@@ -1,0 +1,39 @@
+// Copyright 2014 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+// http://fetch.spec.whatwg.org/#request-class
+
+typedef (Request or USVString) RequestInfo;
+
+enum RequestContext {
+    "", "audio", "beacon", "cspreport", "download", "embed", "eventsource", "favicon",
+    "fetch", "font", "form", "frame", "hyperlink", "iframe", "image", "imageset", "import",
+    "internal", "location", "manifest", "metarefresh", "object", "ping", "plugin",
+    "prefetch", "script", "serviceworker", "sharedworker",
+    "subresource", "style", "track", "video", "worker", "xmlhttprequest", "xslt"
+};
+enum RequestMode { "same-origin", "no-cors", "cors" };
+enum RequestCredentials { "omit", "same-origin", "include" };
+
+[
+    Constructor(RequestInfo input, optional Dictionary requestInitDict),
+    ConstructorCallWith=ScriptState,
+    Exposed=(Window,Worker),
+    RaisesException=Constructor,
+    ActiveDOMObject,
+    GarbageCollected,
+    TypeChecking=Interface,
+] interface Request {
+    readonly attribute ByteString method;
+    readonly attribute USVString url;
+    readonly attribute Headers headers;
+    [DeprecateAs=FetchAPIRequestContext] readonly attribute RequestContext context;
+    readonly attribute DOMString referrer;
+    readonly attribute RequestMode mode;
+    readonly attribute RequestCredentials credentials;
+
+    [RaisesException] Request clone();
+};
+
+Request implements Body;

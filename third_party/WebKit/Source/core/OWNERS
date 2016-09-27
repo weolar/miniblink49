@@ -1,0 +1,62 @@
+# Please prefer to use more specific OWNERS if possible.
+# For example, core/rendering/OWNERS for rendering changes.
+
+# Reviewers (comments indicate areas of expertise):
+adamk@chromium.org
+ager@chromium.org
+alexis.menard@intel.com
+chrishtr@chromium.org
+dcheng@chromium.org
+dglazkov@chromium.org
+dominicc@chromium.org
+dpranke@chromium.org
+dsinclair@chromium.org
+dstockwell@chromium.org
+eae@chromium.org
+enne@chromium.org
+esprehn@chromium.org
+fmalita@chromium.org
+fs@opera.com
+haraken@chromium.org
+hayato@chromium.org
+inferno@chromium.org
+japhet@chromium.org
+jchaffraix@chromium.org
+jianli@chromium.org
+jochen@chromium.org
+junov@chromium.org
+kbr@chromium.org
+keishi@chromium.org
+kenneth.r.christiansen@intel.com
+kinuko@chromium.org
+kouhei@chromium.org
+leviw@chromium.org
+mkwst@chromium.org
+morrita@chromium.org
+mstensho@opera.com
+ojan@chromium.org
+# pdr reviews many svg and text autosizing patches.
+pdr@chromium.org
+pfeldman@chromium.org
+# philipj reviews <video>, <track>, WebVTT and Fullscreen.
+philipj@opera.com
+pkasting@chromium.org
+# rbyers reviews input related changes (eg. event handling, mouse cursors, touch hit testing, scrolling coordinator)
+rbyers@chromium.org
+rob.buis@samsung.com
+# rune reviews core/css and parts of core/rendering
+rune@opera.com
+schenney@chromium.org
+senorblanco@chromium.org
+sigbjornf@opera.com
+skobes@chromium.org
+thakis@chromium.org
+timloh@chromium.org
+tkent@chromium.org
+tonyg@chromium.org
+# vollick reviews compositor integration, accelerated transitions, animations and scrolling, scrolling coordinator, CSS transforms
+vollick@chromium.org
+wangxianzhu@chromium.org
+yoav@yoav.ws
+yurys@chromium.org
+yutak@chromium.org

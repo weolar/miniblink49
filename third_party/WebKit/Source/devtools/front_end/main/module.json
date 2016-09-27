@@ -1,0 +1,322 @@
+{
+    "extensions": [
+        {
+            "type": "@WebInspector.AppProvider",
+            "condition": "can_dock",
+            "className": "WebInspector.AdvancedAppProvider",
+            "order": 0
+        },
+        {
+            "type": "@WebInspector.AppProvider",
+            "className": "WebInspector.SimpleAppProvider",
+            "order": 10
+        },
+        {
+            "type": "@WebInspector.ContextMenu.Provider",
+            "contextTypes": ["WebInspector.UISourceCode", "WebInspector.Resource", "WebInspector.NetworkRequest", "Node"],
+            "className": "WebInspector.HandlerRegistry.ContextMenuProvider"
+        },
+        {
+            "type": "@WebInspector.ActionDelegate",
+            "actionId": "main.reload",
+            "className": "WebInspector.Main.ReloadActionDelegate",
+            "bindings": [
+                {
+                    "platform": "windows,linux",
+                    "shortcut": "F5 Ctrl+R"
+                },
+                {
+                    "platform": "mac",
+                    "shortcut": "Meta+R"
+                }
+            ]
+        },
+        {
+            "type": "@WebInspector.ActionDelegate",
+            "actionId": "main.hard-reload",
+            "className": "WebInspector.Main.ReloadActionDelegate",
+            "bindings": [
+                {
+                    "platform": "windows,linux",
+                    "shortcut": "Shift+F5 Ctrl+F5 Ctrl+Shift+F5 Shift+Ctrl+R"
+                },
+                {
+                    "platform": "mac",
+                    "shortcut": "Shift+Meta+R"
+                }
+            ]
+        },
+        {
+            "type": "@WebInspector.ActionDelegate",
+            "actionId": "main.toggle-drawer",
+            "className": "WebInspector.InspectorView.DrawerToggleActionDelegate",
+            "bindings": [
+                {
+                    "shortcut": "Esc"
+                }
+            ]
+        },
+        {
+            "type": "@WebInspector.ActionDelegate",
+            "actionId": "main.debug-reload",
+            "className": "WebInspector.Main.ReloadActionDelegate",
+            "bindings": [
+                {
+                    "shortcut": "Alt+R"
+                }
+            ]
+        },
+        {
+            "type": "@WebInspector.ActionDelegate",
+            "actionId": "main.toggle-element-search",
+            "contextTypes": ["WebInspector.InspectElementModeController"],
+            "className": "WebInspector.InspectElementModeController.ToggleSearchActionDelegate",
+            "bindings": [
+                {
+                    "platform": "windows,linux",
+                    "shortcut": "Ctrl+Shift+C"
+                },
+                {
+                    "platform": "mac",
+                    "shortcut": "Meta+Shift+C"
+                }
+            ]
+        },
+        {
+            "type": "@WebInspector.ActionDelegate",
+            "actionId": "main.toggle-dock",
+            "className": "WebInspector.DockController.ToggleDockActionDelegate",
+            "bindings": [
+                {
+                    "platform": "windows,linux",
+                    "shortcut": "Ctrl+Shift+D"
+                },
+                {
+                    "platform": "mac",
+                    "shortcut": "Meta+Shift+D"
+                }
+            ]
+        },
+        {
+            "type": "@WebInspector.ActionDelegate",
+            "actionId": "main.zoom-in",
+            "className": "WebInspector.Main.ZoomActionDelegate",
+            "bindings": [
+                {
+                    "platform": "windows,linux",
+                    "shortcut": "Ctrl+Plus Ctrl+Shift+Plus Ctrl+NumpadPlus Ctrl+Shift+NumpadPlus"
+                },
+                {
+                    "platform": "mac",
+                    "shortcut": "Meta+Plus Meta+Shift+Plus Meta+NumpadPlus Meta+Shift+NumpadPlus"
+                }
+            ]
+        },
+        {
+            "type": "@WebInspector.ActionDelegate",
+            "actionId": "main.zoom-out",
+            "className": "WebInspector.Main.ZoomActionDelegate",
+            "bindings": [
+                {
+                    "platform": "windows,linux",
+                    "shortcut": "Ctrl+Minus Ctrl+Shift+Minus Ctrl+NumpadMinus Ctrl+Shift+NumpadMinus"
+                },
+                {
+                    "platform": "mac",
+                    "shortcut": "Meta+Minus Meta+Shift+Minus Meta+NumpadMinus Meta+Shift+NumpadMinus"
+                }
+            ]
+        },
+        {
+            "type": "@WebInspector.ActionDelegate",
+            "actionId": "main.zoom-reset",
+            "className": "WebInspector.Main.ZoomActionDelegate",
+            "bindings": [
+                {
+                    "platform": "windows,linux",
+                    "shortcut": "Ctrl+0 Ctrl+Numpad0"
+                },
+                {
+                    "platform": "mac",
+                    "shortcut": "Meta+0 Meta+Numpad0"
+                }
+            ]
+        },
+        {
+            "type": "drawer-view",
+            "name": "rendering",
+            "title": "Rendering",
+            "order": "11",
+            "className": "WebInspector.RenderingOptions.View"
+        },
+        {
+            "type": "@WebInspector.ToolbarItem.Provider",
+            "className": "WebInspector.InspectElementModeController.ToggleButtonProvider",
+            "location": "main-toolbar-left",
+            "order": 0,
+            "actionId": "main.toggle-element-search"
+        },
+        {
+            "type": "@WebInspector.ToolbarItem.Provider",
+            "separator": true,
+            "location": "main-toolbar-left",
+            "order": 100
+        },
+        {
+            "type": "@WebInspector.ToolbarItem.Provider",
+            "className": "WebInspector.Main.WarningErrorCounter",
+            "order": 1,
+            "location": "main-toolbar-right"
+        },
+        {
+            "type": "@WebInspector.ToolbarItem.Provider",
+            "className": "WebInspector.InspectorView.ToggleDrawerButtonProvider",
+            "order": 2,
+            "location": "main-toolbar-right"
+        },
+        {
+            "type": "@WebInspector.ToolbarItem.Provider",
+            "separator": true,
+            "order": 3,
+            "location": "main-toolbar-right"
+        },
+        {
+            "type": "@WebInspector.ToolbarItem.Provider",
+            "className": "WebInspector.DockController.ButtonProvider",
+            "order": 5,
+            "location": "main-toolbar-right"
+        },
+        {
+            "type": "@WebInspector.ToolbarItem.Provider",
+            "separator": true,
+            "order": 90,
+            "location": "main-toolbar-right"
+        },
+        {
+            "type": "@WebInspector.ToolbarItem.Provider",
+            "className": "WebInspector.DockController.CloseButtonProvider",
+            "order": 100,
+            "location": "main-toolbar-right"
+        },
+        {
+            "type": "setting",
+            "category": "",
+            "title": "Disable cache (while DevTools is open)",
+            "settingName": "cacheDisabled",
+            "settingType": "boolean",
+            "defaultValue": false
+        },
+        {
+            "type": "setting",
+            "settingName": "networkConditions",
+            "settingType": "object",
+            "defaultValue": { "throughput": -1, "latency": 0 }
+        },
+        {
+            "type": "setting",
+            "category": "",
+            "title": "Disable JavaScript",
+            "settingName": "javaScriptDisabled",
+            "settingType": "boolean",
+            "defaultValue": false
+        },
+        {
+            "type": "setting",
+            "category": "Appearance",
+            "title": "Split panels vertically when docked to right",
+            "settingName": "splitVerticallyWhenDockedToRight",
+            "settingType": "boolean",
+            "defaultValue": true
+        },
+        {
+            "type": "setting",
+            "category": "Appearance",
+            "title": "Enable Ctrl + 1-9 shortcut to switch panels",
+            "title-mac": "Enable Cmd + 1-9 shortcut to switch panels",
+            "settingName": "shortcutPanelSwitch",
+            "settingType": "boolean",
+            "defaultValue": false
+        },
+        {
+            "type": "setting",
+            "category": "Appearance",
+            "title": "Don't show emulation warnings",
+            "settingName": "disableOverridesWarning",
+            "settingType": "boolean",
+            "defaultValue": false
+        },
+        {
+            "type": "setting",
+            "category": "Appearance",
+            "title": "Don't show Chrome Data Saver warning",
+            "settingName": "disableDataSaverInfobar",
+            "settingType": "boolean",
+            "defaultValue": false
+        },
+        {
+            "type": "setting",
+            "category": "Appearance",
+            "title": "Disable paused state overlay",
+            "settingName": "disablePausedStateOverlay",
+            "settingType": "boolean",
+            "defaultValue": false
+        },
+        {
+            "type": "@WebInspector.SettingUI",
+            "category": "Extensions",
+            "className": "WebInspector.HandlerRegistry.OpenAnchorLocationSettingUI"
+        },
+        {
+            "type": "setting",
+            "settingName": "showPaintRects",
+            "settingType": "boolean",
+            "defaultValue": false
+        },
+        {
+            "type": "setting",
+            "settingName": "showDebugBorders",
+            "settingType": "boolean",
+            "defaultValue": false
+        },
+        {
+            "type": "setting",
+            "settingName": "showFPSCounter",
+            "settingType": "boolean",
+            "defaultValue": false
+        },
+        {
+            "type": "setting",
+            "settingName": "continuousPainting",
+            "settingType": "boolean",
+            "defaultValue": false
+        },
+        {
+            "type": "setting",
+            "settingName": "showScrollBottleneckRects",
+            "settingType": "boolean",
+            "defaultValue": false
+        }
+    ],
+    "dependencies": [
+        "extensions",
+        "host",
+        "platform",
+        "sdk",
+        "emulation"
+    ],
+    "scripts": [
+        "HelpScreenUntilReload.js",
+        "AdvancedApp.js",
+        "RenderingOptions.js",
+        "SimpleApp.js",
+        "TestController.js",
+        "Tests.js",
+        "OverlayController.js",
+        "Main.js"
+    ],
+    "skip_compilation": [
+        "Tests.js"
+    ],
+    "resources": [
+    ]
+}

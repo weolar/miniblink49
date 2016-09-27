@@ -1,0 +1,226 @@
+/*
+ * Copyright (C) 2006, 2007, 2011 Apple Inc. All rights reserved.
+ * Copyright (C) 2006, 2007 Samuel Weinig <sam@webkit.org>
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public License
+ * along with this library; see the file COPYING.LIB.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
+ */
+
+callback CustomElementConstructor = Element ();
+
+// https://html.spec.whatwg.org/#the-document-object
+enum DocumentReadyState { "loading", "interactive", "complete" };
+
+// http://www.w3.org/TR/page-visibility/#VisibilityState
+enum VisibilityState { "hidden", "visible", "prerender", "unloaded" };
+
+// https://dom.spec.whatwg.org/#interface-document
+
+// FIXME: Document should have a constructor. crbug.com/238234
+interface Document : Node {
+    [SameObject] readonly attribute DOMImplementation implementation;
+    readonly attribute DOMString URL;
+    // FIXME: documentURI should not be nullable.
+    [ImplementedAs=url] readonly attribute DOMString? documentURI;
+    readonly attribute DOMString origin;
+    readonly attribute DOMString compatMode;
+
+    readonly attribute DOMString characterSet;
+    [MeasureAs=DocumentInputEncoding, ImplementedAs=characterSet] readonly attribute DOMString inputEncoding; // legacy alias of .characterSet
+    readonly attribute DOMString contentType;
+
+    readonly attribute DocumentType? doctype;
+    readonly attribute Element? documentElement;
+    HTMLCollection getElementsByTagName(DOMString localName);
+    HTMLCollection getElementsByTagNameNS(DOMString? namespaceURI, DOMString localName);
+    HTMLCollection getElementsByClassName(DOMString classNames);
+
+    [NewObject, CustomElementCallbacks, PerWorldBindings, RaisesException] Element createElement(DOMString localName);
+    [NewObject, CustomElementCallbacks, RaisesException] Element createElementNS(DOMString? namespaceURI, DOMString qualifiedName);
+    [NewObject] DocumentFragment createDocumentFragment();
+    [NewObject] Text createTextNode(DOMString data);
+    [NewObject] Comment createComment(DOMString data);
+    [NewObject, RaisesException] ProcessingInstruction createProcessingInstruction(DOMString target, DOMString data);
+
+    [NewObject, CustomElementCallbacks, RaisesException, TypeChecking=Interface] Node importNode(Node node, optional boolean deep = false);
+    [RaisesException, CustomElementCallbacks, TypeChecking=Interface] Node adoptNode(Node node);
+
+    [NewObject, RaisesException, MeasureAs=DocumentCreateAttribute] Attr createAttribute(DOMString localName);
+    [NewObject, RaisesException, MeasureAs=DocumentCreateAttributeNS] Attr createAttributeNS(DOMString? namespaceURI, DOMString qualifiedName);
+
+    [NewObject, RaisesException] Event createEvent(DOMString eventType);
+
+    [NewObject] Range createRange();
+
+    // NodeFilter.SHOW_ALL = 0xFFFFFFFF
+    [NewObject, RaisesException, TypeChecking=Interface] NodeIterator createNodeIterator(Node root, optional unsigned long whatToShow = 0xFFFFFFFF, optional NodeFilter? filter = null);
+    [NewObject, RaisesException, TypeChecking=Interface] TreeWalker createTreeWalker(Node root, optional unsigned long whatToShow = 0xFFFFFFFF, optional NodeFilter? filter = null);
+
+    // FIXME: CDATASection has been removed from the spec. crbug.com/437205
+    [RaisesException, MeasureAs=DocumentCreateCDATASection] CDATASection createCDATASection(DOMString data);
+
+    // FIXME: xmlEncoding/xmlVersion/xmlStandalone have been removed from the spec.
+    [MeasureAs=DocumentXMLEncoding] readonly attribute DOMString? xmlEncoding;
+    [RaisesException=Setter, MeasureAs=DocumentXMLVersion] attribute DOMString? xmlVersion;
+    [RaisesException=Setter, MeasureAs=DocumentXMLStandalone] attribute boolean xmlStandalone;
+
+    // HTML
+    // https://html.spec.whatwg.org/#the-document-object
+
+    // resource metadata management
+    [PutForwards=href, Unforgeable] readonly attribute Location? location;
+    [RaisesException=Setter] attribute DOMString domain;
+    readonly attribute DOMString referrer;
+    // FIXME: cookie should not have [TreatNullAs=NullString].
+    [TreatNullAs=NullString, RaisesException] attribute DOMString cookie;
+    readonly attribute DOMString lastModified;
+    readonly attribute DocumentReadyState readyState;
+
+    // DOM tree accessors
+    // FIXME: title and dir should not have [TreatNullAs=NullString].
+    [TreatNullAs=NullString, CustomElementCallbacks] attribute DOMString title;
+    [TreatNullAs=NullString, CustomElementCallbacks] attribute DOMString dir;
+    [RaisesException=Setter, CustomElementCallbacks, PerWorldBindings, TypeChecking=Interface] attribute HTMLElement? body;
+    readonly attribute HTMLHeadElement? head;
+    [SameObject] readonly attribute HTMLCollection images;
+    [SameObject] readonly attribute HTMLCollection embeds;
+    [SameObject, ImplementedAs=embeds] readonly attribute HTMLCollection plugins;
+    [SameObject] readonly attribute HTMLCollection links;
+    [SameObject] readonly attribute HTMLCollection forms;
+    [SameObject] readonly attribute HTMLCollection scripts;
+    [PerWorldBindings] NodeList getElementsByName(DOMString elementName);
+    readonly attribute HTMLScriptElement? currentScript;
+
+    // dynamic markup insertion
+    // FIXME: There are two open() methods in the spec.
+    [Custom, CustomElementCallbacks, RaisesException] void open();
+    [RaisesException] void close();
+    [CallWith=ActiveWindow, CustomElementCallbacks, RaisesException] void write(DOMString... text);
+    [CallWith=ActiveWindow, CustomElementCallbacks, RaisesException] void writeln(DOMString... text);
+
+    // user interaction
+    [ImplementedAs=domWindow] readonly attribute Window? defaultView;
+    readonly attribute Element? activeElement;
+    boolean hasFocus();
+    // FIXME: designMode should not have [TreatNullAs=NullString].
+    [TreatNullAs=NullString, CustomElementCallbacks, MeasureAs=DocumentDesignMode] attribute DOMString designMode;
+    [CustomElementCallbacks, RaisesException] boolean execCommand(DOMString commandId, optional boolean showUI = false, optional DOMString value = "");
+    [RaisesException] boolean queryCommandEnabled(DOMString commandId);
+    [RaisesException] boolean queryCommandIndeterm(DOMString commandId);
+    [RaisesException] boolean queryCommandState(DOMString commandId);
+    [RaisesException] boolean queryCommandSupported(DOMString commandId);
+    [RaisesException] DOMString queryCommandValue(DOMString commandId);
+
+    [LenientThis] attribute EventHandler onreadystatechange;
+
+    // HTML obsolete features
+    // https://html.spec.whatwg.org/#Document-partial
+
+    // FIXME: *Color are on HTMLDocument.
+
+    readonly attribute HTMLCollection anchors;
+    readonly attribute HTMLCollection applets;
+
+    // FIXME: clear(), captureEvents(), releaseEvents() and all are on HTMLDocument.
+
+    // CSS Object Model (CSSOM)
+    // http://dev.w3.org/csswg/cssom/#extensions-to-the-document-interface
+    [SameObject] readonly attribute StyleSheetList styleSheets;
+    attribute DOMString? selectedStylesheetSet;
+    readonly attribute DOMString? preferredStylesheetSet;
+
+    // CSSOM View Module
+    // http://dev.w3.org/csswg/cssom-view/#extensions-to-the-document-interface
+    // FIXME: The x and y arguments should be of type double.
+    Element? elementFromPoint(long x, long y);
+    sequence<Element> elementsFromPoint(long x, long y);
+    readonly attribute Element? scrollingElement;
+
+    // Selection API
+    // http://w3c.github.io/selection-api/#extensions-to-document-interface
+    Selection? getSelection();
+
+    // Pointer Lock
+    // https://dvcs.w3.org/hg/pointerlock/raw-file/default/index.html#extensions-to-the-document-interface
+    attribute EventHandler onpointerlockchange;
+    attribute EventHandler onpointerlockerror;
+    [MeasureAs=DocumentPointerLockElement] readonly attribute Element? pointerLockElement;
+    [MeasureAs=DocumentExitPointerLock] void exitPointerLock();
+
+    // Touch Events
+    // http://rawgit.com/w3c/touch-events/v1-errata/touchevents.html#extensions-to-the-document-interface
+    // FIXME: The arguments should not be optional.
+    [RuntimeEnabled=Touch, Measure] Touch createTouch([Default=Undefined] optional Window window,
+                                                      [Default=Undefined] optional EventTarget target,
+                                                      [Default=Undefined] optional long identifier,
+                                                      [Default=Undefined] optional unrestricted double pageX,
+                                                      [Default=Undefined] optional unrestricted double pageY,
+                                                      [Default=Undefined] optional unrestricted double screenX,
+                                                      [Default=Undefined] optional unrestricted double screenY,
+                                                      [Default=Undefined] optional unrestricted double radiusX,
+                                                      [Default=Undefined] optional unrestricted double radiusY,
+                                                      [Default=Undefined] optional unrestricted float rotationAngle,
+                                                      [Default=Undefined] optional unrestricted float force);
+    [RuntimeEnabled=Touch] TouchList createTouchList(Touch... touches);
+
+    // FIXME: The spec doesn't define these event handler attributes.
+    [RuntimeEnabled=Touch] attribute EventHandler ontouchstart;
+    [RuntimeEnabled=Touch] attribute EventHandler ontouchend;
+    [RuntimeEnabled=Touch] attribute EventHandler ontouchmove;
+    [RuntimeEnabled=Touch] attribute EventHandler ontouchcancel;
+
+    // Custom Elements
+    // http://w3c.github.io/webcomponents/spec/custom/#extensions-to-document-interface-to-register
+    // FIXME: The registerElement return type should be Function.
+    [CallWith=ScriptState, CustomElementCallbacks, RaisesException, MeasureAs=DocumentRegisterElement] CustomElementConstructor registerElement(DOMString type, optional ElementRegistrationOptions options);
+    // http://w3c.github.io/webcomponents/spec/custom/#extensions-to-document-interface-to-instantiate
+    // FIXME: The typeExtension arguments should not be nullable.
+    [CustomElementCallbacks, PerWorldBindings, RaisesException] Element createElement(DOMString localName, DOMString? typeExtension);
+    [CustomElementCallbacks, RaisesException] Element createElementNS(DOMString? namespaceURI, DOMString qualifiedName, DOMString? typeExtension);
+
+    // Page Visibility
+    // http://www.w3.org/TR/page-visibility/#sec-document-interface
+    readonly attribute boolean hidden;
+    readonly attribute VisibilityState visibilityState;
+
+    // Non-standard APIs
+    [MeasureAs=DocumentCharset] readonly attribute DOMString charset;
+    [MeasureAs=DocumentDefaultCharset, TreatReturnedNullStringAs=Undefined] readonly attribute DOMString defaultCharset;
+    [MeasureAs=DocumentCaretRangeFromPoint] Range caretRangeFromPoint([Default=Undefined] optional long x, [Default=Undefined] optional long y);
+    [CallWith=ScriptState, DeprecateAs=DocumentGetCSSCanvasContext] any getCSSCanvasContext(DOMString contextId, DOMString name, long width, long height);
+
+    // Deprecated prefixed page visibility API.
+    // TODO(davidben): This is a property so attaching a deprecation warning results in false positives when outputting
+    // document in the console. It's possible http://crbug.com/43394 will resolve this.
+    [MeasureAs=PrefixedPageVisibility, ImplementedAs=visibilityState] readonly attribute DOMString webkitVisibilityState;
+    [MeasureAs=PrefixedPageVisibility, ImplementedAs=hidden] readonly attribute boolean webkitHidden;
+
+    // Event handler attributes
+    attribute EventHandler onbeforecopy;
+    attribute EventHandler onbeforecut;
+    attribute EventHandler onbeforepaste;
+    attribute EventHandler oncopy;
+    attribute EventHandler oncut;
+    attribute EventHandler onpaste;
+    attribute EventHandler onsearch;
+    [RuntimeEnabled=ExperimentalContentSecurityPolicyFeatures] attribute EventHandler onsecuritypolicyviolation;
+    attribute EventHandler onselectionchange;
+    attribute EventHandler onselectstart;
+    attribute EventHandler onwheel;
+};
+
+Document implements GlobalEventHandlers;
+Document implements ParentNode;
+Document implements NonElementParentNode;

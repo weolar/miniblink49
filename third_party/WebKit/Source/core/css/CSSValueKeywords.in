@@ -1,0 +1,1057 @@
+//
+// CSS value names
+//
+
+// The mode argument is used to limit the keyword to be used only for certain
+// CSSParserModes. Values that have the prefix -internal- are only allowed by
+// CSSParserModes listed in allowInternalPropertyAndValue()
+
+inherit
+initial
+//
+// outline-style
+// border-top-style
+// border-bottom-style
+// border-left-style
+// border-right-style
+// The order here must match the order of the EBorderStyle enum in ComputedStyleConstants.h.
+none
+hidden
+inset
+groove
+outset
+ridge
+dotted
+dashed
+solid
+double
+
+//
+// font
+//
+caption
+icon
+menu
+message-box
+small-caption
+-webkit-mini-control
+-webkit-small-control
+-webkit-control
+status-bar
+
+//
+// font-style
+//
+//normal
+italic
+oblique
+// The following is only allowed in @font-face:
+all
+
+//
+// font-variant
+//
+//normal
+small-caps
+
+// font-variant-ligatures:
+//
+// normal
+common-ligatures
+no-common-ligatures
+discretionary-ligatures
+no-discretionary-ligatures
+historical-ligatures
+no-historical-ligatures
+contextual
+no-contextual
+
+//
+// font-weigth
+//
+normal
+bold
+bolder
+lighter
+100
+200
+300
+400
+500
+600
+700
+800
+900
+
+//
+// font-stretch
+//
+ultra-condensed
+extra-condensed
+condensed
+semi-condensed
+semi-expanded
+expanded
+extra-expanded
+ultra-expanded
+
+//
+// font-size
+//
+xx-small
+x-small
+small
+medium
+large
+x-large
+xx-large
+-webkit-xxx-large
+smaller
+larger
+
+//
+// font-family (<generic-family> in CSS 2.1)
+//
+serif
+sans-serif
+cursive
+fantasy
+monospace
+-webkit-body
+-webkit-pictograph
+
+//
+//
+// *-color
+//
+aqua
+black
+blue
+fuchsia
+gray
+green
+lime
+maroon
+navy
+olive
+orange
+purple
+red
+silver
+teal
+white
+yellow
+transparent
+-webkit-link
+-webkit-activelink
+activeborder
+activecaption
+appworkspace
+background
+buttonface
+buttonhighlight
+buttonshadow
+buttontext
+captiontext
+graytext
+highlight
+highlighttext
+inactiveborder
+inactivecaption
+inactivecaptiontext
+infobackground
+infotext
+menutext
+scrollbar
+threeddarkshadow
+threedface
+threedhighlight
+threedlightshadow
+threedshadow
+window
+windowframe
+windowtext
+-internal-active-list-box-selection
+-internal-active-list-box-selection-text
+-internal-inactive-list-box-selection
+-internal-inactive-list-box-selection-text
+-webkit-focus-ring-color mode=QuirksOrUASheet
+currentcolor
+grey
+//
+// colors in non strict mode
+-webkit-text mode=QuirksOrUASheet
+//
+// background-repeat
+//
+repeat
+repeat-x
+repeat-y
+no-repeat
+// round
+// space
+//
+// -webkit-background-composite
+//
+clear
+copy
+source-over
+source-in
+source-out
+source-atop
+destination-over
+destination-in
+destination-out
+destination-atop
+xor
+// highlight
+plus-lighter
+//
+// vertical-align
+//
+baseline
+middle
+sub
+super
+text-top
+text-bottom
+top
+bottom
+// HTML alignment MIDDLE has no corresponding CSS alignment
+-webkit-baseline-middle
+//
+// text-align
+// The order here must match the order of the ETextAlign enum in ComputedStyleConstants.h.
+//
+-webkit-auto
+left
+right
+center
+justify
+-webkit-left
+-webkit-right
+-webkit-center
+-webkit-match-parent
+//
+// text-justify
+//
+//auto
+//none
+inter-word
+distribute
+//
+// list-style-position
+//
+outside
+inside
+//
+// list-style-type
+// The order here must match the order of the EListStyleType enum in ComputedStyleConstants.h.
+//
+disc
+circle
+square
+decimal
+decimal-leading-zero
+arabic-indic
+bengali
+cambodian
+khmer
+devanagari
+gujarati
+gurmukhi
+kannada
+lao
+malayalam
+mongolian
+myanmar
+oriya
+persian
+urdu
+telugu
+tibetan
+thai
+lower-roman
+upper-roman
+lower-greek
+lower-alpha
+lower-latin
+upper-alpha
+upper-latin
+cjk-earthly-branch
+cjk-heavenly-stem
+ethiopic-halehame
+ethiopic-halehame-am
+ethiopic-halehame-ti-er
+ethiopic-halehame-ti-et
+hangul
+hangul-consonant
+korean-hangul-formal
+korean-hanja-formal
+korean-hanja-informal
+hebrew
+armenian
+lower-armenian
+upper-armenian
+georgian
+cjk-ideographic
+simp-chinese-formal
+simp-chinese-informal
+trad-chinese-formal
+trad-chinese-informal
+hiragana
+katakana
+hiragana-iroha
+katakana-iroha
+//none
+//
+// display
+// The order here must match the order of the EDisplay enum in ComputedStyleConstants.h.
+//
+inline
+block
+list-item
+inline-block
+table
+inline-table
+table-row-group
+table-header-group
+table-footer-group
+table-row
+table-column-group
+table-column
+table-cell
+table-caption
+-webkit-box
+-webkit-inline-box
+flex
+inline-flex
+grid
+inline-grid
+//none
+-webkit-flex
+-webkit-inline-flex
+//
+// cursor
+// The order here must match the order of the ECursor enum in ComputedStyleConstants.h.
+//
+auto
+crosshair
+default
+pointer
+move
+vertical-text
+cell
+context-menu
+alias
+// copy
+progress
+no-drop
+not-allowed
+zoom-in
+zoom-out
+e-resize
+ne-resize
+nw-resize
+n-resize
+se-resize
+sw-resize
+s-resize
+w-resize
+ew-resize
+ns-resize
+nesw-resize
+nwse-resize
+col-resize
+row-resize
+text
+wait
+help
+all-scroll
+-webkit-grab
+-webkit-grabbing
+-webkit-zoom-in
+-webkit-zoom-out
+// none
+//
+// direction
+//
+ltr
+rtl
+//
+// text-transform
+//
+capitalize
+uppercase
+lowercase
+//none
+//
+// visibility
+//
+visible
+//hidden
+collapse
+//
+// Unordered rest
+//
+a3
+a4
+a5
+above
+absolute
+always
+avoid
+b4
+b5
+below
+bidi-override
+blink
+both
+close-quote
+embed
+fixed
+hand
+hide
+invert
+-webkit-isolate
+-webkit-isolate-override
+-webkit-plaintext
+landscape
+ledger
+legal
+letter
+line-through
+local
+no-close-quote
+no-open-quote
+nowrap
+open-quote
+overlay
+overline
+portrait
+pre
+pre-line
+pre-wrap
+relative
+scroll
+separate
+show
+static
+thick
+thin
+underline
+wavy
+-webkit-nowrap
+
+// CSS3 Values
+// box-align
+stretch
+start
+end
+//center
+//baseline
+
+// box-decoration-break
+clone
+slice
+
+// box-direction
+// normal
+reverse
+
+// box-orient
+horizontal
+vertical
+inline-axis
+block-axis
+
+// box-pack
+// start
+// end
+// center
+// justify
+
+// box-lines
+single
+multiple
+
+// align-content
+// start
+// end
+flex-start
+flex-end
+// center
+space-between
+space-around
+space-evenly
+// stretch
+
+// align-items / align-self
+// flex-start
+// flex-end
+// center
+// baseline
+// stretch
+
+// justify-content
+// start
+// end
+// flex-start
+// flex-end
+// center
+// space-between
+// space-around
+// space-evenly
+// stretch
+
+
+// flex-flow
+row
+row-reverse
+column
+column-reverse
+// nowrap
+wrap
+wrap-reverse
+
+// grid-auto-flow
+dense
+
+//
+// -webkit-user-modify
+//
+read-only
+read-write
+read-write-plaintext-only
+
+//
+// -webkit-user-drag
+//
+element
+
+//
+// width/min-width/max-width
+//
+intrinsic
+min-intrinsic
+
+//
+// CSS3 intrinsic dimension keywords
+//
+-webkit-min-content
+-webkit-max-content
+-webkit-fill-available
+-webkit-fit-content
+// Unprefixed for CSS Grid Layout.
+min-content
+max-content
+
+//
+// text-overflow
+//
+clip
+ellipsis
+
+//
+// -webkit-margin-collapse
+//
+// collapse
+// separate
+discard
+
+//
+// word-break
+//
+break-all
+keep-all
+
+//
+// word-wrap
+//
+break-word
+
+//
+// nbsp-mode
+//
+space
+
+//
+// -webkit-line-break
+//
+// auto
+loose
+// normal
+strict
+after-white-space
+
+// -webkit-appearance
+// The order here must match the order in the ControlPart enum in ThemeTypes.h.
+// All appearance values that should be accepted by the parser should be listed between 'checkbox' and 'textarea':
+checkbox
+radio
+push-button
+square-button
+button
+button-bevel
+inner-spin-button
+listbox
+listitem
+media-enter-fullscreen-button
+media-exit-fullscreen-button
+media-fullscreen-volume-slider
+media-fullscreen-volume-slider-thumb
+media-mute-button
+media-play-button
+media-overlay-play-button
+media-toggle-closed-captions-button
+media-slider
+media-sliderthumb
+media-volume-slider-container
+media-volume-slider
+media-volume-sliderthumb
+media-controls-background
+media-controls-fullscreen-background
+media-current-time-display
+media-time-remaining-display
+-internal-media-cast-off-button
+-internal-media-overlay-cast-off-button
+menulist
+menulist-button
+menulist-text
+menulist-textfield
+meter
+progress-bar
+progress-bar-value
+slider-horizontal
+slider-vertical
+sliderthumb-horizontal
+sliderthumb-vertical
+caret
+searchfield
+searchfield-decoration
+searchfield-results-decoration
+searchfield-cancel-button
+textfield
+relevancy-level-indicator
+continuous-capacity-level-indicator
+discrete-capacity-level-indicator
+rating-level-indicator
+textarea
+// An appearance value that should not be accepted by the parser:
+caps-lock-indicator
+
+//
+// border-image
+//
+// stretch
+// repeat
+round
+
+//
+// background-clip/background-origin
+//
+// border/content/padding are deprecated and ultimately will only apply to the -webkit- form of these properties.
+// border-box/content-box/padding-box should be used instead.
+//
+border
+border-box
+content
+content-box
+padding
+padding-box
+
+// CSS 3 SHAPES
+margin-box
+
+//
+// background-size
+//
+contain
+cover
+
+//
+// -webkit-rtl-ordering
+//
+logical
+visual
+
+//
+// animation-direction
+//
+alternate
+alternate-reverse
+
+//
+// animation-fill-mode
+//
+forwards
+backwards
+// both
+
+//
+// animation-iteration-count
+infinite
+
+//
+// animation-play-state
+//
+running
+paused
+
+//
+// transform-style
+//
+flat
+preserve-3d
+
+//
+// transition-timing-function
+// animation-timing-function
+//
+ease
+linear
+ease-in
+ease-out
+ease-in-out
+step-start
+step-middle
+step-end
+steps
+cubic-bezier
+
+//
+// zoom
+//
+document
+reset
+
+//
+// user-zoom
+//
+// fixed
+zoom
+
+//
+// pointer-events
+//
+visiblePainted
+visibleFill
+visibleStroke
+//visible
+painted
+fill
+stroke
+bounding-box
+//all
+//none
+
+//
+// speech
+//
+spell-out
+digits
+literal-punctuation
+no-punctuation
+
+//
+// -webkit-font-smoothing
+//
+// auto
+// none
+antialiased
+subpixel-antialiased
+
+// text-rendering
+//auto
+optimizeSpeed
+optimizeLegibility
+geometricPrecision
+
+// -webkit-color-adjust
+economy
+exact
+
+// -webkit-writing-mode
+// SVG compatibility
+lr
+rl
+tb
+lr-tb
+rl-tb
+tb-rl
+// Standard values from CSS3
+horizontal-tb
+vertical-rl
+vertical-lr
+horizontal-bt
+
+// -webkit-ruby-position
+after
+before
+
+// -webkit-text-emphasis-position
+over
+under
+
+// -webkit-text-emphasis-style
+filled
+open
+dot
+// circle
+double-circle
+triangle
+sesame
+
+// -webkit-radial-gradient
+// circle
+ellipse
+closest-side
+closest-corner
+farthest-side
+farthest-corner
+// contain
+// cover
+
+// -webkit-text-orientation
+sideways
+sideways-right
+upright
+vertical-right
+
+// -webkit-line-box-contain
+font
+glyphs
+inline-box
+replaced
+
+// -webkit-font-feature-settings
+on
+off
+
+// image-rendering
+//auto
+//optimizeSpeed
+optimizeQuality
+pixelated
+-webkit-optimize-contrast
+
+// shape-outside
+nonzero
+evenodd
+at
+// closest-side
+// farthest-side
+
+alphabetic
+
+// (display-mode:) media feature
+fullscreen
+standalone
+minimal-ui
+browser
+
+// (pointer:) media feature
+// none
+coarse
+fine
+
+// (hover:) media feature
+//  none
+on-demand
+hover
+
+// blend modes
+// normal
+multiply
+screen
+// overlay
+darken
+lighten
+color-dodge
+color-burn
+hard-light
+soft-light
+difference
+exclusion
+hue
+saturation
+color
+luminosity
+
+// object-fit
+scale-down
+
+// column-fill
+balance
+
+// overflow
+-webkit-paged-x
+-webkit-paged-y
+
+// -webkit-app-region
+drag
+no-drag
+
+// grid-{column|row}-{start|end}
+span
+
+// grid-template-{columns|rows}
+minmax
+
+// text-indent
+each-line
+//hanging   // hanging exists in SVGCSSValueKeywords.in
+
+// (scan:) media feature
+progressive
+interlace
+
+//
+// paint-order
+//
+// normal
+// fill
+// stroke
+markers
+
+//
+// CSS3 viewport-length keywords
+//
+-internal-extend-to-zoom
+
+// isolation
+// auto
+isolate
+
+// scroll-blocks-on
+// none
+start-touch
+wheel-event
+scroll-event
+
+// touch-action
+pan-x
+pan-y
+pan-left
+pan-right
+pan-up
+pan-down
+manipulation
+
+// justify-items / justify-self
+// auto
+// stretch
+// baseline
+last-baseline
+// center
+// start
+// end
+self-start
+self-end
+// flex-start
+// flex-end
+// left
+// right
+true
+safe
+legacy
+
+// scroll-behavior
+// auto
+smooth
+
+// will-change
+// auto
+contents
+scroll-position
+
+// all
+// initial
+// inherit
+unset
+
+// background-image, etc.
+linear-gradient
+radial-gradient
+repeating-linear-gradient
+repeating-radial-gradient
+-webkit-canvas
+-webkit-cross-fade
+-webkit-gradient
+-webkit-linear-gradient
+-webkit-radial-gradient
+-webkit-repeating-linear-gradient
+-webkit-repeating-radial-gradient
+-webkit-image-set
+
+// deprecated gradients
+from
+to
+color-stop
+radial
+
+// content
+attr
+counter
+counters
+
+// clip
+rect
+
+// shapes
+polygon
+
+// @font-face src
+format
+
+// (-webkit-)filter
+grayscale
+sepia
+saturate
+hue-rotate
+opacity
+brightness
+contrast
+blur
+drop-shadow
+url
+
+// colors
+rgb
+rgba
+hsl
+hsla
+
+// transform
+matrix
+matrix3d
+perspective
+rotate
+rotateX
+rotateY
+rotateZ
+rotate3d
+scale
+scaleX
+scaleY
+scaleZ
+scale3d
+skew
+skewX
+skewY
+translate
+translateX
+translateY
+translateZ
+translate3d
+
+// motion path
+path
+
+calc
+-webkit-calc
+
+// scroll-snap-type
+// none
+mandatory
+proximity

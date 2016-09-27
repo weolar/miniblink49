@@ -1,0 +1,22 @@
+// Copyright 2015 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+// https://webbluetoothchrome.github.io/web-bluetooth/#idl-def-bluetoothgattservice
+
+// Implement BluetoothGATTService interface: https://crbug.com/483342
+
+[
+    GarbageCollected,
+    RuntimeEnabled=WebBluetooth,
+] interface BluetoothGATTService { // : ServiceEventHandlers {
+    readonly    attribute UUID            uuid;
+    readonly    attribute boolean         isPrimary;
+    // TODO(ortuno): Once device is implemented test that it matches
+    // the original device.
+    // readonly    attribute BluetoothDevice device;
+    [RaisesException, CallWith=ScriptState] Promise<BluetoothGATTCharacteristic>           getCharacteristic(BluetoothCharacteristicUUID characteristic);
+    // Promise<sequence<BluetoothGATTCharacteristic>> getCharacteristics(optional BluetoothCharacteristicUUID characteristic);
+    // Promise<BluetoothGATTService>                  getIncludedService(BluetoothServiceUUID service);
+    // Promise<sequence<BluetoothGATTService>>        getIncludedServices(optional BluetoothServiceUUID service);
+};

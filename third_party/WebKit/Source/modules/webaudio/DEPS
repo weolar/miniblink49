@@ -1,0 +1,14 @@
+include_rules = [
+    "+bindings",
+    "+core",
+    "+heap",
+    "-modules",
+    "+modules/EventModules.h",
+    "+modules/EventTargetModules.h",
+    "+modules/ModulesExport.h",
+    "+modules/mediastream",
+    "+modules/webaudio",
+    "+platform",
+    "+public/platform",
+    "-web",
+]

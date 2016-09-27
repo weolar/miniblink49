@@ -1,0 +1,16 @@
+// Copyright 2015 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+[
+    Exposed=CompositorWorker,
+    Global=CompositorWorker,
+    RuntimeEnabled=CompositorWorker,
+    TypeChecking=Interface,
+] interface CompositorWorkerGlobalScope : WorkerGlobalScope {
+    [PostMessage, RaisesException] void postMessage(any message, optional sequence<Transferable> transfer);
+    attribute EventHandler onmessage;
+
+    long requestAnimationFrame(FrameRequestCallback callback);
+    void cancelAnimationFrame(long handle);
+};

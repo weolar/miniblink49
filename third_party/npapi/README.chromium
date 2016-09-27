@@ -1,0 +1,9 @@
+Name: Netscape Plugin Application Programming Interface (NPAPI)
+Short Name: npapi
+URL: http://mxr.mozilla.org/mozilla-central/source/modules/plugin/base/public/
+Version: unknown
+Security Critical: yes
+License: MPL 1.1/GPL 2.0/LGPL 2.1
+
+Modifications:
+- Converted to utf-8 with: vim +"argdo write ++enc=utf-8" *.h

@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..\..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..\..\..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..\..\..\..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..\..\..\..\third_party">
+      <UniqueIdentifier>{D6C6CEA7-AAD0-03AD-2394-AC6FCBF8A498}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..\..\..\..\third_party\jinja2">
+      <UniqueIdentifier>{F67B6D8D-9D6D-EF58-FCA2-DEE724EF6AD4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..\..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..\..\..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..\..\..\..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..\..\..\..\third_party">
+      <UniqueIdentifier>{D6C6CEA7-AAD0-03AD-2394-AC6FCBF8A498}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..\..\..\..\third_party\markupsafe">
+      <UniqueIdentifier>{AB221831-57C1-21E1-518E-5A10EF2539EA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\templates">
+      <UniqueIdentifier>{65BD37FD-C3E2-5CBE-9D7E-7A2E93D16AAC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\templates">
+      <UniqueIdentifier>{65BD37FD-C3E2-5CBE-9D7E-7A2E93D16AAC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\templates">
+      <UniqueIdentifier>{65BD37FD-C3E2-5CBE-9D7E-7A2E93D16AAC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\templates">
+      <UniqueIdentifier>{65BD37FD-C3E2-5CBE-9D7E-7A2E93D16AAC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\templates">
+      <UniqueIdentifier>{65BD37FD-C3E2-5CBE-9D7E-7A2E93D16AAC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\templates">
+      <UniqueIdentifier>{65BD37FD-C3E2-5CBE-9D7E-7A2E93D16AAC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\templates">
+      <UniqueIdentifier>{65BD37FD-C3E2-5CBE-9D7E-7A2E93D16AAC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\templates">
+      <UniqueIdentifier>{65BD37FD-C3E2-5CBE-9D7E-7A2E93D16AAC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\templates">
+      <UniqueIdentifier>{65BD37FD-C3E2-5CBE-9D7E-7A2E93D16AAC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\templates">
+      <UniqueIdentifier>{65BD37FD-C3E2-5CBE-9D7E-7A2E93D16AAC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\templates">
+      <UniqueIdentifier>{65BD37FD-C3E2-5CBE-9D7E-7A2E93D16AAC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\templates">
+      <UniqueIdentifier>{65BD37FD-C3E2-5CBE-9D7E-7A2E93D16AAC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\templates">
+      <UniqueIdentifier>{65BD37FD-C3E2-5CBE-9D7E-7A2E93D16AAC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\templates">
+      <UniqueIdentifier>{65BD37FD-C3E2-5CBE-9D7E-7A2E93D16AAC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\templates">
+      <UniqueIdentifier>{65BD37FD-C3E2-5CBE-9D7E-7A2E93D16AAC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\templates">
+      <UniqueIdentifier>{65BD37FD-C3E2-5CBE-9D7E-7A2E93D16AAC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\templates">
+      <UniqueIdentifier>{65BD37FD-C3E2-5CBE-9D7E-7A2E93D16AAC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\templates">
+      <UniqueIdentifier>{65BD37FD-C3E2-5CBE-9D7E-7A2E93D16AAC}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="scripts.gyp"/>
+    <None Include="..\..\..\..\..\third_party\jinja2\__init__.py">
+      <Filter>..\..\..\..\..\third_party\jinja2</Filter>
+    </None>
+    <None Include="..\..\..\..\..\third_party\markupsafe\__init__.py">
+      <Filter>..\..\..\..\..\third_party\markupsafe</Filter>
+    </None>
+    <None Include="code_generator_v8.py"/>
+    <ClCompile Include="..\templates\attributes.cpp">
+      <Filter>..\templates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\templates\callback_interface.cpp">
+      <Filter>..\templates</Filter>
+    </ClCompile>
+    <ClInclude Include="..\templates\callback_interface.h">
+      <Filter>..\templates</Filter>
+    </ClInclude>
+    <ClCompile Include="..\templates\constants.cpp">
+      <Filter>..\templates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\templates\conversions.cpp">
+      <Filter>..\templates</Filter>
+    </ClCompile>
+    <None Include="..\templates\copyright_block.txt">
+      <Filter>..\templates</Filter>
+    </None>
+    <ClCompile Include="..\templates\dictionary_impl.cpp">
+      <Filter>..\templates</Filter>
+    </ClCompile>
+    <ClInclude Include="..\templates\dictionary_impl.h">
+      <Filter>..\templates</Filter>
+    </ClInclude>
+    <ClCompile Include="..\templates\dictionary_v8.cpp">
+      <Filter>..\templates</Filter>
+    </ClCompile>
+    <ClInclude Include="..\templates\dictionary_v8.h">
+      <Filter>..\templates</Filter>
+    </ClInclude>
+    <ClCompile Include="..\templates\interface_base.cpp">
+      <Filter>..\templates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\templates\interface.cpp">
+      <Filter>..\templates</Filter>
+    </ClCompile>
+    <ClInclude Include="..\templates\interface.h">
+      <Filter>..\templates</Filter>
+    </ClInclude>
+    <ClCompile Include="..\templates\methods.cpp">
+      <Filter>..\templates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\templates\partial_interface.cpp">
+      <Filter>..\templates</Filter>
+    </ClCompile>
+    <ClInclude Include="..\templates\partial_interface.h">
+      <Filter>..\templates</Filter>
+    </ClInclude>
+    <ClCompile Include="..\templates\union.cpp">
+      <Filter>..\templates</Filter>
+    </ClCompile>
+    <ClInclude Include="..\templates\union.h">
+      <Filter>..\templates</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

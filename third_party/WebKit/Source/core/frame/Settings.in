@@ -1,0 +1,357 @@
+# Defines properties which are available on the Settings object.
+#
+# Please think carefully before adding a new Setting.  Some questions to
+# consider are:
+# - Should this be a RuntimeEnabledFeature instead? Settings are for things
+#   which we support either values of at runtime.  Features are set at renderer
+#   process startup and are never changed. Features also tend to be set to a
+#   value based on the platform or the stability of the code in question, where
+#   as settings both codepaths need to be stable.
+# - How will you ensure test coverage of all relevant values of your setting?
+# - Is the default value appropriate for other platforms or ports which may
+#   not be aware of your setting?
+# - Can your setting result in behavior differences observable to web
+#   developers?
+# - Should this setting ideally be removed in the future?  If so please file
+#   a bug and reference it in the comments for your setting.
+#
+# One reason to add a Setting is to manage the risk associated with adding a
+# new feature.  For example, we may choose to ship a new UI behavior or
+# performance optimization to ChromeOS users first (in order to gather feedback
+# and metrics on its use from the wild) before attempting to ship it to
+# Windows.
+#
+# FIXME: Add support for global settings.
+# FIXME: Add support for custom getters/setters.
+
+defaultTextEncodingName type=String
+
+# Do not hide chars typed in password fields immediately, but let the last char stay
+# visible for N seconds, configured by the passwordEchoDurationInSeconds setting
+# FIXME: Enable automatically if passwordEchoDurationInSeconds is set to a positive value.
+passwordEchoEnabled initial=false
+
+# Configure how long the last char should say visible in seconds.
+passwordEchoDurationInSeconds type=double, initial=1
+
+# Sets the magnification value for validation message timer.  If the
+# magnification value is N, a validation message disappears automatically after
+# <message length> * N / 1000 seconds.  If N is equal to or less than 0, a
+# validation message doesn't disappears automaticaly.
+validationMessageTimerMagnification type=int, initial=50
+
+# Number of pixels below which 2D canvas is rendered in software
+# even if hardware acceleration is enabled.
+# Hardware acceleration is useful for large canvases where it can avoid the
+# pixel bandwidth between the CPU and GPU. But GPU acceleration comes at
+# a price - extra back-buffer and texture copy. Small canvases are also
+# widely used for stylized fonts. Anti-aliasing text in hardware at that
+# scale is generally slower. So below a certain size it is better to
+# draw canvas in software.
+minimumAccelerated2dCanvasSize type=int, initial=257*256
+
+minimumFontSize type=int, initial=0, invalidate=Style
+minimumLogicalFontSize type=int, initial=0, invalidate=Style
+defaultFontSize type=int, initial=0, invalidate=Style
+defaultFixedFontSize type=int, initial=0, invalidate=Style
+
+editingBehaviorType type=EditingBehaviorType, initial=editingBehaviorTypeForPlatform()
+
+caretBrowsingEnabled initial=false
+localStorageEnabled initial=false
+allowUniversalAccessFromFileURLs initial=true
+allowFileAccessFromFileURLs initial=true
+javaScriptCanOpenWindowsAutomatically initial=false
+supportsMultipleWindows initial=true
+javaScriptCanAccessClipboard initial=false
+shouldPrintBackgrounds initial=false
+shouldClearDocumentBackground initial=true
+
+textAreasAreResizable initial=false, invalidate=Style
+acceleratedCompositingEnabled initial=true, invalidate=AcceleratedCompositing
+
+offlineWebApplicationCacheEnabled initial=true
+usesEncodingDetector initial=false
+allowScriptsToCloseWindows initial=false
+
+# FIXME: This should really be disabled by default as it makes platforms that
+# don't support the feature download files they can't use by.
+# Leaving enabled for now to not change existing behavior.
+downloadableBinaryFontsEnabled initial=true
+
+xssAuditorEnabled initial=false
+unsafePluginPastingEnabled initial=false
+
+preferCompositingToLCDTextEnabled initial=false, invalidate=AcceleratedCompositing
+
+# 3D canvas (WebGL) support.
+webGLEnabled initial=false
+
+webGLErrorsToConsoleEnabled initial=true
+accelerated2dCanvasEnabled initial=false
+antialiased2dCanvasEnabled initial=true
+antialiasedClips2dCanvasEnabled initial=false
+accelerated2dCanvasMSAASampleCount type=int, initial=0
+
+# WebAudio support.
+webAudioEnabled initial=false
+
+asynchronousSpellCheckingEnabled initial=false
+
+hyperlinkAuditingEnabled initial=false
+allowDisplayOfInsecureContent initial=true
+allowRunningOfInsecureContent initial=true
+
+mediaControlsOverlayPlayButtonEnabled initial=false
+mediaPlaybackRequiresUserGesture initial=false
+
+scrollAnimatorEnabled initial=true
+
+# Used to disable threaded, compositor scrolling for testing purposes.
+# crbug.com/410974 tracks removal once alternative solutions for selective
+# main thread scrolling are supported.
+threadedScrollingEnabled initial=true, invalidate=Style
+
+# Handles frame-level scrolls via the root Layer instead of the FrameView.
+# crbug.com/417782 tracks enabling this by default.
+rootLayerScrolls initial=false
+
+# Used in layout tests for gesture tap highlights. Makes the highlights square
+# (rather than rounded) to make it possible to reftest the results.
+mockGestureTapHighlightsEnabled initial=false
+
+shouldRespectImageOrientation initial=false
+
+# Limited use by features which behave differently depending on the input
+# devices available.  For example, the pointer and hover media queries.
+# Note that we need to be careful when basing behavior or UI on this -
+# just because a device is present doesn't mean the user cares about it
+# or uses it (i.e. Chromebook Pixel users generally don't want to give up
+# screen real estate just because they happen to have a touchscreen).
+deviceSupportsTouch initial=false
+deviceSupportsMouse initial=true
+
+# This value indicates the number of simultaneous multi-touch points supported
+# by the currently connected screen/digitizer that supports the most points.
+# From Pointer Events spec:
+#   http://www.w3.org/TR/pointerevents/#widl-Navigator-maxTouchPoints
+maxTouchPoints type=int, initial=0
+
+# Whether touch gestures should be "fuzzed" to nearest touch targets.
+# It's expected that this is enabled everywhere by default, but it may be
+# disabled for testing purposes as the algorithm is not yet perfect.
+# crbug.com/304895 tracks removal once we're satisfied with the algorithm.
+touchAdjustmentEnabled initial=true
+
+# Determines whether WebViewClient::didTapMultipleTargets will be used for
+# touch disambiguation.
+multiTargetTapNotificationEnabled initial=true
+
+syncXHRInDocumentsEnabled initial=true
+cookieEnabled initial=true
+navigateOnDragDrop initial=true
+DOMPasteAllowed initial=false
+
+allowCustomScrollbarInMainFrame initial=true
+webSecurityEnabled initial=true
+
+# Special keyboard navigation mode intented for platforms with no
+# proper mouse or touch support, such as a TV controller with a remote.
+spatialNavigationEnabled initial=false
+
+# This setting adds a means to enable/disable touch initiated drag & drop. If
+# enabled, the user can initiate drag using long press.
+# crbug.com/304894 tracks removal once it's been enabled on all platforms.
+touchDragDropEnabled initial=false
+
+unifiedTextCheckerEnabled initial=defaultUnifiedTextCheckerEnabled
+
+# Some apps could have a default video poster if it is not set.
+defaultVideoPosterURL type=String
+
+smartInsertDeleteEnabled initial=defaultSmartInsertDeleteEnabled
+selectTrailingWhitespaceEnabled initial=defaultSelectTrailingWhitespaceEnabled
+
+selectionIncludesAltImageText initial=false
+
+selectionStrategy type=SelectionStrategy, initial=SelectionStrategy::Character
+
+######## Settings used by Android WebView below ########
+
+useLegacyBackgroundSizeShorthandBehavior initial=false
+
+# This quirk is to maintain compatibility with Android apps built on
+# the Android SDK prior to and including version 18.
+# Presumably, this can be removed any time after 2015.
+# See http://crbug.com/282130.
+viewportMetaZeroValuesQuirk initial=false
+
+# Another Android SDK <= 18 quirk, removable 2015.
+# See http://crbug.com/295287
+ignoreMainFrameOverflowHiddenQuirk initial=false
+
+# Yet another Android SDK <= 18 quirk, removable 2015.
+# See http://crbug.com/305236
+reportScreenSizeInPhysicalPixelsQuirk initial=false
+
+# One more Android SDK <= 18 quirk, removable 2015.
+# See http://crbug.com/306548
+viewportMetaMergeContentQuirk initial=false
+
+# This quirk is to maintain compatibility with Android apps.
+# It will be possible to remove it once WebSettings.{get|set}UseWideViewPort
+# API function will be removed.
+# See http://crbug.com/288037.
+wideViewportQuirkEnabled initial=false
+
+# Used by the android_webview to support a horizontal height auto-sizing
+# mode.
+forceZeroLayoutHeight initial=false, invalidate=ViewportDescription
+
+mainFrameClipsContent initial=true
+
+# For android.webkit.WebSettings.setUseWideViewport()
+# http://developer.android.com/reference/android/webkit/WebSettings.html#setUseWideViewPort(boolean)
+useWideViewport initial=true, invalidate=ViewportDescription
+
+# For android.webkit.WebSettings.setLoadWithOverviewMode()
+# http://developer.android.com/reference/android/webkit/WebSettings.html#setLoadWithOverviewMode(boolean)
+loadWithOverviewMode initial=true, invalidate=ViewportDescription
+
+######## End of settings used by Android WebView ########
+
+
+# Touch based text selection and editing on desktop.
+# crbug.com/304873 tracks removal once it's been enabled on all platforms.
+touchEditingEnabled initial=false
+
+# Settings for experimental desktop pinch-zoom support (with semantics
+# optimized for large screens).  Pinch-zoom generally is implemented mainly
+# outside of blink (in the compositor) and doesn't require any settings.
+# These settings are for an experimental modification to how pinch-zoom
+# behaves. crbug.com/304869 tracks removal.
+useSolidColorScrollbars initial=false
+pinchOverlayScrollbarThickness type=int, initial=0
+
+# Experiment to invert the scroll order of the layout and visual viewports
+# in some circumstances. Namely, during a pinch-zoom gesture and browser
+# generated scrolls like "scroll into view".
+invertViewportScrollOrder initial=false
+
+# The rubber-band overscroll effect is implemented in Blink and is being moved
+# to the compositor thread. This will be set to true and eventually removed.
+# crbug.com/133097
+rubberBandingOnCompositorThread initial=false
+
+# Font scale factor for accessibility, applied as part of text autosizing.
+accessibilityFontScaleFactor type=double, initial=1.0, invalidate=TextAutosizing
+
+# Only used by Layout Tests and inspector emulation.
+mediaTypeOverride type=String, initial="", invalidate=MediaQuery
+displayModeOverride type=WebDisplayMode, initial=WebDisplayModeUndefined, invalidate=MediaQuery
+
+# loadsImagesAutomatically only suppresses the network load of
+# the image URL. A cached image will still be rendered if requested.
+loadsImagesAutomatically initial=false, invalidate=ImageLoading
+imagesEnabled initial=true, invalidate=ImageLoading
+imageAnimationPolicy type=ImageAnimationPolicy, initial=ImageAnimationPolicyAllowed
+
+# Number of outstanding and pending tokens allowed in the background HTML
+# parser. A value of 0 indicates the parser should use its default value.
+backgroundHtmlParserOutstandingTokenLimit type=unsigned, initial=0
+backgroundHtmlParserPendingTokenLimit type=unsigned, initial=0
+
+# Html preload scanning is a fast, early scan of HTML documents to find loadable
+# resources before the parser advances to them. If it is disabled, resources will
+# be loaded later.
+doHtmlPreloadScanning initial=true
+
+javaEnabled initial=false
+pluginsEnabled initial=false
+
+viewportEnabled initial=false, invalidate=ViewportDescription
+viewportMetaEnabled initial=false
+
+dnsPrefetchingEnabled initial=false, invalidate=DNSPrefetching
+
+# FIXME: This is a temporary flag and should be removed
+# when squashing is ready. (crbug.com/261605)
+layerSquashingEnabled initial=false
+
+# Clients that execute script should call ScriptController::canExecuteScripts()
+# instead of this function. ScriptController::canExecuteScripts() checks the
+# HTML sandbox, plugin sandboxing, and other important details.
+scriptEnabled initial=false
+
+# Compensates for poor text legibility on mobile devices. This value is
+# multiplied by the font scale factor when performing text autosizing of
+# websites that do not set an explicit viewport description.
+deviceScaleAdjustment type=double, initial=1.0, invalidate=TextAutosizing
+
+# This value indicates the maximum number of bytes a document is allowed
+# to transmit in Beacons (via navigator.sendBeacon()) -- Beacons are
+# intended to be smaller payloads transmitted as a page is unloading, not
+# a general (one-way) network transmission API.
+# The spec ( https://dvcs.w3.org/hg/webperf/raw-file/tip/specs/Beacon/Overview.html )
+# does not proscribe an upper limit, but allows for it -- the underlying
+# API will return 'false' in that case.
+maxBeaconTransmission type=int, initial=65536
+
+# This value is set to false if the platform does not support fullscreen.
+# When set to false all the requests to enter fullscreen will return an error
+# (fullscreenerror or webkitfullscreenerror) as specified in the standard:
+# http://fullscreen.spec.whatwg.org/#dom-element-requestfullscreen
+fullscreenSupported initial=true
+
+# V8 supports different types of caching. Used by V8 bindings.
+v8CacheOptions type=V8CacheOptions, initial=V8CacheOptionsDefault
+
+# These values are bit fields for the properties of available pointing devices
+# and may take on multiple values (e.g. laptop with touchpad and touchscreen
+# has pointerType coarse *and* fine).
+availablePointerTypes type=int, initial=PointerTypeNone, invalidate=MediaQuery
+availableHoverTypes type=int, initial=HoverTypeNone, invalidate=MediaQuery
+
+# These values specify properties of the user's primary pointing device only.
+primaryPointerType type=PointerType, initial=PointerTypeNone, invalidate=MediaQuery
+primaryHoverType type=HoverType, initial=HoverTypeNone, invalidate=MediaQuery
+
+# Whether accessibility support is enabled at all.
+accessibilityEnabled initial=false, invalidate=AccessibilityState
+
+# If true, the value in password fields is exposed to assistive technologies.
+accessibilityPasswordValuesEnabled initial=false
+
+# If true, static text nodes expose inline text box children.
+inlineTextBoxAccessibilityEnabled initial=false
+
+# If true, context menu will be shown on mouse up instead of mouse down.
+# Typically enabled on Windows to match platform convention.
+showContextMenuOnMouseUp initial=false
+
+disableReadingFromCanvas initial=false
+strictMixedContentChecking initial=false
+strictPowerfulFeatureRestrictions initial=false
+logDnsPrefetchAndPreconnect initial=false
+logPreload initial=false
+
+# If true, the UA styles will include viewportAndroid.css. It is used for
+# Android, and dynamically set by the inspector for mobile emulation.
+useMobileViewportStyle initial=false, invalidate=ViewportRule
+
+# Automatic track selection is performed based on user preference for track kind specified
+# by this setting.
+textTrackKindUserPreference type=TextTrackKindUserPreference, initial=TextTrackKindUserPreference::Default, invalidate=TextTrackKindUserPreference
+
+# User style overrides for captions and subtitles
+textTrackBackgroundColor type=String
+textTrackFontFamily type=String
+textTrackFontStyle type=String
+textTrackFontVariant type=String
+textTrackTextColor type=String
+textTrackTextShadow type=String
+textTrackTextSize type=String
+
+lowPriorityIframes initial=false
+
+reportWheelOverscroll initial=false

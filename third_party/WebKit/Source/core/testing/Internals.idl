@@ -1,0 +1,331 @@
+/*
+ * Copyright (C) 2012 Google Inc. All rights reserved.
+ * Copyright (C) 2013 Apple Inc. All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1.  Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+[
+    DoNotCheckConstants,
+    GarbageCollected,
+    TypeChecking=Interface,
+    ConstructorCallWith=ScriptState,
+] interface Internals {
+    DOMString address(Node node);
+
+    GCObservation observeGC(any observed);
+
+    [RaisesException, TypeChecking=Interface] DOMString elementLayoutTreeAsText(Element element);
+    boolean isPreloaded(DOMString url);
+    boolean isPreloadedBy(DOMString url, Document document);
+    boolean isLoadingFromMemoryCache(DOMString url);
+
+    [TypeChecking=Interface] boolean isSharingStyle(Element element1, Element element2);
+
+    [TypeChecking=Interface] CSSStyleDeclaration computedStyleIncludingVisitedInfo(Node node);
+
+    [TypeChecking=Interface] ShadowRoot createUserAgentShadowRoot(Element host);
+
+    [TypeChecking=Interface] ShadowRoot shadowRoot(Element host);
+    [TypeChecking=Interface] ShadowRoot youngestShadowRoot(Element host);
+    [TypeChecking=Interface] ShadowRoot oldestShadowRoot(Element host);
+    [RaisesException, TypeChecking=Interface] ShadowRoot youngerShadowRoot(Node root);
+
+    [RaisesException, TypeChecking=Interface] DOMString shadowRootType(Node root);
+    [RaisesException] boolean hasShadowInsertionPoint(Node root);
+    [RaisesException] boolean hasContentElement(Node root);
+    [RaisesException, TypeChecking=Interface] unsigned long countElementShadow(Node Root);
+    [TypeChecking=Interface] DOMString shadowPseudoId(Element element);
+    [RaisesException, TypeChecking=Interface] boolean isValidContentSelect(Element contentElement);
+    [TypeChecking=Interface] Node treeScopeRootNode(Node node);
+    [TypeChecking=Interface] Node parentTreeScope(Node node);
+    [RaisesException, TypeChecking=Interface] boolean hasSelectorForIdInShadow(Element host, DOMString id);
+    [RaisesException, TypeChecking=Interface] boolean hasSelectorForClassInShadow(Element host, DOMString className);
+    [RaisesException, TypeChecking=Interface] boolean hasSelectorForAttributeInShadow(Element host, DOMString attributeName);
+    [RaisesException, TypeChecking=Interface] unsigned short compareTreeScopePosition(Node treeScope1, Node treeScope2);
+    [RaisesException] unsigned long updateStyleAndReturnAffectedElementCount();
+    [RaisesException] unsigned long needsLayoutCount();
+    [RaisesException] unsigned long hitTestCount(Document document);
+    [RaisesException] unsigned long hitTestCacheHits(Document document);
+    [RaisesException] Element? elementFromPoint(Document document, double x, double y, boolean ignoreClipping, boolean allowChildFrameContent);
+    [RaisesException] void clearHitTestCache(Document document);
+
+    // Animation testing.
+    [RaisesException] void pauseAnimations(double pauseTime);
+    bool isCompositedAnimation(Animation animation);
+
+    // Modifies m_desiredFrameStartTime in BitmapImage to advance the next frame time
+    // for testing whether animated images work properly.
+    [RaisesException] void advanceTimeForImage(Element image, double deltaTimeInSeconds);
+
+    [RaisesException, TypeChecking=Interface] Node nextSiblingInComposedTree(Node node);
+    [RaisesException, TypeChecking=Interface] Node firstChildInComposedTree(Node node);
+    [RaisesException, TypeChecking=Interface] Node lastChildInComposedTree(Node node);
+    [RaisesException, TypeChecking=Interface] Node nextInComposedTree(Node node);
+    [RaisesException, TypeChecking=Interface] Node previousInComposedTree(Node node);
+
+    DOMString visiblePlaceholder(Element element);
+
+    [TypeChecking=Interface] void selectColorInColorChooser(Element element, DOMString colorValue);
+    [TypeChecking=Interface] void endColorChooser(Element element);
+
+    // If the argument is omitted, the top-level document is used.
+    boolean hasAutofocusRequest(optional Document document);
+    [RaisesException] DOMString[] formControlStateOfHistoryItem();
+    [RaisesException] void setFormControlStateOfHistoryItem(sequence<DOMString> values);
+    readonly attribute Window pagePopupWindow;
+
+    [RaisesException] ClientRect absoluteCaretBounds();
+
+    [TypeChecking=Interface] ClientRect boundingBox(Element element);
+
+    [RaisesException, TypeChecking=Interface] unsigned long markerCountForNode(Node node, DOMString markerType);
+    [TypeChecking=Interface] unsigned long activeMarkerCountForNode(Node node);
+    [RaisesException, TypeChecking=Interface] Range markerRangeForNode(Node node, DOMString markerType, unsigned long index);
+    [RaisesException, TypeChecking=Interface] DOMString markerDescriptionForNode(Node node, DOMString markerType, unsigned long index);
+    [TypeChecking=Interface] void addTextMatchMarker(Range range, boolean isActive);
+    [TypeChecking=Interface] void setMarkersActive(Node node, unsigned long startOffset, unsigned long endOffset, boolean active);
+    void setMarkedTextMatchesAreHighlighted(Document document, boolean highlight);
+
+    [RaisesException, TypeChecking=Interface] void setFrameViewPosition(Document document, long x, long y);
+
+    [RaisesException, TypeChecking=Interface] DOMString viewportAsText(Document document,
+                                                                       float devicePixelRatio,
+                                                                       long availableWidth,
+                                                                       long availableHeight);
+
+    [RaisesException, TypeChecking=Interface] boolean wasLastChangeUserEdit(Element textField);
+    [RaisesException, TypeChecking=Interface] boolean elementShouldAutoComplete(Element inputElement);
+    [RaisesException, TypeChecking=Interface] DOMString suggestedValue(Element inputElement);
+    [RaisesException, TypeChecking=Interface] void setSuggestedValue(Element inputElement, DOMString value);
+    [RaisesException, TypeChecking=Interface] void setEditingValue(Element inputElement, DOMString value);
+    [RaisesException, TypeChecking=Interface] void setAutofilled(Element inputElement, boolean enabled);
+
+    [RaisesException, TypeChecking=Interface] void scrollElementToRect(Element element, long x, long y, long w, long h);
+
+    [TypeChecking=Interface] Range rangeFromLocationAndLength(Element scope, long rangeLocation, long rangeLength);
+    [TypeChecking=Interface] unsigned long locationFromRange(Element scope, Range range);
+    [TypeChecking=Interface] unsigned long lengthFromRange(Element scope, Range range);
+    [TypeChecking=Interface] DOMString rangeAsText(Range range);
+
+    [RaisesException, TypeChecking=Interface] DOMPoint touchPositionAdjustedToBestClickableNode(long x, long y, long width, long height, Document document);
+    [RaisesException, TypeChecking=Interface] Node touchNodeAdjustedToBestClickableNode(long x, long y, long width, long height, Document document);
+    [RaisesException, TypeChecking=Interface] DOMPoint touchPositionAdjustedToBestContextMenuNode(long x, long y, long width, long height, Document document);
+    [RaisesException, TypeChecking=Interface] Node touchNodeAdjustedToBestContextMenuNode(long x, long y, long width, long height, Document document);
+    [RaisesException, TypeChecking=Interface] ClientRect bestZoomableAreaForTouchPoint(long x, long y, long width, long height, Document document);
+
+    [RaisesException] long lastSpellCheckRequestSequence(Document document);
+    [RaisesException] long lastSpellCheckProcessedSequence(Document document);
+
+    sequence<DOMString> userPreferredLanguages();
+    void setUserPreferredLanguages(sequence<DOMString> languages);
+
+    [TypeChecking=Interface] unsigned long activeDOMObjectCount(Document document);
+    [TypeChecking=Interface] unsigned long wheelEventHandlerCount(Document document);
+    [TypeChecking=Interface] unsigned long scrollEventHandlerCount(Document document);
+    [TypeChecking=Interface] unsigned long touchEventHandlerCount(Document document);
+    [RaisesException, TypeChecking=Interface] LayerRectList touchEventTargetLayerRects(Document document);
+
+    [RaisesException, TypeChecking=Interface] boolean executeCommand(Document document, DOMString name, DOMString value);
+
+    DOMString htmlNamespace();
+    sequence<DOMString> htmlTags();
+    DOMString svgNamespace();
+    sequence<DOMString> svgTags();
+
+    [RaisesException, TypeChecking=Interface] NodeList nodesFromRect(Document document, long x, long y,
+        unsigned long topPadding, unsigned long rightPadding, unsigned long bottomPadding, unsigned long leftPadding,
+        boolean ignoreClipping, boolean allowChildFrameContent);
+
+    [TypeChecking=Interface] boolean hasSpellingMarker(Document document, long from, long length);
+    [TypeChecking=Interface] boolean hasGrammarMarker(Document document, long from, long length);
+    void setContinuousSpellCheckingEnabled(boolean enabled);
+
+    [TypeChecking=Interface] boolean isOverwriteModeEnabled(Document document);
+    [TypeChecking=Interface] void toggleOverwriteModeEnabled(Document document);
+
+    [TypeChecking=Interface] unsigned long numberOfScrollableAreas(Document document);
+
+    [TypeChecking=Interface] boolean isPageBoxVisible(Document document, long pageNumber);
+
+    readonly attribute InternalSettings settings;
+    readonly attribute InternalRuntimeFlags runtimeFlags;
+    readonly attribute unsigned long workerThreadCount;
+
+    // Flags for layerTreeAsText.
+    // The values of these constants must be kept in sync with the values of LayerTreeAsTextBehaviorFlags in GraphicsLayerClient.h.
+    const unsigned short LAYER_TREE_INCLUDES_REPAINT_RECTS = 2;
+    const unsigned short LAYER_TREE_INCLUDES_PAINTING_PHASES = 4;
+    const unsigned short LAYER_TREE_INCLUDES_ROOT_LAYER = 8;
+    const unsigned short LAYER_TREE_INCLUDES_CLIP_AND_SCROLL_PARENTS = 16;
+    const unsigned short LAYER_TREE_INCLUDES_SCROLL_BLOCKS_ON = 32;
+    const unsigned short LAYER_TREE_INCLUDES_PAINT_INVALIDATION_OBJECTS = 64;
+    const unsigned short LAYER_TREE_INCLUDES_COMPOSITING_REASONS = 128;
+    [RaisesException, TypeChecking=Interface] DOMString layerTreeAsText(Document document, optional unsigned short flags);
+    [RaisesException, TypeChecking=Interface] DOMString elementLayerTreeAsText(Element element, optional unsigned short flags);
+
+    [RaisesException, TypeChecking=Interface] boolean scrollsWithRespectTo(Element element1, Element element2);
+
+    [TypeChecking=Interface] DOMString scrollingStateTreeAsText(Document document);
+    [RaisesException, TypeChecking=Interface] DOMString mainThreadScrollingReasons(Document document);
+    [RaisesException, TypeChecking=Interface] ClientRectList nonFastScrollableRects(Document document);
+
+    [TypeChecking=Interface] void garbageCollectDocumentResources(Document document);
+    void evictAllResources();
+
+    unsigned long numberOfLiveNodes();
+    unsigned long numberOfLiveDocuments();
+    DOMString dumpRefCountedInstanceCounts();
+    sequence<DOMString> consoleMessageArgumentCounts(Document document);
+    unsigned long[] setMemoryCacheCapacities(unsigned long minDeadBytes, unsigned long maxDeadBytes, unsigned long totalBytes);
+
+    DOMString counterValue(Element element);
+    long pageNumber(Element element, optional float pageWidth, optional float pageHeight);
+    DOMString[] shortcutIconURLs(Document document);
+    DOMString[] allIconURLs(Document document);
+    long numberOfPages(optional double pageWidthInPixels, optional double pageHeightInPixels);
+    [RaisesException] DOMString pageProperty(DOMString propertyName, long pageNumber);
+    [RaisesException] DOMString pageSizeAndMarginsInPixels(long pageIndex, long width, long height, long marginTop, long marginRight, long marginBottom, long marginLeft);
+
+    [RaisesException] void setDeviceScaleFactor(float scaleFactor);
+    [RaisesException] void setPageScaleFactor(float scaleFactor);
+    [RaisesException] void setPageScaleFactorLimits(float minScaleFactor, float maxScaleFactor);
+
+    [RaisesException, TypeChecking=Interface] void setIsCursorVisible(Document document, boolean isVisible);
+
+    [TypeChecking=Interface] double effectiveMediaVolume(HTMLMediaElement mediaElement);
+    [TypeChecking=Interface] void mediaPlayerRemoteRouteAvailabilityChanged(HTMLMediaElement mediaElement, boolean available);
+    [TypeChecking=Interface] void mediaPlayerPlayingRemotelyChanged(HTMLMediaElement mediaElement, boolean remote);
+
+    void registerURLSchemeAsBypassingContentSecurityPolicy(DOMString scheme);
+    void registerURLSchemeAsBypassingContentSecurityPolicy(DOMString scheme, sequence<DOMString> policyAreas);
+    void removeURLSchemeRegisteredAsBypassingContentSecurityPolicy(DOMString scheme);
+
+    TypeConversions typeConversions();
+
+    // This is enabled only in Debug builds.
+    // This is because we want to avoid putting the byte stream of testing private scripts
+    // into the binary of Release builds.
+    PrivateScriptTest privateScriptTest();
+
+    DOMString[] getReferencedFilePaths();
+
+    // These functions both reset the tracked repaint rects. They are inteded to be used in the following order:
+    //  startTrackingRepaints, repaintRectsAsText, stopTrackingRepaints.
+    [RaisesException, TypeChecking=Interface] void startTrackingRepaints(Document document);
+    [RaisesException, TypeChecking=Interface] void stopTrackingRepaints(Document document);
+
+    // |node| should be Document, HTMLIFrameElement, or unspecified.
+    // If |node| is an HTMLIFrameElement, it assumes node.contentDocument is
+    // specified without security checks. Unspecified means this document.
+    [RaisesException] void updateLayoutIgnorePendingStylesheetsAndRunPostLayoutTasks(optional Node? node = null);
+
+    [RaisesException, TypeChecking=Interface] void forceFullRepaint(Document document);
+
+    // Returns a list of draggable/non-draggable regions in the document.
+    [RaisesException, TypeChecking=Interface] ClientRectList draggableRegions(Document document);
+    [RaisesException, TypeChecking=Interface] ClientRectList nonDraggableRegions(Document document);
+
+    // Returns a string with information about the mouse cursor used at the specified client location.
+    [TypeChecking=Interface] DOMString getCurrentCursorInfo();
+
+    readonly attribute boolean cursorUpdatePending;
+
+    [TypeChecking=Interface] DOMString markerTextForListItem(Element element);
+
+    SerializedScriptValue deserializeBuffer(ArrayBuffer buffer);
+    ArrayBuffer serializeObject(SerializedScriptValue obj);
+
+    void forceReload(boolean endToEnd);
+
+    [TypeChecking=Interface] DOMString getImageSourceURL(Element element);
+
+    [TypeChecking=Interface] DOMString selectMenuListText(HTMLSelectElement select);
+    [TypeChecking=Interface] boolean isSelectPopupVisible(Node node);
+    boolean selectPopupItemStyleIsRtl(Node select, long itemIndex);
+    long selectPopupItemStyleFontHeight(Node select, long itemIndex);
+
+    [RaisesException] ClientRect selectionBounds();
+
+    boolean loseSharedGraphicsContext3D();
+
+    [RaisesException, TypeChecking=Interface] void forceCompositingUpdate(Document document);
+
+    void setZoomFactor(float factor);
+
+    [RaisesException, TypeChecking=Interface] void setShouldRevealPassword(Element element, boolean reveal);
+
+    [CallWith=ScriptState] Promise createResolvedPromise(any value);
+    [CallWith=ScriptState] Promise createRejectedPromise(any reason);
+    [CallWith=ScriptState] Promise addOneToPromise(Promise promise);
+    [CallWith=ScriptState, RaisesException] Promise promiseCheck(long arg1, boolean arg2, Dictionary arg3, DOMString arg4, DOMString[] arg5);
+    [CallWith=ScriptState] Promise promiseCheckWithoutExceptionState(Dictionary arg1, DOMString arg2, DOMString... variadic);
+    [CallWith=ScriptState] Promise promiseCheckRange([EnforceRange] octet arg1);
+    [CallWith=ScriptState] Promise promiseCheckOverload(Location arg1);
+    [CallWith=ScriptState] Promise promiseCheckOverload(Document arg1);
+    [CallWith=ScriptState] Promise promiseCheckOverload(Location arg1, long arg2, long arg3);
+
+    void setValueForUser(Element element, DOMString value);
+
+    DOMString textSurroundingNode(Node node, long x, long y, unsigned long maxLength);
+
+    void setFocused(boolean focused);
+    void setInitialFocus(boolean reverse);
+
+    [TypeChecking=Interface] boolean ignoreLayoutWithPendingStylesheets(Document document);
+
+    // These functions are for testing NetInfo. You must call setNetworkStateNotifierTestOnly(true)
+    // before calling setNetworkConnectionInfo.
+    void setNetworkStateNotifierTestOnly(boolean testOnly);
+    [RaisesException] void setNetworkConnectionInfo(DOMString type);
+
+    // This function is for testing HitRegions on Canvas2D.
+    unsigned long countHitRegions(CanvasRenderingContext2D context);
+
+    [TypeChecking=Interface] boolean isInCanvasFontCache(Document document, DOMString fontString);
+    [TypeChecking=Interface] unsigned long canvasFontCacheMaxFonts();
+
+    [TypeChecking=Interface] ClientRect boundsInViewportSpace(Element element);
+
+    [RaisesException, TypeChecking=Interface] void forcePluginPlaceholder(HTMLElement plugin, DocumentFragment fragment);
+    [RaisesException, TypeChecking=Interface] void forcePluginPlaceholder(HTMLElement plugin, PluginPlaceholderOptions options);
+
+    DictionaryTest dictionaryTest();
+    UnionTypesTest unionTypesTest();
+
+    void forceBlinkGCWithoutV8GC();
+
+    DOMString selectedHTMLForClipboard();
+    DOMString selectedTextForClipboard();
+
+    void setVisualViewportOffset(long x, long y);
+
+    boolean isUseCounted(Document document, long useCounterId);
+
+    iterable<long>;
+
+    [Unscopeable] readonly attribute DOMString unscopeableAttribute;
+    [Unscopeable] DOMString unscopeableMethod();
+
+    ClientRectList focusRingRects(Element element);
+    void setCapsLockState(boolean enabled);
+};

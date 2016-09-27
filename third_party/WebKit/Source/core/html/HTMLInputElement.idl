@@ -1,0 +1,113 @@
+/*
+ * Copyright (C) 2006, 2010 Apple Inc. All rights reserved.
+ * Copyright (C) 2006 Samuel Weinig <sam.weinig@gmail.com>
+ * Copyright (C) 2012 Samsung Electronics. All rights reserved.
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public License
+ * along with this library; see the file COPYING.LIB.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
+ */
+
+// https://html.spec.whatwg.org/#the-input-element
+
+interface HTMLInputElement : HTMLElement {
+    [Reflect] attribute DOMString accept;
+    [Reflect] attribute DOMString alt;
+    [Reflect] attribute DOMString autocomplete;
+    [Reflect] attribute boolean autofocus;
+    [Reflect=checked] attribute boolean defaultChecked;
+    attribute boolean checked;
+    [Reflect] attribute DOMString dirName;
+    [Reflect] attribute boolean disabled;
+    [ImplementedAs=formOwner] readonly attribute HTMLFormElement? form;
+    // The 'files' attribute is intentionally not readonly.
+    // https://www.w3.org/Bugs/Public/show_bug.cgi?id=22682
+    attribute FileList? files;
+    [Reflect, URL] attribute DOMString formAction;
+    [CustomElementCallbacks] attribute DOMString formEnctype;
+    [CustomElementCallbacks] attribute DOMString formMethod;
+    [Reflect] attribute boolean formNoValidate;
+    [Reflect] attribute DOMString formTarget;
+    [CustomElementCallbacks] attribute unsigned long height;
+    attribute boolean indeterminate;
+    [RuntimeEnabled=InputModeAttribute, Reflect] attribute DOMString inputMode;
+    readonly attribute HTMLElement? list;
+    [Reflect] attribute DOMString max;
+    [RaisesException=Setter, CustomElementCallbacks] attribute long maxLength;
+    [Reflect] attribute DOMString min;
+    [RaisesException=Setter, CustomElementCallbacks] attribute long minLength;
+    [Reflect] attribute boolean multiple;
+    [Reflect] attribute DOMString name;
+    [Reflect] attribute DOMString pattern;
+    [Reflect] attribute DOMString placeholder;
+    [Reflect] attribute boolean readOnly;
+    [Reflect] attribute boolean required;
+    [RaisesException=Setter, CustomElementCallbacks] attribute unsigned long size;
+    [Reflect, URL] attribute DOMString src;
+    [Reflect] attribute DOMString step;
+    [CustomElementCallbacks] attribute DOMString type;
+    [Reflect=value, CustomElementCallbacks] attribute DOMString defaultValue;
+    [TreatNullAs=EmptyString, RaisesException=Setter, CustomElementCallbacks] attribute DOMString value;
+    [RaisesException=Setter, CustomElementCallbacks] attribute Date? valueAsDate;
+    [RaisesException=Setter, CustomElementCallbacks] attribute unrestricted double valueAsNumber;
+    // Note: The spec has valueLow and valueHigh for two-valued range controls.
+    // https://www.w3.org/Bugs/Public/show_bug.cgi?id=13154
+    [CustomElementCallbacks] attribute unsigned long width;
+
+    [RaisesException, CustomElementCallbacks] void stepUp(optional long n = 1);
+    [RaisesException, CustomElementCallbacks] void stepDown(optional long n = 1);
+
+    readonly attribute boolean willValidate;
+    readonly attribute ValidityState validity;
+    readonly attribute DOMString validationMessage;
+    boolean checkValidity();
+    boolean reportValidity();
+    void setCustomValidity(DOMString error);
+
+    readonly attribute NodeList labels;
+
+    void select();
+    // FIXME: selectionStart and selectionEnd should be unsigned long.
+    [RaisesException, ImplementedAs=selectionStartForBinding] attribute long selectionStart;
+    [RaisesException, ImplementedAs=selectionEndForBinding] attribute long selectionEnd;
+    [RaisesException, ImplementedAs=selectionDirectionForBinding] attribute DOMString selectionDirection;
+    [RaisesException] void setRangeText(DOMString replacement);
+    // FIXME: The selectionMode argument should be a SelectionMode enum.
+    [RaisesException] void setRangeText(DOMString replacement,
+                                        unsigned long start,
+                                        unsigned long end,
+                                        optional DOMString selectionMode = "preserve");
+    // FIXME: The start and end arguments should be unsigned long and should not have [Default=Undefined].
+    [RaisesException, ImplementedAs=setSelectionRangeForBinding]
+    void setSelectionRange([Default=Undefined] optional long start,
+                           [Default=Undefined] optional long end,
+                           optional DOMString direction);
+
+    // obsolete members
+    // https://html.spec.whatwg.org/#HTMLInputElement-partial
+    [Reflect] attribute DOMString align;
+    [Reflect] attribute DOMString useMap;
+
+    // HTML autocapitalize proposal
+    // https://github.com/mounirlamouri/html-autocapitalize/blob/master/proposal.md
+    [Measure] attribute DOMString autocapitalize;
+
+    // HTML Media Capture
+    // http://www.w3.org/TR/html-media-capture/
+    [RuntimeEnabled=MediaCapture, Reflect] attribute boolean capture;
+
+    // Non-standard APIs
+    [Reflect, MeasureAs=PrefixedDirectoryAttribute] attribute boolean webkitdirectory;
+    [Reflect, MeasureAs=IncrementalAttribute] attribute boolean incremental;
+};

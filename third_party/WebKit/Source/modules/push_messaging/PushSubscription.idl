@@ -1,0 +1,16 @@
+// Copyright 2014 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+// https://w3c.github.io/push-api/#pushsubscription-interface
+
+[
+    Exposed=(Window,ServiceWorker),
+    GarbageCollected,
+    RuntimeEnabled=PushMessaging,
+] interface PushSubscription {
+    readonly attribute USVString endpoint;
+    [CallWith=ScriptState] Promise<boolean> unsubscribe();
+
+    serializer = { attribute };
+};

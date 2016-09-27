@@ -1,0 +1,18 @@
+// Copyright 2014 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+// https://dvcs.w3.org/hg/dap/raw-file/tip/battery/Overview.html#batterymanager-interface
+[
+    ActiveDOMObject
+] interface BatteryManager : EventTarget {
+    readonly attribute boolean charging;
+    readonly attribute unrestricted double chargingTime;
+    readonly attribute unrestricted double dischargingTime;
+    readonly attribute double level;
+
+    attribute EventHandler onchargingchange;
+    attribute EventHandler onchargingtimechange;
+    attribute EventHandler ondischargingtimechange;
+    attribute EventHandler onlevelchange;
+};

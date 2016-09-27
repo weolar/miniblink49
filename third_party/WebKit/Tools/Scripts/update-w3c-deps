@@ -1,0 +1,20 @@
+#!/usr/bin/python
+# Copyright 2014 The Chromium Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+"""Pull latest revisions of the W3C test repos and update our DEPS entries."""
+
+from webkitpy.common import version_check
+from webkitpy.common.system.systemhost import SystemHost
+from webkitpy.w3c.deps_updater import DepsUpdater
+
+
+if __name__ == '__main__':
+    host = SystemHost()
+    updater = DepsUpdater(host)
+    try:
+        host.exit(updater.main())
+    except KeyboardInterrupt:
+        host.print_("Interrupted, exiting")
+        host.exit(130)

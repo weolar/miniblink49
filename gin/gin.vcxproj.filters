@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="modules">
+      <UniqueIdentifier>{212BF124-DF0B-CDE7-390D-94BCC1C226CB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="modules">
+      <UniqueIdentifier>{212BF124-DF0B-CDE7-390D-94BCC1C226CB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="modules">
+      <UniqueIdentifier>{212BF124-DF0B-CDE7-390D-94BCC1C226CB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="modules">
+      <UniqueIdentifier>{212BF124-DF0B-CDE7-390D-94BCC1C226CB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="modules">
+      <UniqueIdentifier>{212BF124-DF0B-CDE7-390D-94BCC1C226CB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="modules">
+      <UniqueIdentifier>{212BF124-DF0B-CDE7-390D-94BCC1C226CB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="modules">
+      <UniqueIdentifier>{212BF124-DF0B-CDE7-390D-94BCC1C226CB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="modules">
+      <UniqueIdentifier>{212BF124-DF0B-CDE7-390D-94BCC1C226CB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="modules">
+      <UniqueIdentifier>{212BF124-DF0B-CDE7-390D-94BCC1C226CB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="modules">
+      <UniqueIdentifier>{212BF124-DF0B-CDE7-390D-94BCC1C226CB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="modules">
+      <UniqueIdentifier>{212BF124-DF0B-CDE7-390D-94BCC1C226CB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="public">
+      <UniqueIdentifier>{0D2511BD-044F-C35F-ECCE-845899961E41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="public">
+      <UniqueIdentifier>{0D2511BD-044F-C35F-ECCE-845899961E41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="public">
+      <UniqueIdentifier>{0D2511BD-044F-C35F-ECCE-845899961E41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="public">
+      <UniqueIdentifier>{0D2511BD-044F-C35F-ECCE-845899961E41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="public">
+      <UniqueIdentifier>{0D2511BD-044F-C35F-ECCE-845899961E41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="public">
+      <UniqueIdentifier>{0D2511BD-044F-C35F-ECCE-845899961E41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)gen">
+      <UniqueIdentifier>{B54385DA-9AA0-82F8-3CCF-636B21B5C41E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)gen\gin">
+      <UniqueIdentifier>{5196A5EE-F646-E232-A628-4AF20897A907}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="arguments.cc"/>
+    <ClInclude Include="arguments.h"/>
+    <ClCompile Include="array_buffer.cc"/>
+    <ClInclude Include="array_buffer.h"/>
+    <ClCompile Include="context_holder.cc"/>
+    <ClCompile Include="converter.cc"/>
+    <ClInclude Include="converter.h"/>
+    <ClCompile Include="debug_impl.cc"/>
+    <ClInclude Include="debug_impl.h"/>
+    <ClCompile Include="dictionary.cc"/>
+    <ClInclude Include="dictionary.h"/>
+    <ClCompile Include="function_template.cc"/>
+    <ClInclude Include="function_template.h"/>
+    <ClInclude Include="gin_export.h"/>
+    <ClInclude Include="handle.h"/>
+    <ClCompile Include="interceptor.cc"/>
+    <ClInclude Include="interceptor.h"/>
+    <ClCompile Include="isolate_holder.cc"/>
+    <ClCompile Include="modules\console.cc">
+      <Filter>modules</Filter>
+    </ClCompile>
+    <ClInclude Include="modules\console.h">
+      <Filter>modules</Filter>
+    </ClInclude>
+    <ClCompile Include="modules\file_module_provider.cc">
+      <Filter>modules</Filter>
+    </ClCompile>
+    <ClInclude Include="modules\file_module_provider.h">
+      <Filter>modules</Filter>
+    </ClInclude>
+    <ClCompile Include="modules\module_registry.cc">
+      <Filter>modules</Filter>
+    </ClCompile>
+    <ClInclude Include="modules\module_registry.h">
+      <Filter>modules</Filter>
+    </ClInclude>
+    <ClInclude Include="modules\module_registry_observer.h">
+      <Filter>modules</Filter>
+    </ClInclude>
+    <ClCompile Include="modules\module_runner_delegate.cc">
+      <Filter>modules</Filter>
+    </ClCompile>
+    <ClInclude Include="modules\module_runner_delegate.h">
+      <Filter>modules</Filter>
+    </ClInclude>
+    <ClCompile Include="modules\timer.cc">
+      <Filter>modules</Filter>
+    </ClCompile>
+    <ClInclude Include="modules\timer.h">
+      <Filter>modules</Filter>
+    </ClInclude>
+    <ClCompile Include="object_template_builder.cc"/>
+    <ClInclude Include="object_template_builder.h"/>
+    <ClCompile Include="per_context_data.cc"/>
+    <ClInclude Include="per_context_data.h"/>
+    <ClCompile Include="per_isolate_data.cc"/>
+    <ClInclude Include="per_isolate_data.h"/>
+    <ClInclude Include="public\context_holder.h">
+      <Filter>public</Filter>
+    </ClInclude>
+    <ClInclude Include="public\debug.h">
+      <Filter>public</Filter>
+    </ClInclude>
+    <ClInclude Include="public\gin_embedders.h">
+      <Filter>public</Filter>
+    </ClInclude>
+    <ClInclude Include="public\isolate_holder.h">
+      <Filter>public</Filter>
+    </ClInclude>
+    <ClInclude Include="public\v8_platform.h">
+      <Filter>public</Filter>
+    </ClInclude>
+    <ClInclude Include="public\wrapper_info.h">
+      <Filter>public</Filter>
+    </ClInclude>
+    <ClCompile Include="runner.cc"/>
+    <ClInclude Include="runner.h"/>
+    <ClCompile Include="run_microtasks_observer.cc"/>
+    <ClInclude Include="run_microtasks_observer.h"/>
+    <ClCompile Include="shell_runner.cc"/>
+    <ClInclude Include="shell_runner.h"/>
+    <ClCompile Include="try_catch.cc"/>
+    <ClInclude Include="try_catch.h"/>
+    <ClInclude Include="v8_initializer.h"/>
+    <ClCompile Include="v8_initializer.cc"/>
+    <ClCompile Include="v8_isolate_memory_dump_provider.cc"/>
+    <ClInclude Include="v8_isolate_memory_dump_provider.h"/>
+    <ClCompile Include="v8_platform.cc"/>
+    <ClCompile Include="wrappable.cc"/>
+    <ClInclude Include="wrappable.h"/>
+    <ClCompile Include="wrapper_info.cc"/>
+    <ClCompile Include="$(OutDir)gen\gin\v8_snapshot_fingerprint.cc">
+      <Filter>$(OutDir)gen\gin</Filter>
+    </ClCompile>
+    <None Include="gin.gyp"/>
+  </ItemGroup>
+</Project>

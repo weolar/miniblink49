@@ -1,0 +1,22 @@
+<style>
+    @font-face {
+        font-family: ahem;
+        src: url(Ahem.ttf);
+    }
+    * {
+        font-family: ahem;
+        margin: 0;
+        padding: 0;
+    }
+</style>
+<input type="text" id="text"/>
+<script>
+    var textNode = document.getElementById("text");
+    textNode.focus();
+
+    var expectEditable = true;
+    var expectEmptyTextFormControl = true;
+    var yBottomEpsilon = 2;
+    window.expectedResult = [document, 2, 2, 2, 14, document, 2, 2, 2, 14, expectEditable, expectEmptyTextFormControl, yBottomEpsilon];
+</script>
+

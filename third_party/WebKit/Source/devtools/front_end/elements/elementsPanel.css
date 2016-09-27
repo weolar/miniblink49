@@ -1,0 +1,735 @@
+/*
+ * Copyright (C) 2006, 2007, 2008 Apple Inc.  All rights reserved.
+ * Copyright (C) 2009 Anthony Ricaud <rik@webkit.org>
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1.  Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ * 3.  Neither the name of Apple Computer, Inc. ("Apple") nor the names of
+ *     its contributors may be used to endorse or promote products derived
+ *     from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+#elements-content {
+    flex: 1 1;
+    overflow: auto;
+    padding: 2px 0 0 0;
+    transform: translateZ(0);
+}
+
+#elements-content:not(.elements-wrap) > div {
+    display: inline-block;
+    min-width: 100%;
+}
+
+#elements-content.elements-wrap {
+    overflow-x: hidden;
+}
+
+.elements-topbar {
+    border-bottom: 1px solid hsla(0, 0%, 0%, 0.1);
+    flex-shrink: 0;
+}
+
+#elements-crumbs {
+    flex: 0 0 19px;
+    background-color: white;
+    border-top: 1px solid #ccc;
+    overflow: hidden;
+    height: 19px;
+    width: 100%;
+}
+
+.material #elements-crumbs {
+    flex: 1 0 28px;
+    border: none;
+    height: 100%;
+}
+
+.metrics {
+    padding: 8px;
+    font-size: 10px;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.metrics .label {
+    position: absolute;
+    font-size: 10px;
+    margin-left: 3px;
+    padding-left: 2px;
+    padding-right: 2px;
+}
+
+.metrics .position {
+    border: 1px rgb(66%, 66%, 66%) dotted;
+    background-color: white;
+    display: inline-block;
+    text-align: center;
+    padding: 3px;
+    margin: 3px;
+}
+
+.metrics .margin {
+    border: 1px dashed;
+    background-color: white;
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+    padding: 3px;
+    margin: 3px;
+}
+
+.metrics .border {
+    border: 1px black solid;
+    background-color: white;
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+    padding: 3px;
+    margin: 3px;
+}
+
+.metrics .padding {
+    border: 1px grey dashed;
+    background-color: white;
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+    padding: 3px;
+    margin: 3px;
+}
+
+.metrics .content {
+    position: static;
+    border: 1px gray solid;
+    background-color: white;
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+    padding: 3px;
+    margin: 3px;
+    min-width: 80px;
+    overflow: visible;
+}
+
+.metrics .content span {
+    display: inline-block;
+}
+
+.metrics .editing {
+    position: relative;
+    z-index: 100;
+    cursor: text;
+}
+
+.metrics .left {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.metrics .right {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.metrics .top {
+    display: inline-block;
+}
+
+.metrics .bottom {
+    display: inline-block;
+}
+
+.styles-section {
+    padding: 2px 2px 4px 4px;
+    min-height: 18px;
+    white-space: nowrap;
+    background-origin: padding;
+    background-clip: padding;
+    -webkit-user-select: text;
+    border-bottom: 1px solid #eee;
+    position: relative;
+}
+
+.styles-section:last-child {
+    border-bottom: none;
+}
+
+.styles-pane .sidebar-separator {
+    border-top: 0 none;
+}
+
+.styles-sidebar-placeholder {
+    height: 16px;
+}
+
+.styles-section.read-only {
+    background-color: #eee;
+}
+
+.styles-section .style-properties li.not-parsed-ok {
+    margin-left: 0;
+}
+
+.styles-section .style-properties li.filter-match,
+.styles-section .simple-selector.filter-match {
+    background-color: rgba(255, 255, 0, 0.5);
+}
+
+.styles-section .style-properties li.overloaded.filter-match {
+    background-color: rgba(255, 255, 0, 0.25);
+}
+
+.styles-section .style-properties li.not-parsed-ok .exclamation-mark {
+    display: inline-block;
+    position: relative;
+    width: 11px;
+    height: 10px;
+    margin: 0 7px 0 0;
+    top: 1px;
+    left: -36px; /* outdent to compensate for the top-level property indent */
+    -webkit-user-select: none;
+    cursor: default;
+    z-index: 1;
+}
+
+.styles-section-title {
+    background-origin: padding;
+    background-clip: padding;
+    word-wrap: break-word;
+    white-space: normal;
+}
+
+.styles-section-title .media-list {
+    color: #888;
+}
+
+.styles-section-title .media-list.media-matches .media.editable-media {
+    color: #222;
+}
+
+.styles-section-title .media:not(.editing-media),
+.styles-section-title .media:not(.editing-media) .subtitle {
+    overflow: hidden;
+}
+
+.styles-section-title .media .subtitle {
+    float: right;
+    color: rgb(85, 85, 85);
+}
+
+.styles-section-subtitle {
+    color: rgb(85, 85, 85);
+    float: right;
+    margin-left: 5px;
+    max-width: 100%;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.styles-section .styles-section-subtitle a {
+    color: inherit;
+}
+
+.styles-section .selector {
+    color: #888;
+}
+
+.styles-section .simple-selector.selector-matches {
+    color: #222;
+}
+
+.styles-section a[data-uncopyable] {
+    display: inline-block;
+}
+
+.styles-section a[data-uncopyable]::before {
+    content: attr(data-uncopyable);
+    text-decoration: underline;
+}
+
+.styles-section .style-properties {
+    margin: 0;
+    padding: 2px 4px 0 0;
+    list-style: none;
+    clear: both;
+}
+
+.styles-section.matched-styles .style-properties {
+    padding-left: 0;
+}
+
+.no-affect .style-properties li {
+    opacity: 0.5;
+}
+
+.no-affect .style-properties li.editing {
+    opacity: 1.0;
+}
+
+.styles-section .style-properties li {
+    margin-left: 12px;
+    padding-left: 22px;
+    white-space: normal;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    cursor: auto;
+}
+
+.styles-section .style-properties li .webkit-css-property {
+    margin-left: -22px; /* outdent the first line of longhand properties (in an expanded shorthand) to compensate for the "padding-left" shift in .styles-section .style-properties li */
+}
+
+.styles-section .style-properties > li {
+    padding-left: 38px;
+}
+
+.styles-section .style-properties > li .webkit-css-property {
+    margin-left: -38px; /* outdent the first line of the top-level properties to compensate for the "padding-left" shift in .styles-section .style-properties > li */
+}
+
+.styles-section .style-properties > li.child-editing {
+    padding-left: 8px;
+}
+
+.styles-section .style-properties > li.child-editing .webkit-css-property {
+    margin-left: 0;
+}
+
+.styles-section.matched-styles .style-properties li {
+    margin-left: 0 !important;
+}
+
+.styles-section .style-properties li.child-editing {
+    word-wrap: break-word !important;
+    white-space: normal !important;
+    padding-left: 0;
+}
+
+.styles-section .style-properties ol {
+    display: none;
+    margin: 0;
+    -webkit-padding-start: 12px;
+    list-style: none;
+}
+
+.styles-section .style-properties ol.expanded {
+    display: block;
+}
+
+.styles-section.matched-styles .style-properties li.parent .expand-element {
+    -webkit-user-select: none;
+    background-image: url(Images/toolbarButtonGlyphs.png);
+    background-size: 352px 144px;
+    margin-right: 2px;
+    margin-left: -6px;
+    opacity: 0.55;
+    width: 8px;
+    height: 10px;
+    display: inline-block;
+}
+
+@media (-webkit-min-device-pixel-ratio: 1.5) {
+.styles-section.matched-styles .style-properties li.parent .expand-element {
+    background-image: url(Images/toolbarButtonGlyphs_2x.png);
+}
+} /* media */
+
+.styles-section.matched-styles .style-properties li.parent .expand-element {
+    background-position: -4px -96px;
+}
+
+.styles-section.matched-styles .style-properties li.parent.expanded .expand-element {
+    background-position: -20px -96px;
+}
+
+.styles-section .style-properties li .info {
+    padding-top: 4px;
+    padding-bottom: 3px;
+}
+
+.styles-section.matched-styles:not(.read-only):hover .style-properties .enabled-button {
+    visibility: visible;
+}
+
+.styles-section.matched-styles:not(.read-only) .style-properties li.disabled .enabled-button {
+    visibility: visible;
+}
+
+.styles-section .style-properties .enabled-button {
+    visibility: hidden;
+    float: left;
+    font-size: 10px;
+    margin: 0;
+    vertical-align: top;
+    position: relative;
+    z-index: 1;
+    width: 18px;
+    left: -40px; /* original -2px + (-38px) to compensate for the first line outdent */
+    top: 1px;
+}
+
+.styles-section.matched-styles .style-properties ol.expanded {
+    margin-left: 16px;
+}
+
+.styles-section .style-properties .overloaded:not(.has-ignorable-error),
+.styles-section .style-properties .inactive,
+.styles-section .style-properties .disabled,
+.styles-section .style-properties .not-parsed-ok:not(.has-ignorable-error) {
+    text-decoration: line-through;
+}
+
+.styles-section .style-properties .has-ignorable-error .webkit-css-property {
+    color: inherit;
+}
+
+.styles-section .style-properties .implicit,
+.styles-section .style-properties .inherited {
+    opacity: 0.5;
+}
+
+.styles-section .style-properties .has-ignorable-error {
+    color: gray;
+}
+
+.styles-element-state-pane {
+    overflow: hidden;
+    height: 60px;
+    padding-left: 2px;
+    border-bottom: 1px solid rgb(189, 189, 189);
+}
+
+@keyframes styles-element-state-pane-slidein {
+    from {
+        margin-top: -60px;
+    }
+    to {
+        margin-top: 0px;
+    }
+}
+
+@keyframes styles-element-state-pane-slideout {
+    from {
+        margin-top: 0px;
+    }
+    to {
+        margin-top: -60px;
+    }
+}
+
+.styles-sidebar-toolbar-pane {
+    position: relative;
+    animation-duration: 0.1s;
+    animation-direction: normal;
+}
+
+.styles-sidebar-toolbar-pane-container {
+    position: relative;
+    max-height: 60px;
+    overflow: hidden;
+}
+
+.styles-element-state-pane {
+    background-color: #f3f3f3;
+    border-bottom: 1px solid rgb(189, 189, 189);
+    margin-top: 0;
+}
+
+
+.styles-element-state-pane > div {
+    margin: 6px 4px 2px;
+}
+
+.styles-element-state-pane > table {
+    width: 100%;
+    border-spacing: 0;
+}
+
+.styles-element-state-pane td {
+    padding: 0;
+}
+
+.styles-animations-controls-pane > * {
+    margin: 6px 4px;
+}
+
+.styles-animations-controls-pane {
+    border-bottom: 1px solid rgb(189, 189, 189);
+    height: 60px;
+    overflow: hidden;
+    background-color: #eee;
+}
+
+.animations-controls {
+    width: 100%;
+    max-width: 200px;
+    display: flex;
+    align-items: center;
+}
+
+.animations-controls > .toolbar {
+    display: inline-block;
+}
+
+.animations-controls > input {
+    flex-grow: 1;
+    margin-right: 10px;
+}
+
+.animations-controls > .playback-label {
+    width: 35px;
+}
+
+.styles-selector {
+    cursor: text;
+}
+
+.image-preview-container {
+    background: transparent;
+    text-align: center;
+}
+
+.image-preview-container img {
+    margin: 2px auto;
+    max-width: 100px;
+    max-height: 100px;
+    background-image: url(Images/checker.png);
+    -webkit-user-select: text;
+    -webkit-user-drag: auto;
+}
+
+.sidebar-pane.composite {
+    position: absolute;
+}
+
+.metrics {
+    border-bottom: 1px solid #ccc;
+}
+
+.metrics-and-styles .metrics {
+    border-top: 1px solid #ccc;
+    border-bottom: none;
+}
+
+.sidebar-pane.composite .metrics {
+    height: 190px;
+    display: flex;
+    flex-direction: column;
+    -webkit-align-items: center;
+    -webkit-justify-content: center;
+}
+
+.sidebar-pane .metrics-and-styles,
+.sidebar-pane .metrics-and-computed {
+    display: flex !important;
+    flex-direction: column !important;
+    position: relative;
+}
+
+.sidebar-pane .style-panes-wrapper {
+    transform: translateZ(0);
+    flex: 1;
+    overflow-y: auto;
+    position: relative;
+}
+
+.styles-sidebar-pane-toolbar {
+    border-bottom: 1px solid #eee;
+}
+
+.styles-sidebar-pane-filter-box {
+    flex: auto;
+    display: flex;
+}
+
+.styles-sidebar-pane-filter-box > input {
+    outline: none !important;
+    border: none;
+    width: 100%;
+    background: transparent;
+    margin-left: 4px;
+}
+
+.styles-filter-engaged {
+    background-color: rgba(255, 255, 0, 0.5);
+}
+
+.sidebar-pane.composite .platform-fonts {
+    -webkit-user-select: text;
+}
+
+.sidebar-pane.composite .platform-fonts .sidebar-separator {
+    height: 24px;
+    background-color: #f1f1f1;
+    border-color: #ddd;
+    display: flex;
+    align-items: center;
+}
+
+.sidebar-pane.composite .platform-fonts .stats-section {
+    margin: 5px 0;
+}
+
+.sidebar-pane.composite .platform-fonts .font-stats-item {
+    padding-left: 1em;
+}
+
+.sidebar-pane.composite .platform-fonts .font-stats-item .delimeter {
+    margin: 0 1ex 0 1ex;
+}
+
+.sidebar-pane.composite .metrics-and-styles .metrics {
+    border-bottom: none;
+}
+
+.sidebar-pane > .split-widget {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.styles-section:not(.read-only) .style-properties .webkit-css-property.styles-panel-hovered,
+.styles-section:not(.read-only) .style-properties .value .styles-panel-hovered,
+.styles-section:not(.read-only) .style-properties .value.styles-panel-hovered,
+.styles-section:not(.read-only) span.simple-selector.styles-panel-hovered {
+    text-decoration: underline;
+    cursor: default;
+}
+
+.styles-clipboard-only {
+    display: inline-block;
+    width: 0;
+    opacity: 0;
+    pointer-events: none;
+    white-space: pre;
+}
+
+.popover-icon {
+    margin-left: 1px;
+    margin-right: 2px;
+    width: 10px;
+    height: 10px;
+    position: relative;
+    top: 1px;
+    display: inline-block;
+    line-height: 1px;
+    -webkit-user-select: none;
+}
+
+.bezier-icon {
+    background-color: #9C27B0;
+    border-radius: 2px;
+}
+
+.bezier-icon path {
+    stroke: white;
+    stroke-width: 1.5;
+    stroke-linecap: square;
+    fill: none;
+}
+
+.swatch {
+    background-image: url(Images/checker.png);
+}
+
+li.child-editing .styles-clipboard-only {
+    display: none;
+}
+
+li.editing .swatch,
+li.editing .enabled-button {
+    display: none !important;
+}
+
+.sidebar-separator {
+    background-color: #ddd;
+    padding: 0 5px;
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    color: rgb(50, 50, 50);
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    line-height: 16px;
+}
+
+.swatch-inner {
+    width: 100%;
+    height: 100%;
+    display: inline-block;
+    border: 1px solid rgba(128, 128, 128, 0.6);
+}
+
+.swatch-inner:hover {
+    border: 1px solid rgba(64, 64, 64, 0.8);
+}
+
+.animation-section-body {
+    display: none;
+}
+
+.animation-section-body.expanded {
+    display: block;
+}
+
+.animation-section-body .section {
+    border-bottom: 1px solid rgb(191, 191, 191);
+}
+
+.animationsHeader {
+    padding-top: 23px;
+}
+
+.global-animations-toolbar {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    background-color: #eee;
+    border-bottom: 1px solid rgb(163, 163, 163);
+    padding-left: 10px;
+}
+
+.events-pane .section:not(:first-of-type) {
+    border-top: 1px solid rgb(231, 231, 231);
+}
+
+.events-pane .section {
+    margin: 0;
+}
+
+.style-properties li.editing {
+    margin-left: 10px;
+    text-overflow: clip;
+}
+
+.style-properties li.editing-sub-part {
+    padding: 3px 6px 8px 18px;
+    margin: -1px -6px -8px -6px;
+    text-overflow: clip;
+}
+
+.properties-widget-section {
+    padding: 2px 0px 2px 5px;
+}

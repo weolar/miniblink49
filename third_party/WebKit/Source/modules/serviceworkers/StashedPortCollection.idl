@@ -1,0 +1,16 @@
+// Copyright 2015 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+// https://github.com/mkruisselbrink/navigator-connect/blob/gh-pages/docs/api-idea.md#persisted-messageports
+// TODO(mek): Link to actual spec when this is added there.
+[
+    Exposed=ServiceWorker,
+    GarbageCollected,
+    RuntimeEnabled=NavigatorConnect,
+    TypeChecking=Interface,
+] interface StashedPortCollection : EventTarget {
+    [CallWith=ScriptState] StashedMessagePort add(USVString name, MessagePort port);
+    // Promise<sequence<StashedMessagePort>> match(UVString name);
+    attribute EventHandler onmessage;
+};

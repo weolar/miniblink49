@@ -1,0 +1,28 @@
+// Copyright 2014 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+// https://w3c.github.io/presentation-api/#interface-presentationsession
+
+enum PresentationSessionState {
+    "connected",
+    "disconnected"
+};
+
+[
+    GarbageCollected,
+    RuntimeEnabled=Presentation
+] interface PresentationSession : EventTarget {
+    readonly attribute DOMString? id;
+    readonly attribute PresentationSessionState state;
+    void close();
+    attribute EventHandler onstatechange;
+
+    // Communication
+    attribute BinaryType binaryType;
+    attribute EventHandler onmessage;
+    [RaisesException] void send(DOMString message);
+    [RaisesException] void send(Blob data);
+    [RaisesException] void send(ArrayBuffer data);
+    [RaisesException] void send(ArrayBufferView data);
+};

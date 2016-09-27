@@ -1,0 +1,61 @@
+#!/bin/bash
+#
+# android_install_app: installs the skia sampleApp on the device.
+
+function print_usage {
+  echo "USAGE: android_install_app [options]"
+  echo " Options:         -f  Forces the package to be installed by removing any"
+  echo "                      previously installed packages"
+  echo "                  -h  Prints this help message"
+  echo "            --release Install the release build of Skia"
+  echo "      -s [device_s/n] Serial number of the device to be used"
+  echo "              AppName Can be either SampleApp or VisualBench"
+}
+
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+source $SCRIPT_DIR/android_setup.sh
+source $SCRIPT_DIR/utils/setup_adb.sh
+
+forceRemoval="false"
+installLauncher="false"
+installOptions="-r"
+app=""
+
+for arg in ${APP_ARGS[@]}; do
+  if [[ "${arg}" == "-f" ]]; then
+    forceRemoval="true"
+  elif [[ "${arg}" == "-h" ]]; then
+    print_usage
+    exit
+  elif [[ "${arg}" == "-r" ]]; then
+    echo "DEPRECATED: -r is now a no-op"
+  elif [[ ${arg} == '-'* ]]; then
+    echo "ERROR: unrecognized option ${arg}"
+    print_usage
+    exit 1;
+  else
+    if [[ ${app} != "" ]]; then
+      echo "ERROR: app already defined ${app}"
+      exit 1;
+    else
+      app=${arg}
+    fi
+  fi
+done
+
+if [[ ${app} == "" ]]; then
+  echo "defaulting to installing SampleApp."
+  app="SampleApp"
+fi
+
+
+if [[ "$forceRemoval" == "true" ]];
+then
+    echo "Forcing removal of previously installed packages"
+    $ADB ${DEVICE_SERIAL} uninstall com.skia > /dev/null
+fi
+
+echo "Installing ${app} from ${SKIA_OUT}/${BUILDTYPE}"
+$ADB ${DEVICE_SERIAL} install ${installOptions} ${SKIA_OUT}/${BUILDTYPE}/android/${app}/bin/${app}.apk
+

@@ -1,0 +1,48 @@
+{
+    "extensions": [
+        {
+            "type": "setting",
+            "category": "Console",
+            "title": "Enable custom formatters",
+            "settingName": "customFormatters",
+            "settingType": "boolean",
+            "defaultValue": false,
+            "experiment": "customObjectFormatters"
+        }
+    ],
+    "dependencies": [
+        "bindings",
+        "platform",
+        "ui"
+    ],
+    "scripts": [
+        "BreakpointsSidebarPaneBase.js",
+        "CustomPreviewSection.js",
+        "DataSaverInfobar.js",
+        "DebuggerPresentationUtils.js",
+        "DOMBreakpointsSidebarPane.js",
+        "DOMPresentationUtils.js",
+        "DockController.js",
+        "Drawer.js",
+        "ExecutionContextSelector.js",
+        "ExecutionContextModel.js",
+        "HandlerRegistry.js",
+        "InspectElementModeController.js",
+        "InspectorView.js",
+        "NetworkConditionsSelector.js",
+        "ObjectPopoverHelper.js",
+        "ObjectPropertiesSection.js",
+        "RemoteObjectPreviewFormatter.js",
+        "ShortcutsScreen.js",
+        "EventListenersView.js"
+    ],
+    "resources": [
+        "breakpointsList.css",
+        "customPreviewSection.css",
+        "eventListenersView.css",
+        "domUtils.css",
+        "inspectorViewTabbedPane.css",
+        "objectPropertiesSection.css",
+        "objectValue.css"
+    ]
+}

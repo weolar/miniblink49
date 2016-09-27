@@ -1,0 +1,69 @@
+{
+    "extensions": [
+        {
+            "type": "@WebInspector.PanelFactory",
+            "name": "network",
+            "title": "Network",
+            "order": 1,
+            "className": "WebInspector.NetworkPanelFactory"
+        },
+        {
+            "type": "@WebInspector.ContextMenu.Provider",
+            "contextTypes": ["WebInspector.NetworkRequest", "WebInspector.Resource", "WebInspector.UISourceCode"],
+            "className": "WebInspector.NetworkPanel.ContextMenuProvider"
+        },
+        {
+            "type": "@WebInspector.Revealer",
+            "contextTypes": ["WebInspector.NetworkRequest"],
+            "className": "WebInspector.NetworkPanel.RequestRevealer"
+        },
+        {
+            "type": "setting",
+            "category": "Network",
+            "title": "Show primary load waterfall",
+            "settingName": "networkShowPrimaryLoadWaterfall",
+            "settingType": "boolean",
+            "experiment": "showPrimaryLoadWaterfallInNetworkTimeline",
+            "defaultValue": false
+        },
+        {
+            "type": "setting",
+            "category": "Network",
+            "title": "Color-code resource types",
+            "settingName": "networkColorCodeResourceTypes",
+            "settingType": "boolean",
+            "defaultValue": false
+        }
+    ],
+    "dependencies": ["source_frame", "components_lazy", "ui_lazy"],
+    "scripts": [
+        "EventSourceMessagesView.js",
+        "FilterSuggestionBuilder.js",
+        "HARWriter.js",
+        "RequestView.js",
+        "NetworkDataGridNode.js",
+        "NetworkItemView.js",
+        "NetworkTimeCalculator.js",
+        "NetworkLogView.js",
+        "NetworkOverview.js",
+        "RequestCookiesView.js",
+        "RequestHeadersView.js",
+        "RequestHTMLView.js",
+        "RequestJSONView.js",
+        "RequestPreviewView.js",
+        "RequestResponseView.js",
+        "RequestTimingView.js",
+        "ResourceWebSocketFrameView.js",
+        "NetworkPanel.js",
+        "XMLView.js"
+    ],
+    "resources": [
+        "eventSourceMessagesView.css",
+        "networkLogView.css",
+        "networkPanel.css",
+        "requestCookiesView.css",
+        "requestHeadersView.css",
+        "webSocketFrameView.css",
+        "xmlView.css"
+    ]
+}

@@ -1,0 +1,124 @@
+/*
+ * Copyright (C) 2013 Google Inc. All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are
+ * met:
+ *
+ *     * Redistributions of source code must retain the above copyright
+ * notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above
+ * copyright notice, this list of conditions and the following disclaimer
+ * in the documentation and/or other materials provided with the
+ * distribution.
+ *     * Neither the name of Google Inc. nor the names of its
+ * contributors may be used to endorse or promote products derived from
+ * this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+// Test for interface extended attributes and special operations.
+// Also used as a target by TestObject
+
+[
+    ActiveDOMObject,
+    Conditional=CONDITION,
+    Custom=LegacyCallAsFunction,
+    DoNotCheckConstants,
+    ImplementedAs=TestInterfaceImplementation,
+    Iterable,
+    Measure,
+    RuntimeEnabled=FeatureName,
+    SetWrapperReferenceTo(TestInterface referencedName),
+    TypeChecking=Interface,
+    Exposed=(Worker,Window),
+] interface TestInterface : TestInterfaceEmpty {
+    // members needed to test [ImplementedAs], as this affect attribute
+    // configuration and method configuration, and [TypeChecking]
+    // constants also needed for [DoNotCheckConstants]
+    const unsigned long UNSIGNED_LONG = 0;
+    [Reflect=CONST_CPP] const short CONST_JAVASCRIPT = 1;
+
+    [Measure] attribute TestInterface testInterfaceAttribute; // Self-referential interface type with [ImplementedAs]
+    attribute TestInterfaceConstructor testInterfaceConstructorAttribute;
+    attribute TestInterfaceConstructor TestInterface;
+    attribute TestInterface2Constructor TestInterface2;
+    attribute double doubleAttribute;
+    attribute float floatAttribute;
+    attribute unrestricted double unrestrictedDoubleAttribute;
+    attribute unrestricted float unrestrictedFloatAttribute;
+    attribute TestEnum testEnumAttribute;
+    attribute DOMStringOrDouble stringOrDoubleAttribute;
+    static attribute DOMString staticStringAttribute;
+    static attribute TestInterface staticReturnDOMWrapperAttribute;
+    [LegacyInterfaceTypeChecking] attribute TestInterfaceEmpty legacyInterfaceTypeCheckingAttribute;
+
+    void voidMethodTestInterfaceEmptyArg(TestInterfaceEmpty testInterfaceEmptyArg);
+    void voidMethodDoubleArgFloatArg(double doubleArg, float floatArg);
+    void voidMethodUnrestrictedDoubleArgUnrestrictedFloatArg(unrestricted double unrestrictedDoubleArg, unrestricted float unrestrictedFloatArg);
+    void voidMethodTestEnumArg(TestEnum testEnumArg);
+    [PerWorldBindings] void voidMethod();
+
+    // Anonymous indexed property operations
+    [DoNotCheckSecurity] getter DOMString (unsigned long index);
+    setter DOMString (unsigned long index, DOMString value);
+    deleter boolean (unsigned long index);
+
+    // Anonymous named property operations
+    [DoNotCheckSecurity] getter DOMString (DOMString name);
+    setter DOMString (DOMString name, DOMString value);
+    deleter boolean (DOMString name);
+
+    [NotEnumerable] stringifier;
+    [NotEnumerable, RaisesException] serializer;
+
+    // Per-method [Exposed] annotation support.
+    void alwaysExposedMethod();
+    [Exposed=Worker] void workerExposedMethod();
+    [Exposed=Window] void windowExposedMethod();
+
+    static void alwaysExposedStaticMethod();
+    [Exposed=Worker] static void workerExposedStaticMethod();
+    [Exposed=Window] static void windowExposedStaticMethod();
+    static TestInterface staticReturnDOMWrapperMethod();
+
+    attribute long alwaysExposedAttribute;
+    [Exposed=Worker] attribute long workerExposedAttribute;
+    [Exposed=Window] attribute long windowExposedAttribute;
+
+    [Exposed=Window, RuntimeEnabled=FeatureName] void methodWithExposedAndRuntimeEnabledFlag();
+    [Exposed=Window] void overloadMethodWithExposedAndRuntimeEnabledFlag(long longArg);
+    [Exposed=Window, RuntimeEnabled=FeatureName] void overloadMethodWithExposedAndRuntimeEnabledFlag(DOMString string);
+    [Exposed=Window, RuntimeEnabled=FeatureName2] void overloadMethodWithExposedAndRuntimeEnabledFlag(Window window);
+
+    [Exposed(Window FeatureName, Worker FeatureName2)] void methodWithExposedHavingRuntimeEnabldFlag();
+
+    [Exposed=(Window,ServiceWorker)] void windowAndServiceWorkerExposedMethod();
+
+    void voidMethodPartialOverload();
+    void voidMethodPartialOverload(double doubleArg);
+    static void staticVoidMethodPartialOverload();
+
+    Promise promiseMethodPartialOverload();
+    Promise promiseMethodPartialOverload(Window window);
+    static Promise staticPromiseMethodPartialOverload();
+
+    [LenientThis] attribute any lenientThisAttribute;
+
+    [LegacyInterfaceTypeChecking] void legacyInterfaceTypeCheckingMethod(TestInterfaceEmpty testInterfaceEmptyArg);
+};
+
+TestInterface implements TestImplements;
+// TestInterface implements TestImplements2; // at implement*ed* interface
+TestInterface implements TestImplements3;

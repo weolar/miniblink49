@@ -1,0 +1,82 @@
+/*
+ * Copyright (C) 2006 Apple Computer, Inc.
+ * Copyright (C) 2006 Samuel Weinig <sam.weinig@gmail.com>
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public License
+ * along with this library; see the file COPYING.LIB.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
+ */
+
+// https://dom.spec.whatwg.org/#interface-range
+
+// FIXME: All long types in this interface should be unsigned long.
+[
+    Constructor,
+    ConstructorCallWith=Document,
+    WillBeGarbageCollected,
+    TypeChecking=Interface,
+] interface Range {
+    readonly attribute Node startContainer;
+    readonly attribute long startOffset;
+    readonly attribute Node endContainer;
+    readonly attribute long endOffset;
+    readonly attribute boolean collapsed;
+    readonly attribute Node commonAncestorContainer;
+
+    [RaisesException] void setStart(Node node, long offset);
+    [RaisesException] void setEnd(Node node, long offset);
+    [RaisesException] void setStartBefore(Node node);
+    [RaisesException] void setStartAfter(Node node);
+    [RaisesException] void setEndBefore(Node node);
+    [RaisesException] void setEndAfter(Node node);
+    void collapse(optional boolean toStart = false);
+    [RaisesException] void selectNode(Node node);
+    [RaisesException] void selectNodeContents(Node node);
+
+    const unsigned short START_TO_START = 0;
+    const unsigned short START_TO_END = 1;
+    const unsigned short END_TO_END = 2;
+    const unsigned short END_TO_START = 3;
+    [RaisesException] short compareBoundaryPoints(unsigned short how, Range sourceRange);
+
+    [RaisesException, CustomElementCallbacks] void deleteContents();
+    [NewObject, RaisesException, CustomElementCallbacks] DocumentFragment extractContents();
+    [NewObject, RaisesException, CustomElementCallbacks] DocumentFragment cloneContents();
+    [RaisesException, CustomElementCallbacks] void insertNode(Node node);
+    [RaisesException, CustomElementCallbacks] void surroundContents(Node newParent);
+
+    [NewObject] Range cloneRange();
+    [DeprecateAs=RangeDetach] void detach();
+
+    [RaisesException] boolean isPointInRange(Node node, long offset);
+    [RaisesException] short comparePoint(Node node, long offset);
+
+    [RaisesException] boolean intersectsNode(Node node);
+
+    stringifier;
+
+    // CSSOM View Module
+    // http://dev.w3.org/csswg/cssom-view/#extensions-to-the-range-interface
+    // FIXME: getClientRect() and getBoundingClientRect() should
+    // return DOMRectList and DOMRect respectively.
+    ClientRectList getClientRects();
+    ClientRect getBoundingClientRect();
+
+    // DOM Parsing and Serialization
+    // https://dvcs.w3.org/hg/innerhtml/raw-file/tip/index.html#extensions-to-the-range-interface
+    [NewObject, RaisesException, CustomElementCallbacks] DocumentFragment createContextualFragment(DOMString fragment);
+
+    // Non-standard API
+    [RaisesException, DeprecateAs=RangeExpand] void expand([Default=Undefined] optional DOMString unit);
+};

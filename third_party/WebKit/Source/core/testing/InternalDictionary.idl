@@ -1,0 +1,37 @@
+// Copyright 2014 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+enum InternalEnum { "foo", "bar", "baz" };
+
+dictionary InternalDictionary {
+    long longMember;
+    [Clamp] long longMemberWithClamp;
+    [EnforceRange] long longMemberWithEnforceRange;
+    // We don't want to add a UseCounter feature for testing, so using KeyboardEventKeyLocation.
+    [DeprecateAs=KeyboardEventKeyLocation, ImplementedAs=longMember] long deprecateLongMember;
+    long longMemberWithDefault = 42;
+    long? longOrNullMember;
+    long? longOrNullMemberWithDefault = null;
+    boolean booleanMember;
+    double doubleMember;
+    unrestricted double unrestrictedDoubleMember;
+    DOMString stringMember;
+    DOMString stringMemberWithDefault = "defaultStringValue";
+    ByteString byteStringMember;
+    USVString usvStringMember;
+    sequence<DOMString> stringSequenceMember;
+    sequence<DOMString> stringSequenceMemberWithDefault = [];
+    sequence<DOMString>? stringSequenceOrNullMember;
+    InternalEnum enumMember;
+    InternalEnum enumMemberWithDefault = "foo";
+    InternalEnum? enumOrNullMember;
+    InternalEnum[] enumArrayMember;
+    Element elementMember;
+    Element? elementOrNullMember;
+    object objectMember;
+    object? objectOrNullMemberWithDefault = null;
+    (double or DOMString) doubleOrStringMember;
+    sequence<(double or DOMString)> doubleOrStringSequenceMember;
+    EventTarget? eventTargetOrNullMember = null;
+};

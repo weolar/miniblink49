@@ -1,0 +1,11 @@
+include_rules = [
+    "+bindings/core",
+    "-bindings/modules",
+    "+core",
+    "+heap",
+    "+gin/public",
+    "-modules",
+    "+platform",
+    "+public/platform",
+    "-web",
+]

@@ -1,0 +1,15 @@
+{% from "macros.tmpl" import license %}
+{{ license() }}
+
+[
+    GarbageCollected,
+] interface InternalRuntimeFlags {
+    {% for feature in features if not feature.custom %}
+{#
+    Currently assuming that runtime flags cannot be changed after startup
+    it's possible that some can be and should be conditionally readonly.
+#}
+    {%+ if feature.condition %}[Conditional={{feature.condition}}] {% endif -%}
+    readonly attribute boolean {{feature.first_lowered_name}}Enabled;
+    {% endfor %}
+};

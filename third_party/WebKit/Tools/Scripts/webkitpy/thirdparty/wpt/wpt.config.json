@@ -1,0 +1,13 @@
+{
+  "host": "127.0.0.1",
+  "doc_root": null,
+  "ws_doc_root": null,
+  "external_host": null,
+  "check_subdomains": false,
+  "ports": {
+    "http": [8001, 8081],
+    "https": [8444],
+    "ws": [9001],
+    "wss": [9444]
+  }
+}

@@ -1,0 +1,44 @@
+{% from 'macros.tmpl' import license %}
+{{license()}}
+
+#ifndef InternalRuntimeFlags_h
+#define InternalRuntimeFlags_h
+
+#include "bindings/core/v8/ScriptWrappable.h"
+#include "platform/RuntimeEnabledFeatures.h"
+#include "platform/heap/Handle.h"
+#include "wtf/PassRefPtr.h"
+#include "wtf/RefPtr.h"
+#include "wtf/RefCounted.h"
+
+namespace blink {
+
+class InternalRuntimeFlags : public GarbageCollected<InternalRuntimeFlags>, public ScriptWrappable {
+    DEFINE_WRAPPERTYPEINFO();
+public:
+    static InternalRuntimeFlags* create()
+    {
+        return new InternalRuntimeFlags;
+    }
+
+{#
+    Setting after startup does not work for most runtime flags, but we
+    could add an option to print setters for ones which do:
+    void set{{feature.name}}Enabled(bool isEnabled) { RuntimeEnabledFeatures::set{{feature.name}}Enabled(isEnabled); }
+    If we do that, we also need to respect Internals::resetToConsistentState.
+#}
+    {% for feature in features if not feature.custom %}
+    {% filter enable_conditional(feature.condition) %}
+    bool {{feature.first_lowered_name}}Enabled() { return RuntimeEnabledFeatures::{{feature.first_lowered_name}}Enabled(); }
+    {% endfilter %}
+    {% endfor %}
+
+    DEFINE_INLINE_TRACE() { }
+
+private:
+    InternalRuntimeFlags() { }
+};
+
+} // namespace blink
+
+#endif // InternalRuntimeFlags_h

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<title>Update rebaseline logs</title>
+<style>
+html, body {
+    height: 100%;
+}
+body, form {
+    display: flex;
+    flex-direction: column;
+}
+form, textarea {
+    flex: 1;
+}
+</style>
+
+<h1>Update logs</h1>
+<p>This page is for manually testing the log server.</p>
+<form accept="text/html" action="{{ update_log_url }}" enctype="multipart/form-data" method="post">
+    <div>
+        <label><input name="{{ new_entry_param }}" type="checkbox">Start a new log entry</label>
+        <input class=button type="submit" value="Upload">
+    </div>
+    <textarea name="{{ log_param }}" placeholder="Some logging data..."></textarea>
+    <textarea name="{{ command_param }}" placeholder="Command JSON..."></textarea>
+</form>

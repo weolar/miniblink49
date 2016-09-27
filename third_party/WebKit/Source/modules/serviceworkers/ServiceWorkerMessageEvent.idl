@@ -1,0 +1,16 @@
+// Copyright 2015 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+// https://slightlyoff.github.io/ServiceWorker/spec/service_worker/#serviceworkermessage-event-interface
+
+[
+    Constructor(DOMString type, optional ServiceWorkerMessageEventInit eventInitDict),
+    Exposed=(Window, Worker),
+] interface ServiceWorkerMessageEvent : Event {
+    [Custom=Getter] readonly attribute any data;
+    readonly attribute DOMString origin;
+    readonly attribute DOMString lastEventId;
+    readonly attribute (ServiceWorker or MessagePort)? source;
+    readonly attribute MessagePort[]? ports;
+};

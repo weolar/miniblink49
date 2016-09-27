@@ -1,0 +1,60 @@
+# Copyright 2014 The Chromium Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+blink_core_output_dir = "$root_gen_dir/blink/core"
+
+# This file is the GN version of core.gypi. We rebase most paths to be absolute
+# so these lists can be used by BUILD files in different directories without
+# worrying about the base directory.
+_gypi = exec_script(
+    "//build/gypi_to_gn.py",
+    [ rebase_path("core.gypi"),
+      "--replace=<(SHARED_INTERMEDIATE_DIR)=$root_gen_dir",
+      "--replace=<(blink_core_output_dir)=$blink_core_output_dir"],
+    "scope",
+    [ "core.gypi" ])
+
+# Files for which bindings (.cpp and .h files) will be generated.
+core_idl_files = get_path_info(_gypi.core_idl_files, "abspath")
+core_idl_with_modules_dependency_files =
+  get_path_info(_gypi.core_idl_with_modules_dependency_files, "abspath")
+
+core_dictionary_idl_files =
+  get_path_info(_gypi.core_dictionary_idl_files, "abspath")
+core_testing_dictionary_idl_files =
+  get_path_info(_gypi.core_testing_dictionary_idl_files, "abspath")
+
+# 'partial interface', target (right side of) 'implements', and
+# interfaces with static bindings (in bindings/core/v8/)
+core_dependency_idl_files =
+  get_path_info(_gypi.core_dependency_idl_files, "abspath")
+
+# Interfaces that inherit from Event, including Event itself.
+core_event_idl_files = get_path_info(_gypi.core_event_idl_files, "abspath")
+
+# IDL files that only have typedefs/enums.
+core_typedefs_enums_only_idl_files =
+  get_path_info(_gypi.core_typedefs_enums_only_idl_files, "abspath")
+
+webcore_non_rendering_files =
+  get_path_info(_gypi.webcore_non_rendering_files, "abspath")
+webcore_rendering_files =
+  get_path_info(_gypi.webcore_rendering_files, "abspath")
+webcore_dom_files = get_path_info(_gypi.webcore_dom_files, "abspath")
+webcore_html_files = get_path_info(_gypi.webcore_html_files, "abspath")
+webcore_svg_files = get_path_info(_gypi.webcore_svg_files, "abspath")
+webcore_testing_idl_files =
+  get_path_info(_gypi.webcore_testing_idl_files, "abspath")
+webcore_testing_idl_with_modules_dependency_files =
+  get_path_info(_gypi.webcore_testing_idl_with_modules_dependency_files, "abspath")
+webcore_testing_dependency_idl_files =
+  get_path_info(_gypi.webcore_testing_dependency_idl_files, "abspath")
+generated_core_dictionary_files =
+  get_path_info(_gypi.generated_core_dictionary_files, "abspath")
+generated_core_testing_dictionary_files =
+  get_path_info(_gypi.generated_core_testing_dictionary_files, "abspath")
+generated_webcore_testing_idl_files =
+  get_path_info(_gypi.generated_webcore_testing_idl_files, "abspath")
+webcore_testing_files = get_path_info(_gypi.webcore_testing_files, "abspath")
+core_unittest_files = get_path_info(_gypi.core_unittest_files, "abspath")

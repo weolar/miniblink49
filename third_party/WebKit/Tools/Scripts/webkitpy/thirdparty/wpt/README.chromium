@@ -1,0 +1,108 @@
+W3C Web Platform Tests in Blink Layout Tests
+
+Design Doc: https://goo.gl/iXUaZd
+
+This directory contains checked out and reduced code from web-platform-tests
+(https://github.com/w3c/web-platform-tests/) required to run WPT tests as part
+of Blink's test infrastructure and some maintenance/configuration code.
+
+The third party code lives entirely in the wpt subdirectory:
+Tools/Scripts/webkitpy/thirdparty/wpt/wpt
+
+Besides the reduced web-platform-tests repository, the wpt subdirectory also
+contains wpt/tools submodule (https://github.com/w3c/wpt-tools) and
+wpt/tools/wptserve (https://github.com/w3c/wptserve) directories.
+
+For licensing, see README.chromium in parent directory
+(Tools/Scripts/webkitpy/thirdparty/README.chromium).
+
+**
+
+Files in this directory (non third-party)
+
+README.chromium
+===============
+This file.
+
+wpt.config.json
+===============
+The configuration file used when running WPTServe. Note that this file loads
+after wpt/config.default.json and this configuration gets merged onto it. When
+changing the ports (HTTP/S, WS/S), make sure to update the python code too.
+
+checkout.sh
+===========
+Running this script without arguments will remove the existing checkout
+(thirdparty/wpt/wpt) and perform a fresh one. See "Rolling in WPT" for more.
+
+WPTHeads
+========
+List of git commit-ish for the WPT repositories. File format is as follows:
+First line: HEAD position for web-platform-tests.
+Rest of lines: parent directory, submodule name, HEAD position for submodule.
+The submodule checkout is performed in order when running ./checkout.sh.
+
+WPTWhiteList
+============
+The explicit list of files being kept, everything else not on this list is
+deleted when running "./checkout.sh reduce". Use this file to control what gets
+checked in and try to keep the list as small as possible (use what you need).
+
+**
+
+Rolling in WPT
+
+When rolling in new versions of WPT support, use WPTHeads to adjust the HEAD
+positions. You can then call "./checkout.sh clone" which will pull in all the
+code and required submodules.
+
+You can check in the latest code by setting the HEAD commit-ish to "master" on
+each line, afterwards make sure to use the actual SHA1s to lock down the HEAD
+positions. It is also important to update the hashes in the 'Version:' fields of
+Tools/Scripts/webkitpy/thirdparty/README.chromium.
+
+You can examine what's pulled in and update WPTWhiteList if some new files are
+required to run the updated version.
+
+Once you've cloned the repositories you can call "./checkout.sh reduce" to
+remove everything that is not listed in WPTWhiteList.
+
+Note that calling "./checkout.sh" without arguments is equivalent of calling
+"./checkout.sh clone reduce".
+
+**
+
+Configuration
+
+Read instructions in WPT README:
+https://github.com/w3c/web-platform-tests/blob/master/README.md
+
+Also, check out the WPTServe Documentation
+(https://wptserve.readthedocs.org/en/latest/).
+
+For setting up SSL, refer to Tools/Scripts/webkitpy/thirdparty/wpt/wpt/_certs
+(which gets generated on the first run).
+
+Note that editing /etc/hosts is not required for run-webkit-tests since
+content_shell is invoked with flags to map all *.test domains to 127.0.0.1.
+
+**
+
+Running web-platform-tests with enabled WPTServe on a local machine
+
+Starting run-webkit-tests with the --enable-wptserve flag will start WPTServe
+for tests which live in LayoutTests/imported/web-platform-tests.
+
+WPTServe starts HTTP/S and WS/S servers as separate processes.
+
+The content_shell used to run the tests will receive the URL of each test
+(instead of a filename). The document root http://web-platform.test/ maps to
+LayoutTests/imported/web-platform-tests. HTTPS tests are enabled by default.
+
+Example run:
+
+./Tools/Scripts/run-webkit-tests \
+    --debug \
+    --enable-wptserve \
+    --no-new-test-results \
+    imported/web-platform-tests

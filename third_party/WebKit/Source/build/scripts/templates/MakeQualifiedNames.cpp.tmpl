@@ -1,0 +1,109 @@
+{% from "macros.tmpl" import license %}
+{{ license() }}
+
+#include "config.h"
+
+#include "{{namespace}}Names.h"
+
+#include "wtf/StaticConstructors.h"
+#include "wtf/StdLibExtras.h"
+
+namespace blink {
+namespace {{namespace}}Names {
+
+using namespace blink;
+
+DEFINE_GLOBAL(AtomicString, {{namespace_prefix}}NamespaceURI)
+
+{% if tags %}
+// Tags
+
+void* {{suffix}}TagStorage[{{namespace}}TagsCount * ((sizeof({{namespace}}QualifiedName) + sizeof(void *) - 1) / sizeof(void *))];
+{% for tag in tags|sort(attribute='name', case_sensitive=True) %}
+const {{namespace}}QualifiedName& {{tag|symbol}}Tag = reinterpret_cast<{{namespace}}QualifiedName*>(&{{suffix}}TagStorage)[{{loop.index0}}];
+{% endfor %}
+
+
+PassOwnPtr<const {{namespace}}QualifiedName*[]> get{{namespace}}Tags()
+{
+    OwnPtr<const {{namespace}}QualifiedName*[]> tags = adoptArrayPtr(new const {{namespace}}QualifiedName*[{{namespace}}TagsCount]);
+    for (size_t i = 0; i < {{namespace}}TagsCount; i++)
+        tags[i] = reinterpret_cast<{{namespace}}QualifiedName*>(&{{suffix}}TagStorage) + i;
+    return tags.release();
+}
+
+{% endif %}
+// Attributes
+
+void* {{suffix}}AttrStorage[{{namespace}}AttrsCount * ((sizeof(QualifiedName) + sizeof(void *) - 1) / sizeof(void *))];
+
+{% for attr in attrs|sort(attribute='name', case_sensitive=True) %}
+const QualifiedName& {{attr|symbol}}Attr = reinterpret_cast<QualifiedName*>(&{{suffix}}AttrStorage)[{{loop.index0}}];
+{% endfor %}
+
+{% if namespace != 'HTML' %}
+PassOwnPtr<const QualifiedName*[]> get{{namespace}}Attrs()
+{
+    OwnPtr<const QualifiedName*[]> attrs = adoptArrayPtr(new const QualifiedName*[{{namespace}}AttrsCount]);
+    for (size_t i = 0; i < {{namespace}}AttrsCount; i++)
+        attrs[i] = reinterpret_cast<QualifiedName*>(&{{suffix}}AttrStorage) + i;
+    return attrs.release();
+}
+{% endif %}
+
+
+void init()
+{
+    struct NameEntry {
+        const char* name;
+        unsigned hash;
+        unsigned char length;
+        unsigned char isTag;
+        unsigned char isAttr;
+    };
+
+    // Use placement new to initialize the globals.
+    AtomicString {{namespace_prefix}}NS("{{namespace_uri}}", AtomicString::ConstructFromLiteral);
+
+    // Namespace
+    new ((void*)&{{namespace_prefix}}NamespaceURI) AtomicString({{namespace_prefix}}NS);
+    {% set tagnames = tags|map(attribute='name')|list() %}
+    {% set attrnames = attrs|map(attribute='name')|list() %}
+    static const NameEntry kNames[] = {
+    {% for name, tag_list in (tags + attrs)|groupby('name')|sort(attribute=0, case_sensitive=True) %}
+        { "{{name}}", {{name|hash}}, {{name|length}}, {{ (name in tagnames)|int }}, {{ (name in attrnames)|int }} },
+    {% endfor %}
+    };
+
+    {% if tags %}
+    size_t tag_i = 0;
+    {% endif %}
+    size_t attr_i = 0;
+    for (size_t i = 0; i < WTF_ARRAY_LENGTH(kNames); i++) {
+        StringImpl* stringImpl = StringImpl::createStatic(kNames[i].name, kNames[i].length, kNames[i].hash);
+        {% if tags %}
+        if (kNames[i].isTag) {
+            void* address = reinterpret_cast<{{namespace}}QualifiedName*>(&{{suffix}}TagStorage) + tag_i;
+            QualifiedName::createStatic(address, stringImpl, {{namespace_prefix}}NS);
+            tag_i++;
+        }
+
+        if (!kNames[i].isAttr)
+            continue;
+        {% endif %}
+        void* address = reinterpret_cast<QualifiedName*>(&{{suffix}}AttrStorage) + attr_i;
+        {% if use_namespace_for_attrs %}
+        QualifiedName::createStatic(address, stringImpl, {{namespace_prefix}}NS);
+        {% else %}
+        QualifiedName::createStatic(address, stringImpl);
+        {% endif %}
+        attr_i++;
+    }
+    {% if tags %}
+    ASSERT(tag_i == {{namespace}}TagsCount);
+    {% endif %}
+    ASSERT(attr_i == {{namespace}}AttrsCount);
+}
+
+} // {{namespace}}
+} // namespace blink

@@ -1,0 +1,22 @@
+// Copyright 2015 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+// http://mozvr.github.io/webvr-spec/webvr.html#vrdevice
+[
+    RuntimeEnabled=WebVR,
+    GarbageCollected,
+] interface VRDevice {
+    // An identifier for the distinct hardware unit that this
+    // VR Device is a part of.  All VRDevice/Sensors that come
+    // from the same hardware will have the same hardwareId.
+    readonly attribute DOMString hardwareUnitId;
+
+    // An identifier for this distinct sensor/device on a physical
+    // hardware device.  This shouldn't change across browser
+    // restrats, allowing configuration data to be saved based on it.
+    readonly attribute DOMString deviceId;
+
+    // A user-readable name identifying the device.
+    readonly attribute DOMString deviceName;
+};

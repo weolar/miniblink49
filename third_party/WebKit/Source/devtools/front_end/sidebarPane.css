@@ -1,0 +1,148 @@
+/*
+ * Copyright (C) 2006, 2007, 2008 Apple Inc.  All rights reserved.
+ * Copyright (C) 2009 Anthony Ricaud <rik@webkit.org>
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1.  Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ * 3.  Neither the name of Apple Computer, Inc. ("Apple") nor the names of
+ *     its contributors may be used to endorse or promote products derived
+ *     from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+.sidebar-pane {
+    position: relative;
+    flex-direction: column;
+    display: flex;
+    flex: none;
+}
+
+.sidebar-pane-hidden {
+    display: none;
+}
+
+.sidebar-pane .info {
+    text-align: center;
+    font-style: italic;
+    padding: 6px;
+    color: #888;
+}
+
+.sidebar-pane .section .properties-tree {
+    padding-left: 16px;
+}
+
+.sidebar-tabbed-pane .tabbed-pane-header {
+    border-bottom: 1px solid rgb(202, 202, 202);
+    background-color: #eee;
+}
+
+.sidebar-pane-title {
+    display: flex;
+    align-items: center;
+    background-color: #eee;
+    height: 20px;
+    padding: 0 5px;
+    border-top: 1px solid #dadada;
+    white-space: nowrap;
+    overflow: hidden;
+    position: relative;
+}
+
+.sidebar-pane-title.expanded,
+.sidebar-pane-title:last-child {
+    border-bottom: 1px solid #ddd;
+}
+
+.sidebar-pane-title::before {
+    background-image: url(Images/toolbarButtonGlyphs.png);
+    background-size: 352px 144px;
+    opacity: 0.5;
+    float: left;
+    width: 11px;
+    height: 11px;
+    margin-right: 2px;
+    content: "a";
+    color: transparent;
+}
+
+@media (-webkit-min-device-pixel-ratio: 1.5) {
+.sidebar-pane-title::before {
+    background-image: url(Images/toolbarButtonGlyphs_2x.png);
+}
+} /* media */
+
+.sidebar-pane-title::before {
+    background-position: -4px -96px;
+}
+
+.sidebar-pane-title.expanded::before {
+    background-position: -20px -96px;
+}
+
+.sidebar-pane > .toolbar {
+    border-bottom: 1px solid #eee;
+}
+
+.sidebar-pane > .toolbar > * {
+    pointer-events: auto;
+}
+
+.sidebar-pane-title > .toolbar {
+    position: absolute;
+    right: 0;
+    top: -3px;
+}
+
+.section > .header input[type=checkbox] {
+    height: 1em;
+    width: 1em;
+    margin-left: 0;
+    margin-top: 0;
+    margin-bottom: 0.25em;
+    vertical-align: bottom;
+}
+
+.hidden-callframes-message {
+    text-align: center;
+    font-style: italic;
+    padding: 4px;
+    color: #888;
+    background-color: #FFFFC2;
+}
+
+.sidebar-pane-button-new-rule {
+    background-image: url(Images/paneAddButtons.png);
+    background-position: 0 0;
+    position: absolute;
+    height: 16px;
+    width: 23px;
+    right: 5px;
+    bottom: 3px;
+    visibility: hidden;
+}
+
+.styles-section.matched-styles:not(.read-only):hover .sidebar-pane-button-new-rule {
+    visibility: visible;
+}
+
+.sidebar-pane-button-new-rule:hover {
+    background-position: -23px 0;
+}

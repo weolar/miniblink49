@@ -1,0 +1,813 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{C0B5099A-68A6-C022-28F1-83D15B204764}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>build_applications</RootNamespace>
+    <IgnoreWarnCompileDuplicatedFilename>true</IgnoreWarnCompileDuplicatedFilename>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props"/>
+  <PropertyGroup Label="Configuration">
+    <CharacterSet>Unicode</CharacterSet>
+    <ConfigurationType>Utility</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Label="Locals">
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props"/>
+  <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.props"/>
+  <ImportGroup Label="ExtensionSettings"/>
+  <ImportGroup Label="PropertySheets">
+    <Import Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props"/>
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros"/>
+  <PropertyGroup>
+    <ExecutablePath>$(ExecutablePath);$(MSBuildProjectDirectory)\.\bin\;$(MSBuildProjectDirectory)\.\bin\</ExecutablePath>
+    <OutDir>..\..\..\..\..\..\out\$(Configuration)\</OutDir>
+    <IntDir>$(OutDir)obj\$(ProjectName)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</LinkIncremental>
+    <TargetName>$(ProjectName)</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(OutDir)gen;..\..\..\..\third_party\wtl\include;C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\um;C:\Program Files (x86)\Windows Kits\8.1\Include\winrt;$(VSInstallDir)\VC\atlmfc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/MP /bigobj %(AdditionalOptions)</AdditionalOptions>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <CompileAsWinRT>false</CompileAsWinRT>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4091;4127;4351;4355;4503;4611;4100;4121;4244;4481;4505;4510;4512;4610;4838;4996;4456;4457;4458;4459;4702;4800;4251;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <ExceptionHandling>false</ExceptionHandling>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <MinimalRebuild>false</MinimalRebuild>
+      <Optimization>Disabled</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PreprocessorDefinitions>_DEBUG;V8_DEPRECATION_WARNINGS;_WIN32_WINNT=0x0603;WINVER=0x0603;WIN32;_WINDOWS;NOMINMAX;PSAPI_VERSION=1;_CRT_RAND_S;CERT_CHAIN_PARA_HAS_EXTRA_FIELDS;WIN32_LEAN_AND_MEAN;_ATL_NO_OPENGL;_SECURE_ATL;_HAS_EXCEPTIONS=0;_WINSOCK_DEPRECATED_NO_WARNINGS;CHROMIUM_BUILD;CR_CLANG_REVISION=239674-1;COMPONENT_BUILD;USE_AURA=1;USE_ASH=1;USE_DEFAULT_RENDER_THEME=1;USE_LIBJPEG_TURBO=1;ENABLE_ONE_CLICK_SIGNIN;ENABLE_PRE_SYNC_BACKUP;ENABLE_REMOTING=1;ENABLE_WEBRTC=1;ENABLE_MEDIA_ROUTER=1;ENABLE_PEPPER_CDMS;ENABLE_CONFIGURATION_POLICY;ENABLE_NOTIFICATIONS;ENABLE_HIDPI=1;ENABLE_TOPCHROME_MD=1;DONT_EMBED_BUILD_METADATA;NO_TCMALLOC;__STD_C;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;NTDDI_VERSION=0x06030000;_USING_V110_SDK71_;ENABLE_TASK_MANAGER=1;ENABLE_EXTENSIONS=1;ENABLE_PLUGIN_INSTALLATION=1;ENABLE_PLUGINS=1;ENABLE_SESSION_SERVICE=1;ENABLE_THEMES=1;ENABLE_AUTOFILL_DIALOG=1;ENABLE_BACKGROUND=1;ENABLE_GOOGLE_NOW=1;CLD_VERSION=2;ENABLE_PRINTING=1;ENABLE_BASIC_PRINTING=1;ENABLE_PRINT_PREVIEW=1;ENABLE_SPELLCHECK=1;ENABLE_CAPTIVE_PORTAL_DETECTION=1;ENABLE_APP_LIST=1;ENABLE_SETTINGS_APP=1;ENABLE_SUPERVISED_USERS=1;ENABLE_MDNS=1;ENABLE_SERVICE_DISCOVERY=1;ENABLE_WIFI_BOOTSTRAPPING=1;V8_USE_EXTERNAL_STARTUP_DATA;FULL_SAFE_BROWSING;SAFE_BROWSING_CSD;SAFE_BROWSING_DB_LOCAL;SAFE_BROWSING_SERVICE;USE_LIBPCI=1;USE_OPENSSL=1;_CRT_NONSTDC_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;DYNAMIC_ANNOTATIONS_ENABLED=1;WTF_USE_DYNAMIC_ANNOTATIONS=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <WarningLevel>Level3</WarningLevel>
+    </ClCompile>
+    <Lib>
+      <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.1/Lib/win8/um/x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>/ignore:4221 %(AdditionalOptions)</AdditionalOptions>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Lib>
+    <Link>
+      <AdditionalDependencies>wininet.lib;dnsapi.lib;version.lib;msimg32.lib;ws2_32.lib;usp10.lib;psapi.lib;dbghelp.lib;winmm.lib;shlwapi.lib;kernel32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;user32.lib;uuid.lib;odbc32.lib;odbccp32.lib;delayimp.lib;credui.lib;netapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.1/Lib/win8/um/x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>/maxilksize:0x7ff00000 /safeseh /dynamicbase /ignore:4199 /ignore:4221 /nxcompat /largeaddressaware %(AdditionalOptions)</AdditionalOptions>
+      <DelayLoadDLLs>dbghelp.dll;dwmapi.dll;shell32.dll;uxtheme.dll;%(DelayLoadDLLs)</DelayLoadDLLs>
+      <FixedBaseAddress>false</FixedBaseAddress>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ImportLibrary>$(OutDir)lib\$(TargetName).lib</ImportLibrary>
+      <MapFileName>$(OutDir)$(TargetName).map</MapFileName>
+      <MinimumRequiredVersion>5.01</MinimumRequiredVersion>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <SubSystem>Console</SubSystem>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\um;C:\Program Files (x86)\Windows Kits\8.1\Include\winrt;$(VSInstallDir)\VC\atlmfc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DllDataFileName>%(Filename).dlldata.c</DllDataFileName>
+      <GenerateStublessProxies>true</GenerateStublessProxies>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <OutputDirectory>$(IntDir)</OutputDirectory>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+    </Midl>
+    <ResourceCompile>
+      <AdditionalIncludeDirectories>../../../..;$(OutDir)gen;$(OutDir)gen;..\..\..\..\third_party\wtl\include;C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\um;C:\Program Files (x86)\Windows Kits\8.1\Include\winrt;$(VSInstallDir)\VC\atlmfc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Culture>0x0409</Culture>
+      <PreprocessorDefinitions>_DEBUG;V8_DEPRECATION_WARNINGS;_WIN32_WINNT=0x0603;WINVER=0x0603;WIN32;_WINDOWS;NOMINMAX;PSAPI_VERSION=1;_CRT_RAND_S;CERT_CHAIN_PARA_HAS_EXTRA_FIELDS;WIN32_LEAN_AND_MEAN;_ATL_NO_OPENGL;_SECURE_ATL;_HAS_EXCEPTIONS=0;_WINSOCK_DEPRECATED_NO_WARNINGS;CHROMIUM_BUILD;CR_CLANG_REVISION=239674-1;COMPONENT_BUILD;USE_AURA=1;USE_ASH=1;USE_DEFAULT_RENDER_THEME=1;USE_LIBJPEG_TURBO=1;ENABLE_ONE_CLICK_SIGNIN;ENABLE_PRE_SYNC_BACKUP;ENABLE_REMOTING=1;ENABLE_WEBRTC=1;ENABLE_MEDIA_ROUTER=1;ENABLE_PEPPER_CDMS;ENABLE_CONFIGURATION_POLICY;ENABLE_NOTIFICATIONS;ENABLE_HIDPI=1;ENABLE_TOPCHROME_MD=1;DONT_EMBED_BUILD_METADATA;NO_TCMALLOC;__STD_C;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;NTDDI_VERSION=0x06030000;_USING_V110_SDK71_;ENABLE_TASK_MANAGER=1;ENABLE_EXTENSIONS=1;ENABLE_PLUGIN_INSTALLATION=1;ENABLE_PLUGINS=1;ENABLE_SESSION_SERVICE=1;ENABLE_THEMES=1;ENABLE_AUTOFILL_DIALOG=1;ENABLE_BACKGROUND=1;ENABLE_GOOGLE_NOW=1;CLD_VERSION=2;ENABLE_PRINTING=1;ENABLE_BASIC_PRINTING=1;ENABLE_PRINT_PREVIEW=1;ENABLE_SPELLCHECK=1;ENABLE_CAPTIVE_PORTAL_DETECTION=1;ENABLE_APP_LIST=1;ENABLE_SETTINGS_APP=1;ENABLE_SUPERVISED_USERS=1;ENABLE_MDNS=1;ENABLE_SERVICE_DISCOVERY=1;ENABLE_WIFI_BOOTSTRAPPING=1;V8_USE_EXTERNAL_STARTUP_DATA;FULL_SAFE_BROWSING;SAFE_BROWSING_CSD;SAFE_BROWSING_DB_LOCAL;SAFE_BROWSING_SERVICE;USE_LIBPCI=1;USE_OPENSSL=1;_CRT_NONSTDC_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;DYNAMIC_ANNOTATIONS_ENABLED=1;WTF_USE_DYNAMIC_ANNOTATIONS=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(OutDir)gen;..\..\..\..\third_party\wtl\include;C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\um;C:\Program Files (x86)\Windows Kits\8.1\Include\winrt;$(VSInstallDir)\VC\atlmfc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/MP /bigobj %(AdditionalOptions)</AdditionalOptions>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <CompileAsWinRT>false</CompileAsWinRT>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4091;4127;4351;4355;4503;4611;4100;4121;4244;4481;4505;4510;4512;4610;4838;4996;4456;4457;4458;4459;4702;4800;4251;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <ExceptionHandling>false</ExceptionHandling>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <MinimalRebuild>false</MinimalRebuild>
+      <Optimization>Disabled</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PreprocessorDefinitions>_DEBUG;V8_DEPRECATION_WARNINGS;_WIN32_WINNT=0x0603;WINVER=0x0603;WIN32;_WINDOWS;NOMINMAX;PSAPI_VERSION=1;_CRT_RAND_S;CERT_CHAIN_PARA_HAS_EXTRA_FIELDS;WIN32_LEAN_AND_MEAN;_ATL_NO_OPENGL;_SECURE_ATL;_HAS_EXCEPTIONS=0;_WINSOCK_DEPRECATED_NO_WARNINGS;CHROMIUM_BUILD;CR_CLANG_REVISION=239674-1;COMPONENT_BUILD;USE_AURA=1;USE_ASH=1;USE_DEFAULT_RENDER_THEME=1;USE_LIBJPEG_TURBO=1;ENABLE_ONE_CLICK_SIGNIN;ENABLE_PRE_SYNC_BACKUP;ENABLE_REMOTING=1;ENABLE_WEBRTC=1;ENABLE_MEDIA_ROUTER=1;ENABLE_PEPPER_CDMS;ENABLE_CONFIGURATION_POLICY;ENABLE_NOTIFICATIONS;ENABLE_HIDPI=1;ENABLE_TOPCHROME_MD=1;DONT_EMBED_BUILD_METADATA;NO_TCMALLOC;__STD_C;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;NTDDI_VERSION=0x06030000;_USING_V110_SDK71_;ENABLE_TASK_MANAGER=1;ENABLE_EXTENSIONS=1;ENABLE_PLUGIN_INSTALLATION=1;ENABLE_PLUGINS=1;ENABLE_SESSION_SERVICE=1;ENABLE_THEMES=1;ENABLE_AUTOFILL_DIALOG=1;ENABLE_BACKGROUND=1;ENABLE_GOOGLE_NOW=1;CLD_VERSION=2;ENABLE_PRINTING=1;ENABLE_BASIC_PRINTING=1;ENABLE_PRINT_PREVIEW=1;ENABLE_SPELLCHECK=1;ENABLE_CAPTIVE_PORTAL_DETECTION=1;ENABLE_APP_LIST=1;ENABLE_SETTINGS_APP=1;ENABLE_SUPERVISED_USERS=1;ENABLE_MDNS=1;ENABLE_SERVICE_DISCOVERY=1;ENABLE_WIFI_BOOTSTRAPPING=1;V8_USE_EXTERNAL_STARTUP_DATA;FULL_SAFE_BROWSING;SAFE_BROWSING_CSD;SAFE_BROWSING_DB_LOCAL;SAFE_BROWSING_SERVICE;USE_LIBPCI=1;USE_OPENSSL=1;_CRT_NONSTDC_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;DYNAMIC_ANNOTATIONS_ENABLED=1;WTF_USE_DYNAMIC_ANNOTATIONS=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <WarningLevel>Level3</WarningLevel>
+    </ClCompile>
+    <Lib>
+      <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.1/Lib/win8/um/x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>/ignore:4221 %(AdditionalOptions)</AdditionalOptions>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Lib>
+    <Link>
+      <AdditionalDependencies>wininet.lib;dnsapi.lib;version.lib;msimg32.lib;ws2_32.lib;usp10.lib;psapi.lib;dbghelp.lib;winmm.lib;shlwapi.lib;kernel32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;user32.lib;uuid.lib;odbc32.lib;odbccp32.lib;delayimp.lib;credui.lib;netapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.1/Lib/win8/um/x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>/maxilksize:0x7ff00000 /dynamicbase /ignore:4199 /ignore:4221 /nxcompat %(AdditionalOptions)</AdditionalOptions>
+      <DelayLoadDLLs>dbghelp.dll;dwmapi.dll;shell32.dll;uxtheme.dll;%(DelayLoadDLLs)</DelayLoadDLLs>
+      <FixedBaseAddress>false</FixedBaseAddress>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>olepro32.lib</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>$(OutDir)lib\$(TargetName).lib</ImportLibrary>
+      <MapFileName>$(OutDir)$(TargetName).map</MapFileName>
+      <MinimumRequiredVersion>5.02</MinimumRequiredVersion>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <SubSystem>Console</SubSystem>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\um;C:\Program Files (x86)\Windows Kits\8.1\Include\winrt;$(VSInstallDir)\VC\atlmfc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DllDataFileName>%(Filename).dlldata.c</DllDataFileName>
+      <GenerateStublessProxies>true</GenerateStublessProxies>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <OutputDirectory>$(IntDir)</OutputDirectory>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+    </Midl>
+    <ResourceCompile>
+      <AdditionalIncludeDirectories>../../../..;$(OutDir)gen;$(OutDir)gen;..\..\..\..\third_party\wtl\include;C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\um;C:\Program Files (x86)\Windows Kits\8.1\Include\winrt;$(VSInstallDir)\VC\atlmfc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Culture>0x0409</Culture>
+      <PreprocessorDefinitions>_DEBUG;V8_DEPRECATION_WARNINGS;_WIN32_WINNT=0x0603;WINVER=0x0603;WIN32;_WINDOWS;NOMINMAX;PSAPI_VERSION=1;_CRT_RAND_S;CERT_CHAIN_PARA_HAS_EXTRA_FIELDS;WIN32_LEAN_AND_MEAN;_ATL_NO_OPENGL;_SECURE_ATL;_HAS_EXCEPTIONS=0;_WINSOCK_DEPRECATED_NO_WARNINGS;CHROMIUM_BUILD;CR_CLANG_REVISION=239674-1;COMPONENT_BUILD;USE_AURA=1;USE_ASH=1;USE_DEFAULT_RENDER_THEME=1;USE_LIBJPEG_TURBO=1;ENABLE_ONE_CLICK_SIGNIN;ENABLE_PRE_SYNC_BACKUP;ENABLE_REMOTING=1;ENABLE_WEBRTC=1;ENABLE_MEDIA_ROUTER=1;ENABLE_PEPPER_CDMS;ENABLE_CONFIGURATION_POLICY;ENABLE_NOTIFICATIONS;ENABLE_HIDPI=1;ENABLE_TOPCHROME_MD=1;DONT_EMBED_BUILD_METADATA;NO_TCMALLOC;__STD_C;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;NTDDI_VERSION=0x06030000;_USING_V110_SDK71_;ENABLE_TASK_MANAGER=1;ENABLE_EXTENSIONS=1;ENABLE_PLUGIN_INSTALLATION=1;ENABLE_PLUGINS=1;ENABLE_SESSION_SERVICE=1;ENABLE_THEMES=1;ENABLE_AUTOFILL_DIALOG=1;ENABLE_BACKGROUND=1;ENABLE_GOOGLE_NOW=1;CLD_VERSION=2;ENABLE_PRINTING=1;ENABLE_BASIC_PRINTING=1;ENABLE_PRINT_PREVIEW=1;ENABLE_SPELLCHECK=1;ENABLE_CAPTIVE_PORTAL_DETECTION=1;ENABLE_APP_LIST=1;ENABLE_SETTINGS_APP=1;ENABLE_SUPERVISED_USERS=1;ENABLE_MDNS=1;ENABLE_SERVICE_DISCOVERY=1;ENABLE_WIFI_BOOTSTRAPPING=1;V8_USE_EXTERNAL_STARTUP_DATA;FULL_SAFE_BROWSING;SAFE_BROWSING_CSD;SAFE_BROWSING_DB_LOCAL;SAFE_BROWSING_SERVICE;USE_LIBPCI=1;USE_OPENSSL=1;_CRT_NONSTDC_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;DYNAMIC_ANNOTATIONS_ENABLED=1;WTF_USE_DYNAMIC_ANNOTATIONS=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(OutDir)gen;..\..\..\..\third_party\wtl\include;C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\um;C:\Program Files (x86)\Windows Kits\8.1\Include\winrt;$(VSInstallDir)\VC\atlmfc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/MP /bigobj /d2Zi+ /Zc:inline /Oy- /Gw %(AdditionalOptions)</AdditionalOptions>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <CompileAsWinRT>false</CompileAsWinRT>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4091;4127;4351;4355;4503;4611;4100;4121;4244;4481;4505;4510;4512;4610;4838;4996;4456;4457;4458;4459;4702;4800;4251;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <ExceptionHandling>false</ExceptionHandling>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <MinimalRebuild>false</MinimalRebuild>
+      <OmitFramePointers>false</OmitFramePointers>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PreprocessorDefinitions>V8_DEPRECATION_WARNINGS;_WIN32_WINNT=0x0603;WINVER=0x0603;WIN32;_WINDOWS;NOMINMAX;PSAPI_VERSION=1;_CRT_RAND_S;CERT_CHAIN_PARA_HAS_EXTRA_FIELDS;WIN32_LEAN_AND_MEAN;_ATL_NO_OPENGL;_SECURE_ATL;_HAS_EXCEPTIONS=0;_WINSOCK_DEPRECATED_NO_WARNINGS;CHROMIUM_BUILD;CR_CLANG_REVISION=239674-1;COMPONENT_BUILD;USE_AURA=1;USE_ASH=1;USE_DEFAULT_RENDER_THEME=1;USE_LIBJPEG_TURBO=1;ENABLE_ONE_CLICK_SIGNIN;ENABLE_PRE_SYNC_BACKUP;ENABLE_REMOTING=1;ENABLE_WEBRTC=1;ENABLE_MEDIA_ROUTER=1;ENABLE_PEPPER_CDMS;ENABLE_CONFIGURATION_POLICY;ENABLE_NOTIFICATIONS;ENABLE_HIDPI=1;ENABLE_TOPCHROME_MD=1;DONT_EMBED_BUILD_METADATA;NO_TCMALLOC;__STD_C;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;NTDDI_VERSION=0x06030000;_USING_V110_SDK71_;ENABLE_TASK_MANAGER=1;ENABLE_EXTENSIONS=1;ENABLE_PLUGIN_INSTALLATION=1;ENABLE_PLUGINS=1;ENABLE_SESSION_SERVICE=1;ENABLE_THEMES=1;ENABLE_AUTOFILL_DIALOG=1;ENABLE_BACKGROUND=1;ENABLE_GOOGLE_NOW=1;CLD_VERSION=2;ENABLE_PRINTING=1;ENABLE_BASIC_PRINTING=1;ENABLE_PRINT_PREVIEW=1;ENABLE_SPELLCHECK=1;ENABLE_CAPTIVE_PORTAL_DETECTION=1;ENABLE_APP_LIST=1;ENABLE_SETTINGS_APP=1;ENABLE_SUPERVISED_USERS=1;ENABLE_MDNS=1;ENABLE_SERVICE_DISCOVERY=1;ENABLE_WIFI_BOOTSTRAPPING=1;V8_USE_EXTERNAL_STARTUP_DATA;FULL_SAFE_BROWSING;SAFE_BROWSING_CSD;SAFE_BROWSING_DB_LOCAL;SAFE_BROWSING_SERVICE;USE_LIBPCI=1;USE_OPENSSL=1;_CRT_NONSTDC_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;NDEBUG;NVALGRIND;DYNAMIC_ANNOTATIONS_ENABLED=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <StringPooling>true</StringPooling>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <WarningLevel>Level3</WarningLevel>
+    </ClCompile>
+    <Lib>
+      <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.1/Lib/win8/um/x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>/ignore:4221 %(AdditionalOptions)</AdditionalOptions>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Lib>
+    <Link>
+      <AdditionalDependencies>wininet.lib;dnsapi.lib;version.lib;msimg32.lib;ws2_32.lib;usp10.lib;psapi.lib;dbghelp.lib;winmm.lib;shlwapi.lib;kernel32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;user32.lib;uuid.lib;odbc32.lib;odbccp32.lib;delayimp.lib;credui.lib;netapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.1/Lib/win8/um/x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>/maxilksize:0x7ff00000 /safeseh /dynamicbase /ignore:4199 /ignore:4221 /nxcompat /largeaddressaware %(AdditionalOptions)</AdditionalOptions>
+      <DelayLoadDLLs>dbghelp.dll;dwmapi.dll;shell32.dll;uxtheme.dll;%(DelayLoadDLLs)</DelayLoadDLLs>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <FixedBaseAddress>false</FixedBaseAddress>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ImportLibrary>$(OutDir)lib\$(TargetName).lib</ImportLibrary>
+      <MapFileName>$(OutDir)$(TargetName).map</MapFileName>
+      <MinimumRequiredVersion>5.01</MinimumRequiredVersion>
+      <OptimizeReferences>true</OptimizeReferences>
+      <Profile>true</Profile>
+      <SubSystem>Console</SubSystem>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\um;C:\Program Files (x86)\Windows Kits\8.1\Include\winrt;$(VSInstallDir)\VC\atlmfc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DllDataFileName>%(Filename).dlldata.c</DllDataFileName>
+      <GenerateStublessProxies>true</GenerateStublessProxies>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <OutputDirectory>$(IntDir)</OutputDirectory>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+    </Midl>
+    <ResourceCompile>
+      <AdditionalIncludeDirectories>../../../..;$(OutDir)gen;$(OutDir)gen;..\..\..\..\third_party\wtl\include;C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\um;C:\Program Files (x86)\Windows Kits\8.1\Include\winrt;$(VSInstallDir)\VC\atlmfc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Culture>0x0409</Culture>
+      <PreprocessorDefinitions>V8_DEPRECATION_WARNINGS;_WIN32_WINNT=0x0603;WINVER=0x0603;WIN32;_WINDOWS;NOMINMAX;PSAPI_VERSION=1;_CRT_RAND_S;CERT_CHAIN_PARA_HAS_EXTRA_FIELDS;WIN32_LEAN_AND_MEAN;_ATL_NO_OPENGL;_SECURE_ATL;_HAS_EXCEPTIONS=0;_WINSOCK_DEPRECATED_NO_WARNINGS;CHROMIUM_BUILD;CR_CLANG_REVISION=239674-1;COMPONENT_BUILD;USE_AURA=1;USE_ASH=1;USE_DEFAULT_RENDER_THEME=1;USE_LIBJPEG_TURBO=1;ENABLE_ONE_CLICK_SIGNIN;ENABLE_PRE_SYNC_BACKUP;ENABLE_REMOTING=1;ENABLE_WEBRTC=1;ENABLE_MEDIA_ROUTER=1;ENABLE_PEPPER_CDMS;ENABLE_CONFIGURATION_POLICY;ENABLE_NOTIFICATIONS;ENABLE_HIDPI=1;ENABLE_TOPCHROME_MD=1;DONT_EMBED_BUILD_METADATA;NO_TCMALLOC;__STD_C;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;NTDDI_VERSION=0x06030000;_USING_V110_SDK71_;ENABLE_TASK_MANAGER=1;ENABLE_EXTENSIONS=1;ENABLE_PLUGIN_INSTALLATION=1;ENABLE_PLUGINS=1;ENABLE_SESSION_SERVICE=1;ENABLE_THEMES=1;ENABLE_AUTOFILL_DIALOG=1;ENABLE_BACKGROUND=1;ENABLE_GOOGLE_NOW=1;CLD_VERSION=2;ENABLE_PRINTING=1;ENABLE_BASIC_PRINTING=1;ENABLE_PRINT_PREVIEW=1;ENABLE_SPELLCHECK=1;ENABLE_CAPTIVE_PORTAL_DETECTION=1;ENABLE_APP_LIST=1;ENABLE_SETTINGS_APP=1;ENABLE_SUPERVISED_USERS=1;ENABLE_MDNS=1;ENABLE_SERVICE_DISCOVERY=1;ENABLE_WIFI_BOOTSTRAPPING=1;V8_USE_EXTERNAL_STARTUP_DATA;FULL_SAFE_BROWSING;SAFE_BROWSING_CSD;SAFE_BROWSING_DB_LOCAL;SAFE_BROWSING_SERVICE;USE_LIBPCI=1;USE_OPENSSL=1;_CRT_NONSTDC_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;NDEBUG;NVALGRIND;DYNAMIC_ANNOTATIONS_ENABLED=0;%(PreprocessorDefinitions);%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(OutDir)gen;..\..\..\..\third_party\wtl\include;C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\um;C:\Program Files (x86)\Windows Kits\8.1\Include\winrt;$(VSInstallDir)\VC\atlmfc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/MP /bigobj /d2Zi+ /Zc:inline /Oy- /Gw %(AdditionalOptions)</AdditionalOptions>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <CompileAsWinRT>false</CompileAsWinRT>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4091;4127;4351;4355;4503;4611;4100;4121;4244;4481;4505;4510;4512;4610;4838;4996;4456;4457;4458;4459;4702;4800;4251;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <ExceptionHandling>false</ExceptionHandling>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <MinimalRebuild>false</MinimalRebuild>
+      <OmitFramePointers>false</OmitFramePointers>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PreprocessorDefinitions>V8_DEPRECATION_WARNINGS;_WIN32_WINNT=0x0603;WINVER=0x0603;WIN32;_WINDOWS;NOMINMAX;PSAPI_VERSION=1;_CRT_RAND_S;CERT_CHAIN_PARA_HAS_EXTRA_FIELDS;WIN32_LEAN_AND_MEAN;_ATL_NO_OPENGL;_SECURE_ATL;_HAS_EXCEPTIONS=0;_WINSOCK_DEPRECATED_NO_WARNINGS;CHROMIUM_BUILD;CR_CLANG_REVISION=239674-1;COMPONENT_BUILD;USE_AURA=1;USE_ASH=1;USE_DEFAULT_RENDER_THEME=1;USE_LIBJPEG_TURBO=1;ENABLE_ONE_CLICK_SIGNIN;ENABLE_PRE_SYNC_BACKUP;ENABLE_REMOTING=1;ENABLE_WEBRTC=1;ENABLE_MEDIA_ROUTER=1;ENABLE_PEPPER_CDMS;ENABLE_CONFIGURATION_POLICY;ENABLE_NOTIFICATIONS;ENABLE_HIDPI=1;ENABLE_TOPCHROME_MD=1;DONT_EMBED_BUILD_METADATA;NO_TCMALLOC;__STD_C;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;NTDDI_VERSION=0x06030000;_USING_V110_SDK71_;ENABLE_TASK_MANAGER=1;ENABLE_EXTENSIONS=1;ENABLE_PLUGIN_INSTALLATION=1;ENABLE_PLUGINS=1;ENABLE_SESSION_SERVICE=1;ENABLE_THEMES=1;ENABLE_AUTOFILL_DIALOG=1;ENABLE_BACKGROUND=1;ENABLE_GOOGLE_NOW=1;CLD_VERSION=2;ENABLE_PRINTING=1;ENABLE_BASIC_PRINTING=1;ENABLE_PRINT_PREVIEW=1;ENABLE_SPELLCHECK=1;ENABLE_CAPTIVE_PORTAL_DETECTION=1;ENABLE_APP_LIST=1;ENABLE_SETTINGS_APP=1;ENABLE_SUPERVISED_USERS=1;ENABLE_MDNS=1;ENABLE_SERVICE_DISCOVERY=1;ENABLE_WIFI_BOOTSTRAPPING=1;V8_USE_EXTERNAL_STARTUP_DATA;FULL_SAFE_BROWSING;SAFE_BROWSING_CSD;SAFE_BROWSING_DB_LOCAL;SAFE_BROWSING_SERVICE;USE_LIBPCI=1;USE_OPENSSL=1;_CRT_NONSTDC_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;NDEBUG;NVALGRIND;DYNAMIC_ANNOTATIONS_ENABLED=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <StringPooling>true</StringPooling>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <WarningLevel>Level3</WarningLevel>
+    </ClCompile>
+    <Lib>
+      <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.1/Lib/win8/um/x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>/ignore:4221 %(AdditionalOptions)</AdditionalOptions>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Lib>
+    <Link>
+      <AdditionalDependencies>wininet.lib;dnsapi.lib;version.lib;msimg32.lib;ws2_32.lib;usp10.lib;psapi.lib;dbghelp.lib;winmm.lib;shlwapi.lib;kernel32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;user32.lib;uuid.lib;odbc32.lib;odbccp32.lib;delayimp.lib;credui.lib;netapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.1/Lib/win8/um/x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>/maxilksize:0x7ff00000 /dynamicbase /ignore:4199 /ignore:4221 /nxcompat %(AdditionalOptions)</AdditionalOptions>
+      <DelayLoadDLLs>dbghelp.dll;dwmapi.dll;shell32.dll;uxtheme.dll;%(DelayLoadDLLs)</DelayLoadDLLs>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <FixedBaseAddress>false</FixedBaseAddress>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>olepro32.lib</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>$(OutDir)lib\$(TargetName).lib</ImportLibrary>
+      <MapFileName>$(OutDir)$(TargetName).map</MapFileName>
+      <MinimumRequiredVersion>5.02</MinimumRequiredVersion>
+      <OptimizeReferences>true</OptimizeReferences>
+      <Profile>true</Profile>
+      <SubSystem>Console</SubSystem>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\um;C:\Program Files (x86)\Windows Kits\8.1\Include\winrt;$(VSInstallDir)\VC\atlmfc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DllDataFileName>%(Filename).dlldata.c</DllDataFileName>
+      <GenerateStublessProxies>true</GenerateStublessProxies>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <OutputDirectory>$(IntDir)</OutputDirectory>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+    </Midl>
+    <ResourceCompile>
+      <AdditionalIncludeDirectories>../../../..;$(OutDir)gen;$(OutDir)gen;..\..\..\..\third_party\wtl\include;C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\um;C:\Program Files (x86)\Windows Kits\8.1\Include\winrt;$(VSInstallDir)\VC\atlmfc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Culture>0x0409</Culture>
+      <PreprocessorDefinitions>V8_DEPRECATION_WARNINGS;_WIN32_WINNT=0x0603;WINVER=0x0603;WIN32;_WINDOWS;NOMINMAX;PSAPI_VERSION=1;_CRT_RAND_S;CERT_CHAIN_PARA_HAS_EXTRA_FIELDS;WIN32_LEAN_AND_MEAN;_ATL_NO_OPENGL;_SECURE_ATL;_HAS_EXCEPTIONS=0;_WINSOCK_DEPRECATED_NO_WARNINGS;CHROMIUM_BUILD;CR_CLANG_REVISION=239674-1;COMPONENT_BUILD;USE_AURA=1;USE_ASH=1;USE_DEFAULT_RENDER_THEME=1;USE_LIBJPEG_TURBO=1;ENABLE_ONE_CLICK_SIGNIN;ENABLE_PRE_SYNC_BACKUP;ENABLE_REMOTING=1;ENABLE_WEBRTC=1;ENABLE_MEDIA_ROUTER=1;ENABLE_PEPPER_CDMS;ENABLE_CONFIGURATION_POLICY;ENABLE_NOTIFICATIONS;ENABLE_HIDPI=1;ENABLE_TOPCHROME_MD=1;DONT_EMBED_BUILD_METADATA;NO_TCMALLOC;__STD_C;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;NTDDI_VERSION=0x06030000;_USING_V110_SDK71_;ENABLE_TASK_MANAGER=1;ENABLE_EXTENSIONS=1;ENABLE_PLUGIN_INSTALLATION=1;ENABLE_PLUGINS=1;ENABLE_SESSION_SERVICE=1;ENABLE_THEMES=1;ENABLE_AUTOFILL_DIALOG=1;ENABLE_BACKGROUND=1;ENABLE_GOOGLE_NOW=1;CLD_VERSION=2;ENABLE_PRINTING=1;ENABLE_BASIC_PRINTING=1;ENABLE_PRINT_PREVIEW=1;ENABLE_SPELLCHECK=1;ENABLE_CAPTIVE_PORTAL_DETECTION=1;ENABLE_APP_LIST=1;ENABLE_SETTINGS_APP=1;ENABLE_SUPERVISED_USERS=1;ENABLE_MDNS=1;ENABLE_SERVICE_DISCOVERY=1;ENABLE_WIFI_BOOTSTRAPPING=1;V8_USE_EXTERNAL_STARTUP_DATA;FULL_SAFE_BROWSING;SAFE_BROWSING_CSD;SAFE_BROWSING_DB_LOCAL;SAFE_BROWSING_SERVICE;USE_LIBPCI=1;USE_OPENSSL=1;_CRT_NONSTDC_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;NDEBUG;NVALGRIND;DYNAMIC_ANNOTATIONS_ENABLED=0;%(PreprocessorDefinitions);%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <None Include="devtools.gyp"/>
+    <None Include="scripts\build_applications.py"/>
+    <None Include="scripts\modular_build.py"/>
+    <None Include="scripts\concatenate_application_code.py"/>
+    <None Include="front_end\cm\codemirror.css"/>
+    <None Include="front_end\cm\activeline.js"/>
+    <None Include="front_end\cm\closebrackets.js"/>
+    <None Include="front_end\cm\codemirror.js"/>
+    <None Include="front_end\cm\comment.js"/>
+    <None Include="front_end\cm\css.js"/>
+    <None Include="front_end\cm\headlesscodemirror.js"/>
+    <None Include="front_end\cm\htmlembedded.js"/>
+    <None Include="front_end\cm\htmlmixed.js"/>
+    <None Include="front_end\cm\javascript.js"/>
+    <None Include="front_end\cm\markselection.js"/>
+    <None Include="front_end\cm\matchbrackets.js"/>
+    <None Include="front_end\cm\overlay.js"/>
+    <None Include="front_end\cm\xml.js"/>
+    <None Include="front_end\bindings\BlackboxSupport.js"/>
+    <None Include="front_end\bindings\BreakpointManager.js"/>
+    <None Include="front_end\bindings\CompilerScriptMapping.js"/>
+    <None Include="front_end\bindings\ContentProviderBasedProjectDelegate.js"/>
+    <None Include="front_end\bindings\CSSWorkspaceBinding.js"/>
+    <None Include="front_end\bindings\DebuggerWorkspaceBinding.js"/>
+    <None Include="front_end\bindings\DefaultScriptMapping.js"/>
+    <None Include="front_end\bindings\ContentScriptProjectDecorator.js"/>
+    <None Include="front_end\bindings\FileSystemWorkspaceBinding.js"/>
+    <None Include="front_end\bindings\FileUtils.js"/>
+    <None Include="front_end\bindings\Linkifier.js"/>
+    <None Include="front_end\bindings\LiveLocation.js"/>
+    <None Include="front_end\bindings\NetworkMapping.js"/>
+    <None Include="front_end\bindings\NetworkProject.js"/>
+    <None Include="front_end\bindings\PresentationConsoleMessageHelper.js"/>
+    <None Include="front_end\bindings\ResourceScriptMapping.js"/>
+    <None Include="front_end\bindings\ResourceUtils.js"/>
+    <None Include="front_end\bindings\SASSSourceMapping.js"/>
+    <None Include="front_end\bindings\StylesSourceMapping.js"/>
+    <None Include="front_end\bindings\TempFile.js"/>
+    <None Include="front_end\bindings\WorkspaceController.js"/>
+    <None Include="front_end\common\Color.js"/>
+    <None Include="front_end\common\Console.js"/>
+    <None Include="front_end\common\ContentProvider.js"/>
+    <None Include="front_end\common\Geometry.js"/>
+    <None Include="front_end\common\ModuleExtensionInterfaces.js"/>
+    <None Include="front_end\common\NotificationService.js"/>
+    <None Include="front_end\common\Object.js"/>
+    <None Include="front_end\common\ParsedURL.js"/>
+    <None Include="front_end\common\Progress.js"/>
+    <None Include="front_end\common\ResourceType.js"/>
+    <None Include="front_end\common\Settings.js"/>
+    <None Include="front_end\common\StaticContentProvider.js"/>
+    <None Include="front_end\common\OutputStream.js"/>
+    <None Include="front_end\common\TestBase.js"/>
+    <None Include="front_end\common\TextDictionary.js"/>
+    <None Include="front_end\common\TextRange.js"/>
+    <None Include="front_end\common\TextUtils.js"/>
+    <None Include="front_end\common\Throttler.js"/>
+    <None Include="front_end\common\UIString.js"/>
+    <None Include="front_end\common\WebInspector.js"/>
+    <None Include="front_end\common\WorkerRuntime.js"/>
+    <None Include="front_end\components\breakpointsList.css"/>
+    <None Include="front_end\components\customPreviewSection.css"/>
+    <None Include="front_end\components\domUtils.css"/>
+    <None Include="front_end\components\inspectorViewTabbedPane.css"/>
+    <None Include="front_end\components\objectPropertiesSection.css"/>
+    <None Include="front_end\components\objectValue.css"/>
+    <None Include="front_end\components\CustomPreviewSection.js"/>
+    <None Include="front_end\components\DataSaverInfobar.js"/>
+    <None Include="front_end\components\DebuggerPresentationUtils.js"/>
+    <None Include="front_end\components\DockController.js"/>
+    <None Include="front_end\components\DOMBreakpointsSidebarPane.js"/>
+    <None Include="front_end\components\DOMPresentationUtils.js"/>
+    <None Include="front_end\components\Drawer.js"/>
+    <None Include="front_end\components\ExecutionContextSelector.js"/>
+    <None Include="front_end\components\ExecutionContextModel.js"/>
+    <None Include="front_end\components\HandlerRegistry.js"/>
+    <None Include="front_end\components\InspectElementModeController.js"/>
+    <None Include="front_end\components\InspectorView.js"/>
+    <None Include="front_end\components\BreakpointsSidebarPaneBase.js"/>
+    <None Include="front_end\components\NetworkConditionsSelector.js"/>
+    <None Include="front_end\components\ObjectPopoverHelper.js"/>
+    <None Include="front_end\components\ObjectPropertiesSection.js"/>
+    <None Include="front_end\components\RemoteObjectPreviewFormatter.js"/>
+    <None Include="front_end\components\ShortcutsScreen.js"/>
+    <None Include="front_end\components\EventListenersView.js"/>
+    <None Include="front_end\inspector.css"/>
+    <None Include="front_end\inspector.js"/>
+    <None Include="front_end\inspector.json"/>
+    <None Include="front_end\toolbox.css"/>
+    <None Include="front_end\toolbox.js"/>
+    <None Include="front_end\toolbox.json"/>
+    <None Include="front_end\Runtime.js"/>
+    <None Include="front_end\emulation\accelerometer.css"/>
+    <None Include="front_end\emulation\devicesSettingsTab.css"/>
+    <None Include="front_end\emulation\overrides.css"/>
+    <None Include="front_end\emulation\responsiveDesignView.css"/>
+    <None Include="front_end\emulation\DeviceModeButton.js"/>
+    <None Include="front_end\emulation\DevicesSettingsTab.js"/>
+    <None Include="front_end\emulation\EmulatedDevices.js"/>
+    <None Include="front_end\emulation\InspectedPagePlaceholder.js"/>
+    <None Include="front_end\emulation\MediaQueryInspector.js"/>
+    <None Include="front_end\emulation\OverridesSupport.js"/>
+    <None Include="front_end\emulation\OverridesView.js"/>
+    <None Include="front_end\emulation\OverridesUI.js"/>
+    <None Include="front_end\emulation\ResponsiveDesignView.js"/>
+    <None Include="front_end\host\InspectorFrontendHostAPI.js"/>
+    <None Include="front_end\host\InspectorFrontendHost.js"/>
+    <None Include="front_end\host\Platform.js"/>
+    <None Include="front_end\host\ResourceLoader.js"/>
+    <None Include="front_end\host\UserMetrics.js"/>
+    <None Include="front_end\main\AdvancedApp.js"/>
+    <None Include="front_end\main\HelpScreenUntilReload.js"/>
+    <None Include="front_end\main\Main.js"/>
+    <None Include="front_end\main\OverlayController.js"/>
+    <None Include="front_end\main\RenderingOptions.js"/>
+    <None Include="front_end\main\SimpleApp.js"/>
+    <None Include="front_end\main\Tests.js"/>
+    <None Include="front_end\main\TestController.js"/>
+    <None Include="front_end\platform\DOMExtension.js"/>
+    <None Include="front_end\platform\utilities.js"/>
+    <None Include="front_end\sdk\ApplicationCacheModel.js"/>
+    <None Include="front_end\sdk\ConsoleModel.js"/>
+    <None Include="front_end\sdk\ContentProviders.js"/>
+    <None Include="front_end\sdk\CookieParser.js"/>
+    <None Include="front_end\sdk\CPUProfileDataModel.js"/>
+    <None Include="front_end\sdk\CPUProfilerModel.js"/>
+    <None Include="front_end\sdk\CSSMetadata.js"/>
+    <None Include="front_end\sdk\CSSParser.js"/>
+    <None Include="front_end\sdk\CSSStyleModel.js"/>
+    <None Include="front_end\sdk\DebuggerModel.js"/>
+    <None Include="front_end\sdk\DOMModel.js"/>
+    <None Include="front_end\sdk\HAREntry.js"/>
+    <None Include="front_end\sdk\HeapProfilerModel.js"/>
+    <None Include="front_end\sdk\InspectorBackend.js"/>
+    <None Include="front_end\sdk\LayerTreeModel.js"/>
+    <None Include="front_end\sdk\NetworkLog.js"/>
+    <None Include="front_end\sdk\NetworkManager.js"/>
+    <None Include="front_end\sdk\NetworkRequest.js"/>
+    <None Include="front_end\sdk\PaintProfiler.js"/>
+    <None Include="front_end\sdk\RemoteObject.js"/>
+    <None Include="front_end\sdk\Resource.js"/>
+    <None Include="front_end\sdk\ResourceTreeModel.js"/>
+    <None Include="front_end\sdk\RuntimeModel.js"/>
+    <None Include="front_end\sdk\Script.js"/>
+    <None Include="front_end\sdk\ServiceWorkerManager.js"/>
+    <None Include="front_end\sdk\SourceMap.js"/>
+    <None Include="front_end\sdk\Target.js"/>
+    <None Include="front_end\sdk\TracingManager.js"/>
+    <None Include="front_end\sdk\TracingModel.js"/>
+    <None Include="front_end\sdk\WorkerManager.js"/>
+    <None Include="front_end\toolbox_bootstrap\Toolbox.js"/>
+    <None Include="front_end\ui\checkboxTextLabel.css"/>
+    <None Include="front_end\ui\closeButton.css"/>
+    <None Include="front_end\ui\colorSwatch.css"/>
+    <None Include="front_end\ui\dropTarget.css"/>
+    <None Include="front_end\ui\emptyWidget.css"/>
+    <None Include="front_end\ui\filter.css"/>
+    <None Include="front_end\ui\helpScreen.css"/>
+    <None Include="front_end\ui\infobar.css"/>
+    <None Include="front_end\ui\inspectorCommon.css"/>
+    <None Include="front_end\ui\inspectorSyntaxHighlight.css"/>
+    <None Include="front_end\ui\panelEnablerView.css"/>
+    <None Include="front_end\ui\progressIndicator.css"/>
+    <None Include="front_end\ui\propertiesSection.css"/>
+    <None Include="front_end\ui\radioButton.css"/>
+    <None Include="front_end\ui\searchableView.css"/>
+    <None Include="front_end\ui\section.css"/>
+    <None Include="front_end\ui\softContextMenu.css"/>
+    <None Include="front_end\ui\smallIcon.css"/>
+    <None Include="front_end\ui\splitWidget.css"/>
+    <None Include="front_end\ui\toolbar.css"/>
+    <None Include="front_end\ui\suggestBox.css"/>
+    <None Include="front_end\ui\tabbedPane.css"/>
+    <None Include="front_end\ui\textButton.css"/>
+    <None Include="front_end\ui\textPrompt.css"/>
+    <None Include="front_end\ui\treeoutline.css"/>
+    <None Include="front_end\ui\ActionRegistry.js"/>
+    <None Include="front_end\ui\ColorSwatch.js"/>
+    <None Include="front_end\ui\Context.js"/>
+    <None Include="front_end\ui\ContextMenu.js"/>
+    <None Include="front_end\ui\Dialog.js"/>
+    <None Include="front_end\ui\DOMSyntaxHighlighter.js"/>
+    <None Include="front_end\ui\DropDownMenu.js"/>
+    <None Include="front_end\ui\DropTarget.js"/>
+    <None Include="front_end\ui\EmptyWidget.js"/>
+    <None Include="front_end\ui\FilterBar.js"/>
+    <None Include="front_end\ui\ForwardedInputEventHandler.js"/>
+    <None Include="front_end\ui\HelpScreen.js"/>
+    <None Include="front_end\ui\HistoryInput.js"/>
+    <None Include="front_end\ui\Infobar.js"/>
+    <None Include="front_end\ui\InplaceEditor.js"/>
+    <None Include="front_end\ui\KeyboardShortcut.js"/>
+    <None Include="front_end\ui\Panel.js"/>
+    <None Include="front_end\ui\Popover.js"/>
+    <None Include="front_end\ui\ProgressIndicator.js"/>
+    <None Include="front_end\ui\ResizerWidget.js"/>
+    <None Include="front_end\ui\RootView.js"/>
+    <None Include="front_end\ui\SearchableView.js"/>
+    <None Include="front_end\ui\Section.js"/>
+    <None Include="front_end\ui\SettingsUI.js"/>
+    <None Include="front_end\ui\ShortcutRegistry.js"/>
+    <None Include="front_end\ui\SidebarPane.js"/>
+    <None Include="front_end\ui\SidebarTreeElement.js"/>
+    <None Include="front_end\ui\SoftContextMenu.js"/>
+    <None Include="front_end\ui\SplitWidget.js"/>
+    <None Include="front_end\ui\StackView.js"/>
+    <None Include="front_end\ui\Toolbar.js"/>
+    <None Include="front_end\ui\SuggestBox.js"/>
+    <None Include="front_end\ui\TabbedPane.js"/>
+    <None Include="front_end\ui\TextPrompt.js"/>
+    <None Include="front_end\ui\UIUtils.js"/>
+    <None Include="front_end\ui\ViewportControl.js"/>
+    <None Include="front_end\ui\Widget.js"/>
+    <None Include="front_end\ui\ZoomManager.js"/>
+    <None Include="front_end\ui\treeoutline.js"/>
+    <None Include="front_end\ui\ThrottledWidget.js"/>
+    <None Include="front_end\workspace\ExcludedFolderManager.js"/>
+    <None Include="front_end\workspace\FileManager.js"/>
+    <None Include="front_end\workspace\FileSystemMapping.js"/>
+    <None Include="front_end\workspace\IsolatedFileSystem.js"/>
+    <None Include="front_end\workspace\IsolatedFileSystemManager.js"/>
+    <None Include="front_end\workspace\SearchConfig.js"/>
+    <None Include="front_end\workspace\UISourceCode.js"/>
+    <None Include="front_end\workspace\Workspace.js"/>
+    <None Include="front_end\dialog.css"/>
+    <None Include="front_end\inspectorStyle.css"/>
+    <None Include="front_end\popover.css"/>
+    <None Include="front_end\sidebarPane.css"/>
+    <None Include="front_end\accessibility\module.json"/>
+    <None Include="front_end\animation\module.json"/>
+    <None Include="front_end\audits\module.json"/>
+    <None Include="front_end\bindings\module.json"/>
+    <None Include="front_end\cm_modes\module.json"/>
+    <None Include="front_end\common\module.json"/>
+    <None Include="front_end\components\module.json"/>
+    <None Include="front_end\components_lazy\module.json"/>
+    <None Include="front_end\console\module.json"/>
+    <None Include="front_end\elements\module.json"/>
+    <None Include="front_end\emulated_devices\module.json"/>
+    <None Include="front_end\emulation\module.json"/>
+    <None Include="front_end\extensions\module.json"/>
+    <None Include="front_end\heap_snapshot_worker\module.json"/>
+    <None Include="front_end\host\module.json"/>
+    <None Include="front_end\layers\module.json"/>
+    <None Include="front_end\main\module.json"/>
+    <None Include="front_end\network\module.json"/>
+    <None Include="front_end\platform\module.json"/>
+    <None Include="front_end\profiler\module.json"/>
+    <None Include="front_end\promises\module.json"/>
+    <None Include="front_end\resources\module.json"/>
+    <None Include="front_end\security\module.json"/>
+    <None Include="front_end\screencast\module.json"/>
+    <None Include="front_end\script_formatter_worker\module.json"/>
+    <None Include="front_end\sdk\module.json"/>
+    <None Include="front_end\settings\module.json"/>
+    <None Include="front_end\source_frame\module.json"/>
+    <None Include="front_end\sources\module.json"/>
+    <None Include="front_end\snippets\module.json"/>
+    <None Include="front_end\temp_storage_shared_worker\module.json"/>
+    <None Include="front_end\timeline\module.json"/>
+    <None Include="front_end\toolbox_bootstrap\module.json"/>
+    <None Include="front_end\ui\module.json"/>
+    <None Include="front_end\ui_lazy\module.json"/>
+    <None Include="front_end\workspace\module.json"/>
+    <None Include="front_end\accessibility\accessibilityNode.css"/>
+    <None Include="front_end\accessibility\AccessibilityModel.js"/>
+    <None Include="front_end\accessibility\AccessibilitySidebarView.js"/>
+    <None Include="front_end\accessibility\AccessibilityStrings.js"/>
+    <None Include="front_end\animation\animationTimeline.css"/>
+    <None Include="front_end\animation\AnimationControlPane.js"/>
+    <None Include="front_end\animation\AnimationModel.js"/>
+    <None Include="front_end\animation\AnimationTimeline.js"/>
+    <None Include="front_end\audits\auditResultTree.css"/>
+    <None Include="front_end\audits\auditsPanel.css"/>
+    <None Include="front_end\audits\AuditCategories.js"/>
+    <None Include="front_end\audits\AuditCategory.js"/>
+    <None Include="front_end\audits\AuditController.js"/>
+    <None Include="front_end\audits\AuditExtensionCategory.js"/>
+    <None Include="front_end\audits\AuditFormatters.js"/>
+    <None Include="front_end\audits\AuditLauncherView.js"/>
+    <None Include="front_end\audits\AuditResultView.js"/>
+    <None Include="front_end\audits\AuditRules.js"/>
+    <None Include="front_end\audits\AuditsPanel.js"/>
+    <None Include="front_end\cm_modes\clike.js"/>
+    <None Include="front_end\cm_modes\coffeescript.js"/>
+    <None Include="front_end\cm_modes\php.js"/>
+    <None Include="front_end\cm_modes\python.js"/>
+    <None Include="front_end\cm_modes\shell.js"/>
+    <None Include="front_end\cm_modes\livescript.js"/>
+    <None Include="front_end\cm_modes\clojure.js"/>
+    <None Include="front_end\cm_modes\DefaultCodeMirrorMimeMode.js"/>
+    <None Include="front_end\components_lazy\filmStripDialog.css"/>
+    <None Include="front_end\components_lazy\filmStripView.css"/>
+    <None Include="front_end\components_lazy\CookiesTable.js"/>
+    <None Include="front_end\components_lazy\FilmStripModel.js"/>
+    <None Include="front_end\components_lazy\FilmStripView.js"/>
+    <None Include="front_end\console\consoleView.css"/>
+    <None Include="front_end\console\ConsolePanel.js"/>
+    <None Include="front_end\console\ConsoleView.js"/>
+    <None Include="front_end\console\ConsoleViewMessage.js"/>
+    <None Include="front_end\elements\bezierEditor.css"/>
+    <None Include="front_end\elements\breadcrumbs.css"/>
+    <None Include="front_end\elements\computedStyleSidebarPane.css"/>
+    <None Include="front_end\elements\elementsPanel.css"/>
+    <None Include="front_end\elements\elementsTreeOutline.css"/>
+    <None Include="front_end\elements\spectrum.css"/>
+    <None Include="front_end\elements\BezierEditor.js"/>
+    <None Include="front_end\elements\BezierUI.js"/>
+    <None Include="front_end\elements\ElementsBreadcrumbs.js"/>
+    <None Include="front_end\elements\ElementsPanel.js"/>
+    <None Include="front_end\elements\ElementsSidebarPane.js"/>
+    <None Include="front_end\elements\ElementsSidebarView.js"/>
+    <None Include="front_end\elements\ElementsTreeElement.js"/>
+    <None Include="front_end\elements\ElementsTreeOutline.js"/>
+    <None Include="front_end\elements\ElementStatePaneWidget.js"/>
+    <None Include="front_end\elements\SharedSidebarModel.js"/>
+    <None Include="front_end\elements\EventListenersWidget.js"/>
+    <None Include="front_end\elements\MetricsSidebarPane.js"/>
+    <None Include="front_end\elements\PlatformFontsWidget.js"/>
+    <None Include="front_end\elements\PropertiesWidget.js"/>
+    <None Include="front_end\elements\Spectrum.js"/>
+    <None Include="front_end\elements\StylesPopoverHelper.js"/>
+    <None Include="front_end\elements\StylesSectionModel.js"/>
+    <None Include="front_end\elements\StylesSidebarPane.js"/>
+    <None Include="front_end\elements\ComputedStyleWidget.js"/>
+    <None Include="front_end\extensions\ExtensionAuditCategory.js"/>
+    <None Include="front_end\extensions\ExtensionPanel.js"/>
+    <None Include="front_end\extensions\ExtensionRegistryStub.js"/>
+    <None Include="front_end\extensions\ExtensionServer.js"/>
+    <None Include="front_end\extensions\ExtensionView.js"/>
+    <None Include="front_end\extensions\ExtensionAPI.js"/>
+    <None Include="front_end\heap_snapshot_worker\AllocationProfile.js"/>
+    <None Include="front_end\heap_snapshot_worker\HeapSnapshot.js"/>
+    <None Include="front_end\heap_snapshot_worker\HeapSnapshotLoader.js"/>
+    <None Include="front_end\heap_snapshot_worker\HeapSnapshotWorker.js"/>
+    <None Include="front_end\heap_snapshot_worker\HeapSnapshotWorkerDispatcher.js"/>
+    <None Include="front_end\heap_snapshot_worker\JSHeapSnapshot.js"/>
+    <None Include="front_end\profiler\HeapSnapshotCommon.js"/>
+    <None Include="front_end\layers\LayerPaintProfilerView.js"/>
+    <None Include="front_end\layers\LayersPanel.js"/>
+    <None Include="front_end\network\eventSourceMessagesView.css"/>
+    <None Include="front_end\network\networkLogView.css"/>
+    <None Include="front_end\network\networkPanel.css"/>
+    <None Include="front_end\network\requestCookiesView.css"/>
+    <None Include="front_end\network\requestHeadersView.css"/>
+    <None Include="front_end\network\webSocketFrameView.css"/>
+    <None Include="front_end\network\xmlView.css"/>
+    <None Include="front_end\network\EventSourceMessagesView.js"/>
+    <None Include="front_end\network\FilterSuggestionBuilder.js"/>
+    <None Include="front_end\network\HARWriter.js"/>
+    <None Include="front_end\network\NetworkDataGridNode.js"/>
+    <None Include="front_end\network\NetworkItemView.js"/>
+    <None Include="front_end\network\NetworkLogView.js"/>
+    <None Include="front_end\network\NetworkOverview.js"/>
+    <None Include="front_end\network\NetworkPanel.js"/>
+    <None Include="front_end\network\NetworkTimeCalculator.js"/>
+    <None Include="front_end\network\RequestCookiesView.js"/>
+    <None Include="front_end\network\RequestHeadersView.js"/>
+    <None Include="front_end\network\RequestHTMLView.js"/>
+    <None Include="front_end\network\RequestJSONView.js"/>
+    <None Include="front_end\network\RequestPreviewView.js"/>
+    <None Include="front_end\network\RequestResponseView.js"/>
+    <None Include="front_end\network\RequestTimingView.js"/>
+    <None Include="front_end\network\RequestView.js"/>
+    <None Include="front_end\network\ResourceWebSocketFrameView.js"/>
+    <None Include="front_end\network\XMLView.js"/>
+    <None Include="front_end\profiler\heapProfiler.css"/>
+    <None Include="front_end\profiler\profilesPanel.css"/>
+    <None Include="front_end\profiler\CPUProfileBottomUpDataGrid.js"/>
+    <None Include="front_end\profiler\CPUProfileDataGrid.js"/>
+    <None Include="front_end\profiler\CPUProfileFlameChart.js"/>
+    <None Include="front_end\profiler\CPUProfileTopDownDataGrid.js"/>
+    <None Include="front_end\profiler\CPUProfileView.js"/>
+    <None Include="front_end\profiler\HeapSnapshotDataGrids.js"/>
+    <None Include="front_end\profiler\HeapSnapshotGridNodes.js"/>
+    <None Include="front_end\profiler\HeapSnapshotProxy.js"/>
+    <None Include="front_end\profiler\HeapSnapshotView.js"/>
+    <None Include="front_end\profiler\ProfileLauncherView.js"/>
+    <None Include="front_end\profiler\ProfilesPanel.js"/>
+    <None Include="front_end\profiler\ProfileTypeRegistry.js"/>
+    <None Include="front_end\profiler\TargetsComboBoxController.js"/>
+    <None Include="front_end\promises\promisePane.css"/>
+    <None Include="front_end\promises\PromisePane.js"/>
+    <None Include="front_end\resources\indexedDBViews.css"/>
+    <None Include="front_end\resources\resourcesPanel.css"/>
+    <None Include="front_end\resources\serviceWorkerCacheViews.css"/>
+    <None Include="front_end\resources\serviceWorkersView.css"/>
+    <None Include="front_end\resources\ApplicationCacheItemsView.js"/>
+    <None Include="front_end\resources\CookieItemsView.js"/>
+    <None Include="front_end\resources\DatabaseModel.js"/>
+    <None Include="front_end\resources\DatabaseQueryView.js"/>
+    <None Include="front_end\resources\DatabaseTableView.js"/>
+    <None Include="front_end\resources\DirectoryContentView.js"/>
+    <None Include="front_end\resources\DOMStorageModel.js"/>
+    <None Include="front_end\resources\DOMStorageItemsView.js"/>
+    <None Include="front_end\resources\FileContentView.js"/>
+    <None Include="front_end\resources\FileSystemModel.js"/>
+    <None Include="front_end\resources\FileSystemView.js"/>
+    <None Include="front_end\resources\IndexedDBViews.js"/>
+    <None Include="front_end\resources\IndexedDBModel.js"/>
+    <None Include="front_end\resources\ResourcesPanel.js"/>
+    <None Include="front_end\resources\ServiceWorkerCacheViews.js"/>
+    <None Include="front_end\resources\ServiceWorkersView.js"/>
+    <None Include="front_end\security\lockIcon.css"/>
+    <None Include="front_end\security\securityPanel.css"/>
+    <None Include="front_end\security\SecurityModel.js"/>
+    <None Include="front_end\security\SecurityPanel.js"/>
+    <None Include="front_end\screencast\screencastView.css"/>
+    <None Include="front_end\screencast\ScreencastApp.js"/>
+    <None Include="front_end\screencast\ScreencastView.js"/>
+    <None Include="front_end\acorn\acorn.js"/>
+    <None Include="front_end\script_formatter_worker\AcornTokenizer.js"/>
+    <None Include="front_end\script_formatter_worker\CSSFormatter.js"/>
+    <None Include="front_end\script_formatter_worker\ESTreeWalker.js"/>
+    <None Include="front_end\script_formatter_worker\JavaScriptFormatter.js"/>
+    <None Include="front_end\script_formatter_worker\ScriptFormatterWorker.js"/>
+    <None Include="front_end\settings\EditFileSystemDialog.js"/>
+    <None Include="front_end\settings\FrameworkBlackboxDialog.js"/>
+    <None Include="front_end\settings\SettingsScreen.js"/>
+    <None Include="front_end\source_frame\cmdevtools.css"/>
+    <None Include="front_end\source_frame\fontView.css"/>
+    <None Include="front_end\source_frame\imageView.css"/>
+    <None Include="front_end\source_frame\resourceSourceFrame.css"/>
+    <None Include="front_end\source_frame\CodeMirrorDictionary.js"/>
+    <None Include="front_end\source_frame\CodeMirrorTextEditor.js"/>
+    <None Include="front_end\source_frame\CodeMirrorUtils.js"/>
+    <None Include="front_end\source_frame\FontView.js"/>
+    <None Include="front_end\source_frame\GoToLineDialog.js"/>
+    <None Include="front_end\source_frame\ImageView.js"/>
+    <None Include="front_end\source_frame\ResourceSourceFrame.js"/>
+    <None Include="front_end\source_frame\SourceFrame.js"/>
+    <None Include="front_end\source_frame\TextEditorAutocompleteController.js"/>
+    <None Include="front_end\sources\filteredItemSelectionDialog.css"/>
+    <None Include="front_end\sources\navigatorView.css"/>
+    <None Include="front_end\sources\revisionHistory.css"/>
+    <None Include="front_end\sources\serviceWorkersSidebar.css"/>
+    <None Include="front_end\sources\sourcesPanel.css"/>
+    <None Include="front_end\sources\sourcesSearch.css"/>
+    <None Include="front_end\sources\sourcesView.css"/>
+    <None Include="front_end\sources\uiList.css"/>
+    <None Include="front_end\sources\AddSourceMapURLDialog.js"/>
+    <None Include="front_end\sources\AdvancedSearchView.js"/>
+    <None Include="front_end\sources\AsyncOperationsSidebarPane.js"/>
+    <None Include="front_end\sources\CallStackSidebarPane.js"/>
+    <None Include="front_end\sources\CSSSourceFrame.js"/>
+    <None Include="front_end\sources\EditingLocationHistoryManager.js"/>
+    <None Include="front_end\sources\EventListenerBreakpointsSidebarPane.js"/>
+    <None Include="front_end\sources\FileBasedSearchResultsPane.js"/>
+    <None Include="front_end\sources\FilePathScoreFunction.js"/>
+    <None Include="front_end\sources\FilteredItemSelectionDialog.js"/>
+    <None Include="front_end\sources\InplaceFormatterEditorAction.js"/>
+    <None Include="front_end\sources\JavaScriptBreakpointsSidebarPane.js"/>
+    <None Include="front_end\sources\JavaScriptCompiler.js"/>
+    <None Include="front_end\sources\JavaScriptSourceFrame.js"/>
+    <None Include="front_end\sources\jsdifflib.js"/>
+    <None Include="front_end\sources\NavigatorView.js"/>
+    <None Include="front_end\sources\ObjectEventListenersSidebarPane.js"/>
+    <None Include="front_end\sources\RevisionHistoryView.js"/>
+    <None Include="front_end\sources\ScopeChainSidebarPane.js"/>
+    <None Include="front_end\sources\ScriptFormatter.js"/>
+    <None Include="front_end\sources\ScriptFormatterEditorAction.js"/>
+    <None Include="front_end\sources\ServiceWorkersSidebarPane.js"/>
+    <None Include="front_end\sources\SimpleHistoryManager.js"/>
+    <None Include="front_end\sources\SourcesNavigator.js"/>
+    <None Include="front_end\sources\SourcesPanel.js"/>
+    <None Include="front_end\sources\SourcesSearchScope.js"/>
+    <None Include="front_end\sources\SourcesView.js"/>
+    <None Include="front_end\sources\StyleSheetOutlineDialog.js"/>
+    <None Include="front_end\sources\TabbedEditorContainer.js"/>
+    <None Include="front_end\sources\ThreadsSidebarPane.js"/>
+    <None Include="front_end\sources\UIList.js"/>
+    <None Include="front_end\sources\UISourceCodeFrame.js"/>
+    <None Include="front_end\sources\WatchExpressionsSidebarPane.js"/>
+    <None Include="front_end\sources\WorkspaceMappingTip.js"/>
+    <None Include="front_end\sources\XHRBreakpointsSidebarPane.js"/>
+    <None Include="front_end\snippets\ScriptSnippetModel.js"/>
+    <None Include="front_end\snippets\SnippetStorage.js"/>
+    <None Include="front_end\temp_storage_shared_worker\TempStorageSharedWorker.js"/>
+    <None Include="front_end\timeline\invalidationsTree.css"/>
+    <None Include="front_end\timeline\timelinePanel.css"/>
+    <None Include="front_end\timeline\CountersGraph.js"/>
+    <None Include="front_end\timeline\LayerDetailsView.js"/>
+    <None Include="front_end\timeline\LayerTreeOutline.js"/>
+    <None Include="front_end\timeline\LayerViewHost.js"/>
+    <None Include="front_end\timeline\Layers3DView.js"/>
+    <None Include="front_end\timeline\MemoryCountersGraph.js"/>
+    <None Include="front_end\timeline\PaintProfilerView.js"/>
+    <None Include="front_end\timeline\TimelineEventOverview.js"/>
+    <None Include="front_end\timeline\TimelineFlameChart.js"/>
+    <None Include="front_end\timeline\TimelineFrameModel.js"/>
+    <None Include="front_end\timeline\TimelineFrameOverview.js"/>
+    <None Include="front_end\timeline\TimelineJSProfile.js"/>
+    <None Include="front_end\timeline\TimelineLayersView.js"/>
+    <None Include="front_end\timeline\TimelineMemoryOverview.js"/>
+    <None Include="front_end\timeline\TimelineModel.js"/>
+    <None Include="front_end\timeline\TimelinePaintProfilerView.js"/>
+    <None Include="front_end\timeline\TimelinePanel.js"/>
+    <None Include="front_end\timeline\TimelinePresentationModel.js"/>
+    <None Include="front_end\timeline\TimelineUIUtils.js"/>
+    <None Include="front_end\timeline\TimelineView.js"/>
+    <None Include="front_end\timeline\TransformController.js"/>
+    <None Include="front_end\ui_lazy\dataGrid.css"/>
+    <None Include="front_end\ui_lazy\flameChart.css"/>
+    <None Include="front_end\ui_lazy\overviewGrid.css"/>
+    <None Include="front_end\ui_lazy\pieChart.css"/>
+    <None Include="front_end\ui_lazy\timelineGrid.css"/>
+    <None Include="front_end\ui_lazy\DataGrid.js"/>
+    <None Include="front_end\ui_lazy\FlameChart.js"/>
+    <None Include="front_end\ui_lazy\OverviewGrid.js"/>
+    <None Include="front_end\ui_lazy\PieChart.js"/>
+    <None Include="front_end\ui_lazy\ShowMoreDataGridNode.js"/>
+    <None Include="front_end\ui_lazy\SortableDataGrid.js"/>
+    <None Include="front_end\ui_lazy\TimelineGrid.js"/>
+    <None Include="front_end\ui_lazy\TimelineOverviewPane.js"/>
+    <None Include="front_end\ui_lazy\ViewportDataGrid.js"/>
+    <None Include="front_end\inspector.html"/>
+    <None Include="front_end\toolbox.html"/>
+    <None Include="$(OutDir)\resources\inspector\InspectorBackendCommands.js"/>
+    <None Include="$(OutDir)\resources\inspector\SupportedCSSProperties.js"/>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets"/>
+  <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.targets"/>
+  <ImportGroup Label="ExtensionTargets"/>
+  <Target Name="Build">
+    <Exec Command="call ninja.exe -C $(OutDir) $(ProjectName)"/>
+  </Target>
+  <Target Name="Clean">
+    <Exec Command="call ninja.exe -C $(OutDir) -tclean $(ProjectName)"/>
+  </Target>
+</Project>

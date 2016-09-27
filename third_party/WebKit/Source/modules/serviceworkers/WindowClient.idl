@@ -1,0 +1,24 @@
+// Copyright 2014 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+// https://slightlyoff.github.io/ServiceWorker/spec/service_worker/#context-frame-type-enum
+enum ContextFrameType {
+    "top-level",
+    "nested",
+    "auxiliary",
+    "none"
+};
+
+// https://slightlyoff.github.io/ServiceWorker/spec/service_worker/#window-client-interface
+[
+    Exposed=ServiceWorker,
+    RuntimeEnabled=ServiceWorkerClientAttributes,
+    GarbageCollected,
+    TypeChecking=Interface,
+    ImplementedAs=ServiceWorkerWindowClient,
+] interface WindowClient : Client {
+    readonly attribute VisibilityState visibilityState;
+    readonly attribute boolean focused;
+    [CallWith=ScriptState] Promise<WindowClient> focus();
+};

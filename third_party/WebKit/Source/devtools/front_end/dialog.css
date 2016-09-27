@@ -1,0 +1,50 @@
+.dialog {
+    position: absolute;
+    border: 1px solid rgb(204, 204, 204);
+    box-shadow: rgb(140, 140, 140) 0 3px 14px;
+    display: flex;
+    -webkit-flex-direction: column;
+    background: white;
+}
+
+.dialog-contents {
+    width: 100%;
+}
+
+.go-to-line-dialog {
+    font-family: 'Lucida Grande', sans-serif;
+    padding: 10px;
+    font-size: inherit;
+}
+
+.dialog input[type=text] {
+    font-size: inherit;
+    height: 24px;
+    padding-left: 2px;
+    margin: 0 5px;
+}
+
+.dialog button {
+    background-image: linear-gradient(hsl(0, 0%, 93%), hsl(0, 0%, 93%) 38%, hsl(0, 0%, 87%));
+    border: 1px solid hsla(0, 0%, 0%, 0.25);
+    border-radius: 2px;
+    box-shadow: 0 1px 0 hsla(0, 0%, 0%, 0.08), inset 0 1px 2px hsla(0, 100%, 100%, 0.75);
+    color: hsl(0, 0%, 27%);
+    font-size: 12px;
+    margin: 0 6px 0 6px;
+    text-shadow: 0 1px 0 hsl(0, 0%, 94%);
+    min-height: 2em;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.dialog button:active {
+    background-color: rgb(215, 215, 215);
+    background-image: linear-gradient(to bottom, rgb(194, 194, 194), rgb(239, 239, 239));
+}
+
+.dialog input[type="search"]:focus,
+.dialog input[type="text"]:focus {
+    outline: none;
+}
+

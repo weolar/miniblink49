@@ -1,0 +1,135 @@
+/*
+ * Copyright (C) 2006, 2007, 2009 Apple Inc. All rights reserved.
+ * Copyright (C) 2006 Samuel Weinig <sam.weinig@gmail.com>
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public License
+ * along with this library; see the file COPYING.LIB.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
+ */
+
+// https://dom.spec.whatwg.org/#interface-element
+
+[
+    TypeChecking=Interface,
+] interface Element : Node {
+    readonly attribute DOMString? namespaceURI;
+    readonly attribute DOMString? prefix;
+    readonly attribute DOMString localName;
+    readonly attribute DOMString tagName;
+
+    [Reflect] attribute DOMString id;
+    [Reflect=class] attribute DOMString className;
+    [SameObject, PerWorldBindings] readonly attribute DOMTokenList classList;
+
+    [MeasureAs=HasAttributes] boolean hasAttributes();
+    [SameObject, PerWorldBindings, ImplementedAs=attributesForBindings] readonly attribute NamedNodeMap attributes;
+    DOMString? getAttribute(DOMString name);
+    DOMString? getAttributeNS(DOMString? namespaceURI, DOMString localName);
+    [RaisesException, CustomElementCallbacks] void setAttribute(DOMString name, DOMString value);
+    [RaisesException, CustomElementCallbacks] void setAttributeNS(DOMString? namespaceURI, DOMString name, DOMString value);
+    [CustomElementCallbacks] void removeAttribute(DOMString name);
+    [CustomElementCallbacks] void removeAttributeNS(DOMString? namespaceURI, DOMString localName);
+    boolean hasAttribute(DOMString name);
+    boolean hasAttributeNS(DOMString? namespaceURI, DOMString localName);
+
+    [MeasureAs=ElementGetAttributeNode] Attr? getAttributeNode(DOMString name);
+    [MeasureAs=ElementGetAttributeNodeNS] Attr? getAttributeNodeNS(DOMString? namespaceURI, DOMString localName);
+    [RaisesException, CustomElementCallbacks, MeasureAs=ElementSetAttributeNode] Attr? setAttributeNode(Attr attr);
+    [RaisesException, CustomElementCallbacks, MeasureAs=ElementSetAttributeNodeNS] Attr? setAttributeNodeNS(Attr attr);
+    [RaisesException, CustomElementCallbacks, MeasureAs=ElementRemoveAttributeNode] Attr removeAttributeNode(Attr attr);
+
+    [RaisesException] Element? closest(DOMString selectors);
+    [RaisesException] boolean matches(DOMString selectors);
+
+    HTMLCollection getElementsByTagName(DOMString localName);
+    HTMLCollection getElementsByTagNameNS(DOMString? namespaceURI, DOMString localName);
+    HTMLCollection getElementsByClassName(DOMString classNames);
+
+    // DOM Parsing and Serialization
+    // https://dvcs.w3.org/hg/innerhtml/raw-file/tip/index.html#extensions-to-the-element-interface
+    [TreatNullAs=NullString, CustomElementCallbacks, RaisesException=Setter] attribute DOMString innerHTML;
+    [TreatNullAs=NullString, CustomElementCallbacks, RaisesException=Setter] attribute DOMString outerHTML;
+    [CustomElementCallbacks, RaisesException, MeasureAs=InsertAdjacentHTML] void insertAdjacentHTML(DOMString position, DOMString text);
+
+    // Shadow DOM
+    // http://w3c.github.io/webcomponents/spec/shadow/#extensions-to-element-interface
+    [RaisesException, CallWith=ScriptState, MeasureAs=ElementCreateShadowRoot] ShadowRoot createShadowRoot();
+    [RuntimeEnabled=CreateShadowRootWithParameter, RaisesException, CallWith=ScriptState, MeasureAs=ElementCreateShadowRoot] ShadowRoot createShadowRoot(ShadowRootInit shadowRootInitDict);
+    NodeList getDestinationInsertionPoints();
+    [PerWorldBindings] readonly attribute ShadowRoot? shadowRoot;
+
+    // Pointer Lock
+    // https://dvcs.w3.org/hg/pointerlock/raw-file/default/index.html#extensions-to-the-element-interface
+    [MeasureAs=ElementRequestPointerLock] void requestPointerLock();
+
+    // CSSOM View Module
+    // http://dev.w3.org/csswg/cssom-view/#extension-to-the-element-interface
+    // FIXME: getClientRect() and getBoundingClientRect() should
+    // return DOMRectList and DOMRect respectively.
+    ClientRectList getClientRects();
+    ClientRect getBoundingClientRect();
+    // FIXME: scrollIntoView() should have a ScrollIntoViewOptions dictionary argument.
+    void scrollIntoView(optional boolean alignWithTop);
+    [RuntimeEnabled=CSSOMSmoothScroll, ImplementedAs=scrollTo] void scroll(optional ScrollToOptions options);
+    [RuntimeEnabled=CSSOMSmoothScroll, ImplementedAs=scrollTo] void scroll(unrestricted double x, unrestricted double y);
+    [RuntimeEnabled=CSSOMSmoothScroll] void scrollTo(optional ScrollToOptions options);
+    [RuntimeEnabled=CSSOMSmoothScroll] void scrollTo(unrestricted double x, unrestricted double y);
+    [RuntimeEnabled=CSSOMSmoothScroll] void scrollBy(optional ScrollToOptions options);
+    [RuntimeEnabled=CSSOMSmoothScroll] void scrollBy(unrestricted double x, unrestricted double y);
+    attribute unrestricted double scrollTop;
+    attribute unrestricted double scrollLeft;
+    readonly attribute long scrollWidth;
+    readonly attribute long scrollHeight;
+    readonly attribute long clientTop;
+    readonly attribute long clientLeft;
+    readonly attribute long clientWidth;
+    readonly attribute long clientHeight;
+    // http://dev.w3.org/csswg/cssom-view/#extensions-to-the-htmlelement-interface
+    // FIXME: offset* should only be on HTMLElement.
+    [MeasureAs=ElementOffsetParent, PerWorldBindings] readonly attribute Element? offsetParent;
+    [MeasureAs=ElementOffsetTop] readonly attribute long offsetTop;
+    [MeasureAs=ElementOffsetLeft] readonly attribute long offsetLeft;
+    [MeasureAs=ElementOffsetWidth] readonly attribute long offsetWidth;
+    [MeasureAs=ElementOffsetHeight] readonly attribute long offsetHeight;
+
+    // Non-standard APIs
+    // https://www.w3.org/Bugs/Public/show_bug.cgi?id=19962
+    [RaisesException, CustomElementCallbacks, MeasureAs=InsertAdjacentElement] Element insertAdjacentElement(DOMString where, Element element);
+    [RaisesException, MeasureAs=InsertAdjacentText] void insertAdjacentText(DOMString where, DOMString text);
+    [MeasureAs=ElementScrollIntoViewIfNeeded] void scrollIntoViewIfNeeded(optional boolean centerIfNeeded);
+    [RaisesException, ImplementedAs=matches, MeasureAs=ElementPrefixedMatchesSelector] boolean webkitMatchesSelector(DOMString selectors);
+
+    // Experimental accessibility API
+    [RuntimeEnabled=ComputedAccessibilityInfo] readonly attribute DOMString? computedRole;
+    [RuntimeEnabled=ComputedAccessibilityInfo] readonly attribute DOMString? computedName;
+
+    // Event handler attributes
+    attribute EventHandler onbeforecopy;
+    attribute EventHandler onbeforecut;
+    attribute EventHandler onbeforepaste;
+    attribute EventHandler oncopy;
+    attribute EventHandler oncut;
+    attribute EventHandler onpaste;
+    attribute EventHandler onsearch;
+    attribute EventHandler onselectstart;
+    [RuntimeEnabled=Touch] attribute EventHandler ontouchcancel;
+    [RuntimeEnabled=Touch] attribute EventHandler ontouchend;
+    [RuntimeEnabled=Touch] attribute EventHandler ontouchmove;
+    [RuntimeEnabled=Touch] attribute EventHandler ontouchstart;
+    attribute EventHandler onwheel;
+};
+
+Element implements ParentNode;
+Element implements ChildNode;
+Element implements NonDocumentTypeChildNode;

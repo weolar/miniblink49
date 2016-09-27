@@ -1,0 +1,145 @@
+# Copyright 2014 The Chromium Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+import("//build/config/ui.gni")
+import("//testing/test.gni")
+import("//third_party/WebKit/Source/bindings/bindings.gni")
+import("//third_party/WebKit/Source/config.gni")
+import("//third_party/WebKit/Source/core/core.gni")
+import("//third_party/WebKit/Source/modules/modules.gni")
+import("//third_party/WebKit/Source/platform/platform.gni")
+
+visibility = [ "//third_party/WebKit/*" ]
+web_gypi = exec_script(
+    "//build/gypi_to_gn.py",
+    [ rebase_path("web.gypi") ],
+    "scope",
+    [ "web.gypi" ])
+
+
+component("web") {
+  output_name = "blink_web"
+
+  deps = [
+    "//third_party/WebKit/Source/core",
+    "//third_party/WebKit/Source/modules",
+    "//third_party/WebKit/Source/platform",
+    "//skia",
+    "//third_party/icu",
+    "//v8",
+    "//third_party/angle:translator",
+  ]
+
+  include_dirs = [
+    "//third_party/skia/include/utils",
+  ]
+
+  configs += [
+    "//third_party/WebKit/Source:config",
+    "//third_party/WebKit/Source:inside_blink",
+    "//third_party/WebKit/Source:non_test_config",
+  ]
+
+  sources = web_gypi.web_files
+
+  if (!use_default_render_theme) {
+    sources -= [ "default/WebRenderTheme.cpp" ]
+  }
+
+  if (is_component_build) {
+    deps += [
+      "//base/test:test_support",
+      "//testing/gmock",
+      "//testing/gtest",
+      "//third_party/WebKit/Source/core:testing",
+      "//third_party/WebKit/Source/modules:modules_testing",
+      "//third_party/WebKit/Source/wtf:test_support",
+    ]
+
+    configs -= [
+      "//third_party/WebKit/Source:non_test_config",
+    ]
+
+    sources += web_gypi.web_unittest_files
+    sources += bindings_unittest_files
+    sources += core_unittest_files
+    sources += modules_unittest_files
+    sources += platform_unittest_support_files
+    sources += platform_web_unittest_files
+
+    sources += [ "WebTestingSupport.cpp" ]
+    include_dirs += [ "$root_gen_dir/blink" ]
+  }
+
+  if (is_android) {
+    set_sources_assignment_filter([])
+    sources += [ "linux/WebFontRendering.cpp" ]
+    set_sources_assignment_filter(sources_assignment_filter)
+  }
+}
+
+# GYP version: WebKit/Source/web/web.gyp:blink_web_test_support
+source_set("test_support") {
+  if (!is_component_build) {
+    deps = [
+      "//skia",
+      "//third_party/WebKit/Source/core:testing",
+      "//third_party/WebKit/Source/modules:modules_testing",
+      "//third_party/WebKit/Source/wtf",
+      "//v8",
+    ]
+
+    sources = [ "WebTestingSupport.cpp" ]
+
+    configs += [
+      "//third_party/WebKit/Source:config",
+    ]
+
+    include_dirs = [
+      "$root_gen_dir/blink",
+    ]
+  }
+}
+
+# GYP version: WebKit/Source/web/web_tests.gyp:webkit_unit_tests
+if (!is_mac) {
+  # TODO(GYP): Can't link Blink binaries yet on mac.
+  test("webkit_unit_tests") {
+    visibility = []  # Allow re-assignment of list.
+    visibility = [ "*" ]
+
+    deps = [
+      ":test_support",
+      ":web",
+      "//base",
+      "//base/test:test_support",
+      "//base:i18n",
+      "//content/test:test_support",
+      "//testing/gmock",
+      "//testing/gtest",
+      "//third_party/WebKit/Source/wtf:test_support",
+      "//third_party/libwebp",
+      "//third_party/zlib",
+      "//url",
+      "//v8",
+    ]
+
+    sources = [ "tests/RunAllTests.cpp" ]
+
+    configs += [ "//third_party/WebKit/Source:config" ]
+
+    if (!is_component_build) {
+      deps += [ "//third_party/WebKit/Source/core" ]
+
+      configs += [ "//third_party/WebKit/Source:inside_blink" ]
+
+      sources += web_gypi.web_unittest_files
+      sources += bindings_unittest_files
+      sources += core_unittest_files
+      sources += modules_unittest_files
+      sources += platform_unittest_support_files
+      sources += platform_web_unittest_files
+    }
+  }
+}

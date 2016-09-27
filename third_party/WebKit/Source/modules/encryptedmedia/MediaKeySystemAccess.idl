@@ -1,0 +1,15 @@
+// Copyright 2014 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+// http://w3c.github.io/encrypted-media/#mediakeysystemaccess-interface
+
+[
+    RuntimeEnabled=EncryptedMedia,
+    GarbageCollected,
+    TypeChecking=Interface
+] interface MediaKeySystemAccess {
+    readonly attribute DOMString keySystem;
+    MediaKeySystemConfiguration getConfiguration();
+    [CallWith=ScriptState] Promise<MediaKeys> createMediaKeys();
+};

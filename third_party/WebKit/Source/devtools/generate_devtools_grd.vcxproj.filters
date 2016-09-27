@@ -1,0 +1,1068 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="scripts">
+      <UniqueIdentifier>{4FDF30BD-A895-58AC-A912-7C70A5371544}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)">
+      <UniqueIdentifier>{ECA95933-7FA6-5798-4EC4-C0CAC6DD34DE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)\resources">
+      <UniqueIdentifier>{02993FF4-6DD0-55B6-6A36-E99A964FF863}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)\resources\inspector">
+      <UniqueIdentifier>{781D0FAB-5D65-9B59-CD02-B1BEBA9FCDA6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)">
+      <UniqueIdentifier>{ECA95933-7FA6-5798-4EC4-C0CAC6DD34DE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)\resources">
+      <UniqueIdentifier>{02993FF4-6DD0-55B6-6A36-E99A964FF863}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)\resources\inspector">
+      <UniqueIdentifier>{781D0FAB-5D65-9B59-CD02-B1BEBA9FCDA6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)">
+      <UniqueIdentifier>{ECA95933-7FA6-5798-4EC4-C0CAC6DD34DE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)\resources">
+      <UniqueIdentifier>{02993FF4-6DD0-55B6-6A36-E99A964FF863}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)\resources\inspector">
+      <UniqueIdentifier>{781D0FAB-5D65-9B59-CD02-B1BEBA9FCDA6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)">
+      <UniqueIdentifier>{ECA95933-7FA6-5798-4EC4-C0CAC6DD34DE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)\resources">
+      <UniqueIdentifier>{02993FF4-6DD0-55B6-6A36-E99A964FF863}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)\resources\inspector">
+      <UniqueIdentifier>{781D0FAB-5D65-9B59-CD02-B1BEBA9FCDA6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)">
+      <UniqueIdentifier>{ECA95933-7FA6-5798-4EC4-C0CAC6DD34DE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)\resources">
+      <UniqueIdentifier>{02993FF4-6DD0-55B6-6A36-E99A964FF863}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)\resources\inspector">
+      <UniqueIdentifier>{781D0FAB-5D65-9B59-CD02-B1BEBA9FCDA6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)">
+      <UniqueIdentifier>{ECA95933-7FA6-5798-4EC4-C0CAC6DD34DE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)\resources">
+      <UniqueIdentifier>{02993FF4-6DD0-55B6-6A36-E99A964FF863}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)\resources\inspector">
+      <UniqueIdentifier>{781D0FAB-5D65-9B59-CD02-B1BEBA9FCDA6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)">
+      <UniqueIdentifier>{ECA95933-7FA6-5798-4EC4-C0CAC6DD34DE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)\resources">
+      <UniqueIdentifier>{02993FF4-6DD0-55B6-6A36-E99A964FF863}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)\resources\inspector">
+      <UniqueIdentifier>{781D0FAB-5D65-9B59-CD02-B1BEBA9FCDA6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)">
+      <UniqueIdentifier>{ECA95933-7FA6-5798-4EC4-C0CAC6DD34DE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)\resources">
+      <UniqueIdentifier>{02993FF4-6DD0-55B6-6A36-E99A964FF863}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)\resources\inspector">
+      <UniqueIdentifier>{781D0FAB-5D65-9B59-CD02-B1BEBA9FCDA6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)">
+      <UniqueIdentifier>{ECA95933-7FA6-5798-4EC4-C0CAC6DD34DE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)\resources">
+      <UniqueIdentifier>{02993FF4-6DD0-55B6-6A36-E99A964FF863}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)\resources\inspector">
+      <UniqueIdentifier>{781D0FAB-5D65-9B59-CD02-B1BEBA9FCDA6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)">
+      <UniqueIdentifier>{ECA95933-7FA6-5798-4EC4-C0CAC6DD34DE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)\resources">
+      <UniqueIdentifier>{02993FF4-6DD0-55B6-6A36-E99A964FF863}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)\resources\inspector">
+      <UniqueIdentifier>{781D0FAB-5D65-9B59-CD02-B1BEBA9FCDA6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)">
+      <UniqueIdentifier>{ECA95933-7FA6-5798-4EC4-C0CAC6DD34DE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)\resources">
+      <UniqueIdentifier>{02993FF4-6DD0-55B6-6A36-E99A964FF863}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)\resources\inspector">
+      <UniqueIdentifier>{781D0FAB-5D65-9B59-CD02-B1BEBA9FCDA6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)">
+      <UniqueIdentifier>{ECA95933-7FA6-5798-4EC4-C0CAC6DD34DE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)\resources">
+      <UniqueIdentifier>{02993FF4-6DD0-55B6-6A36-E99A964FF863}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)\resources\inspector">
+      <UniqueIdentifier>{781D0FAB-5D65-9B59-CD02-B1BEBA9FCDA6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)">
+      <UniqueIdentifier>{ECA95933-7FA6-5798-4EC4-C0CAC6DD34DE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)\resources">
+      <UniqueIdentifier>{02993FF4-6DD0-55B6-6A36-E99A964FF863}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)\resources\inspector">
+      <UniqueIdentifier>{781D0FAB-5D65-9B59-CD02-B1BEBA9FCDA6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)">
+      <UniqueIdentifier>{ECA95933-7FA6-5798-4EC4-C0CAC6DD34DE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)\resources">
+      <UniqueIdentifier>{02993FF4-6DD0-55B6-6A36-E99A964FF863}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)\resources\inspector">
+      <UniqueIdentifier>{781D0FAB-5D65-9B59-CD02-B1BEBA9FCDA6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)">
+      <UniqueIdentifier>{ECA95933-7FA6-5798-4EC4-C0CAC6DD34DE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)\resources">
+      <UniqueIdentifier>{02993FF4-6DD0-55B6-6A36-E99A964FF863}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)\resources\inspector">
+      <UniqueIdentifier>{781D0FAB-5D65-9B59-CD02-B1BEBA9FCDA6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)">
+      <UniqueIdentifier>{ECA95933-7FA6-5798-4EC4-C0CAC6DD34DE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)\resources">
+      <UniqueIdentifier>{02993FF4-6DD0-55B6-6A36-E99A964FF863}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)\resources\inspector">
+      <UniqueIdentifier>{781D0FAB-5D65-9B59-CD02-B1BEBA9FCDA6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)">
+      <UniqueIdentifier>{ECA95933-7FA6-5798-4EC4-C0CAC6DD34DE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)\resources">
+      <UniqueIdentifier>{02993FF4-6DD0-55B6-6A36-E99A964FF863}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)\resources\inspector">
+      <UniqueIdentifier>{781D0FAB-5D65-9B59-CD02-B1BEBA9FCDA6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)">
+      <UniqueIdentifier>{ECA95933-7FA6-5798-4EC4-C0CAC6DD34DE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)\resources">
+      <UniqueIdentifier>{02993FF4-6DD0-55B6-6A36-E99A964FF863}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)\resources\inspector">
+      <UniqueIdentifier>{781D0FAB-5D65-9B59-CD02-B1BEBA9FCDA6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)">
+      <UniqueIdentifier>{ECA95933-7FA6-5798-4EC4-C0CAC6DD34DE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)\resources">
+      <UniqueIdentifier>{02993FF4-6DD0-55B6-6A36-E99A964FF863}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)\resources\inspector">
+      <UniqueIdentifier>{781D0FAB-5D65-9B59-CD02-B1BEBA9FCDA6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)">
+      <UniqueIdentifier>{ECA95933-7FA6-5798-4EC4-C0CAC6DD34DE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)\resources">
+      <UniqueIdentifier>{02993FF4-6DD0-55B6-6A36-E99A964FF863}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)\resources\inspector">
+      <UniqueIdentifier>{781D0FAB-5D65-9B59-CD02-B1BEBA9FCDA6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)">
+      <UniqueIdentifier>{ECA95933-7FA6-5798-4EC4-C0CAC6DD34DE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)\resources">
+      <UniqueIdentifier>{02993FF4-6DD0-55B6-6A36-E99A964FF863}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)\resources\inspector">
+      <UniqueIdentifier>{781D0FAB-5D65-9B59-CD02-B1BEBA9FCDA6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)">
+      <UniqueIdentifier>{ECA95933-7FA6-5798-4EC4-C0CAC6DD34DE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)\resources">
+      <UniqueIdentifier>{02993FF4-6DD0-55B6-6A36-E99A964FF863}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)\resources\inspector">
+      <UniqueIdentifier>{781D0FAB-5D65-9B59-CD02-B1BEBA9FCDA6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)">
+      <UniqueIdentifier>{ECA95933-7FA6-5798-4EC4-C0CAC6DD34DE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)\resources">
+      <UniqueIdentifier>{02993FF4-6DD0-55B6-6A36-E99A964FF863}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)\resources\inspector">
+      <UniqueIdentifier>{781D0FAB-5D65-9B59-CD02-B1BEBA9FCDA6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)">
+      <UniqueIdentifier>{ECA95933-7FA6-5798-4EC4-C0CAC6DD34DE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)\resources">
+      <UniqueIdentifier>{02993FF4-6DD0-55B6-6A36-E99A964FF863}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)\resources\inspector">
+      <UniqueIdentifier>{781D0FAB-5D65-9B59-CD02-B1BEBA9FCDA6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)">
+      <UniqueIdentifier>{ECA95933-7FA6-5798-4EC4-C0CAC6DD34DE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)\resources">
+      <UniqueIdentifier>{02993FF4-6DD0-55B6-6A36-E99A964FF863}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)\resources\inspector">
+      <UniqueIdentifier>{781D0FAB-5D65-9B59-CD02-B1BEBA9FCDA6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)">
+      <UniqueIdentifier>{ECA95933-7FA6-5798-4EC4-C0CAC6DD34DE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)\resources">
+      <UniqueIdentifier>{02993FF4-6DD0-55B6-6A36-E99A964FF863}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)\resources\inspector">
+      <UniqueIdentifier>{781D0FAB-5D65-9B59-CD02-B1BEBA9FCDA6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)">
+      <UniqueIdentifier>{ECA95933-7FA6-5798-4EC4-C0CAC6DD34DE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)\resources">
+      <UniqueIdentifier>{02993FF4-6DD0-55B6-6A36-E99A964FF863}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)\resources\inspector">
+      <UniqueIdentifier>{781D0FAB-5D65-9B59-CD02-B1BEBA9FCDA6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)">
+      <UniqueIdentifier>{ECA95933-7FA6-5798-4EC4-C0CAC6DD34DE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)\resources">
+      <UniqueIdentifier>{02993FF4-6DD0-55B6-6A36-E99A964FF863}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)\resources\inspector">
+      <UniqueIdentifier>{781D0FAB-5D65-9B59-CD02-B1BEBA9FCDA6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end\Images">
+      <UniqueIdentifier>{FDE2D151-C225-C2A8-D6EC-CFF3DF41CABC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end\Images">
+      <UniqueIdentifier>{FDE2D151-C225-C2A8-D6EC-CFF3DF41CABC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end\Images">
+      <UniqueIdentifier>{FDE2D151-C225-C2A8-D6EC-CFF3DF41CABC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end\Images">
+      <UniqueIdentifier>{FDE2D151-C225-C2A8-D6EC-CFF3DF41CABC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end\Images">
+      <UniqueIdentifier>{FDE2D151-C225-C2A8-D6EC-CFF3DF41CABC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end\Images">
+      <UniqueIdentifier>{FDE2D151-C225-C2A8-D6EC-CFF3DF41CABC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end\Images">
+      <UniqueIdentifier>{FDE2D151-C225-C2A8-D6EC-CFF3DF41CABC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end\Images">
+      <UniqueIdentifier>{FDE2D151-C225-C2A8-D6EC-CFF3DF41CABC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end\Images">
+      <UniqueIdentifier>{FDE2D151-C225-C2A8-D6EC-CFF3DF41CABC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end\Images">
+      <UniqueIdentifier>{FDE2D151-C225-C2A8-D6EC-CFF3DF41CABC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end\Images">
+      <UniqueIdentifier>{FDE2D151-C225-C2A8-D6EC-CFF3DF41CABC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end\Images">
+      <UniqueIdentifier>{FDE2D151-C225-C2A8-D6EC-CFF3DF41CABC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end\Images">
+      <UniqueIdentifier>{FDE2D151-C225-C2A8-D6EC-CFF3DF41CABC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end\Images">
+      <UniqueIdentifier>{FDE2D151-C225-C2A8-D6EC-CFF3DF41CABC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end\Images">
+      <UniqueIdentifier>{FDE2D151-C225-C2A8-D6EC-CFF3DF41CABC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end\Images">
+      <UniqueIdentifier>{FDE2D151-C225-C2A8-D6EC-CFF3DF41CABC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end\Images">
+      <UniqueIdentifier>{FDE2D151-C225-C2A8-D6EC-CFF3DF41CABC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end\Images">
+      <UniqueIdentifier>{FDE2D151-C225-C2A8-D6EC-CFF3DF41CABC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end\Images">
+      <UniqueIdentifier>{FDE2D151-C225-C2A8-D6EC-CFF3DF41CABC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end\Images">
+      <UniqueIdentifier>{FDE2D151-C225-C2A8-D6EC-CFF3DF41CABC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end\Images">
+      <UniqueIdentifier>{FDE2D151-C225-C2A8-D6EC-CFF3DF41CABC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end\Images">
+      <UniqueIdentifier>{FDE2D151-C225-C2A8-D6EC-CFF3DF41CABC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end\Images">
+      <UniqueIdentifier>{FDE2D151-C225-C2A8-D6EC-CFF3DF41CABC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end\Images">
+      <UniqueIdentifier>{FDE2D151-C225-C2A8-D6EC-CFF3DF41CABC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end\Images">
+      <UniqueIdentifier>{FDE2D151-C225-C2A8-D6EC-CFF3DF41CABC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end\Images">
+      <UniqueIdentifier>{FDE2D151-C225-C2A8-D6EC-CFF3DF41CABC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end\Images">
+      <UniqueIdentifier>{FDE2D151-C225-C2A8-D6EC-CFF3DF41CABC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end\Images">
+      <UniqueIdentifier>{FDE2D151-C225-C2A8-D6EC-CFF3DF41CABC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end\Images">
+      <UniqueIdentifier>{FDE2D151-C225-C2A8-D6EC-CFF3DF41CABC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end\Images">
+      <UniqueIdentifier>{FDE2D151-C225-C2A8-D6EC-CFF3DF41CABC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end\Images">
+      <UniqueIdentifier>{FDE2D151-C225-C2A8-D6EC-CFF3DF41CABC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end\Images">
+      <UniqueIdentifier>{FDE2D151-C225-C2A8-D6EC-CFF3DF41CABC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end\Images">
+      <UniqueIdentifier>{FDE2D151-C225-C2A8-D6EC-CFF3DF41CABC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end\Images">
+      <UniqueIdentifier>{FDE2D151-C225-C2A8-D6EC-CFF3DF41CABC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end\Images">
+      <UniqueIdentifier>{FDE2D151-C225-C2A8-D6EC-CFF3DF41CABC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end\Images">
+      <UniqueIdentifier>{FDE2D151-C225-C2A8-D6EC-CFF3DF41CABC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end\Images">
+      <UniqueIdentifier>{FDE2D151-C225-C2A8-D6EC-CFF3DF41CABC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end\Images">
+      <UniqueIdentifier>{FDE2D151-C225-C2A8-D6EC-CFF3DF41CABC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end\Images">
+      <UniqueIdentifier>{FDE2D151-C225-C2A8-D6EC-CFF3DF41CABC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end\Images">
+      <UniqueIdentifier>{FDE2D151-C225-C2A8-D6EC-CFF3DF41CABC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end\Images">
+      <UniqueIdentifier>{FDE2D151-C225-C2A8-D6EC-CFF3DF41CABC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end\Images">
+      <UniqueIdentifier>{FDE2D151-C225-C2A8-D6EC-CFF3DF41CABC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end\Images">
+      <UniqueIdentifier>{FDE2D151-C225-C2A8-D6EC-CFF3DF41CABC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end\Images">
+      <UniqueIdentifier>{FDE2D151-C225-C2A8-D6EC-CFF3DF41CABC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end\Images">
+      <UniqueIdentifier>{FDE2D151-C225-C2A8-D6EC-CFF3DF41CABC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end\Images">
+      <UniqueIdentifier>{FDE2D151-C225-C2A8-D6EC-CFF3DF41CABC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end\Images">
+      <UniqueIdentifier>{FDE2D151-C225-C2A8-D6EC-CFF3DF41CABC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end\Images">
+      <UniqueIdentifier>{FDE2D151-C225-C2A8-D6EC-CFF3DF41CABC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end\Images">
+      <UniqueIdentifier>{FDE2D151-C225-C2A8-D6EC-CFF3DF41CABC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end\Images">
+      <UniqueIdentifier>{FDE2D151-C225-C2A8-D6EC-CFF3DF41CABC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end\Images">
+      <UniqueIdentifier>{FDE2D151-C225-C2A8-D6EC-CFF3DF41CABC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end\Images">
+      <UniqueIdentifier>{FDE2D151-C225-C2A8-D6EC-CFF3DF41CABC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end\Images">
+      <UniqueIdentifier>{FDE2D151-C225-C2A8-D6EC-CFF3DF41CABC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end\Images">
+      <UniqueIdentifier>{FDE2D151-C225-C2A8-D6EC-CFF3DF41CABC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end\Images">
+      <UniqueIdentifier>{FDE2D151-C225-C2A8-D6EC-CFF3DF41CABC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end\Images">
+      <UniqueIdentifier>{FDE2D151-C225-C2A8-D6EC-CFF3DF41CABC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end\Images">
+      <UniqueIdentifier>{FDE2D151-C225-C2A8-D6EC-CFF3DF41CABC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end\Images">
+      <UniqueIdentifier>{FDE2D151-C225-C2A8-D6EC-CFF3DF41CABC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end\Images">
+      <UniqueIdentifier>{FDE2D151-C225-C2A8-D6EC-CFF3DF41CABC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end\Images">
+      <UniqueIdentifier>{FDE2D151-C225-C2A8-D6EC-CFF3DF41CABC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end\Images">
+      <UniqueIdentifier>{FDE2D151-C225-C2A8-D6EC-CFF3DF41CABC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end\Images">
+      <UniqueIdentifier>{FDE2D151-C225-C2A8-D6EC-CFF3DF41CABC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end\Images">
+      <UniqueIdentifier>{FDE2D151-C225-C2A8-D6EC-CFF3DF41CABC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end\Images">
+      <UniqueIdentifier>{FDE2D151-C225-C2A8-D6EC-CFF3DF41CABC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end\Images">
+      <UniqueIdentifier>{FDE2D151-C225-C2A8-D6EC-CFF3DF41CABC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end\Images">
+      <UniqueIdentifier>{FDE2D151-C225-C2A8-D6EC-CFF3DF41CABC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end\Images">
+      <UniqueIdentifier>{FDE2D151-C225-C2A8-D6EC-CFF3DF41CABC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end\Images">
+      <UniqueIdentifier>{FDE2D151-C225-C2A8-D6EC-CFF3DF41CABC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end\Images">
+      <UniqueIdentifier>{FDE2D151-C225-C2A8-D6EC-CFF3DF41CABC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end\Images">
+      <UniqueIdentifier>{FDE2D151-C225-C2A8-D6EC-CFF3DF41CABC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end\Images">
+      <UniqueIdentifier>{FDE2D151-C225-C2A8-D6EC-CFF3DF41CABC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end\Images">
+      <UniqueIdentifier>{FDE2D151-C225-C2A8-D6EC-CFF3DF41CABC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end\Images">
+      <UniqueIdentifier>{FDE2D151-C225-C2A8-D6EC-CFF3DF41CABC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end\Images">
+      <UniqueIdentifier>{FDE2D151-C225-C2A8-D6EC-CFF3DF41CABC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end\Images">
+      <UniqueIdentifier>{FDE2D151-C225-C2A8-D6EC-CFF3DF41CABC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end\Images">
+      <UniqueIdentifier>{FDE2D151-C225-C2A8-D6EC-CFF3DF41CABC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end\Images">
+      <UniqueIdentifier>{FDE2D151-C225-C2A8-D6EC-CFF3DF41CABC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end\Images">
+      <UniqueIdentifier>{FDE2D151-C225-C2A8-D6EC-CFF3DF41CABC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end\Images">
+      <UniqueIdentifier>{FDE2D151-C225-C2A8-D6EC-CFF3DF41CABC}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="devtools.gyp"/>
+    <None Include="scripts\generate_devtools_grd.py">
+      <Filter>scripts</Filter>
+    </None>
+    <None Include="front_end\devtools.js">
+      <Filter>front_end</Filter>
+    </None>
+    <None Include="$(OutDir)\resources\inspector\inspector.css">
+      <Filter>$(OutDir)\resources\inspector</Filter>
+    </None>
+    <None Include="$(OutDir)\resources\inspector\inspector.html">
+      <Filter>$(OutDir)\resources\inspector</Filter>
+    </None>
+    <None Include="$(OutDir)\resources\inspector\inspector.js">
+      <Filter>$(OutDir)\resources\inspector</Filter>
+    </None>
+    <None Include="$(OutDir)\resources\inspector\toolbox.css">
+      <Filter>$(OutDir)\resources\inspector</Filter>
+    </None>
+    <None Include="$(OutDir)\resources\inspector\toolbox.html">
+      <Filter>$(OutDir)\resources\inspector</Filter>
+    </None>
+    <None Include="$(OutDir)\resources\inspector\toolbox.js">
+      <Filter>$(OutDir)\resources\inspector</Filter>
+    </None>
+    <None Include="$(OutDir)\resources\inspector\accessibility_module.js">
+      <Filter>$(OutDir)\resources\inspector</Filter>
+    </None>
+    <None Include="$(OutDir)\resources\inspector\animation_module.js">
+      <Filter>$(OutDir)\resources\inspector</Filter>
+    </None>
+    <None Include="$(OutDir)\resources\inspector\audits_module.js">
+      <Filter>$(OutDir)\resources\inspector</Filter>
+    </None>
+    <None Include="$(OutDir)\resources\inspector\components_lazy_module.js">
+      <Filter>$(OutDir)\resources\inspector</Filter>
+    </None>
+    <None Include="$(OutDir)\resources\inspector\console_module.js">
+      <Filter>$(OutDir)\resources\inspector</Filter>
+    </None>
+    <None Include="$(OutDir)\resources\inspector\elements_module.js">
+      <Filter>$(OutDir)\resources\inspector</Filter>
+    </None>
+    <None Include="$(OutDir)\resources\inspector\heap_snapshot_worker_module.js">
+      <Filter>$(OutDir)\resources\inspector</Filter>
+    </None>
+    <None Include="$(OutDir)\resources\inspector\layers_module.js">
+      <Filter>$(OutDir)\resources\inspector</Filter>
+    </None>
+    <None Include="$(OutDir)\resources\inspector\network_module.js">
+      <Filter>$(OutDir)\resources\inspector</Filter>
+    </None>
+    <None Include="$(OutDir)\resources\inspector\profiler_module.js">
+      <Filter>$(OutDir)\resources\inspector</Filter>
+    </None>
+    <None Include="$(OutDir)\resources\inspector\promises_module.js">
+      <Filter>$(OutDir)\resources\inspector</Filter>
+    </None>
+    <None Include="$(OutDir)\resources\inspector\resources_module.js">
+      <Filter>$(OutDir)\resources\inspector</Filter>
+    </None>
+    <None Include="$(OutDir)\resources\inspector\security_module.js">
+      <Filter>$(OutDir)\resources\inspector</Filter>
+    </None>
+    <None Include="$(OutDir)\resources\inspector\script_formatter_worker_module.js">
+      <Filter>$(OutDir)\resources\inspector</Filter>
+    </None>
+    <None Include="$(OutDir)\resources\inspector\settings_module.js">
+      <Filter>$(OutDir)\resources\inspector</Filter>
+    </None>
+    <None Include="$(OutDir)\resources\inspector\snippets_module.js">
+      <Filter>$(OutDir)\resources\inspector</Filter>
+    </None>
+    <None Include="$(OutDir)\resources\inspector\source_frame_module.js">
+      <Filter>$(OutDir)\resources\inspector</Filter>
+    </None>
+    <None Include="$(OutDir)\resources\inspector\sources_module.js">
+      <Filter>$(OutDir)\resources\inspector</Filter>
+    </None>
+    <None Include="$(OutDir)\resources\inspector\temp_storage_shared_worker_module.js">
+      <Filter>$(OutDir)\resources\inspector</Filter>
+    </None>
+    <None Include="$(OutDir)\resources\inspector\timeline_module.js">
+      <Filter>$(OutDir)\resources\inspector</Filter>
+    </None>
+    <None Include="$(OutDir)\resources\inspector\ui_lazy_module.js">
+      <Filter>$(OutDir)\resources\inspector</Filter>
+    </None>
+    <None Include="$(OutDir)\resources\inspector\devtools_extension_api.js">
+      <Filter>$(OutDir)\resources\inspector</Filter>
+    </None>
+    <None Include="front_end\Images\applicationCache.png">
+      <Filter>front_end\Images</Filter>
+    </None>
+    <None Include="front_end\Images\breakpoint.png">
+      <Filter>front_end\Images</Filter>
+    </None>
+    <None Include="front_end\Images\breakpoint_2x.png">
+      <Filter>front_end\Images</Filter>
+    </None>
+    <None Include="front_end\Images\breakpointConditional.png">
+      <Filter>front_end\Images</Filter>
+    </None>
+    <None Include="front_end\Images\breakpointConditional_2x.png">
+      <Filter>front_end\Images</Filter>
+    </None>
+    <None Include="front_end\Images\checker.png">
+      <Filter>front_end\Images</Filter>
+    </None>
+    <None Include="front_end\Images\cookie.png">
+      <Filter>front_end\Images</Filter>
+    </None>
+    <None Include="front_end\Images\chromeDisabledSelect.png">
+      <Filter>front_end\Images</Filter>
+    </None>
+    <None Include="front_end\Images\chromeDisabledSelect_2x.png">
+      <Filter>front_end\Images</Filter>
+    </None>
+    <None Include="front_end\Images\chromeLeft.png">
+      <Filter>front_end\Images</Filter>
+    </None>
+    <None Include="front_end\Images\chromeMiddle.png">
+      <Filter>front_end\Images</Filter>
+    </None>
+    <None Include="front_end\Images\chromeRight.png">
+      <Filter>front_end\Images</Filter>
+    </None>
+    <None Include="front_end\Images\chromeSelect.png">
+      <Filter>front_end\Images</Filter>
+    </None>
+    <None Include="front_end\Images\chromeSelect_2x.png">
+      <Filter>front_end\Images</Filter>
+    </None>
+    <None Include="front_end\Images\database.png">
+      <Filter>front_end\Images</Filter>
+    </None>
+    <None Include="front_end\Images\databaseTable.png">
+      <Filter>front_end\Images</Filter>
+    </None>
+    <None Include="front_end\Images\deleteIcon.png">
+      <Filter>front_end\Images</Filter>
+    </None>
+    <None Include="front_end\Images\domain.png">
+      <Filter>front_end\Images</Filter>
+    </None>
+    <None Include="front_end\Images\errorWave.png">
+      <Filter>front_end\Images</Filter>
+    </None>
+    <None Include="front_end\Images\errorWave_2x.png">
+      <Filter>front_end\Images</Filter>
+    </None>
+    <None Include="front_end\Images\fileSystem.png">
+      <Filter>front_end\Images</Filter>
+    </None>
+    <None Include="front_end\Images\forward.png">
+      <Filter>front_end\Images</Filter>
+    </None>
+    <None Include="front_end\Images\frame.png">
+      <Filter>front_end\Images</Filter>
+    </None>
+    <None Include="front_end\Images\graphLabelCalloutLeft.png">
+      <Filter>front_end\Images</Filter>
+    </None>
+    <None Include="front_end\Images\graphLabelCalloutRight.png">
+      <Filter>front_end\Images</Filter>
+    </None>
+    <None Include="front_end\Images\indexedDB.png">
+      <Filter>front_end\Images</Filter>
+    </None>
+    <None Include="front_end\Images\indexedDBIndex.png">
+      <Filter>front_end\Images</Filter>
+    </None>
+    <None Include="front_end\Images\indexedDBObjectStore.png">
+      <Filter>front_end\Images</Filter>
+    </None>
+    <None Include="front_end\Images\localStorage.png">
+      <Filter>front_end\Images</Filter>
+    </None>
+    <None Include="front_end\Images\navigationControls.png">
+      <Filter>front_end\Images</Filter>
+    </None>
+    <None Include="front_end\Images\navigationControls_2x.png">
+      <Filter>front_end\Images</Filter>
+    </None>
+    <None Include="front_end\Images\notifications.svg">
+      <Filter>front_end\Images</Filter>
+    </None>
+    <None Include="front_end\Images\paneAddButtons.png">
+      <Filter>front_end\Images</Filter>
+    </None>
+    <None Include="front_end\Images\paneFilterButtons.png">
+      <Filter>front_end\Images</Filter>
+    </None>
+    <None Include="front_end\Images\paneRefreshButtons.png">
+      <Filter>front_end\Images</Filter>
+    </None>
+    <None Include="front_end\Images\popoverArrows.png">
+      <Filter>front_end\Images</Filter>
+    </None>
+    <None Include="front_end\Images\profileGroupIcon.png">
+      <Filter>front_end\Images</Filter>
+    </None>
+    <None Include="front_end\Images\profileIcon.png">
+      <Filter>front_end\Images</Filter>
+    </None>
+    <None Include="front_end\Images\profileSmallIcon.png">
+      <Filter>front_end\Images</Filter>
+    </None>
+    <None Include="front_end\Images\radioDot.png">
+      <Filter>front_end\Images</Filter>
+    </None>
+    <None Include="front_end\Images\resourceCSSIcon.png">
+      <Filter>front_end\Images</Filter>
+    </None>
+    <None Include="front_end\Images\resourceDocumentIcon.png">
+      <Filter>front_end\Images</Filter>
+    </None>
+    <None Include="front_end\Images\resourceDocumentIconSmall.png">
+      <Filter>front_end\Images</Filter>
+    </None>
+    <None Include="front_end\Images\resourceJSIcon.png">
+      <Filter>front_end\Images</Filter>
+    </None>
+    <None Include="front_end\Images\resourcePlainIcon.png">
+      <Filter>front_end\Images</Filter>
+    </None>
+    <None Include="front_end\Images\resourcePlainIconSmall.png">
+      <Filter>front_end\Images</Filter>
+    </None>
+    <None Include="front_end\Images\resourcesTimeGraphIcon.png">
+      <Filter>front_end\Images</Filter>
+    </None>
+    <None Include="front_end\Images\responsiveDesign.png">
+      <Filter>front_end\Images</Filter>
+    </None>
+    <None Include="front_end\Images\responsiveDesign_2x.png">
+      <Filter>front_end\Images</Filter>
+    </None>
+    <None Include="front_end\Images\searchNext.png">
+      <Filter>front_end\Images</Filter>
+    </None>
+    <None Include="front_end\Images\searchPrev.png">
+      <Filter>front_end\Images</Filter>
+    </None>
+    <None Include="front_end\Images\securityStateHttp_2x.png">
+      <Filter>front_end\Images</Filter>
+    </None>
+    <None Include="front_end\Images\securityStateHttp.png">
+      <Filter>front_end\Images</Filter>
+    </None>
+    <None Include="front_end\Images\securityStateInsecure_2x.png">
+      <Filter>front_end\Images</Filter>
+    </None>
+    <None Include="front_end\Images\securityStateInsecure.png">
+      <Filter>front_end\Images</Filter>
+    </None>
+    <None Include="front_end\Images\securityStateSecure_2x.png">
+      <Filter>front_end\Images</Filter>
+    </None>
+    <None Include="front_end\Images\securityStateSecure.png">
+      <Filter>front_end\Images</Filter>
+    </None>
+    <None Include="front_end\Images\securityStateWarning_2x.png">
+      <Filter>front_end\Images</Filter>
+    </None>
+    <None Include="front_end\Images\securityStateWarning.png">
+      <Filter>front_end\Images</Filter>
+    </None>
+    <None Include="front_end\Images\serviceWorker.svg">
+      <Filter>front_end\Images</Filter>
+    </None>
+    <None Include="front_end\Images\sessionStorage.png">
+      <Filter>front_end\Images</Filter>
+    </None>
+    <None Include="front_end\Images\settingsListRemove.png">
+      <Filter>front_end\Images</Filter>
+    </None>
+    <None Include="front_end\Images\settingsListRemove_2x.png">
+      <Filter>front_end\Images</Filter>
+    </None>
+    <None Include="front_end\Images\speech.png">
+      <Filter>front_end\Images</Filter>
+    </None>
+    <None Include="front_end\Images\spinner.svg">
+      <Filter>front_end\Images</Filter>
+    </None>
+    <None Include="front_end\Images\toolbarButtonGlyphs.png">
+      <Filter>front_end\Images</Filter>
+    </None>
+    <None Include="front_end\Images\toolbarButtonGlyphs_2x.png">
+      <Filter>front_end\Images</Filter>
+    </None>
+    <None Include="front_end\Images\toolbarResizerHorizontal.png">
+      <Filter>front_end\Images</Filter>
+    </None>
+    <None Include="front_end\Images\toolbarResizerVertical.png">
+      <Filter>front_end\Images</Filter>
+    </None>
+    <None Include="front_end\Images\thumbActiveHoriz.png">
+      <Filter>front_end\Images</Filter>
+    </None>
+    <None Include="front_end\Images\thumbActiveVert.png">
+      <Filter>front_end\Images</Filter>
+    </None>
+    <None Include="front_end\Images\thumbHoriz.png">
+      <Filter>front_end\Images</Filter>
+    </None>
+    <None Include="front_end\Images\thumbHoverHoriz.png">
+      <Filter>front_end\Images</Filter>
+    </None>
+    <None Include="front_end\Images\thumbHoverVert.png">
+      <Filter>front_end\Images</Filter>
+    </None>
+    <None Include="front_end\Images\thumbVert.png">
+      <Filter>front_end\Images</Filter>
+    </None>
+    <None Include="front_end\Images\toolbarItemSelected.png">
+      <Filter>front_end\Images</Filter>
+    </None>
+    <None Include="front_end\Images\touchCursor.png">
+      <Filter>front_end\Images</Filter>
+    </None>
+    <None Include="front_end\Images\touchCursor_2x.png">
+      <Filter>front_end\Images</Filter>
+    </None>
+    <None Include="front_end\Images\updateServiceWorker.svg">
+      <Filter>front_end\Images</Filter>
+    </None>
+    <None Include="devtools_static_grd_files.tmp"/>
+  </ItemGroup>
+</Project>

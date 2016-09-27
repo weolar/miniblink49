@@ -1,0 +1,14 @@
+include_rules = [
+    "+bindings",
+    "+core",
+    "+heap",
+    "-modules",
+    "+modules/EventModules.h",
+    "+modules/EventTargetModules.h",
+    "+modules/IndexedDBNames.h",
+    "+modules/ModulesExport.h",
+    "+modules/indexeddb",
+    "+platform",
+    "+public/platform",
+    "-web",
+]

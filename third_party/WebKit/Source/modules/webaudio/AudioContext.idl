@@ -1,0 +1,95 @@
+/*
+ * Copyright (C) 2010, Google Inc. All rights reserved.
+ * Copyright (C) 2011 Apple Inc. All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1.  Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE INC. AND ITS CONTRIBUTORS ``AS IS'' AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL APPLE INC. OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+ * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+enum AudioContextState {
+    "suspended",
+    "running",
+    "closed"
+};
+
+[
+    GarbageCollected,
+    ActiveDOMObject,
+    Conditional=WEB_AUDIO,
+    Constructor,
+    ConstructorCallWith=Document,
+    NoInterfaceObject,
+    RaisesException=Constructor,
+] interface AudioContext : EventTarget {
+    // All rendered audio ultimately connects to destination, which represents the audio hardware.
+    readonly attribute AudioDestinationNode destination;
+
+    // All scheduled times are relative to this time in seconds.
+    readonly attribute double currentTime;
+
+    // All AudioNodes in the context run at this sample-rate (sample-frames per second).
+    readonly attribute float sampleRate;
+
+    // All panning is relative to this listener.
+    readonly attribute AudioListener listener;
+
+    // Current state of the AudioContext
+    readonly attribute AudioContextState state;
+
+    [RaisesException] AudioBuffer createBuffer(unsigned long numberOfChannels, unsigned long numberOfFrames, float sampleRate);
+
+    // Asynchronous audio file data decoding.
+    [RaisesException, MeasureAs=AudioContextDecodeAudioData] void decodeAudioData(ArrayBuffer audioData, AudioBufferCallback successCallback, optional AudioBufferCallback errorCallback);
+
+    // Sources
+    [RaisesException, MeasureAs=AudioContextCreateBufferSource] AudioBufferSourceNode createBufferSource();
+
+    [RaisesException, MeasureAs=AudioContextCreateMediaElementSource] MediaElementAudioSourceNode createMediaElementSource(HTMLMediaElement mediaElement);
+
+    [RaisesException, MeasureAs=AudioContextCreateMediaStreamSource, RaisesException] MediaStreamAudioSourceNode createMediaStreamSource(MediaStream mediaStream);
+    [RaisesException, MeasureAs=AudioContextCreateMediaStreamDestination] MediaStreamAudioDestinationNode createMediaStreamDestination();
+
+    // Processing nodes
+    [RaisesException, MeasureAs=AudioContextCreateGain] GainNode createGain();
+    [RaisesException, MeasureAs=AudioContextCreateDelay] DelayNode createDelay(optional double maxDelayTime);
+    [RaisesException, MeasureAs=AudioContextCreateBiquadFilter] BiquadFilterNode createBiquadFilter();
+    [RaisesException, MeasureAs=AudioContextCreateWaveShaper] WaveShaperNode createWaveShaper();
+    [RaisesException, MeasureAs=AudioContextCreatePanner] PannerNode createPanner();
+    [RaisesException, MeasureAs=AudioContextCreateConvolver] ConvolverNode createConvolver();
+    [RaisesException, MeasureAs=AudioContextCreateDynamicsCompressor] DynamicsCompressorNode createDynamicsCompressor();
+    [RaisesException, MeasureAs=AudioContextCreateAnalyser] AnalyserNode createAnalyser();
+    [RaisesException, MeasureAs=AudioContextCreateScriptProcessor, RaisesException] ScriptProcessorNode createScriptProcessor(optional unsigned long bufferSize, optional unsigned long numberOfInputChannels, optional unsigned long numberOfOutputChannels);
+    [RaisesException, MeasureAs=AudioContextCreateStereoPanner] StereoPannerNode createStereoPanner();
+    [RaisesException, MeasureAs=AudioContextCreateOscillator] OscillatorNode createOscillator();
+    [RaisesException, MeasureAs=AudioContextCreatePeriodicWave, RaisesException] PeriodicWave createPeriodicWave(Float32Array real, Float32Array imag);
+
+    // Channel splitting and merging
+    [RaisesException, MeasureAs=AudioContextCreateChannelSplitter] ChannelSplitterNode createChannelSplitter(optional unsigned long numberOfOutputs);
+    [RaisesException, MeasureAs=AudioContextCreateChannelMerger] ChannelMergerNode createChannelMerger(optional unsigned long numberOfInputs);
+
+    // Close
+    [MeasureAs=AudioContextClose, CallWith=ScriptState, ImplementedAs=closeContext] Promise<void> close();
+
+    // Pause/resume
+    [MeasureAs=AudioContextSuspend, CallWith=ScriptState, ImplementedAs=suspendContext] Promise<void> suspend();
+    [MeasureAs=AudioContextResume, CallWith=ScriptState, ImplementedAs=resumeContext] Promise<void> resume();
+
+    attribute EventHandler onstatechange;
+};

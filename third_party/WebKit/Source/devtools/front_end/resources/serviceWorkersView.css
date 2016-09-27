@@ -1,0 +1,288 @@
+/*
+ * Copyright 2015 The Chromium Authors. All rights reserved.
+ * Use of this source code is governed by a BSD-style license that can be
+ * found in the LICENSE file.
+ */
+
+.service-workers-view {
+    overflow: auto;
+}
+
+.service-workers-settings {
+    border-bottom: 1px solid #e1e1e1;
+    min-height: 26px;
+    overflow: hidden;
+    padding: 5px;
+    white-space: nowrap;
+}
+
+.service-workers-root {
+    margin: 0;
+    padding: 5px;
+}
+
+.service-workers-root ol {
+    list-style-type: none;
+    padding-left: 12px;
+}
+
+.service-workers-origin {
+    padding: 5px;
+}
+
+.service-workers-origin-title {
+    font-size: 20px;
+}
+
+.service-workers-registration {
+    padding: 5px;
+}
+
+.service-workers-registration-header {
+    display: flex;
+    position: relative;
+}
+
+.service-workers-registration-title {
+    font-size: 18px;
+}
+
+.service-workers-versions-table {
+    border-left: 1px solid #e1e1e1;
+    border-right: 1px solid #e1e1e1;
+    border-top: 1px solid #e1e1e1;
+    margin: 5px;
+}
+
+.service-workers-version-mode-row {
+    display: flex;
+}
+
+.service-workers-version-mode-row-installing {
+    background-color: #eee;
+}
+
+.service-workers-version-mode-row-active {
+    background-color: #eee;
+}
+
+.service-workers-version-mode {
+    border-bottom: 1px solid #e1e1e1;
+    display: flex;
+    flex: 1 1 0;
+    min-width: 100px;
+    overflow: hidden;
+    position: relative;
+    text-overflow: ellipsis;
+}
+
+.service-workers-version-mode-text {
+    font-weight: bold;
+    left: 4px;
+    position: absolute;
+    top: 4px;
+}
+
+.service-workers-versions {
+    display: flex;
+    flex: 6 6 0;
+    flex-direction: column;
+}
+
+.service-workers-version-row {
+    border-bottom: 1px solid #e1e1e1;
+    display: flex;
+    min-height: 41px;
+    width: 100%;
+}
+
+.service-workers-version-status {
+    border-left: 1px solid #e1e1e1;
+    display: flex;
+    flex: 0.7 0.7 0;
+    overflow: hidden;
+    position: relative;
+    text-overflow: ellipsis;
+}
+
+.service-workers-version-status-icon {
+    position: absolute;
+    -webkit-mask-image: url(Images/serviceWorker.svg);
+    -webkit-mask-size: 20px 20px;
+    height: 20px;
+    left: 4px;
+    top: 10px;
+    width: 20px;
+}
+
+.service-workers-version-status-text {
+    position: absolute;
+    left: 28px;
+    top: 12px;
+}
+
+.service-workers-version-running-status {
+    border-left: 1px solid #e1e1e1;
+    display: flex;
+    flex: 0.7 0.7 0;
+    overflow: hidden;
+    position: relative;
+    text-overflow: ellipsis;
+}
+
+.service-workers-version-running-status-inspectable {
+    min-height: 39px;
+}
+
+.service-workers-version-running-status-button {
+    position: absolute;
+    left: 0px;
+    top: 6px;
+}
+
+.service-workers-version-running-status-text {
+    left: 32px;
+    position: absolute;
+    top: 10px;
+}
+
+.service-workers-version-inspect {
+    color: #00e;
+    cursor: pointer;
+    left: 32px;
+    position: absolute;
+    text-decoration: underline;
+    top: 22px;
+}
+
+.service-workers-version-script-url {
+    border-left: 1px solid #e1e1e1;
+    display: block;
+    flex: 3 3 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.service-workers-button {
+    -webkit-mask-image: url(Images/toolbarButtonGlyphs.png);
+    -webkit-mask-size: 352px 144px;
+    background-color: rgba(0, 0, 0, 0.75);
+    height: 24px;
+    opacity: 0.8;
+    width: 32px;
+    border: 0;
+    padding: 0;
+}
+
+@media (-webkit-min-device-pixel-ratio: 1.5) {
+.service-workers-button {
+    -webkit-mask-image: url(Images/toolbarButtonGlyphs_2x.png);
+}
+} /* media */
+
+.service-workers-button:hover {
+    opacity: 1;
+}
+
+.service-workers-button:active {
+    opacity: 0.8;
+}
+
+.service-workers-button:disabled {
+    opacity: 0.5;
+}
+
+.service-workers-start-button {
+    -webkit-mask-position: -64px -48px;
+}
+
+.service-workers-stop-button {
+    -webkit-mask-position: -96px -48px;
+}
+
+.service-workers-delete-button {
+    -webkit-mask-position: -128px -24px;
+}
+
+.service-workers-update-button {
+    -webkit-mask-image: url(Images/updateServiceWorker.svg);
+    -webkit-mask-position: 7px 3px;
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-size: 18px 18px;
+}
+
+.service-workers-push-button {
+    -webkit-mask-image: url(Images/notifications.svg);
+    -webkit-mask-position: 7px 3px;
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-size: 18px 18px;
+}
+
+.service-workers-skip-waiting-checkbox-label {
+    left: 10px;
+    position: absolute;
+    top: 20px;
+}
+
+.service-workers-error {
+    display: flex;
+}
+
+.service-workers-error-message {
+    font-weight: bold;
+}
+
+.service-workers-info {
+    display: flex;
+}
+
+.service-worker-client {
+   display: inline;
+}
+
+.service-worker-client-focus {
+   color: #00e;
+   cursor: pointer;
+   padding-left: 4px;
+   text-decoration: underline;
+}
+
+.service-workers-color-0 {
+    background-color: #003366;
+}
+
+.service-workers-color-1 {
+    background-color: #663300;
+}
+
+.service-workers-color-2 {
+    background-color: #660066;
+}
+
+.service-workers-color-3 {
+    background-color: #003300;
+}
+
+.service-workers-color-4 {
+    background-color: #993333;
+}
+
+.service-workers-color-5 {
+    background-color: #000066;
+}
+
+.service-workers-color-6 {
+    background-color: #006666;
+}
+
+.service-workers-color-7 {
+    background-color: #996600;
+}
+
+.service-workers-color-8 {
+    background-color: #9900CC;
+}
+
+.service-workers-color-9 {
+    background-color: #336600;
+}

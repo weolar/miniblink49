@@ -1,0 +1,120 @@
+/*
+ * Copyright (C) 2013 Google Inc. All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are
+ * met:
+ *
+ *     * Redistributions of source code must retain the above copyright
+ * notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above
+ * copyright notice, this list of conditions and the following disclaimer
+ * in the documentation and/or other materials provided with the
+ * distribution.
+ *     * Neither the name of Google Inc. nor the names of its
+ * contributors may be used to endorse or promote products derived from
+ * this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+#sources-panel-sources-view {
+    flex: auto;
+    position: relative;
+}
+
+#sources-panel-sources-view .sources-toolbar {
+    display: flex;
+    flex: 0 0 27px;
+    background-color: #f3f3f3;
+    border-top: 1px solid #dadada;
+    overflow: hidden;
+}
+
+.sources-toolbar .toolbar {
+    cursor: default;
+}
+
+.source-frame-debugger-script {
+    background-color: rgba(255, 255, 194, 0.5);
+}
+
+.source-frame-unsaved-committed-changes {
+    background-color: rgba(255, 225, 205, 0.40);
+}
+
+.source-frame-infobar {
+    flex: none;
+    display: flex;
+    -webkit-user-select: text;
+}
+
+.source-frame-infobar-animation {
+    -webkit-animation: source-frame-infobar-reveal 0.1s;
+}
+@-webkit-keyframes source-frame-infobar-reveal {
+    from { margin-top: -24px; }
+    to { margin-top: 0; }
+}
+
+.source-frame-infobar-main-row {
+    display: flex;
+    flex-direction: row;
+    flex: auto;
+    overflow: hidden;
+}
+
+.source-frame-infobar-details-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.source-frame-infobar-details-row {
+    display: flex;
+    flex: none;
+    margin-top: 2px;
+}
+
+.source-frame-infobar-row-message {
+    overflow: hidden;
+}
+
+.source-frame-infobar-toggle {
+    flex: 1 0 auto;
+    padding: 0 4px;
+    -webkit-user-select: none;
+}
+
+.source-frame-infobar-details-url {
+    flex: 0 1000 auto;
+}
+
+@-webkit-keyframes source-frame-value-update-highlight-animation {
+    from {
+        background-color: inherit;
+        color: inherit;
+    }
+    10% {
+        background-color: rgb(158, 54, 153);
+        color: white;
+    }
+    to {
+        background-color: inherit;
+        color: inherit;
+    }
+}
+
+.source-frame-value-update-highlight {
+    -webkit-animation: source-frame-value-update-highlight-animation 0.8s 1 cubic-bezier(0, 0, 0.2, 1);
+    border-radius: 2px;
+}

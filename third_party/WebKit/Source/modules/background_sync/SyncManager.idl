@@ -1,0 +1,21 @@
+// Copyright 2015 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+enum SyncPermissionState {
+  "default",
+  "denied",
+  "granted"
+};
+
+[
+    Exposed=(Window,ServiceWorker),
+    GarbageCollected,
+    RuntimeEnabled=BackgroundSync,
+    TypeChecking=Interface,
+] interface SyncManager {
+    [CallWith=ScriptState,ImplementedAs=registerFunction] Promise<SyncRegistration> register([RuntimeEnabled=BackgroundSyncV2] optional SyncRegistrationOptions options);
+    [RuntimeEnabled=BackgroundSyncV2, CallWith=ScriptState] Promise<SyncRegistration> getRegistration(DOMString tag);
+    [RuntimeEnabled=BackgroundSyncV2, CallWith=ScriptState] Promise<sequence<SyncRegistration>> getRegistrations();
+    [RuntimeEnabled=BackgroundSyncV2, CallWith=ScriptState] Promise<SyncPermissionState> permissionState();
+};

@@ -1,0 +1,22 @@
+<style>
+    @font-face {
+        font-family: ahem;
+        src: url(Ahem.ttf);
+    }
+    * {
+        font-family: ahem;
+    }
+</style>
+<span id="text">
+    The quick brown fox jumped over the lazy dog.
+</span>
+<script>
+    var range = document.createRange();
+    var textNode = document.getElementById("text").firstChild;
+    range.setStart(textNode, 10);
+    range.setEnd(textNode, 25);
+    document.getSelection().addRange(range);
+
+    window.expectedResult = [document, 68, 8, 68, 20, document, 248, 8, 248, 20];
+</script>
+

@@ -1,0 +1,26 @@
+{
+    "dependencies": ["sdk", "platform", "workspace"],
+    "scripts": [
+        "LiveLocation.js",
+        "CompilerScriptMapping.js",
+        "ResourceScriptMapping.js",
+        "SASSSourceMapping.js",
+        "StylesSourceMapping.js",
+        "CSSWorkspaceBinding.js",
+        "DebuggerWorkspaceBinding.js",
+        "BreakpointManager.js",
+        "ContentProviderBasedProjectDelegate.js",
+        "DefaultScriptMapping.js",
+        "FileSystemWorkspaceBinding.js",
+        "FileUtils.js",
+        "BlackboxSupport.js",
+        "Linkifier.js",
+        "NetworkMapping.js",
+        "NetworkProject.js",
+        "PresentationConsoleMessageHelper.js",
+        "ResourceUtils.js",
+        "TempFile.js",
+        "WorkspaceController.js",
+        "ContentScriptProjectDecorator.js"
+    ]
+}

@@ -1,0 +1,165 @@
+# Copyright (c) 2013 The Chromium Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+source_set("client") {
+  sources = [
+    "cmd_buffer_helper.cc",
+    "cmd_buffer_helper.h",
+    "fenced_allocator.cc",
+    "fenced_allocator.h",
+    "gpu_control.h",
+    "mapped_memory.cc",
+    "mapped_memory.h",
+    "ring_buffer.cc",
+    "ring_buffer.h",
+    "transfer_buffer.cc",
+    "transfer_buffer.h",
+  ]
+
+  if (is_win) {
+    # TODO(jschuh): crbug.com/167187 fix size_t to int truncations.
+    cflags = [ "/wd4267" ]  # size_t to int truncation.
+  }
+
+  all_dependent_configs = [ "//third_party/khronos:khronos_headers" ]
+
+  deps = [
+    "//gpu/command_buffer/common",
+  ]
+}
+
+source_set("gles2_cmd_helper") {
+  sources = [
+    "gles2_cmd_helper.cc",
+    "gles2_cmd_helper.h",
+    "gles2_cmd_helper_autogen.h",
+  ]
+
+  if (is_win) {
+    # TODO(jschuh): crbug.com/167187 fix size_t to int truncations.
+    cflags = [ "/wd4267" ]  # size_t to int truncation.
+  }
+
+  deps = [ ":client" ]
+}
+
+gles2_c_lib_source_files = [
+  "gles2_c_lib.cc",
+  "gles2_c_lib_autogen.h",
+  "gles2_c_lib_export.h",
+  "gles2_lib.h",
+  "gles2_lib.cc",
+]
+
+gles2_implementation_source_files = [
+  "buffer_tracker.cc",
+  "buffer_tracker.h",
+  "client_context_state.h",
+  "client_context_state.cc",
+  "client_context_state_autogen.h",
+  "client_context_state_impl_autogen.h",
+  "gles2_impl_export.h",
+  "gles2_implementation_autogen.h",
+  "gles2_implementation.cc",
+  "gles2_implementation.h",
+  "gles2_implementation_impl_autogen.h",
+  "gles2_interface.h",
+  "gles2_trace_implementation_autogen.h",
+  "gles2_trace_implementation.cc",
+  "gles2_trace_implementation.h",
+  "gles2_trace_implementation_impl_autogen.h",
+  "gpu_memory_buffer_factory.h",
+  "gpu_memory_buffer_tracker.cc",
+  "gpu_memory_buffer_tracker.h",
+  "program_info_manager.cc",
+  "program_info_manager.h",
+  "query_tracker.cc",
+  "query_tracker.h",
+  "share_group.cc",
+  "share_group.h",
+  "vertex_array_object_manager.cc",
+  "vertex_array_object_manager.h",
+]
+
+# Library emulates GLES2 using command_buffers.
+component("gles2_implementation") {
+  sources = gles2_implementation_source_files
+
+  defines = [ "GLES2_IMPL_IMPLEMENTATION" ]
+  all_dependent_configs = [ "//third_party/khronos:khronos_headers" ]
+
+  if (is_win) {
+    # TODO(jschuh): crbug.com/167187 fix size_t to int truncations.
+    cflags = [ "/wd4267" ]  # size_t to int truncation.
+  }
+
+  deps = [
+    ":gles2_cmd_helper",
+    "//base",
+    "//gpu/command_buffer/common",
+    "//ui/gfx/geometry",
+    "//ui/gl",
+  ]
+}
+
+# Library emulates GLES2 using command_buffers.
+component("gles2_implementation_client_side_arrays") {
+  sources = gles2_implementation_source_files
+
+  defines = [
+    "GLES2_IMPL_IMPLEMENTATION",
+    "GLES2_SUPPORT_CLIENT_SIDE_ARRAYS=1",
+  ]
+  all_dependent_configs = [ "//third_party/khronos:khronos_headers" ]
+
+  if (is_win) {
+    # TODO(jschuh): crbug.com/167187 fix size_t to int truncations.
+    cflags = [ "/wd4267" ]  # size_t to int truncation.
+  }
+
+  deps = [
+    ":gles2_cmd_helper",
+    "//base",
+    "//gpu/command_buffer/common",
+    "//ui/gfx/geometry",
+    "//ui/gl",
+  ]
+}
+
+component("gl_in_process_context") {
+  sources = [
+    "gl_in_process_context.h",
+    "gl_in_process_context.cc",
+    "gl_in_process_context_export.h",
+  ]
+
+  defines = [ "GL_IN_PROCESS_CONTEXT_IMPLEMENTATION" ]
+
+  deps = [
+    ":gles2_implementation",
+    "//gpu",
+    "//base",
+    "//base/third_party/dynamic_annotations",
+    "//ui/gfx/geometry",
+    "//ui/gl",
+  ]
+}
+
+component("gles2_c_lib") {
+  sources = gles2_c_lib_source_files
+  defines = [ "GLES2_C_LIB_IMPLEMENTATION" ]
+
+  if (is_win) {
+    # TODO(jschuh): crbug.com/167187 fix size_t to int truncations.
+    cflags = [ "/wd4267" ]  # size_t to int truncation.
+  }
+
+  deps = [
+    ":client",
+    "//base",
+    "//base/third_party/dynamic_annotations",
+    "//gpu/command_buffer/common",
+  ]
+}
+

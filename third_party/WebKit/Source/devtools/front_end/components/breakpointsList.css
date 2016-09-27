@@ -1,0 +1,171 @@
+/*
+ * Copyright (C) 2006, 2007, 2008 Apple Inc.  All rights reserved.
+ * Copyright (C) 2009 Anthony Ricaud <rik@webkit.org>
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1.  Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ * 3.  Neither the name of Apple Computer, Inc. ("Apple") nor the names of
+ *     its contributors may be used to endorse or promote products derived
+ *     from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+.sidebar-pane .breakpoint-condition {
+    display: block;
+    margin-top: 4px;
+    margin-bottom: 4px;
+    margin-left: 23px;
+    margin-right: 8px;
+}
+
+.breakpoint-list .editing.being-edited {
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+#breakpoint-condition-input {
+    display: block;
+    margin-left: 0;
+    margin-right: 0;
+    outline: none !important;
+    border: 1px solid rgb(66%, 66%, 66%);
+}
+
+ol.breakpoint-list {
+    -webkit-padding-start: 0;
+    list-style: none;
+    margin: 0;
+    padding-bottom: 3px;
+}
+
+.breakpoints-list-deactivated {
+    background-color: #eee;
+    opacity: 0.3;
+}
+
+.breakpoint-list li {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    padding: 2px 0;
+}
+
+.breakpoint-list li:hover {
+    background-color: #eee;
+}
+
+.breakpoint-list .source-text {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    margin: 2px 0 0 20px;
+}
+
+.sidebar-pane .breakpoint-hit {
+    background-color: rgb(255, 255, 194);
+}
+
+li.breakpoint-hit .breakpoint-hit-marker {
+    background-color: rgb(255, 255, 194);
+    height: 18px;
+    left: 0;
+    margin-top: -16px;
+    position: absolute;
+    right: 0;
+    z-index: -1;
+}
+
+.event-listener-breakpoints {
+    margin-top: 0;
+    padding: 2px 6px;
+    list-style: none;
+    min-height: 18px;
+}
+
+.event-listener-breakpoints ol {
+    display: none;
+    margin: 0;
+    -webkit-padding-start: 12px;
+    list-style: none;
+}
+
+.event-listener-breakpoints ol.expanded {
+    display: block;
+}
+
+.event-listener-breakpoints li {
+    margin-left: 12px;
+    text-overflow: ellipsis;
+    -webkit-user-select: text;
+    cursor: default;
+}
+
+.event-listener-breakpoints li.parent {
+    margin-left: 1px;
+}
+
+.event-listener-breakpoints li.parent::before {
+    -webkit-user-select: none;
+    background-image: url(Images/toolbarButtonGlyphs.png);
+    background-size: 352px 144px;
+    opacity: 0.5;
+    content: "a";
+    width: 8px;
+    float: left;
+    margin: 2px 2px 0 -2px;
+    color: transparent;
+    text-shadow: none;
+}
+
+@media (-webkit-min-device-pixel-ratio: 1.5) {
+.event-listener-breakpoints li.parent::before {
+    background-image: url(Images/toolbarButtonGlyphs_2x.png);
+}
+} /* media */
+
+.event-listener-breakpoints li.parent::before {
+    background-position: -4px -96px;
+}
+
+.event-listener-breakpoints li.parent.expanded::before {
+    background-position: -20px -96px;
+}
+
+.event-listener-breakpoints .children li {
+    margin-left: 12px;
+}
+
+.async-operations li > label {
+    float: left;
+}
+
+.async-operations li > div {
+    float: right;
+    margin: 2px 3px 0 2px;
+}
+
+.dom-breakpoints-list > li {
+    display: flex;
+}
+
+.dom-breakpoints-list .dom-breakpoint > div {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

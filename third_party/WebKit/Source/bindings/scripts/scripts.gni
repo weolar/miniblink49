@@ -1,0 +1,362 @@
+# Copyright 2014 The Chromium Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+import("//third_party/WebKit/Source/bindings/core/v8/generated.gni")
+import("//third_party/WebKit/Source/bindings/modules/idl.gni")
+import("//third_party/WebKit/Source/bindings/modules/modules.gni")
+
+bindings_scripts_dir = get_path_info(".", "abspath")
+bindings_scripts_output_dir = "$root_gen_dir/blink/bindings/scripts"
+
+# Replacing <(DEPTH) with "/" makes paths like "<(DEPTH)/foo" absolute.
+_gypi = exec_script(
+    "//build/gypi_to_gn.py",
+    [ rebase_path("scripts.gypi"),
+      "--replace=<(DEPTH)=/" ],
+    "scope",
+    [ "scripts.gypi" ])
+
+jinja_module_files = get_path_info(_gypi.jinja_module_files, "abspath")
+idl_lexer_parser_files = get_path_info(_gypi.idl_lexer_parser_files, "abspath")
+idl_compiler_files = get_path_info(_gypi.idl_compiler_files, "abspath")
+
+# Calls the compute_interfaces_info_individual script.
+#
+# Parameters:
+#   sources_static = list of IDL files to pass as inputs
+#   sources_generated = list of generated IDL files to pass as inputs
+#   component_dir = name if subdirectory (one word, no slashes) of component.
+#   interfaces_info_file = output pickle file for interfaces info.
+#   component_info_file = output pickle file for component wide info.
+#   deps = dependencies
+#
+# FIXME: Note the static/generated split is for consistency with GYP. This
+# split is not necessary in the GN build and could be combined into a single
+# "sources".
+template("compute_interfaces_info_individual") {
+  action(target_name) {
+    script = "$bindings_scripts_dir/compute_interfaces_info_individual.py"
+    if (defined(invoker.visibility)) {
+      visibility = invoker.visibility
+    }
+
+    # Save static list to temp file to avoid blowing out command-line length
+    # limit.
+    file_list = "$target_gen_dir/${target_name}_file_list.txt"
+    write_file(file_list, rebase_path(invoker.sources_static, root_build_dir))
+
+    inputs = [
+      "$bindings_scripts_dir/utilities.py",
+      file_list,
+    ] + invoker.sources_static + invoker.sources_generated
+
+    outputs = [
+      invoker.interfaces_info_file,
+      invoker.component_info_file,
+    ]
+
+    args = [
+      "--cache-directory",
+      rebase_path(bindings_scripts_output_dir, root_build_dir),
+      "--idl-files-list", rebase_path(file_list, root_build_dir),
+      "--interfaces-info-file",
+      rebase_path(invoker.interfaces_info_file, root_build_dir),
+      "--component-info-file",
+      rebase_path(invoker.component_info_file, root_build_dir),
+      "--write-file-only-if-changed=1",
+      "--",
+    ] + rebase_path(invoker.sources_generated, root_build_dir)
+
+    deps = [
+      "//third_party/WebKit/Source/bindings/scripts:cached_lex_yacc_tables",
+    ] + invoker.deps
+  }
+}
+
+# Calls generate_event_interfaces
+#
+# Parameters:
+#   sources = A list of IDL files to process.
+#   output_file = The .in file to write, relative to the blink_gen_dir.
+#   suffix = (Optional) String to be passed to script via --suffix
+template("generate_event_interfaces") {
+  action(target_name) {
+    # Write the file list to a unique temp file to avoid blowing out the
+    # command line length limit.
+    idl_files_list = "$target_gen_dir/${target_name}_file_list.tmp"
+    write_file(idl_files_list,
+               rebase_path(invoker.sources, root_build_dir))
+
+    inputs = [
+      "//third_party/WebKit/Source/bindings/scripts/utilities.py",
+      idl_files_list,
+    ] + invoker.sources
+
+    output_file = "$root_gen_dir/blink/" + invoker.output_file
+    outputs = [ output_file ]
+
+    script = "//third_party/WebKit/Source/bindings/scripts/generate_event_interfaces.py"
+    args = [
+      "--event-idl-files-list",
+      rebase_path(idl_files_list, root_build_dir),
+      "--event-interfaces-file",
+      rebase_path(output_file, root_build_dir),
+      "--write-file-only-if-changed=1",  # Always true for Ninja.
+    ]
+
+    if (defined(invoker.suffix)) {
+      args += [ "--suffix", invoker.suffix ]
+    }
+  }
+}
+
+# Runs the idl_compiler script over a list of sources.
+#
+# Parameters:
+#   sources = list of IDL files to compile
+#   output_dir = string containing the directory to put the output files.
+#   output_name_suffix = a suffix after the basename of the output file names.
+#   target_component = component to generate code for.
+template("idl_compiler") {
+  output_dir = invoker.output_dir
+  output_name_suffix = invoker.output_name_suffix
+
+  action_foreach(target_name) {
+    # TODO(brettw) GYP adds a "-S before the script name to skip "import site" to
+    # speed up startup. Figure out if we need this and do something similar (not
+    # really expressible in GN now).
+    script = "//third_party/WebKit/Source/bindings/scripts/idl_compiler.py"
+
+    inputs =
+      idl_lexer_parser_files +  # to be explicit (covered by parsetab)
+      idl_compiler_files
+    inputs += [
+      "$bindings_scripts_output_dir/lextab.py",
+      "$bindings_scripts_output_dir/parsetab.pickle",
+      "$bindings_scripts_output_dir/cached_jinja_templates.stamp",
+      "$bindings_dir/IDLExtendedAttributes.txt",
+      # If the dependency structure or public interface info (e.g.,
+      # [ImplementedAs]) changes, we rebuild all files, since we're not
+      # computing dependencies file-by-file in the build.
+      # This data is generally stable.
+      "$bindings_modules_output_dir/InterfacesInfoOverall.pickle",
+    ]
+    # Further, if any dependency (partial interface or implemented
+    # interface) changes, rebuild everything, since every IDL potentially
+    # depends on them, because we're not computing dependencies
+    # file-by-file.
+    # FIXME: This is too conservative, and causes excess rebuilds:
+    # compute this file-by-file.  http://crbug.com/341748
+    # This should theoretically just be the IDL files passed in.
+    inputs += all_dependency_idl_files
+
+    sources = invoker.sources
+    outputs = [
+      "$output_dir/V8{{source_name_part}}${output_name_suffix}.cpp",
+      "$output_dir/V8{{source_name_part}}${output_name_suffix}.h",
+    ]
+
+    args = [
+      "--cache-dir",
+      rebase_path(bindings_scripts_output_dir, root_build_dir),
+      "--output-dir",
+      rebase_path(output_dir, root_build_dir),
+      "--info-dir",
+      rebase_path("$bindings_output_dir", root_build_dir),
+      "--write-file-only-if-changed=1",  # Always true for Ninja.
+      "--target-component",
+      invoker.target_component,
+      "{{source}}",
+    ]
+
+    public_deps = [
+      "//third_party/WebKit/Source/bindings/core:core_global_constructors_idls",
+      # FIXME: should be interfaces_info_core (w/o modules)
+      # http://crbug.com/358074
+      "//third_party/WebKit/Source/bindings/modules:interfaces_info",
+      "//third_party/WebKit/Source/bindings/modules:modules_core_global_constructors_idls",
+      "//third_party/WebKit/Source/bindings/modules:modules_global_constructors_idls",
+
+      "//third_party/WebKit/Source/bindings/scripts:cached_lex_yacc_tables",
+      "//third_party/WebKit/Source/bindings/scripts:cached_jinja_templates",
+      "//third_party/WebKit/Source/core:generated_testing_idls",
+    ]
+  }
+}
+
+# Runs the idl_compiler to generate IDL dictionary and union impl files.
+#
+# Parameters:
+#   sources = a list of IDL files to process
+#   outputs = a list of files to write to
+#   output_dir = the directory to put the output files
+#   target_component = component to generate code for
+template("idl_impl") {
+  dictionary_impl_output_dir = "$root_gen_dir/blink/"
+
+  action(target_name) {
+    script = "//third_party/WebKit/Source/bindings/scripts/idl_compiler.py"
+    idl_files_list = "$target_gen_dir/${target_name}_file_list.tmp"
+    write_file(idl_files_list, rebase_path(invoker.sources, root_build_dir))
+
+    inputs =
+      idl_lexer_parser_files +  # to be explicit (covered by parsetab)
+      idl_compiler_files
+    inputs += [
+      "$bindings_scripts_output_dir/lextab.py",
+      "$bindings_scripts_output_dir/parsetab.pickle",
+      "$bindings_scripts_output_dir/cached_jinja_templates.stamp",
+      "$bindings_dir/IDLExtendedAttributes.txt",
+    ]
+    inputs += [ idl_files_list ] + invoker.sources
+    outputs = invoker.outputs
+
+    args = [
+      "--cache-dir",
+      rebase_path(bindings_scripts_output_dir, root_build_dir),
+      "--output-dir",
+      rebase_path(invoker.output_dir, root_build_dir),
+      "--impl-output-dir",
+      rebase_path(dictionary_impl_output_dir, root_build_dir),
+      "--info-dir",
+      rebase_path("$bindings_output_dir", root_build_dir),
+      "--target-component",
+      invoker.target_component,
+      "--write-file-only-if-changed=1",
+      "--generate-impl",
+      rebase_path(idl_files_list, root_build_dir),
+    ]
+
+    deps = [
+      # FIXME: should be interfaces_info_core (w/o modules)
+      # http://crbug.com/358074
+      "//third_party/WebKit/Source/bindings/core:interfaces_info_individual_core",
+      "//third_party/WebKit/Source/bindings/modules:interfaces_info",
+      "//third_party/WebKit/Source/bindings/modules:interfaces_info_individual_modules",
+      "//third_party/WebKit/Source/bindings/scripts:cached_lex_yacc_tables",
+      "//third_party/WebKit/Source/bindings/scripts:cached_jinja_templates",
+    ]
+  }
+}
+
+# Calls the aggregate_generated_bindings script.
+#
+# Parameters:
+#   sources = a list of source IDL files.
+#   component_dir = Name of directory for these files (one word, no slashes).
+#   outputs = a list of files to write to.
+template("aggregate_generated_bindings") {
+  action(target_name) {
+    script = "//third_party/WebKit/Source/bindings/scripts/aggregate_generated_bindings.py"
+
+    # Write lists of main IDL files to a file, so that the command lines don't
+    # exceed OS length limits.
+    idl_files_list = "$target_gen_dir/${target_name}_file_list.tmp"
+    write_file(idl_files_list, rebase_path(invoker.sources, root_build_dir))
+
+    inputs = [ idl_files_list ] + invoker.sources
+    outputs = invoker.outputs
+
+    args = [
+      invoker.component_dir,
+      rebase_path(idl_files_list, root_build_dir),
+      "--",
+    ]
+    args += rebase_path(invoker.outputs, root_build_dir)
+  }
+}
+
+# Calls the compute_global_objects script.
+#
+# Parameters:
+#   sources = a list of source IDL files.
+#   sources_generated = a list of generated pickle sources.
+#   output_file = a pickle file to write to (need to specify directory)
+#
+template("compute_global_objects") {
+  action(target_name) {
+    script = "//third_party/WebKit/Source/bindings/scripts/compute_global_objects.py"
+
+    # Write the file list to a unique temp file to avoid blowing out the
+    # command line length limit.
+    idl_files_list = "$target_gen_dir/${target_name}_file_list.tmp"
+    write_file(idl_files_list,
+               rebase_path(invoker.sources, root_build_dir))
+
+    inputs = [
+      "//third_party/WebKit/Source/bindings/scripts/utilities.py",
+      idl_files_list,
+    ] + invoker.sources_generated + invoker.sources
+
+    outputs = [ invoker.output_file ]
+
+    args = [
+      "--idl-files-list",
+      rebase_path(idl_files_list, root_build_dir),
+      "--write-file-only-if-changed=1",  # Always true for Ninja.
+      "--",
+    ]
+    args += rebase_path(invoker.sources_generated, root_build_dir)
+    args += [ rebase_path(invoker.output_file, root_build_dir) ]
+
+    deps = invoker.deps
+  }
+}
+
+# Calls the generate_global_constructors script.
+#
+# Parameters:
+#   sources = a list of source IDL files.
+#   global_objects_file = a global objects file generated by compute_global_objects
+#   interfaces = interfaces to generate global constructors for.
+#   component = component to generate global constructors for.
+#   output_dir = output directory to generate idl files and header files.
+#   deps = dependencies
+#
+template("generate_global_constructors") {
+  action(target_name) {
+    script = "//third_party/WebKit/Source/bindings/scripts/generate_global_constructors.py"
+
+    # Write the file list to a unique temp file to avoid blowing out the
+    # command line length limit.
+    idl_files_list = "$target_gen_dir/${target_name}_file_list.tmp"
+    write_file(idl_files_list,
+               rebase_path(invoker.sources, root_build_dir))
+
+    inputs = [
+      "//third_party/WebKit/Source/bindings/scripts/utilities.py",
+      idl_files_list,
+      invoker.global_objects_file,
+    ] + invoker.sources
+
+    args = [
+      "--idl-files-list",
+      rebase_path(idl_files_list, root_build_dir),
+      "--global-objects-file",
+      rebase_path(invoker.global_objects_file, root_build_dir),
+      "--write-file-only-if-changed=1",  # Always true for Ninja.
+      "--",
+    ]
+
+    output_dir = invoker.output_dir
+    component = invoker.component
+
+    # generate outputs from invoker.interfaces.
+    output_idl_files = []
+    output_header_files = []
+    foreach(interface, invoker.interfaces) {
+      args += [ interface ]
+      output_idl_file = "$output_dir/${interface}${component}Constructors.idl"
+      args += [ rebase_path(output_idl_file, root_build_dir) ]
+      output_idl_files += [ output_idl_file ]
+      output_header_files += [
+        "$output_dir/${interface}${component}Constructors.h"
+      ]
+    }
+
+    outputs = output_idl_files + output_header_files
+    deps = invoker.deps
+  }
+}
+

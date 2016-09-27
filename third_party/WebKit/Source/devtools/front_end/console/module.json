@@ -1,0 +1,76 @@
+{
+    "extensions": [
+        {
+            "type": "@WebInspector.PanelFactory",
+            "name": "console",
+            "title": "Console",
+            "order": 20,
+            "className": "WebInspector.ConsolePanelFactory"
+        },
+        {
+            "type": "drawer-view",
+            "name": "console",
+            "title": "Console",
+            "order": "0",
+            "className": "WebInspector.ConsolePanel.WrapperView"
+        },
+        {
+            "type": "@WebInspector.Revealer",
+            "contextTypes": ["WebInspector.Console"],
+            "className": "WebInspector.ConsolePanel.ConsoleRevealer"
+        },
+        {
+            "type": "@WebInspector.ActionDelegate",
+            "actionId": "console.show",
+            "className": "WebInspector.ConsoleView.ShowConsoleActionDelegate",
+            "bindings": [
+                {
+                    "shortcut": "Ctrl+`"
+                }
+            ]
+        },
+        {
+            "type": "setting",
+            "category": "Console",
+            "title": "Hide network messages",
+            "settingName": "hideNetworkMessages",
+            "settingType": "boolean",
+            "defaultValue": false
+        },
+        {
+            "type": "setting",
+            "category": "Console",
+            "title": "Log XMLHttpRequests",
+            "settingName": "monitoringXHREnabled",
+            "settingType": "boolean",
+            "defaultValue": false
+        },
+        {
+            "type": "setting",
+            "category": "Console",
+            "title": "Preserve log upon navigation",
+            "settingName": "preserveConsoleLog",
+            "settingType": "boolean",
+            "defaultValue": false
+        },
+        {
+            "type": "setting",
+            "category": "Console",
+            "title": "Show timestamps",
+            "settingName": "consoleTimestampsEnabled",
+            "settingType": "boolean",
+            "defaultValue": false
+        }
+    ],
+    "dependencies": [
+        "components", "ui_lazy"
+    ],
+    "scripts": [
+        "ConsoleViewMessage.js",
+        "ConsoleView.js",
+        "ConsolePanel.js"
+    ],
+    "resources": [
+        "consoleView.css"
+    ]
+}

@@ -1,0 +1,637 @@
+/*
+ * Copyright (C) 2006, 2007, 2008 Apple Inc.  All rights reserved.
+ * Copyright (C) 2009 Anthony Ricaud <rik@webkit.org>
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1.  Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ * 3.  Neither the name of Apple Computer, Inc. ("Apple") nor the names of
+ *     its contributors may be used to endorse or promote products derived
+ *     from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+html {
+    height: 100%;
+    overflow: hidden;
+}
+
+body {
+    height: 100%;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    margin: 0;
+    cursor: default;
+    font-family: Lucida Grande, sans-serif;
+    font-size: 12px;
+    tab-size: 4;
+    -webkit-user-select: none;
+    color: #222;
+}
+
+.platform-linux {
+    color: rgb(48, 57, 66);
+    font-family: Ubuntu, Arial, sans-serif;
+}
+
+.platform-mac {
+    color: rgb(48, 57, 66);
+    font-family: 'Lucida Grande', sans-serif;
+}
+
+.platform-windows {
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+}
+
+label:hover input {
+    box-shadow: 0 0 3px highlight;
+}
+
+fieldset[disabled] label:hover input {
+    box-shadow: none;
+}
+
+.object-popover-container {
+    display: inline-block;
+}
+
+.inspected-page-placeholder {
+    background-color: white;
+}
+
+.toolbar-background {
+    padding-left: 1px;
+    border-bottom: 1px solid rgb(64%, 64%, 64%);
+    background-origin: padding-box;
+    background-clip: padding-box;
+}
+
+.inspector-view-toolbar-left {
+    margin-right: -5px; /* Should compensate for .tabbed-pane-header-contents margin-left. */
+}
+
+.bubble-repeat-count {
+    display: inline-block;
+    height: 14px;
+    background-color: rgb(128, 151, 189);
+    vertical-align: middle;
+    white-space: nowrap;
+    padding: 1px 4px;
+    text-align: left;
+    font-size: 11px;
+    line-height: normal;
+    font-weight: bold;
+    text-shadow: none;
+    color: white;
+    margin-top: -1px;
+    border-radius: 7px;
+}
+
+.error-message {
+    color: red;
+}
+
+.error-input {
+    background-color: rgb(220, 130, 130);
+}
+
+.panel {
+    display: flex;
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 0;
+}
+
+iframe.extension {
+    flex: auto;
+    width: 100%;
+    height: 100%;
+}
+
+iframe.panel.extension {
+    display: block;
+    height: 100%;
+}
+
+.outline-disclosure {
+    padding: 0 0 0 4px;
+    margin: 0;
+}
+
+.outline-disclosure li.hovered:not(.selected) .selection {
+    display: block;
+    left: 3px;
+    right: 3px;
+    background-color: rgba(56, 121, 217, 0.1);
+    border-radius: 5px;
+}
+
+.outline-disclosure li .selection {
+    display: none;
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 15px;
+    z-index: -1;
+}
+
+.outline-disclosure li.selected .selection {
+    display: block;
+    background-color: #dadada;
+}
+
+.outline-disclosure li.in-clipboard .highlight {
+    outline: 1px dotted darkgrey;
+}
+
+.outline-disclosure li.elements-drag-over .selection {
+    display: block;
+    margin-top: -2px;
+    border-top: 2px solid rgb(56, 121, 217);
+}
+
+ol.outline-disclosure:focus li.selected .selection {
+    background-color: rgb(56, 121, 217);
+}
+
+ol.outline-disclosure:focus li.parent.selected::before {
+    background-color: white;
+}
+
+ol.outline-disclosure,
+.outline-disclosure ol {
+    list-style-type: none;
+}
+
+.outline-disclosure-no-padding {
+    padding: 0;
+}
+
+.outline-disclosure ol {
+    padding-left: 12px;
+}
+
+.outline-disclosure li {
+    margin-top: 1px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+ol.outline-disclosure:focus li.selected {
+    color: white;
+}
+
+ol.outline-disclosure:focus li.selected * {
+    color: inherit;
+}
+
+.outline-disclosure li::before {
+    float: left;
+    -webkit-user-select: none;
+    -webkit-mask-image: url(Images/toolbarButtonGlyphs.png);
+    -webkit-mask-size: 352px 144px;
+    content: "a";
+    color: transparent;
+    text-shadow: none;
+    position: relative;
+    top: 2px;
+    margin-right: 1px;
+    width: 10px;
+    height: 10px;
+}
+
+.outline-disclosure li:not(.parent)::before {
+    background-color: transparent;
+}
+
+@media (-webkit-min-device-pixel-ratio: 1.5) {
+.outline-disclosure li::before {
+    -webkit-mask-image: url(Images/toolbarButtonGlyphs_2x.png);
+}
+} /* media */
+
+.outline-disclosure li::before {
+    -webkit-mask-position: -4px -96px;
+    background-color: rgb(110, 110, 110);
+}
+
+.outline-disclosure li.parent.expanded::before {
+    -webkit-mask-position: -20px -96px;
+}
+
+.outline-disclosure ol.children {
+    display: none;
+}
+
+.outline-disclosure ol.children.expanded {
+    display: block;
+}
+
+.properties-accessor-property-name {
+    font-style: italic;
+}
+
+.editing {
+    -webkit-user-select: text;
+    box-shadow: rgba(0, 0, 0, .5) 3px 3px 4px;
+    outline: 1px solid rgb(66%, 66%, 66%) !important;
+    background-color: white;
+    -webkit-user-modify: read-write-plaintext-only;
+    text-overflow: clip !important;
+    padding-left: 2px;
+    margin-left: -2px;
+    padding-right: 2px;
+    margin-right: -2px;
+    margin-bottom: -1px;
+    padding-bottom: 1px;
+    opacity: 1.0 !important;
+}
+
+.editing,
+.editing * {
+    color: #222 !important;
+    text-decoration: none !important;
+}
+
+.child-editing {
+    color: #222 !important;
+    text-decoration: none !important;
+    overflow: visible !important;
+}
+
+.sidebar {
+    overflow-x: hidden;
+    background-color: #f3f3f3;
+}
+
+.pane-title-button {
+    color: rgb(6, 6, 6);
+    background-color: transparent;
+    border: 1px solid rgb(165, 165, 165);
+    background-color: #eee;
+    background-image: linear-gradient(to bottom, rgb(252, 252, 252), rgb(223, 223, 223));
+    border-radius: 12px;
+    -webkit-appearance: none;
+}
+
+.pane-title-button:active {
+    background-color: rgb(215, 215, 215);
+    background-image: linear-gradient(to bottom, rgb(194, 194, 194), rgb(239, 239, 239));
+}
+
+.sidebar-tree,
+.sidebar-tree .children {
+    position: relative;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.sidebar-tree-section {
+    position: relative;
+    height: 18px;
+    padding: 1px 10px 6px 10px;
+    white-space: nowrap;
+    margin-top: 1px;
+    color: rgb(92, 110, 129);
+    text-shadow: rgba(255, 255, 255, 0.75) 0 1px 0;
+}
+
+.sidebar-tree-item {
+    position: relative;
+    height: 36px;
+    padding: 0 5px 0 5px;
+    white-space: nowrap;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    margin-top: 1px;
+    line-height: 34px;
+    border-top: 1px solid transparent;
+}
+
+.sidebar-tree .children {
+    display: none;
+}
+
+.sidebar-tree .children.expanded {
+    display: block;
+}
+
+.sidebar-tree-section + .children > .sidebar-tree-item {
+    padding-left: 10px !important;
+}
+
+.sidebar-tree-section + .children.small > .sidebar-tree-item {
+    padding-left: 17px !important;
+}
+
+.sidebar-tree > .children > .sidebar-tree-item {
+    padding-left: 37px;
+}
+
+.sidebar-tree > .children > .children > .sidebar-tree-item {
+    padding-left: 37px;
+}
+
+.sidebar-tree.some-expandable > .sidebar-tree-item:not(.parent) .icon {
+    margin-left: 16px;
+}
+
+.sidebar-tree-item .disclosure-button {
+    float: left;
+    width: 10px;
+    height: 10px;
+    border: 0;
+    -webkit-mask-image: url(Images/toolbarButtonGlyphs.png);
+    -webkit-mask-size: 352px 144px;
+    -webkit-appearance: none;
+    background-color: rgba(0, 0, 0, 0.75);
+    position: relative;
+    top: 10px;
+}
+
+@media (-webkit-min-device-pixel-ratio: 1.5) {
+.sidebar-tree-item .disclosure-button {
+    -webkit-mask-image: url(Images/toolbarButtonGlyphs_2x.png);
+}
+} /* media */
+
+.sidebar-tree-item .disclosure-button {
+    -webkit-mask-position: -4px -96px;
+}
+
+.sidebar-tree-item.selected .disclosure-button {
+    background-color: white;
+    -webkit-mask-position: -4px -96px;
+}
+
+.sidebar-tree-item.expanded .disclosure-button {
+    -webkit-mask-position: -20px -96px;
+}
+
+.sidebar-tree-item.selected.expanded .disclosure-button {
+    background-color: white;
+    -webkit-mask-position: -20px -96px;
+}
+
+.sidebar-tree-item .icon {
+    float: left;
+    width: 32px;
+    height: 32px;
+    margin-top: 1px;
+    margin-right: 3px;
+}
+
+.sidebar-tree-item.wait .icon {
+    content: none;
+}
+
+.spinner-icon::before,
+.sidebar-tree-item.wait .icon::before {
+    display: block;
+    width: 24px;
+    height: 24px;
+    margin: 4px;
+    border: 3px solid grey;
+    border-radius: 12px;
+    clip: rect(0, 15px, 15px, 0);
+    content: "";
+    position: absolute;
+    -webkit-animation: spinner-animation 1s linear infinite;
+    box-sizing: border-box;
+}
+
+.spinner-icon.small::before,
+.sidebar-tree-item.wait.small .icon::before {
+    width: 14px;
+    height: 14px;
+    margin: 1px;
+    clip: rect(0, 9px, 9px, 0);
+    border-width: 2px;
+}
+
+.sidebar-tree-item.wait.selected .icon::before {
+    border-color: white;
+}
+
+@-webkit-keyframes spinner-animation {
+    from { transform: rotate(0); }
+    to { transform: rotate(360deg); }
+}
+
+li .status {
+    float: right;
+    height: 16px;
+    margin-top: 9px;
+    margin-left: 4px;
+    line-height: 1em;
+}
+
+li .status:empty {
+    display: none;
+}
+
+li .status .bubble-repeat-count:empty {
+    display: none;
+}
+
+li.selected .status .bubble-repeat-count {
+    background-color: white !important;
+    color: rgb(132, 154, 190) !important;
+}
+
+:focus li.selected .status .bubble-repeat-count {
+    color: rgb(36, 98, 172) !important;
+}
+
+body.inactive li.selected .status .bubble-repeat-count {
+    color: rgb(159, 159, 159) !important;
+}
+
+.sidebar-tree.small .sidebar-tree-item,
+.sidebar-tree .children.small .sidebar-tree-item,
+.sidebar-tree-item.small {
+    height: 20px;
+}
+
+.sidebar-tree.small .sidebar-tree-item .icon,
+.sidebar-tree .children.small .sidebar-tree-item .icon,
+.sidebar-tree-item.small .icon {
+    width: 16px;
+    height: 16px;
+}
+
+.sidebar-tree.small .sidebar-tree-item .status,
+.sidebar-tree .children.small .sidebar-tree-item .status,
+.sidebar-tree-item.small .status {
+    margin-top: 1px;
+}
+
+.sidebar-tree-item.selected {
+    color: white;
+    text-shadow: rgba(0, 0, 0, 0.33) 1px 1px 0;
+    background-origin: padding-box;
+    background-clip: padding-box;
+    background-color: rgb(56, 121, 217);
+}
+
+:focus .sidebar-tree-item.selected {
+    background-color: rgb(56, 121, 217);
+}
+
+body.inactive .sidebar-tree-item.selected {
+    background-color: rgb(180,180,180);
+}
+
+.sidebar-tree-item .titles {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    top: 5px;
+    line-height: 12px;
+    padding-bottom: 1px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.titles > .title-container {
+    display: flex;
+}
+
+.sidebar-tree-item .titles.no-subtitle {
+    top: 10px;
+}
+
+.sidebar-tree.small .sidebar-tree-item .titles,
+.sidebar-tree .children.small .sidebar-tree-item .titles,
+.sidebar-tree-item.small .titles {
+    top: 2px;
+    line-height: normal;
+}
+
+.sidebar-tree:not(.small) .sidebar-tree-item:not(.small) .title::after,
+.sidebar-tree .children:not(.small) .sidebar-tree-item .title::after {
+    content: "\A";
+    white-space: pre;
+}
+
+.sidebar-tree-item .subtitle {
+    font-size: 80%;
+}
+
+.sidebar-tree.small .sidebar-tree-item .subtitle,
+.sidebar-tree .children.small .sidebar-tree-item .subtitle,
+.sidebar-tree-item.small .subtitle {
+    display: none;
+}
+
+.sidebar-tree-item.selected .subtitle {
+    color: white;
+}
+
+.bubble-repeat-count.debug,
+.console-debug-level .bubble-repeat-count {
+    background-color: rgb(0, 0, 255) !important;
+}
+
+.bubble-repeat-count.warning,
+.console-warning-level .bubble-repeat-count {
+    background-color: rgb(232, 164, 0) !important;
+}
+
+.bubble-repeat-count.error,
+.console-error-level .bubble-repeat-count {
+    background-color: rgb(216, 35, 35) !important;
+}
+
+.soft-context-menu-glass-pane {
+    z-index: 20000;
+}
+
+.root-view {
+    overflow: hidden;
+    position: absolute !important;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.viewport-control-gap-element {
+    color: transparent;
+}
+
+.chrome-select {
+    -webkit-appearance: none;
+    -webkit-user-select: none;
+    border: 1px solid rgba(0, 0, 0, 0.25);
+    border-radius: 2px;
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.08),
+    inset 0 1px 2px rgba(255, 255, 255, 0.75);
+    color: #444;
+    font: inherit;
+    margin: 0 1px 0 0;
+    outline: none;
+    text-shadow: 0 1px 0 rgb(240, 240, 240);
+    padding-right: 20px;
+    padding-left: 6px;
+    background-image: -webkit-image-set(url(Images/chromeSelect.png) 1x, url(Images/chromeSelect_2x.png) 2x), linear-gradient(#ededed, #ededed 38%, #dedede);
+    background-position: right center;
+    background-repeat: no-repeat;
+    min-height: 24px;
+}
+
+.chrome-select:enabled:hover {
+    background-image: -webkit-image-set(url(Images/chromeSelect.png) 1x, url(Images/chromeSelect_2x.png) 2x), linear-gradient(#f0f0f0, #f0f0f0 38%, #e0e0e0);
+    border-color: rgba(0, 0, 0, 0.3);
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.12),
+    inset 0 1px 2px rgba(255, 255, 255, 0.95);
+    color: black;
+}
+
+.chrome-select:enabled:active {
+    background-image: -webkit-image-set(url(Images/chromeSelect.png) 1x, url(Images/chromeSelect_2x.png) 2x), linear-gradient(#e7e7e7, #e7e7e7 38%, #d7d7d7);
+    box-shadow: none;
+    text-shadow: none;
+}
+
+.chrome-select:enabled:focus {
+    /* OVERRIDE */
+    -webkit-transition: border-color 200ms;
+    /* We use border color because it follows the border radius (unlike outline).
+     * This is particularly noticeable on mac. */
+    border-color: rgb(77, 144, 254);
+    outline: none;
+}
+
+body.inactive select.chrome-select,
+.chrome-select:disabled {
+    background-image: -webkit-image-set(url(Images/chromeDisabledSelect.png) 1x, url(Images/chromeDisabledSelect_2x.png) 2x), linear-gradient(#f1f1f1, #f1f1f1 38%, #e6e6e6);
+    border-color: rgba(80, 80, 80, 0.2);
+    box-shadow: 0 1px 0 rgba(80, 80, 80, 0.08),
+    inset 0 1px 2px rgba(255, 255, 255, 0.75);
+    color: #aaa;
+}

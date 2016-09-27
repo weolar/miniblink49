@@ -1,0 +1,339 @@
+# Copyright 2014 The Chromium Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+import("//build/config/features.gni")
+
+gypi_values = exec_script(
+    "//build/gypi_to_gn.py",
+    [ rebase_path("devtools.gypi") ],
+    "scope",
+    [ "devtools.gypi" ])
+
+# Some of the files in the .gypi use GYP variable expansions, go through and
+# fix them.
+devtools_core_files =
+  gypi_values.devtools_core_base_files +
+  gypi_values.devtools_bindings_js_files +
+  gypi_values.devtools_common_js_files +
+  gypi_values.devtools_components_js_files +
+  gypi_values.devtools_emulation_js_files +
+  gypi_values.devtools_host_js_files +
+  gypi_values.devtools_main_js_files +
+  gypi_values.devtools_platform_js_files +
+  gypi_values.devtools_sdk_js_files +
+  gypi_values.devtools_toolbox_bootstrap_js_files +
+  gypi_values.devtools_ui_js_files +
+  gypi_values.devtools_workspace_js_files +
+  gypi_values.devtools_core_css_files
+
+devtools_extensions_js_files = gypi_values.devtools_extensions_js_files -
+  [ "<@(devtools_extension_api_files)" ] +
+  gypi_values.devtools_extension_api_files
+
+devtools_modules_js_files =
+  gypi_values.devtools_accessibility_js_files +
+  gypi_values.devtools_audits_js_files +
+  gypi_values.devtools_cm_modes_js_files +
+  gypi_values.devtools_components_lazy_js_files +
+  gypi_values.devtools_console_js_files +
+  gypi_values.devtools_elements_js_files +
+  gypi_values.devtools_emulated_devices_js_files +
+  devtools_extensions_js_files +
+  gypi_values.devtools_heap_snapshot_worker_js_files +
+  gypi_values.devtools_layers_js_files +
+  gypi_values.devtools_network_js_files +
+  gypi_values.devtools_profiler_js_files +
+  gypi_values.devtools_promises_js_files +
+  gypi_values.devtools_resources_js_files +
+  gypi_values.devtools_security_js_files +
+  gypi_values.devtools_screencast_js_files +
+  gypi_values.devtools_script_formatter_worker_js_files +
+  gypi_values.devtools_settings_js_files +
+  gypi_values.devtools_snippets_js_files +
+  gypi_values.devtools_source_frame_js_files +
+  gypi_values.devtools_sources_js_files +
+  gypi_values.devtools_temp_storage_shared_worker_js_files +
+  gypi_values.devtools_timeline_js_files +
+  gypi_values.devtools_ui_lazy_js_files
+
+all_devtools_files =
+  gypi_values.devtools_cm_css_files +
+  gypi_values.devtools_cm_js_files +
+  devtools_core_files +
+  gypi_values.devtools_module_json_files +
+  devtools_modules_js_files +
+  gypi_values.devtools_acorn_files
+
+# FIXME: Fix the generate_devtools_grd.py script to accept trailing slashes.
+resources_out_dir_no_slash = "$root_out_dir/resources/inspector"
+resources_out_dir = resources_out_dir_no_slash + "/"
+
+generated_scripts = [
+  resources_out_dir + "InspectorBackendCommands.js",
+  resources_out_dir + "SupportedCSSProperties.js",
+]
+
+#-------------------------------------------------------------------------------
+
+visibility = [ "//third_party/WebKit/*" ]
+
+group("devtools_frontend_resources") {
+  deps = [
+    ":copy_compatibility_scripts",
+    ":copy_inspector_images",
+    ":devtools_extension_api",
+    ":frontend_protocol_sources",
+    ":supported_css_properties",
+    ":build_applications",
+  ]
+
+  if (!debug_devtools) {
+    # This overwrites application-specific core CSS (devtools.css),
+    # and thus should be guarded out in Debug builds.
+    deps += [
+      ":concatenated_inspector_css",
+      ":concatenated_toolbox_css",
+    ]
+  }
+}
+
+copy("copy_compatibility_scripts") {
+  sources = gypi_values.devtools_compatibility_scripts
+  outputs = [ resources_out_dir + "{{source_file_part}}" ]
+}
+
+copy("copy_inspector_images") {
+  sources = gypi_values.devtools_image_files
+  outputs = [ resources_out_dir + "Images/{{source_file_part}}" ]
+}
+
+action("generate_devtools_grd") {
+  script = "scripts/generate_devtools_grd.py"
+
+  deps = [ ":devtools_frontend_resources" ]
+  static_files_list = "$target_gen_dir/devtools_static_grd_files.tmp"
+  inputs = gypi_values.devtools_image_files + all_devtools_files
+  inputs += gypi_values.devtools_compatibility_scripts
+  inputs += [ static_files_list ]
+
+  static_files = []
+
+  if (debug_devtools) {
+    # Debug: all files are picked as-is.
+    generated_files = generated_scripts + [
+      resources_out_dir + "inspector.html",
+      resources_out_dir + "toolbox.html",
+    ]
+    static_files += all_devtools_files + [ "front_end/Runtime.js" ]
+  } else {
+    # Release: pick compiled non-remote files and lazy-loaded CSS.
+    generated_files = [
+      resources_out_dir + "inspector.css",
+      resources_out_dir + "inspector.html",
+      resources_out_dir + "inspector.js",
+      resources_out_dir + "toolbox.css",
+      resources_out_dir + "toolbox.html",
+      resources_out_dir + "toolbox.js",
+      resources_out_dir + "accessibility_module.js",
+      resources_out_dir + "audits_module.js",
+      resources_out_dir + "components_lazy_module.js",
+      resources_out_dir + "console_module.js",
+      resources_out_dir + "elements_module.js",
+      resources_out_dir + "heap_snapshot_worker_module.js",
+      resources_out_dir + "layers_module.js",
+      resources_out_dir + "network_module.js",
+      resources_out_dir + "profiler_module.js",
+      resources_out_dir + "promises_module.js",
+      resources_out_dir + "resources_module.js",
+      resources_out_dir + "security_module.js",
+      resources_out_dir + "script_formatter_worker_module.js",
+      resources_out_dir + "settings_module.js",
+      resources_out_dir + "snippets_module.js",
+      resources_out_dir + "source_frame_module.js",
+      resources_out_dir + "sources_module.js",
+      resources_out_dir + "temp_storage_shared_worker_module.js",
+      resources_out_dir + "timeline_module.js",
+      resources_out_dir + "ui_lazy_module.js",
+      resources_out_dir + "devtools_extension_api.js",
+    ]
+  }
+
+  write_file(static_files_list, rebase_path(static_files, root_build_dir))
+  images_path = "front_end/Images"
+
+  inputs += generated_files
+
+  outfile = "$root_gen_dir/devtools/devtools_resources.grd"
+  outputs = [ outfile ]
+
+  relative_path_dirs = [
+    resources_out_dir_no_slash,
+    "front_end",
+  ]
+
+  args = rebase_path(generated_files, root_build_dir) +
+    rebase_path(generated_files, root_build_dir) +
+    rebase_path(gypi_values.devtools_compatibility_scripts, root_build_dir) + [
+    "--static_files_list", rebase_path(static_files_list, root_build_dir),
+    "--relative_path_dirs" ] +
+    rebase_path(relative_path_dirs, root_build_dir) + [
+    "--images", rebase_path(images_path, root_build_dir),
+    "--output", rebase_path(outfile, root_build_dir),
+  ]
+}
+
+action("devtools_extension_api") {
+  script = "scripts/generate_devtools_extension_api.py"
+
+  inputs = gypi_values.devtools_extension_api_files
+  outputs = [ resources_out_dir + "devtools_extension_api.js" ]
+
+  args = rebase_path(outputs, root_build_dir) +
+    rebase_path(gypi_values.devtools_extension_api_files, root_build_dir)
+}
+
+action("supported_css_properties") {
+  script = "scripts/generate_supported_css.py"
+
+  inputs = [ "../core/css/CSSProperties.in" ]
+
+  outputs = [ resources_out_dir + "SupportedCSSProperties.js" ]
+
+  args = rebase_path(inputs, root_build_dir) +
+    rebase_path(outputs, root_build_dir)
+}
+
+action("frontend_protocol_sources") {
+  script = "scripts/CodeGeneratorFrontend.py"
+
+  inputs = [ "protocol.json" ]
+  outputs = [ resources_out_dir + "InspectorBackendCommands.js" ]
+
+  args = rebase_path(inputs, root_build_dir) + [
+    "--output_js_dir",
+    rebase_path(resources_out_dir, root_build_dir),
+  ]
+}
+
+action("build_applications") {
+  script = "scripts/build_applications.py"
+  helper_scripts = [
+    "scripts/modular_build.py",
+    "scripts/concatenate_application_code.py",
+  ]
+
+  inputs = helper_scripts + all_devtools_files + generated_scripts + [
+    "front_end/inspector.html",
+    "front_end/toolbox.html",
+  ]
+
+  outputs = [
+    resources_out_dir + "inspector.html",
+    resources_out_dir + "toolbox.html",
+  ]
+
+  deps = [
+    ":supported_css_properties",
+    ":frontend_protocol_sources",
+  ]
+
+  if (debug_devtools) {
+    deps += [ ":copy_debug_non_modules" ]
+
+    debug_mode = "1"
+  } else {
+    outputs += [
+      resources_out_dir + "inspector.js",
+      resources_out_dir + "toolbox.js",
+      resources_out_dir + "accessibility_module.js",
+      resources_out_dir + "audits_module.js",
+      resources_out_dir + "cm_modes_module.js",
+      resources_out_dir + "components_lazy_module.js",
+      resources_out_dir + "console_module.js",
+      resources_out_dir + "elements_module.js",
+      resources_out_dir + "emulated_devices_module.js",
+      resources_out_dir + "heap_snapshot_worker_module.js",
+      resources_out_dir + "layers_module.js",
+      resources_out_dir + "network_module.js",
+      resources_out_dir + "profiler_module.js",
+      resources_out_dir + "promises_module.js",
+      resources_out_dir + "resources_module.js",
+      resources_out_dir + "security_module.js",
+      resources_out_dir + "screencast_module.js",
+      resources_out_dir + "script_formatter_worker_module.js",
+      resources_out_dir + "settings_module.js",
+      resources_out_dir + "snippets_module.js",
+      resources_out_dir + "source_frame_module.js",
+      resources_out_dir + "sources_module.js",
+      resources_out_dir + "temp_storage_shared_worker_module.js",
+      resources_out_dir + "timeline_module.js",
+      resources_out_dir + "ui_lazy_module.js",
+    ]
+
+    debug_mode = "0"
+  }
+
+  args = [
+    "inspector", "toolbox",
+    "--input_path", rebase_path("front_end", root_build_dir),
+    "--output_path", rebase_path(resources_out_dir, root_build_dir),
+    "--debug", debug_mode
+  ]
+}
+
+if (debug_devtools) {
+  # Debug: copy non-module directories and core into resources_out_dir as-is.
+  group("copy_debug_non_modules") {
+    deps = [
+      ":copy_runtime_core",
+      ":copy_acorn_js_files",
+      ":copy_codemirror_files",
+    ]
+  }
+
+  copy("copy_runtime_core") {
+    sources = gypi_values.devtools_core_base_files +
+      gypi_values.devtools_core_css_files
+    outputs = [ resources_out_dir + "/{{source_file_part}}" ]
+  }
+
+  copy("copy_acorn_js_files") {
+    sources = gypi_values.devtools_acorn_files
+    outputs = [ resources_out_dir + "acorn/{{source_file_part}}" ]
+  }
+
+  copy("copy_codemirror_files") {
+    sources = gypi_values.devtools_cm_js_files +
+      gypi_values.devtools_cm_css_files
+    outputs = [ resources_out_dir + "cm/{{source_file_part}}" ]
+  }
+}
+
+if (!debug_devtools) {
+  # Release: Concatenate application CSS.
+  template("concatenate_css") {
+    assert(defined(invoker.app_name), target_name)
+    app_name = invoker.app_name
+
+    action(target_name) {
+      script = "scripts/concatenate_css_files.py"
+
+      input_stylesheet = "front_end/" + app_name + ".css"
+      inputs = [ input_stylesheet ] + gypi_values.devtools_core_css_files
+
+      outputs = [ resources_out_dir + app_name + ".css" ]
+
+      args = [ rebase_path(input_stylesheet, root_build_dir) ] +
+        rebase_path(outputs, root_build_dir)
+    }
+  }
+
+  concatenate_css("concatenated_inspector_css") {
+    app_name = "inspector"
+  }
+
+  concatenate_css("concatenated_toolbox_css") {
+    app_name = "toolbox"
+  }
+}

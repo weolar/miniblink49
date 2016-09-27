@@ -1,0 +1,14 @@
+// Copyright 2014 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+// http://dev.w3.org/csswg/css-font-loading/#dictdef-fontfacedescriptors
+
+dictionary FontFaceDescriptors {
+    DOMString style = "normal";
+    DOMString weight = "normal";
+    DOMString stretch = "normal";
+    DOMString unicodeRange = "U+0-10FFFF";
+    DOMString variant = "normal";
+    DOMString featureSettings = "normal";
+};

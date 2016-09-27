@@ -1,0 +1,76 @@
+{
+    "extensions": [
+        {
+            "type": "@WebInspector.InplaceEditor",
+            "className": "WebInspector.CodeMirrorUtils"
+        },
+        {
+            "type": "@WebInspector.TokenizerFactory",
+            "className": "WebInspector.CodeMirrorUtils.TokenizerFactory"
+        },
+        {
+            "type": "setting",
+            "category": "Sources",
+            "title": "Default indentation:",
+            "settingName": "textEditorIndent",
+            "settingType": "enum",
+            "defaultValue": "    ",
+            "options": [
+                ["2 spaces", "  "],
+                ["4 spaces", "    "],
+                ["8 spaces", "        "],
+                ["Tab character", "\t"]
+            ]
+        }
+    ],
+    "dependencies": [
+        "components"
+    ],
+    "scripts": [
+        "../cm/codemirror.js",
+        "../cm/css.js",
+        "../cm/javascript.js",
+        "../cm/xml.js",
+        "../cm/htmlmixed.js",
+        "../cm/htmlembedded.js",
+
+        "../cm/matchbrackets.js",
+        "../cm/closebrackets.js",
+        "../cm/markselection.js",
+        "../cm/comment.js",
+        "../cm/overlay.js",
+        "../cm/activeline.js",
+
+        "CodeMirrorUtils.js",
+        "CodeMirrorDictionary.js",
+        "TextEditorAutocompleteController.js",
+        "CodeMirrorTextEditor.js",
+        "FontView.js",
+        "ImageView.js",
+        "SourceFrame.js",
+        "GoToLineDialog.js",
+        "ResourceSourceFrame.js"
+    ],
+    "skip_compilation": [
+        "../cm/codemirror.js",
+        "../cm/css.js",
+        "../cm/javascript.js",
+        "../cm/xml.js",
+        "../cm/htmlmixed.js",
+        "../cm/htmlembedded.js",
+
+        "../cm/matchbrackets.js",
+        "../cm/closebrackets.js",
+        "../cm/markselection.js",
+        "../cm/comment.js",
+        "../cm/overlay.js",
+        "../cm/activeline.js"
+    ],
+    "resources": [
+        "../cm/codemirror.css",
+        "cmdevtools.css",
+        "fontView.css",
+        "imageView.css",
+        "resourceSourceFrame.css"
+    ]
+}

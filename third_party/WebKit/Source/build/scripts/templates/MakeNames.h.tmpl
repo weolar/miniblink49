@@ -1,0 +1,40 @@
+{% from "macros.tmpl" import license %}
+{{ license() }}
+
+#ifndef {{namespace}}{{suffix}}Names_h
+#define {{namespace}}{{suffix}}Names_h
+
+{% set symbol_export = '%s ' % export if export else '' %}
+{% if suffix %}
+#include "core/{{namespace}}Names.h"
+{% else %}
+#include "wtf/text/AtomicString.h"
+{% endif %}
+{% if export == 'CORE_EXPORT' %}
+#include "core/CoreExport.h"
+{% elif export == 'MODULES_EXPORT' %}
+#include "modules/ModulesExport.h"
+{% else %}
+#include "platform/PlatformExport.h"
+{% endif %}
+
+// Generated from:
+{% for entry in in_files|sort %}
+// - {{entry}}
+{% endfor %}
+
+namespace blink {
+namespace {{namespace}}Names {
+
+{% for entry in entries|sort %}
+{% filter enable_conditional(entry.Conditional) %}
+{{symbol_export}}extern const WTF::AtomicString& {{entry|symbol}};
+{% endfilter %}
+{% endfor %}
+
+{{symbol_export}}void init{{suffix}}();
+
+} // {{namespace}}Names
+} // namespace blink
+
+#endif

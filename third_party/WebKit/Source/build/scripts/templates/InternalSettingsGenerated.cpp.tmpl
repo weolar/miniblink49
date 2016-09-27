@@ -1,0 +1,38 @@
+{% from "macros.tmpl" import license %}
+{{ license() }}
+
+#include "config.h"
+#include "InternalSettingsGenerated.h"
+
+#include "core/page/Page.h"
+#include "core/frame/Settings.h"
+
+namespace blink {
+
+InternalSettingsGenerated::InternalSettingsGenerated(Page* page)
+    : m_page(page)
+    {% for setting in settings if setting.type|to_idl_type %}
+    , m_{{setting.name}}(page->settings().{{setting.name}}())
+    {% endfor %}
+{
+}
+
+InternalSettingsGenerated::~InternalSettingsGenerated()
+{
+}
+
+void InternalSettingsGenerated::resetToConsistentState()
+{
+    {% for setting in settings if setting.type|to_idl_type %}
+    m_page->settings().set{{setting.name|upper_first}}(m_{{setting.name}});
+    {% endfor %}
+}
+{% for setting in settings if setting.type|to_idl_type %}
+
+void InternalSettingsGenerated::set{{setting.name|upper_first}}({{setting.type|to_passing_type}} {{setting.name}})
+{
+    m_page->settings().set{{setting.name|upper_first}}({{setting.name}});
+}
+{% endfor %}
+
+} // namespace blink

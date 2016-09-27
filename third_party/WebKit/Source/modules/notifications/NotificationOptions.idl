@@ -1,0 +1,23 @@
+// Copyright 2014 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+// http://notifications.spec.whatwg.org/#api
+
+enum NotificationDirection {
+    "auto",
+    "ltr",
+    "rtl"
+};
+
+dictionary NotificationOptions {
+    NotificationDirection dir = "auto";
+    DOMString lang = "";
+    DOMString body = "";
+    DOMString tag = "";
+    DOMString icon;
+    // TODO(sh919.park): vibrate should be ([Clamp] unsigned long or sequence<unsigned long>)
+    (unsigned long or sequence<unsigned long>) vibrate;
+    boolean silent = false;
+    any data = null;
+};

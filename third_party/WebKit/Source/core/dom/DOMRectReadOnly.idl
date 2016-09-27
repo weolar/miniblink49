@@ -1,0 +1,22 @@
+// Copyright 2014 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+// http://dev.w3.org/fxtf/geometry/#DOMRect
+
+[
+    Constructor(unrestricted double x, unrestricted double y,
+                unrestricted double width, unrestricted double height),
+    // FIXME: Exposed=(Window,Worker)
+    GarbageCollected,
+    RuntimeEnabled=GeometryInterfaces,
+] interface DOMRectReadOnly {
+    readonly attribute unrestricted double x;
+    readonly attribute unrestricted double y;
+    readonly attribute unrestricted double width;
+    readonly attribute unrestricted double height;
+    readonly attribute unrestricted double top;
+    readonly attribute unrestricted double right;
+    readonly attribute unrestricted double bottom;
+    readonly attribute unrestricted double left;
+};

@@ -1,0 +1,21 @@
+// Copyright 2015 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+// Represents an input device (or group of related devices).
+// To ease implementation, developers cannot rely on comparing two InputDevice
+// instances for equality. Now we only have two InputDevice instances: one
+// represents all the devices which send touch events, the other one covers all
+// other devices which do not send touch events, because currently all we care
+// about is if the input device fires touch events or not.
+[
+    Constructor(optional InputDeviceInit deviceInitDict),
+    RuntimeEnabled=InputDevice,
+    GarbageCollected,
+] interface InputDevice {
+    
+    // Whether this device dispatches touch events for movement.  This is used to detect
+    // mouse events which represent only an action that has already been handled  by
+    // touch event handlers.
+    readonly attribute boolean firesTouchEvents;
+};

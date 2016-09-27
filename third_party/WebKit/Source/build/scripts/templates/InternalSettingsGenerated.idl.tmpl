@@ -1,0 +1,10 @@
+{% from "macros.tmpl" import license %}
+{{ license() }}
+
+[
+    WillBeGarbageCollected,
+] interface InternalSettingsGenerated {
+    {% for setting in settings if setting.type|to_idl_type %}
+    void set{{setting.name|upper_first}}({{setting.type|to_idl_type}} {{setting.name}});
+    {% endfor %}
+};

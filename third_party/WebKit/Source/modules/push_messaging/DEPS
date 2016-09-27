@@ -1,0 +1,13 @@
+include_rules = [
+    "+bindings",
+    "+core",
+    "+heap",
+    "-modules",
+    "+modules/EventModules.h",
+    "+modules/ModulesExport.h",
+    "+modules/push_messaging",
+    "+modules/serviceworkers",
+    "+platform",
+    "+public/platform",
+    "-web",
+]

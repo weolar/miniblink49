@@ -1,0 +1,88 @@
+/*
+ * Copyright (C) 2006 Samuel Weinig <sam.weinig@gmail.com>
+ * Copyright (C) 2006 Apple Inc. All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE INC. ``AS IS'' AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL APPLE INC. OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
+ * OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+// http://www.w3.org/TR/SVG2/paths.html#InterfaceSVGPathElement
+
+[
+    TypeChecking=Interface,
+] interface SVGPathElement : SVGGeometryElement {
+    [RuntimeEnabled=SVG1DOM, MeasureAs=SVG1DOM] readonly attribute SVGAnimatedNumber pathLength;
+
+    float getTotalLength();
+    // TODO(philipj): SVGPoint should be DOMPoint.
+    SVGPoint getPointAtLength(float distance);
+    unsigned long getPathSegAtLength(float distance);
+
+    [RuntimeEnabled=SVG1DOM, MeasureAs=SVGPathSegDOM] SVGPathSegClosePath createSVGPathSegClosePath();
+
+    [RuntimeEnabled=SVG1DOM, MeasureAs=SVGPathSegDOM] SVGPathSegMovetoAbs createSVGPathSegMovetoAbs(float x, float y);
+    [RuntimeEnabled=SVG1DOM, MeasureAs=SVGPathSegDOM] SVGPathSegMovetoRel createSVGPathSegMovetoRel(float x, float y);
+
+    [RuntimeEnabled=SVG1DOM, MeasureAs=SVGPathSegDOM] SVGPathSegLinetoAbs createSVGPathSegLinetoAbs(float x, float y);
+    [RuntimeEnabled=SVG1DOM, MeasureAs=SVGPathSegDOM] SVGPathSegLinetoRel createSVGPathSegLinetoRel(float x, float y);
+
+    [RuntimeEnabled=SVG1DOM, MeasureAs=SVGPathSegDOM] SVGPathSegCurvetoCubicAbs createSVGPathSegCurvetoCubicAbs(
+        float x, float y, float x1, float y1, float x2, float y2);
+    [RuntimeEnabled=SVG1DOM, MeasureAs=SVGPathSegDOM] SVGPathSegCurvetoCubicRel createSVGPathSegCurvetoCubicRel(
+        float x, float y, float x1, float y1, float x2, float y2);
+
+    [RuntimeEnabled=SVG1DOM, MeasureAs=SVGPathSegDOM] SVGPathSegCurvetoQuadraticAbs createSVGPathSegCurvetoQuadraticAbs(
+        float x, float y, float x1, float y1);
+    [RuntimeEnabled=SVG1DOM, MeasureAs=SVGPathSegDOM] SVGPathSegCurvetoQuadraticRel createSVGPathSegCurvetoQuadraticRel(
+        float x, float y, float x1, float y1);
+
+    [RuntimeEnabled=SVG1DOM, MeasureAs=SVGPathSegDOM] SVGPathSegArcAbs createSVGPathSegArcAbs(
+        float x, float y, float r1, float r2,
+        float angle, boolean largeArcFlag, boolean sweepFlag);
+    [RuntimeEnabled=SVG1DOM, MeasureAs=SVGPathSegDOM] SVGPathSegArcRel createSVGPathSegArcRel(
+        float x, float y, float r1, float r2,
+        float angle, boolean largeArcFlag, boolean sweepFlag);
+
+    [RuntimeEnabled=SVG1DOM, MeasureAs=SVGPathSegDOM] SVGPathSegLinetoHorizontalAbs createSVGPathSegLinetoHorizontalAbs(float x);
+    [RuntimeEnabled=SVG1DOM, MeasureAs=SVGPathSegDOM] SVGPathSegLinetoHorizontalRel createSVGPathSegLinetoHorizontalRel(float x);
+
+    [RuntimeEnabled=SVG1DOM, MeasureAs=SVGPathSegDOM] SVGPathSegLinetoVerticalAbs createSVGPathSegLinetoVerticalAbs(float y);
+    [RuntimeEnabled=SVG1DOM, MeasureAs=SVGPathSegDOM] SVGPathSegLinetoVerticalRel createSVGPathSegLinetoVerticalRel(float y);
+
+    [RuntimeEnabled=SVG1DOM, MeasureAs=SVGPathSegDOM] SVGPathSegCurvetoCubicSmoothAbs createSVGPathSegCurvetoCubicSmoothAbs(
+        float x, float y, float x2, float y2);
+    [RuntimeEnabled=SVG1DOM, MeasureAs=SVGPathSegDOM] SVGPathSegCurvetoCubicSmoothRel createSVGPathSegCurvetoCubicSmoothRel(
+        float x, float y, float x2, float y2);
+
+    [RuntimeEnabled=SVG1DOM, MeasureAs=SVGPathSegDOM] SVGPathSegCurvetoQuadraticSmoothAbs createSVGPathSegCurvetoQuadraticSmoothAbs(float x, float y);
+    [RuntimeEnabled=SVG1DOM, MeasureAs=SVGPathSegDOM] SVGPathSegCurvetoQuadraticSmoothRel createSVGPathSegCurvetoQuadraticSmoothRel(float x, float y);
+
+    // TODO(philipj): pathSegList and animatedPathSegList should be on the
+    // SVGAnimatedPathData interface which SVGPathElement should implement:
+    // http://www.w3.org/TR/SVG2/paths.html#InterfaceSVGAnimatedPathData
+    [RuntimeEnabled=SVG1DOM, MeasureAs=SVGPathSegDOM] readonly attribute SVGPathSegList pathSegList;
+    [RuntimeEnabled=SVG1DOM, MeasureAs=SVGPathSegDOM] readonly attribute SVGPathSegList animatedPathSegList;
+
+    // TODO(philipj): The following was part of SVG 1.1:
+    // http://www.w3.org/TR/SVG11/paths.html#InterfaceSVGAnimatedPathData
+    [RuntimeEnabled=SVG1DOM, MeasureAs=SVGPathSegDOM] readonly attribute SVGPathSegList normalizedPathSegList;
+    [RuntimeEnabled=SVG1DOM, MeasureAs=SVGPathSegDOM] readonly attribute SVGPathSegList animatedNormalizedPathSegList;
+};

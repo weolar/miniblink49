@@ -1,0 +1,17 @@
+include_rules = [
+    "-core",
+    "+core/CoreExport.h",
+    "+core/fetch",
+
+    # core/fetch/ shouldn't depend on anything else in core/,
+    # but has not been fully isolated yet.
+    # Do not add to this list.
+    "!core/css/StyleSheetContents.h",
+    "!core/dom/XMLDocument.h",
+    "!core/html/HTMLImageElement.h",
+    "!core/html/parser/TextResourceDecoder.h",
+    "!core/inspector/InspectorInstrumentation.h",
+    "!core/layout/LayoutObject.h",
+    "!core/svg/graphics/SVGImage.h",
+    "!core/svg/graphics/SVGImageForContainer.h",
+]

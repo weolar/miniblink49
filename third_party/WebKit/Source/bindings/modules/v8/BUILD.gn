@@ -1,0 +1,92 @@
+# Copyright 2014 The Chromium Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+import("//third_party/WebKit/Source/bindings/modules/v8/generated.gni")
+import("//third_party/WebKit/Source/bindings/scripts/scripts.gni")
+import("//third_party/WebKit/Source/modules/modules.gni")
+
+visibility = [ "//third_party/WebKit/*" ]
+
+core_idl_with_modules_dependency_files_list = "$target_gen_dir/core_idl_with_modules_dependency_files.tmp"
+write_file(core_idl_with_modules_dependency_files_list,
+           rebase_path(core_idl_with_modules_dependency_files, root_build_dir))
+
+# bindings_modules_generated in modules/v8/generated.gyp
+group("bindings_modules_generated") {
+  deps = [
+    ":bindings_modules_impl_generated",
+    ":bindings_modules_v8_generated_aggregate",
+    ":bindings_modules_v8_generated_individual",
+    ":bindings_modules_v8_generated_init_partial",
+    ":bindings_modules_v8_generated_partial_aggregate",
+    ":bindings_modules_v8_generated_partial_individual",
+  ]
+}
+
+# bindings_modules_generated_aggregate in modules/v8/generated.gyp
+aggregate_generated_bindings("bindings_modules_v8_generated_aggregate") {
+  sources = modules_definition_idl_files
+  component_dir = "modules"
+  outputs = bindings_modules_generated_aggregate_files
+}
+
+# bindings_modules_generated_individual in modules/v8/generated.gyp
+idl_compiler("bindings_modules_v8_generated_individual") {
+  # Note in GYP this is modules_interface_idl_files but this variable is just
+  # defined to modules_definition_idl_files.
+  sources = modules_definition_idl_files
+  output_dir = bindings_modules_v8_output_dir
+  output_name_suffix = ""
+  target_component = "modules"
+}
+
+# bindings_modules_impl_generated in modules/v8/generated.gyp
+idl_impl("bindings_modules_impl_generated") {
+  sources = modules_dictionary_idl_files
+  outputs = bindings_modules_generated_union_type_files +
+    generated_modules_dictionary_files
+  output_dir = bindings_modules_v8_output_dir
+  target_component = "modules"
+}
+
+# bindings_modules_generated_individual in modules/v8/generated.gyp
+idl_compiler("bindings_modules_v8_generated_partial_individual") {
+  # Note in GYP this is modules_interface_idl_files but this variable is just
+  # defined to modules_definition_idl_files.
+  sources = core_idl_with_modules_dependency_files + webcore_testing_idl_with_modules_dependency_files
+  output_dir = bindings_modules_v8_output_dir
+  output_name_suffix = "Partial"
+  target_component = "modules"
+}
+
+# bindings_modules_generated_aggregate in modules/v8/generated.gyp
+aggregate_generated_bindings("bindings_modules_v8_generated_partial_aggregate") {
+  sources = core_idl_with_modules_dependency_files
+  component_dir = "modules"
+  outputs = bindings_modules_generated_partial_aggregate_files
+}
+
+# GYP version: Source/bindings/modules/v8/generated.gyp:bindings_modules_v8_generated_init_partial
+action("bindings_modules_v8_generated_init_partial") {
+  script = "$bindings_scripts_dir/generate_init_partial_interfaces.py"
+
+  inputs = [
+    core_idl_with_modules_dependency_files_list,
+    "$bindings_modules_output_dir/InterfacesInfoOverall.pickle",
+  ]
+  outputs = [ bindings_modules_generated_init_partial_interfaces_file ]
+
+  args = [
+    "--idl-files-list",
+    rebase_path(core_idl_with_modules_dependency_files_list, root_build_dir),
+    "--output",
+    rebase_path(bindings_modules_generated_init_partial_interfaces_file, root_build_dir),
+    "--write-file-only-if-changed=1",
+  ]
+
+  deps = [
+    "//third_party/WebKit/Source/bindings/modules:interfaces_info",
+  ]
+}
+

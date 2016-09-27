@@ -1,0 +1,25 @@
+Microsoft Visual Studio Solution File, Format Version 13.00
+# Visual Studio 2013
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "blink_headers", "blink_headers.vcxproj", "{461777A6-B2C0-EBAD-22CD-25DC813C9C75}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|Win32 = Debug|Win32
+		Release|x64 = Release|x64
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{461777A6-B2C0-EBAD-22CD-25DC813C9C75}.Debug|x64.ActiveCfg = Debug|x64
+		{461777A6-B2C0-EBAD-22CD-25DC813C9C75}.Debug|x64.Build.0 = Debug|x64
+		{461777A6-B2C0-EBAD-22CD-25DC813C9C75}.Debug|Win32.ActiveCfg = Debug|Win32
+		{461777A6-B2C0-EBAD-22CD-25DC813C9C75}.Debug|Win32.Build.0 = Debug|Win32
+		{461777A6-B2C0-EBAD-22CD-25DC813C9C75}.Release|x64.ActiveCfg = Release|x64
+		{461777A6-B2C0-EBAD-22CD-25DC813C9C75}.Release|x64.Build.0 = Release|x64
+		{461777A6-B2C0-EBAD-22CD-25DC813C9C75}.Release|Win32.ActiveCfg = Release|Win32
+		{461777A6-B2C0-EBAD-22CD-25DC813C9C75}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

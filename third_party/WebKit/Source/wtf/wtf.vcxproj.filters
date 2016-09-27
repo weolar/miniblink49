@@ -1,0 +1,607 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..\..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..\..\..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..\..\..\third_party">
+      <UniqueIdentifier>{D6C6CEA7-AAD0-03AD-2394-AC6FCBF8A498}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..\..\..\third_party\WebKit">
+      <UniqueIdentifier>{1919EB75-19A6-2BAD-ABB0-47BF57C87A0F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..\..\..\third_party\WebKit\Source">
+      <UniqueIdentifier>{26D65320-41C3-1A61-26C0-583D658C7F16}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..\..\..\third_party\WebKit\Source\build">
+      <UniqueIdentifier>{D5519164-BF26-36DA-740B-76CEFC1827F4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..\..\..\third_party\WebKit\Source\build\win">
+      <UniqueIdentifier>{47FC5EC4-15EB-E92F-89D7-AFE51CF838A9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="asm">
+      <UniqueIdentifier>{FCB20295-9805-239A-10B2-41A081E97F07}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dtoa">
+      <UniqueIdentifier>{FEF8AE6F-D2B3-B84D-A8E4-2E0D701C7ABD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dtoa">
+      <UniqueIdentifier>{FEF8AE6F-D2B3-B84D-A8E4-2E0D701C7ABD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dtoa">
+      <UniqueIdentifier>{FEF8AE6F-D2B3-B84D-A8E4-2E0D701C7ABD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dtoa">
+      <UniqueIdentifier>{FEF8AE6F-D2B3-B84D-A8E4-2E0D701C7ABD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dtoa">
+      <UniqueIdentifier>{FEF8AE6F-D2B3-B84D-A8E4-2E0D701C7ABD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dtoa">
+      <UniqueIdentifier>{FEF8AE6F-D2B3-B84D-A8E4-2E0D701C7ABD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dtoa">
+      <UniqueIdentifier>{FEF8AE6F-D2B3-B84D-A8E4-2E0D701C7ABD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dtoa">
+      <UniqueIdentifier>{FEF8AE6F-D2B3-B84D-A8E4-2E0D701C7ABD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dtoa">
+      <UniqueIdentifier>{FEF8AE6F-D2B3-B84D-A8E4-2E0D701C7ABD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dtoa">
+      <UniqueIdentifier>{FEF8AE6F-D2B3-B84D-A8E4-2E0D701C7ABD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dtoa">
+      <UniqueIdentifier>{FEF8AE6F-D2B3-B84D-A8E4-2E0D701C7ABD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dtoa">
+      <UniqueIdentifier>{FEF8AE6F-D2B3-B84D-A8E4-2E0D701C7ABD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dtoa">
+      <UniqueIdentifier>{FEF8AE6F-D2B3-B84D-A8E4-2E0D701C7ABD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dtoa">
+      <UniqueIdentifier>{FEF8AE6F-D2B3-B84D-A8E4-2E0D701C7ABD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dtoa">
+      <UniqueIdentifier>{FEF8AE6F-D2B3-B84D-A8E4-2E0D701C7ABD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dtoa">
+      <UniqueIdentifier>{FEF8AE6F-D2B3-B84D-A8E4-2E0D701C7ABD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dtoa">
+      <UniqueIdentifier>{FEF8AE6F-D2B3-B84D-A8E4-2E0D701C7ABD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dtoa">
+      <UniqueIdentifier>{FEF8AE6F-D2B3-B84D-A8E4-2E0D701C7ABD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="text">
+      <UniqueIdentifier>{A03EF847-0682-89DE-DB5E-F3ADE72FEA2E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="text">
+      <UniqueIdentifier>{A03EF847-0682-89DE-DB5E-F3ADE72FEA2E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="text">
+      <UniqueIdentifier>{A03EF847-0682-89DE-DB5E-F3ADE72FEA2E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="text">
+      <UniqueIdentifier>{A03EF847-0682-89DE-DB5E-F3ADE72FEA2E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="text">
+      <UniqueIdentifier>{A03EF847-0682-89DE-DB5E-F3ADE72FEA2E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="text">
+      <UniqueIdentifier>{A03EF847-0682-89DE-DB5E-F3ADE72FEA2E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="text">
+      <UniqueIdentifier>{A03EF847-0682-89DE-DB5E-F3ADE72FEA2E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="text">
+      <UniqueIdentifier>{A03EF847-0682-89DE-DB5E-F3ADE72FEA2E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="text">
+      <UniqueIdentifier>{A03EF847-0682-89DE-DB5E-F3ADE72FEA2E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="text">
+      <UniqueIdentifier>{A03EF847-0682-89DE-DB5E-F3ADE72FEA2E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="text">
+      <UniqueIdentifier>{A03EF847-0682-89DE-DB5E-F3ADE72FEA2E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="text">
+      <UniqueIdentifier>{A03EF847-0682-89DE-DB5E-F3ADE72FEA2E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="text">
+      <UniqueIdentifier>{A03EF847-0682-89DE-DB5E-F3ADE72FEA2E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="text">
+      <UniqueIdentifier>{A03EF847-0682-89DE-DB5E-F3ADE72FEA2E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="text">
+      <UniqueIdentifier>{A03EF847-0682-89DE-DB5E-F3ADE72FEA2E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="text">
+      <UniqueIdentifier>{A03EF847-0682-89DE-DB5E-F3ADE72FEA2E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="text">
+      <UniqueIdentifier>{A03EF847-0682-89DE-DB5E-F3ADE72FEA2E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="text">
+      <UniqueIdentifier>{A03EF847-0682-89DE-DB5E-F3ADE72FEA2E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="text">
+      <UniqueIdentifier>{A03EF847-0682-89DE-DB5E-F3ADE72FEA2E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="text">
+      <UniqueIdentifier>{A03EF847-0682-89DE-DB5E-F3ADE72FEA2E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="text">
+      <UniqueIdentifier>{A03EF847-0682-89DE-DB5E-F3ADE72FEA2E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="text">
+      <UniqueIdentifier>{A03EF847-0682-89DE-DB5E-F3ADE72FEA2E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="text">
+      <UniqueIdentifier>{A03EF847-0682-89DE-DB5E-F3ADE72FEA2E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="text">
+      <UniqueIdentifier>{A03EF847-0682-89DE-DB5E-F3ADE72FEA2E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="text">
+      <UniqueIdentifier>{A03EF847-0682-89DE-DB5E-F3ADE72FEA2E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="text">
+      <UniqueIdentifier>{A03EF847-0682-89DE-DB5E-F3ADE72FEA2E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="text">
+      <UniqueIdentifier>{A03EF847-0682-89DE-DB5E-F3ADE72FEA2E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="text">
+      <UniqueIdentifier>{A03EF847-0682-89DE-DB5E-F3ADE72FEA2E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="text">
+      <UniqueIdentifier>{A03EF847-0682-89DE-DB5E-F3ADE72FEA2E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="text">
+      <UniqueIdentifier>{A03EF847-0682-89DE-DB5E-F3ADE72FEA2E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="text">
+      <UniqueIdentifier>{A03EF847-0682-89DE-DB5E-F3ADE72FEA2E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="text">
+      <UniqueIdentifier>{A03EF847-0682-89DE-DB5E-F3ADE72FEA2E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="text">
+      <UniqueIdentifier>{A03EF847-0682-89DE-DB5E-F3ADE72FEA2E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="text">
+      <UniqueIdentifier>{A03EF847-0682-89DE-DB5E-F3ADE72FEA2E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="text">
+      <UniqueIdentifier>{A03EF847-0682-89DE-DB5E-F3ADE72FEA2E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="text">
+      <UniqueIdentifier>{A03EF847-0682-89DE-DB5E-F3ADE72FEA2E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="text">
+      <UniqueIdentifier>{A03EF847-0682-89DE-DB5E-F3ADE72FEA2E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="text">
+      <UniqueIdentifier>{A03EF847-0682-89DE-DB5E-F3ADE72FEA2E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="text">
+      <UniqueIdentifier>{A03EF847-0682-89DE-DB5E-F3ADE72FEA2E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="text">
+      <UniqueIdentifier>{A03EF847-0682-89DE-DB5E-F3ADE72FEA2E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="text">
+      <UniqueIdentifier>{A03EF847-0682-89DE-DB5E-F3ADE72FEA2E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="text">
+      <UniqueIdentifier>{A03EF847-0682-89DE-DB5E-F3ADE72FEA2E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="text">
+      <UniqueIdentifier>{A03EF847-0682-89DE-DB5E-F3ADE72FEA2E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="text\icu">
+      <UniqueIdentifier>{16A1A08C-CD62-E501-A8C7-8BB00F1B8E2B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="text">
+      <UniqueIdentifier>{A03EF847-0682-89DE-DB5E-F3ADE72FEA2E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="text\icu">
+      <UniqueIdentifier>{16A1A08C-CD62-E501-A8C7-8BB00F1B8E2B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="text">
+      <UniqueIdentifier>{A03EF847-0682-89DE-DB5E-F3ADE72FEA2E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="text\_excluded_files">
+      <UniqueIdentifier>{158E591E-B6EA-0C85-8F5A-18EAFA09B4CE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="text">
+      <UniqueIdentifier>{A03EF847-0682-89DE-DB5E-F3ADE72FEA2E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="text\_excluded_files">
+      <UniqueIdentifier>{158E591E-B6EA-0C85-8F5A-18EAFA09B4CE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="text">
+      <UniqueIdentifier>{A03EF847-0682-89DE-DB5E-F3ADE72FEA2E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="text\_excluded_files">
+      <UniqueIdentifier>{158E591E-B6EA-0C85-8F5A-18EAFA09B4CE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="text">
+      <UniqueIdentifier>{A03EF847-0682-89DE-DB5E-F3ADE72FEA2E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="text\_excluded_files">
+      <UniqueIdentifier>{158E591E-B6EA-0C85-8F5A-18EAFA09B4CE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="text">
+      <UniqueIdentifier>{A03EF847-0682-89DE-DB5E-F3ADE72FEA2E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="text\_excluded_files">
+      <UniqueIdentifier>{158E591E-B6EA-0C85-8F5A-18EAFA09B4CE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_excluded_files">
+      <UniqueIdentifier>{158E591E-B6EA-0C85-8F5A-18EAFA09B4CE}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\third_party\WebKit\Source\build\win\Precompile.cpp">
+      <Filter>..\..\..\..\third_party\WebKit\Source\build\win</Filter>
+    </ClCompile>
+    <ClInclude Include="ASCIICType.h"/>
+    <ClInclude Include="AddressSanitizer.h"/>
+    <ClCompile Include="AddressSpaceRandomization.cpp"/>
+    <ClInclude Include="AddressSpaceRandomization.h"/>
+    <ClInclude Include="Alignment.h"/>
+    <ClCompile Include="ArrayBuffer.cpp"/>
+    <ClInclude Include="ArrayBuffer.h"/>
+    <ClCompile Include="ArrayBufferBuilder.cpp"/>
+    <ClInclude Include="ArrayBufferBuilder.h"/>
+    <ClCompile Include="ArrayBufferContents.cpp"/>
+    <ClInclude Include="ArrayBufferContents.h"/>
+    <ClCompile Include="ArrayBufferView.cpp"/>
+    <ClInclude Include="ArrayBufferView.h"/>
+    <ClCompile Include="ArrayPiece.cpp"/>
+    <ClInclude Include="ArrayPiece.h"/>
+    <ClCompile Include="Assertions.cpp"/>
+    <ClInclude Include="Assertions.h"/>
+    <ClInclude Include="Atomics.h"/>
+    <ClInclude Include="BitArray.h"/>
+    <ClCompile Include="BitVector.cpp"/>
+    <ClInclude Include="BitVector.h"/>
+    <ClInclude Include="BitwiseOperations.h"/>
+    <ClInclude Include="BloomFilter.h"/>
+    <ClInclude Include="ByteOrder.h"/>
+    <ClInclude Include="ByteSwap.h"/>
+    <ClInclude Include="CPU.h"/>
+    <ClInclude Include="CheckedArithmetic.h"/>
+    <ClInclude Include="Compiler.h"/>
+    <ClInclude Include="ConditionalDestructor.h"/>
+    <ClInclude Include="ContainerAnnotations.h"/>
+    <ClCompile Include="CryptographicallyRandomNumber.cpp"/>
+    <ClInclude Include="CryptographicallyRandomNumber.h"/>
+    <ClCompile Include="CurrentTime.cpp"/>
+    <ClInclude Include="CurrentTime.h"/>
+    <ClCompile Include="DataLog.cpp"/>
+    <ClInclude Include="DataLog.h"/>
+    <ClCompile Include="DateMath.cpp"/>
+    <ClInclude Include="DateMath.h"/>
+    <ClCompile Include="DefaultAllocator.cpp"/>
+    <ClInclude Include="DefaultAllocator.h"/>
+    <ClInclude Include="Deque.h"/>
+    <ClInclude Include="DoublyLinkedList.h"/>
+    <ClCompile Include="DynamicAnnotations.cpp"/>
+    <ClInclude Include="DynamicAnnotations.h"/>
+    <ClInclude Include="FastAllocBase.h"/>
+    <ClCompile Include="FastMalloc.cpp"/>
+    <ClInclude Include="FastMalloc.h"/>
+    <ClCompile Include="FilePrintStream.cpp"/>
+    <ClInclude Include="FilePrintStream.h"/>
+    <ClInclude Include="Float32Array.h"/>
+    <ClInclude Include="Float64Array.h"/>
+    <ClInclude Include="Forward.h"/>
+    <ClInclude Include="Functional.h"/>
+    <ClInclude Include="GetPtr.h"/>
+    <ClInclude Include="HashCountedSet.h"/>
+    <ClInclude Include="HashFunctions.h"/>
+    <ClInclude Include="HashIterators.h"/>
+    <ClInclude Include="HashMap.h"/>
+    <ClInclude Include="HashSet.h"/>
+    <ClCompile Include="HashTable.cpp"/>
+    <ClInclude Include="HashTable.h"/>
+    <ClInclude Include="HashTableDeletedValueType.h"/>
+    <ClInclude Include="HashTraits.h"/>
+    <ClInclude Include="HexNumber.h"/>
+    <ClCompile Include="InstanceCounter.cpp"/>
+    <ClInclude Include="InstanceCounter.h"/>
+    <ClInclude Include="Int16Array.h"/>
+    <ClInclude Include="Int32Array.h"/>
+    <ClInclude Include="Int8Array.h"/>
+    <ClInclude Include="IntegralTypedArrayBase.h"/>
+    <ClInclude Include="LeakAnnotations.h"/>
+    <ClInclude Include="LinkedStack.h"/>
+    <ClInclude Include="ListHashSet.h"/>
+    <ClInclude Include="Locker.h"/>
+    <ClCompile Include="MainThread.cpp"/>
+    <ClInclude Include="MainThread.h"/>
+    <ClInclude Include="MathExtras.h"/>
+    <ClInclude Include="MessageQueue.h"/>
+    <ClInclude Include="NonCopyingSort.h"/>
+    <ClInclude Include="Noncopyable.h"/>
+    <ClInclude Include="NotFound.h"/>
+    <ClInclude Include="NullPtr.h"/>
+    <ClInclude Include="Optional.h"/>
+    <ClInclude Include="OwnPtr.h"/>
+    <ClInclude Include="OwnPtrCommon.h"/>
+    <ClCompile Include="PageAllocator.cpp"/>
+    <ClInclude Include="PageAllocator.h"/>
+    <ClCompile Include="PartitionAlloc.cpp"/>
+    <ClInclude Include="PartitionAlloc.h"/>
+    <ClCompile Include="Partitions.cpp"/>
+    <ClInclude Include="Partitions.h"/>
+    <ClInclude Include="PassOwnPtr.h"/>
+    <ClInclude Include="PassRefPtr.h"/>
+    <ClInclude Include="PassTraits.h"/>
+    <ClCompile Include="PrintStream.cpp"/>
+    <ClInclude Include="PrintStream.h"/>
+    <ClInclude Include="RefCounted.h"/>
+    <ClCompile Include="RefCountedLeakCounter.cpp"/>
+    <ClInclude Include="RefCountedLeakCounter.h"/>
+    <ClInclude Include="RefPtr.h"/>
+    <ClInclude Include="RetainPtr.h"/>
+    <ClInclude Include="SaturatedArithmetic.h"/>
+    <ClCompile Include="SizeLimits.cpp"/>
+    <ClInclude Include="SpinLock.h"/>
+    <ClInclude Include="StaticConstructors.h"/>
+    <ClInclude Include="StdLibExtras.h"/>
+    <ClInclude Include="StringExtras.h"/>
+    <ClInclude Include="StringHasher.h"/>
+    <ClInclude Include="TemporaryChange.h"/>
+    <ClInclude Include="ThreadRestrictionVerifier.h"/>
+    <ClInclude Include="ThreadSafeRefCounted.h"/>
+    <ClInclude Include="ThreadSpecific.h"/>
+    <ClCompile Include="ThreadSpecificWin.cpp"/>
+    <ClInclude Include="Threading.h"/>
+    <ClInclude Include="ThreadingPrimitives.h"/>
+    <ClCompile Include="ThreadingWin.cpp"/>
+    <ClInclude Include="TreeNode.h"/>
+    <ClCompile Include="TypeTraits.cpp"/>
+    <ClInclude Include="TypeTraits.h"/>
+    <ClInclude Include="TypedArrayBase.h"/>
+    <ClInclude Include="Uint16Array.h"/>
+    <ClInclude Include="Uint32Array.h"/>
+    <ClInclude Include="Uint8Array.h"/>
+    <ClInclude Include="Utility.h"/>
+    <ClInclude Include="Vector.h"/>
+    <ClInclude Include="VectorTraits.h"/>
+    <ClCompile Include="WTF.cpp"/>
+    <ClInclude Include="WTF.h"/>
+    <ClInclude Include="WTFExport.h"/>
+    <ClCompile Include="WTFThreadData.cpp"/>
+    <ClInclude Include="WTFThreadData.h"/>
+    <ClInclude Include="WeakPtr.h"/>
+    <ClInclude Include="asm\SaturatedArithmeticARM.h">
+      <Filter>asm</Filter>
+    </ClInclude>
+    <ClCompile Include="dtoa.cpp"/>
+    <ClInclude Include="dtoa.h"/>
+    <ClCompile Include="dtoa\bignum-dtoa.cc">
+      <Filter>dtoa</Filter>
+    </ClCompile>
+    <ClInclude Include="dtoa\bignum-dtoa.h">
+      <Filter>dtoa</Filter>
+    </ClInclude>
+    <ClCompile Include="dtoa\bignum.cc">
+      <Filter>dtoa</Filter>
+    </ClCompile>
+    <ClInclude Include="dtoa\bignum.h">
+      <Filter>dtoa</Filter>
+    </ClInclude>
+    <ClCompile Include="dtoa\cached-powers.cc">
+      <Filter>dtoa</Filter>
+    </ClCompile>
+    <ClInclude Include="dtoa\cached-powers.h">
+      <Filter>dtoa</Filter>
+    </ClInclude>
+    <ClCompile Include="dtoa\diy-fp.cc">
+      <Filter>dtoa</Filter>
+    </ClCompile>
+    <ClInclude Include="dtoa\diy-fp.h">
+      <Filter>dtoa</Filter>
+    </ClInclude>
+    <ClCompile Include="dtoa\double-conversion.cc">
+      <Filter>dtoa</Filter>
+    </ClCompile>
+    <ClInclude Include="dtoa\double-conversion.h">
+      <Filter>dtoa</Filter>
+    </ClInclude>
+    <ClInclude Include="dtoa\double.h">
+      <Filter>dtoa</Filter>
+    </ClInclude>
+    <ClCompile Include="dtoa\fast-dtoa.cc">
+      <Filter>dtoa</Filter>
+    </ClCompile>
+    <ClInclude Include="dtoa\fast-dtoa.h">
+      <Filter>dtoa</Filter>
+    </ClInclude>
+    <ClCompile Include="dtoa\fixed-dtoa.cc">
+      <Filter>dtoa</Filter>
+    </ClCompile>
+    <ClInclude Include="dtoa\fixed-dtoa.h">
+      <Filter>dtoa</Filter>
+    </ClInclude>
+    <ClCompile Include="dtoa\strtod.cc">
+      <Filter>dtoa</Filter>
+    </ClCompile>
+    <ClInclude Include="dtoa\strtod.h">
+      <Filter>dtoa</Filter>
+    </ClInclude>
+    <ClInclude Include="dtoa\utils.h">
+      <Filter>dtoa</Filter>
+    </ClInclude>
+    <ClInclude Include="text\ASCIIFastPath.h">
+      <Filter>text</Filter>
+    </ClInclude>
+    <ClCompile Include="text\AtomicString.cpp">
+      <Filter>text</Filter>
+    </ClCompile>
+    <ClInclude Include="text\AtomicString.h">
+      <Filter>text</Filter>
+    </ClInclude>
+    <ClInclude Include="text\AtomicStringHash.h">
+      <Filter>text</Filter>
+    </ClInclude>
+    <ClCompile Include="text\Base64.cpp">
+      <Filter>text</Filter>
+    </ClCompile>
+    <ClInclude Include="text\Base64.h">
+      <Filter>text</Filter>
+    </ClInclude>
+    <ClCompile Include="text\CString.cpp">
+      <Filter>text</Filter>
+    </ClCompile>
+    <ClInclude Include="text\CString.h">
+      <Filter>text</Filter>
+    </ClInclude>
+    <ClInclude Include="text\CharacterNames.h">
+      <Filter>text</Filter>
+    </ClInclude>
+    <ClInclude Include="text\Collator.h">
+      <Filter>text</Filter>
+    </ClInclude>
+    <ClInclude Include="text\IntegerToStringConversion.h">
+      <Filter>text</Filter>
+    </ClInclude>
+    <ClInclude Include="text\StringBuffer.h">
+      <Filter>text</Filter>
+    </ClInclude>
+    <ClCompile Include="text\StringBuilder.cpp">
+      <Filter>text</Filter>
+    </ClCompile>
+    <ClInclude Include="text\StringBuilder.h">
+      <Filter>text</Filter>
+    </ClInclude>
+    <ClCompile Include="text\StringConcatenate.cpp">
+      <Filter>text</Filter>
+    </ClCompile>
+    <ClInclude Include="text\StringConcatenate.h">
+      <Filter>text</Filter>
+    </ClInclude>
+    <ClInclude Include="text\StringHash.h">
+      <Filter>text</Filter>
+    </ClInclude>
+    <ClCompile Include="text\StringImpl.cpp">
+      <Filter>text</Filter>
+    </ClCompile>
+    <ClInclude Include="text\StringImpl.h">
+      <Filter>text</Filter>
+    </ClInclude>
+    <ClInclude Include="text\StringOperators.h">
+      <Filter>text</Filter>
+    </ClInclude>
+    <ClCompile Include="text\StringStatics.cpp">
+      <Filter>text</Filter>
+    </ClCompile>
+    <ClInclude Include="text\StringUTF8Adaptor.h">
+      <Filter>text</Filter>
+    </ClInclude>
+    <ClInclude Include="text\StringView.h">
+      <Filter>text</Filter>
+    </ClInclude>
+    <ClCompile Include="text\TextCodec.cpp">
+      <Filter>text</Filter>
+    </ClCompile>
+    <ClInclude Include="text\TextCodecASCIIFastPath.h">
+      <Filter>text</Filter>
+    </ClInclude>
+    <ClCompile Include="text\TextCodecICU.cpp">
+      <Filter>text</Filter>
+    </ClCompile>
+    <ClCompile Include="text\TextCodecLatin1.cpp">
+      <Filter>text</Filter>
+    </ClCompile>
+    <ClCompile Include="text\TextCodecReplacement.cpp">
+      <Filter>text</Filter>
+    </ClCompile>
+    <ClInclude Include="text\TextCodecReplacement.h">
+      <Filter>text</Filter>
+    </ClInclude>
+    <ClCompile Include="text\TextCodecUTF16.cpp">
+      <Filter>text</Filter>
+    </ClCompile>
+    <ClCompile Include="text\TextCodecUTF8.cpp">
+      <Filter>text</Filter>
+    </ClCompile>
+    <ClInclude Include="text\TextCodecUTF8.h">
+      <Filter>text</Filter>
+    </ClInclude>
+    <ClCompile Include="text\TextCodecUserDefined.cpp">
+      <Filter>text</Filter>
+    </ClCompile>
+    <ClCompile Include="text\TextEncoding.cpp">
+      <Filter>text</Filter>
+    </ClCompile>
+    <ClCompile Include="text\TextEncodingRegistry.cpp">
+      <Filter>text</Filter>
+    </ClCompile>
+    <ClCompile Include="text\TextPosition.cpp">
+      <Filter>text</Filter>
+    </ClCompile>
+    <ClInclude Include="text\TextPosition.h">
+      <Filter>text</Filter>
+    </ClInclude>
+    <ClCompile Include="text\UTF8.cpp">
+      <Filter>text</Filter>
+    </ClCompile>
+    <ClInclude Include="text\UTF8.h">
+      <Filter>text</Filter>
+    </ClInclude>
+    <ClInclude Include="text\Unicode.h">
+      <Filter>text</Filter>
+    </ClInclude>
+    <ClCompile Include="text\WTFString.cpp">
+      <Filter>text</Filter>
+    </ClCompile>
+    <ClInclude Include="text\WTFString.h">
+      <Filter>text</Filter>
+    </ClInclude>
+    <ClCompile Include="text\icu\CollatorICU.cpp">
+      <Filter>text\icu</Filter>
+    </ClCompile>
+    <ClInclude Include="text\icu\UnicodeIcu.h">
+      <Filter>text\icu</Filter>
+    </ClInclude>
+    <None Include="wtf.gyp"/>
+    <ClCompile Include="text\AtomicStringCF.cpp">
+      <Filter>text\_excluded_files</Filter>
+    </ClCompile>
+    <ClCompile Include="text\StringCF.cpp">
+      <Filter>text\_excluded_files</Filter>
+    </ClCompile>
+    <ClCompile Include="text\StringImplCF.cpp">
+      <Filter>text\_excluded_files</Filter>
+    </ClCompile>
+    <None Include="text\StringImplMac.mm">
+      <Filter>text\_excluded_files</Filter>
+    </None>
+    <None Include="text\StringMac.mm">
+      <Filter>text\_excluded_files</Filter>
+    </None>
+    <ClCompile Include="ThreadingPthreads.cpp">
+      <Filter>_excluded_files</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

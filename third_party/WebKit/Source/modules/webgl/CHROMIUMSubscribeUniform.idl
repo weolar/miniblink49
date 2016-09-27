@@ -1,0 +1,26 @@
+// Copyright 2014 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+typedef unsigned long GLenum;
+
+[
+    DoNotCheckConstants,
+    NoInterfaceObject,
+    TypeChecking=Interface,
+    WillBeGarbageCollected,
+    SetWrapperReferenceFrom=canvas,
+] interface CHROMIUMSubscribeUniform {
+    const GLenum SUBSCRIBED_VALUES_BUFFER_CHROMIUM =      0x924B;
+
+    const GLenum MOUSE_POSITION_CHROMIUM =                0x924C;
+
+    CHROMIUMValuebuffer createValuebufferCHROMIUM();
+    void deleteValuebufferCHROMIUM(CHROMIUMValuebuffer? buffer);
+    boolean isValuebufferCHROMIUM(CHROMIUMValuebuffer? buffer);
+    void bindValuebufferCHROMIUM(GLenum target, CHROMIUMValuebuffer? buffer);
+
+    void subscribeValueCHROMIUM(GLenum target, GLenum subscriptions);
+    void populateSubscribedValuesCHROMIUM(GLenum target);
+    void uniformValuebufferCHROMIUM(WebGLUniformLocation? location, GLenum target, GLenum subscription);
+};

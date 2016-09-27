@@ -1,0 +1,13 @@
+// Copyright 2014 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+// https://notifications.spec.whatwg.org/#service-worker-api
+
+[
+    Exposed=(Window, ServiceWorker),
+    RuntimeEnabled=ServiceWorkerNotifications
+] partial interface ServiceWorkerRegistration {
+    [CallWith=ScriptState, RaisesException] Promise showNotification(DOMString title, optional NotificationOptions options);
+    [CallWith=ScriptState] Promise<sequence<Notification>> getNotifications(optional GetNotificationOptions filter);
+};

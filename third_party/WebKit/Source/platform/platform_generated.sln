@@ -1,0 +1,25 @@
+Microsoft Visual Studio Solution File, Format Version 13.00
+# Visual Studio 2013
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "make_platform_generated", "make_platform_generated.vcxproj", "{5100AE26-241C-458C-3322-F574ACE6FD06}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|Win32 = Debug|Win32
+		Release|x64 = Release|x64
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5100AE26-241C-458C-3322-F574ACE6FD06}.Debug|x64.ActiveCfg = Debug|x64
+		{5100AE26-241C-458C-3322-F574ACE6FD06}.Debug|x64.Build.0 = Debug|x64
+		{5100AE26-241C-458C-3322-F574ACE6FD06}.Debug|Win32.ActiveCfg = Debug|Win32
+		{5100AE26-241C-458C-3322-F574ACE6FD06}.Debug|Win32.Build.0 = Debug|Win32
+		{5100AE26-241C-458C-3322-F574ACE6FD06}.Release|x64.ActiveCfg = Release|x64
+		{5100AE26-241C-458C-3322-F574ACE6FD06}.Release|x64.Build.0 = Release|x64
+		{5100AE26-241C-458C-3322-F574ACE6FD06}.Release|Win32.ActiveCfg = Release|Win32
+		{5100AE26-241C-458C-3322-F574ACE6FD06}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

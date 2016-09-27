@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\bindings">
+      <UniqueIdentifier>{BDD847E6-3B5D-27DC-A93A-863DCFC98735}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\bindings\scripts">
+      <UniqueIdentifier>{4FDF30BD-A895-58AC-A912-7C70A5371544}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\bindings">
+      <UniqueIdentifier>{BDD847E6-3B5D-27DC-A93A-863DCFC98735}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\bindings\scripts">
+      <UniqueIdentifier>{4FDF30BD-A895-58AC-A912-7C70A5371544}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="css">
+      <UniqueIdentifier>{87F14F59-6AAB-9D50-4AA6-3EAC67BD4AB0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="css">
+      <UniqueIdentifier>{87F14F59-6AAB-9D50-4AA6-3EAC67BD4AB0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="events">
+      <UniqueIdentifier>{35F9EDA7-7DA5-20A8-B488-78EA975C9F74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="events">
+      <UniqueIdentifier>{35F9EDA7-7DA5-20A8-B488-78EA975C9F74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="events">
+      <UniqueIdentifier>{35F9EDA7-7DA5-20A8-B488-78EA975C9F74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="events">
+      <UniqueIdentifier>{35F9EDA7-7DA5-20A8-B488-78EA975C9F74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="events">
+      <UniqueIdentifier>{35F9EDA7-7DA5-20A8-B488-78EA975C9F74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="events">
+      <UniqueIdentifier>{35F9EDA7-7DA5-20A8-B488-78EA975C9F74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="events">
+      <UniqueIdentifier>{35F9EDA7-7DA5-20A8-B488-78EA975C9F74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="events">
+      <UniqueIdentifier>{35F9EDA7-7DA5-20A8-B488-78EA975C9F74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="events">
+      <UniqueIdentifier>{35F9EDA7-7DA5-20A8-B488-78EA975C9F74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="events">
+      <UniqueIdentifier>{35F9EDA7-7DA5-20A8-B488-78EA975C9F74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="events">
+      <UniqueIdentifier>{35F9EDA7-7DA5-20A8-B488-78EA975C9F74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="events">
+      <UniqueIdentifier>{35F9EDA7-7DA5-20A8-B488-78EA975C9F74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="events">
+      <UniqueIdentifier>{35F9EDA7-7DA5-20A8-B488-78EA975C9F74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="events">
+      <UniqueIdentifier>{35F9EDA7-7DA5-20A8-B488-78EA975C9F74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="events">
+      <UniqueIdentifier>{35F9EDA7-7DA5-20A8-B488-78EA975C9F74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="events">
+      <UniqueIdentifier>{35F9EDA7-7DA5-20A8-B488-78EA975C9F74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="events">
+      <UniqueIdentifier>{35F9EDA7-7DA5-20A8-B488-78EA975C9F74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="events">
+      <UniqueIdentifier>{35F9EDA7-7DA5-20A8-B488-78EA975C9F74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="events">
+      <UniqueIdentifier>{35F9EDA7-7DA5-20A8-B488-78EA975C9F74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="events">
+      <UniqueIdentifier>{35F9EDA7-7DA5-20A8-B488-78EA975C9F74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="events">
+      <UniqueIdentifier>{35F9EDA7-7DA5-20A8-B488-78EA975C9F74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="events">
+      <UniqueIdentifier>{35F9EDA7-7DA5-20A8-B488-78EA975C9F74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="events">
+      <UniqueIdentifier>{35F9EDA7-7DA5-20A8-B488-78EA975C9F74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="events">
+      <UniqueIdentifier>{35F9EDA7-7DA5-20A8-B488-78EA975C9F74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="events">
+      <UniqueIdentifier>{35F9EDA7-7DA5-20A8-B488-78EA975C9F74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="events">
+      <UniqueIdentifier>{35F9EDA7-7DA5-20A8-B488-78EA975C9F74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="events">
+      <UniqueIdentifier>{35F9EDA7-7DA5-20A8-B488-78EA975C9F74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="events">
+      <UniqueIdentifier>{35F9EDA7-7DA5-20A8-B488-78EA975C9F74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="events">
+      <UniqueIdentifier>{35F9EDA7-7DA5-20A8-B488-78EA975C9F74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="html">
+      <UniqueIdentifier>{6B759987-DACC-E33B-CA3B-4ABB0218955E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="html">
+      <UniqueIdentifier>{6B759987-DACC-E33B-CA3B-4ABB0218955E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="html\track">
+      <UniqueIdentifier>{32A30229-84E9-3151-A2EB-81BD6E279914}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="svg">
+      <UniqueIdentifier>{B26ADB08-2A5F-6612-9BA2-9FE17A953D2B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xmlhttprequest">
+      <UniqueIdentifier>{D4C0FED0-2C07-E2AA-BC27-6EF19532956E}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="core_generated.gyp"/>
+    <None Include="..\bindings\scripts\generate_event_interfaces.py">
+      <Filter>..\bindings\scripts</Filter>
+    </None>
+    <None Include="..\bindings\scripts\utilities.py">
+      <Filter>..\bindings\scripts</Filter>
+    </None>
+    <None Include="event_idl_files_list.tmp"/>
+    <Midl Include="css\FontFaceSetLoadEvent.idl">
+      <Filter>css</Filter>
+    </Midl>
+    <Midl Include="css\MediaQueryListEvent.idl">
+      <Filter>css</Filter>
+    </Midl>
+    <Midl Include="events\AnimationEvent.idl">
+      <Filter>events</Filter>
+    </Midl>
+    <Midl Include="events\AnimationPlayerEvent.idl">
+      <Filter>events</Filter>
+    </Midl>
+    <Midl Include="events\ApplicationCacheErrorEvent.idl">
+      <Filter>events</Filter>
+    </Midl>
+    <Midl Include="events\AutocompleteErrorEvent.idl">
+      <Filter>events</Filter>
+    </Midl>
+    <Midl Include="events\BeforeUnloadEvent.idl">
+      <Filter>events</Filter>
+    </Midl>
+    <Midl Include="events\ClipboardEvent.idl">
+      <Filter>events</Filter>
+    </Midl>
+    <Midl Include="events\CompositionEvent.idl">
+      <Filter>events</Filter>
+    </Midl>
+    <Midl Include="events\CustomEvent.idl">
+      <Filter>events</Filter>
+    </Midl>
+    <Midl Include="events\ErrorEvent.idl">
+      <Filter>events</Filter>
+    </Midl>
+    <Midl Include="events\Event.idl">
+      <Filter>events</Filter>
+    </Midl>
+    <Midl Include="events\FocusEvent.idl">
+      <Filter>events</Filter>
+    </Midl>
+    <Midl Include="events\HashChangeEvent.idl">
+      <Filter>events</Filter>
+    </Midl>
+    <Midl Include="events\KeyboardEvent.idl">
+      <Filter>events</Filter>
+    </Midl>
+    <Midl Include="events\MessageEvent.idl">
+      <Filter>events</Filter>
+    </Midl>
+    <Midl Include="events\MouseEvent.idl">
+      <Filter>events</Filter>
+    </Midl>
+    <Midl Include="events\MutationEvent.idl">
+      <Filter>events</Filter>
+    </Midl>
+    <Midl Include="events\PageTransitionEvent.idl">
+      <Filter>events</Filter>
+    </Midl>
+    <Midl Include="events\PointerEvent.idl">
+      <Filter>events</Filter>
+    </Midl>
+    <Midl Include="events\PopStateEvent.idl">
+      <Filter>events</Filter>
+    </Midl>
+    <Midl Include="events\ProgressEvent.idl">
+      <Filter>events</Filter>
+    </Midl>
+    <Midl Include="events\PromiseRejectionEvent.idl">
+      <Filter>events</Filter>
+    </Midl>
+    <Midl Include="events\RelatedEvent.idl">
+      <Filter>events</Filter>
+    </Midl>
+    <Midl Include="events\ResourceProgressEvent.idl">
+      <Filter>events</Filter>
+    </Midl>
+    <Midl Include="events\SecurityPolicyViolationEvent.idl">
+      <Filter>events</Filter>
+    </Midl>
+    <Midl Include="events\TextEvent.idl">
+      <Filter>events</Filter>
+    </Midl>
+    <Midl Include="events\TouchEvent.idl">
+      <Filter>events</Filter>
+    </Midl>
+    <Midl Include="events\TransitionEvent.idl">
+      <Filter>events</Filter>
+    </Midl>
+    <Midl Include="events\UIEvent.idl">
+      <Filter>events</Filter>
+    </Midl>
+    <Midl Include="events\WheelEvent.idl">
+      <Filter>events</Filter>
+    </Midl>
+    <Midl Include="html\MediaKeyEvent.idl">
+      <Filter>html</Filter>
+    </Midl>
+    <Midl Include="html\track\TrackEvent.idl">
+      <Filter>html\track</Filter>
+    </Midl>
+    <Midl Include="svg\SVGZoomEvent.idl">
+      <Filter>svg</Filter>
+    </Midl>
+    <Midl Include="xmlhttprequest\XMLHttpRequestProgressEvent.idl">
+      <Filter>xmlhttprequest</Filter>
+    </Midl>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,41 @@
+/*
+ * Copyright (C) 2006, 2007, 2010 Apple, Inc. All rights reserved.
+ * Copyright (C) 2006 Samuel Weinig <sam.weinig@gmail.com>
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public License
+ * along with this library; see the file COPYING.LIB.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
+ */
+
+// https://html.spec.whatwg.org/#the-option-element
+
+[
+    NamedConstructor=Option(optional DOMString data = null,
+                            optional DOMString value = null,
+                            optional boolean defaultSelected = false,
+                            optional boolean selected = false),
+    ConstructorCallWith=Document,
+    RaisesException=Constructor
+] interface HTMLOptionElement : HTMLElement {
+    [Reflect] attribute boolean disabled;
+    readonly attribute HTMLFormElement? form;
+    attribute DOMString label;
+    [Reflect=selected] attribute boolean defaultSelected;
+    attribute boolean selected;
+    attribute DOMString value;
+
+    // TODO(philipj): The text setter should never throw.
+    [RaisesException=Setter] attribute DOMString text;
+    readonly attribute long index;
+};

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<title>Rebaseline-o-matic logs</title>
+<style>
+h1 {
+    font-size: 1em;
+    margin: 0;
+    padding: 4px;
+    background-color: lightgray;
+}
+pre {
+    margin: 0;
+    padding: 4px;
+}
+.container {
+    border: 1px dashed;
+    margin-bottom: 8px;
+}
+</style>
+
+{% for log in logs %}
+<div class="container">
+    <h1>
+        <script>
+            // This date format needs to match the format string used in loghandler.py.
+            lastDateBeforeQueryParameter = '{{ log.date|date:"Y-m-d\TH:i:s" }}Z';
+            document.write(new Date('{{ log.date|date:"c" }}').toLocaleString())
+        </script>
+    </h1>
+    <pre>{% if log.is_no_needs_rebaseline %}No NeedsRebaseline entries in TestExpectations.{% else %}{{ log.content }}{% endif %}</pre>
+</div>
+{% endfor %}
+
+{% if not logs %}
+No more logs.
+{% endif %}
+
+<script>
+    var urlBase = location.toString().replace(/\?.*/, '');
+    [3, 10, 100].forEach(function(numLogs) {
+        var url = urlBase + "?{{ before_param }}=" + lastDateBeforeQueryParameter + "&{{ num_logs_param }}=" + numLogs;
+        document.write('<a href="' + url + '">previous ' + numLogs + '</a> ');
+    })
+</script>

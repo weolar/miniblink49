@@ -1,0 +1,54 @@
+# Copyright 2014 The Chromium Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+source_set("heap") {
+  # This target is a logical part of the platform and only the platform target
+  # should depend on it.
+  visibility = [ "//third_party/WebKit/Source/platform" ]
+
+  sources = [
+    "BlinkGCMemoryDumpProvider.cpp",
+    "BlinkGCMemoryDumpProvider.h",
+    "CallbackStack.cpp",
+    "CallbackStack.h",
+    "GCInfo.cpp",
+    "GCInfo.h",
+    "GarbageCollected.h",
+    "Handle.h",
+    "Heap.cpp",
+    "Heap.h",
+    "HeapAllocator.cpp",
+    "HeapAllocator.h",
+    "InlinedGlobalMarkingVisitor.h",
+    "MarkingVisitor.h",
+    "MarkingVisitorImpl.h",
+    "PageMemory.h",
+    "PagePool.cpp",
+    "PagePool.h",
+    "PersistentNode.cpp",
+    "PersistentNode.h",
+    "StackFrameDepth.cpp",
+    "StackFrameDepth.h",
+    "SafePoint.cpp",
+    "SafePoint.h",
+    "ThreadState.cpp",
+    "ThreadState.h",
+    "ThreadingTraits.h",
+    "TraceTraits.h",
+    "Visitor.h",
+  ]
+
+  defines = [ "BLINK_PLATFORM_IMPLEMENTATION=1" ]
+
+  configs += [
+    "//third_party/WebKit/Source:config",
+    "//third_party/WebKit/Source:inside_blink",
+    "//build/config/compiler:no_size_t_to_int_warning",
+  ]
+
+  deps = [
+    "//third_party/WebKit/Source/platform/heap/asm",
+    "//third_party/icu",
+  ]
+}

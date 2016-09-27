@@ -1,0 +1,342 @@
+{
+    "extensions": [
+        {
+            "type": "@WebInspector.PanelFactory",
+            "name": "sources",
+            "title": "Sources",
+            "order": 2,
+            "className": "WebInspector.SourcesPanelFactory"
+        },
+        {
+            "type": "drawer-view",
+            "name": "sources.search",
+            "title": "Search",
+            "order": "1",
+            "className": "WebInspector.AdvancedSearchView"
+        },
+        {
+            "type": "@WebInspector.ContextMenu.Provider",
+            "contextTypes": ["WebInspector.UISourceCode", "WebInspector.UILocation", "WebInspector.RemoteObject", "WebInspector.NetworkRequest"],
+            "className": "WebInspector.SourcesPanel.ContextMenuProvider"
+        },
+        {
+            "type": "@WebInspector.ActionDelegate",
+            "actionId": "debugger.toggle-pause",
+            "className": "WebInspector.SourcesPanel.RevealingActionDelegate",
+            "contextTypes": ["WebInspector.SourcesPanel", "WebInspector.ShortcutRegistry.ForwardedShortcut"],
+            "bindings": [
+                {
+                    "platform": "windows,linux",
+                    "shortcut": "F8 Ctrl+\\"
+                },
+                {
+                    "platform": "mac",
+                    "shortcut": "F8 Meta+\\"
+                }
+            ]
+        },
+        {
+            "type": "@WebInspector.ActionDelegate",
+            "actionId": "debugger.step-over",
+            "className": "WebInspector.SourcesPanel.DebuggingActionDelegate",
+            "contextTypes": ["WebInspector.SourcesPanel"],
+            "bindings": [
+                {
+                    "platform": "windows,linux",
+                    "shortcut": "F10 Ctrl+'"
+                },
+                {
+                    "platform": "mac",
+                    "shortcut": "F10 Meta+'"
+                }
+            ]
+        },
+        {
+            "type": "@WebInspector.ActionDelegate",
+            "actionId": "debugger.step-into",
+            "className": "WebInspector.SourcesPanel.DebuggingActionDelegate",
+            "contextTypes": ["WebInspector.SourcesPanel"],
+            "bindings": [
+                {
+                    "platform": "windows,linux",
+                    "shortcut": "F11 Ctrl+;"
+                },
+                {
+                    "platform": "mac",
+                    "shortcut": "F11 Meta+;"
+                }
+            ]
+        },
+        {
+            "type": "@WebInspector.ActionDelegate",
+            "actionId": "debugger.step-into-async",
+            "experiment": "stepIntoAsync",
+            "className": "WebInspector.SourcesPanel.DebuggingActionDelegate",
+            "contextTypes": ["WebInspector.SourcesPanel"],
+            "bindings": [
+                {
+                    "platform": "windows,linux",
+                    "shortcut": "Alt+F11 Alt+Ctrl+;"
+                },
+                {
+                    "platform": "mac",
+                    "shortcut": "Alt+F11 Alt+Meta+;"
+                }
+            ]
+        },
+        {
+            "type": "@WebInspector.ActionDelegate",
+            "actionId": "debugger.step-out",
+            "className": "WebInspector.SourcesPanel.DebuggingActionDelegate",
+            "contextTypes": ["WebInspector.SourcesPanel"],
+            "bindings": [
+                {
+                    "platform": "windows,linux",
+                    "shortcut": "Shift+F11 Shift+Ctrl+;"
+                },
+                {
+                    "platform": "mac",
+                    "shortcut": "Shift+F11 Shift+Meta+;"
+                }
+            ]
+        },
+        {
+            "type": "@WebInspector.ActionDelegate",
+            "actionId": "debugger.run-snippet",
+            "className": "WebInspector.SourcesPanel.DebuggingActionDelegate",
+            "contextTypes": ["WebInspector.SourcesPanel"],
+            "bindings": [
+                {
+                    "platform": "windows,linux",
+                    "shortcut": "Ctrl+Enter"
+                },
+                {
+                    "platform": "mac",
+                    "shortcut": "Meta+Enter"
+                }
+            ]
+        },
+        {
+            "type": "@WebInspector.ActionDelegate",
+            "actionId": "sources.search.toggle",
+            "className": "WebInspector.AdvancedSearchView.ActionDelegate",
+            "bindings": [
+                {
+                    "platform": "mac",
+                    "shortcut": "Meta+Alt+F"
+                },
+                {
+                    "platform": "windows,linux",
+                    "shortcut": "Ctrl+Shift+F"
+                }
+            ]
+        },
+        {
+            "type": "@WebInspector.Revealer",
+            "contextTypes": ["WebInspector.UILocation"],
+            "className": "WebInspector.SourcesPanel.UILocationRevealer"
+        },
+        {
+            "type": "@WebInspector.Revealer",
+            "contextTypes": ["WebInspector.DebuggerModel.Location"],
+            "className": "WebInspector.SourcesPanel.DebuggerLocationRevealer"
+        },
+        {
+            "type": "@WebInspector.Revealer",
+            "contextTypes": ["WebInspector.UISourceCode"],
+            "className": "WebInspector.SourcesPanel.UISourceCodeRevealer"
+        },
+        {
+            "type": "@WebInspector.Revealer",
+            "contextTypes": ["WebInspector.DebuggerPausedDetails"],
+            "className": "WebInspector.SourcesPanel.DebuggerPausedDetailsRevealer"
+        },
+        {
+            "type": "@WebInspector.SourcesView.EditorAction",
+            "className": "WebInspector.InplaceFormatterEditorAction"
+        },
+        {
+            "type": "@WebInspector.SourcesView.EditorAction",
+            "className": "WebInspector.ScriptFormatterEditorAction"
+        },
+        {
+            "type": "navigator-view",
+            "name": "sources",
+            "title": "Sources",
+            "order": 1,
+            "className": "WebInspector.SourcesNavigatorView"
+        },
+        {
+            "type": "navigator-view",
+            "name": "contentScripts",
+            "title": "Content scripts",
+            "order": 2,
+            "className": "WebInspector.ContentScriptsNavigatorView"
+        },
+        {
+            "type": "navigator-view",
+            "name": "snippets",
+            "title": "Snippets",
+            "order": 3,
+            "className": "WebInspector.SnippetsNavigatorView"
+        },
+        {
+            "type": "@WebInspector.ActionDelegate",
+            "actionId": "sources.go-to-source",
+            "className": "WebInspector.SourcesPanel.RevealingActionDelegate",
+            "bindings": [
+                {
+                    "platform": "mac",
+                    "shortcut": "Meta+O Meta+P"
+                },
+                {
+                    "platform": "windows,linux",
+                    "shortcut": "Ctrl+O Ctrl+P"
+                }
+            ]
+        },
+        {
+            "type": "@WebInspector.ActionDelegate",
+            "actionId": "sources.switch-file",
+            "className": "WebInspector.SourcesView.SwitchFileActionDelegate",
+            "contextTypes": ["WebInspector.SourcesView"],
+            "bindings": [
+                {
+                    "shortcut": "Alt+O"
+                }
+            ]
+        },
+        {
+            "type": "setting",
+            "category": "Sources",
+            "title": "Search in content scripts",
+            "settingName": "searchInContentScripts",
+            "settingType": "boolean",
+            "defaultValue": false
+        },
+        {
+            "type": "setting",
+            "category": "Sources",
+            "title": "Enable JavaScript source maps",
+            "settingName": "jsSourceMapsEnabled",
+            "settingType": "boolean",
+            "defaultValue": true
+        },
+        {
+            "type": "setting",
+            "category": "Sources",
+            "title": "Detect indentation",
+            "settingName": "textEditorAutoDetectIndent",
+            "settingType": "boolean",
+            "defaultValue": true
+        },
+        {
+            "type": "setting",
+            "category": "Sources",
+            "title": "Autocompletion",
+            "settingName": "textEditorAutocompletion",
+            "settingType": "boolean",
+            "defaultValue": true
+        },
+        {
+            "type": "setting",
+            "category": "Sources",
+            "title": "Bracket matching",
+            "settingName": "textEditorBracketMatching",
+            "settingType": "boolean",
+            "defaultValue": true
+        },
+        {
+            "type": "setting",
+            "category": "Sources",
+            "title": "Show whitespace characters:",
+            "settingName": "showWhitespacesInEditor",
+            "settingType": "enum",
+            "defaultValue": "original",
+            "options": [
+                ["None", "none"],
+                ["All", "all"],
+                ["Trailing", "trailing"]
+            ]
+        },
+        {
+            "type": "setting",
+            "category": "Sources",
+            "title": "Display variable values inline while debugging",
+            "settingName": "inlineVariableValues",
+            "settingType": "boolean",
+            "defaultValue": true
+        },
+        {
+            "type": "setting",
+            "category": "Sources",
+            "title": "Enable CSS source maps",
+            "settingName": "cssSourceMapsEnabled",
+            "settingType": "boolean",
+            "defaultValue": true
+        },
+        {
+            "type": "setting",
+            "title": "Auto-reload generated CSS",
+            "parentSettingName": "cssSourceMapsEnabled",
+            "settingName": "cssReloadEnabled",
+            "settingType": "boolean",
+            "defaultValue": false
+        }
+    ],
+    "dependencies": [
+        "source_frame",
+        "snippets",
+        "extensions"
+    ],
+    "scripts": [
+        "jsdifflib.js",
+        "UIList.js",
+        "AddSourceMapURLDialog.js",
+        "AsyncOperationsSidebarPane.js",
+        "CallStackSidebarPane.js",
+        "SimpleHistoryManager.js",
+        "EditingLocationHistoryManager.js",
+        "EventListenerBreakpointsSidebarPane.js",
+        "FilePathScoreFunction.js",
+        "FilteredItemSelectionDialog.js",
+        "UISourceCodeFrame.js",
+        "JavaScriptBreakpointsSidebarPane.js",
+        "JavaScriptSourceFrame.js",
+        "CSSSourceFrame.js",
+        "NavigatorView.js",
+        "RevisionHistoryView.js",
+        "ScopeChainSidebarPane.js",
+        "ServiceWorkersSidebarPane.js",
+        "SourcesNavigator.js",
+        "StyleSheetOutlineDialog.js",
+        "TabbedEditorContainer.js",
+        "WatchExpressionsSidebarPane.js",
+        "ThreadsSidebarPane.js",
+        "ScriptFormatterEditorAction.js",
+        "InplaceFormatterEditorAction.js",
+        "ScriptFormatter.js",
+        "SourcesView.js",
+        "AdvancedSearchView.js",
+        "FileBasedSearchResultsPane.js",
+        "SourcesSearchScope.js",
+        "SourcesPanel.js",
+        "WorkspaceMappingTip.js",
+        "XHRBreakpointsSidebarPane.js",
+        "JavaScriptCompiler.js",
+        "ObjectEventListenersSidebarPane.js"
+    ],
+    "skip_compilation": [
+        "jsdifflib.js"
+    ],
+    "resources": [
+        "filteredItemSelectionDialog.css",
+        "uiList.css",
+        "navigatorView.css",
+        "revisionHistory.css",
+        "serviceWorkersSidebar.css",
+        "sourcesPanel.css",
+        "sourcesSearch.css",
+        "sourcesView.css"
+    ]
+}
