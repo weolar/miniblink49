@@ -1,0 +1,9 @@
+// Copyright 2014 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+// http://webaudio.github.io/web-midi-api/#idl-def-MIDIConnectionEventInit
+
+dictionary MIDIConnectionEventInit : EventInit {
+    MIDIPort port;
+};

@@ -1,0 +1,13 @@
+<!-- This page is used to test that links are rewritten correctly by the 
+     PageSerializer when a base tag are used.
+-->
+<html>
+<head>
+<base href="http://www.test.com/images/here/" target="_blank">
+</head>
+<body>
+<img src="image.png"/>
+<img src="or/in/here/image.png"/>
+<img src="http://www.test.com/or/absolute.png"/>
+</body>
+</html>

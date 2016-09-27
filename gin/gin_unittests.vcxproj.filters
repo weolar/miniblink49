@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="modules">
+      <UniqueIdentifier>{212BF124-DF0B-CDE7-390D-94BCC1C226CB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="modules">
+      <UniqueIdentifier>{212BF124-DF0B-CDE7-390D-94BCC1C226CB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shell">
+      <UniqueIdentifier>{E85BC352-2D2D-FF70-E8E1-C76BAA70A425}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="converter_unittest.cc"/>
+    <ClCompile Include="interceptor_unittest.cc"/>
+    <ClCompile Include="modules\module_registry_unittest.cc">
+      <Filter>modules</Filter>
+    </ClCompile>
+    <ClCompile Include="modules\timer_unittest.cc">
+      <Filter>modules</Filter>
+    </ClCompile>
+    <ClCompile Include="per_context_data_unittest.cc"/>
+    <ClCompile Include="shell_runner_unittest.cc"/>
+    <ClCompile Include="shell\gin_shell_unittest.cc">
+      <Filter>shell</Filter>
+    </ClCompile>
+    <ClCompile Include="test\run_all_unittests.cc">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClCompile Include="test\run_js_tests.cc">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClCompile Include="v8_isolate_memory_dump_provider_unittest.cc"/>
+    <ClCompile Include="wrappable_unittest.cc"/>
+    <None Include="gin.gyp"/>
+  </ItemGroup>
+</Project>

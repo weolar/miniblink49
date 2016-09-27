@@ -1,0 +1,117 @@
+{
+    "extensions": [
+        {
+            "type": "@WebInspector.PanelFactory",
+            "name": "elements",
+            "title": "Elements",
+            "order": 0,
+            "className": "WebInspector.ElementsPanelFactory"
+        },
+        {
+            "type": "@WebInspector.ContextMenu.Provider",
+            "contextTypes": ["WebInspector.RemoteObject", "WebInspector.DOMNode", "WebInspector.DeferredDOMNode"],
+            "className": "WebInspector.ElementsPanel.ContextMenuProvider"
+        },
+        {
+            "type": "@WebInspector.Renderer",
+            "contextTypes": ["WebInspector.DOMNode", "WebInspector.RemoteObject"],
+            "className": "WebInspector.ElementsTreeOutline.Renderer"
+        },
+        {
+            "type": "@WebInspector.Revealer",
+            "contextTypes": ["WebInspector.DOMNode", "WebInspector.DeferredDOMNode", "WebInspector.RemoteObject" ],
+            "className": "WebInspector.ElementsPanel.DOMNodeRevealer"
+        },
+        {
+            "type": "setting",
+            "category": "Elements",
+            "title": "Color format:",
+            "settingName": "colorFormat",
+            "settingType": "enum",
+            "defaultValue": "original",
+            "options": [
+                ["As authored", "original"],
+                ["HEX: #DAC0DE", "hex", true],
+                ["RGB: rgb(128, 255, 255)", "rgb", true],
+                ["HSL: hsl(300, 80%, 90%)", "hsl", true]
+            ]
+        },
+        {
+            "type": "setting",
+            "category": "Elements",
+            "title": "Show user agent shadow DOM",
+            "settingName": "showUAShadowDOM",
+            "settingType": "boolean",
+            "defaultValue": false
+        },
+        {
+            "type": "setting",
+            "category": "Elements",
+            "title": "Word wrap",
+            "settingName": "domWordWrap",
+            "settingType": "boolean",
+            "defaultValue": true
+        },
+        {
+            "type": "setting",
+            "category": "Elements",
+            "title": "Show rulers",
+            "settingName": "showMetricsRulers",
+            "settingType": "boolean",
+            "defaultValue": false
+        },
+        {
+            "type": "setting",
+            "category": "Elements",
+            "title": "Highlight DOM updates",
+            "settingName": "highlightDOMUpdates",
+            "settingType": "boolean",
+            "defaultValue": true
+        },
+        {
+            "type": "@WebInspector.ToolbarItem.Provider",
+            "className": "WebInspector.StylesSidebarPane.AddNewRuleButtonProvider",
+            "order": 0,
+            "location": "styles-sidebarpane-toolbar"
+        },
+        {
+            "type": "@WebInspector.ToolbarItem.Provider",
+            "className": "WebInspector.ElementStatePaneWidget.ButtonProvider",
+            "order": 1,
+            "location": "styles-sidebarpane-toolbar"
+        }
+    ],
+    "dependencies": [
+        "components",
+        "extensions"
+    ],
+    "scripts": [
+        "BezierUI.js",
+        "StylesPopoverHelper.js",
+        "BezierEditor.js",
+        "Spectrum.js",
+        "ElementsBreadcrumbs.js",
+        "ElementsSidebarPane.js",
+        "ElementsSidebarView.js",
+        "ElementsTreeElement.js",
+        "ElementsTreeOutline.js",
+        "SharedSidebarModel.js",
+        "EventListenersWidget.js",
+        "MetricsSidebarPane.js",
+        "PlatformFontsWidget.js",
+        "PropertiesWidget.js",
+        "StylesSectionModel.js",
+        "StylesSidebarPane.js",
+        "ComputedStyleWidget.js",
+        "ElementStatePaneWidget.js",
+        "ElementsPanel.js"
+    ],
+    "resources": [
+        "bezierEditor.css",
+        "breadcrumbs.css",
+        "computedStyleSidebarPane.css",
+        "elementsPanel.css",
+        "elementsTreeOutline.css",
+        "spectrum.css"
+    ]
+}

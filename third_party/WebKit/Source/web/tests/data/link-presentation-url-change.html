@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<!-- This file is meant to test how many times the WebFrameClient will be
+  notified of a change in the current presentation URL associated with the document. -->
+<html>
+  <head>
+    <link rel='default-presentation' href=''>
+    <link rel='default-presentation'>
+    <link rel='default-presentation foo'>
+    <link rel='default-presentation' crossorigin foo bar>
+    <!-- 4 times (= 4) -->
+  </head>
+  <body>
+    <link rel='default-presentation'>
+    <!-- 1 time (= 5) -->
+  </body>
+  <script>
+    function createLink(href, rel) {
+      var link = document.createElement('link');
+      link.href = href;
+      link.rel = rel;
+      return link;
+    }
+    var links = document.getElementsByTagName('link');
+    var link = document.createElement('link');
+
+    document.head.appendChild(createLink('foo.com', 'default-presentation'));
+    document.head.appendChild(createLink('foo.com', ''));
+    document.head.appendChild(createLink('foo.com', 'default-presentation'));
+    document.head.insertBefore(createLink('foo.com', 'default-presentation'), links[0]);
+    // 3 times (= 8)
+
+    links[0].crossOrigin = 'use-credentials';
+    links[0].media = '';
+    links[0].type = 'image/gif';
+    // 2 times (= 10)
+
+    links[0].href = 'bar.com';
+    links[0].rel = 'blah';
+    links[0].rel = 'default-presentation';
+    // 3 times (= 13)
+
+    document.head.removeChild(links[0]);
+    // 1 time (= 14)
+  </script>
+</html>

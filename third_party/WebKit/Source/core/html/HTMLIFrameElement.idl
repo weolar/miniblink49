@@ -1,0 +1,45 @@
+/*
+ * Copyright (C) 2006, 2007, 2009, 2010 Apple Inc. All rights reserved.
+ * Copyright (C) 2006 Samuel Weinig <sam.weinig@gmail.com>
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public License
+ * along with this library; see the file COPYING.LIB.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
+ */
+
+// https://html.spec.whatwg.org/#the-iframe-element
+
+interface HTMLIFrameElement : HTMLElement {
+    [Reflect, URL] attribute DOMString src;
+    [Reflect] attribute DOMString srcdoc;
+    [Reflect] attribute DOMString name;
+    [PutForwards=value] readonly attribute DOMSettableTokenList sandbox;
+    // Note: The seamless attribute was once supported, but was removed.
+    [Reflect] attribute boolean allowFullscreen;
+    [Reflect] attribute DOMString width;
+    [Reflect] attribute DOMString height;
+    [CheckSecurity=Node] readonly attribute Document? contentDocument;
+    readonly attribute Window? contentWindow;
+    [CheckSecurity=Node, RaisesException] Document? getSVGDocument();
+
+    // obsolete members
+    // https://html.spec.whatwg.org/#HTMLIFrameElement-partial
+    [Reflect] attribute DOMString align;
+    [Reflect] attribute DOMString scrolling;
+    [Reflect] attribute DOMString frameBorder;
+    [Reflect, URL] attribute DOMString longDesc;
+
+    [Reflect, TreatNullAs=EmptyString] attribute DOMString marginHeight;
+    [Reflect, TreatNullAs=EmptyString] attribute DOMString marginWidth;
+};

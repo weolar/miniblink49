@@ -1,0 +1,9 @@
+// Copyright 2014 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+// https://dvcs.w3.org/hg/webperf/raw-file/tip/specs/Beacon/Overview.html#Navigator
+
+partial interface Navigator {
+    [CallWith=ExecutionContext, MeasureAs=SendBeacon, RaisesException] boolean sendBeacon(DOMString url, optional (ArrayBufferView or Blob or DOMString or FormData)? data = null);
+};

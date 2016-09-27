@@ -1,0 +1,173 @@
+# Copyright 2014 The Chromium Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+import("//build/module_args/v8.gni")
+import("//testing/test.gni")
+
+component("gin") {
+  sources = [
+    "arguments.cc",
+    "arguments.h",
+    "array_buffer.cc",
+    "array_buffer.h",
+    "context_holder.cc",
+    "converter.cc",
+    "converter.h",
+    "debug_impl.cc",
+    "debug_impl.h",
+    "dictionary.cc",
+    "dictionary.h",
+    "function_template.cc",
+    "function_template.h",
+    "gin_export.h",
+    "handle.h",
+    "interceptor.cc",
+    "interceptor.h",
+    "isolate_holder.cc",
+    "modules/console.cc",
+    "modules/console.h",
+    "modules/file_module_provider.cc",
+    "modules/file_module_provider.h",
+    "modules/module_registry.cc",
+    "modules/module_registry.h",
+    "modules/module_registry_observer.h",
+    "modules/module_runner_delegate.cc",
+    "modules/module_runner_delegate.h",
+    "modules/timer.cc",
+    "modules/timer.h",
+    "object_template_builder.cc",
+    "object_template_builder.h",
+    "per_context_data.cc",
+    "per_context_data.h",
+    "per_isolate_data.cc",
+    "per_isolate_data.h",
+    "public/context_holder.h",
+    "public/debug.h",
+    "public/gin_embedders.h",
+    "public/isolate_holder.h",
+    "public/v8_platform.h",
+    "public/wrapper_info.h",
+    "run_microtasks_observer.cc",
+    "run_microtasks_observer.h",
+    "runner.cc",
+    "runner.h",
+    "shell_runner.cc",
+    "shell_runner.h",
+    "try_catch.cc",
+    "try_catch.h",
+    "v8_initializer.cc",
+    "v8_initializer.h",
+    "v8_isolate_memory_dump_provider.cc",
+    "v8_isolate_memory_dump_provider.h",
+    "v8_platform.cc",
+    "wrappable.cc",
+    "wrappable.h",
+    "wrapper_info.cc",
+  ]
+
+  defines = [ "GIN_IMPLEMENTATION" ]
+
+  public_deps = [
+    "//base",
+    "//v8",
+  ]
+  deps = [
+    "//base/third_party/dynamic_annotations",
+  ]
+  if (v8_use_external_startup_data && is_win) {
+    public_deps += [ ":gin_v8_snapshot_fingerprint" ]
+    deps += [ "//crypto:crypto" ]
+    sources += [ "$target_gen_dir/v8_snapshot_fingerprint.cc" ]
+    defines += [ "V8_VERIFY_EXTERNAL_STARTUP_DATA" ]
+  }
+}
+
+if (v8_use_external_startup_data) {
+  action("gin_v8_snapshot_fingerprint") {
+    script = "//gin/fingerprint/fingerprint_v8_snapshot.py"
+
+    snapshot_file = "$root_build_dir/snapshot_blob.bin"
+    natives_file = "$root_build_dir/natives_blob.bin"
+    output_file = "$target_gen_dir/v8_snapshot_fingerprint.cc"
+
+    args = [
+      "--snapshot_file",
+      rebase_path(snapshot_file, root_build_dir),
+      "--natives_file",
+      rebase_path(natives_file, root_build_dir),
+      "--output_file",
+      rebase_path(output_file, root_build_dir),
+    ]
+    inputs = [
+      snapshot_file,
+      natives_file,
+    ]
+    outputs = [
+      output_file,
+    ]
+
+    deps = [
+      "//v8",
+    ]
+  }
+}
+
+executable("gin_shell") {
+  sources = [
+    "shell/gin_main.cc",
+  ]
+
+  deps = [
+    ":gin",
+    "//base",
+    "//base:i18n",
+    "//v8",
+  ]
+}
+
+source_set("gin_test") {
+  testonly = true
+  sources = [
+    "test/file.cc",
+    "test/file.h",
+    "test/file_runner.cc",
+    "test/file_runner.h",
+    "test/gc.cc",
+    "test/gc.h",
+    "test/gtest.cc",
+    "test/gtest.h",
+    "test/v8_test.cc",
+    "test/v8_test.h",
+  ]
+
+  public_deps = [
+    ":gin",
+    "//testing/gtest",
+  ]
+  deps = [
+    "//v8",
+  ]
+}
+
+test("gin_unittests") {
+  sources = [
+    "converter_unittest.cc",
+    "interceptor_unittest.cc",
+    "modules/module_registry_unittest.cc",
+    "modules/timer_unittest.cc",
+    "per_context_data_unittest.cc",
+    "shell/gin_shell_unittest.cc",
+    "shell_runner_unittest.cc",
+    "test/run_all_unittests.cc",
+    "test/run_js_tests.cc",
+    "v8_isolate_memory_dump_provider_unittest.cc",
+    "wrappable_unittest.cc",
+  ]
+
+  deps = [
+    ":gin_test",
+    "//base/test:test_support",
+    "//v8",
+  ]
+}

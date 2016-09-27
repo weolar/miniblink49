@@ -1,0 +1,12 @@
+namespace="MathML"
+namespaceURI="http://www.w3.org/1998/Math/MathML"
+
+math
+mi
+mn
+mo
+mtext
+ms
+mglyph
+malignmark
+annotation-xml

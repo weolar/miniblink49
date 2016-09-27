@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\gin">
+      <UniqueIdentifier>{5196A5EE-F646-E232-A628-4AF20897A907}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\gin\fingerprint">
+      <UniqueIdentifier>{E9E2FE0A-5FBE-4F62-9191-47746076F6F8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)">
+      <UniqueIdentifier>{ECA95933-7FA6-5798-4EC4-C0CAC6DD34DE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)">
+      <UniqueIdentifier>{ECA95933-7FA6-5798-4EC4-C0CAC6DD34DE}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="gin.gyp"/>
+    <None Include="..\gin\fingerprint\fingerprint_v8_snapshot.py">
+      <Filter>..\gin\fingerprint</Filter>
+    </None>
+    <None Include="$(OutDir)\snapshot_blob.bin">
+      <Filter>$(OutDir)</Filter>
+    </None>
+    <None Include="$(OutDir)\natives_blob.bin">
+      <Filter>$(OutDir)</Filter>
+    </None>
+  </ItemGroup>
+</Project>

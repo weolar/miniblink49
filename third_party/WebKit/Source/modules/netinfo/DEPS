@@ -1,0 +1,11 @@
+include_rules = [
+    "+bindings",
+    "+core",
+    "+heap",
+    "-modules",
+    "+modules/EventTargetModules.h",
+    "+modules/netinfo",
+    "+platform",
+    "+public/platform",
+    "-web",
+]

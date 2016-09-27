@@ -1,0 +1,11 @@
+// Copyright 2015 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+// TODO(philipj): There is no spec for the Memory Info API, see blink-dev:
+// https://groups.google.com/a/chromium.org/d/msg/blink-dev/g5YRCGpC9vs/b4OJz71NmPwJ
+
+partial interface Console {
+    // We can't make the attribute readonly as it breaks existing code that relies on being able to assign to console.memory in strict mode. Instead, the setter just ignores the passed value.  http://crbug.com/468611
+    [Measure] attribute MemoryInfo memory;
+};

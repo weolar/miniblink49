@@ -1,0 +1,14 @@
+// Copyright 2015 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+// http://mozvr.github.io/webvr-spec/webvr.html#vrfieldofview
+[
+    RuntimeEnabled=WebVR,
+    GarbageCollected
+] dictionary VRFieldOfViewInit {
+    double upDegrees = 0.0;
+    double rightDegrees = 0.0;
+    double downDegrees = 0.0;
+    double leftDegrees = 0.0;
+};

@@ -1,0 +1,16 @@
+// Copyright 2015 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+[
+    GarbageCollected,
+    // We don't expose the interface now, because the name is not stable
+    // enough. We will expose it in the future.
+    NoInterfaceObject,
+] interface ReadableByteStreamReader {
+    [CallWith=ScriptState] readonly attribute Promise<void> closed;
+    [CallWith=ScriptState] Promise<any> read();
+
+    [CallWith=ScriptState] Promise<void> cancel(optional any reason);
+    [RaisesException] void releaseLock();
+};

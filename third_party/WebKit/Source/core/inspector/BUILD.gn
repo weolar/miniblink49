@@ -1,0 +1,72 @@
+# Copyright 2014 The Chromium Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+import("//third_party/WebKit/Source/bindings/bindings.gni")
+import("//third_party/WebKit/Source/core/core.gni")
+
+visibility = [ "//third_party/WebKit/Source/*" ]
+
+protocol_file = "../../devtools/protocol.json"
+
+action("protocol_sources") {
+  script = "CodeGeneratorInspector.py"
+
+  inputs = [
+    # The helper script imported by CodeGeneratorInspector.py.
+    "CodeGeneratorInspectorStrings.py",
+    protocol_file,
+  ]
+  outputs = [
+    "$blink_core_output_dir/InspectorBackendDispatcher.cpp",
+    "$blink_core_output_dir/InspectorBackendDispatcher.h",
+    "$blink_core_output_dir/InspectorFrontend.cpp",
+    "$blink_core_output_dir/InspectorFrontend.h",
+    "$blink_core_output_dir/InspectorTypeBuilder.cpp",
+    "$blink_core_output_dir/InspectorTypeBuilder.h",
+  ]
+
+  args = [
+    rebase_path(protocol_file, root_build_dir),
+    "--output_dir", rebase_path(blink_core_output_dir, root_build_dir),
+  ]
+
+  deps = [
+    ":protocol_version",
+  ]
+}
+
+action("instrumentation_sources") {
+  script = "CodeGeneratorInstrumentation.py"
+
+  inputs = [
+    # Input file for the script.
+    "InspectorInstrumentation.idl",
+  ]
+
+  outputs = [
+    "$blink_core_output_dir/InspectorConsoleInstrumentationInl.h",
+    "$blink_core_output_dir/InspectorInstrumentationInl.h",
+    "$blink_core_output_dir/InspectorOverridesInl.h",
+    "$blink_core_output_dir/InstrumentingAgentsInl.h",
+    "$blink_core_output_dir/InspectorInstrumentationImpl.cpp",
+  ]
+
+  args = [
+    rebase_path("InspectorInstrumentation.idl", root_build_dir),
+    "--output_dir", rebase_path(blink_core_output_dir, root_build_dir),
+  ]
+}
+
+action("protocol_version") {
+  script = "generate-inspector-protocol-version"
+
+  inputs = [ protocol_file ]
+  output_file = "$blink_core_output_dir/InspectorProtocolVersion.h"
+  outputs = [ output_file ]
+
+  args = [
+    "-o", rebase_path(output_file, root_build_dir),
+    rebase_path(protocol_file, root_build_dir),
+  ]
+}

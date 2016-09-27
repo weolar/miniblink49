@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..\..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..\..\..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..\..\..\..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..\..\..\..\third_party">
+      <UniqueIdentifier>{D6C6CEA7-AAD0-03AD-2394-AC6FCBF8A498}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..\..\..\..\third_party\ply">
+      <UniqueIdentifier>{E46F39B1-8E0F-794B-B86B-61FF2A82B32B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..\..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..\..\..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..\..\..\..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..\..\..\..\third_party">
+      <UniqueIdentifier>{D6C6CEA7-AAD0-03AD-2394-AC6FCBF8A498}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..\..\..\..\third_party\ply">
+      <UniqueIdentifier>{E46F39B1-8E0F-794B-B86B-61FF2A82B32B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..\..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..\..\..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..\..\..\..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..\..\..\..\tools">
+      <UniqueIdentifier>{A0946190-5491-4D66-7E51-19400E36F078}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..\..\..\..\tools\idl_parser">
+      <UniqueIdentifier>{70EE0EAF-E8BC-E486-D1C7-920390255A6B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..\..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..\..\..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..\..\..\..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..\..\..\..\tools">
+      <UniqueIdentifier>{A0946190-5491-4D66-7E51-19400E36F078}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..\..\..\..\tools\idl_parser">
+      <UniqueIdentifier>{70EE0EAF-E8BC-E486-D1C7-920390255A6B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..\..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..\..\..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..\..\..\..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..\..\..\..\tools">
+      <UniqueIdentifier>{A0946190-5491-4D66-7E51-19400E36F078}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..\..\..\..\tools\idl_parser">
+      <UniqueIdentifier>{70EE0EAF-E8BC-E486-D1C7-920390255A6B}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="scripts.gyp"/>
+    <None Include="..\..\..\..\..\third_party\ply\lex.py">
+      <Filter>..\..\..\..\..\third_party\ply</Filter>
+    </None>
+    <None Include="..\..\..\..\..\third_party\ply\yacc.py">
+      <Filter>..\..\..\..\..\third_party\ply</Filter>
+    </None>
+    <None Include="..\..\..\..\..\tools\idl_parser\idl_lexer.py">
+      <Filter>..\..\..\..\..\tools\idl_parser</Filter>
+    </None>
+    <None Include="..\..\..\..\..\tools\idl_parser\idl_node.py">
+      <Filter>..\..\..\..\..\tools\idl_parser</Filter>
+    </None>
+    <None Include="..\..\..\..\..\tools\idl_parser\idl_parser.py">
+      <Filter>..\..\..\..\..\tools\idl_parser</Filter>
+    </None>
+    <None Include="blink_idl_lexer.py"/>
+    <None Include="blink_idl_parser.py"/>
+  </ItemGroup>
+</Project>

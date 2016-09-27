@@ -1,0 +1,21 @@
+{
+    "extensions": [
+        {
+            "type": "@WebInspector.PanelFactory",
+            "name": "security",
+            "title": "Security",
+            "order": 7,
+            "className": "WebInspector.SecurityPanelFactory"
+        }
+    ],
+    "dependencies": ["platform", "ui", "sdk"],
+    "experiment": "securityPanel",
+    "scripts": [
+        "SecurityModel.js",
+        "SecurityPanel.js"
+    ],
+    "resources": [
+        "lockIcon.css",
+        "securityPanel.css"
+    ]
+}

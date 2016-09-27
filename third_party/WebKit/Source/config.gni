@@ -1,0 +1,98 @@
+# Copyright 2014 The Chromium Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+import("//build/config/ui.gni")
+import("//third_party/WebKit/public/features.gni")
+
+if (is_android) {
+  import("//build/config/android/config.gni")
+}
+if (current_cpu == "arm") {
+  import("//build/config/arm.gni")
+} else {
+  # TODO(brettw) remove this once && early-out is checked in.
+  arm_version = 0
+}
+
+declare_args() {
+  # Set to true to enable the clang plugin that checks the usage of the Blink
+  # garbage-collection infrastructure during compilation.
+  blink_gc_plugin = false
+  blink_gc_plugin_dump_graph = false
+
+  blink_asserts_always_on = false
+}
+
+# Whether Android ARM or x86 build uses OpenMAX DL FFT. Currently only
+# supported on Android ARMv7+, ia32 or x64 without webview. When enabled, this
+# will also enable WebAudio support on Android ARM, ia32 and x64. Default is
+# enabled. Whether WebAudio is actually available depends on runtime settings
+# and flags.
+use_openmax_dl_fft = is_android &&
+  (current_cpu == "x86" ||
+   current_cpu == "x64" ||
+   (current_cpu == "arm" && arm_version >= 7) ||
+   current_cpu == "mipsel")
+
+use_webaudio_ffmpeg = !is_mac && !is_android
+
+# Set this to true to enable use of concatenated impulse responses for the HRTF
+# panner in WebAudio.
+# TODO(brettw) do we need this or can we assume its always on?
+use_concatenated_impulse_responses = true
+
+# feature_defines_list ---------------------------------------------------------
+
+feature_defines_list = [
+  "ENABLE_LAYOUT_UNIT_IN_INLINE_BOXES=0",
+]
+
+if (is_debug) {
+  # TODO(GYP) this should also be set when release_valgrind_build is set,
+  # but we don't have that flag in the GN build yet.
+  feature_defines_list += [ "WTF_USE_DYNAMIC_ANNOTATIONS=1" ]
+}
+
+if (use_concatenated_impulse_responses) {
+  feature_defines_list += [ "WTF_USE_CONCATENATED_IMPULSE_RESPONSES=1" ]
+}
+
+if (!is_android) {
+  feature_defines_list += [
+    "ENABLE_INPUT_MULTIPLE_FIELDS_UI=1",
+    "ENABLE_WEB_AUDIO=1",
+  ]
+}
+
+if (use_webaudio_ffmpeg) {
+  feature_defines_list += [ "WTF_USE_WEBAUDIO_FFMPEG=1" ]
+}
+
+if (use_openmax_dl_fft) {
+  feature_defines_list += [
+    "WTF_USE_WEBAUDIO_OPENMAX_DL_FFT=1",
+    # Enabling the FFT is enough to enable WebAudio support to
+    # allow most WebAudio features to work on Android.
+    "ENABLE_WEB_AUDIO=1",
+  ]
+}
+
+if (use_default_render_theme) {
+  feature_defines_list += [ "WTF_USE_DEFAULT_RENDER_THEME=1" ]
+}
+if (enable_oilpan) {
+  feature_defines_list += [ "ENABLE_OILPAN=1" ]
+}
+if (blink_asserts_always_on) {
+  feature_defines_list += [ "ENABLE_ASSERT=1" ]
+}
+
+# feature_defines_string -------------------------------------------------------
+
+# Convert the list to a space-separated string for passing to scripts.
+# This would be the equivalent of passing '<(feature_defines)' in GYP.
+feature_defines_string = exec_script(
+    "build/gn_list_to_space_separated_string.py",
+    feature_defines_list,
+    "trim string")

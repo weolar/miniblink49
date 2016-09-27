@@ -1,0 +1,38 @@
+namespace="Event"
+suffix="Modules"
+export=MODULES_EXPORT
+
+modules/app_banner/BeforeInstallPromptEvent RuntimeEnabled=AppBannerEnabled
+modules/background_sync/PeriodicSyncEvent RuntimeEnabled=BackgroundSyncEnabled
+modules/background_sync/SyncEvent RuntimeEnabled=BackgroundSyncEnabled
+modules/device_light/DeviceLightEvent RuntimeEnabled=DeviceLightEnabled
+modules/device_orientation/DeviceMotionEvent 
+modules/device_orientation/DeviceOrientationEvent 
+modules/encryptedmedia/MediaEncryptedEvent RuntimeEnabled=EncryptedMediaEnabled
+modules/encryptedmedia/MediaKeyMessageEvent RuntimeEnabled=EncryptedMediaEnabled
+modules/gamepad/GamepadEvent 
+modules/geofencing/GeofencingEvent RuntimeEnabled=GeofencingEnabled
+modules/indexeddb/IDBVersionChangeEvent 
+modules/mediastream/MediaStreamEvent 
+modules/mediastream/MediaStreamTrackEvent 
+modules/mediastream/RTCDTMFToneChangeEvent 
+modules/mediastream/RTCDataChannelEvent 
+modules/mediastream/RTCIceCandidateEvent 
+modules/navigatorconnect/CrossOriginConnectEvent RuntimeEnabled=NavigatorConnectEnabled
+modules/navigatorconnect/ServicePortConnectEvent RuntimeEnabled=NavigatorConnectEnabled
+modules/notifications/NotificationEvent RuntimeEnabled=ServiceWorkerNotificationsEnabled
+modules/presentation/DefaultSessionStartEvent RuntimeEnabled=PresentationEnabled
+modules/push_messaging/PushEvent RuntimeEnabled=PushMessagingEnabled
+modules/serviceworkers/ExtendableEvent 
+modules/serviceworkers/FetchEvent 
+modules/serviceworkers/ServiceWorkerMessageEvent 
+modules/speech/SpeechRecognitionError 
+modules/speech/SpeechRecognitionEvent 
+modules/speech/SpeechSynthesisEvent RuntimeEnabled=ScriptedSpeechEnabled
+modules/storage/StorageEvent 
+modules/webaudio/AudioProcessingEvent Conditional=WEB_AUDIO
+modules/webaudio/OfflineAudioCompletionEvent Conditional=WEB_AUDIO
+modules/webgl/WebGLContextEvent 
+modules/webmidi/MIDIConnectionEvent 
+modules/webmidi/MIDIMessageEvent 
+modules/websockets/CloseEvent 

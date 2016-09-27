@@ -1,0 +1,1314 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{A24F82D8-BE3C-675C-CCC0-DC57003934DA}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>bindings_modules_v8_generated_individual</RootNamespace>
+    <IgnoreWarnCompileDuplicatedFilename>true</IgnoreWarnCompileDuplicatedFilename>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props"/>
+  <PropertyGroup Label="Configuration">
+    <CharacterSet>Unicode</CharacterSet>
+    <ConfigurationType>Utility</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Label="Locals">
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props"/>
+  <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.props"/>
+  <ImportGroup Label="ExtensionSettings"/>
+  <ImportGroup Label="PropertySheets">
+    <Import Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props"/>
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros"/>
+  <PropertyGroup>
+    <ExecutablePath>$(ExecutablePath);$(MSBuildProjectDirectory)\.\bin\;$(MSBuildProjectDirectory)\.\bin\</ExecutablePath>
+    <OutDir>..\..\..\..\..\..\..\..\out\$(Configuration)\</OutDir>
+    <IntDir>$(OutDir)obj\$(ProjectName)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</LinkIncremental>
+    <TargetName>$(ProjectName)</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(OutDir)gen;..\..\..\..\..\..\third_party\wtl\include;C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\um;C:\Program Files (x86)\Windows Kits\8.1\Include\winrt;$(VSInstallDir)\VC\atlmfc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/MP /bigobj %(AdditionalOptions)</AdditionalOptions>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <CompileAsWinRT>false</CompileAsWinRT>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4091;4127;4351;4355;4503;4611;4100;4121;4244;4481;4505;4510;4512;4610;4838;4996;4456;4457;4458;4459;4702;4800;4251;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <ExceptionHandling>false</ExceptionHandling>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <MinimalRebuild>false</MinimalRebuild>
+      <Optimization>Disabled</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PreprocessorDefinitions>_DEBUG;V8_DEPRECATION_WARNINGS;_WIN32_WINNT=0x0603;WINVER=0x0603;WIN32;_WINDOWS;NOMINMAX;PSAPI_VERSION=1;_CRT_RAND_S;CERT_CHAIN_PARA_HAS_EXTRA_FIELDS;WIN32_LEAN_AND_MEAN;_ATL_NO_OPENGL;_SECURE_ATL;_HAS_EXCEPTIONS=0;_WINSOCK_DEPRECATED_NO_WARNINGS;CHROMIUM_BUILD;CR_CLANG_REVISION=239674-1;COMPONENT_BUILD;USE_AURA=1;USE_ASH=1;USE_DEFAULT_RENDER_THEME=1;USE_LIBJPEG_TURBO=1;ENABLE_ONE_CLICK_SIGNIN;ENABLE_PRE_SYNC_BACKUP;ENABLE_REMOTING=1;ENABLE_WEBRTC=1;ENABLE_MEDIA_ROUTER=1;ENABLE_PEPPER_CDMS;ENABLE_CONFIGURATION_POLICY;ENABLE_NOTIFICATIONS;ENABLE_HIDPI=1;ENABLE_TOPCHROME_MD=1;DONT_EMBED_BUILD_METADATA;NO_TCMALLOC;__STD_C;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;NTDDI_VERSION=0x06030000;_USING_V110_SDK71_;ENABLE_TASK_MANAGER=1;ENABLE_EXTENSIONS=1;ENABLE_PLUGIN_INSTALLATION=1;ENABLE_PLUGINS=1;ENABLE_SESSION_SERVICE=1;ENABLE_THEMES=1;ENABLE_AUTOFILL_DIALOG=1;ENABLE_BACKGROUND=1;ENABLE_GOOGLE_NOW=1;CLD_VERSION=2;ENABLE_PRINTING=1;ENABLE_BASIC_PRINTING=1;ENABLE_PRINT_PREVIEW=1;ENABLE_SPELLCHECK=1;ENABLE_CAPTIVE_PORTAL_DETECTION=1;ENABLE_APP_LIST=1;ENABLE_SETTINGS_APP=1;ENABLE_SUPERVISED_USERS=1;ENABLE_MDNS=1;ENABLE_SERVICE_DISCOVERY=1;ENABLE_WIFI_BOOTSTRAPPING=1;V8_USE_EXTERNAL_STARTUP_DATA;FULL_SAFE_BROWSING;SAFE_BROWSING_CSD;SAFE_BROWSING_DB_LOCAL;SAFE_BROWSING_SERVICE;USE_LIBPCI=1;USE_OPENSSL=1;_CRT_NONSTDC_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;DYNAMIC_ANNOTATIONS_ENABLED=1;WTF_USE_DYNAMIC_ANNOTATIONS=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <WarningLevel>Level3</WarningLevel>
+    </ClCompile>
+    <Lib>
+      <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.1/Lib/win8/um/x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>/ignore:4221 %(AdditionalOptions)</AdditionalOptions>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Lib>
+    <Link>
+      <AdditionalDependencies>wininet.lib;dnsapi.lib;version.lib;msimg32.lib;ws2_32.lib;usp10.lib;psapi.lib;dbghelp.lib;winmm.lib;shlwapi.lib;kernel32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;user32.lib;uuid.lib;odbc32.lib;odbccp32.lib;delayimp.lib;credui.lib;netapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.1/Lib/win8/um/x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>/maxilksize:0x7ff00000 /safeseh /dynamicbase /ignore:4199 /ignore:4221 /nxcompat /largeaddressaware %(AdditionalOptions)</AdditionalOptions>
+      <DelayLoadDLLs>dbghelp.dll;dwmapi.dll;shell32.dll;uxtheme.dll;%(DelayLoadDLLs)</DelayLoadDLLs>
+      <FixedBaseAddress>false</FixedBaseAddress>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ImportLibrary>$(OutDir)lib\$(TargetName).lib</ImportLibrary>
+      <MapFileName>$(OutDir)$(TargetName).map</MapFileName>
+      <MinimumRequiredVersion>5.01</MinimumRequiredVersion>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <SubSystem>Console</SubSystem>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\um;C:\Program Files (x86)\Windows Kits\8.1\Include\winrt;$(VSInstallDir)\VC\atlmfc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DllDataFileName>%(Filename).dlldata.c</DllDataFileName>
+      <GenerateStublessProxies>true</GenerateStublessProxies>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <OutputDirectory>$(IntDir)</OutputDirectory>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+    </Midl>
+    <ResourceCompile>
+      <AdditionalIncludeDirectories>../../../../../..;$(OutDir)gen;$(OutDir)gen;..\..\..\..\..\..\third_party\wtl\include;C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\um;C:\Program Files (x86)\Windows Kits\8.1\Include\winrt;$(VSInstallDir)\VC\atlmfc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Culture>0x0409</Culture>
+      <PreprocessorDefinitions>_DEBUG;V8_DEPRECATION_WARNINGS;_WIN32_WINNT=0x0603;WINVER=0x0603;WIN32;_WINDOWS;NOMINMAX;PSAPI_VERSION=1;_CRT_RAND_S;CERT_CHAIN_PARA_HAS_EXTRA_FIELDS;WIN32_LEAN_AND_MEAN;_ATL_NO_OPENGL;_SECURE_ATL;_HAS_EXCEPTIONS=0;_WINSOCK_DEPRECATED_NO_WARNINGS;CHROMIUM_BUILD;CR_CLANG_REVISION=239674-1;COMPONENT_BUILD;USE_AURA=1;USE_ASH=1;USE_DEFAULT_RENDER_THEME=1;USE_LIBJPEG_TURBO=1;ENABLE_ONE_CLICK_SIGNIN;ENABLE_PRE_SYNC_BACKUP;ENABLE_REMOTING=1;ENABLE_WEBRTC=1;ENABLE_MEDIA_ROUTER=1;ENABLE_PEPPER_CDMS;ENABLE_CONFIGURATION_POLICY;ENABLE_NOTIFICATIONS;ENABLE_HIDPI=1;ENABLE_TOPCHROME_MD=1;DONT_EMBED_BUILD_METADATA;NO_TCMALLOC;__STD_C;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;NTDDI_VERSION=0x06030000;_USING_V110_SDK71_;ENABLE_TASK_MANAGER=1;ENABLE_EXTENSIONS=1;ENABLE_PLUGIN_INSTALLATION=1;ENABLE_PLUGINS=1;ENABLE_SESSION_SERVICE=1;ENABLE_THEMES=1;ENABLE_AUTOFILL_DIALOG=1;ENABLE_BACKGROUND=1;ENABLE_GOOGLE_NOW=1;CLD_VERSION=2;ENABLE_PRINTING=1;ENABLE_BASIC_PRINTING=1;ENABLE_PRINT_PREVIEW=1;ENABLE_SPELLCHECK=1;ENABLE_CAPTIVE_PORTAL_DETECTION=1;ENABLE_APP_LIST=1;ENABLE_SETTINGS_APP=1;ENABLE_SUPERVISED_USERS=1;ENABLE_MDNS=1;ENABLE_SERVICE_DISCOVERY=1;ENABLE_WIFI_BOOTSTRAPPING=1;V8_USE_EXTERNAL_STARTUP_DATA;FULL_SAFE_BROWSING;SAFE_BROWSING_CSD;SAFE_BROWSING_DB_LOCAL;SAFE_BROWSING_SERVICE;USE_LIBPCI=1;USE_OPENSSL=1;_CRT_NONSTDC_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;DYNAMIC_ANNOTATIONS_ENABLED=1;WTF_USE_DYNAMIC_ANNOTATIONS=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(OutDir)gen;..\..\..\..\..\..\third_party\wtl\include;C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\um;C:\Program Files (x86)\Windows Kits\8.1\Include\winrt;$(VSInstallDir)\VC\atlmfc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/MP /bigobj %(AdditionalOptions)</AdditionalOptions>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <CompileAsWinRT>false</CompileAsWinRT>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4091;4127;4351;4355;4503;4611;4100;4121;4244;4481;4505;4510;4512;4610;4838;4996;4456;4457;4458;4459;4702;4800;4251;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <ExceptionHandling>false</ExceptionHandling>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <MinimalRebuild>false</MinimalRebuild>
+      <Optimization>Disabled</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PreprocessorDefinitions>_DEBUG;V8_DEPRECATION_WARNINGS;_WIN32_WINNT=0x0603;WINVER=0x0603;WIN32;_WINDOWS;NOMINMAX;PSAPI_VERSION=1;_CRT_RAND_S;CERT_CHAIN_PARA_HAS_EXTRA_FIELDS;WIN32_LEAN_AND_MEAN;_ATL_NO_OPENGL;_SECURE_ATL;_HAS_EXCEPTIONS=0;_WINSOCK_DEPRECATED_NO_WARNINGS;CHROMIUM_BUILD;CR_CLANG_REVISION=239674-1;COMPONENT_BUILD;USE_AURA=1;USE_ASH=1;USE_DEFAULT_RENDER_THEME=1;USE_LIBJPEG_TURBO=1;ENABLE_ONE_CLICK_SIGNIN;ENABLE_PRE_SYNC_BACKUP;ENABLE_REMOTING=1;ENABLE_WEBRTC=1;ENABLE_MEDIA_ROUTER=1;ENABLE_PEPPER_CDMS;ENABLE_CONFIGURATION_POLICY;ENABLE_NOTIFICATIONS;ENABLE_HIDPI=1;ENABLE_TOPCHROME_MD=1;DONT_EMBED_BUILD_METADATA;NO_TCMALLOC;__STD_C;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;NTDDI_VERSION=0x06030000;_USING_V110_SDK71_;ENABLE_TASK_MANAGER=1;ENABLE_EXTENSIONS=1;ENABLE_PLUGIN_INSTALLATION=1;ENABLE_PLUGINS=1;ENABLE_SESSION_SERVICE=1;ENABLE_THEMES=1;ENABLE_AUTOFILL_DIALOG=1;ENABLE_BACKGROUND=1;ENABLE_GOOGLE_NOW=1;CLD_VERSION=2;ENABLE_PRINTING=1;ENABLE_BASIC_PRINTING=1;ENABLE_PRINT_PREVIEW=1;ENABLE_SPELLCHECK=1;ENABLE_CAPTIVE_PORTAL_DETECTION=1;ENABLE_APP_LIST=1;ENABLE_SETTINGS_APP=1;ENABLE_SUPERVISED_USERS=1;ENABLE_MDNS=1;ENABLE_SERVICE_DISCOVERY=1;ENABLE_WIFI_BOOTSTRAPPING=1;V8_USE_EXTERNAL_STARTUP_DATA;FULL_SAFE_BROWSING;SAFE_BROWSING_CSD;SAFE_BROWSING_DB_LOCAL;SAFE_BROWSING_SERVICE;USE_LIBPCI=1;USE_OPENSSL=1;_CRT_NONSTDC_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;DYNAMIC_ANNOTATIONS_ENABLED=1;WTF_USE_DYNAMIC_ANNOTATIONS=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <WarningLevel>Level3</WarningLevel>
+    </ClCompile>
+    <Lib>
+      <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.1/Lib/win8/um/x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>/ignore:4221 %(AdditionalOptions)</AdditionalOptions>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Lib>
+    <Link>
+      <AdditionalDependencies>wininet.lib;dnsapi.lib;version.lib;msimg32.lib;ws2_32.lib;usp10.lib;psapi.lib;dbghelp.lib;winmm.lib;shlwapi.lib;kernel32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;user32.lib;uuid.lib;odbc32.lib;odbccp32.lib;delayimp.lib;credui.lib;netapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.1/Lib/win8/um/x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>/maxilksize:0x7ff00000 /dynamicbase /ignore:4199 /ignore:4221 /nxcompat %(AdditionalOptions)</AdditionalOptions>
+      <DelayLoadDLLs>dbghelp.dll;dwmapi.dll;shell32.dll;uxtheme.dll;%(DelayLoadDLLs)</DelayLoadDLLs>
+      <FixedBaseAddress>false</FixedBaseAddress>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>olepro32.lib</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>$(OutDir)lib\$(TargetName).lib</ImportLibrary>
+      <MapFileName>$(OutDir)$(TargetName).map</MapFileName>
+      <MinimumRequiredVersion>5.02</MinimumRequiredVersion>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <SubSystem>Console</SubSystem>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\um;C:\Program Files (x86)\Windows Kits\8.1\Include\winrt;$(VSInstallDir)\VC\atlmfc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DllDataFileName>%(Filename).dlldata.c</DllDataFileName>
+      <GenerateStublessProxies>true</GenerateStublessProxies>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <OutputDirectory>$(IntDir)</OutputDirectory>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+    </Midl>
+    <ResourceCompile>
+      <AdditionalIncludeDirectories>../../../../../..;$(OutDir)gen;$(OutDir)gen;..\..\..\..\..\..\third_party\wtl\include;C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\um;C:\Program Files (x86)\Windows Kits\8.1\Include\winrt;$(VSInstallDir)\VC\atlmfc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Culture>0x0409</Culture>
+      <PreprocessorDefinitions>_DEBUG;V8_DEPRECATION_WARNINGS;_WIN32_WINNT=0x0603;WINVER=0x0603;WIN32;_WINDOWS;NOMINMAX;PSAPI_VERSION=1;_CRT_RAND_S;CERT_CHAIN_PARA_HAS_EXTRA_FIELDS;WIN32_LEAN_AND_MEAN;_ATL_NO_OPENGL;_SECURE_ATL;_HAS_EXCEPTIONS=0;_WINSOCK_DEPRECATED_NO_WARNINGS;CHROMIUM_BUILD;CR_CLANG_REVISION=239674-1;COMPONENT_BUILD;USE_AURA=1;USE_ASH=1;USE_DEFAULT_RENDER_THEME=1;USE_LIBJPEG_TURBO=1;ENABLE_ONE_CLICK_SIGNIN;ENABLE_PRE_SYNC_BACKUP;ENABLE_REMOTING=1;ENABLE_WEBRTC=1;ENABLE_MEDIA_ROUTER=1;ENABLE_PEPPER_CDMS;ENABLE_CONFIGURATION_POLICY;ENABLE_NOTIFICATIONS;ENABLE_HIDPI=1;ENABLE_TOPCHROME_MD=1;DONT_EMBED_BUILD_METADATA;NO_TCMALLOC;__STD_C;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;NTDDI_VERSION=0x06030000;_USING_V110_SDK71_;ENABLE_TASK_MANAGER=1;ENABLE_EXTENSIONS=1;ENABLE_PLUGIN_INSTALLATION=1;ENABLE_PLUGINS=1;ENABLE_SESSION_SERVICE=1;ENABLE_THEMES=1;ENABLE_AUTOFILL_DIALOG=1;ENABLE_BACKGROUND=1;ENABLE_GOOGLE_NOW=1;CLD_VERSION=2;ENABLE_PRINTING=1;ENABLE_BASIC_PRINTING=1;ENABLE_PRINT_PREVIEW=1;ENABLE_SPELLCHECK=1;ENABLE_CAPTIVE_PORTAL_DETECTION=1;ENABLE_APP_LIST=1;ENABLE_SETTINGS_APP=1;ENABLE_SUPERVISED_USERS=1;ENABLE_MDNS=1;ENABLE_SERVICE_DISCOVERY=1;ENABLE_WIFI_BOOTSTRAPPING=1;V8_USE_EXTERNAL_STARTUP_DATA;FULL_SAFE_BROWSING;SAFE_BROWSING_CSD;SAFE_BROWSING_DB_LOCAL;SAFE_BROWSING_SERVICE;USE_LIBPCI=1;USE_OPENSSL=1;_CRT_NONSTDC_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;DYNAMIC_ANNOTATIONS_ENABLED=1;WTF_USE_DYNAMIC_ANNOTATIONS=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(OutDir)gen;..\..\..\..\..\..\third_party\wtl\include;C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\um;C:\Program Files (x86)\Windows Kits\8.1\Include\winrt;$(VSInstallDir)\VC\atlmfc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/MP /bigobj /d2Zi+ /Zc:inline /Oy- /Gw %(AdditionalOptions)</AdditionalOptions>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <CompileAsWinRT>false</CompileAsWinRT>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4091;4127;4351;4355;4503;4611;4100;4121;4244;4481;4505;4510;4512;4610;4838;4996;4456;4457;4458;4459;4702;4800;4251;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <ExceptionHandling>false</ExceptionHandling>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <MinimalRebuild>false</MinimalRebuild>
+      <OmitFramePointers>false</OmitFramePointers>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PreprocessorDefinitions>V8_DEPRECATION_WARNINGS;_WIN32_WINNT=0x0603;WINVER=0x0603;WIN32;_WINDOWS;NOMINMAX;PSAPI_VERSION=1;_CRT_RAND_S;CERT_CHAIN_PARA_HAS_EXTRA_FIELDS;WIN32_LEAN_AND_MEAN;_ATL_NO_OPENGL;_SECURE_ATL;_HAS_EXCEPTIONS=0;_WINSOCK_DEPRECATED_NO_WARNINGS;CHROMIUM_BUILD;CR_CLANG_REVISION=239674-1;COMPONENT_BUILD;USE_AURA=1;USE_ASH=1;USE_DEFAULT_RENDER_THEME=1;USE_LIBJPEG_TURBO=1;ENABLE_ONE_CLICK_SIGNIN;ENABLE_PRE_SYNC_BACKUP;ENABLE_REMOTING=1;ENABLE_WEBRTC=1;ENABLE_MEDIA_ROUTER=1;ENABLE_PEPPER_CDMS;ENABLE_CONFIGURATION_POLICY;ENABLE_NOTIFICATIONS;ENABLE_HIDPI=1;ENABLE_TOPCHROME_MD=1;DONT_EMBED_BUILD_METADATA;NO_TCMALLOC;__STD_C;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;NTDDI_VERSION=0x06030000;_USING_V110_SDK71_;ENABLE_TASK_MANAGER=1;ENABLE_EXTENSIONS=1;ENABLE_PLUGIN_INSTALLATION=1;ENABLE_PLUGINS=1;ENABLE_SESSION_SERVICE=1;ENABLE_THEMES=1;ENABLE_AUTOFILL_DIALOG=1;ENABLE_BACKGROUND=1;ENABLE_GOOGLE_NOW=1;CLD_VERSION=2;ENABLE_PRINTING=1;ENABLE_BASIC_PRINTING=1;ENABLE_PRINT_PREVIEW=1;ENABLE_SPELLCHECK=1;ENABLE_CAPTIVE_PORTAL_DETECTION=1;ENABLE_APP_LIST=1;ENABLE_SETTINGS_APP=1;ENABLE_SUPERVISED_USERS=1;ENABLE_MDNS=1;ENABLE_SERVICE_DISCOVERY=1;ENABLE_WIFI_BOOTSTRAPPING=1;V8_USE_EXTERNAL_STARTUP_DATA;FULL_SAFE_BROWSING;SAFE_BROWSING_CSD;SAFE_BROWSING_DB_LOCAL;SAFE_BROWSING_SERVICE;USE_LIBPCI=1;USE_OPENSSL=1;_CRT_NONSTDC_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;NDEBUG;NVALGRIND;DYNAMIC_ANNOTATIONS_ENABLED=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <StringPooling>true</StringPooling>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <WarningLevel>Level3</WarningLevel>
+    </ClCompile>
+    <Lib>
+      <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.1/Lib/win8/um/x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>/ignore:4221 %(AdditionalOptions)</AdditionalOptions>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Lib>
+    <Link>
+      <AdditionalDependencies>wininet.lib;dnsapi.lib;version.lib;msimg32.lib;ws2_32.lib;usp10.lib;psapi.lib;dbghelp.lib;winmm.lib;shlwapi.lib;kernel32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;user32.lib;uuid.lib;odbc32.lib;odbccp32.lib;delayimp.lib;credui.lib;netapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.1/Lib/win8/um/x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>/maxilksize:0x7ff00000 /safeseh /dynamicbase /ignore:4199 /ignore:4221 /nxcompat /largeaddressaware %(AdditionalOptions)</AdditionalOptions>
+      <DelayLoadDLLs>dbghelp.dll;dwmapi.dll;shell32.dll;uxtheme.dll;%(DelayLoadDLLs)</DelayLoadDLLs>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <FixedBaseAddress>false</FixedBaseAddress>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ImportLibrary>$(OutDir)lib\$(TargetName).lib</ImportLibrary>
+      <MapFileName>$(OutDir)$(TargetName).map</MapFileName>
+      <MinimumRequiredVersion>5.01</MinimumRequiredVersion>
+      <OptimizeReferences>true</OptimizeReferences>
+      <Profile>true</Profile>
+      <SubSystem>Console</SubSystem>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\um;C:\Program Files (x86)\Windows Kits\8.1\Include\winrt;$(VSInstallDir)\VC\atlmfc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DllDataFileName>%(Filename).dlldata.c</DllDataFileName>
+      <GenerateStublessProxies>true</GenerateStublessProxies>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <OutputDirectory>$(IntDir)</OutputDirectory>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+    </Midl>
+    <ResourceCompile>
+      <AdditionalIncludeDirectories>../../../../../..;$(OutDir)gen;$(OutDir)gen;..\..\..\..\..\..\third_party\wtl\include;C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\um;C:\Program Files (x86)\Windows Kits\8.1\Include\winrt;$(VSInstallDir)\VC\atlmfc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Culture>0x0409</Culture>
+      <PreprocessorDefinitions>V8_DEPRECATION_WARNINGS;_WIN32_WINNT=0x0603;WINVER=0x0603;WIN32;_WINDOWS;NOMINMAX;PSAPI_VERSION=1;_CRT_RAND_S;CERT_CHAIN_PARA_HAS_EXTRA_FIELDS;WIN32_LEAN_AND_MEAN;_ATL_NO_OPENGL;_SECURE_ATL;_HAS_EXCEPTIONS=0;_WINSOCK_DEPRECATED_NO_WARNINGS;CHROMIUM_BUILD;CR_CLANG_REVISION=239674-1;COMPONENT_BUILD;USE_AURA=1;USE_ASH=1;USE_DEFAULT_RENDER_THEME=1;USE_LIBJPEG_TURBO=1;ENABLE_ONE_CLICK_SIGNIN;ENABLE_PRE_SYNC_BACKUP;ENABLE_REMOTING=1;ENABLE_WEBRTC=1;ENABLE_MEDIA_ROUTER=1;ENABLE_PEPPER_CDMS;ENABLE_CONFIGURATION_POLICY;ENABLE_NOTIFICATIONS;ENABLE_HIDPI=1;ENABLE_TOPCHROME_MD=1;DONT_EMBED_BUILD_METADATA;NO_TCMALLOC;__STD_C;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;NTDDI_VERSION=0x06030000;_USING_V110_SDK71_;ENABLE_TASK_MANAGER=1;ENABLE_EXTENSIONS=1;ENABLE_PLUGIN_INSTALLATION=1;ENABLE_PLUGINS=1;ENABLE_SESSION_SERVICE=1;ENABLE_THEMES=1;ENABLE_AUTOFILL_DIALOG=1;ENABLE_BACKGROUND=1;ENABLE_GOOGLE_NOW=1;CLD_VERSION=2;ENABLE_PRINTING=1;ENABLE_BASIC_PRINTING=1;ENABLE_PRINT_PREVIEW=1;ENABLE_SPELLCHECK=1;ENABLE_CAPTIVE_PORTAL_DETECTION=1;ENABLE_APP_LIST=1;ENABLE_SETTINGS_APP=1;ENABLE_SUPERVISED_USERS=1;ENABLE_MDNS=1;ENABLE_SERVICE_DISCOVERY=1;ENABLE_WIFI_BOOTSTRAPPING=1;V8_USE_EXTERNAL_STARTUP_DATA;FULL_SAFE_BROWSING;SAFE_BROWSING_CSD;SAFE_BROWSING_DB_LOCAL;SAFE_BROWSING_SERVICE;USE_LIBPCI=1;USE_OPENSSL=1;_CRT_NONSTDC_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;NDEBUG;NVALGRIND;DYNAMIC_ANNOTATIONS_ENABLED=0;%(PreprocessorDefinitions);%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(OutDir)gen;..\..\..\..\..\..\third_party\wtl\include;C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\um;C:\Program Files (x86)\Windows Kits\8.1\Include\winrt;$(VSInstallDir)\VC\atlmfc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/MP /bigobj /d2Zi+ /Zc:inline /Oy- /Gw %(AdditionalOptions)</AdditionalOptions>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <CompileAsWinRT>false</CompileAsWinRT>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4091;4127;4351;4355;4503;4611;4100;4121;4244;4481;4505;4510;4512;4610;4838;4996;4456;4457;4458;4459;4702;4800;4251;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <ExceptionHandling>false</ExceptionHandling>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <MinimalRebuild>false</MinimalRebuild>
+      <OmitFramePointers>false</OmitFramePointers>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PreprocessorDefinitions>V8_DEPRECATION_WARNINGS;_WIN32_WINNT=0x0603;WINVER=0x0603;WIN32;_WINDOWS;NOMINMAX;PSAPI_VERSION=1;_CRT_RAND_S;CERT_CHAIN_PARA_HAS_EXTRA_FIELDS;WIN32_LEAN_AND_MEAN;_ATL_NO_OPENGL;_SECURE_ATL;_HAS_EXCEPTIONS=0;_WINSOCK_DEPRECATED_NO_WARNINGS;CHROMIUM_BUILD;CR_CLANG_REVISION=239674-1;COMPONENT_BUILD;USE_AURA=1;USE_ASH=1;USE_DEFAULT_RENDER_THEME=1;USE_LIBJPEG_TURBO=1;ENABLE_ONE_CLICK_SIGNIN;ENABLE_PRE_SYNC_BACKUP;ENABLE_REMOTING=1;ENABLE_WEBRTC=1;ENABLE_MEDIA_ROUTER=1;ENABLE_PEPPER_CDMS;ENABLE_CONFIGURATION_POLICY;ENABLE_NOTIFICATIONS;ENABLE_HIDPI=1;ENABLE_TOPCHROME_MD=1;DONT_EMBED_BUILD_METADATA;NO_TCMALLOC;__STD_C;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;NTDDI_VERSION=0x06030000;_USING_V110_SDK71_;ENABLE_TASK_MANAGER=1;ENABLE_EXTENSIONS=1;ENABLE_PLUGIN_INSTALLATION=1;ENABLE_PLUGINS=1;ENABLE_SESSION_SERVICE=1;ENABLE_THEMES=1;ENABLE_AUTOFILL_DIALOG=1;ENABLE_BACKGROUND=1;ENABLE_GOOGLE_NOW=1;CLD_VERSION=2;ENABLE_PRINTING=1;ENABLE_BASIC_PRINTING=1;ENABLE_PRINT_PREVIEW=1;ENABLE_SPELLCHECK=1;ENABLE_CAPTIVE_PORTAL_DETECTION=1;ENABLE_APP_LIST=1;ENABLE_SETTINGS_APP=1;ENABLE_SUPERVISED_USERS=1;ENABLE_MDNS=1;ENABLE_SERVICE_DISCOVERY=1;ENABLE_WIFI_BOOTSTRAPPING=1;V8_USE_EXTERNAL_STARTUP_DATA;FULL_SAFE_BROWSING;SAFE_BROWSING_CSD;SAFE_BROWSING_DB_LOCAL;SAFE_BROWSING_SERVICE;USE_LIBPCI=1;USE_OPENSSL=1;_CRT_NONSTDC_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;NDEBUG;NVALGRIND;DYNAMIC_ANNOTATIONS_ENABLED=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <StringPooling>true</StringPooling>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <WarningLevel>Level3</WarningLevel>
+    </ClCompile>
+    <Lib>
+      <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.1/Lib/win8/um/x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>/ignore:4221 %(AdditionalOptions)</AdditionalOptions>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Lib>
+    <Link>
+      <AdditionalDependencies>wininet.lib;dnsapi.lib;version.lib;msimg32.lib;ws2_32.lib;usp10.lib;psapi.lib;dbghelp.lib;winmm.lib;shlwapi.lib;kernel32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;user32.lib;uuid.lib;odbc32.lib;odbccp32.lib;delayimp.lib;credui.lib;netapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.1/Lib/win8/um/x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>/maxilksize:0x7ff00000 /dynamicbase /ignore:4199 /ignore:4221 /nxcompat %(AdditionalOptions)</AdditionalOptions>
+      <DelayLoadDLLs>dbghelp.dll;dwmapi.dll;shell32.dll;uxtheme.dll;%(DelayLoadDLLs)</DelayLoadDLLs>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <FixedBaseAddress>false</FixedBaseAddress>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>olepro32.lib</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>$(OutDir)lib\$(TargetName).lib</ImportLibrary>
+      <MapFileName>$(OutDir)$(TargetName).map</MapFileName>
+      <MinimumRequiredVersion>5.02</MinimumRequiredVersion>
+      <OptimizeReferences>true</OptimizeReferences>
+      <Profile>true</Profile>
+      <SubSystem>Console</SubSystem>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\um;C:\Program Files (x86)\Windows Kits\8.1\Include\winrt;$(VSInstallDir)\VC\atlmfc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DllDataFileName>%(Filename).dlldata.c</DllDataFileName>
+      <GenerateStublessProxies>true</GenerateStublessProxies>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <OutputDirectory>$(IntDir)</OutputDirectory>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+    </Midl>
+    <ResourceCompile>
+      <AdditionalIncludeDirectories>../../../../../..;$(OutDir)gen;$(OutDir)gen;..\..\..\..\..\..\third_party\wtl\include;C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\um;C:\Program Files (x86)\Windows Kits\8.1\Include\winrt;$(VSInstallDir)\VC\atlmfc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Culture>0x0409</Culture>
+      <PreprocessorDefinitions>V8_DEPRECATION_WARNINGS;_WIN32_WINNT=0x0603;WINVER=0x0603;WIN32;_WINDOWS;NOMINMAX;PSAPI_VERSION=1;_CRT_RAND_S;CERT_CHAIN_PARA_HAS_EXTRA_FIELDS;WIN32_LEAN_AND_MEAN;_ATL_NO_OPENGL;_SECURE_ATL;_HAS_EXCEPTIONS=0;_WINSOCK_DEPRECATED_NO_WARNINGS;CHROMIUM_BUILD;CR_CLANG_REVISION=239674-1;COMPONENT_BUILD;USE_AURA=1;USE_ASH=1;USE_DEFAULT_RENDER_THEME=1;USE_LIBJPEG_TURBO=1;ENABLE_ONE_CLICK_SIGNIN;ENABLE_PRE_SYNC_BACKUP;ENABLE_REMOTING=1;ENABLE_WEBRTC=1;ENABLE_MEDIA_ROUTER=1;ENABLE_PEPPER_CDMS;ENABLE_CONFIGURATION_POLICY;ENABLE_NOTIFICATIONS;ENABLE_HIDPI=1;ENABLE_TOPCHROME_MD=1;DONT_EMBED_BUILD_METADATA;NO_TCMALLOC;__STD_C;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;NTDDI_VERSION=0x06030000;_USING_V110_SDK71_;ENABLE_TASK_MANAGER=1;ENABLE_EXTENSIONS=1;ENABLE_PLUGIN_INSTALLATION=1;ENABLE_PLUGINS=1;ENABLE_SESSION_SERVICE=1;ENABLE_THEMES=1;ENABLE_AUTOFILL_DIALOG=1;ENABLE_BACKGROUND=1;ENABLE_GOOGLE_NOW=1;CLD_VERSION=2;ENABLE_PRINTING=1;ENABLE_BASIC_PRINTING=1;ENABLE_PRINT_PREVIEW=1;ENABLE_SPELLCHECK=1;ENABLE_CAPTIVE_PORTAL_DETECTION=1;ENABLE_APP_LIST=1;ENABLE_SETTINGS_APP=1;ENABLE_SUPERVISED_USERS=1;ENABLE_MDNS=1;ENABLE_SERVICE_DISCOVERY=1;ENABLE_WIFI_BOOTSTRAPPING=1;V8_USE_EXTERNAL_STARTUP_DATA;FULL_SAFE_BROWSING;SAFE_BROWSING_CSD;SAFE_BROWSING_DB_LOCAL;SAFE_BROWSING_SERVICE;USE_LIBPCI=1;USE_OPENSSL=1;_CRT_NONSTDC_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;NDEBUG;NVALGRIND;DYNAMIC_ANNOTATIONS_ENABLED=0;%(PreprocessorDefinitions);%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <None Include="generated.gyp"/>
+  </ItemGroup>
+  <ItemGroup>
+    <Midl Include="..\..\..\modules\app_banner\BeforeInstallPromptEventInit.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\background_sync\PeriodicSyncEventInit.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\background_sync\PeriodicSyncRegistrationOptions.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\background_sync\SyncEventInit.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\background_sync\SyncRegistrationOptions.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\bluetooth\BluetoothScanFilter.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\bluetooth\RequestDeviceOptions.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\cachestorage\CacheQueryOptions.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\canvas2d\Canvas2DContextAttributes.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\canvas2d\HitRegionOptions.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\credentialmanager\CredentialData.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\credentialmanager\CredentialRequestOptions.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\credentialmanager\FederatedCredentialData.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\credentialmanager\FederatedCredentialRequestOptions.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\credentialmanager\LocallyStoredCredentialData.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\credentialmanager\PasswordCredentialData.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\device_light\DeviceLightEventInit.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\encoding\TextDecodeOptions.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\encoding\TextDecoderOptions.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\encryptedmedia\MediaEncryptedEventInit.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\encryptedmedia\MediaKeyMessageEventInit.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\encryptedmedia\MediaKeySystemConfiguration.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\encryptedmedia\MediaKeySystemMediaCapability.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\filesystem\FileSystemFlags.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\gamepad\GamepadEventInit.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\geofencing\CircularGeofencingRegionInit.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\geolocation\PositionOptions.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\indexeddb\IDBIndexParameters.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\indexeddb\IDBObjectStoreParameters.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\indexeddb\IDBVersionChangeEventInit.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\mediastream\MediaStreamEventInit.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\mediastream\RTCDTMFToneChangeEventInit.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\mediastream\RTCIceCandidateInit.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\mediastream\RTCSessionDescriptionInit.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\navigatorconnect\ServicePortConnectEventInit.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\navigatorconnect\ServicePortConnectOptions.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\navigatorconnect\ServicePortConnectResponse.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\navigatorconnect\ServicePortMatchOptions.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\notifications\GetNotificationOptions.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\notifications\NotificationEventInit.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\notifications\NotificationOptions.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\permissions\MidiPermissionDescriptor.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\permissions\PermissionDescriptor.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\permissions\PushPermissionDescriptor.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\presentation\DefaultSessionStartEventInit.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\push_messaging\PushEventInit.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\push_messaging\PushSubscriptionOptions.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\serviceworkers\ClientQueryOptions.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\serviceworkers\ExtendableEventInit.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\serviceworkers\FetchEventInit.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\serviceworkers\RegistrationOptions.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\serviceworkers\ServiceWorkerMessageEventInit.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\speech\SpeechRecognitionErrorInit.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\speech\SpeechRecognitionEventInit.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\storage\StorageEventInit.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\vr\VRFieldOfViewInit.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webgl\WebGLContextAttributes.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webgl\WebGLContextEventInit.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webmidi\MIDIConnectionEventInit.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webmidi\MIDIMessageEventInit.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webmidi\MIDIOptions.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\websockets\CloseEventInit.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\app_banner\AppBannerPromptResult.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\app_banner\BeforeInstallPromptEvent.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\background_sync\PeriodicSyncEvent.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\background_sync\PeriodicSyncManager.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\background_sync\PeriodicSyncRegistration.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\background_sync\SyncEvent.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\background_sync\SyncManager.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\background_sync\SyncRegistration.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\battery\BatteryManager.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\bluetooth\Bluetooth.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\bluetooth\BluetoothDevice.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\bluetooth\BluetoothGATTCharacteristic.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\bluetooth\BluetoothGATTRemoteServer.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\bluetooth\BluetoothGATTService.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\bluetooth\BluetoothUUID.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\cachestorage\Cache.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\cachestorage\CacheStorage.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\canvas2d\CanvasGradient.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\canvas2d\CanvasPattern.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\canvas2d\CanvasRenderingContext2D.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\canvas2d\Path2D.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\compositorworker\CompositorWorker.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\compositorworker\CompositorWorkerGlobalScope.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\credentialmanager\Credential.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\credentialmanager\CredentialsContainer.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\credentialmanager\FederatedCredential.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\credentialmanager\PasswordCredential.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\crypto\Crypto.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\crypto\CryptoKey.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\crypto\SubtleCrypto.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\device_light\DeviceLightEvent.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\device_orientation\DeviceAcceleration.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\device_orientation\DeviceMotionEvent.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\device_orientation\DeviceOrientationEvent.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\device_orientation\DeviceRotationRate.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\encoding\TextDecoder.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\encoding\TextEncoder.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\encryptedmedia\MediaEncryptedEvent.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\encryptedmedia\MediaKeyMessageEvent.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\encryptedmedia\MediaKeySession.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\encryptedmedia\MediaKeyStatusMap.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\encryptedmedia\MediaKeySystemAccess.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\encryptedmedia\MediaKeys.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\fetch\Body.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\fetch\Headers.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\fetch\Request.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\fetch\Response.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\filesystem\DOMFileSystem.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\filesystem\DOMFileSystemSync.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\filesystem\DirectoryEntry.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\filesystem\DirectoryEntrySync.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\filesystem\DirectoryReader.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\filesystem\DirectoryReaderSync.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\filesystem\EntriesCallback.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\filesystem\Entry.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\filesystem\EntryCallback.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\filesystem\EntrySync.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\filesystem\ErrorCallback.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\filesystem\FileCallback.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\filesystem\FileEntry.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\filesystem\FileEntrySync.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\filesystem\FileSystemCallback.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\filesystem\FileWriter.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\filesystem\FileWriterCallback.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\filesystem\FileWriterSync.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\filesystem\Metadata.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\filesystem\MetadataCallback.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\gamepad\Gamepad.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\gamepad\GamepadButton.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\gamepad\GamepadEvent.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\gamepad\GamepadList.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\geofencing\CircularGeofencingRegion.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\geofencing\Geofencing.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\geofencing\GeofencingEvent.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\geofencing\GeofencingRegion.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\geolocation\Coordinates.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\geolocation\Geolocation.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\geolocation\Geoposition.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\geolocation\PositionCallback.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\geolocation\PositionError.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\geolocation\PositionErrorCallback.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\indexeddb\IDBCursor.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\indexeddb\IDBCursorWithValue.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\indexeddb\IDBDatabase.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\indexeddb\IDBFactory.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\indexeddb\IDBIndex.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\indexeddb\IDBKeyRange.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\indexeddb\IDBObjectStore.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\indexeddb\IDBOpenDBRequest.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\indexeddb\IDBRequest.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\indexeddb\IDBTransaction.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\indexeddb\IDBVersionChangeEvent.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\mediasource\MediaSource.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\mediasource\SourceBuffer.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\mediasource\SourceBufferList.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\mediasource\TrackDefault.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\mediasource\TrackDefaultList.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\mediasource\VideoPlaybackQuality.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\mediasession\MediaSession.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\mediastream\MediaDeviceInfo.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\mediastream\MediaDevices.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\mediastream\MediaStream.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\mediastream\MediaStreamEvent.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\mediastream\MediaStreamTrack.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\mediastream\MediaStreamTrackEvent.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\mediastream\MediaStreamTrackSourcesCallback.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\mediastream\NavigatorUserMediaError.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\mediastream\NavigatorUserMediaErrorCallback.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\mediastream\NavigatorUserMediaSuccessCallback.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\mediastream\RTCDTMFSender.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\mediastream\RTCDTMFToneChangeEvent.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\mediastream\RTCDataChannel.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\mediastream\RTCDataChannelEvent.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\mediastream\RTCErrorCallback.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\mediastream\RTCIceCandidate.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\mediastream\RTCIceCandidateEvent.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\mediastream\RTCPeerConnection.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\mediastream\RTCSessionDescription.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\mediastream\RTCSessionDescriptionCallback.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\mediastream\RTCStatsCallback.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\mediastream\RTCStatsReport.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\mediastream\RTCStatsResponse.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\mediastream\SourceInfo.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\navigatorconnect\CrossOriginConnectEvent.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\navigatorconnect\CrossOriginServiceWorkerClient.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\navigatorconnect\ServicePort.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\navigatorconnect\ServicePortConnectEvent.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\navigatorconnect\ServicePortCollection.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\netinfo\NetworkInformation.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\notifications\Notification.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\notifications\NotificationEvent.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\notifications\NotificationPermissionCallback.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\permissions\Permissions.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\permissions\PermissionStatus.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\plugins\MimeType.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\plugins\MimeTypeArray.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\plugins\Plugin.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\plugins\PluginArray.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\presentation\DefaultSessionStartEvent.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\presentation\Presentation.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\presentation\PresentationAvailability.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\presentation\PresentationSession.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\push_messaging\PushEvent.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\push_messaging\PushManager.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\push_messaging\PushMessageData.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\push_messaging\PushSubscription.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\quota\DeprecatedStorageInfo.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\quota\DeprecatedStorageQuota.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\quota\StorageErrorCallback.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\quota\StorageInfo.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\quota\StorageQuota.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\quota\StorageQuotaCallback.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\quota\StorageUsageCallback.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\screen_orientation\ScreenOrientation.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\serviceworkers\Client.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\serviceworkers\Clients.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\serviceworkers\ExtendableEvent.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\serviceworkers\FetchEvent.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\serviceworkers\ServiceWorker.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\serviceworkers\ServiceWorkerContainer.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\serviceworkers\ServiceWorkerGlobalScope.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\serviceworkers\ServiceWorkerMessageEvent.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\serviceworkers\ServiceWorkerRegistration.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\serviceworkers\StashedMessagePort.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\serviceworkers\StashedPortCollection.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\serviceworkers\WindowClient.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\speech\SpeechGrammar.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\speech\SpeechGrammarList.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\speech\SpeechRecognition.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\speech\SpeechRecognitionAlternative.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\speech\SpeechRecognitionError.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\speech\SpeechRecognitionEvent.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\speech\SpeechRecognitionResult.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\speech\SpeechRecognitionResultList.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\speech\SpeechSynthesis.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\speech\SpeechSynthesisEvent.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\speech\SpeechSynthesisUtterance.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\speech\SpeechSynthesisVoice.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\storage\Storage.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\storage\StorageEvent.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\vr\HMDVRDevice.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\vr\PositionSensorVRDevice.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\vr\VRDevice.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\vr\VREyeParameters.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\vr\VRFieldOfView.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\vr\VRPositionState.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webaudio\AnalyserNode.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webaudio\AudioBuffer.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webaudio\AudioBufferCallback.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webaudio\AudioBufferSourceNode.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webaudio\AudioContext.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webaudio\AudioDestinationNode.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webaudio\AudioListener.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webaudio\AudioNode.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webaudio\AudioParam.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webaudio\AudioProcessingEvent.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webaudio\AudioSourceNode.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webaudio\BiquadFilterNode.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webaudio\ChannelMergerNode.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webaudio\ChannelSplitterNode.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webaudio\ConvolverNode.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webaudio\DelayNode.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webaudio\DynamicsCompressorNode.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webaudio\GainNode.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webaudio\MediaElementAudioSourceNode.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webaudio\MediaStreamAudioDestinationNode.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webaudio\MediaStreamAudioSourceNode.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webaudio\OfflineAudioCompletionEvent.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webaudio\OfflineAudioContext.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webaudio\OscillatorNode.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webaudio\PannerNode.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webaudio\PeriodicWave.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webaudio\ScriptProcessorNode.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webaudio\StereoPannerNode.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webaudio\WaveShaperNode.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webdatabase\Database.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webdatabase\DatabaseCallback.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webdatabase\SQLError.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webdatabase\SQLResultSet.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webdatabase\SQLResultSetRowList.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webdatabase\SQLStatementCallback.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webdatabase\SQLStatementErrorCallback.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webdatabase\SQLTransaction.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webdatabase\SQLTransactionCallback.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webdatabase\SQLTransactionErrorCallback.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webgl\ANGLEInstancedArrays.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webgl\CHROMIUMSubscribeUniform.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webgl\CHROMIUMValuebuffer.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webgl\EXTBlendMinMax.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webgl\EXTFragDepth.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webgl\EXTShaderTextureLOD.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webgl\EXTTextureFilterAnisotropic.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webgl\EXTsRGB.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webgl\OESElementIndexUint.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webgl\OESStandardDerivatives.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webgl\OESTextureFloat.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webgl\OESTextureFloatLinear.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webgl\OESTextureHalfFloat.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webgl\OESTextureHalfFloatLinear.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webgl\OESVertexArrayObject.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webgl\WebGL2RenderingContext.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webgl\WebGLActiveInfo.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webgl\WebGLBuffer.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webgl\WebGLCompressedTextureATC.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webgl\WebGLCompressedTextureETC1.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webgl\WebGLCompressedTexturePVRTC.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webgl\WebGLCompressedTextureS3TC.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webgl\WebGLContextEvent.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webgl\WebGLDebugRendererInfo.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webgl\WebGLDebugShaders.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webgl\WebGLDepthTexture.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webgl\WebGLDrawBuffers.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webgl\WebGLFramebuffer.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webgl\WebGLLoseContext.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webgl\WebGLProgram.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webgl\WebGLQuery.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webgl\WebGLRenderbuffer.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webgl\WebGLRenderingContext.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webgl\WebGLSampler.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webgl\WebGLShader.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webgl\WebGLShaderPrecisionFormat.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webgl\WebGLSync.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webgl\WebGLTexture.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webgl\WebGLTransformFeedback.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webgl\WebGLUniformLocation.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webgl\WebGLVertexArrayObject.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webgl\WebGLVertexArrayObjectOES.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webmidi\MIDIAccess.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webmidi\MIDIConnectionEvent.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webmidi\MIDIInput.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webmidi\MIDIInputMap.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webmidi\MIDIMessageEvent.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webmidi\MIDIOutput.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webmidi\MIDIOutputMap.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\webmidi\MIDIPort.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\websockets\CloseEvent.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\..\..\modules\websockets\WebSocket.idl">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </Midl>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets"/>
+  <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.targets"/>
+  <ImportGroup Label="ExtensionTargets"/>
+  <Target Name="Build">
+    <Exec Command="call ninja.exe -C $(OutDir) $(ProjectName)"/>
+  </Target>
+  <Target Name="Clean">
+    <Exec Command="call ninja.exe -C $(OutDir) -tclean $(ProjectName)"/>
+  </Target>
+</Project>

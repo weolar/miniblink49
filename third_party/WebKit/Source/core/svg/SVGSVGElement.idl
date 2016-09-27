@@ -1,0 +1,78 @@
+/*
+ * Copyright (C) 2004, 2005 Nikolas Zimmermann <zimmermann@kde.org>
+ * Copyright (C) 2004, 2005, 2010 Rob Buis <buis@kde.org>
+ * Copyright (C) 2006 Samuel Weinig <sam.weinig@gmail.com>
+ * Copyright (C) 2006 Apple Inc. All rights reserved.
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public License
+ * along with this library; see the file COPYING.LIB.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
+ */
+
+// http://www.w3.org/TR/SVG2/struct.html#InterfaceSVGSVGElement
+
+[
+    TypeChecking=Interface,
+] interface SVGSVGElement : SVGGraphicsElement {
+
+    [RuntimeEnabled=SVG1DOM, MeasureAs=SVG1DOM] readonly attribute SVGAnimatedLength x;
+    [RuntimeEnabled=SVG1DOM, MeasureAs=SVG1DOM] readonly attribute SVGAnimatedLength y;
+    [RuntimeEnabled=SVG1DOM, MeasureAs=SVG1DOM] readonly attribute SVGAnimatedLength width;
+    [RuntimeEnabled=SVG1DOM, MeasureAs=SVG1DOM] readonly attribute SVGAnimatedLength height;
+    // TODO(philipj): viewport should be a DOMRectReadOnly.
+    readonly attribute SVGRect viewport;
+    // TODO(philipj): useCurrentView and currentView have been removed:
+    // https://github.com/w3c/svgwg/commit/4c26fd36937a65192024208d85c144a21071b057
+    [Measure] readonly attribute boolean useCurrentView;
+    [Measure] readonly attribute SVGViewSpec currentView;
+             attribute float currentScale;
+    // TODO(philipj): currentTranslate should be a DOMPointReadOnly.
+    [ImplementedAs=currentTranslateFromJavascript] readonly attribute SVGPoint currentTranslate;
+
+    [RuntimeEnabled=SVG1DOM, DeprecateAs=SVGSVGElementSuspendRedraw] unsigned long suspendRedraw(unsigned long maxWaitMilliseconds);
+    [RuntimeEnabled=SVG1DOM, DeprecateAs=SVGSVGElementUnsuspendRedraw] void unsuspendRedraw(unsigned long suspendHandleId);
+    [RuntimeEnabled=SVG1DOM, DeprecateAs=SVGSVGElementUnsuspendRedrawAll] void unsuspendRedrawAll();
+    [RuntimeEnabled=SVG1DOM, DeprecateAs=SVGSVGElementForceRedraw] void forceRedraw();
+    void pauseAnimations();
+    void unpauseAnimations();
+    boolean animationsPaused();
+    float getCurrentTime();
+    void setCurrentTime(float seconds);
+    // TODO(philipj): The rect arguments should be DOMRectReadOnly.
+    NodeList getIntersectionList(SVGRect rect, SVGElement? referenceElement);
+    NodeList getEnclosureList(SVGRect rect, SVGElement? referenceElement);
+    boolean checkIntersection(SVGElement element, SVGRect rect);
+    boolean checkEnclosure(SVGElement element, SVGRect rect);
+    void deselectAll();
+    [RuntimeEnabled=SVG1DOM, MeasureAs=SVG1DOM] SVGNumber createSVGNumber();
+    [RuntimeEnabled=SVG1DOM, MeasureAs=SVG1DOM] SVGLength createSVGLength();
+    [RuntimeEnabled=SVG1DOM, MeasureAs=SVG1DOM] SVGAngle createSVGAngle();
+    // TODO(philipj): SVGPoint/Matrix/Rect should be DOMPoint/Matrix/Rect.
+    [RuntimeEnabled=SVG1DOM, MeasureAs=SVG1DOM] SVGPoint createSVGPoint();
+    [RuntimeEnabled=SVG1DOM, MeasureAs=SVG1DOM] SVGMatrix createSVGMatrix();
+    [RuntimeEnabled=SVG1DOM, MeasureAs=SVG1DOM] SVGRect createSVGRect();
+    [RuntimeEnabled=SVG1DOM, MeasureAs=SVG1DOM] SVGTransform createSVGTransform();
+    [RuntimeEnabled=SVG1DOM, MeasureAs=SVG1DOM] SVGTransform createSVGTransformFromMatrix(SVGMatrix matrix);
+
+    // TODO(philipj): The following was part of SVG 1.1:
+    // http://www.w3.org/TR/SVG11/struct.html#InterfaceSVGSVGElement
+    [Measure] readonly attribute float pixelUnitToMillimeterX;
+    [Measure] readonly attribute float pixelUnitToMillimeterY;
+    [Measure] readonly attribute float screenPixelToMillimeterX;
+    [Measure] readonly attribute float screenPixelToMillimeterY;
+    [Measure] Element getElementById(DOMString elementId);
+};
+
+SVGSVGElement implements SVGFitToViewBox;
+SVGSVGElement implements SVGZoomAndPan;

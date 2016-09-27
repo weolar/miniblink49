@@ -1,0 +1,10 @@
+include_rules = [
+    "-bindings",
+    "-core",
+    "-modules",
+    "+platform",
+    "+platform/weborigin",
+    "-public/web",
+    "+third_party/skia",
+    "-web",
+]

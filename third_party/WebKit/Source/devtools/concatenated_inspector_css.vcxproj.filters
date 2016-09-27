@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="scripts">
+      <UniqueIdentifier>{4FDF30BD-A895-58AC-A912-7C70A5371544}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="front_end">
+      <UniqueIdentifier>{6D8DAB43-30B5-AD32-8708-1A9AD7168A0A}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="devtools.gyp"/>
+    <None Include="scripts\concatenate_css_files.py">
+      <Filter>scripts</Filter>
+    </None>
+    <None Include="front_end\inspector.css">
+      <Filter>front_end</Filter>
+    </None>
+    <None Include="front_end\dialog.css">
+      <Filter>front_end</Filter>
+    </None>
+    <None Include="front_end\inspectorStyle.css">
+      <Filter>front_end</Filter>
+    </None>
+    <None Include="front_end\popover.css">
+      <Filter>front_end</Filter>
+    </None>
+    <None Include="front_end\sidebarPane.css">
+      <Filter>front_end</Filter>
+    </None>
+  </ItemGroup>
+</Project>

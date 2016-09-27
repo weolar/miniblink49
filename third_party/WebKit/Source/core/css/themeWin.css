@@ -1,0 +1,128 @@
+/*
+ * Copyright (C) 2008 Google Inc. All rights reserved.
+ * 
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are
+ * met:
+ * 
+ *     * Redistributions of source code must retain the above copyright
+ * notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above
+ * copyright notice, this list of conditions and the following disclaimer
+ * in the documentation and/or other materials provided with the
+ * distribution.
+ *     * Neither the name of Google Inc. nor the names of its
+ * contributors may be used to endorse or promote products derived from
+ * this software without specific prior written permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+/* These styles override the default styling for HTML elements as defined in
+   WebCore/css/html.css. So far we have used this file exclusively for
+   making our form elements match Firefox's. */
+
+input:not([type]), 
+input[type="email" i],
+input[type="number" i],
+input[type="password" i],
+input[type="tel" i],
+input[type="url" i],
+input[type="text" i] {
+    padding:1px 0;
+}
+
+input[type="search" i] {
+    padding:1px;
+}
+
+input[type="checkbox" i] {
+    margin:3px 3px 3px 4px;
+}
+
+input[type="radio" i] {
+    margin:3px 3px 0 5px;
+}
+
+input[type="range" i] {
+    color: #c4c4c4;
+}
+
+/* Not sure this is the right color. #EBEBE4 is what Firefox uses.
+   FIXME: Figure out how to support legacy input rendering. 
+   FIXME: Add input[type="file" i] once we figure out our file inputs.
+   FIXME: Add input[type="image" i] once we figure out our image inputs.
+   FIXME: We probably do the wrong thing if you put an invalid input type.
+          do we care?
+*/
+textarea:disabled,
+input:not([type]):disabled, 
+input[type="color" i]:disabled,
+input[type="date" i]:disabled,
+input[type="datetime" i]:disabled,
+input[type="datetime-local" i]:disabled,
+input[type="email" i]:disabled,
+input[type="month" i]:disabled,
+input[type="password" i]:disabled,
+input[type="number" i]:disabled,
+input[type="search" i]:disabled,
+input[type="tel" i]:disabled,
+input[type="text" i]:disabled,
+input[type="time" i]:disabled,
+input[type="url" i]:disabled,
+input[type="week" i]:disabled {
+    background-color: #EBEBE4; 
+}
+
+input[type="search" i]::-webkit-search-cancel-button {
+    margin-right: 3px;
+}
+
+input[type="search" i]::-webkit-search-results-decoration {
+    margin: auto 3px auto 2px;
+}
+
+input[type="search" i]::-webkit-search-results-button {
+    margin: auto 3px auto 2px;
+}
+
+input::-webkit-outer-spin-button {
+    margin: 0;
+}
+
+input[type="button" i], input[type="submit" i], input[type="reset" i], input[type="file" i]::-webkit-file-upload-button, button {
+    padding: 1px 6px;
+}
+
+/* Windows selects are not rounded. Custom borders for them shouldn't be either. */
+keygen, 
+select, 
+select[size="0"],
+select[size="1"] {
+    border-radius: 0;
+    /* Same as native_theme_base. */
+    border-color: #a9a9a9;
+}
+
+select[size],
+select[multiple],
+select[size][multiple] {
+    /* Same as native_theme_base. */
+    border: 1px solid #a9a9a9;
+}
+
+textarea {
+    font-family: monospace;
+    /* Same as native_theme_base. */
+    border-color: #a9a9a9;
+}

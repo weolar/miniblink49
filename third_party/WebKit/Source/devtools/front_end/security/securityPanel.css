@@ -1,0 +1,43 @@
+/* Copyright (c) 2015 The Chromium Authors. All rights reserved.
+ * Use of this source code is governed by a BSD-style license that can be
+ * found in the LICENSE file.
+ */
+
+.security-main-view {
+    -webkit-user-select: text;
+    margin: 1em;
+}
+
+.security-main-view .lock-icon {
+    display: inline-block;
+    margin: 0.2em;
+    vertical-align: middle;
+}
+
+.security-main-view .security-state {
+    display: inline-block;
+    font-size: 1.2em;
+    font-weight: bold;
+    margin: 0.2em;
+    vertical-align: middle;
+}
+
+.security-explanation {
+    margin: 16px 0px;
+}
+
+.security-explanation .lock-icon {
+    display: inline-block;
+    vertical-align: bottom;
+}
+
+.security-explanation .explanation-title {
+    display: inline-block;
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-left: 4px;
+}
+
+.security-explanation .explanation-text {
+    margin: 4px 0px;
+}

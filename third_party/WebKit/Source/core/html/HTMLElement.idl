@@ -1,0 +1,66 @@
+/*
+ * Copyright (C) 2006, 2007, 2009 Apple Inc. All rights reserved.
+ * Copyright (C) 2006 Samuel Weinig <sam.weinig@gmail.com>
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public License
+ * along with this library; see the file COPYING.LIB.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
+ */
+
+// https://html.spec.whatwg.org/#htmlelement
+
+interface HTMLElement : Element {
+    // metadata attributes
+    [Reflect] attribute DOMString title;
+    [Reflect] attribute DOMString lang;
+    attribute boolean translate;
+    attribute DOMString dir;
+    [SameObject, PerWorldBindings] readonly attribute DOMStringMap dataset;
+
+    // user interaction
+    [Reflect] attribute boolean hidden;
+    void click();
+    [CustomElementCallbacks] attribute long tabIndex;
+    void focus();
+    void blur();
+    [Reflect] attribute DOMString accessKey;
+    [CustomElementCallbacks] attribute boolean draggable;
+    [RuntimeEnabled=ContextMenu] attribute HTMLMenuElement? contextMenu;
+    attribute boolean spellcheck;
+
+    // HTMLElement implements ElementContentEditable
+    // https://html.spec.whatwg.org/#contenteditable
+    [CustomElementCallbacks, RaisesException=Setter] attribute DOMString contentEditable;
+    readonly attribute boolean isContentEditable;
+
+    // CSSOM View Module
+    // http://dev.w3.org/csswg/cssom-view/#extensions-to-the-htmlelement-interface
+    [PerWorldBindings] readonly attribute Element? offsetParent;
+    readonly attribute long offsetTop;
+    readonly attribute long offsetLeft;
+    readonly attribute long offsetWidth;
+    readonly attribute long offsetHeight;
+
+    // CSS Object Model (CSSOM)
+    // http://dev.w3.org/csswg/cssom/#the-elementcssinlinestyle-interface
+    // FIXME: style should have [PutForwards=cssText].
+    [SameObject, PerWorldBindings] readonly attribute CSSStyleDeclaration style;
+
+    // Non-standard APIs
+    [TreatNullAs=NullString, CustomElementCallbacks, RaisesException=Setter, MeasureAs=HTMLElementInnerText] attribute DOMString innerText;
+    [TreatNullAs=NullString, CustomElementCallbacks, RaisesException=Setter, MeasureAs=HTMLElementOuterText] attribute DOMString outerText;
+    [Reflect, TreatNullAs=NullString, MeasureAs=PrefixedHTMLElementDropzone] attribute DOMString webkitdropzone;
+};
+
+HTMLElement implements GlobalEventHandlers;

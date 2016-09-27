@@ -1,0 +1,49 @@
+/*
+ * Copyright (C) 2006, 2007, 2009 Apple Inc. All rights reserved.
+ * Copyright (C) 2006 Samuel Weinig <sam.weinig@gmail.com>
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public License
+ * along with this library; see the file COPYING.LIB.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
+ */
+
+// http://dev.w3.org/csswg/cssom/#the-cssstyledeclaration-interface
+
+[
+    DependentLifetime,
+    WillBeGarbageCollected
+] interface CSSStyleDeclaration {
+    // TODO(philipj): cssText should not be nullable.
+    [RaisesException=Setter] attribute DOMString? cssText;
+    readonly attribute unsigned long length;
+    getter DOMString item(unsigned long index);
+    // TODO(philipj): All DOMString? return types in this interface should be
+    // just DOMString (not nullable).
+    DOMString? getPropertyValue(DOMString property);
+    DOMString? getPropertyPriority(DOMString property);
+    // TODO(philipj): The value and priority arguments should have
+    // [TreatNullAs=EmptyString] and should not be nullable.
+    [RaisesException] void setProperty(DOMString property, DOMString? value, optional DOMString? priority = null);
+    // void setPropertyValue(DOMString property, [TreatNullAs=EmptyString] DOMString value);
+    // void setPropertyPriority(DOMString property, [TreatNullAs=EmptyString] DOMString priority);
+    [RaisesException] DOMString? removeProperty(DOMString property);
+    readonly attribute CSSRule? parentRule;
+    // [TreatNullAs=EmptyString] attribute DOMString cssFloat;
+
+    // The camel-cased and dashed attribute getters have custom bindings.
+    // http://dev.w3.org/csswg/cssom/#dom-cssstyledeclaration-camel-cased-attribute
+    // http://dev.w3.org/csswg/cssom/#dom-cssstyledeclaration-dashed-attribute
+    [Custom=(PropertyGetter,PropertyEnumerator,PropertyQuery)] getter (DOMString or float) (DOMString name);
+    [Custom] setter void (DOMString property, DOMString? propertyValue);
+};

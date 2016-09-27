@@ -1,0 +1,42 @@
+# Copyright 2014 The Chromium Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+import("//third_party/WebKit/Source/bindings/core/core.gni")
+import("//third_party/WebKit/Source/bindings/core/idl.gni")
+import("//third_party/WebKit/Source/bindings/scripts/scripts.gni")
+
+visibility = [ "//third_party/WebKit/*" ]
+
+# GYP version: Source/bindings/core/generated.gyp:interfaces_info_individual_core
+compute_interfaces_info_individual("interfaces_info_individual_core") {
+  sources_static = core_static_idl_files
+  sources_generated = core_generated_idl_files
+  interfaces_info_file =
+    "$bindings_core_output_dir/InterfacesInfoCoreIndividual.pickle"
+  component_info_file =
+    "$bindings_core_output_dir/ComponentInfoCore.pickle"
+  deps = [
+    "//third_party/WebKit/Source/bindings/core:core_global_constructors_idls",
+    "//third_party/WebKit/Source/core:generated_testing_idls_settings",
+    "//third_party/WebKit/Source/core:generated_testing_idls_internal_runtime_flags",
+  ]
+}
+
+# GYP version: Source/bindings/core/generated.gyp:core_global_objects
+compute_global_objects("core_global_objects") {
+  sources = core_idl_files + core_idl_with_modules_dependency_files
+  sources_generated = []
+  output_file = "$bindings_core_output_dir/GlobalObjectsCore.pickle"
+  deps = []
+}
+
+# GYP version: Source/bindings/core/generated.gyp:core_global_constructors_idls
+generate_global_constructors("core_global_constructors_idls") {
+  sources = core_idl_files + core_idl_with_modules_dependency_files
+  global_objects_file = "$bindings_core_output_dir/GlobalObjectsCore.pickle"
+  interfaces = core_global_constructors_original_interfaces
+  component = "Core"
+  output_dir = blink_core_output_dir
+  deps = [ ":core_global_objects" ]
+}

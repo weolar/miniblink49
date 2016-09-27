@@ -1,0 +1,20 @@
+This is a copy of the Skia source tree. In the original repository, the include
+directories and the "corecg" directories are separated out. On top of
+  libs/graphics -> skia
+we have the following mappings from source repository to our tree:
+  include/corecg -> skia/include/corecg
+  include/graphics -> skia/include
+  libs/corecg -> skia/corecg
+
+platform/* are our own files that provide extra functionality we need our
+Skia to implement.
+
+DO NOT CHANGE THE SKIA FILES IN OUR TREE. These will be overwritten when we
+sync to newer versions of Skia. The exception is platform/
+
+THE EXCEPTION IS include/corecg/SkUserConfig.h which are the application's
+definition of its options and environment. This file must be manually merged
+with any changes in the Skia tree so that our options are preserved and we
+also pick up any important changes they make.
+
+ -- brettw@google.com, 28 December 2006

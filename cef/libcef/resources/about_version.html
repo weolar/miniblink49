@@ -1,0 +1,123 @@
+<!DOCTYPE HTML>
+
+<!--
+about:version template page
+-->
+
+<html id="t" i18n-values="dir:textdirection;">
+  <head>
+    <title>About Version</title>
+
+    <style>/* Copyright (c) 2012 The Chromium Authors. All rights reserved.
+ * Use of this source code is governed by a BSD-style license that can be
+ * found in the LICENSE file. */
+
+body {
+  background-color: white;
+  color: black;
+  font-family: Helvetica,Arial,sans-serif;
+  margin: 0;
+}
+
+#outer {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10px;
+  width: 820px;
+}
+
+#inner {
+  padding-top: 10px;
+  width: 550px;
+}
+
+.label {
+  -webkit-padding-end: 5px;
+  font-size: 0.9em;
+  font-weight: bold;
+  text-align: end;
+  white-space: nowrap;
+}
+
+.label:after {
+  content: ':';
+}
+
+#logo {
+  float: right;
+  margin-left: 40px;
+  text-align: right;
+  width: 200px;
+}
+
+#company {
+  font-size: 0.7em;
+  text-align: right;
+}
+
+#copyright {
+  font-size: 0.7em;
+  text-align: right;
+}
+
+.value {
+  font-family: monospace;
+  max-width: 430px;
+  padding-left: 5px;
+}
+</style>
+
+  </head>
+
+  <body>
+    <div id="outer">
+      <div id="logo">
+        <div id="company">Chromium Embedded Framework (CEF)</div>
+        <div id="copyright">Copyright &copy; $$YEAR$$ The Chromium Embedded Framework Authors.<br/>All rights reserved.<br/><a href="chrome://license">license</a> | <a href="chrome://credits">credits</a></div>
+      </div>
+      <table id="inner" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="label" valign="top">CEF</td>
+          <td class="value">$$CEF$$</td>
+        </tr>
+        <tr>
+          <td class="label" valign="top">Chromium</td>
+          <td class="value">$$CHROMIUM$$</td>
+        </tr>
+        <tr>
+          <td class="label" valign="top">OS</td>
+          <td class="value">$$OS$$</td>
+        </tr>
+        <tr>
+          <td class="label" valign="top">WebKit</td>
+          <td class="value">$$WEBKIT$$</td>
+        </tr>
+        <tr>
+          <td class="label" valign="top">JavaScript</td>
+          <td class="value">$$JAVASCRIPT$$</td>
+        </tr>
+          <tr><td class="label" valign="top">Flash</td>
+          <td class="value" id="flash">$$FLASH$$</td>
+        </tr>
+        <tr>
+          <td class="label" valign="top">User Agent</td>
+          <td class="value">$$USERAGENT$$</td>
+        </tr>
+        <tr>
+          <td class="label" valign="top">Command Line</td>
+          <td class="value">$$COMMANDLINE$$</td>
+        </tr>
+        <tr>
+          <td class="label" valign="top">Module Path</td>
+          <td class="value">$$MODULEPATH$$</td>
+        </tr>
+        <tr>
+          <td class="label" valign="top">Cache Path</td>
+          <td class="value">$$CACHEPATH$$</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+
+</html>
+

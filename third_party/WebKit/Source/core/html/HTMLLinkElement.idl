@@ -1,0 +1,54 @@
+/*
+ * Copyright (C) 2006, 2010 Apple Inc. All rights reserved.
+ * Copyright (C) 2006 Samuel Weinig <sam.weinig@gmail.com>
+ * Copyright (C) 2011 Google Inc. All rights reserved.
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public License
+ * along with this library; see the file COPYING.LIB.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
+ */
+
+// https://html.spec.whatwg.org/#the-link-element
+
+interface HTMLLinkElement : HTMLElement {
+    // FIXME: The disabled attribute has been removed from the spec:
+    // https://www.w3.org/Bugs/Public/show_bug.cgi?id=14703
+    [Reflect, Measure] attribute boolean disabled;
+    [Reflect, URL] attribute DOMString href;
+    [Reflect, ReflectOnly=("anonymous","use-credentials"), ReflectEmpty="anonymous", ReflectInvalid="anonymous"] attribute DOMString? crossOrigin;
+    [Reflect] attribute DOMString rel;
+    // FIXME: readonly attribute DOMTokenList relList;
+    [Reflect] attribute DOMString media;
+    [Reflect] attribute DOMString hreflang;
+    [Reflect] attribute DOMString type;
+    [PutForwards=value] readonly attribute DOMSettableTokenList sizes;
+
+    // obsolete members
+    // https://html.spec.whatwg.org/#HTMLLinkElement-partial
+    [Reflect] attribute DOMString charset;
+    [Reflect] attribute DOMString rev;
+    [Reflect] attribute DOMString target;
+
+    // HTMLLinkElement implements LinkStyle
+    // http://dev.w3.org/csswg/cssom/#the-linkstyle-interface
+    readonly attribute StyleSheet? sheet;
+
+    // HTML Imports
+    // https://w3c.github.io/webcomponents/spec/imports/#interface-import
+    readonly attribute Document? import;
+
+    // Subresource Integrity
+    // http://w3c.github.io/webappsec/specs/subresourceintegrity/#htmllinkelement-1
+    [Reflect] attribute DOMString integrity;
+};

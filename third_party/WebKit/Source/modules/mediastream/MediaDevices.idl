@@ -1,0 +1,16 @@
+// Copyright 2015 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+// The spec for MediaDevices is in two parts:
+// http://w3c.github.io/mediacapture-main/#mediadevices
+// http://w3c.github.io/mediacapture-main/#mediadevices-interface-extensions
+
+[
+    GarbageCollected,
+    RuntimeEnabled=EnumerateDevices
+]
+interface MediaDevices {
+    [RuntimeEnabled=EnumerateDevices, TypeChecking=Interface, CallWith=ScriptState] Promise<sequence<MediaDeviceInfo>> enumerateDevices();
+    [CallWith=ScriptState, RaisesException] Promise<MediaStream> getUserMedia(Dictionary options);
+};

@@ -1,0 +1,15 @@
+namespace="FetchInitiatorType"
+export="CORE_EXPORT"
+
+beacon
+css
+document
+icon
+internal
+link
+ping
+processinginstruction
+texttrack
+violationreport
+xml
+xmlhttprequest

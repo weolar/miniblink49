@@ -1,0 +1,27 @@
+partial interface SharedWorkerGlobalScope {
+    [RuntimeEnabled=PromiseRejectionEvent] attribute PromiseRejectionEventConstructor PromiseRejectionEvent;
+    attribute BlobConstructor Blob;
+    attribute CustomEventConstructor CustomEvent;
+    attribute DOMExceptionConstructor DOMException;
+    attribute EventConstructor Event;
+    attribute EventSourceConstructor EventSource;
+    attribute EventTargetConstructor EventTarget;
+    attribute FileConstructor File;
+    attribute FileListConstructor FileList;
+    attribute FileReaderConstructor FileReader;
+    attribute FileReaderSyncConstructor FileReaderSync;
+    attribute FormDataConstructor FormData;
+    attribute ImageDataConstructor ImageData;
+    attribute MessageChannelConstructor MessageChannel;
+    attribute MessageEventConstructor MessageEvent;
+    attribute MessagePortConstructor MessagePort;
+    attribute ReadableByteStreamConstructor ReadableByteStream;
+    attribute ReadableStreamConstructor ReadableStream;
+    attribute SharedWorkerGlobalScopeConstructor SharedWorkerGlobalScope;
+    attribute URLConstructor URL;
+    attribute WorkerGlobalScopeConstructor WorkerGlobalScope;
+    attribute WorkerLocationConstructor WorkerLocation;
+    attribute WorkerNavigatorConstructor WorkerNavigator;
+    attribute XMLHttpRequestConstructor XMLHttpRequest;
+    attribute XMLHttpRequestEventTargetConstructor XMLHttpRequestEventTarget;
+};

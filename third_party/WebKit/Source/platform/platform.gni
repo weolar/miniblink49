@@ -1,0 +1,17 @@
+# Copyright 2014 The Chromium Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+# This file is the GN version of blink_platform.gypi. We rebase most paths to
+# be absolute so these lists can be used by BUILD files in different directories
+# without worrying about the base directory.
+_gypi = exec_script(
+    "//build/gypi_to_gn.py",
+    [ rebase_path("blink_platform.gypi") ],
+    "scope",
+    [ "blink_platform.gypi" ])
+
+platform_files = _gypi.platform_files
+platform_test_files = get_path_info(_gypi.platform_test_files, "abspath")
+platform_unittest_support_files = get_path_info(_gypi.platform_unittest_support_files, "abspath")
+platform_web_unittest_files = get_path_info(_gypi.platform_web_unittest_files, "abspath")

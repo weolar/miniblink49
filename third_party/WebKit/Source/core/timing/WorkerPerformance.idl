@@ -1,0 +1,67 @@
+/*
+ * Copyright (C) 2013 Google Inc. All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are
+ * met:
+ *
+ *     * Redistributions of source code must retain the above copyright
+ * notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above
+ * copyright notice, this list of conditions and the following disclaimer
+ * in the documentation and/or other materials provided with the
+ * distribution.
+ *     * Neither the name of Google Inc. nor the names of its
+ * contributors may be used to endorse or promote products derived from
+ * this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+// https://w3c.github.io/hr-time/#the-performance-interface
+
+// TODO(philipj): This interface should be merged into Performance.
+// TODO(philipj): None of the optional DOMString arguments in this interface
+// should have a default value.
+[
+    GarbageCollected,
+    NoInterfaceObject
+] interface WorkerPerformance : EventTarget {
+    DOMHighResTimeStamp now();
+
+    // Performance Timeline
+    // https://w3c.github.io/performance-timeline/#the-performance-interface
+    // TODO(philipj): getEntries() should take an optional FilterOptions argument.
+    [RuntimeEnabled=ServiceWorkerPerformanceTimeline] PerformanceEntryList getEntries();
+    [RuntimeEnabled=ServiceWorkerPerformanceTimeline] PerformanceEntryList getEntriesByType(DOMString entryType);
+    [RuntimeEnabled=ServiceWorkerPerformanceTimeline] PerformanceEntryList getEntriesByName(DOMString name, optional DOMString entryType = null);
+
+    // Resource Timing
+    // https://w3c.github.io/resource-timing/#extensions-performance-interface
+    // TODO(philipj): Unprefix these APIs.
+    [RuntimeEnabled=ServiceWorkerPerformanceTimeline, MeasureAs=PrefixedPerformanceClearResourceTimings] void webkitClearResourceTimings();
+    [RuntimeEnabled=ServiceWorkerPerformanceTimeline, MeasureAs=PrefixedPerformanceSetResourceTimingBufferSize] void webkitSetResourceTimingBufferSize(unsigned long maxSize);
+    [RuntimeEnabled=ServiceWorkerPerformanceTimeline] attribute EventHandler onwebkitresourcetimingbufferfull;
+
+    // User Timing
+    // https://w3c.github.io/user-timing/#extensions-performance-interface
+    [RuntimeEnabled=ServiceWorkerPerformanceTimeline, RaisesException] void mark(DOMString markName);
+    [RuntimeEnabled=ServiceWorkerPerformanceTimeline] void clearMarks(optional DOMString markName = null);
+
+    [RuntimeEnabled=ServiceWorkerPerformanceTimeline, RaisesException] void measure(DOMString measureName, optional DOMString startMark = null, optional DOMString endMark = null);
+    [RuntimeEnabled=ServiceWorkerPerformanceTimeline] void clearMeasures(optional DOMString measureName = null);
+
+    // TODO(philipj): There is no spec for the Memory Info API, see blink-dev:
+    // https://groups.google.com/a/chromium.org/d/msg/blink-dev/g5YRCGpC9vs/b4OJz71NmPwJ
+    [RuntimeEnabled=MemoryInfoInWorkers] readonly attribute MemoryInfo memory;
+};

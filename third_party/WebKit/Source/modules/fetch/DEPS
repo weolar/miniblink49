@@ -1,0 +1,12 @@
+include_rules = [
+    "+bindings",
+    "+core",
+    "+gin/public",
+    "+heap",
+    "-modules",
+    "+modules/ModulesExport.h",
+    "+modules/fetch",
+    "+platform",
+    "+public/platform",
+    "-web",
+]

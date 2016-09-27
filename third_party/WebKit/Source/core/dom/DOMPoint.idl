@@ -1,0 +1,20 @@
+// Copyright 2014 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+// http://dev.w3.org/fxtf/geometry/#DOMPoint
+
+[
+    // FIXME: The point argument is optional in the spec:
+    // https://www.w3.org/Bugs/Public/show_bug.cgi?id=28108
+    Constructor(DOMPointInit point),
+    Constructor(optional unrestricted double x = 0, optional unrestricted double y = 0,
+                optional unrestricted double z = 0, optional unrestricted double w = 1),
+    // FIXME: Exposed=(Window,Worker)
+    RuntimeEnabled=GeometryInterfaces,
+] interface DOMPoint : DOMPointReadOnly {
+    inherit attribute unrestricted double x;
+    inherit attribute unrestricted double y;
+    inherit attribute unrestricted double z;
+    inherit attribute unrestricted double w;
+};

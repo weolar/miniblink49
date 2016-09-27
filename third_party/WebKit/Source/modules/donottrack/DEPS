@@ -1,0 +1,10 @@
+include_rules = [
+    "+bindings",
+    "+core",
+    "+heap",
+    "-modules",
+    "+modules/donottrack",
+    "+platform",
+    "+public/platform",
+    "-web",
+]

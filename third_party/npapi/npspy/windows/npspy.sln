@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "npspy", "npspy.vcproj", "{BC7D34B8-CF4C-442C-ACC4-0DFAC3EDA19C}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "spysetup", "spysetup.vcproj", "{8489E6BA-49E8-4F84-BC9E-D500D6DD3C8A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BC7D34B8-CF4C-442C-ACC4-0DFAC3EDA19C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{BC7D34B8-CF4C-442C-ACC4-0DFAC3EDA19C}.Debug|Win32.Build.0 = Debug|Win32
+		{BC7D34B8-CF4C-442C-ACC4-0DFAC3EDA19C}.Release|Win32.ActiveCfg = Release|Win32
+		{BC7D34B8-CF4C-442C-ACC4-0DFAC3EDA19C}.Release|Win32.Build.0 = Release|Win32
+		{8489E6BA-49E8-4F84-BC9E-D500D6DD3C8A}.Debug|Win32.ActiveCfg = Debug|Win32
+		{8489E6BA-49E8-4F84-BC9E-D500D6DD3C8A}.Debug|Win32.Build.0 = Debug|Win32
+		{8489E6BA-49E8-4F84-BC9E-D500D6DD3C8A}.Release|Win32.ActiveCfg = Release|Win32
+		{8489E6BA-49E8-4F84-BC9E-D500D6DD3C8A}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

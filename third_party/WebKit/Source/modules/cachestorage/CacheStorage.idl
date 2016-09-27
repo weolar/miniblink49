@@ -1,0 +1,16 @@
+// Copyright 2014 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+// See https://slightlyoff.github.io/ServiceWorker/spec/service_worker/index.html#cache-storage
+[
+    GarbageCollected,
+    Exposed=(Window,Worker),
+    TypeChecking=Interface,
+] interface CacheStorage {
+  [CallWith=ScriptState] Promise<boolean> has(DOMString cacheName);
+  [CallWith=ScriptState] Promise<Cache> open(DOMString cacheName);
+  [CallWith=ScriptState, ImplementedAs=deleteFunction] Promise<boolean> delete(DOMString cacheName);
+  [CallWith=ScriptState] Promise<sequence<DOMString>> keys();
+  [CallWith=ScriptState, RaisesException] Promise<Response> match(RequestInfo request, optional CacheQueryOptions options);
+};

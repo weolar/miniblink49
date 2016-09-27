@@ -1,0 +1,14 @@
+<object width="0" height="0" id="emptyLayer"/>
+<script>
+    var range = document.createRange();
+    var emptyLayer = document.getElementById("emptyLayer");
+    var textNode1 = layer1.firstChild;
+    range.setStart(textNode1, 0);
+    range.collapse();
+    document.getSelection().addRange(range);
+
+    // Even though the logical caret activated by the selection has an empty
+    // area, it should still propagate as a valid selection region.
+    window.expectedResult = [emptyLayer, 8, 8, 8, 8, emptyLayer, 8, 8, 8, 8, false, false];
+</script>
+

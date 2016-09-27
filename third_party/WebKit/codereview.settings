@@ -1,0 +1,8 @@
+# This file is used by gcl to get repository specific information.
+CODE_REVIEW_SERVER: codereview.chromium.org
+CC_LIST: blink-reviews@chromium.org
+VIEW_VC: https://src.chromium.org/viewvc/blink?view=rev&revision=
+STATUS: http://blink-status.appspot.com/status
+GITCL_PREUPLOAD: http://src.chromium.org/viewvc/trunk/tools/depot_tools/git-cl-upload-hook?revision=HEAD&root=chrome
+GITCL_PREDCOMMIT: http://src.chromium.org/viewvc/trunk/tools/depot_tools/git-cl-upload-hook?revision=HEAD&root=chrome
+PROJECT: blink

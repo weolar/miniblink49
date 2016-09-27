@@ -1,0 +1,16 @@
+// Copyright 2014 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+// Per 09 Jan 2015 Editor's Draft
+// https://w3c.github.io/media-source/#trackdefaultlist
+
+[
+    Constructor(optional sequence<TrackDefault> trackDefaults = []),
+    RaisesException=Constructor,
+    GarbageCollected,
+    RuntimeEnabled=MediaSourceExperimental,
+] interface TrackDefaultList {
+    readonly attribute unsigned long length;
+    [ImplementedAs=item] getter TrackDefault (unsigned long index);
+};

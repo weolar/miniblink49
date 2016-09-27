@@ -1,0 +1,428 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..\..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..\..\..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..\..\..\third_party">
+      <UniqueIdentifier>{D6C6CEA7-AAD0-03AD-2394-AC6FCBF8A498}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..\..\..\third_party\WebKit">
+      <UniqueIdentifier>{1919EB75-19A6-2BAD-ABB0-47BF57C87A0F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..\..\..\third_party\WebKit\Source">
+      <UniqueIdentifier>{26D65320-41C3-1A61-26C0-583D658C7F16}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..\..\..\third_party\WebKit\Source\build">
+      <UniqueIdentifier>{D5519164-BF26-36DA-740B-76CEFC1827F4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..\..\..\third_party\WebKit\Source\build\win">
+      <UniqueIdentifier>{47FC5EC4-15EB-E92F-89D7-AFE51CF838A9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="testing">
+      <UniqueIdentifier>{681E52FB-4BB5-C8E2-1D1A-B7C4F2495A5E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="animation">
+      <UniqueIdentifier>{32754A8C-EDC0-67D4-C2EE-20B9F5EB0ADB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="animation">
+      <UniqueIdentifier>{32754A8C-EDC0-67D4-C2EE-20B9F5EB0ADB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="blob">
+      <UniqueIdentifier>{F0F1FA0B-1F02-1777-4B14-B2E007BD2FC3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="clipboard">
+      <UniqueIdentifier>{CD6DB72A-7AF5-DA53-408A-5C0E1680A389}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="fonts">
+      <UniqueIdentifier>{74BB0497-1E7A-FF4A-BE62-BA6AC418F3BD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="fonts">
+      <UniqueIdentifier>{74BB0497-1E7A-FF4A-BE62-BA6AC418F3BD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="fonts">
+      <UniqueIdentifier>{74BB0497-1E7A-FF4A-BE62-BA6AC418F3BD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="fonts">
+      <UniqueIdentifier>{74BB0497-1E7A-FF4A-BE62-BA6AC418F3BD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="fonts">
+      <UniqueIdentifier>{74BB0497-1E7A-FF4A-BE62-BA6AC418F3BD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="fonts">
+      <UniqueIdentifier>{74BB0497-1E7A-FF4A-BE62-BA6AC418F3BD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="fonts\shaping">
+      <UniqueIdentifier>{80603426-0D13-437E-DBE2-AAD078B75E99}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="fonts">
+      <UniqueIdentifier>{74BB0497-1E7A-FF4A-BE62-BA6AC418F3BD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="fonts\shaping">
+      <UniqueIdentifier>{80603426-0D13-437E-DBE2-AAD078B75E99}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="geometry">
+      <UniqueIdentifier>{82F64D97-DB43-5314-0379-87DF9F20B92F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="geometry">
+      <UniqueIdentifier>{82F64D97-DB43-5314-0379-87DF9F20B92F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="geometry">
+      <UniqueIdentifier>{82F64D97-DB43-5314-0379-87DF9F20B92F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="geometry">
+      <UniqueIdentifier>{82F64D97-DB43-5314-0379-87DF9F20B92F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="geometry">
+      <UniqueIdentifier>{82F64D97-DB43-5314-0379-87DF9F20B92F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="geometry">
+      <UniqueIdentifier>{82F64D97-DB43-5314-0379-87DF9F20B92F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="geometry">
+      <UniqueIdentifier>{82F64D97-DB43-5314-0379-87DF9F20B92F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="geometry">
+      <UniqueIdentifier>{82F64D97-DB43-5314-0379-87DF9F20B92F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="graphics">
+      <UniqueIdentifier>{B2A6AACF-46C0-13A9-176C-59F376D7CA47}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="geometry">
+      <UniqueIdentifier>{82F64D97-DB43-5314-0379-87DF9F20B92F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="graphics">
+      <UniqueIdentifier>{B2A6AACF-46C0-13A9-176C-59F376D7CA47}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="graphics">
+      <UniqueIdentifier>{B2A6AACF-46C0-13A9-176C-59F376D7CA47}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="graphics">
+      <UniqueIdentifier>{B2A6AACF-46C0-13A9-176C-59F376D7CA47}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="graphics">
+      <UniqueIdentifier>{B2A6AACF-46C0-13A9-176C-59F376D7CA47}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="graphics\filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="graphics">
+      <UniqueIdentifier>{B2A6AACF-46C0-13A9-176C-59F376D7CA47}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="graphics\filters">
+      <UniqueIdentifier>{B0590D60-4D76-E627-69CE-00D7235F5213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="graphics">
+      <UniqueIdentifier>{B2A6AACF-46C0-13A9-176C-59F376D7CA47}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="graphics\gpu">
+      <UniqueIdentifier>{52E8B949-3E67-CAB7-33D9-3F972FED789B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="graphics">
+      <UniqueIdentifier>{B2A6AACF-46C0-13A9-176C-59F376D7CA47}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="graphics\paint">
+      <UniqueIdentifier>{C9AC461E-1918-FCD4-8E46-D121EE8408B8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="graphics">
+      <UniqueIdentifier>{B2A6AACF-46C0-13A9-176C-59F376D7CA47}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="graphics\paint">
+      <UniqueIdentifier>{C9AC461E-1918-FCD4-8E46-D121EE8408B8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="graphics">
+      <UniqueIdentifier>{B2A6AACF-46C0-13A9-176C-59F376D7CA47}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="graphics\paint">
+      <UniqueIdentifier>{C9AC461E-1918-FCD4-8E46-D121EE8408B8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="image-decoders">
+      <UniqueIdentifier>{696144AE-9C0E-7CE0-561D-F8435AD3E6B4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="image-decoders">
+      <UniqueIdentifier>{696144AE-9C0E-7CE0-561D-F8435AD3E6B4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="network">
+      <UniqueIdentifier>{C0E16F67-D855-B60F-8134-BA0CD12A3DD9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="network">
+      <UniqueIdentifier>{C0E16F67-D855-B60F-8134-BA0CD12A3DD9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="network">
+      <UniqueIdentifier>{C0E16F67-D855-B60F-8134-BA0CD12A3DD9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="scheduler">
+      <UniqueIdentifier>{5C63CE33-9BFC-8892-3622-B59660DA64E3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="scroll">
+      <UniqueIdentifier>{9F305005-9B57-13F0-5466-C78B282F35E0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="testing">
+      <UniqueIdentifier>{681E52FB-4BB5-C8E2-1D1A-B7C4F2495A5E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="testing">
+      <UniqueIdentifier>{681E52FB-4BB5-C8E2-1D1A-B7C4F2495A5E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="testing">
+      <UniqueIdentifier>{681E52FB-4BB5-C8E2-1D1A-B7C4F2495A5E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="text">
+      <UniqueIdentifier>{A03EF847-0682-89DE-DB5E-F3ADE72FEA2E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="text">
+      <UniqueIdentifier>{A03EF847-0682-89DE-DB5E-F3ADE72FEA2E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="text">
+      <UniqueIdentifier>{A03EF847-0682-89DE-DB5E-F3ADE72FEA2E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="text">
+      <UniqueIdentifier>{A03EF847-0682-89DE-DB5E-F3ADE72FEA2E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="transforms">
+      <UniqueIdentifier>{E7DCB681-2FE3-A9E3-4A16-03805E144975}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="transforms">
+      <UniqueIdentifier>{E7DCB681-2FE3-A9E3-4A16-03805E144975}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="transforms">
+      <UniqueIdentifier>{E7DCB681-2FE3-A9E3-4A16-03805E144975}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="weborigin">
+      <UniqueIdentifier>{E7A49198-0A31-6758-06EB-FF6F6F8AA46F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="weborigin">
+      <UniqueIdentifier>{E7A49198-0A31-6758-06EB-FF6F6F8AA46F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="weborigin">
+      <UniqueIdentifier>{E7A49198-0A31-6758-06EB-FF6F6F8AA46F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="weborigin">
+      <UniqueIdentifier>{E7A49198-0A31-6758-06EB-FF6F6F8AA46F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="weborigin">
+      <UniqueIdentifier>{E7A49198-0A31-6758-06EB-FF6F6F8AA46F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="weborigin">
+      <UniqueIdentifier>{E7A49198-0A31-6758-06EB-FF6F6F8AA46F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="weborigin">
+      <UniqueIdentifier>{E7A49198-0A31-6758-06EB-FF6F6F8AA46F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="text">
+      <UniqueIdentifier>{A03EF847-0682-89DE-DB5E-F3ADE72FEA2E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="fonts">
+      <UniqueIdentifier>{74BB0497-1E7A-FF4A-BE62-BA6AC418F3BD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="fonts\android">
+      <UniqueIdentifier>{840B8E33-5F8C-45A0-5FD6-F07AA5687203}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="fonts\android\_excluded_files">
+      <UniqueIdentifier>{158E591E-B6EA-0C85-8F5A-18EAFA09B4CE}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\third_party\WebKit\Source\build\win\Precompile.cpp">
+      <Filter>..\..\..\..\third_party\WebKit\Source\build\win</Filter>
+    </ClCompile>
+    <ClCompile Include="testing\RunAllTests.cpp">
+      <Filter>testing</Filter>
+    </ClCompile>
+    <ClCompile Include="ClockTest.cpp"/>
+    <ClCompile Include="DecimalTest.cpp"/>
+    <ClCompile Include="DragImageTest.cpp"/>
+    <ClCompile Include="LayoutUnitTest.cpp"/>
+    <ClCompile Include="LifecycleContextTest.cpp"/>
+    <ClCompile Include="PODArenaTest.cpp"/>
+    <ClCompile Include="PODFreeListArenaTest.cpp"/>
+    <ClCompile Include="PODIntervalTreeTest.cpp"/>
+    <ClCompile Include="PODRedBlackTreeTest.cpp"/>
+    <ClCompile Include="PurgeableVectorTest.cpp"/>
+    <ClCompile Include="SharedBufferTest.cpp"/>
+    <ClCompile Include="TestingPlatformSupport.cpp"/>
+    <ClInclude Include="TestingPlatformSupport.h"/>
+    <ClCompile Include="TimerTest.cpp"/>
+    <ClCompile Include="TracedValueTest.cpp"/>
+    <ClCompile Include="UUIDTest.cpp"/>
+    <ClCompile Include="WebScreenInfoTest.cpp"/>
+    <ClCompile Include="WebVectorTest.cpp"/>
+    <ClCompile Include="animation\TimingFunctionTest.cpp">
+      <Filter>animation</Filter>
+    </ClCompile>
+    <ClCompile Include="animation\UnitBezierTest.cpp">
+      <Filter>animation</Filter>
+    </ClCompile>
+    <ClCompile Include="blob\BlobDataTest.cpp">
+      <Filter>blob</Filter>
+    </ClCompile>
+    <ClCompile Include="clipboard\ClipboardUtilitiesTest.cpp">
+      <Filter>clipboard</Filter>
+    </ClCompile>
+    <ClCompile Include="fonts\FontCacheTest.cpp">
+      <Filter>fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="fonts\FontDescriptionTest.cpp">
+      <Filter>fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="fonts\FontTest.cpp">
+      <Filter>fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="fonts\GlyphBufferTest.cpp">
+      <Filter>fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="fonts\GlyphPageTreeNodeTest.cpp">
+      <Filter>fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="fonts\shaping\CachingWordShaperTest.cpp">
+      <Filter>fonts\shaping</Filter>
+    </ClCompile>
+    <ClCompile Include="fonts\shaping\HarfBuzzShaperTest.cpp">
+      <Filter>fonts\shaping</Filter>
+    </ClCompile>
+    <ClCompile Include="geometry\FloatBoxTest.cpp">
+      <Filter>geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="geometry\FloatBoxTestHelpers.cpp">
+      <Filter>geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="geometry\FloatPointTest.cpp">
+      <Filter>geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="geometry\FloatPolygonTest.cpp">
+      <Filter>geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="geometry\FloatRoundedRectTest.cpp">
+      <Filter>geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="geometry\FloatSizeTest.cpp">
+      <Filter>geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="geometry\GeometryTestHelpers.cpp">
+      <Filter>geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="geometry\LayoutRectOutsetsTest.cpp">
+      <Filter>geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\ListContainerTest.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="geometry\RegionTest.cpp">
+      <Filter>geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\GraphicsContextTest.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\RecordingImageBufferSurfaceTest.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\ThreadSafeDataTransportTest.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\filters\FilterOperationsTest.cpp">
+      <Filter>graphics\filters</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\filters\ImageFilterBuilderTest.cpp">
+      <Filter>graphics\filters</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\gpu\DrawingBufferTest.cpp">
+      <Filter>graphics\gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\paint\DisplayItemListTest.cpp">
+      <Filter>graphics\paint</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\paint\DisplayItemTest.cpp">
+      <Filter>graphics\paint</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\paint\DisplayItemTransformTreeBuilderTest.cpp">
+      <Filter>graphics\paint</Filter>
+    </ClCompile>
+    <ClCompile Include="image-decoders\FastSharedBufferReaderTest.cpp">
+      <Filter>image-decoders</Filter>
+    </ClCompile>
+    <ClCompile Include="image-decoders\ImageDecoderTest.cpp">
+      <Filter>image-decoders</Filter>
+    </ClCompile>
+    <ClCompile Include="network\FormDataTest.cpp">
+      <Filter>network</Filter>
+    </ClCompile>
+    <ClCompile Include="network\HTTPParsersTest.cpp">
+      <Filter>network</Filter>
+    </ClCompile>
+    <ClCompile Include="network\ResourceRequestTest.cpp">
+      <Filter>network</Filter>
+    </ClCompile>
+    <ClCompile Include="scheduler\CancellableTaskFactoryTest.cpp">
+      <Filter>scheduler</Filter>
+    </ClCompile>
+    <ClCompile Include="scroll\ScrollableAreaTest.cpp">
+      <Filter>scroll</Filter>
+    </ClCompile>
+    <ClInclude Include="testing\ArenaTestHelpers.h">
+      <Filter>testing</Filter>
+    </ClInclude>
+    <ClCompile Include="testing\TreeTestHelpers.cpp">
+      <Filter>testing</Filter>
+    </ClCompile>
+    <ClInclude Include="testing\TreeTestHelpers.h">
+      <Filter>testing</Filter>
+    </ClInclude>
+    <ClCompile Include="text\BidiResolverTest.cpp">
+      <Filter>text</Filter>
+    </ClCompile>
+    <ClCompile Include="text\DateTimeFormatTest.cpp">
+      <Filter>text</Filter>
+    </ClCompile>
+    <ClCompile Include="text\SegmentedStringTest.cpp">
+      <Filter>text</Filter>
+    </ClCompile>
+    <ClCompile Include="text\UnicodeUtilitiesTest.cpp">
+      <Filter>text</Filter>
+    </ClCompile>
+    <ClCompile Include="transforms\TransformOperationsTest.cpp">
+      <Filter>transforms</Filter>
+    </ClCompile>
+    <ClInclude Include="transforms\TransformTestHelper.h">
+      <Filter>transforms</Filter>
+    </ClInclude>
+    <ClCompile Include="transforms\TransformationMatrixTest.cpp">
+      <Filter>transforms</Filter>
+    </ClCompile>
+    <ClCompile Include="weborigin\DatabaseIdentifierTest.cpp">
+      <Filter>weborigin</Filter>
+    </ClCompile>
+    <ClCompile Include="weborigin\KnownPortsTest.cpp">
+      <Filter>weborigin</Filter>
+    </ClCompile>
+    <ClCompile Include="weborigin\KURLTest.cpp">
+      <Filter>weborigin</Filter>
+    </ClCompile>
+    <ClCompile Include="weborigin\OriginAccessEntryTest.cpp">
+      <Filter>weborigin</Filter>
+    </ClCompile>
+    <ClCompile Include="weborigin\SchemeRegistryTest.cpp">
+      <Filter>weborigin</Filter>
+    </ClCompile>
+    <ClCompile Include="weborigin\SecurityOriginTest.cpp">
+      <Filter>weborigin</Filter>
+    </ClCompile>
+    <ClCompile Include="weborigin\SecurityPolicyTest.cpp">
+      <Filter>weborigin</Filter>
+    </ClCompile>
+    <ClCompile Include="text\LocaleWinTest.cpp">
+      <Filter>text</Filter>
+    </ClCompile>
+    <None Include="blink_platform_tests.gyp"/>
+    <ClCompile Include="fonts\android\FontCacheAndroidTest.cpp">
+      <Filter>fonts\android\_excluded_files</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

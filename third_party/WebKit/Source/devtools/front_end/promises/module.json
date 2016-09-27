@@ -1,0 +1,19 @@
+{
+    "extensions": [
+        {
+            "type": "drawer-view",
+            "name": "promises",
+            "title": "Promises",
+            "order": "30",
+            "className": "WebInspector.PromisePane"
+        }
+    ],
+    "dependencies": ["components", "ui_lazy"],
+    "experiment": "promiseTracker",
+    "scripts": [
+        "PromisePane.js"
+    ],
+    "resources": [
+        "promisePane.css"
+    ]
+}

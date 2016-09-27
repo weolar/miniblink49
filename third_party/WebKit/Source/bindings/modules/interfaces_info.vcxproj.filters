@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\scripts">
+      <UniqueIdentifier>{4FDF30BD-A895-58AC-A912-7C70A5371544}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)gen">
+      <UniqueIdentifier>{B54385DA-9AA0-82F8-3CCF-636B21B5C41E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)gen\blink">
+      <UniqueIdentifier>{CB7CC51B-500D-7E25-A6FF-B160892E1B55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)gen\blink\bindings">
+      <UniqueIdentifier>{BDD847E6-3B5D-27DC-A93A-863DCFC98735}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)gen\blink\bindings\core">
+      <UniqueIdentifier>{16178836-FF57-2363-AA2B-8BAC1DC00026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)gen">
+      <UniqueIdentifier>{B54385DA-9AA0-82F8-3CCF-636B21B5C41E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)gen\blink">
+      <UniqueIdentifier>{CB7CC51B-500D-7E25-A6FF-B160892E1B55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)gen\blink\bindings">
+      <UniqueIdentifier>{BDD847E6-3B5D-27DC-A93A-863DCFC98735}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)gen\blink\bindings\modules">
+      <UniqueIdentifier>{212BF124-DF0B-CDE7-390D-94BCC1C226CB}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="generated.gyp"/>
+    <None Include="..\scripts\compute_interfaces_info_overall.py">
+      <Filter>..\scripts</Filter>
+    </None>
+    <None Include="$(OutDir)gen\blink\bindings\core\InterfacesInfoCoreIndividual.pickle">
+      <Filter>$(OutDir)gen\blink\bindings\core</Filter>
+    </None>
+    <None Include="$(OutDir)gen\blink\bindings\modules\InterfacesInfoOverallIndividual.pickle">
+      <Filter>$(OutDir)gen\blink\bindings\modules</Filter>
+    </None>
+  </ItemGroup>
+</Project>

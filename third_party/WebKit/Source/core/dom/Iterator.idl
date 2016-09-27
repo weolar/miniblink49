@@ -1,0 +1,13 @@
+// Copyright 2014 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+// http://people.mozilla.org/~jorendorff/es6-draft.html#sec-iterator-interface
+
+[
+    Iterable,
+    GarbageCollected,
+    NoInterfaceObject,
+] interface Iterator {
+    [CallWith=ScriptState, RaisesException] any next(optional any value);
+};

@@ -1,0 +1,7 @@
+This is a slightly modified version of NPSPY that ships with Firefox, plus some logging and bug fixes.
+NPSPY sits between the browser and plugin and allows logging of all NPP_* and NPN_* function calls
+along with their parameters.
+
+To use this, place this in Chrome\plugins or Firefox\plugins depending on which browser you want to log.
+Note that NPSPY will look for the real plugin in the running browser's plugins directory.  So if this is
+placed in Chrome\plugins, plugins that are located in Firefox\plugins won't be found.

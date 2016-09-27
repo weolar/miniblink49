@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="shell">
+      <UniqueIdentifier>{E85BC352-2D2D-FF70-E8E1-C76BAA70A425}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="shell\gin_main.cc">
+      <Filter>shell</Filter>
+    </ClCompile>
+    <None Include="gin.gyp"/>
+  </ItemGroup>
+</Project>

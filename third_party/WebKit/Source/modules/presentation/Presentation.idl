@@ -1,0 +1,22 @@
+// Copyright 2014 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+// https://w3c.github.io/presentation-api/#interface-presentation
+
+[
+    GarbageCollected,
+    RuntimeEnabled=Presentation
+] interface Presentation : EventTarget {
+    // This API used by controlling browsing context.
+    [CallWith=ScriptState] Promise<PresentationSession> startSession(DOMString url);
+    // TODO(avayvod): The |presentationId| argument should not be optional.
+    [CallWith=ScriptState] Promise<PresentationSession> joinSession(DOMString url, [Default=Undefined] optional DOMString presentationId);
+    [CallWith=ScriptState] Promise<PresentationAvailability> getAvailability(DOMString url);
+    attribute EventHandler ondefaultsessionstart;
+
+    // This API used by presenting browsing context.
+    // TODO(avayvod): The spec has |getSession()| and |getSessions()| instead.
+    readonly attribute PresentationSession? session;
+    // TODO(avayvod): attribute EventHandler onsessionavailable;
+};

@@ -1,0 +1,24 @@
+# Copyright 2014 The Chromium Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+config("npapi_config") {
+  # Some things #include "bindings/npapi.h" and others just #include
+  # "npapi.h". Account for both flavors.
+  include_dirs = [ ".", "bindings" ]
+}
+
+source_set("npapi") {
+  # Just headers but this allows us to track dependencies on these.
+  sources = [
+    "bindings/npapi.h",
+    "bindings/npapi_extensions.h",
+    "bindings/npapi_x11.h",
+    "bindings/npfunctions.h",
+    "bindings/nphostapi.h",
+    "bindings/nptypes.h",
+    "bindings/npruntime.h",
+  ]
+
+  direct_dependent_configs = [ ":npapi_config" ]
+}

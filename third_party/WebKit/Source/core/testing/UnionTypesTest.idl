@@ -1,0 +1,27 @@
+// Copyright 2014 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+[
+    GarbageCollected
+] interface UnionTypesTest {
+    attribute (double or DOMString or DOMString[]) doubleOrStringOrStringArrayAttribute;
+
+    DOMString doubleOrStringArg((double or DOMString) arg);
+    DOMString doubleOrInternalEnumArg((double or InternalEnum) arg);
+
+    [ImplementedAs=doubleOrStringArg] DOMString doubleOrStringDefaultDoubleArg(optional (double or DOMString) arg = 3.14);
+    [ImplementedAs=doubleOrStringArg] DOMString doubleOrStringDefaultStringArg(optional (double or DOMString) arg = "foo");
+    [ImplementedAs=doubleOrStringArg] DOMString doubleOrStringDefaultNullArg(optional (double or DOMString)? arg = null);
+
+    DOMString doubleOrStringArrayArg((double or DOMString)[] arg);
+    DOMString doubleOrStringSequenceArg(sequence<(double or DOMString)> arg);
+
+    DOMString nodeListOrElementArg((NodeList or Element) arg);
+    DOMString nodeListOrElementOrNullArg((NodeList or Element)? arg);
+
+    DOMString doubleOrStringOrStringArrayArg((double or DOMString or DOMString[]) arg);
+    DOMString doubleOrStringOrStringSequenceArg((double or DOMString or sequence<DOMString>) arg);
+    [ImplementedAs=doubleOrStringOrStringArrayArg] DOMString doubleOrStringOrStringArrayNullableArg((double or DOMString or DOMString[])? arg);
+    [ImplementedAs=doubleOrStringOrStringSequenceArg] DOMString doubleOrStringOrStringSequenceNullableArg((double or DOMString or sequence<DOMString>)? arg);
+};

@@ -1,0 +1,14 @@
+<!-- This page is used to test that namespace elements are retrieved
+     correctly by the PageSerializer.
+-->
+<html>
+<body>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  document.body.appendChild(document.createElementNS("", "ns"));
+});
+</script>
+
+</body>
+</html>

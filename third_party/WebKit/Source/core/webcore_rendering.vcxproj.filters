@@ -1,0 +1,2102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..\..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..\..\..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..\..\..\third_party">
+      <UniqueIdentifier>{D6C6CEA7-AAD0-03AD-2394-AC6FCBF8A498}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..\..\..\third_party\WebKit">
+      <UniqueIdentifier>{1919EB75-19A6-2BAD-ABB0-47BF57C87A0F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..\..\..\third_party\WebKit\Source">
+      <UniqueIdentifier>{26D65320-41C3-1A61-26C0-583D658C7F16}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..\..\..\third_party\WebKit\Source\build">
+      <UniqueIdentifier>{D5519164-BF26-36DA-740B-76CEFC1827F4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..\..\..\third_party\WebKit\Source\build\win">
+      <UniqueIdentifier>{47FC5EC4-15EB-E92F-89D7-AFE51CF838A9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout\api">
+      <UniqueIdentifier>{6AE05662-6177-52C8-526E-2E7848D15DCF}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout\api">
+      <UniqueIdentifier>{6AE05662-6177-52C8-526E-2E7848D15DCF}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout\api">
+      <UniqueIdentifier>{6AE05662-6177-52C8-526E-2E7848D15DCF}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout\api">
+      <UniqueIdentifier>{6AE05662-6177-52C8-526E-2E7848D15DCF}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout\api">
+      <UniqueIdentifier>{6AE05662-6177-52C8-526E-2E7848D15DCF}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout\compositing">
+      <UniqueIdentifier>{844D7C15-8365-C010-1C96-239FEA10E46E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout\compositing">
+      <UniqueIdentifier>{844D7C15-8365-C010-1C96-239FEA10E46E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout\compositing">
+      <UniqueIdentifier>{844D7C15-8365-C010-1C96-239FEA10E46E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout\compositing">
+      <UniqueIdentifier>{844D7C15-8365-C010-1C96-239FEA10E46E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout\compositing">
+      <UniqueIdentifier>{844D7C15-8365-C010-1C96-239FEA10E46E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout\compositing">
+      <UniqueIdentifier>{844D7C15-8365-C010-1C96-239FEA10E46E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout\compositing">
+      <UniqueIdentifier>{844D7C15-8365-C010-1C96-239FEA10E46E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout\compositing">
+      <UniqueIdentifier>{844D7C15-8365-C010-1C96-239FEA10E46E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout\compositing">
+      <UniqueIdentifier>{844D7C15-8365-C010-1C96-239FEA10E46E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout\compositing">
+      <UniqueIdentifier>{844D7C15-8365-C010-1C96-239FEA10E46E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout\compositing">
+      <UniqueIdentifier>{844D7C15-8365-C010-1C96-239FEA10E46E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout\compositing">
+      <UniqueIdentifier>{844D7C15-8365-C010-1C96-239FEA10E46E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout\compositing">
+      <UniqueIdentifier>{844D7C15-8365-C010-1C96-239FEA10E46E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout\compositing">
+      <UniqueIdentifier>{844D7C15-8365-C010-1C96-239FEA10E46E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout\compositing">
+      <UniqueIdentifier>{844D7C15-8365-C010-1C96-239FEA10E46E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout\compositing">
+      <UniqueIdentifier>{844D7C15-8365-C010-1C96-239FEA10E46E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout\compositing">
+      <UniqueIdentifier>{844D7C15-8365-C010-1C96-239FEA10E46E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout\compositing">
+      <UniqueIdentifier>{844D7C15-8365-C010-1C96-239FEA10E46E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout\line">
+      <UniqueIdentifier>{7442341A-B32B-8269-2B49-8F5FBFB14BE0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout\line">
+      <UniqueIdentifier>{7442341A-B32B-8269-2B49-8F5FBFB14BE0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout\line">
+      <UniqueIdentifier>{7442341A-B32B-8269-2B49-8F5FBFB14BE0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout\line">
+      <UniqueIdentifier>{7442341A-B32B-8269-2B49-8F5FBFB14BE0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout\line">
+      <UniqueIdentifier>{7442341A-B32B-8269-2B49-8F5FBFB14BE0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout\line">
+      <UniqueIdentifier>{7442341A-B32B-8269-2B49-8F5FBFB14BE0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout\line">
+      <UniqueIdentifier>{7442341A-B32B-8269-2B49-8F5FBFB14BE0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout\line">
+      <UniqueIdentifier>{7442341A-B32B-8269-2B49-8F5FBFB14BE0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout\line">
+      <UniqueIdentifier>{7442341A-B32B-8269-2B49-8F5FBFB14BE0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout\line">
+      <UniqueIdentifier>{7442341A-B32B-8269-2B49-8F5FBFB14BE0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout\line">
+      <UniqueIdentifier>{7442341A-B32B-8269-2B49-8F5FBFB14BE0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout\line">
+      <UniqueIdentifier>{7442341A-B32B-8269-2B49-8F5FBFB14BE0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout\line">
+      <UniqueIdentifier>{7442341A-B32B-8269-2B49-8F5FBFB14BE0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout\line">
+      <UniqueIdentifier>{7442341A-B32B-8269-2B49-8F5FBFB14BE0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout\line">
+      <UniqueIdentifier>{7442341A-B32B-8269-2B49-8F5FBFB14BE0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout\line">
+      <UniqueIdentifier>{7442341A-B32B-8269-2B49-8F5FBFB14BE0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout\line">
+      <UniqueIdentifier>{7442341A-B32B-8269-2B49-8F5FBFB14BE0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout\line">
+      <UniqueIdentifier>{7442341A-B32B-8269-2B49-8F5FBFB14BE0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout\line">
+      <UniqueIdentifier>{7442341A-B32B-8269-2B49-8F5FBFB14BE0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout\shapes">
+      <UniqueIdentifier>{FD98981F-27D3-103B-C62F-4A033FCD495E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout\shapes">
+      <UniqueIdentifier>{FD98981F-27D3-103B-C62F-4A033FCD495E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout\shapes">
+      <UniqueIdentifier>{FD98981F-27D3-103B-C62F-4A033FCD495E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout\shapes">
+      <UniqueIdentifier>{FD98981F-27D3-103B-C62F-4A033FCD495E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout\shapes">
+      <UniqueIdentifier>{FD98981F-27D3-103B-C62F-4A033FCD495E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout\shapes">
+      <UniqueIdentifier>{FD98981F-27D3-103B-C62F-4A033FCD495E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout\shapes">
+      <UniqueIdentifier>{FD98981F-27D3-103B-C62F-4A033FCD495E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout\shapes">
+      <UniqueIdentifier>{FD98981F-27D3-103B-C62F-4A033FCD495E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout\shapes">
+      <UniqueIdentifier>{FD98981F-27D3-103B-C62F-4A033FCD495E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout\shapes">
+      <UniqueIdentifier>{FD98981F-27D3-103B-C62F-4A033FCD495E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout\shapes">
+      <UniqueIdentifier>{FD98981F-27D3-103B-C62F-4A033FCD495E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout\shapes">
+      <UniqueIdentifier>{FD98981F-27D3-103B-C62F-4A033FCD495E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout\shapes">
+      <UniqueIdentifier>{FD98981F-27D3-103B-C62F-4A033FCD495E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="style">
+      <UniqueIdentifier>{BE67EF32-35B8-3B4B-1145-A46AB751253F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="style">
+      <UniqueIdentifier>{BE67EF32-35B8-3B4B-1145-A46AB751253F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="style">
+      <UniqueIdentifier>{BE67EF32-35B8-3B4B-1145-A46AB751253F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="style">
+      <UniqueIdentifier>{BE67EF32-35B8-3B4B-1145-A46AB751253F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="style">
+      <UniqueIdentifier>{BE67EF32-35B8-3B4B-1145-A46AB751253F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="style">
+      <UniqueIdentifier>{BE67EF32-35B8-3B4B-1145-A46AB751253F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="style">
+      <UniqueIdentifier>{BE67EF32-35B8-3B4B-1145-A46AB751253F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="style">
+      <UniqueIdentifier>{BE67EF32-35B8-3B4B-1145-A46AB751253F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="style">
+      <UniqueIdentifier>{BE67EF32-35B8-3B4B-1145-A46AB751253F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="style">
+      <UniqueIdentifier>{BE67EF32-35B8-3B4B-1145-A46AB751253F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="style">
+      <UniqueIdentifier>{BE67EF32-35B8-3B4B-1145-A46AB751253F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="style">
+      <UniqueIdentifier>{BE67EF32-35B8-3B4B-1145-A46AB751253F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="style">
+      <UniqueIdentifier>{BE67EF32-35B8-3B4B-1145-A46AB751253F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="style">
+      <UniqueIdentifier>{BE67EF32-35B8-3B4B-1145-A46AB751253F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="style">
+      <UniqueIdentifier>{BE67EF32-35B8-3B4B-1145-A46AB751253F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="style">
+      <UniqueIdentifier>{BE67EF32-35B8-3B4B-1145-A46AB751253F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="style">
+      <UniqueIdentifier>{BE67EF32-35B8-3B4B-1145-A46AB751253F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="style">
+      <UniqueIdentifier>{BE67EF32-35B8-3B4B-1145-A46AB751253F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="style">
+      <UniqueIdentifier>{BE67EF32-35B8-3B4B-1145-A46AB751253F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="style">
+      <UniqueIdentifier>{BE67EF32-35B8-3B4B-1145-A46AB751253F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="style">
+      <UniqueIdentifier>{BE67EF32-35B8-3B4B-1145-A46AB751253F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="style">
+      <UniqueIdentifier>{BE67EF32-35B8-3B4B-1145-A46AB751253F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="style">
+      <UniqueIdentifier>{BE67EF32-35B8-3B4B-1145-A46AB751253F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="style">
+      <UniqueIdentifier>{BE67EF32-35B8-3B4B-1145-A46AB751253F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="style">
+      <UniqueIdentifier>{BE67EF32-35B8-3B4B-1145-A46AB751253F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="style">
+      <UniqueIdentifier>{BE67EF32-35B8-3B4B-1145-A46AB751253F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="style">
+      <UniqueIdentifier>{BE67EF32-35B8-3B4B-1145-A46AB751253F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="style">
+      <UniqueIdentifier>{BE67EF32-35B8-3B4B-1145-A46AB751253F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="style">
+      <UniqueIdentifier>{BE67EF32-35B8-3B4B-1145-A46AB751253F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="style">
+      <UniqueIdentifier>{BE67EF32-35B8-3B4B-1145-A46AB751253F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="style">
+      <UniqueIdentifier>{BE67EF32-35B8-3B4B-1145-A46AB751253F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="style">
+      <UniqueIdentifier>{BE67EF32-35B8-3B4B-1145-A46AB751253F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="style">
+      <UniqueIdentifier>{BE67EF32-35B8-3B4B-1145-A46AB751253F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="style">
+      <UniqueIdentifier>{BE67EF32-35B8-3B4B-1145-A46AB751253F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="style">
+      <UniqueIdentifier>{BE67EF32-35B8-3B4B-1145-A46AB751253F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="style">
+      <UniqueIdentifier>{BE67EF32-35B8-3B4B-1145-A46AB751253F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="style">
+      <UniqueIdentifier>{BE67EF32-35B8-3B4B-1145-A46AB751253F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="style">
+      <UniqueIdentifier>{BE67EF32-35B8-3B4B-1145-A46AB751253F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="style">
+      <UniqueIdentifier>{BE67EF32-35B8-3B4B-1145-A46AB751253F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="style">
+      <UniqueIdentifier>{BE67EF32-35B8-3B4B-1145-A46AB751253F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="style">
+      <UniqueIdentifier>{BE67EF32-35B8-3B4B-1145-A46AB751253F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="style">
+      <UniqueIdentifier>{BE67EF32-35B8-3B4B-1145-A46AB751253F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="style">
+      <UniqueIdentifier>{BE67EF32-35B8-3B4B-1145-A46AB751253F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="style">
+      <UniqueIdentifier>{BE67EF32-35B8-3B4B-1145-A46AB751253F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="style">
+      <UniqueIdentifier>{BE67EF32-35B8-3B4B-1145-A46AB751253F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="style">
+      <UniqueIdentifier>{BE67EF32-35B8-3B4B-1145-A46AB751253F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="style">
+      <UniqueIdentifier>{BE67EF32-35B8-3B4B-1145-A46AB751253F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="style">
+      <UniqueIdentifier>{BE67EF32-35B8-3B4B-1145-A46AB751253F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="style">
+      <UniqueIdentifier>{BE67EF32-35B8-3B4B-1145-A46AB751253F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="style">
+      <UniqueIdentifier>{BE67EF32-35B8-3B4B-1145-A46AB751253F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="style">
+      <UniqueIdentifier>{BE67EF32-35B8-3B4B-1145-A46AB751253F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout\svg">
+      <UniqueIdentifier>{B26ADB08-2A5F-6612-9BA2-9FE17A953D2B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout\svg\line">
+      <UniqueIdentifier>{7442341A-B32B-8269-2B49-8F5FBFB14BE0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout\svg">
+      <UniqueIdentifier>{B26ADB08-2A5F-6612-9BA2-9FE17A953D2B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout\svg\line">
+      <UniqueIdentifier>{7442341A-B32B-8269-2B49-8F5FBFB14BE0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout\svg">
+      <UniqueIdentifier>{B26ADB08-2A5F-6612-9BA2-9FE17A953D2B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout\svg\line">
+      <UniqueIdentifier>{7442341A-B32B-8269-2B49-8F5FBFB14BE0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout\svg">
+      <UniqueIdentifier>{B26ADB08-2A5F-6612-9BA2-9FE17A953D2B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout\svg\line">
+      <UniqueIdentifier>{7442341A-B32B-8269-2B49-8F5FBFB14BE0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout\svg">
+      <UniqueIdentifier>{B26ADB08-2A5F-6612-9BA2-9FE17A953D2B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout\svg\line">
+      <UniqueIdentifier>{7442341A-B32B-8269-2B49-8F5FBFB14BE0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout\svg">
+      <UniqueIdentifier>{B26ADB08-2A5F-6612-9BA2-9FE17A953D2B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout\svg\line">
+      <UniqueIdentifier>{7442341A-B32B-8269-2B49-8F5FBFB14BE0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout\_excluded_files">
+      <UniqueIdentifier>{158E591E-B6EA-0C85-8F5A-18EAFA09B4CE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout\_excluded_files">
+      <UniqueIdentifier>{158E591E-B6EA-0C85-8F5A-18EAFA09B4CE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout\_excluded_files">
+      <UniqueIdentifier>{158E591E-B6EA-0C85-8F5A-18EAFA09B4CE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout\_excluded_files">
+      <UniqueIdentifier>{158E591E-B6EA-0C85-8F5A-18EAFA09B4CE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout\_excluded_files">
+      <UniqueIdentifier>{158E591E-B6EA-0C85-8F5A-18EAFA09B4CE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout\_excluded_files">
+      <UniqueIdentifier>{158E591E-B6EA-0C85-8F5A-18EAFA09B4CE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout">
+      <UniqueIdentifier>{BA05AA1A-F546-9F6C-6970-AC4C204A8328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="layout\_excluded_files">
+      <UniqueIdentifier>{158E591E-B6EA-0C85-8F5A-18EAFA09B4CE}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\third_party\WebKit\Source\build\win\Precompile.cpp">
+      <Filter>..\..\..\..\third_party\WebKit\Source\build\win</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\api\LineLayoutBlockFlow.h">
+      <Filter>layout\api</Filter>
+    </ClInclude>
+    <ClInclude Include="layout\api\LineLayoutBox.h">
+      <Filter>layout\api</Filter>
+    </ClInclude>
+    <ClInclude Include="layout\api\LineLayoutInline.h">
+      <Filter>layout\api</Filter>
+    </ClInclude>
+    <ClInclude Include="layout\api\LineLayoutItem.h">
+      <Filter>layout\api</Filter>
+    </ClInclude>
+    <ClInclude Include="layout\api\LineLayoutText.h">
+      <Filter>layout\api</Filter>
+    </ClInclude>
+    <ClInclude Include="layout\BidiRun.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\BidiRunForLine.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\BidiRunForLine.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\ClipRect.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\ClipRect.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClInclude Include="layout\ClipRects.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClInclude Include="layout\ClipRectsCache.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\CounterNode.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\CounterNode.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\FloatingObjects.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\FloatingObjects.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClInclude Include="layout\GeneratedChildren.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\HitTestCache.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\HitTestCache.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\HitTestLocation.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\HitTestLocation.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\HitTestResult.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClCompile Include="layout\HitTestingTransformState.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\HitTestingTransformState.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\ImageQualityController.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\ImageQualityController.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\LayoutState.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClCompile Include="layout\OrderIterator.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\OrderIterator.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\PaintInvalidationState.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\PaintInvalidationState.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\PointerEventsHitRules.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\PointerEventsHitRules.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\LayoutDeprecatedFlexibleBox.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\LayoutDeprecatedFlexibleBox.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\LayoutAnalyzer.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\LayoutAnalyzer.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\LayoutApplet.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\LayoutApplet.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\LayoutBlock.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClCompile Include="layout\LayoutBlockFlow.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClCompile Include="layout\LayoutBlockFlowLine.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClCompile Include="layout\LayoutBox.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClCompile Include="layout\LayoutBoxModelObject.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClCompile Include="layout\LayoutBR.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClCompile Include="layout\LayoutButton.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\LayoutButton.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\LayoutCounter.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\LayoutCounter.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\LayoutDetailsMarker.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\LayoutDetailsMarker.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\LayoutEmbeddedObject.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClCompile Include="layout\LayoutFlexibleBox.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\LayoutFlexibleBox.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\LayoutFieldset.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\LayoutFieldset.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\LayoutFileUploadControl.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\LayoutFileUploadControl.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\LayoutFlowThread.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\LayoutFlowThread.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\LayoutFrame.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\LayoutFrame.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\LayoutFrameSet.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\LayoutFrameSet.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\LayoutFullScreen.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\LayoutFullScreen.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\LayoutGeometryMap.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\LayoutGeometryMap.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClInclude Include="layout\LayoutGeometryMapStep.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\LayoutGrid.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\LayoutGrid.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\LayoutHTMLCanvas.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\LayoutHTMLCanvas.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\LayoutIFrame.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\LayoutIFrame.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\LayoutImage.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClCompile Include="layout\LayoutImageResource.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClCompile Include="layout\LayoutImageResourceStyleImage.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClCompile Include="layout\LayoutInline.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\LayoutInline.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\LayoutListBox.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\LayoutListBox.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\LayoutListItem.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClCompile Include="layout\LayoutListMarker.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\LayoutListMarker.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\LayoutMedia.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\LayoutMedia.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\LayoutMenuList.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\LayoutMenuList.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\LayoutMeter.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\LayoutMeter.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\LayoutMultiColumnFlowThread.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\LayoutMultiColumnFlowThread.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\LayoutMultiColumnSet.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\LayoutMultiColumnSet.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\LayoutMultiColumnSpannerPlaceholder.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\LayoutMultiColumnSpannerPlaceholder.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\LayoutObject.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClCompile Include="layout\LayoutObjectChildList.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClCompile Include="layout\LayoutPagedFlowThread.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\LayoutPagedFlowThread.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\LayoutPart.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClCompile Include="layout\LayoutProgress.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\LayoutProgress.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\LayoutQuote.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\LayoutQuote.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\LayoutReplaced.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClCompile Include="layout\LayoutReplica.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\LayoutReplica.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\LayoutRuby.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\LayoutRuby.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\LayoutRubyBase.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\LayoutRubyBase.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\LayoutRubyRun.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\LayoutRubyRun.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\LayoutRubyText.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\LayoutRubyText.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\LayoutScrollbar.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\LayoutScrollbar.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\LayoutScrollbarPart.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\LayoutScrollbarPart.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\LayoutScrollbarTheme.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\LayoutScrollbarTheme.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\LayoutSearchField.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\LayoutSearchField.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\LayoutSlider.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\LayoutSlider.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\LayoutSliderContainer.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\LayoutSliderContainer.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\LayoutSliderThumb.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\LayoutSliderThumb.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\LayoutText.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClCompile Include="layout\LayoutTextCombine.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\LayoutTextCombine.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\LayoutTextFragment.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\LayoutTextFragment.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\LayoutTable.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\LayoutTable.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\LayoutTableCaption.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\LayoutTableCaption.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\LayoutTableCell.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\LayoutTableCell.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\LayoutTableCol.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\LayoutTableCol.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\LayoutTableRow.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\LayoutTableRow.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\LayoutTableSection.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\LayoutTableSection.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\LayoutTextControl.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\LayoutTextControl.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\LayoutTextControlMultiLine.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\LayoutTextControlMultiLine.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\LayoutTextControlSingleLine.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\LayoutTextControlSingleLine.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\LayoutTextTrackContainer.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\LayoutTextTrackContainer.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\LayoutTheme.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\LayoutTheme.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\LayoutThemeDefault.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\LayoutThemeDefault.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\LayoutThemeFontProvider.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\LayoutThemeFontProvider.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\LayoutThemeFontProviderWin.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClCompile Include="layout\LayoutThemeWin.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\LayoutThemeWin.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\LayoutTreeAsText.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClCompile Include="layout\LayoutVTTCue.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\LayoutVTTCue.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\LayoutVideo.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\LayoutVideo.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\LayoutView.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClCompile Include="layout\LayoutWordBreak.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\LayoutWordBreak.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\MultiColumnFragmentainerGroup.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\MultiColumnFragmentainerGroup.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClInclude Include="layout\OverflowModel.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\PendingSelection.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\PendingSelection.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\ScrollAlignment.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClCompile Include="layout\SubtreeLayoutScope.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\SubtreeLayoutScope.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClInclude Include="layout\TableLayoutAlgorithm.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\TableLayoutAlgorithmAuto.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\TableLayoutAlgorithmAuto.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\TableLayoutAlgorithmFixed.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\TableLayoutAlgorithmFixed.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\TextAutosizer.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\TextAutosizer.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\TextRunConstructor.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\TextRunConstructor.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\TracedLayoutObject.cpp">
+      <Filter>layout</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\TracedLayoutObject.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClInclude Include="layout\VerticalPositionCache.h">
+      <Filter>layout</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\compositing\CompositedDeprecatedPaintLayerMapping.cpp">
+      <Filter>layout\compositing</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\compositing\CompositedDeprecatedPaintLayerMapping.h">
+      <Filter>layout\compositing</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\compositing\CompositingInputsUpdater.cpp">
+      <Filter>layout\compositing</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\compositing\CompositingInputsUpdater.h">
+      <Filter>layout\compositing</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\compositing\CompositingLayerAssigner.cpp">
+      <Filter>layout\compositing</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\compositing\CompositingLayerAssigner.h">
+      <Filter>layout\compositing</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\compositing\CompositingReasonFinder.cpp">
+      <Filter>layout\compositing</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\compositing\CompositingReasonFinder.h">
+      <Filter>layout\compositing</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\compositing\CompositingRequirementsUpdater.cpp">
+      <Filter>layout\compositing</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\compositing\CompositingRequirementsUpdater.h">
+      <Filter>layout\compositing</Filter>
+    </ClInclude>
+    <ClInclude Include="layout\compositing\CompositingState.h">
+      <Filter>layout\compositing</Filter>
+    </ClInclude>
+    <ClInclude Include="layout\compositing\CompositingTriggers.h">
+      <Filter>layout\compositing</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\compositing\DeprecatedPaintLayerCompositor.cpp">
+      <Filter>layout\compositing</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\compositing\DeprecatedPaintLayerCompositor.h">
+      <Filter>layout\compositing</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\compositing\GraphicsLayerTreeBuilder.cpp">
+      <Filter>layout\compositing</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\compositing\GraphicsLayerTreeBuilder.h">
+      <Filter>layout\compositing</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\compositing\GraphicsLayerUpdater.cpp">
+      <Filter>layout\compositing</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\compositing\GraphicsLayerUpdater.h">
+      <Filter>layout\compositing</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\line\AbstractInlineTextBox.cpp">
+      <Filter>layout\line</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\line\AbstractInlineTextBox.h">
+      <Filter>layout\line</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\line\BreakingContext.cpp">
+      <Filter>layout\line</Filter>
+    </ClCompile>
+    <ClCompile Include="layout\line\EllipsisBox.cpp">
+      <Filter>layout\line</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\line\EllipsisBox.h">
+      <Filter>layout\line</Filter>
+    </ClInclude>
+    <ClInclude Include="layout\line\GlyphOverflow.h">
+      <Filter>layout\line</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\line\InlineBox.cpp">
+      <Filter>layout\line</Filter>
+    </ClCompile>
+    <ClCompile Include="layout\line\InlineFlowBox.cpp">
+      <Filter>layout\line</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\line\InlineIterator.h">
+      <Filter>layout\line</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\line\InlineTextBox.cpp">
+      <Filter>layout\line</Filter>
+    </ClCompile>
+    <ClCompile Include="layout\line\LineBoxList.cpp">
+      <Filter>layout\line</Filter>
+    </ClCompile>
+    <ClCompile Include="layout\line\LineBreaker.cpp">
+      <Filter>layout\line</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\line\LineBreaker.h">
+      <Filter>layout\line</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\line\LineWidth.cpp">
+      <Filter>layout\line</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\line\LineWidth.h">
+      <Filter>layout\line</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\line\RootInlineBox.cpp">
+      <Filter>layout\line</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\line\TrailingFloatsRootInlineBox.h">
+      <Filter>layout\line</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\line\TrailingObjects.cpp">
+      <Filter>layout\line</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\line\TrailingObjects.h">
+      <Filter>layout\line</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\shapes\BoxShape.cpp">
+      <Filter>layout\shapes</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\shapes\BoxShape.h">
+      <Filter>layout\shapes</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\shapes\PolygonShape.cpp">
+      <Filter>layout\shapes</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\shapes\PolygonShape.h">
+      <Filter>layout\shapes</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\shapes\RasterShape.cpp">
+      <Filter>layout\shapes</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\shapes\RasterShape.h">
+      <Filter>layout\shapes</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\shapes\RectangleShape.cpp">
+      <Filter>layout\shapes</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\shapes\RectangleShape.h">
+      <Filter>layout\shapes</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\shapes\Shape.cpp">
+      <Filter>layout\shapes</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\shapes\Shape.h">
+      <Filter>layout\shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="layout\shapes\ShapeInterval.h">
+      <Filter>layout\shapes</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\shapes\ShapeOutsideInfo.cpp">
+      <Filter>layout\shapes</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\shapes\ShapeOutsideInfo.h">
+      <Filter>layout\shapes</Filter>
+    </ClInclude>
+    <ClCompile Include="style\AppliedTextDecoration.cpp">
+      <Filter>style</Filter>
+    </ClCompile>
+    <ClInclude Include="style\AuthorStyleInfo.h">
+      <Filter>style</Filter>
+    </ClInclude>
+    <ClCompile Include="style\BasicShapes.cpp">
+      <Filter>style</Filter>
+    </ClCompile>
+    <ClCompile Include="style\BorderEdge.cpp">
+      <Filter>style</Filter>
+    </ClCompile>
+    <ClInclude Include="style\BorderEdge.h">
+      <Filter>style</Filter>
+    </ClInclude>
+    <ClInclude Include="style\BorderImageLength.h">
+      <Filter>style</Filter>
+    </ClInclude>
+    <ClInclude Include="style\BorderImageLengthBox.h">
+      <Filter>style</Filter>
+    </ClInclude>
+    <ClInclude Include="style\CachedUAStyle.h">
+      <Filter>style</Filter>
+    </ClInclude>
+    <ClCompile Include="style\ContentData.cpp">
+      <Filter>style</Filter>
+    </ClCompile>
+    <ClCompile Include="style\CounterDirectives.cpp">
+      <Filter>style</Filter>
+    </ClCompile>
+    <ClCompile Include="style\FillLayer.cpp">
+      <Filter>style</Filter>
+    </ClCompile>
+    <ClInclude Include="style\GridCoordinate.h">
+      <Filter>style</Filter>
+    </ClInclude>
+    <ClCompile Include="style\GridResolvedPosition.cpp">
+      <Filter>style</Filter>
+    </ClCompile>
+    <ClInclude Include="style\GridResolvedPosition.h">
+      <Filter>style</Filter>
+    </ClInclude>
+    <ClCompile Include="style\ComputedStyle.cpp">
+      <Filter>style</Filter>
+    </ClCompile>
+    <ClInclude Include="style\ComputedStyle.h">
+      <Filter>style</Filter>
+    </ClInclude>
+    <ClCompile Include="style\NinePieceImage.cpp">
+      <Filter>style</Filter>
+    </ClCompile>
+    <ClCompile Include="style\PathStyleMotionPath.cpp">
+      <Filter>style</Filter>
+    </ClCompile>
+    <ClInclude Include="style\PathStyleMotionPath.h">
+      <Filter>style</Filter>
+    </ClInclude>
+    <ClCompile Include="style\QuotesData.cpp">
+      <Filter>style</Filter>
+    </ClCompile>
+    <ClInclude Include="style\QuotesData.h">
+      <Filter>style</Filter>
+    </ClInclude>
+    <ClCompile Include="style\ShadowData.cpp">
+      <Filter>style</Filter>
+    </ClCompile>
+    <ClInclude Include="style\ShadowData.h">
+      <Filter>style</Filter>
+    </ClInclude>
+    <ClCompile Include="style\ShadowList.cpp">
+      <Filter>style</Filter>
+    </ClCompile>
+    <ClInclude Include="style\ShadowList.h">
+      <Filter>style</Filter>
+    </ClInclude>
+    <ClCompile Include="style\StyleBackgroundData.cpp">
+      <Filter>style</Filter>
+    </ClCompile>
+    <ClCompile Include="style\StyleBoxData.cpp">
+      <Filter>style</Filter>
+    </ClCompile>
+    <ClInclude Include="style\StyleContentAlignmentData.h">
+      <Filter>style</Filter>
+    </ClInclude>
+    <ClCompile Include="style\StyleDeprecatedFlexibleBoxData.cpp">
+      <Filter>style</Filter>
+    </ClCompile>
+    <ClCompile Include="style\StyleFetchedImage.cpp">
+      <Filter>style</Filter>
+    </ClCompile>
+    <ClCompile Include="style\StyleFetchedImageSet.cpp">
+      <Filter>style</Filter>
+    </ClCompile>
+    <ClCompile Include="style\StyleFilterData.cpp">
+      <Filter>style</Filter>
+    </ClCompile>
+    <ClCompile Include="style\StyleFlexibleBoxData.cpp">
+      <Filter>style</Filter>
+    </ClCompile>
+    <ClCompile Include="style\StyleGeneratedImage.cpp">
+      <Filter>style</Filter>
+    </ClCompile>
+    <ClCompile Include="style\StyleGridData.cpp">
+      <Filter>style</Filter>
+    </ClCompile>
+    <ClCompile Include="style\StyleGridItemData.cpp">
+      <Filter>style</Filter>
+    </ClCompile>
+    <ClCompile Include="style\StyleInheritedData.cpp">
+      <Filter>style</Filter>
+    </ClCompile>
+    <ClCompile Include="style\StyleMotionData.cpp">
+      <Filter>style</Filter>
+    </ClCompile>
+    <ClInclude Include="style\StyleMotionData.h">
+      <Filter>style</Filter>
+    </ClInclude>
+    <ClInclude Include="style\StyleMotionPath.h">
+      <Filter>style</Filter>
+    </ClInclude>
+    <ClCompile Include="style\StyleMultiColData.cpp">
+      <Filter>style</Filter>
+    </ClCompile>
+    <ClInclude Include="style\StylePendingImage.h">
+      <Filter>style</Filter>
+    </ClInclude>
+    <ClCompile Include="style\StyleRareInheritedData.cpp">
+      <Filter>style</Filter>
+    </ClCompile>
+    <ClCompile Include="style\StyleRareNonInheritedData.cpp">
+      <Filter>style</Filter>
+    </ClCompile>
+    <ClCompile Include="style\StyleScrollSnapData.cpp">
+      <Filter>style</Filter>
+    </ClCompile>
+    <ClInclude Include="style\StyleScrollSnapData.h">
+      <Filter>style</Filter>
+    </ClInclude>
+    <ClInclude Include="style\StyleSelfAlignmentData.h">
+      <Filter>style</Filter>
+    </ClInclude>
+    <ClCompile Include="style\StyleSurroundData.cpp">
+      <Filter>style</Filter>
+    </ClCompile>
+    <ClCompile Include="style\StyleTransformData.cpp">
+      <Filter>style</Filter>
+    </ClCompile>
+    <ClCompile Include="style\StyleVisualData.cpp">
+      <Filter>style</Filter>
+    </ClCompile>
+    <ClCompile Include="style\StyleWillChangeData.cpp">
+      <Filter>style</Filter>
+    </ClCompile>
+    <ClCompile Include="layout\svg\line\SVGInlineFlowBox.cpp">
+      <Filter>layout\svg\line</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\svg\line\SVGInlineFlowBox.h">
+      <Filter>layout\svg\line</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\svg\line\SVGInlineTextBox.cpp">
+      <Filter>layout\svg\line</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\svg\line\SVGInlineTextBox.h">
+      <Filter>layout\svg\line</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\svg\line\SVGRootInlineBox.cpp">
+      <Filter>layout\svg\line</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\svg\line\SVGRootInlineBox.h">
+      <Filter>layout\svg\line</Filter>
+    </ClInclude>
+    <None Include="core.gyp"/>
+    <ClCompile Include="layout\LayoutThemeAndroid.cpp">
+      <Filter>layout\_excluded_files</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\LayoutThemeAndroid.h">
+      <Filter>layout\_excluded_files</Filter>
+    </ClInclude>
+    <ClCompile Include="layout\LayoutThemeFontProviderLinux.cpp">
+      <Filter>layout\_excluded_files</Filter>
+    </ClCompile>
+    <ClCompile Include="layout\LayoutThemeLinux.cpp">
+      <Filter>layout\_excluded_files</Filter>
+    </ClCompile>
+    <ClInclude Include="layout\LayoutThemeLinux.h">
+      <Filter>layout\_excluded_files</Filter>
+    </ClInclude>
+    <ClInclude Include="layout\LayoutThemeMac.h">
+      <Filter>layout\_excluded_files</Filter>
+    </ClInclude>
+    <None Include="layout\LayoutThemeMac.mm">
+      <Filter>layout\_excluded_files</Filter>
+    </None>
+  </ItemGroup>
+</Project>

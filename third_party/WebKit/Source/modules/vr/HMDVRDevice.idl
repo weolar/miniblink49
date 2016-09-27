@@ -1,0 +1,20 @@
+// Copyright 2015 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+enum VREye {
+    "left",
+    "right"
+};
+
+// An HMDVRDevice represents a Head Mounted Display. The interface provides all
+// the information necessary to correctly render a stereo 3D scene for a given
+// headset.
+// http://mozvr.github.io/webvr-spec/webvr.html#hmdvrdevice
+[
+    RuntimeEnabled=WebVR,
+    TypeChecking=Interface
+] interface HMDVRDevice : VRDevice {
+    VREyeParameters getEyeParameters(VREye whichEye);
+    void setFieldOfView(optional VRFieldOfView leftFov, optional VRFieldOfView rightFov);
+};

@@ -1,0 +1,86 @@
+/*
+ * Copyright (C) 2008, 2011 Apple Inc. All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1.  Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ * 3.  Neither the name of Apple Computer, Inc. ("Apple") nor the names of
+ *     its contributors may be used to endorse or promote products derived
+ *     from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+// https://xhr.spec.whatwg.org/#interface-xmlhttprequest
+
+enum XMLHttpRequestResponseType {
+    "",
+    "arraybuffer",
+    "blob",
+    "document",
+    "json",
+    "text",
+    "legacystream",
+};
+
+// TODO(philipj): Most DOMString types in the XMLHttpRequest interface should be
+// either ByteString or USVString.
+[
+    ActiveDOMObject,
+    Constructor,
+    ConstructorCallWith=ScriptState,
+    // TODO(philipj): The spec has Exposed=(Window,Worker)
+    // https://github.com/whatwg/xhr/issues/19
+    Exposed=(Window,DedicatedWorker,SharedWorker)
+] interface XMLHttpRequest : XMLHttpRequestEventTarget {
+    // event handler
+    attribute EventHandler onreadystatechange;
+
+    // states
+    const unsigned short UNSENT = 0;
+    const unsigned short OPENED = 1;
+    const unsigned short HEADERS_RECEIVED = 2;
+    const unsigned short LOADING = 3;
+    const unsigned short DONE = 4;
+    readonly attribute unsigned short readyState;
+
+    // request
+    [RaisesException] void open(DOMString method, DOMString url);
+    [RaisesException] void open(DOMString method, DOMString url, boolean async, optional DOMString? username = null, optional DOMString? password = null);
+    [RaisesException] void setRequestHeader(DOMString name, DOMString value);
+    [RaisesException=Setter] attribute unsigned long timeout;
+    [RaisesException=Setter] attribute boolean withCredentials;
+    readonly attribute XMLHttpRequestUpload upload;
+    // TODO(philipj): The data argument should be of type
+    // (Document or BodyInit)?
+    [RaisesException] void send(optional (ArrayBuffer or ArrayBufferView or Blob or Document or DOMString or FormData)? body = null);
+    void abort();
+
+    // response
+    readonly attribute DOMString responseURL;
+    readonly attribute unsigned short status;
+    readonly attribute DOMString statusText;
+    DOMString? getResponseHeader(DOMString name);
+    DOMString getAllResponseHeaders();
+    [RaisesException] void overrideMimeType(DOMString mime);
+    [RaisesException=Setter] attribute XMLHttpRequestResponseType responseType;
+    [Custom=Getter, RaisesException=Getter] readonly attribute any response;
+    [Custom=Getter, RaisesException=Getter] readonly attribute DOMString responseText;
+    // TODO(philipj): responseXML should be [Exposed=Window].
+    [RaisesException=Getter] readonly attribute Document? responseXML;
+};

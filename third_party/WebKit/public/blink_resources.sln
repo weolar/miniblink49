@@ -1,0 +1,35 @@
+Microsoft Visual Studio Solution File, Format Version 13.00
+# Visual Studio 2013
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "blink_image_resources", "blink_image_resources.vcxproj", "{C03FF43A-83DD-CCA9-65A7-332471F1F980}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "blink_resources", "blink_resources.vcxproj", "{3342BCA1-DE5F-46C4-4EA6-5968A7010DAA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|Win32 = Debug|Win32
+		Release|x64 = Release|x64
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3342BCA1-DE5F-46C4-4EA6-5968A7010DAA}.Debug|x64.ActiveCfg = Debug|x64
+		{3342BCA1-DE5F-46C4-4EA6-5968A7010DAA}.Debug|x64.Build.0 = Debug|x64
+		{3342BCA1-DE5F-46C4-4EA6-5968A7010DAA}.Debug|Win32.ActiveCfg = Debug|Win32
+		{3342BCA1-DE5F-46C4-4EA6-5968A7010DAA}.Debug|Win32.Build.0 = Debug|Win32
+		{3342BCA1-DE5F-46C4-4EA6-5968A7010DAA}.Release|x64.ActiveCfg = Release|x64
+		{3342BCA1-DE5F-46C4-4EA6-5968A7010DAA}.Release|x64.Build.0 = Release|x64
+		{3342BCA1-DE5F-46C4-4EA6-5968A7010DAA}.Release|Win32.ActiveCfg = Release|Win32
+		{3342BCA1-DE5F-46C4-4EA6-5968A7010DAA}.Release|Win32.Build.0 = Release|Win32
+		{C03FF43A-83DD-CCA9-65A7-332471F1F980}.Debug|x64.ActiveCfg = Debug|x64
+		{C03FF43A-83DD-CCA9-65A7-332471F1F980}.Debug|x64.Build.0 = Debug|x64
+		{C03FF43A-83DD-CCA9-65A7-332471F1F980}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C03FF43A-83DD-CCA9-65A7-332471F1F980}.Debug|Win32.Build.0 = Debug|Win32
+		{C03FF43A-83DD-CCA9-65A7-332471F1F980}.Release|x64.ActiveCfg = Release|x64
+		{C03FF43A-83DD-CCA9-65A7-332471F1F980}.Release|x64.Build.0 = Release|x64
+		{C03FF43A-83DD-CCA9-65A7-332471F1F980}.Release|Win32.ActiveCfg = Release|Win32
+		{C03FF43A-83DD-CCA9-65A7-332471F1F980}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

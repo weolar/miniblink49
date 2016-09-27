@@ -1,0 +1,14 @@
+../../../core/clipboard/DataTransferItem.idl
+../../../core/dom/URL.idl
+../../../core/events/MouseEvent.idl
+../../../core/frame/Navigator.idl
+../../../core/frame/Screen.idl
+../../../core/frame/Window.idl
+../../../core/html/HTMLInputElement.idl
+../../../core/html/HTMLMediaElement.idl
+../../../core/html/HTMLVideoElement.idl
+../../../core/inspector/DevToolsHost.idl
+../../../core/workers/DedicatedWorkerGlobalScope.idl
+../../../core/workers/SharedWorkerGlobalScope.idl
+../../../core/workers/WorkerGlobalScope.idl
+../../../core/workers/WorkerNavigator.idl

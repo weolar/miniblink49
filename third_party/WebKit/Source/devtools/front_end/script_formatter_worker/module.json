@@ -1,0 +1,22 @@
+{
+    "scripts": [
+        "../platform/utilities.js",
+        "../cm/headlesscodemirror.js",
+        "../cm/css.js",
+        "../cm/xml.js",
+        "../cm/htmlmixed.js",
+        "ScriptFormatterWorker.js",
+        "../acorn/acorn.js",
+        "CSSFormatter.js",
+        "ESTreeWalker.js",
+        "AcornTokenizer.js",
+        "JavaScriptFormatter.js"
+    ],
+    "skip_compilation": [
+        "../acorn/acorn.js",
+        "../cm/headlesscodemirror.js",
+        "../cm/css.js",
+        "../cm/xml.js",
+        "../cm/htmlmixed.js"
+    ]
+}

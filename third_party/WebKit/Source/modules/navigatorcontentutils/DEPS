@@ -1,0 +1,11 @@
+include_rules = [
+    "+bindings",
+    "+core",
+    "+heap",
+    "-modules",
+    "+modules/ModulesExport.h",
+    "+modules/navigatorcontentutils",
+    "+platform",
+    "+public/platform",
+    "-web",
+]

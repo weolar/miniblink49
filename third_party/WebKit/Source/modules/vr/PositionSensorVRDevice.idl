@@ -1,0 +1,16 @@
+// Copyright 2015 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+// An PositionSensorVRDevice represents a user interface that provides an
+// orientation and position in space. This may be a Head Mounted Display or
+// any number of other six-degree-of-freedom devices that provide, for example,
+// hand tracking.
+// http://mozvr.github.io/webvr-spec/webvr.html#positionsensorvrdevice
+[
+    RuntimeEnabled=WebVR,
+] interface PositionSensorVRDevice : VRDevice {
+    VRPositionState getState();
+    VRPositionState getImmediateState();
+    void resetSensor();
+};

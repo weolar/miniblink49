@@ -1,0 +1,16 @@
+// Copyright 2014 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+// http://mkruisselbrink.github.io/navigator-connect/#idl-def-CrossOriginServiceWorkerClient
+[
+    RuntimeEnabled=NavigatorConnect,
+    Exposed=ServiceWorker,
+    GarbageCollected
+] interface CrossOriginServiceWorkerClient : EventTarget {
+    readonly attribute DOMString origin;
+    readonly attribute DOMString targetUrl;
+
+    [PostMessage, RaisesException, CallWith=ExecutionContext]
+    void postMessage(SerializedScriptValue message, optional sequence<Transferable> transfer);
+};

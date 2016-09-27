@@ -1,0 +1,26 @@
+namespace="EventTarget"
+export="CORE_EXPORT"
+
+core/animation/AnimationPlayer
+core/css/FontFaceSet
+core/css/MediaQueryList
+core/dom/MessagePort
+core/dom/Node
+core/fileapi/FileReader
+core/html/MediaController
+core/html/ime/InputMethodContext
+core/html/track/AudioTrackList
+core/html/track/TextTrack
+core/html/track/TextTrackCue
+core/html/track/TextTrackList
+core/html/track/VideoTrackList
+core/loader/appcache/ApplicationCache
+core/page/EventSource
+core/timing/Performance
+core/frame/Window ImplementedAs=DOMWindow
+core/workers/DedicatedWorkerGlobalScope
+core/workers/SharedWorker
+core/workers/SharedWorkerGlobalScope
+core/workers/Worker
+core/xml/XMLHttpRequest
+core/xml/XMLHttpRequestUpload

@@ -1,0 +1,12 @@
+include_rules = [
+    "+bindings",
+    "+core",
+    "+heap",
+    "-modules",
+    "+modules/EventModules.h",
+    "+modules/ModulesExport.h",
+    "+modules/geolocation",
+    "+platform",
+    "+public/platform",
+    "-web",
+]

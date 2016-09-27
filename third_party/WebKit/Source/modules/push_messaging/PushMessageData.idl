@@ -1,0 +1,19 @@
+// Copyright 2014 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+// http://w3c.github.io/push-api/#pushmessagedata-interface
+
+typedef object JSON;
+
+[
+    Constructor(USVString message),
+    Exposed=ServiceWorker,
+    GarbageCollected,
+    RuntimeEnabled=PushMessagingData,
+] interface PushMessageData {
+    ArrayBuffer arrayBuffer();
+    Blob blob();
+    [CallWith=ScriptState, RaisesException] JSON json();
+    USVString text();
+};

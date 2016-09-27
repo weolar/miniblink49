@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..\..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..\..\..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..\..\..\third_party">
+      <UniqueIdentifier>{D6C6CEA7-AAD0-03AD-2394-AC6FCBF8A498}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..\..\..\third_party\WebKit">
+      <UniqueIdentifier>{1919EB75-19A6-2BAD-ABB0-47BF57C87A0F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..\..\..\third_party\WebKit\Source">
+      <UniqueIdentifier>{26D65320-41C3-1A61-26C0-583D658C7F16}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..\..\..\third_party\WebKit\Source\build">
+      <UniqueIdentifier>{D5519164-BF26-36DA-740B-76CEFC1827F4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..\..\..\..\third_party\WebKit\Source\build\win">
+      <UniqueIdentifier>{47FC5EC4-15EB-E92F-89D7-AFE51CF838A9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="accessibility">
+      <UniqueIdentifier>{873DE697-7E51-06CB-5ED2-F4A475CEFD57}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="accessibility\testing">
+      <UniqueIdentifier>{681E52FB-4BB5-C8E2-1D1A-B7C4F2495A5E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="accessibility">
+      <UniqueIdentifier>{873DE697-7E51-06CB-5ED2-F4A475CEFD57}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="accessibility\testing">
+      <UniqueIdentifier>{681E52FB-4BB5-C8E2-1D1A-B7C4F2495A5E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="geolocation">
+      <UniqueIdentifier>{42EA6ED6-A702-DB69-AED0-ED93767C1994}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="geolocation\testing">
+      <UniqueIdentifier>{681E52FB-4BB5-C8E2-1D1A-B7C4F2495A5E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="geolocation">
+      <UniqueIdentifier>{42EA6ED6-A702-DB69-AED0-ED93767C1994}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="geolocation\testing">
+      <UniqueIdentifier>{681E52FB-4BB5-C8E2-1D1A-B7C4F2495A5E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="geolocation">
+      <UniqueIdentifier>{42EA6ED6-A702-DB69-AED0-ED93767C1994}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="geolocation\testing">
+      <UniqueIdentifier>{681E52FB-4BB5-C8E2-1D1A-B7C4F2495A5E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="geolocation">
+      <UniqueIdentifier>{42EA6ED6-A702-DB69-AED0-ED93767C1994}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="geolocation\testing">
+      <UniqueIdentifier>{681E52FB-4BB5-C8E2-1D1A-B7C4F2495A5E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="navigatorcontentutils">
+      <UniqueIdentifier>{271FB163-93EE-EF25-AAFA-D37464266C7A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="navigatorcontentutils\testing">
+      <UniqueIdentifier>{681E52FB-4BB5-C8E2-1D1A-B7C4F2495A5E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="navigatorcontentutils">
+      <UniqueIdentifier>{271FB163-93EE-EF25-AAFA-D37464266C7A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="navigatorcontentutils\testing">
+      <UniqueIdentifier>{681E52FB-4BB5-C8E2-1D1A-B7C4F2495A5E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="navigatorcontentutils">
+      <UniqueIdentifier>{271FB163-93EE-EF25-AAFA-D37464266C7A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="navigatorcontentutils\testing">
+      <UniqueIdentifier>{681E52FB-4BB5-C8E2-1D1A-B7C4F2495A5E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="navigatorcontentutils">
+      <UniqueIdentifier>{271FB163-93EE-EF25-AAFA-D37464266C7A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="navigatorcontentutils\testing">
+      <UniqueIdentifier>{681E52FB-4BB5-C8E2-1D1A-B7C4F2495A5E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="serviceworkers">
+      <UniqueIdentifier>{9A6BEC4F-B382-7C00-A8C9-0804014FB431}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="serviceworkers\testing">
+      <UniqueIdentifier>{681E52FB-4BB5-C8E2-1D1A-B7C4F2495A5E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="serviceworkers">
+      <UniqueIdentifier>{9A6BEC4F-B382-7C00-A8C9-0804014FB431}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="serviceworkers\testing">
+      <UniqueIdentifier>{681E52FB-4BB5-C8E2-1D1A-B7C4F2495A5E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="speech">
+      <UniqueIdentifier>{6B7E6414-F041-7B74-8A68-78B9AFDFE9E1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="speech\testing">
+      <UniqueIdentifier>{681E52FB-4BB5-C8E2-1D1A-B7C4F2495A5E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="speech">
+      <UniqueIdentifier>{6B7E6414-F041-7B74-8A68-78B9AFDFE9E1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="speech\testing">
+      <UniqueIdentifier>{681E52FB-4BB5-C8E2-1D1A-B7C4F2495A5E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="speech">
+      <UniqueIdentifier>{6B7E6414-F041-7B74-8A68-78B9AFDFE9E1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="speech\testing">
+      <UniqueIdentifier>{681E52FB-4BB5-C8E2-1D1A-B7C4F2495A5E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="speech">
+      <UniqueIdentifier>{6B7E6414-F041-7B74-8A68-78B9AFDFE9E1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="speech\testing">
+      <UniqueIdentifier>{681E52FB-4BB5-C8E2-1D1A-B7C4F2495A5E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vibration">
+      <UniqueIdentifier>{6817CECB-A842-DA0A-7E6D-E8F81B9C2349}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vibration\testing">
+      <UniqueIdentifier>{681E52FB-4BB5-C8E2-1D1A-B7C4F2495A5E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vibration">
+      <UniqueIdentifier>{6817CECB-A842-DA0A-7E6D-E8F81B9C2349}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vibration\testing">
+      <UniqueIdentifier>{681E52FB-4BB5-C8E2-1D1A-B7C4F2495A5E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="webaudio">
+      <UniqueIdentifier>{08C86603-A0A7-C9B2-CEAE-BDDE4EB98040}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="webaudio\testing">
+      <UniqueIdentifier>{681E52FB-4BB5-C8E2-1D1A-B7C4F2495A5E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="webaudio">
+      <UniqueIdentifier>{08C86603-A0A7-C9B2-CEAE-BDDE4EB98040}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="webaudio\testing">
+      <UniqueIdentifier>{681E52FB-4BB5-C8E2-1D1A-B7C4F2495A5E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)gen">
+      <UniqueIdentifier>{B54385DA-9AA0-82F8-3CCF-636B21B5C41E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)gen\blink">
+      <UniqueIdentifier>{CB7CC51B-500D-7E25-A6FF-B160892E1B55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)gen\blink\bindings">
+      <UniqueIdentifier>{BDD847E6-3B5D-27DC-A93A-863DCFC98735}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)gen\blink\bindings\modules">
+      <UniqueIdentifier>{212BF124-DF0B-CDE7-390D-94BCC1C226CB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)gen\blink\bindings\modules\v8">
+      <UniqueIdentifier>{946EAFF9-E694-C502-F1AD-017A2D933CD2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)gen">
+      <UniqueIdentifier>{B54385DA-9AA0-82F8-3CCF-636B21B5C41E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)gen\blink">
+      <UniqueIdentifier>{CB7CC51B-500D-7E25-A6FF-B160892E1B55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)gen\blink\bindings">
+      <UniqueIdentifier>{BDD847E6-3B5D-27DC-A93A-863DCFC98735}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)gen\blink\bindings\modules">
+      <UniqueIdentifier>{212BF124-DF0B-CDE7-390D-94BCC1C226CB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="$(OutDir)gen\blink\bindings\modules\v8">
+      <UniqueIdentifier>{946EAFF9-E694-C502-F1AD-017A2D933CD2}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\third_party\WebKit\Source\build\win\Precompile.cpp">
+      <Filter>..\..\..\..\third_party\WebKit\Source\build\win</Filter>
+    </ClCompile>
+    <ClCompile Include="accessibility\testing\InternalsAccessibility.cpp">
+      <Filter>accessibility\testing</Filter>
+    </ClCompile>
+    <ClInclude Include="accessibility\testing\InternalsAccessibility.h">
+      <Filter>accessibility\testing</Filter>
+    </ClInclude>
+    <ClCompile Include="geolocation\testing\GeolocationClientMock.cpp">
+      <Filter>geolocation\testing</Filter>
+    </ClCompile>
+    <ClInclude Include="geolocation\testing\GeolocationClientMock.h">
+      <Filter>geolocation\testing</Filter>
+    </ClInclude>
+    <ClCompile Include="geolocation\testing\InternalsGeolocation.cpp">
+      <Filter>geolocation\testing</Filter>
+    </ClCompile>
+    <ClInclude Include="geolocation\testing\InternalsGeolocation.h">
+      <Filter>geolocation\testing</Filter>
+    </ClInclude>
+    <ClCompile Include="navigatorcontentutils\testing\InternalsNavigatorContentUtils.cpp">
+      <Filter>navigatorcontentutils\testing</Filter>
+    </ClCompile>
+    <ClInclude Include="navigatorcontentutils\testing\InternalsNavigatorContentUtils.h">
+      <Filter>navigatorcontentutils\testing</Filter>
+    </ClInclude>
+    <ClCompile Include="navigatorcontentutils\testing\NavigatorContentUtilsClientMock.cpp">
+      <Filter>navigatorcontentutils\testing</Filter>
+    </ClCompile>
+    <ClInclude Include="navigatorcontentutils\testing\NavigatorContentUtilsClientMock.h">
+      <Filter>navigatorcontentutils\testing</Filter>
+    </ClInclude>
+    <ClCompile Include="serviceworkers\testing\InternalsServiceWorker.cpp">
+      <Filter>serviceworkers\testing</Filter>
+    </ClCompile>
+    <ClInclude Include="serviceworkers\testing\InternalsServiceWorker.h">
+      <Filter>serviceworkers\testing</Filter>
+    </ClInclude>
+    <ClCompile Include="speech\testing\InternalsSpeechSynthesis.cpp">
+      <Filter>speech\testing</Filter>
+    </ClCompile>
+    <ClInclude Include="speech\testing\InternalsSpeechSynthesis.h">
+      <Filter>speech\testing</Filter>
+    </ClInclude>
+    <ClCompile Include="speech\testing\PlatformSpeechSynthesizerMock.cpp">
+      <Filter>speech\testing</Filter>
+    </ClCompile>
+    <ClInclude Include="speech\testing\PlatformSpeechSynthesizerMock.h">
+      <Filter>speech\testing</Filter>
+    </ClInclude>
+    <ClCompile Include="vibration\testing\InternalsVibration.cpp">
+      <Filter>vibration\testing</Filter>
+    </ClCompile>
+    <ClInclude Include="vibration\testing\InternalsVibration.h">
+      <Filter>vibration\testing</Filter>
+    </ClInclude>
+    <ClInclude Include="webaudio\testing\InternalsWebAudio.h">
+      <Filter>webaudio\testing</Filter>
+    </ClInclude>
+    <ClCompile Include="webaudio\testing\InternalsWebAudio.cpp">
+      <Filter>webaudio\testing</Filter>
+    </ClCompile>
+    <ClCompile Include="$(OutDir)gen\blink\bindings\modules\v8\V8InternalsPartial.cpp">
+      <Filter>$(OutDir)gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClInclude Include="$(OutDir)gen\blink\bindings\modules\v8\V8InternalsPartial.h">
+      <Filter>$(OutDir)gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <None Include="modules.gyp"/>
+  </ItemGroup>
+</Project>

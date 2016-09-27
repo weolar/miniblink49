@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+<g>
+ <g opacity="0.5">
+  <circle style="fill:none;stroke-width:4;stroke-linecap:round;stroke:#000;stroke-dasharray:81.64;stroke-dashoffset:0" cx="16" cy="16" r="13">
+   <animateTransform id="r1" attributeName="transform" type="rotate" from="0 16 16" to="135 16 16" dur="0.7s" begin="0s;r2.end"/>
+   <animateTransform id="r2" attributeName="transform" type="rotate" from="135 16 16" to="450 16 16" dur="0.7s" begin="r1.end"/>
+   <animate id="d1" attributeName="stroke-dashoffset" dur="0.7s" from="81.84" to="20.41" begin="0s;d2.end"/>
+   <animate id="d2" attributeName="stroke-dashoffset" dur="0.7s" from="20.41" to="81.84" begin="d1.end"/>
+  </circle>
+  <animateTransform attributeName="transform" type="rotate" from="0 16 16" to="270 16 16" dur="1.4s" repeatCount="indefinite"/>
+ </g>
+ <animateTransform attributeName="transform" type="rotate" from="0 16 16" to="360 16 16" dur="6s" repeatCount="indefinite"/>
+</g>
+</svg>

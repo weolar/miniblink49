@@ -1,0 +1,14 @@
+// Copyright (c) 2014 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+[
+    ImplementedAs=DOMWindowSpeech,
+    RuntimeEnabled=ScriptedSpeech,
+] partial interface Window {
+    attribute SpeechGrammarConstructor webkitSpeechGrammar;
+    attribute SpeechGrammarListConstructor webkitSpeechGrammarList;
+    attribute SpeechRecognitionConstructor webkitSpeechRecognition;
+    attribute SpeechRecognitionErrorConstructor webkitSpeechRecognitionError;
+    attribute SpeechRecognitionEventConstructor webkitSpeechRecognitionEvent;
+};

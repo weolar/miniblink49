@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grit latest_public_release="0" current_release="1">
+  <outputs>
+    <output filename="grit/blink_image_resources.h" type="rc_header" context="default_100_percent">
+      <emit emit_type='prepend'></emit>
+    </output>
+    <output filename="blink_image_resources_100_percent.pak" type="data_package" context="default_100_percent" />
+    <output filename="blink_image_resources_200_percent.pak" type="data_package" context="default_200_percent" />
+  </outputs>
+  <release seq="1">
+    <structures fallback_to_low_resolution="true">
+      <structure type="chrome_scaled_image" name="IDR_BROKENIMAGE" file="blink/broken_image.png" />
+      <structure type="chrome_scaled_image" name="IDR_MEDIAPLAYER_PAUSE_BUTTON" file="blink/mediaplayer_pause.png" />
+      <structure type="chrome_scaled_image" name="IDR_MEDIAPLAYER_PAUSE_BUTTON_NEW" file="blink/1x1.png" />
+      <structure type="chrome_scaled_image" name="IDR_MEDIAPLAYER_PAUSE_BUTTON_HOVER" file="blink/mediaplayer_pause_hover.png" />
+      <structure type="chrome_scaled_image" name="IDR_MEDIAPLAYER_PAUSE_BUTTON_DOWN" file="blink/mediaplayer_pause_down.png" />
+      <structure type="chrome_scaled_image" name="IDR_MEDIAPLAYER_PLAY_BUTTON" file="blink/mediaplayer_play.png" />
+      <structure type="chrome_scaled_image" name="IDR_MEDIAPLAYER_PLAY_BUTTON_NEW" file="blink/1x1.png" />
+      <structure type="chrome_scaled_image" name="IDR_MEDIAPLAYER_PLAY_BUTTON_HOVER" file="blink/mediaplayer_play_hover.png" />
+      <structure type="chrome_scaled_image" name="IDR_MEDIAPLAYER_PLAY_BUTTON_DOWN" file="blink/mediaplayer_play_down.png" />
+      <structure type="chrome_scaled_image" name="IDR_MEDIAPLAYER_PLAY_BUTTON_DISABLED" file="blink/mediaplayer_play_disabled.png" />
+      <structure type="chrome_scaled_image" name="IDR_MEDIAPLAYER_SOUND_LEVEL3_BUTTON" file="blink/mediaplayer_sound_level3.png" />
+      <structure type="chrome_scaled_image" name="IDR_MEDIAPLAYER_SOUND_LEVEL3_BUTTON_NEW" file="blink/1x1.png" />
+      <structure type="chrome_scaled_image" name="IDR_MEDIAPLAYER_SOUND_LEVEL3_BUTTON_HOVER" file="blink/mediaplayer_sound_level3_hover.png" />
+      <structure type="chrome_scaled_image" name="IDR_MEDIAPLAYER_SOUND_LEVEL3_BUTTON_DOWN" file="blink/mediaplayer_sound_level3_down.png" />
+      <structure type="chrome_scaled_image" name="IDR_MEDIAPLAYER_SOUND_LEVEL2_BUTTON" file="blink/mediaplayer_sound_level2.png" />
+      <structure type="chrome_scaled_image" name="IDR_MEDIAPLAYER_SOUND_LEVEL2_BUTTON_HOVER" file="blink/mediaplayer_sound_level2_hover.png" />
+      <structure type="chrome_scaled_image" name="IDR_MEDIAPLAYER_SOUND_LEVEL2_BUTTON_DOWN" file="blink/mediaplayer_sound_level2_down.png" />
+      <structure type="chrome_scaled_image" name="IDR_MEDIAPLAYER_SOUND_LEVEL1_BUTTON" file="blink/mediaplayer_sound_level1.png" />
+      <structure type="chrome_scaled_image" name="IDR_MEDIAPLAYER_SOUND_LEVEL1_BUTTON_HOVER" file="blink/mediaplayer_sound_level1_hover.png" />
+      <structure type="chrome_scaled_image" name="IDR_MEDIAPLAYER_SOUND_LEVEL1_BUTTON_DOWN" file="blink/mediaplayer_sound_level1_down.png" />
+      <structure type="chrome_scaled_image" name="IDR_MEDIAPLAYER_SOUND_LEVEL0_BUTTON" file="blink/mediaplayer_sound_level0.png" />
+      <structure type="chrome_scaled_image" name="IDR_MEDIAPLAYER_SOUND_LEVEL0_BUTTON_HOVER" file="blink/mediaplayer_sound_level0_hover.png" />
+      <structure type="chrome_scaled_image" name="IDR_MEDIAPLAYER_SOUND_LEVEL0_BUTTON_DOWN" file="blink/mediaplayer_sound_level0_down.png" />
+      <structure type="chrome_scaled_image" name="IDR_MEDIAPLAYER_SOUND_LEVEL0_BUTTON_NEW" file="blink/1x1.png" />
+      <structure type="chrome_scaled_image" name="IDR_MEDIAPLAYER_SOUND_DISABLED" file="blink/mediaplayer_sound_disabled.png" />
+      <structure type="chrome_scaled_image" name="IDR_MEDIAPLAYER_SLIDER_THUMB" file="blink/mediaplayer_slider_thumb.png" />
+      <structure type="chrome_scaled_image" name="IDR_MEDIAPLAYER_SLIDER_THUMB_NEW" file="blink/1x1.png" />
+      <structure type="chrome_scaled_image" name="IDR_MEDIAPLAYER_SLIDER_THUMB_HOVER" file="blink/mediaplayer_slider_thumb_hover.png" />
+      <structure type="chrome_scaled_image" name="IDR_MEDIAPLAYER_SLIDER_THUMB_DOWN" file="blink/mediaplayer_slider_thumb_down.png" />
+      <structure type="chrome_scaled_image" name="IDR_MEDIAPLAYER_VOLUME_SLIDER_THUMB" file="blink/mediaplayer_volume_slider_thumb.png" />
+      <structure type="chrome_scaled_image" name="IDR_MEDIAPLAYER_VOLUME_SLIDER_THUMB_NEW" file="blink/1x1.png" />
+      <structure type="chrome_scaled_image" name="IDR_MEDIAPLAYER_VOLUME_SLIDER_THUMB_HOVER" file="blink/mediaplayer_volume_slider_thumb_hover.png" />
+      <structure type="chrome_scaled_image" name="IDR_MEDIAPLAYER_VOLUME_SLIDER_THUMB_DOWN" file="blink/mediaplayer_volume_slider_thumb_down.png" />
+      <structure type="chrome_scaled_image" name="IDR_MEDIAPLAYER_VOLUME_SLIDER_THUMB_DISABLED" file="blink/mediaplayer_volume_slider_thumb_disabled.png" />
+      <structure type="chrome_scaled_image" name="IDR_MEDIAPLAYER_CLOSEDCAPTION_BUTTON" file="blink/mediaplayer_closedcaption.png" />
+      <structure type="chrome_scaled_image" name="IDR_MEDIAPLAYER_CLOSEDCAPTION_BUTTON_NEW" file="blink/1x1.png" />
+      <structure type="chrome_scaled_image" name="IDR_MEDIAPLAYER_CLOSEDCAPTION_BUTTON_HOVER" file="blink/mediaplayer_closedcaption_hover.png" />
+      <structure type="chrome_scaled_image" name="IDR_MEDIAPLAYER_CLOSEDCAPTION_BUTTON_DOWN" file="blink/mediaplayer_closedcaption_down.png" />
+      <structure type="chrome_scaled_image" name="IDR_MEDIAPLAYER_CLOSEDCAPTION_BUTTON_DISABLED" file="blink/mediaplayer_closedcaption_disabled.png" />
+      <structure type="chrome_scaled_image" name="IDR_MEDIAPLAYER_CLOSEDCAPTION_BUTTON_DISABLED_NEW" file="blink/1x1.png" />
+      <structure type="chrome_scaled_image" name="IDR_MEDIAPLAYER_FULLSCREEN_BUTTON" file="blink/mediaplayer_fullscreen.png" />
+      <structure type="chrome_scaled_image" name="IDR_MEDIAPLAYER_FULLSCREEN_BUTTON_HOVER" file="blink/mediaplayer_fullscreen_hover.png" />
+      <structure type="chrome_scaled_image" name="IDR_MEDIAPLAYER_FULLSCREEN_BUTTON_DOWN" file="blink/mediaplayer_fullscreen_down.png" />
+      <structure type="chrome_scaled_image" name="IDR_MEDIAPLAYER_FULLSCREEN_BUTTON_DISABLED" file="blink/mediaplayer_fullscreen_disabled.png" />
+      <structure type="chrome_scaled_image" name="IDR_MEDIAPLAYER_ENTER_FULLSCREEN_BUTTON" file="blink/1x1.png" />
+      <structure type="chrome_scaled_image" name="IDR_MEDIAPLAYER_EXIT_FULLSCREEN_BUTTON" file="blink/1x1.png" />
+      <structure type="chrome_scaled_image" name="IDR_MEDIAPLAYER_CAST_BUTTON_OFF" file="blink/mediaplayer_cast_off.png" />
+      <structure type="chrome_scaled_image" name="IDR_MEDIAPLAYER_CAST_BUTTON_OFF_NEW" file="blink/1x1.png" />
+      <structure type="chrome_scaled_image" name="IDR_MEDIAPLAYER_CAST_BUTTON_ON" file="blink/mediaplayer_cast_on.png" />
+      <structure type="chrome_scaled_image" name="IDR_MEDIAPLAYER_CAST_BUTTON_ON_NEW" file="blink/1x1.png" />
+      <structure type="chrome_scaled_image" name="IDR_MEDIAPLAYER_OVERLAY_CAST_BUTTON_OFF" file="blink/mediaplayer_overlay_cast_off.png" />
+      <structure type="chrome_scaled_image" name="IDR_MEDIAPLAYER_OVERLAY_CAST_BUTTON_OFF_NEW" file="blink/1x1.png" />
+      <structure type="chrome_scaled_image" name="IDR_MEDIAPLAYER_OVERLAY_PLAY_BUTTON" file="blink/mediaplayer_overlay_play.png" />
+      <structure type="chrome_scaled_image" name="IDR_MEDIAPLAYER_OVERLAY_PLAY_BUTTON_NEW" file="blink/1x1.png" />
+      <structure type="chrome_scaled_image" name="IDR_SEARCH_CANCEL" file="blink/search_cancel.png" />
+      <structure type="chrome_scaled_image" name="IDR_SEARCH_CANCEL_PRESSED" file="blink/search_cancel_pressed.png" />
+      <structure type="chrome_scaled_image" name="IDR_SEARCH_MAGNIFIER" file="blink/search_magnifier.png" />
+      <structure type="chrome_scaled_image" name="IDR_SEARCH_MAGNIFIER_RESULTS" file="blink/search_magnifier_results.png" />
+      <structure type="chrome_scaled_image" name="IDR_TEXTAREA_RESIZER" file="blink/textarea_resize_corner.png" />
+      <structure type="chrome_scaled_image" name="IDR_PASSWORD_GENERATION_ICON" file="blink/password_generation.png" />
+      <structure type="chrome_scaled_image" name="IDR_PASSWORD_GENERATION_ICON_HOVER" file="blink/password_generation_hover.png" />
+    </structures>
+  </release>
+</grit>

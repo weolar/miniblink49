@@ -1,0 +1,13 @@
+include_rules = [
+    "+bindings",
+    "+core",
+    "+heap",
+    "-modules",
+    "+modules/EventModules.h",
+    "+modules/EventTargetModules.h",
+    "+modules/ModulesExport.h",
+    "+modules/device_orientation",
+    "+platform",
+    "+public/platform",
+    "-web",
+]

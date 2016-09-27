@@ -1,0 +1,48 @@
+/*
+ * Copyright (C) 2010 Google Inc. All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1.  Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+// https://w3c.github.io/IndexedDB/#idl-def-IDBIndex
+
+[
+    Exposed=(Window,Worker),
+    GarbageCollected
+] interface IDBIndex {
+    readonly attribute DOMString name;
+    readonly attribute IDBObjectStore objectStore;
+    [CallWith=ScriptState] readonly attribute any keyPath;
+    readonly attribute boolean multiEntry;
+    readonly attribute boolean unique;
+
+    [CallWith=ScriptState, RaisesException] IDBRequest get(any key);
+    [CallWith=ScriptState, RaisesException] IDBRequest getKey(any key);
+    // TODO(cmumford): 0xFFFFFFFF is not necessary. Remove once crbug.com/335871 is fixed.
+    [CallWith=ScriptState, RaisesException, RuntimeEnabled=IndexedDBExperimental] IDBRequest getAll([Default=Undefined] optional any range, optional unsigned long maxCount = 0xFFFFFFFF);
+    // TODO(cmumford): 0xFFFFFFFF is not necessary. Remove once crbug.com/335871 is fixed.
+    [CallWith=ScriptState, RaisesException, RuntimeEnabled=IndexedDBExperimental] IDBRequest getAllKeys([Default=Undefined] optional any range, [EnforceRange] optional unsigned long maxCount = 0xFFFFFFFF);
+    [CallWith=ScriptState, RaisesException] IDBRequest count([Default=Undefined] optional any key);
+    [CallWith=ScriptState, RaisesException] IDBRequest openCursor([Default=Undefined] optional any range, optional IDBCursorDirection direction = "next");
+    [CallWith=ScriptState, RaisesException] IDBRequest openKeyCursor([Default=Undefined] optional any range, optional IDBCursorDirection direction = "next");
+
+};

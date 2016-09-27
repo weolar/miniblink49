@@ -1,0 +1,318 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{eecfdd9c-b73d-4330-844c-fced1bbd0822}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include">
+      <UniqueIdentifier>{08abff39-9691-4d6b-95db-5655e782da5e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\libxml">
+      <UniqueIdentifier>{64f0bb85-a902-4fa9-b05f-d47439328649}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\third_party\libxml\src\c14n.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libxml\src\catalog.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libxml\src\chvalid.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libxml\src\dict.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libxml\src\DOCBparser.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libxml\src\entities.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libxml\src\error.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libxml\src\globals.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libxml\src\hash.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libxml\src\legacy.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libxml\src\list.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libxml\src\parser.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libxml\src\parserInternals.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libxml\src\pattern.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libxml\src\relaxng.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libxml\src\schematron.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libxml\src\threads.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libxml\src\tree.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libxml\src\trio.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libxml\src\trionan.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libxml\src\triostr.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libxml\src\uri.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libxml\src\valid.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libxml\src\xinclude.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libxml\src\xlink.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libxml\src\xmllint.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libxml\src\xmlmemory.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libxml\src\xmlmodule.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libxml\src\xmlreader.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libxml\src\xmlsave.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libxml\src\xmlstring.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libxml\src\xmlunicode.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libxml\src\xmlschemas.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libxml\src\xmlschemastypes.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libxml\src\xmlregexp.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libxml\src\encoding.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libxml\src\xmlIO.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libxml\src\SAX2.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libxml\src\SAX.c">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libxml\src\config.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libxml\src\elfgcchack.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libxml\src\libxml.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libxml\src\trio.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libxml\src\triodef.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libxml\src\trionan.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libxml\src\triop.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libxml\src\triostr.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libxml\src\include\libxml\c14n.h">
+      <Filter>include\libxml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libxml\src\include\libxml\catalog.h">
+      <Filter>include\libxml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libxml\src\include\libxml\chvalid.h">
+      <Filter>include\libxml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libxml\src\include\libxml\debugXML.h">
+      <Filter>include\libxml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libxml\src\include\libxml\dict.h">
+      <Filter>include\libxml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libxml\src\include\libxml\DOCBparser.h">
+      <Filter>include\libxml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libxml\src\include\libxml\encoding.h">
+      <Filter>include\libxml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libxml\src\include\libxml\entities.h">
+      <Filter>include\libxml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libxml\src\include\libxml\globals.h">
+      <Filter>include\libxml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libxml\src\include\libxml\hash.h">
+      <Filter>include\libxml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libxml\src\include\libxml\HTMLparser.h">
+      <Filter>include\libxml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libxml\src\include\libxml\HTMLtree.h">
+      <Filter>include\libxml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libxml\src\include\libxml\list.h">
+      <Filter>include\libxml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libxml\src\include\libxml\nanoftp.h">
+      <Filter>include\libxml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libxml\src\include\libxml\nanohttp.h">
+      <Filter>include\libxml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libxml\src\include\libxml\parser.h">
+      <Filter>include\libxml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libxml\src\include\libxml\parserInternals.h">
+      <Filter>include\libxml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libxml\src\include\libxml\pattern.h">
+      <Filter>include\libxml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libxml\src\include\libxml\relaxng.h">
+      <Filter>include\libxml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libxml\src\include\libxml\SAX.h">
+      <Filter>include\libxml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libxml\src\include\libxml\SAX2.h">
+      <Filter>include\libxml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libxml\src\include\libxml\schemasInternals.h">
+      <Filter>include\libxml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libxml\src\include\libxml\schematron.h">
+      <Filter>include\libxml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libxml\src\include\libxml\threads.h">
+      <Filter>include\libxml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libxml\src\include\libxml\tree.h">
+      <Filter>include\libxml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libxml\src\include\libxml\uri.h">
+      <Filter>include\libxml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libxml\src\include\libxml\valid.h">
+      <Filter>include\libxml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libxml\src\include\libxml\xinclude.h">
+      <Filter>include\libxml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libxml\src\include\libxml\xlink.h">
+      <Filter>include\libxml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libxml\src\include\libxml\xmlautomata.h">
+      <Filter>include\libxml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libxml\src\include\libxml\xmlerror.h">
+      <Filter>include\libxml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libxml\src\include\libxml\xmlexports.h">
+      <Filter>include\libxml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libxml\src\include\libxml\xmlIO.h">
+      <Filter>include\libxml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libxml\src\include\libxml\xmlmemory.h">
+      <Filter>include\libxml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libxml\src\include\libxml\xmlmodule.h">
+      <Filter>include\libxml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libxml\src\include\libxml\xmlreader.h">
+      <Filter>include\libxml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libxml\src\include\libxml\xmlregexp.h">
+      <Filter>include\libxml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libxml\src\include\libxml\xmlsave.h">
+      <Filter>include\libxml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libxml\src\include\libxml\xmlschemas.h">
+      <Filter>include\libxml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libxml\src\include\libxml\xmlschemastypes.h">
+      <Filter>include\libxml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libxml\src\include\libxml\xmlstring.h">
+      <Filter>include\libxml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libxml\src\include\libxml\xmlunicode.h">
+      <Filter>include\libxml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libxml\src\include\libxml\xmlversion.h">
+      <Filter>include\libxml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libxml\src\include\libxml\xmlwriter.h">
+      <Filter>include\libxml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libxml\src\include\libxml\xpath.h">
+      <Filter>include\libxml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libxml\src\include\libxml\xpathInternals.h">
+      <Filter>include\libxml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\libxml\src\include\libxml\xpointer.h">
+      <Filter>include\libxml</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+</Project>

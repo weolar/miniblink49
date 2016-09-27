@@ -1,0 +1,143 @@
+# Copyright 2014 The Chromium Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+import("//testing/test.gni")
+
+# The list of files is kept in the .gypi.
+gypi_values = exec_script("//build/gypi_to_gn.py",
+                          [ rebase_path("wtf.gypi") ],
+                          "scope",
+                          [ "wtf.gypi" ])
+
+visibility = [ "//third_party/WebKit/*" ]
+
+config("wtf_config") {
+  if (is_win) {
+    defines = [
+      "__STD_C",
+      "_CRT_SECURE_NO_DEPRECATE",
+      "_SCL_SECURE_NO_DEPRECATE",
+    ]
+    include_dirs = [
+      "os-win32",
+    ]
+
+    cflags = [
+      # Don't complain about calling specific versions of templatized
+      # functions (e.g. in RefPtrHashMap.h).
+      "/wd4344",
+      # dtoa, icu, etc. like doing assignment within conditional.
+      "/wd4706",
+    ]
+
+    if (component_mode == "shared_library") {
+      # Chromium windows multi-dll build enables C++ exceptions and this causes
+      # wtf to generate 4291 warning due to operator new/delete
+      # implementations. Disable the warning for chromium windows multi-dll
+      # build.
+      cflags += [ "/wd4291" ]
+    }
+  }
+}
+
+component("wtf") {
+  sources = gypi_values.wtf_files
+
+  configs += [
+    "//third_party/WebKit/Source:config",
+    "//third_party/WebKit/Source:non_test_config",
+  ]
+
+  defines = [ "WTF_IMPLEMENTATION=1" ]
+
+  public_configs = [
+    ":wtf_config",
+    # TODO(jschuh): crbug.com/167187 fix size_t to int truncations.
+    "//build/config/compiler:no_size_t_to_int_warning",
+    "//third_party/WebKit/Source:features",
+  ]
+
+  public_deps = [
+    "//third_party/icu",
+  ]
+
+  if (is_win) {
+    sources -= [
+      "ThreadingPthreads.cpp",
+    ]
+
+    cflags = [
+      "/wd4068",  # Unknown pragma.
+    ]
+  } else {
+    # Non-Windows.
+    sources -= [
+      "ThreadSpecificWin.cpp",
+      "ThreadingWin.cpp",
+    ]
+  }
+
+  if (is_android) {
+    libs = [ "log" ]
+  }
+  if (is_linux) {
+    libs = [ "dl" ]
+  }
+
+  if (is_mac) {
+    libs = [ "CoreFoundation.framework", "Foundation.framework" ]
+  } else {
+    sources -= [
+      "text/StringImplCF.cpp",
+      "text/AtomicStringCF.cpp",
+      "text/StringCF.cpp",
+    ]
+  }
+}
+
+test("wtf_unittests") {
+  visibility = []  # Allow re-assignment of list.
+  visibility = [ "*" ]
+
+  sources = gypi_values.wtf_unittest_files
+
+  sources += [ "testing/RunAllTests.cpp" ]
+
+  # TODO(jschuh): crbug.com/167187 fix size_t to int truncations.
+  configs += [ "//build/config/compiler:no_size_t_to_int_warning" ]
+
+  if (is_win) {
+    cflags = [ "/wd4068" ]  # Unknown pragma.
+  }
+
+  configs += [ "//third_party/WebKit/Source:config", ]
+
+  deps = [
+    ":test_support",
+    ":wtf",
+    "//base",
+    "//base/allocator",
+    "//base/test:test_support",
+    "//testing/gmock",
+    "//testing/gtest",
+  ]
+}
+
+component("test_support") {
+  output_name = "wtf_test_support"
+  sources = gypi_values.wtf_unittest_helper_files
+  defines = [ "WTF_UNITTEST_HELPERS_IMPLEMENTATION=1" ]
+
+  configs += [
+    ":wtf_config",
+    # TODO(jschuh): crbug.com/167187 fix size_t to int truncations.
+    "//build/config/compiler:no_size_t_to_int_warning",
+    "//third_party/WebKit/Source:config",
+    "//third_party/WebKit/Source:non_test_config",
+  ]
+
+  deps = [
+    ":wtf",
+  ]
+}

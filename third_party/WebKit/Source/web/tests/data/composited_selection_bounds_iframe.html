@@ -1,0 +1,15 @@
+<style>
+    @font-face {
+        font-family: ahem;
+        src: url(Ahem.ttf);
+    }
+    * {
+        font-family: ahem;
+    }
+</style>
+<iframe id="frame" src="composited_selection_bounds_basic.html"></iframe>
+<script>
+    document.getElementById("frame").focus();
+    window.expectedResult = [document, 78, 18, 78, 30, document, 18, 30, 18, 42];
+</script>
+

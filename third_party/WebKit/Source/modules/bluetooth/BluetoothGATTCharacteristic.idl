@@ -1,0 +1,25 @@
+// Copyright 2015 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+// https://webbluetoothchrome.github.io/web-bluetooth/#idl-def-bluetoothgattcharacteristic
+
+// Implement BluetoothGATTCharacteristic interface: https://crbug.com/483344
+
+[
+    GarbageCollected,
+    RuntimeEnabled=WebBluetooth,
+] interface BluetoothGATTCharacteristic {//: CharacteristicEventHandlers {
+    // TODO(ortuno): Add test to make sure service matches the service
+    // used to call getCharacteristic.
+    // readonly    attribute BluetoothGATTService     service;
+    readonly    attribute UUID                   uuid;
+    // readonly    attribute CharacteristicProperties properties;
+    // readonly    attribute ArrayBuffer?             value;
+    // Promise<BluetoothGATTDescriptor>           getDescriptor(BluetoothDescriptorUUID descriptor);
+    // Promise<sequence<BluetoothGATTDescriptor>> getDescriptors(optional BluetoothDescriptorUUID descriptor);
+    [CallWith=ScriptState] Promise<ArrayBuffer> readValue();
+    [CallWith=ScriptState] Promise<void>        writeValue(BufferSource value);
+    // Promise<void>                              startNotifications();
+    // Promise<void>                              stopNotifications();
+};

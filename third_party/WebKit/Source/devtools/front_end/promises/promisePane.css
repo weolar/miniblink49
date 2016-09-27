@@ -1,0 +1,89 @@
+/*
+ * Copyright 2014 The Chromium Authors. All rights reserved.
+ * Use of this source code is governed by a BSD-style license that can be
+ * found in the LICENSE file.
+ */
+
+.promises .data-grid {
+    border: none;
+    flex: 1 1;
+}
+
+.promises > .toolbar {
+    border-bottom: 1px solid #dadada;
+}
+
+.promises .promise-gc {
+    opacity: 0.6;
+}
+
+.promises .data-grid th:hover {
+    background-color: inherit !important;
+}
+
+.promises .data-grid .odd {
+    background-color: #eee;
+}
+
+.promises .data-grid .header-container {
+    height: 30px;
+}
+
+.promises .data-grid .data-container {
+    top: 29px;
+}
+
+.promises .data-grid table.data {
+    background: transparent;
+}
+
+.promises .data-grid th {
+    background-color: white;
+}
+
+.promises .data-grid td {
+    line-height: 17px;
+    height: 24px;
+    vertical-align: middle;
+}
+
+.promises .data-grid th,
+.promises .data-grid td {
+    border-bottom: 1px solid rgb(205, 205, 205);
+    border-left: 1px solid rgb(205, 205, 205);
+}
+
+.promises .status {
+    -webkit-mask-image: url(Images/toolbarButtonGlyphs.png);
+    -webkit-mask-size: 352px 144px;
+    -webkit-mask-position: -294px -26px;
+    background-color: #bbb;
+    height: 20px;
+    width: 20px;
+}
+
+.promises .status.rejected {
+    background-color: rgb(216, 0, 0);
+}
+
+.promises .status.resolved {
+    background-color: #696;
+}
+
+.promises-filters-header {
+    flex: 0 0 23px;
+    overflow: hidden;
+}
+
+.promises-filter-status {
+    flex: 0 0 23px;
+    padding-left: 18px;
+    color: rgb(128, 128, 128);
+    font-style: italic;
+}
+.promises-filter-status .link:hover {
+    color: rgb(15%, 15%, 15%);
+}
+.promises-filter-status .link {
+    color: rgb(33%, 33%, 33%);
+}

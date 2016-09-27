@@ -1,0 +1,8 @@
+include_rules = [
+    "+bindings",
+    "-modules",
+    "+modules/ModulesExport.h",
+    "+modules/mediasession",
+    "+platform",
+]
+

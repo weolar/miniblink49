@@ -1,0 +1,181 @@
+/* https://github.com/bgrins/spectrum */
+:host {
+    width: 226px;
+    height: 240px;
+    -webkit-user-select: none;
+}
+
+.spectrum-color {
+    position: relative;
+    width: 226px;
+    height: 124px;
+    border-radius: 2px 2px 0 0;
+    overflow: hidden;
+}
+
+.spectrum-display-value {
+    -webkit-user-select: text;
+    display: inline-block;
+    padding-left: 2px;
+}
+
+.spectrum-hue {
+    top: 140px;
+}
+
+.spectrum-alpha {
+    top: 159px;
+    background-image: url(Images/checker.png);
+    background-size: 12px 11px;
+}
+
+.spectrum-alpha-background {
+    height: 100%;
+    border-radius: 2px;
+}
+
+.spectrum-hue, .spectrum-alpha {
+    position: absolute;
+    right: 16px;
+    width: 130px;
+    height: 11px;
+    border-radius: 2px;
+}
+
+.spectrum-dragger,
+.spectrum-slider {
+    -webkit-user-select: none;
+}
+
+.spectrum-sat {
+    background-image: linear-gradient(to right, white, rgba(204, 154, 129, 0));
+}
+
+.spectrum-val {
+    background-image: linear-gradient(to top, black, rgba(204, 154, 129, 0));
+}
+
+.spectrum-hue {
+    background: linear-gradient(to left, #ff0000 0%, #ffff00 17%, #00ff00 33%, #00ffff 50%, #0000ff 67%, #ff00ff 83%, #ff0000 100%);
+}
+
+.spectrum-dragger {
+    border-radius: 12px;
+    height: 12px;
+    width: 12px;
+    border: 1px solid white;
+    cursor: pointer;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: black;
+    box-shadow: 0 0 2px 0px rgba(0, 0, 0, 0.24);
+}
+
+.spectrum-slider {
+    position: absolute;
+    top: -1px;
+    cursor: pointer;
+    width: 13px;
+    height: 13px;
+    border-radius: 13px;
+    background-color: rgb(248, 248, 248);
+    box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.37);
+}
+
+.swatch {
+    width: 16px;
+    height: 16px;
+    margin: 0;
+    position: absolute;
+    top: 148px;
+    left: 48px;
+    background-image: url(Images/checker.png);
+    border-radius: 16px;
+}
+
+.swatch-inner {
+    width: 100%;
+    height: 100%;
+    display: inline-block;
+    border-radius: 16px;
+}
+
+.swatch-inner-white {
+    border: 1px solid #ddd;
+}
+
+.spectrum-text {
+    position: absolute;
+    top: 184px;
+    left: 16px;
+}
+
+.spectrum-text-value {
+    display: inline-block;
+    width: 36px;
+    overflow: hidden;
+    text-align: center;
+    border: 1px solid #dadada;
+    border-radius: 2px;
+    margin-right: 6px;
+    line-height: 20px;
+    font-size: 11px;
+    padding: 0;
+    color: #333;
+    white-space: nowrap;
+}
+
+.spectrum-text-label {
+    letter-spacing: 35.5px;
+    margin-top: 8px;
+    display: block;
+    color: #969696;
+    margin-left: 15px;
+    width: 162px;
+}
+
+.spectrum-text-hex > .spectrum-text-value {
+    width: 162px;
+}
+
+.spectrum-text-hex > .spectrum-text-label {
+    letter-spacing: normal;
+    margin-left: 0px;
+    text-align: center;
+}
+
+.spectrum-palette-value {
+    background-color: rgb(65, 75, 217);
+    border-radius: 2px;
+    margin-top: 12px;
+    margin-left: 12px;
+    width: 12px;
+    height: 12px;
+    display: inline-block;
+}
+
+.spectrum-palette-container {
+    position: absolute;
+    top: 244px;
+}
+
+.spectrum-display-switcher {
+    top: 196px;
+    position: absolute;
+    right: 16px;
+    padding: 2px;
+    border-radius: 2px;
+}
+
+.spectrum-display-switcher:hover {
+    background-color: #EEEEEE;
+}
+
+.spectrum-eye-dropper {
+    width: 32px;
+    height: 24px;
+    position: absolute;
+    left: 12px;
+    top: 144px;
+}

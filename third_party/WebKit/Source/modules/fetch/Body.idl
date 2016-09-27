@@ -1,0 +1,26 @@
+// Copyright 2014 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+// http://fetch.spec.whatwg.org/#body
+typedef object JSON;
+[
+    Exposed=ServiceWorker,
+    NoInterfaceObject,
+    ActiveDOMObject,
+    GarbageCollected,
+    TypeChecking=Interface,
+] interface Body {
+    readonly attribute boolean bodyUsed;
+    [CallWith=ScriptState] Promise<ArrayBuffer> arrayBuffer();
+    [CallWith=ScriptState] Promise<Blob> blob();
+    [CallWith=ScriptState] Promise<JSON> json();
+    [CallWith=ScriptState] Promise<USVString> text();
+
+    // body attribute is defined in sub-interfaces, because the IDL processor
+    // cannot deal with attribute inheritance with runtime enabled flag.
+    // [RuntimeEnabled=ExperimentalStream] readonly attribute ReadableByteStream body;
+
+    // Still to be implemented.
+    // [CallWith=ScriptState] Promise<FormData> formData();
+};

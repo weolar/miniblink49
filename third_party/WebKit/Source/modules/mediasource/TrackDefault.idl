@@ -1,0 +1,21 @@
+// Copyright 2014 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+// Per 11 Nov 2014 Editor's Draft
+// https://dvcs.w3.org/hg/html-media/raw-file/tip/media-source/media-source.html#idl-def-TrackDefault
+
+enum TrackDefaultType { "audio", "video", "text" };
+
+[
+    Constructor(TrackDefaultType type, DOMString language, DOMString label, sequence<DOMString> kinds, optional DOMString byteStreamTrackID = ""),
+    RaisesException=Constructor,
+    GarbageCollected,
+    RuntimeEnabled=MediaSourceExperimental,
+] interface TrackDefault {
+    readonly attribute TrackDefaultType type;
+    readonly attribute DOMString byteStreamTrackID;
+    readonly attribute DOMString language;
+    readonly attribute DOMString label;
+    readonly attribute DOMString[] kinds;
+};

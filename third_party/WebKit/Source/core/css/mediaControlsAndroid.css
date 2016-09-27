@@ -1,0 +1,82 @@
+/*
+ * Copyright (C) 2012 Google Inc.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE COMPUTER, INC. ``AS IS'' AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL APPLE COMPUTER, INC. OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
+ * OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+/* Media controls for Chromium on Android */
+
+/* WARNING: This css file can only style <audio> and <video> elements */
+
+audio {
+    height: 35px;
+}
+
+audio::-webkit-media-controls-enclosure {
+    height: 35px;
+}
+
+video::-webkit-media-controls-enclosure {
+    height: 40px;
+}
+
+audio::-webkit-media-controls-panel, video::-webkit-media-controls-panel {
+    height: 35px;
+}
+
+audio::-webkit-media-controls-play-button, video::-webkit-media-controls-play-button {
+    width: 35px;
+    height: 35px;
+    line-height: 35px;
+}
+
+audio::-webkit-media-controls-current-time-display, video::-webkit-media-controls-current-time-display,
+audio::-webkit-media-controls-time-remaining-display, video::-webkit-media-controls-time-remaining-display {
+    height: 35px;
+    line-height: 35px;
+    font-size: 18px;
+}
+
+audio::-webkit-media-controls-volume-slider, video::-webkit-media-controls-volume-slider {
+    display: none;
+}
+
+video::-webkit-media-controls-fullscreen-button {
+    width: 35px;
+    height: 35px;
+    line-height: 35px;
+}
+
+audio::-webkit-media-controls-fullscreen-button {
+    display: none;
+}
+
+audio::-internal-media-controls-cast-button, video::-internal-media-controls-cast-button {
+    width: 35px;
+    height: 35px;
+    line-height: 35px;
+}
+
+video::-webkit-media-controls-toggle-closed-captions-button {
+    width: 35px;
+    height: 35px;
+    line-height: 35px;
+}

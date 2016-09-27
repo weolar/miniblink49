@@ -1,0 +1,15 @@
+// Copyright 2014 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+// https://slightlyoff.github.io/ServiceWorker/spec/service_worker/#clients-interface
+[
+    Exposed=ServiceWorker,
+    GarbageCollected,
+    TypeChecking=Interface,
+    ImplementedAs=ServiceWorkerClients,
+] interface Clients {
+    [CallWith=ScriptState] Promise<sequence<Client>> matchAll(optional ClientQueryOptions options);
+    [RuntimeEnabled=ServiceWorkerClientAttributes, CallWith=ScriptState] Promise<WindowClient?> openWindow(USVString url);
+    [CallWith=ScriptState] Promise<void> claim();
+};

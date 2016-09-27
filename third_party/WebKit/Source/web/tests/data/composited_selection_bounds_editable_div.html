@@ -1,0 +1,21 @@
+<style>
+    @font-face {
+        font-family: ahem;
+        src: url(Ahem.ttf);
+    }
+    * {
+        font-family: ahem;
+    }
+</style>
+<div contentEditable="true">
+    The quick brown fox jumped over the lazy dog.
+</div>
+<script>
+    var textNode = document.getElementById("text");
+    textNode.focus();
+
+    var expectEditable = true;
+    var expectEmptyTextFormControl = false;
+    window.expectedResult = [document, 11, 11, 11, 25, document, 11, 11, 11, 25, expectEditable, expectEmptyTextFormControl];
+</script>
+

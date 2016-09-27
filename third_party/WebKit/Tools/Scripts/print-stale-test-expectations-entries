@@ -1,0 +1,105 @@
+#!/usr/bin/python
+#
+# Copyright (C) 2013 Google Inc. All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are
+# met:
+#
+#     * Redistributions of source code must retain the above copyright
+# notice, this list of conditions and the following disclaimer.
+#     * Redistributions in binary form must reproduce the above
+# copyright notice, this list of conditions and the following disclaimer
+# in the documentation and/or other materials provided with the
+# distribution.
+#     * Neither the name of Google Inc. nor the names of its
+# contributors may be used to endorse or promote products derived from
+# this software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+# "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+# LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+# A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+# OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+# SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+# LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+# DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+# THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+# OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+"""Prints lists of bug numbers / tests whose bugs haven't been modified recently."""
+
+import datetime
+import json
+import optparse
+import re
+import sys
+import time
+import urllib2
+
+from webkitpy.common.system.filesystem import FileSystem
+from webkitpy.common.webkit_finder import WebKitFinder
+
+google_code_url = 'https://www.googleapis.com/projecthosting/v2/projects/chromium/issues/%s?key=AIzaSyDgCqT1Dt5AZWLHo4QJjyMHaCjhnFacGF0'
+crbug_prefix = 'crbug.com/'
+
+class StaleTestPrinter(object):
+    def __init__(self, options):
+        self._days = options.days
+
+    def is_stale(self, bug_number):
+        url = google_code_url % bug_number
+        response = urllib2.urlopen(url)
+        parsed = json.loads(response.read())
+        last_updated = parsed['updated']
+        parsed_time = datetime.datetime.strptime(last_updated.split(".")[0]+"UTC", "%Y-%m-%dT%H:%M:%S%Z")
+        time_delta = datetime.datetime.now() - parsed_time
+        return time_delta.days > 90
+
+    def print_stale_tests(self):
+        finder = WebKitFinder(FileSystem())
+        path_to_expectations = finder.path_from_webkit_base('LayoutTests', 'TestExpectations')
+        expectations = open(path_to_expectations)
+
+        for line in expectations:
+            comment_index = line.find("#")
+            if comment_index == -1:
+                comment_index = len(line)
+
+            remaining_string = re.sub(r"\s+", " ", line[:comment_index].strip())
+            if len(remaining_string) == 0:
+                continue
+
+            is_bug_stale = True
+            parts = line.split(' ')
+            for part in parts:
+                if part.startswith(crbug_prefix):
+                    bug_number = part.split('/')[1]
+                    try:
+                        if not self.is_stale(bug_number):
+                            is_bug_stale = False
+                            break;
+                    except urllib2.HTTPError as error:
+                        if error.code == 404:
+                            print '%s%s does not exist.' % (crbug_prefix, bug_number)
+                        elif error.code == 403:
+                            print '%s%s is not accessible. Not able to tell if it\'s stale.' % (crbug_prefix, bug_number)
+                            is_bug_stale = False
+                        else:
+                            raise error
+
+            if is_bug_stale:
+                print line.strip()
+
+def main(argv):
+    option_parser = optparse.OptionParser()
+    option_parser.add_option('--days', type='int', default=90, help='Number of days to consider a bug stale.'),
+    options, args = option_parser.parse_args(argv)
+
+    printer = StaleTestPrinter(options)
+    printer.print_stale_tests()
+    return 0
+
+if __name__ == '__main__':
+    sys.exit(main(sys.argv[1:]))

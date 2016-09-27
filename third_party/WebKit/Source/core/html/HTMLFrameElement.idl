@@ -1,0 +1,39 @@
+/*
+ * Copyright (C) 2006, 2007, 2010 Apple Inc. All rights reserved.
+ * Copyright (C) 2006 Samuel Weinig <sam.weinig@gmail.com>
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public License
+ * along with this library; see the file COPYING.LIB.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
+ */
+
+// https://html.spec.whatwg.org/#htmlframeelement
+
+interface HTMLFrameElement : HTMLElement {
+    [Reflect] attribute DOMString name;
+    [Reflect] attribute DOMString scrolling;
+    [Reflect, URL] attribute DOMString src;
+    [Reflect] attribute DOMString frameBorder;
+    [Reflect, URL] attribute DOMString longDesc;
+    [Reflect] attribute boolean noResize;
+    [CheckSecurity=Node] readonly attribute Document? contentDocument;
+    readonly attribute Window? contentWindow;
+
+    [Reflect, TreatNullAs=EmptyString] attribute DOMString marginHeight;
+    [Reflect, TreatNullAs=EmptyString] attribute DOMString marginWidth;
+
+    // FIXME: The spec defines getSVGDocument() for HTMLIFrameElement,
+    // HTMLEmbedElement and HTMLObjectElement, but not here.
+    [Measure, CheckSecurity=Node, RaisesException] Document? getSVGDocument();
+};

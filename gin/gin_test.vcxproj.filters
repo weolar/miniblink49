@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{5763B17F-46DA-9ED7-179F-9C9F273B791C}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="test\file.cc">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClInclude Include="test\file.h">
+      <Filter>test</Filter>
+    </ClInclude>
+    <ClCompile Include="test\file_runner.cc">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClInclude Include="test\file_runner.h">
+      <Filter>test</Filter>
+    </ClInclude>
+    <ClCompile Include="test\gc.cc">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClInclude Include="test\gc.h">
+      <Filter>test</Filter>
+    </ClInclude>
+    <ClCompile Include="test\gtest.cc">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClInclude Include="test\gtest.h">
+      <Filter>test</Filter>
+    </ClInclude>
+    <ClCompile Include="test\v8_test.cc">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClInclude Include="test\v8_test.h">
+      <Filter>test</Filter>
+    </ClInclude>
+    <None Include="gin.gyp"/>
+  </ItemGroup>
+</Project>

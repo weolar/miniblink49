@@ -1,0 +1,108 @@
+/*
+ * Copyright (c) 2014 The Chromium Authors. All rights reserved.
+ * Use of this source code is governed by a BSD-style license that can be
+ * found in the LICENSE file.
+ */
+
+.request-headers-view {
+    -webkit-user-select: text;
+    overflow: auto;
+}
+
+.request-headers-view .outline-disclosure {
+    -webkit-padding-start: 4px;
+    flex-grow: 1;
+    overflow-y: auto;
+}
+
+.request-headers-view .outline-disclosure > .parent {
+    -webkit-user-select: none;
+    font-weight: bold;
+    color: #616161;
+    margin-top: -1px;
+    height: 20px;
+    border-top: solid 1px #e0e0e0;
+    display: flex;
+    align-items: center;
+}
+
+.request-headers-view .outline-disclosure li.parent::before {
+    position: static;
+    width: 9px;
+    height: 9px;
+    -webkit-mask-position: -4px -98px;
+    background-image: none;
+    opacity: 1;
+}
+
+.request-headers-view .outline-disclosure li.parent.expanded::before {
+    -webkit-mask-position: -20px -98px;
+}
+
+.request-headers-view .properties-tree li.parent {
+    margin-left: 10px;
+}
+
+.request-headers-view .outline-disclosure .children li {
+    white-space: nowrap;
+}
+
+.request-headers-view .outline-disclosure .caution {
+    margin-left: 4px;
+    display: inline-block;
+    font-weight: bold;
+}
+
+.request-headers-view .outline-disclosure li.expanded .header-count {
+    display: none;
+}
+
+.request-headers-view .outline-disclosure li .header-toggle {
+    display: none;
+}
+
+.request-headers-view .outline-disclosure li .status-from-cache {
+    color: gray;
+}
+
+.request-headers-view .outline-disclosure li.expanded .header-toggle {
+    display: inline;
+    margin-left: 30px;
+    font-weight: normal;
+    color: rgb(45%, 45%, 45%);
+}
+
+.request-headers-view .outline-disclosure li .header-toggle:hover {
+    color: rgb(20%, 20%, 45%);
+    cursor: pointer;
+}
+
+.request-headers-view .outline-disclosure .header-name {
+    color: rgb(33%, 33%, 33%);
+    display: inline-block;
+    margin-right: 0.5em;
+    font-weight: bold;
+    vertical-align: top;
+    white-space: pre-wrap;
+}
+
+.request-headers-view .outline-disclosure .header-value {
+    display: inline;
+    margin-right: 1em;
+    white-space: pre-wrap;
+    word-break: break-all;
+    margin-top: 1px;
+}
+
+.resource-status-image {
+    margin-top: -2px;
+    margin-right: 3px;
+}
+
+.request-headers-view .filter-input {
+    outline: none !important;
+    border: none;
+    border-bottom: solid 1px #ccc;
+    flex: 0 0 19px;
+    padding: 0 4px;
+}

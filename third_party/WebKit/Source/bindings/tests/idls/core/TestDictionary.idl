@@ -1,0 +1,39 @@
+// Copyright 2014 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+dictionary TestDictionary {
+    boolean booleanMember;
+    long longMember = 1;
+    DOMString stringMember;
+    TestInterface testInterfaceMember;
+    double? doubleOrNullMember = null;
+    double restrictedDoubleMember = 3.14;
+    unrestricted double unrestrictedDoubleMember = 3.14;
+    DOMString? stringOrNullMember = "default string value";
+    TestInterface? testInterfaceOrNullMember;
+    TestInterfaceGarbageCollected testInterfaceGarbageCollectedMember;
+    TestInterfaceGarbageCollected? testInterfaceGarbageCollectedOrNullMember;
+    TestInterfaceWillBeGarbageCollected testInterfaceWillBeGarbageCollectedMember;
+    TestInterfaceWillBeGarbageCollected? testInterfaceWillBeGarbageCollectedOrNullMember;
+    DOMString[] stringArrayMember;
+    sequence<DOMString> stringSequenceMember = [];
+    sequence<TestInterface> testInterfaceSequenceMember = [];
+    sequence<TestInterfaceGarbageCollected> testInterfaceGarbageCollectedSequenceMember = [];
+    sequence<TestInterfaceWillBeGarbageCollected> testInterfaceWillBeGarbageCollectedSequenceMember = [];
+    TestEnum enumMember = "foo";
+    sequence<TestEnum> enumSequenceMember;
+    Element? elementOrNullMember;
+    object objectMember;
+    object? objectOrNullMember;
+    [ImplementedAs=createMember] boolean create;
+    [DeprecateAs=CreateMember, ImplementedAs=createMember] boolean deprecatedCreateMember;
+    (double or DOMString) doubleOrStringMember = 3.14;
+    sequence<(double or DOMString)> doubleOrStringSequenceMember;
+    (double or DOMString) otherDoubleOrStringMember = "default string value";
+    (TestInterface2 or Uint8Array) testInterface2OrUint8ArrayMember;
+    sequence<InternalDictionary> internalDictionarySequenceMember;
+    Uint8Array uint8ArrayMember;
+    EventTarget eventTargetMember;
+    any anyMember = null;
+};

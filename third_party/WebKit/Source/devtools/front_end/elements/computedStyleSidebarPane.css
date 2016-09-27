@@ -1,0 +1,59 @@
+/*
+ * Copyright (c) 2015 The Chromium Authors. All rights reserved.
+ * Use of this source code is governed by a BSD-style license that can be
+ * found in the LICENSE file.
+ */
+
+.computed-properties {
+    padding: 2px 2px 4px 4px;
+    -webkit-user-select: text;
+}
+
+.computed-style-property-inherited {
+    opacity: 0.5;
+}
+
+.computed-style-trace-button {
+    display: none;
+    position: absolute;
+    border: 0 transparent none;
+    background-color: transparent;
+    height: 25px;
+    width: 26px;
+    transform: scale(0.75);
+    left: -10px;
+    top: -6px;
+    opacity: 0.5;
+}
+
+.computed-style-property:hover .computed-style-trace-button {
+    display: inline-block;
+}
+
+.computed-style-trace-button:hover {
+    opacity: 1;
+}
+
+.computed-style-trace-button > .glyph {
+    -webkit-mask-image: url(Images/toolbarButtonGlyphs.png);
+    -webkit-mask-size: 352px 144px;
+    -webkit-mask-position: -224px -24px;
+    background-color: rgba(0, 0, 0, 0.75);
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin: 0 -1px;
+}
+
+@media (-webkit-min-device-pixel-ratio: 1.5) {
+.computed-style-trace-button > .glyph {
+    -webkit-mask-image: url(Images/toolbarButtonGlyphs_2x.png);
+}
+} /* media */
+
+.computed-style-property {
+    position: relative;
+    padding-left: 14px;
+}

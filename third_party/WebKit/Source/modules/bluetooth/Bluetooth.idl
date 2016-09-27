@@ -1,0 +1,15 @@
+// Copyright 2014 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+// https://webbluetoothchrome.github.io/web-bluetooth/#idl-def-bluetooth
+
+[
+    GarbageCollected,
+    NoInterfaceObject,
+    RuntimeEnabled=WebBluetooth,
+] interface Bluetooth {
+    [CallWith=ScriptState, RaisesException] Promise<BluetoothDevice> requestDevice (
+        RequestDeviceOptions options
+        );
+};

@@ -1,0 +1,64 @@
+/*
+ * Copyright (C) 2013 Google Inc. All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1.  Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ * 2.  Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+[
+    GarbageCollected,
+] interface TypeConversions {
+    attribute long testLong;
+    [EnforceRange, ImplementedAs=testLong] attribute long testEnforceRangeLong;
+    attribute unsigned long testUnsignedLong;
+    [EnforceRange, ImplementedAs=testUnsignedLong] attribute unsigned long testEnforceRangeUnsignedLong;
+
+    attribute long long testLongLong;
+    [EnforceRange, ImplementedAs=testLongLong] attribute long long testEnforceRangeLongLong;
+    attribute unsigned long long testUnsignedLongLong;
+    [EnforceRange, ImplementedAs=testUnsignedLongLong] attribute unsigned long long testEnforceRangeUnsignedLongLong;
+
+    attribute byte testByte;
+    [EnforceRange, ImplementedAs=testByte] attribute byte testEnforceRangeByte;
+    attribute octet testOctet;
+    [EnforceRange, ImplementedAs=testOctet] attribute octet testEnforceRangeOctet;
+
+    attribute short testShort;
+    [EnforceRange, ImplementedAs=testShort] attribute short testEnforceRangeShort;
+    attribute unsigned short testUnsignedShort;
+    [EnforceRange, ImplementedAs=testUnsignedShort] attribute unsigned short testEnforceRangeUnsignedShort;
+
+    attribute ByteString testByteString;
+    [ImplementedAs=testByteString, TreatReturnedNullStringAs=Null] attribute ByteString testByteStringTreatReturnedNullStringAsNullAttribute;
+    [ImplementedAs=testByteString, TreatReturnedNullStringAs=Undefined] attribute ByteString testByteStringTreatReturnedNullStringAsUndefinedAttribute;
+    [ImplementedAs=testByteString] ByteString? getTestByteStringTreatReturnedNullStringAsNullMethod();
+    [ImplementedAs=testByteString, TreatReturnedNullStringAs=Undefined] ByteString getTestByteStringTreatReturnedNullStringAsUndefinedMethod();
+    void setTestByteString(ByteString byteString);
+    [ImplementedAs=setTestByteString] void setTestByteStringDefaultNull(optional ByteString byteString = null);
+
+    attribute USVString testUSVString;
+    [ImplementedAs=testUSVString, TreatReturnedNullStringAs=Null] attribute USVString testUSVStringTreatReturnedNullStringAsNullAttribute;
+    [ImplementedAs=testUSVString, TreatReturnedNullStringAs=Undefined] attribute USVString testUSVStringTreatReturnedNullStringAsUndefinedAttribute;
+    [ImplementedAs=testUSVString] USVString? getTestUSVStringTreatReturnedNullStringAsNullMethod();
+    [ImplementedAs=testUSVString, TreatReturnedNullStringAs=Undefined] USVString getTestUSVStringTreatReturnedNullStringAsUndefinedMethod();
+    void setTestUSVString(USVString usvString);
+    [ImplementedAs=setTestUSVString] void setTestUSVStringDefaultNull(optional USVString usvString = null);
+};

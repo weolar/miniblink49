@@ -1,0 +1,23 @@
+# Copyright 2014 The Chromium Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+# FIXME: factor out bindings_core http://crbug.com/358074
+import("//third_party/WebKit/Source/bindings/bindings.gni")
+import("//third_party/WebKit/Source/core/core.gni")
+
+bindings_core_output_dir = "$bindings_output_dir/core"
+
+# Global constructors
+core_global_constructors_original_interfaces = [
+  "Window",
+  "SharedWorkerGlobalScope",
+  "DedicatedWorkerGlobalScope",
+]
+
+core_global_constructors_generated_idl_files = []
+foreach (interface, core_global_constructors_original_interfaces) {
+  core_global_constructors_generated_idl_files += [
+    "$blink_core_output_dir/${interface}CoreConstructors.idl"
+  ]
+}

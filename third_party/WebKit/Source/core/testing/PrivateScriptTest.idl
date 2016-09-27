@@ -1,0 +1,47 @@
+// Copyright 2014 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+[
+    GarbageCollected,
+    TypeChecking=Interface,
+] interface PrivateScriptTest {
+    [ImplementedInPrivateScript] void doNothing();
+    [ImplementedInPrivateScript] short return123();
+    [ImplementedInPrivateScript] short echoInteger(short value);
+    [ImplementedInPrivateScript] DOMString echoString(DOMString value);
+    [ImplementedInPrivateScript] Node echoNode(Node value);
+    [ImplementedInPrivateScript] short addInteger(short value1, short value2);
+    [ImplementedInPrivateScript] DOMString addString(DOMString value1, DOMString value2);
+    [ImplementedInPrivateScript] void setIntegerToPrototype(short value);
+    [ImplementedInPrivateScript] short getIntegerFromPrototype();
+    [ImplementedInPrivateScript] void setIntegerToDocument(Document document, short value);
+    [ImplementedInPrivateScript] short getIntegerFromDocument(Document document);
+    [ImplementedInPrivateScript] Node createElement(Document document);
+    [ImplementedInPrivateScript] void appendChild(Node node1, Node node2);
+    [ImplementedInPrivateScript] Node firstChild(Node node);
+    [ImplementedInPrivateScript] Node nextSibling(Node node);
+    [ImplementedInPrivateScript] DOMString innerHTML(Node node);
+    [ImplementedInPrivateScript] void setInnerHTML(Node node, DOMString string);
+    [ImplementedInPrivateScript] void addClickListener(Node node);
+    [ImplementedInPrivateScript] void clickNode(Document document, Node node);
+    [ImplementedInPrivateScript] readonly attribute short readonlyShortAttribute;
+    [ImplementedInPrivateScript] attribute short shortAttribute;
+    [ImplementedInPrivateScript] attribute DOMString stringAttribute;
+    [ImplementedInPrivateScript] attribute Node nodeAttribute;
+    [ImplementedInPrivateScript] attribute Node? nodeAttributeThrowsIndexSizeError;
+    [ImplementedInPrivateScript] void voidMethodThrowsDOMSyntaxError();
+    [ImplementedInPrivateScript] void voidMethodThrowsError();
+    [ImplementedInPrivateScript] void voidMethodThrowsTypeError();
+    [ImplementedInPrivateScript] void voidMethodThrowsRangeError();
+    [ImplementedInPrivateScript] void voidMethodThrowsSyntaxError();
+    [ImplementedInPrivateScript] void voidMethodThrowsReferenceError();
+    [ImplementedInPrivateScript] void voidMethodThrowsStackOverflowError();
+    [ImplementedInPrivateScript, OnlyExposedToPrivateScript] short addIntegerForPrivateScriptOnly(short value1, short value2);
+    [ImplementedInPrivateScript, OnlyExposedToPrivateScript] attribute DOMString stringAttributeForPrivateScriptOnly;
+    [ImplementedInPrivateScript] short addIntegerImplementedInCPP(short value1, short value2);
+    [OnlyExposedToPrivateScript] short addIntegerImplementedInCPPForPrivateScriptOnly(short value1, short value2);
+    [ImplementedInPrivateScript] attribute DOMString stringAttributeImplementedInCPP;
+    [OnlyExposedToPrivateScript] attribute DOMString stringAttributeImplementedInCPPForPrivateScriptOnly;
+    [ImplementedInPrivateScript] void dispatchDocumentOnload(Document document);
+};

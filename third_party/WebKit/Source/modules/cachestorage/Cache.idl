@@ -1,0 +1,23 @@
+// Copyright 2014 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+// See https://slightlyoff.github.io/ServiceWorker/spec/service_worker/index.html#cache
+
+[
+    GarbageCollected,
+    Exposed=(Window,Worker),
+    TypeChecking=Interface,
+] interface Cache {
+    [CallWith=ScriptState, RaisesException] Promise<Response> match(RequestInfo request, optional CacheQueryOptions options);
+
+    // FIXME: Implement matchAll(): http://crbug.com/428363
+    // FIXME: First argument of matchAll() should be optional: http://crbug.com/425459
+    // [CallWith=ScriptState, RaisesException] Promise<sequence<Response>> matchAll(RequestInfo request, optional CacheQueryOptions options);
+
+    [CallWith=ScriptState, RaisesException] Promise<void> add(RequestInfo request);
+    [RuntimeEnabled=ServiceWorkerCacheAddAll, CallWith=ScriptState, RaisesException] Promise<void> addAll(sequence<RequestInfo> requests);
+    [CallWith=ScriptState, RaisesException] Promise<void> put(RequestInfo request, Response response);
+    [CallWith=ScriptState, ImplementedAs=deleteFunction, RaisesException] Promise<boolean> delete(RequestInfo request, optional CacheQueryOptions options);
+    [CallWith=ScriptState, RaisesException] Promise<sequence<Response>> keys(optional RequestInfo request, optional CacheQueryOptions options);
+};

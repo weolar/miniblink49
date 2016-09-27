@@ -1,0 +1,43 @@
+#!/bin/bash
+# Copyright 2015 The Chromium Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+# Runs Chrome / content_shell and attaches to the first renderer process in gdb.
+
+RENDERER_PID_RE='Renderer \(([0-9]+)\) paused waiting for debugger'
+TARGET_FLAGS="--no-sandbox --renderer-startup-dialog"
+DEBUGGER="gdb -q"
+TARGET=$1
+shift
+
+if [ -z "$TARGET" ]; then
+  echo "usage: $(basename $0) <path-to-content-shell> [more-args...]"
+  exit
+fi
+
+OUTPUT=$(mktemp --tmpdir $(basename $0).XXXXX)
+$TARGET $TARGET_FLAGS "$@" 2>&1 | tee $OUTPUT &
+BROWSER_PID=$!
+
+wait_renderer_pid() {
+  for i in {1..100}; do
+    browser_running || return
+    RENDERER_PID=$(renderer_pid)
+    [ -n "$RENDERER_PID" ] && return
+    sleep 0.2
+  done
+}
+
+browser_running() { ps -p $BROWSER_PID > /dev/null; }
+renderer_pid() { [[ "$(cat $OUTPUT)" =~ $RENDERER_PID_RE ]] && echo ${BASH_REMATCH[1]}; }
+
+wait_renderer_pid
+if [ -n "$RENDERER_PID" ]; then
+  # print yellow message
+  echo -e "\n\e[1;33mDebugging renderer, use 'signal SIGUSR1' to run.\e[0m\n"
+  $DEBUGGER -p $RENDERER_PID
+fi
+
+wait
+rm $OUTPUT

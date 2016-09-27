@@ -1,0 +1,26 @@
+option optimize_for = LITE_RUNTIME;
+
+message ShaderInfoProto {
+  optional int32 type = 1;
+  optional int32 size = 2;
+  optional string name = 3;
+  optional string key = 4;
+  optional int32 precision = 5;
+  optional int32 static_use = 6;  
+}
+
+message ShaderProto {
+  optional bytes sha = 1;
+  repeated ShaderInfoProto attribs = 2;
+  repeated ShaderInfoProto uniforms = 3;
+  repeated ShaderInfoProto varyings = 4;
+}
+
+message GpuProgramProto {
+  optional bytes sha = 1;
+  optional int32 format = 2;
+  optional bytes program = 3;
+
+  optional ShaderProto vertex_shader = 4;
+  optional ShaderProto fragment_shader = 5;
+}

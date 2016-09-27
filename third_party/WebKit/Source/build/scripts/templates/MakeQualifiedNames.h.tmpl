@@ -1,0 +1,48 @@
+{% from "macros.tmpl" import license %}
+{{ license() }}
+
+#ifndef {{namespace}}Names_h
+#define {{namespace}}Names_h
+
+{% if export == 'CORE_EXPORT' %}
+#include "core/CoreExport.h"
+{% endif %}
+#include "core/dom/QualifiedName.h"
+#include "wtf/PassOwnPtr.h"
+
+namespace blink {
+
+class {{namespace}}QualifiedName : public QualifiedName { };
+
+namespace {{namespace}}Names {
+
+{% set symbol_export = '%s ' % export if export else '' %}
+// Namespace
+{{symbol_export}}extern const WTF::AtomicString& {{namespace_prefix}}NamespaceURI;
+
+// Tags
+{% for tag in tags|sort %}
+{{symbol_export}}extern const blink::{{namespace}}QualifiedName& {{tag|symbol}}Tag;
+{% endfor %}
+
+// Attributes
+{% for attr in attrs|sort %}
+{{symbol_export}}extern const blink::QualifiedName& {{attr|symbol}}Attr;
+{% endfor %}
+
+{% if tags %}
+const unsigned {{namespace}}TagsCount = {{tags|count}};
+{{symbol_export}}PassOwnPtr<const {{namespace}}QualifiedName*[]> get{{namespace}}Tags();
+{% endif %}
+
+const unsigned {{namespace}}AttrsCount = {{attrs|count}};
+{% if namespace != 'HTML' %}
+PassOwnPtr<const QualifiedName*[]> get{{namespace}}Attrs();
+{% endif %}
+
+void init();
+
+} // {{namespace}}Names
+} // namespace blink
+
+#endif

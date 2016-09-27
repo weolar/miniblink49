@@ -1,0 +1,17 @@
+// Copyright 2015 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+// https://mkruisselbrink.github.io/navigator-connect/#idl-def-ServicePort
+[
+    Exposed=(Window,Worker),
+    RuntimeEnabled=NavigatorConnect,
+    GarbageCollected,
+]  interface ServicePort {
+    readonly attribute DOMString targetURL;
+    readonly attribute DOMString name;
+    [CallWith=ScriptState] readonly attribute any data;
+    [PostMessage, RaisesException, CallWith=ExecutionContext]
+    void postMessage(SerializedScriptValue message, optional sequence<Transferable> transfer);
+    void close();
+};

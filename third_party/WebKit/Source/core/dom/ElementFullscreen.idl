@@ -1,0 +1,18 @@
+// Copyright 2014 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+// https://fullscreen.spec.whatwg.org/#api
+
+partial interface Element {
+    [RuntimeEnabled=FullscreenUnprefixed] void requestFullscreen();
+
+    // Mozilla version
+    [LogActivity, LogAllWorlds, MeasureAs=PrefixedElementRequestFullScreen, ImplementedAs=webkitRequestFullscreen] void webkitRequestFullScreen();
+
+    // W3C version
+    [LogActivity, LogAllWorlds, MeasureAs=PrefixedElementRequestFullscreen] void webkitRequestFullscreen();
+
+    attribute EventHandler onwebkitfullscreenchange;
+    attribute EventHandler onwebkitfullscreenerror;
+};

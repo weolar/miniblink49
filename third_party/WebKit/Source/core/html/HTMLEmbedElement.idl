@@ -1,0 +1,45 @@
+/*
+ * Copyright (C) 2006, 2007, 2010 Apple Inc. All rights reserved.
+ * Copyright (C) 2006 Samuel Weinig <sam.weinig@gmail.com>
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public License
+ * along with this library; see the file COPYING.LIB.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301, USA.
+ */
+
+// https://html.spec.whatwg.org/#the-embed-element
+
+// TODO(yukishiino): HTMLEmbedElement should not have [OverrideBuiltins].
+[
+    Custom=LegacyCallAsFunction,
+    OverrideBuiltins,
+] interface HTMLEmbedElement : HTMLElement {
+    [Reflect, URL] attribute DOMString src;
+    [Reflect] attribute DOMString type;
+    [Reflect] attribute DOMString width;
+    [Reflect] attribute DOMString height;
+    [CheckSecurity=Node, RaisesException] Document? getSVGDocument();
+    // FIXME: The spec has a legacycaller any (any... arguments); crbug.com/465009
+
+    // obsolete members
+    // https://html.spec.whatwg.org/#HTMLEmbedElement-partial
+    [Reflect] attribute DOMString align;
+    [Reflect] attribute DOMString name;
+
+    // FIXME: None of these getters and setters are in the spec.
+    [Custom, NotEnumerable] getter boolean (unsigned long index);
+    [Custom] setter boolean (unsigned long index, Node value);
+    [Custom, NotEnumerable] getter Node (DOMString name);
+    [Custom] setter Node (DOMString name, Node value);
+};

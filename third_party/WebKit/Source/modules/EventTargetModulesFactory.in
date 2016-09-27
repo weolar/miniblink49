@@ -1,0 +1,42 @@
+namespace="EventTarget"
+suffix="Modules"
+
+modules/battery/BatteryManager
+modules/compositorworker/CompositorWorker
+modules/compositorworker/CompositorWorkerGlobalScope
+modules/encryptedmedia/MediaKeySession
+modules/filesystem/FileWriter
+modules/indexeddb/IDBDatabase
+modules/indexeddb/IDBOpenDBRequest
+modules/indexeddb/IDBRequest
+modules/indexeddb/IDBTransaction
+modules/mediasource/MediaSource
+modules/mediasource/SourceBuffer
+modules/mediasource/SourceBufferList
+modules/mediastream/MediaStream
+modules/mediastream/MediaStreamTrack
+modules/mediastream/RTCDTMFSender
+modules/mediastream/RTCDataChannel
+modules/mediastream/RTCPeerConnection
+modules/navigatorconnect/ServicePortCollection
+modules/netinfo/NetworkInformation
+modules/notifications/Notification
+modules/permissions/PermissionStatus
+modules/presentation/Presentation
+modules/presentation/PresentationAvailability
+modules/presentation/PresentationSession
+modules/screen_orientation/ScreenOrientation
+modules/serviceworkers/ServiceWorker
+modules/serviceworkers/ServiceWorkerContainer
+modules/serviceworkers/ServiceWorkerGlobalScope
+modules/serviceworkers/ServiceWorkerRegistration
+modules/serviceworkers/StashedPortCollection
+modules/speech/SpeechRecognition
+modules/speech/SpeechSynthesis
+modules/speech/SpeechSynthesisUtterance
+modules/webaudio/AudioContext Conditional=WEB_AUDIO
+modules/webaudio/AudioNode Conditional=WEB_AUDIO
+modules/webmidi/MIDIAccess
+modules/webmidi/MIDIInput
+modules/webmidi/MIDIPort
+modules/websockets/WebSocket ImplementedAs=DOMWebSocket

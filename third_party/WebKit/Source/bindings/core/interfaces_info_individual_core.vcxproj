@@ -1,0 +1,807 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{77F0F937-5882-53B8-B103-83C72C8E1470}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>interfaces_info_individual_core</RootNamespace>
+    <IgnoreWarnCompileDuplicatedFilename>true</IgnoreWarnCompileDuplicatedFilename>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props"/>
+  <PropertyGroup Label="Configuration">
+    <CharacterSet>Unicode</CharacterSet>
+    <ConfigurationType>Utility</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Label="Locals">
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props"/>
+  <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.props"/>
+  <ImportGroup Label="ExtensionSettings"/>
+  <ImportGroup Label="PropertySheets">
+    <Import Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props"/>
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros"/>
+  <PropertyGroup>
+    <ExecutablePath>$(ExecutablePath);$(MSBuildProjectDirectory)\.\bin\;$(MSBuildProjectDirectory)\.\bin\</ExecutablePath>
+    <OutDir>..\..\..\..\..\..\..\out\$(Configuration)\</OutDir>
+    <IntDir>$(OutDir)obj\$(ProjectName)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</LinkIncremental>
+    <TargetName>$(ProjectName)</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(OutDir)gen;..\..\..\..\..\third_party\wtl\include;C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\um;C:\Program Files (x86)\Windows Kits\8.1\Include\winrt;$(VSInstallDir)\VC\atlmfc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/MP /bigobj %(AdditionalOptions)</AdditionalOptions>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <CompileAsWinRT>false</CompileAsWinRT>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4091;4127;4351;4355;4503;4611;4100;4121;4244;4481;4505;4510;4512;4610;4838;4996;4456;4457;4458;4459;4702;4800;4251;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <ExceptionHandling>false</ExceptionHandling>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <MinimalRebuild>false</MinimalRebuild>
+      <Optimization>Disabled</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PreprocessorDefinitions>_DEBUG;V8_DEPRECATION_WARNINGS;_WIN32_WINNT=0x0603;WINVER=0x0603;WIN32;_WINDOWS;NOMINMAX;PSAPI_VERSION=1;_CRT_RAND_S;CERT_CHAIN_PARA_HAS_EXTRA_FIELDS;WIN32_LEAN_AND_MEAN;_ATL_NO_OPENGL;_SECURE_ATL;_HAS_EXCEPTIONS=0;_WINSOCK_DEPRECATED_NO_WARNINGS;CHROMIUM_BUILD;CR_CLANG_REVISION=239674-1;COMPONENT_BUILD;USE_AURA=1;USE_ASH=1;USE_DEFAULT_RENDER_THEME=1;USE_LIBJPEG_TURBO=1;ENABLE_ONE_CLICK_SIGNIN;ENABLE_PRE_SYNC_BACKUP;ENABLE_REMOTING=1;ENABLE_WEBRTC=1;ENABLE_MEDIA_ROUTER=1;ENABLE_PEPPER_CDMS;ENABLE_CONFIGURATION_POLICY;ENABLE_NOTIFICATIONS;ENABLE_HIDPI=1;ENABLE_TOPCHROME_MD=1;DONT_EMBED_BUILD_METADATA;NO_TCMALLOC;__STD_C;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;NTDDI_VERSION=0x06030000;_USING_V110_SDK71_;ENABLE_TASK_MANAGER=1;ENABLE_EXTENSIONS=1;ENABLE_PLUGIN_INSTALLATION=1;ENABLE_PLUGINS=1;ENABLE_SESSION_SERVICE=1;ENABLE_THEMES=1;ENABLE_AUTOFILL_DIALOG=1;ENABLE_BACKGROUND=1;ENABLE_GOOGLE_NOW=1;CLD_VERSION=2;ENABLE_PRINTING=1;ENABLE_BASIC_PRINTING=1;ENABLE_PRINT_PREVIEW=1;ENABLE_SPELLCHECK=1;ENABLE_CAPTIVE_PORTAL_DETECTION=1;ENABLE_APP_LIST=1;ENABLE_SETTINGS_APP=1;ENABLE_SUPERVISED_USERS=1;ENABLE_MDNS=1;ENABLE_SERVICE_DISCOVERY=1;ENABLE_WIFI_BOOTSTRAPPING=1;V8_USE_EXTERNAL_STARTUP_DATA;FULL_SAFE_BROWSING;SAFE_BROWSING_CSD;SAFE_BROWSING_DB_LOCAL;SAFE_BROWSING_SERVICE;USE_LIBPCI=1;USE_OPENSSL=1;_CRT_NONSTDC_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;DYNAMIC_ANNOTATIONS_ENABLED=1;WTF_USE_DYNAMIC_ANNOTATIONS=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <WarningLevel>Level3</WarningLevel>
+    </ClCompile>
+    <Lib>
+      <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.1/Lib/win8/um/x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>/ignore:4221 %(AdditionalOptions)</AdditionalOptions>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Lib>
+    <Link>
+      <AdditionalDependencies>wininet.lib;dnsapi.lib;version.lib;msimg32.lib;ws2_32.lib;usp10.lib;psapi.lib;dbghelp.lib;winmm.lib;shlwapi.lib;kernel32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;user32.lib;uuid.lib;odbc32.lib;odbccp32.lib;delayimp.lib;credui.lib;netapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.1/Lib/win8/um/x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>/maxilksize:0x7ff00000 /safeseh /dynamicbase /ignore:4199 /ignore:4221 /nxcompat /largeaddressaware %(AdditionalOptions)</AdditionalOptions>
+      <DelayLoadDLLs>dbghelp.dll;dwmapi.dll;shell32.dll;uxtheme.dll;%(DelayLoadDLLs)</DelayLoadDLLs>
+      <FixedBaseAddress>false</FixedBaseAddress>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ImportLibrary>$(OutDir)lib\$(TargetName).lib</ImportLibrary>
+      <MapFileName>$(OutDir)$(TargetName).map</MapFileName>
+      <MinimumRequiredVersion>5.01</MinimumRequiredVersion>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <SubSystem>Console</SubSystem>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\um;C:\Program Files (x86)\Windows Kits\8.1\Include\winrt;$(VSInstallDir)\VC\atlmfc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DllDataFileName>%(Filename).dlldata.c</DllDataFileName>
+      <GenerateStublessProxies>true</GenerateStublessProxies>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <OutputDirectory>$(IntDir)</OutputDirectory>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+    </Midl>
+    <ResourceCompile>
+      <AdditionalIncludeDirectories>../../../../..;$(OutDir)gen;$(OutDir)gen;..\..\..\..\..\third_party\wtl\include;C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\um;C:\Program Files (x86)\Windows Kits\8.1\Include\winrt;$(VSInstallDir)\VC\atlmfc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Culture>0x0409</Culture>
+      <PreprocessorDefinitions>_DEBUG;V8_DEPRECATION_WARNINGS;_WIN32_WINNT=0x0603;WINVER=0x0603;WIN32;_WINDOWS;NOMINMAX;PSAPI_VERSION=1;_CRT_RAND_S;CERT_CHAIN_PARA_HAS_EXTRA_FIELDS;WIN32_LEAN_AND_MEAN;_ATL_NO_OPENGL;_SECURE_ATL;_HAS_EXCEPTIONS=0;_WINSOCK_DEPRECATED_NO_WARNINGS;CHROMIUM_BUILD;CR_CLANG_REVISION=239674-1;COMPONENT_BUILD;USE_AURA=1;USE_ASH=1;USE_DEFAULT_RENDER_THEME=1;USE_LIBJPEG_TURBO=1;ENABLE_ONE_CLICK_SIGNIN;ENABLE_PRE_SYNC_BACKUP;ENABLE_REMOTING=1;ENABLE_WEBRTC=1;ENABLE_MEDIA_ROUTER=1;ENABLE_PEPPER_CDMS;ENABLE_CONFIGURATION_POLICY;ENABLE_NOTIFICATIONS;ENABLE_HIDPI=1;ENABLE_TOPCHROME_MD=1;DONT_EMBED_BUILD_METADATA;NO_TCMALLOC;__STD_C;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;NTDDI_VERSION=0x06030000;_USING_V110_SDK71_;ENABLE_TASK_MANAGER=1;ENABLE_EXTENSIONS=1;ENABLE_PLUGIN_INSTALLATION=1;ENABLE_PLUGINS=1;ENABLE_SESSION_SERVICE=1;ENABLE_THEMES=1;ENABLE_AUTOFILL_DIALOG=1;ENABLE_BACKGROUND=1;ENABLE_GOOGLE_NOW=1;CLD_VERSION=2;ENABLE_PRINTING=1;ENABLE_BASIC_PRINTING=1;ENABLE_PRINT_PREVIEW=1;ENABLE_SPELLCHECK=1;ENABLE_CAPTIVE_PORTAL_DETECTION=1;ENABLE_APP_LIST=1;ENABLE_SETTINGS_APP=1;ENABLE_SUPERVISED_USERS=1;ENABLE_MDNS=1;ENABLE_SERVICE_DISCOVERY=1;ENABLE_WIFI_BOOTSTRAPPING=1;V8_USE_EXTERNAL_STARTUP_DATA;FULL_SAFE_BROWSING;SAFE_BROWSING_CSD;SAFE_BROWSING_DB_LOCAL;SAFE_BROWSING_SERVICE;USE_LIBPCI=1;USE_OPENSSL=1;_CRT_NONSTDC_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;DYNAMIC_ANNOTATIONS_ENABLED=1;WTF_USE_DYNAMIC_ANNOTATIONS=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(OutDir)gen;..\..\..\..\..\third_party\wtl\include;C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\um;C:\Program Files (x86)\Windows Kits\8.1\Include\winrt;$(VSInstallDir)\VC\atlmfc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/MP /bigobj %(AdditionalOptions)</AdditionalOptions>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <CompileAsWinRT>false</CompileAsWinRT>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4091;4127;4351;4355;4503;4611;4100;4121;4244;4481;4505;4510;4512;4610;4838;4996;4456;4457;4458;4459;4702;4800;4251;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <ExceptionHandling>false</ExceptionHandling>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <MinimalRebuild>false</MinimalRebuild>
+      <Optimization>Disabled</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PreprocessorDefinitions>_DEBUG;V8_DEPRECATION_WARNINGS;_WIN32_WINNT=0x0603;WINVER=0x0603;WIN32;_WINDOWS;NOMINMAX;PSAPI_VERSION=1;_CRT_RAND_S;CERT_CHAIN_PARA_HAS_EXTRA_FIELDS;WIN32_LEAN_AND_MEAN;_ATL_NO_OPENGL;_SECURE_ATL;_HAS_EXCEPTIONS=0;_WINSOCK_DEPRECATED_NO_WARNINGS;CHROMIUM_BUILD;CR_CLANG_REVISION=239674-1;COMPONENT_BUILD;USE_AURA=1;USE_ASH=1;USE_DEFAULT_RENDER_THEME=1;USE_LIBJPEG_TURBO=1;ENABLE_ONE_CLICK_SIGNIN;ENABLE_PRE_SYNC_BACKUP;ENABLE_REMOTING=1;ENABLE_WEBRTC=1;ENABLE_MEDIA_ROUTER=1;ENABLE_PEPPER_CDMS;ENABLE_CONFIGURATION_POLICY;ENABLE_NOTIFICATIONS;ENABLE_HIDPI=1;ENABLE_TOPCHROME_MD=1;DONT_EMBED_BUILD_METADATA;NO_TCMALLOC;__STD_C;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;NTDDI_VERSION=0x06030000;_USING_V110_SDK71_;ENABLE_TASK_MANAGER=1;ENABLE_EXTENSIONS=1;ENABLE_PLUGIN_INSTALLATION=1;ENABLE_PLUGINS=1;ENABLE_SESSION_SERVICE=1;ENABLE_THEMES=1;ENABLE_AUTOFILL_DIALOG=1;ENABLE_BACKGROUND=1;ENABLE_GOOGLE_NOW=1;CLD_VERSION=2;ENABLE_PRINTING=1;ENABLE_BASIC_PRINTING=1;ENABLE_PRINT_PREVIEW=1;ENABLE_SPELLCHECK=1;ENABLE_CAPTIVE_PORTAL_DETECTION=1;ENABLE_APP_LIST=1;ENABLE_SETTINGS_APP=1;ENABLE_SUPERVISED_USERS=1;ENABLE_MDNS=1;ENABLE_SERVICE_DISCOVERY=1;ENABLE_WIFI_BOOTSTRAPPING=1;V8_USE_EXTERNAL_STARTUP_DATA;FULL_SAFE_BROWSING;SAFE_BROWSING_CSD;SAFE_BROWSING_DB_LOCAL;SAFE_BROWSING_SERVICE;USE_LIBPCI=1;USE_OPENSSL=1;_CRT_NONSTDC_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;DYNAMIC_ANNOTATIONS_ENABLED=1;WTF_USE_DYNAMIC_ANNOTATIONS=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <WarningLevel>Level3</WarningLevel>
+    </ClCompile>
+    <Lib>
+      <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.1/Lib/win8/um/x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>/ignore:4221 %(AdditionalOptions)</AdditionalOptions>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Lib>
+    <Link>
+      <AdditionalDependencies>wininet.lib;dnsapi.lib;version.lib;msimg32.lib;ws2_32.lib;usp10.lib;psapi.lib;dbghelp.lib;winmm.lib;shlwapi.lib;kernel32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;user32.lib;uuid.lib;odbc32.lib;odbccp32.lib;delayimp.lib;credui.lib;netapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.1/Lib/win8/um/x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>/maxilksize:0x7ff00000 /dynamicbase /ignore:4199 /ignore:4221 /nxcompat %(AdditionalOptions)</AdditionalOptions>
+      <DelayLoadDLLs>dbghelp.dll;dwmapi.dll;shell32.dll;uxtheme.dll;%(DelayLoadDLLs)</DelayLoadDLLs>
+      <FixedBaseAddress>false</FixedBaseAddress>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>olepro32.lib</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>$(OutDir)lib\$(TargetName).lib</ImportLibrary>
+      <MapFileName>$(OutDir)$(TargetName).map</MapFileName>
+      <MinimumRequiredVersion>5.02</MinimumRequiredVersion>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <SubSystem>Console</SubSystem>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\um;C:\Program Files (x86)\Windows Kits\8.1\Include\winrt;$(VSInstallDir)\VC\atlmfc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DllDataFileName>%(Filename).dlldata.c</DllDataFileName>
+      <GenerateStublessProxies>true</GenerateStublessProxies>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <OutputDirectory>$(IntDir)</OutputDirectory>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+    </Midl>
+    <ResourceCompile>
+      <AdditionalIncludeDirectories>../../../../..;$(OutDir)gen;$(OutDir)gen;..\..\..\..\..\third_party\wtl\include;C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\um;C:\Program Files (x86)\Windows Kits\8.1\Include\winrt;$(VSInstallDir)\VC\atlmfc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Culture>0x0409</Culture>
+      <PreprocessorDefinitions>_DEBUG;V8_DEPRECATION_WARNINGS;_WIN32_WINNT=0x0603;WINVER=0x0603;WIN32;_WINDOWS;NOMINMAX;PSAPI_VERSION=1;_CRT_RAND_S;CERT_CHAIN_PARA_HAS_EXTRA_FIELDS;WIN32_LEAN_AND_MEAN;_ATL_NO_OPENGL;_SECURE_ATL;_HAS_EXCEPTIONS=0;_WINSOCK_DEPRECATED_NO_WARNINGS;CHROMIUM_BUILD;CR_CLANG_REVISION=239674-1;COMPONENT_BUILD;USE_AURA=1;USE_ASH=1;USE_DEFAULT_RENDER_THEME=1;USE_LIBJPEG_TURBO=1;ENABLE_ONE_CLICK_SIGNIN;ENABLE_PRE_SYNC_BACKUP;ENABLE_REMOTING=1;ENABLE_WEBRTC=1;ENABLE_MEDIA_ROUTER=1;ENABLE_PEPPER_CDMS;ENABLE_CONFIGURATION_POLICY;ENABLE_NOTIFICATIONS;ENABLE_HIDPI=1;ENABLE_TOPCHROME_MD=1;DONT_EMBED_BUILD_METADATA;NO_TCMALLOC;__STD_C;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;NTDDI_VERSION=0x06030000;_USING_V110_SDK71_;ENABLE_TASK_MANAGER=1;ENABLE_EXTENSIONS=1;ENABLE_PLUGIN_INSTALLATION=1;ENABLE_PLUGINS=1;ENABLE_SESSION_SERVICE=1;ENABLE_THEMES=1;ENABLE_AUTOFILL_DIALOG=1;ENABLE_BACKGROUND=1;ENABLE_GOOGLE_NOW=1;CLD_VERSION=2;ENABLE_PRINTING=1;ENABLE_BASIC_PRINTING=1;ENABLE_PRINT_PREVIEW=1;ENABLE_SPELLCHECK=1;ENABLE_CAPTIVE_PORTAL_DETECTION=1;ENABLE_APP_LIST=1;ENABLE_SETTINGS_APP=1;ENABLE_SUPERVISED_USERS=1;ENABLE_MDNS=1;ENABLE_SERVICE_DISCOVERY=1;ENABLE_WIFI_BOOTSTRAPPING=1;V8_USE_EXTERNAL_STARTUP_DATA;FULL_SAFE_BROWSING;SAFE_BROWSING_CSD;SAFE_BROWSING_DB_LOCAL;SAFE_BROWSING_SERVICE;USE_LIBPCI=1;USE_OPENSSL=1;_CRT_NONSTDC_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;DYNAMIC_ANNOTATIONS_ENABLED=1;WTF_USE_DYNAMIC_ANNOTATIONS=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(OutDir)gen;..\..\..\..\..\third_party\wtl\include;C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\um;C:\Program Files (x86)\Windows Kits\8.1\Include\winrt;$(VSInstallDir)\VC\atlmfc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/MP /bigobj /d2Zi+ /Zc:inline /Oy- /Gw %(AdditionalOptions)</AdditionalOptions>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <CompileAsWinRT>false</CompileAsWinRT>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4091;4127;4351;4355;4503;4611;4100;4121;4244;4481;4505;4510;4512;4610;4838;4996;4456;4457;4458;4459;4702;4800;4251;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <ExceptionHandling>false</ExceptionHandling>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <MinimalRebuild>false</MinimalRebuild>
+      <OmitFramePointers>false</OmitFramePointers>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PreprocessorDefinitions>V8_DEPRECATION_WARNINGS;_WIN32_WINNT=0x0603;WINVER=0x0603;WIN32;_WINDOWS;NOMINMAX;PSAPI_VERSION=1;_CRT_RAND_S;CERT_CHAIN_PARA_HAS_EXTRA_FIELDS;WIN32_LEAN_AND_MEAN;_ATL_NO_OPENGL;_SECURE_ATL;_HAS_EXCEPTIONS=0;_WINSOCK_DEPRECATED_NO_WARNINGS;CHROMIUM_BUILD;CR_CLANG_REVISION=239674-1;COMPONENT_BUILD;USE_AURA=1;USE_ASH=1;USE_DEFAULT_RENDER_THEME=1;USE_LIBJPEG_TURBO=1;ENABLE_ONE_CLICK_SIGNIN;ENABLE_PRE_SYNC_BACKUP;ENABLE_REMOTING=1;ENABLE_WEBRTC=1;ENABLE_MEDIA_ROUTER=1;ENABLE_PEPPER_CDMS;ENABLE_CONFIGURATION_POLICY;ENABLE_NOTIFICATIONS;ENABLE_HIDPI=1;ENABLE_TOPCHROME_MD=1;DONT_EMBED_BUILD_METADATA;NO_TCMALLOC;__STD_C;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;NTDDI_VERSION=0x06030000;_USING_V110_SDK71_;ENABLE_TASK_MANAGER=1;ENABLE_EXTENSIONS=1;ENABLE_PLUGIN_INSTALLATION=1;ENABLE_PLUGINS=1;ENABLE_SESSION_SERVICE=1;ENABLE_THEMES=1;ENABLE_AUTOFILL_DIALOG=1;ENABLE_BACKGROUND=1;ENABLE_GOOGLE_NOW=1;CLD_VERSION=2;ENABLE_PRINTING=1;ENABLE_BASIC_PRINTING=1;ENABLE_PRINT_PREVIEW=1;ENABLE_SPELLCHECK=1;ENABLE_CAPTIVE_PORTAL_DETECTION=1;ENABLE_APP_LIST=1;ENABLE_SETTINGS_APP=1;ENABLE_SUPERVISED_USERS=1;ENABLE_MDNS=1;ENABLE_SERVICE_DISCOVERY=1;ENABLE_WIFI_BOOTSTRAPPING=1;V8_USE_EXTERNAL_STARTUP_DATA;FULL_SAFE_BROWSING;SAFE_BROWSING_CSD;SAFE_BROWSING_DB_LOCAL;SAFE_BROWSING_SERVICE;USE_LIBPCI=1;USE_OPENSSL=1;_CRT_NONSTDC_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;NDEBUG;NVALGRIND;DYNAMIC_ANNOTATIONS_ENABLED=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <StringPooling>true</StringPooling>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <WarningLevel>Level3</WarningLevel>
+    </ClCompile>
+    <Lib>
+      <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.1/Lib/win8/um/x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>/ignore:4221 %(AdditionalOptions)</AdditionalOptions>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Lib>
+    <Link>
+      <AdditionalDependencies>wininet.lib;dnsapi.lib;version.lib;msimg32.lib;ws2_32.lib;usp10.lib;psapi.lib;dbghelp.lib;winmm.lib;shlwapi.lib;kernel32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;user32.lib;uuid.lib;odbc32.lib;odbccp32.lib;delayimp.lib;credui.lib;netapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.1/Lib/win8/um/x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>/maxilksize:0x7ff00000 /safeseh /dynamicbase /ignore:4199 /ignore:4221 /nxcompat /largeaddressaware %(AdditionalOptions)</AdditionalOptions>
+      <DelayLoadDLLs>dbghelp.dll;dwmapi.dll;shell32.dll;uxtheme.dll;%(DelayLoadDLLs)</DelayLoadDLLs>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <FixedBaseAddress>false</FixedBaseAddress>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ImportLibrary>$(OutDir)lib\$(TargetName).lib</ImportLibrary>
+      <MapFileName>$(OutDir)$(TargetName).map</MapFileName>
+      <MinimumRequiredVersion>5.01</MinimumRequiredVersion>
+      <OptimizeReferences>true</OptimizeReferences>
+      <Profile>true</Profile>
+      <SubSystem>Console</SubSystem>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\um;C:\Program Files (x86)\Windows Kits\8.1\Include\winrt;$(VSInstallDir)\VC\atlmfc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DllDataFileName>%(Filename).dlldata.c</DllDataFileName>
+      <GenerateStublessProxies>true</GenerateStublessProxies>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <OutputDirectory>$(IntDir)</OutputDirectory>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+    </Midl>
+    <ResourceCompile>
+      <AdditionalIncludeDirectories>../../../../..;$(OutDir)gen;$(OutDir)gen;..\..\..\..\..\third_party\wtl\include;C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\um;C:\Program Files (x86)\Windows Kits\8.1\Include\winrt;$(VSInstallDir)\VC\atlmfc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Culture>0x0409</Culture>
+      <PreprocessorDefinitions>V8_DEPRECATION_WARNINGS;_WIN32_WINNT=0x0603;WINVER=0x0603;WIN32;_WINDOWS;NOMINMAX;PSAPI_VERSION=1;_CRT_RAND_S;CERT_CHAIN_PARA_HAS_EXTRA_FIELDS;WIN32_LEAN_AND_MEAN;_ATL_NO_OPENGL;_SECURE_ATL;_HAS_EXCEPTIONS=0;_WINSOCK_DEPRECATED_NO_WARNINGS;CHROMIUM_BUILD;CR_CLANG_REVISION=239674-1;COMPONENT_BUILD;USE_AURA=1;USE_ASH=1;USE_DEFAULT_RENDER_THEME=1;USE_LIBJPEG_TURBO=1;ENABLE_ONE_CLICK_SIGNIN;ENABLE_PRE_SYNC_BACKUP;ENABLE_REMOTING=1;ENABLE_WEBRTC=1;ENABLE_MEDIA_ROUTER=1;ENABLE_PEPPER_CDMS;ENABLE_CONFIGURATION_POLICY;ENABLE_NOTIFICATIONS;ENABLE_HIDPI=1;ENABLE_TOPCHROME_MD=1;DONT_EMBED_BUILD_METADATA;NO_TCMALLOC;__STD_C;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;NTDDI_VERSION=0x06030000;_USING_V110_SDK71_;ENABLE_TASK_MANAGER=1;ENABLE_EXTENSIONS=1;ENABLE_PLUGIN_INSTALLATION=1;ENABLE_PLUGINS=1;ENABLE_SESSION_SERVICE=1;ENABLE_THEMES=1;ENABLE_AUTOFILL_DIALOG=1;ENABLE_BACKGROUND=1;ENABLE_GOOGLE_NOW=1;CLD_VERSION=2;ENABLE_PRINTING=1;ENABLE_BASIC_PRINTING=1;ENABLE_PRINT_PREVIEW=1;ENABLE_SPELLCHECK=1;ENABLE_CAPTIVE_PORTAL_DETECTION=1;ENABLE_APP_LIST=1;ENABLE_SETTINGS_APP=1;ENABLE_SUPERVISED_USERS=1;ENABLE_MDNS=1;ENABLE_SERVICE_DISCOVERY=1;ENABLE_WIFI_BOOTSTRAPPING=1;V8_USE_EXTERNAL_STARTUP_DATA;FULL_SAFE_BROWSING;SAFE_BROWSING_CSD;SAFE_BROWSING_DB_LOCAL;SAFE_BROWSING_SERVICE;USE_LIBPCI=1;USE_OPENSSL=1;_CRT_NONSTDC_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;NDEBUG;NVALGRIND;DYNAMIC_ANNOTATIONS_ENABLED=0;%(PreprocessorDefinitions);%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(OutDir)gen;..\..\..\..\..\third_party\wtl\include;C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\um;C:\Program Files (x86)\Windows Kits\8.1\Include\winrt;$(VSInstallDir)\VC\atlmfc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/MP /bigobj /d2Zi+ /Zc:inline /Oy- /Gw %(AdditionalOptions)</AdditionalOptions>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <CompileAsWinRT>false</CompileAsWinRT>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4091;4127;4351;4355;4503;4611;4100;4121;4244;4481;4505;4510;4512;4610;4838;4996;4456;4457;4458;4459;4702;4800;4251;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <ExceptionHandling>false</ExceptionHandling>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <MinimalRebuild>false</MinimalRebuild>
+      <OmitFramePointers>false</OmitFramePointers>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PreprocessorDefinitions>V8_DEPRECATION_WARNINGS;_WIN32_WINNT=0x0603;WINVER=0x0603;WIN32;_WINDOWS;NOMINMAX;PSAPI_VERSION=1;_CRT_RAND_S;CERT_CHAIN_PARA_HAS_EXTRA_FIELDS;WIN32_LEAN_AND_MEAN;_ATL_NO_OPENGL;_SECURE_ATL;_HAS_EXCEPTIONS=0;_WINSOCK_DEPRECATED_NO_WARNINGS;CHROMIUM_BUILD;CR_CLANG_REVISION=239674-1;COMPONENT_BUILD;USE_AURA=1;USE_ASH=1;USE_DEFAULT_RENDER_THEME=1;USE_LIBJPEG_TURBO=1;ENABLE_ONE_CLICK_SIGNIN;ENABLE_PRE_SYNC_BACKUP;ENABLE_REMOTING=1;ENABLE_WEBRTC=1;ENABLE_MEDIA_ROUTER=1;ENABLE_PEPPER_CDMS;ENABLE_CONFIGURATION_POLICY;ENABLE_NOTIFICATIONS;ENABLE_HIDPI=1;ENABLE_TOPCHROME_MD=1;DONT_EMBED_BUILD_METADATA;NO_TCMALLOC;__STD_C;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;NTDDI_VERSION=0x06030000;_USING_V110_SDK71_;ENABLE_TASK_MANAGER=1;ENABLE_EXTENSIONS=1;ENABLE_PLUGIN_INSTALLATION=1;ENABLE_PLUGINS=1;ENABLE_SESSION_SERVICE=1;ENABLE_THEMES=1;ENABLE_AUTOFILL_DIALOG=1;ENABLE_BACKGROUND=1;ENABLE_GOOGLE_NOW=1;CLD_VERSION=2;ENABLE_PRINTING=1;ENABLE_BASIC_PRINTING=1;ENABLE_PRINT_PREVIEW=1;ENABLE_SPELLCHECK=1;ENABLE_CAPTIVE_PORTAL_DETECTION=1;ENABLE_APP_LIST=1;ENABLE_SETTINGS_APP=1;ENABLE_SUPERVISED_USERS=1;ENABLE_MDNS=1;ENABLE_SERVICE_DISCOVERY=1;ENABLE_WIFI_BOOTSTRAPPING=1;V8_USE_EXTERNAL_STARTUP_DATA;FULL_SAFE_BROWSING;SAFE_BROWSING_CSD;SAFE_BROWSING_DB_LOCAL;SAFE_BROWSING_SERVICE;USE_LIBPCI=1;USE_OPENSSL=1;_CRT_NONSTDC_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;NDEBUG;NVALGRIND;DYNAMIC_ANNOTATIONS_ENABLED=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <StringPooling>true</StringPooling>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <WarningLevel>Level3</WarningLevel>
+    </ClCompile>
+    <Lib>
+      <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.1/Lib/win8/um/x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>/ignore:4221 %(AdditionalOptions)</AdditionalOptions>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Lib>
+    <Link>
+      <AdditionalDependencies>wininet.lib;dnsapi.lib;version.lib;msimg32.lib;ws2_32.lib;usp10.lib;psapi.lib;dbghelp.lib;winmm.lib;shlwapi.lib;kernel32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;user32.lib;uuid.lib;odbc32.lib;odbccp32.lib;delayimp.lib;credui.lib;netapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:/Program Files (x86)/Windows Kits/8.1/Lib/win8/um/x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>/maxilksize:0x7ff00000 /dynamicbase /ignore:4199 /ignore:4221 /nxcompat %(AdditionalOptions)</AdditionalOptions>
+      <DelayLoadDLLs>dbghelp.dll;dwmapi.dll;shell32.dll;uxtheme.dll;%(DelayLoadDLLs)</DelayLoadDLLs>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <FixedBaseAddress>false</FixedBaseAddress>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>olepro32.lib</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>$(OutDir)lib\$(TargetName).lib</ImportLibrary>
+      <MapFileName>$(OutDir)$(TargetName).map</MapFileName>
+      <MinimumRequiredVersion>5.02</MinimumRequiredVersion>
+      <OptimizeReferences>true</OptimizeReferences>
+      <Profile>true</Profile>
+      <SubSystem>Console</SubSystem>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\um;C:\Program Files (x86)\Windows Kits\8.1\Include\winrt;$(VSInstallDir)\VC\atlmfc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DllDataFileName>%(Filename).dlldata.c</DllDataFileName>
+      <GenerateStublessProxies>true</GenerateStublessProxies>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <OutputDirectory>$(IntDir)</OutputDirectory>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+    </Midl>
+    <ResourceCompile>
+      <AdditionalIncludeDirectories>../../../../..;$(OutDir)gen;$(OutDir)gen;..\..\..\..\..\third_party\wtl\include;C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\um;C:\Program Files (x86)\Windows Kits\8.1\Include\winrt;$(VSInstallDir)\VC\atlmfc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Culture>0x0409</Culture>
+      <PreprocessorDefinitions>V8_DEPRECATION_WARNINGS;_WIN32_WINNT=0x0603;WINVER=0x0603;WIN32;_WINDOWS;NOMINMAX;PSAPI_VERSION=1;_CRT_RAND_S;CERT_CHAIN_PARA_HAS_EXTRA_FIELDS;WIN32_LEAN_AND_MEAN;_ATL_NO_OPENGL;_SECURE_ATL;_HAS_EXCEPTIONS=0;_WINSOCK_DEPRECATED_NO_WARNINGS;CHROMIUM_BUILD;CR_CLANG_REVISION=239674-1;COMPONENT_BUILD;USE_AURA=1;USE_ASH=1;USE_DEFAULT_RENDER_THEME=1;USE_LIBJPEG_TURBO=1;ENABLE_ONE_CLICK_SIGNIN;ENABLE_PRE_SYNC_BACKUP;ENABLE_REMOTING=1;ENABLE_WEBRTC=1;ENABLE_MEDIA_ROUTER=1;ENABLE_PEPPER_CDMS;ENABLE_CONFIGURATION_POLICY;ENABLE_NOTIFICATIONS;ENABLE_HIDPI=1;ENABLE_TOPCHROME_MD=1;DONT_EMBED_BUILD_METADATA;NO_TCMALLOC;__STD_C;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;NTDDI_VERSION=0x06030000;_USING_V110_SDK71_;ENABLE_TASK_MANAGER=1;ENABLE_EXTENSIONS=1;ENABLE_PLUGIN_INSTALLATION=1;ENABLE_PLUGINS=1;ENABLE_SESSION_SERVICE=1;ENABLE_THEMES=1;ENABLE_AUTOFILL_DIALOG=1;ENABLE_BACKGROUND=1;ENABLE_GOOGLE_NOW=1;CLD_VERSION=2;ENABLE_PRINTING=1;ENABLE_BASIC_PRINTING=1;ENABLE_PRINT_PREVIEW=1;ENABLE_SPELLCHECK=1;ENABLE_CAPTIVE_PORTAL_DETECTION=1;ENABLE_APP_LIST=1;ENABLE_SETTINGS_APP=1;ENABLE_SUPERVISED_USERS=1;ENABLE_MDNS=1;ENABLE_SERVICE_DISCOVERY=1;ENABLE_WIFI_BOOTSTRAPPING=1;V8_USE_EXTERNAL_STARTUP_DATA;FULL_SAFE_BROWSING;SAFE_BROWSING_CSD;SAFE_BROWSING_DB_LOCAL;SAFE_BROWSING_SERVICE;USE_LIBPCI=1;USE_OPENSSL=1;_CRT_NONSTDC_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;NDEBUG;NVALGRIND;DYNAMIC_ANNOTATIONS_ENABLED=0;%(PreprocessorDefinitions);%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <None Include="generated.gyp"/>
+    <None Include="..\scripts\compute_interfaces_info_individual.py"/>
+    <None Include="..\scripts\utilities.py"/>
+    <None Include="interfaces_info_individual_core_static_idl_files_list.tmp"/>
+  </ItemGroup>
+  <ItemGroup>
+    <Midl Include="..\..\core\animation\KeyframeEffectOptions.idl"/>
+    <Midl Include="..\..\core\animation\ComputedTimingProperties.idl"/>
+    <Midl Include="..\..\core\css\FontFaceDescriptors.idl"/>
+    <Midl Include="..\..\core\css\FontFaceSetLoadEventInit.idl"/>
+    <Midl Include="..\..\core\css\MediaQueryListEventInit.idl"/>
+    <Midl Include="..\..\core\dom\DOMPointInit.idl"/>
+    <Midl Include="..\..\core\dom\ElementRegistrationOptions.idl"/>
+    <Midl Include="..\..\core\dom\MutationObserverInit.idl"/>
+    <Midl Include="..\..\core\dom\shadow\ShadowRootInit.idl"/>
+    <Midl Include="..\..\core\events\AnimationEventInit.idl"/>
+    <Midl Include="..\..\core\events\AnimationPlayerEventInit.idl"/>
+    <Midl Include="..\..\core\events\ApplicationCacheErrorEventInit.idl"/>
+    <Midl Include="..\..\core\events\AutocompleteErrorEventInit.idl"/>
+    <Midl Include="..\..\core\events\CompositionEventInit.idl"/>
+    <Midl Include="..\..\core\events\CustomEventInit.idl"/>
+    <Midl Include="..\..\core\events\ErrorEventInit.idl"/>
+    <Midl Include="..\..\core\events\EventInit.idl"/>
+    <Midl Include="..\..\core\events\EventModifierInit.idl"/>
+    <Midl Include="..\..\core\events\FocusEventInit.idl"/>
+    <Midl Include="..\..\core\events\HashChangeEventInit.idl"/>
+    <Midl Include="..\..\core\events\KeyboardEventInit.idl"/>
+    <Midl Include="..\..\core\events\MessageEventInit.idl"/>
+    <Midl Include="..\..\core\events\MouseEventInit.idl"/>
+    <Midl Include="..\..\core\events\PageTransitionEventInit.idl"/>
+    <Midl Include="..\..\core\events\PointerEventInit.idl"/>
+    <Midl Include="..\..\core\events\PopStateEventInit.idl"/>
+    <Midl Include="..\..\core\events\ProgressEventInit.idl"/>
+    <Midl Include="..\..\core\events\PromiseRejectionEventInit.idl"/>
+    <Midl Include="..\..\core\events\RelatedEventInit.idl"/>
+    <Midl Include="..\..\core\events\SecurityPolicyViolationEventInit.idl"/>
+    <Midl Include="..\..\core\events\TransitionEventInit.idl"/>
+    <Midl Include="..\..\core\events\UIEventInit.idl"/>
+    <Midl Include="..\..\core\events\WheelEventInit.idl"/>
+    <Midl Include="..\..\core\fileapi\BlobPropertyBag.idl"/>
+    <Midl Include="..\..\core\fileapi\FilePropertyBag.idl"/>
+    <Midl Include="..\..\core\frame\StateOptions.idl"/>
+    <Midl Include="..\..\core\frame\ScrollOptions.idl"/>
+    <Midl Include="..\..\core\frame\ScrollToOptions.idl"/>
+    <Midl Include="..\..\core\html\MediaKeyEventInit.idl"/>
+    <Midl Include="..\..\core\html\canvas\CanvasContextCreationAttributes.idl"/>
+    <Midl Include="..\..\core\html\track\TrackEventInit.idl"/>
+    <Midl Include="..\..\core\input\InputDeviceInit.idl"/>
+    <Midl Include="..\..\core\page\EventSourceInit.idl"/>
+    <Midl Include="..\..\core\animation\KeyframeEffect.idl"/>
+    <Midl Include="..\..\core\animation\EffectModel.idl"/>
+    <Midl Include="..\..\core\animation\AnimationEffectReadOnly.idl"/>
+    <Midl Include="..\..\core\animation\AnimationEffectTiming.idl"/>
+    <Midl Include="..\..\core\animation\Animation.idl"/>
+    <Midl Include="..\..\core\animation\AnimationTimeline.idl"/>
+    <Midl Include="..\..\core\clipboard\DataTransfer.idl"/>
+    <Midl Include="..\..\core\clipboard\DataTransferItemList.idl"/>
+    <Midl Include="..\..\core\css\CSS.idl"/>
+    <Midl Include="..\..\core\css\CSSFontFaceRule.idl"/>
+    <Midl Include="..\..\core\css\CSSGroupingRule.idl"/>
+    <Midl Include="..\..\core\css\CSSImportRule.idl"/>
+    <Midl Include="..\..\core\css\CSSKeyframeRule.idl"/>
+    <Midl Include="..\..\core\css\CSSKeyframesRule.idl"/>
+    <Midl Include="..\..\core\css\CSSMediaRule.idl"/>
+    <Midl Include="..\..\core\css\CSSPageRule.idl"/>
+    <Midl Include="..\..\core\css\CSSRule.idl"/>
+    <Midl Include="..\..\core\css\CSSRuleList.idl"/>
+    <Midl Include="..\..\core\css\CSSStyleDeclaration.idl"/>
+    <Midl Include="..\..\core\css\CSSStyleRule.idl"/>
+    <Midl Include="..\..\core\css\CSSStyleSheet.idl"/>
+    <Midl Include="..\..\core\css\CSSSupportsRule.idl"/>
+    <Midl Include="..\..\core\css\CSSViewportRule.idl"/>
+    <Midl Include="..\..\core\css\FontFace.idl"/>
+    <Midl Include="..\..\core\css\FontFaceSet.idl"/>
+    <Midl Include="..\..\core\css\FontFaceSetForEachCallback.idl"/>
+    <Midl Include="..\..\core\css\FontFaceSetLoadEvent.idl"/>
+    <Midl Include="..\..\core\css\MediaList.idl"/>
+    <Midl Include="..\..\core\css\MediaQueryList.idl"/>
+    <Midl Include="..\..\core\css\MediaQueryListEvent.idl"/>
+    <Midl Include="..\..\core\css\StyleMedia.idl"/>
+    <Midl Include="..\..\core\css\StyleSheet.idl"/>
+    <Midl Include="..\..\core\css\StyleSheetList.idl"/>
+    <Midl Include="..\..\core\css\WebKitCSSMatrix.idl"/>
+    <Midl Include="..\..\core\dom\ArrayBuffer.idl"/>
+    <Midl Include="..\..\core\dom\ArrayBufferView.idl"/>
+    <Midl Include="..\..\core\dom\Attr.idl"/>
+    <Midl Include="..\..\core\dom\CDATASection.idl"/>
+    <Midl Include="..\..\core\dom\CharacterData.idl"/>
+    <Midl Include="..\..\core\dom\ClientRect.idl"/>
+    <Midl Include="..\..\core\dom\ClientRectList.idl"/>
+    <Midl Include="..\..\core\dom\Comment.idl"/>
+    <Midl Include="..\..\core\dom\CompositorProxy.idl"/>
+    <Midl Include="..\..\core\dom\DOMError.idl"/>
+    <Midl Include="..\..\core\dom\DOMException.idl"/>
+    <Midl Include="..\..\core\dom\DOMImplementation.idl"/>
+    <Midl Include="..\..\core\dom\DOMMatrix.idl"/>
+    <Midl Include="..\..\core\dom\DOMMatrixReadOnly.idl"/>
+    <Midl Include="..\..\core\dom\DOMPoint.idl"/>
+    <Midl Include="..\..\core\dom\DOMPointReadOnly.idl"/>
+    <Midl Include="..\..\core\dom\DOMRect.idl"/>
+    <Midl Include="..\..\core\dom\DOMRectReadOnly.idl"/>
+    <Midl Include="..\..\core\dom\DOMSettableTokenList.idl"/>
+    <Midl Include="..\..\core\dom\DOMStringList.idl"/>
+    <Midl Include="..\..\core\dom\DOMStringMap.idl"/>
+    <Midl Include="..\..\core\dom\DOMTokenList.idl"/>
+    <Midl Include="..\..\core\dom\DataView.idl"/>
+    <Midl Include="..\..\core\dom\Document.idl"/>
+    <Midl Include="..\..\core\dom\DocumentFragment.idl"/>
+    <Midl Include="..\..\core\dom\DocumentType.idl"/>
+    <Midl Include="..\..\core\dom\Element.idl"/>
+    <Midl Include="..\..\core\dom\Float32Array.idl"/>
+    <Midl Include="..\..\core\dom\Float64Array.idl"/>
+    <Midl Include="..\..\core\dom\FrameRequestCallback.idl"/>
+    <Midl Include="..\..\core\dom\Int16Array.idl"/>
+    <Midl Include="..\..\core\dom\Int32Array.idl"/>
+    <Midl Include="..\..\core\dom\Int8Array.idl"/>
+    <Midl Include="..\..\core\dom\Iterator.idl"/>
+    <Midl Include="..\..\core\dom\MessageChannel.idl"/>
+    <Midl Include="..\..\core\dom\MessagePort.idl"/>
+    <Midl Include="..\..\core\dom\MutationObserver.idl"/>
+    <Midl Include="..\..\core\dom\MutationRecord.idl"/>
+    <Midl Include="..\..\core\dom\NamedNodeMap.idl"/>
+    <Midl Include="..\..\core\dom\Node.idl"/>
+    <Midl Include="..\..\core\dom\NodeFilter.idl"/>
+    <Midl Include="..\..\core\dom\NodeIterator.idl"/>
+    <Midl Include="..\..\core\dom\NodeList.idl"/>
+    <Midl Include="..\..\core\dom\ProcessingInstruction.idl"/>
+    <Midl Include="..\..\core\dom\Range.idl"/>
+    <Midl Include="..\..\core\dom\SharedArrayBuffer.idl"/>
+    <Midl Include="..\..\core\dom\StringCallback.idl"/>
+    <Midl Include="..\..\core\dom\Text.idl"/>
+    <Midl Include="..\..\core\dom\Touch.idl"/>
+    <Midl Include="..\..\core\dom\TouchList.idl"/>
+    <Midl Include="..\..\core\dom\TreeWalker.idl"/>
+    <Midl Include="..\..\core\dom\Uint16Array.idl"/>
+    <Midl Include="..\..\core\dom\Uint32Array.idl"/>
+    <Midl Include="..\..\core\dom\Uint8Array.idl"/>
+    <Midl Include="..\..\core\dom\Uint8ClampedArray.idl"/>
+    <Midl Include="..\..\core\dom\XMLDocument.idl"/>
+    <Midl Include="..\..\core\dom\shadow\ShadowRoot.idl"/>
+    <Midl Include="..\..\core\editing\Selection.idl"/>
+    <Midl Include="..\..\core\events\AnimationEvent.idl"/>
+    <Midl Include="..\..\core\events\AnimationPlayerEvent.idl"/>
+    <Midl Include="..\..\core\events\ApplicationCacheErrorEvent.idl"/>
+    <Midl Include="..\..\core\events\AutocompleteErrorEvent.idl"/>
+    <Midl Include="..\..\core\events\BeforeUnloadEvent.idl"/>
+    <Midl Include="..\..\core\events\ClipboardEvent.idl"/>
+    <Midl Include="..\..\core\events\CompositionEvent.idl"/>
+    <Midl Include="..\..\core\events\CustomEvent.idl"/>
+    <Midl Include="..\..\core\events\ErrorEvent.idl"/>
+    <Midl Include="..\..\core\events\Event.idl"/>
+    <Midl Include="..\..\core\events\EventTarget.idl"/>
+    <Midl Include="..\..\core\events\FocusEvent.idl"/>
+    <Midl Include="..\..\core\events\HashChangeEvent.idl"/>
+    <Midl Include="..\..\core\events\KeyboardEvent.idl"/>
+    <Midl Include="..\..\core\events\MessageEvent.idl"/>
+    <Midl Include="..\..\core\events\MutationEvent.idl"/>
+    <Midl Include="..\..\core\events\PageTransitionEvent.idl"/>
+    <Midl Include="..\..\core\events\PointerEvent.idl"/>
+    <Midl Include="..\..\core\events\PopStateEvent.idl"/>
+    <Midl Include="..\..\core\events\ProgressEvent.idl"/>
+    <Midl Include="..\..\core\events\PromiseRejectionEvent.idl"/>
+    <Midl Include="..\..\core\events\RelatedEvent.idl"/>
+    <Midl Include="..\..\core\events\ResourceProgressEvent.idl"/>
+    <Midl Include="..\..\core\events\SecurityPolicyViolationEvent.idl"/>
+    <Midl Include="..\..\core\events\TextEvent.idl"/>
+    <Midl Include="..\..\core\events\TouchEvent.idl"/>
+    <Midl Include="..\..\core\events\TransitionEvent.idl"/>
+    <Midl Include="..\..\core\events\UIEvent.idl"/>
+    <Midl Include="..\..\core\events\WheelEvent.idl"/>
+    <Midl Include="..\..\core\fileapi\Blob.idl"/>
+    <Midl Include="..\..\core\fileapi\File.idl"/>
+    <Midl Include="..\..\core\fileapi\FileError.idl"/>
+    <Midl Include="..\..\core\fileapi\FileList.idl"/>
+    <Midl Include="..\..\core\fileapi\FileReader.idl"/>
+    <Midl Include="..\..\core\fileapi\FileReaderSync.idl"/>
+    <Midl Include="..\..\core\frame\BarProp.idl"/>
+    <Midl Include="..\..\core\frame\Console.idl"/>
+    <Midl Include="..\..\core\frame\ConsoleBase.idl"/>
+    <Midl Include="..\..\core\frame\History.idl"/>
+    <Midl Include="..\..\core\frame\ImageBitmap.idl"/>
+    <Midl Include="..\..\core\frame\Location.idl"/>
+    <Midl Include="..\..\core\html\FormData.idl"/>
+    <Midl Include="..\..\core\html\HTMLAllCollection.idl"/>
+    <Midl Include="..\..\core\html\HTMLAnchorElement.idl"/>
+    <Midl Include="..\..\core\html\HTMLAppletElement.idl"/>
+    <Midl Include="..\..\core\html\HTMLAreaElement.idl"/>
+    <Midl Include="..\..\core\html\HTMLAudioElement.idl"/>
+    <Midl Include="..\..\core\html\HTMLBRElement.idl"/>
+    <Midl Include="..\..\core\html\HTMLBaseElement.idl"/>
+    <Midl Include="..\..\core\html\HTMLBodyElement.idl"/>
+    <Midl Include="..\..\core\html\HTMLButtonElement.idl"/>
+    <Midl Include="..\..\core\html\HTMLCanvasElement.idl"/>
+    <Midl Include="..\..\core\html\HTMLCollection.idl"/>
+    <Midl Include="..\..\core\html\HTMLContentElement.idl"/>
+    <Midl Include="..\..\core\html\HTMLDListElement.idl"/>
+    <Midl Include="..\..\core\html\HTMLDataListElement.idl"/>
+    <Midl Include="..\..\core\html\HTMLDetailsElement.idl"/>
+    <Midl Include="..\..\core\html\HTMLDialogElement.idl"/>
+    <Midl Include="..\..\core\html\HTMLDirectoryElement.idl"/>
+    <Midl Include="..\..\core\html\HTMLDivElement.idl"/>
+    <Midl Include="..\..\core\html\HTMLDocument.idl"/>
+    <Midl Include="..\..\core\html\HTMLElement.idl"/>
+    <Midl Include="..\..\core\html\HTMLEmbedElement.idl"/>
+    <Midl Include="..\..\core\html\HTMLFieldSetElement.idl"/>
+    <Midl Include="..\..\core\html\HTMLFontElement.idl"/>
+    <Midl Include="..\..\core\html\HTMLFormControlsCollection.idl"/>
+    <Midl Include="..\..\core\html\HTMLFormElement.idl"/>
+    <Midl Include="..\..\core\html\HTMLFrameElement.idl"/>
+    <Midl Include="..\..\core\html\HTMLFrameSetElement.idl"/>
+    <Midl Include="..\..\core\html\HTMLHRElement.idl"/>
+    <Midl Include="..\..\core\html\HTMLHeadElement.idl"/>
+    <Midl Include="..\..\core\html\HTMLHeadingElement.idl"/>
+    <Midl Include="..\..\core\html\HTMLHtmlElement.idl"/>
+    <Midl Include="..\..\core\html\HTMLIFrameElement.idl"/>
+    <Midl Include="..\..\core\html\HTMLImageElement.idl"/>
+    <Midl Include="..\..\core\html\HTMLKeygenElement.idl"/>
+    <Midl Include="..\..\core\html\HTMLLIElement.idl"/>
+    <Midl Include="..\..\core\html\HTMLLabelElement.idl"/>
+    <Midl Include="..\..\core\html\HTMLLegendElement.idl"/>
+    <Midl Include="..\..\core\html\HTMLLinkElement.idl"/>
+    <Midl Include="..\..\core\html\HTMLMapElement.idl"/>
+    <Midl Include="..\..\core\html\HTMLMarqueeElement.idl"/>
+    <Midl Include="..\..\core\html\HTMLMenuElement.idl"/>
+    <Midl Include="..\..\core\html\HTMLMenuItemElement.idl"/>
+    <Midl Include="..\..\core\html\HTMLMetaElement.idl"/>
+    <Midl Include="..\..\core\html\HTMLMeterElement.idl"/>
+    <Midl Include="..\..\core\html\HTMLModElement.idl"/>
+    <Midl Include="..\..\core\html\HTMLOListElement.idl"/>
+    <Midl Include="..\..\core\html\HTMLObjectElement.idl"/>
+    <Midl Include="..\..\core\html\HTMLOptGroupElement.idl"/>
+    <Midl Include="..\..\core\html\HTMLOptionElement.idl"/>
+    <Midl Include="..\..\core\html\HTMLOptionsCollection.idl"/>
+    <Midl Include="..\..\core\html\HTMLOutputElement.idl"/>
+    <Midl Include="..\..\core\html\HTMLParagraphElement.idl"/>
+    <Midl Include="..\..\core\html\HTMLParamElement.idl"/>
+    <Midl Include="..\..\core\html\HTMLPictureElement.idl"/>
+    <Midl Include="..\..\core\html\HTMLPreElement.idl"/>
+    <Midl Include="..\..\core\html\HTMLProgressElement.idl"/>
+    <Midl Include="..\..\core\html\HTMLQuoteElement.idl"/>
+    <Midl Include="..\..\core\html\HTMLScriptElement.idl"/>
+    <Midl Include="..\..\core\html\HTMLSelectElement.idl"/>
+    <Midl Include="..\..\core\html\HTMLShadowElement.idl"/>
+    <Midl Include="..\..\core\html\HTMLSourceElement.idl"/>
+    <Midl Include="..\..\core\html\HTMLSpanElement.idl"/>
+    <Midl Include="..\..\core\html\HTMLStyleElement.idl"/>
+    <Midl Include="..\..\core\html\HTMLTableCaptionElement.idl"/>
+    <Midl Include="..\..\core\html\HTMLTableCellElement.idl"/>
+    <Midl Include="..\..\core\html\HTMLTableColElement.idl"/>
+    <Midl Include="..\..\core\html\HTMLTableElement.idl"/>
+    <Midl Include="..\..\core\html\HTMLTableRowElement.idl"/>
+    <Midl Include="..\..\core\html\HTMLTableSectionElement.idl"/>
+    <Midl Include="..\..\core\html\HTMLTemplateElement.idl"/>
+    <Midl Include="..\..\core\html\HTMLTextAreaElement.idl"/>
+    <Midl Include="..\..\core\html\HTMLTitleElement.idl"/>
+    <Midl Include="..\..\core\html\HTMLTrackElement.idl"/>
+    <Midl Include="..\..\core\html\HTMLUListElement.idl"/>
+    <Midl Include="..\..\core\html\HTMLUnknownElement.idl"/>
+    <Midl Include="..\..\core\html\ImageData.idl"/>
+    <Midl Include="..\..\core\html\MediaController.idl"/>
+    <Midl Include="..\..\core\html\MediaError.idl"/>
+    <Midl Include="..\..\core\html\MediaKeyError.idl"/>
+    <Midl Include="..\..\core\html\MediaKeyEvent.idl"/>
+    <Midl Include="..\..\core\html\RadioNodeList.idl"/>
+    <Midl Include="..\..\core\html\TextMetrics.idl"/>
+    <Midl Include="..\..\core\html\TimeRanges.idl"/>
+    <Midl Include="..\..\core\html\ValidityState.idl"/>
+    <Midl Include="..\..\core\html\VoidCallback.idl"/>
+    <Midl Include="..\..\core\html\shadow\PluginPlaceholderElement.idl"/>
+    <Midl Include="..\..\core\html\track\AudioTrack.idl"/>
+    <Midl Include="..\..\core\html\track\AudioTrackList.idl"/>
+    <Midl Include="..\..\core\html\track\TextTrack.idl"/>
+    <Midl Include="..\..\core\html\track\TextTrackCue.idl"/>
+    <Midl Include="..\..\core\html\track\TextTrackCueList.idl"/>
+    <Midl Include="..\..\core\html\track\TextTrackList.idl"/>
+    <Midl Include="..\..\core\html\track\TrackEvent.idl"/>
+    <Midl Include="..\..\core\html\track\VideoTrack.idl"/>
+    <Midl Include="..\..\core\html\track\VideoTrackList.idl"/>
+    <Midl Include="..\..\core\html\track\vtt\VTTCue.idl"/>
+    <Midl Include="..\..\core\html\track\vtt\VTTRegion.idl"/>
+    <Midl Include="..\..\core\html\track\vtt\VTTRegionList.idl"/>
+    <Midl Include="..\..\core\input\InputDevice.idl"/>
+    <Midl Include="..\..\core\inspector\InspectorOverlayHost.idl"/>
+    <Midl Include="..\..\core\loader\appcache\ApplicationCache.idl"/>
+    <Midl Include="..\..\core\page\EventSource.idl"/>
+    <Midl Include="..\..\core\page\PagePopupController.idl"/>
+    <Midl Include="..\..\core\page\scrolling\ScrollState.idl"/>
+    <Midl Include="..\..\core\streams\ReadableByteStream.idl"/>
+    <Midl Include="..\..\core\streams\ReadableByteStreamReader.idl"/>
+    <Midl Include="..\..\core\streams\ReadableStream.idl"/>
+    <Midl Include="..\..\core\streams\ReadableStreamReader.idl"/>
+    <Midl Include="..\..\core\streams\Stream.idl"/>
+    <Midl Include="..\..\core\svg\SVGAElement.idl"/>
+    <Midl Include="..\..\core\svg\SVGAngle.idl"/>
+    <Midl Include="..\..\core\svg\SVGAnimateElement.idl"/>
+    <Midl Include="..\..\core\svg\SVGAnimateMotionElement.idl"/>
+    <Midl Include="..\..\core\svg\SVGAnimateTransformElement.idl"/>
+    <Midl Include="..\..\core\svg\SVGAnimatedAngle.idl"/>
+    <Midl Include="..\..\core\svg\SVGAnimatedBoolean.idl"/>
+    <Midl Include="..\..\core\svg\SVGAnimatedEnumeration.idl"/>
+    <Midl Include="..\..\core\svg\SVGAnimatedInteger.idl"/>
+    <Midl Include="..\..\core\svg\SVGAnimatedLength.idl"/>
+    <Midl Include="..\..\core\svg\SVGAnimatedLengthList.idl"/>
+    <Midl Include="..\..\core\svg\SVGAnimatedNumber.idl"/>
+    <Midl Include="..\..\core\svg\SVGAnimatedNumberList.idl"/>
+    <Midl Include="..\..\core\svg\SVGAnimatedPreserveAspectRatio.idl"/>
+    <Midl Include="..\..\core\svg\SVGAnimatedRect.idl"/>
+    <Midl Include="..\..\core\svg\SVGAnimatedString.idl"/>
+    <Midl Include="..\..\core\svg\SVGAnimatedTransformList.idl"/>
+    <Midl Include="..\..\core\svg\SVGAnimationElement.idl"/>
+    <Midl Include="..\..\core\svg\SVGCircleElement.idl"/>
+    <Midl Include="..\..\core\svg\SVGClipPathElement.idl"/>
+    <Midl Include="..\..\core\svg\SVGComponentTransferFunctionElement.idl"/>
+    <Midl Include="..\..\core\svg\SVGCursorElement.idl"/>
+    <Midl Include="..\..\core\svg\SVGDefsElement.idl"/>
+    <Midl Include="..\..\core\svg\SVGDescElement.idl"/>
+    <Midl Include="..\..\core\svg\SVGDiscardElement.idl"/>
+    <Midl Include="..\..\core\svg\SVGElement.idl"/>
+    <Midl Include="..\..\core\svg\SVGEllipseElement.idl"/>
+    <Midl Include="..\..\core\svg\SVGFEBlendElement.idl"/>
+    <Midl Include="..\..\core\svg\SVGFEColorMatrixElement.idl"/>
+    <Midl Include="..\..\core\svg\SVGFEComponentTransferElement.idl"/>
+    <Midl Include="..\..\core\svg\SVGFECompositeElement.idl"/>
+    <Midl Include="..\..\core\svg\SVGFEConvolveMatrixElement.idl"/>
+    <Midl Include="..\..\core\svg\SVGFEDiffuseLightingElement.idl"/>
+    <Midl Include="..\..\core\svg\SVGFEDisplacementMapElement.idl"/>
+    <Midl Include="..\..\core\svg\SVGFEDistantLightElement.idl"/>
+    <Midl Include="..\..\core\svg\SVGFEDropShadowElement.idl"/>
+    <Midl Include="..\..\core\svg\SVGFEFloodElement.idl"/>
+    <Midl Include="..\..\core\svg\SVGFEFuncAElement.idl"/>
+    <Midl Include="..\..\core\svg\SVGFEFuncBElement.idl"/>
+    <Midl Include="..\..\core\svg\SVGFEFuncGElement.idl"/>
+    <Midl Include="..\..\core\svg\SVGFEFuncRElement.idl"/>
+    <Midl Include="..\..\core\svg\SVGFEGaussianBlurElement.idl"/>
+    <Midl Include="..\..\core\svg\SVGFEImageElement.idl"/>
+    <Midl Include="..\..\core\svg\SVGFEMergeElement.idl"/>
+    <Midl Include="..\..\core\svg\SVGFEMergeNodeElement.idl"/>
+    <Midl Include="..\..\core\svg\SVGFEMorphologyElement.idl"/>
+    <Midl Include="..\..\core\svg\SVGFEOffsetElement.idl"/>
+    <Midl Include="..\..\core\svg\SVGFEPointLightElement.idl"/>
+    <Midl Include="..\..\core\svg\SVGFESpecularLightingElement.idl"/>
+    <Midl Include="..\..\core\svg\SVGFESpotLightElement.idl"/>
+    <Midl Include="..\..\core\svg\SVGFETileElement.idl"/>
+    <Midl Include="..\..\core\svg\SVGFETurbulenceElement.idl"/>
+    <Midl Include="..\..\core\svg\SVGFilterElement.idl"/>
+    <Midl Include="..\..\core\svg\SVGForeignObjectElement.idl"/>
+    <Midl Include="..\..\core\svg\SVGGElement.idl"/>
+    <Midl Include="..\..\core\svg\SVGGeometryElement.idl"/>
+    <Midl Include="..\..\core\svg\SVGGradientElement.idl"/>
+    <Midl Include="..\..\core\svg\SVGGraphicsElement.idl"/>
+    <Midl Include="..\..\core\svg\SVGImageElement.idl"/>
+    <Midl Include="..\..\core\svg\SVGLength.idl"/>
+    <Midl Include="..\..\core\svg\SVGLengthList.idl"/>
+    <Midl Include="..\..\core\svg\SVGLineElement.idl"/>
+    <Midl Include="..\..\core\svg\SVGLinearGradientElement.idl"/>
+    <Midl Include="..\..\core\svg\SVGMPathElement.idl"/>
+    <Midl Include="..\..\core\svg\SVGMarkerElement.idl"/>
+    <Midl Include="..\..\core\svg\SVGMaskElement.idl"/>
+    <Midl Include="..\..\core\svg\SVGMatrix.idl"/>
+    <Midl Include="..\..\core\svg\SVGMetadataElement.idl"/>
+    <Midl Include="..\..\core\svg\SVGNumber.idl"/>
+    <Midl Include="..\..\core\svg\SVGNumberList.idl"/>
+    <Midl Include="..\..\core\svg\SVGPathElement.idl"/>
+    <Midl Include="..\..\core\svg\SVGPathSeg.idl"/>
+    <Midl Include="..\..\core\svg\SVGPathSegArcAbs.idl"/>
+    <Midl Include="..\..\core\svg\SVGPathSegArcRel.idl"/>
+    <Midl Include="..\..\core\svg\SVGPathSegClosePath.idl"/>
+    <Midl Include="..\..\core\svg\SVGPathSegCurvetoCubicAbs.idl"/>
+    <Midl Include="..\..\core\svg\SVGPathSegCurvetoCubicRel.idl"/>
+    <Midl Include="..\..\core\svg\SVGPathSegCurvetoCubicSmoothAbs.idl"/>
+    <Midl Include="..\..\core\svg\SVGPathSegCurvetoCubicSmoothRel.idl"/>
+    <Midl Include="..\..\core\svg\SVGPathSegCurvetoQuadraticAbs.idl"/>
+    <Midl Include="..\..\core\svg\SVGPathSegCurvetoQuadraticRel.idl"/>
+    <Midl Include="..\..\core\svg\SVGPathSegCurvetoQuadraticSmoothAbs.idl"/>
+    <Midl Include="..\..\core\svg\SVGPathSegCurvetoQuadraticSmoothRel.idl"/>
+    <Midl Include="..\..\core\svg\SVGPathSegLinetoAbs.idl"/>
+    <Midl Include="..\..\core\svg\SVGPathSegLinetoHorizontalAbs.idl"/>
+    <Midl Include="..\..\core\svg\SVGPathSegLinetoHorizontalRel.idl"/>
+    <Midl Include="..\..\core\svg\SVGPathSegLinetoRel.idl"/>
+    <Midl Include="..\..\core\svg\SVGPathSegLinetoVerticalAbs.idl"/>
+    <Midl Include="..\..\core\svg\SVGPathSegLinetoVerticalRel.idl"/>
+    <Midl Include="..\..\core\svg\SVGPathSegList.idl"/>
+    <Midl Include="..\..\core\svg\SVGPathSegMovetoAbs.idl"/>
+    <Midl Include="..\..\core\svg\SVGPathSegMovetoRel.idl"/>
+    <Midl Include="..\..\core\svg\SVGPatternElement.idl"/>
+    <Midl Include="..\..\core\svg\SVGPoint.idl"/>
+    <Midl Include="..\..\core\svg\SVGPointList.idl"/>
+    <Midl Include="..\..\core\svg\SVGPolygonElement.idl"/>
+    <Midl Include="..\..\core\svg\SVGPolylineElement.idl"/>
+    <Midl Include="..\..\core\svg\SVGPreserveAspectRatio.idl"/>
+    <Midl Include="..\..\core\svg\SVGRadialGradientElement.idl"/>
+    <Midl Include="..\..\core\svg\SVGRect.idl"/>
+    <Midl Include="..\..\core\svg\SVGRectElement.idl"/>
+    <Midl Include="..\..\core\svg\SVGSVGElement.idl"/>
+    <Midl Include="..\..\core\svg\SVGScriptElement.idl"/>
+    <Midl Include="..\..\core\svg\SVGSetElement.idl"/>
+    <Midl Include="..\..\core\svg\SVGStopElement.idl"/>
+    <Midl Include="..\..\core\svg\SVGStringList.idl"/>
+    <Midl Include="..\..\core\svg\SVGStyleElement.idl"/>
+    <Midl Include="..\..\core\svg\SVGSwitchElement.idl"/>
+    <Midl Include="..\..\core\svg\SVGSymbolElement.idl"/>
+    <Midl Include="..\..\core\svg\SVGTSpanElement.idl"/>
+    <Midl Include="..\..\core\svg\SVGTextContentElement.idl"/>
+    <Midl Include="..\..\core\svg\SVGTextElement.idl"/>
+    <Midl Include="..\..\core\svg\SVGTextPathElement.idl"/>
+    <Midl Include="..\..\core\svg\SVGTextPositioningElement.idl"/>
+    <Midl Include="..\..\core\svg\SVGTitleElement.idl"/>
+    <Midl Include="..\..\core\svg\SVGTransform.idl"/>
+    <Midl Include="..\..\core\svg\SVGTransformList.idl"/>
+    <Midl Include="..\..\core\svg\SVGUnitTypes.idl"/>
+    <Midl Include="..\..\core\svg\SVGUseElement.idl"/>
+    <Midl Include="..\..\core\svg\SVGViewElement.idl"/>
+    <Midl Include="..\..\core\svg\SVGViewSpec.idl"/>
+    <Midl Include="..\..\core\svg\SVGZoomEvent.idl"/>
+    <Midl Include="..\..\core\timing\MemoryInfo.idl"/>
+    <Midl Include="..\..\core\timing\Performance.idl"/>
+    <Midl Include="..\..\core\timing\PerformanceCompositeTiming.idl"/>
+    <Midl Include="..\..\core\timing\PerformanceEntry.idl"/>
+    <Midl Include="..\..\core\timing\PerformanceMark.idl"/>
+    <Midl Include="..\..\core\timing\PerformanceMeasure.idl"/>
+    <Midl Include="..\..\core\timing\PerformanceNavigation.idl"/>
+    <Midl Include="..\..\core\timing\PerformanceRenderTiming.idl"/>
+    <Midl Include="..\..\core\timing\PerformanceResourceTiming.idl"/>
+    <Midl Include="..\..\core\timing\PerformanceTiming.idl"/>
+    <Midl Include="..\..\core\timing\WorkerPerformance.idl"/>
+    <Midl Include="..\..\core\workers\SharedWorker.idl"/>
+    <Midl Include="..\..\core\workers\Worker.idl"/>
+    <Midl Include="..\..\core\workers\WorkerConsole.idl"/>
+    <Midl Include="..\..\core\workers\WorkerLocation.idl"/>
+    <Midl Include="..\..\core\xml\DOMParser.idl"/>
+    <Midl Include="..\..\core\xml\XMLSerializer.idl"/>
+    <Midl Include="..\..\core\xml\XPathEvaluator.idl"/>
+    <Midl Include="..\..\core\xml\XPathExpression.idl"/>
+    <Midl Include="..\..\core\xml\XPathNSResolver.idl"/>
+    <Midl Include="..\..\core\xml\XPathResult.idl"/>
+    <Midl Include="..\..\core\xml\XSLTProcessor.idl"/>
+    <Midl Include="..\..\core\xmlhttprequest\XMLHttpRequest.idl"/>
+    <Midl Include="..\..\core\xmlhttprequest\XMLHttpRequestEventTarget.idl"/>
+    <Midl Include="..\..\core\xmlhttprequest\XMLHttpRequestProgressEvent.idl"/>
+    <Midl Include="..\..\core\xmlhttprequest\XMLHttpRequestUpload.idl"/>
+    <Midl Include="..\..\core\clipboard\DataTransferItem.idl"/>
+    <Midl Include="..\..\core\dom\URL.idl"/>
+    <Midl Include="..\..\core\events\MouseEvent.idl"/>
+    <Midl Include="..\..\core\frame\Navigator.idl"/>
+    <Midl Include="..\..\core\frame\Screen.idl"/>
+    <Midl Include="..\..\core\frame\Window.idl"/>
+    <Midl Include="..\..\core\html\HTMLInputElement.idl"/>
+    <Midl Include="..\..\core\html\HTMLMediaElement.idl"/>
+    <Midl Include="..\..\core\html\HTMLVideoElement.idl"/>
+    <Midl Include="..\..\core\inspector\DevToolsHost.idl"/>
+    <Midl Include="..\..\core\workers\DedicatedWorkerGlobalScope.idl"/>
+    <Midl Include="..\..\core\workers\SharedWorkerGlobalScope.idl"/>
+    <Midl Include="..\..\core\workers\WorkerGlobalScope.idl"/>
+    <Midl Include="..\..\core\workers\WorkerNavigator.idl"/>
+    <Midl Include="..\..\core\testing\InternalDictionary.idl"/>
+    <Midl Include="..\..\core\testing\InternalDictionaryDerived.idl"/>
+    <Midl Include="..\..\core\testing\PluginPlaceholderOptions.idl"/>
+    <Midl Include="..\..\core\testing\DictionaryTest.idl"/>
+    <Midl Include="..\..\core\testing\GCObservation.idl"/>
+    <Midl Include="..\..\core\testing\GarbageCollectedScriptWrappable.idl"/>
+    <Midl Include="..\..\core\testing\InternalSettings.idl"/>
+    <Midl Include="..\..\core\testing\LayerRect.idl"/>
+    <Midl Include="..\..\core\testing\LayerRectList.idl"/>
+    <Midl Include="..\..\core\testing\PrivateScriptTest.idl"/>
+    <Midl Include="..\..\core\testing\RefCountedScriptWrappable.idl"/>
+    <Midl Include="..\..\core\testing\TypeConversions.idl"/>
+    <Midl Include="..\..\core\testing\UnionTypesTest.idl"/>
+    <Midl Include="..\..\core\testing\Internals.idl"/>
+    <Midl Include="..\..\core\dom\CommonDefinitions.idl"/>
+    <Midl Include="..\..\core\timing\DOMHighResTimeStamp.idl"/>
+    <Midl Include="..\..\core\timing\PerformanceEntryList.idl"/>
+    <Midl Include="..\..\core\animation\DocumentAnimation.idl"/>
+    <Midl Include="..\..\core\animation\ElementAnimation.idl"/>
+    <Midl Include="..\..\core\css\DocumentFontFaceSet.idl"/>
+    <Midl Include="..\..\core\dom\ChildNode.idl"/>
+    <Midl Include="..\..\core\dom\DocumentFullscreen.idl"/>
+    <Midl Include="..\..\core\dom\ElementFullscreen.idl"/>
+    <Midl Include="..\..\core\dom\GlobalEventHandlers.idl"/>
+    <Midl Include="..\..\core\dom\NonDocumentTypeChildNode.idl"/>
+    <Midl Include="..\..\core\dom\NonElementParentNode.idl"/>
+    <Midl Include="..\..\core\dom\ParentNode.idl"/>
+    <Midl Include="..\..\core\dom\URLUtils.idl"/>
+    <Midl Include="..\..\core\dom\URLUtilsReadOnly.idl"/>
+    <Midl Include="..\..\core\events\EventListener.idl"/>
+    <Midl Include="..\..\core\events\NavigatorEvents.idl"/>
+    <Midl Include="..\..\core\frame\NavigatorCPU.idl"/>
+    <Midl Include="..\..\core\frame\NavigatorID.idl"/>
+    <Midl Include="..\..\core\frame\NavigatorLanguage.idl"/>
+    <Midl Include="..\..\core\frame\NavigatorOnLine.idl"/>
+    <Midl Include="..\..\core\frame\NavigatorStorageUtils.idl"/>
+    <Midl Include="..\..\core\frame\WindowBase64.idl"/>
+    <Midl Include="..\..\core\frame\WindowEventHandlers.idl"/>
+    <Midl Include="..\..\core\frame\WindowTimers.idl"/>
+    <Midl Include="..\..\core\imagebitmap\ImageBitmapFactories.idl"/>
+    <Midl Include="..\..\core\svg\SVGDocument.idl"/>
+    <Midl Include="..\..\core\svg\SVGFilterPrimitiveStandardAttributes.idl"/>
+    <Midl Include="..\..\core\svg\SVGFitToViewBox.idl"/>
+    <Midl Include="..\..\core\svg\SVGTests.idl"/>
+    <Midl Include="..\..\core\svg\SVGURIReference.idl"/>
+    <Midl Include="..\..\core\svg\SVGZoomAndPan.idl"/>
+    <Midl Include="..\..\core\timing\ConsoleMemory.idl"/>
+    <Midl Include="..\..\core\timing\SharedWorkerPerformance.idl"/>
+    <Midl Include="..\..\core\timing\WindowPerformance.idl"/>
+    <Midl Include="..\..\core\timing\WorkerGlobalScopePerformance.idl"/>
+    <Midl Include="..\..\core\workers\AbstractWorker.idl"/>
+    <Midl Include="..\..\core\xml\DocumentXMLTreeViewer.idl"/>
+    <Midl Include="..\..\core\xml\DocumentXPathEvaluator.idl"/>
+    <Midl Include="..\..\core\testing\PartialPrivateScriptTest.idl"/>
+    <Midl Include="$(OutDir)gen\blink\core\testing\InternalRuntimeFlags.idl"/>
+    <Midl Include="$(OutDir)gen\blink\core\testing\InternalSettingsGenerated.idl"/>
+    <Midl Include="$(OutDir)gen\blink\core\WindowCoreConstructors.idl"/>
+    <Midl Include="$(OutDir)gen\blink\core\SharedWorkerGlobalScopeCoreConstructors.idl"/>
+    <Midl Include="$(OutDir)gen\blink\core\DedicatedWorkerGlobalScopeCoreConstructors.idl"/>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets"/>
+  <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.targets"/>
+  <ImportGroup Label="ExtensionTargets"/>
+  <Target Name="Build">
+    <Exec Command="call ninja.exe -C $(OutDir) $(ProjectName)"/>
+  </Target>
+  <Target Name="Clean">
+    <Exec Command="call ninja.exe -C $(OutDir) -tclean $(ProjectName)"/>
+  </Target>
+</Project>

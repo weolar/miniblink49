@@ -1,0 +1,106 @@
+# Copyright 2014 The Chromium Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+import("//third_party/WebKit/Source/bindings/bindings.gni")
+import("//third_party/WebKit/Source/bindings/modules/v8/generated.gni")
+import("//third_party/WebKit/Source/bindings/modules/v8/v8.gni")
+import("//third_party/WebKit/Source/build/scripts/scripts.gni")
+import("//third_party/WebKit/Source/modules/modules.gni")
+
+visibility = [ "//third_party/WebKit/Source/*" ]
+
+# GYP version: WebKit/Source/modules/modules.gyp:modules
+source_set("modules") {
+  visibility = []  # Allow re-assignment of list.
+  visibility = [ "//third_party/WebKit/*" ]
+
+  sources = rebase_path(modules_files, ".", "//")
+  sources += bindings_modules_v8_files
+  sources += rebase_path(bindings_modules_generated_aggregate_files, ".", "//")
+  sources += rebase_path(bindings_modules_generated_union_type_files, ".", "//")
+  sources += rebase_path(bindings_modules_generated_partial_aggregate_files, ".", "//")
+  sources += rebase_path([ bindings_modules_generated_init_partial_interfaces_file ], ".", "//")
+
+  if (!is_win) {
+    sources -= [
+      "webdatabase/sqlite/SQLiteFileSystemWin.cpp",
+    ]
+  }
+  if (!is_posix) {
+    sources -= [
+      "webdatabase/sqlite/SQLiteFileSystemPosix.cpp",
+    ]
+  }
+
+  configs += [
+    # TODO(jschuh): crbug.com/167187 fix size_t to int truncations.
+    "//build/config/compiler:no_size_t_to_int_warning",
+    "//third_party/WebKit/Source:config",
+    "//third_party/WebKit/Source:inside_blink",
+  ]
+
+  deps = [
+    ":make_modules_generated",
+    "//third_party/WebKit/Source/core",
+    "//third_party/sqlite",
+    "//third_party/zlib",
+  ]
+
+  if (is_win) {
+    cflags = [
+      "/wd4334",  # Result of 32-bit shift implicitly converted to 64 bits.
+    ]
+    # TODO(GYP)
+    # Shard this taret into parts to work around linker limitations.
+    # on link time code generation builds.
+    #[buildtype=="Official"', {
+    #  'msvs_shard': 5,
+    #}],
+  }
+}
+
+# GYP version: WebKit/Source/modules/modules.gyp:modules_testing
+source_set("modules_testing") {
+  sources = modules_testing_files
+  sources += [
+    "$bindings_modules_v8_output_dir/V8InternalsPartial.cpp",
+    "$bindings_modules_v8_output_dir/V8InternalsPartial.h",
+  ]
+
+  configs += [
+    "//third_party/WebKit/Source:config",
+    "//third_party/WebKit/Source:inside_blink",
+  ]
+
+  deps = [
+    "//third_party/WebKit/Source/core",
+  ]
+}
+
+action("module_names") {
+  script = "../build/scripts/make_names.py"
+
+  module_names_in = "indexeddb/IndexedDBNames.in"
+  inputs = make_names_files + [ module_names_in ]
+
+  outputs = [
+    "$blink_modules_output_dir/IndexedDBNames.cpp",
+    "$blink_modules_output_dir/IndexedDBNames.h",
+  ]
+
+  args = [
+    rebase_path(module_names_in, root_build_dir),
+    "--output_dir",
+    rebase_path(blink_modules_output_dir, root_build_dir),
+  ]
+}
+
+# GYP version: WebKit/Source/modules/modules_generated.gyp:make_modules_generated
+group("make_modules_generated") {
+  deps = [
+    "//third_party/WebKit/Source/core:core_event_interfaces",
+    "//third_party/WebKit/Source/bindings/modules:bindings_modules_generated",
+    ":module_names",
+  ]
+}

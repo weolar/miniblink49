@@ -1,0 +1,18 @@
+// Copyright 2014 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+// https://html.spec.whatwg.org/#the-menuitem-element
+
+[
+    RuntimeEnabled=ContextMenu,
+] interface HTMLMenuItemElement : HTMLElement {
+    [Reflect] attribute DOMString type;
+    [Reflect] attribute DOMString label;
+    [Reflect] attribute DOMString icon;
+    [Reflect] attribute boolean disabled;
+    [Reflect] attribute boolean checked;
+    [Reflect] attribute DOMString radiogroup;
+    [Reflect] attribute boolean default;
+    // FIXME: readonly attribute HTMLElement? command;
+};
