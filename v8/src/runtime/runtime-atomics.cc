@@ -113,6 +113,30 @@ inline void StoreSeqCst(uint64_t* p, uint64_t value) {
 #define _InterlockedOr32 _InterlockedOr
 #define _InterlockedXor32 _InterlockedXor
 
+#ifndef _InterlockedCompareExchange64
+#define _InterlockedCompareExchange64 InterlockedCompareExchange64
+#endif // _InterlockedCompareExchange64
+
+#ifndef _InterlockedExchange64
+#define _InterlockedExchange64 InterlockedExchange64
+#endif // !_InterlockedExchange64
+
+#ifndef _InterlockedExchangeAdd64
+#define _InterlockedExchangeAdd64 InterlockedExchangeAdd64
+#endif // !_InterlockedExchangeAdd64
+
+#ifndef _InterlockedAnd64
+#define _InterlockedAnd64 InterlockedAnd64
+#endif // !_InterlockedAnd64
+
+#ifndef _InterlockedOr64
+#define _InterlockedOr64 InterlockedOr64
+#endif // !_InterlockedOr64
+
+#ifndef _InterlockedXor64
+#define _InterlockedXor64 InterlockedXor64
+#endif // !_InterlockedXor64
+
 #define INTEGER_TYPES(V)                           \
   V(int8_t, 8, char)                               \
   V(uint8_t, 8, char)                              \
