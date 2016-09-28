@@ -1,3 +1,8 @@
 tmp/*
 *.opensdf
 *.sdf
+build/.vs/miniblink/v14/.suo
+build/miniblink.VC.db
+build/miniblink.VC.VC.opendb
+*.ipch
+Debug/*
