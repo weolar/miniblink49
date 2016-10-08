@@ -1,0 +1,17 @@
+// cerrno standard header
+#ifndef _CERRNO_
+#define _CERRNO_
+#ifdef _STD_USING
+ #undef _STD_USING
+ #include <errno.h>
+ #define _STD_USING
+#else
+ #include <errno.h>
+#endif /* _STD_USING */
+#endif /* _CERRNO_ */
+
+/*
+ * Copyright (c) 1994 by P.J. Plauger.  ALL RIGHTS RESERVED. 
+ * Consult your license regarding permissions and restrictions.
+ */
+

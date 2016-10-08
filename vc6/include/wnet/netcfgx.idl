@@ -1,0 +1,538 @@
+//+---------------------------------------------------------------------------
+//
+//  Microsoft Windows
+//  Copyright (c) Microsoft Corporation. All rights reserved.
+//
+//  File: netcfgx.idl
+//
+//----------------------------------------------------------------------------
+
+cpp_quote("//+-------------------------------------------------------------------------")
+cpp_quote("//")
+cpp_quote("//  Microsoft Windows")
+cpp_quote("//  Copyright (c) Microsoft Corporation. All rights reserved.")
+cpp_quote("//")
+cpp_quote("//--------------------------------------------------------------------------")
+
+cpp_quote("#if ( _MSC_VER >= 800 )")
+cpp_quote("#pragma warning(disable:4201)")
+cpp_quote("#endif")
+
+#ifndef DO_NO_IMPORTS
+import "unknwn.idl";
+import "wtypes.idl";
+import "prsht.idl";
+#endif
+
+cpp_quote("")
+cpp_quote("EXTERN_C const CLSID CLSID_CNetCfg;")
+cpp_quote("")
+
+cpp_quote("#define NETCFG_E_ALREADY_INITIALIZED                 MAKE_HRESULT(SEVERITY_ERROR, FACILITY_ITF, 0xA020)")
+cpp_quote("#define NETCFG_E_NOT_INITIALIZED                     MAKE_HRESULT(SEVERITY_ERROR, FACILITY_ITF, 0xA021)")
+cpp_quote("#define NETCFG_E_IN_USE                              MAKE_HRESULT(SEVERITY_ERROR, FACILITY_ITF, 0xA022)")
+cpp_quote("#define NETCFG_E_NO_WRITE_LOCK                       MAKE_HRESULT(SEVERITY_ERROR, FACILITY_ITF, 0xA024)")
+cpp_quote("#define NETCFG_E_NEED_REBOOT                         MAKE_HRESULT(SEVERITY_ERROR, FACILITY_ITF, 0xA025)")
+cpp_quote("#define NETCFG_E_ACTIVE_RAS_CONNECTIONS              MAKE_HRESULT(SEVERITY_ERROR, FACILITY_ITF, 0xA026)")
+// THe network adapter does not exists in the system (Eisa and Mca)
+cpp_quote("#define NETCFG_E_ADAPTER_NOT_FOUND                   MAKE_HRESULT(SEVERITY_ERROR, FACILITY_ITF, 0xA027)")
+// The component was removed and cannot be added until the system is rebooted
+cpp_quote("#define NETCFG_E_COMPONENT_REMOVED_PENDING_REBOOT    MAKE_HRESULT(SEVERITY_ERROR, FACILITY_ITF, 0xA028)")
+
+cpp_quote("#define NETCFG_S_REBOOT                              MAKE_HRESULT(SEVERITY_SUCCESS, FACILITY_ITF, 0xA020)")
+cpp_quote("#define NETCFG_S_DISABLE_QUERY                       MAKE_HRESULT(SEVERITY_SUCCESS, FACILITY_ITF, 0xA022)")
+cpp_quote("#define NETCFG_S_STILL_REFERENCED                    MAKE_HRESULT(SEVERITY_SUCCESS, FACILITY_ITF, 0xA023)")
+cpp_quote("#define NETCFG_S_CAUSED_SETUP_CHANGE                 MAKE_HRESULT(SEVERITY_SUCCESS, FACILITY_ITF, 0xA024)")
+cpp_quote("#define NETCFG_S_COMMIT_NOW                          MAKE_HRESULT(SEVERITY_SUCCESS, FACILITY_ITF, 0xA025)")
+
+cpp_quote("")
+
+cpp_quote("#define NETCFG_CLIENT_CID_MS_MSClient        TEXT(\"ms_msclient\")")
+cpp_quote("#define NETCFG_SERVICE_CID_MS_SERVER         TEXT(\"ms_server\")")
+cpp_quote("#define NETCFG_SERVICE_CID_MS_NETBIOS        TEXT(\"ms_netbios\")")
+cpp_quote("#define NETCFG_SERVICE_CID_MS_PSCHED         TEXT(\"ms_pschedpc\")")
+cpp_quote("#define NETCFG_SERVICE_CID_MS_WLBS           TEXT(\"ms_wlbs\")")
+cpp_quote("#define NETCFG_TRANS_CID_MS_APPLETALK        TEXT(\"ms_appletalk\")")
+cpp_quote("#define NETCFG_TRANS_CID_MS_NETBEUI          TEXT(\"ms_netbeui\")")
+cpp_quote("#define NETCFG_TRANS_CID_MS_NETMON           TEXT(\"ms_netmon\")")
+cpp_quote("#define NETCFG_TRANS_CID_MS_NWIPX            TEXT(\"ms_nwipx\")")
+cpp_quote("#define NETCFG_TRANS_CID_MS_NWSPX            TEXT(\"ms_nwspx\")")
+cpp_quote("#define NETCFG_TRANS_CID_MS_TCPIP            TEXT(\"ms_tcpip\")")
+
+// Reserved GUIDS for Microsoft use
+//
+// C0E8AE90-306E-11D1-AACF-00805FC1270E     IID_IEnumNetCfgBindingInterface
+// C0E8AE91-306E-11D1-AACF-00805FC1270E     IID_IEnumNetCfgBindingPath
+// C0E8AE92-306E-11D1-AACF-00805FC1270E     IID_IEnumNetCfgComponent
+// C0E8AE93-306E-11D1-AACF-00805FC1270E     IID_INetCfg
+// C0E8AE94-306E-11D1-AACF-00805FC1270E     IID_INetCfgBindingInterface
+// C0E8AE95-306E-11D1-AACF-00805FC1270E     IID_INetCfgProperties
+// C0E8AE96-306E-11D1-AACF-00805FC1270E     IID_INetCfgBindingPath
+// C0E8AE97-306E-11D1-AACF-00805FC1270E     IID_INetCfgClass
+// C0E8AE98-306E-11D1-AACF-00805FC1270E     IID_INetCfgSysPrep
+// C0E8AE99-306E-11D1-AACF-00805FC1270E     IID_INetCfgComponent
+// C0E8AE9A-306E-11D1-AACF-00805FC1270E     IID_INetCfgComponentSysPrep
+// C0E8AE9B-306E-11D1-AACF-00805FC1270E     (open)
+// C0E8AE9C-306E-11D1-AACF-00805FC1270E     (open)
+
+// C0E8AE9D-306E-11D1-AACF-00805FC1270E     IID_INetCfgClassSetup
+// C0E8AE9E-306E-11D1-AACF-00805FC1270E     IID_INetCfgComponentBindings
+// C0E8AE9F-306E-11D1-AACF-00805FC1270E     IID_INetCfgLock
+// C0E8AEA0-306E-11D1-AACF-00805FC1270E
+// C0E8AEA1-306E-11D1-AACF-00805FC1270E
+// C0E8AEA2-306E-11D1-AACF-00805FC1270E
+// C0E8AEA3-306E-11D1-AACF-00805FC1270E
+// C0E8AEA4-306E-11D1-AACF-00805FC1270E
+// C0E8AEA5-306E-11D1-AACF-00805FC1270E
+// C0E8AEA6-306E-11D1-AACF-00805FC1270E
+// C0E8AEA7-306E-11D1-AACF-00805FC1270E
+// C0E8AEA8-306E-11D1-AACF-00805FC1270E
+// C0E8AEA9-306E-11D1-AACF-00805FC1270E
+// ...
+// C0E8B266-306E-11D1-AACF-00805FC1270E
+// C0E8B267-306E-11D1-AACF-00805FC1270E
+// C0E8B268-306E-11D1-AACF-00805FC1270E
+
+
+interface IEnumNetCfgBindingInterface;
+interface IEnumNetCfgBindingPath;
+interface IEnumNetCfgComponent;
+interface INetCfg;
+interface INetCfgProperties;
+interface INetCfgLock;
+interface INetCfgBindingInterface;
+interface INetCfgBindingPath;
+interface INetCfgComponentBindings;
+interface INetCfgBindingPath;
+interface INetCfgClass;
+interface INetCfgComponent;
+interface INetCfgIdentification;
+interface INetCfgClassSetup;
+
+
+//+---------------------------------------------------------------------------
+// IEnumNetCfgBindingInterface -
+[
+    local,
+    object,
+    uuid(C0E8AE90-306E-11D1-AACF-00805FC1270E),
+    pointer_default(unique)
+]
+interface IEnumNetCfgBindingInterface : IUnknown
+{
+    HRESULT Next (
+        [in] ULONG celt,
+        [out, size_is(celt), length_is(*pceltFetched)]
+        INetCfgBindingInterface** rgelt,
+        [out] ULONG* pceltFetched);
+
+    HRESULT Skip (
+        [in] ULONG celt);
+
+    HRESULT Reset ();
+
+    HRESULT Clone (
+        [out] IEnumNetCfgBindingInterface** ppenum);
+};
+
+
+//+---------------------------------------------------------------------------
+// IEnumNetCfgBindingPath -
+[
+    local,
+    object,
+    uuid(C0E8AE91-306E-11D1-AACF-00805FC1270E),
+    pointer_default(unique)
+]
+interface IEnumNetCfgBindingPath : IUnknown
+{
+    HRESULT Next (
+        [in] ULONG celt,
+        [out, size_is(celt), length_is(*pceltFetched)]
+        INetCfgBindingPath** rgelt,
+        [out] ULONG* pceltFetched);
+
+    HRESULT Skip (
+        [in] ULONG celt);
+
+    HRESULT Reset ();
+
+    HRESULT Clone (
+        [out] IEnumNetCfgBindingPath** ppenum);
+};
+
+
+//+---------------------------------------------------------------------------
+// IEnumNetCfgComponent -
+[
+    local,
+    object,
+    uuid(C0E8AE92-306E-11D1-AACF-00805FC1270E),
+    pointer_default(unique)
+]
+interface IEnumNetCfgComponent : IUnknown
+{
+    HRESULT Next (
+        [in] ULONG celt,
+        [out, size_is(celt), length_is(*pceltFetched)]
+        INetCfgComponent** rgelt,
+        [out] ULONG* pceltFetched);
+
+    HRESULT Skip (
+        [in] ULONG celt);
+
+    HRESULT Reset ();
+
+    HRESULT Clone (
+        [out] IEnumNetCfgComponent** ppenum);
+};
+
+
+//+---------------------------------------------------------------------------
+// INetCfg -
+[
+    local,
+    object,
+    uuid(C0E8AE93-306E-11D1-AACF-00805FC1270E),
+    pointer_default(unique)
+]
+interface INetCfg : IUnknown
+{
+    HRESULT Initialize (
+        [in] PVOID pvReserved);
+
+    HRESULT Uninitialize ();
+
+    HRESULT Apply ();
+
+    HRESULT Cancel ();
+
+    HRESULT EnumComponents (
+        [in] const GUID* pguidClass,
+        [out] IEnumNetCfgComponent** ppenumComponent);
+
+    HRESULT FindComponent (
+        [in, string] LPCWSTR pszwInfId,
+        [out] INetCfgComponent** pComponent);
+
+    HRESULT QueryNetCfgClass (
+        [in] const GUID* pguidClass,
+        [in] REFIID riid,
+        [out, iid_is(riid)] void** ppvObject);
+};
+
+
+//+---------------------------------------------------------------------------
+// INetCfgLock -
+[
+    local,
+    object,
+    uuid(C0E8AE9F-306E-11D1-AACF-00805FC1270E),
+    pointer_default(unique)
+]
+interface INetCfgLock : IUnknown
+{
+    HRESULT AcquireWriteLock (
+        [in] DWORD cmsTimeout,
+        [in, string] LPCWSTR pszwClientDescription,
+        [out, string] LPWSTR* ppszwClientDescription);
+
+    HRESULT ReleaseWriteLock ();
+
+    HRESULT IsWriteLocked (
+        [out, string] LPWSTR* ppszwClientDescription);
+};
+
+
+//+---------------------------------------------------------------------------
+// INetCfgBindingInterface -
+[
+    local,
+    object,
+    uuid(C0E8AE94-306E-11D1-AACF-00805FC1270E),
+    pointer_default(unique)
+]
+interface INetCfgBindingInterface : IUnknown
+{
+    HRESULT GetName (
+        [out, string] LPWSTR* ppszwInterfaceName);
+
+    HRESULT GetUpperComponent (
+        [out] INetCfgComponent** ppnccItem);
+
+    HRESULT GetLowerComponent (
+        [out] INetCfgComponent** ppnccItem);
+
+};
+
+
+//+---------------------------------------------------------------------------
+// INetCfgBindingPath -
+[
+    local,
+    object,
+    uuid(C0E8AE96-306E-11D1-AACF-00805FC1270E),
+    pointer_default(unique)
+]
+interface INetCfgBindingPath : IUnknown
+{
+    HRESULT IsSamePathAs (
+        [in] INetCfgBindingPath* pPath);
+
+    HRESULT IsSubPathOf (
+        [in] INetCfgBindingPath* pPath);
+
+    HRESULT IsEnabled ();
+
+    HRESULT Enable (
+        [in] BOOL fEnable);
+
+    HRESULT GetPathToken(
+        [out, string] LPWSTR* ppszwPathToken);
+
+    HRESULT GetOwner (
+        [out] INetCfgComponent** ppComponent);
+
+    HRESULT GetDepth (
+        [out] ULONG* pcInterfaces);
+
+    HRESULT EnumBindingInterfaces (
+        [out] IEnumNetCfgBindingInterface** ppenumInterface);
+};
+
+
+//+---------------------------------------------------------------------------
+// INetCfgClass -
+[
+    local,
+    object,
+    uuid(C0E8AE97-306E-11D1-AACF-00805FC1270E),
+    pointer_default(unique)
+]
+interface INetCfgClass : IUnknown
+{
+    HRESULT FindComponent (
+        [in, string] LPCWSTR pszwInfId,
+        [out] INetCfgComponent** ppnccItem);
+
+    HRESULT EnumComponents (
+        [out] IEnumNetCfgComponent** ppenumComponent);
+};
+
+
+//+---------------------------------------------------------------------------
+// INetCfgClassSetup -
+[
+    local,
+    object,
+    uuid(C0E8AE9D-306E-11D1-AACF-00805FC1270E),
+    pointer_default(unique)
+]
+interface INetCfgClassSetup : IUnknown
+{
+    typedef enum tagOBO_TOKEN_TYPE
+    {
+        OBO_USER        = 1,
+        OBO_COMPONENT   = 2,
+        OBO_SOFTWARE    = 3,
+    } OBO_TOKEN_TYPE;
+
+    typedef struct tagOBO_TOKEN
+    {
+        OBO_TOKEN_TYPE  Type;
+
+        // Type == OBO_COMPONENT
+        //
+        INetCfgComponent*   pncc;
+
+        // Type == OBO_SOFTWARE
+        //
+        LPCWSTR             pszwManufacturer;
+        LPCWSTR             pszwProduct;
+        LPCWSTR             pszwDisplayName;
+
+        // The following fields must be initialized to zero
+        // by users of OBO_TOKEN.
+        //
+        BOOL    fRegistered;
+    } OBO_TOKEN;
+
+    HRESULT SelectAndInstall (
+        [in]  HWND                  hwndParent,
+        [in]  OBO_TOKEN*            pOboToken,
+        [out] INetCfgComponent**    ppnccItem);
+
+    HRESULT Install (
+        [in, string] LPCWSTR            pszwInfId,
+        [in]         OBO_TOKEN*         pOboToken,
+        [in]         DWORD              dwSetupFlags,
+        [in]         DWORD              dwUpgradeFromBuildNo,
+        [in, string] LPCWSTR            pszwAnswerFile,
+        [in, string] LPCWSTR            pszwAnswerSections,
+        [out]        INetCfgComponent** ppnccItem);
+
+    HRESULT DeInstall (
+        [in]  INetCfgComponent* pComponent,
+        [in]  OBO_TOKEN*        pOboToken,
+        [out] LPWSTR*           pmszwRefs);
+};
+
+
+//+---------------------------------------------------------------------------
+// INetCfgComponent -
+[
+    local,
+    object,
+    uuid(C0E8AE99-306E-11D1-AACF-00805FC1270E),
+    pointer_default(unique)
+]
+interface INetCfgComponent : IUnknown
+{
+    typedef enum tagCOMPONENT_CHARACTERISTICS
+    {
+        NCF_VIRTUAL                     = 0x00000001,
+        NCF_SOFTWARE_ENUMERATED         = 0x00000002,
+        NCF_PHYSICAL                    = 0x00000004,
+        NCF_HIDDEN                      = 0x00000008,
+        NCF_NO_SERVICE                  = 0x00000010,
+        NCF_NOT_USER_REMOVABLE          = 0x00000020,
+        NCF_MULTIPORT_INSTANCED_ADAPTER = 0x00000040,  // This adapter has separate instances for each port
+        NCF_HAS_UI                      = 0x00000080,
+        NCF_SINGLE_INSTANCE             = 0x00000100,
+        //                              = 0x00000200,  // filter device
+        NCF_FILTER                      = 0x00000400,  // filter component
+        NCF_DONTEXPOSELOWER             = 0x00001000,
+        NCF_HIDE_BINDING                = 0x00002000,  // don't show in binding page
+        NCF_NDIS_PROTOCOL               = 0x00004000,  // Needs UNLOAD notifications
+        //                              = 0x00008000,
+        //                              = 0x00010000,  // pnp notifications forced through service controller
+        NCF_FIXED_BINDING               = 0x00020000   // UI ability to change binding is disabled
+    } COMPONENT_CHARACTERISTICS;
+
+    typedef enum tagNCRP_FLAGS
+    {
+        NCRP_QUERY_PROPERTY_UI          = 0x00000001,
+        NCRP_SHOW_PROPERTY_UI           = 0x00000002
+    } NCRP_FLAGS;
+
+    HRESULT GetDisplayName (
+        [out, string] LPWSTR* ppszwDisplayName);
+
+    HRESULT SetDisplayName (
+        [in, string] LPCWSTR pszwDisplayName);
+
+    HRESULT GetHelpText (
+        [out, string] LPWSTR* pszwHelpText);
+
+    HRESULT GetId (
+        [out, string] LPWSTR* ppszwId);
+
+    HRESULT GetCharacteristics (
+        [out] LPDWORD pdwCharacteristics);
+
+    HRESULT GetInstanceGuid (
+        [out] GUID* pGuid);
+
+    HRESULT GetPnpDevNodeId (
+        [out, string] LPWSTR* ppszwDevNodeId);
+
+    HRESULT GetClassGuid (
+        [out] GUID* pGuid);
+
+    HRESULT GetBindName (
+        [out, string] LPWSTR* ppszwBindName);
+
+    HRESULT GetDeviceStatus (
+        [out] ULONG* pulStatus);
+
+    HRESULT OpenParamKey (
+        [out] HKEY* phkey);
+
+    HRESULT RaisePropertyUi (
+        [in] HWND hwndParent,
+        [in] DWORD dwFlags, /* NCRP_FLAGS */
+        [in] IUnknown* punkContext);
+};
+
+
+//+---------------------------------------------------------------------------
+// INetCfgComponentBindings -
+[
+    local,
+    object,
+    uuid(C0E8AE9E-306E-11D1-AACF-00805FC1270E),
+    pointer_default(unique)
+]
+interface INetCfgComponentBindings : IUnknown
+{
+    typedef enum tagSUPPORTS_BINDING_INTERFACE_FLAGS
+    {
+        NCF_LOWER   = 0x01,
+        NCF_UPPER   = 0x02
+    } SUPPORTS_BINDING_INTERFACE_FLAGS;
+
+    typedef enum tagENUM_BINDING_PATHS_FLAGS
+    {
+        EBP_ABOVE     = 0x01,
+        EBP_BELOW     = 0x02,
+    } ENUM_BINDING_PATHS_FLAGS;
+
+    HRESULT BindTo (
+        [in] INetCfgComponent* pnccItem);
+
+    HRESULT UnbindFrom (
+        [in] INetCfgComponent* pnccItem);
+
+    HRESULT SupportsBindingInterface (
+        [in] DWORD dwFlags,
+        [in] LPCWSTR pszwInterfaceName);
+
+    HRESULT IsBoundTo (
+        [in] INetCfgComponent* pnccItem);
+
+    HRESULT IsBindableTo (
+        [in] INetCfgComponent* pnccItem);
+
+    HRESULT EnumBindingPaths (
+        [in] DWORD dwFlags,
+        [out] IEnumNetCfgBindingPath** ppIEnum);
+
+    HRESULT MoveBefore (
+        [in] INetCfgBindingPath* pncbItemSrc,
+        [in] INetCfgBindingPath* pncbItemDest);
+
+    HRESULT MoveAfter (
+        [in] INetCfgBindingPath* pncbItemSrc,
+        [in] INetCfgBindingPath* pncbItemDest);
+};
+
+//+---------------------------------------------------------------------------
+// INetCfgSysPrep -
+[
+    local,
+    object,
+    uuid(C0E8AE98-306E-11D1-AACF-00805FC1270E),
+    pointer_default(unique)
+]
+interface INetCfgSysPrep : IUnknown
+{
+	HRESULT HrSetupSetFirstDword(
+        [in, string] LPCWSTR pwszSection,
+        [in, string] LPCWSTR pwszKey,
+        [in]         DWORD   dwValue);
+
+    HRESULT HrSetupSetFirstString(
+        [in, string] LPCWSTR pwszSection,
+        [in, string] LPCWSTR pwszKey,
+        [in, string] LPCWSTR pwszValue);
+
+    HRESULT HrSetupSetFirstStringAsBool(
+        [in, string] LPCWSTR pwszSection,
+        [in, string] LPCWSTR pwszKey,
+        [in]         BOOL    fValue);
+
+    HRESULT HrSetupSetFirstMultiSzField(
+        [in, string] LPCWSTR pwszSection,
+        [in, string] LPCWSTR pwszKey,
+        [in]         LPCWSTR pmszValue);
+};

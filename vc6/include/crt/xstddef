@@ -1,0 +1,59 @@
+// xstddef standard header
+#ifndef _XSTDDEF_
+#define _XSTDDEF_
+#ifndef _YVALS
+ #include <yvals.h>
+#endif
+#include <cstddef>
+
+/* Define _CRTIMP */
+#ifndef _CRTIMP
+#ifdef	_DLL
+#define _CRTIMP __declspec(dllimport)
+#else	/* ndef _DLL */
+#define _CRTIMP
+#endif	/* _DLL */
+#endif	/* _CRTIMP */
+
+#ifdef  _MSC_VER
+#pragma pack(push,8)
+#endif  /* _MSC_VER */
+_STD_BEGIN
+		// EXCEPTION MACROS
+ #define _TRY_BEGIN	try {
+ #define _CATCH(x)	} catch (x) {
+ #define _CATCH_ALL	} catch (...) {
+ #define _CATCH_END	}
+ #define _RAISE(x)	throw (x)
+ #define _RERAISE	throw
+ #define _THROW0()	throw ()
+ #define _THROW1(x)	throw (x)
+ #define _THROW(x, y)	throw x(y)
+		// explicit KEYWORD
+		// BITMASK MACROS
+ #define _BITMASK(E, T)	typedef int T
+ #define _BITMASK_OPS(T)
+		// MISCELLANEOUS MACROS
+#define _DESTRUCTOR(ty, ptr)	(ptr)->~ty()
+#define _PROTECTED	public
+ #define _TDEF(x)		= x
+ #define _TDEF2(x, y)	= x, y
+ #define _CNTSIZ(iter)	ptrdiff_t
+ #define _TDEFP(x)
+ #define _STCONS(ty, name, val)	enum {name = val}
+		// TYPE DEFINITIONS
+enum _Uninitialized {_Noinit};
+		// FUNCTIONS
+_CRTIMP void __cdecl _Nomemory();
+_STD_END
+#ifdef  _MSC_VER
+#pragma pack(pop)
+#endif  /* _MSC_VER */
+
+#endif /* _XSTDDEF_ */
+
+/*
+ * Copyright (c) 1995 by P.J. Plauger.  ALL RIGHTS RESERVED. 
+ * Consult your license regarding permissions and restrictions.
+ */
+

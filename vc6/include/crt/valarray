@@ -1,0 +1,935 @@
+// valarray standard header
+#ifndef _VALARRAY_
+#define _VALARRAY_
+#include <cstring>
+#include <xstddef>
+
+#ifdef  _MSC_VER
+#pragma pack(push,8)
+#endif  /* _MSC_VER */
+_STD_BEGIN
+class gslice;
+class slice;
+template<class _Ty>
+	class gslice_array;
+template<class _Ty>
+	class indirect_array;
+template<class _Ty>
+	class mask_array;
+template<class _Ty>
+	class slice_array;
+template<class _Ty>
+	class valarray;
+typedef valarray<_Bool> _Boolarray;
+typedef valarray<size_t> _Sizarray;
+		// TEMPLATE CLASS valarray
+#define _VALOP(TYPE, LENGTH, RHS) \
+	valarray<TYPE> _Ans(LENGTH); \
+	for (size_t _I = 0; _I < _Ans.size(); ++_I) \
+		_Ans[_I] = RHS; \
+	return (_Ans)
+#define _VALGOP(RHS) \
+	for (size_t _I = 0; _I < size(); ++_I) \
+		_Ptr[_I] RHS; \
+	return (*this)
+#define _VALGOP2(RHS) \
+	for (size_t _I = 0; _I < _L.size(); ++_I) \
+		_L[_I] RHS; \
+	return (_L)
+template<class _Ty>
+	class valarray {
+public:
+	typedef _Ty value_type;
+	explicit valarray(size_t _N = 0)
+		{_Tidy(), _Res = _N, _Grow(_N); }
+	valarray(const _Ty& _X, size_t _N)
+		{_Tidy(), _Grow(_N, &_X); }
+	valarray(const _Ty *_S, size_t _N)
+		{_Tidy(), _Grow(_N, _S, 1); }
+	valarray(const valarray<_Ty>& _X)
+		{_Tidy(), _Grow(_X.size(), _X._Ptr, 1); }
+	valarray(const slice_array<_Ty>& _Sl)
+		{_Tidy();
+		*this = _Sl; }
+	valarray(const gslice_array<_Ty>& _Gs)
+		{_Tidy();
+		*this = _Gs; }
+	valarray(const mask_array<_Ty>& _Ma)
+		{_Tidy();
+		*this = _Ma; }
+	valarray(const indirect_array<_Ty>& _Ia)
+		{_Tidy();
+		*this = _Ia; }
+	~valarray()
+		{_Tidy(true); }
+	valarray<_Ty>& operator=(const valarray<_Ty>& _R)
+		{if (this == &_R)
+			return (*this);
+		_Grow(_R.size(), 0, 0, true);
+		_VALGOP(= _R[_I]); }
+	valarray<_Ty>& operator=(const _Ty& _R)
+		{_VALGOP(= _R); }
+	void resize(size_t _N, const _Ty& _C = _Ty())
+		{_Grow(_N, &_C, 0, true); }
+	valarray<_Ty>& operator=(const slice_array<_Ty>& _Sl);
+	valarray<_Ty>& operator=(const gslice_array<_Ty>& _Gs);
+	valarray<_Ty>& operator=(const mask_array<_Ty>& _Ma);
+	valarray<_Ty>& operator=(const indirect_array<_Ty>& _Ia);
+	size_t size() const
+		{return (_Len); }
+	_Ty operator[](size_t _I) const
+		{return (_Ptr[_I]); } 
+	_Ty& operator[](size_t _I)
+		{return (_Ptr[_I]); }
+	valarray<_Ty> operator[](slice _Sl) const;
+	slice_array<_Ty> operator[](slice _Sl);
+	valarray<_Ty> operator[](const gslice& _Gs) const;
+	gslice_array<_Ty> operator[](const gslice& _Gs);
+	valarray<_Ty> operator[](
+		const _Boolarray& _Ba) const;
+	mask_array<_Ty> operator[](
+		const _Boolarray& _Ba);
+	valarray<_Ty> operator[](const _Sizarray& _Ia) const;
+	indirect_array<_Ty> operator[](const _Sizarray& _Ia);
+	_Ty sum() const
+		{_Ty _Sum = _Ptr[0];
+		for (size_t _I = 0; ++_I < size(); )
+			_Sum += _Ptr[_I];
+		return (_Sum); }
+	_Ty min() const
+		{_Ty _Min = _Ptr[0];
+		for (size_t _I = 0; ++_I < size(); )
+			if (_Ptr[_I] < _Min)
+				_Min = _Ptr[_I];
+		return (_Min); }
+	_Ty max() const
+		{_Ty _Max = _Ptr[0];
+		for (size_t _I = 0; ++_I < size(); )
+			if (_Max < _Ptr[_I])
+				_Max = _Ptr[_I];
+		return (_Max); }
+	valarray<_Ty> shift(int _N) const
+		{static _Ty _Def;
+		_VALOP(_Ty, size(),
+			0 < _N && size() - _I <= _N
+				|| _N < 0 && _I  < -_N
+					? _Def : _Ptr[_I + _N]); }
+	valarray<_Ty> cshift(int _N) const
+		{if (size() == 0)
+			;
+		else if (_N < 0)
+			{if ((_N += size()) < 0)
+				_N = size() - (-_N) % size(); }
+		else if (size() <= _N)
+			_N %= size();
+		_VALOP(_Ty, size(),
+			size() - _I <= _N
+				? _Ptr[_I - size() + _N] : _Ptr[_I + _N]); }
+	valarray<_Ty> apply(_Ty _F(_Ty)) const
+		{_VALOP(_Ty, size(), _F(_Ptr[_I])); }
+	valarray<_Ty> apply(_Ty _F(const _Ty&)) const
+		{_VALOP(_Ty, size(), _F(_Ptr[_I])); }
+	void free()
+		{_Tidy(true); }
+private:
+	void _Grow(size_t _N, const _Ty *_S = 0, size_t _D = 0,
+		bool _Trim = 0)
+		{size_t _Os = _Ptr == 0 ? 0 : _Res;
+		if (_N == 0)
+			{if (_Trim)
+				_Tidy(true); }
+		else if (_N == _Os || _N < _Os && !_Trim)
+			;
+		else
+			{size_t _I, _M = _Ptr == 0 && _N < _Res ? _Res : _N;
+			_Ty *_Np = new _Ty[_M];
+			if (_Np == 0)
+				_Nomemory();
+			size_t _Nm = _N < _Len ? _N : _Len;
+			for (_I = 0; _I < _Nm; ++_I)
+				_Np[_I] = _Ptr[_I];
+			if (_S != 0)
+				for (; _I < _M; ++_I, _S += _D)
+					_Np[_I] = *_S;
+			_Tidy(true), _Ptr = _Np, _Res = _M; }
+		_Len = _N; }
+	void _Tidy(bool _Constructed = 0)
+		{if (_Constructed && _Ptr != 0)
+			delete[] _Ptr;
+		_Len = 0, _Ptr = 0, _Res = 0; }
+	 _Ty *_Ptr;
+	size_t _Len, _Res;
+	};
+		// valarray MEMBER TEMPLATE OPERATORS
+template<class _Ty> inline
+	valarray<_Ty> operator+(const valarray<_Ty>& _L)
+	{_VALOP(_Ty, _L.size(), +_L[_I]); }
+template<class _Ty> inline
+	valarray<_Ty> operator-(const valarray<_Ty>& _L)
+	{_VALOP(_Ty, _L.size(), -_L[_I]); }
+template<class _Ty> inline
+	valarray<_Ty> operator~(const valarray<_Ty>& _L)
+	{_VALOP(_Ty, _L.size(), ~_L[_I]); }
+template<class _Ty> inline
+	_Boolarray operator!(const valarray<_Ty>& _L)
+	{_VALOP(_Bool, _L.size(), !_L[_I]); }
+template<class _Ty> inline
+	valarray<_Ty>& operator*=(valarray<_Ty>& _L, const _Ty& _R)
+	{_VALGOP2(*= _R); }
+template<class _Ty> inline
+	valarray<_Ty>& operator/=(valarray<_Ty>& _L, const _Ty& _R)
+	{_VALGOP2(/= _R); }
+template<class _Ty> inline
+	valarray<_Ty>& operator%=(valarray<_Ty>& _L, const _Ty& _R)
+	{_VALGOP2(%= _R); }
+template<class _Ty> inline
+	valarray<_Ty>& operator+=(valarray<_Ty>& _L, const _Ty& _R)
+	{_VALGOP2(+= _R); }
+template<class _Ty> inline
+	valarray<_Ty>& operator-=(valarray<_Ty>& _L, const _Ty& _R)
+	{_VALGOP2(-= _R); }
+template<class _Ty> inline
+	valarray<_Ty>& operator^=(valarray<_Ty>& _L, const _Ty& _R)
+	{_VALGOP2(^= _R); }
+template<class _Ty> inline
+	valarray<_Ty>& operator&=(valarray<_Ty>& _L, const _Ty& _R)
+	{_VALGOP2(&= _R); }
+template<class _Ty> inline
+	valarray<_Ty>& operator|=(valarray<_Ty>& _L, const _Ty& _R)
+	{_VALGOP2(|= _R); }
+template<class _Ty> inline
+	valarray<_Ty>& operator<<=(valarray<_Ty>& _L, const _Ty& _R)
+	{_VALGOP2(<<= _R); }
+template<class _Ty> inline
+	valarray<_Ty>& operator>>=(valarray<_Ty>& _L, const _Ty& _R)
+	{_VALGOP2(>>= _R); }
+template<class _Ty> inline
+	valarray<_Ty>& operator*=(valarray<_Ty>& _L,
+		const valarray<_Ty>& _R)
+	{_VALGOP2(*= _R[_I]); }
+template<class _Ty> inline
+	valarray<_Ty>& operator/=(valarray<_Ty>& _L,
+		const valarray<_Ty>& _R)
+	{_VALGOP2(/= _R[_I]); }
+template<class _Ty> inline
+	valarray<_Ty>& operator%=(valarray<_Ty>& _L,
+		const valarray<_Ty>& _R)
+	{_VALGOP2(%= _R[_I]); }
+template<class _Ty> inline
+	valarray<_Ty>& operator+=(valarray<_Ty>& _L,
+		const valarray<_Ty>& _R)
+	{_VALGOP2(+= _R[_I]); }
+template<class _Ty> inline
+	valarray<_Ty>& operator-=(valarray<_Ty>& _L,
+		const valarray<_Ty>& _R)
+	{_VALGOP2(-= _R[_I]); }
+template<class _Ty> inline
+	valarray<_Ty>& operator^=(valarray<_Ty>& _L,
+		const valarray<_Ty>& _R)
+	{_VALGOP2(^= _R[_I]); }
+template<class _Ty> inline
+	valarray<_Ty>& operator|=(valarray<_Ty>& _L,
+		const valarray<_Ty>& _R)
+	{_VALGOP2(|= _R[_I]); }
+template<class _Ty> inline
+	valarray<_Ty>& operator&=(valarray<_Ty>& _L,
+		const valarray<_Ty>& _R)
+	{_VALGOP2(&= _R[_I]); }
+template<class _Ty> inline
+	valarray<_Ty>& operator<<=(valarray<_Ty>& _L,
+		const valarray<_Ty>& _R)
+	{_VALGOP2(<<= _R[_I]); }
+template<class _Ty> inline
+	valarray<_Ty>& operator>>=(valarray<_Ty>& _L,
+		const valarray<_Ty>& _R)
+	{_VALGOP2(>>= _R[_I]); }
+		// valarray TEMPLATE FUNCTIONS
+template<class _Ty> inline
+	valarray<_Ty> operator*(const valarray<_Ty>& _L,
+		const _Ty& _R)
+	{_VALOP(_Ty, _L.size(), _L[_I] * _R); }
+template<class _Ty> inline
+	valarray<_Ty> operator*(const _Ty& _L,
+		const valarray<_Ty>& _R)
+	{_VALOP(_Ty, _R.size(), _L * _R[_I]); }
+template<class _Ty> inline
+	valarray<_Ty> operator/(const valarray<_Ty>& _L,
+		const _Ty& _R)
+	{_VALOP(_Ty, _L.size(), _L[_I] / _R); }
+template<class _Ty> inline
+	valarray<_Ty> operator/(const _Ty& _L,
+		const valarray<_Ty>& _R)
+	{_VALOP(_Ty, _R.size(), _L / _R[_I]); }
+template<class _Ty> inline
+	valarray<_Ty> operator%(const valarray<_Ty>& _L,
+		const _Ty& _R)
+	{_VALOP(_Ty, _L.size(), _L[_I] % _R); }
+template<class _Ty> inline
+	valarray<_Ty> operator%(const _Ty& _L,
+		const valarray<_Ty>& _R)
+	{_VALOP(_Ty, _R.size(), _L % _R[_I]); }
+template<class _Ty> inline
+	valarray<_Ty> operator+(const valarray<_Ty>& _L,
+		const _Ty& _R)
+	{_VALOP(_Ty, _L.size(), _L[_I] + _R); }
+template<class _Ty> inline
+	valarray<_Ty> operator+(const _Ty& _L,
+		const valarray<_Ty>& _R)
+	{_VALOP(_Ty, _R.size(), _L + _R[_I]); }
+template<class _Ty> inline
+	valarray<_Ty> operator-(const valarray<_Ty>& _L,
+		const _Ty& _R)
+	{_VALOP(_Ty, _L.size(), _L[_I] - _R); }
+template<class _Ty> inline
+	valarray<_Ty> operator-(const _Ty& _L,
+		const valarray<_Ty>& _R)
+	{_VALOP(_Ty, _R.size(), _L - _R[_I]); }
+template<class _Ty> inline
+	valarray<_Ty> operator^(const valarray<_Ty>& _L,
+		const _Ty& _R)
+	{_VALOP(_Ty, _L.size(), _L[_I] ^ _R); }
+template<class _Ty> inline
+	valarray<_Ty> operator^(const _Ty& _L,
+		const valarray<_Ty>& _R)
+	{_VALOP(_Ty, _R.size(), _L ^ _R[_I]); }
+template<class _Ty> inline
+	valarray<_Ty> operator&(const valarray<_Ty>& _L,
+		const _Ty& _R)
+	{_VALOP(_Ty, _L.size(), _L[_I] & _R); }
+template<class _Ty> inline
+	valarray<_Ty> operator&(const _Ty& _L,
+		const valarray<_Ty>& _R)
+	{_VALOP(_Ty, _R.size(), _L & _R[_I]); }
+template<class _Ty> inline
+	valarray<_Ty> operator|(const valarray<_Ty>& _L,
+		const _Ty& _R)
+	{_VALOP(_Ty, _L.size(), _L[_I] | _R); }
+template<class _Ty> inline
+	valarray<_Ty> operator|(const _Ty& _L,
+		const valarray<_Ty>& _R)
+	{_VALOP(_Ty, _R.size(), _L | _R[_I]); }
+template<class _Ty> inline
+	valarray<_Ty> operator<<(const valarray<_Ty>& _L,
+		const _Ty& _R)
+	{_VALOP(_Ty, _L.size(), _L[_I] << _R); }
+template<class _Ty> inline
+	valarray<_Ty> operator<<(const _Ty& _L,
+		const valarray<_Ty>& _R)
+	{_VALOP(_Ty, _R.size(), _L << _R[_I]); }
+template<class _Ty> inline
+	valarray<_Ty> operator>>(const valarray<_Ty>& _L,
+		const _Ty& _R)
+	{_VALOP(_Ty, _L.size(), _L[_I] >> _R); }
+template<class _Ty> inline
+	valarray<_Ty> operator>>(const _Ty& _L,
+		const valarray<_Ty>& _R)
+	{_VALOP(_Ty, _R.size(), _L >> _R[_I]); }
+template<class _Ty> inline
+	_Boolarray operator&&(const valarray<_Ty>& _L,
+		const _Ty& _R)
+	{_VALOP(_Bool, _L.size(), _L[_I] && _R); }
+template<class _Ty> inline
+	_Boolarray operator&&(const _Ty& _L,
+		const valarray<_Ty>& _R)
+	{_VALOP(_Bool, _R.size(), _L && _R[_I]); }
+template<class _Ty> inline
+	_Boolarray operator||(const valarray<_Ty>& _L,
+		const _Ty& _R)
+	{_VALOP(_Bool, _L.size(), _L[_I] || _R); }
+template<class _Ty> inline
+	_Boolarray operator||(const _Ty& _L,
+		const valarray<_Ty>& _R)
+	{_VALOP(_Bool, _R.size(), _L || _R[_I]); }
+template<class _Ty> inline
+	valarray<_Ty> operator*(const valarray<_Ty>& _L,
+		const valarray<_Ty>& _R)
+	{_VALOP(_Ty, _L.size(), _L[_I] * _R[_I]); }
+template<class _Ty> inline
+	valarray<_Ty> operator/(const valarray<_Ty>& _L,
+		const valarray<_Ty>& _R)
+	{_VALOP(_Ty, _L.size(), _L[_I] / _R[_I]); }
+template<class _Ty> inline
+	valarray<_Ty> operator%(const valarray<_Ty>& _L,
+		const valarray<_Ty>& _R)
+	{_VALOP(_Ty, _L.size(), _L[_I] % _R[_I]); }
+template<class _Ty> inline
+	valarray<_Ty> operator+(const valarray<_Ty>& _L,
+		const valarray<_Ty>& _R)
+	{_VALOP(_Ty, _L.size(), _L[_I] + _R[_I]); }
+template<class _Ty> inline
+	valarray<_Ty> operator-(const valarray<_Ty>& _L,
+		const valarray<_Ty>& _R)
+	{_VALOP(_Ty, _L.size(), _L[_I] - _R[_I]); }
+template<class _Ty> inline
+	valarray<_Ty> operator^(const valarray<_Ty>& _L,
+		const valarray<_Ty>& _R)
+	{_VALOP(_Ty, _L.size(), _L[_I] ^ _R[_I]); }
+template<class _Ty> inline
+	valarray<_Ty> operator&(const valarray<_Ty>& _L,
+		const valarray<_Ty>& _R)
+	{_VALOP(_Ty, _L.size(), _L[_I] & _R[_I]); }
+template<class _Ty> inline
+	valarray<_Ty> operator|(const valarray<_Ty>& _L,
+		const valarray<_Ty>& _R)
+	{_VALOP(_Ty, _L.size(), _L[_I] | _R[_I]); }
+template<class _Ty> inline
+	valarray<_Ty> operator<<(const valarray<_Ty>& _L,
+		const valarray<_Ty>& _R)
+	{_VALOP(_Ty, _L.size(), _L[_I] << _R[_I]); }
+template<class _Ty> inline
+	valarray<_Ty> operator>>(const valarray<_Ty>& _L,
+		const valarray<_Ty>& _R)
+	{_VALOP(_Ty, _L.size(), _L[_I] >> _R[_I]); }
+template<class _Ty> inline
+	_Boolarray operator&&(const valarray<_Ty>& _L,
+		const valarray<_Ty>& _R)
+	{_VALOP(_Bool, _L.size(), _L[_I] && _R[_I]); }
+template<class _Ty> inline
+	_Boolarray operator||(const valarray<_Ty>& _L,
+		const valarray<_Ty>& _R)
+	{_VALOP(_Bool, _L.size(), _L[_I] || _R[_I]); }
+template<class _Ty> inline
+	_Boolarray operator==(const valarray<_Ty>& _L,
+		const _Ty& _R)
+	{_VALOP(_Bool, _L.size(), _L[_I] == _R); }
+template<class _Ty> inline
+	_Boolarray operator==(const _Ty& _L,
+		const valarray<_Ty>& _R)
+	{_VALOP(_Bool, _R.size(), _L == _R[_I]); }
+template<class _Ty> inline
+	_Boolarray operator==(const valarray<_Ty>& _L,
+		const valarray<_Ty>& _R)
+	{_VALOP(_Bool, _L.size(), _L[_I] == _R[_I]); }
+template<class _Ty> inline
+	_Boolarray operator!=(const valarray<_Ty>& _L,
+		const _Ty& _R)
+	{_VALOP(_Bool, _L.size(), _L[_I] != _R); }
+template<class _Ty> inline
+	_Boolarray operator!=(const _Ty& _L,
+		const valarray<_Ty>& _R)
+	{_VALOP(_Bool, _R.size(), _L != _R[_I]); }
+template<class _Ty> inline
+	_Boolarray operator!=(const valarray<_Ty>& _L,
+		const valarray<_Ty>& _R)
+	{_VALOP(_Bool, _L.size(), _L[_I] != _R[_I]); }
+template<class _Ty> inline
+	_Boolarray operator<(const valarray<_Ty>& _L,
+		const _Ty& _R)
+	{_VALOP(_Bool, _L.size(), _L[_I] < _R); }
+template<class _Ty> inline
+	_Boolarray operator<(const _Ty& _L,
+		const valarray<_Ty>& _R)
+	{_VALOP(_Bool, _R.size(), _L < _R[_I]); }
+template<class _Ty> inline
+	_Boolarray operator<(const valarray<_Ty>& _L,
+		const valarray<_Ty>& _R)
+	{_VALOP(_Bool, _L.size(), _L[_I] < _R[_I]); }
+template<class _Ty> inline
+	_Boolarray operator>(const valarray<_Ty>& _L,
+		const _Ty& _R)
+	{_VALOP(_Bool, _L.size(), _L[_I] > _R); }
+template<class _Ty> inline
+	_Boolarray operator>(const _Ty& _L,
+		const valarray<_Ty>& _R)
+	{_VALOP(_Bool, _R.size(), _L > _R[_I]); }
+template<class _Ty> inline
+	_Boolarray operator>(const valarray<_Ty>& _L,
+		const valarray<_Ty>& _R)
+	{_VALOP(_Bool, _L.size(), _L[_I] > _R[_I]); }
+template<class _Ty> inline
+	_Boolarray operator<=(const valarray<_Ty>& _L,
+		const _Ty& _R)
+	{_VALOP(_Bool, _L.size(), _L[_I] <= _R); }
+template<class _Ty> inline
+	_Boolarray operator<=(const _Ty& _L,
+		const valarray<_Ty>& _R)
+	{_VALOP(_Bool, _R.size(), _L <= _R[_I]); }
+template<class _Ty> inline
+	_Boolarray operator<=(const valarray<_Ty>& _L,
+		const valarray<_Ty>& _R)
+	{_VALOP(_Bool, _L.size(), _L[_I] <= _R[_I]); }
+template<class _Ty> inline
+	_Boolarray operator>=(const valarray<_Ty>& _L,
+		const _Ty& _R)
+	{_VALOP(_Bool, _L.size(), _L[_I] >= _R); }
+template<class _Ty> inline
+	_Boolarray operator>=(const _Ty& _L,
+		const valarray<_Ty>& _R)
+	{_VALOP(_Bool, _R.size(), _L >= _R[_I]); }
+template<class _Ty> inline
+	_Boolarray operator>=(const valarray<_Ty>& _L,
+		const valarray<_Ty>& _R)
+	{_VALOP(_Bool, _L.size(), _L[_I] >= _R[_I]); }
+template<class _Ty> inline
+	valarray<_Ty> abs(const valarray<_Ty>& _X)
+	{_VALOP(_Ty, _X.size(), ::abs(_X[_I])); }
+template<class _Ty> inline
+	valarray<_Ty> acos(const valarray<_Ty>& _X)
+	{_VALOP(_Ty, _X.size(), ::acos(_X[_I])); }
+template<class _Ty> inline
+	valarray<_Ty> asin(const valarray<_Ty>& _X)
+	{_VALOP(_Ty, _X.size(), ::asin(_X[_I])); }
+template<class _Ty> inline
+	valarray<_Ty> atan(const valarray<_Ty>& _X)
+	{_VALOP(_Ty, _X.size(), ::atan(_X[_I])); }
+template<class _Ty> inline
+	valarray<_Ty> atan2(const valarray<_Ty>& _X,
+		const valarray<_Ty>& _Y)
+	{_VALOP(_Ty, _X.size(), ::atan2(_X[_I], _Y[_I])); }
+template<class _Ty> inline
+	valarray<_Ty> atan2(const valarray<_Ty>& _X, const _Ty& _Y)
+	{_VALOP(_Ty, _X.size(), ::atan2(_X[_I], _Y)); }
+template<class _Ty> inline
+	valarray<_Ty> atan2(const _Ty& _X, const valarray<_Ty>& _Y)
+	{_VALOP(_Ty, _Y.size(), ::atan2(_X, _Y[_I])); }
+template<class _Ty> inline
+	valarray<_Ty> cos(const valarray<_Ty>& _X)
+	{_VALOP(_Ty, _X.size(), ::cos(_X[_I])); }
+template<class _Ty> inline
+	valarray<_Ty> cosh(const valarray<_Ty>& _X)
+	{_VALOP(_Ty, _X.size(), ::cosh(_X[_I])); }
+template<class _Ty> inline
+	valarray<_Ty> exp(const valarray<_Ty>& _X)
+	{_VALOP(_Ty, _X.size(), ::exp(_X[_I])); }
+template<class _Ty> inline
+	valarray<_Ty> log(const valarray<_Ty>& _X)
+	{_VALOP(_Ty, _X.size(), ::log(_X[_I])); }
+template<class _Ty> inline
+	valarray<_Ty> log10(const valarray<_Ty>& _X)
+	{_VALOP(_Ty, _X.size(), ::log10(_X[_I])); }
+template<class _Ty> inline
+	valarray<_Ty> pow(const valarray<_Ty>& _X,
+		const valarray<_Ty>& _Y)
+	{_VALOP(_Ty, _X.size(), ::pow(_X[_I], _Y[_I])); }
+template<class _Ty> inline
+	valarray<_Ty> pow(const valarray<_Ty>& _X, const _Ty& _Y)
+	{_VALOP(_Ty, _X.size(), ::pow(_X[_I], _Y)); }
+template<class _Ty> inline
+	valarray<_Ty> pow(const _Ty& _X, const valarray<_Ty>& _Y)
+	{_VALOP(_Ty, _Y.size(), ::pow(_X, _Y[_I])); }
+template<class _Ty> inline
+	valarray<_Ty> sin(const valarray<_Ty>& _X)
+	{_VALOP(_Ty, _X.size(), ::sin(_X[_I])); }
+template<class _Ty> inline
+	valarray<_Ty> sinh(const valarray<_Ty>& _X)
+	{_VALOP(_Ty, _X.size(), ::sinh(_X[_I])); }
+template<class _Ty> inline
+	valarray<_Ty> sqrt(const valarray<_Ty>& _X)
+	{_VALOP(_Ty, _X.size(), ::sqrt(_X[_I])); }
+template<class _Ty> inline
+	valarray<_Ty> tan(const valarray<_Ty>& _X)
+	{_VALOP(_Ty, _X.size(), ::tan(_X[_I])); }
+template<class _Ty> inline
+	valarray<_Ty> tanh(const valarray<_Ty>& _X)
+	{_VALOP(_Ty, _X.size(), ::tanh(_X[_I])); }
+		// CLASS slice
+class slice {
+public:
+	slice()
+		: _Start(0), _Len(0), _Stride(0) {}
+	slice(size_t _S, size_t _L, size_t _D)
+		: _Start(_S), _Len(_L), _Stride(_D) {}
+	size_t start() const
+		{return (_Start); }
+	size_t size() const
+		{return (_Len); }
+	size_t stride() const
+		{return (_Stride); }
+protected:
+	size_t _Start, _Len, _Stride;
+	};
+		// TEMPLATE CLASS slice_array
+#define _SLOP(RHS) \
+	size_t _N = _Start; \
+	for (size_t _I = 0; _I < _Len; ++_I, _N += _Stride) \
+		_Ptr[_N] RHS;
+#define _SLOP2(RHS) \
+	size_t _N = _L.start(); \
+	for (size_t _I = 0; _I < _L.size(); \
+		++_I, _N += _L.stride()) \
+		_L._Data(_N) RHS;
+template<class _Ty>
+	class slice_array : public slice {
+public:
+	typedef _Ty value_type;
+	void operator=(const valarray<_Ty>& _R) const
+		{_SLOP(= _R[_I]); }
+	void operator=(const _Ty& _R)
+		{_SLOP(= _R); }
+	_Ty& _Data(size_t _I) const
+		{return (_Ptr[_I]); }
+private:
+	friend class valarray<_Ty>;
+	slice_array(const slice& _Sl, _Ty *_Pd)
+		: slice(_Sl), _Ptr(_Pd) {}
+	_Ty *_Ptr;
+	};
+		// slice_array MEMBER TEMPLATE OPERATORS
+template<class _Ty> inline
+	void operator*=(const slice_array<_Ty>& _L,
+		const valarray<_Ty>& _R)
+	{_SLOP2(*= _R[_I]); }
+template<class _Ty> inline
+	void operator/=(const slice_array<_Ty>& _L,
+		const valarray<_Ty>& _R)
+	{_SLOP2(/= _R[_I]); }
+template<class _Ty> inline
+	void operator%=(const slice_array<_Ty>& _L,
+		const valarray<_Ty>& _R)
+	{_SLOP2(%= _R[_I]); }
+template<class _Ty> inline
+	void operator+=(const slice_array<_Ty>& _L,
+		const valarray<_Ty>& _R)
+	{_SLOP2(+= _R[_I]); }
+template<class _Ty> inline
+	void operator-=(const slice_array<_Ty>& _L,
+		const valarray<_Ty>& _R)
+	{_SLOP2(-= _R[_I]); }
+template<class _Ty> inline
+	void operator^=(const slice_array<_Ty>& _L,
+		const valarray<_Ty>& _R)
+	{_SLOP2(^= _R[_I]); }
+template<class _Ty> inline
+	void operator&=(const slice_array<_Ty>& _L,
+		const valarray<_Ty>& _R)
+	{_SLOP2(&= _R[_I]); }
+template<class _Ty> inline
+	void operator|=(const slice_array<_Ty>& _L,
+		const valarray<_Ty>& _R)
+	{_SLOP2(|= _R[_I]); }
+template<class _Ty> inline
+	void operator<<=(const slice_array<_Ty>& _L,
+		const valarray<_Ty>& _R)
+	{_SLOP2(<<= _R[_I]); }
+template<class _Ty> inline
+	void operator>>=(const slice_array<_Ty>& _L,
+		const valarray<_Ty>& _R)
+	{_SLOP2(>>= _R[_I]); }
+		// CLASS gslice
+class gslice {
+public:
+	gslice()
+		: _Start(0) {}
+	gslice(size_t _S, const _Sizarray& _L,
+		const _Sizarray& _D)
+		: _Start(_S), _Len(_L), _Stride(_D) {}
+	size_t start() const
+		{return (_Start); }
+	_Sizarray size() const
+		{return (_Len); }
+	_Sizarray stride() const
+		{return (_Stride); }
+	size_t _Nslice() const
+		{return (_Len.size()); }
+	size_t _Off(_Sizarray& _Idx) const
+		{size_t _I, _K = _Start;
+		for (_I = 0; _I < _Idx.size(); ++_I)
+			_K += _Idx[_I] * _Stride[_I];
+		while (0 < _I--)
+			if (++_Idx[_I] < _Len[_I])
+				break;
+			else
+				_Idx[_I] = 0;
+		return (_K); }
+	size_t _Totlen() const
+		{if (_Len.size() == 0)
+			return (0);
+		size_t _L = _Len[0];
+		for (size_t _I = 0; ++_I < _Len.size(); )
+			_L *= _Len[_I];
+		return (_L); }
+private:
+	size_t _Start;
+	_Sizarray _Len;
+	_Sizarray _Stride;
+	};
+		// TEMPLATE CLASS gslice_array
+#define _GSLOP(RHS) \
+	_Sizarray _Idx((size_t)0, _Nslice()); \
+	size_t _N = _Totlen(); \
+	for (size_t _I = 0; _I < _N; ++_I) \
+		_Ptr[_Off(_Idx)] RHS;
+#define _GSLOP2(RHS) \
+	_Sizarray _Idx((size_t)0, _L._Nslice()); \
+	size_t _N = _L._Totlen(); \
+	for (size_t _I = 0; _I < _N; ++_I) \
+		_L._Data(_L._Off(_Idx)) RHS;
+template<class _Ty>
+	class gslice_array : public gslice {
+public:
+	typedef _Ty value_type;
+	void operator=(const valarray<_Ty>& _R) const
+		{_GSLOP(= _R[_I]); }
+	void operator=(const _Ty& _R)
+		{_GSLOP(= _R); }
+	_Ty& _Data(size_t _I) const
+		{return (_Ptr[_I]); }
+private:
+	friend class valarray<_Ty>;
+	gslice_array(const gslice& _Gs, _Ty *_Pd)
+		: gslice(_Gs), _Ptr(_Pd) {}
+	_Ty *_Ptr;
+	};
+		// gslice_array MEMBER TEMPLATE OPERATORS
+template<class _Ty> inline
+	void operator*=(const gslice_array<_Ty>& _L,
+		const valarray<_Ty>& _R)
+	{_GSLOP2(*= _R[_I]); }
+template<class _Ty> inline
+	void operator/=(const gslice_array<_Ty>& _L,
+		const valarray<_Ty>& _R)
+	{_GSLOP2(/= _R[_I]); }
+template<class _Ty> inline
+	void operator%=(const gslice_array<_Ty>& _L,
+		const valarray<_Ty>& _R)
+	{_GSLOP2(%= _R[_I]); }
+template<class _Ty> inline
+	void operator+=(const gslice_array<_Ty>& _L,
+		const valarray<_Ty>& _R)
+	{_GSLOP2(+= _R[_I]); }
+template<class _Ty> inline
+	void operator-=(const gslice_array<_Ty>& _L,
+		const valarray<_Ty>& _R)
+	{_GSLOP2(-= _R[_I]); }
+template<class _Ty> inline
+	void operator^=(const gslice_array<_Ty>& _L,
+		const valarray<_Ty>& _R)
+	{_GSLOP2(^= _R[_I]); }
+template<class _Ty> inline
+	void operator&=(const gslice_array<_Ty>& _L,
+		const valarray<_Ty>& _R)
+	{_GSLOP2(&= _R[_I]); }
+template<class _Ty> inline
+	void operator|=(const gslice_array<_Ty>& _L,
+		const valarray<_Ty>& _R)
+	{_GSLOP2(|= _R[_I]); }
+template<class _Ty> inline
+	void operator<<=(const gslice_array<_Ty>& _L,
+		const valarray<_Ty>& _R)
+	{_GSLOP2(<<= _R[_I]); }
+template<class _Ty> inline
+	void operator>>=(const gslice_array<_Ty>& _L,
+		const valarray<_Ty>& _R)
+	{_GSLOP2(>>= _R[_I]); }
+		// TEMPLATE CLASS mask_array
+#define _MOP(RHS) \
+	size_t _N = 0; \
+	size_t _M = _Totlen(); \
+	for (size_t _I = 0; _I < _M; ++_N) \
+		if (_Mask(_N)) \
+			_Ptr[_N] RHS, ++_I;
+#define _MOP2(RHS) \
+	size_t _N = 0; \
+	size_t _M = _L._Totlen(); \
+	for (size_t _I = 0; _I < _M; ++_N) \
+		if (_L._Mask(_N)) \
+			_L._Data(_N) RHS, ++_I;
+template<class _Ty>
+	class mask_array {
+public:
+	typedef _Ty value_type;
+	void operator=(const valarray<_Ty>& _R)
+		{_MOP(= _R[_I]); }
+	void operator=(const _Ty& _R)
+		{_MOP(= _R); }
+	_Ty& _Data(size_t _I) const
+		{return (_Ptr[_I]); }
+	bool _Mask(size_t _I) const
+		{return (_Marr[_I]); }
+	size_t _Totlen() const
+		{size_t _N = 0;
+		for (size_t _I = 0; _I < _Marr.size(); ++_I)
+			if (_Marr[_I])
+				++_N;
+		return (_N); }
+private:
+	friend class valarray<_Ty>;
+	mask_array(const _Boolarray& _Ma, _Ty *_Pd)
+		: _Marr(_Ma), _Ptr(_Pd) {}
+	_Boolarray _Marr;
+	_Ty *_Ptr;
+	};
+		// mask_array MEMBER TEMPLATE OPERATORS
+template<class _Ty> inline
+	void operator*=(const mask_array<_Ty>& _L,
+		const valarray<_Ty>& _R)
+	{_MOP2(*= _R[_I]); }
+template<class _Ty> inline
+	void operator/=(const mask_array<_Ty>& _L,
+		const valarray<_Ty>& _R)
+	{_MOP2(/= _R[_I]); }
+template<class _Ty> inline
+	void operator%=(const mask_array<_Ty>& _L,
+		const valarray<_Ty>& _R)
+	{_MOP2(%= _R[_I]); }
+template<class _Ty> inline
+	void operator+=(const mask_array<_Ty>& _L,
+		const valarray<_Ty>& _R)
+	{_MOP2(+= _R[_I]); }
+template<class _Ty> inline
+	void operator-=(const mask_array<_Ty>& _L,
+		const valarray<_Ty>& _R)
+	{_MOP2(-= _R[_I]); }
+template<class _Ty> inline
+	void operator^=(const mask_array<_Ty>& _L,
+		const valarray<_Ty>& _R)
+	{_MOP2(^= _R[_I]); }
+template<class _Ty> inline
+	void operator&=(const mask_array<_Ty>& _L,
+		const valarray<_Ty>& _R)
+	{_MOP2(&= _R[_I]); }
+template<class _Ty> inline
+	void operator|=(const mask_array<_Ty>& _L,
+		const valarray<_Ty>& _R)
+	{_MOP2(|= _R[_I]); }
+template<class _Ty> inline
+	void operator<<=(const mask_array<_Ty>& _L,
+		const valarray<_Ty>& _R)
+	{_MOP2(<<= _R[_I]); }
+template<class _Ty> inline
+	void operator>>=(const mask_array<_Ty>& _L,
+		const valarray<_Ty>& _R)
+	{_MOP2(>>= _R[_I]); }
+		// TEMPLATE CLASS indirect_array
+#define _IOP(RHS) \
+	size_t _L = _Totlen(); \
+	for (size_t _I = 0; _I < _L; ++_I) \
+		_Ptr[_Indir(_I)] RHS;
+#define _IOP2(RHS) \
+	size_t _N = _L._Totlen(); \
+	for (size_t _I = 0; _I < _N; ++_I) \
+		_L._Data(_L._Indir(_I)) RHS;
+template<class _Ty>
+	class indirect_array {
+public:
+	typedef _Ty value_type;
+	void operator=(const valarray<_Ty>& _R) const
+		{_IOP(= _R[_I]); }
+	void operator=(const _Ty& _R)
+		{_IOP(= _R); }
+	_Ty& _Data(size_t _I) const
+		{return (_Ptr[_I]); }
+	size_t _Indir(size_t _I) const
+		{return (_Iarr[_I]); }
+	size_t _Totlen() const
+		{return (_Iarr.size()); }
+private:
+	friend class valarray<_Ty>;
+	indirect_array(const _Sizarray& _Ia, _Ty *_Pd)
+		: _Iarr(_Ia), _Ptr(_Pd) {}
+	_Sizarray _Iarr;
+	_Ty *_Ptr;
+	};
+		// indirect_array MEMBER TEMPLATE OPERATORS
+template<class _Ty> inline
+	void operator*=(const indirect_array<_Ty>& _L,
+		const valarray<_Ty>& _R)
+	{_IOP2(*= _R[_I]); }
+template<class _Ty> inline
+	void operator/=(const indirect_array<_Ty>& _L,
+		const valarray<_Ty>& _R)
+	{_IOP2(/= _R[_I]); }
+template<class _Ty> inline
+	void operator%=(const indirect_array<_Ty>& _L,
+		const valarray<_Ty>& _R)
+	{_IOP2(%= _R[_I]); }
+template<class _Ty> inline
+	void operator+=(const indirect_array<_Ty>& _L,
+		const valarray<_Ty>& _R)
+	{_IOP2(+= _R[_I]); }
+template<class _Ty> inline
+	void operator-=(const indirect_array<_Ty>& _L,
+		const valarray<_Ty>& _R)
+	{_IOP2(-= _R[_I]); }
+template<class _Ty> inline
+	void operator^=(const indirect_array<_Ty>& _L,
+		const valarray<_Ty>& _R)
+	{_IOP2(^= _R[_I]); }
+template<class _Ty> inline
+	void operator&=(const indirect_array<_Ty>& _L,
+		const valarray<_Ty>& _R)
+	{_IOP2(&= _R[_I]); }
+template<class _Ty> inline
+	void operator|=(const indirect_array<_Ty>& _L,
+		const valarray<_Ty>& _R)
+	{_IOP2(|= _R[_I]); }
+template<class _Ty> inline
+	void operator<<=(const indirect_array<_Ty>& _L,
+		const valarray<_Ty>& _R)
+	{_IOP2(<<= _R[_I]); }
+template<class _Ty> inline
+	void operator>>=(const indirect_array<_Ty>& _L,
+		const valarray<_Ty>& _R)
+	{_IOP2(>>= _R[_I]); }
+		// slice_array TEMPLATE FUNCTIONS
+template<class _Ty> inline
+	valarray<_Ty>& valarray<_Ty>::operator=(
+		const slice_array<_Ty>& _Sl)
+	{_Grow(_Sl.size(), &_Sl._Data(_Sl.start()),
+		_Sl.stride(), true);
+	return (*this); }
+template<class _Ty> inline
+	valarray<_Ty> valarray<_Ty>::operator[](slice _Sl) const
+	{return (valarray<_Ty>(slice_array<_Ty>(_Sl, _Ptr))); }
+template<class _Ty> inline
+	slice_array<_Ty> valarray<_Ty>::operator[](slice _Sl)
+	{return (slice_array<_Ty>(_Sl, _Ptr)); }
+		// gslice_array TEMPLATE FUNCTIONS
+template<class _Ty> inline
+	valarray<_Ty>& valarray<_Ty>::operator=(
+		const gslice_array<_Ty>& _Gs)
+	{_Grow(_Gs._Totlen(), 0, 0, true);
+	_Sizarray _Idx((size_t)0, _Gs._Nslice());
+	_VALGOP(= _Gs._Data(_Gs._Off(_Idx))); }
+template<class _Ty> inline
+	valarray<_Ty> valarray<_Ty>::operator[](
+		const gslice& _Gs) const
+	{return (valarray<_Ty>(gslice_array<_Ty>(_Gs, _Ptr))); }
+template<class _Ty> inline
+	gslice_array<_Ty> valarray<_Ty>::operator[](
+		const gslice& _Gs)
+	{return (gslice_array<_Ty>(_Gs, _Ptr)); }
+		// mask_array TEMPLATE FUNCTIONS
+template<class _Ty> inline
+	valarray<_Ty>& valarray<_Ty>::operator=(
+		const mask_array<_Ty>& _Ma)
+	{_Grow(_Ma._Totlen(), 0, 0, true);
+	size_t _N = 0;
+	for (size_t _I = 0; _I < size(); ++_N)
+		if (_Ma._Mask(_N))
+			_Ptr[_I++] = _Ma._Data(_N);
+	return (*this); }
+template<class _Ty> inline
+	valarray<_Ty> valarray<_Ty>::operator[](
+		const _Boolarray& _Ba) const
+	{return (valarray<_Ty>(mask_array<_Ty>(_Ba, _Ptr))); }
+template<class _Ty> inline
+	mask_array<_Ty> valarray<_Ty>::operator[](
+		const _Boolarray& _Ba)
+	{return (mask_array<_Ty>(_Ba, _Ptr)); }
+		// indirect_array TEMPLATE FUNCTIONS
+template<class _Ty> inline
+	valarray<_Ty>& valarray<_Ty>::operator=(
+		const indirect_array<_Ty>& _Ia)
+	{_Grow(_Ia._Totlen(), 0, 0, true);
+	_VALGOP(= _Ia._Data(_Ia._Indir(_I))); }
+template<class _Ty> inline
+	valarray<_Ty> valarray<_Ty>::operator[](
+		const _Sizarray& _Ia) const
+	{return (valarray<_Ty>(indirect_array<_Ty>(_Ia, _Ptr))); }
+template<class _Ty> inline
+	indirect_array<_Ty> valarray<_Ty>::operator[](
+		const _Sizarray& _Ia)
+	{return (indirect_array<_Ty>(_Ia, _Ptr)); }
+_STD_END
+#ifdef  _MSC_VER
+#pragma pack(pop)
+#endif  /* _MSC_VER */
+
+#endif /* _VALARRAY_ */
+
+/*
+ * Copyright (c) 1995 by P.J. Plauger.  ALL RIGHTS RESERVED. 
+ * Consult your license regarding permissions and restrictions.
+ */
+

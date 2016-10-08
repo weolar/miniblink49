@@ -13,8 +13,6 @@ void __cdecl operator delete[](void * p, unsigned int)
     free(p);
 }
 
-void* ftol2ptr = nullptr;
-
 typedef HINTERNET(WINAPI * PFN_InternetOpenW)(LPCWSTR lpszAgent, DWORD dwAccessType, LPCWSTR lpszProxy, LPCWSTR lpszProxyBypass, DWORD dwFlags);
 static PFN_InternetOpenW pInternetOpenW = nullptr;
 
@@ -24,10 +22,7 @@ static PFN_GdiAlphaBlend pGdiAlphaBlend = nullptr;
 
 void scrt_initialize_thread_safe_statics()
 {
-    HMODULE hMon = LoadLibraryW(L"msvcrt.dll");
-    ftol2ptr = GetProcAddress(hMon, "_ftol2");
-
-    hMon = LoadLibraryW(L"Wininet.dll");
+	HMODULE hMon = LoadLibraryW(L"Wininet.dll");
     pInternetOpenW = (PFN_InternetOpenW)GetProcAddress(hMon, "InternetOpenW");
 
     hMon = LoadLibraryW(L"GDI32.dll");

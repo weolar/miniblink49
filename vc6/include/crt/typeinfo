@@ -1,0 +1,112 @@
+/***
+*typeinfo.h - Defines the type_info structure and exceptions used for RTTI
+*
+*	Copyright (c) Microsoft Corporation. All rights reserved.
+*	Modified January 1996 by P.J. Plauger
+*
+*Purpose:
+*       Defines the type_info structure and exceptions used for
+*       Runtime Type Identification.
+*
+*       [Public]
+*
+****/
+
+#ifndef __cplusplus
+#error This header requires a C++ compiler ...
+#endif
+
+#ifndef _INC_TYPEINFO
+#define _INC_TYPEINFO
+
+ #if !defined(_WIN32) && !defined(_MAC)
+  #error ERROR: Only Mac or Win32 targets supported!
+ #endif
+
+
+/* Define _CRTIMP */
+
+#ifndef _CRTIMP
+#ifdef	_DLL
+#define _CRTIMP __declspec(dllimport)
+#else	/* ndef _DLL */
+#define _CRTIMP
+#endif	/* _DLL */
+#endif	/* _CRTIMP */
+
+#include <xstddef>
+
+#ifdef  _MSC_VER
+#pragma pack(push,8)
+#endif  /* _MSC_VER */
+
+class type_info {
+public:
+    _CRTIMP virtual ~type_info();
+    _CRTIMP int operator==(const type_info& rhs) const;
+    _CRTIMP int operator!=(const type_info& rhs) const;
+    _CRTIMP int before(const type_info& rhs) const;
+    _CRTIMP const char* name() const;
+    _CRTIMP const char* raw_name() const;
+private:
+    void *_m_data;
+    char _m_d_name[1];
+    type_info(const type_info& rhs);
+    type_info& operator=(const type_info& rhs);
+};
+
+
+// This include must occur below the definition of class type_info
+ #include <exception>
+
+ _STD_BEGIN
+		// CLASS bad_cast
+class _CRTIMP bad_cast : public exception {
+public:
+	bad_cast(const char *_S = "bad cast") _THROW0()
+		: exception(_S) {}
+	virtual ~bad_cast() _THROW0()
+		{}
+protected:
+	virtual void _Doraise() const
+		{_RAISE(*this); }
+	};
+		// CLASS bad_typeid
+class _CRTIMP bad_typeid : public exception {
+public:
+	bad_typeid(const char *_S = "bad typeid") _THROW0()
+		: exception(_S) {}
+	virtual ~bad_typeid() _THROW0()
+		{}
+protected:
+	virtual void _Doraise() const
+		{_RAISE(*this); }
+	};
+
+class _CRTIMP __non_rtti_object : public bad_typeid {
+public:
+    __non_rtti_object(const char * what_arg) : bad_typeid(what_arg) {}
+};
+using ::type_info;
+ _STD_END
+using std::__non_rtti_object;
+
+#ifdef __RTTI_OLDNAMES
+// Some synonyms for folks using older standard
+typedef type_info Type_info;
+typedef bad_cast Bad_cast;
+typedef bad_typeid Bad_typeid;
+#endif	// __RTTI_OLDNAMES
+
+#ifdef  _MSC_VER
+#pragma pack(pop)
+#endif  /* _MSC_VER */
+
+#endif // _INC_TYPEINFO
+
+/*
+ * 1994-2000, Microsoft Corporation. All rights reserved.
+ * Modified January 1996 by P.J. Plauger
+ * Consult your license regarding permissions and restrictions.
+ */
+

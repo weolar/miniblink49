@@ -1,0 +1,275 @@
+// iterator standard header
+#ifndef _ITERATOR_
+#define _ITERATOR_
+#include <utility>
+
+#ifdef  _MSC_VER
+#pragma pack(push,8)
+#endif  /* _MSC_VER */
+_STD_BEGIN
+		// TEMPLATE CLASS reverse_bidirectional_iterator
+template<class _BI,
+	class _Ty,
+	class _Rt = _Ty&,
+	class _Pt = _Ty *,
+	class _D = ptrdiff_t>
+	class reverse_bidirectional_iterator
+		: public _Bidit<_Ty, _D> {
+public:
+	typedef reverse_bidirectional_iterator<_BI,
+		_Ty, _Rt, _Pt, _D> _Myt;
+	typedef _BI iter_type;
+	typedef _Rt reference_type;
+	typedef _Pt pointer_type;
+	reverse_bidirectional_iterator()
+		{}
+	explicit reverse_bidirectional_iterator(_BI _X)
+		: current(_X) {}
+	_BI base() const
+		{return (current); }
+	_Rt operator*() const
+		{_BI _Tmp = current;
+		return (*--_Tmp); }
+	_Pt operator->() const
+		{return (&**this); }
+	_Myt& operator++()
+		{--current;
+		return (*this); }
+	_Myt operator++(int)
+		{_Myt _Tmp = *this;
+		--current;
+		return (_Tmp); }
+	_Myt& operator--()
+		{++current;
+		return (*this); }
+	_Myt operator--(int)
+		{_Myt _Tmp = *this;
+		++current;
+		return (_Tmp); }
+protected:
+	_BI current;
+	};
+template<class _BI, class _Ty, class _Rt, class _Pt,
+	class _D> inline
+	bool operator==(const reverse_bidirectional_iterator<_BI,
+			_Ty, _Rt, _Pt, _D>& _X,
+		const reverse_bidirectional_iterator<_BI,
+			_Ty, _Rt, _Pt, _D>& _Y)
+	{return (_X.base() == _Y.base()); }
+template<class _BI, class _Ty, class _Rt, class _Pt,
+	class _D> inline
+	bool operator!=(const reverse_bidirectional_iterator<_BI,
+			_Ty, _Rt, _Pt, _D>& _X,
+		const reverse_bidirectional_iterator<_BI,
+			_Ty, _Rt, _Pt, _D>& _Y)
+	{return (!(_X == _Y)); }
+		// TEMPLATE CLASS back_insert_iterator
+template<class _C>
+	class back_insert_iterator
+		: public iterator<output_iterator_tag, void, void> {
+public:
+	typedef _C container_type;
+	typedef typename _C::value_type value_type;
+	explicit back_insert_iterator(_C& _X)
+		: container(_X) {}
+	back_insert_iterator<_C>& operator=(
+		const value_type& _V)
+		{container.push_back(_V);
+		return (*this); }
+	back_insert_iterator<_C>& operator*()
+		{return (*this); }
+	back_insert_iterator<_C>& operator++()
+		{return (*this); }
+	back_insert_iterator<_C> operator++(int)
+		{return (*this); }
+protected:
+	_C& container;
+	};
+template<class _C> inline
+	back_insert_iterator<_C> back_inserter(_C& _X)
+	{return (back_insert_iterator<_C>(_X)); }
+		// TEMPLATE CLASS front_insert_iterator
+template<class _C>
+	class front_insert_iterator
+		: public iterator<output_iterator_tag, void, void> {
+public:
+	typedef _C container_type;
+	typedef typename _C::value_type value_type;
+	explicit front_insert_iterator(_C& _X)
+		: container(_X) {}
+	front_insert_iterator<_C>& operator=(
+		const value_type& _V)
+		{container.push_front(_V);
+		return (*this); }
+	front_insert_iterator<_C>& operator*()
+		{return (*this); }
+	front_insert_iterator<_C>& operator++()
+		{return (*this); }
+	front_insert_iterator<_C> operator++(int)
+		{return (*this); }
+protected:
+	_C& container;
+	};
+template<class _C> inline
+	front_insert_iterator<_C> front_inserter(_C& _X)
+	{return (front_insert_iterator<_C>(_X)); }
+		// TEMPLATE CLASS insert_iterator
+template<class _C>
+	class insert_iterator
+		: public iterator<output_iterator_tag, void, void> {
+public:
+	typedef _C container_type;
+	typedef typename _C::value_type value_type;
+	insert_iterator(_C& _X, typename _C::iterator _I)
+		: container(_X), iter(_I) {}
+	insert_iterator<_C>& operator=(
+		const value_type& _V)
+		{iter = container.insert(iter, _V);
+		++iter;
+		return (*this); }
+	insert_iterator<_C>& operator*()
+		{return (*this); }
+	insert_iterator<_C>& operator++()
+		{return (*this); }
+	insert_iterator<_C>& operator++(int)
+		{return (*this); }
+protected:
+	_C& container;
+	typename _C::iterator iter;
+	};
+template<class _C, class _XI> inline
+	insert_iterator<_C> inserter(_C& _X, _XI _I)
+	{return (insert_iterator<_C>(_X, _C::iterator(_I))); }
+		// TEMPLATE CLASS istream_iterator
+template<class _U, class _E = char,
+	class _Tr = char_traits<_E> >
+	class istream_iterator
+		: public iterator<input_iterator_tag, _U, ptrdiff_t> {
+public:
+	typedef _E char_type;
+	typedef _Tr traits_type;
+	typedef basic_istream<_E, _Tr> istream_type;
+	istream_iterator()
+		: _Istr(0) {}
+	istream_iterator(istream_type& _I)
+		: _Istr(&_I) {_Getval(); }
+	const _U& operator*() const
+		{return (_Val); }
+	const _U *operator->() const
+		{return (&**this); }
+	istream_iterator<_U, _E, _Tr>& operator++()
+		{_Getval();
+		return (*this); }
+	istream_iterator<_U, _E, _Tr> operator++(int)
+		{istream_iterator<_U, _E, _Tr> _Tmp = *this;
+		_Getval();
+		return (_Tmp); }
+	bool _Equal(const istream_iterator<_U, _E, _Tr>& _X) const
+		{return (_Istr == _X._Istr); }
+protected:
+	void _Getval()
+		{if (_Istr != 0 && !(*_Istr >> _Val))
+			_Istr = 0; }
+	istream_type *_Istr;
+	_U _Val;
+	};
+template<class _U, class _E, class _Tr> inline
+	bool operator==(const istream_iterator<_U, _E, _Tr>& _X,
+		const istream_iterator<_U, _E, _Tr>& _Y)
+	{return (_X._Equal(_Y)); }
+template<class _U, class _E, class _Tr> inline
+	bool operator!=(const istream_iterator<_U, _E, _Tr>& _X,
+		const istream_iterator<_U, _E, _Tr>& _Y)
+	{return (!(_X == _Y)); }
+		// TEMPLATE CLASS ostream_iterator
+template<class _U, class _E = char,
+	class _Tr = char_traits<_E> >
+	class ostream_iterator
+		: public iterator<output_iterator_tag, void, void> {
+public:
+	typedef _U value_type;
+	typedef _E char_type;
+	typedef _Tr traits_type;
+	typedef basic_ostream<_E, _Tr> ostream_type;
+	ostream_iterator(ostream_type& _O,
+		const _E *_D = 0)
+		: _Ostr(&_O), _Delim(_D) {}
+	ostream_iterator<_U, _E, _Tr>& operator=(const _U& _X)
+		{*_Ostr << _X;
+		if (_Delim != 0)
+			*_Ostr << _Delim;
+		return (*this); }
+	ostream_iterator<_U, _E, _Tr>& operator*()
+		{return (*this); }
+	ostream_iterator<_U, _E, _Tr>& operator++()
+		{return (*this); }
+	ostream_iterator<_U, _E, _Tr> operator++(int)
+		{return (*this); }
+protected:
+	const _E *_Delim;
+	ostream_type *_Ostr;
+	};
+		// TEMPLATE FUNCTION _Val_type
+template<class _C, class _Ty, class _D> inline
+	_Ty *_Val_type(const iterator<_C, _Ty, _D>&)
+	{return ((_Ty *)0); }
+template<class _Ty> inline
+	_Ty *_Val_type(const _Ty *)
+	{return ((_Ty *)0); }
+		// TEMPLATE FUNCTION advance
+template<class _II, class _D> inline
+	void advance(_II& _I, _D _N)
+	{_Advance(_I, _N, _Iter_cat(_I)); }
+template<class _II, class _D> inline
+	void _Advance(_II& _I, _D _N, input_iterator_tag)
+	{for (; 0 < _N; --_N)
+		++_I; }
+template<class _FI, class _D> inline
+	void _Advance(_FI& _I, _D _N, forward_iterator_tag)
+	{for (; 0 < _N; --_N)
+		++_I; }
+template<class _BI, class _D> inline
+	void _Advance(_BI& _I, _D _N, bidirectional_iterator_tag)
+	{for (; 0 < _N; --_N)
+		++_I;
+	for (; _N < 0; ++_N)
+		--_I; }
+template<class _RI, class _D> inline
+	void _Advance(_RI& _I, _D _N, random_access_iterator_tag)
+	{_I += _N; }
+		// TEMPLATE FUNCTION _Dist_type
+template<class _C, class _Ty, class _D> inline
+	_D *_Dist_type(const iterator<_C, _Ty, _D>&)
+	{return ((_D *)0); }
+template<class _Ty> inline
+	ptrdiff_t *_Dist_type(const _Ty *)
+	{return ((ptrdiff_t *)0); }
+_STD_END
+#ifdef  _MSC_VER
+#pragma pack(pop)
+#endif  /* _MSC_VER */
+
+#endif /* _ITERATOR_ */
+
+/*
+ * Copyright (c) 1995 by P.J. Plauger.  ALL RIGHTS RESERVED. 
+ * Consult your license regarding permissions and restrictions.
+ */
+
+/*
+ * This file is derived from software bearing the following
+ * restrictions:
+ *
+ * Copyright (c) 1994
+ * Hewlett-Packard Company
+ *
+ * Permission to use, copy, modify, distribute and sell this
+ * software and its documentation for any purpose is hereby
+ * granted without fee, provided that the above copyright notice
+ * appear in all copies and that both that copyright notice and
+ * this permission notice appear in supporting documentation.
+ * Hewlett-Packard Company makes no representations about the
+ * suitability of this software for any purpose. It is provided
+ * "as is" without express or implied warranty.
+ */
+

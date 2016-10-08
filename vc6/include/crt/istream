@@ -1,0 +1,635 @@
+// istream standard header
+#ifndef _ISTREAM_
+#define _ISTREAM_
+#include <ostream>
+
+#ifdef  _MSC_VER
+#pragma pack(push,8)
+#endif  /* _MSC_VER */
+_STD_BEGIN
+		// TEMPLATE CLASS basic_istream
+template<class _E, class _Tr /*= char_traits<_E> */ >
+	class basic_istream : virtual public basic_ios<_E, _Tr> {
+public:
+	typedef basic_istream<_E, _Tr> _Myt;
+	typedef basic_ios<_E, _Tr> _Myios;
+	typedef basic_streambuf<_E, _Tr> _Mysb;
+	typedef istreambuf_iterator<_E, _Tr> _Iter;
+	typedef ctype<_E> _Ctype;
+	typedef num_get<_E, _Iter> _Nget;
+	explicit basic_istream(_Mysb *_S, bool _Isstd = false)
+		: _Chcount(0) {init(_S, _Isstd); }
+	basic_istream(_Uninitialized)
+		{_Addstd(); }
+	virtual ~basic_istream()
+		{}
+	class sentry {
+	public:
+		explicit sentry(_Myt& _Is, bool _Noskip = false)
+			: _Ok(_Is.ipfx(_Noskip)) {}
+		operator bool() const
+			{return (_Ok); }
+	private:
+		bool _Ok;
+		};
+	bool ipfx(bool _Noskip = false)
+		{if (good())
+			{if (tie() != 0)
+				tie()->flush();
+			if (!_Noskip && flags() & skipws)
+				{const _Ctype& _Fac = _USE(getloc(), _Ctype);
+				_TRY_IO_BEGIN
+				int_type _C = rdbuf()->sgetc();
+				while (!_Tr::eq_int_type(_Tr::eof(), _C)
+					&& _Fac.is(_Ctype::space,
+						_Tr::to_char_type(_C)))
+					_C = rdbuf()->snextc();
+				_CATCH_IO_END }
+			if (good())
+				return (true); }
+		setstate(failbit);
+		return (false); }
+	void isfx()
+		{}
+	_Myt& operator>>(_Myt& (__cdecl *_F)(_Myt&))
+		{return ((*_F)(*this)); }
+	_Myt& operator>>(_Myios& (__cdecl *_F)(_Myios&))
+		{(*_F)(*(_Myios *)this);
+		return (*this); }
+	_Myt& operator>>(ios_base& (__cdecl *_F)(ios_base&))
+		{(*_F)(*(ios_base *)this);
+		return (*this); }
+	_Myt& operator>>(_Bool& _X)
+		{iostate _St = goodbit;
+		const sentry _Ok(*this);
+		if (_Ok)
+			{const _Nget& _Fac = _USE(getloc(), _Nget);
+			_TRY_IO_BEGIN
+			_Fac.get(_Iter(rdbuf()), _Iter(0), *this, _St, _X);
+			_CATCH_IO_END }
+		setstate(_St);
+		return (*this); }
+	_Myt& operator>>(short& _X)
+		{iostate _St = goodbit;
+		const sentry _Ok(*this);
+		if (_Ok)
+			{long _Y;
+			const _Nget& _Fac = _USE(getloc(), _Nget);
+			_TRY_IO_BEGIN
+			_Fac.get(_Iter(rdbuf()), _Iter(0), *this, _St, _Y);
+			_CATCH_IO_END
+			if (_St & failbit || _Y < SHRT_MIN || SHRT_MAX < _Y)
+				_St |= failbit;
+			else
+				_X = (short)_Y; }
+		setstate(_St);
+		return (*this); }
+	_Myt& operator>>(unsigned short& _X)
+		{iostate _St = goodbit;
+		const sentry _Ok(*this);
+		if (_Ok)
+			{const _Nget& _Fac = _USE(getloc(), _Nget);
+			_TRY_IO_BEGIN
+			_Fac.get(_Iter(rdbuf()), _Iter(0), *this, _St, _X);
+			_CATCH_IO_END }
+		setstate(_St);
+		return (*this); }
+	_Myt& operator>>(int& _X)
+		{iostate _St = goodbit;
+		const sentry _Ok(*this);
+		if (_Ok)
+			{long _Y;
+			const _Nget& _Fac = _USE(getloc(), _Nget);
+			_TRY_IO_BEGIN
+			_Fac.get(_Iter(rdbuf()), _Iter(0), *this, _St, _Y);
+			_CATCH_IO_END
+			if (_St & failbit || _Y < INT_MIN || INT_MAX < _Y)
+				_St |= failbit;
+			else
+				_X = _Y; }
+		setstate(_St);
+		return (*this); }
+	_Myt& operator>>(unsigned int& _X)
+		{iostate _St = goodbit;
+		const sentry _Ok(*this);
+		if (_Ok)
+			{const _Nget& _Fac = _USE(getloc(), _Nget);
+			_TRY_IO_BEGIN
+			_Fac.get(_Iter(rdbuf()), _Iter(0), *this, _St, _X);
+			_CATCH_IO_END }
+		setstate(_St);
+		return (*this); }
+	_Myt& operator>>(long& _X)
+		{iostate _St = goodbit;
+		const sentry _Ok(*this);
+		if (_Ok)
+			{const _Nget& _Fac = _USE(getloc(), _Nget);
+			_TRY_IO_BEGIN
+			_Fac.get(_Iter(rdbuf()), _Iter(0), *this, _St, _X);
+			_CATCH_IO_END }
+		setstate(_St);
+		return (*this); }
+	_Myt& operator>>(unsigned long& _X)
+		{iostate _St = goodbit;
+		const sentry _Ok(*this);
+		if (_Ok)
+			{const _Nget& _Fac = _USE(getloc(), _Nget);
+			_TRY_IO_BEGIN
+			_Fac.get(_Iter(rdbuf()), _Iter(0), *this, _St, _X);
+			_CATCH_IO_END }
+		setstate(_St);
+		return (*this); }
+#ifdef _WIN64
+	_Myt& operator>>(__int64& _X)
+		{iostate _St = goodbit;
+		const sentry _Ok(*this);
+		if (_Ok)
+			{const _Nget& _Fac = _USE(getloc(), _Nget);
+			_TRY_IO_BEGIN
+			_Fac.get(_Iter(rdbuf()), _Iter(0), *this, _St, _X);
+			_CATCH_IO_END }
+		setstate(_St);
+		return (*this); }
+	_Myt& operator>>(unsigned __int64& _X)
+		{iostate _St = goodbit;
+		const sentry _Ok(*this);
+		if (_Ok)
+			{const _Nget& _Fac = _USE(getloc(), _Nget);
+			_TRY_IO_BEGIN
+			_Fac.get(_Iter(rdbuf()), _Iter(0), *this, _St, _X);
+			_CATCH_IO_END }
+		setstate(_St);
+		return (*this); }
+#endif	// _WIN64
+	_Myt& operator>>(float& _X)
+		{iostate _St = goodbit;
+		const sentry _Ok(*this);
+		if (_Ok)
+			{const _Nget& _Fac = _USE(getloc(), _Nget);
+			_TRY_IO_BEGIN
+			_Fac.get(_Iter(rdbuf()), _Iter(0), *this, _St, _X);
+			_CATCH_IO_END }
+		setstate(_St);
+		return (*this); }
+	_Myt& operator>>(double& _X)
+		{iostate _St = goodbit;
+		const sentry _Ok(*this);
+		if (_Ok)
+			{const _Nget& _Fac = _USE(getloc(), _Nget);
+			_TRY_IO_BEGIN
+			_Fac.get(_Iter(rdbuf()), _Iter(0), *this, _St, _X);
+			_CATCH_IO_END }
+		setstate(_St);
+		return (*this); }
+	_Myt& operator>>(long double& _X)
+		{iostate _St = goodbit;
+		const sentry _Ok(*this);
+		if (_Ok)
+			{const _Nget& _Fac = _USE(getloc(), _Nget);
+			_TRY_IO_BEGIN
+			_Fac.get(_Iter(rdbuf()), _Iter(0), *this, _St, _X);
+			_CATCH_IO_END }
+		setstate(_St);
+		return (*this); }
+	_Myt& operator>>(void *& _X)
+		{iostate _St = goodbit;
+		const sentry _Ok(*this);
+		if (_Ok)
+			{const _Nget& _Fac = _USE(getloc(), _Nget);
+			_TRY_IO_BEGIN
+			_Fac.get(_Iter(rdbuf()), _Iter(0), *this, _St, _X);
+			_CATCH_IO_END }
+		setstate(_St);
+		return (*this); }
+	_Myt& operator>>(_Mysb *_Pb)
+		{iostate _St = goodbit;
+		bool _Copied = false;
+		const sentry _Ok(*this);
+		if (_Ok && _Pb != 0)
+			{_TRY_IO_BEGIN
+			int_type _C = rdbuf()->sgetc();
+			for (; ; _C = rdbuf()->snextc())
+				if (_Tr::eq_int_type(_Tr::eof(), _C))
+					{_St |= eofbit;
+					break; }
+				else
+					{_TRY_BEGIN
+						if (_Tr::eq_int_type(_Tr::eof(),
+							_Pb->sputc(_Tr::to_char_type(_C))))
+							break;
+					_CATCH_ALL
+						break;
+					_CATCH_END
+					_Copied = true; }
+			_CATCH_IO_END }
+		setstate(!_Copied ? _St | failbit : _St);
+		return (*this); }
+	int_type get()
+		{int_type _C;
+		iostate _St = goodbit;
+		_Chcount = 0;
+		const sentry _Ok(*this, true);
+		if (!_Ok)
+			_C = _Tr::eof();
+		else
+			{_TRY_IO_BEGIN
+			_C = rdbuf()->sbumpc();
+			if (_Tr::eq_int_type(_Tr::eof(), _C))
+				_St |= eofbit | failbit;
+			else
+				++_Chcount;
+			_CATCH_IO_END }
+		setstate(_St);
+		return (_C); }
+	_Myt& get(_E *_S, streamsize _N)
+		{return (get(_S, _N, widen('\n'))); }
+	_Myt& get(_E *_S, streamsize _N, _E _D)
+		{iostate _St = goodbit;
+		_Chcount = 0;
+		const sentry _Ok(*this, true);
+		if (_Ok && 0 < _N)
+			{_TRY_IO_BEGIN
+			int_type _C = rdbuf()->sgetc();
+			for (; 0 < --_N; _C = rdbuf()->snextc())
+				if (_Tr::eq_int_type(_Tr::eof(), _C))
+					{_St |= eofbit;
+					break; }
+				else if (_Tr::to_char_type(_C) == _D)
+					break;
+				else
+					*_S++ = _Tr::to_char_type(_C), ++_Chcount;
+			_CATCH_IO_END }
+		setstate(_Chcount == 0 ? _St | failbit : _St);
+		*_S = _E(0);
+		return (*this); }
+	_Myt& get(_E& _X)
+		{int_type _C = get();
+		if (!_Tr::eq_int_type(_Tr::eof(), _C))
+			_X = _Tr::to_char_type(_C);
+		return (*this); }
+	_Myt& get(_Mysb& _Sb)
+		{return (get(_Sb, widen('\n'))); }
+	_Myt& get(_Mysb& _Sb, _E _D)
+		{iostate _St = goodbit;
+		_Chcount = 0;
+		const sentry _Ok(*this, true);
+		if (_Ok)
+			{_TRY_IO_BEGIN
+			int_type _C = rdbuf()->sgetc();
+			for (; ; _C = rdbuf()->snextc())
+				if (_Tr::eq_int_type(_Tr::eof(), _C))
+					{_St |= eofbit;
+					break; }
+				else
+					{_TRY_BEGIN
+						_E _Ch = _Tr::to_char_type(_C);
+						if (_Ch == _D
+							|| _Tr::eq_int_type(_Tr::eof(),
+								_Sb.sputc(_Ch)))
+							break;
+					_CATCH_ALL
+						break;
+					_CATCH_END
+					++_Chcount; }
+			_CATCH_IO_END }
+		if (_Chcount == 0)
+			_St |= failbit;
+		setstate(_St);
+		return (*this); }
+	_Myt& getline(_E *_S, streamsize _N)
+		{return (getline(_S, _N, widen('\n'))); }
+	_Myt& getline(_E *_S, streamsize _N, _E _D)
+		{iostate _St = goodbit;
+		_Chcount = 0;
+		const sentry _Ok(*this, true);
+		if (_Ok && 0 < _N)
+			{int_type _Di = _Tr::to_int_type(_D);
+			_TRY_IO_BEGIN
+			int_type _C = rdbuf()->sgetc();
+			for (; ; _C = rdbuf()->snextc())
+				if (_Tr::eq_int_type(_Tr::eof(), _C))
+					{_St |= eofbit;
+					break; }
+				else if (_C == _Di)
+					{++_Chcount;
+					rdbuf()->stossc();
+					break; }
+				else if (--_N <= 0)
+					{_St |= failbit;
+					break; }
+				else
+					{++_Chcount;
+					*_S++ = _Tr::to_char_type(_C); }
+			_CATCH_IO_END }
+		*_S = _E(0);
+		setstate(_Chcount == 0 ? _St | failbit : _St);
+		return (*this); }
+	_Myt& ignore(streamsize _N = 1, int_type _Di = _Tr::eof())
+		{iostate _St = goodbit;
+		_Chcount = 0;
+		const sentry _Ok(*this, true);
+		if (_Ok && 0 < _N)
+			{_TRY_IO_BEGIN
+			for (; ; )
+				{int_type _C;
+				if (_N != INT_MAX && --_N < 0)
+					break;
+				else if (_Tr::eq_int_type(_Tr::eof(),
+					_C = rdbuf()->sbumpc()))
+					{_St |= eofbit;
+					break; }
+				else
+					{++_Chcount;
+					if (_C == _Di)
+						break; }}
+			_CATCH_IO_END }
+		setstate(_St);
+		return (*this); }
+	_Myt& read(_E *_S, streamsize _N)
+		{iostate _St = goodbit;
+		_Chcount = 0;
+		const sentry _Ok(*this, true);
+		if (_Ok)
+			{_TRY_IO_BEGIN
+			const streamsize _M = rdbuf()->sgetn(_S, _N);
+			_Chcount += _M;
+			if (_M != _N)
+				_St |= eofbit | failbit;
+			_CATCH_IO_END }
+		setstate(_St);
+		return (*this); }
+	streamsize readsome(_E *_S, streamsize _N)
+		{iostate _St = goodbit;
+		_Chcount = 0;
+		int _M;
+		if (rdbuf() == 0)
+			_St |= failbit;
+		else if ((_M = rdbuf()->in_avail()) < 0)
+			_St |= eofbit;
+		else if (0 < _M)
+			read(_S, _M < _N ? _M : _N);
+		setstate(_St);
+		return (gcount()); }
+	int_type peek()
+		{iostate _St = goodbit;
+		_Chcount = 0;
+		int_type _C;
+		const sentry _Ok(*this, true);
+		if (!_Ok)
+			_C = _Tr::eof();
+		else
+			{_TRY_IO_BEGIN
+			if (_Tr::eq_int_type(_Tr::eof(),
+				_C = rdbuf()->sgetc()))
+				_St |= eofbit;
+			_CATCH_IO_END }
+		setstate(_St);
+		return (_C); }
+	_Myt& putback(_E _X)
+		{iostate _St = goodbit;
+		_Chcount = 0;
+		const sentry _Ok(*this, true);
+		if (_Ok)
+			{_TRY_IO_BEGIN
+			if (_Tr::eq_int_type(_Tr::eof(),
+				rdbuf()->sputbackc(_X)))
+				_St |= badbit;
+			_CATCH_IO_END }
+		setstate(_St);
+		return (*this); }
+	_Myt& unget()
+		{iostate _St = goodbit;
+		_Chcount = 0;
+		const sentry _Ok(*this, true);
+		if (_Ok)
+			{_TRY_IO_BEGIN
+			if (_Tr::eq_int_type(_Tr::eof(),
+				rdbuf()->sungetc()))
+				_St |= badbit;
+			_CATCH_IO_END }
+		setstate(_St);
+		return (*this); }
+	streamsize gcount() const
+		{return (_Chcount); }
+	int sync()
+		{iostate _St = goodbit;
+		int _Ans;
+		if (rdbuf() == 0)
+			_Ans = -1;
+		else if (rdbuf()->pubsync() == -1)
+			_St |= badbit, _Ans = -1;
+		else
+			_Ans = 0;
+		setstate(_St);
+		return (_Ans); }
+	_Myt& seekg(pos_type _P)
+		{if (!fail())
+			rdbuf()->pubseekpos(_P, in);
+		return (*this); }
+	_Myt& seekg(off_type _O, ios_base::seekdir _W)
+		{if (!fail())
+			rdbuf()->pubseekoff(_O, _W, in);
+		return (*this); }
+	pos_type tellg()
+		{if (!fail())
+			return (rdbuf()->pubseekoff(0, cur, in));
+		else
+			return (streampos(_BADOFF)); }
+private:
+	streamsize _Chcount;
+	};
+
+#ifdef _DLL
+#pragma warning(disable:4231) /* the extern before template is a non-standard extension */
+extern template class _CRTIMP basic_istream<char, char_traits<char> >;
+extern template class _CRTIMP basic_istream<wchar_t, char_traits<wchar_t> >;
+#pragma warning(default:4231) /* restore previous warning */
+#endif		// _DLL
+
+		// TEMPLATE CLASS basic_iostream
+template<class _E, class _Tr /*= char_traits<_E> */ >
+	class basic_iostream : public basic_istream<_E, _Tr>,
+		public basic_ostream<_E, _Tr> {
+public:
+	explicit basic_iostream(basic_streambuf<_E, _Tr> *_S)
+		: basic_istream<_E, _Tr>(_S), basic_ostream<_E, _Tr>(_S, false, false)
+		{}
+	virtual ~basic_iostream()
+		{}
+	};
+
+#ifdef _DLL
+#pragma warning(disable:4231) /* the extern before template is a non-standard extension */
+extern template class _CRTIMP basic_iostream<char, char_traits<char> >;
+extern template class _CRTIMP basic_iostream<wchar_t, char_traits<wchar_t> >;
+#pragma warning(default:4231) /* restore previous warning */
+#endif		// _DLL
+
+
+
+		// EXTRACTORS
+template<class _E, class _Tr> inline
+	basic_istream<_E, _Tr>& __cdecl operator>>(
+		basic_istream<_E, _Tr>& _I, _E *_X)
+	{typedef basic_istream<_E, _Tr> _Myis;
+	typedef ctype<_E> _Ctype;
+	ios_base::iostate _St = ios_base::goodbit;
+	_E *_S = _X;
+	const _Myis::sentry _Ok(_I);
+	if (_Ok)
+		{const _Ctype& _Fac = _USE(_I.getloc(), _Ctype);
+		_TRY_IO_BEGIN
+		int _N = 0 < _I.width() ? _I.width() : INT_MAX;
+		_Myis::int_type _C = _I.rdbuf()->sgetc();
+		for (; 0 < --_N; _C = _I.rdbuf()->snextc())
+			if (_Tr::eq_int_type(_Tr::eof(), _C))
+				{_St |= ios_base::eofbit;
+				break; }
+			else if (_Fac.is(_Ctype::space,
+				_Tr::to_char_type(_C)))
+				break;
+			else
+				*_S++ = _Tr::to_char_type(_C);
+		_CATCH_IO_(_I) }
+	*_S = _E(0);
+	_I.width(0);
+	_I.setstate(_S == _X ? _St | ios_base::failbit : _St);
+	return (_I); }
+template<class _E, class _Tr> inline
+	basic_istream<_E, _Tr>& __cdecl operator>>(
+		basic_istream<_E, _Tr>& _I, _E& _X)
+	{typedef basic_istream<_E, _Tr> _Myis;
+	_Myis::int_type _C;
+	ios_base::iostate _St = ios_base::goodbit;
+	const _Myis::sentry _Ok(_I);
+	if (_Ok)
+		{_TRY_IO_BEGIN
+		_C = _I.rdbuf()->sbumpc();
+		if (_Tr::eq_int_type(_Tr::eof(), _C))
+			_St |= ios_base::eofbit | ios_base::failbit;
+		else
+			_X = _Tr::to_char_type(_C);
+		_CATCH_IO_(_I) }
+	_I.setstate(_St);
+	return (_I); }
+template<class _E, class _Tr> inline
+	basic_istream<_E, _Tr>& __cdecl operator>>(
+		basic_istream<_E, _Tr>& _I, signed char *_X)
+	{return (_I >> (char *)_X); }
+template<class _E, class _Tr> inline
+	basic_istream<_E, _Tr>& __cdecl operator>>(
+		basic_istream<_E, _Tr>& _I, signed char& _C)
+	{return (_I >> (char&)_C); }
+template<class _E, class _Tr> inline
+	basic_istream<_E, _Tr>& __cdecl operator>>(
+		basic_istream<_E, _Tr>& _I, unsigned char *_X)
+	{return (_I >> (char *)_X); }
+template<class _E, class _Tr> inline
+	basic_istream<_E, _Tr>& __cdecl operator>>(
+		basic_istream<_E, _Tr>& _I, unsigned char& _C)
+	{return (_I >> (char&)_C); }
+template<class _E, class _Tr> inline
+	basic_istream<_E, _Tr>& __cdecl operator>>(
+		basic_istream<_E, _Tr>& _I, signed short * _X)
+	{return (_I >> (wchar_t *)_X); }
+		// MANIPULATORS
+template<class _E, class _Tr> inline
+	basic_istream<_E, _Tr>& __cdecl ws(basic_istream<_E, _Tr>& _I)
+	{typedef basic_istream<_E, _Tr> _Myis;
+	typedef ctype<_E> _Ctype;
+	ios_base::iostate _St = ios_base::goodbit;
+	const _Myis::sentry _Ok(_I, true);
+	if (_Ok)
+		{const _Ctype& _Fac = _USE(_I.getloc(), _Ctype);
+		_TRY_IO_BEGIN
+		for (_Tr::int_type _C = _I.rdbuf()->sgetc(); ;
+			_C = _I.rdbuf()->snextc())
+			if (_Tr::eq_int_type(_Tr::eof(), _C))
+				{_St |= ios_base::eofbit;
+				break; }
+			else if (!_Fac.is(_Ctype::space,
+				_Tr::to_char_type(_C)))
+				break;
+		_CATCH_IO_(_I) }
+	_I.setstate(_St);
+	return (_I); }
+_CRTIMP inline basic_istream<char, char_traits<char> >&
+	__cdecl ws(basic_istream<char, char_traits<char> >& _I)
+	{typedef char _E;
+	typedef char_traits<_E> _Tr;
+	ios_base::iostate _St = ios_base::goodbit;
+	const basic_istream<_E, _Tr>::sentry _Ok(_I, true);
+	if (_Ok)
+		{const ctype<_E>& _Fac = _USE(_I.getloc(), ctype<_E>);
+		_TRY_IO_BEGIN
+		for (_Tr::int_type _C = _I.rdbuf()->sgetc(); ;
+			_C = _I.rdbuf()->snextc())
+			if (_Tr::eq_int_type(_Tr::eof(), _C))
+				{_St |= ios_base::eofbit;
+				break; }
+			else if (!_Fac.is(ctype<_E>::space,
+				_Tr::to_char_type(_C)))
+				break;
+		_CATCH_IO_(_I) }
+	_I.setstate(_St);
+	return (_I); }
+_CRTIMP inline basic_istream<wchar_t, char_traits<wchar_t> >&
+	__cdecl ws(basic_istream<wchar_t, char_traits<wchar_t> >& _I)
+	{typedef wchar_t _E;
+	typedef char_traits<_E> _Tr;
+	ios_base::iostate _St = ios_base::goodbit;
+	const basic_istream<_E, _Tr>::sentry _Ok(_I, true);
+	if (_Ok)
+		{const ctype<_E>& _Fac = _USE(_I.getloc(), ctype<_E>);
+		_TRY_IO_BEGIN
+		for (_Tr::int_type _C = _I.rdbuf()->sgetc(); ;
+			_C = _I.rdbuf()->snextc())
+			if (_Tr::eq_int_type(_Tr::eof(), _C))
+				{_St |= ios_base::eofbit;
+				break; }
+			else if (_Fac.is(ctype<_E>::space,
+				_Tr::to_char_type(_C)))
+				break;
+		_CATCH_IO_(_I) }
+	_I.setstate(_St);
+	return (_I); }
+
+
+#ifdef _DLL
+#pragma warning(disable:4231) /* the extern before template is a non-standard extension */
+
+extern template _CRTIMP basic_istream<char, char_traits<char> >& __cdecl operator>>(
+       basic_istream<char, char_traits<char> >&, char *);
+extern template _CRTIMP basic_istream<char, char_traits<char> >& __cdecl operator>>(
+       basic_istream<char, char_traits<char> >&, char&);
+extern template _CRTIMP basic_istream<char, char_traits<char> >& __cdecl operator>>(
+       basic_istream<char, char_traits<char> >&, signed char *);
+extern template _CRTIMP basic_istream<char, char_traits<char> >& __cdecl operator>>(
+       basic_istream<char, char_traits<char> >&, signed char&);
+extern template _CRTIMP basic_istream<char, char_traits<char> >& __cdecl operator>>(
+       basic_istream<char, char_traits<char> >&, unsigned char *);
+extern template _CRTIMP basic_istream<char, char_traits<char> >& __cdecl operator>>(
+       basic_istream<char, char_traits<char> >&, unsigned char&);
+extern template _CRTIMP basic_istream<wchar_t, char_traits<wchar_t> >& __cdecl operator>>(
+       basic_istream<wchar_t, char_traits<wchar_t> >&, wchar_t *);
+extern template _CRTIMP basic_istream<wchar_t, char_traits<wchar_t> >& __cdecl operator>>(
+       basic_istream<wchar_t, char_traits<wchar_t> >&, wchar_t&);
+extern template _CRTIMP basic_istream<wchar_t, char_traits<wchar_t> >& __cdecl operator>>(
+       basic_istream<wchar_t, char_traits<wchar_t> >&, signed short *);
+
+#pragma warning(default:4231) /* restore previous warning */
+#endif		// _DLL
+
+
+_STD_END
+#ifdef  _MSC_VER
+#pragma pack(pop)
+#endif  /* _MSC_VER */
+
+#endif /* _ISTREAM_ */
+
+/*
+ * Copyright (c) 1994 by P.J. Plauger.  ALL RIGHTS RESERVED. 
+ * Consult your license regarding permissions and restrictions.
+ */
+

@@ -1,0 +1,177 @@
+// ios standard header
+#ifndef _IOS_
+#define _IOS_
+#include <streambuf>
+
+#ifdef  _MSC_VER
+#pragma pack(push,8)
+#endif  /* _MSC_VER */
+_STD_BEGIN
+		// TEMPLATE CLASS basic_ios
+template<class _E, class _Tr /*= char_traits<_E> */ >
+	class basic_ios : public ios_base {
+public:
+	typedef basic_ios<_E, _Tr> _Myt;
+	typedef basic_ostream<_E, _Tr> _Myos;
+	typedef basic_streambuf<_E, _Tr> _Mysb;
+	typedef ctype<_E> _Ctype;
+	explicit basic_ios(_Mysb *_S)
+		{init(_S); }
+	basic_ios(const _Myt& _R)
+		{init(0), *this = _R; }
+	virtual ~basic_ios()
+		{}
+	typedef _E char_type;
+	typedef _Tr traits_type;
+	typedef typename _Tr::int_type int_type;
+	typedef typename _Tr::pos_type pos_type;
+	typedef typename _Tr::off_type off_type;
+	void clear(iostate _St = goodbit, bool _Ex = false)
+		{ios_base::clear(_Sb == 0 ? (int)_St | (int)badbit
+			: (int)_St, _Ex); }
+	void clear(io_state _St)
+		{clear((iostate)_St); }
+	void setstate(iostate _St, bool _Ex = false)
+		{if (_St != goodbit)
+			clear((iostate)((int)rdstate() | (int)_St), _Ex); }
+	void setstate(io_state _St)
+		{setstate((iostate)_St); }
+	_Myt& copyfmt(const _Myt& _R)
+		{_Tiestr = _R.tie();
+		_Fillch = _R.fill();
+		ios_base::copyfmt(_R);
+		return (*this); }
+	_Myos *tie() const
+		{return (_Tiestr); }
+	_Myos *tie(_Myos *_N)
+		{_Myos *_O = _Tiestr;
+		_Tiestr = _N;
+		return (_O); }
+	_Mysb *rdbuf() const
+		{return (_Sb); }
+	_Mysb *rdbuf(_Mysb *_N)
+		{_Mysb *_O = _Sb;
+		_Sb = _N;
+		clear();
+		return (_O); }
+	locale imbue(const locale& _Ln)
+		{if (rdbuf() != 0)
+			rdbuf()->pubimbue(_Ln);
+		return (ios_base::imbue(_Ln)); }
+	_E fill() const
+		{return (_Fillch); }
+	_E fill(_E _Nf)
+		{_E _Of = _Fillch;
+		_Fillch = _Nf;
+		return (_Of); }
+	char narrow(_E _C, char _D = '\0') const
+		{const _Ctype& _Fac = _USE(getloc(), _Ctype);
+		return (_Fac.narrow(_C, _D)); }
+	_E widen(char _C) const
+		{const _Ctype& _Fac = _USE(getloc(), _Ctype);
+		return (_Fac.widen(_C)); }
+protected:
+	void init(_Mysb *_S = 0,
+		bool _Isstd = false)
+		{_Sb = _S;
+		_Tiestr = 0;
+		_Fillch = _WIDEN(_E, ' ');
+		_Init();
+		if (_Sb == 0)
+			setstate(badbit);
+		if (_Isstd)
+			_Addstd(); }
+	basic_ios()
+		{}
+private:
+	_Mysb *_Sb;
+	_Myos *_Tiestr;
+	_E _Fillch;
+	};
+
+#ifdef _DLL
+#pragma warning(disable:4231) /* the extern before template is a non-standard extension */
+extern template class _CRTIMP basic_ios<char, char_traits<char> >;
+extern template class _CRTIMP basic_ios<wchar_t, char_traits<wchar_t> >;
+#pragma warning(default:4231) /* restore previous warning */
+#endif		// _DLL
+
+		// MANIPULATORS
+inline ios_base& __cdecl boolalpha(ios_base& _I)
+	{_I.setf(ios_base::boolalpha);
+	return (_I); }
+inline ios_base& __cdecl dec(ios_base& _I)
+	{_I.setf(ios_base::dec, ios_base::basefield);
+	return (_I); }
+inline ios_base& __cdecl fixed(ios_base& _I)
+	{_I.setf(ios_base::fixed, ios_base::floatfield);
+	return (_I); }
+inline ios_base& __cdecl hex(ios_base& _I)
+	{_I.setf(ios_base::hex, ios_base::basefield);
+	return (_I); }
+inline ios_base& __cdecl internal(ios_base& _I)
+	{_I.setf(ios_base::internal, ios_base::adjustfield);
+	return (_I); }
+inline ios_base& __cdecl left(ios_base& _I)
+	{_I.setf(ios_base::left, ios_base::adjustfield);
+	return (_I); }
+inline ios_base& __cdecl noboolalpha(ios_base& _I)
+	{_I.unsetf(ios_base::boolalpha);
+	return (_I); }
+inline ios_base& __cdecl noshowbase(ios_base& _I)
+	{_I.unsetf(ios_base::showbase);
+	return (_I); }
+inline ios_base& __cdecl noshowpoint(ios_base& _I)
+	{_I.unsetf(ios_base::showpoint);
+	return (_I); }
+inline ios_base& __cdecl noshowpos(ios_base& _I)
+	{_I.unsetf(ios_base::showpos);
+	return (_I); }
+inline ios_base& __cdecl noskipws(ios_base& _I)
+	{_I.unsetf(ios_base::skipws);
+	return (_I); }
+inline ios_base& __cdecl nounitbuf(ios_base& _I)
+	{_I.unsetf(ios_base::unitbuf);
+	return (_I); }
+inline ios_base& __cdecl nouppercase(ios_base& _I)
+	{_I.unsetf(ios_base::uppercase);
+	return (_I); }
+inline ios_base& __cdecl oct(ios_base& _I)
+	{_I.setf(ios_base::oct, ios_base::basefield);
+	return (_I); }
+inline ios_base& __cdecl right(ios_base& _I)
+	{_I.setf(ios_base::right, ios_base::adjustfield);
+	return (_I); }
+inline ios_base& __cdecl scientific(ios_base& _I)
+	{_I.setf(ios_base::scientific, ios_base::floatfield);
+	return (_I); }
+inline ios_base& __cdecl showbase(ios_base& _I)
+	{_I.setf(ios_base::showbase);
+	return (_I); }
+inline ios_base& __cdecl showpoint(ios_base& _I)
+	{_I.setf(ios_base::showpoint);
+	return (_I); }
+inline ios_base& __cdecl showpos(ios_base& _I)
+	{_I.setf(ios_base::showpos);
+	return (_I); }
+inline ios_base& __cdecl skipws(ios_base& _I)
+	{_I.setf(ios_base::skipws);
+	return (_I); }
+inline ios_base& __cdecl unitbuf(ios_base& _I)
+	{_I.setf(ios_base::unitbuf);
+	return (_I); }
+inline ios_base& __cdecl uppercase(ios_base& _I)
+	{_I.setf(ios_base::uppercase);
+	return (_I); }
+_STD_END
+#ifdef  _MSC_VER
+#pragma pack(pop)
+#endif  /* _MSC_VER */
+
+#endif /* _IOS_ */
+
+/*
+ * Copyright (c) 1994 by P.J. Plauger.  ALL RIGHTS RESERVED. 
+ * Consult your license regarding permissions and restrictions.
+ */
+

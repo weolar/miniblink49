@@ -1,0 +1,640 @@
+// xlocale internal header (from <locale>)
+#ifndef _XLOCALE_
+#define _XLOCALE_
+#include <climits>
+#include <cstring>
+#include <stdexcept>
+#include <typeinfo>
+#include <xlocinfo>
+
+#ifdef  _MSC_VER
+#pragma pack(push,8)
+#endif  /* _MSC_VER */
+_STD_BEGIN
+                // CLASS locale
+class _CRTIMP locale {
+public:
+        enum _Category {collate = _M_COLLATE, ctype = _M_CTYPE,
+                monetary = _M_MONETARY, numeric = _M_NUMERIC,
+                time = _M_TIME, messages = _M_MESSAGE,
+                all = _M_ALL, none = 0};
+        typedef int category;
+                        // CLASS id
+        class _CRTIMP id {
+        public:
+                operator size_t()
+                        {_Lockit _Lk;
+                        if (_Id == 0)
+                                _Id = ++_Id_cnt;
+                        return (_Id); }
+        private:
+                size_t _Id;
+                static int _Id_cnt;
+                };
+        class _Locimp;
+                        // class facet
+        class _CRTIMP facet {
+                friend class locale;
+                friend class _Locimp;
+        public:
+                static size_t __cdecl _Getcat()
+                        {return ((size_t)(-1)); }
+                void _Incref()
+                        {_Lockit _Lk;
+                        if (_Refs < (size_t)(-1))
+                                ++_Refs; }
+                facet *_Decref()
+                        {_Lockit _Lk;
+                        if (0 < _Refs && _Refs < (size_t)(-1))
+                                --_Refs;
+                        return (_Refs == 0 ? this : 0); }
+        _PROTECTED:
+                virtual ~facet()
+                        {}
+        protected:
+                explicit facet(size_t _R = 0)
+                        : _Refs(_R) {}
+        private:
+                facet(const facet&);    // undefined
+                const facet& operator=(const facet&);   // undefined
+                size_t _Refs;
+                };
+                        // CLASS _Locimp
+        class _Locimp : public facet {
+        _PROTECTED:
+                ~_Locimp();
+        private:
+                friend class locale;
+                _Locimp(bool _Xp = false);
+                _Locimp(const _Locimp&);
+                void _Addfac(facet *, size_t);
+                static _Locimp *__cdecl _Makeloc(const _Locinfo&,
+                        category, _Locimp *, const locale *);
+                static void __cdecl _Makewloc(const _Locinfo&,
+                        category, _Locimp *, const locale *);
+                static void __cdecl _Makexloc(const _Locinfo&,
+                        category, _Locimp *, const locale *);
+                facet **_Fv;
+                size_t _Nfv;
+                category _Cat;
+                bool _Xpar;
+                string _Name;
+                static _CRTIMP _Locimp *_Clocptr, *_Global;
+                };
+        locale& _Addfac(facet *, size_t, size_t);
+        bool operator()(const string&, const string&) const;
+        locale() _THROW0()
+                : _Ptr(_Init())
+                {_Lockit _lk;
+                _Locimp::_Global->_Incref(); }
+        locale(_Uninitialized)
+                {}
+        locale(const locale& _X) _THROW0()
+                : _Ptr(_X._Ptr)
+                {_Ptr->_Incref(); }
+        locale(const locale&, const locale&, category);
+        explicit locale(const char *, category = all);
+        locale(const locale&, const char *, category);
+        ~locale() _THROW0()
+                {if (_Ptr != 0)
+                        delete _Ptr->_Decref(); }
+        locale& operator=(const locale& _X) _THROW0()
+                {if (_Ptr != _X._Ptr)
+                        {delete _Ptr->_Decref();
+                        _Ptr = _X._Ptr;
+                        _Ptr->_Incref(); }
+                return (*this); }
+        string name() const
+                {return (_Ptr->_Name); }
+        const facet *_Getfacet(size_t _Id, bool _Xp = false) const;
+        bool _Iscloc() const;
+        bool operator==(const locale& _X) const;
+        bool operator!=(const locale& _X) const
+                {return (!(*this == _X)); }
+        static const locale& __cdecl classic();
+        static locale __cdecl global(const locale&);
+        static locale __cdecl empty();
+private:
+        locale(_Locimp *_P)
+                : _Ptr(_P) {}
+        static _Locimp *__cdecl _Init();
+        static void __cdecl _Tidy();
+        _Locimp *_Ptr;
+        };
+_BITMASK_OPS(locale::_Category);
+                // SUPPORT TEMPLATES
+template<class _F>
+        class _Tidyfac {
+public:
+        static _F *__cdecl _Save(_F *_Fac)
+                {_Lockit _Lk;
+                _Facsav = _Fac;
+                _Facsav->_Incref();
+                atexit(_Tidy);
+                return (_Fac); }
+        static void __cdecl _Tidy()
+                {_Lockit _Lk;
+                delete _Facsav->_Decref();
+                _Facsav = 0; }
+private:
+        static _F *_Facsav;
+        };
+template<class _F>
+        _F *_Tidyfac<_F>::_Facsav = 0;
+ #define _ADDFAC(loc, pfac) _Addfac(loc, pfac)
+ #define _USEFAC(loc, fac)      use_facet(loc, (fac *)0, false)
+ #define _USE(loc, fac)         use_facet(loc, (fac *)0, true)
+template<class _F> inline
+        locale _Addfac(locale _X, _F *_Fac)
+                {_Lockit _Lk;
+                return (_X._Addfac(_Fac, _F::id, _F::_Getcat())); }
+template<class _F> inline
+        const _F& __cdecl use_facet(const locale& _L, const _F *,
+                bool _Cfacet)
+        {static const locale::facet *_Psave = 0;
+        _Lockit _Lk;
+        size_t _Id = _F::id;
+        const locale::facet *_Pf = _L._Getfacet(_Id, true);
+        if (_Pf != 0)
+                ;
+        else if (!_Cfacet || !_L._Iscloc())
+                _THROW(bad_cast, "missing locale facet");
+        else if (_Psave == 0)
+                _Pf = _Psave = _Tidyfac<_F>::_Save(new _F);
+        else
+                _Pf = _Psave;
+        return (*(const _F *)_Pf); }
+                // TEMPLATE FUNCTION _Narrow
+#define _NARROW(T, V)   _Narrow((T)(V))
+template<class _E> inline
+        int _Narrow(_E _C)      // needs _E::operator char()
+        {return ((unsigned char)(char)_C); }
+inline int _Narrow(wchar_t _C)
+        {return (wctob(_C)); }
+                // TEMPLATE FUNCTION _Widen
+#define _WIDEN(T, V)    _Widen(V, (T *)0)
+template<class _E> inline
+        _E _Widen(char _Ch, _E *)       // needs _E(char)
+        {return (_Ch); }
+inline wchar_t _Widen(char _Ch, wchar_t *)
+        {return (btowc(_Ch)); }
+                // TEMPLATE FUNCTION _Getloctxt
+template<class _E, class _II> inline
+        int __cdecl _Getloctxt(_II& _F, _II& _L, size_t _N,
+                const _E *_S)
+        {for (size_t _I = 0; _S[_I] != (_E)0; ++_I)
+                if (_S[_I] == _S[0])
+                        ++_N;
+        string _Str(_N, '\0');
+        int _Ans = -2;
+        for (size_t _J = 1; ; ++_J, ++_F, _Ans = -1)
+                {bool  _Pfx;
+                size_t _I, _K;
+                for (_I = 0, _K = 0, _Pfx = false; _K < _N; ++_K)
+                        {for (; _S[_I] != (_E)0 && _S[_I] != _S[0]; ++_I)
+                                ;
+                        if (_Str[_K] != '\0')
+                                _I += _Str[_K];
+                        else if (_S[_I += _J] == _S[0] || _S[_I] == (_E)0)
+                                {_Str[_K] = (char)(_J < 127 ? _J : 127);
+                                _Ans = (int)_K; }
+                        else if (_F == _L || _S[_I] != *_F)
+                                _Str[_K] = (char)(_J < 127 ? _J : 127);
+                        else
+                                _Pfx = true; }
+                if (!_Pfx || _F == _L)
+                        break; }
+        return (_Ans); }
+                // TEMPLATE FUNCTION _Maklocstr
+#define _MAKLOCSTR(T, S)        _Maklocstr(S, (T *)0)
+template<class _E> inline
+        _E *__cdecl _Maklocstr(const char *_S, _E *)
+        {size_t _L = strlen(_S) + 1;
+        _E *_X = new _E[_L];
+        for (_E *_P = _X; 0 < _L; --_L, ++_P, ++_S)
+                *_P = _WIDEN(_E, *_S);
+        return (_X); }
+                // STRUCT codecvt_base
+class _CRTIMP codecvt_base : public locale::facet {
+public:
+        enum _Result {ok, partial, error, noconv};
+        _BITMASK(_Result, result);
+        codecvt_base(size_t _R = 0)
+                : locale::facet(_R) {}
+        bool always_noconv() const _THROW0()
+                {return (do_always_noconv()); }
+        int max_length() const _THROW0()
+                {return (do_max_length()); }
+        int encoding() const _THROW0()
+                {return (do_encoding()); }
+protected:
+        virtual bool do_always_noconv() const _THROW0()
+                {return (true); }
+        virtual int do_max_length() const _THROW0()
+                {return (1); }
+        virtual int do_encoding() const _THROW0()
+                {return (1); }
+        };
+_BITMASK_OPS(codecvt_base::_Result);
+                // TEMPLATE CLASS codecvt
+template<class _E, class _To, class _St>
+        class codecvt : public codecvt_base {
+public:
+        typedef _E from_type;
+        typedef _To to_type;
+        typedef _St state_type;
+        result in(_St& _State,
+                const _To *_F1, const _To *_L1, const _To *& _Mid1,
+                _E *_F2, _E *_L2, _E *& _Mid2) const
+                {return (do_in(_State,
+                        _F1, _L1, _Mid1, _F2, _L2, _Mid2)); }
+        result out(_St& _State,
+                const _E *_F1, const _E *_L1, const _E *& _Mid1,
+                _To *_F2, _To *_L2, _To *& _Mid2) const
+                {return (do_out(_State,
+                        _F1, _L1, _Mid1, _F2, _L2, _Mid2)); }
+        int length(_St& _State, const _E *_F1,
+                const _E *_L1, size_t _N2) const _THROW0()
+                {return (do_length(_State, _F1, _L1, _N2)); }
+        static locale::id id;
+        explicit codecvt(size_t _R = 0)
+                : codecvt_base(_R) {_Init(_Locinfo()); }
+        codecvt(const _Locinfo& _Lobj, size_t _R = 0)
+                : codecvt_base(_R) {_Init(_Lobj); }
+        static size_t __cdecl _Getcat()
+                {return (_LC_CTYPE); }
+_PROTECTED:
+        virtual ~codecvt()
+                {};
+protected:
+        void _Init(const _Locinfo& _Lobj)
+                {_Cvt = _Lobj._Getcvt(); }
+        virtual result do_in(_St& _State,
+                const _To *_F1, const _To *, const _To *& _Mid1,
+                _E *_F2, _E *, _E *& _Mid2) const
+                {(_State); _Mid1 = _F1, _Mid2 = _F2;
+                return (noconv); }
+        virtual result do_out(_St& _State,
+                const _E *_F1, const _E *, const _E *& _Mid1,
+                _To *_F2, _To *, _To *& _Mid2) const
+                {(_State);_Mid1 = _F1, _Mid2 = _F2;
+                return (noconv); }
+        virtual int do_length(_St& _State, const _E *_F1,
+                const _E *_L1, size_t _N2) const _THROW0()
+                {(_State);return (int)(_N2 < (size_t)(_L1 - _F1) ? _N2 : (_L1 - _F1)); }
+private:
+        _Locinfo::_Cvtvec _Cvt;
+        };
+template<class _E, class _To, class _St>
+        locale::id codecvt<_E, _To, _St>::id;
+                // CLASS codecvt<wchar_t, char, mbstate_t>
+template <>
+class _CRTIMP codecvt<wchar_t, char, mbstate_t> : public codecvt_base {
+public:
+        typedef wchar_t _E;
+        typedef char _To;
+        typedef mbstate_t _St;
+        typedef _E from_type;
+        typedef _To to_type;
+        typedef _St state_type;
+        result in(_St& _State,
+                const _To *_F1, const _To *_L1, const _To *& _Mid1,
+                _E *_F2, _E *_L2, _E *& _Mid2) const
+                {return (do_in(_State,
+                        _F1, _L1, _Mid1, _F2, _L2, _Mid2)); }
+        result out(_St& _State,
+                const _E *_F1, const _E *_L1, const _E *& _Mid1,
+                _To *_F2, _To *_L2, _To *& _Mid2) const
+                {return (do_out(_State,
+                        _F1, _L1, _Mid1, _F2, _L2, _Mid2)); }
+        int length(_St& _State, const _E *_F1,
+                const _E *_L1, size_t _N2) const _THROW0()
+                {return (do_length(_State, _F1, _L1, _N2)); }
+        static locale::id id;
+        explicit codecvt(size_t _R = 0)
+                : codecvt_base(_R) {_Init(_Locinfo()); }
+        codecvt(const _Locinfo& _Lobj, size_t _R = 0)
+                : codecvt_base(_R) {_Init(_Lobj); }
+        static size_t __cdecl _Getcat()
+                {return (_LC_CTYPE); }
+_PROTECTED:
+        virtual ~codecvt()
+                {};
+protected:
+        void _Init(const _Locinfo& _Lobj)
+                {_Cvt = _Lobj._Getcvt(); }
+        virtual result do_in(_St& _State,
+                const _To *_F1, const _To *_L1, const _To *& _Mid1,
+                _E *_F2, _E *_L2, _E *& _Mid2) const
+                {_Mid1 = _F1, _Mid2 = _F2;
+                result _Ans = _Mid1 == _L1 ? ok : partial;
+                int _N;
+                while (_Mid1 != _L1 && _Mid2 != _L2)
+                        switch (_N =
+                                _Mbrtowc(_Mid2, _Mid1, _L1 - _Mid1,
+                                        &_State, &_Cvt))
+                        {case -2:
+                                _Mid1 = _L1;
+                                return (_Ans);
+                        case -1:
+                                return (error);
+                        case 0:
+                                _N = (int)strlen(_Mid1) + 1;
+                        default:        // fall through
+                                _Mid1 += _N, ++_Mid2, _Ans = ok; }
+                return (_Ans); }
+        virtual result do_out(_St& _State,
+                const _E *_F1, const _E *_L1, const _E *& _Mid1,
+                _To *_F2, _To *_L2, _To *& _Mid2) const
+                {_Mid1 = _F1, _Mid2 = _F2;
+                result _Ans = _Mid1 == _L1 ? ok : partial;
+                int _N;
+                while (_Mid1 != _L1 && _Mid2 != _L2)
+                        if (MB_CUR_MAX <= _L2 - _Mid2)
+                                if ((_N =
+                                        _Wcrtomb(_Mid2, *_Mid1, &_State,
+                                                &_Cvt)) <= 0)
+                                        return (error);
+                                else
+                                        ++_Mid1, _Mid2 += _N, _Ans = ok;
+                        else
+                                {_To _Buf[MB_LEN_MAX];
+                                _St _Stsave = _State;
+                                if ((_N =
+                                        _Wcrtomb(_Buf, *_Mid1, &_State,
+                                                &_Cvt)) <= 0)
+                                        return (error);
+                                else if (_L2 - _Mid2 < _N)
+                                        {_State = _Stsave;
+                                        return (_Ans); }
+                                else
+                                        {memcpy(_Mid2, _Buf, _N);
+                                        ++_Mid1, _Mid2 += _N, _Ans = ok; }}
+                return (_Ans); }
+        virtual int do_length(_St& _State, const _E *_F1,
+                const _E *_L1, size_t _N2) const _THROW0()
+                {const _E *_Mid1;
+                _To _Buf[MB_LEN_MAX];
+                int _N;
+                for (_Mid1 = _F1; _Mid1 != _L1 && 0 < _N2;
+                        ++_Mid1, _N2 -= _N)
+                        if ((_N =
+                                _Wcrtomb(_Buf, *_Mid1, &_State, &_Cvt)) <= 0
+                                        || _N2 < (size_t) _N)
+                                break;
+                return ((int) (_Mid1 - _F1)); }
+        virtual bool do_always_noconv() const _THROW0()
+                {return (false); }
+        virtual int do_max_length() const _THROW0()
+                {return (MB_LEN_MAX); }
+        virtual int do_encoding() const _THROW0()
+                {return (0); }
+private:
+        _Locinfo::_Cvtvec _Cvt;
+        };
+                // TEMPLATE CLASS codecvt_byname
+template<class _E, class _To, class _St>
+        class codecvt_byname : public codecvt<_E, _To, _St> {
+public:
+        explicit codecvt_byname(const char *_S, size_t _R = 0)
+                : codecvt<_E, _To, _St>(_Locinfo(_S), _R) {}
+_PROTECTED:
+        virtual ~codecvt_byname()
+                {}
+        };
+                // STRUCT ctype_base
+struct _CRTIMP ctype_base : public locale::facet {
+        enum _Mask {alnum = _DI|_LO|_UP|_XA, alpha = _LO|_UP|_XA,
+                cntrl = _BB, digit = _DI, graph = _DI|_LO|_PU|_UP|_XA,
+                lower = _LO, print = _DI|_LO|_PU|_SP|_UP|_XA|_XD,
+                punct = _PU, space = _CN|_SP|_XS, upper = _UP,
+                xdigit = _XD};
+//      _BITMASK(_Mask, mask);
+        typedef short mask;     // to match <ctype.h>
+        ctype_base(size_t _R = 0)
+                : locale::facet(_R) {}
+        };
+                // TEMPLATE CLASS ctype
+template<class _E>
+        class ctype : public ctype_base {
+public:
+        typedef _E char_type;
+        bool is(mask _M, _E _C) const
+                {return (do_is(_M, _C)); }
+        const _E *is(const _E *_F, const _E *_L, mask *_V) const
+                {return (do_is(_F, _L, _V)); }
+        const _E *scan_is(mask _M, const _E *_F,
+                const _E *_L) const
+                {return (do_scan_is(_M, _F, _L)); }
+        const _E *scan_not(mask _M, const _E *_F,
+                const _E *_L) const
+                {return (do_scan_not(_M, _F, _L)); }
+        _E tolower(_E _C) const
+                {return (do_tolower(_C)); }
+        const _E *tolower(_E *_F, const _E *_L) const
+                {return (do_tolower(_F, _L)); }
+        _E toupper(_E _C) const
+                {return (do_toupper(_C)); }
+        const _E *toupper(_E *_F, const _E *_L) const
+                {return (do_toupper(_F, _L)); }
+        _E widen(char _X) const
+                {return (do_widen(_X)); }
+        const char *widen(const char *_F, const char *_L,
+                _E *_V) const
+                {return (do_widen(_F, _L, _V)); }
+        char narrow(_E _C, char _D = '\0') const
+                {return (do_narrow(_C, _D)); }
+        const _E *narrow(const _E *_F, const _E *_L, char _D,
+                char *_V) const
+                {return (do_narrow(_F, _L, _D, _V)); }
+        static locale::id id;
+        explicit ctype(size_t _R = 0)
+                : ctype_base(_R) {_Init(_Locinfo()); }
+        ctype(const _Locinfo& _Lobj, size_t _R = 0)
+                : ctype_base(_R) {_Init(_Lobj); }
+        static size_t __cdecl _Getcat()
+                {return (_LC_CTYPE); }
+_PROTECTED:
+        virtual ~ctype()
+                {if (_Ctype._Delfl)
+                        free((void *)_Ctype._Table); }
+protected:
+        void _Init(const _Locinfo& _Lobj)
+                {_Ctype = _Lobj._Getctype(); }
+        virtual bool do_is(mask _M, _E _C) const
+                {return ((_Ctype._Table[narrow(_C)] & _M) != 0); }
+        virtual const _E *do_is(const _E *_F, const _E *_L,
+                mask *_V) const
+                {for (; _F != _L; ++_F, ++_V)
+                        *_V = _Ctype._Table[narrow(*_F)];
+                return (_F); }
+        virtual const _E *do_scan_is(mask _M, const _E *_F,
+                const _E *_L) const
+                {for (; _F != _L && !is(_M, *_F); ++_F)
+                        ;
+                return (_F); }
+        virtual const _E *do_scan_not(mask _M, const _E *_F,
+                const _E *_L) const
+                {for (; _F != _L && is(_M, *_F); ++_F)
+                        ;
+                return (_F); }
+        virtual _E do_tolower(_E _C) const
+                {return ((_E)widen((char)_Tolower(narrow(_C), &_Ctype))); }
+        virtual const _E *do_tolower(_E *_F, const _E *_L) const
+                {for (; _F != _L; ++_F)
+                        *_F = (_E)_Tolower(*_F, &_Ctype);
+                return ((const _E *)_F); }
+        virtual _E do_toupper(_E _C) const
+                {return ((_E)widen((char)_Toupper(narrow(_C), &_Ctype))); }
+        virtual const _E *do_toupper(_E *_F, const _E *_L) const
+                {for (; _F != _L; ++_F)
+                        *_F = (_E)_Toupper(*_F, &_Ctype);
+                return ((const _E *)_F); }
+        virtual _E do_widen(char _X) const
+                {return (_WIDEN(_E, _X)); }
+        virtual const char *do_widen(const char *_F, const char *_L,
+                _E *_V) const
+                {for (; _F != _L; ++_F, ++_V)
+                        *_V = _WIDEN(_E, *_F);
+                return (_F); }
+        virtual char do_narrow(_E _C, char) const
+                {return ((char)_NARROW(_E, _C)); }
+        virtual const _E *do_narrow(const _E *_F, const _E *_L,
+                char, char *_V) const
+                {for (; _F != _L; ++_F, ++_V)
+                        *_V = (char)_NARROW(_E, *_F);
+                return (_F); }
+private:
+        _Locinfo::_Ctypevec _Ctype;
+        };
+
+template<class _E>
+        locale::id ctype<_E>::id;
+
+                // CLASS ctype<char>
+template <>
+class _CRTIMP ctype<char> : public ctype_base {
+public:
+        typedef char _E;
+        typedef _E char_type;
+        bool is(mask _M, _E _C) const
+                {return ((_Ctype._Table[(unsigned char)_C] & _M) != 0); }
+        const _E *is(const _E *_F, const _E *_L, mask *_V) const
+                {for (; _F != _L; ++_F, ++_V)
+                        *_V = _Ctype._Table[(unsigned char)*_F];
+                return (_F); }
+        const _E *scan_is(mask _M, const _E *_F,
+                const _E *_L) const
+                {for (; _F != _L && !is(_M, *_F); ++_F)
+                        ;
+                return (_F); }
+        const _E *scan_not(mask _M, const _E *_F,
+                const _E *_L) const
+                {for (; _F != _L && is(_M, *_F); ++_F)
+                        ;
+                return (_F); }
+        _E tolower(_E _C) const
+                {return (do_tolower(_C)); }
+        const _E *tolower(_E *_F, const _E *_L) const
+                {return (do_tolower(_F, _L)); }
+        _E toupper(_E _C) const
+                {return (do_toupper(_C)); }
+        const _E *toupper(_E *_F, const _E *_L) const
+                {return (do_toupper(_F, _L)); }
+        _E widen(char _X) const
+                {return (_X); }
+        const _E *widen(const char *_F, const char *_L, _E *_V) const
+                {memcpy(_V, _F, _L - _F);
+                return (_L); }
+        _E narrow(_E _C, char _D = '\0') const
+                {(_D); return (_C); }
+        const _E *narrow(const _E *_F, const _E *_L, char _D,
+                char *_V) const
+                {(_D);memcpy(_V, _F, _L - _F);
+                return (_L); }
+        static locale::id id;
+        explicit ctype(const mask *_Tab = 0, bool _Df = false,
+                size_t _R = 0)
+                : ctype_base(_R)
+                {_Lockit Lk;
+                _Init(_Locinfo());
+                if (_Ctype._Delfl)
+                        free((void *)_Ctype._Table), _Ctype._Delfl = false;
+                if (_Tab == 0)
+                        _Ctype._Table = _Cltab;
+                else
+                        _Ctype._Table = _Tab, _Ctype._Delfl = _Df; }
+        ctype(const _Locinfo& _Lobj, size_t _R = 0)
+                : ctype_base(_R) {_Init(_Lobj); }
+        static size_t __cdecl _Getcat()
+                {return (_LC_CTYPE); }
+        static const size_t table_size;
+_PROTECTED:
+        virtual ~ctype()
+                {if (_Ctype._Delfl)
+                        free((void *)_Ctype._Table); }
+protected:
+        static void __cdecl _Term(void)
+                {free((void *)_Cltab); }
+        void _Init(const _Locinfo& _Lobj)
+                {_Lockit Lk;
+                _Ctype = _Lobj._Getctype();
+                if (_Cltab == 0)
+                        {_Cltab = _Ctype._Table;
+                        atexit(_Term);
+                        _Ctype._Delfl = false; }}
+        virtual _E do_tolower(_E _C) const
+                {return (_E)(_Tolower((unsigned char)_C, &_Ctype)); }
+        virtual const _E *do_tolower(_E *_F, const _E *_L) const
+                {for (; _F != _L; ++_F)
+                        *_F = (_E)_Tolower(*_F, &_Ctype);
+                return ((const _E *)_F); }
+        virtual _E do_toupper(_E _C) const
+                {return ((_E)_Toupper((unsigned char)_C, &_Ctype)); }
+        virtual const _E *do_toupper(_E *_F, const _E *_L) const
+                {for (; _F != _L; ++_F)
+                        *_F = (_E)_Toupper(*_F, &_Ctype);
+                return ((const _E *)_F); }
+        const mask *table() const _THROW0()
+                {return (_Ctype._Table); }
+        static const mask * __cdecl classic_table() _THROW0()
+                {_Lockit Lk;
+                if (_Cltab == 0)
+                        locale::classic();      // force locale::_Init() call
+                return (_Cltab); }
+private:
+        _Locinfo::_Ctypevec _Ctype;
+        static const mask *_Cltab;
+        };
+
+
+                // TEMPLATE CLASS ctype_byname
+template<class _E>
+        class ctype_byname : public ctype<_E> {
+public:
+        explicit ctype_byname(const char *_S, size_t _R = 0)
+                : ctype<_E>(_Locinfo(_S), _R) {}
+_PROTECTED:
+        virtual ~ctype_byname()
+                {}
+        };
+
+#ifdef  _DLL
+#pragma warning(disable:4231) /* the extern before template is a non-standard extension */
+extern template class _CRTIMP ctype<wchar_t>;
+extern template class _CRTIMP codecvt<char, char, int>;
+#pragma warning(default:4231) /* restore previous warning */
+#endif		// _DLL
+
+_STD_END
+#ifdef  _MSC_VER
+#pragma pack(pop)
+#endif  /* _MSC_VER */
+
+#endif /* _XLOCALE_ */
+
+/*
+ * Copyright (c) 1995 by P.J. Plauger.  ALL RIGHTS RESERVED.
+ * Consult your license regarding permissions and restrictions.
+ */
+

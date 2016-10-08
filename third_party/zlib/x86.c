@@ -57,20 +57,7 @@ static void _x86_check_features(void)
 #include <intrin.h>
 #include <windows.h>
 
-static BOOL CALLBACK _x86_check_features(PINIT_ONCE once,
-                                         PVOID param,
-                                         PVOID *context);
-static INIT_ONCE cpu_check_inited_once = INIT_ONCE_STATIC_INIT;
-
-void x86_check_features(void)
-{
-    InitOnceExecuteOnce(&cpu_check_inited_once, _x86_check_features,
-                        NULL, NULL);
-}
-
-static BOOL CALLBACK _x86_check_features(PINIT_ONCE once,
-                                         PVOID param,
-                                         PVOID *context)
+extern void x86_check_features(void)
 {
     int x86_cpu_has_sse2;
     int x86_cpu_has_sse42;
@@ -86,6 +73,5 @@ static BOOL CALLBACK _x86_check_features(PINIT_ONCE once,
     x86_cpu_enable_simd = x86_cpu_has_sse2 &&
                           x86_cpu_has_sse42 &&
                           x86_cpu_has_pclmulqdq;
-    return TRUE;
 }
 #endif  /* _MSC_VER */
