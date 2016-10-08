@@ -1,0 +1,451 @@
+// limits standard header
+#ifndef _LIMITS_
+#define _LIMITS_
+#include <ymath.h>
+#include <cfloat>
+#include <climits>
+#include <cmath>
+#include <cwchar>
+#include <xstddef>
+
+#ifdef  _MSC_VER
+#pragma pack(push,8)
+#endif  /* _MSC_VER */
+//	ASSUMES:
+//	wraparound 2's complement integer arithmetic w/o traps
+//	all CHAR_BITs of each byte used by integers
+//	IEC559 (IEEE 754) floating-point arithmetic
+//	floating-point errors can trap
+//	tinyness detected before floating-point rounding
+_STD_BEGIN
+		// ENUM float_round_style
+typedef enum {
+	round_indeterminate = -1, round_toward_zero = 0,
+	round_to_nearest = 1, round_toward_infinity = 2,
+	round_toward_neg_infinity = 3} float_round_style;
+		// STRUCT _Num_base
+struct _CRTIMP _Num_base {
+	_STCONS(bool, has_denorm, false);
+	_STCONS(bool, has_denorm_loss, false);
+	_STCONS(bool, has_infinity, false);
+	_STCONS(bool, has_quiet_NaN, false);
+	_STCONS(bool, has_signaling_NaN, false);
+	_STCONS(bool, is_bounded, false);
+	_STCONS(bool, is_exact, false);
+	_STCONS(bool, is_iec559, false);
+	_STCONS(bool, is_integer, false);
+	_STCONS(bool, is_modulo, false);
+	_STCONS(bool, is_signed, false);
+	_STCONS(bool, is_specialized, false);
+	_STCONS(bool, tinyness_before, false);
+	_STCONS(bool, traps, false);
+	_STCONS(float_round_style, round_style, round_toward_zero);
+	_STCONS(int, digits, 0);
+	_STCONS(int, digits10, 0);
+	_STCONS(int, max_exponent, 0);
+	_STCONS(int, max_exponent10, 0);
+	_STCONS(int, min_exponent, 0);
+	_STCONS(int, min_exponent10, 0);
+	_STCONS(int, radix, 0);
+	};
+		// TEMPLATE CLASS numeric_limits
+template<class _Ty> class numeric_limits : public _Num_base {
+public:
+	static _Ty (__cdecl min)() _THROW0()
+		{return (_Ty(0)); }
+	static _Ty (__cdecl max)() _THROW0()
+		{return (_Ty(0)); }
+	static _Ty __cdecl epsilon() _THROW0()
+		{return (_Ty(0)); }
+	static _Ty __cdecl round_error() _THROW0()
+		{return (_Ty(0)); }
+	static _Ty __cdecl denorm_min() _THROW0()
+		{return (_Ty(0)); }
+	static _Ty __cdecl infinity() _THROW0()
+		{return (_Ty(0)); }
+	static _Ty __cdecl quiet_NaN() _THROW0()
+		{return (_Ty(0)); }
+	static _Ty __cdecl signaling_NaN() _THROW0()
+		{return (_Ty(0)); }
+	};
+		// STRUCT _Num_int_base
+struct _CRTIMP _Num_int_base : public _Num_base {
+	_STCONS(bool, is_bounded, true);
+	_STCONS(bool, is_exact, true);
+	_STCONS(bool, is_integer, true);
+	_STCONS(bool, is_modulo, true);
+	_STCONS(bool, is_specialized, true);
+	_STCONS(int, radix, 2);
+	};
+		// STRUCT _Num_float_base
+struct _CRTIMP _Num_float_base : public _Num_base {
+	_STCONS(bool, has_denorm, true);
+	_STCONS(bool, has_denorm_loss, true);
+	_STCONS(bool, has_infinity, true);
+	_STCONS(bool, has_quiet_NaN, true);
+	_STCONS(bool, has_signaling_NaN, true);
+	_STCONS(bool, is_bounded, true);
+	_STCONS(bool, is_exact, false);
+	_STCONS(bool, is_iec559, true);
+	_STCONS(bool, is_integer, false);
+	_STCONS(bool, is_modulo, false);
+	_STCONS(bool, is_signed, true);
+	_STCONS(bool, is_specialized, true);
+	_STCONS(bool, tinyness_before, true);
+	_STCONS(bool, traps, true);
+	_STCONS(float_round_style, round_style, round_to_nearest);
+	_STCONS(int, radix, FLT_RADIX);
+	};
+		// CLASS numeric_limits<char>
+template <>
+class _CRTIMP numeric_limits<char> : public _Num_int_base {
+public:
+	typedef char _Ty;
+	static _Ty (__cdecl min)() _THROW0()
+		{return (CHAR_MIN); }
+	static _Ty (__cdecl max)() _THROW0()
+		{return (CHAR_MAX); }
+	static _Ty __cdecl epsilon() _THROW0()
+		{return (0); }
+	static _Ty __cdecl round_error() _THROW0()
+		{return (0); }
+	static _Ty __cdecl denorm_min() _THROW0()
+		{return (0); }
+	static _Ty __cdecl infinity() _THROW0()
+		{return (0); }
+	static _Ty __cdecl quiet_NaN() _THROW0()
+		{return (0); }
+	static _Ty __cdecl signaling_NaN() _THROW0()
+		{return (0); }
+	_STCONS(bool, is_signed, CHAR_MIN < 0);
+	_STCONS(int, digits, CHAR_BIT - (CHAR_MIN < 0 ? 1 : 0));
+	_STCONS(int, digits10, (CHAR_BIT - (CHAR_MIN < 0 ? 1 : 0))
+		* 301L / 1000);
+	};
+		// CLASS numeric_limits<_Bool>
+template <>
+class _CRTIMP numeric_limits<_Bool> : public _Num_int_base {
+public:
+	typedef bool _Ty;
+	static _Ty (__cdecl min)() _THROW0()
+		{return (false); }
+	static _Ty (__cdecl max)() _THROW0()
+		{return (true); }
+	static _Ty __cdecl epsilon() _THROW0()
+		{return (0); }
+	static _Ty __cdecl round_error() _THROW0()
+		{return (0); }
+	static _Ty __cdecl denorm_min() _THROW0()
+		{return (0); }
+	static _Ty __cdecl infinity() _THROW0()
+		{return (0); }
+	static _Ty __cdecl quiet_NaN() _THROW0()
+		{return (0); }
+	static _Ty __cdecl signaling_NaN() _THROW0()
+		{return (0); }
+	_STCONS(bool, is_signed, false);
+	_STCONS(int, digits, 1);
+	_STCONS(int, digits10, 0);
+	};
+		// CLASS numeric_limits<signed char>
+template <>
+class _CRTIMP numeric_limits<signed char> : public _Num_int_base {
+public:
+	typedef signed char _Ty;
+	static _Ty (__cdecl min)() _THROW0()
+		{return (SCHAR_MIN); }
+	static _Ty (__cdecl max)() _THROW0()
+		{return (SCHAR_MAX); }
+	static _Ty __cdecl epsilon() _THROW0()
+		{return (0); }
+	static _Ty __cdecl round_error() _THROW0()
+		{return (0); }
+	static _Ty __cdecl denorm_min() _THROW0()
+		{return (0); }
+	static _Ty __cdecl infinity() _THROW0()
+		{return (0); }
+	static _Ty __cdecl quiet_NaN() _THROW0()
+		{return (0); }
+	static _Ty __cdecl signaling_NaN() _THROW0()
+		{return (0); }
+	_STCONS(bool, is_signed, true);
+	_STCONS(int, digits, CHAR_BIT - 1);
+	_STCONS(int, digits10, (CHAR_BIT - 1) * 301L / 1000);
+	};
+		// CLASS numeric_limits<unsigned char>
+template <>
+class _CRTIMP numeric_limits<unsigned char> : public _Num_int_base {
+public:
+	typedef unsigned char _Ty;
+	static _Ty (__cdecl min)() _THROW0()
+		{return (0); }
+	static _Ty (__cdecl max)() _THROW0()
+		{return (UCHAR_MAX); }
+	static _Ty __cdecl epsilon() _THROW0()
+		{return (0); }
+	static _Ty __cdecl round_error() _THROW0()
+		{return (0); }
+	static _Ty __cdecl denorm_min() _THROW0()
+		{return (0); }
+	static _Ty __cdecl infinity() _THROW0()
+		{return (0); }
+	static _Ty __cdecl quiet_NaN() _THROW0()
+		{return (0); }
+	static _Ty __cdecl signaling_NaN() _THROW0()
+		{return (0); }
+	_STCONS(bool, is_signed, false);
+	_STCONS(int, digits, CHAR_BIT);
+	_STCONS(int, digits10, (CHAR_BIT) * 301L / 1000);
+	};
+		// CLASS numeric_limits<short>
+template <>
+class _CRTIMP numeric_limits<short> : public _Num_int_base {
+public:
+	typedef short _Ty;
+	static _Ty (__cdecl min)() _THROW0()
+		{return (SHRT_MIN); }
+	static _Ty (__cdecl max)() _THROW0()
+		{return (SHRT_MAX); }
+	static _Ty __cdecl epsilon() _THROW0()
+		{return (0); }
+	static _Ty __cdecl round_error() _THROW0()
+		{return (0); }
+	static _Ty __cdecl denorm_min() _THROW0()
+		{return (0); }
+	static _Ty __cdecl infinity() _THROW0()
+		{return (0); }
+	static _Ty __cdecl quiet_NaN() _THROW0()
+		{return (0); }
+	static _Ty __cdecl signaling_NaN() _THROW0()
+		{return (0); }
+	_STCONS(bool, is_signed, true);
+	_STCONS(int, digits, CHAR_BIT * sizeof (short) - 1);
+	_STCONS(int, digits10, (CHAR_BIT * sizeof (short) - 1)
+		* 301L / 1000);
+	};
+		// CLASS numeric_limits<unsigned short>
+template <>
+class _CRTIMP numeric_limits<unsigned short> : public _Num_int_base {
+public:
+	typedef unsigned short _Ty;
+	static _Ty (__cdecl min)() _THROW0()
+		{return (0); }
+	static _Ty (__cdecl max)() _THROW0()
+		{return (USHRT_MAX); }
+	static _Ty __cdecl epsilon() _THROW0()
+		{return (0); }
+	static _Ty __cdecl round_error() _THROW0()
+		{return (0); }
+	static _Ty __cdecl denorm_min() _THROW0()
+		{return (0); }
+	static _Ty __cdecl infinity() _THROW0()
+		{return (0); }
+	static _Ty __cdecl quiet_NaN() _THROW0()
+		{return (0); }
+	static _Ty __cdecl signaling_NaN() _THROW0()
+		{return (0); }
+	_STCONS(bool, is_signed, false);
+	_STCONS(int, digits, CHAR_BIT * sizeof (unsigned short));
+	_STCONS(int, digits10, (CHAR_BIT * sizeof (unsigned short))
+		* 301L / 1000);
+	};
+		// CLASS numeric_limits<int>
+template <>
+class _CRTIMP numeric_limits<int> : public _Num_int_base {
+public:
+	typedef int _Ty;
+	static _Ty (__cdecl min)() _THROW0()
+		{return (INT_MIN); }
+	static _Ty (__cdecl max)() _THROW0()
+		{return (INT_MAX); }
+	static _Ty __cdecl epsilon() _THROW0()
+		{return (0); }
+	static _Ty __cdecl round_error() _THROW0()
+		{return (0); }
+	static _Ty __cdecl denorm_min() _THROW0()
+		{return (0); }
+	static _Ty __cdecl infinity() _THROW0()
+		{return (0); }
+	static _Ty __cdecl quiet_NaN() _THROW0()
+		{return (0); }
+	static _Ty __cdecl signaling_NaN() _THROW0()
+		{return (0); }
+	_STCONS(bool, is_signed, true);
+	_STCONS(int, digits, CHAR_BIT * sizeof (int) - 1);
+	_STCONS(int, digits10, (CHAR_BIT * sizeof (int) - 1)
+		* 301L / 1000);
+	};
+		// CLASS numeric_limits<unsigned int>
+template <>
+class _CRTIMP numeric_limits<unsigned int> : public _Num_int_base {
+public:
+	typedef unsigned int _Ty;
+	static _Ty (__cdecl min)() _THROW0()
+		{return (0); }
+	static _Ty (__cdecl max)() _THROW0()
+		{return (UINT_MAX); }
+	static _Ty __cdecl epsilon() _THROW0()
+		{return (0); }
+	static _Ty __cdecl round_error() _THROW0()
+		{return (0); }
+	static _Ty __cdecl denorm_min() _THROW0()
+		{return (0); }
+	static _Ty __cdecl infinity() _THROW0()
+		{return (0); }
+	static _Ty __cdecl quiet_NaN() _THROW0()
+		{return (0); }
+	static _Ty __cdecl signaling_NaN() _THROW0()
+		{return (0); }
+	_STCONS(bool, is_signed, false);
+	_STCONS(int, digits, CHAR_BIT * sizeof (unsigned int));
+	_STCONS(int, digits10, (CHAR_BIT * sizeof (unsigned int))
+		* 301L / 1000);
+	};
+		// CLASS numeric_limits<long>
+template <>
+class _CRTIMP numeric_limits<long> : public _Num_int_base {
+public:
+	typedef long _Ty;
+	static _Ty (__cdecl min)() _THROW0()
+		{return (LONG_MIN); }
+	static _Ty (__cdecl max)() _THROW0()
+		{return (LONG_MAX); }
+	static _Ty __cdecl epsilon() _THROW0()
+		{return (0); }
+	static _Ty __cdecl round_error() _THROW0()
+		{return (0); }
+	static _Ty __cdecl denorm_min() _THROW0()
+		{return (0); }
+	static _Ty __cdecl infinity() _THROW0()
+		{return (0); }
+	static _Ty __cdecl quiet_NaN() _THROW0()
+		{return (0); }
+	static _Ty __cdecl signaling_NaN() _THROW0()
+		{return (0); }
+	_STCONS(bool, is_signed, true);
+	_STCONS(int, digits, CHAR_BIT * sizeof (long) - 1);
+	_STCONS(int, digits10, (CHAR_BIT * sizeof (long) - 1)
+		* 301L / 1000);
+	};
+		// CLASS numeric_limits<unsigned long>
+template <>
+class _CRTIMP numeric_limits<unsigned long> : public _Num_int_base {
+public:
+	typedef unsigned long _Ty;
+	static _Ty (__cdecl min)() _THROW0()
+		{return (0); }
+	static _Ty (__cdecl max)() _THROW0()
+		{return (ULONG_MAX); }
+	static _Ty __cdecl epsilon() _THROW0()
+		{return (0); }
+	static _Ty __cdecl round_error() _THROW0()
+		{return (0); }
+	static _Ty __cdecl denorm_min() _THROW0()
+		{return (0); }
+	static _Ty __cdecl infinity() _THROW0()
+		{return (0); }
+	static _Ty __cdecl quiet_NaN() _THROW0()
+		{return (0); }
+	static _Ty __cdecl signaling_NaN() _THROW0()
+		{return (0); }
+	_STCONS(bool, is_signed, false);
+	_STCONS(int, digits, CHAR_BIT * sizeof (unsigned long));
+	_STCONS(int, digits10, (CHAR_BIT * sizeof (unsigned long))
+		* 301L / 1000);
+	};
+		// CLASS numeric_limits<float>
+template <>
+class _CRTIMP numeric_limits<float> : public _Num_float_base {
+public:
+	typedef float _Ty;
+	static _Ty (__cdecl min)() _THROW0()
+		{return (FLT_MIN); }
+	static _Ty (__cdecl max)() _THROW0()
+		{return (FLT_MAX); }
+	static _Ty __cdecl epsilon() _THROW0()
+		{return (FLT_EPSILON); }
+	static _Ty __cdecl round_error() _THROW0()
+		{return (0.5); }
+	static _Ty __cdecl denorm_min() _THROW0()
+		{return (_FDenorm._F); }
+	static _Ty __cdecl infinity() _THROW0()
+		{return (_FInf._F); }
+	static _Ty __cdecl quiet_NaN() _THROW0()
+		{return (_FNan._F); }
+	static _Ty __cdecl signaling_NaN() _THROW0()
+		{return (_FSnan._F); }
+	_STCONS(int, digits, FLT_MANT_DIG);
+	_STCONS(int, digits10, FLT_DIG);
+	_STCONS(int, max_exponent, FLT_MAX_EXP);
+	_STCONS(int, max_exponent10, FLT_MAX_10_EXP);
+	_STCONS(int, min_exponent, FLT_MIN_EXP);
+	_STCONS(int, min_exponent10, FLT_MIN_10_EXP);
+	};
+		// CLASS numeric_limits<double>
+template <>
+class _CRTIMP numeric_limits<double> : public _Num_float_base {
+public:
+	typedef double _Ty;
+	static _Ty (__cdecl min)() _THROW0()
+		{return (DBL_MIN); }
+	static _Ty (__cdecl max)() _THROW0()
+		{return (DBL_MAX); }
+	static _Ty __cdecl epsilon() _THROW0()
+		{return (DBL_EPSILON); }
+	static _Ty __cdecl round_error() _THROW0()
+		{return (0.5); }
+	static _Ty __cdecl denorm_min() _THROW0()
+		{return (_Denorm._D); }
+	static _Ty __cdecl infinity() _THROW0()
+		{return (_Inf._D); }
+	static _Ty __cdecl quiet_NaN() _THROW0()
+		{return (_Nan._D); }
+	static _Ty __cdecl signaling_NaN() _THROW0()
+		{return (_Snan._D); }
+	_STCONS(int, digits, DBL_MANT_DIG);
+	_STCONS(int, digits10, DBL_DIG);
+	_STCONS(int, max_exponent, DBL_MAX_EXP);
+	_STCONS(int, max_exponent10, DBL_MAX_10_EXP);
+	_STCONS(int, min_exponent, DBL_MIN_EXP);
+	_STCONS(int, min_exponent10, DBL_MIN_10_EXP);
+	};
+		// CLASS numeric_limits<long double>
+template <>
+class _CRTIMP numeric_limits<long double> : public _Num_float_base {
+public:
+	typedef long double _Ty;
+	static _Ty (__cdecl min)() _THROW0()
+		{return (LDBL_MIN); }
+	static _Ty (__cdecl max)() _THROW0()
+		{return (LDBL_MAX); }
+	static _Ty __cdecl epsilon() _THROW0()
+		{return (LDBL_EPSILON); }
+	static _Ty __cdecl round_error() _THROW0()
+		{return (0.5); }
+	static _Ty __cdecl denorm_min() _THROW0()
+		{return (_LDenorm._L); }
+	static _Ty __cdecl infinity() _THROW0()
+		{return (_LInf._L); }
+	static _Ty __cdecl quiet_NaN() _THROW0()
+		{return (_LNan._L); }
+	static _Ty __cdecl signaling_NaN() _THROW0()
+		{return (_LSnan._L); }
+	_STCONS(int, digits, LDBL_MANT_DIG);
+	_STCONS(int, digits10, LDBL_DIG);
+	_STCONS(int, max_exponent, LDBL_MAX_EXP);
+	_STCONS(int, max_exponent10, LDBL_MAX_10_EXP);
+	_STCONS(int, min_exponent, LDBL_MIN_EXP);
+	_STCONS(int, min_exponent10, LDBL_MIN_10_EXP);
+	};
+_STD_END
+#ifdef  _MSC_VER
+#pragma pack(pop)
+#endif  /* _MSC_VER */
+
+#endif /* _LIMITS_ */
+
+/*
+ * Copyright (c) 1995 by P.J. Plauger.  ALL RIGHTS RESERVED. 
+ * Consult your license regarding permissions and restrictions.
+ */
+

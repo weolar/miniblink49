@@ -78,6 +78,7 @@ using namespace blink;
 #if USING_VC6RT == 1
 void scrt_initialize_thread_safe_statics();
 #endif
+extern "C" void x86_check_features(void);
 
 namespace blink {
     bool saveDumpFile(const String& url, char* buffer, unsigned int size);
@@ -92,7 +93,7 @@ void WebPageImpl::initBlink()
 #if USING_VC6RT == 1
     scrt_initialize_thread_safe_statics();
 #endif
-    
+	x86_check_features();
     ::CoInitializeEx(NULL, 0); // COINIT_MULTITHREADED
 
     setRuntimeEnabledFeatures();

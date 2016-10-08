@@ -1,0 +1,128 @@
+// strstream standard header
+#ifndef _STRSTREAM_
+#define _STRSTREAM_
+#include <istream>
+
+#ifdef  _MSC_VER
+#pragma pack(push,8)
+#endif  /* _MSC_VER */
+_STD_BEGIN
+		// CLASS strstreambuf
+class strstreambuf : public streambuf {
+public:
+	enum __Strstate {_Allocated = 1, _Constant = 2,
+		_Dynamic = 4, _Frozen = 8};
+	_BITMASK(__Strstate, _Strstate);
+	explicit strstreambuf(streamsize _N = 0)
+		{_Init(_N); }
+	strstreambuf(void *(__cdecl *_A)(size_t),
+		void (__cdecl *_F)(void *))
+		{_Init(), _Palloc = _A, _Pfree = _F; }
+	strstreambuf(char *_G, streamsize _N, char *_P = 0)
+		{_Init(_N, _G, _P); }
+	strstreambuf(unsigned char *_G, streamsize _N,
+		unsigned char *_P = 0)
+		{_Init(_N, (char *)_G, (char *)_P); }
+	strstreambuf(const char *_G, streamsize _N)
+		{_Init(_N, (char *)_G, 0, _Constant); }
+	strstreambuf(const unsigned char *_G, streamsize _N)
+		{_Init(_N, (char *)_G, 0, _Constant); }
+	_CRTIMP virtual ~strstreambuf();
+	_CRTIMP void freeze(bool = true);
+	char *str()
+		{freeze();
+		return (gptr()); }
+	streamsize pcount() const
+		{return (pptr() == 0 ? 0 : (streamsize) (pptr() - pbase())); } 
+	strstreambuf(signed char *_G, streamsize _N,
+		signed char *_P = 0)
+		{_Init(_N, (char *)_G, (char *)_P); }
+	strstreambuf(const signed char *_G, streamsize _N)
+		{_Init(_N, (char *)_G, 0, _Constant); }
+protected:
+	_CRTIMP virtual int overflow(int = EOF);
+	_CRTIMP virtual int pbackfail(int = EOF);
+	_CRTIMP virtual int underflow();
+	_CRTIMP virtual streampos seekoff(streamoff, ios::seekdir,
+		ios::openmode = ios::in | ios::out);
+	_CRTIMP virtual streampos seekpos(streampos,
+		ios::openmode = ios::in | ios::out);
+	_CRTIMP void _Init(int = 0, char * = 0, char * = 0,
+		_Strstate = (_Strstate)0);
+	_CRTIMP void _Tidy();
+private:
+	enum {_ALSIZE = 512, _MINSIZE = 32};
+	char *_Pendsave, *_Seekhigh;
+	int _Alsize;
+	_Strstate _Strmode;
+	void *(__cdecl *_Palloc)(size_t);
+	void (__cdecl *_Pfree)(void *);
+	};
+_BITMASK_OPS(strstreambuf::__Strstate)
+		// CLASS istrstream
+class istrstream : public istream {
+public:
+	explicit istrstream(const char *_S)
+		: istream(&_Sb), _Sb(_S, 0) {}
+	istrstream(const char *_S, streamsize _N)
+		: istream(&_Sb), _Sb(_S, _N) {}
+	explicit istrstream(char *_S)
+		: istream(&_Sb), _Sb((const char *)_S, 0) {}
+	istrstream(char *_S, int _N)
+		: istream(&_Sb), _Sb((const char *)_S, _N) {}
+	_CRTIMP virtual ~istrstream();
+	strstreambuf *rdbuf() const
+		{return ((strstreambuf *)&_Sb); }
+	char *str()
+		{return (_Sb.str()); }
+private:
+	strstreambuf _Sb;
+	};
+		// CLASS ostrstream
+class ostrstream : public ostream {
+public:
+	ostrstream()
+		: ostream(&_Sb), _Sb() {}
+	_CRTIMP ostrstream(char *, streamsize, openmode = out);
+	_CRTIMP virtual ~ostrstream();
+	strstreambuf *rdbuf() const
+		{return ((strstreambuf *)&_Sb); }
+	void freeze(bool _F = true)
+		{_Sb.freeze(_F); }
+	char *str()
+		{return (_Sb.str()); }
+	streamsize pcount() const
+		{return (_Sb.pcount()); }
+private:
+	strstreambuf _Sb;
+	};
+		// CLASS strstream
+class strstream : public iostream {
+public:
+	strstream()
+		: iostream(&_Sb), _Sb() {}
+	_CRTIMP strstream(char *, streamsize, openmode = in | out);
+	_CRTIMP virtual ~strstream();
+	strstreambuf *rdbuf() const
+		{return ((strstreambuf *)&_Sb); }
+	void freeze(bool _F = true)
+		{_Sb.freeze(_F); }
+	char *str()
+		{return (_Sb.str()); }
+	streamsize pcount() const
+		{return (_Sb.pcount()); }
+private:
+	strstreambuf _Sb;
+	};
+_STD_END
+#ifdef  _MSC_VER
+#pragma pack(pop)
+#endif  /* _MSC_VER */
+
+#endif /* _STRSTREAM_ */
+
+/*
+ * Copyright (c) 1994 by P.J. Plauger.  ALL RIGHTS RESERVED. 
+ * Consult your license regarding permissions and restrictions.
+ */
+

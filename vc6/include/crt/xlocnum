@@ -1,0 +1,740 @@
+// xlocnum internal header (from <locale>)
+#ifndef _XLOCNUM_
+#define _XLOCNUM_
+#include <cerrno>
+#include <cfloat>
+#include <climits>
+#include <cstdio>
+#include <cstdlib>
+#include <xiosbase>
+
+#ifdef  _MSC_VER
+#pragma pack(push,8)
+#endif  /* _MSC_VER */
+_STD_BEGIN
+                // TEMPLATE CLASS numpunct
+template<class _E>
+        class numpunct : public locale::facet {
+public:
+        typedef basic_string<_E, char_traits<_E>, allocator<_E> >
+                string_type;
+        typedef _E char_type;
+        static locale::id id;
+        _E decimal_point() const
+                {return (do_decimal_point()); }
+        _E thousands_sep() const
+                {return (do_thousands_sep()); }
+        string grouping() const
+                {return (do_grouping()); }
+        string_type falsename() const
+                {return (do_falsename()); }
+        string_type truename() const
+                {return (do_truename()); }
+        explicit numpunct(size_t _R = 0)
+                : locale::facet(_R) {_Init(_Locinfo()); }
+        numpunct(const _Locinfo& _Lobj, size_t _R = 0)
+                : locale::facet(_R) {_Init(_Lobj); }
+        static size_t __cdecl _Getcat()
+                {return (_LC_NUMERIC); }
+_PROTECTED:
+        virtual ~numpunct()
+                {delete[] _Gr;
+                delete[] _Nf;
+                delete[] _Nt; }
+protected:
+        void _Init(const _Locinfo& _Lobj)
+                {const lconv *_P = _Lobj._Getlconv();
+                _Dp = _WIDEN(_E, _P->decimal_point[0]);
+                _Ks = _WIDEN(_E, _P->thousands_sep[0]);
+                _Gr = _MAKLOCSTR(char, _P->grouping);
+                _Nf = _MAKLOCSTR(_E, _Lobj._Getfalse());
+                _Nt = _MAKLOCSTR(_E, _Lobj._Gettrue()); }
+        virtual _E do_decimal_point() const
+                {return (_Dp); }
+        virtual _E do_thousands_sep() const
+                {return (_Ks); }
+        virtual string do_grouping() const
+                {return (string(_Gr)); }
+        virtual string_type do_falsename() const
+                {return (string_type(_Nf)); }
+        virtual string_type do_truename() const
+                {return (string_type(_Nt)); }
+private:
+        char *_Gr;
+        _E _Dp, _Ks, *_Nf, *_Nt;
+        };
+typedef numpunct<char> _Npc;
+typedef numpunct<wchar_t> _Npwc;
+                // TEMPLATE CLASS numpunct_byname
+template<class _E>
+        class numpunct_byname : public numpunct<_E> {
+public:
+        explicit numpunct_byname(const char *_S, size_t _R = 0)
+                : numpunct<_E>(_Locinfo(_S), _R) {}
+_PROTECTED:
+        virtual ~numpunct_byname()
+                {}
+        };
+template<class _E>
+        locale::id numpunct<_E>::id;
+ #define _VIRTUAL       virtual
+
+template<class _E> inline
+        bool (isdigit)(_E _C, const locale& _L)
+        {return (_USE(_L, ctype<_E>).is(ctype_base::digit, _C)); }
+
+                // TEMPLATE CLASS num_get
+template<class _E,
+        class _II = istreambuf_iterator<_E, char_traits<_E> > >
+        class num_get : public locale::facet {
+public:
+        typedef numpunct<_E> _Mypunct;
+        typedef basic_string<_E, char_traits<_E>, allocator<_E> >
+                _Mystr;
+        static size_t __cdecl _Getcat()
+                {return (_LC_NUMERIC); }
+        static locale::id id;
+_PROTECTED:
+        virtual ~num_get()
+                {}
+protected:
+        void _Init(const _Locinfo& _Lobj)
+                {}
+public:
+        explicit num_get(size_t _R = 0)
+                : locale::facet(_R) {_Init(_Locinfo()); }
+        num_get(const _Locinfo& _Lobj, size_t _R = 0)
+                : locale::facet(_R) {_Init(_Lobj); }
+        typedef _E char_type;
+        typedef _II iter_type;
+        _II get(_II _F, _II _L, ios_base& _X, ios_base::iostate& _St,
+                _Bool& _V) const
+                {return (do_get(_F, _L, _X, _St, _V)); }
+        _II get(_II _F, _II _L, ios_base& _X, ios_base::iostate& _St,
+                unsigned short& _V) const
+                {return (do_get(_F, _L, _X, _St, _V)); }
+        _II get(_II _F, _II _L, ios_base& _X, ios_base::iostate& _St,
+                unsigned int& _V) const
+                {return (do_get(_F, _L, _X, _St, _V)); }
+        _II get(_II _F, _II _L, ios_base& _X, ios_base::iostate& _St,
+                long& _V) const
+                {return (do_get(_F, _L, _X, _St, _V)); }
+        _II get(_II _F, _II _L, ios_base& _X, ios_base::iostate& _St,
+                unsigned long& _V) const
+                {return (do_get(_F, _L, _X, _St, _V)); }
+#ifdef _WIN64
+        _II get(_II _F, _II _L, ios_base& _X, ios_base::iostate& _St,
+                __int64& _V) const
+                {return (do_get(_F, _L, _X, _St, _V)); }
+        _II get(_II _F, _II _L, ios_base& _X, ios_base::iostate& _St,
+                unsigned __int64& _V) const
+                {return (do_get(_F, _L, _X, _St, _V)); }
+#endif  // _WIN64
+        _II get(_II _F, _II _L, ios_base& _X, ios_base::iostate& _St,
+                float& _V) const
+                {return (do_get(_F, _L, _X, _St, _V)); }
+        _II get(_II _F, _II _L, ios_base& _X, ios_base::iostate& _St,
+                double& _V) const
+                {return (do_get(_F, _L, _X, _St, _V)); }
+        _II get(_II _F, _II _L, ios_base& _X, ios_base::iostate& _St,
+                long double& _V) const
+                {return (do_get(_F, _L, _X, _St, _V)); }
+        _II get(_II _F, _II _L, ios_base& _X, ios_base::iostate& _St,
+                void *& _V) const
+                {return (do_get(_F, _L, _X, _St, _V)); }
+protected:
+        _VIRTUAL _II do_get(_II _F, _II _L, ios_base& _X,
+                ios_base::iostate& _St, _Bool& _V) const
+                {int _Ans = -1;
+                if (_X.flags() & ios_base::boolalpha)
+                        {const _Mypunct& _Fac = _USE(_X.getloc(), _Mypunct);
+                        _Mystr _Str(1, (_E)0);
+                        _Str += _Fac.falsename();
+                        _Str += (_E)0;
+                        _Str += _Fac.truename();
+                        _Ans = _Getloctxt(_F, _L, (size_t)2, _Str.c_str()); }
+                else
+                        {char _Ac[_MAX_INT_DIG], *_Ep;
+                        errno = 0;
+                        const unsigned long _Ulo = strtoul(_Ac, &_Ep,
+                                _Getifld(_Ac, _F, _L, _X.flags(), _X.getloc()));
+                        if (_Ep != _Ac && errno == 0 && _Ulo <= 1)
+                                _Ans = _Ulo; }
+                if (_F == _L)
+                        _St |= ios_base::eofbit;
+                if (_Ans < 0)
+                        _St |= ios_base::failbit;
+                else
+                        _V = _Ans != 0;
+                return (_F); }
+        _VIRTUAL _II do_get(_II _F, _II _L, ios_base& _X,
+                ios_base::iostate& _St, unsigned short& _V) const
+                {char _Ac[_MAX_INT_DIG], *_Ep;
+                errno = 0;
+                int _Base =
+                        _Getifld(_Ac, _F, _L, _X.flags(), _X.getloc());
+                char *_S = _Ac[0] == '-' ? _Ac + 1 : _Ac;
+                const unsigned long _Ans = strtoul(_S, &_Ep, _Base);
+                if (_F == _L)
+                        _St |= ios_base::eofbit;
+                if (_Ep == _S || errno != 0 || USHRT_MAX < _Ans)
+                        _St |= ios_base::failbit;
+                else
+                        _V = (unsigned short)(_Ac[0] == '-' ? -(long)_Ans : _Ans);
+                return (_F); }
+        _VIRTUAL _II do_get(_II _F, _II _L, ios_base& _X,
+                ios_base::iostate& _St, unsigned int& _V) const
+                {char _Ac[_MAX_INT_DIG], *_Ep;
+                errno = 0;
+                int _Base =
+                        _Getifld(_Ac, _F, _L, _X.flags(), _X.getloc());
+                char *_S = _Ac[0] == '-' ? _Ac + 1 : _Ac;
+                const unsigned long _Ans = strtoul(_S, &_Ep, _Base);
+                if (_F == _L)
+                        _St |= ios_base::eofbit;
+                if (_Ep == _S || errno != 0 || UINT_MAX < _Ans)
+                        _St |= ios_base::failbit;
+                else
+                        _V = _Ac[0] == '-' ? -(long)_Ans : _Ans;
+                return (_F); }
+        _VIRTUAL _II do_get(_II _F, _II _L, ios_base& _X,
+                ios_base::iostate& _St, long& _V) const
+                {char _Ac[_MAX_INT_DIG], *_Ep;
+                errno = 0;
+                const long _Ans = strtol(_Ac, &_Ep,
+                        _Getifld(_Ac, _F, _L, _X.flags(), _X.getloc()));
+                if (_F == _L)
+                        _St |= ios_base::eofbit;
+                if (_Ep == _Ac || errno != 0)
+                        _St |= ios_base::failbit;
+                else
+                        _V = _Ans;
+                return (_F); }
+        _VIRTUAL _II do_get(_II _F, _II _L, ios_base& _X,
+                ios_base::iostate& _St, unsigned long& _V) const
+                {char _Ac[_MAX_INT_DIG], *_Ep;
+                errno = 0;
+                const unsigned long _Ans = strtoul(_Ac, &_Ep,
+                        _Getifld(_Ac, _F, _L, _X.flags(), _X.getloc()));
+                if (_F == _L)
+                        _St |= ios_base::eofbit;
+                if (_Ep == _Ac || errno != 0)
+                        _St |= ios_base::failbit;
+                else
+                        _V = _Ans;
+                return (_F); }
+#ifdef _WIN64
+	_VIRTUAL _II do_get(_II _F, _II _L, ios_base& _X,
+		ios_base::iostate& _St, __int64& _V) const
+		{char _Ac[_MAX_INT_DIG];
+		errno = 0;
+		_Getifld(_Ac, _F, _L, _X.flags(), _X.getloc());
+		const __int64 _Ans = _atoi64(_Ac);
+		if (_F == _L)
+			_St |= ios_base::eofbit;
+		if (errno != 0)
+			_St |= ios_base::failbit;
+		else
+			_V = _Ans;
+		return (_F); }
+	_VIRTUAL _II do_get(_II _F, _II _L, ios_base& _X,
+		ios_base::iostate& _St, unsigned __int64& _V) const
+		{char _Ac[_MAX_INT_DIG];
+		errno = 0;
+		_Getifld(_Ac, _F, _L, _X.flags(), _X.getloc());
+		const unsigned __int64 _Ans = _atoi64(_Ac);
+		if (_F == _L)
+			_St |= ios_base::eofbit;
+		if (errno != 0)
+			_St |= ios_base::failbit;
+		else
+			_V = _Ans;
+		return (_F); }
+#endif	// _WIN64
+	_VIRTUAL _II do_get(_II _F, _II _L, ios_base& _X,
+		ios_base::iostate& _St, float& _V) const
+		{char _Ac[_MAX_EXP_DIG + _MAX_SIG_DIG + 32], *_Ep;
+		errno = 0;
+		const float _Ans = _Stof(_Ac, &_Ep,
+			_Getffld(_Ac, _F, _L, _X.getloc()));
+		if (_F == _L)
+			_St |= ios_base::eofbit;
+		if (_Ep == _Ac || errno != 0)
+			_St |= ios_base::failbit;
+		else
+			_V = _Ans;
+		return (_F); }
+	_VIRTUAL _II do_get(_II _F, _II _L, ios_base& _X,
+		ios_base::iostate& _St, double& _V) const
+		{char _Ac[_MAX_EXP_DIG + _MAX_SIG_DIG + 32], *_Ep;
+		errno = 0;
+		const double _Ans = _Stod(_Ac, &_Ep,
+			_Getffld(_Ac, _F, _L, _X.getloc()));
+		if (_F == _L)
+			_St |= ios_base::eofbit;
+		if (_Ep == _Ac || errno != 0)
+			_St |= ios_base::failbit;
+		else
+			_V = _Ans;
+		return (_F); }
+	_VIRTUAL _II do_get(_II _F, _II _L, ios_base& _X,
+		ios_base::iostate& _St, long double& _V) const
+		{char _Ac[_MAX_EXP_DIG + _MAX_SIG_DIG + 32], *_Ep;
+		errno = 0;
+		const long double _Ans = _Stold(_Ac, &_Ep,
+			_Getffld(_Ac, _F, _L, _X.getloc()));
+		if (_F == _L)
+			_St |= ios_base::eofbit;
+		if (_Ep == _Ac || errno != 0)
+			_St |= ios_base::failbit;
+		else
+			_V = _Ans;
+		return (_F); }
+	_VIRTUAL _II do_get(_II _F, _II _L, ios_base& _X,
+		ios_base::iostate& _St, void *& _V) const
+		{union _Pvlo {
+			void *_Pv;
+			unsigned long _Lo[1 +
+				(sizeof (void *) - 1) / sizeof (unsigned long)];
+			} _U;
+		const int _NL = sizeof (_U._Lo) / sizeof (unsigned long);
+		for (int _I = 0; ; ++_F)
+			{char _Ac[_MAX_INT_DIG], *_Ep;
+			errno = 0;
+			_U._Lo[_I] = strtoul(_Ac, &_Ep,
+				_Getifld(_Ac, _F, _L,
+					ios_base::hex, _X.getloc()));
+			if (_F == _L)
+				_St |= ios_base::eofbit;
+			if (_Ep == _Ac || errno != 0)
+				{_St |= ios_base::failbit;
+				break; }
+			if (_NL <= ++_I)
+				break;
+			if (_F == _L || *_F != _WIDEN(_E, ':'))
+				{_St |= ios_base::failbit;
+				break; }}
+		if (!(_St & ios_base::failbit))
+			_V = _U._Pv;
+		return (_F); }
+private:
+        static int __cdecl _Getifld(char *_Ac, _II& _F, _II& _L,
+                ios_base::fmtflags _Bfl, const locale& _Loc)
+                {const _E _E0 = _WIDEN(_E, '0');
+                const _Mypunct& _Fac = _USE(_Loc, _Mypunct);
+                const string _Gr = _Fac.grouping();
+                const _E _Ks = _Fac.thousands_sep();
+                char *_P = _Ac;
+                if (_F == _L)
+                        ;
+                else if (*_F == _WIDEN(_E, '+'))
+                        *_P++ = '+', ++_F;
+                else if (*_F == _WIDEN(_E, '-'))
+                        *_P++ = '-', ++_F;
+                _Bfl &= ios_base::basefield;
+                int _Base = _Bfl == ios_base::oct ? 8
+                        : _Bfl == ios_base::hex ? 16
+                        : _Bfl == ios_base::_Fmtzero ? 0 : 10;
+                bool _Sd = false, _Snz = false;
+                if (_F != _L && *_F == _E0)
+                        {_Sd = true, ++_F;
+                        if (_F != _L && (*_F == _WIDEN(_E, 'x')
+                                        || *_F == _WIDEN(_E, 'X'))
+                                && (_Base == 0 || _Base == 16))
+                                _Base = 16, _Sd = false, ++_F;
+                        else if (_Base == 0)
+                                _Base = 8; }
+                int _Dlen = _Base == 0 || _Base == 10 ? 10
+                        : _Base == 8 ? 8 : 16 + 6;
+                string _Grin(1, _Sd ? '\1' : '\0');
+                size_t _I = 0;
+                for (char *const _Pe = &_Ac[_MAX_INT_DIG - 1];
+                        _F != _L; ++_F)
+                        if (memchr("0123456789abcdefABCDEF",
+                                *_P = (char)_NARROW(_E, *_F), _Dlen) != 0)
+                                {if ((_Snz || *_P != '0') && _P < _Pe)
+                                        ++_P, _Snz = true;
+                                _Sd = true;
+                                if (_Grin[_I] != CHAR_MAX)
+                                        ++_Grin[_I]; }
+                        else if (_Grin[_I] == '\0' || _Ks == (_E)0
+                                || *_F != _Ks)
+                                break;
+                        else
+                                _Grin.append(1, '\0'), ++_I;
+                if (_I == 0)
+                        ;
+                else if ('\0' < _Grin[_I])
+                        ++_I;
+                else
+                        _Sd = false;
+                for (const char *_Pg = _Gr.c_str(); _Sd && 0 < _I; --_I)
+                        if (*_Pg == CHAR_MAX)
+                                break;
+                        else if (0 < --_I && *_Pg != _Grin[_I]
+                                || 0 == _I && *_Pg < _Grin[_I])
+                                _Sd = false;
+                        else if ('\0' < _Pg[1])
+                                ++_Pg;
+                if (_Sd && !_Snz)
+                        *_P++ = '0';
+                else if (!_Sd)
+                        _P = _Ac;
+                *_P = '\0';
+                return (_Base);
+                }
+        static int __cdecl _Getffld(char *_Ac, _II& _F, _II &_L,
+                const locale& _Loc)
+                {const _E _E0 = _WIDEN(_E, '0');
+                const _Mypunct& _Fac = _USE(_Loc, _Mypunct);
+                char *_P = _Ac;
+                if (_F == _L)
+                        ;
+                else if (*_F == _WIDEN(_E, '+'))
+                        *_P++ = '+', ++_F;
+                else if (*_F == _WIDEN(_E, '-'))
+                        *_P++ = '-', ++_F;
+                bool _Sd = false;
+                for (; _F != _L && *_F == _E0; _Sd = true, ++_F)
+                        ;
+                if (_Sd)
+                        *_P++ = '0';
+                int _Ns = 0;
+                int _Pten = 0;
+                for (; _F != _L && isdigit(*_P = (char)_NARROW(_E, *_F), _Loc);
+                        _Sd = true, ++_F)
+                        if (_Ns < _MAX_SIG_DIG)
+                                ++_P, ++_Ns;
+                        else
+                                ++_Pten;
+                if (_F != _L && *_F == _Fac.decimal_point())
+                        *_P++ = localeconv()->decimal_point[0], ++_F;
+                if (_Ns == 0)
+                        {for (; _F != _L && *_F == _E0; _Sd = true, ++_F)
+                                --_Pten;
+                        if (_Pten < 0)
+                                *_P++ = '0', ++_Pten; }
+                for (; _F != _L && isdigit(*_P = (char)_NARROW(_E, *_F), _Loc);
+                        _Sd = true, ++_F)
+                        if (_Ns < _MAX_SIG_DIG)
+                                ++_P, ++_Ns;
+                if (_Sd && _F != _L
+                        && (*_F == _WIDEN(_E, 'e') || *_F == _WIDEN(_E, 'E')))
+                        {*_P++ = 'e', ++_F;
+                        _Sd = false, _Ns = 0;
+                        if (_F == _L)
+                                ;
+                        else if (*_F == _WIDEN(_E, '+'))
+                                *_P++ = '+', ++_F;
+                        else if (*_F == _WIDEN(_E, '-'))
+                                *_P++ = '-', ++_F;
+                        for (; _F != _L && *_F == _E0; _Sd = true, ++_F)
+                                ;
+                        if (_Sd)
+                                *_P++ = '0';
+                        for (; _F != _L && isdigit(*_P = (char)_NARROW(_E, *_F), _Loc);
+                                _Sd = true, ++_F)
+                                if (_Ns < _MAX_EXP_DIG)
+                                        ++_P, ++_Ns; }
+                if (!_Sd)
+                        _P = _Ac;
+                *_P = '\0';
+                return (_Pten);
+                };
+        };
+template<class _E, class _II>
+        locale::id num_get<_E, _II>::id;
+                // TEMPLATE CLASS num_put
+template<class _E,
+        class _OI = ostreambuf_iterator<_E, char_traits<_E> > >
+        class num_put : public locale::facet {
+public:
+        typedef numpunct<_E> _Mypunct;
+        typedef basic_string<_E, char_traits<_E>, allocator<_E> >
+                _Mystr;
+        static size_t __cdecl _Getcat()
+                {return (_LC_NUMERIC); }
+        static locale::id id;
+_PROTECTED:
+        virtual ~num_put()
+                {}
+protected:
+        void _Init(const _Locinfo& _Lobj)
+                {}
+public:
+        explicit num_put(size_t _R = 0)
+                : locale::facet(_R) {_Init(_Locinfo()); }
+        num_put(const _Locinfo& _Lobj, size_t _R = 0)
+                : locale::facet(_R) {_Init(_Lobj); }
+        typedef _E char_type;
+        typedef _OI iter_type;
+        _OI put(_OI _F, ios_base& _X, _E _Fill,
+                _Bool _V) const
+                {return (do_put(_F, _X, _Fill, _V)); }
+        _OI put(_OI _F, ios_base& _X, _E _Fill,
+                long _V) const
+                {return (do_put(_F, _X, _Fill, _V)); }
+        _OI put(_OI _F, ios_base& _X, _E _Fill,
+                unsigned long _V) const
+                {return (do_put(_F, _X, _Fill, _V)); }
+#ifdef _WIN64
+        _OI put(_OI _F, ios_base& _X, _E _Fill,
+                __int64 _V) const
+                {return (do_put(_F, _X, _Fill, _V)); }
+        _OI put(_OI _F, ios_base& _X, _E _Fill,
+                unsigned __int64 _V) const
+                {return (do_put(_F, _X, _Fill, _V)); }
+#endif  // _WIN64
+        _OI put(_OI _F, ios_base& _X, _E _Fill,
+                double _V) const
+                {return (do_put(_F, _X, _Fill, _V)); }
+        _OI put(_OI _F, ios_base& _X, _E _Fill,
+                long double _V) const
+                {return (do_put(_F, _X, _Fill, _V)); }
+        _OI put(_OI _F, ios_base& _X, _E _Fill,
+                const void *_V) const
+                {return (do_put(_F, _X, _Fill, _V)); }
+protected:
+        virtual _OI do_put(_OI _F, ios_base& _X, _E _Fill,
+                _Bool _V) const
+                {const _Mypunct& _Fac = _USE(_X.getloc(), _Mypunct);
+                _Mystr _Str;
+                if (!(_X.flags() & ios_base::boolalpha))
+                        _Str.append(1, _WIDEN(_E, _V ? '1' : '0'));
+                else if (_V)
+                        _Str = _Fac.truename();
+                else
+                        _Str = _Fac.falsename();
+                size_t _M = _X.width() <= 0 || (size_t)(_X.width()) <= _Str.size()
+                        ? 0 : _X.width() - _Str.size();
+                ios_base::fmtflags _Afl =
+                        _X.flags() & ios_base::adjustfield;
+                if (_Afl != ios_base::left)
+                        _F = _Rep(_F, _Fill, _M), _M = 0;
+                _F = _Put(_F, _Str.c_str(), _Str.size());
+                _X.width(0);
+                return (_Rep(_F, _Fill, _M)); }
+        virtual _OI do_put(_OI _F, ios_base& _X, _E _Fill,
+                long _V) const
+                {char _Buf[2 * _MAX_INT_DIG], _Fmt[6];
+                return (_Iput(_F, _X, _Fill, _Buf,
+                        sprintf(_Buf, _Ifmt(_Fmt, 'd', _X.flags()), _V))); }
+        virtual _OI do_put(_OI _F, ios_base& _X, _E _Fill,
+                unsigned long _V) const
+                {char _Buf[2 * _MAX_INT_DIG], _Fmt[6];
+                return (_Iput(_F, _X, _Fill, _Buf,
+                        sprintf(_Buf, _Ifmt(_Fmt, 'u', _X.flags()), _V))); }
+#ifdef _WIN64
+	virtual _OI do_put(_OI _F, ios_base& _X, _E _Fill,
+		__int64 _V) const
+		{char _Buf[2 * _MAX_INT_DIG], _Fmt[6];
+		return (_Iput(_F, _X, _Fill, _Buf,
+			sprintf(_Buf, _Ifmt(_Fmt, "Id", _X.flags()), _V))); }
+	virtual _OI do_put(_OI _F, ios_base& _X, _E _Fill,
+		unsigned __int64 _V) const
+		{char _Buf[2 * _MAX_INT_DIG], _Fmt[6];
+		return (_Iput(_F, _X, _Fill, _Buf,
+			sprintf(_Buf, _Ifmt(_Fmt, "Iu", _X.flags()), _V))); }
+#endif	// _WIN64
+	virtual _OI do_put(_OI _F, ios_base& _X, _E _Fill,
+		double _V) const
+		{char _Buf[_MAX_EXP_DIG + _MAX_SIG_DIG + 32 + DBL_MAX_10_EXP], _Fmt[8];
+		streamsize _Prec = _X.precision() <= 0
+			&& !(_X.flags() & ios_base::fixed) ? 6
+			: _X.precision();
+		int _Mpr = (int)(_MAX_SIG_DIG < _Prec ? _MAX_SIG_DIG : _Prec);
+		return (_Fput(_F, _X, _Fill, _Buf, _Prec - _Mpr,
+			sprintf(_Buf, _Ffmt(_Fmt, 0, _X.flags()),
+				_Mpr, _V))); }
+	virtual _OI do_put(_OI _F, ios_base& _X, _E _Fill,
+		long double _V) const
+		{char _Buf[_MAX_EXP_DIG + _MAX_SIG_DIG + 32 + DBL_MAX_10_EXP], _Fmt[8];
+		streamsize _Prec = _X.precision() <= 0
+			&& !(_X.flags() & ios_base::fixed) ? 6
+			: _X.precision();
+		int _Mpr = (int)(_MAX_SIG_DIG < _Prec ? _MAX_SIG_DIG : _Prec);
+		return (_Fput(_F, _X, _Fill, _Buf, _Prec - _Mpr,
+			sprintf(_Buf, _Ffmt(_Fmt, 'L', _X.flags()),
+				_Mpr, _V))); }
+	virtual _OI do_put(_OI _F, ios_base& _X, _E _Fill,
+		const void *_V) const
+		{
+		const int _NL = 1
+			+ (sizeof (void *) - 1) / sizeof (unsigned long);
+		char _Buf[(_NL + 1) * (_MAX_INT_DIG + 1)];
+		int _N = sprintf(_Buf, "%p", _V);
+		size_t _M = _X.width() <= 0 || _X.width() <= _N
+			? 0 : _X.width() - _N;
+		ios_base::fmtflags _Afl =
+			_X.flags() & ios_base::adjustfield;
+		if (_Afl != ios_base::left)
+			_F = _Rep(_F, _Fill, _M), _M = 0;
+		_F = _Putc(_F, _Buf, _N);
+		_X.width(0);
+		return (_Rep(_F, _Fill, _M)); }
+	static char *_Ffmt(char *_Fmt, char _Spec,
+		ios_base::fmtflags _Fl)
+		{char *_S = _Fmt;
+		*_S++ = '%';
+		if (_Fl & ios_base::showpos)
+			*_S++ = '+';
+		if (_Fl & ios_base::showpoint)
+			*_S++ = '#';
+		*_S++ = '.';
+		*_S++ = '*';
+		if (_Spec != 0)
+			*_S++ = _Spec;	// 'L' for long double only
+		ios_base::fmtflags _Ffl = _Fl & ios_base::floatfield;
+		*_S++ = _Ffl == ios_base::fixed ? 'f'
+			: _Ffl == ios_base::scientific ? 'e' : 'g';
+		*_S = '\0';
+		return (_Fmt); }
+	static _OI __cdecl _Fput(_OI _F, ios_base& _X, _E _Fill,
+		const char *_S, size_t _Nz, size_t _N)
+		{size_t _M = _X.width() <= 0 || ((size_t)_X.width()) <= _N  + _Nz
+			? 0 : _X.width() - _N - _Nz;
+		ios_base::fmtflags _Afl =
+			_X.flags() & ios_base::adjustfield;
+		if (_Afl != ios_base::left && _Afl != ios_base::internal)
+			_F = _Rep(_F, _Fill, _M), _M = 0;
+		else if (_Afl == ios_base::internal)
+			{if (0 < _N && (*_S == '+' || *_S == '-'))
+				_F = _Putc(_F, _S, 1), ++_S, --_N;
+			_F = _Rep(_F, _Fill, _M), _M = 0; }
+		const char *_P = (const char *)memchr(_S,
+			localeconv()->decimal_point[0], _N);
+		if (_P != 0)
+			{const _Mypunct& _Fac = _USE(_X.getloc(), _Mypunct);
+			size_t _Nf = (size_t) (_P - _S + 1);
+			_F = _Putc(_F, _S, _Nf - 1);
+			_F = _Rep(_F, _Fac.decimal_point(), 1);
+			_S += _Nf, _N -= _Nf; }
+		if ((_P = (const char *)memchr(_S, 'e', _N)) != 0)
+			{size_t _Nm = (size_t) (_P - _S + 1);
+			_F = _Putc(_F, _S, _Nm - 1);
+			_F = _Rep(_F, _WIDEN(_E, '0'), _Nz), _Nz = 0;
+			_F = _Putc(_F, _X.flags() & ios_base::uppercase
+				? "E" : "e", 1);
+			_S += _Nm, _N -= _Nm; }
+		_F = _Putc(_F, _S, _N);
+		_F = _Rep(_F, _WIDEN(_E, '0'), _Nz);
+		_X.width(0);
+		return (_Rep(_F, _Fill, _M)); }
+	static char *__cdecl _Ifmt(char *_Fmt, char _Spec,
+		ios_base::fmtflags _Fl)
+		{char *_S = _Fmt;
+		*_S++ = '%';
+		if (_Fl & ios_base::showpos)
+			*_S++ = '+';
+		if (_Fl & ios_base::showbase)
+			*_S++ = '#';
+		*_S++ = 'l';
+		ios_base::fmtflags _Bfl = _Fl & ios_base::basefield;
+		*_S++ = _Bfl == ios_base::oct ? 'o'
+			: _Bfl != ios_base::hex ? _Spec	// 'd' or 'u'
+			: _Fl & ios_base::uppercase ? 'X' : 'x';
+		*_S = '\0';
+		return (_Fmt); }
+#ifdef _WIN64
+        static char *__cdecl _Ifmt(char *_Fmt, const char *_Spec,
+                ios_base::fmtflags _Fl)
+                {char *_S = _Fmt;
+                *_S++ = '%';
+                if (_Fl & ios_base::showpos)
+                        *_S++ = '+';
+                if (_Fl & ios_base::showbase)
+                        *_S++ = '#';
+                *_S++ = _Spec[0];
+                ios_base::fmtflags _Bfl = _Fl & ios_base::basefield;
+                *_S++ = _Bfl == ios_base::oct ? 'o'
+                        : _Bfl != ios_base::hex ? _Spec[1]      // 'd' or 'u'
+                        : _Fl & ios_base::uppercase ? 'X' : 'x';
+                *_S = '\0';
+                return (_Fmt); }
+#endif  // _WIN64
+        static _OI __cdecl _Iput(_OI _F, ios_base& _X, _E _Fill,
+                char *_S, size_t _N)
+                {const size_t _Np = *_S == '+' || *_S == '-' ? 1
+                        : *_S == '0' && (_S[1] == 'x' || _S[1] == 'X') ? 2
+                        : 0;
+                const _Mypunct& _Fac = _USE(_X.getloc(), _Mypunct);
+                const string _Gr = _Fac.grouping();
+                const _E _Ks = _Fac.thousands_sep();
+                bool _Grp = '\0' < *_Gr.c_str();
+                if (_Grp)
+                        {const char *_Pg = _Gr.c_str();
+                        size_t _I = _N;
+                        for (_Grp = false; *_Pg != CHAR_MAX && '\0' < *_Pg
+                                && *_Pg < (char)(_I - _Np); _Grp = true)
+                                {_I -= *_Pg;
+                                memmove(&_S[_I + 1], &_S[_I], _N + 1 - _I);
+                                _S[_I] = ',', ++_N;
+                                if ('\0' < _Pg[1])
+                                        ++_Pg; }}
+                size_t _M = _X.width() <= 0 || (size_t)(_X.width()) <= _N
+                        ? 0 : _X.width() - _N;
+                ios_base::fmtflags _Afl =
+                        _X.flags() & ios_base::adjustfield;
+                if (_Afl != ios_base::left && _Afl != ios_base::internal)
+                        _F = _Rep(_F, _Fill, _M), _M = 0;
+                else if (_Afl == ios_base::internal)
+                        {_F = _Putc(_F, _S, _Np), _S += _Np, _N -= _Np;
+                        _F = _Rep(_F, _Fill, _M), _M = 0; }
+                if (!_Grp)
+                        _F = _Putc(_F, _S, _N);
+                else
+                        for (; ; ++_S, --_N)
+                                {size_t _Nd = strcspn(_S, ",");
+                                _F = _Putc(_F, _S, _Nd);
+                                _S += _Nd, _N -= _Nd;
+                                if (_N == 0)
+                                        break;
+                                if (_Ks != (_E)0)
+                                        _F = _Rep(_F, _Ks, 1); }
+                _X.width(0);
+                return (_Rep(_F, _Fill, _M)); }
+        static _OI _Put(_OI _F, const _E *_S, size_t _N)
+                {for (; 0 < _N; --_N, ++_F, ++_S)
+                        *_F = *_S;
+                return (_F); }
+        static _OI _Putc(_OI _F, const char *_S, size_t _N)
+                {for (; 0 < _N; --_N, ++_F, ++_S)
+                        *_F = _WIDEN(_E, *_S);
+                return (_F); }
+        static _OI _Rep(_OI _F, _E _C, size_t _N)
+                {for (; 0 < _N; --_N, ++_F)
+                        *_F = _C;
+                return (_F); }
+        };
+template<class _E, class _OI>
+        locale::id num_put<_E, _OI>::id;
+
+#ifdef  _DLL
+#pragma warning(disable:4231) /* the extern before template is a non-standard extension */
+
+extern template class _CRTIMP numpunct<char>;
+extern template class _CRTIMP numpunct<wchar_t>;
+extern template class _CRTIMP num_get<char,
+                      istreambuf_iterator<char, char_traits<char> > >;
+extern template class _CRTIMP num_get<wchar_t,
+                      istreambuf_iterator<wchar_t, char_traits<wchar_t> > >;
+extern template class _CRTIMP num_put<char,
+                      ostreambuf_iterator<char, char_traits<char> > >;
+extern template class _CRTIMP num_put<wchar_t,
+                      ostreambuf_iterator<wchar_t, char_traits<wchar_t> > >;
+
+#pragma warning(default:4231) /* restore previous warning */
+#endif          // _DLL
+
+_STD_END
+#ifdef  _MSC_VER
+#pragma pack(pop)
+#endif  /* _MSC_VER */
+
+#endif /* _XLOCNUM_ */
+
+/*
+ * Copyright (c) 1995 by P.J. Plauger.  ALL RIGHTS RESERVED.
+ * Consult your license regarding permissions and restrictions.
+ */
+

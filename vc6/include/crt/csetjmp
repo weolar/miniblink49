@@ -1,0 +1,17 @@
+// csetjmp standard header
+#ifndef _CSETJMP_
+#define _CSETJMP_
+#ifdef _STD_USING
+ #undef _STD_USING
+ #include <setjmp.h>
+ #define _STD_USING
+#else
+ #include <setjmp.h>
+#endif /* _STD_USING */
+#endif /* _CSETJMP */
+
+/*
+ * Copyright (c) 1994 by P.J. Plauger.  ALL RIGHTS RESERVED. 
+ * Consult your license regarding permissions and restrictions.
+ */
+

@@ -1,0 +1,467 @@
+// list standard header
+#ifndef _LIST_
+#define _LIST_
+#include <cstddef>
+#include <functional>
+#include <iterator>
+#include <memory>
+#include <stdexcept>
+#include <xutility>
+
+#ifdef  _MSC_VER
+#pragma pack(push,8)
+#endif  /* _MSC_VER */
+_STD_BEGIN
+		// TEMPLATE CLASS list
+template<class _Ty, class _A = allocator<_Ty> >
+	class list {
+protected:
+	typedef _POINTER_X(void, _A) _Genptr;
+	struct _Node;
+	friend struct _Node;
+	struct _Node {
+		_Genptr _Next, _Prev;
+		_Ty _Value;
+		};
+	typedef _POINTER_X(_Node, _A) _Nodeptr;
+	struct _Acc;
+	friend struct _Acc;
+	struct _Acc {
+		typedef _REFERENCE_X(_Nodeptr, _A) _Nodepref;
+		typedef typename _A::reference _Vref;
+		static _Nodepref _Next(_Nodeptr _P)
+			{return ((_Nodepref)(*_P)._Next); }
+		static _Nodepref _Prev(_Nodeptr _P)
+			{return ((_Nodepref)(*_P)._Prev); }
+		static _Vref _Value(_Nodeptr _P)
+			{return ((_Vref)(*_P)._Value); }
+		};
+public:
+	typedef list<_Ty, _A> _Myt;
+	typedef _A allocator_type;
+	typedef typename _A::size_type size_type;
+	typedef typename _A::difference_type difference_type;
+	typedef typename _A::pointer _Tptr;
+	typedef typename _A::const_pointer _Ctptr;
+	typedef typename _A::reference reference;
+	typedef typename _A::const_reference const_reference;
+	typedef typename _A::value_type value_type;
+		// CLASS iterator
+	class iterator;
+	friend class iterator;
+	class iterator : public _Bidit<_Ty, difference_type> {
+	public:
+		iterator()
+			{}
+		iterator(_Nodeptr _P)
+			: _Ptr(_P) {}
+		reference operator*() const
+			{return (_Acc::_Value(_Ptr)); }
+		_Tptr operator->() const
+			{return (&**this); }
+		iterator& operator++()
+			{_Ptr = _Acc::_Next(_Ptr);
+			return (*this); }
+		iterator operator++(int)
+			{iterator _Tmp = *this;
+			++*this;
+			return (_Tmp); }
+		iterator& operator--()
+			{_Ptr = _Acc::_Prev(_Ptr);
+			return (*this); }
+		iterator operator--(int)
+			{iterator _Tmp = *this;
+			--*this;
+			return (_Tmp); }
+		bool operator==(const iterator& _X) const
+			{return (_Ptr == _X._Ptr); }
+		bool operator!=(const iterator& _X) const
+			{return (!(*this == _X)); }
+		_Nodeptr _Mynode() const
+			{return (_Ptr); }
+	protected:
+		_Nodeptr _Ptr;
+		};
+		// CLASS const_iterator
+	class const_iterator;
+	friend class const_iterator;
+	class const_iterator : public iterator {
+	public:
+		const_iterator()
+			{}
+		const_iterator(_Nodeptr _P)
+			: iterator(_P) {}
+		const_iterator(const iterator& _X)
+			: iterator(_X) {}
+		const_reference operator*() const
+			{return (_Acc::_Value(_Ptr)); }
+		_Ctptr operator->() const
+			{return (&**this); }
+		const_iterator& operator++()
+			{_Ptr = _Acc::_Next(_Ptr);
+			return (*this); }
+		const_iterator operator++(int)
+			{iterator _Tmp = *this;
+			++*this;
+			return (_Tmp); }
+		const_iterator& operator--()
+			{_Ptr = _Acc::_Prev(_Ptr);
+			return (*this); }
+		const_iterator operator--(int)
+			{iterator _Tmp = *this;
+			--*this;
+			return (_Tmp); }
+		bool operator==(const const_iterator& _X) const
+			{return (_Ptr == _X._Ptr); }
+		bool operator!=(const const_iterator& _X) const
+			{return (!(*this == _X)); }
+		};
+	typedef reverse_bidirectional_iterator<iterator,
+		value_type, reference, _Tptr, difference_type>
+			reverse_iterator;
+	typedef reverse_bidirectional_iterator<const_iterator,
+		value_type, const_reference, _Ctptr, difference_type>
+			const_reverse_iterator;
+	explicit list(const _A& _Al = _A())
+		: allocator(_Al),
+		_Head(_Buynode()), _Size(0) {}
+	explicit list(size_type _N, const _Ty& _V = _Ty(),
+		const _A& _Al = _A())
+		: allocator(_Al),
+		_Head(_Buynode()), _Size(0)
+		{insert(begin(), _N, _V); }
+	list(const _Myt& _X)
+		: allocator(_X.allocator),
+		_Head(_Buynode()), _Size(0)
+		{insert(begin(), _X.begin(), _X.end()); }
+	list(const _Ty *_F, const _Ty *_L, const _A& _Al = _A())
+		: allocator(_Al),
+		_Head(_Buynode()), _Size(0)
+		{insert(begin(), _F, _L); }
+	typedef const_iterator _It;
+	list(_It _F, _It _L, const _A& _Al = _A())
+		: allocator(_Al),
+		_Head(_Buynode()), _Size(0)
+		{insert(begin(), _F, _L); }
+	~list()
+		{erase(begin(), end());
+		_Freenode(_Head);
+		_Head = 0, _Size = 0; }
+	_Myt& operator=(const _Myt& _X)
+		{if (this != &_X)
+			{iterator _F1 = begin();
+			iterator _L1 = end();
+			const_iterator _F2 = _X.begin();
+			const_iterator _L2 = _X.end();
+			for (; _F1 != _L1 && _F2 != _L2; ++_F1, ++_F2)
+				*_F1 = *_F2;
+			erase(_F1, _L1);
+			insert(_L1, _F2, _L2); }
+		return (*this); }
+	iterator begin()
+		{return (iterator(_Acc::_Next(_Head))); }
+	const_iterator begin() const
+		{return (const_iterator(_Acc::_Next(_Head))); }
+	iterator end()
+		{return (iterator(_Head)); }
+	const_iterator end() const
+		{return (const_iterator(_Head)); }
+	reverse_iterator rbegin()
+		{return (reverse_iterator(end())); }
+	const_reverse_iterator rbegin() const
+		{return (const_reverse_iterator(end())); }
+	reverse_iterator rend()
+		{return (reverse_iterator(begin())); }
+	const_reverse_iterator rend() const
+		{return (const_reverse_iterator(begin())); }
+	void resize(size_type _N, _Ty _X = _Ty())
+		{if (size() < _N)
+			insert(end(), _N - size(), _X);
+		else
+			while (_N < size())
+				pop_back(); }
+	size_type size() const
+		{return (_Size); }
+	size_type max_size() const
+		{return (allocator.max_size()); }
+	bool empty() const
+		{return (size() == 0); }
+	_A get_allocator() const
+		{return (allocator); }
+	reference front()
+		{return (*begin()); }
+	const_reference front() const
+		{return (*begin()); }
+	reference back()
+		{return (*(--end())); }
+	const_reference back() const
+		{return (*(--end())); }
+	void push_front(const _Ty& _X)
+		{insert(begin(), _X); }
+	void pop_front()
+		{erase(begin()); }
+	void push_back(const _Ty& _X)
+		{insert(end(), _X); }
+	void pop_back()
+		{erase(--end()); }
+	void assign(_It _F, _It _L)
+		{erase(begin(), end());
+		insert(begin(), _F, _L); }
+	void assign(size_type _N, const _Ty& _X = _Ty())
+		{erase(begin(), end());
+		insert(begin(), _N, _X); }
+	iterator insert(iterator _P, const _Ty& _X = _Ty())
+		{_Nodeptr _S = _P._Mynode();
+		_Acc::_Prev(_S) = _Buynode(_S, _Acc::_Prev(_S));
+		_S = _Acc::_Prev(_S);
+		_Acc::_Next(_Acc::_Prev(_S)) = _S;
+		allocator.construct(&_Acc::_Value(_S), _X);
+		++_Size;
+		return (iterator(_S)); }
+	void insert(iterator _P, size_type _M, const _Ty& _X)
+		{for (; 0 < _M; --_M)
+			insert(_P, _X); }
+	void insert(iterator _P, const _Ty *_F, const _Ty *_L)
+		{for (; _F != _L; ++_F)
+			insert(_P, *_F); }
+	void insert(iterator _P, _It _F, _It _L)
+		{for (; _F != _L; ++_F)
+			insert(_P, *_F); }
+	iterator erase(iterator _P)
+		{_Nodeptr _S = (_P++)._Mynode();
+		_Acc::_Next(_Acc::_Prev(_S)) = _Acc::_Next(_S);
+		_Acc::_Prev(_Acc::_Next(_S)) = _Acc::_Prev(_S);
+		allocator.destroy(&_Acc::_Value(_S));
+		_Freenode(_S);
+		--_Size;
+		return (_P); }
+	iterator erase(iterator _F, iterator _L)
+		{while (_F != _L)
+			erase(_F++);
+		return (_F); }
+	void clear()
+		{erase(begin(), end()); }
+	void swap(_Myt& _X)
+		{if (allocator == _X.allocator)
+			{std::swap(_Head, _X._Head);
+			std::swap(_Size, _X._Size); }
+		else
+			{iterator _P = begin();
+			splice(_P, _X);
+			_X.splice(_X.begin(), *this, _P, end()); }}
+	friend void swap(_Myt& _X, _Myt& _Y)
+		{_X.swap(_Y); }
+	void splice(iterator _P, _Myt& _X)
+		{if (!_X.empty())
+			{_Splice(_P, _X, _X.begin(), _X.end());
+			_Size += _X._Size;
+			_X._Size = 0; }}
+	void splice(iterator _P, _Myt& _X, iterator _F)
+		{iterator _L = _F;
+		if (_P != _F && _P != ++_L)
+			{_Splice(_P, _X, _F, _L);
+			++_Size;
+			--_X._Size; }}
+	void splice(iterator _P, _Myt& _X, iterator _F, iterator _L)
+		{if (_F != _L)
+			{if (&_X != this)
+				{difference_type _N = 0;
+				_Distance(_F, _L, _N);
+				_Size += (size_type)_N;
+				_X._Size -= (size_type)_N; }
+			_Splice(_P, _X, _F, _L); }}
+	void remove(const _Ty& _V)
+		{iterator _L = end();
+		for (iterator _F = begin(); _F != _L; )
+			if (*_F == _V)
+				erase(_F++);
+			else
+				++_F; }
+	typedef binder2nd<not_equal_to<_Ty> > _Pr1;
+	void remove_if(_Pr1 _Pr)
+		{iterator _L = end();
+		for (iterator _F = begin(); _F != _L; )
+			if (_Pr(*_F))
+				erase(_F++);
+			else
+				++_F; }
+	void unique()
+		{iterator _F = begin(), _L = end();
+		if (_F != _L)
+			for (iterator _M = _F; ++_M != _L; _M = _F)
+				if (*_F == *_M)
+					erase(_M);
+				else
+					_F = _M; }
+	typedef not_equal_to<_Ty> _Pr2;
+	void unique(_Pr2 _Pr)
+		{iterator _F = begin(), _L = end();
+		if (_F != _L)
+			for (iterator _M = _F; ++_M != _L; _M = _F)
+				if (_Pr(*_F, *_M))
+					erase(_M);
+				else
+					_F = _M; }
+	void merge(_Myt& _X)
+		{if (&_X != this)
+			{iterator _F1 = begin(), _L1 = end();
+			iterator _F2 = _X.begin(), _L2 = _X.end();
+			while (_F1 != _L1 && _F2 != _L2)
+				if (*_F2 < *_F1)
+					{iterator _Mid2 = _F2;
+					_Splice(_F1, _X, _F2, ++_Mid2);
+					_F2 = _Mid2; }
+				else
+					++_F1;
+			if (_F2 != _L2)
+				_Splice(_L1, _X, _F2, _L2);
+			_Size += _X._Size;
+			_X._Size = 0; }}
+	typedef greater<_Ty> _Pr3;
+	void merge(_Myt& _X, _Pr3 _Pr)
+		{if (&_X != this)
+			{iterator _F1 = begin(), _L1 = end();
+			iterator _F2 = _X.begin(), _L2 = _X.end();
+			while (_F1 != _L1 && _F2 != _L2)
+				if (_Pr(*_F2, *_F1))
+					{iterator _Mid2 = _F2;
+					_Splice(_F1, _X, _F2, ++_Mid2);
+					_F2 = _Mid2; }
+				else
+					++_F1;
+			if (_F2 != _L2)
+				_Splice(_L1, _X, _F2, _L2);
+			_Size += _X._Size;
+			_X._Size = 0; }}
+	void sort()
+		{if (2 <= size())
+			{const size_t _MAXN = 15;
+			_Myt _X(allocator), _A[_MAXN + 1];
+			size_t _N = 0;
+			while (!empty())
+				{_X.splice(_X.begin(), *this, begin());
+				size_t _I;
+				for (_I = 0; _I < _N && !_A[_I].empty(); ++_I)
+					{_A[_I].merge(_X);
+					_A[_I].swap(_X); }
+				if (_I == _MAXN)
+					_A[_I].merge(_X);
+				else
+					{_A[_I].swap(_X);
+					if (_I == _N)
+						++_N; }}
+			while (0 < _N)
+				merge(_A[--_N]); }}
+	void sort(_Pr3 _Pr)
+		{if (2 <= size())
+			{const size_t _MAXN = 15;
+			_Myt _X(allocator), _A[_MAXN + 1];
+			size_t _N = 0;
+			while (!empty())
+				{_X.splice(_X.begin(), *this, begin());
+				size_t _I;
+				for (_I = 0; _I < _N && !_A[_I].empty(); ++_I)
+					{_A[_I].merge(_X, _Pr);
+					_A[_I].swap(_X); }
+				if (_I == _MAXN)
+					_A[_I].merge(_X, _Pr);
+				else
+					{_A[_I].swap(_X);
+					if (_I == _N)
+						++_N; }}
+			while (0 < _N)
+				merge(_A[--_N], _Pr); }}
+	void reverse()
+		{if (2 <= size())
+			{iterator _L = end();
+			for (iterator _F = ++begin(); _F != _L; )
+				{iterator _M = _F;
+				_Splice(begin(), *this, _M, ++_F); }}}
+protected:
+	_Nodeptr _Buynode(_Nodeptr _Narg = 0, _Nodeptr _Parg = 0)
+		{_Nodeptr _S = (_Nodeptr)allocator._Charalloc(
+			1 * sizeof (_Node));
+		_Acc::_Next(_S) = _Narg != 0 ? _Narg : _S;
+		_Acc::_Prev(_S) = _Parg != 0 ? _Parg : _S;
+		return (_S); }
+	void _Freenode(_Nodeptr _S)
+		{allocator.deallocate(_S, 1); }
+	void _Splice(iterator _P, _Myt& _X, iterator _F, iterator _L)
+		{if (allocator == _X.allocator)
+			{_Acc::_Next(_Acc::_Prev(_L._Mynode())) =
+				_P._Mynode();
+			_Acc::_Next(_Acc::_Prev(_F._Mynode())) =
+				_L._Mynode();
+			_Acc::_Next(_Acc::_Prev(_P._Mynode())) =
+				_F._Mynode();
+			_Nodeptr _S = _Acc::_Prev(_P._Mynode());
+			_Acc::_Prev(_P._Mynode()) =
+				_Acc::_Prev(_L._Mynode());
+			_Acc::_Prev(_L._Mynode()) =
+				_Acc::_Prev(_F._Mynode());
+			_Acc::_Prev(_F._Mynode()) = _S; }
+		else
+			{insert(_P, _F, _L);
+			_X.erase(_F, _L); }}
+	void _Xran() const
+		{_THROW(out_of_range, "invalid list<T> subscript"); }
+	_A allocator;
+	_Nodeptr _Head;
+	size_type _Size;
+	};
+		// list TEMPLATE OPERATORS
+template<class _Ty, class _A> inline
+	bool operator==(const list<_Ty, _A>& _X,
+		const list<_Ty, _A>& _Y)
+	{return (_X.size() == _Y.size()
+		&& equal(_X.begin(), _X.end(), _Y.begin())); }
+template<class _Ty, class _A> inline
+	bool operator!=(const list<_Ty, _A>& _X,
+		const list<_Ty, _A>& _Y)
+	{return (!(_X == _Y)); }
+template<class _Ty, class _A> inline
+	bool operator<(const list<_Ty, _A>& _X,
+		const list<_Ty, _A>& _Y)
+	{return (lexicographical_compare(_X.begin(), _X.end(),
+		_Y.begin(), _Y.end())); }
+template<class _Ty, class _A> inline
+	bool operator>(const list<_Ty, _A>& _X,
+		const list<_Ty, _A>& _Y)
+	{return (_Y < _X); }
+template<class _Ty, class _A> inline
+	bool operator<=(const list<_Ty, _A>& _X,
+		const list<_Ty, _A>& _Y)
+	{return (!(_Y < _X)); }
+template<class _Ty, class _A> inline
+	bool operator>=(const list<_Ty, _A>& _X,
+		const list<_Ty, _A>& _Y)
+	{return (!(_X < _Y)); }
+_STD_END
+#ifdef  _MSC_VER
+#pragma pack(pop)
+#endif  /* _MSC_VER */
+
+#endif /* _LIST_ */
+
+/*
+ * Copyright (c) 1995 by P.J. Plauger.  ALL RIGHTS RESERVED.
+ * Consult your license regarding permissions and restrictions.
+ */
+
+/*
+ * This file is derived from software bearing the following
+ * restrictions:
+ *
+ * Copyright (c) 1994
+ * Hewlett-Packard Company
+ *
+ * Permission to use, copy, modify, distribute and sell this
+ * software and its documentation for any purpose is hereby
+ * granted without fee, provided that the above copyright notice
+ * appear in all copies and that both that copyright notice and
+ * this permission notice appear in supporting documentation.
+ * Hewlett-Packard Company makes no representations about the
+ * suitability of this software for any purpose. It is provided
+ * "as is" without express or implied warranty.
+ */
+

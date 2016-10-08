@@ -83,10 +83,10 @@ int RunMain(HINSTANCE hInstance, int nCmdShow) {
     message_loop.reset(new MainMessageLoopMultithreadedWin);
   else
     message_loop.reset(new MainMessageLoopStd);
-
+  
   // Initialize CEF.
   context->Initialize(main_args, settings, app, sandbox_info);
-
+  
   // Register scheme handlers.
   test_runner::RegisterSchemeHandlers();
 

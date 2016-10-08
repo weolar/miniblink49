@@ -1,0 +1,75 @@
+// new standard header
+#ifndef _NEW_
+#define _NEW_
+#include <exception>
+
+#ifdef  _MSC_VER
+#pragma pack(push,8)
+#endif  /* _MSC_VER */
+_STD_BEGIN
+		// CLASS bad_alloc
+class _CRTIMP bad_alloc : public exception {
+public:
+	bad_alloc(const char *_S = "bad allocation") _THROW0()
+		: exception(_S) {}
+	virtual ~bad_alloc() _THROW0()
+		{}
+protected:
+	virtual void _Doraise() const
+		{_RAISE(*this); }
+	};
+		// SUPPORT TYPES
+#ifndef __NOTHROW_T_DEFINED
+struct nothrow_t {};
+extern _CRTIMP const nothrow_t nothrow;
+#endif  /* __NOTHROW_T_DEFINED */
+_STD_END
+
+typedef void (__cdecl *new_handler)();
+extern new_handler _New_hand;
+
+		// new AND delete DECLARATIONS
+void __cdecl operator delete(void *) _THROW0();
+void *__cdecl operator new(size_t) _THROW1(std::bad_alloc);
+#ifndef __NOTHROW_T_DEFINED
+#define __NOTHROW_T_DEFINED
+void *__cdecl operator new(size_t, const std::nothrow_t&)
+	_THROW0();
+
+#if     _MSC_VER >= 1200
+#if     defined(_WIN64)
+void __cdecl operator delete(void *,
+	const std::nothrow_t&) _THROW0();
+#else
+inline void __cdecl operator delete(void * pv, const std::nothrow_t&)
+    {::delete(pv);}
+#endif
+#endif
+#endif  /* __NOTHROW_T_DEFINED */
+
+#ifndef __PLACEMENT_NEW_INLINE
+#define __PLACEMENT_NEW_INLINE
+inline void *__cdecl operator new(size_t, void *_P)
+	{return (_P); }
+#if     _MSC_VER >= 1200
+inline void __cdecl operator delete(void *, void *)
+	{return; }
+#endif
+#endif
+
+#ifdef _CRTIMP
+_CRTIMP
+#endif
+	new_handler __cdecl set_new_handler(new_handler) _THROW0();
+
+#ifdef  _MSC_VER
+#pragma pack(pop)
+#endif  /* _MSC_VER */
+
+#endif /* _NEW_ */
+
+/*
+ * Copyright (c) 1994 by P.J. Plauger.  ALL RIGHTS RESERVED. 
+ * Consult your license regarding permissions and restrictions.
+ */
+

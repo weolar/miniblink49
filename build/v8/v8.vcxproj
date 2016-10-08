@@ -15,18 +15,19 @@
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>Win32Project1</RootNamespace>
     <ProjectName>v8</ProjectName>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v140_xp</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v140_xp</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -42,14 +43,15 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>$(SolutionDir)..\$(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)..\tmp\v8\$(Configuration)\</IntDir>
+    <IntDir>$(SolutionDir)..\tmp\$(ProjectName)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)..\$(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)..\tmp\v8\$(Configuration)\</IntDir>
-    <IncludePath>E:\WINDDK\3790.1830\inc\crt;E:\WINDDK\3790.1830\inc\wxp;E:\WINDDK\3790.1830\inc\wnet</IncludePath>
-    <ReferencePath>E:\WINDDK\3790.1830\lib\crt\i386;E:\WINDDK\3790.1830\lib\wxp\i386</ReferencePath>
-    <LibraryPath>E:\WINDDK\3790.1830\lib\crt\i386;E:\WINDDK\3790.1830\lib\wxp\i386</LibraryPath>
+    <IntDir>$(SolutionDir)..\tmp\$(ProjectName)\$(Configuration)\</IntDir>
+    <IncludePath>$(SolutionDir)..\vc6\include\crt;$(SolutionDir)..\vc6\include\wnet</IncludePath>
+    <ReferencePath>
+    </ReferencePath>
+    <LibraryPath>$(SolutionDir)..\vc6\lib</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -60,7 +62,7 @@
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>../../v8</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <MinimalRebuild>false</MinimalRebuild>
+      <MinimalRebuild>true</MinimalRebuild>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -79,7 +81,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>V8_NO_FAST_TLS;NDEBUG;WIN32;_LIB;V8_TARGET_ARCH_X87=1;V8_USE_EXTERNAL_STARTUP_DATA=1;USING_VC6RT=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>E:\WINDDK\3790.1830\inc\crt;E:\WINDDK\3790.1830\inc\wnet;E:\WINDDK\3790.1830\inc\wxp;../../v8;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../v8</AdditionalIncludeDirectories>
       <ExceptionHandling>false</ExceptionHandling>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>

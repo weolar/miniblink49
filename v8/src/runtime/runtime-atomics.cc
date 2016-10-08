@@ -113,27 +113,130 @@ inline void StoreSeqCst(uint64_t* p, uint64_t value) {
 #define _InterlockedOr32 _InterlockedOr
 #define _InterlockedXor32 _InterlockedXor
 
-#ifndef _InterlockedCompareExchange64
-#define _InterlockedCompareExchange64 InterlockedCompareExchange64
+
+
+#ifndef InterlockedCompareExchange64
+__int64 InterlockedCompareExchange64(volatile LONGLONG* m, __int64 iNew, __int64 iOld)
+{
+	__int64 iReturn;
+	_asm {
+		push esi
+		mov esi, m
+		mov eax, dword ptr iOld
+		mov edx, dword ptr iOld + 4
+		mov ebx, dword ptr iNew
+		mov ecx, dword ptr iNew + 4
+		LOCK CMPXCHG8B[esi]
+		pop esi
+		mov dword ptr iReturn, eax
+		mov dword ptr iReturn + 4, edx
+	};
+	return iReturn;
+}
 #endif // _InterlockedCompareExchange64
 
 #ifndef _InterlockedExchange64
+LONGLONG
+FORCEINLINE
+InterlockedExchange64(
+	__inout LONGLONG volatile *Target,
+	__in    LONGLONG Value
+)
+{
+	LONGLONG Old;
+
+	do {
+		Old = *Target;
+	} while (InterlockedCompareExchange64(Target,
+		Value,
+		Old) != Old);
+
+	return Old;
+}
 #define _InterlockedExchange64 InterlockedExchange64
 #endif // !_InterlockedExchange64
 
 #ifndef _InterlockedExchangeAdd64
+LONGLONG
+FORCEINLINE
+InterlockedExchangeAdd64(
+	__inout LONGLONG volatile *Addend,
+	__in    LONGLONG Value
+)
+{
+	LONGLONG Old;
+
+	do {
+		Old = *Addend;
+	} while (InterlockedCompareExchange64(Addend,
+		Old + Value,
+		Old) != Old);
+
+	return Old;
+}
 #define _InterlockedExchangeAdd64 InterlockedExchangeAdd64
 #endif // !_InterlockedExchangeAdd64
 
 #ifndef _InterlockedAnd64
+FORCEINLINE
+LONGLONG
+InterlockedAnd64(
+	__inout LONGLONG volatile *Destination,
+	__in    LONGLONG Value
+)
+{
+	LONGLONG Old;
+
+	do {
+		Old = *Destination;
+	} while (InterlockedCompareExchange64(Destination,
+		Old & Value,
+		Old) != Old);
+
+	return Old;
+}
 #define _InterlockedAnd64 InterlockedAnd64
 #endif // !_InterlockedAnd64
 
 #ifndef _InterlockedOr64
+FORCEINLINE
+LONGLONG
+InterlockedOr64(
+	__inout LONGLONG volatile *Destination,
+	__in    LONGLONG Value
+)
+{
+	LONGLONG Old;
+
+	do {
+		Old = *Destination;
+	} while (InterlockedCompareExchange64(Destination,
+		Old | Value,
+		Old) != Old);
+
+	return Old;
+}
 #define _InterlockedOr64 InterlockedOr64
 #endif // !_InterlockedOr64
 
 #ifndef _InterlockedXor64
+FORCEINLINE
+LONGLONG
+InterlockedXor64(
+	__inout LONGLONG volatile *Destination,
+	__in    LONGLONG Value
+)
+{
+	LONGLONG Old;
+
+	do {
+		Old = *Destination;
+	} while (InterlockedCompareExchange64(Destination,
+		Old ^ Value,
+		Old) != Old);
+
+	return Old;
+}
 #define _InterlockedXor64 InterlockedXor64
 #endif // !_InterlockedXor64
 

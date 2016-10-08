@@ -1,0 +1,276 @@
+//+---------------------------------------------------------------------------
+//
+//  Microsoft Windows
+//  Copyright (c) Microsoft Corporation. All rights reserved.
+//
+//  File: netcfgn.idl
+//
+//----------------------------------------------------------------------------
+
+cpp_quote("//+-------------------------------------------------------------------------")
+cpp_quote("//")
+cpp_quote("//  Microsoft Windows")
+cpp_quote("//  Copyright (c) Microsoft Corporation. All rights reserved.")
+cpp_quote("//")
+cpp_quote("//--------------------------------------------------------------------------")
+
+cpp_quote("#if ( _MSC_VER >= 800 )")
+cpp_quote("#pragma warning(disable:4201)")
+cpp_quote("#endif")
+
+#ifndef DO_NO_IMPORTS
+import "unknwn.idl";
+import "wtypes.idl";
+import "netcfgx.idl";
+#endif
+
+
+[
+    local,
+    object,
+    uuid(8d84bd35-e227-11d2-b700-00a0c98a6a85),
+    pointer_default(unique)
+]
+interface INetCfgPnpReconfigCallback : IUnknown
+{
+    typedef [v1_enum] enum tagNCPNP_RECONFIG_LAYER
+    {
+        NCRL_NDIS = 1,
+        NCRL_TDI = 2
+    } NCPNP_RECONFIG_LAYER;
+
+    HRESULT SendPnpReconfig (
+        [in] NCPNP_RECONFIG_LAYER Layer,
+        [in] LPCWSTR pszwUpper,
+        [in] LPCWSTR pszwLower,
+        [in] PVOID pvData,
+        [in] DWORD dwSizeOfData);
+};
+
+[
+    local,
+    object,
+    uuid(932238df-bea1-11d0-9298-00c04fc99dcf),
+    pointer_default(unique)
+]
+interface INetCfgComponentControl : IUnknown
+{
+    HRESULT Initialize (
+        [in] INetCfgComponent* pIComp,
+        [in] INetCfg* pINetCfg,
+        [in] BOOL fInstalling);
+
+    HRESULT ApplyRegistryChanges ();
+
+    HRESULT ApplyPnpChanges (
+        [in] INetCfgPnpReconfigCallback* pICallback);
+
+    HRESULT CancelChanges ();
+};
+
+[
+    local,
+    object,
+    uuid(932238e3-bea1-11d0-9298-00c04fc99dcf),
+    pointer_default(unique)
+]
+interface INetCfgComponentSetup : IUnknown
+{
+    typedef [v1_enum] enum tagNETWORK_INSTALL_TIME
+    {
+        NSF_PRIMARYINSTALL = 0x00000001,
+        NSF_POSTSYSINSTALL = 0x00000002
+    } NETWORK_INSTALL_TIME;
+
+    typedef [v1_enum] enum tagNETWORK_UPGRADE_TYPE
+    {
+        NSF_WIN16_UPGRADE      = 0x00000010,
+        NSF_WIN95_UPGRADE      = 0x00000020,
+        NSF_WINNT_WKS_UPGRADE  = 0x00000040,
+        NSF_WINNT_SVR_UPGRADE  = 0x00000080,
+        NSF_WINNT_SBS_UPGRADE  = 0x00000100,
+        NSF_COMPONENT_UPDATE   = 0x00000200,
+    } NETWORK_UPGRADE_TYPE;
+
+    HRESULT Install (
+        [in] DWORD dwSetupFlags);
+
+    HRESULT Upgrade(
+        [in] DWORD dwSetupFlags,
+        [in] DWORD dwUpgradeFomBuildNo );
+
+    HRESULT ReadAnswerFile(
+        [in] LPCWSTR pszwAnswerFile,
+        [in] LPCWSTR pszwAnswerSections);
+
+    HRESULT Removing ();
+};
+
+[
+    local,
+    object,
+    uuid(932238e0-bea1-11d0-9298-00c04fc99dcf),
+    pointer_default(unique)
+]
+interface INetCfgComponentPropertyUi : IUnknown
+{
+    typedef [v1_enum] enum tagDEFAULT_PAGES
+    {
+        DPP_ADVANCED = 1,
+    } DEFAULT_PAGES;
+
+    HRESULT QueryPropertyUi (
+        [in] IUnknown * pUnkReserved);
+
+    HRESULT SetContext (
+        [in] IUnknown * pUnkReserved);
+
+    HRESULT MergePropPages (
+        [in, out] DWORD* pdwDefPages,
+        [out] BYTE** pahpspPrivate,
+        [out] UINT* pcPages,
+        [in] HWND hwndParent,
+        [out] LPCWSTR *pszStartPage);
+
+    HRESULT ValidateProperties (
+        [in] HWND hwndSheet);
+
+    HRESULT ApplyProperties ();
+    HRESULT CancelProperties ();
+};
+
+[
+    local,
+    object,
+    uuid(932238e1-bea1-11d0-9298-00c04fc99dcf),
+    pointer_default(unique)
+]
+interface INetCfgComponentNotifyBinding : IUnknown
+{
+    typedef [v1_enum] enum tagBIND_FLAGS1
+    {
+        NCN_ADD                 = 0x00000001,
+        NCN_REMOVE              = 0x00000002,
+        NCN_UPDATE              = 0x00000004,
+        NCN_ENABLE              = 0x00000010,
+        NCN_DISABLE             = 0x00000020,
+        NCN_BINDING_PATH        = 0x00000100,
+        NCN_PROPERTYCHANGE      = 0x00000200,
+        NCN_NET                 = 0x00010000,
+        NCN_NETTRANS            = 0x00020000,
+        NCN_NETCLIENT           = 0x00040000,
+        NCN_NETSERVICE          = 0x00080000,
+    } BIND_FLAGS1;
+
+    HRESULT QueryBindingPath (
+        [in] DWORD dwChangeFlag,
+        [in] INetCfgBindingPath* pIPath);
+
+    HRESULT NotifyBindingPath (
+        [in] DWORD dwChangeFlag,
+        [in] INetCfgBindingPath* pIPath);
+};
+
+[
+    local,
+    object,
+    uuid(932238e2-bea1-11d0-9298-00c04fc99dcf),
+    pointer_default(unique)
+]
+interface INetCfgComponentNotifyGlobal : IUnknown
+{
+    HRESULT GetSupportedNotifications (
+        [out] DWORD* dwNotifications);
+
+    HRESULT SysQueryBindingPath (
+        [in] DWORD dwChangeFlag,
+        [in] INetCfgBindingPath* pIPath);
+
+    HRESULT SysNotifyBindingPath (
+        [in] DWORD dwChangeFlag,
+        [in] INetCfgBindingPath* pIPath);
+
+    HRESULT SysNotifyComponent (
+        [in] DWORD dwChangeFlag,
+        [in] INetCfgComponent* pIComp);
+};
+
+
+[
+    local,
+    object,
+    uuid(932238e4-bea1-11d0-9298-00c04fc99dcf),
+    pointer_default(unique)
+]
+interface INetCfgComponentUpperEdge : IUnknown
+{
+    // Return an array of interface ids for an adapter bound to
+    // this component.  If the specified adapter does not have explicit
+    // interfaces exported from it, S_FALSE is returned.
+    // pAdapter is the adapter in question.
+    // pdwNumInterfaces is the address of a DWORD where the count of elements
+    // returned via ppguidInterfaceIds is stored.
+    // ppguidInterfaceIds is the address of a pointer where an allocated
+    // block of memory is returned.  This memory is an array of interface ids.
+    // *ppguidInterfaceIds should be free with CoTaskMemFree if S_OK is
+    // returned. if S_FALSE is returned, *pdwNumInterfaces and
+    // *ppguidInterfaceIds should be NULL.
+    //
+    HRESULT GetInterfaceIdsForAdapter (
+        [in] INetCfgComponent* pAdapter,
+        [out] DWORD*           pdwNumInterfaces,
+        [out] GUID**           ppguidInterfaceIds);
+
+    // Add the specified number of new interfaces to the specified adapter.
+    // The implementation will choose the interface ids.
+    //
+    HRESULT AddInterfacesToAdapter (
+        [in] INetCfgComponent* pAdapter,
+        [in] DWORD dwNumInterfaces);
+
+    // Remove the specified interface ids from the specified adapter.
+    // pguidInterfaceIds is the array of ids to be removed.  dwNumInterfaces
+    // is the count in that array.
+    //
+    HRESULT RemoveInterfacesFromAdapter (
+        [in] INetCfgComponent* pAdapter,
+        [in] DWORD dwNumInterfaces,
+        [in] const GUID* pguidInterfaceIds);
+};
+
+//+---------------------------------------------------------------------------
+// INetLanConnectionUiInfo - Used to obtain LAN connection-specific info
+//
+[
+    object,
+    uuid(C08956A6-1CD3-11D1-B1C5-00805FC1270E),
+    pointer_default(unique)
+]
+interface INetLanConnectionUiInfo : IUnknown
+{
+    HRESULT GetDeviceGuid (
+        [out] GUID* pguid);
+};
+
+//+---------------------------------------------------------------------------
+// INetCfgComponentSysPrep - Used by SysPrep and mini-setup
+//
+[
+    local,
+    object,
+    uuid(C0E8AE9A-306E-11D1-AACF-00805FC1270E),
+    pointer_default(unique)
+]
+interface INetCfgComponentSysPrep : IUnknown
+{
+	HRESULT SaveAdapterParameters(
+		[in] INetCfgSysPrep* pncsp,
+		[in] LPCWSTR pszwAnswerSections,
+		[in] GUID* pAdapterInstanceGuid);
+
+	HRESULT RestoreAdapterParameters(
+		[in] LPCWSTR pszwAnswerFile, 
+		[in] LPCWSTR pszwAnswerSection,
+		[in] GUID*   pAdapterInstanceGuid);
+};
+
