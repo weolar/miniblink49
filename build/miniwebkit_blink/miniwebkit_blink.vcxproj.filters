@@ -748,6 +748,12 @@
     <Filter Include="cc\layers">
       <UniqueIdentifier>{213bd9dc-f6b0-4fcf-9e5f-b444713df395}</UniqueIdentifier>
     </Filter>
+    <Filter Include="content\web_impl_win\ui">
+      <UniqueIdentifier>{b468b82a-41a2-4896-a4b4-8ec26f8a3ae0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base\strings">
+      <UniqueIdentifier>{1e08a647-7d8b-4be0-98a6-23f9eeabd88d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -8049,9 +8055,6 @@
     <ClCompile Include="..\..\content\web_impl_win\WebTimerBase.cpp">
       <Filter>content\web_impl_win</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\content\web_impl_win\WebURLLoaderImpl.cpp">
-      <Filter>content\web_impl_win</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\content\web_impl_win\BlinkPlatformImpl.cpp">
       <Filter>content\web_impl_win</Filter>
     </ClCompile>
@@ -8241,9 +8244,6 @@
     <ClCompile Include="..\..\net\DataURL.cpp">
       <Filter>net</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\content\web_impl_win\WebCookieJarImpl.cpp">
-      <Filter>content\web_impl_win</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\third_party\WebKit\Source\web\WebSecurityPolicy.cpp">
       <Filter>third_party\Webkit\Source\web</Filter>
     </ClCompile>
@@ -8264,9 +8264,6 @@
     </ClCompile>
     <ClCompile Include="..\..\cc\raster\RasterTaskWorkerThreadPool.cpp">
       <Filter>cc\raster</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\net\WebURLLoaderWinINet.cpp">
-      <Filter>net</Filter>
     </ClCompile>
     <ClCompile Include="..\..\third_party\WebKit\Source\bindings\core\v8\custom\V8DocumentCustom.cpp">
       <Filter>third_party\Webkit\Source\bindings\core\v8\custom</Filter>
@@ -8866,6 +8863,24 @@
       <Filter>base</Filter>
     </ClCompile>
     <ClCompile Include="..\..\net\ActivatingLoaderCheck.cpp">
+      <Filter>net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\content\web_impl_win\WebClipboardImpl.cpp">
+      <Filter>content\web_impl_win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\base\strings\string_util.cc">
+      <Filter>base\strings</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\content\web_impl_win\WebURLLoaderImplCurl.cpp">
+      <Filter>content\web_impl_win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\net\WebURLLoaderManager.cpp">
+      <Filter>net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\content\web_impl_win\WebCookieJarCurlImpl.cpp">
+      <Filter>content\web_impl_win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\net\MultipartHandle.cpp">
       <Filter>net</Filter>
     </ClCompile>
   </ItemGroup>
@@ -19577,9 +19592,6 @@
     <ClInclude Include="..\..\net\DataURL.h">
       <Filter>net</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\content\web_impl_win\WebCookieJarImpl.h">
-      <Filter>content\web_impl_win</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8URLPartial.h">
       <Filter>gen\blink\bindings\modules\v8</Filter>
     </ClInclude>
@@ -20689,6 +20701,36 @@
     </ClInclude>
     <ClInclude Include="..\..\third_party\WebKit\Source\platform\exported\WebScrollbarImpl.h">
       <Filter>third_party\Webkit\Source\platform\exported</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\content\web_impl_win\WebClipboardImpl.h">
+      <Filter>content\web_impl_win</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\content\web_impl_win\ui\ClipboardUtil.h">
+      <Filter>content\web_impl_win\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\base\strings\string_util.h">
+      <Filter>base\strings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\base\strings\utf_offset_string_conversions.h">
+      <Filter>base\strings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\content\web_impl_win\WebCookieJarCurlImpl.h">
+      <Filter>content\web_impl_win</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\content\web_impl_win\WebCookieJarINetImpl.h">
+      <Filter>content\web_impl_win</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\base\process\CallAddrsRecord.h">
+      <Filter>base\memory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\base\process\SkTDArrayRecord.h">
+      <Filter>base\memory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\net\MultipartHandle.h">
+      <Filter>net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\net\SSLHandle.h">
+      <Filter>net</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

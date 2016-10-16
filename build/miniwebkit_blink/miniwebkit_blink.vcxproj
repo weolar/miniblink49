@@ -78,7 +78,7 @@
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
       <AdditionalLibraryDirectories>$(SolutionDir)..\Debug\;$(SolutionDir)..\lib\;</AdditionalLibraryDirectories>
-      <AdditionalDependencies>ots_d.lib;Imm32.lib;libxml.lib;zlib_d.lib;v8_d.lib;skia_d.lib;winmm.lib;Ws2_32.lib;Usp10.lib;Shlwapi.lib;wininet.lib;GDIPlus.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>InjectTool.lib;ots_d.lib;Crypt32.lib;Wldap32.lib;Imm32.lib;libxml.lib;zlib_d.lib;libcurl_d.lib;v8_d.lib;skia_d.lib;winmm.lib;Ws2_32.lib;Usp10.lib;Shlwapi.lib;wininet.lib;GDIPlus.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(SolutionDir)..\Debug\libcef.dll</OutputFile>
       <ImportLibrary>$(OutDir)libcef.lib</ImportLibrary>
       <IgnoreSpecificDefaultLibraries>LIBCMT.lib</IgnoreSpecificDefaultLibraries>
@@ -131,6 +131,7 @@
     <ClCompile Include="..\..\base\process\memory_win.cc" />
     <ClCompile Include="..\..\base\rand_util.cc" />
     <ClCompile Include="..\..\base\rand_util_win.cc" />
+    <ClCompile Include="..\..\base\strings\string_util.cc" />
     <ClCompile Include="..\..\base\time\time.cc" />
     <ClCompile Include="..\..\base\time\time_win.cc" />
     <ClCompile Include="..\..\base\values.cc" />
@@ -307,14 +308,15 @@
     <ClCompile Include="..\..\content\web_impl_win\BlinkPlatformImpl.cpp" />
     <ClCompile Include="..\..\content\web_impl_win\CurrentTimeImpl.cpp" />
     <ClCompile Include="..\..\content\web_impl_win\WebBlobRegistryImpl.cpp" />
-    <ClCompile Include="..\..\content\web_impl_win\WebCookieJarImpl.cpp" />
+    <ClCompile Include="..\..\content\web_impl_win\WebClipboardImpl.cpp" />
+    <ClCompile Include="..\..\content\web_impl_win\WebCookieJarCurlImpl.cpp" />
     <ClCompile Include="..\..\content\web_impl_win\WebMediaPlayerImpl.cpp" />
     <ClCompile Include="..\..\content\web_impl_win\WebMimeRegistryImpl.cpp" />
     <ClCompile Include="..\..\content\web_impl_win\WebSchedulerImpl.cpp" />
     <ClCompile Include="..\..\content\web_impl_win\WebThemeEngineImpl.cpp" />
     <ClCompile Include="..\..\content\web_impl_win\WebThreadImpl.cpp" />
     <ClCompile Include="..\..\content\web_impl_win\WebTimerBase.cpp" />
-    <ClCompile Include="..\..\content\web_impl_win\WebURLLoaderImpl.cpp" />
+    <ClCompile Include="..\..\content\web_impl_win\WebURLLoaderImplCurl.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\core\v8\UnionTypesCore.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8Animation.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8AnimationEffectReadOnly.cpp" />
@@ -859,7 +861,8 @@
     <ClCompile Include="..\..\net\cookies\CookieUtil.cpp" />
     <ClCompile Include="..\..\net\cookies\ParsedCookie.cpp" />
     <ClCompile Include="..\..\net\DataURL.cpp" />
-    <ClCompile Include="..\..\net\WebURLLoaderWinINet.cpp" />
+    <ClCompile Include="..\..\net\MultipartHandle.cpp" />
+    <ClCompile Include="..\..\net\WebURLLoaderManager.cpp" />
     <ClCompile Include="..\..\skia\ext\bitmap_platform_device_win.cc" />
     <ClCompile Include="..\..\skia\ext\fontmgr_default_win.cc" />
     <ClCompile Include="..\..\skia\ext\lazy_pixel_ref.cc" />
@@ -2843,8 +2846,12 @@
     <ClInclude Include="..\..\base\float_util.h" />
     <ClInclude Include="..\..\base\logging.h" />
     <ClInclude Include="..\..\base\memory\scoped_ptr.h" />
+    <ClInclude Include="..\..\base\process\CallAddrsRecord.h" />
     <ClInclude Include="..\..\base\process\memory.h" />
+    <ClInclude Include="..\..\base\process\SkTDArrayRecord.h" />
     <ClInclude Include="..\..\base\rand_util.h" />
+    <ClInclude Include="..\..\base\strings\string_util.h" />
+    <ClInclude Include="..\..\base\strings\utf_offset_string_conversions.h" />
     <ClInclude Include="..\..\base\time\time.h" />
     <ClInclude Include="..\..\base\values.h" />
     <ClInclude Include="..\..\cc\base\MathUtil.h" />
@@ -3110,8 +3117,11 @@
     <ClInclude Include="..\..\content\web_impl_win\CustomTheme.h" />
     <ClInclude Include="..\..\content\web_impl_win\MissingImageData.h" />
     <ClInclude Include="..\..\content\web_impl_win\NativeThemeWin.h" />
+    <ClInclude Include="..\..\content\web_impl_win\ui\ClipboardUtil.h" />
     <ClInclude Include="..\..\content\web_impl_win\WebBlobRegistryImpl.h" />
-    <ClInclude Include="..\..\content\web_impl_win\WebCookieJarImpl.h" />
+    <ClInclude Include="..\..\content\web_impl_win\WebClipboardImpl.h" />
+    <ClInclude Include="..\..\content\web_impl_win\WebCookieJarCurlImpl.h" />
+    <ClInclude Include="..\..\content\web_impl_win\WebCookieJarINetImpl.h" />
     <ClInclude Include="..\..\content\web_impl_win\WebMediaPlayerImpl.h" />
     <ClInclude Include="..\..\content\web_impl_win\WebMimeRegistryImpl.h" />
     <ClInclude Include="..\..\content\web_impl_win\WebSchedulerImpl.h" />
@@ -3717,7 +3727,9 @@
     <ClInclude Include="..\..\net\cookies\CookieUtil.h" />
     <ClInclude Include="..\..\net\cookies\ParsedCookie.h" />
     <ClInclude Include="..\..\net\DataURL.h" />
+    <ClInclude Include="..\..\net\MultipartHandle.h" />
     <ClInclude Include="..\..\net\RequestExtraData.h" />
+    <ClInclude Include="..\..\net\SSLHandle.h" />
     <ClInclude Include="..\..\net\WebURLLoaderInternal.h" />
     <ClInclude Include="..\..\net\WebURLLoaderManager.h" />
     <ClInclude Include="..\..\net\WebURLLoaderWinINet.h" />
