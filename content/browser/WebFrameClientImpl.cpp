@@ -5,7 +5,7 @@
 #include "third_party/WebKit/public/web/WebDocument.h"
 #include "content/browser/WebFrameClientImpl.h"
 #include "content/browser/WebPage.h"
-#include "content/web_impl_win/WebCookieJarImpl.h"
+#include "content/web_impl_win/WebCookieJarCurlImpl.h"
 #include "content/web_impl_win/WebMediaPlayerImpl.h"
 #include "cef/include/capi/cef_base_capi.h"
 #include "cef/include/capi/cef_browser_capi.h"
@@ -361,24 +361,24 @@ void WebFrameClientImpl::willSendRequest(WebLocalFrame* webFrame, unsigned ident
     requestExtraData->browser = m_webPage->browser();
     request.setExtraData(requestExtraData);
 
-    String headerFieldValue = blink::defaultLanguage();
-    headerFieldValue.append(",en,*");
-
-    CString value = headerFieldValue.latin1().data();
-    request.addHTTPHeaderField("Accept-Language", WebString::fromLatin1((const WebLChar*)value.data(), value.length()));
-
-    WebViewImpl* viewImpl = m_webPage->webViewImpl();
-    if (!viewImpl)
-        return;
-    Page* page = viewImpl->page();
-    if (!page)
-        return;
-
-    Settings& setting = page->settings();
-    headerFieldValue = "GBK"; // setting.defaultTextEncodingName();
-    headerFieldValue.append(",utf-8;q=0.7,*;q=0.3");
-    value = headerFieldValue.latin1().data();
-    request.addHTTPHeaderField("Accept-Charset", WebString::fromLatin1((const WebLChar*)value.data(), value.length()));
+//     String headerFieldValue = blink::defaultLanguage();
+//     headerFieldValue.append(",en,*");
+// 
+//     CString value = headerFieldValue.latin1().data();
+//     request.addHTTPHeaderField("Accept-Language", WebString::fromLatin1((const WebLChar*)value.data(), value.length()));
+// 
+//     WebViewImpl* viewImpl = m_webPage->webViewImpl();
+//     if (!viewImpl)
+//         return;
+//     Page* page = viewImpl->page();
+//     if (!page)
+//         return;
+// 
+//     Settings& setting = page->settings();
+//     headerFieldValue = "GBK"; // setting.defaultTextEncodingName();
+//     headerFieldValue.append(",utf-8;q=0.7,*;q=0.3");
+//     value = headerFieldValue.latin1().data();
+//     request.addHTTPHeaderField("Accept-Charset", WebString::fromLatin1((const WebLChar*)value.data(), value.length()));
 }
 
 void WebFrameClientImpl::didReceiveResponse(WebLocalFrame*, unsigned identifier, const WebURLResponse&)
