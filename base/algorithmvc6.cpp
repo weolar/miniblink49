@@ -1,5 +1,4 @@
 
-
 #if USING_VC6RT == 1
 
 #include <string>
@@ -475,8 +474,6 @@ typedef union { uint64_t u; double d; } du;
 float hypotf(float x, float y)
 {
     //return _hypotf(x, y);
-    DebugBreak();
-
     static const double inf = 0xffffff;// inf();
     du u[3];
     du *largeVal = u;
