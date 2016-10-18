@@ -25,7 +25,7 @@
 #include "src/base/platform/platform.h"
 #include "src/base/platform/time.h"
 #include "src/base/utils/random-number-generator.h"
-
+#include "src/allocation.h"
 
 // Extra functions for MinGW. Most of these are the _s functions which are in
 // the Microsoft Visual Studio C++ CRT.
@@ -551,9 +551,11 @@ static void VPrintHelper(FILE* stream, const char* format, va_list args) {
     // It is important to use safe print here in order to avoid
     // overflowing the buffer. We might truncate the output, but this
     // does not crash.
-    char buffer[4096];
-    OS::VSNPrintF(buffer, sizeof(buffer), format, args);
+    size_t buffer_size = 4096 * 8;
+    char* buffer = (char*)internal::Malloced::New(buffer_size);
+    OS::VSNPrintF(buffer, buffer_size, format, args);
     OutputDebugStringA(buffer);
+    internal::Malloced::Delete(buffer);
   } else {
     vfprintf(stream, format, args);
   }

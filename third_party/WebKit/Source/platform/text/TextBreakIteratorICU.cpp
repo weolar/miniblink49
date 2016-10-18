@@ -837,7 +837,7 @@ static TextBreakIterator* setUpIteratorWithRules(const char* breakRules, const U
     setText16(iterator, string, length);
     return iterator;
 #endif // MINIBLINK_NOT_IMPLEMENTED
-    return sentenceBreakIterator(string, length);
+    return charBreakIterator(string, length);
 }
 
 TextBreakIterator* cursorMovementIterator(const UChar* string, int length)

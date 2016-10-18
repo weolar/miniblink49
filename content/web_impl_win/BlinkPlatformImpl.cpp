@@ -9,6 +9,7 @@
 #include "content/web_impl_win/WebThemeEngineImpl.h"
 #include "content/web_impl_win/WebMimeRegistryImpl.h"
 #include "content/web_impl_win/WebBlobRegistryImpl.h"
+#include "content/web_impl_win/WebClipboardImpl.h"
 #include "content/resources/MissingImageData.h"
 #include "content/resources/TextAreaResizeCornerData.h"
 #include "content/resources/LocalizedString.h"
@@ -33,6 +34,9 @@
 #include "third_party/WebKit/Source/core/css/resolver/StyleResolver.h"
 
 #ifdef _DEBUG
+
+#include "base/process/InjectTool.h"
+
 extern size_t g_v8MemSize;
 extern size_t g_blinkMemSize;
 extern size_t g_skiaMemSize;
@@ -42,6 +46,29 @@ CallAddrsRecord* g_callAddrsRecord = nullptr;
 
 extern std::set<void*>* g_activatingStyleFetchedImage;
 extern std::set<void*>* g_activatingIncrementLoadEventDelayCount;
+
+typedef void* (__cdecl * MyFree)(void*);
+MyFree myFree = nullptr;
+
+void* __cdecl newFree(void* p)
+{
+    if (p && 0x1122dd44 == *(size_t*)p) {
+        DebugBreak();
+    }
+    return myFree(p);
+}
+
+typedef void *  (__cdecl* MyRealloc)(void*, size_t);
+MyRealloc myRealloc = nullptr;
+
+void* __cdecl newRealloc(void* p, size_t s)
+{
+    if (p && 0x1122dd44 == *(size_t*)p) {
+        DebugBreak();
+    }
+    return myRealloc(p, s);
+}
+
 #endif
 
 namespace blink {
@@ -83,6 +110,7 @@ BlinkPlatformImpl::BlinkPlatformImpl()
     m_mainThreadId = -1;
     m_webThemeEngine = nullptr;
     m_mimeRegistry = nullptr;
+    m_clipboardImpl = nullptr;
     m_webCompositorSupport = nullptr;
     m_webScrollbarBehavior = nullptr;
     m_localStorageStorageMap = nullptr;
@@ -94,6 +122,11 @@ BlinkPlatformImpl::BlinkPlatformImpl()
     m_firstMonotonicallyIncreasingTime = currentTimeImpl(); // (GetTickCount() / 1000.0);
     for (int i = 0; i < m_maxThreadNum; ++i) { m_threads[i] = nullptr; }
     ::InitializeCriticalSection(m_lock);
+
+#ifdef _DEBUG
+    myFree = (MyFree)ReplaceFuncAndCopy(free, newFree);
+    myRealloc = (MyRealloc)ReplaceFuncAndCopy(realloc, newRealloc);
+#endif
 }
 
 BlinkPlatformImpl::~BlinkPlatformImpl()
@@ -128,6 +161,10 @@ void BlinkPlatformImpl::destroyWebInfo()
     if (m_sessionStorageStorageMap)
         delete m_sessionStorageStorageMap;
     m_sessionStorageStorageMap = nullptr;
+
+    if (m_clipboardImpl)
+        delete m_clipboardImpl;
+    m_clipboardImpl = nullptr;
 }
 
 void BlinkPlatformImpl::registerMemoryDumpProvider(blink::WebMemoryDumpProvider*) {}
@@ -311,8 +348,8 @@ void BlinkPlatformImpl::cryptographicallyRandomValues(unsigned char* buffer, siz
 
 blink::WebURLLoader* BlinkPlatformImpl::createURLLoader()
 {
-    return new content::WebURLLoaderImpl();
-    //return new content::WebURLLoaderImplCurl();
+    //return new content::WebURLLoaderImpl();
+    return new content::WebURLLoaderImplCurl();
 }
 
 const unsigned char* BlinkPlatformImpl::getTraceCategoryEnabledFlag(const char* categoryName)
@@ -485,6 +522,15 @@ blink::WebString BlinkPlatformImpl::queryLocalizedString(blink::WebLocalizedStri
 blink::WebBlobRegistry* BlinkPlatformImpl::blobRegistry()
 {
     return new WebBlobRegistryImpl();
+}
+
+//
+
+blink::WebClipboard* BlinkPlatformImpl::clipboard()
+{
+    if (!m_clipboardImpl)
+        m_clipboardImpl = new WebClipboardImpl();
+    return m_clipboardImpl;
 }
 
 } // namespace content
