@@ -124,7 +124,7 @@ public:
     {                                                                   \
         typedef WTF::IsSubclassOfTemplate<typename WTF::RemoveConst<TYPE>::Type, blink::GarbageCollected> IsSubclassOfGarbageCollected; \
         static_assert(IsSubclassOfGarbageCollected::value, "only garbage collected objects can have garbage collected mixins"); \
-        if (TraceEagerlyTrait<TYPE>::value) {                           \
+        if (blink::TraceEagerlyTrait<TYPE>::value) {                           \
             if (visitor->ensureMarked(static_cast<const TYPE*>(this)))  \
                 TraceTrait<TYPE>::trace(visitor, const_cast<TYPE*>(this)); \
             return;                                                     \
