@@ -126,7 +126,7 @@ public:
         static_assert(IsSubclassOfGarbageCollected::value, "only garbage collected objects can have garbage collected mixins"); \
         if (blink::TraceEagerlyTrait<TYPE>::value) {                           \
             if (visitor->ensureMarked(static_cast<const TYPE*>(this)))  \
-                TraceTrait<TYPE>::trace(visitor, const_cast<TYPE*>(this)); \
+                blink::TraceTrait<TYPE>::trace(visitor, const_cast<TYPE*>(this)); \
             return;                                                     \
         }                                                               \
         visitor->mark(static_cast<const TYPE*>(this), &blink::TraceTrait<TYPE>::trace); \
@@ -191,7 +191,7 @@ public:
 public:                                                                 \
     bool isHeapObjectAlive() const override                             \
     {                                                                   \
-        return Heap::isHeapObjectAlive(this);                           \
+        return blink::Heap::isHeapObjectAlive(this);                           \
     }                                                                   \
 private:
 
