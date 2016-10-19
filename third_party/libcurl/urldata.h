@@ -138,8 +138,13 @@
 
 #ifdef USE_SCHANNEL
 #include "curl_sspi.h"
+#if USING_VC6RT == 1
+#include "schnlspvc6.h"
+#include "schannelvc6.h"
+#else
 #include <schnlsp.h>
 #include <schannel.h>
+#endif
 #endif
 
 #ifdef USE_DARWINSSL
