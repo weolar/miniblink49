@@ -3,7 +3,7 @@
 #include "content/web_impl_win/WebURLLoaderImplCurl.h"
 
 #include <windows.h>
-#include <wininet.h>
+//#include <wininet.h>
 
 #include "net/WebURLLoaderManager.h"
 #include "net/WebURLLoaderInternal.h"

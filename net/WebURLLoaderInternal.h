@@ -37,6 +37,7 @@
 #include "third_party/WebKit/Source/wtf/Noncopyable.h"
 #include "third_party/WebKit/Source/wtf/FastAllocBase.h"
 #include "third_party/WebKit/public/platform/WebURLLoaderClient.h"
+#include "third_party/WebKit/Source/wtf/OwnPtr.h"
 
 #include <windows.h>
 #include <memory>
@@ -159,7 +160,7 @@ public:
     char* m_url;
     struct curl_slist* m_customHeaders;
     WebURLResponse m_response;
-    std::unique_ptr<MultipartHandle> m_multipartHandle;
+    OwnPtr<MultipartHandle> m_multipartHandle;
     bool m_cancelled;
 
     //FormDataStream m_formDataStream;

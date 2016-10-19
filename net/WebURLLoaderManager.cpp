@@ -50,6 +50,9 @@
 
 #include <errno.h>
 #include <stdio.h>
+#if USING_VC6RT == 1
+#define PURE = 0
+#endif
 #include <shlobj.h>
 #include <shlwapi.h>
 
@@ -325,10 +328,10 @@ static size_t writeCallback(void* ptr, size_t size, size_t nmemb, void* data)
         debugRedirect = true;
     }
 
-    if (WTF::kNotFound != url.find("https://g.alicdn.com/??kissy/k/6.2.4/seed-min.js,kg/global-util/1.0.5/index-min.js,tb/tracker/4.0.1/p/index/index.js,kg/tb-nav/1.2.8/index-min.js")) {
+    if (WTF::kNotFound != url.find("http://www.blue-zero.com/WebSocket/JS/min/index.js")) {
         static bool debugRedirect1 = false;
         if (!debugRedirect1) {
-            readFile(L"E:\\test\\taobao\\kissy_wenhao.js", debugBuffer);
+            readFile(L"E:\\test\\WebSocket\\index.js", debugBuffer);
             d->client()->didReceiveData(job->loader(), static_cast<char*>(debugBuffer.data()), debugBuffer.size(), 0);
         }
         debugRedirect1 = true;
@@ -339,7 +342,11 @@ static size_t writeCallback(void* ptr, size_t size, size_t nmemb, void* data)
 
     if (d->m_multipartHandle)
         d->m_multipartHandle->contentReceived(static_cast<const char*>(ptr), totalSize);
-    else if (d->client() && job->loader() && !debugRedirect) {
+#ifndef NDEBUG
+	else if (d->client() && job->loader() && !debugRedirect) {
+#else
+	else if (d->client() && job->loader()) {
+#endif
         d->client()->didReceiveData(job->loader(), static_cast<char*>(ptr), totalSize, 0);
         //CurlCacheManager::getInstance().didReceiveData(*job, static_cast<char*>(ptr), totalSize);
     }
@@ -510,7 +517,7 @@ static size_t headerCallback(char* ptr, size_t size, size_t nmemb, void* data)
             String boundary;
             bool parsed = MultipartHandle::extractBoundary(d->m_response.httpHeaderField(WebString::fromUTF8("Content-Type")), boundary);
             if (parsed)
-                d->m_multipartHandle = std::make_unique<MultipartHandle>(job, boundary);
+                d->m_multipartHandle = adoptPtr(new MultipartHandle(job, boundary));
         }
 
         // HTTP redirection
