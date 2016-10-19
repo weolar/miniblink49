@@ -12,7 +12,7 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{D4CF74E8-8AE3-4534-92BE-10503E556E87}</ProjectGuid>
-    <RootNamespace>miniwebkit_blink</RootNamespace>
+    <RootNamespace>miniblink</RootNamespace>
     <Keyword>Win32Proj</Keyword>
     <ProjectName>miniblink</ProjectName>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
@@ -6790,11 +6790,11 @@
     <ClInclude Include="..\..\third_party\WebKit\Source\wtf\WTFThreadData.h" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="miniwebkit_blink.ico" />
+    <Image Include="miniblink.ico" />
     <Image Include="small.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="miniwebkit_blink.rc" />
+    <ResourceCompile Include="miniblink.rc" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\gen\blink\core\EventInterfaces.in" />

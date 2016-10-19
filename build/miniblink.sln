@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "miniblink", "miniwebkit_blink\miniwebkit_blink.vcxproj", "{D4CF74E8-8AE3-4534-92BE-10503E556E87}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "miniblink", "miniblink\miniblink.vcxproj", "{D4CF74E8-8AE3-4534-92BE-10503E556E87}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "v8", "v8\v8.vcxproj", "{6A8A620E-E791-4A56-B0D7-5D3EF75D614A}"
 EndProject

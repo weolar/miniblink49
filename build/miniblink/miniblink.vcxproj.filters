@@ -20734,7 +20734,7 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="miniwebkit_blink.ico">
+    <Image Include="miniblink.ico">
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="small.ico">
@@ -20742,7 +20742,7 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="miniwebkit_blink.rc">
+    <ResourceCompile Include="miniblink.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
   </ItemGroup>
