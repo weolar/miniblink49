@@ -183,7 +183,7 @@ short WINAPI InterlockedCompareExchange16(short volatile * _Destination, short _
 
 char WINAPI InterlockedCompareExchange8(char volatile * _Destination, char _Exchange, char _Comparand)
 {
-    return InterlockedCompareExchange8(_Destination, _Exchange, _Comparand);
+    return _InterlockedCompareExchange8(_Destination, _Exchange, _Comparand);
 }
 
 char WINAPI InterlockedXor8(char volatile * _Value, char _Mask)
