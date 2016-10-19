@@ -50,6 +50,9 @@
 
 #include <errno.h>
 #include <stdio.h>
+#if USING_VC6RT == 1
+#define PURE = 0
+#endif
 #include <shlobj.h>
 #include <shlwapi.h>
 
@@ -339,7 +342,11 @@ static size_t writeCallback(void* ptr, size_t size, size_t nmemb, void* data)
 
     if (d->m_multipartHandle)
         d->m_multipartHandle->contentReceived(static_cast<const char*>(ptr), totalSize);
-    else if (d->client() && job->loader() && !debugRedirect) {
+#ifndef NDEBUG
+	else if (d->client() && job->loader() && !debugRedirect) {
+#else
+	else if (d->client() && job->loader()) {
+#endif
         d->client()->didReceiveData(job->loader(), static_cast<char*>(ptr), totalSize, 0);
         //CurlCacheManager::getInstance().didReceiveData(*job, static_cast<char*>(ptr), totalSize);
     }
