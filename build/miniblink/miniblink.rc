@@ -25,8 +25,8 @@ LANGUAGE 4, 2
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
 
-IDI_MINIWEBKIT_BLINK       ICON         "miniwebkit_blink.ico"
-IDI_SMALL               ICON         "small.ico"
+IDI_MINIBLINK       ICON         "miniblink.ico"
+IDI_SMALL           ICON         "small.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
