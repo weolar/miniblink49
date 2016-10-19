@@ -64,7 +64,7 @@
 #include "rawstr.h"
 #include "url.h"
 #include "progress.h"
-#include "share.h"
+#include "../share.h"
 #include "timeval.h"
 #include "curl_md5.h"
 #include "warnless.h"

@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
-	Name="miniwebkit_blink"
+	Name="miniblink"
 	ProjectGUID="{D4CF74E8-8AE3-4534-92BE-10503E556E87}"
-	RootNamespace="miniwebkit_blink"
+	RootNamespace="miniblink"
 	Keyword="Win32Proj"
 	>
 	<Platforms>
@@ -175,7 +175,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\miniwebkit_blink.cpp"
+				RelativePath=".\miniblink.cpp"
 				>
 			</File>
 			<File
@@ -205,7 +205,7 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\miniwebkit_blink.h"
+				RelativePath=".\miniblink.h"
 				>
 			</File>
 			<File
@@ -223,11 +223,11 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 			<File
-				RelativePath=".\miniwebkit_blink.ico"
+				RelativePath=".\miniblink.ico"
 				>
 			</File>
 			<File
-				RelativePath=".\miniwebkit_blink.rc"
+				RelativePath=".\miniblink.rc"
 				>
 			</File>
 			<File

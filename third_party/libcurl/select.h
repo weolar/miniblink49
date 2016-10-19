@@ -34,9 +34,7 @@
  * Definition of pollfd struct and constants for platforms lacking them.
  */
 
-#if !defined(HAVE_STRUCT_POLLFD) && \
-    !defined(HAVE_SYS_POLL_H) && \
-    !defined(HAVE_POLL_H)
+#if !defined(HAVE_STRUCT_POLLFD) && !defined(HAVE_SYS_POLL_H) && !defined(HAVE_POLL_H) || USING_VC6RT == 1
 
 #define POLLIN      0x01
 #define POLLPRI     0x02

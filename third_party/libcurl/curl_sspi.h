@@ -36,8 +36,12 @@
 #undef SECURITY_WIN32
 #undef SECURITY_KERNEL
 #define SECURITY_WIN32 1
+#if USING_VC6RT == 1
+#include "sspivc6.h"
+#else
 #include <security.h>
 #include <sspi.h>
+#endif
 #include <rpc.h>
 
 CURLcode Curl_sspi_global_init(void);

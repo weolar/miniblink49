@@ -113,7 +113,7 @@ void SetFileSystemHook(
 	userFileSize = lpFileSize;
 }
 
-int ewefs_open(_In_z_ const char * _Filename, _In_ int _OpenFlag ){
+int ewefs_open(/*_In_z_*/ const char * _Filename, /*_In_*/ int _OpenFlag ){
 	FILE* fp = 0;
 
 	if( O_WRONLY & _OpenFlag ){
@@ -161,7 +161,7 @@ curl_off_t ewefs_lseek( int fd, curl_off_t _Offset, int _Origin ){
 	return IsUserFileIO(fd) ? userSeekFile( UserFD(fd)->fp, _Offset ) : _lseeki64( fileno((FILE*)fd), _Offset, _Origin );
 }
 
-int ewefs_fstat(_In_ int fd, struct _stati64* _Stat){
+int ewefs_fstat(/*_In_*/ int fd, struct _stati64* _Stat){
 	if( IsUserFileIO(fd) ){
 		_Stat->st_size = userFileSize( UserFD(fd)->fp );
 		return _Stat->st_size >= 0 ? 0 : -1;
