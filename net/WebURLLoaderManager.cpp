@@ -1,5 +1,5 @@
-/*
- * Copyright (C) 2004, 2006 Apple Computer, Inc.  All rights reserved.
+﻿/*
+ * Copyright (C) 2004, 2006 Apple Inc.  All rights reserved.
  * Copyright (C) 2006 Michael Emmel mike.emmel@gmail.com
  * Copyright (C) 2007 Alp Toker <alp@atoker.com>
  * Copyright (C) 2007 Holger Hans Peter Freyther
@@ -7,6 +7,9 @@
  * Copyright (C) 2008 Nuanti Ltd.
  * Copyright (C) 2009 Appcelerator Inc.
  * Copyright (C) 2009 Brent Fulgham <bfulgham@webkit.org>
+ * Copyright (C) 2013 Peter Gal <galpeter@inf.u-szeged.hu>, University of Szeged
+ * Copyright (C) 2013 Alex Christensen <achristensen@webkit.org>
+ * Copyright (C) 2013 University of Szeged
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -18,10 +21,10 @@
  *    notice, this list of conditions and the following disclaimer in the
  *    documentation and/or other materials provided with the distribution.
  *
- * THIS SOFTWARE IS PROVIDED BY APPLE COMPUTER, INC. ``AS IS'' AND ANY
+ * THIS SOFTWARE IS PROVIDED BY APPLE INC. ``AS IS'' AND ANY
  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL APPLE COMPUTER, INC. OR
+ * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL APPLE INC. OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
@@ -32,6 +35,7 @@
  */
 
 #include "config.h"
+#include "net/WebURLLoaderManager.h"
 
 #include "third_party/WebKit/public/platform/WebURLRequest.h"
 #include "third_party/WebKit/public/platform/WebURLError.h"
@@ -39,39 +43,73 @@
 #include "third_party/WebKit/Source/platform/weborigin/KURL.h"
 #include "third_party/WebKit/Source/platform/network/HTTPParsers.h"
 #include "third_party/WebKit/Source/platform/MIMETypeRegistry.h"
+#include "content/web_impl_win/WebCookieJarCurlImpl.h"
 
-#include "content/web_impl_win/WebCookieJarImpl.h"
-
-#include "net/WebURLLoaderManager.h"
 #include "net/WebURLLoaderInternal.h"
 #include "net/DataURL.h"
+
 #include <errno.h>
 #include <stdio.h>
+#include <shlobj.h>
+#include <shlwapi.h>
 
-#include <wtf/Threading.h>
-#include <wtf/Vector.h>
-#include <wtf/text/CString.h>
+#include "third_party/WebKit/Source/wtf/Threading.h"
+#include "third_party/WebKit/Source/wtf/Vector.h"
+#include "third_party/WebKit/Source/wtf/text/CString.h"
 
-#pragma comment(lib, "libcurl_imp.lib")
+using namespace blink;
 
 namespace net {
 
-const int selectTimeoutMS = 1;
-const double pollTimeSeconds = 0.01;
+const int selectTimeoutMS = 5;
+const double pollTimeSeconds = 0.05;
 const int maxRunningJobs = 5;
 
-static const bool ignoreSSLErrors = true; // getenv("WEBKIT_IGNORE_SSL_ERRORS");
+static const bool ignoreSSLErrors = true; //  ("WEBKIT_IGNORE_SSL_ERRORS");
 
 static CString certificatePath()
 {
-    char* envPath = getenv("CURL_CA_BUNDLE_PATH");
-    if (envPath)
-       return envPath;
+//     char* envPath = getenv("CURL_CA_BUNDLE_PATH");
+//     if (envPath)
+//        return envPath;
 
     return CString();
 }
 
-static Mutex* sharedResourceMutex(curl_lock_data data) {
+static char* cookieJarPath()
+{
+//     char* cookieJarPath = getenv("CURL_COOKIE_JAR_PATH");
+//     if (cookieJarPath)
+//         return fastStrDup(cookieJarPath);
+
+#if 0 // OS(WINDOWS)
+    char executablePath[MAX_PATH];
+    char appDataDirectory[MAX_PATH];
+    char cookieJarFullPath[MAX_PATH];
+    char cookieJarDirectory[MAX_PATH];
+
+    if (FAILED(::SHGetFolderPathA(0, CSIDL_LOCAL_APPDATA | CSIDL_FLAG_CREATE, 0, 0, appDataDirectory))
+        || FAILED(::GetModuleFileNameA(0, executablePath, MAX_PATH)))
+        return fastStrDup("cookies.dat");
+
+    ::PathRemoveExtensionA(executablePath);
+    LPSTR executableName = ::PathFindFileNameA(executablePath);
+    sprintf_s(cookieJarDirectory, MAX_PATH, "%s/%s", appDataDirectory, executableName);
+    sprintf_s(cookieJarFullPath, MAX_PATH, "%s/cookies.dat", cookieJarDirectory);
+
+    if (::SHCreateDirectoryExA(0, cookieJarDirectory, 0) != ERROR_SUCCESS
+        && ::GetLastError() != ERROR_FILE_EXISTS
+        && ::GetLastError() != ERROR_ALREADY_EXISTS)
+        return fastStrDup("cookies.dat");
+
+    return fastStrDup(cookieJarFullPath);
+#else
+    return fastStrDup("cookies.dat");
+#endif
+}
+
+static Mutex* sharedResourceMutex(curl_lock_data data)
+{
     DEFINE_STATIC_LOCAL(Mutex, cookieMutex, ());
     DEFINE_STATIC_LOCAL(Mutex, dnsMutex, ());
     DEFINE_STATIC_LOCAL(Mutex, shareMutex, ());
@@ -89,27 +127,80 @@ static Mutex* sharedResourceMutex(curl_lock_data data) {
     }
 }
 
+#if ENABLE(WEB_TIMING)
+static int milisecondsSinceRequest(double requestTime)
+{
+    return static_cast<int>((monotonicallyIncreasingTime() - requestTime) * 1000.0);
+}
+
+static void calculateWebTimingInformations(ResourceHandleInternal* d)
+{
+    double startTransfertTime = 0;
+    double preTransferTime = 0;
+    double dnslookupTime = 0;
+    double connectTime = 0;
+    double appConnectTime = 0;
+
+    curl_easy_getinfo(d->m_handle, CURLINFO_NAMELOOKUP_TIME, &dnslookupTime);
+    curl_easy_getinfo(d->m_handle, CURLINFO_CONNECT_TIME, &connectTime);
+    curl_easy_getinfo(d->m_handle, CURLINFO_APPCONNECT_TIME, &appConnectTime);
+    curl_easy_getinfo(d->m_handle, CURLINFO_STARTTRANSFER_TIME, &startTransfertTime);
+    curl_easy_getinfo(d->m_handle, CURLINFO_PRETRANSFER_TIME, &preTransferTime);
+
+    d->m_response.resourceLoadTiming().domainLookupStart = 0;
+    d->m_response.resourceLoadTiming().domainLookupEnd = static_cast<int>(dnslookupTime * 1000);
+
+    d->m_response.resourceLoadTiming().connectStart = static_cast<int>(dnslookupTime * 1000);
+    d->m_response.resourceLoadTiming().connectEnd = static_cast<int>(connectTime * 1000);
+
+    d->m_response.resourceLoadTiming().requestStart = static_cast<int>(connectTime *1000);
+    d->m_response.resourceLoadTiming().responseStart =static_cast<int>(preTransferTime * 1000);
+
+    if (appConnectTime)
+        d->m_response.resourceLoadTiming().secureConnectionStart = static_cast<int>(connectTime * 1000);
+}
+#endif
+
 // libcurl does not implement its own thread synchronization primitives.
 // these two functions provide mutexes for cookies, and for the global DNS
 // cache.
-static void curl_lock_callback(CURL* handle, curl_lock_data data, curl_lock_access access, void* userPtr)
+static void curl_lock_callback(CURL* /* handle */, curl_lock_data data, curl_lock_access /* access */, void* /* userPtr */)
 {
     if (Mutex* mutex = sharedResourceMutex(data))
         mutex->lock();
 }
 
-static void curl_unlock_callback(CURL* handle, curl_lock_data data, void* userPtr)
+static void curl_unlock_callback(CURL* /* handle */, curl_lock_data data, void* /* userPtr */)
 {
     if (Mutex* mutex = sharedResourceMutex(data))
         mutex->unlock();
 }
 
+inline static bool isHttpInfo(int statusCode)
+{
+    return 100 <= statusCode && statusCode < 200;
+}
+
+inline static bool isHttpRedirect(int statusCode)
+{
+    return 300 <= statusCode && statusCode < 400 && statusCode != 304;
+}
+
+inline static bool isHttpAuthentication(int statusCode)
+{
+    return statusCode == 401;
+}
+
+inline static bool isHttpNotModified(int statusCode)
+{
+    return statusCode == 304;
+}
+
 WebURLLoaderManager::WebURLLoaderManager()
     : m_downloadTimer(this, &WebURLLoaderManager::downloadTimerCallback)
-    , m_cookieJarFileName(0)
+    , m_cookieJarFileName(cookieJarPath())
     , m_certificatePath (certificatePath())
     , m_runningJobs(0)
-
 {
     curl_global_init(CURL_GLOBAL_ALL);
     m_curlMultiHandle = curl_multi_init();
@@ -118,6 +209,8 @@ WebURLLoaderManager::WebURLLoaderManager()
     curl_share_setopt(m_curlShareHandle, CURLSHOPT_SHARE, CURL_LOCK_DATA_DNS);
     curl_share_setopt(m_curlShareHandle, CURLSHOPT_LOCKFUNC, curl_lock_callback);
     curl_share_setopt(m_curlShareHandle, CURLSHOPT_UNLOCKFUNC, curl_unlock_callback);
+
+    initCookieSession();
 }
 
 WebURLLoaderManager::~WebURLLoaderManager()
@@ -129,9 +222,19 @@ WebURLLoaderManager::~WebURLLoaderManager()
     curl_global_cleanup();
 }
 
+CURLSH* WebURLLoaderManager::getCurlShareHandle() const
+{
+    return m_curlShareHandle;
+}
+
 void WebURLLoaderManager::setCookieJarFileName(const char* cookieJarFileName)
 {
     m_cookieJarFileName = fastStrDup(cookieJarFileName);
+}
+
+const char* WebURLLoaderManager::getCookieJarFileName() const
+{
+    return m_cookieJarFileName;
 }
 
 WebURLLoaderManager* WebURLLoaderManager::sharedInstance()
@@ -142,60 +245,211 @@ WebURLLoaderManager* WebURLLoaderManager::sharedInstance()
     return sharedInstance;
 }
 
-static void handleLocalReceiveResponse(CURL* handle, WebURLLoaderInternal* job)
+static void handleLocalReceiveResponse (CURL* handle, WebURLLoaderInternal* job, WebURLLoaderInternal* d)
 {
     // since the code in headerCallback will not have run for local files
-    // the code to set the URL and fire didReceiveResponse is never run,
-    // which means the ResourceLoader's response does not contain the URL.
+    // the code to set the KURL and fire didReceiveResponse is never run,
+    // which means the ResourceLoader's response does not contain the KURL.
     // Run the code here for local files to resolve the issue.
     // TODO: See if there is a better approach for handling this.
      const char* hdr;
      CURLcode err = curl_easy_getinfo(handle, CURLINFO_EFFECTIVE_URL, &hdr);
      ASSERT_UNUSED(err, CURLE_OK == err);
-     job->m_response.setURL(KURL(ParsedURLString, hdr));
-     if (job->client() && job->loader())
-         job->client()->didReceiveResponse(job->loader(), job->m_response);
-     job->setResponseFired(true);
+     d->m_response.setURL(KURL(ParsedURLString, hdr));
+     if (d->client() && job->loader())
+         d->client()->didReceiveResponse(job->loader(), d->m_response);
+     d->setResponseFired(true);
+}
+
+void readFile(const WCHAR* path, Vector<char>& buffer)
+{
+    HANDLE hFile = NULL;
+
+    hFile = CreateFileW(path, GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+    if (!hFile || INVALID_HANDLE_VALUE == hFile)
+        return;
+
+    DWORD nNumberOfBytesToRead = 0;
+    DWORD dwFileSizeHigh = 0;
+    nNumberOfBytesToRead = ::GetFileSize(hFile, &dwFileSizeHigh);
+
+    buffer.resize(nNumberOfBytesToRead);
+
+    DWORD nNumberOfBytesRead = 0;
+    ::ReadFile(hFile, buffer.data(), nNumberOfBytesToRead, &nNumberOfBytesRead, nullptr);
+
+    ::CloseHandle(hFile);
 }
 
 // called with data after all headers have been processed via headerCallback
 static size_t writeCallback(void* ptr, size_t size, size_t nmemb, void* data)
 {
     WebURLLoaderInternal* job = static_cast<WebURLLoaderInternal*>(data);
-    if (job->m_cancelled)
+    WebURLLoaderInternal* d = job;
+    if (d->m_cancelled)
         return 0;
 
-#if LIBCURL_VERSION_NUM > 0x071200
     // We should never be called when deferred loading is activated.
-    ASSERT(!job->m_defersLoading);
-#endif
+    ASSERT(!d->m_defersLoading);
 
     size_t totalSize = size * nmemb;
 
     // this shouldn't be necessary but apparently is. CURL writes the data
     // of html page even if it is a redirect that was handled internally
     // can be observed e.g. on gmail.com
-    CURL* h = job->m_handle;
+    CURL* h = d->m_handle;
     long httpCode = 0;
     CURLcode err = curl_easy_getinfo(h, CURLINFO_RESPONSE_CODE, &httpCode);
     if (CURLE_OK == err && httpCode >= 300 && httpCode < 400)
         return totalSize;
 
-    if (!job->responseFired()) {
-        handleLocalReceiveResponse(h, job);
-        if (job->m_cancelled)
+    if (!d->responseFired()) {
+        handleLocalReceiveResponse(h, job, d);
+        if (d->m_cancelled)
             return 0;
     }
 
-    if (0 != strstr(job->m_url, "api.")) {// weolar
-        String out = String::format("writeCallback:%d, %s\n", totalSize, job->m_url);
-        OutputDebugStringW(out.charactersWithNullTermination().data());
+#ifndef NDEBUG
+    size_t debugTotalSize = totalSize;
+    Vector<char> debugBuffer;
+    String url = d->firstRequest()->url().string();
+    bool debugRedirect = false;
+    const char* urlRedirect = "https://g.alicdn.com/kissy/k/6.2.4/??node-min.js,node-base-min.js,dom-base-min.js,query-selector-base-min.js,dom-extra-min.js,node-event-min.js,event-dom-base-min.js,event-base-min.js,event-dom-extra-min.js,event-gesture-min.js,event-touch-min.js,node-anim-min.js,anim-transition-min.js,anim-base-min.js,promise-min.js,base-min.js,attribute-min.js,event-custom-min.js,json-base-min.js,event-min.js,io-min.js,io-extra-min.js,io-base-min.js,io-form-min.js,cookie-min.js";
+    if (WTF::kNotFound != url.find(urlRedirect)) {
+        static bool debugRedirect0 = false;
+        if (!debugRedirect0) {
+            readFile(L"E:\\test\\taobao\\kissy.js", debugBuffer);
+            d->client()->didReceiveData(job->loader(), static_cast<char*>(debugBuffer.data()), debugBuffer.size(), 0);
+        }
+        debugRedirect0 = true;
+        debugRedirect = true;
     }
 
-    if (job->client() && job->loader())
-        job->client()->didReceiveData(job->loader(), static_cast<char*>(ptr), totalSize, 0);
+    if (WTF::kNotFound != url.find("https://g.alicdn.com/??kissy/k/6.2.4/seed-min.js,kg/global-util/1.0.5/index-min.js,tb/tracker/4.0.1/p/index/index.js,kg/tb-nav/1.2.8/index-min.js")) {
+        static bool debugRedirect1 = false;
+        if (!debugRedirect1) {
+            readFile(L"E:\\test\\taobao\\kissy_wenhao.js", debugBuffer);
+            d->client()->didReceiveData(job->loader(), static_cast<char*>(debugBuffer.data()), debugBuffer.size(), 0);
+        }
+        debugRedirect1 = true;
+        debugRedirect = true;
+    }
+
+#endif
+
+    if (d->m_multipartHandle)
+        d->m_multipartHandle->contentReceived(static_cast<const char*>(ptr), totalSize);
+    else if (d->client() && job->loader() && !debugRedirect) {
+        d->client()->didReceiveData(job->loader(), static_cast<char*>(ptr), totalSize, 0);
+        //CurlCacheManager::getInstance().didReceiveData(*job, static_cast<char*>(ptr), totalSize);
+    }
     return totalSize;
 }
+
+static bool isAppendableHeader(const String &key)
+{
+    static const char* appendableHeaders[] = {
+        "access-control-allow-headers",
+        "access-control-allow-methods",
+        "access-control-allow-origin",
+        "access-control-expose-headers",
+        "allow",
+        "cache-control",
+        "connection",
+        "content-encoding",
+        "content-language",
+        "if-match",
+        "if-none-match",
+        "keep-alive",
+        "pragma",
+        "proxy-authenticate",
+        "public",
+        "server",
+        "set-cookie",
+        "te",
+        "trailer",
+        "transfer-encoding",
+        "upgrade",
+        "user-agent",
+        "vary",
+        "via",
+        "warning",
+        "www-authenticate",
+        0
+    };
+
+    // Custom headers start with 'X-', and need no further checking.
+    if (key.startsWith("x-", WTF::TextCaseInsensitive))
+        return true;
+
+    for (unsigned i = 0; appendableHeaders[i]; ++i)
+        if (equalIgnoringCase(key, appendableHeaders[i]))
+            return true;
+
+    return false;
+}
+
+static void removeLeadingAndTrailingQuotes(String& value)
+{
+    unsigned length = value.length();
+    if (value.startsWith('"') && value.endsWith('"') && length > 1)
+        value = value.substring(1, length-2);
+}
+
+// static bool getProtectionSpace(CURL* h, const ResourceResponse& response, ProtectionSpace& protectionSpace)
+// {
+//     CURLcode err;
+// 
+//     long port = 0;
+//     err = curl_easy_getinfo(h, CURLINFO_PRIMARY_PORT, &port);
+//     if (err != CURLE_OK)
+//         return false;
+// 
+//     long availableAuth = CURLAUTH_NONE;
+//     err = curl_easy_getinfo(h, CURLINFO_HTTPAUTH_AVAIL, &availableAuth);
+//     if (err != CURLE_OK)
+//         return false;
+// 
+//     const char* effectiveUrl = 0;
+//     err = curl_easy_getinfo(h, CURLINFO_EFFECTIVE_URL, &effectiveUrl);
+//     if (err != CURLE_OK)
+//         return false;
+// 
+//     KURL url(ParsedURLString, effectiveUrl);
+// 
+//     String host = url.host();
+//     String protocol = url.protocol();
+// 
+//     String realm;
+// 
+//     const String authHeader = response.httpHeaderField(HTTPHeaderName::Authorization);
+//     const String realmString = "realm=";
+//     int realmPos = authHeader.find(realmString);
+//     if (realmPos > 0) {
+//         realm = authHeader.substring(realmPos + realmString.length());
+//         realm = realm.left(realm.find(','));
+//         removeLeadingAndTrailingQuotes(realm);
+//     }
+// 
+//     ProtectionSpaceServerType serverType = ProtectionSpaceServerHTTP;
+//     if (protocol == "https")
+//         serverType = ProtectionSpaceServerHTTPS;
+// 
+//     ProtectionSpaceAuthenticationScheme authScheme = ProtectionSpaceAuthenticationSchemeUnknown;
+// 
+//     if (availableAuth & CURLAUTH_BASIC)
+//         authScheme = ProtectionSpaceAuthenticationSchemeHTTPBasic;
+//     if (availableAuth & CURLAUTH_DIGEST)
+//         authScheme = ProtectionSpaceAuthenticationSchemeHTTPDigest;
+//     if (availableAuth & CURLAUTH_GSSNEGOTIATE)
+//         authScheme = ProtectionSpaceAuthenticationSchemeNegotiate;
+//     if (availableAuth & CURLAUTH_NTLM)
+//         authScheme = ProtectionSpaceAuthenticationSchemeNTLM;
+// 
+//     protectionSpace = ProtectionSpace(host, port, serverType, realm, authScheme);
+// 
+//     return true;
+// }
 
 /*
  * This is being called for each HTTP header in the response. This includes '\r\n'
@@ -209,16 +463,15 @@ static size_t writeCallback(void* ptr, size_t size, size_t nmemb, void* data)
 static size_t headerCallback(char* ptr, size_t size, size_t nmemb, void* data)
 {
     WebURLLoaderInternal* job = static_cast<WebURLLoaderInternal*>(data);
-    if (job->m_cancelled)
+    WebURLLoaderInternal* d = job;
+    if (d->m_cancelled)
         return 0;
 
-#if LIBCURL_VERSION_NUM > 0x071200
     // We should never be called when deferred loading is activated.
-    ASSERT(!job->m_defersLoading);
-#endif
+    ASSERT(!d->m_defersLoading);
 
     size_t totalSize = size * nmemb;
-    WebURLLoaderClient* client = job->client();
+    WebURLLoaderClient* client = d->client();
 
     String header(static_cast<const char*>(ptr), totalSize);
 
@@ -230,56 +483,108 @@ static size_t headerCallback(char* ptr, size_t size, size_t nmemb, void* data)
      * accept also \n.
      */
     if (header == String("\r\n") || header == String("\n")) {
-        CURL* h = job->m_handle;
-        CURLcode err;
-
-        double contentLength = 0;
-        err = curl_easy_getinfo(h, CURLINFO_CONTENT_LENGTH_DOWNLOAD, &contentLength);
-        job->m_response.setExpectedContentLength(static_cast<long long int>(contentLength));
-
-        const char* hdr;
-        err = curl_easy_getinfo(h, CURLINFO_EFFECTIVE_URL, &hdr);
-        //wke++++++
-        job->m_response.setURL(KURL(KURL(), hdr));
-        //wke++++++
+        CURL* h = d->m_handle;
 
         long httpCode = 0;
-        err = curl_easy_getinfo(h, CURLINFO_RESPONSE_CODE, &httpCode);
-        job->m_response.setHTTPStatusCode(httpCode);
+        curl_easy_getinfo(h, CURLINFO_RESPONSE_CODE, &httpCode);
 
-        job->m_response.setMIMEType(extractMIMETypeFromMediaType(job->m_response.httpHeaderField("Content-Type")));
-        job->m_response.setTextEncodingName(extractCharsetFromMediaType(job->m_response.httpHeaderField("Content-Type")));
-        job->m_response.setSuggestedFileName(filenameFromHTTPContentDisposition(job->m_response.httpHeaderField("Content-Disposition")));
-                      
+        if (isHttpInfo(httpCode)) {
+            // Just return when receiving http info, e.g. HTTP/1.1 100 Continue.
+            // If not, the request might be cancelled, because the MIME type will be empty for this response.
+            return totalSize;
+        }
+
+        double contentLength = 0;
+        curl_easy_getinfo(h, CURLINFO_CONTENT_LENGTH_DOWNLOAD, &contentLength);
+        d->m_response.setExpectedContentLength(static_cast<long long int>(contentLength));
+
+        const char* hdr;
+        curl_easy_getinfo(h, CURLINFO_EFFECTIVE_URL, &hdr);
+        d->m_response.setURL(KURL(ParsedURLString, hdr));
+
+        d->m_response.setHTTPStatusCode(httpCode);
+        d->m_response.setMIMEType(extractMIMETypeFromMediaType(d->m_response.httpHeaderField(WebString::fromUTF8("Content-Type"))).lower());
+        d->m_response.setTextEncodingName(extractCharsetFromMediaType(d->m_response.httpHeaderField(WebString::fromUTF8("Content-Type"))));
+
+        if (equalIgnoringCase((String)(d->m_response.mimeType()), "multipart/x-mixed-replace")) {
+            String boundary;
+            bool parsed = MultipartHandle::extractBoundary(d->m_response.httpHeaderField(WebString::fromUTF8("Content-Type")), boundary);
+            if (parsed)
+                d->m_multipartHandle = std::make_unique<MultipartHandle>(job, boundary);
+        }
+
         // HTTP redirection
-        if (httpCode >= 300 && httpCode < 400) {
-            String location = job->m_response.httpHeaderField("location");
+        if (isHttpRedirect(httpCode)) {
+            String location = d->m_response.httpHeaderField(WebString::fromUTF8("location"));
             if (!location.isEmpty()) {
                 KURL newURL = KURL((KURL)(job->firstRequest()->url()), location);
 
-                WebURLRequest* redirectedRequest = job->firstRequest();
-                redirectedRequest->setURL(newURL);
+                blink::WebURLRequest redirectedRequest(*job->firstRequest());
+                redirectedRequest.setURL(newURL);
                 if (client && job->loader())
-                    client->willSendRequest(job->loader(), *redirectedRequest, job->m_response);
+                    client->willSendRequest(job->loader(), redirectedRequest, d->m_response);
 
-                job->m_firstRequest->setURL(newURL);
+                d->m_firstRequest->setURL(newURL);
 
                 return totalSize;
             }
+        } else if (isHttpAuthentication(httpCode)) {
+//             ProtectionSpace protectionSpace;
+//             if (getProtectionSpace(d->m_handle, d->m_response, protectionSpace)) {
+//                 Credential credential;
+//                 AuthenticationChallenge challenge(protectionSpace, credential, d->m_authFailureCount, d->m_response, ResourceError());
+//                 challenge.setAuthenticationClient(job);
+//                 job->didReceiveAuthenticationChallenge(challenge);
+//                 d->m_authFailureCount++;
+//                 return totalSize;
+//             }
         }
 
-        if (client && job->loader())
-            client->didReceiveResponse(job->loader(), job->m_response);
-        job->setResponseFired(true);
-        //wke++++++
-        //cookieJar.set(job->m_handle);
-        content::WebCookieJarImpl::inst()->applyCookieAndRecordRealCookies(job->m_handle);
-        //wke++++++
+        if (client && job->loader()) {
+            if (isHttpNotModified(httpCode)) {
+//                 const String& url = job->firstRequest()->url().string();
+//                 if (CurlCacheManager::getInstance().getCachedResponse(url, d->m_response)) {
+//                     if (d->m_addedCacheValidationHeaders) {
+//                         d->m_response.setHTTPStatusCode(200);
+//                         d->m_response.setHTTPStatusText("OK");
+//                     }
+//                 }
+            }
+            client->didReceiveResponse(job->loader(), d->m_response);
+            //CurlCacheManager::getInstance().didReceiveResponse(*job, d->m_response);
+        }
+        d->setResponseFired(true);
 
     } else {
         int splitPos = header.find(":");
-        if (splitPos != -1)
-            job->m_response.setHTTPHeaderField(header.left(splitPos), header.substring(splitPos+1).stripWhiteSpace());
+        if (splitPos != -1) {
+            String key = header.left(splitPos).stripWhiteSpace();
+            String value = header.substring(splitPos + 1).stripWhiteSpace();
+
+            if (isAppendableHeader(key))
+                d->m_response.addHTTPHeaderField(key, value);
+            else
+                d->m_response.setHTTPHeaderField(key, value);
+        } else if (header.startsWith("HTTP", WTF::TextCaseInsensitive)) {
+            // This is the first line of the response.
+            // Extract the http status text from this.
+            //
+            // If the FOLLOWLOCATION option is enabled for the curl handle then
+            // curl will follow the redirections internally. Thus this header callback
+            // will be called more than one time with the line starting "HTTP" for one job.
+            long httpCode = 0;
+            curl_easy_getinfo(d->m_handle, CURLINFO_RESPONSE_CODE, &httpCode);
+
+            String httpCodeString = String::number(httpCode);
+            int statusCodePos = header.find(httpCodeString);
+
+            if (statusCodePos != -1) {
+                // The status text is after the status code.
+                String status = header.substring(statusCodePos + httpCodeString.length());
+                d->m_response.setHTTPStatusText(status.stripWhiteSpace());
+            }
+
+        }
     }
 
     return totalSize;
@@ -291,29 +596,28 @@ static size_t headerCallback(char* ptr, size_t size, size_t nmemb, void* data)
 */
 size_t readCallback(void* ptr, size_t size, size_t nmemb, void* data)
 {
-    WebURLLoaderInternal* job = static_cast<WebURLLoaderInternal*>(data);
-    if (job->m_cancelled)
+    WebURLLoaderInternal* d = static_cast<WebURLLoaderInternal*>(data);
+    if (d->m_cancelled)
         return 0;
 
-#if LIBCURL_VERSION_NUM > 0x071200
     // We should never be called when deferred loading is activated.
-    ASSERT(!job->m_defersLoading);
-#endif
+    ASSERT(!d->m_defersLoading);
 
     if (!size || !nmemb)
         return 0;
 
-    //if (!job->m_formDataStream.hasMoreElements())
-    //         return 0;
-    // 
-    //     size_t sent = job->m_formDataStream.read(ptr, size, nmemb);
-    // 
-    //     // Something went wrong so cancel the job.
-    //     if (!sent)
-    //         job->cancel();
-    // 
-    //     return sent;
-        return 0;
+//     if (!d->m_formDataStream.hasMoreElements())
+//         return 0;
+// 
+//     size_t sent = d->m_formDataStream.read(ptr, size, nmemb);
+// 
+//     // Something went wrong so cancel the job.
+//     if (!sent && d->loader())
+//         d->loader()->cancel();
+// 
+//     return sent;
+
+    return 0;
 }
 
 void WebURLLoaderManager::downloadTimerCallback(Timer<WebURLLoaderManager>* timer)
@@ -361,7 +665,7 @@ void WebURLLoaderManager::downloadTimerCallback(Timer<WebURLLoaderManager>* time
         if (!msg)
             break;
 
-        // find the node which has same job->m_handle as completed transfer
+        // find the node which has same d->m_handle as completed transfer
         CURL* handle = msg->easy_handle;
         ASSERT(handle);
         WebURLLoaderInternal* job = 0;
@@ -370,9 +674,10 @@ void WebURLLoaderManager::downloadTimerCallback(Timer<WebURLLoaderManager>* time
         ASSERT(job);
         if (!job)
             continue;
-        ASSERT(job->m_handle == handle);
+        WebURLLoaderInternal* d = job;
+        ASSERT(d->m_handle == handle);
 
-        if (job->m_cancelled) {
+        if (d->m_cancelled) {
             removeFromCurl(job);
             continue;
         }
@@ -380,29 +685,40 @@ void WebURLLoaderManager::downloadTimerCallback(Timer<WebURLLoaderManager>* time
         if (CURLMSG_DONE != msg->msg)
             continue;
 
+
         if (CURLE_OK == msg->data.result) {
-            if (!job->responseFired()) {
-                handleLocalReceiveResponse(job->m_handle, job);
-                if (job->m_cancelled) {
+#if ENABLE(WEB_TIMING)
+            calculateWebTimingInformations(d);
+#endif
+            if (!d->responseFired()) {
+                handleLocalReceiveResponse(d->m_handle, job, d);
+                if (d->m_cancelled) {
                     removeFromCurl(job);
                     continue;
                 }
             }
 
-            if (job->client() && job->loader())
-                job->client()->didFinishLoading(job->loader(), 0, 0);
+            if (d->m_multipartHandle)
+                d->m_multipartHandle->contentEnded();
+
+            if (d->client() && job->loader()) {
+                d->client()->didFinishLoading(job->loader(), 0, 0);
+                //CurlCacheManager::getInstance().didFinishLoading(*job);
+            }
         } else {
             char* url = 0;
-            curl_easy_getinfo(job->m_handle, CURLINFO_EFFECTIVE_URL, &url);
+            curl_easy_getinfo(d->m_handle, CURLINFO_EFFECTIVE_URL, &url);
 #ifndef NDEBUG
-            fprintf(stderr, "Curl ERROR for url='%s', error: '%s'\n", url, curl_easy_strerror(msg->data.result));
+            WTF::String outstr = String::format("Curl ERROR for url='%s', error: '%s'\n", url, curl_easy_strerror(msg->data.result));
+            OutputDebugStringW(outstr.charactersWithNullTermination().data());
 #endif
-            if (job->client() && job->loader()) {
-                WebURLError error;
-                error.domain = WebString(String(url));
-                error.reason = msg->data.result;
-                error.localizedDescription = WebString(String(curl_easy_strerror(msg->data.result)));
-                job->client()->didFail(job->loader(), error);
+            if (d->client() && job->loader()) {
+                WebURLError resourceError;
+                resourceError.reason = msg->data.result;
+                resourceError.domain = WebString::fromLatin1(url);
+                resourceError.localizedDescription = WebString::fromLatin1(curl_easy_strerror(msg->data.result));
+                d->client()->didFail(job->loader(), resourceError);
+                //CurlCacheManager::getInstance().didFail(*job);
             }
         }
 
@@ -416,39 +732,119 @@ void WebURLLoaderManager::downloadTimerCallback(Timer<WebURLLoaderManager>* time
 }
 
 void WebURLLoaderManager::setProxyInfo(const String& host,
-    unsigned long port,
-    ProxyType type,
-    const String& username,
-    const String& password)
+                                         unsigned long port,
+                                         ProxyType type,
+                                         const String& username,
+                                         const String& password)
 {
     m_proxyType = type;
 
     if (!host.length()) {
-        m_proxy = String("");
+        m_proxy = emptyString();
     } else {
         String userPass;
         if (username.length() || password.length())
             userPass = username + ":" + password + "@";
 
-        m_proxy = userPass + host + ":" + String::number(port);
+        m_proxy = String("http://") + userPass + host + ":" + String::number(port);
     }
 }
 
 void WebURLLoaderManager::removeFromCurl(WebURLLoaderInternal* job)
 {
-    ASSERT(job->m_handle);
-    if (!job->m_handle)
+    WebURLLoaderInternal* d = job;
+    ASSERT(d->m_handle);
+    if (!d->m_handle)
         return;
     m_runningJobs--;
-    curl_multi_remove_handle(m_curlMultiHandle, job->m_handle);
-    curl_easy_cleanup(job->m_handle);
-    job->m_handle = 0;
+    curl_multi_remove_handle(m_curlMultiHandle, d->m_handle);
+    curl_easy_cleanup(d->m_handle);
+    d->m_handle = 0;
     job->deref();
 }
 
-void WebURLLoaderManager::setupPUT(WebURLLoaderInternal*, struct curl_slist**)
+static inline size_t getFormElementsCount(WebURLLoaderInternal* job)
 {
-    notImplemented();
+    WebHTTPBody httpBody = job->firstRequest()->httpBody();
+    if (httpBody.isNull())
+        return 0;
+
+    // Resolve the blob elements so the formData can correctly report it's size.
+    //formData = formData->resolveBlobReferences();
+    //job->firstRequest().setHTTPBody(httpBody);
+
+    return httpBody.elementCount();
+}
+
+static void setupFormData(WebURLLoaderInternal* job, CURLoption sizeOption, struct curl_slist** headers)
+{
+    WebHTTPBody httpBody = job->firstRequest()->httpBody();
+
+    // The size of a curl_off_t could be different in WebKit and in cURL depending on
+    // compilation flags of both.
+    static int expectedSizeOfCurlOffT = 0;
+    if (!expectedSizeOfCurlOffT) {
+        curl_version_info_data *infoData = curl_version_info(CURLVERSION_NOW);
+        if (infoData->features & CURL_VERSION_LARGEFILE)
+            expectedSizeOfCurlOffT = sizeof(long long);
+        else
+            expectedSizeOfCurlOffT = sizeof(int);
+    }
+
+    static const long long maxCurlOffT = (1LL << (expectedSizeOfCurlOffT * 8 - 1)) - 1;
+    // Obtain the total size of the form data
+    curl_off_t size = 0;
+    bool chunkedTransfer = false;
+    for (size_t i = 0; i < httpBody.elementCount(); ++i) {
+        WebHTTPBody::Element element;
+        if (!httpBody.elementAt(i, element))
+            continue;
+
+        if (WebHTTPBody::Element::TypeFile == element.type) {
+            // long long fileSizeResult;
+            //             if (getFileSize(element.m_filename, fileSizeResult)) {
+            //                 if (fileSizeResult > maxCurlOffT) {
+            //                     // File size is too big for specifying it to cURL
+            //                     chunkedTransfer = true;
+            //                     break;
+            //                 }
+            //                 size += fileSizeResult;
+            //             } else {
+            //                 chunkedTransfer = true;
+            //                 break;
+            //             }
+        }
+        else
+            size += element.data.size();
+    }
+
+    // cURL guesses that we want chunked encoding as long as we specify the header
+    if (chunkedTransfer)
+        *headers = curl_slist_append(*headers, "Transfer-Encoding: chunked");
+    else {
+        if (sizeof(long long) == expectedSizeOfCurlOffT)
+            curl_easy_setopt(job->m_handle, sizeOption, (long long)size);
+        else
+            curl_easy_setopt(job->m_handle, sizeOption, (int)size);
+    }
+
+    curl_easy_setopt(job->m_handle, CURLOPT_READFUNCTION, readCallback);
+    curl_easy_setopt(job->m_handle, CURLOPT_READDATA, job);
+}
+
+void WebURLLoaderManager::setupPUT(WebURLLoaderInternal* d, struct curl_slist** headers)
+{
+    curl_easy_setopt(d->m_handle, CURLOPT_UPLOAD, TRUE);
+    curl_easy_setopt(d->m_handle, CURLOPT_INFILESIZE, 0);
+
+    // Disable the Expect: 100 continue header
+    *headers = curl_slist_append(*headers, "Expect:");
+
+    size_t numElements = getFormElementsCount(d);
+    if (!numElements)
+        return;
+
+    setupFormData(d, CURLOPT_INFILESIZE_LARGE, headers);
 }
 
 static void flattenHttpBody(const WebHTTPBody& httpBody, Vector<char>& data)
@@ -461,178 +857,107 @@ static void flattenHttpBody(const WebHTTPBody& httpBody, Vector<char>& data)
     }
 }
 
-/* Calculate the length of the POST.
-   Force chunked data transfer if size of files can't be obtained.
- */
 void WebURLLoaderManager::setupPOST(WebURLLoaderInternal* job, struct curl_slist** headers)
 {
-    curl_easy_setopt(job->m_handle, CURLOPT_POST, TRUE);
-    curl_easy_setopt(job->m_handle, CURLOPT_POSTFIELDSIZE, 0);
+    WebURLLoaderInternal* d = job;
+    curl_easy_setopt(d->m_handle, CURLOPT_POST, true);
+    curl_easy_setopt(d->m_handle, CURLOPT_POSTFIELDSIZE, 0);
 
-    if (job->firstRequest()->httpBody().isNull())
-        return;
-
-    size_t numElements = job->firstRequest()->httpBody().elementCount();
+    size_t numElements = getFormElementsCount(job);
     if (!numElements)
         return;
 
     // Do not stream for simple POST data
     if (numElements == 1) {
         flattenHttpBody(job->firstRequest()->httpBody(), job->m_postBytes);
-        if (job->m_postBytes.size() != 0) {
-            curl_easy_setopt(job->m_handle, CURLOPT_POSTFIELDSIZE, job->m_postBytes.size());
-            curl_easy_setopt(job->m_handle, CURLOPT_POSTFIELDS, job->m_postBytes.data());
+        if (d->m_postBytes.size()) {
+            curl_easy_setopt(d->m_handle, CURLOPT_POSTFIELDSIZE, d->m_postBytes.size());
+            curl_easy_setopt(d->m_handle, CURLOPT_POSTFIELDS, d->m_postBytes.data());
         }
         return;
     }
 
-    // Obtain the total size of the POST
-    // The size of a curl_off_t could be different in WebKit and in cURL depending on
-    // compilation flags of both. For CURLOPT_POSTFIELDSIZE_LARGE we have to pass the
-    // right size or random data will be used as the size.
-    static int expectedSizeOfCurlOffT = 0;
-    if (!expectedSizeOfCurlOffT) {
-        curl_version_info_data *infoData = curl_version_info(CURLVERSION_NOW);
-        if (infoData->features & CURL_VERSION_LARGEFILE)
-            expectedSizeOfCurlOffT = sizeof(long long);
-        else
-            expectedSizeOfCurlOffT = sizeof(int);
-    }
-
-#if COMPILER(MSVC)
-    // work around compiler error in Visual Studio 2005.  It can't properly
-    // handle math with 64-bit constant declarations.
-#pragma warning(disable: 4307)
-#endif
-    static const long long maxCurlOffT = (1LL << (expectedSizeOfCurlOffT * 8 - 1)) - 1;
-    curl_off_t size = 0;
-    bool chunkedTransfer = false;
-    for (size_t i = 0; i < numElements; i++) {
-        WebHTTPBody::Element element;
-        if (!job->firstRequest()->httpBody().elementAt(i, element))
-            continue;
-        if (element.type == WebHTTPBody::Element::TypeFile) {
-//             long long fileSizeResult;
-//             if (getFileSize((String)element.filePath, fileSizeResult)) {
-//                 if (fileSizeResult > maxCurlOffT) {
-//                     // File size is too big for specifying it to cURL
-//                     chunkedTransfer = true;
-//                     break;
-//                 }
-//                 size += fileSizeResult;
-//             } else {
-//                 chunkedTransfer = true;
-//                 break;
-//             }
-            notImplemented();
-        } else
-            size += element.data.size();
-    }
-
-    // cURL guesses that we want chunked encoding as long as we specify the header
-    if (chunkedTransfer)
-        *headers = curl_slist_append(*headers, "Transfer-Encoding: chunked");
-    else {
-        if (sizeof(long long) == expectedSizeOfCurlOffT)
-          curl_easy_setopt(job->m_handle, CURLOPT_POSTFIELDSIZE_LARGE, (long long)size);
-        else
-          curl_easy_setopt(job->m_handle, CURLOPT_POSTFIELDSIZE_LARGE, (int)size);
-    }
-
-    curl_easy_setopt(job->m_handle, CURLOPT_READFUNCTION, readCallback);
-    curl_easy_setopt(job->m_handle, CURLOPT_READDATA, job);
+    setupFormData(job, CURLOPT_POSTFIELDSIZE_LARGE, headers);
 }
 
-static bool shouldContentSniffURL(const KURL& url)
+void WebURLLoaderManager::add(WebURLLoaderInternal* job)
 {
-    // We shouldn't content sniff file URLs as their MIME type should be established via their extension.
-    return !url.protocolIs("file");
-}
-
-WebURLLoaderInternal* WebURLLoaderManager::add(WebURLLoaderImplCurl* loader, const blink::WebURLRequest& request, blink::WebURLLoaderClient* client)
-{
-    WebURLLoaderInternal* job = new WebURLLoaderInternal(loader, request, client, false, shouldContentSniffURL(request.url()));
     // we can be called from within curl, so to avoid re-entrancy issues
     // schedule this job to be added the next time we enter curl download loop
     job->ref();
-    m_WebURLLoaderList.append(job);
+    m_resourceHandleList.append(job);
     if (!m_downloadTimer.isActive())
         m_downloadTimer.startOneShot(pollTimeSeconds, FROM_HERE);
-    return job;
 }
 
-bool WebURLLoaderManager::removeScheduledJob(WebURLLoaderImplCurl* loader)
+bool WebURLLoaderManager::removeScheduledJob(WebURLLoaderInternal* job)
 {
-    WebURLLoaderInternal* job = loader->loaderInterna();
-    if (!job)
-        return true;
-
-    int size = m_WebURLLoaderList.size();
+    int size = m_resourceHandleList.size();
     for (int i = 0; i < size; i++) {
-        if (job == m_WebURLLoaderList[i]) {
-            m_WebURLLoaderList.remove(i);
+        if (job == m_resourceHandleList[i]) {
+            m_resourceHandleList.remove(i);
             job->deref();
             return true;
         }
     }
-    
     return false;
 }
 
 bool WebURLLoaderManager::startScheduledJobs()
 {
     // TODO: Create a separate stack of jobs for each domain.
+
     bool started = false;
-    while (!m_WebURLLoaderList.isEmpty() && m_runningJobs < maxRunningJobs) {
-        WebURLLoaderInternal* job = m_WebURLLoaderList[0];
-        m_WebURLLoaderList.remove(0);
+    while (!m_resourceHandleList.isEmpty() && m_runningJobs < maxRunningJobs) {
+        WebURLLoaderInternal* job = m_resourceHandleList[0];
+        m_resourceHandleList.remove(0);
         startJob(job);
         started = true;
     }
     return started;
 }
 
-void WebURLLoaderManager::dispatchSynchronousJob(WebURLLoaderImplCurl* loader)
+void WebURLLoaderManager::dispatchSynchronousJob(WebURLLoaderInternal* job)
 {
-    WebURLLoaderInternal* job = loader->loaderInterna();
-    if (!job)
-        return;
-    KURL kurl = job->firstRequest()->url();
-
-    if (kurl.protocolIsData()) {
-        handleDataURL(job->loader(), job->client(), kurl);
+    KURL url = job->firstRequest()->url();
+    if (url.protocolIsData() && job->client()) {
+        handleDataURL(job->loader(), job->client(), url);
         return;
     }
-    
-#if LIBCURL_VERSION_NUM > 0x071200
+
+    WebURLLoaderInternal* handle = job;
+
     // If defersLoading is true and we call curl_easy_perform
-    // on a paused job, libcURL would do the transfert anyway
+    // on a paused handle, libcURL would do the transfert anyway
     // and we would assert so force defersLoading to be false.
-    job->m_defersLoading = false;
-#endif
+    handle->m_defersLoading = false;
 
     initializeHandle(job);
 
     // curl_easy_perform blocks until the transfert is finished.
-    CURLcode ret = curl_easy_perform(job->m_handle);
+    CURLcode ret =  curl_easy_perform(handle->m_handle);
 
-    if (ret != 0 && job->client() && job->loader()) {
+    if (ret != CURLE_OK && job->client()) {
         WebURLError error;
         error.domain = WebString(String(job->m_url));
         error.reason = ret;
         error.localizedDescription = WebString(String(curl_easy_strerror(ret)));
         job->client()->didFail(job->loader(), error);
+    } else {
+        if (handle->client() && job->client())
+            handle->client()->didReceiveResponse(job->loader(), handle->m_response);
     }
 
-    curl_easy_cleanup(job->m_handle);
+    curl_easy_cleanup(handle->m_handle);
 }
 
 void WebURLLoaderManager::startJob(WebURLLoaderInternal* job)
 {
-    KURL kurl = job->firstRequest()->url();
+    KURL url = job->firstRequest()->url();
 
-    if (kurl.protocolIsData()) {
-        handleDataURL(job->loader(), job->client(), kurl);
+    if (url.protocolIsData()) {
+        handleDataURL(job->loader(), job->client(), url);
+        job->deref();
         return;
     }
 
@@ -644,33 +969,72 @@ void WebURLLoaderManager::startJob(WebURLLoaderInternal* job)
     // timeout will occur and do curl_multi_perform
     if (ret && ret != CURLM_CALL_MULTI_PERFORM) {
 #ifndef NDEBUG
-        fprintf(stderr, "Error %job starting job %s\n", ret, encodeWithURLEscapeSequences(job->firstRequest()->url().string()).latin1().data());
+        WTF::String outstr = String::format("Error %d starting job %s\n", ret, encodeWithURLEscapeSequences(job->firstRequest()->url().string()).latin1().data());
+        OutputDebugStringW(outstr.charactersWithNullTermination().data());
 #endif
-        if (job->loader())
-            cancel(job->loader());
+        cancel(job);
         return;
     }
 }
 
-class HeaderFlattener : public blink::WebHTTPHeaderVisitor {
+void WebURLLoaderManager::applyAuthenticationToRequest(WebURLLoaderInternal* handle, blink::WebURLRequest* request)
+{
+    // m_user/m_pass are credentials given manually, for instance, by the arguments passed to XMLHttpRequest.open().
+    WebURLLoaderInternal* d = handle;
+// 
+//     if (handle->shouldUseCredentialStorage()) {
+//         if (d->m_user.isEmpty() && d->m_pass.isEmpty()) {
+//             // <rdar://problem/7174050> - For URLs that match the paths of those previously challenged for HTTP Basic authentication, 
+//             // try and reuse the credential preemptively, as allowed by RFC 2617.
+//             d->m_initialCredential = CredentialStorage::defaultCredentialStorage().get(request.url());
+//         } else {
+//             // If there is already a protection space known for the KURL, update stored credentials
+//             // before sending a request. This makes it possible to implement logout by sending an
+//             // XMLHttpRequest with known incorrect credentials, and aborting it immediately (so that
+//             // an authentication dialog doesn't pop up).
+//             CredentialStorage::defaultCredentialStorage().set(Credential(d->m_user, d->m_pass, CredentialPersistenceNone), request.url());
+//         }
+//     }
+// 
+//     String user = d->m_user;
+//     String password = d->m_pass;
+// 
+//     if (!d->m_initialCredential.isEmpty()) {
+//         user = d->m_initialCredential.user();
+//         password = d->m_initialCredential.password();
+//         curl_easy_setopt(d->m_handle, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+//     }
+// 
+//     // It seems we need to set CURLOPT_USERPWD even if username and password is empty.
+//     // Otherwise cURL will not automatically continue with a new request after a 401 response.
+// 
+//     // curl CURLOPT_USERPWD expects username:password
+//     String userpass = user + ":" + password;
+//     curl_easy_setopt(d->m_handle, CURLOPT_USERPWD, userpass.utf8().data());
+
+    curl_easy_setopt(d->m_handle, CURLOPT_USERPWD, ":");
+}
+
+class HeaderVisitor : public blink::WebHTTPHeaderVisitor {
 public:
-    explicit HeaderFlattener() : m_headers(nullptr) {}
+    explicit HeaderVisitor(curl_slist* headers) : m_headers(headers) {}
 
-    static void appendCharToVector(Vector<char>& buffer, const char* characters)
+    virtual void visitHeader(const WebString& webName, const WebString& webValue) override
     {
-        buffer.append(characters, strlen(characters));
-    }
-
-    virtual void visitHeader(const blink::WebString& name, const blink::WebString& value) override
-    {
-        String headerString((String)name);
-        headerString.append(": ");
-        headerString.append((String)value);
+        String value = webValue;
+        String headerString(webName);
+        if (value.isNull() || value.isEmpty())
+            // Insert the ; to tell curl that this header has an empty value.
+            headerString.append(";");
+        else {
+            headerString.append(": ");
+            headerString.append(value);
+        }
         CString headerLatin1 = headerString.latin1();
         m_headers = curl_slist_append(m_headers, headerLatin1.data());
 
-        OutputDebugStringA((LPCSTR)headerLatin1.data());
-        OutputDebugStringW(L"\n");
+//         OutputDebugStringA(headerLatin1.data());
+//         OutputDebugStringA("\n");
     }
 
     curl_slist* headers() { return m_headers; }
@@ -680,139 +1044,143 @@ private:
 
 void WebURLLoaderManager::initializeHandle(WebURLLoaderInternal* job)
 {
-    KURL kurl = job->firstRequest()->url();
+    static const int allowedProtocols = CURLPROTO_FILE | CURLPROTO_FTP | CURLPROTO_FTPS | CURLPROTO_HTTP | CURLPROTO_HTTPS;
+    KURL url = job->firstRequest()->url();
 
     // Remove any fragment part, otherwise curl will send it as part of the request.
-    kurl.removeFragmentIdentifier();
+    url.removeFragmentIdentifier();
 
-    String url = kurl.string();
+    WebURLLoaderInternal* d = job;
+    String urlString = url.string();
 
-    if (kurl.isLocalFile()) {
-        String query = kurl.query();
+//     OutputDebugStringA(urlString.latin1().data());
+//     OutputDebugStringA("\n");
+
+    if (url.isLocalFile()) {
         // Remove any query part sent to a local file.
-        if (!query.isEmpty()) {
-            int queryIndex = url.find(query);
-            if (queryIndex != -1)
-                url = url.left(queryIndex - 1);
+        if (!url.query().isEmpty()) {
+            // By setting the query to a null string it'll be removed.
+            url.setQuery(String());
+            urlString = url.string();
         }
         // Determine the MIME type based on the path.
-        job->m_response.setMIMEType(MIMETypeRegistry::getMIMETypeForPath(url));
+        d->m_response.setMIMEType(MIMETypeRegistry::getMIMETypeForPath(url));
     }
 
-    job->m_handle = curl_easy_init();
+    d->m_handle = curl_easy_init();
 
-#if LIBCURL_VERSION_NUM > 0x071200
-    if (job->m_defersLoading) {
-        CURLcode error = curl_easy_pause(job->m_handle, CURLPAUSE_ALL);
+    if (d->m_defersLoading) {
+        CURLcode error = curl_easy_pause(d->m_handle, CURLPAUSE_ALL);
         // If we did not pause the handle, we would ASSERT in the
         // header callback. So just assert here.
         ASSERT_UNUSED(error, error == CURLE_OK);
     }
-#endif
 #ifndef NDEBUG
     if (getenv("DEBUG_CURL"))
-        curl_easy_setopt(job->m_handle, CURLOPT_VERBOSE, 1);
+        curl_easy_setopt(d->m_handle, CURLOPT_VERBOSE, 1);
 #endif
-    curl_easy_setopt(job->m_handle, CURLOPT_PRIVATE, job);
-    curl_easy_setopt(job->m_handle, CURLOPT_ERRORBUFFER, m_curlErrorBuffer);
-    curl_easy_setopt(job->m_handle, CURLOPT_WRITEFUNCTION, writeCallback);
-    curl_easy_setopt(job->m_handle, CURLOPT_WRITEDATA, job);
-    curl_easy_setopt(job->m_handle, CURLOPT_HEADERFUNCTION, headerCallback);
-    curl_easy_setopt(job->m_handle, CURLOPT_WRITEHEADER, job);
-    curl_easy_setopt(job->m_handle, CURLOPT_AUTOREFERER, 1);
-    curl_easy_setopt(job->m_handle, CURLOPT_FOLLOWLOCATION, 1);
-    curl_easy_setopt(job->m_handle, CURLOPT_MAXREDIRS, 10);
-    curl_easy_setopt(job->m_handle, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
-    curl_easy_setopt(job->m_handle, CURLOPT_SHARE, m_curlShareHandle);
-    curl_easy_setopt(job->m_handle, CURLOPT_DNS_CACHE_TIMEOUT, 60 * 5); // 5 minutes
-    // FIXME: Enable SSL verification when we have a way of shipping certs
-    // and/or reporting SSL errors to the user.
-    if (ignoreSSLErrors)
-        curl_easy_setopt(job->m_handle, CURLOPT_SSL_VERIFYPEER, false);
+    curl_easy_setopt(d->m_handle, CURLOPT_SSL_VERIFYPEER, 1L);
+    curl_easy_setopt(d->m_handle, CURLOPT_SSL_VERIFYHOST, 2L);
+    curl_easy_setopt(d->m_handle, CURLOPT_PRIVATE, job);
+    curl_easy_setopt(d->m_handle, CURLOPT_ERRORBUFFER, m_curlErrorBuffer);
+    curl_easy_setopt(d->m_handle, CURLOPT_WRITEFUNCTION, writeCallback);
+    curl_easy_setopt(d->m_handle, CURLOPT_WRITEDATA, job);
+    curl_easy_setopt(d->m_handle, CURLOPT_HEADERFUNCTION, headerCallback);
+    curl_easy_setopt(d->m_handle, CURLOPT_WRITEHEADER, job);
+    curl_easy_setopt(d->m_handle, CURLOPT_AUTOREFERER, 1);
+    curl_easy_setopt(d->m_handle, CURLOPT_FOLLOWLOCATION, 1);
+    curl_easy_setopt(d->m_handle, CURLOPT_MAXREDIRS, 10);
+    curl_easy_setopt(d->m_handle, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
+    curl_easy_setopt(d->m_handle, CURLOPT_SHARE, m_curlShareHandle);
+    curl_easy_setopt(d->m_handle, CURLOPT_DNS_CACHE_TIMEOUT, 60 * 5); // 5 minutes
+    curl_easy_setopt(d->m_handle, CURLOPT_PROTOCOLS, allowedProtocols);
+    curl_easy_setopt(d->m_handle, CURLOPT_REDIR_PROTOCOLS, allowedProtocols);
+    //setSSLClientCertificate(job);
+
+//     if (ignoreSSLErrors)
+        curl_easy_setopt(d->m_handle, CURLOPT_SSL_VERIFYPEER, false);
+//     else
+//         setSSLVerifyOptions(job);
 
     if (!m_certificatePath.isNull())
-       curl_easy_setopt(job->m_handle, CURLOPT_CAINFO, m_certificatePath.data());
+       curl_easy_setopt(d->m_handle, CURLOPT_CAINFO, m_certificatePath.data());
 
     // enable gzip and deflate through Accept-Encoding:
-    curl_easy_setopt(job->m_handle, CURLOPT_ENCODING, "");
+    curl_easy_setopt(d->m_handle, CURLOPT_ENCODING, "");
 
     // url must remain valid through the request
-    ASSERT(!job->m_url);
+    ASSERT(!d->m_url);
 
     // url is in ASCII so latin1() will only convert it to char* without character translation.
-    job->m_url = fastStrDup(url.latin1().data());
-    curl_easy_setopt(job->m_handle, CURLOPT_URL, job->m_url);
+    d->m_url = fastStrDup(urlString.latin1().data());
+    curl_easy_setopt(d->m_handle, CURLOPT_URL, d->m_url);
 
-    if (m_cookieJarFileName) {
-        curl_easy_setopt(job->m_handle, CURLOPT_COOKIEFILE, m_cookieJarFileName);
-        curl_easy_setopt(job->m_handle, CURLOPT_COOKIEJAR, m_cookieJarFileName);
-    }
+    if (m_cookieJarFileName)
+        curl_easy_setopt(d->m_handle, CURLOPT_COOKIEJAR, m_cookieJarFileName);
 
-//     if (WTF::kNotFound != url.find("api.m.taobao.com")) {
-//         OutputDebugStringW(L"WebURLLoaderManager::initializeHandle:");
-//         OutputDebugStringW(url.charactersWithNullTermination().data());
-//         OutputDebugStringW(L"\n");
-//     }
-    OutputDebugStringW(L"ResourceHandleManager::initializeHandle url:");
-    OutputDebugStringA(job->m_url);
-    OutputDebugStringW(L"\n");
+    curl_slist* headers = nullptr;
+    HeaderVisitor visitor(headers);
+    job->firstRequest()->visitHTTPHeaderFields(&visitor);
 
-    HeaderFlattener flattener;
-    job->firstRequest()->visitHTTPHeaderFields(&flattener);
-    curl_slist* headers = flattener.headers();
-
-    OutputDebugStringW(L"\n");
-
-//     if (WTF::kNotFound != url.find("api.m.taobao.com")) {
-//         curl_slist_free_all(headers);
-//         headers = nullptr;
-//         headers = curl_slist_append(headers, "Accept-Language: zh-CN,en,*");
-//         headers = curl_slist_append(headers, "Accept-Charset: GBK,utf-8;q=0.7,*;q=0.3");
-//         headers = curl_slist_append(headers, "Origin: https://m.taobao.com");
-//         headers = curl_slist_append(headers, "User-Agent: Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36");
-//         headers = curl_slist_append(headers, "Content-type: application/x-www-form-urlencoded");
-//         headers = curl_slist_append(headers, "Accept: application/json");
-//         headers = curl_slist_append(headers, "Referer: https://m.taobao.com/");
-//     }
-    
-    String httpMethod = (String)job->firstRequest()->httpMethod();
-    if (equalIgnoringCase("GET", httpMethod))
-        curl_easy_setopt(job->m_handle, CURLOPT_HTTPGET, TRUE);
-    else if (equalIgnoringCase("POST", httpMethod))
+    String method = job->firstRequest()->httpMethod();
+    if ("GET" == method)
+        curl_easy_setopt(d->m_handle, CURLOPT_HTTPGET, TRUE);
+    else if ("POST" == method)
         setupPOST(job, &headers);
-    else if (equalIgnoringCase("PUT", httpMethod))
+    else if ("PUT" == method)
         setupPUT(job, &headers);
-    else if (equalIgnoringCase("HEAD", httpMethod))
-        curl_easy_setopt(job->m_handle, CURLOPT_NOBODY, TRUE);
+    else if ("HEAD" == method)
+        curl_easy_setopt(d->m_handle, CURLOPT_NOBODY, TRUE);
+    else {
+        curl_easy_setopt(d->m_handle, CURLOPT_CUSTOMREQUEST, method.ascii().data());
+        setupPUT(job, &headers);
+    }
 
     if (headers) {
-        curl_easy_setopt(job->m_handle, CURLOPT_HTTPHEADER, headers);
-        job->m_customHeaders = headers;
+        curl_easy_setopt(d->m_handle, CURLOPT_HTTPHEADER, headers);
+        d->m_customHeaders = headers;
     }
-    // curl CURLOPT_USERPWD expects username:password
-    if (job->m_user.length() || job->m_pass.length()) {
-        String userpass = job->m_user + ":" + job->m_pass;
-        curl_easy_setopt(job->m_handle, CURLOPT_USERPWD, userpass.utf8().data());
-    }
+
+    applyAuthenticationToRequest(job, job->firstRequest());
 
     // Set proxy options if we have them.
     if (m_proxy.length()) {
-        curl_easy_setopt(job->m_handle, CURLOPT_PROXY, m_proxy.utf8().data());
-        curl_easy_setopt(job->m_handle, CURLOPT_PROXYTYPE, m_proxyType);
+        curl_easy_setopt(d->m_handle, CURLOPT_PROXY, m_proxy.utf8().data());
+        curl_easy_setopt(d->m_handle, CURLOPT_PROXYTYPE, m_proxyType);
     }
 }
 
-void WebURLLoaderManager::cancel(WebURLLoaderImplCurl* loader)
+void WebURLLoaderManager::initCookieSession()
 {
-    bool removeOk = removeScheduledJob(loader);
-    WebURLLoaderInternal* job = loader->loaderInterna();
-    job->setLoader(nullptr);
-    if (removeOk)
+    // Curl saves both persistent cookies, and session cookies to the cookie file.
+    // The session cookies should be deleted before starting a new session.
+
+    CURL* curl = curl_easy_init();
+
+    if (!curl)
         return;
 
-    job->m_cancelled = true;
+    curl_easy_setopt(curl, CURLOPT_SHARE, m_curlShareHandle);
+
+    if (m_cookieJarFileName) {
+        curl_easy_setopt(curl, CURLOPT_COOKIEFILE, m_cookieJarFileName);
+        curl_easy_setopt(curl, CURLOPT_COOKIEJAR, m_cookieJarFileName);
+    }
+
+    curl_easy_setopt(curl, CURLOPT_COOKIESESSION, 1);
+
+    curl_easy_cleanup(curl);
+}
+
+void WebURLLoaderManager::cancel(WebURLLoaderInternal* job)
+{
+    if (removeScheduledJob(job))
+        return;
+
+    WebURLLoaderInternal* d = job;
+    d->m_cancelled = true;
     if (!m_downloadTimer.isActive())
         m_downloadTimer.startOneShot(pollTimeSeconds, FROM_HERE);
 }
 
-} // namespace WebCore
+} // namespace net

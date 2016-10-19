@@ -26,17 +26,23 @@
 #ifndef WebURLLoaderInternal_h
 #define WebURLLoaderInternal_h
 
-#include "third_party/WebKit/Source/wtf/Noncopyable.h"
-#include "third_party/WebKit/Source/wtf/FastAllocBase.h"
-#include "third_party/WebKit/public/platform/WebURLLoader.h"
-#include "third_party/WebKit/public/platform/WebURLResponse.h"
-#include "third_party/WebKit/Source/platform/Timer.h"
-#include "third_party/WebKit/Source/platform/weborigin/KURL.h"
-
 #include "content/web_impl_win/WebURLLoaderImplCurl.h"
 
+#include "net/MultipartHandle.h"
+#include "third_party/WebKit/public/platform/WebURLLoader.h"
+#include "third_party/WebKit/public/platform/WebURLResponse.h"
+#include "third_party/WebKit/public/platform/WebURLError.h"
+#include "third_party/WebKit/Source/platform/Timer.h"
+#include "third_party/WebKit/Source/platform/weborigin/KURL.h"
+#include "third_party/WebKit/Source/wtf/Noncopyable.h"
+#include "third_party/WebKit/Source/wtf/FastAllocBase.h"
+#include "third_party/WebKit/public/platform/WebURLLoaderClient.h"
+
 #include <windows.h>
-#include <third_party/curl/curl.h>
+#include <memory>
+
+#define CURL_STATICLIB 
+#include "third_party/libcurl/include/curl/curl.h"
 
 // The allocations and releases in WebURLLoaderInternal are
 // Cocoa-exception-free (either simple Foundation classes or
@@ -59,8 +65,8 @@ class WebURLLoaderInternal {
     //WTF_MAKE_NONCOPYABLE(WebURLLoaderInternal); WTF_MAKE_FAST_ALLOCATED;
 public:
     WebURLLoaderInternal(WebURLLoaderImplCurl* loader, const WebURLRequest& request, WebURLLoaderClient* client, bool defersLoading, bool shouldContentSniff)
-        : m_client(client)
-        //, m_firstRequest(request)
+        : m_ref(0)
+        , m_client(client)
         , m_lastHTTPMethod(request.httpMethod())
         , status(0)
         , m_defersLoading(defersLoading)
@@ -78,7 +84,6 @@ public:
         KURL url = (KURL)m_firstRequest->url();
         m_user = url.user();
         m_pass = url.pass();
-        //m_firstRequest.removeCredentials();
 
         m_response.initialize();
     }
@@ -92,8 +97,14 @@ public:
             curl_slist_free_all(m_customHeaders);
     }
 
-    void ref() {}
-    void deref() {}
+    void ref() { ++m_ref; }
+    void deref()
+    {
+        --m_ref;
+        if (0 >= m_ref) {
+            delete this;
+        }
+    }
 
     void fireFailure(blink::Timer<WebURLLoaderInternal>*)
     {
@@ -130,7 +141,7 @@ public:
     bool responseFired() { return m_responseFired; }
     bool m_responseFired;
 
-   // WebURLRequest m_firstRequest;
+    int m_ref;
     String m_lastHTTPMethod;
 
     // Suggested credentials for the current redirection step.
@@ -148,6 +159,7 @@ public:
     char* m_url;
     struct curl_slist* m_customHeaders;
     WebURLResponse m_response;
+    std::unique_ptr<MultipartHandle> m_multipartHandle;
     bool m_cancelled;
 
     //FormDataStream m_formDataStream;
@@ -171,6 +183,8 @@ public:
     WebURLLoaderImplCurl* m_loader;
 
     blink::WebURLRequest* m_firstRequest;
+
+    String m_debugPath;
 };
 
 } // namespace net

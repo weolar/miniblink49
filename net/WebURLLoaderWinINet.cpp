@@ -29,6 +29,7 @@
 #include "third_party/WebKit/Source/wtf/TemporaryChange.h"
 #include "third_party/zlib/zlib.h"
 #include "net/DataURL.h"
+#include "net/BlinkSynchronousLoader.h"
 
 #if USING_VC6RT == 1
 #define PURE                    = 0
@@ -39,26 +40,6 @@
 using namespace blink;
 
 namespace net {
-
-class BlinkSynchronousLoader : public blink::WebURLLoaderClient {
-    WTF_MAKE_NONCOPYABLE(BlinkSynchronousLoader);
-public:
-    BlinkSynchronousLoader(WebURLError&, WebURLResponse&, Vector<char>&);
-    ~BlinkSynchronousLoader();
-
-    //HINTERNET internetHandle() const { return m_internetHandle; }
-
-    virtual void didReceiveResponse(WebURLLoader*, const WebURLResponse&);
-    virtual void didReceiveData(WebURLLoader*, const char* data, int dataLength, int encodedDataLength);
-    virtual void didFinishLoading(WebURLLoader* loader, double finishTime, int64_t totalEncodedDataLength);
-    virtual void didFail(WebURLLoader*, const WebURLError&);
-
-private:
-    WebURLError& m_error;
-    WebURLResponse& m_response;
-    Vector<char>& m_data;
-    //HINTERNET m_internetHandle;
-};
 
 static inline HINTERNET createInternetHandle(const blink::WebString& userAgent, bool asynchronous)
 {
@@ -71,37 +52,6 @@ static inline HINTERNET createInternetHandle(const blink::WebString& userAgent, 
         InternetSetStatusCallback(internetHandle, &WebURLLoaderWinINet::internetStatusCallback);
 
     return internetHandle;
-}
-
-BlinkSynchronousLoader::BlinkSynchronousLoader(WebURLError& error, WebURLResponse& response, Vector<char>& data)
-    : m_error(error)
-    , m_response(response)
-    , m_data(data)
-{
-}
-
-BlinkSynchronousLoader::~BlinkSynchronousLoader()
-{
-    //InternetCloseHandle(m_internetHandle);
-}
-
-void BlinkSynchronousLoader::didReceiveResponse(WebURLLoader*, const WebURLResponse& response)
-{
-    m_response = response;
-}
-
-void BlinkSynchronousLoader::didReceiveData(WebURLLoader*, const char* data, int dataLength, int encodedDataLength)
-{
-    m_data.append(data, dataLength);
-}
-
-void BlinkSynchronousLoader::didFinishLoading(WebURLLoader* loader, double finishTime, int64_t totalEncodedDataLength)
-{
-}
-
-void BlinkSynchronousLoader::didFail(WebURLLoader*, const WebURLError& error)
-{
-    m_error = error;
 }
 
 static int httpGzipDecompress(Byte *zdata, uLong nzdata, Byte *data, uLong *ndata)
@@ -207,7 +157,6 @@ WebURLLoaderWinINet::WebURLLoaderWinINet(content::WebURLLoaderImpl* loader)
     String outString = String::format("WebURLLoaderWinINet::WebURLLoaderWinINet: %p\n", this);
     OutputDebugStringW(outString.charactersWithNullTermination().data());
 
-    m_ref = 1;
     init(true);
 
 #ifndef NDEBUG
@@ -500,8 +449,7 @@ bool testHttpDownload(KURL url, Vector<char>& buffer)
 
     // 建立连接
     HINTERNET hConnect = nullptr;;
-    hConnect = InternetConnectW(hInternet, L"x5.imtt.qq.com", 80,
-        L"", L"", INTERNET_SERVICE_HTTP, INTERNET_FLAG_PASSIVE, 0);
+    hConnect = InternetConnectW(hInternet, L"x5.imtt.qq.com", 80, L"", L"", INTERNET_SERVICE_HTTP, INTERNET_FLAG_PASSIVE, 0);
 
     if (hInternet == NULL) {
         InternetCloseHandle(hInternet);
@@ -544,39 +492,36 @@ bool testHttpDownload(KURL url, Vector<char>& buffer)
 }
 
 // WebURLLoader methods:
-void WebURLLoaderWinINet::loadSynchronously(
-    const blink::WebURLRequest& request,
-    blink::WebURLResponse& response,
-    blink::WebURLError& error,
-    blink::WebData& data)
+void WebURLLoaderWinINet::loadSynchronously(const blink::WebURLRequest& request, blink::WebURLResponse& response,
+    blink::WebURLError& error, blink::WebData& data)
 {
     Vector<char> buffer;
-#if 1
+
     BlinkSynchronousLoader loader(error, response, buffer);
     m_internetHandle = createInternetHandle(blink::Platform::current()->userAgent(), false);
 
     bool b = start(request, &loader, false); // 执行完后本类被析构了
-    ASSERT(!b && m_ref == 1);
-#else
+    ASSERT(!b);
+
+    data.assign(buffer.data(), buffer.size());
+    m_canDestroy = true;
+    cancel();
+}
+
+void WebURLLoaderWinINet::loadAsynchronously(const blink::WebURLRequest& request, blink::WebURLLoaderClient* client)
+{
+#if 0
+    Vector<char> buffer;
+    blink::WebURLResponse response;
     testHttpDownload(request.url(), buffer);
     response.setURL(request.url());
     response.setHTTPStatusCode(200);
     response.setMIMEType(WebString::fromUTF8("text/xml; charset=UTF-8"));
     response.setHTTPStatusText(WebString::fromUTF8("ok"));
 #endif
-    data.assign(buffer.data(), buffer.size());
-    m_canDestroy = true;
-    cancel();
-}
 
-void WebURLLoaderWinINet::loadAsynchronously(
-    const blink::WebURLRequest& request,
-    blink::WebURLLoaderClient* client)
-{
     bool b = start(request, client, true);
-    if (b) {
-        ASSERT(1 == m_ref);
-    } else
+    if (!b)
         delete this;
 }
 
@@ -590,20 +535,17 @@ bool WebURLLoaderWinINet::start(const blink::WebURLRequest& request, blink::WebU
     m_client = client;
 
     blink::KURL url = (blink::KURL)request.url();
-    Vector<UChar> host = WTF::ensureStringToUChars(url.host());
+    Vector<UChar> host = WTF::ensureUTF16UChar(url.host());
 
     if (!url.isValid() || !url.protocolIsData()) {
-        WTF::String outstr = String::format("WebURLLoaderWinINet.loadAsynchronously: %p %ws\n", this, WTF::ensureStringToUChars(url.string()).data());
+        WTF::String outstr = String::format("WebURLLoaderWinINet.loadAsynchronously: %p %ws\n", this, WTF::ensureUTF16UChar(url.string()).data());
         OutputDebugStringW(outstr.charactersWithNullTermination().data());
     }
 
     //////////////////////////////////////////////////////////////////////////
-//     if (WTF::kNotFound != url.string().find("Window.js")) {
+//  if (WTF::kNotFound != url.string().find("Window.js")) {
 //         m_debugRedirectPath = new blink::KURL(ParsedURLString, "file:///C:/Users/Administrator/Desktop/test/wangbayingxiao/window.js");
 //         OutputDebugStringW(L"");
-// 	} else if (WTF::kNotFound != url.string().find("scripts.js")) {
-// 		m_debugRedirectPath = new blink::KURL(ParsedURLString, "file:///C:/Users/Administrator/Desktop/test/zhihu/DataScience_files/scripts.js");
-// 		OutputDebugStringW(L"");
 // 	}
     //////////////////////////////////////////////////////////////////////////
 
@@ -658,14 +600,13 @@ bool WebURLLoaderWinINet::start(const blink::WebURLRequest& request, blink::WebU
         urlStr.append(urlQuery);
     }
 
-    Vector<UChar> httpMethod = WTF::ensureStringToUChars(request.httpMethod());
-    Vector<UChar> httpReferrer = WTF::ensureStringToUChars(request.httpHeaderField(blink::WebString::fromUTF8("Referer")));
-    Vector<UChar> httpAcceptField = WTF::ensureStringToUChars(request.httpHeaderField(blink::WebString::fromUTF8("Accept")));
+    Vector<UChar> httpMethod = WTF::ensureUTF16UChar(request.httpMethod());
+    Vector<UChar> httpReferrer = WTF::ensureUTF16UChar(request.httpHeaderField(blink::WebString::fromUTF8("Referer")));
+    Vector<UChar> httpAcceptField = WTF::ensureUTF16UChar(request.httpHeaderField(blink::WebString::fromUTF8("Accept")));
 
-    //LPCWSTR httpAccept[] = { L"*/*", 0 };
     LPCWSTR httpAccept[] = { httpAcceptField.data(), 0 };
 
-    m_requestHandle = HttpOpenRequestW(m_connectHandle, (LPCWSTR)httpMethod.data(), (LPCWSTR)WTF::ensureStringToUChars(urlStr).data(),
+    m_requestHandle = HttpOpenRequestW(m_connectHandle, (LPCWSTR)httpMethod.data(), (LPCWSTR)WTF::ensureUTF16UChar(urlStr).data(),
         0, (LPCWSTR)httpReferrer.data(), httpAccept, flags, reinterpret_cast<DWORD_PTR>(this));
 
     if (!m_requestHandle) {
@@ -684,7 +625,6 @@ bool WebURLLoaderWinINet::start(const blink::WebURLRequest& request, blink::WebU
         }
     }
 
-#if 1
     HeaderFlattenerForWinINet flattener;
 	flattener.m_url = url;
     flattener.m_debugTest = WTF::kNotFound != url.string().find("http://m.mi.com/v1/product/view");
@@ -700,7 +640,7 @@ bool WebURLLoaderWinINet::start(const blink::WebURLRequest& request, blink::WebU
     internetBuffers.lpvBuffer = m_formData.data();
 
     BOOL b = HttpSendRequestExA(m_requestHandle, &internetBuffers, 0, 0, reinterpret_cast<DWORD_PTR>(this));
-#endif
+
     if (m_loadSynchronously) {
         while (onRequestComplete()) {
             // Loop until finished.
@@ -890,7 +830,7 @@ void WebURLLoaderWinINet::fileLoadImpl(const blink::KURL& url)
         return;
     }
 
-    Vector<UChar> fileNameVec = WTF::ensureStringToUChars(url.fileSystemPath());
+    Vector<UChar> fileNameVec = WTF::ensureUTF16UChar(url.fileSystemPath());
     String fileName(fileNameVec.data(), fileNameVec.size());
     if (L'/' == fileName[0])
         fileName.remove(0);
@@ -1082,6 +1022,5 @@ void readScript(const WCHAR* path, Vector<char>& buffer)
 
 	::CloseHandle(hFile);
 }
-
 
 }

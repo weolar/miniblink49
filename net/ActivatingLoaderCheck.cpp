@@ -93,7 +93,7 @@ void ActivatingLoaderCheck::doGarbageCollected(bool forceGC)
         WebURLLoaderWinINet* loader = *it;
         double time = WTF::currentTimeMS();
         if (time - loader->startTime() > 10000 || forceGC) {
-            loader->onTimeout();
+            //loader->onTimeout();
         }
     }
 }
