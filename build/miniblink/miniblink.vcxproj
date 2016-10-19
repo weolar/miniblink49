@@ -93,10 +93,10 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <AdditionalIncludeDirectories>../../;../../v8/;../../v8/include;../../third_party/;../../third_party/GDIPlus/Includes;../../third_party/npapi;../../third_party/WebKit;../../third_party/WebKit/Source;../../cef;../../third_party/icu/source/common;../../gen/blink;../../gen/blink/core;../../gen/blink/bindings/modules/v8;../../gen/blink/bindings/core/v8;../../gpu;../../third_party/khronos;../../third_party/libxml/src/include;../../third_party/libxml/win32/include;../../third_party/skia/include/core;../../third_party/skia/include/config;../../third_party/skia/include/codec;../../third_party/skia/include/device;../../third_party/skia/include/effects;../../third_party/skia/include/images;../../third_party/skia/include/pathops;../../third_party/skia/include/ports;../../third_party/skia/include/private;../../third_party/skia/include/utils;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile>config.h</PrecompiledHeaderFile>
-      <DisableSpecificWarnings>4800;4291;4996;4244;4305;4577;4530;4595</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4800;4291;4996;4244;4305;4577;4530;</DisableSpecificWarnings>
       <ForcedIncludeFiles>config.h</ForcedIncludeFiles>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <Optimization>Disabled</Optimization>
+      <Optimization>Full</Optimization>
       <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
       <ExceptionHandling>false</ExceptionHandling>
       <BufferSecurityCheck>false</BufferSecurityCheck>
@@ -106,6 +106,8 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <EnableEnhancedInstructionSet>NoExtensions</EnableEnhancedInstructionSet>
       <AdditionalOptions>/Zc:threadSafeInit- %(AdditionalOptions)</AdditionalOptions>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>Debug</GenerateDebugInformation>
@@ -113,8 +115,8 @@
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <TargetMachine>MachineX86</TargetMachine>
-      <AdditionalLibraryDirectories>E:\WINDDK\3790.1830\lib\crt\i386;E:\WINDDK\3790.1830\lib\wxp\i386;$(SolutionDir)..\third_party\GDIPlus\Lib;$(SolutionDir)..\release\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Advapi32.lib;wldap32.lib;libcurl.lib;zlib.lib;ots.lib;Imm32.lib;libxml.lib;v8.lib;skia.lib;winmm.lib;Ws2_32.lib;Usp10.lib;Shlwapi.lib;wininet.lib;GDIPlus.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\$(Configuration)\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>zlib.lib;ots.lib;Imm32.lib;libxml.lib;v8.lib;skia.lib;winmm.lib;Ws2_32.lib;Usp10.lib;Shlwapi.lib;wininet.lib;GDIPlus.lib;libcurl.lib;Crypt32.lib;Wldap32.lib;Advapi32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>/FORCE:UNRESOLVED %(AdditionalOptions)</AdditionalOptions>
       <OutputFile>$(SolutionDir)..\Release\libcef.dll</OutputFile>
       <ImportLibrary>$(OutDir)libcef.lib</ImportLibrary>
@@ -132,6 +134,7 @@
     <ClCompile Include="..\..\base\rand_util.cc" />
     <ClCompile Include="..\..\base\rand_util_win.cc" />
     <ClCompile Include="..\..\base\strings\string_util.cc" />
+    <ClCompile Include="..\..\base\thread.cc" />
     <ClCompile Include="..\..\base\time\time.cc" />
     <ClCompile Include="..\..\base\time\time_win.cc" />
     <ClCompile Include="..\..\base\values.cc" />
@@ -1963,10 +1966,6 @@
     <ClCompile Include="..\..\wke\wkeString.cpp" />
     <ClCompile Include="..\..\wke\wkeWebView.cpp" />
     <ClCompile Include="..\..\wke\wkeWebWindow.cpp" />
-    <ClCompile Include="stdafx.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
-    </ClCompile>
     <ClCompile Include="..\..\third_party\WebKit\Source\bindings\core\v8\ActiveDOMCallback.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\bindings\core\v8\ArrayValue.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\bindings\core\v8\BindingSecurity.cpp" />
@@ -2837,6 +2836,7 @@
     <ClCompile Include="..\..\third_party\WebKit\Source\wtf\TypeTraits.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\wtf\WTF.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\wtf\WTFThreadData.cpp" />
+    <ClCompile Include="stdafx.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\base\command_line.h" />
@@ -2852,6 +2852,7 @@
     <ClInclude Include="..\..\base\rand_util.h" />
     <ClInclude Include="..\..\base\strings\string_util.h" />
     <ClInclude Include="..\..\base\strings\utf_offset_string_conversions.h" />
+    <ClInclude Include="..\..\base\thread.h" />
     <ClInclude Include="..\..\base\time\time.h" />
     <ClInclude Include="..\..\base\values.h" />
     <ClInclude Include="..\..\cc\base\MathUtil.h" />
@@ -6790,13 +6791,6 @@
     <ClInclude Include="..\..\third_party\WebKit\Source\wtf\WTFThreadData.h" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="miniblink.ico" />
-    <Image Include="small.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="miniblink.rc" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="..\..\gen\blink\core\EventInterfaces.in" />
     <None Include="..\..\third_party\WebKit\Source\core\animation\OWNERS" />
     <None Include="..\..\third_party\WebKit\Source\core\css\parser\CSSGrammar.y" />
@@ -6821,7 +6815,6 @@
     <None Include="..\..\third_party\WebKit\Source\modules\quota\OWNERS" />
     <None Include="..\..\third_party\WebKit\Source\modules\storage\OWNERS" />
     <None Include="..\..\third_party\WebKit\Source\platform\heap\asm\SaveRegisters_x86.asm" />
-    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
