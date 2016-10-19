@@ -206,6 +206,9 @@ LRESULT PopupMenuWin::wndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPa
     case WM_COMMIT:
         beginMainFrame();
         break;
+    case WM_MOUSEACTIVATE: // 不激活窗口
+        lResult = MA_NOACTIVATE;
+        break;
     default:
         lResult = ::DefWindowProc(hWnd, message, wParam, lParam);
     }
@@ -308,11 +311,12 @@ WebWidget* PopupMenuWin::createWnd()
     m_popup = ::CreateWindowExW(exStyle, kPopupWindowClassName, L"PopupMenu",
         WS_POPUP,
         0, 0, 2, 2,
-        NULL, 0, NULL, this);
+        /*NULL*/m_hParentWnd, 0, NULL, this); // 指定父窗口
 
-    ::ShowWindow(m_popup, SW_SHOW);
-    ::UpdateWindow(m_popup);
+    //::ShowWindow(m_popup, SW_SHOW);
+    //::UpdateWindow(m_popup);
     //::SetTimer(m_popup, 1, 10, nullptr);
+    ::SetWindowPos(m_popup, HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW | SWP_NOACTIVATE); // 不激活窗口
 
     initialize();
 
