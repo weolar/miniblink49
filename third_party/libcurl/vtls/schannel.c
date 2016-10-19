@@ -64,6 +64,7 @@
 #include "curl_memory.h"
 #include "memdebug.h"
 
+#include <wincrypt.h>
 /* ALPN requires version 8.1 of the Windows SDK, which was
    shipped with Visual Studio 2013, aka _MSC_VER 1800:
 

@@ -826,7 +826,6 @@
     <None Include="..\..\v8\src\harmony-spread.js" />
     <None Include="..\..\v8\src\harmony-tostring.js" />
     <None Include="..\..\v8\src\harmony-typedarray.js" />
-    <None Include="..\..\v8\src\heap\OWNERS" />
     <None Include="..\..\v8\src\i18n.js" />
     <None Include="..\..\v8\src\iterator-prototype.js" />
     <None Include="..\..\v8\src\json.js" />
