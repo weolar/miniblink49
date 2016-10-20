@@ -754,6 +754,9 @@
     <Filter Include="base\strings">
       <UniqueIdentifier>{1e08a647-7d8b-4be0-98a6-23f9eeabd88d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="net\websocket">
+      <UniqueIdentifier>{eac8e4db-7f21-4a45-9040-df20582d4727}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -8882,6 +8885,39 @@
     </ClCompile>
     <ClCompile Include="..\..\net\MultipartHandle.cpp">
       <Filter>net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\base\thread.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\net\websocket\WebSocketChannelImpl.cpp">
+      <Filter>net\websocket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\net\websocket\WebSocketDeflateFramer.cpp">
+      <Filter>net\websocket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\net\websocket\WebSocketDeflater.cpp">
+      <Filter>net\websocket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\net\websocket\WebSocketExtensionDispatcher.cpp">
+      <Filter>net\websocket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\net\websocket\WebSocketExtensionParser.cpp">
+      <Filter>net\websocket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\net\websocket\WebSocketHandshake.cpp">
+      <Filter>net\websocket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\net\websocket\WebSocketOneFrame.cpp">
+      <Filter>net\websocket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\net\websocket\SocketStreamErrorBase.cpp">
+      <Filter>net\websocket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\net\websocket\SocketStreamHandleBase.cpp">
+      <Filter>net\websocket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\net\websocket\SocketStreamHandleCurl.cpp">
+      <Filter>net\websocket</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -20731,6 +20767,51 @@
     </ClInclude>
     <ClInclude Include="..\..\net\SSLHandle.h">
       <Filter>net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\base\thread.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\net\BlinkSynchronousLoader.h">
+      <Filter>net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\net\websocket\WebSocketChannelImpl.h">
+      <Filter>net\websocket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\net\websocket\WebSocketDeflateFramer.h">
+      <Filter>net\websocket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\net\websocket\WebSocketDeflater.h">
+      <Filter>net\websocket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\net\websocket\WebSocketExtensionDispatcher.h">
+      <Filter>net\websocket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\net\websocket\WebSocketExtensionParser.h">
+      <Filter>net\websocket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\net\websocket\WebSocketExtensionProcessor.h">
+      <Filter>net\websocket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\net\websocket\WebSocketHandshake.h">
+      <Filter>net\websocket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\net\websocket\WebSocketOneFrame.h">
+      <Filter>net\websocket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\net\websocket\SocketStreamError.h">
+      <Filter>net\websocket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\net\websocket\SocketStreamErrorBase.h">
+      <Filter>net\websocket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\net\websocket\SocketStreamHandle.h">
+      <Filter>net\websocket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\net\websocket\SocketStreamHandleBase.h">
+      <Filter>net\websocket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\net\websocket\SocketStreamHandleClient.h">
+      <Filter>net\websocket</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
