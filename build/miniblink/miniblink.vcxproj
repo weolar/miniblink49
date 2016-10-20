@@ -72,6 +72,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PrecompiledHeaderFile>config.h</PrecompiledHeaderFile>
       <ForcedIncludeFiles>config.h</ForcedIncludeFiles>
+      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -96,7 +97,7 @@
       <DisableSpecificWarnings>4800;4291;4996;4244;4305;4577;4530;4595</DisableSpecificWarnings>
       <ForcedIncludeFiles>config.h</ForcedIncludeFiles>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <Optimization>Disabled</Optimization>
+      <Optimization>Full</Optimization>
       <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
       <ExceptionHandling>false</ExceptionHandling>
       <BufferSecurityCheck>false</BufferSecurityCheck>
@@ -106,6 +107,8 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <EnableEnhancedInstructionSet>NoExtensions</EnableEnhancedInstructionSet>
       <AdditionalOptions>/Zc:threadSafeInit- %(AdditionalOptions)</AdditionalOptions>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>Debug</GenerateDebugInformation>
@@ -113,7 +116,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <TargetMachine>MachineX86</TargetMachine>
-      <AdditionalLibraryDirectories>E:\WINDDK\3790.1830\lib\crt\i386;E:\WINDDK\3790.1830\lib\wxp\i386;$(SolutionDir)..\third_party\GDIPlus\Lib;$(SolutionDir)..\release\</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\third_party\GDIPlus\Lib;$(SolutionDir)..\release\</AdditionalLibraryDirectories>
       <AdditionalDependencies>Advapi32.lib;wldap32.lib;libcurl.lib;zlib.lib;ots.lib;Imm32.lib;libxml.lib;v8.lib;skia.lib;winmm.lib;Ws2_32.lib;Usp10.lib;Shlwapi.lib;wininet.lib;GDIPlus.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>/FORCE:UNRESOLVED %(AdditionalOptions)</AdditionalOptions>
       <OutputFile>$(SolutionDir)..\Release\libcef.dll</OutputFile>
@@ -1975,10 +1978,6 @@
     <ClCompile Include="..\..\wke\wkeString.cpp" />
     <ClCompile Include="..\..\wke\wkeWebView.cpp" />
     <ClCompile Include="..\..\wke\wkeWebWindow.cpp" />
-    <ClCompile Include="stdafx.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
-    </ClCompile>
     <ClCompile Include="..\..\third_party\WebKit\Source\bindings\core\v8\ActiveDOMCallback.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\bindings\core\v8\ArrayValue.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\bindings\core\v8\BindingSecurity.cpp" />
@@ -2849,6 +2848,7 @@
     <ClCompile Include="..\..\third_party\WebKit\Source\wtf\TypeTraits.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\wtf\WTF.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\wtf\WTFThreadData.cpp" />
+    <ClCompile Include="stdafx.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\base\command_line.h" />
@@ -6818,13 +6818,6 @@
     <ClInclude Include="..\..\third_party\WebKit\Source\wtf\WTFThreadData.h" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="miniblink.ico" />
-    <Image Include="small.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="miniblink.rc" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="..\..\gen\blink\core\EventInterfaces.in" />
     <None Include="..\..\third_party\WebKit\Source\core\animation\OWNERS" />
     <None Include="..\..\third_party\WebKit\Source\core\css\parser\CSSGrammar.y" />
@@ -6849,7 +6842,6 @@
     <None Include="..\..\third_party\WebKit\Source\modules\quota\OWNERS" />
     <None Include="..\..\third_party\WebKit\Source\modules\storage\OWNERS" />
     <None Include="..\..\third_party\WebKit\Source\platform\heap\asm\SaveRegisters_x86.asm" />
-    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />

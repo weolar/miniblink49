@@ -88,8 +88,9 @@
       <DisableSpecificWarnings>4800;4530</DisableSpecificWarnings>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
+      <EnableEnhancedInstructionSet>NoExtensions</EnableEnhancedInstructionSet>
       <AdditionalOptions>/Zc:threadSafeInit- %(AdditionalOptions)</AdditionalOptions>
+      <StringPooling>true</StringPooling>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -826,7 +827,6 @@
     <None Include="..\..\v8\src\harmony-spread.js" />
     <None Include="..\..\v8\src\harmony-tostring.js" />
     <None Include="..\..\v8\src\harmony-typedarray.js" />
-    <None Include="..\..\v8\src\heap\OWNERS" />
     <None Include="..\..\v8\src\i18n.js" />
     <None Include="..\..\v8\src\iterator-prototype.js" />
     <None Include="..\..\v8\src\json.js" />

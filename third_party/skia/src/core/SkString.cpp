@@ -20,8 +20,17 @@ static const size_t kBufferSize = 1024;
 #ifdef SK_BUILD_FOR_WIN
     
 #if USING_VC6RT == 1
+	inline double wtf_vsnprintf(char* buffer, size_t count, const char* format, va_list args)
+	{
+		int result = _vsnprintf(buffer, count, format, args);
 
-    double wtf_vsnprintf(char* buffer, size_t count, const char* format, va_list args);
+		// In the case where the string entirely filled the buffer, _vsnprintf will not
+		// null-terminate it, but vsnprintf must.
+		if (count > 0)
+			buffer[count - 1] = '\0';
+
+		return result;
+	}
     #define VSNPRINTF(buffer, size, format, args) \
             wtf_vsnprintf(buffer, size, format, args)
 
