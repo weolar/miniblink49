@@ -752,6 +752,8 @@
     <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8CanvasGradient.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8CanvasPattern.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8CanvasRenderingContext2D.cpp" />
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8CloseEvent.cpp" />
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8CloseEventInit.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8DeprecatedStorageInfo.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8DeprecatedStorageQuota.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8HeadersNone.cpp" />
@@ -852,6 +854,7 @@
     <ClCompile Include="..\..\gen\blink\modules\EventModulesNames.cpp" />
     <ClCompile Include="..\..\gen\blink\modules\EventTargetModulesNames.cpp" />
     <ClCompile Include="..\..\gen\blink\modules\storage\StorageEventInit.cpp" />
+    <ClCompile Include="..\..\gen\blink\modules\websockets\CloseEventInit.cpp" />
     <ClCompile Include="..\..\gen\blink\platform\ColorData.cpp" />
     <ClCompile Include="..\..\gen\blink\platform\FontFamilyNames.cpp" />
     <ClCompile Include="..\..\gen\blink\platform\RuntimeEnabledFeatures.cpp" />
@@ -1749,6 +1752,12 @@
     <ClCompile Include="..\..\third_party\WebKit\Source\modules\storage\StorageEvent.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\modules\storage\StorageNamespace.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\modules\storage\StorageNamespaceController.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\websockets\CloseEvent.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\websockets\DocumentWebSocketChannel.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\websockets\DOMWebSocket.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\websockets\InspectorWebSocketEvents.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\websockets\WebSocketChannel.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\websockets\WebSocketFrame.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\platform\animation\CubicBezierControlPoints.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\platform\DragImage.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\platform\EventDispatchForbiddenScope.cpp" />
@@ -1778,6 +1787,7 @@
     <ClCompile Include="..\..\third_party\WebKit\Source\platform\exported\WebScrollbarThemeGeometryNative.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\platform\exported\WebScrollbarThemePainter.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\platform\exported\WebSecurityOrigin.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\exported\WebSerializedOrigin.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\platform\exported\WebStorageQuotaCallbacks.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\platform\exported\WebString.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\platform\exported\WebThreadedDataReceiver.cpp" />
@@ -3605,6 +3615,8 @@
     <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8Canvas2DContextAttributes.h" />
     <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8CanvasGradient.h" />
     <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8CanvasPattern.h" />
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8CloseEvent.h" />
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8CloseEventInit.h" />
     <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8DeprecatedStorageInfo.h" />
     <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8DeprecatedStorageQuota.h" />
     <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8HitRegionOptions.h" />
@@ -3722,6 +3734,7 @@
     <ClInclude Include="..\..\gen\blink\modules\ServiceWorkerGlobalScopeModulesConstructors.h" />
     <ClInclude Include="..\..\gen\blink\modules\SharedWorkerGlobalScopeModulesConstructors.h" />
     <ClInclude Include="..\..\gen\blink\modules\storage\StorageEventInit.h" />
+    <ClInclude Include="..\..\gen\blink\modules\websockets\CloseEventInit.h" />
     <ClInclude Include="..\..\gen\blink\modules\WindowModulesConstructors.h" />
     <ClInclude Include="..\..\gen\blink\platform\FontFamilyNames.h" />
     <ClInclude Include="..\..\gen\blink\platform\RuntimeEnabledFeatures.h" />
@@ -5273,6 +5286,13 @@
     <ClInclude Include="..\..\third_party\WebKit\Source\modules\storage\StorageEvent.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\modules\storage\StorageNamespace.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\modules\storage\StorageNamespaceController.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\websockets\CloseEvent.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\websockets\DocumentWebSocketChannel.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\websockets\DOMWebSocket.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\websockets\InspectorWebSocketEvents.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\websockets\WebSocketChannel.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\websockets\WebSocketChannelClient.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\websockets\WebSocketFrame.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\platform\exported\WebActiveGestureAnimation.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\platform\exported\WebScrollbarImpl.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\platform\exported\WebScrollbarThemeGeometryNative.h" />
