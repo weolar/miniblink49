@@ -357,13 +357,7 @@ typedef void *HCERTSTORE;
 struct _CERT_INFO;
 typedef struct _CERT_INFO CERT_INFO, *PCERT_INFO;
 
-typedef struct _CERT_CONTEXT {
-    DWORD                   dwCertEncodingType;
-    BYTE                    *pbCertEncoded;
-    DWORD                   cbCertEncoded;
-    PCERT_INFO              pCertInfo;
-    HCERTSTORE              hCertStore;
-} CERT_CONTEXT, *PCERT_CONTEXT;
+
 #endif // __WINCRYPT_H__
 
 typedef void

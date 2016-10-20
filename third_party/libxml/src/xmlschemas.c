@@ -1,4 +1,4 @@
-/*
+﻿/*
  * schemas.c : implementation of the XML Schema handling and
  *             schema validity checking
  *
