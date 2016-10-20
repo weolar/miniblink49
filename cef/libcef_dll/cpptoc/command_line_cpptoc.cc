@@ -9,7 +9,7 @@
 // implementations. See the translator.README.txt file in the tools directory
 // for more information.
 //
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "libcef_dll/cpptoc/command_line_cpptoc.h"
 #include "libcef_dll/transfer_util.h"
 
@@ -436,3 +436,4 @@ template<> base::AtomicRefCount CefCppToC<CefCommandLineCppToC, CefCommandLine,
 
 template<> CefWrapperType CefCppToC<CefCommandLineCppToC, CefCommandLine,
     cef_command_line_t>::kWrapperType = WT_COMMAND_LINE;
+#endif

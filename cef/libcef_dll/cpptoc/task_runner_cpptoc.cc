@@ -9,7 +9,7 @@
 // implementations. See the translator.README.txt file in the tools directory
 // for more information.
 //
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "libcef_dll/cpptoc/task_runner_cpptoc.h"
 #include "libcef_dll/ctocpp/task_ctocpp.h"
 
@@ -163,3 +163,4 @@ template<> base::AtomicRefCount CefCppToC<CefTaskRunnerCppToC, CefTaskRunner,
 
 template<> CefWrapperType CefCppToC<CefTaskRunnerCppToC, CefTaskRunner,
     cef_task_runner_t>::kWrapperType = WT_TASK_RUNNER;
+#endif

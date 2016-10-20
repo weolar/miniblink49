@@ -9,7 +9,7 @@
 // implementations. See the translator.README.txt file in the tools directory
 // for more information.
 //
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "libcef_dll/cpptoc/browser_cpptoc.h"
 #include "libcef_dll/ctocpp/keyboard_handler_ctocpp.h"
 
@@ -96,3 +96,4 @@ template<> base::AtomicRefCount CefCToCpp<CefKeyboardHandlerCToCpp,
 template<> CefWrapperType CefCToCpp<CefKeyboardHandlerCToCpp,
     CefKeyboardHandler, cef_keyboard_handler_t>::kWrapperType =
     WT_KEYBOARD_HANDLER;
+#endif

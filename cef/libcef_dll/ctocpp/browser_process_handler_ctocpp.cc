@@ -9,7 +9,7 @@
 // implementations. See the translator.README.txt file in the tools directory
 // for more information.
 //
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "libcef_dll/cpptoc/command_line_cpptoc.h"
 #include "libcef_dll/cpptoc/list_value_cpptoc.h"
 #include "libcef_dll/ctocpp/browser_process_handler_ctocpp.h"
@@ -100,3 +100,4 @@ template<> base::AtomicRefCount CefCToCpp<CefBrowserProcessHandlerCToCpp,
 template<> CefWrapperType CefCToCpp<CefBrowserProcessHandlerCToCpp,
     CefBrowserProcessHandler, cef_browser_process_handler_t>::kWrapperType =
     WT_BROWSER_PROCESS_HANDLER;
+#endif

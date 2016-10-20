@@ -9,7 +9,7 @@
 // implementations. See the translator.README.txt file in the tools directory
 // for more information.
 //
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "libcef_dll/cpptoc/browser_cpptoc.h"
 #include "libcef_dll/cpptoc/process_message_cpptoc.h"
 #include "libcef_dll/ctocpp/client_ctocpp.h"
@@ -275,3 +275,4 @@ template<> base::AtomicRefCount CefCToCpp<CefClientCToCpp, CefClient,
 
 template<> CefWrapperType CefCToCpp<CefClientCToCpp, CefClient,
     cef_client_t>::kWrapperType = WT_CLIENT;
+#endif

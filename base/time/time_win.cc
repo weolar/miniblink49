@@ -41,7 +41,9 @@
 #include <mmsystem.h>
 
 #include "base/basictypes.h"
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "include/base/cef_lock.h"
+#endif
 
 using base::Time;
 using base::TimeDelta;

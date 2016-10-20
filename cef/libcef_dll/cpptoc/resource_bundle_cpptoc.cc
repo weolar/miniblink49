@@ -9,7 +9,7 @@
 // implementations. See the translator.README.txt file in the tools directory
 // for more information.
 //
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "libcef_dll/cpptoc/resource_bundle_cpptoc.h"
 
 
@@ -151,3 +151,4 @@ template<> base::AtomicRefCount CefCppToC<CefResourceBundleCppToC,
 
 template<> CefWrapperType CefCppToC<CefResourceBundleCppToC, CefResourceBundle,
     cef_resource_bundle_t>::kWrapperType = WT_RESOURCE_BUNDLE;
+#endif

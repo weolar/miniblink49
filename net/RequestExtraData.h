@@ -6,9 +6,9 @@
 namespace blink {
 class WebLocalFrame;
 }
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 class CefBrowserHostImpl;
-
+#endif
 namespace net {
 
 class RequestExtraData : public blink::WebURLRequest::ExtraData {
@@ -19,7 +19,9 @@ public:
     }
 
     blink::WebLocalFrame* frame;
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
     CefBrowserHostImpl* browser;
+#endif
 };
 
 } // net

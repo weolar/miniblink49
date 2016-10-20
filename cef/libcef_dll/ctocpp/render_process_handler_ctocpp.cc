@@ -9,7 +9,7 @@
 // implementations. See the translator.README.txt file in the tools directory
 // for more information.
 //
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "libcef_dll/cpptoc/browser_cpptoc.h"
 #include "libcef_dll/cpptoc/domnode_cpptoc.h"
 #include "libcef_dll/cpptoc/frame_cpptoc.h"
@@ -308,3 +308,4 @@ template<> base::AtomicRefCount CefCToCpp<CefRenderProcessHandlerCToCpp,
 template<> CefWrapperType CefCToCpp<CefRenderProcessHandlerCToCpp,
     CefRenderProcessHandler, cef_render_process_handler_t>::kWrapperType =
     WT_RENDER_PROCESS_HANDLER;
+#endif

@@ -9,7 +9,7 @@
 // implementations. See the translator.README.txt file in the tools directory
 // for more information.
 //
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "libcef_dll/cpptoc/menu_model_cpptoc.h"
 
 
@@ -1030,3 +1030,4 @@ template<> base::AtomicRefCount CefCppToC<CefMenuModelCppToC, CefMenuModel,
 
 template<> CefWrapperType CefCppToC<CefMenuModelCppToC, CefMenuModel,
     cef_menu_model_t>::kWrapperType = WT_MENU_MODEL;
+#endif

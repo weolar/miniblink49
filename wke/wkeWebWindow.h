@@ -1,6 +1,8 @@
 #ifndef WKE_WEB_WINDOW_H
 #define WKE_WEB_WINDOW_H
 
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
+
 #include "wkeWebView.h"
 
 //////////////////////////////////////////////////////////////////////////
@@ -71,4 +73,5 @@ protected:
 
 };//namespace wke
 
+#endif
 #endif // #ifndef WKE_WEB_WINDOW_H

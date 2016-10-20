@@ -1,4 +1,4 @@
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "libcef/common/MainDelegate.h"
 
 CefMainDelegate::CefMainDelegate(CefRefPtr<CefApp> application)
@@ -9,3 +9,4 @@ CefMainDelegate::CefMainDelegate(CefRefPtr<CefApp> application)
 
 CefMainDelegate::~CefMainDelegate() {
 }
+#endif

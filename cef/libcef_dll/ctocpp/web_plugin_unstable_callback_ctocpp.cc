@@ -9,7 +9,7 @@
 // implementations. See the translator.README.txt file in the tools directory
 // for more information.
 //
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "libcef_dll/ctocpp/web_plugin_unstable_callback_ctocpp.h"
 
 
@@ -58,3 +58,4 @@ template<> CefWrapperType CefCToCpp<CefWebPluginUnstableCallbackCToCpp,
     CefWebPluginUnstableCallback,
     cef_web_plugin_unstable_callback_t>::kWrapperType =
     WT_WEB_PLUGIN_UNSTABLE_CALLBACK;
+#endif

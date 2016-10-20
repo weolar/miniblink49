@@ -9,7 +9,7 @@
 // implementations. See the translator.README.txt file in the tools directory
 // for more information.
 //
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "libcef_dll/cpptoc/stream_writer_cpptoc.h"
 #include "libcef_dll/ctocpp/write_handler_ctocpp.h"
 
@@ -163,3 +163,4 @@ template<> base::AtomicRefCount CefCppToC<CefStreamWriterCppToC,
 
 template<> CefWrapperType CefCppToC<CefStreamWriterCppToC, CefStreamWriter,
     cef_stream_writer_t>::kWrapperType = WT_STREAM_WRITER;
+#endif

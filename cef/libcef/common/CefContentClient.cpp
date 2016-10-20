@@ -1,4 +1,4 @@
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "third_party/WebKit/Source/wtf/Vector.h"
 #include "third_party/WebKit/Source/wtf/text/WTFString.h"
 
@@ -23,3 +23,4 @@ CefContentClient::~CefContentClient() {
 CefContentClient* CefContentClient::Get() {
     return g_contentClient;
 }
+#endif

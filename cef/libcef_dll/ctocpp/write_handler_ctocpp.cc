@@ -9,7 +9,7 @@
 // implementations. See the translator.README.txt file in the tools directory
 // for more information.
 //
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "libcef_dll/ctocpp/write_handler_ctocpp.h"
 
 
@@ -115,3 +115,4 @@ template<> base::AtomicRefCount CefCToCpp<CefWriteHandlerCToCpp,
 
 template<> CefWrapperType CefCToCpp<CefWriteHandlerCToCpp, CefWriteHandler,
     cef_write_handler_t>::kWrapperType = WT_WRITE_HANDLER;
+#endif

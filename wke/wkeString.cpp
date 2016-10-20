@@ -1,3 +1,4 @@
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
 //////////////////////////////////////////////////////////////////////////
 
 #include <config.h>
@@ -136,3 +137,4 @@ void CString::_free()
 
 };
 
+#endif

@@ -1,6 +1,7 @@
 #ifndef WKE_WEB_VIEW_H
 #define WKE_WEB_VIEW_H
 
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
 //////////////////////////////////////////////////////////////////////////
 
 //cexer: 必须包含在后面，因为其中的 windows.h 会定义 max、min，导致 WebCore 内部的 max、min 出现错乱。
@@ -209,5 +210,5 @@ protected:
 };
 
 };//namespace wke
-
+#endif
 #endif//#ifndef WKE_WEB_VIEW_H

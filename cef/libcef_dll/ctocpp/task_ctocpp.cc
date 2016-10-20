@@ -9,7 +9,7 @@
 // implementations. See the translator.README.txt file in the tools directory
 // for more information.
 //
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "libcef_dll/ctocpp/task_ctocpp.h"
 
 
@@ -45,3 +45,4 @@ template<> base::AtomicRefCount CefCToCpp<CefTaskCToCpp, CefTask,
 
 template<> CefWrapperType CefCToCpp<CefTaskCToCpp, CefTask,
     cef_task_t>::kWrapperType = WT_TASK;
+#endif

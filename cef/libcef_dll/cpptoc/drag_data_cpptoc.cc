@@ -9,7 +9,7 @@
 // implementations. See the translator.README.txt file in the tools directory
 // for more information.
 //
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "libcef_dll/cpptoc/drag_data_cpptoc.h"
 #include "libcef_dll/cpptoc/stream_writer_cpptoc.h"
 #include "libcef_dll/transfer_util.h"
@@ -410,3 +410,4 @@ template<> base::AtomicRefCount CefCppToC<CefDragDataCppToC, CefDragData,
 
 template<> CefWrapperType CefCppToC<CefDragDataCppToC, CefDragData,
     cef_drag_data_t>::kWrapperType = WT_DRAG_DATA;
+#endif
