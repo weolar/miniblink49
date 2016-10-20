@@ -562,10 +562,7 @@ void ImageLoader::updatedHasPendingEvent()
     m_elementIsProtected = m_hasPendingLoadEvent || m_hasPendingErrorEvent;
     if (wasProtected == m_elementIsProtected)
         return;
-
-    WTF::String outstr = String::format("ImageLoader::updatedHasPendingEvent: %p %d\n", this, m_elementIsProtected);
-    OutputDebugStringW(outstr.charactersWithNullTermination().data());
-
+	
     if (m_elementIsProtected) {
         if (m_derefElementTimer.isActive())
             m_derefElementTimer.stop();
@@ -580,9 +577,6 @@ void ImageLoader::updatedHasPendingEvent()
 void ImageLoader::timerFired(Timer<ImageLoader>*)
 {
     m_keepAlive.clear();
-
-    WTF::String outstr = String::format("ImageLoader::timerFired: %p\n", this);
-    OutputDebugStringW(outstr.charactersWithNullTermination().data());
 }
 
 void ImageLoader::dispatchPendingEvent(ImageEventSender* eventSender)
