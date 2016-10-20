@@ -8910,9 +8910,6 @@
     <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8WebSocket.cpp">
       <Filter>gen\blink\bindings\modules\v8</Filter>
     </ClCompile>
-<<<<<<< HEAD
-    <ClCompile Include="stdafx.cpp" />
-=======
     <ClCompile Include="..\..\third_party\WebKit\Source\modules\websockets\InspectorWebSocketEvents.cpp">
       <Filter>third_party\Webkit\Source\modules\websockets</Filter>
     </ClCompile>
@@ -8943,7 +8940,6 @@
     <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8CloseEventInit.cpp">
       <Filter>gen\blink\bindings\modules\v8</Filter>
     </ClCompile>
->>>>>>> refs/remotes/weolar/master
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\public\platform\modules\app_banner\WebAppBannerClient.h">
