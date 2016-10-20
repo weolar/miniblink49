@@ -771,6 +771,7 @@
     <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8StorageQuotaCallback.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8StorageUsageCallback.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8URLPartial.cpp" />
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8WebSocket.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8WindowPartial.cpp" />
     <ClCompile Include="..\..\gen\blink\core\animation\ComputedTimingProperties.cpp" />
     <ClCompile Include="..\..\gen\blink\core\animation\KeyframeEffectOptions.cpp" />
@@ -3622,6 +3623,7 @@
     <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8StorageQuotaCallback.h" />
     <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8StorageUsageCallback.h" />
     <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8URLPartial.h" />
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8WebSocket.h" />
     <ClInclude Include="..\..\gen\blink\core\animation\ComputedTimingProperties.h" />
     <ClInclude Include="..\..\gen\blink\core\animation\KeyframeEffectOptions.h" />
     <ClInclude Include="..\..\gen\blink\core\CSSPropertyNames.h" />
