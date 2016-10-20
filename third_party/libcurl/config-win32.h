@@ -269,8 +269,7 @@
 #define HAVE_STRSTR 1
 
 /* Define if you have the strtoll function. */
-#if defined(__MINGW32__) || defined(__WATCOMC__) || defined(__POCC__) || \
-    (defined(_MSC_VER) && (_MSC_VER >= 1800))
+#if (defined(__MINGW32__) || defined(__WATCOMC__) || defined(__POCC__) || (defined(_MSC_VER) && (_MSC_VER >= 1800))) && USING_VC6RT != 1
 #define HAVE_STRTOLL 1
 #endif
 
