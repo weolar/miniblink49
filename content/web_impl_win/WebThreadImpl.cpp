@@ -13,9 +13,13 @@
 
 #include "WebTimerBase.h"
 #include "WebSchedulerImpl.h"
-#include "wke/wkeJsBindFreeTempObject.h"
 #include "ActivatingTimerCheck.h"
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "libcef/browser/CefContext.h"
+#endif
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
+#include "wke/wkeJsBindFreeTempObject.h"
+#endif
 
 namespace content {
 
@@ -180,8 +184,9 @@ WebThreadImpl::TaskPair::TaskPair(const blink::WebTraceLocation& location, blink
 
 void WebThreadImpl::startTriggerTasks()
 {
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
     wke::freeV8TempObejctOnOneFrameBefore();
-
+#endif
     while (true) {
         ::EnterCriticalSection(&m_taskPairsMutex);
         if (0 == m_taskPairsToPost.size()) {

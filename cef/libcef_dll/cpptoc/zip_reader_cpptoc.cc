@@ -9,7 +9,7 @@
 // implementations. See the translator.README.txt file in the tools directory
 // for more information.
 //
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "libcef_dll/cpptoc/stream_reader_cpptoc.h"
 #include "libcef_dll/cpptoc/zip_reader_cpptoc.h"
 
@@ -259,3 +259,4 @@ template<> base::AtomicRefCount CefCppToC<CefZipReaderCppToC, CefZipReader,
 
 template<> CefWrapperType CefCppToC<CefZipReaderCppToC, CefZipReader,
     cef_zip_reader_t>::kWrapperType = WT_ZIP_READER;
+#endif

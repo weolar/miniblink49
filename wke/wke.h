@@ -10,6 +10,8 @@
 #ifndef WKE_H
 #define WKE_H
 
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
+
 //////////////////////////////////////////////////////////////////////////
 
 #define WIN32_LEAN_AND_MEAN
@@ -486,4 +488,5 @@ WKE_API void jsGC();
 #endif
 
 
+#endif
 #endif//#ifndef WKE_H

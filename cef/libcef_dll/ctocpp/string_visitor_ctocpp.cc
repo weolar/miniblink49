@@ -9,7 +9,7 @@
 // implementations. See the translator.README.txt file in the tools directory
 // for more information.
 //
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "libcef_dll/ctocpp/string_visitor_ctocpp.h"
 
 
@@ -49,3 +49,4 @@ template<> base::AtomicRefCount CefCToCpp<CefStringVisitorCToCpp,
 
 template<> CefWrapperType CefCToCpp<CefStringVisitorCToCpp, CefStringVisitor,
     cef_string_visitor_t>::kWrapperType = WT_STRING_VISITOR;
+#endif

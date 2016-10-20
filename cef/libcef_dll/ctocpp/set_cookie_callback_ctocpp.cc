@@ -9,7 +9,7 @@
 // implementations. See the translator.README.txt file in the tools directory
 // for more information.
 //
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "libcef_dll/ctocpp/set_cookie_callback_ctocpp.h"
 
 
@@ -48,3 +48,4 @@ template<> base::AtomicRefCount CefCToCpp<CefSetCookieCallbackCToCpp,
 template<> CefWrapperType CefCToCpp<CefSetCookieCallbackCToCpp,
     CefSetCookieCallback, cef_set_cookie_callback_t>::kWrapperType =
     WT_SET_COOKIE_CALLBACK;
+#endif

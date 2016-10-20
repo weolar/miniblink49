@@ -1,4 +1,4 @@
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "config.h"
 
 #include "include/cef_response.h"
@@ -234,3 +234,4 @@ bool CefSchemeLoaderImpl::AttachThreadedDataReceiver(blink::WebThreadedDataRecei
     DebugBreak();
     return false;
 }
+#endif

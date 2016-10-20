@@ -11,7 +11,9 @@
 #include "third_party/WebKit/Source/platform/graphics/Color.h"
 #include "third_party/WebKit/public/platform/WebCursorInfo.h"
 #include "third_party/WebKit/Source/web/WebViewImpl.h"
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
 #include "wke/wkeWebView.h"
+#endif
 #include "WebPage.h"
 #include "WebPageImpl.h"
 
@@ -30,16 +32,19 @@ void WebPage::initBlink()
 WebPage::WebPage(void* foreignPtr)
 {
     m_pageImpl = nullptr;
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
     m_wkeWebView = nullptr;
     m_wkeHandler = new wke::CWebViewHandler();
     memset(m_wkeHandler, 0, sizeof(wke::CWebViewHandler));
+#endif
 }
 
 WebPage::~WebPage()
 {
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
     delete m_wkeHandler;
     m_wkeHandler = nullptr;
-
+#endif
     if (m_pageImpl) {
         delete m_pageImpl;
         m_pageImpl = 0;
@@ -295,7 +300,7 @@ void WebPage::setBackgroundColor(COLORREF c) {
     if (m_pageImpl)
         m_pageImpl->m_bdColor = c;
 }
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 CefBrowserHostImpl* WebPage::browser()
 { 
     ASSERT(m_pageImpl);
@@ -310,7 +315,7 @@ void WebPage::setBrowser(CefBrowserHostImpl* browserImpl)
     if (m_pageImpl)
         m_pageImpl->setBrowser(browserImpl);
 }
-
+#endif
 WebViewImpl* WebPage::webViewImpl()
 {
     ASSERT(m_pageImpl);

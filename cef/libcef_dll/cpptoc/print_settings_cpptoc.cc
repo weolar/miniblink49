@@ -9,7 +9,7 @@
 // implementations. See the translator.README.txt file in the tools directory
 // for more information.
 //
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include <algorithm>
 #include "libcef_dll/cpptoc/print_settings_cpptoc.h"
 
@@ -457,3 +457,4 @@ template<> base::AtomicRefCount CefCppToC<CefPrintSettingsCppToC,
 
 template<> CefWrapperType CefCppToC<CefPrintSettingsCppToC, CefPrintSettings,
     cef_print_settings_t>::kWrapperType = WT_PRINT_SETTINGS;
+#endif

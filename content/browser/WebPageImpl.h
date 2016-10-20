@@ -13,18 +13,18 @@
 namespace cc {
 class LayerTreeHost;
 }
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 namespace cef {
 class BrowserHostImpl;
 }
-
+#endif
 namespace blink {
 struct Referrer;
 class WebViewImpl;
 }
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 class CefBrowserHostImpl;
-
+#endif
 namespace content {
 
 class WebFrameClientImpl;
@@ -137,10 +137,10 @@ public:
 	void loadHTMLString(int64 frameId, const blink::WebData& html, const blink::WebURL& baseURL, const blink::WebURL& unreachableURL, bool replace);
 
 	bool initSetting();
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 	CefBrowserHostImpl* browser() const;
 	void setBrowser(CefBrowserHostImpl* browser);
-
+#endif
 	blink::WebFrame* getWebFrameFromFrameId(int64 frameId);
 
 	blink::WebView* createWkeView(blink::WebLocalFrame* creator,
@@ -175,7 +175,9 @@ public:
 
     // May be NULL if the browser has not yet been created or if the browser has
     // been destroyed.
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
     CefBrowserHostImpl* m_browser;
+#endif
     cc::LayerTreeHost* m_layerTreeHost;
 	blink::IntRect m_paintRect;
     skia::PlatformCanvas* m_memoryCanvas;

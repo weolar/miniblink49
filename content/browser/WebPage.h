@@ -8,12 +8,16 @@
 #include "third_party/WebKit/Source/wtf/FastAllocBase.h"
 #include "third_party/WebKit/public/web/WebViewClient.h"
 
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 class CefBrowserHostImpl;
+#endif
 
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
 namespace wke {
 class CWebView;
 struct CWebViewHandler;
 }
+#endif
 
 namespace blink {
 class Page;
@@ -96,10 +100,10 @@ public:
 
     HDC viewDC();
     void paintToBit(void* bits, int pitch);
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
     CefBrowserHostImpl* browser();
     void setBrowser(CefBrowserHostImpl* browserImpl);
-
+#endif
 	blink::WebViewImpl* webViewImpl();
 	blink::WebFrame* mainFrame();
 
@@ -112,7 +116,7 @@ public:
     static const int64 kFocusedFrameId = -2;
     static const int64 kUnspecifiedFrameId = -3;
     static const int64 kInvalidFrameId = -4;
-
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
     void initWkeWebView(wke::CWebView* wkeWebView) 
     {
         ASSERT(!m_wkeWebView);
@@ -120,11 +124,12 @@ public:
     }
     wke::CWebView* wkeWebView() const { return m_wkeWebView; }
     wke::CWebViewHandler& wkeHandler() { return *m_wkeHandler; }
-
+#endif
 protected:
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
     wke::CWebView* m_wkeWebView;
     wke::CWebViewHandler* m_wkeHandler;
-
+#endif
     WebPageImpl* m_pageImpl;
 };
 

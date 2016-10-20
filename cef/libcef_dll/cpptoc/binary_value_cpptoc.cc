@@ -9,7 +9,7 @@
 // implementations. See the translator.README.txt file in the tools directory
 // for more information.
 //
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "libcef_dll/cpptoc/binary_value_cpptoc.h"
 
 
@@ -186,3 +186,4 @@ template<> base::AtomicRefCount CefCppToC<CefBinaryValueCppToC, CefBinaryValue,
 
 template<> CefWrapperType CefCppToC<CefBinaryValueCppToC, CefBinaryValue,
     cef_binary_value_t>::kWrapperType = WT_BINARY_VALUE;
+#endif

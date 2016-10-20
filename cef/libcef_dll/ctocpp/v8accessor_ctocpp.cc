@@ -9,7 +9,7 @@
 // implementations. See the translator.README.txt file in the tools directory
 // for more information.
 //
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "libcef_dll/cpptoc/v8value_cpptoc.h"
 #include "libcef_dll/ctocpp/v8accessor_ctocpp.h"
 
@@ -112,3 +112,4 @@ template<> base::AtomicRefCount CefCToCpp<CefV8AccessorCToCpp, CefV8Accessor,
 
 template<> CefWrapperType CefCToCpp<CefV8AccessorCToCpp, CefV8Accessor,
     cef_v8accessor_t>::kWrapperType = WT_V8ACCESSOR;
+#endif

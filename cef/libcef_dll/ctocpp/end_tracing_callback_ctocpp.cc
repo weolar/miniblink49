@@ -9,7 +9,7 @@
 // implementations. See the translator.README.txt file in the tools directory
 // for more information.
 //
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "libcef_dll/ctocpp/end_tracing_callback_ctocpp.h"
 
 
@@ -54,3 +54,4 @@ template<> base::AtomicRefCount CefCToCpp<CefEndTracingCallbackCToCpp,
 template<> CefWrapperType CefCToCpp<CefEndTracingCallbackCToCpp,
     CefEndTracingCallback, cef_end_tracing_callback_t>::kWrapperType =
     WT_END_TRACING_CALLBACK;
+#endif

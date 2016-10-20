@@ -9,7 +9,7 @@
 // implementations. See the translator.README.txt file in the tools directory
 // for more information.
 //
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "libcef_dll/cpptoc/v8exception_cpptoc.h"
 
 
@@ -163,3 +163,4 @@ template<> base::AtomicRefCount CefCppToC<CefV8ExceptionCppToC, CefV8Exception,
 
 template<> CefWrapperType CefCppToC<CefV8ExceptionCppToC, CefV8Exception,
     cef_v8exception_t>::kWrapperType = WT_V8EXCEPTION;
+#endif

@@ -9,6 +9,7 @@
 // implementations. See the translator.README.txt file in the tools directory
 // for more information.
 //
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "include/cef_version.h"
 
 #include "include/cef_app.h"
@@ -1023,3 +1024,4 @@ CEF_EXPORT void cef_is_web_plugin_unstable(const cef_string_t* path,
       CefWebPluginUnstableCallbackCToCpp::Wrap(callback));
 }
 
+#endif

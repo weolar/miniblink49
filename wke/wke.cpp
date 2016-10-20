@@ -1,3 +1,5 @@
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
+
 //////////////////////////////////////////////////////////////////////////
 #define BUILDING_wke 1
 
@@ -709,3 +711,4 @@ void wkeSetWindowTitleW(wkeWebView webWindow, const wchar_t* title)
         return window->setTitle(title);
 }
 
+#endif

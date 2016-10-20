@@ -9,7 +9,7 @@
 // implementations. See the translator.README.txt file in the tools directory
 // for more information.
 //
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "libcef_dll/cpptoc/web_plugin_info_cpptoc.h"
 #include "libcef_dll/ctocpp/web_plugin_info_visitor_ctocpp.h"
 
@@ -60,3 +60,4 @@ template<> base::AtomicRefCount CefCToCpp<CefWebPluginInfoVisitorCToCpp,
 template<> CefWrapperType CefCToCpp<CefWebPluginInfoVisitorCToCpp,
     CefWebPluginInfoVisitor, cef_web_plugin_info_visitor_t>::kWrapperType =
     WT_WEB_PLUGIN_INFO_VISITOR;
+#endif

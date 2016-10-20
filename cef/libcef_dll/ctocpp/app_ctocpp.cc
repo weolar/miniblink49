@@ -9,7 +9,7 @@
 // implementations. See the translator.README.txt file in the tools directory
 // for more information.
 //
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "libcef_dll/cpptoc/command_line_cpptoc.h"
 #include "libcef_dll/cpptoc/scheme_registrar_cpptoc.h"
 #include "libcef_dll/ctocpp/app_ctocpp.h"
@@ -122,3 +122,4 @@ template<> base::AtomicRefCount CefCToCpp<CefAppCToCpp, CefApp,
 
 template<> CefWrapperType CefCToCpp<CefAppCToCpp, CefApp,
     cef_app_t>::kWrapperType = WT_APP;
+#endif

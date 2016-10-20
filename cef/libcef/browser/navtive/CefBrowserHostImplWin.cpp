@@ -1,4 +1,4 @@
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "include/cef_browser.h"
 #include "include/cef_app.h"
 #include "include/cef_client.h"
@@ -217,3 +217,4 @@ void CefBrowserHostImpl::PlatformSetFocus(bool focus) {
     if (m_webPage->getHWND())
         ::SetFocus(m_webPage->getHWND());
 }
+#endif

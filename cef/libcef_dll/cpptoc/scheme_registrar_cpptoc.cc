@@ -9,7 +9,7 @@
 // implementations. See the translator.README.txt file in the tools directory
 // for more information.
 //
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "libcef_dll/cpptoc/scheme_registrar_cpptoc.h"
 
 
@@ -65,3 +65,4 @@ template<> base::AtomicRefCount CefCppToC<CefSchemeRegistrarCppToC,
 template<> CefWrapperType CefCppToC<CefSchemeRegistrarCppToC,
     CefSchemeRegistrar, cef_scheme_registrar_t>::kWrapperType =
     WT_SCHEME_REGISTRAR;
+#endif

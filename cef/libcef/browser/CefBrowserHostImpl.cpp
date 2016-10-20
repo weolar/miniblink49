@@ -1,4 +1,4 @@
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "wtf/text/WTFStringUtil.h"
 
 #include "third_party/WebKit/public/web/WebFrame.h"
@@ -800,3 +800,4 @@ void CefBrowserHostImpl::OnAddressChange(CefRefPtr<CefFrame> frame, const CefStr
         }
     }
 }
+#endif

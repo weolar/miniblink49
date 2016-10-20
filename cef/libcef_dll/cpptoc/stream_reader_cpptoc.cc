@@ -9,7 +9,7 @@
 // implementations. See the translator.README.txt file in the tools directory
 // for more information.
 //
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "libcef_dll/cpptoc/stream_reader_cpptoc.h"
 #include "libcef_dll/ctocpp/read_handler_ctocpp.h"
 
@@ -181,3 +181,4 @@ template<> base::AtomicRefCount CefCppToC<CefStreamReaderCppToC,
 
 template<> CefWrapperType CefCppToC<CefStreamReaderCppToC, CefStreamReader,
     cef_stream_reader_t>::kWrapperType = WT_STREAM_READER;
+#endif

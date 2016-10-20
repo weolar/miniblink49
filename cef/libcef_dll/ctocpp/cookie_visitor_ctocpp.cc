@@ -9,7 +9,7 @@
 // implementations. See the translator.README.txt file in the tools directory
 // for more information.
 //
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "libcef_dll/ctocpp/cookie_visitor_ctocpp.h"
 
 
@@ -60,3 +60,5 @@ template<> base::AtomicRefCount CefCToCpp<CefCookieVisitorCToCpp,
 
 template<> CefWrapperType CefCToCpp<CefCookieVisitorCToCpp, CefCookieVisitor,
     cef_cookie_visitor_t>::kWrapperType = WT_COOKIE_VISITOR;
+#endif
+

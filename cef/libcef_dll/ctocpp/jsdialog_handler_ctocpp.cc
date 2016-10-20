@@ -9,7 +9,7 @@
 // implementations. See the translator.README.txt file in the tools directory
 // for more information.
 //
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "libcef_dll/cpptoc/browser_cpptoc.h"
 #include "libcef_dll/cpptoc/jsdialog_callback_cpptoc.h"
 #include "libcef_dll/ctocpp/jsdialog_handler_ctocpp.h"
@@ -146,3 +146,4 @@ template<> base::AtomicRefCount CefCToCpp<CefJSDialogHandlerCToCpp,
 template<> CefWrapperType CefCToCpp<CefJSDialogHandlerCToCpp,
     CefJSDialogHandler, cef_jsdialog_handler_t>::kWrapperType =
     WT_JSDIALOG_HANDLER;
+#endif

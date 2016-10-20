@@ -9,7 +9,7 @@
 // implementations. See the translator.README.txt file in the tools directory
 // for more information.
 //
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "libcef_dll/cpptoc/jsdialog_callback_cpptoc.h"
 
 
@@ -56,3 +56,4 @@ template<> base::AtomicRefCount CefCppToC<CefJSDialogCallbackCppToC,
 template<> CefWrapperType CefCppToC<CefJSDialogCallbackCppToC,
     CefJSDialogCallback, cef_jsdialog_callback_t>::kWrapperType =
     WT_JSDIALOG_CALLBACK;
+#endif

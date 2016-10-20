@@ -9,7 +9,7 @@
 // implementations. See the translator.README.txt file in the tools directory
 // for more information.
 //
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "libcef_dll/cpptoc/browser_cpptoc.h"
 #include "libcef_dll/cpptoc/file_dialog_callback_cpptoc.h"
 #include "libcef_dll/ctocpp/dialog_handler_ctocpp.h"
@@ -87,3 +87,5 @@ template<> base::AtomicRefCount CefCToCpp<CefDialogHandlerCToCpp,
 
 template<> CefWrapperType CefCToCpp<CefDialogHandlerCToCpp, CefDialogHandler,
     cef_dialog_handler_t>::kWrapperType = WT_DIALOG_HANDLER;
+#endif
+

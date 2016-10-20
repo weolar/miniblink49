@@ -1,4 +1,4 @@
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 
 #include "libcef/browser/CefFrameHostImpl.h"
 
@@ -296,3 +296,4 @@ void CefFrameHostImpl::SendCommand(const WTF::String& commandName, Cef_Response_
 }
 
 
+#endif

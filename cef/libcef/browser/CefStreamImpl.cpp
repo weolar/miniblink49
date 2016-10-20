@@ -1,7 +1,7 @@
 // Copyright (c) 2008 The Chromium Embedded Framework Authors. All rights
 // reserved. Use of this source code is governed by a BSD-style license that
 // can be found in the LICENSE file.
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "libcef/browser/CefStreamImpl.h"
 #include <stdlib.h>
 // #include "base/files/file_util.h"
@@ -337,3 +337,4 @@ size_t CefBytesWriter::Grow(size_t size) {
 
     return rv;
 }
+#endif
