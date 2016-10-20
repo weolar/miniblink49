@@ -9,7 +9,7 @@
 // implementations. See the translator.README.txt file in the tools directory
 // for more information.
 //
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "libcef_dll/ctocpp/test/translator_test_handler_child_ctocpp.h"
 
 
@@ -68,3 +68,4 @@ template<> CefWrapperType CefCToCpp<CefTranslatorTestHandlerChildCToCpp,
     CefTranslatorTestHandlerChild,
     cef_translator_test_handler_child_t>::kWrapperType =
     WT_TRANSLATOR_TEST_HANDLER_CHILD;
+#endif

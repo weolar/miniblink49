@@ -300,7 +300,7 @@ void WebPage::setBackgroundColor(COLORREF c) {
     if (m_pageImpl)
         m_pageImpl->m_bdColor = c;
 }
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 CefBrowserHostImpl* WebPage::browser()
 { 
     ASSERT(m_pageImpl);
@@ -315,7 +315,7 @@ void WebPage::setBrowser(CefBrowserHostImpl* browserImpl)
     if (m_pageImpl)
         m_pageImpl->setBrowser(browserImpl);
 }
-
+#endif
 WebViewImpl* WebPage::webViewImpl()
 {
     ASSERT(m_pageImpl);

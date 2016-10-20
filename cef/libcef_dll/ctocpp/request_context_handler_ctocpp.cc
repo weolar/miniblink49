@@ -9,7 +9,7 @@
 // implementations. See the translator.README.txt file in the tools directory
 // for more information.
 //
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "libcef_dll/cpptoc/cookie_manager_cpptoc.h"
 #include "libcef_dll/cpptoc/web_plugin_info_cpptoc.h"
 #include "libcef_dll/ctocpp/request_context_handler_ctocpp.h"
@@ -88,3 +88,4 @@ template<> base::AtomicRefCount CefCToCpp<CefRequestContextHandlerCToCpp,
 template<> CefWrapperType CefCToCpp<CefRequestContextHandlerCToCpp,
     CefRequestContextHandler, cef_request_context_handler_t>::kWrapperType =
     WT_REQUEST_CONTEXT_HANDLER;
+#endif

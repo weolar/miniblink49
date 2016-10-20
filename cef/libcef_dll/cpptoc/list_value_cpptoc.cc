@@ -9,7 +9,7 @@
 // implementations. See the translator.README.txt file in the tools directory
 // for more information.
 //
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "libcef_dll/cpptoc/binary_value_cpptoc.h"
 #include "libcef_dll/cpptoc/dictionary_value_cpptoc.h"
 #include "libcef_dll/cpptoc/list_value_cpptoc.h"
@@ -628,3 +628,4 @@ template<> base::AtomicRefCount CefCppToC<CefListValueCppToC, CefListValue,
 
 template<> CefWrapperType CefCppToC<CefListValueCppToC, CefListValue,
     cef_list_value_t>::kWrapperType = WT_LIST_VALUE;
+#endif

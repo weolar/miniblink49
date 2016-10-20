@@ -9,7 +9,7 @@
 // implementations. See the translator.README.txt file in the tools directory
 // for more information.
 //
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "libcef_dll/cpptoc/browser_cpptoc.h"
 #include "libcef_dll/cpptoc/frame_cpptoc.h"
 #include "libcef_dll/cpptoc/request_cpptoc.h"
@@ -410,3 +410,4 @@ template<> base::AtomicRefCount CefCppToC<CefFrameCppToC, CefFrame,
 
 template<> CefWrapperType CefCppToC<CefFrameCppToC, CefFrame,
     cef_frame_t>::kWrapperType = WT_FRAME;
+#endif

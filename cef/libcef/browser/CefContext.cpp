@@ -1,4 +1,4 @@
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "libcef/browser/CefContext.h"
 
 #include <process.h>
@@ -399,3 +399,4 @@ void CefContext::UnregisterBrowser(CefBrowserHostImpl* browser) {
     m_browserList.remove(browser);
 	::LeaveCriticalSection(&m_browserListMutex);
 }
+#endif

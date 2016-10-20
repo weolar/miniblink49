@@ -9,7 +9,7 @@
 // implementations. See the translator.README.txt file in the tools directory
 // for more information.
 //
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "libcef_dll/ctocpp/response_filter_ctocpp.h"
 
 
@@ -77,3 +77,4 @@ template<> base::AtomicRefCount CefCToCpp<CefResponseFilterCToCpp,
 
 template<> CefWrapperType CefCToCpp<CefResponseFilterCToCpp, CefResponseFilter,
     cef_response_filter_t>::kWrapperType = WT_RESPONSE_FILTER;
+#endif

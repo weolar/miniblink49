@@ -9,7 +9,7 @@
 // implementations. See the translator.README.txt file in the tools directory
 // for more information.
 //
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "libcef_dll/cpptoc/auth_callback_cpptoc.h"
 #include "libcef_dll/cpptoc/browser_cpptoc.h"
 #include "libcef_dll/cpptoc/frame_cpptoc.h"
@@ -525,3 +525,4 @@ template<> base::AtomicRefCount CefCToCpp<CefRequestHandlerCToCpp,
 
 template<> CefWrapperType CefCToCpp<CefRequestHandlerCToCpp, CefRequestHandler,
     cef_request_handler_t>::kWrapperType = WT_REQUEST_HANDLER;
+#endif

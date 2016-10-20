@@ -9,7 +9,7 @@
 // implementations. See the translator.README.txt file in the tools directory
 // for more information.
 //
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "libcef_dll/cpptoc/domdocument_cpptoc.h"
 #include "libcef_dll/ctocpp/domvisitor_ctocpp.h"
 
@@ -52,3 +52,4 @@ template<> base::AtomicRefCount CefCToCpp<CefDOMVisitorCToCpp, CefDOMVisitor,
 
 template<> CefWrapperType CefCToCpp<CefDOMVisitorCToCpp, CefDOMVisitor,
     cef_domvisitor_t>::kWrapperType = WT_DOMVISITOR;
+#endif

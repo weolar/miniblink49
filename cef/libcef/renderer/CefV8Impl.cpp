@@ -4,6 +4,7 @@
 
 // MSVC++ requires this to be set before any other includes to get M_PI.
 // Otherwise there will be compile errors in wtf/MathExtras.h.
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #define _USE_MATH_DEFINES
 
 #include "config.h"
@@ -2191,3 +2192,4 @@ bool CefV8StackFrameImpl::IsEval() {
 bool CefV8StackFrameImpl::IsConstructor() {
     return is_constructor_;
 }
+#endif

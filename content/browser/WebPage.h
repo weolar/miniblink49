@@ -8,7 +8,9 @@
 #include "third_party/WebKit/Source/wtf/FastAllocBase.h"
 #include "third_party/WebKit/public/web/WebViewClient.h"
 
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 class CefBrowserHostImpl;
+#endif
 
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
 namespace wke {
@@ -98,10 +100,10 @@ public:
 
     HDC viewDC();
     void paintToBit(void* bits, int pitch);
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
     CefBrowserHostImpl* browser();
     void setBrowser(CefBrowserHostImpl* browserImpl);
-
+#endif
 	blink::WebViewImpl* webViewImpl();
 	blink::WebFrame* mainFrame();
 

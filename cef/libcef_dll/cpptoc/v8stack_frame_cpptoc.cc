@@ -9,7 +9,7 @@
 // implementations. See the translator.README.txt file in the tools directory
 // for more information.
 //
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "libcef_dll/cpptoc/v8stack_frame_cpptoc.h"
 
 
@@ -166,3 +166,4 @@ template<> base::AtomicRefCount CefCppToC<CefV8StackFrameCppToC,
 
 template<> CefWrapperType CefCppToC<CefV8StackFrameCppToC, CefV8StackFrame,
     cef_v8stack_frame_t>::kWrapperType = WT_V8STACK_FRAME;
+#endif

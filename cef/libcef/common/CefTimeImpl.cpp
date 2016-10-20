@@ -1,7 +1,7 @@
 // Copyright (c) 2012 The Chromium Embedded Framework Authors. All rights
 // reserved. Use of this source code is governed by a BSD-style license that
 // can be found in the LICENSE file.
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "libcef/common/CefTimeUtil.h"
 
 void cef_time_to_basetime(const cef_time_t& cef_time, base::Time& time) {
@@ -91,3 +91,4 @@ CEF_EXPORT int cef_time_delta(const cef_time_t* cef_time1,
   *delta = time_delta.InMilliseconds();
   return 1;
 }
+#endif

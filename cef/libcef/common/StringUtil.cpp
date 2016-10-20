@@ -1,4 +1,4 @@
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "libcef/common/StringUtil.h"
 
 namespace cef {
@@ -60,3 +60,4 @@ void WTFStringToCefString(const WTF::String& src, CefString& output) {
 }
 
 } // cef
+#endif

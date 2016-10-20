@@ -9,7 +9,7 @@
 // implementations. See the translator.README.txt file in the tools directory
 // for more information.
 //
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "libcef_dll/cpptoc/geolocation_callback_cpptoc.h"
 
 
@@ -54,3 +54,4 @@ template<> base::AtomicRefCount CefCppToC<CefGeolocationCallbackCppToC,
 template<> CefWrapperType CefCppToC<CefGeolocationCallbackCppToC,
     CefGeolocationCallback, cef_geolocation_callback_t>::kWrapperType =
     WT_GEOLOCATION_CALLBACK;
+#endif

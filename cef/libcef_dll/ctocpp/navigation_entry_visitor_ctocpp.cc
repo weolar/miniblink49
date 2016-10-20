@@ -9,7 +9,7 @@
 // implementations. See the translator.README.txt file in the tools directory
 // for more information.
 //
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "libcef_dll/cpptoc/navigation_entry_cpptoc.h"
 #include "libcef_dll/ctocpp/navigation_entry_visitor_ctocpp.h"
 
@@ -62,3 +62,4 @@ template<> base::AtomicRefCount CefCToCpp<CefNavigationEntryVisitorCToCpp,
 template<> CefWrapperType CefCToCpp<CefNavigationEntryVisitorCToCpp,
     CefNavigationEntryVisitor, cef_navigation_entry_visitor_t>::kWrapperType =
     WT_NAVIGATION_ENTRY_VISITOR;
+#endif

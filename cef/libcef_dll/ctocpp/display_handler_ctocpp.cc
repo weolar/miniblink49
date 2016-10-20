@@ -9,7 +9,7 @@
 // implementations. See the translator.README.txt file in the tools directory
 // for more information.
 //
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "libcef_dll/cpptoc/browser_cpptoc.h"
 #include "libcef_dll/cpptoc/frame_cpptoc.h"
 #include "libcef_dll/ctocpp/display_handler_ctocpp.h"
@@ -203,3 +203,5 @@ template<> base::AtomicRefCount CefCToCpp<CefDisplayHandlerCToCpp,
 
 template<> CefWrapperType CefCToCpp<CefDisplayHandlerCToCpp, CefDisplayHandler,
     cef_display_handler_t>::kWrapperType = WT_DISPLAY_HANDLER;
+#endif
+

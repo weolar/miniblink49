@@ -1,7 +1,7 @@
 // Copyright (c) 2012 The Chromium Embedded Framework Authors. All rights
 // reserved. Use of this source code is governed by a BSD-style license that
 // can be found in the LICENSE file.
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "libcef/common/CefResponseImpl.h"
 #include "include/base/cef_logging.h"
 #include <string>
@@ -235,3 +235,4 @@ void CefResponseImpl::SetReadOnly(bool read_only) {
     MutexLocker lockScope(m_lock);
     m_readOnly = read_only;
 }
+#endif

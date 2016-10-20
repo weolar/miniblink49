@@ -1,4 +1,4 @@
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "third_party/WebKit/public/platform/WebURLRequest.h"
 #include "third_party/WebKit/public/platform/WebHTTPHeaderVisitor.h"
 #include "third_party/WebKit/Source/wtf/text/WTFString.h"
@@ -685,3 +685,4 @@ void CefPostDataElementImpl::Cleanup() {
     type_ = PDE_TYPE_EMPTY;
     memset(&data_, 0, sizeof(data_));
 }
+#endif

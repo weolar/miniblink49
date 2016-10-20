@@ -1,7 +1,7 @@
 // Copyright (c) 2009 The Chromium Embedded Framework Authors. All rights
 // reserved. Use of this source code is governed by a BSD-style license that
 // can be found in the LICENSE file.
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include <vector>
 #include "include/internal/cef_string_list.h"
 #include "wtf/Vector.h"
@@ -55,3 +55,4 @@ CEF_EXPORT cef_string_list_t cef_string_list_copy(cef_string_list_t list) {
     StringList* impl = reinterpret_cast<StringList*>(list);
     return new StringList(*impl);
 }
+#endif

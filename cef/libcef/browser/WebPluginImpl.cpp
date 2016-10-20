@@ -1,3 +1,4 @@
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "cef/libcef/browser/WebPluginImpl.h"
 
 void CefVisitWebPluginInfo(CefRefPtr<CefWebPluginInfoVisitor> visitor) {
@@ -31,3 +32,4 @@ void CefForceWebPluginShutdown(const CefString& path) {
 void CefRegisterWebPluginCrash(const CefString& path) {
     DebugBreak();
 }
+#endif

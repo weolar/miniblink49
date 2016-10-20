@@ -9,7 +9,7 @@
 // implementations. See the translator.README.txt file in the tools directory
 // for more information.
 //
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "libcef_dll/cpptoc/print_job_callback_cpptoc.h"
 
 
@@ -53,3 +53,4 @@ template<> base::AtomicRefCount CefCppToC<CefPrintJobCallbackCppToC,
 template<> CefWrapperType CefCppToC<CefPrintJobCallbackCppToC,
     CefPrintJobCallback, cef_print_job_callback_t>::kWrapperType =
     WT_PRINT_JOB_CALLBACK;
+#endif

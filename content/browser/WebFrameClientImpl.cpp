@@ -7,6 +7,7 @@
 #include "content/browser/WebPage.h"
 #include "content/web_impl_win/WebCookieJarCurlImpl.h"
 #include "content/web_impl_win/WebMediaPlayerImpl.h"
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "cef/include/capi/cef_base_capi.h"
 #include "cef/include/capi/cef_browser_capi.h"
 #include "cef/include/capi/cef_client_capi.h"
@@ -21,6 +22,7 @@
 #include "cef/libcef/browser/CefFrameHostImpl.h"
 #include "cef/libcef/browser/CefBrowserHostImpl.h"
 #include "cef/libcef/renderer/CefV8Impl.h"
+#endif
 #include "third_party/WebKit/Source/platform/Language.h"
 #include "third_party/WebKit/Source/core/frame/Settings.h"
 #include "third_party/WebKit/Source/core/page/Page.h"
@@ -81,11 +83,11 @@ WebFrame* WebFrameClientImpl::createChildFrame(WebLocalFrame* parent, WebTreeSco
 {
     WebLocalFrameImpl* webLocalFrameImpl = WebLocalFrameImpl::create(WebTreeScopeType::Document, this);
     parent->appendChild(webLocalFrameImpl);
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 	CefBrowserHostImpl* browser = m_webPage->browser();
 	if (browser)
 		browser->OnFrameIdentified(webLocalFrameImpl, parent);
-	
+#endif
     if (WTF::kNotFound == m_unusedFrames.find(webLocalFrameImpl))
         m_unusedFrames.append(webLocalFrameImpl);
 
@@ -135,22 +137,24 @@ void WebFrameClientImpl::onLoadingStateChange(bool isLoading, bool toDifferentDo
 
     if (!m_webPage)
         return;
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
     CefBrowserHostImpl* browser = m_webPage->browser();
     if (!browser || !browser->client().get())
         return;
 
 	browser->OnLoadingStateChange(isLoading, toDifferentDocument);
-
+#endif
     WebViewImpl* webview = m_webPage->webViewImpl();
     if (!webview || !webview->client())
         return;
 
     bool canGoBack = webview->client()->historyForwardListCount() > 0;
     bool canGoForward = webview->client()->historyBackListCount() > 0;
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
     CefRefPtr<CefLoadHandler> handler = browser->client()->GetLoadHandler();
     if (handler.get())
         handler->OnLoadingStateChange(browser, isLoading, canGoBack, canGoForward);
+#endif
 }
 
 void WebFrameClientImpl::didStartLoading(bool toDifferentDocument)
@@ -175,18 +179,22 @@ void WebFrameClientImpl::didCreateDataSource(WebLocalFrame*, WebDataSource*) { }
 
 void WebFrameClientImpl::didStartProvisionalLoad(WebLocalFrame* localFrame, double triggeringEventTime)
 {
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 	CefBrowserHostImpl* browser = m_webPage->browser();
 	if (browser)
 		browser->DidStartProvisionalLoad(localFrame, triggeringEventTime);
+#endif
 }
 
 void WebFrameClientImpl::didReceiveServerRedirectForProvisionalLoad(WebLocalFrame*) { }
 
 void WebFrameClientImpl::didFailProvisionalLoad(WebLocalFrame* frame, const WebURLError& error, WebHistoryCommitType type)
 {
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 	CefBrowserHostImpl* browser = m_webPage->browser();
 	if (browser)
 		browser->DidFailProvisionalLoad(frame, error, type);
+#endif
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
 	m_loadFailed = true;
 
@@ -206,10 +214,12 @@ void WebFrameClientImpl::didFailProvisionalLoad(WebLocalFrame* frame, const WebU
 
 void WebFrameClientImpl::didCommitProvisionalLoad(WebLocalFrame* frame, const WebHistoryItem& history, WebHistoryCommitType type)
 {
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
     CefBrowserHostImpl* browser = m_webPage->browser();
     if (!browser)
         return;
     browser->DidCommitProvisionalLoadForFrame(frame, history);
+#endif
 }
 
 void WebFrameClientImpl::didCreateNewDocument(WebLocalFrame* frame) { }
@@ -252,9 +262,11 @@ void WebFrameClientImpl::didHandleOnloadEvents(WebLocalFrame*) { }
 
 void WebFrameClientImpl::didFailLoad(WebLocalFrame* frame, const WebURLError& error, WebHistoryCommitType type)
 {
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 	CefBrowserHostImpl* browser = m_webPage->browser();
 	if (browser)
 		browser->DidFailLoad(frame, error, type);
+#endif
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
 	m_loadFailed = true;
     wke::CWebViewHandler& handler = m_webPage->wkeHandler();
@@ -273,9 +285,11 @@ void WebFrameClientImpl::didFailLoad(WebLocalFrame* frame, const WebURLError& er
 
 void WebFrameClientImpl::didFinishLoad(WebLocalFrame* frame)
 {
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
     CefBrowserHostImpl* browser = m_webPage->browser();
     if (browser)
         browser->DidFinishLoad(frame);
+#endif
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
 	m_loaded = true;
     wke::CWebViewHandler& handler = m_webPage->wkeHandler();
@@ -306,6 +320,7 @@ void WebFrameClientImpl::dispatchLoad() { }
 
 WebNavigationPolicy WebFrameClientImpl::decidePolicyForNavigation(const NavigationPolicyInfo& info)
 {
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
     if (!m_webPage || !m_webPage->browser() || !info.frame)
         return info.defaultPolicy;
 
@@ -353,7 +368,7 @@ WebNavigationPolicy WebFrameClientImpl::decidePolicyForNavigation(const Navigati
     if (!handler->OnBeforeNavigation((CefBrowser*)m_webPage->browser(), cefFrame.get(),
         requestPtr.get(), navigation_type, info.isRedirect))
         return info.defaultPolicy;
-
+#endif
     return WebNavigationPolicyIgnore;
 }
 
@@ -366,7 +381,9 @@ void WebFrameClientImpl::willSendRequest(WebLocalFrame* webFrame, unsigned ident
 {
     net::RequestExtraData* requestExtraData = new net::RequestExtraData();
     requestExtraData->frame = webFrame;
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
     requestExtraData->browser = m_webPage->browser();
+#endif
     request.setExtraData(requestExtraData);
 
 //     String headerFieldValue = blink::defaultLanguage();
@@ -409,6 +426,7 @@ void WebFrameClientImpl::didCreateScriptContext(WebLocalFrame* frame, v8::Local<
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
     wke::onCreateGlobalObject(this, frame, context, extensionGroup, worldId);
 #endif
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
     if (!CefContentClient::Get())
         return;
 
@@ -423,6 +441,7 @@ void WebFrameClientImpl::didCreateScriptContext(WebLocalFrame* frame, v8::Local<
     CefRefPtr<CefFrame> cefFrame = m_webPage->browser()->GetOrCreateFrame(frame, content::WebPage::kUnspecifiedFrameId, blink::KURL());
     CefRefPtr<CefV8Context> cefV8Context = new CefV8ContextImpl(context->GetIsolate(), context);
     handler->OnContextCreated((CefBrowser*)m_webPage->browser(), cefFrame.get(), cefV8Context);
+#endif
 }
 
 void WebFrameClientImpl::willReleaseScriptContext(WebLocalFrame* frame, v8::Local<v8::Context> context, int worldId)
@@ -430,6 +449,7 @@ void WebFrameClientImpl::willReleaseScriptContext(WebLocalFrame* frame, v8::Loca
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
     wke::onReleaseGlobalObject(this, frame, context, worldId);
 #endif
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
     if (!CefContentClient::Get())
         return;
 
@@ -444,6 +464,7 @@ void WebFrameClientImpl::willReleaseScriptContext(WebLocalFrame* frame, v8::Loca
     CefRefPtr<CefFrame> cefFrame = m_webPage->browser()->GetOrCreateFrame(frame, content::WebPage::kUnspecifiedFrameId, blink::KURL());
     CefRefPtr<CefV8Context> cefV8Context = new CefV8ContextImpl(context->GetIsolate(), context);
     handler->OnContextReleased((CefBrowser*)m_webPage->browser(), cefFrame.get(), cefV8Context);
+#endif
 }
 
 } // namespace blink

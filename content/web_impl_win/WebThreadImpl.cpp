@@ -14,7 +14,9 @@
 #include "WebTimerBase.h"
 #include "WebSchedulerImpl.h"
 #include "ActivatingTimerCheck.h"
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "libcef/browser/CefContext.h"
+#endif
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
 #include "wke/wkeJsBindFreeTempObject.h"
 #endif

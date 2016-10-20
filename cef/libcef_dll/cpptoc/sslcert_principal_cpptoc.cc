@@ -9,7 +9,7 @@
 // implementations. See the translator.README.txt file in the tools directory
 // for more information.
 //
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "libcef_dll/cpptoc/sslcert_principal_cpptoc.h"
 #include "libcef_dll/transfer_util.h"
 
@@ -229,3 +229,4 @@ template<> base::AtomicRefCount CefCppToC<CefSSLCertPrincipalCppToC,
 template<> CefWrapperType CefCppToC<CefSSLCertPrincipalCppToC,
     CefSSLCertPrincipal, cef_sslcert_principal_t>::kWrapperType =
     WT_SSLCERT_PRINCIPAL;
+#endif

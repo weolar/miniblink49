@@ -61,14 +61,14 @@
 
 #include "cc/trees/LayerTreeHost.h"
 
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "cef/libcef/browser/CefBrowserHostImpl.h"
 #include "cef/libcef/browser/CefBrowserInfoManager.h"
 #include "cef/libcef/browser/RequestImpl.h"
 #include "cef/libcef/browser/ThreadUtil.h" // TODO
 #include "cef/libcef/common/CefContentClient.h"
 #include "cef/include/capi/cef_render_process_handler_capi.h"
-
+#endif
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
 #include "wke/wkeWebView.h"
 #include "wke/wkeJsBindFreeTempObject.h"
@@ -145,7 +145,9 @@ WebPageImpl::WebPageImpl()
     m_postpaintMessageCount = 0;
     m_hasResize = false;
     m_postMouseLeave = false;
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
     m_browser = nullptr;
+#endif
     m_postCloseWidgetSoonMessage = false;
     
     m_layerTreeHost = new cc::LayerTreeHost(this);
@@ -163,7 +165,7 @@ WebPageImpl::WebPageImpl()
     m_platformEventHandler = new PlatformEventHandler(m_webViewImpl, m_webViewImpl);
 
     m_layerTreeHost->setWebGestureCurveTarget(m_webViewImpl);
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
     if (CefContentClient::Get()) {
         CefRefPtr<CefApp> application = CefContentClient::Get()->rendererApplication();
         if (!application.get())
@@ -177,6 +179,7 @@ WebPageImpl::WebPageImpl()
         //     handler->OnRenderThreadCreated(extraInfo);
         handler->OnWebKitInitialized();
     }
+#endif
 }
 
 WebPageImpl::~WebPageImpl()
@@ -261,7 +264,7 @@ public:
 private:
     cc::LayerTreeHost* m_host;
 };
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 WebView* WebPageImpl::createCefView(WebLocalFrame* creator,
     const WebURLRequest& request,
     const WebWindowFeatures& features,
@@ -277,6 +280,7 @@ WebView* WebPageImpl::createCefView(WebLocalFrame* creator,
         return nullptr;
     return browserHostImpl->webPage()->webViewImpl();
 }
+#endif
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
 static WebView* createWkeViewDefault(HWND parent, const WebString& name, const WTF::CString& url)
 {
@@ -345,7 +349,11 @@ WebView* WebPageImpl::createView(WebLocalFrame* creator,
     if (m_pagePtr->wkeWebView())
         return createWkeView(creator, request, features, name, policy, suppressOpener);
 #endif
-    return createCefView(creator, request, features, name, policy, suppressOpener);  
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
+    return createCefView(creator, request, features, name, policy, suppressOpener);
+#else
+	return nullptr;
+#endif
 }
 
 void WebPageImpl::init(WebPage* pagePtr, HWND hWnd)
@@ -708,9 +716,11 @@ void WebPageImpl::doClose()
 void WebPageImpl::closeWidgetSoon()
 {
 	ASSERT(isMainThread());
-    if (m_browser && !m_postCloseWidgetSoonMessage)
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
+	if (m_browser && !m_postCloseWidgetSoonMessage)
         blink::Platform::current()->currentThread()->postTask(FROM_HERE, WTF::bind(&CefBrowserHostImpl::CloseBrowser, m_browser, true));
-    m_postCloseWidgetSoonMessage = true;
+#endif
+	m_postCloseWidgetSoonMessage = true;
 }
 
 void WebPageImpl::showDebugNodeData()
@@ -764,7 +774,7 @@ void WebPageImpl::setNeedsCommitAndNotLayout()
 	if (m_needsCommit)
 		return;
 	m_needsCommit = true;
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 	if (m_browser) {
         m_browser->SetNeedHeartbeat();
 	} else {
@@ -772,6 +782,7 @@ void WebPageImpl::setNeedsCommitAndNotLayout()
         WebThreadImpl* threadImpl = (WebThreadImpl*)platfrom->mainThread();
         threadImpl->postTask(FROM_HERE, new CommitTask(this));
     }
+#endif
 }
 
 void WebPageImpl::setNeedsCommit()
@@ -783,8 +794,10 @@ void WebPageImpl::setNeedsCommit()
 void WebPageImpl::clearNeedsCommit()
 {
     m_needsCommit = false;
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
     if (m_browser)
         m_browser->ClearNeedHeartbeat();
+#endif
 }
 
 void WebPageImpl::beginMainFrame()
@@ -1326,7 +1339,7 @@ void WebPageImpl::loadHTMLString(int64 frameId, const WebData& html, const WebUR
     AutoRecordActions autoRecordActions(m_layerTreeHost);
     webFrame->loadHTMLString(html, baseURL, unreachableURL, replace);
 }
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 CefBrowserHostImpl* WebPageImpl::browser() const 
 {
     return m_browser;
@@ -1336,7 +1349,7 @@ void WebPageImpl::setBrowser(CefBrowserHostImpl* browser)
 {
     m_browser = browser;
 }
-
+#endif
 WebFrame* WebPageImpl::getWebFrameFromFrameId(int64 frameId)
 {
     blink::WebFrame* webFrame = nullptr;

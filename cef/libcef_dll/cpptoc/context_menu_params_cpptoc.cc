@@ -9,7 +9,7 @@
 // implementations. See the translator.README.txt file in the tools directory
 // for more information.
 //
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "libcef_dll/cpptoc/context_menu_params_cpptoc.h"
 #include "libcef_dll/transfer_util.h"
 
@@ -385,3 +385,4 @@ template<> base::AtomicRefCount CefCppToC<CefContextMenuParamsCppToC,
 template<> CefWrapperType CefCppToC<CefContextMenuParamsCppToC,
     CefContextMenuParams, cef_context_menu_params_t>::kWrapperType =
     WT_CONTEXT_MENU_PARAMS;
+#endif
