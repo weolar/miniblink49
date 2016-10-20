@@ -1,3 +1,4 @@
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
 #define BUILDING_wke
 
 #include "wkeWebWindow.h"
@@ -736,3 +737,5 @@ void CWebWindow::setTitle(const utf8* text)
 } // namespace wke
 
 ////////////////////////////////////////////////////////////////////////////
+
+#endif

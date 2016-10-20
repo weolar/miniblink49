@@ -69,10 +69,11 @@
 #include "cef/libcef/common/CefContentClient.h"
 #include "cef/include/capi/cef_render_process_handler_capi.h"
 
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
 #include "wke/wkeWebView.h"
 #include "wke/wkeJsBindFreeTempObject.h"
 #include "wke/wkeWebWindow.h"
-
+#endif
 using namespace blink;
 
 #if USING_VC6RT == 1
@@ -276,7 +277,7 @@ WebView* WebPageImpl::createCefView(WebLocalFrame* creator,
         return nullptr;
     return browserHostImpl->webPage()->webViewImpl();
 }
-
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
 static WebView* createWkeViewDefault(HWND parent, const WebString& name, const WTF::CString& url)
 {
     wke::CWebWindow* window = new wke::CWebWindow();
@@ -332,7 +333,7 @@ WebView* WebPageImpl::createWkeView(WebLocalFrame* creator,
         return nullptr; 
     return createdWebView->webPage()->webViewImpl();
 }
-
+#endif
 WebView* WebPageImpl::createView(WebLocalFrame* creator,
     const WebURLRequest& request,
     const WebWindowFeatures& features,
@@ -340,8 +341,10 @@ WebView* WebPageImpl::createView(WebLocalFrame* creator,
     WebNavigationPolicy policy,
     bool suppressOpener)
 {
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
     if (m_pagePtr->wkeWebView())
         return createWkeView(creator, request, features, name, policy, suppressOpener);
+#endif
     return createCefView(creator, request, features, name, policy, suppressOpener);  
 }
 
@@ -441,7 +444,9 @@ void WebPageImpl::testPaint()
 
 void WebPageImpl::freeV8TempObejctOnOneFrameBefore()
 {
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
     wke::freeV8TempObejctOnOneFrameBefore();
+#endif
 }
 
 bool WebPageImpl::drawFrame()
@@ -554,14 +559,14 @@ void WebPageImpl::paintToPlatformContext(HDC hdc, const IntRect* paintRect)
         if (hdc)
             skia::DrawToNativeContext(m_memoryCanvas, hdc, m_paintRect.x(), m_paintRect.y(), &intRectToWinRect(m_paintRect));
     }
-
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
     if (m_pagePtr->wkeHandler().paintUpdatedCallback) {
         m_pagePtr->wkeHandler().paintUpdatedCallback(
             m_pagePtr->wkeWebView(), 
             m_pagePtr->wkeHandler().paintUpdatedCallbackParam, 
             hMemoryDC, m_paintRect.x(), m_paintRect.y(), m_paintRect.width(), m_paintRect.height());
     }
-    
+#endif
     skia::EndPlatformPaint(m_memoryCanvas);
 }
 

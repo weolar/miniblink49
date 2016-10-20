@@ -1,6 +1,7 @@
 #ifndef WKE_STRING_H
 #define WKE_STRING_H
 
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
 
 #include <config.h>
 #include <wtf/text/WTFString.h>
@@ -43,4 +44,5 @@ protected:
 
 };
 
+#endif
 #endif // WKE_STRING_H

@@ -200,25 +200,26 @@ public:
     //////////////////////////////////////////////////////////////////////////
 
     bool isLoading() const { return m_loading; }
-
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
     // for wke
     bool isLoaded() const { return m_loaded; }
     bool isLoadFailed() const { return m_loadFailed; }
     bool isDocumentReady() const { return m_documentReady; }
 
     String title() const { return m_title; }
-
+#endif
 private:
     void onLoadingStateChange(bool isLoading, bool toDifferentDocument);
 
     WebPage* m_webPage;
     bool m_loading;
-
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
     // wke
     bool m_loadFailed;
     bool m_loaded;
     bool m_documentReady;
     String m_title;
+#endif
     WTF::Vector<WebFrame*> m_unusedFrames;
 };
 

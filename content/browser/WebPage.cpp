@@ -11,7 +11,9 @@
 #include "third_party/WebKit/Source/platform/graphics/Color.h"
 #include "third_party/WebKit/public/platform/WebCursorInfo.h"
 #include "third_party/WebKit/Source/web/WebViewImpl.h"
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
 #include "wke/wkeWebView.h"
+#endif
 #include "WebPage.h"
 #include "WebPageImpl.h"
 
@@ -30,16 +32,19 @@ void WebPage::initBlink()
 WebPage::WebPage(void* foreignPtr)
 {
     m_pageImpl = nullptr;
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
     m_wkeWebView = nullptr;
     m_wkeHandler = new wke::CWebViewHandler();
     memset(m_wkeHandler, 0, sizeof(wke::CWebViewHandler));
+#endif
 }
 
 WebPage::~WebPage()
 {
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
     delete m_wkeHandler;
     m_wkeHandler = nullptr;
-
+#endif
     if (m_pageImpl) {
         delete m_pageImpl;
         m_pageImpl = 0;

@@ -1,3 +1,4 @@
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
 
 #define BUILDING_wke
 
@@ -913,3 +914,5 @@ void wkeDestroyWebView(wkeWebView webView)
         delete webView;
     //}
 }
+
+#endif

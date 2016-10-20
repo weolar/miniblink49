@@ -1,6 +1,8 @@
 #ifndef wkeJsBind_h
 #define wkeJsBind_h
 
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
+
 #include "wke/wkeJsBindFreeTempObject.h"
 
 namespace blink {
@@ -18,5 +20,7 @@ void onReleaseGlobalObject(content::WebFrameClientImpl* client, blink::WebLocalF
 jsExecState createTempExecStateByV8Context(v8::Local<v8::Context> context);
 
 }
+
+#endif
 
 #endif // wkeJsBind_h

@@ -25,17 +25,21 @@
 #include "third_party/WebKit/Source/core/frame/Settings.h"
 #include "third_party/WebKit/Source/core/page/Page.h"
 #include "net/RequestExtraData.h"
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
 #include "wke/wkeWebView.h"
 #include "wke/wkeJsBind.h"
+#endif
 
 namespace content {
 
 WebFrameClientImpl::WebFrameClientImpl()
 {
     m_loading = false;
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
     m_loadFailed = false;
     m_loaded = false;
     m_documentReady = false;
+#endif
     m_webPage = nullptr;
 }
 
@@ -180,11 +184,11 @@ void WebFrameClientImpl::didReceiveServerRedirectForProvisionalLoad(WebLocalFram
 
 void WebFrameClientImpl::didFailProvisionalLoad(WebLocalFrame* frame, const WebURLError& error, WebHistoryCommitType type)
 {
-    m_loadFailed = true;
-
 	CefBrowserHostImpl* browser = m_webPage->browser();
 	if (browser)
 		browser->DidFailProvisionalLoad(frame, error, type);
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
+	m_loadFailed = true;
 
     wke::CWebViewHandler& handler = m_webPage->wkeHandler();
     if (handler.loadingFinishCallback) {
@@ -197,6 +201,7 @@ void WebFrameClientImpl::didFailProvisionalLoad(WebLocalFrame* frame, const WebU
 
         handler.loadingFinishCallback(m_webPage->wkeWebView(), handler.loadingFinishCallbackParam, &url, result, &failedReason);
     }
+#endif
 }
 
 void WebFrameClientImpl::didCommitProvisionalLoad(WebLocalFrame* frame, const WebHistoryItem& history, WebHistoryCommitType type)
@@ -216,12 +221,14 @@ void WebFrameClientImpl::didCreateDocumentElement(WebLocalFrame* frame) { }
 void WebFrameClientImpl::didReceiveTitle(WebLocalFrame* frame, const WebString& title, WebTextDirection direction)
 {
     if (frame == m_webPage->mainFrame()) {
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
         m_title = title;
         wke::CWebViewHandler& handler = m_webPage->wkeHandler();
         if (handler.titleChangedCallback) {
             wke::CString string(title);
             handler.titleChangedCallback(m_webPage->wkeWebView(), handler.titleChangedCallbackParam, &string);
         }
+#endif
     }
 }
 
@@ -232,24 +239,24 @@ void WebFrameClientImpl::didFinishDocumentLoad(WebLocalFrame*)
     //     cef_load_handler_t* loadHandler = m_cefBrowserHostImpl->m_browserImpl->m_loadHandler;
     //     m_cefBrowserHostImpl->m_browserImpl->ref();
     //     loadHandler->on_loading_state_change(loadHandler, &m_cefBrowserHostImpl->m_browserImpl->m_baseClass, false, false, false);
-
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
     m_documentReady = true;
 
     wke::CWebViewHandler& handler = m_webPage->wkeHandler();
     if (handler.documentReadyCallback)
         handler.documentReadyCallback(m_webPage->wkeWebView(), handler.documentReadyCallbackParam);
+#endif
 }
 
 void WebFrameClientImpl::didHandleOnloadEvents(WebLocalFrame*) { }
 
 void WebFrameClientImpl::didFailLoad(WebLocalFrame* frame, const WebURLError& error, WebHistoryCommitType type)
 {
-    m_loadFailed = true;
-
 	CefBrowserHostImpl* browser = m_webPage->browser();
 	if (browser)
 		browser->DidFailLoad(frame, error, type);
-
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
+	m_loadFailed = true;
     wke::CWebViewHandler& handler = m_webPage->wkeHandler();
     if (handler.loadingFinishCallback) {
         wkeLoadingResult result = WKE_LOADING_FAILED;
@@ -261,16 +268,16 @@ void WebFrameClientImpl::didFailLoad(WebLocalFrame* frame, const WebURLError& er
 
         handler.loadingFinishCallback(m_webPage->wkeWebView(), handler.loadingFinishCallbackParam, &url, result, &failedReason);
     }
+#endif
 }
 
 void WebFrameClientImpl::didFinishLoad(WebLocalFrame* frame)
 {
-    m_loaded = true;
-
     CefBrowserHostImpl* browser = m_webPage->browser();
     if (browser)
         browser->DidFinishLoad(frame);
-
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
+	m_loaded = true;
     wke::CWebViewHandler& handler = m_webPage->wkeHandler();
     if (handler.loadingFinishCallback) {
         wkeLoadingResult result = WKE_LOADING_SUCCEEDED;
@@ -278,6 +285,7 @@ void WebFrameClientImpl::didFinishLoad(WebLocalFrame* frame)
         wke::CString url(frame->document().url().string());
         handler.loadingFinishCallback(m_webPage->wkeWebView(), handler.loadingFinishCallbackParam, &url, result, NULL);
     }
+#endif
 }
 
 void WebFrameClientImpl::didNavigateWithinPage(WebLocalFrame*, const WebHistoryItem&, WebHistoryCommitType)
@@ -398,8 +406,9 @@ bool WebFrameClientImpl::runModalConfirmDialog(const WebString& message)
 
 void WebFrameClientImpl::didCreateScriptContext(WebLocalFrame* frame, v8::Local<v8::Context> context, int extensionGroup, int worldId)
 {
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
     wke::onCreateGlobalObject(this, frame, context, extensionGroup, worldId);
-
+#endif
     if (!CefContentClient::Get())
         return;
 
@@ -418,8 +427,9 @@ void WebFrameClientImpl::didCreateScriptContext(WebLocalFrame* frame, v8::Local<
 
 void WebFrameClientImpl::willReleaseScriptContext(WebLocalFrame* frame, v8::Local<v8::Context> context, int worldId)
 {
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
     wke::onReleaseGlobalObject(this, frame, context, worldId);
-
+#endif
     if (!CefContentClient::Get())
         return;
 
