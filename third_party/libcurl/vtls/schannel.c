@@ -64,29 +64,7 @@
 #include "curl_memory.h"
 #include "memdebug.h"
 
-typedef BOOL(WINAPI * PFN_CryptGenRandom)(HCRYPTPROV hProv, DWORD dwLen, BYTE *pbBuffer);
-static PFN_CryptGenRandom CryptGenRandomPtr = 0;
-
-typedef BOOL(WINAPI * PFN_CryptAcquireContext)(
-	HCRYPTPROV  *phProv,
-	LPCWSTR    szContainer,
-	LPCWSTR    szProvider,
-	DWORD       dwProvType,
-	DWORD       dwFlags
-	);
-static PFN_CryptAcquireContext CryptAcquireContextPtr = 0;
-
-typedef BOOL(WINAPI * PFN_CryptReleaseContext)(
-	HCRYPTPROV  hProv,
-	DWORD       dwFlags
-	);
-static PFN_CryptReleaseContext CryptReleaseContextPtr = 0;
-
-typedef BOOL(WINAPI * PFN_CertFreeCertificateContext)(
-	PCCERT_CONTEXT pCertContext
-	);
-static PFN_CertFreeCertificateContext CertFreeCertificateContextPtr = 0;
-
+#include <wincrypt.h>
 /* ALPN requires version 8.1 of the Windows SDK, which was
    shipped with Visual Studio 2013, aka _MSC_VER 1800:
 
@@ -762,7 +740,7 @@ schannel_connect_step3(struct connectdata *conn, int sockindex)
         result = Curl_extract_certinfo(conn, 0, beg, end);
       }
     }
-    CertFreeCertificateContextPtr(ccert_context);
+    CertFreeCertificateContext(ccert_context);
     if(result)
       return result;
   }
@@ -1495,13 +1473,6 @@ void Curl_schannel_session_free(void *ptr)
 
 int Curl_schannel_init(void)
 {
-  if (!CryptAcquireContextPtr) {
-	HMODULE hMon = LoadLibraryW(L"Advapi32.dll");
-	CryptGenRandomPtr = (PFN_CryptGenRandom)GetProcAddress(hMon, "CryptGenRandom");
-	CryptAcquireContextPtr = (PFN_CryptAcquireContext)GetProcAddress(hMon, "CryptAcquireContext");
-	CryptReleaseContextPtr = (PFN_CryptReleaseContext)GetProcAddress(hMon, "CryptReleaseContext");
-	CertFreeCertificateContextPtr = (PFN_CertFreeCertificateContext)GetProcAddress(hMon, "CertFreeCertificateContext");
-  }
   return (Curl_sspi_global_init() == CURLE_OK ? 1 : 0);
 }
 
@@ -1521,16 +1492,16 @@ int Curl_schannel_random(unsigned char *entropy, size_t length)
 {
   HCRYPTPROV hCryptProv = 0;
 
-  if(!CryptAcquireContextPtr(&hCryptProv, NULL, NULL, PROV_RSA_FULL,
+  if(!CryptAcquireContext(&hCryptProv, NULL, NULL, PROV_RSA_FULL,
                           CRYPT_VERIFYCONTEXT | CRYPT_SILENT))
     return 1;
 
-  if(!CryptGenRandomPtr(hCryptProv, (DWORD)length, entropy)) {
-    CryptReleaseContextPtr(hCryptProv, 0UL);
+  if(!CryptGenRandom(hCryptProv, (DWORD)length, entropy)) {
+    CryptReleaseContext(hCryptProv, 0UL);
     return 1;
   }
 
-  CryptReleaseContextPtr(hCryptProv, 0UL);
+  CryptReleaseContext(hCryptProv, 0UL);
   return 0;
 }
 
@@ -1651,7 +1622,7 @@ static CURLcode verify_certificate(struct connectdata *conn, int sockindex)
     CertFreeCertificateChain(pChainContext);
 
   if(pCertContextServer)
-    CertFreeCertificateContextPtr(pCertContextServer);
+    CertFreeCertificateContext(pCertContextServer);
 
   return result;
 }
