@@ -1039,9 +1039,6 @@ public:
         }
         CString headerLatin1 = headerString.latin1();
         m_headers = curl_slist_append(m_headers, headerLatin1.data());
-
-//         OutputDebugStringA(headerLatin1.data());
-//         OutputDebugStringA("\n");
     }
 
     curl_slist* headers() { return m_headers; }

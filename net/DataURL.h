@@ -26,15 +26,22 @@
 #ifndef DataURL_h
 #define DataURL_h
 
+#include "third_party/WebKit/Source/wtf/Vector.h"
+
 namespace blink {
 class WebURLLoader;
 class KURL;
 class WebURLLoaderClient;
 }
 
+namespace WTF {
+class String;
+}
+
 namespace net {
 
 void handleDataURL(blink::WebURLLoader* handle, blink::WebURLLoaderClient* client, const blink::KURL& kurl);
+bool parseDataURL(const blink::KURL& kurl, WTF::String& mimeType, WTF::String& charset, WTF::Vector<char>& out);
 
 }
 
