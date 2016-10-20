@@ -79,6 +79,7 @@ public:
         , m_cancelled(false)
         //, m_formDataStream(loader)
         , m_scheduledFailureType(NoFailure)
+        , m_loader(loader)
         , m_failureTimer(this, &WebURLLoaderInternal::fireFailure)
     {
         m_firstRequest = new blink::WebURLRequest(request);

@@ -944,14 +944,16 @@ void WebURLLoaderManager::dispatchSynchronousJob(WebURLLoaderInternal* job)
     // curl_easy_perform blocks until the transfert is finished.
     CURLcode ret =  curl_easy_perform(handle->m_handle);
 
-    if (ret != CURLE_OK && job->client()) {
-        WebURLError error;
-        error.domain = WebString(String(job->m_url));
-        error.reason = ret;
-        error.localizedDescription = WebString(String(curl_easy_strerror(ret)));
-        job->client()->didFail(job->loader(), error);
+    if (ret != CURLE_OK) {
+        if (handle->client() && job->loader()) {
+            WebURLError error;
+            error.domain = WebString(String(job->m_url));
+            error.reason = ret;
+            error.localizedDescription = WebString(String(curl_easy_strerror(ret)));
+            job->client()->didFail(job->loader(), error);
+        }
     } else {
-        if (handle->client() && job->client())
+        if (handle->client() && job->loader())
             handle->client()->didReceiveResponse(job->loader(), handle->m_response);
     }
 
