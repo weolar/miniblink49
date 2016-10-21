@@ -1,4 +1,4 @@
-
+ï»¿
 #include "app.h"
 #include "cmdline.h"
 #include "path.h"
@@ -82,20 +82,20 @@ BOOL FixupHtmlUrl(Application* app)
     LPWSTR htmlOption = app->options.htmlFile;
     WCHAR htmlUrl[MAX_PATH + 1] = { 0 };
 
-    // °üº¬ :// ËµÃ÷ÊÇÍêÕûµÄURL
+    // åŒ…å« :// è¯´æ˜æ˜¯å®Œæ•´çš„URL
     if (wcsstr(htmlOption, L"://"))
     {
         wcsncpy_s(app->url, MAX_PATH, htmlOption, MAX_PATH);
         return TRUE;
     }
 
-    // Èô²»ÊÇÍêÕûURL£¬²¹È«Ö®
+    // è‹¥ä¸æ˜¯å®Œæ•´URLï¼Œè¡¥å…¨ä¹‹
     if (FixupHtmlFileUrl(htmlOption, htmlUrl, MAX_PATH))
     {
         wcsncpy_s(app->url, MAX_PATH, htmlUrl, MAX_PATH);
         return TRUE;
     }
-    // ÎŞ·¨»ñµÃÍêÕûµÄURL£¬³ö´í
+    // æ— æ³•è·å¾—å®Œæ•´çš„URLï¼Œå‡ºé”™
     return FALSE;
 }
 
@@ -109,14 +109,14 @@ BOOL ProcessOptions(Application* app)
     return TRUE;
 }
 
-// »Øµ÷£ºµã»÷ÁË¹Ø±Õ¡¢·µ»Ø true ½«Ïú»Ù´°¿Ú£¬·µ»Ø false Ê²Ã´¶¼²»×ö¡£
+// å›è°ƒï¼šç‚¹å‡»äº†å…³é—­ã€è¿”å› true å°†é”€æ¯çª—å£ï¼Œè¿”å› false ä»€ä¹ˆéƒ½ä¸åšã€‚
 bool HandleWindowClosing(wkeWebView webWindow, void* param)
 {
     Application* app = (Application*)param;
-    return IDYES == MessageBoxW(NULL, L"È·¶¨ÒªÍË³ö³ÌĞòÂğ£¿", L"wkexe", MB_YESNO|MB_ICONQUESTION);
+    return IDYES == MessageBoxW(NULL, L"ç¡®å®šè¦é€€å‡ºç¨‹åºå—ï¼Ÿ", L"wkexe", MB_YESNO|MB_ICONQUESTION);
 }
 
-// »Øµ÷£º´°¿ÚÒÑÏú»Ù
+// å›è°ƒï¼šçª—å£å·²é”€æ¯
 void HandleWindowDestroy(wkeWebView webWindow, void* param)
 {
     Application* app = (Application*)param;
@@ -124,27 +124,36 @@ void HandleWindowDestroy(wkeWebView webWindow, void* param)
     PostQuitMessage(0);
 }
 
-// »Øµ÷£ºÎÄµµ¼ÓÔØ³É¹¦
+// å›è°ƒï¼šæ–‡æ¡£åŠ è½½æˆåŠŸ
 void HandleDocumentReady(wkeWebView webWindow, void* param)
 {
     wkeShowWindow(webWindow, TRUE);
 }
 
-// »Øµ÷£ºÒ³Ãæ±êÌâ¸Ä±ä
+// å›è°ƒï¼šé¡µé¢æ ‡é¢˜æ”¹å˜
 void HandleTitleChanged(wkeWebView webWindow, void* param, const wkeString title)
 {
     wkeSetWindowTitleW(webWindow, wkeGetStringW(title));
 }
 
-// »Øµ÷£º´´½¨ĞÂµÄÒ³Ãæ£¬±ÈÈçËµµ÷ÓÃÁË window.open »òÕßµã»÷ÁË <a target="_blank" .../>
+// å›è°ƒï¼šåˆ›å»ºæ–°çš„é¡µé¢ï¼Œæ¯”å¦‚è¯´è°ƒç”¨äº† window.open æˆ–è€…ç‚¹å‡»äº† <a target="_blank" .../>
 wkeWebView HandleCreateView(wkeWebView webWindow, void* param, wkeNavigationType navType, const wkeString url, const wkeWindowFeatures* features)
 {
     wkeWebView newWindow = wkeCreateWebWindow(WKE_WINDOW_TYPE_POPUP, NULL, features->x, features->y, features->width, features->height);
     wkeShowWindow(newWindow, true);
     return newWindow;
 }
+bool HandleLoadUrlBegin(wkeWebView webView, void* param, const wkeString url, void *request, void* response)
+{
+	return 0;
+}
 
-// ´´½¨Ö÷Ò³Ãæ´°¿Ú
+void HandleLoadUrlEnd(wkeWebView webView, void* param, const wkeString url, void *request, void* response)
+{
+	return 0;
+}
+
+// åˆ›å»ºä¸»é¡µé¢çª—å£
 BOOL CreateWebWindow(Application* app)
 {
     if (app->options.transparent)
@@ -160,6 +169,8 @@ BOOL CreateWebWindow(Application* app)
     wkeOnDocumentReady(app->window, HandleDocumentReady, app);
     wkeOnTitleChanged(app->window, HandleTitleChanged, app);
     wkeOnCreateView(app->window, HandleCreateView, app);
+	wkeOnLoadUrlBegin(app->window, HandleLoadUrlBegin, app);
+	wkeOnLoadUrlEnd(app->window, HandleLoadUrlEnd, app);
 
     wkeMoveToCenter(app->window);
     wkeLoadURLW(app->window, app->url);
@@ -196,7 +207,7 @@ void RunApplication(Application* app)
     if (!FixupHtmlUrl(app))
     {
         PrintHelpAndQuit(app);
-		//´ò¿ªÄ¬ÈÏÒ³Ãæ
+		//æ‰“å¼€é»˜è®¤é¡µé¢
 		wcsncpy_s(app->url, MAX_PATH, L"http://www.baidu.com", MAX_PATH);
     }
 
