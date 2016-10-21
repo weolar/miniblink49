@@ -738,4 +738,7 @@ Vista
 #  define ENABLE_IPV6 1
 #endif
 
+#define HAVE_LIBZ 1
+#define HAVE_ZLIB_H 1
+
 #endif /* HEADER_CURL_CONFIG_WIN32_H */
