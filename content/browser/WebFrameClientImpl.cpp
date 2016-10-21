@@ -369,7 +369,7 @@ WebNavigationPolicy WebFrameClientImpl::decidePolicyForNavigation(const Navigati
         requestPtr.get(), navigation_type, info.isRedirect))
         return info.defaultPolicy;
 #endif
-    return WebNavigationPolicyIgnore;
+    return WebNavigationPolicyCurrentTab;
 }
 
 void WebFrameClientImpl::willRequestResource(WebLocalFrame*, const WebCachedURLRequest&)

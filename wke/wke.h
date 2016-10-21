@@ -10,7 +10,7 @@
 #ifndef WKE_H
 #define WKE_H
 
-#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
+//#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -489,4 +489,4 @@ WKE_API void jsGC();
 
 
 #endif
-#endif//#ifndef WKE_H
+//#endif//#ifndef WKE_H
