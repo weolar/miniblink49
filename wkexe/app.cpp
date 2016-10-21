@@ -150,7 +150,7 @@ bool HandleLoadUrlBegin(wkeWebView webView, void* param, const wkeString url, vo
 
 void HandleLoadUrlEnd(wkeWebView webView, void* param, const wkeString url, void *request, void* response)
 {
-	return 0;
+	return ;
 }
 
 // 创建主页面窗口
