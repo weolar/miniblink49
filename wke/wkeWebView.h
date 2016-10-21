@@ -45,6 +45,12 @@ struct CWebViewHandler {
 
     wkeLoadingFinishCallback loadingFinishCallback;
     void* loadingFinishCallbackParam;
+
+	wkeLoadUrlBeginCallback loadUrlBeginCallback;
+	void* loadUrlBeginCallbackParam;
+
+	wkeLoadUrlEndCallback loadUrlEndCallback;
+	void* loadUrlEndCallbackParam;
 };
 
 class CWebView {
@@ -168,6 +174,9 @@ public:
 
     virtual void onLoadingFinish(wkeLoadingFinishCallback callback, void* callbackParam);
     virtual void onDocumentReady(wkeDocumentReadyCallback callback, void* callbackParam);
+
+	void onLoadUrlBegin(wkeLoadUrlBeginCallback callback, void* callbackParam);
+	void onLoadUrlEnd(wkeLoadUrlEndCallback callback, void* callbackParam);
 
     content::WebPage* webPage() { return m_webPage; }
 

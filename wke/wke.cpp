@@ -1,11 +1,11 @@
-#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
+ï»¿#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
 
 //////////////////////////////////////////////////////////////////////////
 #define BUILDING_wke 1
 
 #include "content/browser/WebPage.h"
 
-//cexer: ±ØÐë°üº¬ÔÚºóÃæ£¬ÒòÎªÆäÖÐµÄ wke.h -> windows.h »á¶¨Òå max¡¢min£¬µ¼ÖÂ WebCore ÄÚ²¿µÄ max¡¢min ³öÏÖ´íÂÒ¡£
+//cexer: å¿…é¡»åŒ…å«åœ¨åŽé¢ï¼Œå› ä¸ºå…¶ä¸­çš„ wke.h -> windows.h ä¼šå®šä¹‰ maxã€minï¼Œå¯¼è‡´ WebCore å†…éƒ¨çš„ maxã€min å‡ºçŽ°é”™ä¹±ã€‚
 #include "wkeString.h"
 #include "wkeWebView.h"
 #include "wkeWebWindow.h"
@@ -16,24 +16,15 @@ static bool wkeIsInit = false;
 
 void wkeInitialize()
 {
-    //double-precision float
-    _controlfp(_PC_53, _MCW_PC);
+	if (!wkeIsInit) {
+		//double-precision float
+		_controlfp(_PC_53, _MCW_PC);
 
-    CoInitialize(NULL);
+		CoInitialize(NULL);
 
-//     icuwin_init();
-// 
-//     JSC::initializeThreading();
-//     WTF::initializeMainThread();
-//     wke::PlatformStrategies::initialize();
-// 
-//     //cexer ½â¾ö²»ÄÜ¼ÓÔØ±¾µØÍ¼Æ¬µÄBUG¡£
-//     WebCore::SecurityOrigin::setLocalLoadPolicy(WebCore::SecurityOrigin::AllowLocalLoadsForAll);
-// 
-//     //WebCore::Console::setShouldPrintExceptions(true);
-//     //WebCore::ResourceHandleManager::sharedInstance()->setCookieJarFileName("cookie.txt");
-    content::WebPage::initBlink();
-    wkeIsInit = true;
+		content::WebPage::initBlink();
+		wkeIsInit = true;
+	}
 }
 
 void wkeSetProxy(const wkeProxy& proxy)
@@ -531,6 +522,16 @@ void wkeOnDocumentReady(wkeWebView webView, wkeDocumentReadyCallback callback, v
 void wkeOnLoadingFinish(wkeWebView webView, wkeLoadingFinishCallback callback, void* param)
 {
     webView->onLoadingFinish(callback, param);
+}
+
+void wkeOnLoadUrl(wkeWebView webView, wkeLoadUrlBeginCallback callback, void* callbackParam)
+{
+	webView->onLoadUrlBegin(callback, callbackParam);
+}
+
+void wkeOnLoadUrlEnd(wkeWebView webView, wkeLoadUrlEndCallback callback, void* callbackParam)
+{
+	webView->onLoadUrlEnd(callback, callbackParam);
 }
 
 const utf8* wkeGetString(const wkeString s)

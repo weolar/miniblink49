@@ -380,8 +380,11 @@ void WebFrameClientImpl::willRequestResource(WebLocalFrame*, const WebCachedURLR
 void WebFrameClientImpl::willSendRequest(WebLocalFrame* webFrame, unsigned identifier, WebURLRequest& request, const WebURLResponse& redirectResponse)
 {
     net::RequestExtraData* requestExtraData = new net::RequestExtraData();
-    requestExtraData->frame = webFrame;
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
+	requestExtraData->page = m_webPage;
+#endif
 #if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
+	requestExtraData->frame = webFrame;
     requestExtraData->browser = m_webPage->browser();
 #endif
     request.setExtraData(requestExtraData);
