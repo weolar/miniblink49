@@ -946,8 +946,8 @@ void WebURLLoaderManager::dispatchSynchronousJob(WebURLLoaderInternal* job)
 	if (page->wkeHandler().loadUrlBeginCallback) {
 
 		if (page->wkeHandler().loadUrlBeginCallback(page->wkeWebView(), page->wkeHandler().loadUrlBeginCallbackParam,
-			wkeString(encodeWithURLEscapeSequences(job->firstRequest()->url().string()).latin1().data()),
-			job->m_firstRequest, &job->m_response)) {
+			encodeWithURLEscapeSequences(job->firstRequest()->url().string()).latin1().data(),job)) {
+			job->client()->didFinishLoading(job->loader(), WTF::currentTime(), 0);
 			return;
 		}
 	}
@@ -997,10 +997,8 @@ void WebURLLoaderManager::startJob(WebURLLoaderInternal* job)
 	if (page->wkeHandler().loadUrlBeginCallback) {
 		
 		if (page->wkeHandler().loadUrlBeginCallback(page->wkeWebView(), page->wkeHandler().loadUrlBeginCallbackParam, 
-			wkeString(encodeWithURLEscapeSequences(job->firstRequest()->url().string()).latin1().data()),
-			job->m_firstRequest, &job->m_response)) {
-			
-			//WebURLResponse req = job->m_response;
+			encodeWithURLEscapeSequences(job->firstRequest()->url().string()).latin1().data(),job)) {
+			WebURLResponse req = job->m_response;
 			//req.setHTTPStatusText(String("OK"));
 			//req.setHTTPHeaderField("Content-Leng", "4");
 			//req.setHTTPHeaderField("Content-Type", "text/html");
@@ -1014,7 +1012,7 @@ void WebURLLoaderManager::startJob(WebURLLoaderInternal* job)
 			//job->setResponseFired(true);
 
 			//job->client()->didReceiveData(job->loader(), "aaaa", 4, 0);
-			//job->client()->didFinishLoading(job->loader(), WTF::currentTime(), 0);
+			job->client()->didFinishLoading(job->loader(), WTF::currentTime(), 0);
 			return;
 		}
 	}

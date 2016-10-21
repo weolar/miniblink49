@@ -143,8 +143,14 @@ wkeWebView HandleCreateView(wkeWebView webWindow, void* param, wkeNavigationType
     wkeShowWindow(newWindow, true);
     return newWindow;
 }
-bool HandleLoadUrlBegin(wkeWebView webView, void* param, const wkeString url, void *request, void* response)
+bool HandleLoadUrlBegin(wkeWebView webView, void* param, const char *url, void *job)
 {
+	if (strcmp(url, "http://hook.test/") == 0) {
+		wkeNetSetMIMEType(job, "text/html");
+		wkeNetSetURL(job, url);
+		wkeNetSetData(job, "<li>这是个hook页面</li>", sizeof("<li>这是个hook页面</li>"));
+		return true;
+	}
 	return 0;
 }
 
