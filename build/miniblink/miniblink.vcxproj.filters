@@ -8940,6 +8940,9 @@
     <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8CloseEventInit.cpp">
       <Filter>gen\blink\bindings\modules\v8</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\wke\wkeNetHook.cpp">
+      <Filter>wke</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\public\platform\modules\app_banner\WebAppBannerClient.h">

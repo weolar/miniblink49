@@ -3,10 +3,17 @@
 
 #include "third_party/WebKit/public/platform/WebURLRequest.h"
 
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
+namespace content {
+	class WebPage;
+}
+#endif
+
+
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 namespace blink {
 class WebLocalFrame;
 }
-#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 class CefBrowserHostImpl;
 #endif
 namespace net {
@@ -18,8 +25,12 @@ public:
 
     }
 
-    blink::WebLocalFrame* frame;
+    
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
+	content::WebPage* page;
+#endif
 #if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
+	blink::WebLocalFrame* frame;
     CefBrowserHostImpl* browser;
 #endif
 };
