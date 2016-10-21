@@ -555,19 +555,14 @@ LRESULT CWebWindow::_windowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM l
         {
             wkeRect caret = wkeGetCaretRect(this);
 
-            CANDIDATEFORM form;
-            form.dwIndex = 0;
-            form.dwStyle = CFS_EXCLUDE;
-            form.ptCurrentPos.x = caret.x;
-            form.ptCurrentPos.y = caret.y + caret.h;
-            form.rcArea.top = caret.y;
-            form.rcArea.bottom = caret.y + caret.h;
-            form.rcArea.left = caret.x;
-            form.rcArea.right = caret.x + caret.w;
+			COMPOSITIONFORM COMPOSITIONFORM;
+			COMPOSITIONFORM.dwStyle = CFS_POINT | CFS_FORCE_POSITION;
+			COMPOSITIONFORM.ptCurrentPos.x = caret.x;
+			COMPOSITIONFORM.ptCurrentPos.y = caret.y;
 
-            HIMC hIMC = ImmGetContext(hwnd);
-            ImmSetCandidateWindow(hIMC, &form);
-            ImmReleaseContext(hwnd, hIMC);
+			HIMC hIMC = ImmGetContext(hwnd);
+			ImmSetCompositionWindow(hIMC, &COMPOSITIONFORM);
+			ImmReleaseContext(hwnd, hIMC);
         }
         return 0;
     }
