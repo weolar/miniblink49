@@ -28,6 +28,8 @@ void scrt_initialize_thread_safe_statics()
     hMon = LoadLibraryW(L"GDI32.dll");
     pGdiAlphaBlend = (PFN_GdiAlphaBlend)GetProcAddress(hMon, "GdiAlphaBlend");
 
+	LoadLibraryW(L"Usp10.dll");
+
     OutputDebugStringA("scrt_initialize_thread_safe_statics");
 }
 
