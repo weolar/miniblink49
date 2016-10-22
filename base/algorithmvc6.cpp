@@ -54,14 +54,51 @@ double asin(double x)
     return ::asin(x);
 }
 
+bool isFloatIEEE754Negative(float f)
+{
+	float d = f;
+	if (sizeof(float) == sizeof(unsigned short int)) {
+		return (*(unsigned short int *)(&d) >> (sizeof(unsigned short int)*CHAR_BIT - 1) == 1);
+	}
+	else if (sizeof(float) == sizeof(unsigned int)) {
+		return (*(unsigned int *)(&d) >> (sizeof(unsigned int)*CHAR_BIT - 1) == 1);
+	}
+	else if (sizeof(float) == sizeof(unsigned long)) {
+		return (*(unsigned long *)(&d) >> (sizeof(unsigned long)*CHAR_BIT - 1) == 1);
+	}
+	else if (sizeof(float) == sizeof(unsigned char)) {
+		return (*(unsigned char *)(&d) >> (sizeof(unsigned char)*CHAR_BIT - 1) == 1);
+	}
+	else if (sizeof(float) == sizeof(unsigned long long)) {
+		return (*(unsigned long long *)(&d) >> (sizeof(unsigned long long)*CHAR_BIT - 1) == 1);
+	}
+	return false; // Should never get here if you've covered all the potential types!
+}
+
 bool signbit(float x)
 {
-    return x < 0 ? true : false;
+	return isFloatIEEE754Negative(x);
+}
+
+int _dsign(double x)
+{
+	enum { double_per_long = sizeof(double) / sizeof(long) };
+	enum { long_msb = sizeof(long) * CHAR_BIT - 1 };
+	union { double d; unsigned long i[double_per_long]; } u;
+	unsigned long l;
+
+	u.d = x;
+#ifdef WORDS_BIGENDIAN
+	l = u.i[0];
+#else
+	l = u.i[double_per_long - 1];
+#endif
+	return (int)(l >> long_msb);
 }
 
 bool signbit(double x)
 {
-    return x < 0 ? true : false;
+	return _dsign(x) != 0;
 }
 
 double atan(double x)
@@ -76,6 +113,10 @@ double atan2(double x, double y)
 
 bool isless(double x, double y)
 {
+	if (!signbit(x) && signbit(y)) // + -
+		return false;
+	if (signbit(x) && !signbit(y)) // - +
+		return true;
     return x < y;
 }
 
@@ -86,39 +127,42 @@ double exp(double x)
 
 int isinf(double d)
 {
-    int expon = 0;
-    double val = frexp(d, &expon);
-    if (expon == 1025) {
-        if (val == 0.5) {
-            return 1;
-        } else if (val == -0.5) {
-            return -1;
-        } else {
-            return 0;
-        }
-    } else {
-        return 0;
-    }
+	return fpclassify(d) == FP_INFINITE;
+//     int expon = 0;
+//     double val = frexp(d, &expon);
+//     if (expon == 1025) {
+//         if (val == 0.5) {
+//             return 1;
+//         } else if (val == -0.5) {
+//             return -1;
+//         } else {
+//             return 0;
+//         }
+//     } else {
+//         return 0;
+//     }
 }
 
 int isnan(double d)
 {
-    int expon = 0;
-    double val = frexp(d, &expon);
-    if (expon == 1025) {
-        if (val == 0.5) {
-            return 0;
-        }
-        else if (val == -0.5) {
-            return 0;
-        }
-        else {
-            return 1;
-        }
-    }
-    else {
-        return 0;
-    }
+	return fpclassify(d) == FP_NAN;
+
+//     int expon = 0;
+//     double val = frexp(d, &expon);
+//     if (expon == 1025) {
+//         if (val == 0.5) {
+//             return 0;
+//         }
+//         else if (val == -0.5) {
+//             return 0;
+//         }
+//         else {
+//             return 1;
+//         }
+//     }
+//     else {
+//         return 0;
+//     }
 }
 
 double log(double val)
@@ -162,7 +206,7 @@ double floor(double x)
 
 float ceil(float x)
 {
-    return ::floor(x);
+    return ::ceil((double)x);
 }
 
 double ceil(double x)
@@ -303,7 +347,8 @@ basic_ostream<char, char_traits<char> >& __cdecl operator << <char, char_traits<
     basic_ostream<char, char_traits<char> > & a, char const * b)
 {
     ostringstream aCopy;
-    aCopy.write(b, strlen(b));
+	size_t len = strlen(b);
+    aCopy.write(b, len);
     a << aCopy;
     return a;
 }
@@ -594,8 +639,10 @@ double trunc(double val)
 //     DebugBreak();
 // }
 // 
+
 #undef and
 #undef xor
+
 extern "C" __declspec(naked) __int64 _ftol2_sse(double v)
 {
 	__asm {
@@ -755,14 +802,25 @@ extern "C" void __std_terminate()
     DebugBreak();
 }
 
-extern "C" void vsnprintf()
+extern "C" int vsnprintf(char* const buffer, size_t const count, char const* const format, va_list args)
 {
-    DebugBreak();
+	return _vsnprintf(buffer, count, format, args);
 }
 
-extern "C" void snprintf()
+extern "C" int snprintf(char* buffer, size_t count, const char* format, ...)
 {
-    DebugBreak();
+	int result;
+	va_list args;
+	va_start(args, format);
+	result = _vsnprintf(buffer, count, format, args);
+	va_end(args);
+
+	// In the case where the string entirely filled the buffer, _vsnprintf will not
+	// null-terminate it, but snprintf must.
+	if (count > 0)
+		buffer[count - 1] = '\0';
+
+	return result;
 }
 
 FILE _iob[3] = { 0 };
