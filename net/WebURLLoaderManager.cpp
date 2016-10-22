@@ -33,6 +33,8 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+#include <shlobj.h>
+#include <shlwapi.h>
 
 #include "config.h"
 #include "net/WebURLLoaderManager.h"
@@ -57,8 +59,8 @@
 #if USING_VC6RT == 1
 #define PURE = 0
 #endif
-#include <shlobj.h>
-#include <shlwapi.h>
+
+
 
 #include "third_party/WebKit/Source/wtf/Threading.h"
 #include "third_party/WebKit/Source/wtf/Vector.h"
