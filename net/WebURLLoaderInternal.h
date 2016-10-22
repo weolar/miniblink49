@@ -65,22 +65,27 @@ namespace net {
 class WebURLLoaderInternal {
     //WTF_MAKE_NONCOPYABLE(WebURLLoaderInternal); WTF_MAKE_FAST_ALLOCATED;
 public:
-    WebURLLoaderInternal(WebURLLoaderImplCurl* loader, const WebURLRequest& request, WebURLLoaderClient* client, bool defersLoading, bool shouldContentSniff)
-        : m_ref(0)
-        , m_client(client)
-        , m_lastHTTPMethod(request.httpMethod())
-        , status(0)
-        , m_defersLoading(defersLoading)
-        , m_shouldContentSniff(shouldContentSniff)
-        , m_responseFired(false)
-        , m_handle(0)
-        , m_url(0)
-        , m_customHeaders(0)
-        , m_cancelled(false)
-        //, m_formDataStream(loader)
-        , m_scheduledFailureType(NoFailure)
-        , m_loader(loader)
-        , m_failureTimer(this, &WebURLLoaderInternal::fireFailure)
+	WebURLLoaderInternal(WebURLLoaderImplCurl* loader, const WebURLRequest& request, WebURLLoaderClient* client, bool defersLoading, bool shouldContentSniff)
+		: m_ref(0)
+		, m_client(client)
+		, m_lastHTTPMethod(request.httpMethod())
+		, status(0)
+		, m_defersLoading(defersLoading)
+		, m_shouldContentSniff(shouldContentSniff)
+		, m_responseFired(false)
+		, m_handle(0)
+		, m_url(0)
+		, m_customHeaders(0)
+		, m_cancelled(false)
+		//, m_formDataStream(loader)
+		, m_scheduledFailureType(NoFailure)
+		, m_loader(loader)
+		, m_failureTimer(this, &WebURLLoaderInternal::fireFailure)
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
+		, m_hookbuf(0)
+		, m_hooklen(0)
+		, m_hookRequest(false)
+#endif
     {
         m_firstRequest = new blink::WebURLRequest(request);
         KURL url = (KURL)m_firstRequest->url();
@@ -97,6 +102,10 @@ public:
         fastFree(m_url);
         if (m_customHeaders)
             curl_slist_free_all(m_customHeaders);
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
+		if (m_hookbuf)
+			free(m_hookbuf);
+#endif
     }
 
     void ref() { ++m_ref; }
@@ -187,6 +196,12 @@ public:
     blink::WebURLRequest* m_firstRequest;
 
     String m_debugPath;
+
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
+	bool m_hookRequest;
+	void *m_hookbuf;
+	int m_hooklen;
+#endif
 };
 
 } // namespace net

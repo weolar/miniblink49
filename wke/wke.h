@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 
  * BlzFans@hotmail.com
  * http://wke.sf.net
@@ -342,7 +342,7 @@ WKE_API void wkeOnLoadingFinish(wkeWebView webView, wkeLoadingFinishCallback cal
 typedef bool(*wkeLoadUrlBeginCallback)(wkeWebView webView, void* param, const char *url, void *job);
 WKE_API void wkeOnLoadUrlBegin(wkeWebView webView, wkeLoadUrlBeginCallback callback, void* callbackParam);
 
-typedef void(*wkeLoadUrlEndCallback)(wkeWebView webView, void* param, const wkeString url, void *request, void* response);
+typedef void(*wkeLoadUrlEndCallback)(wkeWebView webView, void* param, const char *url, void *job, void* buf, int len);
 WKE_API void wkeOnLoadUrlEnd(wkeWebView webView, wkeLoadUrlEndCallback callback, void* callbackParam);
 
 //wkeNet--------------------------------------------------------------------------------------
@@ -350,7 +350,7 @@ WKE_API void wkeNetSetMIMEType(void *job, char *type);
 WKE_API void wkeNetSetHTTPHeaderField(void *job, wchar_t *key, wchar_t *value);
 WKE_API void wkeNetSetURL(void *job,const char *url);
 WKE_API void wkeNetSetData(void *job, void *buf, int len);
-
+WKE_API void wkeNetHookRequest(void *job);	//调用此函数后,网络层收到数据会存储在一buf内,接收数据完成后响应OnLoadUrlEnd事件.#此调用严重影响性能,慎用
 //wkewindow-----------------------------------------------------------------------------------
 typedef enum {
     WKE_WINDOW_TYPE_POPUP,
@@ -440,7 +440,7 @@ WKE_API jsValue jsEmptyArray(jsExecState es);
 
 
 
-//cexer JS���󡢺�����֧��
+//cexer JS对象、函数绑定支持
 typedef jsValue (*jsGetPropertyCallback)(jsExecState es, jsValue object, const char* propertyName);
 typedef bool (*jsSetPropertyCallback)(jsExecState es, jsValue object, const char* propertyName, jsValue value);
 typedef jsValue (*jsCallAsFunctionCallback)(jsExecState es, jsValue object, jsValue* args, int argCount);
