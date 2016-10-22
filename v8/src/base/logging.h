@@ -8,6 +8,9 @@
 #include <cstring>
 #include <sstream>
 #include <string>
+#if USING_VC6RT == 1
+#include <ostreamvc6.h>
+#endif
 
 #include "src/base/build_config.h"
 
