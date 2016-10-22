@@ -33,6 +33,8 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+#include <shlobj.h>
+#include <shlwapi.h>
 
 #include "config.h"
 #include "net/WebURLLoaderManager.h"
@@ -57,8 +59,8 @@
 #if USING_VC6RT == 1
 #define PURE = 0
 #endif
-#include <shlobj.h>
-#include <shlwapi.h>
+
+
 
 #include "third_party/WebKit/Source/wtf/Threading.h"
 #include "third_party/WebKit/Source/wtf/Vector.h"
@@ -295,68 +297,47 @@ void readFile(const WCHAR* path, Vector<char>& buffer)
 // called with data after all headers have been processed via headerCallback
 static size_t writeCallback(void* ptr, size_t size, size_t nmemb, void* data)
 {
-    WebURLLoaderInternal* job = static_cast<WebURLLoaderInternal*>(data);
-    WebURLLoaderInternal* d = job;
-    if (d->m_cancelled)
-        return 0;
+	WebURLLoaderInternal* job = static_cast<WebURLLoaderInternal*>(data);
+	WebURLLoaderInternal* d = job;
+	if (d->m_cancelled)
+		return 0;
 
-    // We should never be called when deferred loading is activated.
-    ASSERT(!d->m_defersLoading);
+	// We should never be called when deferred loading is activated.
+	ASSERT(!d->m_defersLoading);
 
-    size_t totalSize = size * nmemb;
+	size_t totalSize = size * nmemb;
 
-    // this shouldn't be necessary but apparently is. CURL writes the data
-    // of html page even if it is a redirect that was handled internally
-    // can be observed e.g. on gmail.com
-    CURL* h = d->m_handle;
-    long httpCode = 0;
-    CURLcode err = curl_easy_getinfo(h, CURLINFO_RESPONSE_CODE, &httpCode);
-    if (CURLE_OK == err && httpCode >= 300 && httpCode < 400)
-        return totalSize;
+	// this shouldn't be necessary but apparently is. CURL writes the data
+	// of html page even if it is a redirect that was handled internally
+	// can be observed e.g. on gmail.com
+	CURL* h = d->m_handle;
+	long httpCode = 0;
+	CURLcode err = curl_easy_getinfo(h, CURLINFO_RESPONSE_CODE, &httpCode);
+	if (CURLE_OK == err && httpCode >= 300 && httpCode < 400)
+		return totalSize;
 
-    if (!d->responseFired()) {
-        handleLocalReceiveResponse(h, job, d);
-        if (d->m_cancelled)
-            return 0;
-    }
+	if (!d->responseFired()) {
+		handleLocalReceiveResponse(h, job, d);
+		if (d->m_cancelled)
+			return 0;
+	}
+	if (d->m_hookRequest) {
+		if (!d->m_hookbuf) {
+			d->m_hookbuf = malloc(totalSize);
+		}
+		else
+		{
+			d->m_hookbuf = realloc(d->m_hookbuf, d->m_hooklen + totalSize);
+		}
+		memcpy(((char *)d->m_hookbuf + d->m_hooklen), ptr, totalSize);
+		d->m_hooklen += totalSize;
+		return totalSize;
+	}
 
-#ifndef NDEBUG
-    size_t debugTotalSize = totalSize;
-    Vector<char> debugBuffer;
-    String url = d->firstRequest()->url().string();
-    bool debugRedirect = false;
-    const char* urlRedirect = "https://g.alicdn.com/kissy/k/6.2.4/??node-min.js,node-base-min.js,dom-base-min.js,query-selector-base-min.js,dom-extra-min.js,node-event-min.js,event-dom-base-min.js,event-base-min.js,event-dom-extra-min.js,event-gesture-min.js,event-touch-min.js,node-anim-min.js,anim-transition-min.js,anim-base-min.js,promise-min.js,base-min.js,attribute-min.js,event-custom-min.js,json-base-min.js,event-min.js,io-min.js,io-extra-min.js,io-base-min.js,io-form-min.js,cookie-min.js";
-    if (WTF::kNotFound != url.find(urlRedirect)) {
-        static bool debugRedirect0 = false;
-        if (!debugRedirect0) {
-            readFile(L"E:\\test\\taobao\\kissy.js", debugBuffer);
-            d->client()->didReceiveData(job->loader(), static_cast<char*>(debugBuffer.data()), debugBuffer.size(), 0);
-        }
-        debugRedirect0 = true;
-        debugRedirect = true;
-    }
-
-    if (WTF::kNotFound != url.find("http://www.blue-zero.com/WebSocket/JS/min/index.js")) {
-        static bool debugRedirect1 = false;
-        if (!debugRedirect1) {
-            readFile(L"E:\\test\\WebSocket\\index.js", debugBuffer);
-            d->client()->didReceiveData(job->loader(), static_cast<char*>(debugBuffer.data()), debugBuffer.size(), 0);
-        }
-        debugRedirect1 = true;
-        debugRedirect = true;
-    }
-
-#endif
-
-    if (d->m_multipartHandle)
-        d->m_multipartHandle->contentReceived(static_cast<const char*>(ptr), totalSize);
-#ifndef NDEBUG
-	else if (d->client() && job->loader() && !debugRedirect) {
-#else
-	else if (d->client() && job->loader()) {
-#endif
+	if (d->m_multipartHandle){
+		d->m_multipartHandle->contentReceived(static_cast<const char*>(ptr), totalSize);
+	}else if (d->client() && job->loader()) {
         d->client()->didReceiveData(job->loader(), static_cast<char*>(ptr), totalSize, 0);
-        //CurlCacheManager::getInstance().didReceiveData(*job, static_cast<char*>(ptr), totalSize);
     }
     return totalSize;
 }
@@ -712,14 +693,33 @@ void WebURLLoaderManager::downloadTimerCallback(Timer<WebURLLoaderManager>* time
                     continue;
                 }
             }
+			if (d->m_hookRequest)
+			{
+				RequestExtraData* requestExtraData = reinterpret_cast<RequestExtraData*>(d->firstRequest()->extraData());
+				WebPage* page = requestExtraData->page;
+				if (page->wkeHandler().loadUrlEndCallback) {
+					page->wkeHandler().loadUrlEndCallback(page->wkeWebView(), page->wkeHandler().loadUrlEndCallbackParam,
+						encodeWithURLEscapeSequences(job->firstRequest()->url().string()).latin1().data(), job,
+						d->m_hookbuf, d->m_hooklen);
+				}
+				if (d->m_multipartHandle) {
+					d->m_multipartHandle->contentReceived(static_cast<const char*>(d->m_hookbuf), d->m_hooklen);
+					d->m_multipartHandle->contentEnded();
+				}
+				else if (d->client() && job->loader()) {
+					d->client()->didReceiveData(job->loader(), static_cast<char*>(d->m_hookbuf), d->m_hooklen, 0);
+					d->client()->didFinishLoading(job->loader(), 0, 0);
+				}
 
-            if (d->m_multipartHandle)
-                d->m_multipartHandle->contentEnded();
-
-            if (d->client() && job->loader()) {
-                d->client()->didFinishLoading(job->loader(), 0, 0);
-                //CurlCacheManager::getInstance().didFinishLoading(*job);
-            }
+			}
+			else {
+				if (d->m_multipartHandle) {
+					d->m_multipartHandle->contentEnded();
+				}
+				if (d->client() && job->loader()) {
+					d->client()->didFinishLoading(job->loader(), 0, 0);
+				}
+			}
         } else {
             char* url = 0;
             curl_easy_getinfo(d->m_handle, CURLINFO_EFFECTIVE_URL, &url);
@@ -733,7 +733,6 @@ void WebURLLoaderManager::downloadTimerCallback(Timer<WebURLLoaderManager>* time
                 resourceError.domain = WebString::fromLatin1(url);
                 resourceError.localizedDescription = WebString::fromLatin1(curl_easy_strerror(msg->data.result));
                 d->client()->didFail(job->loader(), resourceError);
-                //CurlCacheManager::getInstance().didFail(*job);
             }
         }
 
@@ -947,7 +946,7 @@ void WebURLLoaderManager::dispatchSynchronousJob(WebURLLoaderInternal* job)
 
 		if (page->wkeHandler().loadUrlBeginCallback(page->wkeWebView(), page->wkeHandler().loadUrlBeginCallbackParam,
 			encodeWithURLEscapeSequences(job->firstRequest()->url().string()).latin1().data(),job)) {
-			job->client()->didFinishLoading(job->loader(), WTF::currentTime(), 0);
+			job->client()->didFinishLoading(job->loader(), WTF::currentTime(), 0);//加载完成
 			return;
 		}
 	}
@@ -1012,7 +1011,7 @@ void WebURLLoaderManager::startJob(WebURLLoaderInternal* job)
 			//job->setResponseFired(true);
 
 			//job->client()->didReceiveData(job->loader(), "aaaa", 4, 0);
-			job->client()->didFinishLoading(job->loader(), WTF::currentTime(), 0);
+			job->client()->didFinishLoading(job->loader(), WTF::currentTime(), 0);//加载完成
 			return;
 		}
 	}

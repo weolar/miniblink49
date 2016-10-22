@@ -27,6 +27,10 @@ void wkeNetSetData(void *job, void *buf, int len)
 	((net::WebURLLoaderInternal*)job)->client()->didReceiveResponse(((net::WebURLLoaderInternal*)job)->loader(), ((net::WebURLLoaderInternal*)job)->m_response);
 	((net::WebURLLoaderInternal*)job)->client()->didReceiveData(((net::WebURLLoaderInternal*)job)->loader(), static_cast<char *>(buf), len, 0);
 }
+void wkeNetHookRequest(void *job)
+{
+	((net::WebURLLoaderInternal*)job)->m_hookRequest = true;
+}
 //WebURLResponse req = job->m_response;
 //req.setHTTPStatusText(String("OK"));
 //req.setHTTPHeaderField("Content-Leng", "4");

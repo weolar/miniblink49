@@ -148,14 +148,34 @@ bool HandleLoadUrlBegin(wkeWebView webView, void* param, const char *url, void *
 	if (strcmp(url, "http://hook.test/") == 0) {
 		wkeNetSetMIMEType(job, "text/html");
 		wkeNetSetURL(job, url);
-		wkeNetSetData(job, "<li>这是个hook页面</li>", sizeof("<li>这是个hook页面</li>"));
+		wkeNetSetData(job, "<li>这是个hook页面</li><a herf=\"http://www.baidu.com/\">HookRequest</a>", sizeof("<li>这是个hook页面</li><a herf=\"http://www.baidu.com/\">HookRequest</a>"));
 		return true;
 	}
-	return 0;
+	else if (strcmp(url, "http://www.baidu.com/") == 0) {
+		wkeNetHookRequest(job);
+	}
+	return false;
 }
 
-void HandleLoadUrlEnd(wkeWebView webView, void* param, const wkeString url, void *request, void* response)
+void HandleLoadUrlEnd(wkeWebView webView, void* param, const char *url, void *job, void* buf, int len)
 {
+	wchar_t *str = L"百度一下";
+	wchar_t *str1 = L"HOOK一下";
+
+	int slen = ::WideCharToMultiByte(CP_UTF8, 0, str, -1, NULL, 0, NULL, NULL);
+	if (slen == 0) return;
+
+	char utf81[100];
+	::WideCharToMultiByte(CP_UTF8, 0, str, -1, &utf81[0], slen, NULL, NULL);
+
+	slen = ::WideCharToMultiByte(CP_UTF8, 0, str1, -1, NULL, 0, NULL, NULL);
+	if (slen == 0) return;
+
+	char utf82[100];
+	::WideCharToMultiByte(CP_UTF8, 0, str1, -1, &utf82[0], slen, NULL, NULL);
+
+	const char *b = strstr(static_cast<const char*>(buf), &utf81[0]);
+	memcpy((void *)b, &utf82, slen);
 	return ;
 }
 
