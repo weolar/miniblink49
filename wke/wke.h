@@ -275,6 +275,7 @@ WKE_API const wchar_t* wkeGetStringW(const wkeString string);
 WKE_API void wkeSetString(wkeString string, const utf8* str, size_t len);
 WKE_API void wkeSetStringW(wkeString string, const wchar_t* str, size_t len);
 
+//wke callback-----------------------------------------------------------------------------------
 typedef void (*wkeTitleChangedCallback)(wkeWebView webView, void* param, const wkeString title);
 WKE_API void wkeOnTitleChanged(wkeWebView webView, wkeTitleChangedCallback callback, void* callbackParam);
 
@@ -293,7 +294,6 @@ WKE_API void wkeOnConfirmBox(wkeWebView webView, wkeConfirmBoxCallback callback,
 typedef bool (*wkePromptBoxCallback)(wkeWebView webView, void* param, const wkeString msg, const wkeString defaultResult, wkeString result);
 WKE_API void wkeOnPromptBox(wkeWebView webView, wkePromptBoxCallback callback, void* callbackParam);
 
-
 typedef enum {
     WKE_NAVIGATION_TYPE_LINKCLICK,
     WKE_NAVIGATION_TYPE_FORMSUBMITTE,
@@ -306,8 +306,6 @@ typedef enum {
 
 typedef bool (*wkeNavigationCallback)(wkeWebView webView, void* param, wkeNavigationType navigationType, const wkeString url);
 WKE_API void wkeOnNavigation(wkeWebView webView, wkeNavigationCallback callback, void* param);
-
-
 
 typedef struct {
     int x;
@@ -328,10 +326,8 @@ typedef struct {
 typedef wkeWebView (*wkeCreateViewCallback)(wkeWebView webView, void* param, wkeNavigationType navigationType, const wkeString url, const wkeWindowFeatures* windowFeatures);
 WKE_API void wkeOnCreateView(wkeWebView webView, wkeCreateViewCallback callback, void* param);
 
-
 typedef void (*wkeDocumentReadyCallback)(wkeWebView webView, void* param);
 WKE_API void wkeOnDocumentReady(wkeWebView webView, wkeDocumentReadyCallback callback, void* param);
-
 
 typedef enum {
     WKE_LOADING_SUCCEEDED,
@@ -343,7 +339,19 @@ typedef enum {
 typedef void (*wkeLoadingFinishCallback)(wkeWebView webView, void* param, const wkeString url, wkeLoadingResult result, const wkeString failedReason);
 WKE_API void wkeOnLoadingFinish(wkeWebView webView, wkeLoadingFinishCallback callback, void* param);
 
+typedef bool(*wkeLoadUrlBeginCallback)(wkeWebView webView, void* param, const char *url, void *job);
+WKE_API void wkeOnLoadUrlBegin(wkeWebView webView, wkeLoadUrlBeginCallback callback, void* callbackParam);
 
+typedef void(*wkeLoadUrlEndCallback)(wkeWebView webView, void* param, const wkeString url, void *request, void* response);
+WKE_API void wkeOnLoadUrlEnd(wkeWebView webView, wkeLoadUrlEndCallback callback, void* callbackParam);
+
+//wkeNet--------------------------------------------------------------------------------------
+WKE_API void wkeNetSetMIMEType(void *job, char *type);
+WKE_API void wkeNetSetHTTPHeaderField(void *job, wchar_t *key, wchar_t *value);
+WKE_API void wkeNetSetURL(void *job,const char *url);
+WKE_API void wkeNetSetData(void *job, void *buf, int len);
+
+//wkewindow-----------------------------------------------------------------------------------
 typedef enum {
     WKE_WINDOW_TYPE_POPUP,
     WKE_WINDOW_TYPE_TRANSPARENT,
@@ -374,7 +382,7 @@ WKE_API void wkeSetWindowTitleW(wkeWebView webWindow, const wchar_t* title);
 
 
 
-/***JavaScript Bind***/
+//JavaScript Bind-----------------------------------------------------------------------------------
 #define JS_CALL __fastcall
 typedef jsValue (JS_CALL *jsNativeFunction) (jsExecState es);
 

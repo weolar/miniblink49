@@ -881,6 +881,17 @@ void CWebView::onDocumentReady(wkeDocumentReadyCallback callback, void* callback
     m_webPage->wkeHandler().documentReadyCallbackParam = callbackParam;
 }
 
+void CWebView::onLoadUrlBegin(wkeLoadUrlBeginCallback callback, void* callbackParam)
+{
+	m_webPage->wkeHandler().loadUrlBeginCallback = callback;
+	m_webPage->wkeHandler().loadUrlBeginCallbackParam = callbackParam;
+}
+
+void CWebView::onLoadUrlEnd(wkeLoadUrlEndCallback callback, void* callbackParam)
+{
+	m_webPage->wkeHandler().loadUrlEndCallback = callback;
+	m_webPage->wkeHandler().loadUrlEndCallbackParam = callbackParam;
+}
 };//namespace wke
 
 //static Vector<wke::CWebView*> s_webViews;

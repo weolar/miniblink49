@@ -7,6 +7,3 @@ build/miniblink.VC.VC.opendb
 *.ipch
 Debug/*
 Release/*
-*.vcxproj.user
-*.user
-build/cefclient/cefclient.vcxproj.user

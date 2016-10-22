@@ -43,10 +43,14 @@
 #include "third_party/WebKit/Source/platform/weborigin/KURL.h"
 #include "third_party/WebKit/Source/platform/network/HTTPParsers.h"
 #include "third_party/WebKit/Source/platform/MIMETypeRegistry.h"
+#include "third_party/WebKit/Source/web/WebLocalFrameImpl.h"
 #include "content/web_impl_win/WebCookieJarCurlImpl.h"
+#include "content/browser/WebFrameClientImpl.h"
+#include "content/browser/WebPage.h"
 
 #include "net/WebURLLoaderInternal.h"
 #include "net/DataURL.h"
+#include "net/RequestExtraData.h"
 
 #include <errno.h>
 #include <stdio.h>
@@ -59,6 +63,10 @@
 #include "third_party/WebKit/Source/wtf/Threading.h"
 #include "third_party/WebKit/Source/wtf/Vector.h"
 #include "third_party/WebKit/Source/wtf/text/CString.h"
+
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
+#include "wke/wkeWebView.h"
+#endif
 
 using namespace blink;
 
@@ -932,6 +940,19 @@ void WebURLLoaderManager::dispatchSynchronousJob(WebURLLoaderInternal* job)
         return;
     }
 
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
+	RequestExtraData* requestExtraData = reinterpret_cast<RequestExtraData*>(job->firstRequest()->extraData());
+	WebPage* page = requestExtraData->page;
+	if (page->wkeHandler().loadUrlBeginCallback) {
+
+		if (page->wkeHandler().loadUrlBeginCallback(page->wkeWebView(), page->wkeHandler().loadUrlBeginCallbackParam,
+			encodeWithURLEscapeSequences(job->firstRequest()->url().string()).latin1().data(),job)) {
+			job->client()->didFinishLoading(job->loader(), WTF::currentTime(), 0);
+			return;
+		}
+	}
+#endif
+
     WebURLLoaderInternal* handle = job;
 
     // If defersLoading is true and we call curl_easy_perform
@@ -962,13 +983,41 @@ void WebURLLoaderManager::dispatchSynchronousJob(WebURLLoaderInternal* job)
 
 void WebURLLoaderManager::startJob(WebURLLoaderInternal* job)
 {
-    KURL url = job->firstRequest()->url();
+	KURL url = job->firstRequest()->url();
 
-    if (url.protocolIsData()) {
-        handleDataURL(job->loader(), job->client(), url);
-        job->deref();
-        return;
-    }
+	if (url.protocolIsData()) {
+		handleDataURL(job->loader(), job->client(), url);
+		job->deref();
+		return;
+	}
+
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
+	RequestExtraData* requestExtraData = reinterpret_cast<RequestExtraData*>(job->firstRequest()->extraData());
+	WebPage* page = requestExtraData->page;
+	if (page->wkeHandler().loadUrlBeginCallback) {
+		
+		if (page->wkeHandler().loadUrlBeginCallback(page->wkeWebView(), page->wkeHandler().loadUrlBeginCallbackParam, 
+			encodeWithURLEscapeSequences(job->firstRequest()->url().string()).latin1().data(),job)) {
+			WebURLResponse req = job->m_response;
+			//req.setHTTPStatusText(String("OK"));
+			//req.setHTTPHeaderField("Content-Leng", "4");
+			//req.setHTTPHeaderField("Content-Type", "text/html");
+			//req.setExpectedContentLength(static_cast<long long int>(4));
+			//req.setURL(KURL(ParsedURLString, "http://127.0.0.1/a.html"));
+			//req.setHTTPStatusCode(200);
+			//req.setMIMEType(extractMIMETypeFromMediaType(req.httpHeaderField(WebString::fromUTF8("Content-Type"))).lower());
+
+			//req.setTextEncodingName(extractCharsetFromMediaType(req.httpHeaderField(WebString::fromUTF8("Content-Type"))));
+			//job->client()->didReceiveResponse(job->loader(), req);
+			//job->setResponseFired(true);
+
+			//job->client()->didReceiveData(job->loader(), "aaaa", 4, 0);
+			job->client()->didFinishLoading(job->loader(), WTF::currentTime(), 0);
+			return;
+		}
+	}
+#endif
+
 
     initializeHandle(job);
 
