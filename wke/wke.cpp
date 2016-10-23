@@ -303,6 +303,11 @@ HDC wkeGetViewDC(wkeWebView webView)
     return webView->viewDC();
 }
 
+HWND wkeGetHostHWND(wkeWebView webView)
+{
+	return webView->windowHandle();
+}
+
 bool wkeCanGoBack(wkeWebView webView)
 {
     return webView->canGoBack();

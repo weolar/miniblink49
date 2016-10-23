@@ -222,6 +222,7 @@ WKE_API void wkePaint(wkeWebView webView, void* bits,int bufWid, int bufHei, int
 WKE_API void wkePaint2(wkeWebView webView, void* bits,int pitch);
 WKE_API void wkeRepaintIfNeeded(wkeWebView webView);
 WKE_API HDC wkeGetViewDC(wkeWebView webView);
+WKE_API HWND wkeGetHostHWND(wkeWebView webView);
 
 WKE_API bool wkeCanGoBack(wkeWebView webView);
 WKE_API bool wkeGoBack(wkeWebView webView);
