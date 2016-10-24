@@ -28,6 +28,8 @@ void scrt_initialize_thread_safe_statics()
     hMon = LoadLibraryW(L"GDI32.dll");
     pGdiAlphaBlend = (PFN_GdiAlphaBlend)GetProcAddress(hMon, "GdiAlphaBlend");
 
+	LoadLibraryW(L"Usp10.dll");
+
     OutputDebugStringA("scrt_initialize_thread_safe_statics");
 }
 
@@ -235,7 +237,6 @@ char WINAPI InterlockedExchangeAdd8(char volatile * _Addend, char _Value)
 
 void __stdcall _ReadWriteBarrier(void)
 {
-    ;
 }
 
 #endif // #if USING_VC6RT == 1

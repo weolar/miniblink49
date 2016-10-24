@@ -16,6 +16,7 @@ namespace wke {
 
 CWebView::CWebView()
     : m_name("")
+    , m_hWnd(NULL)
     , m_transparent(false)
     //, m_dirty(false)
     , m_width(0)
@@ -330,26 +331,16 @@ HDC CWebView::viewDC()
     return m_webPage->viewDC();
 }
 
+HWND CWebView::windowHandle() const
+{
+    return m_hWnd;
+}
+
 void CWebView::paint(void* bits, int pitch)
 {
     if (m_webPage->needsCommit())
         m_webPage->fireTimerEvent();
     m_webPage->paintToBit(bits, pitch);
-
-//     if (m_dirty)
-//         repaintIfNeeded();
-// 
-//     if (pitch == 0 || pitch == m_width*4) {
-//         memcpy(bits, m_pixels, m_width*m_height*4);
-//     } else {
-//         unsigned char* src = (unsigned char*)m_pixels; 
-//         unsigned char* dst = (unsigned char*)bits; 
-//         for(int i = 0; i < m_height; ++i) {
-//             memcpy(dst, src, m_width*4);
-//             src += m_width*4;
-//             dst += pitch;
-//         }
-//     }
 }
 
 void CWebView::paint(void* bits, int bufWid, int bufHei, int xDst, int yDst, int w, int h, int xSrc, int ySrc, bool bCopyAlpha)

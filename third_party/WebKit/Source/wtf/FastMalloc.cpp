@@ -43,9 +43,13 @@ namespace WTF {
 
 void* fastZeroedMalloc(size_t n)
 {
+#ifdef _DEBUG
+    RECORD_LOCK();
+#endif
     void* result = fastMalloc(n);
 #ifdef _DEBUG
     RECORD_MALLOC(((size_t*)result) - 1, true);
+    RECORD_UNLOCK();
 #endif
     memset(result, 0, n);
     return result;
@@ -53,10 +57,14 @@ void* fastZeroedMalloc(size_t n)
 
 char* fastStrDup(const char* src)
 {
+#ifdef _DEBUG
+    RECORD_LOCK();
+#endif
     size_t len = strlen(src) + 1;
     char* dup = static_cast<char*>(fastMalloc(len));
 #ifdef _DEBUG
     RECORD_MALLOC(((size_t*)dup) - 1, true);
+    RECORD_UNLOCK();
 #endif
     memcpy(dup, src, len);
     return dup;
@@ -64,7 +72,8 @@ char* fastStrDup(const char* src)
 
 void* fastMalloc(size_t n)
 {
-#ifdef _DEBUG // weolar
+#ifdef _DEBUG
+    RECORD_LOCK();
     n += sizeof(size_t);
 #endif
     void* result = partitionAllocGeneric(Partitions::fastMallocPartition(), n);
@@ -73,6 +82,7 @@ void* fastMalloc(size_t n)
     InterlockedExchangeAdd(reinterpret_cast<long volatile*>(&g_blinkMemSize), static_cast<long>(n));
     *(size_t*)result = n;
     result = (char*)result + sizeof(size_t);
+    RECORD_UNLOCK();
 #endif
     return result;
 }
@@ -82,6 +92,7 @@ void fastFree(void* p)
 #ifdef _DEBUG
     if (!p)
         return;
+    RECORD_LOCK();
     size_t* ptr = (size_t*)p;
     --ptr;
     size_t size = *ptr;
@@ -90,6 +101,10 @@ void fastFree(void* p)
     InterlockedExchangeAdd(reinterpret_cast<long volatile*>(&g_blinkMemSize), -static_cast<long>(size));
 #endif
     partitionFreeGeneric(Partitions::fastMallocPartition(), p);
+
+#ifdef _DEBUG
+    RECORD_UNLOCK();
+#endif
 }
 
 void* fastRealloc(void* p, size_t n)
@@ -98,12 +113,15 @@ void* fastRealloc(void* p, size_t n)
 #ifdef _DEBUG
     size_t* ptr = nullptr;
     if (!p) {
+        RECORD_LOCK();
         result = fastMalloc(n);
         ptr = (size_t*)result;
         RECORD_MALLOC(ptr - 1, true);
+        RECORD_UNLOCK();
         return result;
     }
     
+    RECORD_LOCK();
     ptr = (size_t*)p;
     --ptr;
     size_t size = *ptr;
@@ -116,6 +134,7 @@ void* fastRealloc(void* p, size_t n)
     *(size_t*)result = n;
     result = (char*)result + sizeof(size_t);
     InterlockedExchangeAdd(reinterpret_cast<long volatile*>(&g_blinkMemSize), static_cast<long>(n - size));
+    RECORD_UNLOCK();
 #endif
     return result;
 }

@@ -23,6 +23,21 @@ ostream& operator<<(ostream& os, unsigned __int64 val)
     return os;
 }
 
+basic_ostream<char, char_traits<char> > & __cdecl operator<< <char, char_traits<char> >(basic_ostream<char, char_traits<char> > & os, unsigned char const * str)
+{
+	if (!str)
+		return os;
+
+	os << ((const char *)str);
+	return os;
+}
+
+basic_ostream<char, char_traits<char> > & __cdecl operator<<<char, char_traits<char> >(basic_ostream<char, char_traits<char> > & os, unsigned char c)
+{
+	os << ((char)c);
+	return os;
+}
+
 }
 
 #endif // USING_VC6RT

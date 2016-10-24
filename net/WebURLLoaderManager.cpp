@@ -33,6 +33,11 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+#if USING_VC6RT == 1
+#define PURE = 0
+#endif
+
 #include <shlobj.h>
 #include <shlwapi.h>
 
@@ -56,11 +61,6 @@
 
 #include <errno.h>
 #include <stdio.h>
-#if USING_VC6RT == 1
-#define PURE = 0
-#endif
-
-
 
 #include "third_party/WebKit/Source/wtf/Threading.h"
 #include "third_party/WebKit/Source/wtf/Vector.h"
@@ -321,22 +321,21 @@ static size_t writeCallback(void* ptr, size_t size, size_t nmemb, void* data)
 		if (d->m_cancelled)
 			return 0;
 	}
-	if (d->m_hookRequest) {
-		if (!d->m_hookbuf) {
-			d->m_hookbuf = malloc(totalSize);
+
+	if (d->m_isHookRequest) {
+		if (!d->m_hookBuf) {
+			d->m_hookBuf = malloc(totalSize);
+		} else {
+			d->m_hookBuf = realloc(d->m_hookBuf, d->m_hookLength + totalSize);
 		}
-		else
-		{
-			d->m_hookbuf = realloc(d->m_hookbuf, d->m_hooklen + totalSize);
-		}
-		memcpy(((char *)d->m_hookbuf + d->m_hooklen), ptr, totalSize);
-		d->m_hooklen += totalSize;
+		memcpy(((char *)d->m_hookBuf + d->m_hookLength), ptr, totalSize);
+		d->m_hookLength += totalSize;
 		return totalSize;
 	}
 
 	if (d->m_multipartHandle){
 		d->m_multipartHandle->contentReceived(static_cast<const char*>(ptr), totalSize);
-	}else if (d->client() && job->loader()) {
+	} else if (d->client() && job->loader()) {
         d->client()->didReceiveData(job->loader(), static_cast<char*>(ptr), totalSize, 0);
     }
     return totalSize;
@@ -681,7 +680,6 @@ void WebURLLoaderManager::downloadTimerCallback(Timer<WebURLLoaderManager>* time
         if (CURLMSG_DONE != msg->msg)
             continue;
 
-
         if (CURLE_OK == msg->data.result) {
 #if ENABLE(WEB_TIMING)
             calculateWebTimingInformations(d);
@@ -693,33 +691,26 @@ void WebURLLoaderManager::downloadTimerCallback(Timer<WebURLLoaderManager>* time
                     continue;
                 }
             }
-			if (d->m_hookRequest)
-			{
+
+			if (d->m_isHookRequest) {
 				RequestExtraData* requestExtraData = reinterpret_cast<RequestExtraData*>(d->firstRequest()->extraData());
-				WebPage* page = requestExtraData->page;
+				content::WebPage* page = requestExtraData->page;
 				if (page->wkeHandler().loadUrlEndCallback) {
 					page->wkeHandler().loadUrlEndCallback(page->wkeWebView(), page->wkeHandler().loadUrlEndCallbackParam,
 						encodeWithURLEscapeSequences(job->firstRequest()->url().string()).latin1().data(), job,
-						d->m_hookbuf, d->m_hooklen);
+						d->m_hookBuf, d->m_hookLength);
 				}
-				if (d->m_multipartHandle) {
-					d->m_multipartHandle->contentReceived(static_cast<const char*>(d->m_hookbuf), d->m_hooklen);
-					d->m_multipartHandle->contentEnded();
-				}
-				else if (d->client() && job->loader()) {
-					d->client()->didReceiveData(job->loader(), static_cast<char*>(d->m_hookbuf), d->m_hooklen, 0);
-					d->client()->didFinishLoading(job->loader(), 0, 0);
-				}
+			}
 
-			}
-			else {
-				if (d->m_multipartHandle) {
-					d->m_multipartHandle->contentEnded();
-				}
-				if (d->client() && job->loader()) {
-					d->client()->didFinishLoading(job->loader(), 0, 0);
-				}
-			}
+            if (d->m_multipartHandle) {
+                if (d->m_hookBuf)
+                    d->m_multipartHandle->contentReceived(static_cast<const char*>(d->m_hookBuf), d->m_hookLength);
+                d->m_multipartHandle->contentEnded();
+            } else if (d->client() && job->loader()) {
+                if (d->m_hookBuf)
+                    d->client()->didReceiveData(job->loader(), static_cast<char*>(d->m_hookBuf), d->m_hookLength, 0);
+                d->client()->didFinishLoading(job->loader(), 0, 0);
+            }
         } else {
             char* url = 0;
             curl_easy_getinfo(d->m_handle, CURLINFO_EFFECTIVE_URL, &url);
@@ -946,7 +937,7 @@ void WebURLLoaderManager::dispatchSynchronousJob(WebURLLoaderInternal* job)
 
 		if (page->wkeHandler().loadUrlBeginCallback(page->wkeWebView(), page->wkeHandler().loadUrlBeginCallbackParam,
 			encodeWithURLEscapeSequences(job->firstRequest()->url().string()).latin1().data(),job)) {
-			job->client()->didFinishLoading(job->loader(), WTF::currentTime(), 0);//加载完成
+			job->client()->didFinishLoading(job->loader(), WTF::currentTime(), 0); // 加载完成
 			return;
 		}
 	}
@@ -1011,7 +1002,7 @@ void WebURLLoaderManager::startJob(WebURLLoaderInternal* job)
 			//job->setResponseFired(true);
 
 			//job->client()->didReceiveData(job->loader(), "aaaa", 4, 0);
-			job->client()->didFinishLoading(job->loader(), WTF::currentTime(), 0);//加载完成
+			job->client()->didFinishLoading(job->loader(), WTF::currentTime(), 0); // 加载完成
 			return;
 		}
 	}

@@ -29,7 +29,7 @@ void wkeNetSetData(void *job, void *buf, int len)
 }
 void wkeNetHookRequest(void *job)
 {
-	((net::WebURLLoaderInternal*)job)->m_hookRequest = true;
+	((net::WebURLLoaderInternal*)job)->m_isHookRequest = true;
 }
 //WebURLResponse req = job->m_response;
 //req.setHTTPStatusText(String("OK"));

@@ -82,9 +82,9 @@ public:
 		, m_loader(loader)
 		, m_failureTimer(this, &WebURLLoaderInternal::fireFailure)
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
-		, m_hookbuf(0)
-		, m_hooklen(0)
-		, m_hookRequest(false)
+		, m_hookBuf(0)
+		, m_hookLength(0)
+		, m_isHookRequest(false)
 #endif
     {
         m_firstRequest = new blink::WebURLRequest(request);
@@ -103,8 +103,8 @@ public:
         if (m_customHeaders)
             curl_slist_free_all(m_customHeaders);
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
-		if (m_hookbuf)
-			free(m_hookbuf);
+		if (m_hookBuf)
+			free(m_hookBuf);
 #endif
     }
 
@@ -198,9 +198,9 @@ public:
     String m_debugPath;
 
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
-	bool m_hookRequest;
-	void *m_hookbuf;
-	int m_hooklen;
+	bool m_isHookRequest;
+	void* m_hookBuf;
+	int m_hookLength;
 #endif
 };
 

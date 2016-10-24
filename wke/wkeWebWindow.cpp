@@ -9,8 +9,6 @@ namespace wke {
 
 CWebWindow::CWebWindow()
 {
-    m_hwnd = NULL;
-
     m_originalPaintUpdatedCallback = NULL;
     m_originalPaintUpdatedCallbackParam = NULL;
 
@@ -94,7 +92,7 @@ void CWebWindow::onDocumentReady(wkeDocumentReadyCallback callback, void* callba
 
 bool CWebWindow::_createWindow(HWND parent, unsigned styles, unsigned styleEx, int x, int y, int width, int height)
 {
-    if (IsWindow(m_hwnd))
+    if (IsWindow(m_hWnd))
         return true;
 
     const wchar_t* szClassName = L"wkeWebWindow";
@@ -137,7 +135,7 @@ bool CWebWindow::_createWindow(HWND parent, unsigned styles, unsigned styleEx, i
     //if (WKE_WINDOW_STYLE_SHOWLOADING == (styleFlags & WKE_WINDOW_STYLE_SHOWLOADING))
     //    styles |=  WS_VISIBLE;
 
-    m_hwnd = CreateWindowExW(
+    m_hWnd = CreateWindowExW(
         styleEx,        // window ex-style
         szClassName,    // window class name
         L"wkeWebWindow", // window caption
@@ -151,7 +149,7 @@ bool CWebWindow::_createWindow(HWND parent, unsigned styles, unsigned styleEx, i
         GetModuleHandleW(NULL),           // program instance handle
         this);         // creation parameters
 
-    if (!IsWindow(m_hwnd))
+    if (!IsWindow(m_hWnd))
         return FALSE;
 
     CWebView::resize(width, height);
@@ -160,10 +158,10 @@ bool CWebWindow::_createWindow(HWND parent, unsigned styles, unsigned styleEx, i
 
 void CWebWindow::_destroyWindow()
 {
-    KillTimer(m_hwnd, 100);
-    RemovePropW(m_hwnd, L"wkeWebWindow");
-    DestroyWindow(m_hwnd);
-    m_hwnd = NULL;
+    KillTimer(m_hWnd, 100);
+    RemovePropW(m_hWnd, L"wkeWebWindow");
+    DestroyWindow(m_hWnd);
+    m_hWnd = NULL;
 }
 
 void CWebWindow::_initCallbacks()
@@ -214,7 +212,7 @@ LRESULT CWebWindow::_windowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM l
     case WM_DESTROY:
         KillTimer(hwnd, 100);
         RemovePropW(hwnd, L"wkeWebWindow");
-        m_hwnd = NULL;
+        m_hWnd = NULL;
 
         if (m_windowDestroyCallback)
             m_windowDestroyCallback(this, m_windowDestroyCallbackParam);
@@ -293,14 +291,14 @@ LRESULT CWebWindow::_windowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM l
 
 
     //case WM_NCHITTEST:
-    //    if (IsWindow(m_hwnd) && flagsOff(GetWindowLong(m_hwnd, GWL_STYLE), WS_CAPTION))
+    //    if (IsWindow(m_hWnd) && flagsOff(GetWindowLong(m_hWnd, GWL_STYLE), WS_CAPTION))
     //    {
     //        IWebkitObserverPtr observer = m_observer.lock();
     //        if (!observer)
     //            break;
 
     //        QPoint cursor(LOWORD(lParam), HIWORD(lParam));
-    //        ScreenToClient(m_hwnd, &cursor);
+    //        ScreenToClient(m_hWnd, &cursor);
 
     //        QRect clientRect;
     //        QSize clientSize;
@@ -327,7 +325,7 @@ LRESULT CWebWindow::_windowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM l
     //    break;
 
     //case WM_SETCURSOR:
-    //    if (IsWindow(m_hwnd) && flagsOff(GetWindowLong(m_hwnd, GWL_STYLE), WS_CAPTION))
+    //    if (IsWindow(m_hWnd) && flagsOff(GetWindowLong(m_hWnd, GWL_STYLE), WS_CAPTION))
     //    {
     //        WORD hit = LOWORD(lParam);
     //        switch (hit)
@@ -367,34 +365,34 @@ LRESULT CWebWindow::_windowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM l
     //    break;
 
     //case WM_NCLBUTTONDOWN:
-    //    if (IsWindow(m_hwnd) && flagsOff(GetWindowLong(m_hwnd, GWL_STYLE), WS_CAPTION))
+    //    if (IsWindow(m_hWnd) && flagsOff(GetWindowLong(m_hWnd, GWL_STYLE), WS_CAPTION))
     //    {
     //        int hit = wParam;
     //        switch (hit)
     //        {
-    //        case HTTOP:         SendMessageW(m_hwnd, WM_SYSCOMMAND, SC_SIZE|WMSZ_TOP, lParam); return 0;
-    //        case HTBOTTOM:      SendMessageW(m_hwnd, WM_SYSCOMMAND, SC_SIZE|WMSZ_BOTTOM, lParam); return 0;
-    //        case HTLEFT:        SendMessageW(m_hwnd, WM_SYSCOMMAND, SC_SIZE|WMSZ_LEFT, lParam); return 0;
-    //        case HTRIGHT:       SendMessageW(m_hwnd, WM_SYSCOMMAND, SC_SIZE|WMSZ_RIGHT, lParam); return 0;
-    //        case HTTOPLEFT:     SendMessageW(m_hwnd, WM_SYSCOMMAND, SC_SIZE|WMSZ_TOPLEFT, lParam); return 0;
-    //        case HTTOPRIGHT:    SendMessageW(m_hwnd, WM_SYSCOMMAND, SC_SIZE|WMSZ_TOPRIGHT, lParam); return 0;
-    //        case HTBOTTOMLEFT:  SendMessageW(m_hwnd, WM_SYSCOMMAND, SC_SIZE|WMSZ_BOTTOMLEFT, lParam); return 0;
-    //        case HTBOTTOMRIGHT: SendMessageW(m_hwnd, WM_SYSCOMMAND, SC_SIZE|WMSZ_BOTTOMRIGHT, lParam); return 0;
-    //        case HTCAPTION:     SendMessageW(m_hwnd, WM_SYSCOMMAND, SC_MOVE|4, lParam); return 0;
+    //        case HTTOP:         SendMessageW(m_hWnd, WM_SYSCOMMAND, SC_SIZE|WMSZ_TOP, lParam); return 0;
+    //        case HTBOTTOM:      SendMessageW(m_hWnd, WM_SYSCOMMAND, SC_SIZE|WMSZ_BOTTOM, lParam); return 0;
+    //        case HTLEFT:        SendMessageW(m_hWnd, WM_SYSCOMMAND, SC_SIZE|WMSZ_LEFT, lParam); return 0;
+    //        case HTRIGHT:       SendMessageW(m_hWnd, WM_SYSCOMMAND, SC_SIZE|WMSZ_RIGHT, lParam); return 0;
+    //        case HTTOPLEFT:     SendMessageW(m_hWnd, WM_SYSCOMMAND, SC_SIZE|WMSZ_TOPLEFT, lParam); return 0;
+    //        case HTTOPRIGHT:    SendMessageW(m_hWnd, WM_SYSCOMMAND, SC_SIZE|WMSZ_TOPRIGHT, lParam); return 0;
+    //        case HTBOTTOMLEFT:  SendMessageW(m_hWnd, WM_SYSCOMMAND, SC_SIZE|WMSZ_BOTTOMLEFT, lParam); return 0;
+    //        case HTBOTTOMRIGHT: SendMessageW(m_hWnd, WM_SYSCOMMAND, SC_SIZE|WMSZ_BOTTOMRIGHT, lParam); return 0;
+    //        case HTCAPTION:     SendMessageW(m_hWnd, WM_SYSCOMMAND, SC_MOVE|4, lParam); return 0;
     //        }
     //    }
     //    break;
 
     //case WM_NCLBUTTONDBLCLK:
-    //    if (IsWindow(m_hwnd) && flagsOff(GetWindowLong(m_hwnd, GWL_STYLE), WS_CAPTION))
+    //    if (IsWindow(m_hWnd) && flagsOff(GetWindowLong(m_hWnd, GWL_STYLE), WS_CAPTION))
     //    {
     //        int hit = wParam;
     //        if (hit == HTCAPTION)
     //        {
-    //            if (IsZoomed(m_hwnd))
-    //                SendMessageW(m_hwnd, WM_SYSCOMMAND, SC_RESTORE, lParam);
+    //            if (IsZoomed(m_hWnd))
+    //                SendMessageW(m_hWnd, WM_SYSCOMMAND, SC_RESTORE, lParam);
     //            else
-    //                SendMessageW(m_hwnd, WM_SYSCOMMAND, SC_MAXIMIZE, lParam);
+    //                SendMessageW(m_hWnd, WM_SYSCOMMAND, SC_MAXIMIZE, lParam);
     //            return 0;
     //        }
     //    }
@@ -578,9 +576,9 @@ void CWebWindow::_staticOnPaintUpdated(wkeWebView webView, void* param, const HD
 
 void CWebWindow::_onPaintUpdated(const HDC hdc, int x, int y, int cx, int cy)
 {
-    if (WS_EX_LAYERED == (WS_EX_LAYERED & GetWindowLong(m_hwnd, GWL_EXSTYLE))) {
+    if (WS_EX_LAYERED == (WS_EX_LAYERED & GetWindowLong(m_hWnd, GWL_EXSTYLE))) {
         RECT rectDest;
-        GetWindowRect(m_hwnd, &rectDest);
+        GetWindowRect(m_hWnd, &rectDest);
 
         SIZE sizeDest = { rectDest.right - rectDest.left, rectDest.bottom - rectDest.top };
         POINT pointDest = { rectDest.left, rectDest.top };
@@ -597,7 +595,7 @@ void CWebWindow::_onPaintUpdated(const HDC hdc, int x, int y, int cx, int cy)
         blend.BlendOp = AC_SRC_OVER;
         blend.SourceConstantAlpha = 255;
         blend.AlphaFormat = AC_SRC_ALPHA;
-        UpdateLayeredWindow(m_hwnd, hdcScreen, &pointDest, &sizeDest, wkeGetViewDC(this), &pointSource, RGB(0,0,0), &blend, ULW_ALPHA);
+        UpdateLayeredWindow(m_hWnd, hdcScreen, &pointDest, &sizeDest, wkeGetViewDC(this), &pointSource, RGB(0,0,0), &blend, ULW_ALPHA);
 
         //SelectObject(hdcMemory, (HGDIOBJ)hbmpOld);
         //DeleteObject((HGDIOBJ)hbmpMemory);
@@ -605,7 +603,7 @@ void CWebWindow::_onPaintUpdated(const HDC hdc, int x, int y, int cx, int cy)
 
         ReleaseDC(NULL, hdcScreen);
     } else {
-        InvalidateRect(m_hwnd, NULL, FALSE);
+        InvalidateRect(m_hWnd, NULL, FALSE);
     }
 
     if (m_originalPaintUpdatedCallback)
@@ -636,11 +634,6 @@ void CWebWindow::_onDocumentReady()
         m_originalDocumentReadyCallback(this, m_originalDocumentReadyCallbackParam);
 }
 
-HWND CWebWindow::windowHandle() const
-{
-    return m_hwnd;
-}
-
 void CWebWindow::onClosing(wkeWindowClosingCallback callback, void* param)
 {
     m_windowClosingCallback = callback;
@@ -655,17 +648,17 @@ void CWebWindow::onDestroy(wkeWindowDestroyCallback callback, void* param)
 
 void CWebWindow::show(bool b)
 {
-    ShowWindow(m_hwnd, b ? SW_SHOW : SW_HIDE);
+    ShowWindow(m_hWnd, b ? SW_SHOW : SW_HIDE);
 }
 
 void CWebWindow::enable(bool b)
 {
-    EnableWindow(m_hwnd, b ? TRUE : FALSE);
+    EnableWindow(m_hWnd, b ? TRUE : FALSE);
 }
 
 void CWebWindow::move(int x, int y, int width, int height)
 {
-    MoveWindow(m_hwnd, x, y, width, height, FALSE);
+    MoveWindow(m_hWnd, x, y, width, height, FALSE);
 }
 
 void CWebWindow::resize(int width, int height)
@@ -673,18 +666,18 @@ void CWebWindow::resize(int width, int height)
     POINT point = { 0 };
     {
         RECT rect = { 0 };
-        GetWindowRect(m_hwnd, &rect);
+        GetWindowRect(m_hWnd, &rect);
         point.x = rect.left;
         point.y = rect.top;
     }
 
-    if (WS_CHILD == GetWindowLong(m_hwnd, GWL_STYLE))
+    if (WS_CHILD == GetWindowLong(m_hWnd, GWL_STYLE))
     {
-        HWND parent = GetParent(m_hwnd);
+        HWND parent = GetParent(m_hWnd);
         ScreenToClient(parent, &point);
     }
 
-    MoveWindow(m_hwnd, point.x, point.y, width, height, FALSE);
+    MoveWindow(m_hWnd, point.x, point.y, width, height, FALSE);
     CWebView::resize(width, height);
 }
 
@@ -693,15 +686,15 @@ void CWebWindow::moveToCenter()
     int width = 0;
     int height = 0; {
         RECT rect = { 0 };
-        GetWindowRect(m_hwnd, &rect);
+        GetWindowRect(m_hWnd, &rect);
         width = rect.right - rect.left;
         height = rect.bottom - rect.top;
     }
 
     int parentWidth = 0;
     int parentHeight = 0;
-    if (WS_CHILD == GetWindowLong(m_hwnd, GWL_STYLE)) {
-        HWND parent = GetParent(m_hwnd);
+    if (WS_CHILD == GetWindowLong(m_hWnd, GWL_STYLE)) {
+        HWND parent = GetParent(m_hWnd);
         RECT rect = { 0 };
         GetClientRect(parent, &rect);
         parentWidth = rect.right - rect.left;
@@ -714,12 +707,12 @@ void CWebWindow::moveToCenter()
     int x = (parentWidth - width) / 2;
     int y = (parentHeight - height) / 2;
 
-    MoveWindow(m_hwnd, x, y, width, height, FALSE);
+    MoveWindow(m_hWnd, x, y, width, height, FALSE);
 }
 
 void CWebWindow::setTitle(const wchar_t* text)
 {
-    SetWindowTextW(m_hwnd, text);
+    SetWindowTextW(m_hWnd, text);
 }
 
 void CWebWindow::setTitle(const utf8* text)

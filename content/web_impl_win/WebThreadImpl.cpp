@@ -171,7 +171,8 @@ void WebThreadImpl::postDelayedTask(const blink::WebTraceLocation& location, bli
     if (m_hEvent)
         ::SetEvent(m_hEvent);
 #if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
-	CefContext::Get()->SetNeedHeartbeat();
+    if (CefContext::Get())
+	    CefContext::Get()->SetNeedHeartbeat();
 #endif
     ::LeaveCriticalSection(&m_taskPairsMutex);
 }

@@ -47,33 +47,60 @@ void sk_out_of_memory(void) {
 
 static void* sk_malloc_nothrow(size_t size);
 
+struct MemoryHead {
+    size_t magicNum;
+    size_t size;
+};
+
+const size_t magicNum0 = 0x1122dd44;
+const size_t magicNum1 = 0x11227788;
+
 void* sk_realloc_throw(void* addr, size_t size) {
+    if (0 == size)
+        abort();
+
     void* result = nullptr;
 #ifdef _DEBUG
-    size_t* ptr;
+    MemoryHead* ptr;
     if (!addr) {
-        result = sk_malloc_nothrow(size);
-        ptr = (size_t*)result;
-        RECORD_MALLOC(ptr - 1, true);
+        size += sizeof(MemoryHead);
+
+        RECORD_LOCK();
+        ptr = (MemoryHead*)malloc(size);
+        RECORD_MALLOC(ptr, false);
+        
+        InterlockedExchangeAdd(reinterpret_cast<long volatile*>(&g_skiaMemSize), static_cast<long>(size));
+        ptr->magicNum = magicNum0;
+        ptr->size = size;
+        result = ptr + 1;
+        RECORD_UNLOCK();
+
         return result;
     }
 
-    ptr = (size_t*)addr;
-    --ptr;
-    size_t oldSize = *ptr;
+    ptr = (MemoryHead*)addr - 1;
+    if (ptr->magicNum != magicNum0)
+        DebugBreak();
+    ptr->magicNum = magicNum1;
+    size_t oldSize = ptr->size;
     addr = ptr;
-    size += sizeof(size_t);
-    
+    size += sizeof(MemoryHead);
+    RECORD_LOCK();
 #endif
+
     result = realloc(addr, size);
+
 #ifdef _DEBUG
     RECORD_REALLOC(addr, result);
 
-    *(size_t*)result = size;
-    result = (char*)result + sizeof(size_t);
-    InterlockedExchangeAdd(reinterpret_cast<long volatile*>(&g_skiaMemSize), static_cast<long>(size - oldSize));    
+    ptr = (MemoryHead*)result;
+    ptr->magicNum = magicNum0;
+    ptr->size = size;
+    result = ptr + 1;
+    InterlockedExchangeAdd(reinterpret_cast<long volatile*>(&g_skiaMemSize), static_cast<long>(size - oldSize));
+    RECORD_UNLOCK();
 #endif
-    return throw_on_failure(size, result);
+    return result;
 }
 
 void sk_free(void* p) {
@@ -81,114 +108,142 @@ void sk_free(void* p) {
         return;
 
 #ifdef _DEBUG
-    size_t* ptr = (size_t*)p;
-    --ptr;
-    size_t size = *ptr;
+    RECORD_LOCK();
+
+    MemoryHead* ptr = (MemoryHead*)p - 1;
+    if (ptr->magicNum != magicNum0)
+        DebugBreak();
+    ptr->magicNum = magicNum1;
+    size_t size = ptr->size;
     p = ptr;
 
     RECORD_FREE(p);
     InterlockedExchangeAdd(reinterpret_cast<long volatile*>(&g_skiaMemSize), -static_cast<long>(size));
 #endif
     free(p);
+
+#ifdef _DEBUG
+    RECORD_UNLOCK();
+#endif
+
 }
 
 void* sk_malloc_throw(size_t size) {
-#ifdef _DEBUG // weolar
-    size += sizeof(size_t);
-#endif
-    void* result = malloc(size);
+    if (0 == size)
+        return nullptr;
+
 #ifdef _DEBUG
-    RECORD_MALLOC(result, false);
-    InterlockedExchangeAdd(reinterpret_cast<long volatile*>(&g_skiaMemSize), static_cast<long>(size));
-    *(size_t*)result = size;
-    result = (char*)result + sizeof(size_t);
+    size += sizeof(MemoryHead);
+    RECORD_LOCK();
 #endif
-    return throw_on_failure(size, result);
+
+    void* result = malloc(size);
+
+#ifdef _DEBUG
+    MemoryHead* ptr = (MemoryHead*)result;
+    RECORD_MALLOC(ptr, false);
+    InterlockedExchangeAdd(reinterpret_cast<long volatile*>(&g_skiaMemSize), static_cast<long>(size));
+    ptr->magicNum = magicNum0;
+    ptr->size = size;
+    result = ptr + 1;
+
+    RECORD_UNLOCK();
+#endif
+    return result;
 }
 
 static void* sk_malloc_nothrow(size_t size) {
-#ifdef _DEBUG // weolar
-    size += sizeof(size_t);
-#endif
-
-    void* result;
-    // TODO(b.kelemen): we should always use UncheckedMalloc but currently it
-    // doesn't work as intended everywhere.
-#if  defined(LIBC_GLIBC) || defined(USE_TCMALLOC) || \
-     (defined(OS_MACOSX) && !defined(OS_IOS)) || defined(OS_ANDROID)
-    // It's the responsibility of the caller to check the return value.
-    ignore_result(base::UncheckedMalloc(size, &result));
-#else
-    // This is not really thread safe.  It only won't collide with itself, but we're totally
-    // unprotected from races with other code that calls set_new_handler.
-    SkAutoMutexAcquire lock(gSkNewHandlerMutex);
-    std::new_handler old_handler = std::set_new_handler(NULL);
-    result = malloc(size);
-    std::set_new_handler(old_handler);
-    return result;
-#endif
+    if (0 == size)
+        return nullptr;
 
 #ifdef _DEBUG
-    RECORD_MALLOC(result, false);
+    size += sizeof(MemoryHead);
+    RECORD_LOCK();
+#endif
+
+    void* result = malloc(size);
+
+#ifdef _DEBUG
+    MemoryHead* ptr = (MemoryHead*)result;
+    RECORD_MALLOC(ptr, false);
     InterlockedExchangeAdd(reinterpret_cast<long volatile*>(&g_skiaMemSize), static_cast<long>(size));
-    *(size_t*)result = size;
-    result = (char*)result + sizeof(size_t);
+    ptr->magicNum = magicNum0;
+    ptr->size = size;
+    result = ptr + 1;
+
+    RECORD_UNLOCK();
 #endif
     return result;
 }
 
 void* sk_malloc_flags(size_t size, unsigned flags) {
-    void* result;
-    if (flags & SK_MALLOC_THROW)
-        result = sk_malloc_throw(size);
-    else
-        result = sk_malloc_nothrow(size);
+    if (0 == size)
+        return nullptr;
+
 #ifdef _DEBUG
-    RECORD_MALLOC(((size_t*)result) - 1, true);
+    size += sizeof(MemoryHead);
+    RECORD_LOCK();
+#endif
+
+    void* result = malloc(size);
+
+#ifdef _DEBUG
+    MemoryHead* ptr = (MemoryHead*)result;
+    RECORD_MALLOC(ptr, false);
+    InterlockedExchangeAdd(reinterpret_cast<long volatile*>(&g_skiaMemSize), static_cast<long>(size));
+    ptr->magicNum = magicNum0;
+    ptr->size = size;
+    result = ptr + 1;
+
+    RECORD_UNLOCK();
 #endif
     return result;
 }
 
 void* sk_calloc_throw(size_t size) {
-#ifdef _DEBUG // weolar
-    size += sizeof(size_t);
-#endif
-    void* result = calloc(size, 1);
+    if (0 == size)
+        return nullptr;
+
 #ifdef _DEBUG
-    RECORD_MALLOC(result, false);
-    InterlockedExchangeAdd(reinterpret_cast<long volatile*>(&g_skiaMemSize), static_cast<long>(size));
-    *(size_t*)result = size;
-    result = (char*)result + sizeof(size_t);
+    size += sizeof(MemoryHead);
+    RECORD_LOCK();
 #endif
-    return throw_on_failure(size, result);
+
+    void* result = calloc(size, 1);
+
+#ifdef _DEBUG
+    MemoryHead* ptr = (MemoryHead*)result;
+    RECORD_MALLOC(ptr, false);
+    InterlockedExchangeAdd(reinterpret_cast<long volatile*>(&g_skiaMemSize), static_cast<long>(size));
+    ptr->magicNum = magicNum0;
+    ptr->size = size;
+    result = ptr + 1;
+
+    RECORD_UNLOCK();
+#endif
+    return result;
 }
 
 void* sk_calloc(size_t size) {
-#ifdef _DEBUG // weolar
-    size += sizeof(size_t);
-#endif
-
-    void* result;
-    // TODO(b.kelemen): we should always use UncheckedCalloc but currently it
-    // doesn't work as intended everywhere.
-#if  defined(LIBC_GLIBC) || defined(USE_TCMALLOC) || \
-     (defined(OS_MACOSX) && !defined(OS_IOS)) || defined(OS_ANDROID)
-    
-    // It's the responsibility of the caller to check the return value.
-    ignore_result(base::UncheckedCalloc(size, 1, &result));
-#else
-    SkAutoMutexAcquire lock(gSkNewHandlerMutex);
-    std::new_handler old_handler = std::set_new_handler(NULL);
-    result = calloc(size, 1);
-    std::set_new_handler(old_handler);
-#endif
+    if (0 == size)
+        return nullptr;
 
 #ifdef _DEBUG
-    RECORD_MALLOC(result, false);
-    InterlockedExchangeAdd(reinterpret_cast<long volatile*>(&g_skiaMemSize), static_cast<long>(size));
-    *(size_t*)result = size;
-    result = (char*)result + sizeof(size_t);
+    size += sizeof(MemoryHead);
+    RECORD_LOCK();
 #endif
 
+    void* result = calloc(size, 1);
+
+#ifdef _DEBUG
+    MemoryHead* ptr = (MemoryHead*)result;
+    RECORD_MALLOC(ptr, false);
+    InterlockedExchangeAdd(reinterpret_cast<long volatile*>(&g_skiaMemSize), static_cast<long>(size));
+    ptr->magicNum = magicNum0;
+    ptr->size = size;
+    result = ptr + 1;
+
+    RECORD_UNLOCK();
+#endif
     return result;
 }

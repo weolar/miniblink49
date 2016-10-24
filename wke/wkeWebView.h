@@ -111,6 +111,7 @@ public:
     void paint(void* bits, int bufWid, int bufHei, int xDst, int yDst, int w, int h, int xSrc, int ySrc, bool fKeepAlpha);
 	void repaintIfNeeded();
     HDC viewDC();
+    HWND windowHandle() const;
     
     bool canGoBack() const;
     bool goBack();
@@ -181,6 +182,7 @@ public:
     content::WebPage* webPage() { return m_webPage; }
 
 protected:
+    HWND m_hWnd;
     void _initHandler();
     void _initPage();
     void _initMemoryDC();
