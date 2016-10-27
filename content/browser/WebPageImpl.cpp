@@ -519,7 +519,7 @@ void WebPageImpl::paintToPlatformContext(const IntRect* paintRect)
         m_memoryCanvas = skia::CreatePlatformCanvas(m_clientRect.width(), m_clientRect.height(), !m_useLayeredBuffer);
 
         SkPaint clearColorPaint;
-        clearColorPaint.setColor(0xffff00ff); // 0xfff0504a
+        clearColorPaint.setColor(0x0); // 0xfff0504a
         clearColorPaint.setXfermodeMode(SkXfermode::kSrcOver_Mode); // SkXfermode::kSrcOver_Mode
         m_memoryCanvas->drawRect((SkRect)m_clientRect, clearColorPaint);
     }
