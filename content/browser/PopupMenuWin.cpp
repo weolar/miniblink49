@@ -54,7 +54,7 @@ const int smoothScrollAnimationDuration = 5000;
 
 static LPCWSTR kPopupWindowClassName = L"PopupWindowClass";
 
-PopupMenuWin::PopupMenuWin(HWND hWnd, WebViewImpl* webViewImpl)
+PopupMenuWin::PopupMenuWin(HWND hWnd, IntPoint offset, WebViewImpl* webViewImpl)
 {
     m_popup = NULL;
     m_popupImpl = nullptr;
@@ -69,6 +69,8 @@ PopupMenuWin::PopupMenuWin(HWND hWnd, WebViewImpl* webViewImpl)
     m_hParentWnd = hWnd;
     m_rect.setWidth(1);
     m_rect.setHeight(1);
+	m_offset.setX(offset.x());
+	m_offset.setY(offset.y());
 }
 
 void PopupMenuWin::closeWidgetSoon()
@@ -256,8 +258,9 @@ void PopupMenuWin::updataSize()
     popup->resize(size);
     m_needsCommit = needsCommit;
 
-    POINT pos = { m_rect.x(), m_rect.y() };
-    ::ClientToScreen(m_hParentWnd, &pos);
+
+	POINT pos = { m_rect.x() + m_offset.x(), m_rect.y() + m_offset.y() };
+	::ClientToScreen(m_hParentWnd, &pos);
 
     ::MoveWindow(m_popup, pos.x, pos.y, m_rect.width(), m_rect.height(), false);
 }
@@ -337,9 +340,9 @@ void PopupMenuWin::initialize()
     m_popupImpl->setFocus(true);
 }
 
-WebWidget* PopupMenuWin::create(HWND hWnd, WebViewImpl* webViewImpl, WebPopupType type)
+WebWidget* PopupMenuWin::create(HWND hWnd, blink::IntPoint offset, WebViewImpl* webViewImpl, WebPopupType type)
 {
-    PopupMenuWin* self = new PopupMenuWin(hWnd, webViewImpl);
+    PopupMenuWin* self = new PopupMenuWin(hWnd, offset, webViewImpl);
     return self->createWnd();
 }
 

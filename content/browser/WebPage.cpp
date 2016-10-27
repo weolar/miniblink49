@@ -214,6 +214,19 @@ HWND WebPage::getHWND() const
     return 0;
 }
 
+void WebPage::setHWND(HWND hwnd)
+{
+	if (m_pageImpl)
+		m_pageImpl->m_hWnd = hwnd;
+}
+
+void WebPage::setHWNDoffset(int x, int y)
+{
+	if (m_pageImpl) {
+		m_pageImpl->m_hWndoffset.setX(x);
+		m_pageImpl->m_hWndoffset.setY(y);
+	}
+}
 // Page* WebPage::page() const 
 // {
 //     if (m_pageImpl)

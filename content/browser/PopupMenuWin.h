@@ -43,7 +43,7 @@ class PlatformEventHandler;
 
 class PopupMenuWin : public blink::WebViewClient {
 public:
-    static blink::WebWidget* create(HWND hWnd, blink::WebViewImpl* webViewImpl, blink::WebPopupType type);
+    static blink::WebWidget* create(HWND hWnd, blink::IntPoint offset, blink::WebViewImpl* webViewImpl, blink::WebPopupType type);
     virtual void PopupMenuWin::closeWidgetSoon() override;
 
     HWND popupHandle() const { return m_popup; }
@@ -58,7 +58,7 @@ public:
     virtual void show(blink::WebNavigationPolicy) override;
 
 protected:
-    PopupMenuWin(HWND hWnd, blink::WebViewImpl* webViewImpl);
+    PopupMenuWin(HWND hWnd, blink::IntPoint offset, blink::WebViewImpl* webViewImpl);
     blink::WebWidget* PopupMenuWin::createWnd();
     void updataSize();
     void updataPaint();
@@ -84,6 +84,7 @@ protected:
     blink::WebFrameClient* m_webFrameClient;
     blink::WebViewImpl* m_webViewImpl;
     HWND m_hParentWnd;
+	blink::IntPoint m_offset;
     PlatformEventHandler* m_platformEventHandler;
 };
 

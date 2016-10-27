@@ -1,4 +1,4 @@
-
+ï»¿
 #include "content/browser/WebPageImpl.h"
 
 #include "base/basictypes.h"
@@ -136,7 +136,7 @@ WebPageImpl::WebPageImpl()
     m_layerTreeHost = nullptr;
     m_lastFrameTimeMonotonic = 0;
     m_webViewImpl = nullptr;
-    m_debugCount = 0;
+//    m_debugCount = 0;
     m_enterCount = 0;
     m_hWnd = NULL;
     m_state = pageUninited;
@@ -190,7 +190,7 @@ WebPageImpl::~WebPageImpl()
 	delete m_layerTreeHost;
 	m_layerTreeHost = nullptr;
 
-    // ÔÚPage::~Page()ÖĞÏú»Ù
+    // åœ¨Page::~Page()ä¸­é”€æ¯
     if (m_webFrameClient)
         delete m_webFrameClient;
     m_webFrameClient = nullptr;
@@ -462,20 +462,15 @@ bool WebPageImpl::drawFrame()
     if (0 != m_scheduleMessageCount)
         DebugBreak();
 
-    bool needClearCommit = m_layerTreeHost->preDrawFrame(); // ÕâÀïÒ²»á·¢ÆğCommit
+    bool needClearCommit = m_layerTreeHost->preDrawFrame(); // è¿™é‡Œä¹Ÿä¼šå‘èµ·Commit
 
     m_scheduleMessageCount++;
 
-    HDC hdc = NULL;
-    if (m_pagePtr->getHWND())
-        hdc = ::GetDC(m_pagePtr->getHWND());
 
-    paintToPlatformContext(hdc, &m_dirtyRects);
+    paintToPlatformContext(&m_dirtyRects);
 
 	m_layerTreeHost->postDrawFrame();
 
-    if (hdc && m_pagePtr->getHWND())
-        ::ReleaseDC(m_pagePtr->getHWND(), hdc);
     m_dirtyRects = IntRect();
     m_paintMessageQueue.clear();
     m_scheduleMessageCount--;
@@ -509,24 +504,11 @@ void WebPageImpl::firePaintEvent(HDC hdc, const RECT* paintRect)
     skia::DrawToNativeContext(m_memoryCanvas, hdc, paintRect->left, paintRect->top, paintRect);
 }
 
-void WebPageImpl::paintToPlatformContext(HDC hdc, const IntRect* paintRect)
+void WebPageImpl::paintToPlatformContext(const IntRect* paintRect)
 {
-    //////////////////////////////////////////////////////////////////////////
-//     HPEN hpen = CreatePen(PS_SOLID, 10, RGB(11, 22, 33));
-//     HBRUSH hbrush = CreateSolidBrush(RGB(0xf3, 22, 33));
-// 
-//     SelectObject(hdc, hpen);
-//     SelectObject(hdc, hbrush);
-// 
-//     Rectangle(hdc, paintRect->x(), paintRect->y(), paintRect->maxX(), paintRect->maxY());
-// 
-//     DeleteObject(hpen);
-//     DeleteObject(hbrush);
-//     return; // weolar
-    //////////////////////////////////////////////////////////////////////////
     m_paintRect = *paintRect;
 
-    bool needsFullTreeSync = true; // false; ÏÈÈ«²¿²ã¶¼¸üĞÂ£¬ÕâÑù¹ö¶¯Ìõ²ÅÄÜ±»Ë¢ĞÂµ½
+    bool needsFullTreeSync = true; // false; å…ˆå…¨éƒ¨å±‚éƒ½æ›´æ–°ï¼Œè¿™æ ·æ»šåŠ¨æ¡æ‰èƒ½è¢«åˆ·æ–°åˆ°
     if ((!m_memoryCanvas || m_hasResize) && !m_clientRect.isEmpty()) {
         m_hasResize = false;
         needsFullTreeSync = true;
@@ -555,17 +537,23 @@ void WebPageImpl::paintToPlatformContext(HDC hdc, const IntRect* paintRect)
 
     HDC hMemoryDC = skia::BeginPlatformPaint(m_memoryCanvas);
 
-    drawToCanvas(m_paintRect, m_memoryCanvas, needsFullTreeSync); // »æÖÆÔà¾ØĞÎ
+    drawToCanvas(m_paintRect, m_memoryCanvas, needsFullTreeSync); // ç»˜åˆ¶è„çŸ©å½¢
 
-    if (m_useLayeredBuffer) { // ÔÙ°ÑÄÚ´ædc»­µ½hdcÉÏ
+    if (m_useLayeredBuffer) { // å†æŠŠå†…å­˜dcç”»åˆ°hdcä¸Š
         RECT rtWnd;
         ::GetWindowRect(m_pagePtr->getHWND(), &rtWnd);
         m_winodwRect = winRectToIntRect(rtWnd);
         //skia::DrawToNativeLayeredContext(m_memoryCanvas.get(), hdc, m_winodwRect.x(), m_winodwRect.y(), &((RECT)m_clientRect));
     } else {
-        drawDebugLine(m_memoryCanvas, m_paintRect);
-        if (hdc)
-            skia::DrawToNativeContext(m_memoryCanvas, hdc, m_paintRect.x(), m_paintRect.y(), &intRectToWinRect(m_paintRect));
+        //drawDebugLine(m_memoryCanvas, m_paintRect);
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
+		if (m_browser)//ä½¿ç”¨wkeæ¥å£ä¸ç”±æ­¤ä¸Šå±
+		{
+			HDC hdc = GetDC(m_pagePtr->getHWND());
+			skia::DrawToNativeContext(m_memoryCanvas, hdc, m_paintRect.x(), m_paintRect.y(), &intRectToWinRect(m_paintRect));
+			ReleaseDC(m_pagePtr->getHWND(), hdc);
+		}
+#endif
     }
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
     if (m_pagePtr->wkeHandler().paintUpdatedCallback) {
@@ -578,13 +566,13 @@ void WebPageImpl::paintToPlatformContext(HDC hdc, const IntRect* paintRect)
     skia::EndPlatformPaint(m_memoryCanvas);
 }
 
-void WebPageImpl::drawDebugLine(skia::PlatformCanvas* memoryCanvas, const IntRect& paintRect)
-{
-    m_debugCount++;
+//void WebPageImpl::drawDebugLine(skia::PlatformCanvas* memoryCanvas, const IntRect& paintRect)
+//{
+//    m_debugCount++;
 
     //     HBRUSH hbrush;
     //     HPEN hpen;
-    //     hbrush = ::CreateSolidBrush(rand()); // ´´½¨À¶É«»­Ë¢
+    //     hbrush = ::CreateSolidBrush(rand()); // åˆ›å»ºè“è‰²ç”»åˆ·
     //     ::SelectObject(hdc, hbrush);
     //     //::Rectangle(hdc, m_paintRect.x(), m_paintRect.y(), m_paintRect.maxX(), m_paintRect.maxY());
     //     ::Rectangle(hdc, 220, 40, 366, 266);
@@ -599,7 +587,7 @@ void WebPageImpl::drawDebugLine(skia::PlatformCanvas* memoryCanvas, const IntRec
 
 // 	String outString = String::format("drawDebugLine:%d %d %d %d, %d\n", m_paintRect.x(), m_paintRect.y(), m_paintRect.width(), m_paintRect.height(), m_debugCount);
 // 	OutputDebugStringW(outString.charactersWithNullTermination().data());
-}
+//}
 
 void WebPageImpl::drawToCanvas(const IntRect& dirtyRect, skia::PlatformCanvas* canvas, bool needsFullTreeSync)
 {
@@ -654,7 +642,7 @@ void WebPageImpl::close()
     if (pageInited != m_state)
         return;
 
-    if (m_enterCount == 1) { // °ÑdragState().m_dragSrcÖ®ÀàµÄÕ¼ÓÃµÖÏû
+    if (m_enterCount == 1) { // æŠŠdragState().m_dragSrcä¹‹ç±»çš„å ç”¨æŠµæ¶ˆ
         WTF::TemporaryChange<int> temporaryChange(m_enterCount, 0);
         LPARAM lParam = MAKELONG(-10000, -10000);
         fireMouseEvent(m_hWnd, WM_MOUSEMOVE, 0, lParam, nullptr);
@@ -665,7 +653,7 @@ void WebPageImpl::close()
 
     m_state = pageDestroying;
     
-    // ÔÚKFrameLoaderClient::frameLoaderDestroyed()Ò²»áµ÷ÓÃµ½´Ë£¬ËùÒÔÔÚ¸ø½Å±¾·¢ÏûÏ¢µÄÊ±ºò×¢ÒâÒ»ÏÂ
+    // åœ¨KFrameLoaderClient::frameLoaderDestroyed()ä¹Ÿä¼šè°ƒç”¨åˆ°æ­¤ï¼Œæ‰€ä»¥åœ¨ç»™è„šæœ¬å‘æ¶ˆæ¯çš„æ—¶å€™æ³¨æ„ä¸€ä¸‹
     // WebCore::WebPage::windowCloseRequested+0x1a           
     // WebCore::KFrameLoaderClient::frameLoaderDestroyed+0xc  
     // WebCore::FrameLoader::~FrameLoader+0x7e                
@@ -676,13 +664,13 @@ void WebPageImpl::close()
     // WebCore::ThreadTimers::sharedTimerFiredInternal+0x8b   
     // WebCore::ThreadTimers::sharedTimerFired+0xe            
     // WebCore::WebPage::windowCloseRequested+0x99
-    // ËùÒÔÕâÀï¿ÉÄÜÓĞÖØÈë
-    //SharedTimerKd::inst()->timerEvent(); // ºÜ¶àÒì²½ÇåÀí×ÊÔ´µÄ¹¤×÷»á·ÅÔÚ¶¨Ê±Æ÷Àï£¬ËùÒÔ×îºóÔÙÖ´ĞĞÒ»±é
+    // æ‰€ä»¥è¿™é‡Œå¯èƒ½æœ‰é‡å…¥
+    //SharedTimerKd::inst()->timerEvent(); // å¾ˆå¤šå¼‚æ­¥æ¸…ç†èµ„æºçš„å·¥ä½œä¼šæ”¾åœ¨å®šæ—¶å™¨é‡Œï¼Œæ‰€ä»¥æœ€åå†æ‰§è¡Œä¸€é
 
     // TODO_Weolar
-    // ·¢ÉúunloadÏûÏ¢¸ø½Å±¾
+    // å‘ç”Ÿunloadæ¶ˆæ¯ç»™è„šæœ¬
 
-    // Çå¿ÕwebkitµÄ×ÊÔ´»º´æ
+    // æ¸…ç©ºwebkitçš„èµ„æºç¼“å­˜
     //memoryCache()->evictResources();
 
     if (m_enterCount <= 1)
@@ -1396,7 +1384,7 @@ WebScreenInfo WebPageImpl::screenInfo()
 
 WebWidget* WebPageImpl::createPopupMenu(WebPopupType type)
 {
-    return PopupMenuWin::create(m_hWnd, m_webViewImpl, type);
+    return PopupMenuWin::create(m_hWnd, m_hWndoffset, m_webViewImpl, type);
 }
 
 static void setRuntimeEnabledFeatures()
@@ -1416,7 +1404,7 @@ bool WebPageImpl::initSetting()
         return false;
     settings->setTextAreasAreResizable(true);
 
-    settings->setStandardFontFamily(WebString(L"Î¢ÈíÑÅºÚ", 4));
+    settings->setStandardFontFamily(WebString(L"å¾®è½¯é›…é»‘", 4));
     settings->setUsesEncodingDetector(true);
     settings->setJavaScriptEnabled(true);
     settings->setAllowFileAccessFromFileURLs(true);

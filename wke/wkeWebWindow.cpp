@@ -178,6 +178,7 @@ LRESULT CALLBACK CWebWindow::_staticWindowProc(HWND hwnd, UINT message, WPARAM w
         if (message == WM_CREATE) {
             LPCREATESTRUCTW cs = (LPCREATESTRUCTW)lParam;
             pthis = (CWebWindow*)cs->lpCreateParams;
+			((CWebWindow*)cs->lpCreateParams)->setHandle(hwnd);
             SetPropW(hwnd, L"wkeWebWindow", (HANDLE)pthis);
         }
     }
