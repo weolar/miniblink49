@@ -386,7 +386,7 @@ void CompositingLayer::drawToCanvasChildren(LayerTreeHost* host, SkCanvas* canva
         child->drawToCanvas(host, canvas, clipInLayerdCoordinateInt);
         canvas->restore();
 
-        if (!child->opaque())
+        if (!child->opaque() || !child->drawsContent())
             child->drawToCanvasChildren(host, canvas, clipInLayerdCoordinateInt, deep + 1);
 
         canvas->resetMatrix();
