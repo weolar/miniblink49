@@ -77,8 +77,11 @@ public:
     // Must return non-null.
     virtual blink::WebBlobRegistry* blobRegistry() override;
 
-    // ----------------------------------------------------------------
+    // clipboard -----------------------------------------------------------
     virtual blink::WebClipboard* clipboard() override;
+
+    // Plugin --------------------------------------------------------------
+    void BlinkPlatformImpl::getPluginList(bool refresh, blink::WebPluginListBuilder* builder) override;
 
     //////////////////////////////////////////////////////////////////////////
     virtual void registerMemoryDumpProvider(blink::WebMemoryDumpProvider*) override;

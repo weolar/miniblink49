@@ -10,6 +10,7 @@
 #include "content/web_impl_win/WebMimeRegistryImpl.h"
 #include "content/web_impl_win/WebBlobRegistryImpl.h"
 #include "content/web_impl_win/WebClipboardImpl.h"
+#include "content/web_impl_win/WebFileUtilitiesImpl.h"
 #include "content/resources/MissingImageData.h"
 #include "content/resources/TextAreaResizeCornerData.h"
 #include "content/resources/LocalizedString.h"
@@ -20,6 +21,7 @@
 #include "third_party/WebKit/Source/core/fetch/MemoryCache.h"
 #include "third_party/WebKit/Source/web/WebStorageNamespaceImpl.h"
 #include "third_party/WebKit/public/platform/WebScrollbarBehavior.h"
+#include "third_party/WebKit/public/platform/WebPluginListBuilder.h"
 #include "third_party/WebKit/Source/platform/PartitionAllocMemoryDumpProvider.h"
 #include "third_party/WebKit/Source/platform/heap/BlinkGCMemoryDumpProvider.h"
 #include "third_party/WebKit/Source/bindings/core/v8/V8GCController.h"
@@ -524,13 +526,21 @@ blink::WebBlobRegistry* BlinkPlatformImpl::blobRegistry()
     return new WebBlobRegistryImpl();
 }
 
-//
+// clipboard ----------------------------------------------------------------
 
 blink::WebClipboard* BlinkPlatformImpl::clipboard()
 {
     if (!m_clipboardImpl)
         m_clipboardImpl = new WebClipboardImpl();
     return m_clipboardImpl;
+}
+
+// Plugins -------------------------------------------------------------
+void BlinkPlatformImpl::getPluginList(bool refresh, blink::WebPluginListBuilder* builder)
+{
+    builder->addPlugin(blink::WebString::fromUTF8("flash"), blink::WebString::fromUTF8("flashPlugin"), blink::WebString::fromUTF8(".swf"));
+    builder->addMediaTypeToLastPlugin(blink::WebString::fromUTF8("application/x-shockwave-flash"), blink::WebString::fromUTF8("flashPlugin"));
+    builder->addFileExtensionToLastMediaType(blink::WebString::fromUTF8(".swf"));
 }
 
 } // namespace content

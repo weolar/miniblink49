@@ -7,6 +7,7 @@
 #include "content/browser/WebPage.h"
 #include "content/web_impl_win/WebCookieJarCurlImpl.h"
 #include "content/web_impl_win/WebMediaPlayerImpl.h"
+#include "content/web_impl_win/npapi/WebPluginImpl.h"
 #if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "cef/include/capi/cef_base_capi.h"
 #include "cef/include/capi/cef_browser_capi.h"
@@ -102,7 +103,12 @@ void WebFrameClientImpl::frameDetached(WebFrame* child, DetachType)
 
 blink::WebPluginPlaceholder* WebFrameClientImpl::createPluginPlaceholder(WebLocalFrame*, const blink::WebPluginParams&) { return 0; }
 
-blink::WebPlugin* WebFrameClientImpl::createPlugin(WebLocalFrame*, const WebPluginParams&) { return 0; }
+blink::WebPlugin* WebFrameClientImpl::createPlugin(WebLocalFrame* frame, const WebPluginParams& params)
+{
+    PassRefPtr<WebPluginImpl> plugin = adoptRef(new WebPluginImpl(frame, params));
+    plugin->setParentPlatformWidget(m_webPage->getHWND());
+    return plugin.leakRef();
+}
 
 blink::WebMediaPlayer* WebFrameClientImpl::createMediaPlayer(WebLocalFrame* frame, const WebURL& url , WebMediaPlayerClient* client, WebContentDecryptionModule*)
 {
