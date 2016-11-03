@@ -79,7 +79,7 @@
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
       <AdditionalLibraryDirectories>$(SolutionDir)..\Debug\;$(SolutionDir)..\lib\;</AdditionalLibraryDirectories>
-      <AdditionalDependencies>InjectTool.lib;ots_d.lib;Crypt32.lib;Wldap32.lib;Imm32.lib;libxml.lib;zlib_d.lib;libcurl_d.lib;v8_d.lib;skia_d.lib;winmm.lib;Ws2_32.lib;Usp10.lib;Shlwapi.lib;wininet.lib;GDIPlus.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>InjectTool.lib;version.lib;ots_d.lib;Crypt32.lib;Wldap32.lib;Imm32.lib;libxml.lib;zlib_d.lib;libcurl_d.lib;v8_d.lib;skia_d.lib;winmm.lib;Ws2_32.lib;Usp10.lib;Shlwapi.lib;wininet.lib;GDIPlus.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(SolutionDir)..\Debug\libcef.dll</OutputFile>
       <ImportLibrary>$(OutDir)libcef.lib</ImportLibrary>
       <IgnoreSpecificDefaultLibraries>LIBCMT.lib</IgnoreSpecificDefaultLibraries>
@@ -117,7 +117,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <TargetMachine>MachineX86</TargetMachine>
       <AdditionalLibraryDirectories>$(SolutionDir)..\third_party\GDIPlus\Lib;$(SolutionDir)..\release\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Crypt32.lib;Advapi32.lib;wldap32.lib;libcurl.lib;zlib.lib;ots.lib;Imm32.lib;libxml.lib;v8.lib;skia.lib;winmm.lib;Ws2_32.lib;Usp10.lib;Shlwapi.lib;wininet.lib;GDIPlus.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>version.lib;Crypt32.lib;Advapi32.lib;wldap32.lib;libcurl.lib;zlib.lib;ots.lib;Imm32.lib;libxml.lib;v8.lib;skia.lib;winmm.lib;Ws2_32.lib;Usp10.lib;Shlwapi.lib;wininet.lib;GDIPlus.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>/FORCE:UNRESOLVED %(AdditionalOptions)</AdditionalOptions>
       <OutputFile>$(SolutionDir)..\Release\libcef.dll</OutputFile>
       <ImportLibrary>$(OutDir)libcef.lib</ImportLibrary>
@@ -166,10 +166,10 @@
     <ClCompile Include="..\..\cef\libcef\browser\CefSchemeImpl.cpp" />
     <ClCompile Include="..\..\cef\libcef\browser\CefSchemeLoaderImpl.cpp" />
     <ClCompile Include="..\..\cef\libcef\browser\CefStreamImpl.cpp" />
+    <ClCompile Include="..\..\cef\libcef\browser\CefWebPluginImpl.cpp" />
     <ClCompile Include="..\..\cef\libcef\browser\navtive\CefBrowserHostImplWin.cpp" />
     <ClCompile Include="..\..\cef\libcef\browser\RequestImpl.cpp" />
     <ClCompile Include="..\..\cef\libcef\browser\ThreadUtil.cpp" />
-    <ClCompile Include="..\..\cef\libcef\browser\WebPluginImpl.cpp" />
     <ClCompile Include="..\..\cef\libcef\common\CefCommandLineImpl.cpp" />
     <ClCompile Include="..\..\cef\libcef\common\CefContentClient.cpp" />
     <ClCompile Include="..\..\cef\libcef\common\CefProcessMessageImpl.cpp" />
@@ -3103,10 +3103,10 @@
     <ClInclude Include="..\..\cef\libcef\browser\CefRequestContextImpl.h" />
     <ClInclude Include="..\..\cef\libcef\browser\CefSchemeLoaderImpl.h" />
     <ClInclude Include="..\..\cef\libcef\browser\CefStreamImpl.h" />
+    <ClInclude Include="..\..\cef\libcef\browser\CefWebPluginImpl.h" />
     <ClInclude Include="..\..\cef\libcef\browser\FrameImpl.h" />
     <ClInclude Include="..\..\cef\libcef\browser\RequestImpl.h" />
     <ClInclude Include="..\..\cef\libcef\browser\ThreadUtil.h" />
-    <ClInclude Include="..\..\cef\libcef\browser\WebPluginImpl.h" />
     <ClInclude Include="..\..\cef\libcef\common\CefCommandLineImpl.h" />
     <ClInclude Include="..\..\cef\libcef\common\CefContentClient.h" />
     <ClInclude Include="..\..\cef\libcef\common\CefMessages.h" />

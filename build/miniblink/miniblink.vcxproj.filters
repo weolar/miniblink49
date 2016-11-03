@@ -8784,9 +8784,6 @@
     <ClCompile Include="..\..\cef\libcef\browser\CefPrintSettingsImpl.cpp">
       <Filter>cef\libcef\browser</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\cef\libcef\browser\WebPluginImpl.cpp">
-      <Filter>cef\libcef\browser</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\cef\libcef\browser\CefStreamImpl.cpp">
       <Filter>cef\libcef\browser</Filter>
     </ClCompile>
@@ -8978,6 +8975,9 @@
     </ClCompile>
     <ClCompile Include="..\..\content\web_impl_win\npapi\PluginMainThreadScheduler.cpp">
       <Filter>content\web_impl_win\npapi</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\cef\libcef\browser\CefWebPluginImpl.cpp">
+      <Filter>cef\libcef\browser</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -20729,9 +20729,6 @@
     <ClInclude Include="..\..\cef\libcef\browser\CefPrintSettingsImpl.h">
       <Filter>cef\libcef\browser</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\cef\libcef\browser\WebPluginImpl.h">
-      <Filter>cef\libcef\browser</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\cef\libcef\browser\CefStreamImpl.h">
       <Filter>cef\libcef\browser</Filter>
     </ClInclude>
@@ -20929,6 +20926,9 @@
     </ClInclude>
     <ClInclude Include="..\..\content\web_impl_win\npapi\PluginDatabase.h">
       <Filter>content\web_impl_win\npapi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\cef\libcef\browser\CefWebPluginImpl.h">
+      <Filter>cef\libcef\browser</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
