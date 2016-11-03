@@ -545,8 +545,8 @@ static void showDebugChildren(cc_blink::WebLayerImpl* layer, int deep)
         blink::WebFloatPoint position = child->position();
         blink::WebSize bounds = child->bounds();
         
-        String msg = String::format("%p, %d %d %d %d - %d %d %d\n", child,
-            (int)position.x, (int)position.y, bounds.width, bounds.height, child->id(), child->drawsContent(), child->masksToBounds());
+        String msg = String::format("%p, %d %d %d %d - %d, %d %d %d\n", child,
+            (int)position.x, (int)position.y, bounds.width, bounds.height, child->id(), child->drawsContent(), child->masksToBounds(), child->opaque());
         msg.insert(blankSpaceString.data(), blankSpaceString.size(), 0);
         OutputDebugStringA(msg.utf8().data());
 

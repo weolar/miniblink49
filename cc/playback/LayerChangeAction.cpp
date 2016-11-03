@@ -228,7 +228,8 @@ void LayerChangeActionDrawPropUpdata::appendDirtyLayer(cc_blink::WebLayerImpl* l
     prop->bounds = layer->bounds();
     prop->position = layer->position();
 	prop->drawsContent = layer->drawsContent();
-	prop->masksToBounds = layer->masksToBounds();
+    prop->masksToBounds = layer->masksToBounds();
+    prop->opaque = layer->opaque();
     prop->maskLayerId = layer->maskLayerId();
     prop->replicaLayerId = layer->replicaLayerId();
     m_props.append(prop);
