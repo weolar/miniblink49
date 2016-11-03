@@ -211,6 +211,10 @@ typedef struct _NPNetscapeFuncs {
   NPN_URLRedirectResponsePtr urlredirectresponse;
 } NPNetscapeFuncs;
 
+typedef NPError (__stdcall * NP_GetEntryPointsFuncPtr)(NPPluginFuncs*);
+typedef void (__stdcall * NPP_ShutdownProcPtr)(void);
+typedef NPError (__stdcall * NP_InitializeFuncPtr)(NPNetscapeFuncs*);
+
 #ifdef XP_MACOSX
 /*
  * Mac OS X version(s) of NP_GetMIMEDescription(const char *)
