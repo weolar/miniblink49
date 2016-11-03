@@ -79,6 +79,7 @@ blink::WebMimeRegistry::SupportsType WebMimeRegistryImpl::supportsMIMEType(const
             "image/ico",
             "image/bmp",
             "image/gif",
+            "application/x-shockwave-flash",
         };
         for (size_t i = 0; i < WTF_ARRAY_LENGTH(types); ++i)
             m_supportedMIMETypes->add(types[i]);
@@ -183,7 +184,8 @@ blink::WebMimeRegistry::SupportsType WebMimeRegistryImpl::supportsNonImageMIMETy
             "image/svg+xml",
 //#endif
             "application/x-ftp-directory",
-            "multipart/x-mixed-replace"
+            "multipart/x-mixed-replace",
+            "application/x-shockwave-flash",
             // Note: ADDING a new type here will probably render it as HTML. This can
             // result in cross-site scripting.
         };
@@ -236,6 +238,8 @@ blink::WebString WebMimeRegistryImpl::mimeTypeForExtension(const blink::WebStrin
         m_mimetypeMap->add("bmp", "image/bmp");
         m_mimetypeMap->add("wml", "text/vnd.wap.wml");
         m_mimetypeMap->add("wmlc", "application/vnd.wap.wmlc");
+        m_mimetypeMap->add("swf", "application/x-shockwave-flash");
+        //
     }
     WTF::String result = m_mimetypeMap->get(extension);
     return result;

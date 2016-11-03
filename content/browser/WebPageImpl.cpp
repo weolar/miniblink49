@@ -58,6 +58,7 @@
 #include "content/browser/WebFrameClientImpl.h"
 #include "content/web_impl_win/BlinkPlatformImpl.h"
 #include "content/web_impl_win/WebThreadImpl.h"
+#include "content/web_impl_win/npapi/PluginDatabase.h"
 
 #include "cc/trees/LayerTreeHost.h"
 
@@ -1418,6 +1419,9 @@ bool WebPageImpl::initSetting()
     settings->setDefaultFontSize(16);
     settings->setDefaultFixedFontSize(16);
     settings->setLoadsImagesAutomatically(true);
+    settings->setPluginsEnabled(true);
+
+    PluginDatabase::installedPlugins()->refresh();
 
     // settings->setFontRenderingMode(AlternateRenderingMode);
 

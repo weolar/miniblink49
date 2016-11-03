@@ -1,5 +1,5 @@
 #if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
-#include "cef/libcef/browser/WebPluginImpl.h"
+#include "cef/libcef/browser/CefWebPluginImpl.h"
 
 void CefVisitWebPluginInfo(CefRefPtr<CefWebPluginInfoVisitor> visitor) {
     DebugBreak();

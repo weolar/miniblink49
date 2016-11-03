@@ -971,6 +971,42 @@ void WebURLLoaderManager::dispatchSynchronousJob(WebURLLoaderInternal* job)
     curl_easy_cleanup(handle->m_handle);
 }
 
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
+static bool dispatchWkeLoadUrlBegin(WebURLLoaderInternal* job)
+{
+    RequestExtraData* requestExtraData = reinterpret_cast<RequestExtraData*>(job->firstRequest()->extraData());
+    if (!requestExtraData)
+        return false;
+
+    WebPage* page = requestExtraData->page;
+    if (!page->wkeHandler().loadUrlBeginCallback)
+        return false;
+    
+    if (!page->wkeHandler().loadUrlBeginCallback(page->wkeWebView(), 
+        page->wkeHandler().loadUrlBeginCallbackParam,
+        encodeWithURLEscapeSequences(job->firstRequest()->url().string()).latin1().data(), job))
+        return false;
+
+    WebURLResponse req = job->m_response;
+    //req.setHTTPStatusText(String("OK"));
+    //req.setHTTPHeaderField("Content-Leng", "4");
+    //req.setHTTPHeaderField("Content-Type", "text/html");
+    //req.setExpectedContentLength(static_cast<long long int>(4));
+    //req.setURL(KURL(ParsedURLString, "http://127.0.0.1/a.html"));
+    //req.setHTTPStatusCode(200);
+    //req.setMIMEType(extractMIMETypeFromMediaType(req.httpHeaderField(WebString::fromUTF8("Content-Type"))).lower());
+
+    //req.setTextEncodingName(extractCharsetFromMediaType(req.httpHeaderField(WebString::fromUTF8("Content-Type"))));
+    //job->client()->didReceiveResponse(job->loader(), req);
+    //job->setResponseFired(true);
+
+    //job->client()->didReceiveData(job->loader(), "aaaa", 4, 0);
+    job->client()->didFinishLoading(job->loader(), WTF::currentTime(), 0); // 加载完成
+
+    return true;
+}
+#endif
+
 void WebURLLoaderManager::startJob(WebURLLoaderInternal* job)
 {
 	KURL url = job->firstRequest()->url();
@@ -982,35 +1018,9 @@ void WebURLLoaderManager::startJob(WebURLLoaderInternal* job)
 	}
 
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
-	RequestExtraData* requestExtraData = reinterpret_cast<RequestExtraData*>(job->firstRequest()->extraData());
-	if (requestExtraData)
-	{
-		WebPage* page = requestExtraData->page;
-		if (page->wkeHandler().loadUrlBeginCallback) {
-
-			if (page->wkeHandler().loadUrlBeginCallback(page->wkeWebView(), page->wkeHandler().loadUrlBeginCallbackParam,
-				encodeWithURLEscapeSequences(job->firstRequest()->url().string()).latin1().data(), job)) {
-				WebURLResponse req = job->m_response;
-				//req.setHTTPStatusText(String("OK"));
-				//req.setHTTPHeaderField("Content-Leng", "4");
-				//req.setHTTPHeaderField("Content-Type", "text/html");
-				//req.setExpectedContentLength(static_cast<long long int>(4));
-				//req.setURL(KURL(ParsedURLString, "http://127.0.0.1/a.html"));
-				//req.setHTTPStatusCode(200);
-				//req.setMIMEType(extractMIMETypeFromMediaType(req.httpHeaderField(WebString::fromUTF8("Content-Type"))).lower());
-
-				//req.setTextEncodingName(extractCharsetFromMediaType(req.httpHeaderField(WebString::fromUTF8("Content-Type"))));
-				//job->client()->didReceiveResponse(job->loader(), req);
-				//job->setResponseFired(true);
-
-				//job->client()->didReceiveData(job->loader(), "aaaa", 4, 0);
-				job->client()->didFinishLoading(job->loader(), WTF::currentTime(), 0); // 加载完成
-				return;
-			}
-		}
-	}
+    if (dispatchWkeLoadUrlBegin(job))
+        return;
 #endif
-
 
     initializeHandle(job);
 

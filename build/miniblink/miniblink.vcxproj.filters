@@ -748,6 +748,9 @@
     <Filter Include="third_party\Webkit\Source\modules\websockets">
       <UniqueIdentifier>{5169d5cb-5a12-4182-9b02-949ebc6810f4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="content\web_impl_win\npapi">
+      <UniqueIdentifier>{26eb4eab-b806-4651-8467-46a5636674e0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\third_party\WebKit\Source\bindings\core\v8\ActiveDOMCallback.cpp">
@@ -8781,9 +8784,6 @@
     <ClCompile Include="..\..\cef\libcef\browser\CefPrintSettingsImpl.cpp">
       <Filter>cef\libcef\browser</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\cef\libcef\browser\WebPluginImpl.cpp">
-      <Filter>cef\libcef\browser</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\cef\libcef\browser\CefStreamImpl.cpp">
       <Filter>cef\libcef\browser</Filter>
     </ClCompile>
@@ -8942,6 +8942,42 @@
     </ClCompile>
     <ClCompile Include="..\..\wke\wkeNetHook.cpp">
       <Filter>wke</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\content\web_impl_win\WebFileUtilitiesImpl.cpp">
+      <Filter>content\web_impl_win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\content\web_impl_win\npapi\PluginMessageThrottlerWin.cpp">
+      <Filter>content\web_impl_win\npapi</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\content\web_impl_win\npapi\PluginPackage.cpp">
+      <Filter>content\web_impl_win\npapi</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\content\web_impl_win\npapi\PluginPackageWin.cpp">
+      <Filter>content\web_impl_win\npapi</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\content\web_impl_win\npapi\PluginStream.cpp">
+      <Filter>content\web_impl_win\npapi</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\content\web_impl_win\npapi\WebPluginImpl.cpp">
+      <Filter>content\web_impl_win\npapi</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\content\web_impl_win\npapi\WebPluginImplWin.cpp">
+      <Filter>content\web_impl_win\npapi</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\content\web_impl_win\npapi\npapi.cpp">
+      <Filter>content\web_impl_win\npapi</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\content\web_impl_win\npapi\PluginDatabase.cpp">
+      <Filter>content\web_impl_win\npapi</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\content\web_impl_win\npapi\PluginDatabaseWin.cpp">
+      <Filter>content\web_impl_win\npapi</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\content\web_impl_win\npapi\PluginMainThreadScheduler.cpp">
+      <Filter>content\web_impl_win\npapi</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\cef\libcef\browser\CefWebPluginImpl.cpp">
+      <Filter>cef\libcef\browser</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -20693,9 +20729,6 @@
     <ClInclude Include="..\..\cef\libcef\browser\CefPrintSettingsImpl.h">
       <Filter>cef\libcef\browser</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\cef\libcef\browser\WebPluginImpl.h">
-      <Filter>cef\libcef\browser</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\cef\libcef\browser\CefStreamImpl.h">
       <Filter>cef\libcef\browser</Filter>
     </ClInclude>
@@ -20869,6 +20902,33 @@
     </ClInclude>
     <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8CloseEventInit.h">
       <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\content\web_impl_win\WebFileUtilitiesImpl.h">
+      <Filter>content\web_impl_win</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\content\web_impl_win\npapi\PluginMainThreadScheduler.h">
+      <Filter>content\web_impl_win\npapi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\content\web_impl_win\npapi\PluginMessageThrottlerWin.h">
+      <Filter>content\web_impl_win\npapi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\content\web_impl_win\npapi\PluginPackage.h">
+      <Filter>content\web_impl_win\npapi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\content\web_impl_win\npapi\PluginQuirkSet.h">
+      <Filter>content\web_impl_win\npapi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\content\web_impl_win\npapi\PluginStream.h">
+      <Filter>content\web_impl_win\npapi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\content\web_impl_win\npapi\WebPluginImpl.h">
+      <Filter>content\web_impl_win\npapi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\content\web_impl_win\npapi\PluginDatabase.h">
+      <Filter>content\web_impl_win\npapi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\cef\libcef\browser\CefWebPluginImpl.h">
+      <Filter>cef\libcef\browser</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
