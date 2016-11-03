@@ -117,6 +117,7 @@ BlinkPlatformImpl::BlinkPlatformImpl()
     m_webScrollbarBehavior = nullptr;
     m_localStorageStorageMap = nullptr;
     m_sessionStorageStorageMap = nullptr;
+    m_webFileUtilitiesImpl = nullptr;
     m_storageNamespaceIdCount = 1;
     m_lock = new CRITICAL_SECTION();
     m_threadNum = 0;
@@ -541,6 +542,13 @@ void BlinkPlatformImpl::getPluginList(bool refresh, blink::WebPluginListBuilder*
     builder->addPlugin(blink::WebString::fromUTF8("flash"), blink::WebString::fromUTF8("flashPlugin"), blink::WebString::fromUTF8(".swf"));
     builder->addMediaTypeToLastPlugin(blink::WebString::fromUTF8("application/x-shockwave-flash"), blink::WebString::fromUTF8("flashPlugin"));
     builder->addFileExtensionToLastMediaType(blink::WebString::fromUTF8(".swf"));
+}
+
+blink::WebFileUtilities* BlinkPlatformImpl::fileUtilities()
+{
+    if (!m_webFileUtilitiesImpl)
+        m_webFileUtilitiesImpl = new WebFileUtilitiesImpl();
+    return m_webFileUtilitiesImpl;
 }
 
 } // namespace content

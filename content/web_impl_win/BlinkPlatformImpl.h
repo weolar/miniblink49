@@ -15,6 +15,7 @@ class DOMStorageMapWrap;
 class WebThreadImpl;
 class WebMimeRegistryImpl;
 class WebClipboardImpl;
+class WebFileUtilitiesImpl;
 
 class BlinkPlatformImpl : NON_EXPORTED_BASE(public blink::Platform) {
 public:
@@ -83,6 +84,9 @@ public:
     // Plugin --------------------------------------------------------------
     void BlinkPlatformImpl::getPluginList(bool refresh, blink::WebPluginListBuilder* builder) override;
 
+    // fileUtilities -------------------------------------------------------
+    virtual blink::WebFileUtilities* fileUtilities() override;
+
     //////////////////////////////////////////////////////////////////////////
     virtual void registerMemoryDumpProvider(blink::WebMemoryDumpProvider*) override;
     virtual void unregisterMemoryDumpProvider(blink::WebMemoryDumpProvider*) override;
@@ -107,6 +111,7 @@ private:
     blink::WebThemeEngine* m_webThemeEngine;
     WebMimeRegistryImpl* m_mimeRegistry;
     WebClipboardImpl* m_clipboardImpl;
+    WebFileUtilitiesImpl* m_webFileUtilitiesImpl;
     cc_blink::WebCompositorSupportImpl* m_webCompositorSupport;
     blink::WebScrollbarBehavior* m_webScrollbarBehavior;
     DOMStorageMapWrap* m_localStorageStorageMap;
