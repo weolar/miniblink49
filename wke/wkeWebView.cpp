@@ -335,7 +335,15 @@ HWND CWebView::windowHandle() const
 {
     return m_hWnd;
 }
-
+void CWebView::setHandle(HWND wnd)
+{
+	m_hWnd = wnd;
+	m_webPage->setHWND(wnd);
+}
+void CWebView::setHandleOffset(int x, int y)
+{
+	m_webPage->setHWNDoffset(x, y);
+}
 void CWebView::paint(void* bits, int pitch)
 {
     if (m_webPage->needsCommit())

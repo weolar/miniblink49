@@ -140,6 +140,16 @@ void wkeSetName(wkeWebView webView, const char* name)
     webView->setName(name);
 }
 
+void wkeSetHandle(wkeWebView webView, HWND wnd)
+{
+	webView->setHandle(wnd);
+}
+
+void wkeSetHandleOffset(wkeWebView webView, int x, int y)
+{
+	webView->setHandleOffset(x, y);
+}
+
 bool wkeIsTransparent(wkeWebView webView)
 {
     return webView->isTransparent();

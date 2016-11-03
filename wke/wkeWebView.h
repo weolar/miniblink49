@@ -112,7 +112,8 @@ public:
 	void repaintIfNeeded();
     HDC viewDC();
     HWND windowHandle() const;
-    
+	void setHandle(HWND wnd);
+	void setHandleOffset(int x, int y);
     bool canGoBack() const;
     bool goBack();
     bool canGoForward() const;

@@ -93,7 +93,8 @@ public:
     bool needsCommit();
 
     HWND getHWND() const;
-    
+	void setHWND(HWND hwnd);
+	void setHWNDoffset(int x, int y);
     void setBackgroundColor(COLORREF c);
 
     void showDebugNodeData();

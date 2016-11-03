@@ -91,8 +91,12 @@ typedef enum {
 
 
 typedef char utf8;
+#if !defined(__cplusplus)
+typedef void* jsExecState;
+#else
 struct JsExecStateInfo;
 typedef JsExecStateInfo* jsExecState;
+#endif
 typedef __int64 jsValue;
 
 
@@ -179,6 +183,9 @@ WKE_API void wkeDestroyWebView(wkeWebView webView);
 
 WKE_API const char* wkeGetName(wkeWebView webView);
 WKE_API void wkeSetName(wkeWebView webView, const char* name);
+
+WKE_API void wkeSetHandle(wkeWebView webView, HWND wnd);
+WKE_API void wkeSetHandleOffset(wkeWebView webView, int x, int y);
 
 WKE_API bool wkeIsTransparent(wkeWebView webView);
 WKE_API void wkeSetTransparent(wkeWebView webView, bool transparent);

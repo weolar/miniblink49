@@ -1,4 +1,4 @@
-#ifndef WebPageImpl_h
+ï»¿#ifndef WebPageImpl_h
 #define WebPageImpl_h
 
 #include "base/rand_util.h"
@@ -88,7 +88,7 @@ public:
 
     void beginMainFrame();
     
-    void paintToPlatformContext(HDC hdc, const blink::IntRect* paintRect);
+    void paintToPlatformContext(const blink::IntRect* paintRect);
     bool drawFrame();
     
     void repaintRequested(const blink::IntRect& windowRect);
@@ -114,10 +114,6 @@ public:
     void setViewportSize(const blink::IntSize& size);
 
 	blink::IntRect caretRect() const;
-
-    int m_debugCount;
-
-    void drawDebugLine(skia::PlatformCanvas* memoryCanvas, const blink::IntRect& paintRect);
    
     void drawToCanvas(const blink::IntRect& dirtyRect, skia::PlatformCanvas* canvas, bool needsFullTreeSync);
         
@@ -162,15 +158,16 @@ public:
     bool m_useLayeredBuffer;
 
 	blink::IntRect m_winodwRect;
-	blink::IntRect m_clientRect; // ·½±ãWebPageĞŞ¸Ä
+	blink::IntRect m_clientRect; // æ–¹ä¾¿WebPageä¿®æ”¹
     bool m_hasResize;
-    bool m_postMouseLeave; // ÏµÍ³µÄMouseLeave»ñÈ¡µ½µÄÊó±êÎ»ÖÃ²»Ì«×¼È·£¬×Ô¼ºÔÚ¶¨Ê±Æ÷ÀïÔÙÅ×Ò»´Î
+    bool m_postMouseLeave; // ç³»ç»Ÿçš„MouseLeaveè·å–åˆ°çš„é¼ æ ‡ä½ç½®ä¸å¤ªå‡†ç¡®ï¼Œè‡ªå·±åœ¨å®šæ—¶å™¨é‡Œå†æŠ›ä¸€æ¬¡
 	blink::RGBA32 m_bdColor;
     double m_lastFrameTimeMonotonic;
     WebPage* m_pagePtr;
     blink::WebViewImpl* m_webViewImpl;
     bool m_mouseInWindow;
     HWND m_hWnd;
+	blink::IntPoint m_hWndoffset;	//ç½‘é¡µæ¸²æŸ“åæ ‡ç›¸å¯¹äºçª—å£çš„åŸç‚¹
 	blink::IntSize m_viewportSize;
 
     // May be NULL if the browser has not yet been created or if the browser has
@@ -205,8 +202,8 @@ public:
 	WebFrameClientImpl* m_webFrameClient;
     PlatformEventHandler* m_platformEventHandler;
 
-    BOOL* m_messageStackVar; // ¸øÏûÏ¢´¦Àíº¯ÊıÊ¹ÓÃ£¬±£´æµØÖ·¡£ÀıÈç£¬WM_TIMERÖĞµ÷ÓÃDestroyWindow£¬
-    // ´°¿Ú´İ»ÙÁË£¬ÏûÏ¢º¯Êı»¹ÔÚ½øÈëWM_TIMERµÄ´¦Àíº¯Êı£¬µ¼ÖÂÒ°Ö¸Õë±ÀÀ£.
+    BOOL* m_messageStackVar; // ç»™æ¶ˆæ¯å¤„ç†å‡½æ•°ä½¿ç”¨ï¼Œä¿å­˜åœ°å€ã€‚ä¾‹å¦‚ï¼ŒWM_TIMERä¸­è°ƒç”¨DestroyWindowï¼Œ
+    // çª—å£æ‘§æ¯äº†ï¼Œæ¶ˆæ¯å‡½æ•°è¿˜åœ¨è¿›å…¥WM_TIMERçš„å¤„ç†å‡½æ•°ï¼Œå¯¼è‡´é‡æŒ‡é’ˆå´©æºƒ.
 
 	blink::WebCursorInfo::Type m_cursorType;
 
