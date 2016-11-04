@@ -101,7 +101,7 @@
       <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
       <ExceptionHandling>false</ExceptionHandling>
       <BufferSecurityCheck>false</BufferSecurityCheck>
-      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
       <StringPooling>true</StringPooling>
       <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -123,11 +123,14 @@
       <ImportLibrary>$(OutDir)miniblink.lib</ImportLibrary>
       <IgnoreSpecificDefaultLibraries>LIBCMT.lib;libcpmt.lib</IgnoreSpecificDefaultLibraries>
       <ShowProgress>NotSet</ShowProgress>
-      <EntryPointSymbol>DllMain</EntryPointSymbol>
+      <EntryPointSymbol>
+      </EntryPointSymbol>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\base\algorithmvc6.cpp" />
+    <ClCompile Include="..\..\base\algorithmvc6.cpp">
+      <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</WholeProgramOptimization>
+    </ClCompile>
     <ClCompile Include="..\..\base\command_line.cc" />
     <ClCompile Include="..\..\base\debug\alias.cc" />
     <ClCompile Include="..\..\base\debug\gdi_debug_util_win.cc" />
@@ -141,7 +144,9 @@
     <ClCompile Include="..\..\base\time\time.cc" />
     <ClCompile Include="..\..\base\time\time_win.cc" />
     <ClCompile Include="..\..\base\values.cc" />
-    <ClCompile Include="..\..\base\windowsvc6.cpp" />
+    <ClCompile Include="..\..\base\windowsvc6.cpp">
+      <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</WholeProgramOptimization>
+    </ClCompile>
     <ClCompile Include="..\..\cc\base\MathUtil.cpp" />
     <ClCompile Include="..\..\cc\blink\WebCompositorSupportImpl.cpp" />
     <ClCompile Include="..\..\cc\blink\WebContentLayerImpl.cpp" />
