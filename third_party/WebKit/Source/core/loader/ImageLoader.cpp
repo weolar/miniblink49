@@ -173,8 +173,8 @@ ImageLoader::ImageLoader(Element* element)
         g_activatingImageLoader = new std::set<void*>();
     g_activatingImageLoader->insert(this);
 
-    WTF::String outstr = String::format("ImageLoader::ImageLoader: %p\n", this);
-    OutputDebugStringW(outstr.charactersWithNullTermination().data());
+//     WTF::String outstr = String::format("ImageLoader::ImageLoader: %p\n", this);
+//     OutputDebugStringW(outstr.charactersWithNullTermination().data());
 #endif
 }
 
@@ -198,8 +198,8 @@ ImageLoader::~ImageLoader()
         errorEventSender().cancelEvent(this);
 
 #ifndef NDEBUG
-    WTF::String outstr = String::format("ImageLoader::~ImageLoader: %p\n", this);
-    OutputDebugStringW(outstr.charactersWithNullTermination().data());
+//     WTF::String outstr = String::format("ImageLoader::~ImageLoader: %p\n", this);
+//     OutputDebugStringW(outstr.charactersWithNullTermination().data());
 
     imageLoaderCounter.decrement();
     g_activatingImageLoader->erase(this);
