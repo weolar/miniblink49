@@ -37,6 +37,7 @@
 #endif
 #include <stdlib.h>
 #include <windows.h>
+#define PURE = 0
 #include <Shlwapi.h>
 
 #include "third_party/WebKit/Source/wtf/text/CString.h"

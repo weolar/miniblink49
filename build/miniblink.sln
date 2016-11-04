@@ -28,9 +28,6 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libcurl", "libcurl\libcurl.vcxproj", "{A0E351C3-1C05-431A-B7B4-4B6B66A210B6}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wkexe", "..\wkexe\wkexe.vcxproj", "{14BD76E4-E8CE-486D-B552-AE17332AFD67}"
-	ProjectSection(ProjectDependencies) = postProject
-		{D4CF74E8-8AE3-4534-92BE-10503E556E87} = {D4CF74E8-8AE3-4534-92BE-10503E556E87}
-	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
