@@ -224,6 +224,8 @@ WebURLLoaderManager::WebURLLoaderManager()
     curl_share_setopt(m_curlShareHandle, CURLSHOPT_UNLOCKFUNC, curl_unlock_callback);
 
     initCookieSession();
+
+    //setProxyInfo("127.0.0.1", 8888, WebURLLoaderManager::HTTP, "", "");
 }
 
 WebURLLoaderManager::~WebURLLoaderManager()
@@ -1078,7 +1080,7 @@ void WebURLLoaderManager::applyAuthenticationToRequest(WebURLLoaderInternal* han
 
 class HeaderVisitor : public blink::WebHTTPHeaderVisitor {
 public:
-    explicit HeaderVisitor(curl_slist* headers) : m_headers(headers) {}
+    explicit HeaderVisitor(curl_slist** headers) : m_headers(headers) {}
 
     virtual void visitHeader(const WebString& webName, const WebString& webValue) override
     {
@@ -1092,12 +1094,12 @@ public:
             headerString.append(value);
         }
         CString headerLatin1 = headerString.latin1();
-        m_headers = curl_slist_append(m_headers, headerLatin1.data());
+        *m_headers = curl_slist_append(*m_headers, headerLatin1.data());
     }
 
-    curl_slist* headers() { return m_headers; }
+    curl_slist* headers() { return* m_headers; }
 private:
-    curl_slist* m_headers;
+    curl_slist** m_headers;
 };
 
 void WebURLLoaderManager::initializeHandle(WebURLLoaderInternal* job)
@@ -1177,7 +1179,7 @@ void WebURLLoaderManager::initializeHandle(WebURLLoaderInternal* job)
         curl_easy_setopt(d->m_handle, CURLOPT_COOKIEJAR, m_cookieJarFileName);
 
     curl_slist* headers = nullptr;
-    HeaderVisitor visitor(headers);
+    HeaderVisitor visitor(&headers);
     job->firstRequest()->visitHTTPHeaderFields(&visitor);
 
     String method = job->firstRequest()->httpMethod();
