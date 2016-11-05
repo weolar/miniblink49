@@ -36,6 +36,7 @@
 #include "FileSystem.h"
 #endif
 #include <stdlib.h>
+#define PURE = 0
 #include <windows.h>
 #include <Shlwapi.h>
 

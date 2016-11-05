@@ -620,8 +620,8 @@ __declspec(allocate(".CRT$XCG")) _PVFV init_section[] = { init_libs };
 
 
 // extern "C" BOOL WINAPI CoreFoundationDllMain( HINSTANCE hInstance, DWORD dwReason, LPVOID pReserved );
-// STDAPI_(BOOL) DllMain( HMODULE hModule, DWORD  ul_reason_for_call, LPVOID /*lpReserved*/)
-// {
+STDAPI_(BOOL) DllMain( HMODULE hModule, DWORD  ul_reason_for_call, LPVOID /*lpReserved*/)
+{
 //     BOOL ret = FALSE;
 //     switch (ul_reason_for_call) {
 //         case DLL_PROCESS_ATTACH:
@@ -644,8 +644,8 @@ __declspec(allocate(".CRT$XCG")) _PVFV init_section[] = { init_libs };
 //     }
 // 
 //     CoreFoundationDllMain(hModule, ul_reason_for_call, 0);
-//     return ret;
-// }
+     return TRUE;
+}
 
 wkeWebView wkeCreateWebWindow(wkeWindowType type, HWND parent, int x, int y, int width, int height)
 {
