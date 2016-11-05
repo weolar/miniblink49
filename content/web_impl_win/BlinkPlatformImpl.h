@@ -48,6 +48,7 @@ public:
     virtual double systemTraceTime() override;
 
     virtual blink::WebString userAgent() override;
+	virtual void setuserAgent(char* ua) override;
 
     virtual blink::WebData BlinkPlatformImpl::loadResource(const char* name) override;
 
@@ -118,6 +119,8 @@ private:
     DOMStorageMapWrap* m_sessionStorageStorageMap;
     int64 m_storageNamespaceIdCount;
     double m_firstMonotonicallyIncreasingTime;
+
+	char* m_userAgent;
 };
 
 } // namespace content

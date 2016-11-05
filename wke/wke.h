@@ -10,7 +10,6 @@
 #ifndef WKE_H
 #define WKE_H
 
-//#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -167,14 +166,6 @@ WKE_API void wkeFinalize();
 WKE_API void wkeUpdate();
 WKE_API unsigned int wkeGetVersion();
 WKE_API const utf8* wkeGetVersionString();
-
-typedef void* (*FILE_OPEN) (const char* path);
-typedef void (*FILE_CLOSE) (void* handle);
-typedef size_t (*FILE_SIZE) (void* handle);
-typedef int (*FILE_READ) (void* handle, void* buffer, size_t size);
-typedef int (*FILE_SEEK) (void* handle, int offset, int origin);
-
-WKE_API void wkeSetFileSystem(FILE_OPEN pfn_open, FILE_CLOSE pfn_close, FILE_SIZE pfn_size, FILE_READ pfn_read, FILE_SEEK pfn_seek);
 
 
 WKE_API wkeWebView wkeCreateWebView();
@@ -505,4 +496,4 @@ WKE_API void jsGC();
 
 
 #endif
-//#endif//#ifndef WKE_H
+

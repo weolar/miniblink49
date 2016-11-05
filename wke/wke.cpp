@@ -4,6 +4,7 @@
 #define BUILDING_wke 1
 
 #include "content/browser/WebPage.h"
+#include "net/WebURLLoaderManager.h"
 
 //cexer: 必须包含在后面，因为其中的 wke.h -> windows.h 会定义 max、min，导致 WebCore 内部的 max、min 出现错乱。
 #include "wkeString.h"
@@ -29,28 +30,28 @@ void wkeInitialize()
 
 void wkeSetProxy(const wkeProxy& proxy)
 {
-//     WebCore::ResourceHandleManager::ProxyType proxyType = WebCore::ResourceHandleManager::HTTP;
-//     String hostname;
-//     String username;
-//     String password;
-// 
-//     if (proxy.hostname[0] != 0 && proxy.type >= WKE_PROXY_HTTP && proxy.type <= WKE_PROXY_SOCKS5HOSTNAME)
-//     {
-//         switch (proxy.type)
-//         {
-//         case WKE_PROXY_HTTP:           proxyType = WebCore::ResourceHandleManager::HTTP; break;
-//         case WKE_PROXY_SOCKS4:         proxyType = WebCore::ResourceHandleManager::Socks4; break;
-//         case WKE_PROXY_SOCKS4A:        proxyType = WebCore::ResourceHandleManager::Socks4A; break;
-//         case WKE_PROXY_SOCKS5:         proxyType = WebCore::ResourceHandleManager::Socks5; break;
-//         case WKE_PROXY_SOCKS5HOSTNAME: proxyType = WebCore::ResourceHandleManager::Socks5Hostname; break;
-//         }
-// 
-//         hostname = String::fromUTF8(proxy.hostname);
-//         username = String::fromUTF8(proxy.username);
-//         password = String::fromUTF8(proxy.password);
-//     }
-// 
-//     WebCore::ResourceHandleManager::sharedInstance()->setProxyInfo(hostname, proxy.port, proxyType, username, password);
+     net::WebURLLoaderManager::ProxyType proxyType = net::WebURLLoaderManager::HTTP;
+     String hostname;
+     String username;
+     String password;
+ 
+     if (proxy.hostname[0] != 0 && proxy.type >= WKE_PROXY_HTTP && proxy.type <= WKE_PROXY_SOCKS5HOSTNAME)
+     {
+         switch (proxy.type)
+         {
+         case WKE_PROXY_HTTP:           proxyType = net::WebURLLoaderManager::HTTP; break;
+         case WKE_PROXY_SOCKS4:         proxyType = net::WebURLLoaderManager::Socks4; break;
+         case WKE_PROXY_SOCKS4A:        proxyType = net::WebURLLoaderManager::Socks4A; break;
+         case WKE_PROXY_SOCKS5:         proxyType = net::WebURLLoaderManager::Socks5; break;
+         case WKE_PROXY_SOCKS5HOSTNAME: proxyType = net::WebURLLoaderManager::Socks5Hostname; break;
+         }
+ 
+         hostname = String::fromUTF8(proxy.hostname);
+         username = String::fromUTF8(proxy.username);
+         password = String::fromUTF8(proxy.password);
+     }
+ 
+	 net::WebURLLoaderManager::sharedInstance()->setProxyInfo(hostname, proxy.port, proxyType, username, password);
 }
 
 void wkeConfigure(const wkeSettings* settings)
@@ -113,7 +114,7 @@ const utf8* wkeGetVersionString()
         return s_versionString.data();
 
     String versionString = String::format("wke version %d.%02d\n"
-        "webkit build %d\n"
+        "blink build %d\n"
         "build time %s\n",
         MAJOR_VERSION,
         MINOR_VERSION,
@@ -122,12 +123,6 @@ const utf8* wkeGetVersionString()
 
     s_versionString = versionString.utf8();
     return s_versionString.data();
-}
-
-extern "C" void libcurl_set_file_system(FILE_OPEN pfn_open, FILE_CLOSE pfn_close, FILE_SIZE pfn_size, FILE_READ pfn_read, FILE_SEEK  pfn_seek);
-void wkeSetFileSystem(FILE_OPEN pfn_open, FILE_CLOSE pfn_close, FILE_SIZE pfn_size, FILE_READ pfn_read, FILE_SEEK pfn_seek)
-{
-    //libcurl_set_file_system(pfn_open, pfn_close, pfn_size, pfn_read, pfn_seek);
 }
 
 const char* wkeGetName(wkeWebView webView)
@@ -598,53 +593,28 @@ void wkeSetStringW(wkeString string, const wchar_t* str, size_t len)
 }
 
 
-
-//FIXME: We should consider moving this to a new file for cross-project functionality
-// PassRefPtr<WebCore::SharedBuffer> loadResourceIntoBuffer(const char* name)
-// {
-//     return 0;
-// }
-
-extern void __CFInitialize(void);
-
-void init_libs()
-{
-    //_putenv("WEBKIT_IGNORE_SSL_ERRORS=1");
-    //pthread_win32_process_attach_np ();
-    //__CFInitialize();
-}
-
 typedef void (__cdecl* _PVFV) ();
 #pragma section(".CRT$XCG", long, read)
-__declspec(allocate(".CRT$XCG")) _PVFV init_section[] = { init_libs };
 
-
-// extern "C" BOOL WINAPI CoreFoundationDllMain( HINSTANCE hInstance, DWORD dwReason, LPVOID pReserved );
 STDAPI_(BOOL) DllMain( HMODULE hModule, DWORD  ul_reason_for_call, LPVOID /*lpReserved*/)
 {
-//     BOOL ret = FALSE;
-//     switch (ul_reason_for_call) {
-//         case DLL_PROCESS_ATTACH:
-//             WebCore::setInstanceHandle(hModule);
-//             ret = TRUE;
-//             break;
-// 
-//         case DLL_PROCESS_DETACH:
-//             WebCore::RenderThemeWin::setWebKitIsBeingUnloaded();
-//             pthread_win32_thread_detach_np ();
-//             break;
-// 
-//         case DLL_THREAD_ATTACH:
-//             pthread_win32_thread_attach_np ();
-//             break;
-// 
-//         case DLL_THREAD_DETACH:
-//             pthread_win32_thread_detach_np ();
-//             break;
-//     }
-// 
-//     CoreFoundationDllMain(hModule, ul_reason_for_call, 0);
-     return TRUE;
+     BOOL ret = FALSE;
+     switch (ul_reason_for_call) {
+         case DLL_PROCESS_ATTACH:
+             ret = TRUE;
+             break;
+ 
+         case DLL_PROCESS_DETACH:
+
+             break;
+ 
+         case DLL_THREAD_ATTACH:
+             break;
+ 
+         case DLL_THREAD_DETACH:
+             break;
+     }
+     return ret;
 }
 
 wkeWebView wkeCreateWebWindow(wkeWindowType type, HWND parent, int x, int y, int width, int height)

@@ -125,7 +125,7 @@ BlinkPlatformImpl::BlinkPlatformImpl()
     m_firstMonotonicallyIncreasingTime = currentTimeImpl(); // (GetTickCount() / 1000.0);
     for (int i = 0; i < m_maxThreadNum; ++i) { m_threads[i] = nullptr; }
     ::InitializeCriticalSection(m_lock);
-
+	setuserAgent("Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.2171.99 Safari/537.36");
 #ifdef _DEBUG
     myFree = (MyFree)ReplaceFuncAndCopy(free, newFree);
     myRealloc = (MyRealloc)ReplaceFuncAndCopy(realloc, newRealloc);
@@ -137,6 +137,7 @@ BlinkPlatformImpl::~BlinkPlatformImpl()
     ::DeleteCriticalSection(m_lock);
     delete m_lock;
     m_lock = nullptr;
+	free(m_userAgent);
 }
 
 void BlinkPlatformImpl::destroyWebInfo()
@@ -392,8 +393,12 @@ double BlinkPlatformImpl::systemTraceTime()
 
 blink::WebString BlinkPlatformImpl::userAgent()
 {
-    return blink::WebString("Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.2171.99 Safari/537.36"); // PC
+    return blink::WebString(WTF::String(m_userAgent)); // PC
     //return blink::WebString("Mozilla/5.0 (Linux; Android 4.4.4; en-us; Nexus 4 Build/JOP40D) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2307.2 Mobile Safari/537.36");
+}
+void BlinkPlatformImpl::setuserAgent(char *ua)
+{
+	m_userAgent = _strdup(ua);
 }
 
 blink::WebData BlinkPlatformImpl::loadResource(const char* name)
