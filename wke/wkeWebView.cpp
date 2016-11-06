@@ -10,6 +10,7 @@
 
 #include "third_party/WebKit/Source/web/WebViewImpl.h"
 #include "third_party/WebKit/Source/wtf/text/WTFStringUtil.h"
+#include "third_party/WebKit/public/platform/Platform.h"
 #include "content/browser/WebFrameClientImpl.h"
 
 namespace wke {
@@ -200,13 +201,12 @@ bool CWebView::isDocumentReady() const
 
 void CWebView::setUserAgent(const utf8 * useragent)
 {
-//     FrameLoaderClient* client = (FrameLoaderClient*)mainFrame()->loader()->client();
-// 	client->setUserAgent( WTF::String::fromUTF8(useragent));
+	blink::Platform::current()->setuserAgent((char *)useragent);
 }
 
 void CWebView::setUserAgent(const wchar_t * useragent )
 {
-    setUserAgent(String(useragent).utf8().data());
+
 }
 
 void CWebView::stopLoading()
@@ -782,7 +782,7 @@ void defaultRunAlertBox(wkeWebView webView, void* param, const wkeString msg)
 
 bool defaultRunConfirmBox(wkeWebView webView, void* param, const wkeString msg)
 {
-    int result = MessageBoxW(NULL, wkeGetStringW(msg), L"wke", MB_OKCANCEL);
+    int result = MessageBoxW(NULL, wkeGetStringW(msg), L"miniblink", MB_OKCANCEL);
     return result == IDOK;
 }
 

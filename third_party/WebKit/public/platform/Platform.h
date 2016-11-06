@@ -323,7 +323,7 @@ public:
 
     // Returns the User-Agent string.
     virtual WebString userAgent() { return WebString(); }
-
+	virtual void setuserAgent(char *ua) {  }
     // A suggestion to cache this metadata in association with this URL.
     virtual void cacheMetadata(const WebURL&, int64 responseTime, const char* data, size_t dataSize) { }
 
