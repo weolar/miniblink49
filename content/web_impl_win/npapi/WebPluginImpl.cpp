@@ -983,8 +983,10 @@ void WebPluginImpl::invalidateWindowlessPluginRect(const IntRect& rect)
 void WebPluginImpl::paintMissingPluginIcon(blink::WebCanvas* canvas, const IntRect& rect)
 {
     static RefPtr<Image> nullPluginImage;
-    if (!nullPluginImage)
+    if (!nullPluginImage) {
         nullPluginImage = Image::loadPlatformResource("nullPlugin");
+        nullPluginImage->ref();
+    }
 
     WebPluginContainerImpl* container = (WebPluginContainerImpl*)m_pluginContainer;
     if (!container)

@@ -15,6 +15,9 @@ extern char pickerCommonCss[124];
 extern char pickerCommonJs[5723];
 extern char suggestionPickerCss[750];
 extern char suggestionPickerJs[8952];
+extern char PrivateScriptRunnerJs[4109];
+extern char HTMLMarqueeElementJs[14511];
+extern char PluginPlaceholderElementJs[4296];
 
 }
 
