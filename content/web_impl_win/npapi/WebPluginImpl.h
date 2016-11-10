@@ -95,6 +95,8 @@ public:
     virtual bool initialize(blink::WebPluginContainer*);
     virtual void destroy() override;
 
+    static void shutdown();
+
     virtual blink::WebPluginContainer* container() const override;
     virtual void containerDidDetachFromParent() override;
 
