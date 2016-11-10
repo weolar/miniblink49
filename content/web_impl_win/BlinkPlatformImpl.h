@@ -120,7 +120,7 @@ private:
     int64 m_storageNamespaceIdCount;
     double m_firstMonotonicallyIncreasingTime;
 
-    WTF::String m_userAgent;
+    WTF::String* m_userAgent;
 };
 
 } // namespace content

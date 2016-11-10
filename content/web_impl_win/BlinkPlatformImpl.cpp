@@ -11,6 +11,7 @@
 #include "content/web_impl_win/WebBlobRegistryImpl.h"
 #include "content/web_impl_win/WebClipboardImpl.h"
 #include "content/web_impl_win/WebFileUtilitiesImpl.h"
+#include "content/web_impl_win/npapi/WebPluginImpl.h"
 #include "content/resources/MissingImageData.h"
 #include "content/resources/TextAreaResizeCornerData.h"
 #include "content/resources/LocalizedString.h"
@@ -118,6 +119,7 @@ BlinkPlatformImpl::BlinkPlatformImpl()
     m_localStorageStorageMap = nullptr;
     m_sessionStorageStorageMap = nullptr;
     m_webFileUtilitiesImpl = nullptr;
+    m_userAgent = nullptr;
     m_storageNamespaceIdCount = 1;
     m_lock = new CRITICAL_SECTION();
     m_threadNum = 0;
@@ -170,6 +172,10 @@ void BlinkPlatformImpl::destroyWebInfo()
     if (m_clipboardImpl)
         delete m_clipboardImpl;
     m_clipboardImpl = nullptr;
+
+    if (m_userAgent)
+        delete m_userAgent;
+    m_userAgent = nullptr;
 }
 
 void BlinkPlatformImpl::registerMemoryDumpProvider(blink::WebMemoryDumpProvider*) {}
@@ -186,6 +192,7 @@ void BlinkPlatformImpl::unregisterMemoryDumpProvider(blink::WebMemoryDumpProvide
 
 void BlinkPlatformImpl::preShutdown()
 {
+    WebPluginImpl::shutdown();
     destroyWebInfo();
 
     if (m_ioThread)
@@ -394,13 +401,15 @@ double BlinkPlatformImpl::systemTraceTime()
 
 blink::WebString BlinkPlatformImpl::userAgent()
 {
-    return m_userAgent; // PC
+    return *m_userAgent; // PC
     //return blink::WebString("Mozilla/5.0 (Linux; Android 4.4.4; en-us; Nexus 4 Build/JOP40D) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2307.2 Mobile Safari/537.36");
 }
 
 void BlinkPlatformImpl::setUserAgent(char* ua)
 {
-	m_userAgent = String(ua);
+    if (m_userAgent)
+        delete m_userAgent;
+	m_userAgent = new String(ua);
 }
 
 blink::WebData BlinkPlatformImpl::loadResource(const char* name)
