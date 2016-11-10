@@ -121,14 +121,17 @@ WebPluginImpl::WebPluginImpl(WebLocalFrame* parentFrame, const blink::WebPluginP
     , m_isJavaScriptPaused(false)
     , m_haveCalledSetWindow(false)
 {
+#ifndef NDEBUG
+    webPluginImplCount.increment();
+#endif
     if (!m_parentFrame)
         return;
+
     m_plugin = PluginDatabase::installedPlugins()->findPlugin(m_url, m_mimeType);
 
     // No plugin was found, try refreshing the database and searching again
-    if (!m_plugin && PluginDatabase::installedPlugins()->refresh()) {
+    if (!m_plugin && PluginDatabase::installedPlugins()->refresh())
         m_plugin = PluginDatabase::installedPlugins()->findPlugin(m_url, m_mimeType);
-    }
 
     if (!m_plugin) {
         m_status = PluginStatusCanNotFindPlugin;
@@ -140,16 +143,10 @@ WebPluginImpl::WebPluginImpl(WebLocalFrame* parentFrame, const blink::WebPluginP
     m_instance->pdata = 0;
 
     instanceMap().add(m_instance, this);
-
+    memset(&m_npWindow, 0, sizeof(m_npWindow));
     setParameters(params.attributeNames, params.attributeValues);
 
-    memset(&m_npWindow, 0, sizeof(m_npWindow));
-
     //resize(size);
-
-#ifndef NDEBUG
-    webPluginImplCount.increment();
-#endif
 }
 
 WebPluginImpl::~WebPluginImpl()
