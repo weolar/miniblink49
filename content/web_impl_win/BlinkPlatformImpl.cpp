@@ -11,6 +11,7 @@
 #include "content/web_impl_win/WebBlobRegistryImpl.h"
 #include "content/web_impl_win/WebClipboardImpl.h"
 #include "content/web_impl_win/WebFileUtilitiesImpl.h"
+#include "content/web_impl_win/npapi/WebPluginImpl.h"
 #include "content/resources/MissingImageData.h"
 #include "content/resources/TextAreaResizeCornerData.h"
 #include "content/resources/LocalizedString.h"
@@ -118,6 +119,7 @@ BlinkPlatformImpl::BlinkPlatformImpl()
     m_localStorageStorageMap = nullptr;
     m_sessionStorageStorageMap = nullptr;
     m_webFileUtilitiesImpl = nullptr;
+    m_userAgent = nullptr;
     m_storageNamespaceIdCount = 1;
     m_lock = new CRITICAL_SECTION();
     m_threadNum = 0;
@@ -125,7 +127,9 @@ BlinkPlatformImpl::BlinkPlatformImpl()
     m_firstMonotonicallyIncreasingTime = currentTimeImpl(); // (GetTickCount() / 1000.0);
     for (int i = 0; i < m_maxThreadNum; ++i) { m_threads[i] = nullptr; }
     ::InitializeCriticalSection(m_lock);
-	setuserAgent("Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.2171.99 Safari/537.36");
+
+	setUserAgent("Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.2171.99 Safari/537.36");
+
 #ifdef _DEBUG
     myFree = (MyFree)ReplaceFuncAndCopy(free, newFree);
     myRealloc = (MyRealloc)ReplaceFuncAndCopy(realloc, newRealloc);
@@ -137,7 +141,6 @@ BlinkPlatformImpl::~BlinkPlatformImpl()
     ::DeleteCriticalSection(m_lock);
     delete m_lock;
     m_lock = nullptr;
-	free(m_userAgent);
 }
 
 void BlinkPlatformImpl::destroyWebInfo()
@@ -169,6 +172,10 @@ void BlinkPlatformImpl::destroyWebInfo()
     if (m_clipboardImpl)
         delete m_clipboardImpl;
     m_clipboardImpl = nullptr;
+
+    if (m_userAgent)
+        delete m_userAgent;
+    m_userAgent = nullptr;
 }
 
 void BlinkPlatformImpl::registerMemoryDumpProvider(blink::WebMemoryDumpProvider*) {}
@@ -185,6 +192,7 @@ void BlinkPlatformImpl::unregisterMemoryDumpProvider(blink::WebMemoryDumpProvide
 
 void BlinkPlatformImpl::preShutdown()
 {
+    WebPluginImpl::shutdown();
     destroyWebInfo();
 
     if (m_ioThread)
@@ -393,12 +401,15 @@ double BlinkPlatformImpl::systemTraceTime()
 
 blink::WebString BlinkPlatformImpl::userAgent()
 {
-    return blink::WebString(WTF::String(m_userAgent)); // PC
+    return *m_userAgent; // PC
     //return blink::WebString("Mozilla/5.0 (Linux; Android 4.4.4; en-us; Nexus 4 Build/JOP40D) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2307.2 Mobile Safari/537.36");
 }
-void BlinkPlatformImpl::setuserAgent(char *ua)
+
+void BlinkPlatformImpl::setUserAgent(char* ua)
 {
-	m_userAgent = _strdup(ua);
+    if (m_userAgent)
+        delete m_userAgent;
+	m_userAgent = new String(ua);
 }
 
 blink::WebData BlinkPlatformImpl::loadResource(const char* name)
@@ -417,7 +428,7 @@ blink::WebData BlinkPlatformImpl::loadResource(const char* name)
         return blink::WebData(blink::themeChromiumUserAgentStyleSheet, sizeof(blink::themeChromiumUserAgentStyleSheet));
     else if (0 == strcmp("themeWinQuirks.css", name))
         return blink::WebData(blink::themeWinQuirksUserAgentStyleSheet, sizeof(blink::themeWinQuirksUserAgentStyleSheet));
-    else if (0 == strcmp("missingImage", name))
+    else if (0 == strcmp("missingImage", name) || 0 == strcmp("nullPlugin", name))
         return blink::WebData((const char*)content::gMissingImageData, sizeof(content::gMissingImageData));
     else if (0 == strcmp("textAreaResizeCorner", name))
         return blink::WebData((const char*)content::gTextAreaResizeCornerData, sizeof(content::gTextAreaResizeCornerData));
@@ -448,6 +459,12 @@ blink::WebData BlinkPlatformImpl::loadResource(const char* name)
         return blink::WebData((const char*)content::suggestionPickerCss, sizeof(content::suggestionPickerCss));
     else if (0 == strcmp("suggestionPicker.js", name))
         return blink::WebData((const char*)content::suggestionPickerJs, sizeof(content::suggestionPickerJs));
+    else if (0 == strcmp("PrivateScriptRunner.js", name))
+        return blink::WebData((const char*)content::PrivateScriptRunnerJs, sizeof(content::PrivateScriptRunnerJs));
+    else if (0 == strcmp("HTMLMarqueeElement.js", name))
+        return blink::WebData((const char*)content::HTMLMarqueeElementJs, sizeof(content::HTMLMarqueeElementJs));
+    else if (0 == strcmp("PluginPlaceholderElement.js", name))
+        return blink::WebData((const char*)content::PluginPlaceholderElementJs, sizeof(content::PluginPlaceholderElementJs));
     
     notImplemented();
     return blink::WebData();

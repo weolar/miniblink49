@@ -8979,6 +8979,15 @@
     <ClCompile Include="..\..\cef\libcef\browser\CefWebPluginImpl.cpp">
       <Filter>cef\libcef\browser</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\content\resources\PrivateScriptRunnerJs.cpp">
+      <Filter>content\resources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\content\resources\PluginPlaceholderElementJs.cpp">
+      <Filter>content\resources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\content\resources\HTMLMarqueeElementJs.cpp">
+      <Filter>content\resources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\public\platform\modules\app_banner\WebAppBannerClient.h">

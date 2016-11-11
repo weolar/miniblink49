@@ -10,7 +10,7 @@
 
 #include "third_party/WebKit/Source/web/WebViewImpl.h"
 #include "third_party/WebKit/Source/wtf/text/WTFStringUtil.h"
-#include "third_party/WebKit/public/platform/Platform.h"
+#include "content/web_impl_win/BlinkPlatformImpl.h"
 #include "content/browser/WebFrameClientImpl.h"
 
 namespace wke {
@@ -149,7 +149,8 @@ void CWebView::loadHTML(const utf8* html)
     size_t length = strlen(html);
     if (0 == length)
         return;
-    m_webPage->loadHTMLString(content::WebPage::kMainFrameId, blink::WebData(html, length), blink::WebURL(), blink::WebURL(), true);
+    String url = String::format("MemoryURL://data.com/%d", GetTickCount());
+    m_webPage->loadHTMLString(content::WebPage::kMainFrameId, blink::WebData(html, length), blink::KURL(blink::ParsedURLString, url), blink::WebURL(), true);
 }
 
 void CWebView::loadHTML(const wchar_t* html)
@@ -159,7 +160,9 @@ void CWebView::loadHTML(const wchar_t* html)
         return;
     String htmlUTF8((UChar*)html, length);
     Vector<char> htmlUTF8Buf = WTF::ensureStringToUTF8(htmlUTF8);
-    m_webPage->loadHTMLString(content::WebPage::kMainFrameId, blink::WebData(htmlUTF8Buf.data(), htmlUTF8Buf.size()), blink::WebURL(), blink::WebURL(), true);
+
+    String url = String::format("MemoryURL://data.com/%d", GetTickCount());
+    m_webPage->loadHTMLString(content::WebPage::kMainFrameId, blink::WebData(htmlUTF8Buf.data(), htmlUTF8Buf.size()), blink::KURL(blink::ParsedURLString, url), blink::WebURL(), true);
 }
 
 void CWebView::loadFile(const utf8* filename)
@@ -201,12 +204,13 @@ bool CWebView::isDocumentReady() const
 
 void CWebView::setUserAgent(const utf8 * useragent)
 {
-	blink::Platform::current()->setuserAgent((char *)useragent);
+    content::BlinkPlatformImpl* platform = (content::BlinkPlatformImpl*)blink::Platform::current();
+    platform->setUserAgent((char *)useragent);
 }
 
 void CWebView::setUserAgent(const wchar_t * useragent )
 {
-
+    setUserAgent(String(useragent).utf8().data());
 }
 
 void CWebView::stopLoading()
@@ -335,15 +339,18 @@ HWND CWebView::windowHandle() const
 {
     return m_hWnd;
 }
+
 void CWebView::setHandle(HWND wnd)
 {
 	m_hWnd = wnd;
 	m_webPage->setHWND(wnd);
 }
+
 void CWebView::setHandleOffset(int x, int y)
 {
 	m_webPage->setHWNDoffset(x, y);
 }
+
 void CWebView::paint(void* bits, int pitch)
 {
     if (m_webPage->needsCommit())
@@ -782,7 +789,7 @@ void defaultRunAlertBox(wkeWebView webView, void* param, const wkeString msg)
 
 bool defaultRunConfirmBox(wkeWebView webView, void* param, const wkeString msg)
 {
-    int result = MessageBoxW(NULL, wkeGetStringW(msg), L"miniblink", MB_OKCANCEL);
+    int result = MessageBoxW(NULL, wkeGetStringW(msg), L"wke", MB_OKCANCEL);
     return result == IDOK;
 }
 

@@ -1328,6 +1328,7 @@ void WebPageImpl::loadHTMLString(int64 frameId, const WebData& html, const WebUR
     AutoRecordActions autoRecordActions(m_layerTreeHost);
     webFrame->loadHTMLString(html, baseURL, unreachableURL, replace);
 }
+
 #if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 CefBrowserHostImpl* WebPageImpl::browser() const 
 {
@@ -1339,6 +1340,7 @@ void WebPageImpl::setBrowser(CefBrowserHostImpl* browser)
     m_browser = browser;
 }
 #endif
+
 WebFrame* WebPageImpl::getWebFrameFromFrameId(int64 frameId)
 {
     blink::WebFrame* webFrame = nullptr;

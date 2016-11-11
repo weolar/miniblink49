@@ -308,11 +308,14 @@
     <ClCompile Include="..\..\content\resources\calendarPickerJs.cpp" />
     <ClCompile Include="..\..\content\resources\colorSuggestionPickerCss.cpp" />
     <ClCompile Include="..\..\content\resources\colorSuggestionPickerJs.cpp" />
+    <ClCompile Include="..\..\content\resources\HTMLMarqueeElementJs.cpp" />
     <ClCompile Include="..\..\content\resources\listPickerCss.cpp" />
     <ClCompile Include="..\..\content\resources\listPickerJs.cpp" />
     <ClCompile Include="..\..\content\resources\pickerButtonCss.cpp" />
     <ClCompile Include="..\..\content\resources\pickerCommonCss.cpp" />
     <ClCompile Include="..\..\content\resources\pickerCommonJs.cpp" />
+    <ClCompile Include="..\..\content\resources\PluginPlaceholderElementJs.cpp" />
+    <ClCompile Include="..\..\content\resources\PrivateScriptRunnerJs.cpp" />
     <ClCompile Include="..\..\content\resources\suggestionPickerCss.cpp" />
     <ClCompile Include="..\..\content\resources\suggestionPickerJs.cpp" />
     <ClCompile Include="..\..\content\resources\testWebPagePopupImpl.cpp" />
