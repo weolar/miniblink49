@@ -26,10 +26,10 @@ CWebView::CWebView()
     , m_title("")
     , m_cookie("")
 {
-	m_webPage->wkeHandler().isWke = true;
     _initPage();
     _initHandler();
     _initMemoryDC();
+	m_webPage->wkeHandler().isWke = true;
 }
 
 CWebView::~CWebView()
