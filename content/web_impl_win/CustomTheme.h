@@ -444,36 +444,28 @@ public:
         SkPath outline;
         switch (direction) {
         case blink::WebThemeEngine::PartScrollbarUpArrow:
-            outline.moveTo(rect.x() + 0.5, rect.y() + rect.height() + 0.5);
-            outline.rLineTo(0, -(rect.height() - 2));
-            outline.rLineTo(2, -2);
-            outline.rLineTo(rect.width() - 5, 0);
-            outline.rLineTo(2, 2);
-            outline.rLineTo(0, rect.height() - 2);
+            outline.moveTo(rect.x(), rect.y() + rect.height());
+            outline.rLineTo(0, -rect.height());
+            outline.rLineTo(rect.width(), 0);
+            outline.rLineTo(0, rect.height());
             break;
         case blink::WebThemeEngine::PartScrollbarDownArrow:
-            outline.moveTo(rect.x() + 0.5, rect.y() - 0.5);
-            outline.rLineTo(0, rect.height() - 2);
-            outline.rLineTo(2, 2);
-            outline.rLineTo(rect.width() - 5, 0);
-            outline.rLineTo(2, -2);
-            outline.rLineTo(0, -(rect.height() - 2));
+            outline.moveTo(rect.x(), rect.y());
+            outline.rLineTo(0, rect.height());
+            outline.rLineTo(rect.width(), 0);
+            outline.rLineTo(0, -rect.height());
             break;
         case blink::WebThemeEngine::PartScrollbarRightArrow:
-            outline.moveTo(rect.x() - 0.5, rect.y() + 0.5);
-            outline.rLineTo(rect.width() - 2, 0);
-            outline.rLineTo(2, 2);
-            outline.rLineTo(0, rect.height() - 5);
-            outline.rLineTo(-2, 2);
-            outline.rLineTo(-(rect.width() - 2), 0);
+            outline.moveTo(rect.x(), rect.y());
+            outline.rLineTo(rect.width(), 0);
+            outline.rLineTo(0, rect.height());
+            outline.rLineTo(-rect.width(), 0);
             break;
         case blink::WebThemeEngine::PartScrollbarLeftArrow:
-            outline.moveTo(rect.x() + rect.width() + 0.5, rect.y() + 0.5);
-            outline.rLineTo(-(rect.width() - 2), 0);
-            outline.rLineTo(-2, 2);
-            outline.rLineTo(0, rect.height() - 5);
-            outline.rLineTo(2, 2);
-            outline.rLineTo(rect.width() - 2, 0);
+            outline.moveTo(rect.x() + rect.width(), rect.y());
+            outline.rLineTo(-rect.width(), 0);
+            outline.rLineTo(0, rect.height());
+            outline.rLineTo(rect.width(), 0);
             break;
         default:
             break;
