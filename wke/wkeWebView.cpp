@@ -29,6 +29,7 @@ CWebView::CWebView()
     _initPage();
     _initHandler();
     _initMemoryDC();
+	m_webPage->wkeHandler().isWke = true;
 }
 
 CWebView::~CWebView()
