@@ -685,7 +685,7 @@ void WebPageImpl::doClose()
 
     m_layerTreeHost->applyActions(false);
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
-	if (m_pagePtr->wkeHandler().isWke) {
+	if (!m_pagePtr->wkeHandler().isWke) {
 #endif
 		if (m_hWnd) {
 			::SetWindowLongPtr(m_hWnd, GWLP_USERDATA, 0);
