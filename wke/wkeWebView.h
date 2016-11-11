@@ -1,10 +1,10 @@
-#ifndef WKE_WEB_VIEW_H
+ï»¿#ifndef WKE_WEB_VIEW_H
 #define WKE_WEB_VIEW_H
 
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
 //////////////////////////////////////////////////////////////////////////
 
-//cexer: ±ØĞë°üº¬ÔÚºóÃæ£¬ÒòÎªÆäÖĞµÄ windows.h »á¶¨Òå max¡¢min£¬µ¼ÖÂ WebCore ÄÚ²¿µÄ max¡¢min ³öÏÖ´íÂÒ¡£
+//cexer: å¿…é¡»åŒ…å«åœ¨åé¢ï¼Œå› ä¸ºå…¶ä¸­çš„ windows.h ä¼šå®šä¹‰ maxã€minï¼Œå¯¼è‡´ WebCore å†…éƒ¨çš„ maxã€min å‡ºç°é”™ä¹±ã€‚
 #include "wke/wkeString.h"
 #include "third_party/WebKit/Source/platform/geometry/IntRect.h"
 
@@ -51,6 +51,8 @@ struct CWebViewHandler {
 
 	wkeLoadUrlEndCallback loadUrlEndCallback;
 	void* loadUrlEndCallbackParam;
+
+	bool isWke;//æ˜¯å¦æ˜¯ä½¿ç”¨çš„wkeæ¥å£
 };
 
 class CWebView {
@@ -188,7 +190,7 @@ protected:
     void _initPage();
     void _initMemoryDC();
 
-    //°´ÀíÕâĞ©½Ó¿ÚÓ¦¸ÃÊ¹ÓÃCWebViewÀ´ÊµÏÖµÄ£¬¿ÉÒÔ°ÑËüÃÇÏëÏñ³ÉÒ»¸öÀà£¬Òò´ËÉèÖÃÎªÓÑÔ±·ûºÏÇéÀí¡£
+    //æŒ‰ç†è¿™äº›æ¥å£åº”è¯¥ä½¿ç”¨CWebViewæ¥å®ç°çš„ï¼Œå¯ä»¥æŠŠå®ƒä»¬æƒ³åƒæˆä¸€ä¸ªç±»ï¼Œå› æ­¤è®¾ç½®ä¸ºå‹å‘˜ç¬¦åˆæƒ…ç†ã€‚
 //     friend class ToolTip;
 //     friend class ChromeClient;
 //     friend class ContextMenuClient;
