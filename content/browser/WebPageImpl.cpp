@@ -684,12 +684,18 @@ void WebPageImpl::doClose()
         m_destroyNotifs[i]->destroy();
 
     m_layerTreeHost->applyActions(false);
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
+	if (!m_pagePtr->wkeHandler().isWke) {
+#endif
+		if (m_hWnd) {
+			::SetWindowLongPtr(m_hWnd, GWLP_USERDATA, 0);
+			::KillTimer(m_hWnd, (UINT_PTR)this);
+			::DestroyWindow(m_hWnd);
+		}
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
+	}
+#endif
 
-    if (m_hWnd) {
-        ::SetWindowLongPtr(m_hWnd, GWLP_USERDATA, 0);
-        ::KillTimer(m_hWnd, (UINT_PTR)this);
-        ::DestroyWindow(m_hWnd);
-    }
 
     content::WebThreadImpl* threadImpl = nullptr;
     threadImpl = (content::WebThreadImpl*)(blink::Platform::current()->currentThread());
