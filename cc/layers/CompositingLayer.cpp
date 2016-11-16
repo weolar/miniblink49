@@ -324,7 +324,9 @@ public:
 
         SkRect skClipRect = clip;
         if (layer->masksToBounds()) {
-            skClipRect.intersect(SkRect::MakeIWH(layer->drawToCanvasProperties()->bounds.width(), layer->drawToCanvasProperties()->bounds.height()));
+            bool isIntersect = skClipRect.intersect(SkRect::MakeIWH(layer->drawToCanvasProperties()->bounds.width(), layer->drawToCanvasProperties()->bounds.height()));
+            if (!isIntersect)
+                skClipRect.setEmpty();
         }
 
         m_maskLayer = nullptr;
@@ -336,7 +338,8 @@ public:
                     m_maskLayer->m_prop->position.y(),
                     m_maskLayer->m_prop->bounds.width(), 
                     m_maskLayer->m_prop->bounds.height());
-                skClipRect.intersect(skMaskClipRect);
+                if (!skClipRect.intersect(skMaskClipRect))
+                    skClipRect.setEmpty();
             }
         }
 
@@ -386,7 +389,7 @@ void CompositingLayer::drawToCanvasChildren(LayerTreeHost* host, SkCanvas* canva
         child->drawToCanvas(host, canvas, clipInLayerdCoordinateInt);
         canvas->restore();
 
-        if (!child->opaque() || !child->drawsContent())
+        if (!child->opaque() || !child->masksToBounds() || !child->drawsContent())
             child->drawToCanvasChildren(host, canvas, clipInLayerdCoordinateInt, deep + 1);
 
         canvas->resetMatrix();
@@ -442,7 +445,8 @@ CompositingImageLayer::CompositingImageLayer(int id)
 
 CompositingImageLayer::~CompositingImageLayer()
 {
-	m_bitmap->deref();
+    if (m_bitmap)
+	    m_bitmap->deref();
 }
 
 void CompositingImageLayer::drawToCanvas(LayerTreeHost* host, blink::WebCanvas* canvas, const blink::IntRect& clip)
