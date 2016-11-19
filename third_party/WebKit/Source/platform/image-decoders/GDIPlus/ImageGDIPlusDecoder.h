@@ -29,7 +29,13 @@
 #include "platform/image-decoders/bmp/BMPImageDecoder.h"
 #include <wtf/OwnPtr.h>
 
+namespace Gdiplus {
+class Bitmap;
+}
+
 namespace blink {
+
+class GDIPlusReader;
 
 // This class decodes the PNG image format.
 class ImageGDIPlusDecoder : public ImageDecoder {
@@ -42,7 +48,7 @@ public:
     ImageGDIPlusDecoder(ImageSource::AlphaOption, ImageSource::GammaAndColorProfileOption, GDIPlusDecoderType type, size_t maxDecodedBytes);
     virtual ~ImageGDIPlusDecoder();
 
-    String filenameExtension() const override { return "bmp"; }
+    virtual String filenameExtension() const override;
 
     virtual void setData(SharedBuffer*, bool allDataReceived) override;
 
@@ -87,11 +93,11 @@ protected:
     size_t m_decodedOffset;
 
     // The reader used to do most of the BMP decoding.
-    OwnPtr<BMPImageReader> m_reader;
+    OwnPtr<GDIPlusReader> m_reader;
 
-    static WebThread* m_thread;
-    
+    Gdiplus::Bitmap* m_gdipBitmap;
 };
+
 } // namespace blink
 
 #endif // ImageGDIPlusDecoder_h
