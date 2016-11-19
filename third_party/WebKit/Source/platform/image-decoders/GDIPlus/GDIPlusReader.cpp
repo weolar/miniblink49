@@ -33,7 +33,11 @@ static void fillbitmap(Gdiplus::Bitmap* gdipBitmap, ImageFrame* buffer)
 
     Gdiplus::Rect rect(0, 0, w, h);
     Gdiplus::BitmapData lockedBitmapData;
-    gdipBitmap->LockBits(&rect, Gdiplus::ImageLockModeRead, PixelFormat32bppARGB, &lockedBitmapData);
+    gdipBitmap->LockBits(
+#if USING_VC6RT != 1
+        &
+#endif
+        rect, Gdiplus::ImageLockModeRead, PixelFormat32bppARGB, &lockedBitmapData);
 
     unsigned int *pData = reinterpret_cast<unsigned int *>(lockedBitmapData.Scan0);
     int stride = lockedBitmapData.Stride;
