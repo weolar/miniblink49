@@ -47,9 +47,9 @@ static void fillbitmap(Gdiplus::Bitmap* gdipBitmap, ImageFrame* buffer)
         for (UINT y = 0; y < h; ++y) {
             UINT color = pData[y * stride / 4 + x]; // color= 0xAARRGGBB
             hasAlpha &= color;
-            UINT red = GetRValue(color);
+            UINT blue = GetRValue(color);
             UINT green = GetGValue(color);
-            UINT blue = GetBValue(color);
+            UINT red = GetBValue(color);
             UINT alpha = (LOBYTE((color) >> 24));
             buffer->setRGBA(x, y, red, green, blue, alpha);
         }
@@ -63,7 +63,14 @@ static void fillbitmap(Gdiplus::Bitmap* gdipBitmap, ImageFrame* buffer)
 bool GDIPlusReader::decodeBMP(bool onlySize)
 {
     // Set our size.
-    if (!m_parent->setSize(m_gdipBitmap->GetWidth(), m_gdipBitmap->GetHeight()))
+    int width = m_gdipBitmap->GetWidth();
+    int height = m_gdipBitmap->GetHeight();
+    if (0 == width || 0 == height) {
+        m_buffer->setStatus(ImageFrame::FramePartial);
+        return false;
+    }
+
+    if (!m_parent->setSize(width, height))
         return false;
 
     if (onlySize)

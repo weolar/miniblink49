@@ -150,19 +150,13 @@ static PassRefPtr<SharedBuffer> decodeToBitmapByGDIPlus(SharedBuffer* data, Gdip
     HGLOBAL hMem = ::GlobalAlloc(GMEM_FIXED, data->size());
     BYTE* pMem = (BYTE*)::GlobalLock(hMem);
     memcpy(pMem, data->data(), data->size());
+    ::GlobalUnlock(hMem);
 
     IStream* istream = 0;
     ::CreateStreamOnHGlobal(hMem, FALSE, &istream);
 
-    char* dummyData = nullptr;
+    *gdipBitmap = Gdiplus::Bitmap::FromStream(istream);
 
-    do {
-        *gdipBitmap = Gdiplus::Bitmap::FromStream(istream);
-        if (!*gdipBitmap)
-            break;
-    } while (false);
-
-    ::GlobalUnlock(hMem);
     ::GlobalFree(hMem);
     istream->Release();
 
@@ -181,7 +175,12 @@ void ImageGDIPlusDecoder::setData(SharedBuffer* data, bool allDataReceived)
     }
 
     RefPtr<SharedBuffer> dummyBuffer = decodeToBitmapByGDIPlus(data, &m_gdipBitmap);
-    if (!dummyBuffer.get())
+    if (!dummyBuffer.get() || !m_gdipBitmap) {
+        setFailed();
+        return;
+    }
+
+    if (!m_gdipBitmap->GetWidth() || !m_gdipBitmap->GetHeight())
         return;
 
     m_dummyData = dummyBuffer;
