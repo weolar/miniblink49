@@ -1909,6 +1909,7 @@
     <ClCompile Include="..\..\third_party\WebKit\Source\platform\heap\StackFrameDepth.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\platform\heap\ThreadState.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\platform\image-decoders\FastSharedBufferReader.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\image-decoders\GDIPlus\GDIPlusReader.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\platform\image-decoders\GDIPlus\ImageGDIPlusDecoder.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\platform\image-decoders\gif\GIFImageDecoder.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\platform\image-decoders\gif\GIFImageReader.cpp" />
@@ -5435,6 +5436,7 @@
     <ClInclude Include="..\..\third_party\WebKit\Source\platform\heap\TraceTraits.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\platform\heap\Visitor.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\platform\image-decoders\FastSharedBufferReader.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\platform\image-decoders\GDIPlus\GDIPlusReader.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\platform\image-decoders\GDIPlus\ImageGDIPlusDecoder.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\platform\image-encoders\gdiplus\GDIPlusImageEncoder.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\platform\network\NetworkHints.h" />
