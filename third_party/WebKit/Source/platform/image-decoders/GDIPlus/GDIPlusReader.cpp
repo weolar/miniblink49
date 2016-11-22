@@ -3,6 +3,7 @@
 #include <windows.h>
 
 #include "platform/image-decoders/GDIPlus/GDIPlusReader.h"
+#include "platform/graphics/GDIPlusInit.h"
 
 #undef min
 #undef max
@@ -60,22 +61,98 @@ static void fillbitmap(Gdiplus::Bitmap* gdipBitmap, ImageFrame* buffer)
     gdipBitmap->UnlockBits(&lockedBitmapData);
 }
 
-bool GDIPlusReader::decodeBMP(bool onlySize)
+// class DecodeTask : public WebThread::Task {
+// public:
+//     DecodeTask(bool* isDecodeFinish, SharedBuffer* data, Gdiplus::Bitmap** gdipBitmap)
+//         : m_isDecodeFinish(isDecodeFinish)
+//         , m_gdipBitmap(gdipBitmap)
+//         , m_data(data)
+//     {
+// 
+//     }
+// 
+//     virtual ~DecodeTask()
+//     {
+//     }
+// 
+//     virtual void run() override
+//     {
+//         initGDIPlusClsids();
+// 
+//         HGLOBAL hMem = ::GlobalAlloc(GMEM_FIXED, m_data->size());
+//         BYTE* pMem = (BYTE*)::GlobalLock(hMem);
+//         memcpy(pMem, m_data->data(), m_data->size());
+//         ::GlobalUnlock(hMem);
+// 
+//         IStream* istream = 0;
+//         ::CreateStreamOnHGlobal(hMem, FALSE, &istream);
+// 
+//         *m_gdipBitmap = Gdiplus::Bitmap::FromStream(istream);
+// 
+//         ::GlobalFree(hMem);
+//         istream->Release();
+//     }
+// 
+// private:
+//     bool m_isDecodeFinish;
+//     Gdiplus::Bitmap** m_gdipBitmap;
+//     SharedBuffer* m_data;
+// };
+
+static void decodeToBitmapByGDIPlus(SharedBuffer* data, Gdiplus::Bitmap** gdipBitmap)
 {
-    // Set our size.
+//     *gdipBitmap = nullptr;
+// 
+//     static WebThread* ioThread = nullptr;
+//     if (!ioThread)
+//         ioThread = Platform::createThread("IO");
+// 
+//     bool isDecodeFinish = false;
+//     ioThread->postTask(FROM_HERE, new DecodeTask(&isDecodeFinish, data, gdipBitmap));
+// 
+//     while (!isDecodeFinish) {}
+
+    initGDIPlusClsids();
+
+    HGLOBAL hMem = ::GlobalAlloc(GMEM_FIXED, data->size());
+    BYTE* pMem = (BYTE*)::GlobalLock(hMem);
+    memcpy(pMem, data->data(), data->size());
+    ::GlobalUnlock(hMem);
+
+    IStream* istream = 0;
+    ::CreateStreamOnHGlobal(hMem, FALSE, &istream);
+
+    *gdipBitmap = Gdiplus::Bitmap::FromStream(istream);
+
+    ::GlobalFree(hMem);
+    istream->Release();
+}
+
+bool GDIPlusReader::decode(bool onlySize)
+{
+    decodeToBitmapByGDIPlus(m_data.get(), &m_gdipBitmap);
+
     int width = m_gdipBitmap->GetWidth();
     int height = m_gdipBitmap->GetHeight();
-    if (0 == width || 0 == height) {
-        m_buffer->setStatus(ImageFrame::FramePartial);
-        return false;
-    }
 
+    // Set our size.
+    if (0 == width || 0 == height)
+        return false;
+    
     if (!m_parent->setSize(width, height))
         return false;
 
     if (onlySize)
         return true;
 
+    if (!m_buffer)
+        return false;
+
+    if (0 == width || 0 == height) {
+        m_buffer->setStatus(ImageFrame::FramePartial);
+        return false;
+    }
+    
     // Initialize the framebuffer if needed.
     ASSERT(m_buffer);  // Parent should set this before asking us to decode!
     if (m_buffer->status() == ImageFrame::FrameEmpty) {
