@@ -2146,7 +2146,6 @@ String KURL::elidedString() const
 
 const KURL* KURL::innerURL() const
 {
-    notImplemented();
     return 0;
 }
 
@@ -2155,5 +2154,11 @@ bool KURL::isAboutBlankURL() const
     return *this == blankURL();
 }
 
+KURL KURL::createIsolated(ParsedURLStringTag, const String& url)
+{
+    // FIXME: We should be able to skip this extra copy and created an
+    // isolated KURL more efficiently.
+    return KURL(ParsedURLString, url).copy();
+}
 
 }
