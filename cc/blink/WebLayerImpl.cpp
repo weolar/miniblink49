@@ -784,49 +784,35 @@ void WebLayerImpl::setFilters(const WebFilterOperations& filters)
     //setNeedsCommit(true);
 }
 
-// void WebLayerImpl::setBackgroundFilters(const WebFilterOperations& filters) {
-// //   const WebFilterOperationsImpl& filters_impl =
-// //       static_cast<const WebFilterOperationsImpl&>(filters);
-// //   layer_->SetBackgroundFilters(filters_impl.AsFilterOperations());
-//     notImplemented();
-//     setNeedsCommit(true);
-// }
-
 void WebLayerImpl::setAnimationDelegate(blink::WebCompositorAnimationDelegate* delegate)
 {
     notImplemented();
-    setNeedsCommit(true);
 }
 
 bool WebLayerImpl::addAnimation(blink::WebCompositorAnimation* animation) 
 {
     notImplemented();
-    setNeedsCommit(true);
     return true;
 }
 
 void WebLayerImpl::removeAnimation(int animation_id) 
 {
     notImplemented();
-    setNeedsCommit(true);
 }
 
 void WebLayerImpl::removeAnimation(int animation_id, blink::WebCompositorAnimation::TargetProperty target_property) 
 {
     notImplemented();
-    setNeedsCommit(true);
 }
 
 void WebLayerImpl::pauseAnimation(int animation_id, double time_offset) 
 {
     notImplemented();
-    setNeedsCommit(true);
 }
 
 bool WebLayerImpl::hasActiveAnimation() 
 {
     notImplemented();
-    setNeedsCommit(true);
     return false;
 }
 
@@ -934,23 +920,23 @@ bool WebLayerImpl::shouldScrollOnMainThread() const {
 
 void WebLayerImpl::setNonFastScrollableRegion(const WebVector<WebRect>& rects)
 {
-    if (0 == rects.size())
-        return;
-
-    size_t size = m_nonFastScrollableRegion.size();
-    for (size_t j = 0; j < rects.size(); ++j) {
-        bool find = false;
-        blink::IntRect rect(rects[j]);
-        for (size_t i = 0; i < m_nonFastScrollableRegion.size(); ++i) {
-            if (!m_nonFastScrollableRegion[i].contains(rect))
-                continue;
-            find = true;
-        }
-        m_nonFastScrollableRegion.append(rect);
-    }
-
-    if (size != m_nonFastScrollableRegion.size())
-        setNeedsCommit(true);
+//     if (0 == rects.size())
+//         return;
+// 
+//     size_t size = m_nonFastScrollableRegion.size();
+//     for (size_t j = 0; j < rects.size(); ++j) {
+//         bool find = false;
+//         blink::IntRect rect(rects[j]);
+//         for (size_t i = 0; i < m_nonFastScrollableRegion.size(); ++i) {
+//             if (!m_nonFastScrollableRegion[i].contains(rect))
+//                 continue;
+//             find = true;
+//         }
+//         m_nonFastScrollableRegion.append(rect);
+//     }
+// 
+//     if (size != m_nonFastScrollableRegion.size())
+//         setNeedsCommit(true);
 }
 
 WebVector<WebRect> WebLayerImpl::nonFastScrollableRegion() const
@@ -964,28 +950,11 @@ WebVector<WebRect> WebLayerImpl::nonFastScrollableRegion() const
 
 void WebLayerImpl::setFrameTimingRequests(const WebVector<std::pair<int64_t, WebRect>>& requests) 
 {
-//   std::vector<cc::FrameTimingRequest> frame_timing_requests(requests.size());
-//   for (size_t i = 0; i < requests.size(); ++i) {
-//     frame_timing_requests[i] = cc::FrameTimingRequest(
-//         requests[i].first, gfx::Rect(requests[i].second));
-//   }
-//   layer_->SetFrameTimingRequests(frame_timing_requests);
     notImplemented();
 }
 
 WebVector<std::pair<int64_t, WebRect>> WebLayerImpl::frameTimingRequests() const 
 {
-//   const std::vector<cc::FrameTimingRequest>& frame_timing_requests =
-//       layer_->FrameTimingRequests();
-// 
-//   size_t num_requests = frame_timing_requests.size();
-// 
-//   WebVector<std::pair<int64_t, WebRect>> result(num_requests);
-//   for (size_t i = 0; i < num_requests; ++i) {
-//     result[i] = std::make_pair(frame_timing_requests[i].id(),
-//                                frame_timing_requests[i].rect());
-//   }
-//   return result;
     notImplemented();
     return WebVector<std::pair<int64_t, WebRect>>();
 }
@@ -1003,42 +972,12 @@ void WebLayerImpl::setTouchEventHandlerRegion(const WebVector<WebRect>& rects)
 
 WebVector<WebRect> WebLayerImpl::touchEventHandlerRegion() const 
 {
-//   size_t num_rects = 0;
-//   for (cc::Region::Iterator region_rects(layer_->touch_event_handler_region());
-//        region_rects.has_rect();
-//        region_rects.next())
-//     ++num_rects;
-// 
-//   WebVector<WebRect> result(num_rects);
-//   size_t i = 0;
-//   for (cc::Region::Iterator region_rects(layer_->touch_event_handler_region());
-//        region_rects.has_rect();
-//        region_rects.next()) {
-//     result[i] = region_rects.rect();
-//     ++i;
-//   }
-//   return result;
     notImplemented();
     return WebVector<WebRect>();
 }
 
-// static_assert(static_cast<ScrollBlocksOn>(blink::WebScrollBlocksOnNone) ==
-//                   SCROLL_BLOCKS_ON_NONE,
-//               "ScrollBlocksOn and WebScrollBlocksOn enums must match");
-// static_assert(static_cast<ScrollBlocksOn>(blink::WebScrollBlocksOnStartTouch) ==
-//                   SCROLL_BLOCKS_ON_START_TOUCH,
-//               "ScrollBlocksOn and WebScrollBlocksOn enums must match");
-// static_assert(static_cast<ScrollBlocksOn>(blink::WebScrollBlocksOnWheelEvent) ==
-//                   SCROLL_BLOCKS_ON_WHEEL_EVENT,
-//               "ScrollBlocksOn and WebScrollBlocksOn enums must match");
-// static_assert(
-//     static_cast<ScrollBlocksOn>(blink::WebScrollBlocksOnScrollEvent) ==
-//         SCROLL_BLOCKS_ON_SCROLL_EVENT,
-//     "ScrollBlocksOn and WebScrollBlocksOn enums must match");
-
 void WebLayerImpl::setScrollBlocksOn(blink::WebScrollBlocksOn blocks) 
 {
-    //layer_->SetScrollBlocksOn(static_cast<ScrollBlocksOn>(blocks));
     if (m_scrollBlocksOn == blocks)
         return;
     m_scrollBlocksOn = blocks;
@@ -1047,13 +986,11 @@ void WebLayerImpl::setScrollBlocksOn(blink::WebScrollBlocksOn blocks)
 
 blink::WebScrollBlocksOn WebLayerImpl::scrollBlocksOn() const
 {
-    //return static_cast<blink::WebScrollBlocksOn>(layer_->scroll_blocks_on());
     return m_scrollBlocksOn;
 }
 
 void WebLayerImpl::setIsContainerForFixedPositionLayers(bool enable) 
 {
-    //layer_->SetIsContainerForFixedPositionLayers(enable);
     if (m_isContainerForFixedPositionLayers == enable)
         return;
     m_isContainerForFixedPositionLayers = enable;
@@ -1062,31 +999,11 @@ void WebLayerImpl::setIsContainerForFixedPositionLayers(bool enable)
 
 bool WebLayerImpl::isContainerForFixedPositionLayers() const 
 {
-    //return layer_->IsContainerForFixedPositionLayers();
     return m_isContainerForFixedPositionLayers;
 }
 
-// static blink::WebLayerPositionConstraint ToWebLayerPositionConstraint(
-//     const cc::LayerPositionConstraint& constraint) {
-//   blink::WebLayerPositionConstraint web_constraint;
-//   web_constraint.isFixedPosition = constraint.is_fixed_position();
-//   web_constraint.isFixedToRightEdge = constraint.is_fixed_to_right_edge();
-//   web_constraint.isFixedToBottomEdge = constraint.is_fixed_to_bottom_edge();
-//   return web_constraint;
-// }
-
-// static cc::LayerPositionConstraint ToLayerPositionConstraint(
-//     const blink::WebLayerPositionConstraint& web_constraint) {
-//   cc::LayerPositionConstraint constraint;
-//   constraint.set_is_fixed_position(web_constraint.isFixedPosition);
-//   constraint.set_is_fixed_to_right_edge(web_constraint.isFixedToRightEdge);
-//   constraint.set_is_fixed_to_bottom_edge(web_constraint.isFixedToBottomEdge);
-//   return constraint;
-// }
-
 void WebLayerImpl::setPositionConstraint(const blink::WebLayerPositionConstraint& constraint) 
 {
-    //layer_->SetPositionConstraint(ToLayerPositionConstraint(constraint));
     if (m_positionConstraint.isFixedPosition == constraint.isFixedPosition &&
         m_positionConstraint.isFixedToRightEdge == constraint.isFixedToRightEdge &&
         m_positionConstraint.isFixedToBottomEdge == constraint.isFixedToBottomEdge)
@@ -1103,13 +1020,6 @@ blink::WebLayerPositionConstraint WebLayerImpl::positionConstraint() const
 
 void WebLayerImpl::setScrollClient(blink::WebLayerScrollClient* scroll_client) 
 {
-//   if (scroll_client) {
-//     layer_->set_did_scroll_callback(
-//         base::Bind(&blink::WebLayerScrollClient::didScroll,
-//                    base::Unretained(scroll_client)));
-//   } else {
-//     layer_->set_did_scroll_callback(base::Closure());
-//   }
     if (m_webLayerScrollClient == scroll_client)
         return;
     m_webLayerScrollClient = scroll_client;
