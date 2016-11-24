@@ -88,7 +88,7 @@ public:
 
     void beginMainFrame();
     
-    void paintToPlatformContext(const blink::IntRect* paintRect);
+    void paintToPlatformContext(const blink::IntRect& paintRect);
     bool drawFrame();
     
     void repaintRequested(const blink::IntRect& windowRect);
@@ -120,6 +120,7 @@ public:
     void setPainting(bool value) { m_painting = value; }
 
     void showDebugNodeData();
+    void drawDebugLine(skia::PlatformCanvas* memoryCanvas, const blink::IntRect& paintRect);
 
     bool needsCommit() { return m_needsCommit; }
     void setNeedsCommit();
@@ -182,7 +183,7 @@ public:
     bool m_canScheduleResourceLoader;
     Vector<blink::IntRect> m_paintMessageQueue;
     static const int m_paintMessageQueueSize = 200;
-	blink::IntRect m_dirtyRects;
+    Vector<blink::IntRect> m_dirtyRects;
     int m_postpaintMessageCount;
     int m_scheduleMessageCount;
     bool m_needsCommit;
@@ -214,6 +215,8 @@ public:
     bool m_postCloseWidgetSoonMessage;
 
     WTF::Vector<DestroyNotif*> m_destroyNotifs;
+
+    int m_debugCount;
 };
 
 } // blink

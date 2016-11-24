@@ -137,7 +137,7 @@ WebPageImpl::WebPageImpl()
     m_layerTreeHost = nullptr;
     m_lastFrameTimeMonotonic = 0;
     m_webViewImpl = nullptr;
-//    m_debugCount = 0;
+    m_debugCount = 0;
     m_enterCount = 0;
     m_hWnd = NULL;
     m_state = pageUninited;
@@ -437,7 +437,7 @@ void WebPageImpl::postPaintMessage(const IntRect* paintRect)
 // 	String outString = String::format("WebPageImpl::postPaintMessage: (%d %d)(%d %d)\n", dirtyRect.x(), dirtyRect.y(), dirtyRect.width(), dirtyRect.height());
 // 	OutputDebugStringW(outString.charactersWithNullTermination().data());
 
-    m_dirtyRects.unite(dirtyRect);
+    m_dirtyRects.append(dirtyRect);
     setNeedsCommitAndNotLayout();
 }
 
@@ -467,12 +467,14 @@ bool WebPageImpl::drawFrame()
 
     m_scheduleMessageCount++;
 
-
-    paintToPlatformContext(&m_dirtyRects);
+    for (size_t i = 0; i < m_dirtyRects.size(); ++i) {
+        const blink::IntRect& r = m_dirtyRects[i];
+        paintToPlatformContext(r);
+    }
 
 	m_layerTreeHost->postDrawFrame();
 
-    m_dirtyRects = IntRect();
+    m_dirtyRects.clear();
     m_paintMessageQueue.clear();
     m_scheduleMessageCount--;
 
@@ -505,9 +507,9 @@ void WebPageImpl::firePaintEvent(HDC hdc, const RECT* paintRect)
     skia::DrawToNativeContext(m_memoryCanvas, hdc, paintRect->left, paintRect->top, paintRect);
 }
 
-void WebPageImpl::paintToPlatformContext(const IntRect* paintRect)
+void WebPageImpl::paintToPlatformContext(const IntRect& paintRect)
 {
-    m_paintRect = *paintRect;
+    m_paintRect = paintRect;
 
     bool needsFullTreeSync = true; // false; 先全部层都更新，这样滚动条才能被刷新到
     if ((!m_memoryCanvas || m_hasResize) && !m_clientRect.isEmpty()) {
@@ -567,9 +569,9 @@ void WebPageImpl::paintToPlatformContext(const IntRect* paintRect)
     skia::EndPlatformPaint(m_memoryCanvas);
 }
 
-//void WebPageImpl::drawDebugLine(skia::PlatformCanvas* memoryCanvas, const IntRect& paintRect)
-//{
-//    m_debugCount++;
+void WebPageImpl::drawDebugLine(skia::PlatformCanvas* memoryCanvas, const IntRect& paintRect)
+{
+   m_debugCount++;
 
     //     HBRUSH hbrush;
     //     HPEN hpen;
@@ -579,16 +581,16 @@ void WebPageImpl::paintToPlatformContext(const IntRect* paintRect)
     //     ::Rectangle(hdc, 220, 40, 366, 266);
     //     ::DeleteObject(hbrush);
 
-//     OwnPtr<GraphicsContext> context = GraphicsContext::deprecatedCreateWithCanvas(memoryCanvas, GraphicsContext::NothingDisabled);
-//     context->setStrokeStyle(SolidStroke);
-//     context->setStrokeColor(0xff000000 | (::GetTickCount() + base::RandInt(0, 0x1223345)));
-//     context->drawLine(IntPoint(paintRect.x(), paintRect.y()), IntPoint(paintRect.maxX(), paintRect.maxY()));
-//     context->drawLine(IntPoint(paintRect.maxX(), paintRect.y()), IntPoint(paintRect.x(), paintRect.maxY()));
-//     context->strokeRect(paintRect, 2);
+    OwnPtr<GraphicsContext> context = GraphicsContext::deprecatedCreateWithCanvas(memoryCanvas, GraphicsContext::NothingDisabled);
+    context->setStrokeStyle(SolidStroke);
+    context->setStrokeColor(0xff000000 | (::GetTickCount() + base::RandInt(0, 0x1223345)));
+    context->drawLine(IntPoint(paintRect.x(), paintRect.y()), IntPoint(paintRect.maxX(), paintRect.maxY()));
+    context->drawLine(IntPoint(paintRect.maxX(), paintRect.y()), IntPoint(paintRect.x(), paintRect.maxY()));
+    context->strokeRect(paintRect, 2);
 
 // 	String outString = String::format("drawDebugLine:%d %d %d %d, %d\n", m_paintRect.x(), m_paintRect.y(), m_paintRect.width(), m_paintRect.height(), m_debugCount);
 // 	OutputDebugStringW(outString.charactersWithNullTermination().data());
-//}
+}
 
 void WebPageImpl::drawToCanvas(const IntRect& dirtyRect, skia::PlatformCanvas* canvas, bool needsFullTreeSync)
 {
