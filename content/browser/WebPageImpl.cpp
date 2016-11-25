@@ -550,14 +550,14 @@ void WebPageImpl::paintToPlatformContext(const IntRect& paintRect)
     } else {
         //drawDebugLine(m_memoryCanvas, m_paintRect);
 #if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
-		if (m_browser)//使用wke接口不由此上屏
-		{
+		if (m_browser) { // 使用wke接口不由此上屏
 			HDC hdc = GetDC(m_pagePtr->getHWND());
 			skia::DrawToNativeContext(m_memoryCanvas, hdc, m_paintRect.x(), m_paintRect.y(), &intRectToWinRect(m_paintRect));
 			ReleaseDC(m_pagePtr->getHWND(), hdc);
 		}
 #endif
     }
+
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
     if (m_pagePtr->wkeHandler().paintUpdatedCallback) {
         m_pagePtr->wkeHandler().paintUpdatedCallback(
@@ -566,6 +566,7 @@ void WebPageImpl::paintToPlatformContext(const IntRect& paintRect)
             hMemoryDC, m_paintRect.x(), m_paintRect.y(), m_paintRect.width(), m_paintRect.height());
     }
 #endif
+
     skia::EndPlatformPaint(m_memoryCanvas);
 }
 
