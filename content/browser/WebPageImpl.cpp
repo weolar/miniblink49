@@ -646,11 +646,12 @@ void WebPageImpl::close()
     if (pageInited != m_state)
         return;
 
-    if (m_enterCount == 1) { // 把dragState().m_dragSrc之类的占用抵消
+    if (m_enterCount == 0) { // 把dragState().m_dragSrc之类的占用抵消
         WTF::TemporaryChange<int> temporaryChange(m_enterCount, 0);
         LPARAM lParam = MAKELONG(-10000, -10000);
-        fireMouseEvent(m_hWnd, WM_MOUSEMOVE, 0, lParam, nullptr);
         fireMouseEvent(m_hWnd, WM_LBUTTONUP, 0, lParam, nullptr);
+        fireMouseEvent(m_hWnd, WM_MOUSEMOVE, 0, lParam, nullptr);
+        fireMouseEvent(m_hWnd, WM_LBUTTONDOWN, 0, lParam, nullptr);
         fireMouseEvent(m_hWnd, WM_MBUTTONUP, 0, lParam, nullptr);
         fireMouseEvent(m_hWnd, WM_RBUTTONUP, 0, lParam, nullptr);
     }
