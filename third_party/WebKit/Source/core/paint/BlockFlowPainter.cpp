@@ -72,7 +72,8 @@ void BlockFlowPainter::paintSelection(const PaintInfo& paintInfo, const LayoutPo
         drawingRecorder.emplace(*paintInfo.context, m_layoutBlockFlow, DisplayItem::SelectionGap, bounds);
         clipScope.emplace(paintInfo.context);
     }
-
+    
+#if MINIBLINK_NOT_IMPLEMENTED
     LayoutRect gapRectsBounds = m_layoutBlockFlow.selectionGaps(&m_layoutBlockFlow, paintOffset, LayoutSize(), lastTop, lastLeft, lastRight,
         skipRecording ? nullptr : &paintInfo,
         skipRecording ? nullptr : &(*clipScope));
@@ -89,6 +90,7 @@ void BlockFlowPainter::paintSelection(const PaintInfo& paintInfo, const LayoutPo
         }
         layer->addBlockSelectionGapsBounds(gapRectsBounds);
     }
+#endif
 }
 
 } // namespace blink
