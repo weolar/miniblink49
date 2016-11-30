@@ -30,7 +30,6 @@
 #   define WKE_API WKE_EXTERN_C __declspec(dllimport)
 #endif
 
-
 typedef struct {
     int x;
     int y;
@@ -108,7 +107,6 @@ typedef enum {
     WKE_PROXY_SOCKS4A,
     WKE_PROXY_SOCKS5,
     WKE_PROXY_SOCKS5HOSTNAME
-
 } wkeProxyType;
 
 typedef struct {
@@ -117,7 +115,6 @@ typedef struct {
     unsigned short port;
     char username[50];
     char password[50];
-
 } wkeProxy;
 
 enum wkeSettingMask {
