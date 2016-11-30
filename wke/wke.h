@@ -44,13 +44,11 @@ typedef enum {
     WKE_SHIFT = 0x04,
     WKE_CONTROL = 0x08,
     WKE_MBUTTON = 0x10,
-
 } wkeMouseFlags;
 
 typedef enum {
     WKE_EXTENDED = 0x0100,
     WKE_REPEAT = 0x4000,
-
 } wkeKeyFlags;
 
 typedef enum {
@@ -65,7 +63,6 @@ typedef enum {
     WKE_MSG_MBUTTONUP = 0x0208,
     WKE_MSG_MBUTTONDBLCLK = 0x0209,
     WKE_MSG_MOUSEWHEEL = 0x020A,
-
 } wkeMouseMsg;
 
 #if !defined(__cplusplus)
@@ -130,7 +127,6 @@ enum wkeSettingMask {
 typedef struct {
     wkeProxy proxy;
     unsigned int mask;
-
 } wkeSettings;
 
 /*
@@ -152,7 +148,6 @@ WKE_API void wkeFinalize();
 WKE_API void wkeUpdate();
 WKE_API unsigned int wkeGetVersion();
 WKE_API const utf8* wkeGetVersionString();
-
 
 WKE_API wkeWebView wkeCreateWebView();
 WKE_API wkeWebView wkeGetWebView(const char* name);
@@ -286,7 +281,6 @@ typedef enum {
     WKE_NAVIGATION_TYPE_RELOAD,
     WKE_NAVIGATION_TYPE_FORMRESUBMITT,
     WKE_NAVIGATION_TYPE_OTHER
-
 } wkeNavigationType;
 
 typedef bool(*wkeNavigationCallback)(wkeWebView webView, void* param, wkeNavigationType navigationType, const wkeString url);
@@ -305,7 +299,6 @@ typedef struct {
     bool scrollbarsVisible;
     bool resizable;
     bool fullscreen;
-
 } wkeWindowFeatures;
 
 typedef wkeWebView(*wkeCreateViewCallback)(wkeWebView webView, void* param, wkeNavigationType navigationType, const wkeString url, const wkeWindowFeatures* windowFeatures);
@@ -318,7 +311,6 @@ typedef enum {
     WKE_LOADING_SUCCEEDED,
     WKE_LOADING_FAILED,
     WKE_LOADING_CANCELED
-
 } wkeLoadingResult;
 
 typedef void(*wkeLoadingFinishCallback)(wkeWebView webView, void* param, const wkeString url, wkeLoadingResult result, const wkeString failedReason);
@@ -353,7 +345,6 @@ WKE_API void wkeOnWindowClosing(wkeWebView webWindow, wkeWindowClosingCallback c
 
 typedef void(*wkeWindowDestroyCallback)(wkeWebView webWindow, void* param);
 WKE_API void wkeOnWindowDestroy(wkeWebView webWindow, wkeWindowDestroyCallback callback, void* param);
-
 
 WKE_API void wkeShowWindow(wkeWebView webWindow, bool show);
 WKE_API void wkeEnableWindow(wkeWebView webWindow, bool enable);
