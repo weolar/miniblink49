@@ -83,7 +83,9 @@ void scrt_initialize_thread_safe_statics();
 extern "C" void x86_check_features(void);
 
 namespace blink {
-    bool saveDumpFile(const String& url, char* buffer, unsigned int size);
+
+bool saveDumpFile(const String& url, char* buffer, unsigned int size);
+
 }
 
 namespace content {
@@ -629,15 +631,30 @@ HDC WebPageImpl::viewDC()
 
 void WebPageImpl::paintToBit(void* bits, int pitch)
 {
-    if (0 != pitch || !m_memoryCanvas)
+    if (0 == pitch || !m_memoryCanvas)
         return;
 
-    DWORD cBytes = m_clientRect.width() * m_clientRect.height() * 4;
+    int width = m_clientRect.width();
+    int height = m_clientRect.height();
+
+    DWORD cBytes = width * height * 4;
     SkBaseDevice* device = (SkBaseDevice*)m_memoryCanvas->getTopDevice();
     if (!device)
         return;
     const SkBitmap& bitmap = device->accessBitmap(false);
-    bitmap.copyPixelsTo(bits, cBytes, pitch, false);
+    //bitmap.copyPixelsTo(bits, cBytes, pitch, false);
+    uint32_t* m_pixels = bitmap.getAddr32(0, 0);
+    if (pitch == 0 || pitch == width * 4) {
+        memcpy(bits, m_pixels, width * height * 4);
+    } else {
+        unsigned char* src = (unsigned char*)m_pixels;
+        unsigned char* dst = (unsigned char*)bits;
+        for (int i = 0; i < height; ++i) {
+            memcpy(dst, src, width * 4);
+            src += width * 4;
+            dst += pitch;
+        }
+    }
 }
 
 void WebPageImpl::close()
