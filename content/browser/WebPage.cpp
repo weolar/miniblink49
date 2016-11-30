@@ -34,6 +34,7 @@ WebPage::WebPage(void* foreignPtr)
     m_pageImpl = nullptr;
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
     m_wkeWebView = nullptr;
+    m_wkeClientHandler = nullptr;
     m_wkeHandler = new wke::CWebViewHandler();
     memset(m_wkeHandler, 0, sizeof(wke::CWebViewHandler));
 #endif

@@ -117,19 +117,24 @@ public:
     static const int64 kFocusedFrameId = -2;
     static const int64 kUnspecifiedFrameId = -3;
     static const int64 kInvalidFrameId = -4;
+
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
     void initWkeWebView(wke::CWebView* wkeWebView) 
     {
-        ASSERT(!m_wkeWebView);
+        ASSERT(!m_wkeWebView);/**/
         m_wkeWebView = wkeWebView;
     }
     wke::CWebView* wkeWebView() const { return m_wkeWebView; }
     wke::CWebViewHandler& wkeHandler() { return *m_wkeHandler; }
+    void* wkeClientHandler() const { return m_wkeClientHandler; }
+    void wkeSetClientHandler(void* clientHandler) { m_wkeClientHandler = clientHandler; }
 #endif
+
 protected:
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
     wke::CWebView* m_wkeWebView;
     wke::CWebViewHandler* m_wkeHandler;
+    void* m_wkeClientHandler;
 #endif
     WebPageImpl* m_pageImpl;
 };
