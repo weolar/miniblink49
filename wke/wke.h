@@ -136,6 +136,82 @@ typedef struct {
 extern "C" {
 #endif
 
+//////////////////////////////////////////////////////////////////////////
+// V1 API
+
+WKE_API void wkeInit();
+WKE_API void wkeShutdown();
+WKE_API unsigned int wkeVersion();
+WKE_API const utf8* wkeVersionString();
+
+typedef void* (*FILE_OPEN_) (const char* path);
+typedef void(*FILE_CLOSE_) (void* handle);
+typedef size_t(*FILE_SIZE) (void* handle);
+typedef int(*FILE_READ) (void* handle, void* buffer, size_t size);
+typedef int(*FILE_SEEK) (void* handle, int offset, int origin);
+
+WKE_API void wkeSetFileSystem(FILE_OPEN_ pfn_open, FILE_CLOSE_ pfn_close, FILE_SIZE pfn_size, FILE_READ pfn_read, FILE_SEEK pfn_seek);
+
+WKE_API const char* wkeWebViewName(wkeWebView webView);
+WKE_API void wkeSetWebViewName(wkeWebView webView, const char* name);
+
+WKE_API bool wkeIsLoaded(wkeWebView webView);
+WKE_API bool wkeIsLoadFailed(wkeWebView webView);
+WKE_API bool wkeIsLoadComplete(wkeWebView webView);
+
+WKE_API const utf8* wkeTitle(wkeWebView webView);
+WKE_API const wchar_t* wkeTitleW(wkeWebView webView);
+
+WKE_API int wkeWidth(wkeWebView webView);
+WKE_API int wkeHeight(wkeWebView webView);
+
+WKE_API int wkeContentsWidth(wkeWebView webView);
+WKE_API int wkeContentsHeight(wkeWebView webView);
+
+WKE_API void wkeSelectAll(wkeWebView webView);
+WKE_API void wkeCopy(wkeWebView webView);
+WKE_API void wkeCut(wkeWebView webView);
+WKE_API void wkePaste(wkeWebView webView);
+WKE_API void wkeDelete(wkeWebView webView);
+
+WKE_API bool wkeCookieEnabled(wkeWebView webView);
+
+WKE_API float wkeMediaVolume(wkeWebView webView);
+
+WKE_API bool wkeMouseEvent(wkeWebView webView, unsigned int message, int x, int y, unsigned int flags);
+WKE_API bool wkeContextMenuEvent(wkeWebView webView, int x, int y, unsigned int flags);
+WKE_API bool wkeMouseWheel(wkeWebView webView, int x, int y, int delta, unsigned int flags);
+WKE_API bool wkeKeyUp(wkeWebView webView, unsigned int virtualKeyCode, unsigned int flags, bool systemKey);
+WKE_API bool wkeKeyDown(wkeWebView webView, unsigned int virtualKeyCode, unsigned int flags, bool systemKey);
+WKE_API bool wkeKeyPress(wkeWebView webView, unsigned int charCode, unsigned int flags, bool systemKey);
+
+WKE_API void wkeFocus(wkeWebView webView);
+WKE_API void wkeUnfocus(wkeWebView webView);
+
+WKE_API wkeRect wkeGetCaret(wkeWebView webView);
+
+WKE_API void wkeAwaken(wkeWebView webView);
+
+WKE_API float wkeZoomFactor(wkeWebView webView);
+
+typedef void(*ON_TITLE_CHANGED) (const struct _wkeClientHandler* clientHandler, const wkeString title);
+typedef void(*ON_URL_CHANGED) (const struct _wkeClientHandler* clientHandler, const wkeString url);
+
+typedef struct _wkeClientHandler {
+    ON_TITLE_CHANGED onTitleChanged;
+    ON_URL_CHANGED onURLChanged;
+} wkeClientHandler;
+WKE_API void wkeSetClientHandler(wkeWebView webView, const wkeClientHandler* handler);
+WKE_API const wkeClientHandler* wkeGetClientHandler(wkeWebView webView);
+
+WKE_API const utf8* wkeToString(const wkeString string);
+WKE_API const wchar_t* wkeToStringW(const wkeString string);
+
+WKE_API const utf8* jsToString(jsExecState es, jsValue v);
+WKE_API const wchar_t* jsToStringW(jsExecState es, jsValue v);
+// V1 API end
+//////////////////////////////////////////////////////////////////////////
+
 WKE_API void wkeInitialize();
 WKE_API void wkeInitializeEx(const wkeSettings* settings);
 WKE_API void wkeConfigure(const wkeSettings* settings);
@@ -194,8 +270,8 @@ WKE_API void wkeSetDirty(wkeWebView webView, bool dirty);
 WKE_API bool wkeIsDirty(wkeWebView webView);
 WKE_API void wkeAddDirtyArea(wkeWebView webView, int x, int y, int w, int h);
 WKE_API void wkeLayoutIfNeeded(wkeWebView webView);
-WKE_API void wkePaint(wkeWebView webView, void* bits, int bufWid, int bufHei, int xDst, int yDst, int w, int h, int xSrc, int ySrc, bool bCopyAlpha);
-WKE_API void wkePaint2(wkeWebView webView, void* bits, int pitch);
+WKE_API void wkePaint2(wkeWebView webView, void* bits, int bufWid, int bufHei, int xDst, int yDst, int w, int h, int xSrc, int ySrc, bool bCopyAlpha);
+WKE_API void wkePaint(wkeWebView webView, void* bits, int pitch);
 WKE_API void wkeRepaintIfNeeded(wkeWebView webView);
 WKE_API HDC wkeGetViewDC(wkeWebView webView);
 WKE_API HWND wkeGetHostHWND(wkeWebView webView);
@@ -451,12 +527,102 @@ WKE_API void    jsSetGlobal(jsExecState es, const char* prop, jsValue v);
 //garbage collect
 WKE_API void jsGC();
 
-
-
-
 #ifdef __cplusplus
 }
 #endif
+
+namespace wke {
+
+class IWebView {
+public:
+    virtual void destroy() = 0;
+
+    virtual const char* name() const = 0;
+    virtual void setName(const char* name) = 0;
+
+    virtual bool isTransparent() const = 0;
+    virtual void setTransparent(bool transparent) = 0;
+
+    virtual void loadURL(const utf8* url) = 0;
+    virtual void loadURL(const wchar_t* url) = 0;
+
+    virtual void loadHTML(const utf8* html) = 0;
+    virtual void loadHTML(const wchar_t* html) = 0;
+
+    virtual void loadFile(const utf8* filename) = 0;
+    virtual void loadFile(const wchar_t* filename) = 0;
+
+    virtual bool isLoading() const = 0;        /*document load sucessed*/
+    virtual bool isLoadingFailed() const = 0;    /*document load failed*/
+    virtual bool isLoadingSucceeded() const = 0;  /*document load complete*/
+    virtual bool isDocumentReady() const = 0; /*document ready*/
+    virtual void stopLoading() = 0;
+    virtual void reload() = 0;
+
+    virtual const utf8* title() = 0;
+    virtual const wchar_t* titleW() = 0;
+
+    virtual void resize(int w, int h) = 0;
+    virtual int width() const = 0;   /*viewport width*/
+    virtual int height() const = 0;  /*viewport height*/
+
+    virtual int contentsWidth() const = 0;  /*contents width*/
+    virtual int contentsHeight() const = 0; /*contents height*/
+
+    virtual void setDirty(bool dirty) = 0;
+    virtual bool isDirty() const = 0;
+    virtual void addDirtyArea(int x, int y, int w, int h) = 0;
+
+    virtual void layoutIfNeeded() = 0;
+    virtual void paint(void* bits, int pitch) = 0;
+
+    virtual bool canGoBack() const = 0;
+    virtual bool goBack() = 0;
+    virtual bool canGoForward() const = 0;
+    virtual bool goForward() = 0;
+
+    virtual void editorSelectAll() = 0;
+    virtual void editorCopy() = 0;
+    virtual void editorCut() = 0;
+    virtual void editorPaste() = 0;
+    virtual void editorDelete() = 0;
+
+    virtual void setCookieEnabled(bool enable) = 0;
+    virtual bool isCookieEnabled() const = 0;
+
+    virtual void setMediaVolume(float volume) = 0;
+    virtual float mediaVolume() const = 0;
+
+    virtual bool fireMouseEvent(unsigned int message, int x, int y, unsigned int flags) = 0;
+    virtual bool fireContextMenuEvent(int x, int y, unsigned int flags) = 0;
+    virtual bool fireMouseWheelEvent(int x, int y, int delta, unsigned int flags) = 0;
+    virtual bool fireKeyUpEvent(unsigned int virtualKeyCode, unsigned int flags, bool systemKey) = 0;
+    virtual bool fireKeyDownEvent(unsigned int virtualKeyCode, unsigned int flags, bool systemKey) = 0;
+    virtual bool fireKeyPressEvent(unsigned int virtualKeyCode, unsigned int flags, bool systemKey) = 0;
+
+    virtual void setFocus() = 0;
+    virtual void killFocus() = 0;
+
+    virtual wkeRect getCaret() = 0;
+
+    virtual jsValue runJS(const utf8* script) = 0;
+    virtual jsValue runJS(const wchar_t* script) = 0;
+    virtual jsExecState globalExec() = 0;
+
+    virtual void sleep() = 0; //moveOffscreen
+    virtual void wake() = 0; //moveOnscreen
+    virtual bool isAwake() const = 0;
+
+    virtual void setZoomFactor(float factor) = 0;
+    virtual float zoomFactor() const = 0;
+
+    virtual void setEditable(bool editable) = 0;
+
+    virtual void setClientHandler(const wkeClientHandler* handler) = 0;
+    virtual const wkeClientHandler* getClientHandler() const = 0;
+};
+
+}
 
 
 #endif
