@@ -1,15 +1,14 @@
 ﻿/*
- * 
- * BlzFans@hotmail.com
- * http://wke.sf.net
- * http://www.github.com/BlzFans/wke
- * licence LGPL
- *
- */
+*
+* BlzFans@hotmail.com
+* http://wke.sf.net
+* http://www.github.com/BlzFans/wke
+* licence LGPL
+*
+*/
 
 #ifndef WKE_H
 #define WKE_H
-
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -18,11 +17,10 @@
 
 //////////////////////////////////////////////////////////////////////////
 
-
 #if defined(__cplusplus)
-    #define WKE_EXTERN_C extern "C"
+#define WKE_EXTERN_C extern "C"
 #else
-    #define WKE_EXTERN_C
+#define WKE_EXTERN_C
 #endif
 
 
@@ -38,19 +36,16 @@ typedef struct {
     int y;
     int w;
     int h;
-
 } wkeRect;
-
 
 typedef enum {
     WKE_LBUTTON = 0x01,
     WKE_RBUTTON = 0x02,
-    WKE_SHIFT   = 0x04,
+    WKE_SHIFT = 0x04,
     WKE_CONTROL = 0x08,
     WKE_MBUTTON = 0x10,
 
 } wkeMouseFlags;
-
 
 typedef enum {
     WKE_EXTENDED = 0x0100,
@@ -58,36 +53,32 @@ typedef enum {
 
 } wkeKeyFlags;
 
-
 typedef enum {
-    WKE_MSG_MOUSEMOVE       =  0x0200,
-    WKE_MSG_LBUTTONDOWN     =  0x0201,
-    WKE_MSG_LBUTTONUP       =  0x0202,
-    WKE_MSG_LBUTTONDBLCLK   =  0x0203,
-    WKE_MSG_RBUTTONDOWN     =  0x0204,
-    WKE_MSG_RBUTTONUP       =  0x0205,
-    WKE_MSG_RBUTTONDBLCLK   =  0x0206,
-    WKE_MSG_MBUTTONDOWN     =  0x0207,
-    WKE_MSG_MBUTTONUP       =  0x0208,
-    WKE_MSG_MBUTTONDBLCLK   =  0x0209,
-    WKE_MSG_MOUSEWHEEL      =  0x020A,
+    WKE_MSG_MOUSEMOVE = 0x0200,
+    WKE_MSG_LBUTTONDOWN = 0x0201,
+    WKE_MSG_LBUTTONUP = 0x0202,
+    WKE_MSG_LBUTTONDBLCLK = 0x0203,
+    WKE_MSG_RBUTTONDOWN = 0x0204,
+    WKE_MSG_RBUTTONUP = 0x0205,
+    WKE_MSG_RBUTTONDBLCLK = 0x0206,
+    WKE_MSG_MBUTTONDOWN = 0x0207,
+    WKE_MSG_MBUTTONUP = 0x0208,
+    WKE_MSG_MBUTTONDBLCLK = 0x0209,
+    WKE_MSG_MOUSEWHEEL = 0x020A,
 
 } wkeMouseMsg;
 
-
-
 #if !defined(__cplusplus)
-    #ifndef HAVE_WCHAR_T
-        typedef unsigned short wchar_t;
-    #endif
-
-    #ifndef HAVE_BOOL
-        typedef unsigned char bool;
-        #define true 1
-        #define false 0
-    #endif
+#ifndef HAVE_WCHAR_T
+typedef unsigned short wchar_t;
 #endif
 
+#ifndef HAVE_BOOL
+typedef unsigned char bool;
+#define true 1
+#define false 0
+#endif
+#endif
 
 typedef char utf8;
 #if !defined(__cplusplus)
@@ -98,23 +89,20 @@ typedef JsExecStateInfo* jsExecState;
 #endif
 typedef __int64 jsValue;
 
-
 #if defined(__cplusplus)
-    namespace wke{ class CWebView; };
-    typedef wke::CWebView* wkeWebView;
+namespace wke { class CWebView; };
+typedef wke::CWebView* wkeWebView;
 
-    namespace wke{ class CString; };
-    typedef wke::CString* wkeString;
+namespace wke { class CString; };
+typedef wke::CString* wkeString;
 
 #else
-    struct _tagWkeWebView;
-    typedef struct _tagWkeWebView* wkeWebView;
+struct _tagWkeWebView;
+typedef struct _tagWkeWebView* wkeWebView;
 
-    struct _tagWkeString;
-    typedef struct _tagWkeString* wkeString;
+struct _tagWkeString;
+typedef struct _tagWkeString* wkeString;
 #endif
-
-
 
 typedef enum {
     WKE_PROXY_NONE,
@@ -127,11 +115,11 @@ typedef enum {
 } wkeProxyType;
 
 typedef struct {
-   wkeProxyType type;
-   char hostname[100];
-   unsigned short port;
-   char username[50];
-   char password[50];
+    wkeProxyType type;
+    char hostname[100];
+    unsigned short port;
+    char username[50];
+    char password[50];
 
 } wkeProxy;
 
@@ -145,16 +133,14 @@ typedef struct {
 
 } wkeSettings;
 
-
 /*
- *c interface
- *----------------------------------------------------------------------------------------------------------
- *
- */
+*c interface
+*----------------------------------------------------------------------------------------------------------
+*
+*/
 
 #if defined(__cplusplus)
-extern "C"
-{
+extern "C" {
 #endif
 
 WKE_API void wkeInitialize();
@@ -186,8 +172,8 @@ WKE_API void wkeSetUserAgentW(wkeWebView webView, const wchar_t* userAgent);
 
 WKE_API void wkeLoadURL(wkeWebView webView, const utf8* url);
 WKE_API void wkeLoadURLW(wkeWebView webView, const wchar_t* url);
-WKE_API void wkePostURL(wkeWebView wkeView,const utf8* url, const char* postData,int  postLen); 
-WKE_API void wkePostURLW(wkeWebView wkeView,const wchar_t* url, const char* postData, int postLen);
+WKE_API void wkePostURL(wkeWebView wkeView, const utf8* url, const char* postData, int  postLen);
+WKE_API void wkePostURLW(wkeWebView wkeView, const wchar_t* url, const char* postData, int postLen);
 
 WKE_API void wkeLoadHTML(wkeWebView webView, const utf8* html);
 WKE_API void wkeLoadHTMLW(wkeWebView webView, const wchar_t* html);
@@ -216,8 +202,8 @@ WKE_API void wkeSetDirty(wkeWebView webView, bool dirty);
 WKE_API bool wkeIsDirty(wkeWebView webView);
 WKE_API void wkeAddDirtyArea(wkeWebView webView, int x, int y, int w, int h);
 WKE_API void wkeLayoutIfNeeded(wkeWebView webView);
-WKE_API void wkePaint(wkeWebView webView, void* bits,int bufWid, int bufHei, int xDst, int yDst, int w, int h, int xSrc, int ySrc, bool bCopyAlpha);
-WKE_API void wkePaint2(wkeWebView webView, void* bits,int pitch);
+WKE_API void wkePaint(wkeWebView webView, void* bits, int bufWid, int bufHei, int xDst, int yDst, int w, int h, int xSrc, int ySrc, bool bCopyAlpha);
+WKE_API void wkePaint2(wkeWebView webView, void* bits, int pitch);
 WKE_API void wkeRepaintIfNeeded(wkeWebView webView);
 WKE_API HDC wkeGetViewDC(wkeWebView webView);
 WKE_API HWND wkeGetHostHWND(wkeWebView webView);
@@ -275,22 +261,22 @@ WKE_API void wkeSetString(wkeString string, const utf8* str, size_t len);
 WKE_API void wkeSetStringW(wkeString string, const wchar_t* str, size_t len);
 
 //wke callback-----------------------------------------------------------------------------------
-typedef void (*wkeTitleChangedCallback)(wkeWebView webView, void* param, const wkeString title);
+typedef void(*wkeTitleChangedCallback)(wkeWebView webView, void* param, const wkeString title);
 WKE_API void wkeOnTitleChanged(wkeWebView webView, wkeTitleChangedCallback callback, void* callbackParam);
 
-typedef void (*wkeURLChangedCallback)(wkeWebView webView, void* param, const wkeString url);
+typedef void(*wkeURLChangedCallback)(wkeWebView webView, void* param, const wkeString url);
 WKE_API void wkeOnURLChanged(wkeWebView webView, wkeURLChangedCallback callback, void* callbackParam);
 
-typedef void (*wkePaintUpdatedCallback)(wkeWebView webView, void* param, const HDC hdc, int x, int y, int cx, int cy);
+typedef void(*wkePaintUpdatedCallback)(wkeWebView webView, void* param, const HDC hdc, int x, int y, int cx, int cy);
 WKE_API void wkeOnPaintUpdated(wkeWebView webView, wkePaintUpdatedCallback callback, void* callbackParam);
 
-typedef void (*wkeAlertBoxCallback)(wkeWebView webView, void* param, const wkeString msg);
+typedef void(*wkeAlertBoxCallback)(wkeWebView webView, void* param, const wkeString msg);
 WKE_API void wkeOnAlertBox(wkeWebView webView, wkeAlertBoxCallback callback, void* callbackParam);
 
-typedef bool (*wkeConfirmBoxCallback)(wkeWebView webView, void* param, const wkeString msg);
+typedef bool(*wkeConfirmBoxCallback)(wkeWebView webView, void* param, const wkeString msg);
 WKE_API void wkeOnConfirmBox(wkeWebView webView, wkeConfirmBoxCallback callback, void* callbackParam);
 
-typedef bool (*wkePromptBoxCallback)(wkeWebView webView, void* param, const wkeString msg, const wkeString defaultResult, wkeString result);
+typedef bool(*wkePromptBoxCallback)(wkeWebView webView, void* param, const wkeString msg, const wkeString defaultResult, wkeString result);
 WKE_API void wkeOnPromptBox(wkeWebView webView, wkePromptBoxCallback callback, void* callbackParam);
 
 typedef enum {
@@ -303,7 +289,7 @@ typedef enum {
 
 } wkeNavigationType;
 
-typedef bool (*wkeNavigationCallback)(wkeWebView webView, void* param, wkeNavigationType navigationType, const wkeString url);
+typedef bool(*wkeNavigationCallback)(wkeWebView webView, void* param, wkeNavigationType navigationType, const wkeString url);
 WKE_API void wkeOnNavigation(wkeWebView webView, wkeNavigationCallback callback, void* param);
 
 typedef struct {
@@ -322,10 +308,10 @@ typedef struct {
 
 } wkeWindowFeatures;
 
-typedef wkeWebView (*wkeCreateViewCallback)(wkeWebView webView, void* param, wkeNavigationType navigationType, const wkeString url, const wkeWindowFeatures* windowFeatures);
+typedef wkeWebView(*wkeCreateViewCallback)(wkeWebView webView, void* param, wkeNavigationType navigationType, const wkeString url, const wkeWindowFeatures* windowFeatures);
 WKE_API void wkeOnCreateView(wkeWebView webView, wkeCreateViewCallback callback, void* param);
 
-typedef void (*wkeDocumentReadyCallback)(wkeWebView webView, void* param);
+typedef void(*wkeDocumentReadyCallback)(wkeWebView webView, void* param);
 WKE_API void wkeOnDocumentReady(wkeWebView webView, wkeDocumentReadyCallback callback, void* param);
 
 typedef enum {
@@ -335,7 +321,7 @@ typedef enum {
 
 } wkeLoadingResult;
 
-typedef void (*wkeLoadingFinishCallback)(wkeWebView webView, void* param, const wkeString url, wkeLoadingResult result, const wkeString failedReason);
+typedef void(*wkeLoadingFinishCallback)(wkeWebView webView, void* param, const wkeString url, wkeLoadingResult result, const wkeString failedReason);
 WKE_API void wkeOnLoadingFinish(wkeWebView webView, wkeLoadingFinishCallback callback, void* param);
 
 typedef bool(*wkeLoadUrlBeginCallback)(wkeWebView webView, void* param, const char *url, void *job);
@@ -347,10 +333,10 @@ WKE_API void wkeOnLoadUrlEnd(wkeWebView webView, wkeLoadUrlEndCallback callback,
 //wkeNet--------------------------------------------------------------------------------------
 WKE_API void wkeNetSetMIMEType(void *job, char *type);
 WKE_API void wkeNetSetHTTPHeaderField(void *job, wchar_t *key, wchar_t *value);
-WKE_API void wkeNetSetURL(void *job,const char *url);
+WKE_API void wkeNetSetURL(void *job, const char *url);
 WKE_API void wkeNetSetData(void *job, void *buf, int len);
 WKE_API void wkeNetHookRequest(void *job);	//调用此函数后,网络层收到数据会存储在一buf内,接收数据完成后响应OnLoadUrlEnd事件.#此调用严重影响性能,慎用
-//wkewindow-----------------------------------------------------------------------------------
+                                            //wkewindow-----------------------------------------------------------------------------------
 typedef enum {
     WKE_WINDOW_TYPE_POPUP,
     WKE_WINDOW_TYPE_TRANSPARENT,
@@ -362,10 +348,10 @@ WKE_API wkeWebView wkeCreateWebWindow(wkeWindowType type, HWND parent, int x, in
 WKE_API void wkeDestroyWebWindow(wkeWebView webWindow);
 WKE_API HWND wkeGetWindowHandle(wkeWebView webWindow);
 
-typedef bool (*wkeWindowClosingCallback)(wkeWebView webWindow, void* param);
+typedef bool(*wkeWindowClosingCallback)(wkeWebView webWindow, void* param);
 WKE_API void wkeOnWindowClosing(wkeWebView webWindow, wkeWindowClosingCallback callback, void* param);
 
-typedef void (*wkeWindowDestroyCallback)(wkeWebView webWindow, void* param);
+typedef void(*wkeWindowDestroyCallback)(wkeWebView webWindow, void* param);
 WKE_API void wkeOnWindowDestroy(wkeWebView webWindow, wkeWindowDestroyCallback callback, void* param);
 
 
@@ -379,21 +365,18 @@ WKE_API void wkeResizeWindow(wkeWebView webWindow, int width, int height);
 WKE_API void wkeSetWindowTitle(wkeWebView webWindow, const utf8* title);
 WKE_API void wkeSetWindowTitleW(wkeWebView webWindow, const wchar_t* title);
 
-
-
 //JavaScript Bind-----------------------------------------------------------------------------------
 #define JS_CALL __fastcall
-typedef jsValue (JS_CALL *jsNativeFunction) (jsExecState es);
+typedef jsValue(JS_CALL *jsNativeFunction) (jsExecState es);
 
 typedef enum {
-	JSTYPE_NUMBER,
-	JSTYPE_STRING,
-	JSTYPE_BOOLEAN,
-	JSTYPE_OBJECT,
-	JSTYPE_FUNCTION,
-	JSTYPE_UNDEFINED,
+    JSTYPE_NUMBER,
+    JSTYPE_STRING,
+    JSTYPE_BOOLEAN,
+    JSTYPE_OBJECT,
+    JSTYPE_FUNCTION,
+    JSTYPE_UNDEFINED,
 } jsType;
-
 
 WKE_API void jsBindFunction(const char* name, jsNativeFunction fn, unsigned int argCount);
 WKE_API void jsBindGetter(const char* name, jsNativeFunction fn); /*get property*/
@@ -437,22 +420,18 @@ WKE_API jsValue jsStringW(jsExecState es, const wchar_t* str);
 WKE_API jsValue jsEmptyObject(jsExecState es);
 WKE_API jsValue jsEmptyArray(jsExecState es);
 
+// cexer JS对象、函数绑定支持
+typedef jsValue(*jsGetPropertyCallback)(jsExecState es, jsValue object, const char* propertyName);
+typedef bool(*jsSetPropertyCallback)(jsExecState es, jsValue object, const char* propertyName, jsValue value);
+typedef jsValue(*jsCallAsFunctionCallback)(jsExecState es, jsValue object, jsValue* args, int argCount);
+typedef void(*jsFinalizeCallback)(struct tagjsData* data);
 
-
-//cexer JS对象、函数绑定支持
-typedef jsValue (*jsGetPropertyCallback)(jsExecState es, jsValue object, const char* propertyName);
-typedef bool (*jsSetPropertyCallback)(jsExecState es, jsValue object, const char* propertyName, jsValue value);
-typedef jsValue (*jsCallAsFunctionCallback)(jsExecState es, jsValue object, jsValue* args, int argCount);
-typedef void (*jsFinalizeCallback)(struct tagjsData* data);
-
-typedef struct tagjsData
-{
+typedef struct tagjsData {
     char typeName[100];
     jsGetPropertyCallback propertyGet;
     jsSetPropertyCallback propertySet;
     jsFinalizeCallback finalize;
     jsCallAsFunctionCallback callAsFunction;
-
 } jsData;
 
 WKE_API jsValue jsObject(jsExecState es, jsData* obj);
@@ -468,8 +447,6 @@ WKE_API void   jsSetAt(jsExecState es, jsValue object, int index, jsValue v);
 WKE_API int     jsGetLength(jsExecState es, jsValue object);
 WKE_API void    jsSetLength(jsExecState es, jsValue object, int length);
 
-
-
 //window object
 WKE_API jsValue jsGlobalObject(jsExecState es);
 WKE_API wkeWebView jsGetWebView(jsExecState es);
@@ -483,9 +460,8 @@ WKE_API jsValue jsCallGlobal(jsExecState es, jsValue func, jsValue* args, int ar
 WKE_API jsValue jsGetGlobal(jsExecState es, const char* prop);
 WKE_API void    jsSetGlobal(jsExecState es, const char* prop, jsValue v);
 
-
 //garbage collect
-WKE_API void jsGC(); 
+WKE_API void jsGC();
 
 
 
