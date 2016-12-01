@@ -1,0 +1,190 @@
+// memory standard header
+#ifndef _MEMORY_
+#define _MEMORY_
+#include <xmemory>
+
+#ifdef  _MSC_VER
+#pragma pack(push,8)
+#endif  /* _MSC_VER */
+		// TEMPLATE OPERATOR new
+template<class _Ty>
+	inline void *operator new(size_t _N, std::allocator<_Ty>& _Al)
+	{return (_Al._Charalloc(_N)); }
+_STD_BEGIN
+		// TEMPLATE FUNCTION get_temporary_buffer
+template<class _Ty> inline
+	pair<_Ty _FARQ *, _PDFT>
+		get_temporary_buffer(_PDFT _N, _Ty _FARQ *)
+	{_Ty _FARQ *_P;
+	for (_P = 0; 0 < _N; _N /= 2)
+		if ((_P = (_Ty _FARQ *)operator new(
+			(_SIZT)_N * sizeof (_Ty), nothrow)) != 0)
+			break;
+	return (pair<_Ty _FARQ *, _PDFT>(_P, _N)); }
+		// TEMPLATE FUNCTION return_temporary_buffer
+template<class _Ty> inline
+	void return_temporary_buffer(_Ty *_P)
+	{operator delete(_P); }
+		// TEMPLATE FUNCTION uninitialized_copy
+template<class _II, class _FI> inline
+	_FI uninitialized_copy(_II _F, _II _L, _FI _X)
+	{for (; _F != _L; ++_X, ++_F)
+		_Construct(&*_X, *_F);
+	return (_X); }
+		// TEMPLATE FUNCTION uninitialized_fill
+template<class _FI, class _Ty> inline
+	void uninitialized_fill(_FI _F, _FI _L, const _Ty& _X)
+	{for (; _F != _L; ++_F)
+		_Construct(&*_F, _X); }
+		// TEMPLATE FUNCTION uninitialized_fill_n
+template<class _FI, class _S, class _Ty> inline
+	void uninitialized_fill_n(_FI _F, _S _N, const _Ty& _X)
+	{for (; 0 < _N; --_N, ++_F)
+		_Construct(&*_F, _X); }
+		// TEMPLATE CLASS raw_storage_iterator
+template<class _OI, class _Ty>
+	class raw_storage_iterator
+		: public iterator<output_iterator_tag, void, void> {
+public:
+	typedef _OI iterator_type;
+	typedef _Ty element_type;
+	explicit raw_storage_iterator(_OI _X)
+		: _Next(_X) {}
+	raw_storage_iterator<_OI, _Ty>& operator*()
+		{return (*this); }
+	raw_storage_iterator<_OI, _Ty>& operator=(const _Ty& _X)
+		{_Construct(&*_Next, _X);
+		return (*this); }
+	raw_storage_iterator<_OI, _Ty>& operator++()
+		{++_Next;
+		return (*this); }
+	raw_storage_iterator<_OI, _Ty> operator++(int)
+		{raw_storage_iterator<_OI, _Ty> _Ans = *this;
+		++_Next;
+		return (_Ans); }
+private:
+	_OI _Next;
+	};
+		// TEMPLATE CLASS _Temp_iterator
+template<class _Ty>
+	class _Temp_iterator
+		: public iterator<output_iterator_tag, void, void> {
+public:
+	typedef _Ty _FARQ *_Pty;
+	_Temp_iterator(_PDFT _N = 0)
+		{pair<_Pty, _PDFT> _Pair =
+			get_temporary_buffer(_N, (_Pty)0);
+		_Buf._Begin = _Pair.first;
+		_Buf._Cur = _Pair.first;
+		_Buf._Hiwater = _Pair.first;
+		_Buf._Len = _Pair.second;
+		_Pb = &_Buf; }
+	_Temp_iterator(const _Temp_iterator<_Ty>& _X)
+		{_Buf._Begin = 0;
+		_Buf._Cur = 0;
+		_Buf._Hiwater = 0;
+		_Buf._Len = 0;
+		*this = _X; }
+	~_Temp_iterator()
+		{if (_Buf._Begin != 0)
+			{for (_Pty _F = _Buf._Begin;
+				_F != _Buf._Hiwater; ++_F)
+				_Destroy(&*_F);
+			return_temporary_buffer(_Buf._Begin); }}
+	_Temp_iterator<_Ty>& operator=(const _Temp_iterator<_Ty>& _X)
+		{_Pb = _X._Pb;
+		return (*this); }
+	_Temp_iterator<_Ty>& operator=(const _Ty& _V)
+		{if (_Pb->_Cur < _Pb->_Hiwater)
+			*_Pb->_Cur++ = _V;
+		else
+			{_Construct(&*_Pb->_Cur, _V);
+			_Pb->_Hiwater = ++_Pb->_Cur; }
+		return (*this); }
+	_Temp_iterator<_Ty>& operator*()
+		{return (*this); }
+	_Temp_iterator<_Ty>& operator++()
+		{return (*this); }
+	_Temp_iterator<_Ty>& operator++(int)
+		{return (*this); }
+	_Temp_iterator<_Ty>& _Init()
+		{_Pb->_Cur = _Pb->_Begin;
+		return (*this); }
+	_Pty _First() const
+		{return (_Pb->_Begin); }
+	_Pty _Last() const
+		{return (_Pb->_Cur); }
+	_PDFT _Maxlen() const
+		{return (_Pb->_Len); }
+private:
+	struct _Bufpar {
+		_Pty _Begin;
+		_Pty _Cur;
+		_Pty _Hiwater;
+		_PDFT _Len;
+		} _Buf, *_Pb;
+	};
+		// TEMPLATE CLASS auto_ptr
+template<class _Ty>
+	class auto_ptr {
+public:
+	typedef _Ty element_type;
+	explicit auto_ptr(_Ty *_P = 0) _THROW0()
+		: _Owns(_P != 0), _Ptr(_P) {}
+	auto_ptr(const auto_ptr<_Ty>& _Y) _THROW0()
+		: _Owns(_Y._Owns), _Ptr(_Y.release()) {}
+	auto_ptr<_Ty>& operator=(const auto_ptr<_Ty>& _Y) _THROW0()
+		{if (this != &_Y)
+			{if (_Ptr != _Y.get())
+				{if (_Owns)
+					delete _Ptr;
+				_Owns = _Y._Owns; }
+			else if (_Y._Owns)
+				_Owns = true;
+			_Ptr = _Y.release(); }
+		return (*this); }
+	~auto_ptr()
+		{if (_Owns)
+			delete _Ptr; }
+	_Ty& operator*() const _THROW0()
+		{return (*get()); }
+	_Ty *operator->() const _THROW0()
+		{return (get()); }
+	_Ty *get() const _THROW0()
+		{return (_Ptr); }
+	_Ty *release() const _THROW0()
+		{((auto_ptr<_Ty> *)this)->_Owns = false;
+		return (_Ptr); }
+private:
+	bool _Owns;
+	_Ty *_Ptr;
+	};
+_STD_END
+#ifdef  _MSC_VER
+#pragma pack(pop)
+#endif  /* _MSC_VER */
+
+#endif /* _MEMORY_ */
+
+/*
+ * Copyright (c) 1995 by P.J. Plauger.  ALL RIGHTS RESERVED. 
+ * Consult your license regarding permissions and restrictions.
+ */
+
+/*
+ * This file is derived from software bearing the following
+ * restrictions:
+ *
+ * Copyright (c) 1994
+ * Hewlett-Packard Company
+ *
+ * Permission to use, copy, modify, distribute and sell this
+ * software and its documentation for any purpose is hereby
+ * granted without fee, provided that the above copyright notice
+ * appear in all copies and that both that copyright notice and
+ * this permission notice appear in supporting documentation.
+ * Hewlett-Packard Company makes no representations about the
+ * suitability of this software for any purpose. It is provided
+ * "as is" without express or implied warranty.
+ */
+

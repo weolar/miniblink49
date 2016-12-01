@@ -41,7 +41,9 @@
 #include <mmsystem.h>
 
 #include "base/basictypes.h"
+//#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "include/base/cef_lock.h"
+//#endif
 
 using base::Time;
 using base::TimeDelta;
@@ -162,8 +164,8 @@ FILETIME Time::ToFileTime() const {
 // static
 void Time::EnableHighResolutionTimer(bool enable) {
     // Test for single-threaded access.
-    static PlatformThreadId my_thread = PlatformThread::CurrentId();
-    ASSERT(PlatformThread::CurrentId() == my_thread);
+    static DWORD my_thread = ::GetCurrentThreadId();
+    ASSERT(::GetCurrentThreadId() == my_thread);
 
     if (high_resolution_timer_enabled_ == enable)
         return;

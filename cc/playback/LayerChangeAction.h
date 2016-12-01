@@ -151,7 +151,7 @@ public:
 	void appendDirtyLayer(cc_blink::WebLayerImpl* layer);
 	void appendPendingInvalidateRect(const blink::IntRect& r);
 	void cleanupPendingInvalidateRectIfHasAlendAction();
-	blink::IntRect dirtyRect() const;
+    const WTF::Vector<blink::IntRect>& dirtyRects() const;
 
 	bool isDirtyLayerEmpty() const { return 0 == m_layerIds.size(); }
 
@@ -160,7 +160,7 @@ public:
 private:
 	WTF::Vector<int> m_layerIds;
 	WTF::Vector<DrawToCanvasProperties*> m_props;
-	blink::IntRect m_pendingInvalidateRect;
+    WTF::Vector<blink::IntRect> m_pendingInvalidateRects;
 };
 
 class LayerChangeActionUpdataImageLayer : public LayerChangeOneLayer {
@@ -182,8 +182,8 @@ public:
 	void run(LayerTreeHost* host);
 	void setBitmap(SkBitmap* bitmap);
 	void appendPendingInvalidateRect(const blink::IntRect& r);
+    void appendPendingInvalidateRects(const WTF::Vector<blink::IntRect>& rects);
 
-//private: // weolar
 	struct Item {
 		Item(int layerId, TileActionInfoVector* willRasteredTiles, blink::IntRect dirtyRect, SkBitmap* bitmap)
 		{
@@ -199,11 +199,10 @@ public:
 		blink::IntRect dirtyRect;
 		SkBitmap* bitmap;
 	};
-	//WTF::Vector<Item*>& items() { return m_items; } // test!!!!!!!!!
+
 	Item* m_item;
 private:
-	//WTF::Vector<Item*> m_items;
-	blink::IntRect m_pendingInvalidateRect;
+    WTF::Vector<blink::IntRect> m_pendingInvalidateRects;
 };
 
 class LayerChangeActionUpdataTile : public LayerChangeOneLayer {

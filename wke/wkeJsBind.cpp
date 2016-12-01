@@ -1,3 +1,4 @@
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
 //////////////////////////////////////////////////////////////////////////
 #define BUILDING_wke
 
@@ -934,7 +935,7 @@ static void addAccessor(v8::Local<v8::Context> context, const char* name, jsNati
     v8::Isolate* isolate = context->GetIsolate();
     v8::HandleScope handleScope(isolate);
     v8::Context::Scope contextScope(context);
-    v8::Local<v8::Object> globalObj = context->Global();
+    v8::Local<v8::Object> globalObj = v8::Local<v8::Object>::Cast(context->Global()->GetPrototype());
 
     v8::TryCatch tryCatch;
     tryCatch.SetVerbose(true);
@@ -943,14 +944,12 @@ static void addAccessor(v8::Local<v8::Context> context, const char* name, jsNati
     if (nameMaybeLocal.IsEmpty())
         return;
 
-    // Recored for release
     NativeGetterSetterWrap* wrap = NativeGetterSetterWrap::createWrapAndAddToGlobalObjForRelease(isolate, globalObj);
     wrap->set(getter, setter);
     v8::Local<v8::Value> data = v8::External::New(isolate, wrap);
 
-    bool set = globalObj->SetAccessor(nameMaybeLocal.ToLocalChecked(),
-        NativeGetterSetterWrap::AccessorGetterCallbackImpl,
-        NativeGetterSetterWrap::AccessorSetterCallbackImpl,
+    bool setOk = globalObj->SetAccessor(nameMaybeLocal.ToLocalChecked(),
+        NativeGetterSetterWrap::AccessorGetterCallbackImpl, NativeGetterSetterWrap::AccessorSetterCallbackImpl,
         data, (v8::AccessControl)(v8::ALL_CAN_READ | v8::ALL_CAN_WRITE));
 }
 
@@ -961,6 +960,7 @@ static void addAccessor(v8::Local<v8::Context> context, const char* name, jsNati
 #define JS_FUNC   (0)
 #define JS_GETTER (1)
 #define JS_SETTER (2)
+
 struct jsFunctionInfo {
     char name[MAX_NAME_LENGTH];
     jsNativeFunction fn;
@@ -1348,3 +1348,5 @@ void freeV8TempObejctOnOneFrameBefore()
 }
 
 };
+
+#endif

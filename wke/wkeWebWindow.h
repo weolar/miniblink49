@@ -1,6 +1,8 @@
 #ifndef WKE_WEB_WINDOW_H
 #define WKE_WEB_WINDOW_H
 
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
+
 #include "wkeWebView.h"
 
 //////////////////////////////////////////////////////////////////////////
@@ -14,7 +16,7 @@ public:
 
     bool create(HWND parent, unsigned styles, unsigned styleEx, int x, int y, int width, int height);
     bool create(HWND parent, wkeWindowType type, int x, int y, int width, int height);
-    HWND windowHandle() const;
+    
     void destroy();
 
     void show(bool b);
@@ -50,7 +52,6 @@ protected:
     static void _staticOnDocumentReady(wkeWebView webView, void* param);
     void _onDocumentReady();
 
-    HWND m_hwnd;
     bool m_acceptDrags;
 
     wkePaintUpdatedCallback m_originalPaintUpdatedCallback;
@@ -71,4 +72,5 @@ protected:
 
 };//namespace wke
 
+#endif
 #endif // #ifndef WKE_WEB_WINDOW_H

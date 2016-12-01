@@ -1,0 +1,528 @@
+// xcomplex internal header
+		// TEMPLATE FUNCTION imag
+_TMPLT(_Ty) inline
+	_Ty __cdecl imag(const _CMPLX(_Ty)& _X)
+	{return (_X.imag()); }
+		// TEMPLATE FUNCTION real
+_TMPLT(_Ty) inline
+	_Ty __cdecl real(const _CMPLX(_Ty)& _X)
+	{return (_X.real()); }
+		// TEMPLATE FUNCTION _Fabs
+_TMPLT(_Ty) inline
+	_Ty __cdecl _Fabs(const _CMPLX(_Ty)& _X, int *_Pexp)
+	{*_Pexp = 0;
+	_Ty _A = real(_X);
+	_Ty _B = imag(_X);
+	if (_CTR(_Ty)::_Isnan(_A))
+		return (_A);
+	else if (_CTR(_Ty)::_Isnan(_B))
+		return (_B);
+	else
+		{if (_A < 0)
+			_A = -_A;
+		if (_B < 0)
+			_B = -_B;
+		if (_A < _B)
+			{_Ty _W = _A;
+			_A = _B, _B = _W; }
+		if (_A == 0 || _CTR(_Ty)::_Isinf(_A))
+			return (_A);
+		if (1 <= _A)
+			*_Pexp = 2, _A = _A * 0.25, _B = _B * 0.25;
+		else
+			*_Pexp = -2, _A = _A * 4, _B = _B * 4;
+		_Ty _W = _A - _B;
+		if (_W == _A)
+			return (_A);
+		else if (_B < _W)
+			{const _Ty _Q = _A / _B;
+			return (_A + _B
+				/ (_Q + _CTR(_Ty)::sqrt(_Q * _Q + 1))); }
+		else
+			{static const _Ty _R2 = (const _Ty)1.4142135623730950488L;
+			static const _Ty _Xh = (const _Ty)2.4142L;
+			static const _Ty _Xl = (const _Ty)0.0000135623730950488016887L;
+			const _Ty _Q = _W / _B;
+			const _Ty _R = (_Q + 2) * _Q;
+			const _Ty _S = _R / (_R2 + _CTR(_Ty)::sqrt(_R + 2))
+				+ _Xl + _Q + _Xh;
+			return (_A + _B / _S); }}}
+		// TEMPLATE FUNCTION operator+
+_TMPLT(_Ty) inline
+	_CMPLX(_Ty) __cdecl operator+(const _CMPLX(_Ty)& _L,
+		const _CMPLX(_Ty)& _R)
+	{_CMPLX(_Ty) _W(_L);
+	return (_W += _R); }
+_TMPLT(_Ty) inline
+	_CMPLX(_Ty) __cdecl operator+(const _CMPLX(_Ty)& _L, const _Ty& _R)
+	{_CMPLX(_Ty) _W(_L);
+	_W.real(_W.real() + _R);
+	return (_W); }
+_TMPLT(_Ty) inline
+	_CMPLX(_Ty) __cdecl operator+(const _Ty& _L, const _CMPLX(_Ty)& _R)
+	{_CMPLX(_Ty) _W(_L);
+	return (_W += _R); }
+		// TEMPLATE FUNCTION operator-
+_TMPLT(_Ty) inline
+	_CMPLX(_Ty) __cdecl operator-(const _CMPLX(_Ty)& _L,
+		const _CMPLX(_Ty)& _R)
+	{_CMPLX(_Ty) _W(_L);
+	return (_W -= _R); }
+_TMPLT(_Ty) inline
+	_CMPLX(_Ty) __cdecl operator-(const _CMPLX(_Ty)& _L, const _Ty& _R)
+	{_CMPLX(_Ty) _W(_L);
+	_W.real(_W.real() - _R);
+	return (_W); }
+_TMPLT(_Ty) inline
+	_CMPLX(_Ty) __cdecl operator-(const _Ty& _L, const _CMPLX(_Ty)& _R)
+	{_CMPLX(_Ty) _W(_L);
+	return (_W -= _R); }
+		// TEMPLATE FUNCTION operator*
+_TMPLT(_Ty) inline
+	_CMPLX(_Ty) __cdecl operator*(const _CMPLX(_Ty)& _L,
+		const _CMPLX(_Ty)& _R)
+	{_CMPLX(_Ty) _W(_L);
+	return (_W *= _R); }
+_TMPLT(_Ty) inline
+	_CMPLX(_Ty) __cdecl operator*(const _CMPLX(_Ty)& _L, const _Ty& _R)
+	{_CMPLX(_Ty) _W(_L);
+	_W.real(_W.real() * _R);
+	_W.imag(_W.imag() * _R);
+	return (_W); }
+_TMPLT(_Ty) inline
+	_CMPLX(_Ty) __cdecl operator*(const _Ty& _L, const _CMPLX(_Ty)& _R)
+	{_CMPLX(_Ty) _W(_L);
+	return (_W *= _R); }
+		// TEMPLATE FUNCTION operator/
+_TMPLT(_Ty) inline
+	_CMPLX(_Ty) __cdecl operator/(const _CMPLX(_Ty)& _L,
+		const _CMPLX(_Ty)& _R)
+	{_CMPLX(_Ty) _W(_L);
+	return (_W /= _R); }
+_TMPLT(_Ty) inline
+	_CMPLX(_Ty) __cdecl operator/(const _CMPLX(_Ty)& _L, const _Ty& _R)
+	{_CMPLX(_Ty) _W(_L);
+	_W.real(_W.real() / _R);
+	_W.imag(_W.imag() / _R);
+	return (_W); }
+_TMPLT(_Ty) inline
+	_CMPLX(_Ty) __cdecl operator/(const _Ty& _L, const _CMPLX(_Ty)& _R)
+	{_CMPLX(_Ty) _W(_L);
+	return (_W /= _R); }
+		// TEMPLATE FUNCTION UNARY operator+
+_TMPLT(_Ty) inline
+	_CMPLX(_Ty) __cdecl operator+(const _CMPLX(_Ty)& _L)
+	{return (_CMPLX(_Ty)(_L)); }
+		// TEMPLATE FUNCTION UNARY operator-
+_TMPLT(_Ty) inline
+	_CMPLX(_Ty) __cdecl operator-(const _CMPLX(_Ty)& _L)
+	{return (_CMPLX(_Ty)(-real(_L), -imag(_L))); }
+		// TEMPLATE FUNCTION operator==
+_TMPLT(_Ty) inline
+	bool __cdecl operator==(const _CMPLX(_Ty)& _L, const _CMPLX(_Ty)& _R)
+	{return (real(_L) == real(_R) && imag(_L) == imag(_R)); }
+_TMPLT(_Ty) inline
+	bool __cdecl operator==(const _CMPLX(_Ty)& _L, const _Ty& _R)
+	{return (real(_L) == _R && imag(_L) == 0); }
+_TMPLT(_Ty) inline
+	bool __cdecl operator==(const _Ty& _L, const _CMPLX(_Ty)& _R)
+	{return (_L == real(_R) && 0 == imag(_R)); }
+_TMPLT(_Ty) inline
+	bool __cdecl operator!=(const _CMPLX(_Ty)& _L, const _CMPLX(_Ty)& _R)
+	{return (!(_L == _R)); }
+_TMPLT(_Ty) inline
+	bool __cdecl operator!=(const _CMPLX(_Ty)& _L, const _Ty& _R)
+	{return (!(_L == _R)); }
+_TMPLT(_Ty) inline
+	bool __cdecl operator!=(const _Ty& _L, const _CMPLX(_Ty)& _R)
+	{return (!(_L == _R)); }
+		// TEMPLATE FUNCTION abs
+_TMPLT(_Ty) inline
+	_Ty __cdecl abs(const _CMPLX(_Ty)& _X)
+	{int _Xexp;
+	_Ty _Rho = _Fabs(_X, &_Xexp);
+	if (_Xexp == 0)
+		return (_Rho);
+	else
+		return (_CTR(_Ty)::ldexp(_Rho, _Xexp)); }
+		// TEMPLATE FUNCTION arg
+_TMPLT(_Ty) inline
+	_Ty __cdecl arg(const _CMPLX(_Ty)& _X)
+	{return (_CTR(_Ty)::atan2(imag(_X), real(_X))); }
+		// TEMPLATE FUNCTION conjg
+_TMPLT(_Ty) inline
+	_CMPLX(_Ty) __cdecl conj(const _CMPLX(_Ty)& _X)
+	{return (_CMPLX(_Ty)(real(_X), -imag(_X))); }
+		// TEMPLATE FUNCTION cos
+_TMPLT(_Ty) inline
+	_CMPLX(_Ty) __cdecl cos(const _CMPLX(_Ty)& _X)
+	{return (_CMPLX(_Ty)(
+		_CTR(_Ty)::_Cosh(imag(_X), _CTR(_Ty)::cos(real(_X))),
+		-_CTR(_Ty)::_Sinh(imag(_X),
+			_CTR(_Ty)::sin(real(_X))))); }
+		// TEMPLATE FUNCTION cosh
+_TMPLT(_Ty) inline
+	_CMPLX(_Ty) __cdecl cosh(const _CMPLX(_Ty)& _X)
+	{return (_CMPLX(_Ty)(
+		_CTR(_Ty)::_Cosh(real(_X), _CTR(_Ty)::cos(imag(_X))),
+		_CTR(_Ty)::_Sinh(real(_X), _CTR(_Ty)::sin(imag(_X))))); }
+		// TEMPLATE FUNCTION exp
+_TMPLT(_Ty) inline
+	_CMPLX(_Ty) __cdecl exp(const _CMPLX(_Ty)& _X)
+	{_Ty _Re(real(_X)), _Im(real(_X));
+	_CTR(_Ty)::_Exp(&_Re, _CTR(_Ty)::cos(imag(_X)), 0);
+	_CTR(_Ty)::_Exp(&_Im, _CTR(_Ty)::sin(imag(_X)), 0);
+	return (_CMPLX(_Ty)(_Re, _Im)); }
+		// TEMPLATE FUNCTION log
+_TMPLT(_Ty) inline
+	_CMPLX(_Ty) __cdecl log(const _CMPLX(_Ty)& _X)
+	{int _Xexp;
+	_Ty _Rho = _Fabs(_X, &_Xexp);
+	if (_CTR(_Ty)::_Isnan(_Rho))
+		return (_CMPLX(_Ty)(_Rho, _Rho));
+	else
+		{static const _Ty _Cm = 22713.0 / 32768.0;
+		static const _Ty _Cl = (const _Ty)1.428606820309417232e-6L;
+		_Ty _Xn = _Xexp;
+		_CMPLX(_Ty) _W(_Rho == 0 ? -_CTR(_Ty)::_Infv(_Rho)
+			: _CTR(_Ty)::_Isinf(_Rho) ? _Rho
+			: _CTR(_Ty)::log(_Rho) + _Xn * _Cl + _Xn * _Cm,
+				_CTR(_Ty)::atan2(imag(_X), real(_X)));
+		return (_W); }}
+		// TEMPLATE FUNCTION log10
+_TMPLT(_Ty) inline
+	_CMPLX(_Ty) __cdecl log10(const _CMPLX(_Ty)& _X)
+	{return (log(_X) * (_Ty)0.4342944819032518276511289L); }
+		// TEMPLATE FUNCTION norm
+_TMPLT(_Ty) inline
+	_Ty __cdecl norm(const _CMPLX(_Ty)& _X)
+	{return (real(_X) * real(_X) + imag(_X) * imag(_X)); }
+		// TEMPLATE FUNCTION polar
+_TMPLT(_Ty) inline
+	_CMPLX(_Ty) __cdecl polar(const _Ty& _Rho, const _Ty& _Theta)
+	{return (_CMPLX(_Ty)(_Rho * _CTR(_Ty)::cos(_Theta),
+		_Rho * _CTR(_Ty)::sin(_Theta))); }
+_TMPLT(_Ty) inline
+	_CMPLX(_Ty) __cdecl polar(const _Ty& _Rho)
+	{return (polar(_Rho, (_Ty)0)); }
+		// TEMPLATE FUNCTION pow
+_TMPLT(_Ty) inline
+	_CMPLX(_Ty) __cdecl pow(const _CMPLX(_Ty)& _X,
+		const _CMPLX(_Ty)& _Y)
+	{if (imag(_Y) == 0)
+		return (pow(_X, real(_Y)));
+	else if (imag(_X) == 0)
+		return (_CMPLX(_Ty)(pow(real(_X), _Y)));
+	else
+		return (exp(_Y * log(_X))); }
+_TMPLT(_Ty) inline
+	_CMPLX(_Ty) __cdecl pow(const _CMPLX(_Ty)& _X, const _Ty& _Y)
+	{if (imag(_X) == 0)
+		return (_CMPLX(_Ty)(_CTR(_Ty)::pow(real(_X), _Y)));
+	else
+		return (exp(_Y * log(_X))); }
+_TMPLT(_Ty) inline
+	_CMPLX(_Ty) __cdecl pow(const _CMPLX(_Ty)& _X, int _Y)
+	{if (imag(_X) == 0)
+		return (_CMPLX(_Ty)(_CTR(_Ty)::pow(real(_X), _Y)));
+	else
+		return (_Pow_int(_CMPLX(_Ty)(_X), _Y)); }
+_TMPLT(_Ty) inline
+	_CMPLX(_Ty) __cdecl pow(const _Ty& _X, const _CMPLX(_Ty)& _Y)
+	{if (imag(_Y) == 0)
+		return (_CMPLX(_Ty)(_CTR(_Ty)::pow(_X, real(_Y))));
+	else
+		return (exp(_Y * _CTR(_Ty)::log(_X))); }
+		// TEMPLATE FUNCTION sin
+_TMPLT(_Ty) inline
+	_CMPLX(_Ty) __cdecl sin(const _CMPLX(_Ty)& _X)
+	{return (_CMPLX(_Ty)(
+		_CTR(_Ty)::_Cosh(imag(_X), _CTR(_Ty)::sin(real(_X))),
+		_CTR(_Ty)::_Sinh(imag(_X), _CTR(_Ty)::cos(real(_X))))); }
+		// TEMPLATE FUNCTION sinh
+_TMPLT(_Ty) inline
+	_CMPLX(_Ty) __cdecl sinh(const _CMPLX(_Ty)& _X)
+	{return (_CMPLX(_Ty)(
+		_CTR(_Ty)::_Sinh(real(_X), _CTR(_Ty)::cos(imag(_X))),
+		_CTR(_Ty)::_Cosh(real(_X), _CTR(_Ty)::sin(imag(_X))))); }
+		// TEMPLATE FUNCTION sqrt
+_TMPLT(_Ty) inline
+	_CMPLX(_Ty) __cdecl sqrt(const _CMPLX(_Ty)& _X)
+	{int _Xexp;
+	_Ty _Rho = _Fabs(_X, &_Xexp);
+	if (_Xexp == 0)
+		return (_CMPLX(_Ty)(_Rho, _Rho));
+	else
+		{_Ty _Remag = _CTR(_Ty)::ldexp(real(_X) < 0
+			? - real(_X) : real(_X), -_Xexp);
+		_Rho = _CTR(_Ty)::ldexp(_CTR(_Ty)::sqrt(
+			2 * (_Remag + _Rho)), _Xexp / 2 - 1);
+		if (0 <= real(_X))
+			return (_CMPLX(_Ty)(_Rho, imag(_X) / (2 * _Rho)));
+		else if (imag(_X) < 0)
+			return (_CMPLX(_Ty)(-imag(_X) / (2 * _Rho), -_Rho));
+		else
+			return (_CMPLX(_Ty)(imag(_X) / (2 * _Rho),
+				_Rho)); }}
+
+#ifdef _DLL
+#pragma warning(disable:4231) /* the extern before template is a non-standard extension */
+
+extern template _CRTIMP complex<float>& __cdecl operator+=(
+        complex<float>&, const complex<float>&);
+extern template _CRTIMP complex<float>& __cdecl operator-=(
+        complex<float>&, const complex<float>&);
+extern template _CRTIMP complex<float>& __cdecl operator*=(
+        complex<float>&, const complex<float>&);
+extern template _CRTIMP complex<float>& __cdecl operator/=(
+        complex<float>&, const complex<float>&);
+
+extern template _CRTIMP basic_istream<char, char_traits<char> >& __cdecl operator>>(
+        basic_istream<char, char_traits<char> >&, complex<float>&);
+extern template _CRTIMP basic_ostream<char, char_traits<char> >& __cdecl operator<<(
+        basic_ostream<char, char_traits<char> >&, const complex<float>&);
+extern template _CRTIMP basic_istream<wchar_t, char_traits<wchar_t> >& __cdecl operator>>(
+        basic_istream<wchar_t, char_traits<wchar_t> >&, complex<float>&);
+extern template _CRTIMP basic_ostream<wchar_t, char_traits<wchar_t> >& __cdecl operator<<(
+        basic_ostream<wchar_t, char_traits<wchar_t> >&, const complex<float>&);
+
+extern template _CRTIMP complex<double>& __cdecl operator+=(
+        complex<double>&, const complex<double>&);
+extern template _CRTIMP complex<double>& __cdecl operator-=(
+        complex<double>&, const complex<double>&);
+extern template _CRTIMP complex<double>& __cdecl operator*=(
+        complex<double>&, const complex<double>&);
+extern template _CRTIMP complex<double>& __cdecl operator/=(
+        complex<double>&, const complex<double>&);
+extern template _CRTIMP basic_istream<char, char_traits<char> >& __cdecl operator>>(
+        basic_istream<char, char_traits<char> >&, complex<double>&);
+extern template _CRTIMP basic_ostream<char, char_traits<char> >& __cdecl operator<<(
+        basic_ostream<char, char_traits<char> >&, const complex<double>&);
+extern template _CRTIMP basic_istream<wchar_t, char_traits<wchar_t> >& __cdecl operator>>(
+        basic_istream<wchar_t, char_traits<wchar_t> >&, complex<double>&);
+extern template _CRTIMP basic_ostream<wchar_t, char_traits<wchar_t> >& __cdecl operator<<(
+        basic_ostream<wchar_t, char_traits<wchar_t> >&, const complex<double>&);
+
+extern template _CRTIMP complex<long double>& __cdecl operator+=(
+        complex<long double>&, const complex<long double>&);
+extern template _CRTIMP complex<long double>& __cdecl operator-=(
+        complex<long double>&, const complex<long double>&);
+extern template _CRTIMP complex<long double>& __cdecl operator*=(
+        complex<long double>&, const complex<long double>&);
+extern template _CRTIMP complex<long double>& __cdecl operator/=(
+        complex<long double>&, const complex<long double>&);
+extern template _CRTIMP basic_istream<char, char_traits<char> >& __cdecl operator>>(
+        basic_istream<char, char_traits<char> >&, complex<long double>&);
+extern template _CRTIMP basic_ostream<char, char_traits<char> >& __cdecl operator<<(
+        basic_ostream<char, char_traits<char> >&, const complex<long double>&);
+extern template _CRTIMP basic_istream<wchar_t, char_traits<wchar_t> >& __cdecl operator>>(
+        basic_istream<wchar_t, char_traits<wchar_t> >&, complex<long double>&);
+extern template _CRTIMP basic_ostream<wchar_t, char_traits<wchar_t> >& __cdecl operator<<(
+        basic_ostream<wchar_t, char_traits<wchar_t> >&, const complex<long double>&);
+
+extern template _CRTIMP float __cdecl imag(const complex<float>&);
+extern template _CRTIMP float __cdecl real(const complex<float>&);
+extern template _CRTIMP float __cdecl _Fabs(const complex<float>&, int *);
+extern template _CRTIMP complex<float> __cdecl operator+(
+        const complex<float>&, const complex<float>&);
+extern template _CRTIMP complex<float> __cdecl operator+(
+        const complex<float>&, const float&);
+extern template _CRTIMP complex<float> __cdecl operator+(
+        const float&, const complex<float>&);
+extern template _CRTIMP complex<float> __cdecl operator-(
+        const complex<float>&, const complex<float>&);
+extern template _CRTIMP complex<float> __cdecl operator-(
+        const complex<float>&, const float&);
+extern template _CRTIMP    complex<float> __cdecl operator-(
+        const float&, const complex<float>&);
+extern template _CRTIMP complex<float> __cdecl operator*(
+        const complex<float>&, const complex<float>&);
+extern template _CRTIMP complex<float> __cdecl operator*(
+        const complex<float>&, const float&);
+extern template _CRTIMP complex<float> __cdecl operator*(
+        const float&, const complex<float>&);
+extern template _CRTIMP complex<float> __cdecl operator/(
+        const complex<float>&, const complex<float>&);
+extern template _CRTIMP complex<float> __cdecl operator/(
+        const complex<float>&, const float&);
+extern template _CRTIMP complex<float> __cdecl operator/(
+        const float&, const complex<float>&);
+extern template _CRTIMP complex<float> __cdecl operator+(
+        const complex<float>&);
+extern template _CRTIMP complex<float> __cdecl operator-(
+        const complex<float>&);
+extern template _CRTIMP bool __cdecl operator==(
+        const complex<float>&, const complex<float>&);
+extern template _CRTIMP bool __cdecl operator==(
+        const complex<float>&, const float&);
+extern template _CRTIMP bool __cdecl operator==(
+        const float&, const complex<float>&);
+extern template _CRTIMP bool __cdecl operator!=(
+        const complex<float>&, const complex<float>&);
+extern template _CRTIMP bool __cdecl operator!=(
+        const complex<float>&, const float&);
+extern template _CRTIMP bool __cdecl operator!=(
+        const float&, const complex<float>&);
+extern template _CRTIMP float __cdecl abs(const complex<float>&);
+extern template _CRTIMP float __cdecl arg(const complex<float>&);
+extern template _CRTIMP complex<float> __cdecl conj(const complex<float>&);
+extern template _CRTIMP complex<float> __cdecl cos(const complex<float>&);
+extern template _CRTIMP complex<float> __cdecl cosh(const complex<float>&);
+extern template _CRTIMP complex<float> __cdecl exp(const complex<float>&);
+extern template _CRTIMP complex<float> __cdecl log(const complex<float>&);
+extern template _CRTIMP complex<float> __cdecl log10(const complex<float>&);
+extern template _CRTIMP float __cdecl norm(const complex<float>&);
+extern template _CRTIMP complex<float> __cdecl polar(const float&, const float&);
+extern template _CRTIMP complex<float> __cdecl polar(const float&);
+extern template _CRTIMP complex<float> __cdecl pow(
+        const complex<float>&, const complex<float>&);
+extern template _CRTIMP complex<float> __cdecl pow(
+        const complex<float>&, const float&);
+extern template _CRTIMP complex<float> __cdecl pow(
+        const complex<float>&, int);
+extern template _CRTIMP complex<float> __cdecl pow(
+        const float&, const complex<float>&);
+extern template _CRTIMP complex<float> __cdecl sin(const complex<float>&);
+extern template _CRTIMP complex<float> __cdecl sinh(const complex<float>&);
+extern template _CRTIMP complex<float> __cdecl sqrt(const complex<float>&);
+
+extern template _CRTIMP double __cdecl imag(const complex<double>&);
+extern template _CRTIMP double __cdecl real(const complex<double>&);
+extern template _CRTIMP double __cdecl _Fabs(const complex<double>&, int *);
+extern template _CRTIMP complex<double> __cdecl operator+(
+        const complex<double>&, const complex<double>&);
+extern template _CRTIMP complex<double> __cdecl operator+(
+        const complex<double>&, const double&);
+extern template _CRTIMP complex<double> __cdecl operator+(
+        const double&, const complex<double>&);
+extern template _CRTIMP complex<double> __cdecl operator-(
+        const complex<double>&, const complex<double>&);
+extern template _CRTIMP complex<double> __cdecl operator-(
+        const complex<double>&, const double&);
+extern template _CRTIMP    complex<double> __cdecl operator-(
+        const double&, const complex<double>&);
+extern template _CRTIMP complex<double> __cdecl operator*(
+        const complex<double>&, const complex<double>&);
+extern template _CRTIMP complex<double> __cdecl operator*(
+        const complex<double>&, const double&);
+extern template _CRTIMP complex<double> __cdecl operator*(
+        const double&, const complex<double>&);
+extern template _CRTIMP complex<double> __cdecl operator/(
+        const complex<double>&, const complex<double>&);
+extern template _CRTIMP complex<double> __cdecl operator/(
+        const complex<double>&, const double&);
+extern template _CRTIMP complex<double> __cdecl operator/(
+        const double&, const complex<double>&);
+extern template _CRTIMP complex<double> __cdecl operator+(
+        const complex<double>&);
+extern template _CRTIMP complex<double> __cdecl operator-(
+        const complex<double>&);
+extern template _CRTIMP bool __cdecl operator==(
+        const complex<double>&, const complex<double>&);
+extern template _CRTIMP bool __cdecl operator==(
+        const complex<double>&, const double&);
+extern template _CRTIMP bool __cdecl operator==(
+        const double&, const complex<double>&);
+extern template _CRTIMP bool __cdecl operator!=(
+        const complex<double>&, const complex<double>&);
+extern template _CRTIMP bool __cdecl operator!=(
+        const complex<double>&, const double&);
+extern template _CRTIMP bool __cdecl operator!=(
+        const double&, const complex<double>&);
+extern template _CRTIMP double __cdecl abs(const complex<double>&);
+extern template _CRTIMP double __cdecl arg(const complex<double>&);
+extern template _CRTIMP complex<double> __cdecl conj(const complex<double>&);
+extern template _CRTIMP complex<double> __cdecl cos(const complex<double>&);
+extern template _CRTIMP complex<double> __cdecl cosh(const complex<double>&);
+extern template _CRTIMP complex<double> __cdecl exp(const complex<double>&);
+extern template _CRTIMP complex<double> __cdecl log(const complex<double>&);
+extern template _CRTIMP complex<double> __cdecl log10(const complex<double>&);
+extern template _CRTIMP double __cdecl norm(const complex<double>&);
+extern template _CRTIMP complex<double> __cdecl polar(const double&, const double&);
+extern template _CRTIMP complex<double> __cdecl polar(const double&);
+extern template _CRTIMP complex<double> __cdecl pow(
+        const complex<double>&, const complex<double>&);
+extern template _CRTIMP complex<double> __cdecl pow(
+        const complex<double>&, const double&);
+extern template _CRTIMP complex<double> __cdecl pow(
+        const complex<double>&, int);
+extern template _CRTIMP complex<double> __cdecl pow(
+        const double&, const complex<double>&);
+extern template _CRTIMP complex<double> __cdecl sin(const complex<double>&);
+extern template _CRTIMP complex<double> __cdecl sinh(const complex<double>&);
+extern template _CRTIMP complex<double> __cdecl sqrt(const complex<double>&);
+
+extern template _CRTIMP long double __cdecl imag(const complex<long double>&);
+extern template _CRTIMP long double __cdecl real(const complex<long double>&);
+extern template _CRTIMP long double __cdecl _Fabs(const complex<long double>&, int *);
+extern template _CRTIMP complex<long double> __cdecl operator+(
+        const complex<long double>&, const complex<long double>&);
+extern template _CRTIMP complex<long double> __cdecl operator+(
+        const complex<long double>&, const long double&);
+extern template _CRTIMP complex<long double> __cdecl operator+(
+        const long double&, const complex<long double>&);
+extern template _CRTIMP complex<long double> __cdecl operator-(
+        const complex<long double>&, const complex<long double>&);
+extern template _CRTIMP complex<long double> __cdecl operator-(
+        const complex<long double>&, const long double&);
+extern template _CRTIMP    complex<long double> __cdecl operator-(
+        const long double&, const complex<long double>&);
+extern template _CRTIMP complex<long double> __cdecl operator*(
+        const complex<long double>&, const complex<long double>&);
+extern template _CRTIMP complex<long double> __cdecl operator*(
+        const complex<long double>&, const long double&);
+extern template _CRTIMP complex<long double> __cdecl operator*(
+        const long double&, const complex<long double>&);
+extern template _CRTIMP complex<long double> __cdecl operator/(
+        const complex<long double>&, const complex<long double>&);
+extern template _CRTIMP complex<long double> __cdecl operator/(
+        const complex<long double>&, const long double&);
+extern template _CRTIMP complex<long double> __cdecl operator/(
+        const long double&, const complex<long double>&);
+extern template _CRTIMP complex<long double> __cdecl operator+(
+        const complex<long double>&);
+extern template _CRTIMP complex<long double> __cdecl operator-(
+        const complex<long double>&);
+extern template _CRTIMP bool __cdecl operator==(
+        const complex<long double>&, const complex<long double>&);
+extern template _CRTIMP bool __cdecl operator==(
+        const complex<long double>&, const long double&);
+extern template _CRTIMP bool __cdecl operator==(
+        const long double&, const complex<long double>&);
+extern template _CRTIMP bool __cdecl operator!=(
+        const complex<long double>&, const complex<long double>&);
+extern template _CRTIMP bool __cdecl operator!=(
+        const complex<long double>&, const long double&);
+extern template _CRTIMP bool __cdecl operator!=(
+        const long double&, const complex<long double>&);
+extern template _CRTIMP long double __cdecl abs(const complex<long double>&);
+extern template _CRTIMP long double __cdecl arg(const complex<long double>&);
+extern template _CRTIMP complex<long double> __cdecl conj(const complex<long double>&);
+extern template _CRTIMP complex<long double> __cdecl cos(const complex<long double>&);
+extern template _CRTIMP complex<long double> __cdecl cosh(const complex<long double>&);
+extern template _CRTIMP complex<long double> __cdecl exp(const complex<long double>&);
+extern template _CRTIMP complex<long double> __cdecl log(const complex<long double>&);
+extern template _CRTIMP complex<long double> __cdecl log10(const complex<long double>&);
+extern template _CRTIMP long double __cdecl norm(const complex<long double>&);
+extern template _CRTIMP complex<long double> __cdecl polar(const long double&, const long double&);
+extern template _CRTIMP complex<long double> __cdecl polar(const long double&);
+extern template _CRTIMP complex<long double> __cdecl pow(
+        const complex<long double>&, const complex<long double>&);
+extern template _CRTIMP complex<long double> __cdecl pow(
+        const complex<long double>&, const long double&);
+extern template _CRTIMP complex<long double> __cdecl pow(
+        const complex<long double>&, int);
+extern template _CRTIMP complex<long double> __cdecl pow(
+        const long double&, const complex<long double>&);
+extern template _CRTIMP complex<long double> __cdecl sin(const complex<long double>&);
+extern template _CRTIMP complex<long double> __cdecl sinh(const complex<long double>&);
+extern template _CRTIMP complex<long double> __cdecl sqrt(const complex<long double>&);
+
+#pragma warning(default:4231) /* restore previous warning */
+#endif		// _DLL
+
+/*
+ * Copyright (c) 1996 by P.J. Plauger.  ALL RIGHTS RESERVED. 
+ * Consult your license regarding permissions and restrictions.
+ */
+

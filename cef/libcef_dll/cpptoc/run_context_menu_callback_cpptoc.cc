@@ -9,7 +9,7 @@
 // implementations. See the translator.README.txt file in the tools directory
 // for more information.
 //
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "libcef_dll/cpptoc/run_context_menu_callback_cpptoc.h"
 
 
@@ -70,3 +70,4 @@ template<> base::AtomicRefCount CefCppToC<CefRunContextMenuCallbackCppToC,
 template<> CefWrapperType CefCppToC<CefRunContextMenuCallbackCppToC,
     CefRunContextMenuCallback, cef_run_context_menu_callback_t>::kWrapperType =
     WT_RUN_CONTEXT_MENU_CALLBACK;
+#endif

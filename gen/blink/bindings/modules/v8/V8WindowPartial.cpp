@@ -188,7 +188,9 @@
 #include "bindings/modules/v8/V8WebGLTransformFeedback.h"
 #include "bindings/modules/v8/V8WebGLUniformLocation.h"
 #include "bindings/modules/v8/V8WebGLVertexArrayObject.h"
+#endif // MINIBLINK_NOT_IMPLEMENTED
 #include "bindings/modules/v8/V8WebSocket.h"
+#ifdef MINIBLINK_NOT_IMPLEMENTED
 #include "core/dom/ContextFeatures.h"
 #include "core/dom/Document.h"
 #include "core/frame/UseCounter.h"
@@ -1655,8 +1657,8 @@ static const V8DOMConfiguration::AttributeConfiguration V8WindowAttributes[] = {
     {"WebGLShaderPrecisionFormat", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8WebGLShaderPrecisionFormat::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
     {"WebGLTexture", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8WebGLTexture::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
     {"WebGLUniformLocation", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8WebGLUniformLocation::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
-    {"WebSocket", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8WebSocket::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
 #endif // #ifdef MINIBLINK_NOT_IMPLEMENTED
+    {"WebSocket", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8WebSocket::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
 };
 
 #if defined(COMPONENT_BUILD) && defined(WIN32) && COMPILER(CLANG)

@@ -1,7 +1,7 @@
 // Copyright (c) 2012 The Chromium Embedded Framework Authors. All rights
 // reserved. Use of this source code is governed by a BSD-style license that
 // can be found in the LICENSE file.
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include <map>
 #include "include/internal/cef_string_multimap.h"
 #include "base/logging.h"
@@ -114,3 +114,5 @@ CEF_EXPORT void cef_string_multimap_free(cef_string_multimap_t map) {
   StringMultimap* impl = reinterpret_cast<StringMultimap*>(map);
   delete impl;
 }
+#endif
+

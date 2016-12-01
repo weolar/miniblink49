@@ -127,6 +127,9 @@
 #include <QRegion>
 #endif
 
+#define jref    void *
+#define JRIEnv  void
+
 /*----------------------------------------------------------------------*/
 /*                        Plugin Version Constants                      */
 /*----------------------------------------------------------------------*/
@@ -877,6 +880,8 @@ const char* NP_LOADDS NPN_UserAgent(NPP instance);
 void*       NP_LOADDS NPN_MemAlloc(uint32_t size);
 void        NP_LOADDS NPN_MemFree(void* ptr);
 uint32_t    NP_LOADDS NPN_MemFlush(uint32_t size);
+JRIEnv*     NP_LOADDS NPN_GetJavaEnv(void);
+jref        NP_LOADDS NPN_GetJavaPeer(NPP instance);
 void        NP_LOADDS NPN_ReloadPlugins(NPBool reloadPages);
 NPError     NP_LOADDS NPN_GetValue(NPP instance, NPNVariable variable,
                                    void *value);

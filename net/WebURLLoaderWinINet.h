@@ -60,8 +60,6 @@ public:
 private:
     bool start(const blink::WebURLRequest& request, blink::WebURLLoaderClient* client, bool synchronously);
 
-    int m_ref;
-
     blink::WebURLRequest* m_request;
     blink::WebURLLoaderClient* m_client;
     content::WebURLLoaderImpl* m_loader;

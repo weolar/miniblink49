@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006 Apple Computer, Inc.  All rights reserved.
+ * Copyright (C) 2006 Apple Inc.  All rights reserved.
  * Copyright (C) 2006 Michael Emmel mike.emmel@gmail.com
  * All rights reserved.
  *
@@ -12,10 +12,10 @@
  *    notice, this list of conditions and the following disclaimer in the
  *    documentation and/or other materials provided with the distribution.
  *
- * THIS SOFTWARE IS PROVIDED BY APPLE COMPUTER, INC. ``AS IS'' AND ANY
+ * THIS SOFTWARE IS PROVIDED BY APPLE INC. ``AS IS'' AND ANY
  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL APPLE COMPUTER, INC. OR
+ * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL APPLE INC. OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
@@ -25,28 +25,24 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef WebURLLoaderManager_h
-#define WebURLLoaderManager_h
+#ifndef net_WebURLLoaderManager_h
+#define net_WebURLLoaderManager_h
 
-#include "third_party/WebKit/Source/platform/Timer.h"
-#include "third_party/WebKit/public/platform/WebURLLoaderClient.h"
-
-//#include <winsock2.h>
-#include <windows.h>
-
-#define BUILDING_LIBCURL 
+#define CURL_STATICLIB  
 #define HTTP_ONLY 
 
-#include "third_party/curl/curl.h"
-#include <wtf/Vector.h>
-#include <wtf/text/CString.h>
+#include "third_party/libcurl/include/curl/curl.h"
+#include "third_party/WebKit/Source/platform/Timer.h"
 
-namespace content {
-class WebURLLoaderImplCurl;
+#include "third_party/WebKit/Source/wtf/Vector.h"
+#include "third_party/WebKit/Source/wtf/text/CString.h"
+#include "third_party/WebKit/Source/wtf/text/WTFString.h"
+#include "third_party/WebKit/Source/wtf/Threading.h"
+#include "third_party/WebKit/Source/platform/Timer.h"
+
+namespace blink {
+class WebURLRequest;
 }
-
-using namespace blink;
-using namespace content;
 
 namespace net {
 
@@ -62,38 +58,45 @@ public:
         Socks5Hostname = CURLPROXY_SOCKS5_HOSTNAME
     };
     static WebURLLoaderManager* sharedInstance();
-    WebURLLoaderInternal* add(WebURLLoaderImplCurl* loader, const blink::WebURLRequest& request, blink::WebURLLoaderClient* client);
-    void cancel(WebURLLoaderImplCurl* loader);
-    void setCookieJarFileName(const char* cookieJarFileName);
+    void add(WebURLLoaderInternal*);
+    void cancel(WebURLLoaderInternal*);
 
-    void dispatchSynchronousJob(WebURLLoaderImplCurl*);
+    CURLSH* getCurlShareHandle() const;
+
+    void setCookieJarFileName(const char* cookieJarFileName);
+    const char* getCookieJarFileName() const;
+
+    void dispatchSynchronousJob(WebURLLoaderInternal*);
 
     void setupPOST(WebURLLoaderInternal*, struct curl_slist**);
     void setupPUT(WebURLLoaderInternal*, struct curl_slist**);
 
-    void setProxyInfo(const String& host = "",
-                      unsigned long port = 0,
-                      ProxyType type = HTTP,
-                      const String& username = "",
-                      const String& password = "");
+    void setProxyInfo(const String& host,
+                      unsigned long port,
+                      ProxyType type,
+                      const String& username,
+                      const String& password);
 
 private:
     WebURLLoaderManager();
     ~WebURLLoaderManager();
-    void downloadTimerCallback(Timer<WebURLLoaderManager>*);
+    void downloadTimerCallback(blink::Timer<WebURLLoaderManager>* timer);
     void removeFromCurl(WebURLLoaderInternal*);
-    bool removeScheduledJob(WebURLLoaderImplCurl*);
+    bool removeScheduledJob(WebURLLoaderInternal*);
     void startJob(WebURLLoaderInternal*);
     bool startScheduledJobs();
+    void applyAuthenticationToRequest(WebURLLoaderInternal*, blink::WebURLRequest*);
 
     void initializeHandle(WebURLLoaderInternal*);
 
-    Timer<WebURLLoaderManager> m_downloadTimer;
+    void initCookieSession();
+
+    blink::Timer<WebURLLoaderManager> m_downloadTimer;
     CURLM* m_curlMultiHandle;
     CURLSH* m_curlShareHandle;
     char* m_cookieJarFileName;
     char m_curlErrorBuffer[CURL_ERROR_SIZE];
-    Vector<WebURLLoaderInternal*> m_WebURLLoaderList;
+    Vector<WebURLLoaderInternal*> m_resourceHandleList;
     const CString m_certificatePath;
     int m_runningJobs;
     
@@ -103,4 +106,4 @@ private:
 
 }
 
-#endif
+#endif // net_WebURLLoaderManager_h

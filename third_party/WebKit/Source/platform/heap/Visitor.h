@@ -92,8 +92,8 @@ public:
 #define DECLARE_TRACE_IMPL(maybevirtual)                                     \
 public:                                                                      \
     typedef int HasInlinedTraceMethodMarker;                                 \
-    maybevirtual void trace(Visitor*);                                       \
-    maybevirtual void trace(InlinedGlobalMarkingVisitor);                    \
+    maybevirtual void trace(blink::Visitor*);                                \
+    maybevirtual void trace(blink::InlinedGlobalMarkingVisitor);             \
                                                                              \
 private:                                                                     \
     template <typename VisitorDispatcher> void traceImpl(VisitorDispatcher); \

@@ -1,0 +1,119 @@
+// queue standard header
+#ifndef _QUEUE_
+#define _QUEUE_
+#include <algorithm>
+#include <deque>
+#include <vector>
+
+#ifdef  _MSC_VER
+#pragma pack(push,8)
+#endif  /* _MSC_VER */
+_STD_BEGIN
+		// TEMPLATE CLASS queue
+template<class _Ty, class _C = deque<_Ty> >
+	class queue {
+public:
+	typedef typename _C::allocator_type allocator_type;
+	typedef typename _C::value_type value_type;
+	typedef typename _C::size_type size_type;
+	explicit queue(const allocator_type& _Al = allocator_type())
+		: c(_Al) {}
+	allocator_type get_allocator() const
+		{return (c.get_allocator()); }
+	bool empty() const
+		{return (c.empty()); }
+	size_type size() const
+		{return (c.size()); }
+	value_type& front()
+		{return (c.front()); }
+	const value_type& front() const
+		{return (c.front()); }
+	value_type& back()
+		{return (c.back()); }
+	const value_type& back() const
+		{return (c.back()); }
+	void push(const value_type& _X)
+		{c.push_back(_X); }
+	void pop()
+		{c.pop_front(); }
+	bool operator==(const queue<_Ty, _C>& _X) const
+		{return (c == _X.c); }
+	bool operator!=(const queue<_Ty, _C>& _X) const
+		{return (!(*this == _X)); }
+	bool operator<(const queue<_Ty, _C>& _X) const
+		{return (c < _X.c); }
+	bool operator>(const queue<_Ty, _C>& _X) const
+		{return (_X < *this); }
+	bool operator<=(const queue<_Ty, _C>& _X) const
+		{return (!(_X < *this)); }
+	bool operator>=(const queue<_Ty, _C>& _X) const
+		{return (!(*this < _X)); }
+protected:
+	_C c;
+	};
+		// TEMPLATE CLASS priority_queue
+template<class _Ty, class _C = vector<_Ty>,
+	class _Pr = less<_C::value_type> >
+	class priority_queue {
+public:
+	typedef typename _C::allocator_type allocator_type;
+	typedef typename _C::value_type value_type;
+	typedef typename _C::size_type size_type;
+	explicit priority_queue(const _Pr& _X = _Pr(),
+		const allocator_type& _Al = allocator_type())
+		: c(_Al), comp(_X) {}
+	typedef const value_type *_It;
+	priority_queue(_It _F, _It _L, const _Pr& _X = _Pr(),
+		const allocator_type& _Al = allocator_type())
+		: c(_Al), comp(_X)
+		{for (; _F != _L; ++_F)
+			push(*_F); }
+	allocator_type get_allocator() const
+		{return (c.get_allocator()); }
+	bool empty() const
+		{return (c.empty()); }
+	size_type size() const
+		{return (c.size()); }
+	value_type& top()
+		{return (c.front()); }
+	const value_type& top() const
+		{return (c.front()); }
+	void push(const value_type& _X)
+		{c.push_back(_X);
+		push_heap(c.begin(), c.end(), comp); }
+	void pop()
+		{pop_heap(c.begin(), c.end(), comp);
+		c.pop_back(); }
+protected:
+	_C c;
+	_Pr comp;
+	};
+_STD_END
+#ifdef  _MSC_VER
+#pragma pack(pop)
+#endif  /* _MSC_VER */
+
+#endif /* _QUEUE_ */
+
+/*
+ * Copyright (c) 1995 by P.J. Plauger.  ALL RIGHTS RESERVED. 
+ * Consult your license regarding permissions and restrictions.
+ */
+
+/*
+ * This file is derived from software bearing the following
+ * restrictions:
+ *
+ * Copyright (c) 1994
+ * Hewlett-Packard Company
+ *
+ * Permission to use, copy, modify, distribute and sell this
+ * software and its documentation for any purpose is hereby
+ * granted without fee, provided that the above copyright notice
+ * appear in all copies and that both that copyright notice and
+ * this permission notice appear in supporting documentation.
+ * Hewlett-Packard Company makes no representations about the
+ * suitability of this software for any purpose. It is provided
+ * "as is" without express or implied warranty.
+ */
+

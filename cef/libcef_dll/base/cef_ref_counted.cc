@@ -1,7 +1,7 @@
 // Copyright (c) 2011 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "include/base/cef_ref_counted.h"
 #include "include/base/cef_thread_collision_warner.h"
 
@@ -51,3 +51,5 @@ bool RefCountedThreadSafeBase::Release() const {
 }  // namespace cef_subtle
 
 }  // namespace base
+
+#endif

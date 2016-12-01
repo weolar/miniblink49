@@ -41,8 +41,6 @@ public:
     // Returns the scheduler associated with the thread.
     virtual blink::WebScheduler* scheduler() const OVERRIDE;
 
-	static void setThreadName(DWORD dwThreadID, LPCSTR szThreadName);
-
     void willExit();
 
     void startTriggerTasks();

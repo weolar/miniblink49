@@ -9,7 +9,7 @@
 // implementations. See the translator.README.txt file in the tools directory
 // for more information.
 //
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "libcef_dll/cpptoc/list_value_cpptoc.h"
 #include "libcef_dll/cpptoc/process_message_cpptoc.h"
 
@@ -141,3 +141,4 @@ template<> base::AtomicRefCount CefCppToC<CefProcessMessageCppToC,
 
 template<> CefWrapperType CefCppToC<CefProcessMessageCppToC, CefProcessMessage,
     cef_process_message_t>::kWrapperType = WT_PROCESS_MESSAGE;
+#endif

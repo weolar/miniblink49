@@ -1,0 +1,129 @@
+// stdexcept standard header
+#ifndef _STDEXCEPT_
+#define _STDEXCEPT_
+#include <exception>
+#include <xstring>
+
+#ifdef  _MSC_VER
+#pragma pack(push,8)
+#endif  /* _MSC_VER */
+_STD_BEGIN
+		// CLASS logic_error
+class _CRTIMP logic_error : public exception {
+public:
+	explicit logic_error(const string& _S)
+		: exception(""), _Str(_S) {}
+	virtual ~logic_error()
+		{}
+	virtual const char *what() const
+		{return (_Str.c_str()); }
+protected:
+	virtual void _Doraise() const
+		{_RAISE(*this); }
+private:
+	string _Str;
+	};
+		// CLASS domain_error
+class _CRTIMP domain_error : public logic_error {
+public:
+	explicit domain_error(const string& _S)
+		: logic_error(_S) {}
+	virtual ~domain_error()
+		{}
+protected:
+	virtual void _Doraise() const
+		{_RAISE(*this); }
+	};
+		// CLASS invalid_argument
+class invalid_argument : public logic_error {
+public:
+	explicit invalid_argument(const string& _S)
+		: logic_error(_S) {}
+	virtual ~invalid_argument()
+		{}
+protected:
+	virtual void _Doraise() const
+		{_RAISE(*this); }
+	};
+		// CLASS length_error
+class _CRTIMP length_error : public logic_error {
+public:
+	explicit length_error(const string& _S)
+		: logic_error(_S) {}
+	virtual ~length_error()
+		{}
+protected:
+	virtual void _Doraise() const
+		{_RAISE(*this); }
+	};
+		// CLASS out_of_range
+class _CRTIMP out_of_range : public logic_error {
+public:
+	explicit out_of_range(const string& _S)
+		: logic_error(_S) {}
+	virtual ~out_of_range()
+		{}
+protected:
+	virtual void _Doraise() const
+		{_RAISE(*this); }
+	};
+		// CLASS runtime_error
+class _CRTIMP runtime_error : public exception {
+public:
+	explicit runtime_error(const string& _S)
+		: exception(""), _Str(_S) {}
+	virtual ~runtime_error()
+		{}
+	virtual const char *what() const
+		{return (_Str.c_str()); }
+protected:
+	virtual void _Doraise() const
+		{_RAISE(*this); }
+private:
+	string _Str;
+	};
+		// CLASS overflow_error
+class _CRTIMP overflow_error : public runtime_error {
+public:
+	explicit overflow_error(const string& _S)
+		: runtime_error(_S) {}
+	virtual ~overflow_error()
+		{}
+protected:
+	virtual void _Doraise() const
+		{_RAISE(*this); }
+	};
+		// CLASS underflow_error
+class _CRTIMP underflow_error : public runtime_error {
+public:
+	explicit underflow_error(const string& _S)
+		: runtime_error(_S) {}
+	virtual ~underflow_error()
+		{}
+protected:
+	virtual void _Doraise() const
+		{_RAISE(*this); }
+	};
+		// CLASS range_error
+class _CRTIMP range_error : public runtime_error {
+public:
+	explicit range_error(const string& _S)
+		: runtime_error(_S) {}
+	virtual ~range_error()
+		{}
+protected:
+	virtual void _Doraise() const
+		{_RAISE(*this); }
+	};
+_STD_END
+#ifdef  _MSC_VER
+#pragma pack(pop)
+#endif  /* _MSC_VER */
+
+#endif /* _STDEXCEPT_ */
+
+/*
+ * Copyright (c) 1994 by P.J. Plauger.  ALL RIGHTS RESERVED. 
+ * Consult your license regarding permissions and restrictions.
+ */
+

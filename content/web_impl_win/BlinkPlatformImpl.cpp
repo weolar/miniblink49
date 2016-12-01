@@ -9,6 +9,9 @@
 #include "content/web_impl_win/WebThemeEngineImpl.h"
 #include "content/web_impl_win/WebMimeRegistryImpl.h"
 #include "content/web_impl_win/WebBlobRegistryImpl.h"
+#include "content/web_impl_win/WebClipboardImpl.h"
+#include "content/web_impl_win/WebFileUtilitiesImpl.h"
+#include "content/web_impl_win/npapi/WebPluginImpl.h"
 #include "content/resources/MissingImageData.h"
 #include "content/resources/TextAreaResizeCornerData.h"
 #include "content/resources/LocalizedString.h"
@@ -19,6 +22,7 @@
 #include "third_party/WebKit/Source/core/fetch/MemoryCache.h"
 #include "third_party/WebKit/Source/web/WebStorageNamespaceImpl.h"
 #include "third_party/WebKit/public/platform/WebScrollbarBehavior.h"
+#include "third_party/WebKit/public/platform/WebPluginListBuilder.h"
 #include "third_party/WebKit/Source/platform/PartitionAllocMemoryDumpProvider.h"
 #include "third_party/WebKit/Source/platform/heap/BlinkGCMemoryDumpProvider.h"
 #include "third_party/WebKit/Source/bindings/core/v8/V8GCController.h"
@@ -33,6 +37,9 @@
 #include "third_party/WebKit/Source/core/css/resolver/StyleResolver.h"
 
 #ifdef _DEBUG
+
+#include "base/process/InjectTool.h"
+
 extern size_t g_v8MemSize;
 extern size_t g_blinkMemSize;
 extern size_t g_skiaMemSize;
@@ -42,6 +49,29 @@ CallAddrsRecord* g_callAddrsRecord = nullptr;
 
 extern std::set<void*>* g_activatingStyleFetchedImage;
 extern std::set<void*>* g_activatingIncrementLoadEventDelayCount;
+
+typedef void* (__cdecl * MyFree)(void*);
+MyFree myFree = nullptr;
+
+void* __cdecl newFree(void* p)
+{
+    if (p && 0x1122dd44 == *(size_t*)p) {
+        DebugBreak();
+    }
+    return myFree(p);
+}
+
+typedef void *  (__cdecl* MyRealloc)(void*, size_t);
+MyRealloc myRealloc = nullptr;
+
+void* __cdecl newRealloc(void* p, size_t s)
+{
+    if (p && 0x1122dd44 == *(size_t*)p) {
+        DebugBreak();
+    }
+    return myRealloc(p, s);
+}
+
 #endif
 
 namespace blink {
@@ -83,10 +113,13 @@ BlinkPlatformImpl::BlinkPlatformImpl()
     m_mainThreadId = -1;
     m_webThemeEngine = nullptr;
     m_mimeRegistry = nullptr;
+    m_clipboardImpl = nullptr;
     m_webCompositorSupport = nullptr;
     m_webScrollbarBehavior = nullptr;
     m_localStorageStorageMap = nullptr;
     m_sessionStorageStorageMap = nullptr;
+    m_webFileUtilitiesImpl = nullptr;
+    m_userAgent = nullptr;
     m_storageNamespaceIdCount = 1;
     m_lock = new CRITICAL_SECTION();
     m_threadNum = 0;
@@ -94,6 +127,13 @@ BlinkPlatformImpl::BlinkPlatformImpl()
     m_firstMonotonicallyIncreasingTime = currentTimeImpl(); // (GetTickCount() / 1000.0);
     for (int i = 0; i < m_maxThreadNum; ++i) { m_threads[i] = nullptr; }
     ::InitializeCriticalSection(m_lock);
+
+	setUserAgent("Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.2171.99 Safari/537.36");
+
+#ifdef _DEBUG
+    myFree = (MyFree)ReplaceFuncAndCopy(free, newFree);
+    myRealloc = (MyRealloc)ReplaceFuncAndCopy(realloc, newRealloc);
+#endif
 }
 
 BlinkPlatformImpl::~BlinkPlatformImpl()
@@ -128,6 +168,14 @@ void BlinkPlatformImpl::destroyWebInfo()
     if (m_sessionStorageStorageMap)
         delete m_sessionStorageStorageMap;
     m_sessionStorageStorageMap = nullptr;
+
+    if (m_clipboardImpl)
+        delete m_clipboardImpl;
+    m_clipboardImpl = nullptr;
+
+    if (m_userAgent)
+        delete m_userAgent;
+    m_userAgent = nullptr;
 }
 
 void BlinkPlatformImpl::registerMemoryDumpProvider(blink::WebMemoryDumpProvider*) {}
@@ -144,6 +192,7 @@ void BlinkPlatformImpl::unregisterMemoryDumpProvider(blink::WebMemoryDumpProvide
 
 void BlinkPlatformImpl::preShutdown()
 {
+    WebPluginImpl::shutdown();
     destroyWebInfo();
 
     if (m_ioThread)
@@ -311,8 +360,8 @@ void BlinkPlatformImpl::cryptographicallyRandomValues(unsigned char* buffer, siz
 
 blink::WebURLLoader* BlinkPlatformImpl::createURLLoader()
 {
-    return new content::WebURLLoaderImpl();
-    //return new content::WebURLLoaderImplCurl();
+    //return new content::WebURLLoaderImpl();
+    return new content::WebURLLoaderImplCurl();
 }
 
 const unsigned char* BlinkPlatformImpl::getTraceCategoryEnabledFlag(const char* categoryName)
@@ -352,8 +401,15 @@ double BlinkPlatformImpl::systemTraceTime()
 
 blink::WebString BlinkPlatformImpl::userAgent()
 {
-    return blink::WebString("Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.2171.99 Safari/537.36"); // PC
+    return *m_userAgent; // PC
     //return blink::WebString("Mozilla/5.0 (Linux; Android 4.4.4; en-us; Nexus 4 Build/JOP40D) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2307.2 Mobile Safari/537.36");
+}
+
+void BlinkPlatformImpl::setUserAgent(char* ua)
+{
+    if (m_userAgent)
+        delete m_userAgent;
+	m_userAgent = new String(ua);
 }
 
 blink::WebData BlinkPlatformImpl::loadResource(const char* name)
@@ -372,7 +428,7 @@ blink::WebData BlinkPlatformImpl::loadResource(const char* name)
         return blink::WebData(blink::themeChromiumUserAgentStyleSheet, sizeof(blink::themeChromiumUserAgentStyleSheet));
     else if (0 == strcmp("themeWinQuirks.css", name))
         return blink::WebData(blink::themeWinQuirksUserAgentStyleSheet, sizeof(blink::themeWinQuirksUserAgentStyleSheet));
-    else if (0 == strcmp("missingImage", name))
+    else if (0 == strcmp("missingImage", name) || 0 == strcmp("nullPlugin", name))
         return blink::WebData((const char*)content::gMissingImageData, sizeof(content::gMissingImageData));
     else if (0 == strcmp("textAreaResizeCorner", name))
         return blink::WebData((const char*)content::gTextAreaResizeCornerData, sizeof(content::gTextAreaResizeCornerData));
@@ -403,6 +459,12 @@ blink::WebData BlinkPlatformImpl::loadResource(const char* name)
         return blink::WebData((const char*)content::suggestionPickerCss, sizeof(content::suggestionPickerCss));
     else if (0 == strcmp("suggestionPicker.js", name))
         return blink::WebData((const char*)content::suggestionPickerJs, sizeof(content::suggestionPickerJs));
+    else if (0 == strcmp("PrivateScriptRunner.js", name))
+        return blink::WebData((const char*)content::PrivateScriptRunnerJs, sizeof(content::PrivateScriptRunnerJs));
+    else if (0 == strcmp("HTMLMarqueeElement.js", name))
+        return blink::WebData((const char*)content::HTMLMarqueeElementJs, sizeof(content::HTMLMarqueeElementJs));
+    else if (0 == strcmp("PluginPlaceholderElement.js", name))
+        return blink::WebData((const char*)content::PluginPlaceholderElementJs, sizeof(content::PluginPlaceholderElementJs));
     
     notImplemented();
     return blink::WebData();
@@ -465,6 +527,11 @@ blink::WebStorageNamespace* BlinkPlatformImpl::createSessionStorageNamespace()
     return new blink::WebStorageNamespaceImpl(m_storageNamespaceIdCount++, m_sessionStorageStorageMap->map);
 }
 
+bool BlinkPlatformImpl::portAllowed(const blink::WebURL&) const
+{
+    return true;
+}
+
 // Resources -----------------------------------------------------------
 blink::WebString BlinkPlatformImpl::queryLocalizedString(blink::WebLocalizedString::Name name)
 {
@@ -485,6 +552,30 @@ blink::WebString BlinkPlatformImpl::queryLocalizedString(blink::WebLocalizedStri
 blink::WebBlobRegistry* BlinkPlatformImpl::blobRegistry()
 {
     return new WebBlobRegistryImpl();
+}
+
+// clipboard ----------------------------------------------------------------
+
+blink::WebClipboard* BlinkPlatformImpl::clipboard()
+{
+    if (!m_clipboardImpl)
+        m_clipboardImpl = new WebClipboardImpl();
+    return m_clipboardImpl;
+}
+
+// Plugins -------------------------------------------------------------
+void BlinkPlatformImpl::getPluginList(bool refresh, blink::WebPluginListBuilder* builder)
+{
+    builder->addPlugin(blink::WebString::fromUTF8("flash"), blink::WebString::fromUTF8("flashPlugin"), blink::WebString::fromUTF8(".swf"));
+    builder->addMediaTypeToLastPlugin(blink::WebString::fromUTF8("application/x-shockwave-flash"), blink::WebString::fromUTF8("flashPlugin"));
+    builder->addFileExtensionToLastMediaType(blink::WebString::fromUTF8(".swf"));
+}
+
+blink::WebFileUtilities* BlinkPlatformImpl::fileUtilities()
+{
+    if (!m_webFileUtilitiesImpl)
+        m_webFileUtilitiesImpl = new WebFileUtilitiesImpl();
+    return m_webFileUtilitiesImpl;
 }
 
 } // namespace content

@@ -5,7 +5,7 @@
 // This file is used for debugging assertion support.  The Lock class
 // is functionally a wrapper around the LockImpl class, so the only
 // real intelligence in the class is in the debugging logic.
-
+//#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #if !defined(NDEBUG)
 
 #include "include/base/cef_lock.h"
@@ -42,3 +42,4 @@ void Lock::CheckUnheldAndMark() {
 }  // namespace base
 
 #endif  // NDEBUG
+//#endif

@@ -9,7 +9,7 @@
 // implementations. See the translator.README.txt file in the tools directory
 // for more information.
 //
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "libcef_dll/cpptoc/domdocument_cpptoc.h"
 #include "libcef_dll/cpptoc/domnode_cpptoc.h"
 #include "libcef_dll/transfer_util.h"
@@ -476,3 +476,4 @@ template<> base::AtomicRefCount CefCppToC<CefDOMNodeCppToC, CefDOMNode,
 
 template<> CefWrapperType CefCppToC<CefDOMNodeCppToC, CefDOMNode,
     cef_domnode_t>::kWrapperType = WT_DOMNODE;
+#endif

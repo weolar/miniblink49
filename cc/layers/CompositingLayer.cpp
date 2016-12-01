@@ -104,6 +104,11 @@ float CompositingLayer::opacity() const
 	return m_prop->opacity;
 }
 
+bool CompositingLayer::opaque() const
+{
+    return m_prop->opaque;
+}
+
 void CompositingLayer::insertChild(CompositingLayer* child, size_t index)
 {
     CompositingLayer* childOfImpl = static_cast<CompositingLayer*>(child);
@@ -279,6 +284,15 @@ void CompositingLayer::blendToTile(CompositingTile* tile, const SkBitmap& bitmap
     SkCanvas canvas(*tile->bitmap());
     canvas.drawBitmapRect(bitmap, nullptr, SkRect::MakeFromIRect(dst), &paint);
 
+//     static bool s_startDump = false;
+//     if (s_startDump) {
+//         s_startDump = true;
+// 
+//         Vector<unsigned char> output;
+//         blink::GDIPlusImageEncoder::encode(bitmap, blink::GDIPlusImageEncoder::PNG, &output);
+//         blink::saveDumpFile("", (char*)output.data(), output.size());
+//     }
+
 #if 0 // debug
     SkPaint paintTest;
     const SkColor color = 0xff000000 | (rand() % 3) * (rand() % 7) * GetTickCount();
@@ -296,7 +310,7 @@ void CompositingLayer::blendToTile(CompositingTile* tile, const SkBitmap& bitmap
     canvas.drawLine(0, 0, tile->postion().width(), tile->postion().height(), paintTest);
     canvas.drawLine(tile->postion().width(), 0, 0, tile->postion().height(), paintTest);
 
-    String textTest = String::format("id:%d, %d %d", m_id, m_prop->bounds.height(), m_prop->masksToBounds);
+    String textTest = String::format("id:%d, %d %d", m_id, tile->xIndex(), tile->yIndex());
     CString cText = textTest.utf8();
     canvas.drawText(cText.data(), cText.length(), 5, 15, paintTest);
 #endif
@@ -310,7 +324,9 @@ public:
 
         SkRect skClipRect = clip;
         if (layer->masksToBounds()) {
-            skClipRect.intersect(SkRect::MakeIWH(layer->drawToCanvasProperties()->bounds.width(), layer->drawToCanvasProperties()->bounds.height()));
+            bool isIntersect = skClipRect.intersect(SkRect::MakeIWH(layer->drawToCanvasProperties()->bounds.width(), layer->drawToCanvasProperties()->bounds.height()));
+            if (!isIntersect)
+                skClipRect.setEmpty();
         }
 
         m_maskLayer = nullptr;
@@ -322,7 +338,8 @@ public:
                     m_maskLayer->m_prop->position.y(),
                     m_maskLayer->m_prop->bounds.width(), 
                     m_maskLayer->m_prop->bounds.height());
-                skClipRect.intersect(skMaskClipRect);
+                if (!skClipRect.intersect(skMaskClipRect))
+                    skClipRect.setEmpty();
             }
         }
 
@@ -372,7 +389,8 @@ void CompositingLayer::drawToCanvasChildren(LayerTreeHost* host, SkCanvas* canva
         child->drawToCanvas(host, canvas, clipInLayerdCoordinateInt);
         canvas->restore();
 
-        child->drawToCanvasChildren(host, canvas, clipInLayerdCoordinateInt, deep + 1);
+        if (!child->opaque() || !child->masksToBounds() || !child->drawsContent())
+            child->drawToCanvasChildren(host, canvas, clipInLayerdCoordinateInt, deep + 1);
 
         canvas->resetMatrix();
         canvas->restore();
@@ -381,41 +399,39 @@ void CompositingLayer::drawToCanvasChildren(LayerTreeHost* host, SkCanvas* canva
 
 void CompositingLayer::drawToCanvas(LayerTreeHost* host, blink::WebCanvas* canvas, const blink::IntRect& clip)
 {
-	int alpha = (int)(255 * opacity());
-	if (!drawsContent())
-		return;
+    int alpha = (int)(255 * opacity());
+    if (!drawsContent())
+        return;
 
-	for (size_t i = 0; i < m_tiles->size(); ++i) {
-		CompositingTile* tile = m_tiles->at(i);
-		if (!tile->postion().intersects(clip))
-			continue;
-		if (!tile->bitmap())
-			continue;
+    for (size_t i = 0; i < m_tiles->size(); ++i) {
+        CompositingTile* tile = m_tiles->at(i);
+        if (!tile->postion().intersects(clip))
+            continue;
+        if (!tile->bitmap())
+            continue;
 
-		blink::IntRect tilePostion = tile->postion();
-		SkIRect dst = (SkIRect)(tilePostion);
-		SkIRect src = SkIRect::MakeWH(tile->bitmap()->width(), tile->bitmap()->height());
+        blink::IntRect tilePostion = tile->postion();
+        SkIRect dst = (SkIRect)(tilePostion);
+        SkIRect src = SkIRect::MakeWH(tile->bitmap()->width(), tile->bitmap()->height());
 
-		SkPaint paint;
-		paint.setAntiAlias(true);
-		paint.setAlpha(alpha);
-		paint.setXfermodeMode(SkXfermode::kSrcOver_Mode);
-		//paint.setColor(0xffffffff);
-		paint.setFilterQuality(kHigh_SkFilterQuality);
+        SkPaint paint;
+        paint.setAntiAlias(true);
+        paint.setAlpha(alpha);
+        paint.setXfermodeMode(SkXfermode::kSrcOver_Mode);
+        //paint.setColor(0xffffffff);
+        paint.setFilterQuality(kHigh_SkFilterQuality);
 
-		// debug
-// 		OwnPtr<blink::GraphicsContext> context = blink::GraphicsContext::deprecatedCreateWithCanvas(canvas, blink::GraphicsContext::NothingDisabled);
-// 		auto bitmapImage = blink::BitmapImage::create(*tile->bitmap(), nullptr);
-// 		blink::IntRect srcRect(0, 0, tile->bitmap()->width(), tile->bitmap()->height());
-// 		context->drawImage(bitmapImage.get(), tilePostion, srcRect, SkXfermode::kSrcOver_Mode);
-		//         context->setStrokeStyle(blink::SolidStroke);
-		//         context->setStrokeColor(0xff000000 | (::GetTickCount() + rand()));
-		//         context->drawLine(blink::IntPoint(tilePostion.x(), tilePostion.y()), blink::IntPoint(tilePostion.maxX(), tilePostion.maxY()));
-		//         context->drawLine(blink::IntPoint(tilePostion.maxX(), tilePostion.y()), blink::IntPoint(tilePostion.x(), tilePostion.maxY()));
-		//         context->strokeRect(tilePostion, 2);
-		//context->fillRect(tilePostion, 0x00000000 | (::GetTickCount() + rand()));
-		canvas->drawBitmapRect(*tile->bitmap(), nullptr, SkRect::MakeFromIRect(dst), &paint);
-	}
+#if 0 // debug
+        OwnPtr<blink::GraphicsContext> context = blink::GraphicsContext::deprecatedCreateWithCanvas(canvas, blink::GraphicsContext::NothingDisabled);
+        context->setStrokeStyle(blink::SolidStroke);
+        context->setStrokeColor(0xff000000 | (::GetTickCount() + rand()));
+        context->drawLine(blink::IntPoint(tilePostion.x(), tilePostion.y()), blink::IntPoint(tilePostion.maxX(), tilePostion.maxY()));
+        context->drawLine(blink::IntPoint(tilePostion.maxX(), tilePostion.y()), blink::IntPoint(tilePostion.x(), tilePostion.maxY()));
+        context->strokeRect(tilePostion, 2);
+        context->fillRect(tilePostion, 0x00000000 | (::GetTickCount() + rand()));
+#endif
+        canvas->drawBitmapRect(*tile->bitmap(), nullptr, SkRect::MakeFromIRect(dst), &paint);
+    }
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -429,7 +445,8 @@ CompositingImageLayer::CompositingImageLayer(int id)
 
 CompositingImageLayer::~CompositingImageLayer()
 {
-	m_bitmap->deref();
+    if (m_bitmap)
+	    m_bitmap->deref();
 }
 
 void CompositingImageLayer::drawToCanvas(LayerTreeHost* host, blink::WebCanvas* canvas, const blink::IntRect& clip)

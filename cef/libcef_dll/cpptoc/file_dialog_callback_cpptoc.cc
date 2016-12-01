@@ -9,7 +9,7 @@
 // implementations. See the translator.README.txt file in the tools directory
 // for more information.
 //
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "libcef_dll/cpptoc/file_dialog_callback_cpptoc.h"
 #include "libcef_dll/transfer_util.h"
 
@@ -79,3 +79,4 @@ template<> base::AtomicRefCount CefCppToC<CefFileDialogCallbackCppToC,
 template<> CefWrapperType CefCppToC<CefFileDialogCallbackCppToC,
     CefFileDialogCallback, cef_file_dialog_callback_t>::kWrapperType =
     WT_FILE_DIALOG_CALLBACK;
+#endif

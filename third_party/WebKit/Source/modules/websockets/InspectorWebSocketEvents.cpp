@@ -13,6 +13,7 @@ namespace blink {
 
 PassRefPtr<TraceEvent::ConvertableToTraceFormat> InspectorWebSocketCreateEvent::data(Document* document, unsigned long identifier, const KURL& url, const String& protocol)
 {
+#ifdef MINIBLINK_NOT_IMPLEMENTED
     RefPtr<TracedValue> value = TracedValue::create();
     value->setInteger("identifier", identifier);
     value->setString("url", url.string());
@@ -21,15 +22,20 @@ PassRefPtr<TraceEvent::ConvertableToTraceFormat> InspectorWebSocketCreateEvent::
         value->setString("webSocketProtocol", protocol);
     setCallStack(value.get());
     return value.release();
+#endif
+    return nullptr;
 }
 
 PassRefPtr<TraceEvent::ConvertableToTraceFormat> InspectorWebSocketEvent::data(Document* document, unsigned long identifier)
 {
+#ifdef MINIBLINK_NOT_IMPLEMENTED
     RefPtr<TracedValue> value = TracedValue::create();
     value->setInteger("identifier", identifier);
     value->setString("frame", toHexString(document->frame()));
     setCallStack(value.get());
     return value.release();
+#endif
+    return nullptr;
 }
 
 } // namespace blink

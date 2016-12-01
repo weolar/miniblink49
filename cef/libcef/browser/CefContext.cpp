@@ -1,4 +1,4 @@
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "libcef/browser/CefContext.h"
 
 #include <process.h>
@@ -15,6 +15,7 @@
 #include "content/browser/WebPage.h"
 #include "content/web_impl_win/BlinkPlatformImpl.h"
 #include "content/web_impl_win/WebThreadImpl.h"
+#include "base/thread.h"
 
 static CefContext* g_context = nullptr;
 
@@ -44,7 +45,7 @@ private:
 
 
 unsigned CefContext::WebkitThreadEntryPoint(void* param) {
-	content::WebThreadImpl::setThreadName(GetCurrentThreadId(), "uiThread");
+	base::SetThreadName("UiThread");
 	
 	WebkitThreadInitArgs* webkitInitArgs = (WebkitThreadInitArgs*)param;
 	webkitInitArgs->context()->InitializeOnWebkitThread(
@@ -398,3 +399,4 @@ void CefContext::UnregisterBrowser(CefBrowserHostImpl* browser) {
     m_browserList.remove(browser);
 	::LeaveCriticalSection(&m_browserListMutex);
 }
+#endif

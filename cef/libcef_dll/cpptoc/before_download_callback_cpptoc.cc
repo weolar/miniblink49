@@ -9,7 +9,7 @@
 // implementations. See the translator.README.txt file in the tools directory
 // for more information.
 //
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "libcef_dll/cpptoc/before_download_callback_cpptoc.h"
 
 
@@ -58,3 +58,4 @@ template<> base::AtomicRefCount CefCppToC<CefBeforeDownloadCallbackCppToC,
 template<> CefWrapperType CefCppToC<CefBeforeDownloadCallbackCppToC,
     CefBeforeDownloadCallback, cef_before_download_callback_t>::kWrapperType =
     WT_BEFORE_DOWNLOAD_CALLBACK;
+#endif

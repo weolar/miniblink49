@@ -48,7 +48,8 @@ public:
     void updataDrawProp(DrawToCanvasProperties* m_prop);
 
 	bool masksToBounds() const;
-	bool drawsContent() const;
+    bool drawsContent() const;
+    bool opaque() const;
 	float opacity() const;
 
     CompositingTile* getTileByXY(int xIndex, int yIndex);

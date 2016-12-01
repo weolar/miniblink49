@@ -443,7 +443,14 @@ void ImageResource::decodedSizeChanged(const blink::Image* image, int delta)
     if (!image || image != m_image)
         return;
 
-    setDecodedSize(decodedSize() + delta);
+    size_t size = decodedSize();
+    size_t result = size + delta;
+#ifndef MINIBLIN_CHANGE_DISABLE
+    if (delta < 0 && size < -delta)
+        result = 0;
+#endif
+    
+    setDecodedSize(result);
 }
 
 void ImageResource::didDraw(const blink::Image* image)

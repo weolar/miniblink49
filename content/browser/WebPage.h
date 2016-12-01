@@ -7,14 +7,17 @@
 #include "third_party/WebKit/Source/platform/geometry/IntRect.h"
 #include "third_party/WebKit/Source/wtf/FastAllocBase.h"
 #include "third_party/WebKit/public/web/WebViewClient.h"
-#include "KdPageInfo.h"
 
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 class CefBrowserHostImpl;
+#endif
 
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
 namespace wke {
 class CWebView;
 struct CWebViewHandler;
 }
+#endif
 
 namespace blink {
 class Page;
@@ -90,17 +93,18 @@ public:
     bool needsCommit();
 
     HWND getHWND() const;
-    
+	void setHWND(HWND hwnd);
+	void setHWNDoffset(int x, int y);
     void setBackgroundColor(COLORREF c);
 
     void showDebugNodeData();
 
     HDC viewDC();
     void paintToBit(void* bits, int pitch);
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
     CefBrowserHostImpl* browser();
     void setBrowser(CefBrowserHostImpl* browserImpl);
-
+#endif
 	blink::WebViewImpl* webViewImpl();
 	blink::WebFrame* mainFrame();
 
@@ -114,18 +118,24 @@ public:
     static const int64 kUnspecifiedFrameId = -3;
     static const int64 kInvalidFrameId = -4;
 
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
     void initWkeWebView(wke::CWebView* wkeWebView) 
     {
-        ASSERT(!m_wkeWebView);
+        ASSERT(!m_wkeWebView);/**/
         m_wkeWebView = wkeWebView;
     }
     wke::CWebView* wkeWebView() const { return m_wkeWebView; }
     wke::CWebViewHandler& wkeHandler() { return *m_wkeHandler; }
+    void* wkeClientHandler() const { return m_wkeClientHandler; }
+    void wkeSetClientHandler(void* clientHandler) { m_wkeClientHandler = clientHandler; }
+#endif
 
 protected:
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
     wke::CWebView* m_wkeWebView;
     wke::CWebViewHandler* m_wkeHandler;
-
+    void* m_wkeClientHandler;
+#endif
     WebPageImpl* m_pageImpl;
 };
 

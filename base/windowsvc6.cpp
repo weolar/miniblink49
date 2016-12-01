@@ -13,8 +13,6 @@ void __cdecl operator delete[](void * p, unsigned int)
     free(p);
 }
 
-void* ftol2ptr = nullptr;
-
 typedef HINTERNET(WINAPI * PFN_InternetOpenW)(LPCWSTR lpszAgent, DWORD dwAccessType, LPCWSTR lpszProxy, LPCWSTR lpszProxyBypass, DWORD dwFlags);
 static PFN_InternetOpenW pInternetOpenW = nullptr;
 
@@ -24,14 +22,13 @@ static PFN_GdiAlphaBlend pGdiAlphaBlend = nullptr;
 
 void scrt_initialize_thread_safe_statics()
 {
-    HMODULE hMon = LoadLibraryW(L"msvcrt.dll");
-    ftol2ptr = GetProcAddress(hMon, "_ftol2");
-
-    hMon = LoadLibraryW(L"Wininet.dll");
+	HMODULE hMon = LoadLibraryW(L"Wininet.dll");
     pInternetOpenW = (PFN_InternetOpenW)GetProcAddress(hMon, "InternetOpenW");
 
     hMon = LoadLibraryW(L"GDI32.dll");
     pGdiAlphaBlend = (PFN_GdiAlphaBlend)GetProcAddress(hMon, "GdiAlphaBlend");
+
+	LoadLibraryW(L"Usp10.dll");
 
     OutputDebugStringA("scrt_initialize_thread_safe_statics");
 }
@@ -188,7 +185,7 @@ short WINAPI InterlockedCompareExchange16(short volatile * _Destination, short _
 
 char WINAPI InterlockedCompareExchange8(char volatile * _Destination, char _Exchange, char _Comparand)
 {
-    return InterlockedCompareExchange8(_Destination, _Exchange, _Comparand);
+    return _InterlockedCompareExchange8(_Destination, _Exchange, _Comparand);
 }
 
 char WINAPI InterlockedXor8(char volatile * _Value, char _Mask)
@@ -240,7 +237,6 @@ char WINAPI InterlockedExchangeAdd8(char volatile * _Addend, char _Value)
 
 void __stdcall _ReadWriteBarrier(void)
 {
-    ;
 }
 
 #endif // #if USING_VC6RT == 1

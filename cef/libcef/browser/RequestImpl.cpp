@@ -1,4 +1,4 @@
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "include/capi/cef_request_capi.h"
 #include "libcef/common/CommonBase.h"
 #include "cef/libcef/browser/RequestImpl.h"
@@ -55,3 +55,5 @@ cef_string_userfree_t RequestImpl::get_url(cef_request_t* s)
 void RequestImpl::set_url(cef_request_t* self, const cef_string_t* url) { DebugBreak(); return; }
 
 } // cef
+
+#endif

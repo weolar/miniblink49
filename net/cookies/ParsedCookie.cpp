@@ -45,7 +45,7 @@
 #include "net/cookies/ParsedCookie.h"
 
 #include "net/cookies/CookieConstants.h"
-#include "base/string_util.h"
+#include "base/strings/string_util.h"
 
 namespace {
 
@@ -407,7 +407,7 @@ void ParsedCookie::ParseTokenValuePairs(const std::string& cookie_line, int max_
 
 		// From RFC2109: "Attributes (names) (attr) are case-insensitive."
 		if (pair_num != 0)
-			StringToLowerASCII(&pair.first);
+			base::StringToLowerASCII(&pair.first);
 		// Ignore Set-Cookie directives contaning control characters. See
 		// http://crbug.com/238041.
 		if (!IsValidCookieAttributeValue(pair.first) ||

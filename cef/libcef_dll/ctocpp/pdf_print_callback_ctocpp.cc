@@ -9,7 +9,7 @@
 // implementations. See the translator.README.txt file in the tools directory
 // for more information.
 //
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "libcef_dll/ctocpp/pdf_print_callback_ctocpp.h"
 
 
@@ -55,3 +55,4 @@ template<> base::AtomicRefCount CefCToCpp<CefPdfPrintCallbackCToCpp,
 template<> CefWrapperType CefCToCpp<CefPdfPrintCallbackCToCpp,
     CefPdfPrintCallback, cef_pdf_print_callback_t>::kWrapperType =
     WT_PDF_PRINT_CALLBACK;
+#endif

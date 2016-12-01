@@ -9,7 +9,7 @@
 // implementations. See the translator.README.txt file in the tools directory
 // for more information.
 //
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "libcef_dll/cpptoc/download_item_cpptoc.h"
 
 
@@ -307,3 +307,4 @@ template<> base::AtomicRefCount CefCppToC<CefDownloadItemCppToC,
 
 template<> CefWrapperType CefCppToC<CefDownloadItemCppToC, CefDownloadItem,
     cef_download_item_t>::kWrapperType = WT_DOWNLOAD_ITEM;
+#endif

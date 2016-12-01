@@ -41,6 +41,7 @@
 #include "modules/websockets/DocumentWebSocketChannel.h"
 #include "modules/websockets/WebSocketChannelClient.h"
 #include "modules/websockets/WorkerWebSocketChannel.h"
+#include "net/websocket/WebSocketChannelImpl.h"
 
 namespace blink {
 
@@ -58,12 +59,21 @@ WebSocketChannel* WebSocketChannel::create(ExecutionContext* context, WebSocketC
     }
 
     if (context->isWorkerGlobalScope()) {
+#if MINIBLINK_NOT_IMPLEMENTED
         WorkerGlobalScope* workerGlobalScope = toWorkerGlobalScope(context);
         return WorkerWebSocketChannel::create(*workerGlobalScope, client, sourceURL, lineNumber);
+#else
+        notImplemented();
+        return nullptr;
+#endif
     }
 
     Document* document = toDocument(context);
+#if MINIBLINK_NOT_IMPLEMENTED
     return DocumentWebSocketChannel::create(document, client, sourceURL, lineNumber);
+#else
+    return net::WebSocketChannelImpl::create(document, client, sourceURL, lineNumber, nullptr);
+#endif
 }
 
 } // namespace blink

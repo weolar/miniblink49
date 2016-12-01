@@ -9,7 +9,7 @@
 // implementations. See the translator.README.txt file in the tools directory
 // for more information.
 //
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "libcef_dll/cpptoc/print_dialog_callback_cpptoc.h"
 #include "libcef_dll/cpptoc/print_settings_cpptoc.h"
 
@@ -73,3 +73,4 @@ template<> base::AtomicRefCount CefCppToC<CefPrintDialogCallbackCppToC,
 template<> CefWrapperType CefCppToC<CefPrintDialogCallbackCppToC,
     CefPrintDialogCallback, cef_print_dialog_callback_t>::kWrapperType =
     WT_PRINT_DIALOG_CALLBACK;
+#endif

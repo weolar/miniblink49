@@ -9,7 +9,7 @@
 // implementations. See the translator.README.txt file in the tools directory
 // for more information.
 //
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "libcef_dll/cpptoc/post_data_element_cpptoc.h"
 
 
@@ -190,3 +190,4 @@ template<> base::AtomicRefCount CefCppToC<CefPostDataElementCppToC,
 template<> CefWrapperType CefCppToC<CefPostDataElementCppToC,
     CefPostDataElement, cef_post_data_element_t>::kWrapperType =
     WT_POST_DATA_ELEMENT;
+#endif

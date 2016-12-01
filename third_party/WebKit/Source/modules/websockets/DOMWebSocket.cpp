@@ -278,7 +278,6 @@ DOMWebSocket* DOMWebSocket::create(ExecutionContext* context, const String& url,
 
 void DOMWebSocket::connect(const String& url, const Vector<String>& protocols, ExceptionState& exceptionState)
 {
-
     WTF_LOG(Network, "WebSocket %p connect() url='%s'", this, url.utf8().data());
     m_url = KURL(KURL(), url);
 

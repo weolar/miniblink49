@@ -1,7 +1,7 @@
 // Copyright (c) 2009 The Chromium Embedded Framework Authors. All rights
 // reserved. Use of this source code is governed by a BSD-style license that
 // can be found in the LICENSE file.
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "transfer_util.h"
 
 void transfer_string_list_contents(cef_string_list_t fromList,
@@ -70,3 +70,4 @@ void transfer_string_multimap_contents(const StringMultimap& fromMap,
         it->second.GetStruct());
   }
 }
+#endif

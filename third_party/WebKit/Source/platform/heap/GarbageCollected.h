@@ -124,9 +124,9 @@ public:
     {                                                                   \
         typedef WTF::IsSubclassOfTemplate<typename WTF::RemoveConst<TYPE>::Type, blink::GarbageCollected> IsSubclassOfGarbageCollected; \
         static_assert(IsSubclassOfGarbageCollected::value, "only garbage collected objects can have garbage collected mixins"); \
-        if (TraceEagerlyTrait<TYPE>::value) {                           \
+        if (blink::TraceEagerlyTrait<TYPE>::value) {                           \
             if (visitor->ensureMarked(static_cast<const TYPE*>(this)))  \
-                TraceTrait<TYPE>::trace(visitor, const_cast<TYPE*>(this)); \
+                blink::TraceTrait<TYPE>::trace(visitor, const_cast<TYPE*>(this)); \
             return;                                                     \
         }                                                               \
         visitor->mark(static_cast<const TYPE*>(this), &blink::TraceTrait<TYPE>::trace); \
@@ -156,13 +156,13 @@ public:
     public:                                                             \
     GC_PLUGIN_IGNORE("crbug.com/456823") NO_SANITIZE_UNRELATED_CAST     \
     void* operator new(size_t size)                                     \
-{                                                                       \
-        void* object = TYPE::allocateObject(size, IsEagerlyFinalizedType<TYPE>::value); \
-        ThreadState* state = ThreadStateFor<ThreadingTrait<TYPE>::Affinity>::state();   \
+    {                                                                   \
+        void* object = TYPE::allocateObject(size, blink::IsEagerlyFinalizedType<TYPE>::value); \
+        blink::ThreadState* state = blink::ThreadStateFor<blink::ThreadingTrait<TYPE>::Affinity>::state();   \
         state->enterGCForbiddenScopeIfNeeded(&(reinterpret_cast<TYPE*>(object)->m_mixinConstructorMarker)); \
         return object;                                                  \
     }                                                                   \
-    GarbageCollectedMixinConstructorMarker m_mixinConstructorMarker;    \
+    blink::GarbageCollectedMixinConstructorMarker m_mixinConstructorMarker;    \
     private:
 
 // Mixins that wrap/nest others requires extra handling:
@@ -191,7 +191,7 @@ public:
 public:                                                                 \
     bool isHeapObjectAlive() const override                             \
     {                                                                   \
-        return Heap::isHeapObjectAlive(this);                           \
+        return blink::Heap::isHeapObjectAlive(this);                           \
     }                                                                   \
 private:
 

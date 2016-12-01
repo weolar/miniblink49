@@ -1,0 +1,110 @@
+// xlocinfo internal header
+#ifndef _XLOCINFO_
+#define _XLOCINFO_
+#include <xlocinfo.h>
+#include <cstdlib>
+#include <xstddef>
+
+#ifdef  _MSC_VER
+#pragma pack(push,8)
+#endif  /* _MSC_VER */
+_STD_BEGIN
+
+		// CLASS _Timevec
+class _CRTIMP _Timevec {
+public:
+	_Timevec(void *_P = 0)
+		: _Ptr(_P) {}
+	_Timevec(const _Timevec& _Rhs)
+		{*this = _Rhs; }
+	~_Timevec()
+		{free(_Ptr); }
+	_Timevec& operator=(const _Timevec& _Rhs)
+		{_Ptr = _Rhs._Ptr;
+		((_Timevec *)&_Rhs)->_Ptr = 0;
+		return (*this); }
+	void *_Getptr() const
+		{return (_Ptr); }
+private:
+	void *_Ptr;
+	};
+		// CLASS _Locinfo
+class _CRTIMP _Locinfo {
+public:
+	typedef ::_Collvec _Collvec;
+	typedef ::_Ctypevec _Ctypevec;
+	typedef ::_Cvtvec _Cvtvec;
+	typedef std::_Timevec _Timevec;
+	_Locinfo(const char * = "C");
+	_Locinfo(int, const char *);
+	~_Locinfo();
+	_Locinfo& _Addcats(int, const char *);
+	string _Getname() const
+		{return (_Nname); }
+	_Collvec _Getcoll() const
+		{return (::_Getcoll()); }
+	_Ctypevec _Getctype() const
+		{return (::_Getctype()); }
+	_Cvtvec _Getcvt() const
+		{return (::_Getcvt()); }
+	const lconv *_Getlconv() const
+		{return (localeconv()); }
+	_Timevec _Gettnames() const
+		{return (_Timevec(::_Gettnames())); }
+	const char *_Getdays() const
+		{char *_S = ::_Getdays();
+		if (_S != 0)
+			{((_Locinfo *)this)->_Days = _S, free(_S); }
+		return (_Days.size() != 0 ? _Days.c_str()
+				: ":Sun:Sunday:Mon:Monday:Tue:Tuesday"
+				":Wed:Wednesday:Thu:Thursday:Fri:Friday"
+				":Sat:Saturday"); }
+	const char *_Getmonths() const
+		{char *_S = ::_Getmonths();
+		if (_S != 0)
+			{((_Locinfo *)this)->_Months = _S, free(_S); }
+		return (_Months.size() != 0 ? _Months.c_str()
+				: ":Jan:January:Feb:February:Mar:March"
+				":Apr:April:May:May:Jun:June"
+				":Jul:July:Aug:August:Sep:September"
+				":Oct:October:Nov:November:Dec:December"); }
+	const char *_Getfalse() const
+		{return ("false"); }
+	const char *_Gettrue() const
+		{return ("true"); }
+	const char *_Getno() const
+		{return ("no"); }
+	const char *_Getyes() const
+		{return ("yes"); }
+private:
+	string _Days, _Months, _Oname, _Nname;
+	};
+		// TEMPLATE FUNCTIONS
+template<class _E> inline
+	int __cdecl _Strcoll(const _E *_F1, const _E *_L1,
+		const _E *_F2, const _E *_L2, const _Locinfo::_Collvec *)
+	{for (; _F1 != _L1 && _F2 != _L2; ++_F1, ++_F2)
+		if (*_F1 < *_F2)
+			return (-1);
+		else if (*_F2 < *_F1)
+			return (+1);
+	return (_F2 != _L2 ? -1 : _F1 != _L1 ? +1 : 0); }
+template<class _E> inline
+	size_t __cdecl _Strxfrm(_E *_F1, _E *_L1,
+		const _E *_F2, const _E *_L2, const _Locinfo::_Collvec *)
+	{size_t _N = _L2 - _F2;
+	if (_N <= _L1 - _F1)
+		memcpy(_F1, _F2, _N * sizeof (_E));
+	return (_N); }
+_STD_END
+#ifdef  _MSC_VER
+#pragma pack(pop)
+#endif  /* _MSC_VER */
+
+#endif /* _XLOCINFO_ */
+
+/*
+ * Copyright (c) 1996 by P.J. Plauger.  ALL RIGHTS RESERVED. 
+ * Consult your license regarding permissions and restrictions.
+ */
+

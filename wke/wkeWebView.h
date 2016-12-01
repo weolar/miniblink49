@@ -1,9 +1,10 @@
-#ifndef WKE_WEB_VIEW_H
+ï»¿#ifndef WKE_WEB_VIEW_H
 #define WKE_WEB_VIEW_H
 
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
 //////////////////////////////////////////////////////////////////////////
 
-//cexer: ±ØĞë°üº¬ÔÚºóÃæ£¬ÒòÎªÆäÖĞµÄ windows.h »á¶¨Òå max¡¢min£¬µ¼ÖÂ WebCore ÄÚ²¿µÄ max¡¢min ³öÏÖ´íÂÒ¡£
+//cexer: å¿…é¡»åŒ…å«åœ¨åé¢ï¼Œå› ä¸ºå…¶ä¸­çš„ windows.h ä¼šå®šä¹‰ maxã€minï¼Œå¯¼è‡´ WebCore å†…éƒ¨çš„ maxã€min å‡ºç°é”™ä¹±ã€‚
 #include "wke/wkeString.h"
 #include "third_party/WebKit/Source/platform/geometry/IntRect.h"
 
@@ -44,116 +45,130 @@ struct CWebViewHandler {
 
     wkeLoadingFinishCallback loadingFinishCallback;
     void* loadingFinishCallbackParam;
+
+	wkeLoadUrlBeginCallback loadUrlBeginCallback;
+	void* loadUrlBeginCallbackParam;
+
+	wkeLoadUrlEndCallback loadUrlEndCallback;
+	void* loadUrlEndCallbackParam;
+
+	bool isWke;//æ˜¯å¦æ˜¯ä½¿ç”¨çš„wkeæ¥å£
 };
 
-class CWebView {
+class CWebView : public IWebView {
 public:
     CWebView();
     virtual ~CWebView();
 
     virtual bool create();
-    virtual void destroy();
+    virtual void destroy() override;
 
-    const utf8* name() const;
+    const utf8* name() const override;
     const wchar_t* nameW() const;
 
-    void setName(const utf8* name);
+    void setName(const utf8* name) override;
     void setName(const wchar_t* name);
 
-    bool isTransparent() const;
-    void setTransparent(bool transparent);
+    virtual bool isTransparent() const override;
+    virtual void setTransparent(bool transparent) override;
 
-    void loadURL(const utf8* inUrl);
-    void loadURL(const wchar_t* url);
+    void loadURL(const utf8* inUrl) override;
+    void loadURL(const wchar_t* url) override;
     
-    void loadPostURL(const utf8* inUrl,const char * poastData,int nLen );
-    void loadPostURL(const wchar_t * inUrl,const char * poastData,int nLen );
+    void loadPostURL(const utf8* inUrl,const char * poastData,int nLen);
+    void loadPostURL(const wchar_t * inUrl,const char * poastData,int nLen);
 
-    void loadHTML(const utf8* html);
-    void loadHTML(const wchar_t* html);
+    void loadHTML(const utf8* html) override;
+    void loadHTML(const wchar_t* html) override;
 
-    void loadFile(const utf8* filename);
-    void loadFile(const wchar_t* filename);
+    void loadFile(const utf8* filename) override;
+    void loadFile(const wchar_t* filename) override;
 
 	void setUserAgent(const utf8 * useragent);
     void setUserAgent(const wchar_t * useragent);
 
+    bool isLoading() const;
     bool isLoadingSucceeded() const;
     bool isLoadingFailed() const;
     bool isLoadingCompleted() const;
-    bool isDocumentReady() const;
+    virtual bool isDocumentReady() const override;
     void stopLoading();
     void reload();
 
-    const utf8* title();
-    const wchar_t* titleW();
+    const utf8* title() override;
+    const wchar_t* titleW() override;
     
-    virtual void resize(int w, int h);
-    int width() const;
-    int height() const;
+    virtual void resize(int w, int h) override;
+    int width() const override;
+    int height() const override;
 
     int contentWidth() const;
     int contentHeight() const;
-    
-    void setDirty(bool dirty);
-    bool isDirty() const;
-    void addDirtyArea(int x, int y, int w, int h);
 
-    void layoutIfNeeded();
-    void paint(void* bits, int pitch);
+    virtual int contentsWidth() const override;
+    virtual int contentsHeight() const override;
+    
+    void setDirty(bool dirty) override;
+    bool isDirty() const override;
+    void addDirtyArea(int x, int y, int w, int h) override;
+
+    void layoutIfNeeded() override;
+    void paint(void* bits, int pitch) override;
     void paint(void* bits, int bufWid, int bufHei, int xDst, int yDst, int w, int h, int xSrc, int ySrc, bool fKeepAlpha);
 	void repaintIfNeeded();
     HDC viewDC();
+    HWND windowHandle() const;
+	void setHandle(HWND wnd);
+	void setHandleOffset(int x, int y);
+    bool canGoBack() const override;
+    bool goBack() override;
+    bool canGoForward() const override;
+    bool goForward() override;
     
-    bool canGoBack() const;
-    bool goBack();
-    bool canGoForward() const;
-    bool goForward();
-    
-    void editorSelectAll();
-    void editorCopy();
-    void editorCut();
-    void editorPaste();
-    void editorDelete();
+    void editorSelectAll() override;
+    void editorCopy() override;
+    void editorCut() override;
+    void editorPaste() override;
+    void editorDelete() override;
 
     const wchar_t* cookieW();
     const utf8* cookie();
 
-    void setCookieEnabled(bool enable);
-    bool isCookieEnabled() const;
+    void setCookieEnabled(bool enable) override;
+    bool isCookieEnabled() const override;
     
-    void setMediaVolume(float volume);
-    float mediaVolume() const;
-    
-    bool fireMouseEvent(unsigned int message, int x, int y, unsigned int flags);
-    bool fireContextMenuEvent(int x, int y, unsigned int flags);
-    bool fireMouseWheelEvent(int x, int y, int delta, unsigned int flags);
-    bool fireKeyUpEvent(unsigned int virtualKeyCode, unsigned int flags, bool systemKey);
-    bool fireKeyDownEvent(unsigned int virtualKeyCode, unsigned int flags, bool systemKey);
-    bool fireKeyPressEvent(unsigned int charCode, unsigned int flags, bool systemKey);
+    void setMediaVolume(float volume) override;
+    float mediaVolume() const override;
+   
+    virtual bool fireMouseEvent(unsigned int message, int x, int y, unsigned int flags) override;
+    virtual bool fireContextMenuEvent(int x, int y, unsigned int flags) override;
+    virtual bool fireMouseWheelEvent(int x, int y, int delta, unsigned int flags) override;
+    virtual bool fireKeyUpEvent(unsigned int virtualKeyCode, unsigned int flags, bool systemKey) override;
+    virtual bool fireKeyDownEvent(unsigned int virtualKeyCode, unsigned int flags, bool systemKey) override;
+    virtual bool fireKeyPressEvent(unsigned int charCode, unsigned int flags, bool systemKey) override;
     bool fireWindowsMessage(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, LRESULT* result);
 
-    void setFocus();
-    void killFocus();
+    virtual void setFocus() override;
+    virtual void killFocus() override;
     
-    wkeRect caretRect();
+    virtual wkeRect getCaret() override;
+    wkeRect caretRect() ;
     
-    jsValue runJS(const wchar_t* script);
-    jsValue runJS(const utf8* script);
-    jsExecState globalExec();
+    jsValue runJS(const wchar_t* script) override;
+    jsValue runJS(const utf8* script) override;
+    jsExecState globalExec() override;
     
-    void sleep();
-    void wake();
-    bool isAwake() const;
+    void sleep() override;
+    void wake() override;
+    bool isAwake() const override;
 
-    void setZoomFactor(float factor);
-    float zoomFactor() const;
+    //virtual void awaken() override;
 
-    void setEditable(bool editable);
+    void setZoomFactor(float factor) override;
+    float zoomFactor() const override;
 
-//     WebCore::Page* page() const { return m_page.get(); }
-//     WebCore::Frame* mainFrame() const { return m_mainFrame; }
-
+    void setEditable(bool editable) override;
+    
     void onURLChanged(wkeURLChangedCallback callback, void* callbackParam);
     void onTitleChanged(wkeTitleChangedCallback callback, void* callbackParam);
     virtual void onPaintUpdated(wkePaintUpdatedCallback callback, void* callbackParam);
@@ -168,14 +183,21 @@ public:
     virtual void onLoadingFinish(wkeLoadingFinishCallback callback, void* callbackParam);
     virtual void onDocumentReady(wkeDocumentReadyCallback callback, void* callbackParam);
 
+	void onLoadUrlBegin(wkeLoadUrlBeginCallback callback, void* callbackParam);
+	void onLoadUrlEnd(wkeLoadUrlEndCallback callback, void* callbackParam);
+
+    void setClientHandler(const wkeClientHandler* handler) override;
+    const wkeClientHandler* getClientHandler() const override;
+
     content::WebPage* webPage() { return m_webPage; }
 
 protected:
+    HWND m_hWnd;
     void _initHandler();
     void _initPage();
     void _initMemoryDC();
 
-    //°´ÀíÕâĞ©½Ó¿ÚÓ¦¸ÃÊ¹ÓÃCWebViewÀ´ÊµÏÖµÄ£¬¿ÉÒÔ°ÑËüÃÇÏëÏñ³ÉÒ»¸öÀà£¬Òò´ËÉèÖÃÎªÓÑÔ±·ûºÏÇéÀí¡£
+    //æŒ‰ç†è¿™äº›æ¥å£åº”è¯¥ä½¿ç”¨CWebViewæ¥å®ç°çš„ï¼Œå¯ä»¥æŠŠå®ƒä»¬æƒ³åƒæˆä¸€ä¸ªç±»ï¼Œå› æ­¤è®¾ç½®ä¸ºå‹å‘˜ç¬¦åˆæƒ…ç†ã€‚
 //     friend class ToolTip;
 //     friend class ChromeClient;
 //     friend class ContextMenuClient;
@@ -209,5 +231,5 @@ protected:
 };
 
 };//namespace wke
-
+#endif
 #endif//#ifndef WKE_WEB_VIEW_H

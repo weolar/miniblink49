@@ -1,0 +1,113 @@
+// numeric standard header
+#ifndef _NUMERIC_
+#define _NUMERIC_
+#include <iterator>
+
+#ifdef  _MSC_VER
+#pragma pack(push,8)
+#endif  /* _MSC_VER */
+_STD_BEGIN
+		// TEMPLATE FUNCTION accumulate
+template<class _II, class _Ty> inline
+	_Ty accumulate(_II _F, _II _L, _Ty _V)
+	{for (; _F != _L; ++_F)
+		_V = _V + *_F;
+	return (_V); }
+		// TEMPLATE FUNCTION accumulate WITH BINOP
+template<class _II, class _Ty, class _Bop> inline
+	_Ty accumulate(_II _F, _II _L, _Ty _V, _Bop _B)
+	{for (; _F != _L; ++_F)
+		_V = _B(_V, *_F);
+	return (_V); }
+		// TEMPLATE FUNCTION inner_product
+template<class _II1, class _II2, class _Ty> inline
+	_Ty inner_product(_II1 _F, _II1 _L, _II2 _X, _Ty _V)
+	{for (; _F != _L; ++_F, ++_X)
+		_V = _V + *_F * *_X;
+	return (_V); }
+		// TEMPLATE FUNCTION inner_product WITH BINOPS
+template<class _II1, class _II2, class _Ty,
+	class _Bop1, class _Bop2> inline
+	_Ty inner_product(_II1 _F, _II1 _L, _II2 _X, _Ty _V,
+		_Bop1 _B1, _Bop2 _B2)
+	{for (; _F != _L; ++_F, ++_X)
+		_V = _B1(_V, _B2(*_F, *_X));
+	return (_V); }
+		// TEMPLATE FUNCTION partial_sum
+template<class _II, class _OI> inline
+	_OI partial_sum(_II _F, _II _L, _OI _X)
+	{return (_F == _L ? _X
+		: _Partial_sum(_F, _L, _X, _Val_type(_F))); }
+template<class _II, class _OI, class _Ty> inline
+	_OI _Partial_sum(_II _F, _II _L, _OI _X, _Ty *)
+	{_Ty _V = *_F;
+	for (*_X = _V; ++_F != _L; *++_X = _V)
+		_V = _V + *_F;
+	return (++_X); }
+		// TEMPLATE FUNCTION partial_sum WITH BINOP
+template<class _II, class _OI, class _Bop> inline
+	_OI partial_sum(_II _F, _II _L, _OI _X, _Bop _B)
+	{return (_F == _L ? _X
+		: _Partial_sum(_F, _L, _X, _B, _Val_type(_F))); }
+template<class _II, class _OI, class _Bop, class _Ty> inline
+	_OI _Partial_sum(_II _F, _II _L, _OI _X, _Bop _B, _Ty *)
+	{_Ty _V = *_F;
+	for (*_X = _V; ++_F != _L; *++_X = _V)
+		_V = _B(_V, *_F);
+	return (++_X); }
+		// TEMPLATE FUNCTION adjacent_difference
+template<class _II, class _OI> inline
+	_OI adjacent_difference(_II _F, _II _L, _OI _X)
+	{return (_F == _L ? _X
+		: _Adjacent_difference(_F, _L, _X, _Val_type(_F))); }
+template<class _II, class _OI, class _Ty> inline
+	_OI _Adjacent_difference(_II _F, _II _L, _OI _X, _Ty *)
+	{_Ty _V = *_F;
+	for (*_X = _V; ++_F != _L; )
+		{_Ty _Tmp = *_F;
+		*++_X = _Tmp - _V;
+		_V = _Tmp; }
+	return (++_X); }
+		// TEMPLATE FUNCTION adjacent_difference WITH BINOP
+template<class _II, class _OI, class _Bop> inline
+	_OI adjacent_difference(_II _F, _II _L, _OI _X, _Bop _B)
+	{return (_F == _L ? _X
+		: _Adjacent_difference(_F, _L, _X, _B, _Val_type(_F))); }
+template<class _II, class _OI, class _Bop, class _Ty> inline
+	_OI _Adjacent_difference(_II _F, _II _L, _OI _X,
+		_Bop _B, _Ty *)
+	{_Ty _V = *_F;
+	for (*_X = _V; ++_F != _L; )
+		{_Ty _Tmp = *_F;
+		*++_X = _B(_Tmp, _V);
+		_V = _Tmp; }
+	return (++_X); }
+_STD_END
+#ifdef  _MSC_VER
+#pragma pack(pop)
+#endif  /* _MSC_VER */
+
+#endif /* _NUMERIC_ */
+
+/*
+ * Copyright (c) 1995 by P.J. Plauger.  ALL RIGHTS RESERVED. 
+ * Consult your license regarding permissions and restrictions.
+ */
+
+/*
+ * This file is derived from software bearing the following
+ * restrictions:
+ *
+ * Copyright (c) 1994
+ * Hewlett-Packard Company
+ *
+ * Permission to use, copy, modify, distribute and sell this
+ * software and its documentation for any purpose is hereby
+ * granted without fee, provided that the above copyright notice
+ * appear in all copies and that both that copyright notice and
+ * this permission notice appear in supporting documentation.
+ * Hewlett-Packard Company makes no representations about the
+ * suitability of this software for any purpose. It is provided
+ * "as is" without express or implied warranty.
+ */
+

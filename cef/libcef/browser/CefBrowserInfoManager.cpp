@@ -1,4 +1,4 @@
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "include/internal/cef_ptr.h"
 #include "include/cef_life_span_handler.h"
 #include "include/cef_client.h"
@@ -220,3 +220,4 @@ scoped_refptr<CefBrowserHostImpl> CefBrowserInfoManager::CreateBrowserHostIfAllo
 
     return newBrowserHostImpl;
 }
+#endif

@@ -9,7 +9,7 @@
 // implementations. See the translator.README.txt file in the tools directory
 // for more information.
 //
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "libcef_dll/cpptoc/auth_callback_cpptoc.h"
 
 
@@ -74,3 +74,4 @@ template<> base::AtomicRefCount CefCppToC<CefAuthCallbackCppToC,
 
 template<> CefWrapperType CefCppToC<CefAuthCallbackCppToC, CefAuthCallback,
     cef_auth_callback_t>::kWrapperType = WT_AUTH_CALLBACK;
+#endif

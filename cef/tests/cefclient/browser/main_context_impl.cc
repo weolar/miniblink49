@@ -99,7 +99,7 @@ bool MainContextImpl::Initialize(const CefMainArgs& args,
   DCHECK(thread_checker_.CalledOnValidThread());
   DCHECK(!initialized_);
   DCHECK(!shutdown_);
-
+  
   if (!CefInitialize(args, settings, application, windows_sandbox_info))
     return false;
 

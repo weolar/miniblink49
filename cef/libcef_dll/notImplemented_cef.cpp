@@ -1,4 +1,4 @@
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "include/cef_drag_data.h"
 #include "include/cef_request.h"
 #include "include/cef_resource_bundle.h"
@@ -168,3 +168,4 @@ CefRefPtr<CefBinaryValue> CefBase64Decode(const CefString& data) {
     DebugBreak();
     return nullptr;
 }
+#endif

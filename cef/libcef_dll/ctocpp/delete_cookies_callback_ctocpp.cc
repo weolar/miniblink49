@@ -9,7 +9,7 @@
 // implementations. See the translator.README.txt file in the tools directory
 // for more information.
 //
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "libcef_dll/ctocpp/delete_cookies_callback_ctocpp.h"
 
 
@@ -48,3 +48,5 @@ template<> base::AtomicRefCount CefCToCpp<CefDeleteCookiesCallbackCToCpp,
 template<> CefWrapperType CefCToCpp<CefDeleteCookiesCallbackCToCpp,
     CefDeleteCookiesCallback, cef_delete_cookies_callback_t>::kWrapperType =
     WT_DELETE_COOKIES_CALLBACK;
+#endif
+

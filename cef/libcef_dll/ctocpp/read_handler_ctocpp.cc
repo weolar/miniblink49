@@ -9,7 +9,7 @@
 // implementations. See the translator.README.txt file in the tools directory
 // for more information.
 //
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "libcef_dll/ctocpp/read_handler_ctocpp.h"
 
 
@@ -115,3 +115,4 @@ template<> base::AtomicRefCount CefCToCpp<CefReadHandlerCToCpp, CefReadHandler,
 
 template<> CefWrapperType CefCToCpp<CefReadHandlerCToCpp, CefReadHandler,
     cef_read_handler_t>::kWrapperType = WT_READ_HANDLER;
+#endif

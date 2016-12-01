@@ -33,6 +33,9 @@ struct DrawToCanvasProperties : public DrawProperties {
     {
         maskLayerId = -2;
         replicaLayerId = -2;
+        masksToBounds = true;
+        drawsContent = true;
+        opaque = true;
     }
 
     void copyDrawProperties(const DrawProperties& other)
@@ -53,7 +56,8 @@ struct DrawToCanvasProperties : public DrawProperties {
         bounds = other.bounds;
         position = other.position;
 		masksToBounds = other.masksToBounds;
-		drawsContent = other.drawsContent;
+        drawsContent = other.drawsContent;
+        opaque = other.opaque;
 		opacity = other.opacity;
         maskLayerId = other.maskLayerId;
         replicaLayerId = other.replicaLayerId;
@@ -63,6 +67,7 @@ struct DrawToCanvasProperties : public DrawProperties {
     blink::FloatPoint position;
 	bool masksToBounds;
 	bool drawsContent;
+    bool opaque;
     int maskLayerId;
     int replicaLayerId;
 };
