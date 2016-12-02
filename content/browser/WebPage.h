@@ -90,7 +90,8 @@ public:
     void setIsDraggableRegionNcHitTest();
 
     void setNeedsCommit();
-    bool needsCommit();
+    bool needsCommit() const;
+    bool isDrawDirty() const;
 
     HWND getHWND() const;
 	void setHWND(HWND hwnd);

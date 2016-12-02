@@ -89,10 +89,17 @@ void WebPage::setNeedsCommit()
         m_pageImpl->setNeedsCommit();
 }
 
-bool WebPage::needsCommit()
+bool WebPage::needsCommit() const
 {
     if (m_pageImpl)
         return m_pageImpl->needsCommit();
+    return false;
+}
+
+bool WebPage::isDrawDirty() const
+{
+    if (m_pageImpl)
+        return m_pageImpl->isDrawDirty();
     return false;
 }
 

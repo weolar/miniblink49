@@ -136,6 +136,7 @@ WebPageImpl::WebPageImpl()
     m_memoryCanvas = nullptr;
     m_needsCommit = true;
     m_needsLayout = true;
+    m_drawDirty = true;
     m_layerTreeHost = nullptr;
     m_lastFrameTimeMonotonic = 0;
     m_webViewImpl = nullptr;
@@ -538,6 +539,7 @@ void WebPageImpl::paintToPlatformContext(const IntRect& paintRect)
         return;
     }
 
+    m_drawDirty = true;
     clearPaintWhenLayeredWindow(m_memoryCanvas, m_paintRect);
 
     HDC hMemoryDC = skia::BeginPlatformPaint(m_memoryCanvas);
@@ -623,6 +625,9 @@ void WebPageImpl::drawToCanvas(const IntRect& dirtyRect, skia::PlatformCanvas* c
 
 HDC WebPageImpl::viewDC()
 {
+    if (!m_memoryCanvas)
+        return nullptr;
+
     skia::BitmapPlatformDevice* device = (skia::BitmapPlatformDevice*)skia::GetPlatformDevice(skia::GetTopDevice(*m_memoryCanvas));
     if (device)
         return device->GetBitmapDCUgly();
@@ -664,6 +669,8 @@ void WebPageImpl::paintToBit(void* bits, int pitch)
             dst += pitch;
         }
     }
+
+    m_drawDirty = false;
 }
 
 void WebPageImpl::close()
@@ -963,10 +970,7 @@ void WebPageImpl::setViewportSize(const IntSize& size)
         return;
 
     AutoRecordActions autoRecordActions(m_layerTreeHost);
-
-//     String outString = String::format("WebPageImpl::setViewportSize: %d %d\n", size.width(), size.height());
-//     OutputDebugStringW(outString.charactersWithNullTermination().data());
-
+    
     if (m_layerTreeHost)
         m_layerTreeHost->setViewportSize(size);
 
@@ -1039,19 +1043,15 @@ void WebPageImpl::fireCursorEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM
     HCURSOR hCur = NULL;
     switch (m_cursorType) {
     case WebCursorInfo::TypeIBeam:
-        //OutputDebugStringW(L"WebPageImpl::fireCursorEvent  IDC_IBEAM\n");
         hCur = ::LoadCursor(NULL, IDC_IBEAM);
         break;
     case WebCursorInfo::TypeHand:
-        //OutputDebugStringW(L"WebPageImpl::fireCursorEvent  IDC_HAND\n");
         hCur = ::LoadCursor(NULL, IDC_HAND);
         break;
     case WebCursorInfo::TypeWait:
-        //OutputDebugStringW(L"WebPageImpl::fireCursorEvent  IDC_WAIT\n");
         hCur = ::LoadCursor(NULL, IDC_WAIT);
         break;
     case WebCursorInfo::TypeHelp:
-        //OutputDebugStringW(L"WebPageImpl::fireCursorEvent  IDC_HELP\n");
         hCur = ::LoadCursor(NULL, IDC_HELP);
         break;
     case WebCursorInfo::TypeEastResize:
