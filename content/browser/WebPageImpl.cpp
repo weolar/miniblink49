@@ -631,7 +631,14 @@ HDC WebPageImpl::viewDC()
 
 void WebPageImpl::paintToBit(void* bits, int pitch)
 {
-    if (0 == pitch || !m_memoryCanvas)
+    if (0 == pitch)
+        return;
+
+    CHECK_FOR_REENTER0();
+
+    beginMainFrame();
+
+    if (!m_memoryCanvas)
         return;
 
     int width = m_clientRect.width();
@@ -642,12 +649,14 @@ void WebPageImpl::paintToBit(void* bits, int pitch)
     if (!device)
         return;
     const SkBitmap& bitmap = device->accessBitmap(false);
-    //bitmap.copyPixelsTo(bits, cBytes, pitch, false);
-    uint32_t* m_pixels = bitmap.getAddr32(0, 0);
+    if (bitmap.info().width() != width || bitmap.info().height() != height)
+        return;
+    uint32_t* pixels = bitmap.getAddr32(0, 0);
+
     if (pitch == 0 || pitch == width * 4) {
-        memcpy(bits, m_pixels, width * height * 4);
+        memcpy(bits, pixels, width * height * 4);
     } else {
-        unsigned char* src = (unsigned char*)m_pixels;
+        unsigned char* src = (unsigned char*)pixels;
         unsigned char* dst = (unsigned char*)bits;
         for (int i = 0; i < height; ++i) {
             memcpy(dst, src, width * 4);
@@ -794,9 +803,11 @@ void WebPageImpl::setNeedsCommitAndNotLayout()
 	if (m_browser) {
         m_browser->SetNeedHeartbeat();
 	} else {
+#endif
         blink::Platform* platfrom = blink::Platform::current();
         WebThreadImpl* threadImpl = (WebThreadImpl*)platfrom->mainThread();
         threadImpl->postTask(FROM_HERE, new CommitTask(this));
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
     }
 #endif
 }
@@ -819,12 +830,6 @@ void WebPageImpl::clearNeedsCommit()
 void WebPageImpl::beginMainFrame()
 {
 	bool needsCommit = m_needsCommit;
-//     while (m_needsCommit && pageInited == m_state) {
-//         executeMainFrame();
-//     }
-// 
-//    if (needsCommit && drawFrame())
-//        clearNeedsCommit();
 	if (pageInited != m_state)
 		return;
 		
@@ -832,7 +837,6 @@ void WebPageImpl::beginMainFrame()
 		executeMainFrame();
 		drawFrame();
 	}
-	//OutputDebugStringA("WebPageImpl::beginMainFrame end\n");
 }
 
 void WebPageImpl::executeMainFrame()
@@ -908,10 +912,7 @@ bool WebPageImpl::fireTimerEvent()
 {
     CHECK_FOR_REENTER(false);
         
-//     if (base::RandInt(0, 300) == 1) { // Test
-//         blink::Platform::current()->currentThread()->postTask(FROM_HERE, new TestTask(this));
-//     } else
-        beginMainFrame();
+    beginMainFrame();
     return false;
 }
 
