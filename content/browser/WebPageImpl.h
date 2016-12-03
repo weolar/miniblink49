@@ -126,7 +126,7 @@ public:
     void setNeedsCommit();
     void setNeedsCommitAndNotLayout();
     void clearNeedsCommit();
-    bool isDrawDirty() const { return m_drawDirty; }
+    bool isDrawDirty() const { return m_isDrawDirty; }
     
     cc::LayerTreeHost* layerTreeHost() { return m_layerTreeHost; }
 
@@ -189,7 +189,7 @@ public:
     int m_scheduleMessageCount;
     bool m_needsCommit;
     bool m_needsLayout;
-    bool m_drawDirty;
+    bool m_isDrawDirty;
     
     enum WebPageState {
         pageUninited,

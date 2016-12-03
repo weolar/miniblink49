@@ -136,7 +136,7 @@ WebPageImpl::WebPageImpl()
     m_memoryCanvas = nullptr;
     m_needsCommit = true;
     m_needsLayout = true;
-    m_drawDirty = true;
+    m_isDrawDirty = true;
     m_layerTreeHost = nullptr;
     m_lastFrameTimeMonotonic = 0;
     m_webViewImpl = nullptr;
@@ -539,7 +539,7 @@ void WebPageImpl::paintToPlatformContext(const IntRect& paintRect)
         return;
     }
 
-    m_drawDirty = true;
+    m_isDrawDirty = true;
     clearPaintWhenLayeredWindow(m_memoryCanvas, m_paintRect);
 
     HDC hMemoryDC = skia::BeginPlatformPaint(m_memoryCanvas);
@@ -670,7 +670,7 @@ void WebPageImpl::paintToBit(void* bits, int pitch)
         }
     }
 
-    m_drawDirty = false;
+    m_isDrawDirty = false;
 }
 
 void WebPageImpl::close()
