@@ -173,6 +173,11 @@ void wkePostURLW(wkeWebView wkeView,const wchar_t * url,const char *szPostData,i
     wkeView->loadPostURL(url,szPostData,nLen);
 }
 
+void wkeLoadW(wkeWebView webView, const wchar_t* url)
+{
+    wkeLoadURLW(webView, url);
+}
+
 void wkeLoadURL(wkeWebView webView, const utf8* url)
 {
     webView->loadURL(url);

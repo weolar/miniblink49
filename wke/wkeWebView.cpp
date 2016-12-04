@@ -20,15 +20,14 @@
 namespace wke {
 
 CWebView::CWebView()
-    : m_name("")
-    , m_hWnd(NULL)
+    : m_hWnd(NULL)
     , m_transparent(false)
-    //, m_dirty(false)
     , m_width(0)
     , m_height(0)
     , m_awake(true)
-    , m_title("")
-    , m_cookie("")
+    , m_title("", 0)
+    , m_cookie("", 0)
+    , m_name("", 0)
 {
     _initPage();
     _initHandler();
@@ -304,14 +303,12 @@ int CWebView::contentHeight() const
 
 void CWebView::setDirty(bool dirty)
 {
-    //m_dirty = dirty;
     m_webPage->setNeedsCommit();
 }
 
 bool CWebView::isDirty() const
 {
-    return m_webPage->needsCommit();
-    //return m_dirty;
+    return m_webPage->isDrawDirty();
 }
 
 void CWebView::addDirtyArea(int x, int y, int w, int h)
@@ -325,6 +322,7 @@ void CWebView::addDirtyArea(int x, int y, int w, int h)
 void CWebView::layoutIfNeeded()
 {
     //m_mainFrame->view()->updateLayoutAndStyleIfNeededRecursive();
+    m_webPage->fireTimerEvent();
 }
 
 void CWebView::repaintIfNeeded()
@@ -369,7 +367,6 @@ void CWebView::repaintIfNeeded()
 
 HDC CWebView::viewDC()
 {
-    //return *m_hdc.get();
     return m_webPage->viewDC();
 }
 
@@ -524,9 +521,6 @@ float CWebView::mediaVolume() const
 
 bool CWebView::fireMouseEvent(unsigned int message, int x, int y, unsigned int flags)
 {
-//     if (!mainFrame()->view()->didFirstLayout())
-//         return true;
-
     if (message == WM_CANCELMODE) {
         //mainFrame()->eventHandler()->lostMouseCapture();
         return true;

@@ -211,14 +211,12 @@ protected:
 //     WebCore::Frame* m_mainFrame;
     wke::CString m_title;
     wke::CString m_cookie;
-
     wke::CString m_name;
     bool m_transparent;
 
     int m_width;
     int m_height;
 
-    //bool m_dirty;
     blink::IntRect m_dirtyArea;
 
     content::WebPage* m_webPage;
