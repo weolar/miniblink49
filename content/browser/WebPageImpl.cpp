@@ -14,7 +14,6 @@
 #include "third_party/WebKit/Source/core/input/EventHandler.h"
 #include "third_party/WebKit/Source/core/loader/FrameLoadRequest.h"
 #include "third_party/WebKit/Source/core/fetch/MemoryCache.h"
-//#include "third_party/WebKit/Source/core/page/DragState.h"
 #include "third_party/WebKit/Source/core/editing/FrameSelection.h"
 #include "third_party/WebKit/Source/core/editing/Editor.h"
 #include "third_party/WebKit/Source/platform/Task.h"
@@ -31,9 +30,6 @@
 #include "third_party/WebKit/public/web/WebWindowFeatures.h"
 #include "third_party/WebKit/public/web/WebKit.h"
 #include "third_party/WebKit/public/web/WebFrameClient.h"
-// #include "third_party/WebKit/Source/web/ContextMenuClientImpl.h"
-// #include "third_party/WebKit/Source/web/EditorClientImpl.h"
-// #include "third_party/WebKit/Source/web/DragClientImpl.h"
 #include "third_party/WebKit/Source/web/WebViewImpl.h"
 #include "third_party/WebKit/Source/web/FrameLoaderClientImpl.h"
 #include "third_party/WebKit/Source/web/WebLocalFrameImpl.h"
@@ -43,7 +39,7 @@
 #include "third_party/WebKit/Source/wtf/RefCountedLeakCounter.h"
 #include "third_party/WebKit/Source/wtf/text/WTFStringUtil.h"
 #include "third_party/WebKit/Source/bindings/core/v8/V8GCController.h"
-
+#include "third_party/skia/include/core/SkGraphics.h"
 #include "gin/public/isolate_holder.h"
 #include "gin/array_buffer.h"
 #include "ui/gfx/win/dpi.h"
@@ -107,8 +103,14 @@ void WebPageImpl::initBlink()
     blink::Platform::initialize(platform);
     gin::IsolateHolder::Initialize(gin::IsolateHolder::kNonStrictMode, gin::ArrayBufferAllocator::SharedInstance());
     blink::initialize(blink::Platform::current());
-
 	initializeOffScreenTimerWindow();
+
+    // Maximum allocation size allowed for image scaling filters that
+    // require pre-scaling. Skia will fallback to a filter that doesn't
+    // require pre-scaling if the default filter would require an
+    // allocation that exceeds this limit.
+    const size_t kImageCacheSingleAllocationByteLimit = 64 * 1024 * 1024;
+    SkGraphics::SetResourceCacheSingleAllocationByteLimit(kImageCacheSingleAllocationByteLimit);
 
     platform->startGarbageCollectedThread();
 
@@ -268,6 +270,7 @@ public:
 private:
     cc::LayerTreeHost* m_host;
 };
+
 #if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 WebView* WebPageImpl::createCefView(WebLocalFrame* creator,
     const WebURLRequest& request,
@@ -285,6 +288,7 @@ WebView* WebPageImpl::createCefView(WebLocalFrame* creator,
     return browserHostImpl->webPage()->webViewImpl();
 }
 #endif
+
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
 static WebView* createWkeViewDefault(HWND parent, const WebString& name, const WTF::CString& url)
 {
@@ -320,7 +324,7 @@ WebView* WebPageImpl::createWkeView(WebLocalFrame* creator,
         return createWkeViewDefault(m_hWnd, name, url);
 
     wkeNavigationType type = WKE_NAVIGATION_TYPE_LINKCLICK;
-    wke::CString wkeUrl(url.data());
+    wke::CString wkeUrl(url.data(), url.length());
     wkeWindowFeatures windowFeatures;
     windowFeatures.x = features.xSet ? features.x : CW_USEDEFAULT;
     windowFeatures.y = features.ySet ? features.y : CW_USEDEFAULT;
@@ -342,6 +346,7 @@ WebView* WebPageImpl::createWkeView(WebLocalFrame* creator,
     return createdWebView->webPage()->webViewImpl();
 }
 #endif
+
 WebView* WebPageImpl::createView(WebLocalFrame* creator,
     const WebURLRequest& request,
     const WebWindowFeatures& features,
@@ -492,18 +497,18 @@ void WebPageImpl::firePaintEvent(HDC hdc, const RECT* paintRect)
     if (!m_memoryCanvas || m_clientRect.isEmpty())
         return;
 
-    //////////////////////////////////////////////////////////////////////////
-//     HPEN hpen = CreatePen(PS_SOLID, 10, RGB(11, 22, 33));
-//     HBRUSH hbrush = CreateSolidBrush(RGB(0xf3, 22, 33));
-// 
-//     SelectObject(hdc, hpen);
-//     SelectObject(hdc, hbrush);
-// 
-//     Rectangle(hdc, paintRect->left, paintRect->top, paintRect->right, paintRect->bottom);
-// 
-//     DeleteObject(hpen);
-//     DeleteObject(hbrush);
-    //////////////////////////////////////////////////////////////////////////
+#if 0
+    HPEN hpen = CreatePen(PS_SOLID, 10, RGB(11, 22, 33));
+    HBRUSH hbrush = CreateSolidBrush(RGB(0xf3, 22, 33));
+
+    SelectObject(hdc, hpen);
+    SelectObject(hdc, hbrush);
+
+    Rectangle(hdc, paintRect->left, paintRect->top, paintRect->right, paintRect->bottom);
+
+    DeleteObject(hpen);
+    DeleteObject(hbrush);
+#endif
 
     beginMainFrame();
 
@@ -552,7 +557,7 @@ void WebPageImpl::paintToPlatformContext(const IntRect& paintRect)
         m_winodwRect = winRectToIntRect(rtWnd);
         //skia::DrawToNativeLayeredContext(m_memoryCanvas.get(), hdc, m_winodwRect.x(), m_winodwRect.y(), &((RECT)m_clientRect));
     } else {
-        //drawDebugLine(m_memoryCanvas, m_paintRect);
+        drawDebugLine(m_memoryCanvas, m_paintRect);
 #if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 		if (m_browser) { // 使用wke接口不由此上屏
 			HDC hdc = GetDC(m_pagePtr->getHWND());
@@ -576,25 +581,31 @@ void WebPageImpl::paintToPlatformContext(const IntRect& paintRect)
 
 void WebPageImpl::drawDebugLine(skia::PlatformCanvas* memoryCanvas, const IntRect& paintRect)
 {
-   m_debugCount++;
+    m_debugCount++;
 
-    //     HBRUSH hbrush;
-    //     HPEN hpen;
-    //     hbrush = ::CreateSolidBrush(rand()); // 创建蓝色画刷
-    //     ::SelectObject(hdc, hbrush);
-    //     //::Rectangle(hdc, m_paintRect.x(), m_paintRect.y(), m_paintRect.maxX(), m_paintRect.maxY());
-    //     ::Rectangle(hdc, 220, 40, 366, 266);
-    //     ::DeleteObject(hbrush);
+#if 0
+    HBRUSH hbrush;
+    HPEN hpen;
+    hbrush = ::CreateSolidBrush(rand()); // 创建蓝色画刷
+    ::SelectObject(hdc, hbrush);
+    //::Rectangle(hdc, m_paintRect.x(), m_paintRect.y(), m_paintRect.maxX(), m_paintRect.maxY());
+    ::Rectangle(hdc, 220, 40, 366, 266);
+    ::DeleteObject(hbrush);
+#endif
 
+#if 0 // debug
     OwnPtr<GraphicsContext> context = GraphicsContext::deprecatedCreateWithCanvas(memoryCanvas, GraphicsContext::NothingDisabled);
     context->setStrokeStyle(SolidStroke);
     context->setStrokeColor(0xff000000 | (::GetTickCount() + base::RandInt(0, 0x1223345)));
     context->drawLine(IntPoint(paintRect.x(), paintRect.y()), IntPoint(paintRect.maxX(), paintRect.maxY()));
     context->drawLine(IntPoint(paintRect.maxX(), paintRect.y()), IntPoint(paintRect.x(), paintRect.maxY()));
     context->strokeRect(paintRect, 2);
+#endif
 
-// 	String outString = String::format("drawDebugLine:%d %d %d %d, %d\n", m_paintRect.x(), m_paintRect.y(), m_paintRect.width(), m_paintRect.height(), m_debugCount);
-// 	OutputDebugStringW(outString.charactersWithNullTermination().data());
+#if 0
+	String outString = String::format("drawDebugLine:%d %d %d %d, %d\n", m_paintRect.x(), m_paintRect.y(), m_paintRect.width(), m_paintRect.height(), m_debugCount);
+	OutputDebugStringW(outString.charactersWithNullTermination().data());
+#endif
 }
 
 void WebPageImpl::drawToCanvas(const IntRect& dirtyRect, skia::PlatformCanvas* canvas, bool needsFullTreeSync)
