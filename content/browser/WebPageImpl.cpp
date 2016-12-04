@@ -39,18 +39,12 @@
 #include "third_party/WebKit/Source/wtf/RefCountedLeakCounter.h"
 #include "third_party/WebKit/Source/wtf/text/WTFStringUtil.h"
 #include "third_party/WebKit/Source/bindings/core/v8/V8GCController.h"
-#include "third_party/skia/include/core/SkGraphics.h"
-#include "gin/public/isolate_holder.h"
-#include "gin/array_buffer.h"
-#include "ui/gfx/win/dpi.h"
-#include "gen/blink/platform/RuntimeEnabledFeatures.h"
 
 #include "skia/ext/bitmap_platform_device_win.h"
 
 #include "content/browser/WebPage.h"
 #include "content/browser/PlatformEventHandler.h"
 #include "content/browser/PopupMenuWin.h"
-#include "content/browser/SharedTimerWin.h"
 #include "content/browser/WebFrameClientImpl.h"
 #include "content/web_impl_win/BlinkPlatformImpl.h"
 #include "content/web_impl_win/WebThreadImpl.h"
@@ -73,11 +67,6 @@
 #endif
 using namespace blink;
 
-#if USING_VC6RT == 1
-void scrt_initialize_thread_safe_statics();
-#endif
-extern "C" void x86_check_features(void);
-
 namespace blink {
 
 bool saveDumpFile(const String& url, char* buffer, unsigned int size);
@@ -86,35 +75,9 @@ bool saveDumpFile(const String& url, char* buffer, unsigned int size);
 
 namespace content {
 
-static void setRuntimeEnabledFeatures();
-
 void WebPageImpl::initBlink()
 {
-#if USING_VC6RT == 1
-    scrt_initialize_thread_safe_statics();
-#endif
-	x86_check_features();
-    ::CoInitializeEx(NULL, 0); // COINIT_MULTITHREADED
-
-    setRuntimeEnabledFeatures();
-
-    gfx::win::InitDeviceScaleFactor();
-    content::BlinkPlatformImpl* platform = new content::BlinkPlatformImpl();
-    blink::Platform::initialize(platform);
-    gin::IsolateHolder::Initialize(gin::IsolateHolder::kNonStrictMode, gin::ArrayBufferAllocator::SharedInstance());
-    blink::initialize(blink::Platform::current());
-	initializeOffScreenTimerWindow();
-
-    // Maximum allocation size allowed for image scaling filters that
-    // require pre-scaling. Skia will fallback to a filter that doesn't
-    // require pre-scaling if the default filter would require an
-    // allocation that exceeds this limit.
-    const size_t kImageCacheSingleAllocationByteLimit = 64 * 1024 * 1024;
-    SkGraphics::SetResourceCacheSingleAllocationByteLimit(kImageCacheSingleAllocationByteLimit);
-
-    platform->startGarbageCollectedThread();
-
-    OutputDebugStringW(L"WebPageImpl::initBlink\n");
+    BlinkPlatformImpl::initialize();
 }
 
 void WebPageImpl::registerDestroyNotif(DestroyNotif* destroyNotif)
@@ -1427,16 +1390,6 @@ WebScreenInfo WebPageImpl::screenInfo()
 WebWidget* WebPageImpl::createPopupMenu(WebPopupType type)
 {
     return PopupMenuWin::create(m_hWnd, m_hWndoffset, m_webViewImpl, type);
-}
-
-static void setRuntimeEnabledFeatures()
-{
-    blink::RuntimeEnabledFeatures::setSlimmingPaintEnabled(false);
-    blink::RuntimeEnabledFeatures::setXSLTEnabled(false);
-    blink::RuntimeEnabledFeatures::setExperimentalStreamEnabled(false);
-    blink::RuntimeEnabledFeatures::setFrameTimingSupportEnabled(false);
-    blink::RuntimeEnabledFeatures::setSharedWorkerEnabled(false);
-    blink::RuntimeEnabledFeatures::setOverlayScrollbarsEnabled(false);
 }
 
 bool WebPageImpl::initSetting()
