@@ -78,16 +78,13 @@ void WebURLLoaderImplCurl::loadAsynchronously(const blink::WebURLRequest& reques
     blink::KURL url = (blink::KURL)requestNew.url();
     Vector<UChar> host = WTF::ensureUTF16UChar(url.host());
 
-    if (WTF::kNotFound != url.string().find("recommend")) {
+#if 0
+    if (!url.isValid() || !url.protocolIsData()) {
         WTF::String outstr = String::format("WebURLLoaderImpl.loadAsynchronously: %p %ws\n", this, WTF::ensureUTF16UChar(url.string()).data());
         OutputDebugStringW(outstr.charactersWithNullTermination().data());
     }
+#endif
 
-//     if (!url.isValid() || !url.protocolIsData()) {
-//         WTF::String outstr = String::format("WebURLLoaderImpl.loadAsynchronously: %p %ws\n", this, WTF::ensureUTF16UChar(url.string()).data());
-//         OutputDebugStringW(outstr.charactersWithNullTermination().data());
-//     }
-    
     return;
 }
 
