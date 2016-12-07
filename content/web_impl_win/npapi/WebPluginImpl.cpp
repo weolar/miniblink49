@@ -300,11 +300,12 @@ void WebPluginImpl::stop()
 
     //WTF_LOG(Plugins, "WebPluginImpl::stop(): Stopping plug-in '%s'", m_plugin->name().utf8().data());
 
-    HashSet<RefPtr<PluginStream> > streams = m_streams;
-    HashSet<RefPtr<PluginStream> >::iterator end = streams.end();
-    for (HashSet<RefPtr<PluginStream> >::iterator it = streams.begin(); it != end; ++it) {
-        (*it)->stop();
-        disconnectStream((*it).get());
+    HashSetStreams streams = m_streams;
+    HashSetStreams::iterator end = streams.end();
+    for (HashSetStreams::iterator it = streams.begin(); it != end; ++it) {
+        PluginStream* stream = *it;
+        stream->stop();
+        disconnectStream(stream);
     }
 
     ASSERT(m_streams.isEmpty());
@@ -394,8 +395,8 @@ void WebPluginImpl::performRequest(PluginRequest* request)
         // if this is not a targeted request, create a stream for it. otherwise,
         // just pass it off to the loader
         if (targetFrameName.isEmpty()) {
-            RefPtr<PluginStream> stream = PluginStream::create(this, m_parentFrame, request->frameLoadRequest().resourceRequest(), request->sendNotification(), request->notifyData(), plugin()->pluginFuncs(), instance(), m_plugin->quirks());
-            m_streams.add(stream);
+            PluginStream* stream = PluginStream::create(this, m_parentFrame, request->frameLoadRequest().resourceRequest(), request->sendNotification(), request->notifyData(), plugin()->pluginFuncs(), instance(), m_plugin->quirks());            
+            m_streams.add((stream));
             stream->start();
         } else {
             // If the target frame is our frame, we could destroy the

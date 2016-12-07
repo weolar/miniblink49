@@ -79,6 +79,8 @@ PluginStream::PluginStream(PluginStreamClient* client, LocalFrame* frame, const 
     , m_pluginFuncs(pluginFuncs)
     , m_instance(instance)
     , m_quirks(quirks)
+    , m_ref(0)
+    , m_keepAlive(this)
 {
     ASSERT(m_instance);
 
@@ -112,6 +114,16 @@ PluginStream::~PluginStream()
 #ifndef NDEBUG
     pluginStreamCount.decrement();
 #endif
+}
+
+void PluginStream::ref()
+{
+
+}
+
+void PluginStream::deref()
+{
+
 }
 
 void PluginStream::start()
@@ -269,6 +281,8 @@ void PluginStream::destroyStream()
     if (m_streamState == StreamStopped)
         return;
 
+    m_keepAlive.clear();
+
     ASSERT(m_reason != WebReasonNone);
     ASSERT(!m_deliveryData || m_deliveryData->size() == 0);
 
@@ -338,7 +352,7 @@ void PluginStream::destroyStream()
 
     if (!m_path.isNull()) {
         String filename = m_path;
-        DeleteFileW(WTF::ensureUTF16UChar(filename).data());
+        ::DeleteFileW(WTF::ensureUTF16UChar(filename).data());
     }
 }
 
@@ -454,7 +468,7 @@ void PluginStream::didReceiveData(WebURLLoader* loader, const char* data, int da
     // If the plug-in cancels the stream in deliverData it could be deleted, 
     // so protect it here.
 
-    //RefPtr<PluginStream> protect(this);
+    RefPtr<PluginStream> protect(this);
 
     if (m_transferMode != NP_ASFILEONLY) {
         if (!m_deliveryData)
@@ -517,6 +531,11 @@ bool PluginStream::wantsAllStreams() const
         return false;
 
     return !!result;
+}
+
+DEFINE_TRACE(PluginStream)
+{
+
 }
 
 }

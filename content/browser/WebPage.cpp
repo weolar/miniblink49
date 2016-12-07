@@ -34,6 +34,7 @@ WebPage::WebPage(void* foreignPtr)
     m_pageImpl = nullptr;
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
     m_wkeWebView = nullptr;
+    m_wkeClientHandler = nullptr;
     m_wkeHandler = new wke::CWebViewHandler();
     memset(m_wkeHandler, 0, sizeof(wke::CWebViewHandler));
 #endif
@@ -88,10 +89,17 @@ void WebPage::setNeedsCommit()
         m_pageImpl->setNeedsCommit();
 }
 
-bool WebPage::needsCommit()
+bool WebPage::needsCommit() const
 {
     if (m_pageImpl)
         return m_pageImpl->needsCommit();
+    return false;
+}
+
+bool WebPage::isDrawDirty() const
+{
+    if (m_pageImpl)
+        return m_pageImpl->isDrawDirty();
     return false;
 }
 

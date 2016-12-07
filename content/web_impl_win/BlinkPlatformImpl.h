@@ -24,6 +24,8 @@ public:
     void shutdown();
     void preShutdown();
 
+    static void initialize();
+
     void startGarbageCollectedThread();
    
     virtual void cryptographicallyRandomValues(unsigned char* buffer, size_t length) override;

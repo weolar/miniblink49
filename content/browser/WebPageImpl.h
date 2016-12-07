@@ -122,10 +122,11 @@ public:
     void showDebugNodeData();
     void drawDebugLine(skia::PlatformCanvas* memoryCanvas, const blink::IntRect& paintRect);
 
-    bool needsCommit() { return m_needsCommit; }
+    bool needsCommit() const { return m_needsCommit; }
     void setNeedsCommit();
     void setNeedsCommitAndNotLayout();
     void clearNeedsCommit();
+    bool isDrawDirty() const { return m_isDrawDirty; }
     
     cc::LayerTreeHost* layerTreeHost() { return m_layerTreeHost; }
 
@@ -180,7 +181,7 @@ public:
 	blink::IntRect m_paintRect;
     skia::PlatformCanvas* m_memoryCanvas;
     bool m_painting;
-    bool m_canScheduleResourceLoader;
+
     Vector<blink::IntRect> m_paintMessageQueue;
     static const int m_paintMessageQueueSize = 200;
     Vector<blink::IntRect> m_dirtyRects;
@@ -188,6 +189,7 @@ public:
     int m_scheduleMessageCount;
     bool m_needsCommit;
     bool m_needsLayout;
+    bool m_isDrawDirty;
     
     enum WebPageState {
         pageUninited,
@@ -202,9 +204,6 @@ public:
 	blink::IntPoint m_lastPosForDrag;
 	WebFrameClientImpl* m_webFrameClient;
     PlatformEventHandler* m_platformEventHandler;
-
-    BOOL* m_messageStackVar; // 给消息处理函数使用，保存地址。例如，WM_TIMER中调用DestroyWindow，
-    // 窗口摧毁了，消息函数还在进入WM_TIMER的处理函数，导致野指针崩溃.
 
 	blink::WebCursorInfo::Type m_cursorType;
 

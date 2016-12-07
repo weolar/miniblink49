@@ -13,18 +13,34 @@ using std::min;
 
 namespace blink {
 
-GDIPlusReader::GDIPlusReader(ImageDecoder* parent, Gdiplus::Bitmap* gdipBitmap)
+GDIPlusReader::GDIPlusReader(ImageDecoder* parent)
     : m_parent(parent)
     , m_buffer(0)
-    , m_gdipBitmap(gdipBitmap)
+    , m_gdipBitmap(nullptr)
+    , m_istream(nullptr)
+    , m_memHandle(nullptr)
 {
 
 }
 
 GDIPlusReader::~GDIPlusReader()
 {
-    delete m_gdipBitmap;
+    release();
+}
+
+void GDIPlusReader::release()
+{
+    if (m_gdipBitmap)
+        delete m_gdipBitmap;
     m_gdipBitmap = nullptr;
+
+    if (m_memHandle)
+        ::GlobalFree(m_memHandle);
+    m_memHandle = nullptr;
+
+    if (m_istream)
+        m_istream->Release();
+    m_istream = nullptr;
 }
 
 static void fillbitmap(Gdiplus::Bitmap* gdipBitmap, ImageFrame* buffer)
@@ -61,76 +77,27 @@ static void fillbitmap(Gdiplus::Bitmap* gdipBitmap, ImageFrame* buffer)
     gdipBitmap->UnlockBits(&lockedBitmapData);
 }
 
-// class DecodeTask : public WebThread::Task {
-// public:
-//     DecodeTask(bool* isDecodeFinish, SharedBuffer* data, Gdiplus::Bitmap** gdipBitmap)
-//         : m_isDecodeFinish(isDecodeFinish)
-//         , m_gdipBitmap(gdipBitmap)
-//         , m_data(data)
-//     {
-// 
-//     }
-// 
-//     virtual ~DecodeTask()
-//     {
-//     }
-// 
-//     virtual void run() override
-//     {
-//         initGDIPlusClsids();
-// 
-//         HGLOBAL hMem = ::GlobalAlloc(GMEM_FIXED, m_data->size());
-//         BYTE* pMem = (BYTE*)::GlobalLock(hMem);
-//         memcpy(pMem, m_data->data(), m_data->size());
-//         ::GlobalUnlock(hMem);
-// 
-//         IStream* istream = 0;
-//         ::CreateStreamOnHGlobal(hMem, FALSE, &istream);
-// 
-//         *m_gdipBitmap = Gdiplus::Bitmap::FromStream(istream);
-// 
-//         ::GlobalFree(hMem);
-//         istream->Release();
-//     }
-// 
-// private:
-//     bool m_isDecodeFinish;
-//     Gdiplus::Bitmap** m_gdipBitmap;
-//     SharedBuffer* m_data;
-// };
-
-static void decodeToBitmapByGDIPlus(SharedBuffer* data, Gdiplus::Bitmap** gdipBitmap)
+void GDIPlusReader::decodeToBitmapByGDIPlus()
 {
-//     *gdipBitmap = nullptr;
-// 
-//     static WebThread* ioThread = nullptr;
-//     if (!ioThread)
-//         ioThread = Platform::createThread("IO");
-// 
-//     bool isDecodeFinish = false;
-//     ioThread->postTask(FROM_HERE, new DecodeTask(&isDecodeFinish, data, gdipBitmap));
-// 
-//     while (!isDecodeFinish) {}
-
     initGDIPlusClsids();
 
-    HGLOBAL hMem = ::GlobalAlloc(GMEM_FIXED, data->size());
-    BYTE* pMem = (BYTE*)::GlobalLock(hMem);
-    memcpy(pMem, data->data(), data->size());
-    ::GlobalUnlock(hMem);
+    release();
 
-    IStream* istream = 0;
-    ::CreateStreamOnHGlobal(hMem, FALSE, &istream);
+    m_memHandle = ::GlobalAlloc(GMEM_FIXED, m_data->size());
+    BYTE* pMem = (BYTE*)::GlobalLock(m_memHandle);
+    memcpy(pMem, m_data->data(), m_data->size());
+    ::GlobalUnlock(m_memHandle);
 
-    *gdipBitmap = Gdiplus::Bitmap::FromStream(istream);
+    ::CreateStreamOnHGlobal(m_memHandle, FALSE, &m_istream);
 
-    ::GlobalFree(hMem);
-    istream->Release();
+    m_gdipBitmap = Gdiplus::Bitmap::FromStream(m_istream);
 }
 
 bool GDIPlusReader::decode(bool onlySize)
 {
-    decodeToBitmapByGDIPlus(m_data.get(), &m_gdipBitmap);
+    decodeToBitmapByGDIPlus();
+    if (!m_gdipBitmap)
+        return false;
 
     int width = m_gdipBitmap->GetWidth();
     int height = m_gdipBitmap->GetHeight();

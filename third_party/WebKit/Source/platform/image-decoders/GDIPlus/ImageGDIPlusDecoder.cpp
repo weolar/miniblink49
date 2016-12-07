@@ -126,7 +126,7 @@ bool ImageGDIPlusDecoder::decodeHelper(bool onlySize)
         return false;
 
     if (!m_reader) {
-        m_reader = adoptPtr(new GDIPlusReader(this, nullptr));
+        m_reader = adoptPtr(new GDIPlusReader(this));
         m_reader->setForceBitMaskAlpha();
         m_reader->setData(m_data.get());
     }
