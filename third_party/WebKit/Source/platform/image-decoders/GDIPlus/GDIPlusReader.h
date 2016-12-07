@@ -19,7 +19,7 @@ public:
     void setBuffer(ImageFrame* buffer) { m_buffer = buffer; }
     void setData(SharedBuffer* data) { m_data = data; }
 
-    bool decodeBMP(bool onlySize);
+    bool decode(bool onlySize);
 
     void setForceBitMaskAlpha() {}
 

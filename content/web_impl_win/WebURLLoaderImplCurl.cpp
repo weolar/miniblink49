@@ -104,7 +104,7 @@ void WebURLLoaderImplCurl::fileLoadImpl(const blink::KURL& url)
 
 void WebURLLoaderImplCurl::setDefersLoading(bool value)
 {
-    notImplemented();
+    //notImplemented();
 }
 
 void WebURLLoaderImplCurl::didChangePriority(blink::WebURLRequest::Priority new_priority, int intra_priority_value)

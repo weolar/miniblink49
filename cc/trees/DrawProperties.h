@@ -33,6 +33,9 @@ struct DrawToCanvasProperties : public DrawProperties {
     {
         maskLayerId = -2;
         replicaLayerId = -2;
+        masksToBounds = true;
+        drawsContent = true;
+        opaque = true;
     }
 
     void copyDrawProperties(const DrawProperties& other)

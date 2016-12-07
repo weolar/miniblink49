@@ -527,6 +527,11 @@ blink::WebStorageNamespace* BlinkPlatformImpl::createSessionStorageNamespace()
     return new blink::WebStorageNamespaceImpl(m_storageNamespaceIdCount++, m_sessionStorageStorageMap->map);
 }
 
+bool BlinkPlatformImpl::portAllowed(const blink::WebURL&) const
+{
+    return true;
+}
+
 // Resources -----------------------------------------------------------
 blink::WebString BlinkPlatformImpl::queryLocalizedString(blink::WebLocalizedString::Name name)
 {

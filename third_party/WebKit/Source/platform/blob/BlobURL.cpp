@@ -64,11 +64,7 @@ KURL BlobURL::createBlobURL(const String& originString)
 {
     ASSERT(!originString.isEmpty());
     String urlString = "blob:" + encodeWithURLEscapeSequences(originString) + '/' + createCanonicalUUIDString();
-#ifdef MINIBLINK_NOT_IMPLEMENTED
     return KURL::createIsolated(ParsedURLString, urlString);
-#endif // MINIBLINK_NOT_IMPLEMENTED
-	notImplemented();
-	return KURL();
 }
 
 } // namespace blink
