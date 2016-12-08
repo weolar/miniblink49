@@ -292,6 +292,7 @@ WKE_API const wchar_t* wkeGetCookieW(wkeWebView webView);
 WKE_API const utf8* wkeGetCookie(wkeWebView webView);
 WKE_API void wkeSetCookieEnabled(wkeWebView webView, bool enable);
 WKE_API bool wkeIsCookieEnabled(wkeWebView webView);
+WKE_API void wkeSetCookieJarPath(wkeWebView webView, const WCHAR* path);
 
 WKE_API void wkeSetMediaVolume(wkeWebView webView, float volume);
 WKE_API float wkeGetMediaVolume(wkeWebView webView);

@@ -125,6 +125,7 @@ static void setRuntimeEnabledFeatures()
     blink::RuntimeEnabledFeatures::setFrameTimingSupportEnabled(false);
     blink::RuntimeEnabledFeatures::setSharedWorkerEnabled(false);
     blink::RuntimeEnabledFeatures::setOverlayScrollbarsEnabled(false);
+    blink::RuntimeEnabledFeatures::setTouchEnabled(false);
 }
 
 void BlinkPlatformImpl::initialize()
@@ -515,7 +516,7 @@ blink::WebData BlinkPlatformImpl::loadResource(const char* name)
         return blink::WebData((const char*)content::PluginPlaceholderElementJs, sizeof(content::PluginPlaceholderElementJs));
     
     notImplemented();
-    return blink::WebData();
+    return blink::WebData(" ", 1);
 }
 
 blink::WebThemeEngine* BlinkPlatformImpl::themeEngine()
