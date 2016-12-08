@@ -391,13 +391,17 @@ typedef enum {
 typedef void(*wkeLoadingFinishCallback)(wkeWebView webView, void* param, const wkeString url, wkeLoadingResult result, const wkeString failedReason);
 WKE_API void wkeOnLoadingFinish(wkeWebView webView, wkeLoadingFinishCallback callback, void* param);
 
+typedef bool(*wkeDownloadCallback)(wkeWebView webView, void* param, const char *url);
+WKE_API void wkeOnDownload(wkeWebView webView, wkeDownloadCallback callback, void* param);
+
+//wkeNet--------------------------------------------------------------------------------------
 typedef bool(*wkeLoadUrlBeginCallback)(wkeWebView webView, void* param, const char *url, void *job);
 WKE_API void wkeOnLoadUrlBegin(wkeWebView webView, wkeLoadUrlBeginCallback callback, void* callbackParam);
 
 typedef void(*wkeLoadUrlEndCallback)(wkeWebView webView, void* param, const char *url, void *job, void* buf, int len);
 WKE_API void wkeOnLoadUrlEnd(wkeWebView webView, wkeLoadUrlEndCallback callback, void* callbackParam);
 
-//wkeNet--------------------------------------------------------------------------------------
+
 WKE_API void wkeNetSetMIMEType(void *job, char *type);
 WKE_API void wkeNetSetHTTPHeaderField(void *job, wchar_t *key, wchar_t *value);
 WKE_API void wkeNetSetURL(void *job, const char *url);

@@ -920,6 +920,12 @@ void CWebView::onLoadingFinish(wkeLoadingFinishCallback callback, void* callback
     m_webPage->wkeHandler().loadingFinishCallbackParam = callbackParam;
 }
 
+void CWebView::onDownload(wkeDownloadCallback callback, void* callbackParam)
+{
+	m_webPage->wkeHandler().downloadCallback = callback;
+	m_webPage->wkeHandler().downloadCallbackParam = callbackParam;
+}
+
 void CWebView::onDocumentReady(wkeDocumentReadyCallback callback, void* callbackParam)
 {
     m_webPage->wkeHandler().documentReadyCallback = callback;

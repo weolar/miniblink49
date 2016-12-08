@@ -52,7 +52,7 @@
 #include "src/disassembler.h"
 #include "src/macro-assembler.h"
 #include "src/v8.h"
-
+extern "C" unsigned __int64 __cdecl _xgetbv(unsigned int);
 namespace v8 {
 namespace internal {
 
@@ -96,6 +96,10 @@ bool OSHasAVXSupport() {
   long kernel_version_major = strtol(buffer, nullptr, 10);  // NOLINT
   if (kernel_version_major <= 13) return false;
 #endif  // V8_OS_MACOSX
+#define _XCR_XFEATURE_ENABLED_MASK 0
+
+  /* Returns the content of the specified extended control register */
+  
   // Check whether OS claims to support AVX.
   uint64_t feature_mask = _xgetbv(_XCR_XFEATURE_ENABLED_MASK);
   return (feature_mask & 0x6) == 0x6;

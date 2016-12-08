@@ -46,6 +46,9 @@ struct CWebViewHandler {
     wkeLoadingFinishCallback loadingFinishCallback;
     void* loadingFinishCallbackParam;
 
+	wkeDownloadCallback downloadCallback;
+	void* downloadCallbackParam;
+
 	wkeLoadUrlBeginCallback loadUrlBeginCallback;
 	void* loadUrlBeginCallbackParam;
 
@@ -182,6 +185,7 @@ public:
 
     virtual void onLoadingFinish(wkeLoadingFinishCallback callback, void* callbackParam);
     virtual void onDocumentReady(wkeDocumentReadyCallback callback, void* callbackParam);
+	virtual void onDownload(wkeDownloadCallback callback, void* callbackParam);
 
 	void onLoadUrlBegin(wkeLoadUrlBeginCallback callback, void* callbackParam);
 	void onLoadUrlEnd(wkeLoadUrlEndCallback callback, void* callbackParam);

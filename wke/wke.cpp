@@ -555,6 +555,11 @@ void wkeOnLoadingFinish(wkeWebView webView, wkeLoadingFinishCallback callback, v
     webView->onLoadingFinish(callback, param);
 }
 
+void wkeOnDownload(wkeWebView webView, wkeDownloadCallback callback, void* param)
+{
+	webView->onDownload(callback, param);
+}
+
 void wkeOnLoadUrlBegin(wkeWebView webView, wkeLoadUrlBeginCallback callback, void* callbackParam)
 {
 	webView->onLoadUrlBegin(callback, callbackParam);

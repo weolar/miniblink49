@@ -19,26 +19,17 @@
     <Filter Include="src\compiler">
       <UniqueIdentifier>{840afd4f-cea5-4185-8109-9ef9444663c5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\compiler\x87">
-      <UniqueIdentifier>{56baca64-e5e6-41a5-aa7c-0ae70a599721}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\heap">
       <UniqueIdentifier>{482d4d62-f2d9-4d79-be9b-372a8ccd5ae7}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\ic">
       <UniqueIdentifier>{b0a0628e-277b-426c-93a0-331ad2c64c72}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\ic\x87">
-      <UniqueIdentifier>{e472ac92-9dc6-45ca-bf63-709d1b508cf6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\libplatform">
       <UniqueIdentifier>{c571c61d-7449-436d-a4d1-0ea19c35c90c}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\runtime">
       <UniqueIdentifier>{a1da1183-17a5-47cf-9c00-8746a9612222}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\x87">
-      <UniqueIdentifier>{f8bda915-125f-4f17-959e-b16e346eb905}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\snapshot">
       <UniqueIdentifier>{11b6f5ee-2f93-458d-85ff-14219faae194}</UniqueIdentifier>
@@ -57,6 +48,15 @@
     </Filter>
     <Filter Include="src\gen">
       <UniqueIdentifier>{45fe4b63-32f2-4942-9c50-8cbc5e7879dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\ia32">
+      <UniqueIdentifier>{a0a09a9e-e74c-45ba-93a7-41ff289a4777}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\compiler\ia32">
+      <UniqueIdentifier>{9dcf0105-5a14-42c4-9a80-3f7781475e6f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\ic\ia32">
+      <UniqueIdentifier>{9f032fe6-44f6-403e-855a-04c5f0942b3f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -179,9 +179,6 @@
     </ClInclude>
     <ClInclude Include="..\..\v8\src\base\macros.h">
       <Filter>src\base</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\v8\src\compiler\x87\instruction-codes-x87.h">
-      <Filter>src\compiler\x87</Filter>
     </ClInclude>
     <ClInclude Include="..\..\v8\src\ic\ic-state.h">
       <Filter>src\ic</Filter>
@@ -1134,39 +1131,6 @@
     <ClInclude Include="..\..\v8\src\compiler\scheduler.h">
       <Filter>src\compiler</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\v8\src\x87\code-stubs-x87.h">
-      <Filter>src\x87</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\v8\src\x87\frames-x87.h">
-      <Filter>src\x87</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\v8\src\x87\lithium-codegen-x87.h">
-      <Filter>src\x87</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\v8\src\x87\lithium-gap-resolver-x87.h">
-      <Filter>src\x87</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\v8\src\x87\lithium-x87.h">
-      <Filter>src\x87</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\v8\src\x87\macro-assembler-x87.h">
-      <Filter>src\x87</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\v8\src\x87\regexp-macro-assembler-x87.h">
-      <Filter>src\x87</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\v8\src\x87\simulator-x87.h">
-      <Filter>src\x87</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\v8\src\x87\assembler-x87.h">
-      <Filter>src\x87</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\v8\src\x87\assembler-x87-inl.h">
-      <Filter>src\x87</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\v8\src\x87\codegen-x87.h">
-      <Filter>src\x87</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\v8\src\third_party\valgrind\valgrind.h">
       <Filter>src\third_party\valgrind</Filter>
     </ClInclude>
@@ -1187,6 +1151,42 @@
     </ClInclude>
     <ClInclude Include="..\..\v8\src\extensions\externalize-string-extension.h">
       <Filter>src\extensions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8\src\ia32\assembler-ia32.h">
+      <Filter>src\ia32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8\src\ia32\assembler-ia32-inl.h">
+      <Filter>src\ia32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8\src\ia32\codegen-ia32.h">
+      <Filter>src\ia32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8\src\ia32\code-stubs-ia32.h">
+      <Filter>src\ia32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8\src\ia32\frames-ia32.h">
+      <Filter>src\ia32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8\src\ia32\lithium-codegen-ia32.h">
+      <Filter>src\ia32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8\src\ia32\lithium-gap-resolver-ia32.h">
+      <Filter>src\ia32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8\src\ia32\lithium-ia32.h">
+      <Filter>src\ia32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8\src\ia32\macro-assembler-ia32.h">
+      <Filter>src\ia32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8\src\ia32\regexp-macro-assembler-ia32.h">
+      <Filter>src\ia32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8\src\ia32\simulator-ia32.h">
+      <Filter>src\ia32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8\src\compiler\ia32\instruction-codes-ia32.h">
+      <Filter>src\compiler\ia32</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1228,27 +1228,6 @@
     </ClCompile>
     <ClCompile Include="..\..\v8\src\base\once.cc">
       <Filter>src\base</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\v8\src\compiler\x87\instruction-selector-x87.cc">
-      <Filter>src\compiler\x87</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\v8\src\compiler\x87\code-generator-x87.cc">
-      <Filter>src\compiler\x87</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\v8\src\ic\x87\stub-cache-x87.cc">
-      <Filter>src\ic\x87</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\v8\src\ic\x87\access-compiler-x87.cc">
-      <Filter>src\ic\x87</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\v8\src\ic\x87\handler-compiler-x87.cc">
-      <Filter>src\ic\x87</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\v8\src\ic\x87\ic-compiler-x87.cc">
-      <Filter>src\ic\x87</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\v8\src\ic\x87\ic-x87.cc">
-      <Filter>src\ic\x87</Filter>
     </ClCompile>
     <ClCompile Include="..\..\v8\src\ic\stub-cache.cc">
       <Filter>src\ic</Filter>
@@ -2060,57 +2039,6 @@
     <ClCompile Include="..\..\v8\src\compiler\scheduler.cc">
       <Filter>src\compiler</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\v8\src\x87\cpu-x87.cc">
-      <Filter>src\x87</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\v8\src\x87\debug-x87.cc">
-      <Filter>src\x87</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\v8\src\x87\deoptimizer-x87.cc">
-      <Filter>src\x87</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\v8\src\x87\disasm-x87.cc">
-      <Filter>src\x87</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\v8\src\x87\frames-x87.cc">
-      <Filter>src\x87</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\v8\src\x87\full-codegen-x87.cc">
-      <Filter>src\x87</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\v8\src\x87\interface-descriptors-x87.cc">
-      <Filter>src\x87</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\v8\src\x87\lithium-codegen-x87.cc">
-      <Filter>src\x87</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\v8\src\x87\lithium-gap-resolver-x87.cc">
-      <Filter>src\x87</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\v8\src\x87\lithium-x87.cc">
-      <Filter>src\x87</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\v8\src\x87\macro-assembler-x87.cc">
-      <Filter>src\x87</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\v8\src\x87\regexp-macro-assembler-x87.cc">
-      <Filter>src\x87</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\v8\src\x87\simulator-x87.cc">
-      <Filter>src\x87</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\v8\src\x87\assembler-x87.cc">
-      <Filter>src\x87</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\v8\src\x87\builtins-x87.cc">
-      <Filter>src\x87</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\v8\src\x87\codegen-x87.cc">
-      <Filter>src\x87</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\v8\src\x87\code-stubs-x87.cc">
-      <Filter>src\x87</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\v8\src\third_party\fdlibm\fdlibm.cc">
       <Filter>src\third_party\fdlibm</Filter>
     </ClCompile>
@@ -2144,8 +2072,80 @@
     <ClCompile Include="..\..\v8\src\snapshot\serialize.cc">
       <Filter>src\snapshot</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\v8\src\compiler\x87\linkage-x87.cc">
-      <Filter>src\compiler\x87</Filter>
+    <ClCompile Include="..\..\v8\src\ia32\builtins-ia32.cc">
+      <Filter>src\ia32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8\src\ia32\codegen-ia32.cc">
+      <Filter>src\ia32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8\src\ia32\code-stubs-ia32.cc">
+      <Filter>src\ia32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8\src\ia32\cpu-ia32.cc">
+      <Filter>src\ia32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8\src\ia32\debug-ia32.cc">
+      <Filter>src\ia32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8\src\ia32\deoptimizer-ia32.cc">
+      <Filter>src\ia32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8\src\ia32\disasm-ia32.cc">
+      <Filter>src\ia32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8\src\ia32\frames-ia32.cc">
+      <Filter>src\ia32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8\src\ia32\full-codegen-ia32.cc">
+      <Filter>src\ia32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8\src\ia32\interface-descriptors-ia32.cc">
+      <Filter>src\ia32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8\src\ia32\lithium-codegen-ia32.cc">
+      <Filter>src\ia32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8\src\ia32\lithium-gap-resolver-ia32.cc">
+      <Filter>src\ia32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8\src\ia32\lithium-ia32.cc">
+      <Filter>src\ia32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8\src\ia32\macro-assembler-ia32.cc">
+      <Filter>src\ia32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8\src\ia32\regexp-macro-assembler-ia32.cc">
+      <Filter>src\ia32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8\src\ia32\simulator-ia32.cc">
+      <Filter>src\ia32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8\src\compiler\ia32\code-generator-ia32.cc">
+      <Filter>src\compiler\ia32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8\src\compiler\ia32\instruction-selector-ia32.cc">
+      <Filter>src\compiler\ia32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8\src\compiler\ia32\linkage-ia32.cc">
+      <Filter>src\compiler\ia32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8\src\ia32\assembler-ia32.cc">
+      <Filter>src\ia32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8\src\ic\ia32\access-compiler-ia32.cc">
+      <Filter>src\ic\ia32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8\src\ic\ia32\handler-compiler-ia32.cc">
+      <Filter>src\ic\ia32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8\src\ic\ia32\ic-compiler-ia32.cc">
+      <Filter>src\ic\ia32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8\src\ic\ia32\ic-ia32.cc">
+      <Filter>src\ic\ia32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8\src\ic\ia32\stub-cache-ia32.cc">
+      <Filter>src\ic\ia32</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
