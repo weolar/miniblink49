@@ -12,6 +12,12 @@
 #include "wkeWebWindow.h"
 #include "wtf/text/WTFString.h"
 
+namespace net {
+
+void setCookieJarPath(const WCHAR* path);
+
+}
+
 //////////////////////////////////////////////////////////////////////////
 static bool wkeIsInit = false;
 
@@ -387,6 +393,11 @@ void wkeSetCookieEnabled(wkeWebView webView, bool enable)
 bool wkeIsCookieEnabled(wkeWebView webView)
 {
     return webView->isCookieEnabled();
+}
+
+void wkeSetCookieJarPath(wkeWebView webView, const WCHAR* path)
+{
+    net::setCookieJarPath(path);
 }
 
 void wkeSetMediaVolume(wkeWebView webView, float volume)
