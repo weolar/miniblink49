@@ -30,6 +30,7 @@
     <ProjectGuid>{14BD76E4-E8CE-486D-B552-AE17332AFD67}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>wkexe</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.14393.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -96,33 +97,33 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IntDir>$(SolutionDir)..\build\bin\$(Configuration)\tmp\$(ProjectName)\</IntDir>
-    <OutDir>$(SolutionDir)..\build\bin\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)..\bin\$(Configuration)\obj\$(ProjectName)\</IntDir>
+    <OutDir>$(SolutionDir)..\bin\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(SolutionDir)..\build\bin\$(Configuration)64\</OutDir>
-    <IntDir>$(SolutionDir)..\build\bin\$(Configuration)64\tmp\$(ProjectName)\</IntDir>
+    <OutDir>$(SolutionDir)..\bin\$(Configuration)64\</OutDir>
+    <IntDir>$(SolutionDir)..\bin\$(Configuration)64\obj\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IntDir>$(SolutionDir)..\build\bin\$(Configuration)\tmp\$(ProjectName)\</IntDir>
-    <OutDir>$(SolutionDir)..\build\bin\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)..\bin\$(Configuration)\obj\$(ProjectName)\</IntDir>
+    <OutDir>$(SolutionDir)..\bin\$(Configuration)\</OutDir>
     <GenerateManifest>false</GenerateManifest>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_xp|Win32'">
-    <IntDir>$(SolutionDir)..\build\bin\$(Configuration)\tmp\$(ProjectName)\</IntDir>
-    <OutDir>$(SolutionDir)..\build\bin\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)..\bin\$(Configuration)\obj\$(ProjectName)\</IntDir>
+    <OutDir>$(SolutionDir)..\bin\$(Configuration)\</OutDir>
     <GenerateManifest>false</GenerateManifest>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <GenerateManifest>false</GenerateManifest>
-    <OutDir>$(SolutionDir)..\build\bin\$(Configuration)64\</OutDir>
-    <IntDir>$(SolutionDir)..\build\bin\$(Configuration)64\tmp\$(ProjectName)\</IntDir>
+    <OutDir>$(SolutionDir)..\bin\$(Configuration)64\</OutDir>
+    <IntDir>$(SolutionDir)..\bin\$(Configuration)64\obj\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_xp|x64'">
     <GenerateManifest>false</GenerateManifest>
-    <OutDir>$(SolutionDir)..\build\bin\$(Configuration)64\</OutDir>
-    <IntDir>$(SolutionDir)..\build\bin\$(Configuration)64\tmp\$(ProjectName)\</IntDir>
+    <OutDir>$(SolutionDir)..\bin\$(Configuration)64\</OutDir>
+    <IntDir>$(SolutionDir)..\bin\$(Configuration)64\obj\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
