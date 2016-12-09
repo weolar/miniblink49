@@ -57,7 +57,7 @@ namespace WTF {
 using namespace Unicode;
 
 #ifdef _DEBUG
-static_assert(sizeof(StringImpl) == 4 * sizeof(int), "StringImpl should stay small");
+static_assert(sizeof(StringImpl) == 6 * sizeof(int), "StringImpl should stay small");
 #else
 static_assert(sizeof(StringImpl) == 3 * sizeof(int), "StringImpl should stay small");
 #endif
