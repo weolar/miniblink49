@@ -222,9 +222,17 @@ void WebFrameClientImpl::didCommitProvisionalLoad(WebLocalFrame* frame, const We
 {
 #if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
     CefBrowserHostImpl* browser = m_webPage->browser();
-    if (!browser)
-        return;
-    browser->DidCommitProvisionalLoadForFrame(frame, history);
+    if (browser)
+        browser->DidCommitProvisionalLoadForFrame(frame, history);
+#endif
+
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
+    wke::CWebViewHandler& handler = m_webPage->wkeHandler();
+    if (handler.urlChangedCallback) {
+        String url = history.urlString();
+        wke::CString string(url);
+        handler.urlChangedCallback(m_webPage->wkeWebView(), handler.urlChangedCallbackParam, &string);
+    }
 #endif
 }
 
