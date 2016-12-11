@@ -1423,6 +1423,8 @@ WebScreenInfo WebPageImpl::screenInfo()
 
 WebWidget* WebPageImpl::createPopupMenu(WebPopupType type)
 {
+    if (!m_hWnd)
+        m_hWnd = ::GetActiveWindow();
     return PopupMenuWin::create(m_hWnd, m_hWndoffset, m_webViewImpl, type);
 }
 
@@ -1450,8 +1452,6 @@ bool WebPageImpl::initSetting()
     settings->setPluginsEnabled(true);
 
     PluginDatabase::installedPlugins()->refresh();
-
-    // settings->setFontRenderingMode(AlternateRenderingMode);
 
     return true;
 }
