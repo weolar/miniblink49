@@ -182,15 +182,6 @@ LayerChangeActionDrawPropUpdata::LayerChangeActionDrawPropUpdata()
 
 LayerChangeActionDrawPropUpdata::~LayerChangeActionDrawPropUpdata()
 {
-    // TODO weolar
-//     for (size_t i = 0; i < m_props.size(); ++i) {
-//         DrawToCanvasProperties* it = m_props[i];
-//         delete it;
-//     }
-//     m_props.clear();
-//     m_layerIds.clear();
-    //////////////////////////////////////////////////////////////////////////
-
     ASSERT(0 == m_props.size());
     ASSERT(0 == m_layerIds.size());
 }
@@ -216,7 +207,10 @@ void LayerChangeActionDrawPropUpdata::run(LayerTreeHost* host)
     m_layerIds.clear();
     m_props.clear();
 
-	host->requestRepaint(m_pendingInvalidateRect);
+    for (size_t i = 0; i < m_pendingInvalidateRects.size(); ++i) {
+        const blink::IntRect& r = m_pendingInvalidateRects[i];
+        host->requestRepaint(r);
+    }
 }
 
 void LayerChangeActionDrawPropUpdata::appendDirtyLayer(cc_blink::WebLayerImpl* layer)
@@ -240,17 +234,17 @@ void LayerChangeActionDrawPropUpdata::appendDirtyLayer(cc_blink::WebLayerImpl* l
 
 void LayerChangeActionDrawPropUpdata::appendPendingInvalidateRect(const blink::IntRect& r)
 {
-    m_pendingInvalidateRect.unite(r);
+    m_pendingInvalidateRects.append(r);
 }
 
 void LayerChangeActionDrawPropUpdata::cleanupPendingInvalidateRectIfHasAlendAction()
 {
-	m_pendingInvalidateRect = blink::IntRect();
+	m_pendingInvalidateRects.clear();
 }
 
-blink::IntRect LayerChangeActionDrawPropUpdata::dirtyRect() const
+const WTF::Vector<blink::IntRect>& LayerChangeActionDrawPropUpdata::dirtyRects() const
 {
-    return m_pendingInvalidateRect;
+    return m_pendingInvalidateRects;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -311,7 +305,12 @@ void LayerChangeActionBlend::setBitmap(/*size_t itemId, */SkBitmap* bitmap)
 
 void LayerChangeActionBlend::appendPendingInvalidateRect(const blink::IntRect& r)
 {
-	m_pendingInvalidateRect.unite(r);
+	m_pendingInvalidateRects.append(r);
+}
+
+void LayerChangeActionBlend::appendPendingInvalidateRects(const WTF::Vector<blink::IntRect>& rects)
+{
+    m_pendingInvalidateRects.appendVector(rects);
 }
 
 void LayerChangeActionBlend::run(LayerTreeHost* host)
@@ -325,7 +324,11 @@ void LayerChangeActionBlend::run(LayerTreeHost* host)
 
     if (item->bitmap)
         layer->blendToTiles(item->willRasteredTiles, *(item->bitmap), item->dirtyRect);
-	host->requestRepaint(m_pendingInvalidateRect);
+
+    for (size_t i = 0; i < m_pendingInvalidateRects.size(); ++i) {
+        const blink::IntRect& r = m_pendingInvalidateRects[i];
+        host->requestRepaint(r);
+    }
 }
 
 //////////////////////////////////////////////////////////////////////////

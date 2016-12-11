@@ -18,7 +18,7 @@ namespace wke {
 void onCreateGlobalObject(content::WebFrameClientImpl* client, blink::WebLocalFrame* frame, v8::Local<v8::Context> context, int extensionGroup, int worldId);
 void onReleaseGlobalObject(content::WebFrameClientImpl* client, blink::WebLocalFrame* frame, v8::Local<v8::Context> context, int worldId);
 jsExecState createTempExecStateByV8Context(v8::Local<v8::Context> context);
-
+//jsValue createJsValueByLocalValue(v8::Isolate* isolate, v8::Local<v8::Context> context, v8::Local<v8::Value> value);
 }
 
 #endif

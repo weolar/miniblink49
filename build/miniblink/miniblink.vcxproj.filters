@@ -8991,6 +8991,9 @@
     <ClCompile Include="..\..\third_party\WebKit\Source\platform\image-decoders\GDIPlus\GDIPlusReader.cpp">
       <Filter>third_party\Webkit\Source\platform\image-decoders\GDIPlus</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\content\browser\NavigationController.cpp">
+      <Filter>content\browser</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\public\platform\modules\app_banner\WebAppBannerClient.h">
@@ -20944,6 +20947,9 @@
     </ClInclude>
     <ClInclude Include="..\..\third_party\WebKit\Source\platform\image-decoders\GDIPlus\GDIPlusReader.h">
       <Filter>third_party\Webkit\Source\platform\image-decoders\GDIPlus</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\content\browser\NavigationController.h">
+      <Filter>content\browser</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

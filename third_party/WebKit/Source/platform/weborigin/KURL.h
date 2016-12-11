@@ -194,6 +194,9 @@ public:
 
     bool isAboutBlankURL() const;
 
+    // Creates an isolated URL object suitable for sending to another thread.
+    static KURL createIsolated(ParsedURLStringTag, const String&);
+
 #if USE(CF)
     KURL(CFURLRef);
     CFURLRef createCFURL() const;

@@ -82,18 +82,40 @@ static const bool ignoreSSLErrors = true; //  ("WEBKIT_IGNORE_SSL_ERRORS");
 
 static CString certificatePath()
 {
-//     char* envPath = getenv("CURL_CA_BUNDLE_PATH");
-//     if (envPath)
-//        return envPath;
-
+#if 0 
+    char* envPath = getenv("CURL_CA_BUNDLE_PATH");
+    if (envPath)
+       return envPath;
+#endif
     return CString();
+}
+
+static char* gCookieJarPath = nullptr;
+
+void setCookieJarPath(const WCHAR* path)
+{
+    if (!path || !::PathIsDirectoryW(path))
+        return;
+    Vector<WCHAR> jarPath;
+    jarPath.resize(MAX_PATH + 1);
+    wcscpy(jarPath.data(), path);
+    ::PathAppendW(jarPath.data(), L"cookies.dat");
+    String jarPathString(jarPath.data());
+    CString utf8 = jarPathString.utf8();
+
+    if (gCookieJarPath)
+        free(gCookieJarPath);
+    gCookieJarPath = (char*)malloc((MAX_PATH + 1) * sizeof(char) * 5);
+    strncpy(gCookieJarPath, utf8.data(), utf8.length());
 }
 
 static char* cookieJarPath()
 {
-//     char* cookieJarPath = getenv("CURL_COOKIE_JAR_PATH");
-//     if (cookieJarPath)
-//         return fastStrDup(cookieJarPath);
+#if 0 
+    char* cookieJarPath = getenv("CURL_COOKIE_JAR_PATH");
+    if (cookieJarPath)
+        return fastStrDup(cookieJarPath);
+#endif
 
 #if 0 // OS(WINDOWS)
     char executablePath[MAX_PATH];
@@ -117,6 +139,8 @@ static char* cookieJarPath()
 
     return fastStrDup(cookieJarFullPath);
 #else
+    if (gCookieJarPath)
+        return gCookieJarPath;
     return fastStrDup("cookies.dat");
 #endif
 }

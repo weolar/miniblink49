@@ -18,8 +18,8 @@ class CString {
 public:
     CString(const WTF::String& str);
     CString(const blink::WebString& str);
-    CString(const utf8* str, size_t len = 0);
-    CString(const wchar_t* str, size_t len = 0);
+    CString(const utf8* str, size_t len);
+    CString(const wchar_t* str, size_t len);
    ~CString();
 
     CString& operator=(const WTF::String& str);

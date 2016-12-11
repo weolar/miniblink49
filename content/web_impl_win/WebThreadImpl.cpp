@@ -200,6 +200,11 @@ void WebThreadImpl::startTriggerTasks()
         m_taskPairsToPost.clear();
         ::LeaveCriticalSection(&m_taskPairsMutex);
 
+//         if (taskPairsToPostCopy.size() > 20) {
+//             String out = String::format("WebThreadImpl::startTriggerTasks: %d\n", taskPairsToPostCopy.size());
+//             OutputDebugStringA(out.utf8().data());
+//         }
+
         for (size_t i = 0; i < taskPairsToPostCopy.size(); ++i) {
             TaskPair* taskPair = taskPairsToPostCopy[i];
             if (0 == taskPair->delayMs) {

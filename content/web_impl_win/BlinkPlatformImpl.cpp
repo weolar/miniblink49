@@ -16,6 +16,7 @@
 #include "content/resources/TextAreaResizeCornerData.h"
 #include "content/resources/LocalizedString.h"
 #include "content/resources/WebKitWebRes.h"
+#include "content/browser/SharedTimerWin.h"
 #include "cc/blink/WebCompositorSupportImpl.h"
 #include "cc/raster/RasterTaskWorkerThreadPool.h"
 #include "third_party/WebKit/public/web/WebKit.h"
@@ -28,13 +29,16 @@
 #include "third_party/WebKit/Source/bindings/core/v8/V8GCController.h"
 #include "third_party/skia/include/core/SkGraphics.h"
 #include "net/ActivatingLoaderCheck.h"
-
 #include "gen/blink/core/UserAgentStyleSheets.h"
-
+#include "gen/blink/platform/RuntimeEnabledFeatures.h"
 #include "third_party/WebKit/Source/core/loader/ImageLoader.h" // TODO
 #include "third_party/WebKit/Source/core/html/HTMLLinkElement.h" // TODO
 #include "third_party/WebKit/Source/core/html/HTMLStyleElement.h" // TODO
 #include "third_party/WebKit/Source/core/css/resolver/StyleResolver.h"
+#include "third_party/skia/include/core/SkGraphics.h"
+#include "ui/gfx/win/dpi.h"
+#include "gin/public/isolate_holder.h"
+#include "gin/array_buffer.h"
 
 #ifdef _DEBUG
 
@@ -83,6 +87,11 @@ extern int gStyleFetchedImageNotifyFinished;
 #endif
 }
 
+#if USING_VC6RT == 1
+void scrt_initialize_thread_safe_statics();
+#endif
+extern "C" void x86_check_features(void);
+
 namespace content {
 
 class DOMStorageMapWrap {
@@ -106,6 +115,46 @@ static WebThreadImpl* currentTlsThread()
         return (WebThreadImpl*)TlsGetValue(sCurrentThreadTlsKey);
 
     return nullptr;
+}
+
+static void setRuntimeEnabledFeatures()
+{
+    blink::RuntimeEnabledFeatures::setSlimmingPaintEnabled(false);
+    blink::RuntimeEnabledFeatures::setXSLTEnabled(false);
+    blink::RuntimeEnabledFeatures::setExperimentalStreamEnabled(false);
+    blink::RuntimeEnabledFeatures::setFrameTimingSupportEnabled(false);
+    blink::RuntimeEnabledFeatures::setSharedWorkerEnabled(false);
+    blink::RuntimeEnabledFeatures::setOverlayScrollbarsEnabled(false);
+    blink::RuntimeEnabledFeatures::setTouchEnabled(false);
+}
+
+void BlinkPlatformImpl::initialize()
+{
+#if USING_VC6RT == 1
+    scrt_initialize_thread_safe_statics();
+#endif
+    x86_check_features();
+    ::CoInitializeEx(NULL, 0); // COINIT_MULTITHREADED
+
+    setRuntimeEnabledFeatures();
+
+    gfx::win::InitDeviceScaleFactor();
+    BlinkPlatformImpl* platform = new BlinkPlatformImpl();
+    blink::Platform::initialize(platform);
+    gin::IsolateHolder::Initialize(gin::IsolateHolder::kNonStrictMode, gin::ArrayBufferAllocator::SharedInstance());
+    blink::initialize(blink::Platform::current());
+    initializeOffScreenTimerWindow();
+
+    // Maximum allocation size allowed for image scaling filters that
+    // require pre-scaling. Skia will fallback to a filter that doesn't
+    // require pre-scaling if the default filter would require an
+    // allocation that exceeds this limit.
+    const size_t kImageCacheSingleAllocationByteLimit = 64 * 1024 * 1024;
+    SkGraphics::SetResourceCacheSingleAllocationByteLimit(kImageCacheSingleAllocationByteLimit);
+
+    platform->startGarbageCollectedThread();
+
+    OutputDebugStringW(L"WebPageImpl::initBlink\n");
 }
 
 BlinkPlatformImpl::BlinkPlatformImpl() 
@@ -467,7 +516,7 @@ blink::WebData BlinkPlatformImpl::loadResource(const char* name)
         return blink::WebData((const char*)content::PluginPlaceholderElementJs, sizeof(content::PluginPlaceholderElementJs));
     
     notImplemented();
-    return blink::WebData();
+    return blink::WebData(" ", 1);
 }
 
 blink::WebThemeEngine* BlinkPlatformImpl::themeEngine()
@@ -525,6 +574,11 @@ blink::WebStorageNamespace* BlinkPlatformImpl::createSessionStorageNamespace()
     if (!m_sessionStorageStorageMap)
         m_sessionStorageStorageMap = new DOMStorageMapWrap();
     return new blink::WebStorageNamespaceImpl(m_storageNamespaceIdCount++, m_sessionStorageStorageMap->map);
+}
+
+bool BlinkPlatformImpl::portAllowed(const blink::WebURL&) const
+{
+    return true;
 }
 
 // Resources -----------------------------------------------------------

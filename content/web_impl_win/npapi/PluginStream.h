@@ -32,6 +32,7 @@
 #include "third_party/WebKit/Source/platform/Timer.h"
 #include "third_party/WebKit/Source/platform/network/ResourceRequest.h"
 #include "third_party/WebKit/Source/platform/network/ResourceResponse.h"
+#include "third_party/WebKit/Source/platform/heap/Handle.h"
 #include "third_party/WebKit/public/platform/WebURLLoaderClient.h"
 #include "third_party/WebKit/public/platform/WebURLResponse.h"
 #include "third_party/WebKit/public/platform/WebURLRequest.h"
@@ -59,11 +60,11 @@ public:
     virtual void streamDidFinishLoading(PluginStream*) {}
 };
 
-class PluginStream : public RefCounted<PluginStream>, public blink::WebURLLoaderClient {
+class PluginStream : public blink::GarbageCollectedFinalized<PluginStream>, public blink::WebURLLoaderClient {
 public:
-    static PassRefPtr<PluginStream> create(PluginStreamClient* client, blink::LocalFrame* frame, const blink::ResourceRequest& request, bool sendNotification, void* notifyData, const NPPluginFuncs* functions, NPP instance, const PluginQuirkSet& quirks)
+    static PluginStream* create(PluginStreamClient* client, blink::LocalFrame* frame, const blink::ResourceRequest& request, bool sendNotification, void* notifyData, const NPPluginFuncs* functions, NPP instance, const PluginQuirkSet& quirks)
     {
-        return adoptRef(new PluginStream(client, frame, request, sendNotification, notifyData, functions, instance, quirks));
+        return (new PluginStream(client, frame, request, sendNotification, notifyData, functions, instance, quirks));
     }
     virtual ~PluginStream();
 
@@ -78,6 +79,10 @@ public:
     void cancelAndDestroyStream(NPReason);
 
     static NPP ownerForStream(NPStream*);
+
+    void ref();
+    void deref();
+    DECLARE_VIRTUAL_TRACE();
 
 private:
     PluginStream(PluginStreamClient*, blink::LocalFrame*, const blink::ResourceRequest&, bool sendNotification, void* notifyData, const NPPluginFuncs*, NPP instance, const PluginQuirkSet&);
@@ -121,6 +126,9 @@ private:
     NPReason m_reason;
     NPStream m_stream;
     PluginQuirkSet m_quirks;
+
+    int m_ref;
+    blink::Persistent<PluginStream> m_keepAlive;
 
     friend class WebPluginImpl;
 };

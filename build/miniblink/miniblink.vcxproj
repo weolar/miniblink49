@@ -105,7 +105,7 @@
       <StringPooling>true</StringPooling>
       <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <EnableEnhancedInstructionSet>NoExtensions</EnableEnhancedInstructionSet>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
       <AdditionalOptions>/Zc:threadSafeInit- %(AdditionalOptions)</AdditionalOptions>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -299,6 +299,7 @@
     <ClCompile Include="..\..\cef\libcef_dll\notImplemented_cef.cpp" />
     <ClCompile Include="..\..\cef\libcef_dll\transfer_util.cc" />
     <ClCompile Include="..\..\cef\libcef_dll\unused_export.cpp" />
+    <ClCompile Include="..\..\content\browser\NavigationController.cpp" />
     <ClCompile Include="..\..\content\browser\PlatformEventHandler.cpp" />
     <ClCompile Include="..\..\content\browser\PopupMenuWin.cpp" />
     <ClCompile Include="..\..\content\browser\WebFrameClientImpl.cpp" />
@@ -3147,6 +3148,7 @@
     <ClInclude Include="..\..\cef\libcef_dll\cpptoc\frame_cpptoc.h" />
     <ClInclude Include="..\..\cef\libcef_dll\ctocpp\resolve_callback_ctocpp.h" />
     <ClInclude Include="..\..\cef\libcef_dll\ctocpp\response_filter_ctocpp.h" />
+    <ClInclude Include="..\..\content\browser\NavigationController.h" />
     <ClInclude Include="..\..\content\browser\PlatformEventHandler.h" />
     <ClInclude Include="..\..\content\browser\PopupMenuWin.h" />
     <ClInclude Include="..\..\content\browser\SharedTimerWin.h" />

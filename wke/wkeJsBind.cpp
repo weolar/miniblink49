@@ -593,7 +593,7 @@ jsValue jsEmptyArray(jsExecState es)
     return createJsValueByLocalValue(es->isolate, context, v8::Array::New(es->isolate));
 }
 
-
+//return the window object
 
 
 //return the window object
@@ -1344,7 +1344,6 @@ void freeV8TempObejctOnOneFrameBefore()
         delete state;
     }
     s_execStates->clear();
-    
 }
 
 };

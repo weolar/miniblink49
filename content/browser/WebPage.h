@@ -7,6 +7,7 @@
 #include "third_party/WebKit/Source/platform/geometry/IntRect.h"
 #include "third_party/WebKit/Source/wtf/FastAllocBase.h"
 #include "third_party/WebKit/public/web/WebViewClient.h"
+#include "third_party/WebKit/public/web/WebHistoryCommitType.h"
 
 #if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 class CefBrowserHostImpl;
@@ -90,14 +91,19 @@ public:
     void setIsDraggableRegionNcHitTest();
 
     void setNeedsCommit();
-    bool needsCommit();
+    bool needsCommit() const;
+    bool isDrawDirty() const;
 
     HWND getHWND() const;
 	void setHWND(HWND hwnd);
 	void setHWNDoffset(int x, int y);
     void setBackgroundColor(COLORREF c);
 
-    void showDebugNodeData();
+    bool canGoBack();
+    void goBack();
+    bool canGoForward();
+    void goForward();
+    void didCommitProvisionalLoad(blink::WebLocalFrame* frame, const blink::WebHistoryItem& history, blink::WebHistoryCommitType type);
 
     HDC viewDC();
     void paintToBit(void* bits, int pitch);
@@ -117,19 +123,24 @@ public:
     static const int64 kFocusedFrameId = -2;
     static const int64 kUnspecifiedFrameId = -3;
     static const int64 kInvalidFrameId = -4;
+
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
     void initWkeWebView(wke::CWebView* wkeWebView) 
     {
-        ASSERT(!m_wkeWebView);
+        ASSERT(!m_wkeWebView);/**/
         m_wkeWebView = wkeWebView;
     }
     wke::CWebView* wkeWebView() const { return m_wkeWebView; }
     wke::CWebViewHandler& wkeHandler() { return *m_wkeHandler; }
+    void* wkeClientHandler() const { return m_wkeClientHandler; }
+    void wkeSetClientHandler(void* clientHandler) { m_wkeClientHandler = clientHandler; }
 #endif
+
 protected:
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
     wke::CWebView* m_wkeWebView;
     wke::CWebViewHandler* m_wkeHandler;
+    void* m_wkeClientHandler;
 #endif
     WebPageImpl* m_pageImpl;
 };

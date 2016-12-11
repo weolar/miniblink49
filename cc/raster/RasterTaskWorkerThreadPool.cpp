@@ -305,7 +305,7 @@ void RasterTaskGroup::postRasterTask(cc_blink::WebLayerImpl* layer, SkPicture* p
 
 bool RasterTaskGroup::endPostRasterTask()
 {
-    bool noneNeedCommit = (m_drawPropUpdataAction->dirtyRect().isEmpty() && 0 == m_blendAndImageActions.size());
+    bool noneNeedCommit = (m_drawPropUpdataAction->dirtyRects().isEmpty() && 0 == m_blendAndImageActions.size());
     unref();
     return noneNeedCommit;
 }
@@ -363,7 +363,7 @@ void RasterTaskGroup::unref()
 
     // 有时候dirty layer不为0但dirty rect为0，因为有些layer可能只是位置关系变了，但不需要刷新
 	// 有时候没有脏矩形，但有layer需要更新，比如刚创建的时候，layer没有边框位置
-    if (m_drawPropUpdataAction->dirtyRect().isEmpty() && 0 == m_blendAndImageActions.size()) {
+    if (m_drawPropUpdataAction->dirtyRects().isEmpty() && 0 == m_blendAndImageActions.size()) {
         ASSERT(isMainThread());
     }
 
@@ -374,12 +374,12 @@ void RasterTaskGroup::unref()
 
 	if (m_lastBlendActionForPendingInvalidateRect) {
 		if (m_drawPropUpdataAction) { // 脏矩形转移，可以延迟提交
-			m_lastBlendActionForPendingInvalidateRect->appendPendingInvalidateRect(m_drawPropUpdataAction->dirtyRect());
+			m_lastBlendActionForPendingInvalidateRect->appendPendingInvalidateRects(m_drawPropUpdataAction->dirtyRects());
 			m_drawPropUpdataAction->cleanupPendingInvalidateRectIfHasAlendAction();
 		}
 	}
 
-	if (!m_drawPropUpdataAction->dirtyRect().isEmpty() || !m_drawPropUpdataAction->isDirtyLayerEmpty()) {
+	if (!m_drawPropUpdataAction->dirtyRects().isEmpty() || !m_drawPropUpdataAction->isDirtyLayerEmpty()) {
 		if (-1 == m_drawPropUpdataAction->actionId()) {
 			RELEASE_ASSERT(false);
 			m_drawPropUpdataAction->setActionId(m_host->genActionId());

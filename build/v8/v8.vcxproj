@@ -58,7 +58,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>V8_NO_FAST_TLS;WIN32;_DEBUG;_LIB;V8_TARGET_ARCH_X87=1;V8_USE_EXTERNAL_STARTUP_DATA=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>V8_NO_FAST_TLS;WIN32;_DEBUG;_LIB;V8_TARGET_ARCH_IA32=1;V8_DEPRECATION_WARNINGS;NVALGRIND;ENABLE_HANDLE_ZAPPING;V8_USE_EXTERNAL_STARTUP_DATA=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>../../v8</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -79,7 +79,7 @@
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>V8_NO_FAST_TLS;NDEBUG;WIN32;_LIB;V8_TARGET_ARCH_X87=1;V8_USE_EXTERNAL_STARTUP_DATA=1;USING_VC6RT=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>V8_NO_FAST_TLS;NDEBUG;WIN32;_LIB;V8_USE_EXTERNAL_STARTUP_DATA=1;USING_VC6RT=1;V8_TARGET_ARCH_IA32=1;V8_DEPRECATION_WARNINGS;NVALGRIND;ENABLE_HANDLE_ZAPPING;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>../../v8</AdditionalIncludeDirectories>
       <ExceptionHandling>false</ExceptionHandling>
@@ -88,7 +88,7 @@
       <DisableSpecificWarnings>4800;4530</DisableSpecificWarnings>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <EnableEnhancedInstructionSet>NoExtensions</EnableEnhancedInstructionSet>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
       <AdditionalOptions>/Zc:threadSafeInit- %(AdditionalOptions)</AdditionalOptions>
       <StringPooling>true</StringPooling>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
@@ -207,6 +207,7 @@
     <ClInclude Include="..\..\v8\src\compiler\graph-visualizer.h" />
     <ClInclude Include="..\..\v8\src\compiler\graph.h" />
     <ClInclude Include="..\..\v8\src\compiler\greedy-allocator.h" />
+    <ClInclude Include="..\..\v8\src\compiler\ia32\instruction-codes-ia32.h" />
     <ClInclude Include="..\..\v8\src\compiler\instruction-codes.h" />
     <ClInclude Include="..\..\v8\src\compiler\instruction-selector-impl.h" />
     <ClInclude Include="..\..\v8\src\compiler\instruction-selector.h" />
@@ -261,7 +262,6 @@
     <ClInclude Include="..\..\v8\src\compiler\typer.h" />
     <ClInclude Include="..\..\v8\src\compiler\value-numbering-reducer.h" />
     <ClInclude Include="..\..\v8\src\compiler\verifier.h" />
-    <ClInclude Include="..\..\v8\src\compiler\x87\instruction-codes-x87.h" />
     <ClInclude Include="..\..\v8\src\compiler\zone-pool.h" />
     <ClInclude Include="..\..\v8\src\contexts.h" />
     <ClInclude Include="..\..\v8\src\conversions-inl.h" />
@@ -355,6 +355,17 @@
     <ClInclude Include="..\..\v8\src\hydrogen-uint32-analysis.h" />
     <ClInclude Include="..\..\v8\src\hydrogen.h" />
     <ClInclude Include="..\..\v8\src\i18n.h" />
+    <ClInclude Include="..\..\v8\src\ia32\assembler-ia32-inl.h" />
+    <ClInclude Include="..\..\v8\src\ia32\assembler-ia32.h" />
+    <ClInclude Include="..\..\v8\src\ia32\code-stubs-ia32.h" />
+    <ClInclude Include="..\..\v8\src\ia32\codegen-ia32.h" />
+    <ClInclude Include="..\..\v8\src\ia32\frames-ia32.h" />
+    <ClInclude Include="..\..\v8\src\ia32\lithium-codegen-ia32.h" />
+    <ClInclude Include="..\..\v8\src\ia32\lithium-gap-resolver-ia32.h" />
+    <ClInclude Include="..\..\v8\src\ia32\lithium-ia32.h" />
+    <ClInclude Include="..\..\v8\src\ia32\macro-assembler-ia32.h" />
+    <ClInclude Include="..\..\v8\src\ia32\regexp-macro-assembler-ia32.h" />
+    <ClInclude Include="..\..\v8\src\ia32\simulator-ia32.h" />
     <ClInclude Include="..\..\v8\src\icu_util.h" />
     <ClInclude Include="..\..\v8\src\ic\access-compiler.h" />
     <ClInclude Include="..\..\v8\src\ic\call-optimization.h" />
@@ -465,17 +476,6 @@
     <ClInclude Include="..\..\v8\src\version.h" />
     <ClInclude Include="..\..\v8\src\vm-state-inl.h" />
     <ClInclude Include="..\..\v8\src\vm-state.h" />
-    <ClInclude Include="..\..\v8\src\x87\assembler-x87-inl.h" />
-    <ClInclude Include="..\..\v8\src\x87\assembler-x87.h" />
-    <ClInclude Include="..\..\v8\src\x87\code-stubs-x87.h" />
-    <ClInclude Include="..\..\v8\src\x87\codegen-x87.h" />
-    <ClInclude Include="..\..\v8\src\x87\frames-x87.h" />
-    <ClInclude Include="..\..\v8\src\x87\lithium-codegen-x87.h" />
-    <ClInclude Include="..\..\v8\src\x87\lithium-gap-resolver-x87.h" />
-    <ClInclude Include="..\..\v8\src\x87\lithium-x87.h" />
-    <ClInclude Include="..\..\v8\src\x87\macro-assembler-x87.h" />
-    <ClInclude Include="..\..\v8\src\x87\regexp-macro-assembler-x87.h" />
-    <ClInclude Include="..\..\v8\src\x87\simulator-x87.h" />
     <ClInclude Include="..\..\v8\src\zone-allocator.h" />
     <ClInclude Include="..\..\v8\src\zone-containers.h" />
     <ClInclude Include="..\..\v8\src\zone.h" />
@@ -553,6 +553,9 @@
     <ClCompile Include="..\..\v8\src\compiler\graph-visualizer.cc" />
     <ClCompile Include="..\..\v8\src\compiler\graph.cc" />
     <ClCompile Include="..\..\v8\src\compiler\greedy-allocator.cc" />
+    <ClCompile Include="..\..\v8\src\compiler\ia32\code-generator-ia32.cc" />
+    <ClCompile Include="..\..\v8\src\compiler\ia32\instruction-selector-ia32.cc" />
+    <ClCompile Include="..\..\v8\src\compiler\ia32\linkage-ia32.cc" />
     <ClCompile Include="..\..\v8\src\compiler\instruction-selector.cc" />
     <ClCompile Include="..\..\v8\src\compiler\instruction.cc" />
     <ClCompile Include="..\..\v8\src\compiler\js-builtin-reducer.cc" />
@@ -602,9 +605,6 @@
     <ClCompile Include="..\..\v8\src\compiler\typer.cc" />
     <ClCompile Include="..\..\v8\src\compiler\value-numbering-reducer.cc" />
     <ClCompile Include="..\..\v8\src\compiler\verifier.cc" />
-    <ClCompile Include="..\..\v8\src\compiler\x87\code-generator-x87.cc" />
-    <ClCompile Include="..\..\v8\src\compiler\x87\instruction-selector-x87.cc" />
-    <ClCompile Include="..\..\v8\src\compiler\x87\linkage-x87.cc" />
     <ClCompile Include="..\..\v8\src\compiler\zone-pool.cc" />
     <ClCompile Include="..\..\v8\src\contexts.cc" />
     <ClCompile Include="..\..\v8\src\conversions.cc" />
@@ -674,18 +674,35 @@
     <ClCompile Include="..\..\v8\src\hydrogen-types.cc" />
     <ClCompile Include="..\..\v8\src\hydrogen-uint32-analysis.cc" />
     <ClCompile Include="..\..\v8\src\hydrogen.cc" />
+    <ClCompile Include="..\..\v8\src\ia32\assembler-ia32.cc" />
+    <ClCompile Include="..\..\v8\src\ia32\builtins-ia32.cc" />
+    <ClCompile Include="..\..\v8\src\ia32\code-stubs-ia32.cc" />
+    <ClCompile Include="..\..\v8\src\ia32\codegen-ia32.cc" />
+    <ClCompile Include="..\..\v8\src\ia32\cpu-ia32.cc" />
+    <ClCompile Include="..\..\v8\src\ia32\debug-ia32.cc" />
+    <ClCompile Include="..\..\v8\src\ia32\deoptimizer-ia32.cc" />
+    <ClCompile Include="..\..\v8\src\ia32\disasm-ia32.cc" />
+    <ClCompile Include="..\..\v8\src\ia32\frames-ia32.cc" />
+    <ClCompile Include="..\..\v8\src\ia32\full-codegen-ia32.cc" />
+    <ClCompile Include="..\..\v8\src\ia32\interface-descriptors-ia32.cc" />
+    <ClCompile Include="..\..\v8\src\ia32\lithium-codegen-ia32.cc" />
+    <ClCompile Include="..\..\v8\src\ia32\lithium-gap-resolver-ia32.cc" />
+    <ClCompile Include="..\..\v8\src\ia32\lithium-ia32.cc" />
+    <ClCompile Include="..\..\v8\src\ia32\macro-assembler-ia32.cc" />
+    <ClCompile Include="..\..\v8\src\ia32\regexp-macro-assembler-ia32.cc" />
+    <ClCompile Include="..\..\v8\src\ia32\simulator-ia32.cc" />
     <ClCompile Include="..\..\v8\src\ic\access-compiler.cc" />
     <ClCompile Include="..\..\v8\src\ic\call-optimization.cc" />
     <ClCompile Include="..\..\v8\src\ic\handler-compiler.cc" />
+    <ClCompile Include="..\..\v8\src\ic\ia32\access-compiler-ia32.cc" />
+    <ClCompile Include="..\..\v8\src\ic\ia32\handler-compiler-ia32.cc" />
+    <ClCompile Include="..\..\v8\src\ic\ia32\ic-compiler-ia32.cc" />
+    <ClCompile Include="..\..\v8\src\ic\ia32\ic-ia32.cc" />
+    <ClCompile Include="..\..\v8\src\ic\ia32\stub-cache-ia32.cc" />
     <ClCompile Include="..\..\v8\src\ic\ic-compiler.cc" />
     <ClCompile Include="..\..\v8\src\ic\ic-state.cc" />
     <ClCompile Include="..\..\v8\src\ic\ic.cc" />
     <ClCompile Include="..\..\v8\src\ic\stub-cache.cc" />
-    <ClCompile Include="..\..\v8\src\ic\x87\access-compiler-x87.cc" />
-    <ClCompile Include="..\..\v8\src\ic\x87\handler-compiler-x87.cc" />
-    <ClCompile Include="..\..\v8\src\ic\x87\ic-compiler-x87.cc" />
-    <ClCompile Include="..\..\v8\src\ic\x87\ic-x87.cc" />
-    <ClCompile Include="..\..\v8\src\ic\x87\stub-cache-x87.cc" />
     <ClCompile Include="..\..\v8\src\interface-descriptors.cc" />
     <ClCompile Include="..\..\v8\src\interpreter-irregexp.cc" />
     <ClCompile Include="..\..\v8\src\isolate.cc" />
@@ -782,23 +799,6 @@
     <ClCompile Include="..\..\v8\src\v8threads.cc" />
     <ClCompile Include="..\..\v8\src\variables.cc" />
     <ClCompile Include="..\..\v8\src\version.cc" />
-    <ClCompile Include="..\..\v8\src\x87\assembler-x87.cc" />
-    <ClCompile Include="..\..\v8\src\x87\builtins-x87.cc" />
-    <ClCompile Include="..\..\v8\src\x87\code-stubs-x87.cc" />
-    <ClCompile Include="..\..\v8\src\x87\codegen-x87.cc" />
-    <ClCompile Include="..\..\v8\src\x87\cpu-x87.cc" />
-    <ClCompile Include="..\..\v8\src\x87\debug-x87.cc" />
-    <ClCompile Include="..\..\v8\src\x87\deoptimizer-x87.cc" />
-    <ClCompile Include="..\..\v8\src\x87\disasm-x87.cc" />
-    <ClCompile Include="..\..\v8\src\x87\frames-x87.cc" />
-    <ClCompile Include="..\..\v8\src\x87\full-codegen-x87.cc" />
-    <ClCompile Include="..\..\v8\src\x87\interface-descriptors-x87.cc" />
-    <ClCompile Include="..\..\v8\src\x87\lithium-codegen-x87.cc" />
-    <ClCompile Include="..\..\v8\src\x87\lithium-gap-resolver-x87.cc" />
-    <ClCompile Include="..\..\v8\src\x87\lithium-x87.cc" />
-    <ClCompile Include="..\..\v8\src\x87\macro-assembler-x87.cc" />
-    <ClCompile Include="..\..\v8\src\x87\regexp-macro-assembler-x87.cc" />
-    <ClCompile Include="..\..\v8\src\x87\simulator-x87.cc" />
     <ClCompile Include="..\..\v8\src\zone.cc" />
   </ItemGroup>
   <ItemGroup>

@@ -13,17 +13,20 @@ namespace blink {
 
 class PLATFORM_EXPORT GDIPlusReader {
 public:
-    GDIPlusReader(ImageDecoder* parent, Gdiplus::Bitmap* gdipBitmap);
+    GDIPlusReader(ImageDecoder* parent);
     ~GDIPlusReader();
 
     void setBuffer(ImageFrame* buffer) { m_buffer = buffer; }
     void setData(SharedBuffer* data) { m_data = data; }
 
-    bool decodeBMP(bool onlySize);
+    bool decode(bool onlySize);
 
     void setForceBitMaskAlpha() {}
 
 private:
+    void release();
+    void decodeToBitmapByGDIPlus();
+
     // The decoder that owns us.
     ImageDecoder* m_parent;
 
@@ -34,6 +37,8 @@ private:
     RefPtr<SharedBuffer> m_data;
 
     Gdiplus::Bitmap* m_gdipBitmap;
+    IStream* m_istream;
+    HGLOBAL m_memHandle;
 };
 
 } // namespace blink

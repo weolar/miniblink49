@@ -416,49 +416,8 @@ void WebSocketChannelImpl::didCancelAuthenticationChallenge(SocketStreamHandle*,
 {
 }
 
-// void WebSocketChannelImpl::didStartLoading()
-// {
-//     WTF_LOG(Network, "WebSocketChannelImpl %p didStartLoading()", this);
-//     ASSERT(m_blobLoader);
-//     ASSERT(m_blobLoaderStatus == BlobLoaderStarted);
-// }
-// 
-// void WebSocketChannelImpl::didReceiveData()
-// {
-//     WTF_LOG(Network, "WebSocketChannelImpl %p didReceiveData()", this);
-//     ASSERT(m_blobLoader);
-//     ASSERT(m_blobLoaderStatus == BlobLoaderStarted);
-// }
-// 
-// void WebSocketChannelImpl::didFinishLoading()
-// {
-//     WTF_LOG(Network, "WebSocketChannelImpl %p didFinishLoading()", this);
-//     ASSERT(m_blobLoader);
-//     ASSERT(m_blobLoaderStatus == BlobLoaderStarted);
-//     m_blobLoaderStatus = BlobLoaderFinished;
-//     processOutgoingFrameQueue();
-//     deref();
-// }
-// 
-// void WebSocketChannelImpl::didReceiveDataForClient(const char* data, unsigned dataLength)
-// {
-//     DebugBreak();
-// }
-// 
-// void WebSocketChannelImpl::didFail(FileError::ErrorCode errorCode)
-// {
-//     //WTF_LOG(Network, "WebSocketChannelImpl %p didFail() errorCode=%d", this, errorCode);
-//     ASSERT(m_blobLoader);
-//     ASSERT(m_blobLoaderStatus == BlobLoaderStarted);
-//     m_blobLoader = nullptr;
-//     m_blobLoaderStatus = BlobLoaderFailed;
-//     fail("Failed to load Blob: error code = " + String::number((int)errorCode)); // FIXME: Generate human-friendly reason message.
-//     deref();
-// }
-
 void WebSocketChannelImpl::didFinishLoadingBlob(PassRefPtr<DOMArrayBuffer> buffer)
 {
-    m_blobLoader.clear();
     ASSERT(m_handle);
     // The loaded blob is always placed on m_messages[0].
     ASSERT(m_outgoingFrameQueue.size() > 0 && m_outgoingFrameQueue.first()->frameType == QueuedFrameTypeBlob);
@@ -471,18 +430,20 @@ void WebSocketChannelImpl::didFinishLoadingBlob(PassRefPtr<DOMArrayBuffer> buffe
         memcpy(frame->vectorData.data(), buffer->data(), buffer->byteLength());
 
     processOutgoingFrameQueue();
+    m_blobLoader = nullptr;
 }
 
 void WebSocketChannelImpl::didFailLoadingBlob(FileError::ErrorCode errorCode)
 {
-    m_blobLoader.clear();
     if (errorCode == FileError::ABORT_ERR) {
+        m_blobLoader = nullptr;
         // The error is caused by cancel().
         return;
     }
     // FIXME: Generate human-friendly reason message.
     failAsError("Failed to load Blob: error code = " + String::number(errorCode));
     // |this| can be deleted here.
+    m_blobLoader = nullptr;
 }
 
 bool WebSocketChannelImpl::appendToBuffer(const char* data, size_t len)
@@ -880,7 +841,8 @@ void WebSocketChannelImpl::abortOutgoingFrameQueue()
     m_outgoingFrameQueue.clear();
     m_outgoingFrameQueueStatus = OutgoingFrameQueueClosed;
     if (m_blobLoaderStatus == BlobLoaderStarted) {
-        m_blobLoader->cancel();
+        if (m_blobLoader)
+            m_blobLoader->cancel();
         didFail(FileError::ABORT_ERR);
     }
 }

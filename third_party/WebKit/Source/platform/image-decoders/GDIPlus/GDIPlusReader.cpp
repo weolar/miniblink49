@@ -3,6 +3,7 @@
 #include <windows.h>
 
 #include "platform/image-decoders/GDIPlus/GDIPlusReader.h"
+#include "platform/graphics/GDIPlusInit.h"
 
 #undef min
 #undef max
@@ -12,18 +13,34 @@ using std::min;
 
 namespace blink {
 
-GDIPlusReader::GDIPlusReader(ImageDecoder* parent, Gdiplus::Bitmap* gdipBitmap)
+GDIPlusReader::GDIPlusReader(ImageDecoder* parent)
     : m_parent(parent)
     , m_buffer(0)
-    , m_gdipBitmap(gdipBitmap)
+    , m_gdipBitmap(nullptr)
+    , m_istream(nullptr)
+    , m_memHandle(nullptr)
 {
 
 }
 
 GDIPlusReader::~GDIPlusReader()
 {
-    delete m_gdipBitmap;
+    release();
+}
+
+void GDIPlusReader::release()
+{
+    if (m_gdipBitmap)
+        delete m_gdipBitmap;
     m_gdipBitmap = nullptr;
+
+    if (m_memHandle)
+        ::GlobalFree(m_memHandle);
+    m_memHandle = nullptr;
+
+    if (m_istream)
+        m_istream->Release();
+    m_istream = nullptr;
 }
 
 static void fillbitmap(Gdiplus::Bitmap* gdipBitmap, ImageFrame* buffer)
@@ -60,22 +77,49 @@ static void fillbitmap(Gdiplus::Bitmap* gdipBitmap, ImageFrame* buffer)
     gdipBitmap->UnlockBits(&lockedBitmapData);
 }
 
-bool GDIPlusReader::decodeBMP(bool onlySize)
+void GDIPlusReader::decodeToBitmapByGDIPlus()
 {
-    // Set our size.
+    initGDIPlusClsids();
+
+    release();
+
+    m_memHandle = ::GlobalAlloc(GMEM_FIXED, m_data->size());
+    BYTE* pMem = (BYTE*)::GlobalLock(m_memHandle);
+    memcpy(pMem, m_data->data(), m_data->size());
+    ::GlobalUnlock(m_memHandle);
+
+    ::CreateStreamOnHGlobal(m_memHandle, FALSE, &m_istream);
+
+    m_gdipBitmap = Gdiplus::Bitmap::FromStream(m_istream);
+}
+
+bool GDIPlusReader::decode(bool onlySize)
+{
+    decodeToBitmapByGDIPlus();
+    if (!m_gdipBitmap)
+        return false;
+
     int width = m_gdipBitmap->GetWidth();
     int height = m_gdipBitmap->GetHeight();
-    if (0 == width || 0 == height) {
-        m_buffer->setStatus(ImageFrame::FramePartial);
-        return false;
-    }
 
+    // Set our size.
+    if (0 == width || 0 == height)
+        return false;
+    
     if (!m_parent->setSize(width, height))
         return false;
 
     if (onlySize)
         return true;
 
+    if (!m_buffer)
+        return false;
+
+    if (0 == width || 0 == height) {
+        m_buffer->setStatus(ImageFrame::FramePartial);
+        return false;
+    }
+    
     // Initialize the framebuffer if needed.
     ASSERT(m_buffer);  // Parent should set this before asking us to decode!
     if (m_buffer->status() == ImageFrame::FrameEmpty) {
