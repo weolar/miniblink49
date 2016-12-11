@@ -434,24 +434,26 @@ void CWebView::paint(void* bits, int bufWid, int bufHei, int xDst, int yDst, int
 bool CWebView::canGoBack() const
 {
     //return page()->backForwardList()->backItem() && !page()->defersLoading();
-    return false;
+    return m_webPage->canGoBack();
 }
 
 bool CWebView::goBack()
 {
     //return page()->goBack();
+    m_webPage->goBack();
     return true;
 }
 
 bool CWebView::canGoForward() const
 {
     //return page()->backForwardList()->forwardItem() && !page()->defersLoading();
-    return false;
+    return m_webPage->canGoForward();
 }
 
 bool CWebView::goForward()
 {
     //return page()->goForward();
+    m_webPage->goForward();
     return true;
 }
 
