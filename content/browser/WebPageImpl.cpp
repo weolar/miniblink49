@@ -46,6 +46,7 @@
 #include "content/browser/PlatformEventHandler.h"
 #include "content/browser/PopupMenuWin.h"
 #include "content/browser/WebFrameClientImpl.h"
+#include "content/browser/NavigationController.h"
 #include "content/web_impl_win/BlinkPlatformImpl.h"
 #include "content/web_impl_win/WebThreadImpl.h"
 #include "content/web_impl_win/npapi/PluginDatabase.h"
@@ -65,6 +66,7 @@
 #include "wke/wkeJsBindFreeTempObject.h"
 #include "wke/wkeWebWindow.h"
 #endif
+
 using namespace blink;
 
 namespace blink {
@@ -118,9 +120,8 @@ WebPageImpl::WebPageImpl()
     m_browser = nullptr;
 #endif
     m_postCloseWidgetSoonMessage = false;
-    
+    m_navigationController = new NavigationController(this);
     m_layerTreeHost = new cc::LayerTreeHost(this);
-
     m_webFrameClient = new content::WebFrameClientImpl();
     
     WebLocalFrameImpl* webLocalFrameImpl = (WebLocalFrameImpl*)WebLocalFrame::create(WebTreeScopeType::Document, m_webFrameClient);
@@ -155,6 +156,9 @@ WebPageImpl::~WebPageImpl()
 {
     ASSERT(pageDestroyed == m_state);
     m_state = pageDestroyed;
+
+    delete m_navigationController;
+    m_navigationController = nullptr;
 
 	delete m_layerTreeHost;
 	m_layerTreeHost = nullptr;
@@ -1289,6 +1293,16 @@ LRESULT WebPageImpl::fireMouseEvent(HWND hWnd, UINT message, WPARAM wParam, LPAR
     return 0;
 }
 
+void WebPageImpl::loadHistoryItem(int64 frameId, const WebHistoryItem& item, WebHistoryLoadType type, WebURLRequest::CachePolicy policy)
+{
+    WebFrame* webFrame = getWebFrameFromFrameId(frameId);
+    if (!webFrame)
+        return;
+
+    AutoRecordActions autoRecordActions(m_layerTreeHost);
+    webFrame->loadHistoryItem(item, type, policy);
+}
+
 void WebPageImpl::loadURL(int64 frameId, const wchar_t* url, const blink::Referrer& referrer, const wchar_t* extraHeaders)
 {
     int length = wcslen(url);
@@ -1342,6 +1356,26 @@ void WebPageImpl::setBrowser(CefBrowserHostImpl* browser)
     m_browser = browser;
 }
 #endif
+
+void WebPageImpl::didCommitProvisionalLoad(blink::WebLocalFrame* frame, const blink::WebHistoryItem& history, blink::WebHistoryCommitType type)
+{
+    m_navigationController->insertOrReplaceEntry(history, type);
+}
+
+void WebPageImpl::navigateBackForwardSoon(int offset)
+{
+    m_navigationController->navigateBackForwardSoon(offset);
+}
+
+int WebPageImpl::historyBackListCount()
+{
+    return m_navigationController->historyBackListCount();
+}
+
+int WebPageImpl::historyForwardListCount()
+{
+    return m_navigationController->historyForwardListCount();
+}
 
 WebFrame* WebPageImpl::getWebFrameFromFrameId(int64 frameId)
 {

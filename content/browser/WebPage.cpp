@@ -321,6 +321,7 @@ void WebPage::setBackgroundColor(COLORREF c) {
     if (m_pageImpl)
         m_pageImpl->m_bdColor = c;
 }
+
 #if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 CefBrowserHostImpl* WebPage::browser()
 { 
@@ -337,6 +338,39 @@ void WebPage::setBrowser(CefBrowserHostImpl* browserImpl)
         m_pageImpl->setBrowser(browserImpl);
 }
 #endif
+
+bool WebPage::canGoBack()
+{
+    if (!m_pageImpl)
+        return false;
+    return m_pageImpl->historyBackListCount() > 0;
+}
+
+void WebPage::goBack()
+{
+    if (m_pageImpl)
+        m_pageImpl->navigateBackForwardSoon(-1);
+}
+
+bool WebPage::canGoForward()
+{
+    if (!m_pageImpl)
+        return false;
+    return m_pageImpl->historyForwardListCount() > 0;
+}
+
+void WebPage::goForward()
+{
+    if (m_pageImpl)
+        m_pageImpl->navigateBackForwardSoon(1);
+}
+
+void WebPage::didCommitProvisionalLoad(blink::WebLocalFrame* frame, const blink::WebHistoryItem& history, blink::WebHistoryCommitType type)
+{
+    if (m_pageImpl)
+        m_pageImpl->didCommitProvisionalLoad(frame, history, type);
+}
+
 WebViewImpl* WebPage::webViewImpl()
 {
     ASSERT(m_pageImpl);

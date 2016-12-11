@@ -7,6 +7,7 @@
 #include "third_party/WebKit/Source/platform/geometry/IntRect.h"
 #include "third_party/WebKit/Source/wtf/FastAllocBase.h"
 #include "third_party/WebKit/public/web/WebViewClient.h"
+#include "third_party/WebKit/public/web/WebHistoryCommitType.h"
 
 #if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 class CefBrowserHostImpl;
@@ -98,7 +99,11 @@ public:
 	void setHWNDoffset(int x, int y);
     void setBackgroundColor(COLORREF c);
 
-    void showDebugNodeData();
+    bool canGoBack();
+    void goBack();
+    bool canGoForward();
+    void goForward();
+    void didCommitProvisionalLoad(blink::WebLocalFrame* frame, const blink::WebHistoryItem& history, blink::WebHistoryCommitType type);
 
     HDC viewDC();
     void paintToBit(void* bits, int pitch);

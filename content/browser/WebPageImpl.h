@@ -4,6 +4,7 @@
 #include "base/rand_util.h"
 
 #include "third_party/WebKit/public/web/WebViewClient.h"
+#include "third_party/WebKit/public/web/WebHistoryCommitType.h"
 #include "third_party/WebKit/Source/platform/graphics/Color.h"
 #include "third_party/WebKit/public/platform/WebCursorInfo.h"
 
@@ -13,24 +14,28 @@
 namespace cc {
 class LayerTreeHost;
 }
+
 #if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 namespace cef {
 class BrowserHostImpl;
 }
 #endif
+
 namespace blink {
 struct Referrer;
 class WebViewImpl;
 }
+
 #if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 class CefBrowserHostImpl;
 #endif
+
 namespace content {
 
 class WebFrameClientImpl;
 class WebPage;
 class PlatformEventHandler;
-
+class NavigationController;
 
 class WebPageImpl : public blink::WebViewClient {
 public:
@@ -130,9 +135,16 @@ public:
     
     cc::LayerTreeHost* layerTreeHost() { return m_layerTreeHost; }
 
+    void loadHistoryItem(int64 frameId, const blink::WebHistoryItem& item, blink::WebHistoryLoadType type, blink::WebURLRequest::CachePolicy policy);
 	void loadURL(int64 frameId, const wchar_t* url, const blink::Referrer& referrer, const wchar_t* extraHeaders);
 	void loadRequest(int64 frameId, const blink::WebURLRequest& request);
 	void loadHTMLString(int64 frameId, const blink::WebData& html, const blink::WebURL& baseURL, const blink::WebURL& unreachableURL, bool replace);
+
+    // Session history -----------------------------------------------------
+    void didCommitProvisionalLoad(blink::WebLocalFrame* frame, const blink::WebHistoryItem& history, blink::WebHistoryCommitType type);
+    virtual void navigateBackForwardSoon(int offset) override;
+    virtual int historyBackListCount() override;
+    virtual int historyForwardListCount() override;
 
 	bool initSetting();
 #if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
@@ -215,6 +227,7 @@ public:
 
     WTF::Vector<DestroyNotif*> m_destroyNotifs;
 
+    NavigationController* m_navigationController;
     int m_debugCount;
 };
 

@@ -154,8 +154,8 @@ void WebFrameClientImpl::onLoadingStateChange(bool isLoading, bool toDifferentDo
     if (!webview || !webview->client())
         return;
 
-    bool canGoBack = webview->client()->historyForwardListCount() > 0;
-    bool canGoForward = webview->client()->historyBackListCount() > 0;
+    bool canGoBack = webview->client()->historyBackListCount() > 0;
+    bool canGoForward = webview->client()->historyForwardListCount() > 0;
 #if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
     CefRefPtr<CefLoadHandler> handler = browser->client()->GetLoadHandler();
     if (handler.get())
@@ -234,6 +234,8 @@ void WebFrameClientImpl::didCommitProvisionalLoad(WebLocalFrame* frame, const We
         handler.urlChangedCallback(m_webPage->wkeWebView(), handler.urlChangedCallbackParam, &string);
     }
 #endif
+
+    m_webPage->didCommitProvisionalLoad(frame, history, type);
 }
 
 void WebFrameClientImpl::didCreateNewDocument(WebLocalFrame* frame) { }
