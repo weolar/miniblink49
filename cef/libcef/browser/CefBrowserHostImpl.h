@@ -121,10 +121,10 @@ public:
 
     // CefBrowser methods.
     virtual CefRefPtr<CefBrowserHost> GetHost() override;
-    virtual bool CanGoBack() override { return false; }
-    virtual void GoBack() override {}
-    virtual bool CanGoForward() override { return false; }
-    virtual void GoForward() override {}
+    virtual bool CanGoBack() override;
+    virtual void GoBack() override;
+    virtual bool CanGoForward() override;
+    virtual void GoForward() override;
     virtual bool IsLoading() override;
     virtual void Reload() override;
     virtual void ReloadIgnoreCache() override;
