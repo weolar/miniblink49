@@ -677,7 +677,7 @@ void CWebView::setFocus()
 
 void CWebView::killFocus()
 {
-    m_webPage->webViewImpl()->setFocus(false);
+    m_webPage->fireKillFocusEvent(m_webPage->getHWND(), WM_KILLFOCUS, 0, 0);
 }
 
 wkeRect CWebView::getCaret()
