@@ -672,7 +672,7 @@ bool CWebView::fireWindowsMessage(HWND hWnd, UINT message, WPARAM wParam, LPARAM
 
 void CWebView::setFocus()
 {
-    m_webPage->webViewImpl()->setFocus(true);
+    m_webPage->fireSetFocusEvent(m_webPage->getHWND(), WM_SETFOCUS, 0, 0);
 }
 
 void CWebView::killFocus()
