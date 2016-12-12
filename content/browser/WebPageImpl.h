@@ -228,6 +228,8 @@ public:
     WTF::Vector<DestroyNotif*> m_destroyNotifs;
 
     NavigationController* m_navigationController;
+
+    HWND m_popupHandle;
     int m_debugCount;
 };
 
