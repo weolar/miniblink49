@@ -1267,6 +1267,14 @@ void WebPageImpl::fireCaptureChangedEvent(HWND hWnd, UINT message, WPARAM wParam
     m_platformEventHandler->fireCaptureChangedEvent(hWnd, message, wParam, lParam);
 }
 
+void WebPageImpl::fireSetFocusEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+    CHECK_FOR_REENTER0();
+    freeV8TempObejctOnOneFrameBefore();
+    m_webViewImpl->setFocus(true);
+    m_webViewImpl->setIsActive(true);
+}
+
 void WebPageImpl::fireKillFocusEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     CHECK_FOR_REENTER0();
