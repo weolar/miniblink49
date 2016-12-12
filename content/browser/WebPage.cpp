@@ -158,6 +158,12 @@ void WebPage::fireCaptureChangedEvent(HWND hWnd, UINT message, WPARAM wParam, LP
         m_pageImpl->fireCaptureChangedEvent(hWnd, message, wParam, lParam);
 }
 
+void WebPage::fireSetFocusEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+    if (m_pageImpl)
+        m_pageImpl->fireSetFocusEvent(hWnd, message, wParam, lParam);
+}
+
 void WebPage::fireKillFocusEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     if (m_pageImpl)

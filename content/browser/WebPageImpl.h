@@ -104,6 +104,7 @@ public:
     void fireResizeEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
     void fireCaptureChangedEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
     void firePaintEvent(HDC hdc, const RECT* paintRect);
+    void fireSetFocusEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
     void fireKillFocusEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
     LRESULT fireMouseEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, BOOL* bHandle);
     void fireTouchEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
@@ -228,6 +229,8 @@ public:
     WTF::Vector<DestroyNotif*> m_destroyNotifs;
 
     NavigationController* m_navigationController;
+
+    HWND m_popupHandle;
     int m_debugCount;
 };
 

@@ -119,6 +119,7 @@ WebPageImpl::WebPageImpl()
 #if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
     m_browser = nullptr;
 #endif
+    m_popupHandle = nullptr;
     m_postCloseWidgetSoonMessage = false;
     m_navigationController = new NavigationController(this);
     m_layerTreeHost = new cc::LayerTreeHost(this);
@@ -1266,10 +1267,24 @@ void WebPageImpl::fireCaptureChangedEvent(HWND hWnd, UINT message, WPARAM wParam
     m_platformEventHandler->fireCaptureChangedEvent(hWnd, message, wParam, lParam);
 }
 
+void WebPageImpl::fireSetFocusEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+    CHECK_FOR_REENTER0();
+    freeV8TempObejctOnOneFrameBefore();
+    m_webViewImpl->setFocus(true);
+    m_webViewImpl->setIsActive(true);
+}
+
 void WebPageImpl::fireKillFocusEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     CHECK_FOR_REENTER0();
     freeV8TempObejctOnOneFrameBefore();
+
+    HWND currentFocus = ::GetFocus();
+    if (currentFocus == m_popupHandle)
+        return;
+    m_webViewImpl->setFocus(false);
+    m_popupHandle = nullptr;
 }
 
 void WebPageImpl::fireTouchEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -1425,7 +1440,11 @@ WebWidget* WebPageImpl::createPopupMenu(WebPopupType type)
 {
     if (!m_hWnd)
         m_hWnd = ::GetActiveWindow();
-    return PopupMenuWin::create(m_hWnd, m_hWndoffset, m_webViewImpl, type);
+    
+    PopupMenuWin* popup = nullptr;
+    blink::WebWidget* result = PopupMenuWin::create(m_hWnd, m_hWndoffset, m_webViewImpl, type, &popup);
+    m_popupHandle = popup->popupHandle();
+    return result;
 }
 
 bool WebPageImpl::initSetting()
