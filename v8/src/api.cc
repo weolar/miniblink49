@@ -7180,6 +7180,11 @@ void Isolate::Exit() {
   isolate->Exit();
 }
 
+void Isolate::SetAbortOnUncaughtExceptionCallback(
+	AbortOnUncaughtExceptionCallback callback) {
+	i::Isolate* isolate = reinterpret_cast<i::Isolate*>(this);
+	isolate->SetAbortOnUncaughtExceptionCallback(callback);
+}
 
 Isolate::DisallowJavascriptExecutionScope::DisallowJavascriptExecutionScope(
     Isolate* isolate,

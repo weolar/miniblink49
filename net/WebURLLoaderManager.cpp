@@ -530,12 +530,15 @@ static size_t headerCallback(char* ptr, size_t size, size_t nmemb, void* data)
 		if (d->m_response.httpHeaderField(WebString::fromUTF8("Content-Type")).equals("application/octet-stream")) {
 			RequestExtraData* requestExtraData = reinterpret_cast<RequestExtraData*>(job->firstRequest()->extraData());
 			WebPage* page = requestExtraData->page;
-			if (page->wkeHandler().downloadCallback) {
+			if (page)
+			{
+				if (page->wkeHandler().downloadCallback) {
 
-				if (page->wkeHandler().downloadCallback(page->wkeWebView(), page->wkeHandler().downloadCallbackParam, encodeWithURLEscapeSequences(job->firstRequest()->url().string()).latin1().data())) {
-					blink::WebLocalFrame* frame = requestExtraData->frame;
-					frame->stopLoading();
-					return totalSize;
+					if (page->wkeHandler().downloadCallback(page->wkeWebView(), page->wkeHandler().downloadCallbackParam, encodeWithURLEscapeSequences(job->firstRequest()->url().string()).latin1().data())) {
+						blink::WebLocalFrame* frame = requestExtraData->frame;
+						frame->stopLoading();
+						return totalSize;
+					}
 				}
 			}
 		}
