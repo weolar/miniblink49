@@ -201,6 +201,7 @@ public:
     int m_postpaintMessageCount;
     int m_scheduleMessageCount;
     bool m_needsCommit;
+    int m_commitCount;
     bool m_needsLayout;
     bool m_isDrawDirty;
     

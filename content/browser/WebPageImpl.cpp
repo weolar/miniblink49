@@ -102,6 +102,7 @@ WebPageImpl::WebPageImpl()
     m_bdColor = RGB(199, 237, 204) | 0xff000000;
     m_memoryCanvas = nullptr;
     m_needsCommit = true;
+    m_commitCount = 0;
     m_needsLayout = true;
     m_isDrawDirty = true;
     m_layerTreeHost = nullptr;
@@ -756,21 +757,23 @@ public:
 #endif
 	}
 
-    virtual ~CommitTask() OVERRIDE
+    virtual ~CommitTask() override
     {
-        if (m_client)
+        if (m_client) {
+            atomicDecrement(&m_client->m_commitCount);
             m_client->unregisterDestroyNotif(this);
+        }
 #ifndef NDEBUG
 		commitTaskCounter.decrement();
 #endif
 	}
 
-    virtual void destroy()
+    virtual void destroy() override
     {
         m_client = nullptr;
     }
 
-    virtual void run() OVERRIDE
+    virtual void run() override
     {
         if (m_client)
             m_client->beginMainFrame();
@@ -790,9 +793,12 @@ void WebPageImpl::setNeedsCommitAndNotLayout()
         m_browser->SetNeedHeartbeat();
 	} else {
 #endif
-        blink::Platform* platfrom = blink::Platform::current();
-        WebThreadImpl* threadImpl = (WebThreadImpl*)platfrom->mainThread();
-        threadImpl->postTask(FROM_HERE, new CommitTask(this));
+        if (0 == m_commitCount) {
+            atomicIncrement(&m_commitCount);
+            blink::Platform* platfrom = blink::Platform::current();
+            WebThreadImpl* threadImpl = (WebThreadImpl*)platfrom->mainThread();
+            threadImpl->postTask(FROM_HERE, new CommitTask(this));
+        }
 #if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
     }
 #endif

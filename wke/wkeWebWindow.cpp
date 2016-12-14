@@ -193,15 +193,12 @@ LRESULT CWebWindow::_windowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM l
 {
     switch(message) {
     case WM_CREATE:
-        {
-            DragAcceptFiles(hwnd, TRUE);
-            SetTimer(hwnd, 100, 20, NULL);
-        }
+        DragAcceptFiles(hwnd, TRUE);
+        SetTimer(hwnd, 100, 50, NULL);
         return 0;
 
     case WM_CLOSE:
-        if (m_windowClosingCallback)
-        {
+        if (m_windowClosingCallback) {
             if (!m_windowClosingCallback(this, m_windowClosingCallbackParam))
                 return 0;
         }
@@ -256,8 +253,7 @@ LRESULT CWebWindow::_windowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM l
     case WM_ERASEBKGND:
         return TRUE;
 
-    case WM_SIZE:
-    {
+    case WM_SIZE: {
         RECT rc = { 0 };
         GetClientRect(hwnd, &rc);
         int width = rc.right - rc.left;
@@ -268,8 +264,7 @@ LRESULT CWebWindow::_windowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM l
 
         return 0;
     }
-    case WM_DROPFILES:
-    {
+    case WM_DROPFILES: {
         Vector<wchar_t> szFile;
         szFile.resize(2 * MAX_PATH);
         memset(szFile.data(), 0, sizeof(wchar_t) * 2 * (MAX_PATH));
@@ -287,10 +282,8 @@ LRESULT CWebWindow::_windowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM l
             }
         }
         DragFinish(hDrop);
+        return 0;
     }
-    return 0;
-
-
     //case WM_NCHITTEST:
     //    if (IsWindow(m_hWnd) && flagsOff(GetWindowLong(m_hWnd, GWL_STYLE), WS_CAPTION))
     //    {
@@ -399,48 +392,42 @@ LRESULT CWebWindow::_windowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM l
     //    }
     //    break;
 
-    case WM_KEYDOWN:
-        {
-            unsigned int virtualKeyCode = wParam;
-            unsigned int flags = 0;
-            if (HIWORD(lParam) & KF_REPEAT)
-                flags |= WKE_REPEAT;
-            if (HIWORD(lParam) & KF_EXTENDED)
-                flags |= WKE_EXTENDED;
+    case WM_KEYDOWN: {
+        unsigned int virtualKeyCode = wParam;
+        unsigned int flags = 0;
+        if (HIWORD(lParam) & KF_REPEAT)
+            flags |= WKE_REPEAT;
+        if (HIWORD(lParam) & KF_EXTENDED)
+            flags |= WKE_EXTENDED;
 
-            if (wkeFireKeyDownEvent(this, virtualKeyCode, flags, false))
-                return 0;
-        }
+        if (wkeFireKeyDownEvent(this, virtualKeyCode, flags, false))
+            return 0;
         break;
+    }
+    case WM_KEYUP: {
+        unsigned int virtualKeyCode = wParam;
+        unsigned int flags = 0;
+        if (HIWORD(lParam) & KF_REPEAT)
+            flags |= WKE_REPEAT;
+        if (HIWORD(lParam) & KF_EXTENDED)
+            flags |= WKE_EXTENDED;
 
-    case WM_KEYUP:
-        {
-            unsigned int virtualKeyCode = wParam;
-            unsigned int flags = 0;
-            if (HIWORD(lParam) & KF_REPEAT)
-                flags |= WKE_REPEAT;
-            if (HIWORD(lParam) & KF_EXTENDED)
-                flags |= WKE_EXTENDED;
-
-            if (wkeFireKeyUpEvent(this, virtualKeyCode, flags, false))
-                return 0;
-        }
+        if (wkeFireKeyUpEvent(this, virtualKeyCode, flags, false))
+            return 0;
         break;
+    }
+    case WM_CHAR: {
+        unsigned int charCode = wParam;
+        unsigned int flags = 0;
+        if (HIWORD(lParam) & KF_REPEAT)
+            flags |= WKE_REPEAT;
+        if (HIWORD(lParam) & KF_EXTENDED)
+            flags |= WKE_EXTENDED;
 
-    case WM_CHAR:
-        {
-            unsigned int charCode = wParam;
-            unsigned int flags = 0;
-            if (HIWORD(lParam) & KF_REPEAT)
-                flags |= WKE_REPEAT;
-            if (HIWORD(lParam) & KF_EXTENDED)
-                flags |= WKE_EXTENDED;
-
-            if (wkeFireKeyPressEvent(this, charCode, flags, false))
-                return 0;
-        }
+        if (wkeFireKeyPressEvent(this, charCode, flags, false))
+            return 0;
         break;
-
+    }
     case WM_LBUTTONDOWN:
     case WM_MBUTTONDOWN:
     case WM_RBUTTONDOWN:
@@ -450,93 +437,88 @@ LRESULT CWebWindow::_windowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM l
     case WM_LBUTTONUP:
     case WM_MBUTTONUP:
     case WM_RBUTTONUP:
-    case WM_MOUSEMOVE:
-        {
-            if (message == WM_LBUTTONDOWN || message == WM_MBUTTONDOWN || message == WM_RBUTTONDOWN) {
-                SetFocus(hwnd);
-                SetCapture(hwnd);
-            } else if (message == WM_LBUTTONUP || message == WM_MBUTTONUP || message == WM_RBUTTONUP) {
-                ReleaseCapture();
-            }
-
-            int x = LOWORD(lParam);
-            int y = HIWORD(lParam);
-
-            unsigned int flags = 0;
-
-            if (wParam & MK_CONTROL)
-                flags |= WKE_CONTROL;
-            if (wParam & MK_SHIFT)
-                flags |= WKE_SHIFT;
-
-            if (wParam & MK_LBUTTON)
-                flags |= WKE_LBUTTON;
-            if (wParam & MK_MBUTTON)
-                flags |= WKE_MBUTTON;
-            if (wParam & MK_RBUTTON)
-                flags |= WKE_RBUTTON;
-
-            if (wkeFireMouseEvent(this, message, x, y, flags))
-                return 0;
+    case WM_MOUSEMOVE: {
+        if (message == WM_LBUTTONDOWN || message == WM_MBUTTONDOWN || message == WM_RBUTTONDOWN) {
+            SetFocus(hwnd);
+            SetCapture(hwnd);
         }
-        break;
-
-    case WM_CONTEXTMENU:
-        {
-            POINT pt;
-            pt.x = LOWORD(lParam);
-            pt.y = HIWORD(lParam);
-
-            if (pt.x != -1 && pt.y != -1)
-                ScreenToClient(hwnd, &pt);
-
-            unsigned int flags = 0;
-
-            if (wParam & MK_CONTROL)
-                flags |= WKE_CONTROL;
-            if (wParam & MK_SHIFT)
-                flags |= WKE_SHIFT;
-
-            if (wParam & MK_LBUTTON)
-                flags |= WKE_LBUTTON;
-            if (wParam & MK_MBUTTON)
-                flags |= WKE_MBUTTON;
-            if (wParam & MK_RBUTTON)
-                flags |= WKE_RBUTTON;
-
-            if (wkeFireContextMenuEvent(this, pt.x, pt.y, flags))
-                return 0;
+        else if (message == WM_LBUTTONUP || message == WM_MBUTTONUP || message == WM_RBUTTONUP) {
+            ReleaseCapture();
         }
-        break;
 
-    case WM_MOUSEWHEEL:
-        {
-            POINT pt;
-            pt.x = LOWORD(lParam);
-            pt.y = HIWORD(lParam);
+        int x = LOWORD(lParam);
+        int y = HIWORD(lParam);
+
+        unsigned int flags = 0;
+
+        if (wParam & MK_CONTROL)
+            flags |= WKE_CONTROL;
+        if (wParam & MK_SHIFT)
+            flags |= WKE_SHIFT;
+
+        if (wParam & MK_LBUTTON)
+            flags |= WKE_LBUTTON;
+        if (wParam & MK_MBUTTON)
+            flags |= WKE_MBUTTON;
+        if (wParam & MK_RBUTTON)
+            flags |= WKE_RBUTTON;
+
+        if (wkeFireMouseEvent(this, message, x, y, flags))
+            return 0;
+        break;
+    }
+    case WM_CONTEXTMENU: {
+        POINT pt;
+        pt.x = LOWORD(lParam);
+        pt.y = HIWORD(lParam);
+
+        if (pt.x != -1 && pt.y != -1)
             ScreenToClient(hwnd, &pt);
 
-            int delta = GET_WHEEL_DELTA_WPARAM(wParam);
+        unsigned int flags = 0;
 
-            unsigned int flags = 0;
+        if (wParam & MK_CONTROL)
+            flags |= WKE_CONTROL;
+        if (wParam & MK_SHIFT)
+            flags |= WKE_SHIFT;
 
-            if (wParam & MK_CONTROL)
-                flags |= WKE_CONTROL;
-            if (wParam & MK_SHIFT)
-                flags |= WKE_SHIFT;
+        if (wParam & MK_LBUTTON)
+            flags |= WKE_LBUTTON;
+        if (wParam & MK_MBUTTON)
+            flags |= WKE_MBUTTON;
+        if (wParam & MK_RBUTTON)
+            flags |= WKE_RBUTTON;
 
-            if (wParam & MK_LBUTTON)
-                flags |= WKE_LBUTTON;
-            if (wParam & MK_MBUTTON)
-                flags |= WKE_MBUTTON;
-            if (wParam & MK_RBUTTON)
-                flags |= WKE_RBUTTON;
-
-            if (wkeFireMouseWheelEvent(this, pt.x, pt.y, delta, flags))
-                return 0;
-        }
+        if (wkeFireContextMenuEvent(this, pt.x, pt.y, flags))
+            return 0;
         break;
+    }
+    case WM_MOUSEWHEEL: {
+        POINT pt;
+        pt.x = LOWORD(lParam);
+        pt.y = HIWORD(lParam);
+        ScreenToClient(hwnd, &pt);
 
+        int delta = GET_WHEEL_DELTA_WPARAM(wParam);
+
+        unsigned int flags = 0;
+
+        if (wParam & MK_CONTROL)
+            flags |= WKE_CONTROL;
+        if (wParam & MK_SHIFT)
+            flags |= WKE_SHIFT;
+
+        if (wParam & MK_LBUTTON)
+            flags |= WKE_LBUTTON;
+        if (wParam & MK_MBUTTON)
+            flags |= WKE_MBUTTON;
+        if (wParam & MK_RBUTTON)
+            flags |= WKE_RBUTTON;
+
+        if (wkeFireMouseWheelEvent(this, pt.x, pt.y, delta, flags))
+            return 0;
+        break;
+    }
     case WM_SETFOCUS:
         wkeSetFocus(this);
         return 0;
@@ -550,8 +532,7 @@ LRESULT CWebWindow::_windowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM l
             return 0;
         break;
 
-    case WM_IME_STARTCOMPOSITION:
-        {
+    case WM_IME_STARTCOMPOSITION: {
             wkeRect caret = wkeGetCaretRect(this);
 
 			COMPOSITIONFORM COMPOSITIONFORM;
@@ -562,7 +543,7 @@ LRESULT CWebWindow::_windowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM l
 			HIMC hIMC = ImmGetContext(hwnd);
 			ImmSetCompositionWindow(hIMC, &COMPOSITIONFORM);
 			ImmReleaseContext(hwnd, hIMC);
-        }
+    }
         return 0;
     }
 
