@@ -4,6 +4,7 @@
 #include <xmmintrin.h>
 #include <map>
 #include <set>
+#include <intrin.h>
 
 class CallAddrsRecord {
 public:
