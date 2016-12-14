@@ -1018,7 +1018,10 @@ Object* Isolate::Throw(Object* exception, MessageLocation* location) {
       // present.  This flag is intended for use by JavaScript developers, so
       // print a user-friendly stack trace (not an internal one).
       if (FLAG_abort_on_uncaught_exception &&
-          PredictExceptionCatcher() != CAUGHT_BY_JAVASCRIPT) {
+          PredictExceptionCatcher() != CAUGHT_BY_JAVASCRIPT &&
+		  (!abort_on_uncaught_exception_callback_ ||
+			  abort_on_uncaught_exception_callback_(
+				  reinterpret_cast<v8::Isolate*>(this)))) {
         FLAG_abort_on_uncaught_exception = false;  // Prevent endless recursion.
         PrintF(stderr, "%s\n\nFROM\n",
                MessageHandler::GetLocalizedMessage(this, message_obj).get());
@@ -1611,6 +1614,10 @@ void Isolate::SetCaptureStackTraceForUncaughtExceptions(
   stack_trace_for_uncaught_exceptions_options_ = options;
 }
 
+void Isolate::SetAbortOnUncaughtExceptionCallback(
+	v8::Isolate::AbortOnUncaughtExceptionCallback callback) {
+	abort_on_uncaught_exception_callback_ = callback;
+}
 
 Handle<Context> Isolate::native_context() {
   return handle(context()->native_context());

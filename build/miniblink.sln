@@ -32,6 +32,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wkexe", "..\wkexe\wkexe.vcx
 		{D4CF74E8-8AE3-4534-92BE-10503E556E87} = {D4CF74E8-8AE3-4534-92BE-10503E556E87}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "node", "node\node.vcxproj", "{0134FD1E-7817-485F-9506-11B129AC621B}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "openssl", "..\openssl\openssl.vcxproj", "{5C6460DB-F7B1-5315-A0DE-79A9DFC525A1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -96,6 +100,18 @@ Global
 		{14BD76E4-E8CE-486D-B552-AE17332AFD67}.Release|Win32.ActiveCfg = Release|Win32
 		{14BD76E4-E8CE-486D-B552-AE17332AFD67}.Release|Win32.Build.0 = Release|Win32
 		{14BD76E4-E8CE-486D-B552-AE17332AFD67}.Release|x64.ActiveCfg = Release|Win32
+		{0134FD1E-7817-485F-9506-11B129AC621B}.Debug|Win32.ActiveCfg = Debug|Win32
+		{0134FD1E-7817-485F-9506-11B129AC621B}.Debug|Win32.Build.0 = Debug|Win32
+		{0134FD1E-7817-485F-9506-11B129AC621B}.Debug|x64.ActiveCfg = Debug|Win32
+		{0134FD1E-7817-485F-9506-11B129AC621B}.Release|Win32.ActiveCfg = Release|Win32
+		{0134FD1E-7817-485F-9506-11B129AC621B}.Release|Win32.Build.0 = Release|Win32
+		{0134FD1E-7817-485F-9506-11B129AC621B}.Release|x64.ActiveCfg = Release|Win32
+		{5C6460DB-F7B1-5315-A0DE-79A9DFC525A1}.Debug|Win32.ActiveCfg = Debug|Win32
+		{5C6460DB-F7B1-5315-A0DE-79A9DFC525A1}.Debug|Win32.Build.0 = Debug|Win32
+		{5C6460DB-F7B1-5315-A0DE-79A9DFC525A1}.Debug|x64.ActiveCfg = Debug|Win32
+		{5C6460DB-F7B1-5315-A0DE-79A9DFC525A1}.Release|Win32.ActiveCfg = Release|Win32
+		{5C6460DB-F7B1-5315-A0DE-79A9DFC525A1}.Release|Win32.Build.0 = Release|Win32
+		{5C6460DB-F7B1-5315-A0DE-79A9DFC525A1}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
