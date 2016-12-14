@@ -79,7 +79,7 @@
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
       <AdditionalLibraryDirectories>$(SolutionDir)..\out\$(Configuration)\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>InjectTool.lib;version.lib;ots.lib;Crypt32.lib;Wldap32.lib;Imm32.lib;libxml.lib;zlib.lib;libcurl.lib;v8_5_1.lib;skia_d.lib;winmm.lib;Ws2_32.lib;Usp10.lib;Shlwapi.lib;wininet.lib;GDIPlus.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>InjectTool.lib;version.lib;ots.lib;Crypt32.lib;Wldap32.lib;Imm32.lib;libxml.lib;zlib.lib;libcurl.lib;v8_5_1.lib;skia.lib;winmm.lib;Ws2_32.lib;Usp10.lib;Shlwapi.lib;wininet.lib;GDIPlus.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
       <ImportLibrary>$(OutDir)miniblink.lib</ImportLibrary>
       <IgnoreSpecificDefaultLibraries>LIBCMT.lib</IgnoreSpecificDefaultLibraries>

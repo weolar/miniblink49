@@ -1041,9 +1041,6 @@
     <ClInclude Include="..\..\v8_5_1\src\base\atomicops_internals_tsan.h">
       <Filter>src\base</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\v8_5_1\src\base\atomicops_internals_x86_gcc.h">
-      <Filter>src\base</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\v8_5_1\src\compiler\access-info.h">
       <Filter>src\compiler</Filter>
     </ClInclude>
@@ -2268,9 +2265,6 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\v8_5_1\src\base\accounting-allocator.cc">
-      <Filter>src\base</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_1\src\base\atomicops_internals_x86_gcc.cc">
       <Filter>src\base</Filter>
     </ClCompile>
     <ClCompile Include="..\..\v8_5_1\src\compiler\access-info.cc">

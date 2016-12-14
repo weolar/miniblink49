@@ -15,19 +15,41 @@
 #include <malloc.h>  // NOLINT
 #endif
 
+#ifdef _DEBUG
+size_t g_v8MemSize = 0;
+#endif
+
 namespace v8 {
 namespace internal {
 
 void* Malloced::New(size_t size) {
+#ifdef _DEBUG // weolar
+	size += sizeof(size_t);
+#endif
   void* result = malloc(size);
   if (result == NULL) {
     V8::FatalProcessOutOfMemory("Malloced operator new");
   }
+
+#ifdef _DEBUG
+  InterlockedExchangeAdd(reinterpret_cast<long volatile*>(&g_v8MemSize), static_cast<long>(size));
+  *(size_t*)result = size;
+  result = (char*)result + sizeof(size_t);
+#endif
   return result;
 }
 
 
 void Malloced::Delete(void* p) {
+#ifdef _DEBUG
+	if (!p)
+		return;
+	size_t* ptr = (size_t*)p;
+	--ptr;
+	size_t size = *ptr;
+	p = ptr;
+	InterlockedExchangeAdd(reinterpret_cast<long volatile*>(&g_v8MemSize), -static_cast<long>(size));
+#endif
   free(p);
 }
 
@@ -83,6 +105,11 @@ void* AlignedAlloc(size_t size, size_t alignment) {
   DCHECK_LE(V8_ALIGNOF(void*), alignment);
   DCHECK(base::bits::IsPowerOfTwo64(alignment));
   void* ptr;
+
+#ifdef _DEBUG // weolar
+  size += sizeof(size_t);
+#endif
+
 #if V8_OS_WIN
   ptr = _aligned_malloc(size, alignment);
 #elif V8_LIBC_BIONIC
@@ -93,11 +120,26 @@ void* AlignedAlloc(size_t size, size_t alignment) {
   if (posix_memalign(&ptr, alignment, size)) ptr = NULL;
 #endif
   if (ptr == NULL) V8::FatalProcessOutOfMemory("AlignedAlloc");
+#ifdef _DEBUG
+  InterlockedExchangeAdd(reinterpret_cast<long volatile*>(&g_v8MemSize), static_cast<long>(size));
+  *(size_t*)ptr = size;
+  ptr = (char*)ptr + sizeof(size_t);
+#endif
   return ptr;
 }
 
 
 void AlignedFree(void *ptr) {
+#ifdef _DEBUG
+	if (!ptr)
+		return;
+	size_t* ptrForFree = (size_t*)ptr;
+	--ptrForFree;
+	size_t size = *ptrForFree;
+	ptr = ptrForFree;
+	InterlockedExchangeAdd(reinterpret_cast<long volatile*>(&g_v8MemSize), -static_cast<long>(size));
+#endif
+
 #if V8_OS_WIN
   _aligned_free(ptr);
 #elif V8_LIBC_BIONIC

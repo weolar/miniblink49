@@ -147,7 +147,6 @@
     <ClInclude Include="..\..\v8_5_1\src\base\atomicops_internals_ppc_gcc.h" />
     <ClInclude Include="..\..\v8_5_1\src\base\atomicops_internals_s390_gcc.h" />
     <ClInclude Include="..\..\v8_5_1\src\base\atomicops_internals_tsan.h" />
-    <ClInclude Include="..\..\v8_5_1\src\base\atomicops_internals_x86_gcc.h" />
     <ClInclude Include="..\..\v8_5_1\src\base\atomicops_internals_x86_msvc.h" />
     <ClInclude Include="..\..\v8_5_1\src\base\bits.h" />
     <ClInclude Include="..\..\v8_5_1\src\base\build_config.h" />
@@ -604,7 +603,6 @@
     <ClCompile Include="..\..\v8_5_1\src\background-parsing-task.cc" />
     <ClCompile Include="..\..\v8_5_1\src\bailout-reason.cc" />
     <ClCompile Include="..\..\v8_5_1\src\base\accounting-allocator.cc" />
-    <ClCompile Include="..\..\v8_5_1\src\base\atomicops_internals_x86_gcc.cc" />
     <ClCompile Include="..\..\v8_5_1\src\base\bits.cc" />
     <ClCompile Include="..\..\v8_5_1\src\base\cpu.cc" />
     <ClCompile Include="..\..\v8_5_1\src\base\division-by-constant.cc" />

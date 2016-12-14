@@ -12,7 +12,7 @@
 #include "include/base/cef_logging.h"
 #include "libcef/common/CefTracker.h"
 
-#include "v8/include/v8.h"
+#include "v8.h"
 #include "third_party/WebKit/public/platform/WebThread.h"
 
 class CefTrackNode;
