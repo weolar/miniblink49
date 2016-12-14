@@ -26,6 +26,12 @@ class zone_allocator {
     typedef zone_allocator<O> other;
   };
 
+#if USING_VC6RT == 1
+  pointer _Charalloc(size_type n) {
+	  return allocate(n, nullptr);
+  }
+#endif
+
   explicit zone_allocator(Zone* zone) throw() : zone_(zone) {}
   explicit zone_allocator(const zone_allocator& other) throw()
       : zone_(other.zone_) {}

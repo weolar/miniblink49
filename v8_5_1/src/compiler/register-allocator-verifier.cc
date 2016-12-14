@@ -364,7 +364,9 @@ class OperandMap : public ZoneObject {
       if (cur != map().end()) map().erase(cur);
     }
     // Insert new values.
-    map().insert(to_insert.begin(), to_insert.end());
+    //map().insert(to_insert.begin(), to_insert.end()); // for USING_VC6RT
+	for (auto it = to_insert.begin(); it != to_insert.end(); ++it)
+		map().insert(*it);
   }
 
   void RunGaps(Zone* zone, const Instruction* instr) {

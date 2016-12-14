@@ -14,6 +14,14 @@
 #include "src/base/logging.h"
 #include "src/base/macros.h"
 
+#if USING_VC6RT == 1
+#include <algorithmvc6.h>
+#include <ostreamvc6.h>
+#undef STRICT
+#undef CONST
+#undef PURE
+#endif
+
 // Unfortunately, the INFINITY macro cannot be used with the '-pedantic'
 // warning flag and certain versions of GCC due to a bug:
 // http://gcc.gnu.org/bugzilla/show_bug.cgi?id=11931

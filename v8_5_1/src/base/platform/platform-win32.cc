@@ -29,7 +29,7 @@
 
 // Extra functions for MinGW. Most of these are the _s functions which are in
 // the Microsoft Visual Studio C++ CRT.
-#ifdef __MINGW32__
+#ifdef USING_VC6RT == 1 //__MINGW32__
 
 
 #ifndef __MINGW64_VERSION_MAJOR
@@ -37,10 +37,10 @@
 #define _TRUNCATE 0
 #define STRUNCATE 80
 
-inline void MemoryBarrier() {
-  int barrier = 0;
-  __asm__ __volatile__("xchgl %%eax,%0 ":"=r" (barrier));
-}
+//inline void MemoryBarrier() {
+//  int barrier = 0;
+//  __asm__ __volatile__("xchgl %%eax,%0 ":"=r" (barrier));
+//}
 
 #endif  // __MINGW64_VERSION_MAJOR
 
@@ -961,6 +961,125 @@ Win32MemoryMappedFile::~Win32MemoryMappedFile() {
 
 // DbgHelp isn't supported on MinGW yet
 #ifndef __MINGW32__
+
+#if USING_VC6RT == 1
+
+#define MAX_MODULE_NAME32 255
+#define SYMOPT_LOAD_LINES 0x00000010
+#define SYMOPT_FAIL_CRITICAL_ERRORS 0x00000200
+#define TH32CS_SNAPMODULE 0x00000008
+
+typedef enum {
+	AddrMode1616,
+	AddrMode1632,
+	AddrModeReal,
+	AddrModeFlat
+} ADDRESS_MODE;
+
+typedef struct _tagADDRESS64 {
+	DWORD64       Offset;
+	WORD          Segment;
+	ADDRESS_MODE  Mode;
+} ADDRESS64, *LPADDRESS64;
+
+typedef struct _KDHELP64 {
+	DWORD64   Thread;
+	DWORD   ThCallbackStack;
+	DWORD   ThCallbackBStore;
+	DWORD   NextCallback;
+	DWORD   FramePointer;
+	DWORD64   KiCallUserMode;
+	DWORD64   KeUserCallbackDispatcher;
+	DWORD64   SystemRangeStart;
+	DWORD64   KiUserExceptionDispatcher;
+	DWORD64   StackBase;
+	DWORD64   StackLimit;
+	DWORD     BuildVersion;
+	DWORD     Reserved0;
+	DWORD64   Reserved1[4];
+} KDHELP64, *PKDHELP64;
+
+typedef struct _tagSTACKFRAME64 {
+	ADDRESS64   AddrPC;               // program counter
+	ADDRESS64   AddrReturn;           // return address
+	ADDRESS64   AddrFrame;            // frame pointer
+	ADDRESS64   AddrStack;            // stack pointer
+	ADDRESS64   AddrBStore;           // backing store pointer
+	PVOID       FuncTableEntry;       // pointer to pdata/fpo or NULL
+	DWORD64     Params[4];            // possible arguments to the function
+	BOOL        Far;                  // WOW far call
+	BOOL        Virtual;              // is this a virtual frame?
+	DWORD64     Reserved[3];
+	KDHELP64    KdHelp;
+} STACKFRAME64, *LPSTACKFRAME64;
+
+typedef struct _IMAGEHLP_SYMBOL64 {
+	DWORD   SizeOfStruct;           // set to sizeof(IMAGEHLP_SYMBOL64)
+	DWORD64 Address;                // virtual address including dll base address
+	DWORD   Size;                   // estimated size of symbol, can be zero
+	DWORD   Flags;                  // info about the symbols, see the SYMF defines
+	DWORD   MaxNameLength;          // maximum size of symbol name in 'Name'
+	CHAR    Name[1];                // symbol name (null terminated string)
+} IMAGEHLP_SYMBOL64, *PIMAGEHLP_SYMBOL64;
+
+typedef struct _IMAGEHLP_LINE64 {
+	DWORD    SizeOfStruct;           // set to sizeof(IMAGEHLP_LINE64)
+	PVOID    Key;                    // internal
+	DWORD    LineNumber;             // line number in file
+	PCHAR    FileName;               // full filename
+	DWORD64  Address;                // first instruction of line
+} IMAGEHLP_LINE64, *PIMAGEHLP_LINE64;
+
+typedef struct tagMODULEENTRY32W
+{
+	DWORD   dwSize;
+	DWORD   th32ModuleID;       // This module
+	DWORD   th32ProcessID;      // owning process
+	DWORD   GlblcntUsage;       // Global usage count on the module
+	DWORD   ProccntUsage;       // Module usage count in th32ProcessID's context
+	BYTE  * modBaseAddr;        // Base address of module in th32ProcessID's context
+	DWORD   modBaseSize;        // Size in bytes of module starting at modBaseAddr
+	HMODULE hModule;            // The hModule of this module in th32ProcessID's context
+	WCHAR   szModule[MAX_MODULE_NAME32 + 1];
+	WCHAR   szExePath[MAX_PATH];
+} MODULEENTRY32W;
+typedef MODULEENTRY32W *  PMODULEENTRY32W;
+typedef MODULEENTRY32W *  LPMODULEENTRY32W;
+
+typedef
+BOOL
+(__stdcall *PREAD_PROCESS_MEMORY_ROUTINE64)(
+	HANDLE hProcess,
+	DWORD64 qwBaseAddress,
+	PVOID lpBuffer,
+	DWORD nSize,
+	LPDWORD lpNumberOfBytesRead
+	);
+
+typedef
+PVOID
+(__stdcall *PFUNCTION_TABLE_ACCESS_ROUTINE64)(
+	HANDLE ahProcess,
+	DWORD64 AddrBase
+	);
+
+typedef
+DWORD64
+(__stdcall *PGET_MODULE_BASE_ROUTINE64)(
+	HANDLE hProcess,
+	DWORD64 Address
+	);
+
+typedef
+DWORD64
+(__stdcall *PTRANSLATE_ADDRESS_ROUTINE64)(
+	HANDLE hProcess,
+	HANDLE hThread,
+	LPADDRESS64 lpaddr
+	);
+
+#endif
+
 // DbgHelp.h functions.
 typedef BOOL (__stdcall *DLL_FUNC_TYPE(SymInitialize))(IN HANDLE hProcess,
                                                        IN PSTR UserSearchPath,

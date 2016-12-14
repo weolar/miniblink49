@@ -95,7 +95,16 @@ void DumpBacktrace() {
   bt_release_accessor(&acc);
 #endif  // V8_LIBC_GLIBC || V8_OS_BSD
 }
-
+#if USING_VC6RT == 1
+std::basic_string<char, std::char_traits<char>, class std::allocator<char> >* MakeCheckOpString<__int64, __int64>(__int64 const & lhs, __int64 const & rhs, char const * msg) {
+	char* buf = new char[2000];
+	sprintf(buf, " (%I64d vs. %I64d)", lhs, rhs);
+	std::ostringstream ss;
+	ss << msg << buf;
+	delete[] buf;
+	return new std::string(ss.str());
+}
+#endif
 }  // namespace base
 }  // namespace v8
 

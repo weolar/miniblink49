@@ -5,6 +5,9 @@
 #include "src/compiler/opcodes.h"
 
 #include <algorithm>
+#if USING_VC6RT == 1
+#include <algorithmvc6.h>
+#endif
 #include <ostream>
 
 #include "src/base/macros.h"

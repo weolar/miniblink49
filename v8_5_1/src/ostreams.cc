@@ -11,6 +11,10 @@
 #endif
 #endif
 
+#if USING_VC6RT == 1
+int snprintf(char* buffer, size_t count, const char* format, ...);
+#endif
+
 namespace v8 {
 namespace internal {
 
@@ -21,7 +25,7 @@ OFStreamBase::~OFStreamBase() {}
 
 
 int OFStreamBase::sync() {
-  std::fflush(f_);
+  fflush(f_);
   return 0;
 }
 

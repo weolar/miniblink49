@@ -9,6 +9,10 @@
 #include "src/compiler/operator.h"
 #include "src/types.h"
 
+#if USING_VC6RT == 1
+#undef PURE
+#endif
+
 namespace v8 {
 namespace internal {
 namespace compiler {

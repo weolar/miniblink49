@@ -9,6 +9,9 @@
 #include "src/handles.h"
 #include "src/objects.h"
 #include "src/ostreams.h"
+#if USING_VC6RT == 1
+#include <algorithmvc6.h>
+#endif
 
 namespace v8 {
 namespace internal {

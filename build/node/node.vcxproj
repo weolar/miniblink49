@@ -1,0 +1,366 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\node\cares\src\ares_cancel.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_create_query.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_data.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_destroy.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_expand_name.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_expand_string.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_fds.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_free_hostent.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_free_string.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_getenv.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_gethostbyaddr.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_gethostbyname.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_getnameinfo.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_getopt.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_getsock.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_init.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_library_init.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_llist.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_mkquery.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_nowarn.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_options.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_parse_aaaa_reply.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_parse_a_reply.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_parse_mx_reply.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_parse_naptr_reply.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_parse_ns_reply.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_parse_ptr_reply.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_parse_soa_reply.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_parse_srv_reply.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_parse_txt_reply.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_platform.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_process.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_query.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_search.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_send.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_strcasecmp.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_strdup.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_strerror.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_timeout.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_version.c" />
+    <ClCompile Include="..\..\node\cares\src\ares_writev.c" />
+    <ClCompile Include="..\..\node\cares\src\ares__close_sockets.c" />
+    <ClCompile Include="..\..\node\cares\src\ares__get_hostent.c" />
+    <ClCompile Include="..\..\node\cares\src\ares__read_line.c" />
+    <ClCompile Include="..\..\node\cares\src\ares__timeval.c" />
+    <ClCompile Include="..\..\node\cares\src\bitncmp.c" />
+    <ClCompile Include="..\..\node\cares\src\inet_net_pton.c" />
+    <ClCompile Include="..\..\node\cares\src\inet_ntop.c" />
+    <ClCompile Include="..\..\node\cares\src\windows_port.c" />
+    <ClCompile Include="..\..\node\src\async-wrap.cc" />
+    <ClCompile Include="..\..\node\src\backtrace_win32.cc" />
+    <ClCompile Include="..\..\node\src\cares_wrap.cc" />
+    <ClCompile Include="..\..\node\src\connection_wrap.cc" />
+    <ClCompile Include="..\..\node\src\connect_wrap.cc" />
+    <ClCompile Include="..\..\node\src\debug-agent.cc" />
+    <ClCompile Include="..\..\node\src\env.cc" />
+    <ClCompile Include="..\..\node\src\fs_event_wrap.cc" />
+    <ClCompile Include="..\..\node\src\handle_wrap.cc" />
+    <ClCompile Include="..\..\node\src\http_parser.c" />
+    <ClCompile Include="..\..\node\src\inspector_agent.cc" />
+    <ClCompile Include="..\..\node\src\inspector_socket.cc" />
+    <ClCompile Include="..\..\node\src\js_stream.cc" />
+    <ClCompile Include="..\..\node\src\node.cc" />
+    <ClCompile Include="..\..\node\src\node_buffer.cc" />
+    <ClCompile Include="..\..\node\src\node_config.cc" />
+    <ClCompile Include="..\..\node\src\node_constants.cc" />
+    <ClCompile Include="..\..\node\src\node_contextify.cc" />
+    <ClCompile Include="..\..\node\src\node_counters.cc" />
+    <ClCompile Include="..\..\node\src\node_crypto.cc" />
+    <ClCompile Include="..\..\node\src\node_crypto_bio.cc" />
+    <ClCompile Include="..\..\node\src\node_crypto_clienthello.cc" />
+    <ClCompile Include="..\..\node\src\node_dtrace.cc" />
+    <ClCompile Include="..\..\node\src\node_file.cc" />
+    <ClCompile Include="..\..\node\src\node_http_parser.cc" />
+    <ClCompile Include="..\..\node\src\node_javascript.cc" />
+    <ClCompile Include="..\..\node\src\node_main.cc" />
+    <ClCompile Include="..\..\node\src\node_os.cc" />
+    <ClCompile Include="..\..\node\src\node_revert.cc" />
+    <ClCompile Include="..\..\node\src\node_stat_watcher.cc" />
+    <ClCompile Include="..\..\node\src\node_util.cc" />
+    <ClCompile Include="..\..\node\src\node_v8.cc" />
+    <ClCompile Include="..\..\node\src\node_watchdog.cc" />
+    <ClCompile Include="..\..\node\src\node_win32_etw_provider.cc" />
+    <ClCompile Include="..\..\node\src\node_win32_perfctr_provider.cc" />
+    <ClCompile Include="..\..\node\src\node_zlib.cc" />
+    <ClCompile Include="..\..\node\src\pipe_wrap.cc" />
+    <ClCompile Include="..\..\node\src\process_wrap.cc" />
+    <ClCompile Include="..\..\node\src\signal_wrap.cc" />
+    <ClCompile Include="..\..\node\src\spawn_sync.cc" />
+    <ClCompile Include="..\..\node\src\stream_base.cc" />
+    <ClCompile Include="..\..\node\src\stream_wrap.cc" />
+    <ClCompile Include="..\..\node\src\string_bytes.cc" />
+    <ClCompile Include="..\..\node\src\string_search.cc" />
+    <ClCompile Include="..\..\node\src\tcp_wrap.cc" />
+    <ClCompile Include="..\..\node\src\timer_wrap.cc" />
+    <ClCompile Include="..\..\node\src\tls_wrap.cc" />
+    <ClCompile Include="..\..\node\src\tty_wrap.cc" />
+    <ClCompile Include="..\..\node\src\udp_wrap.cc" />
+    <ClCompile Include="..\..\node\src\util1.cc" />
+    <ClCompile Include="..\..\node\src\uv.cc" />
+    <ClCompile Include="..\..\node\uv\src\fs-poll.c" />
+    <ClCompile Include="..\..\node\uv\src\inet.c" />
+    <ClCompile Include="..\..\node\uv\src\threadpool.c" />
+    <ClCompile Include="..\..\node\uv\src\uv-common.c" />
+    <ClCompile Include="..\..\node\uv\src\version.c" />
+    <ClCompile Include="..\..\node\uv\src\win\async.c" />
+    <ClCompile Include="..\..\node\uv\src\win\core.c" />
+    <ClCompile Include="..\..\node\uv\src\win\dl.c" />
+    <ClCompile Include="..\..\node\uv\src\win\error.c" />
+    <ClCompile Include="..\..\node\uv\src\win\fs-event.c" />
+    <ClCompile Include="..\..\node\uv\src\win\fs.c" />
+    <ClCompile Include="..\..\node\uv\src\win\getaddrinfo.c" />
+    <ClCompile Include="..\..\node\uv\src\win\getnameinfo.c" />
+    <ClCompile Include="..\..\node\uv\src\win\handle.c" />
+    <ClCompile Include="..\..\node\uv\src\win\loop-watcher.c" />
+    <ClCompile Include="..\..\node\uv\src\win\pipe.c" />
+    <ClCompile Include="..\..\node\uv\src\win\poll.c" />
+    <ClCompile Include="..\..\node\uv\src\win\process-stdio.c" />
+    <ClCompile Include="..\..\node\uv\src\win\process.c" />
+    <ClCompile Include="..\..\node\uv\src\win\req.c" />
+    <ClCompile Include="..\..\node\uv\src\win\signal.c" />
+    <ClCompile Include="..\..\node\uv\src\win\snprintf.c" />
+    <ClCompile Include="..\..\node\uv\src\win\stream.c" />
+    <ClCompile Include="..\..\node\uv\src\win\tcp.c" />
+    <ClCompile Include="..\..\node\uv\src\win\thread.c" />
+    <ClCompile Include="..\..\node\uv\src\win\timer.c" />
+    <ClCompile Include="..\..\node\uv\src\win\tty.c" />
+    <ClCompile Include="..\..\node\uv\src\win\udp.c" />
+    <ClCompile Include="..\..\node\uv\src\win\util.c" />
+    <ClCompile Include="..\..\node\uv\src\win\winapi.c" />
+    <ClCompile Include="..\..\node\uv\src\win\winsock.c" />
+    <ClCompile Include="..\..\node\v8_inspector\platform\inspector_protocol\DispatcherBase.cpp" />
+    <ClCompile Include="..\..\node\v8_inspector\platform\inspector_protocol\ErrorSupport.cpp" />
+    <ClCompile Include="..\..\node\v8_inspector\platform\inspector_protocol\Parser.cpp" />
+    <ClCompile Include="..\..\node\v8_inspector\platform\inspector_protocol\String16STL.cpp" />
+    <ClCompile Include="..\..\node\v8_inspector\platform\inspector_protocol\Values.cpp" />
+    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\InjectedScript.cpp" />
+    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\InjectedScriptNative.cpp" />
+    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\InspectedContext.cpp" />
+    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\JavaScriptCallFrame.cpp" />
+    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\protocol\Console.cpp" />
+    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\protocol\Debugger.cpp" />
+    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\protocol\HeapProfiler.cpp" />
+    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\protocol\Profiler.cpp" />
+    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\protocol\Runtime.cpp" />
+    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\RemoteObjectId.cpp" />
+    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\V8Console.cpp" />
+    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\V8ConsoleAgentImpl.cpp" />
+    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\V8ConsoleMessage.cpp" />
+    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\V8Debugger.cpp" />
+    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\V8DebuggerAgentImpl.cpp" />
+    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\V8DebuggerScript.cpp" />
+    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\V8FunctionCall.cpp" />
+    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\V8HeapProfilerAgentImpl.cpp" />
+    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\V8InjectedScriptHost.cpp" />
+    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\V8InspectorImpl.cpp" />
+    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\V8InspectorSessionImpl.cpp" />
+    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\V8InternalValueType.cpp" />
+    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\V8ProfilerAgentImpl.cpp" />
+    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\V8Regex.cpp" />
+    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\V8RuntimeAgentImpl.cpp" />
+    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\V8StackTraceImpl.cpp" />
+    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\V8StringUtil.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\node\cares\src\ares_data.h" />
+    <ClInclude Include="..\..\node\cares\src\ares_dns.h" />
+    <ClInclude Include="..\..\node\cares\src\ares_getenv.h" />
+    <ClInclude Include="..\..\node\cares\src\ares_getopt.h" />
+    <ClInclude Include="..\..\node\cares\src\ares_inet_net_pton.h" />
+    <ClInclude Include="..\..\node\cares\src\ares_iphlpapi.h" />
+    <ClInclude Include="..\..\node\cares\src\ares_ipv6.h" />
+    <ClInclude Include="..\..\node\cares\src\ares_library_init.h" />
+    <ClInclude Include="..\..\node\cares\src\ares_llist.h" />
+    <ClInclude Include="..\..\node\cares\src\ares_nowarn.h" />
+    <ClInclude Include="..\..\node\cares\src\ares_platform.h" />
+    <ClInclude Include="..\..\node\cares\src\ares_private.h" />
+    <ClInclude Include="..\..\node\cares\src\ares_setup.h" />
+    <ClInclude Include="..\..\node\cares\src\ares_strcasecmp.h" />
+    <ClInclude Include="..\..\node\cares\src\ares_strdup.h" />
+    <ClInclude Include="..\..\node\cares\src\ares_writev.h" />
+    <ClInclude Include="..\..\node\cares\src\bitncmp.h" />
+    <ClInclude Include="..\..\node\cares\src\config-win32.h" />
+    <ClInclude Include="..\..\node\cares\src\setup_once.h" />
+    <ClInclude Include="..\..\node\src\async-wrap-inl.h" />
+    <ClInclude Include="..\..\node\src\async-wrap.h" />
+    <ClInclude Include="..\..\node\src\base-object-inl.h" />
+    <ClInclude Include="..\..\node\src\base-object.h" />
+    <ClInclude Include="..\..\node\src\base64.h" />
+    <ClInclude Include="..\..\node\src\connection_wrap.h" />
+    <ClInclude Include="..\..\node\src\connect_wrap.h" />
+    <ClInclude Include="..\..\node\src\debug-agent.h" />
+    <ClInclude Include="..\..\node\src\env-inl.h" />
+    <ClInclude Include="..\..\node\src\env.h" />
+    <ClInclude Include="..\..\node\src\handle_wrap.h" />
+    <ClInclude Include="..\..\node\src\http_parser.h" />
+    <ClInclude Include="..\..\node\src\inspector_agent.h" />
+    <ClInclude Include="..\..\node\src\inspector_socket.h" />
+    <ClInclude Include="..\..\node\src\js_stream.h" />
+    <ClInclude Include="..\..\node\src\node.h" />
+    <ClInclude Include="..\..\node\src\node_buffer.h" />
+    <ClInclude Include="..\..\node\src\node_constants.h" />
+    <ClInclude Include="..\..\node\src\node_counters.h" />
+    <ClInclude Include="..\..\node\src\node_crypto.h" />
+    <ClInclude Include="..\..\node\src\node_crypto_bio.h" />
+    <ClInclude Include="..\..\node\src\node_crypto_clienthello-inl.h" />
+    <ClInclude Include="..\..\node\src\node_crypto_clienthello.h" />
+    <ClInclude Include="..\..\node\src\node_crypto_groups.h" />
+    <ClInclude Include="..\..\node\src\node_dtrace.h" />
+    <ClInclude Include="..\..\node\src\node_file.h" />
+    <ClInclude Include="..\..\node\src\node_http_parser.h" />
+    <ClInclude Include="..\..\node\src\node_internals.h" />
+    <ClInclude Include="..\..\node\src\node_javascript.h" />
+    <ClInclude Include="..\..\node\src\node_mutex.h" />
+    <ClInclude Include="..\..\node\src\node_object_wrap.h" />
+    <ClInclude Include="..\..\node\src\node_revert.h" />
+    <ClInclude Include="..\..\node\src\node_root_certs.h" />
+    <ClInclude Include="..\..\node\src\node_stat_watcher.h" />
+    <ClInclude Include="..\..\node\src\node_version.h" />
+    <ClInclude Include="..\..\node\src\node_watchdog.h" />
+    <ClInclude Include="..\..\node\src\node_win32_etw_provider-inl.h" />
+    <ClInclude Include="..\..\node\src\node_win32_etw_provider.h" />
+    <ClInclude Include="..\..\node\src\node_win32_perfctr_provider.h" />
+    <ClInclude Include="..\..\node\src\node_wrap.h" />
+    <ClInclude Include="..\..\node\src\pipe_wrap.h" />
+    <ClInclude Include="..\..\node\src\req-wrap-inl.h" />
+    <ClInclude Include="..\..\node\src\req-wrap.h" />
+    <ClInclude Include="..\..\node\src\spawn_sync.h" />
+    <ClInclude Include="..\..\node\src\stream_base-inl.h" />
+    <ClInclude Include="..\..\node\src\stream_base.h" />
+    <ClInclude Include="..\..\node\src\stream_wrap.h" />
+    <ClInclude Include="..\..\node\src\string_bytes.h" />
+    <ClInclude Include="..\..\node\src\string_search.h" />
+    <ClInclude Include="..\..\node\src\tcp_wrap.h" />
+    <ClInclude Include="..\..\node\src\tls_wrap.h" />
+    <ClInclude Include="..\..\node\src\tree.h" />
+    <ClInclude Include="..\..\node\src\tty_wrap.h" />
+    <ClInclude Include="..\..\node\src\udp_wrap.h" />
+    <ClInclude Include="..\..\node\src\util-inl.h" />
+    <ClInclude Include="..\..\node\src\util.h" />
+    <ClInclude Include="..\..\node\src\v8abbr.h" />
+    <ClInclude Include="..\..\node\uv\include\android-ifaddrs.h" />
+    <ClInclude Include="..\..\node\uv\include\pthread-barrier.h" />
+    <ClInclude Include="..\..\node\uv\include\pthread-fixes.h" />
+    <ClInclude Include="..\..\node\uv\include\stdint-msvc2008.h" />
+    <ClInclude Include="..\..\node\uv\include\tree.h" />
+    <ClInclude Include="..\..\node\uv\include\uv-aix.h" />
+    <ClInclude Include="..\..\node\uv\include\uv-bsd.h" />
+    <ClInclude Include="..\..\node\uv\include\uv-darwin.h" />
+    <ClInclude Include="..\..\node\uv\include\uv-errno.h" />
+    <ClInclude Include="..\..\node\uv\include\uv-threadpool.h" />
+    <ClInclude Include="..\..\node\uv\include\uv-version.h" />
+    <ClInclude Include="..\..\node\uv\include\uv-win.h" />
+    <ClInclude Include="..\..\node\uv\include\uv.h" />
+    <ClInclude Include="..\..\node\uv\src\heap-inl.h" />
+    <ClInclude Include="..\..\node\uv\src\queue.h" />
+    <ClInclude Include="..\..\node\uv\src\uv-common.h" />
+    <ClInclude Include="..\..\node\uv\src\win\atomicops-inl.h" />
+    <ClInclude Include="..\..\node\uv\src\win\handle-inl.h" />
+    <ClInclude Include="..\..\node\uv\src\win\internal.h" />
+    <ClInclude Include="..\..\node\uv\src\win\req-inl.h" />
+    <ClInclude Include="..\..\node\uv\src\win\stream-inl.h" />
+    <ClInclude Include="..\..\node\uv\src\win\winapi.h" />
+    <ClInclude Include="..\..\node\uv\src\win\winsock.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\node\src\CNNICHashWhitelist.inc" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{6F8DE3A0-243B-44FF-9846-B7DB58E0B5E9}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>node</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140_xp</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140_xp</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(SolutionDir)..\out\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)..\out\tmp\$(ProjectName)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IntDir>$(SolutionDir)..\tmp\$(ProjectName)\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)..\$(Configuration)\</OutDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;BUILDING_V8_SHARED=1;BUILDING_UV_SHARED=1;CARES_STATICLIB;NODE_ARCH="ia32";NODE_PLATFORM="win32";NODE_WANT_INTERNALS=1;HAVE_INSPECTOR=1;HAVE_OPENSSL=1;HAVE_ETW=1;HAVE_PERFCTR=1;V8_INSPECTOR_USE_STL=1;NODE_USE_V8_PLATFORM=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>../../third_party/zlib;../../v8_5_1/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>v8_5_1.lib;openssl.lib;zlib.lib;winmm.lib;AdvAPI32.Lib;iphlpapi.lib;psapi.lib;userenv.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\out\$(Configuration)\</AdditionalLibraryDirectories>
+    </Link>
+    <Lib>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
+      <AdditionalOptions>/Zc:threadSafeInit- %(AdditionalOptions)</AdditionalOptions>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <StringPooling>true</StringPooling>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
