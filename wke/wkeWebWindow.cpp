@@ -158,7 +158,7 @@ bool CWebWindow::_createWindow(HWND parent, unsigned styles, unsigned styleEx, i
 
 void CWebWindow::_destroyWindow()
 {
-    KillTimer(m_hWnd, 100);
+    KillTimer(m_hWnd, (UINT_PTR)this);
     RemovePropW(m_hWnd, L"wkeWebWindow");
     DestroyWindow(m_hWnd);
     m_hWnd = NULL;
@@ -194,7 +194,7 @@ LRESULT CWebWindow::_windowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM l
     switch(message) {
     case WM_CREATE:
         DragAcceptFiles(hwnd, TRUE);
-        SetTimer(hwnd, 100, 50, NULL);
+        SetTimer(hwnd, (UINT_PTR)this, 300, NULL);
         return 0;
 
     case WM_CLOSE:
@@ -208,7 +208,7 @@ LRESULT CWebWindow::_windowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM l
         return 0;
 
     case WM_DESTROY:
-        KillTimer(hwnd, 100);
+        KillTimer(hwnd, (UINT_PTR)this);
         RemovePropW(hwnd, L"wkeWebWindow");
         m_hWnd = NULL;
 
@@ -224,19 +224,19 @@ LRESULT CWebWindow::_windowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM l
 
     case WM_PAINT:
         if (WS_EX_LAYERED != (WS_EX_LAYERED & GetWindowLong(hwnd, GWL_EXSTYLE))) {
-            //wkeRepaintIfNeeded(this);
+            wkeRepaintIfNeeded(this);
 
             PAINTSTRUCT ps = { 0 };
             HDC hdc = BeginPaint(hwnd, &ps);
 
-            RECT rcClip;	
-            GetClipBox(hdc,&rcClip);	
+            RECT rcClip = ps.rcPaint;
 
             RECT rcClient;
             GetClientRect(hwnd, &rcClient);
 
-            RECT rcInvalid;
-            IntersectRect(&rcInvalid, &rcClip,&rcClient);
+            RECT rcInvalid = rcClient;
+            if (rcClip.right != rcClip.left && rcClip.bottom != rcClip.top)
+                IntersectRect(&rcInvalid, &rcClip, &rcClient);
 
             int srcX = rcInvalid.left - rcClient.left;
             int srcY = rcInvalid.top - rcClient.top;
@@ -244,11 +244,13 @@ LRESULT CWebWindow::_windowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM l
             int destY = rcInvalid.top;
             int width = rcInvalid.right - rcInvalid.left;
             int height = rcInvalid.bottom - rcInvalid.top;
-            BitBlt(hdc, destX, destY, width, height, wkeGetViewDC(this), srcX, srcY, SRCCOPY); 
+
+            if (0 != width && 0 != height)
+                BitBlt(hdc, destX, destY, width, height, wkeGetViewDC(this), srcX, srcY, SRCCOPY); 
 
             EndPaint(hwnd, &ps);
         }
-        return 0;
+        break;
 
     case WM_ERASEBKGND:
         return TRUE;
@@ -585,7 +587,8 @@ void CWebWindow::_onPaintUpdated(const HDC hdc, int x, int y, int cx, int cy)
 
         ReleaseDC(NULL, hdcScreen);
     } else {
-        InvalidateRect(m_hWnd, NULL, FALSE);
+        RECT rc = {x, y, x + cx, y + cy};
+        BOOL b = InvalidateRect(m_hWnd, &rc, TRUE);
     }
 
     if (m_originalPaintUpdatedCallback)
