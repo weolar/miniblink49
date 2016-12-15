@@ -64,8 +64,8 @@ typedef HDC (WINAPI *PtrBeginPaint)(HWND, PAINTSTRUCT*);
 typedef BOOL (WINAPI *PtrEndPaint)(HWND, const PAINTSTRUCT*);
 
 #if CPU(X86_64)
-extern "C" HDC __stdcall _HBeginPaint(HWND hWnd, LPPAINTSTRUCT lpPaint);
-extern "C" BOOL __stdcall _HEndPaint(HWND hWnd, const PAINTSTRUCT* lpPaint);
+//extern "C" HDC __stdcall _HBeginPaint(HWND hWnd, LPPAINTSTRUCT lpPaint);
+//extern "C" BOOL __stdcall _HEndPaint(HWND hWnd, const PAINTSTRUCT* lpPaint);
 #endif
 
 HDC WINAPI WebPluginImpl::hookedBeginPaint(HWND hWnd, PAINTSTRUCT* lpPaint)
@@ -87,7 +87,7 @@ HDC WINAPI WebPluginImpl::hookedBeginPaint(HWND hWnd, PAINTSTRUCT* lpPaint)
     __asm   push    hWnd
     __asm   call    beginPaint
 #else
-    return _HBeginPaint(hWnd, lpPaint);
+    return BeginPaint(hWnd, lpPaint);
 #endif
 }
 
@@ -107,7 +107,7 @@ BOOL WINAPI WebPluginImpl::hookedEndPaint(HWND hWnd, const PAINTSTRUCT* lpPaint)
     __asm   push    hWnd
     __asm   call    endPaint
 #else
-    return _HEndPaint(hWnd, lpPaint);
+    return EndPaint(hWnd, lpPaint);
 #endif
 }
 

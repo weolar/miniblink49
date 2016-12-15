@@ -148,7 +148,7 @@
     // These checks must be done in descending order to ensure we set the highest
     // available SSE level. 64-bit intel guarantees at least SSE2 support.
     #if defined(_M_X64) || defined(_M_AMD64)
-        #define SK_CPU_SSE_LEVEL    SK_CPU_SSE_LEVEL_SSE2
+        #define SK_CPU_SSE_LEVEL    SK_CPU_SSE_LEVEL_SSE41
     #elif defined (_M_IX86_FP)
         #if _MSC_VER >= 1800
             #define SK_CPU_SSE_LEVEL    SK_CPU_SSE_LEVEL_SSE41

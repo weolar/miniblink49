@@ -4,6 +4,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "miniblink", "miniblink\miniblink.vcxproj", "{D4CF74E8-8AE3-4534-92BE-10503E556E87}"
+<<<<<<< HEAD
 	ProjectSection(ProjectDependencies) = postProject
 		{3A656E0E-C23A-4F36-9A5B-569F501587B4} = {3A656E0E-C23A-4F36-9A5B-569F501587B4}
 		{4D1C9F9B-B3FC-4BFA-82B2-CBD4F4143689} = {4D1C9F9B-B3FC-4BFA-82B2-CBD4F4143689}
@@ -12,6 +13,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "miniblink", "miniblink\mini
 		{3B6807E7-4125-4892-8F4D-568B61462CAF} = {3B6807E7-4125-4892-8F4D-568B61462CAF}
 		{F9C99DF8-BAC7-4623-94D1-ABDE33F627EF} = {F9C99DF8-BAC7-4623-94D1-ABDE33F627EF}
 	EndProjectSection
+=======
+>>>>>>> refs/remotes/weolar/master
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "skia", "skia\skia.vcxproj", "{3B6807E7-4125-4892-8F4D-568B61462CAF}"
 EndProject
@@ -57,51 +60,90 @@ Global
 		{D4CF74E8-8AE3-4534-92BE-10503E556E87}.Release|Win32.ActiveCfg = Release|Win32
 		{D4CF74E8-8AE3-4534-92BE-10503E556E87}.Release|Win32.Build.0 = Release|Win32
 		{D4CF74E8-8AE3-4534-92BE-10503E556E87}.Release|x64.ActiveCfg = Release|Win32
+<<<<<<< HEAD
 		{3B6807E7-4125-4892-8F4D-568B61462CAF}.Debug|Win32.ActiveCfg = Debug|Win32
 		{3B6807E7-4125-4892-8F4D-568B61462CAF}.Debug|Win32.Build.0 = Debug|Win32
 		{3B6807E7-4125-4892-8F4D-568B61462CAF}.Debug|x64.ActiveCfg = Debug|Win32
 		{3B6807E7-4125-4892-8F4D-568B61462CAF}.Release_vc6|Win32.ActiveCfg = Release_vc6|Win32
 		{3B6807E7-4125-4892-8F4D-568B61462CAF}.Release_vc6|Win32.Build.0 = Release_vc6|Win32
 		{3B6807E7-4125-4892-8F4D-568B61462CAF}.Release_vc6|x64.ActiveCfg = Release_vc6|Win32
+=======
+		{6A8A620E-E791-4A56-B0D7-5D3EF75D614A}.Debug|Win32.ActiveCfg = Debug|Win32
+		{6A8A620E-E791-4A56-B0D7-5D3EF75D614A}.Debug|Win32.Build.0 = Debug|Win32
+		{6A8A620E-E791-4A56-B0D7-5D3EF75D614A}.Debug|x64.ActiveCfg = Debug|x64
+		{6A8A620E-E791-4A56-B0D7-5D3EF75D614A}.Debug|x64.Build.0 = Debug|x64
+		{6A8A620E-E791-4A56-B0D7-5D3EF75D614A}.Release|Win32.ActiveCfg = Release|Win32
+		{6A8A620E-E791-4A56-B0D7-5D3EF75D614A}.Release|Win32.Build.0 = Release|Win32
+		{6A8A620E-E791-4A56-B0D7-5D3EF75D614A}.Release|x64.ActiveCfg = Release|x64
+		{6A8A620E-E791-4A56-B0D7-5D3EF75D614A}.Release|x64.Build.0 = Release|x64
+		{3B6807E7-4125-4892-8F4D-568B61462CAF}.Debug|Win32.ActiveCfg = Debug|Win32
+		{3B6807E7-4125-4892-8F4D-568B61462CAF}.Debug|Win32.Build.0 = Debug|Win32
+		{3B6807E7-4125-4892-8F4D-568B61462CAF}.Debug|x64.ActiveCfg = Debug|x64
+		{3B6807E7-4125-4892-8F4D-568B61462CAF}.Debug|x64.Build.0 = Debug|x64
+>>>>>>> refs/remotes/weolar/master
 		{3B6807E7-4125-4892-8F4D-568B61462CAF}.Release|Win32.ActiveCfg = Release|Win32
 		{3B6807E7-4125-4892-8F4D-568B61462CAF}.Release|Win32.Build.0 = Release|Win32
-		{3B6807E7-4125-4892-8F4D-568B61462CAF}.Release|x64.ActiveCfg = Release|Win32
+		{3B6807E7-4125-4892-8F4D-568B61462CAF}.Release|x64.ActiveCfg = Release|x64
 		{A14DB738-9B81-42E4-8405-0FDA19DCB720}.Debug|Win32.ActiveCfg = Debug|Win32
 		{A14DB738-9B81-42E4-8405-0FDA19DCB720}.Debug|Win32.Build.0 = Debug|Win32
+<<<<<<< HEAD
 		{A14DB738-9B81-42E4-8405-0FDA19DCB720}.Debug|x64.ActiveCfg = Debug|Win32
 		{A14DB738-9B81-42E4-8405-0FDA19DCB720}.Release_vc6|Win32.ActiveCfg = Release_vc6|Win32
 		{A14DB738-9B81-42E4-8405-0FDA19DCB720}.Release_vc6|Win32.Build.0 = Release_vc6|Win32
 		{A14DB738-9B81-42E4-8405-0FDA19DCB720}.Release_vc6|x64.ActiveCfg = Release_vc6|Win32
+=======
+		{A14DB738-9B81-42E4-8405-0FDA19DCB720}.Debug|x64.ActiveCfg = Debug|x64
+		{A14DB738-9B81-42E4-8405-0FDA19DCB720}.Debug|x64.Build.0 = Debug|x64
+>>>>>>> refs/remotes/weolar/master
 		{A14DB738-9B81-42E4-8405-0FDA19DCB720}.Release|Win32.ActiveCfg = Release|Win32
 		{A14DB738-9B81-42E4-8405-0FDA19DCB720}.Release|Win32.Build.0 = Release|Win32
-		{A14DB738-9B81-42E4-8405-0FDA19DCB720}.Release|x64.ActiveCfg = Release|Win32
+		{A14DB738-9B81-42E4-8405-0FDA19DCB720}.Release|x64.ActiveCfg = Release|x64
+		{A14DB738-9B81-42E4-8405-0FDA19DCB720}.Release|x64.Build.0 = Release|x64
 		{4D1C9F9B-B3FC-4BFA-82B2-CBD4F4143689}.Debug|Win32.ActiveCfg = Debug|Win32
 		{4D1C9F9B-B3FC-4BFA-82B2-CBD4F4143689}.Debug|Win32.Build.0 = Debug|Win32
+<<<<<<< HEAD
 		{4D1C9F9B-B3FC-4BFA-82B2-CBD4F4143689}.Debug|x64.ActiveCfg = Debug|Win32
 		{4D1C9F9B-B3FC-4BFA-82B2-CBD4F4143689}.Release_vc6|Win32.ActiveCfg = Release_vc6|Win32
 		{4D1C9F9B-B3FC-4BFA-82B2-CBD4F4143689}.Release_vc6|Win32.Build.0 = Release_vc6|Win32
 		{4D1C9F9B-B3FC-4BFA-82B2-CBD4F4143689}.Release_vc6|x64.ActiveCfg = Release_vc6|Win32
+=======
+		{4D1C9F9B-B3FC-4BFA-82B2-CBD4F4143689}.Debug|x64.ActiveCfg = Debug|x64
+		{4D1C9F9B-B3FC-4BFA-82B2-CBD4F4143689}.Debug|x64.Build.0 = Debug|x64
+>>>>>>> refs/remotes/weolar/master
 		{4D1C9F9B-B3FC-4BFA-82B2-CBD4F4143689}.Release|Win32.ActiveCfg = Release|Win32
 		{4D1C9F9B-B3FC-4BFA-82B2-CBD4F4143689}.Release|Win32.Build.0 = Release|Win32
-		{4D1C9F9B-B3FC-4BFA-82B2-CBD4F4143689}.Release|x64.ActiveCfg = Release|Win32
+		{4D1C9F9B-B3FC-4BFA-82B2-CBD4F4143689}.Release|x64.ActiveCfg = Release|x64
+		{4D1C9F9B-B3FC-4BFA-82B2-CBD4F4143689}.Release|x64.Build.0 = Release|x64
 		{3A656E0E-C23A-4F36-9A5B-569F501587B4}.Debug|Win32.ActiveCfg = Debug|Win32
 		{3A656E0E-C23A-4F36-9A5B-569F501587B4}.Debug|Win32.Build.0 = Debug|Win32
+<<<<<<< HEAD
 		{3A656E0E-C23A-4F36-9A5B-569F501587B4}.Debug|x64.ActiveCfg = Debug|Win32
 		{3A656E0E-C23A-4F36-9A5B-569F501587B4}.Release_vc6|Win32.ActiveCfg = Release_vc6|Win32
 		{3A656E0E-C23A-4F36-9A5B-569F501587B4}.Release_vc6|Win32.Build.0 = Release_vc6|Win32
 		{3A656E0E-C23A-4F36-9A5B-569F501587B4}.Release_vc6|x64.ActiveCfg = Release_vc6|Win32
+=======
+		{3A656E0E-C23A-4F36-9A5B-569F501587B4}.Debug|x64.ActiveCfg = Debug|x64
+		{3A656E0E-C23A-4F36-9A5B-569F501587B4}.Debug|x64.Build.0 = Debug|x64
+>>>>>>> refs/remotes/weolar/master
 		{3A656E0E-C23A-4F36-9A5B-569F501587B4}.Release|Win32.ActiveCfg = Release|Win32
 		{3A656E0E-C23A-4F36-9A5B-569F501587B4}.Release|Win32.Build.0 = Release|Win32
-		{3A656E0E-C23A-4F36-9A5B-569F501587B4}.Release|x64.ActiveCfg = Release|Win32
+		{3A656E0E-C23A-4F36-9A5B-569F501587B4}.Release|x64.ActiveCfg = Release|x64
+		{3A656E0E-C23A-4F36-9A5B-569F501587B4}.Release|x64.Build.0 = Release|x64
 		{F9C99DF8-BAC7-4623-94D1-ABDE33F627EF}.Debug|Win32.ActiveCfg = Debug|Win32
 		{F9C99DF8-BAC7-4623-94D1-ABDE33F627EF}.Debug|Win32.Build.0 = Debug|Win32
+<<<<<<< HEAD
 		{F9C99DF8-BAC7-4623-94D1-ABDE33F627EF}.Debug|x64.ActiveCfg = Debug|Win32
 		{F9C99DF8-BAC7-4623-94D1-ABDE33F627EF}.Release_vc6|Win32.ActiveCfg = Release_vc6|Win32
 		{F9C99DF8-BAC7-4623-94D1-ABDE33F627EF}.Release_vc6|Win32.Build.0 = Release_vc6|Win32
 		{F9C99DF8-BAC7-4623-94D1-ABDE33F627EF}.Release_vc6|x64.ActiveCfg = Release_vc6|Win32
+=======
+		{F9C99DF8-BAC7-4623-94D1-ABDE33F627EF}.Debug|x64.ActiveCfg = Debug|x64
+		{F9C99DF8-BAC7-4623-94D1-ABDE33F627EF}.Debug|x64.Build.0 = Debug|x64
+>>>>>>> refs/remotes/weolar/master
 		{F9C99DF8-BAC7-4623-94D1-ABDE33F627EF}.Release|Win32.ActiveCfg = Release|Win32
 		{F9C99DF8-BAC7-4623-94D1-ABDE33F627EF}.Release|Win32.Build.0 = Release|Win32
-		{F9C99DF8-BAC7-4623-94D1-ABDE33F627EF}.Release|x64.ActiveCfg = Release|Win32
+		{F9C99DF8-BAC7-4623-94D1-ABDE33F627EF}.Release|x64.ActiveCfg = Release|x64
+		{F9C99DF8-BAC7-4623-94D1-ABDE33F627EF}.Release|x64.Build.0 = Release|x64
 		{A0E351C3-1C05-431A-B7B4-4B6B66A210B6}.Debug|Win32.ActiveCfg = Debug|Win32
 		{A0E351C3-1C05-431A-B7B4-4B6B66A210B6}.Debug|Win32.Build.0 = Debug|Win32
 		{A0E351C3-1C05-431A-B7B4-4B6B66A210B6}.Debug|x64.ActiveCfg = Debug|x64
@@ -116,6 +158,7 @@ Global
 		{A0E351C3-1C05-431A-B7B4-4B6B66A210B6}.Release|x64.Build.0 = Release|x64
 		{14BD76E4-E8CE-486D-B552-AE17332AFD67}.Debug|Win32.ActiveCfg = Debug|Win32
 		{14BD76E4-E8CE-486D-B552-AE17332AFD67}.Debug|Win32.Build.0 = Debug|Win32
+<<<<<<< HEAD
 		{14BD76E4-E8CE-486D-B552-AE17332AFD67}.Debug|x64.ActiveCfg = Debug|Win32
 		{14BD76E4-E8CE-486D-B552-AE17332AFD67}.Release_vc6|Win32.ActiveCfg = Release_vc6|Win32
 		{14BD76E4-E8CE-486D-B552-AE17332AFD67}.Release_vc6|Win32.Build.0 = Release_vc6|Win32
@@ -159,6 +202,14 @@ Global
 		{5C6460DB-F7B1-5315-A0DE-79A9DFC525A1}.Release|Win32.ActiveCfg = Release|Win32
 		{5C6460DB-F7B1-5315-A0DE-79A9DFC525A1}.Release|Win32.Build.0 = Release|Win32
 		{5C6460DB-F7B1-5315-A0DE-79A9DFC525A1}.Release|x64.ActiveCfg = Release|Win32
+=======
+		{14BD76E4-E8CE-486D-B552-AE17332AFD67}.Debug|x64.ActiveCfg = Debug|x64
+		{14BD76E4-E8CE-486D-B552-AE17332AFD67}.Debug|x64.Build.0 = Debug|x64
+		{14BD76E4-E8CE-486D-B552-AE17332AFD67}.Release|Win32.ActiveCfg = Release|Win32
+		{14BD76E4-E8CE-486D-B552-AE17332AFD67}.Release|Win32.Build.0 = Release|Win32
+		{14BD76E4-E8CE-486D-B552-AE17332AFD67}.Release|x64.ActiveCfg = Release|x64
+		{14BD76E4-E8CE-486D-B552-AE17332AFD67}.Release|x64.Build.0 = Release|x64
+>>>>>>> refs/remotes/weolar/master
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

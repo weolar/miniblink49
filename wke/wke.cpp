@@ -4,6 +4,7 @@
 #define BUILDING_wke 1
 
 #include "content/browser/WebPage.h"
+#include "content/web_impl_win/BlinkPlatformImpl.h"
 #include "net/WebURLLoaderManager.h"
 
 //cexer: 必须包含在后面，因为其中的 wke.h -> windows.h 会定义 max、min，导致 WebCore 内部的 max、min 出现错乱。
@@ -19,6 +20,7 @@ void setCookieJarPath(const WCHAR* path);
 }
 
 //////////////////////////////////////////////////////////////////////////
+static std::string* s_versionString = nullptr;
 static bool wkeIsInit = false;
 
 void wkeInitialize()
@@ -77,12 +79,17 @@ bool wkeIsInitialize()
 
 void wkeFinalize()
 {
-    wkeUpdate();
+    content::BlinkPlatformImpl* platform = (content::BlinkPlatformImpl*)blink::Platform::current();
+    platform->shutdown();
 
 //     WebCore::iconDatabase().close();
 //     WebCore::PageGroup::closeLocalStorage();
 
     CoUninitialize();
+
+    if (s_versionString)
+        delete s_versionString;
+    s_versionString = nullptr;
 }
 
 void wkeUpdate()
@@ -101,7 +108,6 @@ void wkeUpdate()
 //     }
 }
 
-
 #define MAJOR_VERSION   (1)
 #define MINOR_VERSION   (2)
 #define WEBKIT_BUILD    (98096)
@@ -113,9 +119,8 @@ unsigned int wkeGetVersion()
 
 const utf8* wkeGetVersionString()
 {
-    static CString s_versionString;
-    if (0 != s_versionString.length())
-        return s_versionString.data();
+    if (s_versionString)
+        return s_versionString->c_str();
 
     String versionString = String::format("wke version %d.%02d\n"
         "blink build %d\n"
@@ -125,8 +130,8 @@ const utf8* wkeGetVersionString()
         WEBKIT_BUILD,
         __TIMESTAMP__);
 
-    s_versionString = versionString.utf8();
-    return s_versionString.data();
+    s_versionString = new std::string(versionString.utf8().data());
+    return s_versionString->c_str();
 }
 
 const char* wkeGetName(wkeWebView webView)

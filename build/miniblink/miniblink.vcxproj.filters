@@ -21010,9 +21010,6 @@
     <None Include="..\..\third_party\WebKit\Source\core\animation\OWNERS">
       <Filter>third_party\Webkit\Source\core\animation</Filter>
     </None>
-    <None Include="..\..\third_party\WebKit\Source\platform\heap\asm\SaveRegisters_x86.asm">
-      <Filter>third_party\Webkit\Source\platform\heap\asm</Filter>
-    </None>
     <None Include="..\..\third_party\WebKit\Source\modules\storage\OWNERS">
       <Filter>third_party\Webkit\Source\modules\storage</Filter>
     </None>
@@ -21028,5 +21025,10 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <YASM Include="..\..\third_party\WebKit\Source\platform\heap\asm\SaveRegisters_x86.asm">
+      <Filter>third_party\Webkit\Source\platform\heap\asm</Filter>
+    </YASM>
   </ItemGroup>
 </Project>
