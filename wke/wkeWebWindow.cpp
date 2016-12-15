@@ -194,7 +194,7 @@ LRESULT CWebWindow::_windowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM l
     switch(message) {
     case WM_CREATE:
         DragAcceptFiles(hwnd, TRUE);
-        SetTimer(hwnd, (UINT_PTR)this, 300, NULL);
+        SetTimer(hwnd, (UINT_PTR)this, 70, NULL);
         return 0;
 
     case WM_CLOSE:
