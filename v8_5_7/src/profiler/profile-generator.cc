@@ -386,7 +386,7 @@ void ProfileTree::TraverseDepthFirst(Callback* callback) {
 }
 
 using v8::tracing::TracedValue;
-#define  TRACE_EVENT_SAMPLE_WITH_ID1
+
 CpuProfile::CpuProfile(CpuProfiler* profiler, const char* title,
                        bool record_samples)
     : title_(title),

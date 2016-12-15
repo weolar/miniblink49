@@ -140,7 +140,9 @@ public:
 
         // FIXME: There has to be a better way.
         v8::UniqueId groupId(*reinterpret_cast<intptr_t*>(&groupRoot->m_wrapper));
+#if !(V8_MINOR_VERSION == 7)
         m_wrapper.MarkPartiallyDependent();
+#endif
         isolate->SetObjectGroupId(v8::Persistent<v8::Value>::Cast(m_wrapper), groupId);
     }
 
