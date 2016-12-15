@@ -22,12 +22,6 @@
     <Filter Include="cares\src">
       <UniqueIdentifier>{5b03dff4-5266-4902-826e-be9d0c6efb74}</UniqueIdentifier>
     </Filter>
-    <Filter Include="v8_inspector">
-      <UniqueIdentifier>{2f566a85-2483-4252-aa07-5b40e090d42c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="v8_inspector\v8_inspector">
-      <UniqueIdentifier>{d9355b8e-2cf7-47d4-bd03-95fc47305449}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\node\src\async-wrap.cc">
@@ -58,12 +52,6 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\node\src\http_parser.c">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\inspector_agent.cc">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\inspector_socket.cc">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\node\src\js_stream.cc">
@@ -420,104 +408,8 @@
     <ClCompile Include="..\..\node\cares\src\windows_port.c">
       <Filter>cares\src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\node\v8_inspector\platform\inspector_protocol\DispatcherBase.cpp">
-      <Filter>v8_inspector\v8_inspector</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\v8_inspector\platform\inspector_protocol\ErrorSupport.cpp">
-      <Filter>v8_inspector\v8_inspector</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\v8_inspector\platform\inspector_protocol\Parser.cpp">
-      <Filter>v8_inspector\v8_inspector</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\v8_inspector\platform\inspector_protocol\String16STL.cpp">
-      <Filter>v8_inspector\v8_inspector</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\v8_inspector\platform\inspector_protocol\Values.cpp">
-      <Filter>v8_inspector\v8_inspector</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\node\src\util1.cc">
       <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\V8InspectorImpl.cpp">
-      <Filter>v8_inspector\v8_inspector</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\InjectedScript.cpp">
-      <Filter>v8_inspector\v8_inspector</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\InjectedScriptNative.cpp">
-      <Filter>v8_inspector\v8_inspector</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\InspectedContext.cpp">
-      <Filter>v8_inspector\v8_inspector</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\JavaScriptCallFrame.cpp">
-      <Filter>v8_inspector\v8_inspector</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\RemoteObjectId.cpp">
-      <Filter>v8_inspector\v8_inspector</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\V8Console.cpp">
-      <Filter>v8_inspector\v8_inspector</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\V8ConsoleAgentImpl.cpp">
-      <Filter>v8_inspector\v8_inspector</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\V8ConsoleMessage.cpp">
-      <Filter>v8_inspector\v8_inspector</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\V8Debugger.cpp">
-      <Filter>v8_inspector\v8_inspector</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\V8DebuggerAgentImpl.cpp">
-      <Filter>v8_inspector\v8_inspector</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\V8DebuggerScript.cpp">
-      <Filter>v8_inspector\v8_inspector</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\V8FunctionCall.cpp">
-      <Filter>v8_inspector\v8_inspector</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\V8HeapProfilerAgentImpl.cpp">
-      <Filter>v8_inspector\v8_inspector</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\V8InjectedScriptHost.cpp">
-      <Filter>v8_inspector\v8_inspector</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\V8InspectorSessionImpl.cpp">
-      <Filter>v8_inspector\v8_inspector</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\V8InternalValueType.cpp">
-      <Filter>v8_inspector\v8_inspector</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\V8ProfilerAgentImpl.cpp">
-      <Filter>v8_inspector\v8_inspector</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\V8Regex.cpp">
-      <Filter>v8_inspector\v8_inspector</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\V8RuntimeAgentImpl.cpp">
-      <Filter>v8_inspector\v8_inspector</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\V8StackTraceImpl.cpp">
-      <Filter>v8_inspector\v8_inspector</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\V8StringUtil.cpp">
-      <Filter>v8_inspector\v8_inspector</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\protocol\Console.cpp">
-      <Filter>v8_inspector\v8_inspector</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\protocol\Debugger.cpp">
-      <Filter>v8_inspector\v8_inspector</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\protocol\HeapProfiler.cpp">
-      <Filter>v8_inspector\v8_inspector</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\protocol\Profiler.cpp">
-      <Filter>v8_inspector\v8_inspector</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\protocol\Runtime.cpp">
-      <Filter>v8_inspector\v8_inspector</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -555,12 +447,6 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\node\src\http_parser.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\inspector_agent.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\inspector_socket.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\node\src\js_stream.h">

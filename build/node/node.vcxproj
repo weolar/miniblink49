@@ -86,8 +86,6 @@
     <ClCompile Include="..\..\node\src\fs_event_wrap.cc" />
     <ClCompile Include="..\..\node\src\handle_wrap.cc" />
     <ClCompile Include="..\..\node\src\http_parser.c" />
-    <ClCompile Include="..\..\node\src\inspector_agent.cc" />
-    <ClCompile Include="..\..\node\src\inspector_socket.cc" />
     <ClCompile Include="..\..\node\src\js_stream.cc" />
     <ClCompile Include="..\..\node\src\node.cc" />
     <ClCompile Include="..\..\node\src\node_buffer.cc" />
@@ -158,38 +156,6 @@
     <ClCompile Include="..\..\node\uv\src\win\util.c" />
     <ClCompile Include="..\..\node\uv\src\win\winapi.c" />
     <ClCompile Include="..\..\node\uv\src\win\winsock.c" />
-    <ClCompile Include="..\..\node\v8_inspector\platform\inspector_protocol\DispatcherBase.cpp" />
-    <ClCompile Include="..\..\node\v8_inspector\platform\inspector_protocol\ErrorSupport.cpp" />
-    <ClCompile Include="..\..\node\v8_inspector\platform\inspector_protocol\Parser.cpp" />
-    <ClCompile Include="..\..\node\v8_inspector\platform\inspector_protocol\String16STL.cpp" />
-    <ClCompile Include="..\..\node\v8_inspector\platform\inspector_protocol\Values.cpp" />
-    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\InjectedScript.cpp" />
-    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\InjectedScriptNative.cpp" />
-    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\InspectedContext.cpp" />
-    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\JavaScriptCallFrame.cpp" />
-    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\protocol\Console.cpp" />
-    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\protocol\Debugger.cpp" />
-    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\protocol\HeapProfiler.cpp" />
-    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\protocol\Profiler.cpp" />
-    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\protocol\Runtime.cpp" />
-    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\RemoteObjectId.cpp" />
-    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\V8Console.cpp" />
-    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\V8ConsoleAgentImpl.cpp" />
-    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\V8ConsoleMessage.cpp" />
-    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\V8Debugger.cpp" />
-    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\V8DebuggerAgentImpl.cpp" />
-    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\V8DebuggerScript.cpp" />
-    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\V8FunctionCall.cpp" />
-    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\V8HeapProfilerAgentImpl.cpp" />
-    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\V8InjectedScriptHost.cpp" />
-    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\V8InspectorImpl.cpp" />
-    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\V8InspectorSessionImpl.cpp" />
-    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\V8InternalValueType.cpp" />
-    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\V8ProfilerAgentImpl.cpp" />
-    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\V8Regex.cpp" />
-    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\V8RuntimeAgentImpl.cpp" />
-    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\V8StackTraceImpl.cpp" />
-    <ClCompile Include="..\..\node\v8_inspector\platform\v8_inspector\V8StringUtil.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\node\cares\src\ares_data.h" />
@@ -223,8 +189,6 @@
     <ClInclude Include="..\..\node\src\env.h" />
     <ClInclude Include="..\..\node\src\handle_wrap.h" />
     <ClInclude Include="..\..\node\src\http_parser.h" />
-    <ClInclude Include="..\..\node\src\inspector_agent.h" />
-    <ClInclude Include="..\..\node\src\inspector_socket.h" />
     <ClInclude Include="..\..\node\src\js_stream.h" />
     <ClInclude Include="..\..\node\src\node.h" />
     <ClInclude Include="..\..\node\src\node_buffer.h" />
@@ -389,14 +353,14 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;BUILDING_V8_SHARED=1;BUILDING_UV_SHARED=1;CARES_STATICLIB;NODE_ARCH="ia32";NODE_PLATFORM="win32";NODE_WANT_INTERNALS=1;HAVE_INSPECTOR=1;HAVE_OPENSSL=1;HAVE_ETW=1;HAVE_PERFCTR=1;V8_INSPECTOR_USE_STL=1;NODE_USE_V8_PLATFORM=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;BUILDING_V8_SHARED=1;BUILDING_UV_SHARED=1;CARES_STATICLIB;NODE_ARCH="ia32";NODE_PLATFORM="win32";NODE_WANT_INTERNALS=1;HAVE_OPENSSL=1;HAVE_ETW=1;HAVE_PERFCTR=1;V8_INSPECTOR_USE_STL=1;NODE_USE_V8_PLATFORM=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>../../third_party/zlib;../../v8_5_1/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../third_party/zlib;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>v8_5_1.lib;openssl.lib;zlib.lib;winmm.lib;AdvAPI32.Lib;iphlpapi.lib;psapi.lib;userenv.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>v8_5_7.lib;openssl.lib;zlib.lib;winmm.lib;AdvAPI32.Lib;iphlpapi.lib;psapi.lib;userenv.lib;ws2_32.lib;dbghelp.lib;shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)..\out\$(Configuration)\</AdditionalLibraryDirectories>
     </Link>
     <Lib>
