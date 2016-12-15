@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -31,12 +31,12 @@
     <RootNamespace>miniblink</RootNamespace>
     <Keyword>Win32Proj</Keyword>
     <ProjectName>miniblink</ProjectName>
-    <WindowsTargetPlatformVersion>10.0.14393.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
-    <PlatformToolset>v141</PlatformToolset>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v140_xp</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
@@ -60,7 +60,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v140_xp</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
@@ -70,7 +70,6 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
-    <Import Project="$(VCTargetsPath)\BuildCustomizations\vsyasm.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
@@ -95,8 +94,8 @@
     <_ProjectFileVersion>11.0.50727.1</_ProjectFileVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>$(SolutionDir)..\..\bin\$(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)..\..\bin\$(Configuration)\obj\$(ProjectName)\</IntDir>
+    <OutDir>$(SolutionDir)..\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)..\tmp\$(ProjectName)\$(Configuration)\</IntDir>
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -105,10 +104,14 @@
     <IntDir>$(SolutionDir)..\..\bin\$(Configuration)64\obj\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>$(SolutionDir)..\..\bin\$(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)..\..\bin\$(Configuration)\obj\$(ProjectName)\</IntDir>
-    <GenerateManifest>false</GenerateManifest>
-    <ExecutablePath>$(VC_ExecutablePath_x64_x86);$(VC_ExecutablePath_x64_x64);$(‌​WindowsSDK_Executabl‌​ePath_x64);$(VS_Exec‌​utablePath);$(MSBuil‌​d_ExecutablePath);$(‌​SystemRoot)\System32‌​;$(FxCopDir);$(PATH);$(ExecutablePath)</ExecutablePath>
+    <OutDir>$(SolutionDir)..\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)..\tmp\$(ProjectName)\$(Configuration)\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+    <TargetExt>.dll</TargetExt>
+    <IncludePath>$(SolutionDir)..\vc6\include\crt;$(SolutionDir)..\vc6\include\wnet</IncludePath>
+    <ReferencePath>
+    </ReferencePath>
+    <LibraryPath>$(SolutionDir)..\vc6\lib</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_xp|Win32'">
     <OutDir>$(SolutionDir)..\..\bin\$(Configuration)\</OutDir>
@@ -183,7 +186,8 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <PreprocessorDefinitions>NDEBUG;WIN32;_WINDOWS;INSIDE_BLINK=1;BLINK_IMPLEMENTATION=1;ENABLE_OILPAN=1;ENABLE_WKE=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>BUILDING_CEF_SHARED;NDEBUG;WIN32;_WINDOWS;INSIDE_BLINK=1;BLINK_IMPLEMENTATION=1;ENABLE_OILPAN=1;USING_VC6RT=1;ENABLE_WKE=1;ENABLE_CEF=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -191,15 +195,22 @@
       <PrecompiledHeaderFile>config.h</PrecompiledHeaderFile>
       <DisableSpecificWarnings>4800;4291;4996;4244;4305;4577;4530;4595;4049</DisableSpecificWarnings>
       <ForcedIncludeFiles>config.h</ForcedIncludeFiles>
-      <Optimization>Full</Optimization>
-      <ExceptionHandling>Sync</ExceptionHandling>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <StringPooling>true</StringPooling>
+      <Optimization>MinSpace</Optimization>
       <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <ExceptionHandling>false</ExceptionHandling>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
       <WholeProgramOptimization>false</WholeProgramOptimization>
+      <StringPooling>true</StringPooling>
+      <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
+      <AdditionalOptions>/Zc:threadSafeInit- %(AdditionalOptions)</AdditionalOptions>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
     </ClCompile>
     <Link>
+      <GenerateDebugInformation>Debug</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -209,39 +220,7 @@
       <AdditionalOptions>/FORCE:UNRESOLVED %(AdditionalOptions)</AdditionalOptions>
       <OutputFile>$(SolutionDir)..\$(Configuration)\miniblink.dll</OutputFile>
       <ImportLibrary>$(OutDir)miniblink.lib</ImportLibrary>
-      <ShowProgress>NotSet</ShowProgress>
-      <EntryPointSymbol>
-      </EntryPointSymbol>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_xp|Win32'">
-    <ClCompile>
-      <PreprocessorDefinitions>NDEBUG;WIN32;_WINDOWS;INSIDE_BLINK=1;BLINK_IMPLEMENTATION=1;ENABLE_OILPAN=1;ENABLE_WKE=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <PrecompiledHeader>Use</PrecompiledHeader>
-      <WarningLevel>Level3</WarningLevel>
-      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <AdditionalIncludeDirectories>../../;../../v8/;../../v8/include;../../third_party/;../../third_party/GDIPlus/Includes;../../third_party/npapi;../../third_party/WebKit;../../third_party/WebKit/Source;../../cef;../../third_party/icu/source/common;../../gen/blink;../../gen/blink/core;../../gen/blink/bindings/modules/v8;../../gen/blink/bindings/core/v8;../../gpu;../../third_party/khronos;../../third_party/libxml/src/include;../../third_party/libxml/win32/include;../../third_party/skia/include/core;../../third_party/skia/include/config;../../third_party/skia/include/codec;../../third_party/skia/include/device;../../third_party/skia/include/effects;../../third_party/skia/include/images;../../third_party/skia/include/pathops;../../third_party/skia/include/ports;../../third_party/skia/include/private;../../third_party/skia/include/utils;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PrecompiledHeaderFile>config.h</PrecompiledHeaderFile>
-      <DisableSpecificWarnings>4800;4291;4996;4244;4305;4577;4530;4595;4049</DisableSpecificWarnings>
-      <ForcedIncludeFiles>config.h</ForcedIncludeFiles>
-      <Optimization>Full</Optimization>
-      <ExceptionHandling>Sync</ExceptionHandling>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <StringPooling>true</StringPooling>
-      <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <WholeProgramOptimization>false</WholeProgramOptimization>
-    </ClCompile>
-    <Link>
-      <SubSystem>Windows</SubSystem>
-      <OptimizeReferences>true</OptimizeReferences>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <TargetMachine>MachineX86</TargetMachine>
-      <AdditionalLibraryDirectories>$(SolutionDir)..\third_party\GDIPlus\Lib;$(SolutionDir)..\release\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>version.lib;Crypt32.lib;Advapi32.lib;wldap32.lib;libcurl.lib;zlib.lib;ots.lib;Imm32.lib;libxml.lib;v8.lib;skia.lib;winmm.lib;Ws2_32.lib;Usp10.lib;Shlwapi.lib;wininet.lib;GDIPlus.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalOptions>/FORCE:UNRESOLVED %(AdditionalOptions)</AdditionalOptions>
-      <OutputFile>$(SolutionDir)..\$(Configuration)\miniblink.dll</OutputFile>
-      <ImportLibrary>$(OutDir)miniblink.lib</ImportLibrary>
+      <IgnoreSpecificDefaultLibraries>LIBCMT.lib;libcpmt.lib</IgnoreSpecificDefaultLibraries>
       <ShowProgress>NotSet</ShowProgress>
       <EntryPointSymbol>
       </EntryPointSymbol>
@@ -7111,6 +7090,5 @@
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
-    <Import Project="$(VCTargetsPath)\BuildCustomizations\vsyasm.targets" />
   </ImportGroup>
 </Project>
