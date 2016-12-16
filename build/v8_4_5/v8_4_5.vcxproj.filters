@@ -58,6 +58,15 @@
     <Filter Include="src\ic\ia32">
       <UniqueIdentifier>{9f032fe6-44f6-403e-855a-04c5f0942b3f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\x64">
+      <UniqueIdentifier>{6bd541d6-0b17-4359-923e-51e66ad062af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\compiler\x64">
+      <UniqueIdentifier>{446d0361-3bce-481f-a411-7b85e6076046}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\ic\x64">
+      <UniqueIdentifier>{2d111f8b-544d-48a6-b5ca-b1b668193f7a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\v8_4_5\src\compiler\ir-operations.txt">
@@ -1151,6 +1160,9 @@
     <ClInclude Include="..\..\v8_4_5\src\extensions\externalize-string-extension.h">
       <Filter>src\extensions</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\v8_4_5\src\compiler\ia32\instruction-codes-ia32.h">
+      <Filter>src\compiler\ia32</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\v8_4_5\src\ia32\assembler-ia32.h">
       <Filter>src\ia32</Filter>
     </ClInclude>
@@ -1184,8 +1196,41 @@
     <ClInclude Include="..\..\v8_4_5\src\ia32\simulator-ia32.h">
       <Filter>src\ia32</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\v8_4_5\src\compiler\ia32\instruction-codes-ia32.h">
-      <Filter>src\compiler\ia32</Filter>
+    <ClInclude Include="..\..\v8_4_5\src\x64\assembler-x64.h">
+      <Filter>src\x64</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_5\src\x64\assembler-x64-inl.h">
+      <Filter>src\x64</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_5\src\x64\codegen-x64.h">
+      <Filter>src\x64</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_5\src\x64\code-stubs-x64.h">
+      <Filter>src\x64</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_5\src\x64\frames-x64.h">
+      <Filter>src\x64</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_5\src\x64\lithium-codegen-x64.h">
+      <Filter>src\x64</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_5\src\x64\lithium-gap-resolver-x64.h">
+      <Filter>src\x64</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_5\src\x64\lithium-x64.h">
+      <Filter>src\x64</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_5\src\x64\macro-assembler-x64.h">
+      <Filter>src\x64</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_5\src\x64\regexp-macro-assembler-x64.h">
+      <Filter>src\x64</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_5\src\x64\simulator-x64.h">
+      <Filter>src\x64</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_5\src\compiler\x64\instruction-codes-x64.h">
+      <Filter>src\compiler\x64</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -2062,6 +2107,42 @@
     <ClCompile Include="..\..\v8_4_5\src\snapshot\serialize.cc">
       <Filter>src\snapshot</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\v8_4_5\src\compiler\ia32\code-generator-ia32.cc">
+      <Filter>src\compiler\ia32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_5\src\compiler\ia32\instruction-selector-ia32.cc">
+      <Filter>src\compiler\ia32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_5\src\compiler\ia32\linkage-ia32.cc">
+      <Filter>src\compiler\ia32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_5\src\ic\ia32\access-compiler-ia32.cc">
+      <Filter>src\ic\ia32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_5\src\ic\ia32\handler-compiler-ia32.cc">
+      <Filter>src\ic\ia32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_5\src\ic\ia32\ic-compiler-ia32.cc">
+      <Filter>src\ic\ia32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_5\src\ic\ia32\ic-ia32.cc">
+      <Filter>src\ic\ia32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_5\src\ic\ia32\stub-cache-ia32.cc">
+      <Filter>src\ic\ia32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\v8_4_5\experimental-libraries.cc">
+      <Filter>src\gen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\v8_4_5\extras-libraries.cc">
+      <Filter>src\gen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\v8_4_5\libraries.cc">
+      <Filter>src\gen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_5\src\ia32\assembler-ia32.cc">
+      <Filter>src\ia32</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\v8_4_5\src\ia32\builtins-ia32.cc">
       <Filter>src\ia32</Filter>
     </ClCompile>
@@ -2110,50 +2191,83 @@
     <ClCompile Include="..\..\v8_4_5\src\ia32\simulator-ia32.cc">
       <Filter>src\ia32</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\v8_4_5\src\compiler\ia32\code-generator-ia32.cc">
-      <Filter>src\compiler\ia32</Filter>
+    <ClCompile Include="..\..\v8_4_5\src\x64\assembler-x64.cc">
+      <Filter>src\x64</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\v8_4_5\src\compiler\ia32\instruction-selector-ia32.cc">
-      <Filter>src\compiler\ia32</Filter>
+    <ClCompile Include="..\..\v8_4_5\src\x64\builtins-x64.cc">
+      <Filter>src\x64</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\v8_4_5\src\compiler\ia32\linkage-ia32.cc">
-      <Filter>src\compiler\ia32</Filter>
+    <ClCompile Include="..\..\v8_4_5\src\x64\codegen-x64.cc">
+      <Filter>src\x64</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\v8_4_5\src\ia32\assembler-ia32.cc">
-      <Filter>src\ia32</Filter>
+    <ClCompile Include="..\..\v8_4_5\src\x64\code-stubs-x64.cc">
+      <Filter>src\x64</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\v8_4_5\src\ic\ia32\access-compiler-ia32.cc">
-      <Filter>src\ic\ia32</Filter>
+    <ClCompile Include="..\..\v8_4_5\src\x64\cpu-x64.cc">
+      <Filter>src\x64</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\v8_4_5\src\ic\ia32\handler-compiler-ia32.cc">
-      <Filter>src\ic\ia32</Filter>
+    <ClCompile Include="..\..\v8_4_5\src\x64\debug-x64.cc">
+      <Filter>src\x64</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\v8_4_5\src\ic\ia32\ic-compiler-ia32.cc">
-      <Filter>src\ic\ia32</Filter>
+    <ClCompile Include="..\..\v8_4_5\src\x64\deoptimizer-x64.cc">
+      <Filter>src\x64</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\v8_4_5\src\ic\ia32\ic-ia32.cc">
-      <Filter>src\ic\ia32</Filter>
+    <ClCompile Include="..\..\v8_4_5\src\x64\disasm-x64.cc">
+      <Filter>src\x64</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\v8_4_5\src\ic\ia32\stub-cache-ia32.cc">
-      <Filter>src\ic\ia32</Filter>
+    <ClCompile Include="..\..\v8_4_5\src\x64\frames-x64.cc">
+      <Filter>src\x64</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\gen\v8_4_5\experimental-libraries.cc">
-      <Filter>src\gen</Filter>
+    <ClCompile Include="..\..\v8_4_5\src\x64\full-codegen-x64.cc">
+      <Filter>src\x64</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\gen\v8_4_5\extras-libraries.cc">
-      <Filter>src\gen</Filter>
+    <ClCompile Include="..\..\v8_4_5\src\x64\interface-descriptors-x64.cc">
+      <Filter>src\x64</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\gen\v8_4_5\libraries.cc">
-      <Filter>src\gen</Filter>
+    <ClCompile Include="..\..\v8_4_5\src\x64\lithium-codegen-x64.cc">
+      <Filter>src\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_5\src\x64\lithium-gap-resolver-x64.cc">
+      <Filter>src\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_5\src\x64\lithium-x64.cc">
+      <Filter>src\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_5\src\x64\macro-assembler-x64.cc">
+      <Filter>src\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_5\src\x64\regexp-macro-assembler-x64.cc">
+      <Filter>src\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_5\src\x64\simulator-x64.cc">
+      <Filter>src\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_5\src\compiler\x64\code-generator-x64.cc">
+      <Filter>src\compiler\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_5\src\compiler\x64\instruction-selector-x64.cc">
+      <Filter>src\compiler\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_5\src\compiler\x64\linkage-x64.cc">
+      <Filter>src\compiler\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_5\src\ic\x64\access-compiler-x64.cc">
+      <Filter>src\ic\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_5\src\ic\x64\handler-compiler-x64.cc">
+      <Filter>src\ic\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_5\src\ic\x64\ic-compiler-x64.cc">
+      <Filter>src\ic\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_5\src\ic\x64\ic-x64.cc">
+      <Filter>src\ic\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_5\src\ic\x64\stub-cache-x64.cc">
+      <Filter>src\ic\x64</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\v8_4_5\src\libplatform\DEPS">
-      <Filter>src\libplatform</Filter>
-    </None>
-    <None Include="..\..\v8_4_5\src\libplatform\OWNERS">
-      <Filter>src\libplatform</Filter>
-    </None>
     <None Include="..\..\v8_4_5\src\snapshot\OWNERS">
       <Filter>src\snapshot</Filter>
     </None>

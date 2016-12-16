@@ -124,6 +124,30 @@
     <Filter Include="src\libsampler">
       <UniqueIdentifier>{d3fe470b-ae80-46ea-99f6-a36549608217}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\builtins\x64">
+      <UniqueIdentifier>{c017475a-add8-4f85-8dab-7ab149754d14}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\compiler\x64">
+      <UniqueIdentifier>{3dc78283-eac6-4067-9d32-be5241e8b797}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\crankshaft\x64">
+      <UniqueIdentifier>{a49c7537-acbc-49dd-af98-923370b5b5c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\debug\x64">
+      <UniqueIdentifier>{d33ab571-6544-4d9b-9c70-4c6cca014c42}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\full-codegen\x64">
+      <UniqueIdentifier>{4d94d355-3fba-4fbd-8344-aa589c978bf9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\ic\x64">
+      <UniqueIdentifier>{7f646730-429f-4053-8f13-73780c5c9d86}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\regexp\x64">
+      <UniqueIdentifier>{f06fb692-895e-4a3d-bd4b-c3f444e99ef1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\x64">
+      <UniqueIdentifier>{846ff83c-9086-4dfc-b973-75c746f17b3e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\v8_5_7\include\v8.h">
@@ -1758,6 +1782,48 @@
     <ClInclude Include="..\..\v8_5_7\src\snapshot\code-serializer.h">
       <Filter>src\snapshot</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\v8_5_7\src\compiler\x64\instruction-codes-x64.h">
+      <Filter>src\compiler\x64</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_5_7\src\compiler\x64\unwinding-info-writer-x64.h">
+      <Filter>src\compiler\x64</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_5_7\src\crankshaft\x64\lithium-codegen-x64.h">
+      <Filter>src\crankshaft\x64</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_5_7\src\crankshaft\x64\lithium-gap-resolver-x64.h">
+      <Filter>src\crankshaft\x64</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_5_7\src\crankshaft\x64\lithium-x64.h">
+      <Filter>src\crankshaft\x64</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_5_7\src\regexp\x64\regexp-macro-assembler-x64.h">
+      <Filter>src\regexp\x64</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_5_7\src\x64\assembler-x64.h">
+      <Filter>src\x64</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_5_7\src\x64\assembler-x64-inl.h">
+      <Filter>src\x64</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_5_7\src\x64\codegen-x64.h">
+      <Filter>src\x64</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_5_7\src\x64\code-stubs-x64.h">
+      <Filter>src\x64</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_5_7\src\x64\frames-x64.h">
+      <Filter>src\x64</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_5_7\src\x64\macro-assembler-x64.h">
+      <Filter>src\x64</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_5_7\src\x64\simulator-x64.h">
+      <Filter>src\x64</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_5_7\src\x64\sse-instr.h">
+      <Filter>src\x64</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\v8_5_1\src\d8_js2c.vcxproj.filters">
@@ -3267,6 +3333,81 @@
     </ClCompile>
     <ClCompile Include="..\..\v8_5_7\src\interpreter\bytecode-peephole-table.cc">
       <Filter>src\interpreter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_5_7\src\builtins\x64\builtins-x64.cc">
+      <Filter>src\builtins\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_5_7\src\crankshaft\x64\lithium-codegen-x64.cc">
+      <Filter>src\crankshaft\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_5_7\src\crankshaft\x64\lithium-gap-resolver-x64.cc">
+      <Filter>src\crankshaft\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_5_7\src\crankshaft\x64\lithium-x64.cc">
+      <Filter>src\crankshaft\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_5_7\src\debug\x64\debug-x64.cc">
+      <Filter>src\debug\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_5_7\src\full-codegen\x64\full-codegen-x64.cc">
+      <Filter>src\full-codegen\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_5_7\src\ic\x64\access-compiler-x64.cc">
+      <Filter>src\ic\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_5_7\src\ic\x64\handler-compiler-x64.cc">
+      <Filter>src\ic\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_5_7\src\ic\x64\ic-x64.cc">
+      <Filter>src\ic\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_5_7\src\regexp\x64\regexp-macro-assembler-x64.cc">
+      <Filter>src\regexp\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_5_7\src\x64\assembler-x64.cc">
+      <Filter>src\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_5_7\src\x64\codegen-x64.cc">
+      <Filter>src\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_5_7\src\x64\code-stubs-x64.cc">
+      <Filter>src\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_5_7\src\x64\cpu-x64.cc">
+      <Filter>src\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_5_7\src\x64\deoptimizer-x64.cc">
+      <Filter>src\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_5_7\src\x64\disasm-x64.cc">
+      <Filter>src\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_5_7\src\x64\frames-x64.cc">
+      <Filter>src\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_5_7\src\x64\interface-descriptors-x64.cc">
+      <Filter>src\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_5_7\src\x64\macro-assembler-x64.cc">
+      <Filter>src\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_5_7\src\x64\simulator-x64.cc">
+      <Filter>src\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_5_7\src\x64\eh-frame-x64.cc">
+      <Filter>src\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_5_7\src\compiler\x64\code-generator-x64.cc">
+      <Filter>src\compiler\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_5_7\src\compiler\x64\instruction-scheduler-x64.cc">
+      <Filter>src\compiler\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_5_7\src\compiler\x64\instruction-selector-x64.cc">
+      <Filter>src\compiler\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_5_7\src\compiler\x64\unwinding-info-writer-x64.cc">
+      <Filter>src\compiler\x64</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

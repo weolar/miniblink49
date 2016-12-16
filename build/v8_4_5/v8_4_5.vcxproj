@@ -149,7 +149,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>V8_NO_FAST_TLS;WIN32;_DEBUG;_LIB;V8_TARGET_ARCH_IA32=1;V8_DEPRECATION_WARNINGS;NVALGRIND;ENABLE_HANDLE_ZAPPING;V8_USE_EXTERNAL_STARTUP_DATA=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>V8_NO_FAST_TLS;WIN32;_DEBUG;_LIB;V8_TARGET_ARCH_X64=1;V8_DEPRECATION_WARNINGS;NVALGRIND;ENABLE_HANDLE_ZAPPING;V8_USE_EXTERNAL_STARTUP_DATA=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>../../v8_4_5</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -253,7 +253,7 @@
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>V8_NO_FAST_TLS;NDEBUG;WIN32;_LIB;V8_USE_EXTERNAL_STARTUP_DATA=1;V8_TARGET_ARCH_IA32=1;V8_DEPRECATION_WARNINGS;NVALGRIND;ENABLE_HANDLE_ZAPPING;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>V8_NO_FAST_TLS;NDEBUG;WIN32;_LIB;V8_USE_EXTERNAL_STARTUP_DATA=1;V8_TARGET_ARCH_X64=1;V8_DEPRECATION_WARNINGS;NVALGRIND;ENABLE_HANDLE_ZAPPING;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>../../v8_4_5</AdditionalIncludeDirectories>
       <ExceptionHandling>false</ExceptionHandling>
@@ -435,6 +435,9 @@
     <ClInclude Include="..\..\v8_4_5\src\compiler\typer.h" />
     <ClInclude Include="..\..\v8_4_5\src\compiler\value-numbering-reducer.h" />
     <ClInclude Include="..\..\v8_4_5\src\compiler\verifier.h" />
+    <ClInclude Include="..\..\v8_4_5\src\compiler\x64\instruction-codes-x64.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="..\..\v8_4_5\src\compiler\zone-pool.h" />
     <ClInclude Include="..\..\v8_4_5\src\contexts.h" />
     <ClInclude Include="..\..\v8_4_5\src\conversions-inl.h" />
@@ -649,6 +652,39 @@
     <ClInclude Include="..\..\v8_4_5\src\version.h" />
     <ClInclude Include="..\..\v8_4_5\src\vm-state-inl.h" />
     <ClInclude Include="..\..\v8_4_5\src\vm-state.h" />
+    <ClInclude Include="..\..\v8_4_5\src\x64\assembler-x64-inl.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_5\src\x64\assembler-x64.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_5\src\x64\code-stubs-x64.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_5\src\x64\codegen-x64.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_5\src\x64\frames-x64.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_5\src\x64\lithium-codegen-x64.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_5\src\x64\lithium-gap-resolver-x64.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_5\src\x64\lithium-x64.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_5\src\x64\macro-assembler-x64.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_5\src\x64\regexp-macro-assembler-x64.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_5\src\x64\simulator-x64.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="..\..\v8_4_5\src\zone-allocator.h" />
     <ClInclude Include="..\..\v8_4_5\src\zone-containers.h" />
     <ClInclude Include="..\..\v8_4_5\src\zone.h" />
@@ -778,6 +814,15 @@
     <ClCompile Include="..\..\v8_4_5\src\compiler\typer.cc" />
     <ClCompile Include="..\..\v8_4_5\src\compiler\value-numbering-reducer.cc" />
     <ClCompile Include="..\..\v8_4_5\src\compiler\verifier.cc" />
+    <ClCompile Include="..\..\v8_4_5\src\compiler\x64\code-generator-x64.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_5\src\compiler\x64\instruction-selector-x64.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_5\src\compiler\x64\linkage-x64.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\..\v8_4_5\src\compiler\zone-pool.cc" />
     <ClCompile Include="..\..\v8_4_5\src\contexts.cc" />
     <ClCompile Include="..\..\v8_4_5\src\conversions.cc" />
@@ -876,6 +921,21 @@
     <ClCompile Include="..\..\v8_4_5\src\ic\ic-state.cc" />
     <ClCompile Include="..\..\v8_4_5\src\ic\ic.cc" />
     <ClCompile Include="..\..\v8_4_5\src\ic\stub-cache.cc" />
+    <ClCompile Include="..\..\v8_4_5\src\ic\x64\access-compiler-x64.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_5\src\ic\x64\handler-compiler-x64.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_5\src\ic\x64\ic-compiler-x64.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_5\src\ic\x64\ic-x64.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_5\src\ic\x64\stub-cache-x64.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\..\v8_4_5\src\interface-descriptors.cc" />
     <ClCompile Include="..\..\v8_4_5\src\interpreter-irregexp.cc" />
     <ClCompile Include="..\..\v8_4_5\src\isolate.cc" />
@@ -972,6 +1032,57 @@
     <ClCompile Include="..\..\v8_4_5\src\v8threads.cc" />
     <ClCompile Include="..\..\v8_4_5\src\variables.cc" />
     <ClCompile Include="..\..\v8_4_5\src\version.cc" />
+    <ClCompile Include="..\..\v8_4_5\src\x64\assembler-x64.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_5\src\x64\builtins-x64.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_5\src\x64\code-stubs-x64.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_5\src\x64\codegen-x64.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_5\src\x64\cpu-x64.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_5\src\x64\debug-x64.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_5\src\x64\deoptimizer-x64.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_5\src\x64\disasm-x64.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_5\src\x64\frames-x64.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_5\src\x64\full-codegen-x64.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_5\src\x64\interface-descriptors-x64.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_5\src\x64\lithium-codegen-x64.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_5\src\x64\lithium-gap-resolver-x64.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_5\src\x64\lithium-x64.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_5\src\x64\macro-assembler-x64.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_5\src\x64\regexp-macro-assembler-x64.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_5\src\x64\simulator-x64.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\..\v8_4_5\src\zone.cc" />
   </ItemGroup>
   <ItemGroup>
@@ -1003,8 +1114,6 @@
     <None Include="..\..\v8_4_5\src\i18n.js" />
     <None Include="..\..\v8_4_5\src\iterator-prototype.js" />
     <None Include="..\..\v8_4_5\src\json.js" />
-    <None Include="..\..\v8_4_5\src\libplatform\DEPS" />
-    <None Include="..\..\v8_4_5\src\libplatform\OWNERS" />
     <None Include="..\..\v8_4_5\src\liveedit-debugger.js" />
     <None Include="..\..\v8_4_5\src\macros.py" />
     <None Include="..\..\v8_4_5\src\math.js" />

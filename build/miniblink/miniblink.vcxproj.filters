@@ -463,9 +463,6 @@
     <Filter Include="gen\blink\bindings\modules\v8">
       <UniqueIdentifier>{7aed396e-651f-4069-aa1e-88c19e821975}</UniqueIdentifier>
     </Filter>
-    <Filter Include="v8">
-      <UniqueIdentifier>{043c37b2-7934-4f97-b3ae-21813991acdc}</UniqueIdentifier>
-    </Filter>
     <Filter Include="third_party\Webkit\Source\core\layout">
       <UniqueIdentifier>{5bf4d7d1-6381-4c2c-a6fe-f9208f679a0c}</UniqueIdentifier>
     </Filter>
