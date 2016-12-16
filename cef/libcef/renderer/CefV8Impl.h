@@ -295,9 +295,13 @@ protected:
         ~Handle() override;
 
     private:
-        // Callback for weak persistent reference destruction.
-        static void Destructor(const v8::WeakCallbackData<v8::Value, Handle>& data);
+        //zero
+		// Callback for weak persistent reference destruction.
+#if V8_MINOR_VERSION == 7
 
+#else
+		static void Destructor(const v8::WeakCallbackData<v8::Value, Handle>& data);
+#endif
         persistentType handle_;
 
         // For Object and Function types, we need to hold on to a reference to their

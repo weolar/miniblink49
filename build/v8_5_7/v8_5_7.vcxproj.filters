@@ -3331,9 +3331,6 @@
     <ClCompile Include="..\..\v8_5_7\src\interpreter\bytecode-peephole-optimizer.cc">
       <Filter>src\interpreter</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\v8_5_7\src\interpreter\bytecode-peephole-table.cc">
-      <Filter>src\interpreter</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\v8_5_7\src\builtins\x64\builtins-x64.cc">
       <Filter>src\builtins\x64</Filter>
     </ClCompile>
@@ -3408,6 +3405,9 @@
     </ClCompile>
     <ClCompile Include="..\..\v8_5_7\src\compiler\x64\unwinding-info-writer-x64.cc">
       <Filter>src\compiler\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_5_7\src\interpreter\bytecode-peephole-table.cc">
+      <Filter>src\interpreter</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

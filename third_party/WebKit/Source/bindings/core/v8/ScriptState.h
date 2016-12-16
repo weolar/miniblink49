@@ -64,6 +64,7 @@ public:
         v8::Local<v8::Context> context = isolate->GetCurrentContext();
         if (context.IsEmpty())
             return false;
+		//zero
 #if V8_MINOR_VERSION == 7
         return context != v8::Debug::GetDebugContext(isolate);
 #else
