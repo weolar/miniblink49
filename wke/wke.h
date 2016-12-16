@@ -25,9 +25,9 @@
 
 
 #if defined(BUILDING_wke)
-#   define WKE_API WKE_EXTERN_C //__declspec(dllexport)
+#   define WKE_API WKE_EXTERN_C __declspec(dllexport)
 #else
-#   define WKE_API WKE_EXTERN_C //__declspec(dllimport)
+#   define WKE_API WKE_EXTERN_C __declspec(dllimport)
 #endif
 
 typedef struct {

@@ -246,15 +246,6 @@
     <ClInclude Include="..\..\v8_5_1\src\ic\stub-cache.h">
       <Filter>src\ic</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\v8_5_1\src\ic\access-compiler.h">
-      <Filter>src\ic</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\v8_5_1\src\ic\call-optimization.h">
-      <Filter>src\ic</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\v8_5_1\src\ic\handler-compiler.h">
-      <Filter>src\ic</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\v8_5_1\src\ic\ic.h">
       <Filter>src\ic</Filter>
     </ClInclude>
@@ -1575,6 +1566,15 @@
     <ClInclude Include="..\..\v8_5_1\src\compiler\x64\instruction-codes-x64.h">
       <Filter>src\compiler\x64</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\v8_5_1\src\ic\access-compiler.h">
+      <Filter>src\ic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_5_1\src\ic\call-optimization.h">
+      <Filter>src\ic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_5_1\src\ic\handler-compiler.h">
+      <Filter>src\ic</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\v8_5_1\src\base\platform\semaphore.cc">
@@ -1617,15 +1617,6 @@
       <Filter>src\base</Filter>
     </ClCompile>
     <ClCompile Include="..\..\v8_5_1\src\ic\stub-cache.cc">
-      <Filter>src\ic</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_1\src\ic\access-compiler.cc">
-      <Filter>src\ic</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_1\src\ic\call-optimization.cc">
-      <Filter>src\ic</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_1\src\ic\handler-compiler.cc">
       <Filter>src\ic</Filter>
     </ClCompile>
     <ClCompile Include="..\..\v8_5_1\src\ic\ic.cc">
@@ -2789,21 +2780,6 @@
     <ClCompile Include="..\..\v8_5_1\src\full-codegen\x64\full-codegen-x64.cc">
       <Filter>src\full-codegen\x64</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\v8_5_1\src\ic\x64\access-compiler-x64.cc">
-      <Filter>src\ic\x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_1\src\ic\x64\handler-compiler-x64.cc">
-      <Filter>src\ic\x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_1\src\ic\x64\ic-compiler-x64.cc">
-      <Filter>src\ic\x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_1\src\ic\x64\ic-x64.cc">
-      <Filter>src\ic\x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_1\src\ic\x64\stub-cache-x64.cc">
-      <Filter>src\ic\x64</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\v8_5_1\src\x64\assembler-x64.cc">
       <Filter>src\x64</Filter>
     </ClCompile>
@@ -2848,6 +2824,30 @@
     </ClCompile>
     <ClCompile Include="..\..\v8_5_1\src\compiler\x64\instruction-selector-x64.cc">
       <Filter>src\compiler\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_5_1\src\ic\x64\access-compiler-x64.cc">
+      <Filter>src\ic\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_5_1\src\ic\x64\handler-compiler-x64.cc">
+      <Filter>src\ic\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_5_1\src\ic\access-compiler.cc">
+      <Filter>src\ic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_5_1\src\ic\call-optimization.cc">
+      <Filter>src\ic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_5_1\src\ic\handler-compiler.cc">
+      <Filter>src\ic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_5_1\src\ic\x64\ic-compiler-x64.cc">
+      <Filter>src\ic\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_5_1\src\ic\x64\ic-x64.cc">
+      <Filter>src\ic\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_5_1\src\ic\x64\stub-cache-x64.cc">
+      <Filter>src\ic\x64</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
