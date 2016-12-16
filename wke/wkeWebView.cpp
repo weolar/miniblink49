@@ -14,6 +14,7 @@
 #include "content/web_impl_win/BlinkPlatformImpl.h"
 #include "content/browser/WebFrameClientImpl.h"
 
+#undef  PURE
 #define PURE = 0;
 #include <shlwapi.h>
 
@@ -708,17 +709,58 @@ jsValue jsUndefined()
     return 0;
 }
 
+static jsValue v8ValueToJsValue(v8::Local<v8::Context> context, v8::Local<v8::Value> v8Value)
+{
+    v8::Isolate* isolate = context->GetIsolate();
+    v8::HandleScope handleScope(isolate);
+    v8::Context::Scope contextScope(context);
+
+    if (v8Value.IsEmpty())
+        return jsUndefined();
+
+    if (v8Value->IsString()) {
+        String stringWTF = blink::toCoreString(v8::Local<v8::String>::Cast(v8Value));
+        return wke::createJsValueString(context, stringWTF.utf8().data());
+    } else if (v8Value->IsTrue()) {
+        return jsBoolean(true);
+    } else if (v8Value->IsFalse()) {
+        return jsBoolean(true);
+    } else if (v8Value->IsUndefined()) {
+        return jsUndefined();
+    } else if (v8Value->IsObject()) {
+        return wke::createJsValueString(context, "Object");
+    } else if (v8Value->IsNumber()) {
+        v8::Local<v8::Number> v8Number = v8Value->ToNumber();
+        return jsDouble(v8Number->Value());
+    }
+
+    return jsUndefined();
+}
+
+static jsValue runJSImpl(blink::WebFrame* mainFrame, String* codeString)
+{
+    codeString->insert("(function(){", 0);
+    codeString->append("})();");
+    blink::WebScriptSource code(*codeString, KURL(ParsedURLString, "CWebView::runJS"));
+    blink::Frame* coreFrame = blink::toCoreFrame(mainFrame);
+    if (!mainFrame || !coreFrame || !coreFrame->isLocalFrame())
+        return jsUndefined();
+
+    blink::LocalFrame* localFrame = blink::toLocalFrame(coreFrame);
+    v8::HandleScope handleScope(blink::toIsolate(localFrame));
+    v8::Local<v8::Context> context = mainFrame->mainWorldScriptContext();
+    v8::Context::Scope contextScope(context);
+    v8::Local<v8::Value> result = mainFrame->executeScriptAndReturnValue(code);
+    return v8ValueToJsValue(context, result);
+}
+
 jsValue CWebView::runJS(const wchar_t* script)
 {
     if (!script)
         return jsUndefined();
 
-    blink::WebString codeString;
-    codeString.assign(script, wcslen(script));
-    blink::WebScriptSource code(codeString);
-    m_webPage->mainFrame()->executeScriptAndReturnValue(code);
-
-    return jsUndefined();
+    String codeString(script);
+    return runJSImpl(m_webPage->mainFrame(), &codeString);
 }
 
 jsValue CWebView::runJS(const utf8* script)
@@ -726,23 +768,14 @@ jsValue CWebView::runJS(const utf8* script)
     if (!script)
         return jsUndefined();
 
-    blink::WebScriptSource code(blink::WebString::fromUTF8(script));
-    v8::Local<v8::Value> result = m_webPage->mainFrame()->executeScriptAndReturnValue(code);
-
-//     v8::Local<v8::Context> context = m_webPage->mainFrame()->mainWorldScriptContext();
-//     v8::Isolate* isolate = context->GetIsolate();
-//     v8::HandleScope handleScope(isolate);
-//     v8::Context::Scope contextScope(context);
-//     
-//     return createJsValueByLocalValue(isolate, context, result);
-    return jsUndefined();
+    String codeString = String::fromUTF8(script);
+    return runJSImpl(m_webPage->mainFrame(), &codeString);
 }
 
 jsExecState CWebView::globalExec()
 {
     v8::Isolate* isolate = v8::Isolate::GetCurrent();
     v8::HandleScope handleScope(isolate);
-    //v8::Context::Scope contextScope(isolate->GetCurrentContext());
 
     return wke::createTempExecStateByV8Context(m_webPage->mainFrame()->mainWorldScriptContext());
 }
