@@ -277,7 +277,7 @@ void SimdScalarLowering::LowerNode(Node* node) {
     case IrOpcode::kLoad: {
       MachineRepresentation rep =
           LoadRepresentationOf(node->op()).representation();
-      const Operator* load_op;
+      const Operator* load_op = NULL;
       if (rep_type == SimdType::kInt32) {
         load_op = machine()->Load(MachineType::Int32());
       } else if (rep_type == SimdType::kFloat32) {
@@ -289,7 +289,7 @@ void SimdScalarLowering::LowerNode(Node* node) {
     case IrOpcode::kUnalignedLoad: {
       MachineRepresentation rep =
           UnalignedLoadRepresentationOf(node->op()).representation();
-      const Operator* load_op;
+      const Operator* load_op = NULL;
       if (rep_type == SimdType::kInt32) {
         load_op = machine()->UnalignedLoad(MachineType::Int32());
       } else if (rep_type == SimdType::kFloat32) {

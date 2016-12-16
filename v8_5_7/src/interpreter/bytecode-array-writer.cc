@@ -292,7 +292,7 @@ void BytecodeArrayWriter::EmitJump(BytecodeNode* node, BytecodeLabel* label) {
       delta -= 1;
     }
     DCHECK_EQ(Bytecode::kJumpLoop, node->bytecode());
-    node->update_operand0(delta);
+    node->set_bytecode(node->bytecode(), delta, node->operand(1));
   } else {
     // The label has not yet been bound so this is a forward reference
     // that will be patched when the label is bound. We create a
@@ -310,13 +310,13 @@ void BytecodeArrayWriter::EmitJump(BytecodeNode* node, BytecodeLabel* label) {
         UNREACHABLE();
         break;
       case OperandSize::kByte:
-        node->update_operand0(k8BitJumpPlaceholder);
+        node->set_bytecode(node->bytecode(), k8BitJumpPlaceholder);
         break;
       case OperandSize::kShort:
-        node->update_operand0(k16BitJumpPlaceholder);
+        node->set_bytecode(node->bytecode(), k16BitJumpPlaceholder);
         break;
       case OperandSize::kQuad:
-        node->update_operand0(k32BitJumpPlaceholder);
+        node->set_bytecode(node->bytecode(), k32BitJumpPlaceholder);
         break;
     }
   }

@@ -391,6 +391,14 @@ enum class Bytecode : uint8_t {
 #undef COUNT_BYTECODE
 };
 
+// TODO(rmcilroy): Remove once we switch to MSVC 2015 which supports constexpr.
+// See crbug.com/603131.
+#if V8_CC_MSVC
+#define CONSTEXPR const
+#else
+#define CONSTEXPR constexpr
+#endif
+
 class V8_EXPORT_PRIVATE Bytecodes final {
  public:
   //  The maximum number of operands a bytecode may have.
@@ -458,12 +466,14 @@ class V8_EXPORT_PRIVATE Bytecodes final {
 
   // Returns true if |bytecode| reads the accumulator.
   static bool ReadsAccumulator(Bytecode bytecode) {
-    return BytecodeOperands::ReadsAccumulator(GetAccumulatorUse(bytecode));
+    return (GetAccumulatorUse(bytecode) & AccumulatorUse::kRead) ==
+           AccumulatorUse::kRead;
   }
 
   // Returns true if |bytecode| writes the accumulator.
   static bool WritesAccumulator(Bytecode bytecode) {
-    return BytecodeOperands::WritesAccumulator(GetAccumulatorUse(bytecode));
+    return (GetAccumulatorUse(bytecode) & AccumulatorUse::kWrite) ==
+           AccumulatorUse::kWrite;
   }
 
   // Return true if |bytecode| writes the accumulator with a boolean value.
@@ -492,7 +502,7 @@ class V8_EXPORT_PRIVATE Bytecodes final {
 
   // Return true if |bytecode| is an accumulator load without effects,
   // e.g. LdaConstant, LdaTrue, Ldar.
-  static constexpr bool IsAccumulatorLoadWithoutEffects(Bytecode bytecode) {
+  static CONSTEXPR bool IsAccumulatorLoadWithoutEffects(Bytecode bytecode) {
     return bytecode == Bytecode::kLdar || bytecode == Bytecode::kLdaZero ||
            bytecode == Bytecode::kLdaSmi || bytecode == Bytecode::kLdaNull ||
            bytecode == Bytecode::kLdaTrue || bytecode == Bytecode::kLdaFalse ||
@@ -505,124 +515,124 @@ class V8_EXPORT_PRIVATE Bytecodes final {
 
   // Return true if |bytecode| is a register load without effects,
   // e.g. Mov, Star.
-  static constexpr bool IsRegisterLoadWithoutEffects(Bytecode bytecode) {
+  static CONSTEXPR bool IsRegisterLoadWithoutEffects(Bytecode bytecode) {
     return bytecode == Bytecode::kMov || bytecode == Bytecode::kPopContext ||
            bytecode == Bytecode::kPushContext || bytecode == Bytecode::kStar;
   }
 
   // Returns true if the bytecode is a conditional jump taking
   // an immediate byte operand (OperandType::kImm).
-  static constexpr bool IsConditionalJumpImmediate(Bytecode bytecode) {
+  static CONSTEXPR bool IsConditionalJumpImmediate(Bytecode bytecode) {
     return bytecode >= Bytecode::kJumpIfToBooleanTrue &&
            bytecode <= Bytecode::kJumpIfNotHole;
   }
 
   // Returns true if the bytecode is a conditional jump taking
   // a constant pool entry (OperandType::kIdx).
-  static constexpr bool IsConditionalJumpConstant(Bytecode bytecode) {
+  static CONSTEXPR bool IsConditionalJumpConstant(Bytecode bytecode) {
     return bytecode >= Bytecode::kJumpIfNullConstant &&
            bytecode <= Bytecode::kJumpIfToBooleanFalseConstant;
   }
 
   // Returns true if the bytecode is a conditional jump taking
   // any kind of operand.
-  static constexpr bool IsConditionalJump(Bytecode bytecode) {
+  static CONSTEXPR bool IsConditionalJump(Bytecode bytecode) {
     return bytecode >= Bytecode::kJumpIfNullConstant &&
            bytecode <= Bytecode::kJumpIfNotHole;
   }
 
   // Returns true if the bytecode is an unconditional jump.
-  static constexpr bool IsUnconditionalJump(Bytecode bytecode) {
+  static CONSTEXPR bool IsUnconditionalJump(Bytecode bytecode) {
     return bytecode >= Bytecode::kJumpLoop &&
            bytecode <= Bytecode::kJumpConstant;
   }
 
   // Returns true if the bytecode is a jump or a conditional jump taking
   // an immediate byte operand (OperandType::kImm).
-  static constexpr bool IsJumpImmediate(Bytecode bytecode) {
+  static CONSTEXPR bool IsJumpImmediate(Bytecode bytecode) {
     return bytecode == Bytecode::kJump || bytecode == Bytecode::kJumpLoop ||
            IsConditionalJumpImmediate(bytecode);
   }
 
   // Returns true if the bytecode is a jump or conditional jump taking a
   // constant pool entry (OperandType::kIdx).
-  static constexpr bool IsJumpConstant(Bytecode bytecode) {
+  static CONSTEXPR bool IsJumpConstant(Bytecode bytecode) {
     return bytecode >= Bytecode::kJumpConstant &&
            bytecode <= Bytecode::kJumpIfToBooleanFalseConstant;
   }
 
   // Returns true if the bytecode is a jump that internally coerces the
   // accumulator to a boolean.
-  static constexpr bool IsJumpIfToBoolean(Bytecode bytecode) {
+  static CONSTEXPR bool IsJumpIfToBoolean(Bytecode bytecode) {
     return bytecode >= Bytecode::kJumpIfToBooleanTrueConstant &&
            bytecode <= Bytecode::kJumpIfToBooleanFalse;
   }
 
   // Returns true if the bytecode is a jump or conditional jump taking
   // any kind of operand.
-  static constexpr bool IsJump(Bytecode bytecode) {
+  static CONSTEXPR bool IsJump(Bytecode bytecode) {
     return bytecode >= Bytecode::kJumpLoop &&
            bytecode <= Bytecode::kJumpIfNotHole;
   }
 
   // Returns true if the bytecode is a forward jump or conditional jump taking
   // any kind of operand.
-  static constexpr bool IsForwardJump(Bytecode bytecode) {
+  static CONSTEXPR bool IsForwardJump(Bytecode bytecode) {
     return bytecode >= Bytecode::kJump && bytecode <= Bytecode::kJumpIfNotHole;
   }
 
   // Returns true if the bytecode is a conditional jump, a jump, or a return.
-  static constexpr bool IsJumpOrReturn(Bytecode bytecode) {
+  static CONSTEXPR bool IsJumpOrReturn(Bytecode bytecode) {
     return bytecode == Bytecode::kReturn || IsJump(bytecode);
   }
 
   // Return true if |bytecode| is a jump without effects,
   // e.g.  any jump excluding those that include type coercion like
   // JumpIfTrueToBoolean.
-  static constexpr bool IsJumpWithoutEffects(Bytecode bytecode) {
+  static CONSTEXPR bool IsJumpWithoutEffects(Bytecode bytecode) {
     return IsJump(bytecode) && !IsJumpIfToBoolean(bytecode);
   }
 
   // Returns true if |bytecode| has no effects. These bytecodes only manipulate
   // interpreter frame state and will never throw.
-  static constexpr bool IsWithoutExternalSideEffects(Bytecode bytecode) {
+  static CONSTEXPR bool IsWithoutExternalSideEffects(Bytecode bytecode) {
     return (IsAccumulatorLoadWithoutEffects(bytecode) ||
             IsRegisterLoadWithoutEffects(bytecode) ||
             bytecode == Bytecode::kNop || IsJumpWithoutEffects(bytecode));
   }
 
   // Returns true if the bytecode is Ldar or Star.
-  static constexpr bool IsLdarOrStar(Bytecode bytecode) {
+  static CONSTEXPR bool IsLdarOrStar(Bytecode bytecode) {
     return bytecode == Bytecode::kLdar || bytecode == Bytecode::kStar;
   }
 
   // Returns true if |bytecode| puts a name in the accumulator.
-  static constexpr bool PutsNameInAccumulator(Bytecode bytecode) {
+  static CONSTEXPR bool PutsNameInAccumulator(Bytecode bytecode) {
     return bytecode == Bytecode::kTypeOf;
   }
 
   // Returns true if the bytecode is a call or a constructor call.
-  static constexpr bool IsCallOrNew(Bytecode bytecode) {
+  static CONSTEXPR bool IsCallOrNew(Bytecode bytecode) {
     return bytecode == Bytecode::kCall || bytecode == Bytecode::kCallProperty ||
            bytecode == Bytecode::kTailCall || bytecode == Bytecode::kNew;
   }
 
   // Returns true if the bytecode is a call to the runtime.
-  static constexpr bool IsCallRuntime(Bytecode bytecode) {
+  static CONSTEXPR bool IsCallRuntime(Bytecode bytecode) {
     return bytecode == Bytecode::kCallRuntime ||
            bytecode == Bytecode::kCallRuntimeForPair ||
            bytecode == Bytecode::kInvokeIntrinsic;
   }
 
   // Returns true if the bytecode is a scaling prefix bytecode.
-  static constexpr bool IsPrefixScalingBytecode(Bytecode bytecode) {
+  static CONSTEXPR bool IsPrefixScalingBytecode(Bytecode bytecode) {
     return bytecode == Bytecode::kExtraWide || bytecode == Bytecode::kWide ||
            bytecode == Bytecode::kDebugBreakExtraWide ||
            bytecode == Bytecode::kDebugBreakWide;
   }
 
   // Returns the number of values which |bytecode| returns.
-  static constexpr size_t ReturnCount(Bytecode bytecode) {
+  static CONSTEXPR size_t ReturnCount(Bytecode bytecode) {
     return bytecode == Bytecode::kReturn ? 1 : 0;
   }
 
@@ -806,6 +816,10 @@ class V8_EXPORT_PRIVATE Bytecodes final {
   static const int kBytecodeSizes[][3];
   static const OperandSize* const kOperandSizes[][3];
 };
+
+// TODO(rmcilroy): Remove once we switch to MSVC 2015 which supports constexpr.
+// See crbug.com/603131.
+#undef CONSTEXPR
 
 V8_EXPORT_PRIVATE std::ostream& operator<<(std::ostream& os,
                                            const Bytecode& bytecode);

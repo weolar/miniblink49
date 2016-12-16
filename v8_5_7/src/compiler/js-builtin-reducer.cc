@@ -464,7 +464,7 @@ Reduction JSBuiltinReducer::ReduceFastArrayIteratorNext(
     }
 
     Node* vdone_false1;
-    Node* vfalse1;
+	Node* vfalse1 = NULL;
     Node* efalse1 = efalse0;
     Node* if_false1 = graph()->NewNode(common()->IfFalse(), branch1);
     {
@@ -632,7 +632,7 @@ Reduction JSBuiltinReducer::ReduceTypedArrayIteratorNext(
     }
 
     Node* vdone_false2;
-    Node* vfalse2;
+    Node* vfalse2 = NULL;
     Node* efalse2 = efalse0;
     Node* if_false2 = graph()->NewNode(common()->IfFalse(), branch2);
     {

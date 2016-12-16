@@ -143,8 +143,7 @@ class OperandHelper {};
   template <>                                      \
   class OperandHelper<OperandType::k##Name>        \
       : public UnsignedOperandHelper<Type> {};
-UNSIGNED_FIXED_SCALAR_OPERAND_TYPE_LIST(DEFINE_UNSIGNED_OPERAND_HELPER)
-UNSIGNED_SCALABLE_SCALAR_OPERAND_TYPE_LIST(DEFINE_UNSIGNED_OPERAND_HELPER)
+UNSIGNED_SCALAR_OPERAND_TYPE_LIST(DEFINE_UNSIGNED_OPERAND_HELPER)
 #undef DEFINE_UNSIGNED_OPERAND_HELPER
 
 template <>
@@ -212,15 +211,14 @@ class OperandHelper<OperandType::kRegOutTriple> {
 
 }  // namespace
 
-template <Bytecode bytecode, AccumulatorUse accumulator_use,
-          OperandType... operand_types>
+template <OperandType... operand_types>
 class BytecodeNodeBuilder {
  public:
   template <typename... Operands>
   INLINE(static BytecodeNode Make(BytecodeArrayBuilder* builder,
                                   BytecodeSourceInfo source_info,
-                                  Operands... operands)) {
-    builder->PrepareToOutputBytecode<bytecode, accumulator_use>();
+                                  Bytecode bytecode, Operands... operands)) {
+    builder->PrepareToOutputBytecode(bytecode);
     // The "OperandHelper<operand_types>::Convert(builder, operands)..." will
     // expand both the OperandType... and Operands... parameter packs e.g. for:
     //   BytecodeNodeBuilder<OperandType::kReg, OperandType::kImm>::Make<
@@ -228,34 +226,32 @@ class BytecodeNodeBuilder {
     // the code will expand into:
     //    OperandHelper<OperandType::kReg>::Convert(builder, reg),
     //    OperandHelper<OperandType::kImm>::Convert(builder, immediate),
-    return BytecodeNode::Create<bytecode, accumulator_use, operand_types...>(
-        source_info,
-        OperandHelper<operand_types>::Convert(builder, operands)...);
+    return BytecodeNode(
+        bytecode, OperandHelper<operand_types>::Convert(builder, operands)...,
+        source_info);
   }
 };
 
-#define DEFINE_BYTECODE_OUTPUT(name, ...)                                \
-  template <typename... Operands>                                        \
-  void BytecodeArrayBuilder::Output##name(Operands... operands) {        \
-    static_assert(sizeof...(Operands) <= Bytecodes::kMaxOperands,        \
-                  "too many operands for bytecode");                     \
-    BytecodeNode node(                                                   \
-        BytecodeNodeBuilder<Bytecode::k##name, __VA_ARGS__>::Make<       \
-            Operands...>(this, CurrentSourcePosition(Bytecode::k##name), \
-                         operands...));                                  \
-    pipeline()->Write(&node);                                            \
-  }                                                                      \
-                                                                         \
-  template <typename... Operands>                                        \
-  void BytecodeArrayBuilder::Output##name(BytecodeLabel* label,          \
-                                          Operands... operands) {        \
-    DCHECK(Bytecodes::IsJump(Bytecode::k##name));                        \
-    BytecodeNode node(                                                   \
-        BytecodeNodeBuilder<Bytecode::k##name, __VA_ARGS__>::Make<       \
-            Operands...>(this, CurrentSourcePosition(Bytecode::k##name), \
-                         operands...));                                  \
-    pipeline()->WriteJump(&node, label);                                 \
-    LeaveBasicBlock();                                                   \
+#define DEFINE_BYTECODE_OUTPUT(name, accumulator_use, ...)                 \
+  template <typename... Operands>                                          \
+  void BytecodeArrayBuilder::Output##name(Operands... operands) {          \
+    static_assert(sizeof...(Operands) <= Bytecodes::kMaxOperands,          \
+                  "too many operands for bytecode");                       \
+    BytecodeNode node(BytecodeNodeBuilder<__VA_ARGS__>::Make<Operands...>( \
+        this, CurrentSourcePosition(Bytecode::k##name), Bytecode::k##name, \
+        operands...));                                                     \
+    pipeline()->Write(&node);                                              \
+  }                                                                        \
+                                                                           \
+  template <typename... Operands>                                          \
+  void BytecodeArrayBuilder::Output##name(BytecodeLabel* label,            \
+                                          Operands... operands) {          \
+    DCHECK(Bytecodes::IsJump(Bytecode::k##name));                          \
+    BytecodeNode node(BytecodeNodeBuilder<__VA_ARGS__>::Make<Operands...>( \
+        this, CurrentSourcePosition(Bytecode::k##name), Bytecode::k##name, \
+        operands...));                                                     \
+    pipeline()->WriteJump(&node, label);                                   \
+    LeaveBasicBlock();                                                     \
   }
 BYTECODE_LIST(DEFINE_BYTECODE_OUTPUT)
 #undef DEFINE_BYTECODE_OUTPUT
@@ -1004,10 +1000,8 @@ bool BytecodeArrayBuilder::RegisterListIsValid(RegisterList reg_list) const {
   }
 }
 
-template <Bytecode bytecode, AccumulatorUse accumulator_use>
-void BytecodeArrayBuilder::PrepareToOutputBytecode() {
-  if (register_optimizer_)
-    register_optimizer_->PrepareForBytecode<bytecode, accumulator_use>();
+void BytecodeArrayBuilder::PrepareToOutputBytecode(Bytecode bytecode) {
+  if (register_optimizer_) register_optimizer_->PrepareForBytecode(bytecode);
 }
 
 uint32_t BytecodeArrayBuilder::GetInputRegisterOperand(Register reg) {
