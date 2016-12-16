@@ -1,8 +1,8 @@
 
 #include "third_party/WebKit/public/web/WebFrameClient.h"
+#include "third_party/WebKit/public/web/WebDocument.h"
 #include "third_party/WebKit/Source/web/WebLocalFrameImpl.h"
 #include "third_party/WebKit/Source/web/WebViewImpl.h"
-#include "third_party/WebKit/public/web/WebDocument.h"
 #include "content/browser/WebFrameClientImpl.h"
 #include "content/browser/WebPage.h"
 #include "content/web_impl_win/WebCookieJarCurlImpl.h"
@@ -154,8 +154,8 @@ void WebFrameClientImpl::onLoadingStateChange(bool isLoading, bool toDifferentDo
     if (!webview || !webview->client())
         return;
 
-    bool canGoBack = webview->client()->historyForwardListCount() > 0;
-    bool canGoForward = webview->client()->historyBackListCount() > 0;
+    bool canGoBack = webview->client()->historyBackListCount() > 0;
+    bool canGoForward = webview->client()->historyForwardListCount() > 0;
 #if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
     CefRefPtr<CefLoadHandler> handler = browser->client()->GetLoadHandler();
     if (handler.get())
@@ -222,10 +222,20 @@ void WebFrameClientImpl::didCommitProvisionalLoad(WebLocalFrame* frame, const We
 {
 #if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
     CefBrowserHostImpl* browser = m_webPage->browser();
-    if (!browser)
-        return;
-    browser->DidCommitProvisionalLoadForFrame(frame, history);
+    if (browser)
+        browser->DidCommitProvisionalLoadForFrame(frame, history);
 #endif
+
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
+    wke::CWebViewHandler& handler = m_webPage->wkeHandler();
+    if (handler.urlChangedCallback) {
+        String url = history.urlString();
+        wke::CString string(url);
+        handler.urlChangedCallback(m_webPage->wkeWebView(), handler.urlChangedCallbackParam, &string);
+    }
+#endif
+
+    m_webPage->didCommitProvisionalLoad(frame, history, type);
 }
 
 void WebFrameClientImpl::didCreateNewDocument(WebLocalFrame* frame) { }
@@ -326,56 +336,88 @@ void WebFrameClientImpl::dispatchLoad() { }
 
 WebNavigationPolicy WebFrameClientImpl::decidePolicyForNavigation(const NavigationPolicyInfo& info)
 {
+    if (!m_webPage)
+        return info.defaultPolicy;
+
 #if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
-    if (!m_webPage || !m_webPage->browser() || !info.frame)
-        return info.defaultPolicy;
+    if (m_webPage->browser() && info.frame) {
+        CefRefPtr<CefApp> application = CefContentClient::Get()->rendererApplication();
+        if (!application.get())
+            return info.defaultPolicy;
 
-    CefRefPtr<CefApp> application = CefContentClient::Get()->rendererApplication();
-    if (!application.get())
-        return info.defaultPolicy;
+        CefRefPtr<CefRenderProcessHandler> handler = application->GetRenderProcessHandler();
+        if (!handler.get())
+            return info.defaultPolicy;
 
-    CefRefPtr<CefRenderProcessHandler> handler = application->GetRenderProcessHandler();
-    if (!handler.get())
-        return info.defaultPolicy;
+        CefStringUTF16 urlSpec;
+        cef::WebStringToCefString(info.urlRequest.url().spec().utf16(), urlSpec);
 
-    CefStringUTF16 urlSpec;
-    cef::WebStringToCefString(info.urlRequest.url().spec().utf16(), urlSpec);
+        CefRefPtr<CefFrame> cefFrame = m_webPage->browser()->GetOrCreateFrame(info.frame, content::WebPage::kUnspecifiedFrameId, blink::KURL());
 
-    //CefRefPtr<CefFrameHostImpl> cefFrame = new CefFrameHostImpl(m_webPage->browser(), info.frame);
-    CefRefPtr<CefFrame> cefFrame = m_webPage->browser()->GetOrCreateFrame(info.frame, content::WebPage::kUnspecifiedFrameId, blink::KURL());
+        CefRefPtr<CefRequest> requestPtr(CefRequest::Create());
+        CefRequestImpl* requestImpl = static_cast<CefRequestImpl*>(requestPtr.get());
+        requestImpl->Set(info.urlRequest);
+        requestImpl->SetReadOnly(true);
 
-    CefRefPtr<CefRequest> requestPtr(CefRequest::Create());
-    CefRequestImpl* requestImpl = static_cast<CefRequestImpl*>(requestPtr.get());
-    requestImpl->Set(info.urlRequest);
-    requestImpl->SetReadOnly(true);
+        cef_navigation_type_t navigation_type = NAVIGATION_OTHER;
+        switch (info.navigationType) {
+        case blink::WebNavigationTypeLinkClicked:
+            navigation_type = NAVIGATION_LINK_CLICKED;
+            break;
+        case blink::WebNavigationTypeFormSubmitted:
+            navigation_type = NAVIGATION_FORM_SUBMITTED;
+            break;
+        case blink::WebNavigationTypeBackForward:
+            navigation_type = NAVIGATION_BACK_FORWARD;
+            break;
+        case blink::WebNavigationTypeReload:
+            navigation_type = NAVIGATION_RELOAD;
+            break;
+        case blink::WebNavigationTypeFormResubmitted:
+            navigation_type = NAVIGATION_FORM_RESUBMITTED;
+            break;
+        case blink::WebNavigationTypeOther:
+            navigation_type = NAVIGATION_OTHER;
+            break;
+        }
 
-    cef_navigation_type_t navigation_type = NAVIGATION_OTHER;
-    switch (info.navigationType) {
-    case blink::WebNavigationTypeLinkClicked:
-        navigation_type = NAVIGATION_LINK_CLICKED;
-        break;
-    case blink::WebNavigationTypeFormSubmitted:
-        navigation_type = NAVIGATION_FORM_SUBMITTED;
-        break;
-    case blink::WebNavigationTypeBackForward:
-        navigation_type = NAVIGATION_BACK_FORWARD;
-        break;
-    case blink::WebNavigationTypeReload:
-        navigation_type = NAVIGATION_RELOAD;
-        break;
-    case blink::WebNavigationTypeFormResubmitted:
-        navigation_type = NAVIGATION_FORM_RESUBMITTED;
-        break;
-    case blink::WebNavigationTypeOther:
-        navigation_type = NAVIGATION_OTHER;
-        break;
+        if (!handler->OnBeforeNavigation((CefBrowser*)m_webPage->browser(), cefFrame.get(),
+            requestPtr.get(), navigation_type, info.isRedirect))
+            return info.defaultPolicy;
     }
-
-    if (!handler->OnBeforeNavigation((CefBrowser*)m_webPage->browser(), cefFrame.get(),
-        requestPtr.get(), navigation_type, info.isRedirect))
-        return info.defaultPolicy;
 #endif
-    return WebNavigationPolicyCurrentTab;
+
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
+    if (m_webPage->wkeHandler().navigationCallback) {
+        wkeNavigationType navigationType = WKE_NAVIGATION_TYPE_OTHER;
+        switch (info.navigationType) {
+        case blink::WebNavigationTypeLinkClicked:
+            navigationType = WKE_NAVIGATION_TYPE_LINKCLICK;
+            break;
+        case blink::WebNavigationTypeFormSubmitted:
+            navigationType = WKE_NAVIGATION_TYPE_FORMSUBMITTE;
+            break;
+        case blink::WebNavigationTypeBackForward:
+            navigationType = WKE_NAVIGATION_TYPE_BACKFORWARD;
+            break;
+        case blink::WebNavigationTypeReload:
+            navigationType = WKE_NAVIGATION_TYPE_RELOAD;
+            break;
+        case blink::WebNavigationTypeFormResubmitted:
+            navigationType = WKE_NAVIGATION_TYPE_FORMRESUBMITT;
+            break;
+        case blink::WebNavigationTypeOther:
+            navigationType = WKE_NAVIGATION_TYPE_OTHER;
+            break;
+        }
+
+        wke::CString url(info.urlRequest.url().spec().utf16());
+        bool ok = m_webPage->wkeHandler().navigationCallback(m_webPage->wkeWebView(), m_webPage->wkeHandler().navigationCallbackParam, navigationType, &url);
+        if (!ok)
+            return WebNavigationPolicyIgnore;
+    }
+#endif
+    return info.defaultPolicy;
 }
 
 void WebFrameClientImpl::willRequestResource(WebLocalFrame*, const WebCachedURLRequest&)
@@ -386,11 +428,11 @@ void WebFrameClientImpl::willRequestResource(WebLocalFrame*, const WebCachedURLR
 void WebFrameClientImpl::willSendRequest(WebLocalFrame* webFrame, unsigned identifier, WebURLRequest& request, const WebURLResponse& redirectResponse)
 {
     net::RequestExtraData* requestExtraData = new net::RequestExtraData();
+	requestExtraData->frame = webFrame;//两种模式都需要此对象
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
 	requestExtraData->page = m_webPage;
 #endif
 #if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
-	requestExtraData->frame = webFrame;
     requestExtraData->browser = m_webPage->browser();
 #endif
     request.setExtraData(requestExtraData);

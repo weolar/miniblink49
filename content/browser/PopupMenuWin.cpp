@@ -340,9 +340,11 @@ void PopupMenuWin::initialize()
     m_popupImpl->setFocus(true);
 }
 
-WebWidget* PopupMenuWin::create(HWND hWnd, blink::IntPoint offset, WebViewImpl* webViewImpl, WebPopupType type)
+WebWidget* PopupMenuWin::create(HWND hWnd, blink::IntPoint offset, WebViewImpl* webViewImpl, WebPopupType type, PopupMenuWin** result)
 {
     PopupMenuWin* self = new PopupMenuWin(hWnd, offset, webViewImpl);
+    if (result)
+        *result = self;
     return self->createWnd();
 }
 

@@ -82,18 +82,40 @@ static const bool ignoreSSLErrors = true; //  ("WEBKIT_IGNORE_SSL_ERRORS");
 
 static CString certificatePath()
 {
-//     char* envPath = getenv("CURL_CA_BUNDLE_PATH");
-//     if (envPath)
-//        return envPath;
-
+#if 0 
+    char* envPath = getenv("CURL_CA_BUNDLE_PATH");
+    if (envPath)
+       return envPath;
+#endif
     return CString();
+}
+
+static char* gCookieJarPath = nullptr;
+
+void setCookieJarPath(const WCHAR* path)
+{
+    if (!path || !::PathIsDirectoryW(path))
+        return;
+    Vector<WCHAR> jarPath;
+    jarPath.resize(MAX_PATH + 1);
+    wcscpy(jarPath.data(), path);
+    ::PathAppendW(jarPath.data(), L"cookies.dat");
+    String jarPathString(jarPath.data());
+    CString utf8 = jarPathString.utf8();
+
+    if (gCookieJarPath)
+        free(gCookieJarPath);
+    gCookieJarPath = (char*)malloc((MAX_PATH + 1) * sizeof(char) * 5);
+    strncpy(gCookieJarPath, utf8.data(), utf8.length());
 }
 
 static char* cookieJarPath()
 {
-//     char* cookieJarPath = getenv("CURL_COOKIE_JAR_PATH");
-//     if (cookieJarPath)
-//         return fastStrDup(cookieJarPath);
+#if 0 
+    char* cookieJarPath = getenv("CURL_COOKIE_JAR_PATH");
+    if (cookieJarPath)
+        return fastStrDup(cookieJarPath);
+#endif
 
 #if 0 // OS(WINDOWS)
     char executablePath[MAX_PATH];
@@ -117,6 +139,8 @@ static char* cookieJarPath()
 
     return fastStrDup(cookieJarFullPath);
 #else
+    if (gCookieJarPath)
+        return gCookieJarPath;
     return fastStrDup("cookies.dat");
 #endif
 }
@@ -502,8 +526,21 @@ static size_t headerCallback(char* ptr, size_t size, size_t nmemb, void* data)
         d->m_response.setHTTPStatusCode(httpCode);
         d->m_response.setMIMEType(extractMIMETypeFromMediaType(d->m_response.httpHeaderField(WebString::fromUTF8("Content-Type"))).lower());
         d->m_response.setTextEncodingName(extractCharsetFromMediaType(d->m_response.httpHeaderField(WebString::fromUTF8("Content-Type"))));
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
+		if (d->m_response.httpHeaderField(WebString::fromUTF8("Content-Type")).equals("application/octet-stream")) {
+			RequestExtraData* requestExtraData = reinterpret_cast<RequestExtraData*>(job->firstRequest()->extraData());
+			WebPage* page = requestExtraData->page;
+			if (page->wkeHandler().downloadCallback) {
 
-        if (equalIgnoringCase((String)(d->m_response.mimeType()), "multipart/x-mixed-replace")) {
+				if (page->wkeHandler().downloadCallback(page->wkeWebView(), page->wkeHandler().downloadCallbackParam, encodeWithURLEscapeSequences(job->firstRequest()->url().string()).latin1().data())) {
+					blink::WebLocalFrame* frame = requestExtraData->frame;
+					frame->stopLoading();
+					return totalSize;
+				}
+			}
+		}
+#endif
+		if (equalIgnoringCase((String)(d->m_response.mimeType()), "multipart/x-mixed-replace")) {
             String boundary;
             bool parsed = MultipartHandle::extractBoundary(d->m_response.httpHeaderField(WebString::fromUTF8("Content-Type")), boundary);
             if (parsed)

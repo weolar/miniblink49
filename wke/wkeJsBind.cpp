@@ -593,7 +593,7 @@ jsValue jsEmptyArray(jsExecState es)
     return createJsValueByLocalValue(es->isolate, context, v8::Array::New(es->isolate));
 }
 
-
+//return the window object
 
 
 //return the window object
@@ -1344,7 +1344,18 @@ void freeV8TempObejctOnOneFrameBefore()
         delete state;
     }
     s_execStates->clear();
-    
+}
+
+jsValue createJsValueString(v8::Local<v8::Context> context, const utf8* str)
+{
+    v8::Isolate* isolate = context->GetIsolate();
+    v8::HandleScope handleScope(isolate);
+    v8::Context::Scope contextScope(context);
+
+    v8::MaybeLocal<v8::String> value = v8::String::NewFromUtf8(isolate, str, v8::NewStringType::kNormal, -1);
+    if (value.IsEmpty())
+        return jsUndefined();
+    return createJsValueByLocalValue(isolate, context, value.ToLocalChecked());
 }
 
 };

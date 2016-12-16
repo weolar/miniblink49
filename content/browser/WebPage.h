@@ -7,6 +7,7 @@
 #include "third_party/WebKit/Source/platform/geometry/IntRect.h"
 #include "third_party/WebKit/Source/wtf/FastAllocBase.h"
 #include "third_party/WebKit/public/web/WebViewClient.h"
+#include "third_party/WebKit/public/web/WebHistoryCommitType.h"
 
 #if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 class CefBrowserHostImpl;
@@ -67,6 +68,7 @@ public:
     void firePaintEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
     LRESULT fireMouseEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, BOOL* bHandle);
     void fireCaptureChangedEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+    void fireSetFocusEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
     void fireKillFocusEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
     LRESULT fireCursorEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, BOOL* bHandle);
     LRESULT fireWheelEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
@@ -90,14 +92,19 @@ public:
     void setIsDraggableRegionNcHitTest();
 
     void setNeedsCommit();
-    bool needsCommit();
+    bool needsCommit() const;
+    bool isDrawDirty() const;
 
     HWND getHWND() const;
 	void setHWND(HWND hwnd);
 	void setHWNDoffset(int x, int y);
     void setBackgroundColor(COLORREF c);
 
-    void showDebugNodeData();
+    bool canGoBack();
+    void goBack();
+    bool canGoForward();
+    void goForward();
+    void didCommitProvisionalLoad(blink::WebLocalFrame* frame, const blink::WebHistoryItem& history, blink::WebHistoryCommitType type);
 
     HDC viewDC();
     void paintToBit(void* bits, int pitch);

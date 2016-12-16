@@ -8991,6 +8991,9 @@
     <ClCompile Include="..\..\third_party\WebKit\Source\platform\image-decoders\GDIPlus\GDIPlusReader.cpp">
       <Filter>third_party\Webkit\Source\platform\image-decoders\GDIPlus</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\content\browser\NavigationController.cpp">
+      <Filter>content\browser</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\public\platform\modules\app_banner\WebAppBannerClient.h">
@@ -20945,6 +20948,9 @@
     <ClInclude Include="..\..\third_party\WebKit\Source\platform\image-decoders\GDIPlus\GDIPlusReader.h">
       <Filter>third_party\Webkit\Source\platform\image-decoders\GDIPlus</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\content\browser\NavigationController.h">
+      <Filter>content\browser</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\third_party\WebKit\Source\devtools\front_end\Images\src\optimize_png.hashes">
@@ -21004,9 +21010,6 @@
     <None Include="..\..\third_party\WebKit\Source\core\animation\OWNERS">
       <Filter>third_party\Webkit\Source\core\animation</Filter>
     </None>
-    <None Include="..\..\third_party\WebKit\Source\platform\heap\asm\SaveRegisters_x86.asm">
-      <Filter>third_party\Webkit\Source\platform\heap\asm</Filter>
-    </None>
     <None Include="..\..\third_party\WebKit\Source\modules\storage\OWNERS">
       <Filter>third_party\Webkit\Source\modules\storage</Filter>
     </None>
@@ -21022,5 +21025,10 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <YASM Include="..\..\third_party\WebKit\Source\platform\heap\asm\SaveRegisters_x86.asm">
+      <Filter>third_party\Webkit\Source\platform\heap\asm</Filter>
+    </YASM>
   </ItemGroup>
 </Project>

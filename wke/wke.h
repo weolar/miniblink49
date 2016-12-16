@@ -25,9 +25,9 @@
 
 
 #if defined(BUILDING_wke)
-#   define WKE_API WKE_EXTERN_C __declspec(dllexport)
+#   define WKE_API WKE_EXTERN_C //__declspec(dllexport)
 #else
-#   define WKE_API WKE_EXTERN_C __declspec(dllimport)
+#   define WKE_API WKE_EXTERN_C //__declspec(dllimport)
 #endif
 
 typedef struct {
@@ -238,6 +238,7 @@ WKE_API void wkeSetTransparent(wkeWebView webView, bool transparent);
 WKE_API void wkeSetUserAgent(wkeWebView webView, const utf8* userAgent);
 WKE_API void wkeSetUserAgentW(wkeWebView webView, const wchar_t* userAgent);
 
+WKE_API void wkeLoadW(wkeWebView webView, const wchar_t* url);
 WKE_API void wkeLoadURL(wkeWebView webView, const utf8* url);
 WKE_API void wkeLoadURLW(wkeWebView webView, const wchar_t* url);
 WKE_API void wkePostURL(wkeWebView wkeView, const utf8* url, const char* postData, int  postLen);
@@ -291,6 +292,7 @@ WKE_API const wchar_t* wkeGetCookieW(wkeWebView webView);
 WKE_API const utf8* wkeGetCookie(wkeWebView webView);
 WKE_API void wkeSetCookieEnabled(wkeWebView webView, bool enable);
 WKE_API bool wkeIsCookieEnabled(wkeWebView webView);
+WKE_API void wkeSetCookieJarPath(wkeWebView webView, const WCHAR* path);
 
 WKE_API void wkeSetMediaVolume(wkeWebView webView, float volume);
 WKE_API float wkeGetMediaVolume(wkeWebView webView);
@@ -389,13 +391,17 @@ typedef enum {
 typedef void(*wkeLoadingFinishCallback)(wkeWebView webView, void* param, const wkeString url, wkeLoadingResult result, const wkeString failedReason);
 WKE_API void wkeOnLoadingFinish(wkeWebView webView, wkeLoadingFinishCallback callback, void* param);
 
+typedef bool(*wkeDownloadCallback)(wkeWebView webView, void* param, const char *url);
+WKE_API void wkeOnDownload(wkeWebView webView, wkeDownloadCallback callback, void* param);
+
+//wkeNet--------------------------------------------------------------------------------------
 typedef bool(*wkeLoadUrlBeginCallback)(wkeWebView webView, void* param, const char *url, void *job);
 WKE_API void wkeOnLoadUrlBegin(wkeWebView webView, wkeLoadUrlBeginCallback callback, void* callbackParam);
 
 typedef void(*wkeLoadUrlEndCallback)(wkeWebView webView, void* param, const char *url, void *job, void* buf, int len);
 WKE_API void wkeOnLoadUrlEnd(wkeWebView webView, wkeLoadUrlEndCallback callback, void* callbackParam);
 
-//wkeNet--------------------------------------------------------------------------------------
+
 WKE_API void wkeNetSetMIMEType(void *job, char *type);
 WKE_API void wkeNetSetHTTPHeaderField(void *job, wchar_t *key, wchar_t *value);
 WKE_API void wkeNetSetURL(void *job, const char *url);
