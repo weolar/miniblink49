@@ -797,9 +797,13 @@ wkeWebView jsGetWebView(jsExecState es)
     v8::MaybeLocal<v8::String> nameMaybeLocal = v8::String::NewFromUtf8(isolate, "wkeWebViewToV8Context", v8::NewStringType::kNormal, -1);
     if (nameMaybeLocal.IsEmpty())
         return nullptr;
-
+	//zero
+#if V8_MINOR_VERSION == 7
+	v8::Local<v8::Value> wkeWebViewV8 = blink::V8HiddenValue::getHiddenValue(isolate, globalObj, nameMaybeLocal.ToLocalChecked());
+#else
     v8::Local<v8::Value> wkeWebViewV8 = globalObj->GetHiddenValue(nameMaybeLocal.ToLocalChecked());
-    ASSERT(!wkeWebViewV8.IsEmpty());
+#endif
+	ASSERT(!wkeWebViewV8.IsEmpty());
     wke::CWebView* webView = static_cast<wke::CWebView*>(v8::External::Cast(*wkeWebViewV8)->Value());
     return webView;
 }
@@ -918,12 +922,21 @@ public:
             return nullptr;
 
         Vector<NativeGetterSetterWrap*>* cachedWraps = new Vector<NativeGetterSetterWrap*>();
+		//zero
+#if V8_MINOR_VERSION == 7
+		v8::Local<v8::Value> dataMap = blink::V8HiddenValue::getHiddenValue(isolate, globalObj, addAccessorDataMaybeLocal.ToLocalChecked());
+#else
         v8::Local<v8::Value> dataMap = globalObj->GetHiddenValue(addAccessorDataMaybeLocal.ToLocalChecked());
+#endif
         if (dataMap.IsEmpty()) {
             dataMap = v8::External::New(isolate, cachedWraps);
+			//zero
+#if V8_MINOR_VERSION == 7
+			blink::V8HiddenValue::setHiddenValue(isolate, globalObj, addAccessorDataMaybeLocal.ToLocalChecked(), dataMap);
+#else
             globalObj->SetHiddenValue(addAccessorDataMaybeLocal.ToLocalChecked(), dataMap);
+#endif
         }
-
         NativeGetterSetterWrap* wrap = new NativeGetterSetterWrap();
         cachedWraps->append(wrap);
         return wrap;
@@ -1239,13 +1252,23 @@ static void setWkeWebViewToV8Context(content::WebFrameClientImpl* client, v8::Lo
     v8::MaybeLocal<v8::String> nameMaybeLocal = v8::String::NewFromUtf8(isolate, "wkeWebViewToV8Context", v8::NewStringType::kNormal, -1);
     if (nameMaybeLocal.IsEmpty())
         return;
+	//zero
+#if V8_MINOR_VERSION == 7
+	v8::Local<v8::Value> wkeWebViewV8 = blink::V8HiddenValue::getHiddenValue(isolate, globalObj, nameMaybeLocal.ToLocalChecked());
+#else
     v8::Local<v8::Value> wkeWebViewV8 = globalObj->GetHiddenValue(nameMaybeLocal.ToLocalChecked());
-    ASSERT(wkeWebViewV8.IsEmpty());
+#endif
+	ASSERT(wkeWebViewV8.IsEmpty());
 
     CWebView* wkeWebView = webPage->wkeWebView();
     ASSERT(wkeWebView);
     wkeWebViewV8 = v8::External::New(isolate, wkeWebView);
+	//zero
+#if V8_MINOR_VERSION == 7
+	blink::V8HiddenValue::setHiddenValue(isolate, globalObj, nameMaybeLocal.ToLocalChecked(), wkeWebViewV8);
+#else
     globalObj->SetHiddenValue(nameMaybeLocal.ToLocalChecked(), wkeWebViewV8);
+#endif
 }
 
 jsExecState createTempExecStateByV8Context(v8::Local<v8::Context> context)
@@ -1313,8 +1336,13 @@ void onReleaseGlobalObject(content::WebFrameClientImpl* client, blink::WebLocalF
     v8::MaybeLocal<v8::String> addAccessorDataMaybeLocal = v8::String::NewFromUtf8(isolate, "wkeAddAccessorData", v8::NewStringType::kNormal, -1);
     if (addAccessorDataMaybeLocal.IsEmpty())
         return;
+	//zero
+#if V8_MINOR_VERSION == 7
+	v8::Local<v8::Value> dataMap = blink::V8HiddenValue::getHiddenValue(isolate, globalObj, addAccessorDataMaybeLocal.ToLocalChecked());
+#else
     v8::Local<v8::Value> dataMap = globalObj->GetHiddenValue(addAccessorDataMaybeLocal.ToLocalChecked());
-    if (dataMap.IsEmpty())
+#endif
+	if (dataMap.IsEmpty())
         return;
     
     Vector<NativeGetterSetterWrap*>* cachedWraps = static_cast<Vector<NativeGetterSetterWrap*>*>(v8::External::Cast(*dataMap)->Value());

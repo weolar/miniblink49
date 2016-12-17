@@ -358,8 +358,14 @@ v8::MaybeLocal<v8::Script> V8ScriptRunner::compileScript(v8::Local<v8::String> c
         v8::Integer::New(isolate, scriptStartPosition.m_column.zeroBasedInt()),
         v8Boolean(accessControlStatus == SharableCrossOrigin, isolate),
         v8::Local<v8::Integer>(),
-        v8Boolean(isInternalScript, isolate),
+		//zero
+#if V8_MINOR_VERSION == 7
+		v8String(isolate, sourceMapUrl),
+		v8Boolean(isInternalScript, isolate),
+#else
+		v8Boolean(isInternalScript, isolate),
         v8String(isolate, sourceMapUrl),
+#endif
         v8Boolean(accessControlStatus == OpaqueResource, isolate));
 
     OwnPtr<CompileFn> compileFn = streamer
