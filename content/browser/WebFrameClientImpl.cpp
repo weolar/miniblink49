@@ -107,6 +107,7 @@ blink::WebPlugin* WebFrameClientImpl::createPlugin(WebLocalFrame* frame, const W
 {
     PassRefPtr<WebPluginImpl> plugin = adoptRef(new WebPluginImpl(frame, params));
     plugin->setParentPlatformWidget(m_webPage->getHWND());
+    plugin->setHwndRenderOffset(m_webPage->getHwndRenderOffset());
     return plugin.leakRef();
 }
 

@@ -107,6 +107,7 @@ WebPageImpl::WebPageImpl()
     m_isDrawDirty = true;
     m_layerTreeHost = nullptr;
     m_lastFrameTimeMonotonic = 0;
+    m_lastDrawTime = 0;
     m_webViewImpl = nullptr;
     m_debugCount = 0;
     m_enterCount = 0;
@@ -488,10 +489,8 @@ void WebPageImpl::paintToPlatformContext(const IntRect& paintRect)
 {
     m_paintRect = paintRect;
 
-    bool needsFullTreeSync = true; // false; 先全部层都更新，这样滚动条才能被刷新到
     if ((!m_memoryCanvas || m_hasResize) && !m_clientRect.isEmpty()) {
         m_hasResize = false;
-        needsFullTreeSync = true;
         m_paintRect = m_clientRect;
 
         if (m_memoryCanvas)
@@ -507,18 +506,27 @@ void WebPageImpl::paintToPlatformContext(const IntRect& paintRect)
     m_paintRect.intersect(m_clientRect);
     if (m_paintRect.isEmpty())
         return;
-    
+
     if (!m_memoryCanvas) {
         ASSERT(false);
+        return;
+    }
+
+    double lastDrawTime = WTF::monotonicallyIncreasingTime();
+    double detTime = lastDrawTime - m_lastDrawTime;
+    m_lastDrawTime = lastDrawTime;
+    if (detTime < 0.01) { // 如果刷新频率太快，就缓缓
+        setNeedsCommitAndNotLayout();
         return;
     }
 
     m_isDrawDirty = true;
     clearPaintWhenLayeredWindow(m_memoryCanvas, m_paintRect);
 
-    HDC hMemoryDC = skia::BeginPlatformPaint(m_memoryCanvas);
+    HDC hMemoryDC = nullptr;
+    hMemoryDC = skia::BeginPlatformPaint(m_memoryCanvas);
 
-    drawToCanvas(m_paintRect, m_memoryCanvas, needsFullTreeSync); // 绘制脏矩形
+    drawToCanvas(m_paintRect, m_memoryCanvas, true); // 绘制脏矩形
 
     if (m_useLayeredBuffer) { // 再把内存dc画到hdc上
         RECT rtWnd;
@@ -528,19 +536,19 @@ void WebPageImpl::paintToPlatformContext(const IntRect& paintRect)
     } else {
         drawDebugLine(m_memoryCanvas, m_paintRect);
 #if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
-		if (m_browser) { // 使用wke接口不由此上屏
-			HDC hdc = GetDC(m_pagePtr->getHWND());
-			skia::DrawToNativeContext(m_memoryCanvas, hdc, m_paintRect.x(), m_paintRect.y(), &intRectToWinRect(m_paintRect));
-			ReleaseDC(m_pagePtr->getHWND(), hdc);
-		}
+        if (m_browser) { // 使用wke接口不由此上屏
+            HDC hdc = GetDC(m_pagePtr->getHWND());
+            skia::DrawToNativeContext(m_memoryCanvas, hdc, m_paintRect.x(), m_paintRect.y(), &intRectToWinRect(m_paintRect));
+            ReleaseDC(m_pagePtr->getHWND(), hdc);
+        }
 #endif
     }
 
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
     if (m_pagePtr->wkeHandler().paintUpdatedCallback) {
         m_pagePtr->wkeHandler().paintUpdatedCallback(
-            m_pagePtr->wkeWebView(), 
-            m_pagePtr->wkeHandler().paintUpdatedCallbackParam, 
+            m_pagePtr->wkeWebView(),
+            m_pagePtr->wkeHandler().paintUpdatedCallbackParam,
             hMemoryDC, m_paintRect.x(), m_paintRect.y(), m_paintRect.width(), m_paintRect.height());
     }
 #endif
@@ -600,7 +608,7 @@ void WebPageImpl::drawToCanvas(const IntRect& dirtyRect, skia::PlatformCanvas* c
 #endif
 
     canvas->restore();
-    setPainting(false);
+    setPainting(false);   
 }
 
 HDC WebPageImpl::viewDC()
@@ -865,41 +873,6 @@ void WebPageImpl::executeMainFrame()
 #endif    
 }
 
-class TestTask : public blink::WebThread::Task, public WebPageImpl::DestroyNotif {
-public:
-    TestTask(WebPageImpl* client)
-        : m_client(client)
-    {
-        m_client->registerDestroyNotif(this);
-#ifndef NDEBUG
-        commitTaskCounter.increment();
-#endif
-    }
-
-    virtual ~TestTask() OVERRIDE
-    {
-        if (m_client)
-            m_client->unregisterDestroyNotif(this);
-#ifndef NDEBUG
-        commitTaskCounter.decrement();
-#endif
-    }
-
-    virtual void destroy()
-    {
-        m_client = nullptr;
-    }
-
-    virtual void run() OVERRIDE
-    {
-        if (m_client)
-            m_client->loadURL(WebPage::kMainFrameId, L"https://map.baidu.com/", blink::Referrer(), nullptr);
-    }
-
-private:
-    WebPageImpl* m_client;
-};
-
 bool WebPageImpl::fireTimerEvent()
 {
     CHECK_FOR_REENTER(false);
@@ -934,8 +907,6 @@ IntRect WebPageImpl::caretRect() const
 
     blink::IntRect caret;
     if (RefPtrWillBeRawPtr<Range> range = targetFrame->selection().selection().toNormalizedRange()) {
-        blink::ExceptionCode ec = 0;
-       // RefPtr<blink::Range> tempRange = range->cloneRange(ec);
         caret = targetFrame->editor().firstRectForRange(range.get());
     }
 
@@ -1448,7 +1419,7 @@ WebWidget* WebPageImpl::createPopupMenu(WebPopupType type)
         m_hWnd = ::GetActiveWindow();
     
     PopupMenuWin* popup = nullptr;
-    blink::WebWidget* result = PopupMenuWin::create(m_hWnd, m_hWndoffset, m_webViewImpl, type, &popup);
+    blink::WebWidget* result = PopupMenuWin::create(m_hWnd, m_hwndRenderOffset, m_webViewImpl, type, &popup);
     m_popupHandle = popup->popupHandle();
     return result;
 }

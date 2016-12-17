@@ -234,19 +234,18 @@ void WebPage::setHWND(HWND hwnd)
 		m_pageImpl->m_hWnd = hwnd;
 }
 
-void WebPage::setHWNDoffset(int x, int y)
+void WebPage::setHwndRenderOffset(const blink::IntPoint& offset)
 {
-	if (m_pageImpl) {
-		m_pageImpl->m_hWndoffset.setX(x);
-		m_pageImpl->m_hWndoffset.setY(y);
-	}
+	if (m_pageImpl)
+		m_pageImpl->m_hwndRenderOffset = offset;
 }
-// Page* WebPage::page() const 
-// {
-//     if (m_pageImpl)
-//         return m_pageImpl->m_page;
-//     return nullptr;
-// }
+
+blink::IntPoint WebPage::getHwndRenderOffset() const
+{
+    if (m_pageImpl)
+        return m_pageImpl->m_hwndRenderOffset;
+    return blink::IntPoint();
+}
 
 #if 1
 

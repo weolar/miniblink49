@@ -97,7 +97,8 @@ public:
 
     HWND getHWND() const;
 	void setHWND(HWND hwnd);
-	void setHWNDoffset(int x, int y);
+	void setHwndRenderOffset(const blink::IntPoint& offset);
+    blink::IntPoint getHwndRenderOffset() const;
     void setBackgroundColor(COLORREF c);
 
     bool canGoBack();
