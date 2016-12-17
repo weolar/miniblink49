@@ -21024,8 +21024,8 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <YASM Include="..\..\third_party\WebKit\Source\platform\heap\asm\SaveRegisters_x86.asm">
+    <CustomBuild Include="..\..\third_party\WebKit\Source\platform\heap\asm\SaveRegisters_x86.asm">
       <Filter>third_party\Webkit\Source\platform\heap\asm</Filter>
-    </YASM>
+    </CustomBuild>
   </ItemGroup>
 </Project>

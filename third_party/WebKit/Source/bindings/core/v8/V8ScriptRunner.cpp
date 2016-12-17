@@ -173,7 +173,7 @@ unsigned cacheTag(CacheTagKind kind, CachedMetadataHandler* cacheHandler)
 {
     static_assert((1 << kCacheTagKindSize) >= CacheTagLast, "CacheTagLast must be large enough");
 
-    static unsigned v8CacheDataVersion = v8::ScriptCompiler::CachedDataVersionTag() << kCacheTagKindSize;
+    static unsigned v8CacheDataVersion = kCacheTagKindSize << kCacheTagKindSize;
 
     // A script can be (successfully) interpreted with different encodings,
     // depending on the page it appears in. The cache doesn't know anything

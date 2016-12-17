@@ -3082,7 +3082,7 @@ void SetupProcessObject(Environment* env,
                     OneByteString(env->isolate(), NODE_VERSION + 1));
   READONLY_PROPERTY(versions,
                     "v8",
-                    OneByteString(env->isolate(), V8::GetVersion()));
+                    OneByteString(env->isolate(), ""));
   READONLY_PROPERTY(versions,
                     "uv",
                     OneByteString(env->isolate(), uv_version_string()));

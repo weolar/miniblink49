@@ -44,7 +44,6 @@
 #include "src/snapshot/deserializer.h"
 #include "src/tracing/tracing-category-observer.h"
 #include "src/v8.h"
-#include "src/version.h"
 #include "src/vm-state-inl.h"
 #include "src/wasm/wasm-module.h"
 #include "src/wasm/wasm-objects.h"

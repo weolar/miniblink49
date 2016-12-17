@@ -31,6 +31,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "v8_5_1", "v8_5_1\v8_5_1.vcxproj", "{A07B8EAC-C363-466A-AC97-4C89677366B9}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "node", "node\node.vcxproj", "{6F8DE3A0-243B-44FF-9846-B7DB58E0B5E9}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F58AB436-5C2E-4C6C-966F-223C4BF4C63D} = {F58AB436-5C2E-4C6C-966F-223C4BF4C63D}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "openssl", "..\node\openssl\openssl.vcxproj", "{5C6460DB-F7B1-5315-A0DE-79A9DFC525A1}"
 EndProject

@@ -11,7 +11,6 @@
 #include "src/full-codegen/full-codegen.h"
 #include "src/snapshot/deserializer.h"
 #include "src/snapshot/snapshot-source-sink.h"
-#include "src/version.h"
 
 namespace v8 {
 namespace internal {
@@ -194,7 +193,6 @@ SnapshotData::SnapshotData(const Serializer* serializer) {
 
   // Set header values.
   SetMagicNumber(serializer->isolate());
-  SetHeaderValue(kCheckSumOffset, Version::Hash());
   SetHeaderValue(kNumReservationsOffset, reservations.length());
   SetHeaderValue(kPayloadLengthOffset, payload->length());
 
@@ -205,10 +203,6 @@ SnapshotData::SnapshotData(const Serializer* serializer) {
   // Copy serialized data.
   CopyBytes(data_ + kHeaderSize + reservation_size, payload->begin(),
             static_cast<size_t>(payload->length()));
-}
-
-bool SnapshotData::IsSane() {
-  return GetHeaderValue(kCheckSumOffset) == Version::Hash();
 }
 
 Vector<const SerializedData::Reservation> SnapshotData::Reservations() const {

@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "src/d8.h"
+#include "../../v8_5_7/src/d8.h"
 
 
 namespace v8 {
