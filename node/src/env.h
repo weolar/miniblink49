@@ -16,6 +16,7 @@
 #include "v8.h"
 
 #include <stdint.h>
+#include <vector>
 
 // Caveat emptor: we're going slightly crazy with macros here but the end
 // hopefully justifies the means. We have a lot of per-context properties
@@ -69,6 +70,7 @@ namespace node {
   V(args_string, "args")                                                      \
   V(async, "async")                                                           \
   V(async_queue_string, "_asyncQueue")                                        \
+  V(buffer_string, "buffer")                                                  \
   V(bytes_string, "bytes")                                                    \
   V(bytes_parsed_string, "bytesParsed")                                       \
   V(bytes_read_string, "bytesRead")                                           \
@@ -412,8 +414,10 @@ class Environment {
   inline uint32_t watched_providers() const;
 
   static inline Environment* from_immediate_check_handle(uv_check_t* handle);
+  static inline Environment* from_destroy_ids_idle_handle(uv_idle_t* handle);
   inline uv_check_t* immediate_check_handle();
   inline uv_idle_t* immediate_idle_handle();
+  inline uv_idle_t* destroy_ids_idle_handle();
 
   static inline Environment* from_idle_prepare_handle(uv_prepare_t* handle);
   inline uv_prepare_t* idle_prepare_handle();
@@ -450,6 +454,9 @@ class Environment {
 
   inline int64_t get_async_wrap_uid();
 
+  // List of id's that have been destroyed and need the destroy() cb called.
+  inline std::vector<int64_t>* destroy_ids_list();
+
   inline uint32_t* heap_statistics_buffer() const;
   inline void set_heap_statistics_buffer(uint32_t* pointer);
 
@@ -471,11 +478,6 @@ class Environment {
                                const char* message = nullptr,
                                const char* path = nullptr,
                                const char* dest = nullptr);
-
-  // Convenience methods for contextify
-  inline static void ThrowError(v8::Isolate* isolate, const char* errmsg);
-  inline static void ThrowTypeError(v8::Isolate* isolate, const char* errmsg);
-  inline static void ThrowRangeError(v8::Isolate* isolate, const char* errmsg);
 
   inline v8::Local<v8::FunctionTemplate>
       NewFunctionTemplate(v8::FunctionCallback callback,
@@ -533,6 +535,9 @@ class Environment {
   static const int kContextEmbedderDataIndex = NODE_CONTEXT_EMBEDDER_DATA_INDEX;
 
  private:
+  inline void ThrowError(v8::Local<v8::Value> (*fun)(v8::Local<v8::String>),
+                         const char* errmsg);
+
   static const int kIsolateSlot = NODE_ISOLATE_SLOT;
 
   class IsolateData;
@@ -544,6 +549,7 @@ class Environment {
   IsolateData* const isolate_data_;
   uv_check_t immediate_check_handle_;
   uv_idle_t immediate_idle_handle_;
+  uv_idle_t destroy_ids_idle_handle_;
   uv_prepare_t idle_prepare_handle_;
   uv_check_t idle_check_handle_;
   AsyncHooks async_hooks_;
@@ -559,6 +565,7 @@ class Environment {
   bool trace_sync_io_;
   size_t makecallback_cntr_;
   int64_t async_wrap_uid_;
+  std::vector<int64_t> destroy_ids_list_;
   debugger::Agent debugger_agent_;
 #if HAVE_INSPECTOR
   inspector::Agent inspector_agent_;

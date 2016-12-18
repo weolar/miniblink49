@@ -126,7 +126,7 @@
       <AdditionalIncludeDirectories>../../cef;../../cef/tests</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>miniblink.lib;Opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)..\out\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>

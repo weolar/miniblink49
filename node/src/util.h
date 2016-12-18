@@ -24,6 +24,17 @@
 
 namespace node {
 
+// These should be used in our code as opposed to the native
+// versions as they abstract out some platform and or
+// compiler version specific functionality
+// malloc(0) and realloc(ptr, 0) have implementation-defined behavior in
+// that the standard allows them to either return a unique pointer or a
+// nullptr for zero-sized allocation requests.  Normalize by always using
+// a nullptr.
+inline void* Realloc(void* pointer, size_t size);
+inline void* Malloc(size_t size);
+inline void* Calloc(size_t n, size_t size);
+
 #ifdef __GNUC__
 #define NO_RETURN __attribute__((noreturn))
 #else
@@ -124,18 +135,8 @@ template <typename T> using remove_reference = std::remove_reference<T>;
 template <typename T>
 class ListNode;
 
-template <typename T>
-using ListNodeMember = ListNode<T> T::*;
-
-// VS 2013 doesn't understand dependent templates.
-#ifdef _MSC_VER
-#define ListNodeMember(T) ListNodeMember
-#else
-#define ListNodeMember(T) ListNodeMember<T>
-#endif
-
 // TAILQ-style intrusive list head.
-template <typename T, ListNodeMember(T) M>
+template <typename T, ListNode<T> (T::*M)>
 class ListHead;
 
 template <typename T>
@@ -147,13 +148,13 @@ class ListNode {
   inline bool IsEmpty() const;
 
  private:
-  template <typename U, ListNodeMember(U) M> friend class ListHead;
+  template <typename U, ListNode<U> (U::*M)> friend class ListHead;
   ListNode* prev_;
   ListNode* next_;
   DISALLOW_COPY_AND_ASSIGN(ListNode);
 };
 
-template <typename T, ListNodeMember(T) M>
+template <typename T, ListNode<T> (T::*M)>
 class ListHead {
  public:
   class Iterator {
@@ -243,7 +244,11 @@ inline void ClearWrap(v8::Local<v8::Object> object);
 template <typename TypeName>
 inline TypeName* Unwrap(v8::Local<v8::Object> object);
 
-inline void SwapBytes(uint16_t* dst, const uint16_t* src, size_t buflen);
+// Swaps bytes in place. nbytes is the number of bytes to swap and must be a
+// multiple of the word size (checked by function).
+inline void SwapBytes16(char* data, size_t nbytes);
+inline void SwapBytes32(char* data, size_t nbytes);
+inline void SwapBytes64(char* data, size_t nbytes);
 
 // tolower() is locale-sensitive.  Use ToLower() instead.
 inline char ToLower(char c);
@@ -300,7 +305,7 @@ class MaybeStackBuffer {
       // Guard against overflow.
       CHECK_LE(storage, sizeof(T) * storage);
 
-      buf_ = static_cast<T*>(malloc(sizeof(T) * storage));
+      buf_ = static_cast<T*>(Malloc(sizeof(T) * storage));
       CHECK_NE(buf_, nullptr);
     }
 

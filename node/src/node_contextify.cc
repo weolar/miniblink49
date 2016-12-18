@@ -125,7 +125,14 @@ class ContextifyContext {
     int length = names->Length();
     for (int i = 0; i < length; i++) {
       Local<String> key = names->Get(i)->ToString(env()->isolate());
-      bool has = sandbox_obj->HasOwnProperty(context, key).FromJust();
+      auto maybe_has = sandbox_obj->HasOwnProperty(context, key);
+
+      // Check for pending exceptions
+      if (!maybe_has.IsJust())
+        break;
+
+      bool has = maybe_has.FromJust();
+
       if (!has) {
         // Could also do this like so:
         //
@@ -344,7 +351,7 @@ class ContextifyContext {
     ContextifyContext* ctx;
     ASSIGN_OR_RETURN_UNWRAP(&ctx, args.Data().As<Object>());
 
-    // Stil initializing
+    // Still initializing
     if (ctx->context_.IsEmpty())
       return;
 
@@ -374,7 +381,7 @@ class ContextifyContext {
     ContextifyContext* ctx;
     ASSIGN_OR_RETURN_UNWRAP(&ctx, args.Data().As<Object>());
 
-    // Stil initializing
+    // Still initializing
     if (ctx->context_.IsEmpty())
       return;
 
@@ -400,7 +407,7 @@ class ContextifyContext {
     ContextifyContext* ctx;
     ASSIGN_OR_RETURN_UNWRAP(&ctx, args.Data().As<Object>());
 
-    // Stil initializing
+    // Still initializing
     if (ctx->context_.IsEmpty())
       return;
 
@@ -427,7 +434,7 @@ class ContextifyContext {
     ContextifyContext* ctx;
     ASSIGN_OR_RETURN_UNWRAP(&ctx, args.Data().As<Object>());
 
-    // Stil initializing
+    // Still initializing
     if (ctx->context_.IsEmpty())
       return;
 
@@ -443,7 +450,7 @@ class ContextifyContext {
     ContextifyContext* ctx;
     ASSIGN_OR_RETURN_UNWRAP(&ctx, args.Data().As<Object>());
 
-    // Stil initializing
+    // Still initializing
     if (ctx->context_.IsEmpty())
       return;
 
@@ -485,12 +492,14 @@ class ContextifyScript : public BaseObject {
 
     TryCatch try_catch(env->isolate());
     Local<String> code = args[0]->ToString(env->isolate());
-    Local<String> filename = GetFilenameArg(args, 1);
-    Local<Integer> lineOffset = GetLineOffsetArg(args, 1);
-    Local<Integer> columnOffset = GetColumnOffsetArg(args, 1);
-    bool display_errors = GetDisplayErrorsArg(args, 1);
-    MaybeLocal<Uint8Array> cached_data_buf = GetCachedData(env, args, 1);
-    bool produce_cached_data = GetProduceCachedData(env, args, 1);
+
+    Local<Value> options = args[1];
+    Local<String> filename = GetFilenameArg(env, options);
+    Local<Integer> lineOffset = GetLineOffsetArg(env, options);
+    Local<Integer> columnOffset = GetColumnOffsetArg(env, options);
+    bool display_errors = GetDisplayErrorsArg(env, options);
+    MaybeLocal<Uint8Array> cached_data_buf = GetCachedData(env, options);
+    bool produce_cached_data = GetProduceCachedData(env, options);
     if (try_catch.HasCaught()) {
       try_catch.ReThrow();
       return;
@@ -559,18 +568,19 @@ class ContextifyScript : public BaseObject {
 
   // args: [options]
   static void RunInThisContext(const FunctionCallbackInfo<Value>& args) {
+    Environment* env = Environment::GetCurrent(args);
+
     // Assemble arguments
     TryCatch try_catch(args.GetIsolate());
-    uint64_t timeout = GetTimeoutArg(args, 0);
-    bool display_errors = GetDisplayErrorsArg(args, 0);
-    bool break_on_sigint = GetBreakOnSigintArg(args, 0);
+    uint64_t timeout = GetTimeoutArg(env, args[0]);
+    bool display_errors = GetDisplayErrorsArg(env, args[0]);
+    bool break_on_sigint = GetBreakOnSigintArg(env, args[0]);
     if (try_catch.HasCaught()) {
       try_catch.ReThrow();
       return;
     }
 
     // Do the eval within this context
-    Environment* env = Environment::GetCurrent(args);
     EvalMachine(env, timeout, display_errors, break_on_sigint, args,
                 &try_catch);
   }
@@ -592,9 +602,9 @@ class ContextifyScript : public BaseObject {
     Local<Object> sandbox = args[0].As<Object>();
     {
       TryCatch try_catch(env->isolate());
-      timeout = GetTimeoutArg(args, 1);
-      display_errors = GetDisplayErrorsArg(args, 1);
-      break_on_sigint = GetBreakOnSigintArg(args, 1);
+      timeout = GetTimeoutArg(env, args[1]);
+      display_errors = GetDisplayErrorsArg(env, args[1]);
+      break_on_sigint = GetBreakOnSigintArg(env, args[1]);
       if (try_catch.HasCaught()) {
         try_catch.ReThrow();
         return;
@@ -668,111 +678,96 @@ class ContextifyScript : public BaseObject {
         True(env->isolate()));
   }
 
-  static bool GetBreakOnSigintArg(const FunctionCallbackInfo<Value>& args,
-                                  const int i) {
-    if (args[i]->IsUndefined() || args[i]->IsString()) {
+  static bool GetBreakOnSigintArg(Environment* env, Local<Value> options) {
+    if (options->IsUndefined() || options->IsString()) {
       return false;
     }
-    if (!args[i]->IsObject()) {
-      Environment::ThrowTypeError(args.GetIsolate(),
-                                  "options must be an object");
+    if (!options->IsObject()) {
+      env->ThrowTypeError("options must be an object");
       return false;
     }
 
-    Local<String> key = FIXED_ONE_BYTE_STRING(args.GetIsolate(),
-                                              "breakOnSigint");
-    Local<Value> value = args[i].As<Object>()->Get(key);
+    Local<String> key = FIXED_ONE_BYTE_STRING(env->isolate(), "breakOnSigint");
+    Local<Value> value = options.As<Object>()->Get(key);
     return value->IsTrue();
   }
 
-  static int64_t GetTimeoutArg(const FunctionCallbackInfo<Value>& args,
-                               const int i) {
-    if (args[i]->IsUndefined() || args[i]->IsString()) {
+  static int64_t GetTimeoutArg(Environment* env, Local<Value> options) {
+    if (options->IsUndefined() || options->IsString()) {
       return -1;
     }
-    if (!args[i]->IsObject()) {
-      Environment::ThrowTypeError(args.GetIsolate(),
-                                  "options must be an object");
+    if (!options->IsObject()) {
+      env->ThrowTypeError("options must be an object");
       return -1;
     }
 
-    Local<String> key = FIXED_ONE_BYTE_STRING(args.GetIsolate(), "timeout");
-    Local<Value> value = args[i].As<Object>()->Get(key);
+    Local<String> key = FIXED_ONE_BYTE_STRING(env->isolate(), "timeout");
+    Local<Value> value = options.As<Object>()->Get(key);
     if (value->IsUndefined()) {
       return -1;
     }
     int64_t timeout = value->IntegerValue();
 
     if (timeout <= 0) {
-      Environment::ThrowRangeError(args.GetIsolate(),
-                                   "timeout must be a positive number");
+      env->ThrowRangeError("timeout must be a positive number");
       return -1;
     }
     return timeout;
   }
 
 
-  static bool GetDisplayErrorsArg(const FunctionCallbackInfo<Value>& args,
-                                  const int i) {
-    if (args[i]->IsUndefined() || args[i]->IsString()) {
+  static bool GetDisplayErrorsArg(Environment* env, Local<Value> options) {
+    if (options->IsUndefined() || options->IsString()) {
       return true;
     }
-    if (!args[i]->IsObject()) {
-      Environment::ThrowTypeError(args.GetIsolate(),
-                                  "options must be an object");
+    if (!options->IsObject()) {
+      env->ThrowTypeError("options must be an object");
       return false;
     }
 
-    Local<String> key = FIXED_ONE_BYTE_STRING(args.GetIsolate(),
-                                              "displayErrors");
-    Local<Value> value = args[i].As<Object>()->Get(key);
+    Local<String> key = FIXED_ONE_BYTE_STRING(env->isolate(), "displayErrors");
+    Local<Value> value = options.As<Object>()->Get(key);
 
     return value->IsUndefined() ? true : value->BooleanValue();
   }
 
 
-  static Local<String> GetFilenameArg(const FunctionCallbackInfo<Value>& args,
-                                      const int i) {
+  static Local<String> GetFilenameArg(Environment* env, Local<Value> options) {
     Local<String> defaultFilename =
-        FIXED_ONE_BYTE_STRING(args.GetIsolate(), "evalmachine.<anonymous>");
+        FIXED_ONE_BYTE_STRING(env->isolate(), "evalmachine.<anonymous>");
 
-    if (args[i]->IsUndefined()) {
+    if (options->IsUndefined()) {
       return defaultFilename;
     }
-    if (args[i]->IsString()) {
-      return args[i].As<String>();
+    if (options->IsString()) {
+      return options.As<String>();
     }
-    if (!args[i]->IsObject()) {
-      Environment::ThrowTypeError(args.GetIsolate(),
-                                  "options must be an object");
+    if (!options->IsObject()) {
+      env->ThrowTypeError("options must be an object");
       return Local<String>();
     }
 
-    Local<String> key = FIXED_ONE_BYTE_STRING(args.GetIsolate(), "filename");
-    Local<Value> value = args[i].As<Object>()->Get(key);
+    Local<String> key = FIXED_ONE_BYTE_STRING(env->isolate(), "filename");
+    Local<Value> value = options.As<Object>()->Get(key);
 
     if (value->IsUndefined())
       return defaultFilename;
-    return value->ToString(args.GetIsolate());
+    return value->ToString(env->isolate());
   }
 
 
-  static MaybeLocal<Uint8Array> GetCachedData(
-      Environment* env,
-      const FunctionCallbackInfo<Value>& args,
-      const int i) {
-    if (!args[i]->IsObject()) {
+  static MaybeLocal<Uint8Array> GetCachedData(Environment* env,
+                                              Local<Value> options) {
+    if (!options->IsObject()) {
       return MaybeLocal<Uint8Array>();
     }
-    Local<Value> value = args[i].As<Object>()->Get(env->cached_data_string());
+    Local<Value> value = options.As<Object>()->Get(env->cached_data_string());
     if (value->IsUndefined()) {
       return MaybeLocal<Uint8Array>();
     }
 
     if (!value->IsUint8Array()) {
-      Environment::ThrowTypeError(
-          args.GetIsolate(),
-          "options.cachedData must be a Buffer instance");
+      env->ThrowTypeError("options.cachedData must be a Buffer instance");
       return MaybeLocal<Uint8Array>();
     }
 
@@ -780,48 +775,42 @@ class ContextifyScript : public BaseObject {
   }
 
 
-  static bool GetProduceCachedData(
-      Environment* env,
-      const FunctionCallbackInfo<Value>& args,
-      const int i) {
-    if (!args[i]->IsObject()) {
+  static bool GetProduceCachedData(Environment* env, Local<Value> options) {
+    if (!options->IsObject()) {
       return false;
     }
     Local<Value> value =
-        args[i].As<Object>()->Get(env->produce_cached_data_string());
+        options.As<Object>()->Get(env->produce_cached_data_string());
 
     return value->IsTrue();
   }
 
 
-  static Local<Integer> GetLineOffsetArg(
-                                      const FunctionCallbackInfo<Value>& args,
-                                      const int i) {
-    Local<Integer> defaultLineOffset = Integer::New(args.GetIsolate(), 0);
+  static Local<Integer> GetLineOffsetArg(Environment* env,
+                                         Local<Value> options) {
+    Local<Integer> defaultLineOffset = Integer::New(env->isolate(), 0);
 
-    if (!args[i]->IsObject()) {
+    if (!options->IsObject()) {
       return defaultLineOffset;
     }
 
-    Local<String> key = FIXED_ONE_BYTE_STRING(args.GetIsolate(), "lineOffset");
-    Local<Value> value = args[i].As<Object>()->Get(key);
+    Local<String> key = FIXED_ONE_BYTE_STRING(env->isolate(), "lineOffset");
+    Local<Value> value = options.As<Object>()->Get(key);
 
     return value->IsUndefined() ? defaultLineOffset : value->ToInteger();
   }
 
 
-  static Local<Integer> GetColumnOffsetArg(
-                                      const FunctionCallbackInfo<Value>& args,
-                                      const int i) {
-    Local<Integer> defaultColumnOffset = Integer::New(args.GetIsolate(), 0);
+  static Local<Integer> GetColumnOffsetArg(Environment* env,
+                                           Local<Value> options) {
+    Local<Integer> defaultColumnOffset = Integer::New(env->isolate(), 0);
 
-    if (!args[i]->IsObject()) {
+    if (!options->IsObject()) {
       return defaultColumnOffset;
     }
 
-    Local<String> key = FIXED_ONE_BYTE_STRING(args.GetIsolate(),
-                                              "columnOffset");
-    Local<Value> value = args[i].As<Object>()->Get(key);
+    Local<String> key = FIXED_ONE_BYTE_STRING(env->isolate(), "columnOffset");
+    Local<Value> value = options.As<Object>()->Get(key);
 
     return value->IsUndefined() ? defaultColumnOffset : value->ToInteger();
   }

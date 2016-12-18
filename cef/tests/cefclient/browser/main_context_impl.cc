@@ -12,7 +12,7 @@ namespace client {
 namespace {
 
 // The default URL to load in a browser window.
-const char kDefaultUrl[] = "http://www.w3school.com.cn";
+const char kDefaultUrl[] = "http://127.0.0.1:3000";
 //const char kDefaultUrl[] = "file:///E:/test/windbg.htm";
 
 }  // namespace

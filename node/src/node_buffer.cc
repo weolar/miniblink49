@@ -12,13 +12,12 @@
 
 #include <string.h>
 #include <limits.h>
-#include <utility>
 
 #define BUFFER_ID 0xB0E4
 
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
 
-#define CHECK_NOT_OOB(r)                                                    \
+#define THROW_AND_RETURN_IF_OOB(r)                                          \
   do {                                                                      \
     if (!(r)) return env->ThrowRangeError("out of range index");            \
   } while (0)
@@ -43,46 +42,14 @@
 #define SLICE_START_END(start_arg, end_arg, end_max)                        \
   size_t start;                                                             \
   size_t end;                                                               \
-  CHECK_NOT_OOB(ParseArrayIndex(start_arg, 0, &start));                     \
-  CHECK_NOT_OOB(ParseArrayIndex(end_arg, end_max, &end));                   \
+  THROW_AND_RETURN_IF_OOB(ParseArrayIndex(start_arg, 0, &start));           \
+  THROW_AND_RETURN_IF_OOB(ParseArrayIndex(end_arg, end_max, &end));         \
   if (end < start) end = start;                                             \
-  CHECK_NOT_OOB(end <= end_max);                                            \
+  THROW_AND_RETURN_IF_OOB(end <= end_max);                                  \
   size_t length = end - start;
 
 #define BUFFER_MALLOC(length)                                               \
-  zero_fill_all_buffers ? calloc(length, 1) : malloc(length)
-
-#if defined(__GNUC__) || defined(__clang__)
-#define BSWAP_INTRINSIC_2(x) __builtin_bswap16(x)
-#define BSWAP_INTRINSIC_4(x) __builtin_bswap32(x)
-#define BSWAP_INTRINSIC_8(x) __builtin_bswap64(x)
-#elif defined(__linux__)
-#include <byteswap.h>
-#define BSWAP_INTRINSIC_2(x) bswap_16(x)
-#define BSWAP_INTRINSIC_4(x) bswap_32(x)
-#define BSWAP_INTRINSIC_8(x) bswap_64(x)
-#elif defined(_MSC_VER)
-#include <intrin.h>
-#define BSWAP_INTRINSIC_2(x) _byteswap_ushort(x);
-#define BSWAP_INTRINSIC_4(x) _byteswap_ulong(x);
-#define BSWAP_INTRINSIC_8(x) _byteswap_uint64(x);
-#else
-#define BSWAP_INTRINSIC_2(x) ((x) << 8) | ((x) >> 8)
-#define BSWAP_INTRINSIC_4(x)                                                  \
-  (((x) & 0xFF) << 24) |                                                      \
-  (((x) & 0xFF00) << 8) |                                                     \
-  (((x) >> 8) & 0xFF00) |                                                     \
-  (((x) >> 24) & 0xFF)
-#define BSWAP_INTRINSIC_8(x)                                                  \
-  (((x) & 0xFF00000000000000ull) >> 56) |                                     \
-  (((x) & 0x00FF000000000000ull) >> 40) |                                     \
-  (((x) & 0x0000FF0000000000ull) >> 24) |                                     \
-  (((x) & 0x000000FF00000000ull) >> 8) |                                      \
-  (((x) & 0x00000000FF000000ull) << 8) |                                      \
-  (((x) & 0x0000000000FF0000ull) << 24) |                                     \
-  (((x) & 0x000000000000FF00ull) << 40) |                                     \
-  (((x) & 0x00000000000000FFull) << 56)
-#endif
+  zero_fill_all_buffers ? node::Calloc(length, 1) : node::Malloc(length)
 
 namespace node {
 
@@ -265,10 +232,6 @@ MaybeLocal<Object> New(Isolate* isolate,
   size_t actual = 0;
   char* data = nullptr;
 
-  // malloc(0) and realloc(ptr, 0) have implementation-defined behavior in
-  // that the standard allows them to either return a unique pointer or a
-  // nullptr for zero-sized allocation requests.  Normalize by always using
-  // a nullptr.
   if (length > 0) {
     data = static_cast<char*>(BUFFER_MALLOC(length));
 
@@ -282,7 +245,7 @@ MaybeLocal<Object> New(Isolate* isolate,
       free(data);
       data = nullptr;
     } else if (actual < length) {
-      data = static_cast<char*>(realloc(data, actual));
+      data = static_cast<char*>(node::Realloc(data, actual));
       CHECK_NE(data, nullptr);
     }
   }
@@ -361,7 +324,7 @@ MaybeLocal<Object> Copy(Environment* env, const char* data, size_t length) {
   void* new_data;
   if (length > 0) {
     CHECK_NE(data, nullptr);
-    new_data = malloc(length);
+    new_data = node::Malloc(length);
     if (new_data == nullptr)
       return Local<Object>();
     memcpy(new_data, data, length);
@@ -582,9 +545,9 @@ void Copy(const FunctionCallbackInfo<Value> &args) {
   size_t source_start;
   size_t source_end;
 
-  CHECK_NOT_OOB(ParseArrayIndex(args[1], 0, &target_start));
-  CHECK_NOT_OOB(ParseArrayIndex(args[2], 0, &source_start));
-  CHECK_NOT_OOB(ParseArrayIndex(args[3], ts_obj_length, &source_end));
+  THROW_AND_RETURN_IF_OOB(ParseArrayIndex(args[1], 0, &target_start));
+  THROW_AND_RETURN_IF_OOB(ParseArrayIndex(args[2], 0, &source_start));
+  THROW_AND_RETURN_IF_OOB(ParseArrayIndex(args[3], ts_obj_length, &source_end));
 
   // Copy 0 bytes; we're done
   if (target_start >= target_length || source_start >= source_end)
@@ -713,11 +676,12 @@ void StringWrite(const FunctionCallbackInfo<Value>& args) {
   size_t offset;
   size_t max_length;
 
-  CHECK_NOT_OOB(ParseArrayIndex(args[1], 0, &offset));
+  THROW_AND_RETURN_IF_OOB(ParseArrayIndex(args[1], 0, &offset));
   if (offset > ts_obj_length)
     return env->ThrowRangeError("Offset is out of bounds");
 
-  CHECK_NOT_OOB(ParseArrayIndex(args[2], ts_obj_length - offset, &max_length));
+  THROW_AND_RETURN_IF_OOB(ParseArrayIndex(args[2], ts_obj_length - offset,
+                                          &max_length));
 
   max_length = MIN(ts_obj_length - offset, max_length);
 
@@ -842,8 +806,8 @@ void WriteFloatGeneric(const FunctionCallbackInfo<Value>& args) {
   size_t memcpy_num = sizeof(T);
 
   if (should_assert) {
-    CHECK_NOT_OOB(offset + memcpy_num >= memcpy_num);
-    CHECK_NOT_OOB(offset + memcpy_num <= ts_obj_length);
+    THROW_AND_RETURN_IF_OOB(offset + memcpy_num >= memcpy_num);
+    THROW_AND_RETURN_IF_OOB(offset + memcpy_num <= ts_obj_length);
   }
 
   if (offset + memcpy_num > ts_obj_length)
@@ -919,10 +883,10 @@ void CompareOffset(const FunctionCallbackInfo<Value> &args) {
   size_t source_end;
   size_t target_end;
 
-  CHECK_NOT_OOB(ParseArrayIndex(args[2], 0, &target_start));
-  CHECK_NOT_OOB(ParseArrayIndex(args[3], 0, &source_start));
-  CHECK_NOT_OOB(ParseArrayIndex(args[4], target_length, &target_end));
-  CHECK_NOT_OOB(ParseArrayIndex(args[5], ts_obj_length, &source_end));
+  THROW_AND_RETURN_IF_OOB(ParseArrayIndex(args[2], 0, &target_start));
+  THROW_AND_RETURN_IF_OOB(ParseArrayIndex(args[3], 0, &source_start));
+  THROW_AND_RETURN_IF_OOB(ParseArrayIndex(args[4], target_length, &target_end));
+  THROW_AND_RETURN_IF_OOB(ParseArrayIndex(args[5], ts_obj_length, &source_end));
 
   if (source_start > ts_obj_length)
     return env->ThrowRangeError("out of range index");
@@ -1083,7 +1047,7 @@ void IndexOfString(const FunctionCallbackInfo<Value>& args) {
                           offset,
                           is_forward);
   } else if (enc == LATIN1) {
-    uint8_t* needle_data = static_cast<uint8_t*>(malloc(needle_length));
+    uint8_t* needle_data = static_cast<uint8_t*>(node::Malloc(needle_length));
     if (needle_data == nullptr) {
       return args.GetReturnValue().Set(-1);
     }
@@ -1202,23 +1166,7 @@ void Swap16(const FunctionCallbackInfo<Value>& args) {
   Environment* env = Environment::GetCurrent(args);
   THROW_AND_RETURN_UNLESS_BUFFER(env, args[0]);
   SPREAD_ARG(args[0], ts_obj);
-
-  CHECK_EQ(ts_obj_length % 2, 0);
-
-  int align = reinterpret_cast<uintptr_t>(ts_obj_data) % sizeof(uint16_t);
-
-  if (align == 0) {
-    uint16_t* data16 = reinterpret_cast<uint16_t*>(ts_obj_data);
-    size_t len16 = ts_obj_length / 2;
-    for (size_t i = 0; i < len16; i++) {
-      data16[i] = BSWAP_INTRINSIC_2(data16[i]);
-    }
-  } else {
-    for (size_t i = 0; i < ts_obj_length; i += 2) {
-      std::swap(ts_obj_data[i], ts_obj_data[i + 1]);
-    }
-  }
-
+  SwapBytes16(ts_obj_data, ts_obj_length);
   args.GetReturnValue().Set(args[0]);
 }
 
@@ -1227,24 +1175,7 @@ void Swap32(const FunctionCallbackInfo<Value>& args) {
   Environment* env = Environment::GetCurrent(args);
   THROW_AND_RETURN_UNLESS_BUFFER(env, args[0]);
   SPREAD_ARG(args[0], ts_obj);
-
-  CHECK_EQ(ts_obj_length % 4, 0);
-
-  int align = reinterpret_cast<uintptr_t>(ts_obj_data) % sizeof(uint32_t);
-
-  if (align == 0) {
-    uint32_t* data32 = reinterpret_cast<uint32_t*>(ts_obj_data);
-    size_t len32 = ts_obj_length / 4;
-    for (size_t i = 0; i < len32; i++) {
-      data32[i] = BSWAP_INTRINSIC_4(data32[i]);
-    }
-  } else {
-    for (size_t i = 0; i < ts_obj_length; i += 4) {
-      std::swap(ts_obj_data[i], ts_obj_data[i + 3]);
-      std::swap(ts_obj_data[i + 1], ts_obj_data[i + 2]);
-    }
-  }
-
+  SwapBytes32(ts_obj_data, ts_obj_length);
   args.GetReturnValue().Set(args[0]);
 }
 
@@ -1253,26 +1184,7 @@ void Swap64(const FunctionCallbackInfo<Value>& args) {
   Environment* env = Environment::GetCurrent(args);
   THROW_AND_RETURN_UNLESS_BUFFER(env, args[0]);
   SPREAD_ARG(args[0], ts_obj);
-
-  CHECK_EQ(ts_obj_length % 8, 0);
-
-  int align = reinterpret_cast<uintptr_t>(ts_obj_data) % sizeof(uint64_t);
-
-  if (align == 0) {
-    uint64_t* data64 = reinterpret_cast<uint64_t*>(ts_obj_data);
-    size_t len32 = ts_obj_length / 8;
-    for (size_t i = 0; i < len32; i++) {
-      data64[i] = BSWAP_INTRINSIC_8(data64[i]);
-    }
-  } else {
-    for (size_t i = 0; i < ts_obj_length; i += 8) {
-      std::swap(ts_obj_data[i], ts_obj_data[i + 7]);
-      std::swap(ts_obj_data[i + 1], ts_obj_data[i + 6]);
-      std::swap(ts_obj_data[i + 2], ts_obj_data[i + 5]);
-      std::swap(ts_obj_data[i + 3], ts_obj_data[i + 4]);
-    }
-  }
-
+  SwapBytes64(ts_obj_data, ts_obj_length);
   args.GetReturnValue().Set(args[0]);
 }
 
