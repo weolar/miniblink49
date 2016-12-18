@@ -404,16 +404,13 @@ bool WebPageImpl::doMergeDirtyList(bool forceMerge)
     return false;
 }
 
-void WebPageImpl::postPaintMessage(const IntRect* paintRect)
+void WebPageImpl::postPaintMessage(const IntRect& paintRect)
 {
-    if (!paintRect || paintRect->isEmpty() || !m_clientRect.intersects(*paintRect))
+    if (paintRect.isEmpty() || !m_clientRect.intersects(paintRect))
         return;
 
-    IntRect dirtyRect = *paintRect;
+    IntRect dirtyRect = paintRect;
     dirtyRect.intersect(m_clientRect);
-
-// 	String outString = String::format("WebPageImpl::postPaintMessage: (%d %d)(%d %d)\n", dirtyRect.x(), dirtyRect.y(), dirtyRect.width(), dirtyRect.height());
-// 	OutputDebugStringW(outString.charactersWithNullTermination().data());
 
     m_dirtyRects.append(dirtyRect);
     setNeedsCommitAndNotLayout();
@@ -440,6 +437,14 @@ bool WebPageImpl::drawFrame()
 {
     if (0 != m_scheduleMessageCount)
         DebugBreak();
+
+    double lastDrawTime = WTF::monotonicallyIncreasingTime();
+    double detTime = lastDrawTime - m_lastDrawTime;
+    m_lastDrawTime = lastDrawTime;
+    if (detTime < 0.01) { // 如果刷新频率太快，缓缓再画
+        setNeedsCommitAndNotLayout();
+        return false;
+    }
 
     bool needClearCommit = m_layerTreeHost->preDrawFrame(); // 这里也会发起Commit
 
@@ -509,14 +514,6 @@ void WebPageImpl::paintToPlatformContext(const IntRect& paintRect)
 
     if (!m_memoryCanvas) {
         ASSERT(false);
-        return;
-    }
-
-    double lastDrawTime = WTF::monotonicallyIncreasingTime();
-    double detTime = lastDrawTime - m_lastDrawTime;
-    m_lastDrawTime = lastDrawTime;
-    if (detTime < 0.01) { // 如果刷新频率太快，就缓缓
-        setNeedsCommitAndNotLayout();
         return;
     }
 
@@ -942,7 +939,7 @@ void WebPageImpl::repaintRequested(const IntRect& windowRect)
     if (pageInited != m_state || windowRect.isEmpty() || windowRect.maxY() < 0 || windowRect.maxX() < 0)
         return;
 
-    postPaintMessage(&windowRect);
+    postPaintMessage(windowRect);
 }
 
 // Called when a region of the WebWidget needs to be re-painted.

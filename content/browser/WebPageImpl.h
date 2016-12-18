@@ -87,7 +87,7 @@ public:
 
     bool doMergeDirtyList(bool forceMerge);
 
-    void postPaintMessage(const blink::IntRect* paintRect);
+    void postPaintMessage(const blink::IntRect& paintRect);
 
     void testPaint();
 
