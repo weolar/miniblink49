@@ -4616,8 +4616,9 @@ int Start(int argc, char** argv) {
 #endif
 
   v8_platform.Initialize(v8_thread_pool_size);
-  //V8::Initialize();
-
+#if NODE_USE_V8_PLATFORM
+  V8::Initialize();
+#endif
   int exit_code = 1;
   {
     NodeInstanceData instance_data(NodeInstanceType::MAIN,

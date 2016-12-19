@@ -87,7 +87,7 @@
     <ClCompile Include="..\..\node\src\handle_wrap.cc" />
     <ClCompile Include="..\..\node\src\http_parser.c" />
     <ClCompile Include="..\..\node\src\js_stream.cc" />
-    <ClCompile Include="..\..\node\src\node.cc" />
+    <ClCompile Include="..\..\node\src\node1.cc" />
     <ClCompile Include="..\..\node\src\node_buffer.cc" />
     <ClCompile Include="..\..\node\src\node_config.cc" />
     <ClCompile Include="..\..\node\src\node_constants.cc" />
@@ -101,7 +101,7 @@
     <ClCompile Include="..\..\node\src\node_http_parser.cc" />
     <ClCompile Include="..\..\node\src\node_javascript.cc" />
     <ClCompile Include="..\..\node\src\node_main.cc">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\node\src\node_os.cc" />
     <ClCompile Include="..\..\node\src\node_revert.cc" />
@@ -149,10 +149,10 @@
     <ClCompile Include="..\..\node\uv\src\win\req.c" />
     <ClCompile Include="..\..\node\uv\src\win\signal.c" />
     <ClCompile Include="..\..\node\uv\src\win\snprintf.c" />
-    <ClCompile Include="..\..\node\uv\src\win\stream.c" />
+    <ClCompile Include="..\..\node\uv\src\win\stream1.c" />
     <ClCompile Include="..\..\node\uv\src\win\tcp.c" />
-    <ClCompile Include="..\..\node\uv\src\win\thread.c" />
-    <ClCompile Include="..\..\node\uv\src\win\timer.c" />
+    <ClCompile Include="..\..\node\uv\src\win\thread1.c" />
+    <ClCompile Include="..\..\node\uv\src\win\timer1.c" />
     <ClCompile Include="..\..\node\uv\src\win\tty.c" />
     <ClCompile Include="..\..\node\uv\src\win\udp.c" />
     <ClCompile Include="..\..\node\uv\src\win\util.c" />
@@ -255,7 +255,7 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140_xp</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
@@ -341,7 +341,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;BUILDING_V8_SHARED=1;BUILDING_UV_SHARED=1;CARES_STATICLIB;NODE_ARCH="ia32";NODE_PLATFORM="win32";NODE_WANT_INTERNALS=1;HAVE_OPENSSL=1;HAVE_ETW=1;HAVE_PERFCTR=1;V8_INSPECTOR_USE_STL=1;NODE_USE_V8_PLATFORM=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;BUILDING_V8_SHARED=1;BUILDING_UV_SHARED=1;CARES_STATICLIB;NODE_ARCH="ia32";NODE_PLATFORM="win32";NODE_WANT_INTERNALS=1;HAVE_OPENSSL=1;HAVE_ETW=1;HAVE_PERFCTR=1;V8_INSPECTOR_USE_STL=1;NODE_USE_V8_PLATFORM=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>../../third_party/zlib;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>

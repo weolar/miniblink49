@@ -54,9 +54,6 @@
     <ClCompile Include="..\..\node\src\js_stream.cc">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\node\src\node.cc">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\node\src\node_buffer.cc">
       <Filter>src</Filter>
     </ClCompile>
@@ -378,16 +375,7 @@
     <ClCompile Include="..\..\node\uv\src\win\snprintf.c">
       <Filter>uv\src\win</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\stream.c">
-      <Filter>uv\src\win</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\node\uv\src\win\tcp.c">
-      <Filter>uv\src\win</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\thread.c">
-      <Filter>uv\src\win</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\timer.c">
       <Filter>uv\src\win</Filter>
     </ClCompile>
     <ClCompile Include="..\..\node\uv\src\win\tty.c">
@@ -409,6 +397,18 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\node\src\http_parser.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\stream1.c">
+      <Filter>uv\src\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\thread1.c">
+      <Filter>uv\src\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\timer1.c">
+      <Filter>uv\src\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\node1.cc">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>

@@ -766,7 +766,7 @@
     <Filter Include="node\uv\src">
       <UniqueIdentifier>{33470477-f849-400f-a5ed-17fc5e7edd58}</UniqueIdentifier>
     </Filter>
-    <Filter Include="node\uv\src\NewFilter1">
+    <Filter Include="node\uv\src\win">
       <UniqueIdentifier>{877efd80-bba9-437e-a0f3-b2089be66342}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -9015,149 +9015,230 @@
     <ClCompile Include="..\..\node\nodeblink.cpp">
       <Filter>node</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\node\src\http_parser.c">
-      <Filter>node\src</Filter>
+    <ClCompile Include="..\..\node\uv\src\fs-poll.c">
+      <Filter>node\uv\src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\node\src\async-wrap.cc">
-      <Filter>node\src</Filter>
+    <ClCompile Include="..\..\node\uv\src\inet.c">
+      <Filter>node\uv\src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\node\src\backtrace_win32.cc">
-      <Filter>node\src</Filter>
+    <ClCompile Include="..\..\node\uv\src\threadpool.c">
+      <Filter>node\uv\src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\node\src\cares_wrap.cc">
-      <Filter>node\src</Filter>
+    <ClCompile Include="..\..\node\uv\src\uv-common.c">
+      <Filter>node\uv\src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\node\src\connect_wrap.cc">
-      <Filter>node\src</Filter>
+    <ClCompile Include="..\..\node\uv\src\version.c">
+      <Filter>node\uv\src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\node\src\connection_wrap.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\debug-agent.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\env.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\fs_event_wrap.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\handle_wrap.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\js_stream.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\node.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\node_buffer.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\node_config.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\node_constants.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\node_contextify.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\node_counters.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\node_crypto.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\node_crypto_bio.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\node_crypto_clienthello.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\node_dtrace.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\node_file.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\node_http_parser.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\node_javascript.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\node_os.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\node_revert.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\node_stat_watcher.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\node_util.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\node_v8.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\node_watchdog.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\node_win32_etw_provider.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\node_win32_perfctr_provider.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\node_zlib.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\pipe_wrap.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\process_wrap.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\signal_wrap.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\spawn_sync.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\stream_base.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\stream_wrap.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\string_bytes.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\string_search.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\tcp_wrap.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\timer_wrap.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\tls_wrap.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\tty_wrap.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\udp_wrap.cc">
+    <ClCompile Include="..\..\node\src\uv.cc">
       <Filter>node\src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\node\src\util1.cc">
       <Filter>node\src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\node\src\uv.cc">
+    <ClCompile Include="..\..\node\src\udp_wrap.cc">
       <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\tty_wrap.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\tls_wrap.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\timer_wrap.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\tcp_wrap.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\string_search.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\string_bytes.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\stream_wrap.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\stream_base.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\spawn_sync.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\signal_wrap.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\process_wrap.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\pipe_wrap.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\node_zlib.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\node_win32_perfctr_provider.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\node_win32_etw_provider.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\node_watchdog.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\node_v8.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\node_util.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\node_stat_watcher.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\node_revert.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\node_os.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\node_javascript.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\node_http_parser.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\node_file.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\node_dtrace.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\node_crypto_clienthello.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\node_crypto_bio.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\node_crypto.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\node_counters.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\node_contextify.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\node_constants.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\node_config.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\node_buffer.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\js_stream.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\handle_wrap.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\fs_event_wrap.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\env.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\debug-agent.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\connection_wrap.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\connect_wrap.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\cares_wrap.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\backtrace_win32.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\async-wrap.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\http_parser.c">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\async.c">
+      <Filter>node\uv\src\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\core.c">
+      <Filter>node\uv\src\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\dl.c">
+      <Filter>node\uv\src\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\error.c">
+      <Filter>node\uv\src\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\fs.c">
+      <Filter>node\uv\src\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\fs-event.c">
+      <Filter>node\uv\src\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\getaddrinfo.c">
+      <Filter>node\uv\src\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\getnameinfo.c">
+      <Filter>node\uv\src\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\handle.c">
+      <Filter>node\uv\src\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\loop-watcher.c">
+      <Filter>node\uv\src\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\pipe.c">
+      <Filter>node\uv\src\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\poll.c">
+      <Filter>node\uv\src\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\process.c">
+      <Filter>node\uv\src\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\process-stdio.c">
+      <Filter>node\uv\src\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\req.c">
+      <Filter>node\uv\src\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\signal.c">
+      <Filter>node\uv\src\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\snprintf.c">
+      <Filter>node\uv\src\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\tcp.c">
+      <Filter>node\uv\src\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\tty.c">
+      <Filter>node\uv\src\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\udp.c">
+      <Filter>node\uv\src\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\util.c">
+      <Filter>node\uv\src\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\winapi.c">
+      <Filter>node\uv\src\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\winsock.c">
+      <Filter>node\uv\src\win</Filter>
     </ClCompile>
     <ClCompile Include="..\..\node\cares\src\ares__close_sockets.c">
       <Filter>node\cares\src</Filter>
@@ -9306,98 +9387,17 @@
     <ClCompile Include="..\..\node\cares\src\windows_port.c">
       <Filter>node\cares\src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\fs-poll.c">
-      <Filter>node\uv\src</Filter>
+    <ClCompile Include="..\..\node\uv\src\win\thread1.c">
+      <Filter>node\uv\src\win</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\inet.c">
-      <Filter>node\uv\src</Filter>
+    <ClCompile Include="..\..\node\uv\src\win\stream1.c">
+      <Filter>node\uv\src\win</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\threadpool.c">
-      <Filter>node\uv\src</Filter>
+    <ClCompile Include="..\..\node\src\node1.cc">
+      <Filter>node\src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\uv-common.c">
-      <Filter>node\uv\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\version.c">
-      <Filter>node\uv\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\async.c">
-      <Filter>node\uv\src\NewFilter1</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\core.c">
-      <Filter>node\uv\src\NewFilter1</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\dl.c">
-      <Filter>node\uv\src\NewFilter1</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\error.c">
-      <Filter>node\uv\src\NewFilter1</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\fs.c">
-      <Filter>node\uv\src\NewFilter1</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\fs-event.c">
-      <Filter>node\uv\src\NewFilter1</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\getaddrinfo.c">
-      <Filter>node\uv\src\NewFilter1</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\getnameinfo.c">
-      <Filter>node\uv\src\NewFilter1</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\handle.c">
-      <Filter>node\uv\src\NewFilter1</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\loop-watcher.c">
-      <Filter>node\uv\src\NewFilter1</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\pipe.c">
-      <Filter>node\uv\src\NewFilter1</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\poll.c">
-      <Filter>node\uv\src\NewFilter1</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\process.c">
-      <Filter>node\uv\src\NewFilter1</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\process-stdio.c">
-      <Filter>node\uv\src\NewFilter1</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\req.c">
-      <Filter>node\uv\src\NewFilter1</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\signal.c">
-      <Filter>node\uv\src\NewFilter1</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\snprintf.c">
-      <Filter>node\uv\src\NewFilter1</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\stream.c">
-      <Filter>node\uv\src\NewFilter1</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\tcp.c">
-      <Filter>node\uv\src\NewFilter1</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\thread.c">
-      <Filter>node\uv\src\NewFilter1</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\timer.c">
-      <Filter>node\uv\src\NewFilter1</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\tty.c">
-      <Filter>node\uv\src\NewFilter1</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\udp.c">
-      <Filter>node\uv\src\NewFilter1</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\util.c">
-      <Filter>node\uv\src\NewFilter1</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\winapi.c">
-      <Filter>node\uv\src\NewFilter1</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\winsock.c">
-      <Filter>node\uv\src\NewFilter1</Filter>
+    <ClCompile Include="..\..\node\uv\src\win\timer1.c">
+      <Filter>node\uv\src\win</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -21356,267 +21356,6 @@
     <ClInclude Include="..\..\content\browser\NavigationController.h">
       <Filter>content\browser</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\node\src\async-wrap.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\async-wrap-inl.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\base64.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\base-object.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\base-object-inl.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\connect_wrap.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\connection_wrap.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\debug-agent.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\env.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\env-inl.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\handle_wrap.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\http_parser.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\js_stream.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\node.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\node_buffer.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\node_constants.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\node_counters.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\node_crypto.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\node_crypto_bio.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\node_crypto_clienthello.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\node_crypto_clienthello-inl.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\node_crypto_groups.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\node_dtrace.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\node_etw_provider.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\node_file.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\node_http_parser.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\node_internals.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\node_javascript.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\node_mutex.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\node_natives.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\node_object_wrap.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\node_perfctr_provider.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\node_revert.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\node_root_certs.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\node_stat_watcher.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\node_version.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\node_watchdog.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\node_win32_etw_provider.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\node_win32_etw_provider-inl.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\node_win32_perfctr_provider.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\node_wrap.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\pipe_wrap.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\req-wrap.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\req-wrap-inl.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\spawn_sync.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\stream_base.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\stream_base-inl.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\stream_wrap.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\string_bytes.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\string_search.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\tcp_wrap.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\tls_wrap.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\tree.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\tty_wrap.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\udp_wrap.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\util.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\util-inl.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\v8abbr.h">
-      <Filter>node\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\cares\src\ares_data.h">
-      <Filter>node\cares\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\cares\src\ares_dns.h">
-      <Filter>node\cares\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\cares\src\ares_getenv.h">
-      <Filter>node\cares\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\cares\src\ares_getopt.h">
-      <Filter>node\cares\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\cares\src\ares_inet_net_pton.h">
-      <Filter>node\cares\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\cares\src\ares_iphlpapi.h">
-      <Filter>node\cares\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\cares\src\ares_ipv6.h">
-      <Filter>node\cares\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\cares\src\ares_library_init.h">
-      <Filter>node\cares\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\cares\src\ares_llist.h">
-      <Filter>node\cares\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\cares\src\ares_nowarn.h">
-      <Filter>node\cares\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\cares\src\ares_platform.h">
-      <Filter>node\cares\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\cares\src\ares_private.h">
-      <Filter>node\cares\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\cares\src\ares_setup.h">
-      <Filter>node\cares\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\cares\src\ares_strcasecmp.h">
-      <Filter>node\cares\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\cares\src\ares_strdup.h">
-      <Filter>node\cares\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\cares\src\ares_writev.h">
-      <Filter>node\cares\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\cares\src\bitncmp.h">
-      <Filter>node\cares\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\cares\src\config-win32.h">
-      <Filter>node\cares\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\cares\src\setup_once.h">
-      <Filter>node\cares\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\uv\src\heap-inl.h">
-      <Filter>node\uv\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\uv\src\queue.h">
-      <Filter>node\uv\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\uv\src\uv-common.h">
-      <Filter>node\uv\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\uv\src\win\atomicops-inl.h">
-      <Filter>node\uv\src\NewFilter1</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\uv\src\win\handle-inl.h">
-      <Filter>node\uv\src\NewFilter1</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\uv\src\win\internal.h">
-      <Filter>node\uv\src\NewFilter1</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\uv\src\win\req-inl.h">
-      <Filter>node\uv\src\NewFilter1</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\uv\src\win\stream-inl.h">
-      <Filter>node\uv\src\NewFilter1</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\uv\src\win\winapi.h">
-      <Filter>node\uv\src\NewFilter1</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\uv\src\win\winsock.h">
-      <Filter>node\uv\src\NewFilter1</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\third_party\WebKit\Source\devtools\front_end\Images\src\optimize_png.hashes">
@@ -21687,9 +21426,6 @@
     </None>
     <None Include="..\..\third_party\WebKit\Source\modules\mediastream\DEPS">
       <Filter>third_party\Webkit\Source\modules\mediastream</Filter>
-    </None>
-    <None Include="..\..\node\src\CNNICHashWhitelist.inc">
-      <Filter>node\src</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
