@@ -1,6 +1,7 @@
 #include "src\node.h"
 #include <Windows.h>
-#pragma comment(lib,"node.lib")
+#include <process.h>
+
 #pragma comment(lib,"openssl.lib")
 #pragma comment(lib, "IPHLPAPI.lib")
 #pragma comment(lib, "Userenv.lib")
@@ -9,7 +10,7 @@ typedef struct {
 	char** argv;
 	int argc;
 } nodeargc;
-DWORD __stdcall nodeThread(void * p) {
+unsigned __stdcall nodeThread(void * p) {
 	// Now that conversion is done, we can finally start.
 	int ret = node::Start(((nodeargc *)p)->argc, ((nodeargc *)p)->argv);
 	free(p);
@@ -52,6 +53,6 @@ extern "C" bool __declspec(dllexport) RunNode(int argc, wchar_t *wargv[]) {
 	}
 	p->argv[argc] = nullptr;
 	p->argc = argc;
-
-	CreateThread(0, 0, &nodeThread, p, 0, 0);
+	unsigned threadIdentifier = 0;
+	_beginthreadex(0, 0, &nodeThread, p, 0, &threadIdentifier);
 }

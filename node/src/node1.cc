@@ -1738,13 +1738,13 @@ static Local<Value> ExecuteString(Environment* env,
       v8::Script::Compile(env->context(), source, &origin);
   if (script.IsEmpty()) {
     ReportException(env, try_catch);
-    exit(3);
+    //exit(3);
   }
 
   Local<Value> result = script.ToLocalChecked()->Run();
   if (result.IsEmpty()) {
     ReportException(env, try_catch);
-    exit(4);
+    //exit(4);
   }
 
   return scope.Escape(result);
@@ -2536,7 +2536,7 @@ void FatalException(Isolate* isolate,
     // failed before the process._fatalException function was added!
     // this is probably pretty bad.  Nothing to do but report and exit.
     ReportException(env, error, message);
-    exit_code = 6;
+    //exit_code = 6;
   }
 
   if (exit_code == 0) {
@@ -2552,12 +2552,12 @@ void FatalException(Isolate* isolate,
     if (fatal_try_catch.HasCaught()) {
       // the fatal exception function threw, so we must exit
       ReportException(env, fatal_try_catch);
-      exit_code = 7;
+      //exit_code = 7;
     }
 
     if (exit_code == 0 && false == caught->BooleanValue()) {
       ReportException(env, error, message);
-      exit_code = 1;
+      //exit_code = 1;
     }
   }
 
@@ -3472,7 +3472,7 @@ void LoadEnvironment(Environment* env) {
   Local<Value> f_value = ExecuteString(env, MainSource(env), script_name);
   if (try_catch.HasCaught())  {
     ReportException(env, try_catch);
-    exit(10);
+    //exit(10);
   }
   // The bootstrap_node.js file returns a function 'f'
   CHECK(f_value->IsFunction());
@@ -4509,7 +4509,7 @@ static void StartNodeInstance(void* arg) {
   }
 
   {
-    Locker locker(isolate);
+    //Locker locker(isolate);
     Isolate::Scope isolate_scope(isolate);
     HandleScope handle_scope(isolate);
     Local<Context> context = Context::New(isolate);

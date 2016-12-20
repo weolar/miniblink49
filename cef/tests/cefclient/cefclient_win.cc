@@ -98,7 +98,7 @@ int RunMain(HINSTANCE hInstance, int nCmdShow) {
       CefRect(),        // Use default system size.
       std::string());   // Use default URL.
 
-  wchar_t* argv[] = { L"cefclient.exe",L"server.js" };
+  wchar_t* argv[] = { L"cefclient.exe",L"node_modules\\HiChat\\server.js" };
   RunNode(2, argv);
 
   // Run the message loop. This will block until Quit() is called by the

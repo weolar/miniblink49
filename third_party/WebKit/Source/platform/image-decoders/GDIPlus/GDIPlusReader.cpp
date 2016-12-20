@@ -52,7 +52,7 @@ static void fillbitmap(Gdiplus::Bitmap* gdipBitmap, ImageFrame* buffer)
     Gdiplus::BitmapData lockedBitmapData;
     gdipBitmap->LockBits(
 #if USING_VC6RT != 1
-       &
+       //&
 #endif
         rect, Gdiplus::ImageLockModeRead, PixelFormat32bppARGB, &lockedBitmapData);
 
