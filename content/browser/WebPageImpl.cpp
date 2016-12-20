@@ -847,10 +847,10 @@ void WebPageImpl::executeMainFrame()
     m_layerTreeHost->beginRecordActions();
 
     if (m_needsLayout) {
+        m_needsLayout = false;
         WebBeginFrameArgs frameArgs(lastFrameTimeMonotonic, 0, lastFrameTimeMonotonic - m_lastFrameTimeMonotonic);
         m_webViewImpl->beginFrame(frameArgs);
         m_webViewImpl->layout();
-        m_needsLayout = false;
     }
 
     m_layerTreeHost->recordDraw();
