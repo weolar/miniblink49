@@ -350,7 +350,7 @@ void WebPluginImpl::updatePluginWidget(const IntRect& windowRect, const IntRect&
         }
 
         if (!m_haveUpdatedPluginWidget || m_windowRect != oldWindowRect)
-            ::MoveWindow(platformPluginWidget(), m_windowRect.x(), m_windowRect.y(), m_windowRect.width(), m_windowRect.height(), TRUE);
+            ::MoveWindow(platformPluginWidget(), m_windowRect.x() + m_widgetOffset.x(), m_windowRect.y() + m_widgetOffset.y(), m_windowRect.width(), m_windowRect.height(), TRUE);
 
         if (clipToZeroRect) {
             HRGN rgn = (::CreateRectRgn(m_clipRect.x(), m_clipRect.y(), m_clipRect.maxX(), m_clipRect.maxY()));
@@ -785,7 +785,6 @@ bool WebPluginImpl::platformGetValue(NPNVariable variable, void* value, NPError*
     switch (variable) {
         case NPNVnetscapeWindow: {
             HWND* w = reinterpret_cast<HWND*>(value);
-            //*w = windowHandleForPageClient(parent() ? parent()->hostWindow()->platformPageClient() : 0);
             *w = windowHandleForPageClient(platformPluginWidget());
             *result = NPERR_NO_ERROR;
             return true;

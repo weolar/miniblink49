@@ -87,7 +87,7 @@ public:
 
     bool doMergeDirtyList(bool forceMerge);
 
-    void postPaintMessage(const blink::IntRect* paintRect);
+    void postPaintMessage(const blink::IntRect& paintRect);
 
     void testPaint();
 
@@ -178,11 +178,12 @@ public:
     bool m_postMouseLeave; // 系统的MouseLeave获取到的鼠标位置不太准确，自己在定时器里再抛一次
 	blink::RGBA32 m_bdColor;
     double m_lastFrameTimeMonotonic;
+    double m_lastDrawTime;
     WebPage* m_pagePtr;
     blink::WebViewImpl* m_webViewImpl;
     bool m_mouseInWindow;
     HWND m_hWnd;
-	blink::IntPoint m_hWndoffset;	//网页渲染坐标相对于窗口的原点
+	blink::IntPoint m_hwndRenderOffset;	// 网页渲染坐标相对于窗口的原点
 	blink::IntSize m_viewportSize;
 
     // May be NULL if the browser has not yet been created or if the browser has
