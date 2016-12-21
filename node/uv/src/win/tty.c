@@ -23,6 +23,7 @@
 #include <io.h>
 #include <string.h>
 #include <stdlib.h>
+#include <intrin.h>
 
 #if defined(_MSC_VER) && _MSC_VER < 1600
 # include "stdint-msvc2008.h"
@@ -39,7 +40,8 @@
 #include "handle-inl.h"
 #include "stream-inl.h"
 #include "req-inl.h"
-extern long WINAPI _InterlockedOr(long volatile * _Value, long _Mask);
+
+
 #define UNICODE_REPLACEMENT_CHARACTER (0xfffd)
 
 #define ANSI_NORMAL           0x00
@@ -271,7 +273,7 @@ static void uv_tty_capture_initial_style(CONSOLE_SCREEN_BUFFER_INFO* info) {
 
 int uv_tty_set_mode(uv_tty_t* tty, uv_tty_mode_t mode) {
   DWORD flags;
-  unsigned char was_reading = 0;
+  unsigned char was_reading;
   uv_alloc_cb alloc_cb = NULL;
   uv_read_cb read_cb = NULL;
   int err;

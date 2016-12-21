@@ -11,7 +11,6 @@
 #include "src/macro-assembler.h"
 #include "src/snapshot/deserializer.h"
 #include "src/snapshot/snapshot.h"
-#include "src/version.h"
 #include "src/wasm/wasm-module.h"
 #include "src/wasm/wasm-objects.h"
 
@@ -329,7 +328,6 @@ SerializedCodeData::SerializedCodeData(const List<byte>* payload,
 
   // Set header values.
   SetMagicNumber(cs->isolate());
-  SetHeaderValue(kVersionHashOffset, Version::Hash());
   SetHeaderValue(kSourceHashOffset, cs->source_hash());
   SetHeaderValue(kCpuFeaturesOffset,
                  static_cast<uint32_t>(CpuFeatures::SupportedFeatures()));
@@ -362,13 +360,11 @@ SerializedCodeData::SanityCheckResult SerializedCodeData::SanityCheck(
   if (this->size_ < kHeaderSize) return INVALID_HEADER;
   uint32_t magic_number = GetMagicNumber();
   if (magic_number != ComputeMagicNumber(isolate)) return MAGIC_NUMBER_MISMATCH;
-  uint32_t version_hash = GetHeaderValue(kVersionHashOffset);
   uint32_t source_hash = GetHeaderValue(kSourceHashOffset);
   uint32_t cpu_features = GetHeaderValue(kCpuFeaturesOffset);
   uint32_t flags_hash = GetHeaderValue(kFlagHashOffset);
   uint32_t c1 = GetHeaderValue(kChecksum1Offset);
   uint32_t c2 = GetHeaderValue(kChecksum2Offset);
-  if (version_hash != Version::Hash()) return VERSION_MISMATCH;
   if (source_hash != expected_source_hash) return SOURCE_MISMATCH;
   if (cpu_features != static_cast<uint32_t>(CpuFeatures::SupportedFeatures())) {
     return CPU_FEATURES_MISMATCH;

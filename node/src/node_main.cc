@@ -1,7 +1,7 @@
 #include "node.h"
 
+#ifdef _WIN32
 int wmain(int argc, wchar_t *wargv[]) {
-
   // Convert argv to to UTF8
   char** argv = new char*[argc + 1];
   for (int i = 0; i < argc; i++) {
@@ -39,3 +39,13 @@ int wmain(int argc, wchar_t *wargv[]) {
   // Now that conversion is done, we can finally start.
   return node::Start(argc, argv);
 }
+#else
+// UNIX
+int main(int argc, char *argv[]) {
+  // Disable stdio buffering, it interacts poorly with printf()
+  // calls elsewhere in the program (e.g., any logging from V8.)
+  setvbuf(stdout, nullptr, _IONBF, 0);
+  setvbuf(stderr, nullptr, _IONBF, 0);
+  return node::Start(argc, argv);
+}
+#endif

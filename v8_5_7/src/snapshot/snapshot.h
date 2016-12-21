@@ -25,7 +25,6 @@ class SnapshotData : public SerializedData {
   // Used when consuming.
   explicit SnapshotData(const Vector<const byte> snapshot)
       : SerializedData(const_cast<byte*>(snapshot.begin()), snapshot.length()) {
-    CHECK(IsSane());
   }
 
   Vector<const Reservation> Reservations() const;
@@ -36,7 +35,6 @@ class SnapshotData : public SerializedData {
   }
 
  private:
-  bool IsSane();
 
   // The data header consists of uint32_t-sized entries:
   // [0] magic number and external reference count

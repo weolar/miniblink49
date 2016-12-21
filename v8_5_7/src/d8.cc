@@ -1242,9 +1242,6 @@ void Shell::Quit(const v8::FunctionCallbackInfo<v8::Value>& args) {
 
 
 void Shell::Version(const v8::FunctionCallbackInfo<v8::Value>& args) {
-  args.GetReturnValue().Set(
-      String::NewFromUtf8(args.GetIsolate(), V8::GetVersion(),
-                          NewStringType::kNormal).ToLocalChecked());
 }
 
 
@@ -1843,7 +1840,6 @@ void Shell::RunShell(Isolate* isolate) {
   Local<String> name =
       String::NewFromUtf8(isolate, "(d8)", NewStringType::kNormal)
           .ToLocalChecked();
-  printf("V8 version %s\n", V8::GetVersion());
   while (true) {
     HandleScope inner_scope(isolate);
     printf("d8> ");
@@ -2915,7 +2911,6 @@ int Shell::Main(int argc, char* argv[]) {
 #endif  // defined(_MSC_VER)
 #endif  // defined(_WIN32) || defined(_WIN64)
   if (!SetOptions(argc, argv)) return 1;
-  v8::V8::InitializeICUDefaultLocation(argv[0], options.icu_data_file);
   g_platform = i::FLAG_verify_predictable
                    ? new PredictablePlatform()
                    : v8::platform::CreateDefaultPlatform();

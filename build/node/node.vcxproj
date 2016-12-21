@@ -87,7 +87,7 @@
     <ClCompile Include="..\..\node\src\handle_wrap.cc" />
     <ClCompile Include="..\..\node\src\http_parser.c" />
     <ClCompile Include="..\..\node\src\js_stream.cc" />
-    <ClCompile Include="..\..\node\src\node.cc" />
+    <ClCompile Include="..\..\node\src\node1.cc" />
     <ClCompile Include="..\..\node\src\node_buffer.cc" />
     <ClCompile Include="..\..\node\src\node_config.cc" />
     <ClCompile Include="..\..\node\src\node_constants.cc" />
@@ -100,7 +100,9 @@
     <ClCompile Include="..\..\node\src\node_file.cc" />
     <ClCompile Include="..\..\node\src\node_http_parser.cc" />
     <ClCompile Include="..\..\node\src\node_javascript.cc" />
-    <ClCompile Include="..\..\node\src\node_main.cc" />
+    <ClCompile Include="..\..\node\src\node_main.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\..\node\src\node_os.cc" />
     <ClCompile Include="..\..\node\src\node_revert.cc" />
     <ClCompile Include="..\..\node\src\node_stat_watcher.cc" />
@@ -147,10 +149,10 @@
     <ClCompile Include="..\..\node\uv\src\win\req.c" />
     <ClCompile Include="..\..\node\uv\src\win\signal.c" />
     <ClCompile Include="..\..\node\uv\src\win\snprintf.c" />
-    <ClCompile Include="..\..\node\uv\src\win\stream.c" />
+    <ClCompile Include="..\..\node\uv\src\win\stream1.c" />
     <ClCompile Include="..\..\node\uv\src\win\tcp.c" />
-    <ClCompile Include="..\..\node\uv\src\win\thread.c" />
-    <ClCompile Include="..\..\node\uv\src\win\timer.c" />
+    <ClCompile Include="..\..\node\uv\src\win\thread1.c" />
+    <ClCompile Include="..\..\node\uv\src\win\timer1.c" />
     <ClCompile Include="..\..\node\uv\src\win\tty.c" />
     <ClCompile Include="..\..\node\uv\src\win\udp.c" />
     <ClCompile Include="..\..\node\uv\src\win\util.c" />
@@ -188,7 +190,6 @@
     <ClInclude Include="..\..\node\src\env-inl.h" />
     <ClInclude Include="..\..\node\src\env.h" />
     <ClInclude Include="..\..\node\src\handle_wrap.h" />
-    <ClInclude Include="..\..\node\src\http_parser.h" />
     <ClInclude Include="..\..\node\src\js_stream.h" />
     <ClInclude Include="..\..\node\src\node.h" />
     <ClInclude Include="..\..\node\src\node_buffer.h" />
@@ -232,19 +233,6 @@
     <ClInclude Include="..\..\node\src\util-inl.h" />
     <ClInclude Include="..\..\node\src\util.h" />
     <ClInclude Include="..\..\node\src\v8abbr.h" />
-    <ClInclude Include="..\..\node\uv\include\android-ifaddrs.h" />
-    <ClInclude Include="..\..\node\uv\include\pthread-barrier.h" />
-    <ClInclude Include="..\..\node\uv\include\pthread-fixes.h" />
-    <ClInclude Include="..\..\node\uv\include\stdint-msvc2008.h" />
-    <ClInclude Include="..\..\node\uv\include\tree.h" />
-    <ClInclude Include="..\..\node\uv\include\uv-aix.h" />
-    <ClInclude Include="..\..\node\uv\include\uv-bsd.h" />
-    <ClInclude Include="..\..\node\uv\include\uv-darwin.h" />
-    <ClInclude Include="..\..\node\uv\include\uv-errno.h" />
-    <ClInclude Include="..\..\node\uv\include\uv-threadpool.h" />
-    <ClInclude Include="..\..\node\uv\include\uv-version.h" />
-    <ClInclude Include="..\..\node\uv\include\uv-win.h" />
-    <ClInclude Include="..\..\node\uv\include\uv.h" />
     <ClInclude Include="..\..\node\uv\src\heap-inl.h" />
     <ClInclude Include="..\..\node\uv\src\queue.h" />
     <ClInclude Include="..\..\node\uv\src\uv-common.h" />
@@ -356,6 +344,8 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;BUILDING_V8_SHARED=1;BUILDING_UV_SHARED=1;CARES_STATICLIB;NODE_ARCH="ia32";NODE_PLATFORM="win32";NODE_WANT_INTERNALS=1;HAVE_OPENSSL=1;HAVE_ETW=1;HAVE_PERFCTR=1;V8_INSPECTOR_USE_STL=1;NODE_USE_V8_PLATFORM=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>../../third_party/zlib;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -450,7 +440,7 @@
       <StringPooling>true</StringPooling>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <AdditionalIncludeDirectories>../../third_party/zlib;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../third_party/zlib;../../v8_5_7;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
       <WholeProgramOptimization>true</WholeProgramOptimization>
     </ClCompile>
     <Link>

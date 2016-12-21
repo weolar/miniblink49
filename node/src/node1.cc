@@ -115,6 +115,7 @@ using v8::Locker;
 using v8::MaybeLocal;
 using v8::Message;
 using v8::Name;
+using v8::NamedPropertyHandlerConfiguration;
 using v8::Null;
 using v8::Number;
 using v8::Object;
@@ -122,6 +123,7 @@ using v8::ObjectTemplate;
 using v8::Promise;
 using v8::PromiseRejectMessage;
 using v8::PropertyCallbackInfo;
+using v8::PropertyHandlerFlags;
 using v8::ScriptOrigin;
 using v8::SealHandleScope;
 using v8::String;
@@ -169,11 +171,14 @@ static const char* icu_data_dir = nullptr;
 // used by C++ modules as well
 bool no_deprecation = false;
 
-#if HAVE_OPENSSL && NODE_FIPS_MODE
+#if HAVE_OPENSSL
+# if NODE_FIPS_MODE
 // used by crypto module
 bool enable_fips_crypto = false;
 bool force_fips_crypto = false;
-#endif
+# endif  // NODE_FIPS_MODE
+const char* openssl_config = nullptr;
+#endif  // HAVE_OPENSSL
 
 // true if process warnings should be suppressed
 bool no_process_warnings = false;
@@ -208,9 +213,10 @@ static struct {
     platform_ = nullptr;
   }
 
-  bool StartInspector(Environment *env, int port, bool wait) {
+  bool StartInspector(Environment *env, const char* script_path,
+                      int port, bool wait) {
 #if HAVE_INSPECTOR
-    return env->inspector_agent()->Start(platform_, port, wait);
+    return env->inspector_agent()->Start(platform_, script_path, port, wait);
 #else
     return true;
 #endif  // HAVE_INSPECTOR
@@ -221,7 +227,8 @@ static struct {
   void Initialize(int thread_pool_size) {}
   void PumpMessageLoop(Isolate* isolate) {}
   void Dispose() {}
-  bool StartInspector(Environment *env, int port, bool wait) {
+  bool StartInspector(Environment *env, const char* script_path,
+                      int port, bool wait) {
     env->ThrowError("Node compiled with NODE_USE_V8_PLATFORM=0");
     return false;  // make compiler happy
   }
@@ -1021,9 +1028,9 @@ void* ArrayBufferAllocator::Allocate(size_t size) {
   if (env_ == nullptr ||
       !env_->array_buffer_allocator_info()->no_zero_fill() ||
       zero_fill_all_buffers)
-    return calloc(size, 1);
+    return node::Calloc(size, 1);
   env_->array_buffer_allocator_info()->reset_fill_flag();
-  return malloc(size);
+  return node::Malloc(size);
 }
 
 static bool DomainHasErrorHandler(const Environment* env,
@@ -1731,13 +1738,13 @@ static Local<Value> ExecuteString(Environment* env,
       v8::Script::Compile(env->context(), source, &origin);
   if (script.IsEmpty()) {
     ReportException(env, try_catch);
-    exit(3);
+    //exit(3);
   }
 
   Local<Value> result = script.ToLocalChecked()->Run();
   if (result.IsEmpty()) {
     ReportException(env, try_catch);
-    exit(4);
+    //exit(4);
   }
 
   return scope.Escape(result);
@@ -2529,7 +2536,7 @@ void FatalException(Isolate* isolate,
     // failed before the process._fatalException function was added!
     // this is probably pretty bad.  Nothing to do but report and exit.
     ReportException(env, error, message);
-    exit_code = 6;
+    //exit_code = 6;
   }
 
   if (exit_code == 0) {
@@ -2545,12 +2552,12 @@ void FatalException(Isolate* isolate,
     if (fatal_try_catch.HasCaught()) {
       // the fatal exception function threw, so we must exit
       ReportException(env, fatal_try_catch);
-      exit_code = 7;
+      //exit_code = 7;
     }
 
     if (exit_code == 0 && false == caught->BooleanValue()) {
       ReportException(env, error, message);
-      exit_code = 1;
+      //exit_code = 1;
     }
   }
 
@@ -2714,7 +2721,7 @@ static void ProcessTitleSetter(Local<Name> property,
 }
 
 
-static void EnvGetter(Local<String> property,
+static void EnvGetter(Local<Name> property,
                       const PropertyCallbackInfo<Value>& info) {
   Isolate* isolate = info.GetIsolate();
 #ifdef __POSIX__
@@ -2742,7 +2749,7 @@ static void EnvGetter(Local<String> property,
 }
 
 
-static void EnvSetter(Local<String> property,
+static void EnvSetter(Local<Name> property,
                       Local<Value> value,
                       const PropertyCallbackInfo<Value>& info) {
 #ifdef __POSIX__
@@ -2758,12 +2765,12 @@ static void EnvSetter(Local<String> property,
     SetEnvironmentVariableW(key_ptr, reinterpret_cast<WCHAR*>(*val));
   }
 #endif
-  // Whether it worked or not, always return rval.
+  // Whether it worked or not, always return value.
   info.GetReturnValue().Set(value);
 }
 
 
-static void EnvQuery(Local<String> property,
+static void EnvQuery(Local<Name> property,
                      const PropertyCallbackInfo<Integer>& info) {
   int32_t rc = -1;  // Not found unless proven otherwise.
 #ifdef __POSIX__
@@ -2789,7 +2796,7 @@ static void EnvQuery(Local<String> property,
 }
 
 
-static void EnvDeleter(Local<String> property,
+static void EnvDeleter(Local<Name> property,
                        const PropertyCallbackInfo<Boolean>& info) {
 #ifdef __POSIX__
   node::Utf8Value key(info.GetIsolate(), property);
@@ -3081,9 +3088,6 @@ void SetupProcessObject(Environment* env,
                     "node",
                     OneByteString(env->isolate(), NODE_VERSION + 1));
   READONLY_PROPERTY(versions,
-                    "v8",
-                    OneByteString(env->isolate(), V8::GetVersion()));
-  READONLY_PROPERTY(versions,
                     "uv",
                     OneByteString(env->isolate(), uv_version_string()));
   READONLY_PROPERTY(versions,
@@ -3162,6 +3166,11 @@ void SetupProcessObject(Environment* env,
   READONLY_PROPERTY(process, "release", release);
   READONLY_PROPERTY(release, "name", OneByteString(env->isolate(), "node"));
 
+#if NODE_VERSION_IS_LTS
+  READONLY_PROPERTY(release, "lts",
+                    OneByteString(env->isolate(), NODE_VERSION_LTS_CODENAME));
+#endif
+
 // if this is a release build and no explicit base has been set
 // substitute the standard release download URL
 #ifndef NODE_RELEASE_URLBASE
@@ -3211,12 +3220,15 @@ void SetupProcessObject(Environment* env,
   // create process.env
   Local<ObjectTemplate> process_env_template =
       ObjectTemplate::New(env->isolate());
-  process_env_template->SetNamedPropertyHandler(EnvGetter,
-                                                EnvSetter,
-                                                EnvQuery,
-                                                EnvDeleter,
-                                                EnvEnumerator,
-                                                env->as_external());
+  process_env_template->SetHandler(NamedPropertyHandlerConfiguration(
+          EnvGetter,
+          EnvSetter,
+          EnvQuery,
+          EnvDeleter,
+          EnvEnumerator,
+          env->as_external(),
+          PropertyHandlerFlags::kOnlyInterceptStrings));
+
   Local<Object> process_env =
       process_env_template->NewInstance(env->context()).ToLocalChecked();
   process->Set(env->env_string(), process_env);
@@ -3406,7 +3418,7 @@ void SetupProcessObject(Environment* env,
 #undef READONLY_PROPERTY
 
 
-static void AtExit() {
+static void AtProcessExit() {
   uv_tty_reset_mode();
 }
 
@@ -3443,7 +3455,7 @@ void LoadEnvironment(Environment* env) {
   env->isolate()->SetFatalErrorHandler(node::OnFatalError);
   env->isolate()->AddMessageListener(OnMessage);
 
-  atexit(AtExit);
+  atexit(AtProcessExit);
 
   TryCatch try_catch(env->isolate());
 
@@ -3460,19 +3472,11 @@ void LoadEnvironment(Environment* env) {
   Local<Value> f_value = ExecuteString(env, MainSource(env), script_name);
   if (try_catch.HasCaught())  {
     ReportException(env, try_catch);
-    exit(10);
+    //exit(10);
   }
   // The bootstrap_node.js file returns a function 'f'
   CHECK(f_value->IsFunction());
   Local<Function> f = Local<Function>::Cast(f_value);
-
-  // Now we call 'f' with the 'process' variable that we've built up with
-  // all our bindings. Inside bootstrap_node.js we'll take care of
-  // assigning things to their places.
-
-  // We start the process this way in order to be more modular. Developers
-  // who do not like how bootstrap_node.js setups the module system but do
-  // like Node's I/O bindings may want to replace 'f' with their own function.
 
   // Add a reference to the global object
   Local<Object> global = env->context()->Global();
@@ -3503,6 +3507,13 @@ void LoadEnvironment(Environment* env) {
   // (Allows you to set stuff on `global` from anywhere in JavaScript.)
   global->Set(FIXED_ONE_BYTE_STRING(env->isolate(), "global"), global);
 
+  // Now we call 'f' with the 'process' variable that we've built up with
+  // all our bindings. Inside bootstrap_node.js and internal/process we'll
+  // take care of assigning things to their places.
+
+  // We start the process this way in order to be more modular. Developers
+  // who do not like how bootstrap_node.js sets up the module system but do
+  // like Node's I/O bindings may want to replace 'f' with their own function.
   Local<Value> arg = env->process_object();
   f->Call(Null(env->isolate()), 1, &arg);
 }
@@ -3636,6 +3647,8 @@ static void PrintHelp() {
          "  --enable-fips         enable FIPS crypto at startup\n"
          "  --force-fips          force FIPS crypto (cannot be disabled)\n"
 #endif  /* NODE_FIPS_MODE */
+         "  --openssl-config=path load OpenSSL configuration file from the\n"
+         "                        specified path\n"
 #endif /* HAVE_OPENSSL */
 #if defined(NODE_HAVE_I18N_SUPPORT)
          "  --icu-data-dir=dir    set ICU data load path to dir\n"
@@ -3796,6 +3809,8 @@ static void ParseArgs(int* argc,
     } else if (strcmp(arg, "--force-fips") == 0) {
       force_fips_crypto = true;
 #endif /* NODE_FIPS_MODE */
+    } else if (strncmp(arg, "--openssl-config=", 17) == 0) {
+      openssl_config = arg + 17;
 #endif /* HAVE_OPENSSL */
 #if defined(NODE_HAVE_I18N_SUPPORT)
     } else if (strncmp(arg, "--icu-data-dir=", 15) == 0) {
@@ -3852,10 +3867,11 @@ static void DispatchMessagesDebugAgentCallback(Environment* env) {
 }
 
 
-static void StartDebug(Environment* env, bool wait) {
+static void StartDebug(Environment* env, const char* path, bool wait) {
   CHECK(!debugger_running);
   if (use_inspector) {
-    debugger_running = v8_platform.StartInspector(env, inspector_port, wait);
+    debugger_running = v8_platform.StartInspector(env, path, inspector_port,
+                                                  wait);
   } else {
     env->debugger_agent()->set_dispatch_handler(
           DispatchMessagesDebugAgentCallback);
@@ -3917,7 +3933,7 @@ static void DispatchDebugMessagesAsyncCallback(uv_async_t* handle) {
       Environment* env = Environment::GetCurrent(isolate);
       Context::Scope context_scope(env->context());
 
-      StartDebug(env, false);
+      StartDebug(env, nullptr, false);
       EnableDebug(env);
     }
 
@@ -4184,69 +4200,6 @@ static void DebugEnd(const FunctionCallbackInfo<Value>& args) {
 }
 
 
-inline void PlatformInit() {
-#ifdef __POSIX__
-  sigset_t sigmask;
-  sigemptyset(&sigmask);
-  sigaddset(&sigmask, SIGUSR1);
-  const int err = pthread_sigmask(SIG_SETMASK, &sigmask, nullptr);
-
-  // Make sure file descriptors 0-2 are valid before we start logging anything.
-  for (int fd = STDIN_FILENO; fd <= STDERR_FILENO; fd += 1) {
-    struct stat ignored;
-    if (fstat(fd, &ignored) == 0)
-      continue;
-    // Anything but EBADF means something is seriously wrong.  We don't
-    // have to special-case EINTR, fstat() is not interruptible.
-    if (errno != EBADF)
-      ABORT();
-    if (fd != open("/dev/null", O_RDWR))
-      ABORT();
-  }
-
-  CHECK_EQ(err, 0);
-
-  // Restore signal dispositions, the parent process may have changed them.
-  struct sigaction act;
-  memset(&act, 0, sizeof(act));
-
-  // The hard-coded upper limit is because NSIG is not very reliable; on Linux,
-  // it evaluates to 32, 34 or 64, depending on whether RT signals are enabled.
-  // Counting up to SIGRTMIN doesn't work for the same reason.
-  for (unsigned nr = 1; nr < kMaxSignal; nr += 1) {
-    if (nr == SIGKILL || nr == SIGSTOP)
-      continue;
-    act.sa_handler = (nr == SIGPIPE) ? SIG_IGN : SIG_DFL;
-    CHECK_EQ(0, sigaction(nr, &act, nullptr));
-  }
-
-  RegisterSignalHandler(SIGINT, SignalExit, true);
-  RegisterSignalHandler(SIGTERM, SignalExit, true);
-
-  // Raise the open file descriptor limit.
-  struct rlimit lim;
-  if (getrlimit(RLIMIT_NOFILE, &lim) == 0 && lim.rlim_cur != lim.rlim_max) {
-    // Do a binary search for the limit.
-    rlim_t min = lim.rlim_cur;
-    rlim_t max = 1 << 20;
-    // But if there's a defined upper bound, don't search, just set it.
-    if (lim.rlim_max != RLIM_INFINITY) {
-      min = lim.rlim_max;
-      max = lim.rlim_max;
-    }
-    do {
-      lim.rlim_cur = min + (max - min) / 2;
-      if (setrlimit(RLIMIT_NOFILE, &lim)) {
-        max = lim.rlim_cur;
-      } else {
-        min = lim.rlim_cur;
-      }
-    } while (min + 1 < max);
-  }
-#endif  // __POSIX__
-}
-
-
 void Init(int* argc,
           const char** argv,
           int* exec_argc,
@@ -4492,6 +4445,9 @@ Environment* CreateEnvironment(Isolate* isolate,
   uv_unref(reinterpret_cast<uv_handle_t*>(env->idle_prepare_handle()));
   uv_unref(reinterpret_cast<uv_handle_t*>(env->idle_check_handle()));
 
+  uv_idle_init(env->event_loop(), env->destroy_ids_idle_handle());
+  uv_unref(reinterpret_cast<uv_handle_t*>(env->destroy_ids_idle_handle()));
+
   // Register handle cleanups
   env->RegisterHandleCleanup(
       reinterpret_cast<uv_handle_t*>(env->immediate_check_handle()),
@@ -4553,7 +4509,7 @@ static void StartNodeInstance(void* arg) {
   }
 
   {
-    Locker locker(isolate);
+    //Locker locker(isolate);
     Isolate::Scope isolate_scope(isolate);
     HandleScope handle_scope(isolate);
     Local<Context> context = Context::New(isolate);
@@ -4566,7 +4522,10 @@ static void StartNodeInstance(void* arg) {
 
     // Start debug agent when argv has --debug
     if (instance_data->use_debug_agent()) {
-      StartDebug(env, debug_wait_connect);
+      const char* path = instance_data->argc() > 1
+                         ? instance_data->argv()[1]
+                         : nullptr;
+      StartDebug(env, path, debug_wait_connect);
       if (use_inspector && !debugger_running) {
         exit(12);
       }
@@ -4633,7 +4592,6 @@ static void StartNodeInstance(void* arg) {
 }
 
 int Start(int argc, char** argv) {
-  PlatformInit();
 
   CHECK_GT(argc, 0);
 
@@ -4658,8 +4616,9 @@ int Start(int argc, char** argv) {
 #endif
 
   v8_platform.Initialize(v8_thread_pool_size);
+#if NODE_USE_V8_PLATFORM
   V8::Initialize();
-
+#endif
   int exit_code = 1;
   {
     NodeInstanceData instance_data(NodeInstanceType::MAIN,
@@ -4672,9 +4631,9 @@ int Start(int argc, char** argv) {
     StartNodeInstance(&instance_data);
     exit_code = instance_data.exit_code();
   }
-  V8::Dispose();
+  //V8::Dispose();
 
-  v8_platform.Dispose();
+  //v8_platform.Dispose();
 
   delete[] exec_argv;
   exec_argv = nullptr;

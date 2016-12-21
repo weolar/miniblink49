@@ -51,13 +51,7 @@
     <ClCompile Include="..\..\node\src\handle_wrap.cc">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\node\src\http_parser.c">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\node\src\js_stream.cc">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\node.cc">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\node\src\node_buffer.cc">
@@ -167,99 +161,6 @@
     </ClCompile>
     <ClCompile Include="..\..\node\src\uv.cc">
       <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\fs-poll.c">
-      <Filter>uv\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\inet.c">
-      <Filter>uv\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\threadpool.c">
-      <Filter>uv\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\uv-common.c">
-      <Filter>uv\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\version.c">
-      <Filter>uv\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\async.c">
-      <Filter>uv\src\win</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\core.c">
-      <Filter>uv\src\win</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\dl.c">
-      <Filter>uv\src\win</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\error.c">
-      <Filter>uv\src\win</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\fs.c">
-      <Filter>uv\src\win</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\fs-event.c">
-      <Filter>uv\src\win</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\getaddrinfo.c">
-      <Filter>uv\src\win</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\getnameinfo.c">
-      <Filter>uv\src\win</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\handle.c">
-      <Filter>uv\src\win</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\loop-watcher.c">
-      <Filter>uv\src\win</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\pipe.c">
-      <Filter>uv\src\win</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\poll.c">
-      <Filter>uv\src\win</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\process.c">
-      <Filter>uv\src\win</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\process-stdio.c">
-      <Filter>uv\src\win</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\req.c">
-      <Filter>uv\src\win</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\signal.c">
-      <Filter>uv\src\win</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\snprintf.c">
-      <Filter>uv\src\win</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\stream.c">
-      <Filter>uv\src\win</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\tcp.c">
-      <Filter>uv\src\win</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\thread.c">
-      <Filter>uv\src\win</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\timer.c">
-      <Filter>uv\src\win</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\tty.c">
-      <Filter>uv\src\win</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\udp.c">
-      <Filter>uv\src\win</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\util.c">
-      <Filter>uv\src\win</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\winapi.c">
-      <Filter>uv\src\win</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\winsock.c">
-      <Filter>uv\src\win</Filter>
     </ClCompile>
     <ClCompile Include="..\..\node\cares\src\ares__close_sockets.c">
       <Filter>cares\src</Filter>
@@ -408,7 +309,106 @@
     <ClCompile Include="..\..\node\cares\src\windows_port.c">
       <Filter>cares\src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\fs-poll.c">
+      <Filter>uv\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\inet.c">
+      <Filter>uv\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\threadpool.c">
+      <Filter>uv\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\uv-common.c">
+      <Filter>uv\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\version.c">
+      <Filter>uv\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\async.c">
+      <Filter>uv\src\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\core.c">
+      <Filter>uv\src\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\dl.c">
+      <Filter>uv\src\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\error.c">
+      <Filter>uv\src\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\fs.c">
+      <Filter>uv\src\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\fs-event.c">
+      <Filter>uv\src\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\getaddrinfo.c">
+      <Filter>uv\src\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\getnameinfo.c">
+      <Filter>uv\src\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\handle.c">
+      <Filter>uv\src\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\loop-watcher.c">
+      <Filter>uv\src\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\pipe.c">
+      <Filter>uv\src\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\poll.c">
+      <Filter>uv\src\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\process.c">
+      <Filter>uv\src\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\process-stdio.c">
+      <Filter>uv\src\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\req.c">
+      <Filter>uv\src\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\signal.c">
+      <Filter>uv\src\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\snprintf.c">
+      <Filter>uv\src\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\tcp.c">
+      <Filter>uv\src\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\tty.c">
+      <Filter>uv\src\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\udp.c">
+      <Filter>uv\src\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\util.c">
+      <Filter>uv\src\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\winapi.c">
+      <Filter>uv\src\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\winsock.c">
+      <Filter>uv\src\win</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\node\src\util1.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\http_parser.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\stream1.c">
+      <Filter>uv\src\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\thread1.c">
+      <Filter>uv\src\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\timer1.c">
+      <Filter>uv\src\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\node1.cc">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
@@ -444,9 +444,6 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\node\src\handle_wrap.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\src\http_parser.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\node\src\js_stream.h">
@@ -578,75 +575,6 @@
     <ClInclude Include="..\..\node\src\v8abbr.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\node\uv\src\heap-inl.h">
-      <Filter>uv\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\uv\src\queue.h">
-      <Filter>uv\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\uv\src\uv-common.h">
-      <Filter>uv\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\uv\include\android-ifaddrs.h">
-      <Filter>uv\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\uv\include\pthread-barrier.h">
-      <Filter>uv\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\uv\include\pthread-fixes.h">
-      <Filter>uv\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\uv\include\stdint-msvc2008.h">
-      <Filter>uv\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\uv\include\tree.h">
-      <Filter>uv\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\uv\include\uv.h">
-      <Filter>uv\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\uv\include\uv-aix.h">
-      <Filter>uv\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\uv\include\uv-bsd.h">
-      <Filter>uv\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\uv\include\uv-darwin.h">
-      <Filter>uv\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\uv\include\uv-errno.h">
-      <Filter>uv\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\uv\include\uv-threadpool.h">
-      <Filter>uv\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\uv\include\uv-version.h">
-      <Filter>uv\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\uv\include\uv-win.h">
-      <Filter>uv\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\uv\src\win\atomicops-inl.h">
-      <Filter>uv\src\win</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\uv\src\win\handle-inl.h">
-      <Filter>uv\src\win</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\uv\src\win\internal.h">
-      <Filter>uv\src\win</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\uv\src\win\req-inl.h">
-      <Filter>uv\src\win</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\uv\src\win\stream-inl.h">
-      <Filter>uv\src\win</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\uv\src\win\winapi.h">
-      <Filter>uv\src\win</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\node\uv\src\win\winsock.h">
-      <Filter>uv\src\win</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\node\cares\src\ares_data.h">
       <Filter>cares\src</Filter>
     </ClInclude>
@@ -703,6 +631,36 @@
     </ClInclude>
     <ClInclude Include="..\..\node\cares\src\setup_once.h">
       <Filter>cares\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\uv\src\heap-inl.h">
+      <Filter>uv\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\uv\src\queue.h">
+      <Filter>uv\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\uv\src\uv-common.h">
+      <Filter>uv\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\uv\src\win\atomicops-inl.h">
+      <Filter>uv\src\win</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\uv\src\win\handle-inl.h">
+      <Filter>uv\src\win</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\uv\src\win\internal.h">
+      <Filter>uv\src\win</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\uv\src\win\req-inl.h">
+      <Filter>uv\src\win</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\uv\src\win\stream-inl.h">
+      <Filter>uv\src\win</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\uv\src\win\winapi.h">
+      <Filter>uv\src\win</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\uv\src\win\winsock.h">
+      <Filter>uv\src\win</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

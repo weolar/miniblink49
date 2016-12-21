@@ -70,7 +70,6 @@
 #include "src/v8.h"
 #include "src/v8threads.h"
 #include "src/value-serializer.h"
-#include "src/version.h"
 #include "src/vm-state-inl.h"
 #include "src/wasm/wasm-module.h"
 #include "src/wasm/wasm-objects.h"
@@ -2397,13 +2396,6 @@ Local<Script> ScriptCompiler::Compile(Isolate* v8_isolate,
   auto context = v8_isolate->GetCurrentContext();
   RETURN_TO_LOCAL_UNCHECKED(
       Compile(context, v8_source, full_source_string, origin), Script);
-}
-
-
-uint32_t ScriptCompiler::CachedDataVersionTag() {
-  return static_cast<uint32_t>(base::hash_combine(
-      internal::Version::Hash(), internal::FlagList::Hash(),
-      static_cast<uint32_t>(internal::CpuFeatures::SupportedFeatures())));
 }
 
 
@@ -6088,15 +6080,6 @@ HeapObjectStatistics::HeapObjectStatistics()
 HeapCodeStatistics::HeapCodeStatistics()
     : code_and_metadata_size_(0), bytecode_and_metadata_size_(0) {}
 
-bool v8::V8::InitializeICU(const char* icu_data_file) {
-  return i::InitializeICU(icu_data_file);
-}
-
-bool v8::V8::InitializeICUDefaultLocation(const char* exec_path,
-                                          const char* icu_data_file) {
-  return i::InitializeICUDefaultLocation(exec_path, icu_data_file);
-}
-
 void v8::V8::InitializeExternalStartupData(const char* directory_path) {
   i::InitializeExternalStartupData(directory_path);
 }
@@ -6107,10 +6090,6 @@ void v8::V8::InitializeExternalStartupData(const char* natives_blob,
   i::InitializeExternalStartupData(natives_blob, snapshot_blob);
 }
 
-
-const char* v8::V8::GetVersion() {
-  return i::Version::GetVersion();
-}
 
 template <typename ObjectType>
 struct InvokeBootstrapper;

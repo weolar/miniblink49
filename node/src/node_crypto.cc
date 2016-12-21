@@ -1095,7 +1095,7 @@ int SecureContext::TicketKeyCallback(SSL* ssl,
   static const int kTicketPartSize = 16;
 
   SecureContext* sc = static_cast<SecureContext*>(
-      SSL_CTX_get_app_data(ssl->ctx));
+      SSL_CTX_get_app_data(SSL_get_SSL_CTX(ssl)));
 
   Environment* env = sc->env();
   HandleScope handle_scope(env->isolate());
@@ -1632,7 +1632,7 @@ void SSLWrap<Base>::GetPeerCertificate(
   // Last certificate should be self-signed
   while (X509_check_issued(cert, cert) != X509_V_OK) {
     X509* ca;
-    if (SSL_CTX_get_issuer(w->ssl_->ctx, cert, &ca) <= 0)
+    if (SSL_CTX_get_issuer(SSL_get_SSL_CTX(w->ssl_), cert, &ca) <= 0)
       break;
 
     Local<Object> ca_info = X509ToObject(env, ca);
@@ -2238,7 +2238,8 @@ void SSLWrap<Base>::SetALPNProtocols(
           env->alpn_buffer_private_symbol(),
           args[0]).FromJust());
     // Server should select ALPN protocol from list of advertised by client
-    SSL_CTX_set_alpn_select_cb(w->ssl_->ctx, SelectALPNCallback, nullptr);
+    SSL_CTX_set_alpn_select_cb(SSL_get_SSL_CTX(w->ssl_), SelectALPNCallback,
+                               nullptr);
   }
 #endif  // TLSEXT_TYPE_application_layer_protocol_negotiation
 }
@@ -2279,7 +2280,7 @@ int SSLWrap<Base>::TLSExtStatusCallback(SSL* s, void* arg) {
     size_t len = Buffer::Length(obj);
 
     // OpenSSL takes control of the pointer after accepting it
-    char* data = reinterpret_cast<char*>(malloc(len));
+    char* data = reinterpret_cast<char*>(node::Malloc(len));
     CHECK_NE(data, nullptr);
     memcpy(data, resp, len);
 
@@ -3258,11 +3259,10 @@ void CipherBase::InitIv(const char* cipher_type,
     return env()->ThrowError("Unknown cipher");
   }
 
-  /* OpenSSL versions up to 0.9.8l failed to return the correct
-     iv_length (0) for ECB ciphers */
-  if (EVP_CIPHER_iv_length(cipher_) != iv_len &&
-      !(EVP_CIPHER_mode(cipher_) == EVP_CIPH_ECB_MODE && iv_len == 0) &&
-      !(EVP_CIPHER_mode(cipher_) == EVP_CIPH_GCM_MODE) && iv_len > 0) {
+  const int expected_iv_len = EVP_CIPHER_iv_length(cipher_);
+  const bool is_gcm_mode = (EVP_CIPH_GCM_MODE == EVP_CIPHER_mode(cipher_));
+
+  if (is_gcm_mode == false && iv_len != expected_iv_len) {
     return env()->ThrowError("Invalid IV length");
   }
 
@@ -3270,13 +3270,10 @@ void CipherBase::InitIv(const char* cipher_type,
   const bool encrypt = (kind_ == kCipher);
   EVP_CipherInit_ex(&ctx_, cipher_, nullptr, nullptr, nullptr, encrypt);
 
-  /* Set IV length. Only required if GCM cipher and IV is not default iv. */
-  if (EVP_CIPHER_mode(cipher_) == EVP_CIPH_GCM_MODE &&
-      iv_len != EVP_CIPHER_iv_length(cipher_)) {
-    if (!EVP_CIPHER_CTX_ctrl(&ctx_, EVP_CTRL_GCM_SET_IVLEN, iv_len, nullptr)) {
-      EVP_CIPHER_CTX_cleanup(&ctx_);
-      return env()->ThrowError("Invalid IV length");
-    }
+  if (is_gcm_mode &&
+      !EVP_CIPHER_CTX_ctrl(&ctx_, EVP_CTRL_GCM_SET_IVLEN, iv_len, nullptr)) {
+    EVP_CIPHER_CTX_cleanup(&ctx_);
+    return env()->ThrowError("Invalid IV length");
   }
 
   if (!EVP_CIPHER_CTX_set_key_length(&ctx_, key_len)) {
@@ -3330,7 +3327,7 @@ bool CipherBase::GetAuthTag(char** out, unsigned int* out_len) const {
   if (initialised_ || kind_ != kCipher || !auth_tag_)
     return false;
   *out_len = auth_tag_len_;
-  *out = static_cast<char*>(malloc(auth_tag_len_));
+  *out = static_cast<char*>(node::Malloc(auth_tag_len_));
   CHECK_NE(*out, nullptr);
   memcpy(*out, auth_tag_, auth_tag_len_);
   return true;
@@ -4906,7 +4903,7 @@ void ECDH::ComputeSecret(const FunctionCallbackInfo<Value>& args) {
   // NOTE: field_size is in bits
   int field_size = EC_GROUP_get_degree(ecdh->group_);
   size_t out_len = (field_size + 7) / 8;
-  char* out = static_cast<char*>(malloc(out_len));
+  char* out = static_cast<char*>(node::Malloc(out_len));
   CHECK_NE(out, nullptr);
 
   int r = ECDH_compute_key(out, out_len, pub, ecdh->key_, nullptr);
@@ -4942,7 +4939,7 @@ void ECDH::GetPublicKey(const FunctionCallbackInfo<Value>& args) {
   if (size == 0)
     return env->ThrowError("Failed to get public key length");
 
-  unsigned char* out = static_cast<unsigned char*>(malloc(size));
+  unsigned char* out = static_cast<unsigned char*>(node::Malloc(size));
   CHECK_NE(out, nullptr);
 
   int r = EC_POINT_point2oct(ecdh->group_, pub, form, out, size, nullptr);
@@ -4968,7 +4965,7 @@ void ECDH::GetPrivateKey(const FunctionCallbackInfo<Value>& args) {
     return env->ThrowError("Failed to get ECDH private key");
 
   int size = BN_num_bytes(b);
-  unsigned char* out = static_cast<unsigned char*>(malloc(size));
+  unsigned char* out = static_cast<unsigned char*>(node::Malloc(size));
   CHECK_NE(out, nullptr);
 
   if (size != BN_bn2bin(b, out)) {
@@ -5099,7 +5096,7 @@ class PBKDF2Request : public AsyncWrap {
         saltlen_(saltlen),
         salt_(salt),
         keylen_(keylen),
-        key_(static_cast<char*>(malloc(keylen))),
+        key_(static_cast<char*>(node::Malloc(keylen))),
         iter_(iter) {
     if (key() == nullptr)
       FatalError("node::PBKDF2Request()", "Out of Memory");
@@ -5262,7 +5259,7 @@ void PBKDF2(const FunctionCallbackInfo<Value>& args) {
 
   THROW_AND_RETURN_IF_NOT_BUFFER(args[1], "Salt");
 
-  pass = static_cast<char*>(malloc(passlen));
+  pass = static_cast<char*>(node::Malloc(passlen));
   if (pass == nullptr) {
     FatalError("node::PBKDF2()", "Out of Memory");
   }
@@ -5274,7 +5271,7 @@ void PBKDF2(const FunctionCallbackInfo<Value>& args) {
     goto err;
   }
 
-  salt = static_cast<char*>(malloc(saltlen));
+  salt = static_cast<char*>(node::Malloc(saltlen));
   if (salt == nullptr) {
     FatalError("node::PBKDF2()", "Out of Memory");
   }
@@ -5367,7 +5364,7 @@ class RandomBytesRequest : public AsyncWrap {
       : AsyncWrap(env, object, AsyncWrap::PROVIDER_CRYPTO),
         error_(0),
         size_(size),
-        data_(static_cast<char*>(malloc(size))) {
+        data_(static_cast<char*>(node::Malloc(size))) {
     if (data() == nullptr)
       FatalError("node::RandomBytesRequest()", "Out of Memory");
     Wrap(object, this);
@@ -5596,7 +5593,7 @@ void GetCurves(const FunctionCallbackInfo<Value>& args) {
 
   if (num_curves) {
     alloc_size = sizeof(*curves) * num_curves;
-    curves = static_cast<EC_builtin_curve*>(malloc(alloc_size));
+    curves = static_cast<EC_builtin_curve*>(node::Malloc(alloc_size));
 
     CHECK_NE(curves, nullptr);
 
@@ -5771,12 +5768,49 @@ void ExportChallenge(const FunctionCallbackInfo<Value>& args) {
   args.GetReturnValue().Set(outString);
 }
 
+void TimingSafeEqual(const FunctionCallbackInfo<Value>& args) {
+  Environment* env = Environment::GetCurrent(args);
+
+  THROW_AND_RETURN_IF_NOT_BUFFER(args[0], "First argument");
+  THROW_AND_RETURN_IF_NOT_BUFFER(args[1], "Second argument");
+
+  size_t buf_length = Buffer::Length(args[0]);
+  if (buf_length != Buffer::Length(args[1])) {
+    return env->ThrowTypeError("Input buffers must have the same length");
+  }
+
+  const char* buf1 = Buffer::Data(args[0]);
+  const char* buf2 = Buffer::Data(args[1]);
+
+  return args.GetReturnValue().Set(CRYPTO_memcmp(buf1, buf2, buf_length) == 0);
+}
 
 void InitCryptoOnce() {
-  OPENSSL_config(NULL);
+  SSL_load_error_strings();
+  OPENSSL_no_config();
+
+  // --openssl-config=...
+  if (openssl_config != nullptr) {
+    OPENSSL_load_builtin_modules();
+#ifndef OPENSSL_NO_ENGINE
+    ENGINE_load_builtin_engines();
+#endif
+    ERR_clear_error();
+    CONF_modules_load_file(
+        openssl_config,
+        nullptr,
+        CONF_MFLAGS_DEFAULT_SECTION);
+    int err = ERR_get_error();
+    if (0 != err) {
+      fprintf(stderr,
+              "openssl config failed: %s\n",
+              ERR_error_string(err, NULL));
+      CHECK_NE(err, 0);
+    }
+  }
+
   SSL_library_init();
   OpenSSL_add_all_algorithms();
-  SSL_load_error_strings();
 
   crypto_lock_init();
   CRYPTO_set_locking_callback(crypto_lock_cb);
@@ -5903,6 +5937,7 @@ void InitCrypto(Local<Object> target,
   env->SetMethod(target, "setFipsCrypto", SetFipsCrypto);
   env->SetMethod(target, "PBKDF2", PBKDF2);
   env->SetMethod(target, "randomBytes", RandomBytes);
+  env->SetMethod(target, "timingSafeEqual", TimingSafeEqual);
   env->SetMethod(target, "getSSLCiphers", GetSSLCiphers);
   env->SetMethod(target, "getCiphers", GetCiphers);
   env->SetMethod(target, "getHashes", GetHashes);

@@ -245,6 +245,8 @@ inline Environment::Environment(v8::Local<v8::Context> context,
 
   RB_INIT(&cares_task_list_);
   handle_cleanup_waiting_ = 0;
+
+  destroy_ids_list_.reserve(512);
 }
 
 inline Environment::~Environment() {
@@ -303,6 +305,15 @@ inline uv_check_t* Environment::immediate_check_handle() {
 
 inline uv_idle_t* Environment::immediate_idle_handle() {
   return &immediate_idle_handle_;
+}
+
+inline Environment* Environment::from_destroy_ids_idle_handle(
+    uv_idle_t* handle) {
+  return ContainerOf(&Environment::destroy_ids_idle_handle_, handle);
+}
+
+inline uv_idle_t* Environment::destroy_ids_idle_handle() {
+  return &destroy_ids_idle_handle_;
 }
 
 inline Environment* Environment::from_idle_prepare_handle(
@@ -381,6 +392,10 @@ inline int64_t Environment::get_async_wrap_uid() {
   return ++async_wrap_uid_;
 }
 
+inline std::vector<int64_t>* Environment::destroy_ids_list() {
+  return &destroy_ids_list_;
+}
+
 inline uint32_t* Environment::heap_statistics_buffer() const {
   CHECK_NE(heap_statistics_buffer_, nullptr);
   return heap_statistics_buffer_;
@@ -436,39 +451,23 @@ inline Environment::IsolateData* Environment::isolate_data() const {
   return isolate_data_;
 }
 
-// this would have been a template function were it not for the fact that g++
-// sometimes fails to resolve it...
-#define THROW_ERROR(fun)                                                      \
-  do {                                                                        \
-    v8::HandleScope scope(isolate);                                           \
-    isolate->ThrowException(fun(OneByteString(isolate, errmsg)));             \
-  }                                                                           \
-  while (0)
-
-inline void Environment::ThrowError(v8::Isolate* isolate, const char* errmsg) {
-  THROW_ERROR(v8::Exception::Error);
-}
-
-inline void Environment::ThrowTypeError(v8::Isolate* isolate,
-                                        const char* errmsg) {
-  THROW_ERROR(v8::Exception::TypeError);
-}
-
-inline void Environment::ThrowRangeError(v8::Isolate* isolate,
-                                         const char* errmsg) {
-  THROW_ERROR(v8::Exception::RangeError);
-}
-
 inline void Environment::ThrowError(const char* errmsg) {
-  ThrowError(isolate(), errmsg);
+  ThrowError(v8::Exception::Error, errmsg);
 }
 
 inline void Environment::ThrowTypeError(const char* errmsg) {
-  ThrowTypeError(isolate(), errmsg);
+  ThrowError(v8::Exception::TypeError, errmsg);
 }
 
 inline void Environment::ThrowRangeError(const char* errmsg) {
-  ThrowRangeError(isolate(), errmsg);
+  ThrowError(v8::Exception::RangeError, errmsg);
+}
+
+inline void Environment::ThrowError(
+    v8::Local<v8::Value> (*fun)(v8::Local<v8::String>),
+    const char* errmsg) {
+  v8::HandleScope handle_scope(isolate());
+  isolate()->ThrowException(fun(OneByteString(isolate(), errmsg)));
 }
 
 inline void Environment::ThrowErrnoException(int errorno,

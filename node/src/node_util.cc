@@ -28,6 +28,7 @@ using v8::Value;
   V(isRegExp, IsRegExp)                                                       \
   V(isSet, IsSet)                                                             \
   V(isSetIterator, IsSetIterator)                                             \
+  V(isSharedArrayBuffer, IsSharedArrayBuffer)                                 \
   V(isTypedArray, IsTypedArray)
 
 
