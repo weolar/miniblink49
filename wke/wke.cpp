@@ -59,7 +59,28 @@ void wkeSetProxy(const wkeProxy& proxy)
  
 	 net::WebURLLoaderManager::sharedInstance()->setProxyInfo(hostname, proxy.port, proxyType, username, password);
 }
+WKE_API void wkeSetViewProxy(wkeWebView webView, wkeProxy *proxy) {
+	net::WebURLLoaderManager::ProxyType proxyType = net::WebURLLoaderManager::HTTP;
+	String hostname;
+	String username;
+	String password;
 
+	if (proxy->hostname[0] != 0 && proxy->type >= WKE_PROXY_HTTP && proxy->type <= WKE_PROXY_SOCKS5HOSTNAME) {
+		switch (proxy->type) {
+		case WKE_PROXY_HTTP:           proxyType = net::WebURLLoaderManager::HTTP; break;
+		case WKE_PROXY_SOCKS4:         proxyType = net::WebURLLoaderManager::Socks4; break;
+		case WKE_PROXY_SOCKS4A:        proxyType = net::WebURLLoaderManager::Socks4A; break;
+		case WKE_PROXY_SOCKS5:         proxyType = net::WebURLLoaderManager::Socks5; break;
+		case WKE_PROXY_SOCKS5HOSTNAME: proxyType = net::WebURLLoaderManager::Socks5Hostname; break;
+		}
+
+		hostname = String::fromUTF8(proxy->hostname);
+		username = String::fromUTF8(proxy->username);
+		password = String::fromUTF8(proxy->password);
+	}
+
+	webView->setProxyInfo(hostname, proxy->port, proxyType, username, password);
+}
 void wkeConfigure(const wkeSettings* settings)
 {
     if (settings->mask & WKE_SETTING_PROXY)

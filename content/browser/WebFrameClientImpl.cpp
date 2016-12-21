@@ -442,7 +442,7 @@ void WebFrameClientImpl::willSendRequest(WebLocalFrame* webFrame, unsigned ident
 //     headerFieldValue.append(",en,*");
 // 
 //     CString value = headerFieldValue.latin1().data();
-//     request.addHTTPHeaderField("Accept-Language", WebString::fromLatin1((const WebLChar*)value.data(), value.length()));
+     request.addHTTPHeaderField("Accept-Language", "zh-cn,zh;q=0.5");
 // 
 //     WebViewImpl* viewImpl = m_webPage->webViewImpl();
 //     if (!viewImpl)
