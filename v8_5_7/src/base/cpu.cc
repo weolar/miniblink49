@@ -41,6 +41,29 @@
 #include "src/base/win32-headers.h"  // NOLINT
 #endif
 
+#if USING_VC6RT == 1
+void __cpuid(INT32 CPUInfo[4], INT32 InfoType)
+{
+	INT32 ECXValue = 0;
+	if (NULL == CPUInfo)
+		return;
+
+	__asm {
+		// load. 读取参数到寄存器
+		mov edi, CPUInfo;    // 准备用edi寻址CPUInfo
+		mov eax, InfoType;
+		mov ecx, ECXValue;
+		// CPUID
+		cpuid;
+		// save. 将寄存器保存到CPUInfo
+		mov[edi], eax;
+		mov[edi + 4], ebx;
+		mov[edi + 8], ecx;
+		mov[edi + 12], edx;
+	}
+}
+#endif
+
 namespace v8 {
 namespace base {
 

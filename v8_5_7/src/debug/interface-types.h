@@ -4,11 +4,14 @@
 
 #ifndef V8_DEBUG_INTERFACE_TYPES_H_
 #define V8_DEBUG_INTERFACE_TYPES_H_
-
+#if USING_VC6RT != 1
 #include <cstdint>
+#endif
 #include <string>
 #include <vector>
-
+#if USING_VC6RT == 1
+#include <PlatformSTL.h>
+#endif
 namespace v8 {
 namespace debug {
 
@@ -52,8 +55,8 @@ struct WasmDisassembly {
   using OffsetTable = std::vector<WasmDisassemblyOffsetTableEntry>;
   WasmDisassembly() {}
   WasmDisassembly(std::string disassembly, OffsetTable offset_table)
-      : disassembly(std::move(disassembly)),
-        offset_table(std::move(offset_table)) {}
+      : disassembly(static_cast<std::string>(disassembly)),
+        offset_table(static_cast<OffsetTable>(offset_table)) {}
 
   std::string disassembly;
   OffsetTable offset_table;

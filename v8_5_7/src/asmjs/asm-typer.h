@@ -4,12 +4,14 @@
 
 #ifndef SRC_ASMJS_ASM_TYPER_H_
 #define SRC_ASMJS_ASM_TYPER_H_
-
+#if USING_VC6RT != 1
 #include <cstdint>
-#include <string>
 #include <unordered_map>
 #include <unordered_set>
-
+#else
+#include <PlatformSTL.h>
+#endif
+#include <string>
 #include "src/allocation.h"
 #include "src/asmjs/asm-types.h"
 #include "src/ast/ast-type-bounds.h"

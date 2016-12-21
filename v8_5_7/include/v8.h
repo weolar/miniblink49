@@ -21,7 +21,9 @@
 #include <memory>
 #include <utility>
 #include <vector>
-
+#if USING_VC6RT == 1
+#include <PlatformSTL.h>
+#endif
 #include "v8-version.h"  // NOLINT(build/include)
 #include "v8config.h"    // NOLINT(build/include)
 
