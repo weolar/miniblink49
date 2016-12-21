@@ -1,7 +1,6 @@
 #include <windows.h>
 #include "wke.h"
 
-extern "C" bool __declspec(dllexport) RunNode(int argc, wchar_t *wargv[]);
 extern "C" bool __declspec(dllexport) RunNodeThread(int argc, wchar_t *wargv[]);
 int APIENTRY wWinMain(HINSTANCE hInstance,
 	HINSTANCE hPrevInstance,
