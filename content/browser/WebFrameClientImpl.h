@@ -165,11 +165,11 @@ public:
 
     // Response headers have been received for the resource request given
     // by identifier.
-    virtual void didReceiveResponse(
-        WebLocalFrame*, unsigned identifier, const WebURLResponse&) override;
+    virtual void didReceiveResponse(WebLocalFrame* webFrame, unsigned identifier, const WebURLResponse&) override;
 
-    virtual void didChangeResourcePriority(
-        WebLocalFrame* webFrame, unsigned identifier, const WebURLRequest::Priority& priority, int) override;
+    virtual void didChangeResourcePriority(WebLocalFrame* webFrame, unsigned identifier, const WebURLRequest::Priority& priority, int) override;
+
+    virtual void didDispatchPingLoader(WebLocalFrame* webFrame, const WebURL& url) override;
 
     // Navigational queries ------------------------------------------------
     virtual WebNavigationPolicy decidePolicyForNavigation(const NavigationPolicyInfo& info) override;
@@ -213,13 +213,11 @@ private:
 
     WebPage* m_webPage;
     bool m_loading;
-#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
-    // wke
+
     bool m_loadFailed;
     bool m_loaded;
     bool m_documentReady;
     String m_title;
-#endif
     WTF::Vector<WebFrame*> m_unusedFrames;
 };
 
