@@ -16,16 +16,14 @@ namespace cc {
 struct DrawProperties {
     DrawProperties()
     {
-        opacity = 0;
+        
     }
 
     // Transforms objects from content space to screen space (viewport space).
     SkMatrix44 screenSpaceTransform;
     SkMatrix44 targetSpaceTransform;
     SkMatrix44 currentTransform;
-	float opacity;
     blink::IntRect clip;
-
 };
 
 struct DrawToCanvasProperties : public DrawProperties {
@@ -36,15 +34,16 @@ struct DrawToCanvasProperties : public DrawProperties {
         masksToBounds = true;
         drawsContent = true;
         opaque = true;
+        opacity = 0;
     }
 
-    void copyDrawProperties(const DrawProperties& other)
+    void copyDrawProperties(const DrawProperties& other, float otherOpacity)
     {
         screenSpaceTransform = other.screenSpaceTransform;
         targetSpaceTransform = other.targetSpaceTransform;
         currentTransform = other.currentTransform;
 		clip = other.clip;
-		opacity = other.opacity;
+		opacity = otherOpacity;
     }
 
     void copy(const DrawToCanvasProperties& other)
@@ -68,6 +67,7 @@ struct DrawToCanvasProperties : public DrawProperties {
 	bool masksToBounds;
 	bool drawsContent;
     bool opaque;
+    float opacity;
     int maskLayerId;
     int replicaLayerId;
 };

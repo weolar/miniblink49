@@ -1,6 +1,10 @@
 
 #include "cc/tiles/CompositingTile.h"
 
+#include "cc/tiles/TileWidthHeight.h"
+#include "cc/layers/CompositingLayer.h"
+#include "cc/trees/DrawProperties.h"
+
 #include "SkBitmap.h"
 #include "SkCanvas.h"
 
@@ -66,18 +70,33 @@ void CompositingTile::clearBitmap()
 void CompositingTile::allocBitmapIfNeeded()
 {
     m_isNotInit = false;
-    //ASSERT(!(!m_bitmap && 1 != getRefCnt())); // 有可能在还没光栅化，就被滚动导致clearBitmap了
+    // 有可能在还没光栅化，就被滚动导致clearBitmap了，所以不需要ASSERT(!(!m_bitmap && 1 != getRefCnt())); 
 
     if (m_bitmap)
         return;
-	
-     m_bitmap = new SkBitmap();
-//     m_bitmap->allocN32Pixels(m_postion.width(), m_postion.height(), false);
-	 SkImageInfo info = SkImageInfo::Make(m_postion.width(), m_postion.height(), kN32_SkColorType, kPremul_SkAlphaType, kLinear_SkColorProfileType);
-	 m_bitmap->allocPixels(info);
+
+    int width = m_postion.width();
+    int height = m_postion.height();
+    m_postion = blink::IntRect(m_xIndex * kDefaultTileWidth, m_yIndex * kDefaultTileHeight, kDefaultTileWidth, kDefaultTileHeight);
+    if (m_compositingLayer) {
+        blink::IntSize bounds = m_compositingLayer->drawToCanvasProperties()->bounds;
+        if (width >= bounds.width() && height >= bounds.height()) {
+            if (1 != m_compositingLayer->tilesSize()) {
+                ASSERT(false);
+                return;
+            } else {
+                width = bounds.width();
+                height = bounds.height();
+                m_postion = blink::IntRect(0, 0, width, height);
+            }
+        }
+    }
+    
+    m_bitmap = new SkBitmap();
+    SkImageInfo info = SkImageInfo::Make(width, height, kN32_SkColorType, kPremul_SkAlphaType, kLinear_SkColorProfileType);
+    m_bitmap->allocPixels(info);
 
     SkColor color = 0x00ffffff;
-	//color = 0xfff010f0;
     m_bitmap->eraseColor(color); // 根据是否透明窗口决定背景色
 }
 

@@ -21,9 +21,6 @@ class CompositingLayer;
 
 class CompositingTile {
 public:
-    const static int kDefaultTileWidth = 160;
-    const static int kDefaultTileHeight = 160;
-
     CompositingTile(CompositingLayer* compositingLayer, int xIndex, int yIndex);
     ~CompositingTile();
 

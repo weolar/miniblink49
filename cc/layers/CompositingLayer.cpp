@@ -18,6 +18,7 @@
 #include "cc/trees/DrawProperties.h"
 #include "cc/raster/SkBitmapRefWrap.h"
 #include "cc/tiles/CompositingTile.h"
+#include "cc/tiles/TileWidthHeight.h"
 #include "cc/playback/TileActionInfo.h"
 
 namespace blink {
@@ -74,8 +75,6 @@ CompositingLayer::~CompositingLayer()
     }
     delete m_tiles;
 	ASSERT(!m_parent);
-
-	//removeAllChildren(); // weolar
 
 // 	String outString = String::format("CompositingLayer::~~~~~~~~CompositingLayer:%p %d \n", this, m_id);
 // 	OutputDebugStringW(outString.charactersWithNullTermination().data());
@@ -187,6 +186,13 @@ void CompositingLayer::updataDrawProp(DrawToCanvasProperties* prop)
     m_prop->copy(*prop);
 }
 
+size_t CompositingLayer::tilesSize() const
+{
+    if (!m_tiles)
+        return 0;
+    return m_tiles->size();
+}
+
 CompositingTile* CompositingLayer::getTileByXY(int xIndex, int yIndex)
 {
     if (m_numTileX <= xIndex || m_numTileY <= yIndex)
@@ -260,11 +266,13 @@ void CompositingLayer::blendToTile(CompositingTile* tile, const SkBitmap& bitmap
     blink::IntRect dirtyRectInTile = dirtyRect;
     dirtyRectInTile.move(-tile->postion().x(), -tile->postion().y());
     dirtyRectInTile.intersect(blink::IntRect(0, 0, tile->postion().width(), tile->postion().height()));
-    tile->eraseColor(dirtyRectInTile, nullptr); // weolar
+    tile->eraseColor(dirtyRectInTile, nullptr);
 
-//     String outString = String::format("RasterTask::blendToTile:%d %d, %d %d %d %d\n",
-//         tile->xIndex(), tile->yIndex(), dirtyRectInTile.x(), dirtyRectInTile.y(), dirtyRectInTile.width(), dirtyRectInTile.height());
-//     OutputDebugStringW(outString.charactersWithNullTermination().data());
+#if 0 // debug
+    String outString = String::format("RasterTask::blendToTile:%d %d, %d %d %d %d\n",
+        tile->xIndex(), tile->yIndex(), dirtyRectInTile.x(), dirtyRectInTile.y(), dirtyRectInTile.width(), dirtyRectInTile.height());
+    OutputDebugStringW(outString.charactersWithNullTermination().data());
+#endif
 
     SkPaint paint;
     paint.setAntiAlias(true);
@@ -284,14 +292,16 @@ void CompositingLayer::blendToTile(CompositingTile* tile, const SkBitmap& bitmap
     SkCanvas canvas(*tile->bitmap());
     canvas.drawBitmapRect(bitmap, nullptr, SkRect::MakeFromIRect(dst), &paint);
 
-//     static bool s_startDump = false;
-//     if (s_startDump) {
-//         s_startDump = true;
-// 
-//         Vector<unsigned char> output;
-//         blink::GDIPlusImageEncoder::encode(bitmap, blink::GDIPlusImageEncoder::PNG, &output);
-//         blink::saveDumpFile("", (char*)output.data(), output.size());
-//     }
+#if 0 // debug
+    static bool s_startDump = false;
+    if (s_startDump) {
+        s_startDump = true;
+
+        Vector<unsigned char> output;
+        blink::GDIPlusImageEncoder::encode(bitmap, blink::GDIPlusImageEncoder::PNG, &output);
+        blink::saveDumpFile("", (char*)output.data(), output.size());
+    }
+#endif
 
 #if 0 // debug
     SkPaint paintTest;
@@ -307,8 +317,9 @@ void CompositingLayer::blendToTile(CompositingTile* tile, const SkBitmap& bitmap
         typeface = SkTypeface::RefDefault(SkTypeface::kNormal);
     paintTest.setTypeface(typeface);
 
-    canvas.drawLine(0, 0, tile->postion().width(), tile->postion().height(), paintTest);
-    canvas.drawLine(tile->postion().width(), 0, 0, tile->postion().height(), paintTest);
+    paintTest.setStrokeWidth(1);
+    //canvas.drawLine(0, 0, tile->postion().width(), tile->postion().height(), paintTest);
+    //canvas.drawLine(tile->postion().width(), 0, 0, tile->postion().height(), paintTest);
 
     String textTest = String::format("id:%d, %d %d", m_id, tile->xIndex(), tile->yIndex());
     CString cText = textTest.utf8();
@@ -350,6 +361,33 @@ private:
     CompositingLayer* m_maskLayer;
     blink::WebCanvas* m_canvas;
 };
+
+class DoClipChileLayer {
+public:
+    DoClipChileLayer(CompositingLayer* child, blink::WebCanvas* canvas)
+    {
+        m_canvas = canvas;
+        m_child = child;
+        m_clipChild = false;
+
+        if (1 != child->tilesSize() && 0 != child->tilesSize()) {
+            m_clipChild = true;
+            canvas->save(); // weolar
+            canvas->clipRect(SkRect::MakeIWH(child->drawToCanvasProperties()->bounds.width(), child->drawToCanvasProperties()->bounds.height())); // weolar
+        }
+    }
+
+    void release()
+    {
+        if (m_clipChild)
+            m_canvas->restore(); // weolar
+    }
+
+private:
+    CompositingLayer* m_child;
+    blink::WebCanvas* m_canvas;
+    bool m_clipChild;
+};
  
 void CompositingLayer::drawToCanvasChildren(LayerTreeHost* host, SkCanvas* canvas, const blink::IntRect& clip, int deep)
 {
@@ -365,11 +403,10 @@ void CompositingLayer::drawToCanvasChildren(LayerTreeHost* host, SkCanvas* canva
         SkMatrix matrixToCurrent;
         transformToFlattenedSkMatrix(currentTransform, &matrixToCurrent);
 
-        canvas->save();
+        canvas->save();// weolar
         SkPaint paint;
         paint.setAntiAlias(true);
         paint.setXfermodeMode(SkXfermode::kSrcOver_Mode);
-        //paint.setColor(SK_ColorBLACK);
         paint.setFilterQuality(kHigh_SkFilterQuality);
 
         canvas->setMatrix(matrixToAncestor);
@@ -382,18 +419,18 @@ void CompositingLayer::drawToCanvasChildren(LayerTreeHost* host, SkCanvas* canva
         blink::IntRect clipInLayerdCoordinateInt(SkScalarTruncToInt(clipInLayerdCoordinate.x()), SkScalarTruncToInt(clipInLayerdCoordinate.y()),
             SkScalarTruncToInt(clipInLayerdCoordinate.width()), SkScalarTruncToInt(clipInLayerdCoordinate.height()));
 
-        DoClipLayer doClipLayer(host, child, canvas, clipInLayerdCoordinate);
+        DoClipLayer doClipLayer(host, child, canvas, clipInLayerdCoordinate);// weolar
 
-        canvas->save();
-        canvas->clipRect(SkRect::MakeIWH(child->drawToCanvasProperties()->bounds.width(), child->drawToCanvasProperties()->bounds.height()));
+        DoClipChileLayer doClipChileLayer(child, canvas);
         child->drawToCanvas(host, canvas, clipInLayerdCoordinateInt);
-        canvas->restore();
+        doClipChileLayer.release();
 
-        if (!child->opaque() || !child->masksToBounds() || !child->drawsContent())
+        if (!child->opaque() || !child->masksToBounds() || !child->drawsContent()) {
             child->drawToCanvasChildren(host, canvas, clipInLayerdCoordinateInt, deep + 1);
+        }
 
         canvas->resetMatrix();
-        canvas->restore();
+        canvas->restore();// weolar
     }
 }
 
@@ -424,13 +461,14 @@ void CompositingLayer::drawToCanvas(LayerTreeHost* host, blink::WebCanvas* canva
 #if 0 // debug
         OwnPtr<blink::GraphicsContext> context = blink::GraphicsContext::deprecatedCreateWithCanvas(canvas, blink::GraphicsContext::NothingDisabled);
         context->setStrokeStyle(blink::SolidStroke);
+        context->setStrokeThickness(1);
         context->setStrokeColor(0xff000000 | (::GetTickCount() + rand()));
-        context->drawLine(blink::IntPoint(tilePostion.x(), tilePostion.y()), blink::IntPoint(tilePostion.maxX(), tilePostion.maxY()));
-        context->drawLine(blink::IntPoint(tilePostion.maxX(), tilePostion.y()), blink::IntPoint(tilePostion.x(), tilePostion.maxY()));
-        context->strokeRect(tilePostion, 2);
+        //context->drawLine(blink::IntPoint(tilePostion.x(), tilePostion.y()), blink::IntPoint(tilePostion.maxX(), tilePostion.maxY()));
+        //context->drawLine(blink::IntPoint(tilePostion.maxX(), tilePostion.y()), blink::IntPoint(tilePostion.x(), tilePostion.maxY()));
+        context->strokeRect(tilePostion, 1);
         context->fillRect(tilePostion, 0x00000000 | (::GetTickCount() + rand()));
 #endif
-        canvas->drawBitmapRect(*tile->bitmap(), nullptr, SkRect::MakeFromIRect(dst), &paint);
+        canvas->drawBitmapRect(*tile->bitmap(), nullptr, SkRect::MakeFromIRect(dst), &paint); // weolar
     }
 }
 
