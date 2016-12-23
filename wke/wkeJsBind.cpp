@@ -4,6 +4,7 @@
 
 #include <config.h>
 #include "v8.h"
+#include "third_party/WebKit/public/web/WebScriptSource.h"
 #include "third_party/WebKit/Source/wtf/text/WTFStringUtil.h"
 #include "third_party/WebKit/Source/bindings/core/v8/V8StringResource.h"
 #include "third_party/WebKit/Source/bindings/core/v8/V8Binding.h"
@@ -629,18 +630,23 @@ jsValue jsEval(jsExecState es, const utf8* str)
 
 jsValue jsEvalW(jsExecState es, const wchar_t* str)
 {
-//     JSC::ExecState* exec = (JSC::ExecState*)es;
-// 
-//     // evaluate sets "this" to the global object if it is NULL
-//     JSC::JSGlobalObject* globalObject = exec->dynamicGlobalObject();
-//     JSC::SourceCode source = JSC::makeSource(str);
-// 
-//     JSC::JSValue returnValue = JSC::evaluate(globalObject->globalExec(), globalObject->globalScopeChain(), source);
-//     if (returnValue)
-//         return JSC::JSValue::encode(returnValue);
+    if (!s_execStates || !es || !s_execStates->contains(es) || !es->isolate || es->context.IsEmpty())
+        return jsUndefined();
+    if (es->context.IsEmpty())
+        DebugBreak();
+    v8::Isolate* isolate = es->isolate;
+    v8::HandleScope handleScope(isolate);
+    v8::Local<v8::Context> context = v8::Local<v8::Context>::New(es->isolate, es->context);
+    v8::Context::Scope contextScope(context);
 
-    // happens, for example, when the only statement is an empty (';') statement
-    return jsUndefined();
+    v8::Local<v8::String> source;
+    source->Write((uint16_t*)str);
+    v8::Local<v8::Script> script = v8::Script::Compile(source);
+
+    v8::TryCatch trycatch;
+    v8::Local<v8::Value> result = script->Run();
+
+    return wke::v8ValueToJsValue(context, result);
 }
 
 jsValue jsCall(jsExecState es, jsValue func, jsValue thisValue, jsValue* args, int argCount)
@@ -1398,6 +1404,34 @@ jsValue createJsValueString(v8::Local<v8::Context> context, const utf8* str)
     if (value.IsEmpty())
         return jsUndefined();
     return createJsValueByLocalValue(isolate, context, value.ToLocalChecked());
+}
+
+jsValue v8ValueToJsValue(v8::Local<v8::Context> context, v8::Local<v8::Value> v8Value)
+{
+    v8::Isolate* isolate = context->GetIsolate();
+    v8::HandleScope handleScope(isolate);
+    v8::Context::Scope contextScope(context);
+
+    if (v8Value.IsEmpty())
+        return jsUndefined();
+
+    if (v8Value->IsString()) {
+        String stringWTF = blink::toCoreString(v8::Local<v8::String>::Cast(v8Value));
+        return wke::createJsValueString(context, stringWTF.utf8().data());
+    } else if (v8Value->IsTrue()) {
+        return jsBoolean(true);
+    } else if (v8Value->IsFalse()) {
+        return jsBoolean(true);
+    } else if (v8Value->IsUndefined()) {
+        return jsUndefined();
+    } else if (v8Value->IsObject()) {
+        return wke::createJsValueString(context, "Object");
+    } else if (v8Value->IsNumber()) {
+        v8::Local<v8::Number> v8Number = v8Value->ToNumber();
+        return jsDouble(v8Number->Value());
+    }
+
+    return jsUndefined();
 }
 
 };
