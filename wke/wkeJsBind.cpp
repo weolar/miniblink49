@@ -981,10 +981,14 @@ struct jsFunctionInfo {
     unsigned int funcType;
 };
 
-static Vector<jsFunctionInfo> s_jsFunctions;
+static Vector<jsFunctionInfo>* s_jsFunctionsPtr = nullptr;
 
 void jsBindFunction(const char* name, jsNativeFunction fn, unsigned int argCount)
 {
+    if (!s_jsFunctionsPtr)
+        s_jsFunctionsPtr = new Vector<jsFunctionInfo>();
+    Vector<jsFunctionInfo>& s_jsFunctions = *s_jsFunctionsPtr;
+
     for (unsigned int i = 0; i < s_jsFunctions.size(); ++i) {
         if (s_jsFunctions[i].funcType == JS_FUNC && strncmp(name, s_jsFunctions[i].name, MAX_NAME_LENGTH) == 0) {
             s_jsFunctions[i].fn = fn;
@@ -1005,6 +1009,10 @@ void jsBindFunction(const char* name, jsNativeFunction fn, unsigned int argCount
 
 void jsBindGetter(const char* name, jsNativeFunction fn)
 {
+    if (!s_jsFunctionsPtr)
+        s_jsFunctionsPtr = new Vector<jsFunctionInfo>();
+    Vector<jsFunctionInfo>& s_jsFunctions = *s_jsFunctionsPtr;
+
     for (unsigned int i = 0; i < s_jsFunctions.size(); ++i) {
         if (s_jsFunctions[i].funcType == JS_GETTER && strncmp(name, s_jsFunctions[i].name, MAX_NAME_LENGTH) == 0) {
             s_jsFunctions[i].fn = fn;
@@ -1024,6 +1032,10 @@ void jsBindGetter(const char* name, jsNativeFunction fn)
 
 void jsBindSetter(const char* name, jsNativeFunction fn)
 {
+    if (!s_jsFunctionsPtr)
+        s_jsFunctionsPtr = new Vector<jsFunctionInfo>();
+    Vector<jsFunctionInfo>& s_jsFunctions = *s_jsFunctionsPtr;
+
     for (unsigned int i = 0; i < s_jsFunctions.size(); ++i) {
         if (s_jsFunctions[i].funcType == JS_SETTER && strncmp(name, s_jsFunctions[i].name, MAX_NAME_LENGTH) == 0) {
             s_jsFunctions[i].fn = fn;
@@ -1040,8 +1052,6 @@ void jsBindSetter(const char* name, jsNativeFunction fn)
 
     s_jsFunctions.append(funcInfo);
 }
-
-
 
 jsValue JS_CALL js_outputMsg(jsExecState es)
 {
@@ -1306,17 +1316,21 @@ void onCreateGlobalObject(content::WebFrameClientImpl* client, blink::WebLocalFr
     execState->context.Reset(isolate, context);
     jsSetGlobal(execState, "wke", ::jsString(execState, wkeGetVersionString()));
 
-    for (size_t i = 0; i < s_jsFunctions.size(); ++i) {
-        if (s_jsFunctions[i].funcType == JS_FUNC)
-            addFunction(context, s_jsFunctions[i].name, s_jsFunctions[i].fn, s_jsFunctions[i].argCount);
-        else if (s_jsFunctions[i].funcType == JS_GETTER || s_jsFunctions[i].funcType == JS_SETTER) {
-            jsNativeFunction getter = nullptr;
-            jsNativeFunction setter = nullptr;
-            if (s_jsFunctions[i].funcType == JS_GETTER)
-                getter = s_jsFunctions[i].fn;
-            else if (s_jsFunctions[i].funcType == JS_SETTER)
-                setter = s_jsFunctions[i].fn;
-            addAccessor(context, s_jsFunctions[i].name, getter, setter);
+    if (s_jsFunctionsPtr) {
+        Vector<jsFunctionInfo>& s_jsFunctions = *s_jsFunctionsPtr;
+
+        for (size_t i = 0; i < s_jsFunctions.size(); ++i) {
+            if (s_jsFunctions[i].funcType == JS_FUNC)
+                addFunction(context, s_jsFunctions[i].name, s_jsFunctions[i].fn, s_jsFunctions[i].argCount);
+            else if (s_jsFunctions[i].funcType == JS_GETTER || s_jsFunctions[i].funcType == JS_SETTER) {
+                jsNativeFunction getter = nullptr;
+                jsNativeFunction setter = nullptr;
+                if (s_jsFunctions[i].funcType == JS_GETTER)
+                    getter = s_jsFunctions[i].fn;
+                else if (s_jsFunctions[i].funcType == JS_SETTER)
+                    setter = s_jsFunctions[i].fn;
+                addAccessor(context, s_jsFunctions[i].name, getter, setter);
+            }
         }
     }
 }
