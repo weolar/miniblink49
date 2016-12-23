@@ -921,6 +921,7 @@ void WebPluginImpl::platformDestroy()
         return;
 
     blink::Platform::current()->currentThread()->postTask(FROM_HERE, WTF::bind(platformDestroyWindow, platformPluginWidget()));
+    SetWindowLongPtr(platformPluginWidget(), GWLP_WNDPROC, 0);
     setPlatformPluginWidget(0);
 }
 
