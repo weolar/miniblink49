@@ -326,8 +326,9 @@ WebWidget* PopupMenuWin::createWnd()
     //::ShowWindow(m_popup, SW_SHOW);
     //::UpdateWindow(m_popup);
     //::SetTimer(m_popup, 1, 10, nullptr);
-    ::SetWindowPos(m_popup, HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW | SWP_NOACTIVATE); // 不激活窗口
-
+    ::SetWindowPos(m_popup, HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW /*| SWP_NOACTIVATE*/); // 不激活窗口
+    ::SetFocus(m_popup);
+    ::SetCapture(m_popup);
     initialize();
 
     return m_popupImpl;
