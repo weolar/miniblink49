@@ -38,11 +38,9 @@ namespace content {
 WebFrameClientImpl::WebFrameClientImpl()
 {
     m_loading = false;
-#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
     m_loadFailed = false;
     m_loaded = false;
     m_documentReady = false;
-#endif
     m_webPage = nullptr;
 }
 
@@ -197,14 +195,14 @@ void WebFrameClientImpl::didReceiveServerRedirectForProvisionalLoad(WebLocalFram
 
 void WebFrameClientImpl::didFailProvisionalLoad(WebLocalFrame* frame, const WebURLError& error, WebHistoryCommitType type)
 {
+    m_loadFailed = true;
 #if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 	CefBrowserHostImpl* browser = m_webPage->browser();
 	if (browser)
 		browser->DidFailProvisionalLoad(frame, error, type);
 #endif
-#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
-	m_loadFailed = true;
 
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
     wke::CWebViewHandler& handler = m_webPage->wkeHandler();
     if (handler.loadingFinishCallback) {
         wkeLoadingResult result = WKE_LOADING_FAILED;
@@ -248,13 +246,19 @@ void WebFrameClientImpl::didCreateDocumentElement(WebLocalFrame* frame) { }
 void WebFrameClientImpl::didReceiveTitle(WebLocalFrame* frame, const WebString& title, WebTextDirection direction)
 {
     if (frame == m_webPage->mainFrame()) {
-#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
         m_title = title;
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
         wke::CWebViewHandler& handler = m_webPage->wkeHandler();
         if (handler.titleChangedCallback) {
             wke::CString string(title);
             handler.titleChangedCallback(m_webPage->wkeWebView(), handler.titleChangedCallbackParam, &string);
         }
+#endif
+
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
+        CefBrowserHostImpl* browser = m_webPage->browser();
+        if (browser)
+            browser->OnTitleChange(frame, m_title);
 #endif
     }
 }
@@ -263,12 +267,11 @@ void WebFrameClientImpl::didChangeIcon(WebLocalFrame*, WebIconURL::Type) { }
 
 void WebFrameClientImpl::didFinishDocumentLoad(WebLocalFrame*)
 {
+    m_documentReady = true;
     //     cef_load_handler_t* loadHandler = m_cefBrowserHostImpl->m_browserImpl->m_loadHandler;
     //     m_cefBrowserHostImpl->m_browserImpl->ref();
     //     loadHandler->on_loading_state_change(loadHandler, &m_cefBrowserHostImpl->m_browserImpl->m_baseClass, false, false, false);
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
-    m_documentReady = true;
-
     wke::CWebViewHandler& handler = m_webPage->wkeHandler();
     if (handler.documentReadyCallback)
         handler.documentReadyCallback(m_webPage->wkeWebView(), handler.documentReadyCallbackParam);
@@ -279,13 +282,15 @@ void WebFrameClientImpl::didHandleOnloadEvents(WebLocalFrame*) { }
 
 void WebFrameClientImpl::didFailLoad(WebLocalFrame* frame, const WebURLError& error, WebHistoryCommitType type)
 {
+    m_loadFailed = true;
+
 #if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 	CefBrowserHostImpl* browser = m_webPage->browser();
 	if (browser)
 		browser->DidFailLoad(frame, error, type);
 #endif
+
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
-	m_loadFailed = true;
     wke::CWebViewHandler& handler = m_webPage->wkeHandler();
     if (handler.loadingFinishCallback) {
         wkeLoadingResult result = WKE_LOADING_FAILED;
@@ -302,13 +307,14 @@ void WebFrameClientImpl::didFailLoad(WebLocalFrame* frame, const WebURLError& er
 
 void WebFrameClientImpl::didFinishLoad(WebLocalFrame* frame)
 {
+    m_loaded = true;
 #if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
     CefBrowserHostImpl* browser = m_webPage->browser();
     if (browser)
         browser->DidFinishLoad(frame);
 #endif
+
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
-	m_loaded = true;
     wke::CWebViewHandler& handler = m_webPage->wkeHandler();
     if (handler.loadingFinishCallback) {
         wkeLoadingResult result = WKE_LOADING_SUCCEEDED;
@@ -426,16 +432,26 @@ void WebFrameClientImpl::willRequestResource(WebLocalFrame*, const WebCachedURLR
 
 }
 
+void WebFrameClientImpl::didDispatchPingLoader(WebLocalFrame* webFrame, const WebURL& url)
+{
+
+}
+
 void WebFrameClientImpl::willSendRequest(WebLocalFrame* webFrame, unsigned identifier, WebURLRequest& request, const WebURLResponse& redirectResponse)
 {
+    if (request.extraData()) // ResourceLoader::willSendRequest会走到这
+        return;
+
     net::RequestExtraData* requestExtraData = new net::RequestExtraData();
-	requestExtraData->frame = webFrame;//两种模式都需要此对象
+	requestExtraData->frame = webFrame; // 两种模式都需要此对象
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
 	requestExtraData->page = m_webPage;
 #endif
+
 #if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
     requestExtraData->browser = m_webPage->browser();
 #endif
+
     request.setExtraData(requestExtraData);
 
 //     String headerFieldValue = blink::defaultLanguage();

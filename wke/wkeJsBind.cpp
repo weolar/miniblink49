@@ -10,6 +10,7 @@
 #include "third_party/WebKit/Source/core/frame/LocalDOMWindow.h"
 #include "third_party/WebKit/Source/core/frame/LocalFrame.h"
 #include "third_party/WebKit/Source/core/page/ChromeClient.h"
+#include "third_party/WebKit/Source/bindings/core/v8/V8RecursionScope.h"
 #include "content/browser/WebFrameClientImpl.h"
 #include "content/browser/WebPage.h"
 
@@ -629,18 +630,32 @@ jsValue jsEval(jsExecState es, const utf8* str)
 
 jsValue jsEvalW(jsExecState es, const wchar_t* str)
 {
-//     JSC::ExecState* exec = (JSC::ExecState*)es;
-// 
-//     // evaluate sets "this" to the global object if it is NULL
-//     JSC::JSGlobalObject* globalObject = exec->dynamicGlobalObject();
-//     JSC::SourceCode source = JSC::makeSource(str);
-// 
-//     JSC::JSValue returnValue = JSC::evaluate(globalObject->globalExec(), globalObject->globalScopeChain(), source);
-//     if (returnValue)
-//         return JSC::JSValue::encode(returnValue);
+    if (!s_execStates || !es || !s_execStates->contains(es) || !es->isolate || es->context.IsEmpty() || !str)
+        return jsUndefined();
+    if (es->context.IsEmpty())
+        DebugBreak();
 
-    // happens, for example, when the only statement is an empty (';') statement
-    return jsUndefined();
+    String codeString(str);
+    if (codeString.startsWith("javascript:", WTF::TextCaseInsensitive))
+        codeString.remove(0, sizeof("javascript:") - 1);
+    codeString.insert("(function(){", 0);
+    codeString.append("})();");
+
+    v8::Isolate* isolate = es->isolate;
+    blink::V8RecursionScope::MicrotaskSuppression microtaskSuppression(isolate);
+
+    v8::HandleScope handleScope(isolate);
+    v8::Local<v8::Context> context = v8::Local<v8::Context>::New(es->isolate, es->context);
+    v8::Context::Scope contextScope(context);
+
+    v8::MaybeLocal<v8::String> source = v8::String::NewFromUtf8(isolate, codeString.utf8().data(), v8::NewStringType::kNormal);
+    if (source.IsEmpty())
+        return jsUndefined();
+    v8::Local<v8::Script> script = v8::Script::Compile(source.ToLocalChecked());
+    v8::TryCatch trycatch;
+    v8::Local<v8::Value> result = script->Run();
+
+    return wke::v8ValueToJsValue(context, result);
 }
 
 jsValue jsCall(jsExecState es, jsValue func, jsValue thisValue, jsValue* args, int argCount)
@@ -981,10 +996,14 @@ struct jsFunctionInfo {
     unsigned int funcType;
 };
 
-static Vector<jsFunctionInfo> s_jsFunctions;
+static Vector<jsFunctionInfo>* s_jsFunctionsPtr = nullptr;
 
 void jsBindFunction(const char* name, jsNativeFunction fn, unsigned int argCount)
 {
+    if (!s_jsFunctionsPtr)
+        s_jsFunctionsPtr = new Vector<jsFunctionInfo>();
+    Vector<jsFunctionInfo>& s_jsFunctions = *s_jsFunctionsPtr;
+
     for (unsigned int i = 0; i < s_jsFunctions.size(); ++i) {
         if (s_jsFunctions[i].funcType == JS_FUNC && strncmp(name, s_jsFunctions[i].name, MAX_NAME_LENGTH) == 0) {
             s_jsFunctions[i].fn = fn;
@@ -1005,6 +1024,10 @@ void jsBindFunction(const char* name, jsNativeFunction fn, unsigned int argCount
 
 void jsBindGetter(const char* name, jsNativeFunction fn)
 {
+    if (!s_jsFunctionsPtr)
+        s_jsFunctionsPtr = new Vector<jsFunctionInfo>();
+    Vector<jsFunctionInfo>& s_jsFunctions = *s_jsFunctionsPtr;
+
     for (unsigned int i = 0; i < s_jsFunctions.size(); ++i) {
         if (s_jsFunctions[i].funcType == JS_GETTER && strncmp(name, s_jsFunctions[i].name, MAX_NAME_LENGTH) == 0) {
             s_jsFunctions[i].fn = fn;
@@ -1024,6 +1047,10 @@ void jsBindGetter(const char* name, jsNativeFunction fn)
 
 void jsBindSetter(const char* name, jsNativeFunction fn)
 {
+    if (!s_jsFunctionsPtr)
+        s_jsFunctionsPtr = new Vector<jsFunctionInfo>();
+    Vector<jsFunctionInfo>& s_jsFunctions = *s_jsFunctionsPtr;
+
     for (unsigned int i = 0; i < s_jsFunctions.size(); ++i) {
         if (s_jsFunctions[i].funcType == JS_SETTER && strncmp(name, s_jsFunctions[i].name, MAX_NAME_LENGTH) == 0) {
             s_jsFunctions[i].fn = fn;
@@ -1040,8 +1067,6 @@ void jsBindSetter(const char* name, jsNativeFunction fn)
 
     s_jsFunctions.append(funcInfo);
 }
-
-
 
 jsValue JS_CALL js_outputMsg(jsExecState es)
 {
@@ -1306,17 +1331,21 @@ void onCreateGlobalObject(content::WebFrameClientImpl* client, blink::WebLocalFr
     execState->context.Reset(isolate, context);
     jsSetGlobal(execState, "wke", ::jsString(execState, wkeGetVersionString()));
 
-    for (size_t i = 0; i < s_jsFunctions.size(); ++i) {
-        if (s_jsFunctions[i].funcType == JS_FUNC)
-            addFunction(context, s_jsFunctions[i].name, s_jsFunctions[i].fn, s_jsFunctions[i].argCount);
-        else if (s_jsFunctions[i].funcType == JS_GETTER || s_jsFunctions[i].funcType == JS_SETTER) {
-            jsNativeFunction getter = nullptr;
-            jsNativeFunction setter = nullptr;
-            if (s_jsFunctions[i].funcType == JS_GETTER)
-                getter = s_jsFunctions[i].fn;
-            else if (s_jsFunctions[i].funcType == JS_SETTER)
-                setter = s_jsFunctions[i].fn;
-            addAccessor(context, s_jsFunctions[i].name, getter, setter);
+    if (s_jsFunctionsPtr) {
+        Vector<jsFunctionInfo>& s_jsFunctions = *s_jsFunctionsPtr;
+
+        for (size_t i = 0; i < s_jsFunctions.size(); ++i) {
+            if (s_jsFunctions[i].funcType == JS_FUNC)
+                addFunction(context, s_jsFunctions[i].name, s_jsFunctions[i].fn, s_jsFunctions[i].argCount);
+            else if (s_jsFunctions[i].funcType == JS_GETTER || s_jsFunctions[i].funcType == JS_SETTER) {
+                jsNativeFunction getter = nullptr;
+                jsNativeFunction setter = nullptr;
+                if (s_jsFunctions[i].funcType == JS_GETTER)
+                    getter = s_jsFunctions[i].fn;
+                else if (s_jsFunctions[i].funcType == JS_SETTER)
+                    setter = s_jsFunctions[i].fn;
+                addAccessor(context, s_jsFunctions[i].name, getter, setter);
+            }
         }
     }
 }
@@ -1384,6 +1413,30 @@ jsValue createJsValueString(v8::Local<v8::Context> context, const utf8* str)
     if (value.IsEmpty())
         return jsUndefined();
     return createJsValueByLocalValue(isolate, context, value.ToLocalChecked());
+}
+
+jsValue v8ValueToJsValue(v8::Local<v8::Context> context, v8::Local<v8::Value> v8Value)
+{
+    if (v8Value.IsEmpty())
+        return jsUndefined();
+
+    if (v8Value->IsString()) {
+        String stringWTF = blink::toCoreString(v8::Local<v8::String>::Cast(v8Value));
+        return wke::createJsValueString(context, stringWTF.utf8().data());
+    } else if (v8Value->IsTrue()) {
+        return jsBoolean(true);
+    } else if (v8Value->IsFalse()) {
+        return jsBoolean(true);
+    } else if (v8Value->IsUndefined()) {
+        return jsUndefined();
+    } else if (v8Value->IsObject()) {
+        return wke::createJsValueString(context, "Object");
+    } else if (v8Value->IsNumber()) {
+        v8::Local<v8::Number> v8Number = v8Value->ToNumber();
+        return jsDouble(v8Number->Value());
+    }
+
+    return jsUndefined();
 }
 
 };

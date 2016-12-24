@@ -4,6 +4,7 @@
 #include "SkBitmap.h"
 #include "SkCanvas.h"
 #include "cc/tiles/TileGrid.h"
+#include "cc/tiles/TileWidthHeight.h"
 #include "cc/blink/WebLayerImpl.h" // TODO for backgroundColor
 
 #include "third_party/WebKit/Source/wtf/RefCountedLeakCounter.h"

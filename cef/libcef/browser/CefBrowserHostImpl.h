@@ -202,6 +202,7 @@ public:
     void OnLoadStart(CefRefPtr<CefFrame> fram);
 	void OnLoadError(CefRefPtr<CefFrame> frame, const blink::KURL& url, int errorCode, const WTF::String& errorDescription);
     void OnAddressChange(CefRefPtr<CefFrame> frame, const CefString& url);
+    void OnTitleChange(blink::WebLocalFrame* frame, const String& title);
 	void OnFrameIdentified(blink::WebLocalFrame* frame, blink::WebLocalFrame* parent);
 
     CefRefPtr<CefFrame> GetOrCreateFrame(const blink::WebLocalFrame* webFrame, int64 parentFrameId, const blink::KURL& frameUrl);

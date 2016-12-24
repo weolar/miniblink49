@@ -157,7 +157,6 @@ WebLayerImpl::~WebLayerImpl()
 #ifndef NDEBUG
 	webLayerImplCounter.decrement();
 #endif
-
 }
 
 void WebLayerImpl::removeFromScrollTree() {
@@ -200,7 +199,6 @@ static void applyLayerActions(cc::LayerTreeHost* host, WTF::Vector<cc::LayerChan
 
 void WebLayerImpl::setLayerTreeHost(cc::LayerTreeHost* host)
 {
-    //ASSERT(host);
     if (m_layerTreeHost == host)
         return;
 
@@ -247,10 +245,6 @@ void WebLayerImpl::updataAndPaintContents(blink::WebCanvas* canvas, const blink:
         m_client->updataAndPaintContents(canvas, clip);
     m_dirty = false;
     m_updateRectInRootLayerCoordinate = blink::IntRect();
-
-//     WCHAR msg[200] = { 0 };
-//     wsprintfW(msg, L"WebLayerImpl::updataAndPaintContents: %d %d %d %d\n", clip.x(), clip.y(), clip.width(), clip.height());
-//     OutputDebugStringW(msg);
 }
 
 cc::DrawProperties* WebLayerImpl::drawProperties()
@@ -261,7 +255,6 @@ cc::DrawProperties* WebLayerImpl::drawProperties()
 void WebLayerImpl::updataDrawToCanvasProperties(cc::DrawToCanvasProperties* prop)
 {
 	DebugBreak();
-    //m_drawToCanvasProperties->copy(*prop);
 }
 
 const SkMatrix44& WebLayerImpl::drawTransform() const

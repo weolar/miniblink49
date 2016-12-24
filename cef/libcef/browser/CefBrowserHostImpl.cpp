@@ -819,8 +819,23 @@ void CefBrowserHostImpl::OnAddressChange(CefRefPtr<CefFrame> frame, const CefStr
         CefRefPtr<CefDisplayHandler> handler = m_client->GetDisplayHandler();
         if (handler.get()) {
             // Notify the handler of an address change.
-            handler->OnAddressChange(this, GetMainFrame(), url);
+            handler->OnAddressChange(this, frame, url);
         }
     }
 }
+
+void CefBrowserHostImpl::OnTitleChange(blink::WebLocalFrame* frame, const String& title) {
+    if (!m_client.get())
+        return;
+
+    CefString cefTitle;
+
+    CefRefPtr<CefDisplayHandler> handler = m_client->GetDisplayHandler();
+    if (handler.get()) {
+        CefString url;
+        cef::WebStringToCefString(title, cefTitle);
+        handler->OnTitleChange(GetBrowser(), cefTitle);
+    }
+}
+
 #endif

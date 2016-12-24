@@ -704,41 +704,10 @@ wkeRect CWebView::caretRect()
     return rect;
 }
 
-jsValue jsUndefined()
-{
-    return 0;
-}
-
-static jsValue v8ValueToJsValue(v8::Local<v8::Context> context, v8::Local<v8::Value> v8Value)
-{
-    v8::Isolate* isolate = context->GetIsolate();
-    v8::HandleScope handleScope(isolate);
-    v8::Context::Scope contextScope(context);
-
-    if (v8Value.IsEmpty())
-        return jsUndefined();
-
-    if (v8Value->IsString()) {
-        String stringWTF = blink::toCoreString(v8::Local<v8::String>::Cast(v8Value));
-        return wke::createJsValueString(context, stringWTF.utf8().data());
-    } else if (v8Value->IsTrue()) {
-        return jsBoolean(true);
-    } else if (v8Value->IsFalse()) {
-        return jsBoolean(true);
-    } else if (v8Value->IsUndefined()) {
-        return jsUndefined();
-    } else if (v8Value->IsObject()) {
-        return wke::createJsValueString(context, "Object");
-    } else if (v8Value->IsNumber()) {
-        v8::Local<v8::Number> v8Number = v8Value->ToNumber();
-        return jsDouble(v8Number->Value());
-    }
-
-    return jsUndefined();
-}
-
 static jsValue runJSImpl(blink::WebFrame* mainFrame, String* codeString)
 {
+    if (codeString->startsWith("javascript:", WTF::TextCaseInsensitive))
+        codeString->remove(0, sizeof("javascript:") - 1);
     codeString->insert("(function(){", 0);
     codeString->append("})();");
     blink::WebScriptSource code(*codeString, KURL(ParsedURLString, "CWebView::runJS"));

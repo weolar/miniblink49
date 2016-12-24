@@ -510,7 +510,7 @@ static void updateChildLayersDrawProperties(cc_blink::WebLayerImpl* layer, Layer
         drawProperties->screenSpaceTransform = combinedTransform;
         drawProperties->targetSpaceTransform = combinedTransform;
         drawProperties->currentTransform = currentTransform;
-		drawProperties->opacity = propFromAncestor.opacity;
+		//drawProperties->opacity = propFromAncestor.opacity;
 
 		DrawPropertiesFromAncestor prop;
 		prop.transform = transformToAncestorIfFlatten;
@@ -545,8 +545,8 @@ static void showDebugChildren(cc_blink::WebLayerImpl* layer, int deep)
         blink::WebFloatPoint position = child->position();
         blink::WebSize bounds = child->bounds();
         
-        String msg = String::format("%p, %d %d %d %d - %d, %d %d %d\n", child,
-            (int)position.x, (int)position.y, bounds.width, bounds.height, child->id(), child->drawsContent(), child->masksToBounds(), child->opaque());
+        String msg = String::format("%p, %d %d %d %d - %d, %d %d %d, %f\n", child,
+            (int)position.x, (int)position.y, bounds.width, bounds.height, child->id(), child->drawsContent(), child->masksToBounds(), child->opaque(), child->opacity());
         msg.insert(blankSpaceString.data(), blankSpaceString.size(), 0);
         OutputDebugStringA(msg.utf8().data());
 

@@ -218,7 +218,7 @@ void LayerChangeActionDrawPropUpdata::appendDirtyLayer(cc_blink::WebLayerImpl* l
     m_layerIds.append(layer->id());
 
     DrawToCanvasProperties* prop = new DrawToCanvasProperties();
-    prop->copyDrawProperties(*layer->drawProperties());
+    prop->copyDrawProperties(*layer->drawProperties(), layer->opacity());
     prop->bounds = layer->bounds();
     prop->position = layer->position();
 	prop->drawsContent = layer->drawsContent();

@@ -139,6 +139,7 @@ PingLoader::PingLoader(LocalFrame* frame, ResourceRequest& request, const FetchI
     , m_identifier(createUniqueIdentifier())
 {
     frame->loader().client()->didDispatchPingLoader(request.url());
+    frame->loader().client()->dispatchWillSendRequest(frame->loader().documentLoader(), m_identifier, request, ResourceResponse()); // Add by weolar
 
     TRACE_EVENT_INSTANT1("devtools.timeline", "ResourceSendRequest", TRACE_EVENT_SCOPE_THREAD, "data", InspectorSendRequestEvent::data(m_identifier, frame, request));
     InspectorInstrumentation::willSendRequest(frame, m_identifier, frame->loader().documentLoader(), request, ResourceResponse(), initiatorInfo);

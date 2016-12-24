@@ -31,6 +31,7 @@
 #include "third_party/WebKit/public/web/WebFrameClient.h"
 #include "third_party/WebKit/public/web/WebInputEvent.h"
 #include "third_party/WebKit/public/web/WebLocalFrame.h"
+#include "third_party/WebKit/public/platform/Platform.h"
 #include "skia/ext/bitmap_platform_device_win.h"
 #include "cc/trees/LayerTreeHost.h"
 
@@ -73,10 +74,16 @@ PopupMenuWin::PopupMenuWin(HWND hWnd, IntPoint offset, WebViewImpl* webViewImpl)
 	m_offset.setY(offset.y());
 }
 
+static void destroyWindowAsyn(HWND hWnd)
+{
+    ::DestroyWindow(hWnd);
+}
+
 void PopupMenuWin::closeWidgetSoon()
 {
     m_initialize = false;
-    ::DestroyWindow(m_popup);
+    SetWindowLongPtr(m_popup, 0, 0);
+    blink::Platform::current()->currentThread()->postTask(FROM_HERE, WTF::bind(&destroyWindowAsyn, m_popup));
     delete this;
 }
 
