@@ -384,7 +384,8 @@ void CWebView::setHandle(HWND wnd)
 
 void CWebView::setHandleOffset(int x, int y)
 {
-	m_webPage->setHWNDoffset(x, y);
+	blink::IntPoint offset(x, y);
+	m_webPage->setHwndRenderOffset(offset);
 }
 
 void CWebView::paint(void* bits, int pitch)
