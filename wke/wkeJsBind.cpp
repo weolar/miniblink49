@@ -4,13 +4,13 @@
 
 #include <config.h>
 #include "v8.h"
-#include "third_party/WebKit/public/web/WebScriptSource.h"
 #include "third_party/WebKit/Source/wtf/text/WTFStringUtil.h"
 #include "third_party/WebKit/Source/bindings/core/v8/V8StringResource.h"
 #include "third_party/WebKit/Source/bindings/core/v8/V8Binding.h"
 #include "third_party/WebKit/Source/core/frame/LocalDOMWindow.h"
 #include "third_party/WebKit/Source/core/frame/LocalFrame.h"
 #include "third_party/WebKit/Source/core/page/ChromeClient.h"
+#include "third_party/WebKit/Source/bindings/core/v8/V8RecursionScope.h"
 #include "content/browser/WebFrameClientImpl.h"
 #include "content/browser/WebPage.h"
 
@@ -630,19 +630,28 @@ jsValue jsEval(jsExecState es, const utf8* str)
 
 jsValue jsEvalW(jsExecState es, const wchar_t* str)
 {
-    if (!s_execStates || !es || !s_execStates->contains(es) || !es->isolate || es->context.IsEmpty())
+    if (!s_execStates || !es || !s_execStates->contains(es) || !es->isolate || es->context.IsEmpty() || !str)
         return jsUndefined();
     if (es->context.IsEmpty())
         DebugBreak();
+
+    String codeString(str);
+    if (codeString.startsWith("javascript:", WTF::TextCaseInsensitive))
+        codeString.remove(0, sizeof("javascript:") - 1);
+    codeString.insert("(function(){", 0);
+    codeString.append("})();");
+
     v8::Isolate* isolate = es->isolate;
+    blink::V8RecursionScope::MicrotaskSuppression microtaskSuppression(isolate);
+
     v8::HandleScope handleScope(isolate);
     v8::Local<v8::Context> context = v8::Local<v8::Context>::New(es->isolate, es->context);
     v8::Context::Scope contextScope(context);
 
-    v8::Local<v8::String> source;
-    source->Write((uint16_t*)str);
-    v8::Local<v8::Script> script = v8::Script::Compile(source);
-
+    v8::MaybeLocal<v8::String> source = v8::String::NewFromUtf8(isolate, codeString.utf8().data(), v8::NewStringType::kNormal);
+    if (source.IsEmpty())
+        return jsUndefined();
+    v8::Local<v8::Script> script = v8::Script::Compile(source.ToLocalChecked());
     v8::TryCatch trycatch;
     v8::Local<v8::Value> result = script->Run();
 
@@ -1408,10 +1417,6 @@ jsValue createJsValueString(v8::Local<v8::Context> context, const utf8* str)
 
 jsValue v8ValueToJsValue(v8::Local<v8::Context> context, v8::Local<v8::Value> v8Value)
 {
-    v8::Isolate* isolate = context->GetIsolate();
-    v8::HandleScope handleScope(isolate);
-    v8::Context::Scope contextScope(context);
-
     if (v8Value.IsEmpty())
         return jsUndefined();
 

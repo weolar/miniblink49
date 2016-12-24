@@ -705,13 +705,10 @@ wkeRect CWebView::caretRect()
     return rect;
 }
 
-// jsValue jsUndefined()
-// {
-//     return 0;
-// }
-
 static jsValue runJSImpl(blink::WebFrame* mainFrame, String* codeString)
 {
+    if (codeString->startsWith("javascript:", WTF::TextCaseInsensitive))
+        codeString->remove(0, sizeof("javascript:") - 1);
     codeString->insert("(function(){", 0);
     codeString->append("})();");
     blink::WebScriptSource code(*codeString, KURL(ParsedURLString, "CWebView::runJS"));
