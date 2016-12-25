@@ -25,6 +25,6 @@ namespace node {
 		nodeInitCallBack initcall;
 	};
 
-	NODE_EXTERN nodeargc* RunNodeThread(int argc, wchar_t *wargv[]);
+	NODE_EXTERN nodeargc* RunNodeThread(int argc, wchar_t *wargv[], nodeInitCallBack initcall);
 	NODE_EXTERN Environment* NodeGetEnvironment(nodeargc*);
 }

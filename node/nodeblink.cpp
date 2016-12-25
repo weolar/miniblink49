@@ -54,9 +54,10 @@ namespace node {
 	}
 
 
-	nodeargc* RunNodeThread(int argc, wchar_t *wargv[]) {
+	nodeargc* RunNodeThread(int argc, wchar_t *wargv[], nodeInitCallBack initcall) {
 		nodeargc *p = (nodeargc *)malloc(sizeof(nodeargc));
 		memset(p, 0, sizeof(nodeargc));
+		p->initcall = initcall;
 		p->child_loop_ = (uv_loop_t *)malloc(sizeof(uv_loop_t));
 		p->argv = new char*[argc + 1];
 		for (int i = 0; i < argc; i++) {

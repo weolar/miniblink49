@@ -211,6 +211,9 @@ NODE_EXTERN Environment* CreateEnvironment(v8::Isolate* isolate,
                                            int exec_argc,
                                            const char* const* exec_argv);
 
+// Ö´ÐÐjs
+NODE_EXTERN v8::Local<v8::Value> ExecuteString(Environment* env, v8::Local<v8::String> source, v8::Local<v8::String> filename);
+
 
 NODE_EXTERN void EmitBeforeExit(Environment* env);
 NODE_EXTERN int EmitExit(Environment* env);

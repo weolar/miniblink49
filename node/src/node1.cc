@@ -1527,7 +1527,7 @@ namespace node {
 
 	// Executes a str within the current v8 context.
 	// Ö´ÐÐjs
-	static Local<Value> ExecuteString(Environment* env, Local<String> source, Local<String> filename) {
+	Local<Value> ExecuteString(Environment* env, Local<String> source, Local<String> filename) {
 		EscapableHandleScope scope(env->isolate());
 		TryCatch try_catch(env->isolate());
 
