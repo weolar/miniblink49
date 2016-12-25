@@ -301,8 +301,10 @@ private:
     void scheduleRequest(PassOwnPtr<PluginRequest>);
     void requestTimerFired(blink::Timer<WebPluginImpl>*);
     void invalidateTimerFired(blink::Timer<WebPluginImpl>*);
+    void platformStartAsyn(blink::Timer<WebPluginImpl>*);
     blink::Timer<WebPluginImpl> m_requestTimer;
     blink::Timer<WebPluginImpl> m_invalidateTimer;
+    blink::Timer<WebPluginImpl> m_asynStartTimer;
 
     void asynSetPlatformPluginWidgetVisibilityTimerFired(blink::Timer<WebPluginImpl>*);
     blink::Timer<WebPluginImpl> m_setPlatformPluginWidgetVisibilityTimer;
