@@ -130,7 +130,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;V8_NO_FAST_TLS;WIN32;_DEBUG;_LIB;V8_TARGET_ARCH_IA32=1;V8_DEPRECATION_WARNINGS;NVALGRIND;ENABLE_HANDLE_ZAPPING;V8_USE_EXTERNAL_STARTUP_DATA=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;V8_NO_FAST_TLS;WIN32;_DEBUG;_LIB;V8_TARGET_ARCH_IA32=1;V8_DEPRECATION_WARNINGS;NVALGRIND;ENABLE_HANDLE_ZAPPING;V8_USE_EXTERNAL_STARTUP_DATA=1;BUILDING_V8_SHARED;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>../../v8_5_7;../../v8_5_7/include</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>

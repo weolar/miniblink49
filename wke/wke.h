@@ -409,7 +409,7 @@ WKE_API void wkeNetSetHTTPHeaderField(void *job, wchar_t *key, wchar_t *value);
 WKE_API void wkeNetSetURL(void *job, const char *url);
 WKE_API void wkeNetSetData(void *job, void *buf, int len);
 WKE_API void wkeNetHookRequest(void *job);	//调用此函数后,网络层收到数据会存储在一buf内,接收数据完成后响应OnLoadUrlEnd事件.#此调用严重影响性能,慎用
-                                            //wkewindow-----------------------------------------------------------------------------------
+//wkewindow-----------------------------------------------------------------------------------
 typedef enum {
     WKE_WINDOW_TYPE_POPUP,
     WKE_WINDOW_TYPE_TRANSPARENT,
@@ -539,6 +539,8 @@ WKE_API void jsGC();
 }
 #endif
 
+#if defined(__cplusplus)
+
 namespace wke {
 
 class IWebView {
@@ -632,6 +634,7 @@ public:
 
 }
 
+#endif
 
 #endif
 

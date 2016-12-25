@@ -1,7 +1,7 @@
 #include <windows.h>
 #include "wke.h"
+#include "nodeblink.h"
 
-extern "C" bool __declspec(dllexport) RunNodeThread(int argc, wchar_t *wargv[]);
 int APIENTRY wWinMain(HINSTANCE hInstance,
 	HINSTANCE hPrevInstance,
 	LPTSTR    lpCmdLine,
@@ -10,12 +10,10 @@ int APIENTRY wWinMain(HINSTANCE hInstance,
 	UNREFERENCED_PARAMETER(lpCmdLine);
 	wkeInitialize();
 
-	wchar_t* argv[] = { L"cefclient.exe",L"node_modules\\HiChat\\server.js" };
-	RunNodeThread(2, argv);
+
+
 	wchar_t* argv1[] = { L"cefclient.exe",L"server.js" };
-	RunNodeThread(2, argv1);
-	wchar_t* argv2[] = { L"cefclient.exe",L"server1.js" };
-	RunNodeThread(2, argv2);
+	node::RunNodeThread(2, argv1);
 
 	MSG msg = { 0 };
 	while (GetMessageW(&msg, NULL, 0, 0))

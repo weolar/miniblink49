@@ -36,6 +36,8 @@
 #include "v8-profiler.h"
 #include "zlib.h"
 
+#include "node_natives.h"
+
 #include <errno.h>
 #include <limits.h>  // PATH_MAX
 #include <locale.h>
@@ -826,11 +828,7 @@ namespace node {
 	}
 
 
-	Local<Value> WinapiErrnoException(Isolate* isolate,
-		int errorno,
-		const char* syscall,
-		const char* msg,
-		const char* path) {
+	Local<Value> WinapiErrnoException(Isolate* isolate, int errorno, const char* syscall, const char* msg, const char* path) {
 		Environment* env = Environment::GetCurrent(isolate);
 		Local<Value> e;
 		bool must_free = false;
@@ -880,8 +878,7 @@ namespace node {
 		return node::Malloc(size);
 	}
 
-	static bool DomainHasErrorHandler(const Environment* env,
-		const Local<Object>& domain) {
+	static bool DomainHasErrorHandler(const Environment* env, const Local<Object>& domain) {
 		HandleScope scope(env->isolate());
 
 		Local<Value> domain_event_listeners_v = domain->Get(env->events_string());
@@ -1057,12 +1054,8 @@ namespace node {
 			FIXED_ONE_BYTE_STRING(args.GetIsolate(), "_setupPromises")).FromJust();
 	}
 
-
-	Local<Value> MakeCallback(Environment* env,
-		Local<Value> recv,
-		const Local<Function> callback,
-		int argc,
-		Local<Value> argv[]) {
+	// Internal only.
+	Local<Value> MakeCallback(Environment* env, Local<Value> recv, const Local<Function> callback, int argc, Local<Value> argv[]) {
 		// If you hit this assertion, you forgot to enter the v8::Context first.
 		CHECK_EQ(env->context(), env->isolate()->GetCurrentContext());
 
@@ -1171,46 +1164,21 @@ namespace node {
 
 		return ret;
 	}
-
-
-	// Internal only.
-	Local<Value> MakeCallback(Environment* env,
-		Local<Object> recv,
-		uint32_t index,
-		int argc,
-		Local<Value> argv[]) {
+	Local<Value> MakeCallback(Environment* env, Local<Object> recv, uint32_t index, int argc, Local<Value> argv[]) {
 		Local<Value> cb_v = recv->Get(index);
 		CHECK(cb_v->IsFunction());
 		return MakeCallback(env, recv.As<Value>(), cb_v.As<Function>(), argc, argv);
 	}
-
-
-	Local<Value> MakeCallback(Environment* env,
-		Local<Object> recv,
-		Local<String> symbol,
-		int argc,
-		Local<Value> argv[]) {
+	Local<Value> MakeCallback(Environment* env, Local<Object> recv, Local<String> symbol, int argc, Local<Value> argv[]) {
 		Local<Value> cb_v = recv->Get(symbol);
 		CHECK(cb_v->IsFunction());
 		return MakeCallback(env, recv.As<Value>(), cb_v.As<Function>(), argc, argv);
 	}
-
-
-	Local<Value> MakeCallback(Environment* env,
-		Local<Object> recv,
-		const char* method,
-		int argc,
-		Local<Value> argv[]) {
+	Local<Value> MakeCallback(Environment* env, Local<Object> recv, const char* method, int argc, Local<Value> argv[]) {
 		Local<String> method_string = OneByteString(env->isolate(), method);
 		return MakeCallback(env, recv, method_string, argc, argv);
 	}
-
-
-	Local<Value> MakeCallback(Isolate* isolate,
-		Local<Object> recv,
-		const char* method,
-		int argc,
-		Local<Value> argv[]) {
+	Local<Value> MakeCallback(Isolate* isolate, Local<Object> recv, const char* method, int argc, Local<Value> argv[]) {
 		EscapableHandleScope handle_scope(isolate);
 		Local<Context> context = recv->CreationContext();
 		Environment* env = Environment::GetCurrent(context);
@@ -1218,13 +1186,7 @@ namespace node {
 		return handle_scope.Escape(
 			Local<Value>::New(isolate, MakeCallback(env, recv, method, argc, argv)));
 	}
-
-
-	Local<Value> MakeCallback(Isolate* isolate,
-		Local<Object> recv,
-		Local<String> symbol,
-		int argc,
-		Local<Value> argv[]) {
+	Local<Value> MakeCallback(Isolate* isolate, Local<Object> recv, Local<String> symbol, int argc, Local<Value> argv[]) {
 		EscapableHandleScope handle_scope(isolate);
 		Local<Context> context = recv->CreationContext();
 		Environment* env = Environment::GetCurrent(context);
@@ -1232,13 +1194,7 @@ namespace node {
 		return handle_scope.Escape(
 			Local<Value>::New(isolate, MakeCallback(env, recv, symbol, argc, argv)));
 	}
-
-
-	Local<Value> MakeCallback(Isolate* isolate,
-		Local<Object> recv,
-		Local<Function> callback,
-		int argc,
-		Local<Value> argv[]) {
+	Local<Value> MakeCallback(Isolate* isolate, Local<Object> recv, Local<Function> callback, int argc, Local<Value> argv[]) {
 		EscapableHandleScope handle_scope(isolate);
 		Local<Context> context = recv->CreationContext();
 		Environment* env = Environment::GetCurrent(context);
@@ -1249,8 +1205,7 @@ namespace node {
 	}
 
 
-	enum encoding ParseEncoding(const char* encoding,
-	enum encoding default_encoding) {
+	enum encoding ParseEncoding(const char* encoding, enum encoding default_encoding) {
 		switch (encoding[0]) {
 		case 'u':
 			// utf8, utf16le
@@ -1338,9 +1293,7 @@ namespace node {
 	}
 
 
-	enum encoding ParseEncoding(Isolate* isolate,
-		Local<Value> encoding_v,
-	enum encoding default_encoding) {
+	enum encoding ParseEncoding(Isolate* isolate, Local<Value> encoding_v, enum encoding default_encoding) {
 		if (!encoding_v->IsString())
 			return default_encoding;
 
@@ -1349,10 +1302,7 @@ namespace node {
 		return ParseEncoding(*encoding, default_encoding);
 	}
 
-	Local<Value> Encode(Isolate* isolate,
-		const char* buf,
-		size_t len,
-	enum encoding encoding) {
+	Local<Value> Encode(Isolate* isolate, const char* buf, size_t len, enum encoding encoding) {
 		CHECK_NE(encoding, UCS2);
 		return StringBytes::Encode(isolate, buf, len, encoding);
 	}
@@ -1362,20 +1312,14 @@ namespace node {
 	}
 
 	// Returns -1 if the handle was not valid for decoding
-	ssize_t DecodeBytes(Isolate* isolate,
-		Local<Value> val,
-	enum encoding encoding) {
+	ssize_t DecodeBytes(Isolate* isolate, Local<Value> val, enum encoding encoding) {
 		HandleScope scope(isolate);
 
 		return StringBytes::Size(isolate, val, encoding);
 	}
 
 	// Returns number of bytes written.
-	ssize_t DecodeWrite(Isolate* isolate,
-		char* buf,
-		size_t buflen,
-		Local<Value> val,
-	enum encoding encoding) {
+	ssize_t DecodeWrite(Isolate* isolate, char* buf, size_t buflen, Local<Value> val, enum encoding encoding) {
 		return StringBytes::Write(isolate, buf, buflen, val, encoding, nullptr);
 	}
 
@@ -1390,10 +1334,7 @@ namespace node {
 		return false;
 	}
 
-	void AppendExceptionLine(Environment* env,
-		Local<Value> er,
-		Local<Message> message,
-	enum ErrorHandlingMode mode) {
+	void AppendExceptionLine(Environment* env, Local<Value> er, Local<Message> message, enum ErrorHandlingMode mode) {
 		if (message.IsEmpty())
 			return;
 
@@ -1503,9 +1444,7 @@ namespace node {
 	}
 
 
-	static void ReportException(Environment* env,
-		Local<Value> er,
-		Local<Message> message) {
+	static void ReportException(Environment* env, Local<Value> er, Local<Message> message) {
 		HandleScope scope(env->isolate());
 
 		AppendExceptionLine(env, er, message, FATAL_ERROR);
@@ -1581,17 +1520,14 @@ namespace node {
 
 		fflush(stderr);
 	}
-
-
 	static void ReportException(Environment* env, const TryCatch& try_catch) {
 		ReportException(env, try_catch.Exception(), try_catch.Message());
 	}
 
 
 	// Executes a str within the current v8 context.
-	static Local<Value> ExecuteString(Environment* env,
-		Local<String> source,
-		Local<String> filename) {
+	// 执行js
+	static Local<Value> ExecuteString(Environment* env, Local<String> source, Local<String> filename) {
 		EscapableHandleScope scope(env->isolate());
 		TryCatch try_catch(env->isolate());
 
@@ -1615,7 +1551,6 @@ namespace node {
 
 		return scope.Escape(result);
 	}
-
 
 	static void GetActiveRequests(const FunctionCallbackInfo<Value>& args) {
 		Environment* env = Environment::GetCurrent(args);
@@ -2050,9 +1985,7 @@ namespace node {
 	}
 
 
-	void FatalException(Isolate* isolate,
-		Local<Value> error,
-		Local<Message> message) {
+	void FatalException(Isolate* isolate, Local<Value> error, Local<Message> message) {
 		HandleScope scope(isolate);
 
 		Environment* env = Environment::GetCurrent(isolate);
@@ -2100,8 +2033,6 @@ namespace node {
 			exit(exit_code);
 		}
 	}
-
-
 	void FatalException(Isolate* isolate, const TryCatch& try_catch) {
 		HandleScope scope(isolate);
 		// TODO(bajtos) do not call FatalException if try_catch is verbose
@@ -2134,8 +2065,25 @@ namespace node {
 			env->domain_string(),
 			Undefined(env->isolate())).FromJust();
 	}
+	//加载模块js
+	void ModuleJavaScript(Environment* env, Local<Object> target) {
+		HandleScope scope(env->isolate());
 
+		struct node_module* mp;
 
+		for (mp = modlist_builtin; mp != nullptr; mp = mp->nm_link) {
+			if (mp->nm_priv) {
+				struct _native* n = reinterpret_cast<struct _native*>(mp->nm_priv);
+				Local<String> name = String::NewFromUtf8(env->isolate(), n->name);
+				Local<String> source =
+					String::NewFromUtf8(
+						env->isolate(), reinterpret_cast<const char*>(n->source),
+						v8::NewStringType::kNormal, n->source_len).ToLocalChecked();
+				target->Set(name, source);
+			
+			}
+		}
+	}
 	static void Binding(const FunctionCallbackInfo<Value>& args) {
 		Environment* env = Environment::GetCurrent(args);
 
@@ -2178,6 +2126,9 @@ namespace node {
 		else if (!strcmp(*module_v, "natives")) {
 			exports = Object::New(env->isolate());
 			DefineJavaScript(env, exports);
+			//加载脚本
+			ModuleJavaScript(env, exports);
+
 			cache->Set(module, exports);
 		}
 		else {
@@ -2239,25 +2190,19 @@ namespace node {
 		args.GetReturnValue().Set(effective_exports);
 	}
 
-	static void ProcessTitleGetter(Local<Name> property,
-		const PropertyCallbackInfo<Value>& info) {
+	static void ProcessTitleGetter(Local<Name> property, const PropertyCallbackInfo<Value>& info) {
 		char buffer[512];
 		uv_get_process_title(buffer, sizeof(buffer));
 		info.GetReturnValue().Set(String::NewFromUtf8(info.GetIsolate(), buffer));
 	}
-
-
-	static void ProcessTitleSetter(Local<Name> property,
-		Local<Value> value,
-		const PropertyCallbackInfo<void>& info) {
+	static void ProcessTitleSetter(Local<Name> property, Local<Value> value, const PropertyCallbackInfo<void>& info) {
 		node::Utf8Value title(info.GetIsolate(), value);
 		// TODO(piscisaureus): protect with a lock
 		uv_set_process_title(*title);
 	}
 
 
-	static void EnvGetter(Local<Name> property,
-		const PropertyCallbackInfo<Value>& info) {
+	static void EnvGetter(Local<Name> property, const PropertyCallbackInfo<Value>& info) {
 		Isolate* isolate = info.GetIsolate();
 		String::Value key(property);
 		WCHAR buffer[32767];  // The maximum size allowed for environment variables.
@@ -2274,11 +2219,7 @@ namespace node {
 			return info.GetReturnValue().Set(rc);
 		}
 	}
-
-
-	static void EnvSetter(Local<Name> property,
-		Local<Value> value,
-		const PropertyCallbackInfo<Value>& info) {
+	static void EnvSetter(Local<Name> property, Local<Value> value, const PropertyCallbackInfo<Value>& info) {
 		String::Value key(property);
 		String::Value val(value);
 		WCHAR* key_ptr = reinterpret_cast<WCHAR*>(*key);
@@ -2291,8 +2232,7 @@ namespace node {
 	}
 
 
-	static void EnvQuery(Local<Name> property,
-		const PropertyCallbackInfo<Integer>& info) {
+	static void EnvQuery(Local<Name> property, const PropertyCallbackInfo<Integer>& info) {
 		int32_t rc = -1;  // Not found unless proven otherwise.
 		String::Value key(property);
 		WCHAR* key_ptr = reinterpret_cast<WCHAR*>(*key);
@@ -2311,8 +2251,7 @@ namespace node {
 	}
 
 
-	static void EnvDeleter(Local<Name> property,
-		const PropertyCallbackInfo<Boolean>& info) {
+	static void EnvDeleter(Local<Name> property, const PropertyCallbackInfo<Boolean>& info) {
 		String::Value key(property);
 		WCHAR* key_ptr = reinterpret_cast<WCHAR*>(*key);
 		SetEnvironmentVariableW(key_ptr, nullptr);
@@ -2421,15 +2360,10 @@ namespace node {
 	}
 
 
-	static void DebugPortGetter(Local<Name> property,
-		const PropertyCallbackInfo<Value>& info) {
+	static void DebugPortGetter(Local<Name> property, const PropertyCallbackInfo<Value>& info) {
 		info.GetReturnValue().Set(debug_port);
 	}
-
-
-	static void DebugPortSetter(Local<Name> property,
-		Local<Value> value,
-		const PropertyCallbackInfo<void>& info) {
+	static void DebugPortSetter(Local<Name> property, Local<Value> value, const PropertyCallbackInfo<void>& info) {
 		debug_port = value->Int32Value();
 	}
 
@@ -2439,20 +2373,14 @@ namespace node {
 	static void DebugEnd(const FunctionCallbackInfo<Value>& args);
 
 
-	void NeedImmediateCallbackGetter(Local<Name> property,
-		const PropertyCallbackInfo<Value>& info) {
+	static void NeedImmediateCallbackGetter(Local<Name> property, const PropertyCallbackInfo<Value>& info) {
 		Environment* env = Environment::GetCurrent(info);
 		const uv_check_t* immediate_check_handle = env->immediate_check_handle();
 		bool active = uv_is_active(
 			reinterpret_cast<const uv_handle_t*>(immediate_check_handle));
 		info.GetReturnValue().Set(active);
 	}
-
-
-	static void NeedImmediateCallbackSetter(
-		Local<Name> property,
-		Local<Value> value,
-		const PropertyCallbackInfo<void>& info) {
+	static void NeedImmediateCallbackSetter(Local<Name> property, Local<Value> value, const PropertyCallbackInfo<void>& info) {
 		Environment* env = Environment::GetCurrent(info);
 
 		uv_check_t* immediate_check_handle = env->immediate_check_handle();
@@ -2480,8 +2408,6 @@ namespace node {
 		Environment* env = Environment::from_idle_prepare_handle(handle);
 		env->isolate()->GetCpuProfiler()->SetIdle(true);
 	}
-
-
 	void ClearIdle(uv_check_t* handle) {
 		Environment* env = Environment::from_idle_check_handle(handle);
 		env->isolate()->GetCpuProfiler()->SetIdle(false);
@@ -2492,8 +2418,6 @@ namespace node {
 		uv_prepare_start(env->idle_prepare_handle(), SetIdle);
 		uv_check_start(env->idle_check_handle(), ClearIdle);
 	}
-
-
 	void StopProfilerIdleNotifier(Environment* env) {
 		uv_prepare_stop(env->idle_prepare_handle());
 		uv_check_stop(env->idle_check_handle());
@@ -2504,8 +2428,6 @@ namespace node {
 		Environment* env = Environment::GetCurrent(args);
 		StartProfilerIdleNotifier(env);
 	}
-
-
 	void StopProfilerIdleNotifier(const FunctionCallbackInfo<Value>& args) {
 		Environment* env = Environment::GetCurrent(args);
 		StopProfilerIdleNotifier(env);
@@ -2899,7 +2821,7 @@ namespace node {
 		env->isolate()->SetFatalErrorHandler(node::OnFatalError);
 		env->isolate()->AddMessageListener(OnMessage);
 
-		atexit(AtProcessExit);
+		atexit(AtProcessExit);//注册退出函数
 
 		TryCatch try_catch(env->isolate());
 
@@ -2911,8 +2833,7 @@ namespace node {
 		// Execute the lib/internal/bootstrap_node.js file which was included as a
 		// static C string in node_natives.h by node_js2c.
 		// 'internal_bootstrap_node_native' is the string containing that source code.
-		Local<String> script_name = FIXED_ONE_BYTE_STRING(env->isolate(),
-			"bootstrap_node.js");
+		Local<String> script_name = FIXED_ONE_BYTE_STRING(env->isolate(), "bootstrap_node.js");
 		Local<Value> f_value = ExecuteString(env, MainSource(env), script_name);
 		if (try_catch.HasCaught()) {
 			ReportException(env, try_catch);
@@ -2958,8 +2879,6 @@ namespace node {
 		Local<Value> arg = env->process_object();
 		f->Call(Null(env->isolate()), 1, &arg);
 	}
-
-
 	void FreeEnvironment(Environment* env) {
 		CHECK_NE(env, nullptr);
 		env->Dispose();
@@ -3241,8 +3160,6 @@ namespace node {
 			return;
 		}
 	}
-
-
 	// Called from the main thread.
 	static void EnableDebug(Environment* env) {
 		CHECK(debugger_running);
@@ -3613,7 +3530,6 @@ namespace node {
 		uv_close(handle, HandleCloseCb);
 	}
 
-
 	Environment* CreateEnvironment(Isolate* isolate, uv_loop_t* loop, Local<Context> context, int argc, const char* const* argv, int exec_argc, const char* const* exec_argv) {
 		HandleScope handle_scope(isolate);
 
@@ -3679,125 +3595,5 @@ namespace node {
 
 		return env;
 	}
-
-	static void StartNodeInstance(void* arg) {
-		NodeInstanceData* instance_data = static_cast<NodeInstanceData*>(arg);
-		Isolate::CreateParams params;
-		ArrayBufferAllocator* array_buffer_allocator = new ArrayBufferAllocator();
-		params.array_buffer_allocator = array_buffer_allocator;
-		Isolate* isolate = Isolate::New(params);
-
-		{
-			Mutex::ScopedLock scoped_lock(node_isolate_mutex);
-			if (instance_data->is_main()) {
-				CHECK_EQ(node_isolate, nullptr);
-				node_isolate = isolate;
-			}
-		}
-
-		if (track_heap_objects) {
-			isolate->GetHeapProfiler()->StartTrackingHeapObjects(true);
-		}
-
-		{
-			//Locker locker(isolate);
-			Isolate::Scope isolate_scope(isolate);
-			HandleScope handle_scope(isolate);
-			Local<Context> context = Context::New(isolate);
-			Environment* env = CreateEnvironment(isolate, context, instance_data);
-			array_buffer_allocator->set_env(env);
-			Context::Scope context_scope(context);
-
-			isolate->SetAbortOnUncaughtExceptionCallback(
-				ShouldAbortOnUncaughtException);
-
-			// Start debug agent when argv has --debug
-			if (instance_data->use_debug_agent()) {
-				const char* path = instance_data->argc() > 1
-					? instance_data->argv()[1]
-					: nullptr;
-				StartDebug(env, path, debug_wait_connect);
-				if (!debugger_running) {
-					exit(12);
-				}
-			}
-
-			{
-				Environment::AsyncCallbackScope callback_scope(env);
-				LoadEnvironment(env);
-			}
-
-			env->set_trace_sync_io(trace_sync_io);
-
-			// Enable debugger
-			if (instance_data->use_debug_agent())
-				EnableDebug(env);
-
-			{
-				SealHandleScope seal(isolate);
-				bool more;
-				do {
-					more = uv_run(env->event_loop(), UV_RUN_ONCE);
-
-					if (more == false) {
-						EmitBeforeExit(env);
-						more = uv_loop_alive(env->event_loop());
-						if (uv_run(env->event_loop(), UV_RUN_NOWAIT) != 0)
-							more = true;
-					}
-				} while (more == true);
-			}
-
-			env->set_trace_sync_io(false);
-
-			int exit_code = EmitExit(env);
-			if (instance_data->is_main())
-				instance_data->set_exit_code(exit_code);
-			RunAtExit(env);
-
-
-			array_buffer_allocator->set_env(nullptr);
-			env->Dispose();
-			env = nullptr;
-		}
-
-		{
-			Mutex::ScopedLock scoped_lock(node_isolate_mutex);
-			if (node_isolate == isolate)
-				node_isolate = nullptr;
-		}
-
-		CHECK_NE(isolate, nullptr);
-		isolate->Dispose();
-		isolate = nullptr;
-		delete array_buffer_allocator;
-	}
-
-	int Start(int argc, char** argv) {
-		argv = uv_setup_args(argc, argv);
-		int exec_argc;
-		const char** exec_argv;
-		Init(&argc, const_cast<const char**>(argv), &exec_argc, &exec_argv);
-		V8::SetEntropySource(crypto::EntropySource);
-		int exit_code = 1;
-		{
-			NodeInstanceData instance_data(NodeInstanceType::MAIN,
-				uv_default_loop(),
-				argc,
-				const_cast<const char**>(argv),
-				exec_argc,
-				exec_argv,
-				use_debug_agent);
-			//启动Node
-			StartNodeInstance(&instance_data);
-			exit_code = instance_data.exit_code();
-		}
-
-		delete[] exec_argv;
-		exec_argv = nullptr;
-
-		return exit_code;
-	}
-
 
 }  // namespace node
