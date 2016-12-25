@@ -1240,11 +1240,28 @@ void WebURLLoaderManager::initializeHandle(WebURLLoaderInternal* job)
 
     applyAuthenticationToRequest(job, job->firstRequest());
 
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
+	RequestExtraData* requestExtraData = reinterpret_cast<RequestExtraData*>(job->firstRequest()->extraData());
+	WebPage* page = requestExtraData->page;
+	if (page->wkeWebView()) {
+		if (page->wkeWebView()->m_proxy.length()) {
+			curl_easy_setopt(d->m_handle, CURLOPT_PROXY, page->wkeWebView()->m_proxy.utf8().data());
+			curl_easy_setopt(d->m_handle, CURLOPT_PROXYTYPE, page->wkeWebView()->m_proxyType);
+		}
+		else {
+			if (m_proxy.length()) {
+				curl_easy_setopt(d->m_handle, CURLOPT_PROXY, m_proxy.utf8().data());
+				curl_easy_setopt(d->m_handle, CURLOPT_PROXYTYPE, m_proxyType);
+			}
+		}
+	}
+#else
     // Set proxy options if we have them.
     if (m_proxy.length()) {
         curl_easy_setopt(d->m_handle, CURLOPT_PROXY, m_proxy.utf8().data());
         curl_easy_setopt(d->m_handle, CURLOPT_PROXYTYPE, m_proxyType);
     }
+#endif
 }
 
 void WebURLLoaderManager::initCookieSession()

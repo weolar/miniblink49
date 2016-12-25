@@ -193,7 +193,7 @@ _CRTIMP double  __cdecl modf(double, double *);
 _CRTIMP double  __cdecl _y0(double);
 _CRTIMP double  __cdecl _y1(double);
 _CRTIMP double  __cdecl _yn(int, double);
-
+_CRTIMP double __cdecl scalbn( double _X,  int _Y);
 
 #if     defined(_M_IX86)
 

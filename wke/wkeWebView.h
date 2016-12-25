@@ -7,7 +7,7 @@
 //cexer: 必须包含在后面，因为其中的 windows.h 会定义 max、min，导致 WebCore 内部的 max、min 出现错乱。
 #include "wke/wkeString.h"
 #include "third_party/WebKit/Source/platform/geometry/IntRect.h"
-
+#include "net/WebURLLoaderManager.h"
 //////////////////////////////////////////////////////////////////////////
 namespace content {
  class WebPage;
@@ -195,6 +195,11 @@ public:
 
     content::WebPage* webPage() { return m_webPage; }
 
+	void setProxyInfo(const String& host,
+		unsigned long port,
+		net::WebURLLoaderManager::ProxyType type,
+		const String& username,
+		const String& password);
 protected:
     HWND m_hWnd;
     void _initHandler();
@@ -230,6 +235,9 @@ protected:
     //void* m_pixels;
 
     bool m_awake;
+public:
+	String m_proxy;
+	net::WebURLLoaderManager::ProxyType m_proxyType;
 };
 
 };//namespace wke

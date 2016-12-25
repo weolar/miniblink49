@@ -4,8 +4,9 @@
 
 #ifndef V8_VALUE_SERIALIZER_H_
 #define V8_VALUE_SERIALIZER_H_
-
+#if USING_VC6RT != 1
 #include <cstdint>
+#endif
 #include <vector>
 
 #include "include/v8.h"

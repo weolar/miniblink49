@@ -41,6 +41,16 @@ DEFINE_CHECK_OP_IMPL(GE)
 DEFINE_CHECK_OP_IMPL(GT)
 #undef DEFINE_CHECK_OP_IMPL
 
+#if USING_VC6RT == 1
+std::basic_string<char, std::char_traits<char>, class std::allocator<char> >* MakeCheckOpString<__int64, __int64>(__int64 const & lhs, __int64 const & rhs, char const * msg) {
+	char* buf = new char[2000];
+	sprintf(buf, " (%I64d vs. %I64d)", lhs, rhs);
+	std::ostringstream ss;
+	ss << msg << buf;
+	delete[] buf;
+	return new std::string(ss.str());
+}
+#endif
 }  // namespace base
 }  // namespace v8
 

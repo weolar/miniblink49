@@ -53,11 +53,17 @@
 
 // These additional WIN32 includes have to be right here as the #undef's below
 // makes it impossible to have them elsewhere.
+#if USING_VC6RT != 1
 #include <winsock2.h>
 #include <ws2tcpip.h>
+#endif
+
 #ifndef __MINGW32__
+#if USING_VC6RT != 1
 #include <wspiapi.h>
+#endif
 #endif  // __MINGW32__
+
 #include <process.h>  // For _beginthreadex().
 #include <stdlib.h>
 

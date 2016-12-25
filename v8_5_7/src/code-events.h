@@ -5,7 +5,9 @@
 #ifndef V8_CODE_EVENTS_H_
 #define V8_CODE_EVENTS_H_
 
+#if USING_VC6RT != 1
 #include <unordered_set>
+#endif
 
 #include "src/base/platform/mutex.h"
 #include "src/globals.h"

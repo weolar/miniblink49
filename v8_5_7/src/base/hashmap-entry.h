@@ -4,9 +4,9 @@
 
 #ifndef V8_BASE_HASHMAP_ENTRY_H_
 #define V8_BASE_HASHMAP_ENTRY_H_
-
+#if USING_VC6RT != 1
 #include <cstdint>
-
+#endif
 namespace v8 {
 namespace base {
 

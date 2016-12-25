@@ -3,9 +3,9 @@
 // found in the LICENSE file.
 
 #include "src/value-serializer.h"
-
+#if USING_VC6RT != 1
 #include <type_traits>
-
+#endif
 #include "src/base/logging.h"
 #include "src/conversions.h"
 #include "src/factory.h"
@@ -229,7 +229,9 @@ uint8_t* ValueSerializer::ReserveRawBytes(size_t bytes) {
 }
 
 void ValueSerializer::ExpandBuffer(size_t required_capacity) {
-  DCHECK_GT(required_capacity, buffer_capacity_);
+#if USING_VC6RT != 1
+	DCHECK_GT(required_capacity, buffer_capacity_);
+#endif
   size_t requested_capacity =
       std::max(required_capacity, buffer_capacity_ * 2) + 64;
   size_t provided_capacity = 0;
@@ -454,7 +456,9 @@ Maybe<bool> ValueSerializer::WriteJSReceiver(Handle<JSReceiver> receiver) {
 }
 
 Maybe<bool> ValueSerializer::WriteJSObject(Handle<JSObject> object) {
+#if USING_VC6RT != 1
   DCHECK_GT(object->map()->instance_type(), LAST_CUSTOM_ELEMENTS_RECEIVER);
+#endif
   const bool can_serialize_fast =
       object->HasFastProperties() && object->elements()->length() == 0;
   if (!can_serialize_fast) return WriteJSObjectSlow(object);
