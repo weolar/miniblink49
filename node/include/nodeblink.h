@@ -15,12 +15,16 @@
 #include "env-inl.h"
 #include "uv.h"
 namespace node {
-	typedef struct {
+	struct nodeargc;
+	typedef void(*nodeInitCallBack)(nodeargc*);
+	typedef struct nodeargc {
 		char** argv;
 		int argc;
 		uv_loop_t *child_loop_;
 		Environment* child_env_;
-	} nodeargc;
+		nodeInitCallBack initcall;
+	};
 
 	NODE_EXTERN nodeargc* RunNodeThread(int argc, wchar_t *wargv[]);
+	NODE_EXTERN Environment* NodeGetEnvironment(nodeargc*);
 }

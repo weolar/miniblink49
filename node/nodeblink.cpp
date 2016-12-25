@@ -39,6 +39,8 @@ namespace node {
 			// Expose API
 			LoadEnvironment(env);
 
+			if (p->initcall)
+				p->initcall(p);
 			CHECK_EQ(p->child_loop_, env->event_loop());
 			uv_run(p->child_loop_, UV_RUN_DEFAULT);
 
@@ -122,5 +124,12 @@ namespace node {
 	loop_init_failed:
 		free(p);
 		return NULL;
+	}
+	Environment* NodeGetEnvironment(nodeargc* p) {
+		if (p)
+		{
+			return p->child_env_;
+		}
+		return nullptr;
 	}
 }
