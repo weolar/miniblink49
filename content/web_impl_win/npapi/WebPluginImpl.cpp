@@ -102,6 +102,7 @@ WebPluginImpl::WebPluginImpl(WebLocalFrame* parentFrame, const blink::WebPluginP
     , m_invalidateTimer(this, &WebPluginImpl::invalidateTimerFired)
     , m_popPopupsStateTimer(this, &WebPluginImpl::popPopupsStateTimerFired)
     , m_lifeSupportTimer(this, &WebPluginImpl::lifeSupportTimerFired)
+    , m_asynStartTimer(this, &WebPluginImpl::platformStartAsyn)
     , m_setPlatformPluginWidgetVisibilityTimer(this, &WebPluginImpl::asynSetPlatformPluginWidgetVisibilityTimerFired)
     , m_mode(params.loadManually ? NP_FULL : NP_EMBED)
     , m_paramNames(0)
