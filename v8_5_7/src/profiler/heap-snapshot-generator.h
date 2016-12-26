@@ -5,7 +5,12 @@
 #ifndef V8_PROFILER_HEAP_SNAPSHOT_GENERATOR_H_
 #define V8_PROFILER_HEAP_SNAPSHOT_GENERATOR_H_
 
+#if USING_VC6RT == 1
+#include <map>
+#else
 #include <unordered_map>
+#endif
+
 
 #include "include/v8-profiler.h"
 #include "src/base/platform/time.h"
@@ -469,7 +474,11 @@ class V8HeapExplorer : public HeapEntriesAllocator {
   HeapObjectsSet objects_tags_;
   HeapObjectsSet strong_gc_subroot_names_;
   HeapObjectsSet user_roots_;
+#if USING_VC6RT == 1
+  std::map<const FixedArray*, FixedArraySubInstanceType> array_types_;
+#else
   std::unordered_map<const FixedArray*, FixedArraySubInstanceType> array_types_;
+#endif
   v8::HeapProfiler::ObjectNameResolver* global_object_name_resolver_;
 
   std::vector<bool> marks_;

@@ -245,7 +245,11 @@ class ProfileTree {
   void EnqueueNode(const ProfileNode* node) { pending_nodes_.push_back(node); }
   size_t pending_nodes_count() const { return pending_nodes_.size(); }
   std::vector<const ProfileNode*> TakePendingNodes() {
+#if USING_VC6RT == 1
+    return pending_nodes_;
+#else
     return std::move(pending_nodes_);
+#endif
   }
 
  private:

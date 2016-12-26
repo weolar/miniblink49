@@ -202,8 +202,15 @@ class StoreBuffer {
 
   // Callbacks are more efficient than reading out the gc state for every
   // store buffer operation.
+#if USING_VC6RT == 1
+  typedef void(*InsertionCallbackFn)(StoreBuffer*, Address);
+  typedef void(*DeletionCallbackFn)(StoreBuffer*, Address, Address);
+  InsertionCallbackFn insertion_callback;
+  DeletionCallbackFn deletion_callback;
+#else
   std::function<void(StoreBuffer*, Address)> insertion_callback;
   std::function<void(StoreBuffer*, Address, Address)> deletion_callback;
+#endif
 };
 
 }  // namespace internal

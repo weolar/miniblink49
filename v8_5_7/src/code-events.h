@@ -5,7 +5,9 @@
 #ifndef V8_CODE_EVENTS_H_
 #define V8_CODE_EVENTS_H_
 
-#if USING_VC6RT != 1
+#if USING_VC6RT == 1
+#include <set>
+#else
 #include <unordered_set>
 #endif
 
@@ -178,7 +180,11 @@ class CodeEventDispatcher {
 #undef CODE_EVENT_DISPATCH
 
  private:
+#if USING_VC6RT == 1
+   std::set<CodeEventListener*> listeners_;
+#else
   std::unordered_set<CodeEventListener*> listeners_;
+#endif
   base::Mutex mutex_;
 
   DISALLOW_COPY_AND_ASSIGN(CodeEventDispatcher);
