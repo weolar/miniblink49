@@ -124,8 +124,22 @@ public:
     void reset(PtrType = nullptr);
     PtrType release();
 
-    ValueType& operator*() const { DCHECK(m_ptr); return *m_ptr; }
-    PtrType operator->() const { DCHECK(m_ptr); return m_ptr; }
+    ValueType& operator*() const
+    {
+#ifdef DEBUG
+        if (!m_ptr)
+            DebugBreak();
+#endif
+        return *m_ptr;
+    }
+    PtrType operator->() const
+    {
+#ifdef DEBUG
+        if (!m_ptr)
+            DebugBreak();
+#endif
+        return m_ptr;
+    }
 
     ValueType& operator[](std::ptrdiff_t i) const;
 
@@ -181,8 +195,12 @@ template <typename T> inline typename unique_ptr<T>::PtrType unique_ptr<T>::rele
 template <typename T> inline typename unique_ptr<T>::ValueType& unique_ptr<T>::operator[](std::ptrdiff_t i) const
 {
     static_assert(is_array<T>::value, "elements access is possible for arrays only");
-    DCHECK(m_ptr);
-    DCHECK_GE(i, 0);
+//     DCHECK(m_ptr);
+//     DCHECK_GE(i, 0);
+#ifdef DEBUG
+    if (!m_ptr || i < 0)
+        DebugBreak();
+#endif
     return m_ptr[i];
 }
 
@@ -202,7 +220,11 @@ template <typename T> inline unique_ptr<T>& unique_ptr<T>::operator=(unique_ptr<
 {
     PtrType ptr = m_ptr;
     m_ptr = o.release();
-    DCHECK(!ptr || m_ptr != ptr);
+    //DCHECK(!ptr || m_ptr != ptr);
+#ifdef DEBUG
+    if (ptr && m_ptr == ptr)
+        DebugBreak();
+#endif
     OwnedPtrDeleter<T>::deletePtr(ptr);
 
     return *this;
@@ -214,7 +236,11 @@ template <typename U> inline unique_ptr<T>& unique_ptr<T>::operator=(unique_ptr<
     static_assert(!is_array<T>::value, "pointers to array must never be converted");
     PtrType ptr = m_ptr;
     m_ptr = o.release();
-    DCHECK(!ptr || m_ptr != ptr);
+    //DCHECK(!ptr || m_ptr != ptr);
+#ifdef DEBUG
+    if (ptr && m_ptr == ptr)
+        DebugBreak();
+#endif
     OwnedPtrDeleter<T>::deletePtr(ptr);
 
     return *this;
