@@ -38,7 +38,7 @@ inline void* Calloc(size_t n, size_t size);
 #ifdef __GNUC__
 #define NO_RETURN __attribute__((noreturn))
 #else
-#define NO_RETURN __declspec(dllexport)
+#define NO_RETURN __declspec(dllimport)
 #endif
 
 // The slightly odd function signature for Assert() is to ease

@@ -1,7 +1,23 @@
 #include <windows.h>
 #include "wke.h"
+#include "nodeblink.h"
+#include "lib\native.h"
+using namespace v8;
+using namespace node;
 
-extern "C" bool __declspec(dllexport) RunNodeThread(int argc, wchar_t *wargv[]);
+void InitCallBack(node::nodeargc* p) {
+	node::Environment*env = node::NodeGetEnvironment(p);
+	//执行electron初始化脚本
+	Local<String> script_name = FIXED_ONE_BYTE_STRING(env->isolate(), "init.js");
+	node::ExecuteString(env, script_name, String::NewFromUtf8(
+		env->isolate(),
+		reinterpret_cast<const char*>(init),
+		NewStringType::kNormal,
+		sizeof(init)).ToLocalChecked());
+
+}
+
+
 int APIENTRY wWinMain(HINSTANCE hInstance,
 	HINSTANCE hPrevInstance,
 	LPTSTR    lpCmdLine,
@@ -10,12 +26,9 @@ int APIENTRY wWinMain(HINSTANCE hInstance,
 	UNREFERENCED_PARAMETER(lpCmdLine);
 	wkeInitialize();
 
-	wchar_t* argv[] = { L"cefclient.exe",L"node_modules\\HiChat\\server.js" };
-	RunNodeThread(2, argv);
-	wchar_t* argv1[] = { L"cefclient.exe",L"server.js" };
-	RunNodeThread(2, argv1);
-	wchar_t* argv2[] = { L"cefclient.exe",L"server1.js" };
-	RunNodeThread(2, argv2);
+
+	wchar_t* argv1[] = { L"electron.exe" };
+	node::nodeargc *node = node::RunNodeThread(1, argv1, InitCallBack);
 
 	MSG msg = { 0 };
 	while (GetMessageW(&msg, NULL, 0, 0))

@@ -225,51 +225,6 @@
     <ClInclude Include="..\..\v8_5_7\src\full-codegen\full-codegen.h">
       <Filter>src\full-codegen</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\v8_5_7\src\ic\access-compiler.h">
-      <Filter>src\ic</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\v8_5_7\src\ic\access-compiler-data.h">
-      <Filter>src\ic</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\v8_5_7\src\ic\accessor-assembler.h">
-      <Filter>src\ic</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\v8_5_7\src\ic\accessor-assembler-impl.h">
-      <Filter>src\ic</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\v8_5_7\src\ic\call-optimization.h">
-      <Filter>src\ic</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\v8_5_7\src\ic\handler-compiler.h">
-      <Filter>src\ic</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\v8_5_7\src\ic\handler-configuration.h">
-      <Filter>src\ic</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\v8_5_7\src\ic\handler-configuration-inl.h">
-      <Filter>src\ic</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\v8_5_7\src\ic\ic.h">
-      <Filter>src\ic</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\v8_5_7\src\ic\ic-compiler.h">
-      <Filter>src\ic</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\v8_5_7\src\ic\ic-inl.h">
-      <Filter>src\ic</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\v8_5_7\src\ic\ic-state.h">
-      <Filter>src\ic</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\v8_5_7\src\ic\ic-stats.h">
-      <Filter>src\ic</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\v8_5_7\src\ic\keyed-store-generic.h">
-      <Filter>src\ic</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\v8_5_7\src\ic\stub-cache.h">
-      <Filter>src\ic</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\v8_5_7\src\libplatform\default-platform.h">
       <Filter>src\libplatform</Filter>
     </ClInclude>
@@ -411,57 +366,6 @@
     <ClInclude Include="..\..\v8_5_7\src\third_party\vtune\vtune-jit.h">
       <Filter>src\third_party\vtune</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\v8_5_7\src\wasm\ast-decoder.h">
-      <Filter>src\wasm</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\v8_5_7\src\wasm\decoder.h">
-      <Filter>src\wasm</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\v8_5_7\src\wasm\leb-helper.h">
-      <Filter>src\wasm</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\v8_5_7\src\wasm\managed.h">
-      <Filter>src\wasm</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\v8_5_7\src\wasm\module-decoder.h">
-      <Filter>src\wasm</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\v8_5_7\src\wasm\signature-map.h">
-      <Filter>src\wasm</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\v8_5_7\src\wasm\wasm-external-refs.h">
-      <Filter>src\wasm</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\v8_5_7\src\wasm\wasm-interpreter.h">
-      <Filter>src\wasm</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\v8_5_7\src\wasm\wasm-js.h">
-      <Filter>src\wasm</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\v8_5_7\src\wasm\wasm-limits.h">
-      <Filter>src\wasm</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\v8_5_7\src\wasm\wasm-macro-gen.h">
-      <Filter>src\wasm</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\v8_5_7\src\wasm\wasm-module.h">
-      <Filter>src\wasm</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\v8_5_7\src\wasm\wasm-module-builder.h">
-      <Filter>src\wasm</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\v8_5_7\src\wasm\wasm-objects.h">
-      <Filter>src\wasm</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\v8_5_7\src\wasm\wasm-opcodes.h">
-      <Filter>src\wasm</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\v8_5_7\src\wasm\wasm-result.h">
-      <Filter>src\wasm</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\v8_5_7\src\wasm\wasm-text.h">
-      <Filter>src\wasm</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\v8_5_7\src\regexp\regexp-ast.h">
       <Filter>src\regexp</Filter>
     </ClInclude>
@@ -485,21 +389,6 @@
     </ClInclude>
     <ClInclude Include="..\..\v8_5_7\src\regexp\regexp-utils.h">
       <Filter>src\regexp</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\v8_5_7\src\zone\zone.h">
-      <Filter>src\zone</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\v8_5_7\src\zone\zone-allocator.h">
-      <Filter>src\zone</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\v8_5_7\src\zone\zone-chunk-list.h">
-      <Filter>src\zone</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\v8_5_7\src\zone\zone-containers.h">
-      <Filter>src\zone</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\v8_5_7\src\zone\zone-segment.h">
-      <Filter>src\zone</Filter>
     </ClInclude>
     <ClInclude Include="..\..\v8_5_7\src\snapshot\deserializer.h">
       <Filter>src\snapshot</Filter>
