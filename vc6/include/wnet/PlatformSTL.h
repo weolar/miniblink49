@@ -6,79 +6,25 @@
 #define PlatformSTL_h
 
 #include <memory>
-
+#include <type_traits_vc6.h>
 
 #define DEFINE_STATIC_LOCAL(type, name, arguments) \
     static type name;
 
-
-
 namespace std {
 
-template <typename T1, typename T2>
-struct is_convertible {
-private:
-    struct True_ {
-        char x[2];
-    };
-    struct False_ {
-    };
-
-    static True_ helper(T2 const &);
-    static False_ helper(...);
-
-public:
-    static bool const value = (
-        sizeof(True_) == sizeof(is_convertible::helper(T1()))
-    );
-};
-
-template <bool, class T = void>
-struct enable_if {
-};
-
-template <class T>
-struct enable_if<true, T> {
-    typedef T type;
-};
-
-template<class T>
-struct remove_extent {
-    typedef T type;
-};
-
-template<class T>
-struct remove_extent<T[]> {
-    typedef T type;
-};
-
-template<class T, size_t N>
-struct remove_extent<T[N]> {
-    typedef T type;
-};
-
-typedef decltype(nullptr) nullptr_t;
-
-template<class T, T v>
-struct integral_constant {
-    static constexpr T value = v;
-    typedef T value_type;
-    typedef integral_constant type;
-    constexpr operator value_type() const noexcept { return value; }
-    constexpr value_type operator()() const noexcept { return value; }
-};
-
-typedef integral_constant<bool, true> true_type;
-typedef integral_constant<bool, false> false_type;
-
-template<class T>
-struct is_array : false_type {};
-
-template<class T>
-struct is_array<T[]> : true_type {};
-
-template<class T, size_t N>
-struct is_array<T[N]> : true_type {};
+// 
+// typedef integral_constant<bool, true> true_type;
+// typedef integral_constant<bool, false> false_type;
+// 
+// template<class T>
+// struct is_array : false_type {};
+// 
+// template<class T>
+// struct is_array<T[]> : true_type {};
+// 
+// template<class T, size_t N>
+// struct is_array<T[N]> : true_type {};
 
 template <typename T>
 struct OwnedPtrDeleter {
