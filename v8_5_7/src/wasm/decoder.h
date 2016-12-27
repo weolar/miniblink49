@@ -279,7 +279,14 @@ class Decoder {
     error_msg_.reset();
   }
 
-  bool ok() const { return error_msg_ == nullptr; }
+  bool ok() const { 
+      return
+#if USING_VC6RT != 1
+          error_msg_ == nullptr;
+#else
+          !error_msg_;
+#endif
+  }
   bool failed() const { return !ok(); }
   bool more() const { return pc_ < limit_; }
 

@@ -6,7 +6,9 @@
 #define V8_CODE_STUB_ASSEMBLER_H_
 
 #include <functional>
-
+#if USING_VC6RT == 1
+#include <functionalvc6.h>
+#endif
 #include "src/compiler/code-assembler.h"
 #include "src/globals.h"
 #include "src/objects.h"

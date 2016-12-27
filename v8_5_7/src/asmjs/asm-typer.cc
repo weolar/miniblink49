@@ -72,7 +72,11 @@ using v8::internal::GetCurrentStackPosition;
 AsmTyper::FlattenedStatements::FlattenedStatements(Zone* zone,
                                                    ZoneList<Statement*>* s)
     : context_stack_(zone) {
+#if USING_VC6RT != 1
   context_stack_.emplace_back(Context(s));
+#else
+  context_stack_.push_back(Context(s));
+#endif
 }
 
 Statement* AsmTyper::FlattenedStatements::Next() {
@@ -91,8 +95,13 @@ Statement* AsmTyper::FlattenedStatements::Next() {
     Statement* current_statement =
         current->statements_->at(current->next_index_++);
     if (current_statement->IsBlock()) {
+#if USING_VC6RT != 1
       context_stack_.emplace_back(
+#else
+        context_stack_.push_back(
+#endif
           Context(current_statement->AsBlock()->statements()));
+
       continue;
     }
 
@@ -2360,7 +2369,11 @@ AsmType* AsmTyper::ValidateCall(AsmType* return_type, Call* call) {
   for (auto* arg : *call->arguments()) {
     AsmType* arg_type;
     RECURSE(arg_type = ValidateExpression(arg));
+#if USING_VC6RT != 1
     args.emplace_back(arg_type);
+#else
+    args.push_back(arg_type);
+#endif
   }
 
   auto* call_expr = call->expression();
@@ -2405,13 +2418,22 @@ AsmType* AsmTyper::ValidateCall(AsmType* return_type, Call* call) {
       }
       // Record FFI use signature, since the asm->wasm translator must know
       // all uses up-front.
+#if USING_VC6RT != 1
       ffi_use_signatures_.emplace_back(
+#else
+      ffi_use_signatures_.push_back(
+#endif
+
           FFIUseSignature(call_var_proxy->var(), zone_));
       FFIUseSignature* sig = &ffi_use_signatures_.back();
       sig->return_type_ = return_type;
       sig->arg_types_.reserve(args.size());
       for (size_t i = 0; i < args.size(); ++i) {
+#if USING_VC6RT != 1
         sig->arg_types_.emplace_back(args[i]);
+#else
+        sig->arg_types_.push_back(args[i]);
+#endif
       }
     }
 

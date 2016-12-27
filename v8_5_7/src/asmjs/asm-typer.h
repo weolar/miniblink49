@@ -398,7 +398,10 @@ class AsmTyper final {
   ZoneHashMap global_scope_;  // 3.1 Global environment
   ZoneHashMap local_scope_;   // 3.2 Variable environment
 
-  std::uintptr_t stack_limit_;
+#if USING_VC6RT != 1
+  std::
+#endif  
+  uintptr_t stack_limit_;
   bool stack_overflow_ = false;
 #if USING_VC6RT != 1
   std::unordered_map<AstNode*, AsmType*> module_node_types_;

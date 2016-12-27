@@ -14,10 +14,18 @@
 #include "src/splay-tree.h"
 #include "src/zone/accounting-allocator.h"
 
+#if USING_VC6RT == 1
+#undef max
+#undef min
+#endif
+
 #ifndef ZONE_NAME
 #define STRINGIFY(x) #x
 #define TOSTRING(x) STRINGIFY(x)
 #define ZONE_NAME __FILE__ ":" TOSTRING(__LINE__)
+
+#include <initializer_list_vc6.h>
+
 #endif
 
 namespace v8 {
@@ -161,13 +169,12 @@ class ZoneList final : public List<T, ZoneAllocationPolicy> {
       : List<T, ZoneAllocationPolicy>(capacity, ZoneAllocationPolicy(zone)) {}
 
   // Construct a new ZoneList from a std::initializer_list
-#if USING_VC6RT != 1
   ZoneList(std::initializer_list<T> list, Zone* zone)
       : List<T, ZoneAllocationPolicy>(static_cast<int>(list.size()),
                                       ZoneAllocationPolicy(zone)) {
     for (auto& i : list) Add(i, zone);
   }
-#endif
+
   void* operator new(size_t size, Zone* zone) { return zone->New(size); }
 
   // Construct a new ZoneList by copying the elements of the given ZoneList.

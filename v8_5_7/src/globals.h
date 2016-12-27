@@ -14,6 +14,13 @@
 #include "src/base/logging.h"
 #include "src/base/macros.h"
 
+#if USING_VC6RT == 1
+#undef SLOPPY
+#undef STRICT
+#undef LANGUAGE_END
+#undef CONST
+#endif
+
 #ifdef V8_OS_WIN
 
 // Setup for Windows shared library export.

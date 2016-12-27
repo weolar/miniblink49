@@ -1933,12 +1933,19 @@ unsigned OpcodeLength(const byte* pc, const byte* end) {
 void PrintAstForDebugging(const byte* start, const byte* end) {
   AccountingAllocator allocator;
   OFStream os(stdout);
-  PrintAst(&allocator, FunctionBodyForTesting(start, end), os, nullptr);
+  PrintAst(&allocator, FunctionBodyForTesting(start, end), os
+#if USING_VC6RT != 1
+      , nullptr
+#endif
+      );
 }
 
 bool PrintAst(AccountingAllocator* allocator, const FunctionBody& body,
-              std::ostream& os,
-              std::vector<std::tuple<uint32_t, int, int>>* offset_table) {
+              std::ostream& os
+#if USING_VC6RT != 1
+    , std::vector<std::tuple<uint32_t, int, int>>* offset_table
+#endif
+    ) {
   Zone zone(allocator, ZONE_NAME);
   WasmFullDecoder decoder(&zone, nullptr, body);
   int line_nr = 0;
@@ -1979,10 +1986,12 @@ bool PrintAst(AccountingAllocator* allocator, const FunctionBody& body,
     if (opcode == kExprElse) control_depth--;
 
     int num_whitespaces = control_depth < 32 ? 2 * control_depth : 64;
+#if USING_VC6RT != 1
     if (offset_table) {
       offset_table->push_back(
           std::make_tuple(i.pc_offset(), line_nr, num_whitespaces));
     }
+#endif
 
     // 64 whitespaces
     const char* padding =

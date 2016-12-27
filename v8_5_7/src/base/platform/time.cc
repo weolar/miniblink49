@@ -670,7 +670,8 @@ ThreadTicks ThreadTicks::GetForThread(const HANDLE& thread_handle) {
 
   // Get the number of TSC ticks used by the current thread.
   ULONG64 thread_cycle_time = 0;
-  ::QueryThreadCycleTime(thread_handle, &thread_cycle_time);
+  //::QueryThreadCycleTime(thread_handle, &thread_cycle_time);
+  DebugBreak(); // weolar
 
   // Get the frequency of the TSC.
   double tsc_ticks_per_second = TSCTicksPerSecond();
@@ -716,8 +717,9 @@ double ThreadTicks::TSCTicksPerSecond() {
 
   // The first time that this function is called, make an initial reading of the
   // TSC and the performance counter.
-  static const uint64_t tsc_initial = __rdtsc();
+  static const uint64_t tsc_initial = 0; // __rdtsc();
   static const uint64_t perf_counter_initial = QPCNowRaw();
+  DebugBreak(); // weolar
 
   // Make a another reading of the TSC and the performance counter every time
   // that this function is called.
