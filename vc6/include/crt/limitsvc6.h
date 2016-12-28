@@ -85,8 +85,7 @@ public:
 
 
 // CLASS numeric_limits<unsigned __int64>
-template<> class numeric_limits<unsigned __int64> : public _Num_uint64_base
-{	// limits for type unsigned long long
+template<> class numeric_limits<unsigned __int64> : public _Num_uint64_base {	// limits for type unsigned long long
 public:
     typedef unsigned __int64 _Ty;
 

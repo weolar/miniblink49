@@ -448,6 +448,219 @@ struct is_integral
 {	// determine whether _Ty is integral
 };
 
+// TEMPLATE CLASS _Is_unsigned_integral
+template<class _Ty>
+struct _Is_unsigned_integral
+  : false_type
+{	// determine whether _Ty is integral
+};
+
+template<>
+struct _Is_unsigned_integral<bool>
+  : false_type
+{	// determine whether _Ty is integral
+};
+
+template<>
+struct _Is_unsigned_integral<char>
+  : false_type
+{	// determine whether _Ty is integral
+};
+
+template<>
+struct _Is_unsigned_integral<unsigned char>
+  : true_type
+{	// determine whether _Ty is integral
+};
+
+template<>
+struct _Is_unsigned_integral<signed char>
+  : false_type
+{	// determine whether _Ty is integral
+};
+
+#ifdef _NATIVE_WCHAR_T_DEFINED
+template<>
+struct _Is_unsigned_integral<wchar_t>
+  : false_type
+{	// determine whether _Ty is integral
+};
+#endif /* _NATIVE_WCHAR_T_DEFINED */
+
+template<>
+struct _Is_unsigned_integral<unsigned short>
+  : true_type
+{	// determine whether _Ty is integral
+};
+
+template<>
+struct _Is_unsigned_integral<signed short>
+  : false_type
+{	// determine whether _Ty is integral
+};
+
+template<>
+struct _Is_unsigned_integral<unsigned int>
+  : true_type
+{	// determine whether _Ty is integral
+};
+
+template<>
+struct _Is_unsigned_integral<signed int>
+  : false_type
+{	// determine whether _Ty is integral
+};
+
+template<>
+struct _Is_unsigned_integral<unsigned long>
+  : true_type
+{	// determine whether _Ty is integral
+};
+
+template<>
+struct _Is_unsigned_integral<signed long>
+  : false_type
+{	// determine whether _Ty is integral
+};
+
+template<>
+struct _Is_unsigned_integral<char16_t>
+  : false_type
+{	// determine whether _Ty is integral
+};
+
+template<>
+struct _Is_unsigned_integral<char32_t>
+  : false_type
+{	// determine whether _Ty is integral
+};
+
+template<>
+struct _Is_unsigned_integral<__int64>
+  : false_type
+{	// determine whether _Ty is integral
+};
+
+template<>
+struct _Is_unsigned_integral<unsigned __int64>
+  : true_type
+{	// determine whether _Ty is integral
+};
+
+
+template<class _Ty>
+struct is_unsigned
+  : _Is_unsigned_integral<typename remove_cv<_Ty>::type>
+{	// determine whether _Ty is integral
+};
+
+// TEMPLATE CLASS _Is_signed_integral
+template<class _Ty>
+struct _Is_signed_integral
+  : false_type
+{	// determine whether _Ty is integral
+};
+
+template<>
+struct _Is_signed_integral<bool>
+  : false_type
+{	// determine whether _Ty is integral
+};
+
+template<>
+struct _Is_signed_integral<char>
+  : false_type
+{	// determine whether _Ty is integral
+};
+
+template<>
+struct _Is_signed_integral<unsigned char>
+  : false_type
+{	// determine whether _Ty is integral
+};
+
+template<>
+struct _Is_signed_integral<signed char>
+  : true_type
+{	// determine whether _Ty is integral
+};
+
+#ifdef _NATIVE_WCHAR_T_DEFINED
+template<>
+struct _Is_signed_integral<wchar_t>
+  : false_type
+{	// determine whether _Ty is integral
+};
+#endif /* _NATIVE_WCHAR_T_DEFINED */
+
+template<>
+struct _Is_signed_integral<unsigned short>
+  : false_type
+{	// determine whether _Ty is integral
+};
+
+template<>
+struct _Is_signed_integral<signed short>
+  : true_type
+{	// determine whether _Ty is integral
+};
+
+template<>
+struct _Is_signed_integral<unsigned int>
+  : false_type
+{	// determine whether _Ty is integral
+};
+
+template<>
+struct _Is_signed_integral<signed int>
+  : true_type
+{	// determine whether _Ty is integral
+};
+
+template<>
+struct _Is_signed_integral<unsigned long>
+  : false_type
+{	// determine whether _Ty is integral
+};
+
+template<>
+struct _Is_signed_integral<signed long>
+  : true_type
+{	// determine whether _Ty is integral
+};
+
+template<>
+struct _Is_signed_integral<char16_t>
+  : false_type
+{	// determine whether _Ty is integral
+};
+
+template<>
+struct _Is_signed_integral<char32_t>
+  : false_type
+{	// determine whether _Ty is integral
+};
+
+template<>
+struct _Is_signed_integral<__int64>
+  : true_type
+{	// determine whether _Ty is integral
+};
+
+template<>
+struct _Is_signed_integral<unsigned __int64>
+  : false_type
+{	// determine whether _Ty is integral
+};
+
+
+template<class _Ty>
+struct is_signed
+  : _Is_signed_integral<typename remove_cv<_Ty>::type>
+{	// determine whether _Ty is integral
+};
+
+
 // TEMPLATE CLASS _Is_floating_point
 template<class _Ty>
 struct _Is_floating_point
@@ -495,6 +708,93 @@ struct is_fundamental
   || is_void<_Ty>::value
   || is_null_pointer<_Ty>::value>
 {	// determine whether _Ty is a fundamental type
+};
+
+template<class _Ty>
+struct is_enum
+  _IS_ENUM(_Ty)
+{	// determine whether _Ty is an enumerated type
+};
+
+template<bool,
+class _Ty1,
+class _Ty2>
+struct _If
+{	// type is _Ty2 for assumed false
+  typedef _Ty2 type;
+};
+
+template<class _Ty1,
+class _Ty2>
+struct _If<true, _Ty1, _Ty2>
+{	// type is _Ty1 for assumed true
+  typedef _Ty1 type;
+};
+
+template<class _Ty>
+struct _Change_sign
+{	// signed/unsigned partners to _Ty
+  static_assert(
+    ((is_integral<_Ty>::value || is_enum<_Ty>::value)
+      && !is_same<_Ty, bool>::value),
+    "make_signed<T>/make_unsigned<T> require that T shall be a (possibly "
+    "cv-qualified) integral type or enumeration but not a bool type.");
+
+  typedef
+    typename _If<is_same<_Ty, signed char>::value
+    || is_same<_Ty, unsigned char     >::value, signed char,
+    typename _If<is_same<_Ty, short       >::value
+    || is_same<_Ty, unsigned short    >::value, short,
+    typename _If<is_same<_Ty, int         >::value
+    || is_same<_Ty, unsigned int      >::value, int,
+    typename _If<is_same<_Ty, long        >::value
+    || is_same<_Ty, unsigned long     >::value, long,
+    typename _If<is_same<_Ty, long long   >::value
+    || is_same<_Ty, unsigned long long>::value, long long,
+    typename _If<sizeof(_Ty) == sizeof(signed char), signed char,
+    typename _If<sizeof(_Ty) == sizeof(short), short,
+    typename _If<sizeof(_Ty) == sizeof(int), int,
+    typename _If<sizeof(_Ty) == sizeof(long), long,
+    long long
+    >::type>::type>::type>::type>::type>::type>::type>::type>::type
+    _Signed;
+
+  typedef
+    typename _If<is_same<_Signed, signed char>::value, unsigned char,
+    typename _If<is_same<_Signed, short      >::value, unsigned short,
+    typename _If<is_same<_Signed, int        >::value, unsigned int,
+    typename _If<is_same<_Signed, long       >::value, unsigned long,
+    unsigned long long
+    >::type>::type>::type>::type
+    _Unsigned;
+};
+
+template<class _Ty>
+struct _Change_sign<const _Ty>
+{	// signed/unsigned partners to _Ty
+  typedef const typename _Change_sign<_Ty>::_Signed _Signed;
+  typedef const typename _Change_sign<_Ty>::_Unsigned _Unsigned;
+};
+
+template<class _Ty>
+struct _Change_sign<volatile _Ty>
+{	// signed/unsigned partners to _Ty
+  typedef volatile typename _Change_sign<_Ty>::_Signed _Signed;
+  typedef volatile typename _Change_sign<_Ty>::_Unsigned _Unsigned;
+};
+
+template<class _Ty>
+struct _Change_sign<const volatile _Ty>
+{	// signed/unsigned partners to _Ty
+  typedef const volatile typename _Change_sign<_Ty>::_Signed _Signed;
+  typedef const volatile typename _Change_sign<_Ty>::_Unsigned _Unsigned;
+};
+
+// TEMPLATE CLASS make_unsigned
+template<class _Ty>
+struct make_unsigned
+{	// unsigned partner to _Ty
+  typedef typename _Change_sign<_Ty>::_Unsigned type;
 };
 
 _STD_END

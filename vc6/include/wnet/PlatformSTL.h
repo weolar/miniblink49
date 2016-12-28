@@ -7,24 +7,12 @@
 
 #include <memory>
 #include <type_traits_vc6.h>
+#include <algorithmvc6.h>
 
 #define DEFINE_STATIC_LOCAL(type, name, arguments) \
     static type name;
 
 namespace std {
-
-// 
-// typedef integral_constant<bool, true> true_type;
-// typedef integral_constant<bool, false> false_type;
-// 
-// template<class T>
-// struct is_array : false_type {};
-// 
-// template<class T>
-// struct is_array<T[]> : true_type {};
-// 
-// template<class T, size_t N>
-// struct is_array<T[N]> : true_type {};
 
 template <typename T>
 struct OwnedPtrDeleter {
@@ -94,6 +82,7 @@ public:
 
     unique_ptr& operator=(std::nullptr_t) { reset(); return *this; }
 
+    bool operator!=(std::nullptr_t) { return !m_ptr; }
 
     unique_ptr& operator=(unique_ptr&&);
     template <typename U> unique_ptr& operator=(unique_ptr<U>&&);
@@ -217,6 +206,11 @@ template <typename T, typename U> inline bool operator!=(T* a, const unique_ptr<
     return a != b.get();
 }
 
+template <typename T> inline bool operator!=(const unique_ptr<T>& a, std::nullptr_t)
+{
+    return a.get();
+}
+
 template <typename T> inline typename unique_ptr<T>::PtrType getPtr(const unique_ptr<T>& p)
 {
     return p.get();
@@ -228,8 +222,46 @@ unique_ptr<T> move(unique_ptr<T>& ptr)
     return unique_ptr<T>(ptr.release());
 }
 
+// TEMPLATE CLASS remove_reference
+template<class _Ty>
+struct remove_reference
+{	// remove reference
+  typedef _Ty type;
+};
+
+template<class _Ty>
+struct remove_reference<_Ty&>
+{	// remove reference
+  typedef _Ty type;
+};
+
+template<class _Ty>
+struct remove_reference<_Ty&&>
+{	// remove rvalue reference
+  typedef _Ty type;
+};
+
+template<class _Ty> inline
+typename remove_reference<_Ty>::type&& move(_Ty&& _Arg)
+{	// forward _Arg as movable
+  return (static_cast<typename remove_reference<_Ty>::type&&>(_Arg));
 }
 
+// TEMPLATE FUNCTION forward
+template<class _Ty> inline
+_Ty&& forward(
+  typename remove_reference<_Ty>::type& _Arg) {	// forward an lvalue as either an lvalue or an rvalue
+  return (static_cast<_Ty&&>(_Arg));
+}
+
+template<class _Ty> inline
+_Ty&& forward(
+  typename remove_reference<_Ty>::type&& _Arg) {	// forward an rvalue as an rvalue
+  static_assert(!is_lvalue_reference<_Ty>::value, "bad forward call");
+  return (static_cast<_Ty&&>(_Arg));
+}
+
+}
 
 template <typename T>
 std::unique_ptr<T> wrapUnique(T* ptr)

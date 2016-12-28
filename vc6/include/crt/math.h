@@ -23,7 +23,6 @@
 #error ERROR: Only Win32 target supported!
 #endif
 
-
 #ifdef  _MSC_VER
 /*
  * Currently, all MS C compilers for Win32 platforms default to 8 byte

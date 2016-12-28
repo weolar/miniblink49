@@ -1,0 +1,6 @@
+#ifndef __cstdint__
+#define __cstdint__
+
+typedef unsigned __int32 uint32_t;
+
+#endif // __cstdint__
