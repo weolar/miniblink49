@@ -59,7 +59,14 @@ CompilerDispatcher::CompilerDispatcher(Isolate* isolate, size_t max_stack_size)
       max_stack_size_(max_stack_size),
       tracer_(new CompilerDispatcherTracer(isolate_)) {}
 
-CompilerDispatcher::~CompilerDispatcher() {}
+CompilerDispatcher::~CompilerDispatcher() {
+#if USING_VC6RT == 1
+  for (auto it : jobs_) {
+    delete it.second;
+  }
+  jobs_.clear();
+#endif
+}
 
 bool CompilerDispatcher::Enqueue(Handle<SharedFunctionInfo> function) {
   // We only handle functions (no eval / top-level code / wasm) that are
@@ -74,7 +81,13 @@ bool CompilerDispatcher::Enqueue(Handle<SharedFunctionInfo> function) {
       isolate_, tracer_.get(), function, max_stack_size_));
   std::pair<int, int> key(Script::cast(function->script())->id(),
                           function->function_literal_id());
-  jobs_.insert(std::make_pair(key, std::move(job)));
+  jobs_.insert(std::make_pair(key, 
+#if USING_VC6RT != 1
+    std::move(job)
+#else
+    job.release()
+#endif
+    ));
   return true;
 }
 
@@ -88,11 +101,22 @@ bool CompilerDispatcher::FinishNow(Handle<SharedFunctionInfo> function) {
 
   // TODO(jochen): Check if there's an in-flight background task working on this
   // job.
-  while (!IsFinished(job->second.get())) {
-    DoNextStepOnMainThread(job->second.get());
+  while (!IsFinished(job->second
+#if USING_VC6RT != 1
+    .get()
+#endif
+    )) {
+    DoNextStepOnMainThread(job->second
+#if USING_VC6RT != 1
+      .get()
+#endif
+      );
   }
   bool result = job->second->status() != CompileJobStatus::kFailed;
   jobs_.erase(job);
+#if USING_VC6RT == 1
+  delete job->second;
+#endif
   return result;
 }
 
@@ -105,12 +129,20 @@ void CompilerDispatcher::Abort(Handle<SharedFunctionInfo> function,
   // TODO(jochen): Check if there's an in-flight background task working on this
   // job.
   jobs_.erase(job);
+#if USING_VC6RT == 1
+  delete job->second;
+#endif
 }
 
 void CompilerDispatcher::AbortAll(BlockingBehavior blocking) {
   USE(blocking);
   // TODO(jochen): Check if there's an in-flight background task working on this
   // job.
+#if USING_VC6RT == 1
+  for (auto it : jobs_) {
+    delete it.second;
+  }
+#endif
   jobs_.clear();
 }
 

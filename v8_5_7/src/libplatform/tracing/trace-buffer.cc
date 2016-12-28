@@ -15,7 +15,11 @@ TraceBufferRingBuffer::TraceBufferRingBuffer(size_t max_chunks,
   chunks_.resize(max_chunks);
 }
 
-TraceBufferRingBuffer::~TraceBufferRingBuffer() {}
+TraceBufferRingBuffer::~TraceBufferRingBuffer() {
+  for (auto it : chunks_) {
+    delete it;
+  }
+}
 
 TraceObject* TraceBufferRingBuffer::AddTraceEvent(uint64_t* handle) {
   base::LockGuard<base::Mutex> guard(&mutex_);
@@ -26,7 +30,13 @@ TraceObject* TraceBufferRingBuffer::AddTraceEvent(uint64_t* handle) {
     if (chunk) {
       chunk->Reset(current_chunk_seq_++);
     } else {
-      chunk.reset(new TraceBufferChunk(current_chunk_seq_++));
+      chunk
+#if USING_VC6RT == 1
+        =
+#else
+        .reset
+#endif
+        (new TraceBufferChunk(current_chunk_seq_++));
     }
   }
   auto& chunk = chunks_[chunk_index_];

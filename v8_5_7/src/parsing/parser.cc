@@ -5,6 +5,9 @@
 #include "src/parsing/parser.h"
 
 #include <memory>
+#if USING_VC6RT == 1
+#include <string_vc6.h>
+#endif
 
 #include "src/api.h"
 #include "src/ast/ast-expression-rewriter.h"
@@ -3868,9 +3871,9 @@ void Parser::ParseOnBackground(ParseInfo* info) {
       v8::tracing::TracingCategoryObserver::ENABLED_BY_TRACING) {
     auto value = v8::tracing::TracedValue::Create();
     runtime_call_stats_->Dump(value.get());
-    TRACE_EVENT_INSTANT1(TRACE_DISABLED_BY_DEFAULT("v8.runtime_stats"),
-                         "V8.RuntimeStats", TRACE_EVENT_SCOPE_THREAD,
-                         "runtime-call-stats", std::move(value));
+//     TRACE_EVENT_INSTANT1(TRACE_DISABLED_BY_DEFAULT("v8.runtime_stats"),
+//                          "V8.RuntimeStats", TRACE_EVENT_SCOPE_THREAD,
+//                          "runtime-call-stats", std::move(value)); // USING_VC6RT
   }
 }
 

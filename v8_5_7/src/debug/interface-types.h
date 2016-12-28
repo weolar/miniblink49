@@ -4,9 +4,7 @@
 
 #ifndef V8_DEBUG_INTERFACE_TYPES_H_
 #define V8_DEBUG_INTERFACE_TYPES_H_
-#if USING_VC6RT != 1
 #include <cstdint>
-#endif
 #include <string>
 #include <vector>
 #if USING_VC6RT == 1

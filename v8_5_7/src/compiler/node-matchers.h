@@ -6,6 +6,9 @@
 #define V8_COMPILER_NODE_MATCHERS_H_
 
 #include <cmath>
+#if USING_VC6RT == 1
+#include <algorithmvc6.h>
+#endif
 
 // TODO(turbofan): Move ExternalReference out of assembler.h
 #include "src/assembler.h"

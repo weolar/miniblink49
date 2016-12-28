@@ -9,6 +9,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#if USING_VC6RT == 1
+#undef min
+#endif
+
 namespace unibrow {
 
 static const int kStartBit = (1 << 30);

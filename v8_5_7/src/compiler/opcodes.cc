@@ -4,8 +4,14 @@
 
 #include "src/compiler/opcodes.h"
 
+#if USING_VC6RT == 1
+#define min min
+#endif
 #include <algorithm>
 #include <ostream>
+#if USING_VC6RT == 1
+#include <algorithmvc6.h>
+#endif
 
 #include "src/base/macros.h"
 

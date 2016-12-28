@@ -723,7 +723,7 @@ double ThreadTicks::TSCTicksPerSecond() {
 
   // Make a another reading of the TSC and the performance counter every time
   // that this function is called.
-  uint64_t tsc_now = __rdtsc();
+  uint64_t tsc_now = 0;// __rdtsc(); // weolar
   uint64_t perf_counter_now = QPCNowRaw();
 
   // Reset the thread priority.

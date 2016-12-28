@@ -1291,7 +1291,15 @@ class WasmInstanceBuilder {
               protected_instructions
                   ->GetValueChecked<Smi>(isolate_, i + Code::kTrapLandingOffset)
                   ->value();
-          unpacked.emplace_back(data);
+
+          unpacked
+#if USING_VC6RT != 1
+            .emplace_back
+#else
+            .push_back
+#endif
+            (data);
+
         }
         // TODO(eholk): Register the protected instruction information once the
         // trap handler is in place.

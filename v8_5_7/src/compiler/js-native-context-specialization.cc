@@ -127,8 +127,10 @@ Reduction JSNativeContextSpecialization::ReduceJSInstanceOf(Node* node) {
       }
 
       // Monomorphic property access.
+      MapList mapList;
+      mapList.push_back(receiver_map);
       effect =
-          BuildCheckMaps(constructor, effect, control, MapList{receiver_map});
+          BuildCheckMaps(constructor, effect, control, /*MapList{receiver_map}*/mapList);
 
       // Lower to OrdinaryHasInstance(C, O).
       NodeProperties::ReplaceValueInput(node, constructor, 0);
@@ -148,8 +150,10 @@ Reduction JSNativeContextSpecialization::ReduceJSInstanceOf(Node* node) {
     }
 
     // Monomorphic property access.
+    MapList mapList;
+    mapList.push_back(receiver_map);
     effect =
-        BuildCheckMaps(constructor, effect, control, MapList{receiver_map});
+        BuildCheckMaps(constructor, effect, control, /*MapList{receiver_map}*/mapList);
 
     // Call the @@hasInstance handler.
     Node* target = jsgraph()->Constant(access_info.constant());

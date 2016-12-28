@@ -77,6 +77,12 @@ V8_INLINE uint64_t _xgetbv(unsigned int xcr) {
 
 #endif  // !V8_LIBC_MSVCRT
 
+#if USING_VC6RT == 1
+#define _XCR_XFEATURE_ENABLED_MASK 0
+
+/* Returns the content of the specified extended control register */
+extern unsigned __int64 __cdecl _xgetbv(unsigned int);
+#endif
 
 bool OSHasAVXSupport() {
 #if V8_OS_MACOSX

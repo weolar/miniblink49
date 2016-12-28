@@ -3091,7 +3091,10 @@ class HConstant final : public HTemplateInstruction<0> {
     uint64_t bits;
     DCHECK(HasDoubleValue());
     STATIC_ASSERT(sizeof(bits) == sizeof(double_value_));
-    std::memcpy(&bits, &double_value_, sizeof(bits));
+#if USING_VC6RT != 1
+    std::
+#endif
+      memcpy(&bits, &double_value_, sizeof(bits));
     return bits;
   }
   bool IsTheHole() const {
@@ -3194,7 +3197,10 @@ class HConstant final : public HTemplateInstruction<0> {
              int32_value_ == other_constant->int32_value_;
     } else if (HasDoubleValue()) {
       return other_constant->HasDoubleValue() &&
-             std::memcmp(&double_value_, &other_constant->double_value_,
+#if USING_VC6RT != 1
+             std::
+#endif
+        memcmp(&double_value_, &other_constant->double_value_,
                          sizeof(double_value_)) == 0;
     } else if (HasExternalReferenceValue()) {
       return other_constant->HasExternalReferenceValue() &&

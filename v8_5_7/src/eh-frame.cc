@@ -362,7 +362,7 @@ void EhFrameWriter::Finish(int code_size) {
 void EhFrameWriter::GetEhFrame(CodeDesc* desc) {
   DCHECK(writer_state_ == InternalState::kFinalized);
   desc->unwinding_info_size = static_cast<int>(eh_frame_buffer_.size());
-  desc->unwinding_info = eh_frame_buffer_.data();
+  desc->unwinding_info = &eh_frame_buffer_[0];
 }
 
 void EhFrameWriter::WriteULeb128(uint32_t value) {

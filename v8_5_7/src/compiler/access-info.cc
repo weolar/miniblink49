@@ -201,7 +201,13 @@ bool AccessInfoFactory::ComputeElementAccessInfo(
   // Check if it is safe to inline element access for the {map}.
   if (!CanInlineElementAccess(map)) return false;
   ElementsKind const elements_kind = map->elements_kind();
+#if USING_VC6RT == 1
+  MapList mapList;
+  mapList.push_back(map);
+  *access_info = ElementAccessInfo(mapList, elements_kind);
+#else
   *access_info = ElementAccessInfo(MapList{map}, elements_kind);
+#endif
   return true;
 }
 
@@ -297,8 +303,13 @@ bool AccessInfoFactory::ComputePropertyAccessInfo(
       }
       switch (details.type()) {
         case DATA_CONSTANT: {
+//#if USING_VC6RT == 1
+          MapList mapList;
+          mapList.push_back(receiver_map);
+//#endif
           *access_info = PropertyAccessInfo::DataConstant(
-              MapList{receiver_map},
+              //MapList{receiver_map},
+              mapList,
               handle(descriptors->GetValue(number), isolate()), holder);
           return true;
         }
@@ -340,8 +351,12 @@ bool AccessInfoFactory::ComputePropertyAccessInfo(
               field_map = descriptors_field_type->AsClass();
             }
           }
+          MapList mapList;
+          mapList.push_back(receiver_map);
           *access_info = PropertyAccessInfo::DataField(
-              MapList{receiver_map}, field_index, field_representation,
+              //MapList{receiver_map}, 
+              mapList,
+              field_index, field_representation,
               field_type, field_map, holder);
           return true;
         }
@@ -362,8 +377,12 @@ bool AccessInfoFactory::ComputePropertyAccessInfo(
               return false;
             }
           }
+          MapList mapList;
+          mapList.push_back(receiver_map);
           *access_info = PropertyAccessInfo::AccessorConstant(
-              MapList{receiver_map}, accessor, holder);
+              //MapList{receiver_map}
+            mapList
+          , accessor, holder);
           return true;
         }
         case ACCESSOR: {
@@ -404,8 +423,13 @@ bool AccessInfoFactory::ComputePropertyAccessInfo(
         // The property was not found, return undefined or throw depending
         // on the language mode of the load operation.
         // Implemented according to ES6 section 9.1.8 [[Get]] (P, Receiver)
+        MapList mapList;
+        mapList.push_back(receiver_map);
         *access_info =
-            PropertyAccessInfo::NotFound(MapList{receiver_map}, holder);
+            PropertyAccessInfo::NotFound(
+              //MapList{receiver_map}
+              mapList
+              , holder);
         return true;
       } else {
         return false;
@@ -478,8 +502,12 @@ bool AccessInfoFactory::LookupSpecialFieldAccessor(
         field_type = type_cache_.kJSArrayLengthType;
       }
     }
+    MapList mapList;
+    mapList.push_back(map);
     *access_info = PropertyAccessInfo::DataField(
-        MapList{map}, field_index, field_representation, field_type);
+        //MapList{map}
+      mapList
+      , field_index, field_representation, field_type);
     return true;
   }
   return false;
@@ -491,7 +519,9 @@ bool AccessInfoFactory::LookupTransition(Handle<Map> map, Handle<Name> name,
                                          PropertyAccessInfo* access_info) {
   // Check if the {map} has a data transition with the given {name}.
   if (map->unused_property_fields() == 0) {
-    *access_info = PropertyAccessInfo::Generic(MapList{map});
+    MapList mapList;
+    mapList.push_back(map);
+    *access_info = PropertyAccessInfo::Generic(/*MapList{map}*/mapList);
     return true;
   }
   Handle<Map> transition_map;
@@ -539,8 +569,10 @@ bool AccessInfoFactory::LookupTransition(Handle<Map> map, Handle<Name> name,
       }
     }
     dependencies()->AssumeMapNotDeprecated(transition_map);
+    MapList mapList;
+    mapList.push_back(map);
     *access_info = PropertyAccessInfo::DataField(
-        MapList{map}, field_index, field_representation, field_type, field_map,
+        /*MapList{map}*/mapList, field_index, field_representation, field_type, field_map,
         holder, transition_map);
     return true;
   }

@@ -54,7 +54,14 @@ class BlockEffectControlMap {
   }
 
   const BlockEffectControlData& For(BasicBlock* from, BasicBlock* to) const {
+#if USING_VC6RT == 1
+    auto it = map_.lower_bound(std::make_pair(from->rpo_number(), to->rpo_number()));
+    if (it == map_.end())
+      DebugBreak();
+    return it->second;
+#else
     return map_.at(std::make_pair(from->rpo_number(), to->rpo_number()));
+#endif
   }
 
  private:

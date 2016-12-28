@@ -1282,25 +1282,25 @@ class WasmFullDecoder : public WasmDecoder {
 
   void PushBlock(SsaEnv* end_env) {
     const int stack_depth = static_cast<int>(stack_.size());
-    control_.emplace_back(
+    control_.push_back( // emplace_back USING_VC6RT
         Control::Block(pc_, stack_depth, end_env, current_catch_));
   }
 
   void PushLoop(SsaEnv* end_env) {
     const int stack_depth = static_cast<int>(stack_.size());
-    control_.emplace_back(
+    control_.push_back( // emplace_back USING_VC6RT
         Control::Loop(pc_, stack_depth, end_env, current_catch_));
   }
 
   void PushIf(SsaEnv* end_env, SsaEnv* false_env) {
     const int stack_depth = static_cast<int>(stack_.size());
-    control_.emplace_back(
+    control_.push_back( // emplace_back USING_VC6RT
         Control::If(pc_, stack_depth, end_env, false_env, current_catch_));
   }
 
   void PushTry(SsaEnv* end_env, SsaEnv* catch_env) {
     const int stack_depth = static_cast<int>(stack_.size());
-    control_.emplace_back(Control::Try(pc_, stack_depth, end_env, zone_,
+    control_.push_back(Control::Try(pc_, stack_depth, end_env, zone_,  // emplace_back USING_VC6RT
                                        catch_env, current_catch_));
     current_catch_ = static_cast<int32_t>(control_.size() - 1);
   }

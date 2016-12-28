@@ -7,6 +7,10 @@
 
 #include <float.h>         // Required for DBL_MAX and on Win32 for finite()
 #include <limits.h>        // Required for INT_MAX etc.
+#if USING_VC6RT == 1
+#include <limits>
+#include <limitsvc6.h>
+#endif
 #include <stdarg.h>
 #include <cmath>
 #include "src/globals.h"       // Required for V8_INFINITY
