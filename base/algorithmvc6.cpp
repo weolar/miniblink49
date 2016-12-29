@@ -11,6 +11,13 @@
 
 extern "C" double fmod(double _Xx, double _Yx);
 
+#if !defined(_WIN64)
+void __cdecl operator delete(void * pv, const std::nothrow_t&)
+{
+    ::delete(pv);
+}
+#endif
+
 namespace std {
 
 int fpclassify(double x)
