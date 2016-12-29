@@ -9,9 +9,6 @@
 #include <type_traits_vc6.h>
 #include <algorithmvc6.h>
 
-#define DEFINE_STATIC_LOCAL(type, name, arguments) \
-    static type name;
-
 namespace std {
 
 template <typename T>
