@@ -581,8 +581,8 @@ RB_HEAD(uv_timer_tree_s, uv_timer_s);
   /* The addrinfoW field is used to store a pointer to the hints, and    */   \
   /* later on to store the result of GetAddrInfoW. The final result will */   \
   /* be converted to struct addrinfo* and stored in the addrinfo field.  */   \
-  struct addrinfoW* addrinfow;                                                \
   struct addrinfo* addrinfo;                                                  \
+  struct addrinfoW* addrinfow;                                                \
   int retcode;
 
 #define UV_GETNAMEINFO_PRIVATE_FIELDS                                         \
