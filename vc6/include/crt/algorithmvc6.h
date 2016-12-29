@@ -77,10 +77,6 @@ double fmod(double _Xx, double _Yx);
 bool signbit(float x);
 bool signbit(double x);
 
-// template<typename T> bool isfinite(T arg)
-// {
-//     return arg == arg && arg != std::numeric_limits<T>::infinity() && arg != -std::numeric_limits<T>::infinity();
-// }
 bool isfinite(__int64 arg);
 bool isfinite(int arg);
 bool isfinite(unsigned int arg);
@@ -103,9 +99,9 @@ int isinf(double d);
 int isnan(double d);
 
 template <class _Ty>
-inline bool isnormal(_Ty _X) throw()
+inline bool isnormal(_Ty _X)
 {
-  return fpclassify(_X) == FP_NORMAL;
+    return fpclassify(_X) == FP_NORMAL;
 }
 
 double sqrt(double val);
