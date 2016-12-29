@@ -206,6 +206,7 @@
       <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
       <StringPooling>true</StringPooling>
       <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
+      <AdditionalOptions>/Zc:threadSafeInit %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>false</GenerateDebugInformation>
