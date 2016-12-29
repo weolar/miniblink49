@@ -37,6 +37,9 @@
 
 #include <wincrypt.h>
 
+#if USING_VC6RT == 1
+#define VOLUME_NAME_DOS  0x0      //default
+#endif
 
 #define UV_FS_FREE_PATHS         0x0002
 #define UV_FS_FREE_PTR           0x0008
