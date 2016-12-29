@@ -24,6 +24,8 @@ public:
     void shutdown();
     void preShutdown();
 
+    static void initialize();
+
     void startGarbageCollectedThread();
    
     virtual void cryptographicallyRandomValues(unsigned char* buffer, size_t length) override;
@@ -68,6 +70,7 @@ public:
     // DOM Storage --------------------------------------------------
     virtual blink::WebStorageNamespace* createLocalStorageNamespace() override;
     blink::WebStorageNamespace* createSessionStorageNamespace();
+    virtual bool portAllowed(const blink::WebURL&) const override;
 
     // Resources -----------------------------------------------------------
     virtual blink::WebString queryLocalizedString(blink::WebLocalizedString::Name) override;

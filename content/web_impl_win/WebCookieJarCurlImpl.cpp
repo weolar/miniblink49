@@ -314,10 +314,9 @@ WebString WebCookieJarImpl::cookies(const WebURL& webUrl, const WebURL& webFirst
     return cookiesForSession(webFirstPartyForCookies, webUrl, false);
 }
 
-WebString WebCookieJarImpl::cookieRequestHeaderFieldValue(const WebURL& url, const WebURL& firstPartyForCookies)
+WebString WebCookieJarImpl::cookieRequestHeaderFieldValue(const WebURL& webUrl, const WebURL& webFirstPartyForCookies)
 {
-    notImplemented();
-    return WebString();
+    return cookiesForSession(webFirstPartyForCookies, webUrl, false);
 }
 
 void WebCookieJarImpl::setToRecordFromRawHeads(const KURL& url, const String& rawHeadsString)

@@ -37,6 +37,7 @@
 #include "third_party/WebKit/Source/core/loader/FrameLoadRequest.h"
 #include "third_party/WebKit/Source/platform/geometry/IntRect.h"
 #include "third_party/WebKit/Source/platform/Timer.h"
+#include "third_party/WebKit/Source/platform/heap/Handle.h"
 #include "third_party/WebKit/public/platform/WebCanvas.h"
 #include "third_party/WebKit/Source/wtf/HashMap.h"
 #include "third_party/WebKit/Source/wtf/HashSet.h"
@@ -46,6 +47,7 @@
 #include "third_party/WebKit/Source/wtf/FastAllocBase.h"
 #include "third_party/WebKit/Source/wtf/Vector.h"
 #include "third_party/WebKit/Source/wtf/text/CString.h"
+#include "third_party/WebKit/Source/wtf/HashFunctions.h"
 #include "third_party/npapi/bindings/npruntime.h"
 #include <v8.h>
 #include <windows.h>
@@ -334,7 +336,8 @@ private:
 
     Vector<bool, 4> m_popupStateStack;
 
-    HashSet<RefPtr<PluginStream> > m_streams;
+    typedef WTF::HashSet<PluginStream*> HashSetStreams;
+    HashSetStreams m_streams;
     Vector<OwnPtr<PluginRequest>> m_requests;
 
     bool m_isWindowed;
@@ -368,13 +371,17 @@ public:
         }
     }
 
+    void setHwndRenderOffset(const blink::IntPoint& offset)
+    {
+        m_widgetOffset = offset;
+    }
 
 private:
     blink::IntRect m_clipRect; // The clip rect to apply to a windowed plug-in
     blink::IntRect m_windowRect; // Our window rect.
 
     bool m_loadManually;
-    RefPtr<PluginStream> m_manualStream;
+    PluginStream* m_manualStream;
 
     bool m_isJavaScriptPaused;
 
@@ -382,6 +389,7 @@ private:
 
     PlatformWidget m_widget;
     PlatformWidget m_parentWidget;
+    blink::IntPoint m_widgetOffset;
 
     static WebPluginImpl* s_currentPluginView;
 };

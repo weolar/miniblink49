@@ -70,7 +70,6 @@ WebKeyboardEvent PlatformEventHandler::buildKeyboardEvent(WebInputEvent::Type ty
     bool systemKey = false;
 
     LPARAM keyData = MAKELPARAM(0, (WORD)flags);
-    //WebCore::PlatformKeyboardEvent keyEvent(0, virtualKeyCode, keyData, WebCore::PlatformKeyboardEvent::RawKeyDown, systemKey);
     WebKeyboardEvent keyEvent;
     keyEvent.windowsKeyCode = (type == WebInputEvent::RawKeyDown || type == WebInputEvent::KeyUp) ? wParam : 0;
     keyEvent.nativeKeyCode = wParam;
@@ -87,6 +86,15 @@ WebKeyboardEvent PlatformEventHandler::buildKeyboardEvent(WebInputEvent::Type ty
         keyEvent.modifiers |= WebInputEvent::AltKey;
     if (isKeypadEvent(wParam, keyData, type))
         keyEvent.modifiers |= WebInputEvent::IsKeyPad;
+
+    if (VK_TAB == keyEvent.windowsKeyCode) {
+        strcpy(keyEvent.keyIdentifier, "U+0009");
+    } else if (VK_BACK == keyEvent.windowsKeyCode) {
+        strcpy(keyEvent.keyIdentifier, "U+0008");
+    } else if (VK_ESCAPE == keyEvent.windowsKeyCode) {
+        strcpy(keyEvent.keyIdentifier, "U+001B");
+    }
+    
     memset(keyEvent.text, 0, sizeof(WebUChar) * WebKeyboardEvent::textLengthCap);
     keyEvent.text[0] = (WebUChar)wParam;
     return keyEvent;

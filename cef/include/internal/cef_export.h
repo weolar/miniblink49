@@ -39,7 +39,7 @@
 #ifdef BUILDING_CEF_SHARED
 #define CEF_EXPORT __declspec(dllexport)
 #elif USING_CEF_SHARED
-#define CEF_EXPORT __declspec(dllimport)
+#define CEF_EXPORT //__declspec(dllimport)
 #else
 #define CEF_EXPORT
 #endif

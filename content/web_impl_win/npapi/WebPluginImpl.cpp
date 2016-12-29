@@ -46,6 +46,7 @@
 #include "third_party/WebKit/Source/core/frame/FrameView.h"
 #include "third_party/WebKit/Source/bindings/core/v8/ScriptController.h"
 #include "third_party/WebKit/Source/bindings/core/v8/npruntime_impl.h"
+#include "third_party/WebKit/Source/bindings/core/v8/ScriptSourceCode.h"
 #include "third_party/WebKit/public/platform/WebTraceLocation.h"
 #include "third_party/WebKit/public/web/WebPluginContainer.h"
 #include "third_party/WebKit/public/web/WebElement.h"
@@ -300,11 +301,12 @@ void WebPluginImpl::stop()
 
     //WTF_LOG(Plugins, "WebPluginImpl::stop(): Stopping plug-in '%s'", m_plugin->name().utf8().data());
 
-    HashSet<RefPtr<PluginStream> > streams = m_streams;
-    HashSet<RefPtr<PluginStream> >::iterator end = streams.end();
-    for (HashSet<RefPtr<PluginStream> >::iterator it = streams.begin(); it != end; ++it) {
-        (*it)->stop();
-        disconnectStream((*it).get());
+    HashSetStreams streams = m_streams;
+    HashSetStreams::iterator end = streams.end();
+    for (HashSetStreams::iterator it = streams.begin(); it != end; ++it) {
+        PluginStream* stream = *it;
+        stream->stop();
+        disconnectStream(stream);
     }
 
     ASSERT(m_streams.isEmpty());
@@ -394,8 +396,8 @@ void WebPluginImpl::performRequest(PluginRequest* request)
         // if this is not a targeted request, create a stream for it. otherwise,
         // just pass it off to the loader
         if (targetFrameName.isEmpty()) {
-            RefPtr<PluginStream> stream = PluginStream::create(this, m_parentFrame, request->frameLoadRequest().resourceRequest(), request->sendNotification(), request->notifyData(), plugin()->pluginFuncs(), instance(), m_plugin->quirks());
-            m_streams.add(stream);
+            PluginStream* stream = PluginStream::create(this, m_parentFrame, request->frameLoadRequest().resourceRequest(), request->sendNotification(), request->notifyData(), plugin()->pluginFuncs(), instance(), m_plugin->quirks());            
+            m_streams.add((stream));
             stream->start();
         } else {
             // If the target frame is our frame, we could destroy the
@@ -422,25 +424,27 @@ void WebPluginImpl::performRequest(PluginRequest* request)
 
     // Targeted JavaScript requests are only allowed on the frame that contains the JavaScript plugin
     // and this has been made sure in ::load.
-//     ASSERT(targetFrameName.isEmpty() || m_parentFrame->tree().find(targetFrameName) == m_parentFrame);
-//     
-//     // Executing a script can cause the plugin view to be destroyed, so we keep a reference to it.
-//     RefPtr<WebPluginImpl> protector(this);
-//     Deprecated::ScriptValue result = m_parentFrame->script().executeScript(jsString, request->shouldAllowPopups());
-// 
-//     if (targetFrameName.isNull()) {
-//         String resultString;
-// 
-//         JSC::ExecState* scriptState = m_parentFrame->script().globalObject(pluginWorld())->globalExec();
-//         CString cstr;
-//         if (result.getString(scriptState, resultString))
-//             cstr = resultString.utf8();
-// 
-//         RefPtr<PluginStream> stream = PluginStream::create(this, m_parentFrame.get(), request->frameLoadRequest().resourceRequest(), request->sendNotification(), request->notifyData(), plugin()->pluginFuncs(), instance(), m_plugin->quirks());
-//         m_streams.add(stream);
-//         stream->sendJavaScriptStream(requestURL, cstr);
-//     }
-    DebugBreak();
+    ASSERT(targetFrameName.isEmpty() || m_parentFrame->tree().find(targetFrameName) == m_parentFrame);
+    
+    // Executing a script can cause the plugin view to be destroyed, so we keep a reference to it.
+    RefPtr<WebPluginImpl> protector(this);
+    blink::ScriptSourceCode jsCode(jsString);
+    v8::Local<v8::Value> result = m_parentFrame->script().executeScriptInMainWorldAndReturnValue(jsCode);
+
+    if (targetFrameName.isNull()) {
+        String resultString;
+
+        CString cstr;        
+        if (result->IsString()) {
+            v8::Local<v8::String> v8String = result->ToString();
+            resultString = v8StringToWebCoreString<String>(v8String, blink::Externalize);
+            cstr = resultString.utf8();
+        }
+
+        PluginStream* stream = PluginStream::create(this, m_parentFrame, request->frameLoadRequest().resourceRequest(), request->sendNotification(), request->notifyData(), plugin()->pluginFuncs(), instance(), m_plugin->quirks());
+        m_streams.add(stream);
+        stream->sendJavaScriptStream(requestURL, cstr);
+    }
 }
 
 void WebPluginImpl::requestTimerFired(blink::Timer<WebPluginImpl>*)

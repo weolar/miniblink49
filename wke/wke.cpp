@@ -4,6 +4,7 @@
 #define BUILDING_wke 1
 
 #include "content/browser/WebPage.h"
+#include "content/web_impl_win/BlinkPlatformImpl.h"
 #include "net/WebURLLoaderManager.h"
 
 //cexer: 必须包含在后面，因为其中的 wke.h -> windows.h 会定义 max、min，导致 WebCore 内部的 max、min 出现错乱。
@@ -12,7 +13,14 @@
 #include "wkeWebWindow.h"
 #include "wtf/text/WTFString.h"
 
+namespace net {
+
+void setCookieJarPath(const WCHAR* path);
+
+}
+
 //////////////////////////////////////////////////////////////////////////
+static std::string* s_versionString = nullptr;
 static bool wkeIsInit = false;
 
 void wkeInitialize()
@@ -35,10 +43,8 @@ void wkeSetProxy(const wkeProxy& proxy)
      String username;
      String password;
  
-     if (proxy.hostname[0] != 0 && proxy.type >= WKE_PROXY_HTTP && proxy.type <= WKE_PROXY_SOCKS5HOSTNAME)
-     {
-         switch (proxy.type)
-         {
+     if (proxy.hostname[0] != 0 && proxy.type >= WKE_PROXY_HTTP && proxy.type <= WKE_PROXY_SOCKS5HOSTNAME) {
+         switch (proxy.type) {
          case WKE_PROXY_HTTP:           proxyType = net::WebURLLoaderManager::HTTP; break;
          case WKE_PROXY_SOCKS4:         proxyType = net::WebURLLoaderManager::Socks4; break;
          case WKE_PROXY_SOCKS4A:        proxyType = net::WebURLLoaderManager::Socks4A; break;
@@ -73,12 +79,17 @@ bool wkeIsInitialize()
 
 void wkeFinalize()
 {
-    wkeUpdate();
+    content::BlinkPlatformImpl* platform = (content::BlinkPlatformImpl*)blink::Platform::current();
+    platform->shutdown();
 
 //     WebCore::iconDatabase().close();
 //     WebCore::PageGroup::closeLocalStorage();
 
     CoUninitialize();
+
+    if (s_versionString)
+        delete s_versionString;
+    s_versionString = nullptr;
 }
 
 void wkeUpdate()
@@ -97,7 +108,6 @@ void wkeUpdate()
 //     }
 }
 
-
 #define MAJOR_VERSION   (1)
 #define MINOR_VERSION   (2)
 #define WEBKIT_BUILD    (98096)
@@ -109,9 +119,8 @@ unsigned int wkeGetVersion()
 
 const utf8* wkeGetVersionString()
 {
-    static CString s_versionString;
-    if (0 != s_versionString.length())
-        return s_versionString.data();
+    if (s_versionString)
+        return s_versionString->c_str();
 
     String versionString = String::format("wke version %d.%02d\n"
         "blink build %d\n"
@@ -121,8 +130,8 @@ const utf8* wkeGetVersionString()
         WEBKIT_BUILD,
         __TIMESTAMP__);
 
-    s_versionString = versionString.utf8();
-    return s_versionString.data();
+    s_versionString = new std::string(versionString.utf8().data());
+    return s_versionString->c_str();
 }
 
 const char* wkeGetName(wkeWebView webView)
@@ -169,10 +178,17 @@ void wkePostURL(wkeWebView wkeView,const utf8 * url,const char *szPostData,int n
 {
 	wkeView->loadPostURL(url,szPostData,nLen);
 }
+
 void wkePostURLW(wkeWebView wkeView,const wchar_t * url,const char *szPostData,int nLen)
 {
     wkeView->loadPostURL(url,szPostData,nLen);
 }
+
+void wkeLoadW(wkeWebView webView, const wchar_t* url)
+{
+    wkeLoadURLW(webView, url);
+}
+
 void wkeLoadURL(wkeWebView webView, const utf8* url)
 {
     webView->loadURL(url);
@@ -201,6 +217,11 @@ void wkeLoadFile(wkeWebView webView, const utf8* filename)
 void wkeLoadFileW(wkeWebView webView, const wchar_t* filename)
 {
     return webView->loadFile(filename);
+}
+
+bool wkeIsLoading(wkeWebView webView)
+{
+    return webView->isLoading();
 }
 
 bool wkeIsLoadingSucceeded(wkeWebView webView)
@@ -288,12 +309,12 @@ void wkeLayoutIfNeeded(wkeWebView webView)
     webView->layoutIfNeeded();
 }
 
-void wkePaint(wkeWebView webView,void* bits, int bufWid, int bufHei, int xDst, int yDst, int w, int h, int xSrc, int ySrc, bool bCopyAlpha)
+void wkePaint2(wkeWebView webView, void* bits, int bufWid, int bufHei, int xDst, int yDst, int w, int h, int xSrc, int ySrc, bool bCopyAlpha)
 {
-    webView->paint(bits, bufWid,  bufHei,  xDst,  yDst,  w,  h,  xSrc,  ySrc, bCopyAlpha);
+    webView->paint(bits, bufWid, bufHei, xDst, yDst, w, h, xSrc, ySrc,bCopyAlpha);
 }
 
-void wkePaint2(wkeWebView webView, void* bits,int pitch)
+void wkePaint(wkeWebView webView, void* bits, int pitch)
 {
     webView->paint(bits, pitch);
 }
@@ -377,6 +398,11 @@ void wkeSetCookieEnabled(wkeWebView webView, bool enable)
 bool wkeIsCookieEnabled(wkeWebView webView)
 {
     return webView->isCookieEnabled();
+}
+
+void wkeSetCookieJarPath(wkeWebView webView, const WCHAR* path)
+{
+    net::setCookieJarPath(path);
 }
 
 void wkeSetMediaVolume(wkeWebView webView, float volume)
@@ -564,13 +590,10 @@ void wkeSetString(wkeString string, const utf8* str, size_t len)
     if (!string)
         return;
 
-    if (str == NULL)
-    {
+    if (nullptr == str) {
         str = "";
         len = 0;
-    }
-    else
-    {
+    } else {
         if (len == 0)
             len = strlen(str);
     }
@@ -583,13 +606,10 @@ void wkeSetStringW(wkeString string, const wchar_t* str, size_t len)
     if (!string)
         return;
 
-    if (str == NULL)
-    {
+    if (nullptr == str) {
         str = L"";
         len = 0;
-    }
-    else
-    {
+    } else {
         if (len == 0)
             len = wcslen(str);
     }
@@ -598,35 +618,34 @@ void wkeSetStringW(wkeString string, const wchar_t* str, size_t len)
 }
 
 
-typedef void (__cdecl* _PVFV) ();
-#pragma section(".CRT$XCG", long, read)
-
-STDAPI_(BOOL) DllMain( HMODULE hModule, DWORD  ul_reason_for_call, LPVOID /*lpReserved*/)
-{
-     BOOL ret = FALSE;
-     switch (ul_reason_for_call) {
-         case DLL_PROCESS_ATTACH:
-             ret = TRUE;
-             break;
- 
-         case DLL_PROCESS_DETACH:
-
-             break;
- 
-         case DLL_THREAD_ATTACH:
-             break;
- 
-         case DLL_THREAD_DETACH:
-             break;
-     }
-     return ret;
-}
+// typedef void (__cdecl* _PVFV) ();
+// #pragma section(".CRT$XCG", long, read)
+// 
+// STDAPI_(BOOL) DllMain( HMODULE hModule, DWORD  ul_reason_for_call, LPVOID /*lpReserved*/)
+// {
+//      BOOL ret = FALSE;
+//      switch (ul_reason_for_call) {
+//          case DLL_PROCESS_ATTACH:
+//              ret = TRUE;
+//              break;
+//  
+//          case DLL_PROCESS_DETACH:
+// 
+//              break;
+//  
+//          case DLL_THREAD_ATTACH:
+//              break;
+//  
+//          case DLL_THREAD_DETACH:
+//              break;
+//      }
+//      return ret;
+// }
 
 wkeWebView wkeCreateWebWindow(wkeWindowType type, HWND parent, int x, int y, int width, int height)
 {
     wke::CWebWindow* webWindow = new wke::CWebWindow();
-    if (!webWindow->create(parent, type, x, y, width, height))
-    {
+    if (!webWindow->create(parent, type, x, y, width, height)) {
         delete webWindow;
         return NULL;
     }
@@ -638,7 +657,6 @@ void wkeDestroyWebWindow(wkeWebView webWindow)
 {
     webWindow->destroy();
 }
-
 
 HWND wkeGetWindowHandle(wkeWebView webWindow)
 {
@@ -701,5 +719,224 @@ void wkeSetWindowTitleW(wkeWebView webWindow, const wchar_t* title)
     if (wke::CWebWindow* window = static_cast<wke::CWebWindow*>(webWindow))
         return window->setTitle(title);
 }
+
+//////////////////////////////////////////////////////////////////////////
+// V1 API
+
+void wkeInit()
+{
+    wkeInitialize();
+}
+
+void wkeShutdown()
+{
+    wkeFinalize();
+}
+
+unsigned int wkeVersion()
+{
+    return wkeGetVersion();
+}
+
+const utf8* wkeVersionString()
+{
+    return wkeGetVersionString();
+}
+
+void wkeSetFileSystem(FILE_OPEN_ pfn_open, FILE_CLOSE_ pfn_close, FILE_SIZE pfn_size, FILE_READ pfn_read, FILE_SEEK pfn_seek)
+{
+    ;
+}
+
+const char* wkeWebViewName(wkeWebView webView)
+{
+    return wkeGetName(webView);
+}
+void wkeSetWebViewName(wkeWebView webView, const char* name)
+{
+    wkeSetName(webView, name);
+}
+
+bool wkeIsLoaded(wkeWebView webView)
+{
+    return wkeIsLoading(webView);
+}
+
+bool wkeIsLoadFailed(wkeWebView webView)
+{
+    return wkeIsLoadingFailed(webView);
+}
+
+bool wkeIsLoadComplete(wkeWebView webView)
+{
+    return wkeIsLoadingCompleted(webView);
+}
+
+const utf8* wkeTitle(wkeWebView webView)
+{
+    return wkeGetTitle(webView);
+}
+
+const wchar_t* wkeTitleW(wkeWebView webView)
+{
+    return wkeGetTitleW(webView);
+}
+
+int wkeWidth(wkeWebView webView)
+{
+    return wkeGetWidth(webView);
+}
+
+int wkeHeight(wkeWebView webView)
+{
+    return wkeGetHeight(webView);
+}
+
+int wkeContentsWidth(wkeWebView webView)
+{
+    return wkeGetContentWidth(webView);
+}
+
+int wkeContentsHeight(wkeWebView webView)
+{
+    return wkeGetContentHeight(webView);
+}
+
+void wkeSelectAll(wkeWebView webView)
+{
+    wkeEditorSelectAll(webView);
+}
+
+void wkeCopy(wkeWebView webView)
+{
+    wkeEditorCopy(webView);
+}
+
+void wkeCut(wkeWebView webView)
+{
+    wkeEditorCopy(webView);
+}
+
+void wkePaste(wkeWebView webView)
+{
+    wkeEditorPaste(webView);
+}
+
+void wkeDelete(wkeWebView webView)
+{
+    wkeEditorDelete(webView);
+}
+
+bool wkeCookieEnabled(wkeWebView webView)
+{
+    return wkeIsCookieEnabled(webView);
+}
+
+float wkeMediaVolume(wkeWebView webView)
+{
+    return wkeGetMediaVolume(webView);
+}
+
+bool wkeMouseEvent(wkeWebView webView, unsigned int message, int x, int y, unsigned int flags)
+{
+    return wkeFireMouseEvent(webView, message, x, y, flags);
+}
+
+bool wkeContextMenuEvent(wkeWebView webView, int x, int y, unsigned int flags)
+{
+    return wkeFireContextMenuEvent(webView, x, y, flags);
+}
+bool wkeMouseWheel(wkeWebView webView, int x, int y, int delta, unsigned int flags)
+{
+    return wkeFireMouseWheelEvent(webView, x, y, delta, flags);
+}
+
+bool wkeKeyUp(wkeWebView webView, unsigned int virtualKeyCode, unsigned int flags, bool systemKey)
+{
+    return wkeFireKeyUpEvent(webView, virtualKeyCode, flags, systemKey);
+}
+
+bool wkeKeyDown(wkeWebView webView, unsigned int virtualKeyCode, unsigned int flags, bool systemKey)
+{
+    return wkeFireKeyDownEvent(webView, virtualKeyCode, flags, systemKey);
+}
+
+bool wkeKeyPress(wkeWebView webView, unsigned int charCode, unsigned int flags, bool systemKey)
+{
+    return wkeFireKeyPressEvent(webView, charCode, flags, systemKey);
+}
+
+void wkeFocus(wkeWebView webView)
+{
+    wkeSetFocus(webView);
+}
+
+void wkeUnfocus(wkeWebView webView)
+{
+    wkeKillFocus(webView);
+}
+
+wkeRect wkeGetCaret(wkeWebView webView)
+{
+    return wkeGetCaretRect(webView);
+}
+
+void wkeAwaken(wkeWebView webView)
+{
+    return wkeWake(webView);
+}
+
+float wkeZoomFactor(wkeWebView webView)
+{
+    return wkeGetZoomFactor(webView);
+}
+
+void wkeTitleChangedCallbackWrap(wkeWebView webView, void* param, const wkeString title)
+{
+    const wkeClientHandler* handler = (const wkeClientHandler*)param;
+    handler->onTitleChanged(handler, title);
+}
+
+void wkeURLChangedCallbackWrap(wkeWebView webView, void* param, const wkeString url)
+{
+    const wkeClientHandler* handler = (const wkeClientHandler*)param;
+    handler->onTitleChanged(handler, url);
+}
+
+void wkeSetClientHandler(wkeWebView webView, const wkeClientHandler* handler)
+{
+    webView->setClientHandler(handler);
+
+    wkeOnTitleChanged(webView, wkeTitleChangedCallbackWrap, (void*)handler);
+    wkeOnURLChanged(webView, wkeURLChangedCallbackWrap, (void*)handler);
+}
+
+const wkeClientHandler* wkeGetClientHandler(wkeWebView webView)
+{
+    return (const wkeClientHandler*)webView->getClientHandler();
+}
+
+const utf8* wkeToString(const wkeString string)
+{
+    return wkeGetString(string);
+}
+
+const wchar_t* wkeToStringW(const wkeString string)
+{
+    return wkeGetStringW(string);
+}
+
+const utf8* jsToString(jsExecState es, jsValue v)
+{
+    return jsToTempString(es, v);
+}
+
+const wchar_t* jsToStringW(jsExecState es, jsValue v)
+{
+    return jsToTempStringW(es, v);
+}
+
+// V1 API end
+//////////////////////////////////////////////////////////////////////////
 
 #endif

@@ -5155,8 +5155,12 @@ static void closeOriginSafeMethodGetter(const v8::PropertyCallbackInfo<v8::Value
         v8SetReturnValue(info, sharedTemplate->GetFunction(info.GetIsolate()->GetCurrentContext()).ToLocalChecked());
         return;
     }
-
+	//zero
+#if V8_MINOR_VERSION == 7
+	v8::Local<v8::Value> hiddenValue = V8HiddenValue::getHiddenValue(info.GetIsolate(), v8::Local<v8::Object>::Cast(info.This()), v8AtomicString(info.GetIsolate(), "clos"));
+#else
     v8::Local<v8::Value> hiddenValue = v8::Local<v8::Object>::Cast(info.This())->GetHiddenValue(v8AtomicString(info.GetIsolate(), "close"));
+#endif
     if (!hiddenValue.IsEmpty()) {
         v8SetReturnValue(info, hiddenValue);
         return;
@@ -5224,9 +5228,13 @@ static void focusOriginSafeMethodGetter(const v8::PropertyCallbackInfo<v8::Value
         v8SetReturnValue(info, sharedTemplate->GetFunction(info.GetIsolate()->GetCurrentContext()).ToLocalChecked());
         return;
     }
-
+	//zero
+#if V8_MINOR_VERSION == 7
+	v8::Local<v8::Value> hiddenValue = V8HiddenValue::getHiddenValue(info.GetIsolate(), v8::Local<v8::Object>::Cast(info.This()), v8AtomicString(info.GetIsolate(), "focus"));
+#else
     v8::Local<v8::Value> hiddenValue = v8::Local<v8::Object>::Cast(info.This())->GetHiddenValue(v8AtomicString(info.GetIsolate(), "focus"));
-    if (!hiddenValue.IsEmpty()) {
+#endif
+	if (!hiddenValue.IsEmpty()) {
         v8SetReturnValue(info, hiddenValue);
         return;
     }
@@ -5274,9 +5282,13 @@ static void blurOriginSafeMethodGetter(const v8::PropertyCallbackInfo<v8::Value>
         v8SetReturnValue(info, sharedTemplate->GetFunction(info.GetIsolate()->GetCurrentContext()).ToLocalChecked());
         return;
     }
-
+	//zero
+#if V8_MINOR_VERSION == 7
+	v8::Local<v8::Value> hiddenValue = V8HiddenValue::getHiddenValue(info.GetIsolate(), v8::Local<v8::Object>::Cast(info.This()), v8AtomicString(info.GetIsolate(), "blur"));
+#else
     v8::Local<v8::Value> hiddenValue = v8::Local<v8::Object>::Cast(info.This())->GetHiddenValue(v8AtomicString(info.GetIsolate(), "blur"));
-    if (!hiddenValue.IsEmpty()) {
+#endif
+	if (!hiddenValue.IsEmpty()) {
         v8SetReturnValue(info, hiddenValue);
         return;
     }
@@ -5528,9 +5540,13 @@ static void postMessageOriginSafeMethodGetter(const v8::PropertyCallbackInfo<v8:
         v8SetReturnValue(info, sharedTemplate->GetFunction(info.GetIsolate()->GetCurrentContext()).ToLocalChecked());
         return;
     }
-
+	//zero
+#if V8_MINOR_VERSION == 7
+	v8::Local<v8::Value> hiddenValue = V8HiddenValue::getHiddenValue(info.GetIsolate(), v8::Local<v8::Object>::Cast(info.This()), v8AtomicString(info.GetIsolate(), "postMessage"));
+#else
     v8::Local<v8::Value> hiddenValue = v8::Local<v8::Object>::Cast(info.This())->GetHiddenValue(v8AtomicString(info.GetIsolate(), "postMessage"));
-    if (!hiddenValue.IsEmpty()) {
+#endif
+	if (!hiddenValue.IsEmpty()) {
         v8SetReturnValue(info, hiddenValue);
         return;
     }
@@ -6932,9 +6948,13 @@ static void toStringOriginSafeMethodGetter(const v8::PropertyCallbackInfo<v8::Va
         v8SetReturnValue(info, sharedTemplate->GetFunction(info.GetIsolate()->GetCurrentContext()).ToLocalChecked());
         return;
     }
-
-    v8::Local<v8::Value> hiddenValue = v8::Local<v8::Object>::Cast(info.This())->GetHiddenValue(v8AtomicString(info.GetIsolate(), "toString"));
-    if (!hiddenValue.IsEmpty()) {
+	//zero
+#if V8_MINOR_VERSION == 7
+	v8::Local<v8::Value> hiddenValue = blink::V8HiddenValue::getHiddenValue(info.GetIsolate(), v8::Local<v8::Object>::Cast(info.This()), v8AtomicString(info.GetIsolate(), "toString"));
+#else
+	v8::Local<v8::Value> hiddenValue = v8::Local<v8::Object>::Cast(info.This())->GetHiddenValue(v8AtomicString(info.GetIsolate(), "toString"));
+#endif
+	if (!hiddenValue.IsEmpty()) {
         v8SetReturnValue(info, hiddenValue);
         return;
     }
@@ -7475,8 +7495,13 @@ static void configureShadowObjectTemplate(v8::Local<v8::ObjectTemplate> templ, v
     V8DOMConfiguration::installAttributes(isolate, templ, v8::Local<v8::ObjectTemplate>(), shadowAttributes, WTF_ARRAY_LENGTH(shadowAttributes));
 
     // Install a security handler with V8.
+	//zero
+#if V8_MINOR_VERSION == 7
+
+#else
     templ->SetAccessCheckCallbacks(V8Window::namedSecurityCheckCustom, V8Window::indexedSecurityCheckCustom, v8::External::New(isolate, const_cast<WrapperTypeInfo*>(&V8Window::wrapperTypeInfo)));
-    templ->SetInternalFieldCount(V8Window::internalFieldCount);
+#endif
+	templ->SetInternalFieldCount(V8Window::internalFieldCount);
 }
 
 void V8Window::installV8WindowTemplate(v8::Local<v8::FunctionTemplate> functionTemplate, v8::Isolate* isolate)

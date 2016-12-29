@@ -16,7 +16,7 @@ ActionsFrame::ActionsFrame(int64 beginId)
 {
 	m_beginId = beginId;
 	m_endId = -1;
-	m_allArefull = false;
+	m_allAreFull = false;
 	m_hadRunCount = 0;
 #ifndef NDEBUG
     actionsFrameCounter.increment();
@@ -27,7 +27,7 @@ ActionsFrame::ActionsFrame(int64 beginId, int64 endId)
 {
     m_beginId = beginId;
     m_endId = endId;
-    m_allArefull = false;
+    m_allAreFull = false;
     m_hadRunCount = 0;
 #ifndef NDEBUG
     actionsFrameCounter.increment();
@@ -45,6 +45,17 @@ ActionsFrame::~ActionsFrame()
 bool ActionsFrame::isEmpty() const
 {
 	return m_actions.size() == 0;
+}
+
+bool ActionsFrame::areAllfull() const 
+{
+    return m_allAreFull;
+}
+
+void ActionsFrame::checkFull()
+{
+    if (-1 != m_endId && m_actions.size() == (size_t)(m_endId - m_beginId) + 1)
+        m_allAreFull = true;
 }
 
 void ActionsFrame::appendLayerChangeAction(LayerChangeAction* action)
@@ -68,8 +79,7 @@ void ActionsFrame::appendLayerChangeAction(LayerChangeAction* action)
 	if (!find)
 		m_actions.insert(0, action);
 
-	if (-1 != m_endId && m_actions.size() == (size_t)(m_endId - m_beginId) + 1)
-		m_allArefull = true;
+    checkFull();
 }
 
 bool ActionsFrame::applyActions(ActionsFrameGroup* group, LayerTreeHost* host)
@@ -106,6 +116,7 @@ void ActionsFrame::setEndId(int64 endId)
 {
 	ASSERT(endId > m_endId);
 	m_endId = endId;
+    checkFull();
 }
 
 #ifndef NDEBUG

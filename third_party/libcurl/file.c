@@ -113,7 +113,7 @@ void SetFileSystemHook(
 	userFileSize = lpFileSize;
 }
 
-int ewefs_open(/*_In_z_*/ const char * _Filename, /*_In_*/ int _OpenFlag ){
+__int64 ewefs_open(/*_In_z_*/ const char * _Filename, /*_In_*/ int _OpenFlag ){
 	FILE* fp = 0;
 
 	if( O_WRONLY & _OpenFlag ){
@@ -130,17 +130,17 @@ int ewefs_open(/*_In_z_*/ const char * _Filename, /*_In_*/ int _OpenFlag ){
 				if( !user ){ userCloseFile(fp); }
 				user->Flag = EweUserFileIO;
 				user->fp = fp;
-				return user ? (int)user : -1;
+				return user ? user : -1;
 			}
 		}
 		if( !fp ){
 			fp = fopen( _Filename, "rb" );
 		}
 	}
-	return fp ? (int)fp : -1;
+	return fp ? fp : -1;
 }
 
-int ewefs_close( int fd ){
+int ewefs_close( __int64 fd ){
 	if( IsUserFileIO(fd) ){
 		userCloseFile( UserFD(fd)->fp );
 		free( UserFD(fd) );
@@ -149,19 +149,19 @@ int ewefs_close( int fd ){
 	return fclose( (FILE*)fd );
 }
 
-ssize_t ewefs_read(int fd, void *buf, size_t count){
+ssize_t ewefs_read(__int64 fd, void *buf, size_t count){
 	return IsUserFileIO(fd) ? userReadFile( UserFD(fd)->fp, buf, count ) : read( fileno((FILE*)fd), buf, count );
 }
 
-ssize_t ewefs_write(int fd, const void *buf, size_t count){
+ssize_t ewefs_write(__int64 fd, const void *buf, size_t count){
 	return IsUserFileIO(fd) ? -1 : write( fileno((FILE*)fd), buf, count );
 }
 
-curl_off_t ewefs_lseek( int fd, curl_off_t _Offset, int _Origin ){
+curl_off_t ewefs_lseek( __int64 fd, curl_off_t _Offset, int _Origin ){
 	return IsUserFileIO(fd) ? userSeekFile( UserFD(fd)->fp, _Offset ) : _lseeki64( fileno((FILE*)fd), _Offset, _Origin );
 }
 
-int ewefs_fstat(/*_In_*/ int fd, struct _stati64* _Stat){
+int ewefs_fstat(/*_In_*/ __int64 fd, struct _stati64* _Stat){
 	if( IsUserFileIO(fd) ){
 		_Stat->st_size = userFileSize( UserFD(fd)->fp );
 		return _Stat->st_size >= 0 ? 0 : -1;
@@ -283,7 +283,7 @@ static CURLcode file_connect(struct connectdata *conn, bool *done)
   struct Curl_easy *data = conn->data;
   char *real_path;
   struct FILEPROTO *file = data->req.protop;
-  int fd;
+  __int64 fd;
 #ifdef DOS_FILESYSTEM
   int i;
   char *actual_path;
@@ -397,7 +397,7 @@ static CURLcode file_upload(struct connectdata *conn)
 {
   struct FILEPROTO *file = conn->data->req.protop;
   const char *dir = strchr(file->path, DIRSEP);
-  int fd;
+  __int64 fd;
   int mode;
   CURLcode result = CURLE_OK;
   struct Curl_easy *data = conn->data;
@@ -531,7 +531,7 @@ static CURLcode file_do(struct connectdata *conn, bool *done)
   struct Curl_easy *data = conn->data;
   char *buf = data->state.buffer;
   curl_off_t bytecount = 0;
-  int fd;
+  __int64 fd;
   struct timeval now = Curl_tvnow();
   struct FILEPROTO *file;
 

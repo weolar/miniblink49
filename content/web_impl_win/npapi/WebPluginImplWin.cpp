@@ -64,8 +64,8 @@ typedef HDC (WINAPI *PtrBeginPaint)(HWND, PAINTSTRUCT*);
 typedef BOOL (WINAPI *PtrEndPaint)(HWND, const PAINTSTRUCT*);
 
 #if CPU(X86_64)
-extern "C" HDC __stdcall _HBeginPaint(HWND hWnd, LPPAINTSTRUCT lpPaint);
-extern "C" BOOL __stdcall _HEndPaint(HWND hWnd, const PAINTSTRUCT* lpPaint);
+//extern "C" HDC __stdcall _HBeginPaint(HWND hWnd, LPPAINTSTRUCT lpPaint);
+//extern "C" BOOL __stdcall _HEndPaint(HWND hWnd, const PAINTSTRUCT* lpPaint);
 #endif
 
 HDC WINAPI WebPluginImpl::hookedBeginPaint(HWND hWnd, PAINTSTRUCT* lpPaint)
@@ -87,7 +87,7 @@ HDC WINAPI WebPluginImpl::hookedBeginPaint(HWND hWnd, PAINTSTRUCT* lpPaint)
     __asm   push    hWnd
     __asm   call    beginPaint
 #else
-    return _HBeginPaint(hWnd, lpPaint);
+    return BeginPaint(hWnd, lpPaint);
 #endif
 }
 
@@ -107,7 +107,7 @@ BOOL WINAPI WebPluginImpl::hookedEndPaint(HWND hWnd, const PAINTSTRUCT* lpPaint)
     __asm   push    hWnd
     __asm   call    endPaint
 #else
-    return _HEndPaint(hWnd, lpPaint);
+    return EndPaint(hWnd, lpPaint);
 #endif
 }
 
@@ -350,7 +350,7 @@ void WebPluginImpl::updatePluginWidget(const IntRect& windowRect, const IntRect&
         }
 
         if (!m_haveUpdatedPluginWidget || m_windowRect != oldWindowRect)
-            ::MoveWindow(platformPluginWidget(), m_windowRect.x(), m_windowRect.y(), m_windowRect.width(), m_windowRect.height(), TRUE);
+            ::MoveWindow(platformPluginWidget(), m_windowRect.x() + m_widgetOffset.x(), m_windowRect.y() + m_widgetOffset.y(), m_windowRect.width(), m_windowRect.height(), TRUE);
 
         if (clipToZeroRect) {
             HRGN rgn = (::CreateRectRgn(m_clipRect.x(), m_clipRect.y(), m_clipRect.maxX(), m_clipRect.maxY()));
@@ -785,7 +785,6 @@ bool WebPluginImpl::platformGetValue(NPNVariable variable, void* value, NPError*
     switch (variable) {
         case NPNVnetscapeWindow: {
             HWND* w = reinterpret_cast<HWND*>(value);
-            //*w = windowHandleForPageClient(parent() ? parent()->hostWindow()->platformPageClient() : 0);
             *w = windowHandleForPageClient(platformPluginWidget());
             *result = NPERR_NO_ERROR;
             return true;
@@ -922,6 +921,7 @@ void WebPluginImpl::platformDestroy()
         return;
 
     blink::Platform::current()->currentThread()->postTask(FROM_HERE, WTF::bind(platformDestroyWindow, platformPluginWidget()));
+    SetWindowLongPtr(platformPluginWidget(), GWLP_WNDPROC, 0);
     setPlatformPluginWidget(0);
 }
 

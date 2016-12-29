@@ -4,6 +4,7 @@
 #include "base/rand_util.h"
 
 #include "third_party/WebKit/public/web/WebViewClient.h"
+#include "third_party/WebKit/public/web/WebHistoryCommitType.h"
 #include "third_party/WebKit/Source/platform/graphics/Color.h"
 #include "third_party/WebKit/public/platform/WebCursorInfo.h"
 
@@ -13,24 +14,28 @@
 namespace cc {
 class LayerTreeHost;
 }
+
 #if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 namespace cef {
 class BrowserHostImpl;
 }
 #endif
+
 namespace blink {
 struct Referrer;
 class WebViewImpl;
 }
+
 #if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 class CefBrowserHostImpl;
 #endif
+
 namespace content {
 
 class WebFrameClientImpl;
 class WebPage;
 class PlatformEventHandler;
-
+class NavigationController;
 
 class WebPageImpl : public blink::WebViewClient {
 public:
@@ -82,13 +87,13 @@ public:
 
     bool doMergeDirtyList(bool forceMerge);
 
-    void postPaintMessage(const blink::IntRect* paintRect);
+    void postPaintMessage(const blink::IntRect& paintRect);
 
     void testPaint();
 
     void beginMainFrame();
     
-    void paintToPlatformContext(const blink::IntRect* paintRect);
+    void paintToPlatformContext(const blink::IntRect& paintRect);
     bool drawFrame();
     
     void repaintRequested(const blink::IntRect& windowRect);
@@ -99,6 +104,7 @@ public:
     void fireResizeEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
     void fireCaptureChangedEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
     void firePaintEvent(HDC hdc, const RECT* paintRect);
+    void fireSetFocusEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
     void fireKillFocusEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
     LRESULT fireMouseEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, BOOL* bHandle);
     void fireTouchEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
@@ -120,17 +126,26 @@ public:
     void setPainting(bool value) { m_painting = value; }
 
     void showDebugNodeData();
+    void drawDebugLine(skia::PlatformCanvas* memoryCanvas, const blink::IntRect& paintRect);
 
-    bool needsCommit() { return m_needsCommit; }
+    bool needsCommit() const { return m_needsCommit; }
     void setNeedsCommit();
     void setNeedsCommitAndNotLayout();
     void clearNeedsCommit();
+    bool isDrawDirty() const { return m_isDrawDirty; }
     
     cc::LayerTreeHost* layerTreeHost() { return m_layerTreeHost; }
 
+    void loadHistoryItem(int64 frameId, const blink::WebHistoryItem& item, blink::WebHistoryLoadType type, blink::WebURLRequest::CachePolicy policy);
 	void loadURL(int64 frameId, const wchar_t* url, const blink::Referrer& referrer, const wchar_t* extraHeaders);
 	void loadRequest(int64 frameId, const blink::WebURLRequest& request);
 	void loadHTMLString(int64 frameId, const blink::WebData& html, const blink::WebURL& baseURL, const blink::WebURL& unreachableURL, bool replace);
+
+    // Session history -----------------------------------------------------
+    void didCommitProvisionalLoad(blink::WebLocalFrame* frame, const blink::WebHistoryItem& history, blink::WebHistoryCommitType type);
+    virtual void navigateBackForwardSoon(int offset) override;
+    virtual int historyBackListCount() override;
+    virtual int historyForwardListCount() override;
 
 	bool initSetting();
 #if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
@@ -163,11 +178,12 @@ public:
     bool m_postMouseLeave; // 系统的MouseLeave获取到的鼠标位置不太准确，自己在定时器里再抛一次
 	blink::RGBA32 m_bdColor;
     double m_lastFrameTimeMonotonic;
+    double m_lastDrawTime;
     WebPage* m_pagePtr;
     blink::WebViewImpl* m_webViewImpl;
     bool m_mouseInWindow;
     HWND m_hWnd;
-	blink::IntPoint m_hWndoffset;	//网页渲染坐标相对于窗口的原点
+	blink::IntPoint m_hwndRenderOffset;	// 网页渲染坐标相对于窗口的原点
 	blink::IntSize m_viewportSize;
 
     // May be NULL if the browser has not yet been created or if the browser has
@@ -179,14 +195,16 @@ public:
 	blink::IntRect m_paintRect;
     skia::PlatformCanvas* m_memoryCanvas;
     bool m_painting;
-    bool m_canScheduleResourceLoader;
+
     Vector<blink::IntRect> m_paintMessageQueue;
     static const int m_paintMessageQueueSize = 200;
-	blink::IntRect m_dirtyRects;
+    Vector<blink::IntRect> m_dirtyRects;
     int m_postpaintMessageCount;
     int m_scheduleMessageCount;
     bool m_needsCommit;
+    int m_commitCount;
     bool m_needsLayout;
+    bool m_isDrawDirty;
     
     enum WebPageState {
         pageUninited,
@@ -202,9 +220,6 @@ public:
 	WebFrameClientImpl* m_webFrameClient;
     PlatformEventHandler* m_platformEventHandler;
 
-    BOOL* m_messageStackVar; // 给消息处理函数使用，保存地址。例如，WM_TIMER中调用DestroyWindow，
-    // 窗口摧毁了，消息函数还在进入WM_TIMER的处理函数，导致野指针崩溃.
-
 	blink::WebCursorInfo::Type m_cursorType;
 
     int m_enterCount;
@@ -214,6 +229,11 @@ public:
     bool m_postCloseWidgetSoonMessage;
 
     WTF::Vector<DestroyNotif*> m_destroyNotifs;
+
+    NavigationController* m_navigationController;
+
+    HWND m_popupHandle;
+    int m_debugCount;
 };
 
 } // blink

@@ -37,9 +37,6 @@ private:
 
 class Tile {
 public:
-    const static int kDefaultTileWidth = 160; // weolar 256
-    const static int kDefaultTileHeight = 160;
-
     Tile(TileGrid* tileGrid, int xIndex, int yIndex);
     ~Tile();
 
