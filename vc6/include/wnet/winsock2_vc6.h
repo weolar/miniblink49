@@ -125,6 +125,98 @@ typedef int socklen_t;
 
 #define INET6_ADDRSTRLEN 65
 
+struct addrinfo
+{
+	int              ai_flags;
+	int              ai_family;
+	int              ai_socktype;
+	int              ai_protocol;
+	socklen_t   ai_addrlen;   /* Follow rfc3493 struct addrinfo */
+	char            *ai_canonname;
+	struct sockaddr *ai_addr;
+	struct addrinfo *ai_next;
+};
+#define NI_NAMEREQD     0x04  /* Error if the host's name not in DNS */
+#define AI_ADDRCONFIG               0x00000400  // Resolution only if global address configured
+#define AI_V4MAPPED                 0x00000800  // On v6 failure, query v4 and convert to V4MAPPED format
+#define WSA_NOT_ENOUGH_MEMORY	8L
+
+#define WSA_IO_PENDING          997L
+
+#define XP1_IFS_HANDLES                     0x00020000
+#define SO_PROTOCOL_INFOA 0x2004      /* WSAPROTOCOL_INFOA structure */
+#define SO_PROTOCOL_INFOW 0x2005      /* WSAPROTOCOL_INFOW structure */
+
+#define IPPROTO_IPV6 41 // IPv6 header
+#define IPV6_MULTICAST_HOPS   10 // IP multicast hop limit.
+
+struct ipv6_mreq {
+	IN6_ADDR ipv6mr_multiaddr;  // IPv6 multicast address.
+	ULONG ipv6mr_interface;     // Interface index.
+};
+
+
+
+__checkReturn
+SOCKET
+WSAAPI
+WSASocketW(
+	__in int af,
+	__in int type,
+	__in int protocol,
+	__in_opt LPWSAPROTOCOL_INFOW lpProtocolInfo,
+	__in unsigned int g,
+	__in DWORD dwFlags
+);
+#define FROM_PROTOCOL_INFO (-1)
+#define WSA_FLAG_OVERLAPPED           0x01
+
+#define VALIDATE_MULTICAST_LOOP(value) (1)
+#define IPV6_MULTICAST_IF      9 // IP multicast interface.
+#define IPV6_DROP_MEMBERSHIP  13 // Drop an IP group membership.
+#define IPV6_ADD_MEMBERSHIP   12 // Add an IP group membership.
+
+int
+WSAAPI
+WSARecvFrom(
+	__in SOCKET s,
+	__in_ecount(dwBufferCount) LPWSABUF lpBuffers,
+	__in DWORD dwBufferCount,
+	__out_opt LPDWORD lpNumberOfBytesRecvd,
+	__inout LPDWORD lpFlags,
+	__out_bcount_part_opt(*lpFromlen, *lpFromlen) struct sockaddr FAR * lpFrom,
+	__inout_opt LPINT lpFromlen,
+	__inout_opt LPWSAOVERLAPPED lpOverlapped,
+	__in_opt LPWSAOVERLAPPED_COMPLETION_ROUTINE lpCompletionRoutine
+);
+
+int
+WSAAPI
+WSARecv(
+	__in SOCKET s,
+	__in_ecount(dwBufferCount) LPWSABUF lpBuffers,
+	__in DWORD dwBufferCount,
+	__out_opt LPDWORD lpNumberOfBytesRecvd,
+	__inout LPDWORD lpFlags,
+	__inout_opt LPWSAOVERLAPPED lpOverlapped,
+	__in_opt LPWSAOVERLAPPED_COMPLETION_ROUTINE lpCompletionRoutine
+);
+
+#define SD_RECEIVE      0x00
+#define SD_SEND         0x01
+#define SD_BOTH         0x02
+
+#define IPV6_MULTICAST_LOOP   11 // IP multicast loopback.
+#define IOC_WSK                       (IOC_WS2|0x07000000)
+#define IOC_WS2                       0x08000000
+
+#define _WSAIO(x,y)                   (IOC_VOID|(x)|(y))
+#define _WSAIOR(x,y)                  (IOC_OUT|(x)|(y))
+#define _WSAIOW(x,y)                  (IOC_IN|(x)|(y))
+#define _WSAIORW(x,y)                 (IOC_INOUT|(x)|(y))
+
+
+#define SIO_GET_EXTENSION_FUNCTION_POINTER  _WSAIORW(IOC_WS2,6)
 #ifdef __cplusplus
 }
 #endif
