@@ -297,6 +297,82 @@
     <ClInclude Include="..\..\v8_5_7\include\v8-version.h" />
     <ClInclude Include="..\..\v8_5_7\include\v8.h" />
     <ClInclude Include="..\..\v8_5_7\include\v8config.h" />
+    <ClInclude Include="..\..\v8_5_7\src\accessors.h" />
+    <ClInclude Include="..\..\v8_5_7\src\address-map.h" />
+    <ClInclude Include="..\..\v8_5_7\src\allocation-site-scopes.h" />
+    <ClInclude Include="..\..\v8_5_7\src\allocation.h" />
+    <ClInclude Include="..\..\v8_5_7\src\api-arguments-inl.h" />
+    <ClInclude Include="..\..\v8_5_7\src\api-arguments.h" />
+    <ClInclude Include="..\..\v8_5_7\src\api-experimental.h" />
+    <ClInclude Include="..\..\v8_5_7\src\api-natives.h" />
+    <ClInclude Include="..\..\v8_5_7\src\api.h" />
+    <ClInclude Include="..\..\v8_5_7\src\arguments.h" />
+    <ClInclude Include="..\..\v8_5_7\src\asmjs\asm-js.h" />
+    <ClInclude Include="..\..\v8_5_7\src\asmjs\asm-typer.h" />
+    <ClInclude Include="..\..\v8_5_7\src\asmjs\asm-types.h" />
+    <ClInclude Include="..\..\v8_5_7\src\asmjs\asm-wasm-builder.h" />
+    <ClInclude Include="..\..\v8_5_7\src\asmjs\switch-logic.h" />
+    <ClInclude Include="..\..\v8_5_7\src\assembler.h" />
+    <ClInclude Include="..\..\v8_5_7\src\assert-scope.h" />
+    <ClInclude Include="..\..\v8_5_7\src\background-parsing-task.h" />
+    <ClInclude Include="..\..\v8_5_7\src\bailout-reason.h" />
+    <ClInclude Include="..\..\v8_5_7\src\base\adapters.h" />
+    <ClInclude Include="..\..\v8_5_7\src\base\atomic-utils.h" />
+    <ClInclude Include="..\..\v8_5_7\src\base\atomicops.h" />
+    <ClInclude Include="..\..\v8_5_7\src\base\atomicops_internals_atomicword_compat.h" />
+    <ClInclude Include="..\..\v8_5_7\src\base\atomicops_internals_portable.h" />
+    <ClInclude Include="..\..\v8_5_7\src\base\atomicops_internals_x86_msvc.h" />
+    <ClInclude Include="..\..\v8_5_7\src\base\base-export.h" />
+    <ClInclude Include="..\..\v8_5_7\src\base\bits.h" />
+    <ClInclude Include="..\..\v8_5_7\src\base\build_config.h" />
+    <ClInclude Include="..\..\v8_5_7\src\base\compiler-specific.h" />
+    <ClInclude Include="..\..\v8_5_7\src\base\cpu.h" />
+    <ClInclude Include="..\..\v8_5_7\src\base\division-by-constant.h" />
+    <ClInclude Include="..\..\v8_5_7\src\base\file-utils.h" />
+    <ClInclude Include="..\..\v8_5_7\src\base\flags.h" />
+    <ClInclude Include="..\..\v8_5_7\src\base\format-macros.h" />
+    <ClInclude Include="..\..\v8_5_7\src\base\free_deleter.h" />
+    <ClInclude Include="..\..\v8_5_7\src\base\functional.h" />
+    <ClInclude Include="..\..\v8_5_7\src\base\hashmap-entry.h" />
+    <ClInclude Include="..\..\v8_5_7\src\base\hashmap.h" />
+    <ClInclude Include="..\..\v8_5_7\src\base\ieee754.h" />
+    <ClInclude Include="..\..\v8_5_7\src\base\iterator.h" />
+    <ClInclude Include="..\..\v8_5_7\src\base\lazy-instance.h" />
+    <ClInclude Include="..\..\v8_5_7\src\base\logging.h" />
+    <ClInclude Include="..\..\v8_5_7\src\base\macros.h" />
+    <ClInclude Include="..\..\v8_5_7\src\base\once.h" />
+    <ClInclude Include="..\..\v8_5_7\src\base\qnx-math.h" />
+    <ClInclude Include="..\..\v8_5_7\src\base\ring-buffer.h" />
+    <ClInclude Include="..\..\v8_5_7\src\base\safe_conversions.h" />
+    <ClInclude Include="..\..\v8_5_7\src\base\safe_conversions_impl.h" />
+    <ClInclude Include="..\..\v8_5_7\src\base\safe_math.h" />
+    <ClInclude Include="..\..\v8_5_7\src\base\safe_math_impl.h" />
+    <ClInclude Include="..\..\v8_5_7\src\base\sys-info.h" />
+    <ClInclude Include="..\..\v8_5_7\src\base\win32-headers.h" />
+    <ClInclude Include="..\..\v8_5_7\src\basic-block-profiler.h" />
+    <ClInclude Include="..\..\v8_5_7\src\bignum-dtoa.h" />
+    <ClInclude Include="..\..\v8_5_7\src\bignum.h" />
+    <ClInclude Include="..\..\v8_5_7\src\bit-vector.h" />
+    <ClInclude Include="..\..\v8_5_7\src\bootstrapper.h" />
+    <ClInclude Include="..\..\v8_5_7\src\cached-powers.h" />
+    <ClInclude Include="..\..\v8_5_7\src\cancelable-task.h" />
+    <ClInclude Include="..\..\v8_5_7\src\char-predicates.h" />
+    <ClInclude Include="..\..\v8_5_7\src\checks.h" />
+    <ClInclude Include="..\..\v8_5_7\src\code-events.h" />
+    <ClInclude Include="..\..\v8_5_7\src\code-factory.h" />
+    <ClInclude Include="..\..\v8_5_7\src\code-stub-assembler.h" />
+    <ClInclude Include="..\..\v8_5_7\src\code-stubs.h" />
+    <ClInclude Include="..\..\v8_5_7\src\codegen.h" />
+    <ClInclude Include="..\..\v8_5_7\src\collector.h" />
+    <ClInclude Include="..\..\v8_5_7\src\compilation-cache.h" />
+    <ClInclude Include="..\..\v8_5_7\src\compilation-dependencies.h" />
+    <ClInclude Include="..\..\v8_5_7\src\compilation-info.h" />
+    <ClInclude Include="..\..\v8_5_7\src\compilation-statistics.h" />
+    <ClInclude Include="..\..\v8_5_7\src\compiler-dispatcher\compiler-dispatcher-job.h" />
+    <ClInclude Include="..\..\v8_5_7\src\compiler-dispatcher\compiler-dispatcher-tracer.h" />
+    <ClInclude Include="..\..\v8_5_7\src\compiler-dispatcher\compiler-dispatcher.h" />
+    <ClInclude Include="..\..\v8_5_7\src\compiler-dispatcher\optimizing-compile-dispatcher.h" />
+    <ClInclude Include="..\..\v8_5_7\src\compiler.h" />
     <ClInclude Include="..\..\v8_5_7\src\compiler\x64\instruction-codes-x64.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
@@ -307,6 +383,13 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">true</ExcludedFromBuild>
     </ClInclude>
+    <ClInclude Include="..\..\v8_5_7\src\context-measure.h" />
+    <ClInclude Include="..\..\v8_5_7\src\contexts-inl.h" />
+    <ClInclude Include="..\..\v8_5_7\src\contexts.h" />
+    <ClInclude Include="..\..\v8_5_7\src\conversions-inl.h" />
+    <ClInclude Include="..\..\v8_5_7\src\conversions.h" />
+    <ClInclude Include="..\..\v8_5_7\src\counters-inl.h" />
+    <ClInclude Include="..\..\v8_5_7\src\counters.h" />
     <ClInclude Include="..\..\v8_5_7\src\crankshaft\x64\lithium-codegen-x64.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
@@ -322,6 +405,10 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">true</ExcludedFromBuild>
     </ClInclude>
+    <ClInclude Include="..\..\v8_5_7\src\d8.h" />
+    <ClInclude Include="..\..\v8_5_7\src\date.h" />
+    <ClInclude Include="..\..\v8_5_7\src\dateparser-inl.h" />
+    <ClInclude Include="..\..\v8_5_7\src\dateparser.h" />
     <ClInclude Include="..\..\v8_5_7\src\debug\debug-evaluate.h" />
     <ClInclude Include="..\..\v8_5_7\src\debug\debug-frames.h" />
     <ClInclude Include="..\..\v8_5_7\src\debug\debug-interface.h" />
@@ -329,19 +416,80 @@
     <ClInclude Include="..\..\v8_5_7\src\debug\debug.h" />
     <ClInclude Include="..\..\v8_5_7\src\debug\interface-types.h" />
     <ClInclude Include="..\..\v8_5_7\src\debug\liveedit.h" />
+    <ClInclude Include="..\..\v8_5_7\src\deoptimize-reason.h" />
+    <ClInclude Include="..\..\v8_5_7\src\deoptimizer.h" />
+    <ClInclude Include="..\..\v8_5_7\src\disasm.h" />
+    <ClInclude Include="..\..\v8_5_7\src\disassembler.h" />
+    <ClInclude Include="..\..\v8_5_7\src\diy-fp.h" />
+    <ClInclude Include="..\..\v8_5_7\src\double.h" />
+    <ClInclude Include="..\..\v8_5_7\src\dtoa.h" />
+    <ClInclude Include="..\..\v8_5_7\src\effects.h" />
+    <ClInclude Include="..\..\v8_5_7\src\eh-frame.h" />
+    <ClInclude Include="..\..\v8_5_7\src\elements-kind.h" />
+    <ClInclude Include="..\..\v8_5_7\src\elements.h" />
+    <ClInclude Include="..\..\v8_5_7\src\execution.h" />
     <ClInclude Include="..\..\v8_5_7\src\extensions\externalize-string-extension.h" />
     <ClInclude Include="..\..\v8_5_7\src\extensions\free-buffer-extension.h" />
     <ClInclude Include="..\..\v8_5_7\src\extensions\gc-extension.h" />
     <ClInclude Include="..\..\v8_5_7\src\extensions\ignition-statistics-extension.h" />
     <ClInclude Include="..\..\v8_5_7\src\extensions\statistics-extension.h" />
     <ClInclude Include="..\..\v8_5_7\src\extensions\trigger-failure-extension.h" />
+    <ClInclude Include="..\..\v8_5_7\src\external-reference-table.h" />
+    <ClInclude Include="..\..\v8_5_7\src\factory.h" />
+    <ClInclude Include="..\..\v8_5_7\src\fast-accessor-assembler.h" />
+    <ClInclude Include="..\..\v8_5_7\src\fast-dtoa.h" />
+    <ClInclude Include="..\..\v8_5_7\src\field-index-inl.h" />
+    <ClInclude Include="..\..\v8_5_7\src\field-index.h" />
+    <ClInclude Include="..\..\v8_5_7\src\field-type.h" />
+    <ClInclude Include="..\..\v8_5_7\src\fixed-dtoa.h" />
+    <ClInclude Include="..\..\v8_5_7\src\flag-definitions.h" />
+    <ClInclude Include="..\..\v8_5_7\src\flags.h" />
+    <ClInclude Include="..\..\v8_5_7\src\frames-inl.h" />
+    <ClInclude Include="..\..\v8_5_7\src\frames.h" />
     <ClInclude Include="..\..\v8_5_7\src\full-codegen\full-codegen.h" />
+    <ClInclude Include="..\..\v8_5_7\src\futex-emulation.h" />
+    <ClInclude Include="..\..\v8_5_7\src\gdb-jit.h" />
+    <ClInclude Include="..\..\v8_5_7\src\global-handles.h" />
+    <ClInclude Include="..\..\v8_5_7\src\globals.h" />
+    <ClInclude Include="..\..\v8_5_7\src\handles-inl.h" />
+    <ClInclude Include="..\..\v8_5_7\src\handles.h" />
+    <ClInclude Include="..\..\v8_5_7\src\heap-symbols.h" />
+    <ClInclude Include="..\..\v8_5_7\src\i18n.h" />
+    <ClInclude Include="..\..\v8_5_7\src\icu_util.h" />
+    <ClInclude Include="..\..\v8_5_7\src\identity-map.h" />
+    <ClInclude Include="..\..\v8_5_7\src\interface-descriptors.h" />
+    <ClInclude Include="..\..\v8_5_7\src\isolate-inl.h" />
+    <ClInclude Include="..\..\v8_5_7\src\isolate.h" />
+    <ClInclude Include="..\..\v8_5_7\src\json-parser.h" />
+    <ClInclude Include="..\..\v8_5_7\src\json-stringifier.h" />
+    <ClInclude Include="..\..\v8_5_7\src\keys.h" />
+    <ClInclude Include="..\..\v8_5_7\src\layout-descriptor-inl.h" />
+    <ClInclude Include="..\..\v8_5_7\src\layout-descriptor.h" />
     <ClInclude Include="..\..\v8_5_7\src\libplatform\default-platform.h" />
     <ClInclude Include="..\..\v8_5_7\src\libplatform\task-queue.h" />
     <ClInclude Include="..\..\v8_5_7\src\libplatform\tracing\trace-buffer.h" />
     <ClInclude Include="..\..\v8_5_7\src\libplatform\tracing\trace-writer.h" />
     <ClInclude Include="..\..\v8_5_7\src\libplatform\worker-thread.h" />
     <ClInclude Include="..\..\v8_5_7\src\libsampler\sampler.h" />
+    <ClInclude Include="..\..\v8_5_7\src\list-inl.h" />
+    <ClInclude Include="..\..\v8_5_7\src\list.h" />
+    <ClInclude Include="..\..\v8_5_7\src\locked-queue-inl.h" />
+    <ClInclude Include="..\..\v8_5_7\src\locked-queue.h" />
+    <ClInclude Include="..\..\v8_5_7\src\log-inl.h" />
+    <ClInclude Include="..\..\v8_5_7\src\log-utils.h" />
+    <ClInclude Include="..\..\v8_5_7\src\log.h" />
+    <ClInclude Include="..\..\v8_5_7\src\lookup-cache-inl.h" />
+    <ClInclude Include="..\..\v8_5_7\src\lookup-cache.h" />
+    <ClInclude Include="..\..\v8_5_7\src\lookup.h" />
+    <ClInclude Include="..\..\v8_5_7\src\machine-type.h" />
+    <ClInclude Include="..\..\v8_5_7\src\macro-assembler.h" />
+    <ClInclude Include="..\..\v8_5_7\src\messages.h" />
+    <ClInclude Include="..\..\v8_5_7\src\msan.h" />
+    <ClInclude Include="..\..\v8_5_7\src\objects-body-descriptors-inl.h" />
+    <ClInclude Include="..\..\v8_5_7\src\objects-body-descriptors.h" />
+    <ClInclude Include="..\..\v8_5_7\src\objects-inl.h" />
+    <ClInclude Include="..\..\v8_5_7\src\objects.h" />
+    <ClInclude Include="..\..\v8_5_7\src\ostreams.h" />
     <ClInclude Include="..\..\v8_5_7\src\parsing\duplicate-finder.h" />
     <ClInclude Include="..\..\v8_5_7\src\parsing\expression-classifier.h" />
     <ClInclude Include="..\..\v8_5_7\src\parsing\func-name-inferrer.h" />
@@ -357,6 +505,8 @@
     <ClInclude Include="..\..\v8_5_7\src\parsing\scanner-character-streams.h" />
     <ClInclude Include="..\..\v8_5_7\src\parsing\scanner.h" />
     <ClInclude Include="..\..\v8_5_7\src\parsing\token.h" />
+    <ClInclude Include="..\..\v8_5_7\src\pending-compilation-error-handler.h" />
+    <ClInclude Include="..\..\v8_5_7\src\perf-jit.h" />
     <ClInclude Include="..\..\v8_5_7\src\profiler\allocation-tracker.h" />
     <ClInclude Include="..\..\v8_5_7\src\profiler\circular-queue-inl.h" />
     <ClInclude Include="..\..\v8_5_7\src\profiler\circular-queue.h" />
@@ -436,6 +586,12 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">true</ExcludedFromBuild>
     </ClInclude>
+    <ClInclude Include="..\..\v8_5_7\src\zone\accounting-allocator.h" />
+    <ClInclude Include="..\..\v8_5_7\src\zone\zone-allocator.h" />
+    <ClInclude Include="..\..\v8_5_7\src\zone\zone-chunk-list.h" />
+    <ClInclude Include="..\..\v8_5_7\src\zone\zone-containers.h" />
+    <ClInclude Include="..\..\v8_5_7\src\zone\zone-segment.h" />
+    <ClInclude Include="..\..\v8_5_7\src\zone\zone.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\v8_5_1\src\d8_js2c.vcxproj.filters" />
