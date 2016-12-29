@@ -28,7 +28,6 @@
 /* EAI_* constants. */
 #include <winsock2.h>
 
-
 int uv__getaddrinfo_translate_error(int sys_err) {
   switch (sys_err) {
     case 0:                       return 0;
@@ -48,7 +47,7 @@ int uv__getaddrinfo_translate_error(int sys_err) {
 /*
  * MinGW is missing this
  */
-#if !defined(_MSC_VER) && !defined(__MINGW64_VERSION_MAJOR)
+#if !defined(_MSC_VER) && !defined(__MINGW64_VERSION_MAJOR) || USING_VC6RT == 1
   typedef struct addrinfoW {
     int ai_flags;
     int ai_family;
