@@ -111,9 +111,13 @@ void InitPerfCountersWin32() {
 
   wchar_t Inst[INST_MAX_LEN];
   DWORD pid = GetCurrentProcessId();
+#if USING_VC6RT == 1
+  wcscpy(Inst, INST_PREFIX);
+  _itow(pid, Inst + INST_PREFIX_LEN, 10); 
+#else
   wcscpy_s(Inst, INST_MAX_LEN, INST_PREFIX);
   _itow_s(pid, Inst + INST_PREFIX_LEN, INST_MAX_LEN - INST_PREFIX_LEN, 10);
-
+#endif
   advapimod = LoadLibraryW(L"advapi32.dll");
   if (advapimod) {
     perfctr_startProvider = (PerfStartProviderExFunc)

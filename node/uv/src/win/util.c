@@ -30,14 +30,19 @@
 #include "uv.h"
 #include "internal.h"
 
+#if USING_VC6RT != 1
 #include <winsock2.h>
+#endif
 #include <winperf.h>
 #include <iphlpapi.h>
 #include <psapi.h>
 #include <tlhelp32.h>
 #include <windows.h>
+#if USING_VC6RT != 1
 #include <userenv.h>
-
+#else
+#include <iptypes.h>
+#endif
 
 /*
  * Max title length; the only thing MSDN tells us about the maximum length
@@ -46,6 +51,7 @@
  * of the title is or can be, at least not on XP. To make it even more
  * annoying, GetConsoleTitle fails when the buffer to be read into is bigger
  * than the actual maximum length. So we make a conservative guess here;
+ * just don't put the novel you're writing in the title, unless the plot
  * just don't put the novel you're writing in the title, unless the plot
  * survives truncation.
  */

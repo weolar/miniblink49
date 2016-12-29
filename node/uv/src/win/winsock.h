@@ -22,10 +22,14 @@
 #ifndef UV_WIN_WINSOCK_H_
 #define UV_WIN_WINSOCK_H_
 
+#if USING_VC6RT != 1
 #include <winsock2.h>
+#endif
 #include <iptypes.h>
+#if USING_VC6RT != 1
 #include <mswsock.h>
 #include <ws2tcpip.h>
+#endif
 #include <windows.h>
 
 #include "winapi.h"
@@ -146,7 +150,7 @@ typedef struct _AFD_RECV_INFO {
 #define IOCTL_AFD_POLL \
     _AFD_CONTROL_CODE(AFD_POLL, METHOD_BUFFERED)
 
-#if defined(__MINGW32__) && !defined(__MINGW64_VERSION_MAJOR)
+#if (defined(__MINGW32__) && !defined(__MINGW64_VERSION_MAJOR)) || USING_VC6RT == 1
 typedef struct _IP_ADAPTER_UNICAST_ADDRESS_XP {
   /* FIXME: __C89_NAMELESS was removed */
   /* __C89_NAMELESS */ union {

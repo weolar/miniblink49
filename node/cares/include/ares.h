@@ -60,8 +60,12 @@
 #    define WIN32_LEAN_AND_MEAN
 #  endif
 #  include <windows.h>
-#  include <winsock2.h>
-#  include <ws2tcpip.h>
+#  if USING_VC6RT != 1
+#    include <winsock2.h>
+#    include <ws2tcpip.h>
+#  else
+#    include <winsock2_vc6.h>
+#  endif
 #else
 #  include <sys/socket.h>
 #  include <netinet/in.h>

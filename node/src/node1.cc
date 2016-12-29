@@ -56,6 +56,9 @@
 #define umask _umask
 typedef int mode_t;
 
+#if USING_VC6RT == 1
+extern "C" int snprintf(char* buf, size_t len, const char* fmt, ...);
+#endif
 
 namespace node {
 
@@ -160,17 +163,17 @@ namespace node {
 		// Fill in any placeholders
 		int n = _vscprintf(format, ap);
 		std::vector<char> out(n + 1);
-		vsprintf(out.data(), format, ap);
+		vsprintf(&out[0], format, ap);
 
 		// Get required wide buffer size
-		n = MultiByteToWideChar(CP_UTF8, 0, out.data(), -1, nullptr, 0);
+		n = MultiByteToWideChar(CP_UTF8, 0, &out[0], -1, nullptr, 0);
 
 		std::vector<wchar_t> wbuf(n);
-		MultiByteToWideChar(CP_UTF8, 0, out.data(), -1, wbuf.data(), n);
+		MultiByteToWideChar(CP_UTF8, 0, &out[0], -1, &wbuf[0], n);
 
 		// Don't include the null character in the output
 		CHECK_GT(n, 0);
-		WriteConsoleW(stderr_handle, wbuf.data(), n - 1, nullptr, nullptr);
+		WriteConsoleW(stderr_handle, &wbuf[0], n - 1, nullptr, nullptr);
 #else
 		vfprintf(stderr, format, ap);
 #endif
