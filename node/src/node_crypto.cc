@@ -24,6 +24,11 @@
 #include <stdlib.h>
 #include <string.h>
 
+#if USING_VC6RT == 1
+extern "C" int snprintf(char* buffer, size_t count, const char* format, ...);
+#include <algorithmvc6.h>
+#endif
+
 #define THROW_AND_RETURN_IF_NOT_STRING_OR_BUFFER(val, prefix)                  \
   do {                                                                         \
     if (!Buffer::HasInstance(val) && !val->IsString()) {                       \
@@ -5294,7 +5299,7 @@ void PBKDF2(const FunctionCallbackInfo<Value>& args) {
   }
 
   raw_keylen = args[3]->NumberValue();
-  if (raw_keylen < 0.0 || isnan(raw_keylen) || isinf(raw_keylen) ||
+  if (raw_keylen < 0.0 || std::isnan(raw_keylen) || std::isinf(raw_keylen) ||
       raw_keylen > INT_MAX) {
     type_error = "Bad key length";
     goto err;

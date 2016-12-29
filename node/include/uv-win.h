@@ -29,7 +29,13 @@ typedef intptr_t ssize_t;
 # define _SSIZE_T_DEFINED
 #endif
 
+#if USING_VC6RT != 1
 #include <winsock2.h>
+#endif
+#include <winsock.h>
+#if USING_VC6RT == 1
+#include <winsock2_vc6.h>
+#endif
 
 #if defined(__MINGW32__) && !defined(__MINGW64_VERSION_MAJOR)
 typedef struct pollfd {
@@ -43,9 +49,13 @@ typedef struct pollfd {
 # define LOCALE_INVARIANT 0x007f
 #endif
 
+#if USING_VC6RT != 1
 #include <mswsock.h>
 #include <ws2tcpip.h>
+#endif
+
 #include <windows.h>
+#include <wtypes.h>
 
 #include <process.h>
 #include <signal.h>
@@ -116,7 +126,7 @@ typedef struct pollfd {
          {0xb5367df0, 0xcbac, 0x11cf,                                         \
          {0x95, 0xca, 0x00, 0x80, 0x5f, 0x48, 0xa1, 0x92}}
 
-  typedef BOOL PASCAL (*LPFN_ACCEPTEX)
+  typedef BOOL (PASCAL*LPFN_ACCEPTEX)
                       (SOCKET sListenSocket,
                        SOCKET sAcceptSocket,
                        PVOID lpOutputBuffer,
@@ -126,7 +136,7 @@ typedef struct pollfd {
                        LPDWORD lpdwBytesReceived,
                        LPOVERLAPPED lpOverlapped);
 
-  typedef BOOL PASCAL (*LPFN_CONNECTEX)
+  typedef BOOL (PASCAL*LPFN_CONNECTEX)
                       (SOCKET s,
                        const struct sockaddr* name,
                        int namelen,
@@ -135,7 +145,7 @@ typedef struct pollfd {
                        LPDWORD lpdwBytesSent,
                        LPOVERLAPPED lpOverlapped);
 
-  typedef void PASCAL (*LPFN_GETACCEPTEXSOCKADDRS)
+  typedef void (PASCAL*LPFN_GETACCEPTEXSOCKADDRS)
                       (PVOID lpOutputBuffer,
                        DWORD dwReceiveDataLength,
                        DWORD dwLocalAddressLength,
@@ -145,13 +155,13 @@ typedef struct pollfd {
                        LPSOCKADDR* RemoteSockaddr,
                        LPINT RemoteSockaddrLength);
 
-  typedef BOOL PASCAL (*LPFN_DISCONNECTEX)
+  typedef BOOL (PASCAL*LPFN_DISCONNECTEX)
                       (SOCKET hSocket,
                        LPOVERLAPPED lpOverlapped,
                        DWORD dwFlags,
                        DWORD reserved);
 
-  typedef BOOL PASCAL (*LPFN_TRANSMITFILE)
+  typedef BOOL (PASCAL*LPFN_TRANSMITFILE)
                       (SOCKET hSocket,
                        HANDLE hFile,
                        DWORD nNumberOfBytesToWrite,
@@ -160,6 +170,11 @@ typedef struct pollfd {
                        LPTRANSMIT_FILE_BUFFERS lpTransmitBuffers,
                        DWORD dwFlags);
 
+  typedef PVOID RTL_SRWLOCK;
+  typedef RTL_SRWLOCK SRWLOCK, *PSRWLOCK;
+#endif
+
+#if USING_VC6RT == 1
   typedef PVOID RTL_SRWLOCK;
   typedef RTL_SRWLOCK SRWLOCK, *PSRWLOCK;
 #endif

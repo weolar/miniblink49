@@ -6,7 +6,9 @@
 
 #include <errno.h>
 #include <string.h>
-
+#if USING_VC6RT == 1
+extern "C" int snprintf(char* buffer, size_t count, const char* format, ...);
+#endif
 #ifdef __MINGW32__
 # include <io.h>
 #endif  // __MINGW32__
