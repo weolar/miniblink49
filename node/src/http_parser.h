@@ -46,9 +46,12 @@ typedef unsigned __int64 uint64_t;
 #include <stdint.h>
 #endif
 
+#if USING_VC6RT == 1
+#include <wchar.h>
+#endif
+
 /* Compile with -DHTTP_PARSER_STRICT=0 to make less checks, but run
  * faster
- */
 #ifndef HTTP_PARSER_STRICT
 # define HTTP_PARSER_STRICT 1
 #endif
