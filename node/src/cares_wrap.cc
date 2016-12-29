@@ -16,6 +16,23 @@
 #include <stdlib.h>
 #include <string.h>
 
+#if USING_VC6RT == 1
+struct addrinfo
+{
+	int              ai_flags;
+	int              ai_family;
+	int              ai_socktype;
+	int              ai_protocol;
+	ares_socklen_t   ai_addrlen;   /* Follow rfc3493 struct addrinfo */
+	char            *ai_canonname;
+	struct sockaddr *ai_addr;
+	struct addrinfo *ai_next;
+};
+#define NI_NAMEREQD     0x04  /* Error if the host's name not in DNS */
+#define AI_ADDRCONFIG               0x00000400  // Resolution only if global address configured
+#define AI_V4MAPPED                 0x00000800  // On v6 failure, query v4 and convert to V4MAPPED format
+#endif
+
 #if defined(__ANDROID__) || \
     defined(__MINGW32__) || \
     defined(__OpenBSD__) || \

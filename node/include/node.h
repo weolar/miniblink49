@@ -214,7 +214,6 @@ NODE_EXTERN Environment* CreateEnvironment(v8::Isolate* isolate,
 // Ö´ÐÐjs
 NODE_EXTERN v8::Local<v8::Value> ExecuteString(Environment* env, v8::Local<v8::String> source, v8::Local<v8::String> filename);
 
-
 NODE_EXTERN void EmitBeforeExit(Environment* env);
 NODE_EXTERN int EmitExit(Environment* env);
 NODE_EXTERN void RunAtExit(Environment* env);
@@ -395,11 +394,7 @@ typedef void (*addon_context_register_func)(
 
 #define NM_F_BUILTIN 0x01
 #define NM_F_LINKED  0x02
-struct node_native {
-	const char* name;
-	const char* source;
-	size_t source_len;
-};
+
 struct node_module {
   int nm_version;
   unsigned int nm_flags;
@@ -489,8 +484,6 @@ extern "C" NODE_EXTERN void node_module_register(void* mod);
 #define NODE_MODULE_CONTEXT_AWARE_BUILTIN(modname, regfunc)           \
   NODE_MODULE_CONTEXT_AWARE_X(modname, regfunc, NULL, NM_F_BUILTIN)   \
 
-#define NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT(modname, regfunc, scr)           \
-  NODE_MODULE_CONTEXT_AWARE_X(modname, regfunc, scr, NM_F_BUILTIN)   \
 /*
  * For backward compatibility in add-on modules.
  */
