@@ -71,7 +71,7 @@ void PluginPackage::freeLibraryTimerFired(blink::Timer<PluginPackage>*)
     ASSERT(m_module);
     // Do nothing if the module got loaded again meanwhile
     if (!m_loadCount) {
-        ::FreeLibrary(m_module);
+        //::FreeLibrary(m_module); // by weolar: 不卸载模块，因为_NPN_IsAlive里的liveObjectMap还有NPObject，那个有模块里的虚函数表
         m_module = 0;
     }
 }

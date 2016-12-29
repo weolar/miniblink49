@@ -1,10 +1,12 @@
-
+﻿
 #if USING_VC6RT == 1
 
 #include <string>
 #include <vector>
 #include <sstream>
 
+#include <limits>
+#include <limitsvc6.h>
 #include <algorithmvc6.h>
 
 extern "C" double fmod(double _Xx, double _Yx);
@@ -199,6 +201,11 @@ int64 abs(int64 val)
     return (val > 0 ? val : -val);
 }
 
+double fabs(double val)
+{
+    return (val > 0 ? val : -val);
+}
+
 double floor(double x)
 {
     return ::floor(x);
@@ -242,6 +249,31 @@ double tan(double val)
 double ldexp(double x, int exponent)
 {
     return ::ldexp(x, exponent);
+}
+
+bool isfinite(__int64 arg)
+{
+    return arg == arg && arg != std::numeric_limits<__int64>::infinity() && arg != -std::numeric_limits<__int64>::infinity();
+}
+
+bool isfinite(int arg)
+{
+    return arg == arg && arg != std::numeric_limits<int>::infinity() && arg != -std::numeric_limits<int>::infinity();
+}
+
+bool isfinite(unsigned int arg)
+{
+    return arg == arg && arg != std::numeric_limits<int>::infinity() && arg != -std::numeric_limits<int>::infinity();
+}
+
+bool isfinite(double arg)
+{
+    return arg == arg && arg != std::numeric_limits<double>::infinity() && arg != -std::numeric_limits<double>::infinity();
+}
+
+double nearbyint(double x)
+{
+  return ::nearbyint(x);
 }
 
 bool __cdecl operator != <char, char_traits<char>, allocator<char> >(basic_string<char, char_traits<char>, allocator<char> > const & a, char const * b)
@@ -388,6 +420,11 @@ basic_ostream<char, char_traits<char> > & __cdecl operator<< (basic_ostream<char
 double copysign(double x, double y)
 {
     return std::copysign(x, y);
+}
+
+float copysignf(float number, float sign)
+{
+    return std::copysign((double)number, (double)sign);
 }
 
 double rint(double x)
@@ -622,6 +659,11 @@ double trunc(double val)
     if (val < 0)
         result = -result;
     return result;
+}
+
+float truncf(float val)
+{
+    return trunc((double)val);
 }
 
 // extern "C" void _ultod3()

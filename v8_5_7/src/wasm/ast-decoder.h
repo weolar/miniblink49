@@ -334,9 +334,11 @@ V8_EXPORT_PRIVATE DecodeResult VerifyWasmCode(AccountingAllocator* allocator,
 DecodeResult BuildTFGraph(AccountingAllocator* allocator, TFBuilder* builder,
                           FunctionBody& body);
 bool PrintAst(AccountingAllocator* allocator, const FunctionBody& body,
-              std::ostream& os,
-              std::vector<std::tuple<uint32_t, int, int>>* offset_table);
-
+              std::ostream& os
+#if USING_VC6RT != 1
+              , std::vector<std::tuple<uint32_t, int, int>>* offset_table
+#endif
+    );
 // A simplified form of AST printing, e.g. from a debugger.
 void PrintAstForDebugging(const byte* start, const byte* end);
 

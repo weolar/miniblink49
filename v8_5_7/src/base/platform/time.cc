@@ -307,8 +307,8 @@ Time Time::FromFiletime(FILETIME ft) {
   if (ft.dwLowDateTime == 0 && ft.dwHighDateTime == 0) {
     return Time();
   }
-  if (ft.dwLowDateTime == std::numeric_limits<DWORD>::max() &&
-      ft.dwHighDateTime == std::numeric_limits<DWORD>::max()) {
+  if (ft.dwLowDateTime == (std::numeric_limits<DWORD>::max)() &&
+      ft.dwHighDateTime == (std::numeric_limits<DWORD>::max)()) {
     return Max();
   }
   int64_t us = (static_cast<uint64_t>(ft.dwLowDateTime) +
@@ -326,8 +326,8 @@ FILETIME Time::ToFiletime() const {
     return ft;
   }
   if (IsMax()) {
-    ft.dwLowDateTime = std::numeric_limits<DWORD>::max();
-    ft.dwHighDateTime = std::numeric_limits<DWORD>::max();
+    ft.dwLowDateTime = (std::numeric_limits<DWORD>::max)();
+    ft.dwHighDateTime = (std::numeric_limits<DWORD>::max)();
     return ft;
   }
   uint64_t us = static_cast<uint64_t>(us_ + kTimeToEpochInMicroseconds) * 10;
@@ -422,7 +422,7 @@ struct timeval Time::ToTimeval() const {
 Time Time::FromJsTime(double ms_since_epoch) {
   // The epoch is a valid time, so this constructor doesn't interpret
   // 0 as the null time.
-  if (ms_since_epoch == std::numeric_limits<double>::max()) {
+  if (ms_since_epoch == (std::numeric_limits<double>::max)()) {
     return Max();
   }
   return Time(
@@ -437,7 +437,7 @@ double Time::ToJsTime() const {
   }
   if (IsMax()) {
     // Preserve max without offset to prevent overflow.
-    return std::numeric_limits<double>::max();
+    return (std::numeric_limits<double>::max)();
   }
   return static_cast<double>(us_) / kMicrosecondsPerMillisecond;
 }
@@ -670,7 +670,8 @@ ThreadTicks ThreadTicks::GetForThread(const HANDLE& thread_handle) {
 
   // Get the number of TSC ticks used by the current thread.
   ULONG64 thread_cycle_time = 0;
-  ::QueryThreadCycleTime(thread_handle, &thread_cycle_time);
+  //::QueryThreadCycleTime(thread_handle, &thread_cycle_time);
+  DebugBreak(); // weolar
 
   // Get the frequency of the TSC.
   double tsc_ticks_per_second = TSCTicksPerSecond();
@@ -716,12 +717,13 @@ double ThreadTicks::TSCTicksPerSecond() {
 
   // The first time that this function is called, make an initial reading of the
   // TSC and the performance counter.
-  static const uint64_t tsc_initial = __rdtsc();
+  static const uint64_t tsc_initial = 0; // __rdtsc();
   static const uint64_t perf_counter_initial = QPCNowRaw();
+  DebugBreak(); // weolar
 
   // Make a another reading of the TSC and the performance counter every time
   // that this function is called.
-  uint64_t tsc_now = __rdtsc();
+  uint64_t tsc_now = 0;// __rdtsc(); // weolar
   uint64_t perf_counter_now = QPCNowRaw();
 
   // Reset the thread priority.

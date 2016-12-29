@@ -864,13 +864,11 @@ void WebPluginImpl::forceRedraw()
 //         ::UpdateWindow(windowHandleForPageClient(parent() ? parent()->hostWindow()->platformPageClient() : 0));
 }
 
-bool WebPluginImpl::platformStart()
+void WebPluginImpl::platformStartAsyn(blink::Timer<WebPluginImpl>*)
 {
-    ASSERT(m_isStarted);
-    ASSERT(m_status == PluginStatusLoadedSuccessfully);
     WebPluginContainerImpl* container = (WebPluginContainerImpl*)m_pluginContainer;
     if (!container)
-        return false;
+        return;
 
     if (m_isWindowed) {
         registerPluginView();
@@ -882,7 +880,7 @@ bool WebPluginImpl::platformStart()
 
         HWND parentWindowHandle = m_parentWidget;
         HWND window = ::CreateWindowEx(0, kWebPluginViewClassName, 0, flags,
-                                       0, 0, 0, 0, parentWindowHandle, 0, /*WebCore::instanceHandle()*/nullptr, 0);
+            0, 0, 0, 0, parentWindowHandle, 0, /*WebCore::instanceHandle()*/nullptr, 0);
 
         setPlatformWidget(window);
 
@@ -897,7 +895,8 @@ bool WebPluginImpl::platformStart()
 
         m_npWindow.type = NPWindowTypeWindow;
         m_npWindow.window = platformPluginWidget();
-    } else {
+    }
+    else {
         m_npWindow.type = NPWindowTypeDrawable;
         m_npWindow.window = 0;
     }
@@ -906,6 +905,17 @@ bool WebPluginImpl::platformStart()
 
     if (!m_plugin->quirks().contains(PluginQuirkDeferFirstSetWindowCall))
         setNPWindowRect(container->frameRect());
+}
+
+bool WebPluginImpl::platformStart()
+{
+    ASSERT(m_isStarted);
+    ASSERT(m_status == PluginStatusLoadedSuccessfully);
+    WebPluginContainerImpl* container = (WebPluginContainerImpl*)m_pluginContainer;
+    if (!container)
+        return false;
+
+    m_asynStartTimer.startOneShot(0, FROM_HERE);
 
     return true;
 }

@@ -7,8 +7,9 @@
 
 #include <list>
 #include <memory>
+#if USING_VC6RT != 1
 #include <unordered_set>
-
+#endif
 #include "src/allocation.h"
 #include "src/base/atomic-utils.h"
 #include "src/base/atomicops.h"

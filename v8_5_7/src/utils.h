@@ -9,7 +9,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include <cmath>
-
+#if USING_VC6RT == 1
+#include <ymath.h>
+#include <limits>
+#include <limitsvc6.h>
+#include <algorithmvc6.h>
+#endif
 #include "include/v8.h"
 #include "src/allocation.h"
 #include "src/base/bits.h"

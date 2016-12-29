@@ -80,7 +80,11 @@ void CodeGenerator::AddProtectedInstruction(int instr_offset,
   if (protected_instructions_ != nullptr) {
     trap_handler::ProtectedInstructionData data = {instr_offset,
                                                    landing_offset};
+#if USING_VC6RT == 1
+    protected_instructions_->push_back(data);
+#else
     protected_instructions_->emplace_back(data);
+#endif
   }
 }
 

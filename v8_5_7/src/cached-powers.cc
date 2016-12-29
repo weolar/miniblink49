@@ -8,6 +8,9 @@
 #include <stdarg.h>
 #include <stdint.h>
 #include <cmath>
+#if USING_VC6RT == 1
+#include <algorithmvc6.h>
+#endif
 
 #include "src/base/logging.h"
 #include "src/globals.h"

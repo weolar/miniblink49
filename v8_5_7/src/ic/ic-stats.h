@@ -9,6 +9,9 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
+#if USING_VC6RT == 1
+#include <PlatformSTL.h>
+#endif
 
 #include "src/base/atomicops.h"
 #include "src/base/lazy-instance.h"
@@ -50,6 +53,7 @@ class ICStats {
   const int MAX_IC_INFO = 4096;
 
   ICStats();
+  ~ICStats();
   void Dump();
   void Begin();
   void End();
@@ -66,8 +70,13 @@ class ICStats {
   static base::LazyInstance<ICStats>::type instance_;
   base::Atomic32 enabled_;
   std::vector<ICInfo> ic_infos_;
+#if USING_VC6RT != 1
   std::unordered_map<Script*, std::unique_ptr<char[]>> script_name_map_;
   std::unordered_map<JSFunction*, std::unique_ptr<char[]>> function_name_map_;
+#else
+  std::map<Script*, char*> script_name_map_;
+  std::map<JSFunction*, char*> function_name_map_;
+#endif
   int pos_;
 };
 

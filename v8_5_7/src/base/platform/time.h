@@ -8,6 +8,9 @@
 #include <ctime>
 #include <iosfwd>
 #include <limits>
+#if USING_VC6RT == 1
+#include <limitsvc6.h>
+#endif
 
 #include "src/base/base-export.h"
 #include "src/base/bits.h"
@@ -203,7 +206,7 @@ class TimeBase {
   }
 
   // Returns true if this object represents the maximum time.
-  bool IsMax() const { return us_ == std::numeric_limits<int64_t>::max(); }
+  bool IsMax() const { return us_ == (std::numeric_limits<int64_t>::max)(); }
 
   // For serializing only. Use FromInternalValue() to reconstitute. Please don't
   // use this and do arithmetic on it, as it is more error prone than using the
@@ -299,7 +302,7 @@ class V8_BASE_EXPORT Time final : public time_internal::TimeBase<Time> {
 
   // Returns the maximum time, which should be greater than any reasonable time
   // with which we might compare it.
-  static Time Max() { return Time(std::numeric_limits<int64_t>::max()); }
+  static Time Max() { return Time((std::numeric_limits<int64_t>::max)()); }
 
   // Converts to/from POSIX time specs.
   static Time FromTimespec(struct timespec ts);

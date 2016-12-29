@@ -458,6 +458,10 @@ MachineRepresentation AtomicStoreRepresentationOf(Operator const* op) {
   V(kWord16)                          \
   V(kWord32)
 
+#if USING_VC6RT == 1
+#undef PURE
+#endif
+
 struct MachineOperatorGlobalCache {
 #define PURE(Name, properties, value_input_count, control_input_count,         \
              output_count)                                                     \

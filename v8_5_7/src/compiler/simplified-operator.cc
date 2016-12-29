@@ -460,6 +460,8 @@ UnicodeEncoding UnicodeEncodingOf(const Operator* op) {
   V(CheckedTaggedToTaggedPointer, 1, 1) \
   V(CheckedTruncateTaggedToWord32, 1, 1)
 
+#undef PURE
+
 struct SimplifiedOperatorGlobalCache final {
 #define PURE(Name, properties, value_input_count, control_input_count)     \
   struct Name##Operator final : public Operator {                          \

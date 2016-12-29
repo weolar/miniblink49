@@ -384,7 +384,7 @@ void CWebView::setHandle(HWND wnd)
 
 void CWebView::setHandleOffset(int x, int y)
 {
-    blink::IntPoint offset(x, y);
+	blink::IntPoint offset(x, y);
 	m_webPage->setHwndRenderOffset(offset);
 }
 
@@ -958,7 +958,24 @@ const wkeClientHandler* CWebView::getClientHandler() const
 {
     return (const wkeClientHandler *)m_webPage->wkeClientHandler();
 }
+void CWebView::setProxyInfo(const String& host,
+	unsigned long port,
+	net::WebURLLoaderManager::ProxyType type,
+	const String& username,
+	const String& password) {
+	m_proxyType = type;
 
+	if (!host.length()) {
+		m_proxy = emptyString();
+	}
+	else {
+		String userPass;
+		if (username.length() || password.length())
+			userPass = username + ":" + password + "@";
+
+		m_proxy = String("http://") + userPass + host + ":" + String::number(port);
+	}
+}
 };//namespace wke
 
 //static Vector<wke::CWebView*> s_webViews;

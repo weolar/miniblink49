@@ -2,12 +2,12 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "src/v8.h"
-
 // Required to get M_E etc. in MSVC.
 #if defined(_WIN32)
 #define _USE_MATH_DEFINES
 #endif
+#include "src/v8.h"
+
 #include <math.h>
 
 #include "src/asmjs/asm-types.h"

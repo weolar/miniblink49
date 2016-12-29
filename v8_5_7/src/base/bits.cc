@@ -5,6 +5,9 @@
 #include "src/base/bits.h"
 
 #include <limits>
+#if USING_VC6RT == 1
+#include <limitsvc6.h>
+#endif
 
 #include "src/base/logging.h"
 #include "src/base/safe_math.h"
@@ -58,7 +61,7 @@ int64_t FromCheckedNumeric(const internal::CheckedNumeric<int64_t> value) {
   // is. Instead, return max/(-max), which is something that clients can reason
   // about.
   // TODO(rvargas) crbug.com/332611: don't use internal values.
-  int64_t limit = std::numeric_limits<int64_t>::max();
+  int64_t limit = (std::numeric_limits<int64_t>::max)();
   if (value.validity() == internal::RANGE_UNDERFLOW)
     limit = -limit;
   return value.ValueOrDefault(limit);
@@ -81,7 +84,7 @@ int64_t SignedSaturatedSub64(int64_t lhs, int64_t rhs) {
 bool SignedMulOverflow32(int32_t lhs, int32_t rhs, int32_t* val) {
   internal::CheckedNumeric<int32_t> rv(lhs);
   rv *= rhs;
-  int32_t limit = std::numeric_limits<int32_t>::max();
+  int32_t limit = (std::numeric_limits<int32_t>::max)();
   *val = rv.ValueOrDefault(limit);
   return !rv.IsValid();
 }
@@ -89,7 +92,7 @@ bool SignedMulOverflow32(int32_t lhs, int32_t rhs, int32_t* val) {
 bool SignedMulOverflow64(int64_t lhs, int64_t rhs, int64_t* val) {
   internal::CheckedNumeric<int64_t> rv(lhs);
   rv *= rhs;
-  int64_t limit = std::numeric_limits<int64_t>::max();
+  int64_t limit = (std::numeric_limits<int32_t>::max)();
   *val = rv.ValueOrDefault(limit);
   return !rv.IsValid();
 }

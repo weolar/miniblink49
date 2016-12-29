@@ -26,6 +26,12 @@ class zone_allocator {
     typedef zone_allocator<O> other;
   };
 
+#if USING_VC6RT == 1
+  pointer _Charalloc(size_type n) {
+      return allocate(n, nullptr);
+  }
+#endif
+
   // TODO(bbudge) Remove when V8 updates to MSVS 2015. See crbug.com/603131.
   zone_allocator() : zone_(nullptr) { UNREACHABLE(); }
   explicit zone_allocator(Zone* zone) throw() : zone_(zone) {}
@@ -43,9 +49,12 @@ class zone_allocator {
     return static_cast<pointer>(
         zone_->NewArray<value_type>(static_cast<int>(n)));
   }
-  void deallocate(pointer p, size_type) { /* noop for Zones */
-  }
-
+#if USING_VC6RT == 1
+  void deallocate(void* p, size_type) { /* noop for Zones */ }
+#else
+  void deallocate(pointer p, size_type) { /* noop for Zones */ }
+#endif
+  
   size_type max_size() const throw() {
     return std::numeric_limits<int>::max() / sizeof(value_type);
   }

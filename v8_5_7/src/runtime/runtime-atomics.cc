@@ -9,6 +9,9 @@
 #include "src/base/platform/mutex.h"
 #include "src/conversions-inl.h"
 #include "src/factory.h"
+#if USING_VC6RT == 1
+#include <atomic>
+#endif
 
 // Implement Atomic accesses to SharedArrayBuffers as defined in the
 // SharedArrayBuffer draft spec, found here

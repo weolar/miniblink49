@@ -177,6 +177,9 @@ class BinaryOpICState final BASE_EMBEDDED {
 
 std::ostream& operator<<(std::ostream& os, const BinaryOpICState& s);
 
+#if USING_VC6RT == 1
+#undef UNIQUE_NAME // vc6\include\wnet\nb30.h def
+#endif
 
 class CompareICState {
  public:

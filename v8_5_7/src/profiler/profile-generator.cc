@@ -720,8 +720,14 @@ void ProfileGenerator::RecordTickSample(const TickSample& sample) {
         const std::vector<CodeEntry*>* inline_stack =
             entry->GetInlineStack(pc_offset);
         if (inline_stack) {
+#if USING_VC6RT == 1
+          for (auto it = inline_stack->rbegin(); it != inline_stack->rend(); ++it) {
+            entries.push_back(*it);
+          }
+#else
           entries.insert(entries.end(), inline_stack->rbegin(),
                          inline_stack->rend());
+#endif
         }
         // Skip unresolved frames (e.g. internal frame) and get source line of
         // the first JS caller.

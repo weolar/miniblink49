@@ -27,7 +27,7 @@
 // link successfully with other VS versions.
 #pragma comment(lib, "cef_sandbox.lib")
 #endif
-extern "C" bool __declspec(dllexport) RunNode(int argc, wchar_t *wargv[]);
+extern "C" bool __declspec(dllexport) RunNodeThread(int argc, wchar_t *wargv[]);
 namespace client {
 namespace {
 
@@ -99,7 +99,7 @@ int RunMain(HINSTANCE hInstance, int nCmdShow) {
       std::string());   // Use default URL.
 
   wchar_t* argv[] = { L"cefclient.exe",L"node_modules\\HiChat\\server.js" };
-  RunNode(2, argv);
+  //RunNodeThread(2, argv);
 
   // Run the message loop. This will block until Quit() is called by the
   // RootWindowManager after all windows have been destroyed.

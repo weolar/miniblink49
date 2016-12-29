@@ -2745,9 +2745,18 @@ compiler::Node* NonEmptyShallowClone(CodeStubAssembler* assembler,
   capacity = assembler->TaggedToParameter(capacity, param_mode);
 
   Node *array, *elements;
+#if USING_VC6RT != 1
   std::tie(array, elements) =
+#else
+  std::pair<Node*, Node*> nodePair =
+#endif
       assembler->AllocateUninitializedJSArrayWithElements(
           kind, boilerplate_map, length, allocation_site, capacity, param_mode);
+
+#if USING_VC6RT == 1
+  array = nodePair.first;
+  elements = nodePair.second;
+#endif
 
   assembler->Comment("copy elements header");
   // Header consists of map and length.

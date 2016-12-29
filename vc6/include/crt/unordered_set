@@ -1,0 +1,14 @@
+
+#ifndef _UNORDERED_SET_
+#define _UNORDERED_SET_
+
+#include <set>
+
+_STD_BEGIN
+
+template <typename _Kty, typename _Pr = less<_Kty>, typename _Alloc = allocator<_Kty> >
+using unordered_set = set<typename _Kty, typename _Pr, typename _Alloc>;
+
+_STD_END
+
+#endif /* _UNORDERED_SET_ */

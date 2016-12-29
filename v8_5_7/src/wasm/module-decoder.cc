@@ -14,6 +14,10 @@
 #include "src/wasm/decoder.h"
 #include "src/wasm/wasm-limits.h"
 
+#if USING_VC6RT == 1
+extern "C" int snprintf(char* buffer, size_t count, const char* format, ...);
+#endif
+
 namespace v8 {
 namespace internal {
 namespace wasm {

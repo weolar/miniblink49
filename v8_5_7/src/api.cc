@@ -7315,7 +7315,14 @@ WasmCompiledModule::SerializedModule WasmCompiledModule::Serialize() {
   script_data->ReleaseDataOwnership();
 
   size_t size = static_cast<size_t>(script_data->length());
-  return {std::unique_ptr<const uint8_t[]>(script_data->data()), size};
+#if USING_VC6RT == 1
+  SerializedModule result;
+  result.first.swap(std::unique_ptr<const uint8_t[]>(script_data->data()));
+  result.second = size;
+  return result;
+#else
+  return{ std::unique_ptr<const uint8_t[]>(script_data->data()), size };
+#endif
 }
 
 MaybeLocal<WasmCompiledModule> WasmCompiledModule::Deserialize(

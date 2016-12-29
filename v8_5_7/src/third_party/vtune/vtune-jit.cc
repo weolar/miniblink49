@@ -112,8 +112,12 @@ struct HashForCodeObject {
   }
 };
 
+#if USING_VC6RT != 1
 typedef std::unordered_map<void*, void*, HashForCodeObject, SameCodeObjects>
     JitInfoMap;
+#else
+typedef std::map<void*, void*> JitInfoMap;
+#endif
 
 static JitInfoMap* GetEntries() {
   static JitInfoMap* entries;

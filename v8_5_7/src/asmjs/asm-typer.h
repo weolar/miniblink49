@@ -4,12 +4,16 @@
 
 #ifndef SRC_ASMJS_ASM_TYPER_H_
 #define SRC_ASMJS_ASM_TYPER_H_
-
+#if USING_VC6RT != 1
 #include <cstdint>
-#include <string>
 #include <unordered_map>
 #include <unordered_set>
-
+#else
+#include <map>
+#include <set>
+#include <PlatformSTL.h>
+#endif
+#include <string>
 #include "src/allocation.h"
 #include "src/asmjs/asm-types.h"
 #include "src/ast/ast-type-bounds.h"
@@ -86,7 +90,12 @@ class AsmTyper final {
   AsmType* TypeOf(Variable* v) const;
   StandardMember VariableAsStandardMember(Variable* var);
 
-  typedef std::unordered_set<StandardMember, std::hash<int> > StdlibSet;
+#if USING_VC6RT == 1
+  typedef std::set<StandardMember>
+#else
+  typedef std::unordered_set<StandardMember, std::hash<int> > 
+#endif
+      StdlibSet;
 
   StdlibSet StdlibUses() const { return stdlib_uses_; }
 
@@ -389,10 +398,18 @@ class AsmTyper final {
   ZoneHashMap global_scope_;  // 3.1 Global environment
   ZoneHashMap local_scope_;   // 3.2 Variable environment
 
-  std::uintptr_t stack_limit_;
+#if USING_VC6RT != 1
+  std::
+#endif  
+  uintptr_t stack_limit_;
   bool stack_overflow_ = false;
+#if USING_VC6RT != 1
   std::unordered_map<AstNode*, AsmType*> module_node_types_;
   std::unordered_map<AstNode*, AsmType*> function_node_types_;
+#else
+  std::map<AstNode*, AsmType*> module_node_types_;
+  std::map<AstNode*, AsmType*> function_node_types_;
+#endif
   static const int kErrorMessageLimit = 128;
   AsmType* fround_type_;
   AsmType* ffi_type_;

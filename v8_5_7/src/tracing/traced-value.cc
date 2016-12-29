@@ -6,6 +6,10 @@
 
 #include "src/base/platform/platform.h"
 
+#if USING_VC6RT == 1
+#include <string_vc6.h>
+#endif
+
 namespace v8 {
 namespace tracing {
 

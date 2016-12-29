@@ -8,6 +8,9 @@
 #include <stdio.h>
 #include <iosfwd>
 #include <memory>
+#if USING_VC6RT == 1
+#include <PlatformSTL.h>
+#endif
 
 #include "src/globals.h"
 

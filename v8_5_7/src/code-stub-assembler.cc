@@ -2029,8 +2029,17 @@ Node* CodeStubAssembler::AllocateJSArray(ElementsKind kind, Node* array_map,
                                          ParameterMode capacity_mode) {
   // Allocate both array and elements object, and initialize the JSArray.
   Node *array, *elements;
-  std::tie(array, elements) = AllocateUninitializedJSArrayWithElements(
+#if USING_VC6RT != 1
+  std::tie(array, elements)
+#else
+  std::pair<Node*, Node*> nodePair
+#endif
+    = AllocateUninitializedJSArrayWithElements(
       kind, array_map, length, allocation_site, capacity, capacity_mode);
+#if USING_VC6RT == 1
+  array = nodePair.first;
+  elements = nodePair.second;
+#endif
   // Setup elements object.
   Heap::RootListIndex elements_map_index =
       IsFastDoubleElementsKind(kind) ? Heap::kFixedDoubleArrayMapRootIndex

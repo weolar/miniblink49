@@ -111,38 +111,9 @@ void setCookieJarPath(const WCHAR* path)
 
 static char* cookieJarPath()
 {
-#if 0 
-    char* cookieJarPath = getenv("CURL_COOKIE_JAR_PATH");
-    if (cookieJarPath)
-        return fastStrDup(cookieJarPath);
-#endif
-
-#if 0 // OS(WINDOWS)
-    char executablePath[MAX_PATH];
-    char appDataDirectory[MAX_PATH];
-    char cookieJarFullPath[MAX_PATH];
-    char cookieJarDirectory[MAX_PATH];
-
-    if (FAILED(::SHGetFolderPathA(0, CSIDL_LOCAL_APPDATA | CSIDL_FLAG_CREATE, 0, 0, appDataDirectory))
-        || FAILED(::GetModuleFileNameA(0, executablePath, MAX_PATH)))
-        return fastStrDup("cookies.dat");
-
-    ::PathRemoveExtensionA(executablePath);
-    LPSTR executableName = ::PathFindFileNameA(executablePath);
-    sprintf_s(cookieJarDirectory, MAX_PATH, "%s/%s", appDataDirectory, executableName);
-    sprintf_s(cookieJarFullPath, MAX_PATH, "%s/cookies.dat", cookieJarDirectory);
-
-    if (::SHCreateDirectoryExA(0, cookieJarDirectory, 0) != ERROR_SUCCESS
-        && ::GetLastError() != ERROR_FILE_EXISTS
-        && ::GetLastError() != ERROR_ALREADY_EXISTS)
-        return fastStrDup("cookies.dat");
-
-    return fastStrDup(cookieJarFullPath);
-#else
     if (gCookieJarPath)
         return gCookieJarPath;
     return fastStrDup("cookies.dat");
-#endif
 }
 
 static Mutex* sharedResourceMutex(curl_lock_data data)
@@ -248,8 +219,6 @@ WebURLLoaderManager::WebURLLoaderManager()
     curl_share_setopt(m_curlShareHandle, CURLSHOPT_UNLOCKFUNC, curl_unlock_callback);
 
     initCookieSession();
-
-    //setProxyInfo("127.0.0.1", 8888, WebURLLoaderManager::HTTP, "", "");
 }
 
 WebURLLoaderManager::~WebURLLoaderManager()
@@ -416,61 +385,6 @@ static void removeLeadingAndTrailingQuotes(String& value)
     if (value.startsWith('"') && value.endsWith('"') && length > 1)
         value = value.substring(1, length-2);
 }
-
-// static bool getProtectionSpace(CURL* h, const ResourceResponse& response, ProtectionSpace& protectionSpace)
-// {
-//     CURLcode err;
-// 
-//     long port = 0;
-//     err = curl_easy_getinfo(h, CURLINFO_PRIMARY_PORT, &port);
-//     if (err != CURLE_OK)
-//         return false;
-// 
-//     long availableAuth = CURLAUTH_NONE;
-//     err = curl_easy_getinfo(h, CURLINFO_HTTPAUTH_AVAIL, &availableAuth);
-//     if (err != CURLE_OK)
-//         return false;
-// 
-//     const char* effectiveUrl = 0;
-//     err = curl_easy_getinfo(h, CURLINFO_EFFECTIVE_URL, &effectiveUrl);
-//     if (err != CURLE_OK)
-//         return false;
-// 
-//     KURL url(ParsedURLString, effectiveUrl);
-// 
-//     String host = url.host();
-//     String protocol = url.protocol();
-// 
-//     String realm;
-// 
-//     const String authHeader = response.httpHeaderField(HTTPHeaderName::Authorization);
-//     const String realmString = "realm=";
-//     int realmPos = authHeader.find(realmString);
-//     if (realmPos > 0) {
-//         realm = authHeader.substring(realmPos + realmString.length());
-//         realm = realm.left(realm.find(','));
-//         removeLeadingAndTrailingQuotes(realm);
-//     }
-// 
-//     ProtectionSpaceServerType serverType = ProtectionSpaceServerHTTP;
-//     if (protocol == "https")
-//         serverType = ProtectionSpaceServerHTTPS;
-// 
-//     ProtectionSpaceAuthenticationScheme authScheme = ProtectionSpaceAuthenticationSchemeUnknown;
-// 
-//     if (availableAuth & CURLAUTH_BASIC)
-//         authScheme = ProtectionSpaceAuthenticationSchemeHTTPBasic;
-//     if (availableAuth & CURLAUTH_DIGEST)
-//         authScheme = ProtectionSpaceAuthenticationSchemeHTTPDigest;
-//     if (availableAuth & CURLAUTH_GSSNEGOTIATE)
-//         authScheme = ProtectionSpaceAuthenticationSchemeNegotiate;
-//     if (availableAuth & CURLAUTH_NTLM)
-//         authScheme = ProtectionSpaceAuthenticationSchemeNTLM;
-// 
-//     protectionSpace = ProtectionSpace(host, port, serverType, realm, authScheme);
-// 
-//     return true;
-// }
 
 /*
  * This is being called for each HTTP header in the response. This includes '\r\n'
@@ -1240,11 +1154,28 @@ void WebURLLoaderManager::initializeHandle(WebURLLoaderInternal* job)
 
     applyAuthenticationToRequest(job, job->firstRequest());
 
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
+	RequestExtraData* requestExtraData = reinterpret_cast<RequestExtraData*>(job->firstRequest()->extraData());
+	WebPage* page = requestExtraData->page;
+	if (page->wkeWebView()) {
+		if (page->wkeWebView()->m_proxy.length()) {
+			curl_easy_setopt(d->m_handle, CURLOPT_PROXY, page->wkeWebView()->m_proxy.utf8().data());
+			curl_easy_setopt(d->m_handle, CURLOPT_PROXYTYPE, page->wkeWebView()->m_proxyType);
+		}
+		else {
+			if (m_proxy.length()) {
+				curl_easy_setopt(d->m_handle, CURLOPT_PROXY, m_proxy.utf8().data());
+				curl_easy_setopt(d->m_handle, CURLOPT_PROXYTYPE, m_proxyType);
+			}
+		}
+	}
+#else
     // Set proxy options if we have them.
     if (m_proxy.length()) {
         curl_easy_setopt(d->m_handle, CURLOPT_PROXY, m_proxy.utf8().data());
         curl_easy_setopt(d->m_handle, CURLOPT_PROXYTYPE, m_proxyType);
     }
+#endif
 }
 
 void WebURLLoaderManager::initCookieSession()

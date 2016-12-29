@@ -5,7 +5,9 @@
 #ifndef V8_INTERPRETER_BYTECODES_H_
 #define V8_INTERPRETER_BYTECODES_H_
 
+#if USING_VC6RT != 1
 #include <cstdint>
+#endif
 #include <iosfwd>
 #include <string>
 

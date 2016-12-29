@@ -11,6 +11,9 @@
 
 #include "src/base/macros.h"
 #include "src/globals.h"
+#if USING_VC6RT == 1
+#include <PlatformSTL.h>
+#endif
 
 namespace v8 {
 namespace internal {
@@ -48,7 +51,12 @@ class V8_EXPORT_PRIVATE CompilerDispatcher {
 
  private:
   typedef std::multimap<std::pair<int, int>,
-                        std::unique_ptr<CompilerDispatcherJob>>
+#if USING_VC6RT != 1
+    std::unique_ptr<CompilerDispatcherJob>
+#else
+    CompilerDispatcherJob*
+#endif
+  >
       JobMap;
   JobMap::const_iterator GetJobFor(Handle<SharedFunctionInfo> shared) const;
 

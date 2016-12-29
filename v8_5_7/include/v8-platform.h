@@ -9,6 +9,9 @@
 #include <stdint.h>
 #include <memory>
 #include <string>
+#if USING_VC6RT == 1
+#include <PlatformSTL.h>
+#endif
 
 namespace v8 {
 

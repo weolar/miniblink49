@@ -390,7 +390,7 @@ MaybeHandle<String> Factory::NewStringFromTwoByte(Vector<const uc16> string,
 
 MaybeHandle<String> Factory::NewStringFromTwoByte(
     const ZoneVector<uc16>* string, PretenureFlag pretenure) {
-  return NewStringFromTwoByte(string->data(), static_cast<int>(string->size()),
+  return NewStringFromTwoByte(&string->at(0), static_cast<int>(string->size()),
                               pretenure);
 }
 

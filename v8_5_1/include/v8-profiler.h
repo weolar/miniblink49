@@ -27,7 +27,9 @@ struct CpuProfileDeoptFrame {
 }  // namespace v8
 
 #ifdef V8_OS_WIN
+#if USING_VC6RT != 1
 template class V8_EXPORT std::vector<v8::CpuProfileDeoptFrame>;
+#endif
 #endif
 
 namespace v8 {
@@ -41,7 +43,9 @@ struct V8_EXPORT CpuProfileDeoptInfo {
 }  // namespace v8
 
 #ifdef V8_OS_WIN
+#if USING_VC6RT != 1
 template class V8_EXPORT std::vector<v8::CpuProfileDeoptInfo>;
+#endif
 #endif
 
 namespace v8 {

@@ -147,7 +147,7 @@ void WasmFunctionBuilder::ExportAs(Vector<const char> name) {
 
 void WasmFunctionBuilder::SetName(Vector<const char> name) {
   name_.resize(name.length());
-  memcpy(name_.data(), name.start(), name.length());
+  memcpy(&name_[0], name.start(), name.length());
 }
 
 void WasmFunctionBuilder::AddAsmWasmOffset(int call_position,
@@ -175,7 +175,7 @@ void WasmFunctionBuilder::WriteSignature(ZoneBuffer& buffer) const {
 void WasmFunctionBuilder::WriteExports(ZoneBuffer& buffer) const {
   for (auto name : exported_names_) {
     buffer.write_size(name.size());
-    buffer.write(reinterpret_cast<const byte*>(name.data()), name.size());
+    buffer.write(reinterpret_cast<const byte*>(&name[0]), name.size());
     buffer.write_u8(kExternalFunction);
     buffer.write_u32v(func_index_ +
                       static_cast<uint32_t>(builder_->imports_.size()));
@@ -521,7 +521,7 @@ void WasmModuleBuilder::WriteTo(ZoneBuffer& buffer) const {
     }
     for (auto function : functions_) {
       buffer.write_size(function->name_.size());
-      buffer.write(reinterpret_cast<const byte*>(function->name_.data()),
+      buffer.write(reinterpret_cast<const byte*>(&((function->name_)[0])),
                    function->name_.size());
       buffer.write_u8(0);
     }

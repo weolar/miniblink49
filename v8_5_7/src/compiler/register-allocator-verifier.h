@@ -146,7 +146,10 @@ class BlockAssessments : public ZoneObject {
   void CopyFrom(const BlockAssessments* other) {
     CHECK(map_.empty());
     CHECK_NOT_NULL(other);
-    map_.insert(other->map_.begin(), other->map_.end());
+    // map_.insert(other->map_.begin(), other->map_.end()); // USING_VC6RT
+    for (auto it = other->map_.begin(); it != other->map_.end(); ++it) {
+      map_.insert(std::make_pair(it->first, it->second));
+    }
   }
 
   OperandMap& map() { return map_; }

@@ -435,14 +435,14 @@ RUNTIME_FUNCTION(Runtime_GetAndResetRuntimeCallStats) {
     return *result;
   } else {
     DCHECK_LE(args.length(), 2);
-    std::FILE* f;
+    /*std::*/FILE* f; // USING_VC6RT
     if (args[0]->IsString()) {
       // With a string argument, the results are appended to that file.
       CONVERT_ARG_HANDLE_CHECKED(String, arg0, 0);
       String::FlatContent flat = arg0->GetFlatContent();
       const char* filename =
           reinterpret_cast<const char*>(&(flat.ToOneByteVector()[0]));
-      f = std::fopen(filename, "a");
+      f = /*std::*/fopen(filename, "a");
       DCHECK_NOT_NULL(f);
     } else {
       // With an integer argument, the results are written to stdout/stderr.
@@ -454,16 +454,16 @@ RUNTIME_FUNCTION(Runtime_GetAndResetRuntimeCallStats) {
     if (args.length() >= 2) {
       CONVERT_ARG_HANDLE_CHECKED(String, arg1, 1);
       arg1->PrintOn(f);
-      std::fputc('\n', f);
-      std::fflush(f);
+      /*std::*/fputc('\n', f);
+      /*std::*/fflush(f);
     }
     OFStream stats_stream(f);
     isolate->counters()->runtime_call_stats()->Print(stats_stream);
     isolate->counters()->runtime_call_stats()->Reset();
     if (args[0]->IsString())
-      std::fclose(f);
+      /*std::*/fclose(f);
     else
-      std::fflush(f);
+      /*std::*/fflush(f);
     return isolate->heap()->undefined_value();
   }
 }

@@ -429,7 +429,7 @@ Node* BytecodeGraphBuilder::Environment::Checkpoint(
                                   : optimized_out;
 
     UpdateStateValuesWithCache(&registers_state_values_,
-                               state_value_working_area_.data(),
+                               &state_value_working_area_[0],
                                register_count());
 
     UpdateStateValues(&accumulator_state_values_, &accumulator_value, 1);

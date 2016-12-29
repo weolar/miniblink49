@@ -2832,7 +2832,7 @@ class TypedElementsAccessor
           AccessorClass::kind() > FLOAT64_ELEMENTS) {
         return Just(false);
       }
-    } else if (search_value < std::numeric_limits<ctype>::lowest() ||
+    } else if (search_value < std::numeric_limits<ctype>::min() || // lowest USING_VC6CRT
                search_value > std::numeric_limits<ctype>::max()) {
       // Return false if value can't be represented in this space
       return Just(false);
@@ -2877,7 +2877,7 @@ class TypedElementsAccessor
           AccessorClass::kind() > FLOAT64_ELEMENTS) {
         return Just<int64_t>(-1);
       }
-    } else if (search_value < std::numeric_limits<ctype>::lowest() ||
+    } else if (search_value < std::numeric_limits<ctype>::min() || // lowest USING_VC6CRT
                search_value > std::numeric_limits<ctype>::max()) {
       // Return false if value can't be represented in this ElementsKind.
       return Just<int64_t>(-1);

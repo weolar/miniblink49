@@ -142,7 +142,7 @@ class V8_EXPORT_PRIVATE EhFrameWriter {
     DCHECK_EQ(ReadUnalignedUInt32(eh_frame_buffer_.data() + base_offset),
               kInt32Placeholder);
     DCHECK_LT(base_offset + kInt32Size, eh_frame_offset());
-    WriteUnalignedUInt32(eh_frame_buffer_.data() + base_offset, value);
+    WriteUnalignedUInt32(&eh_frame_buffer_[0] + base_offset, value);
   }
 
   // Write the common information entry, which includes encoding specifiers,

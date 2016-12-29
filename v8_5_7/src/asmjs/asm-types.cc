@@ -3,9 +3,9 @@
 // found in the LICENSE file.
 
 #include "src/asmjs/asm-types.h"
-
+#if USING_VC6RT != 1
 #include <cinttypes>
-
+#endif
 #include "src/v8.h"
 
 namespace v8 {

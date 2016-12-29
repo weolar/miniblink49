@@ -184,7 +184,6 @@ NODE_EXTERN extern bool enable_fips_crypto;
 NODE_EXTERN extern bool force_fips_crypto;
 #endif
 
-NODE_EXTERN int Start(int argc, char *argv[]);
 NODE_EXTERN void Init(int* argc,
                       const char** argv,
                       int* exec_argc,
@@ -212,6 +211,8 @@ NODE_EXTERN Environment* CreateEnvironment(v8::Isolate* isolate,
                                            int exec_argc,
                                            const char* const* exec_argv);
 
+// Ö´ÐÐjs
+NODE_EXTERN v8::Local<v8::Value> ExecuteString(Environment* env, v8::Local<v8::String> source, v8::Local<v8::String> filename);
 
 NODE_EXTERN void EmitBeforeExit(Environment* env);
 NODE_EXTERN int EmitExit(Environment* env);

@@ -35,7 +35,13 @@ class TraceBufferRingBuffer : public TraceBuffer {
   mutable base::Mutex mutex_;
   size_t max_chunks_;
   std::unique_ptr<TraceWriter> trace_writer_;
-  std::vector<std::unique_ptr<TraceBufferChunk>> chunks_;
+  std::vector<
+#if USING_VC6RT == 1
+    TraceBufferChunk*
+#else
+    std::unique_ptr<TraceBufferChunk>
+#endif
+  > chunks_;
   size_t chunk_index_;
   bool is_empty_ = true;
   uint32_t current_chunk_seq_ = 1;

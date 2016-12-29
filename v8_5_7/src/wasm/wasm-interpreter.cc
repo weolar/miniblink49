@@ -1768,7 +1768,7 @@ class WasmInterpreterInternals : public ZoneObject {
       : instance_(env.instance),
         module_bytes_(env.module_bytes.start(), env.module_bytes.end(), zone),
         codemap_(env.instance ? env.instance->module : nullptr,
-                 module_bytes_.data(), zone),
+                 &module_bytes_[0], zone),
         threads_(zone) {
     threads_.push_back(new ThreadImpl(zone, &codemap_, env.instance));
   }

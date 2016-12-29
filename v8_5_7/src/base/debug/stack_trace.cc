@@ -8,7 +8,9 @@
 
 #include <algorithm>
 #include <sstream>
-
+#if USING_VC6RT == 1
+#include <algorithmvc6.h>
+#endif
 #include "src/base/macros.h"
 
 namespace v8 {

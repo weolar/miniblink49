@@ -1282,25 +1282,25 @@ class WasmFullDecoder : public WasmDecoder {
 
   void PushBlock(SsaEnv* end_env) {
     const int stack_depth = static_cast<int>(stack_.size());
-    control_.emplace_back(
+    control_.push_back( // emplace_back USING_VC6RT
         Control::Block(pc_, stack_depth, end_env, current_catch_));
   }
 
   void PushLoop(SsaEnv* end_env) {
     const int stack_depth = static_cast<int>(stack_.size());
-    control_.emplace_back(
+    control_.push_back( // emplace_back USING_VC6RT
         Control::Loop(pc_, stack_depth, end_env, current_catch_));
   }
 
   void PushIf(SsaEnv* end_env, SsaEnv* false_env) {
     const int stack_depth = static_cast<int>(stack_.size());
-    control_.emplace_back(
+    control_.push_back( // emplace_back USING_VC6RT
         Control::If(pc_, stack_depth, end_env, false_env, current_catch_));
   }
 
   void PushTry(SsaEnv* end_env, SsaEnv* catch_env) {
     const int stack_depth = static_cast<int>(stack_.size());
-    control_.emplace_back(Control::Try(pc_, stack_depth, end_env, zone_,
+    control_.push_back(Control::Try(pc_, stack_depth, end_env, zone_,  // emplace_back USING_VC6RT
                                        catch_env, current_catch_));
     current_catch_ = static_cast<int32_t>(control_.size() - 1);
   }
@@ -1933,12 +1933,19 @@ unsigned OpcodeLength(const byte* pc, const byte* end) {
 void PrintAstForDebugging(const byte* start, const byte* end) {
   AccountingAllocator allocator;
   OFStream os(stdout);
-  PrintAst(&allocator, FunctionBodyForTesting(start, end), os, nullptr);
+  PrintAst(&allocator, FunctionBodyForTesting(start, end), os
+#if USING_VC6RT != 1
+      , nullptr
+#endif
+      );
 }
 
 bool PrintAst(AccountingAllocator* allocator, const FunctionBody& body,
-              std::ostream& os,
-              std::vector<std::tuple<uint32_t, int, int>>* offset_table) {
+              std::ostream& os
+#if USING_VC6RT != 1
+    , std::vector<std::tuple<uint32_t, int, int>>* offset_table
+#endif
+    ) {
   Zone zone(allocator, ZONE_NAME);
   WasmFullDecoder decoder(&zone, nullptr, body);
   int line_nr = 0;
@@ -1979,10 +1986,12 @@ bool PrintAst(AccountingAllocator* allocator, const FunctionBody& body,
     if (opcode == kExprElse) control_depth--;
 
     int num_whitespaces = control_depth < 32 ? 2 * control_depth : 64;
+#if USING_VC6RT != 1
     if (offset_table) {
       offset_table->push_back(
           std::make_tuple(i.pc_offset(), line_nr, num_whitespaces));
     }
+#endif
 
     // 64 whitespaces
     const char* padding =
