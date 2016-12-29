@@ -16,9 +16,11 @@ TraceBufferRingBuffer::TraceBufferRingBuffer(size_t max_chunks,
 }
 
 TraceBufferRingBuffer::~TraceBufferRingBuffer() {
+#if USING_VC6RT == 1
   for (auto it : chunks_) {
     delete it;
   }
+#endif
 }
 
 TraceObject* TraceBufferRingBuffer::AddTraceEvent(uint64_t* handle) {

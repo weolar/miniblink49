@@ -70,10 +70,13 @@ class ICStats {
   static base::LazyInstance<ICStats>::type instance_;
   base::Atomic32 enabled_;
   std::vector<ICInfo> ic_infos_;
-  //std::unordered_map<Script*, std::unique_ptr<char[]>> script_name_map_; // USING_VC6RT
-  //std::unordered_map<JSFunction*, std::unique_ptr<char[]>> function_name_map_; // USING_VC6RT
+#if USING_VC6RT != 1
+  std::unordered_map<Script*, std::unique_ptr<char[]>> script_name_map_;
+  std::unordered_map<JSFunction*, std::unique_ptr<char[]>> function_name_map_;
+#else
   std::map<Script*, char*> script_name_map_;
   std::map<JSFunction*, char*> function_name_map_;
+#endif
   int pos_;
 };
 
