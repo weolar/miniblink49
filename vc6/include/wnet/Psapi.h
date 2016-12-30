@@ -43,7 +43,7 @@ extern "C" {
 //
 #ifndef PSAPI_VERSION
 #if (NTDDI_VERSION >= NTDDI_WIN7)
-#define PSAPI_VERSION 2
+#define PSAPI_VERSION 1//zero
 #else
 #define PSAPI_VERSION 1
 #endif

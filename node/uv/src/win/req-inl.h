@@ -128,18 +128,19 @@ INLINE static void uv_insert_pending_req(uv_loop_t* loop, uv_req_t* req) {
                                        (uv_pipe_t*) ((req)->handle_at),       \
                                        req);                                  \
         break;                                                                \
-                                                                              \
-      case UV_TTY:                                                            \
-        uv_process_tty_##method##_req(loop,                                   \
-                                      (uv_tty_t*) ((req)->handle_at),         \
-                                      req);                                   \
-        break;                                                                \
-                                                                              \
       default:                                                                \
         assert(0);                                                            \
     }                                                                         \
   } while (0)
-
+//zero
+/*																				\
+case UV_TTY:                                                            \
+uv_process_tty_##method##_req(loop,                                   \
+(uv_tty_t*) ((req)->handle_at),         \
+req);                                   \
+break;                                                                \
+\
+*/
 
 INLINE static int uv_process_reqs(uv_loop_t* loop) {
   uv_req_t* req;

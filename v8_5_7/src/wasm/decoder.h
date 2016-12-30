@@ -196,7 +196,7 @@ class Decoder {
 
   // Check that at least {size} bytes exist between {pc_} and {limit_}.
   bool checkAvailable(int size) {
-    intptr_t pc_overflow_value = std::numeric_limits<intptr_t>::max() - size;
+    intptr_t pc_overflow_value = (std::numeric_limits<intptr_t>::max)() - size;
     if (size < 0 || (intptr_t)pc_ > pc_overflow_value) {
       error(pc_, nullptr, "reading %d bytes would underflow/overflow", size);
       return false;

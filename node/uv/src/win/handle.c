@@ -83,10 +83,10 @@ void uv_close(uv_handle_t* handle, uv_close_cb cb) {
     case UV_NAMED_PIPE:
       uv_pipe_close(loop, (uv_pipe_t*) handle);
       return;
-
-    case UV_TTY:
-      uv_tty_close((uv_tty_t*) handle);
-      return;
+//zero
+//    case UV_TTY:
+//      uv_tty_close((uv_tty_t*) handle);
+//      return;
 
     case UV_UDP:
       uv_udp_close(loop, (uv_udp_t*) handle);

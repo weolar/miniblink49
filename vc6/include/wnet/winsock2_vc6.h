@@ -201,7 +201,43 @@ WSARecv(
 	__inout_opt LPWSAOVERLAPPED lpOverlapped,
 	__in_opt LPWSAOVERLAPPED_COMPLETION_ROUTINE lpCompletionRoutine
 );
-
+int WSAAPI WSASendTo(
+	SOCKET s,
+	LPWSABUF lpBuffers,
+	DWORD dwBufferCount,
+	LPDWORD lpNumberOfBytesSent,
+	int iFlags,
+	LPVOID lpTo,
+	int iToLen,
+	LPWSAOVERLAPPED lpOverlapped,
+	LPWSAOVERLAPPED_COMPLETION_ROUTINE lpCompletionRoutine
+);
+int WSAAPI WSASend(
+	SOCKET s,
+	LPWSABUF lpBuffers,
+	DWORD dwBufferCount,
+	LPDWORD lpNumberOfBytesSent,
+	DWORD dwFlags,
+	LPWSAOVERLAPPED lpOverlapped,
+	LPWSAOVERLAPPED_COMPLETION_ROUTINE lpCompletionRoutine
+);
+int WSAAPI WSAIoctl(SOCKET s,
+	DWORD dwIoControlCode,
+	LPVOID lpvInBuffer,
+	DWORD cbInBuffer,
+	LPVOID lpvOutBuffer,
+	DWORD cbOutBuffer,
+	LPDWORD lpcbBytesReturned,
+	LPWSAOVERLAPPED lpOverlapped,
+	LPWSAOVERLAPPED_COMPLETION_ROUTINE
+	lpCompletionRoutine);
+int
+WSAAPI
+WSADuplicateSocketW(
+	__in SOCKET s,
+	__in DWORD dwProcessId,
+	__out LPWSAPROTOCOL_INFOW lpProtocolInfo
+);
 #define SD_RECEIVE      0x00
 #define SD_SEND         0x01
 #define SD_BOTH         0x02

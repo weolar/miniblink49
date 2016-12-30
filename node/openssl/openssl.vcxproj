@@ -155,7 +155,7 @@
     <ClCompile>
       <AdditionalIncludeDirectories>.;openssl;openssl\crypto;openssl\crypto\asn1;openssl\crypto\evp;openssl\crypto\md2;openssl\crypto\modes;openssl\crypto\store;openssl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
-      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
       <CompileAsWinRT>false</CompileAsWinRT>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <DisableSpecificWarnings>4351;4355;4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>

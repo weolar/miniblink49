@@ -206,6 +206,8 @@ void uv_pipe_endgame(uv_loop_t* loop, uv_pipe_t* handle);
 /*
  * TTY
  */
+//zero
+/*
 void uv_console_init();
 
 int uv_tty_read_start(uv_tty_t* handle, uv_alloc_cb alloc_cb,
@@ -221,15 +223,15 @@ void uv_process_tty_read_req(uv_loop_t* loop, uv_tty_t* handle,
     uv_req_t* req);
 void uv_process_tty_write_req(uv_loop_t* loop, uv_tty_t* handle,
     uv_write_t* req);
-/* TODO: remove me */
+// TODO: remove me 
 void uv_process_tty_accept_req(uv_loop_t* loop, uv_tty_t* handle,
     uv_req_t* raw_req);
-/* TODO: remove me */
+// TODO: remove me
 void uv_process_tty_connect_req(uv_loop_t* loop, uv_tty_t* handle,
     uv_connect_t* req);
 
 void uv_tty_endgame(uv_loop_t* loop, uv_tty_t* handle);
-
+*/
 
 /*
  * Poll watchers
