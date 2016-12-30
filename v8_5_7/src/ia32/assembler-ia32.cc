@@ -56,7 +56,7 @@
 #define _XCR_XFEATURE_ENABLED_MASK 0
 
 /* Returns the content of the specified extended control register */
-extern unsigned __int64 __cdecl _xgetbv(unsigned int);
+extern "C" unsigned __int64 __cdecl _xgetbv(unsigned int);
 #endif
 namespace v8 {
 namespace internal {
