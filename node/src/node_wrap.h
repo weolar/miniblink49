@@ -23,10 +23,6 @@ namespace node {
           env->tcp_constructor_template()->HasInstance(obj)) {                \
         TCPWrap* const wrap = Unwrap<TCPWrap>(obj);                           \
         BODY                                                                  \
-      } else if (env->tty_constructor_template().IsEmpty() == false &&        \
-                 env->tty_constructor_template()->HasInstance(obj)) {         \
-        TTYWrap* const wrap = Unwrap<TTYWrap>(obj);                           \
-        BODY                                                                  \
       } else if (env->pipe_constructor_template().IsEmpty() == false &&       \
                  env->pipe_constructor_template()->HasInstance(obj)) {        \
         PipeWrap* const wrap = Unwrap<PipeWrap>(obj);                         \
@@ -35,6 +31,14 @@ namespace node {
         ELSE                                                                  \
       }                                                                       \
     } while (0)
+
+//zero
+//}
+// else if (env->tty_constructor_template().IsEmpty() == false && \
+//	 env->tty_constructor_template()->HasInstance(obj)) {
+//	 \
+//		 TTYWrap* const wrap = Unwrap<TTYWrap>(obj);                           \
+//		 BODY                                                                  \
 
 inline uv_stream_t* HandleToStream(Environment* env,
                                    v8::Local<v8::Object> obj) {

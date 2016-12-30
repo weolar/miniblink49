@@ -42,6 +42,12 @@
 #include <userenv.h>
 #else
 #include <iptypes.h>
+BOOL
+WINAPI
+GetUserProfileDirectoryW(
+	__in                            HANDLE  hToken,
+	__out_ecount_opt(*lpcchSize)    LPWSTR lpProfileDir,
+	__inout                         LPDWORD lpcchSize);
 #endif
 
 /*
@@ -533,7 +539,7 @@ int uv_uptime(double* uptime) {
 
   data_block = (PERF_DATA_BLOCK*) buffer;
 
-  if (wmemcmp(data_block->Signature, L"PERF", 4) != 0)
+  if (memcmp(data_block->Signature, L"PERF", 8) != 0)
     goto internalError;
 
   if (data_size < data_block->HeaderLength + sizeof(*object_type))

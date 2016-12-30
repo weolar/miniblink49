@@ -90,7 +90,9 @@ static void uv_init(void) {
    * passed. The main issue is that invalid FDs will trigger this behavior.
    */
 #if !defined(__MINGW32__) || __MSVCRT_VERSION__ >= 0x800
+#ifndef USING_VC6RT
   _set_invalid_parameter_handler(uv__crt_invalid_parameter_handler);
+#endif
 #endif
 
   /* We also need to setup our debug report handler because some CRT
@@ -116,7 +118,8 @@ static void uv_init(void) {
   uv_signals_init();
 
   /* Initialize console */
-  uv_console_init();
+  //zero
+  //uv_console_init();
 
   /* Initialize utilities */
   uv__util_init();
@@ -439,10 +442,10 @@ int uv_fileno(const uv_handle_t* handle, uv_os_fd_t* fd) {
   case UV_NAMED_PIPE:
     fd_out = ((uv_pipe_t*) handle)->handle;
     break;
-
-  case UV_TTY:
-    fd_out = ((uv_tty_t*) handle)->handle;
-    break;
+//zero
+//  case UV_TTY:
+//    fd_out = ((uv_tty_t*) handle)->handle;
+//    break;
 
   case UV_UDP:
     fd_out = (uv_os_fd_t)((uv_udp_t*) handle)->socket;

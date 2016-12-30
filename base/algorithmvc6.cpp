@@ -876,4 +876,11 @@ FILE _iob[3] = { 0 };
 
 extern __declspec(dllimport) double _HUGE;
 
+float nearbyintf(float x) {
+	return 0;
+}
+
+double __cdecl scalbn(double _X, int _Y) {
+	return 0;
+}
 #endif // USING_VC6RT

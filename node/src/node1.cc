@@ -1434,8 +1434,8 @@ namespace node {
 			if (env->printed_error())
 				return;
 			env->set_printed_error(true);
-
-			uv_tty_reset_mode();
+			//zero
+			//uv_tty_reset_mode();
 			PrintErrorString("\n%s", arrow);
 			return;
 		}
@@ -2795,12 +2795,14 @@ namespace node {
 
 
 	static void AtProcessExit() {
-		uv_tty_reset_mode();
+		//zero
+		//uv_tty_reset_mode();
 	}
 
 
 	void SignalExit(int signo) {
-		uv_tty_reset_mode();
+		//zero
+		//uv_tty_reset_mode();
 		raise(signo);
 	}
 
