@@ -27,6 +27,9 @@ struct _CRTIMP _Num_uint64_base : public _Num_base {
     _STCONS(int, radix, 2);
 };
 
+#undef min
+#undef max
+
 template <>
 class numeric_limits<__int64> : public _Num_int64_base {
 public:
