@@ -108,8 +108,8 @@ int32_t float32_to_int64_wrapper(float* input, int64_t* output) {
   // We use "<" here to check the upper bound because of rounding problems: With
   // "<=" some inputs would be considered within int64 range which are actually
   // not within int64 range.
-  if (*input >= static_cast<float>(std::numeric_limits<int64_t>::min()) &&
-      *input < static_cast<float>(std::numeric_limits<int64_t>::max())) {
+  if (*input >= static_cast<float>(-_LLONG_MAX - 1) &&
+      *input < static_cast<float>(_LLONG_MAX)) {
     *output = static_cast<int64_t>(*input);
     return 1;
   }
@@ -121,7 +121,7 @@ int32_t float32_to_uint64_wrapper(float* input, uint64_t* output) {
   // "<=" some inputs would be considered within uint64 range which are actually
   // not within uint64 range.
   if (*input > -1.0 &&
-      *input < static_cast<float>(std::numeric_limits<uint64_t>::max())) {
+      *input < static_cast<float>(_LLONG_MAX)) {
     *output = static_cast<uint64_t>(*input);
     return 1;
   }
@@ -132,8 +132,8 @@ int32_t float64_to_int64_wrapper(double* input, int64_t* output) {
   // We use "<" here to check the upper bound because of rounding problems: With
   // "<=" some inputs would be considered within int64 range which are actually
   // not within int64 range.
-  if (*input >= static_cast<double>(std::numeric_limits<int64_t>::min()) &&
-      *input < static_cast<double>(std::numeric_limits<int64_t>::max())) {
+  if (*input >= static_cast<double>(-_LLONG_MAX - 1) &&
+      *input < static_cast<double>(_LLONG_MAX)) {
     *output = static_cast<int64_t>(*input);
     return 1;
   }
@@ -145,7 +145,7 @@ int32_t float64_to_uint64_wrapper(double* input, uint64_t* output) {
   // "<=" some inputs would be considered within uint64 range which are actually
   // not within uint64 range.
   if (*input > -1.0 &&
-      *input < static_cast<double>(std::numeric_limits<uint64_t>::max())) {
+      *input < static_cast<double>(_LLONG_MAX)) {
     *output = static_cast<uint64_t>(*input);
     return 1;
   }
@@ -156,7 +156,7 @@ int32_t int64_div_wrapper(int64_t* dst, int64_t* src) {
   if (*src == 0) {
     return 0;
   }
-  if (*src == -1 && *dst == std::numeric_limits<int64_t>::min()) {
+  if (*src == -1 && *dst == (-_LLONG_MAX - 1)) {
     return -1;
   }
   *dst /= *src;

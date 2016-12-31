@@ -227,7 +227,7 @@ static inline int64_t ExecuteI64DivS(int64_t a, int64_t b, TrapReason* trap) {
     *trap = kTrapDivByZero;
     return 0;
   }
-  if (b == -1 && a == std::numeric_limits<int64_t>::min()) {
+  if (b == -1 && a == _LLONG_MAX) {
     *trap = kTrapDivUnrepresentable;
     return 0;
   }

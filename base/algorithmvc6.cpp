@@ -6,7 +6,6 @@
 #include <sstream>
 
 #include <limits>
-#include <limitsvc6.h>
 #include <algorithmvc6.h>
 
 extern "C" double fmod(double _Xx, double _Yx);

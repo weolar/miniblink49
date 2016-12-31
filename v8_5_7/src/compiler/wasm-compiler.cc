@@ -2068,7 +2068,7 @@ Node* WasmGraphBuilder::BuildI64DivS(Node* left, Node* right,
                     &denom_is_m1, &denom_is_not_m1);
   *control_ = denom_is_m1;
   trap_->TrapIfEq64(wasm::kTrapDivUnrepresentable, left,
-                    (std::numeric_limits<int64_t>::min)(), position);
+	  _LLONG_MAX, position);
   if (*control_ != denom_is_m1) {
     *control_ = graph()->NewNode(jsgraph()->common()->Merge(2), denom_is_not_m1,
                                  *control_);

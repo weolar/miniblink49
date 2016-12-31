@@ -9,7 +9,6 @@
 #include <limits.h>        // Required for INT_MAX etc.
 #if USING_VC6RT == 1
 #include <limits>
-#include <limitsvc6.h>
 #endif
 #include <stdarg.h>
 #include <cmath>
