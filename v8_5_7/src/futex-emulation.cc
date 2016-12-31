@@ -102,7 +102,7 @@ Object* FutexEmulation::Wait(Isolate* isolate,
                             base::Time::kNanosecondsPerMicrosecond *
                             base::Time::kMicrosecondsPerMillisecond;
     if (rel_timeout_ns >
-        static_cast<double>(std::numeric_limits<int64_t>::max())) {
+        static_cast<double>(_LLONG_MAX)) {
       // 2**63 nanoseconds is 292 years. Let's just treat anything greater as
       // infinite.
       use_timeout = false;

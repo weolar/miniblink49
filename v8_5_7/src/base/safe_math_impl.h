@@ -13,9 +13,6 @@
 #include <cmath>
 #include <cstdlib>
 #include <limits>
-#if USING_VC6RT == 1
-#include <limitsvc6.h>
-#endif
 #include "src/base/macros.h"
 #include "src/base/safe_conversions.h"
 

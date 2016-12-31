@@ -23,7 +23,6 @@
 #if V8_OS_WIN
 #include "src/base/win32-headers.h"
 #endif
-
 namespace v8 {
 namespace base {
 
@@ -77,7 +76,7 @@ int64_t SysInfo::AmountOfPhysicalMemory() {
     return 0;
   }
   int64_t result = static_cast<int64_t>(memory_info.ullTotalPhys);
-  if (result < 0) result = std::numeric_limits<int64_t>::max();
+  if (result < 0) result = _LLONG_MAX;
   return result;
 #elif V8_OS_QNX
   struct stat stat_buf;
