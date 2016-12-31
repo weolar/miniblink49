@@ -28,16 +28,16 @@ struct _CRTIMP _Num_uint64_base : public _Num_base {
 };
 
 template <>
-class _CRTIMP numeric_limits<__int64> : public _Num_int64_base {
+class numeric_limits<__int64> : public _Num_int64_base {
 public:
     typedef __int64 _Ty;
 
-    static _Ty(min)()
+    static _Ty min()
     {	// return minimum value
         return (-_LLONG_MAX - 1);
     }
 
-    static _Ty(max)()
+    static _Ty max()
     {	// return maximum value
         return (_LLONG_MAX);
     }
