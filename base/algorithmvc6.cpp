@@ -382,6 +382,16 @@ basic_string<char, char_traits<char>, class std::allocator<char> > __cdecl std::
 
 //////////////////////////////////////////////////////////////////////////
 
+basic_ostream<char, char_traits<char> > & __cdecl operator << (basic_ostream<char, char_traits<char> >& a, unsigned __int64 b)
+{
+    ostringstream aCopy;
+    char buf[32];
+    sprintf(buf, "%I64u", b);
+    aCopy << buf;
+    a << aCopy;
+    return a;
+}
+
 basic_ostream<char, char_traits<char> >& __cdecl operator << <char, char_traits<char>>(
     basic_ostream<char, char_traits<char> > & a, char const * b)
 {
