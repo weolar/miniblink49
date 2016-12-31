@@ -15,6 +15,10 @@
 #include "src/handles.h"
 #include "src/list.h"
 
+#if USING_VC6RT == 1
+#undef GetMessage
+#endif
+
 namespace v8 {
 namespace internal {
 

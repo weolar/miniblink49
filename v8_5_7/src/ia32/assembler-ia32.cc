@@ -52,12 +52,14 @@
 #include "src/disassembler.h"
 #include "src/macro-assembler.h"
 #include "src/v8.h"
+
 #if USING_VC6RT == 1
 #define _XCR_XFEATURE_ENABLED_MASK 0
 
 /* Returns the content of the specified extended control register */
 extern "C" unsigned __int64 __cdecl _xgetbv(unsigned int);
 #endif
+
 namespace v8 {
 namespace internal {
 
