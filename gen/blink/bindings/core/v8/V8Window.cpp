@@ -5157,7 +5157,7 @@ static void closeOriginSafeMethodGetter(const v8::PropertyCallbackInfo<v8::Value
     }
 	//zero
 #if V8_MINOR_VERSION == 7
-	v8::Local<v8::Value> hiddenValue = V8HiddenValue::getHiddenValue(info.GetIsolate(), v8::Local<v8::Object>::Cast(info.This()), v8AtomicString(info.GetIsolate(), "clos"));
+	v8::Local<v8::Value> hiddenValue = V8HiddenValue::getHiddenValue(info.GetIsolate(), v8::Local<v8::Object>::Cast(info.This()), v8AtomicString(info.GetIsolate(), "close"));
 #else
     v8::Local<v8::Value> hiddenValue = v8::Local<v8::Object>::Cast(info.This())->GetHiddenValue(v8AtomicString(info.GetIsolate(), "close"));
 #endif
