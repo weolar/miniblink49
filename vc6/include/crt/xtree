@@ -236,7 +236,8 @@ public:
             _Lockit _Lk;
             if (--_Nilrefs == 0)
             {
-                _Tmp = _Nil;
+                // _Tmp = _Nil; // weolar
+                free(_Nil);
                 _Nil = 0;
             }
         }
@@ -645,7 +646,11 @@ protected:
             _Lockit _Lk;
             if (_Nil == 0)
             {
-                _Nil = _Tmp;
+                //_Nil = _Tmp; // weolar
+                _Nil = (_Nodeptr)malloc(1 * sizeof(_Node));
+                _Parent(_Nil) = 0;
+                _Color(_Nil) = _Black;
+
                 _Tmp = 0;
                 _Left(_Nil) = 0, _Right(_Nil) = 0;
             }
