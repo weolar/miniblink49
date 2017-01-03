@@ -53,7 +53,6 @@ public:
     template<typename T>
     function(const T& obj) {
         m_wrap = new functionWrap<T, R, Args...>(obj, this);
-        m_wrap->setParent(this);
     }
 
     template<typename T>
