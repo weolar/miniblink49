@@ -223,13 +223,13 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <Optimization>MaxSpeed</Optimization>
+      <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;V8_NO_FAST_TLS;NDEBUG;WIN32;_LIB;V8_USE_EXTERNAL_STARTUP_DATA=1;V8_TARGET_ARCH_IA32=1;V8_DEPRECATION_WARNINGS;NVALGRIND;ENABLE_HANDLE_ZAPPING;BUILDING_V8_SHARED;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>../../v8_5_7;../../v8_5_7/include</AdditionalIncludeDirectories>
-      <ExceptionHandling>Sync</ExceptionHandling>
+      <ExceptionHandling>false</ExceptionHandling>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <DisableSpecificWarnings>4800;4530</DisableSpecificWarnings>
@@ -240,7 +240,7 @@
       </AdditionalOptions>
       <StringPooling>true</StringPooling>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
-      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
@@ -733,10 +733,6 @@
       <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</WholeProgramOptimization>
       <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</WholeProgramOptimization>
     </ClCompile>
-    <ClCompile Include="..\..\v8_5_7\src\gdb-jit.cc">
-      <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</WholeProgramOptimization>
-      <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</WholeProgramOptimization>
-    </ClCompile>
     <ClCompile Include="..\..\v8_5_7\src\global-handles.cc">
       <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</WholeProgramOptimization>
       <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</WholeProgramOptimization>
@@ -753,6 +749,29 @@
       <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</WholeProgramOptimization>
       <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</WholeProgramOptimization>
     </ClCompile>
+    <ClCompile Include="..\..\v8_5_7\src\interpreter\bytecode-array-accessor.cc" />
+    <ClCompile Include="..\..\v8_5_7\src\interpreter\bytecode-array-builder.cc" />
+    <ClCompile Include="..\..\v8_5_7\src\interpreter\bytecode-array-iterator.cc" />
+    <ClCompile Include="..\..\v8_5_7\src\interpreter\bytecode-array-random-iterator.cc" />
+    <ClCompile Include="..\..\v8_5_7\src\interpreter\bytecode-array-writer.cc" />
+    <ClCompile Include="..\..\v8_5_7\src\interpreter\bytecode-dead-code-optimizer.cc" />
+    <ClCompile Include="..\..\v8_5_7\src\interpreter\bytecode-decoder.cc" />
+    <ClCompile Include="..\..\v8_5_7\src\interpreter\bytecode-flags.cc" />
+    <ClCompile Include="..\..\v8_5_7\src\interpreter\bytecode-generator.cc" />
+    <ClCompile Include="..\..\v8_5_7\src\interpreter\bytecode-label.cc" />
+    <ClCompile Include="..\..\v8_5_7\src\interpreter\bytecode-operands.cc" />
+    <ClCompile Include="..\..\v8_5_7\src\interpreter\bytecode-peephole-optimizer.cc" />
+    <ClCompile Include="..\..\v8_5_7\src\interpreter\bytecode-peephole-table.cc" />
+    <ClCompile Include="..\..\v8_5_7\src\interpreter\bytecode-pipeline.cc" />
+    <ClCompile Include="..\..\v8_5_7\src\interpreter\bytecode-register-optimizer.cc" />
+    <ClCompile Include="..\..\v8_5_7\src\interpreter\bytecode-register.cc" />
+    <ClCompile Include="..\..\v8_5_7\src\interpreter\bytecodes.cc" />
+    <ClCompile Include="..\..\v8_5_7\src\interpreter\constant-array-builder.cc" />
+    <ClCompile Include="..\..\v8_5_7\src\interpreter\control-flow-builders.cc" />
+    <ClCompile Include="..\..\v8_5_7\src\interpreter\handler-table-builder.cc" />
+    <ClCompile Include="..\..\v8_5_7\src\interpreter\interpreter-assembler.cc" />
+    <ClCompile Include="..\..\v8_5_7\src\interpreter\interpreter-intrinsics.cc" />
+    <ClCompile Include="..\..\v8_5_7\src\interpreter\interpreter.cc" />
     <ClCompile Include="..\..\v8_5_7\src\isolate.cc">
       <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</WholeProgramOptimization>
       <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</WholeProgramOptimization>
@@ -781,9 +800,7 @@
     <ClCompile Include="..\..\v8_5_7\src\libplatform\tracing\trace-writer.cc" />
     <ClCompile Include="..\..\v8_5_7\src\libplatform\tracing\tracing-controller.cc" />
     <ClCompile Include="..\..\v8_5_7\src\libplatform\worker-thread.cc" />
-    <ClCompile Include="..\..\v8_5_7\src\libsampler\sampler.cc">
-      <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</WholeProgramOptimization>
-    </ClCompile>
+    <ClCompile Include="..\..\v8_5_7\src\libsampler\sampler.cc" />
     <ClCompile Include="..\..\v8_5_7\src\log-utils.cc">
       <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</WholeProgramOptimization>
       <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</WholeProgramOptimization>
@@ -805,10 +822,6 @@
       <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</WholeProgramOptimization>
     </ClCompile>
     <ClCompile Include="..\..\v8_5_7\src\messages.cc">
-      <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</WholeProgramOptimization>
-      <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</WholeProgramOptimization>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_7\src\objects-debug.cc">
       <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</WholeProgramOptimization>
       <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</WholeProgramOptimization>
     </ClCompile>
@@ -892,102 +905,38 @@
       <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</WholeProgramOptimization>
       <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</WholeProgramOptimization>
     </ClCompile>
-    <ClCompile Include="..\..\v8_5_7\src\runtime\runtime-array.cc">
-      <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</WholeProgramOptimization>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_7\src\runtime\runtime-atomics.cc">
-      <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</WholeProgramOptimization>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_7\src\runtime\runtime-classes.cc">
-      <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</WholeProgramOptimization>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_7\src\runtime\runtime-collections.cc">
-      <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</WholeProgramOptimization>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_7\src\runtime\runtime-compiler.cc">
-      <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</WholeProgramOptimization>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_7\src\runtime\runtime-date.cc">
-      <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</WholeProgramOptimization>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_7\src\runtime\runtime-debug.cc">
-      <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</WholeProgramOptimization>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_7\src\runtime\runtime-error.cc">
-      <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</WholeProgramOptimization>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_7\src\runtime\runtime-forin.cc">
-      <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</WholeProgramOptimization>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_7\src\runtime\runtime-function.cc">
-      <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</WholeProgramOptimization>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_7\src\runtime\runtime-futex.cc">
-      <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</WholeProgramOptimization>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_7\src\runtime\runtime-generator.cc">
-      <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</WholeProgramOptimization>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_7\src\runtime\runtime-internal.cc">
-      <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</WholeProgramOptimization>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_7\src\runtime\runtime-interpreter.cc">
-      <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</WholeProgramOptimization>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_7\src\runtime\runtime-literals.cc">
-      <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</WholeProgramOptimization>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_7\src\runtime\runtime-liveedit.cc">
-      <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</WholeProgramOptimization>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_7\src\runtime\runtime-maths.cc">
-      <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</WholeProgramOptimization>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_7\src\runtime\runtime-module.cc">
-      <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</WholeProgramOptimization>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_7\src\runtime\runtime-numbers.cc">
-      <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</WholeProgramOptimization>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_7\src\runtime\runtime-object.cc">
-      <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</WholeProgramOptimization>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_7\src\runtime\runtime-operators.cc">
-      <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</WholeProgramOptimization>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_7\src\runtime\runtime-promise.cc">
-      <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</WholeProgramOptimization>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_7\src\runtime\runtime-proxy.cc">
-      <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</WholeProgramOptimization>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_7\src\runtime\runtime-regexp.cc">
-      <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</WholeProgramOptimization>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_7\src\runtime\runtime-scopes.cc">
-      <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</WholeProgramOptimization>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_7\src\runtime\runtime-simd.cc">
-      <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</WholeProgramOptimization>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_7\src\runtime\runtime-strings.cc">
-      <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</WholeProgramOptimization>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_7\src\runtime\runtime-symbol.cc">
-      <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</WholeProgramOptimization>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_7\src\runtime\runtime-test.cc">
-      <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</WholeProgramOptimization>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_7\src\runtime\runtime-typedarray.cc">
-      <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</WholeProgramOptimization>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_7\src\runtime\runtime-wasm.cc">
-      <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</WholeProgramOptimization>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_7\src\runtime\runtime.cc">
-      <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</WholeProgramOptimization>
-    </ClCompile>
+    <ClCompile Include="..\..\v8_5_7\src\runtime\runtime-array.cc" />
+    <ClCompile Include="..\..\v8_5_7\src\runtime\runtime-atomics.cc" />
+    <ClCompile Include="..\..\v8_5_7\src\runtime\runtime-classes.cc" />
+    <ClCompile Include="..\..\v8_5_7\src\runtime\runtime-collections.cc" />
+    <ClCompile Include="..\..\v8_5_7\src\runtime\runtime-compiler.cc" />
+    <ClCompile Include="..\..\v8_5_7\src\runtime\runtime-date.cc" />
+    <ClCompile Include="..\..\v8_5_7\src\runtime\runtime-debug.cc" />
+    <ClCompile Include="..\..\v8_5_7\src\runtime\runtime-error.cc" />
+    <ClCompile Include="..\..\v8_5_7\src\runtime\runtime-forin.cc" />
+    <ClCompile Include="..\..\v8_5_7\src\runtime\runtime-function.cc" />
+    <ClCompile Include="..\..\v8_5_7\src\runtime\runtime-futex.cc" />
+    <ClCompile Include="..\..\v8_5_7\src\runtime\runtime-generator.cc" />
+    <ClCompile Include="..\..\v8_5_7\src\runtime\runtime-internal.cc" />
+    <ClCompile Include="..\..\v8_5_7\src\runtime\runtime-interpreter.cc" />
+    <ClCompile Include="..\..\v8_5_7\src\runtime\runtime-literals.cc" />
+    <ClCompile Include="..\..\v8_5_7\src\runtime\runtime-liveedit.cc" />
+    <ClCompile Include="..\..\v8_5_7\src\runtime\runtime-maths.cc" />
+    <ClCompile Include="..\..\v8_5_7\src\runtime\runtime-module.cc" />
+    <ClCompile Include="..\..\v8_5_7\src\runtime\runtime-numbers.cc" />
+    <ClCompile Include="..\..\v8_5_7\src\runtime\runtime-object.cc" />
+    <ClCompile Include="..\..\v8_5_7\src\runtime\runtime-operators.cc" />
+    <ClCompile Include="..\..\v8_5_7\src\runtime\runtime-promise.cc" />
+    <ClCompile Include="..\..\v8_5_7\src\runtime\runtime-proxy.cc" />
+    <ClCompile Include="..\..\v8_5_7\src\runtime\runtime-regexp.cc" />
+    <ClCompile Include="..\..\v8_5_7\src\runtime\runtime-scopes.cc" />
+    <ClCompile Include="..\..\v8_5_7\src\runtime\runtime-simd.cc" />
+    <ClCompile Include="..\..\v8_5_7\src\runtime\runtime-strings.cc" />
+    <ClCompile Include="..\..\v8_5_7\src\runtime\runtime-symbol.cc" />
+    <ClCompile Include="..\..\v8_5_7\src\runtime\runtime-test.cc" />
+    <ClCompile Include="..\..\v8_5_7\src\runtime\runtime-typedarray.cc" />
+    <ClCompile Include="..\..\v8_5_7\src\runtime\runtime-wasm.cc" />
+    <ClCompile Include="..\..\v8_5_7\src\runtime\runtime.cc" />
     <ClCompile Include="..\..\v8_5_7\src\safepoint-table.cc">
       <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</WholeProgramOptimization>
       <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</WholeProgramOptimization>
@@ -1077,45 +1026,19 @@
       <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</WholeProgramOptimization>
       <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</WholeProgramOptimization>
     </ClCompile>
-    <ClCompile Include="..\..\v8_5_7\src\wasm\ast-decoder.cc">
-      <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</WholeProgramOptimization>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_7\src\wasm\module-decoder.cc">
-      <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</WholeProgramOptimization>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_7\src\wasm\signature-map.cc">
-      <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</WholeProgramOptimization>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_7\src\wasm\wasm-debug.cc">
-      <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</WholeProgramOptimization>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_7\src\wasm\wasm-external-refs.cc">
-      <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</WholeProgramOptimization>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_7\src\wasm\wasm-interpreter.cc">
-      <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</WholeProgramOptimization>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_7\src\wasm\wasm-js.cc">
-      <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</WholeProgramOptimization>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_7\src\wasm\wasm-module-builder.cc">
-      <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</WholeProgramOptimization>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_7\src\wasm\wasm-module.cc">
-      <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</WholeProgramOptimization>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_7\src\wasm\wasm-objects.cc">
-      <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</WholeProgramOptimization>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_7\src\wasm\wasm-opcodes.cc">
-      <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</WholeProgramOptimization>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_7\src\wasm\wasm-result.cc">
-      <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</WholeProgramOptimization>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_7\src\wasm\wasm-text.cc">
-      <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</WholeProgramOptimization>
-    </ClCompile>
+    <ClCompile Include="..\..\v8_5_7\src\wasm\ast-decoder.cc" />
+    <ClCompile Include="..\..\v8_5_7\src\wasm\module-decoder.cc" />
+    <ClCompile Include="..\..\v8_5_7\src\wasm\signature-map.cc" />
+    <ClCompile Include="..\..\v8_5_7\src\wasm\wasm-debug.cc" />
+    <ClCompile Include="..\..\v8_5_7\src\wasm\wasm-external-refs.cc" />
+    <ClCompile Include="..\..\v8_5_7\src\wasm\wasm-interpreter.cc" />
+    <ClCompile Include="..\..\v8_5_7\src\wasm\wasm-js.cc" />
+    <ClCompile Include="..\..\v8_5_7\src\wasm\wasm-module-builder.cc" />
+    <ClCompile Include="..\..\v8_5_7\src\wasm\wasm-module.cc" />
+    <ClCompile Include="..\..\v8_5_7\src\wasm\wasm-objects.cc" />
+    <ClCompile Include="..\..\v8_5_7\src\wasm\wasm-opcodes.cc" />
+    <ClCompile Include="..\..\v8_5_7\src\wasm\wasm-result.cc" />
+    <ClCompile Include="..\..\v8_5_7\src\wasm\wasm-text.cc" />
     <ClCompile Include="..\..\v8_5_7\src\x64\assembler-x64.cc">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
@@ -1171,15 +1094,9 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="..\..\v8_5_7\src\zone\accounting-allocator.cc">
-      <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</WholeProgramOptimization>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_7\src\zone\zone-segment.cc">
-      <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</WholeProgramOptimization>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_7\src\zone\zone.cc">
-      <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</WholeProgramOptimization>
-    </ClCompile>
+    <ClCompile Include="..\..\v8_5_7\src\zone\accounting-allocator.cc" />
+    <ClCompile Include="..\..\v8_5_7\src\zone\zone-segment.cc" />
+    <ClCompile Include="..\..\v8_5_7\src\zone\zone.cc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
