@@ -223,7 +223,8 @@
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
     </Link>
     <PostBuildEvent>
-      <Command>copy $(TargetPath) $(SolutionDir)..\bin\</Command>
+      <Command>copy $(TargetPath) $(SolutionDir)..\bin\
+copy $(OutDir)$(TargetName)\miniblink.lib $(SolutionDir)..\bin\</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
