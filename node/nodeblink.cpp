@@ -54,7 +54,7 @@ namespace node {
 	}
 
 
-	nodeargc* RunNodeThread(int argc, wchar_t *wargv[], nodeInitCallBack initcall) {
+	extern "C" NODE_EXTERN nodeargc* RunNodeThread(int argc, wchar_t *wargv[], nodeInitCallBack initcall) {
 		nodeargc *p = (nodeargc *)malloc(sizeof(nodeargc));
 		memset(p, 0, sizeof(nodeargc));
 		p->initcall = initcall;
@@ -126,7 +126,7 @@ namespace node {
 		free(p);
 		return NULL;
 	}
-	Environment* NodeGetEnvironment(nodeargc* p) {
+	extern "C" NODE_EXTERN Environment* NodeGetEnvironment(nodeargc* p) {
 		if (p)
 		{
 			return p->child_env_;

@@ -19,16 +19,16 @@ struct node_native {
 	size_t source_len;
 };
 namespace node {
-	struct nodeargc;
+	typedef struct _nodeargc nodeargc;
 	typedef void(*nodeInitCallBack)(nodeargc*);
-	typedef struct nodeargc {
+	typedef struct _nodeargc {
 		char** argv;
 		int argc;
 		uv_loop_t *child_loop_;
 		Environment* child_env_;
 		nodeInitCallBack initcall;
-	};
+	}nodeargc;
 
-	NODE_EXTERN nodeargc* RunNodeThread(int argc, wchar_t *wargv[], nodeInitCallBack initcall);
-	NODE_EXTERN Environment* NodeGetEnvironment(nodeargc*);
+	extern "C" NODE_EXTERN nodeargc* RunNodeThread(int argc, wchar_t *wargv[], nodeInitCallBack initcall);
+	extern "C" NODE_EXTERN Environment* NodeGetEnvironment(nodeargc*);
 }
