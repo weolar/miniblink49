@@ -219,45 +219,6 @@ unique_ptr<T> move(unique_ptr<T>& ptr)
     return unique_ptr<T>(ptr.release());
 }
 
-// TEMPLATE CLASS remove_reference
-template<class _Ty>
-struct remove_reference
-{	// remove reference
-  typedef _Ty type;
-};
-
-template<class _Ty>
-struct remove_reference<_Ty&>
-{	// remove reference
-  typedef _Ty type;
-};
-
-template<class _Ty>
-struct remove_reference<_Ty&&>
-{	// remove rvalue reference
-  typedef _Ty type;
-};
-
-template<class _Ty> inline
-typename remove_reference<_Ty>::type&& move(_Ty&& _Arg)
-{	// forward _Arg as movable
-  return (static_cast<typename remove_reference<_Ty>::type&&>(_Arg));
-}
-
-// TEMPLATE FUNCTION forward
-template<class _Ty> inline
-_Ty&& forward(
-  typename remove_reference<_Ty>::type& _Arg) {	// forward an lvalue as either an lvalue or an rvalue
-  return (static_cast<_Ty&&>(_Arg));
-}
-
-template<class _Ty> inline
-_Ty&& forward(
-  typename remove_reference<_Ty>::type&& _Arg) {	// forward an rvalue as an rvalue
-  static_assert(!is_lvalue_reference<_Ty>::value, "bad forward call");
-  return (static_cast<_Ty&&>(_Arg));
-}
-
 }
 
 template <typename T>

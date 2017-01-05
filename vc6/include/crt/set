@@ -47,6 +47,30 @@ public:
 	_Myt& operator=(const _Myt& _X)
 		{_Tr = _X._Tr;
 		return (*this); }
+    //////////////////////////////////////////////////////////////////////////
+    set(const _Myt& _Left)
+        : _Tr(_Left._Tr) {
+    }
+
+    set(_Myt&& _Right)
+        : _Tr(_STD move(_Right._Tr)) {
+    }
+
+    set(_Myt&& _Right, const _A& _Al)
+        : _Tr(_STD move(_Right._Tr), _Al) {
+    }
+
+    _Myt& operator=(_Myt&& _Right) { // assign by moving _Right
+        if (this != &_Right) { // different, assign it
+            clear();
+            _Assign_rv(_STD forward<_Myt>(_Right));
+        }
+        return (*this);
+    }
+    void _Assign_rv(_Myt&& _Right) { // swap with empty *this, same allocator
+        swap(_Right);
+    }
+    //////////////////////////////////////////////////////////////////////////
 	iterator begin()
 		{return (_Tr.begin()); }
 	const_iterator begin() const
@@ -182,6 +206,30 @@ public:
 	_Myt& operator=(const _Myt& _X)
 		{_Tr = _X._Tr;
 		return (*this); }
+    //////////////////////////////////////////////////////////////////////////
+    multiset(const _Myt& _Left)
+        : _Tr(_Left._Tr) {
+    }
+
+    multiset(_Myt&& _Right)
+        : _Tr(_STD move(_Right._Tr)) {	// construct list by moving _Right
+    }
+
+    multiset(_Myt&& _Right, const _A& _Al)
+        : _Tr(_STD move(_Right._Tr), _Al) {	// construct list by moving _Right
+    }
+
+    _Myt& operator=(_Myt&& _Right) { // assign by moving _Right
+        if (this != &_Right) { // different, assign it
+            clear();
+            _Assign_rv(_STD forward<_Myt>(_Right));
+        }
+        return (*this);
+    }
+    void _Assign_rv(_Myt&& _Right) { // swap with empty *this, same allocator
+        swap(_Right);
+    }
+    //////////////////////////////////////////////////////////////////////////
 	iterator begin()
 		{return (_Tr.begin()); }
 	const_iterator begin() const
