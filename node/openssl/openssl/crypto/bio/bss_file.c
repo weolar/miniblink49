@@ -142,7 +142,7 @@ static FILE *file_fopen(const char *filename, const char *mode)
                                    filename, len_0, NULL, 0)) > 0)
         ) {
         WCHAR wmode[8];
-        WCHAR *wfilename = _alloca(sz * sizeof(WCHAR));
+        WCHAR *wfilename = (WCHAR *)malloc(sz * sizeof(WCHAR)); // _alloca
 
         if (MultiByteToWideChar(CP_UTF8, flags,
                                 filename, len_0, wfilename, sz) &&
@@ -157,6 +157,7 @@ static FILE *file_fopen(const char *filename, const char *mode)
              */
             file = fopen(filename, mode);
         }
+        free(wfilename);
     } else if (GetLastError() == ERROR_NO_UNICODE_TRANSLATION) {
         file = fopen(filename, mode);
     }
