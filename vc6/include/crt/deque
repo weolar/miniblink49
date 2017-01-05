@@ -210,6 +210,31 @@ public:
 				_S = copy(_X.begin(), _Sx, begin());
 				copy(_Sx, _X.end(), inserter(*this, _S)); }}
 		return (*this); }
+    //////////////////////////////////////////////////////////////////////////
+    deque(_Myt&& _Right)
+        : allocator(_STD move(_Right.allocator))
+        , _First(), _Last(), _Map(0), _Mapsize(0), _Size(0) {
+        _Assign_rv(_STD forward<_Myt>(_Right));
+    }
+
+    deque(_Myt&& _Right, const _A& _Al)
+        : allocator(_Al)
+        , _First(), _Last(), _Map(0), _Mapsize(0), _Size(0) {
+        _Assign_rv(_STD forward<_Myt>(_Right));
+    }
+
+    _Myt& operator=(_Myt&& _Right) { // assign by moving _Right
+        if (this != &_Right) { // different, assign it
+            clear();
+            _Assign_rv(_STD forward<_Myt>(_Right));
+        }
+        return (*this);
+    }
+
+    void _Assign_rv(_Myt&& _Right) { // swap with empty *this, same allocator
+        swap(_Right);
+    }
+    //////////////////////////////////////////////////////////////////////////
 	iterator begin()
 		{return (_First); }
 	const_iterator begin() const
