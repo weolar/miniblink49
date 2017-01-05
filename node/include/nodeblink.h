@@ -9,11 +9,15 @@
 #define USING_V8_SHARED 1
 #define USING_UV_SHARED 1
 #define CARES_BUILDING_LIBRARY 0
-#define BUILDING_NODE_EXTENSION 0
 #include "node.h"
 #include "env.h"
 #include "env-inl.h"
 #include "uv.h"
+struct node_native {
+	const char* name;
+	const char* source;
+	size_t source_len;
+};
 namespace node {
 	struct nodeargc;
 	typedef void(*nodeInitCallBack)(nodeargc*);
