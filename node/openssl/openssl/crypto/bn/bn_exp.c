@@ -126,6 +126,7 @@
 #elif defined(__sun)
 # include <alloca.h>
 #endif
+#undef alloca
 
 #include "rsaz_exp.h"
 

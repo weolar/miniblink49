@@ -1103,7 +1103,7 @@ static int capi_get_provname(CAPI_CTX * ctx, LPSTR * pname, DWORD * ptype,
         return 0;
     }
     if (sizeof(TCHAR) != sizeof(char))
-        name = alloca(len);
+        name = OPENSSL_malloc(len); // alloca
     else
         name = OPENSSL_malloc(len);
     if (!CryptEnumProviders(idx, NULL, 0, ptype, name, &len)) {
@@ -1114,9 +1114,10 @@ static int capi_get_provname(CAPI_CTX * ctx, LPSTR * pname, DWORD * ptype,
         capi_adderror(err);
         return 0;
     }
-    if (sizeof(TCHAR) != sizeof(char))
+    if (sizeof(TCHAR) != sizeof(char)) {
         *pname = wide_to_asc((WCHAR *)name);
-    else
+        OPENSSL_free(name);
+    } else
         *pname = (char *)name;
     CAPI_trace(ctx, "capi_get_provname, returned name=%s, type=%d\n", *pname,
                *ptype);
@@ -1150,13 +1151,14 @@ static int capi_list_containers(CAPI_CTX * ctx, BIO *out)
     DWORD err, idx, flags, buflen = 0, clen;
     LPSTR cname;
     LPTSTR cspname = NULL;
+    void* allocaBuf = 0;
 
     CAPI_trace(ctx, "Listing containers CSP=%s, type = %d\n", ctx->cspname,
                ctx->csptype);
     if (ctx->cspname && sizeof(TCHAR) != sizeof(char)) {
         if ((clen =
              MultiByteToWideChar(CP_ACP, 0, ctx->cspname, -1, NULL, 0))) {
-            cspname = alloca(clen * sizeof(WCHAR));
+            allocaBuf = cspname = OPENSSL_malloc(clen * sizeof(WCHAR)); // alloca
             MultiByteToWideChar(CP_ACP, 0, ctx->cspname, -1, (WCHAR *)cspname,
                                 clen);
         }
@@ -1172,6 +1174,8 @@ static int capi_list_containers(CAPI_CTX * ctx, BIO *out)
         CAPIerr(CAPI_F_CAPI_LIST_CONTAINERS,
                 CAPI_R_CRYPTACQUIRECONTEXT_ERROR);
         capi_addlasterror();
+        if (allocaBuf)
+            OPENSSL_free(allocaBuf);
         return 0;
     }
     if (!CryptGetProvParam
@@ -1179,6 +1183,8 @@ static int capi_list_containers(CAPI_CTX * ctx, BIO *out)
         CAPIerr(CAPI_F_CAPI_LIST_CONTAINERS, CAPI_R_ENUMCONTAINERS_ERROR);
         capi_addlasterror();
         CryptReleaseContext(hprov, 0);
+        if (allocaBuf)
+            OPENSSL_free(allocaBuf);
         return 0;
     }
     CAPI_trace(ctx, "Got max container len %d\n", buflen);
@@ -1222,6 +1228,8 @@ static int capi_list_containers(CAPI_CTX * ctx, BIO *out)
  done:
     if (cname)
         OPENSSL_free(cname);
+    if (allocaBuf)
+        OPENSSL_free(allocaBuf);
     CryptReleaseContext(hprov, 0);
 
     return ret;
@@ -1529,12 +1537,12 @@ CAPI_KEY *capi_find_key(CAPI_CTX * ctx, const char *id)
             DWORD len;
 
             if ((len = MultiByteToWideChar(CP_ACP, 0, id, -1, NULL, 0)) &&
-                (contname = alloca(len * sizeof(WCHAR)),
+                (contname = OPENSSL_malloc(len * sizeof(WCHAR)), // alloca
                  MultiByteToWideChar(CP_ACP, 0, id, -1, contname, len)) &&
                 (len =
                  MultiByteToWideChar(CP_ACP, 0, ctx->cspname, -1, NULL, 0))
                 && (provname =
-                    alloca(len * sizeof(WCHAR)), MultiByteToWideChar(CP_ACP,
+                    OPENSSL_malloc(len * sizeof(WCHAR)), MultiByteToWideChar(CP_ACP, // alloca
                                                                      0,
                                                                      ctx->cspname,
                                                                      -1,
@@ -1543,6 +1551,10 @@ CAPI_KEY *capi_find_key(CAPI_CTX * ctx, const char *id)
                 key =
                     capi_get_key(ctx, (TCHAR *)contname, (TCHAR *)provname,
                                  ctx->csptype, ctx->keytype);
+            if (contname)
+                OPENSSL_free(contname);
+            if (provname)
+                OPENSSL_free(provname);
         } else
             key = capi_get_key(ctx, (TCHAR *)id,
                                (TCHAR *)ctx->cspname,
@@ -1608,15 +1620,15 @@ static void capi_ctx_free(CAPI_CTX * ctx)
 static int capi_ctx_set_provname(CAPI_CTX * ctx, LPSTR pname, DWORD type,
                                  int check)
 {
+    void* allocaBuf = 0;
     CAPI_trace(ctx, "capi_ctx_set_provname, name=%s, type=%d\n", pname, type);
     if (check) {
         HCRYPTPROV hprov;
         LPTSTR name = NULL;
-
         if (sizeof(TCHAR) != sizeof(char)) {
             DWORD len;
             if ((len = MultiByteToWideChar(CP_ACP, 0, pname, -1, NULL, 0))) {
-                name = alloca(len * sizeof(WCHAR));
+                allocaBuf = name = OPENSSL_malloc(len * sizeof(WCHAR)); // alloca
                 MultiByteToWideChar(CP_ACP, 0, pname, -1, (WCHAR *)name, len);
             }
         } else
@@ -1627,6 +1639,8 @@ static int capi_ctx_set_provname(CAPI_CTX * ctx, LPSTR pname, DWORD type,
             CAPIerr(CAPI_F_CAPI_CTX_SET_PROVNAME,
                     CAPI_R_CRYPTACQUIRECONTEXT_ERROR);
             capi_addlasterror();
+            if (allocaBuf)
+                OPENSSL_free(allocaBuf);
             return 0;
         }
         CryptReleaseContext(hprov, 0);
@@ -1635,6 +1649,9 @@ static int capi_ctx_set_provname(CAPI_CTX * ctx, LPSTR pname, DWORD type,
         OPENSSL_free(ctx->cspname);
     ctx->cspname = BUF_strdup(pname);
     ctx->csptype = type;
+
+    if (allocaBuf)
+        OPENSSL_free(allocaBuf);
     return 1;
 }
 

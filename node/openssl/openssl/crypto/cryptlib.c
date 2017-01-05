@@ -836,9 +836,11 @@ int OPENSSL_isservice(void)
     if (len > 512)
         return -1;              /* paranoia */
     len++, len &= ~1;           /* paranoia */
-    name = (WCHAR *)alloca(len + sizeof(WCHAR));
-    if (!GetUserObjectInformationW(h, UOI_NAME, name, len, &len))
+    name = (WCHAR *)OPENSSL_malloc(len + sizeof(WCHAR)); // alloca
+    if (!GetUserObjectInformationW(h, UOI_NAME, name, len, &len)) {
+        OPENSSL_free(name);
         return -1;
+    }
 
     len++, len &= ~1;           /* paranoia */
     name[len / sizeof(WCHAR)] = L'\0'; /* paranoia */
@@ -848,15 +850,21 @@ int OPENSSL_isservice(void)
      * WinSta0's] nor programs started non-interactively by Task Scheduler
      * [those are working with SAWinSta].
      */
-    if (wcsstr(name, L"Service-0x"))
+    if (wcsstr(name, L"Service-0x")) {
+        OPENSSL_free(name);
         return 1;
+    }
 #  else
     /* This covers all non-interactive programs such as services. */
-    if (!wcsstr(name, L"WinSta0"))
+    if (!wcsstr(name, L"WinSta0")) {
+        OPENSSL_free(name);
         return 1;
+    }
 #  endif
-    else
+    else {
+        OPENSSL_free(name);
         return 0;
+    }
 }
 # else
 int OPENSSL_isservice(void)
@@ -886,6 +894,7 @@ void OPENSSL_showfatal(const char *fmta, ...)
         return;
     }
 # endif
+    void* allocaBuf = 0;
 
     if (sizeof(TCHAR) == sizeof(char))
         fmt = (const TCHAR *)fmta;
@@ -895,7 +904,8 @@ void OPENSSL_showfatal(const char *fmta, ...)
             size_t len_0 = strlen(fmta) + 1, i;
             WCHAR *fmtw;
 
-            fmtw = (WCHAR *)alloca(len_0 * sizeof(WCHAR));
+            fmtw = (WCHAR *)OPENSSL_malloc(len_0 * sizeof(WCHAR)); // alloca
+            allocaBuf = fmtw;
             if (fmtw == NULL) {
                 fmt = (const TCHAR *)L"no stack?";
                 break;
@@ -976,6 +986,8 @@ void OPENSSL_showfatal(const char *fmta, ...)
     } else
 # endif
         MessageBox(NULL, buf, _T("OpenSSL: FATAL"), MB_OK | MB_ICONERROR);
+    if (allocaBuf)
+        OPENSSL_free(allocaBuf);
 }
 #else
 void OPENSSL_showfatal(const char *fmta, ...)

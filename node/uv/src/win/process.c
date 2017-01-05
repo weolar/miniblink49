@@ -615,6 +615,9 @@ int env_strncmp(const wchar_t* a, int na, const wchar_t* b) {
   wchar_t* B;
   int nb;
   int r;
+  int result = 0;
+  void* allocaBuf0 = 0;
+  void* allocaBuf1 = 0;
 
   if (na < 0) {
     a_eq = wcschr(a, L'=');
@@ -627,8 +630,8 @@ int env_strncmp(const wchar_t* a, int na, const wchar_t* b) {
   assert(b_eq);
   nb = b_eq - b;
 
-  A = alloca((na+1) * sizeof(wchar_t));
-  B = alloca((nb+1) * sizeof(wchar_t));
+  allocaBuf0 = A = uv__malloc((na+1) * sizeof(wchar_t)); // alloca
+  allocaBuf1 = B = uv__malloc((nb+1) * sizeof(wchar_t)); // alloca
 
   r = LCMapStringW(LOCALE_INVARIANT, LCMAP_UPPERCASE, a, na, A, na);
   assert(r==na);
@@ -641,13 +644,22 @@ int env_strncmp(const wchar_t* a, int na, const wchar_t* b) {
     wchar_t AA = *A++;
     wchar_t BB = *B++;
     if (AA < BB) {
-      return -1;
+      result = -1;
+      break;
     } else if (AA > BB) {
-      return 1;
+      result = 1;
+      break;
     } else if (!AA && !BB) {
-      return 0;
+      result = 0;
+      break;
     }
   }
+
+  if (allocaBuf0)
+      uv__free(allocaBuf0);
+  if (allocaBuf1)
+      uv__free(allocaBuf1);
+  return result;
 }
 
 
@@ -686,7 +698,10 @@ int make_program_env(char* env_block[], WCHAR** dst_ptr) {
   WCHAR* dst_copy;
   WCHAR** ptr_copy;
   WCHAR** env_copy;
-  DWORD* required_vars_value_len = alloca(n_required_vars * sizeof(DWORD*));
+  void* allocaBuf0 = 0;
+  void* allocaBuf1 = 0;
+  DWORD* required_vars_value_len = uv__malloc(n_required_vars * sizeof(DWORD*)); // alloca
+  allocaBuf0 = required_vars_value_len;
 
   /* first pass: determine size in UTF-16 */
   for (env = env_block; *env; env++) {
@@ -699,6 +714,10 @@ int make_program_env(char* env_block[], WCHAR** dst_ptr) {
                                 NULL,
                                 0);
       if (len <= 0) {
+        if (allocaBuf0)
+          uv__free(allocaBuf0);
+        if (allocaBuf1)
+          uv__free(allocaBuf1);
         return GetLastError();
       }
       env_len += len;
@@ -709,9 +728,13 @@ int make_program_env(char* env_block[], WCHAR** dst_ptr) {
   /* second pass: copy to UTF-16 environment block */
   dst_copy = (WCHAR*)uv__malloc(env_len * sizeof(WCHAR));
   if (!dst_copy) {
+    if (allocaBuf0)
+      uv__free(allocaBuf0);
+    if (allocaBuf1)
+      uv__free(allocaBuf1);
     return ERROR_OUTOFMEMORY;
   }
-  env_copy = alloca(env_block_count * sizeof(WCHAR*));
+  allocaBuf1 = env_copy = uv__malloc(env_block_count * sizeof(WCHAR*)); // alloca
 
   ptr = dst_copy;
   ptr_copy = env_copy;
@@ -726,6 +749,11 @@ int make_program_env(char* env_block[], WCHAR** dst_ptr) {
       if (len <= 0) {
         DWORD err = GetLastError();
         uv__free(dst_copy);
+
+        if (allocaBuf0)
+          uv__free(allocaBuf0);
+        if (allocaBuf1)
+          uv__free(allocaBuf1);
         return err;
       }
       *ptr_copy++ = ptr;
@@ -768,6 +796,11 @@ int make_program_env(char* env_block[], WCHAR** dst_ptr) {
   dst = uv__malloc((1+env_len) * sizeof(WCHAR));
   if (!dst) {
     uv__free(dst_copy);
+
+    if (allocaBuf0)
+      uv__free(allocaBuf0);
+    if (allocaBuf1)
+      uv__free(allocaBuf1);
     return ERROR_OUTOFMEMORY;
   }
 
@@ -814,6 +847,11 @@ int make_program_env(char* env_block[], WCHAR** dst_ptr) {
 
   uv__free(dst_copy);
   *dst_ptr = dst;
+
+  if (allocaBuf0)
+    uv__free(allocaBuf0);
+  if (allocaBuf1)
+    uv__free(allocaBuf1);
   return 0;
 }
 

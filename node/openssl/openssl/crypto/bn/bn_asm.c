@@ -901,6 +901,7 @@ void bn_sqr_comba4(BN_ULONG *r, const BN_ULONG *a)
 int bn_mul_mont(BN_ULONG *rp, const BN_ULONG *ap, const BN_ULONG *bp,
                 const BN_ULONG *np, const BN_ULONG *n0p, int num)
 {
+    void* allocaBuf = 0;
     BN_ULONG c0, c1, ml, *tp, n0;
 #   ifdef mul64
     BN_ULONG mh;
@@ -913,7 +914,7 @@ int bn_mul_mont(BN_ULONG *rp, const BN_ULONG *ap, const BN_ULONG *bp,
     if (ap == bp)
         return bn_sqr_mont(rp, ap, np, n0p, num);
 #   endif
-    vp = tp = alloca((num + 2) * sizeof(BN_ULONG));
+    allocaBuf = vp = tp = (BN_ULONG*)malloc((num + 2) * sizeof(BN_ULONG)); // alloca
 
     n0 = *n0p;
 
@@ -978,13 +979,16 @@ int bn_mul_mont(BN_ULONG *rp, const BN_ULONG *ap, const BN_ULONG *bp,
         if (tp[num] != 0 || c0 == 0) {
             for (i = 0; i < num + 2; i++)
                 vp[i] = 0;
-            return 1;
+            goto;
         }
     }
     for (i = 0; i < num; i++)
         rp[i] = tp[i], vp[i] = 0;
     vp[num] = 0;
     vp[num + 1] = 0;
+Exit:
+    if (allocaBuf)
+        free(allocaBuf);
     return 1;
 }
 #  else
