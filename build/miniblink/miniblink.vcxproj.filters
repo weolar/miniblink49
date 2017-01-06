@@ -9393,6 +9393,9 @@
     <ClCompile Include="..\..\node\uv\src\win\timer1.c">
       <Filter>node\uv\src\win</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\node\src\tty_wrap.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\public\platform\modules\app_banner\WebAppBannerClient.h">

@@ -1619,7 +1619,7 @@ namespace node {
 	NO_RETURN void Abort() {
 		DumpBacktrace(stderr);
 		fflush(stderr);
-		ABORT_NO_BACKTRACE();
+		//ABORT_NO_BACKTRACE();
 	}
 
 
