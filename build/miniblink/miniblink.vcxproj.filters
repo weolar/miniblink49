@@ -9039,9 +9039,6 @@
     <ClCompile Include="..\..\node\src\udp_wrap.cc">
       <Filter>node\src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\node\src\tty_wrap.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\node\src\tls_wrap.cc">
       <Filter>node\src</Filter>
     </ClCompile>
@@ -9225,9 +9222,6 @@
     <ClCompile Include="..\..\node\uv\src\win\tcp.c">
       <Filter>node\uv\src\win</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\node\uv\src\win\tty.c">
-      <Filter>node\uv\src\win</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\node\uv\src\win\udp.c">
       <Filter>node\uv\src\win</Filter>
     </ClCompile>
@@ -9398,6 +9392,9 @@
     </ClCompile>
     <ClCompile Include="..\..\node\uv\src\win\timer1.c">
       <Filter>node\uv\src\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\tty_wrap.cc">
+      <Filter>node\src</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

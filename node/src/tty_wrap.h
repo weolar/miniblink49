@@ -9,15 +9,15 @@
 
 namespace node {
 
-class TTYWrap : public StreamWrap {
+class TTYWrap /*: public StreamWrap //zero */ {
  public:
   static void Initialize(v8::Local<v8::Object> target,
                          v8::Local<v8::Value> unused,
                          v8::Local<v8::Context> context);
 
-  uv_tty_t* UVHandle();
+  //uv_tty_t* UVHandle();//zero
 
-  size_t self_size() const override { return sizeof(*this); }
+  //size_t self_size() const override { return sizeof(*this); }//zero
 
  private:
   TTYWrap(Environment* env,
@@ -31,7 +31,7 @@ class TTYWrap : public StreamWrap {
   static void SetRawMode(const v8::FunctionCallbackInfo<v8::Value>& args);
   static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
 
-  uv_tty_t handle_;
+  //uv_tty_t handle_;//zero
 };
 
 }  // namespace node

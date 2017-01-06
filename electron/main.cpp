@@ -9,12 +9,15 @@ void InitCallBack(node::nodeargc* p) {
 	node::Environment*env = node::NodeGetEnvironment(p);
 	//执行electron初始化脚本
 	Local<String> script_name = FIXED_ONE_BYTE_STRING(env->isolate(), "init.js");
-	node::ExecuteString(env, script_name, String::NewFromUtf8(
+	Local<Value> f_value = node::ExecuteString(env, script_name, String::NewFromUtf8(
 		env->isolate(),
 		reinterpret_cast<const char*>(init),
 		NewStringType::kNormal,
 		sizeof(init)).ToLocalChecked());
-
+	// The bootstrap_node.js file returns a function 'f'
+	//CHECK(f_value->IsFunction());
+	//Local<Function> f = Local<Function>::Cast(f_value);
+	//f->Call(Null(env->isolate()), 0, NULL);
 }
 
 

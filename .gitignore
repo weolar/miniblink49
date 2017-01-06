@@ -6,3 +6,4 @@ build/miniblink.VC.db
 build/miniblink.VC.VC.opendb
 *.ipch
 out/*
+bin/cookies.dat

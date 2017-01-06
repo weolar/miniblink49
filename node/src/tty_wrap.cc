@@ -36,7 +36,7 @@ void TTYWrap::Initialize(Local<Object> target,
   env->SetProtoMethod(t, "unref", HandleWrap::Unref);
   env->SetProtoMethod(t, "hasRef", HandleWrap::HasRef);
 
-  StreamWrap::AddMethods(env, t, StreamBase::kFlagNoShutdown);
+  //StreamWrap::AddMethods(env, t, StreamBase::kFlagNoShutdown);//zero
 
   env->SetProtoMethod(t, "getWindowSize", TTYWrap::GetWindowSize);
   env->SetProtoMethod(t, "setRawMode", SetRawMode);
@@ -48,10 +48,11 @@ void TTYWrap::Initialize(Local<Object> target,
   env->set_tty_constructor_template(t);
 }
 
-
+/*
 uv_tty_t* TTYWrap::UVHandle() {
   return &handle_;
 }
+//zero */
 
 
 void TTYWrap::GuessHandleType(const FunctionCallbackInfo<Value>& args) {
@@ -64,7 +65,7 @@ void TTYWrap::GuessHandleType(const FunctionCallbackInfo<Value>& args) {
 
   switch (t) {
   case UV_TCP: type = "TCP"; break;
-  case UV_TTY: type = "TTY"; break;
+//  case UV_TTY: type = "TTY"; break;	//zero
   case UV_UDP: type = "UDP"; break;
   case UV_FILE: type = "FILE"; break;
   case UV_NAMED_PIPE: type = "PIPE"; break;
@@ -86,7 +87,8 @@ void TTYWrap::IsTTY(const FunctionCallbackInfo<Value>& args) {
 
 
 void TTYWrap::GetWindowSize(const FunctionCallbackInfo<Value>& args) {
-  Environment* env = Environment::GetCurrent(args);
+  /*
+	Environment* env = Environment::GetCurrent(args);
 
   TTYWrap* wrap;
   ASSIGN_OR_RETURN_UNWRAP(&wrap,
@@ -104,6 +106,8 @@ void TTYWrap::GetWindowSize(const FunctionCallbackInfo<Value>& args) {
   }
 
   args.GetReturnValue().Set(err);
+  //zero */
+  args.GetReturnValue().Set(0);
 }
 
 
@@ -112,7 +116,7 @@ void TTYWrap::SetRawMode(const FunctionCallbackInfo<Value>& args) {
   ASSIGN_OR_RETURN_UNWRAP(&wrap,
                           args.Holder(),
                           args.GetReturnValue().Set(UV_EBADF));
-  int err = uv_tty_set_mode(&wrap->handle_, args[0]->IsTrue());
+  int err = 0;// uv_tty_set_mode(&wrap->handle_, args[0]->IsTrue());	//zero
   args.GetReturnValue().Set(err);
 }
 
@@ -128,17 +132,17 @@ void TTYWrap::New(const FunctionCallbackInfo<Value>& args) {
   int fd = args[0]->Int32Value();
   CHECK_GE(fd, 0);
 
-  TTYWrap* wrap = new TTYWrap(env, args.This(), fd, args[1]->IsTrue());
-  wrap->UpdateWriteQueueSize();
+  //TTYWrap* wrap = new TTYWrap(env, args.This(), fd, args[1]->IsTrue());
+  //wrap->UpdateWriteQueueSize();
 }
 
 
 TTYWrap::TTYWrap(Environment* env, Local<Object> object, int fd, bool readable)
-    : StreamWrap(env,
+    /*: StreamWrap(env,
                  object,
                  reinterpret_cast<uv_stream_t*>(&handle_),
-                 AsyncWrap::PROVIDER_TTYWRAP) {
-  uv_tty_init(env->event_loop(), &handle_, fd, readable);
+                 AsyncWrap::PROVIDER_TTYWRAP) */{
+  //uv_tty_init(env->event_loop(), &handle_, fd, readable);//zero
 }
 
 }  // namespace node

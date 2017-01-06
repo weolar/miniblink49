@@ -484,6 +484,8 @@ extern "C" NODE_EXTERN void node_module_register(void* mod);
 #define NODE_MODULE_CONTEXT_AWARE_BUILTIN(modname, regfunc)           \
   NODE_MODULE_CONTEXT_AWARE_X(modname, regfunc, NULL, NM_F_BUILTIN)   \
 
+#define NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT(modname, regfunc, priv)           \
+  NODE_MODULE_CONTEXT_AWARE_X(modname, regfunc, priv, NM_F_BUILTIN)   \
 /*
  * For backward compatibility in add-on modules.
  */
