@@ -164,7 +164,6 @@ public:
 			v8::Local<v8::Value> value = blink::V8HiddenValue::getHiddenValue(isolate_, object, key);
 #else
             v8::Local<v8::Value> value = object->GetHiddenValue(key);
-			state->Release();
 #endif
             if (value.IsEmpty())
                 return;
