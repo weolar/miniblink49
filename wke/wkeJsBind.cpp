@@ -1228,8 +1228,8 @@ WKE_API jsValue jsFunction(jsExecState es, jsData* data)
         return jsUndefined();
     
     v8::Isolate* isolate = es->isolate;
+	v8::HandleScope handleScope(isolate);
     v8::Local<v8::Context> context = v8::Local<v8::Context>::New(isolate, es->context);
-    v8::HandleScope handleScope(isolate);
     v8::Context::Scope contextScope(context);
     v8::Local<v8::Object> globalObj = context->Global();
 
@@ -1251,8 +1251,8 @@ WKE_API jsData* jsGetData(jsExecState es, jsValue value)
         return nullptr;
 
     v8::Isolate* isolate = es->isolate;
+	v8::HandleScope handleScope(isolate);
     v8::Local<v8::Context> context = v8::Local<v8::Context>::New(isolate, es->context);
-    v8::HandleScope handleScope(isolate);
     v8::Context::Scope contextScope(context);
 
     v8::Local<v8::Value> valueV8 = getV8Value(value, context);
