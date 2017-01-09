@@ -44,7 +44,7 @@
 
 #include "base/process/InjectTool.h"
 
-size_t g_v8MemSize;
+extern size_t g_v8MemSize;
 extern size_t g_blinkMemSize;
 extern size_t g_skiaMemSize;
 
