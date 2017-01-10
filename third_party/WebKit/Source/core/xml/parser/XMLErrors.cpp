@@ -162,7 +162,6 @@ void XMLErrors::insertErrorMessageBlock()
         reportElement->parserAppendChild(paragraph.release());
     }
 #endif // MINIBLINK_NOT_IMPLEMENTED
-    notImplemented();
 
     Node* firstChild = documentElement->firstChild();
     if (firstChild)
