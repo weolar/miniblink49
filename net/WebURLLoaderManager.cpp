@@ -1156,19 +1156,22 @@ void WebURLLoaderManager::initializeHandle(WebURLLoaderInternal* job)
 
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
 	RequestExtraData* requestExtraData = reinterpret_cast<RequestExtraData*>(job->firstRequest()->extraData());
+    if (!requestExtraData) // 在退出时候js调用同步XHR请求，会导致ExtraData为0情况
+        return;
+
 	WebPage* page = requestExtraData->page;
-	if (page->wkeWebView()) {
-		if (page->wkeWebView()->m_proxy.length()) {
-			curl_easy_setopt(d->m_handle, CURLOPT_PROXY, page->wkeWebView()->m_proxy.utf8().data());
-			curl_easy_setopt(d->m_handle, CURLOPT_PROXYTYPE, page->wkeWebView()->m_proxyType);
-		}
-		else {
-			if (m_proxy.length()) {
-				curl_easy_setopt(d->m_handle, CURLOPT_PROXY, m_proxy.utf8().data());
-				curl_easy_setopt(d->m_handle, CURLOPT_PROXYTYPE, m_proxyType);
-			}
-		}
-	}
+	if (!page->wkeWebView()) 
+        return;
+
+    if (page->wkeWebView()->m_proxy.length()) {
+        curl_easy_setopt(d->m_handle, CURLOPT_PROXY, page->wkeWebView()->m_proxy.utf8().data());
+        curl_easy_setopt(d->m_handle, CURLOPT_PROXYTYPE, page->wkeWebView()->m_proxyType);
+    } else {
+        if (m_proxy.length()) {
+            curl_easy_setopt(d->m_handle, CURLOPT_PROXY, m_proxy.utf8().data());
+            curl_easy_setopt(d->m_handle, CURLOPT_PROXYTYPE, m_proxyType);
+        }
+    }
 #else
     // Set proxy options if we have them.
     if (m_proxy.length()) {
