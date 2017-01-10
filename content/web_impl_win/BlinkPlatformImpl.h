@@ -106,7 +106,7 @@ private:
 
     CRITICAL_SECTION* m_lock;
     static const int m_maxThreadNum = 20;
-    WebThreadImpl* m_threads[m_maxThreadNum];
+    std::vector<WebThreadImpl*> m_threads;
     int m_threadNum;
 
 	blink::WebThread* m_ioThread;
