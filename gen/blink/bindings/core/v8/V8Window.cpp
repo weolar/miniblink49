@@ -1397,6 +1397,8 @@ static void consoleAttributeSetter(v8::Local<v8::Value> v8Value, const v8::Prope
 
 static void consoleAttributeSetterCallback(v8::Local<v8::Name>, v8::Local<v8::Value> v8Value, const v8::PropertyCallbackInfo<void>& info)
 {
+    return;
+
     TRACE_EVENT_SET_SAMPLING_STATE("blink", "DOMSetter");
     DOMWindowV8Internal::consoleAttributeSetter(v8Value, info);
     TRACE_EVENT_SET_SAMPLING_STATE("v8", "V8Execution");
