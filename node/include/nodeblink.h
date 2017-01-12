@@ -1,3 +1,5 @@
+#ifndef _NODEBLINK_H_
+#define _NODEBLINK_H_
 #define NODE_ARCH "ia32"
 #define NODE_PLATFORM "win32"
 #define NODE_WANT_INTERNALS 1
@@ -6,7 +8,7 @@
 #define HAVE_PERFCTR 1
 #define V8_INSPECTOR_USE_STL 1
 #define NODE_USE_V8_PLATFORM 0
-#define USING_V8_SHARED 1
+#define USING_V8_SHARED 0
 #define USING_UV_SHARED 1
 #define CARES_BUILDING_LIBRARY 0
 #include "node.h"
@@ -32,3 +34,5 @@ namespace node {
 	extern "C" NODE_EXTERN nodeargc* RunNodeThread(int argc, wchar_t *wargv[], nodeInitCallBack initcall);
 	extern "C" NODE_EXTERN Environment* NodeGetEnvironment(nodeargc*);
 }
+
+#endif //_NODEBLINK_H_
