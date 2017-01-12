@@ -9,7 +9,7 @@
 #include "third_party/WebKit/public/platform/WebCursorInfo.h"
 
 #include "cc/trees/LayerTreeHost.h"
-#include "cc/trees/LayerTreeHostUiThreadClient.h"
+//#include "cc/trees/LayerTreeHostUiThreadClient.h"
 #include "skia/ext/platform_canvas.h"
 
 namespace cc {
