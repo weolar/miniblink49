@@ -340,7 +340,7 @@ void PopupMenuWin::initialize()
         return;
     m_initialize = true;
 
-    m_layerTreeHost = new cc::LayerTreeHost(this);
+    m_layerTreeHost = new cc::LayerTreeHost(this, nullptr);
     //m_layerTreeHost->setNeedTileRender(false);
     m_popupImpl = WebPagePopup::create(this);
     m_platformEventHandler = new PlatformEventHandler(m_popupImpl, nullptr);
