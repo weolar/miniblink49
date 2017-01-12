@@ -2,6 +2,9 @@
 #include "cc/trees/LayerTreeHost.h"
 
 #include "SkCanvas.h"
+#include "skia/ext/bitmap_platform_device_win.h"
+#include "skia/ext/platform_canvas.h"
+
 #include "cc/blink/WebLayerImpl.h"
 #include "cc/blink/WebLayerImplClient.h"
 #include "cc/trees/DrawProperties.h"
@@ -16,7 +19,11 @@
 #include "third_party/WebKit/public/web/WebViewClient.h"
 #include "third_party/WebKit/public/platform/WebFloatSize.h"
 #include "third_party/WebKit/public/platform/WebGestureCurveTarget.h"
+#include "third_party/WebKit/public/platform/Platform.h"
+#include "third_party/WebKit/public/platform/WebThread.h"
 #include "third_party/WebKit/Source/platform/graphics/GraphicsContext.h" // TODO
+#include "third_party/WebKit/Source/platform/geometry/win/IntRectWin.h"
+#include "wke/wkeWebView.h"
 
 using namespace blink;
 
@@ -24,7 +31,7 @@ namespace cc {
 
 LayerTreeHost* gLayerTreeHost = nullptr;
 
-LayerTreeHost::LayerTreeHost(blink::WebViewClient* webViewClient)
+LayerTreeHost::LayerTreeHost(blink::WebViewClient* webViewClient, LayerTreeHostUiThreadClient* uiThreadClient)
 {
     m_rootLayer = nullptr;
     m_deviceScaleFactor = 1.0f;
@@ -35,6 +42,7 @@ LayerTreeHost::LayerTreeHost(blink::WebViewClient* webViewClient)
     m_minimum = 1.0f;
     m_maximum = 1.0f;
     m_webViewClient = webViewClient;
+    m_uiThreadClient = uiThreadClient;
     m_needsFullTreeSync = true;
     m_needTileRender = true;
     m_3dNodesCount = 0;
@@ -42,10 +50,25 @@ LayerTreeHost::LayerTreeHost(blink::WebViewClient* webViewClient)
     m_rasterNotifMutex = new WTF::Mutex();
     m_newestDrawingIndex = 0;
     m_drawingIndex = 1;
-// 	m_newestActionId = 0;
-//  m_curActionId = 1;
     m_actionsFrameGroup = new ActionsFrameGroup(this);
     m_isDestroying = false;
+
+    m_memoryCanvas = nullptr;
+    m_memoryCanvasInUiThread = nullptr;
+    m_paintToMemoryCanvasInUiThreadTaskCount = 0;
+
+    m_isDrawDirty = true;
+    m_lastDrawTime = 0;
+    m_drawFrameCount = 0;
+    m_drawFrameFinishCount = 0;
+    m_requestApplyActionsCount = 0;
+    m_requestApplyActionsFinishCount = 0;
+    m_postpaintMessageCount = 0;
+    m_hasResize = false;
+    m_useLayeredBuffer = false;
+    m_compositeThread = nullptr;
+    if (m_uiThreadClient)
+        m_compositeThread = blink::Platform::current()->createThread("CompositeThread");
 
     gLayerTreeHost = this;
 }
@@ -57,7 +80,38 @@ LayerTreeHost::~LayerTreeHost()
     m_isDestroying = true;
 
     while (0 != RasterTaskWorkerThreadPool::shared()->pendingRasterTaskNum()) { ::Sleep(20); }
-    applyActions(true);
+    requestApplyActionsToRunIntoCompositeThread(true);
+
+    m_compositeMutex.lock();
+    for (auto it : m_wrapSelfForUiThreads) {
+        it->m_host = nullptr;
+    }
+    m_wrapSelfForUiThreads.clear();
+    m_compositeMutex.unlock();
+
+    //while (0 != m_paintToMemoryCanvasInUiThreadTaskCount) { ::Sleep(20); }
+ 
+    int finishCount = 0;
+    do {
+        m_compositeMutex.lock();
+        finishCount = m_drawFrameFinishCount;
+        m_compositeMutex.unlock();
+        Sleep(20);
+    } while (0 != finishCount);
+
+    do {
+        m_compositeMutex.lock();
+        finishCount = m_requestApplyActionsFinishCount;
+        m_compositeMutex.unlock();
+        Sleep(20);
+    } while (0 != finishCount);
+
+    if (m_compositeThread)
+        delete m_compositeThread;
+
+    if (m_memoryCanvas)
+        delete m_memoryCanvas;
+    m_memoryCanvas = nullptr;
 
 	for (WTF::HashMap<int, cc_blink::WebLayerImpl*>::iterator it = m_liveLayers.begin(); m_liveLayers.end() != it; ++it) {
         cc_blink::WebLayerImpl* layer = it->value;
@@ -77,7 +131,6 @@ LayerTreeHost::~LayerTreeHost()
 		delete dirtyLayers;
 	}
 	m_dirtyLayersGroup.clear();
-	deleteTilesToUIThreadRelease();
 
 	delete m_rasterNotifMutex;
 	m_rasterNotifMutex = nullptr;
@@ -209,13 +262,14 @@ void LayerTreeHost::requestRepaint(const blink::IntRect& repaintRect)
 
 void LayerTreeHost::requestDrawFrameLocked(DirtyLayers* dirtyLayers, Vector<Tile*>* tilesToUIThreadRelease)
 {
-    m_rasterNotifMutex->lock();
-    // 等待，必须按index的顺序;
-    m_dirtyLayersGroup.append(dirtyLayers);
-	m_tilesToUIThreadRelease.appendVector(*tilesToUIThreadRelease);
-	delete tilesToUIThreadRelease;
-    m_rasterNotifMutex->unlock();
-    setNeedsCommit();
+    DebugBreak();
+//     m_rasterNotifMutex->lock();
+//     // 等待，必须按index的顺序;
+//     m_dirtyLayersGroup.append(dirtyLayers);
+// 	m_tilesToUIThreadRelease.appendVector(*tilesToUIThreadRelease);
+// 	delete tilesToUIThreadRelease;
+//     m_rasterNotifMutex->unlock();
+//     setNeedsCommit();
 }
 
 static bool compareDirtyLayer(DirtyLayers*& left, DirtyLayers*& right)
@@ -255,44 +309,20 @@ int64 LayerTreeHost::genActionId()
 
 bool LayerTreeHost::preDrawFrame()
 {
+    //atomicIncrement(&m_drawFrameCount);
 	return applyActions(false);
 }
 
 bool LayerTreeHost::applyActions(bool needCheck)
 {
+    ASSERT(!m_compositeThread || !isMainThread());
     return m_actionsFrameGroup->applyActions(needCheck);
-}
-
-void LayerTreeHost::deleteTilesToUIThreadRelease()
-{
-	m_rasterNotifMutex->lock();
-	size_t size = m_tilesToUIThreadRelease.size();
-	for (size_t i = 0; i < size; ++i) {
-		cc::Tile* tile = m_tilesToUIThreadRelease[i];
-		tile->unref(FROM_HERE);
-	}
-	m_tilesToUIThreadRelease.clear();
-	m_rasterNotifMutex->unlock();
 }
 
 void LayerTreeHost::postDrawFrame()
 {
-	deleteTilesToUIThreadRelease();
-}
-
-void LayerTreeHost::releaseTilesFromRasterThread(const TileGrid* tileGrid)
-{
-    m_rasterNotifMutex->lock();
-	for (size_t i = 0; i < m_tilesToUIThreadRelease.size(); ++i) {
-		cc::Tile* tile = m_tilesToUIThreadRelease[i];
-		if (!tile->isSameTileGrid(tileGrid))
-			continue;
-		
-		tile->unref(FROM_HERE);
-		m_tilesToUIThreadRelease.remove(i);
-		--i;
-	}
-    m_rasterNotifMutex->unlock();
+    ASSERT(!m_compositeThread || !isMainThread());
+    //atomicDecrement(&m_drawFrameCount);
 }
 
 void LayerTreeHost::scrollBy(const blink::WebFloatSize& delta, const blink::WebFloatSize& velocity)
@@ -448,10 +478,26 @@ void printTrans(const SkMatrix44& transform, int deep)
     OutputDebugStringW(outString.charactersWithNullTermination().data());
 }
 
-void LayerTreeHost::drawToCanvas(SkCanvas* canvas, const IntRect& clip)
+void LayerTreeHost::drawToCanvas(SkCanvas* canvas, const IntRect& dirtyRect)
 {
     if (!m_rootCCLayer)
         return;
+
+    if (dirtyRect.isEmpty())
+        return;
+
+    canvas->save();
+    canvas->clipRect(dirtyRect);
+
+    SkPaint paint;
+    paint.setAntiAlias(false);
+    paint.setColor(0xffffffff); // 0xfff0504a
+    paint.setXfermodeMode(SkXfermode::kSrcOver_Mode); // SkXfermode::kSrcOver_Mode
+    canvas->drawRect((SkRect)dirtyRect, paint);
+
+#if 0
+    updateLayers(canvas, dirtyRect, needsFullTreeSync);
+#endif
 
     SkPaint clearColorPaint;
     clearColorPaint.setColor(0xffffffff | m_backgroundColor); // weolar
@@ -459,9 +505,11 @@ void LayerTreeHost::drawToCanvas(SkCanvas* canvas, const IntRect& clip)
 
     // http://blog.csdn.net/to_be_designer/article/details/48530921
     clearColorPaint.setXfermodeMode(SkXfermode::kSrcOver_Mode); // SkXfermode::kSrcOver_Mode
-    canvas->drawRect((SkRect)clip, clearColorPaint);
+    canvas->drawRect((SkRect)dirtyRect, clearColorPaint);
 
-    m_rootCCLayer->drawToCanvasChildren(this, canvas, clip, 0);
+    m_rootCCLayer->drawToCanvasChildren(this, canvas, dirtyRect, 0);
+
+    canvas->restore();
 }
 
 struct DrawPropertiesFromAncestor {
@@ -567,7 +615,7 @@ void LayerTreeHost::setRootLayer(const blink::WebLayer& layer)
     m_rootLayer = (cc_blink::WebLayerImpl*)&layer;
     m_rootLayer->setLayerTreeHost(this);
 
-	applyActions(false);
+    requestApplyActionsToRunIntoCompositeThread(false);
 
 	m_rootCCLayer = getCCLayerById(m_rootLayer->id());
 
@@ -579,14 +627,17 @@ void LayerTreeHost::clearRootLayer()
     m_rootLayer = nullptr;
 
 	while (0 != RasterTaskWorkerThreadPool::shared()->pendingRasterTaskNum()) {	::Sleep(20); }
-	applyActions(false);
+    requestApplyActionsToRunIntoCompositeThread(false);
 
 	m_rootCCLayer = nullptr;
 }
 
 void LayerTreeHost::setViewportSize(const blink::WebSize& deviceViewportSize)
 {
+    WTF::Locker<WTF::Mutex> locker(m_compositeMutex);
     m_deviceViewportSize = deviceViewportSize;
+    m_clientRect = blink::IntRect(blink::IntPoint(), m_deviceViewportSize);
+    m_hasResize = true;
 }
 
 // Gives the viewport size in physical device pixels.
@@ -655,6 +706,260 @@ void LayerTreeHost::setNeedsAnimate()
 void LayerTreeHost::finishAllRendering()
 {
     OutputDebugStringW(L"LayerTreeHost::finishAllRendering");
+}
+
+//////////////////////////////////////////////////////////////////////////
+
+blink::IntRect LayerTreeHost::getClientRect()
+{
+    blink::IntRect clientRect;
+    WTF::Locker<WTF::Mutex> locker(m_compositeMutex);
+    clientRect = m_clientRect;
+    return clientRect;
+}
+
+void LayerTreeHost::requestDrawFrameToRunIntoCompositeThread()
+{
+    WTF::Locker<WTF::Mutex> locker(m_compositeMutex);
+    if (0 != m_drawFrameCount || !m_compositeThread)
+        return;
+
+    atomicIncrement(&m_drawFrameCount);
+    atomicIncrement(&m_drawFrameFinishCount);
+    m_compositeThread->postTask(FROM_HERE, WTF::bind(&LayerTreeHost::drawFrameInCompositeThread, this));
+}
+
+void LayerTreeHost::requestApplyActionsToRunIntoCompositeThread(bool needCheck)
+{
+    WTF::Locker<WTF::Mutex> locker(m_compositeMutex);
+    if (0 != m_requestApplyActionsCount || !m_compositeThread)
+        return;
+
+    atomicIncrement(&m_requestApplyActionsCount);
+    atomicIncrement(&m_requestApplyActionsFinishCount);
+    m_compositeThread->postTask(FROM_HERE, WTF::bind(&LayerTreeHost::applyActionsInCompositeThread, this, needCheck));
+}
+
+void LayerTreeHost::applyActionsInCompositeThread(bool needCheck)
+{
+    atomicDecrement(&m_requestApplyActionsCount);
+    applyActions(needCheck);
+    atomicDecrement(&m_requestApplyActionsFinishCount);
+}
+
+void LayerTreeHost::setUseLayeredBuffer(bool b)
+{
+    m_useLayeredBuffer = b;
+}
+
+void LayerTreeHost::clearPaintWhenLayeredWindow(SkCanvas* canvas, const IntRect& rect)
+{
+    if (!m_useLayeredBuffer)
+        return;
+
+    // When using transparency mode clear the rectangle before painting.
+    SkPaint clearPaint;
+    clearPaint.setARGB(0, 0xf0, 0, 0);
+    clearPaint.setXfermodeMode(SkXfermode::kClear_Mode);
+
+    SkRect skrc;
+    skrc.set(rect.x(), rect.y(), rect.x() + rect.width(), rect.y() + rect.height());
+    canvas->drawRect(skrc, clearPaint);
+}
+
+
+void LayerTreeHost::postPaintMessage(const IntRect& paintRect)
+{
+    IntRect dirtyRect = paintRect;
+
+    m_compositeMutex.lock();
+    if (paintRect.isEmpty() || !m_clientRect.intersects(paintRect)) {
+        m_compositeMutex.unlock();
+        return;
+    }
+    dirtyRect.intersect(m_clientRect);
+    m_dirtyRects.append(dirtyRect);
+    m_compositeMutex.unlock();
+}
+
+void LayerTreeHost::firePaintEvent(HDC hdc, const RECT* paintRect)
+{
+    m_compositeMutex.lock();
+    if (!m_memoryCanvas || m_clientRect.isEmpty()) {
+        m_compositeMutex.unlock();
+        return;
+    }
+    m_compositeMutex.unlock();
+
+#if 0
+    HPEN hpen = CreatePen(PS_SOLID, 10, RGB(11, 22, 33));
+    HBRUSH hbrush = CreateSolidBrush(RGB(0xf3, 22, 33));
+
+    SelectObject(hdc, hpen);
+    SelectObject(hdc, hbrush);
+
+    Rectangle(hdc, paintRect->left, paintRect->top, paintRect->right, paintRect->bottom);
+
+    DeleteObject(hpen);
+    DeleteObject(hbrush);
+#endif
+
+    WTF::Locker<WTF::Mutex> locker(m_compositeMutex);
+    skia::DrawToNativeContext(m_memoryCanvas, hdc, paintRect->left, paintRect->top, paintRect);
+}
+
+void LayerTreeHost::drawFrameInCompositeThread()
+{
+    m_compositeMutex.lock();
+    if (1 != m_drawFrameCount)
+        DebugBreak();
+    atomicDecrement(&m_drawFrameCount);
+    m_compositeMutex.unlock();
+
+    double lastDrawTime = WTF::monotonicallyIncreasingTime();
+    double detTime = lastDrawTime - m_lastDrawTime;
+    m_lastDrawTime = lastDrawTime;
+//     if (detTime < 0.01) { // 如果刷新频率太快，缓缓再画
+//         m_webViewClient->setNeedsCommitAndNotLayout();
+//         return;
+//     }
+
+    bool needClearCommit = preDrawFrame(); // 这里也会发起Commit
+
+    m_compositeMutex.lock();
+    Vector<blink::IntRect> dirtyRects = m_dirtyRects;
+    m_dirtyRects.clear();
+    m_compositeMutex.unlock();
+
+    for (size_t i = 0; i < dirtyRects.size() && !m_isDestroying; ++i) {
+        const blink::IntRect& r = dirtyRects[i];
+        paintToMemoryCanvas(r);
+    }
+
+    postDrawFrame();
+
+    atomicDecrement(&m_drawFrameFinishCount);
+}
+
+void LayerTreeHost::paintToMemoryCanvasInUiThread(const IntRect& paintRect)
+{
+    if (!m_uiThreadClient)
+        return;
+
+    WTF::Locker<WTF::Mutex> locker(m_compositeMutex);
+    m_uiThreadClient->paintToMemoryCanvasInUiThread(m_memoryCanvas, paintRect);
+}
+
+void LayerTreeHost::WrapSelfForUiThread::paintToMemoryCanvasInUiThread(const blink::IntRect& paintRect)
+{
+    if (!m_host) {
+        delete this;
+        return;
+    }
+    m_host->paintToMemoryCanvasInUiThread(paintRect);
+
+    m_host->m_compositeMutex.lock();
+    m_host->m_wrapSelfForUiThreads.erase(this);
+    m_host->m_compositeMutex.unlock();
+
+    int* paintToMemoryCanvasInUiThreadTaskCount = &m_host->m_paintToMemoryCanvasInUiThreadTaskCount;
+
+    delete this;
+
+    atomicDecrement(paintToMemoryCanvasInUiThreadTaskCount);
+}
+
+void LayerTreeHost::paintToMemoryCanvas(const IntRect& r)
+{
+    WTF::Locker<WTF::Mutex> locker(m_compositeMutex);
+    IntRect paintRect = r;
+
+    if ((!m_memoryCanvas || m_hasResize) && !m_clientRect.isEmpty()) {
+        m_hasResize = false;
+        paintRect = m_clientRect;
+
+        if (m_memoryCanvas)
+            delete m_memoryCanvas;
+        m_memoryCanvas = skia::CreatePlatformCanvas(m_clientRect.width(), m_clientRect.height(), !m_useLayeredBuffer);
+
+        SkPaint clearColorPaint;
+        clearColorPaint.setColor(0x0); // 0xfff0504a
+        clearColorPaint.setXfermodeMode(SkXfermode::kSrcOver_Mode); // SkXfermode::kSrcOver_Mode
+        m_memoryCanvas->drawRect((SkRect)m_clientRect, clearColorPaint);
+    }
+
+    paintRect.intersect(m_clientRect);
+    if (paintRect.isEmpty())
+        return;
+
+    if (!m_memoryCanvas) {
+        ASSERT(false);
+        return;
+    }
+
+    m_isDrawDirty = true;
+    clearPaintWhenLayeredWindow(m_memoryCanvas, paintRect);
+
+    drawToCanvas(m_memoryCanvas, paintRect); // 绘制脏矩形
+
+    WrapSelfForUiThread* wrap = new WrapSelfForUiThread(this);
+    m_wrapSelfForUiThreads.insert(wrap);
+    atomicIncrement(&m_paintToMemoryCanvasInUiThreadTaskCount);
+    Platform::current()->mainThread()->postTask(FROM_HERE, WTF::bind(&LayerTreeHost::WrapSelfForUiThread::paintToMemoryCanvasInUiThread, wrap, paintRect));
+}
+
+HDC LayerTreeHost::viewDC()
+{
+    WTF::Locker<WTF::Mutex> locker(m_compositeMutex);
+    if (!m_memoryCanvas)
+        return nullptr;
+
+    skia::BitmapPlatformDevice* device = (skia::BitmapPlatformDevice*)skia::GetPlatformDevice(skia::GetTopDevice(*m_memoryCanvas));
+    if (device)
+        return device->GetBitmapDCUgly();
+    return nullptr;
+}
+
+bool LayerTreeHost::isDrawDirty()
+{
+    bool isDrawDirty;
+    WTF::Locker<WTF::Mutex> locker(m_compositeMutex);
+    isDrawDirty = m_isDrawDirty;
+    return isDrawDirty;
+}
+
+void LayerTreeHost::paintToBit(void* bits, int pitch)
+{
+    WTF::Locker<WTF::Mutex> locker(m_compositeMutex);
+    if (!m_memoryCanvas)
+        return;
+
+    int width = m_clientRect.width();
+    int height = m_clientRect.height();
+
+    DWORD cBytes = width * height * 4;
+    SkBaseDevice* device = (SkBaseDevice*)m_memoryCanvas->getTopDevice();
+    if (!device)
+        return;
+    const SkBitmap& bitmap = device->accessBitmap(false);
+    if (bitmap.info().width() != width || bitmap.info().height() != height)
+        return;
+    uint32_t* pixels = bitmap.getAddr32(0, 0);
+
+    if (pitch == 0 || pitch == width * 4) {
+        memcpy(bits, pixels, width * height * 4);
+    }
+    else {
+        unsigned char* src = (unsigned char*)pixels;
+        unsigned char* dst = (unsigned char*)bits;
+        for (int i = 0; i < height; ++i) {
+            memcpy(dst, src, width * 4);
+            src += width * 4;
+            dst += pitch;
+        }
+    }
+
+    m_isDrawDirty = false;
 }
 
 } // cc
