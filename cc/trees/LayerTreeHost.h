@@ -2,7 +2,6 @@
 #define LayerTreeHost_h
 
 #include "cc/trees/LayerTreeHost.h"
-#include "cc/trees/LayerTreeHostUiThreadClient.h"
 #include "third_party/WebKit/public/platform/WebLayerTreeView.h"
 #include "third_party/WebKit/Source/platform/geometry/IntRect.h"
 #include "third_party/WebKit/Source/platform/geometry/IntSize.h"
