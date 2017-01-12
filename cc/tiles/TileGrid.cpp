@@ -77,7 +77,6 @@ TileGrid::~TileGrid()
 			OutputDebugStringA(location->functionName());
 			OutputDebugStringA("\n");
 		}
-        gLayerTreeHost->releaseTilesFromRasterThread(this);
 		xxTile = m_registerTiles[1];
 	}
     ASSERT(0 == m_registerTiles.size());
@@ -111,12 +110,9 @@ void TileGrid::waitForReleaseTilesInUIThread()
 {
     ASSERT(m_rasterTaskCount >= 0);
 
-    int dumyDebugRasterCount = debugRasterCount;
-    RasterTaskWorkerThreadPool* debugPool = cc::RasterTaskWorkerThreadPool::shared();
-    while (m_rasterTaskCount != 0) { ::Sleep(50); }
-
-    if (m_layer->layerTreeHost())
-        m_layer->layerTreeHost()->releaseTilesFromRasterThread(this);
+//     int dumyDebugRasterCount = debugRasterCount;
+//     RasterTaskWorkerThreadPool* debugPool = cc::RasterTaskWorkerThreadPool::shared();
+//     while (m_rasterTaskCount != 0) { ::Sleep(50); }
 }
 
 cc_blink::WebLayerImpl* TileGrid::layer() const
