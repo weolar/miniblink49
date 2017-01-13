@@ -128,6 +128,41 @@ public:
 		// export `BrowserWindow`
 		target->Set(String::NewFromUtf8(isolate, "BrowserWindow"), tpl->GetFunction());
 	}
+	//绘制事件
+	static void _staticOnPaintUpdated(wkeWebView webView, HWND m_hWnd, const HDC hdc, int x, int y, int cx, int cy)
+	{
+		if (WS_EX_LAYERED == (WS_EX_LAYERED & GetWindowLong(m_hWnd, GWL_EXSTYLE))) {
+			RECT rectDest;
+			GetWindowRect(m_hWnd, &rectDest);
+
+			SIZE sizeDest = { rectDest.right - rectDest.left, rectDest.bottom - rectDest.top };
+			POINT pointDest = { rectDest.left, rectDest.top };
+			POINT pointSource = { 0, 0 };
+
+			HDC hdcScreen = GetDC(NULL);
+			//HDC hdcMemory = CreateCompatibleDC(hdcScreen);
+			//HBITMAP hbmpMemory = CreateCompatibleBitmap(hdcScreen, sizeDest.cx, sizeDest.cy);
+			//HBITMAP hbmpOld = (HBITMAP)SelectObject(hdcMemory, hbmpMemory);
+			//BitBlt(hdcMemory, 0, 0, sizeDest.cx, sizeDest.cy, wkeGetViewDC(this), 0, 0, SRCCOPY);
+
+			BLENDFUNCTION blend = { 0 };
+			memset(&blend, 0, sizeof(blend));
+			blend.BlendOp = AC_SRC_OVER;
+			blend.SourceConstantAlpha = 255;
+			blend.AlphaFormat = AC_SRC_ALPHA;
+			UpdateLayeredWindow(m_hWnd, hdcScreen, &pointDest, &sizeDest, wkeGetViewDC(webView), &pointSource, RGB(0, 0, 0), &blend, ULW_ALPHA);
+
+			//SelectObject(hdcMemory, (HGDIOBJ)hbmpOld);
+			//DeleteObject((HGDIOBJ)hbmpMemory);
+			//DeleteDC(hdcMemory);
+
+			ReleaseDC(NULL, hdcScreen);
+		}
+		else {
+			RECT rc = { x, y, x + cx, y + cy };
+			BOOL b = InvalidateRect(m_hWnd, &rc, TRUE);
+		}
+	}
 	//窗口消息处理
 	static LRESULT CALLBACK _windowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 	{
@@ -441,7 +476,9 @@ public:
 			return FALSE;
 
 		wkeResize(win->m_web_contents->m_view, width->Int32Value(), height->Int32Value());
-		wkeLoadURL(win->m_web_contents->m_view, "http://www.baidu.com/");
+		wkeOnPaintUpdated(win->m_web_contents->m_view, (wkePaintUpdatedCallback)_staticOnPaintUpdated, win->m_hWnd);
+		wkeLoadHTML(win->m_web_contents->m_view, "test");
+		wkeLoadURL(win->m_web_contents->m_view, "http://www.zerotoken.com");
 		ShowWindow(win->m_hWnd, TRUE);
 		return win;
 	}
