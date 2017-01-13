@@ -1,21 +1,25 @@
 ﻿#include "nodeblink.h"
 #include <node_object_wrap.h>
 #include "wke.h"
+
 #include "electron.h"
 #include "dictionary.h"
+#include "options_switches.h"
+#include "api_web_contents.h"
+
 using namespace v8;
 using namespace node;
 static const char hello_native[] = { 239,187,191,39,117,115,101,32,115,116,114,105,99,116,39,59,10,99,111,110,115,116,32,98,105,110,100,105,110,103,32,61,32,112,114,111,99,101,115,115,46,98,105,110,100,105,110,103,40,39,104,101,108,108,111,39,41,59,10,101,120,112,111,114,116,115,46,77,101,116,104,111,100,32,61,32,98,105,110,100,105,110,103,46,77,101,116,104,111,100,59,10,10,10 };
 
 static node_native native_hello{ "hello", hello_native, sizeof(hello_native) };
-class WebContents {};
+
 // 继承node的ObjectWrap，一般自定义C++类都应该继承node的ObjectWrap
 class Window :
 	public node::ObjectWrap {
 public:
 	// 静态方法，用于注册类和方法
 	static void Init(Local<Object> target, Environment* env) {
-		Isolate* isolate = Isolate::GetCurrent();
+		Isolate* isolate = env->isolate();
 
 		// Function模板
 		Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
@@ -117,7 +121,7 @@ public:
 		NODE_SET_METHOD(t, "setAppDetails", Null);
 		NODE_SET_METHOD(t, "setIcon", Null);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "id", Null);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "webContents", Null);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "webContents", _WebContents);
 
 		// 设置constructor
 		constructor.Reset(isolate, tpl->GetFunction());
@@ -132,28 +136,26 @@ public:
 			if (message == WM_CREATE) {
 				LPCREATESTRUCTW cs = (LPCREATESTRUCTW)lParam;
 				Window *win = (Window *)cs->lpCreateParams;
-				wkeSetHandle(win->m_view, hwnd);
+				wkeSetHandle(win->m_web_contents->m_view, hwnd);
 				SetPropW(hwnd, L"mele", (HANDLE)win);
+				SetTimer(hwnd, (UINT_PTR)win, 70, NULL);
+				return 0;
 			}
 		}
 		if (!win)
 			return DefWindowProcW(hwnd, message, wParam, lParam);
-		wkeWebView pthis = win->m_view;
+		wkeWebView pthis = win->m_web_contents->m_view;
 		if (!pthis)
 			return DefWindowProcW(hwnd, message, wParam, lParam);
 		switch (message) {
-		case WM_CREATE:
-			SetTimer(hwnd, (UINT_PTR)pthis, 70, NULL);
-			return 0;
-
 		case WM_CLOSE:
 			ShowWindow(hwnd, SW_HIDE);
 			DestroyWindow(hwnd);
 			return 0;
 
 		case WM_DESTROY:
-			KillTimer(hwnd, (UINT_PTR)pthis);
-			RemovePropW(hwnd, L"wke");
+			KillTimer(hwnd, (UINT_PTR)win);
+			RemovePropW(hwnd, L"mele");
 			wkeDestroyWebView(pthis);
 			return 0;
 
@@ -355,12 +357,43 @@ public:
 
 		return DefWindowProcW(hwnd, message, wParam, lParam);
 	}
-private:
 	static void *task_WindowNew(gin::Dictionary *options)
 	{
+		//HandleScope scope(options->isolate());
 		Window* win = new Window;
 		unsigned styles = 0;
 		unsigned styleEx = 0;
+
+		WebContents* web_contents;
+		Handle<Object> _web_contents;
+		// If no WebContents was passed to the constructor, create it from options.
+		if (!options->Get("webContents", &_web_contents)) {
+			// Use options.webPreferences to create WebContents.
+			gin::Dictionary web_preferences = gin::Dictionary::CreateEmpty(options->isolate());
+			options->Get(options::kWebPreferences, &web_preferences);
+
+			// Copy the backgroundColor to webContents.
+			v8::Local<v8::Value> value;
+			if (options->Get(options::kBackgroundColor, &value))
+				web_preferences.Set(options::kBackgroundColor, value);
+
+			v8::Local<v8::Value> transparent;
+			if (options->Get("transparent", &transparent))
+				web_preferences.Set("transparent", transparent);
+
+			// Offscreen windows are always created frameless.
+			bool offscreen;
+			if (web_preferences.Get("offscreen", &offscreen) && offscreen) {
+				options->Set(options::kFrame, false);
+			}
+			web_contents = WebContents::Create(options->isolate(), web_preferences);
+		}
+		else
+		{
+			web_contents = WebContents::ObjectWrap::Unwrap<WebContents>(_web_contents);
+		}
+		win->m_web_contents = web_contents;
+
 		v8::Local<v8::Value> transparent;
 		options->Get("transparent", &transparent);
 		v8::Local<v8::Value> height;
@@ -373,11 +406,10 @@ private:
 		options->Get("y", &y);
 		v8::Local<v8::Value> title;
 		options->Get("title", &title);
-		win->m_view = wkeCreateWebView();
 		if (transparent->IsBoolean() && transparent->ToBoolean()->BooleanValue()) {
 			styles = WS_POPUP;
 			styleEx = WS_EX_LAYERED;
-			wkeSetTransparent(win->m_view, true);
+			wkeSetTransparent(win->m_web_contents->m_view, true);
 		}
 		else {
 			styles = WS_OVERLAPPEDWINDOW;
@@ -407,9 +439,9 @@ private:
 
 		if (!IsWindow(win->m_hWnd))
 			return FALSE;
-		int a = width->Int32Value();
-		wkeResize(win->m_view, a, height->Int32Value());
 
+		wkeResize(win->m_web_contents->m_view, width->Int32Value(), height->Int32Value());
+		wkeLoadURL(win->m_web_contents->m_view, "http://www.baidu.com/");
 		ShowWindow(win->m_hWnd, TRUE);
 		return win;
 	}
@@ -418,7 +450,7 @@ private:
 
 	}
 	static void *task_WindowFree(Window *data) {
-		wkeDestroyWebView(data->m_view);
+		delete data->m_web_contents;
 		return NULL;
 	}
 	~Window() {
@@ -426,9 +458,10 @@ private:
 		//等待主线程任务完成
 		main_async_wait();
 	}
+private:
 	// new方法
 	static void New(const v8::FunctionCallbackInfo<v8::Value>& args) {
-		Isolate* isolate = Isolate::GetCurrent();
+		Isolate* isolate = args.GetIsolate();
 		HandleScope scope(isolate);
 
 		if (args.IsConstructCall()) {
@@ -456,7 +489,7 @@ private:
 	}
 	//clos方法
 	static void Clos(const v8::FunctionCallbackInfo<v8::Value>& args) {
-		Isolate* isolate = Isolate::GetCurrent();
+		Isolate* isolate = args.GetIsolate();
 		HandleScope scope(isolate);
 		// 解封this指针
 		Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
@@ -464,7 +497,7 @@ private:
 	}
 	//focus方法
 	static void Focus(const v8::FunctionCallbackInfo<v8::Value>& args) {
-		Isolate* isolate = Isolate::GetCurrent();
+		Isolate* isolate = args.GetIsolate();
 		HandleScope scope(isolate);
 		// 解封this指针
 		Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
@@ -472,7 +505,7 @@ private:
 	}
 	//blur方法
 	static void Blur(const v8::FunctionCallbackInfo<v8::Value>& args) {
-		Isolate* isolate = Isolate::GetCurrent();
+		Isolate* isolate = args.GetIsolate();
 		HandleScope scope(isolate);
 		// 解封this指针
 		Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
@@ -480,7 +513,7 @@ private:
 	}
 	//isFocused方法
 	static void IsFocused(const v8::FunctionCallbackInfo<v8::Value>& args) {
-		Isolate* isolate = Isolate::GetCurrent();
+		Isolate* isolate = args.GetIsolate();
 		HandleScope scope(isolate);
 		// 解封this指针
 		Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
@@ -489,7 +522,7 @@ private:
 	}
 	//show方法
 	static void Show(const v8::FunctionCallbackInfo<v8::Value>& args) {
-		Isolate* isolate = Isolate::GetCurrent();
+		Isolate* isolate = args.GetIsolate();
 		HandleScope scope(isolate);
 		// 解封this指针
 		Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
@@ -498,7 +531,7 @@ private:
 	}
 	//showInactive方法
 	static void ShowInactive(const v8::FunctionCallbackInfo<v8::Value>& args) {
-		Isolate* isolate = Isolate::GetCurrent();
+		Isolate* isolate = args.GetIsolate();
 		HandleScope scope(isolate);
 		// 解封this指针
 		Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
@@ -506,7 +539,7 @@ private:
 	}
 	//hide
 	static void Hide(const v8::FunctionCallbackInfo<v8::Value>& args) {
-		Isolate* isolate = Isolate::GetCurrent();
+		Isolate* isolate = args.GetIsolate();
 		HandleScope scope(isolate);
 		// 解封this指针
 		Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
@@ -514,7 +547,7 @@ private:
 	}
 	//isVisible
 	static void IsVisible(const v8::FunctionCallbackInfo<v8::Value>& args) {
-		Isolate* isolate = Isolate::GetCurrent();
+		Isolate* isolate = args.GetIsolate();
 		HandleScope scope(isolate);
 		// 解封this指针
 		Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
@@ -523,7 +556,7 @@ private:
 	}
 	//isEnabled
 	static void IsEnabled(const v8::FunctionCallbackInfo<v8::Value>& args) {
-		Isolate* isolate = Isolate::GetCurrent();
+		Isolate* isolate = args.GetIsolate();
 		HandleScope scope(isolate);
 		// 解封this指针
 		Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
@@ -532,7 +565,7 @@ private:
 	}
 	//maximize
 	static void Maximize(const v8::FunctionCallbackInfo<v8::Value>& args) {
-		Isolate* isolate = Isolate::GetCurrent();
+		Isolate* isolate = args.GetIsolate();
 		HandleScope scope(isolate);
 		// 解封this指针
 		Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
@@ -540,7 +573,7 @@ private:
 	}
 	//unmaximize
 	static void Unmaximize(const v8::FunctionCallbackInfo<v8::Value>& args) {
-		Isolate* isolate = Isolate::GetCurrent();
+		Isolate* isolate = args.GetIsolate();
 		HandleScope scope(isolate);
 		// 解封this指针
 		Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
@@ -548,7 +581,7 @@ private:
 	}
 	//isMaximized
 	static void IsMaximized(const v8::FunctionCallbackInfo<v8::Value>& args) {
-		Isolate* isolate = Isolate::GetCurrent();
+		Isolate* isolate = args.GetIsolate();
 		HandleScope scope(isolate);
 		// 解封this指针
 		Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
@@ -557,7 +590,7 @@ private:
 	}
 	//minimize
 	static void Minimize(const v8::FunctionCallbackInfo<v8::Value>& args) {
-		Isolate* isolate = Isolate::GetCurrent();
+		Isolate* isolate = args.GetIsolate();
 		HandleScope scope(isolate);
 		// 解封this指针
 		Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
@@ -565,7 +598,7 @@ private:
 	}
 	//restore
 	static void Restore(const v8::FunctionCallbackInfo<v8::Value>& args) {
-		Isolate* isolate = Isolate::GetCurrent();
+		Isolate* isolate = args.GetIsolate();
 		HandleScope scope(isolate);
 		// 解封this指针
 		Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
@@ -573,7 +606,7 @@ private:
 	}
 	//isMinimized
 	static void IsMinimized(const v8::FunctionCallbackInfo<v8::Value>& args) {
-		Isolate* isolate = Isolate::GetCurrent();
+		Isolate* isolate = args.GetIsolate();
 		HandleScope scope(isolate);
 		// 解封this指针
 		Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
@@ -582,7 +615,7 @@ private:
 	}
 	//setFullScreen
 	static void SetFullScreen(const v8::FunctionCallbackInfo<v8::Value>& args) {
-		Isolate* isolate = Isolate::GetCurrent();
+		Isolate* isolate = args.GetIsolate();
 		HandleScope scope(isolate);
 		// 解封this指针
 		Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
@@ -598,12 +631,22 @@ private:
 		}
 	}
 
+	static void _WebContents(const v8::FunctionCallbackInfo<v8::Value>& args) {
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		// 解封this指针
+		Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
+		if (!win->m_web_contents)
+			args.GetReturnValue().SetNull();
+		else
+			args.GetReturnValue().Set(v8::Local<v8::Value>::New(isolate, win->m_web_contents->handle()));
+	}
 	// 空实现
 	static void Null(const v8::FunctionCallbackInfo<v8::Value>& args) {
 	}
 	static v8::Persistent<v8::Function> constructor;
 private:
-	wkeWebView m_view;
+	WebContents* m_web_contents;
 	HWND m_hWnd;
 };
 Persistent<Function> Window::constructor;
