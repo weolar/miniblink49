@@ -23,10 +23,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\electron\converter.cc" />
+    <ClCompile Include="..\..\electron\dictionary.cc" />
     <ClCompile Include="..\..\electron\electron.cpp" />
     <ClCompile Include="..\..\electron\api_window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\electron\converter.h" />
+    <ClInclude Include="..\..\electron\dictionary.h" />
     <ClInclude Include="..\..\electron\electron.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
