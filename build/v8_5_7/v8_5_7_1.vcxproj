@@ -50,7 +50,7 @@
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v140_xp</PlatformToolset>
-    <WholeProgramOptimization>false</WholeProgramOptimization>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_vc6|x64'" Label="Configuration">
@@ -166,7 +166,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <Optimization>Disabled</Optimization>
+      <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;V8_NO_FAST_TLS;NDEBUG;WIN32;_LIB;V8_USE_EXTERNAL_STARTUP_DATA=1;V8_TARGET_ARCH_IA32=1;V8_DEPRECATION_WARNINGS;NVALGRIND;ENABLE_HANDLE_ZAPPING;USING_VC6RT=1;BUILDING_V8_SHARED;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -174,15 +174,15 @@
       <AdditionalIncludeDirectories>../../v8_5_7;../../v8_5_7/include</AdditionalIncludeDirectories>
       <ExceptionHandling>false</ExceptionHandling>
       <BufferSecurityCheck>false</BufferSecurityCheck>
-      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+      <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
       <DisableSpecificWarnings>4800;4530;4251</DisableSpecificWarnings>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
       <AdditionalOptions>/Zc:threadSafeInit- %(AdditionalOptions)</AdditionalOptions>
       <StringPooling>true</StringPooling>
-      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
-      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -239,7 +239,7 @@
       <AdditionalOptions>
       </AdditionalOptions>
       <StringPooling>true</StringPooling>
-      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
       <WholeProgramOptimization>true</WholeProgramOptimization>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>

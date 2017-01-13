@@ -204,7 +204,7 @@
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <MinimalRebuild>false</MinimalRebuild>
-      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
       <StringPooling>true</StringPooling>
@@ -360,7 +360,7 @@ copy $(OutDir)$(TargetName).lib $(SolutionDir)..\bin\</Command>
       <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
-      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
       <FunctionLevelLinking>true</FunctionLevelLinking>
     </ClCompile>
     <Link>
