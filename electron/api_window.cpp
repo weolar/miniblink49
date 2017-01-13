@@ -2,6 +2,7 @@
 #include <node_object_wrap.h>
 #include "wke.h"
 #include "electron.h"
+#include "dictionary.h"
 using namespace v8;
 using namespace node;
 const char hello_native[] = { 239,187,191,39,117,115,101,32,115,116,114,105,99,116,39,59,10,99,111,110,115,116,32,98,105,110,100,105,110,103,32,61,32,112,114,111,99,101,115,115,46,98,105,110,100,105,110,103,40,39,104,101,108,108,111,39,41,59,10,101,120,112,111,114,116,115,46,77,101,116,104,111,100,32,61,32,98,105,110,100,105,110,103,46,77,101,116,104,111,100,59,10,10,10 };
@@ -9,7 +10,8 @@ const char hello_native[] = { 239,187,191,39,117,115,101,32,115,116,114,105,99,1
 node_native native_hello{ "hello", hello_native, sizeof(hello_native) };
 
 // 继承node的ObjectWrap，一般自定义C++类都应该继承node的ObjectWrap
-class Window : public node::ObjectWrap {
+class Window :
+	public node::ObjectWrap {
 public:
 	// 静态方法，用于注册类和方法
 	static void Init(Local<Object> target, Environment* env) {
@@ -21,100 +23,100 @@ public:
 		tpl->SetClassName(String::NewFromUtf8(isolate, "BrowserWindow"));
 		// InternalField
 		tpl->InstanceTemplate()->SetInternalFieldCount(1);
-
+		v8::Local<v8::Template> t = tpl->InstanceTemplate();
 		// 设置Prototype函数
-		NODE_SET_PROTOTYPE_METHOD(tpl, "close", Move);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "focus", toString);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "blur", Move);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "isFocused", toString);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "show", Move);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "showInactive", toString);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "hide", Move);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "isVisible", toString);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "isEnabled", Move);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "maximize", toString);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "unmaximize", Move);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "isMaximized", toString);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "minimize", Move);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "restore", toString);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "isMinimized", Move);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "setFullScreen", toString);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "isFullScreen", Move);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "setAspectRatio", toString);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "previewFile", Move);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "toString", toString);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "closeFilePreview", Move);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "setParentWindow", toString);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "getParentWindow", toString);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "getChildWindows", Move);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "isModal", toString);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "getNativeWindowHandle", Move);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "getBounds", toString);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "setBounds", Move);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "getSize", toString);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "setSize", Move);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "getContentBounds", toString);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "setContentBounds", toString);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "getContentSize", Move);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "setContentSize", toString);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "setMinimumSize", Move);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "getMinimumSize", toString);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "setMaximumSize", Move);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "getMaximumSize", toString);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "setSheetOffset", Move);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "setResizable", toString);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "isResizable", toString);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "setMovable", Move);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "isMovable", toString);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "setMinimizable", Move);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "isMinimizable", toString);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "isMaximizable", Move);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "setFullScreenable", toString);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "isFullScreenable", Move);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "setClosable", toString);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "isClosable", Move);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "setAlwaysOnTop", toString);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "isAlwaysOnTop", toString);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "center", Move);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "setPosition", toString);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "getPosition", Move);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "setTitle", toString);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "getTitle", Move);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "flashFrame", toString);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "setSkipTaskbar", Move);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "setKiosk", toString);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "isKiosk", toString);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "setBackgroundColor", toString);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "setHasShadow", Move);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "hasShadow", toString);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "setRepresentedFilename", Move);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "getRepresentedFilename", toString);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "setDocumentEdited", Move);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "isDocumentEdited", toString);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "setIgnoreMouseEvents", Move);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "setContentProtection", toString);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "setFocusable", toString);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "focusOnWebView", toString);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "blurWebView", Move);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "isWebViewFocused", toString);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "setOverlayIcon", Move);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "setThumbarButtons", toString);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "setMenu", Move);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "setAutoHideMenuBar", toString);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "isMenuBarAutoHide", Move);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "setMenuBarVisibility", toString);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "isMenuBarVisible", Move);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "setVisibleOnAllWorkspaces", toString);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "isVisibleOnAllWorkspaces", Move);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "setVibrancy", toString);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "hookWindowMessage", toString);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "isWindowMessageHooked", toString);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "unhookWindowMessage", Move);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "unhookAllWindowMessages", toString);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "setThumbnailClip", Move);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "setThumbnailToolTip", toString);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "setAppDetails", Move);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "setIcon", toString);
+		NODE_SET_METHOD(t, "close", Clos);
+		NODE_SET_METHOD(t, "focus", Focus);
+		NODE_SET_METHOD(t, "blur", Blur);
+		NODE_SET_METHOD(t, "isFocused", IsFocused);
+		NODE_SET_METHOD(t, "show", Show);
+		NODE_SET_METHOD(t, "showInactive", ShowInactive);
+		NODE_SET_METHOD(t, "hide", Hide);
+		NODE_SET_METHOD(t, "isVisible", IsVisible);
+		NODE_SET_METHOD(t, "isEnabled", IsEnabled);
+		NODE_SET_METHOD(t, "maximize", Maximize);
+		NODE_SET_METHOD(t, "unmaximize", Unmaximize);
+		NODE_SET_METHOD(t, "isMaximized", IsMaximized);
+		NODE_SET_METHOD(t, "minimize", Minimize);
+		NODE_SET_METHOD(t, "restore", Restore);
+		NODE_SET_METHOD(t, "isMinimized", IsMinimized);
+		NODE_SET_METHOD(t, "setFullScreen", SetFullScreen);
+		NODE_SET_METHOD(t, "isFullScreen", Move);
+		NODE_SET_METHOD(t, "setAspectRatio", toString);
+		NODE_SET_METHOD(t, "previewFile", Move);
+		NODE_SET_METHOD(t, "toString", toString);
+		NODE_SET_METHOD(t, "closeFilePreview", Move);
+		NODE_SET_METHOD(t, "setParentWindow", toString);
+		NODE_SET_METHOD(t, "getParentWindow", toString);
+		NODE_SET_METHOD(t, "getChildWindows", Move);
+		NODE_SET_METHOD(t, "isModal", toString);
+		NODE_SET_METHOD(t, "getNativeWindowHandle", Move);
+		NODE_SET_METHOD(t, "getBounds", toString);
+		NODE_SET_METHOD(t, "setBounds", Move);
+		NODE_SET_METHOD(t, "getSize", toString);
+		NODE_SET_METHOD(t, "setSize", Move);
+		NODE_SET_METHOD(t, "getContentBounds", toString);
+		NODE_SET_METHOD(t, "setContentBounds", toString);
+		NODE_SET_METHOD(t, "getContentSize", Move);
+		NODE_SET_METHOD(t, "setContentSize", toString);
+		NODE_SET_METHOD(t, "setMinimumSize", Move);
+		NODE_SET_METHOD(t, "getMinimumSize", toString);
+		NODE_SET_METHOD(t, "setMaximumSize", Move);
+		NODE_SET_METHOD(t, "getMaximumSize", toString);
+		NODE_SET_METHOD(t, "setSheetOffset", Move);
+		NODE_SET_METHOD(t, "setResizable", toString);
+		NODE_SET_METHOD(t, "isResizable", toString);
+		NODE_SET_METHOD(t, "setMovable", Move);
+		NODE_SET_METHOD(t, "isMovable", toString);
+		NODE_SET_METHOD(t, "setMinimizable", Move);
+		NODE_SET_METHOD(t, "isMinimizable", toString);
+		NODE_SET_METHOD(t, "isMaximizable", Move);
+		NODE_SET_METHOD(t, "setFullScreenable", toString);
+		NODE_SET_METHOD(t, "isFullScreenable", Move);
+		NODE_SET_METHOD(t, "setClosable", toString);
+		NODE_SET_METHOD(t, "isClosable", Move);
+		NODE_SET_METHOD(t, "setAlwaysOnTop", toString);
+		NODE_SET_METHOD(t, "isAlwaysOnTop", toString);
+		NODE_SET_METHOD(t, "center", Move);
+		NODE_SET_METHOD(t, "setPosition", toString);
+		NODE_SET_METHOD(t, "getPosition", Move);
+		NODE_SET_METHOD(t, "setTitle", toString);
+		NODE_SET_METHOD(t, "getTitle", Move);
+		NODE_SET_METHOD(t, "flashFrame", toString);
+		NODE_SET_METHOD(t, "setSkipTaskbar", Move);
+		NODE_SET_METHOD(t, "setKiosk", toString);
+		NODE_SET_METHOD(t, "isKiosk", toString);
+		NODE_SET_METHOD(t, "setBackgroundColor", toString);
+		NODE_SET_METHOD(t, "setHasShadow", Move);
+		NODE_SET_METHOD(t, "hasShadow", toString);
+		NODE_SET_METHOD(t, "setRepresentedFilename", Move);
+		NODE_SET_METHOD(t, "getRepresentedFilename", toString);
+		NODE_SET_METHOD(t, "setDocumentEdited", Move);
+		NODE_SET_METHOD(t, "isDocumentEdited", toString);
+		NODE_SET_METHOD(t, "setIgnoreMouseEvents", Move);
+		NODE_SET_METHOD(t, "setContentProtection", toString);
+		NODE_SET_METHOD(t, "setFocusable", toString);
+		NODE_SET_METHOD(t, "focusOnWebView", toString);
+		NODE_SET_METHOD(t, "blurWebView", Move);
+		NODE_SET_METHOD(t, "isWebViewFocused", toString);
+		NODE_SET_METHOD(t, "setOverlayIcon", Move);
+		NODE_SET_METHOD(t, "setThumbarButtons", toString);
+		NODE_SET_METHOD(t, "setMenu", Move);
+		NODE_SET_METHOD(t, "setAutoHideMenuBar", toString);
+		NODE_SET_METHOD(t, "isMenuBarAutoHide", Move);
+		NODE_SET_METHOD(t, "setMenuBarVisibility", toString);
+		NODE_SET_METHOD(t, "isMenuBarVisible", Move);
+		NODE_SET_METHOD(t, "setVisibleOnAllWorkspaces", toString);
+		NODE_SET_METHOD(t, "isVisibleOnAllWorkspaces", Move);
+		NODE_SET_METHOD(t, "setVibrancy", toString);
+		NODE_SET_METHOD(t, "hookWindowMessage", toString);
+		NODE_SET_METHOD(t, "isWindowMessageHooked", toString);
+		NODE_SET_METHOD(t, "unhookWindowMessage", Move);
+		NODE_SET_METHOD(t, "unhookAllWindowMessages", toString);
+		NODE_SET_METHOD(t, "setThumbnailClip", Move);
+		NODE_SET_METHOD(t, "setThumbnailToolTip", toString);
+		NODE_SET_METHOD(t, "setAppDetails", Move);
+		NODE_SET_METHOD(t, "setIcon", toString);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "id", Move);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "webContents", toString);
 
@@ -126,16 +128,18 @@ public:
 	//窗口消息处理
 	static LRESULT CALLBACK _windowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 	{
-		wkeWebView pthis = (wkeWebView)GetPropW(hwnd, L"wke");
-		if (!pthis) {
+		Window *win = (Window *)GetPropW(hwnd, L"mele");
+		if (!win) {
 			if (message == WM_CREATE) {
 				LPCREATESTRUCTW cs = (LPCREATESTRUCTW)lParam;
-				pthis = (wkeWebView)cs->lpCreateParams;
-				wkeSetHandle(pthis, hwnd);
-				SetPropW(hwnd, L"wke", (HANDLE)pthis);
+				Window *win = (Window *)cs->lpCreateParams;
+				wkeSetHandle(win->m_view, hwnd);
+				SetPropW(hwnd, L"mele", (HANDLE)win);
 			}
 		}
-
+		if (!win)
+			return DefWindowProcW(hwnd, message, wParam, lParam);
+		wkeWebView pthis = win->m_view;
 		if (!pthis)
 			return DefWindowProcW(hwnd, message, wParam, lParam);
 		switch (message) {
@@ -353,16 +357,66 @@ public:
 		return DefWindowProcW(hwnd, message, wParam, lParam);
 	}
 private:
-	static void *task_WindowNew(void *data) {
-		wkeWebView v = wkeCreateWebView();
+	static void *task_WindowNew(gin::Dictionary *options)
+	{
+		Window* win = new Window;
+		unsigned styles = 0;
+		unsigned styleEx = 0;
+		v8::Local<v8::Value> transparent;
+		options->Get("transparent", &transparent);
+		v8::Local<v8::Value> height;
+		options->Get("height", &height);
+		v8::Local<v8::Value> width;
+		options->Get("width", &width);
+		v8::Local<v8::Value> x;
+		options->Get("x", &x);
+		v8::Local<v8::Value> y;
+		options->Get("y", &y);
+		v8::Local<v8::Value> title;
+		options->Get("title", &title);
+		win->m_view = wkeCreateWebView();
+		if (transparent->IsBoolean() && transparent->ToBoolean()->BooleanValue()) {
+			styles = WS_POPUP;
+			styleEx = WS_EX_LAYERED;
+			wkeSetTransparent(win->m_view, true);
+		}
+		else {
+			styles = WS_OVERLAPPEDWINDOW;
+			styleEx = 0;
+		}
+		wchar_t s_title[256];
+		if (title->IsString()) {
+			v8::String::Utf8Value str(title);
+			MultiByteToWideChar(CP_UTF8, 0, *str, -1, s_title, 256);
+		}
+		else {
+			wcscpy(s_title, L"Electron");
+		}
+		win->m_hWnd = CreateWindowEx(
+			styleEx,        // window ex-style
+			L"mb_electron_window",    // window class name
+			s_title, // window caption
+			styles,         // window style
+			x->Int32Value(),              // initial x position
+			y->Int32Value(),              // initial y position
+			width->Int32Value(),          // initial x size
+			height->Int32Value(),         // initial y size
+			NULL,         // parent window handle
+			NULL,           // window menu handle
+			GetModuleHandleW(NULL),           // program instance handle
+			win);         // creation parameters
 
-		return v;
+		if (!IsWindow(win->m_hWnd))
+			return FALSE;
+		int a = width->Int32Value();
+		wkeResize(win->m_view, a, height->Int32Value());
+
+		ShowWindow(win->m_hWnd, TRUE);
+		return win;
 	}
 	// 不允许转换构造函数进行的隐式转换
 	explicit Window() {
-		main_async_call(task_WindowNew, 0);
-		//等待主线程任务完成
-		m_view = (wkeWebView)main_async_wait();
+
 	}
 	static void *task_WindowFree(Window *data) {
 		wkeDestroyWebView(data->m_view);
@@ -379,13 +433,17 @@ private:
 		HandleScope scope(isolate);
 
 		if (args.IsConstructCall()) {
+			if (args.Length() > 1) {
+				return;
+			}
 			// 使用new调用 `new Point(...)`
-			double _x = args[0]->IsUndefined() ? 0 : args[0]->NumberValue();
-			double _y = args[1]->IsUndefined() ? 0 : args[1]->NumberValue();
+			gin::Dictionary options(args.GetIsolate(), args[0]->ToObject());
 			// new一个对象
-			Window* point = new Window();
+			main_async_call((core_main_task)task_WindowNew, &options);
+			//等待主线程任务完成
+			Window* win = (Window*)main_async_wait();
 			// 包装this指针
-			point->Wrap(args.This());
+			win->Wrap(args.This());
 			args.GetReturnValue().Set(args.This());
 		}
 		else {
@@ -397,6 +455,150 @@ private:
 			args.GetReturnValue().Set(cons->NewInstance(argc, argv));
 		}
 	}
+	//clos方法
+	static void Clos(const v8::FunctionCallbackInfo<v8::Value>& args) {
+		Isolate* isolate = Isolate::GetCurrent();
+		HandleScope scope(isolate);
+		// 解封this指针
+		Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
+		SendMessage(win->m_hWnd, WM_CLOSE, 0, 0);
+	}
+	//focus方法
+	static void Focus(const v8::FunctionCallbackInfo<v8::Value>& args) {
+		Isolate* isolate = Isolate::GetCurrent();
+		HandleScope scope(isolate);
+		// 解封this指针
+		Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
+		SetFocus(win->m_hWnd);
+	}
+	//blur方法
+	static void Blur(const v8::FunctionCallbackInfo<v8::Value>& args) {
+		Isolate* isolate = Isolate::GetCurrent();
+		HandleScope scope(isolate);
+		// 解封this指针
+		Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
+		SetFocus(NULL);
+	}
+	//isFocused方法
+	static void IsFocused(const v8::FunctionCallbackInfo<v8::Value>& args) {
+		Isolate* isolate = Isolate::GetCurrent();
+		HandleScope scope(isolate);
+		// 解封this指针
+		Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
+		Local<Boolean> ret = Boolean::New(isolate, GetFocus() == win->m_hWnd);
+		args.GetReturnValue().Set(ret);
+	}
+	//show方法
+	static void Show(const v8::FunctionCallbackInfo<v8::Value>& args) {
+		Isolate* isolate = Isolate::GetCurrent();
+		HandleScope scope(isolate);
+		// 解封this指针
+		Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
+		ShowWindow(win->m_hWnd, TRUE);
+		SetFocus(win->m_hWnd);
+	}
+	//showInactive方法
+	static void ShowInactive(const v8::FunctionCallbackInfo<v8::Value>& args) {
+		Isolate* isolate = Isolate::GetCurrent();
+		HandleScope scope(isolate);
+		// 解封this指针
+		Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
+		ShowWindow(win->m_hWnd, TRUE);
+	}
+	//hide
+	static void Hide(const v8::FunctionCallbackInfo<v8::Value>& args) {
+		Isolate* isolate = Isolate::GetCurrent();
+		HandleScope scope(isolate);
+		// 解封this指针
+		Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
+		ShowWindow(win->m_hWnd, FALSE);
+	}
+	//isVisible
+	static void IsVisible(const v8::FunctionCallbackInfo<v8::Value>& args) {
+		Isolate* isolate = Isolate::GetCurrent();
+		HandleScope scope(isolate);
+		// 解封this指针
+		Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
+		Local<Boolean> ret = Boolean::New(isolate, IsWindowVisible(win->m_hWnd));
+		args.GetReturnValue().Set(ret);
+	}
+	//isEnabled
+	static void IsEnabled(const v8::FunctionCallbackInfo<v8::Value>& args) {
+		Isolate* isolate = Isolate::GetCurrent();
+		HandleScope scope(isolate);
+		// 解封this指针
+		Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
+		Local<Boolean> ret = Boolean::New(isolate, IsWindowEnabled(win->m_hWnd));
+		args.GetReturnValue().Set(ret);
+	}
+	//maximize
+	static void Maximize(const v8::FunctionCallbackInfo<v8::Value>& args) {
+		Isolate* isolate = Isolate::GetCurrent();
+		HandleScope scope(isolate);
+		// 解封this指针
+		Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
+		ShowWindow(win->m_hWnd, SW_MAXIMIZE);
+	}
+	//unmaximize
+	static void Unmaximize(const v8::FunctionCallbackInfo<v8::Value>& args) {
+		Isolate* isolate = Isolate::GetCurrent();
+		HandleScope scope(isolate);
+		// 解封this指针
+		Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
+		ShowWindow(win->m_hWnd, SW_RESTORE);
+	}
+	//isMaximized
+	static void IsMaximized(const v8::FunctionCallbackInfo<v8::Value>& args) {
+		Isolate* isolate = Isolate::GetCurrent();
+		HandleScope scope(isolate);
+		// 解封this指针
+		Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
+		Local<Boolean> ret = Boolean::New(isolate, IsZoomed(win->m_hWnd));
+		args.GetReturnValue().Set(ret);
+	}
+	//minimize
+	static void Minimize(const v8::FunctionCallbackInfo<v8::Value>& args) {
+		Isolate* isolate = Isolate::GetCurrent();
+		HandleScope scope(isolate);
+		// 解封this指针
+		Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
+		ShowWindow(win->m_hWnd, SW_MINIMIZE);
+	}
+	//restore
+	static void Restore(const v8::FunctionCallbackInfo<v8::Value>& args) {
+		Isolate* isolate = Isolate::GetCurrent();
+		HandleScope scope(isolate);
+		// 解封this指针
+		Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
+		ShowWindow(win->m_hWnd, SW_RESTORE);
+	}
+	//isMinimized
+	static void IsMinimized(const v8::FunctionCallbackInfo<v8::Value>& args) {
+		Isolate* isolate = Isolate::GetCurrent();
+		HandleScope scope(isolate);
+		// 解封this指针
+		Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
+		Local<Boolean> ret = Boolean::New(isolate, IsIconic(win->m_hWnd));
+		args.GetReturnValue().Set(ret);
+	}
+	//setFullScreen
+	static void SetFullScreen(const v8::FunctionCallbackInfo<v8::Value>& args) {
+		Isolate* isolate = Isolate::GetCurrent();
+		HandleScope scope(isolate);
+		// 解封this指针
+		Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
+		if (args[0]->IsBoolean() && args[0]->ToBoolean()->BooleanValue()) {
+			RECT rc;
+			HWND hDesk = GetDesktopWindow();
+			GetWindowRect(hDesk, &rc);
+			SetWindowLong(win->m_hWnd, GWL_STYLE, GetWindowLong(win->m_hWnd, GWL_STYLE) | WS_BORDER);
+			SetWindowPos(win->m_hWnd, HWND_TOPMOST, 0, 0, rc.right, rc.bottom, SWP_SHOWWINDOW);
+		}
+		else {
+			SetWindowLong(win->m_hWnd, GWL_STYLE, GetWindowLong(win->m_hWnd, GWL_STYLE) ^ WS_BORDER);
+		}
+	}
+
 	// move(x, y)
 	static void Move(const v8::FunctionCallbackInfo<v8::Value>& args) {
 		Isolate* isolate = Isolate::GetCurrent();
@@ -416,7 +618,9 @@ private:
 		args.GetReturnValue().Set(String::NewFromUtf8(isolate, "aa"));
 	}
 	static v8::Persistent<v8::Function> constructor;
+private:
 	wkeWebView m_view;
+	HWND m_hWnd;
 };
 Persistent<Function> Window::constructor;
 void Initialize(Local<Object> target,
