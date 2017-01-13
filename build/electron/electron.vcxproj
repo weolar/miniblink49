@@ -23,6 +23,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\electron\api_web_contents.cc" />
     <ClCompile Include="..\..\electron\converter.cc" />
     <ClCompile Include="..\..\electron\dictionary.cc" />
     <ClCompile Include="..\..\electron\electron.cpp" />

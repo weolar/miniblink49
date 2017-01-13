@@ -27,6 +27,9 @@
     <ClCompile Include="..\..\electron\converter.cc">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\electron\api_web_contents.cc">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\electron\electron.h">
