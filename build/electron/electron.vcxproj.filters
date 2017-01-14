@@ -27,6 +27,12 @@
     <ClCompile Include="..\..\electron\converter.cc">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\electron\api_web_contents.cc">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\electron\options_switches.cc">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\electron\electron.h">
@@ -36,6 +42,12 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="..\..\electron\converter.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\electron\options_switches.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\electron\api_web_contents.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

@@ -23,15 +23,19 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\electron\api_web_contents.cc" />
     <ClCompile Include="..\..\electron\converter.cc" />
     <ClCompile Include="..\..\electron\dictionary.cc" />
     <ClCompile Include="..\..\electron\electron.cpp" />
     <ClCompile Include="..\..\electron\api_window.cpp" />
+    <ClCompile Include="..\..\electron\options_switches.cc" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\electron\api_web_contents.h" />
     <ClInclude Include="..\..\electron\converter.h" />
     <ClInclude Include="..\..\electron\dictionary.h" />
     <ClInclude Include="..\..\electron\electron.h" />
+    <ClInclude Include="..\..\electron\options_switches.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{419D9B69-AC50-49EA-9188-40FB63BE1C90}</ProjectGuid>
@@ -133,7 +137,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>STATIC_GETOPT;WIN32;_DEBUG;_WINDOWS;WIN32_LEAN_AND_MEAN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>STATIC_GETOPT;WIN32;_DEBUG;_WINDOWS;WIN32_LEAN_AND_MEAN;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(SolutionDir)../wke;$(SolutionDir)../node/include;$(SolutionDir)../v8_5_7/include</AdditionalIncludeDirectories>
     </ClCompile>
