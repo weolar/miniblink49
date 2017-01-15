@@ -8,10 +8,12 @@ using namespace node;
 namespace atom {
 
 struct TaskAsyncData {
+	uv_async_t async;
     CoreMainTask call;
     void* data;
     HANDLE event;
     void* ret;
+	uv_mutex_t mutex;
 };
 TaskAsyncData mainAsync;
 
@@ -23,20 +25,22 @@ static void mainAsyncCallback(uv_async_t* handle) {
 }
 
 void mainAsyncCall(CoreMainTask call, void* data) {
-    mainAsync.call = call;
+	uv_mutex_lock(&mainAsync.mutex);
+	mainAsync.call = call;
     mainAsync.data = data;
     uv_async_send((uv_async_t*)&mainAsync);
 }
 
 void* mainAsyncWait() {
     ::WaitForSingleObject(mainAsync.event, INFINITE);
+	uv_mutex_unlock(&mainAsync.mutex);
     return mainAsync.ret;
 }
 
 void* mainSyncCall(CoreMainTask call, void* data) {
     mainAsyncCall(call, data);
-    mainAsyncWait();
-    return mainAsync.ret;
+	void* ret = mainAsyncWait();
+    return ret;
 }
 
 } // atom
@@ -54,6 +58,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance,
 
     atom::mainAsync.event = ::CreateEvent(NULL, FALSE, FALSE, NULL);
     uv_async_init(loop, (uv_async_t*)&atom::mainAsync, atom::mainAsyncCallback);
+	uv_mutex_init(&atom::mainAsync.mutex);
 
     wchar_t* argv1[] = { L"electron.exe", L"init.js" };
     node::NodeArgc* node = node::runNodeThread(2, argv1, NULL);
@@ -68,6 +73,9 @@ int APIENTRY wWinMain(HINSTANCE hInstance,
         } else
             break;
     }
+
+	wkeFinalize();
+	return msg.message;
 }
 
 int main() {

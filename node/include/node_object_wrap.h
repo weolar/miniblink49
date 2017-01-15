@@ -59,6 +59,13 @@ class ObjectWrap {
     MakeWeak();
   }
 
+  inline void Wrap(v8::Local<v8::Object> handle, v8::Isolate* isolate) {
+	  assert(persistent().IsEmpty());
+	  assert(handle->InternalFieldCount() > 0);
+	  handle->SetAlignedPointerInInternalField(0, this);
+	  persistent().Reset(isolate, handle);
+	  MakeWeak();
+  }
 
   inline void MakeWeak(void) {
     persistent().SetWeak(this, WeakCallback, v8::WeakCallbackType::kParameter);
