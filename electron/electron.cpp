@@ -8,6 +8,7 @@ using namespace node;
 namespace atom {
 
 struct TaskAsyncData {
+	uv_async_t async;
     CoreMainTask call;
     void* data;
     HANDLE event;
@@ -72,6 +73,9 @@ int APIENTRY wWinMain(HINSTANCE hInstance,
         } else
             break;
     }
+
+	wkeFinalize();
+	return msg.message;
 }
 
 int main() {
