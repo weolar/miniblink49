@@ -14,8 +14,8 @@
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
 #include "wke/wkeWebView.h"
 #endif
-#include "WebPage.h"
-#include "WebPageImpl.h"
+#include "content/browser/WebPage.h"
+#include "content/browser/WebPageImpl.h"
 
 extern WCHAR szTitle[];
 extern WCHAR szWindowClass[];
@@ -24,13 +24,32 @@ using namespace blink;
 
 namespace content {
 
+WTF::HashSet<WebPage*>* WebPage::m_webPageSet = nullptr;
+
 void WebPage::initBlink()
 {
+    m_webPageSet = nullptr;
     WebPageImpl::initBlink();
+}
+
+void WebPage::shutdown()
+{
+    if (!m_webPageSet)
+        return;
+
+    for (WTF::HashSet<WebPage*>::iterator it = m_webPageSet->begin(); it != m_webPageSet->end(); ++it) {
+        (*it)->close();
+        delete *it;
+    }
+    delete m_webPageSet;
 }
 
 WebPage::WebPage(void* foreignPtr)
 {
+    if (!m_webPageSet)
+        m_webPageSet = new WTF::HashSet<WebPage*>();
+    m_webPageSet->add(this);
+
     m_pageImpl = nullptr;
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
     m_wkeWebView = nullptr;

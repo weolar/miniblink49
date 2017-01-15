@@ -17,6 +17,7 @@
 #include "content/resources/LocalizedString.h"
 #include "content/resources/WebKitWebRes.h"
 #include "content/browser/SharedTimerWin.h"
+#include "content/browser/WebPage.h"
 #include "cc/blink/WebCompositorSupportImpl.h"
 #include "cc/raster/RasterTaskWorkerThreadPool.h"
 #include "third_party/WebKit/public/web/WebKit.h"
@@ -253,6 +254,8 @@ void BlinkPlatformImpl::preShutdown()
 
 void BlinkPlatformImpl::shutdown()
 {
+    WebPage::shutdown();
+
     blink::memoryCache()->evictResources();
     v8::Isolate::GetCurrent()->LowMemoryNotification();
 
