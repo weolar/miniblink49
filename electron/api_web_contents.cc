@@ -167,20 +167,23 @@ static void* WebContentsLoadUrlTask(const v8::FunctionCallbackInfo<v8::Value>* a
     WebContents* con = ObjectWrap::Unwrap<WebContents>(args->Holder());
     if ((*args)[0]->IsString()) {
         v8::String::Utf8Value str((*args)[0]);
-        wkeLoadURL(con->m_view, *str);
+       
     }
 
     return NULL;
 }
 
 void WebContents::_loadURL(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    if (mainSyncCall(_loadURL, args)) {
+        return;
+    }
     Isolate* isolate = args.GetIsolate();
     HandleScope scope(isolate);
     // 解封this指针
     WebContents* con = ObjectWrap::Unwrap<WebContents>(args.Holder());
     if (args[0]->IsString()) {
         v8::String::Utf8Value str(args[0]);
-        mainSyncCall((CoreMainTask)WebContentsLoadUrlTask, (void*)&args);
+        wkeLoadURL(con->m_view, *str);
     }
 }
 
