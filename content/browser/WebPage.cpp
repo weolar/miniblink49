@@ -37,7 +37,8 @@ void WebPage::shutdown()
     if (!m_webPageSet)
         return;
 
-    for (WTF::HashSet<WebPage*>::iterator it = m_webPageSet->begin(); it != m_webPageSet->end(); ++it) {
+    WTF::HashSet<WebPage*> webPageSet = *m_webPageSet;
+    for (WTF::HashSet<WebPage*>::iterator it = webPageSet.begin(); it != webPageSet.end(); ++it) {
         (*it)->close();
         delete *it;
     }
@@ -69,6 +70,8 @@ WebPage::~WebPage()
         delete m_pageImpl;
         m_pageImpl = 0;
     }
+    
+    m_webPageSet->remove(this);
 }
 
 bool WebPage::init(HWND hWnd)
@@ -124,10 +127,12 @@ bool WebPage::isDrawDirty() const
 
 void WebPage::close()
 {
+    if (!m_pageImpl)
+        return;
     m_pageImpl->close();
 
     delete m_pageImpl;
-    m_pageImpl = 0;
+    m_pageImpl = nullptr;
 }
 
 HDC WebPage::viewDC()
