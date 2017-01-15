@@ -56,7 +56,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance,
     uv_async_init(loop, (uv_async_t*)&atom::mainAsync, atom::mainAsyncCallback);
 
     wchar_t* argv1[] = { L"electron.exe", L"init.js" };
-    node::nodeargc *node = node::RunNodeThread(2, argv1, NULL);
+    node::NodeArgc* node = node::runNodeThread(2, argv1, NULL);
 
     MSG msg;
     bool more;

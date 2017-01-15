@@ -18,11 +18,10 @@ namespace atom {
 static const char helloNative[] = { 239,187,191,39,117,115,101,32,115,116,114,105,99,116,39,59,10,99,111,110,115,116,32,98,105,110,100,105,110,103,32,61,32,112,114,111,99,101,115,115,46,98,105,110,100,105,110,103,40,39,104,101,108,108,111,39,41,59,10,101,120,112,111,114,116,115,46,77,101,116,104,111,100,32,61,32,98,105,110,100,105,110,103,46,77,101,116,104,111,100,59,10,10,10 };
 #pragma warning(pop)
 
-static node_native nativeHello{ "hello", helloNative, sizeof(helloNative) };
+static NodeNative nativeHello{ "hello", helloNative, sizeof(helloNative) };
 
 // 继承node的ObjectWrap，一般自定义C++类都应该继承node的ObjectWrap
-class Window :
-    public node::ObjectWrap {
+class Window : public node::ObjectWrap {
 public:
     // 静态方法，用于注册类和方法
     static void Init(Local<Object> target, Environment* env) {
