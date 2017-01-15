@@ -1,4 +1,4 @@
-#include "include/nodeblink.h"
+﻿#include "include/nodeblink.h"
 
 #include <string.h>
 #include <Windows.h>
@@ -16,42 +16,63 @@ static void childSignalCallback(uv_async_t* signal) {
 }
 
 static void workerRun(NodeArgc* nodeArgc) {
-    v8::Isolate::CreateParams params;
-    node::ArrayBufferAllocator array_buffer_allocator;
-    params.array_buffer_allocator = &array_buffer_allocator;
-    v8::Isolate* isolate = v8::Isolate::New(params);
-    
-    v8::Isolate::Scope isolate_scope(isolate);
+    int err = uv_loop_init(nodeArgc->childLoop);
+    if (err != 0)
+        goto loop_init_failed;
 
-    v8::HandleScope handle_scope(isolate);
-    v8::Local<v8::Context> context = v8::Context::New(isolate);
+    // Interruption signal handler
+    err = uv_async_init(nodeArgc->childLoop, &nodeArgc->async, childSignalCallback);
+    if (err != 0)
+        goto async_init_failed;
+    //uv_unref(reinterpret_cast<uv_handle_t*>(&nodeArgc->async)); //zero 不屏蔽此句导致loop循环退出
+    nodeArgc->initType = true;
+    ::PulseEvent(nodeArgc->initEvent);
 
-    v8::Context::Scope context_scope(context);
-    node::Environment* env = node::CreateEnvironment(isolate, nodeArgc->childLoop, context, nodeArgc->argc, nodeArgc->argv, nodeArgc->argc, nodeArgc->argv);
+    {
+        v8::Isolate::CreateParams params;
+        node::ArrayBufferAllocator array_buffer_allocator;
+        params.array_buffer_allocator = &array_buffer_allocator;
+        v8::Isolate *isolate = v8::Isolate::New(params);
+        v8::Isolate::Scope isolate_scope(isolate);
+        {
+            v8::HandleScope handle_scope(isolate);
+            v8::Local<v8::Context> context = v8::Context::New(isolate);
 
-    nodeArgc->childEnv = env;
+            v8::Context::Scope context_scope(context);
+            nodeArgc->childEnv = node::CreateEnvironment(isolate, nodeArgc->childLoop, context, nodeArgc->argc, nodeArgc->argv, nodeArgc->argc, nodeArgc->argv);
 
-    // Expose API
-    LoadEnvironment(env);
+            // Expose API
+            LoadEnvironment(nodeArgc->childEnv);
 
-    if (nodeArgc->initcall)
-        nodeArgc->initcall(nodeArgc);
-    CHECK_EQ(nodeArgc->childLoop, env->event_loop());
-    uv_run(nodeArgc->childLoop, UV_RUN_DEFAULT);
+            if (nodeArgc->initcall)
+                nodeArgc->initcall(nodeArgc);
+            CHECK_EQ(nodeArgc->childLoop, nodeArgc->childEnv->event_loop());
+            uv_run(nodeArgc->childLoop, UV_RUN_DEFAULT);
+        }
+        // Clean-up all running handles
+        nodeArgc->childEnv->CleanupHandles();
 
-    // Clean-up all running handles
-    env->CleanupHandles();
+        nodeArgc->childEnv->Dispose();
+        nodeArgc->childEnv = nullptr;
 
-    env->Dispose();
-    env = nullptr;
-    
-    isolate->Dispose();
+        isolate->Dispose();
+    }
+    return;
+
+async_init_failed:
+    err = uv_loop_close(nodeArgc->childLoop);
+    CHECK_EQ(err, 0);
+loop_init_failed:
+    free(nodeArgc);
+    nodeArgc->initType = false;
+    ::PulseEvent(nodeArgc->initEvent);
 }
 
-extern "C" NODE_EXTERN NodeArgc* runNodeThread(int argc, wchar_t *wargv[], NodeInitCallBack initcall) {
+extern "C" NODE_EXTERN NodeArgc* runNodeThread(int argc, wchar_t *wargv[], NodeInitCallBack initcall, void *data) {
     NodeArgc* nodeArgc = (NodeArgc *)malloc(sizeof(NodeArgc));
     memset(nodeArgc, 0, sizeof(NodeArgc));
     nodeArgc->initcall = initcall;
+    nodeArgc->data = data;
     nodeArgc->childLoop = (uv_loop_t *)malloc(sizeof(uv_loop_t));
     nodeArgc->argv = new char*[argc + 1];
     for (int i = 0; i < argc; i++) {
@@ -69,32 +90,20 @@ extern "C" NODE_EXTERN NodeArgc* runNodeThread(int argc, wchar_t *wargv[], NodeI
     nodeArgc->argv[argc] = nullptr;
     nodeArgc->argc = argc;
 
-    uv_async_t childSignal;
-    uv_thread_t thread;
-    int err = uv_loop_init(nodeArgc->childLoop);
-    if (err != 0)
-        goto loop_init_failed;
-
-    // Interruption signal handler
-    err = uv_async_init(nodeArgc->childLoop, &childSignal, childSignalCallback);
-    if (err != 0)
-        goto async_init_failed;
-    uv_unref(reinterpret_cast<uv_handle_t*>(&childSignal));
-
-    err = uv_thread_create(&thread, reinterpret_cast<uv_thread_cb>(workerRun), nodeArgc);
+    nodeArgc->initEvent = ::CreateEvent(NULL, FALSE, FALSE, NULL);//创建一个对象,用来等待node环境基础环境创建成功
+    int err = uv_thread_create(&nodeArgc->thread, reinterpret_cast<uv_thread_cb>(workerRun), nodeArgc);
     if (err != 0)
         goto thread_create_failed;
-
+    ::WaitForSingleObject(nodeArgc->initEvent, INFINITE);
+    CloseHandle(nodeArgc->initEvent);
+    nodeArgc->initEvent = NULL;
+    if (!nodeArgc->initType)
+        goto thread_init_failed;
     return nodeArgc;
 
+thread_init_failed:
+
 thread_create_failed:
-    uv_close(reinterpret_cast<uv_handle_t*>(&childSignal), nullptr);
-
-async_init_failed:
-    err = uv_loop_close(nodeArgc->childLoop);
-    CHECK_EQ(err, 0);
-
-loop_init_failed:
     free(nodeArgc);
     return nullptr;
 }

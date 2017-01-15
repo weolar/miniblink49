@@ -14,8 +14,10 @@ struct TaskAsyncData {
     HANDLE event;
     void* ret;
 	uv_mutex_t mutex;
+    uv_thread_t main_thread_id;
 };
 TaskAsyncData mainAsync;
+
 
 static void mainAsyncCallback(uv_async_t* handle) {
     if (mainAsync.call) {
@@ -42,6 +44,13 @@ void* mainSyncCall(CoreMainTask call, void* data) {
 	void* ret = mainAsyncWait();
     return ret;
 }
+bool mainSyncCall(v8::FunctionCallback call, const v8::FunctionCallbackInfo<v8::Value>& args) {
+    if (uv_thread_self() == mainAsync.main_thread_id)
+        return false;
+    mainAsyncCall((CoreMainTask)call, (void *)&args);
+    mainAsyncWait();
+    return true;
+}
 
 } // atom
 
@@ -59,9 +68,10 @@ int APIENTRY wWinMain(HINSTANCE hInstance,
     atom::mainAsync.event = ::CreateEvent(NULL, FALSE, FALSE, NULL);
     uv_async_init(loop, (uv_async_t*)&atom::mainAsync, atom::mainAsyncCallback);
 	uv_mutex_init(&atom::mainAsync.mutex);
+    atom::mainAsync.main_thread_id= uv_thread_self();
 
     wchar_t* argv1[] = { L"electron.exe", L"init.js" };
-    node::NodeArgc* node = node::runNodeThread(2, argv1, NULL);
+    node::NodeArgc* node = node::runNodeThread(2, argv1, NULL, NULL);
 
     MSG msg;
     bool more;

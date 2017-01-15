@@ -14,5 +14,5 @@ void mainAsyncCall(CoreMainTask call, void *data);
 void* mainAsyncWait();
 
 void* mainSyncCall(CoreMainTask call, void* data);
-
+bool mainSyncCall(v8::FunctionCallback call, const v8::FunctionCallbackInfo<v8::Value>& args);
 } // atom

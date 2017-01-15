@@ -1,4 +1,4 @@
-#ifndef _NODEBLINK_H_
+﻿#ifndef _NODEBLINK_H_
 #define _NODEBLINK_H_
 
 #define NODE_ARCH "ia32"
@@ -26,19 +26,24 @@ struct NodeNative {
 
 namespace node {
 
-typedef struct _NodeArgc NodeArgc;
-typedef void(*NodeInitCallBack)(NodeArgc*);
+    typedef struct _NodeArgc NodeArgc;
+    typedef void(*NodeInitCallBack)(NodeArgc*);
 
-typedef struct _NodeArgc {
-    char** argv;
-    int argc;
-    uv_loop_t *childLoop;
-    Environment* childEnv;
-    NodeInitCallBack initcall;
-} NodeArgc;
+    typedef struct _NodeArgc {
+        char** argv;
+        int argc;
+        uv_loop_t *childLoop;
+        uv_async_t async;
+        uv_thread_t thread;
+        bool initType;//初始化状态
+        HANDLE initEvent;//创建环境时使用
+        Environment* childEnv;
+        NodeInitCallBack initcall;
+        void *data;
+    } NodeArgc;
 
-extern "C" NODE_EXTERN NodeArgc* runNodeThread(int argc, wchar_t *wargv[], NodeInitCallBack initcall);
-extern "C" NODE_EXTERN Environment* nodeGetEnvironment(NodeArgc*);
+    extern "C" NODE_EXTERN NodeArgc* runNodeThread(int argc, wchar_t *wargv[], NodeInitCallBack initcall, void *data);
+    extern "C" NODE_EXTERN Environment* nodeGetEnvironment(NodeArgc*);
 
 } // node
 

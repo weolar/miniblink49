@@ -482,8 +482,7 @@ public:
 
         wkeResize(win->m_webContents->m_view, width->Int32Value(), height->Int32Value());
         wkeOnPaintUpdated(win->m_webContents->m_view, (wkePaintUpdatedCallback)staticOnPaintUpdated, win->m_hWnd);
-        wkeLoadHTML(win->m_webContents->m_view, "test");
-        wkeLoadURL(win->m_webContents->m_view, "http://www.zerotoken.com");
+
         ShowWindow(win->m_hWnd, TRUE);
         return win;
     }
