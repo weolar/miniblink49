@@ -5,34 +5,41 @@
 using namespace v8;
 using namespace node;
 
-struct task_async_data {
-    uv_async_t main_async;
-    CoreMainTask call;
-    void *data;
-    HANDLE event;
-    void *ret;
-};
+namespace atom {
 
-uv_loop_t *loop; //主loop
-task_async_data main_async;
+struct TaskAsyncData {
+    CoreMainTask call;
+    void* data;
+    HANDLE event;
+    void* ret;
+};
+TaskAsyncData mainAsync;
 
 static void mainAsyncCallback(uv_async_t* handle) {
-    if (main_async.call) {
-        main_async.ret = main_async.call(main_async.data);
-        PulseEvent(main_async.event);
+    if (mainAsync.call) {
+        mainAsync.ret = mainAsync.call(mainAsync.data);
+        ::PulseEvent(mainAsync.event);
     }
 }
 
-void mainAsyncCall(CoreMainTask call, void *data) {
-    main_async.call = call;
-    main_async.data = data;
-    uv_async_send((uv_async_t*)&main_async);
+void mainAsyncCall(CoreMainTask call, void* data) {
+    mainAsync.call = call;
+    mainAsync.data = data;
+    uv_async_send((uv_async_t*)&mainAsync);
 }
 
 void* mainAsyncWait() {
-    ::WaitForSingleObject(main_async.event, INFINITE);
-    return main_async.ret;
+    ::WaitForSingleObject(mainAsync.event, INFINITE);
+    return mainAsync.ret;
 }
+
+void* mainSyncCall(CoreMainTask call, void* data) {
+    mainAsyncCall(call, data);
+    mainAsyncWait();
+    return mainAsync.ret;
+}
+
+} // atom
 
 int APIENTRY wWinMain(HINSTANCE hInstance,
     HINSTANCE hPrevInstance,
@@ -43,10 +50,10 @@ int APIENTRY wWinMain(HINSTANCE hInstance,
 
     wkeInitialize();
 
-    loop = uv_default_loop();
+    uv_loop_t* loop = uv_default_loop();
 
-    main_async.event = ::CreateEvent(NULL, FALSE, FALSE, NULL);
-    uv_async_init(loop, (uv_async_t*)&main_async, mainAsyncCallback);
+    atom::mainAsync.event = ::CreateEvent(NULL, FALSE, FALSE, NULL);
+    uv_async_init(loop, (uv_async_t*)&atom::mainAsync, atom::mainAsyncCallback);
 
     wchar_t* argv1[] = { L"electron.exe", L"init.js" };
     node::nodeargc *node = node::RunNodeThread(2, argv1, NULL);

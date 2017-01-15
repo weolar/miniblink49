@@ -8,6 +8,8 @@
 using namespace v8;
 using namespace node;
 
+namespace atom {
+
 #pragma warning(push)
 #pragma warning(disable:4309)
 #pragma warning(disable:4838)
@@ -32,7 +34,7 @@ void WebContents::init(Local<Object> target, Environment* env) {
     NODE_SET_METHOD(t, "getId", nullFunction);
     NODE_SET_METHOD(t, "getProcessId", nullFunction);
     NODE_SET_METHOD(t, "equal", nullFunction);
-    NODE_SET_METHOD(t, "_loadURL", _LoadURL);
+    NODE_SET_METHOD(t, "_loadURL", _loadURL);
     NODE_SET_METHOD(t, "downloadURL", nullFunction);
     NODE_SET_METHOD(t, "_getURL", nullFunction);
     NODE_SET_METHOD(t, "getTitle", nullFunction);
@@ -158,8 +160,7 @@ void WebContents::newFunction(const v8::FunctionCallbackInfo<v8::Value>& args) {
     }
 }
 
-// _loadurl
-static void *task_WebContents_LoadURL(const v8::FunctionCallbackInfo<v8::Value>* args) {
+static void* WebContentsLoadUrlTask(const v8::FunctionCallbackInfo<v8::Value>* args) {
     Isolate* isolate = args->GetIsolate();
     HandleScope scope(isolate);
     // 解封this指针
@@ -172,16 +173,14 @@ static void *task_WebContents_LoadURL(const v8::FunctionCallbackInfo<v8::Value>*
     return NULL;
 }
 
-void WebContents::_LoadURL(const v8::FunctionCallbackInfo<v8::Value>& args) {
+void WebContents::_loadURL(const v8::FunctionCallbackInfo<v8::Value>& args) {
     Isolate* isolate = args.GetIsolate();
     HandleScope scope(isolate);
     // 解封this指针
     WebContents* con = ObjectWrap::Unwrap<WebContents>(args.Holder());
     if (args[0]->IsString()) {
         v8::String::Utf8Value str(args[0]);
-        mainAsyncCall((CoreMainTask)task_WebContents_LoadURL, (void*)&args);
-        //等待主线程任务完成
-        mainAsyncWait();
+        mainSyncCall((CoreMainTask)WebContentsLoadUrlTask, (void*)&args);
     }
 }
 
@@ -190,10 +189,14 @@ void WebContents::nullFunction(const v8::FunctionCallbackInfo<v8::Value>& args) 
 }
 
 Persistent<Function> WebContents::constructor;
+
 static void Initialize(Local<Object> target,
     Local<Value> unused,
     Local<Context> context) {
     Environment* env = Environment::GetCurrent(context);
     WebContents::init(target, env);
 }
+
 NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT(atom_browser_web_contents, Initialize, &nativeHello)
+
+} // atom

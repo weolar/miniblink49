@@ -10,6 +10,8 @@
 using namespace v8;
 using namespace node;
 
+namespace atom {
+
 #pragma warning(push)
 #pragma warning(disable:4309)
 #pragma warning(disable:4838)
@@ -399,7 +401,7 @@ public:
         return DefWindowProcW(hwnd, message, wParam, lParam);
     }
 
-    static void *task_WindowNew(gin::Dictionary *options) {
+    static void* WindowNewTask(gin::Dictionary *options) {
         //HandleScope scope(options->isolate());
         Window* win = new Window;
         unsigned styles = 0;
@@ -486,19 +488,21 @@ public:
         ShowWindow(win->m_hWnd, TRUE);
         return win;
     }
+
     // 不允许转换构造函数进行的隐式转换
     explicit Window() {
 
     }
+
     static void *task_WindowFree(Window *data) {
         delete data->m_web_contents;
         return NULL;
     }
+
     ~Window() {
-        mainAsyncCall((CoreMainTask)task_WindowFree, this);
-        //等待主线程任务完成
-        mainAsyncWait();
+        mainSyncCall((CoreMainTask)task_WindowFree, this);
     }
+
 private:
     // new方法
     static void New(const v8::FunctionCallbackInfo<v8::Value>& args) {
@@ -512,14 +516,11 @@ private:
             // 使用new调用 `new Point(...)`
             gin::Dictionary options(args.GetIsolate(), args[0]->ToObject());
             // new一个对象
-            mainAsyncCall((CoreMainTask)task_WindowNew, &options);
-            //等待主线程任务完成
-            Window* win = (Window*)mainAsyncWait();
+            Window* win = (Window*)mainSyncCall((CoreMainTask)WindowNewTask, &options);
             // 包装this指针
             win->Wrap(args.This());
             args.GetReturnValue().Set(args.This());
-        }
-        else {
+        } else {
             // 使用`Point(...)`
             const int argc = 2;
             Local<Value> argv[argc] = { args[0], args[1] };
@@ -732,3 +733,5 @@ static void Initialize(Local<Object> target, Local<Value> unused, Local<Context>
 }
 
 NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT(atom_browser_window, Initialize, &nativeHello)
+
+} // atom

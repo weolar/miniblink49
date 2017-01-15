@@ -3,8 +3,11 @@
 #include "wke.h"
 #include "electron.h"
 #include "dictionary.h"
+
 using namespace v8;
 using namespace node;
+
+namespace atom {
 
 // 继承node的ObjectWrap，一般自定义C++类都应该继承node的ObjectWrap
 class WebContents :
@@ -21,11 +24,12 @@ private:
     // new方法
     static void newFunction(const v8::FunctionCallbackInfo<v8::Value>& args);
     // _loadURL
-    static void _LoadURL(const v8::FunctionCallbackInfo<v8::Value>& args);
+    static void _loadURL(const v8::FunctionCallbackInfo<v8::Value>& args);
     
-    // 空实现
     static void nullFunction(const v8::FunctionCallbackInfo<v8::Value>& args);
     static v8::Persistent<v8::Function> constructor;
 public:
     wkeWebView m_view;
 };
+
+} // atom
