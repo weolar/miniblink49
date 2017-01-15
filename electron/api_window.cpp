@@ -517,7 +517,7 @@ private:
             // new一个对象
             Window* win = (Window*)mainSyncCall((CoreMainTask)WindowNewTask, &options);
             // 包装this指针
-            win->Wrap(args.This());
+			win->Wrap(args.This(), isolate);
             args.GetReturnValue().Set(args.This());
         } else {
             // 使用`Point(...)`
