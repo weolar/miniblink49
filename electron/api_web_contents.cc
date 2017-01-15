@@ -147,7 +147,7 @@ void WebContents::newFunction(const v8::FunctionCallbackInfo<v8::Value>& args) {
         // new一个对象
         WebContents* con = new WebContents(isolate, options);
         // 包装this指针
-        con->Wrap(args.This());
+		con->Wrap(args.This(), isolate);
         args.GetReturnValue().Set(args.This());
     }
     else {
