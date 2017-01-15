@@ -1,6 +1,7 @@
 ﻿#include <windows.h>
 #include "electron.h"
-#include "lib\native.h"
+#include "lib/native.h"
+
 using namespace v8;
 using namespace node;
 
@@ -21,15 +22,18 @@ static void main_async_cb(uv_async_t* handle)
 		PulseEvent(main_async.event);
 	}
 }
+
 void main_async_call(core_main_task call, void *data) {
 	main_async.call = call;
 	main_async.data = data;
 	uv_async_send((uv_async_t*)&main_async);
 }
+
 void *main_async_wait() {
 	WaitForSingleObject(main_async.event, INFINITE);
 	return main_async.ret;
 }
+
 int APIENTRY wWinMain(HINSTANCE hInstance,
 	HINSTANCE hPrevInstance,
 	LPTSTR    lpCmdLine,
@@ -49,18 +53,15 @@ int APIENTRY wWinMain(HINSTANCE hInstance,
 	MSG msg;
 	bool more;
 	while (true) {
-		more = uv_run(loop, UV_RUN_NOWAIT);
-		if (GetMessageW(&msg, NULL, 0, 0))
-		{
+		more = (0 != uv_run(loop, UV_RUN_NOWAIT));
+		if (GetMessageW(&msg, NULL, 0, 0)) {
 			TranslateMessage(&msg);
 			DispatchMessageW(&msg);
-		}
-		else
-		{
-			break;
-		}
+		} else
+            break;
 	}
 }
+
 int main() {
 	return wWinMain(0, 0, 0, 0);
 }

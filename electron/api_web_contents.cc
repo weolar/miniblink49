@@ -4,11 +4,17 @@
 #include "electron.h"
 #include "dictionary.h"
 #include "api_web_contents.h"
+
 using namespace v8;
 using namespace node;
-static const char hello_native[] = { 239,187,191,39,117,115,101,32,115,116,114,105,99,116,39,59,10,99,111,110,115,116,32,98,105,110,100,105,110,103,32,61,32,112,114,111,99,101,115,115,46,98,105,110,100,105,110,103,40,39,104,101,108,108,111,39,41,59,10,101,120,112,111,114,116,115,46,77,101,116,104,111,100,32,61,32,98,105,110,100,105,110,103,46,77,101,116,104,111,100,59,10,10,10 };
 
-static node_native native_hello{ "hello", hello_native, sizeof(hello_native) };
+#pragma warning(push)
+#pragma warning(disable:4309)
+#pragma warning(disable:4838)
+static const char helloNative[] = { 239,187,191,39,117,115,101,32,115,116,114,105,99,116,39,59,10,99,111,110,115,116,32,98,105,110,100,105,110,103,32,61,32,112,114,111,99,101,115,115,46,98,105,110,100,105,110,103,40,39,104,101,108,108,111,39,41,59,10,101,120,112,111,114,116,115,46,77,101,116,104,111,100,32,61,32,98,105,110,100,105,110,103,46,77,101,116,104,111,100,59,10,10,10 };
+#pragma warning(pop)
+
+static node_native nativeHello{ "hello", helloNative, sizeof(helloNative) };
 
 // 静态方法，用于注册类和方法
 void WebContents::Init(Local<Object> target, Environment* env) {
@@ -185,4 +191,4 @@ static void Initialize(Local<Object> target,
 	Environment* env = Environment::GetCurrent(context);
 	WebContents::Init(target, env);
 }
-NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT(atom_browser_web_contents, Initialize, &native_hello)
+NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT(atom_browser_web_contents, Initialize, &nativeHello)

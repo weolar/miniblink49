@@ -9,9 +9,14 @@
 
 using namespace v8;
 using namespace node;
-static const char hello_native[] = { 239,187,191,39,117,115,101,32,115,116,114,105,99,116,39,59,10,99,111,110,115,116,32,98,105,110,100,105,110,103,32,61,32,112,114,111,99,101,115,115,46,98,105,110,100,105,110,103,40,39,104,101,108,108,111,39,41,59,10,101,120,112,111,114,116,115,46,77,101,116,104,111,100,32,61,32,98,105,110,100,105,110,103,46,77,101,116,104,111,100,59,10,10,10 };
 
-static node_native native_hello{ "hello", hello_native, sizeof(hello_native) };
+#pragma warning(push)
+#pragma warning(disable:4309)
+#pragma warning(disable:4838)
+static const char helloNative[] = { 239,187,191,39,117,115,101,32,115,116,114,105,99,116,39,59,10,99,111,110,115,116,32,98,105,110,100,105,110,103,32,61,32,112,114,111,99,101,115,115,46,98,105,110,100,105,110,103,40,39,104,101,108,108,111,39,41,59,10,101,120,112,111,114,116,115,46,77,101,116,104,111,100,32,61,32,98,105,110,100,105,110,103,46,77,101,116,104,111,100,59,10,10,10 };
+#pragma warning(pop)
+
+static node_native nativeHello{ "hello", helloNative, sizeof(helloNative) };
 
 // 继承node的ObjectWrap，一般自定义C++类都应该继承node的ObjectWrap
 class Window :
@@ -29,98 +34,98 @@ public:
 		tpl->InstanceTemplate()->SetInternalFieldCount(1);
 		v8::Local<v8::Template> t = tpl->InstanceTemplate();
 		// 设置Prototype函数
-		NODE_SET_METHOD(t, "close", Clos);
-		NODE_SET_METHOD(t, "focus", Focus);
-		NODE_SET_METHOD(t, "blur", Blur);
-		NODE_SET_METHOD(t, "isFocused", IsFocused);
-		NODE_SET_METHOD(t, "show", Show);
-		NODE_SET_METHOD(t, "showInactive", ShowInactive);
-		NODE_SET_METHOD(t, "hide", Hide);
-		NODE_SET_METHOD(t, "isVisible", IsVisible);
-		NODE_SET_METHOD(t, "isEnabled", IsEnabled);
-		NODE_SET_METHOD(t, "maximize", Maximize);
-		NODE_SET_METHOD(t, "unmaximize", Unmaximize);
-		NODE_SET_METHOD(t, "isMaximized", IsMaximized);
-		NODE_SET_METHOD(t, "minimize", Minimize);
-		NODE_SET_METHOD(t, "restore", Restore);
-		NODE_SET_METHOD(t, "isMinimized", IsMinimized);
-		NODE_SET_METHOD(t, "setFullScreen", SetFullScreen);
-		NODE_SET_METHOD(t, "isFullScreen", Null);
-		NODE_SET_METHOD(t, "setAspectRatio", Null);
-		NODE_SET_METHOD(t, "previewFile", Null);
-		NODE_SET_METHOD(t, "closeFilePreview", Null);
-		NODE_SET_METHOD(t, "setParentWindow", Null);
-		NODE_SET_METHOD(t, "getParentWindow", Null);
-		NODE_SET_METHOD(t, "getChildWindows", Null);
-		NODE_SET_METHOD(t, "isModal", Null);
-		NODE_SET_METHOD(t, "getNativeWindowHandle", Null);
-		NODE_SET_METHOD(t, "getBounds", Null);
-		NODE_SET_METHOD(t, "setBounds", Null);
-		NODE_SET_METHOD(t, "getSize", Null);
-		NODE_SET_METHOD(t, "setSize", Null);
-		NODE_SET_METHOD(t, "getContentBounds", Null);
-		NODE_SET_METHOD(t, "setContentBounds", Null);
-		NODE_SET_METHOD(t, "getContentSize", Null);
-		NODE_SET_METHOD(t, "setContentSize", Null);
-		NODE_SET_METHOD(t, "setMinimumSize", Null);
-		NODE_SET_METHOD(t, "getMinimumSize", Null);
-		NODE_SET_METHOD(t, "setMaximumSize", Null);
-		NODE_SET_METHOD(t, "getMaximumSize", Null);
-		NODE_SET_METHOD(t, "setSheetOffset", Null);
-		NODE_SET_METHOD(t, "setResizable", Null);
-		NODE_SET_METHOD(t, "isResizable", Null);
-		NODE_SET_METHOD(t, "setMovable", Null);
-		NODE_SET_METHOD(t, "isMovable", Null);
-		NODE_SET_METHOD(t, "setMinimizable", Null);
-		NODE_SET_METHOD(t, "isMinimizable", Null);
-		NODE_SET_METHOD(t, "isMaximizable", Null);
-		NODE_SET_METHOD(t, "setFullScreenable", Null);
-		NODE_SET_METHOD(t, "isFullScreenable", Null);
-		NODE_SET_METHOD(t, "setClosable", Null);
-		NODE_SET_METHOD(t, "isClosable", Null);
-		NODE_SET_METHOD(t, "setAlwaysOnTop", Null);
-		NODE_SET_METHOD(t, "isAlwaysOnTop", Null);
-		NODE_SET_METHOD(t, "center", Null);
-		NODE_SET_METHOD(t, "setPosition", Null);
-		NODE_SET_METHOD(t, "getPosition", Null);
-		NODE_SET_METHOD(t, "setTitle", Null);
-		NODE_SET_METHOD(t, "getTitle", Null);
-		NODE_SET_METHOD(t, "flashFrame", Null);
-		NODE_SET_METHOD(t, "setSkipTaskbar", Null);
-		NODE_SET_METHOD(t, "setKiosk", Null);
-		NODE_SET_METHOD(t, "isKiosk", Null);
-		NODE_SET_METHOD(t, "setBackgroundColor", Null);
-		NODE_SET_METHOD(t, "setHasShadow", Null);
-		NODE_SET_METHOD(t, "hasShadow", Null);
-		NODE_SET_METHOD(t, "setRepresentedFilename", Null);
-		NODE_SET_METHOD(t, "getRepresentedFilename", Null);
-		NODE_SET_METHOD(t, "setDocumentEdited", Null);
-		NODE_SET_METHOD(t, "isDocumentEdited", Null);
-		NODE_SET_METHOD(t, "setIgnoreMouseEvents", Null);
-		NODE_SET_METHOD(t, "setContentProtection", Null);
-		NODE_SET_METHOD(t, "setFocusable", Null);
-		NODE_SET_METHOD(t, "focusOnWebView", Null);
-		NODE_SET_METHOD(t, "blurWebView", Null);
-		NODE_SET_METHOD(t, "isWebViewFocused", Null);
-		NODE_SET_METHOD(t, "setOverlayIcon", Null);
-		NODE_SET_METHOD(t, "setThumbarButtons", Null);
-		NODE_SET_METHOD(t, "setMenu", Null);
-		NODE_SET_METHOD(t, "setAutoHideMenuBar", Null);
-		NODE_SET_METHOD(t, "isMenuBarAutoHide", Null);
-		NODE_SET_METHOD(t, "setMenuBarVisibility", Null);
-		NODE_SET_METHOD(t, "isMenuBarVisible", Null);
-		NODE_SET_METHOD(t, "setVisibleOnAllWorkspaces", Null);
-		NODE_SET_METHOD(t, "isVisibleOnAllWorkspaces", Null);
-		NODE_SET_METHOD(t, "setVibrancy", Null);
-		NODE_SET_METHOD(t, "hookWindowMessage", Null);
-		NODE_SET_METHOD(t, "isWindowMessageHooked", Null);
-		NODE_SET_METHOD(t, "unhookWindowMessage", Null);
-		NODE_SET_METHOD(t, "unhookAllWindowMessages", Null);
-		NODE_SET_METHOD(t, "setThumbnailClip", Null);
-		NODE_SET_METHOD(t, "setThumbnailToolTip", Null);
-		NODE_SET_METHOD(t, "setAppDetails", Null);
-		NODE_SET_METHOD(t, "setIcon", Null);
-		NODE_SET_PROTOTYPE_METHOD(tpl, "id", Null);
+		NODE_SET_METHOD(t, "close", close);
+		NODE_SET_METHOD(t, "focus", focus);
+		NODE_SET_METHOD(t, "blur", blur);
+		NODE_SET_METHOD(t, "isFocused", isFocused);
+		NODE_SET_METHOD(t, "show", show);
+		NODE_SET_METHOD(t, "showInactive", showInactive);
+		NODE_SET_METHOD(t, "hide", hide);
+		NODE_SET_METHOD(t, "isVisible", isVisible);
+		NODE_SET_METHOD(t, "isEnabled", isEnabled);
+		NODE_SET_METHOD(t, "maximize", maximize);
+		NODE_SET_METHOD(t, "unmaximize", unmaximize);
+		NODE_SET_METHOD(t, "isMaximized", isMaximized);
+		NODE_SET_METHOD(t, "minimize", minimize);
+		NODE_SET_METHOD(t, "restore", restore);
+		NODE_SET_METHOD(t, "isMinimized",isMinimized);
+		NODE_SET_METHOD(t, "setFullScreen", setFullScreen);
+		NODE_SET_METHOD(t, "isFullScreen", nullFunction);
+		NODE_SET_METHOD(t, "setAspectRatio", nullFunction);
+		NODE_SET_METHOD(t, "previewFile", nullFunction);
+		NODE_SET_METHOD(t, "closeFilePreview", nullFunction);
+		NODE_SET_METHOD(t, "setParentWindow", nullFunction);
+		NODE_SET_METHOD(t, "getParentWindow", nullFunction);
+		NODE_SET_METHOD(t, "getChildWindows", nullFunction);
+		NODE_SET_METHOD(t, "isModal", nullFunction);
+		NODE_SET_METHOD(t, "getNativeWindowHandle", nullFunction);
+		NODE_SET_METHOD(t, "getBounds", nullFunction);
+		NODE_SET_METHOD(t, "setBounds", nullFunction);
+		NODE_SET_METHOD(t, "getSize", nullFunction);
+		NODE_SET_METHOD(t, "setSize", nullFunction);
+		NODE_SET_METHOD(t, "getContentBounds", nullFunction);
+		NODE_SET_METHOD(t, "setContentBounds", nullFunction);
+		NODE_SET_METHOD(t, "getContentSize", nullFunction);
+		NODE_SET_METHOD(t, "setContentSize", nullFunction);
+		NODE_SET_METHOD(t, "setMinimumSize", nullFunction);
+		NODE_SET_METHOD(t, "getMinimumSize", nullFunction);
+		NODE_SET_METHOD(t, "setMaximumSize", nullFunction);
+		NODE_SET_METHOD(t, "getMaximumSize", nullFunction);
+		NODE_SET_METHOD(t, "setSheetOffset", nullFunction);
+		NODE_SET_METHOD(t, "setResizable", nullFunction);
+		NODE_SET_METHOD(t, "isResizable", nullFunction);
+		NODE_SET_METHOD(t, "setMovable", nullFunction);
+		NODE_SET_METHOD(t, "isMovable", nullFunction);
+		NODE_SET_METHOD(t, "setMinimizable", nullFunction);
+		NODE_SET_METHOD(t, "isMinimizable", nullFunction);
+		NODE_SET_METHOD(t, "isMaximizable", nullFunction);
+		NODE_SET_METHOD(t, "setFullScreenable", nullFunction);
+		NODE_SET_METHOD(t, "isFullScreenable", nullFunction);
+		NODE_SET_METHOD(t, "setClosable", nullFunction);
+		NODE_SET_METHOD(t, "isClosable", nullFunction);
+		NODE_SET_METHOD(t, "setAlwaysOnTop", nullFunction);
+		NODE_SET_METHOD(t, "isAlwaysOnTop", nullFunction);
+		NODE_SET_METHOD(t, "center", nullFunction);
+		NODE_SET_METHOD(t, "setPosition", nullFunction);
+		NODE_SET_METHOD(t, "getPosition", nullFunction);
+		NODE_SET_METHOD(t, "setTitle", nullFunction);
+		NODE_SET_METHOD(t, "getTitle", nullFunction);
+		NODE_SET_METHOD(t, "flashFrame", nullFunction);
+		NODE_SET_METHOD(t, "setSkipTaskbar", nullFunction);
+		NODE_SET_METHOD(t, "setKiosk", nullFunction);
+		NODE_SET_METHOD(t, "isKiosk", nullFunction);
+		NODE_SET_METHOD(t, "setBackgroundColor", nullFunction);
+		NODE_SET_METHOD(t, "setHasShadow", nullFunction);
+		NODE_SET_METHOD(t, "hasShadow", nullFunction);
+		NODE_SET_METHOD(t, "setRepresentedFilename", nullFunction);
+		NODE_SET_METHOD(t, "getRepresentedFilename", nullFunction);
+		NODE_SET_METHOD(t, "setDocumentEdited", nullFunction);
+		NODE_SET_METHOD(t, "isDocumentEdited", nullFunction);
+		NODE_SET_METHOD(t, "setIgnoreMouseEvents", nullFunction);
+		NODE_SET_METHOD(t, "setContentProtection", nullFunction);
+		NODE_SET_METHOD(t, "setFocusable", nullFunction);
+		NODE_SET_METHOD(t, "focusOnWebView", nullFunction);
+		NODE_SET_METHOD(t, "blurWebView", nullFunction);
+		NODE_SET_METHOD(t, "isWebViewFocused", nullFunction);
+		NODE_SET_METHOD(t, "setOverlayIcon", nullFunction);
+		NODE_SET_METHOD(t, "setThumbarButtons", nullFunction);
+		NODE_SET_METHOD(t, "setMenu", nullFunction);
+		NODE_SET_METHOD(t, "setAutoHideMenuBar", nullFunction);
+		NODE_SET_METHOD(t, "isMenuBarAutoHide", nullFunction);
+		NODE_SET_METHOD(t, "setMenuBarVisibility", nullFunction);
+		NODE_SET_METHOD(t, "isMenuBarVisible", nullFunction);
+		NODE_SET_METHOD(t, "setVisibleOnAllWorkspaces", nullFunction);
+		NODE_SET_METHOD(t, "isVisibleOnAllWorkspaces", nullFunction);
+		NODE_SET_METHOD(t, "setVibrancy", nullFunction);
+		NODE_SET_METHOD(t, "hookWindowMessage", nullFunction);
+		NODE_SET_METHOD(t, "isWindowMessageHooked", nullFunction);
+		NODE_SET_METHOD(t, "unhookWindowMessage", nullFunction);
+		NODE_SET_METHOD(t, "unhookAllWindowMessages", nullFunction);
+		NODE_SET_METHOD(t, "setThumbnailClip", nullFunction);
+		NODE_SET_METHOD(t, "setThumbnailToolTip", nullFunction);
+		NODE_SET_METHOD(t, "setAppDetails", nullFunction);
+		NODE_SET_METHOD(t, "setIcon", nullFunction);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "id", nullFunction);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "webContents", _WebContents);
 
 		// 设置constructor
@@ -128,9 +133,9 @@ public:
 		// export `BrowserWindow`
 		target->Set(String::NewFromUtf8(isolate, "BrowserWindow"), tpl->GetFunction());
 	}
+
 	//绘制事件
-	static void _staticOnPaintUpdated(wkeWebView webView, HWND m_hWnd, const HDC hdc, int x, int y, int cx, int cy)
-	{
+	static void staticOnPaintUpdated(wkeWebView webView, HWND m_hWnd, const HDC hdc, int x, int y, int cx, int cy) {
 		if (WS_EX_LAYERED == (WS_EX_LAYERED & GetWindowLong(m_hWnd, GWL_EXSTYLE))) {
 			RECT rectDest;
 			GetWindowRect(m_hWnd, &rectDest);
@@ -150,29 +155,30 @@ public:
 			blend.BlendOp = AC_SRC_OVER;
 			blend.SourceConstantAlpha = 255;
 			blend.AlphaFormat = AC_SRC_ALPHA;
-			UpdateLayeredWindow(m_hWnd, hdcScreen, &pointDest, &sizeDest, wkeGetViewDC(webView), &pointSource, RGB(0, 0, 0), &blend, ULW_ALPHA);
+			::UpdateLayeredWindow(m_hWnd, hdcScreen, &pointDest, &sizeDest, wkeGetViewDC(webView), &pointSource, RGB(0, 0, 0), &blend, ULW_ALPHA);
 
 			//SelectObject(hdcMemory, (HGDIOBJ)hbmpOld);
 			//DeleteObject((HGDIOBJ)hbmpMemory);
 			//DeleteDC(hdcMemory);
 
-			ReleaseDC(NULL, hdcScreen);
-		}
-		else {
+			::ReleaseDC(NULL, hdcScreen);
+		} else {
 			RECT rc = { x, y, x + cx, y + cy };
 			BOOL b = InvalidateRect(m_hWnd, &rc, TRUE);
 		}
 	}
+
+    static const WCHAR* kPrppW;
+
 	//窗口消息处理
-	static LRESULT CALLBACK _windowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
-	{
-		Window *win = (Window *)GetPropW(hwnd, L"mele");
+	static LRESULT CALLBACK windowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) {
+		Window *win = (Window *)GetPropW(hwnd, kPrppW);
 		if (!win) {
 			if (message == WM_CREATE) {
 				LPCREATESTRUCTW cs = (LPCREATESTRUCTW)lParam;
 				Window *win = (Window *)cs->lpCreateParams;
 				wkeSetHandle(win->m_web_contents->m_view, hwnd);
-				SetPropW(hwnd, L"mele", (HANDLE)win);
+				SetPropW(hwnd, kPrppW, (HANDLE)win);
 				SetTimer(hwnd, (UINT_PTR)win, 70, NULL);
 				return 0;
 			}
@@ -190,7 +196,7 @@ public:
 
 		case WM_DESTROY:
 			KillTimer(hwnd, (UINT_PTR)win);
-			RemovePropW(hwnd, L"mele");
+			RemovePropW(hwnd, kPrppW);
 			wkeDestroyWebView(pthis);
 			return 0;
 
@@ -387,13 +393,13 @@ public:
 			ImmSetCompositionWindow(hIMC, &COMPOSITIONFORM);
 			ImmReleaseContext(hwnd, hIMC);
 		}
-									  return 0;
+            return 0;
 		}
 
 		return DefWindowProcW(hwnd, message, wParam, lParam);
 	}
-	static void *task_WindowNew(gin::Dictionary *options)
-	{
+
+	static void *task_WindowNew(gin::Dictionary *options) {
 		//HandleScope scope(options->isolate());
 		Window* win = new Window;
 		unsigned styles = 0;
@@ -422,11 +428,9 @@ public:
 				options->Set(options::kFrame, false);
 			}
 			web_contents = WebContents::Create(options->isolate(), web_preferences);
-		}
-		else
-		{
+		} else
 			web_contents = WebContents::ObjectWrap::Unwrap<WebContents>(_web_contents);
-		}
+		
 		win->m_web_contents = web_contents;
 
 		v8::Local<v8::Value> transparent;
@@ -445,19 +449,19 @@ public:
 			styles = WS_POPUP;
 			styleEx = WS_EX_LAYERED;
 			wkeSetTransparent(win->m_web_contents->m_view, true);
-		}
-		else {
+		} else {
 			styles = WS_OVERLAPPEDWINDOW;
 			styleEx = 0;
 		}
+
 		wchar_t s_title[256];
 		if (title->IsString()) {
 			v8::String::Utf8Value str(title);
 			MultiByteToWideChar(CP_UTF8, 0, *str, -1, s_title, 256);
-		}
-		else {
+		} else {
 			wcscpy(s_title, L"Electron");
 		}
+
 		win->m_hWnd = CreateWindowEx(
 			styleEx,        // window ex-style
 			L"mb_electron_window",    // window class name
@@ -476,7 +480,7 @@ public:
 			return FALSE;
 
 		wkeResize(win->m_web_contents->m_view, width->Int32Value(), height->Int32Value());
-		wkeOnPaintUpdated(win->m_web_contents->m_view, (wkePaintUpdatedCallback)_staticOnPaintUpdated, win->m_hWnd);
+		wkeOnPaintUpdated(win->m_web_contents->m_view, (wkePaintUpdatedCallback)staticOnPaintUpdated, win->m_hWnd);
 		wkeLoadHTML(win->m_web_contents->m_view, "test");
 		wkeLoadURL(win->m_web_contents->m_view, "http://www.zerotoken.com");
 		ShowWindow(win->m_hWnd, TRUE);
@@ -524,32 +528,36 @@ private:
 			args.GetReturnValue().Set(cons->NewInstance(argc, argv));
 		}
 	}
-	//clos方法
-	static void Clos(const v8::FunctionCallbackInfo<v8::Value>& args) {
+
+	//close方法
+	static void close(const v8::FunctionCallbackInfo<v8::Value>& args) {
 		Isolate* isolate = args.GetIsolate();
 		HandleScope scope(isolate);
 		// 解封this指针
 		Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
-		SendMessage(win->m_hWnd, WM_CLOSE, 0, 0);
+		::SendMessage(win->m_hWnd, WM_CLOSE, 0, 0);
 	}
+
 	//focus方法
-	static void Focus(const v8::FunctionCallbackInfo<v8::Value>& args) {
+	static void focus(const v8::FunctionCallbackInfo<v8::Value>& args) {
 		Isolate* isolate = args.GetIsolate();
 		HandleScope scope(isolate);
 		// 解封this指针
 		Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
-		SetFocus(win->m_hWnd);
+        ::SetFocus(win->m_hWnd);
 	}
+
 	//blur方法
-	static void Blur(const v8::FunctionCallbackInfo<v8::Value>& args) {
+	static void blur(const v8::FunctionCallbackInfo<v8::Value>& args) {
 		Isolate* isolate = args.GetIsolate();
 		HandleScope scope(isolate);
 		// 解封this指针
 		Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
-		SetFocus(NULL);
+        ::SetFocus(NULL);
 	}
+
 	//isFocused方法
-	static void IsFocused(const v8::FunctionCallbackInfo<v8::Value>& args) {
+	static void isFocused(const v8::FunctionCallbackInfo<v8::Value>& args) {
 		Isolate* isolate = args.GetIsolate();
 		HandleScope scope(isolate);
 		// 解封this指针
@@ -557,101 +565,113 @@ private:
 		Local<Boolean> ret = Boolean::New(isolate, GetFocus() == win->m_hWnd);
 		args.GetReturnValue().Set(ret);
 	}
+
 	//show方法
-	static void Show(const v8::FunctionCallbackInfo<v8::Value>& args) {
+	static void show(const v8::FunctionCallbackInfo<v8::Value>& args) {
 		Isolate* isolate = args.GetIsolate();
 		HandleScope scope(isolate);
 		// 解封this指针
 		Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
-		ShowWindow(win->m_hWnd, TRUE);
-		SetFocus(win->m_hWnd);
+        ::ShowWindow(win->m_hWnd, TRUE);
+        ::SetFocus(win->m_hWnd);
 	}
+
 	//showInactive方法
-	static void ShowInactive(const v8::FunctionCallbackInfo<v8::Value>& args) {
+	static void showInactive(const v8::FunctionCallbackInfo<v8::Value>& args) {
 		Isolate* isolate = args.GetIsolate();
 		HandleScope scope(isolate);
 		// 解封this指针
 		Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
-		ShowWindow(win->m_hWnd, TRUE);
+		::ShowWindow(win->m_hWnd, TRUE);
 	}
+
 	//hide
-	static void Hide(const v8::FunctionCallbackInfo<v8::Value>& args) {
+	static void hide(const v8::FunctionCallbackInfo<v8::Value>& args) {
 		Isolate* isolate = args.GetIsolate();
 		HandleScope scope(isolate);
 		// 解封this指针
 		Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
-		ShowWindow(win->m_hWnd, FALSE);
+        ::ShowWindow(win->m_hWnd, FALSE);
 	}
+
 	//isVisible
-	static void IsVisible(const v8::FunctionCallbackInfo<v8::Value>& args) {
+	static void isVisible(const v8::FunctionCallbackInfo<v8::Value>& args) {
 		Isolate* isolate = args.GetIsolate();
 		HandleScope scope(isolate);
 		// 解封this指针
 		Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
-		Local<Boolean> ret = Boolean::New(isolate, IsWindowVisible(win->m_hWnd));
+		Local<Boolean> ret = Boolean::New(isolate, !!IsWindowVisible(win->m_hWnd));
 		args.GetReturnValue().Set(ret);
 	}
+
 	//isEnabled
-	static void IsEnabled(const v8::FunctionCallbackInfo<v8::Value>& args) {
+	static void isEnabled(const v8::FunctionCallbackInfo<v8::Value>& args) {
 		Isolate* isolate = args.GetIsolate();
 		HandleScope scope(isolate);
 		// 解封this指针
 		Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
-		Local<Boolean> ret = Boolean::New(isolate, IsWindowEnabled(win->m_hWnd));
+		Local<Boolean> ret = Boolean::New(isolate, !!IsWindowEnabled(win->m_hWnd));
 		args.GetReturnValue().Set(ret);
 	}
+
 	//maximize
-	static void Maximize(const v8::FunctionCallbackInfo<v8::Value>& args) {
+	static void maximize(const v8::FunctionCallbackInfo<v8::Value>& args) {
 		Isolate* isolate = args.GetIsolate();
 		HandleScope scope(isolate);
 		// 解封this指针
 		Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
 		ShowWindow(win->m_hWnd, SW_MAXIMIZE);
 	}
+
 	//unmaximize
-	static void Unmaximize(const v8::FunctionCallbackInfo<v8::Value>& args) {
+	static void unmaximize(const v8::FunctionCallbackInfo<v8::Value>& args) {
 		Isolate* isolate = args.GetIsolate();
 		HandleScope scope(isolate);
 		// 解封this指针
 		Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
 		ShowWindow(win->m_hWnd, SW_RESTORE);
 	}
+
 	//isMaximized
-	static void IsMaximized(const v8::FunctionCallbackInfo<v8::Value>& args) {
+	static void isMaximized(const v8::FunctionCallbackInfo<v8::Value>& args) {
 		Isolate* isolate = args.GetIsolate();
 		HandleScope scope(isolate);
 		// 解封this指针
 		Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
-		Local<Boolean> ret = Boolean::New(isolate, IsZoomed(win->m_hWnd));
+		Local<Boolean> ret = Boolean::New(isolate, !!IsZoomed(win->m_hWnd));
 		args.GetReturnValue().Set(ret);
 	}
+
 	//minimize
-	static void Minimize(const v8::FunctionCallbackInfo<v8::Value>& args) {
+	static void minimize(const v8::FunctionCallbackInfo<v8::Value>& args) {
 		Isolate* isolate = args.GetIsolate();
 		HandleScope scope(isolate);
 		// 解封this指针
 		Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
-		ShowWindow(win->m_hWnd, SW_MINIMIZE);
+		::ShowWindow(win->m_hWnd, SW_MINIMIZE);
 	}
+
 	//restore
-	static void Restore(const v8::FunctionCallbackInfo<v8::Value>& args) {
+	static void restore(const v8::FunctionCallbackInfo<v8::Value>& args) {
 		Isolate* isolate = args.GetIsolate();
 		HandleScope scope(isolate);
 		// 解封this指针
 		Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
-		ShowWindow(win->m_hWnd, SW_RESTORE);
+        ::ShowWindow(win->m_hWnd, SW_RESTORE);
 	}
+
 	//isMinimized
-	static void IsMinimized(const v8::FunctionCallbackInfo<v8::Value>& args) {
+	static void isMinimized(const v8::FunctionCallbackInfo<v8::Value>& args) {
 		Isolate* isolate = args.GetIsolate();
 		HandleScope scope(isolate);
 		// 解封this指针
 		Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
-		Local<Boolean> ret = Boolean::New(isolate, IsIconic(win->m_hWnd));
+		Local<Boolean> ret = Boolean::New(isolate, !!IsIconic(win->m_hWnd));
 		args.GetReturnValue().Set(ret);
 	}
+
 	//setFullScreen
-	static void SetFullScreen(const v8::FunctionCallbackInfo<v8::Value>& args) {
+	static void setFullScreen(const v8::FunctionCallbackInfo<v8::Value>& args) {
 		Isolate* isolate = args.GetIsolate();
 		HandleScope scope(isolate);
 		// 解封this指针
@@ -678,24 +698,27 @@ private:
 		else
 			args.GetReturnValue().Set(v8::Local<v8::Value>::New(isolate, win->m_web_contents->handle()));
 	}
+
 	// 空实现
-	static void Null(const v8::FunctionCallbackInfo<v8::Value>& args) {
+	static void nullFunction(const v8::FunctionCallbackInfo<v8::Value>& args) {
 	}
+
 	static v8::Persistent<v8::Function> constructor;
 private:
 	WebContents* m_web_contents;
 	HWND m_hWnd;
 };
+
+const WCHAR* Window::kPrppW = L"mele";
 Persistent<Function> Window::constructor;
-static void Initialize(Local<Object> target,
-	Local<Value> unused,
-	Local<Context> context) {
+
+static void Initialize(Local<Object> target, Local<Value> unused, Local<Context> context) {
 	Environment* env = Environment::GetCurrent(context);
 	Window::Init(target, env);
 	WNDCLASS wndClass = { 0 };
 	if (!GetClassInfoW(NULL, L"mb_electron_window", &wndClass)) {
 		wndClass.style = CS_HREDRAW | CS_VREDRAW;
-		wndClass.lpfnWndProc = &Window::_windowProc;
+		wndClass.lpfnWndProc = &Window::windowProc;
 		wndClass.cbClsExtra = 200;
 		wndClass.cbWndExtra = 200;
 		wndClass.hInstance = GetModuleHandleW(NULL);
@@ -707,4 +730,5 @@ static void Initialize(Local<Object> target,
 		RegisterClass(&wndClass);
 	}
 }
-NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT(atom_browser_window, Initialize, &native_hello)
+
+NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT(atom_browser_window, Initialize, &nativeHello)
