@@ -146,7 +146,9 @@ public:
     CompositingLayer* getCCLayerById(int id);
 	bool isRootCCLayerEmpty() const { return !m_rootCCLayer; }
 
-    HDC viewDC();
+    SkCanvas* getMemoryCanvasLocked();
+    void releaseMemoryCanvasLocked();
+
     bool isDrawDirty();
     void paintToBit(void* bits, int pitch);
     void requestDrawFrameToRunIntoCompositeThread();
@@ -208,7 +210,8 @@ private:
     blink::WebThread* m_compositeThread;
     WTF::Mutex m_compositeMutex;
     SkCanvas* m_memoryCanvas;
-    SkCanvas* m_memoryCanvasInUiThread;
+    //SkCanvas* m_memoryCanvasForUi;
+    //SkCanvas* m_memoryCanvasInUiThread;
 
     double m_lastDrawTime;
 
