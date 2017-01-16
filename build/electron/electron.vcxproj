@@ -37,6 +37,7 @@
     <ClInclude Include="..\..\electron\converter.h" />
     <ClInclude Include="..\..\electron\dictionary.h" />
     <ClInclude Include="..\..\electron\electron.h" />
+    <ClInclude Include="..\..\electron\NodeRegisterHelp.h" />
     <ClInclude Include="..\..\electron\options_switches.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
