@@ -5,6 +5,16 @@
 using namespace v8;
 using namespace node;
 
+#if USING_VC6RT == 1
+void __cdecl operator delete(void * p, unsigned int)
+{
+    DebugBreak();
+    free(p);
+}
+
+extern "C" int __security_cookie = 0;
+#endif
+
 namespace atom {
 
 struct TaskAsyncData {
@@ -17,7 +27,6 @@ struct TaskAsyncData {
     uv_thread_t main_thread_id;
 };
 TaskAsyncData mainAsync;
-
 
 static void mainAsyncCallback(uv_async_t* handle) {
     if (mainAsync.call) {
