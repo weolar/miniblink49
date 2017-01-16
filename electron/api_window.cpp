@@ -1,4 +1,5 @@
-﻿#include "nodeblink.h"
+﻿
+#include "nodeblink.h"
 #include <node_object_wrap.h>
 #include "wke.h"
 
@@ -6,6 +7,7 @@
 #include "dictionary.h"
 #include "options_switches.h"
 #include "api_web_contents.h"
+#include "NodeRegisterHelp.h"
 
 using namespace v8;
 using namespace node;
@@ -730,6 +732,6 @@ static void initializeWindowApi(Local<Object> target, Local<Value> unused, Local
     }
 }
 
-NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT(atom_browser_window, initializeWindowApi, &nativeHello)
+NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT_MANUAL(atom_browser_window, initializeWindowApi, &nativeHello)
 
 } // atom

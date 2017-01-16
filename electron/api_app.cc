@@ -1,9 +1,11 @@
-﻿#include "nodeblink.h"
+﻿
+#include "api_app.h"
+#include "nodeblink.h"
 #include <node_object_wrap.h>
 #include "wke.h"
 #include "electron.h"
 #include "dictionary.h"
-#include "api_app.h"
+#include "NodeRegisterHelp.h"
 
 using namespace v8;
 using namespace node;
@@ -114,6 +116,6 @@ static void initializeAppApi(Local<Object> target,
     App::init(target, env);
 }
 
-NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT(atom_browser_app, initializeAppApi, &nativeHello)
+NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT_MANUAL(atom_browser_app, initializeAppApi, &nativeHello)
 
 } // atom

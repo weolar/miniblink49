@@ -1,9 +1,11 @@
-﻿#include "nodeblink.h"
+﻿
+#include "nodeblink.h"
 #include <node_object_wrap.h>
 #include "wke.h"
 #include "electron.h"
 #include "dictionary.h"
 #include "api_web_contents.h"
+#include "NodeRegisterHelp.h"
 
 using namespace v8;
 using namespace node;
@@ -200,6 +202,7 @@ static void initializeWebContentApi(Local<Object> target,
     WebContents::init(target, env);
 }
 
-NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT(atom_browser_web_contents, initializeWebContentApi, &nativeHello)
+NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT_MANUAL(atom_browser_web_contents, initializeWebContentApi, &nativeHello)
 
 } // atom
+

@@ -1,6 +1,10 @@
-﻿#include <windows.h>
+﻿
 #include "electron.h"
+
 #include "lib/native.h"
+#include "NodeRegisterHelp.h"
+
+#include <windows.h>
 
 using namespace v8;
 using namespace node;
@@ -53,6 +57,7 @@ void* mainSyncCall(CoreMainTask call, void* data) {
 	void* ret = mainAsyncWait();
     return ret;
 }
+
 bool mainSyncCall(v8::FunctionCallback call, const v8::FunctionCallbackInfo<v8::Value>& args) {
     if (uv_thread_self() == mainAsync.main_thread_id)
         return false;
@@ -60,6 +65,17 @@ bool mainSyncCall(v8::FunctionCallback call, const v8::FunctionCallbackInfo<v8::
     mainAsyncWait();
     return true;
 }
+
+NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT_DECLARE_IN_MAIN(atom_browser_web_contents)
+NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT_DECLARE_IN_MAIN(atom_browser_app)
+NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT_DECLARE_IN_MAIN(atom_browser_window)
+
+static void registerNodeMod() {
+    NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT_DEFINDE_IN_MAIN(atom_browser_web_contents);
+    NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT_DEFINDE_IN_MAIN(atom_browser_app);
+    NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT_DEFINDE_IN_MAIN(atom_browser_window);
+}
+
 
 } // atom
 
@@ -69,6 +85,8 @@ int APIENTRY wWinMain(HINSTANCE hInstance,
     int       nCmdShow) {
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
+
+    atom::registerNodeMod();
 
     wkeInitialize();
 
