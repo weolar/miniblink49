@@ -133,6 +133,7 @@ WebContents::WebContents(v8::Isolate* isolate, const gin::Dictionary& options) {
 }
 
 WebContents::~WebContents() {
+    //wkeDestroyWebView(m_view);
 }
 
 // new方法
