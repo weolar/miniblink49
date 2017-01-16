@@ -31,6 +31,7 @@ struct TaskAsyncData {
     uv_thread_t main_thread_id;
 };
 TaskAsyncData mainAsync;
+uv_timer_t gcTimer;
 
 static void mainAsyncCallback(uv_async_t* handle) {
     if (mainAsync.call) {
@@ -76,6 +77,16 @@ static void registerNodeMod() {
     NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT_DEFINDE_IN_MAIN(atom_browser_window);
 }
 
+static void gcTimerCallBack(uv_timer_t* handle) {
+    v8::Isolate *isolate = (v8::Isolate *)(handle->data);
+    if (isolate)
+        isolate->LowMemoryNotification();
+}
+void nodeInitCallBack(NodeArgc* n) {
+    gcTimer.data = n->childEnv->isolate();
+    uv_timer_init(n->childLoop, &gcTimer);
+    uv_timer_start(&gcTimer, gcTimerCallBack, 1000 * 10, 1);
+}
 
 } // atom
 
@@ -98,7 +109,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance,
     atom::mainAsync.main_thread_id= uv_thread_self();
 
     wchar_t* argv1[] = { L"electron.exe", L"init.js" };
-    node::NodeArgc* node = node::runNodeThread(2, argv1, NULL, NULL);
+    node::NodeArgc* node = node::runNodeThread(2, argv1, atom::nodeInitCallBack, NULL);
 
     MSG msg;
     bool more;

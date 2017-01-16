@@ -201,6 +201,7 @@ public:
             KillTimer(hwnd, (UINT_PTR)win);
             RemovePropW(hwnd, kPrppW);
             wkeDestroyWebView(pthis);
+            //delete win->m_webContents;
             return 0;
 
         case WM_TIMER:
@@ -495,7 +496,8 @@ public:
     }
 
     static void *task_WindowFree(Window *data) {
-        delete data->m_webContents;
+        //delete data->m_webContents;
+        SendMessage(data->m_hWnd, WM_CLOSE, 0, 0);
         return NULL;
     }
 
