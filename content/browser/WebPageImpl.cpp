@@ -714,7 +714,7 @@ void drawDebugLine(SkCanvas* memoryCanvas, const IntRect& paintRect)
     context->strokeRect(paintRect, 2);
 #endif
 
-#if 1
+#if 0
     String outString = String::format("drawDebugLine:%d %d %d %d, %d\n", paintRect.x(), paintRect.y(), paintRect.width(), paintRect.height(), g_debugCount);
     OutputDebugStringW(outString.charactersWithNullTermination().data());
 #endif
