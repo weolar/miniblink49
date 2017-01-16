@@ -36,6 +36,9 @@
     <ClCompile Include="..\..\electron\api_app.cc">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\electron\window_list.cc">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\electron\electron.h">
@@ -57,6 +60,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="..\..\electron\NodeRegisterHelp.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\electron\window_list.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
