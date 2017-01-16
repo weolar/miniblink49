@@ -158,6 +158,8 @@ public:
     // ----
     void executeMainFrame();
 
+    void copyToMemoryCanvasForUi();
+
     bool m_useLayeredBuffer;
 
 	blink::IntRect m_winodwRect;
@@ -212,6 +214,8 @@ public:
     int m_commitCount;
     int m_needsLayout;
     double m_lastFrameTimeMonotonic;
+
+    SkCanvas* m_memoryCanvasForUi;
 };
 
 } // blink

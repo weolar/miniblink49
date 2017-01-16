@@ -54,7 +54,6 @@ LayerTreeHost::LayerTreeHost(blink::WebViewClient* webViewClient, LayerTreeHostU
     m_isDestroying = false;
 
     m_memoryCanvas = nullptr;
-    m_memoryCanvasInUiThread = nullptr;
     m_paintToMemoryCanvasInUiThreadTaskCount = 0;
 
     m_isDrawDirty = true;
@@ -112,7 +111,7 @@ LayerTreeHost::~LayerTreeHost()
     if (m_memoryCanvas)
         delete m_memoryCanvas;
     m_memoryCanvas = nullptr;
-
+    
 	for (WTF::HashMap<int, cc_blink::WebLayerImpl*>::iterator it = m_liveLayers.begin(); m_liveLayers.end() != it; ++it) {
         cc_blink::WebLayerImpl* layer = it->value;
         layer->setLayerTreeHost(nullptr);
@@ -908,16 +907,15 @@ void LayerTreeHost::paintToMemoryCanvas(const IntRect& r)
     Platform::current()->mainThread()->postTask(FROM_HERE, WTF::bind(&LayerTreeHost::WrapSelfForUiThread::paintToMemoryCanvasInUiThread, wrap, paintRect));
 }
 
-HDC LayerTreeHost::viewDC()
+SkCanvas* LayerTreeHost::getMemoryCanvasLocked()
 {
-    WTF::Locker<WTF::Mutex> locker(m_compositeMutex);
-    if (!m_memoryCanvas)
-        return nullptr;
+    m_compositeMutex.lock();
+    return m_memoryCanvas;
+}
 
-    skia::BitmapPlatformDevice* device = (skia::BitmapPlatformDevice*)skia::GetPlatformDevice(skia::GetTopDevice(*m_memoryCanvas));
-    if (device)
-        return device->GetBitmapDCUgly();
-    return nullptr;
+void LayerTreeHost::releaseMemoryCanvasLocked()
+{
+    m_compositeMutex.unlock();
 }
 
 bool LayerTreeHost::isDrawDirty()
