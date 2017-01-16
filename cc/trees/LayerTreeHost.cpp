@@ -751,21 +751,22 @@ void LayerTreeHost::setUseLayeredBuffer(bool b)
     m_useLayeredBuffer = b;
 }
 
-void LayerTreeHost::clearPaintWhenLayeredWindow(SkCanvas* canvas, const IntRect& rect)
+void LayerTreeHost::clearCanvas(SkCanvas* canvas, const IntRect& rect, bool useLayeredBuffer)
 {
-    if (!m_useLayeredBuffer)
-        return;
-
     // When using transparency mode clear the rectangle before painting.
     SkPaint clearPaint;
-    clearPaint.setARGB(0, 0xf0, 0, 0);
-    clearPaint.setXfermodeMode(SkXfermode::kClear_Mode);
+    if (useLayeredBuffer) {
+        clearPaint.setARGB(0, 0xFF, 0xFF, 0xFF);
+        clearPaint.setXfermodeMode(SkXfermode::kClear_Mode);
+    } else {
+        clearPaint.setARGB(0xFF, 0xFF, 0xFF, 0xFF);
+        clearPaint.setXfermodeMode(SkXfermode::kSrcOver_Mode);
+    }
 
     SkRect skrc;
     skrc.set(rect.x(), rect.y(), rect.x() + rect.width(), rect.y() + rect.height());
     canvas->drawRect(skrc, clearPaint);
 }
-
 
 void LayerTreeHost::postPaintMessage(const IntRect& paintRect)
 {
@@ -880,11 +881,7 @@ void LayerTreeHost::paintToMemoryCanvas(const IntRect& r)
         if (m_memoryCanvas)
             delete m_memoryCanvas;
         m_memoryCanvas = skia::CreatePlatformCanvas(m_clientRect.width(), m_clientRect.height(), !m_useLayeredBuffer);
-
-        SkPaint clearColorPaint;
-        clearColorPaint.setColor(0x0); // 0xfff0504a
-        clearColorPaint.setXfermodeMode(SkXfermode::kSrcOver_Mode); // SkXfermode::kSrcOver_Mode
-        m_memoryCanvas->drawRect((SkRect)m_clientRect, clearColorPaint);
+        clearCanvas(m_memoryCanvas, m_clientRect, m_useLayeredBuffer);
     }
 
     paintRect.intersect(m_clientRect);
@@ -897,7 +894,8 @@ void LayerTreeHost::paintToMemoryCanvas(const IntRect& r)
     }
 
     m_isDrawDirty = true;
-    clearPaintWhenLayeredWindow(m_memoryCanvas, paintRect);
+    if (m_useLayeredBuffer)
+        clearCanvas(m_memoryCanvas, paintRect, m_useLayeredBuffer);
 
     drawToCanvas(m_memoryCanvas, paintRect); // ªÊ÷∆‘‡æÿ–Œ
 

@@ -154,7 +154,8 @@ public:
     void requestDrawFrameToRunIntoCompositeThread();
     void requestApplyActionsToRunIntoCompositeThread(bool needCheck);
     void setUseLayeredBuffer(bool b);
-    void clearPaintWhenLayeredWindow(SkCanvas* canvas, const blink::IntRect& rect);
+    static void clearCanvas(SkCanvas* canvas, const blink::IntRect& rect, bool useLayeredBuffer);
+    
     void postPaintMessage(const blink::IntRect& paintRect);
     void firePaintEvent(HDC hdc, const RECT* paintRect);
     blink::IntRect getClientRect();

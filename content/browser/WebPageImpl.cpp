@@ -649,6 +649,10 @@ void WebPageImpl::firePaintEvent(HDC hdc, const RECT* paintRect)
 
 HDC WebPageImpl::viewDC()
 {
+    if (!m_memoryCanvasForUi && !m_viewportSize.isEmpty()) {
+        m_memoryCanvasForUi = skia::CreatePlatformCanvas(m_viewportSize.width(), m_viewportSize.height(), !m_useLayeredBuffer);
+        cc::LayerTreeHost::clearCanvas(m_memoryCanvasForUi, IntRect(0, 0, m_viewportSize.width(), m_viewportSize.height()), m_useLayeredBuffer);
+    }
     if (!m_memoryCanvasForUi)
         return nullptr;
 
@@ -665,14 +669,24 @@ void WebPageImpl::copyToMemoryCanvasForUi()
         m_layerTreeHost->releaseMemoryCanvasLocked();
         return;
     }
-
-    if (!m_memoryCanvasForUi)
-        m_memoryCanvasForUi = new SkCanvas(memoryCanvas->imageInfo().width(), memoryCanvas->imageInfo().height());
-
-    if (memoryCanvas->imageInfo().width() != m_memoryCanvasForUi->imageInfo().width() &&
-        memoryCanvas->imageInfo().height() != m_memoryCanvasForUi->imageInfo().height()) {
+    
+    int width = memoryCanvas->imageInfo().width();
+    int height = memoryCanvas->imageInfo().height();
+    if (0 != width && 0 != height) {
+        if (!m_memoryCanvasForUi || (m_memoryCanvasForUi && width != m_memoryCanvasForUi->imageInfo().width() && height != m_memoryCanvasForUi->imageInfo().height())) {
+            if (m_memoryCanvasForUi)
+                delete m_memoryCanvasForUi;
+            m_memoryCanvasForUi = skia::CreatePlatformCanvas(width, height, !m_useLayeredBuffer);
+            cc::LayerTreeHost::clearCanvas(m_memoryCanvasForUi, IntRect(0, 0, width, height), m_useLayeredBuffer);
+        }
+    } else if (m_memoryCanvasForUi) {
         delete m_memoryCanvasForUi;
-        m_memoryCanvasForUi = skia::CreatePlatformCanvas(memoryCanvas->imageInfo().width(), memoryCanvas->imageInfo().height(), !m_useLayeredBuffer);
+        m_memoryCanvasForUi = nullptr;
+    }
+
+    if (!m_memoryCanvasForUi) {
+        m_layerTreeHost->releaseMemoryCanvasLocked();
+        return;
     }
 
     HDC hMemoryDC = skia::BeginPlatformPaint(m_memoryCanvasForUi);
