@@ -119,6 +119,7 @@ WebPageImpl::WebPageImpl()
     m_postCloseWidgetSoonMessage = false;
     m_navigationController = new NavigationController(this);
     m_layerTreeHost = new cc::LayerTreeHost(this, this);
+    m_memoryCanvasForUi = nullptr;
     m_webFrameClient = new content::WebFrameClientImpl();
     
     WebLocalFrameImpl* webLocalFrameImpl = (WebLocalFrameImpl*)WebLocalFrame::create(WebTreeScopeType::Document, m_webFrameClient);
@@ -154,7 +155,9 @@ WebPageImpl::~WebPageImpl()
     ASSERT(pageDestroyed == m_state);
     m_state = pageDestroyed;
 
-
+    if (m_memoryCanvasForUi)
+        delete m_memoryCanvasForUi;
+    m_memoryCanvasForUi = nullptr;
     
     delete m_navigationController;
     m_navigationController = nullptr;
@@ -420,7 +423,6 @@ void WebPageImpl::doClose()
 	}
 #endif
 
-
     content::WebThreadImpl* threadImpl = nullptr;
     threadImpl = (content::WebThreadImpl*)(blink::Platform::current()->currentThread());
 
@@ -467,7 +469,6 @@ public:
     virtual ~CommitTask() override
     {
         if (m_client) {
-            atomicDecrement(&m_client->m_commitCount);
             m_client->unregisterDestroyNotif(this);
         }
 #ifndef NDEBUG
@@ -482,8 +483,10 @@ public:
 
     virtual void run() override
     {
-        if (m_client)
+        if (m_client) {
+            atomicDecrement(&m_client->m_commitCount);
             m_client->beginMainFrame();
+        }
     }
 
 private:
@@ -646,9 +649,38 @@ void WebPageImpl::firePaintEvent(HDC hdc, const RECT* paintRect)
 
 HDC WebPageImpl::viewDC()
 {
-    if (m_layerTreeHost)
-        return m_layerTreeHost->viewDC();
-    return nullptr;
+    if (!m_memoryCanvasForUi)
+        return nullptr;
+
+    skia::BitmapPlatformDevice* device = (skia::BitmapPlatformDevice*)skia::GetPlatformDevice(skia::GetTopDevice(*m_memoryCanvasForUi));
+    if (!device)
+        return nullptr;
+    return device->GetBitmapDCUgly();
+}
+
+void WebPageImpl::copyToMemoryCanvasForUi()
+{
+    SkCanvas* memoryCanvas = m_layerTreeHost->getMemoryCanvasLocked();
+    if (!memoryCanvas) {
+        m_layerTreeHost->releaseMemoryCanvasLocked();
+        return;
+    }
+
+    if (!m_memoryCanvasForUi)
+        m_memoryCanvasForUi = new SkCanvas(memoryCanvas->imageInfo().width(), memoryCanvas->imageInfo().height());
+
+    if (memoryCanvas->imageInfo().width() != m_memoryCanvasForUi->imageInfo().width() &&
+        memoryCanvas->imageInfo().height() != m_memoryCanvasForUi->imageInfo().height()) {
+        delete m_memoryCanvasForUi;
+        m_memoryCanvasForUi = skia::CreatePlatformCanvas(memoryCanvas->imageInfo().width(), memoryCanvas->imageInfo().height(), !m_useLayeredBuffer);
+    }
+
+    HDC hMemoryDC = skia::BeginPlatformPaint(m_memoryCanvasForUi);
+    RECT srcRect = { 0, 0, memoryCanvas->imageInfo().width(), memoryCanvas->imageInfo().height() };
+    skia::DrawToNativeContext(memoryCanvas, hMemoryDC, 0, 0, &srcRect);
+    skia::EndPlatformPaint(m_memoryCanvasForUi);
+
+    m_layerTreeHost->releaseMemoryCanvasLocked();
 }
 
 bool WebPageImpl::isDrawDirty()
@@ -660,9 +692,10 @@ bool WebPageImpl::isDrawDirty()
 
 void drawDebugLine(SkCanvas* memoryCanvas, const IntRect& paintRect)
 {
-#if 0
-    m_debugCount++;
+    static int g_debugCount = 0;
+    ++g_debugCount;
 
+#if 0
     HBRUSH hbrush;
     HPEN hpen;
     hbrush = ::CreateSolidBrush(rand()); // 创建蓝色画刷
@@ -681,8 +714,8 @@ void drawDebugLine(SkCanvas* memoryCanvas, const IntRect& paintRect)
     context->strokeRect(paintRect, 2);
 #endif
 
-#if 0
-    String outString = String::format("drawDebugLine:%d %d %d %d, %d\n", m_paintRect.x(), m_paintRect.y(), m_paintRect.width(), m_paintRect.height(), m_debugCount);
+#if 1
+    String outString = String::format("drawDebugLine:%d %d %d %d, %d\n", paintRect.x(), paintRect.y(), paintRect.width(), paintRect.height(), g_debugCount);
     OutputDebugStringW(outString.charactersWithNullTermination().data());
 #endif
 }
@@ -697,16 +730,19 @@ void WebPageImpl::paintToMemoryCanvasInUiThread(SkCanvas* canvas, const IntRect&
         ::GetWindowRect(m_pagePtr->getHWND(), &rtWnd);
         //m_winodwRect = winRectToIntRect(rtWnd);
         //skia::DrawToNativeLayeredContext(canvas.get(), hdc, m_winodwRect.x(), m_winodwRect.y(), &((RECT)m_clientRect));
-    }
-    else {
+    } else {
         drawDebugLine(canvas, paintRect);
-#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
-        if (m_browser) { // 使用wke接口不由此上屏
+        bool drawToScreen = false;
+#if ENABLE_CEF == 1
+        drawToScreen = !!m_browser;
+#endif
+        if (drawToScreen) { // 使用wke接口不由此上屏
             HDC hdc = GetDC(m_pagePtr->getHWND());
             skia::DrawToNativeContext(canvas, hdc, paintRect.x(), paintRect.y(), &intRectToWinRect(paintRect));
             ReleaseDC(m_pagePtr->getHWND(), hdc);
+        } else {
+            copyToMemoryCanvasForUi();
         }
-#endif
     }
 
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
