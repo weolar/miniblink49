@@ -1,9 +1,23 @@
-﻿#include <windows.h>
+﻿
 #include "electron.h"
+
 #include "lib/native.h"
+#include "NodeRegisterHelp.h"
+
+#include <windows.h>
 
 using namespace v8;
 using namespace node;
+
+#if USING_VC6RT == 1
+void __cdecl operator delete(void * p, unsigned int)
+{
+    DebugBreak();
+    free(p);
+}
+
+extern "C" int __security_cookie = 0;
+#endif
 
 namespace atom {
 
@@ -17,7 +31,6 @@ struct TaskAsyncData {
     uv_thread_t main_thread_id;
 };
 TaskAsyncData mainAsync;
-
 
 static void mainAsyncCallback(uv_async_t* handle) {
     if (mainAsync.call) {
@@ -44,6 +57,7 @@ void* mainSyncCall(CoreMainTask call, void* data) {
 	void* ret = mainAsyncWait();
     return ret;
 }
+
 bool mainSyncCall(v8::FunctionCallback call, const v8::FunctionCallbackInfo<v8::Value>& args) {
     if (uv_thread_self() == mainAsync.main_thread_id)
         return false;
@@ -51,6 +65,17 @@ bool mainSyncCall(v8::FunctionCallback call, const v8::FunctionCallbackInfo<v8::
     mainAsyncWait();
     return true;
 }
+
+NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT_DECLARE_IN_MAIN(atom_browser_web_contents)
+NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT_DECLARE_IN_MAIN(atom_browser_app)
+NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT_DECLARE_IN_MAIN(atom_browser_window)
+
+static void registerNodeMod() {
+    NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT_DEFINDE_IN_MAIN(atom_browser_web_contents);
+    NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT_DEFINDE_IN_MAIN(atom_browser_app);
+    NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT_DEFINDE_IN_MAIN(atom_browser_window);
+}
+
 
 } // atom
 
@@ -60,6 +85,8 @@ int APIENTRY wWinMain(HINSTANCE hInstance,
     int       nCmdShow) {
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
+
+    atom::registerNodeMod();
 
     wkeInitialize();
 

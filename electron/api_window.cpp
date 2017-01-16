@@ -1,4 +1,5 @@
-﻿#include "nodeblink.h"
+﻿
+#include "nodeblink.h"
 #include <node_object_wrap.h>
 #include "wke.h"
 
@@ -6,6 +7,7 @@
 #include "dictionary.h"
 #include "options_switches.h"
 #include "api_web_contents.h"
+#include "NodeRegisterHelp.h"
 
 using namespace v8;
 using namespace node;
@@ -24,7 +26,7 @@ static NodeNative nativeHello{ "hello", helloNative, sizeof(helloNative) };
 class Window : public node::ObjectWrap {
 public:
     // 静态方法，用于注册类和方法
-    static void Init(Local<Object> target, Environment* env) {
+    static void init(Local<Object> target, Environment* env) {
         Isolate* isolate = env->isolate();
 
         // Function模板
@@ -711,9 +713,9 @@ private:
 const WCHAR* Window::kPrppW = L"mele";
 Persistent<Function> Window::constructor;
 
-static void Initialize(Local<Object> target, Local<Value> unused, Local<Context> context) {
+static void initializeWindowApi(Local<Object> target, Local<Value> unused, Local<Context> context) {
     Environment* env = Environment::GetCurrent(context);
-    Window::Init(target, env);
+    Window::init(target, env);
     WNDCLASS wndClass = { 0 };
     if (!GetClassInfoW(NULL, L"mb_electron_window", &wndClass)) {
         wndClass.style = CS_HREDRAW | CS_VREDRAW;
@@ -730,6 +732,6 @@ static void Initialize(Local<Object> target, Local<Value> unused, Local<Context>
     }
 }
 
-NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT(atom_browser_window, Initialize, &nativeHello)
+NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT_MANUAL(atom_browser_window, initializeWindowApi, &nativeHello)
 
 } // atom

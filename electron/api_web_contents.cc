@@ -1,9 +1,11 @@
-﻿#include "nodeblink.h"
+﻿
+#include "nodeblink.h"
 #include <node_object_wrap.h>
 #include "wke.h"
 #include "electron.h"
 #include "dictionary.h"
 #include "api_web_contents.h"
+#include "NodeRegisterHelp.h"
 
 using namespace v8;
 using namespace node;
@@ -193,13 +195,14 @@ void WebContents::nullFunction(const v8::FunctionCallbackInfo<v8::Value>& args) 
 
 Persistent<Function> WebContents::constructor;
 
-static void Initialize(Local<Object> target,
+static void initializeWebContentApi(Local<Object> target,
     Local<Value> unused,
     Local<Context> context) {
     Environment* env = Environment::GetCurrent(context);
     WebContents::init(target, env);
 }
 
-NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT(atom_browser_web_contents, Initialize, &nativeHello)
+NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT_MANUAL(atom_browser_web_contents, initializeWebContentApi, &nativeHello)
 
 } // atom
+

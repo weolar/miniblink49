@@ -1,9 +1,11 @@
-﻿#include "nodeblink.h"
+﻿
+#include "api_app.h"
+#include "nodeblink.h"
 #include <node_object_wrap.h>
 #include "wke.h"
 #include "electron.h"
 #include "dictionary.h"
-#include "api_app.h"
+#include "NodeRegisterHelp.h"
 
 using namespace v8;
 using namespace node;
@@ -107,13 +109,13 @@ void App::nullFunction(const v8::FunctionCallbackInfo<v8::Value>& args) {
 
 Persistent<Function> App::constructor;
 
-static void Initialize(Local<Object> target,
+static void initializeAppApi(Local<Object> target,
     Local<Value> unused,
     Local<Context> context) {
     Environment* env = Environment::GetCurrent(context);
     App::init(target, env);
 }
 
-NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT(atom_browser_app, Initialize, &nativeHello)
+NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT_MANUAL(atom_browser_app, initializeAppApi, &nativeHello)
 
 } // atom
