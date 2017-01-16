@@ -193,13 +193,13 @@ void WebContents::nullFunction(const v8::FunctionCallbackInfo<v8::Value>& args) 
 
 Persistent<Function> WebContents::constructor;
 
-static void Initialize(Local<Object> target,
+static void initializeWebContentApi(Local<Object> target,
     Local<Value> unused,
     Local<Context> context) {
     Environment* env = Environment::GetCurrent(context);
     WebContents::init(target, env);
 }
 
-NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT(atom_browser_web_contents, Initialize, &nativeHello)
+NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT(atom_browser_web_contents, initializeWebContentApi, &nativeHello)
 
 } // atom
