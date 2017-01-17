@@ -17,6 +17,7 @@
 #include "content/resources/LocalizedString.h"
 #include "content/resources/WebKitWebRes.h"
 #include "content/browser/SharedTimerWin.h"
+#include "content/browser/WebPage.h"
 #include "cc/blink/WebCompositorSupportImpl.h"
 #include "cc/raster/RasterTaskWorkerThreadPool.h"
 #include "third_party/WebKit/public/web/WebKit.h"
@@ -44,7 +45,7 @@
 
 #include "base/process/InjectTool.h"
 
-size_t g_v8MemSize;
+extern size_t g_v8MemSize;
 extern size_t g_blinkMemSize;
 extern size_t g_skiaMemSize;
 
@@ -174,7 +175,6 @@ BlinkPlatformImpl::BlinkPlatformImpl()
     m_threadNum = 0;
 	m_ioThread = nullptr;
     m_firstMonotonicallyIncreasingTime = currentTimeImpl(); // (GetTickCount() / 1000.0);
-    for (int i = 0; i < m_maxThreadNum; ++i) { m_threads[i] = nullptr; }
     ::InitializeCriticalSection(m_lock);
 
 	setUserAgent("Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.2171.99 Safari/537.36");
@@ -254,6 +254,8 @@ void BlinkPlatformImpl::preShutdown()
 
 void BlinkPlatformImpl::shutdown()
 {
+    WebPage::shutdown();
+
     blink::memoryCache()->evictResources();
     v8::Isolate::GetCurrent()->LowMemoryNotification();
 
@@ -328,10 +330,12 @@ void BlinkPlatformImpl::closeThread()
     if (0 != m_threadNum)
         DebugBreak();
 
-    for (int i = 0; i < m_maxThreadNum; ++i) {
+    ::EnterCriticalSection(m_lock);
+    for (size_t i = 0; i < m_threads.size(); ++i) {
         if (nullptr != m_threads[i])
             DebugBreak();
     }
+    ::LeaveCriticalSection(m_lock);
 }
 
 blink::WebThread* BlinkPlatformImpl::createThread(const char* name)
@@ -342,7 +346,7 @@ blink::WebThread* BlinkPlatformImpl::createThread(const char* name)
     WebThreadImpl* threadImpl = new WebThreadImpl(name);
 
     ::EnterCriticalSection(m_lock);
-    m_threads[m_threadNum] = (threadImpl);
+    m_threads.push_back(threadImpl);
     ++m_threadNum;
     if (m_threadNum > m_maxThreadNum)
         DebugBreak();
@@ -355,10 +359,10 @@ void BlinkPlatformImpl::onThreadExit(WebThreadImpl* threadImpl)
 {
     ::EnterCriticalSection(m_lock);
     bool find = false;
-    for (int i = 0; i < m_maxThreadNum; ++i) {
-        if (m_threads[i] != threadImpl)
+    for (std::vector<WebThreadImpl*>::iterator i = m_threads.begin(); i != m_threads.end(); ++i) {
+        if (*i != threadImpl)
             continue;
-        m_threads[i] = nullptr;
+        m_threads.erase(i);
         --m_threadNum;
         find = true;
         break;

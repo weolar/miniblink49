@@ -8,6 +8,7 @@
 #include "third_party/WebKit/Source/wtf/FastAllocBase.h"
 #include "third_party/WebKit/public/web/WebViewClient.h"
 #include "third_party/WebKit/public/web/WebHistoryCommitType.h"
+#include "third_party/WebKit/Source/wtf/HashSet.h"
 
 #if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 class CefBrowserHostImpl;
@@ -52,6 +53,7 @@ public:
     };
 
     static void initBlink();
+    static void shutdown();
 
     WebPage(void* foreignPtr);
     ~WebPage();
@@ -145,6 +147,7 @@ protected:
     void* m_wkeClientHandler;
 #endif
     WebPageImpl* m_pageImpl;
+    static WTF::HashSet<WebPage*>* m_webPageSet;
 };
 
 } // namespace content

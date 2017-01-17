@@ -226,6 +226,25 @@ public:
         _Init();
         _Copy(_X);
     }
+    //////////////////////////////////////////////////////////////////////////
+    _Tree(_Myt&& _Right)
+        : allocator(_Right.allocator)
+        , key_compare(_Right.key_compare), _Multi(_Right._Multi) {
+        _Init();
+        _Assign_rv(_STD forward<_Myt>(_Right));
+    }
+
+    _Tree(_Myt&& _Right, const _A& _Al)
+        : allocator(_Al)
+        , key_compare(_Right.key_compare), _Multi(_Right._Multi) {
+        _Init();
+        _Assign_rv(_STD forward<_Myt>(_Right));
+    }
+
+    void _Assign_rv(_Myt&& _Right) { // swap with empty *this, same allocator
+        swap(_Right);
+    }
+    //////////////////////////////////////////////////////////////////////////
     ~_Tree()
     {
         erase(begin(), end());

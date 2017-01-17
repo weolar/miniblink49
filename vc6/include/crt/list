@@ -138,6 +138,34 @@ public:
 		: allocator(_Al),
 		_Head(_Buynode()), _Size(0)
 		{insert(begin(), _F, _L); }
+    //////////////////////////////////////////////////////////////////////////
+    list(_Myt&& _Right)
+        : allocator(_STD move(_Right.allocator))
+        , _Head(_Buynode())
+        , _Size(0) {
+        _Assign_rv(_STD forward<_Myt>(_Right));
+    }
+
+    list(_Myt&& _Right, const _A& _Al)
+        : allocator(_Al)
+        , _Head(_Buynode())
+        , _Size(0) {
+        _Assign_rv(_STD forward<_Myt>(_Right));
+    }
+
+    _Myt& operator=(_Myt&& _Right) { // assign by moving _Right
+        if (this != &_Right) { // different, assign it
+            clear();
+            _Assign_rv(_STD forward<_Myt>(_Right));
+        }
+        return (*this);
+    }
+
+    void _Assign_rv(_Myt&& _Right) { // swap with empty *this, same allocator
+        swap(_Right);
+    }
+    //////////////////////////////////////////////////////////////////////////
+
 	typedef const_iterator _It;
 	list(_It _F, _It _L, const _A& _Al = _A())
 		: allocator(_Al),

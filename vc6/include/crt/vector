@@ -73,6 +73,31 @@ public:
 				_First);
 			_End = _Last; }
 		return (*this); }
+    //////////////////////////////////////////////////////////////////////////
+    vector(_Myt&& _Right)
+        : allocator(_STD move(_Right.allocator))
+        , _First(0), _Last(0), _End(0) {	// construct list by moving _Right
+        _Assign_rv(_STD forward<_Myt>(_Right));
+    }
+
+    vector(_Myt&& _Right, const _A& _Al)
+        : allocator(_Al)
+        , _First(0), _Last(0), _End(0) {	// construct list by moving _Right, allocator
+        _Assign_rv(_STD forward<_Myt>(_Right));
+    }
+
+    _Myt& operator=(_Myt&& _Right) { // assign by moving _Right
+        if (this != &_Right) { // different, assign it
+            clear();
+            _Assign_rv(_STD forward<_Myt>(_Right));
+        }
+        return (*this);
+    }
+
+    void _Assign_rv(_Myt&& _Right) { // swap with empty *this, same allocator
+        swap(_Right);
+    }
+    //////////////////////////////////////////////////////////////////////////
 	void reserve(size_type _N)
 		{if (capacity() < _N)
 			{iterator _S = allocator.allocate(_N, (void *)0);

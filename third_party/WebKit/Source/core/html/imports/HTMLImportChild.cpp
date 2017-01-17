@@ -32,9 +32,9 @@
 #include "core/html/imports/HTMLImportChild.h"
 
 #include "core/dom/Document.h"
-// #include "core/dom/custom/CustomElement.h"
-// #include "core/dom/custom/CustomElementMicrotaskImportStep.h"
-// #include "core/dom/custom/CustomElementSyncMicrotaskQueue.h"
+#include "core/dom/custom/CustomElement.h"
+#include "core/dom/custom/CustomElementMicrotaskImportStep.h"
+#include "core/dom/custom/CustomElementSyncMicrotaskQueue.h"
 #include "core/html/imports/HTMLImportChildClient.h"
 #include "core/html/imports/HTMLImportLoader.h"
 #include "core/html/imports/HTMLImportTreeRoot.h"
@@ -88,10 +88,7 @@ void HTMLImportChild::didFinish()
 void HTMLImportChild::didFinishLoading()
 {
     stateWillChange();
-#ifdef MINIBLINK_NOT_IMPLEMENTED
     CustomElement::didFinishLoadingImport(*(root()->document()));
-#endif // MINIBLINK_NOT_IMPLEMENTED
-    notImplemented();
 }
 
 void HTMLImportChild::didFinishUpgradingCustomElements()
@@ -138,16 +135,13 @@ void HTMLImportChild::invalidateCustomElementMicrotaskStep()
 {
     if (!m_customElementMicrotaskStep)
         return;
-#ifdef MINIBLINK_NOT_IMPLEMENTED
+
     m_customElementMicrotaskStep->invalidate();
     m_customElementMicrotaskStep.clear();
-#endif // MINIBLINK_NOT_IMPLEMENTED
-    notImplemented();
 }
 
 void HTMLImportChild::createCustomElementMicrotaskStepIfNeeded()
 {
-#ifdef MINIBLINK_NOT_IMPLEMENTED
     ASSERT(!m_customElementMicrotaskStep);
 
     if (!hasFinishedLoading() && !formsCycle()) {
@@ -157,8 +151,6 @@ void HTMLImportChild::createCustomElementMicrotaskStepIfNeeded()
         m_customElementMicrotaskStep = CustomElement::didCreateImport(this)->weakPtr();
 #endif
     }
-#endif // MINIBLINK_NOT_IMPLEMENTED
-    notImplemented();
 }
 
 bool HTMLImportChild::hasFinishedLoading() const
@@ -232,9 +224,7 @@ void HTMLImportChild::showThis()
 
 DEFINE_TRACE(HTMLImportChild)
 {
-#ifdef MINIBLINK_NOT_IMPLEMENTED
     visitor->trace(m_customElementMicrotaskStep);
-#endif
     visitor->trace(m_loader);
     visitor->trace(m_client);
     HTMLImport::trace(visitor);

@@ -9,6 +9,7 @@
 #include "third_party/WebKit/public/platform/WebCursorInfo.h"
 
 #include "cc/trees/LayerTreeHost.h"
+//#include "cc/trees/LayerTreeHostUiThreadClient.h"
 #include "skia/ext/platform_canvas.h"
 
 namespace cc {
@@ -37,7 +38,7 @@ class WebPage;
 class PlatformEventHandler;
 class NavigationController;
 
-class WebPageImpl : public blink::WebViewClient {
+class WebPageImpl : public blink::WebViewClient, public cc::LayerTreeHostUiThreadClient {
 public:
     WebPageImpl();
     ~WebPageImpl();
@@ -79,22 +80,10 @@ public:
     virtual blink::WebLayerTreeView* layerTreeView() OVERRIDE;
     virtual void didChangeCursor(const blink::WebCursorInfo&) OVERRIDE;
     virtual void closeWidgetSoon() override;
-
-    void clearPaintWhenLayeredWindow(skia::PlatformCanvas* canvas, const blink::IntRect& rect);
-
-    // Merge any areas that would reduce the total area
-    void mergeDirtyList();
-
-    bool doMergeDirtyList(bool forceMerge);
-
-    void postPaintMessage(const blink::IntRect& paintRect);
-
+    
     void testPaint();
 
     void beginMainFrame();
-    
-    void paintToPlatformContext(const blink::IntRect& paintRect);
-    bool drawFrame();
     
     void repaintRequested(const blink::IntRect& windowRect);
 
@@ -120,19 +109,18 @@ public:
     void setViewportSize(const blink::IntSize& size);
 
 	blink::IntRect caretRect() const;
-   
-    void drawToCanvas(const blink::IntRect& dirtyRect, skia::PlatformCanvas* canvas, bool needsFullTreeSync);
         
     void setPainting(bool value) { m_painting = value; }
 
     void showDebugNodeData();
-    void drawDebugLine(skia::PlatformCanvas* memoryCanvas, const blink::IntRect& paintRect);
 
     bool needsCommit() const { return m_needsCommit; }
     void setNeedsCommit();
     void setNeedsCommitAndNotLayout();
     void clearNeedsCommit();
-    bool isDrawDirty() const { return m_isDrawDirty; }
+    bool isDrawDirty();
+
+    virtual void paintToMemoryCanvasInUiThread(SkCanvas* canvas, const blink::IntRect& paintRect) override;
     
     cc::LayerTreeHost* layerTreeHost() { return m_layerTreeHost; }
 
@@ -170,15 +158,15 @@ public:
     // ----
     void executeMainFrame();
 
+    void copyToMemoryCanvasForUi();
+
     bool m_useLayeredBuffer;
 
 	blink::IntRect m_winodwRect;
-	blink::IntRect m_clientRect; // 方便WebPage修改
-    bool m_hasResize;
+
     bool m_postMouseLeave; // 系统的MouseLeave获取到的鼠标位置不太准确，自己在定时器里再抛一次
 	blink::RGBA32 m_bdColor;
-    double m_lastFrameTimeMonotonic;
-    double m_lastDrawTime;
+
     WebPage* m_pagePtr;
     blink::WebViewImpl* m_webViewImpl;
     bool m_mouseInWindow;
@@ -192,20 +180,8 @@ public:
     CefBrowserHostImpl* m_browser;
 #endif
     cc::LayerTreeHost* m_layerTreeHost;
-	blink::IntRect m_paintRect;
-    skia::PlatformCanvas* m_memoryCanvas;
     bool m_painting;
-
-    Vector<blink::IntRect> m_paintMessageQueue;
-    static const int m_paintMessageQueueSize = 200;
-    Vector<blink::IntRect> m_dirtyRects;
-    int m_postpaintMessageCount;
-    int m_scheduleMessageCount;
-    bool m_needsCommit;
-    int m_commitCount;
-    bool m_needsLayout;
-    bool m_isDrawDirty;
-    
+        
     enum WebPageState {
         pageUninited,
         pageInited,
@@ -234,6 +210,12 @@ public:
 
     HWND m_popupHandle;
     int m_debugCount;
+    int m_needsCommit;
+    int m_commitCount;
+    int m_needsLayout;
+    double m_lastFrameTimeMonotonic;
+
+    SkCanvas* m_memoryCanvasForUi;
 };
 
 } // blink

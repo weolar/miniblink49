@@ -37,9 +37,6 @@
     <Filter Include="src\ic\ia32">
       <UniqueIdentifier>{9f032fe6-44f6-403e-855a-04c5f0942b3f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\interpreter">
-      <UniqueIdentifier>{3ad85d8b-986a-4dab-b2a0-ac029018d318}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\ast">
       <UniqueIdentifier>{5b263d80-58ae-4206-ba39-350059d89ff7}</UniqueIdentifier>
     </Filter>
@@ -598,75 +595,6 @@
     </ClCompile>
     <ClCompile Include="..\..\v8_5_7\src\base\debug\stack_trace_win.cc">
       <Filter>src\base\debug</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_7\src\interpreter\bytecode-array-accessor.cc">
-      <Filter>src\interpreter</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_7\src\interpreter\bytecode-array-builder.cc">
-      <Filter>src\interpreter</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_7\src\interpreter\bytecode-array-iterator.cc">
-      <Filter>src\interpreter</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_7\src\interpreter\bytecode-array-random-iterator.cc">
-      <Filter>src\interpreter</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_7\src\interpreter\bytecode-array-writer.cc">
-      <Filter>src\interpreter</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_7\src\interpreter\bytecode-dead-code-optimizer.cc">
-      <Filter>src\interpreter</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_7\src\interpreter\bytecode-decoder.cc">
-      <Filter>src\interpreter</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_7\src\interpreter\bytecode-flags.cc">
-      <Filter>src\interpreter</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_7\src\interpreter\bytecode-generator.cc">
-      <Filter>src\interpreter</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_7\src\interpreter\bytecode-label.cc">
-      <Filter>src\interpreter</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_7\src\interpreter\bytecode-operands.cc">
-      <Filter>src\interpreter</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_7\src\interpreter\bytecode-peephole-optimizer.cc">
-      <Filter>src\interpreter</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_7\src\interpreter\bytecode-peephole-table.cc">
-      <Filter>src\interpreter</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_7\src\interpreter\bytecode-pipeline.cc">
-      <Filter>src\interpreter</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_7\src\interpreter\bytecode-register.cc">
-      <Filter>src\interpreter</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_7\src\interpreter\bytecode-register-optimizer.cc">
-      <Filter>src\interpreter</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_7\src\interpreter\bytecodes.cc">
-      <Filter>src\interpreter</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_7\src\interpreter\constant-array-builder.cc">
-      <Filter>src\interpreter</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_7\src\interpreter\control-flow-builders.cc">
-      <Filter>src\interpreter</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_7\src\interpreter\handler-table-builder.cc">
-      <Filter>src\interpreter</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_7\src\interpreter\interpreter.cc">
-      <Filter>src\interpreter</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_7\src\interpreter\interpreter-assembler.cc">
-      <Filter>src\interpreter</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\v8_5_7\src\interpreter\interpreter-intrinsics.cc">
-      <Filter>src\interpreter</Filter>
     </ClCompile>
     <ClCompile Include="..\..\v8_5_7\src\base\bits.cc">
       <Filter>src\base</Filter>
