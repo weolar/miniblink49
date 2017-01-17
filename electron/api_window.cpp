@@ -410,33 +410,33 @@ public:
         unsigned styles = 0;
         unsigned styleEx = 0;
 
-        WebContents* web_contents;
-        Handle<Object> _web_contents;
+        WebContents* webContents;
+        Handle<Object> webContentsV8;
         // If no WebContents was passed to the constructor, create it from options.
-        if (!options->Get("webContents", &_web_contents)) {
+        if (!options->Get("webContents", &webContentsV8)) {
             // Use options.webPreferences to create WebContents.
-            gin::Dictionary web_preferences = gin::Dictionary::CreateEmpty(options->isolate());
-            options->Get(options::kWebPreferences, &web_preferences);
+            gin::Dictionary webPreferences = gin::Dictionary::CreateEmpty(options->isolate());
+            options->Get(options::kWebPreferences, &webPreferences);
 
             // Copy the backgroundColor to webContents.
             v8::Local<v8::Value> value;
             if (options->Get(options::kBackgroundColor, &value))
-                web_preferences.Set(options::kBackgroundColor, value);
+                webPreferences.Set(options::kBackgroundColor, value);
 
             v8::Local<v8::Value> transparent;
             if (options->Get("transparent", &transparent))
-                web_preferences.Set("transparent", transparent);
+                webPreferences.Set("transparent", transparent);
 
             // Offscreen windows are always created frameless.
             bool offscreen;
-            if (web_preferences.Get("offscreen", &offscreen) && offscreen) {
+            if (webPreferences.Get("offscreen", &offscreen) && offscreen) {
                 options->Set(options::kFrame, false);
             }
-            web_contents = WebContents::create(options->isolate(), web_preferences);
+            webContents = WebContents::create(options->isolate(), webPreferences);
         } else
-            web_contents = WebContents::ObjectWrap::Unwrap<WebContents>(_web_contents);
+            webContents = WebContents::ObjectWrap::Unwrap<WebContents>(webContentsV8);
         
-        win->m_webContents = web_contents;
+        win->m_webContents = webContents;
 
         v8::Local<v8::Value> transparent;
         options->Get("transparent", &transparent);
@@ -459,18 +459,19 @@ public:
             styleEx = 0;
         }
 
-        wchar_t s_title[256];
+        std::vector<wchar_t> s_title;
+        s_title.resize(1023);
         if (title->IsString()) {
             v8::String::Utf8Value str(title);
-            MultiByteToWideChar(CP_UTF8, 0, *str, -1, s_title, 256);
+            MultiByteToWideChar(CP_UTF8, 0, *str, -1, &s_title[0], 256);
         } else {
-            wcscpy(s_title, L"Electron");
+            wcscpy(&s_title[0], L"Electron");
         }
 
         win->m_hWnd = CreateWindowEx(
             styleEx,        // window ex-style
             L"mb_electron_window",    // window class name
-            s_title, // window caption
+            &s_title[0], // window caption
             styles,         // window style
             x->Int32Value(),              // initial x position
             y->Int32Value(),              // initial y position
@@ -496,19 +497,18 @@ public:
 
     }
 
-    static void *task_WindowFree(Window *data) {
+    static void* windowFreeTask(Window *data) {
         //delete data->m_webContents;
         SendMessage(data->m_hWnd, WM_CLOSE, 0, 0);
         return NULL;
     }
 
     ~Window() {
-        mainSyncCall((CoreMainTask)task_WindowFree, this);
+        callUiThreadSync((CoreMainTask)windowFreeTask, this);
         WindowList::GetInstance()->RemoveWindow(this);
     }
 
 private:
-    // new方法
     static void New(const v8::FunctionCallbackInfo<v8::Value>& args) {
         Isolate* isolate = args.GetIsolate();
         HandleScope scope(isolate);
@@ -520,7 +520,7 @@ private:
             // 使用new调用 `new Point(...)`
             gin::Dictionary options(args.GetIsolate(), args[0]->ToObject());
             // new一个对象
-            Window* win = (Window*)mainSyncCall((CoreMainTask)WindowNewTask, &options);
+            Window* win = (Window*)callUiThreadSync((CoreMainTask)WindowNewTask, &options);
             WindowList::GetInstance()->AddWindow(win);
             // 包装this指针
 			win->Wrap(args.This(), isolate);

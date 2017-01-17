@@ -12,8 +12,7 @@ using namespace node;
 #if USING_VC6RT == 1
 void __cdecl operator delete(void * p, unsigned int)
 {
-    DebugBreak();
-    free(p);
+    ::free(p);
 }
 
 extern "C" int __security_cookie = 0;
@@ -30,40 +29,40 @@ struct TaskAsyncData {
 	uv_mutex_t mutex;
     uv_thread_t main_thread_id;
 };
-TaskAsyncData mainAsync;
+TaskAsyncData* g_asyncData = nullptr;
 uv_timer_t gcTimer;
 
-static void mainAsyncCallback(uv_async_t* handle) {
-    if (mainAsync.call) {
-        mainAsync.ret = mainAsync.call(mainAsync.data);
-        ::PulseEvent(mainAsync.event);
+static void callbackInUiThread(uv_async_t* handle) {
+    if (g_asyncData->call) {
+        g_asyncData->ret = g_asyncData->call(g_asyncData->data);
+        ::PulseEvent(g_asyncData->event);
     }
 }
 
-void mainAsyncCall(CoreMainTask call, void* data) {
-	uv_mutex_lock(&mainAsync.mutex);
-	mainAsync.call = call;
-    mainAsync.data = data;
-    uv_async_send((uv_async_t*)&mainAsync);
+void callUiThreadAsync(CoreMainTask call, void* data) {
+	uv_mutex_lock(&g_asyncData->mutex);
+    g_asyncData->call = call;
+    g_asyncData->data = data;
+    uv_async_send((uv_async_t*)g_asyncData);
 }
 
-void* mainAsyncWait() {
-    ::WaitForSingleObject(mainAsync.event, INFINITE);
-	uv_mutex_unlock(&mainAsync.mutex);
-    return mainAsync.ret;
+void* waitForCallUiThreadAsync() {
+    ::WaitForSingleObject(g_asyncData->event, INFINITE);
+	uv_mutex_unlock(&g_asyncData->mutex);
+    return g_asyncData->ret;
 }
 
-void* mainSyncCall(CoreMainTask call, void* data) {
-    mainAsyncCall(call, data);
-	void* ret = mainAsyncWait();
+void* callUiThreadSync(CoreMainTask call, void* data) {
+    callUiThreadAsync(call, data);
+	void* ret = waitForCallUiThreadAsync();
     return ret;
 }
 
-bool mainSyncCall(v8::FunctionCallback call, const v8::FunctionCallbackInfo<v8::Value>& args) {
-    if (uv_thread_self() == mainAsync.main_thread_id)
+bool callUiThreadSync(v8::FunctionCallback call, const v8::FunctionCallbackInfo<v8::Value>& args) {
+    if (uv_thread_self() == g_asyncData->main_thread_id)
         return false;
-    mainAsyncCall((CoreMainTask)call, (void *)&args);
-    mainAsyncWait();
+    callUiThreadAsync((CoreMainTask)call, (void *)&args);
+    waitForCallUiThreadAsync();
     return true;
 }
 
@@ -103,10 +102,11 @@ int APIENTRY wWinMain(HINSTANCE hInstance,
 
     uv_loop_t* loop = uv_default_loop();
 
-    atom::mainAsync.event = ::CreateEvent(NULL, FALSE, FALSE, NULL);
-    uv_async_init(loop, (uv_async_t*)&atom::mainAsync, atom::mainAsyncCallback);
-	uv_mutex_init(&atom::mainAsync.mutex);
-    atom::mainAsync.main_thread_id= uv_thread_self();
+    atom::g_asyncData = new atom::TaskAsyncData();
+    atom::g_asyncData->event = ::CreateEvent(NULL, FALSE, FALSE, NULL);
+    uv_async_init(loop, (uv_async_t*)atom::g_asyncData, atom::callbackInUiThread);
+	uv_mutex_init(&atom::g_asyncData->mutex);
+    atom::g_asyncData->main_thread_id = uv_thread_self();
 
     wchar_t* argv1[] = { L"electron.exe", L"init.js" };
     node::NodeArgc* node = node::runNodeThread(2, argv1, atom::nodeInitCallBack, NULL);
@@ -123,6 +123,9 @@ int APIENTRY wWinMain(HINSTANCE hInstance,
     }
 
 	wkeFinalize();
+
+    delete atom::g_asyncData;
+
 	return msg.message;
 }
 
