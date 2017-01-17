@@ -2,7 +2,7 @@
 #include "nodeblink.h"
 #include <node_object_wrap.h>
 #include "wke.h"
-#include "electron.h"
+#include "ThreadCall.h"
 #include "dictionary.h"
 #include "api_web_contents.h"
 #include "NodeRegisterHelp.h"
@@ -178,7 +178,7 @@ static void* WebContentsLoadUrlTask(const v8::FunctionCallbackInfo<v8::Value>* a
 }
 
 void WebContents::_loadURL(const v8::FunctionCallbackInfo<v8::Value>& args) {
-    if (callUiThreadSync(_loadURL, args)) {
+    if (ThreadCall::callUiThreadSync(_loadURL, args)) {
         return;
     }
     Isolate* isolate = args.GetIsolate();

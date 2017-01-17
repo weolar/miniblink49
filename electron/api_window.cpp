@@ -2,8 +2,7 @@
 #include "nodeblink.h"
 #include <node_object_wrap.h>
 #include "wke.h"
-
-#include "electron.h"
+#include "ThreadCall.h"
 #include "dictionary.h"
 #include "options_switches.h"
 #include "api_web_contents.h"
@@ -26,6 +25,7 @@ static NodeNative nativeHello{ "hello", helloNative, sizeof(helloNative) };
 // 继承node的ObjectWrap，一般自定义C++类都应该继承node的ObjectWrap
 class Window : public node::ObjectWrap {
 public:
+
     // 静态方法，用于注册类和方法
     static void init(Local<Object> target, Environment* env) {
         Isolate* isolate = env->isolate();
@@ -176,7 +176,7 @@ public:
 
     //窗口消息处理
     static LRESULT CALLBACK windowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) {
-        Window *win = (Window *)GetPropW(hwnd, kPrppW);
+        Window* win = (Window *)GetPropW(hwnd, kPrppW);
         if (!win) {
             if (message == WM_CREATE) {
                 LPCREATESTRUCTW cs = (LPCREATESTRUCTW)lParam;
@@ -504,7 +504,7 @@ public:
     }
 
     ~Window() {
-        callUiThreadSync((CoreMainTask)windowFreeTask, this);
+        ThreadCall::callUiThreadSync((ThreadCall::CoreMainTask)windowFreeTask, this);
         WindowList::GetInstance()->RemoveWindow(this);
     }
 
@@ -520,7 +520,7 @@ private:
             // 使用new调用 `new Point(...)`
             gin::Dictionary options(args.GetIsolate(), args[0]->ToObject());
             // new一个对象
-            Window* win = (Window*)callUiThreadSync((CoreMainTask)WindowNewTask, &options);
+            Window* win = (Window*)ThreadCall::callUiThreadSync((ThreadCall::CoreMainTask)WindowNewTask, &options);
             WindowList::GetInstance()->AddWindow(win);
             // 包装this指针
 			win->Wrap(args.This(), isolate);
@@ -710,6 +710,7 @@ private:
     }
 
     static v8::Persistent<v8::Function> constructor;
+
 private:
     WebContents* m_webContents;
     HWND m_hWnd;

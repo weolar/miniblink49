@@ -3,7 +3,7 @@
 #include "nodeblink.h"
 #include <node_object_wrap.h>
 #include "wke.h"
-#include "electron.h"
+#include "ThreadCall.h"
 #include "dictionary.h"
 #include "NodeRegisterHelp.h"
 

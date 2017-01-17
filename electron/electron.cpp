@@ -1,9 +1,10 @@
 ﻿
 #include "electron.h"
 
-#include "lib/native.h"
+#include "ThreadCall.h"
 #include "NodeRegisterHelp.h"
 
+#include "lib/native.h"
 #include <windows.h>
 
 using namespace v8;
@@ -20,51 +21,7 @@ extern "C" int __security_cookie = 0;
 
 namespace atom {
 
-struct TaskAsyncData {
-	uv_async_t async;
-    CoreMainTask call;
-    void* data;
-    HANDLE event;
-    void* ret;
-	uv_mutex_t mutex;
-    uv_thread_t main_thread_id;
-};
-TaskAsyncData* g_asyncData = nullptr;
 uv_timer_t gcTimer;
-
-static void callbackInUiThread(uv_async_t* handle) {
-    if (g_asyncData->call) {
-        g_asyncData->ret = g_asyncData->call(g_asyncData->data);
-        ::PulseEvent(g_asyncData->event);
-    }
-}
-
-void callUiThreadAsync(CoreMainTask call, void* data) {
-	uv_mutex_lock(&g_asyncData->mutex);
-    g_asyncData->call = call;
-    g_asyncData->data = data;
-    uv_async_send((uv_async_t*)g_asyncData);
-}
-
-void* waitForCallUiThreadAsync() {
-    ::WaitForSingleObject(g_asyncData->event, INFINITE);
-	uv_mutex_unlock(&g_asyncData->mutex);
-    return g_asyncData->ret;
-}
-
-void* callUiThreadSync(CoreMainTask call, void* data) {
-    callUiThreadAsync(call, data);
-	void* ret = waitForCallUiThreadAsync();
-    return ret;
-}
-
-bool callUiThreadSync(v8::FunctionCallback call, const v8::FunctionCallbackInfo<v8::Value>& args) {
-    if (uv_thread_self() == g_asyncData->main_thread_id)
-        return false;
-    callUiThreadAsync((CoreMainTask)call, (void *)&args);
-    waitForCallUiThreadAsync();
-    return true;
-}
 
 NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT_DECLARE_IN_MAIN(atom_browser_web_contents)
 NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT_DECLARE_IN_MAIN(atom_browser_app)
@@ -81,6 +38,7 @@ static void gcTimerCallBack(uv_timer_t* handle) {
     if (isolate)
         isolate->LowMemoryNotification();
 }
+
 void nodeInitCallBack(NodeArgc* n) {
     gcTimer.data = n->childEnv->isolate();
     uv_timer_init(n->childLoop, &gcTimer);
@@ -98,15 +56,9 @@ int APIENTRY wWinMain(HINSTANCE hInstance,
 
     atom::registerNodeMod();
 
-    wkeInitialize();
-
     uv_loop_t* loop = uv_default_loop();
 
-    atom::g_asyncData = new atom::TaskAsyncData();
-    atom::g_asyncData->event = ::CreateEvent(NULL, FALSE, FALSE, NULL);
-    uv_async_init(loop, (uv_async_t*)atom::g_asyncData, atom::callbackInUiThread);
-	uv_mutex_init(&atom::g_asyncData->mutex);
-    atom::g_asyncData->main_thread_id = uv_thread_self();
+    atom::ThreadCall::init(loop);
 
     wchar_t* argv1[] = { L"electron.exe", L"init.js" };
     node::NodeArgc* node = node::runNodeThread(2, argv1, atom::nodeInitCallBack, NULL);
@@ -124,7 +76,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance,
 
 	wkeFinalize();
 
-    delete atom::g_asyncData;
+    atom::ThreadCall::shutdown();
 
 	return msg.message;
 }
