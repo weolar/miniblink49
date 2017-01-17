@@ -30,6 +30,7 @@
     <ClCompile Include="..\..\electron\electron.cpp" />
     <ClCompile Include="..\..\electron\api_window.cpp" />
     <ClCompile Include="..\..\electron\options_switches.cc" />
+    <ClCompile Include="..\..\electron\window_list.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\electron\api_app.h" />
@@ -39,6 +40,7 @@
     <ClInclude Include="..\..\electron\electron.h" />
     <ClInclude Include="..\..\electron\NodeRegisterHelp.h" />
     <ClInclude Include="..\..\electron\options_switches.h" />
+    <ClInclude Include="..\..\electron\window_list.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{419D9B69-AC50-49EA-9188-40FB63BE1C90}</ProjectGuid>

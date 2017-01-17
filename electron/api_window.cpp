@@ -8,6 +8,7 @@
 #include "options_switches.h"
 #include "api_web_contents.h"
 #include "NodeRegisterHelp.h"
+#include "window_list.h"
 
 using namespace v8;
 using namespace node;
@@ -503,6 +504,7 @@ public:
 
     ~Window() {
         mainSyncCall((CoreMainTask)task_WindowFree, this);
+        WindowList::GetInstance()->RemoveWindow(this);
     }
 
 private:
@@ -519,6 +521,7 @@ private:
             gin::Dictionary options(args.GetIsolate(), args[0]->ToObject());
             // new一个对象
             Window* win = (Window*)mainSyncCall((CoreMainTask)WindowNewTask, &options);
+            WindowList::GetInstance()->AddWindow(win);
             // 包装this指针
 			win->Wrap(args.This(), isolate);
             args.GetReturnValue().Set(args.This());
