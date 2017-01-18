@@ -105,7 +105,7 @@ private:
     void doGarbageCollected();
 
     CRITICAL_SECTION* m_lock;
-    static const int m_maxThreadNum = 20;
+    static const int m_maxThreadNum = 1000;
     std::vector<WebThreadImpl*> m_threads;
     int m_threadNum;
 
