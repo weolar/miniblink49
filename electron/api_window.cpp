@@ -36,6 +36,8 @@ public:
     }
 
     ~Window() {
+        DebugBreak();
+
         if (m_hbmpMemory)
             ::DeleteObject(m_hbmpMemory);
 
@@ -159,7 +161,7 @@ public:
 
     static void staticOnPaintUpdated(wkeWebView webView, Window* win, const HDC hdc, int x, int y, int cx, int cy) {
         HWND hWnd = win->m_hWnd;
-        HDC hdcScreen = GetDC(NULL);
+        HDC hdcScreen = ::GetDC(hWnd);
         RECT rectDest;
         if (WS_EX_LAYERED == (WS_EX_LAYERED & GetWindowLong(hWnd, GWL_EXSTYLE))) {
             ::GetWindowRect(hWnd, &rectDest);

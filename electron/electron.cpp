@@ -35,6 +35,8 @@ static void registerNodeMod() {
 }
 
 static void gcTimerCallBack(uv_timer_t* handle) {
+    return;
+
     v8::Isolate *isolate = (v8::Isolate *)(handle->data);
     if (isolate)
         isolate->LowMemoryNotification();

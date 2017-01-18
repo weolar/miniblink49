@@ -16,23 +16,17 @@ public:
 
 private:
     struct TaskAsyncData {
-        uv_async_t async;
         CoreMainTask call;
         void* data;
         void* dataEx;
         HANDLE event;
         void* ret;
-        uv_mutex_t mutex;
         DWORD fromThreadId;
         DWORD toThreadId;
     };
 
 public:
-    //static bool callUiThreadSync(v8::FunctionCallback call, const v8::FunctionCallbackInfo<v8::Value>& args);
-
     static void callBlinkThreadSync(std::function<void(void)> closure);
-    //static void callBlinkThreadAsync(std::function<void(void)> closure);
-
     static void callUiThreadSync(std::function<void(void)> closure);
 
     static void shutdown();
@@ -53,6 +47,7 @@ private:
     static uv_loop_t* m_blinkLoop;
 
     static void callbackInThread(uv_async_t* handle);
+    static void callbackInOtherThread(TaskAsyncData* asyncData);
 
     static void callAsync(TaskAsyncData* asyncData, CoreMainTask call, void* data);
 
