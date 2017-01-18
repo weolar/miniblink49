@@ -2,7 +2,7 @@
 #include "nodeblink.h"
 #include <node_object_wrap.h>
 #include "wke.h"
-#include "electron.h"
+#include "ThreadCall.h"
 #include "dictionary.h"
 #include "api_web_contents.h"
 #include "NodeRegisterHelp.h"
@@ -28,11 +28,12 @@ void WebContents::init(Local<Object> target, Environment* env) {
     Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, newFunction);
     // 类名
     tpl->SetClassName(String::NewFromUtf8(isolate, "WebContents"));
+
     // InternalField
     tpl->InstanceTemplate()->SetInternalFieldCount(1);
     v8::Local<v8::Template> t = tpl->InstanceTemplate();
-    // 设置Prototype函数
 
+    // 设置Prototype函数
     NODE_SET_METHOD(t, "getId", nullFunction);
     NODE_SET_METHOD(t, "getProcessId", nullFunction);
     NODE_SET_METHOD(t, "equal", nullFunction);
@@ -177,7 +178,7 @@ static void* WebContentsLoadUrlTask(const v8::FunctionCallbackInfo<v8::Value>* a
 }
 
 void WebContents::_loadURL(const v8::FunctionCallbackInfo<v8::Value>& args) {
-    if (mainSyncCall(_loadURL, args)) {
+    if (ThreadCall::callUiThreadSync(_loadURL, args)) {
         return;
     }
     Isolate* isolate = args.GetIsolate();

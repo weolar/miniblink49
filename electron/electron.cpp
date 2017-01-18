@@ -1,9 +1,10 @@
 ﻿
 #include "electron.h"
 
-#include "lib/native.h"
+#include "ThreadCall.h"
 #include "NodeRegisterHelp.h"
 
+#include "lib/native.h"
 #include <windows.h>
 
 using namespace v8;
@@ -12,8 +13,7 @@ using namespace node;
 #if USING_VC6RT == 1
 void __cdecl operator delete(void * p, unsigned int)
 {
-    DebugBreak();
-    free(p);
+    ::free(p);
 }
 
 extern "C" int __security_cookie = 0;
@@ -21,51 +21,7 @@ extern "C" int __security_cookie = 0;
 
 namespace atom {
 
-struct TaskAsyncData {
-	uv_async_t async;
-    CoreMainTask call;
-    void* data;
-    HANDLE event;
-    void* ret;
-	uv_mutex_t mutex;
-    uv_thread_t main_thread_id;
-};
-TaskAsyncData mainAsync;
 uv_timer_t gcTimer;
-
-static void mainAsyncCallback(uv_async_t* handle) {
-    if (mainAsync.call) {
-        mainAsync.ret = mainAsync.call(mainAsync.data);
-        ::PulseEvent(mainAsync.event);
-    }
-}
-
-void mainAsyncCall(CoreMainTask call, void* data) {
-	uv_mutex_lock(&mainAsync.mutex);
-	mainAsync.call = call;
-    mainAsync.data = data;
-    uv_async_send((uv_async_t*)&mainAsync);
-}
-
-void* mainAsyncWait() {
-    ::WaitForSingleObject(mainAsync.event, INFINITE);
-	uv_mutex_unlock(&mainAsync.mutex);
-    return mainAsync.ret;
-}
-
-void* mainSyncCall(CoreMainTask call, void* data) {
-    mainAsyncCall(call, data);
-	void* ret = mainAsyncWait();
-    return ret;
-}
-
-bool mainSyncCall(v8::FunctionCallback call, const v8::FunctionCallbackInfo<v8::Value>& args) {
-    if (uv_thread_self() == mainAsync.main_thread_id)
-        return false;
-    mainAsyncCall((CoreMainTask)call, (void *)&args);
-    mainAsyncWait();
-    return true;
-}
 
 NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT_DECLARE_IN_MAIN(atom_browser_web_contents)
 NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT_DECLARE_IN_MAIN(atom_browser_app)
@@ -82,6 +38,7 @@ static void gcTimerCallBack(uv_timer_t* handle) {
     if (isolate)
         isolate->LowMemoryNotification();
 }
+
 void nodeInitCallBack(NodeArgc* n) {
     gcTimer.data = n->childEnv->isolate();
     uv_timer_init(n->childLoop, &gcTimer);
@@ -99,14 +56,9 @@ int APIENTRY wWinMain(HINSTANCE hInstance,
 
     atom::registerNodeMod();
 
-    wkeInitialize();
-
     uv_loop_t* loop = uv_default_loop();
 
-    atom::mainAsync.event = ::CreateEvent(NULL, FALSE, FALSE, NULL);
-    uv_async_init(loop, (uv_async_t*)&atom::mainAsync, atom::mainAsyncCallback);
-	uv_mutex_init(&atom::mainAsync.mutex);
-    atom::mainAsync.main_thread_id= uv_thread_self();
+    atom::ThreadCall::init(loop);
 
     wchar_t* argv1[] = { L"electron.exe", L"init.js" };
     node::NodeArgc* node = node::runNodeThread(2, argv1, atom::nodeInitCallBack, NULL);
@@ -123,6 +75,9 @@ int APIENTRY wWinMain(HINSTANCE hInstance,
     }
 
 	wkeFinalize();
+
+    atom::ThreadCall::shutdown();
+
 	return msg.message;
 }
 
