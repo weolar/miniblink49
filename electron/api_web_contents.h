@@ -10,14 +10,12 @@ using namespace node;
 namespace atom {
 
 // 继承node的ObjectWrap，一般自定义C++类都应该继承node的ObjectWrap
-class WebContents :
-    public node::ObjectWrap {
+class WebContents : public node::ObjectWrap {
 public:
-    // 静态方法，用于注册类和方法
     static void init(Local<Object> target, Environment* env);
     static WebContents* create(Isolate* isolate, gin::Dictionary options);
-    // 不允许转换构造函数进行的隐式转换
-    explicit WebContents(v8::Isolate* isolate, const gin::Dictionary& options);
+
+    explicit WebContents();
     ~WebContents();
 
 private:
