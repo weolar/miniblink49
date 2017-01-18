@@ -21,11 +21,11 @@ static const char helloNative[] = { 239,187,191,39,117,115,101,32,115,116,114,10
 static NodeNative nativeHello{ "hello", helloNative, sizeof(helloNative) };
 
 // 静态方法，用于注册类和方法
-void WebContents::init(Local<Object> target, Environment* env) {
-    Isolate* isolate = env->isolate();
+void WebContents::init(v8::Local<v8::Object> target, Environment* env) {
+    v8::Isolate* isolate = env->isolate();
 
     // Function模板
-    Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, newFunction);
+    v8::Local<v8::FunctionTemplate> tpl = v8::FunctionTemplate::New(isolate, newFunction);
     // 类名
     tpl->SetClassName(String::NewFromUtf8(isolate, "WebContents"));
 
@@ -122,14 +122,14 @@ WebContents* WebContents::create(Isolate* isolate, gin::Dictionary options) {
     HandleScope scope(isolate);
     // 使用`Point(...)`
     const int argc = 1;
-    Local<Value> argv[argc] = { gin::ConvertToV8(isolate,options) };
+    v8::Local<v8::Value> argv[argc] = { gin::ConvertToV8(isolate,options) };
     // 使用constructor构建Function
-    Local<Function> cons = Local<Function>::New(isolate, constructor);
+    v8::Local<v8::Function> cons = Local<Function>::New(isolate, constructor);
 
     return WebContents::ObjectWrap::Unwrap<WebContents>(cons->NewInstance(argc, argv));
 }
 
-WebContents::WebContents(v8::Isolate* isolate, const gin::Dictionary& options) {
+WebContents::WebContents() {
     m_view = wkeCreateWebView();
 }
 
@@ -143,18 +143,21 @@ void WebContents::newFunction(const v8::FunctionCallbackInfo<v8::Value>& args) {
     HandleScope scope(isolate);
 
     if (args.IsConstructCall()) {
-        if (args.Length() > 1) {
+        if (args.Length() > 1)
             return;
-        }
+        
         // 使用new调用 `new Point(...)`
         gin::Dictionary options(args.GetIsolate(), args[0]->ToObject());
         // new一个对象
-        WebContents* con = new WebContents(isolate, options);
+        WebContents* webContents = nullptr;
+        WebContents** webContentsPtr = &webContents;
+        ThreadCall::callBlinkThreadSync([webContentsPtr] {
+            *webContentsPtr = new WebContents();
+        });
         // 包装this指针
-		con->Wrap(args.This(), isolate);
+        webContents->Wrap(args.This(), isolate);
         args.GetReturnValue().Set(args.This());
-    }
-    else {
+    } else {
         // 使用`Point(...)`
         const int argc = 2;
         Local<Value> argv[argc] = { args[0], args[1] };
@@ -164,31 +167,21 @@ void WebContents::newFunction(const v8::FunctionCallbackInfo<v8::Value>& args) {
     }
 }
 
-static void* WebContentsLoadUrlTask(const v8::FunctionCallbackInfo<v8::Value>* args) {
-    Isolate* isolate = args->GetIsolate();
-    HandleScope scope(isolate);
-    // 解封this指针
-    WebContents* con = ObjectWrap::Unwrap<WebContents>(args->Holder());
-    if ((*args)[0]->IsString()) {
-        v8::String::Utf8Value str((*args)[0]);
-       
-    }
+void WebContents::_loadURL(const v8::FunctionCallbackInfo<v8::Value>& args) {   
+    v8::Isolate* isolate = args.GetIsolate();
+    v8::HandleScope scope(isolate);
 
-    return NULL;
-}
-
-void WebContents::_loadURL(const v8::FunctionCallbackInfo<v8::Value>& args) {
-    if (ThreadCall::callUiThreadSync(_loadURL, args)) {
+    WebContents* webContents = ObjectWrap::Unwrap<WebContents>(args.Holder());
+    if (!args[0]->IsString())
         return;
-    }
-    Isolate* isolate = args.GetIsolate();
-    HandleScope scope(isolate);
-    // 解封this指针
-    WebContents* con = ObjectWrap::Unwrap<WebContents>(args.Holder());
-    if (args[0]->IsString()) {
-        v8::String::Utf8Value str(args[0]);
-        wkeLoadURL(con->m_view, *str);
-    }
+        
+    v8::String::Utf8Value strV8(args[0]);
+    std::string* str = new std::string(*strV8, strV8.length());
+
+    ThreadCall::callBlinkThreadSync([webContents, str] {
+        wkeLoadURL(webContents->m_view, str->c_str());
+        delete str;
+    });
 }
 
 // 空实现
@@ -198,8 +191,8 @@ void WebContents::nullFunction(const v8::FunctionCallbackInfo<v8::Value>& args) 
 Persistent<Function> WebContents::constructor;
 
 static void initializeWebContentApi(Local<Object> target,
-    Local<Value> unused,
-    Local<Context> context) {
+    v8::Local<Value> unused,
+    v8::Local<Context> context) {
     Environment* env = Environment::GetCurrent(context);
     WebContents::init(target, env);
 }
