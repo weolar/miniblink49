@@ -28,7 +28,8 @@ public:
     explicit Window() {
         m_webContents = nullptr;
         m_hWnd = nullptr;
-        m_hbmpMemory = nullptr;
+        m_memoryBMP = nullptr;
+        m_memoryDC = nullptr;
         m_clientRect.left = 0;
         m_clientRect.top = 0;
         m_clientRect.right = 0;
@@ -38,8 +39,10 @@ public:
     ~Window() {
         DebugBreak();
 
-        if (m_hbmpMemory)
-            ::DeleteObject(m_hbmpMemory);
+        if (m_memoryBMP)
+            ::DeleteObject(m_memoryBMP);
+        if (m_memoryDC)
+            ::DeleteDC(m_memoryDC);
 
         ThreadCall::callUiThreadSync([this] {
             //delete data->m_webContents;
@@ -177,22 +180,23 @@ public:
             blend.AlphaFormat = AC_SRC_ALPHA;
             ::UpdateLayeredWindow(hWnd, hdcScreen, &pointDest, &sizeDest, hdc, &pointSource, RGB(0, 0, 0), &blend, ULW_ALPHA);
         } else {
-            //RECT rc = { x, y, x + cx, y + cy };
-            //BOOL b = InvalidateRect(m_hWnd, &rc, TRUE);
-
             ::GetClientRect(hWnd, &rectDest);
             SIZE sizeDest = { rectDest.right - rectDest.left, rectDest.bottom - rectDest.top };
 
             if (win->m_clientRect.top != rectDest.top || win->m_clientRect.bottom != rectDest.bottom ||
                 win->m_clientRect.right != rectDest.right || win->m_clientRect.left != rectDest.left) {
-                if (win->m_hbmpMemory)
-                    ::DeleteObject((HGDIOBJ)win->m_hbmpMemory);
-                win->m_hbmpMemory = CreateCompatibleBitmap(hdcScreen, sizeDest.cx, sizeDest.cy);
+                if (win->m_memoryBMP)
+                    ::DeleteObject((HGDIOBJ)win->m_memoryBMP);
+                win->m_memoryBMP = ::CreateCompatibleBitmap(hdcScreen, sizeDest.cx, sizeDest.cy);
             }
 
-            HBITMAP hbmpOld = (HBITMAP)::SelectObject(hdcScreen, win->m_hbmpMemory);
-            ::BitBlt(hdcScreen, x, y, cx, cy, hdc, 0, 0, SRCCOPY);
-            ::SelectObject(hdcScreen, (HGDIOBJ)hbmpOld);
+            if (!win->m_memoryDC)
+                win->m_memoryDC = ::CreateCompatibleDC(hdc);
+
+            HBITMAP hbmpOld = (HBITMAP)::SelectObject(win->m_memoryDC, win->m_memoryBMP);
+            ::BitBlt(win->m_memoryDC, x, y, cx, cy, hdc, x, y, SRCCOPY);
+            ::SelectObject(win->m_memoryDC, (HGDIOBJ)hbmpOld);
+            ::BitBlt(hdc, x, y, cx, cy, win->m_memoryDC, x, y, SRCCOPY);
         }
 
         ::ReleaseDC(NULL, hdcScreen);
@@ -238,31 +242,33 @@ public:
             return 0;
 
         case WM_PAINT: {
-//             wkeRepaintIfNeeded(pthis);
-// 
-//             PAINTSTRUCT ps = { 0 };
-//             HDC hdc = ::BeginPaint(hwnd, &ps);
-// 
-//             RECT rcClip = ps.rcPaint;
-// 
-//             RECT rcClient;
-//             GetClientRect(hwnd, &rcClient);
-// 
-//             RECT rcInvalid = rcClient;
-//             if (rcClip.right != rcClip.left && rcClip.bottom != rcClip.top)
-//                 ::IntersectRect(&rcInvalid, &rcClip, &rcClient);
-// 
-//             int srcX = rcInvalid.left - rcClient.left;
-//             int srcY = rcInvalid.top - rcClient.top;
-//             int destX = rcInvalid.left;
-//             int destY = rcInvalid.top;
-//             int width = rcInvalid.right - rcInvalid.left;
-//             int height = rcInvalid.bottom - rcInvalid.top;
-// 
-//             if (0 != width && 0 != height)
-//                 ::BitBlt(hdc, destX, destY, width, height, wkeGetViewDC(pthis), srcX, srcY, SRCCOPY);
-// 
-//             ::EndPaint(hwnd, &ps);
+            PAINTSTRUCT ps = { 0 };
+            HDC hdc = ::BeginPaint(hwnd, &ps);
+
+            RECT rcClip = ps.rcPaint;
+
+            RECT rcClient;
+            ::GetClientRect(hwnd, &rcClient);
+
+            RECT rcInvalid = rcClient;
+            if (rcClip.right != rcClip.left && rcClip.bottom != rcClip.top)
+                ::IntersectRect(&rcInvalid, &rcClip, &rcClient);
+
+            int srcX = rcInvalid.left - rcClient.left;
+            int srcY = rcInvalid.top - rcClient.top;
+            int destX = rcInvalid.left;
+            int destY = rcInvalid.top;
+            int width = rcInvalid.right - rcInvalid.left;
+            int height = rcInvalid.bottom - rcInvalid.top;
+
+            if (0 != width && 0 != height && win->m_memoryBMP) {
+                if (!win->m_memoryDC)
+                    win->m_memoryDC = ::CreateCompatibleDC(hdc);
+                HBITMAP hbmpOld = (HBITMAP)::SelectObject(win->m_memoryDC, win->m_memoryBMP);
+                BOOL b = ::BitBlt(hdc, destX, destY, width, height, win->m_memoryDC, srcX, srcY, SRCCOPY);
+            }
+
+            ::EndPaint(hwnd, &ps);
         }
             break;
 
@@ -792,7 +798,8 @@ private:
     static const WCHAR* kPrppW;
     WebContents* m_webContents;
     HWND m_hWnd;
-    HBITMAP m_hbmpMemory;
+    HBITMAP m_memoryBMP;
+    HDC m_memoryDC;
     RECT m_clientRect;
 };
 
