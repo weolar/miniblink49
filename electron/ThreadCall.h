@@ -14,38 +14,46 @@ public:
 
     typedef void *(*CoreMainTask)(void *data);
 
-    static void callUiThreadAsync(CoreMainTask call, void* data);
-    static void* waitForCallUiThreadAsync();
+private:
+    struct TaskAsyncData {
+        CoreMainTask call;
+        void* data;
+        void* dataEx;
+        HANDLE event;
+        void* ret;
+        DWORD fromThreadId;
+        DWORD toThreadId;
+    };
 
-    static void* callUiThreadSync(CoreMainTask call, void* data);
-    static bool callUiThreadSync(v8::FunctionCallback call, const v8::FunctionCallbackInfo<v8::Value>& args);
-
+public:
     static void callBlinkThreadSync(std::function<void(void)> closure);
+    static void callUiThreadSync(std::function<void(void)> closure);
 
     static void shutdown();
 
-    static void createBlinkThread();
+    static void messageLoop(uv_loop_t* loop);
 
 private:
-    struct TaskAsyncData {
-        uv_async_t async;
-        CoreMainTask call;
-        void* data;
-        HANDLE event;
-        void* ret;
-        uv_mutex_t mutex;
-        uv_thread_t main_thread_id;
-    };
-    static TaskAsyncData* m_uiThreadAsyncData;
-    static TaskAsyncData* m_blinkThreadAsyncData;
+    static void* callUiThreadSync(CoreMainTask call, void* data);
+
+    static void* threadCallbackWrap(void* data);
+
+    static void createBlinkThread();
+
+    static DWORD m_blinkThreadId;
+    static DWORD m_uiThreadId;
+
+    static uv_loop_t* m_uiLoop;
+    static uv_loop_t* m_blinkLoop;
 
     static void callbackInThread(uv_async_t* handle);
+    static void callbackInOtherThread(TaskAsyncData* asyncData);
 
     static void callAsync(TaskAsyncData* asyncData, CoreMainTask call, void* data);
 
     static void* waitForCallThreadAsync(TaskAsyncData* asyncData);
 
-    static void initData(TaskAsyncData** asyncData, uv_loop_t* loop);
+    static TaskAsyncData* initAsyncData(uv_loop_t* loop, DWORD toThreadId);
 
     static void blinkThread(void* created);
 };

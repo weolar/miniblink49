@@ -6,6 +6,7 @@
 
 #include "lib/native.h"
 #include <windows.h>
+#include "base/thread.h"
 
 using namespace v8;
 using namespace node;
@@ -34,12 +35,15 @@ static void registerNodeMod() {
 }
 
 static void gcTimerCallBack(uv_timer_t* handle) {
+    return;
+
     v8::Isolate *isolate = (v8::Isolate *)(handle->data);
     if (isolate)
         isolate->LowMemoryNotification();
 }
 
 void nodeInitCallBack(NodeArgc* n) {
+    base::SetThreadName("NodeCore");
     gcTimer.data = n->childEnv->isolate();
     uv_timer_init(n->childLoop, &gcTimer);
     uv_timer_start(&gcTimer, gcTimerCallBack, 1000 * 10, 1);
@@ -63,22 +67,13 @@ int APIENTRY wWinMain(HINSTANCE hInstance,
     wchar_t* argv1[] = { L"electron.exe", L"init.js" };
     node::NodeArgc* node = node::runNodeThread(2, argv1, atom::nodeInitCallBack, NULL);
 
-    MSG msg;
-    bool more;
-    while (true) {
-        more = (0 != uv_run(loop, UV_RUN_NOWAIT));
-        if (GetMessageW(&msg, NULL, 0, 0)) {
-            TranslateMessage(&msg);
-            DispatchMessageW(&msg);
-        } else
-            break;
-    }
-
+    atom::ThreadCall::messageLoop(loop);
+    
 	wkeFinalize();
 
     atom::ThreadCall::shutdown();
 
-	return msg.message;
+	return 0;
 }
 
 int main() {
