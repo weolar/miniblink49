@@ -29,6 +29,7 @@ CWebView::CWebView()
     , m_title("", 0)
     , m_cookie("", 0)
     , m_name("", 0)
+    , m_url("", 0)
 {
     _initPage();
     _initHandler();
@@ -137,6 +138,7 @@ void CWebView::loadURL(const utf8* inUrl)
         return;
     }
 
+    m_url = inUrl;
     blink::WebURLRequest request(url);
     request.setCachePolicy(blink::WebURLRequest::UseProtocolCachePolicy);
     request.setHTTPMethod(blink::WebString::fromUTF8("GET"));
@@ -199,6 +201,11 @@ void CWebView::loadFile(const wchar_t* filename)
         ::PathAppend(filenameBuffer.data(), filenameUTF8.charactersWithNullTermination().data());
     }
     loadURL(filenameBuffer.data());
+}
+
+const utf8* CWebView::url() const
+{
+    return m_url.string();
 }
 
 bool CWebView::isLoading() const

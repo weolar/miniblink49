@@ -39,9 +39,9 @@ void WebContents::init(Local<Object> target, Environment* env) {
     NODE_SET_METHOD(t, "equal", nullFunction);
     NODE_SET_METHOD(t, "_loadURL", _loadURL);
     NODE_SET_METHOD(t, "downloadURL", nullFunction);
-    NODE_SET_METHOD(t, "_getURL", nullFunction);
-    NODE_SET_METHOD(t, "getTitle", nullFunction);
-    NODE_SET_METHOD(t, "isLoading", nullFunction);
+    NODE_SET_METHOD(t, "_getURL", _getURL);
+    NODE_SET_METHOD(t, "getTitle", getTitle);
+    NODE_SET_METHOD(t, "isLoading", isLoading);
     NODE_SET_METHOD(t, "isLoadingMainFrame", nullFunction);
     NODE_SET_METHOD(t, "isWaitingForResponse", nullFunction);
     NODE_SET_METHOD(t, "_stop", nullFunction);
@@ -189,6 +189,84 @@ void WebContents::_loadURL(const v8::FunctionCallbackInfo<v8::Value>& args) {
         v8::String::Utf8Value str(args[0]);
         wkeLoadURL(con->m_view, *str);
     }
+}
+
+void WebContents::_getURL(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    if (ThreadCall::callUiThreadSync(_getURL, args)) {
+        return;
+    }
+    Isolate* isolate = args.GetIsolate();
+    HandleScope scope(isolate);
+    // 解封this指针
+    WebContents* con = ObjectWrap::Unwrap<WebContents>(args.Holder());
+    
+    Local<v8::String> url;
+    String::NewFromUtf8(isolate, wkeGetURL(con->m_view), NewStringType::kNormal).ToLocal(&url);
+    args.GetReturnValue().Set(url);
+}
+
+void WebContents::getTitle(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    if (ThreadCall::callUiThreadSync(getTitle, args)) {
+        return;
+    }
+    Isolate* isolate = args.GetIsolate();
+    HandleScope scope(isolate);
+    // 解封this指针
+    WebContents* con = ObjectWrap::Unwrap<WebContents>(args.Holder());
+
+    Local<v8::String> title;
+    String::NewFromUtf8(isolate, wkeGetTitle(con->m_view), NewStringType::kNormal).ToLocal(&title);
+    args.GetReturnValue().Set(title);
+}
+
+void WebContents::isLoading(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    if (ThreadCall::callUiThreadSync(isLoading, args)) {
+        return;
+    }
+    Isolate* isolate = args.GetIsolate();
+    HandleScope scope(isolate);
+    // 解封this指针
+    WebContents* con = ObjectWrap::Unwrap<WebContents>(args.Holder());
+
+    Local<Boolean> ret = Boolean::New(isolate, wkeIsLoading(con->m_view));
+    args.GetReturnValue().Set(ret);
+}
+
+void WebContents::_stop(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    if (ThreadCall::callUiThreadSync(_stop, args)) {
+        return;
+    }
+    Isolate* isolate = args.GetIsolate();
+    HandleScope scope(isolate);
+    // 解封this指针
+    WebContents* con = ObjectWrap::Unwrap<WebContents>(args.Holder());
+    wkeStopLoading(con->m_view);
+}
+
+void WebContents::_goBack(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    if (ThreadCall::callUiThreadSync(_goBack, args)) {
+        return;
+    }
+    Isolate* isolate = args.GetIsolate();
+    HandleScope scope(isolate);
+    // 解封this指针
+    WebContents* con = ObjectWrap::Unwrap<WebContents>(args.Holder());
+    wkeGoBack(con->m_view);
+}
+
+void WebContents::_goForward(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    if (ThreadCall::callUiThreadSync(_goForward, args)) {
+        return;
+    }
+    Isolate* isolate = args.GetIsolate();
+    HandleScope scope(isolate);
+    // 解封this指针
+    WebContents* con = ObjectWrap::Unwrap<WebContents>(args.Holder());
+    wkeGoForward(con->m_view);
+}
+
+void WebContents::_goToOffset(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    //
 }
 
 // 空实现

@@ -87,6 +87,8 @@ public:
     void loadFile(const utf8* filename) override;
     void loadFile(const wchar_t* filename) override;
 
+    const utf8* url() const override;
+
 	void setUserAgent(const utf8 * useragent);
     void setUserAgent(const wchar_t * useragent);
 
@@ -218,6 +220,7 @@ protected:
 
 //     OwnPtr<WebCore::Page> m_page;
 //     WebCore::Frame* m_mainFrame;
+    wke::CString m_url;  //记录url地址
     wke::CString m_title;
     wke::CString m_cookie;
     wke::CString m_name;

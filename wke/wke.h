@@ -252,6 +252,8 @@ WKE_API void wkeLoadHTMLW(wkeWebView webView, const wchar_t* html);
 WKE_API void wkeLoadFile(wkeWebView webView, const utf8* filename);
 WKE_API void wkeLoadFileW(wkeWebView webView, const wchar_t* filename);
 
+WKE_API const utf8* wkeGetURL(wkeWebView webView);
+
 WKE_API bool wkeIsLoading(wkeWebView webView);
 WKE_API bool wkeIsLoadingSucceeded(wkeWebView webView);
 WKE_API bool wkeIsLoadingFailed(wkeWebView webView);
@@ -561,6 +563,8 @@ public:
 
     virtual void loadFile(const utf8* filename) = 0;
     virtual void loadFile(const wchar_t* filename) = 0;
+
+    virtual const utf8* url() const = 0;
 
     virtual bool isLoading() const = 0;        /*document load sucessed*/
     virtual bool isLoadingFailed() const = 0;    /*document load failed*/

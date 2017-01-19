@@ -240,6 +240,11 @@ void wkeLoadFileW(wkeWebView webView, const wchar_t* filename)
     return webView->loadFile(filename);
 }
 
+const utf8* wkeGetURL(wkeWebView webView)
+{
+    return webView->url();
+}
+
 bool wkeIsLoading(wkeWebView webView)
 {
     return webView->isLoading();
