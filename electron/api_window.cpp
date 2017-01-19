@@ -162,6 +162,33 @@ public:
         target->Set(String::NewFromUtf8(isolate, "BrowserWindow"), tpl->GetFunction());
     }
 
+    void onPaintUpdated(HDC hdcScreen, const HDC hdc, int x, int y, int cx, int cy) {
+        HWND hWnd = m_hWnd;
+        RECT rectDest;
+        ::GetClientRect(hWnd, &rectDest);
+        SIZE sizeDest = { rectDest.right - rectDest.left, rectDest.bottom - rectDest.top };
+        if (0 == sizeDest.cx * sizeDest.cy)
+            return;
+
+        if (!m_memoryDC)
+            m_memoryDC = ::CreateCompatibleDC(hdc);
+
+        if (m_clientRect.top != rectDest.top || m_clientRect.bottom != rectDest.bottom ||
+            m_clientRect.right != rectDest.right || m_clientRect.left != rectDest.left) {
+            m_clientRect = rectDest;
+
+            if (m_memoryBMP)
+                ::DeleteObject((HGDIOBJ)m_memoryBMP);
+            m_memoryBMP = ::CreateCompatibleBitmap(hdc, sizeDest.cx, sizeDest.cy);
+        }
+
+        HBITMAP hbmpOld = (HBITMAP)::SelectObject(m_memoryDC, m_memoryBMP);
+        ::BitBlt(m_memoryDC, x, y, cx, cy, hdc, x, y, SRCCOPY);
+        ::SelectObject(m_memoryDC, (HGDIOBJ)hbmpOld);
+
+        ::BitBlt(hdcScreen, x, y, cx, cy, hdc, x, y, SRCCOPY);
+    }
+
     static void staticOnPaintUpdated(wkeWebView webView, Window* win, const HDC hdc, int x, int y, int cx, int cy) {
         HWND hWnd = win->m_hWnd;
         HDC hdcScreen = ::GetDC(hWnd);
@@ -180,26 +207,10 @@ public:
             blend.AlphaFormat = AC_SRC_ALPHA;
             ::UpdateLayeredWindow(hWnd, hdcScreen, &pointDest, &sizeDest, hdc, &pointSource, RGB(0, 0, 0), &blend, ULW_ALPHA);
         } else {
-            ::GetClientRect(hWnd, &rectDest);
-            SIZE sizeDest = { rectDest.right - rectDest.left, rectDest.bottom - rectDest.top };
-
-            if (win->m_clientRect.top != rectDest.top || win->m_clientRect.bottom != rectDest.bottom ||
-                win->m_clientRect.right != rectDest.right || win->m_clientRect.left != rectDest.left) {
-                if (win->m_memoryBMP)
-                    ::DeleteObject((HGDIOBJ)win->m_memoryBMP);
-                win->m_memoryBMP = ::CreateCompatibleBitmap(hdcScreen, sizeDest.cx, sizeDest.cy);
-            }
-
-            if (!win->m_memoryDC)
-                win->m_memoryDC = ::CreateCompatibleDC(hdc);
-
-            HBITMAP hbmpOld = (HBITMAP)::SelectObject(win->m_memoryDC, win->m_memoryBMP);
-            ::BitBlt(win->m_memoryDC, x, y, cx, cy, hdc, x, y, SRCCOPY);
-            ::SelectObject(win->m_memoryDC, (HGDIOBJ)hbmpOld);
-            ::BitBlt(hdc, x, y, cx, cy, win->m_memoryDC, x, y, SRCCOPY);
+            win->onPaintUpdated(hdcScreen, hdc, x, y, cx, cy);
         }
 
-        ::ReleaseDC(NULL, hdcScreen);
+        ::ReleaseDC(hWnd, hdcScreen);
     }
 
     static LRESULT CALLBACK windowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) {
@@ -261,9 +272,7 @@ public:
             int width = rcInvalid.right - rcInvalid.left;
             int height = rcInvalid.bottom - rcInvalid.top;
 
-            if (0 != width && 0 != height && win->m_memoryBMP) {
-                if (!win->m_memoryDC)
-                    win->m_memoryDC = ::CreateCompatibleDC(hdc);
+            if (0 != width && 0 != height && win->m_memoryBMP && win->m_memoryDC) {
                 HBITMAP hbmpOld = (HBITMAP)::SelectObject(win->m_memoryDC, win->m_memoryBMP);
                 BOOL b = ::BitBlt(hdc, destX, destY, width, height, win->m_memoryDC, srcX, srcY, SRCCOPY);
             }
@@ -276,6 +285,8 @@ public:
             return TRUE;
 
         case WM_SIZE: {
+            ::GetClientRect(hwnd, &win->m_clientRect);
+            
             ThreadCall::callBlinkThreadSync([pthis, lParam] {
                 wkeResize(pthis, LOWORD(lParam), HIWORD(lParam));
                 wkeRepaintIfNeeded(pthis);
@@ -341,11 +352,11 @@ public:
         case WM_RBUTTONUP:
         case WM_MOUSEMOVE: {
             if (message == WM_LBUTTONDOWN || message == WM_MBUTTONDOWN || message == WM_RBUTTONDOWN) {
-                SetFocus(hwnd);
-                SetCapture(hwnd);
+                ::SetFocus(hwnd);
+                ::SetCapture(hwnd);
             }
             else if (message == WM_LBUTTONUP || message == WM_MBUTTONUP || message == WM_RBUTTONUP) {
-                ReleaseCapture();
+                ::ReleaseCapture();
             }
 
             int x = LOWORD(lParam);
@@ -376,7 +387,7 @@ public:
             pt.y = HIWORD(lParam);
 
             if (pt.x != -1 && pt.y != -1)
-                ScreenToClient(hwnd, &pt);
+                ::ScreenToClient(hwnd, &pt);
 
             unsigned int flags = 0;
 
@@ -392,8 +403,6 @@ public:
             if (wParam & MK_RBUTTON)
                 flags |= WKE_RBUTTON;
 
-            int x = pt.x;
-            int y = pt.y;
             ThreadCall::callBlinkThreadSync([pthis, pt, flags] {
                 wkeFireContextMenuEvent(pthis, pt.x, pt.y, flags);
             });
@@ -403,7 +412,7 @@ public:
             POINT pt;
             pt.x = LOWORD(lParam);
             pt.y = HIWORD(lParam);
-            ScreenToClient(hwnd, &pt);
+            ::ScreenToClient(hwnd, &pt);
 
             int delta = GET_WHEEL_DELTA_WPARAM(wParam);
 
@@ -459,14 +468,14 @@ public:
             COMPOSITIONFORM.ptCurrentPos.x = caret.x;
             COMPOSITIONFORM.ptCurrentPos.y = caret.y;
 
-            HIMC hIMC = ImmGetContext(hwnd);
-            ImmSetCompositionWindow(hIMC, &COMPOSITIONFORM);
-            ImmReleaseContext(hwnd, hIMC);
+            HIMC hIMC = ::ImmGetContext(hwnd);
+            ::ImmSetCompositionWindow(hIMC, &COMPOSITIONFORM);
+            ::ImmReleaseContext(hwnd, hIMC);
         }
             return 0;
         }
 
-        return DefWindowProcW(hwnd, message, wParam, lParam);
+        return ::DefWindowProcW(hwnd, message, wParam, lParam);
     }
 
     struct CreateWindowParam {
@@ -564,7 +573,7 @@ public:
 
     void newWindowTask(const CreateWindowParam* createWindowParam) {
         //HandleScope scope(options->isolate());
-        m_hWnd = CreateWindowEx(
+        m_hWnd = ::CreateWindowEx(
             createWindowParam->styleEx,        // window ex-style
             L"mb_electron_window",    // window class name
             createWindowParam->title.c_str(), // window caption
@@ -580,6 +589,9 @@ public:
 
         if (!::IsWindow(m_hWnd))
             return;
+
+        m_clientRect.right = createWindowParam->width;
+        m_clientRect.bottom = createWindowParam->height;
 
         Window* win = this;
         ThreadCall::callBlinkThreadSync([win, createWindowParam] {
