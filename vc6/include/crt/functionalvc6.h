@@ -18,6 +18,9 @@ public:
     virtual ~functionWrapBase() {
     }
 
+    virtual functionWrapBase<R(Args...)>* clone(void* parent) = 0;
+    virtual functionWrapBase<R(Args...)>* moveTo(void* parent) = 0;
+
     virtual R call(Args... args) = 0;
 
     void* getParent() const {
@@ -32,11 +35,25 @@ protected:
 template<typename T, typename R, typename... Args>
 class functionWrap : public functionWrapBase<R(Args...)> {
 public:
-    functionWrap(const T& obj, void* parent)
+    functionWrap(const T&& obj, void* parent)
         : functionWrapBase(parent)
-        , m_obj(&obj) {}
+        , m_obj(new T(obj)) {}
+
+    functionWrap(const functionWrap& other) = delete;
+    functionWrap(const functionWrap&& other) = delete;
 
     virtual ~functionWrap() override {
+        delete m_obj;
+    }
+
+    virtual functionWrapBase<R(Args...)>* clone(void* parent) override {
+        return new functionWrap<T, R, Args...>(std::move(*m_obj), parent);
+    }
+
+    virtual functionWrapBase<R(Args...)>* moveTo(void* parent) override {
+        auto ret = new functionWrap<T, R, Args...>(m_obj, parent);
+        m_obj = nullptr;
+        return ret;
     }
 
     virtual R call(Args... args) override {
@@ -44,37 +61,32 @@ public:
     }
 
 private:
+    functionWrap(const T* obj, void* parent) : functionWrapBase(parent) {
+        m_obj = obj;
+    }
+
     const T* m_obj;
 };
 
 template<typename R, typename... Args>
 class function<R(Args...)> {
 public:
-    template<typename T>
-    function(const T& obj) {
-        m_wrap = new functionWrap<T, R, Args...>(obj, this);
-    }
-
-    template<typename T>
-    function(const T&& obj) {
-        m_wrap = new functionWrap<T, R, Args...>(obj, this);
-    }
-
     function() = delete;
 
     template<typename T>
-    function(const function<R(Args...)>& other) {
-        m_wrap = new functionWrap<T, R, Args...>(other.m_wrap->obj, this);
+    function(const T& obj) = delete;
+
+    explicit function(const function<R(Args...)>& other) {
+        m_wrap = other.m_wrap->clone(this);
     }
 
-    template<typename T>
-    function(function<R(Args...)>&& other) {
-        m_wrap = new functionWrap<T, R, Args...>(other.m_wrap->obj, this);
+    explicit function(function<R(Args...)>&& other) {
+        m_wrap = other.m_wrap->moveTo(this);
     }
-
+    
     template<typename T>
-    function(const function<T>&& other) {
-        m_wrap = new functionWrap<T, R, Args...>(other.m_wrap->obj, this);
+    function(const T&& obj) {
+        m_wrap = new functionWrap<T, R, Args...>(forward<const T>(obj), this);
     }
 
     R operator()(Args... args) const {
@@ -86,6 +98,7 @@ public:
             delete m_wrap;
     }
 
+private:
     functionWrapBase<R(Args...)>* m_wrap;
 };
 
