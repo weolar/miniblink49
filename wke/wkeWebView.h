@@ -87,6 +87,8 @@ public:
     void loadFile(const utf8* filename) override;
     void loadFile(const wchar_t* filename) override;
 
+    const utf8* url() const override;
+
 	void setUserAgent(const utf8 * useragent);
     void setUserAgent(const wchar_t * useragent);
 
@@ -129,10 +131,13 @@ public:
     bool goForward() override;
     
     void editorSelectAll() override;
+    void editorUnSelect() override;
     void editorCopy() override;
     void editorCut() override;
     void editorPaste() override;
     void editorDelete() override;
+    void editorUndo() override;
+    void editorRedo() override;
 
     const wchar_t* cookieW();
     const utf8* cookie();
@@ -218,6 +223,7 @@ protected:
 
 //     OwnPtr<WebCore::Page> m_page;
 //     WebCore::Frame* m_mainFrame;
+    wke::CString m_url;  //记录url地址
     wke::CString m_title;
     wke::CString m_cookie;
     wke::CString m_name;

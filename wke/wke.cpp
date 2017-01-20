@@ -240,6 +240,11 @@ void wkeLoadFileW(wkeWebView webView, const wchar_t* filename)
     return webView->loadFile(filename);
 }
 
+const utf8* wkeGetURL(wkeWebView webView)
+{
+    return webView->url();
+}
+
 bool wkeIsLoading(wkeWebView webView)
 {
     return webView->isLoading();
@@ -380,6 +385,11 @@ void wkeEditorSelectAll(wkeWebView webView)
     webView->editorSelectAll();
 }
 
+void wkeEditorUnSelect(wkeWebView webView)
+{
+    webView->editorUnSelect();
+}
+
 void wkeEditorCopy(wkeWebView webView)
 {
     webView->editorCopy();
@@ -398,6 +408,16 @@ void wkeEditorPaste(wkeWebView webView)
 void wkeEditorDelete(wkeWebView webView)
 {
     webView->editorDelete();
+}
+
+void wkeEditorUndo(wkeWebView webView)
+{
+    webView->editorUndo();
+}
+
+void wkeEditorRedo(wkeWebView webView)
+{
+    webView->editorRedo();
 }
 
 const wchar_t * wkeGetCookieW(wkeWebView webView)

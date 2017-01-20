@@ -39,74 +39,74 @@ void WebContents::init(v8::Local<v8::Object> target, Environment* env) {
     NODE_SET_METHOD(t, "equal", nullFunction);
     NODE_SET_METHOD(t, "_loadURL", _loadURL);
     NODE_SET_METHOD(t, "downloadURL", nullFunction);
-    NODE_SET_METHOD(t, "_getURL", nullFunction);
-    NODE_SET_METHOD(t, "getTitle", nullFunction);
-    NODE_SET_METHOD(t, "isLoading", nullFunction);
-    NODE_SET_METHOD(t, "isLoadingMainFrame", nullFunction);
-    NODE_SET_METHOD(t, "isWaitingForResponse", nullFunction);
-    NODE_SET_METHOD(t, "_stop", nullFunction);
-    NODE_SET_METHOD(t, "_goBack", nullFunction);
-    NODE_SET_METHOD(t, "_goForward", nullFunction);
-    NODE_SET_METHOD(t, "_goToOffset", nullFunction);
-    NODE_SET_METHOD(t, "isCrashed", nullFunction);
-    NODE_SET_METHOD(t, "setUserAgent", nullFunction);
-    NODE_SET_METHOD(t, "getUserAgent", nullFunction);
-    NODE_SET_METHOD(t, "insertCSS", nullFunction);
-    NODE_SET_METHOD(t, "savePage", nullFunction);
-    NODE_SET_METHOD(t, "openDevTools", nullFunction);
-    NODE_SET_METHOD(t, "closeDevTools", nullFunction);
-    NODE_SET_METHOD(t, "isDevToolsOpened", nullFunction);
-    NODE_SET_METHOD(t, "isDevToolsFocused", nullFunction);
-    NODE_SET_METHOD(t, "enableDeviceEmulation", nullFunction);
-    NODE_SET_METHOD(t, "disableDeviceEmulation", nullFunction);
-    NODE_SET_METHOD(t, "toggleDevTools", nullFunction);
-    NODE_SET_METHOD(t, "inspectElement", nullFunction);
-    NODE_SET_METHOD(t, "setAudioMuted", nullFunction);
-    NODE_SET_METHOD(t, "isAudioMuted", nullFunction);
-    NODE_SET_METHOD(t, "undo", nullFunction);
-    NODE_SET_METHOD(t, "redo", nullFunction);
-    NODE_SET_METHOD(t, "cut", nullFunction);
-    NODE_SET_METHOD(t, "copy", nullFunction);
-    NODE_SET_METHOD(t, "paste", nullFunction);
-    NODE_SET_METHOD(t, "pasteAndMatchStyle", nullFunction);
-    NODE_SET_METHOD(t, "delete", nullFunction);
-    NODE_SET_METHOD(t, "selectAll", nullFunction);
-    NODE_SET_METHOD(t, "unselect", nullFunction);
-    NODE_SET_METHOD(t, "replace", nullFunction);
-    NODE_SET_METHOD(t, "replaceMisspelling", nullFunction);
-    NODE_SET_METHOD(t, "findInPage", nullFunction);
-    NODE_SET_METHOD(t, "stopFindInPage", nullFunction);
-    NODE_SET_METHOD(t, "focus", nullFunction);
-    NODE_SET_METHOD(t, "isFocused", nullFunction);
-    NODE_SET_METHOD(t, "tabTraverse", nullFunction);
-    NODE_SET_METHOD(t, "_send", nullFunction);
-    NODE_SET_METHOD(t, "sendInputEvent", nullFunction);
-    NODE_SET_METHOD(t, "beginFrameSubscription", nullFunction);
-    NODE_SET_METHOD(t, "endFrameSubscription", nullFunction);
-    NODE_SET_METHOD(t, "startDrag", nullFunction);
-    NODE_SET_METHOD(t, "setSize", nullFunction);
-    NODE_SET_METHOD(t, "isGuest", nullFunction);
-    NODE_SET_METHOD(t, "isOffscreen", nullFunction);
-    NODE_SET_METHOD(t, "startPainting", nullFunction);
-    NODE_SET_METHOD(t, "stopPainting", nullFunction);
-    NODE_SET_METHOD(t, "isPainting", nullFunction);
-    NODE_SET_METHOD(t, "setFrameRate", nullFunction);
-    NODE_SET_METHOD(t, "getFrameRate", nullFunction);
-    NODE_SET_METHOD(t, "invalidate", nullFunction);
-    NODE_SET_METHOD(t, "getType", nullFunction);
-    NODE_SET_METHOD(t, "getWebPreferences", nullFunction);
-    NODE_SET_METHOD(t, "getOwnerBrowserWindow", nullFunction);
-    NODE_SET_METHOD(t, "hasServiceWorker", nullFunction);
-    NODE_SET_METHOD(t, "unregisterServiceWorker", nullFunction);
-    NODE_SET_METHOD(t, "inspectServiceWorker", nullFunction);
-    NODE_SET_METHOD(t, "print", nullFunction);
-    NODE_SET_METHOD(t, "_printToPDF", nullFunction);
-    NODE_SET_METHOD(t, "addWorkSpace", nullFunction);
-    NODE_SET_METHOD(t, "reNullWorkSpace", nullFunction);
-    NODE_SET_METHOD(t, "showDefinitionForSelection", nullFunction);
-    NODE_SET_METHOD(t, "copyImageAt", nullFunction);
-    NODE_SET_METHOD(t, "capturePage", nullFunction);
-    NODE_SET_METHOD(t, "setEmbedder", nullFunction);
+    NODE_SET_METHOD(t, "_getURL", _getURL);
+    NODE_SET_METHOD(t, "getTitle", getTitle);
+    NODE_SET_METHOD(t, "isLoading", isLoading);
+    NODE_SET_METHOD(t, "isLoadingMainFrame", isLoadingMainFrame);
+    NODE_SET_METHOD(t, "isWaitingForResponse", isWaitingForResponse);
+    NODE_SET_METHOD(t, "_stop", _stop);
+    NODE_SET_METHOD(t, "_goBack", _goBack);
+    NODE_SET_METHOD(t, "_goForward", _goForward);
+    NODE_SET_METHOD(t, "_goToOffset", _goToOffset);
+    NODE_SET_METHOD(t, "isCrashed", isCrashed);
+    NODE_SET_METHOD(t, "setUserAgent", setUserAgent);
+    NODE_SET_METHOD(t, "getUserAgent", getUserAgent);
+    NODE_SET_METHOD(t, "insertCSS", insertCSS);
+    NODE_SET_METHOD(t, "savePage", savePage);
+    NODE_SET_METHOD(t, "openDevTools", openDevTools);
+    NODE_SET_METHOD(t, "closeDevTools", closeDevTools);
+    NODE_SET_METHOD(t, "isDevToolsOpened", isDevToolsOpened);
+    NODE_SET_METHOD(t, "isDevToolsFocused", isDevToolsFocused);
+    NODE_SET_METHOD(t, "enableDeviceEmulation", enableDeviceEmulation);
+    NODE_SET_METHOD(t, "disableDeviceEmulation", disableDeviceEmulation);
+    NODE_SET_METHOD(t, "toggleDevTools", toggleDevTools);
+    NODE_SET_METHOD(t, "inspectElement", inspectElement);
+    NODE_SET_METHOD(t, "setAudioMuted", setAudioMuted);
+    NODE_SET_METHOD(t, "isAudioMuted", isAudioMuted);
+    NODE_SET_METHOD(t, "undo", undo);
+    NODE_SET_METHOD(t, "redo", redo);
+    NODE_SET_METHOD(t, "cut", cut);
+    NODE_SET_METHOD(t, "copy", copy);
+    NODE_SET_METHOD(t, "paste", paste);
+    NODE_SET_METHOD(t, "pasteAndMatchStyle", pasteAndMatchStyle);
+    NODE_SET_METHOD(t, "delete", _delete);
+    NODE_SET_METHOD(t, "selectAll", selectAll);
+    NODE_SET_METHOD(t, "unselect", unselect);
+    NODE_SET_METHOD(t, "replace", replace);
+    NODE_SET_METHOD(t, "replaceMisspelling", replaceMisspelling);
+    NODE_SET_METHOD(t, "findInPage", findInPage);
+    NODE_SET_METHOD(t, "stopFindInPage", stopFindInPage);
+    NODE_SET_METHOD(t, "focus", focus);
+    NODE_SET_METHOD(t, "isFocused", isFocused);
+    NODE_SET_METHOD(t, "tabTraverse", tabTraverse);
+    NODE_SET_METHOD(t, "_send", _send);
+    NODE_SET_METHOD(t, "sendInputEvent", sendInputEvent);
+    NODE_SET_METHOD(t, "beginFrameSubscription", beginFrameSubscription);
+    NODE_SET_METHOD(t, "endFrameSubscription", endFrameSubscription);
+    NODE_SET_METHOD(t, "startDrag", startDrag);
+    NODE_SET_METHOD(t, "setSize", setSize);
+    NODE_SET_METHOD(t, "isGuest", isGuest);
+    NODE_SET_METHOD(t, "isOffscreen", isOffscreen);
+    NODE_SET_METHOD(t, "startPainting", startPainting);
+    NODE_SET_METHOD(t, "stopPainting", stopPainting);
+    NODE_SET_METHOD(t, "isPainting", isPainting);
+    NODE_SET_METHOD(t, "setFrameRate", setFrameRate);
+    NODE_SET_METHOD(t, "getFrameRate", getFrameRate);
+    NODE_SET_METHOD(t, "invalidate", invalidate);
+    NODE_SET_METHOD(t, "getType", getType);
+    NODE_SET_METHOD(t, "getWebPreferences", getWebPreferences);
+    NODE_SET_METHOD(t, "getOwnerBrowserWindow", getOwnerBrowserWindow);
+    NODE_SET_METHOD(t, "hasServiceWorker", hasServiceWorker);
+    NODE_SET_METHOD(t, "unregisterServiceWorker", unregisterServiceWorker);
+    NODE_SET_METHOD(t, "inspectServiceWorker", inspectServiceWorker);
+    NODE_SET_METHOD(t, "print", print);
+    NODE_SET_METHOD(t, "_printToPDF", _printToPDF);
+    NODE_SET_METHOD(t, "addWorkSpace", addWorkSpace);
+    NODE_SET_METHOD(t, "reNullWorkSpace", reNullWorkSpace);
+    NODE_SET_METHOD(t, "showDefinitionForSelection", showDefinitionForSelection);
+    NODE_SET_METHOD(t, "copyImageAt", copyImageAt);
+    NODE_SET_METHOD(t, "capturePage", capturePage);
+    NODE_SET_METHOD(t, "setEmbedder", setEmbedder);
     NODE_SET_PROTOTYPE_METHOD(tpl, "id", nullFunction);
     NODE_SET_PROTOTYPE_METHOD(tpl, "session", nullFunction);
     NODE_SET_PROTOTYPE_METHOD(tpl, "hostWebContents", nullFunction);
@@ -182,6 +182,419 @@ void WebContents::_loadURL(const v8::FunctionCallbackInfo<v8::Value>& args) {
         wkeLoadURL(webContents->m_view, str->c_str());
         delete str;
     });
+}
+
+void WebContents::_getURL(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    ThreadCall::callBlinkThreadSync([args] {
+        Isolate* isolate = args.GetIsolate();
+        HandleScope scope(isolate);
+
+        WebContents* webContents = ObjectWrap::Unwrap<WebContents>(args.Holder());
+
+        Local<v8::String> url;
+        String::NewFromUtf8(isolate, wkeGetURL(webContents->m_view), NewStringType::kNormal).ToLocal(&url);
+        args.GetReturnValue().Set(url);
+    });
+}
+
+void WebContents::getTitle(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    ThreadCall::callBlinkThreadSync([args] {
+        Isolate* isolate = args.GetIsolate();
+        HandleScope scope(isolate);
+
+        WebContents* webContents = ObjectWrap::Unwrap<WebContents>(args.Holder());
+
+        Local<v8::String> title;
+        String::NewFromUtf8(isolate, wkeGetTitle(webContents->m_view), NewStringType::kNormal).ToLocal(&title);
+        args.GetReturnValue().Set(title);
+    });
+}
+
+void WebContents::isLoading(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    ThreadCall::callBlinkThreadSync([args] {
+        Isolate* isolate = args.GetIsolate();
+        HandleScope scope(isolate);
+
+        WebContents* webContents = ObjectWrap::Unwrap<WebContents>(args.Holder());
+
+        Local<Boolean> ret = Boolean::New(isolate, wkeIsLoading(webContents->m_view));
+        args.GetReturnValue().Set(ret);
+    });
+}
+
+void WebContents::isLoadingMainFrame(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    //todo
+}
+
+void WebContents::isWaitingForResponse(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    //todo
+}
+
+void WebContents::_stop(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    Isolate* isolate = args.GetIsolate();
+    HandleScope scope(isolate);
+    
+    WebContents* webContents = ObjectWrap::Unwrap<WebContents>(args.Holder());
+
+    ThreadCall::callBlinkThreadSync([webContents] {
+        wkeStopLoading(webContents->m_view);
+    });
+}
+
+void WebContents::_goBack(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    Isolate* isolate = args.GetIsolate();
+    HandleScope scope(isolate);
+    
+    WebContents* webContents = ObjectWrap::Unwrap<WebContents>(args.Holder());
+
+    ThreadCall::callBlinkThreadSync([webContents] {
+        wkeGoBack(webContents->m_view);
+    });
+}
+
+void WebContents::_goForward(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    Isolate* isolate = args.GetIsolate();
+    HandleScope scope(isolate);
+   
+    WebContents* webContents = ObjectWrap::Unwrap<WebContents>(args.Holder());
+
+    ThreadCall::callBlinkThreadSync([webContents] {
+        wkeGoForward(webContents->m_view);
+    });
+}
+
+void WebContents::_goToOffset(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    //todo
+}
+
+void WebContents::isCrashed(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    Isolate* isolate = args.GetIsolate();
+    HandleScope scope(isolate);
+
+    Local<Boolean> ret = Boolean::New(isolate, false);
+    args.GetReturnValue().Set(ret);
+}
+
+void WebContents::setUserAgent(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    v8::Isolate* isolate = args.GetIsolate();
+    v8::HandleScope scope(isolate);
+
+    WebContents* webContents = ObjectWrap::Unwrap<WebContents>(args.Holder());
+    if (!args[0]->IsString())
+        return;
+
+    v8::String::Utf8Value strV8(args[0]);
+    std::string* str = new std::string(*strV8, strV8.length());
+
+    ThreadCall::callBlinkThreadSync([webContents, str] {
+        wkeSetUserAgent(webContents->m_view, str->c_str());
+        delete str;
+    });
+}
+
+void WebContents::getUserAgent(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    //todo
+}
+
+void WebContents::insertCSS(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    //todo
+}
+
+void WebContents::savePage(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    //todo
+}
+
+void WebContents::openDevTools(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    //todo
+}
+
+void WebContents::closeDevTools(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    //todo
+}
+
+void WebContents::isDevToolsOpened(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    //todo
+}
+
+void WebContents::isDevToolsFocused(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    //todo
+}
+
+void WebContents::enableDeviceEmulation(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    //todo
+}
+
+void WebContents::disableDeviceEmulation(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    //todo
+}
+
+void WebContents::toggleDevTools(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    //todo
+}
+
+void WebContents::inspectElement(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    //todo
+}
+
+void WebContents::setAudioMuted(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    /*Isolate* isolate = args.GetIsolate();
+    HandleScope scope(isolate);
+
+    WebContents* webContents = ObjectWrap::Unwrap<WebContents>(args.Holder());
+
+    ThreadCall::callBlinkThreadSync([webContents] {
+        wkeSetMediaVolume(webContents->m_view, 0.0);
+    });*/
+}
+
+void WebContents::isAudioMuted(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    /*ThreadCall::callBlinkThreadSync([args] {
+        Isolate* isolate = args.GetIsolate();
+        HandleScope scope(isolate);
+
+        WebContents* webContents = ObjectWrap::Unwrap<WebContents>(args.Holder());
+
+        Local<Boolean> ret = Boolean::New(isolate, wkeIsLoading(webContents->m_view));
+        args.GetReturnValue().Set(ret);
+    });*/
+}
+
+void WebContents::undo(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    Isolate* isolate = args.GetIsolate();
+    HandleScope scope(isolate);
+
+    WebContents* webContents = ObjectWrap::Unwrap<WebContents>(args.Holder());
+
+    ThreadCall::callBlinkThreadSync([webContents] {
+        wkeEditorUndo(webContents->m_view);
+    });
+}
+
+void WebContents::redo(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    Isolate* isolate = args.GetIsolate();
+    HandleScope scope(isolate);
+
+    WebContents* webContents = ObjectWrap::Unwrap<WebContents>(args.Holder());
+
+    ThreadCall::callBlinkThreadSync([webContents] {
+        wkeEditorRedo(webContents->m_view);
+    });
+}
+
+void WebContents::cut(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    Isolate* isolate = args.GetIsolate();
+    HandleScope scope(isolate);
+
+    WebContents* webContents = ObjectWrap::Unwrap<WebContents>(args.Holder());
+
+    ThreadCall::callBlinkThreadSync([webContents] {
+        wkeEditorCut(webContents->m_view);
+    });
+}
+
+void WebContents::copy(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    Isolate* isolate = args.GetIsolate();
+    HandleScope scope(isolate);
+    
+    WebContents* webContents = ObjectWrap::Unwrap<WebContents>(args.Holder());
+
+    ThreadCall::callBlinkThreadSync([webContents] {
+        wkeEditorCopy(webContents->m_view);
+    });
+}
+
+void WebContents::paste(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    Isolate* isolate = args.GetIsolate();
+    HandleScope scope(isolate);
+    WebContents* webContents = ObjectWrap::Unwrap<WebContents>(args.Holder());
+
+    ThreadCall::callBlinkThreadSync([webContents] {
+        wkeEditorPaste(webContents->m_view);
+    });
+}
+
+void WebContents::pasteAndMatchStyle(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    //todo
+}
+
+void WebContents::_delete(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    Isolate* isolate = args.GetIsolate();
+    HandleScope scope(isolate);
+    
+    WebContents* webContents = ObjectWrap::Unwrap<WebContents>(args.Holder());
+
+    ThreadCall::callBlinkThreadSync([webContents] {
+        wkeEditorDelete(webContents->m_view);
+    });
+}
+
+void WebContents::selectAll(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    Isolate* isolate = args.GetIsolate();
+    HandleScope scope(isolate);
+    
+    WebContents* webContents = ObjectWrap::Unwrap<WebContents>(args.Holder());
+
+    ThreadCall::callBlinkThreadSync([webContents] {
+        wkeEditorSelectAll(webContents->m_view);
+    });
+}
+
+void WebContents::unselect(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    Isolate* isolate = args.GetIsolate();
+    HandleScope scope(isolate);
+
+    WebContents* webContents = ObjectWrap::Unwrap<WebContents>(args.Holder());
+
+    ThreadCall::callBlinkThreadSync([webContents] {
+        wkeEditorUnSelect(webContents->m_view);
+    });
+}
+
+void WebContents::replace(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    //todo
+}
+
+void WebContents::replaceMisspelling(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    //todo
+}
+
+void WebContents::findInPage(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    //todo
+}
+
+void WebContents::stopFindInPage(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    //todo
+}
+
+void WebContents::focus(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    Isolate* isolate = args.GetIsolate();
+    HandleScope scope(isolate);
+    
+    WebContents* webContents = ObjectWrap::Unwrap<WebContents>(args.Holder());
+
+    ThreadCall::callBlinkThreadSync([webContents] {
+        wkeSetFocus(webContents->m_view);
+    });
+}
+
+void WebContents::isFocused(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    //todo
+}
+
+void WebContents::tabTraverse(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    //todo
+}
+
+void WebContents::_send(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    //todo
+}
+
+void WebContents::sendInputEvent(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    //todo
+}
+
+void WebContents::beginFrameSubscription(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    //todo
+}
+
+void WebContents::endFrameSubscription(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    //todo
+}
+
+void WebContents::startDrag(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    //todo
+}
+
+void WebContents::setSize(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    //todo
+}
+
+void WebContents::isGuest(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    //todo
+}
+
+void WebContents::isOffscreen(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    //todo
+}
+
+void WebContents::startPainting(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    //todo
+}
+
+void WebContents::stopPainting(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    //todo
+}
+
+void WebContents::isPainting(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    //todo
+}
+
+void WebContents::setFrameRate(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    //todo
+}
+
+void WebContents::getFrameRate(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    //todo
+}
+
+void WebContents::invalidate(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    //todo
+}
+
+void WebContents::getType(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    //todo
+}
+
+void WebContents::getWebPreferences(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    //todo
+}
+
+void WebContents::getOwnerBrowserWindow(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    //todo
+}
+
+void WebContents::hasServiceWorker(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    //todo
+}
+
+void WebContents::unregisterServiceWorker(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    //todo
+}
+
+void WebContents::inspectServiceWorker(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    //todo
+}
+
+void WebContents::print(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    //todo
+}
+
+void WebContents::_printToPDF(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    //todo
+}
+
+void WebContents::addWorkSpace(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    //todo
+}
+
+void WebContents::reNullWorkSpace(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    //todo
+}
+
+void WebContents::showDefinitionForSelection(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    //todo
+}
+
+void WebContents::copyImageAt(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    //todo
+}
+
+void WebContents::capturePage(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    //todo
+}
+
+void WebContents::setEmbedder(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    //todo
 }
 
 // 空实现
