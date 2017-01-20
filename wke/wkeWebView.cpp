@@ -471,6 +471,11 @@ void CWebView::editorSelectAll()
     m_webPage->mainFrame()->executeCommand("SelectAll");
 }
 
+void CWebView::editorUnSelect()
+{
+    m_webPage->mainFrame()->executeCommand("Unselect");
+}
+
 void CWebView::editorCopy()
 {
     m_webPage->mainFrame()->executeCommand("Copy");
@@ -489,6 +494,16 @@ void CWebView::editorPaste()
 void CWebView::editorDelete()
 {
     m_webPage->mainFrame()->executeCommand("Delete");
+}
+
+void CWebView::editorUndo()
+{
+    m_webPage->mainFrame()->executeCommand("Undo");
+}
+
+void CWebView::editorRedo()
+{
+    m_webPage->mainFrame()->executeCommand("Redo");
 }
 
 void CWebView::setCookieEnabled(bool enable)

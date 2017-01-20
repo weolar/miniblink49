@@ -33,6 +33,10 @@ private:
     //
     static void isLoading(const v8::FunctionCallbackInfo<v8::Value>& args);
 
+    static void isLoadingMainFrame(const v8::FunctionCallbackInfo<v8::Value>& args);
+
+    static void isWaitingForResponse(const v8::FunctionCallbackInfo<v8::Value>& args);
+
     //
     static void _stop(const v8::FunctionCallbackInfo<v8::Value>& args);
 

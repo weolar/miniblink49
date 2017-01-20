@@ -131,10 +131,13 @@ public:
     bool goForward() override;
     
     void editorSelectAll() override;
+    void editorUnSelect() override;
     void editorCopy() override;
     void editorCut() override;
     void editorPaste() override;
     void editorDelete() override;
+    void editorUndo() override;
+    void editorRedo() override;
 
     const wchar_t* cookieW();
     const utf8* cookie();

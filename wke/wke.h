@@ -287,10 +287,13 @@ WKE_API bool wkeCanGoForward(wkeWebView webView);
 WKE_API bool wkeGoForward(wkeWebView webView);
 
 WKE_API void wkeEditorSelectAll(wkeWebView webView);
+WKE_API void wkeEditorUnSelect(wkeWebView webView);
 WKE_API void wkeEditorCopy(wkeWebView webView);
 WKE_API void wkeEditorCut(wkeWebView webView);
 WKE_API void wkeEditorPaste(wkeWebView webView);
 WKE_API void wkeEditorDelete(wkeWebView webView);
+WKE_API void wkeEditorUndo(wkeWebView webView);
+WKE_API void wkeEditorRedo(wkeWebView webView);
 
 WKE_API const wchar_t* wkeGetCookieW(wkeWebView webView);
 WKE_API const utf8* wkeGetCookie(wkeWebView webView);
@@ -596,10 +599,13 @@ public:
     virtual bool goForward() = 0;
 
     virtual void editorSelectAll() = 0;
+    virtual void editorUnSelect() = 0;
     virtual void editorCopy() = 0;
     virtual void editorCut() = 0;
     virtual void editorPaste() = 0;
     virtual void editorDelete() = 0;
+    virtual void editorUndo() = 0;
+    virtual void editorRedo() = 0;
 
     virtual void setCookieEnabled(bool enable) = 0;
     virtual bool isCookieEnabled() const = 0;

@@ -23,6 +23,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\base\thread.cc" />
     <ClCompile Include="..\..\electron\api_app.cc" />
     <ClCompile Include="..\..\electron\api_web_contents.cc" />
     <ClCompile Include="..\..\electron\converter.cc" />
@@ -30,9 +31,11 @@
     <ClCompile Include="..\..\electron\electron.cpp" />
     <ClCompile Include="..\..\electron\api_window.cpp" />
     <ClCompile Include="..\..\electron\options_switches.cc" />
+    <ClCompile Include="..\..\electron\ThreadCall.cpp" />
     <ClCompile Include="..\..\electron\window_list.cc" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\base\thread.h" />
     <ClInclude Include="..\..\electron\api_app.h" />
     <ClInclude Include="..\..\electron\api_web_contents.h" />
     <ClInclude Include="..\..\electron\converter.h" />
@@ -209,7 +212,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;STATIC_GETOPT;WIN32_LEAN_AND_MEAN;BUILDING_NODE_EXTENSION=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)../wke;$(SolutionDir)../node/include;$(SolutionDir)../v8_5_7/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)../;$(SolutionDir)../wke;$(SolutionDir)../node/include;$(SolutionDir)../v8_5_7/include</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <StringPooling>true</StringPooling>
       <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>

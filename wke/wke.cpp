@@ -385,6 +385,11 @@ void wkeEditorSelectAll(wkeWebView webView)
     webView->editorSelectAll();
 }
 
+void wkeEditorUnSelect(wkeWebView webView)
+{
+    webView->editorUnSelect();
+}
+
 void wkeEditorCopy(wkeWebView webView)
 {
     webView->editorCopy();
@@ -403,6 +408,16 @@ void wkeEditorPaste(wkeWebView webView)
 void wkeEditorDelete(wkeWebView webView)
 {
     webView->editorDelete();
+}
+
+void wkeEditorUndo(wkeWebView webView)
+{
+    webView->editorUndo();
+}
+
+void wkeEditorRedo(wkeWebView webView)
+{
+    webView->editorRedo();
 }
 
 const wchar_t * wkeGetCookieW(wkeWebView webView)
