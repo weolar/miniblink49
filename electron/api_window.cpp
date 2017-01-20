@@ -194,9 +194,8 @@ public:
         SIZE sizeDest = { rectDest.right - rectDest.left, rectDest.bottom - rectDest.top };
         if (0 == sizeDest.cx * sizeDest.cy)
             return;
-
-        if (!m_memoryDC)
-            m_memoryDC = ::CreateCompatibleDC(hdc);
+            
+        HDC memoryDC = ::CreateCompatibleDC(hdc);
 
         if (m_clientRect.top != rectDest.top || m_clientRect.bottom != rectDest.bottom ||
             m_clientRect.right != rectDest.right || m_clientRect.left != rectDest.left) {
@@ -204,14 +203,30 @@ public:
 
             if (m_memoryBMP)
                 ::DeleteObject((HGDIOBJ)m_memoryBMP);
-            m_memoryBMP = ::CreateCompatibleBitmap(hdc, sizeDest.cx, sizeDest.cy);
+            //m_memoryBMP = ::CreateCompatibleBitmap(hdc, sizeDest.cx, sizeDest.cy);
+            BITMAPINFOHEADER hdr = { 0 };
+            hdr.biSize = sizeof(BITMAPINFOHEADER);
+            hdr.biWidth = sizeDest.cx;
+            hdr.biHeight = -sizeDest.cy;  // minus means top-down bitmap
+            hdr.biPlanes = 1;
+            hdr.biBitCount = 32;
+            hdr.biCompression = BI_RGB;  // no compression
+            hdr.biSizeImage = 0;
+            hdr.biXPelsPerMeter = 1;
+            hdr.biYPelsPerMeter = 1;
+            hdr.biClrUsed = 0;
+            hdr.biClrImportant = 0;
+            void* data = nullptr;
+            m_memoryBMP = CreateDIBSection(NULL, reinterpret_cast<BITMAPINFO*>(&hdr), 0, &data, nullptr, 0);
         }
 
-        HBITMAP hbmpOld = (HBITMAP)::SelectObject(m_memoryDC, m_memoryBMP);
-        ::BitBlt(m_memoryDC, x, y, cx, cy, hdc, x, y, SRCCOPY);
-        ::SelectObject(m_memoryDC, (HGDIOBJ)hbmpOld);
+        HBITMAP hbmpOld = (HBITMAP)::SelectObject(memoryDC, m_memoryBMP);
+        ::BitBlt(memoryDC, x, y, cx, cy, hdc, x, y, SRCCOPY);
+        ::SelectObject(memoryDC, (HGDIOBJ)hbmpOld);
 
         ::BitBlt(hdcScreen, x, y, cx, cy, hdc, x, y, SRCCOPY);
+
+        ::DeleteDC(memoryDC);
     }
 
     static LRESULT CALLBACK windowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) {
@@ -273,9 +288,11 @@ public:
             int width = rcInvalid.right - rcInvalid.left;
             int height = rcInvalid.bottom - rcInvalid.top;
 
-            if (0 != width && 0 != height && win->m_memoryBMP && win->m_memoryDC) {
-                HBITMAP hbmpOld = (HBITMAP)::SelectObject(win->m_memoryDC, win->m_memoryBMP);
-                BOOL b = ::BitBlt(hdc, destX, destY, width, height, win->m_memoryDC, srcX, srcY, SRCCOPY);
+            if (0 != width && 0 != height && win->m_memoryBMP) {
+                HDC memoryDC = ::CreateCompatibleDC(hdc);
+                HBITMAP hbmpOld = (HBITMAP)::SelectObject(memoryDC, win->m_memoryBMP);
+                BOOL b = ::BitBlt(hdc, destX, destY, width, height, memoryDC, srcX, srcY, SRCCOPY);
+                ::DeleteDC(memoryDC);
             }
 
             ::EndPaint(hwnd, &ps);
@@ -288,7 +305,7 @@ public:
         case WM_SIZE: {
             ::GetClientRect(hwnd, &win->m_clientRect);
             
-            ThreadCall::callBlinkThreadAsync([pthis, lParam] {
+            ThreadCall::callBlinkThreadSync([pthis, lParam] {
                 wkeResize(pthis, LOWORD(lParam), HIWORD(lParam));
                 wkeRepaintIfNeeded(pthis);
             });
