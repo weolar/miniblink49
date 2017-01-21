@@ -1,10 +1,10 @@
 ﻿
-#include "api_app.h"
+#include "ApiApp.h"
 #include "nodeblink.h"
 #include <node_object_wrap.h>
 #include "wke.h"
 #include "ThreadCall.h"
-#include "dictionary.h"
+#include "Dictionary.h"
 #include "NodeRegisterHelp.h"
 
 using namespace v8;

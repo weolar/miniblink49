@@ -1,15 +1,17 @@
 ﻿
-#include "nodeblink.h"
 #include <node_object_wrap.h>
 #include "wke.h"
 #include "ThreadCall.h"
-#include "dictionary.h"
-#include "options_switches.h"
-#include "api_web_contents.h"
+#include "Dictionary.h"
+#include "OptionsSwitches.h"
+#include "ApiWebContents.h"
 #include "NodeRegisterHelp.h"
-#include "window_list.h"
+#include "WindowList.h"
 
 #include <set>
+#if USING_VC6RT == 1
+#include <windowsvc6.h>
+#endif
 
 using namespace v8;
 using namespace node;
