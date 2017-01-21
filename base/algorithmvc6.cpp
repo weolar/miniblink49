@@ -4,10 +4,11 @@
 #include <string>
 #include <vector>
 #include <sstream>
-
+//#include <stdint.h>
 #include <limits>
 #include <limitsvc6.h>
 #include <algorithmvc6.h>
+#include <windows.h>
 
 extern "C" double fmod(double _Xx, double _Yx);
 
@@ -22,9 +23,9 @@ namespace std {
 
 int fpclassify(double x)
 {
-    union { double d; uint64_t u; }u = { x };
+    union { double d; unsigned __int64 u; }u = { x };
 
-    uint32_t exp = (uint32_t)((u.u & 0x7fffffffffffffffULL) >> 52);
+    unsigned __int32 exp = (unsigned __int32)((u.u & 0x7fffffffffffffffULL) >> 52);
 
     if (0 == exp) {
         if (u.u & 0x000fffffffffffffULL)
@@ -192,7 +193,7 @@ double pow(int base, double exp)
 
 double __cdecl copysign(double x, double y)
 {
-    union { double f; uint64_t u; } ux, uy;
+    union { double f; unsigned __int64 u; } ux, uy;
 
     ux.f = x;
     uy.f = y;
@@ -203,7 +204,7 @@ double __cdecl copysign(double x, double y)
     return ux.f;
 }
 
-int64 abs(int64 val)
+__int64 abs(__int64 val)
 {
     return (val > 0 ? val : -val);
 }
@@ -446,8 +447,8 @@ float copysignf(float number, float sign)
 
 double rint(double x)
 {
-    union { double d; uint64_t u; }u = { x };
-    uint64_t absux = u.u & 0x7fffffffffffffffULL;
+    union { double d; unsigned __int64 u; }u = { x };
+    unsigned __int64 absux = u.u & 0x7fffffffffffffffULL;
 
     //special case code for large int, Inf, NaN, 0
     if (absux - 1LL >= 0x4330000000000000ULL - 1LL)
@@ -540,8 +541,8 @@ float nextafterf(float x, float y)
 
 double nextafter(double x, double y)
 {
-    union { double d; uint64_t u; } ux = { x };
-    uint64_t	step = 1;
+    union { double d; unsigned __int64 u; } ux = { x };
+    unsigned __int64	step = 1;
 
     if (y != y || x != x)
         return x + y;
@@ -553,10 +554,10 @@ double nextafter(double x, double y)
     }
 
     //correct for the sign
-    int64_t signMask = (int64_t)ux.u >> 63;
+    __int64 signMask = (__int64)ux.u >> 63;
     step = (step ^ signMask) - signMask;
 
-    uint64_t absux = ux.u & 0x7fffffffffffffffULL;
+    unsigned __int64 absux = ux.u & 0x7fffffffffffffffULL;
 
     if (absux == 0ULL) { // zero
         ux.d = y;
@@ -568,7 +569,7 @@ double nextafter(double x, double y)
     return ux.d;
 }
 
-typedef union { uint64_t u; double d; } du;
+typedef union { unsigned __int64 u; double d; } du;
 
 float hypotf(float x, float y)
 {
@@ -600,9 +601,9 @@ float hypotf(float x, float y)
     }
 
     //break values up into exponent and mantissa
-    int64_t largeExp = largeVal->u >> 52;
-    int64_t smallExp = smallVal->u >> 52;
-    int64_t diff = largeExp - smallExp;
+    __int64 largeExp = largeVal->u >> 52;
+    __int64 smallExp = smallVal->u >> 52;
+    __int64 diff = largeExp - smallExp;
     if (diff >= 55L)
         return largeVal->d + smallVal->d;
 
@@ -841,9 +842,10 @@ extern "C" __declspec(naked) __int64 _ftol2_sse(double v)
 //     return 0;
 // }
 
-extern "C" void _alloca_probe_16()
+extern "C" void* _alloca_probe_16(size_t length)
 {
     DebugBreak();
+    return nullptr;
 }
 
 extern "C" void __report_rangecheckfailure()
