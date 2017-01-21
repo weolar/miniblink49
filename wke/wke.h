@@ -12,7 +12,9 @@
 
 //////////////////////////////////////////////////////////////////////////
 
+#ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
+#endif
 #include <windows.h>
 
 //////////////////////////////////////////////////////////////////////////
@@ -118,7 +120,8 @@ typedef struct {
 } wkeProxy;
 
 enum wkeSettingMask {
-    WKE_SETTING_PROXY = 1
+    WKE_SETTING_PROXY = 1,
+    WKE_SETTING_PAINTCALLBACK_IN_OTHER_THREAD = 1 << 2,
 };
 
 typedef struct {
