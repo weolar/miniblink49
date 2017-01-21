@@ -9,12 +9,8 @@
 namespace atom {
 
 class ThreadCall {
-public:
-    static void init(uv_loop_t* loop);
-
-    typedef void *(*CoreMainTask)(void *data);
-
 private:
+    typedef void (*CoreMainTask)(void *data);
     struct TaskAsyncData {
         CoreMainTask call;
         void* data;
@@ -24,8 +20,11 @@ private:
         DWORD fromThreadId;
         DWORD toThreadId;
     };
-
+    
 public:
+    static void init(uv_loop_t* loop);
+
+    static void callBlinkThreadAsync(std::function<void(void)>&& closure);
     static void callBlinkThreadSync(std::function<void(void)> closure);
     static void callUiThreadSync(std::function<void(void)> closure);
 
@@ -34,9 +33,8 @@ public:
     static void messageLoop(uv_loop_t* loop);
 
 private:
-    static void* callUiThreadSync(CoreMainTask call, void* data);
-
-    static void* threadCallbackWrap(void* data);
+    static void threadCallbackWrap(void* data);
+    static void asynThreadCallbackWrap(void* data);
 
     static void createBlinkThread();
 
@@ -46,14 +44,13 @@ private:
     static uv_loop_t* m_uiLoop;
     static uv_loop_t* m_blinkLoop;
 
-    static void callbackInThread(uv_async_t* handle);
     static void callbackInOtherThread(TaskAsyncData* asyncData);
 
     static void callAsync(TaskAsyncData* asyncData, CoreMainTask call, void* data);
 
     static void* waitForCallThreadAsync(TaskAsyncData* asyncData);
 
-    static TaskAsyncData* initAsyncData(uv_loop_t* loop, DWORD toThreadId);
+    static TaskAsyncData* cretaeAsyncData(uv_loop_t* loop, DWORD toThreadId);
 
     static void blinkThread(void* created);
 };

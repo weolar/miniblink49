@@ -20,37 +20,37 @@ void ThreadCall::init(uv_loop_t* uiLoop) {
     createBlinkThread();
 }
 
-void* ThreadCall::callUiThreadSync(CoreMainTask call, void* data) {
-    if (::GetCurrentThreadId() == m_uiThreadId) {
-        return call(data);
-    }
-
-    TaskAsyncData* asyncData = initAsyncData(m_uiLoop, m_uiThreadId);
-    callAsync(asyncData, call, data);
-    void* ret = waitForCallThreadAsync(asyncData);
-    delete asyncData;
-
-    return ret;
-}
-
 void ThreadCall::callUiThreadSync(std::function<void(void)> closure) {
     if (::GetCurrentThreadId() == m_uiThreadId) {
         closure();
         return;
     }
 
-    TaskAsyncData* asyncData = initAsyncData(m_uiLoop, m_uiThreadId);
+    TaskAsyncData* asyncData = cretaeAsyncData(m_uiLoop, m_uiThreadId);
     asyncData->dataEx = &closure;
     callAsync(asyncData, threadCallbackWrap, asyncData);
     waitForCallThreadAsync(asyncData);
-    delete asyncData;
 }
 
-void* ThreadCall::threadCallbackWrap(void* data) {
+void ThreadCall::threadCallbackWrap(void* data) {
     TaskAsyncData* asyncData = (TaskAsyncData*)data;
     std::function<void(void)>* closure = (std::function<void(void)>*)asyncData->dataEx;
     (*closure)();
-    return nullptr;
+}
+
+void ThreadCall::asynThreadCallbackWrap(void* data) {
+    TaskAsyncData* asyncData = (TaskAsyncData*)data;
+    std::function<void(void)>* closure = (std::function<void(void)>*)asyncData->dataEx;
+    (*closure)();
+    delete closure;
+}
+
+void ThreadCall::callBlinkThreadAsync(std::function<void(void)>&& closure) {
+    TaskAsyncData* asyncData = cretaeAsyncData(m_blinkLoop, m_blinkThreadId);
+
+    std::function<void(void)>* closureDummy = new std::function<void(void)>(std::move(closure));
+    asyncData->dataEx = closureDummy;
+    callAsync(asyncData, asynThreadCallbackWrap, asyncData);
 }
 
 void ThreadCall::callBlinkThreadSync(std::function<void(void)> closure) {
@@ -59,27 +59,19 @@ void ThreadCall::callBlinkThreadSync(std::function<void(void)> closure) {
         return;
     }
 
-    TaskAsyncData* asyncData = initAsyncData(m_blinkLoop, m_blinkThreadId);
+    TaskAsyncData* asyncData = cretaeAsyncData(m_blinkLoop, m_blinkThreadId);
     asyncData->dataEx = &closure;
     callAsync(asyncData, threadCallbackWrap, asyncData);
     waitForCallThreadAsync(asyncData);
-    delete asyncData;
 }
 
 void ThreadCall::shutdown() {
 }
 
-void ThreadCall::callbackInThread(uv_async_t* handle) {
-    TaskAsyncData* asyncData = (TaskAsyncData*)handle;
-    if (asyncData->call) {
-        asyncData->ret = asyncData->call(asyncData->data);
-        ::SetEvent(asyncData->event);
-    }
-}
-
 void ThreadCall::callbackInOtherThread(TaskAsyncData* asyncData) {
     if (asyncData->call) {
-        asyncData->ret = asyncData->call(asyncData->data);
+        asyncData->ret = nullptr;
+        asyncData->call(asyncData->data);
         ::SetEvent(asyncData->event);
     }
 }
@@ -87,20 +79,20 @@ void ThreadCall::callbackInOtherThread(TaskAsyncData* asyncData) {
 void ThreadCall::callAsync(TaskAsyncData* asyncData, CoreMainTask call, void* data) {
     asyncData->call = call;
     asyncData->data = data;
+    ::PostThreadMessage(asyncData->toThreadId, WM_THREAD_CALL, (WPARAM)callbackInOtherThread, (LPARAM)asyncData);
 }
 
 void* ThreadCall::waitForCallThreadAsync(TaskAsyncData* asyncData) {
     void* ret = asyncData->ret;
     DWORD waitResult = 0;
     //do {
-        ::PostThreadMessage(asyncData->toThreadId, WM_THREAD_CALL, (WPARAM)callbackInOtherThread, (LPARAM)asyncData);
         waitResult = ::WaitForSingleObject(asyncData->event, INFINITE); // INFINITE
     //} while (WAIT_TIMEOUT == waitResult || WAIT_FAILED == waitResult);
 
     return ret;
 }
 
-ThreadCall::TaskAsyncData* ThreadCall::initAsyncData(uv_loop_t* loop, DWORD toThreadId) {
+ThreadCall::TaskAsyncData* ThreadCall::cretaeAsyncData(uv_loop_t* loop, DWORD toThreadId) {
     TaskAsyncData* asyncData = new TaskAsyncData();
     asyncData->event = ::CreateEvent(NULL, FALSE, FALSE, NULL);
     asyncData->fromThreadId = ::GetCurrentThreadId();
@@ -120,7 +112,9 @@ void ThreadCall::messageLoop(uv_loop_t* loop) {
             if (WM_THREAD_CALL == msg.message) {
                 if (msg.wParam != (WPARAM)callbackInOtherThread)
                     DebugBreak();
-                callbackInOtherThread((TaskAsyncData*)msg.lParam);
+                TaskAsyncData* data = (TaskAsyncData*)msg.lParam;
+                callbackInOtherThread(data);
+                delete data;
             }
             
             ::TranslateMessage(&msg);

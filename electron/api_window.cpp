@@ -162,33 +162,6 @@ public:
         target->Set(String::NewFromUtf8(isolate, "BrowserWindow"), tpl->GetFunction());
     }
 
-    void onPaintUpdated(HDC hdcScreen, const HDC hdc, int x, int y, int cx, int cy) {
-        HWND hWnd = m_hWnd;
-        RECT rectDest;
-        ::GetClientRect(hWnd, &rectDest);
-        SIZE sizeDest = { rectDest.right - rectDest.left, rectDest.bottom - rectDest.top };
-        if (0 == sizeDest.cx * sizeDest.cy)
-            return;
-
-        if (!m_memoryDC)
-            m_memoryDC = ::CreateCompatibleDC(hdc);
-
-        if (m_clientRect.top != rectDest.top || m_clientRect.bottom != rectDest.bottom ||
-            m_clientRect.right != rectDest.right || m_clientRect.left != rectDest.left) {
-            m_clientRect = rectDest;
-
-            if (m_memoryBMP)
-                ::DeleteObject((HGDIOBJ)m_memoryBMP);
-            m_memoryBMP = ::CreateCompatibleBitmap(hdc, sizeDest.cx, sizeDest.cy);
-        }
-
-        HBITMAP hbmpOld = (HBITMAP)::SelectObject(m_memoryDC, m_memoryBMP);
-        ::BitBlt(m_memoryDC, x, y, cx, cy, hdc, x, y, SRCCOPY);
-        ::SelectObject(m_memoryDC, (HGDIOBJ)hbmpOld);
-
-        ::BitBlt(hdcScreen, x, y, cx, cy, hdc, x, y, SRCCOPY);
-    }
-
     static void staticOnPaintUpdated(wkeWebView webView, Window* win, const HDC hdc, int x, int y, int cx, int cy) {
         HWND hWnd = win->m_hWnd;
         HDC hdcScreen = ::GetDC(hWnd);
@@ -206,11 +179,39 @@ public:
             blend.SourceConstantAlpha = 255;
             blend.AlphaFormat = AC_SRC_ALPHA;
             ::UpdateLayeredWindow(hWnd, hdcScreen, &pointDest, &sizeDest, hdc, &pointSource, RGB(0, 0, 0), &blend, ULW_ALPHA);
-        } else {
+        }
+        else {
             win->onPaintUpdated(hdcScreen, hdc, x, y, cx, cy);
         }
 
         ::ReleaseDC(hWnd, hdcScreen);
+    }
+
+    void onPaintUpdated(HDC hdcScreen, const HDC hdc, int x, int y, int cx, int cy) {
+        HWND hWnd = m_hWnd;
+        RECT rectDest;
+        ::GetClientRect(hWnd, &rectDest);
+        SIZE sizeDest = { rectDest.right - rectDest.left, rectDest.bottom - rectDest.top };
+        if (0 == sizeDest.cx * sizeDest.cy)
+            return;
+            
+        if (!m_memoryDC)
+            m_memoryDC = ::CreateCompatibleDC(nullptr);
+
+        if (!m_memoryBMP || m_clientRect.top != rectDest.top || m_clientRect.bottom != rectDest.bottom ||
+            m_clientRect.right != rectDest.right || m_clientRect.left != rectDest.left) {
+            m_clientRect = rectDest;
+
+            if (m_memoryBMP)
+                ::DeleteObject((HGDIOBJ)m_memoryBMP);
+            m_memoryBMP = ::CreateCompatibleBitmap(hdc, sizeDest.cx, sizeDest.cy);
+        }
+
+        HBITMAP hbmpOld = (HBITMAP)::SelectObject(m_memoryDC, m_memoryBMP);
+        ::BitBlt(m_memoryDC, x, y, cx, cy, hdc, x, y, SRCCOPY);
+        ::SelectObject(m_memoryDC, (HGDIOBJ)hbmpOld);
+
+        ::BitBlt(hdcScreen, x, y, cx, cy, hdc, x, y, SRCCOPY);
     }
 
     static LRESULT CALLBACK windowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) {
@@ -275,6 +276,7 @@ public:
             if (0 != width && 0 != height && win->m_memoryBMP && win->m_memoryDC) {
                 HBITMAP hbmpOld = (HBITMAP)::SelectObject(win->m_memoryDC, win->m_memoryBMP);
                 BOOL b = ::BitBlt(hdc, destX, destY, width, height, win->m_memoryDC, srcX, srcY, SRCCOPY);
+                b = b;
             }
 
             ::EndPaint(hwnd, &ps);
@@ -285,6 +287,14 @@ public:
             return TRUE;
 
         case WM_SIZE: {
+            if (win->m_memoryDC)
+                ::DeleteDC(win->m_memoryDC);
+            win->m_memoryDC = nullptr;
+
+            if (win->m_memoryBMP)
+                ::DeleteObject((HGDIOBJ)win->m_memoryBMP);
+            win->m_memoryBMP = nullptr;
+
             ::GetClientRect(hwnd, &win->m_clientRect);
             
             ThreadCall::callBlinkThreadSync([pthis, lParam] {
@@ -376,7 +386,7 @@ public:
             if (wParam & MK_RBUTTON)
                 flags |= WKE_RBUTTON;
 
-            ThreadCall::callBlinkThreadSync([pthis, message, x, y, flags] {
+            ThreadCall::callBlinkThreadAsync([pthis, message, x, y, flags] {
                 wkeFireMouseEvent(pthis, message, x, y, flags);
             });
             break;
@@ -403,7 +413,7 @@ public:
             if (wParam & MK_RBUTTON)
                 flags |= WKE_RBUTTON;
 
-            ThreadCall::callBlinkThreadSync([pthis, pt, flags] {
+            ThreadCall::callBlinkThreadAsync([pthis, pt, flags] {
                 wkeFireContextMenuEvent(pthis, pt.x, pt.y, flags);
             });
             break;
@@ -430,26 +440,26 @@ public:
             if (wParam & MK_RBUTTON)
                 flags |= WKE_RBUTTON;
 
-            ThreadCall::callBlinkThreadSync([pthis, pt, delta, flags] {
+            ThreadCall::callBlinkThreadAsync([pthis, pt, delta, flags] {
                 wkeFireMouseWheelEvent(pthis, pt.x, pt.y, delta, flags);
             });
             break;
         }
         case WM_SETFOCUS:
-            ThreadCall::callBlinkThreadSync([pthis]{
+            ThreadCall::callBlinkThreadAsync([pthis]{
                 wkeSetFocus(pthis);
             });
             return 0;
 
         case WM_KILLFOCUS:
-            ThreadCall::callBlinkThreadSync([pthis] {
+            ThreadCall::callBlinkThreadAsync([pthis] {
                 wkeKillFocus(pthis);
             });
             return 0;
 
         case WM_SETCURSOR: {
             bool retVal = false;
-            ThreadCall::callBlinkThreadSync([pthis, hwnd, &retVal] {
+            ThreadCall::callBlinkThreadAsync([pthis, hwnd, &retVal] {
                 retVal = wkeFireWindowsMessage(pthis, hwnd, WM_SETCURSOR, 0, 0, nullptr);
             });
             if (retVal)
@@ -463,13 +473,13 @@ public:
                 caret = wkeGetCaretRect(pthis);
             });
 
-            COMPOSITIONFORM COMPOSITIONFORM;
-            COMPOSITIONFORM.dwStyle = CFS_POINT | CFS_FORCE_POSITION;
-            COMPOSITIONFORM.ptCurrentPos.x = caret.x;
-            COMPOSITIONFORM.ptCurrentPos.y = caret.y;
+            COMPOSITIONFORM compositionForm;
+            compositionForm.dwStyle = CFS_POINT | CFS_FORCE_POSITION;
+            compositionForm.ptCurrentPos.x = caret.x;
+            compositionForm.ptCurrentPos.y = caret.y;
 
             HIMC hIMC = ::ImmGetContext(hwnd);
-            ::ImmSetCompositionWindow(hIMC, &COMPOSITIONFORM);
+            ::ImmSetCompositionWindow(hIMC, &compositionForm);
             ::ImmReleaseContext(hwnd, hIMC);
         }
             return 0;

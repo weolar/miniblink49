@@ -673,7 +673,7 @@ void WebPageImpl::copyToMemoryCanvasForUi()
     int width = memoryCanvas->imageInfo().width();
     int height = memoryCanvas->imageInfo().height();
     if (0 != width && 0 != height) {
-        if (!m_memoryCanvasForUi || (m_memoryCanvasForUi && (width != m_memoryCanvasForUi->imageInfo().width() || height != m_memoryCanvasForUi->imageInfo().height()))) {
+        if (/*!m_memoryCanvasForUi ||*/ (m_memoryCanvasForUi && (width != m_memoryCanvasForUi->imageInfo().width() || height != m_memoryCanvasForUi->imageInfo().height()))) {
             if (m_memoryCanvasForUi)
                 delete m_memoryCanvasForUi;
             m_memoryCanvasForUi = skia::CreatePlatformCanvas(width, height, !m_useLayeredBuffer);
