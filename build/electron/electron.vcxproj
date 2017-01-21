@@ -23,24 +23,29 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\electron\api_app.cc" />
-    <ClCompile Include="..\..\electron\api_web_contents.cc" />
-    <ClCompile Include="..\..\electron\converter.cc" />
-    <ClCompile Include="..\..\electron\dictionary.cc" />
-    <ClCompile Include="..\..\electron\electron.cpp" />
-    <ClCompile Include="..\..\electron\api_window.cpp" />
-    <ClCompile Include="..\..\electron\options_switches.cc" />
-    <ClCompile Include="..\..\electron\window_list.cc" />
+    <ClCompile Include="..\..\base\algorithmvc6.cpp" />
+    <ClCompile Include="..\..\base\thread.cc" />
+    <ClCompile Include="..\..\electron\ApiAindow.cpp" />
+    <ClCompile Include="..\..\electron\ApiApp.cpp" />
+    <ClCompile Include="..\..\electron\ApiWebContents.cpp" />
+    <ClCompile Include="..\..\electron\Converter.cpp" />
+    <ClCompile Include="..\..\electron\Dictionary.cpp" />
+    <ClCompile Include="..\..\electron\Electron.cpp" />
+    <ClCompile Include="..\..\electron\OptionsSwitches.cpp" />
+    <ClCompile Include="..\..\electron\ThreadCall.cpp" />
+    <ClCompile Include="..\..\electron\WindowList.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\electron\api_app.h" />
-    <ClInclude Include="..\..\electron\api_web_contents.h" />
-    <ClInclude Include="..\..\electron\converter.h" />
-    <ClInclude Include="..\..\electron\dictionary.h" />
-    <ClInclude Include="..\..\electron\electron.h" />
+    <ClInclude Include="..\..\base\thread.h" />
+    <ClInclude Include="..\..\electron\ApiApp.h" />
+    <ClInclude Include="..\..\electron\ApiWebContents.h" />
+    <ClInclude Include="..\..\electron\Converter.h" />
+    <ClInclude Include="..\..\electron\Dictionary.h" />
+    <ClInclude Include="..\..\electron\Electron.h" />
     <ClInclude Include="..\..\electron\NodeRegisterHelp.h" />
-    <ClInclude Include="..\..\electron\options_switches.h" />
-    <ClInclude Include="..\..\electron\window_list.h" />
+    <ClInclude Include="..\..\electron\OptionsSwitches.h" />
+    <ClInclude Include="..\..\electron\ThreadCall.h" />
+    <ClInclude Include="..\..\electron\WindowList.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{419D9B69-AC50-49EA-9188-40FB63BE1C90}</ProjectGuid>
@@ -146,7 +151,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>STATIC_GETOPT;WIN32;_DEBUG;_WINDOWS;WIN32_LEAN_AND_MEAN;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)../wke;$(SolutionDir)../node/include;$(SolutionDir)../v8_5_7/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)../;$(SolutionDir)../wke;$(SolutionDir)../node/include;$(SolutionDir)../v8_5_7/include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -165,7 +170,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;STATIC_GETOPT;WIN32_LEAN_AND_MEAN;BUILDING_NODE_EXTENSION=1;USING_VC6RT=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)../wke;$(SolutionDir)../node/include;$(SolutionDir)../v8_5_7/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)../;$(SolutionDir)../wke;$(SolutionDir)../node/include;$(SolutionDir)../v8_5_7/include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <ExceptionHandling>false</ExceptionHandling>
       <BufferSecurityCheck>false</BufferSecurityCheck>
@@ -173,6 +178,7 @@
       <StringPooling>true</StringPooling>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
+      <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -209,7 +215,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;STATIC_GETOPT;WIN32_LEAN_AND_MEAN;BUILDING_NODE_EXTENSION=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)../wke;$(SolutionDir)../node/include;$(SolutionDir)../v8_5_7/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)../;$(SolutionDir)../wke;$(SolutionDir)../node/include;$(SolutionDir)../v8_5_7/include</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <StringPooling>true</StringPooling>
       <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>

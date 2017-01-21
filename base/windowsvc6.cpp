@@ -30,7 +30,7 @@ void scrt_initialize_thread_safe_statics()
 
 	LoadLibraryW(L"Usp10.dll");
 
-    OutputDebugStringA("scrt_initialize_thread_safe_statics");
+    OutputDebugStringA("scrt_initialize_thread_safe_statics\n");
 }
 
 extern "C" {

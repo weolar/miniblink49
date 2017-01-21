@@ -65,6 +65,7 @@
 #include "wke/wkeWebView.h"
 #include "wke/wkeJsBindFreeTempObject.h"
 #include "wke/wkeWebWindow.h"
+extern bool wkeIsUpdataInOtherThread;
 #endif
 
 using namespace blink;
@@ -673,7 +674,7 @@ void WebPageImpl::copyToMemoryCanvasForUi()
     int width = memoryCanvas->imageInfo().width();
     int height = memoryCanvas->imageInfo().height();
     if (0 != width && 0 != height) {
-        if (!m_memoryCanvasForUi || (m_memoryCanvasForUi && (width != m_memoryCanvasForUi->imageInfo().width() || height != m_memoryCanvasForUi->imageInfo().height()))) {
+        if (/*!m_memoryCanvasForUi ||*/ (m_memoryCanvasForUi && (width != m_memoryCanvasForUi->imageInfo().width() || height != m_memoryCanvasForUi->imageInfo().height()))) {
             if (m_memoryCanvasForUi)
                 delete m_memoryCanvasForUi;
             m_memoryCanvasForUi = skia::CreatePlatformCanvas(width, height, !m_useLayeredBuffer);
@@ -734,18 +735,22 @@ void drawDebugLine(SkCanvas* memoryCanvas, const IntRect& paintRect)
 #endif
 }
 
+// 本函数可能被调用在ui线程，也可以是合成线程
 void WebPageImpl::paintToMemoryCanvasInUiThread(SkCanvas* canvas, const IntRect& paintRect)
 {
     HDC hMemoryDC = nullptr;
     hMemoryDC = skia::BeginPlatformPaint(canvas);
 
+    drawDebugLine(canvas, paintRect);
+
     if (m_useLayeredBuffer) { // 再把内存dc画到hdc上
+#if ENABLE_WKE != 1
         RECT rtWnd;
         ::GetWindowRect(m_pagePtr->getHWND(), &rtWnd);
         //m_winodwRect = winRectToIntRect(rtWnd);
         //skia::DrawToNativeLayeredContext(canvas.get(), hdc, m_winodwRect.x(), m_winodwRect.y(), &((RECT)m_clientRect));
+#endif
     } else {
-        drawDebugLine(canvas, paintRect);
         bool drawToScreen = false;
 #if ENABLE_CEF == 1
         drawToScreen = !!m_browser;

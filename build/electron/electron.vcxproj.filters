@@ -1,69 +1,83 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="源文件">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="头文件">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
-    </Filter>
     <Filter Include="资源文件">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{c3786756-fb55-4fad-88b9-cd0721fd7040}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\electron\electron.cpp">
-      <Filter>源文件</Filter>
+    <ClCompile Include="..\..\base\thread.cc">
+      <Filter>base</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\electron\api_window.cpp">
-      <Filter>源文件</Filter>
+    <ClCompile Include="..\..\base\algorithmvc6.cpp">
+      <Filter>base</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\electron\dictionary.cc">
-      <Filter>源文件</Filter>
+    <ClCompile Include="..\..\electron\ApiWebContents.cpp">
+      <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\electron\converter.cc">
-      <Filter>源文件</Filter>
+    <ClCompile Include="..\..\electron\Converter.cpp">
+      <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\electron\api_web_contents.cc">
-      <Filter>源文件</Filter>
+    <ClCompile Include="..\..\electron\Electron.cpp">
+      <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\electron\options_switches.cc">
-      <Filter>源文件</Filter>
+    <ClCompile Include="..\..\electron\OptionsSwitches.cpp">
+      <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\electron\api_app.cc">
-      <Filter>源文件</Filter>
+    <ClCompile Include="..\..\electron\ThreadCall.cpp">
+      <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\electron\window_list.cc">
-      <Filter>源文件</Filter>
+    <ClCompile Include="..\..\electron\WindowList.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\electron\ApiAindow.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\electron\ApiApp.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\electron\Dictionary.cpp">
+      <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\electron\electron.h">
-      <Filter>头文件</Filter>
+    <ClInclude Include="..\..\base\thread.h">
+      <Filter>base</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\electron\dictionary.h">
-      <Filter>头文件</Filter>
+    <ClInclude Include="..\..\electron\ApiWebContents.h">
+      <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\electron\converter.h">
-      <Filter>头文件</Filter>
+    <ClInclude Include="..\..\electron\Converter.h">
+      <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\electron\options_switches.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\electron\api_web_contents.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\electron\api_app.h">
-      <Filter>头文件</Filter>
+    <ClInclude Include="..\..\electron\Electron.h">
+      <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\electron\NodeRegisterHelp.h">
-      <Filter>头文件</Filter>
+      <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\electron\window_list.h">
-      <Filter>头文件</Filter>
+    <ClInclude Include="..\..\electron\OptionsSwitches.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\electron\ThreadCall.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\electron\WindowList.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\electron\ApiApp.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\electron\Dictionary.h">
+      <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

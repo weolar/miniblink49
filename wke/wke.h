@@ -12,7 +12,9 @@
 
 //////////////////////////////////////////////////////////////////////////
 
+#ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
+#endif
 #include <windows.h>
 
 //////////////////////////////////////////////////////////////////////////
@@ -118,7 +120,8 @@ typedef struct {
 } wkeProxy;
 
 enum wkeSettingMask {
-    WKE_SETTING_PROXY = 1
+    WKE_SETTING_PROXY = 1,
+    WKE_SETTING_PAINTCALLBACK_IN_OTHER_THREAD = 1 << 2,
 };
 
 typedef struct {
@@ -252,6 +255,8 @@ WKE_API void wkeLoadHTMLW(wkeWebView webView, const wchar_t* html);
 WKE_API void wkeLoadFile(wkeWebView webView, const utf8* filename);
 WKE_API void wkeLoadFileW(wkeWebView webView, const wchar_t* filename);
 
+WKE_API const utf8* wkeGetURL(wkeWebView webView);
+
 WKE_API bool wkeIsLoading(wkeWebView webView);
 WKE_API bool wkeIsLoadingSucceeded(wkeWebView webView);
 WKE_API bool wkeIsLoadingFailed(wkeWebView webView);
@@ -285,10 +290,13 @@ WKE_API bool wkeCanGoForward(wkeWebView webView);
 WKE_API bool wkeGoForward(wkeWebView webView);
 
 WKE_API void wkeEditorSelectAll(wkeWebView webView);
+WKE_API void wkeEditorUnSelect(wkeWebView webView);
 WKE_API void wkeEditorCopy(wkeWebView webView);
 WKE_API void wkeEditorCut(wkeWebView webView);
 WKE_API void wkeEditorPaste(wkeWebView webView);
 WKE_API void wkeEditorDelete(wkeWebView webView);
+WKE_API void wkeEditorUndo(wkeWebView webView);
+WKE_API void wkeEditorRedo(wkeWebView webView);
 
 WKE_API const wchar_t* wkeGetCookieW(wkeWebView webView);
 WKE_API const utf8* wkeGetCookie(wkeWebView webView);
@@ -562,6 +570,8 @@ public:
     virtual void loadFile(const utf8* filename) = 0;
     virtual void loadFile(const wchar_t* filename) = 0;
 
+    virtual const utf8* url() const = 0;
+
     virtual bool isLoading() const = 0;        /*document load sucessed*/
     virtual bool isLoadingFailed() const = 0;    /*document load failed*/
     virtual bool isLoadingSucceeded() const = 0;  /*document load complete*/
@@ -592,10 +602,13 @@ public:
     virtual bool goForward() = 0;
 
     virtual void editorSelectAll() = 0;
+    virtual void editorUnSelect() = 0;
     virtual void editorCopy() = 0;
     virtual void editorCut() = 0;
     virtual void editorPaste() = 0;
     virtual void editorDelete() = 0;
+    virtual void editorUndo() = 0;
+    virtual void editorRedo() = 0;
 
     virtual void setCookieEnabled(bool enable) = 0;
     virtual bool isCookieEnabled() const = 0;
