@@ -9,6 +9,8 @@
 #include "NodeRegisterHelp.h"
 #include "window_list.h"
 
+#include <set>
+
 using namespace v8;
 using namespace node;
 
@@ -34,6 +36,18 @@ public:
         m_clientRect.top = 0;
         m_clientRect.right = 0;
         m_clientRect.bottom = 0;
+        ::InitializeCriticalSection(&m_memoryCanvasLock);
+
+        if (!m_liveSelf) {
+            m_idGen = 0;
+            m_liveSelf = new std::set<int>();
+            m_liveSelfLock = new CRITICAL_SECTION();
+            ::InitializeCriticalSection(m_liveSelfLock);
+        }
+        ::EnterCriticalSection(m_liveSelfLock);
+        m_id = ++m_idGen;
+        m_liveSelf->insert(m_id);
+        ::LeaveCriticalSection(m_liveSelfLock);
     }
 
     ~Window() {
@@ -49,6 +63,20 @@ public:
             SendMessage(this->m_hWnd, WM_CLOSE, 0, 0);
         });
         WindowList::GetInstance()->RemoveWindow(this);
+
+        ::EnterCriticalSection(m_liveSelfLock);
+        m_liveSelf->erase(m_id);
+        ::LeaveCriticalSection(m_liveSelfLock);
+
+        ::DeleteCriticalSection(&m_memoryCanvasLock);
+    }
+
+    static bool isLive(int id) {
+        ::EnterCriticalSection(m_liveSelfLock);
+        std::set<int>::const_iterator it = m_liveSelf->find(id);
+        bool b = it != m_liveSelf->end();
+        ::LeaveCriticalSection(m_liveSelfLock);
+        return b;
     }
 
     static void init(Local<Object> target, Environment* env) {
@@ -162,32 +190,32 @@ public:
         target->Set(String::NewFromUtf8(isolate, "BrowserWindow"), tpl->GetFunction());
     }
 
-    static void staticOnPaintUpdated(wkeWebView webView, Window* win, const HDC hdc, int x, int y, int cx, int cy) {
-        HWND hWnd = win->m_hWnd;
-        HDC hdcScreen = ::GetDC(hWnd);
-        RECT rectDest;
-        if (WS_EX_LAYERED == (WS_EX_LAYERED & GetWindowLong(hWnd, GWL_EXSTYLE))) {
-            ::GetWindowRect(hWnd, &rectDest);
+//     static void staticOnPaintUpdated(wkeWebView webView, Window* win, const HDC hdc, int x, int y, int cx, int cy) {
+//         HWND hWnd = win->m_hWnd;
+//         HDC hdcScreen = ::GetDC(hWnd);
+//         RECT rectDest;
+//         if (WS_EX_LAYERED == (WS_EX_LAYERED & GetWindowLong(hWnd, GWL_EXSTYLE))) {
+//             ::GetWindowRect(hWnd, &rectDest);
+// 
+//             SIZE sizeDest = { rectDest.right - rectDest.left, rectDest.bottom - rectDest.top };
+//             POINT pointDest = { rectDest.left, rectDest.top };
+//             POINT pointSource = { 0, 0 };
+// 
+//             BLENDFUNCTION blend = { 0 };
+//             memset(&blend, 0, sizeof(blend));
+//             blend.BlendOp = AC_SRC_OVER;
+//             blend.SourceConstantAlpha = 255;
+//             blend.AlphaFormat = AC_SRC_ALPHA;
+//             ::UpdateLayeredWindow(hWnd, hdcScreen, &pointDest, &sizeDest, hdc, &pointSource, RGB(0, 0, 0), &blend, ULW_ALPHA);
+//         }
+//         else {
+//             win->onPaintUpdated(hdcScreen, hdc, x, y, cx, cy);
+//         }
+// 
+//         ::ReleaseDC(hWnd, hdcScreen);
+//     }
 
-            SIZE sizeDest = { rectDest.right - rectDest.left, rectDest.bottom - rectDest.top };
-            POINT pointDest = { rectDest.left, rectDest.top };
-            POINT pointSource = { 0, 0 };
-
-            BLENDFUNCTION blend = { 0 };
-            memset(&blend, 0, sizeof(blend));
-            blend.BlendOp = AC_SRC_OVER;
-            blend.SourceConstantAlpha = 255;
-            blend.AlphaFormat = AC_SRC_ALPHA;
-            ::UpdateLayeredWindow(hWnd, hdcScreen, &pointDest, &sizeDest, hdc, &pointSource, RGB(0, 0, 0), &blend, ULW_ALPHA);
-        }
-        else {
-            win->onPaintUpdated(hdcScreen, hdc, x, y, cx, cy);
-        }
-
-        ::ReleaseDC(hWnd, hdcScreen);
-    }
-
-    void onPaintUpdated(HDC hdcScreen, const HDC hdc, int x, int y, int cx, int cy) {
+    void onPaintUpdatedInOtherThread(const HDC hdc, int x, int y, int cx, int cy) {
         HWND hWnd = m_hWnd;
         RECT rectDest;
         ::GetClientRect(hWnd, &rectDest);
@@ -210,8 +238,28 @@ public:
         HBITMAP hbmpOld = (HBITMAP)::SelectObject(m_memoryDC, m_memoryBMP);
         ::BitBlt(m_memoryDC, x, y, cx, cy, hdc, x, y, SRCCOPY);
         ::SelectObject(m_memoryDC, (HGDIOBJ)hbmpOld);
+    }
 
-        ::BitBlt(hdcScreen, x, y, cx, cy, hdc, x, y, SRCCOPY);
+    void onPaintUpdatedInUiThread(int x, int y, int cx, int cy) {
+        ::EnterCriticalSection(&m_memoryCanvasLock);
+
+        HDC hdcScreen = ::GetDC(m_hWnd);
+        ::BitBlt(hdcScreen, x, y, cx, cy, m_memoryDC, x, y, SRCCOPY);
+        ::ReleaseDC(m_hWnd, hdcScreen);
+
+        ::LeaveCriticalSection(&m_memoryCanvasLock);
+    }
+
+    static void staticOnPaintUpdatedInOtherThread(wkeWebView webView, Window* win, const HDC hdc, int x, int y, int cx, int cy) {
+        ::EnterCriticalSection(&win->m_memoryCanvasLock);
+        win->onPaintUpdatedInOtherThread(hdc, x, y, cx, cy);
+        ::LeaveCriticalSection(&win->m_memoryCanvasLock);
+
+        int id = win->m_id;
+        ThreadCall::callUiThreadAsync([id, win, x, y, cx, cy] {
+            if (isLive(id))
+                win->onPaintUpdatedInUiThread(x, y, cx, cy);
+        });
     }
 
     static LRESULT CALLBACK windowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) {
@@ -231,6 +279,8 @@ public:
         }
         if (!win)
             return ::DefWindowProcW(hwnd, message, wParam, lParam);
+        int id = win->m_id;
+
         wkeWebView pthis = win->m_webContents->m_view;
         if (!pthis)
             return ::DefWindowProcW(hwnd, message, wParam, lParam);
@@ -273,11 +323,13 @@ public:
             int width = rcInvalid.right - rcInvalid.left;
             int height = rcInvalid.bottom - rcInvalid.top;
 
+            ::EnterCriticalSection(&win->m_memoryCanvasLock);
             if (0 != width && 0 != height && win->m_memoryBMP && win->m_memoryDC) {
                 HBITMAP hbmpOld = (HBITMAP)::SelectObject(win->m_memoryDC, win->m_memoryBMP);
                 BOOL b = ::BitBlt(hdc, destX, destY, width, height, win->m_memoryDC, srcX, srcY, SRCCOPY);
                 b = b;
             }
+            ::LeaveCriticalSection(&win->m_memoryCanvasLock);
 
             ::EndPaint(hwnd, &ps);
         }
@@ -386,8 +438,9 @@ public:
             if (wParam & MK_RBUTTON)
                 flags |= WKE_RBUTTON;
 
-            ThreadCall::callBlinkThreadAsync([pthis, message, x, y, flags] {
-                wkeFireMouseEvent(pthis, message, x, y, flags);
+            ThreadCall::callBlinkThreadAsync([id, pthis, message, x, y, flags] {
+                if (isLive(id))
+                    wkeFireMouseEvent(pthis, message, x, y, flags);
             });
             break;
         }
@@ -413,8 +466,9 @@ public:
             if (wParam & MK_RBUTTON)
                 flags |= WKE_RBUTTON;
 
-            ThreadCall::callBlinkThreadAsync([pthis, pt, flags] {
-                wkeFireContextMenuEvent(pthis, pt.x, pt.y, flags);
+            ThreadCall::callBlinkThreadAsync([id, pthis, pt, flags] {
+                if (isLive(id))
+                    wkeFireContextMenuEvent(pthis, pt.x, pt.y, flags);
             });
             break;
         }
@@ -440,20 +494,22 @@ public:
             if (wParam & MK_RBUTTON)
                 flags |= WKE_RBUTTON;
 
-            ThreadCall::callBlinkThreadAsync([pthis, pt, delta, flags] {
+            ThreadCall::callBlinkThreadAsync([id, pthis, pt, delta, flags] {
                 wkeFireMouseWheelEvent(pthis, pt.x, pt.y, delta, flags);
             });
             break;
         }
         case WM_SETFOCUS:
-            ThreadCall::callBlinkThreadAsync([pthis]{
-                wkeSetFocus(pthis);
+            ThreadCall::callBlinkThreadAsync([id, pthis]{
+                if (isLive(id))
+                    wkeSetFocus(pthis);
             });
             return 0;
 
         case WM_KILLFOCUS:
-            ThreadCall::callBlinkThreadAsync([pthis] {
-                wkeKillFocus(pthis);
+            ThreadCall::callBlinkThreadAsync([id, pthis] {
+                if (isLive(id))
+                    wkeKillFocus(pthis);
             });
             return 0;
 
@@ -607,8 +663,11 @@ public:
         ThreadCall::callBlinkThreadSync([win, createWindowParam] {
             if (createWindowParam->transparent)
                 wkeSetTransparent(win->m_webContents->m_view, true);
+            wkeSettings settings;
+            settings.mask = WKE_SETTING_PAINTCALLBACK_IN_OTHER_THREAD;
+            wkeConfigure(&settings);
             wkeResize(win->m_webContents->m_view, createWindowParam->width, createWindowParam->height);
-            wkeOnPaintUpdated(win->m_webContents->m_view, (wkePaintUpdatedCallback)staticOnPaintUpdated, win);
+            wkeOnPaintUpdated(win->m_webContents->m_view, (wkePaintUpdatedCallback)staticOnPaintUpdatedInOtherThread, win);
         });
 
         ::ShowWindow(m_hWnd, TRUE);
@@ -1186,13 +1245,22 @@ private:
     static const WCHAR* kPrppW;
     WebContents* m_webContents;
     HWND m_hWnd;
+    CRITICAL_SECTION m_memoryCanvasLock;
     HBITMAP m_memoryBMP;
     HDC m_memoryDC;
     RECT m_clientRect;
+
+    int m_id;
+    static int m_idGen;
+    static std::set<int>* m_liveSelf;
+    static CRITICAL_SECTION* m_liveSelfLock;
 };
 
 const WCHAR* Window::kPrppW = L"mele";
 Persistent<Function> Window::constructor;
+int Window::m_idGen;
+std::set<int>* Window::m_liveSelf = nullptr;
+CRITICAL_SECTION* Window::m_liveSelfLock = nullptr;
 
 static void initializeWindowApi(Local<Object> target, Local<Value> unused, Local<Context> context) {
     Environment* env = Environment::GetCurrent(context);

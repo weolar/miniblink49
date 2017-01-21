@@ -20,7 +20,7 @@ void ThreadCall::init(uv_loop_t* uiLoop) {
     createBlinkThread();
 }
 
-void ThreadCall::callUiThreadSync(std::function<void(void)> closure) {
+void ThreadCall::callUiThreadSync(std::function<void(void)>&& closure) {
     if (::GetCurrentThreadId() == m_uiThreadId) {
         closure();
         return;
@@ -53,7 +53,15 @@ void ThreadCall::callBlinkThreadAsync(std::function<void(void)>&& closure) {
     callAsync(asyncData, asynThreadCallbackWrap, asyncData);
 }
 
-void ThreadCall::callBlinkThreadSync(std::function<void(void)> closure) {
+void ThreadCall::callUiThreadAsync(std::function<void(void)>&& closure) {
+    TaskAsyncData* asyncData = cretaeAsyncData(m_uiLoop, m_uiThreadId);
+
+    std::function<void(void)>* closureDummy = new std::function<void(void)>(std::move(closure));
+    asyncData->dataEx = closureDummy;
+    callAsync(asyncData, asynThreadCallbackWrap, asyncData);
+}
+
+void ThreadCall::callBlinkThreadSync(std::function<void(void)>&& closure) {
     if (::GetCurrentThreadId() == m_blinkThreadId) {
         closure();
         return;
