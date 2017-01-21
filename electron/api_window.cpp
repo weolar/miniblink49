@@ -35,18 +35,6 @@ public:
         m_clientRect.top = 0;
         m_clientRect.right = 0;
         m_clientRect.bottom = 0;
-        m_isFullscreen = false;
-        m_isFullscreenable = true;
-        m_isResizable = true;
-        m_isMinimizable = true;
-        m_isMaximizable = true;
-        m_isClosable = true;
-        m_isFocusable = true;
-        m_isIgnoreMouseEvents = false;
-        m_minTrackSize.x = 0;
-        m_minTrackSize.y = 0;
-        m_maxTrackSize.x = 0;
-        m_maxTrackSize.y = 0;
     }
 
     ~Window() {
