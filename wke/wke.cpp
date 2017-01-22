@@ -23,6 +23,8 @@ void setCookieJarPath(const WCHAR* path);
 static std::string* s_versionString = nullptr;
 static bool wkeIsInit = false;
 
+bool wkeIsUpdataInOtherThread = false;
+
 void wkeInitialize()
 {
 	if (!wkeIsInit) {
@@ -59,6 +61,7 @@ void wkeSetProxy(const wkeProxy& proxy)
  
 	 net::WebURLLoaderManager::sharedInstance()->setProxyInfo(hostname, proxy.port, proxyType, username, password);
 }
+
 WKE_API void wkeSetViewProxy(wkeWebView webView, wkeProxy *proxy) {
 	net::WebURLLoaderManager::ProxyType proxyType = net::WebURLLoaderManager::HTTP;
 	String hostname;
@@ -85,6 +88,8 @@ void wkeConfigure(const wkeSettings* settings)
 {
     if (settings->mask & WKE_SETTING_PROXY)
         wkeSetProxy(settings->proxy);
+    if (settings->mask & WKE_SETTING_PAINTCALLBACK_IN_OTHER_THREAD)
+        wkeIsUpdataInOtherThread = true;
 }
 
 void wkeInitializeEx(const wkeSettings* settings)

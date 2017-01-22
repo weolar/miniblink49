@@ -1,15 +1,17 @@
 ﻿
-#include "nodeblink.h"
 #include <node_object_wrap.h>
 #include "wke.h"
 #include "ThreadCall.h"
-#include "dictionary.h"
-#include "options_switches.h"
-#include "api_web_contents.h"
+#include "Dictionary.h"
+#include "OptionsSwitches.h"
+#include "ApiWebContents.h"
 #include "NodeRegisterHelp.h"
-#include "window_list.h"
+#include "WindowList.h"
 
 #include <set>
+#if USING_VC6RT == 1
+#include <windowsvc6.h>
+#endif
 
 using namespace v8;
 using namespace node;
@@ -32,6 +34,7 @@ public:
         m_hWnd = nullptr;
         m_memoryBMP = nullptr;
         m_memoryDC = nullptr;
+        m_isLayerWindow = false;
         m_clientRect.left = 0;
         m_clientRect.top = 0;
         m_clientRect.right = 0;
@@ -215,7 +218,7 @@ public:
 //         ::ReleaseDC(hWnd, hdcScreen);
 //     }
 
-    void onPaintUpdatedInOtherThread(const HDC hdc, int x, int y, int cx, int cy) {
+    void onPaintUpdatedInCompositeThread(const HDC hdc, int x, int y, int cx, int cy) {
         HWND hWnd = m_hWnd;
         RECT rectDest;
         ::GetClientRect(hWnd, &rectDest);
@@ -250,49 +253,84 @@ public:
         ::LeaveCriticalSection(&m_memoryCanvasLock);
     }
 
-    static void staticOnPaintUpdatedInOtherThread(wkeWebView webView, Window* win, const HDC hdc, int x, int y, int cx, int cy) {
+    static void staticOnPaintUpdatedInCompositeThread(wkeWebView webView, Window* win, const HDC hdc, int x, int y, int cx, int cy) {
         ::EnterCriticalSection(&win->m_memoryCanvasLock);
-        win->onPaintUpdatedInOtherThread(hdc, x, y, cx, cy);
+        win->onPaintUpdatedInCompositeThread(hdc, x, y, cx, cy);
         ::LeaveCriticalSection(&win->m_memoryCanvasLock);
 
-        int id = win->m_id;
-        ThreadCall::callUiThreadAsync([id, win, x, y, cx, cy] {
-            if (isLive(id))
-                win->onPaintUpdatedInUiThread(x, y, cx, cy);
-        });
+        if (win->m_isLayerWindow) {
+            int id = win->m_id;
+            ThreadCall::callUiThreadAsync([id, win, x, y, cx, cy] {
+                if (isLive(id))
+                    win->onPaintUpdatedInUiThread(x, y, cx, cy);
+            });
+        } else {
+            RECT rc = { x, y, x + cx, y + cy };
+            ::InvalidateRect(win->m_hWnd, &rc, false);
+        }
     }
 
-    static LRESULT CALLBACK windowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) {
-        Window* win = (Window *)::GetPropW(hwnd, kPrppW);
+    void onPaintMessage(HWND hWnd) {
+        PAINTSTRUCT ps = { 0 };
+        HDC hdc = ::BeginPaint(hWnd, &ps);
+
+        RECT rcClip = ps.rcPaint;
+        RECT rcClient;
+        ::GetClientRect(hWnd, &rcClient);
+
+        RECT rcInvalid = rcClient;
+        if (rcClip.right != rcClip.left && rcClip.bottom != rcClip.top)
+            ::IntersectRect(&rcInvalid, &rcClip, &rcClient);
+
+        int srcX = rcInvalid.left - rcClient.left;
+        int srcY = rcInvalid.top - rcClient.top;
+        int destX = rcInvalid.left;
+        int destY = rcInvalid.top;
+        int width = rcInvalid.right - rcInvalid.left;
+        int height = rcInvalid.bottom - rcInvalid.top;
+
+        ::EnterCriticalSection(&m_memoryCanvasLock);
+        if (0 != width && 0 != height && m_memoryBMP && m_memoryDC) {
+            HBITMAP hbmpOld = (HBITMAP)::SelectObject(m_memoryDC, m_memoryBMP);
+            BOOL b = ::BitBlt(hdc, destX, destY, width, height, m_memoryDC, srcX, srcY, SRCCOPY);
+            b = b;
+        }
+        ::LeaveCriticalSection(&m_memoryCanvasLock);
+
+        ::EndPaint(hWnd, &ps);
+    }
+
+    static LRESULT CALLBACK windowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
+        Window* win = (Window *)::GetPropW(hWnd, kPrppW);
         if (!win) {
             if (message == WM_CREATE) {
                 LPCREATESTRUCTW cs = (LPCREATESTRUCTW)lParam;
                 Window *win = (Window *)cs->lpCreateParams;
-                ThreadCall::callBlinkThreadSync([win, hwnd] {
-                    wkeSetHandle(win->m_webContents->m_view, hwnd);
+                ThreadCall::callBlinkThreadSync([win, hWnd] {
+                    wkeSetHandle(win->m_webContents->m_view, hWnd);
                 });
                 
-                ::SetPropW(hwnd, kPrppW, (HANDLE)win);
-                ::SetTimer(hwnd, (UINT_PTR)win, 70, NULL);
+                ::SetPropW(hWnd, kPrppW, (HANDLE)win);
+                ::SetTimer(hWnd, (UINT_PTR)win, 70, NULL);
                 return 0;
             }
         }
         if (!win)
-            return ::DefWindowProcW(hwnd, message, wParam, lParam);
+            return ::DefWindowProcW(hWnd, message, wParam, lParam);
         int id = win->m_id;
 
         wkeWebView pthis = win->m_webContents->m_view;
         if (!pthis)
-            return ::DefWindowProcW(hwnd, message, wParam, lParam);
+            return ::DefWindowProcW(hWnd, message, wParam, lParam);
         switch (message) {
         case WM_CLOSE:
-            ::ShowWindow(hwnd, SW_HIDE);
-            ::DestroyWindow(hwnd);
+            ::ShowWindow(hWnd, SW_HIDE);
+            ::DestroyWindow(hWnd);
             return 0;
 
         case WM_DESTROY:
-            ::KillTimer(hwnd, (UINT_PTR)win);
-            ::RemovePropW(hwnd, kPrppW);
+            ::KillTimer(hWnd, (UINT_PTR)win);
+            ::RemovePropW(hWnd, kPrppW);
             ThreadCall::callBlinkThreadSync([pthis] {
                 wkeDestroyWebView(pthis);
             });
@@ -303,42 +341,15 @@ public:
             //wkeRepaintIfNeeded(pthis);
             return 0;
 
-        case WM_PAINT: {
-            PAINTSTRUCT ps = { 0 };
-            HDC hdc = ::BeginPaint(hwnd, &ps);
-
-            RECT rcClip = ps.rcPaint;
-
-            RECT rcClient;
-            ::GetClientRect(hwnd, &rcClient);
-
-            RECT rcInvalid = rcClient;
-            if (rcClip.right != rcClip.left && rcClip.bottom != rcClip.top)
-                ::IntersectRect(&rcInvalid, &rcClip, &rcClient);
-
-            int srcX = rcInvalid.left - rcClient.left;
-            int srcY = rcInvalid.top - rcClient.top;
-            int destX = rcInvalid.left;
-            int destY = rcInvalid.top;
-            int width = rcInvalid.right - rcInvalid.left;
-            int height = rcInvalid.bottom - rcInvalid.top;
-
-            ::EnterCriticalSection(&win->m_memoryCanvasLock);
-            if (0 != width && 0 != height && win->m_memoryBMP && win->m_memoryDC) {
-                HBITMAP hbmpOld = (HBITMAP)::SelectObject(win->m_memoryDC, win->m_memoryBMP);
-                BOOL b = ::BitBlt(hdc, destX, destY, width, height, win->m_memoryDC, srcX, srcY, SRCCOPY);
-                b = b;
-            }
-            ::LeaveCriticalSection(&win->m_memoryCanvasLock);
-
-            ::EndPaint(hwnd, &ps);
-        }
+        case WM_PAINT:
+            win->onPaintMessage(hWnd);
             break;
 
         case WM_ERASEBKGND:
             return TRUE;
 
         case WM_SIZE: {
+            ::EnterCriticalSection(&win->m_memoryCanvasLock);
             if (win->m_memoryDC)
                 ::DeleteDC(win->m_memoryDC);
             win->m_memoryDC = nullptr;
@@ -346,8 +357,9 @@ public:
             if (win->m_memoryBMP)
                 ::DeleteObject((HGDIOBJ)win->m_memoryBMP);
             win->m_memoryBMP = nullptr;
+            ::LeaveCriticalSection(&win->m_memoryCanvasLock);
 
-            ::GetClientRect(hwnd, &win->m_clientRect);
+            ::GetClientRect(hWnd, &win->m_clientRect);
             
             ThreadCall::callBlinkThreadSync([pthis, lParam] {
                 wkeResize(pthis, LOWORD(lParam), HIWORD(lParam));
@@ -414,8 +426,8 @@ public:
         case WM_RBUTTONUP:
         case WM_MOUSEMOVE: {
             if (message == WM_LBUTTONDOWN || message == WM_MBUTTONDOWN || message == WM_RBUTTONDOWN) {
-                ::SetFocus(hwnd);
-                ::SetCapture(hwnd);
+                ::SetFocus(hWnd);
+                ::SetCapture(hWnd);
             }
             else if (message == WM_LBUTTONUP || message == WM_MBUTTONUP || message == WM_RBUTTONUP) {
                 ::ReleaseCapture();
@@ -450,7 +462,7 @@ public:
             pt.y = HIWORD(lParam);
 
             if (pt.x != -1 && pt.y != -1)
-                ::ScreenToClient(hwnd, &pt);
+                ::ScreenToClient(hWnd, &pt);
 
             unsigned int flags = 0;
 
@@ -476,7 +488,7 @@ public:
             POINT pt;
             pt.x = LOWORD(lParam);
             pt.y = HIWORD(lParam);
-            ::ScreenToClient(hwnd, &pt);
+            ::ScreenToClient(hWnd, &pt);
 
             int delta = GET_WHEEL_DELTA_WPARAM(wParam);
 
@@ -515,8 +527,8 @@ public:
 
         case WM_SETCURSOR: {
             bool retVal = false;
-            ThreadCall::callBlinkThreadAsync([pthis, hwnd, &retVal] {
-                retVal = wkeFireWindowsMessage(pthis, hwnd, WM_SETCURSOR, 0, 0, nullptr);
+            ThreadCall::callBlinkThreadAsync([pthis, hWnd, &retVal] {
+                retVal = wkeFireWindowsMessage(pthis, hWnd, WM_SETCURSOR, 0, 0, nullptr);
             });
             if (retVal)
                 return 0;
@@ -534,14 +546,14 @@ public:
             compositionForm.ptCurrentPos.x = caret.x;
             compositionForm.ptCurrentPos.y = caret.y;
 
-            HIMC hIMC = ::ImmGetContext(hwnd);
+            HIMC hIMC = ::ImmGetContext(hWnd);
             ::ImmSetCompositionWindow(hIMC, &compositionForm);
-            ::ImmReleaseContext(hwnd, hIMC);
+            ::ImmReleaseContext(hWnd, hIMC);
         }
             return 0;
         }
 
-        return ::DefWindowProcW(hwnd, message, wParam, lParam);
+        return ::DefWindowProcW(hWnd, message, wParam, lParam);
     }
 
     struct CreateWindowParam {
@@ -667,7 +679,7 @@ public:
             settings.mask = WKE_SETTING_PAINTCALLBACK_IN_OTHER_THREAD;
             wkeConfigure(&settings);
             wkeResize(win->m_webContents->m_view, createWindowParam->width, createWindowParam->height);
-            wkeOnPaintUpdated(win->m_webContents->m_view, (wkePaintUpdatedCallback)staticOnPaintUpdatedInOtherThread, win);
+            wkeOnPaintUpdated(win->m_webContents->m_view, (wkePaintUpdatedCallback)staticOnPaintUpdatedInCompositeThread, win);
         });
 
         ::ShowWindow(m_hWnd, TRUE);
@@ -1249,7 +1261,7 @@ private:
     HBITMAP m_memoryBMP;
     HDC m_memoryDC;
     RECT m_clientRect;
-
+    bool m_isLayerWindow;
     int m_id;
     static int m_idGen;
     static std::set<int>* m_liveSelf;
