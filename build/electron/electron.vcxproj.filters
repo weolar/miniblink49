@@ -12,6 +12,21 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
+    <Filter Include="src\common">
+      <UniqueIdentifier>{edf8906d-c8a2-4e26-9b1a-7db936a3a45c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\common\api">
+      <UniqueIdentifier>{becf1eda-95b8-4cdb-99f7-8e00e1a60fa5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\browser">
+      <UniqueIdentifier>{811708e3-0ffc-427e-87e4-8a609c8633b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\browser\api">
+      <UniqueIdentifier>{6301bd5e-1102-4518-afc9-1e390577d6de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gin">
+      <UniqueIdentifier>{6621e29a-5359-41e1-984e-e4a5ca18bec2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\base\thread.cc">
@@ -20,43 +35,37 @@
     <ClCompile Include="..\..\base\algorithmvc6.cpp">
       <Filter>base</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\electron\ApiWebContents.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\electron\Converter.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\electron\Electron.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\electron\OptionsSwitches.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\electron\ThreadCall.cpp">
-      <Filter>src</Filter>
+    <ClCompile Include="..\..\electron\browser\api\ApiWebContents.cpp">
+      <Filter>src\browser\api</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\electron\WindowList.cpp">
-      <Filter>src</Filter>
+    <ClCompile Include="..\..\electron\browser\api\ApiWindow.cpp">
+      <Filter>src\browser\api</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\electron\ApiAindow.cpp">
-      <Filter>src</Filter>
+    <ClCompile Include="..\..\electron\browser\api\WindowList.cpp">
+      <Filter>src\browser\api</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\electron\ApiApp.cpp">
-      <Filter>src</Filter>
+    <ClCompile Include="..\..\electron\browser\api\ApiApp.cpp">
+      <Filter>src\browser\api</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\electron\Dictionary.cpp">
-      <Filter>src</Filter>
+    <ClCompile Include="..\..\electron\common\ThreadCall.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\electron\gin\dictionary.cc">
+      <Filter>gin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\electron\gin\converter.cc">
+      <Filter>gin</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\base\thread.h">
       <Filter>base</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\electron\ApiWebContents.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\electron\Converter.h">
-      <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\electron\Electron.h">
       <Filter>src</Filter>
@@ -67,17 +76,32 @@
     <ClInclude Include="..\..\electron\OptionsSwitches.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\electron\ThreadCall.h">
-      <Filter>src</Filter>
+    <ClInclude Include="..\..\electron\common\api\event_emitter.h">
+      <Filter>src\common\api</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\electron\WindowList.h">
-      <Filter>src</Filter>
+    <ClInclude Include="..\..\electron\common\api\event_emitter_caller.h">
+      <Filter>src\common\api</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\electron\ApiApp.h">
-      <Filter>src</Filter>
+    <ClInclude Include="..\..\electron\common\api\event.h">
+      <Filter>src\common\api</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\electron\Dictionary.h">
-      <Filter>src</Filter>
+    <ClInclude Include="..\..\electron\browser\api\ApiApp.h">
+      <Filter>src\browser\api</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\electron\browser\api\ApiWebContents.h">
+      <Filter>src\browser\api</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\electron\browser\api\WindowList.h">
+      <Filter>src\browser\api</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\electron\common\ThreadCall.h">
+      <Filter>src\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\electron\gin\dictionary.h">
+      <Filter>gin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\electron\gin\converter.h">
+      <Filter>gin</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
