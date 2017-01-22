@@ -3,8 +3,8 @@
 #include "nodeblink.h"
 #include <node_object_wrap.h>
 #include "wke.h"
-#include "ThreadCall.h"
-#include "Dictionary.h"
+#include "common/ThreadCall.h"
+#include "gin/dictionary.h"
 #include "NodeRegisterHelp.h"
 
 using namespace v8;

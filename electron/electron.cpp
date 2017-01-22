@@ -1,7 +1,7 @@
 ﻿
 #include "electron.h"
 
-#include "ThreadCall.h"
+#include "common/ThreadCall.h"
 #include "NodeRegisterHelp.h"
 #include "NodeBlink.h"
 

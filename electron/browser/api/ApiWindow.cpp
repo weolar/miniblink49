@@ -2,8 +2,7 @@
 #include <node_object_wrap.h>
 #include <node_buffer.h>
 #include "wke.h"
-#include "ThreadCall.h"
-#include "Dictionary.h"
+#include "common/ThreadCall.h"
 #include "OptionsSwitches.h"
 #include "ApiWebContents.h"
 #include "NodeRegisterHelp.h"
