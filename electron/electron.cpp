@@ -3,6 +3,7 @@
 
 #include "ThreadCall.h"
 #include "NodeRegisterHelp.h"
+#include "NodeBlink.h"
 
 #include "lib/native.h"
 #include <windows.h>
@@ -47,6 +48,10 @@ void nodeInitCallBack(NodeArgc* n) {
     gcTimer.data = n->childEnv->isolate();
     uv_timer_init(n->childLoop, &gcTimer);
     uv_timer_start(&gcTimer, gcTimerCallBack, 1000 * 10, 1);
+
+    uv_loop_t* loop = n->childLoop;
+    atom::ThreadCall::init(loop);
+    atom::ThreadCall::messageLoop(loop);
 }
 
 } // atom
@@ -60,17 +65,13 @@ int APIENTRY wWinMain(HINSTANCE hInstance,
 
     atom::registerNodeMod();
 
-    uv_loop_t* loop = uv_default_loop();
-
-    atom::ThreadCall::init(loop);
-
-    wchar_t* argv1[] = { L"electron.exe", L"init.js" };
-    node::NodeArgc* node = node::runNodeThread(2, argv1, atom::nodeInitCallBack, NULL);
-
-    atom::ThreadCall::messageLoop(loop);
+    atom::ThreadCall::createBlinkThread();
     
-	wkeFinalize();
-
+    wchar_t* argv1[] = { L"electron.exe", L"init.js" };
+    node::NodeArgc* node = node::runNodeThread(2, argv1, atom::nodeInitCallBack, nullptr);
+    
+    uv_loop_t* loop = uv_default_loop();
+    atom::ThreadCall::messageLoop(loop);
     atom::ThreadCall::shutdown();
 
 	return 0;

@@ -11,7 +11,10 @@
 
 #include <set>
 #if USING_VC6RT == 1
+#pragma warning(push)
+#pragma warning(disable:4273)
 #include <windowsvc6.h>
+#pragma warning(pop)
 #endif
 
 using namespace v8;
@@ -62,10 +65,10 @@ public:
         if (m_memoryDC)
             ::DeleteDC(m_memoryDC);
 
-        ThreadCall::callUiThreadSync([this] {
+        //ThreadCall::callUiThreadSync([this] {
             //delete data->m_webContents;
-            SendMessage(this->m_hWnd, WM_CLOSE, 0, 0);
-        });
+            ::SendMessage(this->m_hWnd, WM_CLOSE, 0, 0);
+        //});
         WindowList::GetInstance()->RemoveWindow(this);
 
         ::EnterCriticalSection(m_liveSelfLock);
@@ -654,13 +657,13 @@ public:
             createWindowParam.styleEx = 0;
         }
 
-        ThreadCall::callUiThreadSync([win, &createWindowParam] {
-            win->newWindowTask(&createWindowParam);
-        });
+        //ThreadCall::callUiThreadSync([win, &createWindowParam] {
+            win->newWindowTaskInUiThread(&createWindowParam);
+        //});
         return win;
     }
 
-    void newWindowTask(const CreateWindowParam* createWindowParam) {
+    void newWindowTaskInUiThread(const CreateWindowParam* createWindowParam) {
         //HandleScope scope(options->isolate());
         m_hWnd = ::CreateWindowEx(
             createWindowParam->styleEx,        // window ex-style
