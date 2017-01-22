@@ -27,6 +27,8 @@
 
 using namespace blink;
 
+extern bool wkeIsUpdataInOtherThread;
+
 namespace cc {
 
 LayerTreeHost* gLayerTreeHost = nullptr;
@@ -898,6 +900,13 @@ void LayerTreeHost::paintToMemoryCanvas(const IntRect& r)
         clearCanvas(m_memoryCanvas, paintRect, m_useLayeredBuffer);
 
     drawToCanvas(m_memoryCanvas, paintRect); // »æÖÆÔà¾ØÐÎ
+
+#if ENABLE_WKE == 1
+    if (wkeIsUpdataInOtherThread) {
+        m_uiThreadClient->paintToMemoryCanvasInUiThread(m_memoryCanvas, paintRect);
+        return;
+    }
+#endif
 
     WrapSelfForUiThread* wrap = new WrapSelfForUiThread(this);
     m_wrapSelfForUiThreads.insert(wrap);
