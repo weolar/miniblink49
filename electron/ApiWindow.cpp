@@ -1,5 +1,6 @@
 ﻿
 #include <node_object_wrap.h>
+#include <node_buffer.h>
 #include "wke.h"
 #include "ThreadCall.h"
 #include "Dictionary.h"
@@ -576,6 +577,16 @@ public:
         utf16->assign(&wbuf[0], n);
     }
 
+    static v8::Local<v8::Value> ToBuffer(v8::Isolate* isolate, void* val, int size) {
+        auto buffer = node::Buffer::Copy(isolate, static_cast<char*>(val), size);
+        if (buffer.IsEmpty()) {
+            return v8::Null(isolate);
+        }
+        else {
+            return buffer.ToLocalChecked();
+        }
+    }
+
     static Window* newWindow(gin::Dictionary* options) {
         Window* win = new Window();
         CreateWindowParam createWindowParam;
@@ -887,6 +898,11 @@ private:
     }
 
     static void getNativeWindowHandleApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
+        Isolate* isolate = args.GetIsolate();
+        HandleScope scope(isolate);
+        Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
+
+        args.GetReturnValue().Set(ToBuffer(isolate, (void*)(&win->m_hWnd), sizeof(HWND)));
     }
 
     static void getBoundsApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
