@@ -17,7 +17,6 @@
 #if USING_VC6RT == 1
 #undef max
 #undef min
-#include <initializer_list_vc6.h>
 #endif
 
 #ifndef ZONE_NAME
