@@ -67,7 +67,7 @@ typedef long _Atomic_flag_t;
 
 extern "C" {
 
-    __int64 WINAPI InterlockedCompareExchange64(__int64 volatile *Destination, __int64 ExChange, __int64 Comperand);
+    WINBASEAPI __int64 WINAPI InterlockedCompareExchange64(__int64 volatile *Destination, __int64 ExChange, __int64 Comperand);
 
     char WINAPI InterlockedExchange8(char volatile * _Target, char _Value);
     char WINAPI InterlockedCompareExchange8(char volatile * _Destination, char _Exchange, char _Comparand);

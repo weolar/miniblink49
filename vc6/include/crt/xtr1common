@@ -239,19 +239,17 @@ template<>
 	{	// determine whether _Ty is integral
 	};
 
- #ifdef _LONGLONG
 template<>
-	struct _Is_integral<_LONGLONG>
+	struct _Is_integral<__int64>
 		: true_type
 	{	// determine whether _Ty is integral
 	};
 
 template<>
-	struct _Is_integral<_ULONGLONG>
+	struct _Is_integral<unsigned __int64>
 		: true_type
 	{	// determine whether _Ty is integral
 	};
- #endif /* _LONGLONG */
 
 	// TEMPLATE CLASS is_integral
 template<class _Ty>

@@ -3,20 +3,39 @@
 
 #if USING_VC6RT == 1
 
-#include <windows.h>
 #include <commctrl.h>
 
 #undef min
 #undef max
 #undef PURE
 
+#ifndef _In_opt_
 #define _In_opt_ 
+#endif
+
+#ifndef _In_
 #define _In_
+#endif
+
+#ifndef _Inout_opt_
 #define _Inout_opt_
+#endif
+
+#ifndef _Inout_
 #define _Inout_
+#endif
+
+#ifndef _In_opt_z_
 #define _In_opt_z_
+#endif
+
+#ifndef _Out_
 #define _Out_
+#endif
+
+#ifndef _Out_opt_
 #define _Out_opt_
+#endif
 
 #define WS_EX_LAYERED 0x00080000
 #define SPI_GETWHEELSCROLLLINES 0x0068
@@ -53,6 +72,8 @@ WINAPI
 TryEnterCriticalSection(
     LPCRITICAL_SECTION lpCriticalSection
     );
+
+typedef struct tagTRACKMOUSEEVENT *LPTRACKMOUSEEVENT;
 
 WINUSERAPI BOOL WINAPI TrackMouseEvent(LPTRACKMOUSEEVENT lpEventTrack);
 
