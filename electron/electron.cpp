@@ -4,7 +4,6 @@
 #include "common/ThreadCall.h"
 #include "NodeRegisterHelp.h"
 #include "NodeBlink.h"
-
 #include "lib/native.h"
 #include <windows.h>
 #include "base/thread.h"
@@ -64,7 +63,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance,
     UNREFERENCED_PARAMETER(lpCmdLine);
 
     atom::registerNodeMod();
-
+    
     atom::ThreadCall::createBlinkThread();
     
     wchar_t* argv1[] = { L"electron.exe", L"init.js" };

@@ -1,20 +1,16 @@
 ﻿
 #include <node_object_wrap.h>
 #include <node_buffer.h>
-#include "wke.h"
-#include "common/ThreadCall.h"
 #include "OptionsSwitches.h"
-#include "ApiWebContents.h"
 #include "NodeRegisterHelp.h"
-#include "WindowList.h"
-
+#include "browser/api/ApiWebContents.h"
+#include "browser/api/WindowList.h"
+#include "common/ThreadCall.h"
+#include "common/api/event_emitter.h"
+#include "wke.h"
+#include "gin/per_isolate_data.h"
+#include "gin/object_template_builder.h"
 #include <set>
-#if USING_VC6RT == 1
-#pragma warning(push)
-#pragma warning(disable:4273)
-#include <windowsvc6.h>
-#pragma warning(pop)
-#endif
 
 using namespace v8;
 using namespace node;
@@ -30,9 +26,10 @@ static const char helloNative[] = { 239,187,191,39,117,115,101,32,115,116,114,10
 static NodeNative nativeHello{ "hello", helloNative, sizeof(helloNative) };
 
 // 继承node的ObjectWrap，一般自定义C++类都应该继承node的ObjectWrap
-class Window : public node::ObjectWrap {
+class Window : public node::ObjectWrap, public mate::EventEmitter<Window> {
 public:
-    explicit Window() {
+    explicit Window(v8::Isolate* isolate, v8::Local<v8::Object> wrapper) {
+        gin::Wrappable<Window>::InitWith(isolate, wrapper);
         m_webContents = nullptr;
         m_hWnd = nullptr;
         m_memoryBMP = nullptr;
@@ -85,115 +82,120 @@ public:
         return b;
     }
 
+    static void buildPrototype(v8::Isolate* isolate, v8::Local<v8::FunctionTemplate> prototype) {
+
+
+    }
+
     static void init(Local<Object> target, Environment* env) {
         Isolate* isolate = env->isolate();
+        gin::PerIsolateData* perIsolateData = new gin::PerIsolateData(isolate, nullptr);
 
-        // Function模板
-        Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, newFunction);
-        // 类名
-        tpl->SetClassName(String::NewFromUtf8(isolate, "BrowserWindow"));
-        // InternalField
-        tpl->InstanceTemplate()->SetInternalFieldCount(1);
-        v8::Local<v8::Template> t = tpl->InstanceTemplate();
+        Local<FunctionTemplate> prototype = FunctionTemplate::New(isolate, newFunction); // Function模板
+        
+        prototype->SetClassName(String::NewFromUtf8(isolate, "BrowserWindow"));
+        gin::ObjectTemplateBuilder builder(isolate, prototype->InstanceTemplate());
+        builder.SetMethod("webContents", &Window::getWebContentsApi);
+        
         // 设置Prototype函数
-        NODE_SET_METHOD(t, "close", closeApi);
-        NODE_SET_METHOD(t, "focus", focusApi);
-        NODE_SET_METHOD(t, "blur", blurApi);
-        NODE_SET_METHOD(t, "isFocused", isFocusedApi);
-        NODE_SET_METHOD(t, "show", showApi);
-        NODE_SET_METHOD(t, "showInactive", showInactiveApi);
-        NODE_SET_METHOD(t, "hide", hideApi);
-        NODE_SET_METHOD(t, "isVisible", isVisibleApi);
-        NODE_SET_METHOD(t, "isEnabled", isEnabledApi);
-        NODE_SET_METHOD(t, "maximize", maximizeApi);
-        NODE_SET_METHOD(t, "unmaximize", unmaximizeApi);
-        NODE_SET_METHOD(t, "isMaximized", isMaximizedApi);
-        NODE_SET_METHOD(t, "minimize", minimizeApi);
-        NODE_SET_METHOD(t, "restore", restoreApi);
-        NODE_SET_METHOD(t, "isMinimized",isMinimizedApi);
-        NODE_SET_METHOD(t, "setFullScreen", setFullScreenApi);
-        NODE_SET_METHOD(t, "isFullScreen", isFullScreenApi);
-        NODE_SET_METHOD(t, "setAspectRatio", nullFunction);
-        NODE_SET_METHOD(t, "previewFile", nullFunction);
-        NODE_SET_METHOD(t, "closeFilePreview", nullFunction);
-        NODE_SET_METHOD(t, "setParentWindow", nullFunction);
-        NODE_SET_METHOD(t, "getParentWindow", nullFunction);
-        NODE_SET_METHOD(t, "getChildWindows", nullFunction);
-        NODE_SET_METHOD(t, "isModal", isModalApi);
-        NODE_SET_METHOD(t, "getNativeWindowHandle", getNativeWindowHandleApi);
-        NODE_SET_METHOD(t, "getBounds", getBoundsApi);
-        NODE_SET_METHOD(t, "setBounds", setBoundsApi);
-        NODE_SET_METHOD(t, "getSize", getSizeApi);
-        NODE_SET_METHOD(t, "setSize", setSizeApi);
-        NODE_SET_METHOD(t, "getContentBounds", getContentBoundsApi);
-        NODE_SET_METHOD(t, "setContentBounds", setContentBoundsApi);
-        NODE_SET_METHOD(t, "getContentSize", getContentSizeApi);
-        NODE_SET_METHOD(t, "setContentSize", setContentSizeApi);
-        NODE_SET_METHOD(t, "setMinimumSize", setMinimumSizeApi);
-        NODE_SET_METHOD(t, "getMinimumSize", getMinimumSizeApi);
-        NODE_SET_METHOD(t, "setMaximumSize", setMaximumSizeApi);
-        NODE_SET_METHOD(t, "getMaximumSize", getMaximumSizeApi);
-        NODE_SET_METHOD(t, "setSheetOffset", nullFunction);
-        NODE_SET_METHOD(t, "setResizable", setResizableApi);
-        NODE_SET_METHOD(t, "isResizable", isResizableApi);
-        NODE_SET_METHOD(t, "setMovable", setMovableApi);
-        NODE_SET_METHOD(t, "isMovable", isMovableApi);
-        NODE_SET_METHOD(t, "setMinimizable", setMinimizableApi);
-        NODE_SET_METHOD(t, "isMinimizable", isMinimizableApi);
-        NODE_SET_METHOD(t, "isMaximizable", isMaximizableApi);
-        NODE_SET_METHOD(t, "setFullScreenable", setFullScreenableApi);
-        NODE_SET_METHOD(t, "isFullScreenable", isFullScreenableApi);
-        NODE_SET_METHOD(t, "setClosable", setClosableApi);
-        NODE_SET_METHOD(t, "isClosable", isClosableApi);
-        NODE_SET_METHOD(t, "setAlwaysOnTop", setAlwaysOnTopApi);
-        NODE_SET_METHOD(t, "isAlwaysOnTop", isAlwaysOnTopApi);
-        NODE_SET_METHOD(t, "center", centerApi);
-        NODE_SET_METHOD(t, "setPosition", setPositionApi);
-        NODE_SET_METHOD(t, "getPosition", getPositionApi);
-        NODE_SET_METHOD(t, "setTitle", setTitleApi);
-        NODE_SET_METHOD(t, "getTitle", getTitleApi);
-        NODE_SET_METHOD(t, "flashFrame", flashFrameApi);
-        NODE_SET_METHOD(t, "setSkipTaskbar", setSkipTaskbarApi);
-        NODE_SET_METHOD(t, "setKiosk", nullFunction);
-        NODE_SET_METHOD(t, "isKiosk", nullFunction);
-        NODE_SET_METHOD(t, "setBackgroundColor", setBackgroundColorApi);
-        NODE_SET_METHOD(t, "setHasShadow", nullFunction);
-        NODE_SET_METHOD(t, "hasShadow", nullFunction);
-        NODE_SET_METHOD(t, "setRepresentedFilename", nullFunction);
-        NODE_SET_METHOD(t, "getRepresentedFilename", nullFunction);
-        NODE_SET_METHOD(t, "setDocumentEdited", setDocumentEditedApi);
-        NODE_SET_METHOD(t, "isDocumentEdited", isDocumentEditedApi);
-        NODE_SET_METHOD(t, "setIgnoreMouseEvents", setIgnoreMouseEventsApi);
-        NODE_SET_METHOD(t, "setContentProtection", setContentProtectionApi);
-        NODE_SET_METHOD(t, "setFocusable", setFocusableApi);
-        NODE_SET_METHOD(t, "focusOnWebView", focusOnWebViewApi);
-        NODE_SET_METHOD(t, "blurWebView", blurApi);
-        NODE_SET_METHOD(t, "isWebViewFocused", isWebViewFocusedApi);
-        NODE_SET_METHOD(t, "setOverlayIcon", setOverlayIconApi);
-        NODE_SET_METHOD(t, "setThumbarButtons", setThumbarButtonsApi);
-        NODE_SET_METHOD(t, "setMenu", setMenuApi);
-        NODE_SET_METHOD(t, "setAutoHideMenuBar", setAutoHideMenuBarApi);
-        NODE_SET_METHOD(t, "isMenuBarAutoHide", isMenuBarAutoHideApi);
-        NODE_SET_METHOD(t, "setMenuBarVisibility", setMenuBarVisibilityApi);
-        NODE_SET_METHOD(t, "isMenuBarVisible", isMenuBarVisibleApi);
-        NODE_SET_METHOD(t, "setVisibleOnAllWorkspaces", setVisibleOnAllWorkspacesApi);
-        NODE_SET_METHOD(t, "isVisibleOnAllWorkspaces", isVisibleOnAllWorkspacesApi);
-        NODE_SET_METHOD(t, "setVibrancy", nullFunction);
-        NODE_SET_METHOD(t, "hookWindowMessage", hookWindowMessageApi);
-        NODE_SET_METHOD(t, "isWindowMessageHooked", isWindowMessageHookedApi);
-        NODE_SET_METHOD(t, "unhookWindowMessage", unhookWindowMessageApi);
-        NODE_SET_METHOD(t, "unhookAllWindowMessages", unhookAllWindowMessagesApi);
-        NODE_SET_METHOD(t, "setThumbnailClip", setThumbnailClipApi);
-        NODE_SET_METHOD(t, "setThumbnailToolTip", setThumbnailToolTipApi);
-        NODE_SET_METHOD(t, "setAppDetails", setAppDetailsApi);
-        NODE_SET_METHOD(t, "setIcon", setIconApi);
-        NODE_SET_PROTOTYPE_METHOD(tpl, "id", nullFunction);
-        NODE_SET_PROTOTYPE_METHOD(tpl, "webContents", getWebContentsApi);
+        builder.SetMethod("close", &Window::closeApi);
+        builder.SetMethod("focus", &Window::focusApi);
+        builder.SetMethod("blur", &Window::blurApi);
+        builder.SetMethod("isFocused", &Window::isFocusedApi);
+        builder.SetMethod("show", &Window::showApi);
+        builder.SetMethod("showInactive", &Window::showInactiveApi);
+        builder.SetMethod("hide", &Window::hideApi);
+        builder.SetMethod("isVisible", &Window::isVisibleApi);
+        builder.SetMethod("isEnabled", &Window::isEnabledApi);
+        builder.SetMethod("maximize", &Window::maximizeApi);
+        builder.SetMethod("unmaximize", &Window::unmaximizeApi);
+        builder.SetMethod("isMaximized", &Window::isMaximizedApi);
+        builder.SetMethod("minimize", &Window::minimizeApi);
+        builder.SetMethod("restore", &Window::restoreApi);
+        builder.SetMethod("isMinimized", &Window::isMinimizedApi);
+        builder.SetMethod("setFullScreen", &Window::setFullScreenApi);
+        builder.SetMethod("isFullScreen", &Window::isFullScreenApi);
+        builder.SetMethod("setAspectRatio", &Window::nullFunction);
+        builder.SetMethod("previewFile", &Window::nullFunction);
+        builder.SetMethod("closeFilePreview", &Window::nullFunction);
+        builder.SetMethod("setParentWindow", &Window::nullFunction);
+        builder.SetMethod("getParentWindow", &Window::nullFunction);
+        builder.SetMethod("getChildWindows", &Window::nullFunction);
+        builder.SetMethod("isModal", &Window::isModalApi);
+        builder.SetMethod("getNativeWindowHandle", &Window::getNativeWindowHandleApi);
+        builder.SetMethod("getBounds", &Window::getBoundsApi);
+        builder.SetMethod("setBounds", &Window::setBoundsApi);
+        builder.SetMethod("getSize", &Window::getSizeApi);
+        builder.SetMethod("setSize", &Window::setSizeApi);
+        builder.SetMethod("getContentBounds", &Window::getContentBoundsApi);
+        builder.SetMethod("setContentBounds", &Window::setContentBoundsApi);
+        builder.SetMethod("getContentSize", &Window::getContentSizeApi);
+        builder.SetMethod("setContentSize", &Window::setContentSizeApi);
+        builder.SetMethod("setMinimumSize", &Window::setMinimumSizeApi);
+        builder.SetMethod("getMinimumSize", &Window::getMinimumSizeApi);
+        builder.SetMethod("setMaximumSize", &Window::setMaximumSizeApi);
+        builder.SetMethod("getMaximumSize", &Window::getMaximumSizeApi);
+        builder.SetMethod("setSheetOffset", &Window::nullFunction);
+        builder.SetMethod("setResizable", &Window::setResizableApi);
+        builder.SetMethod("isResizable", &Window::isResizableApi);
+        builder.SetMethod("setMovable", &Window::setMovableApi);
+        builder.SetMethod("isMovable", &Window::isMovableApi);
+        builder.SetMethod("setMinimizable", &Window::setMinimizableApi);
+        builder.SetMethod("isMinimizable", &Window::isMinimizableApi);
+        builder.SetMethod("isMaximizable", &Window::isMaximizableApi);
+        builder.SetMethod("setFullScreenable", &Window::setFullScreenableApi);
+        builder.SetMethod("isFullScreenable", &Window::isFullScreenableApi);
+        builder.SetMethod("setClosable", &Window::setClosableApi);
+        builder.SetMethod("isClosable", &Window::isClosableApi);
+        builder.SetMethod("setAlwaysOnTop", &Window::setAlwaysOnTopApi);
+        builder.SetMethod("isAlwaysOnTop", &Window::isAlwaysOnTopApi);
+        builder.SetMethod("center", &Window::centerApi);
+        builder.SetMethod("setPosition", &Window::setPositionApi);
+        builder.SetMethod("getPosition", &Window::getPositionApi);
+        builder.SetMethod("setTitle", &Window::setTitleApi);
+        builder.SetMethod("getTitle", &Window::getTitleApi);
+        builder.SetMethod("flashFrame", &Window::flashFrameApi);
+        builder.SetMethod("setSkipTaskbar", &Window::setSkipTaskbarApi);
+        builder.SetMethod("setKiosk", &Window::nullFunction);
+        builder.SetMethod("isKiosk", &Window::nullFunction);
+        builder.SetMethod("setBackgroundColor", &Window::setBackgroundColorApi);
+        builder.SetMethod("setHasShadow", &Window::nullFunction);
+        builder.SetMethod("hasShadow", &Window::nullFunction);
+        builder.SetMethod("setRepresentedFilename", &Window::nullFunction);
+        builder.SetMethod("getRepresentedFilename", &Window::nullFunction);
+        builder.SetMethod("setDocumentEdited", &Window::setDocumentEditedApi);
+        builder.SetMethod("isDocumentEdited", &Window::isDocumentEditedApi);
+        builder.SetMethod("setIgnoreMouseEvents", &Window::setIgnoreMouseEventsApi);
+        builder.SetMethod("setContentProtection", &Window::setContentProtectionApi);
+        builder.SetMethod("setFocusable", &Window::setFocusableApi);
+        builder.SetMethod("focusOnWebView", &Window::focusOnWebViewApi);
+        builder.SetMethod("blurWebView", &Window::blurApi);
+        builder.SetMethod("isWebViewFocused", &Window::isWebViewFocusedApi);
+        builder.SetMethod("setOverlayIcon", &Window::setOverlayIconApi);
+        builder.SetMethod("setThumbarButtons", &Window::setThumbarButtonsApi);
+        builder.SetMethod("setMenu", &Window::setMenuApi);
+        builder.SetMethod("setAutoHideMenuBar", &Window::setAutoHideMenuBarApi);
+        builder.SetMethod("isMenuBarAutoHide", &Window::isMenuBarAutoHideApi);
+        builder.SetMethod("setMenuBarVisibility", &Window::setMenuBarVisibilityApi);
+        builder.SetMethod("isMenuBarVisible", &Window::isMenuBarVisibleApi);
+        builder.SetMethod("setVisibleOnAllWorkspaces", &Window::setVisibleOnAllWorkspacesApi);
+        builder.SetMethod("isVisibleOnAllWorkspaces", &Window::isVisibleOnAllWorkspacesApi);
+        builder.SetMethod("setVibrancy", &Window::nullFunction);
+        builder.SetMethod("hookWindowMessage", &Window::hookWindowMessageApi);
+        builder.SetMethod("isWindowMessageHooked", &Window::isWindowMessageHookedApi);
+        builder.SetMethod("unhookWindowMessage", &Window::unhookWindowMessageApi);
+        builder.SetMethod("unhookAllWindowMessages", &Window::unhookAllWindowMessagesApi);
+        builder.SetMethod("setThumbnailClip", &Window::setThumbnailClipApi);
+        builder.SetMethod("setThumbnailToolTip", &Window::setThumbnailToolTipApi);
+        builder.SetMethod("setAppDetails", &Window::setAppDetailsApi);
+        builder.SetMethod("setIcon", &Window::setIconApi);
+        //NODE_SET_PROTOTYPE_METHOD(prototype, &Window::"id", &Window::nullFunction);
+        builder.SetMethod("webContents", &Window::getWebContentsApi);
 
         // 设置constructor
-        constructor.Reset(isolate, tpl->GetFunction());
+        constructor.Reset(isolate, prototype->GetFunction());
         // export `BrowserWindow`
-        target->Set(String::NewFromUtf8(isolate, "BrowserWindow"), tpl->GetFunction());
+        target->Set(String::NewFromUtf8(isolate, "BrowserWindow"), prototype->GetFunction());
     }
 
 //     static void staticOnPaintUpdated(wkeWebView webView, Window* win, const HDC hdc, int x, int y, int cx, int cy) {
@@ -368,6 +370,9 @@ public:
                 wkeResize(pthis, LOWORD(lParam), HIWORD(lParam));
                 wkeRepaintIfNeeded(pthis);
             });
+
+            if (0)
+                win->mate::EventEmitter<Window>::Emit("resize");
             return 0;
         }
         case WM_KEYDOWN: {
@@ -571,26 +576,32 @@ public:
     };
 
     static void UTF8ToUTF16(const std::string& utf8, std::wstring* utf16) {
-        size_t n = MultiByteToWideChar(CP_UTF8, 0, utf8.c_str(), utf8.size(), nullptr, 0);
-
+        size_t n = ::MultiByteToWideChar(CP_UTF8, 0, utf8.c_str(), utf8.size(), nullptr, 0);
         std::vector<wchar_t> wbuf(n);
         MultiByteToWideChar(CP_UTF8, 0, utf8.c_str(), utf8.size(), &wbuf[0], n);
         utf16->resize(n);
         utf16->assign(&wbuf[0], n);
     }
 
-    static v8::Local<v8::Value> ToBuffer(v8::Isolate* isolate, void* val, int size) {
+    static void UTF16ToUTF8(const std::wstring& utf16, std::string* utf8) {
+        size_t n = ::WideCharToMultiByte(CP_ACP, 0, utf16.c_str(), -1, NULL, 0, NULL, NULL);
+        std::vector<char> buf(n + 1);
+        ::WideCharToMultiByte(CP_ACP, 0, utf16.c_str(), -1, &buf[0], n, NULL, NULL);
+        utf8->resize(n);
+        utf8->assign(&buf[0], n);
+    }
+
+    static v8::Local<v8::Value> toBuffer(v8::Isolate* isolate, void* val, int size) {
         auto buffer = node::Buffer::Copy(isolate, static_cast<char*>(val), size);
         if (buffer.IsEmpty()) {
             return v8::Null(isolate);
-        }
-        else {
+        } else {
             return buffer.ToLocalChecked();
         }
     }
 
-    static Window* newWindow(gin::Dictionary* options) {
-        Window* win = new Window();
+    static Window* newWindow(gin::Dictionary* options, v8::Local<v8::Object> wrapper) {
+        Window* win = new Window(options->isolate(), wrapper);
         CreateWindowParam createWindowParam;
         createWindowParam.styles = 0;
         createWindowParam.styleEx = 0;
@@ -707,13 +718,13 @@ private:
             if (args.Length() > 1)
                 return;
             
-            gin::Dictionary options(args.GetIsolate(), args[0]->ToObject()); // // 使用new调用 `new Point(...)`
-            Window* win = newWindow(&options);
-            
+            gin::Dictionary options(isolate, args[0]->ToObject()); // 使用new调用 `new Point(...)`
+            Window* win = newWindow(&options, args.This());
             WindowList::GetInstance()->AddWindow(win);
             
-			win->Wrap(args.This(), isolate); // 包装this指针
+			// win->Wrap(args.This(), isolate); // 包装this指针 // weolar
             args.GetReturnValue().Set(args.This());
+            // args.GetReturnValue().Set(win->GetWrapper());
         } else {
             // 使用`Point(...)`
             const int argc = 2;
@@ -721,555 +732,376 @@ private:
             // 使用constructor构建Function
             Local<Function> cons = Local<Function>::New(isolate, constructor);
             args.GetReturnValue().Set(cons->NewInstance(argc, argv));
+            DebugBreak();
         }
     }
 
-    //close方法
-    static void closeApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
-        Isolate* isolate = args.GetIsolate();
-        HandleScope scope(isolate);
-
-        Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
-        ::SendMessage(win->m_hWnd, WM_CLOSE, 0, 0);
+    void closeApi() {
+        ::SendMessage(m_hWnd, WM_CLOSE, 0, 0);
     }
 
-    //focus方法
-    static void focusApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
-        Isolate* isolate = args.GetIsolate();
-        HandleScope scope(isolate);
-
-        Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
-        ::SetFocus(win->m_hWnd);
+    void focusApi() {
+        ::SetFocus(m_hWnd);
     }
 
-    //blur方法
-    static void blurApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
-        Isolate* isolate = args.GetIsolate();
-        HandleScope scope(isolate);
-
-        Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
+    void blurApi() {
         ::SetFocus(NULL);
     }
 
-    //isFocused方法
-    static void isFocusedApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
-        Isolate* isolate = args.GetIsolate();
-        HandleScope scope(isolate);
-
-        Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
-        Local<Boolean> ret = Boolean::New(isolate, GetFocus() == win->m_hWnd);
-        args.GetReturnValue().Set(ret);
+    bool isFocusedApi() {
+        return ::GetFocus() == m_hWnd;
     }
 
-    //show方法
-    static void showApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
-        Isolate* isolate = args.GetIsolate();
-        HandleScope scope(isolate);
-
-        Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
-        ::ShowWindow(win->m_hWnd, TRUE);
-        ::SetFocus(win->m_hWnd);
+    void showApi() {
+        ::ShowWindow(m_hWnd, TRUE);
+        ::SetFocus(m_hWnd);
     }
 
-    //showInactive方法
-    static void showInactiveApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
-        Isolate* isolate = args.GetIsolate();
-        HandleScope scope(isolate);
-
-        Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
-        ::ShowWindow(win->m_hWnd, TRUE);
+    void showInactiveApi() {
+        ::ShowWindow(m_hWnd, TRUE);
     }
 
-    //hide
-    static void hideApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
-        Isolate* isolate = args.GetIsolate();
-        HandleScope scope(isolate);
-
-        Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
-        ::ShowWindow(win->m_hWnd, FALSE);
+    void hideApi() {
+        ::ShowWindow(m_hWnd, FALSE);
     }
 
-    //isVisible
-    static void isVisibleApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
-        Isolate* isolate = args.GetIsolate();
-        HandleScope scope(isolate);
-
-        Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
-        Local<Boolean> ret = Boolean::New(isolate, !!IsWindowVisible(win->m_hWnd));
-        args.GetReturnValue().Set(ret);
+    bool isVisibleApi() {
+        return !!::IsWindowVisible(m_hWnd);
     }
 
     //isEnabled
-    static void isEnabledApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
-        Isolate* isolate = args.GetIsolate();
-        HandleScope scope(isolate);
-
-        Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
-        Local<Boolean> ret = Boolean::New(isolate, !!IsWindowEnabled(win->m_hWnd));
-        args.GetReturnValue().Set(ret);
+    bool isEnabledApi() {
+        return ::IsWindowEnabled(m_hWnd);
     }
 
     //maximize
-    static void maximizeApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
-        Isolate* isolate = args.GetIsolate();
-        HandleScope scope(isolate);
-
-        Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
-        ::ShowWindow(win->m_hWnd, SW_MAXIMIZE);
+    void maximizeApi() {
+        ::ShowWindow(m_hWnd, SW_MAXIMIZE);
     }
 
-    //unmaximize
-    static void unmaximizeApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
-        Isolate* isolate = args.GetIsolate();
-        HandleScope scope(isolate);
-
-        Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
-        ::ShowWindow(win->m_hWnd, SW_RESTORE);
+    void unmaximizeApi() {
+        ::ShowWindow(m_hWnd, SW_RESTORE);
     }
 
-    //isMaximized
-    static void isMaximizedApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
-        Isolate* isolate = args.GetIsolate();
-        HandleScope scope(isolate);
-
-        Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
-        Local<Boolean> ret = Boolean::New(isolate, !!IsZoomed(win->m_hWnd));
-        args.GetReturnValue().Set(ret);
+    bool isMaximizedApi() {
+        return ::IsZoomed(m_hWnd);
     }
 
-    //minimize
-    static void minimizeApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
-        Isolate* isolate = args.GetIsolate();
-        HandleScope scope(isolate);
-
-        Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
-        ::ShowWindow(win->m_hWnd, SW_MINIMIZE);
+    void minimizeApi() {
+        ::ShowWindow(m_hWnd, SW_MINIMIZE);
     }
 
     //restore
-    static void restoreApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
-        Isolate* isolate = args.GetIsolate();
-        HandleScope scope(isolate);
-
-        Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
-        ::ShowWindow(win->m_hWnd, SW_RESTORE);
+    void restoreApi() {
+        ::ShowWindow(m_hWnd, SW_RESTORE);
     }
 
     //isMinimized
-    static void isMinimizedApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
-        Isolate* isolate = args.GetIsolate();
-        HandleScope scope(isolate);
-
-        Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
-        Local<Boolean> ret = Boolean::New(isolate, !!IsIconic(win->m_hWnd));
-        args.GetReturnValue().Set(ret);
+    bool isMinimizedApi() {
+        return !!IsIconic(m_hWnd);
     }
 
     //setFullScreen
-    static void setFullScreenApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
-        Isolate* isolate = args.GetIsolate();
-        HandleScope scope(isolate);
-
-        Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
-        if (args[0]->IsBoolean() && args[0]->ToBoolean()->BooleanValue()) {
+    void setFullScreenApi(bool b) {
+        if (b) {
             RECT rc;
             HWND hDesk = ::GetDesktopWindow();
             ::GetWindowRect(hDesk, &rc);
-            ::SetWindowLong(win->m_hWnd, GWL_STYLE, GetWindowLong(win->m_hWnd, GWL_STYLE) | WS_BORDER);
-            ::SetWindowPos(win->m_hWnd, HWND_TOPMOST, 0, 0, rc.right, rc.bottom, SWP_SHOWWINDOW);
-        }
-        else {
-            ::SetWindowLong(win->m_hWnd, GWL_STYLE, GetWindowLong(win->m_hWnd, GWL_STYLE) ^ WS_BORDER);
-        }
-    }
-
-    //
-    static void isFullScreenApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
-    }
-
-    static void setParentWindowApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
-    }
-
-    static void getParentWindowApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
-    }
-
-    static void getChildWindowsApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
-    }
-
-    static void isModalApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
-    }
-
-    static void getNativeWindowHandleApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
-        Isolate* isolate = args.GetIsolate();
-        HandleScope scope(isolate);
-        Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
-
-        args.GetReturnValue().Set(ToBuffer(isolate, (void*)(&win->m_hWnd), sizeof(HWND)));
-    }
-
-    static void getBoundsApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
-        Isolate* isolate = args.GetIsolate();
-        HandleScope scope(isolate);
-
-        Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
-        Local<Integer> x = Integer::New(isolate, win->m_clientRect.left);
-        Local<Integer> y = Integer::New(isolate, win->m_clientRect.top);
-        Local<Integer> width = Integer::New(isolate, win->m_clientRect.right - win->m_clientRect.left);
-        Local<Integer> height = Integer::New(isolate, win->m_clientRect.bottom - win->m_clientRect.top);
-        Local<Object> bounds = Object::New(isolate);
-        bounds->Set(String::NewFromUtf8(isolate, "x"), x);
-        bounds->Set(String::NewFromUtf8(isolate, "y"), y);
-        bounds->Set(String::NewFromUtf8(isolate, "width"), width);
-        bounds->Set(String::NewFromUtf8(isolate, "height"), height);
-        args.GetReturnValue().Set(bounds);
-    }
-
-    static void setBoundsApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
-        Isolate* isolate = args.GetIsolate();
-        HandleScope scope(isolate);
-
-        Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
-        if (args[0]->IsObject()) {
-            Local<Object> bounds = args[0]->ToObject();
-            LONG x = (LONG)bounds->Get(String::NewFromUtf8(isolate, "x"))->NumberValue();
-            LONG y = (LONG)bounds->Get(String::NewFromUtf8(isolate, "y"))->NumberValue();
-            LONG width = (LONG)bounds->Get(String::NewFromUtf8(isolate, "width"))->NumberValue();
-            LONG height = (LONG)bounds->Get(String::NewFromUtf8(isolate, "height"))->NumberValue();
-            ::MoveWindow(win->m_hWnd, x, y, width, height, TRUE);
+            ::SetWindowLong(m_hWnd, GWL_STYLE, GetWindowLong(m_hWnd, GWL_STYLE) | WS_BORDER);
+            ::SetWindowPos(m_hWnd, HWND_TOPMOST, 0, 0, rc.right, rc.bottom, SWP_SHOWWINDOW);
+        } else {
+            ::SetWindowLong(m_hWnd, GWL_STYLE, GetWindowLong(m_hWnd, GWL_STYLE) ^ WS_BORDER);
         }
     }
 
-    static void getSizeApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
-        Isolate* isolate = args.GetIsolate();
-        HandleScope scope(isolate);
+    static void isFullScreenApi() {
+        ::DebugBreak();
+    }
 
-        Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
-        Local<Integer> width = Integer::New(isolate, win->m_clientRect.right - win->m_clientRect.left);
-        Local<Integer> height = Integer::New(isolate, win->m_clientRect.bottom - win->m_clientRect.top);
-        Local<Array> size = Array::New(isolate, 2);
+    void setParentWindowApi() {
+    }
+
+    void getParentWindowApi() {
+    }
+
+    void getChildWindowsApi() {
+    }
+
+    bool isModalApi() {
+        return false;
+    }
+
+    UINT_PTR getNativeWindowHandleApi() {
+        //args.GetReturnValue().Set(toBuffer(isolate, (void*)(&win->m_hWnd), sizeof(HWND)));
+        return (UINT_PTR)m_hWnd;
+    }
+
+    Local<Object> getBoundsApi() {
+        Local<Integer> x = Integer::New(isolate(), m_clientRect.left);
+        Local<Integer> y = Integer::New(isolate(), m_clientRect.top);
+        Local<Integer> width = Integer::New(isolate(), m_clientRect.right - m_clientRect.left);
+        Local<Integer> height = Integer::New(isolate(), m_clientRect.bottom - m_clientRect.top);
+        Local<Object> bounds = Object::New(isolate());
+        bounds->Set(String::NewFromUtf8(isolate(), "x"), x);
+        bounds->Set(String::NewFromUtf8(isolate(), "y"), y);
+        bounds->Set(String::NewFromUtf8(isolate(), "width"), width);
+        bounds->Set(String::NewFromUtf8(isolate(), "height"), height);
+        return bounds;
+    }
+
+    void setBoundsApi(v8::Local<v8::Object> bounds) {
+        LONG x = (LONG)bounds->Get(String::NewFromUtf8(isolate(), "x"))->NumberValue();
+        LONG y = (LONG)bounds->Get(String::NewFromUtf8(isolate(), "y"))->NumberValue();
+        LONG width = (LONG)bounds->Get(String::NewFromUtf8(isolate(), "width"))->NumberValue();
+        LONG height = (LONG)bounds->Get(String::NewFromUtf8(isolate(), "height"))->NumberValue();
+        ::MoveWindow(m_hWnd, x, y, width, height, TRUE);
+    }
+
+    v8::Local<v8::Object> getSizeApi() {
+        v8::Local<v8::Integer> width = Integer::New(isolate(), m_clientRect.right - m_clientRect.left);
+        v8::Local<v8::Integer> height = Integer::New(isolate(), m_clientRect.bottom - m_clientRect.top);
+        v8::Local<v8::Array> size = Array::New(isolate(), 2);
         size->Set(0, width);
         size->Set(1, height);
-        args.GetReturnValue().Set(size);
+        return size;
     }
 
-    static void setSizeApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
-        Isolate* isolate = args.GetIsolate();
-        HandleScope scope(isolate);
-
-        Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
-        if (args[0]->IsNumber() && args[1]->IsNumber()) {
-            LONG width = (LONG)(args[0]->ToNumber()->NumberValue());
-            LONG height = (LONG)(args[1]->ToNumber()->NumberValue());
-            ::SetWindowPos(win->m_hWnd, NULL, 0, 0, width, height, SWP_NOMOVE);
-        }
+    void setSizeApi(int32_t width, int32_t height) {
+        ::SetWindowPos(m_hWnd, NULL, 0, 0, width, height, SWP_NOMOVE);
     }
 
-    static void getContentBoundsApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    void getContentBoundsApi() {
     }
 
-    static void setContentBoundsApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    void setContentBoundsApi() {
     }
 
-    static void getContentSizeApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
-        ThreadCall::callBlinkThreadSync([args] {
-            Isolate* isolate = args.GetIsolate();
-            HandleScope scope(isolate);
+    std::vector<int> getContentSizeApi() {
+        Window* win = this;
+        int width;
+        int height;
+        ThreadCall::callBlinkThreadSync([win, &width, &height] {
+            width = wkeGetContentWidth(win->m_webContents->m_view);
+            height = wkeGetContentHeight(win->m_webContents->m_view);
+        });
+        std::vector<int> size = { width, height };
+        return size;
+    }
 
-            Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
-            Local<Integer> width = Integer::New(isolate, wkeGetContentWidth(win->m_webContents->m_view));
-            Local<Integer> height = Integer::New(isolate, wkeGetContentHeight(win->m_webContents->m_view));
-            Local<Array> size = Array::New(isolate, 2);
-            size->Set(0, width);
-            size->Set(1, height);
-            args.GetReturnValue().Set(size);
+    void setContentSizeApi(int width, int height) {
+        Window* win = this;
+        ThreadCall::callBlinkThreadSync([win, width, height] {
+            wkeResize(win->m_webContents->m_view, width, height);
+            wkeRepaintIfNeeded(win->m_webContents->m_view);
         });
     }
 
-    static void setContentSizeApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
-        ThreadCall::callBlinkThreadSync([args] {
-            Isolate* isolate = args.GetIsolate();
-            HandleScope scope(isolate);
-
-            Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
-            if (args[0]->IsNumber() && args[1]->IsNumber()) {
-                int width = (int)(args[0]->ToNumber()->NumberValue());
-                int height = (int)(args[1]->ToNumber()->NumberValue());
-                wkeResize(win->m_webContents->m_view, width, height);
-                wkeRepaintIfNeeded(win->m_webContents->m_view);
-            }
-        });
+    void setMinimumSizeApi() {
     }
 
-    static void setMinimumSizeApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    void getMinimumSizeApi() {
     }
 
-    static void getMinimumSizeApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    void setMaximumSizeApi() {
     }
 
-    static void setMaximumSizeApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    void getMaximumSizeApi() {
     }
 
-    static void getMaximumSizeApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    void setResizableApi() {
     }
 
-    static void setResizableApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    void isResizableApi() {
     }
 
-    static void isResizableApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    void setMovableApi() {
     }
 
-    static void setMovableApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    void isMovableApi() {
     }
 
-    static void isMovableApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    void setMinimizableApi() {
     }
 
-    static void setMinimizableApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    void isMinimizableApi() {
     }
 
-    static void isMinimizableApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    void isMaximizableApi() {
     }
 
-    static void isMaximizableApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    void setFullScreenableApi() {
     }
 
-    static void setFullScreenableApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    void isFullScreenableApi() {
     }
 
-    static void isFullScreenableApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    void setClosableApi() {
     }
 
-    static void setClosableApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    void isClosableApi() {
     }
 
-    static void isClosableApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    void setAlwaysOnTopApi(bool b) {
+        ::SetWindowPos(m_hWnd, b ? HWND_TOPMOST : HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
     }
 
-    static void setAlwaysOnTopApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
-        Isolate* isolate = args.GetIsolate();
-        HandleScope scope(isolate);
-
-        Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
-        if (args[0]->IsBoolean() && args[0]->ToBoolean()->BooleanValue()) {
-            ::SetWindowPos(win->m_hWnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
-        }
-        else {
-            ::SetWindowPos(win->m_hWnd, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
-        }
+    bool isAlwaysOnTopApi() {
+        return ::GetWindowLong(m_hWnd, GWL_EXSTYLE) & WS_EX_TOPMOST;
     }
 
-    static void isAlwaysOnTopApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
-        Isolate* isolate = args.GetIsolate();
-        HandleScope scope(isolate);
-
-        Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
-        Local<Boolean> ret = Boolean::New(isolate, GetWindowLong(win->m_hWnd, GWL_EXSTYLE) & WS_EX_TOPMOST);
-        args.GetReturnValue().Set(ret);
-    }
-
-    static void centerApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
-        Isolate* isolate = args.GetIsolate();
-        HandleScope scope(isolate);
-
-        Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
-
+    void centerApi() {
         int screenX, screenY;
         screenX = ::GetSystemMetrics(SM_CXSCREEN);  //取得屏幕的宽度
         screenY = ::GetSystemMetrics(SM_CYSCREEN);  //取得屏幕的高度
 
         RECT rect;
-        GetWindowRect(win->m_hWnd, &rect);
+        ::GetWindowRect(m_hWnd, &rect);
         rect.left = (screenX - rect.right) / 2;
         rect.top = (screenY - rect.bottom) / 2;
 
         //设置窗体位置
-        ::SetWindowPos(win->m_hWnd, NULL, rect.left, rect.top, rect.right, rect.bottom, SWP_NOSIZE);
+        ::SetWindowPos(m_hWnd, NULL, rect.left, rect.top, rect.right, rect.bottom, SWP_NOSIZE);
     }
 
-    static void setPositionApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
-        Isolate* isolate = args.GetIsolate();
-        HandleScope scope(isolate);
-
-        Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
-        if (args[0]->IsInt32() && args[1]->IsInt32())
-        {
-            int x = args[0]->ToInt32()->Int32Value();
-            int y = args[1]->ToInt32()->Int32Value();
-            ::SetWindowPos(win->m_hWnd, NULL, x, y, 0, 0, SWP_NOSIZE);
-        }
+    void setPositionApi(int x, int y) {
+        ::SetWindowPos(m_hWnd, NULL, x, y, 0, 0, SWP_NOSIZE);
     }
 
-    static void getPositionApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
-        Isolate* isolate = args.GetIsolate();
-        HandleScope scope(isolate);
-
-        Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
-
-        RECT rect;
-        GetWindowRect(win->m_hWnd, &rect);
-        Local<Integer> x = Integer::New(isolate, rect.left);
-        Local<Integer> y = Integer::New(isolate, rect.top);
-        Local<Array> pos = Array::New(isolate, 2);
-        pos->Set(0, x);
-        pos->Set(1, y);
-        args.GetReturnValue().Set(pos);
+    std::vector<int> getPositionApi() {
+        RECT rect = {0};
+        ::GetWindowRect(m_hWnd, &rect);
+        std::vector<int> pos = { rect.left, rect.top };
+        return pos;
     }
 
-    static void setTitleApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
-        Isolate* isolate = args.GetIsolate();
-        HandleScope scope(isolate);
-
-        Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
-
-        if (args[0]->IsString()) {
-            String::Utf8Value str(args[0]);
-            std::wstring title;
-            UTF8ToUTF16(*str, &title);
-            ::SetWindowText(win->m_hWnd, title.c_str());
-        }
+    void setTitleApi(const std::string& title) {
+        std::wstring titleW;
+        UTF8ToUTF16(title, &titleW);
+        ::SetWindowText(m_hWnd, titleW.c_str());
     }
 
-    static void getTitleApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
-        Isolate* isolate = args.GetIsolate();
-        HandleScope scope(isolate);
-
-        Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
-        wchar_t text[MAX_PATH] = { 0 };
-        ::GetWindowText(win->m_hWnd, text, MAX_PATH);
-        Local<String> title = String::NewFromTwoByte(isolate, (const uint16_t*)text);
-        args.GetReturnValue().Set(title);
+    std::string getTitleApi() {
+        std::vector<wchar_t> titleW;
+        titleW.resize(MAX_PATH + 1);
+        ::GetWindowText(m_hWnd, &titleW[0], MAX_PATH);
+        std::string titleA;
+        UTF16ToUTF8(std::wstring(&titleW[0], titleW.size()), &titleA);
+        return titleA;
     }
 
-    static void flashFrameApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    void flashFrameApi() {
     }
 
-    static void setSkipTaskbarApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
-        Isolate* isolate = args.GetIsolate();
-        HandleScope scope(isolate);
-
-        Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
-        DWORD style = ::GetWindowLong(win->m_hWnd, GWL_STYLE);
-        if (args[0]->IsBoolean() && args[0]->ToBoolean()->BooleanValue()) {
+    void setSkipTaskbarApi(bool b) {
+        DWORD style = ::GetWindowLong(m_hWnd, GWL_STYLE);
+        if (b) {
             style |= WS_EX_TOOLWINDOW;
             style &= ~WS_EX_APPWINDOW;
-        }
-        else {  //todo 如果窗口原来的style没有WS_EX_APPWINDOW，就可能有问题
+        } else {  //todo 如果窗口原来的style没有WS_EX_APPWINDOW，就可能有问题
             style &= ~WS_EX_TOOLWINDOW;
             style |= WS_EX_APPWINDOW;
         }
-        ::SetWindowLong(win->m_hWnd, GWL_EXSTYLE, style);
+        ::SetWindowLong(m_hWnd, GWL_EXSTYLE, style);
     }
 
-    static void setBackgroundColorApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    void setBackgroundColorApi() {
     }
 
-    static void setDocumentEditedApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
-        ThreadCall::callBlinkThreadSync([args] {
-            Isolate* isolate = args.GetIsolate();
-            HandleScope scope(isolate);
-
-            Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
-            if (args[0]->IsBoolean() && args[0]->ToBoolean()->BooleanValue()) {
-                wkeSetEditable(win->m_webContents->m_view, true);
-            }
-            else {
-                wkeSetEditable(win->m_webContents->m_view, false);
-            }
+    void setDocumentEditedApi(bool b) {
+        Window* win = this;
+        ThreadCall::callBlinkThreadSync([win, b] {
+            wkeSetEditable(win->m_webContents->m_view, b);
         });
     }
 
-    static void isDocumentEditedApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    void isDocumentEditedApi() {
     }
 
-    static void setIgnoreMouseEventsApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    void setIgnoreMouseEventsApi() {
     }
 
-    static void setContentProtectionApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    void setContentProtectionApi() {
     }
 
-    static void setFocusableApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    void setFocusableApi() {
     }
 
-    static void focusOnWebViewApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
-        ThreadCall::callBlinkThreadSync([args] {
-            Isolate* isolate = args.GetIsolate();
-            HandleScope scope(isolate);
-
-            Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
+    void focusOnWebViewApi() {
+        Window* win = this;
+        ThreadCall::callBlinkThreadSync([win] {
             wkeSetFocus(win->m_webContents->m_view);
         });
     }
 
-    static void isWebViewFocusedApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    void isWebViewFocusedApi() {
     }
 
-    static void setOverlayIconApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    void setOverlayIconApi() {
     }
 
-    static void setThumbarButtonsApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    void setThumbarButtonsApi() {
     }
 
-    static void setMenuApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    void setMenuApi() {
     }
 
-    static void setAutoHideMenuBarApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    void setAutoHideMenuBarApi() {
     }
 
-    static void isMenuBarAutoHideApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    void isMenuBarAutoHideApi() {
     }
 
-    static void setMenuBarVisibilityApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    void setMenuBarVisibilityApi() {
     }
 
-    static void isMenuBarVisibleApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    void isMenuBarVisibleApi() {
     }
 
-    static void setVisibleOnAllWorkspacesApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    void setVisibleOnAllWorkspacesApi() {
     }
 
-    static void isVisibleOnAllWorkspacesApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    void isVisibleOnAllWorkspacesApi() {
     }
 
-    static void hookWindowMessageApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    void hookWindowMessageApi() {
     }
 
-    static void isWindowMessageHookedApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    void isWindowMessageHookedApi() {
     }
 
-    static void unhookWindowMessageApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    void unhookWindowMessageApi() {
     }
 
-    static void unhookAllWindowMessagesApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    void unhookAllWindowMessagesApi() {
     }
 
-    static void setThumbnailClipApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    void setThumbnailClipApi() {
     }
 
-    static void setThumbnailToolTipApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    void setThumbnailToolTipApi() {
     }
 
-    static void setAppDetailsApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    void setAppDetailsApi() {
     }
 
-    static void setIconApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    void setIconApi() {
     }
 
-    static void getWebContentsApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
-        Isolate* isolate = args.GetIsolate();
-        HandleScope scope(isolate);
-
-        Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
-        if (!win->m_webContents)
-            args.GetReturnValue().SetNull();
+    v8::Local<v8::Value> getWebContentsApi() {
+        if (!m_webContents)
+            return v8::Null(isolate());
         else
-            args.GetReturnValue().Set(v8::Local<v8::Value>::New(isolate, win->m_webContents->handle()));
+            return v8::Local<v8::Value>::New(isolate(), m_webContents->handle());
     }
 
     // 空实现
-    static void nullFunction(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    void nullFunction() {
     }
 
     static v8::Persistent<v8::Function> constructor;
+
+public:
+    static gin::WrapperInfo kWrapperInfo;
 
 private:
     static const WCHAR* kPrppW;
@@ -1291,6 +1123,7 @@ Persistent<Function> Window::constructor;
 int Window::m_idGen;
 std::set<int>* Window::m_liveSelf = nullptr;
 CRITICAL_SECTION* Window::m_liveSelfLock = nullptr;
+gin::WrapperInfo Window::kWrapperInfo = { gin::kEmbedderNativeGin };
 
 static void initializeWindowApi(Local<Object> target, Local<Value> unused, Local<Context> context) {
     Environment* env = Environment::GetCurrent(context);
