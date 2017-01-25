@@ -7,7 +7,8 @@
 namespace gin {
 
 WrapperInfo* WrapperInfo::From(v8::Local<v8::Object> object) {
-  if (object->InternalFieldCount() != kNumberOfInternalFields)
+  int count = object->InternalFieldCount();
+  if (count != kNumberOfInternalFields)
     return NULL;
   WrapperInfo* info = static_cast<WrapperInfo*>(
       object->GetAlignedPointerFromInternalField(kWrapperInfoIndex));

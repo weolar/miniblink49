@@ -3,8 +3,8 @@
 // found in the LICENSE file.
 
 #include "base/logging.h"
-#include "base/single_thread_task_runner.h"
-#include "base/thread_task_runner_handle.h"
+//#include "base/single_thread_task_runner.h"
+//#include "base/thread_task_runner_handle.h"
 #include "gin/per_isolate_data.h"
 #include "gin/public/gin_embedders.h"
 
@@ -20,9 +20,10 @@ namespace gin {
 
 PerIsolateData::PerIsolateData(Isolate* isolate,
                                ArrayBuffer::Allocator* allocator)
-    : isolate_(isolate),
-      allocator_(allocator),
-      task_runner_(base::ThreadTaskRunnerHandle::Get()) {
+    : isolate_(isolate)
+    , allocator_(allocator)
+      //, task_runner_(base::ThreadTaskRunnerHandle::Get())
+{
   isolate_->SetData(kEmbedderNativeGin, this);
 }
 
@@ -79,7 +80,7 @@ void PerIsolateData::ClearIndexedPropertyInterceptor(
   if (it != indexed_interceptors_.end())
     indexed_interceptors_.erase(it);
   else
-    NOTREACHED();
+    *(int*)1 = 1;
 }
 
 void PerIsolateData::ClearNamedPropertyInterceptor(
@@ -89,7 +90,7 @@ void PerIsolateData::ClearNamedPropertyInterceptor(
   if (it != named_interceptors_.end())
     named_interceptors_.erase(it);
   else
-    NOTREACHED();
+    *(int*)1 = 1;
 }
 
 IndexedPropertyInterceptor* PerIsolateData::GetIndexedPropertyInterceptor(

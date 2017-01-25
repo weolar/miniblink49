@@ -5,14 +5,15 @@
 #ifndef GIN_OBJECT_TEMPLATE_BUILDER_H_
 #define GIN_OBJECT_TEMPLATE_BUILDER_H_
 
-#include "base/bind.h"
-#include "base/callback.h"
+#include <type_traits>
+
+#include "cef/include/base/cef_bind.h"
+#include "cef/include/base/cef_callback.h"
 #include "base/strings/string_piece.h"
-#include "base/template_util.h"
 #include "gin/converter.h"
 #include "gin/function_template.h"
 #include "gin/gin_export.h"
-#include "v8/include/v8.h"
+#include "v8.h"
 
 namespace gin {
 
@@ -52,9 +53,10 @@ struct CallbackTraits<base::Callback<T> > {
 // specially because the first parameter for callbacks to MFP should typically
 // come from the the JavaScript "this" object the function was called on, not
 // from the first normal parameter.
-template<typename T>
-struct CallbackTraits<T, typename base::enable_if<
-                           base::is_member_function_pointer<T>::value>::type> {
+template <typename T>
+struct CallbackTraits<
+    T,
+    typename std::enable_if<std::is_member_function_pointer<T>::value>::type> {
   static v8::Local<v8::FunctionTemplate> CreateTemplate(v8::Isolate* isolate,
                                                          T callback) {
     return CreateFunctionTemplate(isolate, base::Bind(callback),
@@ -86,6 +88,8 @@ struct CallbackTraits<v8::Local<v8::FunctionTemplate> > {
 class GIN_EXPORT ObjectTemplateBuilder {
  public:
   explicit ObjectTemplateBuilder(v8::Isolate* isolate);
+  explicit ObjectTemplateBuilder(v8::Isolate* isolate, v8::Local<v8::ObjectTemplate> objectTemplate);
+  ObjectTemplateBuilder(const ObjectTemplateBuilder& other);
   ~ObjectTemplateBuilder();
 
   // It's against Google C++ style to return a non-const ref, but we take some
