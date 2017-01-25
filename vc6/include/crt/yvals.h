@@ -19,6 +19,13 @@
 #define _NOEXCEPT_OP(x)
 #endif /* _HAS_EXCEPTIONS */
 
+// yvals.h
+#define _C_LIB_DECL		extern "C" {	/* C has extern "C" linkage */
+#define _END_C_LIB_DECL	}
+#define _EXTERN_C			extern "C" {
+#define _END_EXTERN_C		}
+#define _CRTIMP2_PURE
+
 /* Define _CRTIMP */
 #ifndef _CRTIMP
 #ifdef	_DLL

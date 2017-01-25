@@ -6,6 +6,7 @@
 #include <stdexcept>
 #include <xutility>
 #include <initializer_list>
+#include <type_traits>
 
 #ifdef  _MSC_VER
 #pragma pack(push,8)

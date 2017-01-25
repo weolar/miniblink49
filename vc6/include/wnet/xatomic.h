@@ -69,7 +69,7 @@ _STD_BEGIN
 typedef unsigned char _Uint1_t;
 typedef unsigned short _Uint2_t;
 //typedef _Uint32t _Uint4_t;
-typedef unsigned _LONGLONG _Uint8_t;
+typedef unsigned __int64 _Uint8_t;
 
 #define _ATOMIC_FLAG_TEST_AND_SET _Atomic_flag_test_and_set
 #define _ATOMIC_FLAG_CLEAR _Atomic_flag_clear

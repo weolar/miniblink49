@@ -16,13 +16,6 @@
 
 #include <type_traits>
 
-// yvals.h
-#define _C_LIB_DECL		extern "C" {	/* C has extern "C" linkage */
-#define _END_C_LIB_DECL	}
-#define _EXTERN_C			extern "C" {
-#define _END_EXTERN_C		}
-#define _CRTIMP2_PURE
-
 #include <stddef.h>
 #include <stdint.h>
 #include <stdlib.h>

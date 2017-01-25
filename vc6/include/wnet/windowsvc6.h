@@ -66,7 +66,7 @@ WINBASEAPI COLORREF WINAPI SetDCBrushColor(HDC hdc, COLORREF color);
 
 WINBASEAPI COLORREF WINAPI SetDCPenColor(HDC hdc, COLORREF color);
 
-WINBASEAPI BOOL WINAPI GdiAlphaBlend(HDC hdcDest, int xoriginDest, int yoriginDest, int wDest, int hDest, HDC hdcSrc, int xoriginSrc, int yoriginSrc, int wSrc, int hSrc, BLENDFUNCTION ftn);
+/*WINBASEAPI*/ BOOL WINAPI GdiAlphaBlend(HDC hdcDest, int xoriginDest, int yoriginDest, int wDest, int hDest, HDC hdcSrc, int xoriginSrc, int yoriginSrc, int wSrc, int hSrc, BLENDFUNCTION ftn);
 
 WINBASEAPI BOOL WINAPI UpdateLayeredWindow(_In_ HWND hWnd, _In_opt_ HDC hdcDst, _In_opt_ POINT* pptDst, _In_opt_ SIZE* psize, _In_opt_ HDC hdcSrc, _In_opt_ POINT* pptSrc, _In_ COLORREF crKey, _In_opt_ BLENDFUNCTION* pblend, _In_ DWORD dwFlags);
 
