@@ -35,7 +35,9 @@
 #define SPI_GETFONTSMOOTHINGTYPE 0x200A
 #define FE_FONTSMOOTHINGCLEARTYPE 0x0002
 
+#ifdef __cplusplus
 extern "C" {
+#endif
 
 WINBASEAPI
 BOOL
@@ -252,7 +254,9 @@ BOOL WINAPI HttpSendRequestW(
 
 BOOL WINAPI InternetWriteFile(_In_ HINTERNET hFile, LPCVOID lpBuffer, _In_ DWORD dwNumberOfBytesToWrite, _Out_ LPDWORD lpdwNumberOfBytesWritten);
 
+#ifdef __cplusplus
 } // extern "C"
+#endif // __cplusplus
 
 #endif
 
