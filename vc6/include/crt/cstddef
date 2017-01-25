@@ -8,8 +8,21 @@
 #else
  #include <stddef.h>
 #endif /* _STD_USING */
-#endif /* _CSTDDEF_ */
 
+#if _GLOBAL_USING && !defined(RC_INVOKED)
+_STD_BEGIN
+using _CSTD ptrdiff_t; using _CSTD size_t;
+_STD_END
+#endif /* _GLOBAL_USING */
+
+#if !defined(RC_INVOKED)
+namespace std {
+typedef double max_align_t;	// most aligned type
+}
+
+#endif /* !defined(RC_INVOKED) */
+
+#endif /* _CSTDDEF_ */
 /*
  * Copyright (c) 1994 by P.J. Plauger.  ALL RIGHTS RESERVED. 
  * Consult your license regarding permissions and restrictions.

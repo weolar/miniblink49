@@ -54,25 +54,23 @@ TryEnterCriticalSection(
 
 WINUSERAPI BOOL WINAPI TrackMouseEvent(LPTRACKMOUSEEVENT lpEventTrack);
 
-HRESULT STDAPICALLTYPE CoInitializeEx(LPVOID pvReserved, DWORD dwCoInit);
+WINBASEAPI HRESULT STDAPICALLTYPE CoInitializeEx(LPVOID pvReserved, DWORD dwCoInit);
 
-BOOL WINAPI InternetSetCookieA(LPCSTR lpszUrl, LPCSTR lpszCookieName, LPCSTR lpszCookieData);
+WINBASEAPI BOOL WINAPI InternetSetCookieA(LPCSTR lpszUrl, LPCSTR lpszCookieName, LPCSTR lpszCookieData);
 
-VOID WINAPI GetNativeSystemInfo(LPSYSTEM_INFO lpSystemInfo);
+WINBASEAPI VOID WINAPI GetNativeSystemInfo(LPSYSTEM_INFO lpSystemInfo);
 
-BOOL WINAPI QueueUserWorkItem(LPTHREAD_START_ROUTINE Function, PVOID Context, ULONG Flags);
+WINBASEAPI BOOL WINAPI QueueUserWorkItem(LPTHREAD_START_ROUTINE Function, PVOID Context, ULONG Flags);
 
-COLORREF WINAPI SetDCBrushColor(HDC hdc, COLORREF color);
+WINBASEAPI COLORREF WINAPI SetDCBrushColor(HDC hdc, COLORREF color);
 
-COLORREF WINAPI SetDCPenColor(HDC hdc, COLORREF color);
+WINBASEAPI COLORREF WINAPI SetDCPenColor(HDC hdc, COLORREF color);
 
-BOOL WINAPI GdiAlphaBlend(HDC hdcDest, int xoriginDest, int yoriginDest, int wDest, int hDest, HDC hdcSrc, int xoriginSrc, int yoriginSrc, int wSrc, int hSrc, BLENDFUNCTION ftn);
+WINBASEAPI BOOL WINAPI GdiAlphaBlend(HDC hdcDest, int xoriginDest, int yoriginDest, int wDest, int hDest, HDC hdcSrc, int xoriginSrc, int yoriginSrc, int wSrc, int hSrc, BLENDFUNCTION ftn);
 
-BOOL WINAPI UpdateLayeredWindow(_In_ HWND hWnd, _In_opt_ HDC hdcDst, _In_opt_ POINT* pptDst, _In_opt_ SIZE* psize, _In_opt_ HDC hdcSrc, _In_opt_ POINT* pptSrc, _In_ COLORREF crKey, _In_opt_ BLENDFUNCTION* pblend, _In_ DWORD dwFlags);
+WINBASEAPI BOOL WINAPI UpdateLayeredWindow(_In_ HWND hWnd, _In_opt_ HDC hdcDst, _In_opt_ POINT* pptDst, _In_opt_ SIZE* psize, _In_opt_ HDC hdcSrc, _In_opt_ POINT* pptSrc, _In_ COLORREF crKey, _In_opt_ BLENDFUNCTION* pblend, _In_ DWORD dwFlags);
 
-BOOL WINAPI IsDebuggerPresent(VOID);
-
-VOID WINAPI GetNativeSystemInfo(LPSYSTEM_INFO lpSystemInfo);
+WINBASEAPI BOOL WINAPI IsDebuggerPresent(VOID);
 
 //////////////////////////////////////////////////////////////////////////
 

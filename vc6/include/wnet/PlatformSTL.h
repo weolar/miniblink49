@@ -6,7 +6,7 @@
 #define PlatformSTL_h
 
 #include <memory>
-#include <type_traits_vc6.h>
+#include <type_traits>
 #include <algorithmvc6.h>
 
 namespace std {
