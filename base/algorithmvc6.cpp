@@ -4,10 +4,9 @@
 #include <string>
 #include <vector>
 #include <sstream>
-//#include <stdint.h>
+#include <algorithm>
 #include <limits>
-#include <limitsvc6.h>
-#include <algorithmvc6.h>
+#include <limits.h>
 #include <windows.h>
 
 extern "C" double fmod(double _Xx, double _Yx);
@@ -379,56 +378,6 @@ basic_string<char, char_traits<char>, class std::allocator<char> > __cdecl std::
     string aCopy(a);
     aCopy.append(b);
     return aCopy;
-}
-
-//////////////////////////////////////////////////////////////////////////
-
-basic_ostream<char, char_traits<char> > & __cdecl operator << (basic_ostream<char, char_traits<char> >& a, unsigned __int64 b)
-{
-    ostringstream aCopy;
-    char buf[32];
-    sprintf(buf, "%I64u", b);
-    aCopy << buf;
-    a << aCopy;
-    return a;
-}
-
-basic_ostream<char, char_traits<char> >& __cdecl operator << <char, char_traits<char>>(
-    basic_ostream<char, char_traits<char> > & a, char const * b)
-{
-    ostringstream aCopy;
-	size_t len = strlen(b);
-    aCopy.write(b, len);
-    a << aCopy;
-    return a;
-}
-
-basic_ostream<char, char_traits<char> > & __cdecl operator<< <char, char_traits<char>, allocator<char> >(
-    basic_ostream<char, char_traits<char> > & a, basic_string<char, char_traits<char>, allocator<char> > const & b)
-{
-    ostringstream aCopy;
-    aCopy.write(b.c_str(), b.size());
-    a << aCopy;
-    return a;
-}
-
-basic_ostream<char, char_traits<char> > & __cdecl operator<< <char, char_traits<char> >(basic_ostream<char, char_traits<char> > & a, char b)
-{
-    ostringstream aCopy;
-    char bCopy[3] = { b, 0, 0 };
-    aCopy.write(bCopy, 1);
-    a << aCopy;
-    return a;
-}
-
-basic_ostream<char, char_traits<char> > & __cdecl operator<< (basic_ostream<char, char_traits<char> > & a, __int64 b)
-{
-    ostringstream aCopy;
-    char buf[32];
-    sprintf(buf, "%I64d", b);
-    aCopy << buf;
-    a << aCopy;
-    return a;
 }
 
 } // std
