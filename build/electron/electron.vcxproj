@@ -24,18 +24,41 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\base\algorithmvc6.cpp" />
+    <ClCompile Include="..\..\base\strings\string_piece.cc" />
     <ClCompile Include="..\..\base\thread.cc" />
+    <ClCompile Include="..\..\cef\libcef_dll\base\cef_atomicops_x86_gcc.cc" />
+    <ClCompile Include="..\..\cef\libcef_dll\base\cef_bind_helpers.cc" />
+    <ClCompile Include="..\..\cef\libcef_dll\base\cef_callback_helpers.cc" />
+    <ClCompile Include="..\..\cef\libcef_dll\base\cef_callback_internal.cc" />
+    <ClCompile Include="..\..\cef\libcef_dll\base\cef_lock.cc" />
+    <ClCompile Include="..\..\cef\libcef_dll\base\cef_lock_impl.cc" />
+    <ClCompile Include="..\..\cef\libcef_dll\base\cef_logging.cc" />
+    <ClCompile Include="..\..\cef\libcef_dll\base\cef_ref_counted.cc" />
+    <ClCompile Include="..\..\cef\libcef_dll\base\cef_string16.cc" />
+    <ClCompile Include="..\..\cef\libcef_dll\base\cef_thread_checker_impl.cc" />
+    <ClCompile Include="..\..\cef\libcef_dll\base\cef_thread_collision_warner.cc" />
+    <ClCompile Include="..\..\cef\libcef_dll\base\cef_weak_ptr.cc" />
     <ClCompile Include="..\..\electron\browser\api\ApiApp.cpp" />
     <ClCompile Include="..\..\electron\browser\api\ApiWebContents.cpp" />
     <ClCompile Include="..\..\electron\browser\api\ApiWindow.cpp" />
     <ClCompile Include="..\..\electron\browser\api\WindowList.cpp" />
+    <ClCompile Include="..\..\electron\common\api\event.cc" />
+    <ClCompile Include="..\..\electron\common\api\event_emitter.cc" />
+    <ClCompile Include="..\..\electron\common\api\event_emitter_caller.cc" />
     <ClCompile Include="..\..\electron\common\ThreadCall.cpp" />
     <ClCompile Include="..\..\electron\Electron.cpp" />
-    <ClCompile Include="..\..\electron\gin\converter.cc" />
-    <ClCompile Include="..\..\electron\gin\dictionary.cc" />
     <ClCompile Include="..\..\electron\OptionsSwitches.cpp" />
+    <ClCompile Include="..\..\gin\arguments.cc" />
+    <ClCompile Include="..\..\gin\converter.cc" />
+    <ClCompile Include="..\..\gin\dictionary.cc" />
+    <ClCompile Include="..\..\gin\function_template.cc" />
+    <ClCompile Include="..\..\gin\object_template_builder.cc" />
+    <ClCompile Include="..\..\gin\per_isolate_data.cc" />
+    <ClCompile Include="..\..\gin\wrappable.cc" />
+    <ClCompile Include="..\..\gin\wrapper_info.cc" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\base\strings\string_piece.h" />
     <ClInclude Include="..\..\base\thread.h" />
     <ClInclude Include="..\..\electron\browser\api\ApiApp.h" />
     <ClInclude Include="..\..\electron\browser\api\ApiWebContents.h" />
@@ -45,10 +68,18 @@
     <ClInclude Include="..\..\electron\common\api\event_emitter_caller.h" />
     <ClInclude Include="..\..\electron\common\ThreadCall.h" />
     <ClInclude Include="..\..\electron\Electron.h" />
-    <ClInclude Include="..\..\electron\gin\converter.h" />
-    <ClInclude Include="..\..\electron\gin\dictionary.h" />
     <ClInclude Include="..\..\electron\NodeRegisterHelp.h" />
     <ClInclude Include="..\..\electron\OptionsSwitches.h" />
+    <ClInclude Include="..\..\gin\arguments.h" />
+    <ClInclude Include="..\..\gin\converter.h" />
+    <ClInclude Include="..\..\gin\dictionary.h" />
+    <ClInclude Include="..\..\gin\function_template.h" />
+    <ClInclude Include="..\..\gin\object_template_builder.h" />
+    <ClInclude Include="..\..\gin\per_isolate_data.h" />
+    <ClInclude Include="..\..\gin\wrappable.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{419D9B69-AC50-49EA-9188-40FB63BE1C90}</ProjectGuid>
@@ -154,7 +185,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>STATIC_GETOPT;WIN32;_DEBUG;_WINDOWS;WIN32_LEAN_AND_MEAN;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)../;$(SolutionDir)../wke;$(SolutionDir)../node/include;$(SolutionDir)../v8_5_7/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)../electron/;$(SolutionDir)../;$(SolutionDir)../wke;$(SolutionDir)../node/include;$(SolutionDir)../v8_5_7/include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -171,9 +202,9 @@
       <Optimization>Disabled</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;STATIC_GETOPT;WIN32_LEAN_AND_MEAN;BUILDING_NODE_EXTENSION=1;USING_VC6RT=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;STATIC_GETOPT;WIN32_LEAN_AND_MEAN;BUILDING_NODE_EXTENSION=1;ENABLE_CEF=1;USING_VC6RT=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)../electron/;$(SolutionDir)../;$(SolutionDir)../wke;$(SolutionDir)../node/include;$(SolutionDir)../v8_5_7/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)../electron/;$(SolutionDir)../;$(SolutionDir)../cef;$(SolutionDir)../wke;$(SolutionDir)../node/include;$(SolutionDir)../v8_5_7/include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <ExceptionHandling>false</ExceptionHandling>
       <BufferSecurityCheck>false</BufferSecurityCheck>
@@ -218,7 +249,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;STATIC_GETOPT;WIN32_LEAN_AND_MEAN;BUILDING_NODE_EXTENSION=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)../;$(SolutionDir)../wke;$(SolutionDir)../node/include;$(SolutionDir)../v8_5_7/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)../electron/;$(SolutionDir)../;$(SolutionDir)../wke;$(SolutionDir)../node/include;$(SolutionDir)../v8_5_7/include</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <StringPooling>true</StringPooling>
       <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>

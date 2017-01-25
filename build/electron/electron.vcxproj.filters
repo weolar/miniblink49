@@ -27,6 +27,15 @@
     <Filter Include="gin">
       <UniqueIdentifier>{6621e29a-5359-41e1-984e-e4a5ca18bec2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="base\strings">
+      <UniqueIdentifier>{ebf98eb8-c619-45ce-91a0-ea4cb18cdab1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="cef">
+      <UniqueIdentifier>{9ed91ca0-48e4-4a02-86eb-d25b007273fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="cef\base">
+      <UniqueIdentifier>{a365a4f3-655f-408e-baf5-e3eaa2e93670}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\base\thread.cc">
@@ -56,10 +65,76 @@
     <ClCompile Include="..\..\electron\common\ThreadCall.cpp">
       <Filter>src\common</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\electron\gin\dictionary.cc">
+    <ClCompile Include="..\..\electron\common\api\event.cc">
+      <Filter>src\common\api</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gin\object_template_builder.cc">
       <Filter>gin</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\electron\gin\converter.cc">
+    <ClCompile Include="..\..\electron\common\api\event_emitter.cc">
+      <Filter>src\common\api</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\base\strings\string_piece.cc">
+      <Filter>base\strings</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\electron\common\api\event_emitter_caller.cc">
+      <Filter>src\common\api</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gin\converter.cc">
+      <Filter>gin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gin\dictionary.cc">
+      <Filter>gin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gin\wrapper_info.cc">
+      <Filter>gin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gin\wrappable.cc">
+      <Filter>gin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gin\arguments.cc">
+      <Filter>gin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\cef\libcef_dll\base\cef_string16.cc">
+      <Filter>cef\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\cef\libcef_dll\base\cef_thread_checker_impl.cc">
+      <Filter>cef\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\cef\libcef_dll\base\cef_thread_collision_warner.cc">
+      <Filter>cef\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\cef\libcef_dll\base\cef_weak_ptr.cc">
+      <Filter>cef\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\cef\libcef_dll\base\cef_atomicops_x86_gcc.cc">
+      <Filter>cef\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\cef\libcef_dll\base\cef_bind_helpers.cc">
+      <Filter>cef\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\cef\libcef_dll\base\cef_callback_helpers.cc">
+      <Filter>cef\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\cef\libcef_dll\base\cef_callback_internal.cc">
+      <Filter>cef\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\cef\libcef_dll\base\cef_lock.cc">
+      <Filter>cef\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\cef\libcef_dll\base\cef_logging.cc">
+      <Filter>cef\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\cef\libcef_dll\base\cef_ref_counted.cc">
+      <Filter>cef\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\cef\libcef_dll\base\cef_lock_impl.cc">
+      <Filter>cef\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gin\function_template.cc">
+      <Filter>gin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gin\per_isolate_data.cc">
       <Filter>gin</Filter>
     </ClCompile>
   </ItemGroup>
@@ -94,14 +169,35 @@
     <ClInclude Include="..\..\electron\browser\api\WindowList.h">
       <Filter>src\browser\api</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\gin\object_template_builder.h">
+      <Filter>gin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\base\strings\string_piece.h">
+      <Filter>base\strings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gin\converter.h">
+      <Filter>gin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gin\dictionary.h">
+      <Filter>gin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gin\wrappable.h">
+      <Filter>gin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gin\arguments.h">
+      <Filter>gin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gin\function_template.h">
+      <Filter>gin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gin\per_isolate_data.h">
+      <Filter>gin</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\electron\common\ThreadCall.h">
       <Filter>src\common</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\electron\gin\dictionary.h">
-      <Filter>gin</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\electron\gin\converter.h">
-      <Filter>gin</Filter>
-    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
 </Project>
