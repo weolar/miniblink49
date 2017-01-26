@@ -305,6 +305,40 @@ public:
         ::EndPaint(hWnd, &ps);
     }
 
+    void onMouseMessage(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
+        int id = m_id;
+        wkeWebView pthis = m_webContents->m_view;
+        if (message == WM_LBUTTONDOWN || message == WM_MBUTTONDOWN || message == WM_RBUTTONDOWN) {
+            ::SetFocus(hWnd);
+            ::SetCapture(hWnd);
+        }
+        else if (message == WM_LBUTTONUP || message == WM_MBUTTONUP || message == WM_RBUTTONUP) {
+            ::ReleaseCapture();
+        }
+
+        int x = LOWORD(lParam);
+        int y = HIWORD(lParam);
+
+        unsigned int flags = 0;
+
+        if (wParam & MK_CONTROL)
+            flags |= WKE_CONTROL;
+        if (wParam & MK_SHIFT)
+            flags |= WKE_SHIFT;
+
+        if (wParam & MK_LBUTTON)
+            flags |= WKE_LBUTTON;
+        if (wParam & MK_MBUTTON)
+            flags |= WKE_MBUTTON;
+        if (wParam & MK_RBUTTON)
+            flags |= WKE_RBUTTON;
+
+        ThreadCall::callBlinkThreadAsync([id, pthis, message, x, y, flags] {
+            if (isLive(id))
+                wkeFireMouseEvent(pthis, message, x, y, flags);
+        });
+    }
+
     static LRESULT CALLBACK windowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
         Window* win = (Window *)::GetPropW(hWnd, kPrppW);
         if (!win) {
@@ -362,9 +396,9 @@ public:
             if (win->m_memoryBMP)
                 ::DeleteObject((HGDIOBJ)win->m_memoryBMP);
             win->m_memoryBMP = nullptr;
-            ::LeaveCriticalSection(&win->m_memoryCanvasLock);
 
             ::GetClientRect(hWnd, &win->m_clientRect);
+            ::LeaveCriticalSection(&win->m_memoryCanvasLock);
             
             ThreadCall::callBlinkThreadSync([pthis, lParam] {
                 wkeResize(pthis, LOWORD(lParam), HIWORD(lParam));
@@ -433,35 +467,7 @@ public:
         case WM_MBUTTONUP:
         case WM_RBUTTONUP:
         case WM_MOUSEMOVE: {
-            if (message == WM_LBUTTONDOWN || message == WM_MBUTTONDOWN || message == WM_RBUTTONDOWN) {
-                ::SetFocus(hWnd);
-                ::SetCapture(hWnd);
-            }
-            else if (message == WM_LBUTTONUP || message == WM_MBUTTONUP || message == WM_RBUTTONUP) {
-                ::ReleaseCapture();
-            }
-
-            int x = LOWORD(lParam);
-            int y = HIWORD(lParam);
-
-            unsigned int flags = 0;
-
-            if (wParam & MK_CONTROL)
-                flags |= WKE_CONTROL;
-            if (wParam & MK_SHIFT)
-                flags |= WKE_SHIFT;
-
-            if (wParam & MK_LBUTTON)
-                flags |= WKE_LBUTTON;
-            if (wParam & MK_MBUTTON)
-                flags |= WKE_MBUTTON;
-            if (wParam & MK_RBUTTON)
-                flags |= WKE_RBUTTON;
-
-            ThreadCall::callBlinkThreadAsync([id, pthis, message, x, y, flags] {
-                if (isLive(id))
-                    wkeFireMouseEvent(pthis, message, x, y, flags);
-            });
+            win->onMouseMessage(hWnd, message, wParam, lParam);
             break;
         }
         case WM_CONTEXTMENU: {
@@ -535,7 +541,7 @@ public:
 
         case WM_SETCURSOR: {
             bool retVal = false;
-            ThreadCall::callBlinkThreadAsync([pthis, hWnd, &retVal] {
+            ThreadCall::callBlinkThreadSync([pthis, hWnd, &retVal] {
                 retVal = wkeFireWindowsMessage(pthis, hWnd, WM_SETCURSOR, 0, 0, nullptr);
             });
             if (retVal)
@@ -837,10 +843,14 @@ private:
     }
 
     Local<Object> getBoundsApi() {
-        Local<Integer> x = Integer::New(isolate(), m_clientRect.left);
-        Local<Integer> y = Integer::New(isolate(), m_clientRect.top);
-        Local<Integer> width = Integer::New(isolate(), m_clientRect.right - m_clientRect.left);
-        Local<Integer> height = Integer::New(isolate(), m_clientRect.bottom - m_clientRect.top);
+        RECT clientRect;
+        ::EnterCriticalSection(&m_memoryCanvasLock);
+        clientRect = m_clientRect;
+        ::LeaveCriticalSection(&m_memoryCanvasLock);
+        Local<Integer> x = Integer::New(isolate(), clientRect.left);
+        Local<Integer> y = Integer::New(isolate(), clientRect.top);
+        Local<Integer> width = Integer::New(isolate(), clientRect.right - clientRect.left);
+        Local<Integer> height = Integer::New(isolate(), clientRect.bottom - clientRect.top);
         Local<Object> bounds = Object::New(isolate());
         bounds->Set(String::NewFromUtf8(isolate(), "x"), x);
         bounds->Set(String::NewFromUtf8(isolate(), "y"), y);
@@ -858,8 +868,12 @@ private:
     }
 
     v8::Local<v8::Object> getSizeApi() {
-        v8::Local<v8::Integer> width = Integer::New(isolate(), m_clientRect.right - m_clientRect.left);
-        v8::Local<v8::Integer> height = Integer::New(isolate(), m_clientRect.bottom - m_clientRect.top);
+        RECT clientRect;
+        ::EnterCriticalSection(&m_memoryCanvasLock);
+        clientRect = m_clientRect;
+        ::LeaveCriticalSection(&m_memoryCanvasLock);
+        v8::Local<v8::Integer> width = Integer::New(isolate(), clientRect.right - clientRect.left);
+        v8::Local<v8::Integer> height = Integer::New(isolate(), clientRect.bottom - clientRect.top);
         v8::Local<v8::Array> size = Array::New(isolate(), 2);
         size->Set(0, width);
         size->Set(1, height);
