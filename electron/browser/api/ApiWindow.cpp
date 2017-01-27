@@ -1,5 +1,4 @@
 ﻿
-#include <node_object_wrap.h>
 #include <node_buffer.h>
 #include "OptionsSwitches.h"
 #include "NodeRegisterHelp.h"
@@ -17,16 +16,8 @@ using namespace node;
 
 namespace atom {
 
-#pragma warning(push)
-#pragma warning(disable:4309)
-#pragma warning(disable:4838)
-static const char helloNative[] = { 239,187,191,39,117,115,101,32,115,116,114,105,99,116,39,59,10,99,111,110,115,116,32,98,105,110,100,105,110,103,32,61,32,112,114,111,99,101,115,115,46,98,105,110,100,105,110,103,40,39,104,101,108,108,111,39,41,59,10,101,120,112,111,114,116,115,46,77,101,116,104,111,100,32,61,32,98,105,110,100,105,110,103,46,77,101,116,104,111,100,59,10,10,10 };
-#pragma warning(pop)
-
-static NodeNative nativeHello{ "hello", helloNative, sizeof(helloNative) };
-
 // 继承node的ObjectWrap，一般自定义C++类都应该继承node的ObjectWrap
-class Window : public node::ObjectWrap, public mate::EventEmitter<Window> {
+class Window : public mate::EventEmitter<Window> {
 public:
     explicit Window(v8::Isolate* isolate, v8::Local<v8::Object> wrapper) {
         gin::Wrappable<Window>::InitWith(isolate, wrapper);
@@ -777,7 +768,7 @@ private:
 
     //isEnabled
     bool isEnabledApi() {
-        return ::IsWindowEnabled(m_hWnd);
+        return !!::IsWindowEnabled(m_hWnd);
     }
 
     //maximize
@@ -790,7 +781,7 @@ private:
     }
 
     bool isMaximizedApi() {
-        return ::IsZoomed(m_hWnd);
+        return !!::IsZoomed(m_hWnd);
     }
 
     void minimizeApi() {
@@ -960,7 +951,7 @@ private:
     }
 
     bool isAlwaysOnTopApi() {
-        return ::GetWindowLong(m_hWnd, GWL_EXSTYLE) & WS_EX_TOPMOST;
+        return 0 == (::GetWindowLong(m_hWnd, GWL_EXSTYLE) & WS_EX_TOPMOST);
     }
 
     void centerApi() {
@@ -1139,7 +1130,7 @@ std::set<int>* Window::m_liveSelf = nullptr;
 CRITICAL_SECTION* Window::m_liveSelfLock = nullptr;
 gin::WrapperInfo Window::kWrapperInfo = { gin::kEmbedderNativeGin };
 
-static void initializeWindowApi(Local<Object> target, Local<Value> unused, Local<Context> context) {
+static void initializeWindowApi(Local<Object> target, Local<Value> unused, Local<Context> context, const NodeNative* native) {
     Environment* env = Environment::GetCurrent(context);
     Window::init(target, env);
     WNDCLASS wndClass = { 0 };
@@ -1158,6 +1149,18 @@ static void initializeWindowApi(Local<Object> target, Local<Value> unused, Local
     }
 }
 
-NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT_MANUAL(atom_browser_window, initializeWindowApi, &nativeHello)
+#pragma warning(push)
+#pragma warning(disable:4309)
+#pragma warning(disable:4838)
+static const char BrowserWindowNative[] =
+"const {EventEmitter} = require('events');"
+"const {BrowserWindow} = process.binding('atom_browser_window');"
+"Object.setPrototypeOf(BrowserWindow.prototype, EventEmitter.prototype);"
+"module.exports = BrowserWindow;";
+#pragma warning(pop)
+
+static NodeNative nativeBrowserWindowNative{ "BrowserWindow", BrowserWindowNative, sizeof(BrowserWindowNative) - 1 };
+
+NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT_MANUAL(atom_browser_window, initializeWindowApi, &nativeBrowserWindowNative)
 
 } // atom
