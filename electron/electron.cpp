@@ -66,7 +66,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance,
     
     atom::ThreadCall::createBlinkThread();
     
-    wchar_t* argv1[] = { L"electron.exe", L"init.js" };
+    wchar_t* argv1[] = { L"electron.exe", L"..\\..\\electron\\lib\\init.js" };
     node::NodeArgc* node = node::runNodeThread(2, argv1, atom::nodeInitCallBack, nullptr);
     
     uv_loop_t* loop = uv_default_loop();

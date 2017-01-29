@@ -22,6 +22,7 @@ public:
     explicit Window(v8::Isolate* isolate, v8::Local<v8::Object> wrapper) {
         gin::Wrappable<Window>::InitWith(isolate, wrapper);
         m_webContents = nullptr;
+        m_state = WindowUninited;
         m_hWnd = nullptr;
         m_memoryBMP = nullptr;
         m_memoryDC = nullptr;
@@ -396,7 +397,7 @@ public:
                 wkeRepaintIfNeeded(pthis);
             });
 
-            if (0)
+            if (WindowInited == win->m_state)
                 win->mate::EventEmitter<Window>::Emit("resize");
             return 0;
         }
@@ -671,7 +672,6 @@ public:
     }
 
     void newWindowTaskInUiThread(const CreateWindowParam* createWindowParam) {
-        //HandleScope scope(options->isolate());
         m_hWnd = ::CreateWindowEx(
             createWindowParam->styleEx,        // window ex-style
             L"mb_electron_window",    // window class name
@@ -704,6 +704,7 @@ public:
         });
 
         ::ShowWindow(m_hWnd, TRUE);
+        m_state = WindowInited;
     }
 
 private:
@@ -1109,8 +1110,16 @@ public:
     static gin::WrapperInfo kWrapperInfo;
 
 private:
+    enum WindowState {
+        WindowUninited,
+        WindowInited,
+        WindowDestroying,
+        WindowDestroyed
+    };
+    WindowState m_state;
     static const WCHAR* kPrppW;
     WebContents* m_webContents;
+    
     HWND m_hWnd;
     CRITICAL_SECTION m_memoryCanvasLock;
     HBITMAP m_memoryBMP;

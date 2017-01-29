@@ -1,32 +1,73 @@
 'use strict';
 
-const {Buffer} = require('buffer')
-const fs = require('fs')
-const path = require('path')
-const util = require('util')
-const Module = require('module')
-const v8 = require('v8')
+const {Buffer} = require('buffer');
+const fs = require('fs');
+const path = require('path');
+const util = require('util');
+const Module = require('module');
+const v8 = require('v8');
+const {app} = require('electron');
+	
+// Import common settings.
+require('./browser/init');
 
-process.binding('atom_browser_web_contents');
-const binding = process.binding('atom_browser_window');
-var i = 0;
+var BrowserWindow = require("./browser/browser-window");
+var win = new BrowserWindow({x:200, y:300, width: 800, height: 700, title:"test"});
 
-var win = new binding.BrowserWindow({x:200, y:300, width: 800, height: 700, title:"test"});
+let packagePath = null;
+let packageJson = null;
+/*const searchPaths = ['', process.resourcesPath];
+for (packagePath of searchPaths) {
+  try {
+    packagePath = path.join(packagePath, 'package.json');
+    packageJson = require(packagePath);
+    break
+  } catch (error) {
+    continue
+  }
+}*/
+packageJson = require('./package.json');
 
-/*
-win.emit = function(e) {
-	console.log("emit 2");
+if (packageJson == null) {
+	process.nextTick(function () {
+		return process.exit(1)
+	})
+	throw new Error('Unable to find a valid app')
 }
 
-binding.BrowserWindow.emit = function(e) {
-	console.log("emit 1");
-}*/
+// Set application's version.
+if (packageJson.version != null) {
+	app.setVersion(packageJson.version)
+}
 
-const {EventEmitter} = require('events')
-Object.setPrototypeOf(binding.BrowserWindow.prototype, EventEmitter.prototype)
+// Set application's name.
+if (packageJson.productName != null) {
+	app.setName(packageJson.productName)
+} else if (packageJson.name != null) {
+	app.setName(packageJson.name)
+}
 
+// Set application's desktop name.
+if (packageJson.desktopName != null) {
+	app.setDesktopName(packageJson.desktopName)
+} else {
+	app.setDesktopName((app.getName()) + '.desktop')
+}
+
+// Set v8 flags
+if (packageJson.v8Flags != null) {
+	v8.setFlagsFromString(packageJson.v8Flags)
+}
+
+// Set main startup script of the app.
+const mainStartupScript = packageJson.main || 'index.js'
+
+// Finally load app's main.js and transfer control to C++.
+Module._load(path.join(packagePath, mainStartupScript), Module, true)
+
+// test
 win.on('resize', function (e) {
-  console.log("emit resize");
+	console.log("emit resize");
 })
 
 // file:///E:/test/weibo/html_link.htm
@@ -34,5 +75,5 @@ win.on('resize', function (e) {
 // file:///C:/Users/weo/Desktop/wke/3d-cube-loading/index.html
 var webContent = win.webContents();
 console.log("webContents:" + webContent);
-webContent._loadURL("http://bjorker.blog.163.com/blog/static/28878284201122304146605/");
+webContent._loadURL("https://segmentfault.com/news");
 //win = undefined;
