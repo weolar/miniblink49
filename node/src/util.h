@@ -23,7 +23,8 @@
 #if USING_VC6RT != 1
 #include <type_traits>  // std::remove_reference
 #else
-#include <type_traits_vc6.h>
+#include <xutility>
+//#include <type_traits_vc6.h>
 #endif
 
 #endif

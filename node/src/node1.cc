@@ -3212,7 +3212,11 @@ namespace node {
 			}
 
 			Isolate::Scope isolate_scope(isolate);
-			v8::Debug::ProcessDebugMessages(isolate);
+			v8::Debug::ProcessDebugMessages(
+#if !(V8_MAJOR_VERSION == 4 && V8_MINOR_VERSION == 8)
+                isolate
+#endif
+            );
 		}
 	}
 

@@ -114,11 +114,19 @@ bool Agent::Start(const std::string& host, int port, bool wait) {
 
 
 void Agent::Enable() {
-  v8::Debug::SetMessageHandler(parent_env()->isolate(), MessageHandler);
+  v8::Debug::SetMessageHandler(
+#if !(V8_MAJOR_VERSION == 4 && V8_MINOR_VERSION == 8)
+      parent_env()->isolate(), 
+#endif
+      MessageHandler);
 
   // Assign environment to the debugger's context
   // NOTE: The debugger context is created after `SetMessageHandler()` call
-  auto debug_context = v8::Debug::GetDebugContext(parent_env()->isolate());
+  auto debug_context = v8::Debug::GetDebugContext(
+#if !(V8_MAJOR_VERSION == 4 && V8_MINOR_VERSION == 8)
+      parent_env()->isolate()
+#endif
+  );
   parent_env()->AssignToContext(debug_context);
 }
 
@@ -130,7 +138,11 @@ void Agent::Stop() {
     return;
   }
 
-  v8::Debug::SetMessageHandler(parent_env()->isolate(), nullptr);
+  v8::Debug::SetMessageHandler(
+#if !(V8_MAJOR_VERSION == 4 && V8_MINOR_VERSION == 8)
+      parent_env()->isolate(), 
+#endif
+      nullptr);
 
   // Send empty message to terminate things
   EnqueueMessage(new AgentMessage(nullptr, 0));
