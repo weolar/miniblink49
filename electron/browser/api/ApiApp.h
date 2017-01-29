@@ -1,8 +1,6 @@
 ﻿#include "nodeblink.h"
 #include <node_object_wrap.h>
 #include "wke.h"
-#include "electron.h"
-#include "dictionary.h"
 
 using namespace v8;
 using namespace node;

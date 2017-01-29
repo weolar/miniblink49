@@ -1,8 +1,8 @@
 ﻿
 #include <node_object_wrap.h>
+#include <node_buffer.h>
 #include "wke.h"
-#include "ThreadCall.h"
-#include "Dictionary.h"
+#include "common/ThreadCall.h"
 #include "OptionsSwitches.h"
 #include "ApiWebContents.h"
 #include "NodeRegisterHelp.h"
@@ -10,7 +10,10 @@
 
 #include <set>
 #if USING_VC6RT == 1
+#pragma warning(push)
+#pragma warning(disable:4273)
 #include <windowsvc6.h>
+#pragma warning(pop)
 #endif
 
 using namespace v8;
@@ -61,10 +64,10 @@ public:
         if (m_memoryDC)
             ::DeleteDC(m_memoryDC);
 
-        ThreadCall::callUiThreadSync([this] {
+        //ThreadCall::callUiThreadSync([this] {
             //delete data->m_webContents;
-            SendMessage(this->m_hWnd, WM_CLOSE, 0, 0);
-        });
+            ::SendMessage(this->m_hWnd, WM_CLOSE, 0, 0);
+        //});
         WindowList::GetInstance()->RemoveWindow(this);
 
         ::EnterCriticalSection(m_liveSelfLock);
@@ -576,6 +579,16 @@ public:
         utf16->assign(&wbuf[0], n);
     }
 
+    static v8::Local<v8::Value> ToBuffer(v8::Isolate* isolate, void* val, int size) {
+        auto buffer = node::Buffer::Copy(isolate, static_cast<char*>(val), size);
+        if (buffer.IsEmpty()) {
+            return v8::Null(isolate);
+        }
+        else {
+            return buffer.ToLocalChecked();
+        }
+    }
+
     static Window* newWindow(gin::Dictionary* options) {
         Window* win = new Window();
         CreateWindowParam createWindowParam;
@@ -643,13 +656,13 @@ public:
             createWindowParam.styleEx = 0;
         }
 
-        ThreadCall::callUiThreadSync([win, &createWindowParam] {
-            win->newWindowTask(&createWindowParam);
-        });
+        //ThreadCall::callUiThreadSync([win, &createWindowParam] {
+            win->newWindowTaskInUiThread(&createWindowParam);
+        //});
         return win;
     }
 
-    void newWindowTask(const CreateWindowParam* createWindowParam) {
+    void newWindowTaskInUiThread(const CreateWindowParam* createWindowParam) {
         //HandleScope scope(options->isolate());
         m_hWnd = ::CreateWindowEx(
             createWindowParam->styleEx,        // window ex-style
@@ -887,6 +900,11 @@ private:
     }
 
     static void getNativeWindowHandleApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
+        Isolate* isolate = args.GetIsolate();
+        HandleScope scope(isolate);
+        Window* win = ObjectWrap::Unwrap<Window>(args.Holder());
+
+        args.GetReturnValue().Set(ToBuffer(isolate, (void*)(&win->m_hWnd), sizeof(HWND)));
     }
 
     static void getBoundsApi(const v8::FunctionCallbackInfo<v8::Value>& args) {

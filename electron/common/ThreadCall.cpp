@@ -17,7 +17,6 @@ uv_loop_t* ThreadCall::m_blinkLoop;
 void ThreadCall::init(uv_loop_t* uiLoop) {
     m_uiLoop = uiLoop;
     m_uiThreadId = ::GetCurrentThreadId();
-    createBlinkThread();
 }
 
 void ThreadCall::callUiThreadSync(std::function<void(void)>&& closure) {
@@ -144,6 +143,8 @@ void ThreadCall::blinkThread(void* created) {
     *(bool*)created = true;
 
     messageLoop(m_blinkLoop);
+
+    wkeFinalize();
 
     free(m_blinkLoop);
     m_blinkLoop = nullptr;

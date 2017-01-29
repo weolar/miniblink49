@@ -25,27 +25,30 @@
   <ItemGroup>
     <ClCompile Include="..\..\base\algorithmvc6.cpp" />
     <ClCompile Include="..\..\base\thread.cc" />
-    <ClCompile Include="..\..\electron\ApiAindow.cpp" />
-    <ClCompile Include="..\..\electron\ApiApp.cpp" />
-    <ClCompile Include="..\..\electron\ApiWebContents.cpp" />
-    <ClCompile Include="..\..\electron\Converter.cpp" />
-    <ClCompile Include="..\..\electron\Dictionary.cpp" />
+    <ClCompile Include="..\..\electron\browser\api\ApiApp.cpp" />
+    <ClCompile Include="..\..\electron\browser\api\ApiWebContents.cpp" />
+    <ClCompile Include="..\..\electron\browser\api\ApiWindow.cpp" />
+    <ClCompile Include="..\..\electron\browser\api\WindowList.cpp" />
+    <ClCompile Include="..\..\electron\common\ThreadCall.cpp" />
     <ClCompile Include="..\..\electron\Electron.cpp" />
+    <ClCompile Include="..\..\electron\gin\converter.cc" />
+    <ClCompile Include="..\..\electron\gin\dictionary.cc" />
     <ClCompile Include="..\..\electron\OptionsSwitches.cpp" />
-    <ClCompile Include="..\..\electron\ThreadCall.cpp" />
-    <ClCompile Include="..\..\electron\WindowList.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\base\thread.h" />
-    <ClInclude Include="..\..\electron\ApiApp.h" />
-    <ClInclude Include="..\..\electron\ApiWebContents.h" />
-    <ClInclude Include="..\..\electron\Converter.h" />
-    <ClInclude Include="..\..\electron\Dictionary.h" />
+    <ClInclude Include="..\..\electron\browser\api\ApiApp.h" />
+    <ClInclude Include="..\..\electron\browser\api\ApiWebContents.h" />
+    <ClInclude Include="..\..\electron\browser\api\WindowList.h" />
+    <ClInclude Include="..\..\electron\common\api\event.h" />
+    <ClInclude Include="..\..\electron\common\api\event_emitter.h" />
+    <ClInclude Include="..\..\electron\common\api\event_emitter_caller.h" />
+    <ClInclude Include="..\..\electron\common\ThreadCall.h" />
     <ClInclude Include="..\..\electron\Electron.h" />
+    <ClInclude Include="..\..\electron\gin\converter.h" />
+    <ClInclude Include="..\..\electron\gin\dictionary.h" />
     <ClInclude Include="..\..\electron\NodeRegisterHelp.h" />
     <ClInclude Include="..\..\electron\OptionsSwitches.h" />
-    <ClInclude Include="..\..\electron\ThreadCall.h" />
-    <ClInclude Include="..\..\electron\WindowList.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{419D9B69-AC50-49EA-9188-40FB63BE1C90}</ProjectGuid>
@@ -170,7 +173,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;STATIC_GETOPT;WIN32_LEAN_AND_MEAN;BUILDING_NODE_EXTENSION=1;USING_VC6RT=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)../;$(SolutionDir)../wke;$(SolutionDir)../node/include;$(SolutionDir)../v8_5_7/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)../electron/;$(SolutionDir)../;$(SolutionDir)../wke;$(SolutionDir)../node/include;$(SolutionDir)../v8_5_7/include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <ExceptionHandling>false</ExceptionHandling>
       <BufferSecurityCheck>false</BufferSecurityCheck>

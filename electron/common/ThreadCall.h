@@ -23,6 +23,7 @@ private:
     
 public:
     static void init(uv_loop_t* loop);
+    static void createBlinkThread(); // Blink线程要先创建，才能调用init
 
     static void callBlinkThreadAsync(std::function<void(void)>&& closure);
     static void callBlinkThreadSync(std::function<void(void)>&& closure);
@@ -37,8 +38,6 @@ private:
     static void callThreadAsync(std::function<void(void)> closure);
     static void threadCallbackWrap(void* data);
     static void asynThreadCallbackWrap(void* data);
-
-    static void createBlinkThread();
 
     static DWORD m_blinkThreadId;
     static DWORD m_uiThreadId;
