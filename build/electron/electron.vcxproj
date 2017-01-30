@@ -24,6 +24,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\base\algorithmvc6.cpp" />
+    <ClCompile Include="..\..\base\ostream_for_other_vc6.cpp" />
     <ClCompile Include="..\..\base\strings\string_piece.cc" />
     <ClCompile Include="..\..\base\thread.cc" />
     <ClCompile Include="..\..\cef\libcef_dll\base\cef_atomicops_x86_gcc.cc" />
@@ -45,9 +46,9 @@
     <ClCompile Include="..\..\electron\common\api\event.cc" />
     <ClCompile Include="..\..\electron\common\api\event_emitter.cc" />
     <ClCompile Include="..\..\electron\common\api\event_emitter_caller.cc" />
+    <ClCompile Include="..\..\electron\common\OptionsSwitches.cpp" />
     <ClCompile Include="..\..\electron\common\ThreadCall.cpp" />
     <ClCompile Include="..\..\electron\Electron.cpp" />
-    <ClCompile Include="..\..\electron\OptionsSwitches.cpp" />
     <ClCompile Include="..\..\gin\arguments.cc" />
     <ClCompile Include="..\..\gin\converter.cc" />
     <ClCompile Include="..\..\gin\dictionary.cc" />
@@ -66,10 +67,10 @@
     <ClInclude Include="..\..\electron\common\api\event.h" />
     <ClInclude Include="..\..\electron\common\api\event_emitter.h" />
     <ClInclude Include="..\..\electron\common\api\event_emitter_caller.h" />
+    <ClInclude Include="..\..\electron\common\NodeRegisterHelp.h" />
+    <ClInclude Include="..\..\electron\common\OptionsSwitches.h" />
     <ClInclude Include="..\..\electron\common\ThreadCall.h" />
     <ClInclude Include="..\..\electron\Electron.h" />
-    <ClInclude Include="..\..\electron\NodeRegisterHelp.h" />
-    <ClInclude Include="..\..\electron\OptionsSwitches.h" />
     <ClInclude Include="..\..\gin\arguments.h" />
     <ClInclude Include="..\..\gin\converter.h" />
     <ClInclude Include="..\..\gin\dictionary.h" />
@@ -183,9 +184,9 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>STATIC_GETOPT;WIN32;_DEBUG;_WINDOWS;WIN32_LEAN_AND_MEAN;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>STATIC_GETOPT;WIN32;_DEBUG;_WINDOWS;WIN32_LEAN_AND_MEAN;_CRT_SECURE_NO_WARNINGS;ENABLE_CEF=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)../electron/;$(SolutionDir)../;$(SolutionDir)../wke;$(SolutionDir)../node/include;$(SolutionDir)../v8_5_7/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)../electron/;$(SolutionDir)../;$(SolutionDir)../cef;$(SolutionDir)../wke;$(SolutionDir)../node/include;$(SolutionDir)../v8_5_7/include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

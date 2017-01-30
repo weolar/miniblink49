@@ -47,9 +47,6 @@
     <ClCompile Include="..\..\electron\Electron.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\electron\OptionsSwitches.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\electron\browser\api\ApiWebContents.cpp">
       <Filter>src\browser\api</Filter>
     </ClCompile>
@@ -137,18 +134,18 @@
     <ClCompile Include="..\..\gin\per_isolate_data.cc">
       <Filter>gin</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\base\ostream_for_other_vc6.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\electron\common\OptionsSwitches.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\base\thread.h">
       <Filter>base</Filter>
     </ClInclude>
     <ClInclude Include="..\..\electron\Electron.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\electron\NodeRegisterHelp.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\electron\OptionsSwitches.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\electron\common\api\event_emitter.h">
@@ -194,6 +191,12 @@
       <Filter>gin</Filter>
     </ClInclude>
     <ClInclude Include="..\..\electron\common\ThreadCall.h">
+      <Filter>src\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\electron\common\OptionsSwitches.h">
+      <Filter>src\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\electron\common\NodeRegisterHelp.h">
       <Filter>src\common</Filter>
     </ClInclude>
   </ItemGroup>
