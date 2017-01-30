@@ -5,6 +5,8 @@
 #include <memory>
 #include <stdexcept>
 #include <xutility>
+#include <initializer_list>
+#include <type_traits>
 
 #ifdef  _MSC_VER
 #pragma pack(push,8)
@@ -74,6 +76,17 @@ public:
 			_End = _Last; }
 		return (*this); }
     //////////////////////////////////////////////////////////////////////////
+    vector(initializer_list<_Ty> _Ilist, const _A& _Al = _A())
+        : allocator(_Al), _First(0), _Last(0), _End(0) { // construct from initializer_list       
+        for (const _Ty* it = _Ilist.begin(); it != _Ilist.end(); ++it) // initialize with [_First, _Last)
+            push_back(*it);
+    }
+
+    _Myt& operator=(initializer_list<value_type> _Ilist) { // assign initializer_list
+        assign(_Ilist.begin(), _Ilist.end());
+        return (*this);
+    }
+
     vector(_Myt&& _Right)
         : allocator(_STD move(_Right.allocator))
         , _First(0), _Last(0), _End(0) {	// construct list by moving _Right

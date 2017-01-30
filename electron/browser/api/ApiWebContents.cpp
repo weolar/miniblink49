@@ -605,7 +605,7 @@ Persistent<Function> WebContents::constructor;
 
 static void initializeWebContentApi(Local<Object> target,
     v8::Local<Value> unused,
-    v8::Local<Context> context) {
+    v8::Local<Context> context, const NodeNative* native) {
     Environment* env = Environment::GetCurrent(context);
     WebContents::init(target, env);
 }

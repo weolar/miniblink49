@@ -3,11 +3,7 @@
 // found in the LICENSE file.
 
 #include "src/value-serializer.h"
-#if USING_VC6RT == 1
-#include <type_traits_vc6.h>
-#else
 #include <type_traits>
-#endif
 #include "src/base/logging.h"
 #include "src/conversions.h"
 #include "src/factory.h"

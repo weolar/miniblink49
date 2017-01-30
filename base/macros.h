@@ -25,9 +25,11 @@
 
 // A macro to disallow the copy constructor and operator= functions
 // This should be used in the private: declarations for a class
-#define DISALLOW_COPY_AND_ASSIGN(TypeName) \
-  TypeName(const TypeName&);               \
-  void operator=(const TypeName&)
+#define DISALLOW_COPY_AND_ASSIGN(TypeName)                                    \
+  void operator=(const TypeName&) = delete;                                   \
+  void operator=(TypeName&&) = delete;                                        \
+  TypeName(const TypeName&) = delete;                                         \
+  TypeName(TypeName&&) = delete
 
 // An older, deprecated, politically incorrect name for the above.
 // NOTE: The usage of this macro was banned from our code base, but some

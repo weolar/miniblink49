@@ -31,6 +31,8 @@
 #include "stream-inl.h"
 #include "req-inl.h"
 
+#define min_compare(a,b)            (((a) < (b)) ? (a) : (b))
+
 typedef struct uv__ipc_queue_item_s uv__ipc_queue_item_t;
 
 struct uv__ipc_queue_item_s {
@@ -1630,7 +1632,7 @@ void uv_process_pipe_read_req(uv_loop_t* loop, uv_pipe_t* handle,
             continue;
           }
         } else {
-          avail = min(avail, (DWORD)handle->pipe.conn.remaining_ipc_rawdata_bytes);
+          avail = min_compare(avail, (DWORD)handle->pipe.conn.remaining_ipc_rawdata_bytes);
         }
       }
 
@@ -1643,7 +1645,7 @@ void uv_process_pipe_read_req(uv_loop_t* loop, uv_pipe_t* handle,
 
       if (ReadFile(handle->handle,
                    buf.base,
-                   min(buf.len, avail),
+                   min_compare(buf.len, avail),
                    &bytes,
                    NULL)) {
         /* Successful read */

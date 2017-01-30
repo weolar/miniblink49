@@ -22,4 +22,10 @@
 #define DCHECK(condition)      ((void) 0)
 #endif
 
+#if defined(NDEBUG) && !defined(DCHECK_ALWAYS_ON)
+#define DCHECK_IS_ON() 0
+#else
+#define DCHECK_IS_ON() 1
+#endif
+
 #endif BASE_LOGGING_H_

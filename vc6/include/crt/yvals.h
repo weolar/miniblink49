@@ -3,6 +3,29 @@
 #define _YVALS
 #include <use_ansi.h>
 
+#if _HAS_CONSTEXPR
+#define _CONST_DATA	constexpr
+#define _CONST_FUN	constexpr
+#else /* _HAS_CONSTEXPR */
+#define _CONST_DATA	const
+#define _CONST_FUN
+#endif /* _HAS_CONSTEXPR */
+
+#if _HAS_EXCEPTIONS
+#define _NOEXCEPT	noexcept
+#define _NOEXCEPT_OP(x)	noexcept(x)
+#else /* _HAS_EXCEPTIONS */
+#define _NOEXCEPT	throw ()
+#define _NOEXCEPT_OP(x)
+#endif /* _HAS_EXCEPTIONS */
+
+// yvals.h
+#define _C_LIB_DECL		extern "C" {	/* C has extern "C" linkage */
+#define _END_C_LIB_DECL	}
+#define _EXTERN_C			extern "C" {
+#define _END_EXTERN_C		}
+#define _CRTIMP2_PURE
+
 /* Define _CRTIMP */
 #ifndef _CRTIMP
 #ifdef	_DLL

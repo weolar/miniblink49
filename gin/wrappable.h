@@ -5,7 +5,8 @@
 #ifndef GIN_WRAPPABLE_H_
 #define GIN_WRAPPABLE_H_
 
-#include "base/template_util.h"
+#include "base/macros.h"
+#include "cef/include/base/cef_template_util.h"
 #include "gin/converter.h"
 #include "gin/gin_export.h"
 #include "gin/public/wrapper_info.h"
@@ -65,6 +66,10 @@ class GIN_EXPORT WrappableBase {
   WrappableBase();
   virtual ~WrappableBase();
 
+  void InitWith(v8::Isolate* isolate, v8::Local<v8::Object> wrapper, WrapperInfo* info);
+
+  v8::Isolate* isolate() const { return isolate_; }
+
   // Overrides of this method should be declared final and not overridden again.
   virtual ObjectTemplateBuilder GetObjectTemplateBuilder(v8::Isolate* isolate);
 
@@ -78,6 +83,7 @@ class GIN_EXPORT WrappableBase {
       const v8::WeakCallbackInfo<WrappableBase>& data);
 
   v8::Global<v8::Object> wrapper_;  // Weak
+  v8::Isolate* isolate_;
 
   DISALLOW_COPY_AND_ASSIGN(WrappableBase);
 };
@@ -86,6 +92,10 @@ class GIN_EXPORT WrappableBase {
 template<typename T>
 class Wrappable : public WrappableBase {
  public:
+  void InitWith(v8::Isolate* isolate, v8::Local<v8::Object> wrapper) {
+    WrappableBase::InitWith(isolate, wrapper, &T::kWrapperInfo);
+  }
+
   // Retrieve (or create) the v8 wrapper object cooresponding to this object.
   v8::Local<v8::Object> GetWrapper(v8::Isolate* isolate) {
     return GetWrapperImpl(isolate, &T::kWrapperInfo);

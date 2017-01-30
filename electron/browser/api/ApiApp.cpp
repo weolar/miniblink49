@@ -109,9 +109,7 @@ void App::nullFunction(const v8::FunctionCallbackInfo<v8::Value>& args) {
 
 Persistent<Function> App::constructor;
 
-static void initializeAppApi(Local<Object> target,
-    Local<Value> unused,
-    Local<Context> context) {
+static void initializeAppApi(Local<Object> target, Local<Value> unused, Local<Context> context, const NodeNative* native) {
     Environment* env = Environment::GetCurrent(context);
     App::init(target, env);
 }
