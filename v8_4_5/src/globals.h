@@ -16,7 +16,6 @@
 
 #if USING_VC6RT == 1
 #include <algorithmvc6.h>
-#include <ostreamvc6.h>
 #undef STRICT
 #undef CONST
 #undef PURE
