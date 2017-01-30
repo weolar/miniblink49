@@ -146,7 +146,7 @@ CefContext::CefContext()
     : m_initialized(false)
     , m_bShuttingDown(false)
     , m_osModalLoop(false)
-    , m_needHeartbeat(false)
+    , m_needHeartbeat(0)
 	, m_appThreadId(0)
 	, m_uiThreadId(0)
 	, m_webkitThreadHandle(NULL)
@@ -168,14 +168,14 @@ const CefContext::BrowserList& CefContext::GetBrowserList() {
 }
 
 void CefContext::SetNeedHeartbeat() {
-    if (m_needHeartbeat)
+    if (0 != m_needHeartbeat)
         return;
-    m_needHeartbeat = true;
+    atomicIncrement(&m_needHeartbeat);
     ::PostThreadMessage(m_uiThreadId, WM_NULL, 0, 0);
 }
 
 void CefContext::ClearNeedHeartbeat() {
-    m_needHeartbeat = false;
+    atomicDecrement(&m_needHeartbeat);
 }
 
 void CefContext::FireHeartBeat() {
