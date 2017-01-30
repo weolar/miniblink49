@@ -2,7 +2,7 @@
 #include "electron.h"
 
 #include "common/ThreadCall.h"
-#include "NodeRegisterHelp.h"
+#include "common/NodeRegisterHelp.h"
 #include "NodeBlink.h"
 #include "lib/native.h"
 #include <windows.h>

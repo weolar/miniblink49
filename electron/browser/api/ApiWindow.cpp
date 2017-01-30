@@ -1,7 +1,7 @@
 ﻿
 #include <node_buffer.h>
-#include "OptionsSwitches.h"
-#include "NodeRegisterHelp.h"
+#include "common/OptionsSwitches.h"
+#include "common/NodeRegisterHelp.h"
 #include "browser/api/ApiWebContents.h"
 #include "browser/api/WindowList.h"
 #include "common/ThreadCall.h"
@@ -16,7 +16,6 @@ using namespace node;
 
 namespace atom {
 
-// 继承node的ObjectWrap，一般自定义C++类都应该继承node的ObjectWrap
 class Window : public mate::EventEmitter<Window> {
 public:
     explicit Window(v8::Isolate* isolate, v8::Local<v8::Object> wrapper) {

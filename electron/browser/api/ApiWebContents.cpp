@@ -4,8 +4,8 @@
 #include <node_object_wrap.h>
 #include "wke.h"
 #include "common/ThreadCall.h"
+#include "common/NodeRegisterHelp.h"
 #include "gin/dictionary.h"
-#include "NodeRegisterHelp.h"
 
 using namespace v8;
 using namespace node;
