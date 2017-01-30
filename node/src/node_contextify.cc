@@ -250,12 +250,20 @@ class ContextifyContext {
     Local<String> script_source(args[0]->ToString(args.GetIsolate()));
     if (script_source.IsEmpty())
       return;  // Exception pending.
-    Local<Context> debug_context = Debug::GetDebugContext(args.GetIsolate());
+    Local<Context> debug_context = Debug::GetDebugContext(
+#if !(V8_MAJOR_VERSION == 4 && V8_MINOR_VERSION == 8)
+        args.GetIsolate()
+#endif
+    );
     Environment* env = Environment::GetCurrent(args);
     if (debug_context.IsEmpty()) {
       // Force-load the debug context.
       Debug::GetMirror(args.GetIsolate()->GetCurrentContext(), args[0]);
-      debug_context = Debug::GetDebugContext(args.GetIsolate());
+      debug_context = Debug::GetDebugContext(
+#if !(V8_MAJOR_VERSION == 4 && V8_MINOR_VERSION == 8)
+          args.GetIsolate()
+#endif
+      );
       CHECK(!debug_context.IsEmpty());
       // Ensure that the debug context has an Environment assigned in case
       // a fatal error is raised.  The fatal exception handler in node.cc
@@ -391,7 +399,9 @@ class ContextifyContext {
     bool is_contextual_store = ctx->global_proxy() != args.This();
 
     bool set_property_will_throw =
+#if !(V8_MAJOR_VERSION == 4 && V8_MINOR_VERSION == 8)
         args.ShouldThrowOnError() &&
+#endif
         !is_declared &&
         is_contextual_store;
 

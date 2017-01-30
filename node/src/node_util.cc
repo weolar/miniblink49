@@ -13,7 +13,9 @@ using v8::FunctionCallbackInfo;
 using v8::Local;
 using v8::Object;
 using v8::Private;
+#if !(V8_MAJOR_VERSION == 4 && V8_MINOR_VERSION == 8)
 using v8::Proxy;
+#endif
 using v8::String;
 using v8::Value;
 
@@ -43,6 +45,7 @@ using v8::Value;
 
 static void GetProxyDetails(const FunctionCallbackInfo<Value>& args) {
   // Return undefined if it's not a proxy.
+#if !(V8_MAJOR_VERSION == 4 && V8_MINOR_VERSION == 8)
   if (!args[0]->IsProxy())
     return;
 
@@ -53,6 +56,7 @@ static void GetProxyDetails(const FunctionCallbackInfo<Value>& args) {
   ret->Set(1, proxy->GetHandler());
 
   args.GetReturnValue().Set(ret);
+#endif
 }
 
 static void GetHiddenValue(const FunctionCallbackInfo<Value>& args) {
