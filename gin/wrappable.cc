@@ -17,6 +17,14 @@ WrappableBase::~WrappableBase() {
   wrapper_.Reset();
 }
 
+void WrappableBase::InitWith(v8::Isolate* isolate, v8::Local<v8::Object> wrapper, WrapperInfo* info) {
+  isolate_ = isolate;
+  wrapper->SetAlignedPointerInInternalField(kWrapperInfoIndex, info);
+  wrapper->SetAlignedPointerInInternalField(kEncodedValueIndex, this);
+  wrapper_.Reset(isolate, wrapper);
+  wrapper_.SetWeak(this, FirstWeakCallback, v8::WeakCallbackType::kParameter);
+}
+
 ObjectTemplateBuilder WrappableBase::GetObjectTemplateBuilder(
     v8::Isolate* isolate) {
   return ObjectTemplateBuilder(isolate);
@@ -35,8 +43,7 @@ void WrappableBase::SecondWeakCallback(
   delete wrappable;
 }
 
-v8::Local<v8::Object> WrappableBase::GetWrapperImpl(v8::Isolate* isolate,
-                                                    WrapperInfo* info) {
+v8::Local<v8::Object> WrappableBase::GetWrapperImpl(v8::Isolate* isolate, WrapperInfo* info) {
   if (!wrapper_.IsEmpty()) {
     return v8::Local<v8::Object>::New(isolate, wrapper_);
   }
@@ -48,7 +55,8 @@ v8::Local<v8::Object> WrappableBase::GetWrapperImpl(v8::Isolate* isolate,
     CHECK(!templ.IsEmpty());
     data->SetObjectTemplate(info, templ);
   }
-  CHECK_EQ(kNumberOfInternalFields, templ->InternalFieldCount());
+  CHECK(kNumberOfInternalFields == templ->InternalFieldCount());
+  
   v8::Local<v8::Object> wrapper;
   // |wrapper| may be empty in some extreme cases, e.g., when
   // Object.prototype.constructor is overwritten.

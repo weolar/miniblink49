@@ -1,9 +1,12 @@
 /* xatomic0.h internal header */
+
 #pragma once
 #ifndef _XATOMIC0_H
 #define _XATOMIC0_H
 #ifndef RC_INVOKED
 #include <yvals.h>
+
+//#include <atomic>
 
  #pragma pack(push,_CRT_PACKING)
  #pragma warning(push,3)

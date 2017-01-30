@@ -442,12 +442,6 @@
     <Filter Include="gen\blink\platform">
       <UniqueIdentifier>{c217d0d6-b3ab-42f3-96d5-4db5c82cd04f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="base">
-      <UniqueIdentifier>{4340f40e-4405-439d-81f2-c9126a225f3f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="base\memory">
-      <UniqueIdentifier>{53c32c57-e58a-415f-b286-734b55306852}</UniqueIdentifier>
-    </Filter>
     <Filter Include="gen\blink\bindings">
       <UniqueIdentifier>{61a069b5-3d74-44b9-a505-dae4896ed11f}</UniqueIdentifier>
     </Filter>
@@ -571,9 +565,6 @@
     <Filter Include="skia\ext">
       <UniqueIdentifier>{7692970c-51dc-46e7-8787-ecfe28b898bf}</UniqueIdentifier>
     </Filter>
-    <Filter Include="base\debug">
-      <UniqueIdentifier>{7307de3e-789b-453a-86a6-831df96e21b2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="third_party\Webkit\Source\platform\graphics\media">
       <UniqueIdentifier>{6383c3d0-3c4b-4772-a59c-ab2b59f10348}</UniqueIdentifier>
     </Filter>
@@ -597,9 +588,6 @@
     </Filter>
     <Filter Include="third_party\Webkit\Source\platform\heap\asm">
       <UniqueIdentifier>{067d5c05-0ea3-4b1e-a7d5-40ed535c7156}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="base\process">
-      <UniqueIdentifier>{86f1b8b7-ffff-4660-9e91-b44a9a4834ee}</UniqueIdentifier>
     </Filter>
     <Filter Include="ui">
       <UniqueIdentifier>{cb58e862-1718-4a4e-9387-d9f820210def}</UniqueIdentifier>
@@ -727,17 +715,11 @@
     <Filter Include="net\cookies">
       <UniqueIdentifier>{ff555750-3752-46ba-877f-ff9cc64c4b20}</UniqueIdentifier>
     </Filter>
-    <Filter Include="base\time">
-      <UniqueIdentifier>{3f042bbb-445f-49b7-9374-292250317222}</UniqueIdentifier>
-    </Filter>
     <Filter Include="cc\layers">
       <UniqueIdentifier>{213bd9dc-f6b0-4fcf-9e5f-b444713df395}</UniqueIdentifier>
     </Filter>
     <Filter Include="content\web_impl_win\ui">
       <UniqueIdentifier>{b468b82a-41a2-4896-a4b4-8ec26f8a3ae0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="base\strings">
-      <UniqueIdentifier>{1e08a647-7d8b-4be0-98a6-23f9eeabd88d}</UniqueIdentifier>
     </Filter>
     <Filter Include="net\websocket">
       <UniqueIdentifier>{eac8e4db-7f21-4a45-9040-df20582d4727}</UniqueIdentifier>
@@ -768,6 +750,24 @@
     </Filter>
     <Filter Include="node\uv\src\win">
       <UniqueIdentifier>{877efd80-bba9-437e-a0f3-b2089be66342}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{4340f40e-4405-439d-81f2-c9126a225f3f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base\memory">
+      <UniqueIdentifier>{53c32c57-e58a-415f-b286-734b55306852}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base\debug">
+      <UniqueIdentifier>{7307de3e-789b-453a-86a6-831df96e21b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base\process">
+      <UniqueIdentifier>{86f1b8b7-ffff-4660-9e91-b44a9a4834ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base\time">
+      <UniqueIdentifier>{3f042bbb-445f-49b7-9374-292250317222}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base\strings">
+      <UniqueIdentifier>{1e08a647-7d8b-4be0-98a6-23f9eeabd88d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -8868,9 +8868,6 @@
     <ClCompile Include="..\..\base\windowsvc6.cpp">
       <Filter>base</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\base\ostreamvc6.cpp">
-      <Filter>base</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\net\ActivatingLoaderCheck.cpp">
       <Filter>net</Filter>
     </ClCompile>
@@ -9395,6 +9392,12 @@
     </ClCompile>
     <ClCompile Include="..\..\node\src\tty_wrap.cc">
       <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\base\ostreamvc6.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\base\ostream_for_other_vc6.cpp">
+      <Filter>base</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

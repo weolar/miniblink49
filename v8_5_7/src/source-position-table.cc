@@ -8,10 +8,6 @@
 #include "src/objects-inl.h"
 #include "src/objects.h"
 
-#if USING_VC6RT == 1
-#include <type_traits_vc6.h>
-#endif
-
 namespace v8 {
 namespace internal {
 

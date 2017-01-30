@@ -1,0 +1,357 @@
+// xtr1common internal header
+#pragma once
+#ifndef _TR1_COMMON_1_
+#define _TR1_COMMON_1_
+#ifndef RC_INVOKED
+#include <cstdlib>
+
+ #pragma pack(push,_CRT_PACKING)
+ #pragma warning(push,3)
+ #pragma push_macro("new")
+ #undef new
+
+_STD_BEGIN
+	// STRUCT _Nil
+struct _Nil
+	{	// empty struct, for unused argument types
+	};
+
+	// TEMPLATE CLASS integral_constant
+template<class _Ty,
+	_Ty _Val>
+	struct integral_constant
+	{	// convenient template for integral constant types
+	static _CONST_DATA _Ty value = _Val;
+
+	typedef _Ty value_type;
+	typedef integral_constant<_Ty, _Val> type;
+
+	_CONST_FUN operator value_type() const _NOEXCEPT
+		{	// return stored value
+		return (value);
+		}
+
+	_CONST_FUN value_type operator()() const _NOEXCEPT
+		{	// return stored value
+		return (value);
+		}
+	};
+
+typedef integral_constant<bool, true> true_type;
+typedef integral_constant<bool, false> false_type;
+
+	// ALIAS TEMPLATE bool_constant
+template<bool _Val>
+	using bool_constant = integral_constant<bool, _Val>;
+
+	// TEMPLATE CLASS _Cat_base
+template<bool _Val>
+	struct _Cat_base
+		: integral_constant<bool, _Val>
+	{	// base class for type predicates
+	};
+
+	// TEMPLATE CLASS enable_if
+template<bool _Test,
+	class _Ty = void>
+	struct enable_if
+	{	// type is undefined for assumed !_Test
+	};
+
+template<class _Ty>
+	struct enable_if<true, _Ty>
+	{	// type is _Ty for _Test
+	typedef _Ty type;
+	};
+
+	// TEMPLATE CLASS conditional
+template<bool _Test,
+	class _Ty1,
+	class _Ty2>
+	struct conditional
+	{	// type is _Ty2 for assumed !_Test
+	typedef _Ty2 type;
+	};
+
+template<class _Ty1,
+	class _Ty2>
+	struct conditional<true, _Ty1, _Ty2>
+	{	// type is _Ty1 for _Test
+	typedef _Ty1 type;
+	};
+
+	// TEMPLATE CLASS is_same
+template<class _Ty1,
+	class _Ty2>
+	struct is_same
+		: false_type
+	{	// determine whether _Ty1 and _Ty2 are the same type
+	};
+
+template<class _Ty1>
+	struct is_same<_Ty1, _Ty1>
+		: true_type
+	{	// determine whether _Ty1 and _Ty2 are the same type
+	};
+
+	// TEMPLATE CLASS remove_const
+template<class _Ty>
+	struct remove_const
+	{	// remove top level const qualifier
+	typedef _Ty type;
+	};
+
+template<class _Ty>
+	struct remove_const<const _Ty>
+	{	// remove top level const qualifier
+	typedef _Ty type;
+	};
+
+template<class _Ty>
+	struct remove_const<const _Ty[]>
+	{	// remove top level const qualifier
+	typedef _Ty type[];
+	};
+
+template<class _Ty, size_t _Nx>
+	struct remove_const<const _Ty[_Nx]>
+	{	// remove top level const qualifier
+	typedef _Ty type[_Nx];
+	};
+
+	// TEMPLATE CLASS remove_volatile
+template<class _Ty>
+	struct remove_volatile
+	{	// remove top level volatile qualifier
+	typedef _Ty type;
+	};
+
+template<class _Ty>
+	struct remove_volatile<volatile _Ty>
+	{	// remove top level volatile qualifier
+	typedef _Ty type;
+	};
+
+template<class _Ty>
+	struct remove_volatile<volatile _Ty[]>
+	{	// remove top level volatile qualifier
+	typedef _Ty type[];
+	};
+
+template<class _Ty, size_t _Nx>
+	struct remove_volatile<volatile _Ty[_Nx]>
+	{	// remove top level volatile qualifier
+	typedef _Ty type[_Nx];
+	};
+
+	// TEMPLATE CLASS remove_cv
+template<class _Ty>
+	struct remove_cv
+	{	// remove top level const and volatile qualifiers
+	typedef typename remove_const<typename remove_volatile<_Ty>::type>::type
+		type;
+	};
+
+	// TEMPLATE CLASS _Is_integral
+template<class _Ty>
+	struct _Is_integral
+		: false_type
+	{	// determine whether _Ty is integral
+	};
+
+template<>
+	struct _Is_integral<bool>
+		: true_type
+	{	// determine whether _Ty is integral
+	};
+
+template<>
+	struct _Is_integral<char>
+		: true_type
+	{	// determine whether _Ty is integral
+	};
+
+template<>
+	struct _Is_integral<unsigned char>
+		: true_type
+	{	// determine whether _Ty is integral
+	};
+
+template<>
+	struct _Is_integral<signed char>
+		: true_type
+	{	// determine whether _Ty is integral
+	};
+
+ #ifdef _NATIVE_WCHAR_T_DEFINED
+template<>
+	struct _Is_integral<wchar_t>
+		: true_type
+	{	// determine whether _Ty is integral
+	};
+ #endif /* _NATIVE_WCHAR_T_DEFINED */
+
+template<>
+	struct _Is_integral<unsigned short>
+		: true_type
+	{	// determine whether _Ty is integral
+	};
+
+template<>
+	struct _Is_integral<signed short>
+		: true_type
+	{	// determine whether _Ty is integral
+	};
+
+template<>
+	struct _Is_integral<unsigned int>
+		: true_type
+	{	// determine whether _Ty is integral
+	};
+
+template<>
+	struct _Is_integral<signed int>
+		: true_type
+	{	// determine whether _Ty is integral
+	};
+
+template<>
+	struct _Is_integral<unsigned long>
+		: true_type
+	{	// determine whether _Ty is integral
+	};
+
+template<>
+	struct _Is_integral<signed long>
+		: true_type
+	{	// determine whether _Ty is integral
+	};
+
+template<>
+	struct _Is_integral<char16_t>
+		: true_type
+	{	// determine whether _Ty is integral
+	};
+
+template<>
+	struct _Is_integral<char32_t>
+		: true_type
+	{	// determine whether _Ty is integral
+	};
+
+template<>
+	struct _Is_integral<__int64>
+		: true_type
+	{	// determine whether _Ty is integral
+	};
+
+template<>
+	struct _Is_integral<unsigned __int64>
+		: true_type
+	{	// determine whether _Ty is integral
+	};
+
+	// TEMPLATE CLASS is_integral
+template<class _Ty>
+	struct is_integral
+		: _Is_integral<typename remove_cv<_Ty>::type>
+	{	// determine whether _Ty is integral
+	};
+
+	// TEMPLATE CLASS _Is_floating_point
+template<class _Ty>
+	struct _Is_floating_point
+		: false_type
+	{	// determine whether _Ty is floating point
+	};
+
+template<>
+	struct _Is_floating_point<float>
+		: true_type
+	{	// determine whether _Ty is floating point
+	};
+
+template<>
+	struct _Is_floating_point<double>
+		: true_type
+	{	// determine whether _Ty is floating point
+	};
+
+template<>
+	struct _Is_floating_point<long double>
+		: true_type
+	{	// determine whether _Ty is floating point
+	};
+
+	// TEMPLATE CLASS is_floating_point
+template<class _Ty>
+	struct is_floating_point
+		: _Is_floating_point<typename remove_cv<_Ty>::type>
+	{	// determine whether _Ty is floating point
+	};
+
+	// TEMPLATE CLASS is_arithmetic
+template<class _Ty>
+	struct is_arithmetic
+		: _Cat_base<is_integral<_Ty>::value
+			|| is_floating_point<_Ty>::value>
+	{	// determine whether _Ty is an arithmetic type
+	};
+
+	// TEMPLATE CLASS remove_reference
+template<class _Ty>
+	struct remove_reference
+	{	// remove reference
+	typedef _Ty type;
+	};
+
+template<class _Ty>
+	struct remove_reference<_Ty&>
+	{	// remove reference
+	typedef _Ty type;
+	};
+
+template<class _Ty>
+	struct remove_reference<_Ty&&>
+	{	// remove rvalue reference
+	typedef _Ty type;
+	};
+
+	// TYPE TESTING MACROS
+struct _Wrap_int
+	{	// wraps int so that int argument is favored over _Wrap_int
+	_Wrap_int(int)
+		{	// do nothing
+		}
+	};
+
+template<class _Ty>
+	struct _Identity
+	{	// map _Ty to type unchanged, without operator()
+	typedef _Ty type;
+	};
+
+#define _GET_TYPE_OR_DEFAULT(TYPE, DEFAULT) \
+	{ \
+	template<class _Uty> \
+		static auto _Fn(int) \
+			-> _Identity<typename _Uty::TYPE>; \
+ \
+	template<class _Uty> \
+		static auto _Fn(_Wrap_int) \
+			-> _Identity<DEFAULT>; \
+ \
+	typedef decltype(_Fn<_Ty>(0)) _Decltype; \
+	typedef typename _Decltype::type type; \
+	}
+_STD_END
+ #pragma pop_macro("new")
+ #pragma warning(pop)
+ #pragma pack(pop, _CRT_PACKING)
+#endif /* RC_INVOKED */
+#endif /* _TR1_COMMON_ */
+
+/*
+ * Copyright (c) by P.J. Plauger. All rights reserved.
+ * Consult your license regarding permissions and restrictions.
+V6.50:0009 */

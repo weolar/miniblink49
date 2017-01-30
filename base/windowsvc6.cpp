@@ -1,7 +1,7 @@
 
 #if USING_VC6RT == 1
 
-#include <windowsvc6.h>
+#include <windows.h>
 
 void __cdecl operator delete(void* p, unsigned int)
 {

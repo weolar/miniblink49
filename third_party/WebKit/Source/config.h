@@ -148,5 +148,4 @@
 
 #if USING_VC6RT == 1
 #include <algorithmvc6.h>
-#include <windowsvc6.h>
 #endif

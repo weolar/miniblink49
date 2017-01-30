@@ -5,12 +5,12 @@
 #ifndef GIN_FUNCTION_TEMPLATE_H_
 #define GIN_FUNCTION_TEMPLATE_H_
 
-#include "base/callback.h"
+#include "cef/include/base/cef_callback.h"
 #include "base/logging.h"
 #include "gin/arguments.h"
 #include "gin/converter.h"
 #include "gin/gin_export.h"
-#include "v8/include/v8.h"
+#include "v8.h"
 
 namespace gin {
 

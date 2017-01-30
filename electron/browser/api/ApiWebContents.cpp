@@ -4,8 +4,8 @@
 #include <node_object_wrap.h>
 #include "wke.h"
 #include "common/ThreadCall.h"
+#include "common/NodeRegisterHelp.h"
 #include "gin/dictionary.h"
-#include "NodeRegisterHelp.h"
 
 using namespace v8;
 using namespace node;
@@ -605,7 +605,7 @@ Persistent<Function> WebContents::constructor;
 
 static void initializeWebContentApi(Local<Object> target,
     v8::Local<Value> unused,
-    v8::Local<Context> context) {
+    v8::Local<Context> context, const NodeNative* native) {
     Environment* env = Environment::GetCurrent(context);
     WebContents::init(target, env);
 }

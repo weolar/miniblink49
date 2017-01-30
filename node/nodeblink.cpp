@@ -26,7 +26,7 @@ static void workerRun(NodeArgc* nodeArgc) {
         goto async_init_failed;
     //uv_unref(reinterpret_cast<uv_handle_t*>(&nodeArgc->async)); //zero 不屏蔽此句导致loop循环退出
     nodeArgc->initType = true;
-    ::PulseEvent(nodeArgc->initEvent);
+    ::SetEvent(nodeArgc->initEvent);
 
     {
         v8::Isolate::CreateParams params;
@@ -47,7 +47,7 @@ static void workerRun(NodeArgc* nodeArgc) {
             if (nodeArgc->initcall)
                 nodeArgc->initcall(nodeArgc);
             CHECK_EQ(nodeArgc->childLoop, nodeArgc->childEnv->event_loop());
-            uv_run(nodeArgc->childLoop, UV_RUN_DEFAULT);
+            //uv_run(nodeArgc->childLoop, UV_RUN_DEFAULT); // 由nodeArgc->initcall里负责消息循环
         }
         // Clean-up all running handles
         nodeArgc->childEnv->CleanupHandles();
@@ -90,7 +90,7 @@ extern "C" NODE_EXTERN NodeArgc* runNodeThread(int argc, wchar_t *wargv[], NodeI
     nodeArgc->argv[argc] = nullptr;
     nodeArgc->argc = argc;
 
-    nodeArgc->initEvent = ::CreateEvent(NULL, FALSE, FALSE, NULL);//创建一个对象,用来等待node环境基础环境创建成功
+    nodeArgc->initEvent = ::CreateEvent(NULL, FALSE, FALSE, NULL); // 创建一个对象,用来等待node环境基础环境创建成功
     int err = uv_thread_create(&nodeArgc->thread, reinterpret_cast<uv_thread_cb>(workerRun), nodeArgc);
     if (err != 0)
         goto thread_create_failed;

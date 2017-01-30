@@ -4,7 +4,7 @@
 
 #include "gin/converter.h"
 
-#include "v8/include/v8.h"
+#include "v8.h"
 
 using v8::ArrayBuffer;
 using v8::Boolean;
