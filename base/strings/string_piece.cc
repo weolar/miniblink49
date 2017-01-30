@@ -438,11 +438,11 @@ StringPiece16 substr(const StringPiece16& self,
 #if DCHECK_IS_ON()
 void AssertIteratorsInOrder(std::string::const_iterator begin,
                             std::string::const_iterator end) {
-  DCHECK(begin <= end) << "StringPiece iterators swapped or invalid.";
+  DCHECK(begin <= end); // << "StringPiece iterators swapped or invalid.";
 }
 void AssertIteratorsInOrder(string16::const_iterator begin,
                             string16::const_iterator end) {
-  DCHECK(begin <= end) << "StringPiece iterators swapped or invalid.";
+  DCHECK(begin <= end); // << "StringPiece iterators swapped or invalid.";
 }
 #endif
 
