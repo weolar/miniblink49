@@ -5427,6 +5427,7 @@ bool v8::V8::InitializeICU(const char* icu_data_file) {
     return i::InitializeICU(icu_data_file);
 #endif // IMPLEMENTED_NEWEST_BLINK
     DebugBreak();
+    return false;
 }
 
 
