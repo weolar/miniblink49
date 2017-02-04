@@ -1,5 +1,7 @@
 ﻿#include "include/nodeblink.h"
 
+#include "gin/v8_initializer.h"
+#include "libplatform/libplatform.h"
 #include <string.h>
 #include <Windows.h>
 #include <process.h>
@@ -24,11 +26,19 @@ static void workerRun(NodeArgc* nodeArgc) {
     err = uv_async_init(nodeArgc->childLoop, &nodeArgc->async, childSignalCallback);
     if (err != 0)
         goto async_init_failed;
+
     //uv_unref(reinterpret_cast<uv_handle_t*>(&nodeArgc->async)); //zero 不屏蔽此句导致loop循环退出
     nodeArgc->initType = true;
     ::SetEvent(nodeArgc->initEvent);
 
     {
+        nodeArgc->v8platform = v8::platform::CreateDefaultPlatform(4);
+        gin::V8Initializer::SetV8Platform(nodeArgc->v8platform);
+        //v8::V8::InitializePlatform(nodeArgc->v8platform);
+
+        if (nodeArgc->preInitcall)
+            nodeArgc->preInitcall(nodeArgc);
+
         v8::Isolate::CreateParams params;
         node::ArrayBufferAllocator array_buffer_allocator;
         params.array_buffer_allocator = &array_buffer_allocator;
@@ -56,6 +66,9 @@ static void workerRun(NodeArgc* nodeArgc) {
         nodeArgc->childEnv = nullptr;
 
         isolate->Dispose();
+
+        delete nodeArgc->v8platform;
+        nodeArgc->v8platform = nullptr;
     }
     return;
 
@@ -65,13 +78,14 @@ async_init_failed:
 loop_init_failed:
     free(nodeArgc);
     nodeArgc->initType = false;
-    ::PulseEvent(nodeArgc->initEvent);
+    ::SetEvent(nodeArgc->initEvent);
 }
 
-extern "C" NODE_EXTERN NodeArgc* runNodeThread(int argc, wchar_t *wargv[], NodeInitCallBack initcall, void *data) {
+extern "C" NODE_EXTERN NodeArgc* runNodeThread(int argc, const wchar_t *wargv[], NodeInitCallBack initcall, NodeInitCallBack preInitcall, void *data) {
     NodeArgc* nodeArgc = (NodeArgc *)malloc(sizeof(NodeArgc));
     memset(nodeArgc, 0, sizeof(NodeArgc));
     nodeArgc->initcall = initcall;
+    nodeArgc->preInitcall = preInitcall;
     nodeArgc->data = data;
     nodeArgc->childLoop = (uv_loop_t *)malloc(sizeof(uv_loop_t));
     nodeArgc->argv = new char*[argc + 1];
