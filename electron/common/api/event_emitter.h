@@ -86,8 +86,6 @@ class EventEmitter : public gin::Wrappable<T> {
   }
 
   DISALLOW_COPY_AND_ASSIGN(EventEmitter);
-
-  v8::Isolate* m_isolate;
 };
 
 }  // namespace mate

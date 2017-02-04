@@ -1,20 +1,27 @@
 'use strict';
 
-const {Buffer} = require('buffer');
+//process.binding('atom_browser_app');
+process.binding('atom_browser_electron');
+
+require('./common/electron');
+
 const fs = require('fs');
 const path = require('path');
 const util = require('util');
 const Module = require('module');
 const v8 = require('v8');
-const {app} = require('electron');
-	
+const app = require('electron').app;
+console.log('init.js: ' + app);
+
 // Import common settings.
 require('./browser/init');
 
-var BrowserWindow = require("./browser/browser-window");
+var BrowserWindow = require("electron").BrowserWindow;
+
 var win = new BrowserWindow({x:200, y:300, width: 800, height: 700, title:"test"});
 
-let packagePath = null;
+let packagePath = __dirname + '/../default_app/';
+console.log('packagePath: ' + packagePath);
 let packageJson = null;
 /*const searchPaths = ['', process.resourcesPath];
 for (packagePath of searchPaths) {
@@ -26,7 +33,7 @@ for (packagePath of searchPaths) {
     continue
   }
 }*/
-packageJson = require('./package.json');
+packageJson = require(packagePath + 'package.json');
 
 if (packageJson == null) {
 	process.nextTick(function () {
@@ -56,14 +63,17 @@ if (packageJson.desktopName != null) {
 
 // Set v8 flags
 if (packageJson.v8Flags != null) {
-	v8.setFlagsFromString(packageJson.v8Flags)
+	v8.setFlagsFromString(packageJson.v8Flags);
 }
 
 // Set main startup script of the app.
-const mainStartupScript = packageJson.main || 'index.js'
+const mainStartupScript = packageJson.main || 'index.js';
+
+console.log('packagePath: ' + packagePath);
+console.log('mainStartupScript: ' + mainStartupScript);
 
 // Finally load app's main.js and transfer control to C++.
-Module._load(path.join(packagePath, mainStartupScript), Module, true)
+Module._load(path.join(packagePath, mainStartupScript), Module, true);
 
 // test
 win.on('resize', function (e) {
