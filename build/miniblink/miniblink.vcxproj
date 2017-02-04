@@ -170,7 +170,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <AdditionalIncludeDirectories>../../;../../v8_5_7/;../../v8_5_7/include;../../third_party/;../../third_party/npapi;../../third_party/WebKit;../../third_party/WebKit/Source;../../cef;../../third_party/icu/source/common;../../gen/blink;../../gen/blink/core;../../gen/blink/bindings/modules/v8;../../gen/blink/bindings/core/v8;../../gpu;../../third_party/khronos;../../third_party/libxml/src/include;../../third_party/libxml/win32/include;../../third_party/skia/include/core;../../third_party/skia/include/config;../../third_party/skia/include/codec;../../third_party/skia/include/device;../../third_party/skia/include/effects;../../third_party/skia/include/images;../../third_party/skia/include/pathops;../../third_party/skia/include/ports;../../third_party/skia/include/private;../../third_party/skia/include/utils;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../;../../v8_4_8/;../../v8_4_8/include;../../third_party/;../../third_party/npapi;../../third_party/WebKit;../../third_party/WebKit/Source;../../cef;../../third_party/icu/source/common;../../gen/blink;../../gen/blink/core;../../gen/blink/bindings/modules/v8;../../gen/blink/bindings/core/v8;../../gpu;../../third_party/khronos;../../third_party/libxml/src/include;../../third_party/libxml/win32/include;../../third_party/skia/include/core;../../third_party/skia/include/config;../../third_party/skia/include/codec;../../third_party/skia/include/device;../../third_party/skia/include/effects;../../third_party/skia/include/images;../../third_party/skia/include/pathops;../../third_party/skia/include/ports;../../third_party/skia/include/private;../../third_party/skia/include/utils;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4800;4291;4996;4244;4305;4577;4091;</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PrecompiledHeaderFile>config.h</PrecompiledHeaderFile>
@@ -182,7 +182,7 @@
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
       <AdditionalLibraryDirectories>$(SolutionDir)..\out\$(Configuration)\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>InjectTool.lib;version.lib;ots.lib;Crypt32.lib;Wldap32.lib;Imm32.lib;libxml.lib;zlib.lib;libcurl.lib;v8_5_7.lib;v8_5_7_1.lib;skia.lib;winmm.lib;Ws2_32.lib;Usp10.lib;Shlwapi.lib;wininet.lib;GDIPlus.lib;DbgHelp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>InjectTool.lib;version.lib;ots.lib;Crypt32.lib;Wldap32.lib;Imm32.lib;libxml.lib;zlib.lib;libcurl.lib;v8_4_8.lib;skia.lib;winmm.lib;Ws2_32.lib;Usp10.lib;Shlwapi.lib;wininet.lib;GDIPlus.lib;DbgHelp.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
       <ImportLibrary>$(OutDir)miniblink.lib</ImportLibrary>
       <IgnoreSpecificDefaultLibraries>LIBCMT.lib</IgnoreSpecificDefaultLibraries>
@@ -1284,7 +1284,7 @@
     <ClCompile Include="..\..\net\websocket\WebSocketOneFrame.cpp" />
     <ClCompile Include="..\..\net\WebURLLoaderManager.cpp" />
     <ClCompile Include="..\..\node\cares\src\ares_cancel.c">
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
@@ -1298,7 +1298,7 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">CARES_BUILDING_LIBRARY=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClCompile Include="..\..\node\cares\src\ares_create_query.c">
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
@@ -1312,7 +1312,7 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">CARES_BUILDING_LIBRARY=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClCompile Include="..\..\node\cares\src\ares_data.c">
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
@@ -1326,7 +1326,7 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">CARES_BUILDING_LIBRARY=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClCompile Include="..\..\node\cares\src\ares_destroy.c">
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
@@ -1340,7 +1340,7 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">CARES_BUILDING_LIBRARY=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClCompile Include="..\..\node\cares\src\ares_expand_name.c">
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
@@ -1354,7 +1354,7 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">CARES_BUILDING_LIBRARY=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClCompile Include="..\..\node\cares\src\ares_expand_string.c">
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
@@ -1368,7 +1368,7 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">CARES_BUILDING_LIBRARY=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClCompile Include="..\..\node\cares\src\ares_fds.c">
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
@@ -1382,7 +1382,7 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">CARES_BUILDING_LIBRARY=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClCompile Include="..\..\node\cares\src\ares_free_hostent.c">
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
@@ -1396,7 +1396,7 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">CARES_BUILDING_LIBRARY=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClCompile Include="..\..\node\cares\src\ares_free_string.c">
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
@@ -1410,7 +1410,7 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">CARES_BUILDING_LIBRARY=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClCompile Include="..\..\node\cares\src\ares_getenv.c">
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
@@ -1424,7 +1424,7 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">CARES_BUILDING_LIBRARY=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClCompile Include="..\..\node\cares\src\ares_gethostbyaddr.c">
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
@@ -1438,7 +1438,7 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">CARES_BUILDING_LIBRARY=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClCompile Include="..\..\node\cares\src\ares_gethostbyname.c">
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
@@ -1452,7 +1452,7 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">CARES_BUILDING_LIBRARY=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClCompile Include="..\..\node\cares\src\ares_getnameinfo.c">
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
@@ -1466,7 +1466,7 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">CARES_BUILDING_LIBRARY=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClCompile Include="..\..\node\cares\src\ares_getopt.c">
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
@@ -1480,7 +1480,7 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">CARES_BUILDING_LIBRARY=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClCompile Include="..\..\node\cares\src\ares_getsock.c">
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
@@ -1494,7 +1494,7 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">CARES_BUILDING_LIBRARY=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClCompile Include="..\..\node\cares\src\ares_init.c">
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
@@ -1508,7 +1508,7 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">CARES_BUILDING_LIBRARY=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClCompile Include="..\..\node\cares\src\ares_library_init.c">
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
@@ -1522,7 +1522,7 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">CARES_BUILDING_LIBRARY=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClCompile Include="..\..\node\cares\src\ares_llist.c">
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
@@ -1536,7 +1536,7 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">CARES_BUILDING_LIBRARY=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClCompile Include="..\..\node\cares\src\ares_mkquery.c">
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
@@ -1550,7 +1550,7 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">CARES_BUILDING_LIBRARY=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClCompile Include="..\..\node\cares\src\ares_nowarn.c">
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
@@ -1564,7 +1564,7 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">CARES_BUILDING_LIBRARY=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClCompile Include="..\..\node\cares\src\ares_options.c">
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
@@ -1578,7 +1578,7 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">CARES_BUILDING_LIBRARY=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClCompile Include="..\..\node\cares\src\ares_parse_aaaa_reply.c">
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
@@ -1592,7 +1592,7 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">CARES_BUILDING_LIBRARY=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClCompile Include="..\..\node\cares\src\ares_parse_a_reply.c">
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
@@ -1606,7 +1606,7 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">CARES_BUILDING_LIBRARY=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClCompile Include="..\..\node\cares\src\ares_parse_mx_reply.c">
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
@@ -1620,7 +1620,7 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">CARES_BUILDING_LIBRARY=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClCompile Include="..\..\node\cares\src\ares_parse_naptr_reply.c">
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
@@ -1634,7 +1634,7 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">CARES_BUILDING_LIBRARY=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClCompile Include="..\..\node\cares\src\ares_parse_ns_reply.c">
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
@@ -1648,7 +1648,7 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">CARES_BUILDING_LIBRARY=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClCompile Include="..\..\node\cares\src\ares_parse_ptr_reply.c">
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
@@ -1662,7 +1662,7 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">CARES_BUILDING_LIBRARY=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClCompile Include="..\..\node\cares\src\ares_parse_soa_reply.c">
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
@@ -1676,7 +1676,7 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">CARES_BUILDING_LIBRARY=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClCompile Include="..\..\node\cares\src\ares_parse_srv_reply.c">
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
@@ -1690,7 +1690,7 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">CARES_BUILDING_LIBRARY=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClCompile Include="..\..\node\cares\src\ares_parse_txt_reply.c">
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
@@ -1704,7 +1704,7 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">CARES_BUILDING_LIBRARY=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClCompile Include="..\..\node\cares\src\ares_platform.c">
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
@@ -1718,7 +1718,7 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">CARES_BUILDING_LIBRARY=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClCompile Include="..\..\node\cares\src\ares_process.c">
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
@@ -1732,7 +1732,7 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">CARES_BUILDING_LIBRARY=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClCompile Include="..\..\node\cares\src\ares_query.c">
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
@@ -1746,7 +1746,7 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">CARES_BUILDING_LIBRARY=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClCompile Include="..\..\node\cares\src\ares_search.c">
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
@@ -1760,7 +1760,7 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">CARES_BUILDING_LIBRARY=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClCompile Include="..\..\node\cares\src\ares_send.c">
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
@@ -1774,7 +1774,7 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">CARES_BUILDING_LIBRARY=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClCompile Include="..\..\node\cares\src\ares_strcasecmp.c">
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
@@ -1788,7 +1788,7 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">CARES_BUILDING_LIBRARY=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClCompile Include="..\..\node\cares\src\ares_strdup.c">
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
@@ -1802,7 +1802,7 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">CARES_BUILDING_LIBRARY=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClCompile Include="..\..\node\cares\src\ares_strerror.c">
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
@@ -1816,7 +1816,7 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">CARES_BUILDING_LIBRARY=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClCompile Include="..\..\node\cares\src\ares_timeout.c">
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
@@ -1830,7 +1830,7 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">CARES_BUILDING_LIBRARY=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClCompile Include="..\..\node\cares\src\ares_version.c">
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
@@ -1844,7 +1844,7 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">CARES_BUILDING_LIBRARY=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClCompile Include="..\..\node\cares\src\ares_writev.c">
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
@@ -1858,7 +1858,7 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">CARES_BUILDING_LIBRARY=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClCompile Include="..\..\node\cares\src\ares__close_sockets.c">
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
@@ -1872,7 +1872,7 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">CARES_BUILDING_LIBRARY=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClCompile Include="..\..\node\cares\src\ares__get_hostent.c">
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
@@ -1886,7 +1886,7 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">CARES_BUILDING_LIBRARY=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClCompile Include="..\..\node\cares\src\ares__read_line.c">
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
@@ -1900,7 +1900,7 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">CARES_BUILDING_LIBRARY=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClCompile Include="..\..\node\cares\src\ares__timeval.c">
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
@@ -1914,7 +1914,7 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">CARES_BUILDING_LIBRARY=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClCompile Include="..\..\node\cares\src\bitncmp.c">
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
@@ -1928,7 +1928,7 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">CARES_BUILDING_LIBRARY=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClCompile Include="..\..\node\cares\src\inet_net_pton.c">
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
@@ -1942,7 +1942,7 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">CARES_BUILDING_LIBRARY=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClCompile Include="..\..\node\cares\src\inet_ntop.c">
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
@@ -1956,7 +1956,7 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">CARES_BUILDING_LIBRARY=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClCompile Include="..\..\node\cares\src\windows_port.c">
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
@@ -1981,14 +1981,14 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">../../third_party/zlib;../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">true</ExcludedFromBuild>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../v8_5_7/;../../v8_5_7/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PreprocessorDefinitions>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\..\node\src\async-wrap.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeaderFile>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;BUILDING_V8_SHARED=1;BUILDING_UV_SHARED=1;CARES_STATICLIB;NODE_ARCH="ia32";NODE_PLATFORM="win32";NODE_WANT_INTERNALS=1;HAVE_OPENSSL=1;HAVE_ETW=1;HAVE_PERFCTR=1;V8_INSPECTOR_USE_STL=1;NODE_USE_V8_PLATFORM=0</PreprocessorDefinitions>
@@ -2005,7 +2005,7 @@
     </ClCompile>
     <ClCompile Include="..\..\node\src\backtrace_win32.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeaderFile>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;BUILDING_V8_SHARED=1;BUILDING_UV_SHARED=1;CARES_STATICLIB;NODE_ARCH="ia32";NODE_PLATFORM="win32";NODE_WANT_INTERNALS=1;HAVE_OPENSSL=1;HAVE_ETW=1;HAVE_PERFCTR=1;V8_INSPECTOR_USE_STL=1;NODE_USE_V8_PLATFORM=0</PreprocessorDefinitions>
@@ -2022,7 +2022,7 @@
     </ClCompile>
     <ClCompile Include="..\..\node\src\cares_wrap.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeaderFile>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;BUILDING_V8_SHARED=1;BUILDING_UV_SHARED=1;CARES_STATICLIB;NODE_ARCH="ia32";NODE_PLATFORM="win32";NODE_WANT_INTERNALS=1;HAVE_OPENSSL=1;HAVE_ETW=1;HAVE_PERFCTR=1;V8_INSPECTOR_USE_STL=1;NODE_USE_V8_PLATFORM=0</PreprocessorDefinitions>
@@ -2039,7 +2039,7 @@
     </ClCompile>
     <ClCompile Include="..\..\node\src\connection_wrap.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeaderFile>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;BUILDING_V8_SHARED=1;BUILDING_UV_SHARED=1;CARES_STATICLIB;NODE_ARCH="ia32";NODE_PLATFORM="win32";NODE_WANT_INTERNALS=1;HAVE_OPENSSL=1;HAVE_ETW=1;HAVE_PERFCTR=1;V8_INSPECTOR_USE_STL=1;NODE_USE_V8_PLATFORM=0</PreprocessorDefinitions>
@@ -2056,7 +2056,7 @@
     </ClCompile>
     <ClCompile Include="..\..\node\src\connect_wrap.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeaderFile>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;BUILDING_V8_SHARED=1;BUILDING_UV_SHARED=1;CARES_STATICLIB;NODE_ARCH="ia32";NODE_PLATFORM="win32";NODE_WANT_INTERNALS=1;HAVE_OPENSSL=1;HAVE_ETW=1;HAVE_PERFCTR=1;V8_INSPECTOR_USE_STL=1;NODE_USE_V8_PLATFORM=0</PreprocessorDefinitions>
@@ -2073,7 +2073,7 @@
     </ClCompile>
     <ClCompile Include="..\..\node\src\debug-agent.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeaderFile>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;BUILDING_V8_SHARED=1;BUILDING_UV_SHARED=1;CARES_STATICLIB;NODE_ARCH="ia32";NODE_PLATFORM="win32";NODE_WANT_INTERNALS=1;HAVE_OPENSSL=1;HAVE_ETW=1;HAVE_PERFCTR=1;V8_INSPECTOR_USE_STL=1;NODE_USE_V8_PLATFORM=0</PreprocessorDefinitions>
@@ -2090,7 +2090,7 @@
     </ClCompile>
     <ClCompile Include="..\..\node\src\env.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeaderFile>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;BUILDING_V8_SHARED=1;BUILDING_UV_SHARED=1;CARES_STATICLIB;NODE_ARCH="ia32";NODE_PLATFORM="win32";NODE_WANT_INTERNALS=1;HAVE_OPENSSL=1;HAVE_ETW=1;HAVE_PERFCTR=1;V8_INSPECTOR_USE_STL=1;NODE_USE_V8_PLATFORM=0</PreprocessorDefinitions>
@@ -2107,7 +2107,7 @@
     </ClCompile>
     <ClCompile Include="..\..\node\src\fs_event_wrap.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeaderFile>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;BUILDING_V8_SHARED=1;BUILDING_UV_SHARED=1;CARES_STATICLIB;NODE_ARCH="ia32";NODE_PLATFORM="win32";NODE_WANT_INTERNALS=1;HAVE_OPENSSL=1;HAVE_ETW=1;HAVE_PERFCTR=1;V8_INSPECTOR_USE_STL=1;NODE_USE_V8_PLATFORM=0</PreprocessorDefinitions>
@@ -2124,7 +2124,7 @@
     </ClCompile>
     <ClCompile Include="..\..\node\src\handle_wrap.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeaderFile>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;BUILDING_V8_SHARED=1;BUILDING_UV_SHARED=1;CARES_STATICLIB;NODE_ARCH="ia32";NODE_PLATFORM="win32";NODE_WANT_INTERNALS=1;HAVE_OPENSSL=1;HAVE_ETW=1;HAVE_PERFCTR=1;V8_INSPECTOR_USE_STL=1;NODE_USE_V8_PLATFORM=0</PreprocessorDefinitions>
@@ -2141,7 +2141,7 @@
     </ClCompile>
     <ClCompile Include="..\..\node\src\http_parser.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeaderFile>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;BUILDING_V8_SHARED=1;BUILDING_UV_SHARED=1;CARES_STATICLIB;NODE_ARCH="ia32";NODE_PLATFORM="win32";NODE_WANT_INTERNALS=1;HAVE_OPENSSL=1;HAVE_ETW=1;HAVE_PERFCTR=1;V8_INSPECTOR_USE_STL=1;NODE_USE_V8_PLATFORM=0</PreprocessorDefinitions>
@@ -2159,7 +2159,7 @@
     </ClCompile>
     <ClCompile Include="..\..\node\src\js_stream.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeaderFile>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;BUILDING_V8_SHARED=1;BUILDING_UV_SHARED=1;CARES_STATICLIB;NODE_ARCH="ia32";NODE_PLATFORM="win32";NODE_WANT_INTERNALS=1;HAVE_OPENSSL=1;HAVE_ETW=1;HAVE_PERFCTR=1;V8_INSPECTOR_USE_STL=1;NODE_USE_V8_PLATFORM=0</PreprocessorDefinitions>
@@ -2176,7 +2176,7 @@
     </ClCompile>
     <ClCompile Include="..\..\node\src\node1.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeaderFile>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;BUILDING_V8_SHARED=1;BUILDING_UV_SHARED=1;CARES_STATICLIB;NODE_ARCH="ia32";NODE_PLATFORM="win32";NODE_WANT_INTERNALS=1;HAVE_OPENSSL=1;HAVE_ETW=1;HAVE_PERFCTR=1;V8_INSPECTOR_USE_STL=1;NODE_USE_V8_PLATFORM=0</PreprocessorDefinitions>
@@ -2193,7 +2193,7 @@
     </ClCompile>
     <ClCompile Include="..\..\node\src\node_buffer.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeaderFile>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;BUILDING_V8_SHARED=1;BUILDING_UV_SHARED=1;CARES_STATICLIB;NODE_ARCH="ia32";NODE_PLATFORM="win32";NODE_WANT_INTERNALS=1;HAVE_OPENSSL=1;HAVE_ETW=1;HAVE_PERFCTR=1;V8_INSPECTOR_USE_STL=1;NODE_USE_V8_PLATFORM=0</PreprocessorDefinitions>
@@ -2210,7 +2210,7 @@
     </ClCompile>
     <ClCompile Include="..\..\node\src\node_config.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeaderFile>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;BUILDING_V8_SHARED=1;BUILDING_UV_SHARED=1;CARES_STATICLIB;NODE_ARCH="ia32";NODE_PLATFORM="win32";NODE_WANT_INTERNALS=1;HAVE_OPENSSL=1;HAVE_ETW=1;HAVE_PERFCTR=1;V8_INSPECTOR_USE_STL=1;NODE_USE_V8_PLATFORM=0</PreprocessorDefinitions>
@@ -2227,7 +2227,7 @@
     </ClCompile>
     <ClCompile Include="..\..\node\src\node_constants.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeaderFile>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;BUILDING_V8_SHARED=1;BUILDING_UV_SHARED=1;CARES_STATICLIB;NODE_ARCH="ia32";NODE_PLATFORM="win32";NODE_WANT_INTERNALS=1;HAVE_OPENSSL=1;HAVE_ETW=1;HAVE_PERFCTR=1;V8_INSPECTOR_USE_STL=1;NODE_USE_V8_PLATFORM=0</PreprocessorDefinitions>
@@ -2244,7 +2244,7 @@
     </ClCompile>
     <ClCompile Include="..\..\node\src\node_contextify.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeaderFile>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;BUILDING_V8_SHARED=1;BUILDING_UV_SHARED=1;CARES_STATICLIB;NODE_ARCH="ia32";NODE_PLATFORM="win32";NODE_WANT_INTERNALS=1;HAVE_OPENSSL=1;HAVE_ETW=1;HAVE_PERFCTR=1;V8_INSPECTOR_USE_STL=1;NODE_USE_V8_PLATFORM=0</PreprocessorDefinitions>
@@ -2261,7 +2261,7 @@
     </ClCompile>
     <ClCompile Include="..\..\node\src\node_counters.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeaderFile>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;BUILDING_V8_SHARED=1;BUILDING_UV_SHARED=1;CARES_STATICLIB;NODE_ARCH="ia32";NODE_PLATFORM="win32";NODE_WANT_INTERNALS=1;HAVE_OPENSSL=1;HAVE_ETW=1;HAVE_PERFCTR=1;V8_INSPECTOR_USE_STL=1;NODE_USE_V8_PLATFORM=0</PreprocessorDefinitions>
@@ -2278,7 +2278,7 @@
     </ClCompile>
     <ClCompile Include="..\..\node\src\node_crypto.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeaderFile>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;BUILDING_V8_SHARED=1;BUILDING_UV_SHARED=1;CARES_STATICLIB;NODE_ARCH="ia32";NODE_PLATFORM="win32";NODE_WANT_INTERNALS=1;HAVE_OPENSSL=1;HAVE_ETW=1;HAVE_PERFCTR=1;V8_INSPECTOR_USE_STL=1;NODE_USE_V8_PLATFORM=0</PreprocessorDefinitions>
@@ -2295,7 +2295,7 @@
     </ClCompile>
     <ClCompile Include="..\..\node\src\node_crypto_bio.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeaderFile>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;BUILDING_V8_SHARED=1;BUILDING_UV_SHARED=1;CARES_STATICLIB;NODE_ARCH="ia32";NODE_PLATFORM="win32";NODE_WANT_INTERNALS=1;HAVE_OPENSSL=1;HAVE_ETW=1;HAVE_PERFCTR=1;V8_INSPECTOR_USE_STL=1;NODE_USE_V8_PLATFORM=0</PreprocessorDefinitions>
@@ -2312,7 +2312,7 @@
     </ClCompile>
     <ClCompile Include="..\..\node\src\node_crypto_clienthello.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeaderFile>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;BUILDING_V8_SHARED=1;BUILDING_UV_SHARED=1;CARES_STATICLIB;NODE_ARCH="ia32";NODE_PLATFORM="win32";NODE_WANT_INTERNALS=1;HAVE_OPENSSL=1;HAVE_ETW=1;HAVE_PERFCTR=1;V8_INSPECTOR_USE_STL=1;NODE_USE_V8_PLATFORM=0</PreprocessorDefinitions>
@@ -2329,7 +2329,7 @@
     </ClCompile>
     <ClCompile Include="..\..\node\src\node_dtrace.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeaderFile>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;BUILDING_V8_SHARED=1;BUILDING_UV_SHARED=1;CARES_STATICLIB;NODE_ARCH="ia32";NODE_PLATFORM="win32";NODE_WANT_INTERNALS=1;HAVE_OPENSSL=1;HAVE_ETW=1;HAVE_PERFCTR=1;V8_INSPECTOR_USE_STL=1;NODE_USE_V8_PLATFORM=0</PreprocessorDefinitions>
@@ -2346,7 +2346,7 @@
     </ClCompile>
     <ClCompile Include="..\..\node\src\node_file.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeaderFile>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;BUILDING_V8_SHARED=1;BUILDING_UV_SHARED=1;CARES_STATICLIB;NODE_ARCH="ia32";NODE_PLATFORM="win32";NODE_WANT_INTERNALS=1;HAVE_OPENSSL=1;HAVE_ETW=1;HAVE_PERFCTR=1;V8_INSPECTOR_USE_STL=1;NODE_USE_V8_PLATFORM=0</PreprocessorDefinitions>
@@ -2363,7 +2363,7 @@
     </ClCompile>
     <ClCompile Include="..\..\node\src\node_http_parser.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeaderFile>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;BUILDING_V8_SHARED=1;BUILDING_UV_SHARED=1;CARES_STATICLIB;NODE_ARCH="ia32";NODE_PLATFORM="win32";NODE_WANT_INTERNALS=1;HAVE_OPENSSL=1;HAVE_ETW=1;HAVE_PERFCTR=1;V8_INSPECTOR_USE_STL=1;NODE_USE_V8_PLATFORM=0</PreprocessorDefinitions>
@@ -2380,7 +2380,7 @@
     </ClCompile>
     <ClCompile Include="..\..\node\src\node_javascript.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeaderFile>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;BUILDING_V8_SHARED=1;BUILDING_UV_SHARED=1;CARES_STATICLIB;NODE_ARCH="ia32";NODE_PLATFORM="win32";NODE_WANT_INTERNALS=1;HAVE_OPENSSL=1;HAVE_ETW=1;HAVE_PERFCTR=1;V8_INSPECTOR_USE_STL=1;NODE_USE_V8_PLATFORM=0</PreprocessorDefinitions>
@@ -2397,7 +2397,7 @@
     </ClCompile>
     <ClCompile Include="..\..\node\src\node_os.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeaderFile>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;BUILDING_V8_SHARED=1;BUILDING_UV_SHARED=1;CARES_STATICLIB;NODE_ARCH="ia32";NODE_PLATFORM="win32";NODE_WANT_INTERNALS=1;HAVE_OPENSSL=1;HAVE_ETW=1;HAVE_PERFCTR=1;V8_INSPECTOR_USE_STL=1;NODE_USE_V8_PLATFORM=0</PreprocessorDefinitions>
@@ -2414,7 +2414,7 @@
     </ClCompile>
     <ClCompile Include="..\..\node\src\node_revert.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeaderFile>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;BUILDING_V8_SHARED=1;BUILDING_UV_SHARED=1;CARES_STATICLIB;NODE_ARCH="ia32";NODE_PLATFORM="win32";NODE_WANT_INTERNALS=1;HAVE_OPENSSL=1;HAVE_ETW=1;HAVE_PERFCTR=1;V8_INSPECTOR_USE_STL=1;NODE_USE_V8_PLATFORM=0</PreprocessorDefinitions>
@@ -2431,7 +2431,7 @@
     </ClCompile>
     <ClCompile Include="..\..\node\src\node_stat_watcher.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeaderFile>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;BUILDING_V8_SHARED=1;BUILDING_UV_SHARED=1;CARES_STATICLIB;NODE_ARCH="ia32";NODE_PLATFORM="win32";NODE_WANT_INTERNALS=1;HAVE_OPENSSL=1;HAVE_ETW=1;HAVE_PERFCTR=1;V8_INSPECTOR_USE_STL=1;NODE_USE_V8_PLATFORM=0</PreprocessorDefinitions>
@@ -2448,7 +2448,7 @@
     </ClCompile>
     <ClCompile Include="..\..\node\src\node_util.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeaderFile>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;BUILDING_V8_SHARED=1;BUILDING_UV_SHARED=1;CARES_STATICLIB;NODE_ARCH="ia32";NODE_PLATFORM="win32";NODE_WANT_INTERNALS=1;HAVE_OPENSSL=1;HAVE_ETW=1;HAVE_PERFCTR=1;V8_INSPECTOR_USE_STL=1;NODE_USE_V8_PLATFORM=0</PreprocessorDefinitions>
@@ -2465,7 +2465,7 @@
     </ClCompile>
     <ClCompile Include="..\..\node\src\node_v8.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeaderFile>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;BUILDING_V8_SHARED=1;BUILDING_UV_SHARED=1;CARES_STATICLIB;NODE_ARCH="ia32";NODE_PLATFORM="win32";NODE_WANT_INTERNALS=1;HAVE_OPENSSL=1;HAVE_ETW=1;HAVE_PERFCTR=1;V8_INSPECTOR_USE_STL=1;NODE_USE_V8_PLATFORM=0</PreprocessorDefinitions>
@@ -2482,7 +2482,7 @@
     </ClCompile>
     <ClCompile Include="..\..\node\src\node_watchdog.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeaderFile>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;BUILDING_V8_SHARED=1;BUILDING_UV_SHARED=1;CARES_STATICLIB;NODE_ARCH="ia32";NODE_PLATFORM="win32";NODE_WANT_INTERNALS=1;HAVE_OPENSSL=1;HAVE_ETW=1;HAVE_PERFCTR=1;V8_INSPECTOR_USE_STL=1;NODE_USE_V8_PLATFORM=0</PreprocessorDefinitions>
@@ -2499,7 +2499,7 @@
     </ClCompile>
     <ClCompile Include="..\..\node\src\node_win32_etw_provider.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeaderFile>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;BUILDING_V8_SHARED=1;BUILDING_UV_SHARED=1;CARES_STATICLIB;NODE_ARCH="ia32";NODE_PLATFORM="win32";NODE_WANT_INTERNALS=1;HAVE_OPENSSL=1;HAVE_ETW=1;HAVE_PERFCTR=1;V8_INSPECTOR_USE_STL=1;NODE_USE_V8_PLATFORM=0</PreprocessorDefinitions>
@@ -2516,7 +2516,7 @@
     </ClCompile>
     <ClCompile Include="..\..\node\src\node_win32_perfctr_provider.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeaderFile>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;BUILDING_V8_SHARED=1;BUILDING_UV_SHARED=1;CARES_STATICLIB;NODE_ARCH="ia32";NODE_PLATFORM="win32";NODE_WANT_INTERNALS=1;HAVE_OPENSSL=1;HAVE_ETW=1;HAVE_PERFCTR=1;V8_INSPECTOR_USE_STL=1;NODE_USE_V8_PLATFORM=0</PreprocessorDefinitions>
@@ -2533,7 +2533,7 @@
     </ClCompile>
     <ClCompile Include="..\..\node\src\node_zlib.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeaderFile>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;BUILDING_V8_SHARED=1;BUILDING_UV_SHARED=1;CARES_STATICLIB;NODE_ARCH="ia32";NODE_PLATFORM="win32";NODE_WANT_INTERNALS=1;HAVE_OPENSSL=1;HAVE_ETW=1;HAVE_PERFCTR=1;V8_INSPECTOR_USE_STL=1;NODE_USE_V8_PLATFORM=0</PreprocessorDefinitions>
@@ -2550,7 +2550,7 @@
     </ClCompile>
     <ClCompile Include="..\..\node\src\pipe_wrap.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeaderFile>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;BUILDING_V8_SHARED=1;BUILDING_UV_SHARED=1;CARES_STATICLIB;NODE_ARCH="ia32";NODE_PLATFORM="win32";NODE_WANT_INTERNALS=1;HAVE_OPENSSL=1;HAVE_ETW=1;HAVE_PERFCTR=1;V8_INSPECTOR_USE_STL=1;NODE_USE_V8_PLATFORM=0</PreprocessorDefinitions>
@@ -2567,7 +2567,7 @@
     </ClCompile>
     <ClCompile Include="..\..\node\src\process_wrap.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeaderFile>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;BUILDING_V8_SHARED=1;BUILDING_UV_SHARED=1;CARES_STATICLIB;NODE_ARCH="ia32";NODE_PLATFORM="win32";NODE_WANT_INTERNALS=1;HAVE_OPENSSL=1;HAVE_ETW=1;HAVE_PERFCTR=1;V8_INSPECTOR_USE_STL=1;NODE_USE_V8_PLATFORM=0</PreprocessorDefinitions>
@@ -2584,7 +2584,7 @@
     </ClCompile>
     <ClCompile Include="..\..\node\src\signal_wrap.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeaderFile>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;BUILDING_V8_SHARED=1;BUILDING_UV_SHARED=1;CARES_STATICLIB;NODE_ARCH="ia32";NODE_PLATFORM="win32";NODE_WANT_INTERNALS=1;HAVE_OPENSSL=1;HAVE_ETW=1;HAVE_PERFCTR=1;V8_INSPECTOR_USE_STL=1;NODE_USE_V8_PLATFORM=0</PreprocessorDefinitions>
@@ -2601,7 +2601,7 @@
     </ClCompile>
     <ClCompile Include="..\..\node\src\spawn_sync.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeaderFile>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;BUILDING_V8_SHARED=1;BUILDING_UV_SHARED=1;CARES_STATICLIB;NODE_ARCH="ia32";NODE_PLATFORM="win32";NODE_WANT_INTERNALS=1;HAVE_OPENSSL=1;HAVE_ETW=1;HAVE_PERFCTR=1;V8_INSPECTOR_USE_STL=1;NODE_USE_V8_PLATFORM=0</PreprocessorDefinitions>
@@ -2618,7 +2618,7 @@
     </ClCompile>
     <ClCompile Include="..\..\node\src\stream_base.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeaderFile>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;BUILDING_V8_SHARED=1;BUILDING_UV_SHARED=1;CARES_STATICLIB;NODE_ARCH="ia32";NODE_PLATFORM="win32";NODE_WANT_INTERNALS=1;HAVE_OPENSSL=1;HAVE_ETW=1;HAVE_PERFCTR=1;V8_INSPECTOR_USE_STL=1;NODE_USE_V8_PLATFORM=0</PreprocessorDefinitions>
@@ -2635,7 +2635,7 @@
     </ClCompile>
     <ClCompile Include="..\..\node\src\stream_wrap.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeaderFile>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;BUILDING_V8_SHARED=1;BUILDING_UV_SHARED=1;CARES_STATICLIB;NODE_ARCH="ia32";NODE_PLATFORM="win32";NODE_WANT_INTERNALS=1;HAVE_OPENSSL=1;HAVE_ETW=1;HAVE_PERFCTR=1;V8_INSPECTOR_USE_STL=1;NODE_USE_V8_PLATFORM=0</PreprocessorDefinitions>
@@ -2652,7 +2652,7 @@
     </ClCompile>
     <ClCompile Include="..\..\node\src\string_bytes.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeaderFile>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;BUILDING_V8_SHARED=1;BUILDING_UV_SHARED=1;CARES_STATICLIB;NODE_ARCH="ia32";NODE_PLATFORM="win32";NODE_WANT_INTERNALS=1;HAVE_OPENSSL=1;HAVE_ETW=1;HAVE_PERFCTR=1;V8_INSPECTOR_USE_STL=1;NODE_USE_V8_PLATFORM=0</PreprocessorDefinitions>
@@ -2669,7 +2669,7 @@
     </ClCompile>
     <ClCompile Include="..\..\node\src\string_search.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeaderFile>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;BUILDING_V8_SHARED=1;BUILDING_UV_SHARED=1;CARES_STATICLIB;NODE_ARCH="ia32";NODE_PLATFORM="win32";NODE_WANT_INTERNALS=1;HAVE_OPENSSL=1;HAVE_ETW=1;HAVE_PERFCTR=1;V8_INSPECTOR_USE_STL=1;NODE_USE_V8_PLATFORM=0</PreprocessorDefinitions>
@@ -2686,7 +2686,7 @@
     </ClCompile>
     <ClCompile Include="..\..\node\src\tcp_wrap.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeaderFile>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;BUILDING_V8_SHARED=1;BUILDING_UV_SHARED=1;CARES_STATICLIB;NODE_ARCH="ia32";NODE_PLATFORM="win32";NODE_WANT_INTERNALS=1;HAVE_OPENSSL=1;HAVE_ETW=1;HAVE_PERFCTR=1;V8_INSPECTOR_USE_STL=1;NODE_USE_V8_PLATFORM=0</PreprocessorDefinitions>
@@ -2703,7 +2703,7 @@
     </ClCompile>
     <ClCompile Include="..\..\node\src\timer_wrap.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeaderFile>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;BUILDING_V8_SHARED=1;BUILDING_UV_SHARED=1;CARES_STATICLIB;NODE_ARCH="ia32";NODE_PLATFORM="win32";NODE_WANT_INTERNALS=1;HAVE_OPENSSL=1;HAVE_ETW=1;HAVE_PERFCTR=1;V8_INSPECTOR_USE_STL=1;NODE_USE_V8_PLATFORM=0</PreprocessorDefinitions>
@@ -2720,7 +2720,7 @@
     </ClCompile>
     <ClCompile Include="..\..\node\src\tls_wrap.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeaderFile>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;BUILDING_V8_SHARED=1;BUILDING_UV_SHARED=1;CARES_STATICLIB;NODE_ARCH="ia32";NODE_PLATFORM="win32";NODE_WANT_INTERNALS=1;HAVE_OPENSSL=1;HAVE_ETW=1;HAVE_PERFCTR=1;V8_INSPECTOR_USE_STL=1;NODE_USE_V8_PLATFORM=0</PreprocessorDefinitions>
@@ -2745,14 +2745,14 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;BUILDING_V8_SHARED=1;BUILDING_UV_SHARED=1;CARES_STATICLIB;NODE_ARCH="ia32";NODE_PLATFORM="win32";NODE_WANT_INTERNALS=1;HAVE_OPENSSL=1;HAVE_ETW=1;HAVE_PERFCTR=1;V8_INSPECTOR_USE_STL=1;NODE_USE_V8_PLATFORM=0</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;BUILDING_V8_SHARED=1;BUILDING_UV_SHARED=1;CARES_STATICLIB;NODE_ARCH="ia32";NODE_PLATFORM="win32";NODE_WANT_INTERNALS=1;HAVE_OPENSSL=1;HAVE_ETW=1;HAVE_PERFCTR=1;V8_INSPECTOR_USE_STL=1;NODE_USE_V8_PLATFORM=0</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;BUILDING_V8_SHARED=1;BUILDING_UV_SHARED=1;CARES_STATICLIB;NODE_ARCH="ia32";NODE_PLATFORM="win32";NODE_WANT_INTERNALS=1;HAVE_OPENSSL=1;HAVE_ETW=1;HAVE_PERFCTR=1;V8_INSPECTOR_USE_STL=1;NODE_USE_V8_PLATFORM=0</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">../../third_party/zlib;../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">../../third_party/zlib;../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\node\src\udp_wrap.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeaderFile>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;BUILDING_V8_SHARED=1;BUILDING_UV_SHARED=1;CARES_STATICLIB;NODE_ARCH="ia32";NODE_PLATFORM="win32";NODE_WANT_INTERNALS=1;HAVE_OPENSSL=1;HAVE_ETW=1;HAVE_PERFCTR=1;V8_INSPECTOR_USE_STL=1;NODE_USE_V8_PLATFORM=0</PreprocessorDefinitions>
@@ -2769,7 +2769,7 @@
     </ClCompile>
     <ClCompile Include="..\..\node\src\util1.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeaderFile>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;BUILDING_V8_SHARED=1;BUILDING_UV_SHARED=1;CARES_STATICLIB;NODE_ARCH="ia32";NODE_PLATFORM="win32";NODE_WANT_INTERNALS=1;HAVE_OPENSSL=1;HAVE_ETW=1;HAVE_PERFCTR=1;V8_INSPECTOR_USE_STL=1;NODE_USE_V8_PLATFORM=0</PreprocessorDefinitions>
@@ -2786,7 +2786,7 @@
     </ClCompile>
     <ClCompile Include="..\..\node\src\uv.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../v8_5_7/;../../v8_5_7/include;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeaderFile>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;BUILDING_V8_SHARED=1;BUILDING_UV_SHARED=1;CARES_STATICLIB;NODE_ARCH="ia32";NODE_PLATFORM="win32";NODE_WANT_INTERNALS=1;HAVE_OPENSSL=1;HAVE_ETW=1;HAVE_PERFCTR=1;V8_INSPECTOR_USE_STL=1;NODE_USE_V8_PLATFORM=0</PreprocessorDefinitions>
