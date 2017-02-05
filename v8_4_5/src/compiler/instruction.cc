@@ -6,9 +6,6 @@
 #include "src/compiler/graph.h"
 #include "src/compiler/instruction.h"
 #include "src/compiler/schedule.h"
-#if USING_VC6RT == 1
-#include <ostreamvc6.h>
-#endif
 
 namespace v8 {
 namespace internal {

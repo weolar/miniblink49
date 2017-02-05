@@ -6,9 +6,6 @@
 #define V8_COMPILER_OPERATOR_H_
 
 #include <ostream>  // NOLINT(readability/streams)
-#if USING_VC6RT == 1
-#include <ostreamvc6.h>
-#endif
 
 #include "src/base/flags.h"
 #include "src/base/functional.h"

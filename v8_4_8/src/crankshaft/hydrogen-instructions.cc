@@ -2695,7 +2695,7 @@ HConstant::HConstant(Special special)
                  InstanceTypeField::encode(kUnknownInstanceType)),
       int32_value_(0) {
   DCHECK_EQ(kHoleNaN, special);
-  std::memcpy(&double_value_, &kHoleNanInt64, sizeof(double_value_));
+  memcpy(&double_value_, &kHoleNanInt64, sizeof(double_value_));
   Initialize(Representation::Double());
 }
 
