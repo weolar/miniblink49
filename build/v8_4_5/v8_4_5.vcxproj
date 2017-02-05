@@ -134,7 +134,7 @@
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>../../v8_4_5</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <MinimalRebuild>true</MinimalRebuild>
+      <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

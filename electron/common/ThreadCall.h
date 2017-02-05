@@ -23,7 +23,7 @@ private:
     
 public:
     static void init(uv_loop_t* loop);
-    static void createBlinkThread(); // Blink线程要先创建，才能调用init
+    static void createBlinkThread(v8::Platform* v8platform); // Blink线程要先创建，才能调用init
 
     static void callBlinkThreadAsync(std::function<void(void)>&& closure);
     static void callBlinkThreadSync(std::function<void(void)>&& closure);
@@ -32,7 +32,7 @@ public:
 
     static void shutdown();
 
-    static void messageLoop(uv_loop_t* loop);
+    static void messageLoop(uv_loop_t* loop, v8::Platform* platform, v8::Isolate* isolate);
 
 private:
     static void callThreadAsync(std::function<void(void)> closure);
@@ -54,6 +54,8 @@ private:
     static TaskAsyncData* cretaeAsyncData(uv_loop_t* loop, DWORD toThreadId);
 
     static void blinkThread(void* created);
+
+    static v8::Platform* m_v8platform;
 };
 
 } // atom

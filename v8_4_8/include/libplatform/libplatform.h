@@ -5,6 +5,7 @@
 #ifndef V8_LIBPLATFORM_LIBPLATFORM_H_
 #define V8_LIBPLATFORM_LIBPLATFORM_H_
 
+#include "include/v8.h"
 #include "include/v8-platform.h"
 
 namespace v8 {
@@ -18,7 +19,7 @@ namespace platform {
  * of zero is passed, a suitable default based on the current number of
  * processors online will be chosen.
  */
-v8::Platform* CreateDefaultPlatform(int thread_pool_size = 0);
+V8_EXPORT v8::Platform* CreateDefaultPlatform(int thread_pool_size = 0);
 
 
 /**
@@ -29,7 +30,7 @@ v8::Platform* CreateDefaultPlatform(int thread_pool_size = 0);
  * not block if no task is pending. The |platform| has to be created using
  * |CreateDefaultPlatform|.
  */
-bool PumpMessageLoop(v8::Platform* platform, v8::Isolate* isolate);
+V8_EXPORT bool PumpMessageLoop(v8::Platform* platform, v8::Isolate* isolate);
 
 
 }  // namespace platform

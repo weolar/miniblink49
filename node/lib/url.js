@@ -8,7 +8,7 @@ function importPunycode() {
   }
 }
 
-const { toASCII } = importPunycode();
+const toASCII = importPunycode().toASCII;
 
 exports.parse = urlParse;
 exports.resolve = urlResolve;

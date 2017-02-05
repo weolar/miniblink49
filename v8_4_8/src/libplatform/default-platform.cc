@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 #include "src/libplatform/default-platform.h"
+#include "include/v8.h"
 
 #include <algorithm>
 #include <queue>
@@ -17,7 +18,7 @@ namespace v8 {
 namespace platform {
 
 
-v8::Platform* CreateDefaultPlatform(int thread_pool_size) {
+V8_EXPORT Platform* CreateDefaultPlatform(int thread_pool_size) {
   DefaultPlatform* platform = new DefaultPlatform();
   platform->SetThreadPoolSize(thread_pool_size);
   platform->EnsureInitialized();
@@ -25,7 +26,7 @@ v8::Platform* CreateDefaultPlatform(int thread_pool_size) {
 }
 
 
-bool PumpMessageLoop(v8::Platform* platform, v8::Isolate* isolate) {
+V8_EXPORT bool PumpMessageLoop(v8::Platform* platform, v8::Isolate* isolate) {
   return reinterpret_cast<DefaultPlatform*>(platform)->PumpMessageLoop(isolate);
 }
 

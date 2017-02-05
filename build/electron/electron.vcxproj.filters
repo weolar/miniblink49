@@ -140,6 +140,9 @@
     <ClCompile Include="..\..\electron\common\OptionsSwitches.cpp">
       <Filter>src\common</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\electron\browser\api\ApiElectron.cpp">
+      <Filter>src\browser\api</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\base\thread.h">

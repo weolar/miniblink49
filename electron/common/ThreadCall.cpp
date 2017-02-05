@@ -3,6 +3,7 @@
 
 #include "wke.h"
 #include "base/thread.h"
+#include "libplatform/libplatform.h"
 
 namespace atom {
 
@@ -11,6 +12,8 @@ DWORD ThreadCall::m_uiThreadId;
 
 uv_loop_t* ThreadCall::m_uiLoop;
 uv_loop_t* ThreadCall::m_blinkLoop;
+
+v8::Platform* ThreadCall::m_v8platform = nullptr;
 
 #define WM_THREAD_CALL (WM_USER + 0x5325)
 
@@ -108,14 +111,18 @@ ThreadCall::TaskAsyncData* ThreadCall::cretaeAsyncData(uv_loop_t* loop, DWORD to
     return asyncData;
 }
 
-void ThreadCall::messageLoop(uv_loop_t* loop) {
+void ThreadCall::messageLoop(uv_loop_t* loop, v8::Platform* platform, v8::Isolate* isolate) {
     MSG msg;
     bool more;
+    
     while (true) {
         more = (0 != uv_run(loop, UV_RUN_NOWAIT));
+        if (platform && isolate)
+            v8::platform::PumpMessageLoop(platform, isolate);
         if (::PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
             if (WM_QUIT == msg.message)
                 break;
+            
             if (WM_THREAD_CALL == msg.message) {
                 if (msg.wParam != (WPARAM)callbackInOtherThread)
                     DebugBreak();
@@ -142,7 +149,8 @@ void ThreadCall::blinkThread(void* created) {
     wkeInitialize();
     *(bool*)created = true;
 
-    messageLoop(m_blinkLoop);
+    v8::Isolate* isolate = v8::Isolate::GetCurrent();
+    messageLoop(m_blinkLoop, m_v8platform, isolate);
 
     wkeFinalize();
 
@@ -150,7 +158,8 @@ void ThreadCall::blinkThread(void* created) {
     m_blinkLoop = nullptr;
 }
 
-void ThreadCall::createBlinkThread() {
+void ThreadCall::createBlinkThread(v8::Platform* v8platform) {
+    m_v8platform = v8platform;
     bool created = false;
     uv_thread_t tid;
     uv_thread_create(&tid, reinterpret_cast<uv_thread_cb>(blinkThread), &created);

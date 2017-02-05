@@ -32,6 +32,7 @@ namespace node {
     typedef struct _NodeArgc {
         char** argv;
         int argc;
+        v8::Platform* v8platform;
         uv_loop_t *childLoop;
         uv_async_t async;
         uv_thread_t thread;
@@ -39,10 +40,11 @@ namespace node {
         HANDLE initEvent;//创建环境时使用
         Environment* childEnv;
         NodeInitCallBack initcall;
+        NodeInitCallBack preInitcall;
         void *data;
     } NodeArgc;
 
-    extern "C" NODE_EXTERN NodeArgc* runNodeThread(int argc, wchar_t *wargv[], NodeInitCallBack initcall, void *data);
+    extern "C" NODE_EXTERN NodeArgc* runNodeThread(int argc, const wchar_t *wargv[], NodeInitCallBack initcall, NodeInitCallBack preInitcall, void *data);
     extern "C" NODE_EXTERN Environment* nodeGetEnvironment(NodeArgc*);
 
 } // node

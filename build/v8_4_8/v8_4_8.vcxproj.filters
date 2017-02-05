@@ -85,6 +85,9 @@
     <Filter Include="src\gen">
       <UniqueIdentifier>{413218f9-609c-40bd-822e-c5e2fbf9fca1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\libplatform">
+      <UniqueIdentifier>{63e43a30-50d6-42f6-8ac1-aca837dd463f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\v8_4_8\include\v8.h">
@@ -1299,6 +1302,15 @@
     <ClInclude Include="..\..\v8_4_8\src\full-codegen\full-codegen.h">
       <Filter>src\full-codegen</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\libplatform\worker-thread.h">
+      <Filter>src\libplatform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\libplatform\default-platform.h">
+      <Filter>src\libplatform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\libplatform\task-queue.h">
+      <Filter>src\libplatform</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\v8_4_8\src\base\bits.cc">
@@ -2362,6 +2374,15 @@
     </ClCompile>
     <ClCompile Include="..\..\v8_4_8\src\snapshot\natives-common.cc">
       <Filter>src\snapshot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\libplatform\worker-thread.cc">
+      <Filter>src\libplatform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\libplatform\default-platform.cc">
+      <Filter>src\libplatform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\libplatform\task-queue.cc">
+      <Filter>src\libplatform</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

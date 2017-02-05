@@ -87,8 +87,6 @@ public:
         prototype->SetClassName(String::NewFromUtf8(isolate, "BrowserWindow"));
         gin::ObjectTemplateBuilder builder(isolate, prototype->InstanceTemplate());
         builder.SetMethod("webContents", &Window::getWebContentsApi);
-        
-        // 设置Prototype函数
         builder.SetMethod("close", &Window::closeApi);
         builder.SetMethod("focus", &Window::focusApi);
         builder.SetMethod("blur", &Window::blurApi);
@@ -1161,10 +1159,10 @@ static void initializeWindowApi(Local<Object> target, Local<Value> unused, Local
 #pragma warning(disable:4309)
 #pragma warning(disable:4838)
 static const char BrowserWindowNative[] =
-"const {EventEmitter} = require('events');"
-"const {BrowserWindow} = process.binding('atom_browser_window');"
-"Object.setPrototypeOf(BrowserWindow.prototype, EventEmitter.prototype);"
-"module.exports = BrowserWindow;";
+"//const {EventEmitter} = require('events');"
+"//const {BrowserWindow} = process.binding('atom_browser_window');"
+"//Object.setPrototypeOf(BrowserWindow.prototype, EventEmitter.prototype);"
+"//module.exports = BrowserWindow;";
 #pragma warning(pop)
 
 static NodeNative nativeBrowserWindowNative{ "BrowserWindow", BrowserWindowNative, sizeof(BrowserWindowNative) - 1 };

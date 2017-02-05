@@ -329,6 +329,9 @@
     <ClInclude Include="..\..\v8_4_8\src\key-accumulator.h" />
     <ClInclude Include="..\..\v8_4_8\src\layout-descriptor-inl.h" />
     <ClInclude Include="..\..\v8_4_8\src\layout-descriptor.h" />
+    <ClInclude Include="..\..\v8_4_8\src\libplatform\default-platform.h" />
+    <ClInclude Include="..\..\v8_4_8\src\libplatform\task-queue.h" />
+    <ClInclude Include="..\..\v8_4_8\src\libplatform\worker-thread.h" />
     <ClInclude Include="..\..\v8_4_8\src\list-inl.h" />
     <ClInclude Include="..\..\v8_4_8\src\list.h" />
     <ClInclude Include="..\..\v8_4_8\src\log-inl.h" />
@@ -687,6 +690,9 @@
     <ClCompile Include="..\..\v8_4_8\src\isolate.cc" />
     <ClCompile Include="..\..\v8_4_8\src\key-accumulator.cc" />
     <ClCompile Include="..\..\v8_4_8\src\layout-descriptor.cc" />
+    <ClCompile Include="..\..\v8_4_8\src\libplatform\default-platform.cc" />
+    <ClCompile Include="..\..\v8_4_8\src\libplatform\task-queue.cc" />
+    <ClCompile Include="..\..\v8_4_8\src\libplatform\worker-thread.cc" />
     <ClCompile Include="..\..\v8_4_8\src\log-utils.cc" />
     <ClCompile Include="..\..\v8_4_8\src\log.cc" />
     <ClCompile Include="..\..\v8_4_8\src\lookup.cc" />
@@ -898,11 +904,12 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>V8_NO_FAST_TLS;WIN32;_DEBUG;_LIB;V8_TARGET_ARCH_IA32=1;V8_DEPRECATION_WARNINGS;NVALGRIND;ENABLE_HANDLE_ZAPPING;V8_USE_EXTERNAL_STARTUP_DATA=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;V8_NO_FAST_TLS;WIN32;_DEBUG;_LIB;V8_TARGET_ARCH_IA32=1;V8_DEPRECATION_WARNINGS;NVALGRIND;ENABLE_HANDLE_ZAPPING;V8_USE_EXTERNAL_STARTUP_DATA=1;BUILDING_V8_SHARED;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>../../v8_4_5</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../v8_4_8</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <MinimalRebuild>true</MinimalRebuild>
+      <MinimalRebuild>false</MinimalRebuild>
+      <DisableSpecificWarnings>4800;4530</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
