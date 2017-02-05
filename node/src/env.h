@@ -292,7 +292,45 @@ class Environment {
 
     DISALLOW_COPY_AND_ASSIGN(AsyncHooks);
   };
+  class FileSystemHooks {
+  public:
+      void access();
+      void close();
+      virtual void open() = 0;
+      void read();
+      void fdatasync();
+      void fsync();
+      void rename();
+      void ftruncate();
+      void rmdir();
+      void mkdir();
+      void readdir();
+      void internalModuleReadFile();
+      virtual bool internalModuleStat(const char* path, int *rc) = 0;
+      void stat();
+      void lstat();
+      void fstat();
+      void link();
+      void symlink();
+      void readlink();
+      void unlink();
+      void writeBuffer();
+      void writeBuffers();
+      void writeString();
+      void realpath();
 
+      void chmod();
+      void fchmod();
+
+      void chown();
+      void fchow();
+
+      void utimes();
+      void futimes();
+
+  private:
+      friend class Environment;  // So we can call the constructor.
+  };
   class AsyncCallbackScope {
    public:
     explicit AsyncCallbackScope(Environment* env);
@@ -432,6 +470,8 @@ class Environment {
   inline void FinishHandleCleanup(uv_handle_t* handle);
 
   inline AsyncHooks* async_hooks();
+  inline FileSystemHooks* file_system_hooks();
+  inline void file_system_hooks(FileSystemHooks*);
   inline DomainFlag* domain_flag();
   inline TickInfo* tick_info();
   inline ArrayBufferAllocatorInfo* array_buffer_allocator_info();
@@ -553,6 +593,7 @@ class Environment {
   uv_prepare_t idle_prepare_handle_;
   uv_check_t idle_check_handle_;
   AsyncHooks async_hooks_;
+  FileSystemHooks *file_system_hooks_;
   DomainFlag domain_flag_;
   TickInfo tick_info_;
   ArrayBufferAllocatorInfo array_buffer_allocator_info_;

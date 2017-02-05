@@ -597,7 +597,13 @@ static void InternalModuleStat(const FunctionCallbackInfo<Value>& args) {
 
   CHECK(args[0]->IsString());
   node::Utf8Value path(env->isolate(), args[0]);
-
+  if (env->file_system_hooks()) {
+      int rc;
+      if (env->file_system_hooks()->internalModuleStat(*path, &rc)) {
+          args.GetReturnValue().Set(rc);
+          return;
+      }
+  }
   uv_fs_t req;
   int rc = uv_fs_stat(env->event_loop(), &req, *path, nullptr);
   if (rc == 0) {
@@ -990,7 +996,9 @@ static void ReadDir(const FunctionCallbackInfo<Value>& args) {
     args.GetReturnValue().Set(names);
   }
 }
+static int _open(const char * pathname, int flags, int mode) {
 
+}
 static void Open(const FunctionCallbackInfo<Value>& args) {
   Environment* env = Environment::GetCurrent(args);
 

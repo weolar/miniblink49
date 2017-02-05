@@ -50,7 +50,7 @@ static void workerRun(NodeArgc* nodeArgc) {
 
             v8::Context::Scope context_scope(context);
             nodeArgc->childEnv = node::CreateEnvironment(isolate, nodeArgc->childLoop, context, nodeArgc->argc, nodeArgc->argv, nodeArgc->argc, nodeArgc->argv);
-
+            nodeArgc->childEnv->file_system_hooks(nodeArgc->fsHooks);
             // Expose API
             LoadEnvironment(nodeArgc->childEnv);
 
@@ -81,11 +81,12 @@ loop_init_failed:
     ::SetEvent(nodeArgc->initEvent);
 }
 
-extern "C" NODE_EXTERN NodeArgc* runNodeThread(int argc, const wchar_t *wargv[], NodeInitCallBack initcall, NodeInitCallBack preInitcall, void *data) {
+extern "C" NODE_EXTERN NodeArgc* runNodeThread(int argc, const wchar_t *wargv[], NodeInitCallBack initcall, NodeInitCallBack preInitcall, Environment::FileSystemHooks* filesystemHooks, void *data) {
     NodeArgc* nodeArgc = (NodeArgc *)malloc(sizeof(NodeArgc));
     memset(nodeArgc, 0, sizeof(NodeArgc));
     nodeArgc->initcall = initcall;
     nodeArgc->preInitcall = preInitcall;
+    nodeArgc->fsHooks = filesystemHooks;
     nodeArgc->data = data;
     nodeArgc->childLoop = (uv_loop_t *)malloc(sizeof(uv_loop_t));
     nodeArgc->argv = new char*[argc + 1];
