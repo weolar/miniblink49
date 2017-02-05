@@ -94,7 +94,7 @@ recompute:
   }
 
   z = scalbn(z, q0);
-  z -= 8.0 * std::floor(z * 0.125);
+  z -= 8.0 * floor(z * 0.125);
   int32_t n = static_cast<int32_t>(z);
   z -= static_cast<double>(n);
   int32_t ih = 0;
