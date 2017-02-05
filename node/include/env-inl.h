@@ -229,6 +229,7 @@ inline Environment::Environment(v8::Local<v8::Context> context,
       inspector_agent_(this),
 #endif
       http_parser_buffer_(nullptr),
+      file_system_hooks_(nullptr),
       context_(context->GetIsolate(), context) {
   // We'll be creating new objects so make sure we've entered the context.
   v8::HandleScope handle_scope(isolate());
@@ -349,6 +350,14 @@ inline uv_loop_t* Environment::event_loop() const {
 
 inline Environment::AsyncHooks* Environment::async_hooks() {
   return &async_hooks_;
+}
+
+inline Environment::FileSystemHooks* Environment::file_system_hooks() {
+    return file_system_hooks_;
+}
+
+inline void Environment::file_system_hooks(Environment::FileSystemHooks* h) {
+    file_system_hooks_ = h;
 }
 
 inline Environment::DomainFlag* Environment::domain_flag() {

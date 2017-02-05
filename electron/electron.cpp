@@ -6,6 +6,7 @@
 #include "NodeBlink.h"
 #include "lib/native.h"
 #include "base/thread.h"
+#include "gin/unzip.h"
 #include <windows.h>
 #include <shlwapi.h>
 #include <xstring>
@@ -23,10 +24,21 @@ extern "C" int __security_cookie = 0;
 #endif
 
 namespace atom {
+class electronFsHooks : public node::Environment::FileSystemHooks {
+    bool internalModuleStat(const char* path, int *rc) {
+        *rc = 1;
+        return false;
+    }
+    void open() {
+
+    }
+};
 
 uv_timer_t gcTimer;
 
 static std::wstring* kResPath = nullptr;
+unzFile gPeResZip = nullptr;
+electronFsHooks gFsHooks;
 
 std::wstring getResPath(const std::wstring& name) {
     std::wstring out;
@@ -92,6 +104,26 @@ static void registerNodeMod() {
     NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT_DEFINDE_IN_MAIN(atom_browser_window);
 }
 
+static void initPeRes(HINSTANCE hInstance) {
+    PIMAGE_DOS_HEADER pDosH = (PIMAGE_DOS_HEADER)hInstance;
+    if (pDosH->e_magic != IMAGE_DOS_SIGNATURE)
+        return;//DOS头不正确
+    PIMAGE_NT_HEADERS32 pNtH = (PIMAGE_NT_HEADERS32)((DWORD)hInstance + (DWORD)pDosH->e_lfanew);
+    if (pNtH->Signature != IMAGE_NT_SIGNATURE)
+        return;//NT头不正确
+    PIMAGE_SECTION_HEADER pSecHTemp = IMAGE_FIRST_SECTION(pNtH);//区段头
+
+    for (size_t index = 0; index < pNtH->FileHeader.NumberOfSections; index++)
+    {
+        //比较区段名
+        if (memcmp(pSecHTemp->Name, ".pack\0\0\0", 8) == 0) {
+            //找到资源包区段
+            gPeResZip = unzOpen(NULL, hInstance + pSecHTemp->VirtualAddress + pSecHTemp->PointerToRawData, pSecHTemp->Misc.VirtualSize);
+        }
+        ++pSecHTemp;
+    }
+}
+
 static void gcTimerCallBack(uv_timer_t* handle) {
     return;
 
@@ -125,10 +157,12 @@ int APIENTRY wWinMain(HINSTANCE hInstance,
     UNREFERENCED_PARAMETER(lpCmdLine);
 
     atom::registerNodeMod();
-       
+    
+    atom::initPeRes(hInstance);//初始化PE打包的资源
+
     std::wstring initScript = atom::getResPath(L"init.js");
     const wchar_t* argv1[] = { L"electron.exe", initScript.c_str() };
-    node::NodeArgc* node = node::runNodeThread(2, argv1, atom::nodeInitCallBack, atom::nodePreInitCallBack, nullptr);
+    node::NodeArgc* node = node::runNodeThread(2, argv1, atom::nodeInitCallBack, atom::nodePreInitCallBack, &atom::gFsHooks, nullptr);
     
     uv_loop_t* loop = uv_default_loop();
     atom::ThreadCall::messageLoop(loop, nullptr, nullptr);
@@ -140,5 +174,5 @@ int APIENTRY wWinMain(HINSTANCE hInstance,
 }
 
 int main() {
-    return wWinMain(0, 0, 0, 0);
+    return wWinMain(GetModuleHandle(NULL), 0, 0, 0);
 }

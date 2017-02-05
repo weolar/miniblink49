@@ -143,6 +143,9 @@
     <ClCompile Include="..\..\electron\browser\api\ApiElectron.cpp">
       <Filter>src\browser\api</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\electron\gin\unzip.c">
+      <Filter>gin</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\base\thread.h">
@@ -202,8 +205,8 @@
     <ClInclude Include="..\..\electron\common\NodeRegisterHelp.h">
       <Filter>src\common</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ClassDiagram.cd" />
+    <ClInclude Include="..\..\electron\gin\unzip.h">
+      <Filter>gin</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

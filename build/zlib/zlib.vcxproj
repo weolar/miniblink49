@@ -115,7 +115,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;ZLIB_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>
@@ -364,13 +364,8 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\third_party\zlib\BUILD.gn" />
     <None Include="..\..\third_party\zlib\google.patch" />
-    <None Include="..\..\third_party\zlib\LICENSE" />
     <None Include="..\..\third_party\zlib\mixed-source.patch" />
-    <None Include="..\..\third_party\zlib\OWNERS" />
-    <None Include="..\..\third_party\zlib\README.chromium" />
-    <None Include="..\..\third_party\zlib\zlib.gyp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
