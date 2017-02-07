@@ -36,6 +36,12 @@
     <Filter Include="cef\base">
       <UniqueIdentifier>{a365a4f3-655f-408e-baf5-e3eaa2e93670}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\renerer">
+      <UniqueIdentifier>{8c07bb10-66bc-44ec-87f2-c775d2756ca7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\renerer\api">
+      <UniqueIdentifier>{297466ae-0116-4643-a2aa-180e5f944155}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\base\thread.cc">
@@ -143,8 +149,20 @@
     <ClCompile Include="..\..\electron\browser\api\ApiElectron.cpp">
       <Filter>src\browser\api</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\electron\gin\unzip.c">
-      <Filter>gin</Filter>
+    <ClCompile Include="..\..\electron\browser\api\ApiMenu.cpp">
+      <Filter>src\browser\api</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\electron\common\NodeThread.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\electron\common\NodeBinding.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\electron\common\AtomCommandLine.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\electron\renderer\api\ApiRendererIpc.cpp">
+      <Filter>src\renerer\api</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -205,8 +223,23 @@
     <ClInclude Include="..\..\electron\common\NodeRegisterHelp.h">
       <Filter>src\common</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\electron\gin\unzip.h">
-      <Filter>gin</Filter>
+    <ClInclude Include="..\..\electron\common\NodeThread.h">
+      <Filter>src\common</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\electron\common\NodeBinding.h">
+      <Filter>src\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\electron\common\StringUtil.h">
+      <Filter>src\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\electron\common\AtomCommandLine.h">
+      <Filter>src\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\electron\renderer\api\ApiRendererIpc.h">
+      <Filter>src\renerer\api</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
 </Project>
