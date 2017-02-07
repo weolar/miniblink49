@@ -1,7 +1,12 @@
-﻿#include "include/nodeblink.h"
+﻿
+#include "include/nodeblink.h"
 
 #include "gin/v8_initializer.h"
 #include "libplatform/libplatform.h"
+
+#include "third_party/WebKit/Source/config.h"
+#include "third_party/WebKit/Source/bindings/core/v8/V8RecursionScope.h"
+
 #include <string.h>
 #include <Windows.h>
 #include <process.h>
@@ -32,10 +37,6 @@ static void workerRun(NodeArgc* nodeArgc) {
     ::SetEvent(nodeArgc->initEvent);
 
     {
-        nodeArgc->v8platform = v8::platform::CreateDefaultPlatform(4);
-        gin::V8Initializer::SetV8Platform(nodeArgc->v8platform);
-        //v8::V8::InitializePlatform(nodeArgc->v8platform);
-
         if (nodeArgc->preInitcall)
             nodeArgc->preInitcall(nodeArgc);
 
@@ -50,7 +51,7 @@ static void workerRun(NodeArgc* nodeArgc) {
 
             v8::Context::Scope context_scope(context);
             nodeArgc->childEnv = node::CreateEnvironment(isolate, nodeArgc->childLoop, context, nodeArgc->argc, nodeArgc->argv, nodeArgc->argc, nodeArgc->argv);
-            nodeArgc->childEnv->file_system_hooks(nodeArgc->fsHooks);
+
             // Expose API
             LoadEnvironment(nodeArgc->childEnv);
 
@@ -81,12 +82,11 @@ loop_init_failed:
     ::SetEvent(nodeArgc->initEvent);
 }
 
-extern "C" NODE_EXTERN NodeArgc* runNodeThread(int argc, const wchar_t *wargv[], NodeInitCallBack initcall, NodeInitCallBack preInitcall, Environment::FileSystemHooks* filesystemHooks, void *data) {
+extern "C" NODE_EXTERN NodeArgc* nodeRunThread(int argc, const wchar_t *wargv[], NodeInitCallBack initcall, NodeInitCallBack preInitcall, void *data) {
     NodeArgc* nodeArgc = (NodeArgc *)malloc(sizeof(NodeArgc));
     memset(nodeArgc, 0, sizeof(NodeArgc));
     nodeArgc->initcall = initcall;
     nodeArgc->preInitcall = preInitcall;
-    nodeArgc->fsHooks = filesystemHooks;
     nodeArgc->data = data;
     nodeArgc->childLoop = (uv_loop_t *)malloc(sizeof(uv_loop_t));
     nodeArgc->argv = new char*[argc + 1];
@@ -104,6 +104,9 @@ extern "C" NODE_EXTERN NodeArgc* runNodeThread(int argc, const wchar_t *wargv[],
     }
     nodeArgc->argv[argc] = nullptr;
     nodeArgc->argc = argc;
+
+    nodeArgc->v8platform = v8::platform::CreateDefaultPlatform(4);
+    gin::V8Initializer::SetV8Platform(nodeArgc->v8platform);
 
     nodeArgc->initEvent = ::CreateEvent(NULL, FALSE, FALSE, NULL); // 创建一个对象,用来等待node环境基础环境创建成功
     int err = uv_thread_create(&nodeArgc->thread, reinterpret_cast<uv_thread_cb>(workerRun), nodeArgc);
@@ -127,6 +130,21 @@ extern "C" NODE_EXTERN Environment* nodeGetEnvironment(NodeArgc* nodeArgc) {
     if (nodeArgc)
         return nodeArgc->childEnv;
     return nullptr;
+}
+
+extern "C" NODE_EXTERN void* nodeCreateDefaultPlatform() {
+    v8::Platform* v8platform = v8::platform::CreateDefaultPlatform(4);
+    gin::V8Initializer::SetV8Platform(v8platform);
+    return v8platform;
+}
+
+extern "C" NODE_EXTERN BlinkMicrotaskSuppressionHandle blinkMicrotaskSuppressionEnter(v8::Isolate* isolate) {
+    return new blink::V8RecursionScope::MicrotaskSuppression(isolate);
+}
+
+extern "C" NODE_EXTERN void blinkMicrotaskSuppressionLeave(BlinkMicrotaskSuppressionHandle handle) {
+    blink::V8RecursionScope::MicrotaskSuppression* suppression = (blink::V8RecursionScope::MicrotaskSuppression*)handle;
+    delete suppression;
 }
 
 } // node
