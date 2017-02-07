@@ -5,7 +5,7 @@
 #include "common/NodeRegisterHelp.h"
 #include "common/NodeThread.h"
 #include "common/AtomCommandLine.h"
-#include "gin/unzip.h"
+#include "third_party/zlib/unzip.h"
 #include "NodeBlink.h"
 #include <windows.h>
 #include <ShellAPI.h>
@@ -21,6 +21,12 @@ void __cdecl operator delete(void * p, unsigned int)
 
 extern "C" int __security_cookie = 0;
 #endif
+
+#pragma comment(lib,"zlib.lib")
+#pragma comment(lib, "Psapi.lib")
+#pragma comment(lib, "IPHLPAPI.lib")
+#pragma comment(lib, "Userenv.lib")
+#pragma comment(lib, "Psapi.lib")
 
 namespace atom {
 

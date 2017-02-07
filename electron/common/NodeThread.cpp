@@ -6,14 +6,10 @@
 #include "base/thread.h"
 #include "common/ThreadCall.h"
 #include "common/NodeBinding.h"
+#include "third_party/zlib/unzip.h"
 #include <string.h>
 #include <Windows.h>
 #include <process.h>
-
-#pragma comment(lib,"openssl.lib")
-#pragma comment(lib, "IPHLPAPI.lib")
-#pragma comment(lib, "Userenv.lib")
-#pragma comment(lib, "Psapi.lib")
 
 namespace atom {
 
