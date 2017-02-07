@@ -107,6 +107,9 @@
     <ClCompile Include="..\..\third_party\zlib\trees.c">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\third_party\zlib\unzip.c">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\third_party\zlib\google.patch">
