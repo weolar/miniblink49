@@ -621,6 +621,17 @@ void wkeOnLoadUrlEnd(wkeWebView webView, wkeLoadUrlEndCallback callback, void* c
 	webView->onLoadUrlEnd(callback, callbackParam);
 }
 
+
+void wkeOnDidCreateScriptContext(wkeWebView webView, wkeDidCreateScriptContextCallback callback, void* callbackParam)
+{
+    webView->onDidCreateScriptContext(callback, callbackParam);
+}
+
+void wkeOnWillReleaseScriptContext(wkeWebView webView, wkeWillReleaseScriptContextCallback callback, void* callbackParam)
+{
+    webView->onWillReleaseScriptContext(callback, callbackParam);
+}
+
 const utf8* wkeGetString(const wkeString s)
 {
     return s ? s->string() : "";

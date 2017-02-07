@@ -55,6 +55,12 @@ struct CWebViewHandler {
 	wkeLoadUrlEndCallback loadUrlEndCallback;
 	void* loadUrlEndCallbackParam;
 
+    wkeDidCreateScriptContextCallback didCreateScriptContextCallback;
+    void* didCreateScriptContextCallbackParam;
+
+    wkeWillReleaseScriptContextCallback willReleaseScriptContextCallback;
+    void* willReleaseScriptContextCallbackParam;
+
 	bool isWke;//是否是使用的wke接口
 };
 
@@ -192,8 +198,11 @@ public:
     virtual void onDocumentReady(wkeDocumentReadyCallback callback, void* callbackParam);
 	virtual void onDownload(wkeDownloadCallback callback, void* callbackParam);
 
-	void onLoadUrlBegin(wkeLoadUrlBeginCallback callback, void* callbackParam);
-	void onLoadUrlEnd(wkeLoadUrlEndCallback callback, void* callbackParam);
+    void onLoadUrlBegin(wkeLoadUrlBeginCallback callback, void* callbackParam);
+    void onLoadUrlEnd(wkeLoadUrlEndCallback callback, void* callbackParam);
+
+    void onDidCreateScriptContext(wkeDidCreateScriptContextCallback callback, void* callbackParam);
+    void onWillReleaseScriptContext(wkeWillReleaseScriptContextCallback callback, void* callbackParam);
 
     void setClientHandler(const wkeClientHandler* handler) override;
     const wkeClientHandler* getClientHandler() const override;

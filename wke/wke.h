@@ -411,12 +411,18 @@ WKE_API void wkeOnLoadUrlBegin(wkeWebView webView, wkeLoadUrlBeginCallback callb
 typedef void(*wkeLoadUrlEndCallback)(wkeWebView webView, void* param, const char *url, void *job, void* buf, int len);
 WKE_API void wkeOnLoadUrlEnd(wkeWebView webView, wkeLoadUrlEndCallback callback, void* callbackParam);
 
+typedef void(*wkeDidCreateScriptContextCallback)(wkeWebView webView, void* param, void* frame, void* context, int extensionGroup, int worldId);
+WKE_API void wkeOnDidCreateScriptContext(wkeWebView webView, wkeDidCreateScriptContextCallback callback, void* callbackParam);
+
+typedef void(*wkeWillReleaseScriptContextCallback)(wkeWebView webView, void* param, void* frame, void* context, int worldId);
+WKE_API void wkeOnWillReleaseScriptContext(wkeWebView webView, wkeWillReleaseScriptContextCallback callback, void* callbackParam);
 
 WKE_API void wkeNetSetMIMEType(void *job, char *type);
 WKE_API void wkeNetSetHTTPHeaderField(void *job, wchar_t *key, wchar_t *value, bool response);
 WKE_API void wkeNetSetURL(void *job, const char *url);
 WKE_API void wkeNetSetData(void *job, void *buf, int len);
 WKE_API void wkeNetHookRequest(void *job);	//调用此函数后,网络层收到数据会存储在一buf内,接收数据完成后响应OnLoadUrlEnd事件.#此调用严重影响性能,慎用
+
 //wkewindow-----------------------------------------------------------------------------------
 typedef enum {
     WKE_WINDOW_TYPE_POPUP,

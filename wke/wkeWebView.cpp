@@ -971,6 +971,18 @@ void CWebView::onLoadUrlEnd(wkeLoadUrlEndCallback callback, void* callbackParam)
 	m_webPage->wkeHandler().loadUrlEndCallbackParam = callbackParam;
 }
 
+void CWebView::onDidCreateScriptContext(wkeDidCreateScriptContextCallback callback, void* callbackParam)
+{
+    m_webPage->wkeHandler().didCreateScriptContextCallback = callback;
+    m_webPage->wkeHandler().didCreateScriptContextCallbackParam = callbackParam;
+}
+
+void CWebView::onWillReleaseScriptContext(wkeWillReleaseScriptContextCallback callback, void* callbackParam)
+{
+    m_webPage->wkeHandler().willReleaseScriptContextCallback = callback;
+    m_webPage->wkeHandler().willReleaseScriptContextCallbackParam = callbackParam;
+}
+
 void CWebView::setClientHandler(const wkeClientHandler* handler)
 {
     m_webPage->wkeSetClientHandler((void*)handler);
