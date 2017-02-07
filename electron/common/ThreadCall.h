@@ -30,9 +30,14 @@ public:
     static void callUiThreadSync(std::function<void(void)>&& closure);
     static void callUiThreadAsync(std::function<void(void)>&& closure);
 
+    static void postNodeCoreThreadTask(std::function<void(void)>&& closure);
+
     static void shutdown();
 
     static void messageLoop(uv_loop_t* loop, v8::Platform* platform, v8::Isolate* isolate);
+
+    static uv_loop_t* uiLoop() { return m_uiLoop; }
+    static uv_loop_t* blinkLoop() { return m_blinkLoop; }
 
 private:
     static void callThreadAsync(std::function<void(void)> closure);

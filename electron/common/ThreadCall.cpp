@@ -75,6 +75,10 @@ void ThreadCall::callBlinkThreadSync(std::function<void(void)>&& closure) {
     waitForCallThreadAsync(asyncData);
 }
 
+void ThreadCall::postNodeCoreThreadTask(std::function<void(void)>&& closure) {
+    callUiThreadAsync(std::move(closure));
+}
+
 void ThreadCall::shutdown() {
 }
 

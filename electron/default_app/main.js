@@ -1,3 +1,4 @@
+'use strict';
 const app = require('electron').app;
 const dialog = require('electron').dialog;
 const shell = require('electron').shell;
@@ -34,7 +35,7 @@ for (let i = 0; i < argv.length; i++) {
   } else if (argv[i][0] === '-') {
     continue
   } else {
-    option.file = argv[i]
+    option.file = 'file:///E:/mycode/miniblink49/trunk/electron/default_app/index.html'// argv[i] --weolar
     break
   }
 }
@@ -250,7 +251,7 @@ if (option.modules.length > 0) {
   Module._preloadModules(option.modules)
 }
 
-function loadApplicationPackage (packagePath) {
+function loadApplicationPackage (packagePath) {console.log('-----------loadApplicationPackage-------------:' + packagePath);
   // Add a flag indicating app is started from default app.
   process.defaultApp = true
 

@@ -1,5 +1,7 @@
-const {app, BrowserWindow} = require('electron')
-const path = require('path')
+'use strict';
+const app= require('electron').app;
+const BrowserWindow = require('electron').BrowserWindow;
+const path = require('path');
 
 let mainWindow = null
 

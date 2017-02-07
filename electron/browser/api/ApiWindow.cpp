@@ -5,6 +5,8 @@
 #include "browser/api/ApiWebContents.h"
 #include "browser/api/WindowList.h"
 #include "common/ThreadCall.h"
+#include "common/StringUtil.h"
+#include "common/NodeBinding.h"
 #include "common/api/event_emitter.h"
 #include "wke.h"
 #include "gin/per_isolate_data.h"
@@ -46,6 +48,9 @@ public:
 
     ~Window() {
         DebugBreak();
+
+        if (m_nodeBinding)
+            delete m_nodeBinding;
 
         if (m_memoryBMP)
             ::DeleteObject(m_memoryBMP);
@@ -179,7 +184,7 @@ public:
         builder.SetMethod("setAppDetails", &Window::setAppDetailsApi);
         builder.SetMethod("setIcon", &Window::setIconApi);
         //NODE_SET_PROTOTYPE_METHOD(prototype, &Window::"id", &Window::nullFunction);
-        builder.SetMethod("webContents", &Window::getWebContentsApi);
+        builder.SetMethod("getWebContents", &Window::getWebContentsApi);
 
         // 设置constructor
         constructor.Reset(isolate, prototype->GetFunction());
@@ -570,20 +575,19 @@ public:
         std::wstring title;
     };
 
-    static void UTF8ToUTF16(const std::string& utf8, std::wstring* utf16) {
-        size_t n = ::MultiByteToWideChar(CP_UTF8, 0, utf8.c_str(), utf8.size(), nullptr, 0);
-        std::vector<wchar_t> wbuf(n);
-        MultiByteToWideChar(CP_UTF8, 0, utf8.c_str(), utf8.size(), &wbuf[0], n);
-        utf16->resize(n);
-        utf16->assign(&wbuf[0], n);
+    static void staticDidCreateScriptContextCallback(wkeWebView webView, void* param, void* frame, void* context, int extensionGroup, int worldId) {
+        Window* self = (Window*)param;
+        self->onDidCreateScriptContext(webView, frame, (v8::Local<v8::Context>*)context, extensionGroup, worldId);
     }
+    
+    void onDidCreateScriptContext(wkeWebView webView, void* frame, v8::Local<v8::Context>* context, int extensionGroup, int worldId) {
+        if (m_nodeBinding)
+            return;
 
-    static void UTF16ToUTF8(const std::wstring& utf16, std::string* utf8) {
-        size_t n = ::WideCharToMultiByte(CP_ACP, 0, utf16.c_str(), -1, NULL, 0, NULL, NULL);
-        std::vector<char> buf(n + 1);
-        ::WideCharToMultiByte(CP_ACP, 0, utf16.c_str(), -1, &buf[0], n, NULL, NULL);
-        utf8->resize(n);
-        utf8->assign(&buf[0], n);
+        node::BlinkMicrotaskSuppressionHandle handle = node::blinkMicrotaskSuppressionEnter((*context)->GetIsolate());
+        m_nodeBinding = new NodeBindings(false, ThreadCall::blinkLoop());
+        m_nodeBinding->createEnvironment(*context);
+        node::blinkMicrotaskSuppressionLeave(handle);
     }
 
     static v8::Local<v8::Value> toBuffer(v8::Isolate* isolate, void* val, int size) {
@@ -644,7 +648,7 @@ public:
         options->Get("title", &title);
         if (title->IsString()) {
             v8::String::Utf8Value str(title);
-            UTF8ToUTF16(*str, &createWindowParam.title);
+            createWindowParam.title = StringUtil::UTF8ToUTF16(*str);
         } else 
             createWindowParam.title = L"Electron";
         
@@ -698,6 +702,7 @@ public:
             wkeConfigure(&settings);
             wkeResize(win->m_webContents->m_view, createWindowParam->width, createWindowParam->height);
             wkeOnPaintUpdated(win->m_webContents->m_view, (wkePaintUpdatedCallback)staticOnPaintUpdatedInCompositeThread, win);
+            wkeOnDidCreateScriptContext(win->m_webContents->m_view, staticDidCreateScriptContextCallback, win);
         });
 
         ::ShowWindow(m_hWnd, TRUE);
@@ -979,7 +984,7 @@ private:
 
     void setTitleApi(const std::string& title) {
         std::wstring titleW;
-        UTF8ToUTF16(title, &titleW);
+        titleW = StringUtil::UTF8ToUTF16(title);
         ::SetWindowText(m_hWnd, titleW.c_str());
     }
 
@@ -988,7 +993,7 @@ private:
         titleW.resize(MAX_PATH + 1);
         ::GetWindowText(m_hWnd, &titleW[0], MAX_PATH);
         std::string titleA;
-        UTF16ToUTF8(std::wstring(&titleW[0], titleW.size()), &titleA);
+        titleA = StringUtil::UTF16ToUTF8(std::wstring(&titleW[0], titleW.size()));
         return titleA;
     }
 
@@ -1116,6 +1121,7 @@ private:
     WindowState m_state;
     static const WCHAR* kPrppW;
     WebContents* m_webContents;
+    NodeBindings* m_nodeBinding;
     
     HWND m_hWnd;
     CRITICAL_SECTION m_memoryCanvasLock;
