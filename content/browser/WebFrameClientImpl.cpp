@@ -492,7 +492,12 @@ bool WebFrameClientImpl::runModalConfirmDialog(const WebString& message)
 void WebFrameClientImpl::didCreateScriptContext(WebLocalFrame* frame, v8::Local<v8::Context> context, int extensionGroup, int worldId)
 {
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
-    wke::onCreateGlobalObject(this, frame, context, extensionGroup, worldId);
+    if (frame->top() == frame)
+        wke::onCreateGlobalObject(this, frame, context, extensionGroup, worldId);
+
+    if (m_webPage->wkeHandler().didCreateScriptContextCallback)
+        m_webPage->wkeHandler().didCreateScriptContextCallback(m_webPage->wkeWebView(), m_webPage->wkeHandler().didCreateScriptContextCallbackParam,
+            frame, &context, extensionGroup, worldId);
 #endif
 #if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
     if (!CefContentClient::Get())
@@ -515,7 +520,12 @@ void WebFrameClientImpl::didCreateScriptContext(WebLocalFrame* frame, v8::Local<
 void WebFrameClientImpl::willReleaseScriptContext(WebLocalFrame* frame, v8::Local<v8::Context> context, int worldId)
 {
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
-    wke::onReleaseGlobalObject(this, frame, context, worldId);
+    if (frame->top() == frame)
+        wke::onReleaseGlobalObject(this, frame, context, worldId);
+
+    if (m_webPage->wkeHandler().willReleaseScriptContextCallback)
+        m_webPage->wkeHandler().willReleaseScriptContextCallback(m_webPage->wkeWebView(), m_webPage->wkeHandler().willReleaseScriptContextCallbackParam,
+            frame, &context, worldId);
 #endif
 #if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
     if (!CefContentClient::Get())
