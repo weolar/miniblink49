@@ -8,7 +8,10 @@
 #include "wke/wkeString.h"
 #include "third_party/WebKit/Source/platform/geometry/IntRect.h"
 #include "net/WebURLLoaderManager.h"
+#include <map>
+
 //////////////////////////////////////////////////////////////////////////
+
 namespace content {
  class WebPage;
 }
@@ -209,16 +212,18 @@ public:
 
     content::WebPage* webPage() { return m_webPage; }
 
-	void setProxyInfo(const String& host,
-		unsigned long port,
-		net::WebURLLoaderManager::ProxyType type,
-		const String& username,
-		const String& password);
+    void setUserKayValue(const char* key, void* value);
+    void* getUserKayValue(const char* key);
+
+	void setProxyInfo(const String& host, unsigned long port, net::WebURLLoaderManager::ProxyType type, const String& username, const String& password);
+
 protected:
     HWND m_hWnd;
     void _initHandler();
     void _initPage();
     void _initMemoryDC();
+
+    std::map<std::string, void*> m_userKayValues;
 
     //按理这些接口应该使用CWebView来实现的，可以把它们想像成一个类，因此设置为友员符合情理。
 //     friend class ToolTip;

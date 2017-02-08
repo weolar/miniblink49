@@ -992,11 +992,26 @@ const wkeClientHandler* CWebView::getClientHandler() const
 {
     return (const wkeClientHandler *)m_webPage->wkeClientHandler();
 }
-void CWebView::setProxyInfo(const String& host,
-	unsigned long port,
-	net::WebURLLoaderManager::ProxyType type,
-	const String& username,
-	const String& password) {
+
+void CWebView::setUserKayValue(const char* key, void* value)
+{
+    if (!key)
+        return;
+    m_userKayValues[key] = value;
+}
+
+void* CWebView::getUserKayValue(const char* key)
+{
+    if (!key)
+        return nullptr;
+    std::map<std::string, void*>::const_iterator it = m_userKayValues.find(key);
+    if (m_userKayValues.end() == it)
+        return nullptr;
+    return it->second;
+}
+
+void CWebView::setProxyInfo(const String& host,	unsigned long port,	net::WebURLLoaderManager::ProxyType type, const String& username, const String& password)
+{
 	m_proxyType = type;
 
 	if (!host.length()) {

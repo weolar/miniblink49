@@ -674,6 +674,24 @@ void wkeSetStringW(wkeString string, const wchar_t* str, size_t len)
     string->setString(str, len);
 }
 
+wkeWebView wkeGetWebViewForCurrentContext()
+{
+    content::WebPage* webpage = content::WebPage::getSelfForCurrentContext();
+    if (!webpage)
+        return nullptr;
+    wkeWebView webview = webpage->wkeWebView();
+    return webview;
+}
+
+WKE_API void wkeSetUserKayValue(wkeWebView webView, const char* key, void* value)
+{
+    webView->setUserKayValue(key, value);
+}
+
+WKE_API void* wkeGetUserKayValue(wkeWebView webView, const char* key)
+{
+    return webView->getUserKayValue(key);
+}
 
 // typedef void (__cdecl* _PVFV) ();
 // #pragma section(".CRT$XCG", long, read)
