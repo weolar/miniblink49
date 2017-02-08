@@ -6,6 +6,11 @@
 
 #include "uv.h"
 
+#if defined(OS_WIN)
+#include <windows.h>
+#include <ShellAPI.h>
+#endif
+
 namespace atom {
 
 // static
@@ -17,27 +22,57 @@ std::vector<std::wstring> AtomCommandLine::wargv_;
 #endif
 
 // static
-void AtomCommandLine::Init(int argc, const char* const* argv) {
-  // Hack around with the argv pointer. Used for process.title = "blah"
-  char** new_argv = uv_setup_args(argc, const_cast<char**>(argv));
-  for (int i = 0; i < argc; ++i) {
-    argv_.push_back(new_argv[i]);
-  }
+void AtomCommandLine::init(int argc, const char* const* argv) {
+    // Hack around with the argv pointer. Used for process.title = "blah"
+    char** new_argv = uv_setup_args(argc, const_cast<char**>(argv));
+    for (int i = 0; i < argc; ++i) {
+        argv_.push_back(new_argv[i]);
+    }
 }
 
 #if defined(OS_WIN)
 // static
-void AtomCommandLine::InitW(int argc, const wchar_t* const* argv) {
-  for (int i = 0; i < argc; ++i) {
-    wargv_.push_back(argv[i]);
-  }
+void AtomCommandLine::initW(int argc, const wchar_t* const* argv) {
+    for (int i = 0; i < argc; ++i) {
+        wargv_.push_back(argv[i]);
+    }
+}
+
+void AtomCommandLine::initAW() {
+    int argc = 0;
+    wchar_t** argvW = ::CommandLineToArgvW(::GetCommandLineW(), &argc);
+
+    initW(argc, argvW);
+
+    // Convert argv to to UTF8
+    char** argvA = new char*[argc];
+    for (int i = 0; i < argc; i++) {
+        // Compute the size of the required buffer
+        DWORD size = WideCharToMultiByte(CP_UTF8, 0, argvW[i], -1, NULL, 0, NULL, NULL);
+        if (size == 0) {
+            // This should never happen.
+            fprintf(stderr, "Could not convert arguments to utf8.");
+            return;
+        }
+
+        // Do the actual conversion
+        argvA[i] = new char[size];
+        DWORD result = WideCharToMultiByte(CP_UTF8, 0, argvW[i], -1, argvA[i], size, NULL, NULL);
+        if (result == 0) {
+            // This should never happen.
+            fprintf(stderr, "Could not convert arguments to utf8.");
+            return;
+        }
+    }
+
+    atom::AtomCommandLine::init(argc, argvA);
 }
 #endif
 
 #if defined(OS_LINUX)
 // static
-void AtomCommandLine::InitializeFromCommandLine() {
-  argv_ = base::CommandLine::ForCurrentProcess()->argv();
+void AtomCommandLine::initializeFromCommandLine() {
+    argv_ = base::CommandLine::ForCurrentProcess()->argv();
 }
 #endif
 

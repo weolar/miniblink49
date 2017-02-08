@@ -15,29 +15,31 @@ namespace atom {
 
 // Singleton to remember the original "argc" and "argv".
 class AtomCommandLine {
- public:
-  static void Init(int argc, const char* const* argv);
-  static std::vector<std::string> argv() { return argv_; }
+public:
+    static void init(int argc, const char* const* argv);
+    static std::vector<std::string> argv() { return argv_; }
 
 #if defined(OS_WIN)
-  static void InitW(int argc, const wchar_t* const* argv);
-  static std::vector<std::wstring> wargv() { return wargv_; }
+    static void initAW();
+    static void initW(int argc, const wchar_t* const* argv);
+
+    static std::vector<std::wstring> wargv() { return wargv_; }
 #endif
 
 #if defined(OS_LINUX)
-  // On Linux the command line has to be read from base::CommandLine since
-  // it is using zygote.
-  static void InitializeFromCommandLine();
+    // On Linux the command line has to be read from base::CommandLine since
+    // it is using zygote.
+    static void initializeFromCommandLine();
 #endif
 
- private:
-  static std::vector<std::string> argv_;
+private:
+    static std::vector<std::string> argv_;
 
 #if defined(OS_WIN)
-  static std::vector<std::wstring> wargv_;
+    static std::vector<std::wstring> wargv_;
 #endif
 
-  DISALLOW_IMPLICIT_CONSTRUCTORS(AtomCommandLine);
+    DISALLOW_IMPLICIT_CONSTRUCTORS(AtomCommandLine);
 };
 
 }  // namespace atom

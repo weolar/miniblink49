@@ -3,7 +3,7 @@
 //process.binding('atom_browser_app');
 process.binding('atom_browser_electron');
 
-require('./../common/electron');
+require('./electron');
 
 const fs = require('fs');
 const path = require('path');

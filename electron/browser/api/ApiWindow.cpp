@@ -8,10 +8,10 @@
 #include "common/StringUtil.h"
 #include "common/NodeBinding.h"
 #include "common/api/event_emitter.h"
+#include "common/IdLiveDetect.h"
 #include "wke.h"
 #include "gin/per_isolate_data.h"
 #include "gin/object_template_builder.h"
-#include <set>
 
 using namespace v8;
 using namespace node;
@@ -33,17 +33,7 @@ public:
         m_clientRect.right = 0;
         m_clientRect.bottom = 0;
         ::InitializeCriticalSection(&m_memoryCanvasLock);
-
-        if (!m_liveSelf) {
-            m_idGen = 0;
-            m_liveSelf = new std::set<int>();
-            m_liveSelfLock = new CRITICAL_SECTION();
-            ::InitializeCriticalSection(m_liveSelfLock);
-        }
-        ::EnterCriticalSection(m_liveSelfLock);
-        m_id = ++m_idGen;
-        m_liveSelf->insert(m_id);
-        ::LeaveCriticalSection(m_liveSelfLock);
+        m_id = IdLiveDetect::get()->constructed();
     }
 
     ~Window() {
@@ -63,24 +53,9 @@ public:
         //});
         WindowList::GetInstance()->RemoveWindow(this);
 
-        ::EnterCriticalSection(m_liveSelfLock);
-        m_liveSelf->erase(m_id);
-        ::LeaveCriticalSection(m_liveSelfLock);
+        IdLiveDetect::get()->deconstructed(m_id);
 
         ::DeleteCriticalSection(&m_memoryCanvasLock);
-    }
-
-    static bool isLive(int id) {
-        ::EnterCriticalSection(m_liveSelfLock);
-        std::set<int>::const_iterator it = m_liveSelf->find(id);
-        bool b = it != m_liveSelf->end();
-        ::LeaveCriticalSection(m_liveSelfLock);
-        return b;
-    }
-
-    static void buildPrototype(v8::Isolate* isolate, v8::Local<v8::FunctionTemplate> prototype) {
-
-
     }
 
     static void init(Local<Object> target, Environment* env) {
@@ -260,7 +235,7 @@ public:
         if (win->m_isLayerWindow) {
             int id = win->m_id;
             ThreadCall::callUiThreadAsync([id, win, x, y, cx, cy] {
-                if (isLive(id))
+                if (IdLiveDetect::get()->isLive(id))
                     win->onPaintUpdatedInUiThread(x, y, cx, cy);
             });
         } else {
@@ -301,7 +276,7 @@ public:
 
     void onMouseMessage(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
         int id = m_id;
-        wkeWebView pthis = m_webContents->m_view;
+        wkeWebView pthis = m_webContents->getWkeView();
         if (message == WM_LBUTTONDOWN || message == WM_MBUTTONDOWN || message == WM_RBUTTONDOWN) {
             ::SetFocus(hWnd);
             ::SetCapture(hWnd);
@@ -328,7 +303,7 @@ public:
             flags |= WKE_RBUTTON;
 
         ThreadCall::callBlinkThreadAsync([id, pthis, message, x, y, flags] {
-            if (isLive(id))
+            if (IdLiveDetect::get()->isLive(id))
                 wkeFireMouseEvent(pthis, message, x, y, flags);
         });
     }
@@ -340,7 +315,7 @@ public:
                 LPCREATESTRUCTW cs = (LPCREATESTRUCTW)lParam;
                 Window *win = (Window *)cs->lpCreateParams;
                 ThreadCall::callBlinkThreadSync([win, hWnd] {
-                    wkeSetHandle(win->m_webContents->m_view, hWnd);
+                    wkeSetHandle(win->m_webContents->getWkeView(), hWnd);
                 });
                 
                 ::SetPropW(hWnd, kPrppW, (HANDLE)win);
@@ -352,7 +327,7 @@ public:
             return ::DefWindowProcW(hWnd, message, wParam, lParam);
         int id = win->m_id;
 
-        wkeWebView pthis = win->m_webContents->m_view;
+        wkeWebView pthis = win->m_webContents->getWkeView();
         if (!pthis)
             return ::DefWindowProcW(hWnd, message, wParam, lParam);
         switch (message) {
@@ -487,7 +462,7 @@ public:
                 flags |= WKE_RBUTTON;
 
             ThreadCall::callBlinkThreadAsync([id, pthis, pt, flags] {
-                if (isLive(id))
+                if (IdLiveDetect::get()->isLive(id))
                     wkeFireContextMenuEvent(pthis, pt.x, pt.y, flags);
             });
             break;
@@ -521,14 +496,14 @@ public:
         }
         case WM_SETFOCUS:
             ThreadCall::callBlinkThreadAsync([id, pthis]{
-                if (isLive(id))
+                if (IdLiveDetect::get()->isLive(id))
                     wkeSetFocus(pthis);
             });
             return 0;
 
         case WM_KILLFOCUS:
             ThreadCall::callBlinkThreadAsync([id, pthis] {
-                if (isLive(id))
+                if (IdLiveDetect::get()->isLive(id))
                     wkeKillFocus(pthis);
             });
             return 0;
@@ -584,10 +559,11 @@ public:
         if (m_nodeBinding)
             return;
 
-        node::BlinkMicrotaskSuppressionHandle handle = node::blinkMicrotaskSuppressionEnter((*context)->GetIsolate());
+        BlinkMicrotaskSuppressionHandle handle = nodeBlinkMicrotaskSuppressionEnter((*context)->GetIsolate());
         m_nodeBinding = new NodeBindings(false, ThreadCall::blinkLoop());
-        m_nodeBinding->createEnvironment(*context);
-        node::blinkMicrotaskSuppressionLeave(handle);
+        node::Environment* env = m_nodeBinding->createEnvironment(*context);
+        node::LoadEnvironment(env);
+        nodeBlinkMicrotaskSuppressionLeave(handle);
     }
 
     static v8::Local<v8::Value> toBuffer(v8::Isolate* isolate, void* val, int size) {
@@ -606,7 +582,7 @@ public:
         createWindowParam.styleEx = 0;
         createWindowParam.transparent = false;
 
-        WebContents* webContents;
+        WebContents* webContents = nullptr;
         Handle<Object> webContentsV8;
         // If no WebContents was passed to the constructor, create it from options.
         if (!options->Get("webContents", &webContentsV8)) {
@@ -630,7 +606,8 @@ public:
             }
             webContents = WebContents::create(options->isolate(), webPreferences);
         } else
-            webContents = WebContents::ObjectWrap::Unwrap<WebContents>(webContentsV8);
+            DebugBreak();
+            //webContents = WebContents::ObjectWrap::Unwrap<WebContents>(webContentsV8);
 
         win->m_webContents = webContents;
 
@@ -696,13 +673,13 @@ public:
         Window* win = this;
         ThreadCall::callBlinkThreadSync([win, createWindowParam] {
             if (createWindowParam->transparent)
-                wkeSetTransparent(win->m_webContents->m_view, true);
+                wkeSetTransparent(win->m_webContents->getWkeView(), true);
             wkeSettings settings;
             settings.mask = WKE_SETTING_PAINTCALLBACK_IN_OTHER_THREAD;
             wkeConfigure(&settings);
-            wkeResize(win->m_webContents->m_view, createWindowParam->width, createWindowParam->height);
-            wkeOnPaintUpdated(win->m_webContents->m_view, (wkePaintUpdatedCallback)staticOnPaintUpdatedInCompositeThread, win);
-            wkeOnDidCreateScriptContext(win->m_webContents->m_view, staticDidCreateScriptContextCallback, win);
+            wkeResize(win->m_webContents->getWkeView(), createWindowParam->width, createWindowParam->height);
+            wkeOnPaintUpdated(win->m_webContents->getWkeView(), (wkePaintUpdatedCallback)staticOnPaintUpdatedInCompositeThread, win);
+            wkeOnDidCreateScriptContext(win->m_webContents->getWkeView(), staticDidCreateScriptContextCallback, win);
         });
 
         ::ShowWindow(m_hWnd, TRUE);
@@ -889,8 +866,8 @@ private:
         int width;
         int height;
         ThreadCall::callBlinkThreadSync([win, &width, &height] {
-            width = wkeGetContentWidth(win->m_webContents->m_view);
-            height = wkeGetContentHeight(win->m_webContents->m_view);
+            width = wkeGetContentWidth(win->m_webContents->getWkeView());
+            height = wkeGetContentHeight(win->m_webContents->getWkeView());
         });
         std::vector<int> size = { width, height };
         return size;
@@ -898,9 +875,12 @@ private:
 
     void setContentSizeApi(int width, int height) {
         Window* win = this;
-        ThreadCall::callBlinkThreadSync([win, width, height] {
-            wkeResize(win->m_webContents->m_view, width, height);
-            wkeRepaintIfNeeded(win->m_webContents->m_view);
+        int id = win->m_id;
+        ThreadCall::callBlinkThreadAsync([win, id, width, height] {
+            if (!IdLiveDetect::get()->isLive(id))
+                return;
+            wkeResize(win->m_webContents->getWkeView(), width, height);
+            wkeRepaintIfNeeded(win->m_webContents->getWkeView());
         });
     }
 
@@ -1018,7 +998,7 @@ private:
     void setDocumentEditedApi(bool b) {
         Window* win = this;
         ThreadCall::callBlinkThreadSync([win, b] {
-            wkeSetEditable(win->m_webContents->m_view, b);
+            wkeSetEditable(win->m_webContents->getWkeView(), b);
         });
     }
 
@@ -1037,7 +1017,7 @@ private:
     void focusOnWebViewApi() {
         Window* win = this;
         ThreadCall::callBlinkThreadSync([win] {
-            wkeSetFocus(win->m_webContents->m_view);
+            wkeSetFocus(win->m_webContents->getWkeView());
         });
     }
 
@@ -1099,7 +1079,7 @@ private:
         if (!m_webContents)
             return v8::Null(isolate());
         else
-            return v8::Local<v8::Value>::New(isolate(), m_webContents->handle());
+            return v8::Local<v8::Value>::New(isolate(), m_webContents->GetWrapper());
     }
 
     // 空实现
@@ -1130,16 +1110,10 @@ private:
     RECT m_clientRect;
     bool m_isLayerWindow;
     int m_id;
-    static int m_idGen;
-    static std::set<int>* m_liveSelf;
-    static CRITICAL_SECTION* m_liveSelfLock;
 };
 
 const WCHAR* Window::kPrppW = L"mele";
 Persistent<Function> Window::constructor;
-int Window::m_idGen;
-std::set<int>* Window::m_liveSelf = nullptr;
-CRITICAL_SECTION* Window::m_liveSelfLock = nullptr;
 gin::WrapperInfo Window::kWrapperInfo = { gin::kEmbedderNativeGin };
 
 static void initializeWindowApi(Local<Object> target, Local<Value> unused, Local<Context> context, const NodeNative* native) {

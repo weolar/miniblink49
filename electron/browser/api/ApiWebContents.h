@@ -1,8 +1,9 @@
-﻿#include "nodeblink.h"
-#include <node_object_wrap.h>
+﻿
+#include "nodeblink.h"
 #include "wke.h"
 #include "electron.h"
 #include "gin/dictionary.h"
+#include "common/api/event_emitter.h"
 
 using namespace v8;
 using namespace node;
@@ -10,163 +11,165 @@ using namespace node;
 namespace atom {
 
 // 继承node的ObjectWrap，一般自定义C++类都应该继承node的ObjectWrap
-class WebContents : public node::ObjectWrap {
+class WebContents : public mate::EventEmitter<WebContents> {
 public:
-    static void init(Local<Object> target, Environment* env);
+    static void init(v8::Isolate* isolate, Local<Object> target, Environment* env);
     static WebContents* create(Isolate* isolate, gin::Dictionary options);
 
-    explicit WebContents();
+    explicit WebContents(v8::Isolate* isolate, v8::Local<v8::Object> wrapper);
     ~WebContents();
 
+    wkeWebView getWkeView() const { return m_view; }
+
 private:
-    // new方法
     static void newFunction(const v8::FunctionCallbackInfo<v8::Value>& args);
-    // _loadURL
-    static void _loadURL(const v8::FunctionCallbackInfo<v8::Value>& args);
 
-    //
-    static void _getURL(const v8::FunctionCallbackInfo<v8::Value>& args);
+    void _loadURLApi(const std::string& url);
 
-    //
-    static void getTitle(const v8::FunctionCallbackInfo<v8::Value>& args);
+    std::string _getURLApi();
 
-    //
-    static void isLoading(const v8::FunctionCallbackInfo<v8::Value>& args);
+    std::string getTitleApi();
 
-    static void isLoadingMainFrame(const v8::FunctionCallbackInfo<v8::Value>& args);
+    bool isLoadingApi();
 
-    static void isWaitingForResponse(const v8::FunctionCallbackInfo<v8::Value>& args);
+    bool isLoadingMainFrameApi();
 
-    //
-    static void _stop(const v8::FunctionCallbackInfo<v8::Value>& args);
+    bool isWaitingForResponseApi();
 
-    static void _goBack(const v8::FunctionCallbackInfo<v8::Value>& args);
+    void _stopApi();
 
-    static void _goForward(const v8::FunctionCallbackInfo<v8::Value>& args);
+    void _goBackApi();
 
-    static void _goToOffset(const v8::FunctionCallbackInfo<v8::Value>& args);
+    void _goForwardApi();
 
-    static void isCrashed(const v8::FunctionCallbackInfo<v8::Value>& args);
+    void _goToOffsetApi();
 
-    static void setUserAgent(const v8::FunctionCallbackInfo<v8::Value>& args);
+    bool isCrashedApi();
 
-    static void getUserAgent(const v8::FunctionCallbackInfo<v8::Value>& args);
+    void setUserAgentApi(const std::string userAgent);
 
-    static void insertCSS(const v8::FunctionCallbackInfo<v8::Value>& args);
+    std::string getUserAgentApi();
 
-    static void savePage(const v8::FunctionCallbackInfo<v8::Value>& args);
+    void insertCSSApi();
 
-    static void openDevTools(const v8::FunctionCallbackInfo<v8::Value>& args);
+    void savePageApi();
 
-    static void closeDevTools(const v8::FunctionCallbackInfo<v8::Value>& args);
+    void openDevToolsApi();
 
-    static void isDevToolsOpened(const v8::FunctionCallbackInfo<v8::Value>& args);
+    void closeDevToolsApi();
 
-    static void isDevToolsFocused(const v8::FunctionCallbackInfo<v8::Value>& args);
+    void isDevToolsOpenedApi();
 
-    static void enableDeviceEmulation(const v8::FunctionCallbackInfo<v8::Value>& args);
+    void isDevToolsFocusedApi();
 
-    static void disableDeviceEmulation(const v8::FunctionCallbackInfo<v8::Value>& args);
+    void enableDeviceEmulationApi();
 
-    static void toggleDevTools(const v8::FunctionCallbackInfo<v8::Value>& args);
+    void disableDeviceEmulationApi();
 
-    static void inspectElement(const v8::FunctionCallbackInfo<v8::Value>& args);
+    void toggleDevToolsApi();
 
-    static void setAudioMuted(const v8::FunctionCallbackInfo<v8::Value>& args);
+    void inspectElementApi();
 
-    static void isAudioMuted(const v8::FunctionCallbackInfo<v8::Value>& args);
+    void setAudioMutedApi();
 
-    static void undo(const v8::FunctionCallbackInfo<v8::Value>& args);
+    void isAudioMutedApi();
 
-    static void redo(const v8::FunctionCallbackInfo<v8::Value>& args);
+    void undoApi();
 
-    static void cut(const v8::FunctionCallbackInfo<v8::Value>& args);
+    void redoApi();
 
-    static void copy(const v8::FunctionCallbackInfo<v8::Value>& args);
+    void cutApi();
 
-    static void paste(const v8::FunctionCallbackInfo<v8::Value>& args);
+    void copyApi();
 
-    static void pasteAndMatchStyle(const v8::FunctionCallbackInfo<v8::Value>& args);
+    void pasteApi();
 
-    static void _delete(const v8::FunctionCallbackInfo<v8::Value>& args);
+    void pasteAndMatchStyleApi();
 
-    static void selectAll(const v8::FunctionCallbackInfo<v8::Value>& args);
+    void _deleteApi();
 
-    static void unselect(const v8::FunctionCallbackInfo<v8::Value>& args);
+    void selectAllApi();
 
-    static void replace(const v8::FunctionCallbackInfo<v8::Value>& args);
+    void unselectApi();
 
-    static void replaceMisspelling(const v8::FunctionCallbackInfo<v8::Value>& args);
+    void replaceApi();
 
-    static void findInPage(const v8::FunctionCallbackInfo<v8::Value>& args);
+    void replaceMisspellingApi();
 
-    static void stopFindInPage(const v8::FunctionCallbackInfo<v8::Value>& args);
+    void findInPageApi();
 
-    static void focus(const v8::FunctionCallbackInfo<v8::Value>& args);
+    void stopFindInPageApi();
 
-    static void isFocused(const v8::FunctionCallbackInfo<v8::Value>& args);
+    void focusApi();
 
-    static void tabTraverse(const v8::FunctionCallbackInfo<v8::Value>& args);
+    bool isFocusedApi();
 
-    static void _send(const v8::FunctionCallbackInfo<v8::Value>& args);
+    void tabTraverseApi();
 
-    static void sendInputEvent(const v8::FunctionCallbackInfo<v8::Value>& args);
+    void _sendApi();
 
-    static void beginFrameSubscription(const v8::FunctionCallbackInfo<v8::Value>& args);
+    void sendInputEventApi();
 
-    static void endFrameSubscription(const v8::FunctionCallbackInfo<v8::Value>& args);
+    void beginFrameSubscriptionApi();
 
-    static void startDrag(const v8::FunctionCallbackInfo<v8::Value>& args);
+    void endFrameSubscriptionApi();
 
-    static void setSize(const v8::FunctionCallbackInfo<v8::Value>& args);
+    void startDragApi();
 
-    static void isGuest(const v8::FunctionCallbackInfo<v8::Value>& args);
+    void setSizeApi();
 
-    static void isOffscreen(const v8::FunctionCallbackInfo<v8::Value>& args);
+    bool isGuestApi();
 
-    static void startPainting(const v8::FunctionCallbackInfo<v8::Value>& args);
+    bool isOffscreenApi();
 
-    static void stopPainting(const v8::FunctionCallbackInfo<v8::Value>& args);
+    void startPaintingApi();
 
-    static void isPainting(const v8::FunctionCallbackInfo<v8::Value>& args);
+    void stopPaintingApi();
 
-    static void setFrameRate(const v8::FunctionCallbackInfo<v8::Value>& args);
+    bool isPaintingApi();
 
-    static void getFrameRate(const v8::FunctionCallbackInfo<v8::Value>& args);
+    void setFrameRateApi();
 
-    static void invalidate(const v8::FunctionCallbackInfo<v8::Value>& args);
+    void getFrameRateApi();
 
-    static void getType(const v8::FunctionCallbackInfo<v8::Value>& args);
+    void invalidateApi();
 
-    static void getWebPreferences(const v8::FunctionCallbackInfo<v8::Value>& args);
+    void getTypeApi();
 
-    static void getOwnerBrowserWindow(const v8::FunctionCallbackInfo<v8::Value>& args);
+    void getWebPreferencesApi();
 
-    static void hasServiceWorker(const v8::FunctionCallbackInfo<v8::Value>& args);
+    void getOwnerBrowserWindowApi();
 
-    static void unregisterServiceWorker(const v8::FunctionCallbackInfo<v8::Value>& args);
+    void hasServiceWorkerApi();
 
-    static void inspectServiceWorker(const v8::FunctionCallbackInfo<v8::Value>& args);
+    void unregisterServiceWorkerApi();
 
-    static void print(const v8::FunctionCallbackInfo<v8::Value>& args);
+    void inspectServiceWorkerApi();
 
-    static void _printToPDF(const v8::FunctionCallbackInfo<v8::Value>& args);
+    void printApi();
 
-    static void addWorkSpace(const v8::FunctionCallbackInfo<v8::Value>& args);
+    void _printToPDFApi();
 
-    static void reNullWorkSpace(const v8::FunctionCallbackInfo<v8::Value>& args);
+    void addWorkSpaceApi();
 
-    static void showDefinitionForSelection(const v8::FunctionCallbackInfo<v8::Value>& args);
+    void reNullWorkSpaceApi();
 
-    static void copyImageAt(const v8::FunctionCallbackInfo<v8::Value>& args);
+    void showDefinitionForSelectionApi();
 
-    static void capturePage(const v8::FunctionCallbackInfo<v8::Value>& args);
+    void copyImageAtApi();
 
-    static void setEmbedder(const v8::FunctionCallbackInfo<v8::Value>& args);
+    void capturePageApi();
+
+    void setEmbedderApi();
     
-    static void nullFunction(const v8::FunctionCallbackInfo<v8::Value>& args);
-    static v8::Persistent<v8::Function> constructor;
+    void nullFunction();
+
 public:
+    static v8::Persistent<v8::Function> constructor;
+    static gin::WrapperInfo kWrapperInfo;
+
+private:
+    int m_id;
     wkeWebView m_view;
 };
 

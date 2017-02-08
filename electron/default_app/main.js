@@ -251,7 +251,7 @@ if (option.modules.length > 0) {
   Module._preloadModules(option.modules)
 }
 
-function loadApplicationPackage (packagePath) {console.log('-----------loadApplicationPackage-------------:' + packagePath);
+function loadApplicationPackage (packagePath) {
   // Add a flag indicating app is started from default app.
   process.defaultApp = true
 
@@ -366,3 +366,9 @@ if (option.file && !option.webdriver) {
   const indexPath = path.join(__dirname, '/index.html')
   loadApplicationByUrl(`file://${indexPath}`)
 }
+
+// test
+const ipc = require('electron').ipcMain;
+ipc.on('zqz-show',function() {
+    console.log('test ipcMain');
+})

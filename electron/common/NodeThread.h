@@ -24,11 +24,11 @@ class Environment;
 
 namespace atom {
 
-// struct NodeNative {
-//     const char* name;
-//     const char* source;
-//     size_t sourceLen;
-// };
+struct NodeNative {
+    const char* name;
+    const char* source;
+    size_t sourceLen;
+};
 
 typedef struct _NodeArgc NodeArgc;
 typedef void(*NodeInitCallBack)(NodeArgc*);

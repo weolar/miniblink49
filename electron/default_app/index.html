@@ -114,6 +114,7 @@
 </head>
 <body>
   <script>
+  /*
     const remote = require('electron').remote;
     const shell = require('electron').shell;
 
@@ -130,6 +131,8 @@
       e.preventDefault();
       return false;
     };
+    */
+    require('electron').ipcRenderer.send('test!!!!');
   </script>
 
   <div class="header">

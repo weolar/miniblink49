@@ -105,7 +105,7 @@ static void workerRun(NodeArgc* nodeArgc) {
     nodeArgc->initType = true;
     ::SetEvent(nodeArgc->initEvent);
 
-    nodeArgc->v8platform = (v8::Platform*)node::nodeCreateDefaultPlatform();
+    nodeArgc->v8platform = (v8::Platform*)nodeCreateDefaultPlatform();
 
     base::SetThreadName("NodeCore");
     ThreadCall::createBlinkThread(nodeArgc->v8platform);
@@ -135,26 +135,9 @@ loop_init_failed:
 NodeArgc* runNodeThread() {
     NodeArgc* nodeArgc = (NodeArgc *)malloc(sizeof(NodeArgc));
     memset(nodeArgc, 0, sizeof(NodeArgc));
-//     nodeArgc->initcall = initcall;
-//     nodeArgc->preInitcall = preInitcall;
     nodeArgc->childLoop = (uv_loop_t *)malloc(sizeof(uv_loop_t));
 
     nodeArgc->m_nodeBinding = new NodeBindings(true, nodeArgc->childLoop);
-//     nodeArgc->argv = new char*[argc + 1];
-//     for (int i = 0; i < argc; i++) {
-//         // Compute the size of the required buffer
-//         DWORD size = WideCharToMultiByte(CP_UTF8, 0, wargv[i], -1, nullptr, 0, nullptr, nullptr);
-//         if (size == 0)
-//             ::DebugBreak();
-//         
-//         // Do the actual conversion
-//         nodeArgc->argv[i] = new char[size];
-//         DWORD result = WideCharToMultiByte(CP_UTF8, 0, wargv[i], -1, nodeArgc->argv[i], size, nullptr, nullptr);
-//         if (result == 0)
-//             ::DebugBreak();
-//     }
-//     nodeArgc->argv[argc] = nullptr;
-//     nodeArgc->argc = argc;
 
     nodeArgc->initEvent = ::CreateEvent(NULL, FALSE, FALSE, NULL); // 创建一个对象,用来等待node环境基础环境创建成功
     int err = uv_thread_create(&nodeArgc->thread, reinterpret_cast<uv_thread_cb>(workerRun), nodeArgc);

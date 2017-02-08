@@ -31,6 +31,8 @@ public:
         v8::Isolate* isolate = args.GetIsolate();
         v8::HandleScope scope(isolate);
 
+        new Electron(isolate, args.This());
+
         if (args.IsConstructCall()) {
             args.GetReturnValue().Set(args.This());
             return;
