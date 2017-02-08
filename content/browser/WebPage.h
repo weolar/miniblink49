@@ -118,6 +118,8 @@ public:
 	blink::WebViewImpl* webViewImpl();
 	blink::WebFrame* mainFrame();
 
+    static WebPage* getSelfForCurrentContext();
+
     WebFrameClientImpl* webFrameClientImpl();
 
 	blink::WebFrame* getWebFrameFromFrameId(int64 frameId);

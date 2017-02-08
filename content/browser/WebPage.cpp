@@ -400,6 +400,14 @@ void WebPage::didCommitProvisionalLoad(blink::WebLocalFrame* frame, const blink:
         m_pageImpl->didCommitProvisionalLoad(frame, history, type);
 }
 
+WebPage* WebPage::getSelfForCurrentContext()
+{
+    WebPageImpl* impl = WebPageImpl::getSelfForCurrentContext();
+    if (!impl)
+        return nullptr;
+    return impl->m_pagePtr;
+}
+
 WebViewImpl* WebPage::webViewImpl()
 {
     ASSERT(m_pageImpl);

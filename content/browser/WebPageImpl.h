@@ -135,6 +135,8 @@ public:
     virtual int historyBackListCount() override;
     virtual int historyForwardListCount() override;
 
+    static WebPageImpl* getSelfForCurrentContext();
+
 	bool initSetting();
 #if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 	CefBrowserHostImpl* browser() const;

@@ -1191,6 +1191,19 @@ void WebPageImpl::loadHTMLString(int64 frameId, const WebData& html, const WebUR
     webFrame->loadHTMLString(html, baseURL, unreachableURL, replace);
 }
 
+WebPageImpl* WebPageImpl::getSelfForCurrentContext()
+{
+    blink::WebLocalFrame* frame = blink::WebLocalFrame::frameForCurrentContext();
+    if (!frame)
+        return nullptr;
+    blink::WebViewImpl* impl = (blink::WebViewImpl*)frame->view();
+    if (!impl)
+        return nullptr;
+
+    content::WebPageImpl* page = (content::WebPageImpl*)impl->client();
+    return page;
+}
+
 #if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 CefBrowserHostImpl* WebPageImpl::browser() const 
 {

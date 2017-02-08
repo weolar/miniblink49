@@ -155,7 +155,7 @@ void BlinkPlatformImpl::initialize()
 
     platform->startGarbageCollectedThread();
 
-    OutputDebugStringW(L"WebPageImpl::initBlink\n");
+    OutputDebugStringW(L"BlinkPlatformImpl::initBlink\n");
 }
 
 BlinkPlatformImpl::BlinkPlatformImpl() 
