@@ -1,22 +1,25 @@
-console.log("BrowserWindow!");
+
 process.binding('atom_browser_web_contents');
 
 const EventEmitter = require('events').EventEmitter;
 const BrowserWindow = process.binding('atom_browser_window').BrowserWindow;
 Object.setPrototypeOf(BrowserWindow.prototype, EventEmitter.prototype);
 
+require('./web-contents');
+
+// Helpers.
 Object.defineProperty(BrowserWindow.prototype, "webContents", {
 	get: function () {
-		return this.getWebContents();
+		var webContents =  this._getWebContents();
+		webContents._init();
+		return webContents;
 	},
 	configurable : true
 });
-
-// Helpers.
+	
 Object.assign(BrowserWindow.prototype, {
   loadURL (...args) {
-  	console.log("_loadURL:" + this.webContents()._loadURL);
-    return this.webContents()._loadURL.apply(this.webContents(), args)
+    return this.webContents._loadURL.apply(this.webContents, args)
   },
   getURL (...args) {
     return this.webContents.getURL()

@@ -2,9 +2,6 @@
 #include <node_object_wrap.h>
 #include "wke.h"
 
-using namespace v8;
-using namespace node;
-
 namespace atom {
 
 // 继承node的ObjectWrap，一般自定义C++类都应该继承node的ObjectWrap

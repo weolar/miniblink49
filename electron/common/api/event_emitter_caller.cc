@@ -17,7 +17,7 @@ v8::Local<v8::Value> CallEmitWithArgs(v8::Isolate* isolate, v8::Local<v8::Object
 #endif
     // Use node::MakeCallback to call the callback, and it will also run pending
     // tasks in Node.js.
-    return node::MakeCallback(isolate, obj, "emit", args->size(), &args->front()); // 
+    return node::MakeCallback(isolate, obj, "emit", args->size(), &args->front()); 
 }
 
 }  // namespace internal

@@ -6,15 +6,11 @@
 #include "browser/api/WindowList.h"
 #include "common/ThreadCall.h"
 #include "common/StringUtil.h"
-#include "common/NodeBinding.h"
 #include "common/api/event_emitter.h"
 #include "common/IdLiveDetect.h"
 #include "wke.h"
 #include "gin/per_isolate_data.h"
 #include "gin/object_template_builder.h"
-
-using namespace v8;
-using namespace node;
 
 namespace atom {
 
@@ -39,9 +35,6 @@ public:
     ~Window() {
         DebugBreak();
 
-        if (m_nodeBinding)
-            delete m_nodeBinding;
-
         if (m_memoryBMP)
             ::DeleteObject(m_memoryBMP);
         if (m_memoryDC)
@@ -58,15 +51,15 @@ public:
         ::DeleteCriticalSection(&m_memoryCanvasLock);
     }
 
-    static void init(Local<Object> target, Environment* env) {
-        Isolate* isolate = env->isolate();
+    static void init(v8::Local<v8::Object> target, node::Environment* env) {
+        v8::Isolate* isolate = env->isolate();
         gin::PerIsolateData* perIsolateData = new gin::PerIsolateData(isolate, nullptr);
 
-        Local<FunctionTemplate> prototype = FunctionTemplate::New(isolate, newFunction); // Function模板
+        v8::Local<v8::FunctionTemplate> prototype = v8::FunctionTemplate::New(isolate, newFunction); // Function模板
         
-        prototype->SetClassName(String::NewFromUtf8(isolate, "BrowserWindow"));
+        prototype->SetClassName(v8::String::NewFromUtf8(isolate, "BrowserWindow"));
         gin::ObjectTemplateBuilder builder(isolate, prototype->InstanceTemplate());
-        builder.SetMethod("webContents", &Window::getWebContentsApi);
+        builder.SetMethod("_getWebContents", &Window::_getWebContentsApi);
         builder.SetMethod("close", &Window::closeApi);
         builder.SetMethod("focus", &Window::focusApi);
         builder.SetMethod("blur", &Window::blurApi);
@@ -159,12 +152,12 @@ public:
         builder.SetMethod("setAppDetails", &Window::setAppDetailsApi);
         builder.SetMethod("setIcon", &Window::setIconApi);
         //NODE_SET_PROTOTYPE_METHOD(prototype, &Window::"id", &Window::nullFunction);
-        builder.SetMethod("getWebContents", &Window::getWebContentsApi);
+        builder.SetMethod("_getWebContents", &Window::_getWebContentsApi);
 
         // 设置constructor
         constructor.Reset(isolate, prototype->GetFunction());
         // export `BrowserWindow`
-        target->Set(String::NewFromUtf8(isolate, "BrowserWindow"), prototype->GetFunction());
+        target->Set(v8::String::NewFromUtf8(isolate, "BrowserWindow"), prototype->GetFunction());
     }
 
 //     static void staticOnPaintUpdated(wkeWebView webView, Window* win, const HDC hdc, int x, int y, int cx, int cy) {
@@ -374,8 +367,9 @@ public:
                 wkeRepaintIfNeeded(pthis);
             });
 
-            if (WindowInited == win->m_state)
+            if (WindowInited == win->m_state) {
                 win->mate::EventEmitter<Window>::Emit("resize");
+            }
             return 0;
         }
         case WM_KEYDOWN: {
@@ -539,32 +533,7 @@ public:
         return ::DefWindowProcW(hWnd, message, wParam, lParam);
     }
 
-    struct CreateWindowParam {
-        int x;
-        int y;
-        int width;
-        int height;
-        unsigned styles;
-        unsigned styleEx;
-        bool transparent;
-        std::wstring title;
-    };
-
-    static void staticDidCreateScriptContextCallback(wkeWebView webView, void* param, void* frame, void* context, int extensionGroup, int worldId) {
-        Window* self = (Window*)param;
-        self->onDidCreateScriptContext(webView, frame, (v8::Local<v8::Context>*)context, extensionGroup, worldId);
-    }
     
-    void onDidCreateScriptContext(wkeWebView webView, void* frame, v8::Local<v8::Context>* context, int extensionGroup, int worldId) {
-        if (m_nodeBinding)
-            return;
-
-        BlinkMicrotaskSuppressionHandle handle = nodeBlinkMicrotaskSuppressionEnter((*context)->GetIsolate());
-        m_nodeBinding = new NodeBindings(false, ThreadCall::blinkLoop());
-        node::Environment* env = m_nodeBinding->createEnvironment(*context);
-        node::LoadEnvironment(env);
-        nodeBlinkMicrotaskSuppressionLeave(handle);
-    }
 
     static v8::Local<v8::Value> toBuffer(v8::Isolate* isolate, void* val, int size) {
         auto buffer = node::Buffer::Copy(isolate, static_cast<char*>(val), size);
@@ -577,13 +546,13 @@ public:
 
     static Window* newWindow(gin::Dictionary* options, v8::Local<v8::Object> wrapper) {
         Window* win = new Window(options->isolate(), wrapper);
-        CreateWindowParam createWindowParam;
+        WebContents::CreateWindowParam createWindowParam;
         createWindowParam.styles = 0;
         createWindowParam.styleEx = 0;
         createWindowParam.transparent = false;
 
         WebContents* webContents = nullptr;
-        Handle<Object> webContentsV8;
+        v8::Handle<v8::Object> webContentsV8;
         // If no WebContents was passed to the constructor, create it from options.
         if (!options->Get("webContents", &webContentsV8)) {
             // Use options.webPreferences to create WebContents.
@@ -649,7 +618,7 @@ public:
         return win;
     }
 
-    void newWindowTaskInUiThread(const CreateWindowParam* createWindowParam) {
+    void newWindowTaskInUiThread(const WebContents::CreateWindowParam* createWindowParam) {
         m_hWnd = ::CreateWindowEx(
             createWindowParam->styleEx,        // window ex-style
             L"mb_electron_window",    // window class name
@@ -672,14 +641,8 @@ public:
 
         Window* win = this;
         ThreadCall::callBlinkThreadSync([win, createWindowParam] {
-            if (createWindowParam->transparent)
-                wkeSetTransparent(win->m_webContents->getWkeView(), true);
-            wkeSettings settings;
-            settings.mask = WKE_SETTING_PAINTCALLBACK_IN_OTHER_THREAD;
-            wkeConfigure(&settings);
-            wkeResize(win->m_webContents->getWkeView(), createWindowParam->width, createWindowParam->height);
+            win->m_webContents->onNewWindowInBlinkThread(createWindowParam);
             wkeOnPaintUpdated(win->m_webContents->getWkeView(), (wkePaintUpdatedCallback)staticOnPaintUpdatedInCompositeThread, win);
-            wkeOnDidCreateScriptContext(win->m_webContents->getWkeView(), staticDidCreateScriptContextCallback, win);
         });
 
         ::ShowWindow(m_hWnd, TRUE);
@@ -688,8 +651,8 @@ public:
 
 private:
     static void newFunction(const v8::FunctionCallbackInfo<v8::Value>& args) {
-        Isolate* isolate = args.GetIsolate();
-        HandleScope scope(isolate);
+        v8::Isolate* isolate = args.GetIsolate();
+        v8::HandleScope scope(isolate);
 
         if (args.IsConstructCall()) {
             if (args.Length() > 1)
@@ -705,9 +668,9 @@ private:
         } else {
             // 使用`Point(...)`
             const int argc = 2;
-            Local<Value> argv[argc] = { args[0], args[1] };
+            v8::Local<v8::Value> argv[argc] = { args[0], args[1] };
             // 使用constructor构建Function
-            Local<Function> cons = Local<Function>::New(isolate, constructor);
+            v8::Local<v8::Function> cons = v8::Local<v8::Function>::New(isolate, constructor);
             args.GetReturnValue().Set(cons->NewInstance(argc, argv));
             DebugBreak();
         }
@@ -813,28 +776,28 @@ private:
         return (UINT_PTR)m_hWnd;
     }
 
-    Local<Object> getBoundsApi() {
+    v8::Local<v8::Object> getBoundsApi() {
         RECT clientRect;
         ::EnterCriticalSection(&m_memoryCanvasLock);
         clientRect = m_clientRect;
         ::LeaveCriticalSection(&m_memoryCanvasLock);
-        Local<Integer> x = Integer::New(isolate(), clientRect.left);
-        Local<Integer> y = Integer::New(isolate(), clientRect.top);
-        Local<Integer> width = Integer::New(isolate(), clientRect.right - clientRect.left);
-        Local<Integer> height = Integer::New(isolate(), clientRect.bottom - clientRect.top);
-        Local<Object> bounds = Object::New(isolate());
-        bounds->Set(String::NewFromUtf8(isolate(), "x"), x);
-        bounds->Set(String::NewFromUtf8(isolate(), "y"), y);
-        bounds->Set(String::NewFromUtf8(isolate(), "width"), width);
-        bounds->Set(String::NewFromUtf8(isolate(), "height"), height);
+        v8::Local<v8::Integer> x = v8::Integer::New(isolate(), clientRect.left);
+        v8::Local<v8::Integer> y = v8::Integer::New(isolate(), clientRect.top);
+        v8::Local<v8::Integer> width = v8::Integer::New(isolate(), clientRect.right - clientRect.left);
+        v8::Local<v8::Integer> height = v8::Integer::New(isolate(), clientRect.bottom - clientRect.top);
+        v8::Local<v8::Object> bounds = v8::Object::New(isolate());
+        bounds->Set(v8::String::NewFromUtf8(isolate(), "x"), x);
+        bounds->Set(v8::String::NewFromUtf8(isolate(), "y"), y);
+        bounds->Set(v8::String::NewFromUtf8(isolate(), "width"), width);
+        bounds->Set(v8::String::NewFromUtf8(isolate(), "height"), height);
         return bounds;
     }
 
     void setBoundsApi(v8::Local<v8::Object> bounds) {
-        LONG x = (LONG)bounds->Get(String::NewFromUtf8(isolate(), "x"))->NumberValue();
-        LONG y = (LONG)bounds->Get(String::NewFromUtf8(isolate(), "y"))->NumberValue();
-        LONG width = (LONG)bounds->Get(String::NewFromUtf8(isolate(), "width"))->NumberValue();
-        LONG height = (LONG)bounds->Get(String::NewFromUtf8(isolate(), "height"))->NumberValue();
+        LONG x = (LONG)bounds->Get(v8::String::NewFromUtf8(isolate(), "x"))->NumberValue();
+        LONG y = (LONG)bounds->Get(v8::String::NewFromUtf8(isolate(), "y"))->NumberValue();
+        LONG width = (LONG)bounds->Get(v8::String::NewFromUtf8(isolate(), "width"))->NumberValue();
+        LONG height = (LONG)bounds->Get(v8::String::NewFromUtf8(isolate(), "height"))->NumberValue();
         ::MoveWindow(m_hWnd, x, y, width, height, TRUE);
     }
 
@@ -843,9 +806,9 @@ private:
         ::EnterCriticalSection(&m_memoryCanvasLock);
         clientRect = m_clientRect;
         ::LeaveCriticalSection(&m_memoryCanvasLock);
-        v8::Local<v8::Integer> width = Integer::New(isolate(), clientRect.right - clientRect.left);
-        v8::Local<v8::Integer> height = Integer::New(isolate(), clientRect.bottom - clientRect.top);
-        v8::Local<v8::Array> size = Array::New(isolate(), 2);
+        v8::Local<v8::Integer> width = v8::Integer::New(isolate(), clientRect.right - clientRect.left);
+        v8::Local<v8::Integer> height = v8::Integer::New(isolate(), clientRect.bottom - clientRect.top);
+        v8::Local<v8::Array> size = v8::Array::New(isolate(), 2);
         size->Set(0, width);
         size->Set(1, height);
         return size;
@@ -1075,7 +1038,7 @@ private:
     void setIconApi() {
     }
 
-    v8::Local<v8::Value> getWebContentsApi() {
+    v8::Local<v8::Value> _getWebContentsApi() {
         if (!m_webContents)
             return v8::Null(isolate());
         else
@@ -1087,7 +1050,7 @@ private:
     }
 
     static v8::Persistent<v8::Function> constructor;
-
+    WebContents* getWebContents() { return m_webContents; }
 public:
     static gin::WrapperInfo kWrapperInfo;
 
@@ -1101,7 +1064,6 @@ private:
     WindowState m_state;
     static const WCHAR* kPrppW;
     WebContents* m_webContents;
-    NodeBindings* m_nodeBinding;
     
     HWND m_hWnd;
     CRITICAL_SECTION m_memoryCanvasLock;
@@ -1113,11 +1075,11 @@ private:
 };
 
 const WCHAR* Window::kPrppW = L"mele";
-Persistent<Function> Window::constructor;
+v8::Persistent<v8::Function> Window::constructor;
 gin::WrapperInfo Window::kWrapperInfo = { gin::kEmbedderNativeGin };
 
-static void initializeWindowApi(Local<Object> target, Local<Value> unused, Local<Context> context, const NodeNative* native) {
-    Environment* env = Environment::GetCurrent(context);
+static void initializeWindowApi(v8::Local<v8::Object> target, v8::Local<v8::Value> unused, v8::Local<v8::Context> context, const NodeNative* native) {
+    node::Environment* env = node::Environment::GetCurrent(context);
     Window::init(target, env);
     WNDCLASS wndClass = { 0 };
     if (!GetClassInfoW(NULL, L"mb_electron_window", &wndClass)) {

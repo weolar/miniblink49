@@ -1,5 +1,4 @@
 'use strict'
-console.log('renderer/ipc-renderer.js');
 
 var IpcRendererBinding = process.binding('atom_renderer_ipc').ipcRenderer;
 const EventEmitter = require('events').EventEmitter;
@@ -10,7 +9,7 @@ const electron = require('electron');
 
 var ipcRenderer = new EventEmitter();
 
-ipcRenderer.send = function (...args) {console.log('renderer/ipc-renderer~~~~~~~~~~~~~~~~~~~~~: ' + binding);
+ipcRenderer.send = function (...args) {
   return binding.send('ipc-message', args)
 }
 

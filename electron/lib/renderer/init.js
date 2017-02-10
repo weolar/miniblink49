@@ -1,5 +1,4 @@
 'use strict'
-console.log('renderer/init.js');
 
 require('./electron.js');
 

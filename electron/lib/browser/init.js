@@ -11,7 +11,6 @@ const util = require('util');
 const Module = require('module');
 const v8 = require('v8');
 const app = require('electron').app;
-console.log('init.js: ' + app);
 
 // Import common settings.
 require('./../common/init');

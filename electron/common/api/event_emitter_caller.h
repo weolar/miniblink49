@@ -49,6 +49,49 @@ v8::Local<v8::Value> EmitEvent(v8::Isolate* isolate,
   return internal::CallEmitWithArgs(isolate, obj, &converted_args);
 }
 
+// obj.emit(name, event, listArgs...);
+// The caller is responsible of allocating a HandleScope.
+template<typename StringType, typename... Args>
+v8::Local<v8::Value> EmitEvent(v8::Isolate* isolate, v8::Local<v8::Object> obj,
+    const StringType& name, v8::Local<v8::Object> event, const base::ListValue& args) {
+    internal::ValueVector converted_args = {
+        gin::StringToV8(isolate, name),
+        gin::ConvertToV8(isolate, event)
+    };
+
+    bool boolVal = false;
+    int intVal = 0;
+    double doubleVal = 0;
+    std::string strVal;
+    for (size_t i = 0; i < args.GetSize(); ++i) {
+        const base::Value* outValue;
+        args.Get(i, &outValue);
+        base::Value::Type type = outValue->GetType();
+        switch (type) {
+        case base::Value::TYPE_BOOLEAN:
+            outValue->GetAsBoolean(&boolVal);
+            converted_args.push_back(v8::Boolean::New(isolate, boolVal));
+            break;
+        case base::Value::TYPE_INTEGER:
+            outValue->GetAsInteger(&intVal);
+            converted_args.push_back(v8::Integer::New(isolate, intVal));
+        case base::Value::TYPE_DOUBLE:
+            outValue->GetAsDouble(&doubleVal);
+            converted_args.push_back(v8::Number::New(isolate, doubleVal));
+            break;
+        case base::Value::TYPE_STRING:
+            outValue->GetAsString(&strVal);
+            converted_args.push_back(String::NewFromUtf8(isolate, strVal.c_str(), v8::NewStringType::kNormal, strVal.size()).ToLocalChecked());
+            break;
+        default:
+            converted_args.push_back(v8::Null(isolate));
+            break;
+        }
+    }
+
+    return internal::CallEmitWithArgs(isolate, obj, &converted_args);
+}
+
 }  // namespace mate
 
 #endif  // ATOM_COMMON_API_EVENT_EMITTER_CALLER_H_

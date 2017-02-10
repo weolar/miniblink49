@@ -1,5 +1,6 @@
 
 #include "node/include/nodeblink.h"
+#include "browser/api/ApiWebContents.h"
 #include "common/NodeRegisterHelp.h"
 #include "common/api/event_emitter.h"
 #include "gin/dictionary.h"
@@ -29,34 +30,23 @@ public:
         target->Set(v8::String::NewFromUtf8(isolate, "ipcRenderer"), prototype->GetFunction());
     }
 
-    void rendererIpcSend(const std::string& channel, v8::Local<v8::Array> arguments) {
-        uint32_t len = arguments->Length();
+    void rendererIpcSend(const std::string& channel, const base::ListValue& arguments) {
+        //uint32_t len = arguments->Length();
 
         wkeWebView view = wkeGetWebViewForCurrentContext();
-        OutputDebugStringA("rendererIpcSend\n");
-
-        //     RenderView* render_view = GetCurrentRenderView();
-        //     if (render_view == nullptr)
-        //         return;
-        // 
-        //     bool success = render_view->Send(new AtomViewHostMsg_Message(
-        //         render_view->GetRoutingID(), channel, arguments));
+        if (!view)
+            return;
+        WebContents* webContents = (WebContents*)wkeGetUserKayValue(view, "WebContents");
+        if (!webContents)
+            return;
+        webContents->postMessage(channel, arguments);
 
         //     if (!success)
         //         args->ThrowError("Unable to send AtomViewHostMsg_Message");
     }
 
-    std::string rendererIpcSendSync(const std::string& channel, v8::Local<v8::Array> arguments) { // base::ListValue
+    std::string rendererIpcSendSync(const std::string& channel, const base::ListValue& arguments) {
         std::string json;
-        OutputDebugStringA("rendererIpcSendSync\n");
-
-        //     RenderView* render_view = GetCurrentRenderView();
-        //     if (render_view == nullptr)
-        //         return json;
-        // 
-        //     IPC::SyncMessage* message = new AtomViewHostMsg_Message_Sync(
-        //         render_view->GetRoutingID(), channel, arguments, &json);
-        //     bool success = render_view->Send(message);
 
         //     if (!success)
         //         args->ThrowError("Unable to send AtomViewHostMsg_Message_Sync");
