@@ -164,6 +164,12 @@
     <ClCompile Include="..\..\electron\renderer\api\ApiRendererIpc.cpp">
       <Filter>src\renerer\api</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\electron\common\IdLiveDetect.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\base\values.cc">
+      <Filter>base</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\base\thread.h">
@@ -237,6 +243,12 @@
     </ClInclude>
     <ClInclude Include="..\..\electron\renderer\api\ApiRendererIpc.h">
       <Filter>src\renerer\api</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\electron\common\IdLiveDetect.h">
+      <Filter>src\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\base\values.h">
+      <Filter>base</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

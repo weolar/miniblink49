@@ -27,6 +27,7 @@
     <ClCompile Include="..\..\base\ostream_for_other_vc6.cpp" />
     <ClCompile Include="..\..\base\strings\string_piece.cc" />
     <ClCompile Include="..\..\base\thread.cc" />
+    <ClCompile Include="..\..\base\values.cc" />
     <ClCompile Include="..\..\cef\libcef_dll\base\cef_atomicops_x86_gcc.cc" />
     <ClCompile Include="..\..\cef\libcef_dll\base\cef_bind_helpers.cc" />
     <ClCompile Include="..\..\cef\libcef_dll\base\cef_callback_helpers.cc" />
@@ -49,6 +50,7 @@
     <ClCompile Include="..\..\electron\common\api\event_emitter.cc" />
     <ClCompile Include="..\..\electron\common\api\event_emitter_caller.cc" />
     <ClCompile Include="..\..\electron\common\AtomCommandLine.cpp" />
+    <ClCompile Include="..\..\electron\common\IdLiveDetect.cpp" />
     <ClCompile Include="..\..\electron\common\NodeBinding.cpp" />
     <ClCompile Include="..\..\electron\common\NodeThread.cpp" />
     <ClCompile Include="..\..\electron\common\OptionsSwitches.cpp" />
@@ -67,6 +69,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\base\strings\string_piece.h" />
     <ClInclude Include="..\..\base\thread.h" />
+    <ClInclude Include="..\..\base\values.h" />
     <ClInclude Include="..\..\electron\browser\api\ApiApp.h" />
     <ClInclude Include="..\..\electron\browser\api\ApiWebContents.h" />
     <ClInclude Include="..\..\electron\browser\api\WindowList.h" />
@@ -74,6 +77,7 @@
     <ClInclude Include="..\..\electron\common\api\event_emitter.h" />
     <ClInclude Include="..\..\electron\common\api\event_emitter_caller.h" />
     <ClInclude Include="..\..\electron\common\AtomCommandLine.h" />
+    <ClInclude Include="..\..\electron\common\IdLiveDetect.h" />
     <ClInclude Include="..\..\electron\common\NodeBinding.h" />
     <ClInclude Include="..\..\electron\common\NodeRegisterHelp.h" />
     <ClInclude Include="..\..\electron\common\NodeThread.h" />
