@@ -1,7 +1,7 @@
 ﻿
 #include "node/include/nodeblink.h"
 #include "common/NodeRegisterHelp.h"
-#include "common/api/event_emitter.h"
+#include "common/api/EventEmitter.h"
 #include "gin/object_template_builder.h"
 #include "wke.h"
 
@@ -29,7 +29,6 @@ public:
 
     static void newFunction(const v8::FunctionCallbackInfo<v8::Value>& args) {
         v8::Isolate* isolate = args.GetIsolate();
-        v8::HandleScope scope(isolate);
 
         new Electron(isolate, args.This());
 
@@ -48,8 +47,8 @@ v8::Persistent<v8::Function> Electron::constructor;
 gin::WrapperInfo Electron::kWrapperInfo = { gin::kEmbedderNativeGin };
 
 static void initializeElectronApi(v8::Local<v8::Object> target, v8::Local<v8::Value> unused, v8::Local<v8::Context> context, const NodeNative* native) {
-    node::Environment* env = node::Environment::GetCurrent(context);
-    Electron::init(target, env->isolate());
+    //node::Environment* env = node::Environment::GetCurrent(context);
+    //Electron::init(target, env->isolate());
 }
 
 static const char BrowserElectronNative[] =
@@ -60,8 +59,6 @@ static const char BrowserElectronNative[] =
 "//const App = process.binding('atom_browser_app').App;"
 "//var electron = {app : App};"
 "exports = {};";
-
-static const char BrowserElectronNative2[] = "./common/electron";
 
 static NodeNative nativeBrowserAppNative{ "electron", BrowserElectronNative, sizeof(BrowserElectronNative) - 1 };
 

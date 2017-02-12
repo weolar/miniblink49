@@ -1,7 +1,6 @@
 'use strict';
 
-//process.binding('atom_browser_app');
-process.binding('atom_browser_electron');
+//process.binding('atom_browser_electron');
 
 require('./electron');
 
@@ -14,6 +13,7 @@ const app = require('electron').app;
 
 // Import common settings.
 require('./../common/init');
+require('./rpc-server');
 
 let packagePath = __dirname + '/../../default_app/';
 

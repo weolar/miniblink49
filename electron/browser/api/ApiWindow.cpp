@@ -6,7 +6,7 @@
 #include "browser/api/WindowList.h"
 #include "common/ThreadCall.h"
 #include "common/StringUtil.h"
-#include "common/api/event_emitter.h"
+#include "common/api/EventEmitter.h"
 #include "common/IdLiveDetect.h"
 #include "wke.h"
 #include "gin/per_isolate_data.h"
@@ -362,13 +362,13 @@ public:
             ::GetClientRect(hWnd, &win->m_clientRect);
             ::LeaveCriticalSection(&win->m_memoryCanvasLock);
             
-            ThreadCall::callBlinkThreadSync([pthis, lParam] {
+            ThreadCall::callBlinkThreadAsync([pthis, lParam] {
                 wkeResize(pthis, LOWORD(lParam), HIWORD(lParam));
                 wkeRepaintIfNeeded(pthis);
             });
 
             if (WindowInited == win->m_state) {
-                win->mate::EventEmitter<Window>::Emit("resize");
+                win->mate::EventEmitter<Window>::emit("resize");
             }
             return 0;
         }
@@ -503,12 +503,12 @@ public:
             return 0;
 
         case WM_SETCURSOR: {
-            bool retVal = false;
-            ThreadCall::callBlinkThreadSync([pthis, hWnd, &retVal] {
-                retVal = wkeFireWindowsMessage(pthis, hWnd, WM_SETCURSOR, 0, 0, nullptr);
-            });
-            if (retVal)
-                return 0;
+//             bool retVal = false;
+//             ThreadCall::callBlinkThreadSync([pthis, hWnd, &retVal] {
+//                 retVal = wkeFireWindowsMessage(pthis, hWnd, WM_SETCURSOR, 0, 0, nullptr);
+//             });
+//             if (retVal)
+//                 return 0;
         }
             break;
 
@@ -533,8 +533,6 @@ public:
         return ::DefWindowProcW(hWnd, message, wParam, lParam);
     }
 
-    
-
     static v8::Local<v8::Value> toBuffer(v8::Isolate* isolate, void* val, int size) {
         auto buffer = node::Buffer::Copy(isolate, static_cast<char*>(val), size);
         if (buffer.IsEmpty()) {
@@ -544,138 +542,9 @@ public:
         }
     }
 
-    static Window* newWindow(gin::Dictionary* options, v8::Local<v8::Object> wrapper) {
-        Window* win = new Window(options->isolate(), wrapper);
-        WebContents::CreateWindowParam createWindowParam;
-        createWindowParam.styles = 0;
-        createWindowParam.styleEx = 0;
-        createWindowParam.transparent = false;
-
-        WebContents* webContents = nullptr;
-        v8::Handle<v8::Object> webContentsV8;
-        // If no WebContents was passed to the constructor, create it from options.
-        if (!options->Get("webContents", &webContentsV8)) {
-            // Use options.webPreferences to create WebContents.
-            gin::Dictionary webPreferences = gin::Dictionary::CreateEmpty(options->isolate());
-            options->Get(options::kWebPreferences, &webPreferences);
-
-            // Copy the backgroundColor to webContents.
-            v8::Local<v8::Value> value;
-            if (options->Get(options::kBackgroundColor, &value))
-                webPreferences.Set(options::kBackgroundColor, value);
-
-            v8::Local<v8::Value> transparent;
-            if (options->Get("transparent", &transparent))
-                webPreferences.Set("transparent", transparent);
-
-            // Offscreen windows are always created frameless.
-            bool offscreen;
-            if (webPreferences.Get("offscreen", &offscreen) && offscreen) {
-                options->Set(options::kFrame, false);
-            }
-            webContents = WebContents::create(options->isolate(), webPreferences);
-        } else
-            DebugBreak();
-            //webContents = WebContents::ObjectWrap::Unwrap<WebContents>(webContentsV8);
-
-        win->m_webContents = webContents;
-
-        v8::Local<v8::Value> transparent;
-        options->Get("transparent", &transparent);
-        v8::Local<v8::Value> height;
-        options->Get("height", &height);
-        v8::Local<v8::Value> width;
-        options->Get("width", &width);
-        v8::Local<v8::Value> x;
-        options->Get("x", &x);
-        v8::Local<v8::Value> y;
-        options->Get("y", &y);
-        v8::Local<v8::Value> title;
-        options->Get("title", &title);
-        if (title->IsString()) {
-            v8::String::Utf8Value str(title);
-            createWindowParam.title = StringUtil::UTF8ToUTF16(*str);
-        } else 
-            createWindowParam.title = L"Electron";
-        
-        createWindowParam.x = x->Int32Value();
-        createWindowParam.y = y->Int32Value();
-        createWindowParam.width = width->Int32Value();
-        createWindowParam.height = height->Int32Value();
-
-        if (transparent->IsBoolean() && transparent->ToBoolean()->BooleanValue()) {
-            createWindowParam.transparent = true;
-            createWindowParam.styles = WS_POPUP;
-            createWindowParam.styleEx = WS_EX_LAYERED;
-        } else {
-            createWindowParam.styles = WS_OVERLAPPEDWINDOW;
-            createWindowParam.styleEx = 0;
-        }
-
-        //ThreadCall::callUiThreadSync([win, &createWindowParam] {
-            win->newWindowTaskInUiThread(&createWindowParam);
-        //});
-        return win;
-    }
-
-    void newWindowTaskInUiThread(const WebContents::CreateWindowParam* createWindowParam) {
-        m_hWnd = ::CreateWindowEx(
-            createWindowParam->styleEx,        // window ex-style
-            L"mb_electron_window",    // window class name
-            createWindowParam->title.c_str(), // window caption
-            createWindowParam->styles,         // window style
-            createWindowParam->x,              // initial x position
-            createWindowParam->y,              // initial y position
-            createWindowParam->width,          // initial x size
-            createWindowParam->height,         // initial y size
-            NULL,         // parent window handle
-            NULL,           // window menu handle
-            ::GetModuleHandleW(NULL),           // program instance handle
-            this);         // creation parameters
-
-        if (!::IsWindow(m_hWnd))
-            return;
-
-        m_clientRect.right = createWindowParam->width;
-        m_clientRect.bottom = createWindowParam->height;
-
-        Window* win = this;
-        ThreadCall::callBlinkThreadSync([win, createWindowParam] {
-            win->m_webContents->onNewWindowInBlinkThread(createWindowParam);
-            wkeOnPaintUpdated(win->m_webContents->getWkeView(), (wkePaintUpdatedCallback)staticOnPaintUpdatedInCompositeThread, win);
-        });
-
-        ::ShowWindow(m_hWnd, TRUE);
-        m_state = WindowInited;
-    }
+    
 
 private:
-    static void newFunction(const v8::FunctionCallbackInfo<v8::Value>& args) {
-        v8::Isolate* isolate = args.GetIsolate();
-        v8::HandleScope scope(isolate);
-
-        if (args.IsConstructCall()) {
-            if (args.Length() > 1)
-                return;
-            
-            gin::Dictionary options(isolate, args[0]->ToObject()); // 使用new调用 `new Point(...)`
-            Window* win = newWindow(&options, args.This());
-            WindowList::GetInstance()->AddWindow(win);
-            
-			// win->Wrap(args.This(), isolate); // 包装this指针 // weolar
-            args.GetReturnValue().Set(args.This());
-            // args.GetReturnValue().Set(win->GetWrapper());
-        } else {
-            // 使用`Point(...)`
-            const int argc = 2;
-            v8::Local<v8::Value> argv[argc] = { args[0], args[1] };
-            // 使用constructor构建Function
-            v8::Local<v8::Function> cons = v8::Local<v8::Function>::New(isolate, constructor);
-            args.GetReturnValue().Set(cons->NewInstance(argc, argv));
-            DebugBreak();
-        }
-    }
-
     void closeApi() {
         ::SendMessage(m_hWnd, WM_CLOSE, 0, 0);
     }
@@ -1042,12 +911,146 @@ private:
         if (!m_webContents)
             return v8::Null(isolate());
         else
-            return v8::Local<v8::Value>::New(isolate(), m_webContents->GetWrapper());
+            return v8::Local<v8::Value>::New(isolate(), m_webContents->getWrapper());
     }
 
     // 空实现
     void nullFunction() {
     }
+
+    static Window* newWindow(gin::Dictionary* options, v8::Local<v8::Object> wrapper) {
+        Window* win = new Window(options->isolate(), wrapper);
+        WebContents::CreateWindowParam createWindowParam;
+        createWindowParam.styles = 0;
+        createWindowParam.styleEx = 0;
+        createWindowParam.transparent = false;
+
+        WebContents* webContents = nullptr;
+        v8::Handle<v8::Object> webContentsV8;
+        // If no WebContents was passed to the constructor, create it from options.
+        if (!options->Get("webContents", &webContentsV8)) {
+            // Use options.webPreferences to create WebContents.
+            gin::Dictionary webPreferences = gin::Dictionary::CreateEmpty(options->isolate());
+            options->Get(options::kWebPreferences, &webPreferences);
+
+            // Copy the backgroundColor to webContents.
+            v8::Local<v8::Value> value;
+            if (options->Get(options::kBackgroundColor, &value))
+                webPreferences.Set(options::kBackgroundColor, value);
+
+            v8::Local<v8::Value> transparent;
+            if (options->Get("transparent", &transparent))
+                webPreferences.Set("transparent", transparent);
+
+            // Offscreen windows are always created frameless.
+            bool offscreen;
+            if (webPreferences.Get("offscreen", &offscreen) && offscreen) {
+                options->Set(options::kFrame, false);
+            }
+            webContents = WebContents::create(options->isolate(), webPreferences);
+        }
+        else
+            DebugBreak();
+        //webContents = WebContents::ObjectWrap::Unwrap<WebContents>(webContentsV8);
+
+        win->m_webContents = webContents;
+
+        v8::Local<v8::Value> transparent;
+        options->Get("transparent", &transparent);
+        v8::Local<v8::Value> height;
+        options->Get("height", &height);
+        v8::Local<v8::Value> width;
+        options->Get("width", &width);
+        v8::Local<v8::Value> x;
+        options->Get("x", &x);
+        v8::Local<v8::Value> y;
+        options->Get("y", &y);
+        v8::Local<v8::Value> title;
+        options->Get("title", &title);
+        if (title->IsString()) {
+            v8::String::Utf8Value str(title);
+            createWindowParam.title = StringUtil::UTF8ToUTF16(*str);
+        }
+        else
+            createWindowParam.title = L"Electron";
+
+        createWindowParam.x = x->Int32Value();
+        createWindowParam.y = y->Int32Value();
+        createWindowParam.width = width->Int32Value();
+        createWindowParam.height = height->Int32Value();
+
+        if (transparent->IsBoolean() && transparent->ToBoolean()->BooleanValue()) {
+            createWindowParam.transparent = true;
+            createWindowParam.styles = WS_POPUP;
+            createWindowParam.styleEx = WS_EX_LAYERED;
+        }
+        else {
+            createWindowParam.styles = WS_OVERLAPPEDWINDOW;
+            createWindowParam.styleEx = 0;
+        }
+
+        //ThreadCall::callUiThreadSync([win, &createWindowParam] {
+        win->newWindowTaskInUiThread(&createWindowParam);
+        //});
+        return win;
+    }
+
+    void newWindowTaskInUiThread(const WebContents::CreateWindowParam* createWindowParam) {
+        m_hWnd = ::CreateWindowEx(
+            createWindowParam->styleEx,        // window ex-style
+            L"mb_electron_window",    // window class name
+            createWindowParam->title.c_str(), // window caption
+            createWindowParam->styles,         // window style
+            createWindowParam->x,              // initial x position
+            createWindowParam->y,              // initial y position
+            createWindowParam->width,          // initial x size
+            createWindowParam->height,         // initial y size
+            NULL,         // parent window handle
+            NULL,           // window menu handle
+            ::GetModuleHandleW(NULL),           // program instance handle
+            this);         // creation parameters
+
+        if (!::IsWindow(m_hWnd))
+            return;
+
+        m_clientRect.right = createWindowParam->width;
+        m_clientRect.bottom = createWindowParam->height;
+
+        Window* win = this;
+        ThreadCall::callBlinkThreadSync([win, createWindowParam] {
+            win->m_webContents->onNewWindowInBlinkThread(createWindowParam);
+            wkeOnPaintUpdated(win->m_webContents->getWkeView(), (wkePaintUpdatedCallback)staticOnPaintUpdatedInCompositeThread, win);
+        });
+
+        ::ShowWindow(m_hWnd, TRUE);
+        m_state = WindowInited;
+    }
+
+    static void newFunction(const v8::FunctionCallbackInfo<v8::Value>& args) {
+        v8::Isolate* isolate = args.GetIsolate();
+        if (args.IsConstructCall()) {
+            if (args.Length() > 1)
+                return;
+
+            gin::Dictionary options(isolate, args[0]->ToObject()); // 使用new调用 `new Point(...)`
+            Window* win = newWindow(&options, args.This());
+            WindowList::GetInstance()->AddWindow(win);
+
+            // win->Wrap(args.This(), isolate); // 包装this指针 // weolar
+            args.GetReturnValue().Set(args.This());
+            // args.GetReturnValue().Set(win->GetWrapper());
+        }
+        else {
+            // 使用`Point(...)`
+            const int argc = 2;
+            v8::Local<v8::Value> argv[argc] = { args[0], args[1] };
+            // 使用constructor构建Function
+            v8::Local<v8::Function> cons = v8::Local<v8::Function>::New(isolate, constructor);
+            args.GetReturnValue().Set(cons->NewInstance(argc, argv));
+            DebugBreak();
+        }
+    }
+
 
     static v8::Persistent<v8::Function> constructor;
     WebContents* getWebContents() { return m_webContents; }

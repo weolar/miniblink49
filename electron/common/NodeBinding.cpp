@@ -5,6 +5,8 @@
 #include "gin/dictionary.h"
 #include "base/file_path.h"
 #include "common/StringUtil.h"
+#include "common/AtomVersion.h"
+#include "common/ChromeVersion.h"
 #include "common/AtomCommandLine.h"
 #include <xstring>
 #include <vector>
@@ -12,6 +14,75 @@
 #include <shlwapi.h>
 
 namespace atom {
+
+namespace {
+
+void crash(const v8::FunctionCallbackInfo<v8::Value>& info) {
+    DebugBreak();
+}
+
+void hang(const v8::FunctionCallbackInfo<v8::Value>& info) {
+    for (;;) {
+        ::Sleep(1000);
+    };
+}
+
+void getProcessMemoryInfo(const v8::FunctionCallbackInfo<v8::Value>& info) {
+    v8::Isolate* isolate = info.GetIsolate();
+    //std::unique_ptr<base::ProcessMetrics> metrics(base::ProcessMetrics::CreateCurrentProcessMetrics());
+
+    gin::Dictionary dict = gin::Dictionary::CreateEmpty(isolate);
+    dict.Set("workingSetSize", /*static_cast<double>(metrics->GetWorkingSetSize() >> 10)*/1000);
+    dict.Set("peakWorkingSetSize", /*static_cast<double>(metrics->GetPeakWorkingSetSize() >> 10)*/1000);
+
+    //size_t private_bytes, shared_bytes;
+    //if (metrics->GetMemoryBytes(&private_bytes, &shared_bytes)) {
+        dict.Set("privateBytes", /*static_cast<double>(private_bytes >> 10)*/1000);
+        dict.Set("sharedBytes", /*static_cast<double>(shared_bytes >> 10)*/1000);
+    //}
+
+    info.GetReturnValue().Set(gin::Converter<gin::Dictionary>::ToV8(isolate, dict));
+}
+
+void getSystemMemoryInfo(const v8::FunctionCallbackInfo<v8::Value>& info) {
+    v8::Isolate* isolate = info.GetIsolate();
+//     base::SystemMemoryInfoKB mem_info;
+//     if (!base::GetSystemMemoryInfo(&mem_info)) {
+//         args->ThrowError("Unable to retrieve system memory information");
+//         return v8::Undefined(isolate);
+//     }
+
+    gin::Dictionary dict = gin::Dictionary::CreateEmpty(isolate);
+    dict.Set("total", /*mem_info.total*/10);
+    dict.Set("free", /*mem_info.free*/10);
+
+    // NB: These return bogus values on macOS
+#if !defined(OS_MACOSX)
+    dict.Set("swapTotal", /*mem_info.swap_total*/10);
+    dict.Set("swapFree", /*mem_info.swap_free*/10);
+#endif
+
+    info.GetReturnValue().Set(gin::Converter<gin::Dictionary>::ToV8(isolate, dict));
+}
+
+// Called when there is a fatal error in V8, we just crash the process here so
+// we can get the stack trace.
+void fatalErrorCallback(const char* location, const char* message) {
+    //crash(info);
+    DebugBreak();
+}
+
+void log(const v8::FunctionCallbackInfo<v8::Value>& info) {
+    //std::cout << message << std::flush;
+    crash(info);
+}
+
+void activateUVLoop(const v8::FunctionCallbackInfo<v8::Value>& info) {
+
+}
+
+
+} // namespace
 
 NodeBindings::NodeBindings(bool isBrowser, uv_loop_t* uvLoop)
     : m_isBrowser(isBrowser)
@@ -88,6 +159,30 @@ std::unique_ptr<const char*[]> stringVectorToArgArray(
     return array;
 }
 
+void NodeBindings::bindFunction(gin::Dictionary* dict) {
+    dict->SetMethod("crash", &crash);
+    dict->SetMethod("hang", &hang);
+    dict->SetMethod("log", &log);
+    dict->SetMethod("getProcessMemoryInfo", &getProcessMemoryInfo);
+    dict->SetMethod("getSystemMemoryInfo", &getSystemMemoryInfo);
+#if defined(OS_POSIX)
+    dict->SetMethod("setFdLimit", &base::SetFdLimit);
+#endif
+    dict->SetMethod("activateUvLoop", &activateUVLoop);
+
+#if defined(MAS_BUILD)
+    dict->Set("mas", true);
+#endif
+
+    gin::Dictionary versions = gin::Dictionary::CreateEmpty(dict->isolate());
+    if (dict->Get("versions", &versions)) {
+        versions.Set("atom-project-name", std::string(ATOM_VERSION_STRING));
+        versions.Set("atom-shell", std::string(ATOM_VERSION_STRING));  // For compatibility.
+        versions.Set("chrome", std::string(CHROME_VERSION_STRING));
+        versions.Set("electron", std::string(ATOM_VERSION_STRING));
+    }
+}
+
 node::Environment* NodeBindings::createEnvironment(v8::Local<v8::Context> context) {
     std::vector<std::string> args = AtomCommandLine::argv();
 
@@ -117,6 +212,8 @@ node::Environment* NodeBindings::createEnvironment(v8::Local<v8::Context> contex
     // Do not set DOM globals for renderer process.
     if (!m_isBrowser)
         process.Set("_noBrowserGlobals", StringUtil::UTF16ToUTF8(resourcesPath));
+
+    bindFunction(&process);
 
     // The path to helper app.
 //     base::FilePath helper_exec_path;

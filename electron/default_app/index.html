@@ -114,25 +114,28 @@
 </head>
 <body>
   <script>
-  /*
+  
     const remote = require('electron').remote;
-    const shell = require('electron').shell;
+    //const shell = require('electron').shell;
 
     var execPath = remote.process.execPath;
     var command = execPath + ' path-to-your-app';
 
     document.onclick = function(e) {
       e.preventDefault();
-      if (e.target.tagName == 'A')
-        shell.openExternal(e.target.href);
+      //if (e.target.tagName == 'A')
+      //  shell.openExternal(e.target.href);
       return false;
     };
     document.ondragover = document.ondrop = function(e) {
       e.preventDefault();
       return false;
     };
-    */
-    require('electron').ipcRenderer.send('zqz-show', 'TestIpcRenderer', 1);
+    /**/
+    // tests
+    console.log("process.versions.electron:" + process.versions.electron);
+    require('electron').ipcRenderer.sendSync('zqz-show', 'TestIpcRenderer', 1);
+    //////
   </script>
 
   <div class="header">

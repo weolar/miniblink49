@@ -2,7 +2,7 @@
 #include "node/include/nodeblink.h"
 #include "browser/api/ApiWebContents.h"
 #include "common/NodeRegisterHelp.h"
-#include "common/api/event_emitter.h"
+#include "common/api/EventEmitter.h"
 #include "gin/dictionary.h"
 #include "gin/arguments.h"
 #include "gin/object_template_builder.h"
@@ -31,8 +31,6 @@ public:
     }
 
     void rendererIpcSend(const std::string& channel, const base::ListValue& arguments) {
-        //uint32_t len = arguments->Length();
-
         wkeWebView view = wkeGetWebViewForCurrentContext();
         if (!view)
             return;
@@ -40,24 +38,27 @@ public:
         if (!webContents)
             return;
         webContents->postMessage(channel, arguments);
-
-        //     if (!success)
-        //         args->ThrowError("Unable to send AtomViewHostMsg_Message");
     }
 
     std::string rendererIpcSendSync(const std::string& channel, const base::ListValue& arguments) {
-        std::string json;
+        wkeWebView view = wkeGetWebViewForCurrentContext();
+        if (!view)
+            return "";
+        WebContents* webContents = (WebContents*)wkeGetUserKayValue(view, "WebContents");
+        if (!webContents)
+            return "";
 
-        //     if (!success)
-        //         args->ThrowError("Unable to send AtomViewHostMsg_Message_Sync");
+        std::string json;
+        webContents->sendMessage(channel, arguments, &json);
+
+        if (0 == json.size())
+            json = "{}";
 
         return json;
     }
 
     static void newFunction(const v8::FunctionCallbackInfo<v8::Value>& args) {
         v8::Isolate* isolate = args.GetIsolate();
-        v8::HandleScope scope(isolate);
-
         new IpcRenderer(isolate, args.This());
 
         if (args.IsConstructCall()) {

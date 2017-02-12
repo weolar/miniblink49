@@ -1,7 +1,7 @@
 ﻿
 #include "node/include/nodeblink.h"
 #include "common/NodeRegisterHelp.h"
-#include "common/api/event_emitter.h"
+#include "common/api/EventEmitter.h"
 #include "gin/object_template_builder.h"
 #include "wke.h"
 
@@ -81,8 +81,6 @@ public:
 
     static void newFunction(const v8::FunctionCallbackInfo<v8::Value>& args) {
         v8::Isolate* isolate = args.GetIsolate();
-        v8::HandleScope scope(isolate);
-
         if (args.IsConstructCall()) {
             new App(isolate, args.This());
             args.GetReturnValue().Set(args.This());

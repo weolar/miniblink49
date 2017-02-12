@@ -6,30 +6,35 @@
 #define ATOM_BROWSER_API_EVENT_H_
 
 #include "gin/wrappable.h"
-#include "gin/handle.h"
+
+#include <functional>
+#include <windows.h>
 
 namespace mate {
 
 class Event : public gin::Wrappable<Event> {
 public:
     static gin::WrapperInfo kWrapperInfo;
-    static gin::Handle<Event> Create(v8::Isolate* isolate);
+    static Event* create(v8::Isolate* isolate, v8::Local<v8::Object> wrapper, std::function<void(std::string)>&& callback);
 
-    static void BuildPrototype(v8::Isolate* isolate,
-        v8::Local<v8::FunctionTemplate> prototype);
+    static void init(v8::Isolate* isolate);
+    static void newFunction(const v8::FunctionCallbackInfo<v8::Value>& args);
 
     // event.PreventDefault().
-    void PreventDefault(v8::Isolate* isolate);
+    void preventDefault(v8::Isolate* isolate);
 
     // event.sendReply(json), used for replying synchronous message.
-    bool SendReply(const std::string& json);
+    bool sendReply(const std::string& json);
 
 protected:
-    explicit Event(v8::Isolate* isolate);
+    explicit Event(v8::Isolate* isolate, v8::Local<v8::Object> wrapper);
     ~Event() override;
 
 private:
+    //static v8::Persistent<v8::Function> constructor;
+    static DWORD constructorTlsKey;
     DISALLOW_COPY_AND_ASSIGN(Event);
+    std::function<void(std::string)>* m_callback;
 };
 
 }  // namespace mate

@@ -1,2 +1,6 @@
+
 const electron = require('electron');
-electron.ipcRenderer = require("./ipc-renderer");
+electron.ipcRenderer = require("./api/ipc-renderer");
+electron.CallbacksRegistry = require("./../common/api/callbacks-registry").CallbacksRegistry;
+electron.isPromise = require("./../common/api/is-promise").isPromise;
+electron.remote = require("./api/remote");

@@ -18,7 +18,7 @@ WebContents.prototype._init = function () {
 	this.setMaxListeners(0);
 	
 	// Dispatch IPC messages to the ipc module.
-	this.on('ipc-message', function (event, channel, ...args) {console.log('this.on(ipc-message!!!!!!!!!!!!!!!!!!!!!!:' + event + ", " + channel);
+	this.on('ipc-message', function (event, channel, ...args) {
 		ipcMain.emit(channel, event, ...args);
 	});
 	this.on('ipc-message-sync', function (event, channel, ...args) {

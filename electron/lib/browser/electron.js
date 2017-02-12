@@ -14,5 +14,8 @@ Object.setPrototypeOf(App.prototype, EventEmitter.prototype);
 const Menu = require('./api/menu');
 electron.Menu = Menu;
 ////////////////////////////////////////////////////////////////
+const isPromise = require('./../common/api/is-promise').isPromise;
+electron.isPromise = isPromise;
+///////////////////////////////////////////////////////////////
 module.exports = electron;
 

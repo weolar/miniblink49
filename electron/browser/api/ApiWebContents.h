@@ -1,9 +1,12 @@
 ﻿
+#ifndef browser_api_ApiWebContents_h
+#define browser_api_ApiWebContents_h
+
 #include "nodeblink.h"
 #include "wke.h"
-#include "electron.h"
 #include "gin/dictionary.h"
-#include "common/api/event_emitter.h"
+#include "common/api/EventEmitter.h"
+#include <set>
 
 namespace base {
 class ListValue;
@@ -12,6 +15,13 @@ class ListValue;
 namespace atom {
 
 class NodeBindings;
+class WebContents;
+
+class WebContentsObserver {
+public:
+    virtual void onWebContentsCreated(WebContents* contents) {}
+    virtual void onWebContentsDeleted(WebContents* contents) {}
+};
 
 class WebContents : public mate::EventEmitter<WebContents> {
 public:
@@ -32,11 +42,15 @@ public:
     explicit WebContents(v8::Isolate* isolate, v8::Local<v8::Object> wrapper);
     ~WebContents();
 
+    void addObserver(WebContentsObserver* observer);
+    void removeObserver(WebContentsObserver* observer);
+
     wkeWebView getWkeView() const { return m_view; }
 
     void onNewWindowInBlinkThread(const CreateWindowParam* createWindowParam);
 
     void postMessage(const std::string& channel, const base::ListValue& listParams);
+    void sendMessage(const std::string& channel, const base::ListValue& listParams, std::string* jsonRet);
 
 private:
     static void newFunction(const v8::FunctionCallbackInfo<v8::Value>& args);
@@ -191,7 +205,10 @@ public:
 private:
     NodeBindings* m_nodeBinding;
     int m_id;
+    std::set<WebContentsObserver*> m_observers;
     wkeWebView m_view;
 };
 
 } // atom
+
+#endif // browser_api_ApiWebContents_h

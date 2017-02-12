@@ -1,6 +1,6 @@
 'use strict'
 
-require('./electron.js');
+require('./electron');
 
 const events = require('events');
 const path = require('path');
