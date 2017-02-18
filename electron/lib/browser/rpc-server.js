@@ -243,8 +243,10 @@ ipcMain.on('ELECTRON_BROWSER_REQUIRE', function (event, module) {
 
 ipcMain.on('ELECTRON_BROWSER_GET_BUILTIN', function (event, module) {
   try {
-    event.returnValue = valueToMeta(event.sender, electron[module])
+  	var outVal = valueToMeta(event.sender, electron[module]);
+    event.returnValue = outVal;
   } catch (error) {
+  	console.log("ELECTRON_BROWSER_GET_BUILTIN error:" + error);
     event.returnValue = exceptionToMeta(error)
   }
 })
@@ -253,6 +255,7 @@ ipcMain.on('ELECTRON_BROWSER_GLOBAL', function (event, name) {
   try {
     event.returnValue = valueToMeta(event.sender, global[name])
   } catch (error) {
+  	console.log("ELECTRON_BROWSER_GLOBAL error:" + error);
     event.returnValue = exceptionToMeta(error)
   }
 })
@@ -261,6 +264,7 @@ ipcMain.on('ELECTRON_BROWSER_CURRENT_WINDOW', function (event) {
   try {
     event.returnValue = valueToMeta(event.sender, event.sender.getOwnerBrowserWindow())
   } catch (error) {
+  	console.log("ELECTRON_BROWSER_CURRENT_WINDOW error:" + error);
     event.returnValue = exceptionToMeta(error)
   }
 })
@@ -279,6 +283,7 @@ ipcMain.on('ELECTRON_BROWSER_CONSTRUCTOR', function (event, id, args) {
     let obj = new (Function.prototype.bind.apply(constructor, [null].concat(args)))
     event.returnValue = valueToMeta(event.sender, obj)
   } catch (error) {
+  	console.log("ELECTRON_BROWSER_CONSTRUCTOR error:" + error);
     event.returnValue = exceptionToMeta(error)
   }
 })
@@ -289,6 +294,7 @@ ipcMain.on('ELECTRON_BROWSER_FUNCTION_CALL', function (event, id, args) {
     let func = objectsRegistry.get(id)
     callFunction(event, func, global, args)
   } catch (error) {
+  	console.log("ELECTRON_BROWSER_FUNCTION_CALL error:" + error);
     event.returnValue = exceptionToMeta(error)
   }
 })
@@ -302,6 +308,7 @@ ipcMain.on('ELECTRON_BROWSER_MEMBER_CONSTRUCTOR', function (event, id, method, a
     let obj = new (Function.prototype.bind.apply(constructor, [null].concat(args)))
     event.returnValue = valueToMeta(event.sender, obj)
   } catch (error) {
+  	console.log("ELECTRON_BROWSER_MEMBER_CONSTRUCTOR error:" + error);
     event.returnValue = exceptionToMeta(error)
   }
 })
@@ -312,6 +319,7 @@ ipcMain.on('ELECTRON_BROWSER_MEMBER_CALL', function (event, id, method, args) {
     let obj = objectsRegistry.get(id)
     callFunction(event, obj[method], obj, args)
   } catch (error) {
+  	console.log("ELECTRON_BROWSER_MEMBER_CALL error:" + error);
     event.returnValue = exceptionToMeta(error)
   }
 })
@@ -322,6 +330,7 @@ ipcMain.on('ELECTRON_BROWSER_MEMBER_SET', function (event, id, name, value) {
     obj[name] = value
     event.returnValue = null
   } catch (error) {
+  	console.log("ELECTRON_BROWSER_MEMBER_SET error:" + error);
     event.returnValue = exceptionToMeta(error)
   }
 })
@@ -331,6 +340,7 @@ ipcMain.on('ELECTRON_BROWSER_MEMBER_GET', function (event, id, name) {
     let obj = objectsRegistry.get(id);
     event.returnValue = valueToMeta(event.sender, obj[name])
   } catch (error) {
+  	console.log("ELECTRON_BROWSER_MEMBER_GET error:" + error);
     event.returnValue = exceptionToMeta(error)
   }
 })
@@ -344,6 +354,7 @@ ipcMain.on('ELECTRON_BROWSER_GUEST_WEB_CONTENTS', function (event, guestInstance
     let guestViewManager = require('./guest-view-manager')
     event.returnValue = valueToMeta(event.sender, guestViewManager.getGuest(guestInstanceId))
   } catch (error) {
+  	console.log("ELECTRON_BROWSER_GUEST_WEB_CONTENTS error:" + error);
     event.returnValue = exceptionToMeta(error)
   }
 })
@@ -360,6 +371,7 @@ ipcMain.on('ELECTRON_BROWSER_ASYNC_CALL_TO_GUEST_VIEW', function (event, request
     }
     guest[method].apply(guest, args)
   } catch (error) {
+  	console.log("ELECTRON_BROWSER_ASYNC_CALL_TO_GUEST_VIEW error:" + error);
     event.returnValue = exceptionToMeta(error)
   }
 })

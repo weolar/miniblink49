@@ -89,7 +89,8 @@ const wrapArgs = function (args, visited) {
       }
     }
   }
-  return Array.prototype.slice.call(args).map(valueToMeta)
+  var result = Array.prototype.slice.call(args).map(valueToMeta);
+  return result;
 }
 
 // Populate object's members from descriptors.

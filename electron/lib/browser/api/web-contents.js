@@ -26,8 +26,8 @@ WebContents.prototype._init = function () {
 			set: function (value) {
 				return event.sendReply(JSON.stringify(value));
 			},
-			get: function () {}
-		})
+		get: function () {}
+		});
 		ipcMain.emit(channel, event, ...args);
 	});
 
