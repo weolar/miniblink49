@@ -110,8 +110,16 @@ void RegisterSignalHandler(int signal,
                            bool reset_handler = false);
 #endif
 
+#ifndef arraysize
+// template <typename T, size_t N>
+// constexpr size_t arraysize(const T(&)[N]) { return N; }
+#ifndef _MSC_VER
 template <typename T, size_t N>
-constexpr size_t arraysize(const T(&)[N]) { return N; }
+char(&ArraySizeHelper(const T(&array)[N]))[N];
+#endif
+
+#define arraysize(array) (sizeof(ArraySizeHelper(array)))
+#endif // end arraysize
 
 #ifndef ROUND_UP
 # define ROUND_UP(a, b) ((a) % (b) ? ((a) + (b)) - ((a) % (b)) : (a))

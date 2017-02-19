@@ -24,37 +24,13 @@ struct NodeNative {
     size_t sourceLen;
 };
 
-namespace node {
-
-// typedef struct _NodeArgc NodeArgc;
-// typedef void(*NodeInitCallBack)(NodeArgc*);
-// 
-// typedef struct _NodeArgc {
-//     char** argv;
-//     int argc;
-//     v8::Platform* v8platform;
-//     uv_loop_t *childLoop;
-//     uv_async_t async;
-//     uv_thread_t thread;
-//     bool initType;
-//     HANDLE initEvent;
-//     Environment* childEnv;
-//     NodeInitCallBack initcall;
-//     NodeInitCallBack preInitcall;
-//     void *data;
-// } NodeArgc;
-// 
-// extern "C" NODE_EXTERN NodeArgc* nodeRunThread(int argc, const wchar_t *wargv[], NodeInitCallBack initcall, NodeInitCallBack preInitcall, void *data);
-// extern "C" NODE_EXTERN Environment* nodeGetEnvironment(NodeArgc*);
-
-} // node
-
 extern "C" NODE_EXTERN void* nodeCreateDefaultPlatform();
 
 typedef void* BlinkMicrotaskSuppressionHandle;
 extern "C" NODE_EXTERN BlinkMicrotaskSuppressionHandle nodeBlinkMicrotaskSuppressionEnter(v8::Isolate* isolate);
 extern "C" NODE_EXTERN void nodeBlinkMicrotaskSuppressionLeave(BlinkMicrotaskSuppressionHandle handle);
 
-
+extern "C" NODE_EXTERN void* nodeBlinkAllocateUninitialized(size_t length);
+extern "C" NODE_EXTERN void nodeBlinkFree(void* data, size_t length);
 
 #endif //_NODEBLINK_H_

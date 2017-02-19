@@ -3,6 +3,7 @@
 #include "v8.h"
 #include "env.h"
 #include "env-inl.h"
+#include "gin/public/isolate_holder.h"
 
 namespace node {
 namespace util {
@@ -134,6 +135,30 @@ void Initialize(Local<Object> target,
 }
 
 }  // namespace util
+
+void* Realloc(void* pointer, size_t size) {
+    if (pointer)
+        gin::IsolateHolder::get_allocator()->Free(pointer, gin::IsolateHolder::GetPointerMemSize(pointer));
+
+    if (size == 0)
+        return nullptr;
+    
+    return gin::IsolateHolder::get_allocator()->Allocate(size);
+}
+
+// As per spec realloc behaves like malloc if passed nullptr.
+void* Malloc(size_t size) {
+    if (size == 0) size = 1;
+    return Realloc(nullptr, size);
+}
+
+void* Calloc(size_t n, size_t size) {
+    if (n == 0) n = 1;
+    if (size == 0) size = 1;
+    CHECK_GE(n * size, n);  // Overflow guard.
+    return calloc(n, size);
+}
+
 }  // namespace node
 
 NODE_MODULE_CONTEXT_AWARE_BUILTIN(util, node::util::Initialize)

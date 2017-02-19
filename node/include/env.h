@@ -428,6 +428,12 @@ class Environment {
     ListNode<HandleCleanup> handle_cleanup_queue_;
   };
 
+#ifndef MINIBLINK_NOT_IMPLEMENTED
+  typedef void* MicrotaskSuppressionHandle;
+  MicrotaskSuppressionHandle BlinkMicrotaskSuppressionEnter(v8::Isolate* isolate);
+  void BlinkMicrotaskSuppressionLeave(MicrotaskSuppressionHandle handle);
+#endif
+
   static inline Environment* GetCurrent(v8::Isolate* isolate);
   static inline Environment* GetCurrent(v8::Local<v8::Context> context);
   static inline Environment* GetCurrent(
@@ -472,6 +478,7 @@ class Environment {
   inline AsyncHooks* async_hooks();
   inline FileSystemHooks* file_system_hooks();
   inline void file_system_hooks(FileSystemHooks*);
+  inline void set_is_blink_core();
   inline DomainFlag* domain_flag();
   inline TickInfo* tick_info();
   inline ArrayBufferAllocatorInfo* array_buffer_allocator_info();
@@ -593,7 +600,11 @@ class Environment {
   uv_prepare_t idle_prepare_handle_;
   uv_check_t idle_check_handle_;
   AsyncHooks async_hooks_;
+#ifndef MINIBLINK_NOT_IMPLEMENTED
   FileSystemHooks *file_system_hooks_;
+  bool is_blink_core_;
+  MicrotaskSuppressionHandle blink_microtask_suppression_handle_;
+#endif
   DomainFlag domain_flag_;
   TickInfo tick_info_;
   ArrayBufferAllocatorInfo array_buffer_allocator_info_;

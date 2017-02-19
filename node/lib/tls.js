@@ -125,7 +125,9 @@ function check(hostParts, pattern, wildcards) {
   if (patternParts.length <= 2)
     return false;
 
-  const [prefix, suffix] = patternSubdomainParts;
+  //const [prefix, suffix] = patternSubdomainParts;
+  const prefix = patternSubdomainParts[0];
+  const suffix = patternSubdomainParts[1];
 
   if (prefix.length + suffix.length > hostSubdomain.length)
     return false;

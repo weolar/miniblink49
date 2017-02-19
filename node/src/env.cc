@@ -10,6 +10,10 @@
 
 #include <stdio.h>
 
+#ifndef MINIBLINK_NOT_IMPLEMENTED
+#include "node/include/nodeblink.h"
+#endif
+
 namespace node {
 
 using v8::HandleScope;
@@ -61,5 +65,15 @@ void Environment::PrintSyncTrace() const {
   }
   fflush(stderr);
 }
+
+#ifndef MINIBLINK_NOT_IMPLEMENTED
+Environment::MicrotaskSuppressionHandle Environment::BlinkMicrotaskSuppressionEnter(v8::Isolate* isolate) {
+  return nodeBlinkMicrotaskSuppressionEnter(isolate);
+}
+
+void Environment::BlinkMicrotaskSuppressionLeave(MicrotaskSuppressionHandle handle) {
+  nodeBlinkMicrotaskSuppressionLeave(handle);
+}
+#endif
 
 }  // namespace node

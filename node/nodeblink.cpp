@@ -149,3 +149,10 @@ extern "C" NODE_EXTERN void nodeBlinkMicrotaskSuppressionLeave(BlinkMicrotaskSup
     delete suppression;
 }
 
+extern "C" NODE_EXTERN void* nodeBlinkAllocateUninitialized(size_t length) {
+    return node::Malloc(length);
+}
+
+extern "C" NODE_EXTERN void nodeBlinkFree(void* data, size_t length) {
+    node::Realloc(data, 0);
+}
