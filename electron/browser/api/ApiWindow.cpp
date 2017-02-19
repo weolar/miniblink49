@@ -351,15 +351,15 @@ public:
 
         case WM_SIZE: {
             ::EnterCriticalSection(&win->m_memoryCanvasLock);
-            if (win->m_memoryDC)
-                ::DeleteDC(win->m_memoryDC);
-            win->m_memoryDC = nullptr;
-
-            if (win->m_memoryBMP)
-                ::DeleteObject((HGDIOBJ)win->m_memoryBMP);
-            win->m_memoryBMP = nullptr;
-
-            ::GetClientRect(hWnd, &win->m_clientRect);
+//             if (win->m_memoryDC)
+//                 ::DeleteDC(win->m_memoryDC);
+//             win->m_memoryDC = nullptr;
+//
+//             if (win->m_memoryBMP)
+//                 ::DeleteObject((HGDIOBJ)win->m_memoryBMP);
+//             win->m_memoryBMP = nullptr;
+// 
+//             ::GetClientRect(hWnd, &win->m_clientRect);
             ::LeaveCriticalSection(&win->m_memoryCanvasLock);
             
             ThreadCall::callBlinkThreadAsync([pthis, lParam] {

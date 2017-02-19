@@ -39,6 +39,9 @@ public:
     static uv_loop_t* uiLoop() { return m_uiLoop; }
     static uv_loop_t* blinkLoop() { return m_blinkLoop; }
 
+    static bool isBlinkThread();
+    static bool isUiThread();
+
 private:
     static void callThreadAsync(std::function<void(void)> closure);
     static void threadCallbackWrap(void* data);

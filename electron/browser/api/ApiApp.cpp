@@ -75,7 +75,9 @@ public:
     std::string getNameApi() const { return m_name; }
 
     void setPathApi(const std::string& path) { m_path = path; }
-    std::string getPathApi() const { return m_path; }
+    std::string getPathApi() const { 
+        return m_path;
+    }
 
     void setDesktopNameApi(const std::string& desktopName) { ; }
 

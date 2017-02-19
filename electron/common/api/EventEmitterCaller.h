@@ -20,6 +20,8 @@ v8::Local<v8::Value> callEmitWithArgs(v8::Isolate* isolate,
                                       v8::Local<v8::Object> obj,
                                       ValueVector* args);
 
+v8::Local<v8::Value> emitEventImpl(v8::Isolate* isolate, v8::Local<v8::Object> obj, internal::ValueVector& converted_args, v8::Local<v8::Object> event, const base::ListValue& args);
+
 }  // namespace internal
 
 // obj.emit.apply(obj, name, args...);
@@ -52,45 +54,12 @@ v8::Local<v8::Value> emitEvent(v8::Isolate* isolate,
 // obj.emit(name, event, listArgs...);
 // The caller is responsible of allocating a HandleScope.
 template<typename StringType, typename... Args>
-v8::Local<v8::Value> emitEvent(v8::Isolate* isolate, v8::Local<v8::Object> obj,
-    const StringType& name, v8::Local<v8::Object> event, const base::ListValue& args) {
+v8::Local<v8::Value> emitEvent(v8::Isolate* isolate, v8::Local<v8::Object> obj, const StringType& name, v8::Local<v8::Object> event, const base::ListValue& args) {
     internal::ValueVector converted_args = {
         gin::StringToV8(isolate, name),
         gin::ConvertToV8(isolate, event)
     };
-
-    bool boolVal = false;
-    int intVal = 0;
-    double doubleVal = 0;
-    std::string strVal;
-    for (size_t i = 0; i < args.GetSize(); ++i) {
-        const base::Value* outValue;
-        args.Get(i, &outValue);
-        base::Value::Type type = outValue->GetType();
-        switch (type) {
-        case base::Value::TYPE_BOOLEAN:
-            outValue->GetAsBoolean(&boolVal);
-            converted_args.push_back(v8::Boolean::New(isolate, boolVal));
-            break;
-        case base::Value::TYPE_INTEGER:
-            outValue->GetAsInteger(&intVal);
-            converted_args.push_back(v8::Integer::New(isolate, intVal));
-            break;
-        case base::Value::TYPE_DOUBLE:
-            outValue->GetAsDouble(&doubleVal);
-            converted_args.push_back(v8::Number::New(isolate, doubleVal));
-            break;
-        case base::Value::TYPE_STRING:
-            outValue->GetAsString(&strVal);
-            converted_args.push_back(v8::String::NewFromUtf8(isolate, strVal.c_str(), v8::NewStringType::kNormal, strVal.size()).ToLocalChecked());
-            break;
-        default:
-            converted_args.push_back(v8::Null(isolate));
-            break;
-        }
-    }
-
-    return internal::callEmitWithArgs(isolate, obj, &converted_args);
+    return internal::emitEventImpl(isolate, obj, converted_args, event, args);
 }
 
 }  // namespace mate

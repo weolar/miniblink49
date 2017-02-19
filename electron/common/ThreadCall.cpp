@@ -23,7 +23,7 @@ void ThreadCall::init(uv_loop_t* uiLoop) {
 }
 
 void ThreadCall::callUiThreadSync(std::function<void(void)>&& closure) {
-    if (::GetCurrentThreadId() == m_uiThreadId) {
+    if (isUiThread()) {
         closure();
         return;
     }
@@ -64,7 +64,7 @@ void ThreadCall::callUiThreadAsync(std::function<void(void)>&& closure) {
 }
 
 void ThreadCall::callBlinkThreadSync(std::function<void(void)>&& closure) {
-    if (::GetCurrentThreadId() == m_blinkThreadId) {
+    if (isBlinkThread()) {
         closure();
         return;
     }
@@ -80,6 +80,14 @@ void ThreadCall::postNodeCoreThreadTask(std::function<void(void)>&& closure) {
 }
 
 void ThreadCall::shutdown() {
+}
+
+bool ThreadCall::isBlinkThread() {
+    return m_blinkThreadId == ::GetCurrentThreadId();
+}
+
+bool ThreadCall::isUiThread() {
+    return m_uiThreadId == ::GetCurrentThreadId();
 }
 
 void ThreadCall::callbackInOtherThread(TaskAsyncData* asyncData) {

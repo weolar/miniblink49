@@ -30,22 +30,21 @@ class ElectronFsHooks : public node::Environment::FileSystemHooks {
 
 class ArrayBufferAllocator : public v8::ArrayBuffer::Allocator {
 public:
-    ArrayBufferAllocator() : env_(nullptr) { }
-
-    inline void set_env(node::Environment* env) { env_ = env; }
+    ArrayBufferAllocator() { }
 
     virtual void* Allocate(size_t size) {
-        void* p = malloc(size);
+        void* p = AllocateUninitialized(size);
         memset(p, 0, size);
         return p;
     }
-    virtual void* AllocateUninitialized(size_t size) {
-        return malloc(size);
-    }
-    virtual void Free(void* data, size_t) { free(data); }
 
-private:
-    node::Environment* env_;
+    virtual void* AllocateUninitialized(size_t size) {
+        if (!ThreadCall::isUiThread())
+            DebugBreak();
+        return nodeBlinkAllocateUninitialized(size);
+    }
+
+    virtual void Free(void* data, size_t size) { nodeBlinkFree(data, size); }
 };
 
 static void gcTimerCallBack(uv_timer_t* handle) {
@@ -56,25 +55,23 @@ static void gcTimerCallBack(uv_timer_t* handle) {
         isolate->LowMemoryNotification();
 }
 
-void nodeInitCallBack(NodeArgc* n) {
-    uv_timer_t gcTimer;
-    gcTimer.data = n->childEnv->isolate();
-    uv_timer_init(n->childLoop, &gcTimer);
-    uv_timer_start(&gcTimer, gcTimerCallBack, 1000 * 10, 1);
+void messageLoop(NodeArgc* n) {
+    atom::ThreadCall::messageLoop(n->childLoop, n->v8platform, v8::Isolate::GetCurrent());
+}
+
+void initThread(NodeArgc* n) {
+//     uv_timer_t gcTimer;
+//     gcTimer.data = n->childEnv->isolate();
+//     uv_timer_init(n->childLoop, &gcTimer);
+//     uv_timer_start(&gcTimer, gcTimerCallBack, 1000 * 10, 1);
 
     uv_loop_t* loop = n->childLoop;
     atom::ThreadCall::init(loop);
-    atom::ThreadCall::messageLoop(loop, n->v8platform, v8::Isolate::GetCurrent());
-}
-
-void nodePreInitCallBack(NodeArgc* n) {
-   
 }
 
 static v8::Isolate* initNodeEnv(NodeArgc* nodeArgc) {
     v8::Isolate::CreateParams params;
-    ArrayBufferAllocator array_buffer_allocator;
-    params.array_buffer_allocator = &array_buffer_allocator;
+    params.array_buffer_allocator = new ArrayBufferAllocator();
     v8::Isolate *isolate = v8::Isolate::New(params);
 
     v8::Isolate::Scope isolateScope(isolate);
@@ -83,11 +80,13 @@ static v8::Isolate* initNodeEnv(NodeArgc* nodeArgc) {
     v8::Context::Scope contextScope(context);
     nodeArgc->childEnv = nodeArgc->m_nodeBinding->createEnvironment(context);
 
+    initThread(nodeArgc);
+
     ElectronFsHooks fsHooks;
     nodeArgc->childEnv->file_system_hooks(&fsHooks);
     node::LoadEnvironment(nodeArgc->childEnv);
 
-    nodeInitCallBack(nodeArgc);
+    messageLoop(nodeArgc);
 
     return isolate;
 }

@@ -197,6 +197,8 @@ node::Environment* NodeBindings::createEnvironment(v8::Local<v8::Context> contex
 
     std::unique_ptr<const char*[]> c_argv = stringVectorToArgArray(args);
     node::Environment* env = node::CreateEnvironment(context->GetIsolate(), m_uvLoop, context, args.size(), c_argv.get(), 0, nullptr);
+    if (!m_isBrowser)
+        env->set_is_blink_core();
 
 //     const char* argv1[] = { "electron.exe", "E:\\mycode\\miniblink49\\trunk\\electron\\lib\\init.js" };
 //     node::Environment* env = node::CreateEnvironment(context->GetIsolate(), m_uvLoop, context, 2, argv1, 2, argv1);
