@@ -769,6 +769,9 @@
     <Filter Include="base\strings">
       <UniqueIdentifier>{1e08a647-7d8b-4be0-98a6-23f9eeabd88d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="node\include">
+      <UniqueIdentifier>{9be143de-ccf8-4d23-86a1-a7a1445fabf0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\third_party\WebKit\Source\bindings\core\v8\ActiveDOMCallback.cpp">
@@ -21355,6 +21358,282 @@
     </ClInclude>
     <ClInclude Include="..\..\content\browser\NavigationController.h">
       <Filter>content\browser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\include\env-inl.h">
+      <Filter>node\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\include\handle_wrap.h">
+      <Filter>node\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\include\node.h">
+      <Filter>node\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\include\node_buffer.h">
+      <Filter>node\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\include\node_internals.h">
+      <Filter>node\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\include\node_mutex.h">
+      <Filter>node\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\include\node_object_wrap.h">
+      <Filter>node\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\include\node_version.h">
+      <Filter>node\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\include\nodeblink.h">
+      <Filter>node\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\include\req-wrap.h">
+      <Filter>node\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\include\tree.h">
+      <Filter>node\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\include\util.h">
+      <Filter>node\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\include\util-inl.h">
+      <Filter>node\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\include\uv.h">
+      <Filter>node\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\include\uv-errno.h">
+      <Filter>node\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\include\uv-threadpool.h">
+      <Filter>node\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\include\uv-version.h">
+      <Filter>node\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\include\uv-win.h">
+      <Filter>node\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\include\ares.h">
+      <Filter>node\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\include\ares_build.h">
+      <Filter>node\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\include\ares_rules.h">
+      <Filter>node\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\include\ares_version.h">
+      <Filter>node\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\include\async-wrap.h">
+      <Filter>node\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\include\async-wrap-inl.h">
+      <Filter>node\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\include\base-object.h">
+      <Filter>node\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\include\debug-agent.h">
+      <Filter>node\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\include\env.h">
+      <Filter>node\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\util.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\util-inl.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\node_natives.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\async-wrap.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\async-wrap-inl.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\base-object-inl.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\config.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\connect_wrap.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\handle_wrap.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\inspector_agent.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\inspector_socket.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\node_buffer.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\node_counters.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\node_crypto.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\node_crypto_clienthello.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\node_crypto_clienthello-inl.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\node_crypto_groups.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\node_dtrace.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\node_etw_provider.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\node_http_parser.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\node_i18n.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\node_internals.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\node_javascript.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\node_lttng.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\node_lttng_provider.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\node_lttng_tp.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\node_object_wrap.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\node_revert.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\node_stat_watcher.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\node_version.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\node_watchdog.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\node_win32_perfctr_provider.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\pipe_wrap.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\req-wrap.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\spawn_sync.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\stream_base.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\stream_base-inl.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\tcp_wrap.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\tree.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\tty_wrap.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\v8abbr.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\base64.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\base-object.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\connection_wrap.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\debug-agent.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\http_parser.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\js_stream.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\node.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\node_constants.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\node_crypto_bio.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\node_file.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\node_mutex.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\node_perfctr_provider.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\node_root_certs.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\node_win32_etw_provider.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\node_win32_etw_provider-inl.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\node_wrap.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\req-wrap-inl.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\stream_wrap.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\string_bytes.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\string_search.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\tls_wrap.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\udp_wrap.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\env.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\env-inl.h">
+      <Filter>node\src</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
