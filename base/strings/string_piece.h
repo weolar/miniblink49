@@ -433,6 +433,29 @@ inline bool operator>=(const StringPiece16& x, const StringPiece16& y) {
 BASE_EXPORT std::ostream& operator<<(std::ostream& o,
                                      const StringPiece& piece);
 
+// Compare the lower-case form of the given string against the given
+// previously-lower-cased ASCII string (typically a constant).
+bool LowerCaseEqualsASCII(StringPiece str, StringPiece lowecase_ascii);
+bool LowerCaseEqualsASCII(StringPiece16 str, StringPiece lowecase_ascii);
+
+enum class CompareCase {
+    SENSITIVE,
+    INSENSITIVE_ASCII,
+};
+
+bool StartsWith(StringPiece str,
+    StringPiece search_for,
+    CompareCase case_sensitivity);
+bool StartsWith(StringPiece16 str,
+    StringPiece16 search_for,
+    CompareCase case_sensitivity);
+bool EndsWith(StringPiece str,
+    StringPiece search_for,
+    CompareCase case_sensitivity);
+bool EndsWith(StringPiece16 str,
+    StringPiece16 search_for,
+    CompareCase case_sensitivity);
+
 }  // namespace base
 
 // Hashing ---------------------------------------------------------------------

@@ -9,6 +9,7 @@
 #include <ostream>
 
 #include "base/logging.h"
+#include "base/strings/string_util.h"
 
 namespace base {
 namespace {
@@ -447,4 +448,101 @@ void AssertIteratorsInOrder(string16::const_iterator begin,
 #endif
 
 }  // namespace internal
+
+template<typename Str>
+static inline bool DoLowerCaseEqualsASCII(BasicStringPiece<Str> str, StringPiece lowercase_ascii) {
+    if (str.size() != lowercase_ascii.size())
+        return false;
+    for (size_t i = 0; i < str.size(); i++) {
+        if (ToLowerASCII(str[i]) != lowercase_ascii[i])
+            return false;
+    }
+    return true;
+}
+
+bool LowerCaseEqualsASCII(StringPiece str, StringPiece lowercase_ascii) {
+    return DoLowerCaseEqualsASCII<std::string>(str, lowercase_ascii);
+}
+
+bool LowerCaseEqualsASCII(StringPiece16 str, StringPiece lowercase_ascii) {
+    return DoLowerCaseEqualsASCII<string16>(str, lowercase_ascii);
+}
+
+template<typename Str, typename CompareFunc1>
+bool EqualWithT(
+    typename BasicStringPiece<Str>::const_iterator search_begin,
+    const typename BasicStringPiece<Str>::const_iterator search_end,
+    typename BasicStringPiece<Str>::const_iterator sourse_begin,
+    const typename BasicStringPiece<Str>::const_iterator sourse_end,
+    CompareFunc1 compare_func) {
+    for (; search_begin != search_end && sourse_begin != sourse_end; ++search_begin, (void)++sourse_begin)
+        if (!compare_func(*search_begin, *sourse_begin))
+            return (false);
+    return (search_begin == search_end && sourse_begin == sourse_end);
+    return false;
+}
+
+template<typename Str>
+bool StartsWithT(BasicStringPiece<Str> str,
+    BasicStringPiece<Str> search_for,
+    CompareCase case_sensitivity) {
+    if (search_for.size() > str.size())
+        return false;
+
+    BasicStringPiece<Str> source = str.substr(0, search_for.size());
+
+    switch (case_sensitivity) {
+    case CompareCase::SENSITIVE:
+        return source == search_for;
+
+    case CompareCase::INSENSITIVE_ASCII:
+        return EqualWithT<Str>(
+            search_for.begin(), search_for.end(),
+            source.begin(), source.end(),
+            CaseInsensitiveCompareASCII<typename Str::value_type>());
+
+    default:
+        *(int*)1 = 1;
+        return false;
+    }
+}
+
+bool StartsWith(StringPiece str,
+    StringPiece search_for,
+    CompareCase case_sensitivity) {
+    return StartsWithT<std::string>(str, search_for, case_sensitivity);
+}
+
+bool StartsWith(StringPiece16 str,
+    StringPiece16 search_for,
+    CompareCase case_sensitivity) {
+    return StartsWithT<string16>(str, search_for, case_sensitivity);
+}
+
+template <typename Str>
+bool EndsWithT(BasicStringPiece<Str> str,
+    BasicStringPiece<Str> search_for,
+    CompareCase case_sensitivity) {
+    if (search_for.size() > str.size())
+        return false;
+
+    BasicStringPiece<Str> source = str.substr(str.size() - search_for.size(),
+        search_for.size());
+
+    switch (case_sensitivity) {
+    case CompareCase::SENSITIVE:
+        return source == search_for;
+
+    case CompareCase::INSENSITIVE_ASCII:
+        return EqualWithT(
+            source.begin(), source.end(),
+            search_for.begin(), search_for.end(),
+            CaseInsensitiveCompareASCII<typename Str::value_type>());
+
+    default:
+        *(int*)1 = 1;
+        return false;
+    }
+}
+
 }  // namespace base
