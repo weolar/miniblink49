@@ -340,6 +340,10 @@ WKE_API const wchar_t* wkeGetStringW(const wkeString string);
 WKE_API void wkeSetString(wkeString string, const utf8* str, size_t len);
 WKE_API void wkeSetStringW(wkeString string, const wchar_t* str, size_t len);
 
+WKE_API wkeWebView wkeGetWebViewForCurrentContext();
+WKE_API void wkeSetUserKayValue(wkeWebView webView, const char* key, void* value);
+WKE_API void* wkeGetUserKayValue(wkeWebView webView, const char* key);
+
 //wke callback-----------------------------------------------------------------------------------
 typedef void(*wkeTitleChangedCallback)(wkeWebView webView, void* param, const wkeString title);
 WKE_API void wkeOnTitleChanged(wkeWebView webView, wkeTitleChangedCallback callback, void* callbackParam);
@@ -411,10 +415,11 @@ WKE_API void wkeOnLoadUrlBegin(wkeWebView webView, wkeLoadUrlBeginCallback callb
 typedef void(*wkeLoadUrlEndCallback)(wkeWebView webView, void* param, const char *url, void *job, void* buf, int len);
 WKE_API void wkeOnLoadUrlEnd(wkeWebView webView, wkeLoadUrlEndCallback callback, void* callbackParam);
 
-typedef void(*wkeDidCreateScriptContextCallback)(wkeWebView webView, void* param, void* frame, void* context, int extensionGroup, int worldId);
+typedef void* wkeWebFrameHandle;
+typedef void(*wkeDidCreateScriptContextCallback)(wkeWebView webView, void* param, wkeWebFrameHandle frame, void* context, int extensionGroup, int worldId);
 WKE_API void wkeOnDidCreateScriptContext(wkeWebView webView, wkeDidCreateScriptContextCallback callback, void* callbackParam);
 
-typedef void(*wkeWillReleaseScriptContextCallback)(wkeWebView webView, void* param, void* frame, void* context, int worldId);
+typedef void(*wkeWillReleaseScriptContextCallback)(wkeWebView webView, void* param, wkeWebFrameHandle frame, void* context, int worldId);
 WKE_API void wkeOnWillReleaseScriptContext(wkeWebView webView, wkeWillReleaseScriptContextCallback callback, void* callbackParam);
 
 WKE_API void wkeNetSetMIMEType(void *job, char *type);
@@ -422,6 +427,8 @@ WKE_API void wkeNetSetHTTPHeaderField(void *job, wchar_t *key, wchar_t *value, b
 WKE_API void wkeNetSetURL(void *job, const char *url);
 WKE_API void wkeNetSetData(void *job, void *buf, int len);
 WKE_API void wkeNetHookRequest(void *job);	//调用此函数后,网络层收到数据会存储在一buf内,接收数据完成后响应OnLoadUrlEnd事件.#此调用严重影响性能,慎用
+
+WKE_API bool wkeWebFrameIsMainFrame(wkeWebFrameHandle webFrame);
 
 //wkewindow-----------------------------------------------------------------------------------
 typedef enum {

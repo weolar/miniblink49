@@ -632,6 +632,12 @@ void wkeOnWillReleaseScriptContext(wkeWebView webView, wkeWillReleaseScriptConte
     webView->onWillReleaseScriptContext(callback, callbackParam);
 }
 
+bool wkeWebFrameIsMainFrame(wkeWebFrameHandle webFrame)
+{
+    blink::WebFrame* frame = (blink::WebFrame*)webFrame;
+    return !frame->parent();
+}
+
 const utf8* wkeGetString(const wkeString s)
 {
     return s ? s->string() : "";
