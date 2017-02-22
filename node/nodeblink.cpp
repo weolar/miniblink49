@@ -140,6 +140,11 @@ extern "C" NODE_EXTERN void* nodeCreateDefaultPlatform() {
     return v8platform;
 }
 
+extern "C" NODE_EXTERN void nodeDeleteNodeEnvironment(node::Environment* env) {
+    env->CleanupHandles();
+    env->Dispose();
+}
+
 extern "C" NODE_EXTERN BlinkMicrotaskSuppressionHandle nodeBlinkMicrotaskSuppressionEnter(v8::Isolate* isolate) {
     return new blink::V8RecursionScope::MicrotaskSuppression(isolate);
 }
@@ -156,3 +161,4 @@ extern "C" NODE_EXTERN void* nodeBlinkAllocateUninitialized(size_t length) {
 extern "C" NODE_EXTERN void nodeBlinkFree(void* data, size_t length) {
     node::Realloc(data, 0);
 }
+

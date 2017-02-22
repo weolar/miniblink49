@@ -25,6 +25,7 @@ struct NodeNative {
 };
 
 extern "C" NODE_EXTERN void* nodeCreateDefaultPlatform();
+extern "C" NODE_EXTERN void nodeDeleteNodeEnvironment(node::Environment* env);
 
 typedef void* BlinkMicrotaskSuppressionHandle;
 extern "C" NODE_EXTERN BlinkMicrotaskSuppressionHandle nodeBlinkMicrotaskSuppressionEnter(v8::Isolate* isolate);

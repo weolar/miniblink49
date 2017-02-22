@@ -193,14 +193,14 @@ void StreamWrap::OnReadImpl(ssize_t nread,
 
   if (nread < 0)  {
     if (buf->base != nullptr)
-      free(buf->base);
+      node::Realloc(buf->base, 0);
     wrap->EmitData(nread, Local<Object>(), pending_obj);
     return;
   }
 
   if (nread == 0) {
     if (buf->base != nullptr)
-      free(buf->base);
+      node::Realloc(buf->base, 0);
     return;
   }
 
