@@ -6,24 +6,32 @@ const Menu = bindings.Menu;
 Object.setPrototypeOf(Menu.prototype, EventEmitter.prototype);
 
 Menu.prototype.popup = function (windowObj, x, y, positioningItem) {
+	console.log('Menu.popup');
 }
 
 Menu.prototype.append = function (item) {
-  return null;
+	console.log('Menu.append');
+    return null;
 }
 
 Menu.prototype.insert = function (pos, item) {
+	console.log('Menu.insert');
 }
 
 Menu.buildFromTemplate = function (template) {
+	console.log('Menu.buildFromTemplate');
+	var result = (new Menu())._buildFromTemplate(template);
+	return result;
 }
 
 Menu.getApplicationMenu = function () {
-  return null;
+	console.log('Menu.getApplicationMenu');
+    return null;
 }
 
 Menu.setApplicationMenu = function (menu) {
-  return null;
+	console.log('Menu.setApplicationMenu');
+    return null;
 }
 
 module.exports = Menu;

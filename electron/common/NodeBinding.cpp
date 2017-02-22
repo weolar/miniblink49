@@ -86,10 +86,14 @@ void activateUVLoop(const v8::FunctionCallbackInfo<v8::Value>& info) {
 
 NodeBindings::NodeBindings(bool isBrowser, uv_loop_t* uvLoop)
     : m_isBrowser(isBrowser)
-    , m_uvLoop(uvLoop) {
+    , m_uvLoop(uvLoop)
+    , m_env(nullptr){
 }
 
 NodeBindings::~NodeBindings() {
+    if (m_env) {
+        nodeDeleteNodeEnvironment(m_env);
+    }
 }
 
 static std::wstring* kResPath = nullptr;
@@ -196,9 +200,9 @@ node::Environment* NodeBindings::createEnvironment(v8::Local<v8::Context> contex
     args.insert(args.begin() + 1, scriptPathStr.c_str());
 
     std::unique_ptr<const char*[]> c_argv = stringVectorToArgArray(args);
-    node::Environment* env = node::CreateEnvironment(context->GetIsolate(), m_uvLoop, context, args.size(), c_argv.get(), 0, nullptr);
+    m_env = node::CreateEnvironment(context->GetIsolate(), m_uvLoop, context, args.size(), c_argv.get(), 0, nullptr);
     if (!m_isBrowser)
-        env->set_is_blink_core();
+        m_env->set_is_blink_core();
 
 //     const char* argv1[] = { "electron.exe", "E:\\mycode\\miniblink49\\trunk\\electron\\lib\\init.js" };
 //     node::Environment* env = node::CreateEnvironment(context->GetIsolate(), m_uvLoop, context, 2, argv1, 2, argv1);
@@ -208,7 +212,7 @@ node::Environment* NodeBindings::createEnvironment(v8::Local<v8::Context> contex
 //     if (!m_isBrowser)
 //         context->GetIsolate()->SetAutorunMicrotasks(true);
 
-    gin::Dictionary process(context->GetIsolate(), env->process_object());
+    gin::Dictionary process(context->GetIsolate(), m_env->process_object());
     process.Set("type", StringUtil::UTF16ToUTF8(processType));
     process.Set("resourcesPath", StringUtil::UTF16ToUTF8(resourcesPath));
     // Do not set DOM globals for renderer process.
@@ -221,7 +225,7 @@ node::Environment* NodeBindings::createEnvironment(v8::Local<v8::Context> contex
 //     base::FilePath helper_exec_path;
 //     PathService::Get(content::CHILD_PROCESS_EXE, &helper_exec_path);
 //     process.Set("helperExecPath", helper_exec_path);
-    return env;
+    return m_env;
 }
 
 } // atom

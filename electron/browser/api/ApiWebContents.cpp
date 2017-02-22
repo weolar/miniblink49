@@ -18,7 +18,7 @@ void WebContents::init(v8::Isolate* isolate, v8::Local<v8::Object> target, node:
 
     prototype->SetClassName(v8::String::NewFromUtf8(isolate, "WebContents"));
     gin::ObjectTemplateBuilder builder(isolate, prototype->InstanceTemplate());
-    builder.SetMethod("getId", &WebContents::nullFunction);
+    builder.SetMethod("getId", &WebContents::getId);
     builder.SetMethod("getProcessId", &WebContents::nullFunction);
     builder.SetMethod("equal", &WebContents::nullFunction);
     builder.SetMethod("_loadURL", &WebContents::_loadURLApi);
@@ -170,15 +170,16 @@ void WebContents::onNewWindowInBlinkThread(const CreateWindowParam* createWindow
     wkeConfigure(&settings);
     wkeResize(getWkeView(), createWindowParam->width, createWindowParam->height);
     wkeOnDidCreateScriptContext(getWkeView(), &WebContents::staticDidCreateScriptContextCallback, this);
+    wkeOnWillReleaseScriptContext(getWkeView(), &WebContents::staticOnWillReleaseScriptContextCallback, this);
 }
 
-void WebContents::staticDidCreateScriptContextCallback(wkeWebView webView, void* param, void* frame, void* context, int extensionGroup, int worldId) {
+void WebContents::staticDidCreateScriptContextCallback(wkeWebView webView, wkeWebFrameHandle param, wkeWebFrameHandle frame, void* context, int extensionGroup, int worldId) {
     WebContents* self = (WebContents*)param;
     self->onDidCreateScriptContext(webView, frame, (v8::Local<v8::Context>*)context, extensionGroup, worldId);
 }
 
-void WebContents::onDidCreateScriptContext(wkeWebView webView, void* frame, v8::Local<v8::Context>* context, int extensionGroup, int worldId) {
-    if (m_nodeBinding)
+void WebContents::onDidCreateScriptContext(wkeWebView webView, wkeWebFrameHandle frame, v8::Local<v8::Context>* context, int extensionGroup, int worldId) {
+    if (m_nodeBinding || !wkeWebFrameIsMainFrame(frame))
         return;
 
     BlinkMicrotaskSuppressionHandle handle = nodeBlinkMicrotaskSuppressionEnter((*context)->GetIsolate());
@@ -186,6 +187,18 @@ void WebContents::onDidCreateScriptContext(wkeWebView webView, void* frame, v8::
     node::Environment* env = m_nodeBinding->createEnvironment(*context);
     node::LoadEnvironment(env);
     nodeBlinkMicrotaskSuppressionLeave(handle);
+}
+
+void WebContents::staticOnWillReleaseScriptContextCallback(wkeWebView webView, void* param, wkeWebFrameHandle frame, void* context, int worldId) {
+    WebContents* self = (WebContents*)param;
+    self->onWillReleaseScriptContextCallback(webView, frame, (v8::Local<v8::Context>*)context, worldId);
+}
+
+void WebContents::onWillReleaseScriptContextCallback(wkeWebView webView, wkeWebFrameHandle frame, v8::Local<v8::Context>* context, int worldId) {
+    if (!m_nodeBinding)
+        return;
+    delete m_nodeBinding;
+    m_nodeBinding = nullptr;
 }
 
 void WebContents::postMessage(const std::string& channel, const base::ListValue& listParams) {
@@ -219,6 +232,10 @@ void WebContents::sendMessage(const std::string& channel, const base::ListValue&
             jsonRet->assign(json.c_str(), json.size());
         }, *listParamsWrap);
     });
+}
+
+int WebContents::getId() const {
+    return (int)this;
 }
 
 void WebContents::_loadURLApi(const std::string& url) {

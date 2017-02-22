@@ -164,10 +164,28 @@ node::Environment* nodeGetEnvironment(NodeArgc* nodeArgc) {
 
 } // atom
 
+#include "node/include/debug-agent.h"
+
 namespace node {
-    namespace debugger {
-        Agent::~Agent(void) {
-            DebugBreak();
-        }
-    }
+namespace debugger {
+
+Agent::~Agent(void) {
+    Stop();
+
+    uv_sem_destroy(&start_sem_);
+
+    while (AgentMessage* msg = messages_.PopFront())
+        delete msg;
+}
+
+
+void Agent::Stop() {
+    if (state_ != kRunning)
+        return;
+
+    DebugBreak();
+    state_ = kNone;
+}
+
+}
 }

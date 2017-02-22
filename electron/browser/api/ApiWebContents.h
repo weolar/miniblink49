@@ -55,6 +55,7 @@ public:
 private:
     static void newFunction(const v8::FunctionCallbackInfo<v8::Value>& args);
 
+    int getId() const;
     void _loadURLApi(const std::string& url);
 
     std::string _getURLApi();
@@ -197,7 +198,8 @@ private:
 
     static void staticDidCreateScriptContextCallback(wkeWebView webView, void* param, void* frame, void* context, int extensionGroup, int worldId);
     void onDidCreateScriptContext(wkeWebView webView, void* frame, v8::Local<v8::Context>* context, int extensionGroup, int worldId);
-
+    static void staticOnWillReleaseScriptContextCallback(wkeWebView webView, void* param, void* frame, void* context, int worldId);
+    void onWillReleaseScriptContextCallback(wkeWebView webView, void* frame, v8::Local<v8::Context>* context, int worldId);
 public:
     static v8::Persistent<v8::Function> constructor;
     static gin::WrapperInfo kWrapperInfo;
