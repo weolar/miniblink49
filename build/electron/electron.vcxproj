@@ -24,10 +24,16 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\base\algorithmvc6.cpp" />
+    <ClCompile Include="..\..\base\files\file_path.cc" />
+    <ClCompile Include="..\..\base\files\file_path_constants.cc" />
     <ClCompile Include="..\..\base\ostream_for_other_vc6.cpp" />
     <ClCompile Include="..\..\base\strings\string_piece.cc" />
+    <ClCompile Include="..\..\base\strings\string_util.cc" />
     <ClCompile Include="..\..\base\thread.cc" />
     <ClCompile Include="..\..\base\values.cc" />
+    <ClCompile Include="..\..\base\win\shell.cc" />
+    <ClCompile Include="..\..\base\win\shortcut.cc" />
+    <ClCompile Include="..\..\base\win\windows_version.cc" />
     <ClCompile Include="..\..\cef\libcef_dll\base\cef_atomicops_x86_gcc.cc" />
     <ClCompile Include="..\..\cef\libcef_dll\base\cef_bind_helpers.cc" />
     <ClCompile Include="..\..\cef\libcef_dll\base\cef_callback_helpers.cc" />
@@ -46,7 +52,8 @@
     <ClCompile Include="..\..\electron\browser\api\ApiWebContents.cpp" />
     <ClCompile Include="..\..\electron\browser\api\ApiWindow.cpp" />
     <ClCompile Include="..\..\electron\browser\api\WindowList.cpp" />
-    <ClCompile Include="..\..\electron\common\api\ApV8Util.cpp" />
+    <ClCompile Include="..\..\electron\common\api\ApiShell.cpp" />
+    <ClCompile Include="..\..\electron\common\api\ApiV8Util.cpp" />
     <ClCompile Include="..\..\electron\common\api\Event.cpp" />
     <ClCompile Include="..\..\electron\common\api\EventEmitter.cpp" />
     <ClCompile Include="..\..\electron\common\api\EventEmitterCaller.cpp" />
@@ -58,6 +65,7 @@
     <ClCompile Include="..\..\electron\common\NodeBinding.cpp" />
     <ClCompile Include="..\..\electron\common\NodeThread.cpp" />
     <ClCompile Include="..\..\electron\common\OptionsSwitches.cpp" />
+    <ClCompile Include="..\..\electron\common\PlatformUtilWin.cpp" />
     <ClCompile Include="..\..\electron\common\ThreadCall.cpp" />
     <ClCompile Include="..\..\electron\Electron.cpp" />
     <ClCompile Include="..\..\electron\renderer\api\ApiRendererIpc.cpp" />
@@ -71,9 +79,18 @@
     <ClCompile Include="..\..\gin\wrapper_info.cc" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\base\files\file_path.h" />
     <ClInclude Include="..\..\base\strings\string_piece.h" />
+    <ClInclude Include="..\..\base\strings\string_util.h" />
     <ClInclude Include="..\..\base\thread.h" />
     <ClInclude Include="..\..\base\values.h" />
+    <ClInclude Include="..\..\base\win\scoped_comptr.h" />
+    <ClInclude Include="..\..\base\win\scoped_com_initializer.h" />
+    <ClInclude Include="..\..\base\win\scoped_co_mem.h" />
+    <ClInclude Include="..\..\base\win\scoped_propvariant.h" />
+    <ClInclude Include="..\..\base\win\shell.h" />
+    <ClInclude Include="..\..\base\win\shortcut.h" />
+    <ClInclude Include="..\..\base\win\windows_version.h" />
     <ClInclude Include="..\..\electron\browser\api\ApiApp.h" />
     <ClInclude Include="..\..\electron\browser\api\ApiWebContents.h" />
     <ClInclude Include="..\..\electron\browser\api\WindowList.h" />
@@ -94,6 +111,7 @@
     <ClInclude Include="..\..\electron\common\NodeRegisterHelp.h" />
     <ClInclude Include="..\..\electron\common\NodeThread.h" />
     <ClInclude Include="..\..\electron\common\OptionsSwitches.h" />
+    <ClInclude Include="..\..\electron\common\PlatformUtil.h" />
     <ClInclude Include="..\..\electron\common\StringUtil.h" />
     <ClInclude Include="..\..\electron\common\ThreadCall.h" />
     <ClInclude Include="..\..\electron\Electron.h" />

@@ -42,6 +42,12 @@
     <Filter Include="src\renerer\api">
       <UniqueIdentifier>{297466ae-0116-4643-a2aa-180e5f944155}</UniqueIdentifier>
     </Filter>
+    <Filter Include="base\win">
+      <UniqueIdentifier>{fa8f649c-9c84-4693-ad98-139d486ded71}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base\files">
+      <UniqueIdentifier>{4205196c-5ca2-4fab-a83b-999605c03050}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\base\thread.cc">
@@ -170,9 +176,6 @@
     <ClCompile Include="..\..\electron\common\api\Event.cpp">
       <Filter>src\common\api</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\electron\common\api\ApV8Util.cpp">
-      <Filter>src\common\api</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\electron\common\api\RemoteCallbackFreer.cpp">
       <Filter>src\common\api</Filter>
     </ClCompile>
@@ -181,6 +184,33 @@
     </ClCompile>
     <ClCompile Include="..\..\electron\common\api\ObjectLifeMonitor.cpp">
       <Filter>src\common\api</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\electron\common\api\ApiV8Util.cpp">
+      <Filter>src\common\api</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\electron\common\api\ApiShell.cpp">
+      <Filter>src\common\api</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\electron\common\PlatformUtilWin.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\base\win\shell.cc">
+      <Filter>base\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\base\files\file_path.cc">
+      <Filter>base\files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\base\win\windows_version.cc">
+      <Filter>base\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\base\strings\string_util.cc">
+      <Filter>base\strings</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\base\files\file_path_constants.cc">
+      <Filter>base\files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\base\win\shortcut.cc">
+      <Filter>base\win</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -286,9 +316,35 @@
     <ClInclude Include="..\..\electron\common\ChromeVersion.h">
       <Filter>src\common</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ClassDiagram.cd" />
-    <None Include="ClassDiagram1.cd" />
+    <ClInclude Include="..\..\electron\common\PlatformUtil.h">
+      <Filter>src\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\base\win\scoped_comptr.h">
+      <Filter>base\win</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\base\win\scoped_com_initializer.h">
+      <Filter>base\win</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\base\win\scoped_co_mem.h">
+      <Filter>base\win</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\base\win\shell.h">
+      <Filter>base\win</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\base\files\file_path.h">
+      <Filter>base\files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\base\win\shortcut.h">
+      <Filter>base\win</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\base\win\windows_version.h">
+      <Filter>base\win</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\base\strings\string_util.h">
+      <Filter>base\strings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\base\win\scoped_propvariant.h">
+      <Filter>base\win</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
