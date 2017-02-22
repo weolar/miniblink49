@@ -51,6 +51,15 @@ class GIN_EXPORT Dictionary {
     return !result.IsNothing() && result.FromJust();
   }
 
+  inline void SetMethod(const char* name, v8::FunctionCallback callback) {
+      v8::Local<v8::Function> func = v8::FunctionTemplate::New(isolate_, callback)->GetFunction();
+      // kInternalized strings are created in the old space.
+      const v8::NewStringType type = v8::NewStringType::kInternalized;
+      v8::Local<v8::String> name_string = v8::String::NewFromUtf8(isolate(), name, type).ToLocalChecked();
+      object_->Set(name_string, func);
+      func->SetName(name_string);  // NODE_SET_METHOD() compatibility.
+  }
+
   v8::Isolate* isolate() const { return isolate_; }
 
  private:

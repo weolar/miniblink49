@@ -10,6 +10,7 @@
 
 #include "base/logging.h"
 #include "base/strings/string_piece.h"
+#include "base/values.h"
 #include "gin/gin_export.h"
 #include "v8.h"
 
@@ -158,6 +159,42 @@ struct GIN_EXPORT Converter<v8::Local<v8::Value> > {
                      v8::Local<v8::Value>* out);
 };
 
+template<>
+struct GIN_EXPORT Converter<v8::Local<v8::String> > {
+    static v8::Local<v8::Value> ToV8(v8::Isolate* isolate,
+        v8::Local<v8::String> val);
+    static bool FromV8(v8::Isolate* isolate,
+        v8::Local<v8::Value> val,
+        v8::Local<v8::String>* out);
+};
+
+template<>
+struct GIN_EXPORT Converter<v8::Local<v8::Array> > {
+    static v8::Local<v8::Value> ToV8(v8::Isolate* isolate,
+        v8::Local<v8::Array> val);
+    static bool FromV8(v8::Isolate* isolate,
+        v8::Local<v8::Value> val,
+        v8::Local<v8::Array>* out);
+};
+
+template<>
+struct GIN_EXPORT Converter<base::ListValue> {
+    static v8::Local<v8::Value> ToV8(v8::Isolate* isolate,
+        const base::ListValue& val);
+    static bool FromV8(v8::Isolate* isolate,
+        v8::Local<v8::Value> val,
+        base::ListValue* out);
+};
+
+template<>
+struct GIN_EXPORT Converter<base::DictionaryValue> {
+    static v8::Local<v8::Value> ToV8(v8::Isolate* isolate,
+        const base::DictionaryValue& val);
+    static bool FromV8(v8::Isolate* isolate,
+        v8::Local<v8::Value> val,
+        base::DictionaryValue* out);
+};
+
 template<typename T>
 struct Converter<std::vector<T> > {
   static v8::MaybeLocal<v8::Value> ToV8(v8::Local<v8::Context> context,
@@ -212,6 +249,8 @@ template<typename T>
 v8::MaybeLocal<v8::Value> ConvertToV8(v8::Local<v8::Context> context, T input) {
   return Converter<T>::ToV8(context, input);
 }
+
+v8::Local<v8::Value> ConvertToV8(v8::Isolate* isolate, const base::ListValue& input);
 
 template<typename T, bool = ToV8ReturnsMaybe<T>::value> struct ToV8Traits;
 

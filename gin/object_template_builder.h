@@ -15,6 +15,13 @@
 #include "gin/gin_export.h"
 #include "v8.h"
 
+namespace mate {
+    class Event;
+}
+
+typedef int (mate::Event::*GetT)();
+typedef void (mate::Event::*SetT)(int);
+
 namespace gin {
 
 namespace {
@@ -123,6 +130,12 @@ class GIN_EXPORT ObjectTemplateBuilder {
                            CallbackTraits<T>::CreateTemplate(isolate_, getter),
                            CallbackTraits<U>::CreateTemplate(isolate_, setter));
   }
+  template <typename GetT, typename SetT>
+  ObjectTemplateBuilder& SetMemberAccessor(const base::StringPiece& name, const GetT& getter, const SetT& setter) {
+      SetMemberGetSetAccessor(isolate_, template_, StringToSymbol(isolate_, name), base::Bind(getter), base::Bind(setter));
+      return *this;
+  }
+
   template<typename T>
   ObjectTemplateBuilder& SetCallAsFunctionHandler(const T& callback) {
     CallbackTraits<T>::SetAsFunctionHandler(isolate_, template_, callback);

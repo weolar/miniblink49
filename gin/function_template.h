@@ -76,6 +76,20 @@ class CallbackHolder : public CallbackHolderBase {
   DISALLOW_COPY_AND_ASSIGN(CallbackHolder);
 };
 
+template<typename ClassType, typename Type>
+class CallbackHolderGetSet : public CallbackHolderBase {
+public:
+    CallbackHolderGetSet(v8::Isolate* isolate, const base::Callback<Type(ClassType)>& get_callback, const base::Callback<void(ClassType, Type)>& set_callback)
+        : CallbackHolderBase(isolate), get_callback_(get_callback), set_callback_(set_callback) {
+    }
+    base::Callback<Type(ClassType)> get_callback_;
+    base::Callback<void(ClassType, Type)> set_callback_;
+private:
+    virtual ~CallbackHolderGetSet() {}
+
+    DISALLOW_COPY_AND_ASSIGN(CallbackHolderGetSet);
+};
+
 template<typename T>
 bool GetNextArgument(Arguments* args, int create_flags, bool is_first,
                      T* result) {
@@ -215,6 +229,53 @@ struct Dispatcher<ReturnType(ArgTypes...)> {
   }
 };
 
+template<typename ClassType, typename Type>
+struct DispatcherAccessor {
+    static void DispatchToCallbackGetter(v8::Local<v8::String> property, const v8::PropertyCallbackInfo<v8::Value>& info) {
+        v8::Isolate* isolate = info.GetIsolate();
+
+        v8::Local<v8::External> v8_holder;
+        if (!ConvertFromV8(isolate, info.Data(), &v8_holder))
+            return;
+
+        CallbackHolderBase* holder_base = reinterpret_cast<CallbackHolderBase*>(v8_holder->Value());
+        typedef CallbackHolderGetSet<ClassType, Type> HolderGetSetT;
+        HolderGetSetT* holder = static_cast<HolderGetSetT*>(holder_base);
+
+        ClassType obj;
+        if (!ConvertFromV8(isolate, info.Holder(), &obj))
+            return;
+
+        Type result = holder->get_callback_.Run(obj);
+        v8::Local<v8::Value> v8_result_value;
+        if (!TryConvertToV8(isolate, result, &v8_result_value))
+            return;
+        info.GetReturnValue().Set(v8_result_value);
+    }
+
+    static void DispatchToCallbackSetter(v8::Local<v8::String> property, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& info) {
+        v8::Isolate* isolate = info.GetIsolate();
+
+        v8::Local<v8::External> v8_holder;
+        if (!ConvertFromV8(isolate, info.Data(), &v8_holder))
+            return;
+
+        CallbackHolderBase* holder_base = reinterpret_cast<CallbackHolderBase*>(v8_holder->Value());
+        typedef CallbackHolderGetSet<ClassType, Type> HolderGetSetT;
+        HolderGetSetT* holder = static_cast<HolderGetSetT*>(holder_base);
+
+        ClassType obj;
+        if (ConvertFromV8(isolate, info.Holder(), &obj))
+            return;
+
+        Type arg;
+        if (ConvertFromV8(isolate, value, &arg))
+            return;
+
+        holder->set_callback_.Run(obj, arg);
+    }
+};
+
 }  // namespace internal
 
 
@@ -239,6 +300,19 @@ v8::Local<v8::FunctionTemplate> CreateFunctionTemplate(
       &internal::Dispatcher<Sig>::DispatchToCallback,
       ConvertToV8<v8::Local<v8::External> >(isolate,
                                              holder->GetHandle(isolate)));
+}
+
+template<typename ClassType, typename Type>
+void SetMemberGetSetAccessor(v8::Isolate* isolate, v8::Local<v8::ObjectTemplate> obj_template, v8::Local<v8::String> name,
+    const base::Callback<Type(ClassType)> get_callback,
+    const base::Callback<void(ClassType, Type)> set_callback) {
+    typedef internal::CallbackHolderGetSet<ClassType, Type> HolderGetSetT;
+    HolderGetSetT* holder = new HolderGetSetT(isolate, get_callback, set_callback);
+
+    obj_template->SetAccessor(name,
+        &internal::DispatcherAccessor<ClassType, Type>::DispatchToCallbackGetter,
+        &internal::DispatcherAccessor<ClassType, Type>::DispatchToCallbackSetter,
+        ConvertToV8<v8::Local<v8::External> >(isolate, holder->GetHandle(isolate)));
 }
 
 // CreateFunctionHandler installs a CallAsFunction handler on the given

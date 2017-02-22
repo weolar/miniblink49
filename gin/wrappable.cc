@@ -43,6 +43,21 @@ void WrappableBase::SecondWeakCallback(
   delete wrappable;
 }
 
+WrappableBase* WrappableBase::GetNativePtr(v8::Local<v8::Object> handle, WrapperInfo* info) {
+  if (handle.IsEmpty() || handle->InternalFieldCount() <= 0)
+    return nullptr;
+
+  // Cast to ObjectWrap before casting to T.  A direct cast from void
+  // to T won't work right when T has more than one base class.
+  WrapperInfo* infoSelf = (WrapperInfo*)handle->GetAlignedPointerFromInternalField(kWrapperInfoIndex);
+  if (infoSelf != info)
+      return nullptr;
+
+  void* ptr = handle->GetAlignedPointerFromInternalField(kEncodedValueIndex);
+  WrappableBase* wrap = static_cast<WrappableBase*>(ptr);
+  return wrap;
+}
+
 v8::Local<v8::Object> WrappableBase::GetWrapperImpl(v8::Isolate* isolate, WrapperInfo* info) {
   if (!wrapper_.IsEmpty()) {
     return v8::Local<v8::Object>::New(isolate, wrapper_);

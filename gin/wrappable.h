@@ -73,8 +73,9 @@ class GIN_EXPORT WrappableBase {
   // Overrides of this method should be declared final and not overridden again.
   virtual ObjectTemplateBuilder GetObjectTemplateBuilder(v8::Isolate* isolate);
 
-  v8::Local<v8::Object> GetWrapperImpl(v8::Isolate* isolate,
-                                        WrapperInfo* wrapper_info);
+  v8::Local<v8::Object> GetWrapperImpl(v8::Isolate* isolate, WrapperInfo* wrapper_info);
+
+  static WrappableBase* GetNativePtr(v8::Local<v8::Object> handle, WrapperInfo* info);
 
  private:
   static void FirstWeakCallback(

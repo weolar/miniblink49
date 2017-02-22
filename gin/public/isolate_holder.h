@@ -76,6 +76,19 @@ class GIN_EXPORT IsolateHolder {
   }
 #endif // MINIBLINK_NOT_IMPLEMENTED
 
+  struct MemoryHead {
+      size_t magicNum;
+      size_t size;
+  };
+  static const size_t magicNum0 = 0x1122dd44;
+  static const size_t magicNum1 = 0x11227788;
+
+  static MemoryHead* GetPointerHead(void* pointer);
+  static size_t GetPointerMemSize(void* pointer);
+  static void* GetHeadToMemBegin(MemoryHead* head);
+
+  static v8::ArrayBuffer::Allocator* get_allocator();
+
  private:
   v8::Isolate* isolate_;
 #ifdef MINIBLINK_NOT_IMPLEMENTED
