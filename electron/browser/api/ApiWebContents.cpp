@@ -185,7 +185,7 @@ void WebContents::onDidCreateScriptContext(wkeWebView webView, wkeWebFrameHandle
     BlinkMicrotaskSuppressionHandle handle = nodeBlinkMicrotaskSuppressionEnter((*context)->GetIsolate());
     m_nodeBinding = new NodeBindings(false, ThreadCall::blinkLoop());
     node::Environment* env = m_nodeBinding->createEnvironment(*context);
-    node::LoadEnvironment(env);
+    m_nodeBinding->loadEnvironment();
     nodeBlinkMicrotaskSuppressionLeave(handle);
 }
 
@@ -197,6 +197,10 @@ void WebContents::staticOnWillReleaseScriptContextCallback(wkeWebView webView, v
 void WebContents::onWillReleaseScriptContextCallback(wkeWebView webView, wkeWebFrameHandle frame, v8::Local<v8::Context>* context, int worldId) {
     if (!m_nodeBinding)
         return;
+    node::Environment* env = node::Environment::GetCurrent(*context);
+    if (env)
+        mate::emitEvent(env->isolate(), env->process_object(), "exit");
+
     delete m_nodeBinding;
     m_nodeBinding = nullptr;
 }

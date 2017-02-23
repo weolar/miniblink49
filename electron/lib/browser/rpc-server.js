@@ -316,8 +316,8 @@ ipcMain.on('ELECTRON_BROWSER_MEMBER_CONSTRUCTOR', function (event, id, method, a
 ipcMain.on('ELECTRON_BROWSER_MEMBER_CALL', function (event, id, method, args) {
   try {
     args = unwrapArgs(event.sender, args)
-    let obj = objectsRegistry.get(id)
-    callFunction(event, obj[method], obj, args)
+    let obj = objectsRegistry.get(id);
+    callFunction(event, obj[method], obj, args);
   } catch (error) {
   	console.log("ELECTRON_BROWSER_MEMBER_CALL error:" + error);
     event.returnValue = exceptionToMeta(error)

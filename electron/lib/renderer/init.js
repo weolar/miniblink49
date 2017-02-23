@@ -13,6 +13,8 @@ const Module = require('module');
 // Export node bindings to global.
 window.require = require;
 window.module = module;
+window.miniNodeRequire = require;
+window.miniNodeModule = module;
 
 // Set the __filename to the path of html file if it is file: protocol.
 if (window.location.protocol === 'file:') {
@@ -26,3 +28,32 @@ if (window.location.protocol === 'file:') {
     // Also search for module under the html file.
     module.paths = module.paths.concat(Module._nodeModulePaths(window.__dirname));
 }
+
+function outputObj(obj) {  
+    var props = "";  
+	for (var prop in obj) {
+        if (obj.hasOwnProperty(prop)) {
+            var propVal = obj[prop];
+            props += prop + ' (' + typeof(prop) + ')' + ' = ';
+            if (typeof(obj[prop]) == 'string') {
+                propVal += obj[prop];
+            } else {
+                if (propVal != null && propVal.toString) {
+                    props += propVal.toString();
+                } else {}
+            }
+            props += '\n';
+        }
+    }
+   	console.log(props);  
+}  
+
+global.process.on('exit', function() {
+	var activeHandles = global.process._getActiveHandles();
+	
+	for (var i in activeHandles) {
+		var handle = activeHandles[i];
+		if (handle.hasOwnProperty('_handle') && handle._handle.hasOwnProperty('close'))
+			handle._handle.close();
+	}
+});

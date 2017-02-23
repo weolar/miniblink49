@@ -8,6 +8,7 @@
 #include "common/AtomVersion.h"
 #include "common/ChromeVersion.h"
 #include "common/AtomCommandLine.h"
+#include "common/api/EventEmitterCaller.h"
 #include <xstring>
 #include <vector>
 #include <memory>
@@ -91,9 +92,9 @@ NodeBindings::NodeBindings(bool isBrowser, uv_loop_t* uvLoop)
 }
 
 NodeBindings::~NodeBindings() {
-    if (m_env) {
-        nodeDeleteNodeEnvironment(m_env);
-    }
+    if (!m_env)
+        return;
+    nodeDeleteNodeEnvironment(m_env);
 }
 
 static std::wstring* kResPath = nullptr;
@@ -226,6 +227,11 @@ node::Environment* NodeBindings::createEnvironment(v8::Local<v8::Context> contex
 //     PathService::Get(content::CHILD_PROCESS_EXE, &helper_exec_path);
 //     process.Set("helperExecPath", helper_exec_path);
     return m_env;
+}
+
+void NodeBindings::loadEnvironment() {
+    node::LoadEnvironment(m_env);
+    mate::emitEvent(m_env->isolate(), m_env->process_object(), "loaded");
 }
 
 } // atom
