@@ -373,6 +373,10 @@ inline void Environment::set_is_blink_core() {
   is_blink_core_ = true;
 }
 
+inline bool Environment::is_blink_core() const {
+  return is_blink_core_;        
+}
+
 inline void Environment::file_system_hooks(Environment::FileSystemHooks* h) {
     file_system_hooks_ = h;
 }

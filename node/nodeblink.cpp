@@ -140,8 +140,52 @@ extern "C" NODE_EXTERN void* nodeCreateDefaultPlatform() {
     return v8platform;
 }
 
+static void waitForEnvironmentHandleWrapQueue(node::Environment* env) {
+    while (true) {
+        uv_run(env->event_loop(), UV_RUN_ONCE);
+
+        int emptyCount = 0;
+        int allCount = 0;
+        node::Environment::HandleWrapQueue::Iterator it = env->handle_wrap_queue()->begin();
+        for (; it != env->handle_wrap_queue()->end(); ++it, ++allCount) {
+            v8::Local<v8::Object> obj = (*it)->object();
+            bool b = obj.IsEmpty();
+            if (b)
+                ++emptyCount;
+        }
+        if (emptyCount == allCount)
+            break;
+    }
+}
+
+static void handleCloseCb(uv_handle_t* handle) {
+    int* closingHandleCount = (int*)handle->data;
+    ++(*closingHandleCount);
+}
+
+static void closeWalkCB(uv_handle_t* handle, void* arg) {
+    int* closeHandleCount = (int*)arg;
+
+    if (!uv_is_closing(handle)) {
+        ++(*closeHandleCount);
+        handle->data = closeHandleCount + 1;
+        uv_close(handle, handleCloseCb);
+    }
+}
+
+static void waitForAllHandleWrapQueue(node::Environment* env) {
+    int closeHandleCount[2] = { 0, 0 };
+    uv_walk(env->event_loop(), closeWalkCB, &closeHandleCount);
+
+    while (closeHandleCount[0] != closeHandleCount[1])
+        uv_run(env->event_loop(), UV_RUN_ONCE);
+}
+
 extern "C" NODE_EXTERN void nodeDeleteNodeEnvironment(node::Environment* env) {
     env->CleanupHandles();
+    waitForEnvironmentHandleWrapQueue(env);
+    waitForAllHandleWrapQueue(env);
+
     env->Dispose();
 }
 

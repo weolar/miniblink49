@@ -151,19 +151,23 @@ namespace node {
 #ifdef _WIN32
 		HANDLE stderr_handle = GetStdHandle(STD_ERROR_HANDLE);
 
+        // Fill in any placeholders
+        int n = _vscprintf(format, ap);
+        std::vector<char> out(n + 1);
+        vsprintf(&out[0], format, ap);
+
 		// Check if stderr is something other than a tty/console
 		if (stderr_handle == INVALID_HANDLE_VALUE ||
 			stderr_handle == nullptr ||
 			uv_guess_handle(_fileno(stderr)) != UV_TTY) {
 			vfprintf(stderr, format, ap);
+            
+            out.push_back('\n');
+            OutputDebugStringA(&out[0]);
+
 			va_end(ap);
 			return;
 		}
-
-		// Fill in any placeholders
-		int n = _vscprintf(format, ap);
-		std::vector<char> out(n + 1);
-		vsprintf(&out[0], format, ap);
 
 		// Get required wide buffer size
 		n = MultiByteToWideChar(CP_UTF8, 0, &out[0], -1, nullptr, 0);
@@ -174,6 +178,9 @@ namespace node {
 		// Don't include the null character in the output
 		CHECK_GT(n, 0);
 		WriteConsoleW(stderr_handle, &wbuf[0], n - 1, nullptr, nullptr);
+
+        wbuf.push_back(L'\n');
+        OutputDebugStringW(&wbuf[0]);
 #else
 		vfprintf(stderr, format, ap);
 #endif
@@ -1990,6 +1997,30 @@ namespace node {
 
 	void FatalException(Isolate* isolate, Local<Value> error, Local<Message> message) {
 		HandleScope scope(isolate);
+
+        Local<String> error_mesage = message->Get();
+        v8::String::Utf8Value error_mesage_utf8(error_mesage);
+
+        Local<String> messageScriptName = message->GetSourceLine();
+        v8::String::Utf8Value messageScriptNameUtf8(messageScriptName);
+
+        char* error_mesage_buf = new char[1000];
+        sprintf(error_mesage_buf, "node.cc, FatalException:%d %s, %s\n", message->GetLineNumber(), *error_mesage_utf8, *messageScriptNameUtf8);
+        OutputDebugStringA(error_mesage_buf);
+
+        v8::Local<v8::StackTrace> stackTrace = message->GetStackTrace();
+        if (!stackTrace.IsEmpty()) {
+            int frameCount = stackTrace->GetFrameCount();
+            for (int i = 0; i < frameCount; ++i) {
+                v8::Local<v8::StackFrame> stackFrame = stackTrace->GetFrame(i);
+
+                Local<String> scriptName = stackFrame->GetScriptNameOrSourceURL();
+                v8::String::Utf8Value scriptNameUtf8(scriptName);
+                sprintf(error_mesage_buf, "node.cc, FatalExceptionStackTrace:%d, %s\n", stackFrame->GetLineNumber(), *scriptNameUtf8);
+                OutputDebugStringA(error_mesage_buf);
+            }
+        }
+        delete[] error_mesage_buf;
 
 		Environment* env = Environment::GetCurrent(isolate);
 		Local<Object> process_object = env->process_object();

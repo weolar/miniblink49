@@ -479,6 +479,7 @@ class Environment {
   inline FileSystemHooks* file_system_hooks();
   inline void file_system_hooks(FileSystemHooks*);
   inline void set_is_blink_core();
+  inline bool is_blink_core() const;
   inline DomainFlag* domain_flag();
   inline TickInfo* tick_info();
   inline ArrayBufferAllocatorInfo* array_buffer_allocator_info();

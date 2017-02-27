@@ -376,6 +376,10 @@ inline void Environment::set_is_blink_core() {
   is_blink_core_ = true;
 }
 
+inline bool Environment::is_blink_core() const {
+    return is_blink_core_;
+}
+
 inline Environment::DomainFlag* Environment::domain_flag() {
   return &domain_flag_;
 }

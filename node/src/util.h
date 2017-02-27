@@ -348,7 +348,7 @@ class MaybeStackBuffer {
 
   ~MaybeStackBuffer() {
     if (buf_ != buf_st_)
-      free(buf_);
+      Realloc(buf_, 0);
   }
 
  private:

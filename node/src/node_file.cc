@@ -515,13 +515,22 @@ Local<Value> BuildStatsObject(Environment* env, const uv_stat_t* s) {
     birthtim_msec
   };
 
+#ifndef MINIBLINK_NOT_IMPLEMENTED
+  Environment::MicrotaskSuppressionHandle handle = nullptr;
+  if (env->is_blink_core())
+    handle = env->BlinkMicrotaskSuppressionEnter(env->isolate());
+#endif
+
   // Call out to JavaScript to create the stats object.
   Local<Value> stats =
       env->fs_stats_constructor_function()->NewInstance(
           env->context(),
           arraysize(argv),
           argv).FromMaybe(Local<Value>());
-
+#ifndef MINIBLINK_NOT_IMPLEMENTED
+  if (handle)
+    env->BlinkMicrotaskSuppressionLeave(handle);
+#endif
   if (stats.IsEmpty())
     return handle_scope.Escape(Local<Object>());
 

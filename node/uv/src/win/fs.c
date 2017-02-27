@@ -651,11 +651,22 @@ void fs__write(uv_fs_t* req) {
       overlapped.OffsetHigh = offset_.HighPart;
     }
 
-    result = WriteFile(handle,
-                       req->fs.info.bufs[index].base,
-                       req->fs.info.bufs[index].len,
-                       &incremental_bytes,
-                       overlapped_ptr);
+    ULONG len = req->fs.info.bufs[index].len;
+    char* base = req->fs.info.bufs[index].base;
+    if ((HANDLE)0xfffffffe == handle && (1 == fd || 2 == fd)) {
+      char* output = malloc(len + 2);
+      output[len] = '\n';
+      output[len + 1] = 0;
+      strncpy(output, base, len);
+      OutputDebugStringW(L"Node:");
+      OutputDebugStringA(output);
+      free(output);
+      incremental_bytes = len;
+      result = 1;
+    } else {
+      result = WriteFile(handle, base, len, &incremental_bytes, overlapped_ptr);
+    }
+
     bytes += incremental_bytes;
     ++index;
   } while (result && index < req->fs.info.nbufs);
