@@ -1,13 +1,14 @@
 ﻿
 #include <node_buffer.h>
-#include "common/OptionsSwitches.h"
-#include "common/NodeRegisterHelp.h"
 #include "browser/api/ApiWebContents.h"
 #include "browser/api/WindowList.h"
+#include "common/OptionsSwitches.h"
+#include "common/NodeRegisterHelp.h"
 #include "common/ThreadCall.h"
 #include "common/StringUtil.h"
 #include "common/api/EventEmitter.h"
 #include "common/IdLiveDetect.h"
+#include "common/WinUserMsg.h"
 #include "wke.h"
 #include "gin/per_isolate_data.h"
 #include "gin/object_template_builder.h"
@@ -21,6 +22,8 @@ public:
         m_webContents = nullptr;
         m_state = WindowUninited;
         m_hWnd = nullptr;
+        m_cursorInfoType = 0;
+        m_isCursorInfoTypeAsynGetting = false;
         m_memoryBMP = nullptr;
         m_memoryDC = nullptr;
         m_isLayerWindow = false;
@@ -301,6 +304,77 @@ public:
         });
     }
 
+    void onCursorChange() {
+        if (m_isCursorInfoTypeAsynGetting)
+            return;
+        m_isCursorInfoTypeAsynGetting = true;
+
+        int id = m_id;
+        wkeWebView pthis = m_webContents->getWkeView();
+        Window* win = this;
+        ThreadCall::callBlinkThreadAsync([pthis, win, id] {
+            if (!IdLiveDetect::get()->isLive(id))
+                return;
+            win->m_isCursorInfoTypeAsynGetting = false;
+            int cursorType = wkeGetCursorInfoType(pthis);
+            if (cursorType == win->m_cursorInfoType)
+                return;
+            win->m_cursorInfoType = cursorType;
+            ::PostMessage(win->m_hWnd, WM_SETCURSOR_ASYN, 0, 0);
+        });
+    }
+
+    void setCursorInfoTypeByCache() {
+        HCURSOR hCur = NULL;
+        switch (m_cursorInfoType) {
+        case WkeCursorInfoIBeam:
+            hCur = ::LoadCursor(NULL, IDC_IBEAM);
+            break;
+        case WkeCursorInfoHand:
+            hCur = ::LoadCursor(NULL, IDC_HAND);
+            break;
+        case WkeCursorInfoWait:
+            hCur = ::LoadCursor(NULL, IDC_WAIT);
+            break;
+        case WkeCursorInfoHelp:
+            hCur = ::LoadCursor(NULL, IDC_HELP);
+            break;
+        case WkeCursorInfoEastResize:
+            hCur = ::LoadCursor(NULL, IDC_SIZEWE);
+            break;
+        case WkeCursorInfoNorthResize:
+            hCur = ::LoadCursor(NULL, IDC_SIZENS);
+            break;
+        case WkeCursorInfoSouthWestResize:
+        case WkeCursorInfoNorthEastResize:
+            hCur = ::LoadCursor(NULL, IDC_SIZENESW);
+            break;
+        case WkeCursorInfoSouthResize:
+        case WkeCursorInfoNorthSouthResize:
+            hCur = ::LoadCursor(NULL, IDC_SIZENS);
+            break;
+        case WkeCursorInfoNorthWestResize:
+        case WkeCursorInfoSouthEastResize:
+            hCur = ::LoadCursor(NULL, IDC_SIZENWSE);
+            break;
+        case WkeCursorInfoWestResize:
+        case WkeCursorInfoEastWestResize:
+            hCur = ::LoadCursor(NULL, IDC_SIZEWE);
+            break;
+        case WkeCursorInfoNorthEastSouthWestResize:
+        case WkeCursorInfoNorthWestSouthEastResize:
+            hCur = ::LoadCursor(NULL, IDC_SIZEALL);
+            break;
+        default:
+            hCur = ::LoadCursor(NULL, IDC_ARROW);
+            break;
+        }
+
+        if (hCur) {
+            ::SetCursor(hCur);
+        }
+    }
+
     static LRESULT CALLBACK windowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
         Window* win = (Window *)::GetPropW(hWnd, kPrppW);
         if (!win) {
@@ -380,12 +454,11 @@ public:
             if (HIWORD(lParam) & KF_EXTENDED)
                 flags |= WKE_EXTENDED;
 
-            bool retVal = false;
-            ThreadCall::callBlinkThreadSync([pthis, virtualKeyCode, flags, &retVal] {
-                retVal = wkeFireKeyDownEvent(pthis, virtualKeyCode, flags, false);
+            ThreadCall::callBlinkThreadSync([pthis, virtualKeyCode, flags] {
+                wkeFireKeyDownEvent(pthis, virtualKeyCode, flags, false);
             });
-            if (retVal)
-                return 0;
+
+            return 0;
             break;
         }
         case WM_KEYUP: {
@@ -396,12 +469,11 @@ public:
             if (HIWORD(lParam) & KF_EXTENDED)
                 flags |= WKE_EXTENDED;
 
-            bool retVal = false;
-            ThreadCall::callBlinkThreadSync([pthis, virtualKeyCode, flags, &retVal] {
-                retVal = wkeFireKeyUpEvent(pthis, virtualKeyCode, flags, false);
+            ThreadCall::callBlinkThreadAsync([pthis, virtualKeyCode, flags] {
+                wkeFireKeyUpEvent(pthis, virtualKeyCode, flags, false);
             });
-            if (retVal)
-                return 0;
+
+            return 0;
             break;
         }
         case WM_CHAR: {
@@ -412,12 +484,10 @@ public:
             if (HIWORD(lParam) & KF_EXTENDED)
                 flags |= WKE_EXTENDED;
 
-            bool retVal = false;
-            ThreadCall::callBlinkThreadSync([pthis, charCode, flags, &retVal] {
-                retVal = wkeFireKeyPressEvent(pthis, charCode, flags, false);
+            ThreadCall::callBlinkThreadSync([pthis, charCode, flags] {
+                wkeFireKeyPressEvent(pthis, charCode, flags, false);
             });
-            if (retVal)
-                return 0;
+            return 0;
             break;
         }
         case WM_LBUTTONDOWN:
@@ -430,6 +500,7 @@ public:
         case WM_MBUTTONUP:
         case WM_RBUTTONUP:
         case WM_MOUSEMOVE: {
+            win->onCursorChange();
             win->onMouseMessage(hWnd, message, wParam, lParam);
             break;
         }
@@ -502,32 +573,32 @@ public:
             });
             return 0;
 
-        case WM_SETCURSOR: {
-//             bool retVal = false;
-//             ThreadCall::callBlinkThreadSync([pthis, hWnd, &retVal] {
-//                 retVal = wkeFireWindowsMessage(pthis, hWnd, WM_SETCURSOR, 0, 0, nullptr);
-//             });
-//             if (retVal)
-//                 return 0;
-        }
+        case WM_SETCURSOR:
+            return 0;
             break;
 
-        case WM_IME_STARTCOMPOSITION: {
-            wkeRect caret;
-            ThreadCall::callBlinkThreadSync([pthis, &caret] {
-                caret = wkeGetCaretRect(pthis);
-            });
+        case WM_SETCURSOR_ASYN:
+            win->setCursorInfoTypeByCache();
 
+        case WM_IME_STARTCOMPOSITION: {
+            ThreadCall::callBlinkThreadSync([pthis, hWnd] {
+                wkeRect* caret = new wkeRect();
+                *caret = wkeGetCaretRect(pthis);
+                ::PostMessage(hWnd, WM_IME_STARTCOMPOSITION_ASYN, (WPARAM)caret, 0);
+            });            
+        }
+            return 0;
+        case WM_IME_STARTCOMPOSITION_ASYN:
+            wkeRect* caret = (wkeRect*)wParam;
             COMPOSITIONFORM compositionForm;
             compositionForm.dwStyle = CFS_POINT | CFS_FORCE_POSITION;
-            compositionForm.ptCurrentPos.x = caret.x;
-            compositionForm.ptCurrentPos.y = caret.y;
+            compositionForm.ptCurrentPos.x = caret->x;
+            compositionForm.ptCurrentPos.y = caret->y;
 
             HIMC hIMC = ::ImmGetContext(hWnd);
             ::ImmSetCompositionWindow(hIMC, &compositionForm);
             ::ImmReleaseContext(hWnd, hIMC);
-        }
-            return 0;
+            break;
         }
 
         return ::DefWindowProcW(hWnd, message, wParam, lParam);
@@ -1069,6 +1140,8 @@ private:
     WebContents* m_webContents;
     
     HWND m_hWnd;
+    int m_cursorInfoType;
+    bool m_isCursorInfoTypeAsynGetting;
     CRITICAL_SECTION m_memoryCanvasLock;
     HBITMAP m_memoryBMP;
     HDC m_memoryDC;

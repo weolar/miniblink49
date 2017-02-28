@@ -1,6 +1,7 @@
 
 #include "ThreadCall.h"
 
+#include "common/WinUserMsg.h"
 #include "wke.h"
 #include "base/thread.h"
 #include "libplatform/libplatform.h"
@@ -15,7 +16,7 @@ uv_loop_t* ThreadCall::m_blinkLoop;
 
 v8::Platform* ThreadCall::m_v8platform = nullptr;
 
-#define WM_THREAD_CALL (WM_USER + 0x5325)
+
 
 void ThreadCall::init(uv_loop_t* uiLoop) {
     m_uiLoop = uiLoop;

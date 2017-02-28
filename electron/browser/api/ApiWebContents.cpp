@@ -18,9 +18,9 @@ void WebContents::init(v8::Isolate* isolate, v8::Local<v8::Object> target, node:
 
     prototype->SetClassName(v8::String::NewFromUtf8(isolate, "WebContents"));
     gin::ObjectTemplateBuilder builder(isolate, prototype->InstanceTemplate());
-    builder.SetMethod("getId", &WebContents::getId);
-    builder.SetMethod("getProcessId", &WebContents::nullFunction);
-    builder.SetMethod("equal", &WebContents::nullFunction);
+    builder.SetMethod("getId", &WebContents::getIdApi);
+    builder.SetMethod("getProcessId", &WebContents::getProcessIdApi);
+    builder.SetMethod("equal", &WebContents::equalApi);
     builder.SetMethod("_loadURL", &WebContents::_loadURLApi);
     builder.SetMethod("downloadURL", &WebContents::nullFunction);
     builder.SetMethod("_getURL", &WebContents::_getURLApi);
@@ -238,13 +238,25 @@ void WebContents::sendMessage(const std::string& channel, const base::ListValue&
     });
 }
 
-int WebContents::getId() const {
+int WebContents::getIdApi() const {
     return (int)this;
 }
+
+int WebContents::getProcessIdApi() const {
+    return (int)::GetCurrentProcessId();
+}
+
+bool WebContents::equalApi() const {
+    return false;
+}
+
 
 void WebContents::_loadURLApi(const std::string& url) {
     WebContents* self = this;
     std::string* str = new std::string(url);
+    if (str->size() > 9 && str->substr(0, 7) == "file://" && str->at(7) != '/')
+        str->insert(7, 1, '/');
+
     int id = m_id;
     ThreadCall::callBlinkThreadAsync([self, str, id] {
         if (IdLiveDetect::get()->isLive(id))

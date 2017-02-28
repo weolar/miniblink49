@@ -55,8 +55,10 @@ public:
 private:
     static void newFunction(const v8::FunctionCallbackInfo<v8::Value>& args);
 
-    int getId() const;
+    int getIdApi() const;
     void _loadURLApi(const std::string& url);
+    int getProcessIdApi() const;
+    bool equalApi() const;
 
     std::string _getURLApi();
 
