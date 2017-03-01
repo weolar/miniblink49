@@ -94,11 +94,27 @@ static void webkitRelativePathAttributeGetter(const v8::FunctionCallbackInfo<v8:
     v8SetReturnValueString(info, impl->webkitRelativePath(), info.GetIsolate());
 }
 
+static void pathAttributeGetter(const v8::FunctionCallbackInfo<v8::Value>& info) {
+    v8::Local<v8::Object> holder = info.Holder();
+    File* impl = V8File::toImpl(holder);
+    String path = impl->fileSystemURL().string();
+    if (path.startsWith("file:///"))
+        path.remove(0, 8);
+    v8SetReturnValueString(info, path, info.GetIsolate());
+}
+
 static void webkitRelativePathAttributeGetterCallback(const v8::FunctionCallbackInfo<v8::Value>& info)
 {
     TRACE_EVENT_SET_SAMPLING_STATE("blink", "DOMGetter");
     UseCounter::countIfNotPrivateScript(info.GetIsolate(), callingExecutionContext(info.GetIsolate()), UseCounter::PrefixedFileRelativePath);
     FileV8Internal::webkitRelativePathAttributeGetter(info);
+    TRACE_EVENT_SET_SAMPLING_STATE("v8", "V8Execution");
+}
+
+static void pathAttributeGetterCallback(const v8::FunctionCallbackInfo<v8::Value>& info) {
+    TRACE_EVENT_SET_SAMPLING_STATE("blink", "DOMGetter");
+    UseCounter::countIfNotPrivateScript(info.GetIsolate(), callingExecutionContext(info.GetIsolate()), UseCounter::PrefixedFileRelativePath);
+    FileV8Internal::pathAttributeGetter(info);
     TRACE_EVENT_SET_SAMPLING_STATE("v8", "V8Execution");
 }
 
@@ -146,6 +162,7 @@ static const V8DOMConfiguration::AccessorConfiguration V8FileAccessors[] = {
     {"lastModified", FileV8Internal::lastModifiedAttributeGetterCallback, 0, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnPrototype, V8DOMConfiguration::CheckHolder},
     {"lastModifiedDate", FileV8Internal::lastModifiedDateAttributeGetterCallback, 0, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnPrototype, V8DOMConfiguration::CheckHolder},
     {"webkitRelativePath", FileV8Internal::webkitRelativePathAttributeGetterCallback, 0, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnPrototype, V8DOMConfiguration::CheckHolder},
+    {"path", FileV8Internal::pathAttributeGetterCallback, 0, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnPrototype, V8DOMConfiguration::CheckHolder},
 };
 
 void V8File::constructorCallback(const v8::FunctionCallbackInfo<v8::Value>& info)
