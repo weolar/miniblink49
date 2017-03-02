@@ -8,11 +8,13 @@
 #include "wkeWebView.h"
 #include "wkeJsBind.h"
 
+#include "content/web_impl_win/BlinkPlatformImpl.h"
+#include "content/browser/WebFrameClientImpl.h"
+
+#include "third_party/WebKit/public/platform/WebDragData.h"
 #include "third_party/WebKit/public/web/WebScriptSource.h"
 #include "third_party/WebKit/Source/web/WebViewImpl.h"
 #include "third_party/WebKit/Source/wtf/text/WTFStringUtil.h"
-#include "content/web_impl_win/BlinkPlatformImpl.h"
-#include "content/browser/WebFrameClientImpl.h"
 
 #undef  PURE
 #define PURE = 0;
@@ -1008,6 +1010,36 @@ void* CWebView::getUserKayValue(const char* key)
     if (m_userKayValues.end() == it)
         return nullptr;
     return it->second;
+}
+
+int CWebView::getCursorInfoType()
+{
+    return m_webPage->getCursorInfoType();
+}
+
+void CWebView::setDragFiles(const POINT* clintPos, const POINT* screenPos, wkeString files[], int filesCount)
+{
+    blink::WebPoint clientPoint(clintPos->x, clintPos->y);
+    blink::WebPoint screenPoint(screenPos->x, screenPos->y);
+
+    blink::WebDragData webDragData;
+    webDragData.initialize();
+
+    for (int i = 0; i < filesCount; ++i) {
+        WTF::String file = files[i]->original();
+        //GetFileSizeEx();
+        file.insert("file:///", 0);
+    
+        blink::WebDragData::Item it;
+        it.storageType = blink::WebDragData::Item::StorageTypeFileSystemFile;
+        it.fileSystemURL = blink::KURL(blink::ParsedURLString, file);
+        webDragData.addItem(it);
+    }
+
+    blink::WebViewImpl* webView = m_webPage->webViewImpl();
+    webView->dragTargetDragEnter(webDragData, clientPoint, screenPoint, blink::WebDragOperationMove, 0);
+    webView->dragTargetDragOver(clientPoint, screenPoint, blink::WebDragOperationMove, 0);
+    webView->dragTargetDrop(clientPoint, screenPoint, 0);
 }
 
 void CWebView::setProxyInfo(const String& host,	unsigned long port,	net::WebURLLoaderManager::ProxyType type, const String& username, const String& password)

@@ -215,6 +215,10 @@ public:
     void setUserKayValue(const char* key, void* value);
     void* getUserKayValue(const char* key);
 
+    int getCursorInfoType();
+
+    void setDragFiles(const POINT* clintPos, const POINT* screenPos, wkeString files[], int filesCount);
+
 	void setProxyInfo(const String& host, unsigned long port, net::WebURLLoaderManager::ProxyType type, const String& username, const String& password);
 
 protected:

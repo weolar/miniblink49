@@ -680,6 +680,17 @@ void wkeSetStringW(wkeString string, const wchar_t* str, size_t len)
     string->setString(str, len);
 }
 
+WKE_API wkeString wkeCreateStringW(const wchar_t* str, size_t len)
+{
+    wkeString wkeStr = new wke::CString(str, len);
+    return wkeStr;
+}
+
+WKE_API void wkeDeleteString(wkeString str)
+{
+    delete str;
+}
+
 wkeWebView wkeGetWebViewForCurrentContext()
 {
     content::WebPage* webpage = content::WebPage::getSelfForCurrentContext();
@@ -697,6 +708,16 @@ WKE_API void wkeSetUserKayValue(wkeWebView webView, const char* key, void* value
 WKE_API void* wkeGetUserKayValue(wkeWebView webView, const char* key)
 {
     return webView->getUserKayValue(key);
+}
+
+WKE_API int wkeGetCursorInfoType(wkeWebView webView)
+{
+    return webView->getCursorInfoType();
+}
+
+WKE_API void wkeSetDragFiles(wkeWebView webView, const POINT* clintPos, const POINT* screenPos, wkeString files[], int filesCount)
+{
+    webView->setDragFiles(clintPos, screenPos, files, filesCount);
 }
 
 // typedef void (__cdecl* _PVFV) ();

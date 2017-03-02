@@ -340,9 +340,36 @@ WKE_API const wchar_t* wkeGetStringW(const wkeString string);
 WKE_API void wkeSetString(wkeString string, const utf8* str, size_t len);
 WKE_API void wkeSetStringW(wkeString string, const wchar_t* str, size_t len);
 
+WKE_API wkeString wkeCreateStringW(const wchar_t* str, size_t len);
+WKE_API void wkeDeleteString(wkeString str);
+
 WKE_API wkeWebView wkeGetWebViewForCurrentContext();
 WKE_API void wkeSetUserKayValue(wkeWebView webView, const char* key, void* value);
 WKE_API void* wkeGetUserKayValue(wkeWebView webView, const char* key);
+
+#define WkeCursorInfoPointer 0
+#define WkeCursorInfoCross 1
+#define WkeCursorInfoHand 2
+#define WkeCursorInfoIBeam 3
+#define WkeCursorInfoWait 4
+#define WkeCursorInfoHelp 5
+#define WkeCursorInfoEastResize 6
+#define WkeCursorInfoNorthResize 7
+#define WkeCursorInfoNorthEastResize 8
+#define WkeCursorInfoNorthWestResize 9
+#define WkeCursorInfoSouthResize 10
+#define WkeCursorInfoSouthEastResize 11
+#define WkeCursorInfoSouthWestResize 12
+#define WkeCursorInfoWestResize 13
+#define WkeCursorInfoNorthSouthResize 14
+#define WkeCursorInfoEastWestResize 15
+#define WkeCursorInfoNorthEastSouthWestResize 16
+#define WkeCursorInfoNorthWestSouthEastResize 17
+#define WkeCursorInfoColumnResize 18
+#define WkeCursorInfoRowResize 19
+
+WKE_API int wkeGetCursorInfoType(wkeWebView webView);
+WKE_API void wkeSetDragFiles(wkeWebView webView, const POINT* clintPos, const POINT* screenPos, wkeString files[], int filesCount);
 
 //wke callback-----------------------------------------------------------------------------------
 typedef void(*wkeTitleChangedCallback)(wkeWebView webView, void* param, const wkeString title);
