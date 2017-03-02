@@ -116,15 +116,15 @@
   <script>
   
     const remote = require('electron').remote;
-    //const shell = require('electron').shell;
+    const shell = require('electron').shell;
 
     var execPath = remote.process.execPath;
     var command = execPath + ' path-to-your-app';
 
     document.onclick = function(e) {
       e.preventDefault();
-      //if (e.target.tagName == 'A')
-      //  shell.openExternal(e.target.href);
+      if (e.target.tagName == 'A')
+        shell.openExternal(e.target.href);
       return false;
     };
     document.ondragover = document.ondrop = function(e) {

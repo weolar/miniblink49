@@ -12,7 +12,8 @@ const url = require('url')
 // Parse command line options.
 const argv = process.argv.slice(1)
 const option = { file: null, help: null, version: null, abi: null, webdriver: null, modules: [] }
-for (let i = 0; i < argv.length; i++) {
+
+for (let i = 1; i < argv.length; i++) {
   if (argv[i] === '--version' || argv[i] === '-v') {
     option.version = true
     break
@@ -35,10 +36,13 @@ for (let i = 0; i < argv.length; i++) {
   } else if (argv[i][0] === '-') {
     continue
   } else {
-    option.file = 'file:///E:/mycode/miniblink49/trunk/electron/default_app/index.html'// argv[i] --weolar
+    option.file = argv[i]
     break
   }
 }
+
+if (null == option.file)
+  option.file = __dirname + '/index.html'
 
 // Quit when all windows are closed and no other one is listening to this.
 app.on('window-all-closed', () => {
@@ -257,7 +261,7 @@ function loadApplicationPackage (packagePath) {
 
   try {
     // Override app name and version.
-    packagePath = path.resolve(packagePath)
+    packagePath = path.resolve(packagePath);
     const packageJsonPath = path.join(packagePath, 'package.json')
     if (fs.existsSync(packageJsonPath)) {
       let packageJson
