@@ -15,7 +15,10 @@ const app = require('electron').app;
 require('./../common/init');
 require('./rpc-server');
 
-let packagePath = __dirname + '/../../default_app/';
+let packagePath = __dirname + '/../default_app/';
+//packagePath = 'E:\\mycode\\electron-v1.3.3\\electron-v1.3.3-win32-ia32\\demo\\ffftp\\';
+//packagePath = 'E:\\mycode\\electron-v1.3.3\\electron-v1.3.3-win32-ia32\\demo\\AiTing\\';
+console.log('browser.init.js');
 
 let packageJson = null;
 packageJson = require(packagePath + 'package.json');

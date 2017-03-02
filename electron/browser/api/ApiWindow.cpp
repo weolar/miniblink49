@@ -12,6 +12,8 @@
 #include "wke.h"
 #include "gin/per_isolate_data.h"
 #include "gin/object_template_builder.h"
+#include <shellapi.h>
+#include <ole2.h>
 
 namespace atom {
 
@@ -375,6 +377,52 @@ public:
         }
     }
 
+    void onDragFiles(HDROP hDrop) {
+        int count = ::DragQueryFile(hDrop, 0xFFFFFFFF, NULL, 0); // How many files were dropped? 
+
+        int id = m_id;
+        WebContents* webContents = m_webContents;
+        std::vector<std::vector<wchar_t>*>* fileNames = new std::vector<std::vector<wchar_t>*>();
+        for (int i = 0; i <count; i++) {
+            int pathlength = ::DragQueryFile(hDrop, i, NULL, 0) + 1;
+            if (pathlength >= MAX_PATH || pathlength <= 1)
+                continue;
+
+            fileNames->push_back(new std::vector<wchar_t>());
+            fileNames->at(i)->resize(pathlength);
+            ::DragQueryFile(hDrop, i, fileNames->at(i)->data(), pathlength);
+        }
+
+        ::DragFinish(hDrop);
+
+        POINT* curPos = new POINT();
+        ::GetCursorPos(curPos);
+
+        POINT* screenPos = new POINT();
+        screenPos->x = curPos->x;
+        screenPos->y = curPos->y;
+        ::ScreenToClient(m_hWnd, screenPos);
+
+        ThreadCall::callBlinkThreadAsync([webContents, id, fileNames, curPos, screenPos] {
+            if (!IdLiveDetect::get()->isLive(id))
+                return;
+
+            std::vector<wkeString> files;
+            for (size_t i = 0; i < fileNames->size(); ++i) {
+                files.push_back(wkeCreateStringW(fileNames->at(i)->data(), fileNames->at(i)->size()));
+            }
+            wkeSetDragFiles(webContents->getWkeView(), curPos, screenPos, files.data(), files.size());
+            
+            delete curPos;
+            delete screenPos;
+            for (size_t i = 0; i < fileNames->size(); ++i) {
+                wkeDeleteString(files.at(i));
+                delete fileNames->at(i);
+            }
+            delete fileNames;
+        });
+    }
+
     static LRESULT CALLBACK windowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
         Window* win = (Window *)::GetPropW(hWnd, kPrppW);
         if (!win) {
@@ -425,17 +473,17 @@ public:
 
         case WM_SIZE: {
             ::EnterCriticalSection(&win->m_memoryCanvasLock);
-//             if (win->m_memoryDC)
-//                 ::DeleteDC(win->m_memoryDC);
-//             win->m_memoryDC = nullptr;
-//
-//             if (win->m_memoryBMP)
-//                 ::DeleteObject((HGDIOBJ)win->m_memoryBMP);
-//             win->m_memoryBMP = nullptr;
-// 
-//             ::GetClientRect(hWnd, &win->m_clientRect);
+            //             if (win->m_memoryDC)
+            //                 ::DeleteDC(win->m_memoryDC);
+            //             win->m_memoryDC = nullptr;
+            //
+            //             if (win->m_memoryBMP)
+            //                 ::DeleteObject((HGDIOBJ)win->m_memoryBMP);
+            //             win->m_memoryBMP = nullptr;
+            // 
+            //             ::GetClientRect(hWnd, &win->m_clientRect);
             ::LeaveCriticalSection(&win->m_memoryCanvasLock);
-            
+
             ThreadCall::callBlinkThreadAsync([pthis, lParam] {
                 wkeResize(pthis, LOWORD(lParam), HIWORD(lParam));
                 wkeRepaintIfNeeded(pthis);
@@ -560,7 +608,7 @@ public:
             break;
         }
         case WM_SETFOCUS:
-            ThreadCall::callBlinkThreadAsync([id, pthis]{
+            ThreadCall::callBlinkThreadAsync([id, pthis] {
                 if (IdLiveDetect::get()->isLive(id))
                     wkeSetFocus(pthis);
             });
@@ -581,14 +629,14 @@ public:
             win->setCursorInfoTypeByCache();
 
         case WM_IME_STARTCOMPOSITION: {
-            ThreadCall::callBlinkThreadSync([pthis, hWnd] {
+            ThreadCall::callBlinkThreadAsync([pthis, hWnd] {
                 wkeRect* caret = new wkeRect();
                 *caret = wkeGetCaretRect(pthis);
                 ::PostMessage(hWnd, WM_IME_STARTCOMPOSITION_ASYN, (WPARAM)caret, 0);
-            });            
+            });
         }
             return 0;
-        case WM_IME_STARTCOMPOSITION_ASYN:
+        case WM_IME_STARTCOMPOSITION_ASYN: {
             wkeRect* caret = (wkeRect*)wParam;
             COMPOSITIONFORM compositionForm;
             compositionForm.dwStyle = CFS_POINT | CFS_FORCE_POSITION;
@@ -598,6 +646,10 @@ public:
             HIMC hIMC = ::ImmGetContext(hWnd);
             ::ImmSetCompositionWindow(hIMC, &compositionForm);
             ::ImmReleaseContext(hWnd, hIMC);
+        }
+            break;
+        case WM_DROPFILES:
+            win->onDragFiles((HDROP)wParam);
             break;
         }
 
@@ -1083,6 +1135,9 @@ private:
 
         if (!::IsWindow(m_hWnd))
             return;
+
+        //::RegisterDragDrop(m_hWnd, nullptr);
+        ::DragAcceptFiles(m_hWnd, true);
 
         m_clientRect.right = createWindowParam->width;
         m_clientRect.bottom = createWindowParam->height;
