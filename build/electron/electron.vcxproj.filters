@@ -346,5 +346,11 @@
     <ClInclude Include="..\..\base\win\scoped_propvariant.h">
       <Filter>base\win</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\electron\common\WinUserMsg.h">
+      <Filter>src\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\electron\browser\api\WindowInterface.h">
+      <Filter>src\browser\api</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

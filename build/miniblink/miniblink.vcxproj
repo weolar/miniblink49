@@ -4115,6 +4115,7 @@
     <ClCompile Include="..\..\third_party\WebKit\Source\platform\exported\WebCString.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\platform\exported\WebCursorInfo.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\platform\exported\WebData.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\exported\WebDragData.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\platform\exported\WebFilterKeyframe.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\platform\exported\WebHTTPBody.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\platform\exported\WebHTTPLoadInfo.cpp" />

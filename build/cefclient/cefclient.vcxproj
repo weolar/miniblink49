@@ -125,6 +125,7 @@
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>../../cef;../../cef/tests</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

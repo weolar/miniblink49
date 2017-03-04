@@ -9402,6 +9402,9 @@
     <ClCompile Include="..\..\base\ostream_for_other_vc6.cpp">
       <Filter>base</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\exported\WebDragData.cpp">
+      <Filter>third_party\Webkit\Source\platform\exported</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\public\platform\modules\app_banner\WebAppBannerClient.h">
