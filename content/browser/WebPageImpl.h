@@ -103,6 +103,8 @@ public:
     bool fireKeyDownEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
     bool fireKeyPressEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
+    int getCursorInfoType() const;
+
     HDC viewDC();
     void paintToBit(void* bits, int pitch);
     

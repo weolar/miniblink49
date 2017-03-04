@@ -238,6 +238,13 @@ LRESULT WebPage::fireWheelEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
     return 0;
 }
 
+int WebPage::getCursorInfoType() const
+{
+    if (m_pageImpl)
+        return m_pageImpl->getCursorInfoType();
+    return -1;
+}
+
 IntSize WebPage::viewportSize() const
 { 
     if (m_pageImpl)

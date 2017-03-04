@@ -843,6 +843,11 @@ void WebPageImpl::didChangeCursor(const WebCursorInfo& cursor)
         ::PostMessage(m_hWnd, WM_SETCURSOR, 0, 0);
 }
 
+int WebPageImpl::getCursorInfoType() const
+{
+    return (int)m_cursorType;
+}
+
 void WebPageImpl::fireCursorEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, BOOL* handle)
 {
     CHECK_FOR_REENTER0();

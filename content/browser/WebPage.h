@@ -84,6 +84,8 @@ public:
 
     void fireResizeEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
+    int getCursorInfoType() const;
+
 	blink::IntSize viewportSize() const;
     void setViewportSize(const blink::IntSize& size);
 
