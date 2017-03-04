@@ -156,6 +156,19 @@ struct ArgumentHolder {
   }
 };
 
+template <>
+struct ArgumentHolder<1, const v8::FunctionCallbackInfo<v8::Value>&> {
+    using ArgLocalType = const v8::FunctionCallbackInfo<v8::Value>&;
+    ArgLocalType value;
+    bool ok;
+
+    ArgumentHolder(Arguments* args, int create_flags)
+        : value(*args->getInfo())
+        , ok(true) {
+        
+    }
+};
+
 // Class template for converting arguments from JavaScript to C++ and running
 // the callback with them.
 template <typename IndicesType, typename... ArgTypes>
