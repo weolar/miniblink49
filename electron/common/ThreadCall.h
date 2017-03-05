@@ -34,13 +34,19 @@ public:
 
     static void shutdown();
 
+    static void exitMessageLoop(DWORD threadId);
     static void messageLoop(uv_loop_t* loop, v8::Platform* platform, v8::Isolate* isolate);
 
-    static uv_loop_t* uiLoop() { return m_uiLoop; }
-    static uv_loop_t* blinkLoop() { return m_blinkLoop; }
+    static uv_loop_t* getUiLoop() { return m_uiLoop; }
+    static uv_loop_t* getBlinkLoop() { return m_blinkLoop; }
+
+    static DWORD getUiThreadId() { return m_uiThreadId; }
+    static DWORD getBlinkThreadId() { return m_blinkThreadId; }
 
     static bool isBlinkThread();
     static bool isUiThread();
+
+    static void setMainThread();
 
 private:
     static void callThreadAsync(std::function<void(void)> closure);
@@ -49,6 +55,7 @@ private:
 
     static DWORD m_blinkThreadId;
     static DWORD m_uiThreadId;
+    static DWORD m_mainThreadId;
 
     static uv_loop_t* m_uiLoop;
     static uv_loop_t* m_blinkLoop;

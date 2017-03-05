@@ -1,5 +1,4 @@
-﻿
-#include "electron.h"
+﻿#include "electron.h"
 
 #include "common/ThreadCall.h"
 #include "common/NodeRegisterHelp.h"
@@ -66,38 +65,16 @@ static void initPeRes(HINSTANCE hInstance) {
     }
 }
 
-// void nodeInitCallBack(node::NodeArgc* n) {
-// //     gcTimer.data = n->childEnv->isolate();
-// //     uv_timer_init(n->childLoop, &gcTimer);
-// //     uv_timer_start(&gcTimer, gcTimerCallBack, 1000 * 10, 1);
-// 
-//     uv_loop_t* loop = n->childLoop;
-//     atom::ThreadCall::init(loop);
-//     atom::ThreadCall::messageLoop(loop, n->v8platform, v8::Isolate::GetCurrent());
-// }
-// 
-// void nodePreInitCallBack(node::NodeArgc* n) {
-//     //base::SetThreadName("NodeCore");
-//     ThreadCall::createBlinkThread(n->v8platform);
-// }
-
 } // atom
 
-int APIENTRY wWinMain(HINSTANCE hInstance,
-    HINSTANCE hPrevInstance,
-    LPTSTR    lpCmdLine,
-    int       nCmdShow) {
+int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow) {
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
 
     atom::AtomCommandLine::initAW();
+    atom::ThreadCall::setMainThread();
     atom::initPeRes(hInstance); // 初始化PE打包的资源
     atom::registerNodeMod();
-       
-    //std::wstring initScript = atom::getResourcesPath(L"init.js");
-    //const wchar_t* argv1[] = { L"electron.exe", initScript.c_str() };
-//     const wchar_t* argv1[] = { L"electron.exe", L"E:\\mycode\\miniblink49\\trunk\\electron\\lib\\init.js" };
-//     node::NodeArgc* node = node::nodeRunThread(2, argv1, atom::nodeInitCallBack, atom::nodePreInitCallBack, nullptr);
 
     atom::NodeArgc* node = atom::runNodeThread();
     

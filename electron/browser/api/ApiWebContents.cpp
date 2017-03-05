@@ -111,6 +111,7 @@ WebContents* WebContents::create(v8::Isolate* isolate, gin::Dictionary options) 
 }
 
 WebContents::WebContents(v8::Isolate* isolate, v8::Local<v8::Object> wrapper) {
+    m_nodeBinding = nullptr;
     m_id = IdLiveDetect::get()->constructed();
     gin::Wrappable<WebContents>::InitWith(isolate, wrapper);
 
@@ -183,7 +184,7 @@ void WebContents::onDidCreateScriptContext(wkeWebView webView, wkeWebFrameHandle
         return;
 
     BlinkMicrotaskSuppressionHandle handle = nodeBlinkMicrotaskSuppressionEnter((*context)->GetIsolate());
-    m_nodeBinding = new NodeBindings(false, ThreadCall::blinkLoop());
+    m_nodeBinding = new NodeBindings(false, ThreadCall::getBlinkLoop());
     node::Environment* env = m_nodeBinding->createEnvironment(*context);
     m_nodeBinding->loadEnvironment();
     nodeBlinkMicrotaskSuppressionLeave(handle);

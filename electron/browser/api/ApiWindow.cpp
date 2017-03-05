@@ -2,6 +2,8 @@
 #include <node_buffer.h>
 #include "browser/api/ApiWebContents.h"
 #include "browser/api/WindowList.h"
+#include "browser/api/ApiApp.h"
+#include "browser/api/WindowInterface.h"
 #include "common/OptionsSwitches.h"
 #include "common/NodeRegisterHelp.h"
 #include "common/ThreadCall.h"
@@ -17,7 +19,7 @@
 
 namespace atom {
 
-class Window : public mate::EventEmitter<Window> {
+class Window : public mate::EventEmitter<Window>, public WindowInterface {
 public:
     explicit Window(v8::Isolate* isolate, v8::Local<v8::Object> wrapper) {
         gin::Wrappable<Window>::InitWith(isolate, wrapper);
@@ -49,7 +51,7 @@ public:
             //delete data->m_webContents;
             ::SendMessage(this->m_hWnd, WM_CLOSE, 0, 0);
         //});
-        WindowList::GetInstance()->RemoveWindow(this);
+        //WindowList::getInstance()->removeWindow(this);
 
         IdLiveDetect::get()->deconstructed(m_id);
 
@@ -165,30 +167,13 @@ public:
         target->Set(v8::String::NewFromUtf8(isolate, "BrowserWindow"), prototype->GetFunction());
     }
 
-//     static void staticOnPaintUpdated(wkeWebView webView, Window* win, const HDC hdc, int x, int y, int cx, int cy) {
-//         HWND hWnd = win->m_hWnd;
-//         HDC hdcScreen = ::GetDC(hWnd);
-//         RECT rectDest;
-//         if (WS_EX_LAYERED == (WS_EX_LAYERED & GetWindowLong(hWnd, GWL_EXSTYLE))) {
-//             ::GetWindowRect(hWnd, &rectDest);
-// 
-//             SIZE sizeDest = { rectDest.right - rectDest.left, rectDest.bottom - rectDest.top };
-//             POINT pointDest = { rectDest.left, rectDest.top };
-//             POINT pointSource = { 0, 0 };
-// 
-//             BLENDFUNCTION blend = { 0 };
-//             memset(&blend, 0, sizeof(blend));
-//             blend.BlendOp = AC_SRC_OVER;
-//             blend.SourceConstantAlpha = 255;
-//             blend.AlphaFormat = AC_SRC_ALPHA;
-//             ::UpdateLayeredWindow(hWnd, hdcScreen, &pointDest, &sizeDest, hdc, &pointSource, RGB(0, 0, 0), &blend, ULW_ALPHA);
-//         }
-//         else {
-//             win->onPaintUpdated(hdcScreen, hdc, x, y, cx, cy);
-//         }
-// 
-//         ::ReleaseDC(hWnd, hdcScreen);
-//     }
+    virtual bool isClosed() override {
+        return m_state == WindowDestroyed;
+    }
+
+    virtual void close() override {
+        ::DestroyWindow(m_hWnd);
+    }
 
     void onPaintUpdatedInCompositeThread(const HDC hdc, int x, int y, int cx, int cy) {
         HWND hWnd = m_hWnd;
@@ -447,16 +432,22 @@ public:
             return ::DefWindowProcW(hWnd, message, wParam, lParam);
         switch (message) {
         case WM_CLOSE:
+            win->m_state = WindowDestroying;
             ::ShowWindow(hWnd, SW_HIDE);
-            ::DestroyWindow(hWnd);
-            return 0;
+            break;
 
-        case WM_DESTROY:
+        case WM_NCDESTROY:
             ::KillTimer(hWnd, (UINT_PTR)win);
             ::RemovePropW(hWnd, kPrppW);
-            ThreadCall::callBlinkThreadSync([pthis] {
+            ThreadCall::callBlinkThreadSync([pthis, win] {
                 wkeDestroyWebView(pthis);
+                win->m_webContents = nullptr;
             });
+            WindowList::getInstance()->removeWindow(win);
+            if (WindowList::getInstance()->empty()) {
+                App::getInstance()->onWindowAllClosed();
+            }
+            win->m_state = WindowDestroyed;
             //delete win->m_webContents;
             return 0;
 
@@ -664,8 +655,6 @@ public:
             return buffer.ToLocalChecked();
         }
     }
-
-    
 
 private:
     void closeApi() {
@@ -1160,7 +1149,7 @@ private:
 
             gin::Dictionary options(isolate, args[0]->ToObject()); // 使用new调用 `new Point(...)`
             Window* win = newWindow(&options, args.This());
-            WindowList::GetInstance()->AddWindow(win);
+            WindowList::getInstance()->addWindow(win);
 
             // win->Wrap(args.This(), isolate); // 包装this指针 // weolar
             args.GetReturnValue().Set(args.This());

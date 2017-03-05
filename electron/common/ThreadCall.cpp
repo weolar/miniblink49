@@ -10,13 +10,12 @@ namespace atom {
 
 DWORD ThreadCall::m_blinkThreadId;
 DWORD ThreadCall::m_uiThreadId;
+DWORD ThreadCall::m_mainThreadId;
 
 uv_loop_t* ThreadCall::m_uiLoop;
 uv_loop_t* ThreadCall::m_blinkLoop;
 
 v8::Platform* ThreadCall::m_v8platform = nullptr;
-
-
 
 void ThreadCall::init(uv_loop_t* uiLoop) {
     m_uiLoop = uiLoop;
@@ -24,10 +23,10 @@ void ThreadCall::init(uv_loop_t* uiLoop) {
 }
 
 void ThreadCall::callUiThreadSync(std::function<void(void)>&& closure) {
-    if (isUiThread()) {
-        closure();
-        return;
-    }
+//     if (isUiThread()) {
+//         closure();
+//         return;
+//     }
 
     TaskAsyncData* asyncData = cretaeAsyncData(m_uiLoop, m_uiThreadId);
     asyncData->dataEx = &closure;
@@ -65,10 +64,10 @@ void ThreadCall::callUiThreadAsync(std::function<void(void)>&& closure) {
 }
 
 void ThreadCall::callBlinkThreadSync(std::function<void(void)>&& closure) {
-    if (isBlinkThread()) {
-        closure();
-        return;
-    }
+//     if (isBlinkThread()) {
+//         closure();
+//         return;
+//     }
 
     TaskAsyncData* asyncData = cretaeAsyncData(m_blinkLoop, m_blinkThreadId);
     asyncData->dataEx = &closure;
@@ -89,6 +88,10 @@ bool ThreadCall::isBlinkThread() {
 
 bool ThreadCall::isUiThread() {
     return m_uiThreadId == ::GetCurrentThreadId();
+}
+
+void ThreadCall::setMainThread() {
+    m_mainThreadId = ::GetCurrentThreadId();
 }
 
 void ThreadCall::callbackInOtherThread(TaskAsyncData* asyncData) {
@@ -124,6 +127,19 @@ ThreadCall::TaskAsyncData* ThreadCall::cretaeAsyncData(uv_loop_t* loop, DWORD to
     return asyncData;
 }
 
+void ThreadCall::exitMessageLoop(DWORD threadId) {
+    if (::GetCurrentThreadId() == threadId) {
+        ::PostThreadMessage(threadId, WM_QUIT, (WPARAM)::GetCurrentThreadId(), (LPARAM)0);
+        return;
+    }
+
+    bool hadExit = false;
+    ::PostThreadMessage(threadId, WM_QUIT, (WPARAM)::GetCurrentThreadId(), (LPARAM)&hadExit);
+    while (!hadExit) {
+        ::Sleep(20);
+    }
+}
+
 void ThreadCall::messageLoop(uv_loop_t* loop, v8::Platform* platform, v8::Isolate* isolate) {
     MSG msg;
     bool more;
@@ -133,8 +149,13 @@ void ThreadCall::messageLoop(uv_loop_t* loop, v8::Platform* platform, v8::Isolat
         if (platform && isolate)
             v8::platform::PumpMessageLoop(platform, isolate);
         if (::PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
-            if (WM_QUIT == msg.message)
+            if (WM_QUIT == msg.message) {
+                if (0 != msg.lParam)
+                    *((bool*)(msg.lParam)) = true;
+                else 
+                    OutputDebugStringA("ThreadCall::messageLoop\n");
                 break;
+            }
             
             if (WM_THREAD_CALL == msg.message) {
                 if (msg.wParam != (WPARAM)callbackInOtherThread)
@@ -150,6 +171,9 @@ void ThreadCall::messageLoop(uv_loop_t* loop, v8::Platform* platform, v8::Isolat
             ::Sleep(20);
         }
     }
+
+    if (::GetCurrentThreadId() == m_uiThreadId)
+        exitMessageLoop(m_mainThreadId);
 }
 
 void ThreadCall::blinkThread(void* created) {

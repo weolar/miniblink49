@@ -9,42 +9,41 @@
 namespace atom {
 
 // static
-WindowList* WindowList::instance_ = nullptr;
+WindowList* WindowList::m_instance = nullptr;
 
 // static
-WindowList* WindowList::GetInstance() {
-  if (!instance_)
-    instance_ = new WindowList;
-  return instance_;
+WindowList* WindowList::getInstance() {
+    if (!m_instance)
+        m_instance = new WindowList;
+    return m_instance;
 }
 
 // static
-void WindowList::AddWindow(Window* window) {
+void WindowList::addWindow(WindowInterface* window) {
     if (window) {
         // Push |window| on the appropriate list instance.
-        WindowVector& windows = GetInstance()->windows_;
+        WindowVector& windows = getInstance()->m_windows;
         windows.push_back(window);
     }
 }
 
 // static
-void WindowList::RemoveWindow(Window* window) {
-  WindowVector& windows = GetInstance()->windows_;
-  windows.erase(std::remove(windows.begin(), windows.end(), window),
-                windows.end());
+void WindowList::removeWindow(WindowInterface* window) {
+    WindowVector& windows = getInstance()->m_windows;
+    windows.erase(std::remove(windows.begin(), windows.end(), window), windows.end());
 }
 
 // static
-void WindowList::WindowCloseCancelled(Window* window) {
+void WindowList::WindowCloseCancelled(WindowInterface* window) {
 
 }
 
 // static
-void WindowList::CloseAllWindows() {
-  WindowVector windows = GetInstance()->windows_;
-  //for (const auto& window : windows)
-  //  if (!window->IsClosed())
-  //    window->Close();
+void WindowList::closeAllWindows() {
+    WindowVector windows = getInstance()->m_windows;
+    for (WindowInterface* window : windows)
+        if (!window->isClosed())
+            window->close();
 }
 
 WindowList::WindowList() {

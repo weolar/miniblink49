@@ -1,103 +1,199 @@
 ﻿
-#include "node/include/nodeblink.h"
+#include "browser/api/ApiApp.h"
+
 #include "common/NodeRegisterHelp.h"
 #include "common/api/EventEmitter.h"
+#include "common/ThreadCall.h"
 #include "gin/object_template_builder.h"
+#include "browser/api/WindowList.h"
+#include "base/values.h"
 #include "wke.h"
+#include "nodeblink.h"
 
 namespace atom {
 
-class App : public mate::EventEmitter<App> {
-public:
-    explicit App(v8::Isolate* isolate, v8::Local<v8::Object> wrapper) {
-        gin::Wrappable<App>::InitWith(isolate, wrapper);
+App* App::m_instance = nullptr;
+
+App* App::getInstance() {
+    return m_instance;
+}
+
+App::App(v8::Isolate* isolate, v8::Local<v8::Object> wrapper) {
+    gin::Wrappable<App>::InitWith(isolate, wrapper);
+    ASSERT(!m_instance);
+    m_instance = this;
+}
+
+App::~App() {
+    DebugBreak();
+}
+
+void App::init(v8::Local<v8::Object> target, v8::Isolate* isolate) {
+    v8::Local<v8::FunctionTemplate> prototype = v8::FunctionTemplate::New(isolate, newFunction);
+
+    prototype->SetClassName(v8::String::NewFromUtf8(isolate, "App"));
+    gin::ObjectTemplateBuilder builder(isolate, prototype->InstanceTemplate());
+    builder.SetMethod("quit", &App::quitApi);
+    builder.SetMethod("exit", &App::exitApi);
+    builder.SetMethod("focus", &App::focusApi);
+    builder.SetMethod("getVersion", &App::getVersionApi);
+    builder.SetMethod("setVersion", &App::setVersionApi);
+    builder.SetMethod("getName", &App::getNameApi);
+    builder.SetMethod("setName", &App::setNameApi);
+    builder.SetMethod("isReady", &App::isReadyApi);
+    builder.SetMethod("addRecentDocument", &App::addRecentDocumentApi);
+    builder.SetMethod("clearRecentDocuments", &App::clearRecentDocumentsApi);
+    builder.SetMethod("setAppUserModelId", &App::setAppUserModelIdApi);
+    builder.SetMethod("isDefaultProtocolClient", &App::isDefaultProtocolClientApi);
+    builder.SetMethod("setAsDefaultProtocolClient", &App::setAsDefaultProtocolClientApi);
+    builder.SetMethod("removeAsDefaultProtocolClient", &App::removeAsDefaultProtocolClientApi);
+    builder.SetMethod("setBadgeCount", &App::setBadgeCountApi);
+    builder.SetMethod("getBadgeCount", &App::getBadgeCountApi);
+    builder.SetMethod("getLoginItemSettings", &App::getLoginItemSettingsApi);
+    builder.SetMethod("setLoginItemSettings", &App::setLoginItemSettingsApi);
+    builder.SetMethod("setUserTasks", &App::setUserTasksApi);
+    builder.SetMethod("getJumpListSettings", &App::getJumpListSettingsApi);
+    builder.SetMethod("setJumpList", &App::setJumpListApi);
+    builder.SetMethod("setPath", &App::setPathApi);
+    builder.SetMethod("getPath", &App::getPathApi);
+    builder.SetMethod("setDesktopName", &App::setDesktopNameApi);
+    builder.SetMethod("getLocale", &App::getLocaleApi);
+    builder.SetMethod("makeSingleInstance", &App::makeSingleInstanceApi);
+    builder.SetMethod("releaseSingleInstance", &App::releaseSingleInstanceApi);
+    builder.SetMethod("relaunch", &App::relaunchApi);
+    builder.SetMethod("isAccessibilitySupportEnabled", &App::isAccessibilitySupportEnabled);
+    builder.SetMethod("disableHardwareAcceleration", &App::disableHardwareAcceleration);
+
+    constructor.Reset(isolate, prototype->GetFunction());
+    target->Set(v8::String::NewFromUtf8(isolate, "App"), prototype->GetFunction());
+}
+
+void App::nullFunction() {
+    OutputDebugStringA("nullFunction\n");
+}
+
+void App::quitApi() {
+    OutputDebugStringA("quitApi\n");
+
+    ThreadCall::callUiThreadAsync([] {
+        WindowList::closeAllWindows();
+
+        ThreadCall::exitMessageLoop(ThreadCall::getBlinkThreadId());
+        ThreadCall::exitMessageLoop(ThreadCall::getUiThreadId());
+    });
+}
+
+void App::exitApi() {
+    ::TerminateProcess(::GetCurrentProcess(), 0);
+    OutputDebugStringA("exitApi\n");
+}
+
+void App::focusApi() {
+    OutputDebugStringA("focusApi\n");
+}
+
+bool App::isReadyApi() const {
+    OutputDebugStringA("isReadyApi\n");
+    return true;
+}
+
+void App::addRecentDocumentApi(const std::string& path) {
+    OutputDebugStringA("addRecentDocumentApi\n");
+}
+
+void App::clearRecentDocumentsApi() {
+    OutputDebugStringA("clearRecentDocumentsApi\n");
+}
+
+void App::setAppUserModelIdApi(const std::string& id) {
+    OutputDebugStringA("setAppUserModelIdApi\n");
+}
+
+bool App::isDefaultProtocolClientApi(const std::string& protocol, const std::string& path, const std::string& args) {
+    OutputDebugStringA("isDefaultProtocolClientApi\n");
+    return true;
+}
+
+bool App::setAsDefaultProtocolClientApi(const std::string& protocol, const std::string& path, const std::string& args) {
+    OutputDebugStringA("setAsDefaultProtocolClientApi\n");
+    return true;
+}
+
+bool App::removeAsDefaultProtocolClientApi(const std::string& protocol, const std::string& path, const std::string& args) {
+    OutputDebugStringA("removeAsDefaultProtocolClientApi\n");
+    return true;
+}
+
+bool App::setBadgeCountApi(int count) {
+    OutputDebugStringA("setBadgeCountApi\n");
+    return false;
+}
+
+int App::getBadgeCountApi() {
+    OutputDebugStringA("getBadgeCountApi\n");
+    return 0;
+}
+
+int App::getLoginItemSettingsApi(const base::DictionaryValue& obj) {
+    OutputDebugStringA("getLoginItemSettingsApi\n");
+    DebugBreak();
+    return 0;
+}
+
+void App::setLoginItemSettingsApi(const base::DictionaryValue& obj, const std::string& path, const std::string& args) {
+    OutputDebugStringA("setLoginItemSettingsApi");
+    DebugBreak();
+}
+
+bool App::setUserTasksApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    OutputDebugStringA("setUserTasksApi\n");
+    return true;
+}
+
+void App::setDesktopNameApi(const std::string& desktopName) { 
+    OutputDebugStringA("setDesktopNameApi\n");
+}
+
+void App::getJumpListSettingsApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    OutputDebugStringA("getJumpListSettingsApi\n");
+    return;
+}
+
+void App::setJumpListApi(const base::DictionaryValue&) {
+    OutputDebugStringA("setJumpListApi\n");
+}
+
+std::string App::getLocaleApi() {
+    return "zh-cn";
+}
+
+void App::makeSingleInstanceApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    OutputDebugStringA("makeSingleInstanceApi\n");
+}
+
+void App::releaseSingleInstanceApi() {
+    OutputDebugStringA("releaseSingleInstanceApi\n");
+}
+
+void App::relaunchApi(const base::DictionaryValue& options) {
+    OutputDebugStringA("relaunchApi\n");
+}
+
+void App::newFunction(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    v8::Isolate* isolate = args.GetIsolate();
+    if (args.IsConstructCall()) {
+        new App(isolate, args.This());
+        args.GetReturnValue().Set(args.This());
+        return;
     }
+}
 
-    ~App() {
-        DebugBreak();
-    }
-
-    static void init(v8::Local<v8::Object> target, v8::Isolate* isolate) {
-        v8::Local<v8::FunctionTemplate> prototype = v8::FunctionTemplate::New(isolate, newFunction);
-
-        prototype->SetClassName(v8::String::NewFromUtf8(isolate, "App"));
-        gin::ObjectTemplateBuilder builder(isolate, prototype->InstanceTemplate());
-        builder.SetMethod("quit", &App::nullFunction);
-        builder.SetMethod("exit", &App::nullFunction);
-        builder.SetMethod("focus", &App::nullFunction);
-        builder.SetMethod("getVersion", &App::getVersionApi);
-        builder.SetMethod("setVersion", &App::setVersionApi);
-        builder.SetMethod("getName", &App::getNameApi);
-        builder.SetMethod("setName", &App::setNameApi);
-        builder.SetMethod("isReady", &App::nullFunction);
-        builder.SetMethod("addRecentDocument", &App::nullFunction);
-        builder.SetMethod("clearRecentDocuments", &App::nullFunction);
-        builder.SetMethod("setAppUserModelId", &App::nullFunction);
-        builder.SetMethod("isDefaultProtocolClient", &App::nullFunction);
-        builder.SetMethod("setAsDefaultProtocolClient", &App::nullFunction);
-        builder.SetMethod("removeAsDefaultProtocolClient", &App::nullFunction);
-        builder.SetMethod("setBadgeCount", &App::nullFunction);
-        builder.SetMethod("getBadgeCount", &App::nullFunction);
-        builder.SetMethod("getLoginItemSettings", &App::nullFunction);
-        builder.SetMethod("setLoginItemSettings", &App::nullFunction);
-        builder.SetMethod("setUserTasks", &App::nullFunction);
-        builder.SetMethod("getJumpListSettings", &App::nullFunction);
-        builder.SetMethod("setJumpList", &App::nullFunction);
-        builder.SetMethod("setPath", &App::setPathApi);
-        builder.SetMethod("getPath", &App::getPathApi);
-        builder.SetMethod("setDesktopName", &App::setDesktopNameApi);
-        builder.SetMethod("getLocale", &App::nullFunction);
-        builder.SetMethod("makeSingleInstance", &App::nullFunction);
-        builder.SetMethod("releaseSingleInstance", &App::nullFunction);
-        builder.SetMethod("relaunch", &App::nullFunction);
-        builder.SetMethod("isAccessibilitySupportEnabled", &App::isAccessibilitySupportEnabled);
-        builder.SetMethod("disableHardwareAcceleration", &App::disableHardwareAcceleration);
-
-        constructor.Reset(isolate, prototype->GetFunction());
-        target->Set(v8::String::NewFromUtf8(isolate, "App"), prototype->GetFunction());
-    }
-
-    void nullFunction() {
-        OutputDebugStringA("nullFunction begin \n");
-        //DebugBreak();
-        OutputDebugStringA("nullFunction over\n");
-    }
-
-    bool isReady() const { return true; }
-
-    bool isAccessibilitySupportEnabled() { return false; }
-    void disableHardwareAcceleration() {}
-
-    void setVersionApi(const std::string& version) { m_version = version; }
-    std::string getVersionApi() const { return m_version; }
-
-    void setNameApi(const std::string& name) { m_name = name; }
-    std::string getNameApi() const { return m_name; }
-
-    void setPathApi(const std::string& path) { m_path = path; }
-    std::string getPathApi() const { 
-        return m_path;
-    }
-
-    void setDesktopNameApi(const std::string& desktopName) { ; }
-
-    static void newFunction(const v8::FunctionCallbackInfo<v8::Value>& args) {
-        v8::Isolate* isolate = args.GetIsolate();
-        if (args.IsConstructCall()) {
-            new App(isolate, args.This());
-            args.GetReturnValue().Set(args.This());
-            return;
-        }
-    }
-
-public:
-    static gin::WrapperInfo kWrapperInfo;
-    static v8::Persistent<v8::Function> constructor;
-
-    std::string m_version;
-    std::string m_name;
-    std::string m_path;
-};
+void App::onWindowAllClosed() {
+    App* self = this;
+    ThreadCall::callUiThreadAsync([self] {
+        self->emit("window-all-closed");
+    });
+}
 
 v8::Persistent< v8::Function> App::constructor;
 gin::WrapperInfo App::kWrapperInfo = { gin::kEmbedderNativeGin };
