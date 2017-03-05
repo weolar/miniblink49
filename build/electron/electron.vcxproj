@@ -93,6 +93,7 @@
     <ClInclude Include="..\..\base\win\windows_version.h" />
     <ClInclude Include="..\..\electron\browser\api\ApiApp.h" />
     <ClInclude Include="..\..\electron\browser\api\ApiWebContents.h" />
+    <ClInclude Include="..\..\electron\browser\api\WindowInterface.h" />
     <ClInclude Include="..\..\electron\browser\api\WindowList.h" />
     <ClInclude Include="..\..\electron\common\api\ApiKeyWeakMap.h" />
     <ClInclude Include="..\..\electron\common\api\Event.h" />
@@ -114,6 +115,7 @@
     <ClInclude Include="..\..\electron\common\PlatformUtil.h" />
     <ClInclude Include="..\..\electron\common\StringUtil.h" />
     <ClInclude Include="..\..\electron\common\ThreadCall.h" />
+    <ClInclude Include="..\..\electron\common\WinUserMsg.h" />
     <ClInclude Include="..\..\electron\Electron.h" />
     <ClInclude Include="..\..\electron\renderer\api\ApiRendererIpc.h" />
     <ClInclude Include="..\..\gin\arguments.h" />
@@ -234,7 +236,7 @@
       <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
       <AdditionalDependencies>imm32.lib;miniblink.lib;shlwapi.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -294,8 +296,8 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;STATIC_GETOPT;WIN32_LEAN_AND_MEAN;BUILDING_NODE_EXTENSION=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)../electron/;$(SolutionDir)../;$(SolutionDir)../wke;$(SolutionDir)../node/include;$(SolutionDir)../v8_5_7/include</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;STATIC_GETOPT;WIN32_LEAN_AND_MEAN;BUILDING_NODE_EXTENSION=1;ENABLE_CEF=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)../electron/;$(SolutionDir)../;$(SolutionDir)../cef;$(SolutionDir)../wke;$(SolutionDir)../node/include;$(SolutionDir)../v8_4_8;$(SolutionDir)../v8_4_8/include</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <StringPooling>true</StringPooling>
       <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
@@ -304,13 +306,13 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>$(SolutionDir)..\out\$(Configuration)\</AdditionalLibraryDirectories>
       <AdditionalDependencies>imm32.lib;miniblink.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)..\out\$(Configuration)\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>imm32.lib;miniblink.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;version.lib;Crypt32.lib;Advapi32.lib;wldap32.lib;Imm32.lib;winmm.lib;Ws2_32.lib;Usp10.lib;Shlwapi.lib;wininet.lib;GDIPlus.lib</AdditionalDependencies>
+      <AdditionalDependencies>imm32.lib;miniblink.lib;shlwapi.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
