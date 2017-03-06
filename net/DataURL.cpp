@@ -126,6 +126,7 @@ void handleDataURL(blink::WebURLLoader* handle, blink::WebURLLoaderClient* clien
     response.setURL(blink::WebURL(kurl));
     response.setExpectedContentLength(out.size());
     client->didReceiveResponse(handle, response);
+    client->didReceiveData(handle, out.data(), out.size(), 0);
     client->didFinishLoading(handle, currentTime(), out.size());
 }
 
