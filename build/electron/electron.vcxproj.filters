@@ -48,6 +48,18 @@
     <Filter Include="base\files">
       <UniqueIdentifier>{4205196c-5ca2-4fab-a83b-999605c03050}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ui">
+      <UniqueIdentifier>{63a588bb-9609-43f1-8895-21240c180e10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ui\display">
+      <UniqueIdentifier>{a765ce8f-16c5-4b15-8824-9b2203eb6343}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ui\display\win">
+      <UniqueIdentifier>{2a7d4131-cf1f-4ec8-a74e-1dd1ed14a94f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ui\geometry">
+      <UniqueIdentifier>{fd79fab1-d806-439f-a6b1-17ac66c593ad}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\base\thread.cc">
@@ -211,6 +223,12 @@
     </ClCompile>
     <ClCompile Include="..\..\base\win\shortcut.cc">
       <Filter>base\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\electron\common\api\ApiOriginalFs.cpp">
+      <Filter>src\common\api</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\electron\common\api\ApiScreen.cpp">
+      <Filter>src\common\api</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

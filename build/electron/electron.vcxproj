@@ -52,6 +52,8 @@
     <ClCompile Include="..\..\electron\browser\api\ApiWebContents.cpp" />
     <ClCompile Include="..\..\electron\browser\api\ApiWindow.cpp" />
     <ClCompile Include="..\..\electron\browser\api\WindowList.cpp" />
+    <ClCompile Include="..\..\electron\common\api\ApiOriginalFs.cpp" />
+    <ClCompile Include="..\..\electron\common\api\ApiScreen.cpp" />
     <ClCompile Include="..\..\electron\common\api\ApiShell.cpp" />
     <ClCompile Include="..\..\electron\common\api\ApiV8Util.cpp" />
     <ClCompile Include="..\..\electron\common\api\Event.cpp" />
@@ -230,7 +232,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>STATIC_GETOPT;WIN32;_DEBUG;_WINDOWS;WIN32_LEAN_AND_MEAN;_CRT_SECURE_NO_WARNINGS;ENABLE_CEF=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)../electron/;$(SolutionDir)../;$(SolutionDir)../cef;$(SolutionDir)../wke;$(SolutionDir)../node/include;$(SolutionDir)../v8_4_8;$(SolutionDir)../v8_4_8/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)../;$(SolutionDir)../../;$(SolutionDir)../electron/;$(SolutionDir)../cef;$(SolutionDir)../wke;$(SolutionDir)../node/include;$(SolutionDir)../v8_4_8;$(SolutionDir)../v8_4_8/include</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
       <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
