@@ -37,7 +37,7 @@ struct Converter<base::win::ShortcutOperation> {
     }
 };
 
-}  // namespace mate
+}  // namespace gin
 //#endif
 
 namespace {

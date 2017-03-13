@@ -109,17 +109,27 @@ void App::setAppUserModelIdApi(const std::string& id) {
     OutputDebugStringA("setAppUserModelIdApi\n");
 }
 
-bool App::isDefaultProtocolClientApi(const std::string& protocol, const std::string& path, const std::string& args) {
+// const std::string& protocol, const std::string& path, const std::string& args
+bool App::isDefaultProtocolClientApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
     OutputDebugStringA("isDefaultProtocolClientApi\n");
     return true;
 }
 
-bool App::setAsDefaultProtocolClientApi(const std::string& protocol, const std::string& path, const std::string& args) {
+//const std::string& protocol, const std::string& path, const std::string& args
+bool App::setAsDefaultProtocolClientApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
     OutputDebugStringA("setAsDefaultProtocolClientApi\n");
+    if (0 == args.Length())
+        return false;
+
+    std::string protocol;
+    if (!gin::ConvertFromV8(args.GetIsolate(), args[0], &protocol))
+        return false;
+    
     return true;
 }
 
-bool App::removeAsDefaultProtocolClientApi(const std::string& protocol, const std::string& path, const std::string& args) {
+// const std::string& protocol, const std::string& path, const std::string& args
+bool App::removeAsDefaultProtocolClientApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
     OutputDebugStringA("removeAsDefaultProtocolClientApi\n");
     return true;
 }
@@ -134,13 +144,15 @@ int App::getBadgeCountApi() {
     return 0;
 }
 
-int App::getLoginItemSettingsApi(const base::DictionaryValue& obj) {
+// const base::DictionaryValue& obj
+int App::getLoginItemSettingsApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
     OutputDebugStringA("getLoginItemSettingsApi\n");
     DebugBreak();
     return 0;
 }
 
-void App::setLoginItemSettingsApi(const base::DictionaryValue& obj, const std::string& path, const std::string& args) {
+// const base::DictionaryValue& obj, const std::string& path, const std::string& args
+void App::setLoginItemSettingsApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
     OutputDebugStringA("setLoginItemSettingsApi");
     DebugBreak();
 }
@@ -159,7 +171,8 @@ void App::getJumpListSettingsApi(const v8::FunctionCallbackInfo<v8::Value>& args
     return;
 }
 
-void App::setJumpListApi(const base::DictionaryValue&) {
+// const base::DictionaryValue&
+void App::setJumpListApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
     OutputDebugStringA("setJumpListApi\n");
 }
 

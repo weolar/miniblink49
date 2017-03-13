@@ -1,7 +1,6 @@
 'use strict';
 
 //process.binding('atom_browser_electron');
-
 require('./electron');
 
 const fs = require('fs');
@@ -18,7 +17,6 @@ require('./rpc-server');
 let packagePath = __dirname + '/../default_app/';
 //packagePath = 'E:\\mycode\\electron-v1.3.3\\electron-v1.3.3-win32-ia32\\demo\\ffftp\\';
 //packagePath = 'E:\\mycode\\electron-v1.3.3\\electron-v1.3.3-win32-ia32\\demo\\AiTing\\';
-console.log('browser.init.js');
 
 let packageJson = null;
 packageJson = require(packagePath + 'package.json');

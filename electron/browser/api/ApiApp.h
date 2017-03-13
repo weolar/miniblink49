@@ -21,13 +21,13 @@ public:
     void addRecentDocumentApi(const std::string& path);
     void clearRecentDocumentsApi();
     void setAppUserModelIdApi(const std::string& id);
-    bool isDefaultProtocolClientApi(const std::string& protocol, const std::string& path, const std::string& args);
-    bool setAsDefaultProtocolClientApi(const std::string& protocol, const std::string& path, const std::string& args);
-    bool removeAsDefaultProtocolClientApi(const std::string& protocol, const std::string& path, const std::string& args);
+    bool isDefaultProtocolClientApi(const v8::FunctionCallbackInfo<v8::Value>& args);
+    bool setAsDefaultProtocolClientApi(const v8::FunctionCallbackInfo<v8::Value>& args);
+    bool removeAsDefaultProtocolClientApi(const v8::FunctionCallbackInfo<v8::Value>& args);
     bool setBadgeCountApi(int count);
     int getBadgeCountApi();
-    int getLoginItemSettingsApi(const base::DictionaryValue& obj);
-    void setLoginItemSettingsApi(const base::DictionaryValue& obj, const std::string& path, const std::string& args);
+    int getLoginItemSettingsApi(const v8::FunctionCallbackInfo<v8::Value>& args);
+    void setLoginItemSettingsApi(const v8::FunctionCallbackInfo<v8::Value>& args);
     bool setUserTasksApi(const v8::FunctionCallbackInfo<v8::Value>& args);
 
     bool isAccessibilitySupportEnabled() { return false; }
@@ -47,7 +47,7 @@ public:
     void setDesktopNameApi(const std::string& desktopName);
 
     void getJumpListSettingsApi(const v8::FunctionCallbackInfo<v8::Value>& args);
-    void setJumpListApi(const base::DictionaryValue&);
+    void setJumpListApi(const v8::FunctionCallbackInfo<v8::Value>& args);
 
     std::string getLocaleApi();
 

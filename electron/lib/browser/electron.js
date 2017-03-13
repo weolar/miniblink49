@@ -14,8 +14,30 @@ Object.setPrototypeOf(App.prototype, EventEmitter.prototype);
 const Menu = require('./api/menu');
 electron.Menu = Menu;
 ////////////////////////////////////////////////////////////////
+function MenuItem(option) {
+	this.enabled = false;
+	this.visible = false;
+	this.checked = false;
+	this.label = false;
+	this.click = false;
+}
+electron.MenuItem = MenuItem;
+////////////////////////////////////////////////////////////////
 const isPromise = require('./../common/api/is-promise').isPromise;
 electron.isPromise = isPromise;
 ///////////////////////////////////////////////////////////////
+const Screen = require('./api/screen');
+electron.Screen = Screen;
+electron.screen = new Screen();
+////////////////////////////////////////////////////////////////
+function SystemPreferences () {}
+SystemPreferences.prototype.isDarkMode = function() { return false; }
+SystemPreferences.prototype.isSwipeTrackingFromScrollEventsEnabled = function() { return false; }
+SystemPreferences.prototype.isAeroGlassEnabled = function() { return false; }
+SystemPreferences.prototype.isInvertedColorScheme = function() { return false; }
+Object.setPrototypeOf(SystemPreferences.prototype, EventEmitter.prototype);
+electron.systemPreferences = new SystemPreferences();
+////////////////////////////////////////////////////////////////
+
 module.exports = electron;
 

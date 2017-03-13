@@ -18,6 +18,8 @@ Menu.prototype.insert = function (pos, item) {
 	console.log('Menu.insert');
 }
 
+Menu.prototype.items = [];
+
 Menu.buildFromTemplate = function (template) {
 	console.log('Menu.buildFromTemplate');
 	var result = (new Menu())._buildFromTemplate(template);

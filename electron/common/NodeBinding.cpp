@@ -112,7 +112,14 @@ std::wstring getResourcesPath(const std::wstring& name) {
 
     ::PathRemoveFileSpecW(&path[0]);
     out += &path[0];
-    out += L"\\..\\..\\electron\\lib\\";
+
+    std::wstring temp(out);
+    temp += L"\\electron.ilk";
+    if (!::PathFileExists(temp.c_str()))
+        out += L"\\electron.asar\\";
+    else
+        out += L"\\..\\..\\electron\\lib\\";
+    
     kResPath = new std::wstring(out);
     out += name;
     return out;
