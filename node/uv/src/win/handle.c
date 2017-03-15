@@ -37,7 +37,7 @@ uv_handle_type uv_guess_handle(uv_file file) {
   }
 
   handle = uv__get_osfhandle(file);
-  if (0xfffffffe == handle && (1 == file || 2 == file))
+  if (/*0xfffffffe == handle && */(1 == file || 2 == file))
       return UV_FILE; // exe 非console模式，uv__get_osfhandle会失败
 
   switch (GetFileType(handle)) {

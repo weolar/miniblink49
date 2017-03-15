@@ -653,7 +653,7 @@ void fs__write(uv_fs_t* req) {
 
     ULONG len = req->fs.info.bufs[index].len;
     char* base = req->fs.info.bufs[index].base;
-    if ((HANDLE)0xfffffffe == handle && (1 == fd || 2 == fd)) {
+    if (/*(HANDLE)0xfffffffe == handle &&*/ (1 == fd || 2 == fd)) {
       char* output = malloc(len + 2);
       output[len] = '\n';
       output[len + 1] = 0;

@@ -26,7 +26,7 @@ static int uv__dlerror(uv_lib_t* lib, int errorno);
 
 
 int uv_dlopen(const char* filename, uv_lib_t* lib) {
-  WCHAR filename_w[32768];
+  WCHAR* filename_w = (WCHAR*)malloc(32768 * sizeof(WCHAR));
 
   lib->handle = NULL;
   lib->errmsg = NULL;
@@ -36,11 +36,12 @@ int uv_dlopen(const char* filename, uv_lib_t* lib) {
                            filename,
                            -1,
                            filename_w,
-                           ARRAY_SIZE(filename_w))) {
+                           /*ARRAY_SIZE(filename_w)*/32768)) {
     return uv__dlerror(lib, GetLastError());
   }
 
   lib->handle = LoadLibraryExW(filename_w, NULL, LOAD_WITH_ALTERED_SEARCH_PATH);
+  free(filename_w);
   if (lib->handle == NULL) {
     return uv__dlerror(lib, GetLastError());
   }
