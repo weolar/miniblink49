@@ -1029,15 +1029,16 @@ Local<FunctionTemplate> FunctionTemplate::New(Isolate* isolate,
                                               FunctionCallback callback,
                                               v8::Local<Value> data,
                                               v8::Local<Signature> signature,
-                                              int length) {
+                                              int length, ConstructorBehavior behavior) {
   i::Isolate* i_isolate = reinterpret_cast<i::Isolate*>(isolate);
   // Changes to the environment cannot be captured in the snapshot. Expect no
   // function templates when the isolate is created for serialization.
   DCHECK(!i_isolate->serializer_enabled());
   LOG_API(i_isolate, "FunctionTemplate::New");
   ENTER_V8(i_isolate);
-  return FunctionTemplateNew(
-      i_isolate, callback, data, signature, length, false);
+  auto templ = FunctionTemplateNew(i_isolate, callback, data, signature, length, false);
+  if (behavior == ConstructorBehavior::kThrow) templ->RemovePrototype();
+  return templ;
 }
 
 

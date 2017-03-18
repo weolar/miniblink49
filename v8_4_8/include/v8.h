@@ -3219,6 +3219,7 @@ class PropertyCallbackInfo {
 
 typedef void (*FunctionCallback)(const FunctionCallbackInfo<Value>& info);
 
+enum class ConstructorBehavior { kThrow, kAllow };
 
 /**
  * A JavaScript function object (ECMA-262, 15.3).
@@ -4420,7 +4421,8 @@ class V8_EXPORT FunctionTemplate : public Template {
   static Local<FunctionTemplate> New(
       Isolate* isolate, FunctionCallback callback = 0,
       Local<Value> data = Local<Value>(),
-      Local<Signature> signature = Local<Signature>(), int length = 0);
+      Local<Signature> signature = Local<Signature>(), int length = 0, 
+      ConstructorBehavior behavior = ConstructorBehavior::kAllow);
 
   /** Returns the unique function instance in the current execution context.*/
   V8_DEPRECATE_SOON("Use maybe version", Local<Function> GetFunction());
