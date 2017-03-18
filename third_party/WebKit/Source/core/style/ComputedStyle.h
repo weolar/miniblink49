@@ -975,36 +975,53 @@ public:
     void setPosition(EPosition v) { noninherited_flags.position = v; }
     void setFloating(EFloat v) { noninherited_flags.floating = v; }
 
-    void setLeft(const Length& v) { SET_VAR(surround, offset.m_left, v); }
-    void setRight(const Length& v) { SET_VAR(surround, offset.m_right, v); }
-    void setTop(const Length& v) { SET_VAR(surround, offset.m_top, v); }
-    void setBottom(const Length& v) { SET_VAR(surround, offset.m_bottom, v); }
+//     void setLeft(const Length& v) { SET_VAR(surround, offset.m_left, v); }
+//     void setRight(const Length& v) { SET_VAR(surround, offset.m_right, v); }
+//     void setTop(const Length& v) { SET_VAR(surround, offset.m_top, v); }
+//     void setBottom(const Length& v) { SET_VAR(surround, offset.m_bottom, v); }
+// 
+//     void setWidth(const Length& v) { SET_VAR(m_box, m_width, v); }
+//     void setHeight(const Length& v) { SET_VAR(m_box, m_height, v); }
+// 
+//     void setLogicalWidth(const Length& v)
+//     {
+//         if (isHorizontalWritingMode()) {
+//             SET_VAR(m_box, m_width, v);
+//         } else {
+//             SET_VAR(m_box, m_height, v);
+//         }
+//     }
+// 
+//     void setLogicalHeight(const Length& v)
+//     {
+//         if (isHorizontalWritingMode()) {
+//             SET_VAR(m_box, m_height, v);
+//         } else {
+//             SET_VAR(m_box, m_width, v);
+//         }
+//     }
+// 
+//     void setMinWidth(const Length& v) { SET_VAR(m_box, m_minWidth, v); }
+//     void setMaxWidth(const Length& v) { SET_VAR(m_box, m_maxWidth, v); }
+//     void setMinHeight(const Length& v) { SET_VAR(m_box, m_minHeight, v); }
+//     void setMaxHeight(const Length& v) { SET_VAR(m_box, m_maxHeight, v); }
 
-    void setWidth(const Length& v) { SET_VAR(m_box, m_width, v); }
-    void setHeight(const Length& v) { SET_VAR(m_box, m_height, v); }
+    void setLeft(const Length& v);
+    void setRight(const Length& v);
+    void setTop(const Length& v);
+    void setBottom(const Length& v);
 
-    void setLogicalWidth(const Length& v)
-    {
-        if (isHorizontalWritingMode()) {
-            SET_VAR(m_box, m_width, v);
-        } else {
-            SET_VAR(m_box, m_height, v);
-        }
-    }
+    void setWidth(const Length& v);
+    void setHeight(const Length& v);
 
-    void setLogicalHeight(const Length& v)
-    {
-        if (isHorizontalWritingMode()) {
-            SET_VAR(m_box, m_height, v);
-        } else {
-            SET_VAR(m_box, m_width, v);
-        }
-    }
+    void setLogicalWidth(const Length& v);
 
-    void setMinWidth(const Length& v) { SET_VAR(m_box, m_minWidth, v); }
-    void setMaxWidth(const Length& v) { SET_VAR(m_box, m_maxWidth, v); }
-    void setMinHeight(const Length& v) { SET_VAR(m_box, m_minHeight, v); }
-    void setMaxHeight(const Length& v) { SET_VAR(m_box, m_maxHeight, v); }
+    void setLogicalHeight(const Length& v);
+
+    void setMinWidth(const Length& v);
+    void setMaxWidth(const Length& v);
+    void setMinHeight(const Length& v);
+    void setMaxHeight(const Length& v);
 
     DraggableRegionMode getDraggableRegionMode() const { return rareNonInheritedData->m_draggableRegionMode; }
     void setDraggableRegionMode(DraggableRegionMode v) { SET_VAR(rareNonInheritedData, m_draggableRegionMode, v); }

@@ -123,9 +123,9 @@ void FrameConsole::addMessage(PassRefPtrWillBeRawPtr<ConsoleMessage> prpConsoleM
     //////////////////////////////////////////////////////////////////////////
     // weolar
     WTF::String outstr;
-    outstr.append(String::format("FrameConsole::addMessage: %d ", lineNumber));
+    outstr.append(String::format("FrameConsole: %d,,,", lineNumber));
     outstr.append((WTF::String)(consoleMessage->message()));
-    outstr.append(" ");
+    outstr.append(", ");
     outstr.append(messageURL);
     outstr.append("\n");
 

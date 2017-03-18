@@ -1774,4 +1774,41 @@ void ComputedStyle::copyChildDependentFlagsFrom(const ComputedStyle& other)
         setHasExplicitlyInheritedProperties();
 }
 
+//////////////////////////////////////////////////////////////////////////
+
+void ComputedStyle::setLeft(const Length& v) { SET_VAR(surround, offset.m_left, v); }
+void ComputedStyle::setRight(const Length& v) { SET_VAR(surround, offset.m_right, v); }
+void ComputedStyle::setTop(const Length& v) { SET_VAR(surround, offset.m_top, v); }
+void ComputedStyle::setBottom(const Length& v) { SET_VAR(surround, offset.m_bottom, v); }
+
+void ComputedStyle::setWidth(const Length& v)
+{
+    SET_VAR(m_box, m_width, v);
+}
+
+void ComputedStyle::setHeight(const Length& v) { SET_VAR(m_box, m_height, v); }
+
+void ComputedStyle::setLogicalWidth(const Length& v)
+{
+    if (isHorizontalWritingMode()) {
+        SET_VAR(m_box, m_width, v);
+    } else {
+        SET_VAR(m_box, m_height, v);
+    }
+}
+
+void ComputedStyle::setLogicalHeight(const Length& v)
+{
+    if (isHorizontalWritingMode()) {
+        SET_VAR(m_box, m_height, v);
+    } else {
+        SET_VAR(m_box, m_width, v);
+    }
+}
+
+void ComputedStyle::setMinWidth(const Length& v) { SET_VAR(m_box, m_minWidth, v); }
+void ComputedStyle::setMaxWidth(const Length& v) { SET_VAR(m_box, m_maxWidth, v); }
+void ComputedStyle::setMinHeight(const Length& v) { SET_VAR(m_box, m_minHeight, v); }
+void ComputedStyle::setMaxHeight(const Length& v) { SET_VAR(m_box, m_maxHeight, v); }
+
 } // namespace blink
