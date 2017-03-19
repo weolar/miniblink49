@@ -144,6 +144,12 @@ static void After(uv_fs_t *req) {
   HandleScope handle_scope(env->isolate());
   Context::Scope context_scope(env->context());
 
+#ifndef MINIBLINK_NOT_IMPLEMENTED
+  Environment::MicrotaskSuppressionHandle handle = nullptr;
+  if (env->is_blink_core())
+      handle = env->BlinkMicrotaskSuppressionEnter(env->isolate());
+#endif
+
   // there is always at least one argument. "error"
   int argc = 1;
 
@@ -319,6 +325,11 @@ static void After(uv_fs_t *req) {
   }
 
   req_wrap->MakeCallback(env->oncomplete_string(), argc, argv);
+
+#ifndef MINIBLINK_NOT_IMPLEMENTED
+  if (handle)
+      env->BlinkMicrotaskSuppressionLeave(handle);
+#endif
 
   uv_fs_req_cleanup(req_wrap->req());
   req_wrap->Dispose();

@@ -29,12 +29,22 @@ using v8::Value;
 
 Local<Object> PipeWrap::Instantiate(Environment* env, AsyncWrap* parent) {
   EscapableHandleScope handle_scope(env->isolate());
+#ifndef MINIBLINK_NOT_IMPLEMENTED
+  Environment::MicrotaskSuppressionHandle handle = nullptr;
+  if (env->is_blink_core())
+      handle = env->BlinkMicrotaskSuppressionEnter(env->isolate());
+#endif
+
   CHECK_EQ(false, env->pipe_constructor_template().IsEmpty());
   Local<Function> constructor = env->pipe_constructor_template()->GetFunction();
   CHECK_EQ(false, constructor.IsEmpty());
   Local<Value> ptr = External::New(env->isolate(), parent);
-  Local<Object> instance =
-      constructor->NewInstance(env->context(), 1, &ptr).ToLocalChecked();
+  Local<Object> instance = constructor->NewInstance(env->context(), 1, &ptr).ToLocalChecked();
+
+#ifndef MINIBLINK_NOT_IMPLEMENTED
+  if (handle)
+      env->BlinkMicrotaskSuppressionLeave(handle);
+#endif
   return handle_scope.Escape(instance);
 }
 

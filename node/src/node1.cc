@@ -1933,7 +1933,7 @@ namespace node {
 			env->ThrowError("Module did not self-register.");
 			return;
 		}
-		if (mp->nm_version != NODE_MODULE_VERSION) {
+		if (mp->nm_version != NODE_MODULE_VERSION && mp->nm_version != 50) { // 特别支持下50版
 			char errmsg[1024];
 			snprintf(errmsg,
 				sizeof(errmsg),
@@ -1943,6 +1943,7 @@ namespace node {
 			// NOTE: `mp` is allocated inside of the shared library's memory, calling
 			// `uv_dlclose` will deallocate it
 			uv_dlclose(&lib);
+            ::DebugBreak();
 			env->ThrowError(errmsg);
 			return;
 		}

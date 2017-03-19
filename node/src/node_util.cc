@@ -137,13 +137,23 @@ void Initialize(Local<Object> target,
 }  // namespace util
 
 void* Realloc(void* pointer, size_t size) {
-    if (pointer)
-        gin::IsolateHolder::get_allocator()->Free(pointer, gin::IsolateHolder::GetPointerMemSize(pointer));
+    void* newPtr = nullptr;
+    if (!pointer) {
+        if (size != 0)
+            newPtr = gin::IsolateHolder::get_allocator()->Allocate(size);
+        return newPtr;
+    }
 
-    if (size == 0)
+    size_t oldSize = gin::IsolateHolder::GetPointerMemSize(pointer);
+    if (size == 0) {
+        gin::IsolateHolder::get_allocator()->Free(pointer, gin::IsolateHolder::GetPointerMemSize(pointer));
         return nullptr;
-    
-    return gin::IsolateHolder::get_allocator()->Allocate(size);
+    }
+ 
+    newPtr = gin::IsolateHolder::get_allocator()->Allocate(size);
+    size_t copySize = oldSize < size ? oldSize : size;
+    memcpy(newPtr, pointer, copySize);
+    return newPtr;
 }
 
 // As per spec realloc behaves like malloc if passed nullptr.
