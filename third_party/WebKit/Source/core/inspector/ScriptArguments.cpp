@@ -201,4 +201,19 @@ bool ScriptArguments::getFirstArgumentAsString(String& result) const
     return true;
 }
 
+bool ScriptArguments::getAllArgumentAsString(String& result) const
+{
+    size_t argCount = argumentCount();
+    if (!argCount)
+        return false;
+
+    for (size_t i = 0; i < argCount; ++i) {
+        const ScriptValue& value = argumentAt(i);
+        ScriptState::Scope scope(m_scriptState.get());
+        result = V8ValueStringBuilder::toString(value.v8Value(), value.isolate());
+    }
+
+    return true;
+}
+
 } // namespace blink
