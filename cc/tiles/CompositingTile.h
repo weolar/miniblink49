@@ -42,6 +42,9 @@ public:
     bool isNotInit() { return m_isNotInit; } // for debug
 
 private:
+    void resizeBitmap(int dstWidth, int dstHeight);
+    SkBitmap* allocBitmap(int width, int height);
+
     CompositingLayer* m_compositingLayer;
 	mutable int32_t m_refCnt;
     bool m_isNotInit; // for debug

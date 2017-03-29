@@ -377,7 +377,10 @@ void WebLayerImpl::insertChild(WebLayer* child, size_t index)
     index = std::min(index, m_children.size());
     m_children.insert(index, childOfImpl);
 
-    setNeedsFullTreeSync();
+    //setNeedsFullTreeSync();
+    blink::IntRect invalidateRect(blink::IntPoint(child->position().x, child->position().y), child->bounds());
+    appendPendingInvalidateRect(invalidateRect);// weolar TODO
+    setNeedsCommit(false);
 	appendLayerChangeAction(new cc::LayerChangeActionInsertChild(-1, id(), child->id(), index));
 }
 
@@ -473,13 +476,17 @@ void WebLayerImpl::removeChildOrDependent(WebLayerImpl* child)
     if (m_maskLayer == child) {
         m_maskLayer->setParent(NULL);
         m_maskLayer = NULL;
-        setNeedsFullTreeSync();
+        //setNeedsFullTreeSync();
+        blink::IntRect invalidateRect(blink::IntPoint(child->position().x, child->position().y), child->bounds());
+        appendPendingInvalidateRect(invalidateRect); // weolar TODO
         return;
     }
     if (m_replicaLayer == child) {
         m_replicaLayer->setParent(NULL);
         m_replicaLayer = NULL;
-        setNeedsFullTreeSync();
+        //setNeedsFullTreeSync();
+        blink::IntRect invalidateRect(blink::IntPoint(child->position().x, child->position().y), child->bounds());
+        appendPendingInvalidateRect(invalidateRect); // weolar TODO
         return;
     }
 
@@ -489,7 +496,9 @@ void WebLayerImpl::removeChildOrDependent(WebLayerImpl* child)
 
         child->setParent(NULL);
         m_children.remove(iter);
-        setNeedsFullTreeSync();
+        //setNeedsFullTreeSync();
+        blink::IntRect invalidateRect(blink::IntPoint(child->position().x, child->position().y), child->bounds());
+        appendPendingInvalidateRect(invalidateRect); // weolar TODO
         return;
     }
 }
@@ -514,7 +523,15 @@ void WebLayerImpl::setBounds(const WebSize& size)
         return;
 
     setNeedsCommit(true);
-    m_bounds = size;    
+
+    m_bounds = size;
+
+    if (m_bounds.width() > 3000)
+        m_bounds.setWidth(3000);
+
+    if (m_bounds.height() > 3000)
+        m_bounds.setHeight(3000);
+
     setNeedsCommit(true);
 }
 
@@ -1176,6 +1193,15 @@ void WebLayerImpl::appendPendingInvalidateRect(const blink::IntRect& rect)
 
     drawRect = mapRectFromCurrentLayerCoordinateToRootLayer(drawRect);
     m_updateRectInRootLayerCoordinate.unite((blink::IntRect)(drawRect));
+
+//     if (drawRect.width() > 500 && drawRect.height() > 500)
+//         OutputDebugStringA("WebLayerImpl::appendPendingInvalidateRect\n");
+//     if (drawRect.width() == 160 && drawRect.height() == 58)
+//         OutputDebugStringA("WebLayerImpl::appendPendingInvalidateRect\n");
+
+//     String outString = String::format("WebLayerImpl::appendPendingInvalidateRect:%d %d %d %d\n",
+//         drawRect.x(), drawRect.y(), drawRect.width(), drawRect.height());
+//     OutputDebugStringW(outString.charactersWithNullTermination().data());
 }
 
 void WebLayerImpl::requestBoundRepaint(bool directOrPending)

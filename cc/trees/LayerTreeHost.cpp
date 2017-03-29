@@ -770,6 +770,39 @@ void LayerTreeHost::clearCanvas(SkCanvas* canvas, const IntRect& rect, bool useL
     canvas->drawRect(skrc, clearPaint);
 }
 
+static void mergeDirty(Vector<blink::IntRect>* dirtyRects) {
+    const bool forceMerge = false;
+    do {
+        int nDirty = (int)dirtyRects->size();
+        if (nDirty < 1)
+            break;
+
+        int bestDelta = forceMerge ? 0x7FFFFFFF : 0;
+        int mergeA = 0;
+        int mergeB = 0;
+        for (int i = 0; i < nDirty - 1; i++) {
+            for (int j = i + 1; j < nDirty; j++) {
+
+                int delta = intUnionArea(&dirtyRects->at(i), &dirtyRects->at(j)) - intRectArea(&dirtyRects->at(i)) - intRectArea(&dirtyRects->at(j));
+                if (bestDelta >= delta) {
+                    mergeA = i;
+                    mergeB = j;
+                    bestDelta = delta;
+                }
+            }
+        }
+
+        if (mergeA == mergeB)
+            break;
+        
+        dirtyRects->at(mergeA).unite(dirtyRects->at(mergeB));
+        for (int i = mergeB + 1; i < nDirty; i++)
+            dirtyRects->at(i - 1) = dirtyRects->at(i);
+
+        dirtyRects->removeLast();
+    } while (true);
+}
+
 void LayerTreeHost::postPaintMessage(const IntRect& paintRect)
 {
     IntRect dirtyRect = paintRect;
@@ -781,6 +814,7 @@ void LayerTreeHost::postPaintMessage(const IntRect& paintRect)
     }
     dirtyRect.intersect(m_clientRect);
     m_dirtyRects.append(dirtyRect);
+    mergeDirty(&m_dirtyRects);
     m_compositeMutex.unlock();
 }
 
