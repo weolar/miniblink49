@@ -1,20 +1,27 @@
 'use strict'
 
+const EventEmitter = require('events').EventEmitter;
+// The global variable will be used by ipc for event dispatching
+var v8Util = new (process.binding('atom_common_v8_util').v8Util)();
+v8Util.setHiddenValue(global, 'ipc', new EventEmitter());
+
 require('./electron');
+require('../common/init.js');
+
+const intlCollator = require('../common/api/intl-collator');
 
 const events = require('events');
 const path = require('path');
 const Module = require('module');
-	
-// The global variable will be used by ipc for event dispatching
-//var v8Util = process.binding('atom_v8_util')
-//v8Util.setHiddenValue(global, 'ipc', new events.EventEmitter())
+const timers = require('timers');
 
 // Export node bindings to global.
 window.require = require;
 window.module = module;
 window.miniNodeRequire = require;
 window.miniNodeModule = module;
+window.setImmediate = timers.setImmediate;
+window.Intl = intlCollator;
 
 // Set the __filename to the path of html file if it is file: protocol.
 if (window.location.protocol === 'file:') {

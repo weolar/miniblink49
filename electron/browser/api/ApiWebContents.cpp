@@ -1,11 +1,14 @@
-﻿
-#include "browser/api/ApiWebContents.h"
+﻿#include "browser/api/ApiWebContents.h"
+
+#include "browser/api/WindowInterface.h"
+#include "browser/api/WindowList.h"
 
 #include "wke.h"
 #include "common/ThreadCall.h"
 #include "common/NodeRegisterHelp.h"
 #include "common/IdLiveDetect.h"
 #include "common/NodeBinding.h"
+#include "common/api/EventEmitterCaller.h"
 #include "gin/dictionary.h"
 #include "gin/object_template_builder.h"
 #include "base/values.h"
@@ -91,6 +94,7 @@ void WebContents::init(v8::Isolate* isolate, v8::Local<v8::Object> target, node:
     builder.SetMethod("copyImageAt", &WebContents::copyImageAtApi);
     builder.SetMethod("capturePage", &WebContents::capturePageApi);
     builder.SetMethod("setEmbedder", &WebContents::setEmbedderApi);
+    builder.SetProperty("id", &WebContents::getIdApi);
 //     NODE_SET_PROTOTYPE_METHOD(tpl, "id", nullFunction);
 //     NODE_SET_PROTOTYPE_METHOD(tpl, "session", nullFunction);
 //     NODE_SET_PROTOTYPE_METHOD(tpl, "hostWebContents", nullFunction);
@@ -101,22 +105,30 @@ void WebContents::init(v8::Isolate* isolate, v8::Local<v8::Object> target, node:
     target->Set(v8::String::NewFromUtf8(isolate, "WebContents"), prototype->GetFunction());
 }
 
-WebContents* WebContents::create(v8::Isolate* isolate, gin::Dictionary options) {
+WebContents* WebContents::create(v8::Isolate* isolate, gin::Dictionary options, WindowInterface* owner) {
     const int argc = 1;
     v8::Local<v8::Value> argv[argc] = { gin::ConvertToV8(isolate, options) };
     v8::Local<v8::Function> constructorFunction = v8::Local<v8::Function>::New(isolate, constructor);
 
     v8::MaybeLocal<v8::Object> obj = constructorFunction->NewInstance(argc, argv);
-    return (WebContents*)WrappableBase::GetNativePtr(obj.ToLocalChecked(), &kWrapperInfo);
+    WebContents* self = (WebContents*)WrappableBase::GetNativePtr(obj.ToLocalChecked(), &kWrapperInfo);
+    self->m_owner = owner;
+    return self;
 }
 
 WebContents::WebContents(v8::Isolate* isolate, v8::Local<v8::Object> wrapper) {
+    
     m_nodeBinding = nullptr;
     m_id = IdLiveDetect::get()->constructed();
+    m_view = nullptr;
+    int id = m_id;
     gin::Wrappable<WebContents>::InitWith(isolate, wrapper);
 
     WebContents* self = this;
-    ThreadCall::callBlinkThreadSync([self] {
+    ThreadCall::callBlinkThreadAsync([self, id] { 
+        if (!IdLiveDetect::get()->isLive(id))
+            return;
+
         self->m_view = wkeCreateWebView();
         wkeSetUserKayValue(self->m_view, "WebContents", self);
     });    
@@ -206,7 +218,7 @@ void WebContents::onWillReleaseScriptContextCallback(wkeWebView webView, wkeWebF
     m_nodeBinding = nullptr;
 }
 
-void WebContents::postMessage(const std::string& channel, const base::ListValue& listParams) {
+void WebContents::rendererPostMessageToMain(const std::string& channel, const base::ListValue& listParams) {
     int id = m_id;
     WebContents* self = this;
     std::string* channelWrap = new std::string(channel);
@@ -221,7 +233,7 @@ void WebContents::postMessage(const std::string& channel, const base::ListValue&
     });
 }
 
-void WebContents::sendMessage(const std::string& channel, const base::ListValue& listParams, std::string* jsonRet) {
+void WebContents::rendererSendMessageToMain(const std::string& channel, const base::ListValue& listParams, std::string* jsonRet) {
     WebContents* self = this;
     const std::string* channelWrap = &channel;
     const base::ListValue* listParamsWrap = &listParams;
@@ -239,6 +251,70 @@ void WebContents::sendMessage(const std::string& channel, const base::ListValue&
     });
 }
 
+static bool getIPCObject(v8::Isolate* isolate, v8::Local<v8::Context> context, v8::Local<v8::Object>* ipc) {
+    v8::Local<v8::String> key = gin::StringToV8(isolate, "ipc");
+    v8::Local<v8::Private> privateKey = v8::Private::ForApi(isolate, key);
+    v8::Local<v8::Object> global_object = context->Global();
+    v8::Local<v8::Value> value;
+    if (!global_object->GetPrivate(context, privateKey).ToLocal(&value))
+        return false;
+    if (value.IsEmpty() || !value->IsObject())
+        return false;
+    *ipc = value->ToObject();
+    return true;
+}
+
+static std::vector<v8::Local<v8::Value>> listValueToVector(v8::Isolate* isolate, const base::ListValue& list) {
+    v8::Local<v8::Value> array = gin::ConvertToV8(isolate, list);
+    std::vector<v8::Local<v8::Value>> result;
+    gin::ConvertFromV8(isolate, array, &result);
+    return result;
+}
+
+static void emitIPCEvent(wkeWebFrameHandle frame, const std::string& channel, const base::ListValue& args) {
+    if (!frame || wkeIsWebRemoteFrame(frame))
+        return;
+
+    v8::Isolate* isolate = (v8::Isolate*)wkeGetBlinkMainThreadIsolate();
+    v8::HandleScope handleScope(isolate);
+
+    v8::Local<v8::Context> context;
+    wkeWebFrameGetMainWorldScriptContext(frame, &context);
+    v8::Context::Scope contextScope(context);
+
+    // Only emit IPC event for context with node integration.
+    node::Environment* env = node::Environment::GetCurrent(context);
+    if (!env)
+        return;
+
+    v8::Local<v8::Object> ipc;
+    if (getIPCObject(isolate, context, &ipc)) {
+        std::vector<v8::Local<v8::Value>> argsVector = listValueToVector(isolate, args);
+        // Insert the Event object, event.sender is ipc.
+        gin::Dictionary evt = gin::Dictionary::CreateEmpty(isolate);
+        evt.Set("sender", ipc);
+        argsVector.insert(argsVector.begin(), evt.GetHandle());
+
+        mate::emitEvent(isolate, ipc, channel, argsVector);
+    }
+}
+
+void WebContents::anyPostMessageToRenderer(const std::string& channel, const base::ListValue& listParams) {
+    int id = m_id;
+    WebContents* self = this;
+    std::string* channelWrap = new std::string(channel);
+    base::ListValue* listParamsWrap = listParams.DeepCopy();
+
+    ThreadCall::callBlinkThreadAsync([self, id, channelWrap, listParamsWrap] {
+        if (IdLiveDetect::get()->isLive(id)) {
+            emitIPCEvent(wkeWebFrameGetMainFrame(self->m_view), *channelWrap, *listParamsWrap);
+        }
+
+        delete channelWrap;
+        delete listParamsWrap;
+    });
+}
+
 int WebContents::getIdApi() const {
     return (int)this;
 }
@@ -250,7 +326,6 @@ int WebContents::getProcessIdApi() const {
 bool WebContents::equalApi() const {
     return false;
 }
-
 
 void WebContents::_loadURLApi(const std::string& url) {
     WebContents* self = this;
@@ -541,8 +616,14 @@ void WebContents::tabTraverseApi() {
     //todo
 }
 
-void WebContents::_sendApi() {
-    //todo
+bool WebContents::_sendApi(bool isAllFrames, const std::string& channel, const base::ListValue& args) {
+    WindowList::iterator winIt = WindowList::getInstance()->begin();
+    for (; winIt != WindowList::getInstance()->end(); ++winIt) {
+        WindowInterface* windowInterface = *winIt;
+        WebContents* webCcontents = windowInterface->getWebContents();
+        webCcontents->anyPostMessageToRenderer(channel, args);
+    }
+    return true;
 }
 
 void WebContents::sendInputEventApi() {
@@ -608,8 +689,11 @@ void WebContents::getWebPreferencesApi() {
     //todo
 }
 
-void WebContents::getOwnerBrowserWindowApi() {
-    //todo
+v8::Local<v8::Value> WebContents::getOwnerBrowserWindowApi() {
+     if (m_owner)
+        return m_owner->getWrapper();
+    
+    return v8::Null(isolate());
 }
 
 void WebContents::hasServiceWorkerApi() {

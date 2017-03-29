@@ -59,6 +59,9 @@ v8::Local<v8::Value> emitEventImpl(v8::Isolate* isolate, v8::Local<v8::Object> o
             outValue->GetAsDictionary(&dictionaryValue);
             converted_args.push_back(gin::Converter<base::DictionaryValue>::ToV8(isolate, *dictionaryValue));
             break;
+        case base::Value::TYPE_NULL:
+            converted_args.push_back(v8::Null(isolate));
+            break;
         default:
             *(int*)1 = 1;
             converted_args.push_back(v8::Null(isolate));

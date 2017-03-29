@@ -16,6 +16,7 @@ namespace atom {
 
 class NodeBindings;
 class WebContents;
+class WindowInterface;
 
 class WebContentsObserver {
 public:
@@ -37,7 +38,7 @@ public:
     };
 
     static void init(v8::Isolate* isolate, v8::Local<v8::Object> target, node::Environment* env);
-    static WebContents* create(v8::Isolate* isolate, gin::Dictionary options);
+    static WebContents* create(v8::Isolate* isolate, gin::Dictionary options, WindowInterface* owner);
 
     explicit WebContents(v8::Isolate* isolate, v8::Local<v8::Object> wrapper);
     ~WebContents();
@@ -49,9 +50,9 @@ public:
 
     void onNewWindowInBlinkThread(const CreateWindowParam* createWindowParam);
 
-    void postMessage(const std::string& channel, const base::ListValue& listParams);
-    void sendMessage(const std::string& channel, const base::ListValue& listParams, std::string* jsonRet);
-
+    void rendererPostMessageToMain(const std::string& channel, const base::ListValue& listParams);
+    void rendererSendMessageToMain(const std::string& channel, const base::ListValue& listParams, std::string* jsonRet);
+    void anyPostMessageToRenderer(const std::string& channel, const base::ListValue& listParams);
 private:
     static void newFunction(const v8::FunctionCallbackInfo<v8::Value>& args);
 
@@ -140,7 +141,7 @@ private:
 
     void tabTraverseApi();
 
-    void _sendApi();
+    bool _sendApi(bool isAllFrames, const std::string& channel, const base::ListValue& args);
 
     void sendInputEventApi();
 
@@ -172,7 +173,7 @@ private:
 
     void getWebPreferencesApi();
 
-    void getOwnerBrowserWindowApi();
+    v8::Local<v8::Value> getOwnerBrowserWindowApi();
 
     void hasServiceWorkerApi();
 
@@ -211,6 +212,7 @@ private:
     int m_id;
     std::set<WebContentsObserver*> m_observers;
     wkeWebView m_view;
+    WindowInterface* m_owner;
 };
 
 } // atom

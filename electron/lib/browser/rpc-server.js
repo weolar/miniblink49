@@ -94,9 +94,9 @@ let valueToMeta = function (sender, value, optimizeSimpleObject) {
     // Reference the original value if it's an object, because when it's
     // passed to renderer we would assume the renderer keeps a reference of
     // it.
-    meta.id = objectsRegistry.add(sender, value)
-    meta.members = getObjectMembers(value)
-    meta.proto = getObjectPrototype(value)
+    meta.id = objectsRegistry.add(sender, value);
+    meta.members = getObjectMembers(value);
+    meta.proto = getObjectPrototype(value);
   } else if (meta.type === 'buffer') {
     meta.value = Array.prototype.slice.call(value, 0)
   } else if (meta.type === 'promise') {

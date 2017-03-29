@@ -78,23 +78,21 @@ void log(const v8::FunctionCallbackInfo<v8::Value>& info) {
     crash(info);
 }
 
-void activateUVLoop(const v8::FunctionCallbackInfo<v8::Value>& info) {
-
-}
-
-
 } // namespace
 
 NodeBindings::NodeBindings(bool isBrowser, uv_loop_t* uvLoop)
     : m_isBrowser(isBrowser)
     , m_uvLoop(uvLoop)
-    , m_env(nullptr){
+    , m_env(nullptr)
+    , m_callNextTickAsync(new uv_async_t()) {
+
 }
 
 NodeBindings::~NodeBindings() {
     if (!m_env)
         return;
     nodeDeleteNodeEnvironment(m_env);
+    delete m_callNextTickAsync;
 }
 
 static std::wstring* kResPath = nullptr;
@@ -114,7 +112,7 @@ std::wstring getResourcesPath(const std::wstring& name) {
     out += &path[0];
 
     std::wstring temp(out);
-    temp += L"\\electron.ilk";
+    temp += L"\\node.exp";
     if (!::PathFileExists(temp.c_str()))
         out += L"\\electron.asar\\";
     else
@@ -162,16 +160,26 @@ void loadNodeScriptFromRes(void* path) {
 // Convert the given vector to an array of C-strings. The strings in the
 // returned vector are only guaranteed valid so long as the vector of strings
 // is not modified.
-std::unique_ptr<const char*[]> stringVectorToArgArray(
-    const std::vector<std::string>& vector) {
-    std::unique_ptr<const char*[]> array(new const char*[vector.size()]);
+std::unique_ptr<const char*[]> stringVectorToArgArray(const std::vector<std::string>& vector) {
+    std::unique_ptr<const char*[]> argsArray(new const char*[vector.size()]);
     for (size_t i = 0; i < vector.size(); ++i) {
-        array[i] = vector[i].c_str();
+        argsArray[i] = vector[i].c_str();
     }
-    return array;
+    return argsArray;
+}
+
+void NodeBindings::initNodeEnv() {
+    std::vector<std::string> args = AtomCommandLine::argv();
+    int argsSize = args.size();
+
+    std::unique_ptr<const char*[]> c_argv = stringVectorToArgArray(args);
+    int exec_argc;
+    const char** exec_argv = nullptr;
+    node::Init(&argsSize, c_argv.get(), &exec_argc, &exec_argv);
 }
 
 void NodeBindings::bindFunction(gin::Dictionary* dict) {
+    NodeBindings* self = this;
     dict->SetMethod("crash", &crash);
     dict->SetMethod("hang", &hang);
     dict->SetMethod("log", &log);
@@ -180,7 +188,7 @@ void NodeBindings::bindFunction(gin::Dictionary* dict) {
 #if defined(OS_POSIX)
     dict->SetMethod("setFdLimit", &base::SetFdLimit);
 #endif
-    dict->SetMethod("activateUvLoop", &activateUVLoop);
+    dict->SetMethod("activateUvLoop", [self] (const v8::FunctionCallbackInfo<v8::Value>& info) { self->activateUVLoop(info.GetIsolate()); });
 
 #if defined(MAS_BUILD)
     dict->Set("mas", true);
@@ -196,6 +204,9 @@ void NodeBindings::bindFunction(gin::Dictionary* dict) {
 }
 
 node::Environment* NodeBindings::createEnvironment(v8::Local<v8::Context> context) {
+    uv_async_init(m_uvLoop, m_callNextTickAsync, onCallNextTick);
+    m_callNextTickAsync->data = this;
+
     std::vector<std::string> args = AtomCommandLine::argv();
 
     // Feed node the path to initialization script.
@@ -239,6 +250,43 @@ node::Environment* NodeBindings::createEnvironment(v8::Local<v8::Context> contex
 void NodeBindings::loadEnvironment() {
     node::LoadEnvironment(m_env);
     mate::emitEvent(m_env->isolate(), m_env->process_object(), "loaded");
+}
+
+void NodeBindings::activateUVLoop(v8::Isolate* isoloate) {
+    node::Environment* env = node::Environment::GetCurrent(isoloate);
+    if (std::find(m_pendingNextTicks.begin(), m_pendingNextTicks.end(), env) != m_pendingNextTicks.end())
+        return;
+
+    m_pendingNextTicks.push_back(env);
+    uv_async_send(m_callNextTickAsync);
+}
+
+// static
+void NodeBindings::onCallNextTick(uv_async_t* handle) {
+    NodeBindings* self = static_cast<NodeBindings*>(handle->data);
+
+    for (std::list<node::Environment*>::const_iterator it = self->m_pendingNextTicks.begin();
+        it != self->m_pendingNextTicks.end(); ++it) {
+        node::Environment* env = *it;
+        v8::HandleScope handleScope(env->isolate());
+
+        // KickNextTick, copied from node.cc:
+        node::Environment::AsyncCallbackScope callbackScope(env);
+        if (callbackScope.in_makecallback())
+            continue;
+
+        node::Environment::TickInfo* tickInfo = env->tick_info();
+        if (tickInfo->length() == 0)
+            env->isolate()->RunMicrotasks();
+
+        v8::Local<v8::Object> process = env->process_object();
+        if (tickInfo->length() == 0)
+            tickInfo->set_index(0);
+
+        env->tick_callback_function()->Call(process, 0, nullptr).IsEmpty();
+    }
+
+    self->m_pendingNextTicks.clear();
 }
 
 } // atom

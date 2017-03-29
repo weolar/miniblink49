@@ -84,6 +84,9 @@ static v8::Isolate* initNodeEnv(NodeArgc* nodeArgc) {
 
     ElectronFsHooks fsHooks;
     nodeArgc->childEnv->file_system_hooks(&fsHooks);
+
+    NodeBindings::initNodeEnv();
+
     nodeArgc->m_nodeBinding->loadEnvironment();
 
     messageLoop(nodeArgc);

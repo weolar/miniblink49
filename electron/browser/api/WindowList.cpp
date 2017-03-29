@@ -33,6 +33,14 @@ void WindowList::removeWindow(WindowInterface* window) {
     windows.erase(std::remove(windows.begin(), windows.end(), window), windows.end());
 }
 
+WindowInterface* WindowList::find(int id) const {
+    for (WindowVector::const_iterator it = m_windows.begin(); it != m_windows.end(); ++it) {
+        if ((*it)->getId() == id)
+            return *it;
+    }
+    return nullptr;
+}
+
 // static
 void WindowList::WindowCloseCancelled(WindowInterface* window) {
 

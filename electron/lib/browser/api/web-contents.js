@@ -50,4 +50,15 @@ WebContents.prototype._init = function () {
 	});
 }
 
+// WebContents::send(channel, args..)
+// WebContents::sendToAll(channel, args..)
+WebContents.prototype.send = function (channel, ...args) {
+  if (channel == null) throw new Error('Missing required channel argument')
+  return this._send(false, channel, args)
+}
+WebContents.prototype.sendToAll = function (channel, ...args) {
+  if (channel == null) throw new Error('Missing required channel argument')
+  return this._send(true, channel, args)
+}
+
 module.exports = WebContents;

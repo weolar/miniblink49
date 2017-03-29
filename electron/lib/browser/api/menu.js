@@ -10,7 +10,7 @@ Menu.prototype.popup = function (windowObj, x, y, positioningItem) {
 }
 
 Menu.prototype.append = function (item) {
-	console.log('Menu.append');
+	//console.log('Menu.append');
     return null;
 }
 

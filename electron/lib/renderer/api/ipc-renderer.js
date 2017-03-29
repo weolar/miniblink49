@@ -2,12 +2,11 @@
 
 var IpcRendererBinding = process.binding('atom_renderer_ipc').ipcRenderer;
 const EventEmitter = require('events').EventEmitter;
-
+var v8Util = new (process.binding('atom_common_v8_util').v8Util)();
 var binding = new IpcRendererBinding();
 
-//const electron = require('electron');
-
-var ipcRenderer = new EventEmitter();
+// Created by init.js.
+const ipcRenderer = v8Util.getHiddenValue(global, 'ipc'); //var ipcRenderer = new EventEmitter();
 
 ipcRenderer.send = function (...args) {
   return binding.send('ipc-message', args)

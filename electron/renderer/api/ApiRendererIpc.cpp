@@ -37,7 +37,7 @@ public:
         WebContents* webContents = (WebContents*)wkeGetUserKayValue(view, "WebContents");
         if (!webContents)
             return;
-        webContents->postMessage(channel, arguments);
+        webContents->rendererPostMessageToMain(channel, arguments);
     }
 
     std::string rendererIpcSendSync(const std::string& channel, const base::ListValue& arguments) {
@@ -49,7 +49,7 @@ public:
             return "";
 
         std::string json;
-        webContents->sendMessage(channel, arguments, &json);
+        webContents->rendererSendMessageToMain(channel, arguments, &json);
 
         if (0 == json.size())
             json = "{}";
