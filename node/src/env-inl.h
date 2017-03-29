@@ -108,7 +108,7 @@ inline Environment::AsyncCallbackScope::AsyncCallbackScope(Environment* env)
   env_->makecallback_cntr_++;
 #ifndef MINIBLINK_NOT_IMPLEMENTED
   if (env->is_blink_core_)
-      env->blink_microtask_suppression_handle_ = env->BlinkMicrotaskSuppressionEnter(env->isolate_);
+    env_->BlinkMicrotaskSuppressionEnter(env_);
 #endif
 }
 
@@ -116,7 +116,7 @@ inline Environment::AsyncCallbackScope::~AsyncCallbackScope() {
   env_->makecallback_cntr_--;
 #ifndef MINIBLINK_NOT_IMPLEMENTED
   if (env_->is_blink_core_)
-      env_->BlinkMicrotaskSuppressionLeave(env_->blink_microtask_suppression_handle_);
+    env_->BlinkMicrotaskSuppressionLeave(env_);
 #endif
 }
 

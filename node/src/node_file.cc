@@ -145,9 +145,8 @@ static void After(uv_fs_t *req) {
   Context::Scope context_scope(env->context());
 
 #ifndef MINIBLINK_NOT_IMPLEMENTED
-  Environment::MicrotaskSuppressionHandle handle = nullptr;
   if (env->is_blink_core())
-      handle = env->BlinkMicrotaskSuppressionEnter(env->isolate());
+    env->BlinkMicrotaskSuppressionEnter(env);
 #endif
 
   // there is always at least one argument. "error"
@@ -327,8 +326,8 @@ static void After(uv_fs_t *req) {
   req_wrap->MakeCallback(env->oncomplete_string(), argc, argv);
 
 #ifndef MINIBLINK_NOT_IMPLEMENTED
-  if (handle)
-      env->BlinkMicrotaskSuppressionLeave(handle);
+  if (env->is_blink_core())
+    env->BlinkMicrotaskSuppressionLeave(env);
 #endif
 
   uv_fs_req_cleanup(req_wrap->req());
@@ -527,9 +526,8 @@ Local<Value> BuildStatsObject(Environment* env, const uv_stat_t* s) {
   };
 
 #ifndef MINIBLINK_NOT_IMPLEMENTED
-  Environment::MicrotaskSuppressionHandle handle = nullptr;
   if (env->is_blink_core())
-    handle = env->BlinkMicrotaskSuppressionEnter(env->isolate());
+    env->BlinkMicrotaskSuppressionEnter(env);
 #endif
 
   // Call out to JavaScript to create the stats object.
@@ -539,8 +537,8 @@ Local<Value> BuildStatsObject(Environment* env, const uv_stat_t* s) {
           arraysize(argv),
           argv).FromMaybe(Local<Value>());
 #ifndef MINIBLINK_NOT_IMPLEMENTED
-  if (handle)
-    env->BlinkMicrotaskSuppressionLeave(handle);
+  if (env->is_blink_core())
+    env->BlinkMicrotaskSuppressionLeave(env);
 #endif
   if (stats.IsEmpty())
     return handle_scope.Escape(Local<Object>());

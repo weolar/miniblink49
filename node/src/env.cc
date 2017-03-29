@@ -12,6 +12,7 @@
 
 #ifndef MINIBLINK_NOT_IMPLEMENTED
 #include "node/include/nodeblink.h"
+#include <list>
 #endif
 
 namespace node {
@@ -67,12 +68,37 @@ void Environment::PrintSyncTrace() const {
 }
 
 #ifndef MINIBLINK_NOT_IMPLEMENTED
-Environment::MicrotaskSuppressionHandle Environment::BlinkMicrotaskSuppressionEnter(v8::Isolate* isolate) {
-  return nodeBlinkMicrotaskSuppressionEnter(isolate);
+// Environment::MicrotaskSuppressionHandle Environment::BlinkMicrotaskSuppressionEnter(v8::Isolate* isolate) {
+//     return nodeBlinkMicrotaskSuppressionEnter(isolate);
+// }
+// 
+// void Environment::BlinkMicrotaskSuppressionLeave(MicrotaskSuppressionHandle handle) {
+//     nodeBlinkMicrotaskSuppressionLeave(handle);
+// }
+
+void BlinkMicrotaskSuppressionEnterFunc(Environment* self) {
+    if (!self->blink_microtask_suppression_handle_)
+        self->blink_microtask_suppression_handle_ = new std::list<BlinkMicrotaskSuppressionHandle>();
+    std::list<BlinkMicrotaskSuppressionHandle>* handleList = (std::list<BlinkMicrotaskSuppressionHandle>*)self->blink_microtask_suppression_handle_;
+    handleList->push_back(nodeBlinkMicrotaskSuppressionEnter(self->isolate()));
 }
 
-void Environment::BlinkMicrotaskSuppressionLeave(MicrotaskSuppressionHandle handle) {
-  nodeBlinkMicrotaskSuppressionLeave(handle);
+void BlinkMicrotaskSuppressionLeaveFunc(Environment* self) {
+    std::list<BlinkMicrotaskSuppressionHandle>* handleList = (std::list<BlinkMicrotaskSuppressionHandle>*)self->blink_microtask_suppression_handle_;
+    BlinkMicrotaskSuppressionHandle handle = (handleList->back());
+    handleList->pop_back();
+    
+    if (0 == handleList->size()) {
+        delete handleList;
+        self->blink_microtask_suppression_handle_ = nullptr;
+    }
+
+    nodeBlinkMicrotaskSuppressionLeave(handle);
+}
+
+void Environment::InitBlinkMicrotaskSuppression() {
+    BlinkMicrotaskSuppressionEnter = BlinkMicrotaskSuppressionEnterFunc;
+    BlinkMicrotaskSuppressionLeave = BlinkMicrotaskSuppressionLeaveFunc;
 }
 #endif
 

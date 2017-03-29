@@ -1,5 +1,4 @@
-﻿
-#include "include/nodeblink.h"
+﻿#include "include/nodeblink.h"
 
 #include "gin/v8_initializer.h"
 #include "libplatform/libplatform.h"

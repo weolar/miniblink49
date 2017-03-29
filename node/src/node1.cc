@@ -3576,6 +3576,9 @@ namespace node {
 
 		Context::Scope context_scope(context);
 		Environment* env = Environment::New(context, loop);
+#ifndef MINIBLINK_NOT_IMPLEMENTED
+        env->InitBlinkMicrotaskSuppression();
+#endif
 
 		isolate->SetAutorunMicrotasks(false);
 

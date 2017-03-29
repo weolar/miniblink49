@@ -430,8 +430,11 @@ class Environment {
 
 #ifndef MINIBLINK_NOT_IMPLEMENTED
   typedef void* MicrotaskSuppressionHandle;
-  MicrotaskSuppressionHandle BlinkMicrotaskSuppressionEnter(v8::Isolate* isolate);
-  void BlinkMicrotaskSuppressionLeave(MicrotaskSuppressionHandle handle);
+  typedef void(*FN_BlinkMicrotaskSuppressionEnter)(Environment* self);
+  FN_BlinkMicrotaskSuppressionEnter BlinkMicrotaskSuppressionEnter;
+  typedef void(*FN_BlinkMicrotaskSuppressionLeave)(Environment* self);
+  FN_BlinkMicrotaskSuppressionLeave BlinkMicrotaskSuppressionLeave;
+  void InitBlinkMicrotaskSuppression();
 #endif
 
   static inline Environment* GetCurrent(v8::Isolate* isolate);
@@ -604,7 +607,9 @@ class Environment {
 #ifndef MINIBLINK_NOT_IMPLEMENTED
   FileSystemHooks *file_system_hooks_;
   bool is_blink_core_;
+ public:
   MicrotaskSuppressionHandle blink_microtask_suppression_handle_;
+ private:
 #endif
   DomainFlag domain_flag_;
   TickInfo tick_info_;
