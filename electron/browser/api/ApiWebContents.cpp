@@ -175,13 +175,13 @@ void WebContents::newFunction(const v8::FunctionCallbackInfo<v8::Value>& args) {
     }
 }
 
-void WebContents::onNewWindowInBlinkThread(const CreateWindowParam* createWindowParam) {
+void WebContents::onNewWindowInBlinkThread(int width, int height, const CreateWindowParam* createWindowParam) {
     if (createWindowParam->transparent)
         wkeSetTransparent(getWkeView(), true);
     wkeSettings settings;
     settings.mask = WKE_SETTING_PAINTCALLBACK_IN_OTHER_THREAD;
     wkeConfigure(&settings);
-    wkeResize(getWkeView(), createWindowParam->width, createWindowParam->height);
+    wkeResize(getWkeView(), width, height);
     wkeOnDidCreateScriptContext(getWkeView(), &WebContents::staticDidCreateScriptContextCallback, this);
     wkeOnWillReleaseScriptContext(getWkeView(), &WebContents::staticOnWillReleaseScriptContextCallback, this);
 }

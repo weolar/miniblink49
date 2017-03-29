@@ -526,7 +526,7 @@ public:
             if (HIWORD(lParam) & KF_EXTENDED)
                 flags |= WKE_EXTENDED;
 
-            ThreadCall::callBlinkThreadSync([pthis, virtualKeyCode, flags] {
+            ThreadCall::callBlinkThreadAsync([pthis, virtualKeyCode, flags] {
                 wkeFireKeyDownEvent(pthis, virtualKeyCode, flags, false);
             });
 
@@ -1218,16 +1218,22 @@ private:
         //::RegisterDragDrop(m_hWnd, nullptr);
         ::DragAcceptFiles(m_hWnd, true);
 
-        m_clientRect.right = createWindowParam->width;
-        m_clientRect.bottom = createWindowParam->height;
+        RECT clientRect;
+        ::GetClientRect(m_hWnd, &clientRect);
+
+        int width = clientRect.right - clientRect.left;
+        int height = clientRect.bottom - clientRect.top;
+        m_clientRect.right = width;
+        m_clientRect.bottom = height;
 
         Window* win = this;
         int id = win->m_id;
-        ThreadCall::callBlinkThreadAsync([id, win, createWindowParam] {
+        HWND hWnd = m_hWnd;
+        ThreadCall::callBlinkThreadAsync([id, win, createWindowParam, width, height] {
             if (!IdLiveDetect::get()->isLive(id))
                 return;
 
-            win->m_webContents->onNewWindowInBlinkThread(createWindowParam);
+            win->m_webContents->onNewWindowInBlinkThread(width, height, createWindowParam);
             wkeOnPaintUpdated(win->m_webContents->getWkeView(), (wkePaintUpdatedCallback)staticOnPaintUpdatedInCompositeThread, win);
             delete createWindowParam;
         });

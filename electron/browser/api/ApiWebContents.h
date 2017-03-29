@@ -48,7 +48,7 @@ public:
 
     wkeWebView getWkeView() const { return m_view; }
 
-    void onNewWindowInBlinkThread(const CreateWindowParam* createWindowParam);
+    void onNewWindowInBlinkThread(int width, int height, const CreateWindowParam* createWindowParam);
 
     void rendererPostMessageToMain(const std::string& channel, const base::ListValue& listParams);
     void rendererSendMessageToMain(const std::string& channel, const base::ListValue& listParams, std::string* jsonRet);
