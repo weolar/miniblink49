@@ -141,7 +141,7 @@ extern "C" NODE_EXTERN void* nodeCreateDefaultPlatform() {
 
 static void waitForEnvironmentHandleWrapQueue(node::Environment* env) {
     while (true) {
-        uv_run(env->event_loop(), UV_RUN_ONCE);
+        uv_run(env->event_loop(), UV_RUN_NOWAIT);
 
         int emptyCount = 0;
         int allCount = 0;
@@ -177,7 +177,7 @@ static void waitForAllHandleWrapQueue(node::Environment* env) {
     uv_walk(env->event_loop(), closeWalkCB, &closeHandleCount);
 
     while (closeHandleCount[0] != closeHandleCount[1])
-        uv_run(env->event_loop(), UV_RUN_ONCE);
+        uv_run(env->event_loop(), UV_RUN_NOWAIT);
 }
 
 extern "C" NODE_EXTERN void nodeDeleteNodeEnvironment(node::Environment* env) {
