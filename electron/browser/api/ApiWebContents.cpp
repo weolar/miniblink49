@@ -155,7 +155,6 @@ void WebContents::removeObserver(WebContentsObserver* observer) {
     m_observers.erase(it);
 }
 
-
 // new方法
 void WebContents::newFunction(const v8::FunctionCallbackInfo<v8::Value>& args) {
     v8::Isolate* isolate = args.GetIsolate();

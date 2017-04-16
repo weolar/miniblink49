@@ -202,14 +202,14 @@ private:
 class ScreenWin {
 public:
     void Initialize() {
-        UpdateFromDisplayInfos(getDisplayInfosFromSystem());
+        updateFromDisplayInfos(getDisplayInfosFromSystem());
     }
 
-    static float GetMonitorScaleFactor(HMONITOR monitor) {
+    static float getMonitorScaleFactor(HMONITOR monitor) {
         return 1.0f;
     }
 
-    static MONITORINFOEX MonitorInfoFromHMONITOR(HMONITOR monitor) {
+    static MONITORINFOEX monitorInfoFromHMONITOR(HMONITOR monitor) {
         MONITORINFOEX monitor_info;
         ::ZeroMemory(&monitor_info, sizeof(monitor_info));
         monitor_info.cbSize = sizeof(monitor_info);
@@ -221,7 +221,7 @@ public:
     static BOOL CALLBACK EnumMonitorCallback(HMONITOR monitor, HDC hdc, LPRECT rect, LPARAM data) {
         std::vector<DisplayInfo>* display_infos = reinterpret_cast<std::vector<DisplayInfo>*>(data);
         DCHECK(display_infos);
-        display_infos->push_back(DisplayInfo(MonitorInfoFromHMONITOR(monitor), GetMonitorScaleFactor(monitor)));
+        display_infos->push_back(DisplayInfo(monitorInfoFromHMONITOR(monitor), getMonitorScaleFactor(monitor)));
         return TRUE;
     }
 
@@ -232,11 +232,11 @@ public:
         return display_infos;
     }
 
-    MONITORINFOEX MonitorInfoFromWindow(HWND hwnd, DWORD default_options) const {
-        return MonitorInfoFromHMONITOR(::MonitorFromWindow(hwnd, default_options));
+    MONITORINFOEX monitorInfoFromWindow(HWND hwnd, DWORD default_options) const {
+        return monitorInfoFromHMONITOR(::MonitorFromWindow(hwnd, default_options));
     }
 
-    Display CreateDisplayFromDisplayInfo(const DisplayInfo& display_info) {
+    Display createDisplayFromDisplayInfo(const DisplayInfo& display_info) {
         Display display(display_info.id());
         float scale_factor = display_info.device_scale_factor();
         display.setDeviceScaleFactor(scale_factor);
@@ -267,7 +267,7 @@ public:
         // Layout and create the ScreenWinDisplays.
         std::vector<Display> displays;
         for (const auto& display_info : display_infos)
-            displays.push_back(CreateDisplayFromDisplayInfo(display_info));
+            displays.push_back(createDisplayFromDisplayInfo(display_info));
 
         std::vector<ScreenWinDisplay> screen_win_displays;
         const size_t num_displays = display_infos.size();
@@ -278,11 +278,11 @@ public:
     }
 
 
-    void UpdateFromDisplayInfos(const std::vector<DisplayInfo>& display_infos) {
+    void updateFromDisplayInfos(const std::vector<DisplayInfo>& display_infos) {
         screen_win_displays_ = DisplayInfosToScreenWinDisplays(display_infos);
     }
 
-    ScreenWinDisplay GetScreenWinDisplay(const MONITORINFOEX& monitor_info) const {
+    ScreenWinDisplay getScreenWinDisplay(const MONITORINFOEX& monitor_info) const {
         uint32_t id = DisplayInfo::DeviceIdFromDeviceName(monitor_info.szDevice);
         std::vector<ScreenWinDisplay>::const_iterator screen_win_display = screen_win_displays_.begin();
         for (; screen_win_display != screen_win_displays_.end(); ++screen_win_display) {
@@ -296,9 +296,9 @@ public:
         return ScreenWinDisplay();
     }
 
-    ScreenWinDisplay GetPrimaryScreenWinDisplay() const {
-        MONITORINFOEX monitor_info = MonitorInfoFromWindow(nullptr, MONITOR_DEFAULTTOPRIMARY);
-        ScreenWinDisplay screen_win_display = GetScreenWinDisplay(monitor_info);
+    ScreenWinDisplay getPrimaryScreenWinDisplay() const {
+        MONITORINFOEX monitor_info = monitorInfoFromWindow(nullptr, MONITOR_DEFAULTTOPRIMARY);
+        ScreenWinDisplay screen_win_display = getScreenWinDisplay(monitor_info);
         Display display = screen_win_display.display();
         // The Windows primary monitor is defined to have an origin of (0, 0).
 //         DCHECK(0 == display.bounds().origin().x());
@@ -306,7 +306,7 @@ public:
         return screen_win_display;
     }
 
-    std::vector<Display> ScreenWinDisplaysToDisplays(const std::vector<ScreenWinDisplay>& screen_win_displays) const {
+    std::vector<Display> screenWinDisplaysToDisplays(const std::vector<ScreenWinDisplay>& screen_win_displays) const {
         std::vector<Display> displays;
         for (const auto& screen_win_display : screen_win_displays)
             displays.push_back(screen_win_display.display());
@@ -314,8 +314,8 @@ public:
         return displays;
     }
 
-    std::vector<Display> GetAllDisplays() const {
-        return ScreenWinDisplaysToDisplays(screen_win_displays_);
+    std::vector<Display> getAllDisplays() const {
+        return screenWinDisplaysToDisplays(screen_win_displays_);
     }
 
 private:
@@ -362,7 +362,7 @@ public:
 
     void getPrimaryDisplayApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
         //return screen_->GetPrimaryDisplay();
-        ScreenWinDisplay screenWinDisplay = m_screen.GetPrimaryScreenWinDisplay();
+        ScreenWinDisplay screenWinDisplay = m_screen.getPrimaryScreenWinDisplay();
         base::DictionaryValue* display = createDisplayDictionaryValue(screenWinDisplay.display());
 
         v8::Local<v8::Value> v8Value = gin::Converter<base::DictionaryValue>::ToV8(args.GetIsolate(), *display);
@@ -414,7 +414,7 @@ public:
     }
 
     void getAllDisplaysApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
-        std::vector<Display> display = m_screen.GetAllDisplays();
+        std::vector<Display> display = m_screen.getAllDisplays();
 
         base::ListValue displays;
        

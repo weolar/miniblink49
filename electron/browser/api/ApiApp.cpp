@@ -166,9 +166,17 @@ void App::setDesktopNameApi(const std::string& desktopName) {
     OutputDebugStringA("setDesktopNameApi\n");
 }
 
-void App::getJumpListSettingsApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
+v8::Local<v8::Value> App::getJumpListSettingsApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
     OutputDebugStringA("getJumpListSettingsApi\n");
-    return;
+    base::DictionaryValue obj;
+
+    obj.SetInteger("minItems", 1);
+
+    base::ListValue* removedItems = new base::ListValue();
+    obj.Set("removedItems", removedItems);
+
+    v8::Local<v8::Value> result = gin::Converter<base::DictionaryValue>::ToV8(args.GetIsolate(), obj);
+    return result;
 }
 
 // const base::DictionaryValue&

@@ -46,7 +46,7 @@ public:
 
     void setDesktopNameApi(const std::string& desktopName);
 
-    void getJumpListSettingsApi(const v8::FunctionCallbackInfo<v8::Value>& args);
+    v8::Local<v8::Value> getJumpListSettingsApi(const v8::FunctionCallbackInfo<v8::Value>& args);
     void setJumpListApi(const v8::FunctionCallbackInfo<v8::Value>& args);
 
     std::string getLocaleApi();

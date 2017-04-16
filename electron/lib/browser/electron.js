@@ -30,6 +30,9 @@ const Screen = require('./api/screen');
 electron.Screen = Screen;
 electron.screen = new Screen();
 ////////////////////////////////////////////////////////////////
+const dialog = require('./api/dialog').dialog;
+electron.dialog = dialog;
+////////////////////////////////////////////////////////////////
 function SystemPreferences () {}
 SystemPreferences.prototype.isDarkMode = function() { return false; }
 SystemPreferences.prototype.isSwipeTrackingFromScrollEventsEnabled = function() { return false; }
