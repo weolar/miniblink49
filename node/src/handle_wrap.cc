@@ -83,6 +83,19 @@ HandleWrap::HandleWrap(Environment* env,
 
 HandleWrap::~HandleWrap() {
   CHECK(persistent().IsEmpty());
+
+  // weolar: delete myself from env->handle_wrap_queue()
+  Environment::HandleWrapQueue handle_wrap_queue;
+  while (!env()->handle_wrap_queue()->IsEmpty()) { 
+    HandleWrap* it = env()->handle_wrap_queue()->PopFront();
+    if (it == this)
+      continue;
+    handle_wrap_queue.PushBack(it);
+  }
+  while (!handle_wrap_queue.IsEmpty()) {
+      HandleWrap* it = handle_wrap_queue.PopFront();
+      env()->handle_wrap_queue()->PushBack(it);
+  }
 }
 
 
