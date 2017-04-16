@@ -57,10 +57,13 @@ function outputObj(obj) {
 
 global.process.on('exit', function() {
 	var activeHandles = global.process._getActiveHandles();
-	
 	for (var i in activeHandles) {
 		var handle = activeHandles[i];
-		if (handle.hasOwnProperty('_handle') && handle._handle.hasOwnProperty('close'))
+		if (handle.hasOwnProperty('close') || undefined !== handle['close'])
+			handle.close();
+		else if (handle.hasOwnProperty('_handle') && (handle._handle.hasOwnProperty('close') || undefined !== handle._handle['close']))
 			handle._handle.close();
+		else
+			console.log("global.process.on exit fail:" + handle + ", " + handle._handle);
 	}
 });
