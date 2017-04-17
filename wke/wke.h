@@ -435,6 +435,18 @@ WKE_API void wkeOnLoadingFinish(wkeWebView webView, wkeLoadingFinishCallback cal
 typedef bool(*wkeDownloadCallback)(wkeWebView webView, void* param, const char *url);
 WKE_API void wkeOnDownload(wkeWebView webView, wkeDownloadCallback callback, void* param);
 
+typedef enum {
+    wkeLevelDebug = 4,
+    wkeLevelLog = 1,
+    wkeLevelInfo = 5,
+    wkeLevelWarning = 2,
+    wkeLevelError = 3,
+    wkeLevelRevokedError = 6,
+    wkeLevelLast = wkeLevelInfo
+} wkeConsoleLevel;
+typedef void(*wkeConsoleCallback)(wkeWebView webView, void* param, wkeConsoleLevel level, const wkeString message, const wkeString sourceName, unsigned sourceLine, const wkeString stackTrace);
+WKE_API void wkeOnConsole(wkeWebView webView, wkeConsoleCallback callback, void* param);
+
 //wkeNet--------------------------------------------------------------------------------------
 typedef bool(*wkeLoadUrlBeginCallback)(wkeWebView webView, void* param, const char *url, void *job);
 WKE_API void wkeOnLoadUrlBegin(wkeWebView webView, wkeLoadUrlBeginCallback callback, void* callbackParam);
@@ -456,6 +468,14 @@ WKE_API void wkeNetSetData(void *job, void *buf, int len);
 WKE_API void wkeNetHookRequest(void *job);	//调用此函数后,网络层收到数据会存储在一buf内,接收数据完成后响应OnLoadUrlEnd事件.#此调用严重影响性能,慎用
 
 WKE_API bool wkeWebFrameIsMainFrame(wkeWebFrameHandle webFrame);
+WKE_API bool wkeIsWebRemoteFrame(wkeWebFrameHandle webFrame);
+WKE_API wkeWebFrameHandle wkeWebFrameGetMainFrame(wkeWebView webView);
+
+typedef void* v8ContextPtr;
+WKE_API void wkeWebFrameGetMainWorldScriptContext(wkeWebFrameHandle frame, v8ContextPtr contextOut);
+
+typedef void* v8Isolate;
+WKE_API v8Isolate wkeGetBlinkMainThreadIsolate();
 
 //wkewindow-----------------------------------------------------------------------------------
 typedef enum {

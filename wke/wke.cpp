@@ -11,6 +11,9 @@
 #include "wkeString.h"
 #include "wkeWebView.h"
 #include "wkeWebWindow.h"
+#include "third_party/WebKit/public/web/WebKit.h"
+#include "third_party/WebKit/public/web/WebFrame.h"
+#include <v8.h>
 #include "wtf/text/WTFString.h"
 
 namespace net {
@@ -611,6 +614,10 @@ void wkeOnDownload(wkeWebView webView, wkeDownloadCallback callback, void* param
 	webView->onDownload(callback, param);
 }
 
+void wkeOnConsole(wkeWebView webView, wkeConsoleCallback callback, void* param) {
+    webView->onConsole(callback, param);
+}
+
 void wkeOnLoadUrlBegin(wkeWebView webView, wkeLoadUrlBeginCallback callback, void* callbackParam)
 {
 	webView->onLoadUrlBegin(callback, callbackParam);
@@ -636,6 +643,30 @@ bool wkeWebFrameIsMainFrame(wkeWebFrameHandle webFrame)
 {
     blink::WebFrame* frame = (blink::WebFrame*)webFrame;
     return !frame->parent();
+}
+
+bool wkeIsWebRemoteFrame(wkeWebFrameHandle webFrame)
+{
+    blink::WebFrame* frame = (blink::WebFrame*)webFrame;
+    return frame->isWebRemoteFrame();
+}
+
+wkeWebFrameHandle wkeWebFrameGetMainFrame(wkeWebView webView)
+{
+    return webView->webPage()->mainFrame();
+}
+
+void wkeWebFrameGetMainWorldScriptContext(wkeWebFrameHandle wkeFrame, v8ContextPtr contextOut)
+{
+    blink::WebFrame* frame = (blink::WebFrame*)wkeFrame;
+    v8::Local<v8::Context> result = frame->mainWorldScriptContext();
+    v8::Local<v8::Context>* contextOutPtr = (v8::Local<v8::Context>*)contextOut;
+    *contextOutPtr = result;
+}
+
+v8Isolate wkeGetBlinkMainThreadIsolate()
+{
+    return blink::mainThreadIsolate();
 }
 
 const utf8* wkeGetString(const wkeString s)
