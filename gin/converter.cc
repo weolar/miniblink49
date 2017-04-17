@@ -329,6 +329,9 @@ Local<Value> Converter<base::DictionaryValue>::ToV8(Isolate* isolate, const base
             outValue->GetAsDictionary(&dictionaryValue);
             v8Ojb->Set(v8Key, Converter<base::DictionaryValue>::ToV8(isolate, *dictionaryValue));
             break;
+        case base::Value::TYPE_NULL:
+            v8Ojb->Set(v8Key, v8::Null(isolate));
+            break;
         default:
             DebugBreak();
             v8Ojb->Set(v8Key, v8::Null(isolate));
@@ -388,6 +391,10 @@ bool Converter<base::DictionaryValue>::FromV8(Isolate* isolate, Local<Value> val
                 return false;
             }
             out->Set(keyNameStr, dictionaryOut);
+        } else if (outValue->IsUndefined()) {
+            out->Set(keyNameStr, base::Value::CreateNullValue());
+        } else if (outValue->IsNull()) {
+            out->Set(keyNameStr, base::Value::CreateNullValue());
         } else {
             DebugBreak();
             int type = v8ValueToType(outValue);
@@ -437,6 +444,9 @@ Local<Value> Converter<base::ListValue>::ToV8(Isolate* isolate, const base::List
             outValue->GetAsDictionary(&dictionaryValue);
             v8Arr->Set(i, Converter<base::DictionaryValue>::ToV8(isolate, *dictionaryValue));
             break;
+        case base::Value::TYPE_NULL:
+            v8Arr->Set(i, v8::Null(isolate));
+            break;
         default:
             DebugBreak();
             v8Arr->Set(i, v8::Null(isolate));
@@ -485,9 +495,11 @@ bool Converter<base::ListValue>::FromV8(Isolate* isolate, Local<Value> val, base
                 return false;
             }
             out->Append(dictionaryOut);
+        } else if (outValue->IsUndefined()) {
+            out->Append(base::Value::CreateNullValue());
         } else {
             DebugBreak();
-            int type = v8ValueToType(val);
+            int type = v8ValueToType(outValue);
             out->Append(base::Value::CreateNullValue());
             return false;
         }

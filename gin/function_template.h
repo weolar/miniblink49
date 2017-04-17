@@ -93,11 +93,15 @@ private:
 template<typename T>
 bool GetNextArgument(Arguments* args, int create_flags, bool is_first,
                      T* result) {
+  bool b = false;
   if (is_first && (create_flags & HolderIsFirstArgument) != 0) {
-    return args->GetHolder(result);
+    b = args->GetHolder(result);
   } else {
-    return args->GetNext(result);
+    b = args->GetNext(result);
   }
+  if (!b)
+      OutputDebugStringA("GetNextArgument failed!\n");
+  return b;
 }
 
 // For advanced use cases, we allow callers to request the unparsed Arguments
@@ -165,7 +169,7 @@ struct ArgumentHolder<1, const v8::FunctionCallbackInfo<v8::Value>&> {
     ArgumentHolder(Arguments* args, int create_flags)
         : value(*args->getInfo())
         , ok(true) {
-        
+
     }
 };
 
