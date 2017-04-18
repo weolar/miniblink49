@@ -36,6 +36,7 @@ LayerTreeHost* gLayerTreeHost = nullptr;
 LayerTreeHost::LayerTreeHost(blink::WebViewClient* webViewClient, LayerTreeHostUiThreadClient* uiThreadClient)
 {
     m_rootLayer = nullptr;
+    m_rootCCLayer = nullptr;
     m_deviceScaleFactor = 1.0f;
     m_backgroundColor = 0xff00ffff;
     m_hasTransparentBackground = false;
@@ -54,7 +55,7 @@ LayerTreeHost::LayerTreeHost(blink::WebViewClient* webViewClient, LayerTreeHostU
     m_drawingIndex = 1;
     m_actionsFrameGroup = new ActionsFrameGroup(this);
     m_isDestroying = false;
-
+    
     m_memoryCanvas = nullptr;
     m_paintToMemoryCanvasInUiThreadTaskCount = 0;
 
@@ -179,6 +180,7 @@ cc_blink::WebLayerImpl* LayerTreeHost::getLayerById(int id)
 
 CompositingLayer* LayerTreeHost::getCCLayerById(int id)
 {
+    WTF::Locker<WTF::Mutex> locker(m_compositeMutex);
     WTF::HashMap<int, CompositingLayer*>::iterator it = m_liveCCLayers.find(id);
     if (m_liveCCLayers.end() != it)
         return it->value;
@@ -481,7 +483,7 @@ void printTrans(const SkMatrix44& transform, int deep)
 
 void LayerTreeHost::drawToCanvas(SkCanvas* canvas, const IntRect& dirtyRect)
 {
-    if (!m_rootCCLayer)
+    if (!getRootCCLayer())
         return;
 
     if (dirtyRect.isEmpty())
@@ -618,9 +620,20 @@ void LayerTreeHost::setRootLayer(const blink::WebLayer& layer)
 
     requestApplyActionsToRunIntoCompositeThread(false);
 
-	m_rootCCLayer = getCCLayerById(m_rootLayer->id());
+    getRootCCLayer();
 
     setNeedsFullTreeSync();
+}
+
+CompositingLayer* LayerTreeHost::getRootCCLayer()
+{
+    if (m_rootCCLayer)
+        return m_rootCCLayer;
+    if (!m_rootLayer)
+        return nullptr;
+
+    m_rootCCLayer = getCCLayerById(m_rootLayer->id());
+    return m_rootCCLayer;
 }
 
 void LayerTreeHost::clearRootLayer()
@@ -866,6 +879,15 @@ void LayerTreeHost::drawFrameInCompositeThread()
     Vector<blink::IntRect> dirtyRects = m_dirtyRects;
     m_dirtyRects.clear();
     m_compositeMutex.unlock();
+
+    ///++++++++++++++++++
+//     LARGE_INTEGER performanceCount = { 0 };
+//     QueryPerformanceCounter(&performanceCount);
+//     static DWORD gLastCount = 0;
+//     WTF::String outstr = String::format("LayerTreeHost::drawFrameInCompositeThread:[%d]\n", performanceCount.LowPart - gLastCount);
+//     OutputDebugStringA(outstr.utf8().data());
+//     gLastCount = performanceCount.LowPart;
+    ///------------------
 
     for (size_t i = 0; i < dirtyRects.size() && !m_isDestroying; ++i) {
         const blink::IntRect& r = dirtyRects[i];

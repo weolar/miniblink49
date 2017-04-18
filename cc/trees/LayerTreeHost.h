@@ -83,6 +83,7 @@ public:
     
     // Sets the root of the tree. The root is set by way of the constructor.
     virtual void setRootLayer(const blink::WebLayer&) OVERRIDE;
+    CompositingLayer* getRootCCLayer();
     virtual void clearRootLayer() OVERRIDE;
     virtual void setViewportSize(const blink::WebSize& deviceViewportSize) OVERRIDE;
 
