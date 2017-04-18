@@ -265,7 +265,6 @@ void PopupMenuWin::updataSize()
     popup->resize(size);
     m_needsCommit = needsCommit;
 
-
 	POINT pos = { m_rect.x() + m_offset.x(), m_rect.y() + m_offset.y() };
 	::ClientToScreen(m_hParentWnd, &pos);
 
@@ -282,8 +281,9 @@ void PopupMenuWin::show(WebNavigationPolicy)
 
 void PopupMenuWin::paint(HDC hdc, RECT rcPaint)
 {
-    if (m_memoryCanvas)
-        skia::DrawToNativeContext(m_memoryCanvas, hdc, rcPaint.left, rcPaint.top, &rcPaint);
+    if (!m_memoryCanvas)
+        return;
+    skia::DrawToNativeContext(m_memoryCanvas, hdc, rcPaint.left, rcPaint.top, &rcPaint);
 }
 
 void PopupMenuWin::updataPaint()

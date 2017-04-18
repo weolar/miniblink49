@@ -66,6 +66,16 @@ void WebFrameClientImpl::didAddMessageToConsole(const WebConsoleMessage& message
 //     outstr.append(String::number(sourceLine));
 //     outstr.append(L" \n");
 //     OutputDebugStringW(outstr.charactersWithNullTermination().data());
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
+    wke::CWebViewHandler& handler = m_webPage->wkeHandler();
+    if (handler.consoleCallback) {
+        wke::CString text(message.text);
+        wke::CString sourceNameStr(sourceName);
+        wke::CString stackTraceStr(stackTrace);
+        handler.consoleCallback(m_webPage->wkeWebView(), handler.consoleCallbackParam,
+            (wkeConsoleLevel)message.level, &text, &sourceNameStr, sourceLine, &stackTraceStr);
+    }
+#endif
 }
 
 void WebFrameClientImpl::setWebPage(WebPage* webPage)
