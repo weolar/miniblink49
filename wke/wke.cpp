@@ -614,8 +614,14 @@ void wkeOnDownload(wkeWebView webView, wkeDownloadCallback callback, void* param
 	webView->onDownload(callback, param);
 }
 
-void wkeOnConsole(wkeWebView webView, wkeConsoleCallback callback, void* param) {
+void wkeOnConsole(wkeWebView webView, wkeConsoleCallback callback, void* param)
+{
     webView->onConsole(callback, param);
+}
+
+void wkeSetUIThreadCallback(wkeWebView webView, wkeCallUiThread callback, void* param)
+{
+    webView->onCallUiThread(callback, param);
 }
 
 void wkeOnLoadUrlBegin(wkeWebView webView, wkeLoadUrlBeginCallback callback, void* callbackParam)

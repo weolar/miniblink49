@@ -447,6 +447,10 @@ typedef enum {
 typedef void(*wkeConsoleCallback)(wkeWebView webView, void* param, wkeConsoleLevel level, const wkeString message, const wkeString sourceName, unsigned sourceLine, const wkeString stackTrace);
 WKE_API void wkeOnConsole(wkeWebView webView, wkeConsoleCallback callback, void* param);
 
+typedef void(*wkeOnCallUiThread)(wkeWebView webView, void* paramOnInThread);
+typedef void(*wkeCallUiThread)(wkeWebView webView, wkeOnCallUiThread func, void* param);
+WKE_API void wkeSetUIThreadCallback(wkeWebView webView, wkeCallUiThread callback, void* param);
+
 //wkeNet--------------------------------------------------------------------------------------
 typedef bool(*wkeLoadUrlBeginCallback)(wkeWebView webView, void* param, const char *url, void *job);
 WKE_API void wkeOnLoadUrlBegin(wkeWebView webView, wkeLoadUrlBeginCallback callback, void* callbackParam);

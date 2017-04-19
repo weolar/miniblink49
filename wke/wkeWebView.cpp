@@ -961,6 +961,12 @@ void CWebView::onConsole(wkeConsoleCallback callback, void* callbackParam)
     m_webPage->wkeHandler().consoleCallbackParam = callbackParam;
 }
 
+void CWebView::onCallUiThread(wkeCallUiThread callback, void* callbackParam)
+{
+    m_webPage->wkeHandler().callUiThreadCallback = callback;
+    m_webPage->wkeHandler().callUiThreadCallbackParam = callbackParam;
+}
+
 void CWebView::onDocumentReady(wkeDocumentReadyCallback callback, void* callbackParam)
 {
     m_webPage->wkeHandler().documentReadyCallback = callback;
