@@ -68,9 +68,6 @@
     <ClCompile Include="..\..\base\algorithmvc6.cpp">
       <Filter>base</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\electron\Electron.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\electron\browser\api\ApiWebContents.cpp">
       <Filter>src\browser\api</Filter>
     </ClCompile>
@@ -229,6 +226,18 @@
     </ClCompile>
     <ClCompile Include="..\..\electron\common\api\ApiScreen.cpp">
       <Filter>src\common\api</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\electron\renderer\api\ApiWebFrame.cpp">
+      <Filter>src\renerer\api</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\electron\Electron.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\electron\common\api\ApiIntlCollator.cpp">
+      <Filter>src\common\api</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\electron\browser\api\ApiDialag.cpp">
+      <Filter>src\browser\api</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

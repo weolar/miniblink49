@@ -47,11 +47,13 @@
     <ClCompile Include="..\..\cef\libcef_dll\base\cef_thread_collision_warner.cc" />
     <ClCompile Include="..\..\cef\libcef_dll\base\cef_weak_ptr.cc" />
     <ClCompile Include="..\..\electron\browser\api\ApiApp.cpp" />
+    <ClCompile Include="..\..\electron\browser\api\ApiDialag.cpp" />
     <ClCompile Include="..\..\electron\browser\api\ApiElectron.cpp" />
     <ClCompile Include="..\..\electron\browser\api\ApiMenu.cpp" />
     <ClCompile Include="..\..\electron\browser\api\ApiWebContents.cpp" />
     <ClCompile Include="..\..\electron\browser\api\ApiWindow.cpp" />
     <ClCompile Include="..\..\electron\browser\api\WindowList.cpp" />
+    <ClCompile Include="..\..\electron\common\api\ApiIntlCollator.cpp" />
     <ClCompile Include="..\..\electron\common\api\ApiOriginalFs.cpp" />
     <ClCompile Include="..\..\electron\common\api\ApiScreen.cpp" />
     <ClCompile Include="..\..\electron\common\api\ApiShell.cpp" />
@@ -71,6 +73,7 @@
     <ClCompile Include="..\..\electron\common\ThreadCall.cpp" />
     <ClCompile Include="..\..\electron\Electron.cpp" />
     <ClCompile Include="..\..\electron\renderer\api\ApiRendererIpc.cpp" />
+    <ClCompile Include="..\..\electron\renderer\api\ApiWebFrame.cpp" />
     <ClCompile Include="..\..\gin\arguments.cc" />
     <ClCompile Include="..\..\gin\converter.cc" />
     <ClCompile Include="..\..\gin\dictionary.cc" />
@@ -241,7 +244,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
-      <AdditionalDependencies>imm32.lib;miniblink.lib;shlwapi.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>imm32.lib;node.lib;shlwapi.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)..\out\$(Configuration)\</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -271,7 +274,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>$(SolutionDir)..\out\$(Configuration)\</AdditionalLibraryDirectories>
       <AdditionalDependencies>imm32.lib;miniblink.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalDependencies>imm32.lib;miniblink.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;version.lib;Crypt32.lib;Advapi32.lib;wldap32.lib;Imm32.lib;winmm.lib;Ws2_32.lib;Usp10.lib;Shlwapi.lib;wininet.lib;GDIPlus.lib</AdditionalDependencies>
+      <AdditionalDependencies>imm32.lib;node.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;version.lib;Crypt32.lib;Advapi32.lib;wldap32.lib;Imm32.lib;winmm.lib;Ws2_32.lib;Usp10.lib;Shlwapi.lib;wininet.lib;GDIPlus.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)..\out\$(Configuration)\</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>LIBCMT.lib</IgnoreSpecificDefaultLibraries>
       <EntryPointSymbol>main</EntryPointSymbol>
@@ -314,7 +317,7 @@
       <AdditionalLibraryDirectories>$(SolutionDir)..\out\$(Configuration)\</AdditionalLibraryDirectories>
       <AdditionalDependencies>imm32.lib;miniblink.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)..\out\$(Configuration)\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>imm32.lib;miniblink.lib;shlwapi.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>imm32.lib;node.lib;shlwapi.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
