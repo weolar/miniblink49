@@ -107,27 +107,15 @@
     <ClCompile Include="..\..\third_party\zlib\trees.c">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\third_party\zlib\unzip.c">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\third_party\zlib\zlib.gyp">
-      <Filter>src</Filter>
-    </None>
-    <None Include="..\..\third_party\zlib\BUILD.gn">
-      <Filter>src</Filter>
-    </None>
     <None Include="..\..\third_party\zlib\google.patch">
       <Filter>src</Filter>
     </None>
-    <None Include="..\..\third_party\zlib\LICENSE">
-      <Filter>src</Filter>
-    </None>
     <None Include="..\..\third_party\zlib\mixed-source.patch">
-      <Filter>src</Filter>
-    </None>
-    <None Include="..\..\third_party\zlib\OWNERS">
-      <Filter>src</Filter>
-    </None>
-    <None Include="..\..\third_party\zlib\README.chromium">
       <Filter>src</Filter>
     </None>
   </ItemGroup>

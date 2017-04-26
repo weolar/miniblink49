@@ -14,16 +14,7 @@
 #error <atomic> is not supported when compiling with /clr:pure.
 #endif /* _M_CEE_PURE */
 
-//#include <type_traits>
-#define _NOEXCEPT
-#define _CONST_FUN
-
-// yvals.h
-#define _C_LIB_DECL		extern "C" {	/* C has extern "C" linkage */
-#define _END_C_LIB_DECL	}
-#define _EXTERN_C			extern "C" {
-#define _END_EXTERN_C		}
-#define _CRTIMP2_PURE
+#include <type_traits>
 
 #include <stddef.h>
 #include <stdint.h>

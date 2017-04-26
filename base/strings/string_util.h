@@ -51,7 +51,7 @@ template <class str> inline str StringToLowerASCII(const str& s) {
 template<class STR>
 inline bool DoIsStringASCII(const STR& str) {
     for (size_t i = 0; i < str.length(); i++) {
-        unsigned char c = str[i];
+        unsigned short c = str[i];
         if (c > 0x7F)
             return false;
     }
@@ -70,6 +70,13 @@ inline char ToUpperASCII(char c) {
     return (c >= 'a' && c <= 'z') ? (c + ('A' - 'a')) : c;
 }
 
+template<typename Char> struct CaseInsensitiveCompareASCII {
+public:
+    bool operator()(Char x, Char y) const {
+        return ToLowerASCII(x) == ToLowerASCII(y);
+    }
+};
+
 std::string ToLowerASCII(const std::string& str);
 
 std::string ToUpperASCII(const std::string& str);
@@ -85,6 +92,9 @@ std::wstring UTF8ToWide(const std::string& src);
 std::wstring ASCIIToWide(const std::string& ascii);
 
 std::string UTF16ToASCII(const string16& utf16);
+std::string WideToUTF8(const string16& utf16);
+std::string UTF16ToUTF8(const string16& utf16);
 
 }
+
 #endif // BASE_STRINGS_STRING_UTIL_H_

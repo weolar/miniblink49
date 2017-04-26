@@ -21,7 +21,7 @@ template <class str> inline str StringToLowerASCII(const str& s) {
 template<class STR>
 inline bool DoIsStringASCII(const STR& str) {
     for (size_t i = 0; i < str.length(); i++) {
-        unsigned char c = str[i];
+        unsigned short c = str[i];
         if (c > 0x7F)
             return false;
     }

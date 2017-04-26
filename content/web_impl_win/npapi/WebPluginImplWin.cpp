@@ -64,8 +64,8 @@ typedef HDC (WINAPI *PtrBeginPaint)(HWND, PAINTSTRUCT*);
 typedef BOOL (WINAPI *PtrEndPaint)(HWND, const PAINTSTRUCT*);
 
 #if CPU(X86_64)
-extern "C" HDC __stdcall _HBeginPaint(HWND hWnd, LPPAINTSTRUCT lpPaint);
-extern "C" BOOL __stdcall _HEndPaint(HWND hWnd, const PAINTSTRUCT* lpPaint);
+//extern "C" HDC __stdcall _HBeginPaint(HWND hWnd, LPPAINTSTRUCT lpPaint);
+//extern "C" BOOL __stdcall _HEndPaint(HWND hWnd, const PAINTSTRUCT* lpPaint);
 #endif
 
 HDC WINAPI WebPluginImpl::hookedBeginPaint(HWND hWnd, PAINTSTRUCT* lpPaint)
@@ -87,7 +87,7 @@ HDC WINAPI WebPluginImpl::hookedBeginPaint(HWND hWnd, PAINTSTRUCT* lpPaint)
     __asm   push    hWnd
     __asm   call    beginPaint
 #else
-    return _HBeginPaint(hWnd, lpPaint);
+    return BeginPaint(hWnd, lpPaint);
 #endif
 }
 
@@ -107,7 +107,7 @@ BOOL WINAPI WebPluginImpl::hookedEndPaint(HWND hWnd, const PAINTSTRUCT* lpPaint)
     __asm   push    hWnd
     __asm   call    endPaint
 #else
-    return _HEndPaint(hWnd, lpPaint);
+    return EndPaint(hWnd, lpPaint);
 #endif
 }
 
@@ -350,7 +350,7 @@ void WebPluginImpl::updatePluginWidget(const IntRect& windowRect, const IntRect&
         }
 
         if (!m_haveUpdatedPluginWidget || m_windowRect != oldWindowRect)
-            ::MoveWindow(platformPluginWidget(), m_windowRect.x(), m_windowRect.y(), m_windowRect.width(), m_windowRect.height(), TRUE);
+            ::MoveWindow(platformPluginWidget(), m_windowRect.x() + m_widgetOffset.x(), m_windowRect.y() + m_widgetOffset.y(), m_windowRect.width(), m_windowRect.height(), TRUE);
 
         if (clipToZeroRect) {
             HRGN rgn = (::CreateRectRgn(m_clipRect.x(), m_clipRect.y(), m_clipRect.maxX(), m_clipRect.maxY()));
@@ -785,7 +785,6 @@ bool WebPluginImpl::platformGetValue(NPNVariable variable, void* value, NPError*
     switch (variable) {
         case NPNVnetscapeWindow: {
             HWND* w = reinterpret_cast<HWND*>(value);
-            //*w = windowHandleForPageClient(parent() ? parent()->hostWindow()->platformPageClient() : 0);
             *w = windowHandleForPageClient(platformPluginWidget());
             *result = NPERR_NO_ERROR;
             return true;
@@ -865,13 +864,11 @@ void WebPluginImpl::forceRedraw()
 //         ::UpdateWindow(windowHandleForPageClient(parent() ? parent()->hostWindow()->platformPageClient() : 0));
 }
 
-bool WebPluginImpl::platformStart()
+void WebPluginImpl::platformStartAsyn(blink::Timer<WebPluginImpl>*)
 {
-    ASSERT(m_isStarted);
-    ASSERT(m_status == PluginStatusLoadedSuccessfully);
     WebPluginContainerImpl* container = (WebPluginContainerImpl*)m_pluginContainer;
     if (!container)
-        return false;
+        return;
 
     if (m_isWindowed) {
         registerPluginView();
@@ -883,7 +880,7 @@ bool WebPluginImpl::platformStart()
 
         HWND parentWindowHandle = m_parentWidget;
         HWND window = ::CreateWindowEx(0, kWebPluginViewClassName, 0, flags,
-                                       0, 0, 0, 0, parentWindowHandle, 0, /*WebCore::instanceHandle()*/nullptr, 0);
+            0, 0, 0, 0, parentWindowHandle, 0, /*WebCore::instanceHandle()*/nullptr, 0);
 
         setPlatformWidget(window);
 
@@ -898,7 +895,8 @@ bool WebPluginImpl::platformStart()
 
         m_npWindow.type = NPWindowTypeWindow;
         m_npWindow.window = platformPluginWidget();
-    } else {
+    }
+    else {
         m_npWindow.type = NPWindowTypeDrawable;
         m_npWindow.window = 0;
     }
@@ -907,6 +905,17 @@ bool WebPluginImpl::platformStart()
 
     if (!m_plugin->quirks().contains(PluginQuirkDeferFirstSetWindowCall))
         setNPWindowRect(container->frameRect());
+}
+
+bool WebPluginImpl::platformStart()
+{
+    ASSERT(m_isStarted);
+    ASSERT(m_status == PluginStatusLoadedSuccessfully);
+    WebPluginContainerImpl* container = (WebPluginContainerImpl*)m_pluginContainer;
+    if (!container)
+        return false;
+
+    m_asynStartTimer.startOneShot(0, FROM_HERE);
 
     return true;
 }
@@ -922,6 +931,7 @@ void WebPluginImpl::platformDestroy()
         return;
 
     blink::Platform::current()->currentThread()->postTask(FROM_HERE, WTF::bind(platformDestroyWindow, platformPluginWidget()));
+    SetWindowLongPtr(platformPluginWidget(), GWLP_WNDPROC, 0);
     setPlatformPluginWidget(0);
 }
 

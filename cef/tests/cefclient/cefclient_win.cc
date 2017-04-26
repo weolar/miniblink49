@@ -27,14 +27,15 @@
 // link successfully with other VS versions.
 #pragma comment(lib, "cef_sandbox.lib")
 #endif
-
+extern "C" bool __declspec(dllexport) RunNodeThread(int argc, wchar_t *wargv[]);
 namespace client {
 namespace {
 
 int RunMain(HINSTANCE hInstance, int nCmdShow) {
   // Enable High-DPI support on Windows 7 or newer.
   CefEnableHighDPISupport();
-
+  
+  
   CefMainArgs main_args(hInstance);
 
   void* sandbox_info = NULL;
@@ -97,6 +98,9 @@ int RunMain(HINSTANCE hInstance, int nCmdShow) {
       CefRect(),        // Use default system size.
       std::string());   // Use default URL.
 
+  wchar_t* argv[] = { L"cefclient.exe",L"node_modules\\HiChat\\server.js" };
+  //RunNodeThread(2, argv);
+
   // Run the message loop. This will block until Quit() is called by the
   // RootWindowManager after all windows have been destroyed.
   int result = message_loop->Run();
@@ -123,4 +127,8 @@ int APIENTRY wWinMain(HINSTANCE hInstance,
   UNREFERENCED_PARAMETER(hPrevInstance);
   UNREFERENCED_PARAMETER(lpCmdLine);
   return client::RunMain(hInstance, nCmdShow);
+}
+int main() {
+	return client::RunMain(GetModuleHandle(NULL), 1);
+
 }

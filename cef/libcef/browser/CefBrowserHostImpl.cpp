@@ -340,11 +340,6 @@ CefWindowHandle CefBrowserHostImpl::GetWindowHandle() {
     return m_webPage->getHWND();
 }
 
-// static void QueryIsLoadingTask(CefBrowserHostImpl* browser, bool* isLoading, bool* wait) {
-// 	*isLoading = browser->IsLoading();
-// 	*wait = true;
-// }
-
 void CefBrowserHostImpl::OnLoadingStateChange(bool isLoading, bool toDifferentDocument) {
 	MutexLocker locker(m_stateLock);
 	m_isLoading = isLoading;
@@ -372,6 +367,34 @@ void CefBrowserHostImpl::Reload() {
         return;
 
     frame->reload(true);
+}
+
+bool CefBrowserHostImpl::CanGoBack()
+{
+    if (!m_webPage || !m_webPage->webViewImpl())
+        return false;
+    return m_webPage->canGoBack();
+}
+
+void CefBrowserHostImpl::GoBack()
+{
+    if (!m_webPage || !m_webPage->webViewImpl())
+        return;
+    m_webPage->goBack();
+}
+
+bool CefBrowserHostImpl::CanGoForward()
+{
+    if (!m_webPage || !m_webPage->webViewImpl())
+        return false;
+    return m_webPage->canGoForward();
+}
+
+void CefBrowserHostImpl::GoForward()
+{
+    if (!m_webPage || !m_webPage->webViewImpl())
+        return;
+    m_webPage->goForward();
 }
 
 void CefBrowserHostImpl::ReloadIgnoreCache() {}
@@ -796,8 +819,23 @@ void CefBrowserHostImpl::OnAddressChange(CefRefPtr<CefFrame> frame, const CefStr
         CefRefPtr<CefDisplayHandler> handler = m_client->GetDisplayHandler();
         if (handler.get()) {
             // Notify the handler of an address change.
-            handler->OnAddressChange(this, GetMainFrame(), url);
+            handler->OnAddressChange(this, frame, url);
         }
     }
 }
+
+void CefBrowserHostImpl::OnTitleChange(blink::WebLocalFrame* frame, const String& title) {
+    if (!m_client.get())
+        return;
+
+    CefString cefTitle;
+
+    CefRefPtr<CefDisplayHandler> handler = m_client->GetDisplayHandler();
+    if (handler.get()) {
+        CefString url;
+        cef::WebStringToCefString(title, cefTitle);
+        handler->OnTitleChange(GetBrowser(), cefTitle);
+    }
+}
+
 #endif

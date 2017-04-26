@@ -200,15 +200,19 @@ void CefBrowserHostImpl::SendFocusEvent(bool setFocus) {
     if (!setFocus)
         CancelContextMenu();
 
-    m_webPage->webViewImpl()->setFocus(setFocus);
-    m_webPage->webViewImpl()->setIsActive(setFocus);
+    //m_webPage->webViewImpl()->setFocus(setFocus);
+    //m_webPage->webViewImpl()->setIsActive(setFocus);
+    m_webPage->fireSetFocusEvent(m_webPage->getHWND(), WM_SETFOCUS, 0, 0);
 }
 
 void CefBrowserHostImpl::PlatformSetFocus(bool focus) {
     if (m_webPage && m_webPage->webViewImpl()) {
         // Give logical focus to the RenderWidgetHostViewAura in the views
         // hierarchy. This does not change the native keyboard focus.
-        m_webPage->webViewImpl()->setFocus(focus);
+        if (focus)
+            m_webPage->fireSetFocusEvent(m_webPage->getHWND(), WM_SETFOCUS, 0, 0);
+        else
+            m_webPage->fireKillFocusEvent(m_webPage->getHWND(), WM_KILLFOCUS, 0, 0);
     }
 
     if (!focus)

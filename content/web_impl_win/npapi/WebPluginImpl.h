@@ -301,8 +301,10 @@ private:
     void scheduleRequest(PassOwnPtr<PluginRequest>);
     void requestTimerFired(blink::Timer<WebPluginImpl>*);
     void invalidateTimerFired(blink::Timer<WebPluginImpl>*);
+    void platformStartAsyn(blink::Timer<WebPluginImpl>*);
     blink::Timer<WebPluginImpl> m_requestTimer;
     blink::Timer<WebPluginImpl> m_invalidateTimer;
+    blink::Timer<WebPluginImpl> m_asynStartTimer;
 
     void asynSetPlatformPluginWidgetVisibilityTimerFired(blink::Timer<WebPluginImpl>*);
     blink::Timer<WebPluginImpl> m_setPlatformPluginWidgetVisibilityTimer;
@@ -371,6 +373,10 @@ public:
         }
     }
 
+    void setHwndRenderOffset(const blink::IntPoint& offset)
+    {
+        m_widgetOffset = offset;
+    }
 
 private:
     blink::IntRect m_clipRect; // The clip rect to apply to a windowed plug-in
@@ -385,6 +391,7 @@ private:
 
     PlatformWidget m_widget;
     PlatformWidget m_parentWidget;
+    blink::IntPoint m_widgetOffset;
 
     static WebPluginImpl* s_currentPluginView;
 };

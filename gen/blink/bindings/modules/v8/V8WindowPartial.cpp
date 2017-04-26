@@ -243,6 +243,8 @@ static bool DOMWindowCreateDataProperty(v8::Local<v8::Name> name, v8::Local<v8::
 
 static void DOMWindowConstructorAttributeSetterCallback(v8::Local<v8::Name>, v8::Local<v8::Value> v8Value, const v8::PropertyCallbackInfo<void>& info)
 {
+    return;
+
     TRACE_EVENT_SET_SAMPLING_STATE("blink", "DOMSetter");
     do {
         v8::Local<v8::Value> data = info.Data();

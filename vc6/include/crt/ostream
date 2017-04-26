@@ -451,6 +451,9 @@ extern template _CRTIMP basic_ostream<wchar_t, char_traits<wchar_t> >& __cdecl o
 extern template _CRTIMP basic_ostream<wchar_t, char_traits<wchar_t> >& __cdecl operator<<(
        basic_ostream<wchar_t, char_traits<wchar_t> >&, const signed short *);
 
+basic_ostream<char, char_traits<char> > & __cdecl operator<< (basic_ostream<char, char_traits<char> > & a, __int64 b);
+basic_ostream<char, char_traits<char> > & __cdecl operator << (basic_ostream<char, char_traits<char> >& a, unsigned __int64 b);
+
 #pragma warning(default:4231) /* restore previous warning */
 #endif		// _DLL
 

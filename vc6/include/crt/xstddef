@@ -5,6 +5,7 @@
  #include <yvals.h>
 #endif
 #include <cstddef>
+#include <xtr1common>
 
 /* Define _CRTIMP */
 #ifndef _CRTIMP
@@ -14,6 +15,106 @@
 #define _CRTIMP
 #endif	/* _DLL */
 #endif	/* _CRTIMP */
+
+// MISCELLANEOUS MACROS
+#define _EMPTY_ARGUMENT		/* for empty macro argument */
+
+#define _IOS_BITMASK(Enum, Ty)	typedef int Ty
+#define _IOS_BITMASK_OPS(Ty)
+
+#define _EMIT_CDECL(FUNC, CV_OPT, REF_OPT) \
+	FUNC(__cdecl, CV_OPT, REF_OPT)
+
+#ifdef _M_CEE
+#define _EMIT_CLRCALL(FUNC, CV_OPT, REF_OPT) \
+	FUNC(__clrcall, CV_OPT, REF_OPT)
+
+#else /* _M_CEE */
+#define _EMIT_CLRCALL(FUNC, CV_OPT, REF_OPT)
+#endif /* _M_CEE */
+
+#if defined(_M_IX86) && !defined(_M_CEE)
+#define _EMIT_FASTCALL(FUNC, CV_OPT, REF_OPT) \
+	FUNC(__fastcall, CV_OPT, REF_OPT)
+
+#else /* defined(_M_IX86) && !defined(_M_CEE) */
+#define _EMIT_FASTCALL(FUNC, CV_OPT, REF_OPT)
+#endif /* defined(_M_IX86) && !defined(_M_CEE) */
+
+#ifdef _M_IX86
+#define _EMIT_STDCALL(FUNC, CV_OPT, REF_OPT) \
+	FUNC(__stdcall, CV_OPT, REF_OPT)
+#define _EMIT_THISCALL(FUNC, CV_OPT, REF_OPT) \
+	FUNC(__thiscall, CV_OPT, REF_OPT)
+
+#else /* _M_IX86 */
+#define _EMIT_STDCALL(FUNC, CV_OPT, REF_OPT)
+#define _EMIT_THISCALL(FUNC, CV_OPT, REF_OPT)
+#endif /* _M_IX86 */
+
+#if ((defined(_M_IX86) && _M_IX86_FP >= 2) \
+	|| defined(_M_X64)) && !defined(_M_CEE)
+#define _EMIT_VECTORCALL(FUNC, CV_OPT, REF_OPT) \
+	FUNC(__vectorcall, CV_OPT, REF_OPT)
+
+#else /* defined(_M_IX86) && _M_IX86_FP >= 2 etc. */
+#define _EMIT_VECTORCALL(FUNC, CV_OPT, REF_OPT)
+#endif /* defined(_M_IX86) && _M_IX86_FP >= 2 etc. */
+
+#define _ADAPT_NON_MEMBER(CALL_OPT, FUNC, X1) \
+	FUNC(CALL_OPT)
+
+#define _NON_MEMBER_CALL(FUNC) \
+	_EMIT_CDECL(_ADAPT_NON_MEMBER, FUNC, ) \
+	_EMIT_CLRCALL(_ADAPT_NON_MEMBER, FUNC, ) \
+	_EMIT_FASTCALL(_ADAPT_NON_MEMBER, FUNC, ) \
+	_EMIT_STDCALL(_ADAPT_NON_MEMBER, FUNC, ) \
+	_EMIT_VECTORCALL(_ADAPT_NON_MEMBER, FUNC, )
+
+#define _MEMBER_CALL(FUNC, CV_OPT, REF_OPT) \
+	_EMIT_CDECL(FUNC, CV_OPT, REF_OPT) \
+	_EMIT_CLRCALL(FUNC, CV_OPT, REF_OPT) \
+	_EMIT_FASTCALL(FUNC, CV_OPT, REF_OPT) \
+	_EMIT_STDCALL(FUNC, CV_OPT, REF_OPT) \
+	_EMIT_THISCALL(FUNC, CV_OPT, REF_OPT) \
+	_EMIT_VECTORCALL(FUNC, CV_OPT, REF_OPT)
+
+#define _MEMBER_CALL_CV(FUNC, REF_OPT) \
+	_MEMBER_CALL(FUNC, , REF_OPT) \
+	_MEMBER_CALL(FUNC, const, REF_OPT) \
+	_MEMBER_CALL(FUNC, volatile, REF_OPT) \
+	_MEMBER_CALL(FUNC, const volatile, REF_OPT)
+
+#define _MEMBER_CALL_CV_REF(FUNC) \
+	_MEMBER_CALL_CV(FUNC, ) \
+	_MEMBER_CALL_CV(FUNC, &) \
+	_MEMBER_CALL_CV(FUNC, &&)
+
+#define _CLASS_DEFINE_CONST(CLASS) \
+	CLASS(_EMPTY_ARGUMENT) \
+	CLASS(const)
+
+#define _CLASS_DEFINE_CV(CLASS) \
+	CLASS(_EMPTY_ARGUMENT) \
+	CLASS(const) \
+	CLASS(volatile) \
+	CLASS(const volatile)
+
+#define _CLASS_DEFINE_CV_REF(CLASS) \
+	CLASS( , ) \
+	CLASS(const, ) \
+	CLASS(volatile, ) \
+	CLASS(const volatile, ) \
+	CLASS( , &) \
+	CLASS(const, &) \
+	CLASS(volatile, &) \
+	CLASS(const volatile, &) \
+	CLASS( , &&) \
+	CLASS(const, &&) \
+	CLASS(volatile, &&) \
+	CLASS(const volatile, &&)
+
+#define _COMMA	,	/* for immediate commas in macro parameters */
 
 #ifdef  _MSC_VER
 #pragma pack(push,8)
@@ -45,6 +146,106 @@ _STD_BEGIN
 enum _Uninitialized {_Noinit};
 		// FUNCTIONS
 _CRTIMP void __cdecl _Nomemory();
+
+
+// TEMPLATE CLASS _Arg_types
+template<class... _Types>
+struct _Arg_types
+{	// provide argument_type, etc. (sometimes)
+};
+
+template<class _Ty1>
+struct _Arg_types<_Ty1>
+{	// provide argument_type, etc. (sometimes)
+    typedef _Ty1 argument_type;
+};
+
+template<class _Ty1,
+class _Ty2>
+struct _Arg_types<_Ty1, _Ty2>
+{	// provide argument_type, etc. (sometimes)
+    typedef _Ty1 first_argument_type;
+    typedef _Ty2 second_argument_type;
+};
+
+// TEMPLATE CLASS is_function
+template<class _Ty>
+struct _Is_function
+{	// determine whether _Ty is a function
+    typedef false_type _Bool_type;
+};
+
+#define _IS_FUNCTION(CALL_OPT) \
+template<class _Ret, \
+	class... _Types> \
+	struct _Is_function<_Ret CALL_OPT (_Types...)> \
+		: _Arg_types<_Types...> \
+	{	/* determine whether _Ty is a function */ \
+	typedef true_type _Bool_type; \
+	typedef _Ret result_type; \
+	};
+
+_NON_MEMBER_CALL(_IS_FUNCTION)
+#undef _IS_FUNCTION
+
+template<class _Ret,
+class... _Types>
+struct _Is_function<_Ret(_Types..., ...)>
+{	// no calling conventions for ellipsis
+    typedef true_type _Bool_type;
+    typedef _Ret result_type;
+};
+
+template<class _Ty>
+struct is_function
+    : _Is_function<_Ty>::_Bool_type
+{	// determine whether _Ty is a function
+};
+
+// TEMPLATE FUNCTION addressof
+template<class _Ty> inline
+_Ty *_Addressof(_Ty& _Val, true_type) _NOEXCEPT
+{	// return address of function _Val
+    return (_Val);
+}
+
+template<class _Ty> inline
+_Ty *_Addressof(_Ty& _Val, false_type) _NOEXCEPT
+{	// return address of object _Val
+    return (reinterpret_cast<_Ty *>(
+        &const_cast<char&>(
+            reinterpret_cast<const volatile char&>(_Val))));
+}
+
+template<class _Ty> inline
+_Ty *addressof(_Ty& _Val) _NOEXCEPT
+{	// return address of _Val
+    return (_Addressof(_Val, is_function<_Ty>()));
+}
+
+// TYPE DEFINITIONS
+
+template<bool,
+class _Ty1,
+class _Ty2>
+struct _If
+{	// type is _Ty2 for assumed false
+    typedef _Ty2 type;
+};
+
+template<class _Ty1,
+class _Ty2>
+struct _If<true, _Ty1, _Ty2>
+{	// type is _Ty1 for assumed true
+    typedef _Ty1 type;
+};
+
+template<class _Ty>
+struct _Always_false
+{	// false value that probably won't be optimized away
+    static const bool value = false;
+};
+
 _STD_END
 #ifdef  _MSC_VER
 #pragma pack(pop)

@@ -223,6 +223,7 @@ public:
 
         canvas->save();
         canvas->scale(1, 1);
+        //canvas->clipRect(SkRect::MakeIWH(m_dirtyRect.width(), m_dirtyRect.height()));
         canvas->translate(-m_dirtyRect.x(), -m_dirtyRect.y());
         canvas->drawPicture(m_picture, nullptr, &paint);
         canvas->restore();

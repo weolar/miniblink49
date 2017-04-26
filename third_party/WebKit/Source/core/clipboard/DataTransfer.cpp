@@ -33,7 +33,7 @@
 #include "core/dom/Range.h"
 #include "core/editing/markup.h"
 #include "core/fetch/ImageResource.h"
-//#include "core/fileapi/FileList.h"
+#include "core/fileapi/FileList.h"
 #include "core/frame/LocalFrame.h"
 #include "core/html/HTMLImageElement.h"
 #include "core/layout/LayoutImage.h"
@@ -195,7 +195,6 @@ Vector<String> DataTransfer::types() const
 
 FileList* DataTransfer::files() const
 {
-#ifdef MINIBLINK_NOT_IMPLEMENTED
     FileList* files = FileList::create();
     if (!canReadData())
         return files;
@@ -209,9 +208,6 @@ FileList* DataTransfer::files() const
     }
 
     return files;
-#endif // MINIBLINK_NOT_IMPLEMENTED
-	notImplemented();
-	return nullptr;
 }
 
 void DataTransfer::setDragImage(Element* image, int x, int y, ExceptionState& exceptionState)

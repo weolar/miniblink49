@@ -95,7 +95,7 @@ private:
 	CRITICAL_SECTION m_browserListMutex;
     BrowserList m_browserList;
 
-    bool m_needHeartbeat;
+    int m_needHeartbeat;
 
 	HANDLE m_webkitThreadHandle;
 

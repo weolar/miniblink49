@@ -14,8 +14,8 @@
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
 #include "wke/wkeWebView.h"
 #endif
-#include "WebPage.h"
-#include "WebPageImpl.h"
+#include "content/browser/WebPage.h"
+#include "content/browser/WebPageImpl.h"
 
 extern WCHAR szTitle[];
 extern WCHAR szWindowClass[];
@@ -24,13 +24,33 @@ using namespace blink;
 
 namespace content {
 
+WTF::HashSet<WebPage*>* WebPage::m_webPageSet = nullptr;
+
 void WebPage::initBlink()
 {
+    m_webPageSet = nullptr;
     WebPageImpl::initBlink();
+}
+
+void WebPage::shutdown()
+{
+    if (!m_webPageSet)
+        return;
+
+    WTF::HashSet<WebPage*> webPageSet = *m_webPageSet;
+    for (WTF::HashSet<WebPage*>::iterator it = webPageSet.begin(); it != webPageSet.end(); ++it) {
+        (*it)->close();
+        delete *it;
+    }
+    delete m_webPageSet;
 }
 
 WebPage::WebPage(void* foreignPtr)
 {
+    if (!m_webPageSet)
+        m_webPageSet = new WTF::HashSet<WebPage*>();
+    m_webPageSet->add(this);
+
     m_pageImpl = nullptr;
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
     m_wkeWebView = nullptr;
@@ -50,6 +70,8 @@ WebPage::~WebPage()
         delete m_pageImpl;
         m_pageImpl = 0;
     }
+    
+    m_webPageSet->remove(this);
 }
 
 bool WebPage::init(HWND hWnd)
@@ -89,19 +111,28 @@ void WebPage::setNeedsCommit()
         m_pageImpl->setNeedsCommit();
 }
 
-bool WebPage::needsCommit()
+bool WebPage::needsCommit() const
 {
     if (m_pageImpl)
         return m_pageImpl->needsCommit();
     return false;
 }
 
+bool WebPage::isDrawDirty() const
+{
+    if (m_pageImpl)
+        return m_pageImpl->isDrawDirty();
+    return false;
+}
+
 void WebPage::close()
 {
+    if (!m_pageImpl)
+        return;
     m_pageImpl->close();
 
     delete m_pageImpl;
-    m_pageImpl = 0;
+    m_pageImpl = nullptr;
 }
 
 HDC WebPage::viewDC()
@@ -149,6 +180,12 @@ void WebPage::fireCaptureChangedEvent(HWND hWnd, UINT message, WPARAM wParam, LP
 {
     if (m_pageImpl)
         m_pageImpl->fireCaptureChangedEvent(hWnd, message, wParam, lParam);
+}
+
+void WebPage::fireSetFocusEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+    if (m_pageImpl)
+        m_pageImpl->fireSetFocusEvent(hWnd, message, wParam, lParam);
 }
 
 void WebPage::fireKillFocusEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -201,6 +238,13 @@ LRESULT WebPage::fireWheelEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
     return 0;
 }
 
+int WebPage::getCursorInfoType() const
+{
+    if (m_pageImpl)
+        return m_pageImpl->getCursorInfoType();
+    return -1;
+}
+
 IntSize WebPage::viewportSize() const
 { 
     if (m_pageImpl)
@@ -221,19 +265,18 @@ void WebPage::setHWND(HWND hwnd)
 		m_pageImpl->m_hWnd = hwnd;
 }
 
-void WebPage::setHWNDoffset(int x, int y)
+void WebPage::setHwndRenderOffset(const blink::IntPoint& offset)
 {
-	if (m_pageImpl) {
-		m_pageImpl->m_hWndoffset.setX(x);
-		m_pageImpl->m_hWndoffset.setY(y);
-	}
+	if (m_pageImpl)
+		m_pageImpl->m_hwndRenderOffset = offset;
 }
-// Page* WebPage::page() const 
-// {
-//     if (m_pageImpl)
-//         return m_pageImpl->m_page;
-//     return nullptr;
-// }
+
+blink::IntPoint WebPage::getHwndRenderOffset() const
+{
+    if (m_pageImpl)
+        return m_pageImpl->m_hwndRenderOffset;
+    return blink::IntPoint();
+}
 
 #if 1
 
@@ -314,6 +357,7 @@ void WebPage::setBackgroundColor(COLORREF c) {
     if (m_pageImpl)
         m_pageImpl->m_bdColor = c;
 }
+
 #if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 CefBrowserHostImpl* WebPage::browser()
 { 
@@ -330,6 +374,47 @@ void WebPage::setBrowser(CefBrowserHostImpl* browserImpl)
         m_pageImpl->setBrowser(browserImpl);
 }
 #endif
+
+bool WebPage::canGoBack()
+{
+    if (!m_pageImpl)
+        return false;
+    return m_pageImpl->historyBackListCount() > 0;
+}
+
+void WebPage::goBack()
+{
+    if (m_pageImpl)
+        m_pageImpl->navigateBackForwardSoon(-1);
+}
+
+bool WebPage::canGoForward()
+{
+    if (!m_pageImpl)
+        return false;
+    return m_pageImpl->historyForwardListCount() > 0;
+}
+
+void WebPage::goForward()
+{
+    if (m_pageImpl)
+        m_pageImpl->navigateBackForwardSoon(1);
+}
+
+void WebPage::didCommitProvisionalLoad(blink::WebLocalFrame* frame, const blink::WebHistoryItem& history, blink::WebHistoryCommitType type)
+{
+    if (m_pageImpl)
+        m_pageImpl->didCommitProvisionalLoad(frame, history, type);
+}
+
+WebPage* WebPage::getSelfForCurrentContext()
+{
+    WebPageImpl* impl = WebPageImpl::getSelfForCurrentContext();
+    if (!impl)
+        return nullptr;
+    return impl->m_pagePtr;
+}
+
 WebViewImpl* WebPage::webViewImpl()
 {
     ASSERT(m_pageImpl);

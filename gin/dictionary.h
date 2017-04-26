@@ -7,6 +7,7 @@
 
 #include "gin/converter.h"
 #include "gin/gin_export.h"
+#include <functional>
 
 namespace gin {
 
@@ -50,6 +51,35 @@ class GIN_EXPORT Dictionary {
                     v8_value);
     return !result.IsNothing() && result.FromJust();
   }
+
+  inline void SetMethod(const char* name, v8::FunctionCallback callback) {
+      v8::Local<v8::Function> func = v8::FunctionTemplate::New(isolate_, callback)->GetFunction();
+      // kInternalized strings are created in the old space.
+      const v8::NewStringType type = v8::NewStringType::kInternalized;
+      v8::Local<v8::String> name_string = v8::String::NewFromUtf8(isolate(), name, type).ToLocalChecked();
+      object_->Set(name_string, func);
+      func->SetName(name_string);  // NODE_SET_METHOD() compatibility.
+  }
+
+  static void MethodCallbackWrap(const v8::FunctionCallbackInfo<v8::Value>& info) {
+      v8::Local<v8::External> v8Holder;
+      gin::ConvertFromV8(info.GetIsolate(), info.Data(), &v8Holder);
+      std::function<void(const v8::FunctionCallbackInfo<v8::Value>&)>* func = (std::function<void(const v8::FunctionCallbackInfo<v8::Value>&)>*)v8Holder->Value();
+      (*func)(info);
+  }
+
+  void SetMethod(const char* name, const std::function<void(const v8::FunctionCallbackInfo<v8::Value>&)>&& callback) {
+      v8::Local<v8::External> wrap = v8::External::New(isolate_, new std::function<void(const v8::FunctionCallbackInfo<v8::Value>&)>(callback));
+      v8::Local<v8::Function> func = v8::FunctionTemplate::New(isolate_, MethodCallbackWrap, wrap)->GetFunction();
+
+      // kInternalized strings are created in the old space.
+      const v8::NewStringType type = v8::NewStringType::kInternalized;
+      v8::Local<v8::String> name_string = v8::String::NewFromUtf8(isolate(), name, type).ToLocalChecked();
+      object_->Set(name_string, func);
+      func->SetName(name_string);  // NODE_SET_METHOD() compatibility.
+  }
+
+  v8::Local<v8::Object> GetHandle() const { return object_; }
 
   v8::Isolate* isolate() const { return isolate_; }
 

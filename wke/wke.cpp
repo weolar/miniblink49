@@ -4,16 +4,29 @@
 #define BUILDING_wke 1
 
 #include "content/browser/WebPage.h"
+#include "content/web_impl_win/BlinkPlatformImpl.h"
 #include "net/WebURLLoaderManager.h"
 
 //cexer: 必须包含在后面，因为其中的 wke.h -> windows.h 会定义 max、min，导致 WebCore 内部的 max、min 出现错乱。
 #include "wkeString.h"
 #include "wkeWebView.h"
 #include "wkeWebWindow.h"
+#include "third_party/WebKit/public/web/WebKit.h"
+#include "third_party/WebKit/public/web/WebFrame.h"
+#include <v8.h>
 #include "wtf/text/WTFString.h"
 
+namespace net {
+
+void setCookieJarPath(const WCHAR* path);
+
+}
+
 //////////////////////////////////////////////////////////////////////////
+static std::string* s_versionString = nullptr;
 static bool wkeIsInit = false;
+
+bool wkeIsUpdataInOtherThread = false;
 
 void wkeInitialize()
 {
@@ -52,10 +65,34 @@ void wkeSetProxy(const wkeProxy& proxy)
 	 net::WebURLLoaderManager::sharedInstance()->setProxyInfo(hostname, proxy.port, proxyType, username, password);
 }
 
+WKE_API void wkeSetViewProxy(wkeWebView webView, wkeProxy *proxy) {
+	net::WebURLLoaderManager::ProxyType proxyType = net::WebURLLoaderManager::HTTP;
+	String hostname;
+	String username;
+	String password;
+
+	if (proxy->hostname[0] != 0 && proxy->type >= WKE_PROXY_HTTP && proxy->type <= WKE_PROXY_SOCKS5HOSTNAME) {
+		switch (proxy->type) {
+		case WKE_PROXY_HTTP:           proxyType = net::WebURLLoaderManager::HTTP; break;
+		case WKE_PROXY_SOCKS4:         proxyType = net::WebURLLoaderManager::Socks4; break;
+		case WKE_PROXY_SOCKS4A:        proxyType = net::WebURLLoaderManager::Socks4A; break;
+		case WKE_PROXY_SOCKS5:         proxyType = net::WebURLLoaderManager::Socks5; break;
+		case WKE_PROXY_SOCKS5HOSTNAME: proxyType = net::WebURLLoaderManager::Socks5Hostname; break;
+		}
+
+		hostname = String::fromUTF8(proxy->hostname);
+		username = String::fromUTF8(proxy->username);
+		password = String::fromUTF8(proxy->password);
+	}
+
+	webView->setProxyInfo(hostname, proxy->port, proxyType, username, password);
+}
 void wkeConfigure(const wkeSettings* settings)
 {
     if (settings->mask & WKE_SETTING_PROXY)
         wkeSetProxy(settings->proxy);
+    if (settings->mask & WKE_SETTING_PAINTCALLBACK_IN_OTHER_THREAD)
+        wkeIsUpdataInOtherThread = true;
 }
 
 void wkeInitializeEx(const wkeSettings* settings)
@@ -71,12 +108,17 @@ bool wkeIsInitialize()
 
 void wkeFinalize()
 {
-    wkeUpdate();
+    content::BlinkPlatformImpl* platform = (content::BlinkPlatformImpl*)blink::Platform::current();
+    platform->shutdown();
 
 //     WebCore::iconDatabase().close();
 //     WebCore::PageGroup::closeLocalStorage();
 
     CoUninitialize();
+
+    if (s_versionString)
+        delete s_versionString;
+    s_versionString = nullptr;
 }
 
 void wkeUpdate()
@@ -95,7 +137,6 @@ void wkeUpdate()
 //     }
 }
 
-
 #define MAJOR_VERSION   (1)
 #define MINOR_VERSION   (2)
 #define WEBKIT_BUILD    (98096)
@@ -107,9 +148,8 @@ unsigned int wkeGetVersion()
 
 const utf8* wkeGetVersionString()
 {
-    static CString s_versionString;
-    if (0 != s_versionString.length())
-        return s_versionString.data();
+    if (s_versionString)
+        return s_versionString->c_str();
 
     String versionString = String::format("wke version %d.%02d\n"
         "blink build %d\n"
@@ -119,8 +159,8 @@ const utf8* wkeGetVersionString()
         WEBKIT_BUILD,
         __TIMESTAMP__);
 
-    s_versionString = versionString.utf8();
-    return s_versionString.data();
+    s_versionString = new std::string(versionString.utf8().data());
+    return s_versionString->c_str();
 }
 
 const char* wkeGetName(wkeWebView webView)
@@ -173,6 +213,11 @@ void wkePostURLW(wkeWebView wkeView,const wchar_t * url,const char *szPostData,i
     wkeView->loadPostURL(url,szPostData,nLen);
 }
 
+void wkeLoadW(wkeWebView webView, const wchar_t* url)
+{
+    wkeLoadURLW(webView, url);
+}
+
 void wkeLoadURL(wkeWebView webView, const utf8* url)
 {
     webView->loadURL(url);
@@ -201,6 +246,11 @@ void wkeLoadFile(wkeWebView webView, const utf8* filename)
 void wkeLoadFileW(wkeWebView webView, const wchar_t* filename)
 {
     return webView->loadFile(filename);
+}
+
+const utf8* wkeGetURL(wkeWebView webView)
+{
+    return webView->url();
 }
 
 bool wkeIsLoading(wkeWebView webView)
@@ -343,6 +393,11 @@ void wkeEditorSelectAll(wkeWebView webView)
     webView->editorSelectAll();
 }
 
+void wkeEditorUnSelect(wkeWebView webView)
+{
+    webView->editorUnSelect();
+}
+
 void wkeEditorCopy(wkeWebView webView)
 {
     webView->editorCopy();
@@ -361,6 +416,16 @@ void wkeEditorPaste(wkeWebView webView)
 void wkeEditorDelete(wkeWebView webView)
 {
     webView->editorDelete();
+}
+
+void wkeEditorUndo(wkeWebView webView)
+{
+    webView->editorUndo();
+}
+
+void wkeEditorRedo(wkeWebView webView)
+{
+    webView->editorRedo();
 }
 
 const wchar_t * wkeGetCookieW(wkeWebView webView)
@@ -382,6 +447,11 @@ void wkeSetCookieEnabled(wkeWebView webView, bool enable)
 bool wkeIsCookieEnabled(wkeWebView webView)
 {
     return webView->isCookieEnabled();
+}
+
+void wkeSetCookieJarPath(wkeWebView webView, const WCHAR* path)
+{
+    net::setCookieJarPath(path);
 }
 
 void wkeSetMediaVolume(wkeWebView webView, float volume)
@@ -539,6 +609,21 @@ void wkeOnLoadingFinish(wkeWebView webView, wkeLoadingFinishCallback callback, v
     webView->onLoadingFinish(callback, param);
 }
 
+void wkeOnDownload(wkeWebView webView, wkeDownloadCallback callback, void* param)
+{
+	webView->onDownload(callback, param);
+}
+
+void wkeOnConsole(wkeWebView webView, wkeConsoleCallback callback, void* param)
+{
+    webView->onConsole(callback, param);
+}
+
+void wkeSetUIThreadCallback(wkeWebView webView, wkeCallUiThread callback, void* param)
+{
+    webView->onCallUiThread(callback, param);
+}
+
 void wkeOnLoadUrlBegin(wkeWebView webView, wkeLoadUrlBeginCallback callback, void* callbackParam)
 {
 	webView->onLoadUrlBegin(callback, callbackParam);
@@ -547,6 +632,47 @@ void wkeOnLoadUrlBegin(wkeWebView webView, wkeLoadUrlBeginCallback callback, voi
 void wkeOnLoadUrlEnd(wkeWebView webView, wkeLoadUrlEndCallback callback, void* callbackParam)
 {
 	webView->onLoadUrlEnd(callback, callbackParam);
+}
+
+
+void wkeOnDidCreateScriptContext(wkeWebView webView, wkeDidCreateScriptContextCallback callback, void* callbackParam)
+{
+    webView->onDidCreateScriptContext(callback, callbackParam);
+}
+
+void wkeOnWillReleaseScriptContext(wkeWebView webView, wkeWillReleaseScriptContextCallback callback, void* callbackParam)
+{
+    webView->onWillReleaseScriptContext(callback, callbackParam);
+}
+
+bool wkeWebFrameIsMainFrame(wkeWebFrameHandle webFrame)
+{
+    blink::WebFrame* frame = (blink::WebFrame*)webFrame;
+    return !frame->parent();
+}
+
+bool wkeIsWebRemoteFrame(wkeWebFrameHandle webFrame)
+{
+    blink::WebFrame* frame = (blink::WebFrame*)webFrame;
+    return frame->isWebRemoteFrame();
+}
+
+wkeWebFrameHandle wkeWebFrameGetMainFrame(wkeWebView webView)
+{
+    return webView->webPage()->mainFrame();
+}
+
+void wkeWebFrameGetMainWorldScriptContext(wkeWebFrameHandle wkeFrame, v8ContextPtr contextOut)
+{
+    blink::WebFrame* frame = (blink::WebFrame*)wkeFrame;
+    v8::Local<v8::Context> result = frame->mainWorldScriptContext();
+    v8::Local<v8::Context>* contextOutPtr = (v8::Local<v8::Context>*)contextOut;
+    *contextOutPtr = result;
+}
+
+v8Isolate wkeGetBlinkMainThreadIsolate()
+{
+    return blink::mainThreadIsolate();
 }
 
 const utf8* wkeGetString(const wkeString s)
@@ -591,6 +717,45 @@ void wkeSetStringW(wkeString string, const wchar_t* str, size_t len)
     string->setString(str, len);
 }
 
+WKE_API wkeString wkeCreateStringW(const wchar_t* str, size_t len)
+{
+    wkeString wkeStr = new wke::CString(str, len);
+    return wkeStr;
+}
+
+WKE_API void wkeDeleteString(wkeString str)
+{
+    delete str;
+}
+
+wkeWebView wkeGetWebViewForCurrentContext()
+{
+    content::WebPage* webpage = content::WebPage::getSelfForCurrentContext();
+    if (!webpage)
+        return nullptr;
+    wkeWebView webview = webpage->wkeWebView();
+    return webview;
+}
+
+WKE_API void wkeSetUserKayValue(wkeWebView webView, const char* key, void* value)
+{
+    webView->setUserKayValue(key, value);
+}
+
+WKE_API void* wkeGetUserKayValue(wkeWebView webView, const char* key)
+{
+    return webView->getUserKayValue(key);
+}
+
+WKE_API int wkeGetCursorInfoType(wkeWebView webView)
+{
+    return webView->getCursorInfoType();
+}
+
+WKE_API void wkeSetDragFiles(wkeWebView webView, const POINT* clintPos, const POINT* screenPos, wkeString files[], int filesCount)
+{
+    webView->setDragFiles(clintPos, screenPos, files, filesCount);
+}
 
 // typedef void (__cdecl* _PVFV) ();
 // #pragma section(".CRT$XCG", long, read)

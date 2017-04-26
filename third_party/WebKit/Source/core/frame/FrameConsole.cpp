@@ -122,12 +122,16 @@ void FrameConsole::addMessage(PassRefPtrWillBeRawPtr<ConsoleMessage> prpConsoleM
 
     //////////////////////////////////////////////////////////////////////////
     // weolar
+    WTF::String argumentString = consoleMessage->message();
+    if (consoleMessage->scriptArguments())
+        consoleMessage->scriptArguments()->getAllArgumentAsString(argumentString);
+
     WTF::String outstr;
-    outstr.append(String::format("FrameConsole::addMessage: %d ", lineNumber));
-    outstr.append((WTF::String)(consoleMessage->message()));
-    outstr.append(" ");
+    outstr.append(String::format("FrameConsole:[%d],[", lineNumber));
+    outstr.append(argumentString);
+    outstr.append("],[");
     outstr.append(messageURL);
-    outstr.append("\n");
+    outstr.append("]\n");
 
     //saveDumpFile("xx", (char*)outstr.characters16(), outstr.length() * 2);
     Vector<UChar> utf16 = WTF::ensureUTF16UChar(outstr);
@@ -143,7 +147,7 @@ void FrameConsole::addMessage(PassRefPtrWillBeRawPtr<ConsoleMessage> prpConsoleM
         }
     }
 
-    ////
+    //////////////////////////////////////////////////////////////////////////
 
     String stackTrace;
     if (reportedCallStack)

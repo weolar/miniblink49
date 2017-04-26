@@ -10,26 +10,29 @@
 
 #include "wke/wke.h"
 
-void wkeNetSetHTTPHeaderField(void *job, wchar_t *key, wchar_t *value)
+void wkeNetSetHTTPHeaderField(void *job, wchar_t *key, wchar_t *value, bool response)
 {
-	((net::WebURLLoaderInternal*)job)->m_response.setHTTPHeaderField(String(key), String(value));
+    if (response)
+        ((net::WebURLLoaderInternal*)job)->m_response.setHTTPHeaderField(String(key), String(value));
+    else
+        ((net::WebURLLoaderInternal*)job)->firstRequest()->setHTTPHeaderField(String(key), String(value));
 }
 void wkeNetSetMIMEType(void *job, char *type)
 {
-	((net::WebURLLoaderInternal*)job)->m_response.setMIMEType(WebString::fromUTF8(type));
+    ((net::WebURLLoaderInternal*)job)->m_response.setMIMEType(WebString::fromUTF8(type));
 }
 void wkeNetSetURL(void *job, const char *url)
 {
-	((net::WebURLLoaderInternal*)job)->m_response.setURL(KURL(ParsedURLString, url));
+    ((net::WebURLLoaderInternal*)job)->m_response.setURL(KURL(ParsedURLString, url));
 }
 void wkeNetSetData(void *job, void *buf, int len)
 {
-	((net::WebURLLoaderInternal*)job)->client()->didReceiveResponse(((net::WebURLLoaderInternal*)job)->loader(), ((net::WebURLLoaderInternal*)job)->m_response);
-	((net::WebURLLoaderInternal*)job)->client()->didReceiveData(((net::WebURLLoaderInternal*)job)->loader(), static_cast<char *>(buf), len, 0);
+    ((net::WebURLLoaderInternal*)job)->client()->didReceiveResponse(((net::WebURLLoaderInternal*)job)->loader(), ((net::WebURLLoaderInternal*)job)->m_response);
+    ((net::WebURLLoaderInternal*)job)->client()->didReceiveData(((net::WebURLLoaderInternal*)job)->loader(), static_cast<char *>(buf), len, 0);
 }
 void wkeNetHookRequest(void *job)
 {
-	((net::WebURLLoaderInternal*)job)->m_isHookRequest = true;
+    ((net::WebURLLoaderInternal*)job)->m_isHookRequest = true;
 }
 //WebURLResponse req = job->m_response;
 //req.setHTTPStatusText(String("OK"));

@@ -5,5 +5,5 @@ build/.vs/*
 build/miniblink.VC.db
 build/miniblink.VC.VC.opendb
 *.ipch
-Debug/*
-Release/*
+out/*
+bin/cookies.dat

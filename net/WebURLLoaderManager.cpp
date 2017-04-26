@@ -82,43 +82,38 @@ static const bool ignoreSSLErrors = true; //  ("WEBKIT_IGNORE_SSL_ERRORS");
 
 static CString certificatePath()
 {
-//     char* envPath = getenv("CURL_CA_BUNDLE_PATH");
-//     if (envPath)
-//        return envPath;
-
+#if 0 
+    char* envPath = getenv("CURL_CA_BUNDLE_PATH");
+    if (envPath)
+       return envPath;
+#endif
     return CString();
+}
+
+static char* gCookieJarPath = nullptr;
+
+void setCookieJarPath(const WCHAR* path)
+{
+    if (!path || !::PathIsDirectoryW(path))
+        return;
+    Vector<WCHAR> jarPath;
+    jarPath.resize(MAX_PATH + 1);
+    wcscpy(jarPath.data(), path);
+    ::PathAppendW(jarPath.data(), L"cookies.dat");
+    String jarPathString(jarPath.data());
+    CString utf8 = jarPathString.utf8();
+
+    if (gCookieJarPath)
+        free(gCookieJarPath);
+    gCookieJarPath = (char*)malloc((MAX_PATH + 1) * sizeof(char) * 5);
+    strncpy(gCookieJarPath, utf8.data(), utf8.length());
 }
 
 static char* cookieJarPath()
 {
-//     char* cookieJarPath = getenv("CURL_COOKIE_JAR_PATH");
-//     if (cookieJarPath)
-//         return fastStrDup(cookieJarPath);
-
-#if 0 // OS(WINDOWS)
-    char executablePath[MAX_PATH];
-    char appDataDirectory[MAX_PATH];
-    char cookieJarFullPath[MAX_PATH];
-    char cookieJarDirectory[MAX_PATH];
-
-    if (FAILED(::SHGetFolderPathA(0, CSIDL_LOCAL_APPDATA | CSIDL_FLAG_CREATE, 0, 0, appDataDirectory))
-        || FAILED(::GetModuleFileNameA(0, executablePath, MAX_PATH)))
-        return fastStrDup("cookies.dat");
-
-    ::PathRemoveExtensionA(executablePath);
-    LPSTR executableName = ::PathFindFileNameA(executablePath);
-    sprintf_s(cookieJarDirectory, MAX_PATH, "%s/%s", appDataDirectory, executableName);
-    sprintf_s(cookieJarFullPath, MAX_PATH, "%s/cookies.dat", cookieJarDirectory);
-
-    if (::SHCreateDirectoryExA(0, cookieJarDirectory, 0) != ERROR_SUCCESS
-        && ::GetLastError() != ERROR_FILE_EXISTS
-        && ::GetLastError() != ERROR_ALREADY_EXISTS)
-        return fastStrDup("cookies.dat");
-
-    return fastStrDup(cookieJarFullPath);
-#else
+    if (gCookieJarPath)
+        return gCookieJarPath;
     return fastStrDup("cookies.dat");
-#endif
 }
 
 static Mutex* sharedResourceMutex(curl_lock_data data)
@@ -224,8 +219,6 @@ WebURLLoaderManager::WebURLLoaderManager()
     curl_share_setopt(m_curlShareHandle, CURLSHOPT_UNLOCKFUNC, curl_unlock_callback);
 
     initCookieSession();
-
-    //setProxyInfo("127.0.0.1", 8888, WebURLLoaderManager::HTTP, "", "");
 }
 
 WebURLLoaderManager::~WebURLLoaderManager()
@@ -393,61 +386,6 @@ static void removeLeadingAndTrailingQuotes(String& value)
         value = value.substring(1, length-2);
 }
 
-// static bool getProtectionSpace(CURL* h, const ResourceResponse& response, ProtectionSpace& protectionSpace)
-// {
-//     CURLcode err;
-// 
-//     long port = 0;
-//     err = curl_easy_getinfo(h, CURLINFO_PRIMARY_PORT, &port);
-//     if (err != CURLE_OK)
-//         return false;
-// 
-//     long availableAuth = CURLAUTH_NONE;
-//     err = curl_easy_getinfo(h, CURLINFO_HTTPAUTH_AVAIL, &availableAuth);
-//     if (err != CURLE_OK)
-//         return false;
-// 
-//     const char* effectiveUrl = 0;
-//     err = curl_easy_getinfo(h, CURLINFO_EFFECTIVE_URL, &effectiveUrl);
-//     if (err != CURLE_OK)
-//         return false;
-// 
-//     KURL url(ParsedURLString, effectiveUrl);
-// 
-//     String host = url.host();
-//     String protocol = url.protocol();
-// 
-//     String realm;
-// 
-//     const String authHeader = response.httpHeaderField(HTTPHeaderName::Authorization);
-//     const String realmString = "realm=";
-//     int realmPos = authHeader.find(realmString);
-//     if (realmPos > 0) {
-//         realm = authHeader.substring(realmPos + realmString.length());
-//         realm = realm.left(realm.find(','));
-//         removeLeadingAndTrailingQuotes(realm);
-//     }
-// 
-//     ProtectionSpaceServerType serverType = ProtectionSpaceServerHTTP;
-//     if (protocol == "https")
-//         serverType = ProtectionSpaceServerHTTPS;
-// 
-//     ProtectionSpaceAuthenticationScheme authScheme = ProtectionSpaceAuthenticationSchemeUnknown;
-// 
-//     if (availableAuth & CURLAUTH_BASIC)
-//         authScheme = ProtectionSpaceAuthenticationSchemeHTTPBasic;
-//     if (availableAuth & CURLAUTH_DIGEST)
-//         authScheme = ProtectionSpaceAuthenticationSchemeHTTPDigest;
-//     if (availableAuth & CURLAUTH_GSSNEGOTIATE)
-//         authScheme = ProtectionSpaceAuthenticationSchemeNegotiate;
-//     if (availableAuth & CURLAUTH_NTLM)
-//         authScheme = ProtectionSpaceAuthenticationSchemeNTLM;
-// 
-//     protectionSpace = ProtectionSpace(host, port, serverType, realm, authScheme);
-// 
-//     return true;
-// }
-
 /*
  * This is being called for each HTTP header in the response. This includes '\r\n'
  * for the last line of the header.
@@ -502,8 +440,21 @@ static size_t headerCallback(char* ptr, size_t size, size_t nmemb, void* data)
         d->m_response.setHTTPStatusCode(httpCode);
         d->m_response.setMIMEType(extractMIMETypeFromMediaType(d->m_response.httpHeaderField(WebString::fromUTF8("Content-Type"))).lower());
         d->m_response.setTextEncodingName(extractCharsetFromMediaType(d->m_response.httpHeaderField(WebString::fromUTF8("Content-Type"))));
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
+		if (d->m_response.httpHeaderField(WebString::fromUTF8("Content-Type")).equals("application/octet-stream")) {
+			RequestExtraData* requestExtraData = reinterpret_cast<RequestExtraData*>(job->firstRequest()->extraData());
+			WebPage* page = requestExtraData->page;
+			if (page->wkeHandler().downloadCallback) {
 
-        if (equalIgnoringCase((String)(d->m_response.mimeType()), "multipart/x-mixed-replace")) {
+				if (page->wkeHandler().downloadCallback(page->wkeWebView(), page->wkeHandler().downloadCallbackParam, encodeWithURLEscapeSequences(job->firstRequest()->url().string()).latin1().data())) {
+					blink::WebLocalFrame* frame = requestExtraData->frame;
+					frame->stopLoading();
+					return totalSize;
+				}
+			}
+		}
+#endif
+		if (equalIgnoringCase((String)(d->m_response.mimeType()), "multipart/x-mixed-replace")) {
             String boundary;
             bool parsed = MultipartHandle::extractBoundary(d->m_response.httpHeaderField(WebString::fromUTF8("Content-Type")), boundary);
             if (parsed)
@@ -1203,11 +1154,31 @@ void WebURLLoaderManager::initializeHandle(WebURLLoaderInternal* job)
 
     applyAuthenticationToRequest(job, job->firstRequest());
 
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
+	RequestExtraData* requestExtraData = reinterpret_cast<RequestExtraData*>(job->firstRequest()->extraData());
+    if (!requestExtraData) // 在退出时候js调用同步XHR请求，会导致ExtraData为0情况
+        return;
+
+	WebPage* page = requestExtraData->page;
+	if (!page->wkeWebView()) 
+        return;
+
+    if (page->wkeWebView()->m_proxy.length()) {
+        curl_easy_setopt(d->m_handle, CURLOPT_PROXY, page->wkeWebView()->m_proxy.utf8().data());
+        curl_easy_setopt(d->m_handle, CURLOPT_PROXYTYPE, page->wkeWebView()->m_proxyType);
+    } else {
+        if (m_proxy.length()) {
+            curl_easy_setopt(d->m_handle, CURLOPT_PROXY, m_proxy.utf8().data());
+            curl_easy_setopt(d->m_handle, CURLOPT_PROXYTYPE, m_proxyType);
+        }
+    }
+#else
     // Set proxy options if we have them.
     if (m_proxy.length()) {
         curl_easy_setopt(d->m_handle, CURLOPT_PROXY, m_proxy.utf8().data());
         curl_easy_setopt(d->m_handle, CURLOPT_PROXYTYPE, m_proxyType);
     }
+#endif
 }
 
 void WebURLLoaderManager::initCookieSession()

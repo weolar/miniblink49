@@ -173,7 +173,7 @@ unsigned cacheTag(CacheTagKind kind, CachedMetadataHandler* cacheHandler)
 {
     static_assert((1 << kCacheTagKindSize) >= CacheTagLast, "CacheTagLast must be large enough");
 
-    static unsigned v8CacheDataVersion = v8::ScriptCompiler::CachedDataVersionTag() << kCacheTagKindSize;
+    static unsigned v8CacheDataVersion = kCacheTagKindSize << kCacheTagKindSize;
 
     // A script can be (successfully) interpreted with different encodings,
     // depending on the page it appears in. The cache doesn't know anything
@@ -358,8 +358,14 @@ v8::MaybeLocal<v8::Script> V8ScriptRunner::compileScript(v8::Local<v8::String> c
         v8::Integer::New(isolate, scriptStartPosition.m_column.zeroBasedInt()),
         v8Boolean(accessControlStatus == SharableCrossOrigin, isolate),
         v8::Local<v8::Integer>(),
-        v8Boolean(isInternalScript, isolate),
+		//zero
+#if V8_MINOR_VERSION == 7
+		v8String(isolate, sourceMapUrl),
+		v8Boolean(isInternalScript, isolate),
+#else
+		v8Boolean(isInternalScript, isolate),
         v8String(isolate, sourceMapUrl),
+#endif
         v8Boolean(accessControlStatus == OpaqueResource, isolate));
 
     OwnPtr<CompileFn> compileFn = streamer

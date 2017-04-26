@@ -23,7 +23,6 @@
 #error ERROR: Only Win32 target supported!
 #endif
 
-
 #ifdef  _MSC_VER
 /*
  * Currently, all MS C compilers for Win32 platforms default to 8 byte
@@ -193,7 +192,7 @@ _CRTIMP double  __cdecl modf(double, double *);
 _CRTIMP double  __cdecl _y0(double);
 _CRTIMP double  __cdecl _y1(double);
 _CRTIMP double  __cdecl _yn(int, double);
-
+/*_CRTIMP*/ double __cdecl scalbn( double _X,  int _Y);
 
 #if     defined(_M_IX86)
 

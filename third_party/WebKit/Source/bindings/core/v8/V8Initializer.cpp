@@ -64,6 +64,9 @@
 #include "wtf/text/WTFString.h"
 #include <v8-debug.h>
 
+void* sk_malloc_throw(size_t size);
+void sk_free(void* p);
+
 namespace blink {
 
 static Frame* findFrame(v8::Isolate* isolate, v8::Local<v8::Object> host, v8::Local<v8::Value> data)
@@ -367,23 +370,43 @@ static void initializeV8Common(v8::Isolate* isolate)
 namespace {
 
 class ArrayBufferAllocator : public v8::ArrayBuffer::Allocator {
-    void* Allocate(size_t size) override
+    struct MemoryHead {
+        size_t magicNum;
+        size_t size;
+    };
+    static const size_t magicNum0 = 0x1122dd44;
+    static const size_t magicNum1 = 0x11227788;
+
+    static MemoryHead* getPointerHead(void* pointer) { return ((MemoryHead*)pointer) - 1; }
+    static size_t getPointerMemSize(void* pointer) { return getPointerHead(pointer)->size; }
+    static void* getHeadToMemBegin(MemoryHead* head) { return head + 1; }
+
+    void* allocate(size_t size, WTF::ArrayBufferContents::InitializationPolicy policy)
     {
         void* data;
-        WTF::ArrayBufferContents::allocateMemory(size, WTF::ArrayBufferContents::ZeroInitialize, data);
-        return data;
+        WTF::ArrayBufferContents::allocateMemory(size + sizeof(MemoryHead), policy, data);
+        MemoryHead* head = (MemoryHead*)data;
+        head->magicNum = magicNum0;
+        head->size = size;
+        return getHeadToMemBegin(head);
+    }
+
+    void* Allocate(size_t size) override
+    {
+        return allocate(size, WTF::ArrayBufferContents::ZeroInitialize);
     }
 
     void* AllocateUninitialized(size_t size) override
     {
-        void* data;
-        WTF::ArrayBufferContents::allocateMemory(size, WTF::ArrayBufferContents::DontInitialize, data);
-        return data;
+        return allocate(size, WTF::ArrayBufferContents::DontInitialize);
     }
 
     void Free(void* data, size_t size) override
     {
-        WTF::ArrayBufferContents::freeMemory(data, size);
+        MemoryHead* head = getPointerHead(data);
+        if (head->magicNum != magicNum0)
+            DebugBreak();
+        WTF::ArrayBufferContents::freeMemory(head, size);
     }
 };
 

@@ -1,0 +1,14 @@
+
+#ifndef _UNORDERED_MAP_
+#define _UNORDERED_MAP_
+
+#include <map>
+
+_STD_BEGIN
+
+template <typename _K, typename _Ty, typename _Pr = less<_K>, typename _A = allocator<_Ty> >
+using unordered_map = map<typename _K, typename _Ty, typename _Pr, typename _A>;
+
+_STD_END
+
+#endif /* _UNORDERED_MAP_ */

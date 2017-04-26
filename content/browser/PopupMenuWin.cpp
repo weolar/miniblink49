@@ -31,6 +31,7 @@
 #include "third_party/WebKit/public/web/WebFrameClient.h"
 #include "third_party/WebKit/public/web/WebInputEvent.h"
 #include "third_party/WebKit/public/web/WebLocalFrame.h"
+#include "third_party/WebKit/public/platform/Platform.h"
 #include "skia/ext/bitmap_platform_device_win.h"
 #include "cc/trees/LayerTreeHost.h"
 
@@ -73,10 +74,16 @@ PopupMenuWin::PopupMenuWin(HWND hWnd, IntPoint offset, WebViewImpl* webViewImpl)
 	m_offset.setY(offset.y());
 }
 
+static void destroyWindowAsyn(HWND hWnd)
+{
+    ::DestroyWindow(hWnd);
+}
+
 void PopupMenuWin::closeWidgetSoon()
 {
     m_initialize = false;
-    ::DestroyWindow(m_popup);
+    SetWindowLongPtr(m_popup, 0, 0);
+    blink::Platform::current()->currentThread()->postTask(FROM_HERE, WTF::bind(&destroyWindowAsyn, m_popup));
     delete this;
 }
 
@@ -258,7 +265,6 @@ void PopupMenuWin::updataSize()
     popup->resize(size);
     m_needsCommit = needsCommit;
 
-
 	POINT pos = { m_rect.x() + m_offset.x(), m_rect.y() + m_offset.y() };
 	::ClientToScreen(m_hParentWnd, &pos);
 
@@ -275,8 +281,9 @@ void PopupMenuWin::show(WebNavigationPolicy)
 
 void PopupMenuWin::paint(HDC hdc, RECT rcPaint)
 {
-    if (m_memoryCanvas)
-        skia::DrawToNativeContext(m_memoryCanvas, hdc, rcPaint.left, rcPaint.top, &rcPaint);
+    if (!m_memoryCanvas)
+        return;
+    skia::DrawToNativeContext(m_memoryCanvas, hdc, rcPaint.left, rcPaint.top, &rcPaint);
 }
 
 void PopupMenuWin::updataPaint()
@@ -319,8 +326,9 @@ WebWidget* PopupMenuWin::createWnd()
     //::ShowWindow(m_popup, SW_SHOW);
     //::UpdateWindow(m_popup);
     //::SetTimer(m_popup, 1, 10, nullptr);
-    ::SetWindowPos(m_popup, HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW | SWP_NOACTIVATE); // 不激活窗口
-
+    ::SetWindowPos(m_popup, HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW /*| SWP_NOACTIVATE*/); // 不激活窗口
+    ::SetFocus(m_popup);
+    ::SetCapture(m_popup);
     initialize();
 
     return m_popupImpl;
@@ -332,7 +340,7 @@ void PopupMenuWin::initialize()
         return;
     m_initialize = true;
 
-    m_layerTreeHost = new cc::LayerTreeHost(this);
+    m_layerTreeHost = new cc::LayerTreeHost(this, nullptr);
     //m_layerTreeHost->setNeedTileRender(false);
     m_popupImpl = WebPagePopup::create(this);
     m_platformEventHandler = new PlatformEventHandler(m_popupImpl, nullptr);
@@ -340,9 +348,11 @@ void PopupMenuWin::initialize()
     m_popupImpl->setFocus(true);
 }
 
-WebWidget* PopupMenuWin::create(HWND hWnd, blink::IntPoint offset, WebViewImpl* webViewImpl, WebPopupType type)
+WebWidget* PopupMenuWin::create(HWND hWnd, blink::IntPoint offset, WebViewImpl* webViewImpl, WebPopupType type, PopupMenuWin** result)
 {
     PopupMenuWin* self = new PopupMenuWin(hWnd, offset, webViewImpl);
+    if (result)
+        *result = self;
     return self->createWnd();
 }
 

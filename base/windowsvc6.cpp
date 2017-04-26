@@ -1,7 +1,7 @@
 
 #if USING_VC6RT == 1
 
-#include <windowsvc6.h>
+#include <windows.h>
 
 void __cdecl operator delete(void* p, unsigned int)
 {
@@ -30,7 +30,7 @@ void scrt_initialize_thread_safe_statics()
 
 	LoadLibraryW(L"Usp10.dll");
 
-    OutputDebugStringA("scrt_initialize_thread_safe_statics");
+    OutputDebugStringA("scrt_initialize_thread_safe_statics\n");
 }
 
 extern "C" {

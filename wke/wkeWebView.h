@@ -7,8 +7,11 @@
 //cexer: 必须包含在后面，因为其中的 windows.h 会定义 max、min，导致 WebCore 内部的 max、min 出现错乱。
 #include "wke/wkeString.h"
 #include "third_party/WebKit/Source/platform/geometry/IntRect.h"
+#include "net/WebURLLoaderManager.h"
+#include <map>
 
 //////////////////////////////////////////////////////////////////////////
+
 namespace content {
  class WebPage;
 }
@@ -46,11 +49,26 @@ struct CWebViewHandler {
     wkeLoadingFinishCallback loadingFinishCallback;
     void* loadingFinishCallbackParam;
 
+	wkeDownloadCallback downloadCallback;
+	void* downloadCallbackParam;
+
+    wkeConsoleCallback consoleCallback;
+    void* consoleCallbackParam;
+
+    wkeCallUiThread callUiThreadCallback;
+    void* callUiThreadCallbackParam;
+    
 	wkeLoadUrlBeginCallback loadUrlBeginCallback;
 	void* loadUrlBeginCallbackParam;
 
 	wkeLoadUrlEndCallback loadUrlEndCallback;
 	void* loadUrlEndCallbackParam;
+
+    wkeDidCreateScriptContextCallback didCreateScriptContextCallback;
+    void* didCreateScriptContextCallbackParam;
+
+    wkeWillReleaseScriptContextCallback willReleaseScriptContextCallback;
+    void* willReleaseScriptContextCallbackParam;
 
 	bool isWke;//是否是使用的wke接口
 };
@@ -83,6 +101,8 @@ public:
 
     void loadFile(const utf8* filename) override;
     void loadFile(const wchar_t* filename) override;
+
+    const utf8* url() const override;
 
 	void setUserAgent(const utf8 * useragent);
     void setUserAgent(const wchar_t * useragent);
@@ -126,10 +146,13 @@ public:
     bool goForward() override;
     
     void editorSelectAll() override;
+    void editorUnSelect() override;
     void editorCopy() override;
     void editorCut() override;
     void editorPaste() override;
     void editorDelete() override;
+    void editorUndo() override;
+    void editorRedo() override;
 
     const wchar_t* cookieW();
     const utf8* cookie();
@@ -182,20 +205,37 @@ public:
 
     virtual void onLoadingFinish(wkeLoadingFinishCallback callback, void* callbackParam);
     virtual void onDocumentReady(wkeDocumentReadyCallback callback, void* callbackParam);
+	virtual void onDownload(wkeDownloadCallback callback, void* callbackParam);
+    virtual void onConsole(wkeConsoleCallback callback, void* callbackParam);
+    virtual void onCallUiThread(wkeCallUiThread callback, void* callbackParam);
+    
+    void onLoadUrlBegin(wkeLoadUrlBeginCallback callback, void* callbackParam);
+    void onLoadUrlEnd(wkeLoadUrlEndCallback callback, void* callbackParam);
 
-	void onLoadUrlBegin(wkeLoadUrlBeginCallback callback, void* callbackParam);
-	void onLoadUrlEnd(wkeLoadUrlEndCallback callback, void* callbackParam);
+    void onDidCreateScriptContext(wkeDidCreateScriptContextCallback callback, void* callbackParam);
+    void onWillReleaseScriptContext(wkeWillReleaseScriptContextCallback callback, void* callbackParam);
 
     void setClientHandler(const wkeClientHandler* handler) override;
     const wkeClientHandler* getClientHandler() const override;
 
     content::WebPage* webPage() { return m_webPage; }
 
+    void setUserKayValue(const char* key, void* value);
+    void* getUserKayValue(const char* key);
+
+    int getCursorInfoType();
+
+    void setDragFiles(const POINT* clintPos, const POINT* screenPos, wkeString files[], int filesCount);
+
+	void setProxyInfo(const String& host, unsigned long port, net::WebURLLoaderManager::ProxyType type, const String& username, const String& password);
+
 protected:
     HWND m_hWnd;
     void _initHandler();
     void _initPage();
     void _initMemoryDC();
+
+    std::map<std::string, void*> m_userKayValues;
 
     //按理这些接口应该使用CWebView来实现的，可以把它们想像成一个类，因此设置为友员符合情理。
 //     friend class ToolTip;
@@ -209,16 +249,15 @@ protected:
 
 //     OwnPtr<WebCore::Page> m_page;
 //     WebCore::Frame* m_mainFrame;
+    wke::CString m_url;  //记录url地址
     wke::CString m_title;
     wke::CString m_cookie;
-
     wke::CString m_name;
     bool m_transparent;
 
     int m_width;
     int m_height;
 
-    //bool m_dirty;
     blink::IntRect m_dirtyArea;
 
     content::WebPage* m_webPage;
@@ -228,6 +267,9 @@ protected:
     //void* m_pixels;
 
     bool m_awake;
+public:
+	String m_proxy;
+	net::WebURLLoaderManager::ProxyType m_proxyType;
 };
 
 };//namespace wke

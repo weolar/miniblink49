@@ -419,6 +419,20 @@ void V8GCController::gcEpilogue(v8::GCType type, v8::GCCallbackFlags flags)
         ThreadState::current()->setGCState(ThreadState::FullGCScheduled);
     }
 
+#if V8_MINOR_VERSION == 7
+    // v8::kGCCallbackFlagCollectAllAvailableGarbage is used when V8 handles
+    // low memory notifications.
+    if (flags & v8::kGCCallbackFlagCollectAllAvailableGarbage) {
+        // This single GC is not enough. See the above comment.
+        Heap::collectGarbage(ThreadState::HeapPointersOnStack, ThreadState::GCWithSweep, Heap::ForcedGC);
+
+        // The conservative GC might have left floating garbage. Schedule
+        // precise GC to ensure that we collect all available garbage.
+        if (ThreadState::current())
+            ThreadState::current()->schedulePreciseGC();
+    }
+#endif
+
     TRACE_EVENT_INSTANT1(TRACE_DISABLED_BY_DEFAULT("devtools.timeline"), "UpdateCounters", TRACE_EVENT_SCOPE_THREAD, "data", InspectorUpdateCountersEvent::data());
 }
 

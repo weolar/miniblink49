@@ -24,19 +24,20 @@ public:
 
 	void appendLayerChangeAction(LayerChangeAction* action);
 
-	bool areAllfull() const { return m_allArefull; }
+    bool areAllfull() const;
 
 private:
 	bool applyActions(ActionsFrameGroup* group, LayerTreeHost* host);
 	
 	void setEndId(int64 endId);
+    void checkFull();
 
 	friend class ActionsFrameGroup;
 
 	WTF::Vector<LayerChangeAction*> m_actions;
 	int64 m_beginId;
 	int64 m_endId;
-	bool m_allArefull;
+	bool m_allAreFull;
 	int m_hadRunCount;
 };
 

@@ -54,6 +54,8 @@ public:
 
     bool getFirstArgumentAsString(String&) const;
 
+    bool getAllArgumentAsString(String&) const; // weolar add
+
     DEFINE_INLINE_TRACE() { }
 
 private:

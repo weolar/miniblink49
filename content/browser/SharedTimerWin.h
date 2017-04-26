@@ -45,7 +45,7 @@ static void initializeOffScreenTimerWindow()
         NULL,           // window menu handle
         GetModuleHandleW(NULL),           // program instance handle
         NULL);         // creation parameters
-    ::SetTimer(timerWindowHandle, 1000, 20, 0);
+    ::SetTimer(timerWindowHandle, (UINT_PTR)timerWindowHandle, 50, 0);
 }
 
 }

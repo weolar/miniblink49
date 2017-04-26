@@ -16,7 +16,7 @@ ActionsFrame::ActionsFrame(int64 beginId)
 {
 	m_beginId = beginId;
 	m_endId = -1;
-	m_allArefull = false;
+	m_allAreFull = false;
 	m_hadRunCount = 0;
 #ifndef NDEBUG
     actionsFrameCounter.increment();
@@ -27,7 +27,7 @@ ActionsFrame::ActionsFrame(int64 beginId, int64 endId)
 {
     m_beginId = beginId;
     m_endId = endId;
-    m_allArefull = false;
+    m_allAreFull = false;
     m_hadRunCount = 0;
 #ifndef NDEBUG
     actionsFrameCounter.increment();
@@ -45,6 +45,17 @@ ActionsFrame::~ActionsFrame()
 bool ActionsFrame::isEmpty() const
 {
 	return m_actions.size() == 0;
+}
+
+bool ActionsFrame::areAllfull() const 
+{
+    return m_allAreFull;
+}
+
+void ActionsFrame::checkFull()
+{
+    if (-1 != m_endId && m_actions.size() == (size_t)(m_endId - m_beginId) + 1)
+        m_allAreFull = true;
 }
 
 void ActionsFrame::appendLayerChangeAction(LayerChangeAction* action)
@@ -68,8 +79,7 @@ void ActionsFrame::appendLayerChangeAction(LayerChangeAction* action)
 	if (!find)
 		m_actions.insert(0, action);
 
-	if (-1 != m_endId && m_actions.size() == (size_t)(m_endId - m_beginId) + 1)
-		m_allArefull = true;
+    checkFull();
 }
 
 bool ActionsFrame::applyActions(ActionsFrameGroup* group, LayerTreeHost* host)
@@ -106,7 +116,10 @@ void ActionsFrame::setEndId(int64 endId)
 {
 	ASSERT(endId > m_endId);
 	m_endId = endId;
+    checkFull();
 }
+
+//////////////////////////////////////////////////////////////////////////
 
 #ifndef NDEBUG
 DEFINE_DEBUG_ONLY_GLOBAL(WTF::RefCountedLeakCounter, actionsFrameGroupCounter, ("ccActionsFrameGroup"));
@@ -143,14 +156,18 @@ ActionsFrameGroup::~ActionsFrameGroup()
 
 void ActionsFrameGroup::beginRecordActions()
 {
+    WTF::MutexLocker locker(*m_actionsMutex);
 	ASSERT(!m_curFrame);
+
 	m_curFrame = new ActionsFrame(m_newestActionId + 1);
 	m_frames.append(m_curFrame);
 }
 
 void ActionsFrameGroup::endRecordActions()
 {
+    WTF::MutexLocker locker(*m_actionsMutex);
     ASSERT(m_curFrame);
+
 	if (m_curFrame->beginId() == m_newestActionId + 1) {
         ASSERT(0 != m_frames.size() && m_curFrame == m_frames.last() && m_curFrame->isEmpty());
         m_frames.removeLast();
@@ -166,6 +183,8 @@ void ActionsFrameGroup::endRecordActions()
 int64 ActionsFrameGroup::genActionId()
 {
     ASSERT(WTF::isMainThread());
+    WTF::MutexLocker locker(*m_actionsMutex);
+
     if (!m_curFrame) { // 如果不属于任何一个，说明是一些异步回调调用进来的，另起一帧
         m_curFrame = new ActionsFrame(m_newestActionId + 1, m_newestActionId + 1);
         m_frames.append(m_curFrame);
@@ -179,9 +198,6 @@ int64 ActionsFrameGroup::genActionId()
 
 void ActionsFrameGroup::saveLayerChangeAction(LayerChangeAction* action)
 {
-//     delete action; //TODO weolar
-//     return;
-
 	m_actionsMutex->lock();
 	m_actions.append(action);
 	m_actionsMutex->unlock();
@@ -189,6 +205,7 @@ void ActionsFrameGroup::saveLayerChangeAction(LayerChangeAction* action)
 
 void ActionsFrameGroup::appendActionToFrame(LayerChangeAction* action)
 {
+    WTF::MutexLocker locker(*m_actionsMutex);
     if (m_frames.size() == 0) {
         ASSERT(false);
         return;
@@ -223,17 +240,27 @@ bool ActionsFrameGroup::applyActions(bool needCheck)
 		appendActionToFrame(actions[i]);
 	}
 
-	while (0 != m_frames.size()) {
+	while (true) {
+        m_actionsMutex->lock();
+        if (0 == m_frames.size()) {
+            m_actionsMutex->unlock();
+            break;
+        }
+
 		ActionsFrame* frame = m_frames[0];
         if (!frame->areAllfull()) {
             ASSERT(!needCheck);
+            m_actionsMutex->unlock();
             return false;
         }
+
+        m_frames.remove(0);
+
+        m_actionsMutex->unlock();
 
 		bool ok = frame->applyActions(this, m_host);
 		ASSERT(ok);
 		delete frame;
-		m_frames.remove(0);
 	}
 
 	return true;
@@ -241,11 +268,16 @@ bool ActionsFrameGroup::applyActions(bool needCheck)
 
 int64 ActionsFrameGroup::curActionId() const
 {
-	return m_curActionId;
+    int64 curActionId;
+    WTF::MutexLocker locker(*m_actionsMutex);
+    curActionId =  m_curActionId;
+
+    return curActionId;
 }
 
 void ActionsFrameGroup::incCurActionId()
 {
+    WTF::MutexLocker locker(*m_actionsMutex);
 	++m_curActionId;
 }
 

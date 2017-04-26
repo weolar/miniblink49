@@ -2,6 +2,7 @@
 
 #include "third_party/WebKit/public/platform/WebContentLayerClient.h"
 #include "third_party/WebKit/Source/platform/geometry/win/IntRectWin.h"
+#include "cc/tiles/TileWidthHeight.h"
 #include "cc/tiles/Tile.h"
 #include "cc/blink/WebLayerImpl.h"
 #include "cc/raster/RasterTaskWorkerThreadPool.h"
@@ -76,7 +77,6 @@ TileGrid::~TileGrid()
 			OutputDebugStringA(location->functionName());
 			OutputDebugStringA("\n");
 		}
-        gLayerTreeHost->releaseTilesFromRasterThread(this);
 		xxTile = m_registerTiles[1];
 	}
     ASSERT(0 == m_registerTiles.size());
@@ -110,12 +110,9 @@ void TileGrid::waitForReleaseTilesInUIThread()
 {
     ASSERT(m_rasterTaskCount >= 0);
 
-    int dumyDebugRasterCount = debugRasterCount;
-    RasterTaskWorkerThreadPool* debugPool = cc::RasterTaskWorkerThreadPool::shared();
-    while (m_rasterTaskCount != 0) { ::Sleep(50); }
-
-    if (m_layer->layerTreeHost())
-        m_layer->layerTreeHost()->releaseTilesFromRasterThread(this);
+//     int dumyDebugRasterCount = debugRasterCount;
+//     RasterTaskWorkerThreadPool* debugPool = cc::RasterTaskWorkerThreadPool::shared();
+//     while (m_rasterTaskCount != 0) { ::Sleep(50); }
 }
 
 cc_blink::WebLayerImpl* TileGrid::layer() const
@@ -176,10 +173,10 @@ bool TileGrid::isInWillBeShowedArea(Tile* tile)
 {
     int xIndex = tile->xIndex();
     int yIndex = tile->yIndex();
-    int left = getIndexByLength(m_screenRect.x() , Tile::kDefaultTileWidth);
-    int top = getIndexByLength(m_screenRect.y(), Tile::kDefaultTileHeight);
-    int right = getIndexByLength(m_screenRect.maxX(), Tile::kDefaultTileWidth);
-    int buttom = getIndexByLength(m_screenRect.maxY(), Tile::kDefaultTileHeight);
+    int left = getIndexByLength(m_screenRect.x() , kDefaultTileWidth);
+    int top = getIndexByLength(m_screenRect.y(), kDefaultTileHeight);
+    int right = getIndexByLength(m_screenRect.maxX(), kDefaultTileWidth);
+    int buttom = getIndexByLength(m_screenRect.maxY(), kDefaultTileHeight);
     left = std::max(0, left - kXIndexDistanceToWillBeShowedTile);
     top = std::max(0, top - kYIndexDistanceToWillBeShowedTile);
     right = std::min(m_numTileX, right + kXIndexDistanceToWillBeShowedTile);
@@ -203,10 +200,8 @@ void TileGrid::updateSize(const blink::IntRect& screenRect, const blink::IntSize
 //     OutputDebugStringW(outString.charactersWithNullTermination().data());
 
     ASSERT(m_numTileX * m_numTileY == m_tiles->size());
-    int newIndexNumX = getIndexNumByLength(newLayerSize.width(), Tile::kDefaultTileWidth);
-    int newIndexNumY = getIndexNumByLength(newLayerSize.height(), Tile::kDefaultTileHeight);
-//     int detX = std::abs(newIndexNumX - m_numTileX);
-//     int detY = std::abs(newIndexNumY - m_numTileY);
+    int newIndexNumX = getIndexNumByLength(newLayerSize.width(), kDefaultTileWidth);
+    int newIndexNumY = getIndexNumByLength(newLayerSize.height(), kDefaultTileHeight);
 
     Vector<Tile*>* newTiles = new Vector<Tile*>;
     newTiles->resize(newIndexNumX * newIndexNumY);
@@ -281,8 +276,6 @@ void TileGrid::updateTilePriorityAndCommitInvalidate(Vector<size_t>* hasBitmapTi
                 dirtyRect.move(tile->postion().x(), tile->postion().y());
                 newCreatedWhenScrolling.unite(dirtyRect);
                 debugTiles.append(tile);
-                if (debugTiles.size() > 20)
-                    OutputDebugStringA("");
             }
              
             tile->setPriority(TilePriorityWillBeShowed);
@@ -296,7 +289,6 @@ void TileGrid::updateTilePriorityAndCommitInvalidate(Vector<size_t>* hasBitmapTi
         if (newCreatedWhenScrolling.width() > 1000 && newCreatedWhenScrolling.height() > 700) {
             for (size_t i = 0; i < debugTiles.size(); ++i) {
                 Tile* tile = debugTiles.at(i);
-                OutputDebugStringA("");
             }
         }
         invalidate(newCreatedWhenScrolling, true);
@@ -308,7 +300,7 @@ void TileGrid::updateTilePriorityAndCommitInvalidate(Vector<size_t>* hasBitmapTi
 
 void TileGrid::savaUnnecessaryTile(RasterTaskGroup* taskGroup, Vector<Tile*>* hasBitmapTiles)
 {
-    const int maxHasBitmapTiles = 2 * (m_needBeShowedArea.width()*m_needBeShowedArea.height()) / (Tile::kDefaultTileWidth*Tile::kDefaultTileHeight);
+    const int maxHasBitmapTiles = 2 * (m_needBeShowedArea.width()*m_needBeShowedArea.height()) / (kDefaultTileWidth*kDefaultTileHeight);
     if (hasBitmapTiles->size() < maxHasBitmapTiles)
         return;
 
@@ -361,7 +353,7 @@ void TileGrid::cleanupUnnecessaryTile(Vector<size_t>* hasBitmapTiles)
     if (0 != taskNum /*&& (base::RandInt(0, 500) != 1)*/)
         return;
 
-    const int maxHasBitmapTiles = 2 * (m_needBeShowedArea.width()*m_needBeShowedArea.height()) / (Tile::kDefaultTileWidth*Tile::kDefaultTileHeight);
+    const int maxHasBitmapTiles = 2 * (m_needBeShowedArea.width()*m_needBeShowedArea.height()) / (kDefaultTileWidth*kDefaultTileHeight);
     if (hasBitmapTiles->size() < maxHasBitmapTiles)
         return;
 
@@ -448,9 +440,6 @@ void TileGrid::invalidate(const blink::IntRect& rect, bool directSaveToDirtyRect
             if (dirtyRectItem.contains(dirtyRect))
                 return;
         }
-
-//         if (1417 <= dirtyRect.width() && 320 <= dirtyRect.height())
-//             OutputDebugStringA("");
 
 //         String outString = String::format("TileGrid::invalidate: %d %d, %d %d\n", dirtyRect.x(), dirtyRect.y(), dirtyRect.width(), dirtyRect.height());
 //         OutputDebugStringW(outString.charactersWithNullTermination().data());

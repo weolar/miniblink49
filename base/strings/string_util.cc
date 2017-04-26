@@ -1,7 +1,8 @@
 
 #include "base/strings/string_util.h"
 
-#include "wtf/text/WTFStringUtil.h"
+#include <windows.h>
+#include <vector>
 
 namespace base {
 
@@ -69,25 +70,40 @@ std::string ToUpperASCII(const std::string& str) {
     return ret;
 }
 
-std::wstring UTF8ToWide(const std::string& src) {
-    std::wstring output;
-    WTF::Vector<UChar> out = WTF::ensureUTF16UChar(WTF::String(src.c_str(), src.size()));
-    output.append((const wchar_t*)out.data(), out.size());
-    return output;
+std::wstring UTF8ToWide(const std::string& utf8) {
+    std::wstring utf16;
+    size_t n = ::MultiByteToWideChar(CP_UTF8, 0, utf8.c_str(), utf8.size(), nullptr, 0);
+    if (0 == n)
+        return L"";
+    std::vector<wchar_t> wbuf(n);
+    MultiByteToWideChar(CP_UTF8, 0, utf8.c_str(), utf8.size(), &wbuf[0], n);
+    utf16.resize(n + 5);
+    utf16.assign(&wbuf[0], n);
+    return utf16;
 }
 
 std::wstring ASCIIToWide(const std::string& ascii) {
-    //DCHECK(base::IsStringASCII(ascii)) << ascii;
-    WTF::String str(ascii.data(), ascii.size());
-    Vector<UChar> ustring = WTF::ensureUTF16UChar(str);
-    return std::wstring(ustring.data(), ustring.size());
+    return UTF8ToWide(ascii);
 }
 
 std::string UTF16ToASCII(const string16& utf16) {
-    //DCHECK(IsStringASCII(utf16)) << UTF16ToUTF8(utf16);
-    WTF::String str(utf16.data(), utf16.size());
-    CString ascii = str.ascii();
-    return std::string(ascii.data());
+    return WideToUTF8(utf16);
+}
+
+std::string WideToUTF8(const string16& utf16) {
+    std::string utf8;
+    size_t n = ::WideCharToMultiByte(CP_ACP, 0, utf16.c_str(), utf16.size(), NULL, 0, NULL, NULL);
+    if (0 == n)
+        return "";
+    std::vector<char> buf(n + 1);
+    ::WideCharToMultiByte(CP_ACP, 0, utf16.c_str(), -1, &buf[0], n, NULL, NULL);
+    utf8.resize(n);
+    utf8.assign(&buf[0], n);
+    return utf8;
+}
+
+std::string UTF16ToUTF8(const string16& utf16) {
+    return WideToUTF8(utf16);
 }
 
 }

@@ -1,21 +1,30 @@
-
+﻿
 #if USING_VC6RT == 1
 
 #include <string>
 #include <vector>
 #include <sstream>
-
-#include <algorithmvc6.h>
+#include <algorithm>
+#include <limits>
+#include <limits.h>
+#include <windows.h>
 
 extern "C" double fmod(double _Xx, double _Yx);
+
+#if !defined(_WIN64)
+void __cdecl operator delete(void * pv, const std::nothrow_t&)
+{
+    ::delete(pv);
+}
+#endif
 
 namespace std {
 
 int fpclassify(double x)
 {
-    union { double d; uint64_t u; }u = { x };
+    union { double d; unsigned __int64 u; }u = { x };
 
-    uint32_t exp = (uint32_t)((u.u & 0x7fffffffffffffffULL) >> 52);
+    unsigned __int32 exp = (unsigned __int32)((u.u & 0x7fffffffffffffffULL) >> 52);
 
     if (0 == exp) {
         if (u.u & 0x000fffffffffffffULL)
@@ -183,7 +192,7 @@ double pow(int base, double exp)
 
 double __cdecl copysign(double x, double y)
 {
-    union { double f; uint64_t u; } ux, uy;
+    union { double f; unsigned __int64 u; } ux, uy;
 
     ux.f = x;
     uy.f = y;
@@ -194,7 +203,12 @@ double __cdecl copysign(double x, double y)
     return ux.f;
 }
 
-int64 abs(int64 val)
+__int64 abs(__int64 val)
+{
+    return (val > 0 ? val : -val);
+}
+
+double fabs(double val)
 {
     return (val > 0 ? val : -val);
 }
@@ -242,6 +256,31 @@ double tan(double val)
 double ldexp(double x, int exponent)
 {
     return ::ldexp(x, exponent);
+}
+
+bool isfinite(__int64 arg)
+{
+    return arg == arg && arg != std::numeric_limits<__int64>::infinity() && arg != -std::numeric_limits<__int64>::infinity();
+}
+
+bool isfinite(int arg)
+{
+    return arg == arg && arg != std::numeric_limits<int>::infinity() && arg != -std::numeric_limits<int>::infinity();
+}
+
+bool isfinite(unsigned int arg)
+{
+    return arg == arg && arg != std::numeric_limits<int>::infinity() && arg != -std::numeric_limits<int>::infinity();
+}
+
+bool isfinite(double arg)
+{
+    return arg == arg && arg != std::numeric_limits<double>::infinity() && arg != -std::numeric_limits<double>::infinity();
+}
+
+double nearbyint(double x)
+{
+  return ::nearbyint(x);
 }
 
 bool __cdecl operator != <char, char_traits<char>, allocator<char> >(basic_string<char, char_traits<char>, allocator<char> > const & a, char const * b)
@@ -341,46 +380,6 @@ basic_string<char, char_traits<char>, class std::allocator<char> > __cdecl std::
     return aCopy;
 }
 
-//////////////////////////////////////////////////////////////////////////
-
-basic_ostream<char, char_traits<char> >& __cdecl operator << <char, char_traits<char>>(
-    basic_ostream<char, char_traits<char> > & a, char const * b)
-{
-    ostringstream aCopy;
-	size_t len = strlen(b);
-    aCopy.write(b, len);
-    a << aCopy;
-    return a;
-}
-
-basic_ostream<char, char_traits<char> > & __cdecl operator<< <char, char_traits<char>, allocator<char> >(
-    basic_ostream<char, char_traits<char> > & a, basic_string<char, char_traits<char>, allocator<char> > const & b)
-{
-    ostringstream aCopy;
-    aCopy.write(b.c_str(), b.size());
-    a << aCopy;
-    return a;
-}
-
-basic_ostream<char, char_traits<char> > & __cdecl operator<< <char, char_traits<char> >(basic_ostream<char, char_traits<char> > & a, char b)
-{
-    ostringstream aCopy;
-    char bCopy[3] = { b, 0, 0 };
-    aCopy.write(bCopy, 1);
-    a << aCopy;
-    return a;
-}
-
-basic_ostream<char, char_traits<char> > & __cdecl operator<< (basic_ostream<char, char_traits<char> > & a, __int64 b)
-{
-    ostringstream aCopy;
-    char buf[32];
-    sprintf(buf, "%I64d", b);
-    aCopy << buf;
-    a << aCopy;
-    return a;
-}
-
 } // std
 
 //////////////////////////////////////////////////////////////////////////
@@ -390,10 +389,15 @@ double copysign(double x, double y)
     return std::copysign(x, y);
 }
 
+float copysignf(float number, float sign)
+{
+    return std::copysign((double)number, (double)sign);
+}
+
 double rint(double x)
 {
-    union { double d; uint64_t u; }u = { x };
-    uint64_t absux = u.u & 0x7fffffffffffffffULL;
+    union { double d; unsigned __int64 u; }u = { x };
+    unsigned __int64 absux = u.u & 0x7fffffffffffffffULL;
 
     //special case code for large int, Inf, NaN, 0
     if (absux - 1LL >= 0x4330000000000000ULL - 1LL)
@@ -486,8 +490,8 @@ float nextafterf(float x, float y)
 
 double nextafter(double x, double y)
 {
-    union { double d; uint64_t u; } ux = { x };
-    uint64_t	step = 1;
+    union { double d; unsigned __int64 u; } ux = { x };
+    unsigned __int64	step = 1;
 
     if (y != y || x != x)
         return x + y;
@@ -499,10 +503,10 @@ double nextafter(double x, double y)
     }
 
     //correct for the sign
-    int64_t signMask = (int64_t)ux.u >> 63;
+    __int64 signMask = (__int64)ux.u >> 63;
     step = (step ^ signMask) - signMask;
 
-    uint64_t absux = ux.u & 0x7fffffffffffffffULL;
+    unsigned __int64 absux = ux.u & 0x7fffffffffffffffULL;
 
     if (absux == 0ULL) { // zero
         ux.d = y;
@@ -514,7 +518,7 @@ double nextafter(double x, double y)
     return ux.d;
 }
 
-typedef union { uint64_t u; double d; } du;
+typedef union { unsigned __int64 u; double d; } du;
 
 float hypotf(float x, float y)
 {
@@ -546,9 +550,9 @@ float hypotf(float x, float y)
     }
 
     //break values up into exponent and mantissa
-    int64_t largeExp = largeVal->u >> 52;
-    int64_t smallExp = smallVal->u >> 52;
-    int64_t diff = largeExp - smallExp;
+    __int64 largeExp = largeVal->u >> 52;
+    __int64 smallExp = smallVal->u >> 52;
+    __int64 diff = largeExp - smallExp;
     if (diff >= 55L)
         return largeVal->d + smallVal->d;
 
@@ -622,6 +626,11 @@ double trunc(double val)
     if (val < 0)
         result = -result;
     return result;
+}
+
+float truncf(float val)
+{
+    return trunc((double)val);
 }
 
 // extern "C" void _ultod3()
@@ -782,9 +791,10 @@ extern "C" __declspec(naked) __int64 _ftol2_sse(double v)
 //     return 0;
 // }
 
-extern "C" void _alloca_probe_16()
+extern "C" void* _alloca_probe_16(size_t length)
 {
     DebugBreak();
+    return nullptr;
 }
 
 extern "C" void __report_rangecheckfailure()
@@ -827,4 +837,11 @@ FILE _iob[3] = { 0 };
 
 extern __declspec(dllimport) double _HUGE;
 
+float nearbyintf(float x) {
+	return 0;
+}
+
+double __cdecl scalbn(double _X, int _Y) {
+	return 0;
+}
 #endif // USING_VC6RT

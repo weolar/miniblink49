@@ -16,6 +16,8 @@
 #include "content/resources/TextAreaResizeCornerData.h"
 #include "content/resources/LocalizedString.h"
 #include "content/resources/WebKitWebRes.h"
+#include "content/browser/SharedTimerWin.h"
+#include "content/browser/WebPage.h"
 #include "cc/blink/WebCompositorSupportImpl.h"
 #include "cc/raster/RasterTaskWorkerThreadPool.h"
 #include "third_party/WebKit/public/web/WebKit.h"
@@ -28,13 +30,16 @@
 #include "third_party/WebKit/Source/bindings/core/v8/V8GCController.h"
 #include "third_party/skia/include/core/SkGraphics.h"
 #include "net/ActivatingLoaderCheck.h"
-
 #include "gen/blink/core/UserAgentStyleSheets.h"
-
+#include "gen/blink/platform/RuntimeEnabledFeatures.h"
 #include "third_party/WebKit/Source/core/loader/ImageLoader.h" // TODO
 #include "third_party/WebKit/Source/core/html/HTMLLinkElement.h" // TODO
 #include "third_party/WebKit/Source/core/html/HTMLStyleElement.h" // TODO
 #include "third_party/WebKit/Source/core/css/resolver/StyleResolver.h"
+#include "third_party/skia/include/core/SkGraphics.h"
+#include "ui/gfx/win/dpi.h"
+#include "gin/public/isolate_holder.h"
+#include "gin/array_buffer.h"
 
 #ifdef _DEBUG
 
@@ -83,6 +88,11 @@ extern int gStyleFetchedImageNotifyFinished;
 #endif
 }
 
+#if USING_VC6RT == 1
+void scrt_initialize_thread_safe_statics();
+#endif
+extern "C" void x86_check_features(void);
+
 namespace content {
 
 class DOMStorageMapWrap {
@@ -108,6 +118,46 @@ static WebThreadImpl* currentTlsThread()
     return nullptr;
 }
 
+static void setRuntimeEnabledFeatures()
+{
+    blink::RuntimeEnabledFeatures::setSlimmingPaintEnabled(false);
+    blink::RuntimeEnabledFeatures::setXSLTEnabled(false);
+    blink::RuntimeEnabledFeatures::setExperimentalStreamEnabled(false);
+    blink::RuntimeEnabledFeatures::setFrameTimingSupportEnabled(false);
+    blink::RuntimeEnabledFeatures::setSharedWorkerEnabled(false);
+    blink::RuntimeEnabledFeatures::setOverlayScrollbarsEnabled(false);
+    blink::RuntimeEnabledFeatures::setTouchEnabled(false);
+}
+
+void BlinkPlatformImpl::initialize()
+{
+#if USING_VC6RT == 1
+    scrt_initialize_thread_safe_statics();
+#endif
+    x86_check_features();
+    ::CoInitializeEx(NULL, 0); // COINIT_MULTITHREADED
+
+    setRuntimeEnabledFeatures();
+
+    gfx::win::InitDeviceScaleFactor();
+    BlinkPlatformImpl* platform = new BlinkPlatformImpl();
+    blink::Platform::initialize(platform);
+    gin::IsolateHolder::Initialize(gin::IsolateHolder::kNonStrictMode, gin::ArrayBufferAllocator::SharedInstance());
+    blink::initialize(blink::Platform::current());
+    initializeOffScreenTimerWindow();
+
+    // Maximum allocation size allowed for image scaling filters that
+    // require pre-scaling. Skia will fallback to a filter that doesn't
+    // require pre-scaling if the default filter would require an
+    // allocation that exceeds this limit.
+    const size_t kImageCacheSingleAllocationByteLimit = 64 * 1024 * 1024;
+    SkGraphics::SetResourceCacheSingleAllocationByteLimit(kImageCacheSingleAllocationByteLimit);
+
+    platform->startGarbageCollectedThread();
+
+    OutputDebugStringW(L"BlinkPlatformImpl::initBlink\n");
+}
+
 BlinkPlatformImpl::BlinkPlatformImpl() 
 {
     m_mainThreadId = -1;
@@ -125,14 +175,13 @@ BlinkPlatformImpl::BlinkPlatformImpl()
     m_threadNum = 0;
 	m_ioThread = nullptr;
     m_firstMonotonicallyIncreasingTime = currentTimeImpl(); // (GetTickCount() / 1000.0);
-    for (int i = 0; i < m_maxThreadNum; ++i) { m_threads[i] = nullptr; }
     ::InitializeCriticalSection(m_lock);
 
 	setUserAgent("Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.2171.99 Safari/537.36");
 
 #ifdef _DEBUG
-    myFree = (MyFree)ReplaceFuncAndCopy(free, newFree);
-    myRealloc = (MyRealloc)ReplaceFuncAndCopy(realloc, newRealloc);
+    //myFree = (MyFree)ReplaceFuncAndCopy(free, newFree);
+    //myRealloc = (MyRealloc)ReplaceFuncAndCopy(realloc, newRealloc);
 #endif
 }
 
@@ -205,6 +254,8 @@ void BlinkPlatformImpl::preShutdown()
 
 void BlinkPlatformImpl::shutdown()
 {
+    WebPage::shutdown();
+
     blink::memoryCache()->evictResources();
     v8::Isolate::GetCurrent()->LowMemoryNotification();
 
@@ -279,10 +330,12 @@ void BlinkPlatformImpl::closeThread()
     if (0 != m_threadNum)
         DebugBreak();
 
-    for (int i = 0; i < m_maxThreadNum; ++i) {
+    ::EnterCriticalSection(m_lock);
+    for (size_t i = 0; i < m_threads.size(); ++i) {
         if (nullptr != m_threads[i])
             DebugBreak();
     }
+    ::LeaveCriticalSection(m_lock);
 }
 
 blink::WebThread* BlinkPlatformImpl::createThread(const char* name)
@@ -293,7 +346,7 @@ blink::WebThread* BlinkPlatformImpl::createThread(const char* name)
     WebThreadImpl* threadImpl = new WebThreadImpl(name);
 
     ::EnterCriticalSection(m_lock);
-    m_threads[m_threadNum] = (threadImpl);
+    m_threads.push_back(threadImpl);
     ++m_threadNum;
     if (m_threadNum > m_maxThreadNum)
         DebugBreak();
@@ -306,10 +359,10 @@ void BlinkPlatformImpl::onThreadExit(WebThreadImpl* threadImpl)
 {
     ::EnterCriticalSection(m_lock);
     bool find = false;
-    for (int i = 0; i < m_maxThreadNum; ++i) {
-        if (m_threads[i] != threadImpl)
+    for (std::vector<WebThreadImpl*>::iterator i = m_threads.begin(); i != m_threads.end(); ++i) {
+        if (*i != threadImpl)
             continue;
-        m_threads[i] = nullptr;
+        m_threads.erase(i);
         --m_threadNum;
         find = true;
         break;
@@ -467,7 +520,7 @@ blink::WebData BlinkPlatformImpl::loadResource(const char* name)
         return blink::WebData((const char*)content::PluginPlaceholderElementJs, sizeof(content::PluginPlaceholderElementJs));
     
     notImplemented();
-    return blink::WebData();
+    return blink::WebData(" ", 1);
 }
 
 blink::WebThemeEngine* BlinkPlatformImpl::themeEngine()
