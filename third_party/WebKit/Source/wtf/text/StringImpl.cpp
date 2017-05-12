@@ -304,6 +304,7 @@ PassRefPtr<StringImpl> StringImpl::createUninitialized(unsigned length, LChar*& 
 
     data = reinterpret_cast<LChar*>(string + 1);
 #ifdef _DEBUG
+    memset(string, 0, allocationSize<LChar>(length));
     string->m_debugStringA = (char*)data;
 #endif // _DEBUG
     return adoptRef(new (string) StringImpl(length, Force8BitConstructor));
@@ -323,7 +324,8 @@ PassRefPtr<StringImpl> StringImpl::createUninitialized(unsigned length, UChar*& 
 
     data = reinterpret_cast<UChar*>(string + 1);
 #ifdef _DEBUG
-    string->m_debugStringA = (char*)data;
+    memset(string, 0, allocationSize<UChar>(length));
+    string->m_debugStringW = (UChar*)data;
 #endif // _DEBUG
     return adoptRef(new (string) StringImpl(length));
 }
