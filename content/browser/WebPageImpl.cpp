@@ -460,12 +460,12 @@ class CommitTask : public blink::WebThread::Task, public WebPageImpl::DestroyNot
 public:
     CommitTask(WebPageImpl* client)
         : m_client(client)
-	{
+    {
         m_client->registerDestroyNotif(this);
 #ifndef NDEBUG
 		commitTaskCounter.increment();
 #endif
-	}
+    }
 
     virtual ~CommitTask() override
     {
@@ -475,7 +475,7 @@ public:
 #ifndef NDEBUG
 		commitTaskCounter.decrement();
 #endif
-	}
+    }
 
     virtual void destroy() override
     {
@@ -496,14 +496,14 @@ private:
 
 void WebPageImpl::setNeedsCommitAndNotLayout()
 {
-	if (0 != m_needsCommit)
-		return;
+    if (0 != m_needsCommit)
+        return;
     atomicIncrement(&m_needsCommit);
 
 #if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
-	if (m_browser) {
+    if (m_browser) {
         m_browser->SetNeedHeartbeat();
-	} else {
+    } else {
 #endif
         if (0 == m_commitCount) {
             atomicIncrement(&m_commitCount);
@@ -533,12 +533,12 @@ void WebPageImpl::clearNeedsCommit()
 
 void WebPageImpl::beginMainFrame()
 {
-	bool needsCommit = m_needsCommit;
-	if (pageInited != m_state)
-		return;
+    bool needsCommit = m_needsCommit;
+    if (pageInited != m_state)
+        return;
 		
-	if (needsCommit) {
-		executeMainFrame();
+    if (needsCommit) {
+        executeMainFrame();
         m_layerTreeHost->requestDrawFrameToRunIntoCompositeThread();
 	}
 }

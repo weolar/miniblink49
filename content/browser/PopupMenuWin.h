@@ -24,6 +24,7 @@
 #include "third_party/WebKit/public/web/WebTextDirection.h"
 #include "third_party/WebKit/public/web/WebViewClient.h"
 #include "third_party/WebKit/public/web/WebPopupType.h"
+#include "third_party/WebKit/Source/platform/Timer.h"
 #include "skia/ext/platform_canvas.h"
 
 namespace blink {
@@ -46,7 +47,7 @@ public:
     static blink::WebWidget* create(HWND hWnd, blink::IntPoint offset, blink::WebViewImpl* webViewImpl, blink::WebPopupType type, PopupMenuWin** result);
     virtual void PopupMenuWin::closeWidgetSoon() override;
 
-    HWND popupHandle() const { return m_popup; }
+    HWND popupHandle() const { return m_hPopup; }
 
     // WebWidgetClient
     virtual void didInvalidateRect(const blink::WebRect&) override;
@@ -59,7 +60,7 @@ public:
 
 protected:
     PopupMenuWin(HWND hWnd, blink::IntPoint offset, blink::WebViewImpl* webViewImpl);
-    blink::WebWidget* PopupMenuWin::createWnd();
+    blink::WebWidget* createWnd();
     void updataSize();
     void updataPaint();
     void initialize();
@@ -70,8 +71,10 @@ protected:
     void beginMainFrame();
     static LRESULT CALLBACK PopupMenuWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
     LRESULT wndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+    void asynStartCreateWnd(blink::Timer<PopupMenuWin>*);
 
-    HWND m_popup;
+    blink::Timer<PopupMenuWin> m_asynStartCreateWndTimer;
+    HWND m_hPopup;
     skia::PlatformCanvas* m_memoryCanvas;
     blink::IntRect m_rect;
     bool m_needsCommit;
