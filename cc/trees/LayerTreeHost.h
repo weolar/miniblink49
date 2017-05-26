@@ -65,14 +65,15 @@ public:
 
     void setNeedsCommit();
     void setNeedsFullTreeSync();
+    void didUpdateLayout();
 
     void requestRepaint(const blink::IntRect& repaintRect);
 
     // 从光栅化线程发出，通知渲染新的一帧。当然也可能从主线程发出，如果没有光栅化，但又有滚动等情况
     void requestDrawFrameLocked(DirtyLayers* dirtyLayers, Vector<Tile*>* tilesToUIThreadRelease);
     bool preDrawFrame();
-	void postDrawFrame();
-	bool applyActions(bool needCheck);
+    void postDrawFrame();
+    bool applyActions(bool needCheck);
 
     void scrollBy(const blink::WebFloatSize& delta, const blink::WebFloatSize& velocity);
 
@@ -99,7 +100,7 @@ public:
     // Sets the background transparency for the viewport. The default is 'false'.
     virtual void setHasTransparentBackground(bool) OVERRIDE;
 
-	virtual void registerForAnimations(blink::WebLayer* layer) OVERRIDE;
+    virtual void registerForAnimations(blink::WebLayer* layer) OVERRIDE;
 
     // Sets whether this view is visible. In threaded mode, a view that is not visible will not
     // composite or trigger updateAnimations() or layout() calls until it becomes visible.
@@ -145,7 +146,7 @@ public:
     void registerCCLayer(CompositingLayer* layer);
     void unregisterCCLayer(CompositingLayer* layer);
     CompositingLayer* getCCLayerById(int id);
-	bool isRootCCLayerEmpty() const { return !m_rootCCLayer; }
+    bool isRootCCLayerEmpty() const { return !m_rootCCLayer; }
 
     SkCanvas* getMemoryCanvasLocked();
     void releaseMemoryCanvasLocked();

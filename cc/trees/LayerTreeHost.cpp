@@ -252,6 +252,11 @@ void LayerTreeHost::setNeedsCommit()
     m_webViewClient->scheduleAnimation();
 }
 
+void LayerTreeHost::didUpdateLayout()
+{
+    m_webViewClient->didUpdateLayout();
+}
+
 void LayerTreeHost::setNeedsFullTreeSync()
 {
     m_needsFullTreeSync = true;
@@ -266,13 +271,6 @@ void LayerTreeHost::requestRepaint(const blink::IntRect& repaintRect)
 void LayerTreeHost::requestDrawFrameLocked(DirtyLayers* dirtyLayers, Vector<Tile*>* tilesToUIThreadRelease)
 {
     DebugBreak();
-//     m_rasterNotifMutex->lock();
-//     // 等待，必须按index的顺序;
-//     m_dirtyLayersGroup.append(dirtyLayers);
-// 	m_tilesToUIThreadRelease.appendVector(*tilesToUIThreadRelease);
-// 	delete tilesToUIThreadRelease;
-//     m_rasterNotifMutex->unlock();
-//     setNeedsCommit();
 }
 
 static bool compareDirtyLayer(DirtyLayers*& left, DirtyLayers*& right)
@@ -459,7 +457,7 @@ void LayerTreeHost::recordDraw()
     if (!m_rootLayer)
         return;
 
-	updateLayersDrawProperties();
+    updateLayersDrawProperties();
 
     cc::RasterTaskGroup* taskGroup = cc::RasterTaskWorkerThreadPool::shared()->beginPostRasterTask(this);
     m_rootLayer->recordDrawChildren(taskGroup, 0);
@@ -516,14 +514,14 @@ void LayerTreeHost::drawToCanvas(SkCanvas* canvas, const IntRect& dirtyRect)
 }
 
 struct DrawPropertiesFromAncestor {
-	DrawPropertiesFromAncestor() 
-	{
-	    transform = SkMatrix44(SkMatrix44::kIdentity_Constructor);
-		opacity = 1.0;
-	}
+    DrawPropertiesFromAncestor() 
+    {
+        transform = SkMatrix44(SkMatrix44::kIdentity_Constructor);
+        opacity = 1.0;
+    }
 
-	SkMatrix44 transform;
-	float opacity;
+    SkMatrix44 transform;
+    float opacity;
 };
 
 static void updateChildLayersDrawProperties(cc_blink::WebLayerImpl* layer, LayerSorter& layerSorter,  const DrawPropertiesFromAncestor& propFromAncestor, int deep)
@@ -561,11 +559,11 @@ static void updateChildLayersDrawProperties(cc_blink::WebLayerImpl* layer, Layer
         drawProperties->screenSpaceTransform = combinedTransform;
         drawProperties->targetSpaceTransform = combinedTransform;
         drawProperties->currentTransform = currentTransform;
-		//drawProperties->opacity = propFromAncestor.opacity;
+        //drawProperties->opacity = propFromAncestor.opacity;
 
-		DrawPropertiesFromAncestor prop;
-		prop.transform = transformToAncestorIfFlatten;
-		prop.opacity *= child->opacity();
+        DrawPropertiesFromAncestor prop;
+        prop.transform = transformToAncestorIfFlatten;
+        prop.opacity *= child->opacity();
         updateChildLayersDrawProperties(child, layerSorter, prop, deep + 1);
     }
 
@@ -579,7 +577,7 @@ void LayerTreeHost::updateLayersDrawProperties()
     LayerSorter layerSorter;
     SkMatrix44 transform(SkMatrix44::kIdentity_Constructor);
 
-	DrawPropertiesFromAncestor prop;
+    DrawPropertiesFromAncestor prop;
     updateChildLayersDrawProperties(m_rootLayer, layerSorter, prop, 0);
 }
 
@@ -640,10 +638,10 @@ void LayerTreeHost::clearRootLayer()
 {
     m_rootLayer = nullptr;
 
-	while (0 != RasterTaskWorkerThreadPool::shared()->pendingRasterTaskNum()) {	::Sleep(20); }
-    requestApplyActionsToRunIntoCompositeThread(false);
+    while (0 != RasterTaskWorkerThreadPool::shared()->pendingRasterTaskNum()) {	::Sleep(20); }
+        requestApplyActionsToRunIntoCompositeThread(false);
 
-	m_rootCCLayer = nullptr;
+    m_rootCCLayer = nullptr;
 }
 
 void LayerTreeHost::setViewportSize(const blink::WebSize& deviceViewportSize)

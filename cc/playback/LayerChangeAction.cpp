@@ -221,15 +221,12 @@ void LayerChangeActionDrawPropUpdata::appendDirtyLayer(cc_blink::WebLayerImpl* l
     prop->copyDrawProperties(*layer->drawProperties(), layer->opacity());
     prop->bounds = layer->bounds();
     prop->position = layer->position();
-	prop->drawsContent = layer->drawsContent();
+	  prop->drawsContent = layer->drawsContent();
     prop->masksToBounds = layer->masksToBounds();
     prop->opaque = layer->opaque();
     prop->maskLayerId = layer->maskLayerId();
     prop->replicaLayerId = layer->replicaLayerId();
     m_props.append(prop);
-
-// 	String outString = String::format("LayerChangeActionDrawPropUpdata::appendDirtyLayer:%d %d\n", prop->drawsContent, layer->id());
-// 	OutputDebugStringW(outString.charactersWithNullTermination().data());
 }
 
 void LayerChangeActionDrawPropUpdata::appendPendingInvalidateRect(const blink::IntRect& r)
@@ -295,17 +292,17 @@ LayerChangeActionBlend::LayerChangeActionBlend(int actionId, int layerId, TileAc
 
 LayerChangeActionBlend::~LayerChangeActionBlend()
 {
-	delete m_item;
+	  delete m_item;
 }
 
 void LayerChangeActionBlend::setBitmap(/*size_t itemId, */SkBitmap* bitmap)
 {
-	m_item->bitmap = bitmap;
+	  m_item->bitmap = bitmap;
 }
 
 void LayerChangeActionBlend::appendPendingInvalidateRect(const blink::IntRect& r)
 {
-	m_pendingInvalidateRects.append(r);
+	  m_pendingInvalidateRects.append(r);
 }
 
 void LayerChangeActionBlend::appendPendingInvalidateRects(const WTF::Vector<blink::IntRect>& rects)

@@ -381,7 +381,7 @@ void WebLayerImpl::insertChild(WebLayer* child, size_t index)
     blink::IntRect invalidateRect(blink::IntPoint(child->position().x, child->position().y), child->bounds());
     appendPendingInvalidateRect(invalidateRect);// weolar TODO
     setNeedsCommit(false);
-	appendLayerChangeAction(new cc::LayerChangeActionInsertChild(-1, id(), child->id(), index));
+    appendLayerChangeAction(new cc::LayerChangeActionInsertChild(-1, id(), child->id(), index));
 }
 
 WebLayerImpl* WebLayerImpl::parent() const
@@ -865,7 +865,6 @@ void WebLayerImpl::setScrollClipLayer(WebLayer* clip_layer)
 
 bool WebLayerImpl::scrollable() const
 {
-    //return layer_->scrollable();
     return m_scrollClipLayerId != -1;
 }
 
@@ -880,13 +879,11 @@ void WebLayerImpl::setUserScrollable(bool horizontal, bool vertical)
 
 bool WebLayerImpl::userScrollableHorizontal() const
 {
-    //return layer_->user_scrollable_horizontal();
     return m_userScrollableHorizontal;
 }
 
 bool WebLayerImpl::userScrollableVertical() const
 {
-    //return layer_->user_scrollable_vertical();
     return m_userScrollableVertical;
 }
 

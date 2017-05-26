@@ -198,16 +198,16 @@ public:
     virtual void run() override
     {
         SkBitmap* bitmap = raster();
-		m_blendAction->setBitmap(bitmap);
-		releaseRource();
+        m_blendAction->setBitmap(bitmap);
+        releaseRource();
 
 //         String outString = String::format("RasterTask::run: %d %d %d %d\n", m_dirtyRect.x(), m_dirtyRect.y(), m_dirtyRect.width(), m_dirtyRect.height());
 //         OutputDebugStringW(outString.charactersWithNullTermination().data());
     }
 
-	SkBitmap* raster()
+    SkBitmap* raster()
     {
-		SkBitmap* bitmap = new SkBitmap;
+        SkBitmap* bitmap = new SkBitmap;
         bitmap->allocN32Pixels(m_dirtyRect.width(), m_dirtyRect.height());
         bitmap->eraseColor(0x00ffffff);
         
@@ -228,7 +228,7 @@ public:
         canvas->drawPicture(m_picture, nullptr, &paint);
         canvas->restore();
 
-		return bitmap;
+        return bitmap;
     }
 
     int threadIndex() const { return m_threadIndex; };
@@ -239,7 +239,7 @@ private:
     //Vector<Tile*>* m_willRasteredTiles;
     IntRect m_dirtyRect;
     int m_threadIndex;
-	LayerChangeActionBlend* m_blendAction;
+    LayerChangeActionBlend* m_blendAction;
     RasterTaskGroup* m_group;
 };
 
@@ -261,7 +261,7 @@ RasterTaskGroup::RasterTaskGroup(RasterTaskWorkerThreadPool* pool, LayerTreeHost
     m_pool = pool;
     m_host = host;
     m_drawPropUpdataAction = new LayerChangeActionDrawPropUpdata();
-	m_lastBlendActionForPendingInvalidateRect = nullptr;
+    m_lastBlendActionForPendingInvalidateRect = nullptr;
 
 // 	String outString = String::format("RasterTaskGroup::RasterTaskGroup: %p\n", this);
 // 	OutputDebugStringW(outString.charactersWithNullTermination().data());
@@ -280,7 +280,7 @@ RasterTaskGroup::~RasterTaskGroup()
 
 void RasterTaskGroup::postImageLayerAction(int imageLayerId, SkBitmapRefWrap* bitmap)
 {
-	m_blendAndImageActions.append(new LayerChangeActionUpdataImageLayer(m_host->genActionId(), imageLayerId, bitmap));
+    m_blendAndImageActions.append(new LayerChangeActionUpdataImageLayer(m_host->genActionId(), imageLayerId, bitmap));
 }
 
 void RasterTaskGroup::postRasterTask(cc_blink::WebLayerImpl* layer, SkPicture* picture, TileActionInfoVector* willRasteredTiles, const IntRect& dirtyRect)
@@ -289,9 +289,9 @@ void RasterTaskGroup::postRasterTask(cc_blink::WebLayerImpl* layer, SkPicture* p
 
     int layerId = layer->id();
     
-	LayerChangeActionBlend* blendAction = new LayerChangeActionBlend(m_host->genActionId(), layerId, willRasteredTiles, dirtyRect, nullptr);
-	m_blendAndImageActions.append(blendAction);
-	m_lastBlendActionForPendingInvalidateRect = blendAction;
+    LayerChangeActionBlend* blendAction = new LayerChangeActionBlend(m_host->genActionId(), layerId, willRasteredTiles, dirtyRect, nullptr);
+    m_blendAndImageActions.append(blendAction);
+    m_lastBlendActionForPendingInvalidateRect = blendAction;
 
     int threadIndex = m_pool->selectOneIdleThread();
 
@@ -373,27 +373,27 @@ void RasterTaskGroup::unref()
 // 		OutputDebugStringW(outString.charactersWithNullTermination().data());
 // 	}
 
-	if (m_lastBlendActionForPendingInvalidateRect) {
-		if (m_drawPropUpdataAction) { // 脏矩形转移，可以延迟提交
-			m_lastBlendActionForPendingInvalidateRect->appendPendingInvalidateRects(m_drawPropUpdataAction->dirtyRects());
-			m_drawPropUpdataAction->cleanupPendingInvalidateRectIfHasAlendAction();
-		}
-	}
+    if (m_lastBlendActionForPendingInvalidateRect) {
+        if (m_drawPropUpdataAction) { // 脏矩形转移，可以延迟提交
+            m_lastBlendActionForPendingInvalidateRect->appendPendingInvalidateRects(m_drawPropUpdataAction->dirtyRects());
+            m_drawPropUpdataAction->cleanupPendingInvalidateRectIfHasAlendAction();
+		    }
+    }
 
-	if (!m_drawPropUpdataAction->dirtyRects().isEmpty() || !m_drawPropUpdataAction->isDirtyLayerEmpty()) {
-		if (-1 == m_drawPropUpdataAction->actionId()) {
-			RELEASE_ASSERT(false);
-			m_drawPropUpdataAction->setActionId(m_host->genActionId());
-		}
-		m_host->appendLayerChangeAction(m_drawPropUpdataAction);
-	} else {
-		ASSERT(m_drawPropUpdataAction->isActionIdEmpty());
-		delete m_drawPropUpdataAction;
-		m_drawPropUpdataAction = nullptr;
-	}
+    if (!m_drawPropUpdataAction->dirtyRects().isEmpty() || !m_drawPropUpdataAction->isDirtyLayerEmpty()) {
+        if (-1 == m_drawPropUpdataAction->actionId()) {
+            RELEASE_ASSERT(false);
+            m_drawPropUpdataAction->setActionId(m_host->genActionId());
+        }
+        m_host->appendLayerChangeAction(m_drawPropUpdataAction);
+    } else {
+        ASSERT(m_drawPropUpdataAction->isActionIdEmpty());
+        delete m_drawPropUpdataAction;
+        m_drawPropUpdataAction = nullptr;
+    }
 
-	for (size_t i = 0; i < m_blendAndImageActions.size(); ++i)
-		m_host->appendLayerChangeAction(m_blendAndImageActions[i]);
+    for (size_t i = 0; i < m_blendAndImageActions.size(); ++i)
+        m_host->appendLayerChangeAction(m_blendAndImageActions[i]);
 
     delete this;
     mutex->unlock();

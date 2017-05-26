@@ -357,20 +357,20 @@ void TileGrid::cleanupUnnecessaryTile(Vector<size_t>* hasBitmapTiles)
     if (hasBitmapTiles->size() < maxHasBitmapTiles)
         return;
 
-	LayerChangeActionCleanupUnnecessaryTile* cleanupAction = new LayerChangeActionCleanupUnnecessaryTile(layer()->id());
+    LayerChangeActionCleanupUnnecessaryTile* cleanupAction = new LayerChangeActionCleanupUnnecessaryTile(layer()->id());
 
-	CompareTileUsing compareTileUsing(m_tiles);
+    CompareTileUsing compareTileUsing(m_tiles);
     std::sort(hasBitmapTiles->begin(), hasBitmapTiles->end(), compareTileUsing);
 
     int willWithoutBitmapCount = 0;
     int hasBitmapTilesSize = hasBitmapTiles->size();
     for (int i = hasBitmapTilesSize - 1; i >= 0; --i) {
-		size_t index = hasBitmapTiles->at(i);
-		if (index >= m_tiles->size()) {
-			ASSERT(false);
-			continue;
-		}
-		Tile* tile = m_tiles->at(index);
+        size_t index = hasBitmapTiles->at(i);
+        if (index >= m_tiles->size()) {
+            ASSERT(false);
+            continue;
+        }
+        Tile* tile = m_tiles->at(index);
 
         if ((maxHasBitmapTiles + willWithoutBitmapCount > hasBitmapTilesSize) || TilePriorityNormal != tile->priority() || 1 != tile->getRefCnt())
             continue;
@@ -378,19 +378,19 @@ void TileGrid::cleanupUnnecessaryTile(Vector<size_t>* hasBitmapTiles)
         ASSERT(!isInWillBeShowedArea(tile));
 
         ++willWithoutBitmapCount;
-        
+
         MutexLocker locker(tile->mutex());
         tile->setPriority(TilePriorityNormal);
         tile->setAllBoundDirty();
         tile->clearBitmap();
-		cleanupAction->appendTile(index, tile->xIndex(), tile->yIndex());
+        cleanupAction->appendTile(index, tile->xIndex(), tile->yIndex());
     }
 
-	if (cleanupAction->isEmpty()) {
+    if (cleanupAction->isEmpty()) {
         delete cleanupAction;
         cleanupAction = nullptr;
         return;
-	}
+    }
 
     LayerTreeHost* host = layer()->layerTreeHost();
     cleanupAction->setActionId(host->genActionId());
@@ -399,7 +399,7 @@ void TileGrid::cleanupUnnecessaryTile(Vector<size_t>* hasBitmapTiles)
 
 void TileGrid::update(blink::WebContentLayerClient* client, RasterTaskGroup* taskGroup, const blink::IntSize& newLayerSize, const blink::IntRect& screenRect)
 {
-	Vector<size_t> hasBitmapTiles;
+    Vector<size_t> hasBitmapTiles;
     updateSize(screenRect, newLayerSize);	
     updateTilePriorityAndCommitInvalidate(&hasBitmapTiles);
     applyDirtyRectsToRaster(client, taskGroup);
@@ -430,7 +430,11 @@ void TileGrid::invalidate(const blink::IntRect& rect, bool directSaveToDirtyRect
     if (m_dirtyRects.size() > 100) {
         OutputDebugStringA("TileGrid::invalidate > 100 \n");
         DebugBreak();
-    }    
+    }
+
+//     const blink::IntRect& r = rect;
+//     if (r.width() > 600 && r.height() > 600)
+//         OutputDebugStringA("TileGrid::invalidate\n");
 
     bool isIntersect = m_needBeShowedArea.intersects(dirtyRect);
     bool isContain = m_needBeShowedArea.contains(dirtyRect);

@@ -42,8 +42,8 @@ struct DrawToCanvasProperties : public DrawProperties {
         screenSpaceTransform = other.screenSpaceTransform;
         targetSpaceTransform = other.targetSpaceTransform;
         currentTransform = other.currentTransform;
-		clip = other.clip;
-		opacity = otherOpacity;
+		    clip = other.clip;
+	    	opacity = otherOpacity;
     }
 
     void copy(const DrawToCanvasProperties& other)
@@ -54,10 +54,10 @@ struct DrawToCanvasProperties : public DrawProperties {
         clip = other.clip;
         bounds = other.bounds;
         position = other.position;
-		masksToBounds = other.masksToBounds;
+		    masksToBounds = other.masksToBounds;
         drawsContent = other.drawsContent;
         opaque = other.opaque;
-		opacity = other.opacity;
+		    opacity = other.opacity;
         maskLayerId = other.maskLayerId;
         replicaLayerId = other.replicaLayerId;
     }
