@@ -177,14 +177,14 @@ void V8PromiseRejectionEvent::visitDOMWrapper(v8::Isolate*, ScriptWrappable*, co
 {
 #ifdef MINIBLINK_NOT_IMPLEMENTED
 #endif // MINIBLINK_NOT_IMPLEMENTED
-	notImplemented();
+    notImplemented();
 }
 
 void constructorCallback(const v8::FunctionCallbackInfo<v8::Value>&)
 {
 #ifdef MINIBLINK_NOT_IMPLEMENTED
 #endif // MINIBLINK_NOT_IMPLEMENTED
-	notImplemented();
+    notImplemented();
 }
 
 void V8PromiseRejectionEvent::promiseAttributeGetterCustom(const v8::FunctionCallbackInfo<v8::Value>&) { notImplemented(); }

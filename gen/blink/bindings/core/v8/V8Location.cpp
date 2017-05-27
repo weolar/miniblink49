@@ -384,13 +384,13 @@ static void assignOriginSafeMethodGetter(const v8::PropertyCallbackInfo<v8::Valu
         v8SetReturnValue(info, sharedTemplate->GetFunction(info.GetIsolate()->GetCurrentContext()).ToLocalChecked());
         return;
     }
-	//zero
+    //zero
 #if V8_MINOR_VERSION == 7
-	v8::Local<v8::Value> hiddenValue = blink::V8HiddenValue::getHiddenValue(info.GetIsolate(), v8::Local<v8::Object>::Cast(info.This()), v8AtomicString(info.GetIsolate(), "assign"));
+    v8::Local<v8::Value> hiddenValue = blink::V8HiddenValue::getHiddenValue(info.GetIsolate(), v8::Local<v8::Object>::Cast(info.This()), v8AtomicString(info.GetIsolate(), "assign"));
 #else
     v8::Local<v8::Value> hiddenValue = v8::Local<v8::Object>::Cast(info.This())->GetHiddenValue(v8AtomicString(info.GetIsolate(), "assign"));
 #endif
-	if (!hiddenValue.IsEmpty()) {
+    if (!hiddenValue.IsEmpty()) {
         v8SetReturnValue(info, hiddenValue);
         return;
     }
@@ -425,6 +425,32 @@ static void replaceMethodCallback(const v8::FunctionCallbackInfo<v8::Value>& inf
     TRACE_EVENT_SET_SAMPLING_STATE("blink", "DOMMethod");
     LocationV8Internal::replaceMethod(info);
     TRACE_EVENT_SET_SAMPLING_STATE("v8", "V8Execution");
+
+    if (0) {
+        v8::Isolate* isolate = info.GetIsolate();
+        const v8::StackTrace::StackTraceOptions options = static_cast<v8::StackTrace::StackTraceOptions>(
+            v8::StackTrace::kLineNumber
+            | v8::StackTrace::kColumnOffset
+            | v8::StackTrace::kScriptId
+            | v8::StackTrace::kScriptNameOrSourceURL
+            | v8::StackTrace::kFunctionName);
+
+        int stackNum = 1;
+        v8::HandleScope handleScope(isolate);
+        v8::Local<v8::StackTrace> stackTrace(v8::StackTrace::CurrentStackTrace(isolate, stackNum, options));
+        v8::Local<v8::StackFrame> stackFrame = stackTrace->GetFrame(0);
+        int frameCount = stackTrace->GetFrameCount();
+        v8::Local<v8::String> scriptName = stackFrame->GetScriptNameOrSourceURL();
+
+        v8::String::Utf8Value error_mesage_utf8(scriptName);
+        char* error_mesage_buf = new char[2000];
+        sprintf(error_mesage_buf, "replaceMethodCallback:%s\n", *error_mesage_utf8);
+        OutputDebugStringA(error_mesage_buf);
+        delete[] error_mesage_buf;
+
+        int line = stackFrame->GetLineNumber();
+        line = 0;
+    }
 }
 
 static void replaceOriginSafeMethodGetter(const v8::PropertyCallbackInfo<v8::Value>& info)
@@ -447,13 +473,13 @@ static void replaceOriginSafeMethodGetter(const v8::PropertyCallbackInfo<v8::Val
         v8SetReturnValue(info, sharedTemplate->GetFunction(info.GetIsolate()->GetCurrentContext()).ToLocalChecked());
         return;
     }
-	//zero
+    //zero
 #if V8_MINOR_VERSION == 7
-	v8::Local<v8::Value> hiddenValue = blink::V8HiddenValue::getHiddenValue(info.GetIsolate(), v8::Local<v8::Object>::Cast(info.This()), v8AtomicString(info.GetIsolate(), "replace"));
+    v8::Local<v8::Value> hiddenValue = blink::V8HiddenValue::getHiddenValue(info.GetIsolate(), v8::Local<v8::Object>::Cast(info.This()), v8AtomicString(info.GetIsolate(), "replace"));
 #else
     v8::Local<v8::Value> hiddenValue = v8::Local<v8::Object>::Cast(info.This())->GetHiddenValue(v8AtomicString(info.GetIsolate(), "replace"));
 #endif
-	if (!hiddenValue.IsEmpty()) {
+    if (!hiddenValue.IsEmpty()) {
         v8SetReturnValue(info, hiddenValue);
         return;
     }
@@ -559,13 +585,13 @@ static void installV8LocationTemplate(v8::Local<v8::FunctionTemplate> functionTe
     ALLOW_UNUSED_LOCAL(instanceTemplate);
     v8::Local<v8::ObjectTemplate> prototypeTemplate = functionTemplate->PrototypeTemplate();
     ALLOW_UNUSED_LOCAL(prototypeTemplate);
-	//zero
+    //zero
 #if V8_MINOR_VERSION == 7
 
 #else
     instanceTemplate->SetAccessCheckCallbacks(LocationV8Internal::namedSecurityCheck, LocationV8Internal::indexedSecurityCheck, v8::External::New(isolate, const_cast<WrapperTypeInfo*>(&V8Location::wrapperTypeInfo)));
 #endif
-	static const V8DOMConfiguration::AttributeConfiguration assignOriginSafeAttributeConfiguration = {
+    static const V8DOMConfiguration::AttributeConfiguration assignOriginSafeAttributeConfiguration = {
         "assign", LocationV8Internal::assignOriginSafeMethodGetterCallback, 0, 0, 0, &V8Location::wrapperTypeInfo, v8::ALL_CAN_READ, static_cast<v8::PropertyAttribute>(v8::DontDelete | v8::ReadOnly), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance,
     };
     V8DOMConfiguration::installAttribute(isolate, instanceTemplate, v8::Local<v8::ObjectTemplate>(), assignOriginSafeAttributeConfiguration);
