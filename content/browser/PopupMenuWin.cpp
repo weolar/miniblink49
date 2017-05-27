@@ -71,8 +71,8 @@ PopupMenuWin::PopupMenuWin(HWND hWnd, IntPoint offset, WebViewImpl* webViewImpl)
     m_hParentWnd = hWnd;
     m_rect.setWidth(1);
     m_rect.setHeight(1);
-	m_offset.setX(offset.x());
-	m_offset.setY(offset.y());
+    m_offset.setX(offset.x());
+    m_offset.setY(offset.y());
 }
 
 static void destroyWindowAsyn(HWND hWnd)
@@ -241,14 +241,14 @@ void PopupMenuWin::beginMainFrame()
     popup->beginFrame(frameTime);
     popup->layout();
 
-	if (0)
-		m_layerTreeHost->showDebug();
+    if (0)
+        m_layerTreeHost->showDebug();
 
-	m_layerTreeHost->recordDraw();
+    m_layerTreeHost->recordDraw();
     
-	m_layerTreeHost->preDrawFrame();
+    m_layerTreeHost->preDrawFrame();
     updataPaint();
-	m_layerTreeHost->postDrawFrame();
+    m_layerTreeHost->postDrawFrame();
 }
 
 void PopupMenuWin::updataSize()
@@ -260,14 +260,14 @@ void PopupMenuWin::updataSize()
     blink::WebPagePopup* popup = m_popupImpl;
 
     bool needsCommit = m_needsCommit;
-	blink::IntSize size(m_rect.width(), m_rect.height());
-	if (m_layerTreeHost)
-		m_layerTreeHost->setViewportSize(size);
+    blink::IntSize size(m_rect.width(), m_rect.height());
+    if (m_layerTreeHost)
+        m_layerTreeHost->setViewportSize(size);
     popup->resize(size);
     m_needsCommit = needsCommit;
 
-	POINT pos = { m_rect.x() + m_offset.x(), m_rect.y() + m_offset.y() };
-	::ClientToScreen(m_hParentWnd, &pos);
+    POINT pos = { m_rect.x() + m_offset.x(), m_rect.y() + m_offset.y() };
+    ::ClientToScreen(m_hParentWnd, &pos);
 
     ::MoveWindow(m_hPopup, pos.x, pos.y, m_rect.width(), m_rect.height(), false);
 }

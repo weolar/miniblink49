@@ -155,10 +155,10 @@ void WebThreadImpl::postDelayedTaskImpl(const blink::WebTraceLocation& location,
 
 void WebThreadImpl::postDelayedTask(const blink::WebTraceLocation& location, blink::WebThread::Task* task, long long delayMs)
 {
-	if (m_willExit) {
-		delete task;
-		return;
-	}
+    if (m_willExit) {
+        delete task;
+        return;
+    }
 
     if (isCurrentThread()) {
         postDelayedTaskImpl(location, task, delayMs);
@@ -172,7 +172,7 @@ void WebThreadImpl::postDelayedTask(const blink::WebTraceLocation& location, bli
         ::SetEvent(m_hEvent);
 #if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
     if (CefContext::Get())
-	    CefContext::Get()->SetNeedHeartbeat();
+        CefContext::Get()->SetNeedHeartbeat();
 #endif
     ::LeaveCriticalSection(&m_taskPairsMutex);
 }
@@ -323,22 +323,22 @@ void WebThreadImpl::fire()
 
 void WebThreadImpl::fireTimeOnExit()
 {
-	while (!m_timerHeap.empty()) {
-		WebTimerBase* timer = m_timerHeap[0];
-		timer->m_nextFireTime = 0;
-		timer->heapDeleteMin();
+    while (!m_timerHeap.empty()) {
+        WebTimerBase* timer = m_timerHeap[0];
+        timer->m_nextFireTime = 0;
+        timer->heapDeleteMin();
 
-		willProcessTasks();
-		timer->fired(); // 可能会append m_timerHeap
-		didProcessTasks();
-	}
+        willProcessTasks();
+        timer->fired(); // 可能会append m_timerHeap
+        didProcessTasks();
+    }
 }
 
 void WebThreadImpl::fireOnExit()
 {
-	startTriggerTasks();
-	fireTimeOnExit();
-	ASSERT(0 == m_timerHeap.size() && 0 == m_taskPairsToPost.size());
+    startTriggerTasks();
+    fireTimeOnExit();
+    ASSERT(0 == m_timerHeap.size() && 0 == m_taskPairsToPost.size());
 
     deleteUnusedTimers();
     deleteTimersOnExit();

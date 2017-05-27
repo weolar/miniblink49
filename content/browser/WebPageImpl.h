@@ -56,7 +56,7 @@ public:
         const blink::WebURLRequest& request,
         const blink::WebWindowFeatures& features,
         const blink::WebString& name,
-		blink::WebNavigationPolicy policy,
+        blink::WebNavigationPolicy policy,
         bool suppressOpener) OVERRIDE;
 
     void init(WebPage* pagePtr, HWND hWnd);
@@ -65,6 +65,7 @@ public:
     // WebViewClient
     virtual void didInvalidateRect(const blink::WebRect&) OVERRIDE;
     virtual void didAutoResize(const blink::WebSize& newSize) OVERRIDE;
+    virtual void didUpdateLayout() OVERRIDE;
     virtual void didUpdateLayoutSize(const blink::WebSize& newSize) OVERRIDE;
     virtual void scheduleAnimation() OVERRIDE;
     virtual void initializeLayerTreeView() OVERRIDE;
@@ -150,13 +151,13 @@ public:
         const blink::WebURLRequest& request,
         const blink::WebWindowFeatures& features,
         const blink::WebString& name,
-		blink::WebNavigationPolicy policy,
+        blink::WebNavigationPolicy policy,
         bool suppressOpener);
     blink::WebView* createCefView(blink::WebLocalFrame* creator,
         const blink::WebURLRequest& request,
         const blink::WebWindowFeatures& features,
         const blink::WebString& name,
-		blink::WebNavigationPolicy policy,
+        blink::WebNavigationPolicy policy,
         bool suppressOpener);
 
     // ----
@@ -175,7 +176,7 @@ public:
     blink::WebViewImpl* m_webViewImpl;
     bool m_mouseInWindow;
     HWND m_hWnd;
-    blink::IntPoint m_hwndRenderOffset;	// 网页渲染坐标相对于窗口的原点
+    blink::IntPoint m_hwndRenderOffset;    // 网页渲染坐标相对于窗口的原点
     blink::IntSize m_viewportSize;
 
     // May be NULL if the browser has not yet been created or if the browser has

@@ -87,7 +87,7 @@ protected:
     blink::WebFrameClient* m_webFrameClient;
     blink::WebViewImpl* m_webViewImpl;
     HWND m_hParentWnd;
-	blink::IntPoint m_offset;
+    blink::IntPoint m_offset;
     PlatformEventHandler* m_platformEventHandler;
 };
 

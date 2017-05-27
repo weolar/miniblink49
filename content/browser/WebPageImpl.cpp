@@ -163,8 +163,8 @@ WebPageImpl::~WebPageImpl()
     delete m_navigationController;
     m_navigationController = nullptr;
 
-	delete m_layerTreeHost;
-	m_layerTreeHost = nullptr;
+    delete m_layerTreeHost;
+    m_layerTreeHost = nullptr;
 
     // 在Page::~Page()中销毁
     if (m_webFrameClient)
@@ -327,7 +327,7 @@ WebView* WebPageImpl::createView(WebLocalFrame* creator,
 #if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
     return createCefView(creator, request, features, name, policy, suppressOpener);
 #else
-	return nullptr;
+    return nullptr;
 #endif
 }
 
@@ -366,7 +366,7 @@ void WebPageImpl::freeV8TempObejctOnOneFrameBefore()
 
 void WebPageImpl::close()
 {
-	ASSERT(isMainThread());
+    ASSERT(isMainThread());
     if (pageInited != m_state)
         return;
 
@@ -413,15 +413,15 @@ void WebPageImpl::doClose()
 
     m_layerTreeHost->requestApplyActionsToRunIntoCompositeThread(false);
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
-	if (!m_pagePtr->wkeHandler().isWke) {
+    if (!m_pagePtr->wkeHandler().isWke) {
 #endif
-		if (m_hWnd) {
-			::SetWindowLongPtr(m_hWnd, GWLP_USERDATA, 0);
-			::KillTimer(m_hWnd, (UINT_PTR)this);
-			::DestroyWindow(m_hWnd);
-		}
+        if (m_hWnd) {
+            ::SetWindowLongPtr(m_hWnd, GWLP_USERDATA, 0);
+            ::KillTimer(m_hWnd, (UINT_PTR)this);
+            ::DestroyWindow(m_hWnd);
+        }
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
-	}
+    }
 #endif
 
     content::WebThreadImpl* threadImpl = nullptr;
@@ -437,12 +437,12 @@ void WebPageImpl::doClose()
 
 void WebPageImpl::closeWidgetSoon()
 {
-	ASSERT(isMainThread());
+    ASSERT(isMainThread());
 #if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
-	if (m_browser && !m_postCloseWidgetSoonMessage)
+    if (m_browser && !m_postCloseWidgetSoonMessage)
         blink::Platform::current()->currentThread()->postTask(FROM_HERE, WTF::bind(&CefBrowserHostImpl::CloseBrowser, m_browser, true));
 #endif
-	m_postCloseWidgetSoonMessage = true;
+    m_postCloseWidgetSoonMessage = true;
 }
 
 void WebPageImpl::showDebugNodeData()
@@ -463,7 +463,7 @@ public:
     {
         m_client->registerDestroyNotif(this);
 #ifndef NDEBUG
-		commitTaskCounter.increment();
+        commitTaskCounter.increment();
 #endif
     }
 
@@ -473,7 +473,7 @@ public:
             m_client->unregisterDestroyNotif(this);
         }
 #ifndef NDEBUG
-		commitTaskCounter.decrement();
+        commitTaskCounter.decrement();
 #endif
     }
 
@@ -518,7 +518,7 @@ void WebPageImpl::setNeedsCommitAndNotLayout()
 
 void WebPageImpl::setNeedsCommit()
 {
-    atomicIncrement(&m_needsLayout);
+    InterlockedExchange(reinterpret_cast<long volatile*>(&m_needsLayout), 1);
     setNeedsCommitAndNotLayout();
 }
 
@@ -531,16 +531,21 @@ void WebPageImpl::clearNeedsCommit()
 #endif
 }
 
+void WebPageImpl::didUpdateLayout()
+{
+    ;
+}
+
 void WebPageImpl::beginMainFrame()
 {
     bool needsCommit = m_needsCommit;
     if (pageInited != m_state)
         return;
-		
+        
     if (needsCommit) {
         executeMainFrame();
         m_layerTreeHost->requestDrawFrameToRunIntoCompositeThread();
-	}
+    }
 }
 
 void WebPageImpl::executeMainFrame()
@@ -551,17 +556,17 @@ void WebPageImpl::executeMainFrame()
 
     double lastFrameTimeMonotonic = WTF::monotonicallyIncreasingTime();
     
-    m_layerTreeHost->beginRecordActions();
+    int needsLayout = InterlockedExchange(reinterpret_cast<long volatile*>(&m_needsLayout), 0);
+    if (needsLayout) {
+        m_layerTreeHost->beginRecordActions();
 
-    if (m_needsLayout) {
-        atomicDecrement(&m_needsLayout);
         WebBeginFrameArgs frameArgs(lastFrameTimeMonotonic, 0, lastFrameTimeMonotonic - m_lastFrameTimeMonotonic);
         m_webViewImpl->beginFrame(frameArgs);
         m_webViewImpl->layout();
-    }
 
-    m_layerTreeHost->recordDraw();
-    m_layerTreeHost->endRecordActions();
+        m_layerTreeHost->recordDraw();
+        m_layerTreeHost->endRecordActions();
+    }
 
     m_lastFrameTimeMonotonic = lastFrameTimeMonotonic;
 
@@ -821,7 +826,7 @@ void WebPageImpl::didUpdateLayoutSize(const WebSize& newSize)
 
 void WebPageImpl::scheduleAnimation()
 {
-    setNeedsCommit();
+    setNeedsCommit/*AndNotLayout*/();
 }
 
 void WebPageImpl::initializeLayerTreeView()
@@ -1158,9 +1163,9 @@ void WebPageImpl::loadURL(int64 frameId, const wchar_t* url, const blink::Referr
 {
     int length = wcslen(url);
     String urlW((const UChar*)url, length);
-	blink::KURL kurl(ParsedURLString, urlW.utf8().data());
+    blink::KURL kurl(ParsedURLString, urlW.utf8().data());
 
-	blink::WebURL webURL = kurl;
+    blink::WebURL webURL = kurl;
     blink::WebURLRequest request(webURL);
     loadRequest(frameId, request);
 }

@@ -50,7 +50,7 @@ public:
     virtual double systemTraceTime() override;
 
     virtual blink::WebString userAgent() override;
-	void setUserAgent(char* ua);
+    void setUserAgent(char* ua);
 
     virtual blink::WebData BlinkPlatformImpl::loadResource(const char* name) override;
 
@@ -95,9 +95,9 @@ public:
     virtual void registerMemoryDumpProvider(blink::WebMemoryDumpProvider*) override;
     virtual void unregisterMemoryDumpProvider(blink::WebMemoryDumpProvider*) override;
 
-	//////////////////////////////////////////////////////////////////////////
-	blink::WebThread* tryGetIoThread() const;
-	blink::WebThread* ioThread();
+    //////////////////////////////////////////////////////////////////////////
+    blink::WebThread* tryGetIoThread() const;
+    blink::WebThread* ioThread();
 
 private:
     void destroyWebInfo();
@@ -109,7 +109,7 @@ private:
     std::vector<WebThreadImpl*> m_threads;
     int m_threadNum;
 
-	blink::WebThread* m_ioThread;
+    blink::WebThread* m_ioThread;
 
     ThreadIdentifier m_mainThreadId;
     blink::WebThemeEngine* m_webThemeEngine;

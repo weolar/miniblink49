@@ -180,8 +180,8 @@ BlinkPlatformImpl::BlinkPlatformImpl()
 	setUserAgent("Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.2171.99 Safari/537.36");
 
 #ifdef _DEBUG
-    //myFree = (MyFree)ReplaceFuncAndCopy(free, newFree);
-    //myRealloc = (MyRealloc)ReplaceFuncAndCopy(realloc, newRealloc);
+    myFree = (MyFree)ReplaceFuncAndCopy(free, newFree);
+    myRealloc = (MyRealloc)ReplaceFuncAndCopy(realloc, newRealloc);
 #endif
 }
 

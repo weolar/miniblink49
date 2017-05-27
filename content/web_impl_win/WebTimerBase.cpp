@@ -53,20 +53,20 @@ public:
     explicit TimerHeapElement(int i, WebThreadImpl* threadTimers)
         : m_index(i)
     {
-		m_threadTimers = (threadTimers);
-		m_timer = (timerHeap()[m_index]);
+        m_threadTimers = (threadTimers);
+        m_timer = (timerHeap()[m_index]);
         checkConsistency(); 
     }
 
-	std::vector<WebTimerBase*>& timerHeap()
-	{
-		return m_threadTimers->timerHeap();
-	}
+    std::vector<WebTimerBase*>& timerHeap()
+    {
+        return m_threadTimers->timerHeap();
+    }
 
-	const std::vector<WebTimerBase*>& timerHeap() const
-	{
-		return m_threadTimers->timerHeap();
-	}
+    const std::vector<WebTimerBase*>& timerHeap() const
+    {
+        return m_threadTimers->timerHeap();
+    }
 
     TimerHeapElement(const TimerHeapElement&);
     TimerHeapElement& operator=(const TimerHeapElement&);
@@ -85,7 +85,7 @@ private:
     int m_index;
     WebTimerBase* m_timer;
 
-	WebThreadImpl* m_threadTimers;
+    WebThreadImpl* m_threadTimers;
 };
 
 TimerHeapElement::TimerHeapElement(const TimerHeapElement& o)
@@ -131,11 +131,11 @@ public:
 
     TimerHeapIterator& operator++() { checkConsistency(); ++m_index; checkConsistency(); return *this; }
     TimerHeapIterator operator++(int) 
-	{ 
-		checkConsistency();
-		checkConsistency(1);
-		return TimerHeapIterator(m_index++, m_threadTimers);
-	}
+    { 
+        checkConsistency();
+        checkConsistency(1);
+        return TimerHeapIterator(m_index++, m_threadTimers);
+    }
 
     TimerHeapIterator& operator--() { checkConsistency(); --m_index; checkConsistency(); return *this; }
     TimerHeapIterator operator--(int) { checkConsistency(); checkConsistency(-1); return TimerHeapIterator(m_index--, m_threadTimers); }
@@ -157,12 +157,12 @@ public:
     std::vector<WebTimerBase*>& timerHeap() { return m_threadTimers->timerHeap(); }
     const std::vector<WebTimerBase*>& timerHeap() const  { return m_threadTimers->timerHeap(); }
 
-	WebThreadImpl* threadTimers() { return m_threadTimers; }
+    WebThreadImpl* threadTimers() { return m_threadTimers; }
 
 private:
     int m_index;
 
-	WebThreadImpl* m_threadTimers;
+    WebThreadImpl* m_threadTimers;
 };
 
 inline bool operator==(TimerHeapIterator a, TimerHeapIterator b) { return a.index() == b.index(); }
@@ -179,19 +179,19 @@ inline int operator-(TimerHeapIterator a, TimerHeapIterator b) { return a.index(
 
 std::vector<WebTimerBase*>& WebTimerBase::timerHeap()
 {
-	return m_threadTimers->timerHeap();
+    return m_threadTimers->timerHeap();
 }
 
 const std::vector<WebTimerBase*>& WebTimerBase::timerHeap() const
 {
-	return m_threadTimers->timerHeap();
+    return m_threadTimers->timerHeap();
 }
 
 extern ActivatingTimerCheck* gActivatingTimerCheck;
 
 WebTimerBase::WebTimerBase(WebThreadImpl* threadTimers, const blink::WebTraceLocation& location, blink::WebThread::Task* task)
     : m_nextFireTime(0)
-	, m_threadTimers(threadTimers)
+    , m_threadTimers(threadTimers)
     , m_repeatInterval(0)
     , m_heapIndex(-1)
     , m_location(location)
@@ -337,7 +337,7 @@ void WebTimerBase::heapPop()
 {
     // Temporarily force this timer to have the minimum key so we can pop it.
     double fireTime = m_nextFireTime;
-	m_nextFireTime = -std::numeric_limits<double>::infinity();
+    m_nextFireTime = -std::numeric_limits<double>::infinity();
     heapDecreaseKey();
     heapPopMin();
     m_nextFireTime = fireTime;
