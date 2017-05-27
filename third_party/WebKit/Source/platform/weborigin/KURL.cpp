@@ -351,8 +351,11 @@ bool needInserFileHead(const String& url)
     if (WTF::kNotFound != url.find("file:/"))
         return false;
 
-    if (WTF::kNotFound != url.find(":\\"))
-        return true;
+    if (WTF::kNotFound != url.find("data:"))
+        return false;
+
+//     if (WTF::kNotFound != url.find(":\\"))
+//         return true;
 
     if (':' == url[1] && ('\\' == url[1] || '/' == url[1]))
         return true;
