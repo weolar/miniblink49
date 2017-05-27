@@ -13,60 +13,60 @@ class LayerTreeHost;
 
 class ActionsFrame {
 public:
-	ActionsFrame(int64 beginId);
+    ActionsFrame(int64 beginId);
     ActionsFrame(int64 beginId, int64 endId);
-	~ActionsFrame();
+    ~ActionsFrame();
 
-	bool isEmpty() const;
+    bool isEmpty() const;
 
-	int64 beginId() const { return m_beginId; }
-	int64 endId() const { return m_endId; }
+    int64 beginId() const { return m_beginId; }
+    int64 endId() const { return m_endId; }
 
-	void appendLayerChangeAction(LayerChangeAction* action);
+    void appendLayerChangeAction(LayerChangeAction* action);
 
     bool areAllfull() const;
 
 private:
-	bool applyActions(ActionsFrameGroup* group, LayerTreeHost* host);
-	
-	void setEndId(int64 endId);
+    bool applyActions(ActionsFrameGroup* group, LayerTreeHost* host);
+    
+    void setEndId(int64 endId);
     void checkFull();
 
-	friend class ActionsFrameGroup;
+    friend class ActionsFrameGroup;
 
-	WTF::Vector<LayerChangeAction*> m_actions;
-	int64 m_beginId;
-	int64 m_endId;
-	bool m_allAreFull;
-	int m_hadRunCount;
+    WTF::Vector<LayerChangeAction*> m_actions;
+    int64 m_beginId;
+    int64 m_endId;
+    bool m_allAreFull;
+    int m_hadRunCount;
 };
 
 class ActionsFrameGroup {
 public:
-	ActionsFrameGroup(LayerTreeHost* host);
-	~ActionsFrameGroup();
+    ActionsFrameGroup(LayerTreeHost* host);
+    ~ActionsFrameGroup();
 
-	void beginRecordActions();
-	void endRecordActions();
+    void beginRecordActions();
+    void endRecordActions();
 
-	int64 genActionId();
-	void saveLayerChangeAction(LayerChangeAction* action);
-	void appendActionToFrame(LayerChangeAction* action);
-	bool applyActions(bool needCheck);
-	int64 curActionId() const;
-	void incCurActionId();
+    int64 genActionId();
+    void saveLayerChangeAction(LayerChangeAction* action);
+    void appendActionToFrame(LayerChangeAction* action);
+    bool applyActions(bool needCheck);
+    int64 curActionId() const;
+    void incCurActionId();
 
 private:
-	WTF::Vector<ActionsFrame*> m_frames;
+    WTF::Vector<ActionsFrame*> m_frames;
 
-	ActionsFrame* m_curFrame;
-	int64 m_curActionId;
-	int64 m_newestActionId;
+    ActionsFrame* m_curFrame;
+    int64 m_curActionId;
+    int64 m_newestActionId;
 
-	WTF::Mutex* m_actionsMutex;
-	WTF::Vector<LayerChangeAction*> m_actions;
+    WTF::Mutex* m_actionsMutex;
+    WTF::Vector<LayerChangeAction*> m_actions;
 
-	LayerTreeHost* m_host;
+    LayerTreeHost* m_host;
 };
 
 } // namespace cc

@@ -21,25 +21,25 @@ static int gWebScrollbarLayerImplCount = 0;
 
 class WebScrollbarContentLayerClient : public blink::WebContentLayerClient {
 public:
-	WebScrollbarContentLayerClient(WebScrollbarLayerImpl* owner)
-		: m_owner(owner)
-	{
-	}
+    WebScrollbarContentLayerClient(WebScrollbarLayerImpl* owner)
+        : m_owner(owner)
+    {
+    }
 
-	virtual void paintContents(blink::WebCanvas* canvas, const blink::WebRect& clip, blink::WebContentLayerClient::PaintingControlSetting) override
-	{
-		m_owner->drawToCanvas(canvas, clip);
-	}
+    virtual void paintContents(blink::WebCanvas* canvas, const blink::WebRect& clip, blink::WebContentLayerClient::PaintingControlSetting) override
+    {
+        m_owner->drawToCanvas(canvas, clip);
+    }
 
-	virtual void paintContents(blink::WebDisplayItemList*, const blink::WebRect& clip, blink::WebContentLayerClient::PaintingControlSetting) override
-	{
-	}
+    virtual void paintContents(blink::WebDisplayItemList*, const blink::WebRect& clip, blink::WebContentLayerClient::PaintingControlSetting) override
+    {
+    }
 
-	virtual ~WebScrollbarContentLayerClient() override { }
+    virtual ~WebScrollbarContentLayerClient() override { }
 
 protected:
-	
-	WebScrollbarLayerImpl* m_owner;
+    
+    WebScrollbarLayerImpl* m_owner;
 };
 
 WebScrollbarLayerImpl::WebScrollbarLayerImpl(
@@ -49,7 +49,7 @@ WebScrollbarLayerImpl::WebScrollbarLayerImpl(
     : m_layer(new WebLayerImpl(this))
     , m_scrollLayerId(-1)
     , m_clipLayerId(-1)
-	, m_client(new WebScrollbarContentLayerClient(this))
+    , m_client(new WebScrollbarContentLayerClient(this))
 {
     m_scrollbar = scrollbar;
     m_painter = painter;
@@ -66,7 +66,7 @@ WebScrollbarLayerImpl::WebScrollbarLayerImpl(
     bool is_left_side_vertical_scrollbar)
     : m_layer(new WebLayerImpl(this))
     , m_scrollLayerId(-1)
-	, m_client(new WebScrollbarContentLayerClient(this))
+    , m_client(new WebScrollbarContentLayerClient(this))
 {
     m_visibleSize = 0;
     m_value = 0;
@@ -79,7 +79,7 @@ WebScrollbarLayerImpl::~WebScrollbarLayerImpl()
 {
     m_layer->removeFromParent();
     delete m_layer;
-	delete m_client;
+    delete m_client;
 
     if (m_scrollbar)
         delete m_scrollbar;
@@ -164,18 +164,18 @@ void WebScrollbarLayerImpl::updataAndPaintContents(blink::WebCanvas* canvas, con
 
 void WebScrollbarLayerImpl::recordDraw(cc::RasterTaskGroup* taskGroup)
 {
-	if (!m_layer->tileGrid())
-		return;
+    if (!m_layer->tileGrid())
+        return;
 
-	cc::LayerTreeHost* layerTreeHost = m_layer->layerTreeHost();
-	if (layerTreeHost && !layerTreeHost->needTileRender())
-		return;
+    cc::LayerTreeHost* layerTreeHost = m_layer->layerTreeHost();
+    if (layerTreeHost && !layerTreeHost->needTileRender())
+        return;
 
-	blink::IntRect screenRect = blink::IntRect(blink::IntPoint(), layerTreeHost->deviceViewportSize());
-	screenRect = m_layer->mapRectFromRootLayerCoordinateToCurrentLayer(screenRect);
+    blink::IntRect screenRect = blink::IntRect(blink::IntPoint(), layerTreeHost->deviceViewportSize());
+    screenRect = m_layer->mapRectFromRootLayerCoordinateToCurrentLayer(screenRect);
 
-	blink::IntSize bounds = m_layer->bounds();
-	m_layer->tileGrid()->update(m_client, taskGroup, bounds, screenRect);
+    blink::IntSize bounds = m_layer->bounds();
+    m_layer->tileGrid()->update(m_client, taskGroup, bounds, screenRect);
 }
 
 void WebScrollbarLayerImpl::drawToCanvas(blink::WebCanvas* canvas, const blink::IntRect& clip)

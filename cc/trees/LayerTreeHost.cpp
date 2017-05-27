@@ -115,10 +115,10 @@ LayerTreeHost::~LayerTreeHost()
         delete m_memoryCanvas;
     m_memoryCanvas = nullptr;
     
-	for (WTF::HashMap<int, cc_blink::WebLayerImpl*>::iterator it = m_liveLayers.begin(); m_liveLayers.end() != it; ++it) {
+    for (WTF::HashMap<int, cc_blink::WebLayerImpl*>::iterator it = m_liveLayers.begin(); m_liveLayers.end() != it; ++it) {
         cc_blink::WebLayerImpl* layer = it->value;
         layer->setLayerTreeHost(nullptr);
-	}
+    }
     m_liveLayers.clear();
 
     for (WTF::HashMap<int, CompositingLayer*>::iterator it = m_liveCCLayers.begin(); m_liveCCLayers.end() != it; ++it) {
@@ -128,14 +128,14 @@ LayerTreeHost::~LayerTreeHost()
     }
     m_liveCCLayers.clear();
     
-	for (size_t i = 0; i < m_dirtyLayersGroup.size(); ++i) {
-		DirtyLayers* dirtyLayers = m_dirtyLayersGroup[i];
-		delete dirtyLayers;
-	}
-	m_dirtyLayersGroup.clear();
+    for (size_t i = 0; i < m_dirtyLayersGroup.size(); ++i) {
+        DirtyLayers* dirtyLayers = m_dirtyLayersGroup[i];
+        delete dirtyLayers;
+    }
+    m_dirtyLayersGroup.clear();
 
-	delete m_rasterNotifMutex;
-	m_rasterNotifMutex = nullptr;
+    delete m_rasterNotifMutex;
+    m_rasterNotifMutex = nullptr;
 
     delete m_tilesMutex;
     m_tilesMutex = nullptr;
@@ -280,7 +280,7 @@ static bool compareDirtyLayer(DirtyLayers*& left, DirtyLayers*& right)
 
 static bool compareAction(LayerChangeAction*& left, LayerChangeAction*& right)
 {
-	return left->actionId() < right->actionId();
+    return left->actionId() < right->actionId();
 }
 
 void LayerTreeHost::beginRecordActions()
@@ -295,12 +295,12 @@ void LayerTreeHost::endRecordActions()
 
 void LayerTreeHost::appendLayerChangeAction(LayerChangeAction* action)
 {
-	m_actionsFrameGroup->saveLayerChangeAction(action);
+    m_actionsFrameGroup->saveLayerChangeAction(action);
 
-	setNeedsAnimate();
+    setNeedsAnimate();
 
-// 	String outString = String::format("LayerTreeHost::appendLayerChangeAction: %d %d \n", (int)(action->type()), (int)action->actionId());
-// 	OutputDebugStringW(outString.charactersWithNullTermination().data());
+//     String outString = String::format("LayerTreeHost::appendLayerChangeAction: %d %d \n", (int)(action->type()), (int)action->actionId());
+//     OutputDebugStringW(outString.charactersWithNullTermination().data());
 }
 
 int64 LayerTreeHost::genActionId()
@@ -311,7 +311,7 @@ int64 LayerTreeHost::genActionId()
 bool LayerTreeHost::preDrawFrame()
 {
     //atomicIncrement(&m_drawFrameCount);
-	return applyActions(false);
+    return applyActions(false);
 }
 
 bool LayerTreeHost::applyActions(bool needCheck)
@@ -524,7 +524,7 @@ struct DrawPropertiesFromAncestor {
     float opacity;
 };
 
-static void updateChildLayersDrawProperties(cc_blink::WebLayerImpl* layer, LayerSorter& layerSorter,  const DrawPropertiesFromAncestor& propFromAncestor, int deep)
+static void updateChildLayersDrawProperties(cc_blink::WebLayerImpl* layer, LayerSorter& layerSorter, const DrawPropertiesFromAncestor& propFromAncestor, int deep)
 {
     WTF::Vector<cc_blink::WebLayerImpl*>& children = layer->children();
     
@@ -638,7 +638,7 @@ void LayerTreeHost::clearRootLayer()
 {
     m_rootLayer = nullptr;
 
-    while (0 != RasterTaskWorkerThreadPool::shared()->pendingRasterTaskNum()) {	::Sleep(20); }
+    while (0 != RasterTaskWorkerThreadPool::shared()->pendingRasterTaskNum()) {    ::Sleep(20); }
         requestApplyActionsToRunIntoCompositeThread(false);
 
     m_rootCCLayer = nullptr;
@@ -682,9 +682,9 @@ void LayerTreeHost::setHasTransparentBackground(bool b)
 
 void LayerTreeHost::registerForAnimations(blink::WebLayer* layer)
 {
-	// 不能在这里设置LayerTreeHost，因为popup 类型的会把新窗口的layer调用本接口到老的host来。
-// 	cc_blink::WebLayerImpl* layerImpl = (cc_blink::WebLayerImpl*)layer;
-// 	layerImpl->setLayerTreeHost(this);
+    // 不能在这里设置LayerTreeHost，因为popup 类型的会把新窗口的layer调用本接口到老的host来。
+//     cc_blink::WebLayerImpl* layerImpl = (cc_blink::WebLayerImpl*)layer;
+//     layerImpl->setLayerTreeHost(this);
 }
 
 // Sets whether this view is visible. In threaded mode, a view that is not visible will not

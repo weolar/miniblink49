@@ -62,12 +62,12 @@ public:
     Vector<Tile*>* m_tiles; // for test!~!!!!!!!!!!!!!!
 
 private:
-	void updateTilePriorityAndCommitInvalidate(Vector<size_t>* hasBitmapTiles);
-	void applyDirtyRectsToRaster(blink::WebContentLayerClient* client, RasterTaskGroup* taskGroup);
+    void updateTilePriorityAndCommitInvalidate(Vector<size_t>* hasBitmapTiles);
+    void applyDirtyRectsToRaster(blink::WebContentLayerClient* client, RasterTaskGroup* taskGroup);
     void markTileDirtyExceptNeedBeShowedArea(const blink::IntRect& dirtyRect);
     void savaUnnecessaryTile(RasterTaskGroup* taskGroup, Vector<Tile*>* hasBitmapTiles);
-	void cleanupUnnecessaryTile(Vector<size_t>* hasBitmapTiles);
-	void updateSize(const blink::IntRect& screenRect, const blink::IntSize& newLayerSize);
+    void cleanupUnnecessaryTile(Vector<size_t>* hasBitmapTiles);
+    void updateSize(const blink::IntRect& screenRect, const blink::IntSize& newLayerSize);
     
     Vector<Tile*> m_registerTiles; // 调试用，记录所有还没释放的tile，包括m_tiles已经没有记录的
     int m_numTileX;

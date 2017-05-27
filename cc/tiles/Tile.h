@@ -26,13 +26,13 @@ class TileGrid;
 
 class TileTraceLocation : public blink::WebTraceLocation {
 public:
-	TileTraceLocation(const char* func, const char* file, bool isRef)
-		: blink::WebTraceLocation(func, file)
-	{
-		m_isRef = isRef;
-	}
+    TileTraceLocation(const char* func, const char* file, bool isRef)
+        : blink::WebTraceLocation(func, file)
+    {
+        m_isRef = isRef;
+    }
 private:
-	bool m_isRef;
+    bool m_isRef;
 };
 
 class Tile {
@@ -40,9 +40,9 @@ public:
     Tile(TileGrid* tileGrid, int xIndex, int yIndex);
     ~Tile();
 
-	void ref(const blink::WebTraceLocation&);
-	void unref(const blink::WebTraceLocation&);
-	int32_t getRefCnt() const;
+    void ref(const blink::WebTraceLocation&);
+    void unref(const blink::WebTraceLocation&);
+    int32_t getRefCnt() const;
 
     int xIndex() const { return m_xIndex; }
     int yIndex() const { return m_yIndex; }
@@ -51,8 +51,8 @@ public:
 //     SkBitmap* bitmap() { return m_bitmap; }
 //     void clearBitmap();
 
-	bool bitmap() { return m_bitmap; }
-	void clearBitmap();
+    bool bitmap() { return m_bitmap; }
+    void clearBitmap();
 
     blink::IntRect postion() const;
     blink::IntRect dirtyRect(); // 以本tile为坐标系
@@ -64,12 +64,12 @@ public:
     void eraseColor(const blink::IntRect& r, const SkColor* color);
     void allocBitmapIfNeeded();
 
-	bool isSameTileGrid(const TileGrid* tileGrid) const;
+    bool isSameTileGrid(const TileGrid* tileGrid) const;
 
     cc_blink::WebLayerImpl* layer() const;
     TileGrid* tileGrid() const;
 
-	Vector<TileTraceLocation*>* refFrom() { return &m_refFrom; };
+    Vector<TileTraceLocation*>* refFrom() { return &m_refFrom; };
 
     bool isNotInit() { return m_isNotInit; } // for debug
 
@@ -77,7 +77,7 @@ public:
     size_t usingRate() const { return m_useingRate; }
 
 private:
-	mutable int32_t m_refCnt;
+    mutable int32_t m_refCnt;
     bool m_isNotInit; // for debug
 
     TileGrid* m_tileGrid;
@@ -88,10 +88,10 @@ private:
     blink::IntRect m_dirtyRect;
     TilePriority m_priority;
     //SkBitmap* m_bitmap;
-	bool m_bitmap;
+    bool m_bitmap;
     Mutex m_mutex;
     size_t m_useingRate;
-	Vector<TileTraceLocation*> m_refFrom;
+    Vector<TileTraceLocation*> m_refFrom;
 };
 
 }

@@ -176,8 +176,8 @@ private:
     LayerTreeHostUiThreadClient* m_uiThreadClient;
     blink::WebGestureCurveTarget * m_webGestureCurveTarget;
 
-	cc_blink::WebLayerImpl* m_rootLayer;
-	CompositingLayer* m_rootCCLayer;
+    cc_blink::WebLayerImpl* m_rootLayer;
+    CompositingLayer* m_rootCCLayer;
 
     blink::IntSize m_deviceViewportSize;
     blink::IntRect m_clientRect;
@@ -202,11 +202,11 @@ private:
 
     WTF::HashMap<int, cc_blink::WebLayerImpl*> m_liveLayers;
 
-	WTF::Mutex* m_rasterNotifMutex;
+    WTF::Mutex* m_rasterNotifMutex;
     WTF::Vector<DirtyLayers*> m_dirtyLayersGroup;
-	WTF::Vector<Tile*> m_tilesToUIThreadRelease;
+    WTF::Vector<Tile*> m_tilesToUIThreadRelease;
 
-	ActionsFrameGroup* m_actionsFrameGroup;
+    ActionsFrameGroup* m_actionsFrameGroup;
     WTF::Vector<LayerChangeAction*> m_actions;
     WTF::HashMap<int, CompositingLayer*> m_liveCCLayers;
     //////////////////////////////////////////////////////////////////////////

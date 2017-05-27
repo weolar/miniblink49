@@ -22,15 +22,15 @@ class LayerTreeHost;
 class CompositingLayer {
 public:
     CompositingLayer(int id);
-	virtual ~CompositingLayer();
+    virtual ~CompositingLayer();
 
-	enum CCType {
-		NormalCCLayer,
-		ImageCCLayer,
-	};
-	virtual CCType ccType() const { return NormalCCLayer; }
+    enum CCType {
+        NormalCCLayer,
+        ImageCCLayer,
+    };
+    virtual CCType ccType() const { return NormalCCLayer; }
 
-	int id() const;
+    int id() const;
 
     void insertChild(CompositingLayer* child, size_t index);
     void removeFromParent();
@@ -42,21 +42,21 @@ public:
     void removeChildOrDependent(CompositingLayer* child);
     void removeAllChildren();
 
-	WTF::Vector<CompositingLayer*>& children() { return m_children; }
+    WTF::Vector<CompositingLayer*>& children() { return m_children; }
 
-	DrawToCanvasProperties* drawToCanvasProperties() { return m_prop; }
+    DrawToCanvasProperties* drawToCanvasProperties() { return m_prop; }
     void updataDrawProp(DrawToCanvasProperties* m_prop);
 
-	bool masksToBounds() const;
+    bool masksToBounds() const;
     bool drawsContent() const;
     bool opaque() const;
-	float opacity() const;
+    float opacity() const;
 
     CompositingTile* getTileByXY(int xIndex, int yIndex);
     void updataTile(int newIndexNumX, int newIndexNumY);
     void cleanupUnnecessaryTile(const WTF::Vector<TileActionInfo*>& tiles);
 
-	virtual void drawToCanvas(LayerTreeHost* host, blink::WebCanvas* canvas, const blink::IntRect& clip);
+    virtual void drawToCanvas(LayerTreeHost* host, blink::WebCanvas* canvas, const blink::IntRect& clip);
 
     void blendToTiles(TileActionInfoVector* willRasteredTiles, const SkBitmap& bitmap, const blink::IntRect& dirtyRect);
     
@@ -68,7 +68,7 @@ protected:
     friend class DoClipLayer;
     void blendToTile(CompositingTile* tile, const SkBitmap& bitmap, blink::IntRect dirtyRect);
 
-	int m_id;
+    int m_id;
     DrawToCanvasProperties* m_prop;
 
     WTF::Vector<CompositingTile*>* m_tiles;
@@ -81,14 +81,14 @@ protected:
 
 class CompositingImageLayer : public CompositingLayer {
 public:
-	CompositingImageLayer(int id);
-	virtual ~CompositingImageLayer() override;
-	virtual void drawToCanvas(LayerTreeHost* host, blink::WebCanvas* canvas, const blink::IntRect& clip) override;
-	void setImage(SkBitmapRefWrap* bitmap);
-	virtual CCType ccType() const override { return CompositingLayer::ImageCCLayer;	}
-	
+    CompositingImageLayer(int id);
+    virtual ~CompositingImageLayer() override;
+    virtual void drawToCanvas(LayerTreeHost* host, blink::WebCanvas* canvas, const blink::IntRect& clip) override;
+    void setImage(SkBitmapRefWrap* bitmap);
+    virtual CCType ccType() const override { return CompositingLayer::ImageCCLayer;    }
+    
 private:
-	SkBitmapRefWrap* m_bitmap;
+    SkBitmapRefWrap* m_bitmap;
 };
 
 }

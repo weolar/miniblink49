@@ -70,8 +70,8 @@ void WebContentLayerImpl::paintContents(blink::WebCanvas* canvas, const blink::I
 
 void WebContentLayerImpl::recordDraw(cc::RasterTaskGroup* taskGroup)
 {
-// 	String outString = String::format("WebContentLayerImpl::recordDraw:%d \n", m_layer->id());
-// 	OutputDebugStringW(outString.charactersWithNullTermination().data());
+//     String outString = String::format("WebContentLayerImpl::recordDraw:%d \n", m_layer->id());
+//     OutputDebugStringW(outString.charactersWithNullTermination().data());
 
     if (!m_client || !m_layer)
         return;
@@ -98,7 +98,7 @@ void WebContentLayerImpl::drawToCanvas(blink::WebCanvas* canvas, const blink::In
     if (!m_layer)
         return;
 
-	DebugBreak();
+    DebugBreak();
 
 //     blink::IntSize bounds = m_layer->drawToCanvasProperties()->bounds;
 //     cc::LayerTreeHost* layerTreeHost = m_layer->layerTreeHost();
