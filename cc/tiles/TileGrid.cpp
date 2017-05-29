@@ -323,11 +323,6 @@ void TileGrid::savaUnnecessaryTile(RasterTaskGroup* taskGroup, Vector<Tile*>* ha
     m_tilesMutex->unlock();
 }
 
-// static bool compareTileUsing(Tile*& left, Tile*& right)
-// { 
-//     return left->usingRate() > right->usingRate();
-// }
-
 struct CompareTileUsing
 {
     CompareTileUsing(Vector<Tile*>* tiles)
@@ -431,11 +426,7 @@ void TileGrid::invalidate(const blink::IntRect& rect, bool directSaveToDirtyRect
         OutputDebugStringA("TileGrid::invalidate > 100 \n");
         DebugBreak();
     }
-
-//     const blink::IntRect& r = rect;
-//     if (r.width() > 600 && r.height() > 600)
-//         OutputDebugStringA("TileGrid::invalidate\n");
-
+    
     bool isIntersect = m_needBeShowedArea.intersects(dirtyRect);
     bool isContain = m_needBeShowedArea.contains(dirtyRect);
     if (isIntersect || directSaveToDirtyRects) {

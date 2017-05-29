@@ -176,7 +176,6 @@ public:
     //blink::IntRect updateRect() const { return m_updateRect; };
     cc::TileGrid* tileGrid() { return m_tileGrid; }
 
-    void onRasterFinish(int layerId, const blink::IntRect& rect);
     void requestRepaint(const blink::IntRect& rect);
     void requestBoundRepaint(bool directOrPending);
     void appendPendingInvalidateRect(const blink::IntRect& rect);

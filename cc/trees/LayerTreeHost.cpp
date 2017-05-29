@@ -48,6 +48,7 @@ LayerTreeHost::LayerTreeHost(blink::WebViewClient* webViewClient, LayerTreeHostU
     m_uiThreadClient = uiThreadClient;
     m_needsFullTreeSync = true;
     m_needTileRender = true;
+    m_layerTreeDirty = true;
     m_3dNodesCount = 0;
     m_tilesMutex = new WTF::Mutex();
     m_rasterNotifMutex = new WTF::Mutex();
@@ -246,16 +247,27 @@ void LayerTreeHost::setWebGestureCurveTarget(blink::WebGestureCurveTarget* webGe
     m_webGestureCurveTarget = webGestureCurveTarget;
 }
 
-void LayerTreeHost::setNeedsCommit()
-{
-    // 由光栅化线程来提起脏区域，所以这里直接指定需要开始下一帧，光删化完毕后由光栅化线程通过requestRepaint发起重绘
-    m_webViewClient->scheduleAnimation();
-}
+// void LayerTreeHost::setNeedsCommit() // 暂时被废弃，由setLayerTreeDirty代替
+// {
+//     // 由光栅化线程来提起脏区域，所以这里直接指定需要开始下一帧，光删化完毕后由光栅化线程通过requestRepaint发起重绘
+//     m_webViewClient->scheduleAnimation();
+// }
 
-void LayerTreeHost::didUpdateLayout()
+void LayerTreeHost::setLayerTreeDirty()
 {
+    m_layerTreeDirty = true;
     m_webViewClient->didUpdateLayout();
 }
+
+bool LayerTreeHost::isLayerTreeDirty() const
+{
+    return m_layerTreeDirty;
+}
+
+// void LayerTreeHost::didUpdateLayout()
+// {
+//     m_webViewClient->didUpdateLayout();
+// }
 
 void LayerTreeHost::setNeedsFullTreeSync()
 {
@@ -403,11 +415,7 @@ static void updateLayerChildren(cc_blink::WebLayerImpl* layer, SkCanvas* canvas,
         canvas->clipRect(layerRect, SkRegion::kIntersect_Op, false);
     }
 
-    if (
-#if 0
-        layer->dirty() ||
-#endif
-        needsFullTreeSync)
+    if (needsFullTreeSync)
         updateLayer(layer, canvas, clip);
 
     blink::IntRect clipInChildCoordinate = clip;

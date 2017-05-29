@@ -12,7 +12,6 @@
 
 namespace blink {
 class WebViewClient;
-class WebPageImpl;
 class WebGestureCurveTarget;
 class IntRect;
 struct WebFloatSize;
@@ -63,7 +62,7 @@ public:
     void drawToCanvas(SkCanvas* canvas, const blink::IntRect& clip);
     void updateLayersDrawProperties();
 
-    void setNeedsCommit();
+    //void setNeedsCommit();
     void setNeedsFullTreeSync();
     void didUpdateLayout();
 
@@ -162,6 +161,9 @@ public:
     void firePaintEvent(HDC hdc, const RECT* paintRect);
     blink::IntRect getClientRect();
 
+    void setLayerTreeDirty();
+    bool isLayerTreeDirty() const;
+
 private:
     void applyActionsInCompositeThread(bool needCheck);
     void drawFrameInCompositeThread();
@@ -172,6 +174,7 @@ private:
     
     bool m_isDestroying;
 
+    // content::WebPageImpl*
     blink::WebViewClient* m_webViewClient;
     LayerTreeHostUiThreadClient* m_uiThreadClient;
     blink::WebGestureCurveTarget * m_webGestureCurveTarget;
@@ -191,6 +194,7 @@ private:
 
     bool m_needsFullTreeSync;
     bool m_needTileRender;
+    bool m_layerTreeDirty; // ÐèÒªWebPageImpl.recordDraw
 
     int m_3dNodesCount;
 

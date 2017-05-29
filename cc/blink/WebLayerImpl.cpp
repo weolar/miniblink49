@@ -1232,7 +1232,8 @@ void WebLayerImpl::setNeedsCommit(bool needUpdateAllBoundsArea)
     setAllParentDirty();
     if (needUpdateAllBoundsArea)
         requestBoundRepaint(false);
-    m_layerTreeHost->setNeedsCommit();
+    //m_layerTreeHost->setNeedsCommit();
+    m_layerTreeHost->setLayerTreeDirty();
 }
 
 void WebLayerImpl::setNeedsFullTreeSync()
@@ -1240,27 +1241,6 @@ void WebLayerImpl::setNeedsFullTreeSync()
     if (m_layerTreeHost)
         m_layerTreeHost->setNeedsFullTreeSync();
     setNeedsCommit(true);
-}
-
-void WebLayerImpl::onRasterFinish(int layerId, const blink::IntRect& rect)
-{
-//     if (!s_liveLayers->contains(layerId))
-//         return;
-    DebugBreak();
-
-    blink::IntRect updateRect;
-    updateRect.unite(rect);
-
-//     if (needUpdateAllBoundsArea) {
-//         updateRect.unite(blink::IntRect(0, 0, m_bounds.width(), m_bounds.height()));
-//     }
-
-    updateRect = mapRectFromCurrentLayerCoordinateToRootLayer(updateRect);
-
-//     String outString = String::format("RasterTask::notifyMainThreadRasterFinish Y: %d\n", updateRect.y());
-//     OutputDebugStringW(outString.charactersWithNullTermination().data());
-
-    m_layerTreeHost->requestRepaint(updateRect);
 }
 
 bool WebLayerImpl::dirty() const
