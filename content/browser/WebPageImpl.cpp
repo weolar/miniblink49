@@ -115,6 +115,7 @@ WebPageImpl::WebPageImpl()
     m_needsCommit = 0;
     m_commitCount = 0;
     m_needsLayout = 1;
+    m_layerDirty = 1;
     m_lastFrameTimeMonotonic = 0;
     m_popupHandle = nullptr;
     m_postCloseWidgetSoonMessage = false;
@@ -531,9 +532,15 @@ void WebPageImpl::clearNeedsCommit()
 #endif
 }
 
+void WebPageImpl::onLayerTreeDirty()
+{
+    InterlockedExchange(reinterpret_cast<long volatile*>(&m_layerDirty), 1);
+    setNeedsCommitAndNotLayout();
+}
+
 void WebPageImpl::didUpdateLayout()
 {
-    ;
+    onLayerTreeDirty();
 }
 
 void WebPageImpl::beginMainFrame()
@@ -551,22 +558,26 @@ void WebPageImpl::beginMainFrame()
 void WebPageImpl::executeMainFrame()
 {
     freeV8TempObejctOnOneFrameBefore();
-
     clearNeedsCommit();
 
     double lastFrameTimeMonotonic = WTF::monotonicallyIncreasingTime();
-    
+
+    int layerDirty = InterlockedExchange(reinterpret_cast<long volatile*>(&m_layerDirty), 0);
     int needsLayout = InterlockedExchange(reinterpret_cast<long volatile*>(&m_needsLayout), 0);
-    if (needsLayout) {
+    if (needsLayout ) {
         m_layerTreeHost->beginRecordActions();
 
         WebBeginFrameArgs frameArgs(lastFrameTimeMonotonic, 0, lastFrameTimeMonotonic - m_lastFrameTimeMonotonic);
         m_webViewImpl->beginFrame(frameArgs);
         m_webViewImpl->layout();
 
-        m_layerTreeHost->recordDraw();
+        if (layerDirty)
+            m_layerTreeHost->recordDraw();
         m_layerTreeHost->endRecordActions();
     }
+
+//     String out = String::format("WebPageImpl::executeMainFrame: %f\n", (float)(lastFrameTimeMonotonic - m_lastFrameTimeMonotonic));
+//     OutputDebugStringA(out.utf8().data());
 
     m_lastFrameTimeMonotonic = lastFrameTimeMonotonic;
 

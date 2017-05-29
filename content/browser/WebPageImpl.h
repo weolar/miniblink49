@@ -122,6 +122,7 @@ public:
     void setNeedsCommitAndNotLayout();
     void clearNeedsCommit();
     bool isDrawDirty();
+    void onLayerTreeDirty();
 
     virtual void paintToMemoryCanvasInUiThread(SkCanvas* canvas, const blink::IntRect& paintRect) override;
     
@@ -218,6 +219,7 @@ public:
     int m_needsCommit;
     int m_commitCount;
     int m_needsLayout;
+    int m_layerDirty;
     double m_lastFrameTimeMonotonic;
 
     SkCanvas* m_memoryCanvasForUi;
