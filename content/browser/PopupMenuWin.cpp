@@ -64,6 +64,7 @@ PopupMenuWin::PopupMenuWin(HWND hWnd, IntPoint offset, WebViewImpl* webViewImpl)
     m_hasResize = true;
     m_needResize = true;
     m_initialize = false;
+    m_isCommiting = false;
     m_lastFrameTimeMonotonic = 0;
     m_memoryCanvas = nullptr;
     m_layerTreeHost = nullptr;
@@ -136,7 +137,6 @@ LRESULT PopupMenuWin::wndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPa
     LRESULT lResult = 0;
 
     switch (message) {
-    
     case WM_MOUSEMOVE:
     case WM_LBUTTONDOWN:
     case WM_LBUTTONUP: {
@@ -228,10 +228,11 @@ LRESULT PopupMenuWin::wndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPa
 
 void PopupMenuWin::beginMainFrame()
 {
+    m_isCommiting = false;
     if (!m_needsCommit || !m_initialize)
         return;
     m_needsCommit = false;
-
+    
     blink::WebPagePopup* popup = m_popupImpl;
 
     updataSize();
@@ -277,7 +278,11 @@ void PopupMenuWin::show(WebNavigationPolicy)
     m_needResize = true;
     m_hasResize = true;
     m_needsCommit = true;
-    ::PostMessage(m_hPopup, WM_COMMIT, 0, 0);
+
+    if (!m_isCommiting && m_hPopup) {
+        m_isCommiting = true;
+        ::PostMessage(m_hPopup, WM_COMMIT, 0, 0);
+    }
 }
 
 void PopupMenuWin::paint(HDC hdc, RECT rcPaint)
@@ -309,7 +314,6 @@ void PopupMenuWin::updataPaint()
     paint.setAntiAlias(true);
     m_memoryCanvas->drawPaint(paint);
     m_layerTreeHost->drawToCanvas(m_memoryCanvas, clip);
-
     m_memoryCanvas->restore();
     skia::EndPlatformPaint(m_memoryCanvas);
 }
@@ -361,7 +365,10 @@ void PopupMenuWin::didInvalidateRect(const blink::WebRect& r)
 {
     ::InvalidateRect(m_hPopup, NULL, TRUE);
     m_needsCommit = true;
-    ::PostMessage(m_hPopup, WM_COMMIT, 0, 0);
+    if (!m_isCommiting && m_hPopup) {
+        m_isCommiting = true;
+        ::PostMessage(m_hPopup, WM_COMMIT, 0, 0);
+    }
 }
 
 void PopupMenuWin::didAutoResize(const WebSize& newSize)
@@ -374,7 +381,10 @@ void PopupMenuWin::didUpdateLayoutSize(const WebSize& newSize)
     m_needResize = true;
     m_hasResize = true;
     m_needsCommit = true;
-    ::PostMessage(m_hPopup, WM_COMMIT, 0, 0);
+    if (!m_isCommiting && m_hPopup) {
+        m_isCommiting = true;
+        ::PostMessage(m_hPopup, WM_COMMIT, 0, 0);
+    }
 }
 
 static void trimWidthHeight(blink::IntRect& rect)
@@ -389,21 +399,24 @@ static void trimWidthHeight(blink::IntRect& rect)
 void PopupMenuWin::setWindowRect(const WebRect& r)
 {
     m_rect = r;
-//     m_rect.setWidth(r.width);
-//     m_rect.setHeight(r.height);
-
     trimWidthHeight(m_rect);
 
     m_needResize = true;
     m_hasResize = true;
     m_needsCommit = true;
-    ::PostMessage(m_hPopup, WM_COMMIT, 0, 0);
+    if (!m_isCommiting && m_hPopup) {
+        m_isCommiting = true;
+        ::PostMessage(m_hPopup, WM_COMMIT, 0, 0);
+    }
 }
 
 void PopupMenuWin::scheduleAnimation()
 {
     m_needsCommit = true;
-    ::PostMessage(m_hPopup, WM_COMMIT, 0, 0);
+    if (!m_isCommiting && m_hPopup) {
+        m_isCommiting = true;
+        ::PostMessage(m_hPopup, WM_COMMIT, 0, 0);
+    }
 }
 
 WebLayerTreeView* PopupMenuWin::layerTreeView()

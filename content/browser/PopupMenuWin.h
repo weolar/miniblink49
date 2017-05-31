@@ -77,7 +77,8 @@ protected:
     HWND m_hPopup;
     skia::PlatformCanvas* m_memoryCanvas;
     blink::IntRect m_rect;
-    bool m_needsCommit;
+    bool m_needsCommit; // 防止重入beginMainFrame
+    bool m_isCommiting; // 防止多次发送Commit
     bool m_hasResize;
     bool m_needResize;
     bool m_initialize;
