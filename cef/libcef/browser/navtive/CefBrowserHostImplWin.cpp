@@ -151,21 +151,21 @@ LRESULT CALLBACK CefBrowserHostImpl::WndProc(HWND hWnd, UINT message, WPARAM wPa
     case WM_SETFOCUS:
         browserHostImpl->SendFocusEvent(true);
         break;
-	case WM_IME_STARTCOMPOSITION:{
-		if (!browserHostImpl->m_webPage)
-			return 0;
-		blink::IntRect caret = browserHostImpl->m_webPage->caretRect();
-		COMPOSITIONFORM COMPOSITIONFORM;
-		COMPOSITIONFORM.dwStyle = CFS_POINT | CFS_FORCE_POSITION;
-		COMPOSITIONFORM.ptCurrentPos.x = caret.x();
-		COMPOSITIONFORM.ptCurrentPos.y = caret.y();
+    case WM_IME_STARTCOMPOSITION:{
+        if (!browserHostImpl->m_webPage)
+            return 0;
+        blink::IntRect caret = browserHostImpl->m_webPage->caretRect();
+        COMPOSITIONFORM COMPOSITIONFORM;
+        COMPOSITIONFORM.dwStyle = CFS_POINT | CFS_FORCE_POSITION;
+        COMPOSITIONFORM.ptCurrentPos.x = caret.x();
+        COMPOSITIONFORM.ptCurrentPos.y = caret.y();
 
-		HIMC hIMC = ImmGetContext(hWnd);
-		ImmSetCompositionWindow(hIMC, &COMPOSITIONFORM);
-		ImmReleaseContext(hWnd, hIMC);
-		return 0;
-	}
-		break;
+        HIMC hIMC = ImmGetContext(hWnd);
+        ImmSetCompositionWindow(hIMC, &COMPOSITIONFORM);
+        ImmReleaseContext(hWnd, hIMC);
+        return 0;
+    }
+        break;
     case WM_DESTROY:
         // Clear the user data pointer.
         ::SetWindowLongPtr(hWnd, GWLP_USERDATA, NULL);

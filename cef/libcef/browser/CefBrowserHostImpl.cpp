@@ -41,9 +41,9 @@ CefBrowserHostImpl::CefBrowserHostImpl(
     , m_isInOnsetfocus(false)
     , m_mouseCursorChangeDisabled(false)
     , m_windowDestroyed(false)
-	, m_isLoading(false)
+    , m_isLoading(false)
     , m_destructionState(DESTRUCTION_STATE_NONE)
-	, m_frameDestructionPending(false) {
+    , m_frameDestructionPending(false) {
     DCHECK(requestContext.get());
 
     DCHECK(!browserInfo->Browser().get());
@@ -70,35 +70,35 @@ void CefBrowserHostImpl::DetachAllFrames() {}
 // -----------------------------------------------------------------------------
 
 struct CreateBrowserHostWindowArgs {
-	CreateBrowserHostWindowArgs(
-		const CefWindowInfo* windowInfo,
-		CefRefPtr<CefClient>* client,
-		const CefString* url,
-		const CefBrowserSettings* settings,
-		CefRefPtr<CefBrowserHostImpl>* opener,
-		bool isPopup,
-		CefRefPtr<CefRequestContext>* requestContext,
-		CefRefPtr<CefBrowserHostImpl>* result,
-		bool* waitForFinish) {
-		this->windowInfo = windowInfo;
-		this->client = client;
-		this->url = url;
-		this->settings = settings;
-		this->opener = opener;
-		this->isPopup = isPopup;
-		this->requestContext = requestContext;
-		this->result = result;
-		this->waitForFinish = waitForFinish;
-	}
-	const CefWindowInfo* windowInfo;
-	CefRefPtr<CefClient>* client;
-	const CefString* url;
-	const CefBrowserSettings* settings;
-	CefRefPtr<CefBrowserHostImpl>* opener;
-	bool isPopup;
-	CefRefPtr<CefRequestContext>* requestContext;
-	CefRefPtr<CefBrowserHostImpl>* result;
-	bool* waitForFinish;
+    CreateBrowserHostWindowArgs(
+        const CefWindowInfo* windowInfo,
+        CefRefPtr<CefClient>* client,
+        const CefString* url,
+        const CefBrowserSettings* settings,
+        CefRefPtr<CefBrowserHostImpl>* opener,
+        bool isPopup,
+        CefRefPtr<CefRequestContext>* requestContext,
+        CefRefPtr<CefBrowserHostImpl>* result,
+        bool* waitForFinish) {
+        this->windowInfo = windowInfo;
+        this->client = client;
+        this->url = url;
+        this->settings = settings;
+        this->opener = opener;
+        this->isPopup = isPopup;
+        this->requestContext = requestContext;
+        this->result = result;
+        this->waitForFinish = waitForFinish;
+    }
+    const CefWindowInfo* windowInfo;
+    CefRefPtr<CefClient>* client;
+    const CefString* url;
+    const CefBrowserSettings* settings;
+    CefRefPtr<CefBrowserHostImpl>* opener;
+    bool isPopup;
+    CefRefPtr<CefRequestContext>* requestContext;
+    CefRefPtr<CefBrowserHostImpl>* result;
+    bool* waitForFinish;
 };
 
 // static
@@ -111,35 +111,35 @@ CefRefPtr<CefBrowserHostImpl> CefBrowserHostImpl::Create(
     bool isPopup,
     CefRefPtr<CefRequestContext> requestContext) {
 
-	bool waitForFinish = false;
-	CefRefPtr<CefBrowserHostImpl> browser;
+    bool waitForFinish = false;
+    CefRefPtr<CefBrowserHostImpl> browser;
 
-	CreateBrowserHostWindowArgs args(&windowInfo, &client, &url, &settings, &opener, isPopup, &requestContext, &browser, &waitForFinish);
-	if (CEF_CURRENTLY_ON_UIT()) {
-		CreateAndLoadOnWebkitThread(&args);
-	} else {
-		CEF_POST_BLINK_TASK(CEF_UIT, WTF::bind(CreateAndLoadOnWebkitThread, &args));
-	}
+    CreateBrowserHostWindowArgs args(&windowInfo, &client, &url, &settings, &opener, isPopup, &requestContext, &browser, &waitForFinish);
+    if (CEF_CURRENTLY_ON_UIT()) {
+        CreateAndLoadOnWebkitThread(&args);
+    } else {
+        CEF_POST_BLINK_TASK(CEF_UIT, WTF::bind(CreateAndLoadOnWebkitThread, &args));
+    }
 
-	// webkit线程创建窗口会向app线程的父窗口发消息，所以这里必须搞个消息循环接受一下子窗口的消息
-	MSG msg = { 0 }; 
-	while (!waitForFinish) {
-		if (::PeekMessage(&msg, NULL, 0, 0, PM_REMOVE) && 0 == TranslateAccelerator(msg.hwnd, NULL, &msg)) {
-			::TranslateMessage(&msg);
-			::DispatchMessage(&msg);
-		}
-		::Sleep(20);
-	}
+    // webkit线程创建窗口会向app线程的父窗口发消息，所以这里必须搞个消息循环接受一下子窗口的消息
+    MSG msg = { 0 }; 
+    while (!waitForFinish) {
+        if (::PeekMessage(&msg, NULL, 0, 0, PM_REMOVE) && 0 == TranslateAccelerator(msg.hwnd, NULL, &msg)) {
+            ::TranslateMessage(&msg);
+            ::DispatchMessage(&msg);
+        }
+        ::Sleep(20);
+    }
     return browser.get();
 }
 
 void CefBrowserHostImpl::CreateAndLoadOnWebkitThread(CreateBrowserHostWindowArgs* args) {
-	scoped_refptr<CefBrowserInfo> info = CefBrowserInfoManager::GetInstance()->CreateBrowserInfo(args->isPopup, false);
-	*(args->result) = CefBrowserHostImpl::CreateInternal(*(args->windowInfo), *(args->settings), *(args->client), info, *(args->opener), *(args->requestContext));
-	if ((*(args->result)).get() && !args->url->empty()) {
-		(*(args->result))->LoadURL(content::WebPage::kMainFrameId, *(args->url), blink::Referrer(), CefString());
-	}
-	*(args->waitForFinish) = true;
+    scoped_refptr<CefBrowserInfo> info = CefBrowserInfoManager::GetInstance()->CreateBrowserInfo(args->isPopup, false);
+    *(args->result) = CefBrowserHostImpl::CreateInternal(*(args->windowInfo), *(args->settings), *(args->client), info, *(args->opener), *(args->requestContext));
+    if ((*(args->result)).get() && !args->url->empty()) {
+        (*(args->result))->LoadURL(content::WebPage::kMainFrameId, *(args->url), blink::Referrer(), CefString());
+    }
+    *(args->waitForFinish) = true;
 }
 
 CefRefPtr<CefBrowserHostImpl> CefBrowserHostImpl::CreateInternal(
@@ -150,7 +150,7 @@ CefRefPtr<CefBrowserHostImpl> CefBrowserHostImpl::CreateInternal(
     CefRefPtr<CefBrowserHostImpl> opener,
     CefRefPtr<CefRequestContext> requestContext) {
 
-	CEF_REQUIRE_UIT();
+    CEF_REQUIRE_UIT();
 
     content::WebPage* webPage = new content::WebPage(nullptr);
 
@@ -223,24 +223,24 @@ void CefBrowserHostImpl::LoadURL(int64 frameId, const CefString& url, const blin
     if (!m_webPage)
         return;
 
-	if (CEF_CURRENTLY_ON_UIT())
-		m_webPage->loadURL(frameId, url.c_str(), referrer, extraHeaders.c_str());
-	else {
-		blink::KURL kurl(ParsedURLString, WTF::String(url.c_str(), url.length()));
-		blink::WebURL webURL = kurl;
-		blink::WebURLRequest request(webURL);
-		CEF_POST_BLINK_TASK(CEF_UIT, WTF::bind(&(content::WebPage::loadRequest), m_webPage, frameId, request));
-	}
+    if (CEF_CURRENTLY_ON_UIT())
+        m_webPage->loadURL(frameId, url.c_str(), referrer, extraHeaders.c_str());
+    else {
+        blink::KURL kurl(ParsedURLString, WTF::String(url.c_str(), url.length()));
+        blink::WebURL webURL = kurl;
+        blink::WebURLRequest request(webURL);
+        CEF_POST_BLINK_TASK(CEF_UIT, WTF::bind(&(content::WebPage::loadRequest), m_webPage, frameId, request));
+    }
 }
 
 void CefBrowserHostImpl::LoadRequest(int64 frameId, CefRefPtr<CefRequest> request) {
     if (!m_webPage)
         return;
 
-	if (!(CEF_CURRENTLY_ON_UIT())) {
-		CEF_POST_BLINK_TASK(CEF_UIT, WTF::bind(&CefBrowserHostImpl::LoadRequest, this, frameId, request));
-		return;
-	}
+    if (!(CEF_CURRENTLY_ON_UIT())) {
+        CEF_POST_BLINK_TASK(CEF_UIT, WTF::bind(&CefBrowserHostImpl::LoadRequest, this, frameId, request));
+        return;
+    }
 
     WebURL webURL(KURL(ParsedURLString, request->GetURL().c_str()));
     WebURLRequest webRequest(webURL);
@@ -317,10 +317,10 @@ void CefBrowserHostImpl::LoadRequest(int64 frameId, CefRefPtr<CefRequest> reques
 
 // Load the specified string.
 void CefBrowserHostImpl::LoadString(int64 frameId, const CefString& string, const CefString& url) {
-	if (!(CEF_CURRENTLY_ON_UIT())) {
-		CEF_POST_BLINK_TASK(CEF_UIT, WTF::bind(&CefBrowserHostImpl::LoadString, this, frameId, string, url));
-		return;
-	}
+    if (!(CEF_CURRENTLY_ON_UIT())) {
+        CEF_POST_BLINK_TASK(CEF_UIT, WTF::bind(&CefBrowserHostImpl::LoadString, this, frameId, string, url));
+        return;
+    }
 
     Vector<char> data = WTF::ensureStringToUTF8(WTF::String(string.c_str(), string.length()));
     WebData html(data.data(), data.size());
@@ -341,24 +341,24 @@ CefWindowHandle CefBrowserHostImpl::GetWindowHandle() {
 }
 
 void CefBrowserHostImpl::OnLoadingStateChange(bool isLoading, bool toDifferentDocument) {
-	MutexLocker locker(m_stateLock);
-	m_isLoading = isLoading;
+    MutexLocker locker(m_stateLock);
+    m_isLoading = isLoading;
 }
 
 bool CefBrowserHostImpl::IsLoading() {
-	bool loading = false;
-	{
-		MutexLocker locker(m_stateLock);
-		loading = m_isLoading;
-	}
-	return loading;
+    bool loading = false;
+    {
+        MutexLocker locker(m_stateLock);
+        loading = m_isLoading;
+    }
+    return loading;
 }
 
 void CefBrowserHostImpl::Reload() {
-	if (!(CEF_CURRENTLY_ON_UIT())) {
-		CEF_POST_BLINK_TASK(CEF_UIT, WTF::bind(&CefBrowserHostImpl::Reload, this));
-		return;
-	}
+    if (!(CEF_CURRENTLY_ON_UIT())) {
+        CEF_POST_BLINK_TASK(CEF_UIT, WTF::bind(&CefBrowserHostImpl::Reload, this));
+        return;
+    }
 
     if (!m_webPage || !m_webPage->webViewImpl())
         return;
@@ -405,122 +405,122 @@ bool CefBrowserHostImpl::IsPopup() { return false; }
 bool CefBrowserHostImpl::HasDocument() { return false; }
 
 CefRefPtr<CefFrame> CefBrowserHostImpl::GetOrCreateFrame(const blink::WebLocalFrame* webFrame, int64 parentFrameId, const blink::KURL& frameUrl) {
-	int64 frameId = CefFrameHostImpl::GetFrameIdByBlinkFrame(webFrame);
-	String frameName = CefFrameHostImpl::GetFrameNameByBlinkFrame(webFrame);
-	bool isMainFrame = (nullptr == webFrame->parent());
+    int64 frameId = CefFrameHostImpl::GetFrameIdByBlinkFrame(webFrame);
+    String frameName = CefFrameHostImpl::GetFrameNameByBlinkFrame(webFrame);
+    bool isMainFrame = (nullptr == webFrame->parent());
 
-	//ASSERT(frameId > content::WebPage::kInvalidFrameId);
-	if (frameId <= content::WebPage::kInvalidFrameId)
-		return NULL;
+    //ASSERT(frameId > content::WebPage::kInvalidFrameId);
+    if (frameId <= content::WebPage::kInvalidFrameId)
+        return NULL;
 
-	CefString url;
-	if (frameUrl.isValid())
-		url = WTFStringToStdString(frameUrl.string());
+    CefString url;
+    if (frameUrl.isValid())
+        url = WTFStringToStdString(frameUrl.string());
 
-	CefString name;
-	if (!frameName.isEmpty())
-		 cef::WTFStringToCefString(frameName, name);
+    CefString name;
+    if (!frameName.isEmpty())
+         cef::WTFStringToCefString(frameName, name);
 
-	CefRefPtr<CefFrameHostImpl> frame;
-	bool frameCreated = false;
+    CefRefPtr<CefFrameHostImpl> frame;
+    bool frameCreated = false;
 
-	{
-		MutexLocker locker(m_stateLock);
+    {
+        MutexLocker locker(m_stateLock);
 
-		if (isMainFrame)
-			m_mainFrameId = frameId;
+        if (isMainFrame)
+            m_mainFrameId = frameId;
 
-		// Check if a frame object already exists.
-		FrameMap::const_iterator it = m_frames.find(frameId);
-		if (it != m_frames.end())
-			frame = it->second.get();
+        // Check if a frame object already exists.
+        FrameMap::const_iterator it = m_frames.find(frameId);
+        if (it != m_frames.end())
+            frame = it->second.get();
 
-		if (!frame.get()) {
-			frame = new CefFrameHostImpl(this, frameId, isMainFrame, url, name, parentFrameId);
-			frameCreated = true;
-			m_frames.insert(std::make_pair(frameId, frame));
-		}
-	}
+        if (!frame.get()) {
+            frame = new CefFrameHostImpl(this, frameId, isMainFrame, url, name, parentFrameId);
+            frameCreated = true;
+            m_frames.insert(std::make_pair(frameId, frame));
+        }
+    }
 
-	if (!frameCreated)
-		frame->SetAttributes(url, name, parentFrameId);
+    if (!frameCreated)
+        frame->SetAttributes(url, name, parentFrameId);
 
-	return frame.get();
+    return frame.get();
 }
 
 CefRefPtr<CefFrame> CefBrowserHostImpl::GetMainFrame() {
-	return GetFrame(content::WebPage::kMainFrameId);
+    return GetFrame(content::WebPage::kMainFrameId);
 }
 
 CefRefPtr<CefFrame> CefBrowserHostImpl::GetFocusedFrame() {
-	return GetFrame(content::WebPage::kFocusedFrameId);
+    return GetFrame(content::WebPage::kFocusedFrameId);
 }
 
 CefRefPtr<CefFrame> CefBrowserHostImpl::GetFrame(int64 identifier) { 
-	MutexLocker locker(m_stateLock);
+    MutexLocker locker(m_stateLock);
 
-	if (m_mainFrameId == content::WebPage::kInvalidFrameId) {
-		// A main frame does not exist yet. Return the placeholder frame that
-		// provides limited functionality.
-		return nullptr; // placeholder_frame_.get();
-	}
+    if (m_mainFrameId == content::WebPage::kInvalidFrameId) {
+        // A main frame does not exist yet. Return the placeholder frame that
+        // provides limited functionality.
+        return nullptr; // placeholder_frame_.get();
+    }
 
-	if (identifier == content::WebPage::kMainFrameId) {
-		identifier = m_mainFrameId;
-	} else if (identifier == content::WebPage::kFocusedFrameId) {
-		// Return the main frame if no focused frame is currently identified.
-		if (m_focusedFrameId == content::WebPage::kInvalidFrameId)
-			identifier = m_mainFrameId;
-		else
-			identifier = m_focusedFrameId;
-	}
+    if (identifier == content::WebPage::kMainFrameId) {
+        identifier = m_mainFrameId;
+    } else if (identifier == content::WebPage::kFocusedFrameId) {
+        // Return the main frame if no focused frame is currently identified.
+        if (m_focusedFrameId == content::WebPage::kInvalidFrameId)
+            identifier = m_mainFrameId;
+        else
+            identifier = m_focusedFrameId;
+    }
 
-	if (identifier == content::WebPage::kInvalidFrameId)
-		return nullptr;
+    if (identifier == content::WebPage::kInvalidFrameId)
+        return nullptr;
 
-	FrameMap::const_iterator it = m_frames.find(identifier);
-	if (it != m_frames.end())
-		return it->second.get();
+    FrameMap::const_iterator it = m_frames.find(identifier);
+    if (it != m_frames.end())
+        return it->second.get();
 
-	return nullptr;
+    return nullptr;
 }
 
 CefRefPtr<CefFrame> CefBrowserHostImpl::GetFrame(const CefString& name) { 
-	MutexLocker locker(m_stateLock);
+    MutexLocker locker(m_stateLock);
 
-	FrameMap::const_iterator it = m_frames.begin();
-	for (; it != m_frames.end(); ++it) {
-		if (it->second->GetName() == name)
-			return it->second.get();
-	}
+    FrameMap::const_iterator it = m_frames.begin();
+    for (; it != m_frames.end(); ++it) {
+        if (it->second->GetName() == name)
+            return it->second.get();
+    }
 
-	return nullptr;
+    return nullptr;
 }
 
 size_t CefBrowserHostImpl::GetFrameCount() {
-	MutexLocker locker(m_stateLock);
-	return m_frames.size();
+    MutexLocker locker(m_stateLock);
+    return m_frames.size();
 }
 void CefBrowserHostImpl::GetFrameIdentifiers(std::vector<int64>& identifiers) {
-	MutexLocker locker(m_stateLock);
+    MutexLocker locker(m_stateLock);
 
-	if (identifiers.size() > 0)
-		identifiers.clear();
+    if (identifiers.size() > 0)
+        identifiers.clear();
 
-	FrameMap::const_iterator it = m_frames.begin();
-	for (; it != m_frames.end(); ++it)
-		identifiers.push_back(it->first);
+    FrameMap::const_iterator it = m_frames.begin();
+    for (; it != m_frames.end(); ++it)
+        identifiers.push_back(it->first);
 }
 
 void CefBrowserHostImpl::GetFrameNames(std::vector<CefString>& names) {
-	MutexLocker locker(m_stateLock);
+    MutexLocker locker(m_stateLock);
 
-	if (names.size() > 0)
-		names.clear();
+    if (names.size() > 0)
+        names.clear();
 
-	FrameMap::const_iterator it = m_frames.begin();
-	for (; it != m_frames.end(); ++it)
-		names.push_back(it->second->GetName());
+    FrameMap::const_iterator it = m_frames.begin();
+    for (; it != m_frames.end(); ++it)
+        names.push_back(it->second->GetName());
 }
 
 bool CefBrowserHostImpl::SendProcessMessage(CefProcessId targetProcess, CefRefPtr<CefProcessMessage> message) {
@@ -630,7 +630,7 @@ void CefBrowserHostImpl::CloseBrowser(bool forceClose) {
         return;
     }
 
-	CEF_REQUIRE_UIT();
+    CEF_REQUIRE_UIT();
 
     if (m_client.get()) {
         CefRefPtr<CefLifeSpanHandler> handler = m_client->GetLifeSpanHandler();
@@ -680,7 +680,7 @@ void CefBrowserHostImpl::OnSetFocus(cef_focus_source_t source) {
 
         PlatformSetFocus(true);
     } else {
-		CEF_POST_BLINK_TASK(CEF_UIT, WTF::bind(&CefBrowserHostImpl::OnSetFocus, this, source));
+        CEF_POST_BLINK_TASK(CEF_UIT, WTF::bind(&CefBrowserHostImpl::OnSetFocus, this, source));
     }
 }
 
@@ -691,7 +691,7 @@ void CefBrowserHostImpl::SetFocus(bool focus) {
         if (CEF_CURRENTLY_ON_UIT()) {
             PlatformSetFocus(false);
         } else {
-			CEF_POST_BLINK_TASK(CEF_UIT, WTF::bind(&CefBrowserHostImpl::PlatformSetFocus, this, false));
+            CEF_POST_BLINK_TASK(CEF_UIT, WTF::bind(&CefBrowserHostImpl::PlatformSetFocus, this, false));
         }
     }
 }
@@ -713,7 +713,7 @@ void CefBrowserHostImpl::WasHidden(bool hidden) {
 }
 
 CefBrowserHostImpl* CefBrowserHostImpl::GetBrowserForMainFrame(blink::WebFrame* webFrame) {
-	CEF_REQUIRE_UIT();
+    CEF_REQUIRE_UIT();
 
     blink::Frame* frame = blink::toWebLocalFrameImpl(webFrame)->frame();
     if (!frame)
@@ -739,7 +739,7 @@ void CefBrowserHostImpl::DidCommitProvisionalLoadForFrame(blink::WebLocalFrame* 
     cef::WebStringToCefString(history.urlString(), url);
     bool isMainFrame = (nullptr == frame->parent());
 
-	CefRefPtr<CefFrame> cefFrame = GetOrCreateFrame(frame, content::WebPage::kUnspecifiedFrameId, blink::KURL(blink::ParsedURLString, history.urlString()));
+    CefRefPtr<CefFrame> cefFrame = GetOrCreateFrame(frame, content::WebPage::kUnspecifiedFrameId, blink::KURL(blink::ParsedURLString, history.urlString()));
 
     OnLoadStart(cefFrame);
     if (isMainFrame)
@@ -747,14 +747,14 @@ void CefBrowserHostImpl::DidCommitProvisionalLoadForFrame(blink::WebLocalFrame* 
 }
 
 void CefBrowserHostImpl::DidStartProvisionalLoad(blink::WebLocalFrame* frame, double triggeringEventTime) {
-	// Send the frame creation notification if necessary.
+    // Send the frame creation notification if necessary.
     GetOrCreateFrame(frame, content::WebPage::kUnspecifiedFrameId, blink::KURL());
 }
 
 void CefBrowserHostImpl::DidFailProvisionalLoad(blink::WebLocalFrame* frame, const blink::WebURLError& error, blink::WebHistoryCommitType) {
-	bool isMainFrame = (nullptr == frame->parent());
-	CefRefPtr<CefFrame> cefFrame = GetOrCreateFrame(frame, content::WebPage::kUnspecifiedFrameId, blink::KURL());
-	OnLoadError(cefFrame, error.unreachableURL, error.reason, error.localizedDescription);
+    bool isMainFrame = (nullptr == frame->parent());
+    CefRefPtr<CefFrame> cefFrame = GetOrCreateFrame(frame, content::WebPage::kUnspecifiedFrameId, blink::KURL());
+    OnLoadError(cefFrame, error.unreachableURL, error.reason, error.localizedDescription);
 }
 
 void CefBrowserHostImpl::OnFrameIdentified(blink::WebLocalFrame* frame, blink::WebLocalFrame* parent) {
@@ -786,22 +786,22 @@ void CefBrowserHostImpl::DidFailLoad(blink::WebLocalFrame* frame, const WebURLEr
 }
 
 void CefBrowserHostImpl::OnLoadError(CefRefPtr<CefFrame> frame, const blink::KURL& kurl, int errorCode, const WTF::String& errorDescription) {
-	if (!m_client.get())
-		return;
+    if (!m_client.get())
+        return;
 
-	CefRefPtr<CefLoadHandler> handler = m_client->GetLoadHandler();
-	if (!handler.get())
-		return;
+    CefRefPtr<CefLoadHandler> handler = m_client->GetLoadHandler();
+    if (!handler.get())
+        return;
 
-	m_frameDestructionPending = true;
-	// Notify the handler that loading has failed.
-	CefString url;
-	cef::WTFStringToCefString(kurl.string(), url);
+    m_frameDestructionPending = true;
+    // Notify the handler that loading has failed.
+    CefString url;
+    cef::WTFStringToCefString(kurl.string(), url);
 
-	CefString cefErrorDescription;
-	cef::WTFStringToCefString(errorDescription, cefErrorDescription);
-	handler->OnLoadError(this, frame, static_cast<cef_errorcode_t>(errorCode), CefString(cefErrorDescription), url);
-	m_frameDestructionPending = false;
+    CefString cefErrorDescription;
+    cef::WTFStringToCefString(errorDescription, cefErrorDescription);
+    handler->OnLoadError(this, frame, static_cast<cef_errorcode_t>(errorCode), CefString(cefErrorDescription), url);
+    m_frameDestructionPending = false;
 }
 
 void CefBrowserHostImpl::OnLoadStart(CefRefPtr<CefFrame> frame) {
