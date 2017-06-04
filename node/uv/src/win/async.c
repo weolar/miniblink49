@@ -77,7 +77,8 @@ int uv_async_send(uv_async_t* handle) {
   assert(!(handle->flags & UV__HANDLE_CLOSING));
   
   struct uv_req_s *req = (void *)malloc(sizeof(*req));
-  UV_REQ_INIT(req, UV_WAKEUP);
+  uv_req_init(loop, req);
+  req->type = UV_WAKEUP;
   req->data = handle;
 
   //if (!uv__atomic_exchange_set(&handle->async_sent)) {
