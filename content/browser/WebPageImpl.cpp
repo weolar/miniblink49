@@ -564,17 +564,20 @@ void WebPageImpl::executeMainFrame()
 
     int layerDirty = InterlockedExchange(reinterpret_cast<long volatile*>(&m_layerDirty), 0);
     int needsLayout = InterlockedExchange(reinterpret_cast<long volatile*>(&m_needsLayout), 0);
-    if (needsLayout ) {
+    if (needsLayout || layerDirty)
         m_layerTreeHost->beginRecordActions();
-
+    
+    if (needsLayout) {
         WebBeginFrameArgs frameArgs(lastFrameTimeMonotonic, 0, lastFrameTimeMonotonic - m_lastFrameTimeMonotonic);
         m_webViewImpl->beginFrame(frameArgs);
         m_webViewImpl->layout();
-
-        if (layerDirty)
-            m_layerTreeHost->recordDraw();
-        m_layerTreeHost->endRecordActions();
     }
+
+    if (needsLayout || layerDirty)
+        m_layerTreeHost->recordDraw();
+
+    if (needsLayout || layerDirty)
+        m_layerTreeHost->endRecordActions();
 
 //     String out = String::format("WebPageImpl::executeMainFrame: %f\n", (float)(lastFrameTimeMonotonic - m_lastFrameTimeMonotonic));
 //     OutputDebugStringA(out.utf8().data());
