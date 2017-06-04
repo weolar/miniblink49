@@ -526,11 +526,11 @@ void WebLayerImpl::setBounds(const WebSize& size)
 
     m_bounds = size;
 
-    if (m_bounds.width() > 3000)
-        m_bounds.setWidth(3000);
-
-    if (m_bounds.height() > 3000)
-        m_bounds.setHeight(3000);
+//     if (m_bounds.width() > 3000)
+//         m_bounds.setWidth(3000);
+// 
+//     if (m_bounds.height() > 3000)
+//         m_bounds.setHeight(3000);
 
     setNeedsCommit(true);
 }

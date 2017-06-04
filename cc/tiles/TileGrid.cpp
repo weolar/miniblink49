@@ -169,22 +169,35 @@ static int getIndexNumByLength(int length, int tileLength)
     return (int)(length / tileLength) + (length % tileLength != 0 ? 1 : 0);
 }
 
-bool TileGrid::isInWillBeShowedArea(Tile* tile)
+bool TileGrid::isInWillBeShowedArea(Tile* tile) const
 {
     int xIndex = tile->xIndex();
     int yIndex = tile->yIndex();
-    int left = getIndexByLength(m_screenRect.x() , kDefaultTileWidth);
+
+    blink::IntRect pos = getInWillBeShowedAreaPos();
+    if (0 == pos.width() || 0 == pos.height())
+        return false;
+
+    if (xIndex < pos.x() || xIndex > pos.maxX() || yIndex < pos.y() || yIndex > pos.maxY())
+        return false;
+    return true;
+}
+
+blink::IntRect TileGrid::getInWillBeShowedAreaPos() const
+{
+    if (0 == m_numTileX || 0 == m_numTileY)
+        return blink::IntRect();
+
+    int left = getIndexByLength(m_screenRect.x(), kDefaultTileWidth);
     int top = getIndexByLength(m_screenRect.y(), kDefaultTileHeight);
     int right = getIndexByLength(m_screenRect.maxX(), kDefaultTileWidth);
     int buttom = getIndexByLength(m_screenRect.maxY(), kDefaultTileHeight);
     left = std::max(0, left - kXIndexDistanceToWillBeShowedTile);
     top = std::max(0, top - kYIndexDistanceToWillBeShowedTile);
-    right = std::min(m_numTileX, right + kXIndexDistanceToWillBeShowedTile);
-    buttom = std::min(m_numTileY, buttom + kYIndexDistanceToWillBeShowedTile);
+    right = std::min(m_numTileX - 1, right + kXIndexDistanceToWillBeShowedTile);
+    buttom = std::min(m_numTileY - 1, buttom + kYIndexDistanceToWillBeShowedTile);
 
-    if (xIndex < left || xIndex > right || yIndex < top || yIndex > buttom)
-        return false;
-    return true;
+    return blink::IntRect(left, top, right - left + 1, buttom - top + 1);
 }
 
 void TileGrid::updateSize(const blink::IntRect& screenRect, const blink::IntSize& newLayerSize)
@@ -286,16 +299,80 @@ void TileGrid::updateTilePriorityAndCommitInvalidate(Vector<size_t>* hasBitmapTi
     }
 
     if (!newCreatedWhenScrolling.isEmpty()) {
-        if (newCreatedWhenScrolling.width() > 1000 && newCreatedWhenScrolling.height() > 700) {
-            for (size_t i = 0; i < debugTiles.size(); ++i) {
-                Tile* tile = debugTiles.at(i);
-            }
-        }
+//         if (newCreatedWhenScrolling.width() > 1000 && newCreatedWhenScrolling.height() > 700) {
+//             for (size_t i = 0; i < debugTiles.size(); ++i) {
+//                 Tile* tile = debugTiles.at(i);
+//             }
+//         }
         invalidate(newCreatedWhenScrolling, true);
     }
 
 //     outString = String::format("TileGrid::updateTilePriorityAndCommitInvalidate 2: %d\n\n", m_needBeShowedArea.height());
 //     OutputDebugStringW(outString.charactersWithNullTermination().data());
+}
+
+int TileGrid::getIndexByTile(const Tile* tile) const
+{
+    return tile->xIndex() + m_numTileX * tile->yIndex();
+}
+
+void TileGrid::doUpdateTilePriority(Tile* tile, Vector<size_t>* hasBitmapTiles, blink::IntRect* newCreatedWhenScrolling)
+{
+    if (tile->bitmap())
+        hasBitmapTiles->append(getIndexByTile(tile));
+
+    if (isInWillBeShowedArea(tile)) {
+        if (0 == m_needBeShowedArea.height())
+            m_needBeShowedArea = tile->postion();
+        else
+            m_needBeShowedArea.unite(tile->postion());
+
+        if (TilePriorityNormal == tile->priority() /*&& !tile->dirtyRect().isEmpty()*/) { // 如果是被刚刷新出来的tile
+            tile->setAllBoundDirty(); // 有可能在光栅化线程里脏矩形被清空了，所以只要是被刷出来的tile，都要设置脏矩形
+            tile->increaseUseingRate();
+
+            // 提交脏区域
+            blink::IntRect dirtyRect = tile->dirtyRect();
+            dirtyRect.move(tile->postion().x(), tile->postion().y());
+            newCreatedWhenScrolling->unite(dirtyRect);
+        }
+
+        tile->setPriority(TilePriorityWillBeShowed);
+    } else if (TilePriorityWillBeShowed == tile->priority()) { //  如果是刚被踢出显示区域的
+        tile->setPriority(TilePriorityNormal);
+        tile->setAllBoundDirty();
+    }
+}
+
+void TileGrid::updateTilePriorityAndCommitInvalidate2(Vector<size_t>* hasBitmapTiles)
+{
+    blink::IntRect newCreatedWhenScrolling;
+
+    if (0 != m_lastInWillBeShowedAreaPosIndex.width() && 0 != m_lastInWillBeShowedAreaPosIndex.height()) {
+        for (int i = m_lastInWillBeShowedAreaPosIndex.x(); i < m_lastInWillBeShowedAreaPosIndex.maxX(); ++i) {
+            for (int j = m_lastInWillBeShowedAreaPosIndex.y(); j < m_lastInWillBeShowedAreaPosIndex.maxY(); ++j) {
+                Tile* tile = getTileByXY(i, j);
+                doUpdateTilePriority(tile, hasBitmapTiles, &newCreatedWhenScrolling);
+            }
+        }
+    }
+
+    blink::IntRect pos = getInWillBeShowedAreaPos();
+    if (0 != pos.width() && 0 != pos.height()) {
+        for (int i = pos.x(); i < pos.maxX(); ++i) {
+            for (int j = pos.y(); j < pos.maxY(); ++j) {
+                if (i + m_numTileX * j >= m_tiles->size())
+                    DebugBreak();
+                Tile* tile = getTileByXY(i, j);
+                doUpdateTilePriority(tile, hasBitmapTiles, &newCreatedWhenScrolling);
+            }
+        }
+    }
+    m_lastInWillBeShowedAreaPosIndex = pos;
+
+    if (!newCreatedWhenScrolling.isEmpty()) {
+        invalidate(newCreatedWhenScrolling, true);
+    }
 }
 
 void TileGrid::savaUnnecessaryTile(RasterTaskGroup* taskGroup, Vector<Tile*>* hasBitmapTiles)
@@ -323,8 +400,7 @@ void TileGrid::savaUnnecessaryTile(RasterTaskGroup* taskGroup, Vector<Tile*>* ha
     m_tilesMutex->unlock();
 }
 
-struct CompareTileUsing
-{
+struct CompareTileUsing {
     CompareTileUsing(Vector<Tile*>* tiles)
         : m_tiles(tiles) {}
 
@@ -396,24 +472,33 @@ void TileGrid::update(blink::WebContentLayerClient* client, RasterTaskGroup* tas
 {
     Vector<size_t> hasBitmapTiles;
     updateSize(screenRect, newLayerSize);    
-    updateTilePriorityAndCommitInvalidate(&hasBitmapTiles);
+    updateTilePriorityAndCommitInvalidate2(&hasBitmapTiles);
     applyDirtyRectsToRaster(client, taskGroup);
     cleanupUnnecessaryTile(&hasBitmapTiles);
 }
 
 void TileGrid::markTileDirtyExceptNeedBeShowedArea(const blink::IntRect& dirtyRect)
 {
-    for (size_t j = 0; j < m_tiles->size(); ++j) {
-        Tile* tile = m_tiles->at(j);
-        blink::IntRect tilePos = tile->postion();
-        if (m_needBeShowedArea.intersects(tilePos) || !tilePos.intersects(dirtyRect)) // 在可视区域内的不记录了，直接记录在脏区域矩形里
-            continue;
+    if (0 == m_numTileX || 0 == m_numTileY || dirtyRect.width() || dirtyRect.height())
+        return;
+    int left = getIndexByLength(dirtyRect.x(), kDefaultTileWidth);
+    int top = getIndexByLength(dirtyRect.y(), kDefaultTileHeight);
+    int right = getIndexByLength(dirtyRect.maxX(), kDefaultTileWidth);
+    int buttom = getIndexByLength(dirtyRect.maxY(), kDefaultTileHeight);
 
-        blink::IntRect dirtyRectInTile = tilePos;
-        dirtyRectInTile.intersect(dirtyRect);
-        dirtyRectInTile.move(-tilePos.x(), -tilePos.y());
-        ASSERT(dirtyRectInTile.x() >= 0 && dirtyRectInTile.y() >= 0 && dirtyRectInTile.maxX() <= tilePos.width() && dirtyRectInTile.maxY() <= tilePos.height());
-        tile->appendDirtyRect(dirtyRectInTile);
+    for (size_t i = left; i <= right; ++i) {
+        for (size_t j = top; j <= buttom; ++j) {
+            Tile* tile = getTileByXY(i, j);
+            blink::IntRect tilePos = tile->postion();
+            if (m_needBeShowedArea.intersects(tilePos) || !tilePos.intersects(dirtyRect)) // 在可视区域内的不记录了，直接记录在脏区域矩形里
+                continue;
+
+            blink::IntRect dirtyRectInTile = tilePos;
+            dirtyRectInTile.intersect(dirtyRect);
+            dirtyRectInTile.move(-tilePos.x(), -tilePos.y());
+            ASSERT(dirtyRectInTile.x() >= 0 && dirtyRectInTile.y() >= 0 && dirtyRectInTile.maxX() <= tilePos.width() && dirtyRectInTile.maxY() <= tilePos.height());
+            tile->appendDirtyRect(dirtyRectInTile);
+        }
     }
 }
 
@@ -501,11 +586,16 @@ void TileGrid::mergeDirtyRectAndClipToCanBeShowedAreaIfNeeded(bool needClip)
 // 录制并发送光栅化
 void TileGrid::applyDirtyRectsToRaster(blink::WebContentLayerClient* client, RasterTaskGroup* taskGroup)
 {
+    if (0 == m_numTileX || 0 == m_numTileY)
+        return;
+
     // TODO 裁剪超出可绘制区域，并合并脏矩形
     mergeDirtyRectAndClipToCanBeShowedAreaIfNeeded(true);
     
     for (size_t i = 0; i < m_dirtyRects.size(); ++i) {
         blink::IntRect dirtyRect = m_dirtyRects[i];
+        if (0 == dirtyRect.width() || 0 == dirtyRect.height())
+            continue;
 
 //         String outString = String::format("TileGrid::applyDirtyRectsToRaster:%d %d, %d %d\n", 
 //             dirtyRect.x(), dirtyRect.y(), dirtyRect.width(), dirtyRect.height());
@@ -520,21 +610,44 @@ void TileGrid::applyDirtyRectsToRaster(blink::WebContentLayerClient* client, Ras
 
         TileActionInfoVector* willRasteredTiles = new TileActionInfoVector();
 
-        for (size_t j = 0; j < m_tiles->size(); ++j) {
-            Tile* tile = m_tiles->at(j);
-            blink::IntRect tilePos = tile->postion();
-            if (!tilePos.intersects(dirtyRect))
-                continue;
+        int left = getIndexByLength(dirtyRect.x(), kDefaultTileWidth);
+        int top = getIndexByLength(dirtyRect.y(), kDefaultTileHeight);
+        int right = getIndexByLength(dirtyRect.maxX(), kDefaultTileWidth);
+        int buttom = getIndexByLength(dirtyRect.maxY(), kDefaultTileHeight);
 
-            if (picture && isInWillBeShowedArea(tile)) {
-                tile->clearDirtyRect();
-                tile->allocBitmapIfNeeded();
-                tile->increaseUseingRate();
+        for (size_t i = left; i <= right; ++i) {
+            for (size_t j = top; j <= buttom; ++j) {
+                Tile* tile = getTileByXY(i, j);
+                blink::IntRect tilePos = tile->postion();
+                if (!tilePos.intersects(dirtyRect))
+                    continue;
 
-                // 发去光栅化;
-                willRasteredTiles->append(j, tile->xIndex(), tile->yIndex());
+                if (picture && isInWillBeShowedArea(tile)) {
+                    tile->clearDirtyRect();
+                    tile->allocBitmapIfNeeded();
+                    tile->increaseUseingRate();
+
+                    // 发去光栅化;
+                    willRasteredTiles->append(getIndexByTile(tile), tile->xIndex(), tile->yIndex());
+                }
             }
         }
+
+//         for (size_t j = 0; j < m_tiles->size(); ++j) {
+//             Tile* tile = m_tiles->at(j);
+//             blink::IntRect tilePos = tile->postion();
+//             if (!tilePos.intersects(dirtyRect))
+//                 continue;
+// 
+//             if (picture && isInWillBeShowedArea(tile)) {
+//                 tile->clearDirtyRect();
+//                 tile->allocBitmapIfNeeded();
+//                 tile->increaseUseingRate();
+// 
+//                 // 发去光栅化;
+//                 willRasteredTiles->append(j, tile->xIndex(), tile->yIndex());
+//             }
+//         }
 
         if (0 != willRasteredTiles->size()) {
             picture->ref();

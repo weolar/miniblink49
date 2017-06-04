@@ -226,9 +226,9 @@ void CompositingLayer::updataTile(int newIndexNumX, int newIndexNumY)
     }
 
     delete m_tiles;
-	m_tiles = newTiles;
-	m_numTileX = newIndexNumX;
-	m_numTileY = newIndexNumY;
+    m_tiles = newTiles;
+    m_numTileX = newIndexNumX;
+    m_numTileY = newIndexNumY;
 
 // 	String outString = String::format("CompositingLayer::updataTile: %d \n", m_id);
 // 	OutputDebugStringW(outString.charactersWithNullTermination().data());

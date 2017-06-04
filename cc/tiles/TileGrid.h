@@ -44,7 +44,8 @@ public:
     
     void update(blink::WebContentLayerClient* client, RasterTaskGroup* taskGroup, const blink::IntSize& newLayerSize, const blink::IntRect& screenRect);
 
-    bool isInWillBeShowedArea(Tile* tile);
+    bool isInWillBeShowedArea(Tile* tile) const;
+    blink::IntRect getInWillBeShowedAreaPos() const;
 
     Tile* getTileByXY(int xIndex, int yIndex);
     void invalidate(const blink::IntRect& dirtyRect, bool directSaveToDirtyRects);
@@ -63,12 +64,15 @@ public:
 
 private:
     void updateTilePriorityAndCommitInvalidate(Vector<size_t>* hasBitmapTiles);
+    void updateTilePriorityAndCommitInvalidate2(Vector<size_t>* hasBitmapTiles);
+    void doUpdateTilePriority(Tile* tile, Vector<size_t>* hasBitmapTiles, blink::IntRect* newCreatedWhenScrolling);
     void applyDirtyRectsToRaster(blink::WebContentLayerClient* client, RasterTaskGroup* taskGroup);
     void markTileDirtyExceptNeedBeShowedArea(const blink::IntRect& dirtyRect);
     void savaUnnecessaryTile(RasterTaskGroup* taskGroup, Vector<Tile*>* hasBitmapTiles);
     void cleanupUnnecessaryTile(Vector<size_t>* hasBitmapTiles);
     void updateSize(const blink::IntRect& screenRect, const blink::IntSize& newLayerSize);
-    
+    int getIndexByTile(const Tile* tile) const;
+
     Vector<Tile*> m_registerTiles; // 调试用，记录所有还没释放的tile，包括m_tiles已经没有记录的
     int m_numTileX;
     int m_numTileY;
@@ -78,7 +82,7 @@ private:
     blink::IntRect m_needBeShowedArea;
     blink::IntRect m_screenRect;
     bool m_willShutdown;
-    //blink::IntRect m_pendingInvalidateRect;
+    blink::IntRect m_lastInWillBeShowedAreaPosIndex;
 
     WTF::Mutex* m_registerTileMutex; // for debug
     int m_rasterTaskCount;
