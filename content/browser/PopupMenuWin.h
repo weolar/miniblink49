@@ -42,10 +42,11 @@ namespace content {
 
 class PlatformEventHandler;
 
-class PopupMenuWin : public blink::WebViewClient {
+class PopupMenuWin : public NoBaseWillBeGarbageCollectedFinalized<PopupMenuWin>, public blink::WebViewClient {
 public:
     static blink::WebWidget* create(HWND hWnd, blink::IntPoint offset, blink::WebViewImpl* webViewImpl, blink::WebPopupType type, PopupMenuWin** result);
     virtual void PopupMenuWin::closeWidgetSoon() override;
+    ~PopupMenuWin();
 
     HWND popupHandle() const { return m_hPopup; }
 
@@ -72,6 +73,8 @@ protected:
     static LRESULT CALLBACK PopupMenuWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
     LRESULT wndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
     void asynStartCreateWnd(blink::Timer<PopupMenuWin>*);
+
+    DECLARE_TRACE();
 
     blink::Timer<PopupMenuWin> m_asynStartCreateWndTimer;
     HWND m_hPopup;

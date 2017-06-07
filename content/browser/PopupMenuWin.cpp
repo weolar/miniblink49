@@ -76,6 +76,17 @@ PopupMenuWin::PopupMenuWin(HWND hWnd, IntPoint offset, WebViewImpl* webViewImpl)
     m_offset.setY(offset.y());
 }
 
+PopupMenuWin::~PopupMenuWin()
+{
+    if (m_memoryCanvas)
+        delete m_memoryCanvas;
+    m_memoryCanvas = nullptr;
+
+    if (m_layerTreeHost)
+        delete m_layerTreeHost;
+    m_layerTreeHost = nullptr;
+}
+
 static void destroyWindowAsyn(HWND hWnd)
 {
     ::DestroyWindow(hWnd);
@@ -83,10 +94,11 @@ static void destroyWindowAsyn(HWND hWnd)
 
 void PopupMenuWin::closeWidgetSoon()
 {
+    m_layerTreeHost->applyActions(false);
     m_initialize = false;
     SetWindowLongPtr(m_hPopup, 0, 0);
     blink::Platform::current()->currentThread()->postTask(FROM_HERE, WTF::bind(&destroyWindowAsyn, m_hPopup));
-    delete this;
+    //delete this;
 }
 
 void PopupMenuWin::registerClass()
@@ -427,6 +439,10 @@ WebLayerTreeView* PopupMenuWin::layerTreeView()
 bool PopupMenuWin::initSetting()
 {
     return true;
+}
+
+DEFINE_TRACE(PopupMenuWin)
+{
 }
 
 } // content

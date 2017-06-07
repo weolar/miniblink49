@@ -101,7 +101,6 @@ WebPageImpl::WebPageImpl()
 {
     m_pagePtr = 0;
     m_bdColor = RGB(199, 237, 204) | 0xff000000;
-    m_layerTreeHost = nullptr;
     m_webViewImpl = nullptr;
     m_debugCount = 0;
     m_enterCount = 0;
@@ -176,6 +175,7 @@ WebPageImpl::~WebPageImpl()
     m_platformEventHandler = nullptr;
 
     m_pagePtr = 0;
+    m_popupHandle = nullptr;
 }
 
 bool WebPageImpl::checkForRepeatEnter()
@@ -306,7 +306,8 @@ WebView* WebPageImpl::createWkeView(WebLocalFrame* creator,
 
     wke::CWebView* createdWebView = handler.createViewCallback(m_pagePtr->wkeWebView(), handler.createViewCallbackParam, type, &wkeUrl, &windowFeatures);
     if (!createdWebView)
-        return createWkeViewDefault(m_hWnd, name, url);
+        //return createWkeViewDefault(m_hWnd, name, url);
+        return nullptr;
 
     if (!createdWebView->webPage())
         return nullptr; 
@@ -1311,6 +1312,7 @@ WebWidget* WebPageImpl::createPopupMenu(WebPopupType type)
     
     PopupMenuWin* popup = nullptr;
     blink::WebWidget* result = PopupMenuWin::create(m_hWnd, m_hwndRenderOffset, m_webViewImpl, type, &popup);
+    m_popup = popup;
     m_popupHandle = popup->popupHandle();
     return result;
 }

@@ -37,6 +37,7 @@ class WebFrameClientImpl;
 class WebPage;
 class PlatformEventHandler;
 class NavigationController;
+class PopupMenuWin;
 
 class WebPageImpl : public blink::WebViewClient, public cc::LayerTreeHostUiThreadClient {
 public:
@@ -223,6 +224,8 @@ public:
     double m_lastFrameTimeMonotonic;
 
     SkCanvas* m_memoryCanvasForUi;
+
+    blink::Persistent<PopupMenuWin> m_popup;
 };
 
 } // blink
