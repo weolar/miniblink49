@@ -173,11 +173,11 @@ BlinkPlatformImpl::BlinkPlatformImpl()
     m_storageNamespaceIdCount = 1;
     m_lock = new CRITICAL_SECTION();
     m_threadNum = 0;
-	m_ioThread = nullptr;
+    m_ioThread = nullptr;
     m_firstMonotonicallyIncreasingTime = currentTimeImpl(); // (GetTickCount() / 1000.0);
     ::InitializeCriticalSection(m_lock);
 
-	setUserAgent("Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.2171.99 Safari/537.36");
+    setUserAgent("Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.2171.99 Safari/537.36");
 
 #ifdef _DEBUG
     myFree = (MyFree)ReplaceFuncAndCopy(free, newFree);
@@ -318,11 +318,22 @@ void BlinkPlatformImpl::shutdown()
 void BlinkPlatformImpl::doGarbageCollected()
 {
     //net::gActivatingLoaderCheck->doGarbageCollected(false);
+    //blink::memoryCache()->evictResources();
+    //Heap::collectGarbage(ThreadState::HeapPointersOnStack, ThreadState::GCWithSweep, Heap::ForcedGC);
+    v8::Isolate::GetCurrent()->LowMemoryNotification();
+    //     v8::Isolate::GetCurrent()->IdleNotificationDeadline(currentMonotonicallyTime + 0.1);
+    //     v8::Isolate::GetCurrent()->ContextDisposedNotification(false);
+    SkGraphics::PurgeResourceCache();
+
+    mainThread()->postDelayedTask(FROM_HERE, WTF::bind(&BlinkPlatformImpl::doGarbageCollected, this), 30000);
+
+//     String out = String::format("BlinkPlatformImpl::doGarbageCollected: %d %d %d\n", g_v8MemSize, g_blinkMemSize, g_skiaMemSize);
+//     OutputDebugStringA(out.utf8().data());
 }
 
 void BlinkPlatformImpl::startGarbageCollectedThread()
 {
-    mainThread()->postDelayedTask(FROM_HERE, WTF::bind(&BlinkPlatformImpl::doGarbageCollected, this), 3000);
+    mainThread()->postDelayedTask(FROM_HERE, WTF::bind(&BlinkPlatformImpl::doGarbageCollected, this), 30000);
 }
 
 void BlinkPlatformImpl::closeThread()
