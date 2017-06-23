@@ -178,7 +178,7 @@ bool TileGrid::isInWillBeShowedArea(Tile* tile) const
     if (0 == pos.width() || 0 == pos.height())
         return false;
 
-    if (xIndex < pos.x() || xIndex > pos.maxX() || yIndex < pos.y() || yIndex > pos.maxY())
+    if (xIndex < pos.x() || xIndex >= pos.maxX() || yIndex < pos.y() || yIndex >= pos.maxY())
         return false;
     return true;
 }
@@ -348,31 +348,31 @@ void TileGrid::updateTilePriorityAndCommitInvalidate2(Vector<size_t>* hasBitmapT
 {
     blink::IntRect newCreatedWhenScrolling;
 
-    if (0 != m_lastInWillBeShowedAreaPosIndex.width() && 0 != m_lastInWillBeShowedAreaPosIndex.height()) {
-        for (int i = m_lastInWillBeShowedAreaPosIndex.x(); i < m_lastInWillBeShowedAreaPosIndex.maxX(); ++i) {
-            for (int j = m_lastInWillBeShowedAreaPosIndex.y(); j < m_lastInWillBeShowedAreaPosIndex.maxY(); ++j) {
-                Tile* tile = getTileByXY(i, j);
-                doUpdateTilePriority(tile, hasBitmapTiles, &newCreatedWhenScrolling);
-            }
+    for (int i = m_lastInWillBeShowedAreaPosIndex.x(); i < m_lastInWillBeShowedAreaPosIndex.maxX(); ++i) {
+        for (int j = m_lastInWillBeShowedAreaPosIndex.y(); j < m_lastInWillBeShowedAreaPosIndex.maxY(); ++j) {
+            Tile* tile = getTileByXY(i, j);
+            if (!tile)
+                continue;
+            doUpdateTilePriority(tile, hasBitmapTiles, &newCreatedWhenScrolling);
         }
     }
 
     blink::IntRect pos = getInWillBeShowedAreaPos();
-    if (0 != pos.width() && 0 != pos.height()) {
-        for (int i = pos.x(); i < pos.maxX(); ++i) {
-            for (int j = pos.y(); j < pos.maxY(); ++j) {
-                if (i + m_numTileX * j >= m_tiles->size())
-                    DebugBreak();
-                Tile* tile = getTileByXY(i, j);
-                doUpdateTilePriority(tile, hasBitmapTiles, &newCreatedWhenScrolling);
-            }
+
+    for (int i = pos.x(); i < pos.maxX(); ++i) {
+        for (int j = pos.y(); j < pos.maxY(); ++j) {
+            if (i + m_numTileX * j >= m_tiles->size())
+                DebugBreak();
+            Tile* tile = getTileByXY(i, j);
+            if (!tile)
+                continue;
+            doUpdateTilePriority(tile, hasBitmapTiles, &newCreatedWhenScrolling);
         }
     }
     m_lastInWillBeShowedAreaPosIndex = pos;
 
-    if (!newCreatedWhenScrolling.isEmpty()) {
+    if (!newCreatedWhenScrolling.isEmpty())
         invalidate(newCreatedWhenScrolling, true);
-    }
 }
 
 void TileGrid::savaUnnecessaryTile(RasterTaskGroup* taskGroup, Vector<Tile*>* hasBitmapTiles)
@@ -485,6 +485,10 @@ void TileGrid::markTileDirtyExceptNeedBeShowedArea(const blink::IntRect& dirtyRe
     int top = getIndexByLength(dirtyRect.y(), kDefaultTileHeight);
     int right = getIndexByLength(dirtyRect.maxX(), kDefaultTileWidth);
     int buttom = getIndexByLength(dirtyRect.maxY(), kDefaultTileHeight);
+    left = std::max(0, left);
+    top = std::max(0, top);
+    right = std::min(m_numTileX - 1, right);
+    buttom = std::min(m_numTileY - 1, buttom);
 
     for (size_t i = left; i <= right; ++i) {
         for (size_t j = top; j <= buttom; ++j) {
@@ -614,6 +618,10 @@ void TileGrid::applyDirtyRectsToRaster(blink::WebContentLayerClient* client, Ras
         int top = getIndexByLength(dirtyRect.y(), kDefaultTileHeight);
         int right = getIndexByLength(dirtyRect.maxX(), kDefaultTileWidth);
         int buttom = getIndexByLength(dirtyRect.maxY(), kDefaultTileHeight);
+        left = std::max(0, left);
+        top = std::max(0, top);
+        right = std::min(m_numTileX - 1, right);
+        buttom = std::min(m_numTileY - 1, buttom);
 
         for (size_t i = left; i <= right; ++i) {
             for (size_t j = top; j <= buttom; ++j) {
