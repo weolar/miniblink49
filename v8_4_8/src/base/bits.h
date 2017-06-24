@@ -14,6 +14,10 @@
 #include "src/base/win32-headers.h"
 #endif
 
+#if USING_VC6RT == 1
+#undef RotateRight32
+#endif
+
 namespace v8 {
 namespace base {
 namespace bits {

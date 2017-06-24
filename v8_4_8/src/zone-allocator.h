@@ -46,7 +46,11 @@ class zone_allocator {
     return static_cast<pointer>(zone_->NewArray<value_type>(
             static_cast<int>(n)));
   }
+#if USING_VC6RT == 1
+  void deallocate(void* p, size_type) { /* noop for Zones */ }
+#else
   void deallocate(pointer p, size_type) { /* noop for Zones */ }
+#endif
 
   size_type max_size() const throw() {
     return std::numeric_limits<int>::max() / sizeof(value_type);
