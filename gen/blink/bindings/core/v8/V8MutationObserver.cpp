@@ -185,14 +185,14 @@ void V8MutationObserver::visitDOMWrapper(v8::Isolate*, ScriptWrappable*, const v
 {
 #ifdef MINIBLINK_NOT_IMPLEMENTED
 #endif // MINIBLINK_NOT_IMPLEMENTED
-	notImplemented();
+    notImplemented();
 }
 
 void V8MutationObserver::constructorCustom(const v8::FunctionCallbackInfo<v8::Value>&)
 {
 #ifdef MINIBLINK_NOT_IMPLEMENTED
 #endif // MINIBLINK_NOT_IMPLEMENTED
-	notImplemented();
+    notImplemented();
 }
 
 } // namespace blink

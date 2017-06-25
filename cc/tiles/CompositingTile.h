@@ -24,9 +24,9 @@ public:
     CompositingTile(CompositingLayer* compositingLayer, int xIndex, int yIndex);
     ~CompositingTile();
 
-	void ref();
-	void unref();
-	int32_t getRefCnt() const;
+    void ref();
+    void unref();
+    int32_t getRefCnt() const;
 
     int xIndex() const { return m_xIndex; }
     int yIndex() const { return m_yIndex; }
@@ -46,7 +46,7 @@ private:
     SkBitmap* allocBitmap(int width, int height);
 
     CompositingLayer* m_compositingLayer;
-	mutable int32_t m_refCnt;
+    mutable int32_t m_refCnt;
     bool m_isNotInit; // for debug
 
     int m_xIndex;

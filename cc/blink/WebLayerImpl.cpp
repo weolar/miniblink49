@@ -54,7 +54,7 @@ int debugMaskLayerId = -1;
 
 WebLayerImpl::WebLayerImpl(WebLayerImplClient* client)
     : m_client(client)
-	, m_layerType(client->type())
+    , m_layerType(client->type())
     , m_dirty(true)
     , m_childrenDirty(true)
     , m_opacity(1.0f)
@@ -90,7 +90,7 @@ WebLayerImpl::WebLayerImpl(WebLayerImplClient* client)
     , m_clipChildren(nullptr)
     , m_tileGrid(nullptr)
     , m_drawProperties(new cc::DrawProperties())
-	, m_drawToCanvasProperties(new cc::DrawToCanvasProperties())
+    , m_drawToCanvasProperties(new cc::DrawToCanvasProperties())
     , m_isMaskLayer(false)
     , m_isReplicaLayer(false)
     , m_hasMaskLayerChild(false)
@@ -98,24 +98,24 @@ WebLayerImpl::WebLayerImpl(WebLayerImplClient* client)
     m_id = atomicIncrement(&g_next_layer_id);
     m_webLayerClient = nullptr;
 
-	appendLayerChangeAction(new cc::LayerChangeActionCreate(-1, id(), m_layerType));
+    appendLayerChangeAction(new cc::LayerChangeActionCreate(-1, id(), m_layerType));
 
     m_backgroundColor = 0x00ffffff | ((rand() % 3) * (rand() % 7) * GetTickCount());
 #ifndef NDEBUG
-	webLayerImplCounter.increment();
+    webLayerImplCounter.increment();
 #endif
 
-// 	String outString = String::format("WebLayerImpl::WebLayerImpl:%p %d \n", this, m_id);
-// 	OutputDebugStringW(outString.charactersWithNullTermination().data());
+//     String outString = String::format("WebLayerImpl::WebLayerImpl:%p %d \n", this, m_id);
+//     OutputDebugStringW(outString.charactersWithNullTermination().data());
 }
 
 WebLayerImpl::~WebLayerImpl()
 {
     ASSERT(!m_parent);
 
-	if (m_tileGrid)
-		delete m_tileGrid;
-	m_tileGrid = nullptr;
+    if (m_tileGrid)
+        delete m_tileGrid;
+    m_tileGrid = nullptr;
 
     m_webLayerClient = nullptr;
 
@@ -133,18 +133,18 @@ WebLayerImpl::~WebLayerImpl()
         m_replicaLayer->removeFromParent();
     }
 
-	// ASSERT(m_layerTreeHost); // 有的layer会在还没设置host就被删除
-	if (m_layerTreeHost) {
-		m_layerTreeHost->unregisterLayer(this);
+    // ASSERT(m_layerTreeHost); // 有的layer会在还没设置host就被删除
+    if (m_layerTreeHost) {
+        m_layerTreeHost->unregisterLayer(this);
 
-		int64 actionId = m_layerTreeHost->genActionId();
-		m_layerTreeHost->appendLayerChangeAction(new cc::LayerChangeActionDestroy(actionId, id()));
+        int64 actionId = m_layerTreeHost->genActionId();
+        m_layerTreeHost->appendLayerChangeAction(new cc::LayerChangeActionDestroy(actionId, id()));
 
-// 		String outString = String::format("WebLayerImpl::~~~WebLayerImpl:%p m_id:%d, actionId:%d \n", this, m_id, actionId);
-// 		OutputDebugStringW(outString.charactersWithNullTermination().data());
-	}
+//         String outString = String::format("WebLayerImpl::~~~WebLayerImpl:%p m_id:%d, actionId:%d \n", this, m_id, actionId);
+//         OutputDebugStringW(outString.charactersWithNullTermination().data());
+    }
 
-	clearLayerActions(&m_savedActionsWhenHostIsNull);
+    clearLayerActions(&m_savedActionsWhenHostIsNull);
 
     //TODO m_replicaLayer......
     m_scrollParent = nullptr;
@@ -153,9 +153,9 @@ WebLayerImpl::~WebLayerImpl()
     m_replicaLayer = nullptr;
 
     delete m_drawProperties;
-	delete m_drawToCanvasProperties;
+    delete m_drawToCanvasProperties;
 #ifndef NDEBUG
-	webLayerImplCounter.decrement();
+    webLayerImplCounter.decrement();
 #endif
 }
 
@@ -188,13 +188,13 @@ cc::LayerTreeHost* WebLayerImpl::layerTreeHost() const
 
 static void applyLayerActions(cc::LayerTreeHost* host, WTF::Vector<cc::LayerChangeAction*>* actions)
 {
-	for (size_t i = 0; i < actions->size(); ++i) {
-		cc::LayerChangeAction* action = actions->at(i);
-		ASSERT(-1 == action->actionId());
-		action->setActionId(host->genActionId());
-		host->appendLayerChangeAction(action);
-	}
-	actions->clear();
+    for (size_t i = 0; i < actions->size(); ++i) {
+        cc::LayerChangeAction* action = actions->at(i);
+        ASSERT(-1 == action->actionId());
+        action->setActionId(host->genActionId());
+        host->appendLayerChangeAction(action);
+    }
+    actions->clear();
 }
 
 void WebLayerImpl::setLayerTreeHost(cc::LayerTreeHost* host)
@@ -205,12 +205,12 @@ void WebLayerImpl::setLayerTreeHost(cc::LayerTreeHost* host)
     setNeedsCommit(true);
 
     if (host) {
-		RELEASE_ASSERT(!m_layerTreeHost);
+        RELEASE_ASSERT(!m_layerTreeHost);
         if (m_drawsContent && !m_tileGrid && host->needTileRender())
             m_tileGrid = new cc::TileGrid(this);
 
         host->registerLayer(this);
-		applyLayerActions(host, &m_savedActionsWhenHostIsNull);
+        applyLayerActions(host, &m_savedActionsWhenHostIsNull);
 
         if (m_tileGrid)
             m_tileGrid->setTilesMutex(host->tilesMutex());
@@ -218,14 +218,14 @@ void WebLayerImpl::setLayerTreeHost(cc::LayerTreeHost* host)
         if (0 != m_3dSortingContextId)
             host->increaseNodesCount();
     } else if (m_layerTreeHost) {
-		ASSERT(m_layerTreeHost->isDestroying() || false);
+        ASSERT(m_layerTreeHost->isDestroying() || false);
 //         if (m_tileGrid) {
 //             m_layerTreeHost->preDrawFrame();
 //             m_layerTreeHost->postDrawFrame();
 //             m_tileGrid->waitForReleaseTilesInUIThread();
 //         }
 //         m_layerTreeHost->unregisterLayer(this);
-	}
+    }
 
     m_layerTreeHost = host;
 
@@ -254,7 +254,7 @@ cc::DrawProperties* WebLayerImpl::drawProperties()
 
 void WebLayerImpl::updataDrawToCanvasProperties(cc::DrawToCanvasProperties* prop)
 {
-	DebugBreak();
+    DebugBreak();
 }
 
 const SkMatrix44& WebLayerImpl::drawTransform() const
@@ -339,23 +339,23 @@ int WebLayerImpl::id() const
 
 static void clearLayerActions(WTF::Vector<cc::LayerChangeAction*>* actions)
 {
-	for (size_t i = 0; i < actions->size(); ++i) {
-		cc::LayerChangeAction* action = actions->at(i);
-		delete action;
-	}
-	actions->clear();
+    for (size_t i = 0; i < actions->size(); ++i) {
+        cc::LayerChangeAction* action = actions->at(i);
+        delete action;
+    }
+    actions->clear();
 }
 
 void WebLayerImpl::appendLayerChangeAction(cc::LayerChangeAction* action)
 {
-	if (m_layerTreeHost) {
+    if (m_layerTreeHost) {
         ASSERT(-1 == action->actionId());
-		action->setActionId(m_layerTreeHost->genActionId());
-		m_layerTreeHost->appendLayerChangeAction(action);
+        action->setActionId(m_layerTreeHost->genActionId());
+        m_layerTreeHost->appendLayerChangeAction(action);
     } else if (m_parent) {
         m_parent->appendLayerChangeAction(action);
     } else
-		m_savedActionsWhenHostIsNull.append(action);
+        m_savedActionsWhenHostIsNull.append(action);
 }
 
 void WebLayerImpl::addChild(WebLayer* child) 
@@ -369,10 +369,10 @@ void WebLayerImpl::insertChild(WebLayer* child, size_t index)
     childOfImpl->removeFromParent();
     childOfImpl->setParent(this);
     childOfImpl->m_stackingOrderChanged = true;
-	
-	// 滚动条的layer没有host
-	if (!childOfImpl->layerTreeHost())
-		childOfImpl->setLayerTreeHost(m_layerTreeHost);
+    
+    // 滚动条的layer没有host
+    if (!childOfImpl->layerTreeHost())
+        childOfImpl->setLayerTreeHost(m_layerTreeHost);
 
     index = std::min(index, m_children.size());
     m_children.insert(index, childOfImpl);
@@ -381,7 +381,7 @@ void WebLayerImpl::insertChild(WebLayer* child, size_t index)
     blink::IntRect invalidateRect(blink::IntPoint(child->position().x, child->position().y), child->bounds());
     appendPendingInvalidateRect(invalidateRect);// weolar TODO
     setNeedsCommit(false);
-	appendLayerChangeAction(new cc::LayerChangeActionInsertChild(-1, id(), child->id(), index));
+    appendLayerChangeAction(new cc::LayerChangeActionInsertChild(-1, id(), child->id(), index));
 }
 
 WebLayerImpl* WebLayerImpl::parent() const
@@ -400,15 +400,15 @@ bool WebLayerImpl::hasAncestor(blink::WebLayer* ancestor)
 
 void WebLayerImpl::appendLayerActionsToParent()
 {
-	if (!m_parent)
-		return;
+    if (!m_parent)
+        return;
 
-	WTF::Vector<cc::LayerChangeAction*>* actions = &m_savedActionsWhenHostIsNull;
-	for (size_t i = 0; i < actions->size(); ++i) {
-		cc::LayerChangeAction* action = actions->at(i);
+    WTF::Vector<cc::LayerChangeAction*>* actions = &m_savedActionsWhenHostIsNull;
+    for (size_t i = 0; i < actions->size(); ++i) {
+        cc::LayerChangeAction* action = actions->at(i);
         m_parent->appendLayerChangeAction(action);
-	}
-	actions->clear();
+    }
+    actions->clear();
 }
 
 void WebLayerImpl::setParent(blink::WebLayer* layer)
@@ -427,7 +427,7 @@ void WebLayerImpl::setParent(blink::WebLayer* layer)
     }
 
     //setLayerTreeHost(m_parent ? m_parent->layerTreeHost() : nullptr);
-	appendLayerActionsToParent();
+    appendLayerActionsToParent();
 }
 
 void WebLayerImpl::replaceChild(blink::WebLayer* referenceWebLayer, blink::WebLayer* newWebLayer)
@@ -467,7 +467,7 @@ void WebLayerImpl::removeFromParent()
 {
     if (m_parent) {
         m_parent->removeChildOrDependent(this);
-		appendLayerChangeAction(new cc::LayerChangeActionRemoveFromParent(-1, id()));
+        appendLayerChangeAction(new cc::LayerChangeActionRemoveFromParent(-1, id()));
     }
 }
 
@@ -526,11 +526,11 @@ void WebLayerImpl::setBounds(const WebSize& size)
 
     m_bounds = size;
 
-    if (m_bounds.width() > 3000)
-        m_bounds.setWidth(3000);
-
-    if (m_bounds.height() > 3000)
-        m_bounds.setHeight(3000);
+//     if (m_bounds.width() > 3000)
+//         m_bounds.setWidth(3000);
+// 
+//     if (m_bounds.height() > 3000)
+//         m_bounds.setHeight(3000);
 
     setNeedsCommit(true);
 }
@@ -865,7 +865,6 @@ void WebLayerImpl::setScrollClipLayer(WebLayer* clip_layer)
 
 bool WebLayerImpl::scrollable() const
 {
-    //return layer_->scrollable();
     return m_scrollClipLayerId != -1;
 }
 
@@ -880,13 +879,11 @@ void WebLayerImpl::setUserScrollable(bool horizontal, bool vertical)
 
 bool WebLayerImpl::userScrollableHorizontal() const
 {
-    //return layer_->user_scrollable_horizontal();
     return m_userScrollableHorizontal;
 }
 
 bool WebLayerImpl::userScrollableVertical() const
 {
-    //return layer_->user_scrollable_vertical();
     return m_userScrollableVertical;
 }
 
@@ -1235,7 +1232,8 @@ void WebLayerImpl::setNeedsCommit(bool needUpdateAllBoundsArea)
     setAllParentDirty();
     if (needUpdateAllBoundsArea)
         requestBoundRepaint(false);
-    m_layerTreeHost->setNeedsCommit();
+    //m_layerTreeHost->setNeedsCommit();
+    m_layerTreeHost->setLayerTreeDirty();
 }
 
 void WebLayerImpl::setNeedsFullTreeSync()
@@ -1243,27 +1241,6 @@ void WebLayerImpl::setNeedsFullTreeSync()
     if (m_layerTreeHost)
         m_layerTreeHost->setNeedsFullTreeSync();
     setNeedsCommit(true);
-}
-
-void WebLayerImpl::onRasterFinish(int layerId, const blink::IntRect& rect)
-{
-//     if (!s_liveLayers->contains(layerId))
-//         return;
-    DebugBreak();
-
-    blink::IntRect updateRect;
-    updateRect.unite(rect);
-
-//     if (needUpdateAllBoundsArea) {
-//         updateRect.unite(blink::IntRect(0, 0, m_bounds.width(), m_bounds.height()));
-//     }
-
-    updateRect = mapRectFromCurrentLayerCoordinateToRootLayer(updateRect);
-
-//     String outString = String::format("RasterTask::notifyMainThreadRasterFinish Y: %d\n", updateRect.y());
-//     OutputDebugStringW(outString.charactersWithNullTermination().data());
-
-    m_layerTreeHost->requestRepaint(updateRect);
 }
 
 bool WebLayerImpl::dirty() const

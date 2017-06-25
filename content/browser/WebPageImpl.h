@@ -37,6 +37,7 @@ class WebFrameClientImpl;
 class WebPage;
 class PlatformEventHandler;
 class NavigationController;
+class PopupMenuWin;
 
 class WebPageImpl : public blink::WebViewClient, public cc::LayerTreeHostUiThreadClient {
 public:
@@ -56,7 +57,7 @@ public:
         const blink::WebURLRequest& request,
         const blink::WebWindowFeatures& features,
         const blink::WebString& name,
-		blink::WebNavigationPolicy policy,
+        blink::WebNavigationPolicy policy,
         bool suppressOpener) OVERRIDE;
 
     void init(WebPage* pagePtr, HWND hWnd);
@@ -65,6 +66,7 @@ public:
     // WebViewClient
     virtual void didInvalidateRect(const blink::WebRect&) OVERRIDE;
     virtual void didAutoResize(const blink::WebSize& newSize) OVERRIDE;
+    virtual void didUpdateLayout() OVERRIDE;
     virtual void didUpdateLayoutSize(const blink::WebSize& newSize) OVERRIDE;
     virtual void scheduleAnimation() OVERRIDE;
     virtual void initializeLayerTreeView() OVERRIDE;
@@ -110,7 +112,7 @@ public:
     
     void setViewportSize(const blink::IntSize& size);
 
-	blink::IntRect caretRect() const;
+    blink::IntRect caretRect() const;
         
     void setPainting(bool value) { m_painting = value; }
 
@@ -121,15 +123,16 @@ public:
     void setNeedsCommitAndNotLayout();
     void clearNeedsCommit();
     bool isDrawDirty();
+    void onLayerTreeDirty();
 
     virtual void paintToMemoryCanvasInUiThread(SkCanvas* canvas, const blink::IntRect& paintRect) override;
     
     cc::LayerTreeHost* layerTreeHost() { return m_layerTreeHost; }
 
     void loadHistoryItem(int64 frameId, const blink::WebHistoryItem& item, blink::WebHistoryLoadType type, blink::WebURLRequest::CachePolicy policy);
-	void loadURL(int64 frameId, const wchar_t* url, const blink::Referrer& referrer, const wchar_t* extraHeaders);
-	void loadRequest(int64 frameId, const blink::WebURLRequest& request);
-	void loadHTMLString(int64 frameId, const blink::WebData& html, const blink::WebURL& baseURL, const blink::WebURL& unreachableURL, bool replace);
+    void loadURL(int64 frameId, const wchar_t* url, const blink::Referrer& referrer, const wchar_t* extraHeaders);
+    void loadRequest(int64 frameId, const blink::WebURLRequest& request);
+    void loadHTMLString(int64 frameId, const blink::WebData& html, const blink::WebURL& baseURL, const blink::WebURL& unreachableURL, bool replace);
 
     // Session history -----------------------------------------------------
     void didCommitProvisionalLoad(blink::WebLocalFrame* frame, const blink::WebHistoryItem& history, blink::WebHistoryCommitType type);
@@ -139,24 +142,24 @@ public:
 
     static WebPageImpl* getSelfForCurrentContext();
 
-	bool initSetting();
+    bool initSetting();
 #if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
-	CefBrowserHostImpl* browser() const;
-	void setBrowser(CefBrowserHostImpl* browser);
+    CefBrowserHostImpl* browser() const;
+    void setBrowser(CefBrowserHostImpl* browser);
 #endif
-	blink::WebFrame* getWebFrameFromFrameId(int64 frameId);
+    blink::WebFrame* getWebFrameFromFrameId(int64 frameId);
 
-	blink::WebView* createWkeView(blink::WebLocalFrame* creator,
+    blink::WebView* createWkeView(blink::WebLocalFrame* creator,
         const blink::WebURLRequest& request,
         const blink::WebWindowFeatures& features,
         const blink::WebString& name,
-		blink::WebNavigationPolicy policy,
+        blink::WebNavigationPolicy policy,
         bool suppressOpener);
-	blink::WebView* createCefView(blink::WebLocalFrame* creator,
+    blink::WebView* createCefView(blink::WebLocalFrame* creator,
         const blink::WebURLRequest& request,
         const blink::WebWindowFeatures& features,
         const blink::WebString& name,
-		blink::WebNavigationPolicy policy,
+        blink::WebNavigationPolicy policy,
         bool suppressOpener);
 
     // ----
@@ -166,17 +169,17 @@ public:
 
     bool m_useLayeredBuffer;
 
-	blink::IntRect m_winodwRect;
+    blink::IntRect m_winodwRect;
 
     bool m_postMouseLeave; // 系统的MouseLeave获取到的鼠标位置不太准确，自己在定时器里再抛一次
-	blink::RGBA32 m_bdColor;
+    blink::RGBA32 m_bdColor;
 
     WebPage* m_pagePtr;
     blink::WebViewImpl* m_webViewImpl;
     bool m_mouseInWindow;
     HWND m_hWnd;
-	blink::IntPoint m_hwndRenderOffset;	// 网页渲染坐标相对于窗口的原点
-	blink::IntSize m_viewportSize;
+    blink::IntPoint m_hwndRenderOffset;    // 网页渲染坐标相对于窗口的原点
+    blink::IntSize m_viewportSize;
 
     // May be NULL if the browser has not yet been created or if the browser has
     // been destroyed.
@@ -196,11 +199,11 @@ public:
     bool m_LMouseDown;
     bool m_RMouseDown;
     void* m_foreignPtr;
-	blink::IntPoint m_lastPosForDrag;
-	WebFrameClientImpl* m_webFrameClient;
+    blink::IntPoint m_lastPosForDrag;
+    WebFrameClientImpl* m_webFrameClient;
     PlatformEventHandler* m_platformEventHandler;
 
-	blink::WebCursorInfo::Type m_cursorType;
+    blink::WebCursorInfo::Type m_cursorType;
 
     int m_enterCount;
     bool checkForRepeatEnter();
@@ -217,9 +220,12 @@ public:
     int m_needsCommit;
     int m_commitCount;
     int m_needsLayout;
+    int m_layerDirty;
     double m_lastFrameTimeMonotonic;
 
     SkCanvas* m_memoryCanvasForUi;
+
+    blink::Persistent<PopupMenuWin> m_popup;
 };
 
 } // blink

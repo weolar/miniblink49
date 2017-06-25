@@ -33,7 +33,7 @@ public:
     bool RegisterSchemeHandlerFactory(
         const CefString& scheme_name,
         const CefString& domain_name,
-        CefRefPtr<CefSchemeHandlerFactory> factory) override;	
+        CefRefPtr<CefSchemeHandlerFactory> factory) override;    
     bool ClearSchemeHandlerFactories() override;
     void PurgePluginListCache(bool reload_pages) override;
     bool HasPreference(const CefString& name) override;
@@ -45,10 +45,10 @@ public:
         CefRefPtr<CefValue> value,
         CefString& error) override;
 
-	void ClearCertificateExceptions(CefRefPtr<CefCompletionCallback> callback) override;
-	void CloseAllConnections(CefRefPtr<CefCompletionCallback> callback) override;
-	void ResolveHost(const CefString& origin, CefRefPtr<CefResolveCallback> callback) override;
-	cef_errorcode_t ResolveHostCached(const CefString& origin, std::vector<CefString>& resolved_ips);
+    void ClearCertificateExceptions(CefRefPtr<CefCompletionCallback> callback) override;
+    void CloseAllConnections(CefRefPtr<CefCompletionCallback> callback) override;
+    void ResolveHost(const CefString& origin, CefRefPtr<CefResolveCallback> callback) override;
+    cef_errorcode_t ResolveHostCached(const CefString& origin, std::vector<CefString>& resolved_ips);
 
     const CefRequestContextSettings& settings() const { return settings_; }
 
@@ -59,10 +59,10 @@ public:
     void RemoveFactory(const std::string& scheme, const std::string& domain);
 
 private:
-	void RegisterSchemeHandlerFactoryImpl(
-		const CefString& scheme_name,
-		const CefString& domain_name,
-		CefRefPtr<CefSchemeHandlerFactory> factory);
+    void RegisterSchemeHandlerFactoryImpl(
+        const CefString& scheme_name,
+        const CefString& domain_name,
+        CefRefPtr<CefSchemeHandlerFactory> factory);
 
     CefRequestContextSettings settings_;
     IMPLEMENT_REFCOUNTING(CefRequestContextImpl);

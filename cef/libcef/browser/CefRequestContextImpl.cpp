@@ -183,10 +183,10 @@ CefRefPtr<CefCookieManager> CefRequestContextImpl::GetDefaultCookieManager(CefRe
 }
 
 void CefRequestContextImpl::RemoveFactory(const std::string& scheme, const std::string& domain) {
-	if (!CEF_CURRENTLY_ON_UIT()) {
-		CEF_POST_BLINK_TASK(CEF_UIT, WTF::bind(&CefRequestContextImpl::RemoveFactory, this, scheme, domain));
-		return;
-	}
+    if (!CEF_CURRENTLY_ON_UIT()) {
+        CEF_POST_BLINK_TASK(CEF_UIT, WTF::bind(&CefRequestContextImpl::RemoveFactory, this, scheme, domain));
+        return;
+    }
 
     std::string scheme_lower = ToLower(scheme);
     std::string domain_lower = ToLower(domain);
@@ -203,19 +203,19 @@ void CefRequestContextImpl::RemoveFactory(const std::string& scheme, const std::
 }
 
 void CefRequestContextImpl::RegisterSchemeHandlerFactoryImpl(
-	const CefString& scheme,
-	const CefString& domain,
-	CefRefPtr<CefSchemeHandlerFactory> factory) {
-	std::string scheme_lower = ToLower(scheme);
-	std::string domain_lower = ToLower(domain);
+    const CefString& scheme,
+    const CefString& domain,
+    CefRefPtr<CefSchemeHandlerFactory> factory) {
+    std::string scheme_lower = ToLower(scheme);
+    std::string domain_lower = ToLower(domain);
 
-	// Hostname is only supported for standard schemes.
-	if (!IsStandardScheme(scheme_lower))
-		domain_lower.resize(0);
+    // Hostname is only supported for standard schemes.
+    if (!IsStandardScheme(scheme_lower))
+        domain_lower.resize(0);
 
-	//SetProtocolHandlerIfNecessary(scheme_lower, true);
+    //SetProtocolHandlerIfNecessary(scheme_lower, true);
 
-	m_handlerMap[make_pair(scheme_lower, domain_lower)] = factory;
+    m_handlerMap[make_pair(scheme_lower, domain_lower)] = factory;
 }
 
 bool CefRequestContextImpl::RegisterSchemeHandlerFactory(
@@ -227,12 +227,12 @@ bool CefRequestContextImpl::RegisterSchemeHandlerFactory(
         return true;
     }
 
-	if (!CEF_CURRENTLY_ON_UIT()) {
-		CEF_POST_BLINK_TASK(CEF_UIT, WTF::bind(&CefRequestContextImpl::RegisterSchemeHandlerFactoryImpl, this, scheme, domain, factory));
-		return true;
-	}
+    if (!CEF_CURRENTLY_ON_UIT()) {
+        CEF_POST_BLINK_TASK(CEF_UIT, WTF::bind(&CefRequestContextImpl::RegisterSchemeHandlerFactoryImpl, this, scheme, domain, factory));
+        return true;
+    }
 
-	RegisterSchemeHandlerFactoryImpl(scheme, domain, factory);
+    RegisterSchemeHandlerFactoryImpl(scheme, domain, factory);
 
     return true;
 }
@@ -243,7 +243,7 @@ bool CefRequestContextImpl::ClearSchemeHandlerFactories() {
 }
 
 CefRefPtr<CefSchemeHandlerFactory> CefRequestContextImpl::GetHandlerFactory(const blink::WebURLRequest& request, const WTF::String& schemeValue) {
-	CEF_REQUIRE_UIT();
+    CEF_REQUIRE_UIT();
 
     CefRefPtr<CefSchemeHandlerFactory> factory;
     const std::string scheme = schemeValue.utf8().data();
@@ -401,19 +401,19 @@ bool CefRequestContextImpl::SetPreference(const CefString& name, CefRefPtr<CefVa
 }
 
 void CefRequestContextImpl::ClearCertificateExceptions(CefRefPtr<CefCompletionCallback> callback) {
-	;
+    ;
 }
 
 void CefRequestContextImpl::CloseAllConnections(CefRefPtr<CefCompletionCallback> callback) {
-	;
+    ;
 }
 
 void CefRequestContextImpl::ResolveHost(const CefString& origin, CefRefPtr<CefResolveCallback> callback) {
-	;
+    ;
 }
 
 cef_errorcode_t CefRequestContextImpl::ResolveHostCached(const CefString& origin, std::vector<CefString>& resolved_ips) {
-	return ERR_NONE;
+    return ERR_NONE;
 }
 // 
 // CefRequestContextImpl::CefRequestContextImpl(

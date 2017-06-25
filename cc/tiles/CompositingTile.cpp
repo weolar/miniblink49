@@ -43,21 +43,21 @@ CompositingTile::~CompositingTile()
 
 void CompositingTile::ref()
 {
-	ASSERT(m_refCnt > 0);
-	(void)sk_atomic_fetch_add(&m_refCnt, +1, sk_memory_order_relaxed);  // No barrier required.
+	  ASSERT(m_refCnt > 0);
+	  (void)sk_atomic_fetch_add(&m_refCnt, +1, sk_memory_order_relaxed);  // No barrier required.
 }
 
 void CompositingTile::unref()
 {
-	ASSERT(m_refCnt > 0);
-	if (1 == sk_atomic_fetch_add(&m_refCnt, -1, sk_memory_order_acq_rel)) {
-		delete this;
-	}
+    ASSERT(m_refCnt > 0);
+    if (1 == sk_atomic_fetch_add(&m_refCnt, -1, sk_memory_order_acq_rel)) {
+        delete this;
+	  }
 }
 
 int32_t CompositingTile::getRefCnt() const
 {
-	return m_refCnt;
+	  return m_refCnt;
 }
 
 void CompositingTile::clearBitmap()
@@ -69,6 +69,9 @@ void CompositingTile::clearBitmap()
 
 SkBitmap* CompositingTile::allocBitmap(int width, int height)
 {
+    if (0 == width || 0 == height)
+        return nullptr;
+
     SkBitmap* bitmap = new SkBitmap();
     SkImageInfo info = SkImageInfo::Make(width, height, kN32_SkColorType, kPremul_SkAlphaType, kLinear_SkColorProfileType);
     bitmap->allocPixels(info);

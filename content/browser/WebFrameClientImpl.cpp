@@ -93,9 +93,9 @@ WebFrame* WebFrameClientImpl::createChildFrame(WebLocalFrame* parent, WebTreeSco
     WebLocalFrameImpl* webLocalFrameImpl = WebLocalFrameImpl::create(WebTreeScopeType::Document, this);
     parent->appendChild(webLocalFrameImpl);
 #if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
-	CefBrowserHostImpl* browser = m_webPage->browser();
-	if (browser)
-		browser->OnFrameIdentified(webLocalFrameImpl, parent);
+    CefBrowserHostImpl* browser = m_webPage->browser();
+    if (browser)
+        browser->OnFrameIdentified(webLocalFrameImpl, parent);
 #endif
     if (WTF::kNotFound == m_unusedFrames.find(webLocalFrameImpl))
         m_unusedFrames.append(webLocalFrameImpl);
@@ -157,7 +157,7 @@ void WebFrameClientImpl::onLoadingStateChange(bool isLoading, bool toDifferentDo
     if (!browser || !browser->client().get())
         return;
 
-	browser->OnLoadingStateChange(isLoading, toDifferentDocument);
+    browser->OnLoadingStateChange(isLoading, toDifferentDocument);
 #endif
     WebViewImpl* webview = m_webPage->webViewImpl();
     if (!webview || !webview->client())
@@ -195,9 +195,9 @@ void WebFrameClientImpl::didCreateDataSource(WebLocalFrame*, WebDataSource*) { }
 void WebFrameClientImpl::didStartProvisionalLoad(WebLocalFrame* localFrame, double triggeringEventTime)
 {
 #if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
-	CefBrowserHostImpl* browser = m_webPage->browser();
-	if (browser)
-		browser->DidStartProvisionalLoad(localFrame, triggeringEventTime);
+    CefBrowserHostImpl* browser = m_webPage->browser();
+    if (browser)
+        browser->DidStartProvisionalLoad(localFrame, triggeringEventTime);
 #endif
 }
 
@@ -207,9 +207,9 @@ void WebFrameClientImpl::didFailProvisionalLoad(WebLocalFrame* frame, const WebU
 {
     m_loadFailed = true;
 #if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
-	CefBrowserHostImpl* browser = m_webPage->browser();
-	if (browser)
-		browser->DidFailProvisionalLoad(frame, error, type);
+    CefBrowserHostImpl* browser = m_webPage->browser();
+    if (browser)
+        browser->DidFailProvisionalLoad(frame, error, type);
 #endif
 
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
@@ -295,9 +295,9 @@ void WebFrameClientImpl::didFailLoad(WebLocalFrame* frame, const WebURLError& er
     m_loadFailed = true;
 
 #if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
-	CefBrowserHostImpl* browser = m_webPage->browser();
-	if (browser)
-		browser->DidFailLoad(frame, error, type);
+    CefBrowserHostImpl* browser = m_webPage->browser();
+    if (browser)
+        browser->DidFailLoad(frame, error, type);
 #endif
 
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
@@ -453,9 +453,9 @@ void WebFrameClientImpl::willSendRequest(WebLocalFrame* webFrame, unsigned ident
         return;
 
     net::RequestExtraData* requestExtraData = new net::RequestExtraData();
-	requestExtraData->frame = webFrame; // 两种模式都需要此对象
+    requestExtraData->frame = webFrame; // 两种模式都需要此对象
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
-	requestExtraData->page = m_webPage;
+    requestExtraData->page = m_webPage;
 #endif
 
 #if (defined ENABLE_CEF) && (ENABLE_CEF == 1)

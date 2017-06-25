@@ -5159,9 +5159,9 @@ static void closeOriginSafeMethodGetter(const v8::PropertyCallbackInfo<v8::Value
         v8SetReturnValue(info, sharedTemplate->GetFunction(info.GetIsolate()->GetCurrentContext()).ToLocalChecked());
         return;
     }
-	//zero
+    //zero
 #if V8_MINOR_VERSION == 7
-	v8::Local<v8::Value> hiddenValue = V8HiddenValue::getHiddenValue(info.GetIsolate(), v8::Local<v8::Object>::Cast(info.This()), v8AtomicString(info.GetIsolate(), "close"));
+    v8::Local<v8::Value> hiddenValue = V8HiddenValue::getHiddenValue(info.GetIsolate(), v8::Local<v8::Object>::Cast(info.This()), v8AtomicString(info.GetIsolate(), "close"));
 #else
     v8::Local<v8::Value> hiddenValue = v8::Local<v8::Object>::Cast(info.This())->GetHiddenValue(v8AtomicString(info.GetIsolate(), "close"));
 #endif
@@ -5232,13 +5232,13 @@ static void focusOriginSafeMethodGetter(const v8::PropertyCallbackInfo<v8::Value
         v8SetReturnValue(info, sharedTemplate->GetFunction(info.GetIsolate()->GetCurrentContext()).ToLocalChecked());
         return;
     }
-	//zero
+    //zero
 #if V8_MINOR_VERSION == 7
-	v8::Local<v8::Value> hiddenValue = V8HiddenValue::getHiddenValue(info.GetIsolate(), v8::Local<v8::Object>::Cast(info.This()), v8AtomicString(info.GetIsolate(), "focus"));
+    v8::Local<v8::Value> hiddenValue = V8HiddenValue::getHiddenValue(info.GetIsolate(), v8::Local<v8::Object>::Cast(info.This()), v8AtomicString(info.GetIsolate(), "focus"));
 #else
     v8::Local<v8::Value> hiddenValue = v8::Local<v8::Object>::Cast(info.This())->GetHiddenValue(v8AtomicString(info.GetIsolate(), "focus"));
 #endif
-	if (!hiddenValue.IsEmpty()) {
+    if (!hiddenValue.IsEmpty()) {
         v8SetReturnValue(info, hiddenValue);
         return;
     }
@@ -5286,13 +5286,13 @@ static void blurOriginSafeMethodGetter(const v8::PropertyCallbackInfo<v8::Value>
         v8SetReturnValue(info, sharedTemplate->GetFunction(info.GetIsolate()->GetCurrentContext()).ToLocalChecked());
         return;
     }
-	//zero
+    //zero
 #if V8_MINOR_VERSION == 7
-	v8::Local<v8::Value> hiddenValue = V8HiddenValue::getHiddenValue(info.GetIsolate(), v8::Local<v8::Object>::Cast(info.This()), v8AtomicString(info.GetIsolate(), "blur"));
+    v8::Local<v8::Value> hiddenValue = V8HiddenValue::getHiddenValue(info.GetIsolate(), v8::Local<v8::Object>::Cast(info.This()), v8AtomicString(info.GetIsolate(), "blur"));
 #else
     v8::Local<v8::Value> hiddenValue = v8::Local<v8::Object>::Cast(info.This())->GetHiddenValue(v8AtomicString(info.GetIsolate(), "blur"));
 #endif
-	if (!hiddenValue.IsEmpty()) {
+    if (!hiddenValue.IsEmpty()) {
         v8SetReturnValue(info, hiddenValue);
         return;
     }
@@ -5544,13 +5544,13 @@ static void postMessageOriginSafeMethodGetter(const v8::PropertyCallbackInfo<v8:
         v8SetReturnValue(info, sharedTemplate->GetFunction(info.GetIsolate()->GetCurrentContext()).ToLocalChecked());
         return;
     }
-	//zero
+    //zero
 #if V8_MINOR_VERSION == 7
-	v8::Local<v8::Value> hiddenValue = V8HiddenValue::getHiddenValue(info.GetIsolate(), v8::Local<v8::Object>::Cast(info.This()), v8AtomicString(info.GetIsolate(), "postMessage"));
+    v8::Local<v8::Value> hiddenValue = V8HiddenValue::getHiddenValue(info.GetIsolate(), v8::Local<v8::Object>::Cast(info.This()), v8AtomicString(info.GetIsolate(), "postMessage"));
 #else
     v8::Local<v8::Value> hiddenValue = v8::Local<v8::Object>::Cast(info.This())->GetHiddenValue(v8AtomicString(info.GetIsolate(), "postMessage"));
 #endif
-	if (!hiddenValue.IsEmpty()) {
+    if (!hiddenValue.IsEmpty()) {
         v8SetReturnValue(info, hiddenValue);
         return;
     }
@@ -6952,13 +6952,13 @@ static void toStringOriginSafeMethodGetter(const v8::PropertyCallbackInfo<v8::Va
         v8SetReturnValue(info, sharedTemplate->GetFunction(info.GetIsolate()->GetCurrentContext()).ToLocalChecked());
         return;
     }
-	//zero
+    //zero
 #if V8_MINOR_VERSION == 7
-	v8::Local<v8::Value> hiddenValue = blink::V8HiddenValue::getHiddenValue(info.GetIsolate(), v8::Local<v8::Object>::Cast(info.This()), v8AtomicString(info.GetIsolate(), "toString"));
+    v8::Local<v8::Value> hiddenValue = blink::V8HiddenValue::getHiddenValue(info.GetIsolate(), v8::Local<v8::Object>::Cast(info.This()), v8AtomicString(info.GetIsolate(), "toString"));
 #else
-	v8::Local<v8::Value> hiddenValue = v8::Local<v8::Object>::Cast(info.This())->GetHiddenValue(v8AtomicString(info.GetIsolate(), "toString"));
+    v8::Local<v8::Value> hiddenValue = v8::Local<v8::Object>::Cast(info.This())->GetHiddenValue(v8AtomicString(info.GetIsolate(), "toString"));
 #endif
-	if (!hiddenValue.IsEmpty()) {
+    if (!hiddenValue.IsEmpty()) {
         v8SetReturnValue(info, hiddenValue);
         return;
     }
@@ -7017,6 +7017,72 @@ static void namedPropertyGetterCallback(v8::Local<v8::Name> name, const v8::Prop
     TRACE_EVENT_SET_SAMPLING_STATE("blink", "DOMNamedProperty");
     V8Window::namedPropertyGetterCustom(name, info);
     TRACE_EVENT_SET_SAMPLING_STATE("v8", "V8Execution");
+}
+
+static bool isOriginAccessibleFromDOMWindow(const SecurityOrigin* targetOrigin, const LocalDOMWindow* accessingWindow)
+{
+    return accessingWindow && accessingWindow->document()->securityOrigin()->canAccessCheckSuborigins(targetOrigin);
+}
+
+static bool mycanAccessFrame(v8::Isolate* isolate, LocalDOMWindow* accessingWindow, SecurityOrigin* targetFrameOrigin, DOMWindow* targetWindow,
+    SecurityReportingOption reportingOption = ReportSecurityError)
+{
+    ASSERT_WITH_SECURITY_IMPLICATION(!(targetWindow && targetWindow->frame()) || targetWindow == targetWindow->frame()->domWindow());
+
+    // It's important to check that targetWindow is a LocalDOMWindow: it's
+    // possible for a remote frame and local frame to have the same security
+    // origin, depending on the model being used to allocate Frames between
+    // processes. See https://crbug.com/601629.
+    if (targetWindow->isLocalDOMWindow() && isOriginAccessibleFromDOMWindow(targetFrameOrigin, accessingWindow))
+        return true;
+
+    if (reportingOption == ReportSecurityError && targetWindow)
+        accessingWindow->printErrorMessage(targetWindow->crossDomainAccessErrorMessage(accessingWindow));
+    return false;
+}
+
+static bool myshouldAllowAccessTo(v8::Isolate* isolate, LocalDOMWindow* accessingWindow, DOMWindow* target, SecurityReportingOption reportingOption)
+{
+    ASSERT(target);
+    const Frame* frame = target->frame();
+    if (!frame || !frame->securityContext())
+        return false;
+
+    bool b = mycanAccessFrame(isolate, accessingWindow, frame->securityContext()->securityOrigin(), target, reportingOption);
+
+    OutputDebugStringA("myshouldAllowAccessTo:\n");
+    String url1 = accessingWindow->document()->url().string();
+    url1.append("\n");
+    OutputDebugStringA(url1.utf8().data());
+
+    String url2 = target->document()->url().string();
+    url2.append(String::format("\n---- %d ----\n", b));
+    OutputDebugStringA(url2.utf8().data());
+
+    return b;
+}
+
+static bool securityCheck(v8::Local<v8::Context> accessingContext, v8::Local<v8::Object> accessedObject)
+{
+    v8::Isolate* isolate = v8::Isolate::GetCurrent();
+    v8::Local<v8::Object> window = V8Window::findInstanceInPrototypeChain(accessedObject, isolate);
+    if (window.IsEmpty())
+        return false; // the frame is gone.
+
+    DOMWindow* targetWindow = V8Window::toImpl(window);
+    ASSERT(targetWindow);
+    if (!targetWindow->isLocalDOMWindow())
+        return false;
+
+    LocalFrame* targetFrame = toLocalDOMWindow(targetWindow)->frame();
+    if (!targetFrame)
+        return false;
+
+    // Notify the loader's client if the initial document has been accessed.
+    if (targetFrame->loader().stateMachine()->isDisplayingInitialEmptyDocument())
+        targetFrame->loader().didAccessInitialDocument();
+
+    return myshouldAllowAccessTo(isolate, toLocalDOMWindow(toDOMWindow(accessingContext)), targetWindow, DoNotReportSecurityError);
 }
 
 } // namespace DOMWindowV8Internal
@@ -7499,13 +7565,13 @@ static void configureShadowObjectTemplate(v8::Local<v8::ObjectTemplate> templ, v
     V8DOMConfiguration::installAttributes(isolate, templ, v8::Local<v8::ObjectTemplate>(), shadowAttributes, WTF_ARRAY_LENGTH(shadowAttributes));
 
     // Install a security handler with V8.
-	//zero
+    //zero
 #if V8_MINOR_VERSION == 7
 
 #else
     templ->SetAccessCheckCallbacks(V8Window::namedSecurityCheckCustom, V8Window::indexedSecurityCheckCustom, v8::External::New(isolate, const_cast<WrapperTypeInfo*>(&V8Window::wrapperTypeInfo)));
 #endif
-	templ->SetInternalFieldCount(V8Window::internalFieldCount);
+    templ->SetInternalFieldCount(V8Window::internalFieldCount);
 }
 
 void V8Window::installV8WindowTemplate(v8::Local<v8::FunctionTemplate> functionTemplate, v8::Isolate* isolate)
@@ -8029,7 +8095,7 @@ void V8Window::installV8WindowTemplate(v8::Local<v8::FunctionTemplate> functionT
         {"XSLTProcessor", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8XSLTProcessor::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
         V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
 #endif // MINIBLINK_NOT_IMPLEMENTED
-		    notImplemented();
+            notImplemented();
     }
     {
         v8::IndexedPropertyHandlerConfiguration config(DOMWindowV8Internal::indexedPropertyGetterCallback, 0, 0, 0, 0);
@@ -8083,6 +8149,9 @@ void V8Window::installV8WindowTemplate(v8::Local<v8::FunctionTemplate> functionT
     prototypeTemplate->SetInternalFieldCount(V8Window::internalFieldCount);
     functionTemplate->SetHiddenPrototype(true);
     instanceTemplate->SetInternalFieldCount(V8Window::internalFieldCount);
+
+    // Cross-origin access check
+    //instanceTemplate->SetAccessCheckCallback(DOMWindowV8Internal::securityCheck, v8::External::New(isolate, const_cast<WrapperTypeInfo*>(&V8Window::wrapperTypeInfo)));
 
     // Custom toString template
     functionTemplate->Set(v8AtomicString(isolate, "toString"), V8PerIsolateData::from(isolate)->toStringTemplate());

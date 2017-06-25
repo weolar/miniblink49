@@ -12,7 +12,6 @@
 
 namespace blink {
 class WebViewClient;
-class WebPageImpl;
 class WebGestureCurveTarget;
 class IntRect;
 struct WebFloatSize;
@@ -63,16 +62,17 @@ public:
     void drawToCanvas(SkCanvas* canvas, const blink::IntRect& clip);
     void updateLayersDrawProperties();
 
-    void setNeedsCommit();
+    //void setNeedsCommit();
     void setNeedsFullTreeSync();
+    void didUpdateLayout();
 
     void requestRepaint(const blink::IntRect& repaintRect);
 
     // 从光栅化线程发出，通知渲染新的一帧。当然也可能从主线程发出，如果没有光栅化，但又有滚动等情况
     void requestDrawFrameLocked(DirtyLayers* dirtyLayers, Vector<Tile*>* tilesToUIThreadRelease);
     bool preDrawFrame();
-	void postDrawFrame();
-	bool applyActions(bool needCheck);
+    void postDrawFrame();
+    bool applyActions(bool needCheck);
 
     void scrollBy(const blink::WebFloatSize& delta, const blink::WebFloatSize& velocity);
 
@@ -99,7 +99,7 @@ public:
     // Sets the background transparency for the viewport. The default is 'false'.
     virtual void setHasTransparentBackground(bool) OVERRIDE;
 
-	virtual void registerForAnimations(blink::WebLayer* layer) OVERRIDE;
+    virtual void registerForAnimations(blink::WebLayer* layer) OVERRIDE;
 
     // Sets whether this view is visible. In threaded mode, a view that is not visible will not
     // composite or trigger updateAnimations() or layout() calls until it becomes visible.
@@ -145,7 +145,7 @@ public:
     void registerCCLayer(CompositingLayer* layer);
     void unregisterCCLayer(CompositingLayer* layer);
     CompositingLayer* getCCLayerById(int id);
-	bool isRootCCLayerEmpty() const { return !m_rootCCLayer; }
+    bool isRootCCLayerEmpty() const { return !m_rootCCLayer; }
 
     SkCanvas* getMemoryCanvasLocked();
     void releaseMemoryCanvasLocked();
@@ -161,6 +161,9 @@ public:
     void firePaintEvent(HDC hdc, const RECT* paintRect);
     blink::IntRect getClientRect();
 
+    void setLayerTreeDirty();
+    bool isLayerTreeDirty() const;
+
 private:
     void applyActionsInCompositeThread(bool needCheck);
     void drawFrameInCompositeThread();
@@ -171,12 +174,13 @@ private:
     
     bool m_isDestroying;
 
+    // content::WebPageImpl*
     blink::WebViewClient* m_webViewClient;
     LayerTreeHostUiThreadClient* m_uiThreadClient;
     blink::WebGestureCurveTarget * m_webGestureCurveTarget;
 
-	cc_blink::WebLayerImpl* m_rootLayer;
-	CompositingLayer* m_rootCCLayer;
+    cc_blink::WebLayerImpl* m_rootLayer;
+    CompositingLayer* m_rootCCLayer;
 
     blink::IntSize m_deviceViewportSize;
     blink::IntRect m_clientRect;
@@ -190,6 +194,7 @@ private:
 
     bool m_needsFullTreeSync;
     bool m_needTileRender;
+    bool m_layerTreeDirty; // 需要WebPageImpl.recordDraw
 
     int m_3dNodesCount;
 
@@ -201,11 +206,11 @@ private:
 
     WTF::HashMap<int, cc_blink::WebLayerImpl*> m_liveLayers;
 
-	WTF::Mutex* m_rasterNotifMutex;
+    WTF::Mutex* m_rasterNotifMutex;
     WTF::Vector<DirtyLayers*> m_dirtyLayersGroup;
-	WTF::Vector<Tile*> m_tilesToUIThreadRelease;
+    WTF::Vector<Tile*> m_tilesToUIThreadRelease;
 
-	ActionsFrameGroup* m_actionsFrameGroup;
+    ActionsFrameGroup* m_actionsFrameGroup;
     WTF::Vector<LayerChangeAction*> m_actions;
     WTF::HashMap<int, CompositingLayer*> m_liveCCLayers;
     //////////////////////////////////////////////////////////////////////////

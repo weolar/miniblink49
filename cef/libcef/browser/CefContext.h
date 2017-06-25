@@ -30,7 +30,7 @@ public:
 
     // Returns true if the context is initialized.
     bool Initialized() { return m_initialized; }
-	
+    
     // Returns true if the context is shutting down.
     bool ShuttingDown() const { return m_bShuttingDown; }
 
@@ -69,9 +69,9 @@ public:
     void FinalizeShutdown();
 
 private:
-	bool InitializeOnWebkitThread(const CefMainArgs& args, const CefSettings& settings, CefRefPtr<CefApp> application, bool* initialized);
-	static unsigned __stdcall WebkitThreadEntryPoint(void* param);
-	void FinalizeShutdownOnWebkitThread();
+    bool InitializeOnWebkitThread(const CefMainArgs& args, const CefSettings& settings, CefRefPtr<CefApp> application, bool* initialized);
+    static unsigned __stdcall WebkitThreadEntryPoint(void* param);
+    void FinalizeShutdownOnWebkitThread();
 
     //void ExitMessageLoop();
 
@@ -84,7 +84,7 @@ private:
     // The thread on which the context was initialized.
     cef_platform_thread_id_t m_appThreadId; // cefclient 调用线程
 
-	cef_platform_thread_id_t m_uiThreadId; // webkit\窗口线程
+    cef_platform_thread_id_t m_uiThreadId; // webkit\窗口线程
 
     CefSettings m_settings;
 
@@ -92,14 +92,14 @@ private:
 
     bool m_osModalLoop;
 
-	CRITICAL_SECTION m_browserListMutex;
+    CRITICAL_SECTION m_browserListMutex;
     BrowserList m_browserList;
 
     int m_needHeartbeat;
 
-	HANDLE m_webkitThreadHandle;
+    HANDLE m_webkitThreadHandle;
 
-	bool m_webkitShutdown;
+    bool m_webkitShutdown;
 };
 
 // Helper macro that returns true if the global context is in a valid state.

@@ -24,6 +24,7 @@
 #include "third_party/WebKit/public/web/WebTextDirection.h"
 #include "third_party/WebKit/public/web/WebViewClient.h"
 #include "third_party/WebKit/public/web/WebPopupType.h"
+#include "third_party/WebKit/Source/platform/Timer.h"
 #include "skia/ext/platform_canvas.h"
 
 namespace blink {
@@ -41,12 +42,13 @@ namespace content {
 
 class PlatformEventHandler;
 
-class PopupMenuWin : public blink::WebViewClient {
+class PopupMenuWin : public NoBaseWillBeGarbageCollectedFinalized<PopupMenuWin>, public blink::WebViewClient {
 public:
     static blink::WebWidget* create(HWND hWnd, blink::IntPoint offset, blink::WebViewImpl* webViewImpl, blink::WebPopupType type, PopupMenuWin** result);
     virtual void PopupMenuWin::closeWidgetSoon() override;
+    ~PopupMenuWin();
 
-    HWND popupHandle() const { return m_popup; }
+    HWND popupHandle() const { return m_hPopup; }
 
     // WebWidgetClient
     virtual void didInvalidateRect(const blink::WebRect&) override;
@@ -59,7 +61,7 @@ public:
 
 protected:
     PopupMenuWin(HWND hWnd, blink::IntPoint offset, blink::WebViewImpl* webViewImpl);
-    blink::WebWidget* PopupMenuWin::createWnd();
+    blink::WebWidget* createWnd();
     void updataSize();
     void updataPaint();
     void initialize();
@@ -70,11 +72,16 @@ protected:
     void beginMainFrame();
     static LRESULT CALLBACK PopupMenuWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
     LRESULT wndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+    void asynStartCreateWnd(blink::Timer<PopupMenuWin>*);
 
-    HWND m_popup;
+    DECLARE_TRACE();
+
+    blink::Timer<PopupMenuWin> m_asynStartCreateWndTimer;
+    HWND m_hPopup;
     skia::PlatformCanvas* m_memoryCanvas;
     blink::IntRect m_rect;
-    bool m_needsCommit;
+    bool m_needsCommit; // 防止重入beginMainFrame
+    bool m_isCommiting; // 防止多次发送Commit
     bool m_hasResize;
     bool m_needResize;
     bool m_initialize;
@@ -84,7 +91,7 @@ protected:
     blink::WebFrameClient* m_webFrameClient;
     blink::WebViewImpl* m_webViewImpl;
     HWND m_hParentWnd;
-	blink::IntPoint m_offset;
+    blink::IntPoint m_offset;
     PlatformEventHandler* m_platformEventHandler;
 };
 

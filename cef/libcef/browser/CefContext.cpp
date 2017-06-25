@@ -20,45 +20,45 @@
 static CefContext* g_context = nullptr;
 
 struct WebkitThreadInitArgs {
-	WebkitThreadInitArgs(CefContext* context, const CefMainArgs& args, const CefSettings& settings, CefRefPtr<CefApp> application, bool* initialized)
-		: m_context(context)
-		, m_args(&args)
-		, m_settings(settings)
-		, m_application(application)
-		, m_initialized(initialized)
-	{
+    WebkitThreadInitArgs(CefContext* context, const CefMainArgs& args, const CefSettings& settings, CefRefPtr<CefApp> application, bool* initialized)
+        : m_context(context)
+        , m_args(&args)
+        , m_settings(settings)
+        , m_application(application)
+        , m_initialized(initialized)
+    {
 
-	}
+    }
 
-	CefContext* context() { return m_context; }
-	const CefMainArgs* args() { return m_args; }
-	CefSettings settings() { return m_settings; }
-	CefRefPtr<CefApp> application() { return m_application; }
-	bool* initialized() { return m_initialized; }
+    CefContext* context() { return m_context; }
+    const CefMainArgs* args() { return m_args; }
+    CefSettings settings() { return m_settings; }
+    CefRefPtr<CefApp> application() { return m_application; }
+    bool* initialized() { return m_initialized; }
 private:
-	CefContext* m_context;
-	const CefMainArgs* m_args;
-	CefSettings m_settings;
-	CefRefPtr<CefApp> m_application;
-	bool* m_initialized;
+    CefContext* m_context;
+    const CefMainArgs* m_args;
+    CefSettings m_settings;
+    CefRefPtr<CefApp> m_application;
+    bool* m_initialized;
 };
 
 
 unsigned CefContext::WebkitThreadEntryPoint(void* param) {
-	base::SetThreadName("UiThread");
-	
-	WebkitThreadInitArgs* webkitInitArgs = (WebkitThreadInitArgs*)param;
-	webkitInitArgs->context()->InitializeOnWebkitThread(
-		*webkitInitArgs->args(), webkitInitArgs->settings(), webkitInitArgs->application(), webkitInitArgs->initialized());
+    base::SetThreadName("UiThread");
+    
+    WebkitThreadInitArgs* webkitInitArgs = (WebkitThreadInitArgs*)param;
+    webkitInitArgs->context()->InitializeOnWebkitThread(
+        *webkitInitArgs->args(), webkitInitArgs->settings(), webkitInitArgs->application(), webkitInitArgs->initialized());
 
-	webkitInitArgs->context()->RunMessageLoop();
-	webkitInitArgs->context()->FinalizeShutdownOnWebkitThread();
-	delete webkitInitArgs;
-	return 0;
+    webkitInitArgs->context()->RunMessageLoop();
+    webkitInitArgs->context()->FinalizeShutdownOnWebkitThread();
+    delete webkitInitArgs;
+    return 0;
 }
 
 int CefExecuteProcess(const CefMainArgs& args, CefRefPtr<CefApp> application, void* windows_sandbox_info) {
-	OutputDebugStringW(L"libcef.CefExecuteProcess \n");
+    OutputDebugStringW(L"libcef.CefExecuteProcess \n");
     
     if (CefContentClient::Get() && CefContentClient::Get()->application())
         CefContentClient::Get()->SetRendererApplication(application);
@@ -67,7 +67,7 @@ int CefExecuteProcess(const CefMainArgs& args, CefRefPtr<CefApp> application, vo
 }
 
 bool CefInitialize(const CefMainArgs& args, const CefSettings& settings, CefRefPtr<CefApp> application, void* windows_sandbox_info) {
-	OutputDebugStringW(L"libcef.CefInitialize \n");
+    OutputDebugStringW(L"libcef.CefInitialize \n");
 
     // Return true if the global context already exists.
     if (g_context)
@@ -147,10 +147,10 @@ CefContext::CefContext()
     , m_bShuttingDown(false)
     , m_osModalLoop(false)
     , m_needHeartbeat(0)
-	, m_appThreadId(0)
-	, m_uiThreadId(0)
-	, m_webkitThreadHandle(NULL)
-	, m_webkitShutdown(false) {
+    , m_appThreadId(0)
+    , m_uiThreadId(0)
+    , m_webkitThreadHandle(NULL)
+    , m_webkitShutdown(false) {
 }
 
 CefContext::~CefContext() {
@@ -163,7 +163,7 @@ CefContext* CefContext::Get() {
 }
 
 const CefContext::BrowserList& CefContext::GetBrowserList() {
-	ASSERT(IsUIThread());
+    ASSERT(IsUIThread());
     return m_browserList;
 }
 
@@ -179,44 +179,46 @@ void CefContext::ClearNeedHeartbeat() {
 }
 
 void CefContext::FireHeartBeat() {
-	::EnterCriticalSection(&m_browserListMutex);
+    ::EnterCriticalSection(&m_browserListMutex);
     for (auto it = m_browserList.begin(); it != m_browserList.end(); ++it) {
         CefBrowserHostImpl* browser = *it;
         browser->FireHeartbeat();
     }
-	::LeaveCriticalSection(&m_browserListMutex);
+    ::LeaveCriticalSection(&m_browserListMutex);
 }
 
 void CefContext::FinalizeShutdownOnWebkitThread() {
-	ASSERT(IsUIThread());
+    ASSERT(IsUIThread());
     CefCommandLine::GetGlobalCommandLine()->Release();
     CefRequestContext::GetGlobalContext()->Release();
 
-	CefV8IsolateDestroyed();
+    CefV8IsolateDestroyed();
 
-	ASSERT(0 == m_browserList.size());
-	::DeleteCriticalSection(&m_browserListMutex);
+    ASSERT(0 == m_browserList.size());
+    ::DeleteCriticalSection(&m_browserListMutex);
 
-	content::BlinkPlatformImpl* platform = (content::BlinkPlatformImpl*)blink::Platform::current();
-	platform->shutdown();
+    content::BlinkPlatformImpl* platform = (content::BlinkPlatformImpl*)blink::Platform::current();
+    platform->shutdown();
 
-	m_webkitShutdown = true;
+    m_webkitShutdown = true;
 }
 
 void CefContext::FinalizeShutdown() {
-	if (!IsUIThread())
-		Quit();
-	else	
-		FinalizeShutdownOnWebkitThread();
+    if (!IsUIThread())
+        Quit();
+    else    
+        FinalizeShutdownOnWebkitThread();
 
-	while (!m_webkitShutdown) {
-		::Sleep(20);
-	}
+    while (!m_webkitShutdown) {
+        ::Sleep(20);
+    }
 
-	if (m_webkitThreadHandle)
-		::CloseHandle(m_webkitThreadHandle);
-	m_webkitThreadHandle = NULL;
+    if (m_webkitThreadHandle)
+        ::CloseHandle(m_webkitThreadHandle);
+    m_webkitThreadHandle = NULL;
 }
+
+LARGE_INTEGER g_qpcFrequency;
 
 void CefContext::RunMessageLoop() {
     // Verify that the context is in a valid state.
@@ -232,9 +234,9 @@ void CefContext::RunMessageLoop() {
     }
     
     MSG msg = { 0 };
-	BOOL bRet = FALSE;
+    BOOL bRet = FALSE;
 
-	LARGE_INTEGER lastFrequency = {0};
+    LARGE_INTEGER lastFrequency = {0};
 
     while ((bRet = GetMessage(&msg, NULL, 0, 0)) != 0) {
         if (WM_QUIT == msg.message) {
@@ -243,15 +245,19 @@ void CefContext::RunMessageLoop() {
         }
 
         while (true) {
-			LARGE_INTEGER qpcFrequency;
-			BOOL b = QueryPerformanceCounter(&qpcFrequency);
-			//if (qpcFrequency.LowPart - lastFrequency.LowPart > 15217) {
-				FireHeartBeat(); 
-				ClearNeedHeartbeat();
-				lastFrequency = qpcFrequency;
-			//}
-			
+            LARGE_INTEGER qpcFrequency;
+            BOOL b = QueryPerformanceCounter(&qpcFrequency);
+            //if (qpcFrequency.LowPart - lastFrequency.LowPart > 15217) 
+            {
+                FireHeartBeat(); 
+                ClearNeedHeartbeat();
+                lastFrequency = qpcFrequency;
+            }
+            
             do {
+                //content::WebThreadImpl* threadImpl = (content::WebThreadImpl*)(blink::Platform::current()->currentThread());
+                //threadImpl->fire();
+
                 if (!TranslateAccelerator(msg.hwnd, NULL, &msg)) {
                     ::TranslateMessage(&msg);
                     ::DispatchMessage(&msg);
@@ -263,16 +269,23 @@ void CefContext::RunMessageLoop() {
                     //ExitMessageLoop();
                     return;
                 }
-				//::Sleep(10);
-            } while (INVALID_HANDLE_VALUE != msg.hwnd && NULL != msg.hwnd);
 
+//                 QueryPerformanceCounter(&qpcFrequency);
+//                 char* out = (char*)malloc(1000);
+//                 sprintf(out, "CefContext::RunMessageLoop: %d, hwnd:%x MSG%x\n", (qpcFrequency.LowPart - g_qpcFrequency.LowPart), msg.hwnd, msg.message);
+//                 OutputDebugStringA(out);
+//                 free(out);
+//                 g_qpcFrequency = qpcFrequency;
+
+                //::Sleep(10);
+            } while (INVALID_HANDLE_VALUE != msg.hwnd && NULL != msg.hwnd);
+            
             if (NULL == msg.hwnd && !g_context->IsNeedHeartbeat()) {
                 //OutputDebugStringW(L"CefContext::FireHeartBeat break\n");
                 break;
             }
-			//::Sleep(10);
+            ::Sleep(10);
         }
-		
     }
 }
 
@@ -285,77 +298,77 @@ bool CefContext::IsUIThread() const {
 }
 
 bool CefContext::CurrentlyOn(CefThreadId threadId) const {
-	content::BlinkPlatformImpl* platform = (content::BlinkPlatformImpl*)blink::Platform::current();
-	blink::WebThread* webThread = platform->currentThread();
-	if (!webThread)
-		return false;
+    content::BlinkPlatformImpl* platform = (content::BlinkPlatformImpl*)blink::Platform::current();
+    blink::WebThread* webThread = platform->currentThread();
+    if (!webThread)
+        return false;
 
-	bool result = false;
-	switch (threadId) {
-	case TID_RENDERER:
-	case TID_UI:
-		result = (webThread == platform->mainThread());
-		break;
-	case TID_DB:
-		result = false;
-		break;
-	case TID_FILE:
-		result = false;
-		break;
-	case TID_FILE_USER_BLOCKING:
-		result = false;
-		break;
-	case TID_PROCESS_LAUNCHER:
-		result = false;
-		break;
-	case TID_CACHE:
-		result = false;
-		break;
-	case TID_IO:
-		if (!platform->tryGetIoThread())
-			result = false;
-		else
-			result = (webThread == platform->tryGetIoThread());
-		break;
-	default:
-		break;
-	};
+    bool result = false;
+    switch (threadId) {
+    case TID_RENDERER:
+    case TID_UI:
+        result = (webThread == platform->mainThread());
+        break;
+    case TID_DB:
+        result = false;
+        break;
+    case TID_FILE:
+        result = false;
+        break;
+    case TID_FILE_USER_BLOCKING:
+        result = false;
+        break;
+    case TID_PROCESS_LAUNCHER:
+        result = false;
+        break;
+    case TID_CACHE:
+        result = false;
+        break;
+    case TID_IO:
+        if (!platform->tryGetIoThread())
+            result = false;
+        else
+            result = (webThread == platform->tryGetIoThread());
+        break;
+    default:
+        break;
+    };
 
-	return result;
+    return result;
 }
 
 bool CefContext::InitializeOnWebkitThread(const CefMainArgs& args, const CefSettings& settings, CefRefPtr<CefApp> application, bool* initialized) {
-	m_uiThreadId = GetCurrentThreadId();
-	content::WebPage::initBlink();
-	m_mainDelegate = new CefMainDelegate(application);
-	m_initialized = true;
-	SetNeedHeartbeat();
-	OnContextInitialized();
-	*initialized = true;
+    m_uiThreadId = GetCurrentThreadId();
+    content::WebPage::initBlink();
+    m_mainDelegate = new CefMainDelegate(application);
+    m_initialized = true;
+    SetNeedHeartbeat();
+    OnContextInitialized();
+    *initialized = true;
 
-	return true;
+    return true;
 }
 
 bool CefContext::Initialize(const CefMainArgs& args, const CefSettings& settings, CefRefPtr<CefApp> application, void* windows_sandbox_info) {
-	m_appThreadId = GetCurrentThreadId();
-	::InitializeCriticalSection(&m_browserListMutex);
+    m_appThreadId = GetCurrentThreadId();
+    ::InitializeCriticalSection(&m_browserListMutex);
 
     base::CommandLine::Init(0, nullptr);
 
     m_settings = settings;
-	bool initialized = false;
+    bool initialized = false;
 
     if (settings.multi_threaded_message_loop) {
         //NOTIMPLEMENTED() << "multi_threaded_message_loop is not supported.";
-		unsigned threadIdentifier = 0;
-		WebkitThreadInitArgs* webkitInitArgs = new WebkitThreadInitArgs(this, args, settings, application, &initialized);
-		m_webkitThreadHandle = reinterpret_cast<HANDLE>(_beginthreadex(0, 0, WebkitThreadEntryPoint, webkitInitArgs, 0, &threadIdentifier));
-	} else
-		InitializeOnWebkitThread(args, settings, application, &initialized);
-	
-	while (!m_initialized) {
-		Sleep(20);
-	}
+        unsigned threadIdentifier = 0;
+        WebkitThreadInitArgs* webkitInitArgs = new WebkitThreadInitArgs(this, args, settings, application, &initialized);
+        m_webkitThreadHandle = reinterpret_cast<HANDLE>(_beginthreadex(0, 0, WebkitThreadEntryPoint, webkitInitArgs, 0, &threadIdentifier));
+    } else
+        InitializeOnWebkitThread(args, settings, application, &initialized);
+    
+    while (!m_initialized) {
+        Sleep(20);
+    }
 
     return true;
 }
@@ -366,37 +379,37 @@ void CefContext::OnContextInitialized() {
     // Notify the handler.
     CefRefPtr<CefApp> app = CefContentClient::Get()->application();
     if (!app.get())
-		return;
+        return;
 
-	CefRefPtr<CefBrowserProcessHandler> handler = app->GetBrowserProcessHandler();
-	if (!handler.get())
-		return;
+    CefRefPtr<CefBrowserProcessHandler> handler = app->GetBrowserProcessHandler();
+    if (!handler.get())
+        return;
 
-	handler->OnContextInitialized();
+    handler->OnContextInitialized();
 
-	base::CommandLine* baseCommandLine = base::CommandLine::ForCurrentProcess();
-	CefRefPtr<CefCommandLineImpl> commandLine = new CefCommandLineImpl(baseCommandLine, false, false);
+    base::CommandLine* baseCommandLine = base::CommandLine::ForCurrentProcess();
+    CefRefPtr<CefCommandLineImpl> commandLine = new CefCommandLineImpl(baseCommandLine, false, false);
 
-	String out = String::format("CefContext::OnContextInitialized 1: %d\n", (unsigned int)commandLine.get());
-	OutputDebugStringA(out.utf8().data());
+    String out = String::format("CefContext::OnContextInitialized 1: %d\n", (unsigned int)commandLine.get());
+    OutputDebugStringA(out.utf8().data());
 
-	commandLine->AppendSwitchWithValue(CefString("type"), CefString("mbrenderer"));
-	handler->OnBeforeChildProcessLaunch(commandLine);
+    commandLine->AppendSwitchWithValue(CefString("type"), CefString("mbrenderer"));
+    handler->OnBeforeChildProcessLaunch(commandLine);
 
-	out = String::format("CefContext::OnContextInitialized 2: %d\n", (unsigned int)commandLine.get());
-	OutputDebugStringA(out.utf8().data());
+    out = String::format("CefContext::OnContextInitialized 2: %d\n", (unsigned int)commandLine.get());
+    OutputDebugStringA(out.utf8().data());
 }
 
 void CefContext::RegisterBrowser(CefBrowserHostImpl* browser) {
-	ASSERT(IsUIThread());
+    ASSERT(IsUIThread());
     ASSERT(!m_browserList.contains(browser));
     m_browserList.add(browser);
 }
 
 void CefContext::UnregisterBrowser(CefBrowserHostImpl* browser) {
-	::EnterCriticalSection(&m_browserListMutex);
+    ::EnterCriticalSection(&m_browserListMutex);
     ASSERT(m_browserList.contains(browser));
     m_browserList.remove(browser);
-	::LeaveCriticalSection(&m_browserListMutex);
+    ::LeaveCriticalSection(&m_browserListMutex);
 }
 #endif

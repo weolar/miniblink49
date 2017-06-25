@@ -176,13 +176,12 @@ public:
     //blink::IntRect updateRect() const { return m_updateRect; };
     cc::TileGrid* tileGrid() { return m_tileGrid; }
 
-    void onRasterFinish(int layerId, const blink::IntRect& rect);
     void requestRepaint(const blink::IntRect& rect);
     void requestBoundRepaint(bool directOrPending);
     void appendPendingInvalidateRect(const blink::IntRect& rect);
 
     cc::DrawProperties* drawProperties();
-	//cc::DrawToCanvasProperties* drawToCanvasProperties(); // 在上屏时使用本属性，和DrawProperties比，不一定是最新的坐标属性，需要光栅化后来更新
+    //cc::DrawToCanvasProperties* drawToCanvasProperties(); // 在上屏时使用本属性，和DrawProperties比，不一定是最新的坐标属性，需要光栅化后来更新
     void updataDrawToCanvasProperties(cc::DrawToCanvasProperties* prop);
     const SkMatrix44& drawTransform() const;
 
@@ -198,10 +197,10 @@ public:
 
 protected:
     void setNeedsCommit(bool needUpdateAllBoundsArea);
-	void appendLayerChangeAction(cc::LayerChangeAction* action);
-	void appendLayerActionsToParent();
+    void appendLayerChangeAction(cc::LayerChangeAction* action);
+    void appendLayerActionsToParent();
 
-	WebLayerImplClient::Type m_layerType;
+    WebLayerImplClient::Type m_layerType;
     int m_id;
     blink::FloatPoint m_position;
     blink::IntSize m_bounds;
@@ -259,15 +258,15 @@ protected:
     WTF::Vector<blink::IntRect> m_nonFastScrollableRegion;
 
     cc::DrawProperties* m_drawProperties;
-	cc::DrawToCanvasProperties* m_drawToCanvasProperties;
+    cc::DrawToCanvasProperties* m_drawToCanvasProperties;
 
-	WTF::Vector<cc::LayerChangeAction*> m_savedActionsWhenHostIsNull;
+    WTF::Vector<cc::LayerChangeAction*> m_savedActionsWhenHostIsNull;
     bool m_hasMaskLayerChild;
     bool m_isMaskLayer;
     bool m_isReplicaLayer;
 
 private:
-	DISALLOW_COPY_AND_ASSIGN(WebLayerImpl);
+    DISALLOW_COPY_AND_ASSIGN(WebLayerImpl);
 };
 
 }  // namespace cc_blink

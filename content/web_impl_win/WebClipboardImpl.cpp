@@ -110,13 +110,13 @@ void appendEscapedCharForHTMLImpl(typename str::value_type c, str* output)
             const char* p = kCharsToEscape[k].replacement;
             while (*p)
                 //output->push_back(*p++);
-				output += (*p++);
+                output += (*p++);
             break;
         }
     }
     if (k == arraysize(kCharsToEscape))
         //output->push_back(c);
-		output += c;
+        output += c;
 }
 
 template <class str>

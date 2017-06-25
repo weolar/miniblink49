@@ -48,6 +48,7 @@ LayerTreeHost::LayerTreeHost(blink::WebViewClient* webViewClient, LayerTreeHostU
     m_uiThreadClient = uiThreadClient;
     m_needsFullTreeSync = true;
     m_needTileRender = true;
+    m_layerTreeDirty = true;
     m_3dNodesCount = 0;
     m_tilesMutex = new WTF::Mutex();
     m_rasterNotifMutex = new WTF::Mutex();
@@ -115,10 +116,10 @@ LayerTreeHost::~LayerTreeHost()
         delete m_memoryCanvas;
     m_memoryCanvas = nullptr;
     
-	for (WTF::HashMap<int, cc_blink::WebLayerImpl*>::iterator it = m_liveLayers.begin(); m_liveLayers.end() != it; ++it) {
+    for (WTF::HashMap<int, cc_blink::WebLayerImpl*>::iterator it = m_liveLayers.begin(); m_liveLayers.end() != it; ++it) {
         cc_blink::WebLayerImpl* layer = it->value;
         layer->setLayerTreeHost(nullptr);
-	}
+    }
     m_liveLayers.clear();
 
     for (WTF::HashMap<int, CompositingLayer*>::iterator it = m_liveCCLayers.begin(); m_liveCCLayers.end() != it; ++it) {
@@ -128,14 +129,14 @@ LayerTreeHost::~LayerTreeHost()
     }
     m_liveCCLayers.clear();
     
-	for (size_t i = 0; i < m_dirtyLayersGroup.size(); ++i) {
-		DirtyLayers* dirtyLayers = m_dirtyLayersGroup[i];
-		delete dirtyLayers;
-	}
-	m_dirtyLayersGroup.clear();
+    for (size_t i = 0; i < m_dirtyLayersGroup.size(); ++i) {
+        DirtyLayers* dirtyLayers = m_dirtyLayersGroup[i];
+        delete dirtyLayers;
+    }
+    m_dirtyLayersGroup.clear();
 
-	delete m_rasterNotifMutex;
-	m_rasterNotifMutex = nullptr;
+    delete m_rasterNotifMutex;
+    m_rasterNotifMutex = nullptr;
 
     delete m_tilesMutex;
     m_tilesMutex = nullptr;
@@ -246,11 +247,27 @@ void LayerTreeHost::setWebGestureCurveTarget(blink::WebGestureCurveTarget* webGe
     m_webGestureCurveTarget = webGestureCurveTarget;
 }
 
-void LayerTreeHost::setNeedsCommit()
+// void LayerTreeHost::setNeedsCommit() // 暂时被废弃，由setLayerTreeDirty代替
+// {
+//     // 由光栅化线程来提起脏区域，所以这里直接指定需要开始下一帧，光删化完毕后由光栅化线程通过requestRepaint发起重绘
+//     m_webViewClient->scheduleAnimation();
+// }
+
+void LayerTreeHost::setLayerTreeDirty()
 {
-    // 由光栅化线程来提起脏区域，所以这里直接指定需要开始下一帧，光删化完毕后由光栅化线程通过requestRepaint发起重绘
-    m_webViewClient->scheduleAnimation();
+    m_layerTreeDirty = true;
+    m_webViewClient->didUpdateLayout();
 }
+
+bool LayerTreeHost::isLayerTreeDirty() const
+{
+    return m_layerTreeDirty;
+}
+
+// void LayerTreeHost::didUpdateLayout()
+// {
+//     m_webViewClient->didUpdateLayout();
+// }
 
 void LayerTreeHost::setNeedsFullTreeSync()
 {
@@ -266,13 +283,6 @@ void LayerTreeHost::requestRepaint(const blink::IntRect& repaintRect)
 void LayerTreeHost::requestDrawFrameLocked(DirtyLayers* dirtyLayers, Vector<Tile*>* tilesToUIThreadRelease)
 {
     DebugBreak();
-//     m_rasterNotifMutex->lock();
-//     // 等待，必须按index的顺序;
-//     m_dirtyLayersGroup.append(dirtyLayers);
-// 	m_tilesToUIThreadRelease.appendVector(*tilesToUIThreadRelease);
-// 	delete tilesToUIThreadRelease;
-//     m_rasterNotifMutex->unlock();
-//     setNeedsCommit();
 }
 
 static bool compareDirtyLayer(DirtyLayers*& left, DirtyLayers*& right)
@@ -282,7 +292,7 @@ static bool compareDirtyLayer(DirtyLayers*& left, DirtyLayers*& right)
 
 static bool compareAction(LayerChangeAction*& left, LayerChangeAction*& right)
 {
-	return left->actionId() < right->actionId();
+    return left->actionId() < right->actionId();
 }
 
 void LayerTreeHost::beginRecordActions()
@@ -297,12 +307,12 @@ void LayerTreeHost::endRecordActions()
 
 void LayerTreeHost::appendLayerChangeAction(LayerChangeAction* action)
 {
-	m_actionsFrameGroup->saveLayerChangeAction(action);
+    m_actionsFrameGroup->saveLayerChangeAction(action);
 
-	setNeedsAnimate();
+    setNeedsAnimate();
 
-// 	String outString = String::format("LayerTreeHost::appendLayerChangeAction: %d %d \n", (int)(action->type()), (int)action->actionId());
-// 	OutputDebugStringW(outString.charactersWithNullTermination().data());
+//     String outString = String::format("LayerTreeHost::appendLayerChangeAction: %d %d \n", (int)(action->type()), (int)action->actionId());
+//     OutputDebugStringW(outString.charactersWithNullTermination().data());
 }
 
 int64 LayerTreeHost::genActionId()
@@ -313,7 +323,7 @@ int64 LayerTreeHost::genActionId()
 bool LayerTreeHost::preDrawFrame()
 {
     //atomicIncrement(&m_drawFrameCount);
-	return applyActions(false);
+    return applyActions(false);
 }
 
 bool LayerTreeHost::applyActions(bool needCheck)
@@ -405,11 +415,7 @@ static void updateLayerChildren(cc_blink::WebLayerImpl* layer, SkCanvas* canvas,
         canvas->clipRect(layerRect, SkRegion::kIntersect_Op, false);
     }
 
-    if (
-#if 0
-        layer->dirty() ||
-#endif
-        needsFullTreeSync)
+    if (needsFullTreeSync)
         updateLayer(layer, canvas, clip);
 
     blink::IntRect clipInChildCoordinate = clip;
@@ -459,7 +465,7 @@ void LayerTreeHost::recordDraw()
     if (!m_rootLayer)
         return;
 
-	updateLayersDrawProperties();
+    updateLayersDrawProperties();
 
     cc::RasterTaskGroup* taskGroup = cc::RasterTaskWorkerThreadPool::shared()->beginPostRasterTask(this);
     m_rootLayer->recordDrawChildren(taskGroup, 0);
@@ -516,17 +522,17 @@ void LayerTreeHost::drawToCanvas(SkCanvas* canvas, const IntRect& dirtyRect)
 }
 
 struct DrawPropertiesFromAncestor {
-	DrawPropertiesFromAncestor() 
-	{
-	    transform = SkMatrix44(SkMatrix44::kIdentity_Constructor);
-		opacity = 1.0;
-	}
+    DrawPropertiesFromAncestor() 
+    {
+        transform = SkMatrix44(SkMatrix44::kIdentity_Constructor);
+        opacity = 1.0;
+    }
 
-	SkMatrix44 transform;
-	float opacity;
+    SkMatrix44 transform;
+    float opacity;
 };
 
-static void updateChildLayersDrawProperties(cc_blink::WebLayerImpl* layer, LayerSorter& layerSorter,  const DrawPropertiesFromAncestor& propFromAncestor, int deep)
+static void updateChildLayersDrawProperties(cc_blink::WebLayerImpl* layer, LayerSorter& layerSorter, const DrawPropertiesFromAncestor& propFromAncestor, int deep)
 {
     WTF::Vector<cc_blink::WebLayerImpl*>& children = layer->children();
     
@@ -561,11 +567,11 @@ static void updateChildLayersDrawProperties(cc_blink::WebLayerImpl* layer, Layer
         drawProperties->screenSpaceTransform = combinedTransform;
         drawProperties->targetSpaceTransform = combinedTransform;
         drawProperties->currentTransform = currentTransform;
-		//drawProperties->opacity = propFromAncestor.opacity;
+        //drawProperties->opacity = propFromAncestor.opacity;
 
-		DrawPropertiesFromAncestor prop;
-		prop.transform = transformToAncestorIfFlatten;
-		prop.opacity *= child->opacity();
+        DrawPropertiesFromAncestor prop;
+        prop.transform = transformToAncestorIfFlatten;
+        prop.opacity *= child->opacity();
         updateChildLayersDrawProperties(child, layerSorter, prop, deep + 1);
     }
 
@@ -579,7 +585,7 @@ void LayerTreeHost::updateLayersDrawProperties()
     LayerSorter layerSorter;
     SkMatrix44 transform(SkMatrix44::kIdentity_Constructor);
 
-	DrawPropertiesFromAncestor prop;
+    DrawPropertiesFromAncestor prop;
     updateChildLayersDrawProperties(m_rootLayer, layerSorter, prop, 0);
 }
 
@@ -640,10 +646,10 @@ void LayerTreeHost::clearRootLayer()
 {
     m_rootLayer = nullptr;
 
-	while (0 != RasterTaskWorkerThreadPool::shared()->pendingRasterTaskNum()) {	::Sleep(20); }
-    requestApplyActionsToRunIntoCompositeThread(false);
+    while (0 != RasterTaskWorkerThreadPool::shared()->pendingRasterTaskNum()) {    ::Sleep(20); }
+        requestApplyActionsToRunIntoCompositeThread(false);
 
-	m_rootCCLayer = nullptr;
+    m_rootCCLayer = nullptr;
 }
 
 void LayerTreeHost::setViewportSize(const blink::WebSize& deviceViewportSize)
@@ -684,9 +690,9 @@ void LayerTreeHost::setHasTransparentBackground(bool b)
 
 void LayerTreeHost::registerForAnimations(blink::WebLayer* layer)
 {
-	// 不能在这里设置LayerTreeHost，因为popup 类型的会把新窗口的layer调用本接口到老的host来。
-// 	cc_blink::WebLayerImpl* layerImpl = (cc_blink::WebLayerImpl*)layer;
-// 	layerImpl->setLayerTreeHost(this);
+    // 不能在这里设置LayerTreeHost，因为popup 类型的会把新窗口的layer调用本接口到老的host来。
+//     cc_blink::WebLayerImpl* layerImpl = (cc_blink::WebLayerImpl*)layer;
+//     layerImpl->setLayerTreeHost(this);
 }
 
 // Sets whether this view is visible. In threaded mode, a view that is not visible will not

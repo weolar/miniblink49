@@ -77,7 +77,7 @@ public:
 private:
     int m_layerId;
     DrawToCanvasProperties* m_drawToCanvasProperties;
-	Vector<int>* m_hasBitmapTilesToEvict;
+    Vector<int>* m_hasBitmapTilesToEvict;
 
     cc_blink::WebLayerImpl* m_tempLayer;
 };
@@ -109,12 +109,12 @@ public:
     RasterTaskGroup(RasterTaskWorkerThreadPool* pool, LayerTreeHost* host);
     ~RasterTaskGroup();
 
-	void postImageLayerAction(int imageLayerId, SkBitmapRefWrap* bitmap);
+    void postImageLayerAction(int imageLayerId, SkBitmapRefWrap* bitmap);
     void postRasterTask(cc_blink::WebLayerImpl* layer, SkPicture* picture, TileActionInfoVector* willRasteredTiles, const blink::IntRect& dirtyRect);
     bool endPostRasterTask();
     void appendPendingInvalidateRect(const blink::IntRect& r); // r是根层坐标系
-	void appendDirtyLayer(cc_blink::WebLayerImpl* layer);
-	void appendTileToUIThreadRelease(Tile* tile);
+    void appendDirtyLayer(cc_blink::WebLayerImpl* layer);
+    void appendTileToUIThreadRelease(Tile* tile);
     void appendUnnecessaryTileToEvictAfterDrawFrame(Tile* tile);
 
     void waitHostRasteringIndex();
@@ -123,7 +123,7 @@ public:
     void ref();
     void unref();
 
-	//LayerChangeActionBlend* blendAction() { return m_blendAction; }
+    //LayerChangeActionBlend* blendAction() { return m_blendAction; }
 
 private:
     int m_ref;
@@ -133,10 +133,10 @@ private:
     //cc_blink::WebLayerImpl* m_layer;
     LayerTreeHost* m_host;
     WTF::Mutex* m_mutex;
-	WTF::Vector<LayerChangeAction*> m_blendAndImageActions;
-	LayerChangeActionBlend* m_lastBlendActionForPendingInvalidateRect;
+    WTF::Vector<LayerChangeAction*> m_blendAndImageActions;
+    LayerChangeActionBlend* m_lastBlendActionForPendingInvalidateRect;
     LayerChangeActionDrawPropUpdata* m_drawPropUpdataAction;
-	LayerChangeActionUpdataImageLayer* m_updataImageLayerAction;
+    LayerChangeActionUpdataImageLayer* m_updataImageLayerAction;
 
 //     DirtyLayers* m_dirtyLayers;
 //     Vector<Tile*>* m_tilesToUIThreadRelease;

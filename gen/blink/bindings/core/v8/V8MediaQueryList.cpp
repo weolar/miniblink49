@@ -218,14 +218,14 @@ void V8MediaQueryList::addListenerMethodEpilogueCustom(const v8::FunctionCallbac
 {
 #ifdef MINIBLINK_NOT_IMPLEMENTED
 #endif // MINIBLINK_NOT_IMPLEMENTED
-	notImplemented();
+    notImplemented();
 }
 
 void V8MediaQueryList::removeListenerMethodEpilogueCustom(const v8::FunctionCallbackInfo<v8::Value>&, MediaQueryList*)
 {
 #ifdef MINIBLINK_NOT_IMPLEMENTED
 #endif // MINIBLINK_NOT_IMPLEMENTED
-	notImplemented();
+    notImplemented();
 }
 
 } // namespace blink

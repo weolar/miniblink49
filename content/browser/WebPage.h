@@ -86,10 +86,10 @@ public:
 
     int getCursorInfoType() const;
 
-	blink::IntSize viewportSize() const;
+    blink::IntSize viewportSize() const;
     void setViewportSize(const blink::IntSize& size);
 
-	blink::IntRect caretRect();
+    blink::IntRect caretRect();
 
     void repaintRequested(const blink::IntRect& windowRect);
 
@@ -100,8 +100,8 @@ public:
     bool isDrawDirty() const;
 
     HWND getHWND() const;
-	void setHWND(HWND hwnd);
-	void setHwndRenderOffset(const blink::IntPoint& offset);
+    void setHWND(HWND hwnd);
+    void setHwndRenderOffset(const blink::IntPoint& offset);
     blink::IntPoint getHwndRenderOffset() const;
     void setBackgroundColor(COLORREF c);
 
@@ -117,14 +117,14 @@ public:
     CefBrowserHostImpl* browser();
     void setBrowser(CefBrowserHostImpl* browserImpl);
 #endif
-	blink::WebViewImpl* webViewImpl();
-	blink::WebFrame* mainFrame();
+    blink::WebViewImpl* webViewImpl();
+    blink::WebFrame* mainFrame();
 
     static WebPage* getSelfForCurrentContext();
 
     WebFrameClientImpl* webFrameClientImpl();
 
-	blink::WebFrame* getWebFrameFromFrameId(int64 frameId);
+    blink::WebFrame* getWebFrameFromFrameId(int64 frameId);
 
     // kMainFrameId must be -1 to align with renderer expectations.
     static const int64 kMainFrameId = -1;

@@ -236,18 +236,18 @@ void V8EventTarget::derefObject(ScriptWrappable* scriptWrappable)
 #ifdef MINIBLINK_NOT_IMPLEMENTED
 v8::Local<v8::Value> toV8(EventTarget*, v8::Local<class v8::Object>, v8::Isolate *)
 {
-	notImplemented();
-	return v8::Local<v8::Value>();
+    notImplemented();
+    return v8::Local<v8::Value>();
 }
 
 v8::Local<v8::Value> toV8(EventTarget& impl, v8::Local<v8::Object> creationContext, v8::Isolate* isolate)
 {
-	v8::Local<v8::Object> v8Object = v8::Object::New(isolate);
+    v8::Local<v8::Object> v8Object = v8::Object::New(isolate);
 
-	if (!toV8EventTarget(impl, v8Object, creationContext, isolate))
-		return v8::Local<v8::Value>();
+    if (!toV8EventTarget(impl, v8Object, creationContext, isolate))
+        return v8::Local<v8::Value>();
 
-	return v8Object;
+    return v8Object;
 }
 #endif // MINIBLINK_NOT_IMPLEMENTED
 
