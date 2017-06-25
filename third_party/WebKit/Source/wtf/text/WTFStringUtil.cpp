@@ -23,7 +23,7 @@ String ensureUTF16String(const String& string)
     const char* stringCurrent = reinterpret_cast<const char*>(stringStart);
     if (WTF::Unicode::convertUTF8ToUTF16(&stringCurrent, reinterpret_cast<const char *>(stringStart + length),
         &bufferCurrent, bufferCurrent + buffer.size()) != WTF::Unicode::conversionOK)
-        return String();
+        return "";
 
     unsigned utf16Length = bufferCurrent - bufferStart;
     ASSERT(utf16Length < length);
