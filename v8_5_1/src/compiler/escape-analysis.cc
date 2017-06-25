@@ -883,7 +883,13 @@ void EscapeAnalysis::RunObjectAnalysis() {
       // Danglers need to be processed immediately, even if they are
       // on the stack. Since they do not have effect outputs,
       // we don't have to track whether they are on the stack.
-      queue.insert(queue.end(), danglers.begin(), danglers.end());
+#if USING_VC6RT == 1
+	  for (auto it = danglers.begin(); it != danglers.end(); ++it) {
+		  queue.push_back(*it);
+	  }
+#else
+	  queue.insert(queue.end(), danglers.begin(), danglers.end());
+#endif
       danglers.clear();
     }
   }

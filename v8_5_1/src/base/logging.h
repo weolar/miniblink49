@@ -8,9 +8,6 @@
 #include <cstring>
 #include <sstream>
 #include <string>
-#if USING_VC6RT == 1
-#include <ostreamvc6.h>
-#endif
 #include "src/base/build_config.h"
 
 extern "C" V8_NORETURN void V8_Fatal(const char* file, int line,

@@ -36,8 +36,19 @@ class ZoneVector : public std::vector<T, zone_allocator<T>> {
   // having the value {def}.
   ZoneVector(size_t size, T def, Zone* zone)
       : std::vector<T, zone_allocator<T>>(size, def, zone_allocator<T>(zone)) {}
-};
 
+  // Constructs a new vector and fills it with the contents of the range
+  // [first, last).
+  template <class InputIt>
+  ZoneVector(InputIt first, InputIt last, Zone* zone)
+	  : std::vector<T, zone_allocator<T>>(first, last,
+		  zone_allocator<T>(zone)) {}
+
+#if USING_VC6RT == 1
+  explicit ZoneVector(const zone_allocator<T>& alloc)
+	  : std::vector<T, zone_allocator<T>>(zone_allocator<T>(((zone_allocator<T>*)(&alloc))->zone())) {}
+#endif
+};
 
 // A wrapper subclass std::deque to make it easy to construct one
 // that uses a zone allocator.
@@ -47,8 +58,11 @@ class ZoneDeque : public std::deque<T, zone_allocator<T>> {
   // Constructs an empty deque.
   explicit ZoneDeque(Zone* zone)
       : std::deque<T, zone_allocator<T>>(zone_allocator<T>(zone)) {}
+#if USING_VC6RT == 1
+  explicit ZoneDeque(const zone_allocator<T>& alloc)
+	  : std::deque<T, zone_allocator<T>>(zone_allocator<T>(((zone_allocator<T>*)(&alloc))->zone())) {}
+#endif
 };
-
 
 // A wrapper subclass std::list to make it easy to construct one
 // that uses a zone allocator.
@@ -60,8 +74,12 @@ class ZoneLinkedList : public std::list<T, zone_allocator<T>> {
   // Constructs an empty list.
   explicit ZoneLinkedList(Zone* zone)
       : std::list<T, zone_allocator<T>>(zone_allocator<T>(zone)) {}
-};
 
+#if USING_VC6RT == 1
+  explicit ZoneLinkedList(const zone_allocator<T>& alloc)
+	  : std::list<T, zone_allocator<T>>(zone_allocator<T>(((zone_allocator<T>*)(&alloc))->zone())) {}
+#endif
+};
 
 // A wrapper subclass std::priority_queue to make it easy to construct one
 // that uses a zone allocator.
@@ -72,9 +90,12 @@ class ZonePriorityQueue
   // Constructs an empty list.
   explicit ZonePriorityQueue(Zone* zone)
       : std::priority_queue<T, ZoneVector<T>, Compare>(Compare(),
-                                                       ZoneVector<T>(zone)) {}
+                                                       ZoneVector<T>
+#if USING_VC6RT == 1
+		  ::allocator_type
+#endif
+		  (zone)) {}
 };
-
 
 // A wrapper subclass for std::queue to make it easy to construct one
 // that uses a zone allocator.
@@ -83,9 +104,12 @@ class ZoneQueue : public std::queue<T, ZoneDeque<T>> {
  public:
   // Constructs an empty queue.
   explicit ZoneQueue(Zone* zone)
-      : std::queue<T, ZoneDeque<T>>(ZoneDeque<T>(zone)) {}
+      : std::queue<T, ZoneDeque<T>>(ZoneDeque<T>
+#if USING_VC6RT == 1
+		  ::allocator_type
+#endif
+		  (zone)) {}
 };
-
 
 // A wrapper subclass for std::stack to make it easy to construct one that uses
 // a zone allocator.
@@ -94,9 +118,12 @@ class ZoneStack : public std::stack<T, ZoneDeque<T>> {
  public:
   // Constructs an empty stack.
   explicit ZoneStack(Zone* zone)
-      : std::stack<T, ZoneDeque<T>>(ZoneDeque<T>(zone)) {}
+      : std::stack<T, ZoneDeque<T>>(ZoneDeque<T>
+#if USING_VC6RT == 1
+		  ::allocator_type
+#endif
+		  (zone)) {}
 };
-
 
 // A wrapper subclass for std::set to make it easy to construct one that uses
 // a zone allocator.
@@ -109,19 +136,48 @@ class ZoneSet : public std::set<K, Compare, zone_allocator<K>> {
                                                 zone_allocator<K>(zone)) {}
 };
 
-
 // A wrapper subclass for std::map to make it easy to construct one that uses
 // a zone allocator.
 template <typename K, typename V, typename Compare = std::less<K>>
 class ZoneMap
-    : public std::map<K, V, Compare, zone_allocator<std::pair<K, V>>> {
+    : public std::map<K, V, Compare, zone_allocator<
+#if USING_VC6RT == 1
+	V
+#else
+	std::pair<const K, V>
+#endif
+	>> {
  public:
   // Constructs an empty map.
   explicit ZoneMap(Zone* zone)
-      : std::map<K, V, Compare, zone_allocator<std::pair<K, V>>>(
-            Compare(), zone_allocator<std::pair<K, V>>(zone)) {}
+      : std::map<K, V, Compare, zone_allocator<
+#if USING_VC6RT == 1
+	  V
+#else
+	  std::pair<const K, V>
+#endif
+	  >>(
+            Compare(), zone_allocator<
+#if USING_VC6RT == 1
+		  V
+#else
+		  std::pair<const K, V>
+#endif
+			>(zone)) {}
 };
 
+// A wrapper subclass for std::multimap to make it easy to construct one that
+// uses a zone allocator.
+template <typename K, typename V, typename Compare = std::less<K>>
+class ZoneMultimap
+	: public std::multimap<K, V, Compare,
+	zone_allocator<std::pair<const K, V>>> {
+public:
+	// Constructs an empty multimap.
+	explicit ZoneMultimap(Zone* zone)
+		: std::multimap<K, V, Compare, zone_allocator<std::pair<const K, V>>>(
+			Compare(), zone_allocator<std::pair<const K, V>>(zone)) {}
+};
 
 // Typedefs to shorten commonly used vectors.
 typedef ZoneVector<bool> BoolVector;

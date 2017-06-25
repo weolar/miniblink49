@@ -15,7 +15,6 @@
 #include "src/base/macros.h"
 
 #if USING_VC6RT == 1
-#include <algorithmvc6.h>
 #undef STRICT
 #undef CONST
 #undef PURE

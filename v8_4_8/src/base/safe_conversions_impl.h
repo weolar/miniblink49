@@ -9,6 +9,9 @@
 #define V8_BASE_SAFE_CONVERSIONS_IMPL_H_
 
 #include <limits>
+#if USING_VC6RT == 1
+#include <limitsvc6.h>
+#endif
 
 #include "src/base/logging.h"
 #include "src/base/macros.h"

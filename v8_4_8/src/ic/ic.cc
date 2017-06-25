@@ -4,6 +4,12 @@
 
 #include "src/ic/ic.h"
 
+#include <iostream>
+#include <stdio.h>
+#if USING_VC6RT == 1
+#include <string_vc6.h>
+#endif
+
 #include "src/accessors.h"
 #include "src/api.h"
 #include "src/arguments.h"

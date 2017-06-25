@@ -5,6 +5,9 @@
 #include "src/base/bits.h"
 
 #include <limits>
+#if USING_VC6RT == 1
+#include <limitsvc6.h>
+#endif
 
 #include "src/base/logging.h"
 

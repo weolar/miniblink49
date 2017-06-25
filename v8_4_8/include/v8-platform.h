@@ -4,7 +4,9 @@
 
 #ifndef V8_V8_PLATFORM_H_
 #define V8_V8_PLATFORM_H_
-
+#if USING_VC6RT == 1
+#include <PlatformSTL.h>
+#endif
 namespace v8 {
 
 class Isolate;

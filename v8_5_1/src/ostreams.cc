@@ -31,13 +31,13 @@ int OFStreamBase::sync() {
 
 
 OFStreamBase::int_type OFStreamBase::overflow(int_type c) {
-  return (c != EOF) ? std::fputc(c, f_) : c;
+  return (c != EOF) ? fputc(c, f_) : c;
 }
 
 
 std::streamsize OFStreamBase::xsputn(const char* s, std::streamsize n) {
   return static_cast<std::streamsize>(
-      std::fwrite(s, 1, static_cast<size_t>(n), f_));
+      fwrite(s, 1, static_cast<size_t>(n), f_));
 }
 
 
