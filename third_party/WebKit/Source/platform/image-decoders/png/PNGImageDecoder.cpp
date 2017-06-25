@@ -41,7 +41,7 @@
 
 #include "wtf/PassOwnPtr.h"
 
-#include "png.h"
+#include "libpng/png.h"
 #if !defined(PNG_LIBPNG_VER_MAJOR) || !defined(PNG_LIBPNG_VER_MINOR)
 #error version error: compile against a versioned libpng.
 #endif

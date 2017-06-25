@@ -44,10 +44,10 @@
 
 extern "C" {
 #include <stdio.h> // jpeglib.h needs stdio FILE.
-#include "jpeglib.h"
-#if USE(ICCJPEG)
-#include "iccjpeg.h"
-#endif
+#include "libjpeg/jpeglib.h"
+//#if USE(ICCJPEG)
+//#include "iccjpeg.h"
+//#endif
 #if USE(QCMSLIB)
 #include "qcms.h"
 #endif
@@ -334,10 +334,10 @@ public:
         src->pub.term_source = term_source;
         src->decoder = this;
 
-#if USE(ICCJPEG)
-        // Retain ICC color profile markers for color management.
-        setup_read_icc_profile(&m_info);
-#endif
+//#if USE(ICCJPEG)
+//        // Retain ICC color profile markers for color management.
+//        setup_read_icc_profile(&m_info);
+//#endif
         // Keep APP1 blocks, for obtaining exif data.
         jpeg_save_markers(&m_info, exifMarker, 0xFFFF);
     }

@@ -27,10 +27,10 @@
 #ifdef MINIBLINK_NOT_IMPLEMENTED
 #include "platform/image-decoders/gif/GIFImageDecoder.h"
 #include "platform/image-decoders/ico/ICOImageDecoder.h"
-#include "platform/image-decoders/jpeg/JPEGImageDecoder.h"
-#include "platform/image-decoders/png/PNGImageDecoder.h"
 #include "platform/image-decoders/webp/WEBPImageDecoder.h"
 #else
+#include "platform/image-decoders/png/PNGImageDecoder.h"
+#include "platform/image-decoders/jpeg/JPEGImageDecoder.h"
 #include "platform/image-decoders/GDIPlus/ImageGDIPlusDecoder.h"
 #include "platform/image-decoders/gif/GIFImageDecoder.h"
 #endif // MINIBLINK_NOT_IMPLEMENTED
@@ -101,26 +101,20 @@ PassOwnPtr<ImageDecoder> ImageDecoder::create(const SharedBuffer& data, ImageSou
         return nullptr;
 
 #ifdef MINIBLINK_NOT_IMPLEMENTED
-    if (matchesJPEGSignature(contents))
-        return adoptPtr(new JPEGImageDecoder(alphaOption, gammaAndColorProfileOption, maxDecodedBytes));
-
-    if (matchesPNGSignature(contents))
-        return adoptPtr(new PNGImageDecoder(alphaOption, gammaAndColorProfileOption, maxDecodedBytes));
-
-    if (matchesGIFSignature(contents))
-        return adoptPtr(new GIFImageDecoder(alphaOption, gammaAndColorProfileOption, maxDecodedBytes));
-
     if (matchesWebPSignature(contents))
         return adoptPtr(new WEBPImageDecoder(alphaOption, gammaAndColorProfileOption, maxDecodedBytes));
 
     if (matchesICOSignature(contents) || matchesCURSignature(contents))
         return adoptPtr(new ICOImageDecoder(alphaOption, gammaAndColorProfileOption, maxDecodedBytes));
 #else
-    if (matchesJPEGSignature(contents))
-        return adoptPtr(new ImageGDIPlusDecoder(alphaOption, gammaAndColorProfileOption, ImageGDIPlusDecoder::GDIPlusDecoderJPG, maxDecodedBytes));
+	if (matchesPNGSignature(contents))
+		return adoptPtr(new PNGImageDecoder(alphaOption, gammaAndColorProfileOption, maxDecodedBytes));
 
-    if (matchesPNGSignature(contents))
-        return adoptPtr(new ImageGDIPlusDecoder(alphaOption, gammaAndColorProfileOption, ImageGDIPlusDecoder::GDIPlusDecoderPNG, maxDecodedBytes));
+	if (matchesJPEGSignature(contents))
+		return adoptPtr(new JPEGImageDecoder(alphaOption, gammaAndColorProfileOption, maxDecodedBytes));
+
+    //if (matchesPNGSignature(contents))
+    //    return adoptPtr(new ImageGDIPlusDecoder(alphaOption, gammaAndColorProfileOption, ImageGDIPlusDecoder::GDIPlusDecoderPNG, maxDecodedBytes));
 
     if (matchesGIFSignature(contents))
         return adoptPtr(new GIFImageDecoder(alphaOption, gammaAndColorProfileOption, maxDecodedBytes));
