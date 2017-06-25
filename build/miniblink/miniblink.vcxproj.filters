@@ -9405,6 +9405,12 @@
     <ClCompile Include="..\..\third_party\WebKit\Source\platform\exported\WebDragData.cpp">
       <Filter>third_party\Webkit\Source\platform\exported</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\image-decoders\jpeg\JPEGImageDecoder.cpp">
+      <Filter>third_party\Webkit\Source\platform\image-decoders\jpeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\image-decoders\png\PNGImageDecoder.cpp">
+      <Filter>third_party\Webkit\Source\platform\image-decoders\png</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\public\platform\modules\app_banner\WebAppBannerClient.h">
