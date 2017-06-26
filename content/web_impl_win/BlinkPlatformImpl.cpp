@@ -40,6 +40,7 @@
 #include "ui/gfx/win/dpi.h"
 #include "gin/public/isolate_holder.h"
 #include "gin/array_buffer.h"
+#include "net/WebURLLoaderManager.h"
 
 #ifdef _DEBUG
 
@@ -254,6 +255,7 @@ void BlinkPlatformImpl::preShutdown()
 
 void BlinkPlatformImpl::shutdown()
 {
+    net::WebURLLoaderManager::sharedInstance()->shutdown();
     WebPage::shutdown();
 
     blink::memoryCache()->evictResources();

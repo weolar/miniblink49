@@ -77,6 +77,8 @@ public:
                       const String& username,
                       const String& password);
 
+    void shutdown();
+
 private:
     WebURLLoaderManager();
     ~WebURLLoaderManager();
@@ -102,6 +104,8 @@ private:
     
     String m_proxy;
     ProxyType m_proxyType;
+
+    bool m_isShutdown;
 };
 
 }
