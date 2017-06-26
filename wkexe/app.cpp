@@ -200,7 +200,7 @@ BOOL CreateWebWindow(Application* app)
 
     wkeMoveToCenter(app->window);
     wkeLoadURLW(app->window, app->url);
-
+	wkeShowWindow(app->window, TRUE);
     return TRUE;
 }
 
