@@ -98,18 +98,46 @@ void ArrayBufferContents::copyTo(ArrayBufferContents& other)
     m_holder->copyMemoryTo(*other.m_holder);
 }
 
+struct MemoryHead {
+    size_t magicNum;
+    size_t size;
+
+    static const size_t kMagicNum0 = 0x1122dd44;
+    static const size_t kMagicNum1 = 0x11227788;
+
+    static MemoryHead* getPointerHead(void* pointer) { return ((MemoryHead*)pointer) - 1; }
+    static size_t getPointerMemSize(void* pointer) { return getPointerHead(pointer)->size; }
+    static void* getHeadToMemBegin(MemoryHead* head) { return head + 1; }
+};
+
 void ArrayBufferContents::allocateMemory(size_t size, InitializationPolicy policy, void*& data)
 {
     if (s_adjustAmountOfExternalAllocatedMemoryFunction)
         s_adjustAmountOfExternalAllocatedMemoryFunction(static_cast<int>(size));
+#if 1
+    MemoryHead* head = (MemoryHead*)partitionAllocGenericFlags(WTF::Partitions::bufferPartition(), PartitionAllocReturnNull, size + sizeof(MemoryHead));
+    head->magicNum = MemoryHead::kMagicNum0;
+    head->size = size;
+    data = MemoryHead::getHeadToMemBegin(head);
+#else
     data = partitionAllocGenericFlags(WTF::Partitions::bufferPartition(), PartitionAllocReturnNull, size);
+#endif
     if (policy == ZeroInitialize && data)
         memset(data, '\0', size);
 }
 
 void ArrayBufferContents::freeMemory(void* data, size_t size)
 {
+#if 1
+    if (!data || 0 == size)
+        return;
+    MemoryHead* head = MemoryHead::getPointerHead(data);
+    if (head->magicNum != MemoryHead::kMagicNum0)
+        DebugBreak();
+    partitionFreeGeneric(WTF::Partitions::bufferPartition(), head);
+#else
     partitionFreeGeneric(WTF::Partitions::bufferPartition(), data);
+#endif
     if (s_adjustAmountOfExternalAllocatedMemoryFunction)
         s_adjustAmountOfExternalAllocatedMemoryFunction(-static_cast<int>(size));
 }

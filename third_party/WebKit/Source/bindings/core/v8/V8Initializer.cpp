@@ -370,25 +370,29 @@ static void initializeV8Common(v8::Isolate* isolate)
 namespace {
 
 class ArrayBufferAllocator : public v8::ArrayBuffer::Allocator {
-    struct MemoryHead {
-        size_t magicNum;
-        size_t size;
-    };
-    static const size_t magicNum0 = 0x1122dd44;
-    static const size_t magicNum1 = 0x11227788;
-
-    static MemoryHead* getPointerHead(void* pointer) { return ((MemoryHead*)pointer) - 1; }
-    static size_t getPointerMemSize(void* pointer) { return getPointerHead(pointer)->size; }
-    static void* getHeadToMemBegin(MemoryHead* head) { return head + 1; }
+//     struct MemoryHead {
+//         size_t magicNum;
+//         size_t size;
+//     };
+//     static const size_t magicNum0 = 0x1122dd44;
+//     static const size_t magicNum1 = 0x11227788;
+// 
+//     static MemoryHead* getPointerHead(void* pointer) { return ((MemoryHead*)pointer) - 1; }
+//     static size_t getPointerMemSize(void* pointer) { return getPointerHead(pointer)->size; }
+//     static void* getHeadToMemBegin(MemoryHead* head) { return head + 1; }
 
     void* allocate(size_t size, WTF::ArrayBufferContents::InitializationPolicy policy)
     {
-        void* data;
-        WTF::ArrayBufferContents::allocateMemory(size + sizeof(MemoryHead), policy, data);
-        MemoryHead* head = (MemoryHead*)data;
-        head->magicNum = magicNum0;
-        head->size = size;
-        return getHeadToMemBegin(head);
+         void* data;
+         WTF::ArrayBufferContents::allocateMemory(size, policy, data);
+
+//         WTF::ArrayBufferContents::allocateMemory(size + sizeof(MemoryHead), policy, data);
+//         MemoryHead* head = (MemoryHead*)data;
+//         head->magicNum = magicNum0;
+//         head->size = size;
+//         data = getHeadToMemBegin(head);
+// 
+         return data;
     }
 
     void* Allocate(size_t size) override
@@ -403,10 +407,11 @@ class ArrayBufferAllocator : public v8::ArrayBuffer::Allocator {
 
     void Free(void* data, size_t size) override
     {
-        MemoryHead* head = getPointerHead(data);
-        if (head->magicNum != magicNum0)
-            DebugBreak();
-        WTF::ArrayBufferContents::freeMemory(head, size);
+//         MemoryHead* head = getPointerHead(data);
+//         if (head->magicNum != magicNum0)
+//             DebugBreak();
+//         WTF::ArrayBufferContents::freeMemory(head, size);
+        WTF::ArrayBufferContents::freeMemory(data, size);
     }
 };
 
