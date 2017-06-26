@@ -209,6 +209,7 @@ WebURLLoaderManager::WebURLLoaderManager()
     , m_cookieJarFileName(cookieJarPath())
     , m_certificatePath (certificatePath())
     , m_runningJobs(0)
+    , m_isShutdown(false)
 {
     curl_global_init(CURL_GLOBAL_ALL);
     m_curlMultiHandle = curl_multi_init();
@@ -219,6 +220,11 @@ WebURLLoaderManager::WebURLLoaderManager()
     curl_share_setopt(m_curlShareHandle, CURLSHOPT_UNLOCKFUNC, curl_unlock_callback);
 
     initCookieSession();
+}
+
+void WebURLLoaderManager::shutdown()
+{
+    m_isShutdown = true;
 }
 
 WebURLLoaderManager::~WebURLLoaderManager()
@@ -570,6 +576,8 @@ size_t readCallback(void* ptr, size_t size, size_t nmemb, void* data)
 
 void WebURLLoaderManager::downloadTimerCallback(Timer<WebURLLoaderManager>* timer)
 {
+    if (m_isShutdown)
+        return;
     startScheduledJobs();
 
     fd_set fdread;
@@ -846,6 +854,16 @@ void WebURLLoaderManager::add(WebURLLoaderInternal* job)
     m_resourceHandleList.append(job);
     if (!m_downloadTimer.isActive())
         m_downloadTimer.startOneShot(pollTimeSeconds, FROM_HERE);
+
+//     KURL url = job->firstRequest()->url();
+//     String urlString = url.string();
+// 
+//     CString urlCString = urlString.latin1();
+//     const char* urlStr = urlCString.data();
+//     if (0 != strstr(urlStr, "%3Cscript") || 0 != strstr(urlStr, "document.location"))
+//         DebugBreak();
+//     OutputDebugStringA(urlStr);
+//     OutputDebugStringA("\n");
 }
 
 bool WebURLLoaderManager::removeScheduledJob(WebURLLoaderInternal* job)
