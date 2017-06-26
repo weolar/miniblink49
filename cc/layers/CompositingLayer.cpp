@@ -284,7 +284,10 @@ void CompositingLayer::blendToTile(CompositingTile* tile, const SkBitmap& bitmap
     if (!postion.intersects(dirtyRect)) {
 //         if (postion.width() == 1 && postion.height() == 1 && dirtyRect.width() == 1 && dirtyRect.height() == 1)
 //             return;
-        DebugBreak();
+        postion.setWidth(kDefaultTileWidth);
+        postion.setHeight(kDefaultTileHeight);
+        if (!postion.intersects(dirtyRect)) 
+            DebugBreak();
         return;
     }
 

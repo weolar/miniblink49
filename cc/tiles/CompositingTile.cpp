@@ -67,7 +67,7 @@ void CompositingTile::clearBitmap()
     m_bitmap = nullptr;
 }
 
-SkBitmap* CompositingTile::allocBitmap(int width, int height)
+SkBitmap* CompositingTile::allocBitmap(int width, int height, bool isOpaque)
 {
     if (0 == width || 0 == height)
         return nullptr;
@@ -77,7 +77,8 @@ SkBitmap* CompositingTile::allocBitmap(int width, int height)
     bitmap->allocPixels(info);
 
     SkColor color = 0x00ffffff;
-    bitmap->eraseColor(color); // TODO: 根据是否透明窗口决定背景色
+     if (!isOpaque) // TODO 
+         bitmap->eraseColor(color); // TODO: 根据是否透明窗口决定背景色
     return bitmap;
 }
 
@@ -88,7 +89,7 @@ void CompositingTile::resizeBitmap(int dstWidth, int dstHeight)
     if (isrc.width() == dstWidth && isrc.height() == dstHeight)
         return;
 
-    SkBitmap* dst = allocBitmap(dstWidth, dstHeight);
+    SkBitmap* dst = allocBitmap(dstWidth, dstHeight, m_compositingLayer->opaque());
 
     SkPaint paint;
     paint.setAntiAlias(true);
@@ -115,6 +116,10 @@ void CompositingTile::allocBitmapIfNeeded()
     m_postion = blink::IntRect(m_xIndex * kDefaultTileWidth, m_yIndex * kDefaultTileHeight, kDefaultTileWidth, kDefaultTileHeight);
     if (m_compositingLayer) {
         blink::IntSize bounds = m_compositingLayer->drawToCanvasProperties()->bounds;
+        if (0 == bounds.width() || 0 == bounds.height()) {
+            clearBitmap();
+            return;
+        }
         if (kDefaultTileWidth >= bounds.width() && kDefaultTileHeight >= bounds.height()) {
             if (1 != m_compositingLayer->tilesSize()) {
                 DebugBreak();
@@ -124,7 +129,6 @@ void CompositingTile::allocBitmapIfNeeded()
                 width = bounds.width();
                 height = bounds.height();
                 m_postion = blink::IntRect(0, 0, width, height);
-                
             }
         }
     }
@@ -137,7 +141,7 @@ void CompositingTile::allocBitmapIfNeeded()
     }
 
     clearBitmap();
-    m_bitmap = allocBitmap(width, height);
+    m_bitmap = allocBitmap(width, height, m_compositingLayer->opaque());
 }
 
 // void CompositingTile::allocBitmapIfNeeded()
