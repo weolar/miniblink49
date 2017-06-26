@@ -41,9 +41,6 @@
 #include <mmsystem.h>
 
 #include "base/basictypes.h"
-//#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
-#include "include/base/cef_lock.h"
-//#endif
 
 using base::Time;
 using base::TimeDelta;
@@ -302,7 +299,58 @@ DWORD last_seen_now = 0;
 // easy to use a Singleton without even knowing it, and that may lead to many
 // gotchas). Its impact on startup time should be negligible due to low-level
 // nature of time code.
-base::Lock rollover_lock;
+class Lock {
+public:
+	Lock() {
+		::InitializeCriticalSectionAndSpinCount(&lock_, 2000);
+	}
+	~Lock() {}
+	void Acquire() { ::EnterCriticalSection(&lock_); }
+	void Release() { ::LeaveCriticalSection(&lock_); }
+
+	// If the lock is not held, take it and return true. If the lock is already
+	// held by another thread, immediately return false. This must not be called
+	// by a thread already holding the lock (what happens is undefined and an
+	// assertion may fail).
+	bool Try() {
+		if (::TryEnterCriticalSection(&lock_) != FALSE) {
+			return true;
+		}
+		return false;
+	}
+
+	// Null implementation if not debug.
+	void AssertAcquired() const {}
+
+private:
+	// Platform specific underlying lock implementation.
+	CRITICAL_SECTION lock_;
+
+	DISALLOW_COPY_AND_ASSIGN(Lock);
+};
+class AutoLock {
+public:
+	struct AlreadyAcquired {};
+
+	explicit AutoLock(Lock& lock) : lock_(lock) {
+		lock_.Acquire();
+	}
+
+	AutoLock(Lock& lock, const AlreadyAcquired&) : lock_(lock) {
+		lock_.AssertAcquired();
+	}
+
+	~AutoLock() {
+		lock_.AssertAcquired();
+		lock_.Release();
+	}
+
+private:
+	Lock& lock_;
+	DISALLOW_COPY_AND_ASSIGN(AutoLock);
+};
+
+Lock rollover_lock;
 
 // We use timeGetTime() to implement TimeTicks::Now().  This can be problematic
 // because it returns the number of milliseconds since Windows has started,
@@ -310,7 +358,7 @@ base::Lock rollover_lock;
 // rollover ourselves, which works if TimeTicks::Now() is called at least every
 // 49 days.
 TimeDelta RolloverProtectedNow() {
-    base::AutoLock locked(rollover_lock);
+    AutoLock locked(rollover_lock);
     // We should hold the lock while calling tick_function to make sure that
     // we keep last_seen_now stay correctly in sync.
     DWORD now = tick_function();
@@ -465,7 +513,7 @@ bool CPUReliablySupportsHighResTime() {
    // static
 TimeTicks::TickFunctionType TimeTicks::SetMockTickFunction(
     TickFunctionType ticker) {
-    base::AutoLock locked(rollover_lock);
+    AutoLock locked(rollover_lock);
     TickFunctionType old = tick_function;
     tick_function = ticker;
     rollover_ms = 0;
