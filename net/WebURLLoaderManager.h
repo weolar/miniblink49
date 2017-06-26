@@ -50,7 +50,9 @@ class WebURLLoaderInternal;
 
 class WebURLLoaderManager {
 public:
-    enum ProxyType {
+	class JobTask;
+	class MainTask;
+	enum ProxyType {
         HTTP = CURLPROXY_HTTP,
         Socks4 = CURLPROXY_SOCKS4,
         Socks4A = CURLPROXY_SOCKS4A,
@@ -76,36 +78,31 @@ public:
                       ProxyType type,
                       const String& username,
                       const String& password);
-
-    void shutdown();
+	void shutdown();
 
 private:
     WebURLLoaderManager();
     ~WebURLLoaderManager();
-    void downloadTimerCallback(blink::Timer<WebURLLoaderManager>* timer);
+    bool downloadTimerCallback(blink::Timer<WebURLLoaderManager>* timer);
     void removeFromCurl(WebURLLoaderInternal*);
     bool removeScheduledJob(WebURLLoaderInternal*);
     void startJob(WebURLLoaderInternal*);
-    bool startScheduledJobs();
     void applyAuthenticationToRequest(WebURLLoaderInternal*, blink::WebURLRequest*);
 
     void initializeHandle(WebURLLoaderInternal*);
 
     void initCookieSession();
 
-    blink::Timer<WebURLLoaderManager> m_downloadTimer;
     CURLM* m_curlMultiHandle;
     CURLSH* m_curlShareHandle;
     char* m_cookieJarFileName;
     char m_curlErrorBuffer[CURL_ERROR_SIZE];
-    Vector<WebURLLoaderInternal*> m_resourceHandleList;
     const CString m_certificatePath;
     int m_runningJobs;
-    
+	blink::WebThread* m_thread;
     String m_proxy;
     ProxyType m_proxyType;
-
-    bool m_isShutdown;
+	bool m_isShutdown;
 };
 
 }
