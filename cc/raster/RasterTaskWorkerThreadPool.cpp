@@ -146,6 +146,7 @@ public:
         SkPicture* picture,
         const IntRect& dirtyRect, 
         int threadIndex,
+        bool isOpaque,
         LayerChangeActionBlend* blendAction,
         RasterTaskGroup* group
         )
@@ -153,6 +154,7 @@ public:
         , m_picture(picture)
         , m_dirtyRect(dirtyRect)
         , m_threadIndex(threadIndex)
+        , m_isOpaque(isOpaque)
         , m_blendAction(blendAction)
         , m_group(group)
     {
@@ -209,10 +211,11 @@ public:
     {
         SkBitmap* bitmap = new SkBitmap;
         bitmap->allocN32Pixels(m_dirtyRect.width(), m_dirtyRect.height());
-        bitmap->eraseColor(0x00ffffff);
+        if (!m_isOpaque)
+            bitmap->eraseColor(0x00ffffff); // TODO
         
         // Uses kPremul_SkAlphaType since the result is not known to be opaque.
-        SkImageInfo info = SkImageInfo::MakeN32(m_dirtyRect.width(), m_dirtyRect.height(), kPremul_SkAlphaType);
+        SkImageInfo info = SkImageInfo::MakeN32(m_dirtyRect.width(), m_dirtyRect.height(), m_isOpaque ? kOpaque_SkAlphaType : kPremul_SkAlphaType); // TODO
         SkSurfaceProps surfaceProps(0, kUnknown_SkPixelGeometry);
         size_t stride = info.minRowBytes();
         skia::RefPtr<SkSurface> surface = skia::AdoptRef(SkSurface::NewRasterDirect(info, bitmap->getPixels(), stride, &surfaceProps));
@@ -234,12 +237,11 @@ public:
     int threadIndex() const { return m_threadIndex; };
 private:
     RasterTaskWorkerThreadPool* m_pool;
-    //TileGrid* m_tileGrid;
     SkPicture* m_picture;
-    //Vector<Tile*>* m_willRasteredTiles;
     IntRect m_dirtyRect;
     int m_threadIndex;
     LayerChangeActionBlend* m_blendAction;
+    bool m_isOpaque;
     RasterTaskGroup* m_group;
 };
 
@@ -295,7 +297,7 @@ void RasterTaskGroup::postRasterTask(cc_blink::WebLayerImpl* layer, SkPicture* p
 
     int threadIndex = m_pool->selectOneIdleThread();
 
-    RasterTask* task = new RasterTask(m_pool, picture, dirtyRect, threadIndex, blendAction, this);
+    RasterTask* task = new RasterTask(m_pool, picture, dirtyRect, threadIndex, layer->opaque(), blendAction, this);
     m_pool->increasePendingRasterTaskNum();
     m_pool->increaseBusyCountByIndex(task->threadIndex());
     m_pool->m_threads[task->threadIndex()]->postTask(FROM_HERE, task);

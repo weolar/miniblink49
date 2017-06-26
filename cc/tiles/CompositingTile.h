@@ -43,7 +43,7 @@ public:
 
 private:
     void resizeBitmap(int dstWidth, int dstHeight);
-    SkBitmap* allocBitmap(int width, int height);
+    SkBitmap* allocBitmap(int width, int height, bool isOpaque);
 
     CompositingLayer* m_compositingLayer;
     mutable int32_t m_refCnt;
