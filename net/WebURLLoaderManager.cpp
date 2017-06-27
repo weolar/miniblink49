@@ -282,6 +282,8 @@ WebURLLoaderManager::~WebURLLoaderManager()
 void WebURLLoaderManager::shutdown()
 {
 	m_isShutdown = true;
+	//退出io线程
+	delete m_thread;
 }
 
 void WebURLLoaderManager::initCookieSession()
@@ -347,8 +349,6 @@ static void handleLocalReceiveResponse (CURL* handle, WebURLLoaderInternal* job,
 // called with data after all headers have been processed via headerCallback
 static size_t _writeCallback(void* ptr, size_t size, size_t nmemb, void* data)
 {
-
-
 	WebURLLoaderInternal* job = static_cast<WebURLLoaderInternal*>(data);
 	WebURLLoaderInternal* d = job;
 	if (d->m_cancelled)
@@ -568,34 +568,35 @@ public:
 
 	virtual void run() override
 	{
-		switch (m_type) {
-		case writeCallback:
-			_writeCallback(param1, (size_t)param2, (size_t)param3, job);
-			free(param1);
-			break;
-		case headerCallback:
-			_headerCallback(param1, (size_t)param2, (size_t)param3, job);
-			free(param1);
-			break;
-		case didFinishLoading:
-			job->client()->didFinishLoading(job->loader(), 0, 0);
-			break;
-		case removeFromCurl:
-			WebURLLoaderManager::sharedInstance()->removeFromCurl(job);
-			break;
-		case _handleLocalReceiveResponse:
-			//handleLocalReceiveResponse(job->m_handle, job, job);
-			break;
-		case contentEnded:
-			job->m_multipartHandle->contentEnded();
-			break;
-		case didFail:
-			job->client()->didFail(job->loader(), *(WebURLError *)param1);
-			delete ((WebURLError *)param1);
-			break;
-		default:
-			break;
-		}
+		if(!WebURLLoaderManager::sharedInstance()->m_isShutdown)
+			switch (m_type) {
+			case writeCallback:
+				_writeCallback(param1, (size_t)param2, (size_t)param3, job);
+				free(param1);
+				break;
+			case headerCallback:
+				_headerCallback(param1, (size_t)param2, (size_t)param3, job);
+				free(param1);
+				break;
+			case didFinishLoading:
+				job->client()->didFinishLoading(job->loader(), 0, 0);
+				break;
+			case removeFromCurl:
+				WebURLLoaderManager::sharedInstance()->removeFromCurl(job);
+				break;
+			case _handleLocalReceiveResponse:
+				//handleLocalReceiveResponse(job->m_handle, job, job);
+				break;
+			case contentEnded:
+				job->m_multipartHandle->contentEnded();
+				break;
+			case didFail:
+				job->client()->didFail(job->loader(), *(WebURLError *)param1);
+				delete ((WebURLError *)param1);
+				break;
+			default:
+				break;
+			}
 
 	}
 private:
@@ -795,7 +796,7 @@ bool WebURLLoaderManager::downloadTimerCallback(Timer<WebURLLoaderManager>* time
 		WebURLLoaderManager::MainTask* task = new WebURLLoaderManager::MainTask(job, WebURLLoaderManager::MainTask::TaskType::removeFromCurl, 0, 0, 0);
 		Platform::current()->mainThread()->postTask(FROM_HERE, task);
     }
-	//if (runningHandles > 0)
+	if (runningHandles > 0)
 		//如果还有请求未处理则返回true,下个timer继续处理
 		return true;
 	return false;
