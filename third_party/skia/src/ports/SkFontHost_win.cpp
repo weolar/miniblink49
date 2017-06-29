@@ -1719,7 +1719,7 @@ static void logfont_for_name(const char* familyName, LOGFONT* lf) {
 void LogFontTypeface::onGetFamilyName(SkString* familyName) const {
     // Get the actual name of the typeface. The logfont may not know this.
     HFONT font = CreateFontIndirect(&fLogFont);
-
+//     if (nullptr == wcsstr(fLogFont.lfFaceName, L"Î¢ÈíÑÅºÚ") && nullptr == wcsstr(fLogFont.lfFaceName, L"Microsoft YaHei"))
     HDC deviceContext = ::CreateCompatibleDC(NULL);
     HFONT savefont = (HFONT)SelectObject(deviceContext, font);
 
@@ -2547,6 +2547,18 @@ protected:
         } else {
             logfont_for_name(familyName, &lf);
         }
+
+#if 0 // ndef MINIBLINK_NOCHANGE
+        bool find = false;
+        for (int i = 0; i < fLogFontArray.count(); ++i) {
+            if (0 == wcscmp(lf.lfFaceName, fLogFontArray[i].elfLogFont.lfFaceName)) {
+                find = true;
+                break;
+            }
+        }
+        if (!find)
+            wcscpy_s(lf.lfFaceName, L"Î¢ÈíÑÅºÚ");
+#endif
 
         SkTypeface::Style style = (SkTypeface::Style)styleBits;
         lf.lfWeight = (style & SkTypeface::kBold) != 0 ? FW_BOLD : FW_NORMAL;
