@@ -80,7 +80,7 @@ public:
 		//, m_formDataStream(loader)
 		, m_scheduledFailureType(NoFailure)
 		, m_loader(loader)
-		, m_failureTimer(this, &WebURLLoaderInternal::fireFailure)
+		//, m_failureTimer(this, &WebURLLoaderInternal::fireFailure)
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
 		, m_hookBuf(0)
 		, m_hookLength(0)
@@ -103,8 +103,8 @@ public:
         if (m_customHeaders)
             curl_slist_free_all(m_customHeaders);
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
-		if (m_hookBuf)
-			free(m_hookBuf);
+        if (m_hookBuf)
+            free(m_hookBuf);
 #endif
     }
 
@@ -117,33 +117,33 @@ public:
         }
     }
 
-    void fireFailure(blink::Timer<WebURLLoaderInternal>*)
-    {
-        if (!client())
-            return;
-
-        switch (m_scheduledFailureType) {
-        case net::WebURLLoaderInternal::NoFailure:
-            ASSERT_NOT_REACHED();
-            return;
-        case net::WebURLLoaderInternal::BlockedFailure:
-            m_scheduledFailureType = net::WebURLLoaderInternal::NoFailure;
-            //client()->wasBlocked(this);
-            return;
-        case net::WebURLLoaderInternal::InvalidURLFailure:
-            m_scheduledFailureType = net::WebURLLoaderInternal::NoFailure;
-            //client()->cannotShowURL(this);
-
-            blink::WebURLError error;
-            error.domain = firstRequest()->url().string();
-            error.localizedDescription = blink::WebString::fromUTF8("Cannot show DataUR\n");
-            if (client() && loader())
-                client()->didFail(loader(), error);
-            return;
-        }
-
-        ASSERT_NOT_REACHED();
-    }
+//     void fireFailure(blink::Timer<WebURLLoaderInternal>*)
+//     {
+//         if (!client())
+//             return;
+// 
+//         switch (m_scheduledFailureType) {
+//         case net::WebURLLoaderInternal::NoFailure:
+//             ASSERT_NOT_REACHED();
+//             return;
+//         case net::WebURLLoaderInternal::BlockedFailure:
+//             m_scheduledFailureType = net::WebURLLoaderInternal::NoFailure;
+//             //client()->wasBlocked(this);
+//             return;
+//         case net::WebURLLoaderInternal::InvalidURLFailure:
+//             m_scheduledFailureType = net::WebURLLoaderInternal::NoFailure;
+//             //client()->cannotShowURL(this);
+// 
+//             blink::WebURLError error;
+//             error.domain = firstRequest()->url().string();
+//             error.localizedDescription = blink::WebString::fromUTF8("Cannot show DataUR\n");
+//             if (client() && loader())
+//                 client()->didFail(loader(), error);
+//             return;
+//         }
+// 
+//         ASSERT_NOT_REACHED();
+//     }
 
     WebURLLoaderClient* client() { return m_client; }
     WebURLLoaderClient* m_client;
@@ -183,7 +183,7 @@ public:
     };
 
     FailureType m_scheduledFailureType;
-    Timer<WebURLLoaderInternal> m_failureTimer;
+    // Timer<WebURLLoaderInternal> m_failureTimer;
 
     //////////////////////////////////////////////////////////////////////////
     WebURLLoaderImplCurl* loader() { return m_loader; }

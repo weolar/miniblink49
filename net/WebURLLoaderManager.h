@@ -50,7 +50,7 @@ class WebURLLoaderInternal;
 
 class WebURLLoaderManager {
 public:
-	class JobTask;
+	class IoTask;
 	class MainTask;
 	enum ProxyType {
         HTTP = CURLPROXY_HTTP,
@@ -70,39 +70,44 @@ public:
 
     void dispatchSynchronousJob(WebURLLoaderInternal*);
 
-    void setupPOST(WebURLLoaderInternal*, struct curl_slist**);
-    void setupPUT(WebURLLoaderInternal*, struct curl_slist**);
-
     void setProxyInfo(const String& host,
                       unsigned long port,
                       ProxyType type,
                       const String& username,
                       const String& password);
-	void shutdown();
+    void shutdown();
+
+    bool isShutdown() const { return m_isShutdown; }
 
 private:
     WebURLLoaderManager();
     ~WebURLLoaderManager();
-    bool downloadTimerCallback(blink::Timer<WebURLLoaderManager>* timer);
-    void removeFromCurl(WebURLLoaderInternal*);
-    bool removeScheduledJob(WebURLLoaderInternal*);
-    void startJob(WebURLLoaderInternal*);
+    
+    void dispatchSynchronousJobOnIoThread(WebURLLoaderInternal* job, bool* isCallFinish);
+
+    void setupPOST(WebURLLoaderInternal*, struct curl_slist**);
+    void setupPUT(WebURLLoaderInternal*, struct curl_slist**);
+
+    bool downloadOnIoThread();
+    void removeFromCurlOnIoThread(WebURLLoaderInternal*);
+    void startJobOnMainThread(WebURLLoaderInternal* job);
     void applyAuthenticationToRequest(WebURLLoaderInternal*, blink::WebURLRequest*);
 
     void initializeHandle(WebURLLoaderInternal*);
 
     void initCookieSession();
 
+    Vector<WebURLLoaderInternal*> m_resourceHandleList;
     CURLM* m_curlMultiHandle;
     CURLSH* m_curlShareHandle;
     char* m_cookieJarFileName;
     char m_curlErrorBuffer[CURL_ERROR_SIZE];
     const CString m_certificatePath;
     int m_runningJobs;
-	blink::WebThread* m_thread;
+    blink::WebThread* m_thread;
     String m_proxy;
     ProxyType m_proxyType;
-	bool m_isShutdown;
+    bool m_isShutdown;
 };
 
 }
