@@ -22,13 +22,13 @@ static PFN_GdiAlphaBlend pGdiAlphaBlend = nullptr;
 
 void scrt_initialize_thread_safe_statics()
 {
-	HMODULE hMon = LoadLibraryW(L"Wininet.dll");
+    HMODULE hMon = LoadLibraryW(L"Wininet.dll");
     pInternetOpenW = (PFN_InternetOpenW)GetProcAddress(hMon, "InternetOpenW");
 
     hMon = LoadLibraryW(L"GDI32.dll");
     pGdiAlphaBlend = (PFN_GdiAlphaBlend)GetProcAddress(hMon, "GdiAlphaBlend");
 
-	LoadLibraryW(L"Usp10.dll");
+    LoadLibraryW(L"Usp10.dll");
 
     OutputDebugStringA("scrt_initialize_thread_safe_statics\n");
 }
