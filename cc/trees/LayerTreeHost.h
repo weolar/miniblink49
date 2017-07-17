@@ -137,6 +137,7 @@ public:
     int64 frontRasteringIndex();
     void popRasteringIndex();
 
+    bool canRecordActions() const;
     void beginRecordActions();
     void endRecordActions();
 

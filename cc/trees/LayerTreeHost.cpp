@@ -82,7 +82,7 @@ LayerTreeHost::~LayerTreeHost()
 {
     m_isDestroying = true;
 
-    while (0 != RasterTaskWorkerThreadPool::shared()->pendingRasterTaskNum()) { ::Sleep(20); }
+    while (0 != RasterTaskWorkerThreadPool::shared()->getPendingRasterTaskNum()) { ::Sleep(20); }
     requestApplyActionsToRunIntoCompositeThread(true);
 
     m_compositeMutex.lock();
@@ -264,11 +264,6 @@ bool LayerTreeHost::isLayerTreeDirty() const
     return m_layerTreeDirty;
 }
 
-// void LayerTreeHost::didUpdateLayout()
-// {
-//     m_webViewClient->didUpdateLayout();
-// }
-
 void LayerTreeHost::setNeedsFullTreeSync()
 {
     m_needsFullTreeSync = true;
@@ -293,6 +288,17 @@ static bool compareDirtyLayer(DirtyLayers*& left, DirtyLayers*& right)
 static bool compareAction(LayerChangeAction*& left, LayerChangeAction*& right)
 {
     return left->actionId() < right->actionId();
+}
+
+bool LayerTreeHost::canRecordActions() const
+{
+    if (RasterTaskWorkerThreadPool::shared()->getPendingRasterTaskNum() > 3)
+        return false;
+
+    if (!m_actionsFrameGroup || m_actionsFrameGroup->getFramesSize() > 10)
+        return false;
+
+    return true;
 }
 
 void LayerTreeHost::beginRecordActions()
@@ -467,7 +473,7 @@ void LayerTreeHost::recordDraw()
 
     updateLayersDrawProperties();
 
-    cc::RasterTaskGroup* taskGroup = cc::RasterTaskWorkerThreadPool::shared()->beginPostRasterTask(this);
+    cc::RasterTaskGroup* taskGroup = RasterTaskWorkerThreadPool::shared()->beginPostRasterTask(this);
     m_rootLayer->recordDrawChildren(taskGroup, 0);
     taskGroup->endPostRasterTask();
 
@@ -509,7 +515,7 @@ void LayerTreeHost::drawToCanvas(SkCanvas* canvas, const IntRect& dirtyRect)
 #endif
 
     SkPaint clearColorPaint;
-    clearColorPaint.setColor(0xffffffff | m_backgroundColor); // weolar
+    clearColorPaint.setColor(0xffffffff | m_backgroundColor);
     //clearColorPaint.setColor(0xfff0504a);
 
     // http://blog.csdn.net/to_be_designer/article/details/48530921
@@ -646,7 +652,7 @@ void LayerTreeHost::clearRootLayer()
 {
     m_rootLayer = nullptr;
 
-    while (0 != RasterTaskWorkerThreadPool::shared()->pendingRasterTaskNum()) {    ::Sleep(20); }
+    while (0 != RasterTaskWorkerThreadPool::shared()->getPendingRasterTaskNum()) { ::Sleep(20); }
         requestApplyActionsToRunIntoCompositeThread(false);
 
     m_rootCCLayer = nullptr;
@@ -874,26 +880,32 @@ void LayerTreeHost::drawFrameInCompositeThread()
     double lastDrawTime = WTF::monotonicallyIncreasingTime();
     double detTime = lastDrawTime - m_lastDrawTime;
     m_lastDrawTime = lastDrawTime;
-//     if (detTime < 0.01) { // 如果刷新频率太快，缓缓再画
-//         m_webViewClient->setNeedsCommitAndNotLayout();
-//         return;
-//     }
+    if (detTime < 0.01) { // 如果刷新频率太快，缓缓再画
+        requestDrawFrameToRunIntoCompositeThread();
+        atomicDecrement(&m_drawFrameFinishCount);
+        return;
+    }
 
-    bool needClearCommit = preDrawFrame(); // 这里也会发起Commit
+#if 0
+    LARGE_INTEGER performanceCount = { 0 };
+    QueryPerformanceCounter(&performanceCount);
+    static DWORD gLastCount = 0;
+    WTF::String outstr = String::format("LayerTreeHost::drawFrameInCompositeThread:[%d]\n", performanceCount.LowPart - gLastCount);
+    OutputDebugStringA(outstr.utf8().data());
+    gLastCount = performanceCount.LowPart;
+#endif
+
+    bool frameReady = preDrawFrame(); // 这里也会发起Commit
+    if (!frameReady) {
+        requestDrawFrameToRunIntoCompositeThread();
+        atomicDecrement(&m_drawFrameFinishCount);
+        return;
+    }
 
     m_compositeMutex.lock();
     Vector<blink::IntRect> dirtyRects = m_dirtyRects;
     m_dirtyRects.clear();
     m_compositeMutex.unlock();
-
-    ///++++++++++++++++++
-//     LARGE_INTEGER performanceCount = { 0 };
-//     QueryPerformanceCounter(&performanceCount);
-//     static DWORD gLastCount = 0;
-//     WTF::String outstr = String::format("LayerTreeHost::drawFrameInCompositeThread:[%d]\n", performanceCount.LowPart - gLastCount);
-//     OutputDebugStringA(outstr.utf8().data());
-//     gLastCount = performanceCount.LowPart;
-    ///------------------
 
     for (size_t i = 0; i < dirtyRects.size() && !m_isDestroying; ++i) {
         const blink::IntRect& r = dirtyRects[i];
@@ -901,7 +913,6 @@ void LayerTreeHost::drawFrameInCompositeThread()
     }
 
     postDrawFrame();
-
     atomicDecrement(&m_drawFrameFinishCount);
 }
 

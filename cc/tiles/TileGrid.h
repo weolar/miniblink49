@@ -41,7 +41,6 @@ public:
 
     void mergeDirtyRectAndClipToCanBeShowedAreaIfNeeded(bool needClip);
 
-    
     void update(blink::WebContentLayerClient* client, RasterTaskGroup* taskGroup, const blink::IntSize& newLayerSize, const blink::IntRect& screenRect);
 
     bool isInWillBeShowedArea(Tile* tile) const;

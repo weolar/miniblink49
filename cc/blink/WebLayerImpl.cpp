@@ -129,7 +129,7 @@ WebLayerImpl::~WebLayerImpl()
         m_maskLayer->removeFromParent();
     }
     if (m_replicaLayer) {
-        ASSERT(this == m_replicaLayer->parent()); // weolar
+        ASSERT(this == m_replicaLayer->parent());
         m_replicaLayer->removeFromParent();
     }
 
@@ -139,9 +139,6 @@ WebLayerImpl::~WebLayerImpl()
 
         int64 actionId = m_layerTreeHost->genActionId();
         m_layerTreeHost->appendLayerChangeAction(new cc::LayerChangeActionDestroy(actionId, id()));
-
-//         String outString = String::format("WebLayerImpl::~~~WebLayerImpl:%p m_id:%d, actionId:%d \n", this, m_id, actionId);
-//         OutputDebugStringW(outString.charactersWithNullTermination().data());
     }
 
     clearLayerActions(&m_savedActionsWhenHostIsNull);
@@ -157,6 +154,9 @@ WebLayerImpl::~WebLayerImpl()
 #ifndef NDEBUG
     webLayerImplCounter.decrement();
 #endif
+
+//     String outString = String::format("WebLayerImpl::~~WebLayerImpl:%p m_id:%d \n", this, m_id);
+//     OutputDebugStringW(outString.charactersWithNullTermination().data());
 }
 
 void WebLayerImpl::removeFromScrollTree() {
@@ -254,7 +254,14 @@ cc::DrawProperties* WebLayerImpl::drawProperties()
 
 void WebLayerImpl::updataDrawToCanvasProperties(cc::DrawToCanvasProperties* prop)
 {
-    DebugBreak();
+    prop->copyDrawProperties(*drawProperties(), opacity());
+    prop->bounds = bounds();
+    prop->position = position();
+    prop->drawsContent = drawsContent();
+    prop->masksToBounds = masksToBounds();
+    prop->opaque = opaque();
+    prop->maskLayerId = maskLayerId();
+    prop->replicaLayerId = replicaLayerId();
 }
 
 const SkMatrix44& WebLayerImpl::drawTransform() const
@@ -379,7 +386,7 @@ void WebLayerImpl::insertChild(WebLayer* child, size_t index)
 
     //setNeedsFullTreeSync();
     blink::IntRect invalidateRect(blink::IntPoint(child->position().x, child->position().y), child->bounds());
-    appendPendingInvalidateRect(invalidateRect);// weolar TODO
+    appendPendingInvalidateRect(invalidateRect);
     setNeedsCommit(false);
     appendLayerChangeAction(new cc::LayerChangeActionInsertChild(-1, id(), child->id(), index));
 }
@@ -478,7 +485,7 @@ void WebLayerImpl::removeChildOrDependent(WebLayerImpl* child)
         m_maskLayer = NULL;
         //setNeedsFullTreeSync();
         blink::IntRect invalidateRect(blink::IntPoint(child->position().x, child->position().y), child->bounds());
-        appendPendingInvalidateRect(invalidateRect); // weolar TODO
+        appendPendingInvalidateRect(invalidateRect);
         return;
     }
     if (m_replicaLayer == child) {
@@ -486,7 +493,7 @@ void WebLayerImpl::removeChildOrDependent(WebLayerImpl* child)
         m_replicaLayer = NULL;
         //setNeedsFullTreeSync();
         blink::IntRect invalidateRect(blink::IntPoint(child->position().x, child->position().y), child->bounds());
-        appendPendingInvalidateRect(invalidateRect); // weolar TODO
+        appendPendingInvalidateRect(invalidateRect);
         return;
     }
 
@@ -498,7 +505,7 @@ void WebLayerImpl::removeChildOrDependent(WebLayerImpl* child)
         m_children.remove(iter);
         //setNeedsFullTreeSync();
         blink::IntRect invalidateRect(blink::IntPoint(child->position().x, child->position().y), child->bounds());
-        appendPendingInvalidateRect(invalidateRect); // weolar TODO
+        appendPendingInvalidateRect(invalidateRect);
         return;
     }
 }
@@ -526,11 +533,8 @@ void WebLayerImpl::setBounds(const WebSize& size)
 
     m_bounds = size;
 
-//     if (m_bounds.width() > 3000)
-//         m_bounds.setWidth(3000);
-// 
-//     if (m_bounds.height() > 3000)
-//         m_bounds.setHeight(3000);
+//     String outString = String::format("WebLayerImpl::setBounds:id:%d, %d %d\n", m_id, size.width, size.height);
+//     OutputDebugStringW(outString.charactersWithNullTermination().data());
 
     setNeedsCommit(true);
 }

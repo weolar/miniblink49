@@ -109,7 +109,6 @@ bool ActionsFrame::applyActions(ActionsFrameGroup* group, LayerTreeHost* host)
         delete m_actions[i];
     m_actions.clear();
     return true;
-    
 }
 
 void ActionsFrame::setEndId(int64 endId)
@@ -152,6 +151,11 @@ ActionsFrameGroup::~ActionsFrameGroup()
 #ifndef NDEBUG
     actionsFrameGroupCounter.decrement();
 #endif
+}
+
+size_t ActionsFrameGroup::getFramesSize() const
+{
+    return m_frames.size();
 }
 
 void ActionsFrameGroup::beginRecordActions()
@@ -240,6 +244,7 @@ bool ActionsFrameGroup::applyActions(bool needCheck)
         appendActionToFrame(actions[i]);
     }
 
+    bool okOnce = false;
     while (true) {
         m_actionsMutex->lock();
         if (0 == m_frames.size()) {
@@ -251,7 +256,7 @@ bool ActionsFrameGroup::applyActions(bool needCheck)
         if (!frame->areAllfull()) {
             ASSERT(!needCheck);
             m_actionsMutex->unlock();
-            return false;
+            return okOnce;
         }
 
         m_frames.remove(0);
@@ -261,9 +266,11 @@ bool ActionsFrameGroup::applyActions(bool needCheck)
         bool ok = frame->applyActions(this, m_host);
         ASSERT(ok);
         delete frame;
+
+        okOnce = true;
     }
 
-    return true;
+    return okOnce;
 }
 
 int64 ActionsFrameGroup::curActionId() const
