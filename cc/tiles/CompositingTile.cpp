@@ -10,6 +10,8 @@
 
 #include "third_party/WebKit/Source/wtf/RefCountedLeakCounter.h"
 
+#include "WTF/text/WTFString.h"
+
 namespace cc {
 
 #ifndef NDEBUG
@@ -77,7 +79,7 @@ SkBitmap* CompositingTile::allocBitmap(int width, int height, bool isOpaque)
     bitmap->allocPixels(info);
 
     SkColor color = 0x00ffffff;
-     if (!isOpaque) // TODO 
+    if (!isOpaque) // TODO 
          bitmap->eraseColor(color); // TODO: 根据是否透明窗口决定背景色
     return bitmap;
 }
@@ -122,6 +124,10 @@ void CompositingTile::allocBitmapIfNeeded()
         }
         if (kDefaultTileWidth >= bounds.width() && kDefaultTileHeight >= bounds.height()) {
             if (1 != m_compositingLayer->tilesSize()) {
+
+                WTF::String outstr = WTF::String::format("CompositingTile::allocBitmapIfNeeded %p %d %d\n", this, m_compositingLayer->id(), m_compositingLayer->tilesSize());
+                OutputDebugStringW(outstr.charactersWithNullTermination().data());
+
                 DebugBreak();
                 return;
             } else {
@@ -197,8 +203,8 @@ void CompositingTile::eraseColor(const blink::IntRect& r, const SkColor* color)
 
     SkPaint clearColorPaint;
     clearColorPaint.setXfermodeMode(SkXfermode::kClear_Mode);
-    //clearColorPaint.setColor(color ? *color : (0x00ffffff | (layer()->backgroundColor()))); // weolar
-    clearColorPaint.setColor(0x00ffffff);
+    //clearColorPaint.setColor(color ? *color : (0x00ffffff | (layer()->backgroundColor())));
+    clearColorPaint.setColor(0x00ffff11);
     canvas.drawIRect(rect, clearColorPaint);
 }
 

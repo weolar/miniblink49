@@ -53,7 +53,7 @@ public:
     float opacity() const;
 
     CompositingTile* getTileByXY(int xIndex, int yIndex);
-    void updataTile(int newIndexNumX, int newIndexNumY);
+    void updataTile(int newIndexNumX, int newIndexNumY, DrawToCanvasProperties* prop);
     void cleanupUnnecessaryTile(const WTF::Vector<TileActionInfo*>& tiles);
 
     virtual void drawToCanvas(LayerTreeHost* host, blink::WebCanvas* canvas, const blink::IntRect& clip);

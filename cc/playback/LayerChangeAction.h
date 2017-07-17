@@ -207,7 +207,7 @@ private:
 
 class LayerChangeActionUpdataTile : public LayerChangeOneLayer {
 public:
-    LayerChangeActionUpdataTile(int actionId, int layerId, int newIndexNumX, int newIndexNumY);
+    LayerChangeActionUpdataTile(int actionId, int layerId, int newIndexNumX, int newIndexNumY, DrawToCanvasProperties* prop);
     virtual void run(LayerTreeHost* host) override;
 
     int newIndexNumX() { return m_newIndexNumX; }
@@ -216,6 +216,7 @@ public:
 private:
     int m_newIndexNumX;
     int m_newIndexNumY;
+    DrawToCanvasProperties* m_prop;
 };
 
 class LayerChangeActionCleanupUnnecessaryTile : public LayerChangeOneLayer {

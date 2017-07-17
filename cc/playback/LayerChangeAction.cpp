@@ -100,7 +100,7 @@ void LayerChangeActionCreate::run(LayerTreeHost* host)
 LayerChangeActionDestroy::LayerChangeActionDestroy(int64 actionId, int layerId)
     : LayerChangeOneLayer(actionId, LayerChangeAction::LayerChangeDestroy, layerId)
 {
-//     String outString = String::format("LayerChangeActionDestroy: %d %d %d \n", m_type, layerId, (int)actionId);
+//     String outString = String::format("LayerChangeActionDestroy: id:%d actionId:%lld\n", layerId, actionId);
 //     OutputDebugStringW(outString.charactersWithNullTermination().data());
 }
 
@@ -218,15 +218,19 @@ void LayerChangeActionDrawPropUpdata::appendDirtyLayer(cc_blink::WebLayerImpl* l
     m_layerIds.append(layer->id());
 
     DrawToCanvasProperties* prop = new DrawToCanvasProperties();
-    prop->copyDrawProperties(*layer->drawProperties(), layer->opacity());
-    prop->bounds = layer->bounds();
-    prop->position = layer->position();
-      prop->drawsContent = layer->drawsContent();
-    prop->masksToBounds = layer->masksToBounds();
-    prop->opaque = layer->opaque();
-    prop->maskLayerId = layer->maskLayerId();
-    prop->replicaLayerId = layer->replicaLayerId();
+//     prop->copyDrawProperties(*layer->drawProperties(), layer->opacity());
+//     prop->bounds = layer->bounds();
+//     prop->position = layer->position();
+//     prop->drawsContent = layer->drawsContent();
+//     prop->masksToBounds = layer->masksToBounds();
+//     prop->opaque = layer->opaque();
+//     prop->maskLayerId = layer->maskLayerId();
+//     prop->replicaLayerId = layer->replicaLayerId();
+    layer->updataDrawToCanvasProperties(prop);
     m_props.append(prop);
+
+//     String outString = String::format("blink-LayerChangeActionDrawPropUpdata: id %d, %d, %d\n", layer->id(), prop->bounds.width(), prop->bounds.height());
+//     OutputDebugStringW(outString.charactersWithNullTermination().data());
 }
 
 void LayerChangeActionDrawPropUpdata::appendPendingInvalidateRect(const blink::IntRect& r)
@@ -292,17 +296,17 @@ LayerChangeActionBlend::LayerChangeActionBlend(int actionId, int layerId, TileAc
 
 LayerChangeActionBlend::~LayerChangeActionBlend()
 {
-      delete m_item;
+    delete m_item;
 }
 
 void LayerChangeActionBlend::setBitmap(/*size_t itemId, */SkBitmap* bitmap)
 {
-      m_item->bitmap = bitmap;
+    m_item->bitmap = bitmap;
 }
 
 void LayerChangeActionBlend::appendPendingInvalidateRect(const blink::IntRect& r)
 {
-      m_pendingInvalidateRects.append(r);
+    m_pendingInvalidateRects.append(r);
 }
 
 void LayerChangeActionBlend::appendPendingInvalidateRects(const WTF::Vector<blink::IntRect>& rects)
@@ -312,9 +316,6 @@ void LayerChangeActionBlend::appendPendingInvalidateRects(const WTF::Vector<blin
 
 void LayerChangeActionBlend::run(LayerTreeHost* host)
 {
-    //     String outString = String::format("LayerChangeActionBlend::run: layerId:%d %d \n", item->layerId, (int)m_actionId);
-    //     OutputDebugStringW(outString.charactersWithNullTermination().data());
-
     Item* item = m_item;
     CompositingLayer* layer = host->getCCLayerById(item->layerId);
     CHECK_LAYER_EMPTY(layer);
@@ -330,12 +331,13 @@ void LayerChangeActionBlend::run(LayerTreeHost* host)
 
 //////////////////////////////////////////////////////////////////////////
 
-LayerChangeActionUpdataTile::LayerChangeActionUpdataTile(int actionId, int layerId, int newIndexNumX, int newIndexNumY)
+LayerChangeActionUpdataTile::LayerChangeActionUpdataTile(int actionId, int layerId, int newIndexNumX, int newIndexNumY, DrawToCanvasProperties* prop)
     : LayerChangeOneLayer(actionId, LayerChangeTileUpdata, layerId)
     , m_newIndexNumX(newIndexNumX)
     , m_newIndexNumY(newIndexNumY)
+    , m_prop(prop)
 {
-//     String outString = String::format("LayerChangeActionUpdataTile::LayerChangeActionUpdataTile: actionId:%d layerId:%d, %d %d\n", actionId, layerId, newIndexNumX, newIndexNumY);
+//     String outString = String::format("blink-LayerChangeActionUpdataTile::LayerChangeActionUpdataTile: layerId:%d, %d %d\n", layerId, newIndexNumX, newIndexNumY);
 //     OutputDebugStringW(outString.charactersWithNullTermination().data());
 }
 
@@ -346,7 +348,8 @@ void LayerChangeActionUpdataTile::run(LayerTreeHost * host)
 
     CompositingLayer* layer = host->getCCLayerById(m_layerId);
     CHECK_LAYER_EMPTY(layer);
-    layer->updataTile(m_newIndexNumX, m_newIndexNumY);
+    layer->updataTile(m_newIndexNumX, m_newIndexNumY, m_prop);
+    delete m_prop;
 }
 
 //////////////////////////////////////////////////////////////////////////
