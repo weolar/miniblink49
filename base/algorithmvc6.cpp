@@ -371,6 +371,12 @@ bool __cdecl operator==<char, char_traits<char>, allocator<char> >(
 {
     return a.compare(b) == 0;
 }
+bool __cdecl operator==<char, char_traits<char>, allocator<char> >(
+	char const * a,
+	basic_string<char, char_traits<char>, allocator<char> > const & b) 
+{
+	return b.compare(a) == 0;
+}
 
 basic_string<char, char_traits<char>, class std::allocator<char> > __cdecl std::operator + <char, char_traits<char>, class std::allocator<char> >(
     basic_string<char, char_traits<char>, allocator<char> > const & a, char const * b)
