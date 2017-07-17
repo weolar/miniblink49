@@ -177,9 +177,6 @@ LRESULT PopupMenuWin::wndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPa
         break;
     }
     case WM_CHAR: {
-//         if (!client())
-//             break;
-
         lResult = 0;
         switch (wParam) {
         case 0x0D:   // Enter/Return
