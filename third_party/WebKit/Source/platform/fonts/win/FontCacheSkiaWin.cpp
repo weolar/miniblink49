@@ -255,6 +255,11 @@ static bool typefacesMatchesFamily(const SkTypeface* tf, const AtomicString& fam
         tf->getFamilyName(&familyName);
         if (equalIgnoringCase(family, familyName))
             matchesRequestedFamily = true;
+#ifndef MINIBLINK_NOCHANGE
+        const char data[13] = { 0xE5, 0xBE, 0xAE, 0xE8, 0xBD, 0xAF, 0xE9, 0x9B, 0x85, 0xE9, 0xBB, 0x91, 0 };
+        if (family == "Microsoft YaHei" && familyName.equals(data, 13))
+            matchesRequestedFamily = true;
+#endif
     }
 
     return matchesRequestedFamily;
