@@ -80,6 +80,8 @@ const int maxRunningJobs = 5;
 
 static const bool ignoreSSLErrors = true; //  ("WEBKIT_IGNORE_SSL_ERRORS");
 
+static const int kAllowedProtocols = CURLPROTO_FILE | CURLPROTO_FTP | CURLPROTO_FTPS | CURLPROTO_HTTP | CURLPROTO_HTTPS;
+
 static CString certificatePath()
 {
 #if 0 
@@ -995,18 +997,10 @@ private:
     bool m_start;
 };
 
-static void suspendIoThread(bool* isCallFinish)
-{
-    while (!(*isCallFinish)) { ::Sleep(50); }
-}
-
 // 添加一个作业
 void WebURLLoaderManager::add(WebURLLoaderInternal* job)
 {
-    bool isCallFinish = false; 
-    m_thread->postTask(FROM_HERE, WTF::bind(&suspendIoThread, &isCallFinish));
     startJobOnMainThread(job); // 先在main线程把作业启动起来,减少代码复杂度
-    isCallFinish = true;
 
     IoTask* task = new IoTask(this, job, m_thread, false);
     m_thread->postTask(FROM_HERE, task);
@@ -1024,17 +1018,9 @@ void WebURLLoaderManager::cancel(WebURLLoaderInternal* job) {
 
 void WebURLLoaderManager::dispatchSynchronousJob(WebURLLoaderInternal* job)
 {
-    bool isCallFinish = false;
-    m_thread->postTask(FROM_HERE, WTF::bind(&WebURLLoaderManager::dispatchSynchronousJobOnIoThread, this, job, &isCallFinish));
-    while (!isCallFinish) { ::Sleep(50); }
-}
-
-void WebURLLoaderManager::dispatchSynchronousJobOnIoThread(WebURLLoaderInternal* job, bool* isCallFinish)
-{
     KURL url = job->firstRequest()->url();
     if (url.protocolIsData() && job->client()) {
         handleDataURL(job->loader(), job->client(), url);
-        *isCallFinish = true;
         return;
     }
 
@@ -1046,26 +1032,26 @@ void WebURLLoaderManager::dispatchSynchronousJobOnIoThread(WebURLLoaderInternal*
         if (page->wkeHandler().loadUrlBeginCallback(page->wkeWebView(), page->wkeHandler().loadUrlBeginCallbackParam,
             encodeWithURLEscapeSequences(job->firstRequest()->url().string()).latin1().data(), job)) {
             job->client()->didFinishLoading(job->loader(), WTF::currentTime(), 0); // 加载完成
-            *isCallFinish = true;
             return;
         }
     }
 #endif
 
-    WebURLLoaderInternal* handle = job;
-
     // If defersLoading is true and we call curl_easy_perform
     // on a paused handle, libcURL would do the transfert anyway
     // and we would assert so force defersLoading to be false.
-    handle->m_defersLoading = false;
+    job->m_defersLoading = false;
 
-    initializeHandle(job);
+    InitializeHandleInfo* info = preInitializeHandle(job);
+    m_thread->postTask(FROM_HERE, WTF::bind(&WebURLLoaderManager::initializeHandleOnIoThread, this, job, info));
 
-    // curl_easy_perform blocks until the transfert is finished.
-    CURLcode ret =  curl_easy_perform(handle->m_handle);
+    int isCallFinish = 0;
+    CURLcode ret = CURLE_OK;
+    m_thread->postTask(FROM_HERE, WTF::bind(&WebURLLoaderManager::dispatchSynchronousJobOnIoThread, this, job, info, &ret, &isCallFinish));
+    while (!isCallFinish) { ::Sleep(50); }
 
     if (ret != CURLE_OK) {
-        if (handle->client() && job->loader()) {
+        if (job->client() && job->loader()) {
             WebURLError error;
             error.domain = WebString(String(job->m_url));
             error.reason = ret;
@@ -1073,11 +1059,17 @@ void WebURLLoaderManager::dispatchSynchronousJobOnIoThread(WebURLLoaderInternal*
             job->client()->didFail(job->loader(), error);
         }
     } else {
-        if (handle->client() && job->loader())
-            handle->client()->didReceiveResponse(job->loader(), handle->m_response);
+        if (job->client() && job->loader())
+            job->client()->didReceiveResponse(job->loader(), job->m_response);
     }
+}
 
-    curl_easy_cleanup(handle->m_handle);
+void WebURLLoaderManager::dispatchSynchronousJobOnIoThread(WebURLLoaderInternal* job, InitializeHandleInfo* info, CURLcode* ret, int* isCallFinish)
+{
+    // curl_easy_perform blocks until the transfert is finished.
+    *ret =  curl_easy_perform(job->m_handle);
+    curl_easy_cleanup(job->m_handle);
+
     *isCallFinish = true;
 }
 
@@ -1132,19 +1124,7 @@ void WebURLLoaderManager::startJobOnMainThread(WebURLLoaderInternal* job)
         return;
 #endif
 
-    initializeHandle(job);
-
-    m_runningJobs++;
-    CURLMcode ret = curl_multi_add_handle(m_curlMultiHandle, job->m_handle);
-    // don't call perform, because events must be async
-    // timeout will occur and do curl_multi_perform
-    if (ret && ret != CURLM_CALL_MULTI_PERFORM) {
-#ifndef NDEBUG
-        WTF::String outstr = String::format("Error %job starting job %s\n", ret, encodeWithURLEscapeSequences(job->firstRequest()->url().string()).latin1().data());
-        OutputDebugStringW(outstr.charactersWithNullTermination().data());
-#endif
-        cancel(job);
-    }
+    initializeHandleOnMainThread(job);
 }
 
 // 认证
@@ -1210,10 +1190,182 @@ private:
     curl_slist** m_headers;
 };
 
+struct WebURLLoaderManager::InitializeHandleInfo {
+    std::string url;
+    std::string method;
+    curl_slist* headers;
+    std::string proxy;
+    ProxyType proxyType;
+};
+
+WebURLLoaderManager::InitializeHandleInfo* WebURLLoaderManager::preInitializeHandle(WebURLLoaderInternal* job)
+{
+    InitializeHandleInfo* info = new InitializeHandleInfo();
+    KURL url = job->firstRequest()->url();
+    
+    // Remove any fragment part, otherwise curl will send it as part of the request.
+    url.removeFragmentIdentifier();
+
+    String urlString = url.string();
+    info->url = urlString.utf8().data();
+    info->method = job->firstRequest()->httpMethod().utf8();
+
+    if (url.isLocalFile()) {
+        // Remove any query part sent to a local file.
+        if (!url.query().isEmpty()) {
+            // By setting the query to a null string it'll be removed.
+            url.setQuery(String());
+            urlString = url.string();
+        }
+        // Determine the MIME type based on the path.
+        job->m_response.setMIMEType(MIMETypeRegistry::getMIMETypeForPath(url));
+    }
+
+    curl_slist* headers = nullptr;
+    HeaderVisitor visitor(&headers);
+    job->firstRequest()->visitHTTPHeaderFields(&visitor);
+
+    String method = job->firstRequest()->httpMethod();
+    if ("GET" == method) {
+
+    } else if ("POST" == method) {
+        setupPOST(job, &headers);
+    } else if ("PUT" == method)
+        setupPUT(job, &headers);
+    else if ("HEAD" == method) {
+        
+    } else {
+        setupPUT(job, &headers);
+    }
+    info->headers = headers;
+
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
+    RequestExtraData* requestExtraData = reinterpret_cast<RequestExtraData*>(job->firstRequest()->extraData());
+    if (!requestExtraData) // 在退出时候js调用同步XHR请求，会导致ExtraData为0情况
+        return info;
+
+    WebPage* page = requestExtraData->page;
+    if (!page->wkeWebView())
+        return info;
+
+    if (page->wkeWebView()->m_proxy.length()) {
+        info->proxy = page->wkeWebView()->m_proxy.utf8().data();
+        info->proxyType = page->wkeWebView()->m_proxyType;
+    }
+#endif
+
+    return info;
+}
+
+void WebURLLoaderManager::initializeHandleOnIoThread(WebURLLoaderInternal* job, InitializeHandleInfo* info)
+{
+    job->m_handle = curl_easy_init();
+
+    if (job->m_defersLoading) {
+        CURLcode error = curl_easy_pause(job->m_handle, CURLPAUSE_ALL);
+        // If we did not pause the handle, we would ASSERT in the
+        // header callback. So just assert here.
+        ASSERT_UNUSED(error, error == CURLE_OK);
+    }
+#ifndef NDEBUG
+    if (getenv("DEBUG_CURL"))
+        curl_easy_setopt(job->m_handle, CURLOPT_VERBOSE, 1);
+#endif
+    curl_easy_setopt(job->m_handle, CURLOPT_SSL_VERIFYPEER, 1L);
+    curl_easy_setopt(job->m_handle, CURLOPT_SSL_VERIFYHOST, 2L);
+    curl_easy_setopt(job->m_handle, CURLOPT_PRIVATE, job);
+    curl_easy_setopt(job->m_handle, CURLOPT_ERRORBUFFER, m_curlErrorBuffer);
+    curl_easy_setopt(job->m_handle, CURLOPT_WRITEFUNCTION, writeCallback);
+    curl_easy_setopt(job->m_handle, CURLOPT_WRITEDATA, job);
+    curl_easy_setopt(job->m_handle, CURLOPT_HEADERFUNCTION, headerCallback);
+    curl_easy_setopt(job->m_handle, CURLOPT_WRITEHEADER, job);
+    curl_easy_setopt(job->m_handle, CURLOPT_AUTOREFERER, 1);
+    curl_easy_setopt(job->m_handle, CURLOPT_FOLLOWLOCATION, 1);
+    curl_easy_setopt(job->m_handle, CURLOPT_MAXREDIRS, 10);
+    curl_easy_setopt(job->m_handle, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
+    curl_easy_setopt(job->m_handle, CURLOPT_SHARE, m_curlShareHandle);
+    curl_easy_setopt(job->m_handle, CURLOPT_DNS_CACHE_TIMEOUT, 60 * 5); // 5 minutes
+    curl_easy_setopt(job->m_handle, CURLOPT_PROTOCOLS, kAllowedProtocols);
+    curl_easy_setopt(job->m_handle, CURLOPT_REDIR_PROTOCOLS, kAllowedProtocols);
+    curl_easy_setopt(job->m_handle, CURLOPT_SSL_VERIFYPEER, false);
+
+    if (!m_certificatePath.isNull())
+        curl_easy_setopt(job->m_handle, CURLOPT_CAINFO, m_certificatePath.data());
+
+    // enable gzip and deflate through Accept-Encoding:
+    curl_easy_setopt(job->m_handle, CURLOPT_ENCODING, "");
+
+    // url must remain valid through the request
+    ASSERT(!job->m_url);
+
+    // url is in ASCII so latin1() will only convert it to char* without character translation.
+    job->m_url = fastStrDup(info->url.c_str());
+    curl_easy_setopt(job->m_handle, CURLOPT_URL, job->m_url);
+
+    if (m_cookieJarFileName)
+        curl_easy_setopt(job->m_handle, CURLOPT_COOKIEJAR, m_cookieJarFileName);
+
+    if ("GET" == info->method)
+        curl_easy_setopt(job->m_handle, CURLOPT_HTTPGET, TRUE);
+    else if ("POST" == info->method) {
+
+    } else if ("PUT" == info->method) {
+
+    }  else if ("HEAD" == info->method)
+        curl_easy_setopt(job->m_handle, CURLOPT_NOBODY, TRUE);
+    else {
+        curl_easy_setopt(job->m_handle, CURLOPT_CUSTOMREQUEST, info->method.c_str());
+    }
+
+    if (info->headers) {
+        curl_easy_setopt(job->m_handle, CURLOPT_HTTPHEADER, info->headers);
+        job->m_customHeaders = info->headers;
+    }
+
+    curl_easy_setopt(job->m_handle, CURLOPT_USERPWD, ":");
+
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
+    if (info->proxy.size()) {
+        curl_easy_setopt(job->m_handle, CURLOPT_PROXY, info->proxy.c_str());
+        curl_easy_setopt(job->m_handle, CURLOPT_PROXYTYPE, info->proxyType);
+    }
+#endif
+    delete info;
+}
+
+void WebURLLoaderManager::initializeHandleOnMainThread(WebURLLoaderInternal* job)
+{
+    InitializeHandleInfo* info = preInitializeHandle(job);
+    m_thread->postTask(FROM_HERE, WTF::bind(&WebURLLoaderManager::initializeHandleOnIoThread, this, job, info));
+    m_thread->postTask(FROM_HERE, WTF::bind(&WebURLLoaderManager::startOnIoThread, this, job));
+}
+
+void WebURLLoaderManager::startOnIoThread(WebURLLoaderInternal* job)
+{
+    m_runningJobs++;
+    CURLMcode ret = curl_multi_add_handle(m_curlMultiHandle, job->m_handle);
+    // don't call perform, because events must be async
+    // timeout will occur and do curl_multi_perform
+    if (ret && ret != CURLM_CALL_MULTI_PERFORM) {
+#ifndef NDEBUG
+        //         WTF::String outstr = String::format("Error %job starting job %s\n", ret, encodeWithURLEscapeSequences(job->firstRequest()->url().string()).latin1().data());
+        //         OutputDebugStringW(outstr.charactersWithNullTermination().data());
+#endif
+        cancel(job);
+
+        curl_easy_setopt(job->m_handle, CURLOPT_PRIVATE, nullptr);
+        curl_easy_setopt(job->m_handle, CURLOPT_ERRORBUFFER, nullptr);
+        curl_easy_setopt(job->m_handle, CURLOPT_WRITEDATA, nullptr);
+        curl_easy_setopt(job->m_handle, CURLOPT_WRITEHEADER, nullptr);
+        curl_easy_setopt(job->m_handle, CURLOPT_SHARE, nullptr);
+        delete job;
+    }
+}
+
 // 初始化HTTP头
+#if 0
 void WebURLLoaderManager::initializeHandle(WebURLLoaderInternal* job)
 {
-    static const int allowedProtocols = CURLPROTO_FILE | CURLPROTO_FTP | CURLPROTO_FTPS | CURLPROTO_HTTP | CURLPROTO_HTTPS;
     KURL url = job->firstRequest()->url();
 
     // Remove any fragment part, otherwise curl will send it as part of the request.
@@ -1258,8 +1410,8 @@ void WebURLLoaderManager::initializeHandle(WebURLLoaderInternal* job)
     curl_easy_setopt(job->m_handle, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
     curl_easy_setopt(job->m_handle, CURLOPT_SHARE, m_curlShareHandle);
     curl_easy_setopt(job->m_handle, CURLOPT_DNS_CACHE_TIMEOUT, 60 * 5); // 5 minutes
-    curl_easy_setopt(job->m_handle, CURLOPT_PROTOCOLS, allowedProtocols);
-    curl_easy_setopt(job->m_handle, CURLOPT_REDIR_PROTOCOLS, allowedProtocols);
+    curl_easy_setopt(job->m_handle, CURLOPT_PROTOCOLS, kAllowedProtocols);
+    curl_easy_setopt(job->m_handle, CURLOPT_REDIR_PROTOCOLS, kAllowedProtocols);
     //setSSLClientCertificate(job);
 
 //     if (ignoreSSLErrors)
@@ -1308,6 +1460,7 @@ void WebURLLoaderManager::initializeHandle(WebURLLoaderInternal* job)
 
     applyAuthenticationToRequest(job, job->firstRequest());
     return;
+
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
     RequestExtraData* requestExtraData = reinterpret_cast<RequestExtraData*>(job->firstRequest()->extraData());
     if (!requestExtraData) // 在退出时候js调用同步XHR请求，会导致ExtraData为0情况
@@ -1334,5 +1487,6 @@ void WebURLLoaderManager::initializeHandle(WebURLLoaderInternal* job)
     }
 #endif
 }
+#endif
 
 } // namespace net
