@@ -100,7 +100,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>BUILDING_CEF_SHARED;DCHECK_ALWAYS_ON=1;WIN32;_DEBUG;_WINDOWS;INSIDE_BLINK=1;BLINK_IMPLEMENTATION=1;ENABLE_OILPAN=1;ENABLE_GC_PROFILING=1;ENABLE_WKE=1;ENABLE_CEF=1;CARES_STATICLIB=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>BUILDING_CEF_SHARED;DCHECK_ALWAYS_ON=1;WIN32;_DEBUG;_WINDOWS;INSIDE_BLINK=1;BLINK_IMPLEMENTATION=1;ENABLE_OILPAN=1;ENABLE_GC_PROFILING=1;ENABLE_WKE=1;CARES_STATICLIB=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -195,7 +195,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <PreprocessorDefinitions>USING_VC6RT=1;_USING_V110_SDK71_;_WINDLL;_UNICODE;UNICODE;BUILDING_CEF_SHARED;NDEBUG;WIN32;_WINDOWS;INSIDE_BLINK=1;BLINK_IMPLEMENTATION=1;ENABLE_OILPAN=1;ENABLE_WKE=1;ENABLE_CEF=0</PreprocessorDefinitions>
+      <PreprocessorDefinitions>USING_VC6RT=1;_USING_V110_SDK71_;_WINDLL;_UNICODE;UNICODE;BUILDING_CEF_SHARED;NDEBUG;WIN32;_WINDOWS;INSIDE_BLINK=1;BLINK_IMPLEMENTATION=1;ENABLE_OILPAN=1;ENABLE_WKE=1</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
