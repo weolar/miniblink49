@@ -83,8 +83,6 @@ private:
     WebURLLoaderManager();
     ~WebURLLoaderManager();
     
-    void dispatchSynchronousJobOnIoThread(WebURLLoaderInternal* job, bool* isCallFinish);
-
     void setupPOST(WebURLLoaderInternal*, struct curl_slist**);
     void setupPUT(WebURLLoaderInternal*, struct curl_slist**);
 
@@ -93,7 +91,14 @@ private:
     void startJobOnMainThread(WebURLLoaderInternal* job);
     void applyAuthenticationToRequest(WebURLLoaderInternal*, blink::WebURLRequest*);
 
-    void initializeHandle(WebURLLoaderInternal*);
+    void initializeHandleOnMainThread(WebURLLoaderInternal* job);
+    //void initializeHandle(WebURLLoaderInternal*);
+    struct InitializeHandleInfo;
+    void initializeHandleOnIoThread(WebURLLoaderInternal* job, InitializeHandleInfo* info);
+    InitializeHandleInfo* preInitializeHandle(WebURLLoaderInternal* job);
+    void startOnIoThread(WebURLLoaderInternal* job);
+
+    void dispatchSynchronousJobOnIoThread(WebURLLoaderInternal* job, InitializeHandleInfo* info, CURLcode* ret, int* isCallFinish);
 
     void initCookieSession();
 
