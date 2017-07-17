@@ -221,21 +221,51 @@ private:
 
 class AutoRecordActions {
 public:
-    AutoRecordActions(cc::LayerTreeHost* host)
+    AutoRecordActions(WebPageImpl* page, cc::LayerTreeHost* host)
     {
+        m_recordIsOk = false;
         m_host = host;
-        if (m_host)
+        m_page = page;
+        if (!m_host)
+            return;
+
+        m_lastFrameTimeMonotonic = WTF::monotonicallyIncreasingTime();
+
+        m_layerDirty = InterlockedExchange(reinterpret_cast<long volatile*>(&m_page->m_layerDirty), 0);
+        m_needsLayout = InterlockedExchange(reinterpret_cast<long volatile*>(&m_page->m_needsLayout), 0);
+        if (m_needsLayout || m_layerDirty)
             m_host->beginRecordActions();
     }
 
     ~AutoRecordActions()
     {
-        if (m_host)
+        if (!m_host)
+            return;
+        
+        if (m_needsLayout) {
+            WebBeginFrameArgs frameArgs(m_lastFrameTimeMonotonic, 0, m_lastFrameTimeMonotonic - m_page->m_lastFrameTimeMonotonic);
+            m_page->m_webViewImpl->beginFrame(frameArgs);
+            m_page->m_webViewImpl->layout();
+        }
+
+        if (m_needsLayout || m_layerDirty) {
+            m_host->recordDraw();
             m_host->endRecordActions();
+        }
+
+        m_page->m_lastFrameTimeMonotonic = m_lastFrameTimeMonotonic;
+
+        //String out = String::format("WebPageImpl::AutoRecordActions: %f\n", (float)(lastFrameTimeMonotonic - m_lastFrameTimeMonotonic));
+        //OutputDebugStringA(out.utf8().data());
     }
 
 private:
+    WebPageImpl* m_page;
     cc::LayerTreeHost* m_host;
+    bool m_recordIsOk;
+    int m_layerDirty;
+    int m_needsLayout;
+    double m_lastFrameTimeMonotonic;
 };
 
 #if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
@@ -502,7 +532,7 @@ void WebPageImpl::setNeedsCommitAndNotLayout()
         return;
     atomicIncrement(&m_needsCommit);
 
-#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
+#if 0 // (defined ENABLE_CEF) && (ENABLE_CEF == 1)
     if (m_browser) {
         m_browser->SetNeedHeartbeat();
     } else {
@@ -513,7 +543,7 @@ void WebPageImpl::setNeedsCommitAndNotLayout()
             WebThreadImpl* threadImpl = (WebThreadImpl*)platfrom->mainThread();
             threadImpl->postTask(FROM_HERE, new CommitTask(this));
         }
-#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
+#if 0 // (defined ENABLE_CEF) && (ENABLE_CEF == 1)
     }
 #endif
 }
@@ -549,7 +579,7 @@ void WebPageImpl::beginMainFrame()
     bool needsCommit = m_needsCommit;
     if (pageInited != m_state)
         return;
-        
+
     if (needsCommit) {
         executeMainFrame();
         m_layerTreeHost->requestDrawFrameToRunIntoCompositeThread();
@@ -563,38 +593,41 @@ void WebPageImpl::executeMainFrame()
 
     double lastFrameTimeMonotonic = WTF::monotonicallyIncreasingTime();
 
-    int layerDirty = InterlockedExchange(reinterpret_cast<long volatile*>(&m_layerDirty), 0);
-    int needsLayout = InterlockedExchange(reinterpret_cast<long volatile*>(&m_needsLayout), 0);
-    if (needsLayout || layerDirty)
-        m_layerTreeHost->beginRecordActions();
-    
-    if (needsLayout) {
-        WebBeginFrameArgs frameArgs(lastFrameTimeMonotonic, 0, lastFrameTimeMonotonic - m_lastFrameTimeMonotonic);
-        m_webViewImpl->beginFrame(frameArgs);
-        m_webViewImpl->layout();
+    if (!m_layerTreeHost->canRecordActions()) {
+        setNeedsCommitAndNotLayout();
+        return;
     }
 
-    if (needsLayout || layerDirty)
-        m_layerTreeHost->recordDraw();
+//     int layerDirty = InterlockedExchange(reinterpret_cast<long volatile*>(&m_layerDirty), 0);
+//     int needsLayout = InterlockedExchange(reinterpret_cast<long volatile*>(&m_needsLayout), 0);
+//     if (needsLayout || layerDirty)
+//         m_layerTreeHost->beginRecordActions();
+// 
+//     if (needsLayout) {
+//         WebBeginFrameArgs frameArgs(lastFrameTimeMonotonic, 0, lastFrameTimeMonotonic - m_lastFrameTimeMonotonic);
+//         m_webViewImpl->beginFrame(frameArgs);
+//         m_webViewImpl->layout();
+//     }
+// 
+//     if (needsLayout || layerDirty) {
+//         m_layerTreeHost->recordDraw();
+//         m_layerTreeHost->endRecordActions();
+//     }
+// 
+//     m_lastFrameTimeMonotonic = lastFrameTimeMonotonic;
 
-    if (needsLayout || layerDirty)
-        m_layerTreeHost->endRecordActions();
-
-//     String out = String::format("WebPageImpl::executeMainFrame: %f\n", (float)(lastFrameTimeMonotonic - m_lastFrameTimeMonotonic));
-//     OutputDebugStringA(out.utf8().data());
-
-    m_lastFrameTimeMonotonic = lastFrameTimeMonotonic;
+    AutoRecordActions autoRecordActions(this, m_layerTreeHost);
 
 #ifndef NDEBUG
     if (0) {
         showDebugNodeData();
         m_layerTreeHost->showDebug();
         blink::memoryCache()->evictResources();
-        V8GCController::collectGarbage(v8::Isolate::GetCurrent());
+        // V8GCController::collectGarbage(v8::Isolate::GetCurrent());
         Heap::collectGarbage(ThreadState::HeapPointersOnStack, ThreadState::GCWithSweep, Heap::ForcedGC);
         v8::Isolate::GetCurrent()->LowMemoryNotification();
     }
-#endif    
+#endif
 }
 
 bool WebPageImpl::fireTimerEvent()
@@ -649,7 +682,7 @@ void WebPageImpl::setViewportSize(const IntSize& size)
     if (size.isEmpty())
         return;
 
-    AutoRecordActions autoRecordActions(m_layerTreeHost);
+    AutoRecordActions autoRecordActions(this, m_layerTreeHost);
     
     if (m_layerTreeHost)
         m_layerTreeHost->setViewportSize(size);
@@ -944,7 +977,7 @@ LRESULT WebPageImpl::fireWheelEvent(HWND hWnd, UINT message, WPARAM wParam, LPAR
 {
     CHECK_FOR_REENTER(0);
     freeV8TempObejctOnOneFrameBefore();
-    AutoRecordActions autoRecordActions(m_layerTreeHost);
+    AutoRecordActions autoRecordActions(this, m_layerTreeHost);
 
     int x = LOWORD(lParam);
     int y = HIWORD(lParam);
@@ -999,7 +1032,7 @@ bool WebPageImpl::fireKeyUpEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM 
 {
     CHECK_FOR_REENTER(false);
     freeV8TempObejctOnOneFrameBefore();
-    AutoRecordActions autoRecordActions(m_layerTreeHost);
+    AutoRecordActions autoRecordActions(this, m_layerTreeHost);
 
     WebKeyboardEvent keyEvent = PlatformEventHandler::buildKeyboardEvent(WebInputEvent::KeyUp, message, wParam, lParam);
     return m_webViewImpl->handleInputEvent(keyEvent);
@@ -1009,7 +1042,7 @@ bool WebPageImpl::fireKeyDownEvent(HWND hWnd, UINT message, WPARAM wParam, LPARA
 {
     CHECK_FOR_REENTER(false);
     freeV8TempObejctOnOneFrameBefore();
-    AutoRecordActions autoRecordActions(m_layerTreeHost);
+    AutoRecordActions autoRecordActions(this, m_layerTreeHost);
 
     unsigned int virtualKeyCode = wParam;
     WebKeyboardEvent keyEvent = PlatformEventHandler::buildKeyboardEvent(WebInputEvent::RawKeyDown, message, wParam, lParam);
@@ -1100,7 +1133,7 @@ bool WebPageImpl::fireKeyPressEvent(HWND hWnd, UINT message, WPARAM wParam, LPAR
 {
     CHECK_FOR_REENTER(false);
     freeV8TempObejctOnOneFrameBefore();
-    AutoRecordActions autoRecordActions(m_layerTreeHost);
+    AutoRecordActions autoRecordActions(this, m_layerTreeHost);
 
     unsigned int charCode = wParam;
     unsigned int flags = 0;
@@ -1118,7 +1151,7 @@ void WebPageImpl::fireCaptureChangedEvent(HWND hWnd, UINT message, WPARAM wParam
 {
     CHECK_FOR_REENTER0();
     freeV8TempObejctOnOneFrameBefore();
-    AutoRecordActions autoRecordActions(m_layerTreeHost);
+    AutoRecordActions autoRecordActions(this, m_layerTreeHost);
 
     m_platformEventHandler->fireCaptureChangedEvent(hWnd, message, wParam, lParam);
 }
@@ -1154,7 +1187,7 @@ LRESULT WebPageImpl::fireMouseEvent(HWND hWnd, UINT message, WPARAM wParam, LPAR
 {
     CHECK_FOR_REENTER(0);
     freeV8TempObejctOnOneFrameBefore();
-    AutoRecordActions autoRecordActions(m_layerTreeHost);
+    AutoRecordActions autoRecordActions(this, m_layerTreeHost);
 
     bool handle = false;
 //     fireTouchEvent(hWnd, message, wParam, lParam);
@@ -1170,7 +1203,7 @@ void WebPageImpl::loadHistoryItem(int64 frameId, const WebHistoryItem& item, Web
     if (!webFrame)
         return;
 
-    AutoRecordActions autoRecordActions(m_layerTreeHost);
+    AutoRecordActions autoRecordActions(this, m_layerTreeHost);
     webFrame->loadHistoryItem(item, type, policy);
 }
 
@@ -1196,7 +1229,7 @@ void WebPageImpl::loadRequest(int64 frameId, const blink::WebURLRequest& request
     if (!webFrame)
         return;
 
-    AutoRecordActions autoRecordActions(m_layerTreeHost);
+    AutoRecordActions autoRecordActions(this, m_layerTreeHost);
     
     requestWrap.setHTTPHeaderField(WebString::fromLatin1("Accept"), WebString::fromLatin1("text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"));
     webFrame->loadRequest(requestWrap);
@@ -1212,7 +1245,7 @@ void WebPageImpl::loadHTMLString(int64 frameId, const WebData& html, const WebUR
     if (!webFrame)
         return;
 
-    AutoRecordActions autoRecordActions(m_layerTreeHost);
+    AutoRecordActions autoRecordActions(this, m_layerTreeHost);
     webFrame->loadHTMLString(html, baseURL, unreachableURL, replace);
 }
 
