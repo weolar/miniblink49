@@ -179,12 +179,17 @@ void CefContext::ClearNeedHeartbeat() {
 }
 
 void CefContext::FireHeartBeat() {
-    ::EnterCriticalSection(&m_browserListMutex);
-    for (auto it = m_browserList.begin(); it != m_browserList.end(); ++it) {
-        CefBrowserHostImpl* browser = *it;
-        browser->FireHeartbeat();
-    }
-    ::LeaveCriticalSection(&m_browserListMutex);
+//     ::EnterCriticalSection(&m_browserListMutex);
+//     for (auto it = m_browserList.begin(); it != m_browserList.end(); ++it) {
+//         CefBrowserHostImpl* browser = *it;
+//         browser->FireHeartbeat();
+//     }
+//     ::LeaveCriticalSection(&m_browserListMutex);
+// 
+    ClearNeedHeartbeat();
+
+    content::WebThreadImpl* threadImpl = (content::WebThreadImpl*)(blink::Platform::current()->currentThread());
+    threadImpl->fire();
 }
 
 void CefContext::FinalizeShutdownOnWebkitThread() {
@@ -244,19 +249,14 @@ void CefContext::RunMessageLoop() {
             return;
         }
 
-        while (true) {
-            LARGE_INTEGER qpcFrequency;
-            BOOL b = QueryPerformanceCounter(&qpcFrequency);
-            //if (qpcFrequency.LowPart - lastFrequency.LowPart > 15217) 
-            {
-                FireHeartBeat(); 
-                ClearNeedHeartbeat();
-                lastFrequency = qpcFrequency;
-            }
-            
+        while (true) {            
             do {
-                //content::WebThreadImpl* threadImpl = (content::WebThreadImpl*)(blink::Platform::current()->currentThread());
-                //threadImpl->fire();
+//                 LARGE_INTEGER qpcFrequency;
+//                 BOOL b = QueryPerformanceCounter(&qpcFrequency);
+//                 if (qpcFrequency.LowPart - lastFrequency.LowPart > 5217) {
+//                     FireHeartBeat();
+//                     lastFrequency = qpcFrequency;
+//                 }
 
                 if (!TranslateAccelerator(msg.hwnd, NULL, &msg)) {
                     ::TranslateMessage(&msg);

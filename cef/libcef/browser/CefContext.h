@@ -53,6 +53,7 @@ public:
 
     void SetNeedHeartbeat();
     void ClearNeedHeartbeat();
+
     bool IsNeedHeartbeat() { return m_needHeartbeat; }
     void FireHeartBeat();
 
