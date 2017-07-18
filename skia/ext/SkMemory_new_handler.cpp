@@ -12,9 +12,7 @@
 #include "third_party/skia/include/ports/SkMutex_win.h"
 #include "third_party/skia/include/core/SkMutex.h"
 
-#ifdef _DEBUG
 #include "base/process/CallAddrsRecord.h"
-#endif
 
 // This implementation of sk_malloc_flags() and friends is identical to
 // SkMemory_malloc.cpp, except that it disables the CRT's new_handler during
@@ -23,7 +21,7 @@
 
 SK_DECLARE_STATIC_MUTEX(gSkNewHandlerMutex);
 
-#ifdef _DEBUG
+#ifdef ENABLE_MEM_COUNT
 size_t g_skiaMemSize = 0;
 #endif
 
@@ -60,7 +58,7 @@ void* sk_realloc_throw(void* addr, size_t size) {
         abort();
 
     void* result = nullptr;
-#ifdef _DEBUG
+#ifdef ENABLE_MEM_COUNT
     MemoryHead* ptr;
     if (!addr) {
         size += sizeof(MemoryHead);
@@ -90,7 +88,7 @@ void* sk_realloc_throw(void* addr, size_t size) {
 
     result = realloc(addr, size);
 
-#ifdef _DEBUG
+#ifdef ENABLE_MEM_COUNT
     RECORD_REALLOC(addr, result);
 
     ptr = (MemoryHead*)result;
@@ -107,7 +105,7 @@ void sk_free(void* p) {
     if (!p)
         return;
 
-#ifdef _DEBUG
+#ifdef ENABLE_MEM_COUNT
     RECORD_LOCK();
 
     MemoryHead* ptr = (MemoryHead*)p - 1;
@@ -122,7 +120,7 @@ void sk_free(void* p) {
 #endif
     free(p);
 
-#ifdef _DEBUG
+#ifdef ENABLE_MEM_COUNT
     RECORD_UNLOCK();
 #endif
 
@@ -132,14 +130,14 @@ void* sk_malloc_throw(size_t size) {
     if (0 == size)
         return nullptr;
 
-#ifdef _DEBUG
+#ifdef ENABLE_MEM_COUNT
     size += sizeof(MemoryHead);
     RECORD_LOCK();
 #endif
 
     void* result = malloc(size);
 
-#ifdef _DEBUG
+#ifdef ENABLE_MEM_COUNT
     MemoryHead* ptr = (MemoryHead*)result;
     RECORD_MALLOC(ptr, false);
     InterlockedExchangeAdd(reinterpret_cast<long volatile*>(&g_skiaMemSize), static_cast<long>(size));
@@ -156,14 +154,14 @@ static void* sk_malloc_nothrow(size_t size) {
     if (0 == size)
         return nullptr;
 
-#ifdef _DEBUG
+#ifdef ENABLE_MEM_COUNT
     size += sizeof(MemoryHead);
     RECORD_LOCK();
 #endif
 
     void* result = malloc(size);
 
-#ifdef _DEBUG
+#ifdef ENABLE_MEM_COUNT
     MemoryHead* ptr = (MemoryHead*)result;
     RECORD_MALLOC(ptr, false);
     InterlockedExchangeAdd(reinterpret_cast<long volatile*>(&g_skiaMemSize), static_cast<long>(size));
@@ -180,14 +178,14 @@ void* sk_malloc_flags(size_t size, unsigned flags) {
     if (0 == size)
         return nullptr;
 
-#ifdef _DEBUG
+#ifdef ENABLE_MEM_COUNT
     size += sizeof(MemoryHead);
     RECORD_LOCK();
 #endif
 
     void* result = malloc(size);
 
-#ifdef _DEBUG
+#ifdef ENABLE_MEM_COUNT
     MemoryHead* ptr = (MemoryHead*)result;
     RECORD_MALLOC(ptr, false);
     InterlockedExchangeAdd(reinterpret_cast<long volatile*>(&g_skiaMemSize), static_cast<long>(size));
@@ -204,14 +202,14 @@ void* sk_calloc_throw(size_t size) {
     if (0 == size)
         return nullptr;
 
-#ifdef _DEBUG
+#ifdef ENABLE_MEM_COUNT
     size += sizeof(MemoryHead);
     RECORD_LOCK();
 #endif
 
     void* result = calloc(size, 1);
 
-#ifdef _DEBUG
+#ifdef ENABLE_MEM_COUNT
     MemoryHead* ptr = (MemoryHead*)result;
     RECORD_MALLOC(ptr, false);
     InterlockedExchangeAdd(reinterpret_cast<long volatile*>(&g_skiaMemSize), static_cast<long>(size));
@@ -228,14 +226,14 @@ void* sk_calloc(size_t size) {
     if (0 == size)
         return nullptr;
 
-#ifdef _DEBUG
+#ifdef ENABLE_MEM_COUNT
     size += sizeof(MemoryHead);
     RECORD_LOCK();
 #endif
 
     void* result = calloc(size, 1);
 
-#ifdef _DEBUG
+#ifdef ENABLE_MEM_COUNT
     MemoryHead* ptr = (MemoryHead*)result;
     RECORD_MALLOC(ptr, false);
     InterlockedExchangeAdd(reinterpret_cast<long volatile*>(&g_skiaMemSize), static_cast<long>(size));
