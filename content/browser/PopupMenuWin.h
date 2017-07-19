@@ -25,6 +25,7 @@
 #include "third_party/WebKit/public/web/WebViewClient.h"
 #include "third_party/WebKit/public/web/WebPopupType.h"
 #include "third_party/WebKit/Source/platform/Timer.h"
+#include "cc/trees/LayerTreeHostClient.h"
 #include "skia/ext/platform_canvas.h"
 
 namespace blink {
@@ -42,7 +43,7 @@ namespace content {
 
 class PlatformEventHandler;
 
-class PopupMenuWin : public NoBaseWillBeGarbageCollectedFinalized<PopupMenuWin>, public blink::WebViewClient {
+class PopupMenuWin : public NoBaseWillBeGarbageCollectedFinalized<PopupMenuWin>, public blink::WebViewClient, public cc::LayerTreeHostClent {
 public:
     static blink::WebWidget* create(HWND hWnd, blink::IntPoint offset, blink::WebViewImpl* webViewImpl, blink::WebPopupType type, PopupMenuWin** result);
     virtual void PopupMenuWin::closeWidgetSoon() override;
@@ -58,6 +59,22 @@ public:
     virtual void setWindowRect(const blink::WebRect&) override;
     virtual blink::WebLayerTreeView* layerTreeView() override;
     virtual void show(blink::WebNavigationPolicy) override;
+
+    // LayerTreeHostClent --------------------------------------------------------
+    virtual void onLayerTreeDirty() override
+    {
+        scheduleAnimation();
+    }
+
+    virtual void onLayerTreeInvalidateRect(const blink::IntRect& r)
+    {
+        didInvalidateRect(r);
+    }
+
+    virtual void onLayerTreeSetNeedsCommit()
+    {
+        scheduleAnimation();
+    }
 
 protected:
     PopupMenuWin(HWND hWnd, blink::IntPoint offset, blink::WebViewImpl* webViewImpl);

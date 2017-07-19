@@ -571,7 +571,8 @@ void WebPageImpl::onLayerTreeDirty()
 
 void WebPageImpl::didUpdateLayout()
 {
-    onLayerTreeDirty();
+    //onLayerTreeDirty();
+    setNeedsCommit();
 }
 
 void WebPageImpl::beginMainFrame()
@@ -875,6 +876,16 @@ void WebPageImpl::didUpdateLayoutSize(const WebSize& newSize)
 void WebPageImpl::scheduleAnimation()
 {
     setNeedsCommit/*AndNotLayout*/();
+}
+
+void WebPageImpl::onLayerTreeSetNeedsCommit()
+{
+    setNeedsCommit();
+}
+
+void WebPageImpl::onLayerTreeInvalidateRect(const blink::IntRect& r)
+{
+    didInvalidateRect(r);
 }
 
 void WebPageImpl::initializeLayerTreeView()
