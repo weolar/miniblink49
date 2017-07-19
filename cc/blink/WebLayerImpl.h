@@ -170,7 +170,7 @@ public:
     void setChildrenDirty();
     void clearChildrenDirty();
     void setAllParentDirty();
-    void setNeedsFullTreeSync();
+    //void setNeedsFullTreeSync();
 
     const WebLayerImplClient* client() { return m_client; }
     //blink::IntRect updateRect() const { return m_updateRect; };

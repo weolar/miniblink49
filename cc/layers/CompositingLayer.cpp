@@ -477,11 +477,11 @@ void CompositingLayer::drawToCanvas(LayerTreeHost* host, blink::WebCanvas* canva
 #endif
         canvas->drawBitmapRect(*tile->bitmap(), nullptr, SkRect::MakeFromIRect(dst), &paint);
 
-        if (0) {
-            Vector<unsigned char> output;
-            blink::GDIPlusImageEncoder::encode(*tile->bitmap(), blink::GDIPlusImageEncoder::PNG, &output);
-            cc::saveDumpFile("E:\\mycode\\miniblink49\\trunk\\out\\1.png", (char*)output.data(), output.size());
-        }
+//         if (0) {
+//             Vector<unsigned char> output;
+//             blink::GDIPlusImageEncoder::encode(*tile->bitmap(), blink::GDIPlusImageEncoder::PNG, &output);
+//             cc::saveDumpFile("E:\\mycode\\miniblink49\\trunk\\out\\1.png", (char*)output.data(), output.size());
+//         }
     }
 }
 
