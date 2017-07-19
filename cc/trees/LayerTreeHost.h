@@ -40,6 +40,7 @@ class TileGrid;
 class LayerChangeAction;
 class CompositingLayer;
 class ActionsFrameGroup;
+class LayerTreeHostClent;
 
 class LayerTreeHostUiThreadClient {
 public:
@@ -48,7 +49,7 @@ public:
 
 class LayerTreeHost : public blink::WebLayerTreeView {
 public:
-    LayerTreeHost(blink::WebViewClient* webViewClient, LayerTreeHostUiThreadClient* uiThreadClient);
+    LayerTreeHost(LayerTreeHostClent* hostClient, LayerTreeHostUiThreadClient* uiThreadClient);
     ~LayerTreeHost();
 
     void registerLayer(cc_blink::WebLayerImpl* layer);
@@ -57,14 +58,14 @@ public:
 
     bool isDestroying() const;
 
-    void updateLayers(SkCanvas* canvas, const blink::IntRect& clip, bool needsFullTreeSync);
+    //void updateLayers(SkCanvas* canvas, const blink::IntRect& clip, bool needsFullTreeSync);
     void recordDraw();
     void drawToCanvas(SkCanvas* canvas, const blink::IntRect& clip);
     void updateLayersDrawProperties();
 
     //void setNeedsCommit();
-    void setNeedsFullTreeSync();
-    void didUpdateLayout();
+    //void setNeedsFullTreeSync();
+    //void didUpdateLayout();
 
     void requestRepaint(const blink::IntRect& repaintRect);
 
@@ -82,40 +83,40 @@ public:
     // WebLayerTreeView
     
     // Sets the root of the tree. The root is set by way of the constructor.
-    virtual void setRootLayer(const blink::WebLayer&) OVERRIDE;
+    virtual void setRootLayer(const blink::WebLayer&) override;
     CompositingLayer* getRootCCLayer();
-    virtual void clearRootLayer() OVERRIDE;
-    virtual void setViewportSize(const blink::WebSize& deviceViewportSize) OVERRIDE;
+    virtual void clearRootLayer() override;
+    virtual void setViewportSize(const blink::WebSize& deviceViewportSize) override;
 
     // Gives the viewport size in physical device pixels.
-    virtual blink::WebSize deviceViewportSize() const OVERRIDE;
+    virtual blink::WebSize deviceViewportSize() const override;
 
-    virtual void setDeviceScaleFactor(float) OVERRIDE;
-    virtual float deviceScaleFactor() const OVERRIDE;
+    virtual void setDeviceScaleFactor(float) override;
+    virtual float deviceScaleFactor() const override;
 
     // Sets the background color for the viewport.
-    virtual void setBackgroundColor(blink::WebColor) OVERRIDE;
+    virtual void setBackgroundColor(blink::WebColor) override;
 
     // Sets the background transparency for the viewport. The default is 'false'.
-    virtual void setHasTransparentBackground(bool) OVERRIDE;
+    virtual void setHasTransparentBackground(bool) override;
 
-    virtual void registerForAnimations(blink::WebLayer* layer) OVERRIDE;
+    virtual void registerForAnimations(blink::WebLayer* layer) override;
 
     // Sets whether this view is visible. In threaded mode, a view that is not visible will not
     // composite or trigger updateAnimations() or layout() calls until it becomes visible.
-    virtual void setVisible(bool) OVERRIDE;
+    virtual void setVisible(bool) override;
 
     // Sets the current page scale factor and minimum / maximum limits. Both limits are initially 1 (no page scale allowed).
-    virtual void setPageScaleFactorAndLimits(float pageScaleFactor, float minimum, float maximum) OVERRIDE;
+    virtual void setPageScaleFactorAndLimits(float pageScaleFactor, float minimum, float maximum) override;
 
     // Starts an animation of the page scale to a target scale factor and scroll offset.
     // If useAnchor is true, destination is a point on the screen that will remain fixed for the duration of the animation.
     // If useAnchor is false, destination is the final top-left scroll position.
-    virtual void startPageScaleAnimation(const blink::WebPoint& destination, bool useAnchor, float newPageScale, double durationSec) OVERRIDE;
+    virtual void startPageScaleAnimation(const blink::WebPoint& destination, bool useAnchor, float newPageScale, double durationSec) override;
 
-    virtual void setNeedsAnimate() OVERRIDE;
+    virtual void setNeedsAnimate() override;
 
-    virtual void finishAllRendering() OVERRIDE;
+    virtual void finishAllRendering() override;
 
     void showDebug();
 
@@ -171,13 +172,10 @@ private:
     void drawFrameInCompositeThread();
     void paintToMemoryCanvasInUiThread(const blink::IntRect& paintRect);
     void paintToMemoryCanvas(const blink::IntRect& r);
-    //void drawDebugLine(SkCanvas* memoryCanvas, const blink::IntRect& paintRect);
-    //void drawToCanvas(const IntRect& dirtyRect, skia::PlatformCanvas* canvas);
     
     bool m_isDestroying;
 
-    // content::WebPageImpl*
-    blink::WebViewClient* m_webViewClient;
+    LayerTreeHostClent* m_hostClient;
     LayerTreeHostUiThreadClient* m_uiThreadClient;
     blink::WebGestureCurveTarget * m_webGestureCurveTarget;
 
@@ -194,7 +192,7 @@ private:
     float m_minimum;
     float m_maximum;
 
-    bool m_needsFullTreeSync;
+    //bool m_needsFullTreeSync;
     bool m_needTileRender;
     bool m_layerTreeDirty; // ÐèÒªWebPageImpl.recordDraw
 
@@ -222,6 +220,7 @@ private:
 
     double m_lastCompositeTime;
     double m_lastPaintTime;
+    mutable double m_lastRecordTime;
 
     static const int m_paintMessageQueueSize = 200;
     Vector<blink::IntRect> m_dirtyRectsForComposite;

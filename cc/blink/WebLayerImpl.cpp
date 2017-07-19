@@ -1240,12 +1240,12 @@ void WebLayerImpl::setNeedsCommit(bool needUpdateAllBoundsArea)
     m_layerTreeHost->setLayerTreeDirty();
 }
 
-void WebLayerImpl::setNeedsFullTreeSync()
-{
-    if (m_layerTreeHost)
-        m_layerTreeHost->setNeedsFullTreeSync();
-    setNeedsCommit(true);
-}
+// void WebLayerImpl::setNeedsFullTreeSync()
+// {
+//     if (m_layerTreeHost)
+//         m_layerTreeHost->setNeedsFullTreeSync();
+//     setNeedsCommit(true);
+// }
 
 bool WebLayerImpl::dirty() const
 {

@@ -33,7 +33,7 @@ namespace cc {
 
 LayerTreeHost* gLayerTreeHost = nullptr;
 
-LayerTreeHost::LayerTreeHost(blink::WebViewClient* webViewClient, LayerTreeHostUiThreadClient* uiThreadClient)
+LayerTreeHost::LayerTreeHost(LayerTreeHostClent* hostClient, LayerTreeHostUiThreadClient* uiThreadClient)
 {
     m_rootLayer = nullptr;
     m_rootCCLayer = nullptr;
@@ -44,9 +44,9 @@ LayerTreeHost::LayerTreeHost(blink::WebViewClient* webViewClient, LayerTreeHostU
     m_pageScaleFactor = 1.0f;
     m_minimum = 1.0f;
     m_maximum = 1.0f;
-    m_webViewClient = webViewClient;
+    m_hostClient = hostClient;
     m_uiThreadClient = uiThreadClient;
-    m_needsFullTreeSync = true;
+    //m_needsFullTreeSync = true;
     m_needTileRender = true;
     m_layerTreeDirty = true;
     m_3dNodesCount = 0;
@@ -61,8 +61,9 @@ LayerTreeHost::LayerTreeHost(blink::WebViewClient* webViewClient, LayerTreeHostU
     m_paintToMemoryCanvasInUiThreadTaskCount = 0;
 
     m_isDrawDirty = true;
-    m_lastCompositeTime = 0;
-    m_lastPaintTime = 0;
+    m_lastCompositeTime = 0.0;
+    m_lastPaintTime = 0.0;
+    m_lastRecordTime = 0.0;
     m_drawFrameCount = 0;
     m_drawFrameFinishCount = 0;
     m_requestApplyActionsCount = 0;
@@ -251,13 +252,13 @@ void LayerTreeHost::setWebGestureCurveTarget(blink::WebGestureCurveTarget* webGe
 // void LayerTreeHost::setNeedsCommit() // 暂时被废弃，由setLayerTreeDirty代替
 // {
 //     // 由光栅化线程来提起脏区域，所以这里直接指定需要开始下一帧，光删化完毕后由光栅化线程通过requestRepaint发起重绘
-//     m_webViewClient->scheduleAnimation();
+//     m_hostClient->scheduleAnimation();
 // }
 
 void LayerTreeHost::setLayerTreeDirty()
 {
     m_layerTreeDirty = true;
-    m_webViewClient->didUpdateLayout();
+    m_hostClient->onLayerTreeDirty();
 }
 
 bool LayerTreeHost::isLayerTreeDirty() const
@@ -265,15 +266,15 @@ bool LayerTreeHost::isLayerTreeDirty() const
     return m_layerTreeDirty;
 }
 
-void LayerTreeHost::setNeedsFullTreeSync()
-{
-    m_needsFullTreeSync = true;
-    m_webViewClient->scheduleAnimation();
-}
+// void LayerTreeHost::setNeedsFullTreeSync()
+// {
+//     m_needsFullTreeSync = true;
+//     //m_hostClient->scheduleAnimation();
+// }
 
 void LayerTreeHost::requestRepaint(const blink::IntRect& repaintRect)
 {
-    m_webViewClient->didInvalidateRect(blink::WebRect(repaintRect));
+    m_hostClient->onLayerTreeInvalidateRect(blink::WebRect(repaintRect));
 }
 
 void LayerTreeHost::requestDrawFrameLocked(DirtyLayers* dirtyLayers, Vector<Tile*>* tilesToUIThreadRelease)
@@ -291,6 +292,8 @@ static bool compareAction(LayerChangeAction*& left, LayerChangeAction*& right)
     return left->actionId() < right->actionId();
 }
 
+const double kMinDetTime = 0.1;
+
 bool LayerTreeHost::canRecordActions() const
 {
     if (RasterTaskWorkerThreadPool::shared()->getPendingRasterTaskNum() > 3)
@@ -298,6 +301,12 @@ bool LayerTreeHost::canRecordActions() const
 
     if (!m_actionsFrameGroup || m_actionsFrameGroup->getFramesSize() > 10)
         return false;
+    
+    double lastRecordTime = WTF::monotonicallyIncreasingTime();
+    double detTime = lastRecordTime - m_lastRecordTime;
+    if (detTime < kMinDetTime)
+        return false;
+    m_lastRecordTime = lastRecordTime;
 
     return true;
 }
@@ -316,10 +325,7 @@ void LayerTreeHost::appendLayerChangeAction(LayerChangeAction* action)
 {
     m_actionsFrameGroup->saveLayerChangeAction(action);
 
-    setNeedsAnimate();
-
-//     String outString = String::format("LayerTreeHost::appendLayerChangeAction: %d %d \n", (int)(action->type()), (int)action->actionId());
-//     OutputDebugStringW(outString.charactersWithNullTermination().data());
+    setLayerTreeDirty();
 }
 
 int64 LayerTreeHost::genActionId()
@@ -329,7 +335,6 @@ int64 LayerTreeHost::genActionId()
 
 bool LayerTreeHost::preDrawFrame()
 {
-    //atomicIncrement(&m_drawFrameCount);
     return applyActions(false);
 }
 
@@ -342,7 +347,6 @@ bool LayerTreeHost::applyActions(bool needCheck)
 void LayerTreeHost::postDrawFrame()
 {
     ASSERT(!m_compositeThread || !isMainThread());
-    //atomicDecrement(&m_drawFrameCount);
 }
 
 void LayerTreeHost::scrollBy(const blink::WebFloatSize& delta, const blink::WebFloatSize& velocity)
@@ -369,92 +373,78 @@ static blink::WebDoublePoint getEffectiveTotalScrollOffset(cc_blink::WebLayerImp
     return offset;
 }
 
-static void updateLayer(cc_blink::WebLayerImpl* layer, SkCanvas* canvas, const blink::IntRect& clip)
-{
-    blink::WebFloatPoint position = layer->position();
-    blink::WebSize size = layer->bounds();
-    blink::IntRect childClip(0, 0, size.width, size.height);
-
-//     childClip.intersect(clip);
-//     if (childClip.isEmpty())
+// static void updateLayer(cc_blink::WebLayerImpl* layer, SkCanvas* canvas, const blink::IntRect& clip)
+// {
+//     blink::WebFloatPoint position = layer->position();
+//     blink::WebSize size = layer->bounds();
+//     blink::IntRect childClip(0, 0, size.width, size.height);
+// 
+// //     childClip.intersect(clip);
+// //     if (childClip.isEmpty())
+// //         return;
+//     layer->updataAndPaintContents(canvas, childClip);
+// }
+//
+// static void updateLayerChildren(cc_blink::WebLayerImpl* layer, SkCanvas* canvas, const blink::IntRect& clip, bool needsFullTreeSync)
+// {
+//     blink::WebFloatPoint currentLayerPosition = layer->position();
+//     blink::WebDoublePoint effectiveTotalScrollOffset = getEffectiveTotalScrollOffset(layer);
+//     blink::WebFloatPoint currentLayerPositionScrolled(currentLayerPosition.x - effectiveTotalScrollOffset.x, currentLayerPosition.y - effectiveTotalScrollOffset.y);
+// 
+//     blink::WebFloatPoint3D transformOrigin = layer->transformOrigin();
+// 
+//     SkMatrix44 combinedTransform(SkMatrix44::kIdentity_Constructor);
+//     combinedTransform.preTranslate(currentLayerPositionScrolled.x + transformOrigin.x, currentLayerPositionScrolled.y + transformOrigin.y, currentLayerPosition.x);
+//     combinedTransform.preConcat(layer->transform());
+//     combinedTransform.preTranslate(-transformOrigin.x, -transformOrigin.y, -transformOrigin.z);
+// 
+//     if (!combinedTransform.isIdentity()) {
+//         canvas->save();
+//         canvas->concat(combinedTransform);
+//     }
+// 
+//     blink::WebSize size = layer->bounds();
+//     blink::IntRect layerRect(0, 0, size.width, size.height);
+// 
+//     bool layerClip = 0 != layerRect.width() && 0 != layerRect.height() && layer->masksToBounds();
+//     if (layerClip) {
+//         canvas->save();
+//         canvas->clipRect(layerRect, SkRegion::kIntersect_Op, false);
+//     }
+// 
+//     if (needsFullTreeSync)
+//         updateLayer(layer, canvas, clip);
+// 
+//     blink::IntRect clipInChildCoordinate = clip;
+//     clipInChildCoordinate.move(-currentLayerPositionScrolled.x, -currentLayerPositionScrolled.y);
+// 
+//     WTF::Vector<cc_blink::WebLayerImpl*>& children = layer->children();
+//     for (size_t i = 0; i < children.size(); ++i) {
+//         cc_blink::WebLayerImpl* child = children[i];
+// #if 1
+//         if (!(child->dirty() || child->childrenDirty() || needsFullTreeSync))
+//             continue;
+// #endif
+// 
+//         child->clearChildrenDirty();
+//         updateLayerChildren(child, canvas, clipInChildCoordinate, needsFullTreeSync);
+//     }
+// 
+//     if (layerClip)
+//         canvas->restore();
+// 
+//     if (!combinedTransform.isIdentity())
+//         canvas->restore();
+// }
+// 
+// void LayerTreeHost::updateLayers(SkCanvas* canvas, const blink::IntRect& clip, bool needsFullTreeSync)
+// {
+//     if (!m_rootLayer)
 //         return;
-
-//     String out = String::format("LayerTreeHost::updateLayer: %p\n", layer);
-//     OutputDebugStringW(out.charactersWithNullTermination().data());
-
-    layer->updataAndPaintContents(canvas, childClip);
-}
-
-static void updateLayerChildren(cc_blink::WebLayerImpl* layer, SkCanvas* canvas, const blink::IntRect& clip, bool needsFullTreeSync)
-{
-    blink::WebFloatPoint currentLayerPosition = layer->position();
-    blink::WebDoublePoint effectiveTotalScrollOffset = getEffectiveTotalScrollOffset(layer);
-    blink::WebFloatPoint currentLayerPositionScrolled(currentLayerPosition.x - effectiveTotalScrollOffset.x, currentLayerPosition.y - effectiveTotalScrollOffset.y);
-
-    blink::WebFloatPoint3D transformOrigin = layer->transformOrigin();
-
-    SkMatrix44 combinedTransform(SkMatrix44::kIdentity_Constructor);
-    combinedTransform.preTranslate(currentLayerPositionScrolled.x + transformOrigin.x, currentLayerPositionScrolled.y + transformOrigin.y, currentLayerPosition.x);
-    combinedTransform.preConcat(layer->transform());
-    combinedTransform.preTranslate(-transformOrigin.x, -transformOrigin.y, -transformOrigin.z);
-
-    if (!combinedTransform.isIdentity()) {
-        canvas->save();
-        canvas->concat(combinedTransform);
-    }
-
-    blink::WebSize size = layer->bounds();
-    blink::IntRect layerRect(0, 0, size.width, size.height);
-
-    bool layerClip = 0 != layerRect.width() && 0 != layerRect.height() && layer->masksToBounds();
-    if (layerClip) {
-        canvas->save();
-
-//         OwnPtr<blink::GraphicsContext> context = blink::GraphicsContext::deprecatedCreateWithCanvas(canvas, blink::GraphicsContext::NothingDisabled);
-//         if (childClip.height() == 37) {
-//             context->setStrokeStyle(blink::SolidStroke);
-//             context->setStrokeColor(0xff000000 | (::GetTickCount() + base::RandInt(0, 0x1223345)));
-//             context->drawLine(blink::IntPoint(layerRect.x(), layerRect.y()), blink::IntPoint(layerRect.maxX(), layerRect.maxY()));
-//             context->drawLine(blink::IntPoint(layerRect.maxX(), layerRect.y()), blink::IntPoint(layerRect.x(), layerRect.maxY()));
-//             context->strokeRect(layerRect, 1);
-//         }
-
-        canvas->clipRect(layerRect, SkRegion::kIntersect_Op, false);
-    }
-
-    if (needsFullTreeSync)
-        updateLayer(layer, canvas, clip);
-
-    blink::IntRect clipInChildCoordinate = clip;
-    clipInChildCoordinate.move(-currentLayerPositionScrolled.x, -currentLayerPositionScrolled.y);
-
-    WTF::Vector<cc_blink::WebLayerImpl*>& children = layer->children();
-    for (size_t i = 0; i < children.size(); ++i) {
-        cc_blink::WebLayerImpl* child = children[i];
-#if 1
-        if (!(child->dirty() || child->childrenDirty() || needsFullTreeSync))
-            continue;
-#endif
-
-        child->clearChildrenDirty();
-        updateLayerChildren(child, canvas, clipInChildCoordinate, needsFullTreeSync);
-    }
-
-    if (layerClip)
-        canvas->restore();
-
-    if (!combinedTransform.isIdentity())
-        canvas->restore();
-}
-
-void LayerTreeHost::updateLayers(SkCanvas* canvas, const blink::IntRect& clip, bool needsFullTreeSync)
-{
-    if (!m_rootLayer)
-        return;
-
-    updateLayerChildren(m_rootLayer, canvas, clip, m_needsFullTreeSync || needsFullTreeSync);
-    m_needsFullTreeSync = false;
-}
+// 
+//     updateLayerChildren(m_rootLayer, canvas, clip, m_needsFullTreeSync || needsFullTreeSync);
+//     m_needsFullTreeSync = false;
+// }
 
 static void flattenTo2d(SkMatrix44& matrix)
 {
@@ -478,7 +468,7 @@ void LayerTreeHost::recordDraw()
     m_rootLayer->recordDrawChildren(taskGroup, 0);
     taskGroup->endPostRasterTask();
 
-    m_needsFullTreeSync = false;
+    //m_needsFullTreeSync = false;
 }
 
 void printTrans(const SkMatrix44& transform, int deep)
@@ -511,9 +501,9 @@ void LayerTreeHost::drawToCanvas(SkCanvas* canvas, const IntRect& dirtyRect)
     paint.setXfermodeMode(SkXfermode::kSrcOver_Mode); // SkXfermode::kSrcOver_Mode
     canvas->drawRect((SkRect)dirtyRect, paint);
 
-#if 0
-    updateLayers(canvas, dirtyRect, needsFullTreeSync);
-#endif
+// #if 0
+//     updateLayers(canvas, dirtyRect, needsFullTreeSync);
+// #endif
 
     SkPaint clearColorPaint;
     clearColorPaint.setColor(0xffffffff | m_backgroundColor);
@@ -635,7 +625,7 @@ void LayerTreeHost::setRootLayer(const blink::WebLayer& layer)
 
     getRootCCLayer();
 
-    setNeedsFullTreeSync();
+    //setNeedsFullTreeSync();
 }
 
 CompositingLayer* LayerTreeHost::getRootCCLayer()
@@ -727,7 +717,7 @@ void LayerTreeHost::startPageScaleAnimation(const blink::WebPoint& destination, 
 
 void LayerTreeHost::setNeedsAnimate()
 {
-    m_webViewClient->scheduleAnimation();
+    m_hostClient->onLayerTreeSetNeedsCommit();
 }
 
 void LayerTreeHost::finishAllRendering()
@@ -880,12 +870,12 @@ void LayerTreeHost::drawFrameInCompositeThread()
 
     double lastCompositeTime = WTF::monotonicallyIncreasingTime();
     double detTime = lastCompositeTime - m_lastCompositeTime;
-    m_lastCompositeTime = lastCompositeTime;
-    if (detTime < 0.005) { // 如果刷新频率太快，缓缓再画
+    if (detTime < kMinDetTime) { // 如果刷新频率太快，缓缓再画
         requestDrawFrameToRunIntoCompositeThread();
         atomicDecrement(&m_drawFrameFinishCount);
         return;
     }
+    m_lastCompositeTime = lastCompositeTime;
 
 #if 0
     LARGE_INTEGER performanceCount = { 0 };
@@ -947,13 +937,13 @@ void LayerTreeHost::WrapSelfForUiThread::paintInUiThread()
 
     double lastPaintTime = WTF::monotonicallyIncreasingTime();
     double detTime = lastPaintTime - m_host->m_lastPaintTime;
-    m_host->m_lastPaintTime = lastPaintTime;
-    if (detTime < 0.005) {
+    if (detTime < kMinDetTime) {
         m_host->requestPaintToMemoryCanvasInUiThread(IntRect());
         endPaint();
         return;
     }
-    
+    m_host->m_lastPaintTime = lastPaintTime;
+
     for (size_t i = 0; i < m_host->m_dirtyRectsForUi.size(); ++i) {
         m_host->paintToMemoryCanvasInUiThread(m_host->m_dirtyRectsForUi[i]);
     }

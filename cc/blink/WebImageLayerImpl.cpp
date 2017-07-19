@@ -51,7 +51,7 @@ void WebImageLayerImpl::setImageBitmap(const SkBitmap& bitmap)
     m_bitmap->set(bitmapCopy);
     m_bitmap->ref();
 
-    m_layer->setNeedsFullTreeSync();
+    //m_layer->setNeedsFullTreeSync();
 }
 
 void WebImageLayerImpl::updataAndPaintContents(blink::WebCanvas* canvas, const blink::IntRect& clip)
