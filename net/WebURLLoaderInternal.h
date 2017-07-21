@@ -72,15 +72,15 @@ public:
 
     int getRefCount() const
     { 
-        //return m_ref;
-        return m_refs.size();
+        return m_ref;
+       //return m_refs.size();
     }
 
-//     void ref() { atomicIncrement(&m_ref); }
-//     void deref() { atomicDecrement(&m_ref); }
+    void ref() { atomicIncrement(&m_ref); }
+    void deref() { atomicDecrement(&m_ref); }
 
-    void ref(int addr);
-    void deref(int addr);
+//     void ref(int addr);
+//     void deref(int addr);
 
     WebURLLoaderClient* client() { return m_client; }
     WebURLLoaderClient* m_client;
