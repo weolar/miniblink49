@@ -223,7 +223,6 @@ class AutoRecordActions {
 public:
     AutoRecordActions(WebPageImpl* page, cc::LayerTreeHost* host)
     {
-        m_recordIsOk = false;
         m_host = host;
         m_page = page;
         if (!m_host)
@@ -231,9 +230,10 @@ public:
 
         m_lastFrameTimeMonotonic = WTF::monotonicallyIncreasingTime();
 
-        m_layerDirty = InterlockedExchange(reinterpret_cast<long volatile*>(&m_page->m_layerDirty), 0);
-        m_needsLayout = InterlockedExchange(reinterpret_cast<long volatile*>(&m_page->m_needsLayout), 0);
-        if (m_needsLayout || m_layerDirty)
+        int layerDirty = InterlockedExchange(reinterpret_cast<long volatile*>(&m_page->m_layerDirty), 0);
+        int needsLayout = InterlockedExchange(reinterpret_cast<long volatile*>(&m_page->m_needsLayout), 0);
+        m_isLayout = 0 != layerDirty || 0 != needsLayout;
+        if (m_isLayout)
             m_host->beginRecordActions();
     }
 
@@ -242,29 +242,28 @@ public:
         if (!m_host)
             return;
         
-        if (m_needsLayout) {
+        int layerDirty = InterlockedExchange(reinterpret_cast<long volatile*>(&m_page->m_layerDirty), 0);
+        int needsLayout = InterlockedExchange(reinterpret_cast<long volatile*>(&m_page->m_needsLayout), 0);
+        bool isLayout = 0 != layerDirty || 0 != needsLayout;
+
+        if (isLayout || m_isLayout) {
             WebBeginFrameArgs frameArgs(m_lastFrameTimeMonotonic, 0, m_lastFrameTimeMonotonic - m_page->m_lastFrameTimeMonotonic);
             m_page->m_webViewImpl->beginFrame(frameArgs);
             m_page->m_webViewImpl->layout();
         }
 
-        if (m_needsLayout || m_layerDirty) {
+        if (m_isLayout) {
             m_host->recordDraw();
             m_host->endRecordActions();
         }
 
         m_page->m_lastFrameTimeMonotonic = m_lastFrameTimeMonotonic;
-
-        //String out = String::format("WebPageImpl::AutoRecordActions: %f\n", (float)(lastFrameTimeMonotonic - m_lastFrameTimeMonotonic));
-        //OutputDebugStringA(out.utf8().data());
     }
 
 private:
     WebPageImpl* m_page;
     cc::LayerTreeHost* m_host;
-    bool m_recordIsOk;
-    int m_layerDirty;
-    int m_needsLayout;
+    bool m_isLayout;
     double m_lastFrameTimeMonotonic;
 };
 
