@@ -60,90 +60,27 @@ class WebURLLoaderImplCurl;
 using namespace blink;
 using namespace content;
 
+class WebURLLoaderManager;
+
 namespace net {
     
 class WebURLLoaderInternal {
     //WTF_MAKE_NONCOPYABLE(WebURLLoaderInternal); WTF_MAKE_FAST_ALLOCATED;
 public:
-	WebURLLoaderInternal(WebURLLoaderImplCurl* loader, const WebURLRequest& request, WebURLLoaderClient* client, bool defersLoading, bool shouldContentSniff)
-		: m_ref(0)
-		, m_client(client)
-		, m_lastHTTPMethod(request.httpMethod())
-		, status(0)
-		, m_defersLoading(defersLoading)
-		, m_shouldContentSniff(shouldContentSniff)
-		, m_responseFired(false)
-		, m_handle(0)
-		, m_url(0)
-		, m_customHeaders(0)
-		, m_cancelled(false)
-		//, m_formDataStream(loader)
-		, m_scheduledFailureType(NoFailure)
-		, m_loader(loader)
-		//, m_failureTimer(this, &WebURLLoaderInternal::fireFailure)
-#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
-		, m_hookBuf(0)
-		, m_hookLength(0)
-		, m_isHookRequest(false)
-#endif
-    {
-        m_firstRequest = new blink::WebURLRequest(request);
-        KURL url = (KURL)m_firstRequest->url();
-        m_user = url.user();
-        m_pass = url.pass();
+    WebURLLoaderInternal(WebURLLoaderImplCurl* loader, const WebURLRequest& request, WebURLLoaderClient* client, bool defersLoading, bool shouldContentSniff);
+    ~WebURLLoaderInternal();
 
-        m_response.initialize();
+    int getRefCount() const
+    { 
+        //return m_ref;
+        return m_refs.size();
     }
 
-    ~WebURLLoaderInternal()
-    {
-        delete m_firstRequest;
+//     void ref() { atomicIncrement(&m_ref); }
+//     void deref() { atomicDecrement(&m_ref); }
 
-        fastFree(m_url);
-        if (m_customHeaders)
-            curl_slist_free_all(m_customHeaders);
-#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
-        if (m_hookBuf)
-            free(m_hookBuf);
-#endif
-    }
-
-    void ref() { ++m_ref; }
-    void deref()
-    {
-        --m_ref;
-        if (0 >= m_ref) {
-            delete this;
-        }
-    }
-
-//     void fireFailure(blink::Timer<WebURLLoaderInternal>*)
-//     {
-//         if (!client())
-//             return;
-// 
-//         switch (m_scheduledFailureType) {
-//         case net::WebURLLoaderInternal::NoFailure:
-//             ASSERT_NOT_REACHED();
-//             return;
-//         case net::WebURLLoaderInternal::BlockedFailure:
-//             m_scheduledFailureType = net::WebURLLoaderInternal::NoFailure;
-//             //client()->wasBlocked(this);
-//             return;
-//         case net::WebURLLoaderInternal::InvalidURLFailure:
-//             m_scheduledFailureType = net::WebURLLoaderInternal::NoFailure;
-//             //client()->cannotShowURL(this);
-// 
-//             blink::WebURLError error;
-//             error.domain = firstRequest()->url().string();
-//             error.localizedDescription = blink::WebString::fromUTF8("Cannot show DataUR\n");
-//             if (client() && loader())
-//                 client()->didFail(loader(), error);
-//             return;
-//         }
-// 
-//         ASSERT_NOT_REACHED();
-//     }
+    void ref(int addr);
+    void deref(int addr);
 
     WebURLLoaderClient* client() { return m_client; }
     WebURLLoaderClient* m_client;
@@ -153,6 +90,9 @@ public:
     bool m_responseFired;
 
     int m_ref;
+
+    WTF::Vector<int> m_refs;
+
     String m_lastHTTPMethod;
 
     // Suggested credentials for the current redirection step.
@@ -181,11 +121,8 @@ public:
         BlockedFailure,
         InvalidURLFailure
     };
-
     FailureType m_scheduledFailureType;
-    // Timer<WebURLLoaderInternal> m_failureTimer;
 
-    //////////////////////////////////////////////////////////////////////////
     WebURLLoaderImplCurl* loader() { return m_loader; }
     void setLoader(WebURLLoaderImplCurl* loader) { m_loader = loader; }
 
@@ -194,6 +131,16 @@ public:
     WebURLLoaderImplCurl* m_loader;
 
     blink::WebURLRequest* m_firstRequest;
+
+    WebURLLoaderManager* m_manager;
+
+    WTF::Mutex m_destroingMutex;
+    enum  State {
+        kNormal,
+        kDestroying,
+        kDestroyed,
+    };
+    State m_state;
 
     String m_debugPath;
 
