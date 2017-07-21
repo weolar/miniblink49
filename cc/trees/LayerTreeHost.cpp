@@ -10,6 +10,7 @@
 #include "cc/trees/DrawProperties.h"
 #include "cc/trees/LayerSorter.h"
 #include "cc/trees/ActionsFrameGroup.h"
+#include "cc/trees/LayerTreeHostClient.h"
 #include "cc/tiles/Tile.h"
 #include "cc/tiles/TileGrid.h"
 #include "cc/raster/RasterTaskWorkerThreadPool.h"
