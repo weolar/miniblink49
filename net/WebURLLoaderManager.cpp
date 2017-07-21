@@ -1120,7 +1120,7 @@ WebURLLoaderInternal* AutoLockJob::lock()
     if (!job)
         return nullptr;
 
-    job->ref(1);
+    job->ref();
     return job;
 }
 
@@ -1135,7 +1135,7 @@ AutoLockJob::~AutoLockJob()
         return;
     WebURLLoaderInternal* job = m_manager->checkJob(m_jobId);
     if (job)
-        job->deref(1);
+        job->deref();
 }
 
 WebURLLoaderInternal* WebURLLoaderManager::checkJob(int jobId)
@@ -1619,20 +1619,20 @@ WebURLLoaderInternal::~WebURLLoaderInternal()
 #endif
 }
 
-void WebURLLoaderInternal::ref(int addr)
-{
-    m_refs.append(addr);
-}
-
-void WebURLLoaderInternal::deref(int addr)
-{
-    for (size_t i = 0; i < m_refs.size(); ++i) {
-        if (m_refs[i] == addr) {
-            m_refs.remove(i);
-            return;
-        }
-    }
-}
+// void WebURLLoaderInternal::ref(int addr)
+// {
+//     m_refs.append(addr);
+// }
+// 
+// void WebURLLoaderInternal::deref(int addr)
+// {
+//     for (size_t i = 0; i < m_refs.size(); ++i) {
+//         if (m_refs[i] == addr) {
+//             m_refs.remove(i);
+//             return;
+//         }
+//     }
+// }
 
 // 初始化HTTP头
 #if 0
