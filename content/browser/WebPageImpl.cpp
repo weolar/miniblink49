@@ -232,9 +232,8 @@ public:
 
         int layerDirty = InterlockedExchange(reinterpret_cast<long volatile*>(&m_page->m_layerDirty), 0);
         int needsLayout = InterlockedExchange(reinterpret_cast<long volatile*>(&m_page->m_needsLayout), 0);
-        m_isLayout = 0 != layerDirty || 0 != needsLayout;
-        if (m_isLayout)
-            m_host->beginRecordActions();
+        m_isLayout = (0 != layerDirty || 0 != needsLayout);
+        m_host->beginRecordActions();
     }
 
     ~AutoRecordActions()
@@ -252,10 +251,8 @@ public:
             m_page->m_webViewImpl->layout();
         }
 
-        if (m_isLayout) {
-            m_host->recordDraw();
-            m_host->endRecordActions();
-        }
+        m_host->recordDraw();
+        m_host->endRecordActions();
 
         m_page->m_lastFrameTimeMonotonic = m_lastFrameTimeMonotonic;
     }
