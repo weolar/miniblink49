@@ -283,11 +283,9 @@ LRESULT PlatformEventHandler::fireMouseEvent(HWND hWnd, UINT message, WPARAM wPa
         webMouseEvent.type = WebInputEvent::MouseDown;
         m_webWidget->handleInputEvent(webMouseEvent);
         //makeDraggableRegionNcHitTest(hWnd, lParam, &m_isDraggableRegionNcHitTest, m_lastPosForDrag);
-    }
-    else if (WM_LBUTTONUP == message || WM_MBUTTONUP == message || WM_RBUTTONUP == message) {
+    } else if (WM_LBUTTONUP == message || WM_MBUTTONUP == message || WM_RBUTTONUP == message) {
         handle = true;
-        switch (message)
-        {
+        switch (message) {
         case WM_LBUTTONUP:
             webMouseEvent.button = WebMouseEvent::ButtonLeft;
             break;
