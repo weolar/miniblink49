@@ -297,11 +297,14 @@ const double kMinDetTime = 0.1;
 
 bool LayerTreeHost::canRecordActions() const
 {
-    if (RasterTaskWorkerThreadPool::shared()->getPendingRasterTaskNum() > 3)
+    if (!m_actionsFrameGroup->containComefromMainframeLocked())
+        return true;
+
+    if (RasterTaskWorkerThreadPool::shared()->getPendingRasterTaskNum() > 2)
         return false;
 
-    if (!m_actionsFrameGroup || m_actionsFrameGroup->getFramesSize() > 10)
-        return false;
+//     if (!m_actionsFrameGroup || m_actionsFrameGroup->getFramesSize() > 10)
+//         return false;
     
     double lastRecordTime = WTF::monotonicallyIncreasingTime();
     double detTime = lastRecordTime - m_lastRecordTime;
@@ -312,9 +315,9 @@ bool LayerTreeHost::canRecordActions() const
     return true;
 }
 
-void LayerTreeHost::beginRecordActions()
+void LayerTreeHost::beginRecordActions(bool isComefromMainframe)
 {
-    m_actionsFrameGroup->beginRecordActions();
+    m_actionsFrameGroup->beginRecordActions(isComefromMainframe);
 }
 
 void LayerTreeHost::endRecordActions()
@@ -336,7 +339,7 @@ int64 LayerTreeHost::genActionId()
 
 bool LayerTreeHost::preDrawFrame()
 {
-    return applyActions(false);
+    return applyActions(m_isDestroying);
 }
 
 bool LayerTreeHost::applyActions(bool needCheck)
@@ -871,7 +874,7 @@ void LayerTreeHost::drawFrameInCompositeThread()
 
     double lastCompositeTime = WTF::monotonicallyIncreasingTime();
     double detTime = lastCompositeTime - m_lastCompositeTime;
-    if (detTime < kMinDetTime) { // 如果刷新频率太快，缓缓再画
+    if (detTime < kMinDetTime && !m_isDestroying) { // 如果刷新频率太快，缓缓再画
         requestDrawFrameToRunIntoCompositeThread();
         atomicDecrement(&m_drawFrameFinishCount);
         return;
@@ -889,6 +892,7 @@ void LayerTreeHost::drawFrameInCompositeThread()
 
     bool frameReady = preDrawFrame(); // 这里也会发起Commit
     if (!frameReady) {
+        ASSERT(!m_isDestroying);
         requestDrawFrameToRunIntoCompositeThread();
         atomicDecrement(&m_drawFrameFinishCount);
         return;
