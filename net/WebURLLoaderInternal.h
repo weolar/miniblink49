@@ -91,6 +91,8 @@ public:
 
     int m_ref;
 
+    int m_id;
+
     WTF::Vector<int> m_refs;
 
     String m_lastHTTPMethod;

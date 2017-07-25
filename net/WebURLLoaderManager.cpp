@@ -292,6 +292,7 @@ void WebURLLoaderManager::shutdown()
     
     m_liveJobsMutex.lock();
     WTF::HashMap<int, WebURLLoaderInternal*> liveJobs = m_liveJobs;
+    m_liveJobs.clear();
     m_liveJobsMutex.unlock();
 
     WTF::HashMap<int, WebURLLoaderInternal*>::iterator it = liveJobs.begin();
@@ -1156,6 +1157,8 @@ int WebURLLoaderManager::addLiveJobs(WebURLLoaderInternal* job)
 
     int jobId = (++m_newestJobId);
     m_liveJobs.add(jobId, job);
+    ASSERT(0 == job->m_id);
+    job->m_id = jobId;
     return jobId;
 }
 
@@ -1569,6 +1572,7 @@ void WebURLLoaderManager::startOnIoThread(int jobId)
 
 WebURLLoaderInternal::WebURLLoaderInternal(WebURLLoaderImplCurl* loader, const WebURLRequest& request, WebURLLoaderClient* client, bool defersLoading, bool shouldContentSniff)
     : m_ref(0)
+    , m_id(0)
     , m_client(client)
     , m_lastHTTPMethod(request.httpMethod())
     , status(0)
