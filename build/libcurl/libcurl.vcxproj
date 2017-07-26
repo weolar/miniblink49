@@ -124,7 +124,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Full</Optimization>
-      <PreprocessorDefinitions>CURL_STATICLIB=1;BUILDING_LIBCURL=1;WIN32;NDEBUG;_LIB;USING_VC6RT=1;USE_OPENSSL=1;OPENSSL_NO_COMP=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>CURL_STATICLIB=1;BUILDING_LIBCURL=1;WIN32;NDEBUG;_LIB;USING_VC6RT=1;USE_OPENSSL=1;OPENSSL_NO_COMP=1;CURL_DISABLE_FTP=1;CURL_DISABLE_IMAP=1;CURL_DISABLE_LDAP=1;CURL_DISABLE_POP3=1;CURL_DISABLE_RTSP=1;CURL_DISABLE_SMTP=1;CURL_DISABLE_TELNET=1;CURL_DISABLE_TFTP=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>../../third_party/zlib/;../../third_party/libcurl/;../../third_party/libcurl/include/;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <StringPooling>true</StringPooling>
