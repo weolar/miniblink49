@@ -150,7 +150,7 @@ HRESULT WINAPI ScriptShape(
 BOOL WINAPI GetTextExtentPointI(HDC hdc, LPWORD pgiIn, int cgi, LPSIZE psize)
 {
     typedef BOOL(WINAPI *LPFN_GetTextExtentPointI)(HDC hdc, LPWORD pgiIn, int cgi, LPSIZE psize);
-    static LPFN_GetTextExtentPointI fnGetTextExtentPointI = (LPFN_GetTextExtentPointI)GetProcAddress(GetModuleHandle(_T("Usp10.dll")), "GetTextExtentPointI");
+    static LPFN_GetTextExtentPointI fnGetTextExtentPointI = (LPFN_GetTextExtentPointI)GetProcAddress(GetModuleHandle(_T("Gdi32.dll")), "GetTextExtentPointI");
     return fnGetTextExtentPointI(hdc, pgiIn, cgi, psize);
 }
 
