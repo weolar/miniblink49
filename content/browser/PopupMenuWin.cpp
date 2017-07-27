@@ -82,8 +82,10 @@ PopupMenuWin::~PopupMenuWin()
         delete m_memoryCanvas;
     m_memoryCanvas = nullptr;
 
-    if (m_layerTreeHost)
+    if (m_layerTreeHost) {
+        m_layerTreeHost->applyActions(true);
         delete m_layerTreeHost;
+    }
     m_layerTreeHost = nullptr;
 }
 
@@ -246,6 +248,8 @@ void PopupMenuWin::beginMainFrame()
 
     updataSize();
 
+    m_layerTreeHost->beginRecordActions(true);
+
     double lastFrameTimeMonotonic = WTF::currentTime();
     WebBeginFrameArgs frameTime(m_lastFrameTimeMonotonic, 0, lastFrameTimeMonotonic - m_lastFrameTimeMonotonic);
     popup->beginFrame(frameTime);
@@ -259,6 +263,8 @@ void PopupMenuWin::beginMainFrame()
     m_layerTreeHost->preDrawFrame();
     updataPaint();
     m_layerTreeHost->postDrawFrame();
+
+    m_layerTreeHost->endRecordActions();
 }
 
 void PopupMenuWin::updataSize()
