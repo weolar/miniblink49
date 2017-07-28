@@ -62,7 +62,6 @@ PopupMenuWin::PopupMenuWin(PopupMenuWinClient* client, HWND hWnd, IntPoint offse
     : m_asynStartCreateWndTimer(this, &PopupMenuWin::asynStartCreateWnd)
 {
     m_client = client;
-    m_hPopup = NULL;
     m_popupImpl = nullptr;
     m_needsCommit = true;
     m_hasResize = true;
@@ -101,6 +100,7 @@ static void destroyWindowAsyn(HWND hWnd)
 void PopupMenuWin::closeWidgetSoon()
 {
     m_client->onPopupMenuHide();
+
     m_asynStartCreateWndTimer.stop();
     m_layerTreeHost->applyActions(false);
     m_initialize = false;
@@ -145,7 +145,7 @@ LRESULT CALLBACK PopupMenuWin::PopupMenuWndProc(HWND hWnd, UINT message, WPARAM 
         LPCREATESTRUCT createStruct = reinterpret_cast<LPCREATESTRUCT>(lParam);
         popup = (PopupMenuWin*)createStruct->lpCreateParams;
         // Associate the PopupMenu with the window.
-        SetWindowLongPtr(hWnd, 0, reinterpret_cast<LONG_PTR>(popup));
+        ::SetWindowLongPtr(hWnd, 0, reinterpret_cast<LONG_PTR>(popup));
         return 0;
     }
 
@@ -155,6 +155,9 @@ LRESULT CALLBACK PopupMenuWin::PopupMenuWndProc(HWND hWnd, UINT message, WPARAM 
 LRESULT PopupMenuWin::wndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     LRESULT lResult = 0;
+
+//     String out = String::format("PopupMenuWin wndProc: %x %x\n", hWnd, message);
+//     OutputDebugStringA(out.utf8().data());
 
     switch (message) {
     case WM_MOUSEMOVE:
@@ -168,9 +171,8 @@ LRESULT PopupMenuWin::wndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPa
             return 0;
         break;
     }
-    case WM_MOUSEWHEEL: {
+    case WM_MOUSEWHEEL:
         break;
-    }
 
     case WM_SYSKEYDOWN:
     case WM_KEYDOWN: {
@@ -299,12 +301,10 @@ void PopupMenuWin::show(WebNavigationPolicy)
 {
     m_needResize = true;
     m_hasResize = true;
-    m_needsCommit = true;
+    postCommit();
 
-    if (!m_isCommiting && m_hPopup) {
-        m_isCommiting = true;
-        ::PostMessage(m_hPopup, WM_COMMIT, 0, 0);
-    }
+    if (m_hPopup)
+        ::ShowWindow(m_hPopup, SW_SHOWNOACTIVATE);
 }
 
 void PopupMenuWin::paint(HDC hdc, RECT rcPaint)
@@ -342,9 +342,11 @@ void PopupMenuWin::updataPaint()
 
 static void initWndStyle(HWND hPopup)
 {
-    ::SetWindowPos(hPopup, HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW /*| SWP_NOACTIVATE*/);
-    ::SetFocus(hPopup);
-    ::SetCapture(hPopup);
+    // 这里会重入到WebPageImpl::fireKillFocusEvent
+    ::SetWindowPos(hPopup, HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW | SWP_NOACTIVATE);
+//     ::SetFocus(hPopup);
+//     ::SetCapture(hPopup);
+    ::SetForegroundWindow(hPopup);
 }
 
 void PopupMenuWin::asynStartCreateWnd(blink::Timer<PopupMenuWin>*)
@@ -356,13 +358,23 @@ void PopupMenuWin::asynStartCreateWnd(blink::Timer<PopupMenuWin>*)
         m_hPopup = ::CreateWindowExW(exStyle, kPopupWindowClassName, L"MbPopupMenu",
             WS_POPUP, 0, 0, 2, 2, /*NULL*/m_hParentWnd, 0, NULL, this);
     }
+    m_client->onPopupMenuCreate(m_hPopup);
     initWndStyle(m_hPopup);
+
+    if (m_needsCommit)
+        ::PostMessage(m_hPopup, WM_COMMIT, 0, 0);
+    //OutputDebugStringA("PopupMenuWin::asynStartCreateWnd\n");
 }
 
 WebWidget* PopupMenuWin::createWnd()
 {
     if (!m_hPopup)
         m_asynStartCreateWndTimer.startOneShot(0.0, FROM_HERE);
+    else {
+        if (m_needsCommit)
+            ::PostMessage(m_hPopup, WM_COMMIT, 0, 0);
+        ::SetWindowLongPtr(m_hPopup, 0, reinterpret_cast<LONG_PTR>(this));
+    }
 
     initialize();
     return m_popupImpl;
@@ -389,14 +401,19 @@ WebWidget* PopupMenuWin::create(PopupMenuWinClient* client, HWND hWnd, blink::In
     return self->createWnd();
 }
 
-void PopupMenuWin::didInvalidateRect(const blink::WebRect& r)
+void PopupMenuWin::postCommit()
 {
-    ::InvalidateRect(m_hPopup, NULL, TRUE);
     m_needsCommit = true;
     if (!m_isCommiting && m_hPopup) {
         m_isCommiting = true;
         ::PostMessage(m_hPopup, WM_COMMIT, 0, 0);
     }
+}
+
+void PopupMenuWin::didInvalidateRect(const blink::WebRect& r)
+{
+    ::InvalidateRect(m_hPopup, NULL, TRUE);
+    postCommit();
 }
 
 void PopupMenuWin::didAutoResize(const WebSize& newSize)
@@ -408,11 +425,7 @@ void PopupMenuWin::didUpdateLayoutSize(const WebSize& newSize)
 {
     m_needResize = true;
     m_hasResize = true;
-    m_needsCommit = true;
-    if (!m_isCommiting && m_hPopup) {
-        m_isCommiting = true;
-        ::PostMessage(m_hPopup, WM_COMMIT, 0, 0);
-    }
+    postCommit();
 }
 
 static void trimWidthHeight(blink::IntRect& rect)
@@ -431,20 +444,12 @@ void PopupMenuWin::setWindowRect(const WebRect& r)
 
     m_needResize = true;
     m_hasResize = true;
-    m_needsCommit = true;
-    if (!m_isCommiting && m_hPopup) {
-        m_isCommiting = true;
-        ::PostMessage(m_hPopup, WM_COMMIT, 0, 0);
-    }
+    postCommit();
 }
 
 void PopupMenuWin::scheduleAnimation()
 {
-    m_needsCommit = true;
-    if (!m_isCommiting && m_hPopup) {
-        m_isCommiting = true;
-        ::PostMessage(m_hPopup, WM_COMMIT, 0, 0);
-    }
+    postCommit();
 }
 
 WebLayerTreeView* PopupMenuWin::layerTreeView()

@@ -94,6 +94,8 @@ public:
     virtual void onLayerTreeInvalidateRect(const blink::IntRect& r) override;
     virtual void onLayerTreeSetNeedsCommit() override;
 
+    // PopupMenuWinClient --------------------------------------------------------
+    virtual void onPopupMenuCreate(HWND hWnd) override;
     virtual void onPopupMenuHide() override;
     
     void testPaint();

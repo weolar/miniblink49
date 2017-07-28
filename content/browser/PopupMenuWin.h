@@ -84,6 +84,8 @@ protected:
     void updataPaint();
     void initialize();
     bool initSetting();
+
+    void postCommit();
     
     void registerClass();
     void paint(HDC hdc, RECT rcPaint);

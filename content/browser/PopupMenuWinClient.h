@@ -6,6 +6,7 @@ namespace content {
 
 class PopupMenuWinClient {
 public:
+    virtual void onPopupMenuCreate(HWND hWnd) = 0;
     virtual void onPopupMenuHide() = 0;
 };
 
