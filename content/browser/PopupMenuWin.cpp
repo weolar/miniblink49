@@ -19,6 +19,7 @@
 */
 
 #include "content/browser/PopupMenuWin.h"
+#include "content/browser/PopupMenuWinClient.h"
 #include "content/browser/PlatformEventHandler.h"
 #include "third_party/WebKit/Source/platform/geometry/win/IntRectWin.h"
 #include "third_party/WebKit/Source/web/WebPagePopupImpl.h"
@@ -43,6 +44,8 @@ namespace content {
 
 #define WM_INIT_MENU (WM_USER + 201)
 #define WM_COMMIT    (WM_USER + 202)
+
+HWND PopupMenuWin::m_hPopup = NULL;
     
 // Default Window animation duration in milliseconds
 static const int defaultAnimationDuration = 200;
@@ -55,9 +58,10 @@ const int smoothScrollAnimationDuration = 5000;
 
 static LPCWSTR kPopupWindowClassName = L"PopupWindowClass";
 
-PopupMenuWin::PopupMenuWin(HWND hWnd, IntPoint offset, WebViewImpl* webViewImpl)
+PopupMenuWin::PopupMenuWin(PopupMenuWinClient* client, HWND hWnd, IntPoint offset, WebViewImpl* webViewImpl)
     : m_asynStartCreateWndTimer(this, &PopupMenuWin::asynStartCreateWnd)
 {
+    m_client = client;
     m_hPopup = NULL;
     m_popupImpl = nullptr;
     m_needsCommit = true;
@@ -96,11 +100,13 @@ static void destroyWindowAsyn(HWND hWnd)
 
 void PopupMenuWin::closeWidgetSoon()
 {
+    m_client->onPopupMenuHide();
+    m_asynStartCreateWndTimer.stop();
     m_layerTreeHost->applyActions(false);
     m_initialize = false;
-    SetWindowLongPtr(m_hPopup, 0, 0);
-    blink::Platform::current()->currentThread()->postTask(FROM_HERE, WTF::bind(&destroyWindowAsyn, m_hPopup));
-    //delete this;
+    ::ShowWindow(m_hPopup, SW_HIDE);
+    ::SetWindowLongPtr(m_hPopup, 0, 0);
+    //blink::Platform::current()->currentThread()->postTask(FROM_HERE, WTF::bind(&destroyWindowAsyn, m_hPopup));
 }
 
 void PopupMenuWin::registerClass()
@@ -219,7 +225,8 @@ LRESULT PopupMenuWin::wndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPa
         beginMainFrame();
         break;
     case WM_KILLFOCUS:
-        ::ShowWindow(m_hPopup, SW_HIDE);
+        ::ShowWindow(hWnd, SW_HIDE);
+        ::SetWindowLongPtr(m_hPopup, 0, 0);
         break;
     case WM_INIT_MENU:
         initialize();
@@ -227,7 +234,7 @@ LRESULT PopupMenuWin::wndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPa
     case WM_COMMIT:
         beginMainFrame();
         break;
-    case WM_MOUSEACTIVATE: // 不激活窗口
+    case WM_MOUSEACTIVATE:
         lResult = MA_NOACTIVATE;
         break;
     default:
@@ -333,24 +340,30 @@ void PopupMenuWin::updataPaint()
     skia::EndPlatformPaint(m_memoryCanvas);
 }
 
+static void initWndStyle(HWND hPopup)
+{
+    ::SetWindowPos(hPopup, HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW /*| SWP_NOACTIVATE*/);
+    ::SetFocus(hPopup);
+    ::SetCapture(hPopup);
+}
+
 void PopupMenuWin::asynStartCreateWnd(blink::Timer<PopupMenuWin>*)
 {
-    registerClass();
+    if (!m_hPopup) {
+        registerClass();
 
-    DWORD exStyle = WS_EX_LTRREADING | WS_EX_TOOLWINDOW;
-    m_hPopup = ::CreateWindowExW(exStyle, kPopupWindowClassName, L"MbPopupMenu",
-        WS_POPUP, 0, 0, 2, 2, /*NULL*/m_hParentWnd, 0, NULL, this); // 指定父窗口
-    //::ShowWindow(m_hPopup, SW_SHOW);
-    //::UpdateWindow(m_hPopup);
-    //::SetTimer(m_hPopup, 1, 10, nullptr);
-    ::SetWindowPos(m_hPopup, HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW /*| SWP_NOACTIVATE*/); // 不激活窗口
-    ::SetFocus(m_hPopup);
-    ::SetCapture(m_hPopup);
+        DWORD exStyle = WS_EX_LTRREADING | WS_EX_TOOLWINDOW | WS_EX_NOACTIVATE;
+        m_hPopup = ::CreateWindowExW(exStyle, kPopupWindowClassName, L"MbPopupMenu",
+            WS_POPUP, 0, 0, 2, 2, /*NULL*/m_hParentWnd, 0, NULL, this);
+    }
+    initWndStyle(m_hPopup);
 }
 
 WebWidget* PopupMenuWin::createWnd()
 {
-    m_asynStartCreateWndTimer.startOneShot(0.0, FROM_HERE);
+    if (!m_hPopup)
+        m_asynStartCreateWndTimer.startOneShot(0.0, FROM_HERE);
+
     initialize();
     return m_popupImpl;
 }
@@ -368,9 +381,9 @@ void PopupMenuWin::initialize()
     m_popupImpl->setFocus(true);
 }
 
-WebWidget* PopupMenuWin::create(HWND hWnd, blink::IntPoint offset, WebViewImpl* webViewImpl, WebPopupType type, PopupMenuWin** result)
+WebWidget* PopupMenuWin::create(PopupMenuWinClient* client, HWND hWnd, blink::IntPoint offset, WebViewImpl* webViewImpl, WebPopupType type, PopupMenuWin** result)
 {
-    PopupMenuWin* self = new PopupMenuWin(hWnd, offset, webViewImpl);
+    PopupMenuWin* self = new PopupMenuWin(client, hWnd, offset, webViewImpl);
     if (result)
         *result = self;
     return self->createWnd();

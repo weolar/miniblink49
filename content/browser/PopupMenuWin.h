@@ -42,10 +42,11 @@ class LayerTreeHost;
 namespace content {
 
 class PlatformEventHandler;
+class PopupMenuWinClient;
 
 class PopupMenuWin : public NoBaseWillBeGarbageCollectedFinalized<PopupMenuWin>, public blink::WebViewClient, public cc::LayerTreeHostClent {
 public:
-    static blink::WebWidget* create(HWND hWnd, blink::IntPoint offset, blink::WebViewImpl* webViewImpl, blink::WebPopupType type, PopupMenuWin** result);
+    static blink::WebWidget* create(PopupMenuWinClient* client, HWND hWnd, blink::IntPoint offset, blink::WebViewImpl* webViewImpl, blink::WebPopupType type, PopupMenuWin** result);
     virtual void PopupMenuWin::closeWidgetSoon() override;
     ~PopupMenuWin();
 
@@ -77,7 +78,7 @@ public:
     }
 
 protected:
-    PopupMenuWin(HWND hWnd, blink::IntPoint offset, blink::WebViewImpl* webViewImpl);
+    PopupMenuWin(PopupMenuWinClient* client, HWND hWnd, blink::IntPoint offset, blink::WebViewImpl* webViewImpl);
     blink::WebWidget* createWnd();
     void updataSize();
     void updataPaint();
@@ -93,8 +94,9 @@ protected:
 
     DECLARE_TRACE();
 
+    PopupMenuWinClient* m_client;
     blink::Timer<PopupMenuWin> m_asynStartCreateWndTimer;
-    HWND m_hPopup;
+    static HWND m_hPopup;
     skia::PlatformCanvas* m_memoryCanvas;
     blink::IntRect m_rect;
     bool m_needsCommit; // ∑¿÷π÷ÿ»ÎbeginMainFrame

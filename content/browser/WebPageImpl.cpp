@@ -1345,10 +1345,15 @@ WebWidget* WebPageImpl::createPopupMenu(WebPopupType type)
         m_hWnd = ::GetActiveWindow();
     
     PopupMenuWin* popup = nullptr;
-    blink::WebWidget* result = PopupMenuWin::create(m_hWnd, m_hwndRenderOffset, m_webViewImpl, type, &popup);
+    blink::WebWidget* result = PopupMenuWin::create(this, m_hWnd, m_hwndRenderOffset, m_webViewImpl, type, &popup);
     m_popup = popup;
     m_popupHandle = popup->popupHandle();
     return result;
+}
+
+void WebPageImpl::onPopupMenuHide()
+{
+    //m_popup = nullptr;
 }
 
 bool WebPageImpl::initSetting()
