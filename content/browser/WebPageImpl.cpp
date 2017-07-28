@@ -1351,6 +1351,11 @@ WebWidget* WebPageImpl::createPopupMenu(WebPopupType type)
     return result;
 }
 
+void WebPageImpl::onPopupMenuCreate(HWND hWnd)
+{
+    m_popupHandle = hWnd;
+}
+
 void WebPageImpl::onPopupMenuHide()
 {
     //m_popup = nullptr;
