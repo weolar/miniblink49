@@ -12,6 +12,8 @@
 #include "cc/trees/LayerTreeHostClient.h"
 #include "skia/ext/platform_canvas.h"
 
+#include "content/browser/PopupMenuWinClient.h"
+
 namespace cc {
 class LayerTreeHost;
 }
@@ -39,7 +41,11 @@ class PlatformEventHandler;
 class NavigationController;
 class PopupMenuWin;
 
-class WebPageImpl : public blink::WebViewClient, public cc::LayerTreeHostUiThreadClient, public cc::LayerTreeHostClent {
+class WebPageImpl 
+    : public blink::WebViewClient
+    , public cc::LayerTreeHostUiThreadClient
+    , public cc::LayerTreeHostClent
+    , public PopupMenuWinClient {
 public:
     WebPageImpl();
     ~WebPageImpl();
@@ -87,6 +93,8 @@ public:
     virtual void onLayerTreeDirty() override;
     virtual void onLayerTreeInvalidateRect(const blink::IntRect& r) override;
     virtual void onLayerTreeSetNeedsCommit() override;
+
+    virtual void onPopupMenuHide() override;
     
     void testPaint();
 
