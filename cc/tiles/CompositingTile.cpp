@@ -22,7 +22,7 @@ CompositingTile::CompositingTile(CompositingLayer* compositingLayer, int xIndex,
 {
     m_compositingLayer = compositingLayer;
     m_isNotInit = true;
-	m_refCnt = 1;
+    m_refCnt = 1;
     m_xIndex = xIndex;
     m_yIndex = yIndex;
     m_postion = blink::IntRect(xIndex * kDefaultTileWidth, yIndex * kDefaultTileHeight, kDefaultTileWidth, kDefaultTileHeight);
