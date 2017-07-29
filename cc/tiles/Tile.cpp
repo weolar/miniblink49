@@ -18,7 +18,7 @@ DEFINE_DEBUG_ONLY_GLOBAL(WTF::RefCountedLeakCounter, tileCounter, ("ccTile"));
 Tile::Tile(TileGrid* tileGrid, int xIndex, int yIndex)
 {
     m_isNotInit = true;
-	m_refCnt = 1;
+    m_refCnt = 1;
     m_xIndex = xIndex;
     m_yIndex = yIndex;
     m_priority = TilePriorityNormal;
