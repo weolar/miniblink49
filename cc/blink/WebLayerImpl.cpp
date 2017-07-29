@@ -154,9 +154,6 @@ WebLayerImpl::~WebLayerImpl()
 #ifndef NDEBUG
     webLayerImplCounter.decrement();
 #endif
-
-//     String outString = String::format("WebLayerImpl::~~WebLayerImpl:%p m_id:%d \n", this, m_id);
-//     OutputDebugStringW(outString.charactersWithNullTermination().data());
 }
 
 void WebLayerImpl::removeFromScrollTree() {
@@ -529,14 +526,14 @@ void WebLayerImpl::setBounds(const WebSize& size)
     if (m_bounds.width() == size.width && m_bounds.height() == size.height)
         return;
 
-    setNeedsCommit(true);
+    invalidate();
 
     m_bounds = size;
 
 //     String outString = String::format("WebLayerImpl::setBounds:id:%d, %d %d\n", m_id, size.width, size.height);
 //     OutputDebugStringW(outString.charactersWithNullTermination().data());
 
-    setNeedsCommit(true);
+    invalidate();
 }
 
 WebSize WebLayerImpl::bounds() const
@@ -1220,6 +1217,10 @@ void WebLayerImpl::invalidateRect(const blink::WebRect& rect)
     if (m_tileGrid)
         m_tileGrid->invalidate(dirtyRect, false);
     setNeedsCommit(false);
+
+//     String outString = String::format("WebLayerImpl::invalidateRect:id:%d, %d %d %d %d\n",
+//         m_id, rect.x, rect.y, rect.width, rect.height);
+//     OutputDebugStringW(outString.charactersWithNullTermination().data());
 }
 
 void WebLayerImpl::invalidate()
