@@ -182,7 +182,7 @@ LRESULT PopupMenuWin::wndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPa
         unsigned int virtualKeyCode = wParam;
         WebKeyboardEvent keyEvent = PlatformEventHandler::buildKeyboardEvent(WebInputEvent::RawKeyDown, message, wParam, lParam);
 
-        bool handled = m_webViewImpl->handleInputEvent(keyEvent);
+        bool handled = m_popupImpl->handleInputEvent(keyEvent);
         if (handled)
             return 0;
         break;
@@ -346,7 +346,7 @@ static void initWndStyle(HWND hPopup)
     // 这里会重入到WebPageImpl::fireKillFocusEvent
     ::SetWindowPos(hPopup, HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW | SWP_NOACTIVATE);
 //     ::SetFocus(hPopup);
-    ::SetCapture(hPopup);
+    //::SetCapture(hPopup);
     ::SetForegroundWindow(hPopup);
 }
 
