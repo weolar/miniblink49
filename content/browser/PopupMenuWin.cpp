@@ -304,7 +304,7 @@ void PopupMenuWin::show(WebNavigationPolicy)
     postCommit();
 
     if (m_hPopup)
-        ::ShowWindow(m_hPopup, SW_SHOWNOACTIVATE);
+        ::ShowWindow(m_hPopup, SW_SHOW); // SW_SHOWNOACTIVATE
 }
 
 void PopupMenuWin::paint(HDC hdc, RECT rcPaint)
@@ -345,7 +345,7 @@ static void initWndStyle(HWND hPopup)
     // 这里会重入到WebPageImpl::fireKillFocusEvent
     ::SetWindowPos(hPopup, HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW | SWP_NOACTIVATE);
 //     ::SetFocus(hPopup);
-//     ::SetCapture(hPopup);
+    ::SetCapture(hPopup);
     ::SetForegroundWindow(hPopup);
 }
 
