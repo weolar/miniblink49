@@ -227,6 +227,9 @@ static String getNetscapeCookieFormat(const KURL& url, const String& value)
 
 void setCookiesFromDOM(const KURL&, const KURL& url, const String& value)
 {
+    if (!net::WebURLLoaderManager::sharedInstance())
+        return;
+
     CURL* curl = curl_easy_init();
 
     if (!curl)
@@ -259,6 +262,9 @@ void setCookiesFromDOM(const KURL&, const KURL& url, const String& value)
 
 static String cookiesForSession(const KURL&, const KURL& url, bool httponly)
 {
+    if (!net::WebURLLoaderManager::sharedInstance())
+        return "";
+
     String cookies;
     CURL* curl = curl_easy_init();
 

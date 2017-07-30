@@ -52,6 +52,9 @@ void WebURLLoaderImplCurl::loadSynchronously(
     blink::WebURLError& error,
     blink::WebData& data)
 {
+    if (!net::WebURLLoaderManager::sharedInstance())
+        return;
+
     init();
 
     WebURLRequest requestNew = request;
@@ -59,7 +62,6 @@ void WebURLLoaderImplCurl::loadSynchronously(
     Vector<char> buffer;
     net::BlinkSynchronousLoader syncLoader(error, response, buffer);
     net::WebURLLoaderInternal* job = new net::WebURLLoaderInternal(this, requestNew, &syncLoader, false, shouldContentSniffURL(request.url()));
-
     net::WebURLLoaderManager::sharedInstance()->dispatchSynchronousJob(job);
 
     data.assign(buffer.data(), buffer.size());
@@ -67,6 +69,9 @@ void WebURLLoaderImplCurl::loadSynchronously(
 
 void WebURLLoaderImplCurl::loadAsynchronously(const blink::WebURLRequest& request, blink::WebURLLoaderClient* client)
 {
+    if (!net::WebURLLoaderManager::sharedInstance())
+        return;
+
     init();
 
     WebURLRequest requestNew = request;
@@ -90,7 +95,7 @@ void WebURLLoaderImplCurl::loadAsynchronously(const blink::WebURLRequest& reques
 
 void WebURLLoaderImplCurl::cancel()
 {
-    if (0 != m_jobIds)
+    if (0 != m_jobIds && net::WebURLLoaderManager::sharedInstance())
         net::WebURLLoaderManager::sharedInstance()->cancel(m_jobIds);
     m_jobIds = 0;
 }
