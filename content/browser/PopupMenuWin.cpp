@@ -172,6 +172,7 @@ LRESULT PopupMenuWin::wndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPa
         break;
     }
     case WM_MOUSEWHEEL:
+        m_platformEventHandler->fireWheelEvent(hWnd, message, wParam, lParam);
         break;
 
     case WM_SYSKEYDOWN:
