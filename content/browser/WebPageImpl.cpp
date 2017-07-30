@@ -958,73 +958,13 @@ void WebPageImpl::fireCursorEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM
     }
 }
 
-static int verticalScrollLines()
-{
-    static ULONG scrollLines;
-    if (!scrollLines && !SystemParametersInfo(SPI_GETWHEELSCROLLLINES, 0, &scrollLines, 0))
-        scrollLines = 3;
-    return scrollLines;
-}
-
-static int horizontalScrollChars()
-{
-    static ULONG scrollChars;
-    if (!scrollChars && !SystemParametersInfo(SPI_GETWHEELSCROLLCHARS, 0, &scrollChars, 0))
-        scrollChars = 1;
-    return scrollChars;
-}
-
 LRESULT WebPageImpl::fireWheelEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     CHECK_FOR_REENTER(0);
     freeV8TempObejctOnOneFrameBefore();
     AutoRecordActions autoRecordActions(this, m_layerTreeHost, false);
-
-    int x = LOWORD(lParam);
-    int y = HIWORD(lParam);
-    POINT point = {x, y};
-    ::ScreenToClient(hWnd, &point);
-    x = point.x;
-    y = point.y;
-
-    int wheelDelta = GET_WHEEL_DELTA_WPARAM(wParam);
-
-    static const float cScrollbarPixelsPerLine = 100.0f / 3.0f;
-    float delta = wheelDelta / static_cast<float>(WHEEL_DELTA);
-
-    float deltaX = 0.f;
-    float deltaY = 0.f;
-
-    bool shiftKey = wParam & MK_SHIFT;
-    bool ctrlKey = wParam & MK_CONTROL;
-
-    blink::PlatformWheelEventGranularity granularity = blink::ScrollByPageWheelEvent;
-
-    if (shiftKey) {
-        deltaX = delta * static_cast<float>(horizontalScrollChars()) * cScrollbarPixelsPerLine;
-        deltaY = 0;
-        granularity = blink::ScrollByPixelWheelEvent;
-    } else {
-        deltaX = 0;
-        deltaY = delta;
-        int verticalMultiplier = verticalScrollLines();
-        granularity = (verticalMultiplier == WHEEL_PAGESCROLL) ? blink::ScrollByPageWheelEvent : blink::ScrollByPixelWheelEvent;
-        if (granularity == blink::ScrollByPixelWheelEvent)
-            deltaY *= static_cast<float>(verticalMultiplier)* cScrollbarPixelsPerLine;
-    }
-
-    WebMouseWheelEvent webWheelEvent;
-    webWheelEvent.type = WebInputEvent::MouseWheel;
-    webWheelEvent.x = x;
-    webWheelEvent.y = y;
-    webWheelEvent.globalX = x;
-    webWheelEvent.globalY = y;
-    webWheelEvent.deltaX = deltaX;
-    webWheelEvent.deltaY = deltaY;
-    webWheelEvent.wheelTicksX = 0.f;
-    webWheelEvent.wheelTicksY = delta;
-    webWheelEvent.hasPreciseScrollingDeltas = true;
-    m_webViewImpl->handleInputEvent(webWheelEvent);
+    
+    m_platformEventHandler->fireWheelEvent(hWnd, message, wParam, lParam);
 
     return 0;
 }
