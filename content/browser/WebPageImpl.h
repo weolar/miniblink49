@@ -93,6 +93,8 @@ public:
     virtual void onLayerTreeDirty() override;
     virtual void onLayerTreeInvalidateRect(const blink::IntRect& r) override;
     virtual void onLayerTreeSetNeedsCommit() override;
+    virtual void disablePaint() override;
+    virtual void enablePaint() override;
 
     // PopupMenuWinClient --------------------------------------------------------
     virtual void onPopupMenuCreate(HWND hWnd) override;
@@ -139,6 +141,7 @@ public:
     void clearNeedsCommit();
     bool isDrawDirty();
 
+    // LayerTreeHostUiThreadClient --------------------------------------------------------
     virtual void paintToMemoryCanvasInUiThread(SkCanvas* canvas, const blink::IntRect& paintRect) override;
     
     cc::LayerTreeHost* layerTreeHost() { return m_layerTreeHost; }
@@ -240,6 +243,7 @@ public:
     double m_lastFrameTimeMonotonic;
 
     SkCanvas* m_memoryCanvasForUi;
+    bool m_disablePaint;
 
     blink::Persistent<PopupMenuWin> m_popup;
 };
