@@ -39,6 +39,11 @@
 
 #include "platform/image-encoders/gdiplus/GDIPlusImageEncoder.h" // TODO
 
+extern DWORD g_rasterTime;
+extern DWORD g_nowTime;
+extern int g_mouseTest;
+extern DWORD g_rasterTimeInMouse;
+
 using namespace blink;
 
 namespace blink {
@@ -203,8 +208,12 @@ public:
         m_blendAction->setBitmap(bitmap);
         releaseRource();
 
-//         String outString = String::format("RasterTask::run: %d %d %d %d\n", m_dirtyRect.x(), m_dirtyRect.y(), m_dirtyRect.width(), m_dirtyRect.height());
-//         OutputDebugStringW(outString.charactersWithNullTermination().data());
+//         DWORD nowTime = (DWORD)(WTF::currentTimeMS() * 100);
+//         DWORD detTime = nowTime - g_nowTime;
+//         InterlockedExchange((LONG*)&g_nowTime, nowTime);
+
+//         String out = String::format("RasterTask.run: %d\n", detTime);
+//         OutputDebugStringA(out.utf8().data());
     }
 
     SkBitmap* raster()
@@ -236,11 +245,13 @@ public:
 
     int threadIndex() const { return m_threadIndex; }
 
-    int64 getActionId() const {
+    int64 getActionId() const
+    {
         if (m_blendAction)
             return m_blendAction->actionId();
         return -1;
     }
+
 private:
     RasterTaskWorkerThreadPool* m_pool;
     SkPicture* m_picture;
@@ -298,6 +309,8 @@ int RasterTaskGroup::getPendingRasterTaskNum() const
 int64 RasterTaskGroup::postRasterTask(cc_blink::WebLayerImpl* layer, SkPicture* picture, TileActionInfoVector* willRasteredTiles, const IntRect& dirtyRect)
 {
     ref();
+
+    m_host->enablePaint();
 
     int layerId = layer->id();
     
@@ -387,7 +400,7 @@ void RasterTaskGroup::unref()
         if (m_drawPropUpdataAction) { // 脏矩形转移，可以延迟提交
             m_lastBlendActionForPendingInvalidateRect->appendPendingInvalidateRects(m_drawPropUpdataAction->dirtyRects());
             m_drawPropUpdataAction->cleanupPendingInvalidateRectIfHasAlendAction();
-            }
+        }
     }
 
     if (!m_drawPropUpdataAction->dirtyRects().isEmpty() || !m_drawPropUpdataAction->isDirtyLayerEmpty()) {

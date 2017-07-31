@@ -20,6 +20,8 @@
 #include "platform/image-encoders/gdiplus/GDIPlusImageEncoder.h" // TODO
 #include "base/rand_util.h"
 
+extern DWORD g_nowTime;
+
 namespace content {
 extern int debugPaint;
 extern int debugPaintTile;
@@ -608,7 +610,7 @@ void TileGrid::applyDirtyRectsToRaster(blink::WebContentLayerClient* client, Ras
 
     // TODO 裁剪超出可绘制区域，并合并脏矩形
     mergeDirtyRectAndClipToCanBeShowedAreaIfNeeded(true);
-   
+
     for (size_t i = 0; i < m_dirtyRects.size(); ++i) {
         blink::IntRect dirtyRect = m_dirtyRects[i];
         if (0 == dirtyRect.width() || 0 == dirtyRect.height())
@@ -657,11 +659,6 @@ void TileGrid::applyDirtyRectsToRaster(blink::WebContentLayerClient* client, Ras
         if (0 != willRasteredTiles->size()) {
             picture->ref();
             int64 actionId = taskGroup->postRasterTask(layer(), picture, willRasteredTiles, dirtyRect);
-//             if (m_layer->id() >= 24) {
-//                 String outString = String::format("applyDirtyRectsToRaster,id:%d, actionId:%lld, isLayer24White:%d, children:%d\n", 
-//                     m_layer->id(), actionId, isLayer24White, m_layer->children().size());
-//                 OutputDebugStringW(outString.charactersWithNullTermination().data());
-//             }
         } else {
             delete willRasteredTiles;
             willRasteredTiles = nullptr;

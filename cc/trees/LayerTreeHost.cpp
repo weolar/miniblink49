@@ -26,6 +26,8 @@
 #include "third_party/WebKit/Source/platform/geometry/win/IntRectWin.h"
 #include "wke/wkeWebView.h"
 
+extern DWORD g_nowTime;
+
 using namespace blink;
 
 extern bool wkeIsUpdataInOtherThread;
@@ -293,7 +295,7 @@ static bool compareAction(LayerChangeAction*& left, LayerChangeAction*& right)
     return left->actionId() < right->actionId();
 }
 
-const double kMinDetTime = 0.1;
+const double kMinDetTime = 0.01;
 
 bool LayerTreeHost::canRecordActions() const
 {
@@ -917,6 +919,13 @@ void LayerTreeHost::paintToMemoryCanvasInUiThread(const IntRect& paintRect)
     if (!m_uiThreadClient)
         return;
 
+//     DWORD nowTime = (DWORD)(WTF::currentTimeMS() * 100);
+//     DWORD detTime = nowTime - g_nowTime;
+//     InterlockedExchange((LONG*)&g_nowTime, nowTime);
+
+//     String out = String::format("LayerTreeHost.paintToMemoryCanvasInUiThread: %d\n", detTime);
+//     OutputDebugStringA(out.utf8().data());
+
     WTF::Locker<WTF::Mutex> locker(m_compositeMutex);
     m_uiThreadClient->paintToMemoryCanvasInUiThread(m_memoryCanvas, paintRect);
 }
@@ -1028,6 +1037,16 @@ bool LayerTreeHost::isDrawDirty()
     WTF::Locker<WTF::Mutex> locker(m_compositeMutex);
     isDrawDirty = m_isDrawDirty;
     return isDrawDirty;
+}
+
+void LayerTreeHost::disablePaint()
+{
+    m_hostClient->disablePaint();
+}
+
+void LayerTreeHost::enablePaint()
+{
+    m_hostClient->enablePaint();
 }
 
 void LayerTreeHost::paintToBit(void* bits, int pitch)
