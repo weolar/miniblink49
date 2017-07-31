@@ -319,11 +319,15 @@ bool LayerTreeHost::canRecordActions() const
 
 void LayerTreeHost::beginRecordActions(bool isComefromMainframe)
 {
+    if (m_isDestroying)
+        return;
     m_actionsFrameGroup->beginRecordActions(isComefromMainframe);
 }
 
 void LayerTreeHost::endRecordActions()
 {
+    if (m_isDestroying)
+        return;
     m_actionsFrameGroup->endRecordActions();
 }
 
