@@ -253,7 +253,7 @@ public:
         }
         bool isLayout = 0 != layerDirty || 0 != needsLayout;
 
-        if (isLayout || m_isLayout) {
+        if ((isLayout || m_isLayout) && m_isComefromMainFrame) {
             WebBeginFrameArgs frameArgs(m_lastFrameTimeMonotonic, 0, m_lastFrameTimeMonotonic - m_page->m_lastFrameTimeMonotonic);
             m_page->m_webViewImpl->beginFrame(frameArgs);
             m_page->m_webViewImpl->layout();
