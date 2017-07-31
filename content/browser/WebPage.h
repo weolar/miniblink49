@@ -113,10 +113,15 @@ public:
 
     HDC viewDC();
     void paintToBit(void* bits, int pitch);
+
+    void disablePaint();
+    void enablePaint();
+
 #if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
     CefBrowserHostImpl* browser();
     void setBrowser(CefBrowserHostImpl* browserImpl);
 #endif
+
     blink::WebViewImpl* webViewImpl();
     blink::WebFrame* mainFrame();
 

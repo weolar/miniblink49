@@ -119,6 +119,7 @@ WebPageImpl::WebPageImpl()
     m_navigationController = new NavigationController(this);
     m_layerTreeHost = new cc::LayerTreeHost(this, this);
     m_memoryCanvasForUi = nullptr;
+    m_disablePaint = false;
     m_webFrameClient = new content::WebFrameClientImpl();
     
     WebLocalFrameImpl* webLocalFrameImpl = (WebLocalFrameImpl*)WebLocalFrame::create(WebTreeScopeType::Document, m_webFrameClient);
@@ -779,9 +780,26 @@ void drawDebugLine(SkCanvas* memoryCanvas, const IntRect& paintRect)
 #endif
 }
 
+void WebPageImpl::disablePaint()
+{
+    m_disablePaint = true;
+}
+
+void WebPageImpl::enablePaint()
+{
+    m_disablePaint = false;
+}
+
 // 本函数可能被调用在ui线程，也可以是合成线程
 void WebPageImpl::paintToMemoryCanvasInUiThread(SkCanvas* canvas, const IntRect& paintRect)
 {
+    if (m_disablePaint)
+        return;
+
+//     String outString = String::format("WebPageImpl::paintToMemoryCanvasInUiThread:%d %d %d %d\n",
+//         paintRect.x(), paintRect.y(), paintRect.width(), paintRect.height());
+//     OutputDebugStringW(outString.charactersWithNullTermination().data());
+
     HDC hMemoryDC = nullptr;
     hMemoryDC = skia::BeginPlatformPaint(canvas);
 

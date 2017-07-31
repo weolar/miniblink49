@@ -62,20 +62,9 @@ public:
     virtual void show(blink::WebNavigationPolicy) override;
 
     // LayerTreeHostClent --------------------------------------------------------
-    virtual void onLayerTreeDirty() override
-    {
-        scheduleAnimation();
-    }
-
-    virtual void onLayerTreeInvalidateRect(const blink::IntRect& r)
-    {
-        didInvalidateRect(r);
-    }
-
-    virtual void onLayerTreeSetNeedsCommit()
-    {
-        scheduleAnimation();
-    }
+    virtual void onLayerTreeDirty() override { scheduleAnimation(); }
+    virtual void onLayerTreeInvalidateRect(const blink::IntRect& r) { didInvalidateRect(r); }
+    virtual void onLayerTreeSetNeedsCommit() { scheduleAnimation(); }
 
 protected:
     PopupMenuWin(PopupMenuWinClient* client, HWND hWnd, blink::IntPoint offset, blink::WebViewImpl* webViewImpl);
