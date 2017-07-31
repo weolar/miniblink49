@@ -39,6 +39,16 @@ void ArrayBufferTracker::RegisterNew(JSArrayBuffer* buffer) {
   void* data = buffer->backing_store();
   if (!data) return;
 
+//   char* buf = new char[1000];
+//   sprintf(buf, "ArrayBufferTracker::RegisterNew: %p, %p\n", this, data);
+//   OutputDebugStringA(buf);
+//   delete[] buf;
+
+  //int magicNum1 = *(int*)((char*)data - 16);
+  int magicNum2 = *(int*)((char*)data - 8);
+  if (/*magicNum1 != 0x1122dd44 &&*/ magicNum2 != 0x1122dd44)
+      DebugBreak();
+
   bool in_new_space = heap()->InNewSpace(buffer);
   size_t length = NumberToSize(heap()->isolate(), buffer->byte_length());
   if (in_new_space) {
@@ -57,6 +67,11 @@ void ArrayBufferTracker::RegisterNew(JSArrayBuffer* buffer) {
 void ArrayBufferTracker::Unregister(JSArrayBuffer* buffer) {
   void* data = buffer->backing_store();
   if (!data) return;
+
+//   char* buf = new char[1000];
+//   sprintf(buf, "ArrayBufferTracker::Unregister: %p, %p\n", this, data);
+//   OutputDebugStringA(buf);
+//   delete[] buf;
 
   bool in_new_space = heap()->InNewSpace(buffer);
   std::map<void*, size_t>* live_buffers =
@@ -126,6 +141,12 @@ void ArrayBufferTracker::Promote(JSArrayBuffer* buffer) {
   if (buffer->is_external()) return;
   void* data = buffer->backing_store();
   if (!data) return;
+
+//   char* buf = new char[1000];
+//   sprintf(buf, "ArrayBufferTracker::Unregister: %p, %p\n", this, data);
+//   OutputDebugStringA(buf);
+//   delete[] buf;
+
   // ArrayBuffer might be in the middle of being constructed.
   if (data == heap()->undefined_value()) return;
   DCHECK(live_array_buffers_for_scavenge_.count(data) > 0);
