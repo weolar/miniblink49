@@ -330,7 +330,7 @@ void CompositingLayer::blendToTile(CompositingTile* tile, const SkBitmap& bitmap
     canvas.drawLine(0, 0, tile->postion().width(), tile->postion().height(), paintTest);
     canvas.drawLine(tile->postion().width(), 0, 0, tile->postion().height(), paintTest);
 
-    String textTest = String::format("id:%d child:%d, %d %d", m_id, m_children.size(), tile->xIndex(), tile->yIndex());
+    String textTest = String::format("%d child:%d, %d %d", m_id, m_children.size(), tile->xIndex(), tile->yIndex());
     CString cText = textTest.utf8();
     canvas.drawText(cText.data(), cText.length(), 5, 15, paintTest);
 #endif

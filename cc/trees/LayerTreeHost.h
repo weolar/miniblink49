@@ -166,6 +166,9 @@ public:
     void setLayerTreeDirty();
     bool isLayerTreeDirty() const;
 
+    void disablePaint();
+    void enablePaint();
+
 private:
     void requestPaintToMemoryCanvasInUiThread(const blink::IntRect& r);
     void applyActionsInCompositeThread(bool needCheck);
