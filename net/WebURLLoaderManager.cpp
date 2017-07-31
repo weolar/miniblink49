@@ -510,9 +510,14 @@ public:
         WebURLLoaderInternal* job = autoLockJob.lock();
         if (!job)
             return nullptr;
+
         Args* args = Args::build(ptr, size, nmemb, totalSize, job->m_handle);
         WebURLLoaderManagerMainTask* task = new WebURLLoaderManagerMainTask(jobId, type, args);
-        Platform::current()->mainThread()->postTask(FROM_HERE, task);
+
+        if (job->m_isSynchronous)
+            job->m_syncTasks.append(task);
+        else
+            Platform::current()->mainThread()->postTask(FROM_HERE, task);
         return args;
     }
 
@@ -973,7 +978,59 @@ static inline size_t getFormElementsCount(WebURLLoaderInternal* job)
     return httpBody.elementCount();
 }
 
-static void setupFormData(WebURLLoaderInternal* job, CURLoption sizeOption, struct curl_slist** headers)
+struct SetupDataInfo {
+    CURLoption sizeOption;
+    curl_off_t size;
+    bool islongLong;
+};
+
+struct SetupInfoBase {
+    SetupDataInfo* data;
+
+    SetupInfoBase() { data = nullptr; }
+
+    ~SetupInfoBase() {
+        if (data)
+            delete data;
+    }
+};
+
+struct SetupPutInfo : public SetupInfoBase {
+};
+
+struct SetupPostInfo : public SetupInfoBase {    
+};
+
+struct SetupHttpMethodInfo {
+    SetupHttpMethodInfo() {
+        put = nullptr;
+        post = nullptr;
+    }
+
+    ~SetupHttpMethodInfo() {
+        if (put)
+            delete put;
+        if (post)
+            delete post;
+    }
+    SetupPutInfo* put;
+    SetupPostInfo* post;
+};
+
+static void setupFormDataOnIoThread(WebURLLoaderInternal* job, SetupDataInfo* info)
+{
+    if (info) {
+        if (info->islongLong)
+            curl_easy_setopt(job->m_handle, info->sizeOption, (long long)info->size);
+        else
+            curl_easy_setopt(job->m_handle, info->sizeOption, (int)info->size);
+    }
+
+    curl_easy_setopt(job->m_handle, CURLOPT_READFUNCTION, readCallbackOnIoThread);
+    curl_easy_setopt(job->m_handle, CURLOPT_READDATA, job);
+}
+
+SetupDataInfo* setupFormDataOnMainThread(WebURLLoaderInternal* job, CURLoption sizeOption, struct curl_slist** headers)
 {
     WebHTTPBody httpBody = job->firstRequest()->httpBody();
 
@@ -1015,36 +1072,47 @@ static void setupFormData(WebURLLoaderInternal* job, CURLoption sizeOption, stru
             size += element.data.size();
     }
 
+    SetupDataInfo* result = nullptr;
     // cURL guesses that we want chunked encoding as long as we specify the header
     if (chunkedTransfer)
         *headers = curl_slist_append(*headers, "Transfer-Encoding: chunked");
     else {
-        if (sizeof(long long) == expectedSizeOfCurlOffT)
-            curl_easy_setopt(job->m_handle, sizeOption, (long long)size);
-        else
-            curl_easy_setopt(job->m_handle, sizeOption, (int)size);
+        result = new SetupDataInfo();
+        result->sizeOption = sizeOption;
+        result->size = size;
+        result->islongLong = (sizeof(long long) == expectedSizeOfCurlOffT);
     }
 
-    curl_easy_setopt(job->m_handle, CURLOPT_READFUNCTION, readCallbackOnIoThread);
-    curl_easy_setopt(job->m_handle, CURLOPT_READDATA, job);
+    return result;
 }
 
-void WebURLLoaderManager::setupPUT(WebURLLoaderInternal* job, struct curl_slist** headers)
+static void setupPutOnIoThread(WebURLLoaderInternal* job, SetupPutInfo* info)
 {
     curl_easy_setopt(job->m_handle, CURLOPT_UPLOAD, TRUE);
     curl_easy_setopt(job->m_handle, CURLOPT_INFILESIZE, 0);
 
+    if (!info)
+        return;
+
+    if (info->data)
+        setupFormDataOnIoThread(job, info->data);
+}
+
+static SetupPutInfo* setupPutOnMainThread(WebURLLoaderInternal* job, struct curl_slist** headers)
+{
     // Disable the Expect: 100 continue header
     *headers = curl_slist_append(*headers, "Expect:");
 
     size_t numElements = getFormElementsCount(job);
     if (!numElements)
-        return;
+        return nullptr;
 
-    setupFormData(job, CURLOPT_INFILESIZE_LARGE, headers);
+    SetupPutInfo* result = new SetupPutInfo();
+    result->data = setupFormDataOnMainThread(job, CURLOPT_INFILESIZE_LARGE, headers);
+    return result;
 }
 
-static void flattenHttpBody(const WebHTTPBody& httpBody, Vector<char>& data)
+static void flattenHttpBody(const WebHTTPBody& httpBody, WTF::Vector<char>& data)
 {
     for (size_t i = 0; i < httpBody.elementCount(); ++i) {
         WebHTTPBody::Element element;
@@ -1054,29 +1122,41 @@ static void flattenHttpBody(const WebHTTPBody& httpBody, Vector<char>& data)
     }
 }
 
-void WebURLLoaderManager::setupPOST(WebURLLoaderInternal* job, struct curl_slist** headers)
+static void setupPostOnIoThread(WebURLLoaderInternal* job, SetupPostInfo* info)
 {
     curl_easy_setopt(job->m_handle, CURLOPT_POST, true);
     curl_easy_setopt(job->m_handle, CURLOPT_POSTFIELDSIZE, 0);
 
+    if (!info)
+        return;
+
+    if (0 != job->m_postBytes.size()) {
+        curl_easy_setopt(job->m_handle, CURLOPT_POSTFIELDSIZE, job->m_postBytes.size());
+        curl_easy_setopt(job->m_handle, CURLOPT_POSTFIELDS, job->m_postBytes.data());
+    }
+
+    if (info->data)
+        setupFormDataOnIoThread(job, info->data);
+}
+
+static SetupPostInfo* setupPostOnMainThread(WebURLLoaderInternal* job, struct curl_slist** headers)
+{
     size_t numElements = getFormElementsCount(job);
     if (!numElements)
-        return;
+        return nullptr;
+
+    SetupPostInfo* result = new SetupPostInfo();
 
     // Do not stream for simple POST data
     if (numElements == 1) {
         flattenHttpBody(job->firstRequest()->httpBody(), job->m_postBytes);
-        if (job->m_postBytes.size()) {
-            curl_easy_setopt(job->m_handle, CURLOPT_POSTFIELDSIZE, job->m_postBytes.size());
-            curl_easy_setopt(job->m_handle, CURLOPT_POSTFIELDS, job->m_postBytes.data());
-        }
-        return;
+        return result;
     }
 
-    setupFormData(job, CURLOPT_POSTFIELDSIZE_LARGE, headers);
+    result->data = setupFormDataOnMainThread(job, CURLOPT_POSTFIELDSIZE_LARGE, headers);
+    return result;
 }
 
-// IO任务
 class WebURLLoaderManager::IoTask : public WebThread::Task {
 public:
     IoTask(WebURLLoaderManager* manager, blink::WebThread* thread, bool start)
@@ -1204,13 +1284,14 @@ void WebURLLoaderManager::dispatchSynchronousJob(WebURLLoaderInternal* job)
 {
     ASSERT(WTF::isMainThread());
     job->m_manager = this;
+    job->m_isSynchronous = true;
 
-    DebugBreak();
     int jobId = addLiveJobs(job);
 
     KURL url = job->firstRequest()->url();
     if (url.protocolIsData() && job->client()) {
         handleDataURL(job->loader(), job->client(), url);
+        delete job;
         return;
     }
 
@@ -1220,7 +1301,8 @@ void WebURLLoaderManager::dispatchSynchronousJob(WebURLLoaderInternal* job)
     if (page->wkeHandler().loadUrlBeginCallback) {
         if (page->wkeHandler().loadUrlBeginCallback(page->wkeWebView(), page->wkeHandler().loadUrlBeginCallbackParam,
             encodeWithURLEscapeSequences(job->firstRequest()->url().string()).latin1().data(), job)) {
-            job->client()->didFinishLoading(job->loader(), WTF::currentTime(), 0); // 加载完成
+            job->client()->didFinishLoading(job->loader(), WTF::currentTime(), 0);
+            delete job;
             return;
         }
     }
@@ -1233,12 +1315,17 @@ void WebURLLoaderManager::dispatchSynchronousJob(WebURLLoaderInternal* job)
 
     InitializeHandleInfo* info = preInitializeHandleOnMainThread(job);
     m_thread->postTask(FROM_HERE, WTF::bind(&WebURLLoaderManager::initializeHandleOnIoThread, this, jobId, info));
-    DebugBreak(); // TODO
 
     int isCallFinish = 0;
     CURLcode ret = CURLE_OK;
     m_thread->postTask(FROM_HERE, WTF::bind(&WebURLLoaderManager::dispatchSynchronousJobOnIoThread, this, job, info, &ret, &isCallFinish));
     while (!isCallFinish) { ::Sleep(50); }
+    
+    for (size_t i = 0; i < job->m_syncTasks.size(); ++i) {
+        WebURLLoaderManagerMainTask* task = job->m_syncTasks[i];
+        task->run();
+        delete task;
+    }
 
     if (ret != CURLE_OK) {
         if (job->client() && job->loader()) {
@@ -1390,6 +1477,18 @@ struct WebURLLoaderManager::InitializeHandleInfo {
     curl_slist* headers;
     std::string proxy;
     ProxyType proxyType;
+    SetupHttpMethodInfo* methodInfo;
+
+    InitializeHandleInfo()
+    {
+        methodInfo = nullptr;
+    }
+
+    ~InitializeHandleInfo() {
+        if (methodInfo) {
+            delete methodInfo;
+        }
+    }
 };
 
 WebURLLoaderManager::InitializeHandleInfo* WebURLLoaderManager::preInitializeHandleOnMainThread(WebURLLoaderInternal* job)
@@ -1423,13 +1522,16 @@ WebURLLoaderManager::InitializeHandleInfo* WebURLLoaderManager::preInitializeHan
     if ("GET" == method) {
 
     } else if ("POST" == method) {
-        setupPOST(job, &headers);
-    } else if ("PUT" == method)
-        setupPUT(job, &headers);
-    else if ("HEAD" == method) {
+        info->methodInfo = new SetupHttpMethodInfo();
+        info->methodInfo->post = setupPostOnMainThread(job, &headers);
+    } else if ("PUT" == method) {
+        info->methodInfo = new SetupHttpMethodInfo();
+        info->methodInfo->put = setupPutOnMainThread(job, &headers);
+    } else if ("HEAD" == method) {
         
     } else {
-        setupPUT(job, &headers);
+        info->methodInfo = new SetupHttpMethodInfo();
+        info->methodInfo->put = setupPutOnMainThread(job, &headers);
     }
     info->headers = headers;
 
@@ -1503,13 +1605,13 @@ void WebURLLoaderManager::initializeHandleOnIoThread(int jobId, InitializeHandle
     if (m_cookieJarFileName)
         curl_easy_setopt(job->m_handle, CURLOPT_COOKIEJAR, m_cookieJarFileName);
 
-    if ("GET" == info->method)
+    if ("GET" == info->method) {
         curl_easy_setopt(job->m_handle, CURLOPT_HTTPGET, TRUE);
-    else if ("POST" == info->method) {
-
+    } else if ("POST" == info->method) {
+        setupPostOnIoThread(job, info->methodInfo->post);
     } else if ("PUT" == info->method) {
-
-    }  else if ("HEAD" == info->method)
+        setupPutOnIoThread(job, info->methodInfo->put);
+    } else if ("HEAD" == info->method)
         curl_easy_setopt(job->m_handle, CURLOPT_NOBODY, TRUE);
     else {
         curl_easy_setopt(job->m_handle, CURLOPT_CUSTOMREQUEST, info->method.c_str());
@@ -1573,6 +1675,7 @@ void WebURLLoaderManager::startOnIoThread(int jobId)
 WebURLLoaderInternal::WebURLLoaderInternal(WebURLLoaderImplCurl* loader, const WebURLRequest& request, WebURLLoaderClient* client, bool defersLoading, bool shouldContentSniff)
     : m_ref(0)
     , m_id(0)
+    , m_isSynchronous(false)
     , m_client(client)
     , m_lastHTTPMethod(request.httpMethod())
     , status(0)
