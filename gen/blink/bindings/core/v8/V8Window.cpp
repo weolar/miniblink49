@@ -438,7 +438,7 @@ static bool DOMWindowCreateDataProperty(v8::Local<v8::Name> name, v8::Local<v8::
 
 static void DOMWindowConstructorAttributeSetterCallback(v8::Local<v8::Name>, v8::Local<v8::Value> v8Value, const v8::PropertyCallbackInfo<void>& info)
 {
-    return; // 新chromium不再设置此回调
+    //return; // 新chromium不再设置此回调
 
     TRACE_EVENT_SET_SAMPLING_STATE("blink", "DOMSetter");
     do {
