@@ -259,7 +259,20 @@ void CompositingLayer::blendToTiles(TileActionInfoVector* willRasteredTiles, con
     }
 }
 
-bool saveDumpFile(const String& url, char* buffer, unsigned int size);
+#if 0 // debug
+bool saveDumpFile(const String& url, char* buffer, unsigned int size) {
+    HANDLE hFile = CreateFileA(url.utf8().data(),
+        GENERIC_WRITE, FILE_SHARE_WRITE, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+
+    if (INVALID_HANDLE_VALUE != hFile) {
+        DWORD dwSize = 0;
+        WriteFile(hFile, buffer, size, &dwSize, NULL);
+        CloseHandle(hFile);
+        return TRUE;
+    }
+    return FALSE;
+}
+#endif
 
 void CompositingLayer::blendToTile(CompositingTile* tile, const SkBitmap& bitmap, blink::IntRect dirtyRect)
 {
