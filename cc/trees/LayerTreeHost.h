@@ -169,6 +169,9 @@ public:
     void disablePaint();
     void enablePaint();
 
+    cc_blink::WebLayerImpl* getRootLayer() { return m_rootLayer; }
+    const cc_blink::WebLayerImpl* getConstRootLayer() { return m_rootLayer; }
+
 private:
     void requestPaintToMemoryCanvasInUiThread(const blink::IntRect& r);
     void applyActionsInCompositeThread(bool needCheck);
