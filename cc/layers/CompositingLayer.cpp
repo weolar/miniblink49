@@ -488,13 +488,35 @@ void CompositingLayer::drawToCanvas(LayerTreeHost* host, blink::WebCanvas* canva
         context->strokeRect(tilePostion, 1);
         //context->fillRect(tilePostion, 0x00000000 | (::GetTickCount() + rand()));
 #endif
+
         canvas->drawBitmapRect(*tile->bitmap(), nullptr, SkRect::MakeFromIRect(dst), &paint);
 
 //         if (0) {
-//             Vector<unsigned char> output;
-//             blink::GDIPlusImageEncoder::encode(*tile->bitmap(), blink::GDIPlusImageEncoder::PNG, &output);
-//             cc::saveDumpFile("E:\\mycode\\miniblink49\\trunk\\out\\1.png", (char*)output.data(), output.size());
-//         }
+//             SkPaint paintTest;
+//             static SkTypeface* typeface = nullptr;
+//             if (!typeface)
+//                 typeface = SkTypeface::RefDefault(SkTypeface::kNormal);
+//             paintTest.setTypeface(typeface);
+//             paintTest.setStrokeWidth(1);
+//             paintTest.setStyle(SkPaint::kFill_Style);
+//             paintTest.setARGB(0xff, rand() % 255, rand() % 255, rand() % 255);
+// 
+// //             String textTest = String::format("- asdasdasdasdasda -- %d %d", m_id, rand());
+// //             CString cText = textTest.utf8();
+//             SkCanvas canvasTest(*tile->bitmap());
+//             //canvas.drawText(cText.data(), cText.length(), 55, 232, paintTest);
+//             SkIRect testRect = SkIRect::MakeXYWH(123, 212, 195, 41);
+//             canvasTest.drawIRect(testRect, paintTest);
+// 
+//             SkBitmap dumpBitmap;
+//             dumpBitmap.allocPixels(canvas->imageInfo());
+//             if (canvas->readPixels(&dumpBitmap, 0, 0)) {
+//                 Vector<unsigned char> output;
+//                 blink::GDIPlusImageEncoder::encode(dumpBitmap, blink::GDIPlusImageEncoder::PNG, &output);
+//                 String out = String::format("E:\\mycode\\miniblink49\\trunk\\out\\dump\\%d_0.png", xxxxx);
+//                 cc::saveDumpFile(out, (char*)output.data(), output.size());
+//             }
+//         }       
     }
 }
 

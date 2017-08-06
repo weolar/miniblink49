@@ -511,10 +511,6 @@ void LayerTreeHost::drawToCanvas(SkCanvas* canvas, const IntRect& dirtyRect)
     paint.setXfermodeMode(SkXfermode::kSrcOver_Mode); // SkXfermode::kSrcOver_Mode
     canvas->drawRect((SkRect)dirtyRect, paint);
 
-// #if 0
-//     updateLayers(canvas, dirtyRect, needsFullTreeSync);
-// #endif
-
     SkPaint clearColorPaint;
     clearColorPaint.setColor(0xffffffff | m_backgroundColor);
     //clearColorPaint.setColor(0xfff0504a);
