@@ -475,6 +475,10 @@ void LayerTreeHost::recordDraw()
     updateLayersDrawProperties();
 
     cc::RasterTaskGroup* taskGroup = RasterTaskWorkerThreadPool::shared()->beginPostRasterTask(this);
+
+    taskGroup->appendPendingInvalidateRect((blink::IntRect)m_pendingRepaintRectInRootLayerCoordinate);
+    m_pendingRepaintRectInRootLayerCoordinate = SkRect::MakeEmpty();
+
     m_rootLayer->recordDrawChildren(taskGroup, 0);
     taskGroup->endPostRasterTask();
 
@@ -592,6 +596,11 @@ void LayerTreeHost::updateLayersDrawProperties()
     updateChildLayersDrawProperties(m_rootLayer, layerSorter, prop, 0);
 }
 
+void LayerTreeHost::appendPendingRepaintRect(SkRect r)
+{
+    m_pendingRepaintRectInRootLayerCoordinate.join(r);
+}
+
 static void showDebugChildren(cc_blink::WebLayerImpl* layer, int deep)
 {
     Vector<LChar> blankSpaceString;
@@ -605,8 +614,8 @@ static void showDebugChildren(cc_blink::WebLayerImpl* layer, int deep)
         blink::WebFloatPoint position = child->position();
         blink::WebSize bounds = child->bounds();
         
-        String msg = String::format("%p, %d %d %d %d - %d, %d %d %d, %f\n", child,
-            (int)position.x, (int)position.y, bounds.width, bounds.height, child->id(), child->drawsContent(), child->masksToBounds(), child->opaque(), child->opacity());
+        String msg = String::format("%p, %d %d %d %d - %d, (%f %f)\n", child,
+            (int)position.x, (int)position.y, bounds.width, bounds.height, child->id(), (child->transform().get(0, 3)), (child->transform().get(1, 3)));
         msg.insert(blankSpaceString.data(), blankSpaceString.size(), 0);
         OutputDebugStringA(msg.utf8().data());
 
@@ -958,8 +967,13 @@ void LayerTreeHost::WrapSelfForUiThread::paintInUiThread()
     }
     m_host->m_lastPaintTime = lastPaintTime;
 
-    for (size_t i = 0; i < m_host->m_dirtyRectsForUi.size(); ++i) {
-        m_host->paintToMemoryCanvasInUiThread(m_host->m_dirtyRectsForUi[i]);
+    m_host->m_compositeMutex.lock();
+    Vector<blink::IntRect> dirtyRectsForUi = m_host->m_dirtyRectsForUi;
+    m_host->m_dirtyRectsForUi.clear();
+    m_host->m_compositeMutex.unlock();
+
+    for (size_t i = 0; i < dirtyRectsForUi.size(); ++i) {
+        m_host->paintToMemoryCanvasInUiThread(dirtyRectsForUi[i]);
     }
 
     endPaint();

@@ -658,7 +658,7 @@ void TileGrid::applyDirtyRectsToRaster(blink::WebContentLayerClient* client, Ras
 
         if (0 != willRasteredTiles->size()) {
             picture->ref();
-            int64 actionId = taskGroup->postRasterTask(layer(), picture, willRasteredTiles, dirtyRect);
+            int64 actionId = taskGroup->postRasterTask(layer(), picture, willRasteredTiles, (SkRect)dirtyRect);
         } else {
             delete willRasteredTiles;
             willRasteredTiles = nullptr;

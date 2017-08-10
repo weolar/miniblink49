@@ -3,6 +3,7 @@
 
 #include "third_party/WebKit/Source/platform/geometry/IntSize.h"
 #include "third_party/WebKit/Source/platform/geometry/IntRect.h"
+#include "third_party/skia/include/core/SkRect.h"
 #include "cc/blink/WebLayerImplClient.h"
 
 class SkBitmap;
@@ -149,9 +150,9 @@ public:
     virtual ~LayerChangeActionDrawPropUpdata() override;
 
     void appendDirtyLayer(cc_blink::WebLayerImpl* layer);
-    void appendPendingInvalidateRect(const blink::IntRect& r);
+    void appendPendingInvalidateRect(const SkRect& r);
     void cleanupPendingInvalidateRectIfHasAlendAction();
-    const WTF::Vector<blink::IntRect>& dirtyRects() const;
+    const WTF::Vector<SkRect>& dirtyRects() const;
 
     bool isDirtyLayerEmpty() const { return 0 == m_layerIds.size(); }
 
@@ -160,7 +161,7 @@ public:
 private:
     WTF::Vector<int> m_layerIds;
     WTF::Vector<DrawToCanvasProperties*> m_props;
-    WTF::Vector<blink::IntRect> m_pendingInvalidateRects;
+    WTF::Vector<SkRect> m_pendingInvalidateRects;
 };
 
 class LayerChangeActionUpdataImageLayer : public LayerChangeOneLayer {
@@ -176,16 +177,16 @@ private:
 
 class LayerChangeActionBlend : public LayerChangeAction {
 public:
-    LayerChangeActionBlend(int actionId, int layerId, TileActionInfoVector* willRasteredTiles, const blink::IntRect& dirtyRect, SkBitmap* bitmap);
+    LayerChangeActionBlend(int actionId, int layerId, TileActionInfoVector* willRasteredTiles, const SkRect& dirtyRect, SkBitmap* bitmap);
     virtual ~LayerChangeActionBlend() override;
 
     void run(LayerTreeHost* host);
     void setBitmap(SkBitmap* bitmap);
-    void appendPendingInvalidateRect(const blink::IntRect& r);
-    void appendPendingInvalidateRects(const WTF::Vector<blink::IntRect>& rects);
+    void appendPendingInvalidateRect(const SkRect& r);
+    void appendPendingInvalidateRects(const WTF::Vector<SkRect>& rects);
 
     struct Item {
-        Item(int layerId, TileActionInfoVector* willRasteredTiles, blink::IntRect dirtyRect, SkBitmap* bitmap)
+        Item(int layerId, TileActionInfoVector* willRasteredTiles, SkRect dirtyRect, SkBitmap* bitmap)
         {
             this->layerId = layerId;
             this->willRasteredTiles = willRasteredTiles;
@@ -196,13 +197,13 @@ public:
 
         int layerId;
         TileActionInfoVector* willRasteredTiles;
-        blink::IntRect dirtyRect;
+        SkRect dirtyRect;
         SkBitmap* bitmap;
     };
 
     Item* m_item;
 private:
-    WTF::Vector<blink::IntRect> m_pendingInvalidateRects;
+    WTF::Vector<SkRect> m_pendingInvalidateRects;
 };
 
 class LayerChangeActionUpdataTile : public LayerChangeOneLayer {

@@ -110,9 +110,9 @@ public:
     ~RasterTaskGroup();
 
     void postImageLayerAction(int imageLayerId, SkBitmapRefWrap* bitmap);
-    int64 postRasterTask(cc_blink::WebLayerImpl* layer, SkPicture* picture, TileActionInfoVector* willRasteredTiles, const blink::IntRect& dirtyRect);
+    int64 postRasterTask(cc_blink::WebLayerImpl* layer, SkPicture* picture, TileActionInfoVector* willRasteredTiles, const SkRect& dirtyRect);
     bool endPostRasterTask();
-    void appendPendingInvalidateRect(const blink::IntRect& r); // r是根层坐标系
+    void appendPendingInvalidateRect(const SkRect& r); // r是根层坐标系
     void appendDirtyLayer(cc_blink::WebLayerImpl* layer);
     void appendTileToUIThreadRelease(Tile* tile);
     void appendUnnecessaryTileToEvictAfterDrawFrame(Tile* tile);
@@ -147,7 +147,6 @@ public:
     void shutdown();
 
     RasterTaskGroup* beginPostRasterTask(LayerTreeHost* host);
-    //void postRasterTask(RasterResouce* rasterResouce);
     void postRasterTask(TileGrid* tileGrid, SkPicture* picture, Vector<Tile*>* willRasteredTiles, const blink::IntRect& dirtyRect);
 
     // It is an error to call shared() before init() or after shutdown();

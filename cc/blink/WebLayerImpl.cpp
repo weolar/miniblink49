@@ -366,12 +366,49 @@ void WebLayerImpl::appendLayerChangeAction(cc::LayerChangeAction* action)
 }
 
 
+static SkRect mapRectFromCurrentLayerCoordinateToParentLayer(const WebLayerImpl* curLayer, const SkRect& rect) {
+    SkMatrix44 combinedTransformAll;
+    SkRect rootLayerRect(rect);
+
+    WebFloatPoint currentLayerPosition = curLayer->position();
+    WebDoublePoint effectiveTotalScrollOffset = curLayer->scrollPositionDouble();
+    WebFloatPoint currentLayerPositionScrolled(currentLayerPosition.x - effectiveTotalScrollOffset.x, currentLayerPosition.y - effectiveTotalScrollOffset.y);
+    WebFloatPoint3D transformOrigin = curLayer->transformOrigin();
+
+    SkMatrix44 combinedTransform(SkMatrix44::kIdentity_Constructor);
+    combinedTransform.preTranslate(currentLayerPositionScrolled.x + transformOrigin.x, currentLayerPositionScrolled.y + transformOrigin.y, transformOrigin.z);
+    combinedTransform.preConcat(curLayer->transform());
+    combinedTransform.preTranslate(-transformOrigin.x, -transformOrigin.y, -transformOrigin.z);
+
+    combinedTransformAll.postConcat(combinedTransform);
+
+    ((SkMatrix)combinedTransformAll).mapRect(&rootLayerRect);
+    rootLayerRect.outset(2, 2);
+    return rootLayerRect;
+}
+
+static void getSelfAndChildRectRecursive(WebLayerImpl* root, SkRect* rect)
+{
+    SkRect layerRect = SkRect::MakeXYWH(root->position().x, root->position().y, root->bounds().width, root->bounds().height);
+    layerRect = mapRectFromCurrentLayerCoordinateToParentLayer(root, layerRect);
+    rect->join(layerRect);
+
+    WebLayerImplList& children = root->children();
+    for (size_t i = 0; i != children.size(); ++i) {
+        WebLayerImpl* child = children[i];
+
+        SkRect childRect;
+        getSelfAndChildRectRecursive(child, &childRect);
+        rect->join(childRect);
+    }
+}
+
 static SkRect mapRectFromCurrentLayerCoordinateToAncestorLayer(const WebLayerImpl* curLayer, const WebLayerImpl* ancestorLayer, const SkRect& rect)
 {
     SkMatrix44 combinedTransformAll;
     SkRect rootLayerRect(rect);
     const WebLayerImpl* parentLayer = curLayer;
-    while (parentLayer && parentLayer != ancestorLayer) {
+    while (parentLayer) {
         WebFloatPoint currentLayerPosition = parentLayer->position();
         WebDoublePoint effectiveTotalScrollOffset = parentLayer->scrollPositionDouble();
         WebFloatPoint currentLayerPositionScrolled(currentLayerPosition.x - effectiveTotalScrollOffset.x, currentLayerPosition.y - effectiveTotalScrollOffset.y);
@@ -386,49 +423,47 @@ static SkRect mapRectFromCurrentLayerCoordinateToAncestorLayer(const WebLayerImp
         combinedTransformAll.postConcat(combinedTransform);
 
         parentLayer = parentLayer->parent();
+        if (parentLayer == ancestorLayer)
+            break;
     }
 
     ((SkMatrix)combinedTransformAll).mapRect(&rootLayerRect);
+    rootLayerRect.outset(2, 2);
     return rootLayerRect;
 }
 
-static void getSelfAndChildRectRecursive(WebLayerImpl* root, SkRect* rect)
+static void getSelfAndChildrenRectToRoot(WebLayerImpl* layer, WebLayerImpl* root, SkRect* rootRect)
 {
-    SkRect layerRect = SkRect::MakeXYWH(0, 0, root->bounds().width, root->bounds().height);
-    rect->join(layerRect);
+    if (!layer || !root)
+        return;
 
-    WebLayerImplList& children = root->children();
+    SkRect rect = SkRect::MakeXYWH(0, 0, layer->bounds().width, layer->bounds().height);
+    rect = mapRectFromCurrentLayerCoordinateToAncestorLayer(layer, root, rect);
+    rootRect->join(rect);
+    
+    WebLayerImplList& children = layer->children();
     for (size_t i = 0; i != children.size(); ++i) {
         WebLayerImpl* child = children[i];
-
-        layerRect = mapRectFromCurrentLayerCoordinateToAncestorLayer(child, root, layerRect);
-        rect->join(layerRect);
-
-        getSelfAndChildRectRecursive(child, rect);
+        getSelfAndChildrenRectToRoot(child, root, rootRect);
     }
 }
 
-static void invalidateChildrenRectToAncestor(WebLayerImpl* layer)
+static void invalidateSelfAndChildrenRectToParent(WebLayerImpl* layer)
 {
-    if (!layer)
+    WebLayerImpl* parent = layer->parent();
+    if (!parent)
         return;
 
-    SkRect rect;
-    rect = SkRect::MakeEmpty();
-    getSelfAndChildRectRecursive(layer, &rect);
-    layer->appendPendingInvalidateRect((blink::IntRect)rect);
-   
-    WebLayerImpl* parentLayer = layer->parent();
-    WebLayerImpl* curLayer = layer;
-    while (parentLayer) {
-        rect = mapRectFromCurrentLayerCoordinateToAncestorLayer(curLayer, parentLayer, rect);
+//     String msg = String::format("invalidateSelfAndChildrenRectToParent:%d, parent:%d\n", layer->id(), parent->id());
+//     OutputDebugStringA(msg.utf8().data());
 
-        blink::IntRect r = (blink::IntRect)rect;
-        parentLayer->appendPendingInvalidateRect(r);
+    SkRect rect = SkRect::MakeEmpty();
+    getSelfAndChildrenRectToRoot(layer, parent, &rect);
 
-        curLayer = parentLayer;
-        parentLayer = parentLayer->parent();
-    }
+//     String msg2 = String::format("invalidateSelfAndChildrenRectToParent end:%f %f %f %f\n", rect.x(), rect.y(), rect.width(), rect.height());
+//     OutputDebugStringA(msg2.utf8().data());
+
+    parent->appendPendingInvalidateRect((blink::IntRect)rect);
 }
 
 void WebLayerImpl::addChild(WebLayer* child) 
@@ -453,9 +488,11 @@ void WebLayerImpl::insertChild(WebLayer* child, size_t index)
 //     String outString = String::format("WebLayerImpl::insertChild:%d child:%d\n", id(), childOfImpl->id());
 //     OutputDebugStringW(outString.charactersWithNullTermination().data());
 
-    invalidateChildrenRectToAncestor(childOfImpl);
+    invalidateSelfAndChildrenRectToParent(childOfImpl);
     setNeedsCommit(false);
     appendLayerChangeAction(new cc::LayerChangeActionInsertChild(-1, id(), child->id(), index));
+
+    //OutputDebugStringW(L"WebLayerImpl::insertChild\n\n");
 }
 
 WebLayerImpl* WebLayerImpl::parent() const
@@ -553,21 +590,15 @@ void WebLayerImpl::removeChildOrDependent(WebLayerImpl* child)
     //blink::IntRect invalidatedRect(blink::IntPoint(child->position().x, child->position().y), child->bounds());
     blink::IntRect invalidatedRect;
 
-    if (child->id() == 28)
-        OutputDebugStringA("");
-
-    if (child->id() == 25)
-        OutputDebugStringA("");
-
     if (m_maskLayer == child) {
-        invalidateChildrenRectToAncestor(child); // appendPendingInvalidateRect(invalidateRect);
+        invalidateSelfAndChildrenRectToParent(child); // appendPendingInvalidateRect(invalidateRect);
         m_maskLayer->setParent(NULL);
         m_maskLayer = NULL;
         return;
     }
 
     if (m_replicaLayer == child) {
-        invalidateChildrenRectToAncestor(child); // appendPendingInvalidateRect(invalidateRect);
+        invalidateSelfAndChildrenRectToParent(child); // appendPendingInvalidateRect(invalidateRect);
         m_replicaLayer->setParent(NULL);
         m_replicaLayer = NULL;       
         return;
@@ -577,7 +608,13 @@ void WebLayerImpl::removeChildOrDependent(WebLayerImpl* child)
         if (m_children[iter] != child)
             continue;
 
-        invalidateChildrenRectToAncestor(child); // appendPendingInvalidateRect(invalidateRect);
+//         String outString = String::format("removeChildOrDependent:%d, child:%d\n", m_id, child->id());
+//         OutputDebugStringW(outString.charactersWithNullTermination().data());
+
+        invalidateSelfAndChildrenRectToParent(child); // appendPendingInvalidateRect(invalidateRect);
+
+       // OutputDebugStringW(L"removeChildOrDependent end\n\n");
+
         child->setParent(NULL);
         m_children.remove(iter);
         return;
@@ -604,6 +641,7 @@ void WebLayerImpl::setBounds(const WebSize& size)
         return;
 
     invalidate();
+    setNeedsCommit(true);
 
     m_bounds = size;
 
@@ -611,6 +649,7 @@ void WebLayerImpl::setBounds(const WebSize& size)
 //     OutputDebugStringW(outString.charactersWithNullTermination().data());
 
     invalidate();
+    setNeedsCommit(true);
 }
 
 WebSize WebLayerImpl::bounds() const
@@ -756,6 +795,9 @@ void WebLayerImpl::setPosition(const WebFloatPoint& position)
     setNeedsCommit(true);
     m_position = position;
     setNeedsCommit(true);
+
+//     String outString = String::format("WebLayerImpl::setPosition:id:%d, %d %d\n", m_id, (int)position.x, (int)position.y);
+//     OutputDebugStringW(outString.charactersWithNullTermination().data());
 }
 
 WebFloatPoint WebLayerImpl::position() const 
@@ -768,9 +810,15 @@ void WebLayerImpl::setTransform(const SkMatrix44& matrix)
     if (m_transform == matrix)
         return;
 
+//     String outString0 = String::format("WebLayerImpl::setTransform:%d begin(%f, %f)\n", id(), matrix.get(0, 3), matrix.get(1, 3));
+//     OutputDebugStringW(outString0.charactersWithNullTermination().data());
+
     setNeedsCommit(true);
     m_transform = matrix;
     setNeedsCommit(true);
+
+//     String outString1 = String::format("WebLayerImpl::setTransform:%d end\n", id());
+//     OutputDebugStringW(outString1.charactersWithNullTermination().data());
 }
 
 void WebLayerImpl::setTransformOrigin(const blink::WebFloatPoint3D& point)
@@ -1214,7 +1262,7 @@ blink::IntRect WebLayerImpl::mapRectFromRootLayerCoordinateToCurrentLayer(const 
         1 + (int)ceil(currentLayerRect.width()), 1 + (int)ceil(currentLayerRect.height()));
 }
 
-blink::IntRect WebLayerImpl::mapRectFromCurrentLayerCoordinateToRootLayer(const blink::IntRect& rect)
+SkRect WebLayerImpl::mapRectFromCurrentLayerCoordinateToRootLayer(const SkRect& rect)
 {
     SkMatrix44 combinedTransformAll;
     SkRect rootLayerRect((SkRect)rect);
@@ -1238,16 +1286,17 @@ blink::IntRect WebLayerImpl::mapRectFromCurrentLayerCoordinateToRootLayer(const 
     ((SkMatrix)combinedTransformAll).mapRect(&rootLayerRect);
 
     // 暂时没搞懂这个1+是什么意思，但不加的话在动画时候会有残影
-    return IntRect((int)floor(rootLayerRect.x()), (int)floor(rootLayerRect.y()), 1 + (int)ceil(rootLayerRect.width()), 1 + (int)ceil(rootLayerRect.height()));
+    //return IntRect((int)floor(rootLayerRect.x()), (int)floor(rootLayerRect.y()), 1 + (int)ceil(rootLayerRect.width()), 1 + (int)ceil(rootLayerRect.height()));
+    rootLayerRect.makeOutset(1, 1);
+    return rootLayerRect;
 }
 
 // invalidate和requestRepaint的区别在于一个是在光栅化线程发起ui线程刷新，而后者直接请求
 // 现在个改成在一组光栅化结束后再发起
 void WebLayerImpl::requestRepaint(const blink::IntRect& rect)
 {
-    IntRect drawRect(rect);
-    drawRect.intersect(blink::IntRect(blink::IntPoint(), m_bounds));
-
+    SkRect drawRect(rect);
+//     drawRect.intersect(blink::IntRect(blink::IntPoint(), m_bounds));
     drawRect = mapRectFromCurrentLayerCoordinateToRootLayer(drawRect);
     
     if (drawRect.isEmpty())
@@ -1257,21 +1306,28 @@ void WebLayerImpl::requestRepaint(const blink::IntRect& rect)
 //     OutputDebugStringW(outString.charactersWithNullTermination().data());
 
     if (m_layerTreeHost)
-        m_layerTreeHost->requestRepaint(drawRect);
+        m_layerTreeHost->requestRepaint((blink::IntRect)drawRect);
 }
 
-void WebLayerImpl::appendPendingInvalidateRect(const blink::IntRect& rect)
+void WebLayerImpl::appendPendingInvalidateRect(const SkRect& rect)
 {
-    IntRect drawRect(rect);
-    drawRect.intersect(blink::IntRect(blink::IntPoint(), m_bounds));
+    SkRect pendingRect(rect);
+    //drawRect.intersect(blink::IntRect(blink::IntPoint(), m_bounds));
+    pendingRect = mapRectFromCurrentLayerCoordinateToRootLayer(rect);
 
-    drawRect = mapRectFromCurrentLayerCoordinateToRootLayer(drawRect);
-    m_updateRectInRootLayerCoordinate.unite((blink::IntRect)(drawRect));
+    if (m_layerTreeHost) {
+        m_layerTreeHost->appendPendingRepaintRect(pendingRect);
+    } else {
+        m_updateRectInRootLayerCoordinate.join(pendingRect);
+    }
 
-//     if (drawRect.width() > 500 && drawRect.height() > 500)
-//         OutputDebugStringA("WebLayerImpl::appendPendingInvalidateRect\n");
-//     if (drawRect.width() == 160 && drawRect.height() == 58)
-//         OutputDebugStringA("WebLayerImpl::appendPendingInvalidateRect\n");
+//     if (m_id == 25) {
+//         String outString = String::format("25 appendPendingInvalidateRect:(%d %d %d %d)(%d %d %d %d)\n", 
+//             pendingRect.x(), pendingRect.y(), pendingRect.width(), pendingRect.height(),
+//             m_updateRectInRootLayerCoordinate.x(), m_updateRectInRootLayerCoordinate.y(), m_updateRectInRootLayerCoordinate.width(), m_updateRectInRootLayerCoordinate.height()
+//             );
+//         OutputDebugStringW(outString.charactersWithNullTermination().data());
+//     }
 
 //     String outString = String::format("WebLayerImpl::appendPendingInvalidateRect:%d %d %d %d\n",
 //         drawRect.x(), drawRect.y(), drawRect.width(), drawRect.height());
@@ -1306,7 +1362,8 @@ void WebLayerImpl::invalidate()
 
 void WebLayerImpl::requestSelfAndAncestorBoundRepaint()
 {
-    invalidateChildrenRectToAncestor(this);
+    //invalidateSelfAndChildrenRectToParent(this);
+    DebugBreak();
 }
 
 void WebLayerImpl::setNeedsCommit(bool needUpdateAllBoundsArea)
@@ -1317,8 +1374,9 @@ void WebLayerImpl::setNeedsCommit(bool needUpdateAllBoundsArea)
 
     setAllParentDirty();
 
-    if (needUpdateAllBoundsArea)
-        requestSelfAndAncestorBoundRepaint();
+    if (needUpdateAllBoundsArea) {
+        invalidateSelfAndChildrenRectToParent(this);
+    }
 
     m_layerTreeHost->setLayerTreeDirty();
 }
