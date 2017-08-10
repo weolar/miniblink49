@@ -149,7 +149,7 @@ public:
     explicit RasterTask(
         RasterTaskWorkerThreadPool* pool, 
         SkPicture* picture,
-        const IntRect& dirtyRect, 
+        const SkRect& dirtyRect, 
         int threadIndex,
         bool isOpaque,
         LayerChangeActionBlend* blendAction,
@@ -255,7 +255,7 @@ public:
 private:
     RasterTaskWorkerThreadPool* m_pool;
     SkPicture* m_picture;
-    IntRect m_dirtyRect;
+    SkRect m_dirtyRect;
     int m_threadIndex;
     LayerChangeActionBlend* m_blendAction;
     bool m_isOpaque;
@@ -306,7 +306,7 @@ int RasterTaskGroup::getPendingRasterTaskNum() const
     return m_pool->getPendingRasterTaskNum();
 }
 
-int64 RasterTaskGroup::postRasterTask(cc_blink::WebLayerImpl* layer, SkPicture* picture, TileActionInfoVector* willRasteredTiles, const IntRect& dirtyRect)
+int64 RasterTaskGroup::postRasterTask(cc_blink::WebLayerImpl* layer, SkPicture* picture, TileActionInfoVector* willRasteredTiles, const SkRect& dirtyRect)
 {
     ref();
 
@@ -325,7 +325,7 @@ int64 RasterTaskGroup::postRasterTask(cc_blink::WebLayerImpl* layer, SkPicture* 
     m_pool->increaseBusyCountByIndex(task->threadIndex());
     m_pool->m_threads[task->threadIndex()]->postTask(FROM_HERE, task);
 
-    blink::IntRect updateRect = layer->mapRectFromCurrentLayerCoordinateToRootLayer(dirtyRect);
+    SkRect updateRect = layer->mapRectFromCurrentLayerCoordinateToRootLayer(dirtyRect);
     appendPendingInvalidateRect(updateRect);
 
     return blendAction->actionId();
@@ -338,7 +338,7 @@ bool RasterTaskGroup::endPostRasterTask()
     return noneNeedCommit;
 }
 
-void RasterTaskGroup::appendPendingInvalidateRect(const blink::IntRect& r)
+void RasterTaskGroup::appendPendingInvalidateRect(const SkRect& r)
 {
     if (m_drawPropUpdataAction->isActionIdEmpty())
         m_drawPropUpdataAction->setActionId(m_host->genActionId());

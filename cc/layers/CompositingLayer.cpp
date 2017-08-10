@@ -247,7 +247,7 @@ void CompositingLayer::cleanupUnnecessaryTile(const WTF::Vector<TileActionInfo*>
     }
 }
 
-void CompositingLayer::blendToTiles(TileActionInfoVector* willRasteredTiles, const SkBitmap& bitmap, const blink::IntRect& dirtyRect)
+void CompositingLayer::blendToTiles(TileActionInfoVector* willRasteredTiles, const SkBitmap& bitmap, const SkRect& dirtyRect)
 {
     const Vector<TileActionInfo*>& infos = willRasteredTiles->infos();
     for (size_t i = 0; i < infos.size(); ++i) {
@@ -274,13 +274,13 @@ bool saveDumpFile(const String& url, char* buffer, unsigned int size) {
 }
 #endif
 
-void CompositingLayer::blendToTile(CompositingTile* tile, const SkBitmap& bitmap, blink::IntRect dirtyRect)
+void CompositingLayer::blendToTile(CompositingTile* tile, const SkBitmap& bitmap, const SkRect& dirtyRect)
 {
     tile->allocBitmapIfNeeded();
     if (!tile->bitmap())
         return;
 
-    blink::IntRect dirtyRectInTile = dirtyRect;
+    blink::IntRect dirtyRectInTile = (blink::IntRect)dirtyRect;
     dirtyRectInTile.move(-tile->postion().x(), -tile->postion().y());
     dirtyRectInTile.intersect(blink::IntRect(0, 0, tile->postion().width(), tile->postion().height()));
     tile->eraseColor(dirtyRectInTile, nullptr);
@@ -298,17 +298,17 @@ void CompositingLayer::blendToTile(CompositingTile* tile, const SkBitmap& bitmap
     paint.setFilterQuality(kHigh_SkFilterQuality);
 
     blink::IntRect postion = tile->postion();
-    if (!postion.intersects(dirtyRect)) {
+    if (!postion.intersects((blink::IntRect)dirtyRect)) {
 //         if (postion.width() == 1 && postion.height() == 1 && dirtyRect.width() == 1 && dirtyRect.height() == 1)
 //             return;
         postion.setWidth(kDefaultTileWidth);
         postion.setHeight(kDefaultTileHeight);
-        if (!postion.intersects(dirtyRect)) 
+        if (!postion.intersects((blink::IntRect)dirtyRect))
             DebugBreak();
         return;
     }
 
-    SkIRect dst = (dirtyRect);
+    SkIRect dst = (blink::IntRect)(dirtyRect);
     dst = dst.makeOffset(-tile->postion().x(), -tile->postion().y());
 
     SkCanvas canvas(*tile->bitmap());
@@ -379,6 +379,9 @@ public:
         canvas->clipRect(skClipRect);
     }
 
+    ~DoClipLayer() {
+    }
+
 private:
     CompositingLayer* m_maskLayer;
     blink::WebCanvas* m_canvas;
@@ -390,10 +393,10 @@ public:
     {
         m_canvas = canvas;
         m_child = child;
-        m_clipChild = false;
+        m_isClipChild = false;
 
         if (1 != child->tilesSize() && 0 != child->tilesSize()) {
-            m_clipChild = true;
+            m_isClipChild = true;            
             canvas->save();
             canvas->clipRect(SkRect::MakeIWH(child->drawToCanvasProperties()->bounds.width(), child->drawToCanvasProperties()->bounds.height()));
         }
@@ -401,14 +404,14 @@ public:
 
     void release()
     {
-        if (m_clipChild)
+        if (m_isClipChild)
             m_canvas->restore();
     }
 
 private:
     CompositingLayer* m_child;
     blink::WebCanvas* m_canvas;
-    bool m_clipChild;
+    bool m_isClipChild;
 };
  
 void CompositingLayer::drawToCanvasChildren(LayerTreeHost* host, SkCanvas* canvas, const blink::IntRect& clip, int deep)
@@ -425,7 +428,12 @@ void CompositingLayer::drawToCanvasChildren(LayerTreeHost* host, SkCanvas* canva
         SkMatrix matrixToCurrent;
         transformToFlattenedSkMatrix(currentTransform, &matrixToCurrent);
 
-        canvas->save();
+        if (opacity() < 1 && opacity() > 0) {
+            U8CPU opacityVal = (int)ceil(opacity() * 255);
+            canvas->saveLayerAlpha(nullptr, opacityVal);
+        } else
+            canvas->save();
+
         SkPaint paint;
         paint.setAntiAlias(true);
         paint.setXfermodeMode(SkXfermode::kSrcOver_Mode);
@@ -445,7 +453,6 @@ void CompositingLayer::drawToCanvasChildren(LayerTreeHost* host, SkCanvas* canva
 
         DoClipChileLayer doClipChileLayer(child, canvas);
         child->drawToCanvas(host, canvas, clipInLayerdCoordinateInt);
-
         doClipChileLayer.release();
 
         if (!child->opaque() || !child->masksToBounds() || !child->drawsContent())

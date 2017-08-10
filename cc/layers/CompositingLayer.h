@@ -5,6 +5,7 @@
 #include "third_party/WebKit/public/platform/WebCanvas.h"
 
 class SkBitmap;
+struct SkRect;
 
 namespace blink {
 class IntRect;
@@ -58,7 +59,7 @@ public:
 
     virtual void drawToCanvas(LayerTreeHost* host, blink::WebCanvas* canvas, const blink::IntRect& clip);
 
-    void blendToTiles(TileActionInfoVector* willRasteredTiles, const SkBitmap& bitmap, const blink::IntRect& dirtyRect);
+    void blendToTiles(TileActionInfoVector* willRasteredTiles, const SkBitmap& bitmap, const SkRect& dirtyRect);
     
     void drawToCanvasChildren(LayerTreeHost* host, SkCanvas* canvas, const blink::IntRect& clip, int deep);
 
@@ -66,7 +67,7 @@ public:
 
 protected:
     friend class DoClipLayer;
-    void blendToTile(CompositingTile* tile, const SkBitmap& bitmap, blink::IntRect dirtyRect);
+    void blendToTile(CompositingTile* tile, const SkBitmap& bitmap, const SkRect& dirtyRect);
 
     int m_id;
     DrawToCanvasProperties* m_prop;

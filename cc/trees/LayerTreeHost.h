@@ -5,6 +5,7 @@
 #include "third_party/WebKit/public/platform/WebLayerTreeView.h"
 #include "third_party/WebKit/Source/platform/geometry/IntRect.h"
 #include "third_party/WebKit/Source/platform/geometry/IntSize.h"
+#include "third_party/skia/include/core/SkRect.h"
 #include "wtf/HashMap.h"
 #include "wtf/Vector.h"
 #include "wtf/ThreadingPrimitives.h"
@@ -172,6 +173,7 @@ public:
     cc_blink::WebLayerImpl* getRootLayer() { return m_rootLayer; }
     const cc_blink::WebLayerImpl* getConstRootLayer() { return m_rootLayer; }
 
+    void appendPendingRepaintRect(SkRect r);
 private:
     void requestPaintToMemoryCanvasInUiThread(const blink::IntRect& r);
     void applyActionsInCompositeThread(bool needCheck);
@@ -251,6 +253,8 @@ private:
 
     bool m_isDrawDirty;
     bool m_hasResize;
+
+    SkRect m_pendingRepaintRectInRootLayerCoordinate;
 };
 
 } // cc
