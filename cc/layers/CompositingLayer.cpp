@@ -351,21 +351,26 @@ void CompositingLayer::blendToTile(CompositingTile* tile, const SkBitmap& bitmap
 
 class DoClipLayer {
 public:
-    DoClipLayer(LayerTreeHost* host, CompositingLayer* layer, blink::WebCanvas* canvas, SkRect clip)
+    DoClipLayer(LayerTreeHost* host, CompositingLayer* layer, blink::WebCanvas* canvas, const SkRect& clip)
     {
         m_canvas = canvas;
 
-        SkRect skClipRect = clip;
+        bool needClip = false;
+        //SkRect skClipRect = clip;
+        SkRect skClipRect = SkRect::MakeIWH(layer->drawToCanvasProperties()->bounds.width(), layer->drawToCanvasProperties()->bounds.height());
         if (layer->masksToBounds()) {
-            bool isIntersect = skClipRect.intersect(SkRect::MakeIWH(layer->drawToCanvasProperties()->bounds.width(), layer->drawToCanvasProperties()->bounds.height()));
-            if (!isIntersect)
-                skClipRect.setEmpty();
+//             bool isIntersect = skClipRect.intersect(SkRect::MakeIWH(layer->drawToCanvasProperties()->bounds.width(), layer->drawToCanvasProperties()->bounds.height()));
+//             if (!isIntersect)
+//                 skClipRect.setEmpty();
+            skClipRect = SkRect::MakeIWH(layer->drawToCanvasProperties()->bounds.width(), layer->drawToCanvasProperties()->bounds.height());
+            needClip = true;
         }
 
         m_maskLayer = nullptr;
         if (-1 != layer->m_prop->maskLayerId) {
             m_maskLayer = host->getCCLayerById(layer->m_prop->maskLayerId);
             if (m_maskLayer) {
+                needClip = true;
                 SkRect skMaskClipRect = SkRect::MakeXYWH(
                     m_maskLayer->m_prop->position.x(), 
                     m_maskLayer->m_prop->position.y(),
@@ -376,7 +381,8 @@ public:
             }
         }
 
-        canvas->clipRect(skClipRect);
+        if (needClip)
+            canvas->clipRect(skClipRect);
     }
 
     ~DoClipLayer() {
@@ -425,9 +431,6 @@ void CompositingLayer::drawToCanvasChildren(LayerTreeHost* host, SkCanvas* canva
         SkMatrix matrixToAncestor;
         transformToFlattenedSkMatrix(transformToAncestor, &matrixToAncestor);
 
-        SkMatrix matrixToCurrent;
-        transformToFlattenedSkMatrix(currentTransform, &matrixToCurrent);
-
         if (opacity() < 1 && opacity() > 0) {
             U8CPU opacityVal = (int)ceil(opacity() * 255);
             canvas->saveLayerAlpha(nullptr, opacityVal);
@@ -444,6 +447,7 @@ void CompositingLayer::drawToCanvasChildren(LayerTreeHost* host, SkCanvas* canva
         SkRect clipInLayerdCoordinate = SkRect::MakeXYWH(clip.x(), clip.y(), clip.width(), clip.height());
         SkMatrix44 transformToAncestorInverse;
         transformToAncestor.invert(&transformToAncestorInverse);
+
         ((SkMatrix)transformToAncestorInverse).mapRect(&clipInLayerdCoordinate);
 
         blink::IntRect clipInLayerdCoordinateInt(SkScalarTruncToInt(clipInLayerdCoordinate.x()), SkScalarTruncToInt(clipInLayerdCoordinate.y()),
