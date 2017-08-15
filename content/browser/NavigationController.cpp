@@ -66,7 +66,7 @@ void NavigationController::insertOrReplaceEntry(const blink::WebHistoryItem& ite
     switch (type) {
     case blink::WebStandardCommit:
         ++m_currentOffset;
-        ASSERT(0 <= m_currentOffset && m_currentOffset <= m_items.size());
+        ASSERT(0 <= m_currentOffset && m_currentOffset <= (int)m_items.size());
         if (m_currentOffset == m_items.size()) {
             m_items.append(item);
         } else {

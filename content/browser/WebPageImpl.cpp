@@ -390,12 +390,6 @@ void WebPageImpl::init(WebPage* pagePtr, HWND hWnd)
 
 void WebPageImpl::testPaint()
 {
-//     for (size_t index = 0; index < m_paintMessageQueue.size(); ++index) {
-//         IntRect* paintRect = &m_paintMessageQueue[index];
-//         WCHAR msg[100] = { 0 };
-//         swprintf(msg, L"testPaint: %d %d %x\n", paintRect->y(), paintRect->height(), index);
-//         OutputDebugStringW(msg);
-//     }
 }
 
 void WebPageImpl::freeV8TempObejctOnOneFrameBefore()
@@ -608,8 +602,11 @@ void WebPageImpl::executeMainFrame()
         return;
     }
 
-    AutoRecordActions autoRecordActions(this, m_layerTreeHost, true);
-
+    //OutputDebugStringW(L"WebPageImpl::executeMainFrame ------------------------\n");
+    {
+        AutoRecordActions autoRecordActions(this, m_layerTreeHost, true);
+    }
+    //OutputDebugStringW(L"WebPageImpl::executeMainFrame end =====================\n\n");
 #ifndef NDEBUG
     if (0) {
         showDebugNodeData();
@@ -839,9 +836,6 @@ void WebPageImpl::paintToMemoryCanvasInUiThread(SkCanvas* canvas, const IntRect&
 
 void WebPageImpl::paintToBit(void* bits, int pitch)
 {
-    if (0 == pitch)
-        return;
-
     CHECK_FOR_REENTER0();
 
     beginMainFrame();
@@ -1174,6 +1168,7 @@ void WebPageImpl::loadURL(int64 frameId, const wchar_t* url, const blink::Referr
 
     blink::WebURL webURL = kurl;
     blink::WebURLRequest request(webURL);
+    request.setHTTPReferrer(referrer.referrer, blink::WebReferrerPolicyOrigin);
     loadRequest(frameId, request);
 }
 
