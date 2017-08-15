@@ -173,4 +173,85 @@ FloatRect MathUtil::ComputeEnclosingRectOfVertices(const FloatPoint vertices[], 
     return FloatRect(FloatPoint(xmin, ymin), FloatSize(xmax - xmin, ymax - ymin));
 }
 
+FloatRect MathUtil::ComputeEnclosingClippedRect(
+    const HomogeneousCoordinate& h1, const HomogeneousCoordinate& h2,
+    const HomogeneousCoordinate& h3, const HomogeneousCoordinate& h4)
+{
+    // This function performs clipping as necessary and computes the enclosing 2d
+    // gfx::RectF of the vertices. Doing these two steps simultaneously allows us
+    // to avoid the overhead of storing an unknown number of clipped vertices.
+
+    // If no vertices on the quad are clipped, then we can simply return the
+    // enclosing rect directly.
+    bool something_clipped = h1.ShouldBeClipped() || h2.ShouldBeClipped() || h3.ShouldBeClipped() || h4.ShouldBeClipped();
+    if (!something_clipped) {
+        FloatQuad mapped_quad = FloatQuad(h1.CartesianPoint2d(), h2.CartesianPoint2d(), h3.CartesianPoint2d(), h4.CartesianPoint2d());
+        return mapped_quad.boundingBox();
+    }
+
+    bool everything_clipped = h1.ShouldBeClipped() && h2.ShouldBeClipped() && h3.ShouldBeClipped() && h4.ShouldBeClipped();
+    if (everything_clipped)
+        return FloatRect();
+
+    float xmin = std::numeric_limits<float>::max();
+    float xmax = -std::numeric_limits<float>::max();
+    float ymin = std::numeric_limits<float>::max();
+    float ymax = -std::numeric_limits<float>::max();
+
+    if (!h1.ShouldBeClipped())
+        ExpandBoundsToIncludePoint(&xmin, &xmax, &ymin, &ymax, h1.CartesianPoint2d());
+
+    if (h1.ShouldBeClipped() ^ h2.ShouldBeClipped())
+        ExpandBoundsToIncludePoint(&xmin, &xmax, &ymin, &ymax, ComputeClippedPointForEdge(h1, h2).CartesianPoint2d());
+
+    if (!h2.ShouldBeClipped())
+        ExpandBoundsToIncludePoint(&xmin, &xmax, &ymin, &ymax, h2.CartesianPoint2d());
+
+    if (h2.ShouldBeClipped() ^ h3.ShouldBeClipped())
+        ExpandBoundsToIncludePoint(&xmin, &xmax, &ymin, &ymax, ComputeClippedPointForEdge(h2, h3).CartesianPoint2d());
+
+    if (!h3.ShouldBeClipped())
+        ExpandBoundsToIncludePoint(&xmin, &xmax, &ymin, &ymax, h3.CartesianPoint2d());
+
+    if (h3.ShouldBeClipped() ^ h4.ShouldBeClipped())
+        ExpandBoundsToIncludePoint(&xmin, &xmax, &ymin, &ymax, ComputeClippedPointForEdge(h3, h4).CartesianPoint2d());
+
+    if (!h4.ShouldBeClipped())
+        ExpandBoundsToIncludePoint(&xmin, &xmax, &ymin, &ymax, h4.CartesianPoint2d());
+
+    if (h4.ShouldBeClipped() ^ h1.ShouldBeClipped())
+        ExpandBoundsToIncludePoint(&xmin, &xmax, &ymin, &ymax, ComputeClippedPointForEdge(h4, h1).CartesianPoint2d());
+
+    return FloatRect(FloatPoint(xmin, ymin), FloatSize(xmax - xmin, ymax - ymin));
+}
+
+FloatRect MathUtil::MapClippedRect(const SkMatrix44& transform, const FloatRect& srcRect)
+{
+    if (transform.isIdentity() || transform.isTranslate()) {
+        FloatPoint offset(transform.getFloat(0, 3), transform.getFloat(1, 3));
+        return FloatRect(srcRect.x() + offset.x(), srcRect.y() + offset.y(), srcRect.width(), srcRect.height());
+    }
+
+    // Apply the transform, but retain the result in homogeneous coordinates.
+
+    SkMScalar quad[4 * 2];  // input: 4 x 2D points
+    quad[0] = srcRect.x();
+    quad[1] = srcRect.y();
+    quad[2] = srcRect.maxX();
+    quad[3] = srcRect.y();
+    quad[4] = srcRect.maxX();
+    quad[5] = srcRect.maxY();
+    quad[6] = srcRect.x();
+    quad[7] = srcRect.maxY();
+
+    SkMScalar result[4 * 4];  // output: 4 x 4D homogeneous points
+    transform.map2(quad, 4, result);
+
+    HomogeneousCoordinate hc0(result[0], result[1], result[2], result[3]);
+    HomogeneousCoordinate hc1(result[4], result[5], result[6], result[7]);
+    HomogeneousCoordinate hc2(result[8], result[9], result[10], result[11]);
+    HomogeneousCoordinate hc3(result[12], result[13], result[14], result[15]);
+    return ComputeEnclosingClippedRect(hc0, hc1, hc2, hc3);
+}
+
 }
