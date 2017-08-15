@@ -395,6 +395,7 @@ static SkRect mapRectFromCurrentLayerCoordinateToAncestorLayer(const WebLayerImp
     }
 
     ((SkMatrix)combinedTransform).mapRect(&rootLayerRect);
+    rootLayerRect.outset(1, 1);
     return rootLayerRect;
 }
 
@@ -1310,9 +1311,8 @@ void WebLayerImpl::setNeedsCommit(bool needUpdateAllBoundsArea)
 
     setAllParentDirty();
 
-    if (needUpdateAllBoundsArea) {
+    if (needUpdateAllBoundsArea)
         invalidateSelfAndChildrenRectToRoot(this);
-    }
 
     m_layerTreeHost->setLayerTreeDirty();
 }
