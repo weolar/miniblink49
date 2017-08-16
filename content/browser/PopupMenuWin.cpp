@@ -440,6 +440,9 @@ static void trimWidthHeight(blink::IntRect& rect)
 
 void PopupMenuWin::setWindowRect(const WebRect& r)
 {
+    if (m_rect == (blink::IntRect)r)
+        return;
+
     m_rect = r;
     trimWidthHeight(m_rect);
 
