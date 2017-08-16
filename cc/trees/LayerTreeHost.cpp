@@ -476,7 +476,8 @@ void LayerTreeHost::recordDraw()
 
     cc::RasterTaskGroup* taskGroup = RasterTaskWorkerThreadPool::shared()->beginPostRasterTask(this);
 
-    taskGroup->appendPendingInvalidateRect((blink::IntRect)m_pendingRepaintRectInRootLayerCoordinate);
+    if (!m_pendingRepaintRectInRootLayerCoordinate.isEmpty())
+        taskGroup->appendPendingInvalidateRect((blink::IntRect)m_pendingRepaintRectInRootLayerCoordinate);
     m_pendingRepaintRectInRootLayerCoordinate = SkRect::MakeEmpty();
 
     m_rootLayer->recordDrawChildren(taskGroup, 0);
@@ -517,7 +518,9 @@ void LayerTreeHost::drawToCanvas(SkCanvas* canvas, const IntRect& dirtyRect)
 
     SkPaint clearColorPaint;
     clearColorPaint.setColor(0xffffffff | m_backgroundColor);
-    //clearColorPaint.setColor(0xfff0504a);
+
+//     String outString = String::format("LayerTreeHost::drawToCanvas:%d, %d, %d, %d\n", dirtyRect.x(), dirtyRect.y(), dirtyRect.width(), dirtyRect.height());
+//     OutputDebugStringW(outString.charactersWithNullTermination().data());
 
     // http://blog.csdn.net/to_be_designer/article/details/48530921
     clearColorPaint.setXfermodeMode(SkXfermode::kSrcOver_Mode); // SkXfermode::kSrcOver_Mode
@@ -574,7 +577,6 @@ static void updateChildLayersDrawProperties(cc_blink::WebLayerImpl* layer, Layer
         drawProperties->screenSpaceTransform = combinedTransform;
         drawProperties->targetSpaceTransform = combinedTransform;
         drawProperties->currentTransform = currentTransform;
-        //drawProperties->opacity = propFromAncestor.opacity;
 
         DrawPropertiesFromAncestor prop;
         prop.transform = transformToAncestorIfFlatten;
