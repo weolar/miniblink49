@@ -115,7 +115,7 @@ void CompositingTile::allocBitmapIfNeeded()
     int height = m_postion.height();
 
     bool needResize = false;
-    m_postion = blink::IntRect(m_xIndex * kDefaultTileWidth, m_yIndex * kDefaultTileHeight, kDefaultTileWidth, kDefaultTileHeight);
+    //m_postion = blink::IntRect(m_xIndex * kDefaultTileWidth, m_yIndex * kDefaultTileHeight, kDefaultTileWidth, kDefaultTileHeight);
     if (m_compositingLayer) {
         blink::IntSize bounds = m_compositingLayer->drawToCanvasProperties()->bounds;
         if (0 == bounds.width() || 0 == bounds.height()) {
@@ -124,7 +124,6 @@ void CompositingTile::allocBitmapIfNeeded()
         }
         if (kDefaultTileWidth >= bounds.width() && kDefaultTileHeight >= bounds.height()) {
             if (1 != m_compositingLayer->tilesSize()) {
-
                 WTF::String outstr = WTF::String::format("CompositingTile::allocBitmapIfNeeded %p %d %d\n", this, m_compositingLayer->id(), m_compositingLayer->tilesSize());
                 OutputDebugStringW(outstr.charactersWithNullTermination().data());
 
