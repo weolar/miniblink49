@@ -80,9 +80,10 @@ protected:
     void paint(HDC hdc, RECT rcPaint);
     void beginMainFrame();
     static LRESULT CALLBACK PopupMenuWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+    static LRESULT CALLBACK mouseHookProc(int nCode, WPARAM wParam, LPARAM lParam);
     LRESULT wndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
     void asynStartCreateWnd(blink::Timer<PopupMenuWin>*);
-
+    
     DECLARE_TRACE();
 
     PopupMenuWinClient* m_client;
@@ -95,6 +96,7 @@ protected:
     bool m_hasResize;
     bool m_needResize;
     bool m_initialize;
+    bool m_isVisible;
     double m_lastFrameTimeMonotonic;
     blink::WebPagePopup* m_popupImpl;
     cc::LayerTreeHost* m_layerTreeHost;
