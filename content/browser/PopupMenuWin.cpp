@@ -42,8 +42,9 @@ namespace content {
 
 #define HIGH_BIT_MASK_SHORT 0x8000
 
-#define WM_INIT_MENU (WM_USER + 201)
-#define WM_COMMIT    (WM_USER + 202)
+#define WM_INIT_MENU        (WM_USER + 201)
+#define WM_COMMIT           (WM_USER + 202)
+#define WM_PMW_KILLFOCUS    (WM_USER + 203)
 
 HWND PopupMenuWin::m_hPopup = NULL;
     
@@ -68,6 +69,7 @@ PopupMenuWin::PopupMenuWin(PopupMenuWinClient* client, HWND hWnd, IntPoint offse
     m_needResize = true;
     m_initialize = false;
     m_isCommiting = false;
+    m_isVisible = false;
     m_lastFrameTimeMonotonic = 0;
     m_memoryCanvas = nullptr;
     m_layerTreeHost = nullptr;
@@ -104,6 +106,7 @@ void PopupMenuWin::closeWidgetSoon()
     m_asynStartCreateWndTimer.stop();
     m_layerTreeHost->applyActions(false);
     m_initialize = false;
+    m_isVisible = false;
     ::ShowWindow(m_hPopup, SW_HIDE);
     ::SetWindowLongPtr(m_hPopup, 0, 0);
     //blink::Platform::current()->currentThread()->postTask(FROM_HERE, WTF::bind(&destroyWindowAsyn, m_hPopup));
@@ -156,7 +159,7 @@ LRESULT PopupMenuWin::wndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPa
 {
     LRESULT lResult = 0;
 
-//     String out = String::format("PopupMenuWin wndProc: %x %x\n", hWnd, message);
+//     String out = String::format("PopupMenuWin wndProc: %x %04x\n", hWnd, message);
 //     OutputDebugStringA(out.utf8().data());
 
     switch (message) {
@@ -227,9 +230,10 @@ LRESULT PopupMenuWin::wndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPa
     case WM_TIMER:
         beginMainFrame();
         break;
+    case WM_PMW_KILLFOCUS:
     case WM_KILLFOCUS:
-        ::ShowWindow(hWnd, SW_HIDE);
-        ::SetWindowLongPtr(m_hPopup, 0, 0);
+        m_isVisible = false;
+        m_webViewImpl->hidePopups();
         break;
     case WM_INIT_MENU:
         initialize();
@@ -279,7 +283,7 @@ void PopupMenuWin::beginMainFrame()
 
 void PopupMenuWin::updataSize()
 {
-    if (!m_needResize)
+    if (!m_needResize || !m_hPopup)
         return;
     m_needResize = false;
 
@@ -294,18 +298,20 @@ void PopupMenuWin::updataSize()
 
     POINT pos = { m_rect.x() + m_offset.x(), m_rect.y() + m_offset.y() };
     ::ClientToScreen(m_hParentWnd, &pos);
-
-    ::MoveWindow(m_hPopup, pos.x, pos.y, m_rect.width(), m_rect.height(), false);
+    ::SetWindowPos(m_hPopup, HWND_TOP, pos.x, pos.y, m_rect.width(), m_rect.height(), SWP_SHOWWINDOW | SWP_NOACTIVATE);
 }
 
 void PopupMenuWin::show(WebNavigationPolicy)
 {
     m_needResize = true;
     m_hasResize = true;
+    m_isVisible = true;
     postCommit();
+    
+    updataSize();
 
     if (m_hPopup)
-        ::ShowWindow(m_hPopup, SW_SHOW); // SW_SHOWNOACTIVATE
+        ::ShowWindow(m_hPopup, SW_SHOWNOACTIVATE);
 }
 
 void PopupMenuWin::paint(HDC hdc, RECT rcPaint)
@@ -344,10 +350,33 @@ void PopupMenuWin::updataPaint()
 static void initWndStyle(HWND hPopup)
 {
     // 这里会重入到WebPageImpl::fireKillFocusEvent
-    ::SetWindowPos(hPopup, HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW | SWP_NOACTIVATE);
+    // ::SetWindowPos(hPopup, HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW | SWP_NOACTIVATE);
     // ::SetFocus(hPopup);
     // ::SetCapture(hPopup);
-    ::SetForegroundWindow(hPopup);
+    // ::SetForegroundWindow(hPopup);
+    ::ShowWindow(hPopup, SW_HIDE);
+}
+
+static HHOOK g_hMouseHook = nullptr;
+
+LRESULT CALLBACK PopupMenuWin::mouseHookProc(int nCode, WPARAM wParam, LPARAM lParam)
+{
+    MOUSEHOOKSTRUCT* pMouseStruct = (MOUSEHOOKSTRUCT*)lParam;    
+    if (pMouseStruct != NULL && nullptr != m_hPopup && 
+        (wParam == WM_LBUTTONDOWN ||
+        wParam == WM_NCLBUTTONDOWN ||
+        wParam == WM_RBUTTONDOWN ||
+        wParam == WM_NCRBUTTONDOWN) &&
+        pMouseStruct->hwnd != m_hPopup) {
+        
+        PopupMenuWin* popup = reinterpret_cast<PopupMenuWin*>(::GetWindowLongPtr(m_hPopup, 0));
+        if (popup && popup->m_isVisible) {
+            ::PostMessage(m_hPopup, WM_PMW_KILLFOCUS, 0, 0);
+        }
+
+    }
+    
+    return CallNextHookEx(g_hMouseHook, nCode, wParam, lParam);
 }
 
 void PopupMenuWin::asynStartCreateWnd(blink::Timer<PopupMenuWin>*)
@@ -355,16 +384,22 @@ void PopupMenuWin::asynStartCreateWnd(blink::Timer<PopupMenuWin>*)
     if (!m_hPopup) {
         registerClass();
 
-        DWORD exStyle = WS_EX_LTRREADING | WS_EX_TOOLWINDOW | WS_EX_NOACTIVATE;
-        m_hPopup = ::CreateWindowExW(exStyle, kPopupWindowClassName, L"MbPopupMenu",
-            WS_POPUP, 0, 0, 2, 2, /*NULL*/m_hParentWnd, 0, NULL, this);
+        m_hPopup = CreateWindowEx(WS_EX_NOACTIVATE, kPopupWindowClassName, L"MbPopupMenu", WS_POPUP,
+            CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, /*m_hParentWnd*/0, 0, 0, this);
+        
+        g_hMouseHook = SetWindowsHookEx(WH_MOUSE, mouseHookProc, GetModuleHandle(NULL), GetCurrentThreadId());
+
     }
     m_client->onPopupMenuCreate(m_hPopup);
     initWndStyle(m_hPopup);
 
+    if (m_isVisible) {
+        updataSize();
+        ::ShowWindow(m_hPopup, SW_SHOWNOACTIVATE);
+    }
+
     if (m_needsCommit)
         ::PostMessage(m_hPopup, WM_COMMIT, 0, 0);
-    //OutputDebugStringA("PopupMenuWin::asynStartCreateWnd\n");
 }
 
 WebWidget* PopupMenuWin::createWnd()
