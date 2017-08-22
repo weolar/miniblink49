@@ -66,6 +66,11 @@ public:
     virtual void onLayerTreeInvalidateRect(const blink::IntRect& r) { didInvalidateRect(r); }
     virtual void onLayerTreeSetNeedsCommit() { scheduleAnimation(); }
 
+    LRESULT fireWheelEvent(UINT message, WPARAM wParam, LPARAM lParam);
+    bool fireKeyUpEvent(UINT message, WPARAM wParam, LPARAM lParam);
+
+    bool isVisible() const { return m_isVisible; }
+
 protected:
     PopupMenuWin(PopupMenuWinClient* client, HWND hWnd, blink::IntPoint offset, blink::WebViewImpl* webViewImpl);
     blink::WebWidget* createWnd();
