@@ -87,14 +87,34 @@ WebKeyboardEvent PlatformEventHandler::buildKeyboardEvent(WebInputEvent::Type ty
     if (isKeypadEvent(wParam, keyData, type))
         keyEvent.modifiers |= WebInputEvent::IsKeyPad;
 
-    if (VK_TAB == keyEvent.windowsKeyCode) {
+    if (VK_LEFT == keyEvent.windowsKeyCode)
+        strcpy(keyEvent.keyIdentifier, "Left");
+    else if (VK_UP == keyEvent.windowsKeyCode)
+        strcpy(keyEvent.keyIdentifier, "Up");
+    else if (VK_UP == keyEvent.windowsKeyCode)
+        strcpy(keyEvent.keyIdentifier, "Up");
+    else if (VK_RIGHT == keyEvent.windowsKeyCode)
+        strcpy(keyEvent.keyIdentifier, "Right");
+    else if (VK_DOWN == keyEvent.windowsKeyCode)
+        strcpy(keyEvent.keyIdentifier, "Down");
+
+    else if (VK_NEXT == keyEvent.windowsKeyCode)
+        strcpy(keyEvent.keyIdentifier, "PageDown");
+    else if (VK_PRIOR == keyEvent.windowsKeyCode)
+        strcpy(keyEvent.keyIdentifier, "PageUp");
+
+    else if (VK_HOME == keyEvent.windowsKeyCode)
+        strcpy(keyEvent.keyIdentifier, "Home");
+    else if (VK_END == keyEvent.windowsKeyCode)
+        strcpy(keyEvent.keyIdentifier, "End");
+
+    else if (VK_TAB == keyEvent.windowsKeyCode)
         strcpy(keyEvent.keyIdentifier, "U+0009");
-    } else if (VK_BACK == keyEvent.windowsKeyCode) {
+    else if (VK_BACK == keyEvent.windowsKeyCode)
         strcpy(keyEvent.keyIdentifier, "U+0008");
-    } else if (VK_ESCAPE == keyEvent.windowsKeyCode) {
+    else if (VK_ESCAPE == keyEvent.windowsKeyCode)
         strcpy(keyEvent.keyIdentifier, "U+001B");
-    }
-    
+
     memset(keyEvent.text, 0, sizeof(WebUChar) * WebKeyboardEvent::textLengthCap);
     keyEvent.text[0] = (WebUChar)wParam;
     return keyEvent;
@@ -264,7 +284,7 @@ LRESULT PlatformEventHandler::fireMouseEvent(HWND hWnd, UINT message, WPARAM wPa
     if (WM_LBUTTONDOWN == message || WM_MBUTTONDOWN == message || WM_RBUTTONDOWN == message) {
         handle = true;
         if (hWnd) {
-            ::SetFocus(hWnd);
+            //::SetFocus(hWnd);
             ::SetCapture(hWnd);
         }
         switch (message)

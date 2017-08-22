@@ -45,6 +45,7 @@ namespace content {
 #define WM_INIT_MENU        (WM_USER + 201)
 #define WM_COMMIT           (WM_USER + 202)
 #define WM_PMW_KILLFOCUS    (WM_USER + 203)
+#define WM_PMW_MOUSEHWHEEL  (WM_USER + 204)
 
 HWND PopupMenuWin::m_hPopup = NULL;
     
@@ -138,6 +139,21 @@ void PopupMenuWin::registerClass()
     RegisterClassEx(&wcex);
 }
 
+LRESULT PopupMenuWin::fireWheelEvent(UINT message, WPARAM wParam, LPARAM lParam)
+{
+    if (!m_hPopup)
+        return 0;
+    return wndProc(m_hPopup, message, wParam, lParam);
+}
+
+bool PopupMenuWin::fireKeyUpEvent(UINT message, WPARAM wParam, LPARAM lParam)
+{
+    if (!m_hPopup)
+        return false;
+    wndProc(m_hPopup, message, wParam, lParam);
+    return true;
+}
+
 LRESULT CALLBACK PopupMenuWin::PopupMenuWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     PopupMenuWin* popup = nullptr;
@@ -174,6 +190,7 @@ LRESULT PopupMenuWin::wndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPa
             return 0;
         break;
     }
+    case WM_PMW_MOUSEHWHEEL:
     case WM_MOUSEWHEEL:
         m_platformEventHandler->fireWheelEvent(hWnd, message, wParam, lParam);
         break;
@@ -344,6 +361,13 @@ void PopupMenuWin::updataPaint()
     m_memoryCanvas->drawPaint(paint);
     m_layerTreeHost->drawToCanvas(m_memoryCanvas, clip);
     m_memoryCanvas->restore();
+
+    if (m_hPopup) {
+        HDC hdc = GetDC(m_hPopup);
+        RECT rc = { 0, 0, m_rect.width(), m_rect.height() };
+        skia::DrawToNativeContext(m_memoryCanvas, hdc, 0, 0, &rc);
+        ::ReleaseDC(m_hPopup, hdc);
+    }
     skia::EndPlatformPaint(m_memoryCanvas);
 }
 
@@ -361,19 +385,23 @@ static HHOOK g_hMouseHook = nullptr;
 
 LRESULT CALLBACK PopupMenuWin::mouseHookProc(int nCode, WPARAM wParam, LPARAM lParam)
 {
-    MOUSEHOOKSTRUCT* pMouseStruct = (MOUSEHOOKSTRUCT*)lParam;    
-    if (pMouseStruct != NULL && nullptr != m_hPopup && 
-        (wParam == WM_LBUTTONDOWN ||
-        wParam == WM_NCLBUTTONDOWN ||
-        wParam == WM_RBUTTONDOWN ||
-        wParam == WM_NCRBUTTONDOWN) &&
-        pMouseStruct->hwnd != m_hPopup) {
-        
-        PopupMenuWin* popup = reinterpret_cast<PopupMenuWin*>(::GetWindowLongPtr(m_hPopup, 0));
-        if (popup && popup->m_isVisible) {
-            ::PostMessage(m_hPopup, WM_PMW_KILLFOCUS, 0, 0);
-        }
+    MOUSEHOOKSTRUCT* pMouseStruct = (MOUSEHOOKSTRUCT*)lParam;
+    if (pMouseStruct == NULL || nullptr == m_hPopup || pMouseStruct->hwnd == m_hPopup)
+        return CallNextHookEx(g_hMouseHook, nCode, wParam, lParam);
 
+    PopupMenuWin* popup = reinterpret_cast<PopupMenuWin*>(::GetWindowLongPtr(m_hPopup, 0));
+    if (!popup || !popup->m_isVisible)
+        return CallNextHookEx(g_hMouseHook, nCode, wParam, lParam);
+
+    if (wParam == WM_LBUTTONDOWN || wParam == WM_NCLBUTTONDOWN ||
+        wParam == WM_RBUTTONDOWN || wParam == WM_NCRBUTTONDOWN)
+        ::PostMessage(m_hPopup, WM_PMW_KILLFOCUS, 0, 0);
+
+    if (wParam == WM_MOUSEHWHEEL) {
+        MOUSEHOOKSTRUCTEX* pMouseStructEx = (MOUSEHOOKSTRUCTEX*)lParam;
+        WORD delta = HIWORD(pMouseStructEx->mouseData);
+        WPARAM wParamToPost = pMouseStructEx->mouseData;
+        ::PostMessage(m_hPopup, WM_PMW_MOUSEHWHEEL, wParamToPost, 0);
     }
     
     return CallNextHookEx(g_hMouseHook, nCode, wParam, lParam);
@@ -448,7 +476,7 @@ void PopupMenuWin::postCommit()
 
 void PopupMenuWin::didInvalidateRect(const blink::WebRect& r)
 {
-    ::InvalidateRect(m_hPopup, NULL, TRUE);
+    //::InvalidateRect(m_hPopup, NULL, TRUE);
     postCommit();
 }
 

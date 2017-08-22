@@ -817,7 +817,7 @@ void WebPageImpl::paintToMemoryCanvasInUiThread(SkCanvas* canvas, const IntRect&
         if (drawToScreen) { // 使用wke接口不由此上屏
             HDC hdc = GetDC(m_pagePtr->getHWND());
             skia::DrawToNativeContext(canvas, hdc, paintRect.x(), paintRect.y(), &intRectToWinRect(paintRect));
-            ReleaseDC(m_pagePtr->getHWND(), hdc);
+            ::ReleaseDC(m_pagePtr->getHWND(), hdc);
         } else {
             copyToMemoryCanvasForUi();
         }
@@ -976,7 +976,10 @@ LRESULT WebPageImpl::fireWheelEvent(HWND hWnd, UINT message, WPARAM wParam, LPAR
     freeV8TempObejctOnOneFrameBefore();
     AutoRecordActions autoRecordActions(this, m_layerTreeHost, false);
     
-    m_platformEventHandler->fireWheelEvent(hWnd, message, wParam, lParam);
+    if (m_popup && m_popup->isVisible())
+        m_popup->fireWheelEvent(message, wParam, lParam);
+    else
+        m_platformEventHandler->fireWheelEvent(hWnd, message, wParam, lParam);
 
     return 0;
 }
@@ -986,7 +989,7 @@ bool WebPageImpl::fireKeyUpEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM 
     CHECK_FOR_REENTER(false);
     freeV8TempObejctOnOneFrameBefore();
     AutoRecordActions autoRecordActions(this, m_layerTreeHost, false);
-
+    
     WebKeyboardEvent keyEvent = PlatformEventHandler::buildKeyboardEvent(WebInputEvent::KeyUp, message, wParam, lParam);
     return m_webViewImpl->handleInputEvent(keyEvent);
 }
@@ -996,6 +999,9 @@ bool WebPageImpl::fireKeyDownEvent(HWND hWnd, UINT message, WPARAM wParam, LPARA
     CHECK_FOR_REENTER(false);
     freeV8TempObejctOnOneFrameBefore();
     AutoRecordActions autoRecordActions(this, m_layerTreeHost, false);
+
+    if (m_popup && m_popup->isVisible())
+        return m_popup->fireKeyUpEvent(message, wParam, lParam);
 
     unsigned int virtualKeyCode = wParam;
     WebKeyboardEvent keyEvent = PlatformEventHandler::buildKeyboardEvent(WebInputEvent::RawKeyDown, message, wParam, lParam);
