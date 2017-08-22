@@ -251,10 +251,10 @@ void CefContext::RunMessageLoop() {
 
         while (true) {            
             do {
-//                 LARGE_INTEGER qpcFrequency;
-//                 BOOL b = QueryPerformanceCounter(&qpcFrequency);
+                LARGE_INTEGER qpcFrequency;
+                BOOL b = QueryPerformanceCounter(&qpcFrequency);
 //                 if (qpcFrequency.LowPart - lastFrequency.LowPart > 5217) {
-//                     FireHeartBeat();
+                     FireHeartBeat();
 //                     lastFrequency = qpcFrequency;
 //                 }
 
@@ -272,19 +272,20 @@ void CefContext::RunMessageLoop() {
 
 //                 QueryPerformanceCounter(&qpcFrequency);
 //                 char* out = (char*)malloc(1000);
-//                 sprintf(out, "CefContext::RunMessageLoop: %d, hwnd:%x MSG%x\n", (qpcFrequency.LowPart - g_qpcFrequency.LowPart), msg.hwnd, msg.message);
+//                 sprintf(out, "CefContext::RunMessageLoop: %d, hwnd:%x MSG:%x\n", (qpcFrequency.LowPart - g_qpcFrequency.LowPart), msg.hwnd, msg.message);
 //                 OutputDebugStringA(out);
 //                 free(out);
 //                 g_qpcFrequency = qpcFrequency;
-
-                //::Sleep(10);
+                ::Sleep(10);
             } while (INVALID_HANDLE_VALUE != msg.hwnd && NULL != msg.hwnd);
             
             if (NULL == msg.hwnd && !g_context->IsNeedHeartbeat()) {
                 //OutputDebugStringW(L"CefContext::FireHeartBeat break\n");
                 break;
             }
-            ::Sleep(10);
+
+            if (!msg.hwnd)
+                ::Sleep(10);
         }
     }
 }
