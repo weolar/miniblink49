@@ -60,8 +60,11 @@ void DocumentOrderedList::add(Node* node)
 
 void DocumentOrderedList::parserAdd(Node* node)
 {
-    ASSERT(m_nodes.isEmpty() || m_nodes.last()->compareDocumentPosition(node, Node::TreatShadowTreesAsComposed) & Node::DOCUMENT_POSITION_FOLLOWING);
-    m_nodes.add(node);
+    //ASSERT(m_nodes.isEmpty() || m_nodes.last()->compareDocumentPosition(node, Node::TreatShadowTreesAsComposed) & Node::DOCUMENT_POSITION_FOLLOWING);
+    //m_nodes.add(node);
+
+    //¼û https://chromium.googlesource.com/chromium/src/+/2cd49bb3ebb9ce32d49aa2dd7a80ca0593855890%5E%21/#F2
+    add(node);
 }
 
 void DocumentOrderedList::remove(const Node* node)
