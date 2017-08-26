@@ -52,6 +52,7 @@
 #include "third_party/WebKit/Source/platform/MIMETypeRegistry.h"
 #include "third_party/WebKit/Source/web/WebLocalFrameImpl.h"
 #include "content/web_impl_win/WebCookieJarCurlImpl.h"
+#include "content/web_impl_win/BlinkPlatformImpl.h"
 #include "content/browser/WebFrameClientImpl.h"
 #include "content/browser/WebPage.h"
 
@@ -262,8 +263,9 @@ WebURLLoaderManager::WebURLLoaderManager()
     , m_isShutdown(false)
     , m_newestJobId(1)
 {
-    m_thread = Platform::current()->createThread("netIoThread");
-    //初始化curl
+    content::BlinkPlatformImpl* platform = (content::BlinkPlatformImpl*)Platform::current();
+    m_thread = platform->ioThread();
+
     curl_global_init(CURL_GLOBAL_ALL);
     //初始化curl批处理句柄
     m_curlMultiHandle = curl_multi_init();
@@ -312,7 +314,7 @@ void WebURLLoaderManager::shutdown()
         }
     }
     
-    delete m_thread;
+    // delete m_thread;
     m_thread = nullptr;
 }
 
