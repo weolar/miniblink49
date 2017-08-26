@@ -1152,7 +1152,7 @@ LRESULT WebPageImpl::fireMouseEvent(HWND hWnd, UINT message, WPARAM wParam, LPAR
 //     fireTouchEvent(hWnd, message, wParam, lParam);
 //     return; // TODO
 
-    m_platformEventHandler->fireMouseEvent(hWnd, message, wParam, lParam, bHandle);
+    m_platformEventHandler->fireMouseEvent(hWnd, message, wParam, lParam, true, bHandle);
     return 0;
 }
 
