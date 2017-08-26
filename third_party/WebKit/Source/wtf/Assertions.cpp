@@ -128,7 +128,13 @@ static void vprintf_stderr_common(const char* format, va_list args)
 
             if (_vsnprintf(buffer, size, format, args) != -1) {
 #if 1 // def MINIBLINK_NOT_IMPLEMENTED
-                OutputDebugStringA(buffer);
+                int cbMultiByte = (int)strlen(buffer);
+                DWORD dwMinSize = MultiByteToWideChar(CP_UTF8, 0, buffer, cbMultiByte, NULL, 0);
+                WCHAR* wbuffer = (WCHAR*)malloc((dwMinSize + 1) * sizeof(WCHAR));
+                memset(wbuffer, 0, (dwMinSize + 1) * sizeof(WCHAR));
+                MultiByteToWideChar(CP_UTF8, 0, buffer, cbMultiByte, wbuffer, dwMinSize);
+                OutputDebugStringW(wbuffer);
+                free(wbuffer);
 #else
                 String utf8 = String::fromUTF8(buffer);
                 OutputDebugStringW(utf8.charactersWithNullTermination().data());
@@ -194,7 +200,7 @@ static void printf_stderr_common(const char* format, ...)
 static void printCallSite(const char* file, int line, const char* function)
 {
 #ifndef MINIBLINK_NOT_IMPLEMENTED
-  printf_stderr_common("%s(%d) : %s\n", file, line, function);
+    printf_stderr_common("%s(%d) : %s\n", file, line, function);
 #else
 #if OS(WIN) && defined(_DEBUG)
     _CrtDbgReport(_CRT_WARN, file, line, NULL, "%s\n", function);

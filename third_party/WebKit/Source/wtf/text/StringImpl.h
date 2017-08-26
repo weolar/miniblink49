@@ -442,7 +442,11 @@ private:
     template<typename CharType> static size_t allocationSize(unsigned length)
     {
         RELEASE_ASSERT(length <= ((std::numeric_limits<unsigned>::max() - sizeof(StringImpl)) / sizeof(CharType)));
-        return sizeof(StringImpl) + length * sizeof(CharType);
+        return sizeof(StringImpl) + length * sizeof(CharType)
+#ifdef _DEBUG
+            + 10 // weolar: c_str
+#endif
+            ;
     }
 
     template <class UCharPredicate> PassRefPtr<StringImpl> stripMatchedCharacters(UCharPredicate);
