@@ -185,7 +185,7 @@ LRESULT PopupMenuWin::wndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPa
         if (!m_initialize)
             break;
         BOOL bHandle = FALSE;
-        m_platformEventHandler->fireMouseEvent(hWnd, message, wParam, lParam, &bHandle);
+        m_platformEventHandler->fireMouseEvent(hWnd, message, wParam, lParam, false, &bHandle);
         if (bHandle)
             return 0;
         break;
@@ -248,7 +248,7 @@ LRESULT PopupMenuWin::wndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPa
         beginMainFrame();
         break;
     case WM_PMW_KILLFOCUS:
-    case WM_KILLFOCUS:
+    //case WM_KILLFOCUS:
         m_isVisible = false;
         m_webViewImpl->hidePopups();
         break;
@@ -413,7 +413,7 @@ void PopupMenuWin::asynStartCreateWnd(blink::Timer<PopupMenuWin>*)
         registerClass();
 
         m_hPopup = CreateWindowEx(WS_EX_NOACTIVATE, kPopupWindowClassName, L"MbPopupMenu", WS_POPUP,
-            CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, /*m_hParentWnd*/0, 0, 0, this);
+            CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, m_hParentWnd, 0, 0, this);
         
         g_hMouseHook = SetWindowsHookEx(WH_MOUSE, mouseHookProc, GetModuleHandle(NULL), GetCurrentThreadId());
 

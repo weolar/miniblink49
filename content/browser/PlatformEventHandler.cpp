@@ -155,7 +155,7 @@ void PlatformEventHandler::fireCaptureChangedEvent(HWND hWnd, UINT message, WPAR
         m_isDraggableRegionNcHitTest = false;
 
         lParam = MAKELONG(m_lastPosForDrag.x(), m_lastPosForDrag.y());
-        fireMouseEvent(hWnd, WM_LBUTTONUP, wParam, lParam, nullptr);
+        fireMouseEvent(hWnd, WM_LBUTTONUP, wParam, lParam, true, nullptr);
     }
 }
 
@@ -206,7 +206,7 @@ void PlatformEventHandler::fireTouchEvent(HWND hWnd, UINT message, WPARAM wParam
     m_webWidget->handleInputEvent(webTouchEvent);
 }
 
-LRESULT PlatformEventHandler::fireMouseEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, BOOL* bHandle)
+LRESULT PlatformEventHandler::fireMouseEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, bool needSetFocus, BOOL* bHandle)
 {
     bool handle = false;
 
@@ -283,8 +283,8 @@ LRESULT PlatformEventHandler::fireMouseEvent(HWND hWnd, UINT message, WPARAM wPa
 
     if (WM_LBUTTONDOWN == message || WM_MBUTTONDOWN == message || WM_RBUTTONDOWN == message) {
         handle = true;
-        if (hWnd) {
-            //::SetFocus(hWnd);
+        if (hWnd && needSetFocus) {
+            ::SetFocus(hWnd);
             ::SetCapture(hWnd);
         }
         switch (message)
