@@ -76,6 +76,13 @@ bool saveDumpFile(const String& url, char* buffer, unsigned int size);
 
 }
 
+namespace gfx {
+
+	namespace win {
+		float GetDeviceScaleFactor();
+	}
+}
+
 namespace content {
 
 void WebPageImpl::initBlink()
@@ -1301,7 +1308,7 @@ WebScreenInfo WebPageImpl::screenInfo()
     WebScreenInfo info;
     info.rect = WebRect(winRectToIntRect(mi.rcMonitor));
     info.availableRect = WebRect(winRectToIntRect(mi.rcWork));
-
+	info.deviceScaleFactor = gfx::win::GetDeviceScaleFactor();
     return info;
 }
 

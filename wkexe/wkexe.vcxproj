@@ -110,6 +110,9 @@
     <PostBuildEvent>
       <Command>copy $(TargetPath) $(SolutionDir)..\bin\</Command>
     </PostBuildEvent>
+    <Manifest>
+      <EnableDpiAwareness>false</EnableDpiAwareness>
+    </Manifest>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
