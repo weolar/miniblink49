@@ -25,6 +25,7 @@
 #include "third_party/WebKit/public/web/WebViewClient.h"
 #include "third_party/WebKit/public/web/WebPopupType.h"
 #include "third_party/WebKit/Source/platform/Timer.h"
+#include "cc/trees/LayerTreeHostClient.h"
 #include "skia/ext/platform_canvas.h"
 
 namespace blink {
@@ -41,10 +42,11 @@ class LayerTreeHost;
 namespace content {
 
 class PlatformEventHandler;
+class PopupMenuWinClient;
 
-class PopupMenuWin : public NoBaseWillBeGarbageCollectedFinalized<PopupMenuWin>, public blink::WebViewClient {
+class PopupMenuWin : public NoBaseWillBeGarbageCollectedFinalized<PopupMenuWin>, public blink::WebViewClient, public cc::LayerTreeHostClent {
 public:
-    static blink::WebWidget* create(HWND hWnd, blink::IntPoint offset, blink::WebViewImpl* webViewImpl, blink::WebPopupType type, PopupMenuWin** result);
+    static blink::WebWidget* create(PopupMenuWinClient* client, HWND hWnd, blink::IntPoint offset, blink::WebViewImpl* webViewImpl, blink::WebPopupType type, PopupMenuWin** result);
     virtual void PopupMenuWin::closeWidgetSoon() override;
     ~PopupMenuWin();
 
@@ -59,25 +61,39 @@ public:
     virtual blink::WebLayerTreeView* layerTreeView() override;
     virtual void show(blink::WebNavigationPolicy) override;
 
+    // LayerTreeHostClent --------------------------------------------------------
+    virtual void onLayerTreeDirty() override { scheduleAnimation(); }
+    virtual void onLayerTreeInvalidateRect(const blink::IntRect& r) { didInvalidateRect(r); }
+    virtual void onLayerTreeSetNeedsCommit() { scheduleAnimation(); }
+
+    LRESULT fireWheelEvent(UINT message, WPARAM wParam, LPARAM lParam);
+    bool fireKeyUpEvent(UINT message, WPARAM wParam, LPARAM lParam);
+
+    bool isVisible() const { return m_isVisible; }
+
 protected:
-    PopupMenuWin(HWND hWnd, blink::IntPoint offset, blink::WebViewImpl* webViewImpl);
+    PopupMenuWin(PopupMenuWinClient* client, HWND hWnd, blink::IntPoint offset, blink::WebViewImpl* webViewImpl);
     blink::WebWidget* createWnd();
     void updataSize();
     void updataPaint();
     void initialize();
     bool initSetting();
+
+    void postCommit();
     
     void registerClass();
     void paint(HDC hdc, RECT rcPaint);
     void beginMainFrame();
     static LRESULT CALLBACK PopupMenuWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+    static LRESULT CALLBACK mouseHookProc(int nCode, WPARAM wParam, LPARAM lParam);
     LRESULT wndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
     void asynStartCreateWnd(blink::Timer<PopupMenuWin>*);
-
+    
     DECLARE_TRACE();
 
+    PopupMenuWinClient* m_client;
     blink::Timer<PopupMenuWin> m_asynStartCreateWndTimer;
-    HWND m_hPopup;
+    static HWND m_hPopup;
     skia::PlatformCanvas* m_memoryCanvas;
     blink::IntRect m_rect;
     bool m_needsCommit; // ∑¿÷π÷ÿ»ÎbeginMainFrame
@@ -85,6 +101,7 @@ protected:
     bool m_hasResize;
     bool m_needResize;
     bool m_initialize;
+    bool m_isVisible;
     double m_lastFrameTimeMonotonic;
     blink::WebPagePopup* m_popupImpl;
     cc::LayerTreeHost* m_layerTreeHost;

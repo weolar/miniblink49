@@ -187,7 +187,9 @@ const std::vector<WebTimerBase*>& WebTimerBase::timerHeap() const
     return m_threadTimers->timerHeap();
 }
 
+#ifndef NDEBUG
 extern ActivatingTimerCheck* gActivatingTimerCheck;
+#endif
 
 WebTimerBase::WebTimerBase(WebThreadImpl* threadTimers, const blink::WebTraceLocation& location, blink::WebThread::Task* task)
     : m_nextFireTime(0)
@@ -203,8 +205,9 @@ WebTimerBase::WebTimerBase(WebThreadImpl* threadTimers, const blink::WebTraceLoc
 {
 //     String out = String::format(" WebTimerBase::WebTimerBase: %p %x\n", this, ::GetCurrentThreadId());
 //     OutputDebugStringW(out.charactersWithNullTermination().data());
-
+#ifndef NDEBUG
     gActivatingTimerCheck->add(this);
+#endif
 }
 
 WebTimerBase::~WebTimerBase()
@@ -215,9 +218,9 @@ WebTimerBase::~WebTimerBase()
     if (m_task)
         delete m_task;
     m_task = nullptr;
-
+#ifndef NDEBUG
     gActivatingTimerCheck->remove(this);
-
+#endif
 //     String out = String::format(" WebTimerBase::~WebTimerBase: %p %x\n", this, ::GetCurrentThreadId());
 //     OutputDebugStringW(out.charactersWithNullTermination().data());
 }

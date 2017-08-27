@@ -7,3 +7,5 @@ build/miniblink.VC.VC.opendb
 *.ipch
 out/*
 bin/cookies.dat
+bin/wkexe.exe
+wkexe/cookies.dat

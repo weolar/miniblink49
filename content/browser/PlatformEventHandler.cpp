@@ -87,14 +87,34 @@ WebKeyboardEvent PlatformEventHandler::buildKeyboardEvent(WebInputEvent::Type ty
     if (isKeypadEvent(wParam, keyData, type))
         keyEvent.modifiers |= WebInputEvent::IsKeyPad;
 
-    if (VK_TAB == keyEvent.windowsKeyCode) {
+    if (VK_LEFT == keyEvent.windowsKeyCode)
+        strcpy(keyEvent.keyIdentifier, "Left");
+    else if (VK_UP == keyEvent.windowsKeyCode)
+        strcpy(keyEvent.keyIdentifier, "Up");
+    else if (VK_UP == keyEvent.windowsKeyCode)
+        strcpy(keyEvent.keyIdentifier, "Up");
+    else if (VK_RIGHT == keyEvent.windowsKeyCode)
+        strcpy(keyEvent.keyIdentifier, "Right");
+    else if (VK_DOWN == keyEvent.windowsKeyCode)
+        strcpy(keyEvent.keyIdentifier, "Down");
+
+    else if (VK_NEXT == keyEvent.windowsKeyCode)
+        strcpy(keyEvent.keyIdentifier, "PageDown");
+    else if (VK_PRIOR == keyEvent.windowsKeyCode)
+        strcpy(keyEvent.keyIdentifier, "PageUp");
+
+    else if (VK_HOME == keyEvent.windowsKeyCode)
+        strcpy(keyEvent.keyIdentifier, "Home");
+    else if (VK_END == keyEvent.windowsKeyCode)
+        strcpy(keyEvent.keyIdentifier, "End");
+
+    else if (VK_TAB == keyEvent.windowsKeyCode)
         strcpy(keyEvent.keyIdentifier, "U+0009");
-    } else if (VK_BACK == keyEvent.windowsKeyCode) {
+    else if (VK_BACK == keyEvent.windowsKeyCode)
         strcpy(keyEvent.keyIdentifier, "U+0008");
-    } else if (VK_ESCAPE == keyEvent.windowsKeyCode) {
+    else if (VK_ESCAPE == keyEvent.windowsKeyCode)
         strcpy(keyEvent.keyIdentifier, "U+001B");
-    }
-    
+
     memset(keyEvent.text, 0, sizeof(WebUChar) * WebKeyboardEvent::textLengthCap);
     keyEvent.text[0] = (WebUChar)wParam;
     return keyEvent;
@@ -135,7 +155,7 @@ void PlatformEventHandler::fireCaptureChangedEvent(HWND hWnd, UINT message, WPAR
         m_isDraggableRegionNcHitTest = false;
 
         lParam = MAKELONG(m_lastPosForDrag.x(), m_lastPosForDrag.y());
-        fireMouseEvent(hWnd, WM_LBUTTONUP, wParam, lParam, nullptr);
+        fireMouseEvent(hWnd, WM_LBUTTONUP, wParam, lParam, true, nullptr);
     }
 }
 
@@ -186,7 +206,7 @@ void PlatformEventHandler::fireTouchEvent(HWND hWnd, UINT message, WPARAM wParam
     m_webWidget->handleInputEvent(webTouchEvent);
 }
 
-LRESULT PlatformEventHandler::fireMouseEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, BOOL* bHandle)
+LRESULT PlatformEventHandler::fireMouseEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, bool needSetFocus, BOOL* bHandle)
 {
     bool handle = false;
 
@@ -263,7 +283,7 @@ LRESULT PlatformEventHandler::fireMouseEvent(HWND hWnd, UINT message, WPARAM wPa
 
     if (WM_LBUTTONDOWN == message || WM_MBUTTONDOWN == message || WM_RBUTTONDOWN == message) {
         handle = true;
-        if (hWnd) {
+        if (hWnd && needSetFocus) {
             ::SetFocus(hWnd);
             ::SetCapture(hWnd);
         }
@@ -283,11 +303,9 @@ LRESULT PlatformEventHandler::fireMouseEvent(HWND hWnd, UINT message, WPARAM wPa
         webMouseEvent.type = WebInputEvent::MouseDown;
         m_webWidget->handleInputEvent(webMouseEvent);
         //makeDraggableRegionNcHitTest(hWnd, lParam, &m_isDraggableRegionNcHitTest, m_lastPosForDrag);
-    }
-    else if (WM_LBUTTONUP == message || WM_MBUTTONUP == message || WM_RBUTTONUP == message) {
+    } else if (WM_LBUTTONUP == message || WM_MBUTTONUP == message || WM_RBUTTONUP == message) {
         handle = true;
-        switch (message)
-        {
+        switch (message) {
         case WM_LBUTTONUP:
             webMouseEvent.button = WebMouseEvent::ButtonLeft;
             break;
@@ -337,6 +355,73 @@ LRESULT PlatformEventHandler::fireMouseEvent(HWND hWnd, UINT message, WPARAM wPa
 
     if (bHandle)
         *bHandle = handle;
+    return 0;
+}
+
+static int verticalScrollLines()
+{
+    static ULONG scrollLines;
+    if (!scrollLines && !SystemParametersInfo(SPI_GETWHEELSCROLLLINES, 0, &scrollLines, 0))
+        scrollLines = 3;
+    return scrollLines;
+}
+
+static int horizontalScrollChars()
+{
+    static ULONG scrollChars;
+    if (!scrollChars && !SystemParametersInfo(SPI_GETWHEELSCROLLCHARS, 0, &scrollChars, 0))
+        scrollChars = 1;
+    return scrollChars;
+}
+
+LRESULT PlatformEventHandler::fireWheelEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+    int x = LOWORD(lParam);
+    int y = HIWORD(lParam);
+    POINT point = { x, y };
+    ::ScreenToClient(hWnd, &point);
+    x = point.x;
+    y = point.y;
+
+    int wheelDelta = GET_WHEEL_DELTA_WPARAM(wParam);
+
+    static const float cScrollbarPixelsPerLine = 100.0f / 3.0f;
+    float delta = wheelDelta / static_cast<float>(WHEEL_DELTA);
+
+    float deltaX = 0.f;
+    float deltaY = 0.f;
+
+    bool shiftKey = wParam & MK_SHIFT;
+    bool ctrlKey = wParam & MK_CONTROL;
+
+    blink::PlatformWheelEventGranularity granularity = blink::ScrollByPageWheelEvent;
+
+    if (shiftKey) {
+        deltaX = delta * static_cast<float>(horizontalScrollChars()) * cScrollbarPixelsPerLine;
+        deltaY = 0;
+        granularity = blink::ScrollByPixelWheelEvent;
+    } else {
+        deltaX = 0;
+        deltaY = delta;
+        int verticalMultiplier = verticalScrollLines();
+        granularity = (verticalMultiplier == WHEEL_PAGESCROLL) ? blink::ScrollByPageWheelEvent : blink::ScrollByPixelWheelEvent;
+        if (granularity == blink::ScrollByPixelWheelEvent)
+            deltaY *= static_cast<float>(verticalMultiplier)* cScrollbarPixelsPerLine;
+    }
+
+    WebMouseWheelEvent webWheelEvent;
+    webWheelEvent.type = WebInputEvent::MouseWheel;
+    webWheelEvent.x = x;
+    webWheelEvent.y = y;
+    webWheelEvent.globalX = x;
+    webWheelEvent.globalY = y;
+    webWheelEvent.deltaX = deltaX;
+    webWheelEvent.deltaY = deltaY;
+    webWheelEvent.wheelTicksX = 0.f;
+    webWheelEvent.wheelTicksY = delta;
+    webWheelEvent.hasPreciseScrollingDeltas = true;
+    m_webWidget->handleInputEvent(webWheelEvent);
+
     return 0;
 }
 

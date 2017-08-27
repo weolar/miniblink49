@@ -34,20 +34,18 @@
 #include "wtf/Partitions.h"
 #include <string.h>
 
-#ifdef _DEBUG
 size_t g_blinkMemSize = 0;
 #include "base/process/CallAddrsRecord.h"
-#endif
 
 namespace WTF {
 
 void* fastZeroedMalloc(size_t n)
 {
-#ifdef _DEBUG
+#ifdef ENABLE_MEM_COUNT
     RECORD_LOCK();
 #endif
     void* result = fastMalloc(n);
-#ifdef _DEBUG
+#ifdef ENABLE_MEM_COUNT
     RECORD_MALLOC(((size_t*)result) - 1, true);
     RECORD_UNLOCK();
 #endif
@@ -57,12 +55,12 @@ void* fastZeroedMalloc(size_t n)
 
 char* fastStrDup(const char* src)
 {
-#ifdef _DEBUG
+#ifdef ENABLE_MEM_COUNT
     RECORD_LOCK();
 #endif
     size_t len = strlen(src) + 1;
     char* dup = static_cast<char*>(fastMalloc(len));
-#ifdef _DEBUG
+#ifdef ENABLE_MEM_COUNT
     RECORD_MALLOC(((size_t*)dup) - 1, true);
     RECORD_UNLOCK();
 #endif
@@ -72,12 +70,12 @@ char* fastStrDup(const char* src)
 
 void* fastMalloc(size_t n)
 {
-#ifdef _DEBUG
+#ifdef ENABLE_MEM_COUNT
     RECORD_LOCK();
     n += sizeof(size_t);
 #endif
     void* result = partitionAllocGeneric(Partitions::fastMallocPartition(), n);
-#ifdef _DEBUG
+#ifdef ENABLE_MEM_COUNT
     RECORD_MALLOC(result, false);
     InterlockedExchangeAdd(reinterpret_cast<long volatile*>(&g_blinkMemSize), static_cast<long>(n));
     *(size_t*)result = n;
@@ -89,7 +87,7 @@ void* fastMalloc(size_t n)
 
 void fastFree(void* p)
 {
-#ifdef _DEBUG
+#ifdef ENABLE_MEM_COUNT
     if (!p)
         return;
     RECORD_LOCK();
@@ -102,7 +100,7 @@ void fastFree(void* p)
 #endif
     partitionFreeGeneric(Partitions::fastMallocPartition(), p);
 
-#ifdef _DEBUG
+#ifdef ENABLE_MEM_COUNT
     RECORD_UNLOCK();
 #endif
 }
@@ -110,7 +108,7 @@ void fastFree(void* p)
 void* fastRealloc(void* p, size_t n)
 {
     void* result = nullptr;
-#ifdef _DEBUG
+#ifdef ENABLE_MEM_COUNT
     size_t* ptr = nullptr;
     if (!p) {
         RECORD_LOCK();
@@ -129,7 +127,7 @@ void* fastRealloc(void* p, size_t n)
     n += sizeof(size_t);
 #endif
     result = partitionReallocGeneric(Partitions::fastMallocPartition(), p, n);
-#ifdef _DEBUG
+#ifdef ENABLE_MEM_COUNT
     RECORD_REALLOC(p, result);
     *(size_t*)result = n;
     result = (char*)result + sizeof(size_t);

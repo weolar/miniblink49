@@ -61,6 +61,9 @@ static void fillbitmap(Gdiplus::Bitmap* gdipBitmap, ImageFrame* buffer)
         rect, Gdiplus::ImageLockModeRead, PixelFormat32bppARGB, &lockedBitmapData);
 
     unsigned int *pData = reinterpret_cast<unsigned int *>(lockedBitmapData.Scan0);
+    if (!pData)
+        return;
+    
     int stride = lockedBitmapData.Stride;
 
     UINT hasAlpha = 0xff000000;

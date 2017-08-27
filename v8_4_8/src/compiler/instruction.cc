@@ -543,8 +543,8 @@ InstructionBlocks* InstructionSequence::InstructionBlocksFor(
     Zone* zone, const Schedule* schedule) {
   InstructionBlocks* blocks = zone->NewArray<InstructionBlocks>(1);
   //zero
-  //new (blocks) InstructionBlocks(
-  //    static_cast<int>(schedule->rpo_order()->size()), NULL, zone);
+  new (blocks) InstructionBlocks(
+      static_cast<int>(schedule->rpo_order()->size()), NULL, zone);
   size_t rpo_number = 0;
   for (BasicBlockVector::const_iterator it = schedule->rpo_order()->begin();
        it != schedule->rpo_order()->end(); ++it, ++rpo_number) {

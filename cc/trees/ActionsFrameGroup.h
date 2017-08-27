@@ -13,8 +13,8 @@ class LayerTreeHost;
 
 class ActionsFrame {
 public:
-    ActionsFrame(int64 beginId);
-    ActionsFrame(int64 beginId, int64 endId);
+    static ActionsFrame* createWithBeginId(int64 beginId, bool isComefromMainframe);
+    static ActionsFrame* createWithBeginEndId(int64 beginId, int64 endId, bool isComefromMainframe);
     ~ActionsFrame();
 
     bool isEmpty() const;
@@ -25,8 +25,13 @@ public:
     void appendLayerChangeAction(LayerChangeAction* action);
 
     bool areAllfull() const;
+    bool isContainBlendActions() const;
+
+    bool isComefromMainframe() const { return m_isComefromMainframe; }
 
 private:
+    ActionsFrame();
+
     bool applyActions(ActionsFrameGroup* group, LayerTreeHost* host);
     
     void setEndId(int64 endId);
@@ -39,6 +44,7 @@ private:
     int64 m_endId;
     bool m_allAreFull;
     int m_hadRunCount;
+    bool m_isComefromMainframe;
 };
 
 class ActionsFrameGroup {
@@ -46,7 +52,7 @@ public:
     ActionsFrameGroup(LayerTreeHost* host);
     ~ActionsFrameGroup();
 
-    void beginRecordActions();
+    void beginRecordActions(bool isComefromMainframe);
     void endRecordActions();
 
     int64 genActionId();
@@ -56,14 +62,20 @@ public:
     int64 curActionId() const;
     void incCurActionId();
 
+    size_t getFramesSize() const;
+
+    bool containComefromMainframeLocked() const;
+
 private:
+    bool canApplyActions() const;
+
     WTF::Vector<ActionsFrame*> m_frames;
 
     ActionsFrame* m_curFrame;
     int64 m_curActionId;
     int64 m_newestActionId;
 
-    WTF::Mutex* m_actionsMutex;
+    mutable WTF::Mutex* m_actionsMutex;
     WTF::Vector<LayerChangeAction*> m_actions;
 
     LayerTreeHost* m_host;

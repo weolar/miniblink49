@@ -110,20 +110,21 @@ public:
     ~RasterTaskGroup();
 
     void postImageLayerAction(int imageLayerId, SkBitmapRefWrap* bitmap);
-    void postRasterTask(cc_blink::WebLayerImpl* layer, SkPicture* picture, TileActionInfoVector* willRasteredTiles, const blink::IntRect& dirtyRect);
+    int64 postRasterTask(cc_blink::WebLayerImpl* layer, SkPicture* picture, TileActionInfoVector* willRasteredTiles, const SkRect& dirtyRect);
     bool endPostRasterTask();
-    void appendPendingInvalidateRect(const blink::IntRect& r); // r是根层坐标系
+    void appendPendingInvalidateRect(const SkRect& r); // r是根层坐标系
     void appendDirtyLayer(cc_blink::WebLayerImpl* layer);
     void appendTileToUIThreadRelease(Tile* tile);
     void appendUnnecessaryTileToEvictAfterDrawFrame(Tile* tile);
 
-    void waitHostRasteringIndex();
     void waitHostRasteringIndexOld();
+
+    int getPendingRasterTaskNum() const;
+
+    bool isTaskEmpty() const { return m_tasks.size() == 0; }
 
     void ref();
     void unref();
-
-    //LayerChangeActionBlend* blendAction() { return m_blendAction; }
 
 private:
     int m_ref;
@@ -137,10 +138,6 @@ private:
     LayerChangeActionBlend* m_lastBlendActionForPendingInvalidateRect;
     LayerChangeActionDrawPropUpdata* m_drawPropUpdataAction;
     LayerChangeActionUpdataImageLayer* m_updataImageLayerAction;
-
-//     DirtyLayers* m_dirtyLayers;
-//     Vector<Tile*>* m_tilesToUIThreadRelease;
-//     Vector<Tile*> m_unnecessaryTilesToEvictAfterDrawFrame;
 };
 
 class RasterTaskWorkerThreadPool {
@@ -150,7 +147,6 @@ public:
     void shutdown();
 
     RasterTaskGroup* beginPostRasterTask(LayerTreeHost* host);
-    //void postRasterTask(RasterResouce* rasterResouce);
     void postRasterTask(TileGrid* tileGrid, SkPicture* picture, Vector<Tile*>* willRasteredTiles, const blink::IntRect& dirtyRect);
 
     // It is an error to call shared() before init() or after shutdown();
@@ -161,7 +157,7 @@ public:
     bool willShutdown() const { return m_willShutdown; }
     void increasePendingRasterTaskNum();
     void decreasePendingRasterTaskNum();
-    int pendingRasterTaskNum();
+    int getPendingRasterTaskNum() const;
 
     void increaseBusyCountByIndex(int index);
     void decreaseBusyCountByIndex(int index);

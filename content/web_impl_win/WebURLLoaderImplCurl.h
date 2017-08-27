@@ -48,11 +48,11 @@ public:
 
     //void fireFailure(blink::Timer<WebURLLoaderImplCurl>*);
    
-    net::WebURLLoaderInternal* loaderInterna() { return m_webURLLoaderInternal; }
+    //net::WebURLLoaderInternal* loaderInterna() { return m_webURLLoaderInternal; }
 
 private:
     bool* m_hadDestroied;
-    net::WebURLLoaderInternal* m_webURLLoaderInternal;
+    int m_jobIds;
 };
 
 }  // namespace content

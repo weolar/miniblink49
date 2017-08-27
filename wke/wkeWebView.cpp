@@ -616,12 +616,12 @@ bool CWebView::fireContextMenuEvent(int x, int y, unsigned int flags)
 
 bool CWebView::fireMouseWheelEvent(int x, int y, int wheelDelta, unsigned int flags)
 {
-//     if (!mainFrame()->view()->didFirstLayout())
-//         return true;
-
     BOOL handled = TRUE;
     WPARAM wParam = 0;
-    LPARAM lParam = MAKELPARAM(x, y);
+
+    POINT screenPoint = { x, y };
+    ::ClientToScreen(m_webPage->getHWND(), &screenPoint);
+    LPARAM lParam = MAKELPARAM(screenPoint.x, screenPoint.y);
     if (flags & WKE_CONTROL)
         wParam |= MK_CONTROL;
     if (flags & WKE_SHIFT)

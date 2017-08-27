@@ -65,49 +65,49 @@ double asin(double x)
 
 bool isFloatIEEE754Negative(float f)
 {
-	float d = f;
-	if (sizeof(float) == sizeof(unsigned short int)) {
-		return (*(unsigned short int *)(&d) >> (sizeof(unsigned short int)*CHAR_BIT - 1) == 1);
-	}
-	else if (sizeof(float) == sizeof(unsigned int)) {
-		return (*(unsigned int *)(&d) >> (sizeof(unsigned int)*CHAR_BIT - 1) == 1);
-	}
-	else if (sizeof(float) == sizeof(unsigned long)) {
-		return (*(unsigned long *)(&d) >> (sizeof(unsigned long)*CHAR_BIT - 1) == 1);
-	}
-	else if (sizeof(float) == sizeof(unsigned char)) {
-		return (*(unsigned char *)(&d) >> (sizeof(unsigned char)*CHAR_BIT - 1) == 1);
-	}
-	else if (sizeof(float) == sizeof(unsigned long long)) {
-		return (*(unsigned long long *)(&d) >> (sizeof(unsigned long long)*CHAR_BIT - 1) == 1);
-	}
-	return false; // Should never get here if you've covered all the potential types!
+    float d = f;
+    if (sizeof(float) == sizeof(unsigned short int)) {
+        return (*(unsigned short int *)(&d) >> (sizeof(unsigned short int)*CHAR_BIT - 1) == 1);
+    }
+    else if (sizeof(float) == sizeof(unsigned int)) {
+        return (*(unsigned int *)(&d) >> (sizeof(unsigned int)*CHAR_BIT - 1) == 1);
+    }
+    else if (sizeof(float) == sizeof(unsigned long)) {
+        return (*(unsigned long *)(&d) >> (sizeof(unsigned long)*CHAR_BIT - 1) == 1);
+    }
+    else if (sizeof(float) == sizeof(unsigned char)) {
+        return (*(unsigned char *)(&d) >> (sizeof(unsigned char)*CHAR_BIT - 1) == 1);
+    }
+    else if (sizeof(float) == sizeof(unsigned long long)) {
+        return (*(unsigned long long *)(&d) >> (sizeof(unsigned long long)*CHAR_BIT - 1) == 1);
+    }
+    return false; // Should never get here if you've covered all the potential types!
 }
 
 bool signbit(float x)
 {
-	return isFloatIEEE754Negative(x);
+    return isFloatIEEE754Negative(x);
 }
 
 int _dsign(double x)
 {
-	enum { double_per_long = sizeof(double) / sizeof(long) };
-	enum { long_msb = sizeof(long) * CHAR_BIT - 1 };
-	union { double d; unsigned long i[double_per_long]; } u;
-	unsigned long l;
+    enum { double_per_long = sizeof(double) / sizeof(long) };
+    enum { long_msb = sizeof(long) * CHAR_BIT - 1 };
+    union { double d; unsigned long i[double_per_long]; } u;
+    unsigned long l;
 
-	u.d = x;
+    u.d = x;
 #ifdef WORDS_BIGENDIAN
-	l = u.i[0];
+    l = u.i[0];
 #else
-	l = u.i[double_per_long - 1];
+    l = u.i[double_per_long - 1];
 #endif
-	return (int)(l >> long_msb);
+    return (int)(l >> long_msb);
 }
 
 bool signbit(double x)
 {
-	return _dsign(x) != 0;
+    return _dsign(x) != 0;
 }
 
 double atan(double x)
@@ -122,10 +122,10 @@ double atan2(double x, double y)
 
 bool isless(double x, double y)
 {
-	if (!signbit(x) && signbit(y)) // + -
-		return false;
-	if (signbit(x) && !signbit(y)) // - +
-		return true;
+    if (!signbit(x) && signbit(y)) // + -
+        return false;
+    if (signbit(x) && !signbit(y)) // - +
+        return true;
     return x < y;
 }
 
@@ -136,7 +136,7 @@ double exp(double x)
 
 int isinf(double d)
 {
-	return fpclassify(d) == FP_INFINITE;
+    return fpclassify(d) == FP_INFINITE;
 //     int expon = 0;
 //     double val = frexp(d, &expon);
 //     if (expon == 1025) {
@@ -154,7 +154,7 @@ int isinf(double d)
 
 int isnan(double d)
 {
-	return fpclassify(d) == FP_NAN;
+    return fpclassify(d) == FP_NAN;
 
 //     int expon = 0;
 //     double val = frexp(d, &expon);
@@ -371,6 +371,12 @@ bool __cdecl operator==<char, char_traits<char>, allocator<char> >(
 {
     return a.compare(b) == 0;
 }
+bool __cdecl operator==<char, char_traits<char>, allocator<char> >(
+	char const * a,
+	basic_string<char, char_traits<char>, allocator<char> > const & b) 
+{
+	return b.compare(a) == 0;
+}
 
 basic_string<char, char_traits<char>, class std::allocator<char> > __cdecl std::operator + <char, char_traits<char>, class std::allocator<char> >(
     basic_string<char, char_traits<char>, allocator<char> > const & a, char const * b)
@@ -403,7 +409,7 @@ double rint(double x)
     if (absux - 1LL >= 0x4330000000000000ULL - 1LL)
         return x;
 
-    u.u = (u.u & 0x8000000000000000ULL) | 0x4330000000000000ULL;	//copysign( 0x1.0p23f, x )
+    u.u = (u.u & 0x8000000000000000ULL) | 0x4330000000000000ULL;    //copysign( 0x1.0p23f, x )
 
     x += u.d;
     x -= u.d;
@@ -450,7 +456,7 @@ long lrint(double x)
         if (result & 1L) {
             // If the trailing bit is set, we rounded the wrong way
             long step = (result >> 30) | 1L;// x < 0 ? -1 : 1
-            return result - step;			// x < 0 ? result + 1 : result - 1
+            return result - step;            // x < 0 ? result + 1 : result - 1
         }
         else {
             return result;
@@ -468,7 +474,7 @@ float nextafterf(float x, float y)
 
     if (y <= x) { // a subtraction here would risk Inf-Inf
         if (y == x)
-            return y;	//make sure sign of 0 is correct
+            return y;    //make sure sign of 0 is correct
         step = -1;
     }
 
@@ -491,14 +497,14 @@ float nextafterf(float x, float y)
 double nextafter(double x, double y)
 {
     union { double d; unsigned __int64 u; } ux = { x };
-    unsigned __int64	step = 1;
+    unsigned __int64    step = 1;
 
     if (y != y || x != x)
         return x + y;
 
     if (y <= x) { // a subtraction here would risk Inf-Inf
         if (y == x)
-            return y;	//make sure sign of 0 is correct
+            return y;    //make sure sign of 0 is correct
         step = -1LL;
     }
 
@@ -537,7 +543,7 @@ float hypotf(float x, float y)
         if (0x7ff0000000000000ULL == u[0].u || 0x7ff0000000000000ULL == u[1].u)
             return inf;
 
-        return x + y;		// NaN
+        return x + y;        // NaN
     }
 
     if (x == 0.0 || y == 0.0)
@@ -654,50 +660,50 @@ float truncf(float val)
 
 extern "C" __declspec(naked) __int64 _ftol2_sse(double v)
 {
-	__asm {
-		push        ebp
-			mov         ebp, esp
-			sub         esp, 20h
-			and         esp, 0FFFFFFF0h
-			fld         st(0)
-			fst         dword ptr[esp + 18h]
-			fistp       qword ptr[esp + 10h]
-			fild        qword ptr[esp + 10h]
-			mov         edx, dword ptr[esp + 18h]
-			mov         eax, dword ptr[esp + 10h]
-			test        eax, eax
-			je          integer_QnaN_or_zero
-			arg_is_not_integer_QnaN :
-		fsubp       st(1), st
-			test        edx, edx
-			jns         positive
-			fstp        dword ptr[esp]
-			mov         ecx, dword ptr[esp]
-			xor ecx, 80000000h
-			add         ecx, 7FFFFFFFh
-			adc         eax, 0
-			mov         edx, dword ptr[esp + 14h]
-			adc         edx, 0
-			jmp         localexit
+    __asm {
+        push        ebp
+            mov         ebp, esp
+            sub         esp, 20h
+            and         esp, 0FFFFFFF0h
+            fld         st(0)
+            fst         dword ptr[esp + 18h]
+            fistp       qword ptr[esp + 10h]
+            fild        qword ptr[esp + 10h]
+            mov         edx, dword ptr[esp + 18h]
+            mov         eax, dword ptr[esp + 10h]
+            test        eax, eax
+            je          integer_QnaN_or_zero
+            arg_is_not_integer_QnaN :
+        fsubp       st(1), st
+            test        edx, edx
+            jns         positive
+            fstp        dword ptr[esp]
+            mov         ecx, dword ptr[esp]
+            xor ecx, 80000000h
+            add         ecx, 7FFFFFFFh
+            adc         eax, 0
+            mov         edx, dword ptr[esp + 14h]
+            adc         edx, 0
+            jmp         localexit
 
-			positive :
-		fstp        dword ptr[esp]
-			mov         ecx, dword ptr[esp]
-			add         ecx, 7FFFFFFFh
-			sbb         eax, 0
-			mov         edx, dword ptr[esp + 14h]
-			sbb         edx, 0
-			jmp         localexit
-			integer_QnaN_or_zero :
-		mov         edx, dword ptr[esp + 14h]
-			test        edx, 7FFFFFFFh
-			jne         arg_is_not_integer_QnaN
-			fstp        dword ptr[esp + 18h]
-			fstp        dword ptr[esp + 18h]
-			localexit :
-			leave
-			ret
-	}
+            positive :
+        fstp        dword ptr[esp]
+            mov         ecx, dword ptr[esp]
+            add         ecx, 7FFFFFFFh
+            sbb         eax, 0
+            mov         edx, dword ptr[esp + 14h]
+            sbb         edx, 0
+            jmp         localexit
+            integer_QnaN_or_zero :
+        mov         edx, dword ptr[esp + 14h]
+            test        edx, 7FFFFFFFh
+            jne         arg_is_not_integer_QnaN
+            fstp        dword ptr[esp + 18h]
+            fstp        dword ptr[esp + 18h]
+            localexit :
+            leave
+            ret
+    }
 }
 // 
 // extern "C" void _dtoui3()
@@ -814,23 +820,23 @@ extern "C" void __std_terminate()
 
 extern "C" int vsnprintf(char* const buffer, size_t const count, char const* const format, va_list args)
 {
-	return _vsnprintf(buffer, count, format, args);
+    return _vsnprintf(buffer, count, format, args);
 }
 
 extern "C" int snprintf(char* buffer, size_t count, const char* format, ...)
 {
-	int result;
-	va_list args;
-	va_start(args, format);
-	result = _vsnprintf(buffer, count, format, args);
-	va_end(args);
+    int result;
+    va_list args;
+    va_start(args, format);
+    result = _vsnprintf(buffer, count, format, args);
+    va_end(args);
 
-	// In the case where the string entirely filled the buffer, _vsnprintf will not
-	// null-terminate it, but snprintf must.
-	if (count > 0)
-		buffer[count - 1] = '\0';
+    // In the case where the string entirely filled the buffer, _vsnprintf will not
+    // null-terminate it, but snprintf must.
+    if (count > 0)
+        buffer[count - 1] = '\0';
 
-	return result;
+    return result;
 }
 
 FILE _iob[3] = { 0 };
@@ -838,10 +844,10 @@ FILE _iob[3] = { 0 };
 extern __declspec(dllimport) double _HUGE;
 
 float nearbyintf(float x) {
-	return 0;
+    return 0;
 }
 
 double __cdecl scalbn(double _X, int _Y) {
-	return 0;
+    return 0;
 }
 #endif // USING_VC6RT

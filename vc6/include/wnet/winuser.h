@@ -2428,7 +2428,7 @@ TrackMouseEvent(
 #if(_WIN32_WINNT >= 0x0501)
 #define WS_EX_COMPOSITED        0x02000000L
 #endif /* _WIN32_WINNT >= 0x0501 */
-#if(_WIN32_WINNT >= 0x0500)
+#if(WINVER >= 0x0500)
 #define WS_EX_NOACTIVATE        0x08000000L
 #endif /* _WIN32_WINNT >= 0x0500 */
 

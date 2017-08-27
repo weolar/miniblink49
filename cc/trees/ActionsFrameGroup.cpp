@@ -12,26 +12,37 @@ namespace cc {
 DEFINE_DEBUG_ONLY_GLOBAL(WTF::RefCountedLeakCounter, actionsFrameCounter, ("ccActionsFrame"));
 #endif
 
-ActionsFrame::ActionsFrame(int64 beginId)
+ActionsFrame::ActionsFrame()
 {
-    m_beginId = beginId;
-    m_endId = -1;
-    m_allAreFull = false;
-    m_hadRunCount = 0;
-#ifndef NDEBUG
-    actionsFrameCounter.increment();
-#endif
 }
 
-ActionsFrame::ActionsFrame(int64 beginId, int64 endId)
+ActionsFrame* ActionsFrame::createWithBeginId(int64 beginId, bool isComefromMainframe)
 {
-    m_beginId = beginId;
-    m_endId = endId;
-    m_allAreFull = false;
-    m_hadRunCount = 0;
+    ActionsFrame* out = new ActionsFrame();
+    out->m_beginId = beginId;
+    out->m_endId = -1;
+    out->m_allAreFull = false;
+    out->m_hadRunCount = 0;
+    out->m_isComefromMainframe = isComefromMainframe;
 #ifndef NDEBUG
     actionsFrameCounter.increment();
 #endif
+
+    return out;
+}
+
+ActionsFrame* ActionsFrame::createWithBeginEndId(int64 beginId, int64 endId, bool isComefromMainframe)
+{
+    ActionsFrame* out = new ActionsFrame();
+    out->m_beginId = beginId;
+    out->m_endId = endId;
+    out->m_allAreFull = false;
+    out->m_hadRunCount = 0;
+    out->m_isComefromMainframe = isComefromMainframe;
+#ifndef NDEBUG
+    actionsFrameCounter.increment();
+#endif
+    return out;
 }
 
 ActionsFrame::~ActionsFrame()
@@ -50,6 +61,17 @@ bool ActionsFrame::isEmpty() const
 bool ActionsFrame::areAllfull() const 
 {
     return m_allAreFull;
+}
+
+bool ActionsFrame::isContainBlendActions() const
+{
+    for (size_t i = 0; i < m_actions.size(); ++i) {
+        LayerChangeAction* action = m_actions[i];
+        if (LayerChangeAction::LayerChangeBlend == action->type()) {
+            return true;
+        }
+    }
+    return false;
 }
 
 void ActionsFrame::checkFull()
@@ -109,7 +131,6 @@ bool ActionsFrame::applyActions(ActionsFrameGroup* group, LayerTreeHost* host)
         delete m_actions[i];
     m_actions.clear();
     return true;
-    
 }
 
 void ActionsFrame::setEndId(int64 endId)
@@ -154,12 +175,17 @@ ActionsFrameGroup::~ActionsFrameGroup()
 #endif
 }
 
-void ActionsFrameGroup::beginRecordActions()
+size_t ActionsFrameGroup::getFramesSize() const
+{
+    return m_frames.size();
+}
+
+void ActionsFrameGroup::beginRecordActions(bool isComefromMainframe)
 {
     WTF::MutexLocker locker(*m_actionsMutex);
     ASSERT(!m_curFrame);
 
-    m_curFrame = new ActionsFrame(m_newestActionId + 1);
+    m_curFrame = ActionsFrame::createWithBeginId(m_newestActionId + 1, isComefromMainframe);
     m_frames.append(m_curFrame);
 }
 
@@ -175,7 +201,7 @@ void ActionsFrameGroup::endRecordActions()
         m_curFrame = nullptr;
         return;
     }
-    //ASSERT(m_curFrame->endId() == m_newestActionId);
+
     m_curFrame->setEndId(m_newestActionId);
     m_curFrame = nullptr;
 }
@@ -185,8 +211,8 @@ int64 ActionsFrameGroup::genActionId()
     ASSERT(WTF::isMainThread());
     WTF::MutexLocker locker(*m_actionsMutex);
 
-    if (!m_curFrame) { // 如果不属于任何一个，说明是一些异步回调调用进来的，另起一帧
-        m_curFrame = new ActionsFrame(m_newestActionId + 1, m_newestActionId + 1);
+    if (!m_curFrame) { // 如果不属于任何一个，说明是一些异步回调调用(如网络回调)进来的，另起一帧
+        m_curFrame = ActionsFrame::createWithBeginEndId(m_newestActionId + 1, m_newestActionId + 1, false);
         m_frames.append(m_curFrame);
         m_curFrame = nullptr;
     }
@@ -218,15 +244,18 @@ void ActionsFrameGroup::appendActionToFrame(LayerChangeAction* action)
         return;
     }
 
+    bool appendOk = false;
     for (int i = (int)(m_frames.size() - 1); i >= 0; --i) {
         frame = m_frames[i];
         if (action->actionId() < frame->beginId())
             continue;
         
+        appendOk = true;
         frame->appendLayerChangeAction(action);
         break;
     }
     ASSERT(frame);
+    RELEASE_ASSERT(appendOk);
 }
 
 bool ActionsFrameGroup::applyActions(bool needCheck)
@@ -240,6 +269,7 @@ bool ActionsFrameGroup::applyActions(bool needCheck)
         appendActionToFrame(actions[i]);
     }
 
+    bool okOnce = false;
     while (true) {
         m_actionsMutex->lock();
         if (0 == m_frames.size()) {
@@ -250,8 +280,10 @@ bool ActionsFrameGroup::applyActions(bool needCheck)
         ActionsFrame* frame = m_frames[0];
         if (!frame->areAllfull()) {
             ASSERT(!needCheck);
+        }
+        if (!needCheck && !canApplyActions()) {
             m_actionsMutex->unlock();
-            return false;
+            return okOnce;
         }
 
         m_frames.remove(0);
@@ -261,9 +293,40 @@ bool ActionsFrameGroup::applyActions(bool needCheck)
         bool ok = frame->applyActions(this, m_host);
         ASSERT(ok);
         delete frame;
+
+        okOnce = true;
     }
 
-    return true;
+    return okOnce;
+}
+
+bool ActionsFrameGroup::canApplyActions() const
+{
+    for (size_t i = 0; i < m_frames.size(); ++i) {
+        ActionsFrame* frame = m_frames[i];
+        bool isComefromMainframe = frame->isComefromMainframe();
+        if (frame->areAllfull()) {
+            if (isComefromMainframe)
+                return true;
+            else
+                continue;
+        } else
+            return false;
+    }
+    return false;
+}
+
+bool ActionsFrameGroup::containComefromMainframeLocked() const
+{
+    WTF::MutexLocker locker(*m_actionsMutex);
+
+    for (size_t i = 0; i < m_frames.size(); ++i) {
+        ActionsFrame* frame = m_frames[i];
+        bool isComefromMainframe = frame->isComefromMainframe();
+        if (isComefromMainframe)
+            return true;
+    }
+    return false;
 }
 
 int64 ActionsFrameGroup::curActionId() const

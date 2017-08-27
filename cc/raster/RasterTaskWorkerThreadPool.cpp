@@ -39,6 +39,11 @@
 
 #include "platform/image-encoders/gdiplus/GDIPlusImageEncoder.h" // TODO
 
+extern DWORD g_rasterTime;
+extern DWORD g_nowTime;
+extern int g_mouseTest;
+extern DWORD g_rasterTimeInMouse;
+
 using namespace blink;
 
 namespace blink {
@@ -120,7 +125,7 @@ void RasterTaskWorkerThreadPool::decreasePendingRasterTaskNum()
     atomicDecrement(&m_pendingRasterTaskNum);
 }
 
-int RasterTaskWorkerThreadPool::pendingRasterTaskNum()
+int RasterTaskWorkerThreadPool::getPendingRasterTaskNum() const
 {
     return m_pendingRasterTaskNum;
 }
@@ -144,7 +149,7 @@ public:
     explicit RasterTask(
         RasterTaskWorkerThreadPool* pool, 
         SkPicture* picture,
-        const IntRect& dirtyRect, 
+        const SkRect& dirtyRect, 
         int threadIndex,
         bool isOpaque,
         LayerChangeActionBlend* blendAction,
@@ -203,8 +208,12 @@ public:
         m_blendAction->setBitmap(bitmap);
         releaseRource();
 
-//         String outString = String::format("RasterTask::run: %d %d %d %d\n", m_dirtyRect.x(), m_dirtyRect.y(), m_dirtyRect.width(), m_dirtyRect.height());
-//         OutputDebugStringW(outString.charactersWithNullTermination().data());
+//         DWORD nowTime = (DWORD)(WTF::currentTimeMS() * 100);
+//         DWORD detTime = nowTime - g_nowTime;
+//         InterlockedExchange((LONG*)&g_nowTime, nowTime);
+
+//         String out = String::format("RasterTask.run: %d\n", detTime);
+//         OutputDebugStringA(out.utf8().data());
     }
 
     SkBitmap* raster()
@@ -212,7 +221,7 @@ public:
         SkBitmap* bitmap = new SkBitmap;
         bitmap->allocN32Pixels(m_dirtyRect.width(), m_dirtyRect.height());
         if (!m_isOpaque)
-            bitmap->eraseColor(0x00ffffff); // TODO
+            bitmap->eraseColor(0x00ff11ff); // TODO
         
         // Uses kPremul_SkAlphaType since the result is not known to be opaque.
         SkImageInfo info = SkImageInfo::MakeN32(m_dirtyRect.width(), m_dirtyRect.height(), m_isOpaque ? kOpaque_SkAlphaType : kPremul_SkAlphaType); // TODO
@@ -228,17 +237,25 @@ public:
         canvas->scale(1, 1);
         //canvas->clipRect(SkRect::MakeIWH(m_dirtyRect.width(), m_dirtyRect.height()));
         canvas->translate(-m_dirtyRect.x(), -m_dirtyRect.y());
-        canvas->drawPicture(m_picture, nullptr, &paint);
+        canvas->drawPicture(m_picture, nullptr, /*&paint*/nullptr);
         canvas->restore();
 
         return bitmap;
     }
 
-    int threadIndex() const { return m_threadIndex; };
+    int threadIndex() const { return m_threadIndex; }
+
+    int64 getActionId() const
+    {
+        if (m_blendAction)
+            return m_blendAction->actionId();
+        return -1;
+    }
+
 private:
     RasterTaskWorkerThreadPool* m_pool;
     SkPicture* m_picture;
-    IntRect m_dirtyRect;
+    SkRect m_dirtyRect;
     int m_threadIndex;
     LayerChangeActionBlend* m_blendAction;
     bool m_isOpaque;
@@ -264,7 +281,6 @@ RasterTaskGroup::RasterTaskGroup(RasterTaskWorkerThreadPool* pool, LayerTreeHost
     m_host = host;
     m_drawPropUpdataAction = new LayerChangeActionDrawPropUpdata();
     m_lastBlendActionForPendingInvalidateRect = nullptr;
-
 //     String outString = String::format("RasterTaskGroup::RasterTaskGroup: %p\n", this);
 //     OutputDebugStringW(outString.charactersWithNullTermination().data());
 
@@ -285,9 +301,16 @@ void RasterTaskGroup::postImageLayerAction(int imageLayerId, SkBitmapRefWrap* bi
     m_blendAndImageActions.append(new LayerChangeActionUpdataImageLayer(m_host->genActionId(), imageLayerId, bitmap));
 }
 
-void RasterTaskGroup::postRasterTask(cc_blink::WebLayerImpl* layer, SkPicture* picture, TileActionInfoVector* willRasteredTiles, const IntRect& dirtyRect)
+int RasterTaskGroup::getPendingRasterTaskNum() const
+{
+    return m_pool->getPendingRasterTaskNum();
+}
+
+int64 RasterTaskGroup::postRasterTask(cc_blink::WebLayerImpl* layer, SkPicture* picture, TileActionInfoVector* willRasteredTiles, const SkRect& dirtyRect)
 {
     ref();
+
+    m_host->enablePaint();
 
     int layerId = layer->id();
     
@@ -302,8 +325,10 @@ void RasterTaskGroup::postRasterTask(cc_blink::WebLayerImpl* layer, SkPicture* p
     m_pool->increaseBusyCountByIndex(task->threadIndex());
     m_pool->m_threads[task->threadIndex()]->postTask(FROM_HERE, task);
 
-    blink::IntRect updateRect = layer->mapRectFromCurrentLayerCoordinateToRootLayer(dirtyRect);
+    SkRect updateRect = layer->mapRectFromCurrentLayerCoordinateToRootLayer(dirtyRect);
     appendPendingInvalidateRect(updateRect);
+
+    return blendAction->actionId();
 }
 
 bool RasterTaskGroup::endPostRasterTask()
@@ -313,7 +338,7 @@ bool RasterTaskGroup::endPostRasterTask()
     return noneNeedCommit;
 }
 
-void RasterTaskGroup::appendPendingInvalidateRect(const blink::IntRect& r)
+void RasterTaskGroup::appendPendingInvalidateRect(const SkRect& r)
 {
     if (m_drawPropUpdataAction->isActionIdEmpty())
         m_drawPropUpdataAction->setActionId(m_host->genActionId());
@@ -335,10 +360,6 @@ void RasterTaskGroup::appendTileToUIThreadRelease(Tile* tile)
 void RasterTaskGroup::appendUnnecessaryTileToEvictAfterDrawFrame(Tile* tile)
 {
     DebugBreak();
-}
-
-void RasterTaskGroup::waitHostRasteringIndex()
-{
 }
 
 void RasterTaskGroup::waitHostRasteringIndexOld()
@@ -379,7 +400,7 @@ void RasterTaskGroup::unref()
         if (m_drawPropUpdataAction) { // 脏矩形转移，可以延迟提交
             m_lastBlendActionForPendingInvalidateRect->appendPendingInvalidateRects(m_drawPropUpdataAction->dirtyRects());
             m_drawPropUpdataAction->cleanupPendingInvalidateRectIfHasAlendAction();
-            }
+        }
     }
 
     if (!m_drawPropUpdataAction->dirtyRects().isEmpty() || !m_drawPropUpdataAction->isDirtyLayerEmpty()) {

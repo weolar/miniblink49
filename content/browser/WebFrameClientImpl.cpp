@@ -247,7 +247,10 @@ void WebFrameClientImpl::didCommitProvisionalLoad(WebLocalFrame* frame, const We
     m_webPage->didCommitProvisionalLoad(frame, history, type);
 }
 
-void WebFrameClientImpl::didCreateNewDocument(WebLocalFrame* frame) { }
+void WebFrameClientImpl::didCreateNewDocument(WebLocalFrame* frame)
+{
+    //OutputDebugStringA("WebFrameClientImpl::didFinishDocumentLoad\n");
+}
 
 void WebFrameClientImpl::didClearWindowObject(WebLocalFrame* frame) { }
 
@@ -286,6 +289,8 @@ void WebFrameClientImpl::didFinishDocumentLoad(WebLocalFrame*)
     if (handler.documentReadyCallback)
         handler.documentReadyCallback(m_webPage->wkeWebView(), handler.documentReadyCallbackParam);
 #endif
+
+    //OutputDebugStringA("WebFrameClientImpl::didFinishDocumentLoad\n");
 }
 
 void WebFrameClientImpl::didHandleOnloadEvents(WebLocalFrame*) { }
@@ -313,6 +318,8 @@ void WebFrameClientImpl::didFailLoad(WebLocalFrame* frame, const WebURLError& er
         handler.loadingFinishCallback(m_webPage->wkeWebView(), handler.loadingFinishCallbackParam, &url, result, &failedReason);
     }
 #endif
+
+    //OutputDebugStringA("WebFrameClientImpl::didFailLoad\n");
 }
 
 void WebFrameClientImpl::didFinishLoad(WebLocalFrame* frame)
@@ -333,6 +340,8 @@ void WebFrameClientImpl::didFinishLoad(WebLocalFrame* frame)
         handler.loadingFinishCallback(m_webPage->wkeWebView(), handler.loadingFinishCallbackParam, &url, result, NULL);
     }
 #endif
+
+    //OutputDebugStringA("WebFrameClientImpl::didFinishLoad\n");
 }
 
 void WebFrameClientImpl::didNavigateWithinPage(WebLocalFrame*, const WebHistoryItem&, WebHistoryCommitType)
@@ -530,8 +539,10 @@ void WebFrameClientImpl::didCreateScriptContext(WebLocalFrame* frame, v8::Local<
 void WebFrameClientImpl::willReleaseScriptContext(WebLocalFrame* frame, v8::Local<v8::Context> context, int worldId)
 {
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
-    if (frame->top() == frame)
+    if (frame->top() == frame) {
         wke::onReleaseGlobalObject(this, frame, context, worldId);
+        m_webPage->disablePaint();
+    }
 
     if (m_webPage->wkeHandler().willReleaseScriptContextCallback)
         m_webPage->wkeHandler().willReleaseScriptContextCallback(m_webPage->wkeWebView(), m_webPage->wkeHandler().willReleaseScriptContextCallbackParam,

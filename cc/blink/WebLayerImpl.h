@@ -68,7 +68,7 @@ public:
     void setContentsOpaqueIsFixed(bool fixed);
 
     blink::IntRect mapRectFromRootLayerCoordinateToCurrentLayer(const blink::IntRect& rect);
-    blink::IntRect mapRectFromCurrentLayerCoordinateToRootLayer(const blink::IntRect& rect);
+    SkRect mapRectFromCurrentLayerCoordinateToRootLayer(const SkRect& rect);
 
     // WebLayer implementation.
     int id() const override;
@@ -170,7 +170,7 @@ public:
     void setChildrenDirty();
     void clearChildrenDirty();
     void setAllParentDirty();
-    void setNeedsFullTreeSync();
+    void requestSelfAndAncestorBoundRepaint();
 
     const WebLayerImplClient* client() { return m_client; }
     //blink::IntRect updateRect() const { return m_updateRect; };
@@ -178,7 +178,7 @@ public:
 
     void requestRepaint(const blink::IntRect& rect);
     void requestBoundRepaint(bool directOrPending);
-    void appendPendingInvalidateRect(const blink::IntRect& rect);
+    void appendPendingInvalidateRect(const SkRect& rect);
 
     cc::DrawProperties* drawProperties();
     //cc::DrawToCanvasProperties* drawToCanvasProperties(); // 在上屏时使用本属性，和DrawProperties比，不一定是最新的坐标属性，需要光栅化后来更新
@@ -215,7 +215,7 @@ protected:
     blink::WebLayerClient* m_webLayerClient;
     WebLayerImplClient* m_client;
 
-    blink::IntRect m_updateRectInRootLayerCoordinate;
+    SkRect m_updateRectInRootLayerCoordinate;
     
     float m_opacity;
     blink::WebBlendMode m_blendMode;

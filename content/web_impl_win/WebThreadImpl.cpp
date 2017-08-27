@@ -34,7 +34,9 @@ unsigned __stdcall WebThreadImpl::WebThreadImplThreadEntryPoint(void* param)
     return 0;
 }
 
+#ifdef _DEBUG
 ActivatingTimerCheck* gActivatingTimerCheck = nullptr;
+#endif
 
 WebThreadImpl::WebThreadImpl(const char* name)
     : m_hEvent(NULL)
@@ -52,9 +54,10 @@ WebThreadImpl::WebThreadImpl(const char* name)
     ::InitializeCriticalSection(&m_taskPairsMutex);
 
     if (0 == strcmp("MainThread", name)) {
+#ifdef _DEBUG
         if (!gActivatingTimerCheck)
             gActivatingTimerCheck = new ActivatingTimerCheck();
-
+#endif
         m_hadThreadInit = true;
         m_threadId = WTF::currentThread();
         return;

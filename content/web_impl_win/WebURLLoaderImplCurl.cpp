@@ -21,7 +21,7 @@ namespace content {
 
 WebURLLoaderImplCurl::WebURLLoaderImplCurl()
 {
-    m_webURLLoaderInternal = nullptr;
+    m_jobIds = 0;
 #ifndef NDEBUG
     webURLLoaderImplCurlCount.increment();
 #endif
@@ -37,7 +37,7 @@ WebURLLoaderImplCurl::~WebURLLoaderImplCurl()
 void WebURLLoaderImplCurl::init()
 {
     m_hadDestroied = false;
-    m_webURLLoaderInternal = nullptr;
+    m_jobIds = 0;
 }
 
 static bool shouldContentSniffURL(const KURL& url)
@@ -52,6 +52,9 @@ void WebURLLoaderImplCurl::loadSynchronously(
     blink::WebURLError& error,
     blink::WebData& data)
 {
+    if (!net::WebURLLoaderManager::sharedInstance())
+        return;
+
     init();
 
     WebURLRequest requestNew = request;
@@ -59,39 +62,42 @@ void WebURLLoaderImplCurl::loadSynchronously(
     Vector<char> buffer;
     net::BlinkSynchronousLoader syncLoader(error, response, buffer);
     net::WebURLLoaderInternal* job = new net::WebURLLoaderInternal(this, requestNew, &syncLoader, false, shouldContentSniffURL(request.url()));
-
     net::WebURLLoaderManager::sharedInstance()->dispatchSynchronousJob(job);
 
     data.assign(buffer.data(), buffer.size());
-
-    delete job;
 }
 
 void WebURLLoaderImplCurl::loadAsynchronously(const blink::WebURLRequest& request, blink::WebURLLoaderClient* client)
 {
+    if (!net::WebURLLoaderManager::sharedInstance())
+        return;
+
     init();
 
     WebURLRequest requestNew = request;
-    m_webURLLoaderInternal = new net::WebURLLoaderInternal(this, requestNew, client, false, shouldContentSniffURL(request.url()));
-    net::WebURLLoaderManager::sharedInstance()->add(m_webURLLoaderInternal);
+    net::WebURLLoaderInternal* job = new net::WebURLLoaderInternal(this, requestNew, client, false, shouldContentSniffURL(request.url()));
+    int jobIds = net::WebURLLoaderManager::sharedInstance()->addAsynchronousJob(job);
+    if (0 == jobIds)
+        return;
+    m_jobIds = jobIds;
 
+    // 执行完add后，this可能被销毁，当dataurl的时候
+#if 0
     blink::KURL url = (blink::KURL)requestNew.url();
     Vector<UChar> host = WTF::ensureUTF16UChar(url.host());
 
-#if 0
     if (!url.isValid() || !url.protocolIsData()) {
         WTF::String outstr = String::format("WebURLLoaderImpl.loadAsynchronously: %p %ws\n", this, WTF::ensureUTF16UChar(url.string()).data());
         OutputDebugStringW(outstr.charactersWithNullTermination().data());
     }
 #endif
-
-    return;
 }
 
 void WebURLLoaderImplCurl::cancel()
 {
-    net::WebURLLoaderManager::sharedInstance()->cancel(m_webURLLoaderInternal);
-    m_webURLLoaderInternal = nullptr;
+    if (0 != m_jobIds && net::WebURLLoaderManager::sharedInstance())
+        net::WebURLLoaderManager::sharedInstance()->cancel(m_jobIds);
+    m_jobIds = 0;
 }
 
 void WebURLLoaderImplCurl::fileLoadImpl(const blink::KURL& url)

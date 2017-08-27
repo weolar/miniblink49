@@ -47,6 +47,21 @@ class WebURLRequest;
 namespace net {
 
 class WebURLLoaderInternal;
+class WebURLLoaderManager;
+
+class AutoLockJob {
+public:
+    AutoLockJob(WebURLLoaderManager* manager, int jobId);
+    WebURLLoaderInternal* lock();
+    ~AutoLockJob();
+
+    void setNotDerefForDelete();
+
+private:
+    WebURLLoaderManager* m_manager;
+    int m_jobId;
+    bool m_isNotDerefForDelete;
+};
 
 class WebURLLoaderManager {
 public:
@@ -60,8 +75,12 @@ public:
         Socks5Hostname = CURLPROXY_SOCKS5_HOSTNAME
     };
     static WebURLLoaderManager* sharedInstance();
-    void add(WebURLLoaderInternal*);
-    void cancel(WebURLLoaderInternal*);
+    int addAsynchronousJob(WebURLLoaderInternal*);
+    void cancel(int jobId);
+
+    WebURLLoaderInternal* checkJob(int jobId);
+    void removeLiveJobs(int jobId);
+    int addLiveJobs(WebURLLoaderInternal* job);
 
     CURLSH* getCurlShareHandle() const;
 
@@ -83,17 +102,22 @@ private:
     WebURLLoaderManager();
     ~WebURLLoaderManager();
     
-    void dispatchSynchronousJobOnIoThread(WebURLLoaderInternal* job, bool* isCallFinish);
-
     void setupPOST(WebURLLoaderInternal*, struct curl_slist**);
     void setupPUT(WebURLLoaderInternal*, struct curl_slist**);
 
     bool downloadOnIoThread();
-    void removeFromCurlOnIoThread(WebURLLoaderInternal*);
-    void startJobOnMainThread(WebURLLoaderInternal* job);
+    void removeFromCurlOnIoThread(int jobId);
+    int startJobOnMainThread(WebURLLoaderInternal* job);
     void applyAuthenticationToRequest(WebURLLoaderInternal*, blink::WebURLRequest*);
 
-    void initializeHandle(WebURLLoaderInternal*);
+    int initializeHandleOnMainThread(WebURLLoaderInternal* job);
+    
+    struct InitializeHandleInfo;
+    void initializeHandleOnIoThread(int jobId, InitializeHandleInfo* info);
+    InitializeHandleInfo* preInitializeHandleOnMainThread(WebURLLoaderInternal* job);
+    void startOnIoThread(int jobId);
+
+    void dispatchSynchronousJobOnIoThread(WebURLLoaderInternal* job, InitializeHandleInfo* info, CURLcode* ret, int* isCallFinish);
 
     void initCookieSession();
 
@@ -108,6 +132,11 @@ private:
     String m_proxy;
     ProxyType m_proxyType;
     bool m_isShutdown;
+
+    friend class WebURLLoaderManagerMainTask;
+    WTF::Mutex m_liveJobsMutex;
+    WTF::HashMap<int, WebURLLoaderInternal*> m_liveJobs;
+    int m_newestJobId;
 };
 
 }
