@@ -234,6 +234,8 @@ private:
 
     String m_sourceURLAtConstruction;
     unsigned m_lineNumberAtConstruction;
+
+    bool m_beCallclosed;
 };
 
 } // namespace net
