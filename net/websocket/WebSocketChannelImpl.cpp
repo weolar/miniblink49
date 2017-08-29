@@ -137,6 +137,7 @@ WebSocketChannelImpl::WebSocketChannelImpl(ExecutionContext* context, WebSocketC
     , m_blobLoaderStatus(BlobLoaderNotStarted)
     , m_sourceURLAtConstruction(sourceURL)
     , m_lineNumberAtConstruction(lineNumber)
+    , m_beCallclosed(false)
    
 {
     m_identifier = createUniqueIdentifier();
@@ -226,6 +227,7 @@ void WebSocketChannelImpl::close(int code, const String& reason)
     ASSERT(!m_suspended);
     if (!m_handle)
         return;
+    m_beCallclosed = true;
     RefPtr<WebSocketChannelImpl> protect(*this); // An attempt to send closing handshake may fail, which will get the channel closed and dereferenced.
     startClosingHandshake(code, reason);
     if (m_closing && !m_closingTimer.isActive())
@@ -348,7 +350,7 @@ void WebSocketChannelImpl::didCloseSocketStream(SocketStreamHandle* handle)
         WebSocketChannelClient* client = m_client;
         m_client = nullptr;
         m_handle = nullptr;
-        if (client)
+        if (client && !m_beCallclosed)
             client->didClose(m_receivedClosingHandshake ? WebSocketChannelClient::ClosingHandshakeComplete : WebSocketChannelClient::ClosingHandshakeIncomplete, m_closeEventCode, m_closeEventReason);
     }
     deref();
