@@ -255,8 +255,12 @@ void BlinkPlatformImpl::preShutdown()
 
 void BlinkPlatformImpl::shutdown()
 {
+    ((WebThreadImpl*)currentThread())->fire();
+
     net::WebURLLoaderManager::sharedInstance()->shutdown();
     WebPage::shutdown();
+
+    ((WebThreadImpl*)currentThread())->fire();
 
     blink::memoryCache()->evictResources();
     v8::Isolate::GetCurrent()->LowMemoryNotification();
@@ -272,6 +276,8 @@ void BlinkPlatformImpl::shutdown()
 
     MemoryCache* memoryCache = MemoryCache::create();
     replaceMemoryCacheForTesting(memoryCache);
+
+    ((WebThreadImpl*)currentThread())->fire();
 
     blink::Heap::collectAllGarbage();
 
@@ -409,14 +415,14 @@ blink::WebThread* BlinkPlatformImpl::currentThread()
 
 blink::WebThread* BlinkPlatformImpl::tryGetIoThread() const
 {
-	return m_ioThread;
+    return m_ioThread;
 }
 
 blink::WebThread* BlinkPlatformImpl::ioThread()
 {
-	if (!m_ioThread)
-		m_ioThread = createThread("ioThread");
-	return m_ioThread;
+    if (!m_ioThread)
+        m_ioThread = createThread("ioThread");
+    return m_ioThread;
 }
 
 void BlinkPlatformImpl::cryptographicallyRandomValues(unsigned char* buffer, size_t length)
