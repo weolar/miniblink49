@@ -1048,8 +1048,9 @@ String decodeURLEscapeSequences(const String& str)
     return decodeURLEscapeSequences(str, UTF8Encoding());
 }
 
-String decodeURLEscapeSequences(const String& str, const TextEncoding& encoding)
+String decodeURLEscapeSequences(const String& strURL, const TextEncoding& encoding)
 {
+    String str = WTF::ensureStringToUTF8String(strURL);
     Vector<LChar> result;
 
     CharBuffer buffer;

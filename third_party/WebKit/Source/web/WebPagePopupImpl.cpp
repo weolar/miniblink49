@@ -222,9 +222,9 @@ bool WebPagePopupImpl::initialize(WebViewImpl* webView, PagePopupClient* popupCl
 
     if (!m_widgetClient || !initializePage())
         return false;
+    m_widgetClient->scheduleAnimation();
     m_widgetClient->show(WebNavigationPolicy());
     setFocus(true);
-
     return true;
 }
 
