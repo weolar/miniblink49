@@ -65,7 +65,7 @@ Vector<char> ensureStringToUTF8(const String& string)
     if (string.is8Bit()) {
         out.resize(string.length());
         memcpy(out.data(), string.characters8(), string.length());
-        out.append('\0');
+        //out.append('\0');
     } else {
         CString utf8 = string.utf8();
         out.resize(utf8.length());
