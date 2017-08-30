@@ -280,7 +280,7 @@ inline void ImageLoader::enqueueImageLoadingMicroTask(UpdateFromElementBehavior 
     OwnPtr<Task> task = Task::create(this, updateBehavior);
     m_pendingTask = task->createWeakPtr();
     Microtask::enqueueMicrotask(task.release());
-    m_loadDelayCounter = IncrementLoadEventDelayCount::create(m_element->document(), this);
+    m_loadDelayCounter = IncrementLoadEventDelayCount::create(m_element->document(), "ImageLoader");
 }
 
 void ImageLoader::doUpdateFromElement(BypassMainWorldBehavior bypassBehavior, UpdateFromElementBehavior updateBehavior)
@@ -430,7 +430,7 @@ void ImageLoader::updateFromElement(UpdateFromElementBehavior updateBehavior)
         enqueueImageLoadingMicroTask(updateBehavior);
     else {
 #ifdef _DEBUG
-        DebugBreak();
+        //DebugBreak();
 #endif
     }
 }
