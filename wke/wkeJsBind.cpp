@@ -814,11 +814,11 @@ wkeWebView jsGetWebView(jsExecState es)
         return nullptr;
 	//zero
 #if V8_MINOR_VERSION == 7
-	v8::Local<v8::Value> wkeWebViewV8 = blink::V8HiddenValue::getHiddenValue(isolate, globalObj, nameMaybeLocal.ToLocalChecked());
+    v8::Local<v8::Value> wkeWebViewV8 = blink::V8HiddenValue::getHiddenValue(isolate, globalObj, nameMaybeLocal.ToLocalChecked());
 #else
     v8::Local<v8::Value> wkeWebViewV8 = globalObj->GetHiddenValue(nameMaybeLocal.ToLocalChecked());
 #endif
-	ASSERT(!wkeWebViewV8.IsEmpty());
+    ASSERT(!wkeWebViewV8.IsEmpty());
     wke::CWebView* webView = static_cast<wke::CWebView*>(v8::External::Cast(*wkeWebViewV8)->Value());
     return webView;
 }
