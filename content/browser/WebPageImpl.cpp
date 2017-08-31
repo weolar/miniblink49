@@ -177,9 +177,11 @@ WebPageImpl::~WebPageImpl()
     m_popupHandle = nullptr;
 }
 
+int g_kEnterContent = 0;
+
 bool WebPageImpl::checkForRepeatEnter()
 {
-    if (m_enterCount == 0)
+    if (m_enterCount == 0 && 0 == g_kEnterContent)
         return true;
     return false;
 }
@@ -190,11 +192,13 @@ public:
     {
         m_webPageImpl = webPageImpl;
         ++m_webPageImpl->m_enterCount;
+        ++g_kEnterContent;
     }
 
     ~CheckReEnter()
     {
         --m_webPageImpl->m_enterCount;
+        --g_kEnterContent;
 
         if (WebPageImpl::pageDestroying == m_webPageImpl->m_state)
             m_webPageImpl->doClose();
@@ -629,7 +633,6 @@ bool WebPageImpl::fireTimerEvent()
 
 void WebPageImpl::fireResizeEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    CHECK_FOR_REENTER0();
     freeV8TempObejctOnOneFrameBefore();
     if (pageInited != m_state)
         return;
@@ -1180,7 +1183,6 @@ void WebPageImpl::loadURL(int64 frameId, const wchar_t* url, const blink::Referr
 
 void WebPageImpl::loadRequest(int64 frameId, const blink::WebURLRequest& request)
 {
-    CHECK_FOR_REENTER0();
     if (!m_webViewImpl || !m_webViewImpl->mainFrame())
         return;
 
@@ -1197,7 +1199,6 @@ void WebPageImpl::loadRequest(int64 frameId, const blink::WebURLRequest& request
 
 void WebPageImpl::loadHTMLString(int64 frameId, const WebData& html, const WebURL& baseURL, const WebURL& unreachableURL, bool replace)
 {
-    CHECK_FOR_REENTER0();
     if (!m_webViewImpl || !m_webViewImpl->mainFrame())
         return;
 

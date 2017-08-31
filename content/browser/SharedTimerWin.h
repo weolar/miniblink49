@@ -8,16 +8,23 @@ namespace content {
 
 static HWND timerWindowHandle = 0;
 const LPCWSTR kTimerWindowClassName = L"MiniBlinkTimerWindowClass";
-
+extern int g_kEnterContent; // define in WebPageImpl
+ 
 static LRESULT CALLBACK TimerWindowWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+    if (0 != g_kEnterContent)
+        return 0;
+    ++g_kEnterContent;
+
     if (WM_TIMER ==  message) {
         content::WebThreadImpl* threadImpl = nullptr;
         threadImpl = (content::WebThreadImpl*)(blink::Platform::current()->currentThread());
         threadImpl->fire();
     }
 
-    return ::DefWindowProc(hWnd, message, wParam, lParam);
+    LRESULT result = ::DefWindowProc(hWnd, message, wParam, lParam);
+    --g_kEnterContent;
+    return result;
 }
 
 static void initializeOffScreenTimerWindow()
