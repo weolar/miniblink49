@@ -383,6 +383,10 @@ static void initWndStyle(HWND hPopup)
 
 static HHOOK g_hMouseHook = nullptr;
 
+struct MY_MOUSEHOOKSTRUCTEX : public tagMOUSEHOOKSTRUCT {
+    DWORD   mouseData;
+};
+
 LRESULT CALLBACK PopupMenuWin::mouseHookProc(int nCode, WPARAM wParam, LPARAM lParam)
 {
     MOUSEHOOKSTRUCT* pMouseStruct = (MOUSEHOOKSTRUCT*)lParam;
@@ -398,7 +402,7 @@ LRESULT CALLBACK PopupMenuWin::mouseHookProc(int nCode, WPARAM wParam, LPARAM lP
         ::PostMessage(m_hPopup, WM_PMW_KILLFOCUS, 0, 0);
 
     if (wParam == WM_MOUSEHWHEEL) {
-        MOUSEHOOKSTRUCTEX* pMouseStructEx = (MOUSEHOOKSTRUCTEX*)lParam;
+        MY_MOUSEHOOKSTRUCTEX* pMouseStructEx = (MY_MOUSEHOOKSTRUCTEX*)lParam;
         WORD delta = HIWORD(pMouseStructEx->mouseData);
         WPARAM wParamToPost = pMouseStructEx->mouseData;
         ::PostMessage(m_hPopup, WM_PMW_MOUSEHWHEEL, wParamToPost, 0);
