@@ -142,6 +142,10 @@ public:
 	bool m_isHookRequest;
 	void* m_hookBuf;
 	int m_hookLength;
+
+  void* m_asynWkeNetSetData;
+  int m_asynWkeNetSetDataLength;
+  bool m_isWkeNetSetDataBeSetted;
 #endif
 };
 

@@ -953,17 +953,18 @@ void WebURLLoaderManager::removeFromCurlOnIoThread(int jobId)
 
     job->m_state = WebURLLoaderInternal::kDestroying;
     if (WebURLLoaderInternal::kNormal == state) {
-        ASSERT(job->m_handle);
-
         m_runningJobs--;
         
-        WebURLLoaderManagerMainTask* task = WebURLLoaderManagerMainTask::createTask(jobId, WebURLLoaderManagerMainTask::TaskType::kRemoveFromCurl, nullptr, 0, 0, 0);
-        if (job->m_handle) {
-            curl_multi_remove_handle(m_curlMultiHandle, job->m_handle);
-            curl_easy_cleanup(job->m_handle);
+        if (!job->m_isWkeNetSetDataBeSetted) {
+            ASSERT(job->m_handle);
+            WebURLLoaderManagerMainTask* task = WebURLLoaderManagerMainTask::createTask(jobId, WebURLLoaderManagerMainTask::TaskType::kRemoveFromCurl, nullptr, 0, 0, 0);
+            if (job->m_handle) {
+                curl_multi_remove_handle(m_curlMultiHandle, job->m_handle);
+                curl_easy_cleanup(job->m_handle);
+            }
+            job->m_handle = nullptr;
+            Platform::current()->mainThread()->postTask(FROM_HERE, task);
         }
-        job->m_handle = nullptr;
-        Platform::current()->mainThread()->postTask(FROM_HERE, task);
     }
 }
 
@@ -1168,7 +1169,7 @@ public:
     {
     }
 
-    ~IoTask()
+    ~IoTask() override
     {
     }
 
@@ -1185,6 +1186,35 @@ private:
     WebURLLoaderManager* m_manager;
     blink::WebThread* m_thread;
     bool m_start;
+};
+
+class WkeAsynTask : public WebThread::Task {
+public:
+    WkeAsynTask(WebURLLoaderManager* manager, int jobId)
+    {
+        m_manager = manager;
+        m_jobId = jobId;
+    }
+
+    ~WkeAsynTask() override
+    {
+    }
+
+    virtual void run() override
+    {
+        WebURLLoaderInternal* job = m_manager->checkJob(m_jobId);
+        if (!job)
+            return;
+
+        job->client()->didReceiveResponse(job->loader(), job->m_response);
+        if (job->m_asynWkeNetSetData)
+            job->client()->didReceiveData(job->loader(), static_cast<char*>(job->m_asynWkeNetSetData), job->m_asynWkeNetSetDataLength, 0);
+        job->client()->didFinishLoading(job->loader(), 0, 0);
+    }
+
+private:
+    WebURLLoaderManager* m_manager;
+    int m_jobId;
 };
 
 AutoLockJob::AutoLockJob(WebURLLoaderManager* manager, int jobId)
@@ -1255,10 +1285,23 @@ void WebURLLoaderManager::removeLiveJobs(int jobId)
 int WebURLLoaderManager::addAsynchronousJob(WebURLLoaderInternal* job)
 {
     ASSERT(WTF::isMainThread());
+
+#if 0
+    String url = job->firstRequest()->url().string();
+    OutputDebugStringW(L"addAsynchronousJob:");
+    OutputDebugStringW(url.charactersWithNullTermination().data());
+    OutputDebugStringW(L"\n");
+#endif
+
     job->m_manager = this;
     int jobId = startJobOnMainThread(job);
     if (0 == jobId)
         return 0;
+
+    if (job->m_isWkeNetSetDataBeSetted) {
+        Platform::current()->currentThread()->postTask(FROM_HERE, new WkeAsynTask(this, jobId));
+        return jobId;
+    }
     
     IoTask* task = new IoTask(this, m_thread, false);
     m_thread->postTask(FROM_HERE, task);
@@ -1371,22 +1414,7 @@ static bool dispatchWkeLoadUrlBegin(WebURLLoaderInternal* job)
         encodeWithURLEscapeSequences(job->firstRequest()->url().string()).latin1().data(), job))
         return false;
 
-    WebURLResponse req = job->m_response;
-    //req.setHTTPStatusText(String("OK"));
-    //req.setHTTPHeaderField("Content-Leng", "4");
-    //req.setHTTPHeaderField("Content-Type", "text/html");
-    //req.setExpectedContentLength(static_cast<long long int>(4));
-    //req.setURL(KURL(ParsedURLString, "http://127.0.0.1/a.html"));
-    //req.setHTTPStatusCode(200);
-    //req.setMIMEType(extractMIMETypeFromMediaType(req.httpHeaderField(WebString::fromUTF8("Content-Type"))).lower());
-
-    //req.setTextEncodingName(extractCharsetFromMediaType(req.httpHeaderField(WebString::fromUTF8("Content-Type"))));
-    //job->client()->didReceiveResponse(job->loader(), req);
-    //job->setResponseFired(true);
-
-    //job->client()->didReceiveData(job->loader(), "aaaa", 4, 0);
-    job->client()->didFinishLoading(job->loader(), WTF::currentTime(), 0);
-
+    //job->client()->didFinishLoading(job->loader(), WTF::currentTime(), 0);
     return true;
 }
 #endif
@@ -1402,10 +1430,8 @@ int WebURLLoaderManager::startJobOnMainThread(WebURLLoaderInternal* job)
     }
 
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
-    if (dispatchWkeLoadUrlBegin(job)) {
-        delete job;
-        return 0;
-    }
+    if (dispatchWkeLoadUrlBegin(job))
+        return addLiveJobs(job);
 #endif
 
     return initializeHandleOnMainThread(job);
@@ -1693,9 +1719,12 @@ WebURLLoaderInternal::WebURLLoaderInternal(WebURLLoaderImplCurl* loader, const W
     , m_loader(loader)
     , m_state(kNormal)
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
-    , m_hookBuf(0)
+    , m_hookBuf(nullptr)
     , m_hookLength(0)
     , m_isHookRequest(false)
+    , m_asynWkeNetSetData(nullptr)
+    , m_asynWkeNetSetDataLength(0)
+    , m_isWkeNetSetDataBeSetted(false)
 #endif
 {
     m_firstRequest = new blink::WebURLRequest(request);
@@ -1721,6 +1750,8 @@ WebURLLoaderInternal::~WebURLLoaderInternal()
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
     if (m_hookBuf)
         free(m_hookBuf);
+    if (m_asynWkeNetSetData)
+        free(m_asynWkeNetSetData);
 #endif
 
 #ifndef NDEBUG
