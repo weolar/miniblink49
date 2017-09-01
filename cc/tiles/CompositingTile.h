@@ -52,6 +52,7 @@ private:
     int m_xIndex;
     int m_yIndex;
     blink::IntRect m_postion;
+    blink::IntSize m_layerBounds;
     SkBitmap* m_bitmap;
 };
 

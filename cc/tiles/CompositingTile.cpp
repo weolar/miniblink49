@@ -110,43 +110,52 @@ void CompositingTile::allocBitmapIfNeeded()
 {
     m_isNotInit = false;
     // 有可能在还没光栅化，就被滚动导致clearBitmap了，所以不需要ASSERT(!(!m_bitmap && 1 != getRefCnt())); 
+    if (!m_compositingLayer)
+        return;
 
     int width = m_postion.width();
     int height = m_postion.height();
-
-    bool needResize = false;
+    
     //m_postion = blink::IntRect(m_xIndex * kDefaultTileWidth, m_yIndex * kDefaultTileHeight, kDefaultTileWidth, kDefaultTileHeight);
-    if (m_compositingLayer) {
-        blink::IntSize bounds = m_compositingLayer->drawToCanvasProperties()->bounds;
-        if (0 == bounds.width() || 0 == bounds.height()) {
-            clearBitmap();
-            return;
-        }
-        if (kDefaultTileWidth >= bounds.width() && kDefaultTileHeight >= bounds.height()) {
-            if (1 != m_compositingLayer->tilesSize()) {
-                WTF::String outstr = WTF::String::format("CompositingTile::allocBitmapIfNeeded %p %d %d\n", this, m_compositingLayer->id(), m_compositingLayer->tilesSize());
-                OutputDebugStringW(outstr.charactersWithNullTermination().data());
-
-                DebugBreak();
-                return;
-            } else {
-                needResize = (width != bounds.width() || height != bounds.height());
-                width = bounds.width();
-                height = bounds.height();
-                m_postion = blink::IntRect(0, 0, width, height);
-            }
-        }
+    blink::IntSize bounds = m_compositingLayer->drawToCanvasProperties()->bounds;
+    bool isBoundsDirty = m_layerBounds != bounds;
+    m_layerBounds = bounds;
+    if (0 == bounds.width() || 0 == bounds.height()) {
+        clearBitmap();
+        return;
     }
 
+    
+    //         if (kDefaultTileWidth >= bounds.width() && kDefaultTileHeight >= bounds.height()) {
+    //             if (1 != m_compositingLayer->tilesSize()) {
+    //                 WTF::String outstr = WTF::String::format("CompositingTile::allocBitmapIfNeeded %p %d %d\n", this, m_compositingLayer->id(), m_compositingLayer->tilesSize());
+    //                 OutputDebugStringW(outstr.charactersWithNullTermination().data());
+    // 
+    //                 DebugBreak();
+    //                 return;
+    //             } else {
+    //                 needResize = (width != bounds.width() || height != bounds.height());
+    //                 width = bounds.width();
+    //                 height = bounds.height();
+    //                 m_postion = blink::IntRect(0, 0, width, height);
+    //             }
+    //         }
+    
+    int newWidth = bounds.width() < kDefaultTileWidth ? bounds.width() : kDefaultTileWidth;
+    int newHeight = bounds.height() < kDefaultTileHeight ? bounds.height() : kDefaultTileHeight;
+
+    bool needResize = newWidth != width || newHeight != height;
+    m_postion = blink::IntRect(m_xIndex * kDefaultTileWidth, m_yIndex * kDefaultTileHeight, newWidth, newHeight);
+
     if (m_bitmap && needResize) {
-        resizeBitmap(width, height);
+        resizeBitmap(newWidth, newHeight);
         return;
     } else if (m_bitmap && !needResize) {
         return;
     }
 
     clearBitmap();
-    m_bitmap = allocBitmap(width, height, m_compositingLayer->opaque());
+    m_bitmap = allocBitmap(newWidth, newHeight, m_compositingLayer->opaque());
 }
 
 // void CompositingTile::allocBitmapIfNeeded()
