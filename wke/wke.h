@@ -469,7 +469,10 @@ WKE_API void wkeNetSetMIMEType(void *job, char *type);
 WKE_API void wkeNetSetHTTPHeaderField(void *job, wchar_t *key, wchar_t *value, bool response);
 WKE_API void wkeNetSetURL(void *job, const char *url);
 WKE_API void wkeNetSetData(void *job, void *buf, int len);
-WKE_API void wkeNetHookRequest(void *job);	//调用此函数后,网络层收到数据会存储在一buf内,接收数据完成后响应OnLoadUrlEnd事件.#此调用严重影响性能,慎用
+// 调用此函数后,网络层收到数据会存储在一buf内,接收数据完成后响应OnLoadUrlEnd事件.#此调用严重影响性能,慎用
+// 此函数和wkeNetSetData的区别是，wkeNetHookRequest会在接受到真正网络数据后再调用回调，并允许回调修改网络数据。
+// 而wkeNetSetData是在网络数据还没发送的时候修改
+WKE_API void wkeNetHookRequest(void *job);	
 
 WKE_API bool wkeWebFrameIsMainFrame(wkeWebFrameHandle webFrame);
 WKE_API bool wkeIsWebRemoteFrame(wkeWebFrameHandle webFrame);
@@ -511,7 +514,7 @@ WKE_API void wkeSetWindowTitleW(wkeWebView webWindow, const wchar_t* title);
 
 //JavaScript Bind-----------------------------------------------------------------------------------
 #define JS_CALL __fastcall
-typedef jsValue(JS_CALL *jsNativeFunction) (jsExecState es);
+typedef jsValue(JS_CALL* jsNativeFunction) (jsExecState es);
 
 typedef enum {
     JSTYPE_NUMBER,

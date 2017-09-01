@@ -34,11 +34,14 @@ public:
     const v8::FunctionCallbackInfo<v8::Value>* args;
     v8::Persistent<v8::Context> context;
 
+    v8::Local<v8::Value> accessorSetterArg;
+
 private:
     JsExecStateInfo()
     {
         isolate = nullptr;
         args = nullptr;
+        accessorSetterArg.Clear();
     }
 };
 typedef JsExecStateInfo* jsExecState;
@@ -173,7 +176,13 @@ static jsValue createEmptyJsValue(WkeJsValue** out)
 
 int jsArgCount(jsExecState es)
 {
-    if (!s_execStates || !s_execStates->contains(es) || !es || !es->args)
+    if (!s_execStates || !s_execStates->contains(es))
+        return 0;
+
+    if (!es->accessorSetterArg.IsEmpty())
+        return 1;
+
+    if (!es || !es->args)
         return 0;
     return es->args->Length();
 }
@@ -183,18 +192,33 @@ jsType jsArgType(jsExecState es, int argIdx)
     return jsTypeOf(jsArg(es, argIdx));
 }
 
-jsValue jsArg(jsExecState es, int argIdx)
+static jsValue jsArgImpl(jsExecState es, v8::Local<v8::Value> value)
 {
-    if (!s_execStates || !s_execStates->contains(es) || !es || !es->args || argIdx >= es->args->Length() || es->context.IsEmpty())
-        return jsUndefined();
-    v8::Local<v8::Value> value =(*es->args)[argIdx];
-
     v8::Isolate* isolate = es->isolate;
     v8::HandleScope handleScope(isolate);
     v8::Local<v8::Context> context = v8::Local<v8::Context>::New(es->isolate, es->context);
     v8::Context::Scope contextScope(context);
 
     return createJsValueByLocalValue(es->isolate, context, value);
+}
+
+jsValue jsArg(jsExecState es, int argIdx)
+{
+    if (!s_execStates || !s_execStates->contains(es))
+        return jsUndefined();
+
+    if (!es->accessorSetterArg.IsEmpty()) {
+        if (0 != argIdx)
+            return jsUndefined();
+
+        return jsArgImpl(es, es->accessorSetterArg);
+    }
+
+    if (!es || !es->args || argIdx >= es->args->Length() || es->context.IsEmpty())
+        return jsUndefined();
+
+    v8::Local<v8::Value> value =(*es->args)[argIdx];
+    return jsArgImpl(es, value);
 }
 
 jsType jsTypeOf(jsValue v)
@@ -812,8 +836,8 @@ wkeWebView jsGetWebView(jsExecState es)
     v8::MaybeLocal<v8::String> nameMaybeLocal = v8::String::NewFromUtf8(isolate, "wkeWebViewToV8Context", v8::NewStringType::kNormal, -1);
     if (nameMaybeLocal.IsEmpty())
         return nullptr;
-	//zero
-#if V8_MINOR_VERSION == 7
+
+#if V8_MINOR_VERSION == 7 // zero
     v8::Local<v8::Value> wkeWebViewV8 = blink::V8HiddenValue::getHiddenValue(isolate, globalObj, nameMaybeLocal.ToLocalChecked());
 #else
     v8::Local<v8::Value> wkeWebViewV8 = globalObj->GetHiddenValue(nameMaybeLocal.ToLocalChecked());
@@ -827,7 +851,6 @@ void jsGC()
 {
     //WebCore::gcController().garbageCollectNow();
 }
-
 
 static void functionCallbackImpl(const v8::FunctionCallbackInfo<v8::Value>& info)
 {
@@ -901,7 +924,7 @@ public:
         this->jsDataObj = nullptr;
     }
 
-    static void AccessorGetterCallbackImpl(v8::Local<v8::String> property, const v8::PropertyCallbackInfo<v8::Value>& info)
+    static void AccessorGetterCallbackImpl(v8::Local<v8::Name> property, const v8::PropertyCallbackInfo<v8::Value>& info)
     {
         v8::Isolate* isolate = info.GetIsolate();
         NativeGetterSetterWrap* getterSetter = static_cast<NativeGetterSetterWrap*>(v8::External::Cast(*info.Data())->Value());
@@ -915,7 +938,7 @@ public:
         info.GetReturnValue().Set(getV8Value(retJsValue, isolate->GetCurrentContext()));
     }
 
-    static void AccessorSetterCallbackImpl(v8::Local<v8::String> property, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& info)
+    static void AccessorSetterCallbackImpl(v8::Local<v8::Name> property, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& info)
     {
         v8::Isolate* isolate = info.GetIsolate();
 
@@ -923,6 +946,7 @@ public:
 
         jsExecState execState = JsExecStateInfo::create();
         execState->args = nullptr;
+        execState->accessorSetterArg = value;
         execState->isolate = isolate;
         execState->context.Reset(isolate, isolate->GetCurrentContext());
         getterSetter->setter(execState);
@@ -937,17 +961,17 @@ public:
             return nullptr;
 
         Vector<NativeGetterSetterWrap*>* cachedWraps = new Vector<NativeGetterSetterWrap*>();
-		//zero
-#if V8_MINOR_VERSION == 7
-		v8::Local<v8::Value> dataMap = blink::V8HiddenValue::getHiddenValue(isolate, globalObj, addAccessorDataMaybeLocal.ToLocalChecked());
+        
+#if V8_MINOR_VERSION == 7 //zero
+        v8::Local<v8::Value> dataMap = blink::V8HiddenValue::getHiddenValue(isolate, globalObj, addAccessorDataMaybeLocal.ToLocalChecked());
 #else
         v8::Local<v8::Value> dataMap = globalObj->GetHiddenValue(addAccessorDataMaybeLocal.ToLocalChecked());
 #endif
         if (dataMap.IsEmpty()) {
             dataMap = v8::External::New(isolate, cachedWraps);
-			//zero
-#if V8_MINOR_VERSION == 7
-			blink::V8HiddenValue::setHiddenValue(isolate, globalObj, addAccessorDataMaybeLocal.ToLocalChecked(), dataMap);
+
+#if V8_MINOR_VERSION == 7 //zero
+            blink::V8HiddenValue::setHiddenValue(isolate, globalObj, addAccessorDataMaybeLocal.ToLocalChecked(), dataMap);
 #else
             globalObj->SetHiddenValue(addAccessorDataMaybeLocal.ToLocalChecked(), dataMap);
 #endif
@@ -960,6 +984,9 @@ public:
 
 static void addAccessor(v8::Local<v8::Context> context, const char* name, jsNativeFunction getter, jsNativeFunction setter)
 {
+    if (!getter && !setter)
+        return;
+
     v8::Isolate* isolate = context->GetIsolate();
     v8::HandleScope handleScope(isolate);
     v8::Context::Scope contextScope(context);
@@ -976,9 +1003,10 @@ static void addAccessor(v8::Local<v8::Context> context, const char* name, jsNati
     wrap->set(getter, setter);
     v8::Local<v8::Value> data = v8::External::New(isolate, wrap);
 
-    bool setOk = globalObj->SetAccessor(nameMaybeLocal.ToLocalChecked(),
-        NativeGetterSetterWrap::AccessorGetterCallbackImpl, NativeGetterSetterWrap::AccessorSetterCallbackImpl,
-        data, (v8::AccessControl)(v8::ALL_CAN_READ | v8::ALL_CAN_WRITE));
+    v8::AccessorNameGetterCallback v8Getter = getter ? &NativeGetterSetterWrap::AccessorGetterCallbackImpl : nullptr;
+    v8::AccessorNameSetterCallback v8Setter = setter ? &NativeGetterSetterWrap::AccessorSetterCallbackImpl : nullptr;
+
+    bool setOk = globalObj->SetAccessor(nameMaybeLocal.ToLocalChecked(), v8Getter, v8Setter, data, (v8::AccessControl)(v8::ALL_CAN_READ | v8::ALL_CAN_WRITE));
 }
 
 
@@ -992,6 +1020,8 @@ static void addAccessor(v8::Local<v8::Context> context, const char* name, jsNati
 struct jsFunctionInfo {
     char name[MAX_NAME_LENGTH];
     jsNativeFunction fn;
+    jsNativeFunction settet;
+    jsNativeFunction gettet;
     unsigned int argCount;
     unsigned int funcType;
 };
@@ -1022,15 +1052,14 @@ void jsBindFunction(const char* name, jsNativeFunction fn, unsigned int argCount
     s_jsFunctions.append(funcInfo);
 }
 
-void jsBindGetter(const char* name, jsNativeFunction fn)
-{
+void jsBindSetterGetter(const char* name, jsNativeFunction fn, unsigned int funcType) {
     if (!s_jsFunctionsPtr)
         s_jsFunctionsPtr = new Vector<jsFunctionInfo>();
     Vector<jsFunctionInfo>& s_jsFunctions = *s_jsFunctionsPtr;
 
     for (unsigned int i = 0; i < s_jsFunctions.size(); ++i) {
-        if (s_jsFunctions[i].funcType == JS_GETTER && strncmp(name, s_jsFunctions[i].name, MAX_NAME_LENGTH) == 0) {
-            s_jsFunctions[i].fn = fn;
+        if (strncmp(name, s_jsFunctions[i].name, MAX_NAME_LENGTH) == 0) {
+            JS_GETTER == funcType ? s_jsFunctions[i].gettet = fn : s_jsFunctions[i].settet = fn;
             return;
         }
     }
@@ -1038,34 +1067,21 @@ void jsBindGetter(const char* name, jsNativeFunction fn)
     jsFunctionInfo funcInfo;
     strncpy(funcInfo.name, name, MAX_NAME_LENGTH - 1);
     funcInfo.name[MAX_NAME_LENGTH - 1] = '\0';
-    funcInfo.fn = fn;
+    JS_GETTER == funcType ? funcInfo.gettet = fn : funcInfo.settet = fn;
     funcInfo.argCount = 0;
-    funcInfo.funcType = JS_GETTER;
+    funcInfo.funcType |= funcType;
 
     s_jsFunctions.append(funcInfo);
 }
 
+void jsBindGetter(const char* name, jsNativeFunction fn)
+{
+    jsBindSetterGetter(name, fn, JS_GETTER);
+}
+
 void jsBindSetter(const char* name, jsNativeFunction fn)
 {
-    if (!s_jsFunctionsPtr)
-        s_jsFunctionsPtr = new Vector<jsFunctionInfo>();
-    Vector<jsFunctionInfo>& s_jsFunctions = *s_jsFunctionsPtr;
-
-    for (unsigned int i = 0; i < s_jsFunctions.size(); ++i) {
-        if (s_jsFunctions[i].funcType == JS_SETTER && strncmp(name, s_jsFunctions[i].name, MAX_NAME_LENGTH) == 0) {
-            s_jsFunctions[i].fn = fn;
-            return;
-        }
-    }
-
-    jsFunctionInfo funcInfo;
-    strncpy(funcInfo.name, name, MAX_NAME_LENGTH - 1);
-    funcInfo.name[MAX_NAME_LENGTH - 1] = '\0';
-    funcInfo.fn = fn;
-    funcInfo.argCount = 1;
-    funcInfo.funcType = JS_SETTER;
-
-    s_jsFunctions.append(funcInfo);
+    jsBindSetterGetter(name, fn, JS_SETTER);
 }
 
 jsValue JS_CALL js_outputMsg(jsExecState es)
@@ -1277,9 +1293,9 @@ static void setWkeWebViewToV8Context(content::WebFrameClientImpl* client, v8::Lo
     v8::MaybeLocal<v8::String> nameMaybeLocal = v8::String::NewFromUtf8(isolate, "wkeWebViewToV8Context", v8::NewStringType::kNormal, -1);
     if (nameMaybeLocal.IsEmpty())
         return;
-	//zero
-#if V8_MINOR_VERSION == 7
-	v8::Local<v8::Value> wkeWebViewV8 = blink::V8HiddenValue::getHiddenValue(isolate, globalObj, nameMaybeLocal.ToLocalChecked());
+
+#if V8_MINOR_VERSION == 7 // zero
+    v8::Local<v8::Value> wkeWebViewV8 = blink::V8HiddenValue::getHiddenValue(isolate, globalObj, nameMaybeLocal.ToLocalChecked());
 #else
     v8::Local<v8::Value> wkeWebViewV8 = globalObj->GetHiddenValue(nameMaybeLocal.ToLocalChecked());
 #endif
@@ -1288,8 +1304,8 @@ static void setWkeWebViewToV8Context(content::WebFrameClientImpl* client, v8::Lo
     CWebView* wkeWebView = webPage->wkeWebView();
     ASSERT(wkeWebView);
     wkeWebViewV8 = v8::External::New(isolate, wkeWebView);
-	//zero
-#if V8_MINOR_VERSION == 7
+
+#if V8_MINOR_VERSION == 7 // zero
 	blink::V8HiddenValue::setHiddenValue(isolate, globalObj, nameMaybeLocal.ToLocalChecked(), wkeWebViewV8);
 #else
     globalObj->SetHiddenValue(nameMaybeLocal.ToLocalChecked(), wkeWebViewV8);
@@ -1337,13 +1353,9 @@ void onCreateGlobalObject(content::WebFrameClientImpl* client, blink::WebLocalFr
         for (size_t i = 0; i < s_jsFunctions.size(); ++i) {
             if (s_jsFunctions[i].funcType == JS_FUNC)
                 addFunction(context, s_jsFunctions[i].name, s_jsFunctions[i].fn, s_jsFunctions[i].argCount);
-            else if (s_jsFunctions[i].funcType == JS_GETTER || s_jsFunctions[i].funcType == JS_SETTER) {
-                jsNativeFunction getter = nullptr;
-                jsNativeFunction setter = nullptr;
-                if (s_jsFunctions[i].funcType == JS_GETTER)
-                    getter = s_jsFunctions[i].fn;
-                else if (s_jsFunctions[i].funcType == JS_SETTER)
-                    setter = s_jsFunctions[i].fn;
+            else {
+                jsNativeFunction getter = s_jsFunctions[i].gettet;
+                jsNativeFunction setter = s_jsFunctions[i].settet;
                 addAccessor(context, s_jsFunctions[i].name, getter, setter);
             }
         }
@@ -1365,13 +1377,13 @@ void onReleaseGlobalObject(content::WebFrameClientImpl* client, blink::WebLocalF
     v8::MaybeLocal<v8::String> addAccessorDataMaybeLocal = v8::String::NewFromUtf8(isolate, "wkeAddAccessorData", v8::NewStringType::kNormal, -1);
     if (addAccessorDataMaybeLocal.IsEmpty())
         return;
-	//zero
-#if V8_MINOR_VERSION == 7
-	v8::Local<v8::Value> dataMap = blink::V8HiddenValue::getHiddenValue(isolate, globalObj, addAccessorDataMaybeLocal.ToLocalChecked());
+
+#if V8_MINOR_VERSION == 7 // zero
+    v8::Local<v8::Value> dataMap = blink::V8HiddenValue::getHiddenValue(isolate, globalObj, addAccessorDataMaybeLocal.ToLocalChecked());
 #else
     v8::Local<v8::Value> dataMap = globalObj->GetHiddenValue(addAccessorDataMaybeLocal.ToLocalChecked());
 #endif
-	if (dataMap.IsEmpty())
+    if (dataMap.IsEmpty())
         return;
     
     Vector<NativeGetterSetterWrap*>* cachedWraps = static_cast<Vector<NativeGetterSetterWrap*>*>(v8::External::Cast(*dataMap)->Value());
