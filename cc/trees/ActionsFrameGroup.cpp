@@ -273,6 +273,7 @@ bool ActionsFrameGroup::applyActions(bool needCheck)
     while (true) {
         m_actionsMutex->lock();
         if (0 == m_frames.size()) {
+            okOnce = true;
             m_actionsMutex->unlock();
             break;
         }
