@@ -12,8 +12,12 @@
 #include "content/browser/WebFrameClientImpl.h"
 
 #include "third_party/WebKit/public/platform/WebDragData.h"
+#include "third_party/WebKit/public/web/WebDocument.h"
 #include "third_party/WebKit/public/web/WebScriptSource.h"
 #include "third_party/WebKit/Source/web/WebViewImpl.h"
+#include "third_party/WebKit/Source/web/WebSettingsImpl.h"
+#include "third_party/WebKit/Source/bindings/core/v8/ExceptionState.h"
+
 #include "third_party/WebKit/Source/wtf/text/WTFStringUtil.h"
 
 #undef  PURE
@@ -32,6 +36,7 @@ CWebView::CWebView()
     , m_cookie("", 0)
     , m_name("", 0)
     , m_url("", 0)
+    , m_isCokieEnabled(true)
 {
     _initPage();
     _initHandler();
@@ -510,30 +515,35 @@ void CWebView::editorRedo()
 
 void CWebView::setCookieEnabled(bool enable)
 {
-    //page()->setCookieEnabled(enable);
+    blink::WebSettingsImpl* settings = m_webPage->webViewImpl()->settingsImpl();
+    settings->setCookieEnabled(enable);
+    m_isCokieEnabled = enable;
 }
 
-//»ñÈ¡cookies
 const wchar_t* CWebView::cookieW()
 {
-// 	int e = 0;
-// 	m_cookie = mainFrame()->document()->cookie(e);
-// 	return m_cookie.stringW();
-    return L"";
+    cookie();
+    return m_cookie.stringW();
 }
 
 const utf8* CWebView::cookie()
 {
-// 	int e = 0;
-// 	m_cookie = mainFrame()->document()->cookie(e);
-// 	return m_cookie.string();
-    return "";
+    if (!m_webPage->mainFrame())
+        return "";
+    blink::WebDocument webDocument = m_webPage->mainFrame()->document();
+    if (webDocument.isNull())
+        return "";
+
+    const blink::Document* doc = webDocument.constUnwrap<blink::Document>();
+    String cookieString = doc->cookie(IGNORE_EXCEPTION);
+    m_cookie = cookieString;
+
+    return m_cookie.string();
 }
 
 bool CWebView::isCookieEnabled() const
 {
-    //return page()->cookieEnabled();
-    return true;
+    return m_isCokieEnabled;
 }
 
 void CWebView::setMediaVolume(float volume)
