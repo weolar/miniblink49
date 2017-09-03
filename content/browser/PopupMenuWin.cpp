@@ -408,7 +408,7 @@ LRESULT CALLBACK PopupMenuWin::mouseHookProc(int nCode, WPARAM wParam, LPARAM lP
         ::PostMessage(m_hPopup, WM_PMW_MOUSEHWHEEL, wParamToPost, 0);
     }
     
-    return CallNextHookEx(g_hMouseHook, nCode, wParam, lParam);
+    return ::CallNextHookEx(g_hMouseHook, nCode, wParam, lParam);
 }
 
 void PopupMenuWin::asynStartCreateWnd(blink::Timer<PopupMenuWin>*)

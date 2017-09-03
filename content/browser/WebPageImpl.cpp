@@ -1165,7 +1165,7 @@ void WebPageImpl::loadHistoryItem(int64 frameId, const WebHistoryItem& item, Web
     if (!webFrame)
         return;
 
-    AutoRecordActions autoRecordActions(this, m_layerTreeHost, false);
+    //AutoRecordActions autoRecordActions(this, m_layerTreeHost, false);
     webFrame->loadHistoryItem(item, type, policy);
 }
 
@@ -1191,7 +1191,7 @@ void WebPageImpl::loadRequest(int64 frameId, const blink::WebURLRequest& request
     if (!webFrame)
         return;
 
-    AutoRecordActions autoRecordActions(this, m_layerTreeHost, false);
+    //AutoRecordActions autoRecordActions(this, m_layerTreeHost, false);
     
     requestWrap.setHTTPHeaderField(WebString::fromLatin1("Accept"), WebString::fromLatin1("text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"));
     webFrame->loadRequest(requestWrap);
@@ -1206,7 +1206,7 @@ void WebPageImpl::loadHTMLString(int64 frameId, const WebData& html, const WebUR
     if (!webFrame)
         return;
 
-    AutoRecordActions autoRecordActions(this, m_layerTreeHost, false);
+    //AutoRecordActions autoRecordActions(this, m_layerTreeHost, false);
     webFrame->loadHTMLString(html, baseURL, unreachableURL, replace);
 }
 
