@@ -21644,6 +21644,9 @@
     <ClInclude Include="..\..\node\src\env-inl.h">
       <Filter>node\src</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\cc\trees\LayerTreeHostClient.h">
+      <Filter>cc\trees</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\third_party\WebKit\Source\devtools\front_end\Images\src\optimize_png.hashes">
