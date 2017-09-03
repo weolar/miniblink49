@@ -953,7 +953,7 @@ void wkeCopy(wkeWebView webView)
 
 void wkeCut(wkeWebView webView)
 {
-    wkeEditorCopy(webView);
+    wkeEditorCut(webView);
 }
 
 void wkePaste(wkeWebView webView)
