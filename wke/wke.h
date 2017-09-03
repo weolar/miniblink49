@@ -514,6 +514,7 @@ WKE_API void wkeSetWindowTitleW(wkeWebView webWindow, const wchar_t* title);
 
 //JavaScript Bind-----------------------------------------------------------------------------------
 #define JS_CALL __fastcall
+//#define JS_CALL __cdecl
 typedef jsValue(JS_CALL* jsNativeFunction) (jsExecState es);
 
 typedef enum {

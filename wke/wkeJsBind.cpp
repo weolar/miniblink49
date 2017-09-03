@@ -414,12 +414,27 @@ bool jsToBoolean(jsExecState es, jsValue v)
     return false;
 }
 
+static std::vector<std::vector<char>*> s_sharedStringBuffers;
+static std::vector<std::vector<wchar_t>*> s_sharedStringBuffersW;
 
-static Vector<char> s_sharedStringBuffer;
-static Vector<wchar_t> s_sharedStringBufferW;
-
-const utf8* jsToTempString(jsExecState es, jsValue v)
+const wchar_t* jsToTempStringW(jsExecState es, jsValue v)
 {
+    const utf8* utf8String = jsToTempString(es, v);
+    Vector<UChar> utf16 = WTF::ensureUTF16UChar(String(utf8String));
+    if (0 == utf16.size())
+        return L"";
+
+    std::vector<wchar_t>* stringBuffer = new std::vector<wchar_t>();
+    s_sharedStringBuffersW.push_back(stringBuffer);
+
+    stringBuffer->resize(utf16.size());
+    memcpy(&stringBuffer->at(0), utf16.data(), utf16.size() * sizeof(wchar_t));
+    stringBuffer->push_back('\0');
+
+    return &stringBuffer->at(0);
+}
+
+const utf8* jsToTempString(jsExecState es, jsValue v) {
     if (!s_execStates || !s_execStates->contains(es) || !es)
         return "";
 
@@ -428,9 +443,8 @@ const utf8* jsToTempString(jsExecState es, jsValue v)
         return "";
 
     WkeJsValue* wkeValue = it->value;
-    s_sharedStringBuffer.clear();
+    
     WTF::CString sharedStringBuffer;
-
     if (WkeJsValue::wkeJsValueV8Value == wkeValue->type) {
         if (wkeValue->value.IsEmpty())
             return "";
@@ -451,48 +465,16 @@ const utf8* jsToTempString(jsExecState es, jsValue v)
         sharedStringBuffer = wkeValue->stringVal;
     }
 
-    s_sharedStringBuffer.resize(sharedStringBuffer.length());
-    memcpy(s_sharedStringBuffer.data(), sharedStringBuffer.data(), sharedStringBuffer.length());
-    s_sharedStringBuffer.append('\0');
-    return s_sharedStringBuffer.data();
+    if (0 == sharedStringBuffer.length())
+        return "";
 
-    return "";    
-}
+    std::vector<char>* stringBuffer = new std::vector<char>();
+    s_sharedStringBuffers.push_back(stringBuffer);
 
-const wchar_t* jsToTempStringW(jsExecState es, jsValue v)
-{
-    if (!s_execStates || !s_execStates->contains(es) || !es)
-        return L"";
-
-    JsValueMap::iterator it = jsValueMap->find(v);
-    if (it == jsValueMap->end())
-        return L"";
-
-    WkeJsValue* wkeValue = it->value;
-    String stringWTF;
-    if (WkeJsValue::wkeJsValueV8Value == wkeValue->type) {
-        if (wkeValue->value.IsEmpty())
-            return L"";
-
-        v8::Isolate* isolate = es->isolate;
-        v8::HandleScope handleScope(isolate);
-        v8::Local<v8::Context> context = v8::Local<v8::Context>::New(isolate, es->context);
-        v8::Context::Scope contextScope(context);
-
-        v8::Local<v8::Value> value = v8::Local<v8::Value>::New(wkeValue->isolate, wkeValue->value);
-        if (!value->IsString())
-            return L"";
-
-        v8::Local<v8::String> stringValue = value->ToString();
-        stringWTF = blink::v8StringToWebCoreString<String>(stringValue, blink::DoNotExternalize);
-    } else if (WkeJsValue::wkeJsValueString == wkeValue->type) {
-        stringWTF = String::fromUTF8(wkeValue->stringVal.data());
-    }
-
-    s_sharedStringBufferW = WTF::ensureStringToUChars(stringWTF);
-    return s_sharedStringBufferW.data();
-
-    return L"";
+    stringBuffer->resize(sharedStringBuffer.length());
+    memcpy(&stringBuffer->at(0), sharedStringBuffer.data(), sharedStringBuffer.length());
+    stringBuffer->push_back('\0');
+    return &stringBuffer->at(0);
 }
 
 jsValue jsInt(int n)
@@ -1411,8 +1393,18 @@ void freeV8TempObejctOnOneFrameBefore()
     for (Vector<jsExecState>::iterator it = s_execStates->begin(); it != s_execStates->end(); ++it) {
         jsExecState state = *it;
         delete state;
-    }
+    } 
     s_execStates->clear();
+
+    for (size_t i = 0; i < s_sharedStringBuffers.size(); ++i) {
+        delete s_sharedStringBuffers[i];
+    }
+    s_sharedStringBuffers.clear();
+
+    for (size_t i = 0; i < s_sharedStringBuffersW.size(); ++i) {
+        delete s_sharedStringBuffersW[i];
+    }
+    s_sharedStringBuffersW.clear();
 }
 
 jsValue createJsValueString(v8::Local<v8::Context> context, const utf8* str)
