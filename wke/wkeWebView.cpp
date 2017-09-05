@@ -9,6 +9,7 @@
 #include "wkeJsBind.h"
 
 #include "content/web_impl_win/BlinkPlatformImpl.h"
+#include "content/web_impl_win/WebCookieJarCurlImpl.h"
 #include "content/browser/WebFrameClientImpl.h"
 
 #include "third_party/WebKit/public/platform/WebDragData.h"
@@ -17,7 +18,6 @@
 #include "third_party/WebKit/Source/web/WebViewImpl.h"
 #include "third_party/WebKit/Source/web/WebSettingsImpl.h"
 #include "third_party/WebKit/Source/bindings/core/v8/ExceptionState.h"
-
 #include "third_party/WebKit/Source/wtf/text/WTFStringUtil.h"
 
 #undef  PURE
@@ -535,8 +535,8 @@ const utf8* CWebView::cookie()
         return "";
 
     const blink::Document* doc = webDocument.constUnwrap<blink::Document>();
-    String cookieString = doc->cookie(IGNORE_EXCEPTION);
-    m_cookie = cookieString;
+    //String cookieString = doc->cookie(IGNORE_EXCEPTION);
+    m_cookie = content::WebCookieJarImpl::cookiesForSession(KURL(), doc->cookieURL(), true);
 
     return m_cookie.string();
 }

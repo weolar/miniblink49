@@ -312,8 +312,8 @@ bool jsIsNull(jsValue v)
     v8::Local<v8::Context> context = v8::Local<v8::Context>::New(isolate, wkeValue->context);
     v8::Context::Scope contextScope(context);
     v8::Local<v8::Value> value = v8::Local<v8::Value>::New(wkeValue->isolate, wkeValue->value);
+
     return value->IsNull();
-    
 }
 
 bool jsIsArray(jsValue v)
@@ -834,22 +834,34 @@ void jsGC()
     //WebCore::gcController().garbageCollectNow();
 }
 
+struct AddFunctionInfo {
+    AddFunctionInfo(wkeJsNativeFunction nativeFunction, void* param) {
+        this->nativeFunction = nativeFunction;
+        this->param = param;
+    }
+
+    wkeJsNativeFunction nativeFunction;
+    void* param;
+};
+
 static void functionCallbackImpl(const v8::FunctionCallbackInfo<v8::Value>& info)
 {
     v8::Isolate* isolate = info.GetIsolate();
-    jsNativeFunction func = static_cast<jsNativeFunction>(v8::External::Cast(*info.Data())->Value());
+    AddFunctionInfo* addFunctionInfo = static_cast<AddFunctionInfo*>(v8::External::Cast(*info.Data())->Value());
+    wkeJsNativeFunction func = addFunctionInfo->nativeFunction;
+    //wkeJsNativeFunction func = static_cast<wkeJsNativeFunction>(v8::External::Cast(*info.Data())->Value());
     JsExecStateInfo* execState = JsExecStateInfo::create();
     execState->args = &info;
     execState->isolate = isolate;
     v8::Local<v8::Context> context = isolate->GetCurrentContext();
     execState->context.Reset(isolate, context);
-    jsValue retVal = func(execState);
+    jsValue retVal = func(execState, addFunctionInfo->param);
 
     v8::Local<v8::Value> rv = getV8Value(retVal, context);
     info.GetReturnValue().Set(rv);
 }
 
-static void addFunction(v8::Local<v8::Context> context, const char* name, jsNativeFunction nativeFunction, unsigned int argCount)
+static void addFunction(v8::Local<v8::Context> context, const char* name, wkeJsNativeFunction nativeFunction, void* param, unsigned int argCount)
 {
     v8::Isolate* isolate = context->GetIsolate();
     if (!isolate->InContext())
@@ -858,8 +870,8 @@ static void addFunction(v8::Local<v8::Context> context, const char* name, jsNati
     v8::Context::Scope contextScope(context);
 
     v8::Local<v8::Object> object = context->Global();
-    v8::Local<v8::FunctionTemplate> tmpl = v8::FunctionTemplate::New(isolate);
-    v8::Local<v8::Value> data = v8::External::New(isolate, nativeFunction);
+    v8::Local<v8::FunctionTemplate> tmpl = v8::FunctionTemplate::New(isolate);    
+    v8::Local<v8::Value> data = v8::External::New(isolate, new AddFunctionInfo(nativeFunction, param));
 
     // Set the function handler callback.
     tmpl->SetCallHandler(functionCallbackImpl, data);
@@ -880,15 +892,20 @@ static void addFunction(v8::Local<v8::Context> context, const char* name, jsNati
 
 class NativeGetterSetterWrap {
 public:
-    jsNativeFunction getter;
-    jsNativeFunction setter;
+    wkeJsNativeFunction getter;
+    void* getterParam;
+
+    wkeJsNativeFunction setter;
+    void* setterParam;
 
     jsData* jsDataObj;
 
-    void set(jsNativeFunction getter, jsNativeFunction setter)
+    void set(wkeJsNativeFunction getter, void* getterParam, wkeJsNativeFunction setter, void* setterParam)
     {
         this->getter = getter;
+        this->getterParam = getterParam;
         this->setter = setter;
+        this->setterParam = setterParam;
         this->jsDataObj = nullptr;
     }
 
@@ -915,7 +932,7 @@ public:
         execState->args = nullptr;
         execState->isolate = isolate;
         execState->context.Reset(isolate, isolate->GetCurrentContext());
-        jsValue retJsValue = getterSetter->getter(execState);
+        jsValue retJsValue = getterSetter->getter(execState, getterSetter->getterParam);
 
         info.GetReturnValue().Set(getV8Value(retJsValue, isolate->GetCurrentContext()));
     }
@@ -931,7 +948,7 @@ public:
         execState->accessorSetterArg = value;
         execState->isolate = isolate;
         execState->context.Reset(isolate, isolate->GetCurrentContext());
-        getterSetter->setter(execState);
+        getterSetter->setter(execState, getterSetter->getterParam);
 
         info.GetReturnValue().SetUndefined();
     }
@@ -964,7 +981,7 @@ public:
     }
 };
 
-static void addAccessor(v8::Local<v8::Context> context, const char* name, jsNativeFunction getter, jsNativeFunction setter)
+static void addAccessor(v8::Local<v8::Context> context, const char* name, wkeJsNativeFunction getter, void* getterParam, wkeJsNativeFunction setter, void* setterParam)
 {
     if (!getter && !setter)
         return;
@@ -982,7 +999,7 @@ static void addAccessor(v8::Local<v8::Context> context, const char* name, jsNati
         return;
 
     NativeGetterSetterWrap* wrap = NativeGetterSetterWrap::createWrapAndAddToGlobalObjForRelease(isolate, globalObj);
-    wrap->set(getter, setter);
+    wrap->set(getter, getterParam, setter, setterParam);
     v8::Local<v8::Value> data = v8::External::New(isolate, wrap);
 
     v8::AccessorNameGetterCallback v8Getter = getter ? &NativeGetterSetterWrap::AccessorGetterCallbackImpl : nullptr;
@@ -1001,40 +1018,34 @@ static void addAccessor(v8::Local<v8::Context> context, const char* name, jsNati
 
 struct jsFunctionInfo {
     char name[MAX_NAME_LENGTH];
-    jsNativeFunction fn;
-    jsNativeFunction settet;
-    jsNativeFunction gettet;
+    wkeJsNativeFunction fn;
+    void* param;
+
+    wkeJsNativeFunction settet;
+    void* setterParam;
+
+    wkeJsNativeFunction gettet;
+    void* getterParam;
+
     unsigned int argCount;
     unsigned int funcType;
 };
 
 static Vector<jsFunctionInfo>* s_jsFunctionsPtr = nullptr;
 
-void jsBindFunction(const char* name, jsNativeFunction fn, unsigned int argCount)
+static jsValue wkeJsBindFunctionWrap(jsExecState es, void* param)
 {
-    if (!s_jsFunctionsPtr)
-        s_jsFunctionsPtr = new Vector<jsFunctionInfo>();
-    Vector<jsFunctionInfo>& s_jsFunctions = *s_jsFunctionsPtr;
-
-    for (unsigned int i = 0; i < s_jsFunctions.size(); ++i) {
-        if (s_jsFunctions[i].funcType == JS_FUNC && strncmp(name, s_jsFunctions[i].name, MAX_NAME_LENGTH) == 0) {
-            s_jsFunctions[i].fn = fn;
-            s_jsFunctions[i].argCount = argCount;
-            return;
-        }
-    }
-
-    jsFunctionInfo funcInfo;
-    strncpy(funcInfo.name, name, MAX_NAME_LENGTH - 1);
-    funcInfo.name[MAX_NAME_LENGTH - 1] = '\0';
-    funcInfo.fn = fn;
-    funcInfo.argCount = argCount;
-    funcInfo.funcType = JS_FUNC;
-
-    s_jsFunctions.append(funcInfo);
+    jsNativeFunction fn = (jsNativeFunction)param;
+    return fn(es);
 }
 
-void jsBindSetterGetter(const char* name, jsNativeFunction fn, unsigned int funcType) {
+void jsBindFunction(const char* name, jsNativeFunction fn, unsigned int argCount)
+{
+    wkeJsBindFunction(name, wkeJsBindFunctionWrap, fn, argCount);
+}
+
+static void wkeJsBindSetterGetter(const char* name, wkeJsNativeFunction fn, void* param, unsigned int funcType)
+{
     if (!s_jsFunctionsPtr)
         s_jsFunctionsPtr = new Vector<jsFunctionInfo>();
     Vector<jsFunctionInfo>& s_jsFunctions = *s_jsFunctionsPtr;
@@ -1050,6 +1061,8 @@ void jsBindSetterGetter(const char* name, jsNativeFunction fn, unsigned int func
     strncpy(funcInfo.name, name, MAX_NAME_LENGTH - 1);
     funcInfo.name[MAX_NAME_LENGTH - 1] = '\0';
     JS_GETTER == funcType ? funcInfo.gettet = fn : funcInfo.settet = fn;
+    JS_GETTER == funcType ? funcInfo.getterParam = param : funcInfo.setterParam = param;
+
     funcInfo.argCount = 0;
     funcInfo.funcType |= funcType;
 
@@ -1058,15 +1071,51 @@ void jsBindSetterGetter(const char* name, jsNativeFunction fn, unsigned int func
 
 void jsBindGetter(const char* name, jsNativeFunction fn)
 {
-    jsBindSetterGetter(name, fn, JS_GETTER);
+    wkeJsBindSetterGetter(name, wkeJsBindFunctionWrap, fn, JS_GETTER);
 }
 
 void jsBindSetter(const char* name, jsNativeFunction fn)
 {
-    jsBindSetterGetter(name, fn, JS_SETTER);
+    wkeJsBindSetterGetter(name, wkeJsBindFunctionWrap, fn, JS_SETTER);
 }
 
-jsValue JS_CALL js_outputMsg(jsExecState es)
+void wkeJsBindFunction(const char* name, wkeJsNativeFunction fn, void* param, unsigned int argCount)
+{
+    if (!s_jsFunctionsPtr)
+        s_jsFunctionsPtr = new Vector<jsFunctionInfo>();
+    Vector<jsFunctionInfo>& s_jsFunctions = *s_jsFunctionsPtr;
+
+    for (unsigned int i = 0; i < s_jsFunctions.size(); ++i) {
+        if (s_jsFunctions[i].funcType == JS_FUNC && strncmp(name, s_jsFunctions[i].name, MAX_NAME_LENGTH) == 0) {
+            s_jsFunctions[i].fn = fn;
+            s_jsFunctions[i].param = param;
+            s_jsFunctions[i].argCount = argCount;
+            return;
+        }
+    }
+
+    jsFunctionInfo funcInfo;
+    strncpy(funcInfo.name, name, MAX_NAME_LENGTH - 1);
+    funcInfo.name[MAX_NAME_LENGTH - 1] = '\0';
+    funcInfo.fn = fn;
+    funcInfo.param = param;
+    funcInfo.argCount = argCount;
+    funcInfo.funcType = JS_FUNC;
+
+    s_jsFunctions.append(funcInfo);
+}
+
+void wkeJsBindGetter(const char* name, wkeJsNativeFunction fn, void* param)
+{
+    wkeJsBindSetterGetter(name, fn, param, JS_GETTER);
+}
+
+void wkeJsBindSetter(const char* name, wkeJsNativeFunction fn, void* param)
+{
+    wkeJsBindSetterGetter(name, fn, param, JS_GETTER);
+}
+
+jsValue js_outputMsg(jsExecState es, void* param)
 {
     //ASSERT(jsArgCount(es) == 1);
     //ASSERT(jsArgType(es, 0) == JSTYPE_STRING);
@@ -1077,13 +1126,13 @@ jsValue JS_CALL js_outputMsg(jsExecState es)
     return jsUndefined();
 }
 
-jsValue JS_CALL js_getWebViewName(jsExecState es)
+jsValue js_getWebViewName(jsExecState es, void* param)
 {
     wkeWebView webView = jsGetWebView(es);
     return jsString(es, webView->name());
 }
 
-jsValue JS_CALL js_setWebViewName(jsExecState es)
+jsValue js_setWebViewName(jsExecState es, void* param)
 {
     const char* name = jsToTempString(es, jsArg(es, 0));
     wkeWebView webView = jsGetWebView(es);
@@ -1317,8 +1366,8 @@ void onCreateGlobalObject(content::WebFrameClientImpl* client, blink::WebLocalFr
     v8::Isolate* isolate = context->GetIsolate();
     setWkeWebViewToV8Context(client, context);
 
-    addFunction(context, "outputMsg", js_outputMsg, 1);
-    addAccessor(context, "webViewName", js_getWebViewName, js_setWebViewName);
+    addFunction(context, "outputMsg", js_outputMsg, nullptr, 1);
+    addAccessor(context, "webViewName", js_getWebViewName, nullptr, js_setWebViewName, nullptr);
 
     v8::HandleScope handleScope(isolate);
     v8::Context::Scope contextScope(context);
@@ -1334,11 +1383,13 @@ void onCreateGlobalObject(content::WebFrameClientImpl* client, blink::WebLocalFr
 
         for (size_t i = 0; i < s_jsFunctions.size(); ++i) {
             if (s_jsFunctions[i].funcType == JS_FUNC)
-                addFunction(context, s_jsFunctions[i].name, s_jsFunctions[i].fn, s_jsFunctions[i].argCount);
+                addFunction(context, s_jsFunctions[i].name, s_jsFunctions[i].fn, s_jsFunctions[i].param, s_jsFunctions[i].argCount);
             else {
-                jsNativeFunction getter = s_jsFunctions[i].gettet;
-                jsNativeFunction setter = s_jsFunctions[i].settet;
-                addAccessor(context, s_jsFunctions[i].name, getter, setter);
+                wkeJsNativeFunction getter = s_jsFunctions[i].gettet;
+                void* getterParam = s_jsFunctions[i].getterParam;
+                wkeJsNativeFunction setter = s_jsFunctions[i].settet;
+                void* setterParam = s_jsFunctions[i].setterParam;
+                addAccessor(context, s_jsFunctions[i].name, getter, getterParam, setter, setterParam);
             }
         }
     }
