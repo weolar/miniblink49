@@ -514,8 +514,9 @@ WKE_API void wkeSetWindowTitleW(wkeWebView webWindow, const wchar_t* title);
 
 //JavaScript Bind-----------------------------------------------------------------------------------
 #define JS_CALL __fastcall
-//#define JS_CALL __cdecl
 typedef jsValue(JS_CALL* jsNativeFunction) (jsExecState es);
+
+typedef jsValue(* wkeJsNativeFunction) (jsExecState es, void* param);
 
 typedef enum {
     JSTYPE_NUMBER,
@@ -529,6 +530,10 @@ typedef enum {
 WKE_API void jsBindFunction(const char* name, jsNativeFunction fn, unsigned int argCount);
 WKE_API void jsBindGetter(const char* name, jsNativeFunction fn); /*get property*/
 WKE_API void jsBindSetter(const char* name, jsNativeFunction fn); /*set property*/
+
+WKE_API void wkeJsBindFunction(const char* name, wkeJsNativeFunction fn, void* param, unsigned int argCount);
+WKE_API void wkeJsBindGetter(const char* name, wkeJsNativeFunction fn, void* param); /*get property*/
+WKE_API void wkeJsBindSetter(const char* name, wkeJsNativeFunction fn, void* param); /*set property*/
 
 WKE_API int jsArgCount(jsExecState es);
 WKE_API jsType jsArgType(jsExecState es, int argIdx);
