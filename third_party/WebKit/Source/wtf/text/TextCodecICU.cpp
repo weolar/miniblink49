@@ -34,6 +34,7 @@
 #include "wtf/text/CString.h"
 #include "wtf/text/CharacterNames.h"
 #include "wtf/text/StringBuilder.h"
+#include "wtf/text/WTFStringUtil.h"
 // #include <unicode/ucnv.h>
 // #include <unicode/ucnv_cb.h>
 
@@ -369,28 +370,6 @@ private:
 };
 #endif // MINIBLINK_NOT_IMPLEMENTED
 
-void MByteToWChar(LPCSTR lpcszStr, DWORD cbMultiByte, Vector<UChar>& out, UINT codePage)
-{
-    DWORD dwMinSize;
-    dwMinSize = MultiByteToWideChar(codePage, 0, lpcszStr, cbMultiByte, NULL, 0);
-
-    out.resize(dwMinSize);
-
-    // Convert headers from ASCII to Unicode.
-    MultiByteToWideChar(codePage, 0, lpcszStr, cbMultiByte, out.data(), dwMinSize);
-}
-
-void WCharToMByte(LPCWSTR lpWideCharStr, DWORD cchWideChar, Vector<char>& out, UINT codePage)
-{
-    DWORD dwMinSize;
-    dwMinSize = WideCharToMultiByte(codePage, 0, lpWideCharStr, cchWideChar, NULL, 0, NULL, FALSE);
-
-    out.resize(dwMinSize);
-
-    // Convert headers from ASCII to Unicode.
-    WideCharToMultiByte(codePage, 0, lpWideCharStr, cchWideChar, out.data(), dwMinSize, NULL, FALSE);
-}
-
 String TextCodecICU::decode(const char* bytes, size_t length, FlushBehavior flush, bool stopOnError, bool& sawError)
 {
 #ifdef MINIBLINK_NOT_IMPLEMENTED
@@ -449,12 +428,14 @@ String TextCodecICU::decode(const char* bytes, size_t length, FlushBehavior flus
 #endif
 
 #else
-    Vector<UChar> resultBuffer;
+    std::vector<UChar> resultBuffer;
     if (strcasecmp(m_encoding.name(), "gb2312") && strcasecmp(m_encoding.name(), "GBK"))
         return String();
 
-    MByteToWChar(bytes, length, resultBuffer, CP_ACP);
-    return String(resultBuffer);
+    MByteToWChar(bytes, length, &resultBuffer, CP_ACP);
+    if (0 == resultBuffer.size())
+        return String();
+    return String(&resultBuffer[0], resultBuffer.size());
     
 #endif // MINIBLINK_NOT_IMPLEMENTED
 }
@@ -640,12 +621,14 @@ CString TextCodecICU::encode(const UChar* characters, size_t length, Unencodable
 #ifdef MINIBLINK_NOT_IMPLEMENTED
     return encodeCommon(characters, length, handling);
 #else
-    Vector<char> resultBuffer;
+    std::vector<char> resultBuffer;
     if (strcasecmp(m_encoding.name(), "gb2312") && strcasecmp(m_encoding.name(), "GBK"))
         return CString();
 
-    WCharToMByte(characters, length, resultBuffer, CP_ACP);
-    return CString(resultBuffer.data(), resultBuffer.size());
+    WCharToMByte(characters, length, &resultBuffer, CP_ACP);
+    if (0 == resultBuffer.size())
+        return CString();
+    return CString(&resultBuffer[0], resultBuffer.size());
 #endif // MINIBLINK_NOT_IMPLEMENTED
 }
 

@@ -3,6 +3,7 @@
 #define WTFStringUtil_h
 
 #include <string>
+#include <vector>
 #include "wtf/text/WTFString.h"
 
 namespace WTF {
@@ -17,6 +18,9 @@ std::string WTFStringToStdString(const WTF::String& str);
 bool isTextUTF8(const char *str, int length);
 
 bool splitStringToVector(const String& strData, const char strSplit, bool needTrim, WTF::Vector<String>& out);
+
+void MByteToWChar(LPCSTR lpcszStr, DWORD cbMultiByte, std::vector<UChar>* out, UINT codePage);
+void WCharToMByte(LPCWSTR lpWideCharStr, DWORD cchWideChar, std::vector<char>* out, UINT codePage);
 
 }
 

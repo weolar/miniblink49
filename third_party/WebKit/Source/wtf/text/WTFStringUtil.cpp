@@ -112,6 +112,36 @@ void stringTrim(String& stringInOut, bool leftTrim, bool rightTrim)
     }
 }
 
+void MByteToWChar(LPCSTR lpcszStr, DWORD cbMultiByte, std::vector<UChar>* out, UINT codePage)
+{
+    out->clear();
+
+    DWORD dwMinSize;
+    dwMinSize = MultiByteToWideChar(codePage, 0, lpcszStr, cbMultiByte, NULL, 0);
+    if (0 == dwMinSize)
+        return;
+
+    out->resize(dwMinSize);
+
+    // Convert headers from ASCII to Unicode.
+    MultiByteToWideChar(codePage, 0, lpcszStr, cbMultiByte, &out->at(0), dwMinSize);
+}
+
+void WCharToMByte(LPCWSTR lpWideCharStr, DWORD cchWideChar, std::vector<char>* out, UINT codePage)
+{
+    out->clear();
+
+    DWORD dwMinSize;
+    dwMinSize = WideCharToMultiByte(codePage, 0, lpWideCharStr, cchWideChar, NULL, 0, NULL, FALSE);
+    if (0 == dwMinSize)
+        return;
+
+    out->resize(dwMinSize);
+
+    // Convert headers from ASCII to Unicode.
+    WideCharToMultiByte(codePage, 0, lpWideCharStr, cchWideChar, &out->at(0), dwMinSize, NULL, FALSE);
+}
+
 bool splitStringToVector(const String& strData, const char strSplit, bool needTrim, WTF::Vector<String>& out)
 {
     ASSERT(strData.is8Bit());
