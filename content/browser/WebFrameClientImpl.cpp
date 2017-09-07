@@ -440,6 +440,7 @@ WebNavigationPolicy WebFrameClientImpl::decidePolicyForNavigation(const Navigati
         // WebString::utf8在含有utf的中文时，会当成latin来转换
         WebString url16 = info.urlRequest.url().string();
         wke::CString url(url16);
+
         bool ok = m_webPage->wkeHandler().navigationCallback(m_webPage->wkeWebView(), m_webPage->wkeHandler().navigationCallbackParam, navigationType, &url);
         if (!ok)
             return WebNavigationPolicyIgnore;
