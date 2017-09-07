@@ -225,7 +225,7 @@ static String getNetscapeCookieFormat(const KURL& url, const String& value)
     return cookieStr.toString();
 }
 
-void setCookiesFromDOM(const KURL&, const KURL& url, const String& value)
+static void setCookiesFromDOM(const KURL&, const KURL& url, const String& value)
 {
     if (!net::WebURLLoaderManager::sharedInstance())
         return;
@@ -260,7 +260,7 @@ void setCookiesFromDOM(const KURL&, const KURL& url, const String& value)
 //     OutputDebugStringA("\n");
 }
 
-static String cookiesForSession(const KURL&, const KURL& url, bool httponly)
+String WebCookieJarImpl::cookiesForSession(const KURL&, const KURL& url, bool httponly)
 {
     if (!net::WebURLLoaderManager::sharedInstance())
         return "";
