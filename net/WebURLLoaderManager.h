@@ -42,12 +42,14 @@
 
 namespace blink {
 class WebURLRequest;
+struct WebURLError;
 }
 
 namespace net {
 
 class WebURLLoaderInternal;
 class WebURLLoaderManager;
+struct BlobTempFileInfo;
 
 class AutoLockJob {
 public:
@@ -98,6 +100,12 @@ public:
 
     bool isShutdown() const { return m_isShutdown; }
 
+    String handleHeaderForBlobOnMainThread(WebURLLoaderInternal* job, size_t totalSize);
+    BlobTempFileInfo* getBlobTempFileInfoByTempFilePath(const String& path);
+    void didReceiveDataOrDownload(WebURLLoaderInternal* job, const char* data, int dataLength, int encodedDataLength);
+    void handleDidFinishLoading(WebURLLoaderInternal* job, double finishTime, int64_t totalEncodedDataLength);
+    void handleDidFail(WebURLLoaderInternal* job, const blink::WebURLError& error);
+
 private:
     WebURLLoaderManager();
     ~WebURLLoaderManager();
@@ -137,6 +145,8 @@ private:
     WTF::Mutex m_liveJobsMutex;
     WTF::HashMap<int, WebURLLoaderInternal*> m_liveJobs;
     int m_newestJobId;
+
+    WTF::HashMap<String, BlobTempFileInfo*> m_blobCache; // real url -> <temp, data>
 };
 
 }

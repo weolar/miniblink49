@@ -100,6 +100,8 @@ public:
 
     int status;
 
+    size_t m_dataLength;
+
     bool m_defersLoading;
     bool m_shouldContentSniff;
 
