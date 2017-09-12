@@ -16,6 +16,7 @@ class WebThreadImpl;
 class WebMimeRegistryImpl;
 class WebClipboardImpl;
 class WebFileUtilitiesImpl;
+class WebBlobRegistryImpl;
 
 class BlinkPlatformImpl : NON_EXPORTED_BASE(public blink::Platform) {
 public:
@@ -115,6 +116,7 @@ private:
     blink::WebThemeEngine* m_webThemeEngine;
     WebMimeRegistryImpl* m_mimeRegistry;
     WebClipboardImpl* m_clipboardImpl;
+    WebBlobRegistryImpl* m_blobRegistryImpl;
     WebFileUtilitiesImpl* m_webFileUtilitiesImpl;
     cc_blink::WebCompositorSupportImpl* m_webCompositorSupport;
     blink::WebScrollbarBehavior* m_webScrollbarBehavior;
