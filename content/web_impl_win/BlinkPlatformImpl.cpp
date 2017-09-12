@@ -301,8 +301,9 @@ void BlinkPlatformImpl::shutdown()
 #ifdef _DEBUG
     if (blink::g_activatingImageLoader && !blink::g_activatingImageLoader->empty() ||
         // blink::g_activatingFontFallbackList && !blink::g_activatingFontFallbackList->empty() ||
-        g_activatingStyleFetchedImage && !g_activatingStyleFetchedImage->empty() ||
-        g_activatingIncrementLoadEventDelayCount && !g_activatingIncrementLoadEventDelayCount->empty())
+        g_activatingStyleFetchedImage && !g_activatingStyleFetchedImage->empty() 
+        // || g_activatingIncrementLoadEventDelayCount && !g_activatingIncrementLoadEventDelayCount->empty()
+        )
         DebugBreak();
 #endif
 
