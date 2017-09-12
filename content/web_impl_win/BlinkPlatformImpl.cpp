@@ -54,7 +54,6 @@ class CallAddrsRecord;
 CallAddrsRecord* g_callAddrsRecord = nullptr;
 
 extern std::set<void*>* g_activatingStyleFetchedImage;
-extern std::set<void*>* g_activatingIncrementLoadEventDelayCount;
 
 typedef void* (__cdecl * MyFree)(void*);
 MyFree myFree = nullptr;
@@ -170,6 +169,7 @@ BlinkPlatformImpl::BlinkPlatformImpl()
     m_localStorageStorageMap = nullptr;
     m_sessionStorageStorageMap = nullptr;
     m_webFileUtilitiesImpl = nullptr;
+    m_blobRegistryImpl = nullptr;
     m_userAgent = nullptr;
     m_storageNamespaceIdCount = 1;
     m_lock = new CRITICAL_SECTION();
@@ -623,7 +623,9 @@ blink::WebString BlinkPlatformImpl::queryLocalizedString(blink::WebLocalizedStri
 // Blob ----------------------------------------------------------------
 blink::WebBlobRegistry* BlinkPlatformImpl::blobRegistry()
 {
-    return new WebBlobRegistryImpl();
+    if (!m_blobRegistryImpl)
+        m_blobRegistryImpl = new WebBlobRegistryImpl();
+    return m_blobRegistryImpl;
 }
 
 // clipboard ----------------------------------------------------------------

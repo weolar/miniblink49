@@ -15,6 +15,7 @@ namespace blink {
 
 namespace net {
 class WebURLLoaderInternal;
+class BlobResourceLoader;
 }
 
 using namespace blink;
@@ -53,6 +54,8 @@ public:
 private:
     bool* m_hadDestroied;
     int m_jobIds;
+
+    net::BlobResourceLoader* m_blobLoader;
 };
 
 }  // namespace content

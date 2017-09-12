@@ -1,17 +1,18 @@
 #include "config.h"
 
 #include "content/web_impl_win/WebURLLoaderImplCurl.h"
-
-#include <windows.h>
-//#include <wininet.h>
+#include "content/web_impl_win/WebBlobRegistryImpl.h"
 
 #include "net/WebURLLoaderManager.h"
 #include "net/WebURLLoaderInternal.h"
 #include "net/BlinkSynchronousLoader.h"
-
+#include "net/BlobResourceLoader.h"
+#include "content/web_impl_win/BlinkPlatformImpl.h"
 #include "third_party/WebKit/public/platform/WebURLError.h"
 #include "third_party/WebKit/Source/wtf/text/WTFStringUtil.h"
 #include "third_party/WebKit/Source/wtf/RefCountedLeakCounter.h"
+
+#include <windows.h>
 
 #ifndef NDEBUG
 DEFINE_DEBUG_ONLY_GLOBAL(WTF::RefCountedLeakCounter, webURLLoaderImplCurlCount, ("WebURLLoaderImplCurl"));
@@ -22,6 +23,7 @@ namespace content {
 WebURLLoaderImplCurl::WebURLLoaderImplCurl()
 {
     m_jobIds = 0;
+    m_blobLoader = nullptr;
 #ifndef NDEBUG
     webURLLoaderImplCurlCount.increment();
 #endif
@@ -38,6 +40,7 @@ void WebURLLoaderImplCurl::init()
 {
     m_hadDestroied = false;
     m_jobIds = 0;
+    m_blobLoader = nullptr;
 }
 
 static bool shouldContentSniffURL(const KURL& url)
@@ -74,6 +77,21 @@ void WebURLLoaderImplCurl::loadAsynchronously(const blink::WebURLRequest& reques
 
     init();
 
+    KURL url = request.url();
+    if (url.protocol() == "blob") {
+        WebBlobRegistryImpl* blolRegistry = (WebBlobRegistryImpl*)blink::Platform::current()->blobRegistry();
+        net::BlobDataWrap* blogData = blolRegistry->getBlobDataFromUUID(url.string());
+        if (!blogData)
+            return;
+
+        blolRegistry->abortStream(WebURL());
+
+        m_blobLoader = net::BlobResourceLoader::createAsync(blogData, request, client, this);
+        m_blobLoader->start();
+        return;
+    }
+
+
     WebURLRequest requestNew = request;
     net::WebURLLoaderInternal* job = new net::WebURLLoaderInternal(this, requestNew, client, false, shouldContentSniffURL(request.url()));
     int jobIds = net::WebURLLoaderManager::sharedInstance()->addAsynchronousJob(job);
@@ -95,6 +113,13 @@ void WebURLLoaderImplCurl::loadAsynchronously(const blink::WebURLRequest& reques
 
 void WebURLLoaderImplCurl::cancel()
 {
+    if (m_blobLoader) {
+        m_blobLoader->cancel();
+        delete m_blobLoader;
+        m_blobLoader = nullptr;
+        return;
+    }
+
     if (0 != m_jobIds && net::WebURLLoaderManager::sharedInstance())
         net::WebURLLoaderManager::sharedInstance()->cancel(m_jobIds);
     m_jobIds = 0;
