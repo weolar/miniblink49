@@ -43,6 +43,7 @@
 
 #include "config.h"
 #include "net/WebURLLoaderManager.h"
+
 #include "third_party/WebKit/public/platform/Platform.h"
 #include "third_party/WebKit/public/platform/WebURLRequest.h"
 #include "third_party/WebKit/public/platform/WebURLError.h"
@@ -51,21 +52,21 @@
 #include "third_party/WebKit/Source/platform/network/HTTPParsers.h"
 #include "third_party/WebKit/Source/platform/MIMETypeRegistry.h"
 #include "third_party/WebKit/Source/web/WebLocalFrameImpl.h"
+#include "content/web_impl_win/WebBlobRegistryImpl.h"
 #include "content/web_impl_win/WebCookieJarCurlImpl.h"
 #include "content/web_impl_win/BlinkPlatformImpl.h"
 #include "content/browser/WebFrameClientImpl.h"
 #include "content/browser/WebPage.h"
-
 #include "net/WebURLLoaderInternal.h"
 #include "net/DataURL.h"
 #include "net/RequestExtraData.h"
-
-#include <errno.h>
-#include <stdio.h>
-
+#include "net/BlobResourceLoader.h"
 #include "third_party/WebKit/Source/wtf/Threading.h"
 #include "third_party/WebKit/Source/wtf/Vector.h"
 #include "third_party/WebKit/Source/wtf/text/CString.h"
+#include "third_party/WebKit/Source/wtf/text/WTFStringUtil.h"
+#include <errno.h>
+#include <stdio.h>
 
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
 #include "wke/wkeWebView.h"
@@ -98,29 +99,37 @@ static CString certificatePath()
     return CString();
 }
 
-static char* gCookieJarPath = nullptr;
+static char* g_cookieJarPath = nullptr;
 
 void setCookieJarPath(const WCHAR* path)
 {
     if (!path || !::PathIsDirectoryW(path))
         return;
+
     Vector<WCHAR> jarPath;
     jarPath.resize(MAX_PATH + 1);
     wcscpy(jarPath.data(), path);
     ::PathAppendW(jarPath.data(), L"cookies.dat");
-    String jarPathString(jarPath.data());
-    CString utf8 = jarPathString.utf8();
 
-    if (gCookieJarPath)
-        free(gCookieJarPath);
-    gCookieJarPath = (char*)malloc((MAX_PATH + 1) * sizeof(char) * 5);
-    strncpy(gCookieJarPath, utf8.data(), utf8.length());
+    std::vector<char> jarPathA;
+    WTF::WCharToMByte(jarPath.data(), wcslen(jarPath.data()), &jarPathA, CP_ACP);
+    if (0 == jarPathA.size())
+        return;
+
+    if (g_cookieJarPath)
+        free(g_cookieJarPath);
+
+    const int pathLen = (MAX_PATH + 1) * sizeof(char) * 5;
+    g_cookieJarPath = (char*)malloc(pathLen);
+    memset(g_cookieJarPath, 0, pathLen);
+
+    strncpy(g_cookieJarPath, &jarPathA[0], jarPathA.size());
 }
 
 static char* cookieJarPath()
 {
-    if (gCookieJarPath)
-        return gCookieJarPath;
+    if (g_cookieJarPath)
+        return g_cookieJarPath;
     return fastStrDup("cookies.dat");
 }
 
@@ -365,6 +374,85 @@ WebURLLoaderManager* WebURLLoaderManager::sharedInstance()
     return sharedInstance;
 }
 
+void WebURLLoaderManager::didReceiveDataOrDownload(WebURLLoaderInternal* job, const char* data, int dataLength, int encodedDataLength)
+{
+    blink::WebURLLoaderClient* client = job->client();
+    WebURLLoaderImplCurl* loader = job->loader();
+
+    job->m_dataLength += dataLength;
+    
+    if (!job->m_firstRequest->downloadToFile()) {
+        client->didReceiveData(loader, data, dataLength, encodedDataLength);
+        return;
+    }
+
+    WTF::HashMap<String, BlobTempFileInfo*>::iterator it = m_blobCache.find(String(job->m_url));
+    if (it == m_blobCache.end()) {
+        DebugBreak();
+        return;
+    }
+
+    BlobTempFileInfo* tempFile = it->value;
+    Vector<char>& tempFileData = tempFile->data;
+    tempFileData.append(data, dataLength);
+
+    client->didDownloadData(loader, dataLength, encodedDataLength);
+}
+
+BlobTempFileInfo* WebURLLoaderManager::getBlobTempFileInfoByTempFilePath(const String& path)
+{
+    WTF::HashMap<String, BlobTempFileInfo*>::iterator it = m_blobCache.begin();
+    for (; it != m_blobCache.end(); ++it) {
+        BlobTempFileInfo* tempFileInfo = it->value;
+        if (tempFileInfo->tempUrl != path)
+            continue;
+
+        return tempFileInfo;
+    }
+
+    return nullptr;
+}
+
+String WebURLLoaderManager::handleHeaderForBlobOnMainThread(WebURLLoaderInternal* job, size_t totalSize)
+{
+    String tempPath = String::format("file:///c:/miniblink_blob_download_%d", GetTickCount());
+
+    WTF::HashMap<String, BlobTempFileInfo*>::iterator it = m_blobCache.find(String(job->m_url));
+    if (it != m_blobCache.end()) {
+        DebugBreak();
+        return tempPath;
+    }
+
+    BlobTempFileInfo* tempFileInfo = new BlobTempFileInfo();
+    tempFileInfo->tempUrl = tempPath;
+    tempFileInfo->refCount = 0;
+
+    m_blobCache.set(String(job->m_url), tempFileInfo);
+
+    return tempPath;
+}
+
+static void setBlobDataLengthByTempPath(WebURLLoaderInternal* job)
+{
+    if (!job->m_firstRequest->downloadToFile())
+        return;
+    
+    content::WebBlobRegistryImpl* blolReg = (content::WebBlobRegistryImpl*)blink::Platform::current()->blobRegistry();
+    blolReg->setBlobDataLengthByTempPath(job->m_response.downloadFilePath(), job->m_dataLength);
+}
+
+void WebURLLoaderManager::handleDidFinishLoading(WebURLLoaderInternal* job, double finishTime, int64_t totalEncodedDataLength)
+{
+    setBlobDataLengthByTempPath(job);
+    job->client()->didFinishLoading(job->loader(), finishTime, totalEncodedDataLength);
+}
+
+void WebURLLoaderManager::handleDidFail(WebURLLoaderInternal* job, const blink::WebURLError& error)
+{
+    setBlobDataLengthByTempPath(job);
+    job->client()->didFail(job->loader(), error);
+}
+
 // 回调回main线程的task
 class WebURLLoaderManagerMainTask : public WebThread::Task {
 public:
@@ -480,8 +568,8 @@ public:
             break;
         case kDidFinishLoading:
             if (job->m_hookBuf)
-                job->client()->didReceiveData(job->loader(), static_cast<char*>(job->m_hookBuf), job->m_hookLength, 0);
-            job->client()->didFinishLoading(job->loader(), 0, 0);
+                WebURLLoaderManager::sharedInstance()->didReceiveDataOrDownload(job, static_cast<char*>(job->m_hookBuf), job->m_hookLength, 0);
+            WebURLLoaderManager::sharedInstance()->handleDidFinishLoading(job, 0, 0);
             break;
         case kRemoveFromCurl:
             break;
@@ -496,7 +584,7 @@ public:
             job->m_multipartHandle->contentEnded();
             break;
         case kDidFail:
-            job->client()->didFail(job->loader(), *(m_args->resourceError));
+            WebURLLoaderManager::sharedInstance()->handleDidFail(job, *(m_args->resourceError));
             break;
         case kHandleHookRequest:
             handleHookRequestOnMainThread(job);
@@ -593,7 +681,7 @@ size_t WebURLLoaderManagerMainTask::handleWriteCallbackOnMainThread(WebURLLoader
     if (job->m_multipartHandle) {
         job->m_multipartHandle->contentReceived(static_cast<const char*>(ptr), totalSize);
     } else if (job->client() && job->loader()) {
-        job->client()->didReceiveData(job->loader(), static_cast<char*>(ptr), totalSize, 0);
+        WebURLLoaderManager::sharedInstance()->didReceiveDataOrDownload(job, static_cast<char*>(ptr), totalSize, 0);
     }
     return totalSize;
 }
@@ -626,6 +714,10 @@ size_t WebURLLoaderManagerMainTask::handleHeaderCallbackOnMainThread(WebURLLoade
             return totalSize;
         }
 
+        if (job->m_firstRequest->downloadToFile()) {
+            String tempPath = WebURLLoaderManager::sharedInstance()->handleHeaderForBlobOnMainThread(job, totalSize);
+            job->m_response.setDownloadFilePath(tempPath);
+        }
         job->m_response.setExpectedContentLength(static_cast<long long int>(args->contentLength));
         job->m_response.setURL(KURL(ParsedURLString, args->hdr));
         job->m_response.setHTTPStatusCode(args->httpCode);
@@ -895,21 +987,14 @@ bool WebURLLoaderManager::downloadOnIoThread()
                 WebURLLoaderManagerMainTask::pushTask(jobId, WebURLLoaderManagerMainTask::TaskType::kHandleHookRequest, nullptr, 0, 0, 0);
 
             if (job->m_multipartHandle) {
-                //if (job->m_hookBuf)
-                //    job->m_multipartHandle->contentReceived(static_cast<const char*>(job->m_hookBuf), job->m_hookLength);
-                //job->m_multipartHandle->contentEnded();
                 WebURLLoaderManagerMainTask::pushTask(jobId, WebURLLoaderManagerMainTask::TaskType::kContentEnded, nullptr, 0, 0, 0);
             } else if (job->client() && job->loader()) {
-                //if (job->m_hookBuf)
-                //    job->client()->didReceiveData(job->loader(), static_cast<char*>(job->m_hookBuf), job->m_hookLength, 0);
-                //job->client()->didFinishLoading(job->loader(), 0, 0);
                 WebURLLoaderManagerMainTask::pushTask(jobId, WebURLLoaderManagerMainTask::TaskType::kDidFinishLoading, nullptr, 0, 0, 0);
             }
         } else {
             char* url = 0;
             curl_easy_getinfo(job->m_handle, CURLINFO_EFFECTIVE_URL, &url);
             if (job->client() && job->loader()) {
-                //job->client()->didFail(job->loader(), resourceError);
 
                 WebURLLoaderManagerMainTask::Args* args = WebURLLoaderManagerMainTask::pushTask(jobId, WebURLLoaderManagerMainTask::TaskType::kDidFail, nullptr, 0, 0, 0);
                 args->resourceError->reason = msg->data.result;
@@ -1207,9 +1292,10 @@ public:
             return;
 
         job->client()->didReceiveResponse(job->loader(), job->m_response);
-        if (job->m_asynWkeNetSetData)
-            job->client()->didReceiveData(job->loader(), static_cast<char*>(job->m_asynWkeNetSetData), job->m_asynWkeNetSetDataLength, 0);
-        job->client()->didFinishLoading(job->loader(), 0, 0);
+        if (job->m_asynWkeNetSetData && !job->m_cancelled) { // 可能在didReceiveResponse里被cancel
+            WebURLLoaderManager::sharedInstance()->didReceiveDataOrDownload(job, static_cast<char*>(job->m_asynWkeNetSetData), job->m_asynWkeNetSetDataLength, 0);
+            WebURLLoaderManager::sharedInstance()->handleDidFinishLoading(job, WTF::currentTime(), 0);
+        }
     }
 
 private:
@@ -1286,11 +1372,13 @@ int WebURLLoaderManager::addAsynchronousJob(WebURLLoaderInternal* job)
 {
     ASSERT(WTF::isMainThread());
 
-#if 0
+#if 1
     String url = job->firstRequest()->url().string();
-    OutputDebugStringW(L"addAsynchronousJob:");
-    OutputDebugStringW(url.charactersWithNullTermination().data());
-    OutputDebugStringW(L"\n");
+//     OutputDebugStringW(L"addAsynchronousJob:");
+//     OutputDebugStringW(url.charactersWithNullTermination().data());
+//     OutputDebugStringW(L"\n");
+    if (WTF::kNotFound != url.find("blob:"))
+        OutputDebugStringA("");
 #endif
 
     job->m_manager = this;
@@ -1346,7 +1434,7 @@ void WebURLLoaderManager::dispatchSynchronousJob(WebURLLoaderInternal* job)
     if (page->wkeHandler().loadUrlBeginCallback) {
         if (page->wkeHandler().loadUrlBeginCallback(page->wkeWebView(), page->wkeHandler().loadUrlBeginCallbackParam,
             encodeWithURLEscapeSequences(job->firstRequest()->url().string()).latin1().data(), job)) {
-            job->client()->didFinishLoading(job->loader(), WTF::currentTime(), 0);
+            WebURLLoaderManager::sharedInstance()->handleDidFinishLoading(job, WTF::currentTime(), 0);
             delete job;
             return;
         }
@@ -1378,7 +1466,7 @@ void WebURLLoaderManager::dispatchSynchronousJob(WebURLLoaderInternal* job)
             error.domain = WebString(String(job->m_url));
             error.reason = ret;
             error.localizedDescription = WebString(String(curl_easy_strerror(ret)));
-            job->client()->didFail(job->loader(), error);
+            WebURLLoaderManager::sharedInstance()->handleDidFail(job, error);
         }
     } else {
         if (job->client() && job->loader())
@@ -1414,7 +1502,6 @@ static bool dispatchWkeLoadUrlBegin(WebURLLoaderInternal* job)
         encodeWithURLEscapeSequences(job->firstRequest()->url().string()).latin1().data(), job))
         return false;
 
-    //job->client()->didFinishLoading(job->loader(), WTF::currentTime(), 0);
     return true;
 }
 #endif
@@ -1733,6 +1820,8 @@ WebURLLoaderInternal::WebURLLoaderInternal(WebURLLoaderImplCurl* loader, const W
     m_pass = url.pass();
 
     m_response.initialize();
+
+    m_dataLength = 0;
 
 #ifndef NDEBUG
     webURLLoaderInternalCounter.increment();
