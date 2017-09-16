@@ -679,6 +679,7 @@
     <ClCompile Include="..\..\cef\libcef_dll\notImplemented_cef.cpp" />
     <ClCompile Include="..\..\cef\libcef_dll\transfer_util.cc" />
     <ClCompile Include="..\..\cef\libcef_dll\unused_export.cpp" />
+    <ClCompile Include="..\..\content\browser\CheckReEnter.cpp" />
     <ClCompile Include="..\..\content\browser\NavigationController.cpp" />
     <ClCompile Include="..\..\content\browser\PlatformEventHandler.cpp" />
     <ClCompile Include="..\..\content\browser\PopupMenuWin.cpp" />
@@ -5482,6 +5483,7 @@
     <ClInclude Include="..\..\cef\libcef_dll\cpptoc\frame_cpptoc.h" />
     <ClInclude Include="..\..\cef\libcef_dll\ctocpp\resolve_callback_ctocpp.h" />
     <ClInclude Include="..\..\cef\libcef_dll\ctocpp\response_filter_ctocpp.h" />
+    <ClInclude Include="..\..\content\browser\CheckReEnter.h" />
     <ClInclude Include="..\..\content\browser\NavigationController.h" />
     <ClInclude Include="..\..\content\browser\PlatformEventHandler.h" />
     <ClInclude Include="..\..\content\browser\PopupMenuWin.h" />

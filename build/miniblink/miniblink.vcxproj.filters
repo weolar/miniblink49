@@ -9429,6 +9429,9 @@
     <ClCompile Include="..\..\net\AsyncFileStream.cpp">
       <Filter>net</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\content\browser\CheckReEnter.cpp">
+      <Filter>content\browser</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\public\platform\modules\app_banner\WebAppBannerClient.h">
@@ -21685,6 +21688,9 @@
     </ClInclude>
     <ClInclude Include="..\..\net\MemBlobStream.h">
       <Filter>net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\content\browser\CheckReEnter.h">
+      <Filter>content\browser</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
