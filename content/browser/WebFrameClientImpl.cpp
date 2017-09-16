@@ -1,4 +1,3 @@
-
 #include "third_party/WebKit/public/web/WebFrameClient.h"
 #include "third_party/WebKit/public/web/WebDocument.h"
 #include "third_party/WebKit/Source/web/WebLocalFrameImpl.h"
@@ -27,6 +26,7 @@
 #include "third_party/WebKit/Source/platform/Language.h"
 #include "third_party/WebKit/Source/core/frame/Settings.h"
 #include "third_party/WebKit/Source/core/page/Page.h"
+#include "third_party/WebKit/Source/wtf/text/WTFStringUtil.h"
 #include "net/RequestExtraData.h"
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
 #include "wke/wkeWebView.h"
@@ -116,6 +116,7 @@ blink::WebPlugin* WebFrameClientImpl::createPlugin(WebLocalFrame* frame, const W
     PassRefPtr<WebPluginImpl> plugin = adoptRef(new WebPluginImpl(frame, params));
     plugin->setParentPlatformWidget(m_webPage->getHWND());
     plugin->setHwndRenderOffset(m_webPage->getHwndRenderOffset());
+    plugin->setWebViewClient(m_webPage->webViewImpl()->client());
     return plugin.leakRef();
 }
 
@@ -501,14 +502,55 @@ void WebFrameClientImpl::didReceiveResponse(WebLocalFrame*, unsigned identifier,
 
 }
 
-void WebFrameClientImpl::didChangeResourcePriority(
-    WebLocalFrame* webFrame, unsigned identifier, const WebURLRequest::Priority& priority, int)
+void WebFrameClientImpl::didChangeResourcePriority(WebLocalFrame* webFrame, unsigned identifier, const WebURLRequest::Priority& priority, int)
 {
+}
+
+void WebFrameClientImpl::runModalAlertDialog(const WebString& message)
+{
+    bool needCall = true;
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
+    if (m_webPage->wkeHandler().alertBoxCallback) {
+        needCall = false;
+        wke::CString wkeMsg(message);
+        m_webPage->wkeHandler().alertBoxCallback(m_webPage->wkeWebView(), m_webPage->wkeHandler().alertBoxCallbackParam, &wkeMsg);
+    }
+#endif
+
+    if (!needCall)
+        return;
+
+    Vector<UChar> text = WTF::ensureUTF16UChar(message);
+    ::MessageBoxW(nullptr, text.data(), L"Miniblink Alert", 0);
 }
 
 bool WebFrameClientImpl::runModalConfirmDialog(const WebString& message)
 {
+    bool needCall = true;
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
+    if (m_webPage->wkeHandler().alertBoxCallback) {
+        needCall = false;
+        wke::CString wkeMsg(message);
+        return m_webPage->wkeHandler().confirmBoxCallback(m_webPage->wkeWebView(), m_webPage->wkeHandler().confirmBoxCallbackParam, &wkeMsg);
+    }
+#endif
+
+    if (!needCall)
+        return false;
+
+    Vector<UChar> text = WTF::ensureUTF16UChar(message);
+    int result = ::MessageBoxW(NULL, text.data(), L"Miniblink Confirm", MB_OKCANCEL);
+    return result == IDOK;
+}
+
+bool WebFrameClientImpl::runModalPromptDialog(const WebString& message, const WebString& defaultValue, WebString* actualValue)
+{
     return false;
+}
+
+bool WebFrameClientImpl::runModalBeforeUnloadDialog(bool isReload, const WebString& message)
+{
+    return true;
 }
 
 void WebFrameClientImpl::didCreateScriptContext(WebLocalFrame* frame, v8::Local<v8::Context> context, int extensionGroup, int worldId)

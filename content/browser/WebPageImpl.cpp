@@ -47,6 +47,7 @@
 #include "content/browser/PopupMenuWin.h"
 #include "content/browser/WebFrameClientImpl.h"
 #include "content/browser/NavigationController.h"
+#include "content/browser/CheckReEnter.h"
 #include "content/web_impl_win/BlinkPlatformImpl.h"
 #include "content/web_impl_win/WebThreadImpl.h"
 #include "content/web_impl_win/npapi/PluginDatabase.h"
@@ -177,50 +178,12 @@ WebPageImpl::~WebPageImpl()
     m_popupHandle = nullptr;
 }
 
-int g_kEnterContent = 0;
-
 bool WebPageImpl::checkForRepeatEnter()
 {
-    if (m_enterCount == 0 && 0 == g_kEnterContent)
+    if (m_enterCount == 0 && 0 == CheckReEnter::s_kEnterContent)
         return true;
     return false;
 }
-
-class CheckReEnter {
-public:
-    CheckReEnter(WebPageImpl* webPageImpl)
-    {
-        m_webPageImpl = webPageImpl;
-        ++m_webPageImpl->m_enterCount;
-        ++g_kEnterContent;
-    }
-
-    ~CheckReEnter()
-    {
-        --m_webPageImpl->m_enterCount;
-        --g_kEnterContent;
-
-        if (WebPageImpl::pageDestroying == m_webPageImpl->m_state)
-            m_webPageImpl->doClose();
-    }
-
-private:
-    WebPageImpl* m_webPageImpl;
-};
-
-#define CHECK_FOR_REENTER(ret) \
-    if (!checkForRepeatEnter()) \
-        return ret; \
-    if (pageInited != m_state) \
-        return ret; \
-    CheckReEnter checker(this);
-
-#define CHECK_FOR_REENTER0() \
-    if (!checkForRepeatEnter()) \
-        return; \
-    if (pageInited != m_state) \
-        return; \
-    CheckReEnter checker(this);
 
 class AutoRecordActions {
 public:
