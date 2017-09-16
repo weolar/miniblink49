@@ -33,7 +33,6 @@
 #include "content/web_impl_win/npapi/PluginPackage.h"
 #include "content/web_impl_win/npapi/PluginMainThreadScheduler.h"
 #include "content/web_impl_win/npapi/PluginMessageThrottlerWin.h"
-#include "third_party/npapi/bindings/npapi.h"
 #include "third_party/WebKit/Source/web/WebLocalFrameImpl.h"
 #include "third_party/WebKit/Source/web/WebPluginContainerImpl.h"
 #include "third_party/WebKit/Source/platform/network/ResourceRequest.h"
@@ -50,10 +49,12 @@
 #include "third_party/WebKit/public/platform/WebTraceLocation.h"
 #include "third_party/WebKit/public/web/WebPluginContainer.h"
 #include "third_party/WebKit/public/web/WebElement.h"
-#include "gen/blink/core/HTMLNames.h"
+#include "third_party/WebKit/public/web/WebViewClient.h"
 #include "third_party/WebKit/Source/wtf/ASCIICType.h"
 #include "third_party/WebKit/Source/wtf/text/WTFString.h"
 #include "third_party/WebKit/Source/wtf/RefCountedLeakCounter.h"
+#include "third_party/npapi/bindings/npapi.h"
+#include "gen/blink/core/HTMLNames.h"
 
 using std::min;
 
@@ -122,6 +123,8 @@ WebPluginImpl::WebPluginImpl(WebLocalFrame* parentFrame, const blink::WebPluginP
     , m_manualStream(nullptr)
     , m_isJavaScriptPaused(false)
     , m_haveCalledSetWindow(false)
+    , m_memoryCanvas(nullptr)
+    , m_webviewClient(nullptr)
 {
 #ifndef NDEBUG
     webPluginImplCount.increment();
@@ -980,7 +983,9 @@ void WebPluginImpl::invalidateWindowlessPluginRect(const IntRect& rect)
 //     IntRect dirtyRect = rect;
 //     dirtyRect.move(renderer.borderLeft() + renderer.paddingLeft(), renderer.borderTop() + renderer.paddingTop());
 //     renderer.repaintRectangle(dirtyRect);
-    DebugBreak();
+
+    //m_webviewClient->didInvalidateRect(rect);
+    m_pluginContainer->invalidateRect(rect);
 }
 
 void WebPluginImpl::paintMissingPluginIcon(blink::WebCanvas* canvas, const IntRect& rect)

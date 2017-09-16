@@ -29,11 +29,13 @@
 #include "content/web_impl_win/npapi/WebPluginImpl.h"
 
 #include "content/web_impl_win/npapi/PluginMessageThrottlerWin.h"
+#include "content/browser/CheckReEnter.h"
 #include "third_party/WebKit/Source/web/WebPluginContainerImpl.h"
 #include "third_party/WebKit/Source/core/frame/FrameView.h"
 #include "third_party/WebKit/Source/platform/graphics/Image.h"
 #include "third_party/WebKit/public/platform/Platform.h"
 #include "third_party/WebKit/Source/wtf/Functional.h"
+#include "skia/ext/bitmap_platform_device_win.h"
 #include "skia/ext/platform_canvas.h"
 
 static inline HWND windowHandleForPageClient(HWND client)
@@ -362,6 +364,11 @@ void WebPluginImpl::updatePluginWidget(const IntRect& windowRect, const IntRect&
 
         m_haveUpdatedPluginWidget = true;
     }
+
+    if (m_windowRect != oldWindowRect || m_clipRect != oldClipRect) {
+        if (!m_memoryCanvas)
+            m_memoryCanvas = skia::CreatePlatformCanvas(m_windowRect.width(), m_windowRect.height(), !m_isTransparent);
+    }
 }
 
 bool WebPluginImpl::dispatchNPEvent(NPEvent& npEvent)
@@ -654,6 +661,13 @@ void WebPluginImpl::paintWindowedPluginIntoContext(GraphicsContext& context, con
 //#endif
 }
 
+class BitmapDeviceForGetBitmap : public skia::BitmapPlatformDevice {
+public:
+    const SkBitmap& getBitmap() {
+        return onAccessBitmap();
+    }
+};
+
 void WebPluginImpl::paint(blink::WebCanvas* canvas, const blink::WebRect& rect)
 {
     if (!m_isStarted) {
@@ -678,23 +692,24 @@ void WebPluginImpl::paint(blink::WebCanvas* canvas, const blink::WebRect& rect)
         return;
     }
 
-    // TODO windowsless
-//     IntRect rectInWindow = downcast<FrameView>(*parent()).contentsToWindow(frameRect());
-//     LocalWindowsContext windowsContext(context, rectInWindow, m_isTransparent);
-    HDC hMemoryDC = skia::BeginPlatformPaint(canvas);
+    HDC hMemoryDC = skia::BeginPlatformPaint(m_memoryCanvas);
 
     // On Safari/Windows without transparency layers the GraphicsContext returns the HDC
     // of the window and the plugin expects that the passed in DC has window coordinates.
     //if (!context.isInTransparencyLayer()) {
         XFORM transform;
         GetWorldTransform(hMemoryDC, &transform);
-        transform.eDx = 0;
-        transform.eDy = 0;
+        transform.eDx = -rect.x;
+        transform.eDy = -rect.y;
         SetWorldTransform(hMemoryDC, &transform);
     //}
 
     paintIntoTransformedContext(hMemoryDC);
-    skia::EndPlatformPaint(canvas);
+    skia::EndPlatformPaint(m_memoryCanvas);
+
+    BitmapDeviceForGetBitmap* bitmapDevice = (BitmapDeviceForGetBitmap*)skia::GetTopDevice(*m_memoryCanvas);
+    const SkBitmap& bitmap = bitmapDevice->getBitmap();
+    canvas->drawBitmap(bitmap, rect.x, rect.y);
 }
 
 void WebPluginImpl::setNPWindowRect(const IntRect& rect)
@@ -710,10 +725,9 @@ void WebPluginImpl::setNPWindowRect(const IntRect& rect)
     if (!frameView)
         return;
 
-    //IntPoint p = frameView->contentsToWindow(rect.location());
     IntPoint p = container->localToRootFramePoint(rect.location());
-    m_npWindow.x = p.x();
-    m_npWindow.y = p.y();
+    m_npWindow.x = rect.x(); // windowless模式是直接画在0，0点的独立canvas
+    m_npWindow.y = rect.y();
 
     m_npWindow.width = rect.width();
     m_npWindow.height = rect.height();
@@ -735,9 +749,9 @@ void WebPluginImpl::setNPWindowRect(const IntRect& rect)
             return;
 
         if (platformPluginWidget()) {
-            WNDPROC currentWndProc = (WNDPROC)GetWindowLongPtr(platformPluginWidget(), GWLP_WNDPROC);
+            WNDPROC currentWndProc = (WNDPROC)GetWindowLongPtrW(platformPluginWidget(), GWLP_WNDPROC);
             if (currentWndProc != PluginViewWndProc)
-                m_pluginWndProc = (WNDPROC)SetWindowLongPtr(platformPluginWidget(), GWLP_WNDPROC, (LONG_PTR)PluginViewWndProc);
+                m_pluginWndProc = (WNDPROC)SetWindowLongPtrW(platformPluginWidget(), GWLP_WNDPROC, (LONG_PTR)PluginViewWndProc);
         }
     }
 }
@@ -891,16 +905,15 @@ void WebPluginImpl::platformStartAsyn(blink::Timer<WebPluginImpl>*)
 #else
         ::SetWindowLongPtrA(platformPluginWidget(), GWL_WNDPROC, (LONG)DefWindowProcA);
 #endif
-        SetProp(platformPluginWidget(), kWebPluginViewProperty, this);
+        ::SetProp(platformPluginWidget(), kWebPluginViewProperty, this);
 
         m_npWindow.type = NPWindowTypeWindow;
         m_npWindow.window = platformPluginWidget();
-    }
-    else {
+    } else {
         m_npWindow.type = NPWindowTypeDrawable;
         m_npWindow.window = 0;
     }
-
+    
     updatePluginWidget(m_windowRect, m_clipRect);
 
     if (!m_plugin->quirks().contains(PluginQuirkDeferFirstSetWindowCall))
@@ -920,19 +933,38 @@ bool WebPluginImpl::platformStart()
     return true;
 }
 
+static LRESULT CALLBACK platformDestroyNullWndProc(HWND, UINT, WPARAM, LPARAM)
+{
+    return 0;
+}
+
 static void platformDestroyWindow(PlatformPluginWidget widget)
 {
+    bool isUnicode = ::IsWindowUnicode(widget);
+    if (!isUnicode)
+        ::SetWindowLongPtrA(widget, GWLP_WNDPROC, (LONG_PTR)&platformDestroyNullWndProc);
+    else
+        ::SetWindowLongPtrW(widget, GWLP_WNDPROC, (LONG_PTR)&platformDestroyNullWndProc);
+    
     ::DestroyWindow(widget);
 }
 
 void WebPluginImpl::platformDestroy()
 {
-    if (!platformPluginWidget())
+    if (m_memoryCanvas)
+        delete m_memoryCanvas;
+    m_memoryCanvas = nullptr;
+
+    PlatformPluginWidget widget = platformPluginWidget();
+    if (!widget)
         return;
 
-    blink::Platform::current()->currentThread()->postTask(FROM_HERE, WTF::bind(platformDestroyWindow, platformPluginWidget()));
-    SetWindowLongPtr(platformPluginWidget(), GWLP_WNDPROC, 0);
+    blink::Platform::current()->currentThread()->postTask(FROM_HERE, WTF::bind(platformDestroyWindow, widget));
+
+    ++CheckReEnter::s_kEnterContent;
+    ::ShowWindow(widget, SW_HIDE);
     setPlatformPluginWidget(0);
+    --CheckReEnter::s_kEnterContent;
 }
 
 PassRefPtr<Image> WebPluginImpl::snapshot()
