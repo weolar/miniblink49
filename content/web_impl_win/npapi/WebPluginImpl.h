@@ -58,6 +58,7 @@ typedef PlatformWidget PlatformPluginWidget;
 namespace blink {
 class WebPluginContainer;
 class GraphicsContext;
+class WebViewClient;
 }
 
 namespace content {
@@ -359,19 +360,21 @@ public:
     PlatformPluginWidget platformPluginWidget() const { return platformWidget(); }
 
     PlatformWidget platformWidget() const { return m_widget; }
-    inline void setPlatformWidget(PlatformWidget widget)
+    void setPlatformWidget(PlatformWidget widget)
     {
         if (widget != m_widget) {
             m_widget = widget;
         }
     }
 
-    inline void setParentPlatformWidget(PlatformWidget widget)
+    void setParentPlatformWidget(PlatformWidget widget)
     {
         if (widget != m_parentWidget) {
             m_parentWidget = widget;
         }
     }
+
+    void setWebViewClient(blink::WebViewClient* client) { m_webviewClient = client; }
 
     void setHwndRenderOffset(const blink::IntPoint& offset)
     {
@@ -394,6 +397,9 @@ private:
     blink::IntPoint m_widgetOffset;
 
     static WebPluginImpl* s_currentPluginView;
+
+    SkCanvas* m_memoryCanvas;
+    blink::WebViewClient* m_webviewClient;
 };
 
 } // namespace content
