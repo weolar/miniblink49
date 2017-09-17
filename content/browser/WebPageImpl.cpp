@@ -267,7 +267,7 @@ static WebView* createWkeViewDefault(HWND parent, const WebString& name, const W
 {
     wke::CWebWindow* window = new wke::CWebWindow();
     WTF::String nameString = name;
-    Vector<UChar> nameBuf = WTF::ensureUTF16UChar(nameString);
+    Vector<UChar> nameBuf = WTF::ensureUTF16UChar(nameString, true);
 
     window->create(parent, WS_OVERLAPPEDWINDOW | WS_VISIBLE, 0, 100, 100, 570, 570);
 
