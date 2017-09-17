@@ -167,13 +167,17 @@ void PluginStream::startStream()
     ASSERT(m_streamState == StreamBeforeStarted);
 
     const KURL& responseURL = m_resourceResponse.url();
+    Vector<char> responseUrlUtf8 = WTF::ensureStringToUTF8(responseURL.string(), true);
 
     // Some plugins (Flash) expect that javascript URLs are passed back decoded as this is the
     // format used when requesting the URL.
-    if (protocolIsJavaScript(responseURL))
-        m_stream.url = fastStrDup(decodeURLEscapeSequences(responseURL.string()).utf8().data());
-    else
-        m_stream.url = fastStrDup(responseURL.string().utf8().data());
+    if (protocolIsJavaScript(responseUrlUtf8.data())) {
+        String decodeURL = decodeURLEscapeSequences(responseUrlUtf8.data());
+        char* url = (char*)fastMalloc(decodeURL.length());
+        strncpy(url, (char*)decodeURL.characters8(), decodeURL.length());
+        m_stream.url = url;
+    } else
+        m_stream.url = fastStrDup(responseUrlUtf8.data());
 
     CString mimeTypeStr(m_resourceResponse.mimeType().utf8().c_str());
 
@@ -301,7 +305,7 @@ void PluginStream::destroyStream()
 
             if (m_loader)
                 m_loader->setDefersLoading(true);
-            m_pluginFuncs->asfile(m_instance, &m_stream, m_path.utf8().data());
+            m_pluginFuncs->asfile(m_instance, &m_stream, WTF::ensureStringToUTF8(m_path, true).data());
             if (m_loader)
                 m_loader->setDefersLoading(false);
         }
@@ -340,7 +344,10 @@ void PluginStream::destroyStream()
             // destructor, so reset it to 0
             m_stream.url = 0;
         }
-        m_pluginFuncs->urlnotify(m_instance, m_resourceRequest.url().string().utf8().data(), m_reason, m_notifyData);
+        
+        String url = m_resourceRequest.url().string();
+        Vector<char> urlBuf = WTF::ensureStringToUTF8(url, true);
+        m_pluginFuncs->urlnotify(m_instance, urlBuf.data(), m_reason, m_notifyData);
         if (m_loader)
             m_loader->setDefersLoading(false);
     }
@@ -352,7 +359,7 @@ void PluginStream::destroyStream()
 
     if (!m_path.isNull()) {
         String filename = m_path;
-        ::DeleteFileW(WTF::ensureUTF16UChar(filename).data());
+        ::DeleteFileW(WTF::ensureUTF16UChar(filename, true).data());
     }
 }
 

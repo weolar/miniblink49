@@ -55,6 +55,7 @@
 #include "third_party/WebKit/Source/wtf/RefCountedLeakCounter.h"
 #include "third_party/npapi/bindings/npapi.h"
 #include "gen/blink/core/HTMLNames.h"
+#include "wtf/text/WTFStringUtil.h"
 
 using std::min;
 
@@ -370,8 +371,8 @@ WebPluginImpl* WebPluginImpl::currentPluginView()
 
 static char* createUTF8String(const String& str)
 {
-    CString cstr = str.utf8();
-    const size_t cstrLength = cstr.length();
+    Vector<char> cstr = WTF::ensureStringToUTF8(str, false);
+    const size_t cstrLength = cstr.size();
     char* result = reinterpret_cast<char*>(fastMalloc(cstrLength + 1));
 
     memcpy(result, cstr.data(), cstrLength);
@@ -394,6 +395,8 @@ void WebPluginImpl::performRequest(PluginRequest* request)
     KURL requestURL = request->frameLoadRequest().resourceRequest().url();
     String jsString = scriptStringIfJavaScriptURL(requestURL);
 
+    Vector<char> requestUrlBuf = ensureStringToUTF8(requestURL.string(), true);
+    
     UserGestureIndicator gestureIndicator(request->shouldAllowPopups() ? DefinitelyProcessingUserGesture : PossiblyProcessingUserGesture);
 
     if (jsString.isNull()) {
@@ -418,7 +421,7 @@ void WebPluginImpl::performRequest(PluginRequest* request)
                 WebPluginImpl::setCurrentPluginView(this);
                 //JSC::JSLock::DropAllLocks dropAllLocks(JSDOMWindowBase::commonVM());
                 setCallingPlugin(true);
-                m_plugin->pluginFuncs()->urlnotify(m_instance, requestURL.string().utf8().data(), NPRES_DONE, request->notifyData());
+                m_plugin->pluginFuncs()->urlnotify(m_instance, requestUrlBuf.data(), NPRES_DONE, request->notifyData());
                 setCallingPlugin(false);
                 WebPluginImpl::setCurrentPluginView(0);
             }
