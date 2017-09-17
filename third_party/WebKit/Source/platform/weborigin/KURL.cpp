@@ -374,16 +374,16 @@ KURL::KURL(ParsedURLStringTag, const String& url)
             fixSchemeUrl = url;
             fixSchemeUrl.insert("file:///", 0);            
             fixSchemeUrl.replace(L"\\", L"/");
-            parse(fixSchemeUrl.utf8().data());
+            parse(WTF::ensureStringToUTF8(fixSchemeUrl, true).data());
         } else
-            parse(url.utf8().data(), nullptr);
+            parse(WTF::ensureStringToUTF8(url, true).data(), nullptr);
 
         if (!m_isValid) {
             if (WTF::kNotFound == m_string.find("://")) {
                 fixed = true;
                 fixSchemeUrl = m_string;
                 fixSchemeUrl.insert("http://", 0);
-                parse(fixSchemeUrl.utf8().data(), 0);
+                parse(WTF::ensureStringToUTF8(fixSchemeUrl, true).data(), 0);
             }
         }
 
@@ -1110,7 +1110,7 @@ static void appendEscapedChar(char*& buffer, unsigned char c)
     placeByteAsHex(c, buffer);
 }
 
-static void appendEscapingBadChars(char*& buffer, const char* strStart, size_t length)
+static void appendEscapingBadChars(char*& buffer, bool isFile, const char* strStart, size_t length)
 {
     char* p = buffer;
 
@@ -1118,7 +1118,7 @@ static void appendEscapingBadChars(char*& buffer, const char* strStart, size_t l
     const char* strEnd = strStart + length;
     while (str < strEnd) {
         unsigned char c = *str++;
-        if (isBadChar(c)) {
+        if (isBadChar(c) && !isFile) {
             if (c == '%' || c == '?')
                 *p++ = c;
             else if (c != 0x09 && c != 0x0a && c != 0x0d)
@@ -1551,11 +1551,11 @@ void KURL::parse(const char* url, const String* originalString)
 
     // add path, escaping bad characters
     if (!hierarchical || !hasSlashDotOrDotDot(url))
-        appendEscapingBadChars(p, url + pathStart, pathEnd - pathStart);
+        appendEscapingBadChars(p, isFile, url + pathStart, pathEnd - pathStart);
     else {
         CharBuffer pathBuffer(pathEnd - pathStart + 1);
         size_t length = copyPathRemovingDots(pathBuffer.data(), url, pathStart, pathEnd);
-        appendEscapingBadChars(p, pathBuffer.data(), length);
+        appendEscapingBadChars(p, isFile, pathBuffer.data(), length);
     }
 
     m_pathEnd = p - buffer.data();
@@ -1570,7 +1570,7 @@ void KURL::parse(const char* url, const String* originalString)
     m_pathAfterLastSlash = i;
 
     // add query, escaping bad characters
-    appendEscapingBadChars(p, url + queryStart, queryEnd - queryStart);
+    appendEscapingBadChars(p, isFile, url + queryStart, queryEnd - queryStart);
     m_queryEnd = p - buffer.data();
 
     // add fragment, escaping bad characters
