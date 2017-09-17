@@ -520,7 +520,7 @@ void WebFrameClientImpl::runModalAlertDialog(const WebString& message)
     if (!needCall)
         return;
 
-    Vector<UChar> text = WTF::ensureUTF16UChar(message);
+    Vector<UChar> text = WTF::ensureUTF16UChar(message, true);
     ::MessageBoxW(nullptr, text.data(), L"Miniblink Alert", 0);
 }
 
@@ -538,7 +538,7 @@ bool WebFrameClientImpl::runModalConfirmDialog(const WebString& message)
     if (!needCall)
         return false;
 
-    Vector<UChar> text = WTF::ensureUTF16UChar(message);
+    Vector<UChar> text = WTF::ensureUTF16UChar(message, true);
     int result = ::MessageBoxW(NULL, text.data(), L"Miniblink Confirm", MB_OKCANCEL);
     return result == IDOK;
 }
