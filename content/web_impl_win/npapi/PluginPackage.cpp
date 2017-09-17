@@ -114,7 +114,7 @@ PluginPackage::PluginPackage(const String& path, const time_t& lastModified)
     , m_infoIsFromCache(true)
 #endif
 {
-    m_fileName = String(::PathFindFileName(WTF::ensureUTF16UChar(m_path).data()));
+    m_fileName = String(::PathFindFileName(WTF::ensureUTF16UChar(m_path, true).data()));
     m_parentDirectory = m_path.left(m_path.length() - m_fileName.length() - 1);
 }
 

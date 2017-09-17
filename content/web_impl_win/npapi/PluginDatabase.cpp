@@ -557,8 +557,8 @@ void PluginDatabase::loadPersistentMetadataCache()
 
 static bool writeUTF8String(PlatformFileHandle file, const String& string)
 {
-    CString utf8String = string.utf8();
-    int length = utf8String.length() + 1;
+    Vector<UChar> utf8String = WTF::ensureUTF16UChar(string, false);
+    int length = utf8String.size() + 1;
     return writeToFile(file, utf8String.data(), length) == length;
 }
 
