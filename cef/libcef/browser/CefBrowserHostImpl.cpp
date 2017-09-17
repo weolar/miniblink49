@@ -322,7 +322,7 @@ void CefBrowserHostImpl::LoadString(int64 frameId, const CefString& string, cons
         return;
     }
 
-    Vector<char> data = WTF::ensureStringToUTF8(WTF::String(string.c_str(), string.length()));
+    Vector<char> data = WTF::ensureStringToUTF8(WTF::String(string.c_str(), string.length()), false);
     WebData html(data.data(), data.size());
 
     WTF::String urlStr = ensureStringToUTF8String(WTF::String(url.c_str(), url.length()));
