@@ -151,6 +151,9 @@ LRESULT CALLBACK CefBrowserHostImpl::WndProc(HWND hWnd, UINT message, WPARAM wPa
     case WM_SETFOCUS:
         browserHostImpl->SendFocusEvent(true);
         break;
+    case WM_KILLFOCUS:
+        browserHostImpl->SendFocusEvent(false);
+        break;
     case WM_IME_STARTCOMPOSITION:{
         if (!browserHostImpl->m_webPage)
             return 0;
@@ -200,9 +203,10 @@ void CefBrowserHostImpl::SendFocusEvent(bool setFocus) {
     if (!setFocus)
         CancelContextMenu();
 
-    //m_webPage->webViewImpl()->setFocus(setFocus);
-    //m_webPage->webViewImpl()->setIsActive(setFocus);
-    m_webPage->fireSetFocusEvent(m_webPage->getHWND(), WM_SETFOCUS, 0, 0);
+    if (setFocus)
+        m_webPage->fireSetFocusEvent(m_webPage->getHWND(), WM_SETFOCUS, 0, 0);
+    else
+        m_webPage->fireKillFocusEvent(m_webPage->getHWND(), WM_KILLFOCUS, 0, 0);
 }
 
 void CefBrowserHostImpl::PlatformSetFocus(bool focus) {

@@ -141,7 +141,7 @@ void CefRequestImpl::SetReferrer(const CefString& referrerUrl, ReferrerPolicy po
     String url = kurl.strippedForUseAsReferrer();
     ASSERT(url.is8Bit());
     if (url != m_referrerUrl.ToString().c_str() || m_referrerPolicy != policy) {
-        m_referrerUrl = WTF::ensureUTF16UChar(url).data();
+        m_referrerUrl = WTF::ensureUTF16UChar(url, true).data();
         m_referrerPolicy = policy;
         Changed(kChangedReferrer);
     }
@@ -246,7 +246,7 @@ uint64 CefRequestImpl::GetIdentifier() {
 
 CefString WebStringToCefString(const blink::WebString& in) {
     CefString out;
-    Vector<UChar> temp = WTF::ensureUTF16UChar((String)in);
+    Vector<UChar> temp = WTF::ensureUTF16UChar(in, false);
     out.FromString(temp.data(), temp.size(), true);
     return out;
 }
