@@ -113,14 +113,59 @@ void SetFileSystemHook(
 	userFileSize = lpFileSize;
 }
 
+wchar_t* utf8_to_wide_char(const char * inStr) {
+    int cbMultiByte = 0;
+    DWORD dwMinSize = 0;
+    wchar_t* outStr = 0;
+
+    FILE* fp = 0;
+
+    cbMultiByte = strlen(inStr);
+    if (0 == cbMultiByte)
+        return 0;
+
+    dwMinSize = MultiByteToWideChar(CP_UTF8, 0, inStr, cbMultiByte, NULL, 0);
+    if (0 == dwMinSize)
+        return 0;
+
+    outStr = (wchar_t*)malloc((dwMinSize + 1) * 2);
+    memset(outStr, 0, (dwMinSize + 1) * 2);
+
+    // Convert headers from ASCII to Unicode.
+    MultiByteToWideChar(CP_UTF8, 0, inStr, cbMultiByte, outStr, dwMinSize);
+
+    return outStr;
+}
+
+FILE* fopen_wrap(/*_In_z_*/ const char * _Filename, /*_In_*/ const char * _OpenFlag) {
+ wchar_t* filenameW = 0;
+ wchar_t* openFlagW = 0;
+
+ FILE* fp = 0;
+
+ filenameW = utf8_to_wide_char(_Filename);
+ openFlagW = utf8_to_wide_char(_OpenFlag);
+
+ fp = _wfopen(filenameW, openFlagW);
+
+ free(filenameW);
+ free(openFlagW);
+
+ if (fp)
+     return fp;
+
+ fp = fopen(_Filename, _OpenFlag);
+ return fp;
+}
+
 __int64 ewefs_open(/*_In_z_*/ const char * _Filename, /*_In_*/ int _OpenFlag ){
 	FILE* fp = 0;
 
 	if( O_WRONLY & _OpenFlag ){
 		if( O_APPEND & _OpenFlag ){
-			fp = fopen( _Filename, "ab" );
+			fp = fopen_wrap( _Filename, "ab" );
 		}else{
-			fp = fopen( _Filename, "wb" );
+			fp = fopen_wrap( _Filename, "wb" );
 		}
 	}else{
 		if( userOpenFile ){
@@ -134,7 +179,7 @@ __int64 ewefs_open(/*_In_z_*/ const char * _Filename, /*_In_*/ int _OpenFlag ){
 			}
 		}
 		if( !fp ){
-			fp = fopen( _Filename, "rb" );
+			fp = fopen_wrap( _Filename, "rb" );
 		}
 	}
 	return fp ? fp : -1;
