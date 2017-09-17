@@ -9,9 +9,9 @@
 namespace WTF {
 
 String ensureUTF16String(const String& string);
-Vector<UChar> ensureUTF16UChar(const String& string);
-Vector<UChar> ensureStringToUChars(const String& string);
-Vector<char> ensureStringToUTF8(const String& string);
+Vector<UChar> ensureUTF16UChar(const String& string, bool isNullTermination);
+//Vector<UChar> ensureStringToUChars(const String& string);
+Vector<char> ensureStringToUTF8(const String& string, bool isNullTermination);
 String ensureStringToUTF8String(const String& string);
 std::string WTFStringToStdString(const WTF::String& str);
 

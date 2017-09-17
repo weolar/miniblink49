@@ -3,9 +3,80 @@
 #include "wtf/text/UTF8.h"
 
 namespace WTF {
+// 
+// String ensureUTF16String(const String& string)
+// {
+//     if (string.isNull() || string.isEmpty())
+//         return String(L"");
+//     if (!string.is8Bit())
+//         return String(string.characters16(), string.length());
+// 
+//     const LChar* stringStart = string.characters8();
+//     size_t length = string.length();
+//     if (charactersAreAllASCII(stringStart, length))
+//         return String::make16BitFrom8BitSource(stringStart, length);
+// 
+//     Vector<UChar, 1024> buffer(length);
+//     UChar* bufferStart = buffer.data();
+// 
+//     UChar* bufferCurrent = bufferStart;
+//     const char* stringCurrent = reinterpret_cast<const char*>(stringStart);
+//     if (WTF::Unicode::convertUTF8ToUTF16(&stringCurrent, reinterpret_cast<const char *>(stringStart + length),
+//         &bufferCurrent, bufferCurrent + buffer.size()) != WTF::Unicode::conversionOK)
+//         return "";
+// 
+//     unsigned utf16Length = bufferCurrent - bufferStart;
+//     ASSERT(utf16Length < length);
+//     return StringImpl::create(bufferStart, utf16Length);
+// }
+
+Vector<UChar> ensureUTF16UChar(const String& string, bool isNullTermination)
+{
+//     String out = ensureUTF16String(string);
+//     return out.charactersWithNullTermination();
+    if (string.isNull() || string.isEmpty())
+        return Vector<UChar>();
+
+    Vector<UChar> out;
+    if (!string.is8Bit()) {
+        if (isNullTermination)
+            return string.charactersWithNullTermination();
+        out.append(string.characters16(), string.length());
+        return out;
+    }
+
+    //ASSERT(WTF::Unicode::isLegalUTF8(string.characters8(), string.length()));
+    if (string.containsOnlyASCII()) {
+        out = string.charactersWithNullTermination();
+        if (!isNullTermination)
+            out.removeLast();
+        return out;
+    }
+
+    String retVal = String::fromUTF8(string.characters8(), string.length());
+    if (retVal.isNull() || retVal.isEmpty())
+        return Vector<UChar>();
+
+    ASSERT(!retVal.is8Bit());
+    out = retVal.charactersWithNullTermination();
+    if (!isNullTermination)
+        out.removeLast();
+    return out;
+}
 
 String ensureUTF16String(const String& string)
 {
+//     if (string.isNull() || string.isEmpty())
+//         return String(L"");
+//     if (!string.is8Bit())
+//         return String(string.characters16(), string.length());
+// 
+//     String retVal = String::fromUTF8(string.characters8(), string.length());
+//     if (retVal.isNull() || retVal.isEmpty())
+//         return String(L"");
+// 
+//     ASSERT(!retVal.is8Bit());
+//     return retVal;
     if (string.isNull() || string.isEmpty())
         return String(L"");
     if (!string.is8Bit())
@@ -30,54 +101,57 @@ String ensureUTF16String(const String& string)
     return StringImpl::create(bufferStart, utf16Length);
 }
 
-Vector<UChar> ensureUTF16UChar(const String& string)
-{
-    String out = ensureUTF16String(string);
-    return out.charactersWithNullTermination();
-}
-
 // 如果string里是8bit的话，必须是utf8编码
-Vector<UChar> ensureStringToUChars(const String& string)
-{
-    if (string.isNull() || string.isEmpty())
-        return Vector<UChar>();
+// Vector<UChar> ensureStringToUChars(const String& string, bool isNullTermination)
+// {
+//     if (string.isNull() || string.isEmpty())
+//         return Vector<UChar>();
+// 
+//     if (!string.is8Bit())
+//         return string.charactersWithNullTermination();
+// 
+//     //ASSERT(WTF::Unicode::isLegalUTF8(string.characters8(), string.length()));
+//     if (string.containsOnlyASCII())
+//         return string.charactersWithNullTermination();
+// 
+//     String retVal = String::fromUTF8(string.characters8(), string.length());
+//     if (retVal.isNull() || retVal.isEmpty())
+//         return Vector<UChar>();
+// 
+//     ASSERT(!retVal.is8Bit());
+//     return retVal.charactersWithNullTermination();
+// }
 
-    if (!string.is8Bit())
-        return string.charactersWithNullTermination();
-
-    //ASSERT(WTF::Unicode::isLegalUTF8(string.characters8(), string.length()));
-    if (string.containsOnlyASCII())
-        return string.charactersWithNullTermination();
-
-    String retVal = String::fromUTF8(string.characters8(), string.length());
-    if (retVal.isNull() || retVal.isEmpty())
-        return Vector<UChar>();
-
-    ASSERT(!retVal.is8Bit());
-    return retVal.charactersWithNullTermination();
-}
-
-Vector<char> ensureStringToUTF8(const String& string)
+Vector<char> ensureStringToUTF8(const String& string, bool isNullTermination)
 {
     Vector<char> out;
     if (string.isNull() || string.isEmpty())
         return out;
+
     if (string.is8Bit()) {
         out.resize(string.length());
         memcpy(out.data(), string.characters8(), string.length());
-        //out.append('\0');
     } else {
         CString utf8 = string.utf8();
-        out.resize(utf8.length());
-        memcpy(out.data(), utf8.data(), utf8.length());
+        size_t len = utf8.length();
+        if (1 == len && !isNullTermination)
+            return out;
+        if (!isNullTermination)
+            --len;
+        
+        out.resize(len);
+        memcpy(out.data(), utf8.data(), len);
     }
+
+    if (isNullTermination && '\0' != out[out.size() - 1])
+        out.append('\0');
 
     return out;
 }
 
 String ensureStringToUTF8String(const String& string)
 {
-    Vector<char> out = ensureStringToUTF8(string);
+    Vector<char> out = ensureStringToUTF8(string, false);
     return String(out.data(), out.size());
 }
 
