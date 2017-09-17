@@ -420,7 +420,7 @@ static std::vector<std::vector<wchar_t>*> s_sharedStringBuffersW;
 const wchar_t* jsToTempStringW(jsExecState es, jsValue v)
 {
     const utf8* utf8String = jsToTempString(es, v);
-    Vector<UChar> utf16 = WTF::ensureUTF16UChar(String(utf8String));
+    Vector<UChar> utf16 = WTF::ensureUTF16UChar(String(utf8String), false);
     if (0 == utf16.size())
         return L"";
 
@@ -444,7 +444,7 @@ const utf8* jsToTempString(jsExecState es, jsValue v) {
 
     WkeJsValue* wkeValue = it->value;
     
-    WTF::CString sharedStringBuffer;
+    Vector<char> sharedStringBuffer;
     if (WkeJsValue::wkeJsValueV8Value == wkeValue->type) {
         if (wkeValue->value.IsEmpty())
             return "";
@@ -460,19 +460,22 @@ const utf8* jsToTempString(jsExecState es, jsValue v) {
 
         v8::Local<v8::String> stringValue = value->ToString();
         String stringWTF = blink::v8StringToWebCoreString<String>(stringValue, blink::DoNotExternalize);
-        sharedStringBuffer = stringWTF.utf8();
+
+        sharedStringBuffer = WTF::ensureStringToUTF8(stringWTF, false);
     } else if (WkeJsValue::wkeJsValueString == wkeValue->type) {
-        sharedStringBuffer = wkeValue->stringVal;
+        if (0 == wkeValue->stringVal.length() || 1 == wkeValue->stringVal.length())
+            return "";
+        sharedStringBuffer.append(wkeValue->stringVal.data(), wkeValue->stringVal.length() - 1);
     }
 
-    if (0 == sharedStringBuffer.length())
+    if (0 == sharedStringBuffer.size())
         return "";
 
     std::vector<char>* stringBuffer = new std::vector<char>();
     s_sharedStringBuffers.push_back(stringBuffer);
 
-    stringBuffer->resize(sharedStringBuffer.length());
-    memcpy(&stringBuffer->at(0), sharedStringBuffer.data(), sharedStringBuffer.length());
+    stringBuffer->resize(sharedStringBuffer.size());
+    memcpy(&stringBuffer->at(0), sharedStringBuffer.data(), sharedStringBuffer.size());
     stringBuffer->push_back('\0');
     return &stringBuffer->at(0);
 }
@@ -630,7 +633,7 @@ jsValue jsGlobalObject(jsExecState es)
 jsValue jsEval(jsExecState es, const utf8* str)
 {
     String s = String::fromUTF8(str);
-    Vector<UChar> buf = WTF::ensureUTF16UChar(s);
+    Vector<UChar> buf = WTF::ensureUTF16UChar(s, true);
     return jsEvalW(es, buf.data());
 }
 
@@ -654,7 +657,7 @@ jsValue jsEvalW(jsExecState es, const wchar_t* str)
     v8::Local<v8::Context> context = v8::Local<v8::Context>::New(es->isolate, es->context);
     v8::Context::Scope contextScope(context);
 
-    v8::MaybeLocal<v8::String> source = v8::String::NewFromUtf8(isolate, codeString.utf8().data(), v8::NewStringType::kNormal);
+    v8::MaybeLocal<v8::String> source = v8::String::NewFromUtf8(isolate, WTF::ensureStringToUTF8(codeString, true).data(), v8::NewStringType::kNormal);
     if (source.IsEmpty())
         return jsUndefined();
     v8::Local<v8::Script> script = v8::Script::Compile(source.ToLocalChecked());
@@ -948,7 +951,7 @@ public:
         execState->accessorSetterArg = value;
         execState->isolate = isolate;
         execState->context.Reset(isolate, isolate->GetCurrentContext());
-        getterSetter->setter(execState, getterSetter->getterParam);
+        getterSetter->setter(execState, getterSetter->setterParam);
 
         info.GetReturnValue().SetUndefined();
     }
@@ -1017,6 +1020,18 @@ static void addAccessor(v8::Local<v8::Context> context, const char* name, wkeJsN
 #define JS_SETTER (2)
 
 struct jsFunctionInfo {
+    jsFunctionInfo() {
+        memset(name, 0, MAX_NAME_LENGTH);
+        fn = nullptr;
+        param = nullptr;
+        settet = nullptr;
+        setterParam = nullptr;
+        gettet = nullptr;
+        getterParam = nullptr;
+        argCount = 0;
+        funcType = JS_FUNC;
+    }
+
     char name[MAX_NAME_LENGTH];
     wkeJsNativeFunction fn;
     void* param;
@@ -1330,7 +1345,7 @@ static void setWkeWebViewToV8Context(content::WebFrameClientImpl* client, v8::Lo
 #else
     v8::Local<v8::Value> wkeWebViewV8 = globalObj->GetHiddenValue(nameMaybeLocal.ToLocalChecked());
 #endif
-	ASSERT(wkeWebViewV8.IsEmpty());
+    ASSERT(wkeWebViewV8.IsEmpty());
 
     CWebView* wkeWebView = webPage->wkeWebView();
     ASSERT(wkeWebView);
@@ -1477,7 +1492,7 @@ jsValue v8ValueToJsValue(v8::Local<v8::Context> context, v8::Local<v8::Value> v8
 
     if (v8Value->IsString()) {
         String stringWTF = blink::toCoreString(v8::Local<v8::String>::Cast(v8Value));
-        return wke::createJsValueString(context, stringWTF.utf8().data());
+        return wke::createJsValueString(context, WTF::ensureStringToUTF8(stringWTF, true).data());
     } else if (v8Value->IsTrue()) {
         return jsBoolean(true);
     } else if (v8Value->IsFalse()) {

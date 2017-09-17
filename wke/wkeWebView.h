@@ -229,6 +229,9 @@ public:
 
     void setProxyInfo(const String& host, unsigned long port, net::WebURLLoaderManager::ProxyType type, const String& username, const String& password);
 
+    String getProxy() const { return m_proxy; }
+    net::WebURLLoaderManager::ProxyType getProxyType() const { return m_proxyType; }
+
 protected:
     HWND m_hWnd;
     void _initHandler();
@@ -268,9 +271,9 @@ protected:
     //void* m_pixels;
 
     bool m_awake;
-public:
-	String m_proxy;
-	net::WebURLLoaderManager::ProxyType m_proxyType;
+
+    String m_proxy;
+    net::WebURLLoaderManager::ProxyType m_proxyType;
 };
 
 };//namespace wke
