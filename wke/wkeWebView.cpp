@@ -104,16 +104,16 @@ void CWebView::setTransparent(bool transparent)
 void CWebView::loadPostURL(const utf8* inUrl, const char * poastData, int nLen )
 {
     blink::KURL url(blink::ParsedURLString, inUrl);
-	if (!url.isValid())
-		url.setProtocol("http:");
+    if (!url.isValid())
+        url.setProtocol("http:");
 
-	if (!url.isValid())
-		return;
+    if (!url.isValid())
+        return;
 
-	if (blink::protocolIsJavaScript(url)) {
-		//m_mainFrame->script()->executeIfJavaScriptURL(url);
-		return;
-	}
+    if (blink::protocolIsJavaScript(url)) {
+        //m_mainFrame->script()->executeIfJavaScriptURL(url);
+        return;
+    }
 
     blink::WebURLRequest request(url);
     request.setCachePolicy(blink::WebURLRequest::UseProtocolCachePolicy);
@@ -127,7 +127,7 @@ void CWebView::loadPostURL(const utf8* inUrl, const char * poastData, int nLen )
 
 void CWebView::loadPostURL(const wchar_t * inUrl,const char * poastData,int nLen )
 {
-   loadPostURL(String(inUrl).utf8().data(),poastData,nLen);
+    loadPostURL(String(inUrl).utf8().data(), poastData,nLen);
 }
 
 void CWebView::loadURL(const utf8* inUrl)
@@ -172,7 +172,7 @@ void CWebView::loadHTML(const wchar_t* html)
     if (0 == length)
         return;
     String htmlUTF8((UChar*)html, length);
-    Vector<char> htmlUTF8Buf = WTF::ensureStringToUTF8(htmlUTF8);
+    Vector<char> htmlUTF8Buf = WTF::ensureStringToUTF8(htmlUTF8, false);
 
     String url = String::format("MemoryURL://data.com/%d", GetTickCount());
     m_webPage->loadHTMLString(content::WebPage::kMainFrameId, blink::WebData(htmlUTF8Buf.data(), htmlUTF8Buf.size()), blink::KURL(blink::ParsedURLString, url), blink::WebURL(), true);
@@ -187,7 +187,7 @@ void CWebView::loadFile(const utf8* filename)
         return;
 
     String filenameUTF8(filename, length);
-    loadFile(ensureUTF16UChar(filenameUTF8).data());
+    loadFile(ensureUTF16UChar(filenameUTF8, true).data());
 }
 
 void CWebView::loadFile(const wchar_t* filename)
@@ -250,7 +250,7 @@ void CWebView::setUserAgent(const utf8 * useragent)
     platform->setUserAgent((char *)useragent);
 }
 
-void CWebView::setUserAgent(const wchar_t * useragent )
+void CWebView::setUserAgent(const wchar_t * useragent)
 {
     setUserAgent(String(useragent).utf8().data());
 }
@@ -515,8 +515,18 @@ void CWebView::editorRedo()
 
 void CWebView::setCookieEnabled(bool enable)
 {
+//     if (!m_webPage->mainFrame())
+//         return;
+// 
+//     blink::WebDocument webDocument = m_webPage->mainFrame()->document();
+//     if (webDocument.isNull())
+//         return;
+
     blink::WebSettingsImpl* settings = m_webPage->webViewImpl()->settingsImpl();
     settings->setCookieEnabled(enable);
+
+   // const blink::Document* doc = webDocument.constUnwrap<blink::Document>();
+
     m_isCokieEnabled = enable;
 }
 
@@ -535,7 +545,6 @@ const utf8* CWebView::cookie()
         return "";
 
     const blink::Document* doc = webDocument.constUnwrap<blink::Document>();
-    //String cookieString = doc->cookie(IGNORE_EXCEPTION);
     m_cookie = content::WebCookieJarImpl::cookiesForSession(KURL(), doc->cookieURL(), true);
 
     return m_cookie.string();
@@ -1066,20 +1075,20 @@ void CWebView::setDragFiles(const POINT* clintPos, const POINT* screenPos, wkeSt
 
 void CWebView::setProxyInfo(const String& host,	unsigned long port,	net::WebURLLoaderManager::ProxyType type, const String& username, const String& password)
 {
-	m_proxyType = type;
+    m_proxyType = type;
 
-	if (!host.length()) {
-		m_proxy = emptyString();
-	}
-	else {
-		String userPass;
-		if (username.length() || password.length())
-			userPass = username + ":" + password + "@";
+    if (!host.length()) {
+        m_proxy = emptyString();
+    } else {
+        String userPass;
+        if (username.length() || password.length())
+            userPass = username + ":" + password + "@";
 
-		m_proxy = String("http://") + userPass + host + ":" + String::number(port);
-	}
+        m_proxy = String("http://") + userPass + host + ":" + String::number(port);
+    }
 }
-};//namespace wke
+
+} // namespace wke
 
 //static Vector<wke::CWebView*> s_webViews;
 

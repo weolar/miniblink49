@@ -30,64 +30,61 @@ bool wkeIsUpdataInOtherThread = false;
 
 void wkeInitialize()
 {
-	if (!wkeIsInit) {
-		//double-precision float
-		_controlfp(_PC_53, _MCW_PC);
+    if (wkeIsInit)
+        return;
 
-		CoInitialize(NULL);
+    //double-precision float
+    _controlfp(_PC_53, _MCW_PC);
 
-		content::WebPage::initBlink();
-		wkeIsInit = true;
-	}
+    CoInitialize(NULL);
+
+    content::WebPage::initBlink();
+    wkeIsInit = true;
 }
 
-void wkeSetProxy(const wkeProxy& proxy)
-{
-    net::WebURLLoaderManager::ProxyType proxyType = net::WebURLLoaderManager::HTTP;
+struct ProxyInfo {
+    net::WebURLLoaderManager::ProxyType proxyType;
     String hostname;
     String username;
     String password;
 
-    if (proxy.hostname[0] != 0 && proxy.type >= WKE_PROXY_HTTP && proxy.type <= WKE_PROXY_SOCKS5HOSTNAME) {
-        switch (proxy.type) {
-        case WKE_PROXY_HTTP:           proxyType = net::WebURLLoaderManager::HTTP; break;
-        case WKE_PROXY_SOCKS4:         proxyType = net::WebURLLoaderManager::Socks4; break;
-        case WKE_PROXY_SOCKS4A:        proxyType = net::WebURLLoaderManager::Socks4A; break;
-        case WKE_PROXY_SOCKS5:         proxyType = net::WebURLLoaderManager::Socks5; break;
-        case WKE_PROXY_SOCKS5HOSTNAME: proxyType = net::WebURLLoaderManager::Socks5Hostname; break;
-        }
+    static WTF::PassOwnPtr<ProxyInfo> create(const wkeProxy& proxy) {
+        WTF::PassOwnPtr<ProxyInfo> info = WTF::adoptPtr(new ProxyInfo());
+        info->proxyType = net::WebURLLoaderManager::HTTP;
 
-        hostname = String::fromUTF8(proxy.hostname);
-        username = String::fromUTF8(proxy.username);
-        password = String::fromUTF8(proxy.password);
+        if (proxy.hostname[0] != 0 && proxy.type >= WKE_PROXY_HTTP && proxy.type <= WKE_PROXY_SOCKS5HOSTNAME) {
+            switch (proxy.type) {
+            case WKE_PROXY_HTTP:           info->proxyType = net::WebURLLoaderManager::HTTP; break;
+            case WKE_PROXY_SOCKS4:         info->proxyType = net::WebURLLoaderManager::Socks4; break;
+            case WKE_PROXY_SOCKS4A:        info->proxyType = net::WebURLLoaderManager::Socks4A; break;
+            case WKE_PROXY_SOCKS5:         info->proxyType = net::WebURLLoaderManager::Socks5; break;
+            case WKE_PROXY_SOCKS5HOSTNAME: info->proxyType = net::WebURLLoaderManager::Socks5Hostname; break;
+            }
+
+            info->hostname = String::fromUTF8(proxy.hostname);
+            info->username = String::fromUTF8(proxy.username);
+            info->password = String::fromUTF8(proxy.password);
+        }
+        return info;
     }
+};
+
+void wkeSetProxy(const wkeProxy& proxy)
+{
+    WTF::PassOwnPtr<ProxyInfo> info = ProxyInfo::create(proxy);
 
     if (net::WebURLLoaderManager::sharedInstance())
-        net::WebURLLoaderManager::sharedInstance()->setProxyInfo(hostname, proxy.port, proxyType, username, password);
+        net::WebURLLoaderManager::sharedInstance()->setProxyInfo(info->hostname, proxy.port, info->proxyType, info->username, info->password);
 }
 
-WKE_API void wkeSetViewProxy(wkeWebView webView, wkeProxy *proxy) {
-	net::WebURLLoaderManager::ProxyType proxyType = net::WebURLLoaderManager::HTTP;
-	String hostname;
-	String username;
-	String password;
-
-	if (proxy->hostname[0] != 0 && proxy->type >= WKE_PROXY_HTTP && proxy->type <= WKE_PROXY_SOCKS5HOSTNAME) {
-		switch (proxy->type) {
-		case WKE_PROXY_HTTP:           proxyType = net::WebURLLoaderManager::HTTP; break;
-		case WKE_PROXY_SOCKS4:         proxyType = net::WebURLLoaderManager::Socks4; break;
-		case WKE_PROXY_SOCKS4A:        proxyType = net::WebURLLoaderManager::Socks4A; break;
-		case WKE_PROXY_SOCKS5:         proxyType = net::WebURLLoaderManager::Socks5; break;
-		case WKE_PROXY_SOCKS5HOSTNAME: proxyType = net::WebURLLoaderManager::Socks5Hostname; break;
-		}
-
-		hostname = String::fromUTF8(proxy->hostname);
-		username = String::fromUTF8(proxy->username);
-		password = String::fromUTF8(proxy->password);
-	}
-
-	webView->setProxyInfo(hostname, proxy->port, proxyType, username, password);
+WKE_API void wkeSetViewProxy(wkeWebView webView, wkeProxy* proxy)
+{
+    if (!webView || !proxy)
+        return;
+    WTF::PassOwnPtr<ProxyInfo> info = ProxyInfo::create(*proxy);
+    webView->setProxyInfo(info->hostname, proxy->port, info->proxyType, info->username, info->password);
 }
+
 void wkeConfigure(const wkeSettings* settings)
 {
     if (settings->mask & WKE_SETTING_PROXY)
