@@ -1377,8 +1377,6 @@ int WebURLLoaderManager::addAsynchronousJob(WebURLLoaderInternal* job)
 //     OutputDebugStringW(L"addAsynchronousJob:");
 //     OutputDebugStringW(url.charactersWithNullTermination().data());
 //     OutputDebugStringW(L"\n");
-    if (WTF::kNotFound != url.find("blob:"))
-        OutputDebugStringA("");
 #endif
 
     job->m_manager = this;
@@ -1615,9 +1613,6 @@ WebURLLoaderManager::InitializeHandleInfo* WebURLLoaderManager::preInitializeHan
     url.removeFragmentIdentifier();
 
     String urlString = url.string();
-    info->url = urlString.utf8().data();
-    info->method = job->firstRequest()->httpMethod().utf8();
-
     if (url.isLocalFile()) {
         // Remove any query part sent to a local file.
         if (!url.query().isEmpty()) {
@@ -1625,9 +1620,14 @@ WebURLLoaderManager::InitializeHandleInfo* WebURLLoaderManager::preInitializeHan
             url.setQuery(String());
             urlString = url.string();
         }
+
         // Determine the MIME type based on the path.
         job->m_response.setMIMEType(MIMETypeRegistry::getMIMETypeForPath(url));
     }
+
+    info->url = WTF::ensureStringToUTF8(urlString, true).data();
+
+    info->method = job->firstRequest()->httpMethod().utf8();
 
     curl_slist* headers = nullptr;
     HeaderVisitor visitor(&headers);
@@ -1650,6 +1650,12 @@ WebURLLoaderManager::InitializeHandleInfo* WebURLLoaderManager::preInitializeHan
     }
     info->headers = headers;
 
+    // Set proxy options if we have them.
+    if (m_proxy.length()) {
+        info->proxy = m_proxy.utf8().data();
+        info->proxyType = m_proxyType;
+    }
+
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
     RequestExtraData* requestExtraData = reinterpret_cast<RequestExtraData*>(job->firstRequest()->extraData());
     if (!requestExtraData) // 在退出时候js调用同步XHR请求，会导致ExtraData为0情况
@@ -1659,9 +1665,10 @@ WebURLLoaderManager::InitializeHandleInfo* WebURLLoaderManager::preInitializeHan
     if (!page->wkeWebView())
         return info;
 
-    if (page->wkeWebView()->m_proxy.length()) {
-        info->proxy = page->wkeWebView()->m_proxy.utf8().data();
-        info->proxyType = page->wkeWebView()->m_proxyType;
+    String wkeProxy = page->wkeWebView()->getProxy();
+    if (wkeProxy.length()) {
+        info->proxy = wkeProxy.utf8().data();
+        info->proxyType = page->wkeWebView()->getProxyType();
     }
 #endif
 
