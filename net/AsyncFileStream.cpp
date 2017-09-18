@@ -135,7 +135,7 @@ void AsyncFileStream::getSize(const String& path, double expectedModificationTim
 //         };
 //     });
 
-    Vector<UChar>* capturedPath = new Vector<UChar>(WTF::ensureUTF16UChar(path));
+    Vector<UChar>* capturedPath = new Vector<UChar>(WTF::ensureUTF16UChar(path, false));
     m_fileThread->postTask(FROM_HERE, WTF::bind(getSizeOnFileThread, m_asyncTaskInfo, capturedPath, expectedModificationTime));
 }
 
@@ -168,7 +168,7 @@ void AsyncFileStream::openForRead(const String& path, long long offset, long lon
 //         };
 //     });
 
-    Vector<UChar>* capturedPath = new Vector<UChar>(WTF::ensureUTF16UChar(path));
+    Vector<UChar>* capturedPath = new Vector<UChar>(WTF::ensureUTF16UChar(path, false));
     m_fileThread->postTask(FROM_HERE, WTF::bind(openForReadOnFileThread, m_asyncTaskInfo, capturedPath, offset, length));
 }
 
@@ -200,7 +200,7 @@ void AsyncFileStream::openForWrite(const String& path)
 //         };
 //     });
 
-    Vector<UChar>* capturedPath = new Vector<UChar>(WTF::ensureUTF16UChar(path));
+    Vector<UChar>* capturedPath = new Vector<UChar>(WTF::ensureUTF16UChar(path, false));
     m_fileThread->postTask(FROM_HERE, WTF::bind(openForWriteOnFileThread, m_asyncTaskInfo, capturedPath));
 }
 
@@ -273,7 +273,7 @@ void AsyncFileStream::write(const String& blobURL, long long position, int lengt
 //         };
 //     });
 
-    Vector<UChar>* capturedBlobURL = new Vector<UChar>(WTF::ensureUTF16UChar(blobURL));
+    Vector<UChar>* capturedBlobURL = new Vector<UChar>(WTF::ensureUTF16UChar(blobURL, false));
     m_fileThread->postTask(FROM_HERE, WTF::bind(writeOnFileThread, m_asyncTaskInfo, capturedBlobURL, position, length));
 }
 

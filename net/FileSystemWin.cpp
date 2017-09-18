@@ -191,8 +191,7 @@ String pathByAppendingComponent(const String& path, const String& component)
         return String();
 
     // StringView(path).getCharactersWithUpconvert(buffer.data());
-    Vector<UChar> buffer = WTF::ensureUTF16UChar(path);
-    buffer[path.length()] = '\0';
+    Vector<UChar> buffer = WTF::ensureUTF16UChar(path, true);
 
     if (!PathAppendW(buffer.data(), component.charactersWithNullTermination().data()))
         return String();
@@ -218,7 +217,7 @@ std::vector<char> fileSystemRepresentation(const String& path)
 // 
 //     return string;
 
-    Vector<UChar> buffer = WTF::ensureUTF16UChar(path);
+    Vector<UChar> buffer = WTF::ensureUTF16UChar(path, false);
 
     std::vector<char> out;
     WTF::WCharToMByte(buffer.data(), buffer.size(),&out, CP_ACP);
