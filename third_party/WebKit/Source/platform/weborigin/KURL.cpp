@@ -357,7 +357,7 @@ bool needInserFileHead(const String& url)
 //     if (WTF::kNotFound != url.find(":\\"))
 //         return true;
 
-    if (':' == url[1] && ('\\' == url[1] || '/' == url[1]))
+    if (':' == url[1] && ('\\' == url[2] || '/' == url[2]))
         return true;
 
     return false;
@@ -372,7 +372,8 @@ KURL::KURL(ParsedURLStringTag, const String& url)
         if (needInserFileHead(url)) {
             fixed = true;
             fixSchemeUrl = url;
-            fixSchemeUrl.insert("file:///", 0);            
+            fixSchemeUrl = WTF::ensureUTF16String(fixSchemeUrl); // see http://blog.csdn.net/weolar/article/details/78020701
+            fixSchemeUrl.insert(L"file:///", 0);            
             fixSchemeUrl.replace(L"\\", L"/");
             parse(WTF::ensureStringToUTF8(fixSchemeUrl, true).data());
         } else
