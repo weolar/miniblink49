@@ -134,7 +134,7 @@ void FrameConsole::addMessage(PassRefPtrWillBeRawPtr<ConsoleMessage> prpConsoleM
     outstr.append("]\n");
 
     //saveDumpFile("xx", (char*)outstr.characters16(), outstr.length() * 2);
-    Vector<UChar> utf16 = WTF::ensureUTF16UChar(outstr);
+    Vector<UChar> utf16 = WTF::ensureUTF16UChar(outstr, true);
     OutputDebugStringW(utf16.data());
 
     if (WTF::kNotFound != outstr.find("callstack")) {
@@ -142,7 +142,7 @@ void FrameConsole::addMessage(PassRefPtrWillBeRawPtr<ConsoleMessage> prpConsoleM
             int num = consoleMessage->callStack()->at(i).lineNumber();
             outstr.append(String::format(" %d", num));
             outstr.append("\n");
-            Vector<UChar> utf16 = WTF::ensureUTF16UChar(outstr);
+            Vector<UChar> utf16 = WTF::ensureUTF16UChar(outstr, true);
             OutputDebugStringW(utf16.data());
         }
     }
