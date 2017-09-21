@@ -639,13 +639,13 @@ bool WebSocketChannelImpl::processFrame()
             // so we should pretend that we have finished to read this frame and
             // make sure that the member variables are in a consistent state before
             // the handler is invoked.
-            Vector<char> continuousFrameData;
-            continuousFrameData.appendVector(m_continuousFrameData);
+            OwnPtr<Vector<char>> continuousFrameData = adoptPtr(new Vector<char>());
+            continuousFrameData->appendVector(m_continuousFrameData);
             m_hasContinuousFrame = false;
             if (m_continuousFrameOpCode == WebSocketOneFrame::OpCodeText) {
                 String message;
-                if (continuousFrameData.size())
-                    message = String::fromUTF8(continuousFrameData.data(), continuousFrameData.size());
+                if (continuousFrameData->size())
+                    message = String::fromUTF8(continuousFrameData->data(), continuousFrameData->size());
                 else
                     message = emptyString();
                 if (message.isNull())
@@ -653,7 +653,7 @@ bool WebSocketChannelImpl::processFrame()
                 else
                     m_client->didReceiveTextMessage(message);
             } else if (m_continuousFrameOpCode == WebSocketOneFrame::OpCodeBinary)
-                m_client->didReceiveBinaryMessage(WTF::adoptPtr(&continuousFrameData));
+                m_client->didReceiveBinaryMessage(continuousFrameData.release());
         }
         break;
 
@@ -680,10 +680,10 @@ bool WebSocketChannelImpl::processFrame()
 
     case WebSocketOneFrame::OpCodeBinary:
         if (frame.final) {
-            Vector<char> binaryData(frame.payloadLength);
-            memcpy(binaryData.data(), frame.payload, frame.payloadLength);
+            OwnPtr<Vector<char>> binaryData = adoptPtr(new Vector<char>(frame.payloadLength));
+            memcpy(binaryData->data(), frame.payload, frame.payloadLength);
             skipBuffer(frameEnd - m_buffer.data());
-            m_client->didReceiveBinaryMessage(WTF::adoptPtr(&binaryData));
+            m_client->didReceiveBinaryMessage(binaryData.release());
         } else {
             m_hasContinuousFrame = true;
             m_continuousFrameOpCode = WebSocketOneFrame::OpCodeBinary;
