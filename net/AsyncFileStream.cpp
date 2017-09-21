@@ -73,19 +73,31 @@ AsyncFileStream::AsyncFileStream(FileStreamClient* client)
     m_asyncTaskInfo = new AsyncTaskInfo(m_stream, m_blinkThread, m_fileThread, m_client);
 }
 
-static void lambdaCall(std::function<void()> func)
+static void lambdaCall(std::function<void()>&& func)
 {
     func();
 }
 
+class LambdaTask : public  blink::WebThread::Task {
+public:
+    LambdaTask(std::function<void()>&& func) 
+        : m_func(func) { }
+    virtual ~LambdaTask() override { }
+
+    virtual void run() override { m_func(); }
+
+private:
+    std::function<void()> m_func;
+};
+
 static void callOnFileThread(AsyncTaskInfo* info, std::function<void()>&& func)
 {
-    info->fileThread->postTask(FROM_HERE, WTF::bind(lambdaCall, func));
+    info->fileThread->postTask(FROM_HERE, new LambdaTask(std::move(func)));
 }
 
 static void callOnBlinkThread(AsyncTaskInfo* info, std::function<void()>&& func)
 {
-    info->blinkThread->postTask(FROM_HERE, WTF::bind(lambdaCall, func));
+    info->blinkThread->postTask(FROM_HERE, new LambdaTask(std::move(func)));
 }
 
 AsyncFileStream::~AsyncFileStream()

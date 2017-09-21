@@ -28,9 +28,9 @@
  */
 
 #include "config.h"
+
 #include "net/FileSystem.h"
 #include "net/PathWalker.h"
-
 #include "third_party/WebKit/Source/platform/FileMetadata.h"
 #include "third_party/WebKit/Source/platform/NotImplemented.h"
 #include <wtf/CryptographicallyRandomNumber.h>
@@ -38,6 +38,8 @@
 #include <wtf/text/CString.h>
 #include <wtf/text/StringBuilder.h>
 #include <wtf/text/WTFStringUtil.h>
+
+#define PURE = 0
 #include <windows.h>
 #include <shlobj.h>
 #include <shlwapi.h>
