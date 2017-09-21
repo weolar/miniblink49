@@ -2,6 +2,7 @@
 #ifndef _FUNCTIONAL_
 #define _FUNCTIONAL_
 #include <xstddef>
+#include <functionalvc6.h>
 
 #ifdef  _MSC_VER
 #pragma pack(push,8)
