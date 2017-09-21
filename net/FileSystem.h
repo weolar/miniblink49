@@ -219,20 +219,29 @@ public:
     unsigned size() const { return m_fileSize; }
 
 private:
+    template<class T, class OtherT = T>
+    T exchange(T& value, OtherT&& newValue)
+    {
+        T oldValue = std::move(value);
+        value = std::forward<OtherT>(newValue);
+        return oldValue;
+    }
+
     void* m_fileData { nullptr };
     unsigned m_fileSize { 0 };
 };
 
+
 inline MappedFileData::MappedFileData(MappedFileData&& other)
-    : m_fileData(std::exchange(other.m_fileData, nullptr))
-    , m_fileSize(std::exchange(other.m_fileSize, 0))
+    : m_fileData(/*std::*/exchange(other.m_fileData, nullptr))
+    , m_fileSize(/*std::*/exchange(other.m_fileSize, 0))
 {
 }
 
 inline MappedFileData& MappedFileData::operator=(MappedFileData&& other)
 {
-    m_fileData = std::exchange(other.m_fileData, nullptr);
-    m_fileSize = std::exchange(other.m_fileSize, 0);
+    m_fileData = exchange(other.m_fileData, nullptr);
+    m_fileSize = exchange(other.m_fileSize, 0);
     return *this;
 }
 

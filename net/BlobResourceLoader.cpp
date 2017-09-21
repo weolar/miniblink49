@@ -41,7 +41,6 @@
 #include "third_party/WebKit/public/platform/WebURLResponse.h"
 #include "third_party/WebKit/public/platform/WebURLError.h"
 #include "third_party/WebKit/public/platform/Platform.h"
-
 #include <wtf/MainThread.h>
 
 namespace net {
@@ -282,7 +281,7 @@ BlobResourceLoader::BlobResourceLoader(BlobDataWrap* blobData, const blink::WebU
     , m_readItemCount(0)
     , m_fileOpened(false)
 {
-    m_streamWrap = std::make_unique<StreamWrap>(this, m_async);
+    m_streamWrap = std::unique_ptr<StreamWrap>(new StreamWrap(this, m_async));
 }
 
 BlobResourceLoader::~BlobResourceLoader()
