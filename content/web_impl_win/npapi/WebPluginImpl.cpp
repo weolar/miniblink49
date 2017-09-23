@@ -373,6 +373,8 @@ static char* createUTF8String(const String& str)
 {
     Vector<char> cstr = WTF::ensureStringToUTF8(str, false);
     const size_t cstrLength = cstr.size();
+    if (0 == cstrLength)
+        return "";
     char* result = reinterpret_cast<char*>(fastMalloc(cstrLength + 1));
 
     memcpy(result, cstr.data(), cstrLength);
