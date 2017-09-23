@@ -281,7 +281,7 @@ void CefFrameHostImpl::SendJavaScript(const std::string& jsCode, const std::stri
 }
 
 void CefFrameHostImpl::SendCommand(const WTF::String& commandName, Cef_Response_Params* response) {
-    if (!m_browser)
+    if (!m_browser || 0 == commandName.length())
         return;
 
     Cef_Request_Params* request = new Cef_Request_Params();
