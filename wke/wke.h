@@ -229,6 +229,7 @@ WKE_API wkeWebView wkeCreateWebView();
 WKE_API wkeWebView wkeGetWebView(const char* name);
 WKE_API void wkeDestroyWebView(wkeWebView webView);
 
+WKE_API void wkeSetProxy(const wkeProxy* proxy);
 WKE_API void wkeSetViewProxy(wkeWebView webView, wkeProxy *proxy);
 
 WKE_API const char* wkeGetName(wkeWebView webView);

@@ -69,15 +69,18 @@ struct ProxyInfo {
     }
 };
 
-void wkeSetProxy(const wkeProxy& proxy)
+void wkeSetProxy(const wkeProxy* proxy)
 {
-    WTF::PassOwnPtr<ProxyInfo> info = ProxyInfo::create(proxy);
+    if (!proxy)
+        return;
+
+    WTF::PassOwnPtr<ProxyInfo> info = ProxyInfo::create(*proxy);
 
     if (net::WebURLLoaderManager::sharedInstance())
-        net::WebURLLoaderManager::sharedInstance()->setProxyInfo(info->hostname, proxy.port, info->proxyType, info->username, info->password);
+        net::WebURLLoaderManager::sharedInstance()->setProxyInfo(info->hostname, proxy->port, info->proxyType, info->username, info->password);
 }
 
-WKE_API void wkeSetViewProxy(wkeWebView webView, wkeProxy* proxy)
+void wkeSetViewProxy(wkeWebView webView, wkeProxy* proxy)
 {
     if (!webView || !proxy)
         return;
@@ -88,7 +91,7 @@ WKE_API void wkeSetViewProxy(wkeWebView webView, wkeProxy* proxy)
 void wkeConfigure(const wkeSettings* settings)
 {
     if (settings->mask & WKE_SETTING_PROXY)
-        wkeSetProxy(settings->proxy);
+        wkeSetProxy(&settings->proxy);
     if (settings->mask & WKE_SETTING_PAINTCALLBACK_IN_OTHER_THREAD)
         wkeIsUpdataInOtherThread = true;
 }
