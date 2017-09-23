@@ -366,8 +366,9 @@ void WebPluginImpl::updatePluginWidget(const IntRect& windowRect, const IntRect&
     }
 
     if (m_windowRect != oldWindowRect || m_clipRect != oldClipRect) {
-        if (!m_memoryCanvas)
-            m_memoryCanvas = skia::CreatePlatformCanvas(m_windowRect.width(), m_windowRect.height(), !m_isTransparent);
+        if (m_memoryCanvas)
+            delete m_memoryCanvas;
+        m_memoryCanvas = skia::CreatePlatformCanvas(m_windowRect.width(), m_windowRect.height(), !m_isTransparent);
     }
 }
 
@@ -699,8 +700,8 @@ void WebPluginImpl::paint(blink::WebCanvas* canvas, const blink::WebRect& rect)
     //if (!context.isInTransparencyLayer()) {
         XFORM transform;
         GetWorldTransform(hMemoryDC, &transform);
-        transform.eDx = -rect.x;
-        transform.eDy = -rect.y;
+        transform.eDx = -m_windowRect.x();
+        transform.eDy = -m_windowRect.y();
         SetWorldTransform(hMemoryDC, &transform);
     //}
 
@@ -709,7 +710,7 @@ void WebPluginImpl::paint(blink::WebCanvas* canvas, const blink::WebRect& rect)
 
     BitmapDeviceForGetBitmap* bitmapDevice = (BitmapDeviceForGetBitmap*)skia::GetTopDevice(*m_memoryCanvas);
     const SkBitmap& bitmap = bitmapDevice->getBitmap();
-    canvas->drawBitmap(bitmap, rect.x, rect.y);
+    canvas->drawBitmap(bitmap, m_windowRect.x(), m_windowRect.y());
 }
 
 void WebPluginImpl::setNPWindowRect(const IntRect& rect)
