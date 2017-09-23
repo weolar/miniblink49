@@ -82,18 +82,20 @@ void WebBlobRegistryImpl::registerBlobData(const WebString& uuid, const WebBlobD
     dataWrap->m_ref = 1;
 
     while (data.itemAt(i++, dataItem)) {
-        dataWrap->m_items.append(new WebBlobData::Item(dataItem));
+        dataWrap->appendItem(new WebBlobData::Item(dataItem));
     }
 
-//     String out = String::format("WebBlobRegistryImpl::registerBlobData: %p, %s\n", dataWrap, uuidString.utf8().data());
-//     OutputDebugStringA(out.utf8().data());
+    String out = String::format("WebBlobRegistryImpl::registerBlobData: %p, %s\n", dataWrap, uuidString.utf8().data());
+    OutputDebugStringA(out.utf8().data());
 
-    Vector<blink::WebBlobData::Item*>& items = dataWrap->m_items;
+    check();
+
+    const Vector<blink::WebBlobData::Item*>& items = dataWrap->items();
 
     HashMap<String, net::BlobDataWrap*>::const_iterator it = m_datasSet.begin();
     for (; it != m_datasSet.end(); ++it) {
         net::BlobDataWrap* dataWrapValue = it->value;
-        Vector<blink::WebBlobData::Item*>& valueItems = dataWrapValue->m_items;
+        const Vector<blink::WebBlobData::Item*>& valueItems = dataWrapValue->items();
         for (size_t i = 0; i < valueItems.size(); ++i) {
             blink::WebBlobData::Item* valueiIem = valueItems[i];
             
@@ -117,9 +119,27 @@ WebBlobRegistry::Builder* WebBlobRegistryImpl::createBuilder(const WebString& uu
     return new WebBlobRegistryImpl::BuilderImpl();
 }
 
+void WebBlobRegistryImpl::check() const
+{
+#if 0
+    HashMap<String, net::BlobDataWrap*>::const_iterator it = m_datasSet.begin();
+    for (; it != m_datasSet.end(); ++it) {
+        net::BlobDataWrap* dataWrapValue = it->value;
+        const Vector<blink::WebBlobData::Item*>& valueItems = dataWrapValue->items();
+        for (size_t i = 0; i < valueItems.size(); ++i) {
+            blink::WebBlobData::Item* valueiIem = valueItems[i];
+            if (!valueiIem)
+                DebugBreak();
+        }
+    }
+#endif
+}
+
 net::BlobDataWrap* WebBlobRegistryImpl::getBlobDataFromUUID(const String& url) const
 {
     ASSERT(isMainThread());
+
+    check();
 
     HashMap<String, net::BlobDataWrap*>::const_iterator it = m_datasSet.find(url);
     if (m_datasSet.end() == it)
@@ -137,7 +157,7 @@ void WebBlobRegistryImpl::setBlobDataLengthByTempPath(const String& tempPath, si
     HashMap<String, net::BlobDataWrap*>::const_iterator it = m_datasSet.begin();
     for (; it != m_datasSet.end(); ++it) {
         net::BlobDataWrap* dataWrap = (it->value);
-        Vector<blink::WebBlobData::Item*>& items = dataWrap->m_items;
+        const Vector<blink::WebBlobData::Item*>& items = dataWrap->items();
         for (size_t i = 0; i < items.size(); ++i) {
             blink::WebBlobData::Item* item = items[i];
             if ((String)item->filePath == tempPath) {
@@ -149,6 +169,8 @@ void WebBlobRegistryImpl::setBlobDataLengthByTempPath(const String& tempPath, si
             }
         }
     }
+
+    check();
 }
 
 void WebBlobRegistryImpl::addBlobDataRef(const WebString& uuid)
@@ -158,6 +180,8 @@ void WebBlobRegistryImpl::addBlobDataRef(const WebString& uuid)
         return;
 
     dataWrap->m_ref++;
+
+    check();
 }
 
 void WebBlobRegistryImpl::removeBlobDataRef(const WebString& uuid)
@@ -167,10 +191,24 @@ void WebBlobRegistryImpl::removeBlobDataRef(const WebString& uuid)
         return;
 
     dataWrap->m_ref--;
-    if (0 == dataWrap->m_ref) {
-        delete dataWrap;
-        m_datasSet.remove(uuid);
-    }
+    if (0 != dataWrap->m_ref)
+        return;
+
+    bool find = false;
+    do {
+        find = false;
+        HashMap<String, net::BlobDataWrap*>::const_iterator it = m_datasSet.begin();
+        for (; it != m_datasSet.end(); ++it) {
+            if (it->value != dataWrap)
+                continue;
+            m_datasSet.remove(it->key);
+            find = true;
+            break;
+        }
+    } while (find);
+
+    delete dataWrap;
+    check();
 }
 
 // 从uuid对应的data取出，再建立url到data的对应，相当于一个data有两个uuid
@@ -186,12 +224,16 @@ void WebBlobRegistryImpl::registerPublicBlobURL(const WebURL& url, const WebStri
 //     OutputDebugStringA(out.utf8().data());
 
     m_datasSet.set(url.string(), dataWrap);
+
+    check();
 }
 
 void WebBlobRegistryImpl::revokePublicBlobURL(const WebURL& url)
 {
     removeBlobDataRef(url.string());
     m_datasSet.remove(url.string());
+
+    check();
 }
 
 void WebBlobRegistryImpl::registerStreamURL(const WebURL& url, const WebString&) {  }
