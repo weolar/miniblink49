@@ -46,18 +46,14 @@ public:
     virtual void revokePublicBlobURL(const blink::WebURL& url) override;
 
     virtual void registerStreamURL(const blink::WebURL&, const blink::WebString&) override;
-
     virtual void registerStreamURL(const blink::WebURL&, const blink::WebURL& srcURL) override;
-
     virtual void addDataToStream(const blink::WebURL&, const char* data, size_t length) override;
-
     virtual void flushStream(const blink::WebURL&) override;
-
     virtual void finalizeStream(const blink::WebURL&) override;
-
     virtual void abortStream(const blink::WebURL&) override;
-
     virtual void unregisterStreamURL(const blink::WebURL&) override;
+
+    void check() const;
 
 private:
     HashMap<String, net::BlobDataWrap*> m_datasSet;

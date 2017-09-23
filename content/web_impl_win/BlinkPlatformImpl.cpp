@@ -641,7 +641,7 @@ blink::WebClipboard* BlinkPlatformImpl::clipboard()
 // Plugins -------------------------------------------------------------
 void BlinkPlatformImpl::getPluginList(bool refresh, blink::WebPluginListBuilder* builder)
 {
-    builder->addPlugin(blink::WebString::fromUTF8("flash"), blink::WebString::fromUTF8("flashPlugin"), blink::WebString::fromUTF8(".swf"));
+    builder->addPlugin(blink::WebString::fromUTF8("Shockwave Flash"), blink::WebString::fromUTF8("flashPlugin"), blink::WebString::fromUTF8(".swf"));
     builder->addMediaTypeToLastPlugin(blink::WebString::fromUTF8("application/x-shockwave-flash"), blink::WebString::fromUTF8("flashPlugin"));
     builder->addFileExtensionToLastMediaType(blink::WebString::fromUTF8(".swf"));
 }
