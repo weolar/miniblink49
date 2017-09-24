@@ -56,9 +56,11 @@ public:
     ~BlobDataWrap();
 
     const Vector<blink::WebBlobData::Item*>& items() const { return m_items; }
+    void appendItem(blink::WebBlobData::Item* item) { m_items.append(item); }
 
     int m_ref;
     String m_contentType;
+private:
     Vector<blink::WebBlobData::Item*> m_items;
 };
 
