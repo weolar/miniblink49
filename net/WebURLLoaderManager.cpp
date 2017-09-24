@@ -418,10 +418,8 @@ String WebURLLoaderManager::handleHeaderForBlobOnMainThread(WebURLLoaderInternal
     String tempPath = String::format("file:///c:/miniblink_blob_download_%d", GetTickCount());
 
     WTF::HashMap<String, BlobTempFileInfo*>::iterator it = m_blobCache.find(String(job->m_url));
-    if (it != m_blobCache.end()) {
-        DebugBreak();
-        return tempPath;
-    }
+    if (it != m_blobCache.end())
+        return it->value->tempUrl;
 
     BlobTempFileInfo* tempFileInfo = new BlobTempFileInfo();
     tempFileInfo->tempUrl = tempPath;
@@ -1711,6 +1709,8 @@ void WebURLLoaderManager::initializeHandleOnIoThread(int jobId, InitializeHandle
     curl_easy_setopt(job->m_handle, CURLOPT_REDIR_PROTOCOLS, kAllowedProtocols);
     curl_easy_setopt(job->m_handle, CURLOPT_SSL_VERIFYPEER, false);
 
+    //curl_easy_setopt(job->m_handle, CURLOPT_HTTPPROXYTUNNEL, true); // TODO
+    
     if (!m_certificatePath.isNull())
         curl_easy_setopt(job->m_handle, CURLOPT_CAINFO, m_certificatePath.data());
 
