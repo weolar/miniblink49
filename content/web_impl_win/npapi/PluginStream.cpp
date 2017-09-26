@@ -30,8 +30,11 @@
 #include "content/web_impl_win/WebFileUtilitiesImpl.h"
 #include "third_party/WebKit/public/platform/Platform.h"
 #include "third_party/WebKit/public/platform/WebURLLoader.h"
+#include "third_party/WebKit/public/web/WebFrameClient.h"
 #include "third_party/WebKit/Source/core/loader/DocumentLoader.h"
 #include "third_party/WebKit/Source/core/frame/LocalFrame.h"
+#include "third_party/WebKit/Source/core/fetch/UniqueIdentifier.h"
+#include "third_party/WebKit/Source/web/WebLocalFrameImpl.h"
 #include "third_party/WebKit/Source/platform/network/HTTPHeaderMap.h"
 #include "third_party/WebKit/Source/platform/weborigin/KURL.h"
 #include "third_party/WebKit/Source/wtf/StringExtras.h"
@@ -129,6 +132,12 @@ void PluginStream::deref()
 void PluginStream::start()
 {
     ASSERT(!m_loadManually);
+
+    blink::WebLocalFrameImpl* localFrame = blink::WebLocalFrameImpl::fromFrame(m_frame);
+    if (!localFrame || !localFrame->client())
+        return;
+    localFrame->client()->willSendRequest(localFrame, blink::createUniqueIdentifier(), m_resourceRequest, blink::WebURLResponse());
+
     m_loader = adoptPtr(Platform::current()->createURLLoader());
     m_loader->loadAsynchronously(m_resourceRequest, this);
 }
