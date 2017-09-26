@@ -133,6 +133,8 @@ WebPluginImpl::WebPluginImpl(WebLocalFrame* parentFrame, const blink::WebPluginP
     if (!m_parentFrame)
         return;
 
+    // if we fail to find a plugin for this MIME type, findPlugin will search for
+    // a plugin by the file extension and update the MIME type, so pass a mutable String
     m_plugin = PluginDatabase::installedPlugins()->findPlugin(m_url, m_mimeType);
 
     // No plugin was found, try refreshing the database and searching again
@@ -198,16 +200,16 @@ void WebPluginImpl::init()
 
     m_haveInitialized = true;
 
-    // if we fail to find a plugin for this MIME type, findPlugin will search for
-    // a plugin by the file extension and update the MIME type, so pass a mutable String
-    PluginPackage* plugin = PluginDatabase::installedPlugins()->findPlugin(m_url, m_mimeType);
+//     // if we fail to find a plugin for this MIME type, findPlugin will search for
+//     // a plugin by the file extension and update the MIME type, so pass a mutable String
+//     m_plugin = PluginDatabase::installedPlugins()->findPlugin(m_url, m_mimeType);
 
     // No plugin was found, try refreshing the database and searching again
-    if (!plugin && PluginDatabase::installedPlugins()->refresh())
-        plugin = PluginDatabase::installedPlugins()->findPlugin(m_url, m_mimeType);
-    
+    if (!m_plugin && PluginDatabase::installedPlugins()->refresh())
+        m_plugin = PluginDatabase::installedPlugins()->findPlugin(m_url, m_mimeType);
+
     if (!m_plugin) {
-        ASSERT(m_status == PluginStatusCanNotFindPlugin);
+        m_status = PluginStatusCanNotLoadPlugin;
         return;
     }
 
