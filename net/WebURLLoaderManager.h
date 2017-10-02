@@ -79,6 +79,7 @@ public:
     static WebURLLoaderManager* sharedInstance();
     int addAsynchronousJob(WebURLLoaderInternal*);
     void cancel(int jobId);
+    void cancelAll();
 
     WebURLLoaderInternal* checkJob(int jobId);
     void removeLiveJobs(int jobId);
@@ -109,12 +110,15 @@ public:
 private:
     WebURLLoaderManager();
     ~WebURLLoaderManager();
+
+    void doCancel(int jobId, WebURLLoaderInternal* job);
     
     void setupPOST(WebURLLoaderInternal*, struct curl_slist**);
     void setupPUT(WebURLLoaderInternal*, struct curl_slist**);
 
     bool downloadOnIoThread();
     void removeFromCurlOnIoThread(int jobId);
+
     int startJobOnMainThread(WebURLLoaderInternal* job);
     void applyAuthenticationToRequest(WebURLLoaderInternal*, blink::WebURLRequest*);
 
@@ -124,6 +128,7 @@ private:
     void initializeHandleOnIoThread(int jobId, InitializeHandleInfo* info);
     InitializeHandleInfo* preInitializeHandleOnMainThread(WebURLLoaderInternal* job);
     void startOnIoThread(int jobId);
+    void timeoutOnMainThread(int jobId);
 
     void dispatchSynchronousJobOnIoThread(WebURLLoaderInternal* job, InitializeHandleInfo* info, CURLcode* ret, int* isCallFinish);
 

@@ -94,7 +94,7 @@ static CString certificatePath()
 #if 0 
     char* envPath = getenv("CURL_CA_BUNDLE_PATH");
     if (envPath)
-       return envPath;
+        return envPath;
 #endif
     return CString();
 }
@@ -159,8 +159,8 @@ static void calculateWebTimingInformations(ResourceHandleInternal* job)
     job->m_response.resourceLoadTiming().connectStart = static_cast<int>(dnslookupTime * 1000);
     job->m_response.resourceLoadTiming().connectEnd = static_cast<int>(connectTime * 1000);
 
-    job->m_response.resourceLoadTiming().requestStart = static_cast<int>(connectTime *1000);
-    job->m_response.resourceLoadTiming().responseStart =static_cast<int>(preTransferTime * 1000);
+    job->m_response.resourceLoadTiming().requestStart = static_cast<int>(connectTime * 1000);
+    job->m_response.resourceLoadTiming().responseStart = static_cast<int>(preTransferTime * 1000);
 
     if (appConnectTime)
         job->m_response.resourceLoadTiming().secureConnectionStart = static_cast<int>(connectTime * 1000);
@@ -267,7 +267,7 @@ inline static bool isAppendableHeader(const String &key)
 
 WebURLLoaderManager::WebURLLoaderManager()
     : m_cookieJarFileName(cookieJarPath())
-    , m_certificatePath (certificatePath())
+    , m_certificatePath(certificatePath())
     , m_runningJobs(0)
     , m_isShutdown(false)
     , m_newestJobId(1)
@@ -300,7 +300,7 @@ WebURLLoaderManager::~WebURLLoaderManager()
 void WebURLLoaderManager::shutdown()
 {
     m_isShutdown = true;
-    
+
     m_liveJobsMutex.lock();
     WTF::HashMap<int, WebURLLoaderInternal*> liveJobs = m_liveJobs;
     m_liveJobs.clear();
@@ -322,7 +322,7 @@ void WebURLLoaderManager::shutdown()
             break;
         }
     }
-    
+
     // delete m_thread;
     m_thread = nullptr;
 }
@@ -380,7 +380,7 @@ void WebURLLoaderManager::didReceiveDataOrDownload(WebURLLoaderInternal* job, co
     WebURLLoaderImplCurl* loader = job->loader();
 
     job->m_dataLength += dataLength;
-    
+
     if (!job->m_firstRequest->downloadToFile()) {
         client->didReceiveData(loader, data, dataLength, encodedDataLength);
         return;
@@ -434,7 +434,7 @@ static void setBlobDataLengthByTempPath(WebURLLoaderInternal* job)
 {
     if (!job->m_firstRequest->downloadToFile())
         return;
-    
+
     content::WebBlobRegistryImpl* blolReg = (content::WebBlobRegistryImpl*)blink::Platform::current()->blobRegistry();
     blolReg->setBlobDataLengthByTempPath(job->m_response.downloadFilePath(), job->m_dataLength);
 }
@@ -522,7 +522,7 @@ public:
         WebURLLoaderInternal* job = autoLockJob.lock();
         if (!job)
             return;
-        
+
         WTF::Mutex& liveJobsMutex = WebURLLoaderManager::sharedInstance()->m_liveJobsMutex;
         while (true) {
             liveJobsMutex.lock();
@@ -638,7 +638,8 @@ private:
     }
 };
 
-void WebURLLoaderManagerMainTask::handleLocalReceiveResponseOnMainThread(WebURLLoaderManagerMainTask::Args* args, WebURLLoaderInternal* job) {
+void WebURLLoaderManagerMainTask::handleLocalReceiveResponseOnMainThread(WebURLLoaderManagerMainTask::Args* args, WebURLLoaderInternal* job)
+{
     // since the code in headerCallbackOnIoThread will not have run for local files
     // the code to set the KURL and fire didReceiveResponse is never run,
     // which means the ResourceLoader's response does not contain the KURL.
@@ -697,6 +698,8 @@ size_t WebURLLoaderManagerMainTask::handleHeaderCallbackOnMainThread(WebURLLoade
     WebURLLoaderClient* client = job->client();
 
     String header(static_cast<const char*>(args->ptr), totalSize);
+
+    String url = job->firstRequest()->url().string();
 
     /*
     * a) We can finish and send the ResourceResponse
@@ -853,7 +856,6 @@ static size_t writeCallbackOnIoThread(void* ptr, size_t size, size_t nmemb, void
     return totalSize;
 }
 
-// 响应http头部
 static size_t headerCallbackOnIoThread(char* ptr, size_t size, size_t nmemb, void* data)
 {
     int jobId = (int)data;
@@ -870,7 +872,6 @@ static size_t headerCallbackOnIoThread(char* ptr, size_t size, size_t nmemb, voi
     return totalSize;
 }
 
-// 用于提交数据
 size_t readCallbackOnIoThread(void* ptr, size_t size, size_t nmemb, void* data)
 {
     int jobId = (int)data;
@@ -885,21 +886,20 @@ size_t readCallbackOnIoThread(void* ptr, size_t size, size_t nmemb, void* data)
     if (!size || !nmemb)
         return 0;
 
-//     if (!job->m_formDataStream.hasMoreElements())
-//         return 0;
-// 
-//     size_t sent = job->m_formDataStream.read(ptr, size, nmemb);
-// 
-//     // Something went wrong so cancel the job.
-//     if (!sent && job->loader())
-//         job->loader()->cancel();
-// 
-//     return sent;
+    //     if (!job->m_formDataStream.hasMoreElements())
+    //         return 0;
+    // 
+    //     size_t sent = job->m_formDataStream.read(ptr, size, nmemb);
+    // 
+    //     // Something went wrong so cancel the job.
+    //     if (!sent && job->loader())
+    //         job->loader()->cancel();
+    // 
+    //     return sent;
 
     return 0;
 }
 
-// timer刷新回调
 bool WebURLLoaderManager::downloadOnIoThread()
 {
     if (m_isShutdown)
@@ -913,8 +913,7 @@ bool WebURLLoaderManager::downloadOnIoThread()
     struct timeval timeout;
     timeout.tv_sec = 0;
     timeout.tv_usec = selectTimeoutMS * 1000;       // select waits microseconds
-
-    // Retry 'select' if it was interrupted by a process signal.
+                                                    // Retry 'select' if it was interrupted by a process signal.
     int rc = 0;
     do {
         FD_ZERO(&fdread);
@@ -1027,20 +1026,21 @@ void WebURLLoaderManager::removeFromCurlOnIoThread(int jobId)
     AutoLockJob autoLockJob(this, jobId);
     WebURLLoaderInternal* job = autoLockJob.lock();
     if (!job)
-        return;;
+        return;
 
     WTF::Locker<WTF::Mutex> locker(job->m_destroingMutex);
-    
+
     WebURLLoaderInternal::State state = job->m_state;
     ASSERT(WebURLLoaderInternal::kDestroyed != state);
 
     job->m_state = WebURLLoaderInternal::kDestroying;
     if (WebURLLoaderInternal::kNormal == state) {
         m_runningJobs--;
-        
+
         if (!job->m_isWkeNetSetDataBeSetted) {
             ASSERT(job->m_handle);
             WebURLLoaderManagerMainTask* task = WebURLLoaderManagerMainTask::createTask(jobId, WebURLLoaderManagerMainTask::TaskType::kRemoveFromCurl, nullptr, 0, 0, 0);
+                        
             if (job->m_handle) {
                 curl_multi_remove_handle(m_curlMultiHandle, job->m_handle);
                 curl_easy_cleanup(job->m_handle);
@@ -1075,7 +1075,8 @@ struct SetupInfoBase {
 
     SetupInfoBase() { data = nullptr; }
 
-    ~SetupInfoBase() {
+    ~SetupInfoBase()
+    {
         if (data)
             delete data;
     }
@@ -1084,16 +1085,18 @@ struct SetupInfoBase {
 struct SetupPutInfo : public SetupInfoBase {
 };
 
-struct SetupPostInfo : public SetupInfoBase {    
+struct SetupPostInfo : public SetupInfoBase {
 };
 
 struct SetupHttpMethodInfo {
-    SetupHttpMethodInfo() {
+    SetupHttpMethodInfo()
+    {
         put = nullptr;
         post = nullptr;
     }
 
-    ~SetupHttpMethodInfo() {
+    ~SetupHttpMethodInfo()
+    {
         if (put)
             delete put;
         if (post)
@@ -1153,8 +1156,7 @@ SetupDataInfo* setupFormDataOnMainThread(WebURLLoaderInternal* job, CURLoption s
             //                 chunkedTransfer = true;
             //                 break;
             //             }
-        }
-        else
+        } else
             size += element.data.size();
     }
 
@@ -1286,7 +1288,7 @@ public:
     virtual void run() override
     {
         WebURLLoaderInternal* job = m_manager->checkJob(m_jobId);
-        if (!job)
+        if (!job || job->m_cancelled)
             return;
 
         job->client()->didReceiveResponse(job->loader(), job->m_response);
@@ -1294,6 +1296,47 @@ public:
             WebURLLoaderManager::sharedInstance()->didReceiveDataOrDownload(job, static_cast<char*>(job->m_asynWkeNetSetData), job->m_asynWkeNetSetDataLength, 0);
             WebURLLoaderManager::sharedInstance()->handleDidFinishLoading(job, WTF::currentTime(), 0);
         }
+    }
+
+private:
+    WebURLLoaderManager* m_manager;
+    int m_jobId;
+};
+
+class BlackListCancelTask : public WebThread::Task {
+public:
+    BlackListCancelTask(WebURLLoaderManager* manager, int jobId)
+    {
+        m_manager = manager;
+        m_jobId = jobId;
+    }
+
+    ~BlackListCancelTask() override
+    {
+    }
+
+    static void cancel(WebURLLoaderInternal* job)
+    {
+        job->client()->didReceiveResponse(job->loader(), job->m_response);
+        if (job->m_asynWkeNetSetData && !job->m_cancelled) { // 可能在didReceiveResponse里被cancel
+            WebURLLoaderManager::sharedInstance()->didReceiveDataOrDownload(job, static_cast<char*>(""), 0, 0);
+
+            WebURLError error;
+            error.domain = WebString(String(job->m_url));
+            error.reason = 0;
+            error.localizedDescription = WebString::fromUTF8("black list");
+            WebURLLoaderManager::sharedInstance()->handleDidFail(job, error);
+            RELEASE_ASSERT(job->m_cancelled);
+        }
+    }
+
+    virtual void run() override
+    {
+        WebURLLoaderInternal* job = m_manager->checkJob(m_jobId);
+        if (!job || job->m_cancelled)
+            return;
+
+        cancel(job);
     }
 
 private:
@@ -1338,7 +1381,7 @@ AutoLockJob::~AutoLockJob()
 WebURLLoaderInternal* WebURLLoaderManager::checkJob(int jobId)
 {
     WTF::Locker<WTF::Mutex> locker(m_liveJobsMutex);
-    
+
     WTF::HashMap<int, WebURLLoaderInternal*>::iterator it = m_liveJobs.find(jobId);
     if (it == m_liveJobs.end())
         return nullptr;
@@ -1366,19 +1409,57 @@ void WebURLLoaderManager::removeLiveJobs(int jobId)
     m_liveJobs.remove(jobId);
 }
 
+// bool isMessagingTeambitionNet = false;
+// int g_messagingTeambitionNetCount = 0;
+
+bool isBlackListUrl(const String& url)
+{
+    if (false
+        //WTF::kNotFound != url.find("google-analytics.com")
+        //|| WTF::kNotFound != url.find("doubleclick.net")
+        // || WTF::kNotFound != url.find("messaging.teambition.net")
+        ) {
+        return true;
+    }
+    //
+    return false;
+}
+
+static void cancelMessagingTeambitionURL(WebURLLoaderManager* manager, int jobId)
+{
+    WebURLLoaderInternal* job = manager->checkJob(jobId);
+    if (!job || job->m_cancelled)
+        return;
+
+    BlackListCancelTask::cancel(job);
+    manager->cancel(jobId);
+}
+
 int WebURLLoaderManager::addAsynchronousJob(WebURLLoaderInternal* job)
 {
     ASSERT(WTF::isMainThread());
 
-#if 1
     String url = job->firstRequest()->url().string();
-//     OutputDebugStringW(L"addAsynchronousJob:");
-//     OutputDebugStringW(url.charactersWithNullTermination().data());
-//     OutputDebugStringW(L"\n");
+#if 0
+    double timeout = WTF::currentTimeMS();
+    String outString = String::format("addAsynchronousJob:%d, %f, %s\n", m_liveJobs.size(), (float)(timeout - g_timeout), url.utf8().data());
+    OutputDebugStringW(outString.charactersWithNullTermination().data());
+    g_timeout = timeout;
+
+    if (WTF::kNotFound != url.find("messaging.teambition.net/websocket"))
+        OutputDebugStringA("add.find messaging.teambition.net/websocket !\n");
 #endif
 
     job->m_manager = this;
-    int jobId = startJobOnMainThread(job);
+
+    int jobId = 0;
+    if (isBlackListUrl(url)) {
+        jobId = addLiveJobs(job);
+        Platform::current()->currentThread()->postTask(FROM_HERE, new BlackListCancelTask(this, jobId));
+        return jobId;
+    }
+
+    jobId = startJobOnMainThread(job);
     if (0 == jobId)
         return 0;
 
@@ -1386,11 +1467,19 @@ int WebURLLoaderManager::addAsynchronousJob(WebURLLoaderInternal* job)
         Platform::current()->currentThread()->postTask(FROM_HERE, new WkeAsynTask(this, jobId));
         return jobId;
     }
-    
+
     IoTask* task = new IoTask(this, m_thread, false);
     m_thread->postTask(FROM_HERE, task);
-
     return jobId;
+}
+
+void WebURLLoaderManager::doCancel(int jobId, WebURLLoaderInternal* job)
+{
+    WTF::Locker<WTF::Mutex> locker(job->m_destroingMutex);
+    bool cancelled = job->m_cancelled;
+    job->m_cancelled = true;
+    if (!cancelled && job->m_state != WebURLLoaderInternal::kDestroying)
+        m_thread->postTask(FROM_HERE, WTF::bind(&WebURLLoaderManager::removeFromCurlOnIoThread, this, jobId));
 }
 
 void WebURLLoaderManager::cancel(int jobId)
@@ -1402,11 +1491,19 @@ void WebURLLoaderManager::cancel(int jobId)
     if (!job)
         return;
 
-    WTF::Locker<WTF::Mutex> locker(job->m_destroingMutex);
-    bool cancelled = job->m_cancelled;
-    job->m_cancelled = true;
-    if (!cancelled && job->m_state != WebURLLoaderInternal::kDestroying)
-        m_thread->postTask(FROM_HERE, WTF::bind(&WebURLLoaderManager::removeFromCurlOnIoThread, this, jobId));
+    doCancel(jobId, job);
+}
+
+void WebURLLoaderManager::cancelAll()
+{
+    WTF::Locker<WTF::Mutex> locker(m_liveJobsMutex);
+
+    WTF::HashMap<int, WebURLLoaderInternal*>::iterator it = m_liveJobs.begin();
+    for (; it != m_liveJobs.end(); ++it) {
+        WebURLLoaderInternal* job = it->value;
+        int jobId = it->key;
+        doCancel(jobId, job);
+    }
 }
 
 void WebURLLoaderManager::dispatchSynchronousJob(WebURLLoaderInternal* job)
@@ -1449,7 +1546,7 @@ void WebURLLoaderManager::dispatchSynchronousJob(WebURLLoaderInternal* job)
     CURLcode ret = CURLE_OK;
     m_thread->postTask(FROM_HERE, WTF::bind(&WebURLLoaderManager::dispatchSynchronousJobOnIoThread, this, job, info, &ret, &isCallFinish));
     while (!isCallFinish) { ::Sleep(50); }
-    
+
     for (size_t i = 0; i < job->m_syncTasks.size(); ++i) {
         WebURLLoaderManagerMainTask* task = job->m_syncTasks[i];
         task->run();
@@ -1476,7 +1573,7 @@ void WebURLLoaderManager::dispatchSynchronousJob(WebURLLoaderInternal* job)
 void WebURLLoaderManager::dispatchSynchronousJobOnIoThread(WebURLLoaderInternal* job, InitializeHandleInfo* info, CURLcode* ret, int* isCallFinish)
 {
     // curl_easy_perform blocks until the transfert is finished.
-    *ret =  curl_easy_perform(job->m_handle);
+    *ret = curl_easy_perform(job->m_handle);
     curl_easy_cleanup(job->m_handle);
 
     *isCallFinish = true;
@@ -1492,8 +1589,8 @@ static bool dispatchWkeLoadUrlBegin(WebURLLoaderInternal* job)
     WebPage* page = requestExtraData->page;
     if (!page->wkeHandler().loadUrlBeginCallback)
         return false;
-    
-    if (!page->wkeHandler().loadUrlBeginCallback(page->wkeWebView(), 
+
+    if (!page->wkeHandler().loadUrlBeginCallback(page->wkeWebView(),
         page->wkeHandler().loadUrlBeginCallbackParam,
         encodeWithURLEscapeSequences(job->firstRequest()->url().string()).latin1().data(), job))
         return false;
@@ -1524,36 +1621,36 @@ void WebURLLoaderManager::applyAuthenticationToRequest(WebURLLoaderInternal* han
 {
     // m_user/m_pass are credentials given manually, for instance, by the arguments passed to XMLHttpRequest.open().
     WebURLLoaderInternal* job = handle;
-// 
-//     if (handle->shouldUseCredentialStorage()) {
-//         if (job->m_user.isEmpty() && job->m_pass.isEmpty()) {
-//             // <rdar://problem/7174050> - For URLs that match the paths of those previously challenged for HTTP Basic authentication, 
-//             // try and reuse the credential preemptively, as allowed by RFC 2617.
-//             job->m_initialCredential = CredentialStorage::defaultCredentialStorage().get(request.url());
-//         } else {
-//             // If there is already a protection space known for the KURL, update stored credentials
-//             // before sending a request. This makes it possible to implement logout by sending an
-//             // XMLHttpRequest with known incorrect credentials, and aborting it immediately (so that
-//             // an authentication dialog doesn't pop up).
-//             CredentialStorage::defaultCredentialStorage().set(Credential(job->m_user, job->m_pass, CredentialPersistenceNone), request.url());
-//         }
-//     }
-// 
-//     String user = job->m_user;
-//     String password = job->m_pass;
-// 
-//     if (!job->m_initialCredential.isEmpty()) {
-//         user = job->m_initialCredential.user();
-//         password = job->m_initialCredential.password();
-//         curl_easy_setopt(job->m_handle, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-//     }
-// 
-//     // It seems we need to set CURLOPT_USERPWD even if username and password is empty.
-//     // Otherwise cURL will not automatically continue with a new request after a 401 response.
-// 
-//     // curl CURLOPT_USERPWD expects username:password
-//     String userpass = user + ":" + password;
-//     curl_easy_setopt(job->m_handle, CURLOPT_USERPWD, userpass.utf8().data());
+    // 
+    //     if (handle->shouldUseCredentialStorage()) {
+    //         if (job->m_user.isEmpty() && job->m_pass.isEmpty()) {
+    //             // <rdar://problem/7174050> - For URLs that match the paths of those previously challenged for HTTP Basic authentication, 
+    //             // try and reuse the credential preemptively, as allowed by RFC 2617.
+    //             job->m_initialCredential = CredentialStorage::defaultCredentialStorage().get(request.url());
+    //         } else {
+    //             // If there is already a protection space known for the KURL, update stored credentials
+    //             // before sending a request. This makes it possible to implement logout by sending an
+    //             // XMLHttpRequest with known incorrect credentials, and aborting it immediately (so that
+    //             // an authentication dialog doesn't pop up).
+    //             CredentialStorage::defaultCredentialStorage().set(Credential(job->m_user, job->m_pass, CredentialPersistenceNone), request.url());
+    //         }
+    //     }
+    // 
+    //     String user = job->m_user;
+    //     String password = job->m_pass;
+    // 
+    //     if (!job->m_initialCredential.isEmpty()) {
+    //         user = job->m_initialCredential.user();
+    //         password = job->m_initialCredential.password();
+    //         curl_easy_setopt(job->m_handle, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+    //     }
+    // 
+    //     // It seems we need to set CURLOPT_USERPWD even if username and password is empty.
+    //     // Otherwise cURL will not automatically continue with a new request after a 401 response.
+    // 
+    //     // curl CURLOPT_USERPWD expects username:password
+    //     String userpass = user + ":" + password;
+    //     curl_easy_setopt(job->m_handle, CURLOPT_USERPWD, userpass.utf8().data());
 
     curl_easy_setopt(job->m_handle, CURLOPT_USERPWD, ":");
 }
@@ -1577,7 +1674,7 @@ public:
         *m_headers = curl_slist_append(*m_headers, headerLatin1.data());
     }
 
-    curl_slist* headers() { return* m_headers; }
+    curl_slist* headers() { return*m_headers; }
 private:
     curl_slist** m_headers;
 };
@@ -1595,7 +1692,8 @@ struct WebURLLoaderManager::InitializeHandleInfo {
         methodInfo = nullptr;
     }
 
-    ~InitializeHandleInfo() {
+    ~InitializeHandleInfo()
+    {
         if (methodInfo) {
             delete methodInfo;
         }
@@ -1606,7 +1704,7 @@ WebURLLoaderManager::InitializeHandleInfo* WebURLLoaderManager::preInitializeHan
 {
     InitializeHandleInfo* info = new InitializeHandleInfo();
     KURL url = job->firstRequest()->url();
-    
+
     // Remove any fragment part, otherwise curl will send it as part of the request.
     url.removeFragmentIdentifier();
 
@@ -1641,7 +1739,7 @@ WebURLLoaderManager::InitializeHandleInfo* WebURLLoaderManager::preInitializeHan
         info->methodInfo = new SetupHttpMethodInfo();
         info->methodInfo->put = setupPutOnMainThread(job, &headers);
     } else if ("HEAD" == method) {
-        
+
     } else {
         info->methodInfo = new SetupHttpMethodInfo();
         info->methodInfo->put = setupPutOnMainThread(job, &headers);
@@ -1691,7 +1789,8 @@ void WebURLLoaderManager::initializeHandleOnIoThread(int jobId, InitializeHandle
     if (getenv("DEBUG_CURL"))
         curl_easy_setopt(job->m_handle, CURLOPT_VERBOSE, 1);
 #endif
-    curl_easy_setopt(job->m_handle, CURLOPT_SSL_VERIFYPEER, 1L);
+    curl_easy_setopt(job->m_handle, CURLOPT_TIMEOUT, 3000);
+    curl_easy_setopt(job->m_handle, CURLOPT_SSL_VERIFYPEER, false); // ignoreSSLErrors
     curl_easy_setopt(job->m_handle, CURLOPT_SSL_VERIFYHOST, 2L);
     curl_easy_setopt(job->m_handle, CURLOPT_PRIVATE, jobId);
     curl_easy_setopt(job->m_handle, CURLOPT_ERRORBUFFER, m_curlErrorBuffer);
@@ -1707,10 +1806,9 @@ void WebURLLoaderManager::initializeHandleOnIoThread(int jobId, InitializeHandle
     curl_easy_setopt(job->m_handle, CURLOPT_DNS_CACHE_TIMEOUT, 60 * 5); // 5 minutes
     curl_easy_setopt(job->m_handle, CURLOPT_PROTOCOLS, kAllowedProtocols);
     curl_easy_setopt(job->m_handle, CURLOPT_REDIR_PROTOCOLS, kAllowedProtocols);
-    curl_easy_setopt(job->m_handle, CURLOPT_SSL_VERIFYPEER, false);
 
     //curl_easy_setopt(job->m_handle, CURLOPT_HTTPPROXYTUNNEL, true); // TODO
-    
+
     if (!m_certificatePath.isNull())
         curl_easy_setopt(job->m_handle, CURLOPT_CAINFO, m_certificatePath.data());
 
@@ -1755,6 +1853,22 @@ void WebURLLoaderManager::initializeHandleOnIoThread(int jobId, InitializeHandle
     delete info;
 }
 
+void WebURLLoaderManager::timeoutOnMainThread(int jobId)
+{
+    AutoLockJob autoLockJob(this, jobId);
+    WebURLLoaderInternal* job = autoLockJob.lock();
+    if (!job)
+        return;
+
+    OutputDebugStringW(L"timeoutOnMainThread:");
+    KURL kUrl = job->m_firstRequest->url();
+    OutputDebugStringA(kUrl.string().utf8().data());
+    OutputDebugStringW(L"\n");
+
+    BlackListCancelTask::cancel(job);
+    cancel(jobId);
+}
+
 int WebURLLoaderManager::initializeHandleOnMainThread(WebURLLoaderInternal* job)
 {
     int jobId = addLiveJobs(job);
@@ -1772,6 +1886,8 @@ void WebURLLoaderManager::startOnIoThread(int jobId)
     WebURLLoaderInternal* job = autoLockJob.lock();
     if (!job)
         return;
+
+    //Platform::current()->mainThread()->postDelayedTask(FROM_HERE, WTF::bind(&WebURLLoaderManager::timeoutOnMainThread, this, jobId), 5000);
 
     m_runningJobs++;
     CURLMcode ret = curl_multi_add_handle(m_curlMultiHandle, job->m_handle);
@@ -1922,13 +2038,13 @@ void WebURLLoaderManager::initializeHandle(WebURLLoaderInternal* job)
     curl_easy_setopt(job->m_handle, CURLOPT_REDIR_PROTOCOLS, kAllowedProtocols);
     //setSSLClientCertificate(job);
 
-//     if (ignoreSSLErrors)
-        curl_easy_setopt(job->m_handle, CURLOPT_SSL_VERIFYPEER, false);
-//     else
-//         setSSLVerifyOptions(job);
+    //     if (ignoreSSLErrors)
+    curl_easy_setopt(job->m_handle, CURLOPT_SSL_VERIFYPEER, false);
+    //     else
+    //         setSSLVerifyOptions(job);
 
     if (!m_certificatePath.isNull())
-       curl_easy_setopt(job->m_handle, CURLOPT_CAINFO, m_certificatePath.data());
+        curl_easy_setopt(job->m_handle, CURLOPT_CAINFO, m_certificatePath.data());
 
     // enable gzip and deflate through Accept-Encoding:
     curl_easy_setopt(job->m_handle, CURLOPT_ENCODING, "");

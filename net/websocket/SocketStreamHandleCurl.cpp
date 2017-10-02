@@ -231,7 +231,8 @@ void SocketStreamHandle::threadFunction()
     curl_easy_setopt(curlHandle, CURLOPT_URL, m_url.host().utf8().data());
     curl_easy_setopt(curlHandle, CURLOPT_PORT, m_url.port());
     curl_easy_setopt(curlHandle, CURLOPT_CONNECT_ONLY);
-
+    curl_easy_setopt(curlHandle, CURLOPT_TIMEOUT, 5000);
+   
     // Connect to host
     if (curl_easy_perform(curlHandle) != CURLE_OK)
         return;
