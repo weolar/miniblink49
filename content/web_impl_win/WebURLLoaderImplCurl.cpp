@@ -91,7 +91,6 @@ void WebURLLoaderImplCurl::loadAsynchronously(const blink::WebURLRequest& reques
         return;
     }
 
-
     WebURLRequest requestNew = request;
     net::WebURLLoaderInternal* job = new net::WebURLLoaderInternal(this, requestNew, client, false, shouldContentSniffURL(request.url()));
     int jobIds = net::WebURLLoaderManager::sharedInstance()->addAsynchronousJob(job);

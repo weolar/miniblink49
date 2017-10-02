@@ -192,6 +192,7 @@ void WebThreadImpl::startTriggerTasks()
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
     wke::freeV8TempObejctOnOneFrameBefore();
 #endif
+    
     while (true) {
         ::EnterCriticalSection(&m_taskPairsMutex);
         if (0 == m_taskPairsToPost.size()) {
@@ -203,17 +204,13 @@ void WebThreadImpl::startTriggerTasks()
         m_taskPairsToPost.clear();
         ::LeaveCriticalSection(&m_taskPairsMutex);
 
-//         if (taskPairsToPostCopy.size() > 20) {
-//             String out = String::format("WebThreadImpl::startTriggerTasks: %d\n", taskPairsToPostCopy.size());
-//             OutputDebugStringA(out.utf8().data());
-//         }
-
         for (size_t i = 0; i < taskPairsToPostCopy.size(); ++i) {
             TaskPair* taskPair = taskPairsToPostCopy[i];
             if (0 == taskPair->delayMs) {
                 willProcessTasks();
                 taskPair->task->run();
                 delete taskPair->task;
+
                 didProcessTasks();
             } else
                 postDelayedTaskImpl(taskPair->location, taskPair->task, taskPair->delayMs);
@@ -370,6 +367,8 @@ void WebThreadImpl::schedulerTasks()
     }
 #endif
 
+    startTriggerTasks(); // 如果不加这句，且下面的循环在本线程不停添加定时器，则startTriggerTasks里的就没机会执行了。
+
     while (!m_timerHeap.empty() && (m_timerHeap[0]->m_nextFireTime <= fireTime || m_willExit)) {
         WebTimerBase* timer = m_timerHeap[0];
         timer->m_nextFireTime = 0;
@@ -387,6 +386,8 @@ void WebThreadImpl::schedulerTasks()
         willProcessTasks();
         timer->fired();
         didProcessTasks();
+
+        startTriggerTasks();
 
         // Catch the case where the timer asked timers to fire in a nested event loop, or we are over time limit.
         if (!m_firingTimers || timeToQuit < currentTime())

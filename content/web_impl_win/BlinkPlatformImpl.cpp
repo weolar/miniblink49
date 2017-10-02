@@ -433,8 +433,8 @@ void BlinkPlatformImpl::cryptographicallyRandomValues(unsigned char* buffer, siz
 
 blink::WebURLLoader* BlinkPlatformImpl::createURLLoader()
 {
-    //return new content::WebURLLoaderImpl();
-    return new content::WebURLLoaderImplCurl();
+   //return new content::WebURLLoaderImpl();
+   return new content::WebURLLoaderImplCurl();
 }
 
 const unsigned char* BlinkPlatformImpl::getTraceCategoryEnabledFlag(const char* categoryName)
