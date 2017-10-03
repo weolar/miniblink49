@@ -125,8 +125,11 @@ String ensureUTF16String(const String& string)
 Vector<char> ensureStringToUTF8(const String& string, bool isNullTermination)
 {
     Vector<char> out;
-    if (string.isNull() || string.isEmpty())
+    if (string.isNull() || string.isEmpty()) {
+        if (isNullTermination)
+            out.append('\0');
         return out;
+    }
 
     if (string.is8Bit()) {
         out.resize(string.length());
@@ -134,10 +137,8 @@ Vector<char> ensureStringToUTF8(const String& string, bool isNullTermination)
     } else {
         CString utf8 = string.utf8();
         size_t len = utf8.length();
-        if (1 == len && !isNullTermination)
+        if (0 == len)
             return out;
-        if (!isNullTermination)
-            --len;
         
         out.resize(len);
         memcpy(out.data(), utf8.data(), len);
