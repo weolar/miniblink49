@@ -122,6 +122,11 @@ void wkeFinalize()
     s_versionString = nullptr;
 }
 
+void wkeSetDebugConfig(wkeWebView webView, const char* debugString)
+{
+
+}
+
 void wkeUpdate()
 {
 //     static HWND hTimer = NULL;
@@ -882,9 +887,17 @@ const utf8* wkeVersionString()
     return wkeGetVersionString();
 }
 
-void wkeSetFileSystem(FILE_OPEN_ pfn_open, FILE_CLOSE_ pfn_close, FILE_SIZE pfn_size, FILE_READ pfn_read, FILE_SEEK pfn_seek)
+extern "C" void curl_set_file_system(
+    WKE_FILE_OPEN pfnOpen,
+    WKE_FILE_CLOSE pfnClose,
+    WKE_FILE_SIZE pfnSize,
+    WKE_FILE_READ pfnRead,
+    WKE_FILE_SEEK pfnSeek,
+    WKE_EXISTS_FILE pfnExistsFile);
+
+void wkeSetFileSystem(WKE_FILE_OPEN pfnOpen, WKE_FILE_CLOSE pfnClose, WKE_FILE_SIZE pfnSize, WKE_FILE_READ pfnRead, WKE_FILE_SEEK pfnSeek)
 {
-    ;
+    curl_set_file_system(pfnOpen, pfnClose, pfnSize, pfnRead, pfnSeek, nullptr);
 }
 
 const char* wkeWebViewName(wkeWebView webView)
