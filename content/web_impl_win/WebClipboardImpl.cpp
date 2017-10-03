@@ -145,10 +145,10 @@ std::string escapeForHTML(const std::string input)
 std::string URLToMarkup(const blink::WebURL& url, const blink::WebString& title)
 {
     std::string markup("<a href=\"");
-    markup.append(url.string().utf8());
+    markup.append(WTF::ensureStringToUTF8(url.string(), true).data());
     markup.append("\">");
     // TODO(darin): HTML escape this
-    markup.append(escapeForHTML(WTF::ensureStringToUTF8((String)(title))));
+    markup.append(escapeForHTML(WTF::ensureStringToUTF8(title, true)));
     markup.append("</a>");
     return markup;
 }
@@ -156,11 +156,11 @@ std::string URLToMarkup(const blink::WebURL& url, const blink::WebString& title)
 std::string URLToImageMarkup(const blink::WebURL& url, const blink::WebString& title)
 {
     std::string markup("<img src=\"");
-    markup.append(escapeForHTML(url.string().utf8()));
+    markup.append(escapeForHTML(WTF::ensureStringToUTF8(url.string(), true).data()));
     markup.append("\"");
     if (!title.isEmpty()) {
         markup.append(" alt=\"");
-        markup.append(escapeForHTML(WTF::ensureStringToUTF8((String)(title))));
+        markup.append(escapeForHTML(WTF::ensureStringToUTF8(title, true)));
         markup.append("\"");
     }
     markup.append("/>");
@@ -512,7 +512,7 @@ void WebClipboardImpl::writeToClipboard(unsigned int format, HANDLE handle)
 
 void WebClipboardImpl::writeText(String string)
 {
-    HGLOBAL glob = createGlobalData(WTF::ensureUTF16UChar(string));
+    HGLOBAL glob = createGlobalData(WTF::ensureUTF16UChar(string, false));
     writeToClipboard(CF_UNICODETEXT, glob);
 }
 
@@ -531,7 +531,7 @@ void WebClipboardImpl::writeHTML(const WebString& htmlText, const WebURL& source
         url = WTFStringToStdString(urlString);
 
     WTF::String htmlFragment = ClipboardUtil::HtmlToCFHtml(markup, url);
-    HGLOBAL glob = createGlobalData(ensureUTF16UChar(htmlFragment));
+    HGLOBAL glob = createGlobalData(ensureUTF16UChar(htmlFragment, false));
     writeToClipboard(getHtmlFormatType(), glob);
     writePlainText(plainText);
 
@@ -638,7 +638,7 @@ void WebClipboardImpl::writeBookmark(const String& titleData , const String& url
     bookmark.append('\n');
     bookmark.append(urlData);
 
-    Vector<UChar> wideBookmark = WTF::ensureUTF16UChar(bookmark);
+    Vector<UChar> wideBookmark = WTF::ensureUTF16UChar(bookmark, false);
     HGLOBAL glob = createGlobalData(wideBookmark);
 
     writeToClipboard(getUrlWFormatType(), glob);

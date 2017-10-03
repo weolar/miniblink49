@@ -303,11 +303,7 @@ void CompositingLayer::blendToTile(CompositingTile* tile, const SkBitmap& bitmap
 //             return;
         postion.setWidth(kDefaultTileWidth);
         postion.setHeight(kDefaultTileHeight);
-<<<<<<< HEAD
-        if (!postion.intersects(dirtyRect)) 
-=======
         if (!postion.intersects((blink::IntRect)dirtyRect))
->>>>>>> weolar/master
             DebugBreak();
         return;
     }

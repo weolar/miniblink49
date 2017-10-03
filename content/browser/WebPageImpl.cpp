@@ -47,6 +47,7 @@
 #include "content/browser/PopupMenuWin.h"
 #include "content/browser/WebFrameClientImpl.h"
 #include "content/browser/NavigationController.h"
+#include "content/browser/CheckReEnter.h"
 #include "content/web_impl_win/BlinkPlatformImpl.h"
 #include "content/web_impl_win/WebThreadImpl.h"
 #include "content/web_impl_win/npapi/PluginDatabase.h"
@@ -72,13 +73,6 @@ using namespace blink;
 
 namespace blink {
 bool saveDumpFile(const String& url, char* buffer, unsigned int size);
-}
-
-namespace gfx {
-
-	namespace win {
-		float GetDeviceScaleFactor();
-	}
 }
 
 namespace content {
@@ -186,44 +180,10 @@ WebPageImpl::~WebPageImpl()
 
 bool WebPageImpl::checkForRepeatEnter()
 {
-    if (m_enterCount == 0)
+    if (m_enterCount == 0 && 0 == CheckReEnter::s_kEnterContent)
         return true;
     return false;
 }
-
-class CheckReEnter {
-public:
-    CheckReEnter(WebPageImpl* webPageImpl)
-    {
-        m_webPageImpl = webPageImpl;
-        ++m_webPageImpl->m_enterCount;
-    }
-
-    ~CheckReEnter()
-    {
-        --m_webPageImpl->m_enterCount;
-
-        if (WebPageImpl::pageDestroying == m_webPageImpl->m_state)
-            m_webPageImpl->doClose();
-    }
-
-private:
-    WebPageImpl* m_webPageImpl;
-};
-
-#define CHECK_FOR_REENTER(ret) \
-    if (!checkForRepeatEnter()) \
-        return ret; \
-    if (pageInited != m_state) \
-        return ret; \
-    CheckReEnter checker(this);
-
-#define CHECK_FOR_REENTER0() \
-    if (!checkForRepeatEnter()) \
-        return; \
-    if (pageInited != m_state) \
-        return; \
-    CheckReEnter checker(this);
 
 class AutoRecordActions {
 public:
@@ -307,7 +267,7 @@ static WebView* createWkeViewDefault(HWND parent, const WebString& name, const W
 {
     wke::CWebWindow* window = new wke::CWebWindow();
     WTF::String nameString = name;
-    Vector<UChar> nameBuf = WTF::ensureUTF16UChar(nameString);
+    Vector<UChar> nameBuf = WTF::ensureUTF16UChar(nameString, true);
 
     window->create(parent, WS_OVERLAPPEDWINDOW | WS_VISIBLE, 0, 100, 100, 570, 570);
 
@@ -636,7 +596,6 @@ bool WebPageImpl::fireTimerEvent()
 
 void WebPageImpl::fireResizeEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    CHECK_FOR_REENTER0();
     freeV8TempObejctOnOneFrameBefore();
     if (pageInited != m_state)
         return;
@@ -1169,7 +1128,7 @@ void WebPageImpl::loadHistoryItem(int64 frameId, const WebHistoryItem& item, Web
     if (!webFrame)
         return;
 
-    AutoRecordActions autoRecordActions(this, m_layerTreeHost, false);
+    //AutoRecordActions autoRecordActions(this, m_layerTreeHost, false);
     webFrame->loadHistoryItem(item, type, policy);
 }
 
@@ -1187,7 +1146,6 @@ void WebPageImpl::loadURL(int64 frameId, const wchar_t* url, const blink::Referr
 
 void WebPageImpl::loadRequest(int64 frameId, const blink::WebURLRequest& request)
 {
-    CHECK_FOR_REENTER0();
     if (!m_webViewImpl || !m_webViewImpl->mainFrame())
         return;
 
@@ -1196,7 +1154,7 @@ void WebPageImpl::loadRequest(int64 frameId, const blink::WebURLRequest& request
     if (!webFrame)
         return;
 
-    AutoRecordActions autoRecordActions(this, m_layerTreeHost, false);
+    //AutoRecordActions autoRecordActions(this, m_layerTreeHost, false);
     
     requestWrap.setHTTPHeaderField(WebString::fromLatin1("Accept"), WebString::fromLatin1("text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"));
     webFrame->loadRequest(requestWrap);
@@ -1204,7 +1162,6 @@ void WebPageImpl::loadRequest(int64 frameId, const blink::WebURLRequest& request
 
 void WebPageImpl::loadHTMLString(int64 frameId, const WebData& html, const WebURL& baseURL, const WebURL& unreachableURL, bool replace)
 {
-    CHECK_FOR_REENTER0();
     if (!m_webViewImpl || !m_webViewImpl->mainFrame())
         return;
 
@@ -1212,7 +1169,7 @@ void WebPageImpl::loadHTMLString(int64 frameId, const WebData& html, const WebUR
     if (!webFrame)
         return;
 
-    AutoRecordActions autoRecordActions(this, m_layerTreeHost, false);
+    //AutoRecordActions autoRecordActions(this, m_layerTreeHost, false);
     webFrame->loadHTMLString(html, baseURL, unreachableURL, replace);
 }
 
@@ -1301,7 +1258,7 @@ WebScreenInfo WebPageImpl::screenInfo()
     WebScreenInfo info;
     info.rect = WebRect(winRectToIntRect(mi.rcMonitor));
     info.availableRect = WebRect(winRectToIntRect(mi.rcWork));
-	info.deviceScaleFactor = gfx::win::GetDeviceScaleFactor();
+
     return info;
 }
 

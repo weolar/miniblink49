@@ -25,6 +25,8 @@ public:
     void setCookieFromWinINet(const blink::KURL& url, const WTF::Vector<char>& cookiesLine);
     void setToRecordFromRawHeads(const blink::KURL& url, const WTF::String& rawHeadsString);
 
+    static String cookiesForSession(const blink::KURL&, const blink::KURL& url, bool httponly);
+
     static WebCookieJarImpl* inst();
 
 private:

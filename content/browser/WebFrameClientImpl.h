@@ -182,7 +182,25 @@ public:
 
     // Dialogs -------------------------------------------------------------
 
+    virtual void runModalAlertDialog(const WebString& message) override;
+
+    // Displays a modal confirmation dialog with the given message as
+    // description and OK/Cancel choices. Returns true if the user selects
+    // 'OK' or false otherwise.
     virtual bool runModalConfirmDialog(const WebString& message) override;
+
+    // Displays a modal input dialog with the given message as description
+    // and OK/Cancel choices. The input field is pre-filled with
+    // defaultValue. Returns true if the user selects 'OK' or false
+    // otherwise. Upon returning true, actualValue contains the value of
+    // the input field.
+    virtual bool runModalPromptDialog(const WebString& message, const WebString& defaultValue, WebString* actualValue) override;
+
+    // Displays a modal confirmation dialog containing the given message as
+    // description and OK/Cancel choices, where 'OK' means that it is okay
+    // to proceed with closing the view. Returns true if the user selects
+    // 'OK' or false otherwise.
+    virtual bool runModalBeforeUnloadDialog(bool isReload, const WebString& message) override;
 
     // Script notifications ------------------------------------------------
 

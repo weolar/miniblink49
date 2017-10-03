@@ -333,7 +333,7 @@ Blob* XMLHttpRequest::responseBlob()
 
     if (!m_responseBlob) {
         if (m_downloadingToFile) {
-            // ASSERT(!m_binaryResponseBuilder); // weolar
+            ASSERT(!m_binaryResponseBuilder); // weolar
 
             // When responseType is set to "blob", we redirect the downloaded
             // data to a file-handle directly in the browser process. We get

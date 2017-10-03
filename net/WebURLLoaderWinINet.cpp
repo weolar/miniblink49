@@ -535,10 +535,10 @@ bool WebURLLoaderWinINet::start(const blink::WebURLRequest& request, blink::WebU
     m_client = client;
 
     blink::KURL url = (blink::KURL)request.url();
-    Vector<UChar> host = WTF::ensureUTF16UChar(url.host());
+    Vector<UChar> host = WTF::ensureUTF16UChar(url.host(), false);
 
     if (!url.isValid() || !url.protocolIsData()) {
-        WTF::String outstr = String::format("WebURLLoaderWinINet.loadAsynchronously: %p %ws\n", this, WTF::ensureUTF16UChar(url.string()).data());
+        WTF::String outstr = String::format("WebURLLoaderWinINet.loadAsynchronously: %p %ws\n", this, WTF::ensureUTF16UChar(url.string(), true).data());
         OutputDebugStringW(outstr.charactersWithNullTermination().data());
     }
 
@@ -600,13 +600,13 @@ bool WebURLLoaderWinINet::start(const blink::WebURLRequest& request, blink::WebU
         urlStr.append(urlQuery);
     }
 
-    Vector<UChar> httpMethod = WTF::ensureUTF16UChar(request.httpMethod());
-    Vector<UChar> httpReferrer = WTF::ensureUTF16UChar(request.httpHeaderField(blink::WebString::fromUTF8("Referer")));
-    Vector<UChar> httpAcceptField = WTF::ensureUTF16UChar(request.httpHeaderField(blink::WebString::fromUTF8("Accept")));
+    Vector<UChar> httpMethod = WTF::ensureUTF16UChar(request.httpMethod(), true);
+    Vector<UChar> httpReferrer = WTF::ensureUTF16UChar(request.httpHeaderField(blink::WebString::fromUTF8("Referer")), true);
+    Vector<UChar> httpAcceptField = WTF::ensureUTF16UChar(request.httpHeaderField(blink::WebString::fromUTF8("Accept")), true);
 
     LPCWSTR httpAccept[] = { httpAcceptField.data(), 0 };
 
-    m_requestHandle = HttpOpenRequestW(m_connectHandle, (LPCWSTR)httpMethod.data(), (LPCWSTR)WTF::ensureUTF16UChar(urlStr).data(),
+    m_requestHandle = HttpOpenRequestW(m_connectHandle, (LPCWSTR)httpMethod.data(), (LPCWSTR)WTF::ensureUTF16UChar(urlStr, true).data(),
         0, (LPCWSTR)httpReferrer.data(), httpAccept, flags, reinterpret_cast<DWORD_PTR>(this));
 
     if (!m_requestHandle) {
@@ -830,7 +830,7 @@ void WebURLLoaderWinINet::fileLoadImpl(const blink::KURL& url)
         return;
     }
 
-    Vector<UChar> fileNameVec = WTF::ensureUTF16UChar(url.fileSystemPath());
+    Vector<UChar> fileNameVec = WTF::ensureUTF16UChar(url.fileSystemPath(), false);
     String fileName(fileNameVec.data(), fileNameVec.size());
     if (L'/' == fileName[0])
         fileName.remove(0);

@@ -205,7 +205,7 @@ public:
 
     virtual void onLoadingFinish(wkeLoadingFinishCallback callback, void* callbackParam);
     virtual void onDocumentReady(wkeDocumentReadyCallback callback, void* callbackParam);
-	virtual void onDownload(wkeDownloadCallback callback, void* callbackParam);
+    virtual void onDownload(wkeDownloadCallback callback, void* callbackParam);
     virtual void onConsole(wkeConsoleCallback callback, void* callbackParam);
     virtual void onCallUiThread(wkeCallUiThread callback, void* callbackParam);
     
@@ -227,7 +227,10 @@ public:
 
     void setDragFiles(const POINT* clintPos, const POINT* screenPos, wkeString files[], int filesCount);
 
-	void setProxyInfo(const String& host, unsigned long port, net::WebURLLoaderManager::ProxyType type, const String& username, const String& password);
+    void setProxyInfo(const String& host, unsigned long port, net::WebURLLoaderManager::ProxyType type, const String& username, const String& password);
+
+    String getProxy() const { return m_proxy; }
+    net::WebURLLoaderManager::ProxyType getProxyType() const { return m_proxyType; }
 
 protected:
     HWND m_hWnd;
@@ -254,6 +257,7 @@ protected:
     wke::CString m_cookie;
     wke::CString m_name;
     bool m_transparent;
+    bool m_isCokieEnabled;
 
     int m_width;
     int m_height;
@@ -267,9 +271,9 @@ protected:
     //void* m_pixels;
 
     bool m_awake;
-public:
-	String m_proxy;
-	net::WebURLLoaderManager::ProxyType m_proxyType;
+
+    String m_proxy;
+    net::WebURLLoaderManager::ProxyType m_proxyType;
 };
 
 };//namespace wke

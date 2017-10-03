@@ -229,6 +229,7 @@ WKE_API wkeWebView wkeCreateWebView();
 WKE_API wkeWebView wkeGetWebView(const char* name);
 WKE_API void wkeDestroyWebView(wkeWebView webView);
 
+WKE_API void wkeSetProxy(const wkeProxy* proxy);
 WKE_API void wkeSetViewProxy(wkeWebView webView, wkeProxy *proxy);
 
 WKE_API const char* wkeGetName(wkeWebView webView);
@@ -469,7 +470,10 @@ WKE_API void wkeNetSetMIMEType(void *job, char *type);
 WKE_API void wkeNetSetHTTPHeaderField(void *job, wchar_t *key, wchar_t *value, bool response);
 WKE_API void wkeNetSetURL(void *job, const char *url);
 WKE_API void wkeNetSetData(void *job, void *buf, int len);
-WKE_API void wkeNetHookRequest(void *job);	//调用此函数后,网络层收到数据会存储在一buf内,接收数据完成后响应OnLoadUrlEnd事件.#此调用严重影响性能,慎用
+// 调用此函数后,网络层收到数据会存储在一buf内,接收数据完成后响应OnLoadUrlEnd事件.#此调用严重影响性能,慎用
+// 此函数和wkeNetSetData的区别是，wkeNetHookRequest会在接受到真正网络数据后再调用回调，并允许回调修改网络数据。
+// 而wkeNetSetData是在网络数据还没发送的时候修改
+WKE_API void wkeNetHookRequest(void *job);	
 
 WKE_API bool wkeWebFrameIsMainFrame(wkeWebFrameHandle webFrame);
 WKE_API bool wkeIsWebRemoteFrame(wkeWebFrameHandle webFrame);
@@ -511,7 +515,9 @@ WKE_API void wkeSetWindowTitleW(wkeWebView webWindow, const wchar_t* title);
 
 //JavaScript Bind-----------------------------------------------------------------------------------
 #define JS_CALL __fastcall
-typedef jsValue(JS_CALL *jsNativeFunction) (jsExecState es);
+typedef jsValue(JS_CALL* jsNativeFunction) (jsExecState es);
+
+typedef jsValue(* wkeJsNativeFunction) (jsExecState es, void* param);
 
 typedef enum {
     JSTYPE_NUMBER,
@@ -525,6 +531,10 @@ typedef enum {
 WKE_API void jsBindFunction(const char* name, jsNativeFunction fn, unsigned int argCount);
 WKE_API void jsBindGetter(const char* name, jsNativeFunction fn); /*get property*/
 WKE_API void jsBindSetter(const char* name, jsNativeFunction fn); /*set property*/
+
+WKE_API void wkeJsBindFunction(const char* name, wkeJsNativeFunction fn, void* param, unsigned int argCount);
+WKE_API void wkeJsBindGetter(const char* name, wkeJsNativeFunction fn, void* param); /*get property*/
+WKE_API void wkeJsBindSetter(const char* name, wkeJsNativeFunction fn, void* param); /*set property*/
 
 WKE_API int jsArgCount(jsExecState es);
 WKE_API jsType jsArgType(jsExecState es, int argIdx);

@@ -42,12 +42,14 @@
 
 namespace blink {
 class WebURLRequest;
+struct WebURLError;
 }
 
 namespace net {
 
 class WebURLLoaderInternal;
 class WebURLLoaderManager;
+struct BlobTempFileInfo;
 
 class AutoLockJob {
 public:
@@ -77,6 +79,7 @@ public:
     static WebURLLoaderManager* sharedInstance();
     int addAsynchronousJob(WebURLLoaderInternal*);
     void cancel(int jobId);
+    void cancelAll();
 
     WebURLLoaderInternal* checkJob(int jobId);
     void removeLiveJobs(int jobId);
@@ -98,15 +101,24 @@ public:
 
     bool isShutdown() const { return m_isShutdown; }
 
+    String handleHeaderForBlobOnMainThread(WebURLLoaderInternal* job, size_t totalSize);
+    BlobTempFileInfo* getBlobTempFileInfoByTempFilePath(const String& path);
+    void didReceiveDataOrDownload(WebURLLoaderInternal* job, const char* data, int dataLength, int encodedDataLength);
+    void handleDidFinishLoading(WebURLLoaderInternal* job, double finishTime, int64_t totalEncodedDataLength);
+    void handleDidFail(WebURLLoaderInternal* job, const blink::WebURLError& error);
+
 private:
     WebURLLoaderManager();
     ~WebURLLoaderManager();
+
+    void doCancel(int jobId, WebURLLoaderInternal* job);
     
     void setupPOST(WebURLLoaderInternal*, struct curl_slist**);
     void setupPUT(WebURLLoaderInternal*, struct curl_slist**);
 
     bool downloadOnIoThread();
     void removeFromCurlOnIoThread(int jobId);
+
     int startJobOnMainThread(WebURLLoaderInternal* job);
     void applyAuthenticationToRequest(WebURLLoaderInternal*, blink::WebURLRequest*);
 
@@ -116,6 +128,7 @@ private:
     void initializeHandleOnIoThread(int jobId, InitializeHandleInfo* info);
     InitializeHandleInfo* preInitializeHandleOnMainThread(WebURLLoaderInternal* job);
     void startOnIoThread(int jobId);
+    void timeoutOnMainThread(int jobId);
 
     void dispatchSynchronousJobOnIoThread(WebURLLoaderInternal* job, InitializeHandleInfo* info, CURLcode* ret, int* isCallFinish);
 
@@ -137,6 +150,8 @@ private:
     WTF::Mutex m_liveJobsMutex;
     WTF::HashMap<int, WebURLLoaderInternal*> m_liveJobs;
     int m_newestJobId;
+
+    WTF::HashMap<String, BlobTempFileInfo*> m_blobCache; // real url -> <temp, data>
 };
 
 }

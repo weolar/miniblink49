@@ -83,7 +83,7 @@
 #include "formdata.h"
 
 #ifdef USE_OPENSSL
-#include <openssl/ssl.h>
+#include "openssl/ssl.h"
 #ifdef HAVE_OPENSSL_ENGINE_H
 #include <openssl/engine.h>
 #endif

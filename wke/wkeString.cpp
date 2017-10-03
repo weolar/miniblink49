@@ -48,10 +48,9 @@ CString::~CString()
     _free();
 }
 
-CString& CString::operator=(const WTF::String& str)
+CString& CString::operator = (const WTF::String& str)
 {
-    if (&m_string != &str)
-    {
+    if (&m_string != &str) {
         _dirty();
         m_string = str;
     }
@@ -66,8 +65,10 @@ CString& CString::operator=(const CString& str)
 const utf8* CString::string() const
 {
     if (!m_utf8) {
-        WTF::CString wtfUtf8 = m_string.utf8();
-        size_t wtfUtf8Len = wtfUtf8.length();
+        Vector<char> wtfUtf8 = WTF::ensureStringToUTF8(m_string, false);
+        size_t wtfUtf8Len = wtfUtf8.size();
+        if (0 == wtfUtf8.size())
+            return "";
 
         m_utf8 = new utf8[wtfUtf8Len + 1];
         if (wtfUtf8Len != 0)
@@ -82,7 +83,10 @@ const utf8* CString::string() const
 const wchar_t* CString::stringW() const
 {
     if (!m_wide) {
-        Vector<UChar> stringBuf = WTF::ensureUTF16UChar(m_string);
+        Vector<UChar> stringBuf = WTF::ensureUTF16UChar(m_string, false);
+        if (0 == stringBuf.size())
+            return L"";
+
         const wchar_t* wtfWide = stringBuf.data();
         size_t wtfWideLen = stringBuf.size();
 

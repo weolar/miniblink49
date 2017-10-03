@@ -3,21 +3,28 @@
 #define SharedTimerWin_h
 
 #include "content/web_impl_win/WebThreadImpl.h"
+#include "content/browser/CheckReEnter.h"
 
 namespace content {
 
 static HWND timerWindowHandle = 0;
 const LPCWSTR kTimerWindowClassName = L"MiniBlinkTimerWindowClass";
-
+ 
 static LRESULT CALLBACK TimerWindowWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+    if (0 != CheckReEnter::s_kEnterContent)
+        return 0;
+    ++CheckReEnter::s_kEnterContent;
+
     if (WM_TIMER ==  message) {
         content::WebThreadImpl* threadImpl = nullptr;
         threadImpl = (content::WebThreadImpl*)(blink::Platform::current()->currentThread());
         threadImpl->fire();
     }
 
-    return ::DefWindowProc(hWnd, message, wParam, lParam);
+    LRESULT result = ::DefWindowProc(hWnd, message, wParam, lParam);
+    --CheckReEnter::s_kEnterContent;
+    return result;
 }
 
 static void initializeOffScreenTimerWindow()

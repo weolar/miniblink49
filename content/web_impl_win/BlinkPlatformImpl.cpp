@@ -54,7 +54,6 @@ class CallAddrsRecord;
 CallAddrsRecord* g_callAddrsRecord = nullptr;
 
 extern std::set<void*>* g_activatingStyleFetchedImage;
-extern std::set<void*>* g_activatingIncrementLoadEventDelayCount;
 
 typedef void* (__cdecl * MyFree)(void*);
 MyFree myFree = nullptr;
@@ -170,6 +169,7 @@ BlinkPlatformImpl::BlinkPlatformImpl()
     m_localStorageStorageMap = nullptr;
     m_sessionStorageStorageMap = nullptr;
     m_webFileUtilitiesImpl = nullptr;
+    m_blobRegistryImpl = nullptr;
     m_userAgent = nullptr;
     m_storageNamespaceIdCount = 1;
     m_lock = new CRITICAL_SECTION();
@@ -255,8 +255,12 @@ void BlinkPlatformImpl::preShutdown()
 
 void BlinkPlatformImpl::shutdown()
 {
+    ((WebThreadImpl*)currentThread())->fire();
+
     net::WebURLLoaderManager::sharedInstance()->shutdown();
     WebPage::shutdown();
+
+    ((WebThreadImpl*)currentThread())->fire();
 
     blink::memoryCache()->evictResources();
     v8::Isolate::GetCurrent()->LowMemoryNotification();
@@ -272,6 +276,8 @@ void BlinkPlatformImpl::shutdown()
 
     MemoryCache* memoryCache = MemoryCache::create();
     replaceMemoryCacheForTesting(memoryCache);
+
+    ((WebThreadImpl*)currentThread())->fire();
 
     blink::Heap::collectAllGarbage();
 
@@ -295,8 +301,9 @@ void BlinkPlatformImpl::shutdown()
 #ifdef _DEBUG
     if (blink::g_activatingImageLoader && !blink::g_activatingImageLoader->empty() ||
         // blink::g_activatingFontFallbackList && !blink::g_activatingFontFallbackList->empty() ||
-        g_activatingStyleFetchedImage && !g_activatingStyleFetchedImage->empty() ||
-        g_activatingIncrementLoadEventDelayCount && !g_activatingIncrementLoadEventDelayCount->empty())
+        g_activatingStyleFetchedImage && !g_activatingStyleFetchedImage->empty() 
+        // || g_activatingIncrementLoadEventDelayCount && !g_activatingIncrementLoadEventDelayCount->empty()
+        )
         DebugBreak();
 #endif
 
@@ -409,14 +416,14 @@ blink::WebThread* BlinkPlatformImpl::currentThread()
 
 blink::WebThread* BlinkPlatformImpl::tryGetIoThread() const
 {
-	return m_ioThread;
+    return m_ioThread;
 }
 
 blink::WebThread* BlinkPlatformImpl::ioThread()
 {
-	if (!m_ioThread)
-		m_ioThread = createThread("ioThread");
-	return m_ioThread;
+    if (!m_ioThread)
+        m_ioThread = createThread("ioThread");
+    return m_ioThread;
 }
 
 void BlinkPlatformImpl::cryptographicallyRandomValues(unsigned char* buffer, size_t length)
@@ -426,8 +433,8 @@ void BlinkPlatformImpl::cryptographicallyRandomValues(unsigned char* buffer, siz
 
 blink::WebURLLoader* BlinkPlatformImpl::createURLLoader()
 {
-    //return new content::WebURLLoaderImpl();
-    return new content::WebURLLoaderImplCurl();
+   //return new content::WebURLLoaderImpl();
+   return new content::WebURLLoaderImplCurl();
 }
 
 const unsigned char* BlinkPlatformImpl::getTraceCategoryEnabledFlag(const char* categoryName)
@@ -617,7 +624,9 @@ blink::WebString BlinkPlatformImpl::queryLocalizedString(blink::WebLocalizedStri
 // Blob ----------------------------------------------------------------
 blink::WebBlobRegistry* BlinkPlatformImpl::blobRegistry()
 {
-    return new WebBlobRegistryImpl();
+    if (!m_blobRegistryImpl)
+        m_blobRegistryImpl = new WebBlobRegistryImpl();
+    return m_blobRegistryImpl;
 }
 
 // clipboard ----------------------------------------------------------------
@@ -632,7 +641,7 @@ blink::WebClipboard* BlinkPlatformImpl::clipboard()
 // Plugins -------------------------------------------------------------
 void BlinkPlatformImpl::getPluginList(bool refresh, blink::WebPluginListBuilder* builder)
 {
-    builder->addPlugin(blink::WebString::fromUTF8("flash"), blink::WebString::fromUTF8("flashPlugin"), blink::WebString::fromUTF8(".swf"));
+    builder->addPlugin(blink::WebString::fromUTF8("Shockwave Flash"), blink::WebString::fromUTF8("flashPlugin"), blink::WebString::fromUTF8(".swf"));
     builder->addMediaTypeToLastPlugin(blink::WebString::fromUTF8("application/x-shockwave-flash"), blink::WebString::fromUTF8("flashPlugin"));
     builder->addFileExtensionToLastMediaType(blink::WebString::fromUTF8(".swf"));
 }

@@ -33,7 +33,6 @@
 #include "content/web_impl_win/npapi/PluginPackage.h"
 #include "content/web_impl_win/npapi/PluginMainThreadScheduler.h"
 #include "content/web_impl_win/npapi/PluginMessageThrottlerWin.h"
-#include "third_party/npapi/bindings/npapi.h"
 #include "third_party/WebKit/Source/web/WebLocalFrameImpl.h"
 #include "third_party/WebKit/Source/web/WebPluginContainerImpl.h"
 #include "third_party/WebKit/Source/platform/network/ResourceRequest.h"
@@ -50,10 +49,13 @@
 #include "third_party/WebKit/public/platform/WebTraceLocation.h"
 #include "third_party/WebKit/public/web/WebPluginContainer.h"
 #include "third_party/WebKit/public/web/WebElement.h"
-#include "gen/blink/core/HTMLNames.h"
+#include "third_party/WebKit/public/web/WebViewClient.h"
 #include "third_party/WebKit/Source/wtf/ASCIICType.h"
 #include "third_party/WebKit/Source/wtf/text/WTFString.h"
 #include "third_party/WebKit/Source/wtf/RefCountedLeakCounter.h"
+#include "third_party/npapi/bindings/npapi.h"
+#include "gen/blink/core/HTMLNames.h"
+#include "wtf/text/WTFStringUtil.h"
 
 using std::min;
 
@@ -122,6 +124,8 @@ WebPluginImpl::WebPluginImpl(WebLocalFrame* parentFrame, const blink::WebPluginP
     , m_manualStream(nullptr)
     , m_isJavaScriptPaused(false)
     , m_haveCalledSetWindow(false)
+    , m_memoryCanvas(nullptr)
+    , m_webviewClient(nullptr)
 {
 #ifndef NDEBUG
     webPluginImplCount.increment();
@@ -129,6 +133,8 @@ WebPluginImpl::WebPluginImpl(WebLocalFrame* parentFrame, const blink::WebPluginP
     if (!m_parentFrame)
         return;
 
+    // if we fail to find a plugin for this MIME type, findPlugin will search for
+    // a plugin by the file extension and update the MIME type, so pass a mutable String
     m_plugin = PluginDatabase::installedPlugins()->findPlugin(m_url, m_mimeType);
 
     // No plugin was found, try refreshing the database and searching again
@@ -194,16 +200,16 @@ void WebPluginImpl::init()
 
     m_haveInitialized = true;
 
-    // if we fail to find a plugin for this MIME type, findPlugin will search for
-    // a plugin by the file extension and update the MIME type, so pass a mutable String
-    PluginPackage* plugin = PluginDatabase::installedPlugins()->findPlugin(m_url, m_mimeType);
+//     // if we fail to find a plugin for this MIME type, findPlugin will search for
+//     // a plugin by the file extension and update the MIME type, so pass a mutable String
+//     m_plugin = PluginDatabase::installedPlugins()->findPlugin(m_url, m_mimeType);
 
     // No plugin was found, try refreshing the database and searching again
-    if (!plugin && PluginDatabase::installedPlugins()->refresh())
-        plugin = PluginDatabase::installedPlugins()->findPlugin(m_url, m_mimeType);
-    
+    if (!m_plugin && PluginDatabase::installedPlugins()->refresh())
+        m_plugin = PluginDatabase::installedPlugins()->findPlugin(m_url, m_mimeType);
+
     if (!m_plugin) {
-        ASSERT(m_status == PluginStatusCanNotFindPlugin);
+        m_status = PluginStatusCanNotLoadPlugin;
         return;
     }
 
@@ -367,8 +373,10 @@ WebPluginImpl* WebPluginImpl::currentPluginView()
 
 static char* createUTF8String(const String& str)
 {
-    CString cstr = str.utf8();
-    const size_t cstrLength = cstr.length();
+    Vector<char> cstr = WTF::ensureStringToUTF8(str, false);
+    const size_t cstrLength = cstr.size();
+    if (0 == cstrLength)
+        return "";
     char* result = reinterpret_cast<char*>(fastMalloc(cstrLength + 1));
 
     memcpy(result, cstr.data(), cstrLength);
@@ -391,6 +399,8 @@ void WebPluginImpl::performRequest(PluginRequest* request)
     KURL requestURL = request->frameLoadRequest().resourceRequest().url();
     String jsString = scriptStringIfJavaScriptURL(requestURL);
 
+    Vector<char> requestUrlBuf = ensureStringToUTF8(requestURL.string(), true);
+    
     UserGestureIndicator gestureIndicator(request->shouldAllowPopups() ? DefinitelyProcessingUserGesture : PossiblyProcessingUserGesture);
 
     if (jsString.isNull()) {
@@ -415,7 +425,7 @@ void WebPluginImpl::performRequest(PluginRequest* request)
                 WebPluginImpl::setCurrentPluginView(this);
                 //JSC::JSLock::DropAllLocks dropAllLocks(JSDOMWindowBase::commonVM());
                 setCallingPlugin(true);
-                m_plugin->pluginFuncs()->urlnotify(m_instance, requestURL.string().utf8().data(), NPRES_DONE, request->notifyData());
+                m_plugin->pluginFuncs()->urlnotify(m_instance, requestUrlBuf.data(), NPRES_DONE, request->notifyData());
                 setCallingPlugin(false);
                 WebPluginImpl::setCurrentPluginView(0);
             }
@@ -980,7 +990,9 @@ void WebPluginImpl::invalidateWindowlessPluginRect(const IntRect& rect)
 //     IntRect dirtyRect = rect;
 //     dirtyRect.move(renderer.borderLeft() + renderer.paddingLeft(), renderer.borderTop() + renderer.paddingTop());
 //     renderer.repaintRectangle(dirtyRect);
-    DebugBreak();
+
+    //m_webviewClient->didInvalidateRect(rect);
+    m_pluginContainer->invalidateRect(rect);
 }
 
 void WebPluginImpl::paintMissingPluginIcon(blink::WebCanvas* canvas, const IntRect& rect)

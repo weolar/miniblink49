@@ -281,13 +281,13 @@ void CefFrameHostImpl::SendJavaScript(const std::string& jsCode, const std::stri
 }
 
 void CefFrameHostImpl::SendCommand(const WTF::String& commandName, Cef_Response_Params* response) {
-    if (!m_browser)
+    if (!m_browser || 0 == commandName.length())
         return;
 
     Cef_Request_Params* request = new Cef_Request_Params();
     request->name = "execute-command";
 
-    Vector<char> commandNameVector = WTF::ensureStringToUTF8(commandName);
+    Vector<char> commandNameVector = WTF::ensureStringToUTF8(commandName, true);
     std::string commandNameString = commandNameVector.data();
 
     request->arguments.AppendString(commandNameString);
