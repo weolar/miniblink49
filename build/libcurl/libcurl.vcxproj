@@ -86,14 +86,18 @@
     <OutDir>$(SolutionDir)..\out\$(Platform)$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)..\out\tmp\$(Platform)$(ProjectName)\$(Configuration)\</IntDir>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(SolutionDir)..\out\$(Platform)$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)..\out\tmp\$(Platform)$(ProjectName)\$(Configuration)\</IntDir>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>CURL_STATICLIB=1;BUILDING_LIBCURL=1;WIN32;_DEBUG;_LIB;USE_OPENSSL=1;OPENSSL_NO_COMP=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>CURL_STATICLIB=1;BUILDING_LIBCURL=1;WIN32;_DEBUG;_LIB;USE_CYASSL=1;HAVE_CYASSL_ERROR_SSL_H;WOLFSSL_LIB;WOLFSSL_USER_SETTINGS;CYASSL_USER_SETTINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>../../third_party/zlib/;../../third_party/libcurl/;../../third_party/libcurl/include/;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../third_party/zlib/;../../third_party/libcurl/;../../third_party/libcurl/include/;../../node/openssl/openssl/include;../../third_party/wolfssl/</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
@@ -124,8 +128,8 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Full</Optimization>
-      <PreprocessorDefinitions>CURL_STATICLIB=1;BUILDING_LIBCURL=1;WIN32;NDEBUG;_LIB;USING_VC6RT=1;USE_OPENSSL=1;OPENSSL_NO_COMP=1;CURL_DISABLE_FTP=1;CURL_DISABLE_IMAP=1;CURL_DISABLE_LDAP=1;CURL_DISABLE_POP3=1;CURL_DISABLE_RTSP=1;CURL_DISABLE_SMTP=1;CURL_DISABLE_TELNET=1;CURL_DISABLE_TFTP=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>../../third_party/zlib/;../../third_party/libcurl/;../../third_party/libcurl/include/;../../node/openssl/openssl/include</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>CURL_STATICLIB=1;BUILDING_LIBCURL=1;WIN32;NDEBUG;_LIB;USING_VC6RT=1;USE_CYASSL=1;HAVE_CYASSL_ERROR_SSL_H;WOLFSSL_LIB;WOLFSSL_USER_SETTINGS;CYASSL_USER_SETTINGS;CURL_DISABLE_FTP=1;CURL_DISABLE_IMAP=1;CURL_DISABLE_LDAP=1;CURL_DISABLE_POP3=1;CURL_DISABLE_RTSP=1;CURL_DISABLE_SMTP=1;CURL_DISABLE_TELNET=1;CURL_DISABLE_TFTP=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../../third_party/zlib/;../../third_party/libcurl/;../../third_party/libcurl/include/;../../node/openssl/openssl/include;../../third_party/wolfssl/</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <StringPooling>true</StringPooling>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -146,12 +150,15 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <PrecompiledHeader>Use</PrecompiledHeader>
-      <Optimization>MaxSpeed</Optimization>
+      <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>CURL_STATICLIB=1;BUILDING_LIBCURL=1;WIN32;NDEBUG;_LIB;USE_CYASSL=1;HAVE_CYASSL_ERROR_SSL_H;CURL_DISABLE_FTP=1;CURL_DISABLE_IMAP=1;CURL_DISABLE_LDAP=1;CURL_DISABLE_POP3=1;CURL_DISABLE_RTSP=1;CURL_DISABLE_SMTP=1;CURL_DISABLE_TELNET=1;CURL_DISABLE_TFTP=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>../../third_party/zlib/;../../third_party/libcurl/;../../third_party/libcurl/include/;../../third_party/wolfssl/</AdditionalIncludeDirectories>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <EnableEnhancedInstructionSet />
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

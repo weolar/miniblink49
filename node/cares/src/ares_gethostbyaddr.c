@@ -190,18 +190,18 @@ static int file_lookup(struct ares_addr *addr, struct hostent **host)
     char tmp[MAX_PATH];
     HKEY hkeyHosts;
 
-    if (RegOpenKeyExA(HKEY_LOCAL_MACHINE, WIN_NS_NT_KEY, 0, KEY_READ,
+    if (RegOpenKeyEx(HKEY_LOCAL_MACHINE, WIN_NS_NT_KEY, 0, KEY_READ,
                      &hkeyHosts) == ERROR_SUCCESS)
     {
       DWORD dwLength = MAX_PATH;
-      RegQueryValueExA(hkeyHosts, DATABASEPATH, NULL, NULL, (LPBYTE)tmp,
+      RegQueryValueEx(hkeyHosts, DATABASEPATH, NULL, NULL, (LPBYTE)tmp,
                       &dwLength);
-      ExpandEnvironmentStringsA(tmp, PATH_HOSTS, MAX_PATH);
+      ExpandEnvironmentStrings(tmp, PATH_HOSTS, MAX_PATH);
       RegCloseKey(hkeyHosts);
     }
   }
   else if (platform == WIN_9X)
-    GetWindowsDirectoryA(PATH_HOSTS, MAX_PATH);
+    GetWindowsDirectory(PATH_HOSTS, MAX_PATH);
   else
     return ARES_ENOTFOUND;
 
