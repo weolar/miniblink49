@@ -153,7 +153,14 @@ typedef size_t(*FILE_SIZE) (void* handle);
 typedef int(*FILE_READ) (void* handle, void* buffer, size_t size);
 typedef int(*FILE_SEEK) (void* handle, int offset, int origin);
 
-WKE_API void wkeSetFileSystem(FILE_OPEN_ pfn_open, FILE_CLOSE_ pfn_close, FILE_SIZE pfn_size, FILE_READ pfn_read, FILE_SEEK pfn_seek);
+typedef FILE_OPEN_ WKE_FILE_OPEN;
+typedef FILE_CLOSE_ WKE_FILE_CLOSE;
+typedef FILE_SIZE WKE_FILE_SIZE;
+typedef FILE_READ WKE_FILE_READ;
+typedef FILE_SEEK WKE_FILE_SEEK;
+typedef bool (*WKE_EXISTS_FILE)(const char * path);
+
+WKE_API void wkeSetFileSystem(WKE_FILE_OPEN pfnOpen, WKE_FILE_CLOSE pfnClose, WKE_FILE_SIZE pfnSize, WKE_FILE_READ pfnRead, WKE_FILE_SEEK pfnSeek);
 
 WKE_API const char* wkeWebViewName(wkeWebView webView);
 WKE_API void wkeSetWebViewName(wkeWebView webView, const char* name);
@@ -218,7 +225,9 @@ WKE_API const wchar_t* jsToStringW(jsExecState es, jsValue v);
 WKE_API void wkeInitialize();
 WKE_API void wkeInitializeEx(const wkeSettings* settings);
 WKE_API void wkeConfigure(const wkeSettings* settings);
-bool wkeIsInitialize();
+WKE_API bool wkeIsInitialize();
+
+WKE_API void wkeSetDebugConfig(wkeWebView webView, const char* debugString);
 
 WKE_API void wkeFinalize();
 WKE_API void wkeUpdate();
