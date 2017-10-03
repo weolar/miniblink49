@@ -8568,12 +8568,6 @@
     <ClCompile Include="..\..\net\PathWalker.cpp">
       <Filter>net</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\net\SSLHandle.cpp">
-      <Filter>net</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\net\WebURLLoaderWinINet.cpp">
-      <Filter>net</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\content\browser\CheckReEnter.cpp">
       <Filter>content\browser</Filter>
     </ClCompile>
@@ -18908,9 +18902,6 @@
     <ClInclude Include="..\..\cc\raster\RasterResouce.h">
       <Filter>cc\raster</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\net\WebURLLoaderWinINet.h">
-      <Filter>net</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8HTMLVideoElementPartial.h">
       <Filter>gen\blink\bindings\modules\v8</Filter>
     </ClInclude>
@@ -19749,9 +19740,6 @@
       <Filter>base\memory</Filter>
     </ClInclude>
     <ClInclude Include="..\..\net\MultipartHandle.h">
-      <Filter>net</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\net\SSLHandle.h">
       <Filter>net</Filter>
     </ClInclude>
     <ClInclude Include="..\..\base\thread.h">

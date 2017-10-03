@@ -909,7 +909,6 @@
     <ClCompile Include="..\..\net\FileSystemWin.cpp" />
     <ClCompile Include="..\..\net\MultipartHandle.cpp" />
     <ClCompile Include="..\..\net\PathWalker.cpp" />
-    <ClCompile Include="..\..\net\SSLHandle.cpp" />
     <ClCompile Include="..\..\net\websocket\SocketStreamErrorBase.cpp" />
     <ClCompile Include="..\..\net\websocket\SocketStreamHandleBase.cpp" />
     <ClCompile Include="..\..\net\websocket\SocketStreamHandleCurl.cpp" />
@@ -921,7 +920,6 @@
     <ClCompile Include="..\..\net\websocket\WebSocketHandshake.cpp" />
     <ClCompile Include="..\..\net\websocket\WebSocketOneFrame.cpp" />
     <ClCompile Include="..\..\net\WebURLLoaderManager.cpp" />
-    <ClCompile Include="..\..\net\WebURLLoaderWinINet.cpp" />
     <ClCompile Include="..\..\skia\ext\bitmap_platform_device_win.cc" />
     <ClCompile Include="..\..\skia\ext\fontmgr_default_win.cc" />
     <ClCompile Include="..\..\skia\ext\lazy_pixel_ref.cc" />
@@ -3601,7 +3599,6 @@
     <ClInclude Include="..\..\net\MultipartHandle.h" />
     <ClInclude Include="..\..\net\PathWalker.h" />
     <ClInclude Include="..\..\net\RequestExtraData.h" />
-    <ClInclude Include="..\..\net\SSLHandle.h" />
     <ClInclude Include="..\..\net\StreamReader.h" />
     <ClInclude Include="..\..\net\websocket\SocketStreamError.h" />
     <ClInclude Include="..\..\net\websocket\SocketStreamErrorBase.h" />
@@ -3618,7 +3615,6 @@
     <ClInclude Include="..\..\net\websocket\WebSocketOneFrame.h" />
     <ClInclude Include="..\..\net\WebURLLoaderInternal.h" />
     <ClInclude Include="..\..\net\WebURLLoaderManager.h" />
-    <ClInclude Include="..\..\net\WebURLLoaderWinINet.h" />
     <ClInclude Include="..\..\skia\config\SkUserConfig.h" />
     <ClInclude Include="..\..\skia\config\sk_ref_cnt_ext_debug.h" />
     <ClInclude Include="..\..\skia\config\sk_ref_cnt_ext_release.h" />
