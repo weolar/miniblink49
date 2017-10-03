@@ -37,6 +37,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libjpeg", "libjpeg\libjpeg.
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libpng", "libpng\libpng.vcxproj", "{B8E58962-4E2E-4526-BECB-5F8F5AFA53B4}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wolfssl", "wolfssl\wolfssl.vcxproj", "{495C9D93-26F2-43E3-8DC4-9AE2BB646DD5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -299,6 +301,21 @@ Global
 		{B8E58962-4E2E-4526-BECB-5F8F5AFA53B4}.Release|Win32.Build.0 = Release|Win32
 		{B8E58962-4E2E-4526-BECB-5F8F5AFA53B4}.Release|x64.ActiveCfg = Release|x64
 		{B8E58962-4E2E-4526-BECB-5F8F5AFA53B4}.Release|x64.Build.0 = Release|x64
+		{495C9D93-26F2-43E3-8DC4-9AE2BB646DD5}.Debug|Win32.ActiveCfg = Debug|Win32
+		{495C9D93-26F2-43E3-8DC4-9AE2BB646DD5}.Debug|Win32.Build.0 = Debug|Win32
+		{495C9D93-26F2-43E3-8DC4-9AE2BB646DD5}.Debug|x64.ActiveCfg = Debug|x64
+		{495C9D93-26F2-43E3-8DC4-9AE2BB646DD5}.Debug|x64.Build.0 = Debug|x64
+		{495C9D93-26F2-43E3-8DC4-9AE2BB646DD5}.Release_NoNode|Win32.ActiveCfg = Release_vc6|Win32
+		{495C9D93-26F2-43E3-8DC4-9AE2BB646DD5}.Release_NoNode|x64.ActiveCfg = Release_vc6|x64
+		{495C9D93-26F2-43E3-8DC4-9AE2BB646DD5}.Release_NoNode|x64.Build.0 = Release_vc6|x64
+		{495C9D93-26F2-43E3-8DC4-9AE2BB646DD5}.Release_vc6|Win32.ActiveCfg = Release_vc6|Win32
+		{495C9D93-26F2-43E3-8DC4-9AE2BB646DD5}.Release_vc6|Win32.Build.0 = Release_vc6|Win32
+		{495C9D93-26F2-43E3-8DC4-9AE2BB646DD5}.Release_vc6|x64.ActiveCfg = Release_vc6|x64
+		{495C9D93-26F2-43E3-8DC4-9AE2BB646DD5}.Release_vc6|x64.Build.0 = Release_vc6|x64
+		{495C9D93-26F2-43E3-8DC4-9AE2BB646DD5}.Release|Win32.ActiveCfg = Release_vc6|Win32
+		{495C9D93-26F2-43E3-8DC4-9AE2BB646DD5}.Release|Win32.Build.0 = Release_vc6|Win32
+		{495C9D93-26F2-43E3-8DC4-9AE2BB646DD5}.Release|x64.ActiveCfg = Release_vc6|x64
+		{495C9D93-26F2-43E3-8DC4-9AE2BB646DD5}.Release|x64.Build.0 = Release_vc6|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
