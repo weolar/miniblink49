@@ -90,20 +90,31 @@ typedef struct userFILE{
 
 #define IsUserFileIO( fd )  ( UserFD(fd)->Flag == EweUserFileIO )
 
-bool    (__fastcall *userExistsFile)( const char * _Filename ) = 0;
-void*   (__fastcall *userOpenFile)( const char * _Filename ) = 0;
-int     (__fastcall *userCloseFile)( void* userFileHandle ) = 0;
-int     (__fastcall *userReadFile)( void* userFileHandle, void *buf, size_t count ) = 0;
-int     (__fastcall *userSeekFile)( void* userFileHandle, __int64 _Offset ) = 0;
-__int64 (__fastcall *userFileSize)( void* userFileHandle ) = 0;
+#if 0
+#define CURL_CALL __fastcall
+typedef int __int64;
+#else
+#define CURL_CALL __cdecl
+typedef int __fileSeekType;
+#endif
 
-void SetFileSystemHook(
-	bool  (__fastcall *lpExistsFile)( const char * _Filename ),
-	void* (__fastcall *lpOpenFile)( const char * _Filename ),
-	int   (__fastcall *lpCloseFile)( void* userFileHandle ),
-	int   (__fastcall *lpReadFile)( void* userFileHandle, void *buf, size_t count ),
-	int   (__fastcall *lpSeekFile)( void* userFileHandle, __int64 _Offset ),
-	__int64 (__fastcall *lpFileSize)( void* userFileHandle ) )
+
+
+void*   (CURL_CALL *userOpenFile)( const char * _Filename ) = 0;
+void    (CURL_CALL *userCloseFile)( void* userFileHandle ) = 0;
+size_t  (CURL_CALL *userFileSize)(void* userFileHandle) = 0;
+int     (CURL_CALL *userReadFile)( void* userFileHandle, void *buf, size_t count ) = 0;
+int     (CURL_CALL *userSeekFile)( void* userFileHandle, __fileSeekType _Offset, int origin ) = 0;
+bool    (CURL_CALL *userExistsFile)(const char * _Filename) = 0;
+
+void curl_set_file_system(
+	void* (CURL_CALL *lpOpenFile)( const char * _Filename ),
+	int   (CURL_CALL *lpCloseFile)( void* userFileHandle ),
+  size_t(CURL_CALL *lpFileSize)(void* userFileHandle),
+	int   (CURL_CALL *lpReadFile)( void* userFileHandle, void *buf, size_t count ),
+	int   (CURL_CALL *lpSeekFile)( void* userFileHandle, __fileSeekType _Offset, int origin ),
+  bool  (CURL_CALL *lpExistsFile)(const char * _Filename)
+  )
 {
 	userExistsFile = lpExistsFile;
 	userOpenFile = lpOpenFile;
@@ -160,7 +171,7 @@ FILE* fopen_wrap(/*_In_z_*/ const char * _Filename, /*_In_*/ const char * _OpenF
 
 __int64 ewefs_open(/*_In_z_*/ const char * _Filename, /*_In_*/ int _OpenFlag ){
 	FILE* fp = 0;
-
+  
 	if( O_WRONLY & _OpenFlag ){
 		if( O_APPEND & _OpenFlag ){
 			fp = fopen_wrap( _Filename, "ab" );
@@ -175,14 +186,14 @@ __int64 ewefs_open(/*_In_z_*/ const char * _Filename, /*_In_*/ int _OpenFlag ){
 				if( !user ){ userCloseFile(fp); }
 				user->Flag = EweUserFileIO;
 				user->fp = fp;
-				return user ? user : -1;
+				return user ? (__int64)user : (__int64)-1;
 			}
 		}
 		if( !fp ){
 			fp = fopen_wrap( _Filename, "rb" );
 		}
 	}
-	return fp ? fp : -1;
+	return fp ? (__int64)fp : -1;
 }
 
 int ewefs_close( __int64 fd ){
@@ -203,7 +214,7 @@ ssize_t ewefs_write(__int64 fd, const void *buf, size_t count){
 }
 
 curl_off_t ewefs_lseek( __int64 fd, curl_off_t _Offset, int _Origin ){
-	return IsUserFileIO(fd) ? userSeekFile( UserFD(fd)->fp, _Offset ) : _lseeki64( fileno((FILE*)fd), _Offset, _Origin );
+	return IsUserFileIO(fd) ? userSeekFile( UserFD(fd)->fp, (__fileSeekType)_Offset, _Origin) : _lseeki64( fileno((FILE*)fd), _Offset, _Origin );
 }
 
 int ewefs_fstat(/*_In_*/ __int64 fd, struct _stati64* _Stat){
