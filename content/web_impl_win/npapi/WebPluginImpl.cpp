@@ -33,6 +33,7 @@
 #include "content/web_impl_win/npapi/PluginPackage.h"
 #include "content/web_impl_win/npapi/PluginMainThreadScheduler.h"
 #include "content/web_impl_win/npapi/PluginMessageThrottlerWin.h"
+#include "third_party/WebKit/public/platform/Platform.h"
 #include "third_party/WebKit/Source/web/WebLocalFrameImpl.h"
 #include "third_party/WebKit/Source/web/WebPluginContainerImpl.h"
 #include "third_party/WebKit/Source/platform/network/ResourceRequest.h"
@@ -83,6 +84,24 @@ static String scriptStringIfJavaScriptURL(const KURL& url)
 
     // This returns an unescaped string
     return decodeURLEscapeSequences(url.string().substring(11));
+}
+
+static void buildResourceRequest(FrameLoadRequest* frameLoadRequest, blink::LocalFrame* parentFrame, const KURL& url, const char* target)
+{
+    if (target)
+        frameLoadRequest->setFrameName(target);
+
+    ResourceRequest* request = &frameLoadRequest->resourceRequest();
+
+    request->setHTTPMethod("GET");
+    request->setURL(url);
+    //request->setHTTPHeaderField("x-requested-with", AtomicString("ShockwaveFlash/17.0.0.171"));
+    //request->setHTTPHeaderField("accept-encoding", AtomicString("gzip, deflate, sdch"));
+    //request->setHTTPHeaderField("accept", AtomicString("*/*"));
+    request->setHTTPHeaderField("user-agent", AtomicString(String(blink::Platform::current()->userAgent())));
+
+    if (parentFrame->document())
+        request->setHTTPHeaderField("referer", AtomicString(parentFrame->document()->baseURL().string()));
 }
 
 RefPtr<Image> s_nullPluginImage;
@@ -278,8 +297,8 @@ bool WebPluginImpl::start()
 
     if (!m_url.isEmpty() && !m_loadManually) {
         FrameLoadRequest frameLoadRequest(m_parentFrame->document());
-        frameLoadRequest.resourceRequest().setHTTPMethod("GET");
-        frameLoadRequest.resourceRequest().setURL(m_url);
+        buildResourceRequest(&frameLoadRequest, m_parentFrame, m_url, nullptr);
+
         load(frameLoadRequest, false, 0);
     }
 
@@ -530,9 +549,10 @@ NPError WebPluginImpl::getURLNotify(const char* url, const char* target, void* n
 {
     FrameLoadRequest frameLoadRequest(m_parentFrame->document());
 
-    frameLoadRequest.setFrameName(target);
-    frameLoadRequest.resourceRequest().setHTTPMethod("GET");
-    frameLoadRequest.resourceRequest().setURL(makeURL(m_parentFrame->document()->baseURL(), url));
+//     frameLoadRequest.setFrameName(target);
+//     frameLoadRequest.resourceRequest().setHTTPMethod("GET");
+//     frameLoadRequest.resourceRequest().setURL(makeURL(m_parentFrame->document()->baseURL(), url));
+    buildResourceRequest(&frameLoadRequest, m_parentFrame, makeURL(m_parentFrame->document()->baseURL(), url), target);
 
     return load(frameLoadRequest, true, notifyData);
 }
@@ -541,9 +561,7 @@ NPError WebPluginImpl::getURL(const char* url, const char* target)
 {
     FrameLoadRequest frameLoadRequest(m_parentFrame->document());
 
-    frameLoadRequest.setFrameName(target);
-    frameLoadRequest.resourceRequest().setHTTPMethod("GET");
-    frameLoadRequest.resourceRequest().setURL(makeURL(m_parentFrame->document()->baseURL(), url));
+    buildResourceRequest(&frameLoadRequest, m_parentFrame, makeURL(m_parentFrame->document()->baseURL(), url), target);
 
     return load(frameLoadRequest, false, 0);
 }

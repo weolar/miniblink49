@@ -58,7 +58,7 @@ using namespace blink;
 namespace content {
 
 #ifndef NDEBUG
-    DEFINE_DEBUG_ONLY_GLOBAL(WTF::RefCountedLeakCounter, pluginStreamCount, ("pluginStreamCount"));
+DEFINE_DEBUG_ONLY_GLOBAL(WTF::RefCountedLeakCounter, pluginStreamCount, ("pluginStreamCount"));
 #endif
 
 typedef HashMap<NPStream*, NPP> StreamMap;

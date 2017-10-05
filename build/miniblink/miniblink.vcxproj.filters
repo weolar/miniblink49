@@ -8571,6 +8571,27 @@
     <ClCompile Include="..\..\content\browser\CheckReEnter.cpp">
       <Filter>content\browser</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\net\BlobResourceLoader.cpp">
+      <Filter>net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\net\FileSystem.cpp">
+      <Filter>net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\net\FileSystemWin.cpp">
+      <Filter>net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\net\FileStream.cpp">
+      <Filter>net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\net\PathWalker.cpp">
+      <Filter>net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\net\AsyncFileStream.cpp">
+      <Filter>net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\content\browser\CheckReEnter.cpp">
+      <Filter>content\browser</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\public\platform\modules\app_banner\WebAppBannerClient.h">
@@ -19875,6 +19896,33 @@
       <Filter>net</Filter>
     </ClInclude>
     <ClInclude Include="..\..\net\StreamReader.h">
+      <Filter>net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\content\browser\CheckReEnter.h">
+      <Filter>content\browser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\net\BlobResourceLoader.h">
+      <Filter>net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\net\FileSystem.h">
+      <Filter>net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\net\FileStream.h">
+      <Filter>net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\net\PathWalker.h">
+      <Filter>net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\net\AsyncFileStream.h">
+      <Filter>net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\net\FileStreamClient.h">
+      <Filter>net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\net\StreamReader.h">
+      <Filter>net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\net\MemBlobStream.h">
       <Filter>net</Filter>
     </ClInclude>
     <ClInclude Include="..\..\content\browser\CheckReEnter.h">
