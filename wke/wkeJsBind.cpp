@@ -90,17 +90,28 @@ public:
 };
 
 typedef WTF::HashMap<jsValue, WkeJsValue*> JsValueMap;
-static JsValueMap* jsValueMap = nullptr;
+static JsValueMap* s_jsValueMap = nullptr;
+
+static JsValueMap::iterator findJsValueMap(jsValue value)
+{
+    if (0 == value)
+        return s_jsValueMap->end();
+    JsValueMap::iterator it = s_jsValueMap->find(value);
+    return it;
+}
 
 static bool isJsValueValid(jsValue value)
 {
-    return (jsValueMap->contains(value));
+    if (0 == value)
+        return false;
+
+    return (s_jsValueMap->contains(value));
 }
 
 static v8::Local<v8::Value> getV8Value(jsValue v, v8::Local<v8::Context> context)
 {
-    JsValueMap::iterator it = jsValueMap->find(v);
-    if (it == jsValueMap->end())
+    JsValueMap::iterator it = findJsValueMap(v);
+    if (it == s_jsValueMap->end())
         return v8::Local<v8::Value>(); // v8::Undefined(v8::Isolate::GetCurrent());
 
     WkeJsValue* wkeValue = it->value;
@@ -134,24 +145,11 @@ static v8::Local<v8::Value> getV8Value(jsValue v, v8::Local<v8::Context> context
     return out;
 }
 
-// static v8::Persistent<v8::Value> getV8Value2222(jsValue v, v8::Local<v8::Context> context)
-// {
-//     JsValueMap::iterator it = jsValueMap->find(v);
-//     if (it == jsValueMap->end())
-//         return v8::Persistent<v8::Value>();
-// 
-//     WkeJsValue* wkeValue = it->value;
-//     v8::Isolate* isolate = wkeValue->isolate;
-//     v8::HandleScope handleScope(isolate);
-//     v8::Context::Scope contextScope(context);
-// 
-//     return wkeValue->value;
-// }
+static __int64 s_handleCount = 0;
 
 static jsValue createJsValueByLocalValue(v8::Isolate* isolate, v8::Local<v8::Context> context, v8::Local<v8::Value> value)
 {
-    static __int64 handleCount = 0;
-    handleCount++;
+    s_handleCount++;
 
     WkeJsValue* out = new WkeJsValue();
     out->isolate = isolate;
@@ -160,18 +158,17 @@ static jsValue createJsValueByLocalValue(v8::Isolate* isolate, v8::Local<v8::Con
     out->type = WkeJsValue::wkeJsValueV8Value;
     out->context.Reset(isolate, context);
 
-    jsValueMap->add(handleCount, out);
-    return handleCount;
+    s_jsValueMap->add(s_handleCount, out);
+    return s_handleCount;
 }
 
 static jsValue createEmptyJsValue(WkeJsValue** out)
 {
-    static __int64 handleCount = 0;
-    handleCount++;
+    s_handleCount++;
 
     *out = new WkeJsValue();
-    jsValueMap->add(handleCount, *out);
-    return handleCount;
+    s_jsValueMap->add(s_handleCount, *out);
+    return s_handleCount;
 }
 
 int jsArgCount(jsExecState es)
@@ -223,8 +220,8 @@ jsValue jsArg(jsExecState es, int argIdx)
 
 jsType jsTypeOf(jsValue v)
 {
-    JsValueMap::iterator it = jsValueMap->find(v);
-    if (it == jsValueMap->end())
+    JsValueMap::iterator it = findJsValueMap(v);
+    if (it == s_jsValueMap->end())
         return JSTYPE_UNDEFINED;
 
     WkeJsValue* wkeValue = it->value;
@@ -299,8 +296,8 @@ bool jsIsUndefined(jsValue v)
 
 bool jsIsNull(jsValue v)
 {
-    JsValueMap::iterator it = jsValueMap->find(v);
-    if (it == jsValueMap->end())
+    JsValueMap::iterator it = findJsValueMap(v);
+    if (it == s_jsValueMap->end())
         return false;
 
     WkeJsValue* wkeValue = it->value;
@@ -318,8 +315,8 @@ bool jsIsNull(jsValue v)
 
 bool jsIsArray(jsValue v)
 {
-    JsValueMap::iterator it = jsValueMap->find(v);
-    if (it == jsValueMap->end())
+    JsValueMap::iterator it = findJsValueMap(v);
+    if (it == s_jsValueMap->end())
         return false;
 
     WkeJsValue* wkeValue = it->value;
@@ -333,8 +330,8 @@ bool jsIsArray(jsValue v)
 
 bool jsIsTrue(jsValue v)
 {
-    JsValueMap::iterator it = jsValueMap->find(v);
-    if (it == jsValueMap->end())
+    JsValueMap::iterator it = findJsValueMap(v);
+    if (it == s_jsValueMap->end())
         return false;
 
     WkeJsValue* wkeValue = it->value;
@@ -361,8 +358,8 @@ int jsToInt(jsExecState es, jsValue v)
     if (!s_execStates || !s_execStates->contains(es) || !es)
         return 0;
 
-    JsValueMap::iterator it = jsValueMap->find(v);
-    if (it == jsValueMap->end())
+    JsValueMap::iterator it = findJsValueMap(v);
+    if (it == s_jsValueMap->end())
         return 0;
     WkeJsValue* wkeValue = it->value;
     if (WkeJsValue::wkeJsValueV8Value == wkeValue->type) {
@@ -384,8 +381,8 @@ double jsToDouble(jsExecState es, jsValue v)
     if (!s_execStates || !s_execStates->contains(es) || !es)
         return 0.0;
 
-    JsValueMap::iterator it = jsValueMap->find(v);
-    if (it == jsValueMap->end())
+    JsValueMap::iterator it = findJsValueMap(v);
+    if (it == s_jsValueMap->end())
         return 0.0;
     WkeJsValue* wkeValue = it->value;
     if (WkeJsValue::wkeJsValueV8Value == wkeValue->type) {
@@ -401,8 +398,8 @@ bool jsToBoolean(jsExecState es, jsValue v)
     if (!s_execStates || !s_execStates->contains(es) || !es)
         return false;
 
-    JsValueMap::iterator it = jsValueMap->find(v);
-    if (it == jsValueMap->end())
+    JsValueMap::iterator it = findJsValueMap(v);
+    if (it == s_jsValueMap->end())
         return false;
     WkeJsValue* wkeValue = it->value;
     if (WkeJsValue::wkeJsValueV8Value == wkeValue->type) {
@@ -438,8 +435,8 @@ const utf8* jsToTempString(jsExecState es, jsValue v) {
     if (!s_execStates || !s_execStates->contains(es) || !es)
         return "";
 
-    JsValueMap::iterator it = jsValueMap->find(v);
-    if (it == jsValueMap->end())
+    JsValueMap::iterator it = findJsValueMap(v);
+    if (it == s_jsValueMap->end())
         return "";
 
     WkeJsValue* wkeValue = it->value;
@@ -1373,8 +1370,8 @@ void onCreateGlobalObject(content::WebFrameClientImpl* client, blink::WebLocalFr
     if (!wkeWebView)
         return;
 
-    if (!jsValueMap)
-        jsValueMap = new JsValueMap();
+    if (!s_jsValueMap)
+        s_jsValueMap = new JsValueMap();
     if (!s_execStates)
         s_execStates = new Vector<jsExecState>();
     
@@ -1447,14 +1444,14 @@ void onReleaseGlobalObject(content::WebFrameClientImpl* client, blink::WebLocalF
 
 void freeV8TempObejctOnOneFrameBefore()
 {
-    if (!isMainThread() || !jsValueMap)
+    if (!isMainThread() || !s_jsValueMap)
         return;
 
-    for (JsValueMap::iterator it = jsValueMap->begin(); it != jsValueMap->end(); ++it) {
+    for (JsValueMap::iterator it = s_jsValueMap->begin(); it != s_jsValueMap->end(); ++it) {
         WkeJsValue* value = it->value;
         delete value;
     }
-    jsValueMap->clear();
+    s_jsValueMap->clear();
 
     for (Vector<jsExecState>::iterator it = s_execStates->begin(); it != s_execStates->end(); ++it) {
         jsExecState state = *it;
