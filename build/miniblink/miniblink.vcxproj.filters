@@ -250,18 +250,6 @@
     <Filter Include="third_party\Webkit\Source\core\xmlhttprequest">
       <UniqueIdentifier>{b86a2e53-5ada-4e0f-a709-205c0aed574a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="third_party\Webkit\Source\devtools">
-      <UniqueIdentifier>{34039253-b2d8-45f4-a98f-2dff2101dd29}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="third_party\Webkit\Source\devtools\front_end">
-      <UniqueIdentifier>{6c8d79c6-58ec-4fe4-97b3-838a29d7ec3f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="third_party\Webkit\Source\devtools\front_end\Images">
-      <UniqueIdentifier>{60ae61f8-163f-41e9-b107-178c520a633e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="third_party\Webkit\Source\devtools\front_end\Images\src">
-      <UniqueIdentifier>{e26322df-1867-4e76-8cb5-ff47e9f8f31b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="third_party\Webkit\Source\modules">
       <UniqueIdentifier>{ff6e81a8-5a35-4d1a-a896-6ac015cf0ae9}</UniqueIdentifier>
     </Filter>
@@ -771,6 +759,27 @@
     </Filter>
     <Filter Include="node\include">
       <UniqueIdentifier>{9be143de-ccf8-4d23-86a1-a7a1445fabf0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\Webkit\Source\modules\compositorworker">
+      <UniqueIdentifier>{be01d586-0470-40f2-8644-e994e6c2bf22}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\Webkit\Source\modules\encoding">
+      <UniqueIdentifier>{f1ca691f-4090-4a96-a16f-9c7da58ecd56}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\Webkit\Source\devtools">
+      <UniqueIdentifier>{34039253-b2d8-45f4-a98f-2dff2101dd29}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\Webkit\Source\devtools\front_end">
+      <UniqueIdentifier>{6c8d79c6-58ec-4fe4-97b3-838a29d7ec3f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\Webkit\Source\devtools\front_end\Images">
+      <UniqueIdentifier>{60ae61f8-163f-41e9-b107-178c520a633e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\Webkit\Source\devtools\front_end\Images\src">
+      <UniqueIdentifier>{e26322df-1867-4e76-8cb5-ff47e9f8f31b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gen\blink\modules\encoding">
+      <UniqueIdentifier>{d38df5f6-c525-4ffb-9239-d84f6bb56d4c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -7194,12 +7203,6 @@
     <ClCompile Include="..\..\third_party\WebKit\Source\core\dom\ClientRectList.cpp">
       <Filter>third_party\Webkit\Source\core\dom</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\third_party\WebKit\Source\core\timing\MemoryInfo.cpp">
-      <Filter>third_party\Webkit\Source\core\timing</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\WebKit\Source\core\timing\ConsoleMemory.cpp">
-      <Filter>third_party\Webkit\Source\core\timing</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\third_party\WebKit\Source\core\css\StyleRuleKeyframe.cpp">
       <Filter>third_party\Webkit\Source\core\css</Filter>
     </ClCompile>
@@ -9431,6 +9434,267 @@
     </ClCompile>
     <ClCompile Include="..\..\content\browser\CheckReEnter.cpp">
       <Filter>content\browser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\net\WebURLLoaderWinINet.cpp">
+      <Filter>net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\content\web_impl_win\WebURLLoaderImpl.cpp">
+      <Filter>content\web_impl_win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\workers\DedicatedWorkerThread.cpp">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\workers\InProcessWorkerBase.cpp">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\workers\SharedWorker.cpp">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\workers\SharedWorkerGlobalScope.cpp">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\workers\SharedWorkerThread.cpp">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\workers\Worker.cpp">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\workers\WorkerConsole.cpp">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\workers\WorkerEventQueue.cpp">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\workers\WorkerGlobalScope.cpp">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\workers\WorkerGlobalScopeProxyProvider.cpp">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\workers\WorkerInspectorProxy.cpp">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\workers\WorkerLoaderProxy.cpp">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\workers\WorkerMessagingProxy.cpp">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\workers\WorkerNavigator.cpp">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\workers\WorkerObjectProxy.cpp">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\workers\WorkerScriptLoader.cpp">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\workers\WorkerThread.cpp">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\workers\WorkerThreadStartupData.cpp">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\workers\AbstractWorker.cpp">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\workers\DedicatedWorkerGlobalScope.cpp">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\workers\DedicatedWorkerMessagingProxy.cpp">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8SharedWorkerGlobalScopePartial.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8WorkerGlobalScopePartial.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8WorkerNavigatorPartial.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8CompositorWorker.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8CompositorWorkerGlobalScope.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\minichrome49\third_party\WebKit\Source\modules\compositorworker\CompositorWorkerThread.cpp">
+      <Filter>third_party\Webkit\Source\modules\compositorworker</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\minichrome49\third_party\WebKit\Source\modules\compositorworker\CompositorWorker.cpp">
+      <Filter>third_party\Webkit\Source\modules\compositorworker</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\minichrome49\third_party\WebKit\Source\modules\compositorworker\CompositorWorkerGlobalScope.cpp">
+      <Filter>third_party\Webkit\Source\modules\compositorworker</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\minichrome49\third_party\WebKit\Source\modules\compositorworker\CompositorWorkerManager.cpp">
+      <Filter>third_party\Webkit\Source\modules\compositorworker</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\minichrome49\third_party\WebKit\Source\modules\compositorworker\CompositorWorkerMessagingProxy.cpp">
+      <Filter>third_party\Webkit\Source\modules\compositorworker</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8WorkerNavigator.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8Worker.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8WorkerLocation.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8WorkerGlobalScope.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\v8sharedworkerglobalscope.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8SharedWorker.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8WorkerConsole.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8WorkerPerformance.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8ReadableByteStreamReader.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8ReadableStream.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8ReadableStreamReader.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8ReadableByteStream.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\streams\ReadableStream.cpp">
+      <Filter>third_party\Webkit\Source\core\streams</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\streams\ReadableStreamReader.cpp">
+      <Filter>third_party\Webkit\Source\core\streams</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\streams\ReadableByteStream.cpp">
+      <Filter>third_party\Webkit\Source\core\streams</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\timing\ConsoleMemory.cpp">
+      <Filter>third_party\Webkit\Source\core\timing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\timing\DOMWindowPerformance.cpp">
+      <Filter>third_party\Webkit\Source\core\timing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\timing\MemoryInfo.cpp">
+      <Filter>third_party\Webkit\Source\core\timing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\timing\Performance.cpp">
+      <Filter>third_party\Webkit\Source\core\timing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\timing\PerformanceBase.cpp">
+      <Filter>third_party\Webkit\Source\core\timing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\timing\PerformanceCompositeTiming.cpp">
+      <Filter>third_party\Webkit\Source\core\timing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\timing\PerformanceEntry.cpp">
+      <Filter>third_party\Webkit\Source\core\timing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\timing\PerformanceNavigation.cpp">
+      <Filter>third_party\Webkit\Source\core\timing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\timing\PerformanceRenderTiming.cpp">
+      <Filter>third_party\Webkit\Source\core\timing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\timing\PerformanceResourceTiming.cpp">
+      <Filter>third_party\Webkit\Source\core\timing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\timing\PerformanceTiming.cpp">
+      <Filter>third_party\Webkit\Source\core\timing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\timing\PerformanceUserTiming.cpp">
+      <Filter>third_party\Webkit\Source\core\timing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\timing\SharedWorkerPerformance.cpp">
+      <Filter>third_party\Webkit\Source\core\timing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\timing\WorkerGlobalScopePerformance.cpp">
+      <Filter>third_party\Webkit\Source\core\timing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\timing\WorkerPerformance.cpp">
+      <Filter>third_party\Webkit\Source\core\timing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8PerformanceCompositeTiming.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8PerformanceTiming.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8Performance.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8PerformanceEntry.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8PerformanceMark.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8PerformanceMeasure.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8PerformanceNavigation.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8PerformanceRenderTiming.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8PerformanceResourceTiming.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8TextDecoder.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\encoding\Encoding.cpp">
+      <Filter>third_party\Webkit\Source\modules\encoding</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\encoding\TextDecoder.cpp">
+      <Filter>third_party\Webkit\Source\modules\encoding</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\encoding\TextEncoder.cpp">
+      <Filter>third_party\Webkit\Source\modules\encoding</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\bindings\core\v8\V8ObjectBuilder.cpp">
+      <Filter>third_party\Webkit\Source\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8DedicatedWorkerGlobalScope.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8TextDecodeOptions.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8TextDecoderOptions.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8TextEncoder.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\modules\encoding\TextDecoderOptions.cpp">
+      <Filter>gen\blink\modules\encoding</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\modules\encoding\TextDecodeOptions.cpp">
+      <Filter>gen\blink\modules\encoding</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\web\WorkerGlobalScopeProxyProviderImpl.cpp">
+      <Filter>third_party\Webkit\Source\web</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\web\WorkerContentSettingsClient.cpp">
+      <Filter>third_party\Webkit\Source\web</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8DedicatedWorkerGlobalScopePartial.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\content\web_impl_win\WaitableEventWin.cpp">
+      <Filter>content\web_impl_win</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -18872,12 +19136,6 @@
     <ClInclude Include="..\..\third_party\WebKit\Source\core\html\HTMLImageFallbackHelper.h">
       <Filter>third_party\Webkit\Source\core\html</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\third_party\WebKit\Source\core\timing\MemoryInfo.h">
-      <Filter>third_party\Webkit\Source\core\timing</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\third_party\WebKit\Source\core\timing\ConsoleMemory.h">
-      <Filter>third_party\Webkit\Source\core\timing</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\third_party\WebKit\Source\core\css\StyleRuleKeyframe.h">
       <Filter>third_party\Webkit\Source\core\css</Filter>
     </ClInclude>
@@ -21692,6 +21950,240 @@
     <ClInclude Include="..\..\content\browser\CheckReEnter.h">
       <Filter>content\browser</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\workers\DedicatedWorkerThread.h">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\workers\InProcessWorkerBase.h">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\workers\SharedWorker.h">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\workers\SharedWorkerGlobalScope.h">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\workers\SharedWorkerRepositoryClient.h">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\workers\SharedWorkerThread.h">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\workers\Worker.h">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\workers\WorkerClients.h">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\workers\WorkerConsole.h">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\workers\WorkerEventQueue.h">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\workers\WorkerGlobalScope.h">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\workers\WorkerGlobalScopeProxy.h">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\workers\WorkerGlobalScopeProxyProvider.h">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\workers\WorkerInspectorProxy.h">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\workers\WorkerLoaderProxy.h">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\workers\WorkerLocation.h">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\workers\WorkerMessagingProxy.h">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\workers\WorkerNavigator.h">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\workers\WorkerObjectProxy.h">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\workers\WorkerReportingProxy.h">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\workers\WorkerScriptLoader.h">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\workers\WorkerThread.h">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\workers\WorkerThreadStartupData.h">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\workers\DedicatedWorkerGlobalScope.h">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\workers\DedicatedWorkerMessagingProxy.h">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8ServiceWorkerRegistration.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8SharedWorkerGlobalScopePartial.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8WorkerGlobalScopePartial.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8WorkerNavigatorPartial.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8CompositorWorker.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8CompositorWorkerGlobalScope.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8CrossOriginServiceWorkerClient.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8DedicatedWorkerGlobalScopePartial.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8ServiceWorker.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8ServiceWorkerContainer.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8ServiceWorkerGlobalScope.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8ServiceWorkerMessageEvent.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8ServiceWorkerMessageEventInit.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\minichrome49\third_party\WebKit\Source\modules\compositorworker\CompositorWorkerMessagingProxy.h">
+      <Filter>third_party\Webkit\Source\modules\compositorworker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\minichrome49\third_party\WebKit\Source\modules\compositorworker\CompositorWorkerThread.h">
+      <Filter>third_party\Webkit\Source\modules\compositorworker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\minichrome49\third_party\WebKit\Source\modules\compositorworker\CompositorWorker.h">
+      <Filter>third_party\Webkit\Source\modules\compositorworker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\minichrome49\third_party\WebKit\Source\modules\compositorworker\CompositorWorkerGlobalScope.h">
+      <Filter>third_party\Webkit\Source\modules\compositorworker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\minichrome49\third_party\WebKit\Source\modules\compositorworker\CompositorWorkerManager.h">
+      <Filter>third_party\Webkit\Source\modules\compositorworker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\streams\ReadableByteStreamReader.h">
+      <Filter>third_party\Webkit\Source\core\streams</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\streams\ReadableStream.h">
+      <Filter>third_party\Webkit\Source\core\streams</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\streams\ReadableStreamImpl.h">
+      <Filter>third_party\Webkit\Source\core\streams</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\streams\ReadableStreamReader.h">
+      <Filter>third_party\Webkit\Source\core\streams</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\streams\ReadableByteStream.h">
+      <Filter>third_party\Webkit\Source\core\streams</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\timing\WorkerPerformance.h">
+      <Filter>third_party\Webkit\Source\core\timing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\timing\ConsoleMemory.h">
+      <Filter>third_party\Webkit\Source\core\timing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\timing\DOMWindowPerformance.h">
+      <Filter>third_party\Webkit\Source\core\timing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\timing\MemoryInfo.h">
+      <Filter>third_party\Webkit\Source\core\timing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\timing\Performance.h">
+      <Filter>third_party\Webkit\Source\core\timing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\timing\PerformanceBase.h">
+      <Filter>third_party\Webkit\Source\core\timing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\timing\PerformanceCompositeTiming.h">
+      <Filter>third_party\Webkit\Source\core\timing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\timing\PerformanceEntry.h">
+      <Filter>third_party\Webkit\Source\core\timing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\timing\PerformanceMark.h">
+      <Filter>third_party\Webkit\Source\core\timing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\timing\PerformanceMeasure.h">
+      <Filter>third_party\Webkit\Source\core\timing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\timing\PerformanceNavigation.h">
+      <Filter>third_party\Webkit\Source\core\timing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\timing\PerformanceRenderTiming.h">
+      <Filter>third_party\Webkit\Source\core\timing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\timing\PerformanceResourceTiming.h">
+      <Filter>third_party\Webkit\Source\core\timing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\timing\PerformanceTiming.h">
+      <Filter>third_party\Webkit\Source\core\timing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\timing\PerformanceUserTiming.h">
+      <Filter>third_party\Webkit\Source\core\timing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\timing\SharedWorkerPerformance.h">
+      <Filter>third_party\Webkit\Source\core\timing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\timing\WorkerGlobalScopePerformance.h">
+      <Filter>third_party\Webkit\Source\core\timing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8TextDecoder.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\encoding\TextEncoder.h">
+      <Filter>third_party\Webkit\Source\modules\encoding</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\encoding\Encoding.h">
+      <Filter>third_party\Webkit\Source\modules\encoding</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\encoding\TextDecoder.h">
+      <Filter>third_party\Webkit\Source\modules\encoding</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\bindings\core\v8\V8ObjectBuilder.h">
+      <Filter>third_party\Webkit\Source\bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8TextDecodeOptions.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8TextDecoderOptions.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8TextEncoder.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\modules\encoding\TextDecoderOptions.h">
+      <Filter>gen\blink\modules\encoding</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\modules\encoding\TextDecodeOptions.h">
+      <Filter>gen\blink\modules\encoding</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\web\WorkerGlobalScopeProxyProviderImpl.h">
+      <Filter>third_party\Webkit\Source\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\web\WorkerContentSettingsClient.h">
+      <Filter>third_party\Webkit\Source\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\content\web_impl_win\WaitableEvent.h">
+      <Filter>content\web_impl_win</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\third_party\WebKit\Source\devtools\front_end\Images\src\optimize_png.hashes">
@@ -21762,6 +22254,15 @@
     </None>
     <None Include="..\..\third_party\WebKit\Source\modules\mediastream\DEPS">
       <Filter>third_party\Webkit\Source\modules\mediastream</Filter>
+    </None>
+    <None Include="..\..\..\..\minichrome49\third_party\WebKit\Source\modules\compositorworker\DEPS">
+      <Filter>third_party\Webkit\Source\modules\compositorworker</Filter>
+    </None>
+    <None Include="..\..\third_party\WebKit\Source\modules\encoding\DEPS">
+      <Filter>third_party\Webkit\Source\modules\encoding</Filter>
+    </None>
+    <None Include="..\..\third_party\WebKit\Source\modules\encoding\OWNERS">
+      <Filter>third_party\Webkit\Source\modules\encoding</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
