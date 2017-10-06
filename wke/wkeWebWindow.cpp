@@ -27,10 +27,9 @@ CWebWindow::CWebWindow()
     _initCallbacks();
 }
 
-
 CWebWindow::~CWebWindow()
 {
-
+    destroy();
 }
 
 bool CWebWindow::create(HWND parent, unsigned styles, unsigned styleEx, int x, int y, int width, int height)
@@ -69,7 +68,7 @@ bool CWebWindow::create(HWND parent, wkeWindowType type, int x, int y, int width
 void CWebWindow::destroy()
 {
     _destroyWindow();
-    wkeDestroyWebView(this);
+    //wkeDestroyWebView(this);
 }
 
 void CWebWindow::onPaintUpdated(wkePaintUpdatedCallback callback, void* callbackParam)
