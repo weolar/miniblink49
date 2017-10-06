@@ -30,6 +30,9 @@
 #include "core/inspector/ScriptArguments.h"
 #include "core/inspector/ScriptAsyncCallStack.h"
 #include "core/inspector/InspectorTraceEvents.h"
+#include "core/inspector/WorkerInspectorController.h"
+#include "core/inspector/InspectorStateClient.h"
+#include "core/inspector/InspectorTaskRunner.h"
 
 namespace blink {
 
@@ -354,19 +357,28 @@ void InstrumentingAgents::reset()
 }
 //////////////////////////////////////////////////////////////////////////
 
+class WorkerGlobalScope;
+
 namespace InspectorInstrumentation {
 
 bool consoleAgentEnabled(ExecutionContext* executionContext)
 {
-	//notImplemented();
-	return false;
+    //notImplemented();
+    return false;
 }
 
 bool collectingHTMLParseErrorsImpl(InstrumentingAgents* instrumentingAgents)
 {
-	//notImplemented();
-	return false;
+    //notImplemented();
+    return false;
 }
+
+bool shouldPauseDedicatedWorkerOnStartImpl(InstrumentingAgents*)
+{
+    return false;
+}
+
+
 
 #define GEN_instrumentingAgentsFor_FUNC(type) \
 InstrumentingAgents* instrumentingAgentsFor(type*) \
@@ -385,6 +397,8 @@ GEN_instrumentingAgentsFor_FUNC(Page)
 GEN_instrumentingAgentsForNonDocumentContext_FUNC(ExecutionContext)
 GEN_instrumentingAgentsFor_FUNC(EventTarget)
 GEN_instrumentingAgentsFor_FUNC(LayoutObject)
+GEN_instrumentingAgentsFor_FUNC(LocalFrame)
+GEN_instrumentingAgentsFor_FUNC(WorkerGlobalScope)
 
 //////////////////////////////////////////////////////////////////////////
 void consoleProfileImpl(InstrumentingAgents*, ExecutionContext*, const String&) { /*notImplemented();*/ }
@@ -503,7 +517,7 @@ void markResourceAsCachedImpl(InstrumentingAgents*, unsigned long) { /*notImplem
 void didReceiveResourceResponseImpl(InstrumentingAgents*, LocalFrame*, unsigned long, DocumentLoader*, const ResourceResponse&, ResourceLoader*) { /*notImplemented();*/ }
 void continueAfterXFrameOptionsDeniedImpl(LocalFrame*, DocumentLoader*, unsigned long, const ResourceResponse&) { /*notImplemented();*/ }
 void continueWithPolicyDownloadImpl(LocalFrame*, DocumentLoader*, unsigned long, const ResourceResponse&) { /*notImplemented();*/ }
-InstrumentingAgents* instrumentingAgentsFor(LocalFrame*) { /*notImplemented();*/ return nullptr; }
+//InstrumentingAgents* instrumentingAgentsFor(LocalFrame*) { /*notImplemented();*/ return nullptr; }
 
 void didPushShadowRootImpl(InstrumentingAgents*, Element*, ShadowRoot*) { /*notImplemented();*/ }
 void willPopShadowRootImpl(InstrumentingAgents*, Element*, ShadowRoot*) { /*notImplemented();*/ }
@@ -559,5 +573,109 @@ void appendAsyncCallStack(ExecutionContext*, ScriptCallStack*) { /*notImplemente
 int FrontendCounter::s_frontendCounter = 0;
 
 } // InspectorInstrumentation
+
+class InspectorCompositeState;
+
+InspectorAgentRegistry::InspectorAgentRegistry(InstrumentingAgents*, InspectorCompositeState*)
+{
+
+}
+
+WorkerInspectorController::WorkerInspectorController(WorkerGlobalScope*)
+    : m_agents(nullptr, nullptr)
+{
+
+}
+
+WorkerInspectorController::~WorkerInspectorController()
+{
+
+}
+
+void WorkerInspectorController::resumeStartup()
+{
+
+}
+
+bool WorkerInspectorController::isRunRequired()
+{
+    return false;
+}
+
+void WorkerInspectorController::dispose()
+{
+
+}
+
+DEFINE_TRACE(WorkerInspectorController)
+{
+
+}
+
+
+void WorkerInspectorController::connectFrontend()
+{
+
+}
+
+void WorkerInspectorController::disconnectFrontend()
+{
+
+}
+
+
+void WorkerInspectorController::dispatchMessageFromFrontend(const String& message)
+{
+
+}
+
+void WorkerInspectorController::interruptAndDispatchInspectorCommands()
+{
+
+}
+
+void WorkerInspectorController::workerContextInitialized(bool shouldPauseOnStart)
+{
+
+}
+
+class InspectorTaskRunner::ThreadSafeTaskQueue {
+    WTF_MAKE_NONCOPYABLE(ThreadSafeTaskQueue);
+public:
+    ThreadSafeTaskQueue() {}
+    PassOwnPtr<Task> tryTake()
+    {
+        MutexLocker lock(m_mutex);
+        if (m_queue.isEmpty())
+            return nullptr;
+        return m_queue.takeFirst();
+    }
+    void append(PassOwnPtr<Task> task)
+    {
+        MutexLocker lock(m_mutex);
+        m_queue.append(task);
+    }
+private:
+    Mutex m_mutex;
+    Deque<OwnPtr<Task>> m_queue;
+};
+
+InspectorTaskRunner::~InspectorTaskRunner()
+{
+
+}
+
+InspectorTaskRunner::IgnoreInterruptsScope::IgnoreInterruptsScope(InspectorTaskRunner* taskRunner)
+    : m_wasIgnoring(taskRunner->m_ignoreInterrupts)
+    , m_taskRunner(taskRunner)
+{
+    // There may be nested scopes e.g. when tasks are being executed on XHR breakpoint.
+    m_taskRunner->m_ignoreInterrupts = true;
+}
+
+InspectorTaskRunner::IgnoreInterruptsScope::~IgnoreInterruptsScope()
+{
+    m_taskRunner->m_ignoreInterrupts = m_wasIgnoring;
+}
 
 } // namespace blink

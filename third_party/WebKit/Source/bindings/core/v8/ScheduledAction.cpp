@@ -128,7 +128,7 @@ void ScheduledAction::execute(LocalFrame* frame)
 
 void ScheduledAction::execute(WorkerGlobalScope* worker)
 {
-#ifdef MINIBLINK_NOT_IMPLEMENTED
+#ifndef MINIBLINK_NOT_IMPLEMENTED_WEBWORKER
     ASSERT(worker->thread()->isCurrentThread());
     ASSERT(m_scriptState->contextIsValid());
     if (!m_function.isEmpty()) {
@@ -139,8 +139,7 @@ void ScheduledAction::execute(WorkerGlobalScope* worker)
     } else {
         worker->script()->evaluate(m_code);
     }
-#endif // MINIBLINK_NOT_IMPLEMENTED
-    notImplemented();
+#endif // MINIBLINK_NOT_IMPLEMENTED_WEBWORKER
 }
 
 void ScheduledAction::createLocalHandlesForArgs(Vector<v8::Local<v8::Value>>* handles)

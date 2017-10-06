@@ -147,7 +147,6 @@ bool WorkerScriptController::initializeContextIfNeeded()
 #ifdef MINIBLINK_NOT_IMPLEMENTED
     WorkerThreadDebugger::setContextDebugData(context);
 #endif // MINIBLINK_NOT_IMPLEMENTED
-    notImplemented();
 
     // Create a new JS object and use it as the prototype for the shadow global object.
     const WrapperTypeInfo* wrapperTypeInfo = m_workerGlobalScope.wrapperTypeInfo();
@@ -277,19 +276,13 @@ bool WorkerScriptController::isExecutionTerminating() const
 
 void WorkerScriptController::forbidExecution()
 {
-#ifdef MINIBLINK_NOT_IMPLEMENTED
     ASSERT(m_workerGlobalScope.isContextThread());
-#endif // MINIBLINK_NOT_IMPLEMENTED
-    notImplemented();
     m_executionForbidden = true;
 }
 
 bool WorkerScriptController::isExecutionForbidden() const
 {
-#ifdef MINIBLINK_NOT_IMPLEMENTED
     ASSERT(m_workerGlobalScope.isContextThread());
-#endif // MINIBLINK_NOT_IMPLEMENTED
-    notImplemented();
     return m_executionForbidden;
 }
 
