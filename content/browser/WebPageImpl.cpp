@@ -628,6 +628,8 @@ IntRect WebPageImpl::caretRect() const
 
 void WebPageImpl::setViewportSize(const IntSize& size)
 {
+    if (m_viewportSize == size)
+        return;
     m_viewportSize = size;
 
     ASSERT(pageInited == m_state);
@@ -637,8 +639,11 @@ void WebPageImpl::setViewportSize(const IntSize& size)
     if (size.isEmpty())
         return;
 
-    AutoRecordActions autoRecordActions(this, m_layerTreeHost, false);
-    
+    if (checkForRepeatEnter()) {
+        CheckReEnter checker(this);
+        AutoRecordActions autoRecordActions(this, m_layerTreeHost, false);
+    }
+
     if (m_layerTreeHost)
         m_layerTreeHost->setViewportSize(size);
 
@@ -1130,6 +1135,7 @@ void WebPageImpl::loadHistoryItem(int64 frameId, const WebHistoryItem& item, Web
 
     //AutoRecordActions autoRecordActions(this, m_layerTreeHost, false);
     webFrame->loadHistoryItem(item, type, policy);
+    m_webViewImpl->setFocus(true);
 }
 
 void WebPageImpl::loadURL(int64 frameId, const wchar_t* url, const blink::Referrer& referrer, const wchar_t* extraHeaders)
@@ -1158,6 +1164,7 @@ void WebPageImpl::loadRequest(int64 frameId, const blink::WebURLRequest& request
     
     requestWrap.setHTTPHeaderField(WebString::fromLatin1("Accept"), WebString::fromLatin1("text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"));
     webFrame->loadRequest(requestWrap);
+    m_webViewImpl->setFocus(true);
 }
 
 void WebPageImpl::loadHTMLString(int64 frameId, const WebData& html, const WebURL& baseURL, const WebURL& unreachableURL, bool replace)
@@ -1171,6 +1178,7 @@ void WebPageImpl::loadHTMLString(int64 frameId, const WebData& html, const WebUR
 
     //AutoRecordActions autoRecordActions(this, m_layerTreeHost, false);
     webFrame->loadHTMLString(html, baseURL, unreachableURL, replace);
+    m_webViewImpl->setFocus(true);
 }
 
 WebPageImpl* WebPageImpl::getSelfForCurrentContext()
