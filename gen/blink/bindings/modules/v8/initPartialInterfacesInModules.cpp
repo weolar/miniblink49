@@ -48,6 +48,10 @@ void initPartialInterfacesInModules()
     V8HTMLMediaElementPartial::initialize();
     V8HTMLVideoElementPartial::initialize();
     V8URLPartial::initialize();
+    V8DedicatedWorkerGlobalScopePartial::initialize();
+    V8SharedWorkerGlobalScopePartial::initialize();
+    V8WorkerGlobalScopePartial::initialize();
+    V8WorkerNavigatorPartial::initialize();
 #endif // MINIBLINK_NOT_IMPLEMENTED
 }
 

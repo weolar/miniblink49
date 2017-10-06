@@ -216,11 +216,13 @@ void V8DedicatedWorkerGlobalScope::installV8DedicatedWorkerGlobalScopeTemplate(v
     ALLOW_UNUSED_LOCAL(instanceTemplate);
     v8::Local<v8::ObjectTemplate> prototypeTemplate = functionTemplate->PrototypeTemplate();
     ALLOW_UNUSED_LOCAL(prototypeTemplate);
+#ifdef MINIBLINK_NOT_IMPLEMENTED
     if (RuntimeEnabledFeatures::promiseRejectionEventEnabled()) {
         static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
         {"PromiseRejectionEvent", v8ConstructorAttributeGetter, DedicatedWorkerGlobalScopeV8Internal::DedicatedWorkerGlobalScopeConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8PromiseRejectionEvent::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
         V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
     }
+#endif
     functionTemplate->SetHiddenPrototype(true);
 
     // Custom toString template

@@ -863,6 +863,7 @@ static void removeChildMethod(const v8::FunctionCallbackInfo<v8::Value>& info)
         exceptionState.throwIfNeeded();
         return;
     }
+
     v8SetReturnValueFast(info, WTF::getPtr(result.release()), impl);
 }
 

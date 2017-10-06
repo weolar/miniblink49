@@ -7,8 +7,8 @@
 #include "config.h"
 #include "V8ServiceWorkerGlobalScope.h"
 
-#include "../../../../../out/Debug/gen/blink/modules/ServiceWorkerGlobalScopeCoreConstructors.h"
-#include "../../../../../out/Debug/gen/blink/modules/ServiceWorkerGlobalScopeModulesConstructors.h"
+#include "gen/blink/modules/ServiceWorkerGlobalScopeCoreConstructors.h"
+#include "gen/blink/modules/ServiceWorkerGlobalScopeModulesConstructors.h"
 #include "bindings/core/v8/Dictionary.h"
 #include "bindings/core/v8/ExceptionState.h"
 #include "bindings/core/v8/ScriptPromise.h"

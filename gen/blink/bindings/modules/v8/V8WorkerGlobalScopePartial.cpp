@@ -73,6 +73,7 @@ static void WorkerGlobalScopeConstructorAttributeSetterCallback(v8::Local<v8::Na
     TRACE_EVENT_SET_SAMPLING_STATE("v8", "V8Execution");
 }
 
+#ifdef MINIBLINK_NOT_IMPLEMENTED
 static void cachesAttributeGetter(const v8::PropertyCallbackInfo<v8::Value>& info)
 {
     v8::Local<v8::Object> holder = info.Holder();
@@ -337,9 +338,11 @@ static void webkitIDBTransactionConstructorGetterCallback(v8::Local<v8::Name> pr
     v8ConstructorAttributeGetter(property, info);
     TRACE_EVENT_SET_SAMPLING_STATE("v8", "V8Execution");
 }
+#endif
 
 static void fetchMethodPromise(const v8::FunctionCallbackInfo<v8::Value>& info, ExceptionState& exceptionState)
 {
+#ifdef MINIBLINK_NOT_IMPLEMENTED
     if (UNLIKELY(info.Length() < 1)) {
         setMinimumArityTypeError(exceptionState, 1, info.Length());
         return;
@@ -365,6 +368,8 @@ static void fetchMethodPromise(const v8::FunctionCallbackInfo<v8::Value>& info, 
         return;
     }
     v8SetReturnValue(info, result.v8Value());
+#endif
+    DebugBreak();
 }
 
 static void fetchMethod(const v8::FunctionCallbackInfo<v8::Value>& info)
@@ -384,6 +389,7 @@ static void fetchMethodCallback(const v8::FunctionCallbackInfo<v8::Value>& info)
 
 static void webkitRequestFileSystemMethod(const v8::FunctionCallbackInfo<v8::Value>& info)
 {
+#ifdef MINIBLINK_NOT_IMPLEMENTED
     ExceptionState exceptionState(ExceptionState::ExecutionContext, "webkitRequestFileSystem", "WorkerGlobalScope", info.Holder(), info.GetIsolate());
     if (UNLIKELY(info.Length() < 2)) {
         setMinimumArityTypeError(exceptionState, 2, info.Length());
@@ -424,6 +430,8 @@ static void webkitRequestFileSystemMethod(const v8::FunctionCallbackInfo<v8::Val
         }
     }
     WorkerGlobalScopeFileSystem::webkitRequestFileSystem(*impl, type, size, successCallback, errorCallback);
+#endif
+    DebugBreak();
 }
 
 static void webkitRequestFileSystemMethodCallback(const v8::FunctionCallbackInfo<v8::Value>& info)
@@ -436,6 +444,7 @@ static void webkitRequestFileSystemMethodCallback(const v8::FunctionCallbackInfo
 
 static void webkitRequestFileSystemSyncMethod(const v8::FunctionCallbackInfo<v8::Value>& info)
 {
+#ifdef MINIBLINK_NOT_IMPLEMENTED
     ExceptionState exceptionState(ExceptionState::ExecutionContext, "webkitRequestFileSystemSync", "WorkerGlobalScope", info.Holder(), info.GetIsolate());
     if (UNLIKELY(info.Length() < 2)) {
         setMinimumArityTypeError(exceptionState, 2, info.Length());
@@ -459,6 +468,8 @@ static void webkitRequestFileSystemSyncMethod(const v8::FunctionCallbackInfo<v8:
         return;
     }
     v8SetReturnValue(info, result.release());
+#endif
+    DebugBreak();
 }
 
 static void webkitRequestFileSystemSyncMethodCallback(const v8::FunctionCallbackInfo<v8::Value>& info)
@@ -475,6 +486,7 @@ static void webkitResolveLocalFileSystemURLMethod(const v8::FunctionCallbackInfo
         V8ThrowException::throwException(createMinimumArityTypeErrorForMethod(info.GetIsolate(), "webkitResolveLocalFileSystemURL", "WorkerGlobalScope", 2, info.Length()), info.GetIsolate());
         return;
     }
+#ifdef MINIBLINK_NOT_IMPLEMENTED
     WorkerGlobalScope* impl = V8WorkerGlobalScope::toImpl(info.Holder());
     V8StringResource<> url;
     EntryCallback* successCallback;
@@ -499,6 +511,8 @@ static void webkitResolveLocalFileSystemURLMethod(const v8::FunctionCallbackInfo
         }
     }
     WorkerGlobalScopeFileSystem::webkitResolveLocalFileSystemURL(*impl, url, successCallback, errorCallback);
+#endif
+    DebugBreak();
 }
 
 static void webkitResolveLocalFileSystemURLMethodCallback(const v8::FunctionCallbackInfo<v8::Value>& info)
@@ -510,6 +524,7 @@ static void webkitResolveLocalFileSystemURLMethodCallback(const v8::FunctionCall
 
 static void webkitResolveLocalFileSystemSyncURLMethod(const v8::FunctionCallbackInfo<v8::Value>& info)
 {
+#ifdef MINIBLINK_NOT_IMPLEMENTED
     ExceptionState exceptionState(ExceptionState::ExecutionContext, "webkitResolveLocalFileSystemSyncURL", "WorkerGlobalScope", info.Holder(), info.GetIsolate());
     if (UNLIKELY(info.Length() < 1)) {
         setMinimumArityTypeError(exceptionState, 1, info.Length());
@@ -529,6 +544,8 @@ static void webkitResolveLocalFileSystemSyncURLMethod(const v8::FunctionCallback
         return;
     }
     v8SetReturnValue(info, result.release());
+#endif
+    DebugBreak();
 }
 
 static void webkitResolveLocalFileSystemSyncURLMethodCallback(const v8::FunctionCallbackInfo<v8::Value>& info)
@@ -546,6 +563,7 @@ static void webkitResolveLocalFileSystemSyncURLMethodCallback(const v8::Function
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wglobal-constructors"
 #endif
+#ifdef MINIBLINK_NOT_IMPLEMENTED
 static const V8DOMConfiguration::AttributeConfiguration V8WorkerGlobalScopeAttributes[] = {
     {"webkitIDBCursor", WorkerGlobalScopePartialV8Internal::webkitIDBCursorConstructorGetterCallback, WorkerGlobalScopePartialV8Internal::webkitIDBCursorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8IDBCursor::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
     {"webkitIDBDatabase", WorkerGlobalScopePartialV8Internal::webkitIDBDatabaseConstructorGetterCallback, WorkerGlobalScopePartialV8Internal::webkitIDBDatabaseAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8IDBDatabase::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
@@ -556,15 +574,18 @@ static const V8DOMConfiguration::AttributeConfiguration V8WorkerGlobalScopeAttri
     {"webkitIDBRequest", WorkerGlobalScopePartialV8Internal::webkitIDBRequestConstructorGetterCallback, WorkerGlobalScopePartialV8Internal::webkitIDBRequestAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8IDBRequest::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
     {"webkitIDBTransaction", WorkerGlobalScopePartialV8Internal::webkitIDBTransactionConstructorGetterCallback, WorkerGlobalScopePartialV8Internal::webkitIDBTransactionAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8IDBTransaction::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
 };
+#endif
 #if defined(COMPONENT_BUILD) && defined(WIN32) && COMPILER(CLANG)
 #pragma clang diagnostic pop
 #endif
 
+#ifdef MINIBLINK_NOT_IMPLEMENTED
 static const V8DOMConfiguration::AccessorConfiguration V8WorkerGlobalScopeAccessors[] = {
     {"crypto", WorkerGlobalScopePartialV8Internal::cryptoAttributeGetterCallback, 0, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnPrototype, V8DOMConfiguration::CheckHolder},
     {"webkitIndexedDB", WorkerGlobalScopePartialV8Internal::webkitIndexedDBAttributeGetterCallback, 0, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnPrototype, V8DOMConfiguration::CheckHolder},
     {"indexedDB", WorkerGlobalScopePartialV8Internal::indexedDBAttributeGetterCallback, 0, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnPrototype, V8DOMConfiguration::CheckHolder},
 };
+#endif
 
 static const V8DOMConfiguration::MethodConfiguration V8WorkerGlobalScopeMethods[] = {
     {"fetch", WorkerGlobalScopePartialV8Internal::fetchMethodCallback, 0, 1, V8DOMConfiguration::ExposedToAllScripts},
@@ -575,17 +596,23 @@ void V8WorkerGlobalScopePartial::installV8WorkerGlobalScopeTemplate(v8::Local<v8
     V8WorkerGlobalScope::installV8WorkerGlobalScopeTemplate(functionTemplate, isolate);
 
     v8::Local<v8::Signature> defaultSignature;
+#ifdef MINIBLINK_NOT_IMPLEMENTED
     if (!RuntimeEnabledFeatures::globalCacheStorageEnabled())
+#endif
         defaultSignature = V8DOMConfiguration::installDOMClassTemplate(isolate, functionTemplate, "WorkerGlobalScope", v8::Local<v8::FunctionTemplate>(), V8WorkerGlobalScope::internalFieldCount, 0, 0, 0, 0, 0, 0);
+#ifdef MINIBLINK_NOT_IMPLEMENTED
     else
         defaultSignature = V8DOMConfiguration::installDOMClassTemplate(isolate, functionTemplate, "WorkerGlobalScope", v8::Local<v8::FunctionTemplate>(), V8WorkerGlobalScope::internalFieldCount,
             V8WorkerGlobalScopeAttributes, WTF_ARRAY_LENGTH(V8WorkerGlobalScopeAttributes),
             V8WorkerGlobalScopeAccessors, WTF_ARRAY_LENGTH(V8WorkerGlobalScopeAccessors),
             V8WorkerGlobalScopeMethods, WTF_ARRAY_LENGTH(V8WorkerGlobalScopeMethods));
+#endif
+
     v8::Local<v8::ObjectTemplate> instanceTemplate = functionTemplate->InstanceTemplate();
     ALLOW_UNUSED_LOCAL(instanceTemplate);
     v8::Local<v8::ObjectTemplate> prototypeTemplate = functionTemplate->PrototypeTemplate();
     ALLOW_UNUSED_LOCAL(prototypeTemplate);
+#ifdef MINIBLINK_NOT_IMPLEMENTED
     if (RuntimeEnabledFeatures::globalCacheStorageEnabled()) {
         static const V8DOMConfiguration::AttributeConfiguration attributeConfiguration =\
         {"caches", WorkerGlobalScopePartialV8Internal::cachesAttributeGetterCallback, 0, 0, 0, 0, static_cast<v8::AccessControl>(v8::PROHIBITS_OVERWRITING), static_cast<v8::PropertyAttribute>(v8::DontDelete), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
@@ -596,6 +623,7 @@ void V8WorkerGlobalScopePartial::installV8WorkerGlobalScopeTemplate(v8::Local<v8
         {"FileError", v8ConstructorAttributeGetter, WorkerGlobalScopePartialV8Internal::WorkerGlobalScopeConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8FileError::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder};
         V8DOMConfiguration::installAttribute(isolate, instanceTemplate, prototypeTemplate, attributeConfiguration);
     }
+#endif
     static const V8DOMConfiguration::ConstantConfiguration V8WorkerGlobalScopeConstants[] = {
         {"TEMPORARY", 0, 0, 0, V8DOMConfiguration::ConstantTypeUnsignedShort},
         {"PERSISTENT", 1, 0, 0, V8DOMConfiguration::ConstantTypeUnsignedShort},
@@ -603,6 +631,7 @@ void V8WorkerGlobalScopePartial::installV8WorkerGlobalScopeTemplate(v8::Local<v8
     V8DOMConfiguration::installConstants(isolate, functionTemplate, prototypeTemplate, V8WorkerGlobalScopeConstants, WTF_ARRAY_LENGTH(V8WorkerGlobalScopeConstants));
     static_assert(0 == WorkerGlobalScopeFileSystem::TEMPORARY, "the value of WorkerGlobalScope_TEMPORARY does not match with implementation");
     static_assert(1 == WorkerGlobalScopeFileSystem::PERSISTENT, "the value of WorkerGlobalScope_PERSISTENT does not match with implementation");
+#ifdef MINIBLINK_NOT_IMPLEMENTED
     if (RuntimeEnabledFeatures::fileSystemEnabled()) {
         const V8DOMConfiguration::MethodConfiguration webkitRequestFileSystemMethodConfiguration = {
             "webkitRequestFileSystem", WorkerGlobalScopePartialV8Internal::webkitRequestFileSystemMethodCallback, 0, 2, V8DOMConfiguration::ExposedToAllScripts,
@@ -627,6 +656,7 @@ void V8WorkerGlobalScopePartial::installV8WorkerGlobalScopeTemplate(v8::Local<v8
         };
         V8DOMConfiguration::installMethod(isolate, prototypeTemplate, defaultSignature, v8::None, webkitResolveLocalFileSystemSyncURLMethodConfiguration);
     }
+#endif
 }
 
 void V8WorkerGlobalScopePartial::preparePrototypeObject(v8::Isolate* isolate, v8::Local<v8::Object> prototypeObject, v8::Local<v8::FunctionTemplate> interfaceTemplate)
