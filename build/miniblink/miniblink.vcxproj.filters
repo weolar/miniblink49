@@ -82,9 +82,6 @@
     <Filter Include="gen\blink\bindings\core\dom">
       <UniqueIdentifier>{3da7d627-837f-4c6f-a6f2-456f0b40e88d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="gen\blink\bindings\modules\canvas2d">
-      <UniqueIdentifier>{6bed85f6-237b-486e-9334-078c56dddfd2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="skia">
       <UniqueIdentifier>{6ec03f64-c909-4953-8591-f24898bc2ff8}</UniqueIdentifier>
     </Filter>
@@ -129,9 +126,6 @@
     </Filter>
     <Filter Include="content\web_impl_win">
       <UniqueIdentifier>{a776d198-788c-4843-a4d7-befee693f737}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="gen\blink\bindings\modules\storage">
-      <UniqueIdentifier>{72f304ee-90ee-4f98-b111-8995f4a96035}</UniqueIdentifier>
     </Filter>
     <Filter Include="net">
       <UniqueIdentifier>{e3b5b406-6147-4739-9968-3cc71e19e418}</UniqueIdentifier>
@@ -183,6 +177,15 @@
     </Filter>
     <Filter Include="base\strings">
       <UniqueIdentifier>{1e08a647-7d8b-4be0-98a6-23f9eeabd88d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gen\blink\modules\canvas2d">
+      <UniqueIdentifier>{6bed85f6-237b-486e-9334-078c56dddfd2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gen\blink\modules\storage">
+      <UniqueIdentifier>{72f304ee-90ee-4f98-b111-8995f4a96035}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gen\blink\modules\encoding">
+      <UniqueIdentifier>{8f624ab1-aff2-44d1-8984-925dad9d34ee}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1675,10 +1678,10 @@
       <Filter>gen\blink\bindings\modules\v8</Filter>
     </ClCompile>
     <ClCompile Include="..\..\gen\blink\modules\canvas2d\Canvas2DContextAttributes.cpp">
-      <Filter>gen\blink\bindings\modules\canvas2d</Filter>
+      <Filter>gen\blink\modules\canvas2d</Filter>
     </ClCompile>
     <ClCompile Include="..\..\gen\blink\modules\canvas2d\HitRegionOptions.cpp">
-      <Filter>gen\blink\bindings\modules\canvas2d</Filter>
+      <Filter>gen\blink\modules\canvas2d</Filter>
     </ClCompile>
     <ClCompile Include="..\..\skia\ext\bitmap_platform_device_win.cc">
       <Filter>skia\ext</Filter>
@@ -1873,7 +1876,7 @@
       <Filter>gen\blink\bindings\modules\v8</Filter>
     </ClCompile>
     <ClCompile Include="..\..\gen\blink\modules\storage\StorageEventInit.cpp">
-      <Filter>gen\blink\bindings\modules\storage</Filter>
+      <Filter>gen\blink\modules\storage</Filter>
     </ClCompile>
     <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8DeprecatedStorageInfo.cpp">
       <Filter>gen\blink\bindings\modules\v8</Filter>
@@ -2165,6 +2168,111 @@
     </ClCompile>
     <ClCompile Include="..\..\content\browser\CheckReEnter.cpp">
       <Filter>content\browser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8SharedWorker.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\v8sharedworkerglobalscope.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8Performance.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8PerformanceCompositeTiming.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8PerformanceEntry.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8PerformanceMark.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8PerformanceMeasure.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8PerformanceNavigation.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8PerformanceRenderTiming.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8PerformanceResourceTiming.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8PerformanceTiming.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\content\web_impl_win\WaitableEventWin.cpp">
+      <Filter>content\web_impl_win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8DedicatedWorkerGlobalScope.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8ReadableByteStream.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8ReadableByteStreamReader.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8ReadableStream.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8ReadableStreamReader.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8Worker.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8WorkerConsole.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8WorkerGlobalScope.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8WorkerLocation.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8WorkerNavigator.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8WorkerPerformance.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8CompositorWorker.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8CompositorWorkerGlobalScope.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8DedicatedWorkerGlobalScopePartial.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8SharedWorkerGlobalScopePartial.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8TextDecodeOptions.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8TextDecoder.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8TextDecoderOptions.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8TextEncoder.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8WorkerGlobalScopePartial.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8WorkerNavigatorPartial.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\modules\encoding\TextDecodeOptions.cpp">
+      <Filter>gen\blink\modules\encoding</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\modules\encoding\TextDecoderOptions.cpp">
+      <Filter>gen\blink\modules\encoding</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -3831,10 +3939,10 @@
       <Filter>gen\blink\bindings\modules\v8</Filter>
     </ClInclude>
     <ClInclude Include="..\..\gen\blink\modules\canvas2d\HitRegionOptions.h">
-      <Filter>gen\blink\bindings\modules\canvas2d</Filter>
+      <Filter>gen\blink\modules\canvas2d</Filter>
     </ClInclude>
     <ClInclude Include="..\..\gen\blink\modules\canvas2d\Canvas2DContextAttributes.h">
-      <Filter>gen\blink\bindings\modules\canvas2d</Filter>
+      <Filter>gen\blink\modules\canvas2d</Filter>
     </ClInclude>
     <ClInclude Include="..\..\skia\config\SkUserConfig.h">
       <Filter>skia\config</Filter>
@@ -4101,7 +4209,7 @@
       <Filter>gen\blink\bindings\modules\v8</Filter>
     </ClInclude>
     <ClInclude Include="..\..\gen\blink\modules\storage\StorageEventInit.h">
-      <Filter>gen\blink\bindings\modules\storage</Filter>
+      <Filter>gen\blink\modules\storage</Filter>
     </ClInclude>
     <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8DeprecatedStorageQuota.h">
       <Filter>gen\blink\bindings\modules\v8</Filter>
@@ -4402,6 +4510,45 @@
     </ClInclude>
     <ClInclude Include="..\..\content\browser\CheckReEnter.h">
       <Filter>content\browser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\content\web_impl_win\WaitableEvent.h">
+      <Filter>content\web_impl_win</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8CompositorWorker.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8CompositorWorkerGlobalScope.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8DedicatedWorkerGlobalScopePartial.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8SharedWorkerGlobalScopePartial.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8TextDecodeOptions.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8TextDecoder.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8TextDecoderOptions.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8TextEncoder.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8WorkerGlobalScopePartial.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8WorkerNavigatorPartial.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\modules\encoding\TextDecodeOptions.h">
+      <Filter>gen\blink\modules\encoding</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\modules\encoding\TextDecoderOptions.h">
+      <Filter>gen\blink\modules\encoding</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

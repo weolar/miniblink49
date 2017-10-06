@@ -342,6 +342,7 @@
     <ClCompile Include="..\..\content\web_impl_win\npapi\PluginStream.cpp" />
     <ClCompile Include="..\..\content\web_impl_win\npapi\WebPluginImpl.cpp" />
     <ClCompile Include="..\..\content\web_impl_win\npapi\WebPluginImplWin.cpp" />
+    <ClCompile Include="..\..\content\web_impl_win\WaitableEventWin.cpp" />
     <ClCompile Include="..\..\content\web_impl_win\WebBlobRegistryImpl.cpp" />
     <ClCompile Include="..\..\content\web_impl_win\WebClipboardImpl.cpp" />
     <ClCompile Include="..\..\content\web_impl_win\WebCookieJarCurlImpl.cpp" />
@@ -410,6 +411,7 @@
     <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8DataTransferItem.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8DataTransferItemList.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8DataView.cpp" />
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8DedicatedWorkerGlobalScope.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8Document.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8DocumentFragment.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8DocumentType.cpp" />
@@ -584,6 +586,15 @@
     <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8PagePopupController.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8PageTransitionEvent.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8PageTransitionEventInit.cpp" />
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8Performance.cpp" />
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8PerformanceCompositeTiming.cpp" />
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8PerformanceEntry.cpp" />
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8PerformanceMark.cpp" />
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8PerformanceMeasure.cpp" />
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8PerformanceNavigation.cpp" />
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8PerformanceRenderTiming.cpp" />
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8PerformanceResourceTiming.cpp" />
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8PerformanceTiming.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8PluginPlaceholderElement.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8PointerEvent.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8PointerEventInit.cpp" />
@@ -596,6 +607,10 @@
     <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8PromiseRejectionEventInit.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8RadioNodeList.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8Range.cpp" />
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8ReadableByteStream.cpp" />
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8ReadableByteStreamReader.cpp" />
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8ReadableStream.cpp" />
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8ReadableStreamReader.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8RefCountedScriptWrappable.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8RelatedEvent.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8RelatedEventInit.cpp" />
@@ -610,6 +625,8 @@
     <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8ShadowRoot.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8ShadowRootInit.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8SharedArrayBuffer.cpp" />
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8SharedWorker.cpp" />
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\v8sharedworkerglobalscope.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8StateOptions.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8Stream.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8StringCallback.cpp" />
@@ -773,6 +790,12 @@
     <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8WheelEvent.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8WheelEventInit.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8Window.cpp" />
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8Worker.cpp" />
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8WorkerConsole.cpp" />
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8WorkerGlobalScope.cpp" />
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8WorkerLocation.cpp" />
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8WorkerNavigator.cpp" />
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8WorkerPerformance.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8XMLDocument.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8XMLHttpRequest.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8XMLHttpRequestEventTarget.cpp" />
@@ -786,6 +809,9 @@
     <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8CanvasRenderingContext2D.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8CloseEvent.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8CloseEventInit.cpp" />
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8CompositorWorker.cpp" />
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8CompositorWorkerGlobalScope.cpp" />
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8DedicatedWorkerGlobalScopePartial.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8DeprecatedStorageInfo.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8DeprecatedStorageQuota.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8HeadersNone.cpp" />
@@ -799,6 +825,7 @@
     <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8Path2D.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8Plugin.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8PluginArray.cpp" />
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8SharedWorkerGlobalScopePartial.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8Storage.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8StorageErrorCallback.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8StorageEvent.cpp" />
@@ -807,9 +834,15 @@
     <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8StorageQuota.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8StorageQuotaCallback.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8StorageUsageCallback.cpp" />
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8TextDecodeOptions.cpp" />
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8TextDecoder.cpp" />
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8TextDecoderOptions.cpp" />
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8TextEncoder.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8URLPartial.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8WebSocket.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8WindowPartial.cpp" />
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8WorkerGlobalScopePartial.cpp" />
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8WorkerNavigatorPartial.cpp" />
     <ClCompile Include="..\..\gen\blink\core\animation\ComputedTimingProperties.cpp" />
     <ClCompile Include="..\..\gen\blink\core\animation\KeyframeEffectOptions.cpp" />
     <ClCompile Include="..\..\gen\blink\core\CSSPropertyMetadata.cpp" />
@@ -882,6 +915,8 @@
     <ClCompile Include="..\..\gen\blink\core\XMLNSNames.cpp" />
     <ClCompile Include="..\..\gen\blink\modules\canvas2d\Canvas2DContextAttributes.cpp" />
     <ClCompile Include="..\..\gen\blink\modules\canvas2d\HitRegionOptions.cpp" />
+    <ClCompile Include="..\..\gen\blink\modules\encoding\TextDecodeOptions.cpp" />
+    <ClCompile Include="..\..\gen\blink\modules\encoding\TextDecoderOptions.cpp" />
     <ClCompile Include="..\..\gen\blink\modules\EventModules.cpp" />
     <ClCompile Include="..\..\gen\blink\modules\EventModulesNames.cpp" />
     <ClCompile Include="..\..\gen\blink\modules\EventTargetModulesNames.cpp" />
@@ -1003,6 +1038,7 @@
     <ClInclude Include="..\..\content\web_impl_win\npapi\PluginStream.h" />
     <ClInclude Include="..\..\content\web_impl_win\npapi\WebPluginImpl.h" />
     <ClInclude Include="..\..\content\web_impl_win\ui\ClipboardUtil.h" />
+    <ClInclude Include="..\..\content\web_impl_win\WaitableEvent.h" />
     <ClInclude Include="..\..\content\web_impl_win\WebBlobRegistryImpl.h" />
     <ClInclude Include="..\..\content\web_impl_win\WebClipboardImpl.h" />
     <ClInclude Include="..\..\content\web_impl_win\WebCookieJarCurlImpl.h" />
@@ -1480,6 +1516,9 @@
     <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8CanvasPattern.h" />
     <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8CloseEvent.h" />
     <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8CloseEventInit.h" />
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8CompositorWorker.h" />
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8CompositorWorkerGlobalScope.h" />
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8DedicatedWorkerGlobalScopePartial.h" />
     <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8DeprecatedStorageInfo.h" />
     <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8DeprecatedStorageQuota.h" />
     <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8HitRegionOptions.h" />
@@ -1489,6 +1528,7 @@
     <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8Path2D.h" />
     <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8Plugin.h" />
     <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8PluginArray.h" />
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8SharedWorkerGlobalScopePartial.h" />
     <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8Storage.h" />
     <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8StorageErrorCallback.h" />
     <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8StorageEvent.h" />
@@ -1497,8 +1537,14 @@
     <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8StorageQuota.h" />
     <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8StorageQuotaCallback.h" />
     <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8StorageUsageCallback.h" />
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8TextDecodeOptions.h" />
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8TextDecoder.h" />
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8TextDecoderOptions.h" />
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8TextEncoder.h" />
     <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8URLPartial.h" />
     <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8WebSocket.h" />
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8WorkerGlobalScopePartial.h" />
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8WorkerNavigatorPartial.h" />
     <ClInclude Include="..\..\gen\blink\core\animation\ComputedTimingProperties.h" />
     <ClInclude Include="..\..\gen\blink\core\animation\KeyframeEffectOptions.h" />
     <ClInclude Include="..\..\gen\blink\core\CSSPropertyNames.h" />
@@ -1586,6 +1632,8 @@
     <ClInclude Include="..\..\gen\blink\modules\canvas2d\Canvas2DContextAttributes.h" />
     <ClInclude Include="..\..\gen\blink\modules\canvas2d\HitRegionOptions.h" />
     <ClInclude Include="..\..\gen\blink\modules\DedicatedWorkerGlobalScopeModulesConstructors.h" />
+    <ClInclude Include="..\..\gen\blink\modules\encoding\TextDecodeOptions.h" />
+    <ClInclude Include="..\..\gen\blink\modules\encoding\TextDecoderOptions.h" />
     <ClInclude Include="..\..\gen\blink\modules\EventModulesHeaders.h" />
     <ClInclude Include="..\..\gen\blink\modules\EventModulesInterfaces.h" />
     <ClInclude Include="..\..\gen\blink\modules\EventModulesNames.h" />

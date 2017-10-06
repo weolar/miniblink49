@@ -27,7 +27,7 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <PlatformToolset>v140_xp</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -81,13 +81,11 @@
     <OutDir>$(SolutionDir)..\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)..\tmp\$(ProjectName)\$(Configuration)\</IntDir>
     <LinkIncremental>true</LinkIncremental>
-    <TargetExt>.dll</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)..\out\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)..\out\tmp\$(Platform)\$(ProjectName)\$(Configuration)\</IntDir>
     <LinkIncremental>true</LinkIncremental>
-    <TargetExt>.dll</TargetExt>
     <IncludePath>$(SolutionDir)..\vc6\include\crt;$(SolutionDir)..\vc6\include\wnet;$(SolutionDir)..\third_party\GDIPlus\Includes</IncludePath>
     <ReferencePath />
     <LibraryPath>$(SolutionDir)..\vc6\lib;$(SolutionDir)..\third_party\GDIPlus\lib</LibraryPath>
@@ -290,6 +288,7 @@
     <ClCompile Include="..\..\third_party\WebKit\Source\bindings\core\v8\V8IteratorResultValue.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\bindings\core\v8\V8NPObject.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\bindings\core\v8\V8NPUtils.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\bindings\core\v8\V8ObjectBuilder.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\bindings\core\v8\V8PagePopupControllerBinding.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\bindings\core\v8\WindowProxyManager.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\bindings\modules\v8\ScriptValueSerializerForModules.cpp" />
@@ -1052,6 +1051,9 @@
     <ClCompile Include="..\..\third_party\WebKit\Source\core\paint\TransformRecorder.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\core\paint\VideoPainter.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\core\paint\ViewPainter.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\streams\ReadableByteStream.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\streams\ReadableStream.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\streams\ReadableStreamReader.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\core\streams\Stream.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\core\style\AppliedTextDecoration.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\core\style\BasicShapes.cpp" />
@@ -1091,7 +1093,41 @@
     <ClCompile Include="..\..\third_party\WebKit\Source\core\svg\SVGAnimatedString.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\core\testing\LayerRectList.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\core\timing\ConsoleMemory.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\timing\DOMWindowPerformance.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\core\timing\MemoryInfo.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\timing\Performance.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\timing\PerformanceBase.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\timing\PerformanceCompositeTiming.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\timing\PerformanceEntry.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\timing\PerformanceNavigation.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\timing\PerformanceRenderTiming.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\timing\PerformanceResourceTiming.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\timing\PerformanceTiming.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\timing\PerformanceUserTiming.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\timing\SharedWorkerPerformance.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\timing\WorkerGlobalScopePerformance.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\timing\WorkerPerformance.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\workers\AbstractWorker.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\workers\DedicatedWorkerGlobalScope.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\workers\DedicatedWorkerMessagingProxy.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\workers\DedicatedWorkerThread.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\workers\InProcessWorkerBase.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\workers\SharedWorker.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\workers\SharedWorkerGlobalScope.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\workers\SharedWorkerThread.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\workers\Worker.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\workers\WorkerConsole.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\workers\WorkerEventQueue.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\workers\WorkerGlobalScope.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\workers\WorkerGlobalScopeProxyProvider.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\workers\WorkerInspectorProxy.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\workers\WorkerLoaderProxy.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\workers\WorkerMessagingProxy.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\workers\WorkerNavigator.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\workers\WorkerObjectProxy.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\workers\WorkerScriptLoader.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\workers\WorkerThread.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\workers\WorkerThreadStartupData.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\core\xml\DOMParser.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\core\xml\parser\SharedBufferReader.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\core\xml\parser\XMLDocumentParser.cpp" />
@@ -1107,6 +1143,14 @@
     <ClCompile Include="..\..\third_party\WebKit\Source\modules\canvas2d\ContextAttributeHelpers.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\modules\canvas2d\HitRegion.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\modules\canvas2d\Path2D.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\compositorworker\CompositorWorker.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\compositorworker\CompositorWorkerGlobalScope.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\compositorworker\CompositorWorkerManager.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\compositorworker\CompositorWorkerMessagingProxy.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\compositorworker\CompositorWorkerThread.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\encoding\Encoding.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\encoding\TextDecoder.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\encoding\TextEncoder.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\modules\InitModules.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\modules\navigatorcontentutils\NavigatorContentUtils.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\modules\plugins\DOMMimeType.cpp" />
@@ -1367,6 +1411,8 @@
     <ClCompile Include="..\..\third_party\WebKit\Source\web\WebUserGestureIndicator.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\web\WebUserGestureToken.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\web\WebViewImpl.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\web\WorkerContentSettingsClient.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\web\WorkerGlobalScopeProxyProviderImpl.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\wtf\Partitions.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\wtf\text\qt4\UnicodeQt4.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\wtf\text\UTF8.cpp" />
@@ -2256,8 +2302,6 @@
     <ClInclude Include="..\..\third_party\icu\source\common\unicode\utext.h" />
     <ClInclude Include="..\..\third_party\icu\source\common\unicode\utrie2.h" />
     <ClInclude Include="..\..\third_party\icu\source\common\unicode\utypes.h" />
-    <ClInclude Include="..\..\third_party\ots\include\opentype-sanitiser.h" />
-    <ClInclude Include="..\..\third_party\ots\include\ots-memory-stream.h" />
     <ClInclude Include="..\..\third_party\WebKit\public\platform\Platform.h" />
     <ClInclude Include="..\..\third_party\WebKit\public\platform\WebApplicationCacheHost.h" />
     <ClInclude Include="..\..\third_party\WebKit\public\platform\WebApplicationCacheHostClient.h" />
@@ -2702,6 +2746,7 @@
     <ClInclude Include="..\..\third_party\WebKit\Source\bindings\core\v8\ScriptValueSerializer.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\bindings\core\v8\ToV8.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\bindings\core\v8\V8IteratorResultValue.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\bindings\core\v8\V8ObjectBuilder.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\bindings\core\v8\WindowProxyManager.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\bindings\modules\v8\ScriptValueSerializerForModules.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\bindings\modules\v8\SerializedScriptValueForModulesFactory.h" />
@@ -3608,6 +3653,9 @@
     <ClInclude Include="..\..\third_party\WebKit\Source\core\paint\TransformRecorder.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\core\paint\VideoPainter.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\core\paint\ViewPainter.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\streams\ReadableByteStream.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\streams\ReadableStream.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\streams\ReadableStreamReader.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\core\style\AppliedTextDecoration.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\core\style\AuthorStyleInfo.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\core\style\BasicShapes.h" />
@@ -3674,7 +3722,47 @@
     <ClInclude Include="..\..\third_party\WebKit\Source\core\testing\LayerRect.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\core\testing\LayerRectList.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\core\timing\ConsoleMemory.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\timing\DOMWindowPerformance.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\core\timing\MemoryInfo.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\timing\Performance.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\timing\PerformanceBase.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\timing\PerformanceCompositeTiming.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\timing\PerformanceEntry.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\timing\PerformanceMark.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\timing\PerformanceMeasure.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\timing\PerformanceNavigation.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\timing\PerformanceRenderTiming.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\timing\PerformanceResourceTiming.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\timing\PerformanceTiming.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\timing\PerformanceUserTiming.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\timing\SharedWorkerPerformance.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\timing\WorkerGlobalScopePerformance.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\timing\WorkerPerformance.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\workers\DedicatedWorkerGlobalScope.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\workers\DedicatedWorkerMessagingProxy.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\workers\DedicatedWorkerThread.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\workers\InProcessWorkerBase.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\workers\SharedWorker.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\workers\SharedWorkerGlobalScope.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\workers\SharedWorkerRepositoryClient.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\workers\SharedWorkerThread.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\workers\Worker.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\workers\WorkerClients.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\workers\WorkerConsole.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\workers\WorkerEventQueue.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\workers\WorkerGlobalScope.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\workers\WorkerGlobalScopeProxy.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\workers\WorkerGlobalScopeProxyProvider.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\workers\WorkerInspectorProxy.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\workers\WorkerLoaderProxy.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\workers\WorkerLocation.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\workers\WorkerMessagingProxy.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\workers\WorkerNavigator.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\workers\WorkerObjectProxy.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\workers\WorkerReportingProxy.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\workers\WorkerScriptLoader.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\workers\WorkerThread.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\workers\WorkerThreadStartupData.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\core\xml\DOMParser.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\core\xml\parser\SharedBufferReader.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\core\xml\parser\XMLDocumentParser.h" />
@@ -3692,6 +3780,14 @@
     <ClInclude Include="..\..\third_party\WebKit\Source\modules\canvas2d\HitRegion.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\modules\canvas2d\MouseEventHitRegion.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\modules\canvas2d\Path2D.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\compositorworker\CompositorWorker.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\compositorworker\CompositorWorkerGlobalScope.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\compositorworker\CompositorWorkerManager.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\compositorworker\CompositorWorkerMessagingProxy.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\compositorworker\CompositorWorkerThread.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\encoding\Encoding.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\encoding\TextDecoder.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\encoding\TextEncoder.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\modules\InitModules.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\modules\navigatorcontentutils\NavigatorContentUtils.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\modules\navigatorcontentutils\NavigatorContentUtilsClient.h" />
@@ -3899,6 +3995,8 @@
     <ClInclude Include="..\..\third_party\WebKit\Source\web\WebStorageNamespaceImpl.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\web\WebTextCheckingCompletionImpl.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\web\WebViewImpl.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\web\WorkerContentSettingsClient.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\web\WorkerGlobalScopeProxyProviderImpl.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\wtf\Partitions.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\wtf\text\qt4\QChar.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\wtf\text\qt4\QString.h" />
