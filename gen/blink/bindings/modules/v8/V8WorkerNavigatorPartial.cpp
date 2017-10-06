@@ -36,6 +36,7 @@ namespace WorkerNavigatorPartialV8Internal {
 
 static void geofencingAttributeGetter(const v8::FunctionCallbackInfo<v8::Value>& info)
 {
+#ifdef MINIBLINK_NOT_IMPLEMENTED
     v8::Local<v8::Object> holder = info.Holder();
     WorkerNavigator* impl = V8WorkerNavigator::toImpl(holder);
     RawPtr<Geofencing> cppValue(WorkerNavigatorGeofencing::geofencing(*impl));
@@ -46,6 +47,8 @@ static void geofencingAttributeGetter(const v8::FunctionCallbackInfo<v8::Value>&
         V8HiddenValue::setHiddenValue(info.GetIsolate(), holder, v8AtomicString(info.GetIsolate(), "geofencing"), v8Value);
         v8SetReturnValue(info, v8Value);
     }
+#endif
+    DebugBreak();
 }
 
 static void geofencingAttributeGetterCallback(const v8::FunctionCallbackInfo<v8::Value>& info)
@@ -188,6 +191,7 @@ void V8WorkerNavigatorPartial::installV8WorkerNavigatorTemplate(v8::Local<v8::Fu
     ALLOW_UNUSED_LOCAL(instanceTemplate);
     v8::Local<v8::ObjectTemplate> prototypeTemplate = functionTemplate->PrototypeTemplate();
     ALLOW_UNUSED_LOCAL(prototypeTemplate);
+#ifdef MINIBLINK_NOT_IMPLEMENTED
     if (RuntimeEnabledFeatures::geofencingEnabled()) {
         static const V8DOMConfiguration::AccessorConfiguration accessorConfiguration =\
         {"geofencing", WorkerNavigatorPartialV8Internal::geofencingAttributeGetterCallback, 0, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnPrototype, V8DOMConfiguration::CheckHolder};
@@ -208,6 +212,7 @@ void V8WorkerNavigatorPartial::installV8WorkerNavigatorTemplate(v8::Local<v8::Fu
         {"permissions", WorkerNavigatorPartialV8Internal::permissionsAttributeGetterCallback, 0, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnPrototype, V8DOMConfiguration::CheckHolder};
         V8DOMConfiguration::installAccessor(isolate, instanceTemplate, prototypeTemplate, functionTemplate, defaultSignature, accessorConfiguration);
     }
+#endif
 }
 
 void V8WorkerNavigatorPartial::preparePrototypeObject(v8::Isolate* isolate, v8::Local<v8::Object> prototypeObject, v8::Local<v8::FunctionTemplate> interfaceTemplate)
