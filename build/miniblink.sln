@@ -36,6 +36,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "v8_4_8", "v8_4_8\v8_4_8.vcx
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wolfssl", "wolfssl\wolfssl.vcxproj", "{495C9D93-26F2-43E3-8DC4-9AE2BB646DD5}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "third_party", "third_party\third_party.vcxproj", "{BFD0F769-C12F-43F2-9EC2-80DDDE2BA2A0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -124,6 +126,14 @@ Global
 		{495C9D93-26F2-43E3-8DC4-9AE2BB646DD5}.Release|Win32.Build.0 = Release|Win32
 		{495C9D93-26F2-43E3-8DC4-9AE2BB646DD5}.Release|x64.ActiveCfg = Release|x64
 		{495C9D93-26F2-43E3-8DC4-9AE2BB646DD5}.Release|x64.Build.0 = Release|x64
+		{BFD0F769-C12F-43F2-9EC2-80DDDE2BA2A0}.Debug|Win32.ActiveCfg = Debug|Win32
+		{BFD0F769-C12F-43F2-9EC2-80DDDE2BA2A0}.Debug|Win32.Build.0 = Debug|Win32
+		{BFD0F769-C12F-43F2-9EC2-80DDDE2BA2A0}.Debug|x64.ActiveCfg = Debug|x64
+		{BFD0F769-C12F-43F2-9EC2-80DDDE2BA2A0}.Debug|x64.Build.0 = Debug|x64
+		{BFD0F769-C12F-43F2-9EC2-80DDDE2BA2A0}.Release|Win32.ActiveCfg = Release|Win32
+		{BFD0F769-C12F-43F2-9EC2-80DDDE2BA2A0}.Release|Win32.Build.0 = Release|Win32
+		{BFD0F769-C12F-43F2-9EC2-80DDDE2BA2A0}.Release|x64.ActiveCfg = Release|x64
+		{BFD0F769-C12F-43F2-9EC2-80DDDE2BA2A0}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
