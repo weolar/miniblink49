@@ -1,0 +1,379 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="modules">
+      <UniqueIdentifier>{ff6e81a8-5a35-4d1a-a896-6ac015cf0ae9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="modules\canvas2d">
+      <UniqueIdentifier>{b8daa87b-1f02-4970-9850-71d503f01c43}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="modules\plugins">
+      <UniqueIdentifier>{6d1cda1d-2a22-408d-b932-0501fad73ee0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="modules\navigatorcontentutils">
+      <UniqueIdentifier>{282aa2c2-7e89-4310-853f-76bb1c4d7778}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="modules\storage">
+      <UniqueIdentifier>{30a3ea81-4479-4e9c-89de-2aa24ca5074a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="modules\quota">
+      <UniqueIdentifier>{4c5b04d2-901d-4959-bab2-66bb63169d01}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="modules\mediastream">
+      <UniqueIdentifier>{f5d65f01-3d12-4409-81cd-031fcd5abe40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="modules\websockets">
+      <UniqueIdentifier>{5169d5cb-5a12-4182-9b02-949ebc6810f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="modules\compositorworker">
+      <UniqueIdentifier>{79cace2d-e0a5-46d1-9fba-1825273d4a73}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="modules\encoding">
+      <UniqueIdentifier>{012b5879-56ff-44a6-b29f-e19e795c2829}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\modules\canvas2d\CanvasStyle.cpp">
+      <Filter>modules\canvas2d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\modules\canvas2d\ClipList.cpp">
+      <Filter>modules\canvas2d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\modules\canvas2d\ContextAttributeHelpers.cpp">
+      <Filter>modules\canvas2d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\modules\canvas2d\HitRegion.cpp">
+      <Filter>modules\canvas2d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\modules\canvas2d\CanvasGradient.cpp">
+      <Filter>modules\canvas2d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\modules\canvas2d\CanvasPathMethods.cpp">
+      <Filter>modules\canvas2d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\modules\canvas2d\CanvasPattern.cpp">
+      <Filter>modules\canvas2d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\modules\canvas2d\CanvasRenderingContext2D.cpp">
+      <Filter>modules\canvas2d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\modules\canvas2d\CanvasRenderingContext2DState.cpp">
+      <Filter>modules\canvas2d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\modules\canvas2d\Path2D.cpp">
+      <Filter>modules\canvas2d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\modules\InitModules.cpp">
+      <Filter>modules</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\modules\navigatorcontentutils\NavigatorContentUtils.cpp">
+      <Filter>modules\navigatorcontentutils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\modules\plugins\DOMMimeTypeArray.cpp">
+      <Filter>modules\plugins</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\modules\plugins\DOMPlugin.cpp">
+      <Filter>modules\plugins</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\modules\plugins\DOMPluginArray.cpp">
+      <Filter>modules\plugins</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\modules\plugins\NavigatorPlugins.cpp">
+      <Filter>modules\plugins</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\modules\plugins\PluginOcclusionSupport.cpp">
+      <Filter>modules\plugins</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\modules\plugins\DOMMimeType.cpp">
+      <Filter>modules\plugins</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\modules\storage\StorageNamespace.cpp">
+      <Filter>modules\storage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\modules\storage\StorageNamespaceController.cpp">
+      <Filter>modules\storage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\modules\storage\DOMWindowStorage.cpp">
+      <Filter>modules\storage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\modules\storage\DOMWindowStorageController.cpp">
+      <Filter>modules\storage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\modules\storage\Storage.cpp">
+      <Filter>modules\storage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\modules\storage\StorageArea.cpp">
+      <Filter>modules\storage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\modules\storage\StorageEvent.cpp">
+      <Filter>modules\storage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\modules\quota\NavigatorStorageQuota.cpp">
+      <Filter>modules\quota</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\modules\quota\StorageErrorCallback.cpp">
+      <Filter>modules\quota</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\modules\quota\StorageInfo.cpp">
+      <Filter>modules\quota</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\modules\quota\StorageQuota.cpp">
+      <Filter>modules\quota</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\modules\quota\StorageQuotaCallbacksImpl.cpp">
+      <Filter>modules\quota</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\modules\quota\StorageQuotaClient.cpp">
+      <Filter>modules\quota</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\modules\quota\WorkerNavigatorStorageQuota.cpp">
+      <Filter>modules\quota</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\modules\quota\DeprecatedStorageInfo.cpp">
+      <Filter>modules\quota</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\modules\quota\DeprecatedStorageQuota.cpp">
+      <Filter>modules\quota</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\modules\quota\DeprecatedStorageQuotaCallbacksImpl.cpp">
+      <Filter>modules\quota</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\modules\quota\DOMWindowQuota.cpp">
+      <Filter>modules\quota</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\modules\storage\InspectorDOMStorageAgent.cpp">
+      <Filter>modules\storage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\modules\websockets\InspectorWebSocketEvents.cpp">
+      <Filter>modules\websockets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\modules\websockets\WebSocketChannel.cpp">
+      <Filter>modules\websockets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\modules\websockets\WebSocketFrame.cpp">
+      <Filter>modules\websockets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\modules\websockets\CloseEvent.cpp">
+      <Filter>modules\websockets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\modules\websockets\DocumentWebSocketChannel.cpp">
+      <Filter>modules\websockets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\modules\websockets\DOMWebSocket.cpp">
+      <Filter>modules\websockets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\modules\compositorworker\CompositorWorker.cpp">
+      <Filter>modules\compositorworker</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\modules\compositorworker\CompositorWorkerGlobalScope.cpp">
+      <Filter>modules\compositorworker</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\modules\compositorworker\CompositorWorkerManager.cpp">
+      <Filter>modules\compositorworker</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\modules\compositorworker\CompositorWorkerMessagingProxy.cpp">
+      <Filter>modules\compositorworker</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\modules\compositorworker\CompositorWorkerThread.cpp">
+      <Filter>modules\compositorworker</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\modules\encoding\Encoding.cpp">
+      <Filter>modules\encoding</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\modules\encoding\TextDecoder.cpp">
+      <Filter>modules\encoding</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\modules\encoding\TextEncoder.cpp">
+      <Filter>modules\encoding</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\config.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\modules\canvas2d\CanvasRenderingContext2DState.h">
+      <Filter>modules\canvas2d</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\modules\canvas2d\CanvasStyle.h">
+      <Filter>modules\canvas2d</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\modules\canvas2d\ClipList.h">
+      <Filter>modules\canvas2d</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\modules\canvas2d\ContextAttributeHelpers.h">
+      <Filter>modules\canvas2d</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\modules\canvas2d\HitRegion.h">
+      <Filter>modules\canvas2d</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\modules\canvas2d\MouseEventHitRegion.h">
+      <Filter>modules\canvas2d</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\modules\canvas2d\Path2D.h">
+      <Filter>modules\canvas2d</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\modules\canvas2d\CanvasGradient.h">
+      <Filter>modules\canvas2d</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\modules\canvas2d\CanvasPathMethods.h">
+      <Filter>modules\canvas2d</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\modules\canvas2d\CanvasPattern.h">
+      <Filter>modules\canvas2d</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\modules\canvas2d\CanvasRenderingContext2D.h">
+      <Filter>modules\canvas2d</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\modules\InitModules.h">
+      <Filter>modules</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\modules\plugins\PluginOcclusionSupport.h">
+      <Filter>modules\plugins</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\modules\navigatorcontentutils\NavigatorContentUtilsClient.h">
+      <Filter>modules\navigatorcontentutils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\modules\navigatorcontentutils\NavigatorContentUtils.h">
+      <Filter>modules\navigatorcontentutils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\modules\plugins\DOMMimeType.h">
+      <Filter>modules\plugins</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\modules\plugins\DOMMimeTypeArray.h">
+      <Filter>modules\plugins</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\modules\plugins\DOMPlugin.h">
+      <Filter>modules\plugins</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\modules\plugins\DOMPluginArray.h">
+      <Filter>modules\plugins</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\modules\plugins\NavigatorPlugins.h">
+      <Filter>modules\plugins</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\modules\storage\StorageNamespace.h">
+      <Filter>modules\storage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\modules\storage\StorageNamespaceController.h">
+      <Filter>modules\storage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\modules\storage\DOMWindowStorage.h">
+      <Filter>modules\storage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\modules\storage\DOMWindowStorageController.h">
+      <Filter>modules\storage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\modules\storage\InspectorDOMStorageAgent.h">
+      <Filter>modules\storage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\modules\storage\Storage.h">
+      <Filter>modules\storage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\modules\storage\StorageArea.h">
+      <Filter>modules\storage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\modules\storage\StorageClient.h">
+      <Filter>modules\storage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\modules\storage\StorageEvent.h">
+      <Filter>modules\storage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\modules\quota\NavigatorStorageQuota.h">
+      <Filter>modules\quota</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\modules\quota\StorageErrorCallback.h">
+      <Filter>modules\quota</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\modules\quota\StorageInfo.h">
+      <Filter>modules\quota</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\modules\quota\StorageQuota.h">
+      <Filter>modules\quota</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\modules\quota\StorageQuotaCallback.h">
+      <Filter>modules\quota</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\modules\quota\StorageQuotaCallbacksImpl.h">
+      <Filter>modules\quota</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\modules\quota\StorageQuotaClient.h">
+      <Filter>modules\quota</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\modules\quota\StorageUsageCallback.h">
+      <Filter>modules\quota</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\modules\quota\WorkerNavigatorStorageQuota.h">
+      <Filter>modules\quota</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\modules\quota\DeprecatedStorageInfo.h">
+      <Filter>modules\quota</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\modules\quota\DeprecatedStorageQuota.h">
+      <Filter>modules\quota</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\modules\quota\DeprecatedStorageQuotaCallbacksImpl.h">
+      <Filter>modules\quota</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\modules\quota\DOMWindowQuota.h">
+      <Filter>modules\quota</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\modules\websockets\InspectorWebSocketEvents.h">
+      <Filter>modules\websockets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\modules\websockets\WebSocketChannel.h">
+      <Filter>modules\websockets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\modules\websockets\WebSocketChannelClient.h">
+      <Filter>modules\websockets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\modules\websockets\WebSocketFrame.h">
+      <Filter>modules\websockets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\modules\websockets\CloseEvent.h">
+      <Filter>modules\websockets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\modules\websockets\DocumentWebSocketChannel.h">
+      <Filter>modules\websockets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\modules\websockets\DOMWebSocket.h">
+      <Filter>modules\websockets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\modules\compositorworker\CompositorWorker.h">
+      <Filter>modules\compositorworker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\modules\compositorworker\CompositorWorkerGlobalScope.h">
+      <Filter>modules\compositorworker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\modules\compositorworker\CompositorWorkerManager.h">
+      <Filter>modules\compositorworker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\modules\compositorworker\CompositorWorkerMessagingProxy.h">
+      <Filter>modules\compositorworker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\modules\compositorworker\CompositorWorkerThread.h">
+      <Filter>modules\compositorworker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\modules\encoding\Encoding.h">
+      <Filter>modules\encoding</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\modules\encoding\TextDecoder.h">
+      <Filter>modules\encoding</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\modules\encoding\TextEncoder.h">
+      <Filter>modules\encoding</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\config.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\..\..\third_party\WebKit\Source\modules\storage\OWNERS">
+      <Filter>modules\storage</Filter>
+    </None>
+    <None Include="..\..\..\..\..\third_party\WebKit\Source\modules\quota\OWNERS">
+      <Filter>modules\quota</Filter>
+    </None>
+    <None Include="..\..\..\..\..\third_party\WebKit\Source\modules\quota\DEPS">
+      <Filter>modules\quota</Filter>
+    </None>
+    <None Include="..\..\..\..\..\third_party\WebKit\Source\modules\mediastream\DEPS">
+      <Filter>modules\mediastream</Filter>
+    </None>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,1016 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{DBA59586-5C14-4017-81F1-07126F27C0E5}</ProjectGuid>
+    <RootNamespace>miniblink</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectName>core_all</ProjectName>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v140_xp</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v140_xp</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v140_xp</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v140_xp</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>11.0.50727.1</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(SolutionDir)..\out\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)..\out\tmp\$(Platform)\$(ProjectName)\$(Configuration)\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)..\out\$(Platform)$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)..\out\tmp\$(Platform)$(ProjectName)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)..\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)..\tmp\$(ProjectName)\$(Configuration)\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)..\out\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)..\out\tmp\$(Platform)\$(ProjectName)\$(Configuration)\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(SolutionDir)..\vc6\include\crt;$(SolutionDir)..\vc6\include\wnet;$(SolutionDir)..\third_party\GDIPlus\Includes</IncludePath>
+    <ReferencePath />
+    <LibraryPath>$(SolutionDir)..\vc6\lib;$(SolutionDir)..\third_party\GDIPlus\lib</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <GenerateManifest>false</GenerateManifest>
+    <OutDir>$(SolutionDir)..\out\$(Platform)$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)..\out\tmp\$(Platform)$(ProjectName)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>BUILDING_CEF_SHARED;DCHECK_ALWAYS_ON=1;WIN32;_DEBUG;_WINDOWS;INSIDE_BLINK=1;BLINK_IMPLEMENTATION=1;ENABLE_OILPAN=1;ENABLE_GC_PROFILING=1;ENABLE_WKE=1;CARES_STATICLIB=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalIncludeDirectories>../../../../../../;../../../../../../v8_4_8/;../../../../../../v8_4_8/include;../../../../../../base;../../../../../../third_party/;../../../../../../third_party/npapi;../../../../../../third_party/WebKit;../../../../../../third_party/WebKit/Source;../../../../../../cef;../../../../../../third_party/icu/source/common;../../../../../../gen/blink;../../../../../../gen/blink/core;../../../../../../gen/blink/bindings/modules/v8;../../../../../../gen/blink/bindings/core/v8;../../../../../../gpu;../../../../../../third_party/khronos;../../../../../../third_party/libxml/src/include;../../../../../../third_party/libxml/win32/include;../../../../../../third_party/skia/include/core;../../../../../../third_party/skia/include/config;../../../../../../third_party/skia/include/codec;../../../../../../third_party/skia/include/device;../../../../../../third_party/skia/include/effects;../../../../../../third_party/skia/include/images;../../../../../../third_party/skia/include/pathops;../../../../../../third_party/skia/include/ports;../../../../../../third_party/skia/include/private;../../../../../../third_party/skia/include/utils</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4800;4291;4996;4244;4305;4577;4091;4251</DisableSpecificWarnings>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <PrecompiledHeaderFile>config.h</PrecompiledHeaderFile>
+      <ForcedIncludeFiles>config.h</ForcedIncludeFiles>
+      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <TargetMachine>MachineX86</TargetMachine>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\out\$(Configuration)\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>InjectTool.lib;version.lib;ots.lib;Crypt32.lib;Wldap32.lib;Imm32.lib;libxml.lib;zlib.lib;libcurl.lib;v8_4_8.lib;skia.lib;winmm.lib;Ws2_32.lib;Usp10.lib;Shlwapi.lib;wininet.lib;GDIPlus.lib;DbgHelp.lib;libjpeg.lib;libpng.lib;wolfssl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)node$(TargetExt)</OutputFile>
+      <ImportLibrary>$(OutDir)miniblink.lib</ImportLibrary>
+      <IgnoreSpecificDefaultLibraries>LIBCMT.lib</IgnoreSpecificDefaultLibraries>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>BUILDING_CEF_SHARED;DCHECK_ALWAYS_ON=1;WIN32;_DEBUG;_WINDOWS;INSIDE_BLINK=1;BLINK_IMPLEMENTATION=1;ENABLE_OILPAN=1;ENABLE_GC_PROFILING=1;ENABLE_WKE=1;ENABLE_CEF=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalIncludeDirectories>../../;../../v8/;../../v8/include;../../third_party/;../../third_party/npapi;../../third_party/WebKit;../../third_party/WebKit/Source;../../cef;../../third_party/icu/source/common;../../gen/blink;../../gen/blink/core;../../gen/blink/bindings/modules/v8;../../gen/blink/bindings/core/v8;../../gpu;../../third_party/khronos;../../third_party/libxml/src/include;../../third_party/libxml/win32/include;../../third_party/skia/include/core;../../third_party/skia/include/config;../../third_party/skia/include/codec;../../third_party/skia/include/device;../../third_party/skia/include/effects;../../third_party/skia/include/images;../../third_party/skia/include/pathops;../../third_party/skia/include/ports;../../third_party/skia/include/private;../../third_party/skia/include/utils;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4800;4291;4996;4244;4305;4577;4267;</DisableSpecificWarnings>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <PrecompiledHeaderFile>config.h</PrecompiledHeaderFile>
+      <ForcedIncludeFiles>config.h</ForcedIncludeFiles>
+      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <MinimalRebuild>true</MinimalRebuild>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\Debug\;$(SolutionDir)..\lib\;</AdditionalLibraryDirectories>
+      <AdditionalDependencies>InjectTool.lib;version.lib;ots_d.lib;Crypt32.lib;Wldap32.lib;Imm32.lib;libxml.lib;zlib_d.lib;libcurl_d.lib;v8_d.lib;skia_d.lib;winmm.lib;Ws2_32.lib;Usp10.lib;Shlwapi.lib;wininet.lib;GDIPlus.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(SolutionDir)..\Debug\miniblink.dll</OutputFile>
+      <ImportLibrary>$(OutDir)miniblink.lib</ImportLibrary>
+      <IgnoreSpecificDefaultLibraries>LIBCMT.lib</IgnoreSpecificDefaultLibraries>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>BUILDING_CEF_SHARED;NDEBUG;WIN32;_WINDOWS;INSIDE_BLINK=1;BLINK_IMPLEMENTATION=1;ENABLE_OILPAN=1;USING_VC6RT=1;ENABLE_WKE=1;ENABLE_CEF=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalIncludeDirectories>../../;../../v8_5_1/;../../v8_5_1/include;../../third_party/;../../third_party/GDIPlus/Includes;../../third_party/npapi;../../third_party/WebKit;../../third_party/WebKit/Source;../../cef;../../third_party/icu/source/common;../../gen/blink;../../gen/blink/core;../../gen/blink/bindings/modules/v8;../../gen/blink/bindings/core/v8;../../gpu;../../third_party/khronos;../../third_party/libxml/src/include;../../third_party/libxml/win32/include;../../third_party/skia/include/core;../../third_party/skia/include/config;../../third_party/skia/include/codec;../../third_party/skia/include/device;../../third_party/skia/include/effects;../../third_party/skia/include/images;../../third_party/skia/include/pathops;../../third_party/skia/include/ports;../../third_party/skia/include/private;../../third_party/skia/include/utils;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PrecompiledHeaderFile>config.h</PrecompiledHeaderFile>
+      <DisableSpecificWarnings>4800;4291;4996;4244;4305;4577;4530;4595;4049</DisableSpecificWarnings>
+      <ForcedIncludeFiles>config.h</ForcedIncludeFiles>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <Optimization>MinSpace</Optimization>
+      <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
+      <ExceptionHandling>false</ExceptionHandling>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
+      <StringPooling>true</StringPooling>
+      <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>Debug</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <TargetMachine>MachineX86</TargetMachine>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\third_party\GDIPlus\Lib;$(SolutionDir)..\out\$(Configuration)\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>version.lib;Crypt32.lib;Advapi32.lib;wldap32.lib;libcurl.lib;zlib.lib;ots.lib;Imm32.lib;libxml.lib;v8.lib;skia.lib;winmm.lib;Ws2_32.lib;Usp10.lib;Shlwapi.lib;wininet.lib;GDIPlus.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>/FORCE:UNRESOLVED %(AdditionalOptions)</AdditionalOptions>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <ImportLibrary>$(OutDir)miniblink.lib</ImportLibrary>
+      <IgnoreSpecificDefaultLibraries>LIBCMT.lib;libcpmt.lib</IgnoreSpecificDefaultLibraries>
+      <ShowProgress>NotSet</ShowProgress>
+      <EntryPointSymbol>
+      </EntryPointSymbol>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>_WIN32_WINNT=0x0500;USING_VC6RT=1;_USING_V110_SDK71_;_WINDLL;_UNICODE;UNICODE;BUILDING_CEF_SHARED;NDEBUG;WIN32;_WINDOWS;INSIDE_BLINK=1;BLINK_IMPLEMENTATION=1;ENABLE_OILPAN=1;ENABLE_WKE=1</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <AdditionalIncludeDirectories>../../../../../../;../../../../../../v8_4_8/;../../../../../../v8_4_8/include;../../../../../../base;../../../../../../third_party/;../../../../../../third_party/GDIPlus/Includes;../../../../../../third_party/npapi;../../../../../../third_party/WebKit;../../../../../../third_party/WebKit/Source;../../../../../../cef;../../../../../../third_party/icu/source/common;../../../../../../gen/blink;../../../../../../gen/blink/core;../../../../../../gen/blink/bindings/modules/v8;../../../../../../gen/blink/bindings/core/v8;../../../../../../gpu;../../../../../../third_party/khronos;../../../../../../third_party/libxml/src/include;../../../../../../third_party/libxml/win32/include;../../../../../../third_party/skia/include/core;../../../../../../third_party/skia/include/config;../../../../../../third_party/skia/include/codec;../../../../../../third_party/skia/include/device;../../../../../../third_party/skia/include/effects;../../../../../../third_party/skia/include/images;../../../../../../third_party/skia/include/pathops;../../../../../../third_party/skia/include/ports;../../../../../../third_party/skia/include/private;../../../../../../third_party/skia/include/utils</AdditionalIncludeDirectories>
+      <PrecompiledHeaderFile>config.h</PrecompiledHeaderFile>
+      <DisableSpecificWarnings>4800;4291;4996;4244;4305;4577;4530;4595;4049;4273</DisableSpecificWarnings>
+      <ForcedIncludeFiles>config.h</ForcedIncludeFiles>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <Optimization>Full</Optimization>
+      <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
+      <ExceptionHandling>false</ExceptionHandling>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <StringPooling>true</StringPooling>
+      <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <AdditionalOptions>/Zc:threadSafeInit- %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <TargetMachine>MachineX86</TargetMachine>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\third_party\GDIPlus\Lib;$(SolutionDir)..\out\Release\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libcurl.lib;zlib.lib;ots.lib;libxml.lib;v8_4_8.lib;skia.lib;winmm.lib;Ws2_32.lib;Usp10.lib;Shlwapi.lib;wininet.lib;GDIPlus.lib;version.lib;Crypt32.lib;wldap32.lib;Imm32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;wolfssl.lib;libpng.lib;libjpeg.lib</AdditionalDependencies>
+      <AdditionalOptions>/FORCE:UNRESOLVED %(AdditionalOptions)</AdditionalOptions>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <ImportLibrary>$(OutDir)miniblink.lib</ImportLibrary>
+      <IgnoreSpecificDefaultLibraries>LIBCMT.lib</IgnoreSpecificDefaultLibraries>
+      <ShowProgress>NotSet</ShowProgress>
+      <EntryPointSymbol>
+      </EntryPointSymbol>
+      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;BUILDING_CEF_SHARED;INSIDE_BLINK=1;BLINK_IMPLEMENTATION=1;ENABLE_OILPAN=1;ENABLE_WKE=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalIncludeDirectories>../../;../../v8_5_7/;../../v8_5_7/include;../../third_party/;../../third_party/GDIPlus/Includes;../../third_party/npapi;../../third_party/WebKit;../../third_party/WebKit/Source;../../cef;../../third_party/icu/source/common;../../gen/blink;../../gen/blink/core;../../gen/blink/bindings/modules/v8;../../gen/blink/bindings/core/v8;../../gpu;../../third_party/khronos;../../third_party/libxml/src/include;../../third_party/libxml/win32/include;../../third_party/skia/include/core;../../third_party/skia/include/config;../../third_party/skia/include/codec;../../third_party/skia/include/device;../../third_party/skia/include/effects;../../third_party/skia/include/images;../../third_party/skia/include/pathops;../../third_party/skia/include/ports;../../third_party/skia/include/private;../../third_party/skia/include/utils;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PrecompiledHeaderFile>config.h</PrecompiledHeaderFile>
+      <DisableSpecificWarnings>4800;4291;4996;4244;4305;4577;4530;4595;4049;4267;4302;4311</DisableSpecificWarnings>
+      <ForcedIncludeFiles>config.h</ForcedIncludeFiles>
+      <Optimization>Full</Optimization>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
+      <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\out\$(Platform)$(Configuration)\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>version.lib;Crypt32.lib;Advapi32.lib;wldap32.lib;libcurl.lib;zlib.lib;ots.lib;Imm32.lib;libxml.lib;v8_5_7.lib;skia.lib;winmm.lib;Ws2_32.lib;Usp10.lib;Shlwapi.lib;wininet.lib;GDIPlus.lib;DbgHelp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>/FORCE:UNRESOLVED %(AdditionalOptions)</AdditionalOptions>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <ImportLibrary>
+      </ImportLibrary>
+      <ShowProgress>NotSet</ShowProgress>
+      <EntryPointSymbol>
+      </EntryPointSymbol>
+      <GenerateDebugInformation>No</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\config.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\clipboard\DraggedIsolatedFileSystem.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\ComputedStyleCSSValueMapping.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\AnimationEvent.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\AnimationPlayerEvent.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\ApplicationCacheErrorEvent.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\BeforeTextInsertedEvent.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\BeforeUnloadEvent.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\ClipboardEvent.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\CompositionEvent.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\CustomEvent.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\DOMWindowEventQueue.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\ErrorEvent.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\Event.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\EventDispatcher.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\EventDispatchMediator.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\EventListenerMap.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\EventPath.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\EventTarget.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\FocusEvent.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\GenericEventQueue.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\GestureEvent.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\KeyboardEvent.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\MessageEvent.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\MouseEvent.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\MouseRelatedEvent.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\MutationEvent.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\NavigatorEvents.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\NodeEventContext.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\PageTransitionEvent.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\PointerEvent.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\PointerIdManager.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\PopStateEvent.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\ProgressEvent.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\PromiseRejectionEvent.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\RelatedEvent.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\ResourceProgressEvent.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\ScopedEventQueue.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\TextEvent.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\TouchEvent.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\TouchEventContext.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\TransitionEvent.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\TreeScopeEventContext.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\UIEvent.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\UIEventWithKeyState.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\WheelEvent.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\WindowEventContext.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\fetch\ClientHintsPreferences.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\fetch\CrossOriginAccessControl.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\fetch\CSSStyleSheetResource.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\fetch\DocumentResource.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\fetch\FetchContext.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\fetch\FetchRequest.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\fetch\FetchUtils.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\fetch\FontResource.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\fetch\ImageResource.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\fetch\LinkFetchResource.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\fetch\MemoryCache.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\fetch\RawResource.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\fetch\Resource.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\fetch\ResourceFetcher.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\fetch\ResourceLoader.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\fetch\ResourceLoaderSet.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\fetch\ResourceLoadPriorityOptimizer.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\fetch\ResourcePtr.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\fetch\ScriptResource.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\fetch\TextResource.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\fetch\UniqueIdentifier.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\fileapi\Blob.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\fileapi\File.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\fileapi\FileError.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\fileapi\FileList.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\fileapi\FileReader.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\fileapi\FileReaderLoader.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\fileapi\FileReaderSync.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\input\EventHandler.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\input\InputDevice.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\inspector\ConsoleMessage.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\inspector\ConsoleMessageStorage.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\inspector\InspectorNone.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\inspector\InspectorTraceEventsNone.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\inspector\InstanceCounters.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\inspector\ScriptArguments.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\inspector\ScriptAsyncCallStack.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\inspector\ScriptCallFrame.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\inspector\ScriptCallStack.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\loader\LinkHeader.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\page\AutoscrollController.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\page\ChromeClient.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\page\ContextMenuController.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\page\CreateWindow.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\page\CustomContextMenuProvider.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\page\DOMWindowPagePopup.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\page\DragController.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\page\DragData.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\page\EventSource.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\page\FocusController.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\page\FrameTree.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\page\NetworkStateNotifier.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\page\Page.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\page\PageAnimator.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\page\PageLifecycleNotifier.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\page\PagePopupClient.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\page\PagePopupController.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\page\PageSerializer.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\page\PageVisibilityState.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\page\PointerLockController.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\page\PrintContext.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\page\ScopedPageLoadDeferrer.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\page\scrolling\ScrollState.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\page\SpatialNavigation.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\page\TouchAdjustment.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\page\TouchDisambiguation.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\page\WindowFeatures.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\BackgroundImageGeometry.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\BlockFlowPainter.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\BlockPainter.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\BoxBorderPainter.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\BoxClipper.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\BoxDecorationData.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\BoxPainter.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\ClipScope.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\CompositingRecorder.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\DeprecatedPaintLayer.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\DeprecatedPaintLayerClipper.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\DeprecatedPaintLayerFilterInfo.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\DeprecatedPaintLayerPainter.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\DeprecatedPaintLayerReflectionInfo.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\DeprecatedPaintLayerScrollableArea.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\DeprecatedPaintLayerStackingNode.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\DeprecatedPaintLayerStackingNodeIterator.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\DetailsMarkerPainter.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\EllipsisBoxPainter.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\EmbeddedObjectPainter.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\FieldsetPainter.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\FileUploadControlPainter.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\FilterEffectBuilder.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\FilterPainter.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\FloatClipRecorder.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\FramePainter.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\FrameSetPainter.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\GridPainter.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\HTMLCanvasPainter.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\ImagePainter.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\InlineFlowBoxPainter.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\InlinePainter.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\InlineTextBoxPainter.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\LayerClipRecorder.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\LayerFixedPositionRecorder.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\LineBoxListPainter.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\ListItemPainter.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\ListMarkerPainter.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\MediaControlsPainter.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\MultiColumnSetPainter.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\NinePieceImageGrid.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\NinePieceImagePainter.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\ObjectPainter.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\PaintPhase.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\PartPainter.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\ReplacedPainter.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\ReplicaPainter.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\RootInlineBoxPainter.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\RoundedInnerRectClipper.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\ScopeRecorder.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\ScrollableAreaPainter.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\ScrollbarPainter.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\ScrollRecorder.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\SubtreeRecorder.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\SVGClipPainter.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\SVGContainerPainter.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\SVGFilterPainter.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\SVGForeignObjectPainter.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\SVGImagePainter.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\SVGInlineFlowBoxPainter.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\SVGInlineTextBoxPainter.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\SVGMaskPainter.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\SVGPaintContext.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\SVGRootInlineBoxPainter.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\SVGRootPainter.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\SVGShapePainter.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\SVGTextPainter.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\TableCellPainter.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\TablePainter.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\TableRowPainter.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\TableSectionPainter.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\TextPainter.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\ThemePainter.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\ThemePainterDefault.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\Transform3DRecorder.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\TransformRecorder.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\VideoPainter.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\ViewPainter.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\streams\ReadableByteStream.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\streams\ReadableStream.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\streams\ReadableStreamReader.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\streams\Stream.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\AppliedTextDecoration.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\BasicShapes.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\BorderEdge.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\ComputedStyle.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\ContentData.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\CounterDirectives.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\FillLayer.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\GridResolvedPosition.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\NinePieceImage.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\PathStyleMotionPath.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\QuotesData.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\ShadowData.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\ShadowList.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\StyleBackgroundData.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\StyleBoxData.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\StyleDeprecatedFlexibleBoxData.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\StyleFetchedImage.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\StyleFetchedImageSet.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\StyleFilterData.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\StyleFlexibleBoxData.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\StyleGeneratedImage.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\StyleGridData.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\StyleGridItemData.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\StyleInheritedData.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\StyleMotionData.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\StyleMultiColData.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\StyleRareInheritedData.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\StyleRareNonInheritedData.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\StyleScrollSnapData.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\StyleSurroundData.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\StyleTransformData.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\StyleVisualData.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\StyleWillChangeData.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\SVGComputedStyle.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\SVGComputedStyleDefs.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\testing\LayerRectList.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\timing\ConsoleMemory.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\timing\DOMWindowPerformance.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\timing\MemoryInfo.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\timing\Performance.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\timing\PerformanceBase.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\timing\PerformanceCompositeTiming.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\timing\PerformanceEntry.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\timing\PerformanceNavigation.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\timing\PerformanceRenderTiming.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\timing\PerformanceResourceTiming.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\timing\PerformanceTiming.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\timing\PerformanceUserTiming.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\timing\SharedWorkerPerformance.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\timing\WorkerGlobalScopePerformance.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\timing\WorkerPerformance.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\workers\AbstractWorker.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\workers\DedicatedWorkerGlobalScope.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\workers\DedicatedWorkerMessagingProxy.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\workers\DedicatedWorkerThread.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\workers\InProcessWorkerBase.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\workers\SharedWorker.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\workers\SharedWorkerGlobalScope.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\workers\SharedWorkerThread.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\workers\Worker.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\workers\WorkerConsole.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\workers\WorkerEventQueue.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\workers\WorkerGlobalScope.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\workers\WorkerGlobalScopeProxyProvider.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\workers\WorkerInspectorProxy.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\workers\WorkerLoaderProxy.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\workers\WorkerMessagingProxy.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\workers\WorkerNavigator.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\workers\WorkerObjectProxy.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\workers\WorkerScriptLoader.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\workers\WorkerThread.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\workers\WorkerThreadStartupData.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\xml\DOMParser.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\xml\parser\SharedBufferReader.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\xml\parser\XMLDocumentParser.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\xml\parser\XMLDocumentParserScope.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\xml\parser\XMLErrors.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\clipboard\DataObject.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\clipboard\DataObjectItem.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\clipboard\DataTransfer.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\clipboard\DataTransferItem.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\clipboard\DataTransferItemList.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\clipboard\Pasteboard.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\imagebitmap\ImageBitmapFactories.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\Init.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\loader\appcache\ApplicationCache.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\loader\appcache\ApplicationCacheHost.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\loader\BeaconLoader.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\loader\CookieJar.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\loader\CrossOriginPreflightResultCache.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\loader\DocumentLoader.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\loader\DocumentLoadTiming.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\loader\DocumentThreadableLoader.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\loader\DocumentWriter.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\loader\EmptyClients.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\loader\FormSubmission.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\loader\FrameFetchContext.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\loader\FrameLoader.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\loader\FrameLoaderStateMachine.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\loader\HistoryItem.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\loader\ImageLoader.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\loader\LinkLoader.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\loader\MixedContentChecker.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\loader\NavigationPolicy.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\loader\NavigationScheduler.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\loader\PingLoader.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\loader\PrerendererClient.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\loader\PrerenderHandle.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\loader\ProgressTracker.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\loader\SinkDocument.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\loader\TextResourceDecoderBuilder.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\loader\TextTrackLoader.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\loader\ThreadableLoader.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\loader\WorkerLoaderClientBridge.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\loader\WorkerLoaderClientBridgeSyncHelper.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\loader\WorkerThreadableLoader.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\page\scrolling\ScrollingConstraints.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\page\scrolling\ScrollingCoordinator.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\xmlhttprequest\XMLHttpRequest.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\xmlhttprequest\XMLHttpRequestProgressEventThrottle.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\xmlhttprequest\XMLHttpRequestUpload.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\gen\blink\core\testing\InternalDictionary.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\clipboard\DraggedIsolatedFileSystem.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\ComputedStyleCSSValueMapping.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\AnimationEvent.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\AnimationPlayerEvent.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\ApplicationCacheErrorEvent.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\AutocompleteErrorEvent.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\BeforeTextInsertedEvent.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\BeforeUnloadEvent.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\ClipboardEvent.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\CompositionEvent.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\CustomEvent.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\DOMWindowEventQueue.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\ErrorEvent.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\Event.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\EventDispatcher.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\EventDispatchMediator.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\EventFactory.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\EventListener.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\EventListenerMap.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\EventPath.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\EventQueue.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\EventSender.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\EventTarget.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\FocusEvent.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\GenericEventQueue.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\GestureEvent.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\HashChangeEvent.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\KeyboardEvent.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\MessageEvent.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\MouseEvent.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\MouseRelatedEvent.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\MutationEvent.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\NavigatorEvents.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\NodeEventContext.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\PageTransitionEvent.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\PointerEvent.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\PointerIdManager.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\PopStateEvent.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\ProgressEvent.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\PromiseRejectionEvent.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\RegisteredEventListener.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\RelatedEvent.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\ResourceProgressEvent.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\ScopedEventQueue.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\SecurityPolicyViolationEvent.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\TextEvent.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\TextEventInputType.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\TouchEvent.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\TouchEventContext.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\TransitionEvent.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\TreeScopeEventContext.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\UIEvent.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\UIEventWithKeyState.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\WheelEvent.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\WindowEventContext.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\fetch\AccessControlStatus.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\fetch\CachedMetadata.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\fetch\CachedMetadataHandler.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\fetch\CachePolicy.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\fetch\ClientHintsPreferences.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\fetch\CrossOriginAccessControl.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\fetch\CSSStyleSheetResource.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\fetch\DocumentResource.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\fetch\DocumentResourceReference.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\fetch\FetchContext.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\fetch\FetchInitiatorInfo.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\fetch\FetchRequest.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\fetch\FetchUtils.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\fetch\FontResource.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\fetch\ImageResource.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\fetch\ImageResourceClient.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\fetch\LinkFetchResource.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\fetch\MemoryCache.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\fetch\MockImageResourceClient.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\fetch\RawResource.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\fetch\Resource.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\fetch\ResourceClient.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\fetch\ResourceClientWalker.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\fetch\ResourceFetcher.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\fetch\ResourceLoader.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\fetch\ResourceLoaderOptions.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\fetch\ResourceLoaderSet.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\fetch\ResourceLoadPriorityOptimizer.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\fetch\ResourceOwner.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\fetch\ResourcePtr.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\fetch\ScriptResource.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\fetch\StyleSheetResource.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\fetch\StyleSheetResourceClient.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\fetch\SubstituteData.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\fetch\TextResource.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\fetch\UniqueIdentifier.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\fetch\XSLStyleSheetResource.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\fileapi\Blob.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\fileapi\File.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\fileapi\FileError.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\fileapi\FileList.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\fileapi\FileReader.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\fileapi\FileReaderLoader.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\fileapi\FileReaderLoaderClient.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\fileapi\FileReaderSync.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\input\EventHandler.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\input\InputDevice.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\inspector\InstanceCounters.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\inspector\ScriptArguments.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\inspector\ScriptCallFrame.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\inspector\ScriptCallStack.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\loader\LinkHeader.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\page\AutoscrollController.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\page\ChromeClient.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\page\ContextMenuClient.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\page\ContextMenuController.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\page\ContextMenuProvider.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\page\CreateWindow.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\page\CustomContextMenuProvider.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\page\DOMWindowPagePopup.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\page\DragActions.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\page\DragClient.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\page\DragController.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\page\DragData.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\page\DragSession.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\page\DragState.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\page\EditorClient.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\page\EventSource.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\page\FocusController.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\page\FrameTree.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\page\NetworkStateNotifier.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\page\Page.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\page\PageAnimator.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\page\PageLifecycleNotifier.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\page\PageLifecycleObserver.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\page\PagePopup.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\page\PagePopupClient.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\page\PagePopupController.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\page\PageSerializer.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\page\PageVisibilityState.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\page\PointerLockController.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\page\PopupOpeningObserver.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\page\PrintContext.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\page\ScopedPageLoadDeferrer.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\page\scrolling\ScrollState.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\page\SpatialNavigation.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\page\SpellCheckerClient.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\page\TouchAdjustment.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\page\TouchDisambiguation.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\page\ValidationMessageClient.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\page\WindowFeatures.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\BackgroundImageGeometry.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\BlockFlowPainter.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\BlockPainter.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\BoxBorderPainter.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\BoxClipper.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\BoxDecorationData.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\BoxPainter.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\ClipScope.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\CompositingRecorder.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\DeprecatedPaintLayer.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\DeprecatedPaintLayerClipper.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\DeprecatedPaintLayerFilterInfo.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\DeprecatedPaintLayerFragment.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\DeprecatedPaintLayerPainter.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\DeprecatedPaintLayerPaintingInfo.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\DeprecatedPaintLayerReflectionInfo.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\DeprecatedPaintLayerScrollableArea.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\DeprecatedPaintLayerStackingNode.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\DeprecatedPaintLayerStackingNodeIterator.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\DetailsMarkerPainter.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\EllipsisBoxPainter.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\EmbeddedObjectPainter.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\FieldsetPainter.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\FileUploadControlPainter.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\FilterEffectBuilder.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\FilterPainter.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\FloatClipRecorder.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\FramePainter.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\FrameSetPainter.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\GridPainter.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\HTMLCanvasPainter.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\ImagePainter.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\InlineFlowBoxPainter.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\InlinePainter.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\InlineTextBoxPainter.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\LayerClipRecorder.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\LayerFixedPositionRecorder.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\LayoutObjectDrawingRecorder.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\LineBoxListPainter.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\ListItemPainter.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\ListMarkerPainter.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\MediaControlsPainter.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\MultiColumnSetPainter.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\NinePieceImageGrid.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\NinePieceImagePainter.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\ObjectPainter.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\PaintInfo.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\PaintPhase.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\PartPainter.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\ReplacedPainter.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\ReplicaPainter.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\RootInlineBoxPainter.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\RoundedInnerRectClipper.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\ScopeRecorder.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\ScrollableAreaPainter.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\ScrollbarPainter.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\ScrollRecorder.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\SubtreeRecorder.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\SVGClipPainter.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\SVGContainerPainter.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\SVGFilterPainter.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\SVGForeignObjectPainter.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\SVGImagePainter.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\SVGInlineFlowBoxPainter.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\SVGInlineTextBoxPainter.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\SVGMaskPainter.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\SVGPaintContext.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\SVGRootInlineBoxPainter.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\SVGRootPainter.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\SVGShapePainter.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\SVGTextPainter.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\TableCellPainter.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\TablePainter.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\TableRowPainter.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\TableSectionPainter.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\TextPainter.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\ThemePainter.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\ThemePainterDefault.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\ThemePainterMac.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\Transform3DRecorder.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\TransformRecorder.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\VideoPainter.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\ViewPainter.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\streams\ReadableByteStream.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\streams\ReadableStream.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\streams\ReadableStreamReader.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\AppliedTextDecoration.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\AuthorStyleInfo.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\BasicShapes.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\BorderData.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\BorderEdge.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\BorderImageLength.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\BorderImageLengthBox.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\BorderValue.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\CachedUAStyle.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\CollapsedBorderValue.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\ComputedStyle.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\ComputedStyleConstants.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\ContentData.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\CounterContent.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\CounterDirectives.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\CursorData.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\DataEquivalency.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\DataRef.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\FillLayer.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\GridCoordinate.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\GridLength.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\GridPosition.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\GridResolvedPosition.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\GridTrackSize.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\LineClampValue.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\NinePieceImage.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\OutlineValue.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\PathStyleMotionPath.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\QuotesData.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\ShadowData.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\ShadowList.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\ShapeValue.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\StyleBackgroundData.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\StyleBoxData.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\StyleContentAlignmentData.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\StyleDeprecatedFlexibleBoxData.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\StyleDifference.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\StyleFetchedImage.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\StyleFetchedImageSet.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\StyleFilterData.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\StyleFlexibleBoxData.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\StyleGeneratedImage.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\StyleGridData.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\StyleGridItemData.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\StyleImage.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\StyleInheritedData.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\StyleMotionData.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\StyleMotionPath.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\StyleMultiColData.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\StylePendingImage.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\StyleRareInheritedData.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\StyleRareNonInheritedData.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\StyleReflection.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\StyleScrollSnapData.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\StyleSelfAlignmentData.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\StyleSurroundData.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\StyleTransformData.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\StyleVisualData.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\StyleWillChangeData.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\SVGComputedStyle.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\SVGComputedStyleDefs.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\style\TransformOrigin.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\testing\LayerRect.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\testing\LayerRectList.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\timing\ConsoleMemory.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\timing\DOMWindowPerformance.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\timing\MemoryInfo.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\timing\Performance.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\timing\PerformanceBase.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\timing\PerformanceCompositeTiming.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\timing\PerformanceEntry.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\timing\PerformanceMark.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\timing\PerformanceMeasure.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\timing\PerformanceNavigation.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\timing\PerformanceRenderTiming.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\timing\PerformanceResourceTiming.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\timing\PerformanceTiming.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\timing\PerformanceUserTiming.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\timing\SharedWorkerPerformance.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\timing\WorkerGlobalScopePerformance.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\timing\WorkerPerformance.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\workers\DedicatedWorkerGlobalScope.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\workers\DedicatedWorkerMessagingProxy.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\workers\DedicatedWorkerThread.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\workers\InProcessWorkerBase.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\workers\SharedWorker.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\workers\SharedWorkerGlobalScope.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\workers\SharedWorkerRepositoryClient.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\workers\SharedWorkerThread.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\workers\Worker.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\workers\WorkerClients.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\workers\WorkerConsole.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\workers\WorkerEventQueue.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\workers\WorkerGlobalScope.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\workers\WorkerGlobalScopeProxy.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\workers\WorkerGlobalScopeProxyProvider.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\workers\WorkerInspectorProxy.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\workers\WorkerLoaderProxy.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\workers\WorkerLocation.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\workers\WorkerMessagingProxy.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\workers\WorkerNavigator.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\workers\WorkerObjectProxy.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\workers\WorkerReportingProxy.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\workers\WorkerScriptLoader.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\workers\WorkerThread.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\workers\WorkerThreadStartupData.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\xml\DOMParser.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\xml\parser\SharedBufferReader.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\xml\parser\XMLDocumentParser.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\xml\parser\XMLDocumentParserScope.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\xml\parser\XMLErrors.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\xml\parser\XMLParserInput.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\config.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\clipboard\DataObject.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\clipboard\DataObjectItem.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\clipboard\DataTransfer.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\clipboard\DataTransferAccessPolicy.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\clipboard\DataTransferItem.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\clipboard\DataTransferItemList.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\clipboard\Pasteboard.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\CoreExport.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\imagebitmap\ImageBitmapFactories.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\Init.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\loader\appcache\ApplicationCache.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\loader\appcache\ApplicationCacheHost.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\loader\BeaconLoader.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\loader\CookieJar.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\loader\CrossOriginPreflightResultCache.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\loader\DocumentLoader.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\loader\DocumentLoadTiming.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\loader\DocumentThreadableLoader.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\loader\DocumentThreadableLoaderClient.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\loader\DocumentWriter.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\loader\EmptyClients.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\loader\FormSubmission.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\loader\FrameFetchContext.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\loader\FrameLoader.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\loader\FrameLoaderClient.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\loader\FrameLoaderStateMachine.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\loader\FrameLoaderTypes.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\loader\FrameLoadRequest.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\loader\HistoryItem.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\loader\ImageLoader.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\loader\LinkLoader.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\loader\LinkLoaderClient.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\loader\MixedContentChecker.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\loader\NavigationPolicy.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\loader\NavigationScheduler.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\loader\NetworkHintsInterface.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\loader\PingLoader.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\loader\PrerendererClient.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\loader\PrerenderHandle.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\loader\ProgressTracker.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\loader\SinkDocument.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\loader\TextResourceDecoderBuilder.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\loader\TextTrackLoader.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\loader\ThreadableLoader.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\loader\ThreadableLoaderClient.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\loader\ThreadableLoaderClientWrapper.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\loader\WorkerLoaderClientBridge.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\loader\WorkerLoaderClientBridgeSyncHelper.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\loader\WorkerThreadableLoader.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\page\scrolling\ScrollingConstraints.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\page\scrolling\ScrollingCoordinator.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\plugins\PluginPlaceholder.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\plugins\PluginView.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\plugins\testing\DictionaryPluginPlaceholder.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\plugins\testing\DocumentFragmentPluginPlaceholder.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\streams\Stream.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\streams\UnderlyingSource.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\workers\AbstractWorker.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\xmlhttprequest\XMLHttpRequest.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\xmlhttprequest\XMLHttpRequestEventTarget.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\xmlhttprequest\XMLHttpRequestProgressEvent.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\xmlhttprequest\XMLHttpRequestProgressEventThrottle.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\xmlhttprequest\XMLHttpRequestUpload.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\EventAliases.in" />
+    <None Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\events.rar" />
+    <None Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\EventTargetFactory.in" />
+    <None Include="..\..\..\..\..\..\third_party\WebKit\Source\core\events\EventTypeNames.in" />
+    <None Include="..\..\..\..\..\..\third_party\WebKit\Source\core\fetch\FetchInitiatorTypeNames.in" />
+    <None Include="..\..\..\..\..\..\third_party\WebKit\Source\core\paint\ThemePainterMac.mm" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

@@ -1,0 +1,590 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="bindings">
+      <UniqueIdentifier>{9e42f1b7-57ed-40b7-85a6-14bc09d7ad9b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="bindings\core">
+      <UniqueIdentifier>{ae64e03a-ac3f-4240-a041-5937eae23f6f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="bindings\core\v8">
+      <UniqueIdentifier>{43b58fef-024e-40f8-bb49-7c5aa20c223f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="bindings\core\v8\custom">
+      <UniqueIdentifier>{4463d8ec-deea-43fe-aa86-94489e7aea8e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="bindings\modules">
+      <UniqueIdentifier>{ec29591d-b9fc-4ca6-bd4d-130fbd0671b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="bindings\modules\v8">
+      <UniqueIdentifier>{426f9a99-d684-49f3-80bf-770dadb06470}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="bindings\modules\v8\custom">
+      <UniqueIdentifier>{abfcd744-6aeb-4831-9447-04f4e891b9f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="bindings\templates">
+      <UniqueIdentifier>{7cdfcb0e-ccbd-4647-b43f-a50da7dbfde5}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\ActiveDOMCallback.cpp">
+      <Filter>bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\ArrayValue.cpp">
+      <Filter>bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\BindingSecurity.cpp">
+      <Filter>bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\custom\V8CSSStyleDeclarationCustom.cpp">
+      <Filter>bindings\core\v8\custom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\custom\V8ErrorEventCustom.cpp">
+      <Filter>bindings\core\v8\custom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\custom\V8EventTargetCustom.cpp">
+      <Filter>bindings\core\v8\custom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\custom\V8HTMLAllCollectionCustom.cpp">
+      <Filter>bindings\core\v8\custom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\custom\V8InjectedScriptManager.cpp">
+      <Filter>bindings\core\v8\custom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\custom\V8MessageChannelCustom.cpp">
+      <Filter>bindings\core\v8\custom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\custom\V8MessageEventCustom.cpp">
+      <Filter>bindings\core\v8\custom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\custom\V8PopStateEventCustom.cpp">
+      <Filter>bindings\core\v8\custom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\custom\V8WindowCustom.cpp">
+      <Filter>bindings\core\v8\custom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\custom\V8XMLHttpRequestCustom.cpp">
+      <Filter>bindings\core\v8\custom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\Dictionary.cpp">
+      <Filter>bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\DictionaryHelperForCore.cpp">
+      <Filter>bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\DOMWrapperWorld.cpp">
+      <Filter>bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\ExceptionMessages.cpp">
+      <Filter>bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\ExceptionState.cpp">
+      <Filter>bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\ExceptionStatePlaceholder.cpp">
+      <Filter>bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\ModuleProxy.cpp">
+      <Filter>bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\PrivateScriptRunner.cpp">
+      <Filter>bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\RetainedDOMInfo.cpp">
+      <Filter>bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\ScheduledAction.cpp">
+      <Filter>bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\ScriptCallStackFactory.cpp">
+      <Filter>bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\ScriptController.cpp">
+      <Filter>bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\ScriptEventListener.cpp">
+      <Filter>bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\ScriptFunction.cpp">
+      <Filter>bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\ScriptFunctionCall.cpp">
+      <Filter>bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\ScriptPromise.cpp">
+      <Filter>bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\ScriptPromisePropertyBase.cpp">
+      <Filter>bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\ScriptPromiseResolver.cpp">
+      <Filter>bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\ScriptRegexp.cpp">
+      <Filter>bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\ScriptState.cpp">
+      <Filter>bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\ScriptStreamer.cpp">
+      <Filter>bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\ScriptStreamerThread.cpp">
+      <Filter>bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\ScriptString.cpp">
+      <Filter>bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\ScriptValue.cpp">
+      <Filter>bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\ScriptWrappable.cpp">
+      <Filter>bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\V8AbstractEventListener.cpp">
+      <Filter>bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\V8Binding.cpp">
+      <Filter>bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\V8CustomElementLifecycleCallbacks.cpp">
+      <Filter>bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\V8DOMActivityLogger.cpp">
+      <Filter>bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\V8DOMConfiguration.cpp">
+      <Filter>bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\V8DOMWrapper.cpp">
+      <Filter>bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\V8ErrorHandler.cpp">
+      <Filter>bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\V8EventListener.cpp">
+      <Filter>bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\V8EventListenerList.cpp">
+      <Filter>bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\V8GCController.cpp">
+      <Filter>bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\V8GCForContextDispose.cpp">
+      <Filter>bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\V8HiddenValue.cpp">
+      <Filter>bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\V8Initializer.cpp">
+      <Filter>bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\V8LazyEventListener.cpp">
+      <Filter>bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\V8MutationCallback.cpp">
+      <Filter>bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\V8NodeFilterCondition.cpp">
+      <Filter>bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\V8ObjectConstructor.cpp">
+      <Filter>bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\V8PerContextData.cpp">
+      <Filter>bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\V8PerIsolateData.cpp">
+      <Filter>bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\V8RecursionScope.cpp">
+      <Filter>bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\V8ScriptRunner.cpp">
+      <Filter>bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\V8StringResource.cpp">
+      <Filter>bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\V8ThrowException.cpp">
+      <Filter>bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\V8ValueCache.cpp">
+      <Filter>bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\V8WorkerGlobalScopeEventListener.cpp">
+      <Filter>bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\WindowProxy.cpp">
+      <Filter>bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\WorkerScriptController.cpp">
+      <Filter>bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\WrapperTypeInfo.cpp">
+      <Filter>bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\modules\v8\DictionaryHelperForModules.cpp">
+      <Filter>bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\modules\v8\ModuleBindingsInitializer.cpp">
+      <Filter>bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\OnStackObjectChecker.cpp">
+      <Filter>bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\ScriptSourceCode.cpp">
+      <Filter>bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\SerializedScriptValue.cpp">
+      <Filter>bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\ScriptValueSerializer.cpp">
+      <Filter>bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\WindowProxyManager.cpp">
+      <Filter>bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\SerializedScriptValueFactory.cpp">
+      <Filter>bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\V8IteratorResultValue.cpp">
+      <Filter>bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\CustomElementBinding.cpp">
+      <Filter>bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\RejectedPromises.cpp">
+      <Filter>bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\V8PagePopupControllerBinding.cpp">
+      <Filter>bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\npruntime.cpp">
+      <Filter>bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\NPV8Object.cpp">
+      <Filter>bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\V8NPObject.cpp">
+      <Filter>bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\V8NPUtils.cpp">
+      <Filter>bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\ToV8.cpp">
+      <Filter>bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\custom\V8HTMLPlugInElementCustom.cpp">
+      <Filter>bindings\core\v8\custom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\modules\v8\ScriptValueSerializerForModules.cpp">
+      <Filter>bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\modules\v8\SerializedScriptValueForModulesFactory.cpp">
+      <Filter>bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\custom\V8DocumentCustom.cpp">
+      <Filter>bindings\core\v8\custom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\CustomElementConstructorBuilder.cpp">
+      <Filter>bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\custom\V8CustomEventCustom.cpp">
+      <Filter>bindings\core\v8\custom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\custom\V8HTMLOptionsCollectionCustom.cpp">
+      <Filter>bindings\core\v8\custom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\V8ObjectBuilder.cpp">
+      <Filter>bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\config.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\ActiveDOMCallback.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\ArrayValue.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\BindingSecurity.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\CallbackPromiseAdapter.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\CustomElementBinding.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\Dictionary.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\DictionaryHelperForBindings.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\DOMDataStore.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\DOMWrapperMap.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\DOMWrapperWorld.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\ExceptionMessages.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\ExceptionState.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\ExceptionStatePlaceholder.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\Iterable.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\Maplike.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\ModuleProxy.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\NativeValueTraits.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\npruntime_impl.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\npruntime_priv.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\NPV8Object.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\Nullable.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\PrivateScriptRunner.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\RejectedPromises.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\RetainedDOMInfo.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\RetainedObjectInfo.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\ScheduledAction.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\ScopedPersistent.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\ScriptCallStackFactory.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\ScriptController.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\ScriptEventListener.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\ScriptFunction.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\ScriptFunctionCall.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\ScriptPromise.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\ScriptPromiseProperties.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\ScriptPromiseProperty.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\ScriptPromisePropertyBase.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\ScriptPromiseResolver.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\ScriptRegexp.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\ScriptState.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\ScriptStreamer.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\ScriptStreamerThread.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\ScriptString.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\ScriptValue.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\ScriptWrappable.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\SerializationTag.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\SerializedScriptValue.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\SharedPersistent.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\V8AbstractEventListener.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\V8Binding.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\V8BindingMacros.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\V8CacheOptions.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\V8CustomElementLifecycleCallbacks.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\V8DOMActivityLogger.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\V8DOMConfiguration.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\V8DOMWrapper.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\V8ErrorHandler.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\V8EventListener.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\V8EventListenerList.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\V8GCController.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\V8GCForContextDispose.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\V8GlobalValueMap.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\V8HiddenValue.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\V8IdleTaskRunner.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\V8Initializer.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\V8LazyEventListener.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\V8MutationCallback.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\V8NodeFilterCondition.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\V8NPObject.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\V8NPUtils.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\V8ObjectConstructor.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\V8PerContextData.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\V8PerIsolateData.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\V8PersistentValueVector.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\V8RecursionScope.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\V8ScriptRunner.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\V8StringResource.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\V8ThrowException.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\V8ValueCache.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\V8WorkerGlobalScopeEventListener.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\WindowProxy.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\WorkerScriptController.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\WrapperTypeInfo.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\modules\v8\ModuleBindingsInitializer.h">
+      <Filter>bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\templates\union.h">
+      <Filter>bindings\templates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\OnStackObjectChecker.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\ScriptSourceCode.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\ScriptValueSerializer.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\WindowProxyManager.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\V8IteratorResultValue.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\ToV8.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\modules\v8\SerializedScriptValueForModulesFactory.h">
+      <Filter>bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\modules\v8\ScriptValueSerializerForModules.h">
+      <Filter>bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\CustomElementConstructorBuilder.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\bindings\core\v8\V8ObjectBuilder.h">
+      <Filter>bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\config.h" />
+  </ItemGroup>
+</Project>

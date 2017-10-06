@@ -2274,6 +2274,7 @@
     <ClCompile Include="..\..\gen\blink\modules\encoding\TextDecoderOptions.cpp">
       <Filter>gen\blink\modules\encoding</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\config.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\gen\blink\modules\ServiceWorkerGlobalScopeCoreConstructors.h">
@@ -4550,6 +4551,7 @@
     <ClInclude Include="..\..\gen\blink\modules\encoding\TextDecoderOptions.h">
       <Filter>gen\blink\modules\encoding</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\config.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\gen\blink\core\EventInterfaces.in">
