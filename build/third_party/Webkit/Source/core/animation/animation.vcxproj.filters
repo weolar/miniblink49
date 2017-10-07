@@ -1,0 +1,532 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="core">
+      <UniqueIdentifier>{8d5b50a9-8799-4f87-b846-bacd5b9929ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\animation">
+      <UniqueIdentifier>{1c11e93b-aa67-4a4a-971b-5d0e20a12385}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\animation\animatable">
+      <UniqueIdentifier>{c274fc38-4e96-4e62-a373-dc68dacd952d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\animation\css">
+      <UniqueIdentifier>{9a50b793-cda2-45c2-8b31-e57f85cc3916}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\css\CSSAnimatableValueFactory.cpp">
+      <Filter>core\animation\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\css\CSSAnimationData.cpp">
+      <Filter>core\animation\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\css\CSSAnimations.cpp">
+      <Filter>core\animation\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\css\CSSPropertyEquality.cpp">
+      <Filter>core\animation\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\css\CSSTimingData.cpp">
+      <Filter>core\animation\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\css\CSSTransitionData.cpp">
+      <Filter>core\animation\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\animatable\AnimatableDouble.cpp">
+      <Filter>core\animation\animatable</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\animatable\AnimatableFilterOperations.cpp">
+      <Filter>core\animation\animatable</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\animatable\AnimatableImage.cpp">
+      <Filter>core\animation\animatable</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\animatable\AnimatableLength.cpp">
+      <Filter>core\animation\animatable</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\animatable\AnimatableLengthBox.cpp">
+      <Filter>core\animation\animatable</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\animatable\AnimatableLengthBoxAndBool.cpp">
+      <Filter>core\animation\animatable</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\animatable\AnimatableLengthPoint.cpp">
+      <Filter>core\animation\animatable</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\animatable\AnimatableLengthPoint3D.cpp">
+      <Filter>core\animation\animatable</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\animatable\AnimatableLengthSize.cpp">
+      <Filter>core\animation\animatable</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\animatable\AnimatableRepeatable.cpp">
+      <Filter>core\animation\animatable</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\animatable\AnimatableShadow.cpp">
+      <Filter>core\animation\animatable</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\animatable\AnimatableShapeValue.cpp">
+      <Filter>core\animation\animatable</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\animatable\AnimatableStrokeDasharrayList.cpp">
+      <Filter>core\animation\animatable</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\animatable\AnimatableSVGPaint.cpp">
+      <Filter>core\animation\animatable</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\animatable\AnimatableTransform.cpp">
+      <Filter>core\animation\animatable</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\animatable\AnimatableValue.cpp">
+      <Filter>core\animation\animatable</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\animatable\AnimatableValueKeyframe.cpp">
+      <Filter>core\animation\animatable</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\animatable\AnimatableVisibility.cpp">
+      <Filter>core\animation\animatable</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\animatable\AnimatableClipPathOperation.cpp">
+      <Filter>core\animation\animatable</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\animatable\AnimatableColor.cpp">
+      <Filter>core\animation\animatable</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\ImageSliceStyleInterpolation.cpp">
+      <Filter>core\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\ImageStyleInterpolation.cpp">
+      <Filter>core\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\InertEffect.cpp">
+      <Filter>core\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\IntegerOptionalIntegerSVGInterpolation.cpp">
+      <Filter>core\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\InterpolableValue.cpp">
+      <Filter>core\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\Interpolation.cpp">
+      <Filter>core\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\InterpolationEffect.cpp">
+      <Filter>core\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\InvalidatableStyleInterpolation.cpp">
+      <Filter>core\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\KeyframeEffect.cpp">
+      <Filter>core\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\KeyframeEffectModel.cpp">
+      <Filter>core\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\LengthBoxStyleInterpolation.cpp">
+      <Filter>core\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\LengthPairStyleInterpolation.cpp">
+      <Filter>core\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\LengthStyleInterpolation.cpp">
+      <Filter>core\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\LengthSVGInterpolation.cpp">
+      <Filter>core\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\NumberSVGInterpolation.cpp">
+      <Filter>core\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\PathSVGInterpolation.cpp">
+      <Filter>core\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\PropertyHandle.cpp">
+      <Filter>core\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\RectSVGInterpolation.cpp">
+      <Filter>core\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\SampledEffect.cpp">
+      <Filter>core\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\ShadowStyleInterpolation.cpp">
+      <Filter>core\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\StringKeyframe.cpp">
+      <Filter>core\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\SVGInterpolation.cpp">
+      <Filter>core\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\SVGStrokeDasharrayStyleInterpolation.cpp">
+      <Filter>core\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\Timing.cpp">
+      <Filter>core\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\TimingInput.cpp">
+      <Filter>core\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\TransformSVGInterpolation.cpp">
+      <Filter>core\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\VisibilityStyleInterpolation.cpp">
+      <Filter>core\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\Animation.cpp">
+      <Filter>core\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\AnimationClock.cpp">
+      <Filter>core\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\AnimationEffect.cpp">
+      <Filter>core\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\AnimationEffectTiming.cpp">
+      <Filter>core\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\AnimationInputHelpers.cpp">
+      <Filter>core\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\AnimationStack.cpp">
+      <Filter>core\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\AnimationTimeline.cpp">
+      <Filter>core\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\AnimationTranslationUtil.cpp">
+      <Filter>core\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\ColorStyleInterpolation.cpp">
+      <Filter>core\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\CompositorAnimations.cpp">
+      <Filter>core\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\CompositorPendingAnimations.cpp">
+      <Filter>core\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\CSSValueInterpolationType.cpp">
+      <Filter>core\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\DefaultSVGInterpolation.cpp">
+      <Filter>core\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\DeferredLegacyStyleInterpolation.cpp">
+      <Filter>core\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\DocumentAnimations.cpp">
+      <Filter>core\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\DoubleStyleInterpolation.cpp">
+      <Filter>core\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\EffectInput.cpp">
+      <Filter>core\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\ElementAnimations.cpp">
+      <Filter>core\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\FilterStyleInterpolation.cpp">
+      <Filter>core\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\animatable\AnimatableDoubleAndBool.cpp">
+      <Filter>core\animation\animatable</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\config.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\css\CSSAnimatableValueFactory.h">
+      <Filter>core\animation\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\css\CSSAnimationData.h">
+      <Filter>core\animation\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\css\CSSAnimations.h">
+      <Filter>core\animation\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\css\CSSAnimationUpdate.h">
+      <Filter>core\animation\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\css\CSSPropertyEquality.h">
+      <Filter>core\animation\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\css\CSSTimingData.h">
+      <Filter>core\animation\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\css\CSSTransitionData.h">
+      <Filter>core\animation\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\animatable\AnimatableColor.h">
+      <Filter>core\animation\animatable</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\animatable\AnimatableDouble.h">
+      <Filter>core\animation\animatable</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\animatable\AnimatableFilterOperations.h">
+      <Filter>core\animation\animatable</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\animatable\AnimatableImage.h">
+      <Filter>core\animation\animatable</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\animatable\AnimatableLength.h">
+      <Filter>core\animation\animatable</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\animatable\AnimatableLengthBox.h">
+      <Filter>core\animation\animatable</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\animatable\AnimatableLengthBoxAndBool.h">
+      <Filter>core\animation\animatable</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\animatable\AnimatableLengthPoint.h">
+      <Filter>core\animation\animatable</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\animatable\AnimatableLengthPoint3D.h">
+      <Filter>core\animation\animatable</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\animatable\AnimatableLengthSize.h">
+      <Filter>core\animation\animatable</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\animatable\AnimatableNeutral.h">
+      <Filter>core\animation\animatable</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\animatable\AnimatableRepeatable.h">
+      <Filter>core\animation\animatable</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\animatable\AnimatableShadow.h">
+      <Filter>core\animation\animatable</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\animatable\AnimatableShapeValue.h">
+      <Filter>core\animation\animatable</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\animatable\AnimatableStrokeDasharrayList.h">
+      <Filter>core\animation\animatable</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\animatable\AnimatableSVGPaint.h">
+      <Filter>core\animation\animatable</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\animatable\AnimatableTransform.h">
+      <Filter>core\animation\animatable</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\animatable\AnimatableUnknown.h">
+      <Filter>core\animation\animatable</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\animatable\AnimatableValue.h">
+      <Filter>core\animation\animatable</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\animatable\AnimatableValueKeyframe.h">
+      <Filter>core\animation\animatable</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\animatable\AnimatableVisibility.h">
+      <Filter>core\animation\animatable</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\animatable\AnimatableClipPathOperation.h">
+      <Filter>core\animation\animatable</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\FilterStyleInterpolation.h">
+      <Filter>core\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\ImageSliceStyleInterpolation.h">
+      <Filter>core\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\ImageStyleInterpolation.h">
+      <Filter>core\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\InertEffect.h">
+      <Filter>core\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\IntegerOptionalIntegerSVGInterpolation.h">
+      <Filter>core\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\IntegerSVGInterpolation.h">
+      <Filter>core\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\InterpolableValue.h">
+      <Filter>core\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\Interpolation.h">
+      <Filter>core\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\InterpolationEffect.h">
+      <Filter>core\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\InterpolationType.h">
+      <Filter>core\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\InterpolationValue.h">
+      <Filter>core\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\InvalidatableStyleInterpolation.h">
+      <Filter>core\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\Keyframe.h">
+      <Filter>core\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\KeyframeEffect.h">
+      <Filter>core\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\KeyframeEffectModel.h">
+      <Filter>core\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\LegacyStyleInterpolation.h">
+      <Filter>core\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\LengthBoxStyleInterpolation.h">
+      <Filter>core\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\LengthPairStyleInterpolation.h">
+      <Filter>core\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\LengthStyleInterpolation.h">
+      <Filter>core\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\LengthSVGInterpolation.h">
+      <Filter>core\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\ListStyleInterpolation.h">
+      <Filter>core\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\ListSVGInterpolation.h">
+      <Filter>core\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\NonInterpolableValue.h">
+      <Filter>core\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\NumberOptionalNumberSVGInterpolation.h">
+      <Filter>core\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\NumberSVGInterpolation.h">
+      <Filter>core\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\PathSVGInterpolation.h">
+      <Filter>core\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\PointSVGInterpolation.h">
+      <Filter>core\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\PrimitiveInterpolation.h">
+      <Filter>core\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\PropertyHandle.h">
+      <Filter>core\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\RectSVGInterpolation.h">
+      <Filter>core\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\SampledEffect.h">
+      <Filter>core\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\ShadowStyleInterpolation.h">
+      <Filter>core\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\StringKeyframe.h">
+      <Filter>core\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\StyleInterpolation.h">
+      <Filter>core\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\SVGInterpolation.h">
+      <Filter>core\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\SVGStrokeDasharrayStyleInterpolation.h">
+      <Filter>core\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\Timing.h">
+      <Filter>core\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\TimingCalculations.h">
+      <Filter>core\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\TimingInput.h">
+      <Filter>core\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\TransformSVGInterpolation.h">
+      <Filter>core\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\VisibilityStyleInterpolation.h">
+      <Filter>core\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\AngleSVGInterpolation.h">
+      <Filter>core\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\Animation.h">
+      <Filter>core\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\AnimationClock.h">
+      <Filter>core\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\AnimationEffect.h">
+      <Filter>core\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\AnimationEffectTiming.h">
+      <Filter>core\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\AnimationInputHelpers.h">
+      <Filter>core\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\AnimationStack.h">
+      <Filter>core\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\AnimationTimeline.h">
+      <Filter>core\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\AnimationTranslationUtil.h">
+      <Filter>core\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\ColorStyleInterpolation.h">
+      <Filter>core\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\CompositorAnimations.h">
+      <Filter>core\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\CompositorAnimationsImpl.h">
+      <Filter>core\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\CompositorPendingAnimations.h">
+      <Filter>core\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\ConstantStyleInterpolation.h">
+      <Filter>core\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\CSSValueInterpolationType.h">
+      <Filter>core\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\DefaultSVGInterpolation.h">
+      <Filter>core\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\DeferredLegacyStyleInterpolation.h">
+      <Filter>core\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\DocumentAnimation.h">
+      <Filter>core\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\DocumentAnimations.h">
+      <Filter>core\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\DoubleStyleInterpolation.h">
+      <Filter>core\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\EffectInput.h">
+      <Filter>core\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\EffectModel.h">
+      <Filter>core\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\ElementAnimation.h">
+      <Filter>core\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\ElementAnimations.h">
+      <Filter>core\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\animatable\AnimatableDoubleAndBool.h">
+      <Filter>core\animation\animatable</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\config.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\..\..\..\third_party\WebKit\Source\core\animation\OWNERS">
+      <Filter>core\animation</Filter>
+    </None>
+  </ItemGroup>
+</Project>

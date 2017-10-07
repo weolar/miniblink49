@@ -1,0 +1,1097 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="core">
+      <UniqueIdentifier>{8d5b50a9-8799-4f87-b846-bacd5b9929ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\dom">
+      <UniqueIdentifier>{540ea911-7e66-4753-aec0-bcf13f4da521}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\dom\custom">
+      <UniqueIdentifier>{6a2867b2-d55c-4c2b-b464-f8bad80b2be5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\dom\shadow">
+      <UniqueIdentifier>{3d1b4cf7-5675-4ac4-8902-d2b7b5ac234e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\shadow\ElementShadow.cpp">
+      <Filter>core\dom\shadow</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\shadow\InsertionPoint.cpp">
+      <Filter>core\dom\shadow</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\shadow\SelectRuleFeatureSet.cpp">
+      <Filter>core\dom\shadow</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\shadow\ShadowRoot.cpp">
+      <Filter>core\dom\shadow</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\AXObjectCache.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\CDATASection.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\CharacterData.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\ChildFrameDisconnector.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\ChildListMutationScope.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\ChildNodeList.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\ClassCollection.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\ClientRect.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\Comment.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\CompositorProxy.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\ContainerNode.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\ContextFeatures.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\ContextLifecycleNotifier.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\ActiveDOMObject.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\AddConsoleMessageTask.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\Attr.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\ElementRareData.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\CSSSelectorWatch.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DatasetDOMStringMap.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DecodedDataDocumentParser.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\Document.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DocumentEncodingData.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DocumentFragment.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DocumentFullscreen.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DocumentInit.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DocumentLifecycle.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DocumentLifecycleNotifier.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DocumentMarker.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DocumentMarkerController.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DocumentOrderedList.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DocumentOrderedMap.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DocumentParser.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DocumentStyleSheetCollection.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DocumentStyleSheetCollector.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DocumentTiming.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DocumentType.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DocumentVisibilityObserver.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DOMArrayBuffer.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DOMArrayPiece.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DOMDataView.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DOMError.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DOMException.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DOMImplementation.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DOMMatrix.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DOMMatrixReadOnly.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DOMNodeIds.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DOMPoint.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DOMPointReadOnly.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DOMRect.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DOMRectReadOnly.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DOMSettableTokenList.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DOMSharedArrayBuffer.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DOMStringList.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DOMStringMap.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DOMTokenList.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DOMTypedArray.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DOMURL.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DOMURLUtils.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DOMURLUtilsReadOnly.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\Element.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\ElementData.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\ElementDataCache.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\ElementFullscreen.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\Fullscreen.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\EmptyNodeList.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\ExecutionContext.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\FirstLetterPseudoElement.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\FrameRequestCallbackCollection.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\IconURL.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\IdTargetObserver.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\IdTargetObserverRegistry.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\IncrementLoadEventDelayCount.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\LayoutTreeBuilder.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\LayoutTreeBuilderTraversal.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\LiveNodeList.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\LiveNodeListBase.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\MainThreadTaskRunner.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\MessageChannel.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\MessagePort.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\Microtask.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\MutationObserver.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\MutationObserverInterestGroup.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\MutationObserverRegistration.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\MutationRecord.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\NamedNodeMap.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\NameNodeList.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\Node.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\NodeChildRemovalTracker.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\NodeFilter.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\NodeIterator.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\NodeIteratorBase.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\NodeListsNodeData.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\NodeRareData.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\NodeTraversal.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\NthIndexCache.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\PendingScript.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\Position.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\PositionIterator.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\PresentationAttributeStyle.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\ProcessingInstruction.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\PseudoElement.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\QualifiedName.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\Range.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\RemoteSecurityContext.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\SandboxFlags.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\ScriptableDocumentParser.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\ScriptedAnimationController.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\ScriptLoader.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\ScriptRunner.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\SecurityContext.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\SelectorQuery.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\ShadowTreeStyleSheetCollection.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\SpaceSplitString.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\StringCallback.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\StyleChangeReason.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\StyleElement.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\StyleEngine.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\StyleSheetCandidate.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\StyleSheetCollection.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\TagCollection.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\Text.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\TextLinkColors.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\Touch.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\TouchList.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\TreeScope.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\TreeScopeAdopter.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\TreeScopeStyleSheetCollection.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\TreeWalker.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\UserActionElementSet.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\ViewportDescription.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\VisitedLinkState.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\XMLDocument.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\ClientRectList.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\shadow\ComposedTreeTraversal.cpp">
+      <Filter>core\dom\shadow</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\shadow\DistributedNodes.cpp">
+      <Filter>core\dom\shadow</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\TransformSourceLibxslt.cpp">
+      <Filter>core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\custom\CustomElement.cpp">
+      <Filter>core\dom\custom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\custom\CustomElementAsyncImportMicrotaskQueue.cpp">
+      <Filter>core\dom\custom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\custom\CustomElementCallbackInvocation.cpp">
+      <Filter>core\dom\custom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\custom\CustomElementCallbackQueue.cpp">
+      <Filter>core\dom\custom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\custom\CustomElementDefinition.cpp">
+      <Filter>core\dom\custom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\custom\CustomElementException.cpp">
+      <Filter>core\dom\custom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\custom\CustomElementMicrotaskDispatcher.cpp">
+      <Filter>core\dom\custom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\custom\CustomElementMicrotaskImportStep.cpp">
+      <Filter>core\dom\custom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\custom\CustomElementMicrotaskQueueBase.cpp">
+      <Filter>core\dom\custom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\custom\CustomElementMicrotaskResolutionStep.cpp">
+      <Filter>core\dom\custom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\custom\CustomElementMicrotaskRunQueue.cpp">
+      <Filter>core\dom\custom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\custom\CustomElementObserver.cpp">
+      <Filter>core\dom\custom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\custom\CustomElementProcessingStack.cpp">
+      <Filter>core\dom\custom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\custom\CustomElementRegistrationContext.cpp">
+      <Filter>core\dom\custom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\custom\CustomElementRegistry.cpp">
+      <Filter>core\dom\custom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\custom\CustomElementScheduler.cpp">
+      <Filter>core\dom\custom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\custom\CustomElementSyncMicrotaskQueue.cpp">
+      <Filter>core\dom\custom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\custom\CustomElementUpgradeCandidateMap.cpp">
+      <Filter>core\dom\custom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\config.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\shadow\ElementShadow.h">
+      <Filter>core\dom\shadow</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\shadow\InsertionPoint.h">
+      <Filter>core\dom\shadow</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\shadow\SelectRuleFeatureSet.h">
+      <Filter>core\dom\shadow</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\shadow\ShadowRoot.h">
+      <Filter>core\dom\shadow</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\shadow\ShadowRootRareData.h">
+      <Filter>core\dom\shadow</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\Attribute.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\AttributeCollection.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\AXObjectCache.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\CDATASection.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\CharacterData.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\ChildFrameDisconnector.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\ChildListMutationScope.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\ChildNode.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\ChildNodeList.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\ClassCollection.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\ClientRect.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\ClientRectList.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\Comment.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\CompositorProxy.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\ContainerNode.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\ContextFeatures.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\ContextLifecycleNotifier.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\ContextLifecycleObserver.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\CrossThreadTask.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\ActiveDOMObject.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\AddConsoleMessageTask.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\Attr.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\CSSSelectorWatch.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DatasetDOMStringMap.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DecodedDataDocumentParser.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\Document.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DocumentEncodingData.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DocumentFragment.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DocumentFullscreen.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DocumentInit.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DocumentLifecycle.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DocumentLifecycleNotifier.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DocumentLifecycleObserver.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DocumentMarker.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DocumentMarkerController.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DocumentOrderedList.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DocumentOrderedMap.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DocumentParser.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DocumentParserClient.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DocumentStyleSheetCollection.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DocumentStyleSheetCollector.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DocumentTiming.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DocumentType.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DocumentVisibilityObserver.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DOMArrayBuffer.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DOMArrayBufferBase.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DOMArrayBufferView.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DOMArrayPiece.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DOMDataView.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DOMError.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DOMException.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DOMImplementation.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DOMMatrix.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DOMMatrixReadOnly.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DOMNodeIds.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DOMPoint.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DOMPointReadOnly.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DOMRect.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DOMRectReadOnly.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DOMSettableTokenList.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DOMSharedArrayBuffer.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DOMStringList.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DOMStringMap.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DOMTimeStamp.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DOMTokenList.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DOMTypedArray.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DOMURL.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DOMURLUtils.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\DOMURLUtilsReadOnly.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\Element.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\ElementData.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\ElementDataCache.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\ElementFullscreen.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\ElementRareData.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\ElementTraversal.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\EmptyNodeList.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\ExceptionCode.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\ExecutionContext.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\ExecutionContextTask.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\FirstLetterPseudoElement.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\FrameRequestCallback.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\FrameRequestCallbackCollection.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\NodeIteratorBase.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\Fullscreen.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\GlobalEventHandlers.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\IconURL.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\IdTargetObserver.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\IdTargetObserverRegistry.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\IgnoreDestructiveWriteCountIncrementer.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\IncrementLoadEventDelayCount.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\Iterator.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\LayoutTreeBuilder.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\LayoutTreeBuilderTraversal.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\LiveNodeList.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\LiveNodeListBase.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\MainThreadTaskRunner.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\MessageChannel.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\MessagePort.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\Microtask.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\MutationCallback.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\MutationObserver.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\MutationObserverInterestGroup.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\MutationObserverRegistration.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\MutationRecord.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\NamedNodeMap.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\NameNodeList.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\Node.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\NodeChildRemovalTracker.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\NodeComputedStyle.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\NodeFilter.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\NodeFilterCondition.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\NodeIterator.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\TreeWalker.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\NodeList.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\NodeListsNodeData.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\NodeRareData.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\NodeTraversal.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\NodeWithIndex.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\NonDocumentTypeChildNode.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\NonElementParentNode.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\NthIndexCache.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\ParentNode.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\ParserContentPolicy.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\PendingScript.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\Position.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\PositionIterator.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\PresentationAttributeStyle.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\ProcessingInstruction.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\PseudoElement.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\QualifiedName.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\Range.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\RangeBoundaryPoint.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\RawDataDocumentParser.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\RemoteSecurityContext.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\RenderedDocumentMarker.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\SandboxFlags.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\ScopedWindowFocusAllowedIndicator.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\ScriptableDocumentParser.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\ScriptedAnimationController.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\ScriptLoader.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\ScriptLoaderClient.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\ScriptRunner.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\SelectorQuery.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\ShadowTreeStyleSheetCollection.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\SimulatedClickOptions.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\SpaceSplitString.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\StaticNodeList.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\StringCallback.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\StyleChangeReason.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\StyleElement.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\StyleEngine.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\StyleSheetCandidate.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\StyleSheetCollection.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\SuspendableTask.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\TagCollection.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\TemplateContentDocumentFragment.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\Text.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\TextLinkColors.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\Touch.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\TouchList.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\TransformSource.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\TreeScope.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\TreeScopeAdopter.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\TreeScopeStyleSheetCollection.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\TreeShared.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\XMLDocument.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\UserActionElementSet.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\ViewportDescription.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\VisitedLinkState.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\WeakIdentifierMap.h">
+      <Filter>core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\shadow\ComposedTreeTraversal.h">
+      <Filter>core\dom\shadow</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\shadow\DistributedNodes.h">
+      <Filter>core\dom\shadow</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\custom\CustomElement.h">
+      <Filter>core\dom\custom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\custom\CustomElementAsyncImportMicrotaskQueue.h">
+      <Filter>core\dom\custom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\custom\CustomElementCallbackInvocation.h">
+      <Filter>core\dom\custom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\custom\CustomElementCallbackQueue.h">
+      <Filter>core\dom\custom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\custom\CustomElementDefinition.h">
+      <Filter>core\dom\custom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\custom\CustomElementDescriptor.h">
+      <Filter>core\dom\custom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\custom\CustomElementDescriptorHash.h">
+      <Filter>core\dom\custom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\custom\CustomElementException.h">
+      <Filter>core\dom\custom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\custom\CustomElementLifecycleCallbacks.h">
+      <Filter>core\dom\custom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\custom\CustomElementMicrotaskDispatcher.h">
+      <Filter>core\dom\custom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\custom\CustomElementMicrotaskImportStep.h">
+      <Filter>core\dom\custom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\custom\CustomElementMicrotaskQueueBase.h">
+      <Filter>core\dom\custom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\custom\CustomElementMicrotaskResolutionStep.h">
+      <Filter>core\dom\custom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\custom\CustomElementMicrotaskRunQueue.h">
+      <Filter>core\dom\custom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\custom\CustomElementMicrotaskStep.h">
+      <Filter>core\dom\custom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\custom\CustomElementObserver.h">
+      <Filter>core\dom\custom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\custom\CustomElementProcessingStack.h">
+      <Filter>core\dom\custom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\custom\CustomElementProcessingStep.h">
+      <Filter>core\dom\custom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\custom\CustomElementRegistrationContext.h">
+      <Filter>core\dom\custom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\custom\CustomElementRegistry.h">
+      <Filter>core\dom\custom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\custom\CustomElementScheduler.h">
+      <Filter>core\dom\custom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\custom\CustomElementSyncMicrotaskQueue.h">
+      <Filter>core\dom\custom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\dom\custom\CustomElementUpgradeCandidateMap.h">
+      <Filter>core\dom\custom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\config.h" />
+  </ItemGroup>
+</Project>

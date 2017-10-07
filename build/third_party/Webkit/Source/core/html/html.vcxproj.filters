@@ -1,0 +1,1574 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="core">
+      <UniqueIdentifier>{8d5b50a9-8799-4f87-b846-bacd5b9929ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\html">
+      <UniqueIdentifier>{61ec7dec-c192-402a-b4db-137601964257}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\html\canvas">
+      <UniqueIdentifier>{17044bf2-96d1-4d29-b5e2-5fc72b48da2f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\html\forms">
+      <UniqueIdentifier>{9e980914-4e0f-4d5c-a698-309373903439}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\html\imports">
+      <UniqueIdentifier>{61a32b1b-29b8-48e0-9022-a45de13bf6e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\html\parser">
+      <UniqueIdentifier>{77964a23-7bf9-401e-b349-2133f7d68b85}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\html\shadow">
+      <UniqueIdentifier>{9b960776-cfdc-40d3-8159-6e48ec0a63f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\html\track">
+      <UniqueIdentifier>{151289df-f329-411b-9c51-e94efe301f77}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\html\track\vtt">
+      <UniqueIdentifier>{60f71160-77df-4921-9328-5cfaaced37c9}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\canvas\CanvasRenderingContext.cpp">
+      <Filter>core\html\canvas</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\ClassList.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\DocumentNameCollection.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\DOMFormData.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\FormAssociatedElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\FormDataList.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\BaseButtonInputType.cpp">
+      <Filter>core\html\forms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\BaseCheckableInputType.cpp">
+      <Filter>core\html\forms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\BaseChooserOnlyDateAndTimeInputType.cpp">
+      <Filter>core\html\forms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\BaseClickableWithKeyInputType.cpp">
+      <Filter>core\html\forms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\BaseDateAndTimeInputType.cpp">
+      <Filter>core\html\forms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\BaseMultipleFieldsDateAndTimeInputType.cpp">
+      <Filter>core\html\forms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\BaseTextInputType.cpp">
+      <Filter>core\html\forms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\ButtonInputType.cpp">
+      <Filter>core\html\forms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\CheckboxInputType.cpp">
+      <Filter>core\html\forms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\ColorChooser.cpp">
+      <Filter>core\html\forms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\ColorChooserClient.cpp">
+      <Filter>core\html\forms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\ColorInputType.cpp">
+      <Filter>core\html\forms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\DateInputType.cpp">
+      <Filter>core\html\forms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\DateTimeChooser.cpp">
+      <Filter>core\html\forms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\DateTimeChooserClient.cpp">
+      <Filter>core\html\forms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\DateTimeFieldsState.cpp">
+      <Filter>core\html\forms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\DateTimeLocalInputType.cpp">
+      <Filter>core\html\forms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\EmailInputType.cpp">
+      <Filter>core\html\forms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\FileInputType.cpp">
+      <Filter>core\html\forms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\FormController.cpp">
+      <Filter>core\html\forms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\HiddenInputType.cpp">
+      <Filter>core\html\forms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\ImageInputType.cpp">
+      <Filter>core\html\forms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\InputType.cpp">
+      <Filter>core\html\forms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\InputTypeView.cpp">
+      <Filter>core\html\forms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\MonthInputType.cpp">
+      <Filter>core\html\forms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\NumberInputType.cpp">
+      <Filter>core\html\forms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\PasswordInputType.cpp">
+      <Filter>core\html\forms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\RadioButtonGroupScope.cpp">
+      <Filter>core\html\forms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\RadioInputType.cpp">
+      <Filter>core\html\forms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\RangeInputType.cpp">
+      <Filter>core\html\forms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\ResetInputType.cpp">
+      <Filter>core\html\forms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\SearchInputType.cpp">
+      <Filter>core\html\forms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\StepRange.cpp">
+      <Filter>core\html\forms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\SubmitInputType.cpp">
+      <Filter>core\html\forms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\TelephoneInputType.cpp">
+      <Filter>core\html\forms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\TextFieldInputType.cpp">
+      <Filter>core\html\forms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\TextInputType.cpp">
+      <Filter>core\html\forms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\TimeInputType.cpp">
+      <Filter>core\html\forms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\TypeAhead.cpp">
+      <Filter>core\html\forms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\URLInputType.cpp">
+      <Filter>core\html\forms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\WeekInputType.cpp">
+      <Filter>core\html\forms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLAllCollection.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLAnchorElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLAppletElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLAreaElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLAudioElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLBaseElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLBodyElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLBRElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLButtonElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLCanvasElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLCollection.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLContentElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLDataListElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLDetailsElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLDialogElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLDimension.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLDirectoryElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLDivElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLDListElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLDocument.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLEmbedElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLFieldSetElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLFontElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLFormControlElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLFormControlElementWithState.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLFormControlsCollection.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLFormElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLFrameElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLFrameElementBase.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLFrameOwnerElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLFrameSetElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLHeadElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLHeadingElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLHRElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLHtmlElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLIFrameElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLImageElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLInputElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLKeygenElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLLabelElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLLegendElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLLIElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLLinkElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLMapElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLMarqueeElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLMediaElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLMediaSource.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLMenuElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLMenuItemElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLMeterElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLModElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLNameCollection.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLNoEmbedElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLNoScriptElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLObjectElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLOListElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLOptGroupElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLOptionElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLOptionsCollection.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLOutputElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLParagraphElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLParamElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLPictureElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLPreElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLProgressElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLQuoteElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLRTElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLRubyElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLScriptElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLSelectElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLShadowElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLSourceElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLSpanElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLStyleElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLSummaryElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLTableCaptionElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLTableCellElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLTableColElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLTableElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLTablePartElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLTableRowElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLTableRowsCollection.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLTableSectionElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLTagCollection.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLTemplateElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLTextAreaElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLTextFormControlElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLTitleElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLTrackElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLUListElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLVideoElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLViewSourceDocument.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLWBRElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\ImageData.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\ImageDocument.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\imports\HTMLImport.cpp">
+      <Filter>core\html\imports</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\imports\HTMLImportChild.cpp">
+      <Filter>core\html\imports</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\imports\HTMLImportLoader.cpp">
+      <Filter>core\html\imports</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\imports\HTMLImportsController.cpp">
+      <Filter>core\html\imports</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\imports\HTMLImportStateResolver.cpp">
+      <Filter>core\html\imports</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\imports\HTMLImportTreeRoot.cpp">
+      <Filter>core\html\imports</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\imports\LinkImport.cpp">
+      <Filter>core\html\imports</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\LabelableElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\LabelsNodeList.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\LinkManifest.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\LinkRelAttribute.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\LinkResource.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\MediaController.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\MediaDocument.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\MediaFragmentURIParser.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\MediaKeyEvent.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\parser\BackgroundHTMLInputStream.cpp">
+      <Filter>core\html\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\parser\BackgroundHTMLParser.cpp">
+      <Filter>core\html\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\parser\CompactHTMLToken.cpp">
+      <Filter>core\html\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\parser\CSSPreloadScanner.cpp">
+      <Filter>core\html\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\parser\HTMLConstructionSite.cpp">
+      <Filter>core\html\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\parser\HTMLDocumentParser.cpp">
+      <Filter>core\html\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\parser\HTMLElementStack.cpp">
+      <Filter>core\html\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\parser\HTMLEntityParser.cpp">
+      <Filter>core\html\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\parser\HTMLEntitySearch.cpp">
+      <Filter>core\html\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\parser\HTMLFormattingElementList.cpp">
+      <Filter>core\html\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\parser\HTMLMetaCharsetParser.cpp">
+      <Filter>core\html\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\parser\HTMLParserIdioms.cpp">
+      <Filter>core\html\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\parser\HTMLParserOptions.cpp">
+      <Filter>core\html\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\parser\HTMLParserScheduler.cpp">
+      <Filter>core\html\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\parser\HTMLParserThread.cpp">
+      <Filter>core\html\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\parser\HTMLPreloadScanner.cpp">
+      <Filter>core\html\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\parser\HTMLResourcePreloader.cpp">
+      <Filter>core\html\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\parser\HTMLScriptRunner.cpp">
+      <Filter>core\html\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\parser\HTMLSourceTracker.cpp">
+      <Filter>core\html\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\parser\HTMLSrcsetParser.cpp">
+      <Filter>core\html\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\parser\HTMLTokenizer.cpp">
+      <Filter>core\html\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\parser\HTMLTreeBuilder.cpp">
+      <Filter>core\html\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\parser\HTMLTreeBuilderSimulator.cpp">
+      <Filter>core\html\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\parser\HTMLViewSourceParser.cpp">
+      <Filter>core\html\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\parser\TextDocumentParser.cpp">
+      <Filter>core\html\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\parser\TextResourceDecoder.cpp">
+      <Filter>core\html\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\parser\XSSAuditor.cpp">
+      <Filter>core\html\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\parser\XSSAuditorDelegate.cpp">
+      <Filter>core\html\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\PluginDocument.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\PublicURLManager.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\RadioNodeList.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\shadow\ClearButtonElement.cpp">
+      <Filter>core\html\shadow</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\shadow\DateTimeEditElement.cpp">
+      <Filter>core\html\shadow</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\shadow\DateTimeFieldElement.cpp">
+      <Filter>core\html\shadow</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\shadow\DateTimeFieldElements.cpp">
+      <Filter>core\html\shadow</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\shadow\DateTimeNumericFieldElement.cpp">
+      <Filter>core\html\shadow</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\shadow\DateTimeSymbolicFieldElement.cpp">
+      <Filter>core\html\shadow</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\shadow\DetailsMarkerControl.cpp">
+      <Filter>core\html\shadow</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\shadow\MediaControlElements.cpp">
+      <Filter>core\html\shadow</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\shadow\MediaControlElementTypes.cpp">
+      <Filter>core\html\shadow</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\shadow\MediaControls.cpp">
+      <Filter>core\html\shadow</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\shadow\MeterShadowElement.cpp">
+      <Filter>core\html\shadow</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\shadow\PickerIndicatorElement.cpp">
+      <Filter>core\html\shadow</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\shadow\ProgressShadowElement.cpp">
+      <Filter>core\html\shadow</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\shadow\ShadowElementNames.cpp">
+      <Filter>core\html\shadow</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\shadow\SliderThumbElement.cpp">
+      <Filter>core\html\shadow</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\shadow\SpinButtonElement.cpp">
+      <Filter>core\html\shadow</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\shadow\TextControlInnerElements.cpp">
+      <Filter>core\html\shadow</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\TextDocument.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\TimeRanges.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\track\AudioTrack.cpp">
+      <Filter>core\html\track</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\track\AudioTrackList.cpp">
+      <Filter>core\html\track</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\track\InbandTextTrack.cpp">
+      <Filter>core\html\track</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\track\LoadableTextTrack.cpp">
+      <Filter>core\html\track</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\track\TextTrack.cpp">
+      <Filter>core\html\track</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\track\TextTrackCue.cpp">
+      <Filter>core\html\track</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\track\TextTrackCueList.cpp">
+      <Filter>core\html\track</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\track\TextTrackList.cpp">
+      <Filter>core\html\track</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\track\TrackBase.cpp">
+      <Filter>core\html\track</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\track\TrackEvent.cpp">
+      <Filter>core\html\track</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\track\VideoTrack.cpp">
+      <Filter>core\html\track</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\track\VideoTrackList.cpp">
+      <Filter>core\html\track</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\ValidityState.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\WindowNameCollection.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLImageFallbackHelper.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLImageLoader.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\track\vtt\VTTRegionList.cpp">
+      <Filter>core\html\track\vtt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\track\vtt\VTTScanner.cpp">
+      <Filter>core\html\track\vtt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\track\vtt\VTTTokenizer.cpp">
+      <Filter>core\html\track\vtt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\track\vtt\BufferedLineReader.cpp">
+      <Filter>core\html\track\vtt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\track\vtt\VTTCue.cpp">
+      <Filter>core\html\track\vtt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\track\vtt\VTTElement.cpp">
+      <Filter>core\html\track\vtt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\track\vtt\VTTParser.cpp">
+      <Filter>core\html\track\vtt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\track\vtt\VTTRegion.cpp">
+      <Filter>core\html\track\vtt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\canvas\CanvasFontCache.cpp">
+      <Filter>core\html\canvas</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\track\CueTimeline.cpp">
+      <Filter>core\html\track</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\parser\PreloadRequest.cpp">
+      <Filter>core\html\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLPlugInElement.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\CrossOriginAttribute.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\LinkDefaultPresentation.cpp">
+      <Filter>core\html</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\track\AutomaticTrackSelection.cpp">
+      <Filter>core\html\track</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\parser\ResourcePreloader.cpp">
+      <Filter>core\html\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\shadow\PluginPlaceholderElement.cpp">
+      <Filter>core\html\shadow</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\track\TextTrackContainer.cpp">
+      <Filter>core\html\track</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\config.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\canvas\CanvasImageSource.h">
+      <Filter>core\html\canvas</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\canvas\CanvasRenderingContext.h">
+      <Filter>core\html\canvas</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\ClassList.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\CollectionIndexCache.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\CollectionItemsCache.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\CollectionType.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\DocumentNameCollection.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\DOMFormData.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\FormAssociatedElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\FormDataList.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\BaseButtonInputType.h">
+      <Filter>core\html\forms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\BaseCheckableInputType.h">
+      <Filter>core\html\forms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\BaseChooserOnlyDateAndTimeInputType.h">
+      <Filter>core\html\forms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\BaseClickableWithKeyInputType.h">
+      <Filter>core\html\forms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\BaseDateAndTimeInputType.h">
+      <Filter>core\html\forms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\BaseMultipleFieldsDateAndTimeInputType.h">
+      <Filter>core\html\forms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\BaseTextInputType.h">
+      <Filter>core\html\forms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\ButtonInputType.h">
+      <Filter>core\html\forms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\CheckboxInputType.h">
+      <Filter>core\html\forms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\ColorChooser.h">
+      <Filter>core\html\forms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\ColorChooserClient.h">
+      <Filter>core\html\forms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\ColorInputType.h">
+      <Filter>core\html\forms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\DateInputType.h">
+      <Filter>core\html\forms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\DateTimeChooser.h">
+      <Filter>core\html\forms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\DateTimeChooserClient.h">
+      <Filter>core\html\forms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\DateTimeFieldsState.h">
+      <Filter>core\html\forms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\DateTimeLocalInputType.h">
+      <Filter>core\html\forms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\EmailInputType.h">
+      <Filter>core\html\forms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\FileInputType.h">
+      <Filter>core\html\forms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\FormController.h">
+      <Filter>core\html\forms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\HiddenInputType.h">
+      <Filter>core\html\forms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\ImageInputType.h">
+      <Filter>core\html\forms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\InputType.h">
+      <Filter>core\html\forms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\InputTypeView.h">
+      <Filter>core\html\forms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\MonthInputType.h">
+      <Filter>core\html\forms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\NumberInputType.h">
+      <Filter>core\html\forms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\PasswordInputType.h">
+      <Filter>core\html\forms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\RadioButtonGroupScope.h">
+      <Filter>core\html\forms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\RadioInputType.h">
+      <Filter>core\html\forms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\RangeInputType.h">
+      <Filter>core\html\forms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\ResetInputType.h">
+      <Filter>core\html\forms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\SearchInputType.h">
+      <Filter>core\html\forms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\StepRange.h">
+      <Filter>core\html\forms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\SubmitInputType.h">
+      <Filter>core\html\forms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\TelephoneInputType.h">
+      <Filter>core\html\forms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\TextFieldInputType.h">
+      <Filter>core\html\forms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\TextInputType.h">
+      <Filter>core\html\forms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\TimeInputType.h">
+      <Filter>core\html\forms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\TypeAhead.h">
+      <Filter>core\html\forms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\URLInputType.h">
+      <Filter>core\html\forms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\forms\WeekInputType.h">
+      <Filter>core\html\forms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLAllCollection.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLAnchorElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLAppletElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLAreaElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLAudioElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLBaseElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLBDIElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLBodyElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLBRElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLButtonElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLCanvasElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLCollection.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLContentElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLDataListElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLDataListOptionsCollection.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLDetailsElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLDialogElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLDimension.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLDirectoryElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLDivElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLDListElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLDocument.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLEmbedElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLFieldSetElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLFontElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLFormControlElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLFormControlElementWithState.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLFormControlsCollection.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLFormElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLFrameElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLFrameElementBase.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLFrameOwnerElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLFrameSetElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLHeadElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLHeadingElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLHRElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLHtmlElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLIFrameElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLImageElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLImageLoader.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLInputElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLKeygenElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLLabelElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLLegendElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLLIElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLLinkElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLMapElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLMarqueeElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLMediaElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLMediaSource.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLMenuElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLMenuItemElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLMetaElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLMeterElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLModElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLNameCollection.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLNoEmbedElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLNoScriptElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLObjectElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLOListElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLOptGroupElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLOptionElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLOptionsCollection.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLOutputElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLParagraphElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLParamElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLPictureElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLPlugInElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLPreElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLProgressElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLQuoteElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLRTElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLRubyElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLScriptElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLSelectElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLShadowElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLSourceElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLSpanElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLStyleElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLSummaryElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLTableCaptionElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLTableCellElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLTableColElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLTableElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLTablePartElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLTableRowElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLTableRowsCollection.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLTableSectionElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLTagCollection.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLTemplateElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLTextAreaElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLTextFormControlElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLTitleElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLTrackElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLUListElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLUnknownElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLVideoElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLViewSourceDocument.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLWBRElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\ImageData.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\ImageDocument.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\imports\HTMLImport.h">
+      <Filter>core\html\imports</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\imports\HTMLImportChild.h">
+      <Filter>core\html\imports</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\imports\HTMLImportChildClient.h">
+      <Filter>core\html\imports</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\imports\HTMLImportLoader.h">
+      <Filter>core\html\imports</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\imports\HTMLImportsController.h">
+      <Filter>core\html\imports</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\imports\HTMLImportState.h">
+      <Filter>core\html\imports</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\imports\HTMLImportStateResolver.h">
+      <Filter>core\html\imports</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\imports\HTMLImportTreeRoot.h">
+      <Filter>core\html\imports</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\imports\LinkImport.h">
+      <Filter>core\html\imports</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\LabelableElement.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\LabelsNodeList.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\LinkManifest.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\LinkRelAttribute.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\LinkResource.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\MediaController.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\MediaDocument.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\MediaError.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\MediaFragmentURIParser.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\MediaKeyError.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\MediaKeyEvent.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\parser\AtomicHTMLToken.h">
+      <Filter>core\html\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\parser\BackgroundHTMLInputStream.h">
+      <Filter>core\html\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\parser\BackgroundHTMLParser.h">
+      <Filter>core\html\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\parser\CompactHTMLToken.h">
+      <Filter>core\html\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\parser\CSSPreloadScanner.h">
+      <Filter>core\html\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\parser\HTMLConstructionSite.h">
+      <Filter>core\html\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\parser\HTMLDocumentParser.h">
+      <Filter>core\html\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\parser\HTMLElementStack.h">
+      <Filter>core\html\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\parser\HTMLEntityParser.h">
+      <Filter>core\html\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\parser\HTMLEntitySearch.h">
+      <Filter>core\html\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\parser\HTMLEntityTable.h">
+      <Filter>core\html\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\parser\HTMLFormattingElementList.h">
+      <Filter>core\html\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\parser\HTMLInputStream.h">
+      <Filter>core\html\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\parser\HTMLMetaCharsetParser.h">
+      <Filter>core\html\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\parser\HTMLParserIdioms.h">
+      <Filter>core\html\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\parser\HTMLParserOptions.h">
+      <Filter>core\html\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\parser\HTMLParserScheduler.h">
+      <Filter>core\html\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\parser\HTMLParserThread.h">
+      <Filter>core\html\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\parser\HTMLPreloadScanner.h">
+      <Filter>core\html\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\parser\HTMLResourcePreloader.h">
+      <Filter>core\html\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\parser\HTMLScriptRunner.h">
+      <Filter>core\html\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\parser\HTMLScriptRunnerHost.h">
+      <Filter>core\html\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\parser\HTMLSourceTracker.h">
+      <Filter>core\html\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\parser\HTMLSrcsetParser.h">
+      <Filter>core\html\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\parser\HTMLStackItem.h">
+      <Filter>core\html\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\parser\HTMLToken.h">
+      <Filter>core\html\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\parser\HTMLTokenizer.h">
+      <Filter>core\html\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\parser\HTMLTreeBuilder.h">
+      <Filter>core\html\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\parser\HTMLTreeBuilderSimulator.h">
+      <Filter>core\html\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\parser\HTMLViewSourceParser.h">
+      <Filter>core\html\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\parser\InputStreamPreprocessor.h">
+      <Filter>core\html\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\parser\NestingLevelIncrementer.h">
+      <Filter>core\html\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\parser\ParserSynchronizationPolicy.h">
+      <Filter>core\html\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\parser\TextDocumentParser.h">
+      <Filter>core\html\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\parser\TextResourceDecoder.h">
+      <Filter>core\html\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\parser\XSSAuditor.h">
+      <Filter>core\html\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\parser\XSSAuditorDelegate.h">
+      <Filter>core\html\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\PluginDocument.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\PublicURLManager.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\RadioNodeList.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\shadow\ClearButtonElement.h">
+      <Filter>core\html\shadow</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\shadow\DateTimeEditElement.h">
+      <Filter>core\html\shadow</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\shadow\DateTimeFieldElement.h">
+      <Filter>core\html\shadow</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\shadow\DateTimeFieldElements.h">
+      <Filter>core\html\shadow</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\shadow\DateTimeNumericFieldElement.h">
+      <Filter>core\html\shadow</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\shadow\DateTimeSymbolicFieldElement.h">
+      <Filter>core\html\shadow</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\shadow\DetailsMarkerControl.h">
+      <Filter>core\html\shadow</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\shadow\MediaControlElements.h">
+      <Filter>core\html\shadow</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\shadow\MediaControlElementTypes.h">
+      <Filter>core\html\shadow</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\shadow\MediaControls.h">
+      <Filter>core\html\shadow</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\shadow\MeterShadowElement.h">
+      <Filter>core\html\shadow</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\shadow\PickerIndicatorElement.h">
+      <Filter>core\html\shadow</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\shadow\PluginPlaceholderElement.h">
+      <Filter>core\html\shadow</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\shadow\ProgressShadowElement.h">
+      <Filter>core\html\shadow</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\shadow\ShadowElementNames.h">
+      <Filter>core\html\shadow</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\shadow\SliderThumbElement.h">
+      <Filter>core\html\shadow</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\shadow\SpinButtonElement.h">
+      <Filter>core\html\shadow</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\shadow\TextControlInnerElements.h">
+      <Filter>core\html\shadow</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\TextDocument.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\TextMetrics.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\TimeRanges.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\track\AudioTrack.h">
+      <Filter>core\html\track</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\track\AudioTrackList.h">
+      <Filter>core\html\track</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\track\InbandTextTrack.h">
+      <Filter>core\html\track</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\track\LoadableTextTrack.h">
+      <Filter>core\html\track</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\track\TextTrack.h">
+      <Filter>core\html\track</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\track\TextTrackCue.h">
+      <Filter>core\html\track</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\track\TextTrackCueList.h">
+      <Filter>core\html\track</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\track\TextTrackKindUserPreference.h">
+      <Filter>core\html\track</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\track\TextTrackList.h">
+      <Filter>core\html\track</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\track\TrackBase.h">
+      <Filter>core\html\track</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\track\TrackEvent.h">
+      <Filter>core\html\track</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\track\TrackListBase.h">
+      <Filter>core\html\track</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\track\VideoTrack.h">
+      <Filter>core\html\track</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\track\VideoTrackList.h">
+      <Filter>core\html\track</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\URLRegistry.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\ValidityState.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\VoidCallback.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\WindowNameCollection.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\HTMLImageFallbackHelper.h">
+      <Filter>core\html</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\track\vtt\VTTRegion.h">
+      <Filter>core\html\track\vtt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\track\vtt\VTTRegionList.h">
+      <Filter>core\html\track\vtt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\track\vtt\VTTScanner.h">
+      <Filter>core\html\track\vtt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\track\vtt\VTTToken.h">
+      <Filter>core\html\track\vtt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\track\vtt\VTTTokenizer.h">
+      <Filter>core\html\track\vtt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\track\vtt\BufferedLineReader.h">
+      <Filter>core\html\track\vtt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\track\vtt\VTTCue.h">
+      <Filter>core\html\track\vtt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\track\vtt\VTTElement.h">
+      <Filter>core\html\track\vtt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\track\vtt\VTTParser.h">
+      <Filter>core\html\track\vtt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\canvas\CanvasFontCache.h">
+      <Filter>core\html\canvas</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\canvas\CanvasRenderingContextFactory.h">
+      <Filter>core\html\canvas</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\track\CueTimeline.h">
+      <Filter>core\html\track</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\parser\PreloadRequest.h">
+      <Filter>core\html\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\track\AutomaticTrackSelection.h">
+      <Filter>core\html\track</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\parser\ResourcePreloader.h">
+      <Filter>core\html\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\html\track\TextTrackContainer.h">
+      <Filter>core\html\track</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\config.h" />
+  </ItemGroup>
+</Project>

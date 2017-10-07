@@ -1,0 +1,514 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="core">
+      <UniqueIdentifier>{8d5b50a9-8799-4f87-b846-bacd5b9929ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\editing">
+      <UniqueIdentifier>{1d924f7e-b1f8-49fa-9b27-e12921c55006}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\editing\iterators">
+      <UniqueIdentifier>{4bd35cb9-81c0-4440-97e1-458f625af8e1}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\AppendNodeCommand.cpp">
+      <Filter>core\editing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\ApplyBlockElementCommand.cpp">
+      <Filter>core\editing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\ApplyStyleCommand.cpp">
+      <Filter>core\editing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\BreakBlockquoteCommand.cpp">
+      <Filter>core\editing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\Caret.cpp">
+      <Filter>core\editing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\CompositeEditCommand.cpp">
+      <Filter>core\editing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\CompositionUnderlineRangeFilter.cpp">
+      <Filter>core\editing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\CreateLinkCommand.cpp">
+      <Filter>core\editing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\DeleteFromTextNodeCommand.cpp">
+      <Filter>core\editing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\DeleteSelectionCommand.cpp">
+      <Filter>core\editing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\DOMSelection.cpp">
+      <Filter>core\editing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\EditCommand.cpp">
+      <Filter>core\editing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\EditingBehavior.cpp">
+      <Filter>core\editing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\EditingStrategy.cpp">
+      <Filter>core\editing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\EditingStyle.cpp">
+      <Filter>core\editing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\Editor.cpp">
+      <Filter>core\editing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\EditorCommand.cpp">
+      <Filter>core\editing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\EditorKeyBindings.cpp">
+      <Filter>core\editing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\EphemeralRange.cpp">
+      <Filter>core\editing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\FormatBlockCommand.cpp">
+      <Filter>core\editing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\FrameSelection.cpp">
+      <Filter>core\editing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\GranularityStrategy.cpp">
+      <Filter>core\editing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\htmlediting.cpp">
+      <Filter>core\editing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\HTMLInterchange.cpp">
+      <Filter>core\editing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\IndentOutdentCommand.cpp">
+      <Filter>core\editing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\InputMethodController.cpp">
+      <Filter>core\editing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\InsertIntoTextNodeCommand.cpp">
+      <Filter>core\editing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\InsertLineBreakCommand.cpp">
+      <Filter>core\editing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\InsertListCommand.cpp">
+      <Filter>core\editing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\InsertNodeBeforeCommand.cpp">
+      <Filter>core\editing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\InsertParagraphSeparatorCommand.cpp">
+      <Filter>core\editing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\InsertTextCommand.cpp">
+      <Filter>core\editing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\markup.cpp">
+      <Filter>core\editing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\MarkupAccumulator.cpp">
+      <Filter>core\editing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\MarkupFormatter.cpp">
+      <Filter>core\editing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\MergeIdenticalElementsCommand.cpp">
+      <Filter>core\editing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\MoveSelectionCommand.cpp">
+      <Filter>core\editing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\PlainTextRange.cpp">
+      <Filter>core\editing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\PositionWithAffinity.cpp">
+      <Filter>core\editing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\RemoveCSSPropertyCommand.cpp">
+      <Filter>core\editing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\RemoveFormatCommand.cpp">
+      <Filter>core\editing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\RemoveNodeCommand.cpp">
+      <Filter>core\editing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\RemoveNodePreservingChildrenCommand.cpp">
+      <Filter>core\editing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\RenderedPosition.cpp">
+      <Filter>core\editing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\ReplaceNodeWithSpanCommand.cpp">
+      <Filter>core\editing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\ReplaceSelectionCommand.cpp">
+      <Filter>core\editing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\SelectionController.cpp">
+      <Filter>core\editing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\SetNodeAttributeCommand.cpp">
+      <Filter>core\editing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\SimplifyMarkupCommand.cpp">
+      <Filter>core\editing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\SpellChecker.cpp">
+      <Filter>core\editing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\SpellCheckRequester.cpp">
+      <Filter>core\editing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\SplitElementCommand.cpp">
+      <Filter>core\editing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\SplitTextNodeCommand.cpp">
+      <Filter>core\editing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\SplitTextNodeContainingElementCommand.cpp">
+      <Filter>core\editing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\StyledMarkupAccumulator.cpp">
+      <Filter>core\editing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\StyledMarkupSerializer.cpp">
+      <Filter>core\editing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\SurroundingText.cpp">
+      <Filter>core\editing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\TextCheckingHelper.cpp">
+      <Filter>core\editing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\TextInsertionBaseCommand.cpp">
+      <Filter>core\editing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\TextOffset.cpp">
+      <Filter>core\editing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\TypingCommand.cpp">
+      <Filter>core\editing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\UndoStack.cpp">
+      <Filter>core\editing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\UnlinkCommand.cpp">
+      <Filter>core\editing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\VisiblePosition.cpp">
+      <Filter>core\editing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\VisibleSelection.cpp">
+      <Filter>core\editing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\VisibleUnits.cpp">
+      <Filter>core\editing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\WrapContentsInDummySpanCommand.cpp">
+      <Filter>core\editing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\iterators\SimplifiedBackwardsTextIterator.cpp">
+      <Filter>core\editing\iterators</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\iterators\TextIterator.cpp">
+      <Filter>core\editing\iterators</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\iterators\TextIteratorTextState.cpp">
+      <Filter>core\editing\iterators</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\iterators\WordAwareIterator.cpp">
+      <Filter>core\editing\iterators</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\iterators\BackwardsCharacterIterator.cpp">
+      <Filter>core\editing\iterators</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\iterators\BitStack.cpp">
+      <Filter>core\editing\iterators</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\iterators\CharacterIterator.cpp">
+      <Filter>core\editing\iterators</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\iterators\FullyClippedStateStack.cpp">
+      <Filter>core\editing\iterators</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\SmartReplaceICU.cpp">
+      <Filter>core\editing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\config.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\AppendNodeCommand.h">
+      <Filter>core\editing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\ApplyBlockElementCommand.h">
+      <Filter>core\editing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\ApplyStyleCommand.h">
+      <Filter>core\editing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\BreakBlockquoteCommand.h">
+      <Filter>core\editing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\Caret.h">
+      <Filter>core\editing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\CompositeEditCommand.h">
+      <Filter>core\editing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\CompositionUnderline.h">
+      <Filter>core\editing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\CompositionUnderlineRangeFilter.h">
+      <Filter>core\editing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\CreateLinkCommand.h">
+      <Filter>core\editing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\DeleteFromTextNodeCommand.h">
+      <Filter>core\editing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\DeleteSelectionCommand.h">
+      <Filter>core\editing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\DOMSelection.h">
+      <Filter>core\editing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\EditAction.h">
+      <Filter>core\editing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\EditCommand.h">
+      <Filter>core\editing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\EditingBehavior.h">
+      <Filter>core\editing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\EditingBehaviorTypes.h">
+      <Filter>core\editing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\EditingBoundary.h">
+      <Filter>core\editing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\EditingStrategy.h">
+      <Filter>core\editing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\EditingStyle.h">
+      <Filter>core\editing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\EditingTestBase.h">
+      <Filter>core\editing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\Editor.h">
+      <Filter>core\editing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\EphemeralRange.h">
+      <Filter>core\editing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\FindOptions.h">
+      <Filter>core\editing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\FormatBlockCommand.h">
+      <Filter>core\editing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\FrameSelection.h">
+      <Filter>core\editing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\GranularityStrategy.h">
+      <Filter>core\editing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\htmlediting.h">
+      <Filter>core\editing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\HTMLInterchange.h">
+      <Filter>core\editing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\IndentOutdentCommand.h">
+      <Filter>core\editing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\InputMethodController.h">
+      <Filter>core\editing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\InsertIntoTextNodeCommand.h">
+      <Filter>core\editing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\InsertLineBreakCommand.h">
+      <Filter>core\editing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\InsertListCommand.h">
+      <Filter>core\editing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\InsertNodeBeforeCommand.h">
+      <Filter>core\editing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\InsertParagraphSeparatorCommand.h">
+      <Filter>core\editing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\InsertTextCommand.h">
+      <Filter>core\editing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\markup.h">
+      <Filter>core\editing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\MarkupAccumulator.h">
+      <Filter>core\editing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\MarkupFormatter.h">
+      <Filter>core\editing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\MergeIdenticalElementsCommand.h">
+      <Filter>core\editing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\MoveSelectionCommand.h">
+      <Filter>core\editing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\PlainTextRange.h">
+      <Filter>core\editing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\PositionWithAffinity.h">
+      <Filter>core\editing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\RemoveCSSPropertyCommand.h">
+      <Filter>core\editing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\RemoveFormatCommand.h">
+      <Filter>core\editing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\RemoveNodeCommand.h">
+      <Filter>core\editing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\RemoveNodePreservingChildrenCommand.h">
+      <Filter>core\editing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\RenderedPosition.h">
+      <Filter>core\editing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\ReplaceNodeWithSpanCommand.h">
+      <Filter>core\editing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\ReplaceSelectionCommand.h">
+      <Filter>core\editing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\SelectionController.h">
+      <Filter>core\editing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\SelectionStrategy.h">
+      <Filter>core\editing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\SelectionType.h">
+      <Filter>core\editing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\SetNodeAttributeCommand.h">
+      <Filter>core\editing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\SimplifyMarkupCommand.h">
+      <Filter>core\editing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\SmartReplace.h">
+      <Filter>core\editing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\SpellChecker.h">
+      <Filter>core\editing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\SpellCheckRequester.h">
+      <Filter>core\editing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\SplitElementCommand.h">
+      <Filter>core\editing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\SplitTextNodeCommand.h">
+      <Filter>core\editing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\SplitTextNodeContainingElementCommand.h">
+      <Filter>core\editing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\StyledMarkupAccumulator.h">
+      <Filter>core\editing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\StyledMarkupSerializer.h">
+      <Filter>core\editing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\SurroundingText.h">
+      <Filter>core\editing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\TextAffinity.h">
+      <Filter>core\editing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\TextCheckingHelper.h">
+      <Filter>core\editing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\TextGranularity.h">
+      <Filter>core\editing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\TextInsertionBaseCommand.h">
+      <Filter>core\editing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\TextOffset.h">
+      <Filter>core\editing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\TypingCommand.h">
+      <Filter>core\editing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\UndoStack.h">
+      <Filter>core\editing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\UndoStep.h">
+      <Filter>core\editing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\UnlinkCommand.h">
+      <Filter>core\editing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\VisiblePosition.h">
+      <Filter>core\editing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\VisibleSelection.h">
+      <Filter>core\editing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\VisibleUnits.h">
+      <Filter>core\editing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\WrapContentsInDummySpanCommand.h">
+      <Filter>core\editing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\WritingDirection.h">
+      <Filter>core\editing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\iterators\SimplifiedBackwardsTextIterator.h">
+      <Filter>core\editing\iterators</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\iterators\TextIterator.h">
+      <Filter>core\editing\iterators</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\iterators\TextIteratorFlags.h">
+      <Filter>core\editing\iterators</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\iterators\TextIteratorTextState.h">
+      <Filter>core\editing\iterators</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\iterators\WordAwareIterator.h">
+      <Filter>core\editing\iterators</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\iterators\BackwardsCharacterIterator.h">
+      <Filter>core\editing\iterators</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\iterators\BitStack.h">
+      <Filter>core\editing\iterators</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\iterators\CharacterIterator.h">
+      <Filter>core\editing\iterators</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\iterators\FullyClippedStateStack.h">
+      <Filter>core\editing\iterators</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\config.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\..\..\..\third_party\WebKit\Source\core\editing\OWNERS">
+      <Filter>core\editing</Filter>
+    </None>
+  </ItemGroup>
+</Project>

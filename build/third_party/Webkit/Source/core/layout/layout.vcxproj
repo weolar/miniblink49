@@ -1,0 +1,669 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{45C745CC-B1EB-4243-939B-3DA02E523F30}</ProjectGuid>
+    <RootNamespace>miniblink</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectName>layout</ProjectName>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v140_xp</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v140_xp</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v140_xp</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v140_xp</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>11.0.50727.1</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(SolutionDir)..\out\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)..\out\tmp\$(Platform)\$(ProjectName)\$(Configuration)\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)..\out\$(Platform)$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)..\out\tmp\$(Platform)$(ProjectName)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)..\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)..\tmp\$(ProjectName)\$(Configuration)\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)..\out\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)..\out\tmp\$(Platform)\$(ProjectName)\$(Configuration)\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(SolutionDir)..\vc6\include\crt;$(SolutionDir)..\vc6\include\wnet;$(SolutionDir)..\third_party\GDIPlus\Includes</IncludePath>
+    <ReferencePath />
+    <LibraryPath>$(SolutionDir)..\vc6\lib;$(SolutionDir)..\third_party\GDIPlus\lib</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <GenerateManifest>false</GenerateManifest>
+    <OutDir>$(SolutionDir)..\out\$(Platform)$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)..\out\tmp\$(Platform)$(ProjectName)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>BUILDING_CEF_SHARED;DCHECK_ALWAYS_ON=1;WIN32;_DEBUG;_WINDOWS;INSIDE_BLINK=1;BLINK_IMPLEMENTATION=1;ENABLE_OILPAN=1;ENABLE_GC_PROFILING=1;ENABLE_WKE=1;CARES_STATICLIB=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalIncludeDirectories>../../../../../../;../../../../../../v8_4_8/;../../../../../../v8_4_8/include;../../../../../../base;../../../../../../third_party/;../../../../../../third_party/npapi;../../../../../../third_party/WebKit;../../../../../../third_party/WebKit/Source;../../../../../../cef;../../../../../../third_party/icu/source/common;../../../../../../gen/blink;../../../../../../gen/blink/core;../../../../../../gen/blink/bindings/modules/v8;../../../../../../gen/blink/bindings/core/v8;../../../../../../gpu;../../../../../../third_party/khronos;../../../../../../third_party/libxml/src/include;../../../../../../third_party/libxml/win32/include;../../../../../../third_party/skia/include/core;../../../../../../third_party/skia/include/config;../../../../../../third_party/skia/include/codec;../../../../../../third_party/skia/include/device;../../../../../../third_party/skia/include/effects;../../../../../../third_party/skia/include/images;../../../../../../third_party/skia/include/pathops;../../../../../../third_party/skia/include/ports;../../../../../../third_party/skia/include/private;../../../../../../third_party/skia/include/utils</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4800;4291;4996;4244;4305;4577;4091;4251</DisableSpecificWarnings>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <PrecompiledHeaderFile>config.h</PrecompiledHeaderFile>
+      <ForcedIncludeFiles>config.h</ForcedIncludeFiles>
+      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <TargetMachine>MachineX86</TargetMachine>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\out\$(Configuration)\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>InjectTool.lib;version.lib;ots.lib;Crypt32.lib;Wldap32.lib;Imm32.lib;libxml.lib;zlib.lib;libcurl.lib;v8_4_8.lib;skia.lib;winmm.lib;Ws2_32.lib;Usp10.lib;Shlwapi.lib;wininet.lib;GDIPlus.lib;DbgHelp.lib;libjpeg.lib;libpng.lib;wolfssl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)node$(TargetExt)</OutputFile>
+      <ImportLibrary>$(OutDir)miniblink.lib</ImportLibrary>
+      <IgnoreSpecificDefaultLibraries>LIBCMT.lib</IgnoreSpecificDefaultLibraries>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>BUILDING_CEF_SHARED;DCHECK_ALWAYS_ON=1;WIN32;_DEBUG;_WINDOWS;INSIDE_BLINK=1;BLINK_IMPLEMENTATION=1;ENABLE_OILPAN=1;ENABLE_GC_PROFILING=1;ENABLE_WKE=1;ENABLE_CEF=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalIncludeDirectories>../../;../../v8/;../../v8/include;../../third_party/;../../third_party/npapi;../../third_party/WebKit;../../third_party/WebKit/Source;../../cef;../../third_party/icu/source/common;../../gen/blink;../../gen/blink/core;../../gen/blink/bindings/modules/v8;../../gen/blink/bindings/core/v8;../../gpu;../../third_party/khronos;../../third_party/libxml/src/include;../../third_party/libxml/win32/include;../../third_party/skia/include/core;../../third_party/skia/include/config;../../third_party/skia/include/codec;../../third_party/skia/include/device;../../third_party/skia/include/effects;../../third_party/skia/include/images;../../third_party/skia/include/pathops;../../third_party/skia/include/ports;../../third_party/skia/include/private;../../third_party/skia/include/utils;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4800;4291;4996;4244;4305;4577;4267;</DisableSpecificWarnings>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <PrecompiledHeaderFile>config.h</PrecompiledHeaderFile>
+      <ForcedIncludeFiles>config.h</ForcedIncludeFiles>
+      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <MinimalRebuild>true</MinimalRebuild>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\Debug\;$(SolutionDir)..\lib\;</AdditionalLibraryDirectories>
+      <AdditionalDependencies>InjectTool.lib;version.lib;ots_d.lib;Crypt32.lib;Wldap32.lib;Imm32.lib;libxml.lib;zlib_d.lib;libcurl_d.lib;v8_d.lib;skia_d.lib;winmm.lib;Ws2_32.lib;Usp10.lib;Shlwapi.lib;wininet.lib;GDIPlus.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(SolutionDir)..\Debug\miniblink.dll</OutputFile>
+      <ImportLibrary>$(OutDir)miniblink.lib</ImportLibrary>
+      <IgnoreSpecificDefaultLibraries>LIBCMT.lib</IgnoreSpecificDefaultLibraries>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>BUILDING_CEF_SHARED;NDEBUG;WIN32;_WINDOWS;INSIDE_BLINK=1;BLINK_IMPLEMENTATION=1;ENABLE_OILPAN=1;USING_VC6RT=1;ENABLE_WKE=1;ENABLE_CEF=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalIncludeDirectories>../../;../../v8_5_1/;../../v8_5_1/include;../../third_party/;../../third_party/GDIPlus/Includes;../../third_party/npapi;../../third_party/WebKit;../../third_party/WebKit/Source;../../cef;../../third_party/icu/source/common;../../gen/blink;../../gen/blink/core;../../gen/blink/bindings/modules/v8;../../gen/blink/bindings/core/v8;../../gpu;../../third_party/khronos;../../third_party/libxml/src/include;../../third_party/libxml/win32/include;../../third_party/skia/include/core;../../third_party/skia/include/config;../../third_party/skia/include/codec;../../third_party/skia/include/device;../../third_party/skia/include/effects;../../third_party/skia/include/images;../../third_party/skia/include/pathops;../../third_party/skia/include/ports;../../third_party/skia/include/private;../../third_party/skia/include/utils;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PrecompiledHeaderFile>config.h</PrecompiledHeaderFile>
+      <DisableSpecificWarnings>4800;4291;4996;4244;4305;4577;4530;4595;4049</DisableSpecificWarnings>
+      <ForcedIncludeFiles>config.h</ForcedIncludeFiles>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <Optimization>MinSpace</Optimization>
+      <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
+      <ExceptionHandling>false</ExceptionHandling>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
+      <StringPooling>true</StringPooling>
+      <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>Debug</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <TargetMachine>MachineX86</TargetMachine>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\third_party\GDIPlus\Lib;$(SolutionDir)..\out\$(Configuration)\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>version.lib;Crypt32.lib;Advapi32.lib;wldap32.lib;libcurl.lib;zlib.lib;ots.lib;Imm32.lib;libxml.lib;v8.lib;skia.lib;winmm.lib;Ws2_32.lib;Usp10.lib;Shlwapi.lib;wininet.lib;GDIPlus.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>/FORCE:UNRESOLVED %(AdditionalOptions)</AdditionalOptions>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <ImportLibrary>$(OutDir)miniblink.lib</ImportLibrary>
+      <IgnoreSpecificDefaultLibraries>LIBCMT.lib;libcpmt.lib</IgnoreSpecificDefaultLibraries>
+      <ShowProgress>NotSet</ShowProgress>
+      <EntryPointSymbol>
+      </EntryPointSymbol>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>_WIN32_WINNT=0x0500;USING_VC6RT=1;_USING_V110_SDK71_;_WINDLL;_UNICODE;UNICODE;BUILDING_CEF_SHARED;NDEBUG;WIN32;_WINDOWS;INSIDE_BLINK=1;BLINK_IMPLEMENTATION=1;ENABLE_OILPAN=1;ENABLE_WKE=1</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <AdditionalIncludeDirectories>../../../../../../;../../../../../../v8_4_8/;../../../../../../v8_4_8/include;../../../../../../base;../../../../../../third_party/;../../../../../../third_party/GDIPlus/Includes;../../../../../../third_party/npapi;../../../../../../third_party/WebKit;../../../../../../third_party/WebKit/Source;../../../../../../cef;../../../../../../third_party/icu/source/common;../../../../../../gen/blink;../../../../../../gen/blink/core;../../../../../../gen/blink/bindings/modules/v8;../../../../../../gen/blink/bindings/core/v8;../../../../../../gpu;../../../../../../third_party/khronos;../../../../../../third_party/libxml/src/include;../../../../../../third_party/libxml/win32/include;../../../../../../third_party/skia/include/core;../../../../../../third_party/skia/include/config;../../../../../../third_party/skia/include/codec;../../../../../../third_party/skia/include/device;../../../../../../third_party/skia/include/effects;../../../../../../third_party/skia/include/images;../../../../../../third_party/skia/include/pathops;../../../../../../third_party/skia/include/ports;../../../../../../third_party/skia/include/private;../../../../../../third_party/skia/include/utils</AdditionalIncludeDirectories>
+      <PrecompiledHeaderFile>config.h</PrecompiledHeaderFile>
+      <DisableSpecificWarnings>4800;4291;4996;4244;4305;4577;4530;4595;4049;4273</DisableSpecificWarnings>
+      <ForcedIncludeFiles>config.h</ForcedIncludeFiles>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <Optimization>Full</Optimization>
+      <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
+      <ExceptionHandling>false</ExceptionHandling>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <StringPooling>true</StringPooling>
+      <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <AdditionalOptions>/Zc:threadSafeInit- %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <TargetMachine>MachineX86</TargetMachine>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\third_party\GDIPlus\Lib;$(SolutionDir)..\out\Release\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libcurl.lib;zlib.lib;ots.lib;libxml.lib;v8_4_8.lib;skia.lib;winmm.lib;Ws2_32.lib;Usp10.lib;Shlwapi.lib;wininet.lib;GDIPlus.lib;version.lib;Crypt32.lib;wldap32.lib;Imm32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;wolfssl.lib;libpng.lib;libjpeg.lib</AdditionalDependencies>
+      <AdditionalOptions>/FORCE:UNRESOLVED %(AdditionalOptions)</AdditionalOptions>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <ImportLibrary>$(OutDir)miniblink.lib</ImportLibrary>
+      <IgnoreSpecificDefaultLibraries>LIBCMT.lib</IgnoreSpecificDefaultLibraries>
+      <ShowProgress>NotSet</ShowProgress>
+      <EntryPointSymbol>
+      </EntryPointSymbol>
+      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;BUILDING_CEF_SHARED;INSIDE_BLINK=1;BLINK_IMPLEMENTATION=1;ENABLE_OILPAN=1;ENABLE_WKE=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalIncludeDirectories>../../;../../v8_5_7/;../../v8_5_7/include;../../third_party/;../../third_party/GDIPlus/Includes;../../third_party/npapi;../../third_party/WebKit;../../third_party/WebKit/Source;../../cef;../../third_party/icu/source/common;../../gen/blink;../../gen/blink/core;../../gen/blink/bindings/modules/v8;../../gen/blink/bindings/core/v8;../../gpu;../../third_party/khronos;../../third_party/libxml/src/include;../../third_party/libxml/win32/include;../../third_party/skia/include/core;../../third_party/skia/include/config;../../third_party/skia/include/codec;../../third_party/skia/include/device;../../third_party/skia/include/effects;../../third_party/skia/include/images;../../third_party/skia/include/pathops;../../third_party/skia/include/ports;../../third_party/skia/include/private;../../third_party/skia/include/utils;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PrecompiledHeaderFile>config.h</PrecompiledHeaderFile>
+      <DisableSpecificWarnings>4800;4291;4996;4244;4305;4577;4530;4595;4049;4267;4302;4311</DisableSpecificWarnings>
+      <ForcedIncludeFiles>config.h</ForcedIncludeFiles>
+      <Optimization>Full</Optimization>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
+      <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\out\$(Platform)$(Configuration)\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>version.lib;Crypt32.lib;Advapi32.lib;wldap32.lib;libcurl.lib;zlib.lib;ots.lib;Imm32.lib;libxml.lib;v8_5_7.lib;skia.lib;winmm.lib;Ws2_32.lib;Usp10.lib;Shlwapi.lib;wininet.lib;GDIPlus.lib;DbgHelp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>/FORCE:UNRESOLVED %(AdditionalOptions)</AdditionalOptions>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <ImportLibrary>
+      </ImportLibrary>
+      <ShowProgress>NotSet</ShowProgress>
+      <EntryPointSymbol>
+      </EntryPointSymbol>
+      <GenerateDebugInformation>No</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\config.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\BidiRunForLine.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\ClipRect.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\compositing\CompositedDeprecatedPaintLayerMapping.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\compositing\CompositingInputsUpdater.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\compositing\CompositingLayerAssigner.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\compositing\CompositingReasonFinder.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\compositing\CompositingRequirementsUpdater.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\compositing\DeprecatedPaintLayerCompositor.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\compositing\GraphicsLayerTreeBuilder.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\compositing\GraphicsLayerUpdater.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\CounterNode.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\FloatingObjects.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\HitTestCache.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\HitTestingTransformState.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\HitTestLocation.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\HitTestResult.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\ImageQualityController.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutAnalyzer.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutApplet.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutBlock.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutBlockFlow.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutBlockFlowLine.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutBox.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutBoxModelObject.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutBR.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutButton.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutCounter.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutDeprecatedFlexibleBox.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutDetailsMarker.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutEmbeddedObject.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutFieldset.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutFileUploadControl.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutFlexibleBox.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutFlowThread.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutFrame.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutFrameSet.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutFullScreen.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutGeometryMap.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutGrid.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutHTMLCanvas.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutIFrame.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutImage.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutImageResource.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutImageResourceStyleImage.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutInline.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutListBox.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutListItem.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutListMarker.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutMedia.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutMenuList.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutMeter.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutMultiColumnFlowThread.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutMultiColumnSet.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutMultiColumnSpannerPlaceholder.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutObject.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutObjectChildList.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutPagedFlowThread.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutPart.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutProgress.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutQuote.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutReplaced.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutReplica.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutRuby.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutRubyBase.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutRubyRun.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutRubyText.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutScrollbar.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutScrollbarPart.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutScrollbarTheme.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutSearchField.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutSlider.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutSliderContainer.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutSliderThumb.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutState.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutTable.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutTableCaption.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutTableCell.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutTableCol.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutTableRow.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutTableSection.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutText.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutTextCombine.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutTextControl.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutTextControlMultiLine.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutTextControlSingleLine.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutTextFragment.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutTextTrackContainer.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutTheme.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutThemeDefault.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutThemeFontProvider.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutThemeFontProviderWin.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutThemeWin.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutTreeAsText.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutVideo.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutView.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutVTTCue.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutWordBreak.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\line\AbstractInlineTextBox.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\line\BreakingContext.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\line\EllipsisBox.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\line\InlineBox.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\line\InlineFlowBox.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\line\InlineTextBox.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\line\LineBoxList.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\line\LineBreaker.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\line\LineWidth.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\line\RootInlineBox.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\line\TrailingObjects.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\MultiColumnFragmentainerGroup.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\OrderIterator.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\PaintInvalidationState.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\PendingSelection.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\PointerEventsHitRules.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\ScrollAlignment.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\shapes\BoxShape.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\shapes\PolygonShape.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\shapes\RasterShape.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\shapes\RectangleShape.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\shapes\Shape.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\shapes\ShapeOutsideInfo.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\SubtreeLayoutScope.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGBlock.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGContainer.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGEllipse.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGForeignObject.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGGradientStop.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGHiddenContainer.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGImage.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGInline.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGInlineText.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGModelObject.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGPath.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGRect.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGResourceClipper.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGResourceContainer.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGResourceFilter.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGResourceFilterPrimitive.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGResourceGradient.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGResourceLinearGradient.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGResourceMarker.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGResourceMasker.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGResourcePaintServer.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGResourcePattern.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGResourceRadialGradient.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGRoot.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGShape.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGText.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGTextPath.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGTransformableContainer.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGTSpan.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGViewportContainer.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\line\SVGInlineFlowBox.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\line\SVGInlineTextBox.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\line\SVGRootInlineBox.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\ReferenceFilterBuilder.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\SVGLayoutSupport.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\SVGLayoutTreeAsText.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\SVGResources.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\SVGResourcesCache.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\SVGResourcesCycleSolver.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\SVGTextChunkBuilder.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\SVGTextLayoutAttributes.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\SVGTextLayoutAttributesBuilder.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\SVGTextLayoutEngine.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\SVGTextLayoutEngineBaseline.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\SVGTextLayoutEngineSpacing.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\SVGTextMetrics.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\SVGTextMetricsBuilder.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\SVGTextQuery.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\TableLayoutAlgorithmAuto.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\TableLayoutAlgorithmFixed.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\TextAutosizer.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\TextRunConstructor.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\TracedLayoutObject.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\api\LineLayoutBlockFlow.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\api\LineLayoutBox.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\api\LineLayoutInline.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\api\LineLayoutItem.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\api\LineLayoutText.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\BidiRun.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\BidiRunForLine.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\ClipPathOperation.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\ClipRect.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\ClipRects.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\ClipRectsCache.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\compositing\CompositedDeprecatedPaintLayerMapping.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\compositing\CompositedSelection.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\compositing\CompositedSelectionBound.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\compositing\CompositingInputsUpdater.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\compositing\CompositingLayerAssigner.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\compositing\CompositingReasonFinder.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\compositing\CompositingRequirementsUpdater.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\compositing\CompositingState.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\compositing\CompositingTriggers.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\compositing\DeprecatedPaintLayerCompositor.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\compositing\GraphicsLayerTreeBuilder.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\compositing\GraphicsLayerUpdater.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\CounterNode.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\FloatingObjects.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\GapRects.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\GeneratedChildren.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\HitTestCache.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\HitTestingTransformState.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\HitTestLocation.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\HitTestRequest.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\HitTestResult.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\ImageQualityController.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutAnalyzer.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutApplet.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutBlock.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutBlockFlow.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutBox.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutBoxModelObject.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutBR.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutButton.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutCounter.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutDeprecatedFlexibleBox.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutDetailsMarker.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutEmbeddedObject.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutFieldset.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutFileUploadControl.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutFlexibleBox.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutFlowThread.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutFrame.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutFrameSet.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutFullScreen.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutGeometryMap.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutGeometryMapStep.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutGrid.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutHTMLCanvas.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutIFrame.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutImage.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutImageResource.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutImageResourceStyleImage.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutInline.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutListBox.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutListItem.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutListMarker.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutMedia.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutMenuList.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutMeter.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutMultiColumnFlowThread.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutMultiColumnSet.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutMultiColumnSpannerPlaceholder.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutObject.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutObjectChildList.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutObjectInlines.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutPagedFlowThread.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutPart.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutProgress.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutQuote.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutReplaced.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutReplica.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutRuby.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutRubyBase.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutRubyRun.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutRubyText.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutScrollbar.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutScrollbarPart.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutScrollbarTheme.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutSearchField.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutSlider.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutSliderContainer.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutSliderThumb.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutState.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutTable.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutTableCaption.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutTableCell.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutTableCol.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutTableRow.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutTableSection.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutText.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutTextCombine.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutTextControl.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutTextControlMultiLine.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutTextControlSingleLine.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutTextFragment.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutTextTrackContainer.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutTheme.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutThemeAndroid.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutThemeDefault.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutThemeFontProvider.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutThemeLinux.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutThemeMac.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutThemeWin.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutTreeAsText.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutVideo.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutView.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutVTTCue.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutWordBreak.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\line\AbstractInlineTextBox.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\line\BreakingContextInlineHeaders.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\line\EllipsisBox.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\line\GlyphOverflow.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\line\InlineBox.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\line\InlineFlowBox.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\line\InlineIterator.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\line\InlineTextBox.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\line\LayoutTextInfo.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\line\LineBoxList.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\line\LineBreaker.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\line\LineInfo.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\line\LineLayoutState.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\line\LineWidth.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\line\RootInlineBox.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\line\TrailingFloatsRootInlineBox.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\line\TrailingObjects.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\line\WordMeasurement.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\MultiColumnFragmentainerGroup.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\OrderIterator.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\OverflowModel.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\PaintInvalidationState.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\PendingSelection.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\PointerEventsHitRules.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\ScrollAlignment.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\shapes\BoxShape.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\shapes\PolygonShape.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\shapes\RasterShape.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\shapes\RectangleShape.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\shapes\Shape.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\shapes\ShapeInterval.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\shapes\ShapeOutsideInfo.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\SubtreeLayoutScope.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGBlock.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGContainer.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGEllipse.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGForeignObject.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGGradientStop.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGHiddenContainer.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGImage.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGInline.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGInlineText.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGModelObject.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGPath.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGRect.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGResourceClipper.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGResourceContainer.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGResourceFilter.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGResourceFilterPrimitive.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGResourceGradient.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGResourceLinearGradient.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGResourceMarker.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGResourceMasker.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGResourcePaintServer.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGResourcePattern.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGResourceRadialGradient.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGRoot.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGShape.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGText.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGTextPath.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGTransformableContainer.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGTSpan.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGViewportContainer.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\line\SVGInlineFlowBox.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\line\SVGInlineTextBox.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\line\SVGRootInlineBox.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\ReferenceFilterBuilder.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\SVGLayoutSupport.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\SVGLayoutTreeAsText.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\SVGMarkerData.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\SVGResources.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\SVGResourcesCache.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\SVGResourcesCycleSolver.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\SVGSubpathData.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\SVGTextChunkBuilder.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\SVGTextFragment.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\SVGTextLayoutAttributes.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\SVGTextLayoutAttributesBuilder.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\SVGTextLayoutEngine.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\SVGTextLayoutEngineBaseline.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\SVGTextLayoutEngineSpacing.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\SVGTextMetrics.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\SVGTextMetricsBuilder.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\SVGTextQuery.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\TableLayoutAlgorithm.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\TableLayoutAlgorithmAuto.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\TableLayoutAlgorithmFixed.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\TextAutosizer.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\TextRunConstructor.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\TracedLayoutObject.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\VerticalPositionCache.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\config.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutThemeMac.mm" />
+    <None Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\OWNERS" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

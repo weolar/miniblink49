@@ -1,0 +1,1799 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="icu">
+      <UniqueIdentifier>{8d088259-2113-4a6f-a479-b63e66c52331}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="icu\source">
+      <UniqueIdentifier>{f951e221-853b-4d35-83df-72e7f0fc9972}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="icu\source\common">
+      <UniqueIdentifier>{6142d583-719d-4832-8539-062071e4beb4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="icu\source\common\unicode">
+      <UniqueIdentifier>{70aff99b-b9de-42dd-b2c3-a0bb2c85de0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Webkit">
+      <UniqueIdentifier>{d4a718e8-6dfd-4dea-8c05-c1e47b3a1653}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Webkit\public">
+      <UniqueIdentifier>{168dbe5f-17ee-40ae-88f8-4b53bbb40e25}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Webkit\public\platform">
+      <UniqueIdentifier>{6a5a38d3-e8c1-4467-b12a-9c11bee115f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Webkit\public\platform\modules">
+      <UniqueIdentifier>{5a7aa951-4979-4d00-b454-ed710b0bc0c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Webkit\public\platform\modules\app_banner">
+      <UniqueIdentifier>{e5c0c467-7782-4167-8bbd-18cd90d8f69b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Webkit\public\platform\modules\background_sync">
+      <UniqueIdentifier>{5eecae99-19bc-4af9-90db-42e54c219d7b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Webkit\public\platform\modules\bluetooth">
+      <UniqueIdentifier>{6dfa586b-e29d-4b6a-9644-6f96d604ba2b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Webkit\public\platform\modules\device_orientation">
+      <UniqueIdentifier>{ab703273-15bf-45db-af6b-5d55950fe7af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Webkit\public\platform\modules\indexeddb">
+      <UniqueIdentifier>{7dfd99eb-c1e0-4676-b181-207413559228}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Webkit\public\platform\modules\navigator_services">
+      <UniqueIdentifier>{ff638efd-6e21-411c-87b1-0356c908d3f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Webkit\public\platform\modules\notifications">
+      <UniqueIdentifier>{4ae8e93c-d22f-4954-b7ef-44294ab2619a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Webkit\public\platform\modules\permissions">
+      <UniqueIdentifier>{26d09091-2645-456d-ab14-65c6a54be02f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Webkit\public\platform\modules\presentation">
+      <UniqueIdentifier>{7b840742-baeb-4278-88a6-4faa5e14d32a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Webkit\public\platform\modules\push_messaging">
+      <UniqueIdentifier>{dad7f853-82bb-49ea-9249-17f460e5bfb2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Webkit\public\platform\modules\screen_orientation">
+      <UniqueIdentifier>{7bb183d5-8571-4b59-bb0a-f2a2158d8900}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Webkit\public\platform\modules\serviceworker">
+      <UniqueIdentifier>{1e00907c-b012-4aa2-ac8d-e52505865991}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Webkit\public\platform\modules\vr">
+      <UniqueIdentifier>{e266bdf9-c47e-4c92-9bd6-8612b2a73330}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Webkit\public\platform\modules\wake_lock">
+      <UniqueIdentifier>{df4d473a-175c-4f16-812c-7d14fa809664}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Webkit\public\platform\modules\webusb">
+      <UniqueIdentifier>{15b3a138-dd07-49d1-974a-cd1e99eceee3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Webkit\public\web">
+      <UniqueIdentifier>{7a06fced-8f3a-499d-b5f6-3f3fa733f19f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Webkit\public\web\default">
+      <UniqueIdentifier>{03d3ec5f-eb03-4817-bb5e-2c14f3393007}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Webkit\public\web\linux">
+      <UniqueIdentifier>{4b098a92-c84e-4b85-9367-622518fcbd26}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Webkit\public\web\mac">
+      <UniqueIdentifier>{b6b58ade-05f0-4f01-b7bb-ea1ef72fc747}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Webkit\public\web\modules">
+      <UniqueIdentifier>{cade9e8d-1d3d-4fa6-a06c-eaa73871dddc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Webkit\public\web\modules\notifications">
+      <UniqueIdentifier>{e25cd82b-f2fa-4481-aa89-fc57a04502d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Webkit\public\web\modules\serviceworker">
+      <UniqueIdentifier>{5dc73e96-8803-45ab-9047-a242d3592870}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Webkit\public\web\win">
+      <UniqueIdentifier>{656ffcc2-d2d1-409b-b109-507d0b175017}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Webkit\Source">
+      <UniqueIdentifier>{847cbad8-0374-4c6d-bf58-39e5f75d285b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Webkit\Source\devtools">
+      <UniqueIdentifier>{34039253-b2d8-45f4-a98f-2dff2101dd29}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Webkit\Source\devtools\front_end">
+      <UniqueIdentifier>{6c8d79c6-58ec-4fe4-97b3-838a29d7ec3f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Webkit\Source\devtools\front_end\Images">
+      <UniqueIdentifier>{60ae61f8-163f-41e9-b107-178c520a633e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Webkit\Source\devtools\front_end\Images\src">
+      <UniqueIdentifier>{e26322df-1867-4e76-8cb5-ff47e9f8f31b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\third_party\WebKit\public\platform\PlatformNone.cpp">
+      <Filter>Webkit\public\platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\third_party\WebKit\Source\config.cpp">
+      <Filter>Webkit\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\third_party\icu\source\uchar.cpp">
+      <Filter>icu\source</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\public\platform\modules\app_banner\WebAppBannerClient.h">
+      <Filter>Webkit\public\platform\modules\app_banner</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\app_banner\WebAppBannerPromptReply.h">
+      <Filter>Webkit\public\platform\modules\app_banner</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\app_banner\WebAppBannerPromptResult.h">
+      <Filter>Webkit\public\platform\modules\app_banner</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\background_sync\WebSyncClient.h">
+      <Filter>Webkit\public\platform\modules\background_sync</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\background_sync\WebSyncError.h">
+      <Filter>Webkit\public\platform\modules\background_sync</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\background_sync\WebSyncPermissionStatus.h">
+      <Filter>Webkit\public\platform\modules\background_sync</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\background_sync\WebSyncProvider.h">
+      <Filter>Webkit\public\platform\modules\background_sync</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\background_sync\WebSyncRegistration.h">
+      <Filter>Webkit\public\platform\modules\background_sync</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\bluetooth\WebBluetooth.h">
+      <Filter>Webkit\public\platform\modules\bluetooth</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\bluetooth\WebBluetoothDevice.h">
+      <Filter>Webkit\public\platform\modules\bluetooth</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\bluetooth\WebBluetoothError.h">
+      <Filter>Webkit\public\platform\modules\bluetooth</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\bluetooth\WebBluetoothGATTCharacteristic.h">
+      <Filter>Webkit\public\platform\modules\bluetooth</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\bluetooth\WebBluetoothGATTRemoteServer.h">
+      <Filter>Webkit\public\platform\modules\bluetooth</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\bluetooth\WebBluetoothGATTService.h">
+      <Filter>Webkit\public\platform\modules\bluetooth</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\bluetooth\WebRequestDeviceOptions.h">
+      <Filter>Webkit\public\platform\modules\bluetooth</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\device_orientation\WebDeviceMotionData.h">
+      <Filter>Webkit\public\platform\modules\device_orientation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\device_orientation\WebDeviceMotionListener.h">
+      <Filter>Webkit\public\platform\modules\device_orientation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\device_orientation\WebDeviceOrientationData.h">
+      <Filter>Webkit\public\platform\modules\device_orientation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\device_orientation\WebDeviceOrientationListener.h">
+      <Filter>Webkit\public\platform\modules\device_orientation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\indexeddb\WebIDBCallbacks.h">
+      <Filter>Webkit\public\platform\modules\indexeddb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\indexeddb\WebIDBCursor.h">
+      <Filter>Webkit\public\platform\modules\indexeddb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\indexeddb\WebIDBDatabase.h">
+      <Filter>Webkit\public\platform\modules\indexeddb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\indexeddb\WebIDBDatabaseCallbacks.h">
+      <Filter>Webkit\public\platform\modules\indexeddb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\indexeddb\WebIDBDatabaseError.h">
+      <Filter>Webkit\public\platform\modules\indexeddb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\indexeddb\WebIDBDatabaseException.h">
+      <Filter>Webkit\public\platform\modules\indexeddb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\indexeddb\WebIDBFactory.h">
+      <Filter>Webkit\public\platform\modules\indexeddb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\indexeddb\WebIDBKey.h">
+      <Filter>Webkit\public\platform\modules\indexeddb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\indexeddb\WebIDBKeyPath.h">
+      <Filter>Webkit\public\platform\modules\indexeddb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\indexeddb\WebIDBKeyRange.h">
+      <Filter>Webkit\public\platform\modules\indexeddb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\indexeddb\WebIDBMetadata.h">
+      <Filter>Webkit\public\platform\modules\indexeddb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\indexeddb\WebIDBTypes.h">
+      <Filter>Webkit\public\platform\modules\indexeddb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\indexeddb\WebIDBValue.h">
+      <Filter>Webkit\public\platform\modules\indexeddb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\navigator_services\WebServicePort.h">
+      <Filter>Webkit\public\platform\modules\navigator_services</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\navigator_services\WebServicePortCallbacks.h">
+      <Filter>Webkit\public\platform\modules\navigator_services</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\navigator_services\WebServicePortProvider.h">
+      <Filter>Webkit\public\platform\modules\navigator_services</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\navigator_services\WebServicePortProviderClient.h">
+      <Filter>Webkit\public\platform\modules\navigator_services</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\notifications\WebNotificationAction.h">
+      <Filter>Webkit\public\platform\modules\notifications</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\notifications\WebNotificationData.h">
+      <Filter>Webkit\public\platform\modules\notifications</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\notifications\WebNotificationDelegate.h">
+      <Filter>Webkit\public\platform\modules\notifications</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\notifications\WebNotificationManager.h">
+      <Filter>Webkit\public\platform\modules\notifications</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\notifications\WebNotificationPermission.h">
+      <Filter>Webkit\public\platform\modules\notifications</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\permissions\WebPermissionClient.h">
+      <Filter>Webkit\public\platform\modules\permissions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\permissions\WebPermissionObserver.h">
+      <Filter>Webkit\public\platform\modules\permissions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\permissions\WebPermissionStatus.h">
+      <Filter>Webkit\public\platform\modules\permissions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\permissions\WebPermissionType.h">
+      <Filter>Webkit\public\platform\modules\permissions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\presentation\WebPresentationAvailabilityObserver.h">
+      <Filter>Webkit\public\platform\modules\presentation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\presentation\WebPresentationClient.h">
+      <Filter>Webkit\public\platform\modules\presentation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\presentation\WebPresentationController.h">
+      <Filter>Webkit\public\platform\modules\presentation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\presentation\WebPresentationError.h">
+      <Filter>Webkit\public\platform\modules\presentation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\presentation\WebPresentationSessionClient.h">
+      <Filter>Webkit\public\platform\modules\presentation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\push_messaging\WebPushClient.h">
+      <Filter>Webkit\public\platform\modules\push_messaging</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\push_messaging\WebPushError.h">
+      <Filter>Webkit\public\platform\modules\push_messaging</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\push_messaging\WebPushPermissionStatus.h">
+      <Filter>Webkit\public\platform\modules\push_messaging</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\push_messaging\WebPushProvider.h">
+      <Filter>Webkit\public\platform\modules\push_messaging</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\push_messaging\WebPushSubscription.h">
+      <Filter>Webkit\public\platform\modules\push_messaging</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\push_messaging\WebPushSubscriptionOptions.h">
+      <Filter>Webkit\public\platform\modules\push_messaging</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\screen_orientation\WebLockOrientationCallback.h">
+      <Filter>Webkit\public\platform\modules\screen_orientation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\screen_orientation\WebLockOrientationError.h">
+      <Filter>Webkit\public\platform\modules\screen_orientation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\screen_orientation\WebScreenOrientationClient.h">
+      <Filter>Webkit\public\platform\modules\screen_orientation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\screen_orientation\WebScreenOrientationLockType.h">
+      <Filter>Webkit\public\platform\modules\screen_orientation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\screen_orientation\WebScreenOrientationType.h">
+      <Filter>Webkit\public\platform\modules\screen_orientation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\serviceworker\WebServiceWorker.h">
+      <Filter>Webkit\public\platform\modules\serviceworker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\serviceworker\WebServiceWorkerCache.h">
+      <Filter>Webkit\public\platform\modules\serviceworker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\serviceworker\WebServiceWorkerCacheError.h">
+      <Filter>Webkit\public\platform\modules\serviceworker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\serviceworker\WebServiceWorkerCacheStorage.h">
+      <Filter>Webkit\public\platform\modules\serviceworker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\serviceworker\WebServiceWorkerClientQueryOptions.h">
+      <Filter>Webkit\public\platform\modules\serviceworker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\serviceworker\WebServiceWorkerClientsClaimCallbacks.h">
+      <Filter>Webkit\public\platform\modules\serviceworker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\serviceworker\WebServiceWorkerClientsInfo.h">
+      <Filter>Webkit\public\platform\modules\serviceworker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\serviceworker\WebServiceWorkerClientType.h">
+      <Filter>Webkit\public\platform\modules\serviceworker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\serviceworker\WebServiceWorkerError.h">
+      <Filter>Webkit\public\platform\modules\serviceworker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\serviceworker\WebServiceWorkerEventResult.h">
+      <Filter>Webkit\public\platform\modules\serviceworker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\serviceworker\WebServiceWorkerProvider.h">
+      <Filter>Webkit\public\platform\modules\serviceworker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\serviceworker\WebServiceWorkerProviderClient.h">
+      <Filter>Webkit\public\platform\modules\serviceworker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\serviceworker\WebServiceWorkerProxy.h">
+      <Filter>Webkit\public\platform\modules\serviceworker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\serviceworker\WebServiceWorkerRegistration.h">
+      <Filter>Webkit\public\platform\modules\serviceworker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\serviceworker\WebServiceWorkerRegistrationProxy.h">
+      <Filter>Webkit\public\platform\modules\serviceworker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\serviceworker\WebServiceWorkerRequest.h">
+      <Filter>Webkit\public\platform\modules\serviceworker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\serviceworker\WebServiceWorkerResponse.h">
+      <Filter>Webkit\public\platform\modules\serviceworker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\serviceworker\WebServiceWorkerResponseError.h">
+      <Filter>Webkit\public\platform\modules\serviceworker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\serviceworker\WebServiceWorkerResponseType.h">
+      <Filter>Webkit\public\platform\modules\serviceworker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\serviceworker\WebServiceWorkerSkipWaitingCallbacks.h">
+      <Filter>Webkit\public\platform\modules\serviceworker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\serviceworker\WebServiceWorkerState.h">
+      <Filter>Webkit\public\platform\modules\serviceworker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\vr\WebVR.h">
+      <Filter>Webkit\public\platform\modules\vr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\vr\WebVRClient.h">
+      <Filter>Webkit\public\platform\modules\vr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\wake_lock\WebWakeLockClient.h">
+      <Filter>Webkit\public\platform\modules\wake_lock</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\webusb\WebUSBClient.h">
+      <Filter>Webkit\public\platform\modules\webusb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\webusb\WebUSBDevice.h">
+      <Filter>Webkit\public\platform\modules\webusb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\webusb\WebUSBDeviceFilter.h">
+      <Filter>Webkit\public\platform\modules\webusb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\webusb\WebUSBDeviceInfo.h">
+      <Filter>Webkit\public\platform\modules\webusb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\webusb\WebUSBDeviceRequestOptions.h">
+      <Filter>Webkit\public\platform\modules\webusb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\webusb\WebUSBError.h">
+      <Filter>Webkit\public\platform\modules\webusb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\platform\modules\webusb\WebUSBTransferInfo.h">
+      <Filter>Webkit\public\platform\modules\webusb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\web\default\WebRenderTheme.h">
+      <Filter>Webkit\public\web\default</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\web\linux\WebFontRendering.h">
+      <Filter>Webkit\public\web\linux</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\web\mac\WebInputEventFactory.h">
+      <Filter>Webkit\public\web\mac</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\web\mac\WebScrollbarTheme.h">
+      <Filter>Webkit\public\web\mac</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\web\mac\WebSubstringUtil.h">
+      <Filter>Webkit\public\web\mac</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\web\modules\notifications\WebNotificationPermissionCallback.h">
+      <Filter>Webkit\public\web\modules\notifications</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\web\modules\serviceworker\WebServiceWorkerContextClient.h">
+      <Filter>Webkit\public\web\modules\serviceworker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\web\modules\serviceworker\WebServiceWorkerContextProxy.h">
+      <Filter>Webkit\public\web\modules\serviceworker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\web\modules\serviceworker\WebServiceWorkerNetworkProvider.h">
+      <Filter>Webkit\public\web\modules\serviceworker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\web\win\WebFontRendering.h">
+      <Filter>Webkit\public\web\win</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\Source\config.h">
+      <Filter>Webkit\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebTransformKeyframe.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebTransformOperations.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebUnitTestSupport.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebURL.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebURLError.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebURLLoader.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebURLLoaderClient.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebURLLoadTiming.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebURLRequest.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebURLResponse.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebVector.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebVibration.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebWaitableEvent.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebWorkerRunLoop.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\Platform.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebApplicationCacheHost.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebApplicationCacheHostClient.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebArrayBuffer.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebAudioBus.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebAudioDestinationConsumer.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebAudioDevice.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebAudioSourceProvider.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebAudioSourceProviderClient.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebBatteryStatus.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebBatteryStatusListener.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebBlendMode.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebBlobData.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebBlobInfo.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebBlobRegistry.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebBluetooth.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebBluetoothError.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebCallback.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebCallbacks.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebCanvas.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebCircularGeofencingRegion.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebClipboard.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebColor.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebCommon.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebCompositeAndReadbackAsyncCallback.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebCompositorAnimation.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebCompositorAnimationCurve.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebCompositorAnimationDelegate.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebCompositorOutputSurface.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebCompositorSupport.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebConnectionType.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebContentDecryptionModule.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebContentDecryptionModuleException.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebContentDecryptionModuleResult.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebContentDecryptionModuleSession.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebContentLayer.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebContentLayerClient.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebConvertableToTraceFormat.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebCookie.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebCookieJar.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebCredential.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebCredentialManagerClient.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebCredentialManagerError.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebCrypto.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebCryptoAlgorithm.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebCryptoAlgorithmParams.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebCryptoKey.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebCryptoKeyAlgorithm.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebCryptoKeyAlgorithmParams.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebCString.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebCursorInfo.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebData.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebDatabaseObserver.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebDataConsumerHandle.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebDeviceLightListener.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebDeviceMotionData.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebDeviceMotionListener.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebDeviceOrientationData.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebDeviceOrientationListener.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebDiscardableMemory.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebDoublePoint.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebDragData.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebExternalBitmap.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebExternalTextureLayer.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebExternalTextureLayerClient.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebExternalTextureMailbox.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebFallbackThemeEngine.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebFederatedCredential.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebFileError.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebFileInfo.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebFileSystem.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebFileSystemCallbacks.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebFileSystemEntry.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebFileSystemType.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebFileUtilities.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebFileWriter.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebFileWriterClient.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebFilterAnimationCurve.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebFilterKeyframe.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebFilterOperations.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebFlingAnimator.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebFloatAnimationCurve.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebFloatKeyframe.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebFloatPoint.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebFloatPoint3D.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebFloatRect.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebFloatSize.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebGamepad.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebGamepadListener.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebGamepads.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebGeofencingError.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebGeofencingEventType.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebGeofencingProvider.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebGeofencingRegistration.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebGestureCurve.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebGestureCurveTarget.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebGestureDevice.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebGraphicsContext3D.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebGraphicsContext3DProvider.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebGraphicsLayerDebugInfo.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebHTTPBody.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebHTTPHeaderVisitor.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebHTTPLoadInfo.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebIDBCallbacks.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebIDBCursor.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebIDBDatabase.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebIDBDatabaseCallbacks.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebIDBDatabaseError.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebIDBDatabaseException.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebIDBFactory.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebIDBKey.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebIDBKeyPath.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebIDBKeyRange.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebIDBMetadata.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebIDBTypes.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebImage.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebImageLayer.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebInbandTextTrack.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebInbandTextTrackClient.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebLayer.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebLayerClient.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebLayerPositionConstraint.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebLayerScrollClient.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebLayerTreeView.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebLocalCredential.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebLocalizedString.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebLockOrientationCallback.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebLockOrientationError.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebMediaConstraints.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebMediaDeviceInfo.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebMediaPlayer.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebMediaPlayerClient.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebMediaSource.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebMediaStream.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebMediaStreamCenter.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebMediaStreamCenterClient.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebMediaStreamSource.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebMediaStreamTrack.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebMediaStreamTrackSourcesRequest.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebMessagePortChannel.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebMessagePortChannelClient.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebMIDIAccessor.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebMIDIAccessorClient.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebMimeRegistry.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebNinePatchLayer.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebNonCopyable.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebNotificationData.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebNotificationDelegate.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebNotificationManager.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebNotificationPermission.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebPermissionCallbacks.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebPlatformEventListener.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebPlatformEventType.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebPluginListBuilder.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebPoint.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebPrerender.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebPrerenderingSupport.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebPrescientNetworking.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebPrivateOwnPtr.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebPrivatePtr.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebPublicSuffixList.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebPushClient.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebPushError.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebPushPermissionStatus.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebPushRegistration.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebRect.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebReferrerPolicy.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebRenderingStats.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebRTCConfiguration.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebRTCDataChannelHandler.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebRTCDataChannelHandlerClient.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebRTCDataChannelInit.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebRTCDTMFSenderHandler.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebRTCDTMFSenderHandlerClient.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebRTCICECandidate.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebRTCOfferOptions.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebRTCPeerConnectionHandler.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebRTCPeerConnectionHandlerClient.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebRTCSessionDescription.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebRTCSessionDescriptionRequest.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebRTCStatsRequest.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebRTCStatsResponse.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebRTCVoidRequest.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebScheduler.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebScreenInfo.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebScreenOrientationClient.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebScreenOrientationLockType.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebScreenOrientationType.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebScrollbar.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebScrollbarBehavior.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebScrollbarLayer.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebScrollbarThemeGeometry.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebScrollbarThemePainter.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebScrollOffsetAnimationCurve.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebSelectionBound.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebSerializedOrigin.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebServiceWorker.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebServiceWorkerCache.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebServiceWorkerCacheError.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebServiceWorkerCacheStorage.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebServiceWorkerClientsInfo.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebServiceWorkerError.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebServiceWorkerEventResult.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebServiceWorkerProvider.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebServiceWorkerProviderClient.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebServiceWorkerProxy.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebServiceWorkerRegistration.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebServiceWorkerRegistrationProxy.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebServiceWorkerRequest.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebServiceWorkerResponse.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebServiceWorkerResponseType.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebServiceWorkerState.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebSize.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebSocketHandle.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebSocketHandleClient.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebSocketHandshakeRequestInfo.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebSocketHandshakeResponseInfo.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebSourceBuffer.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebSourceBufferClient.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebSourceInfo.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebSpeechSynthesisUtterance.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebSpeechSynthesisVoice.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebSpeechSynthesizer.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebSpeechSynthesizerClient.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebStorageArea.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebStorageNamespace.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebStorageQuotaCallbacks.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebStorageQuotaError.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebStorageQuotaType.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebString.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebThemeEngine.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebThread.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebThreadedDataReceiver.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebThreadSafeData.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebTimeRange.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebTraceLocation.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\platform\WebTransformAnimationCurve.h">
+      <Filter>Webkit\public\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\icu\source\common\unicode\ucnv_err.h">
+      <Filter>icu\source\common\unicode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\icu\source\common\unicode\uscript.h">
+      <Filter>icu\source\common\unicode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\icu\source\common\unicode\utext.h">
+      <Filter>icu\source\common\unicode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\icu\source\common\unicode\utypes.h">
+      <Filter>icu\source\common\unicode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\icu\source\common\unicode\brkiter.h">
+      <Filter>icu\source\common\unicode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\icu\source\common\unicode\uchar.h">
+      <Filter>icu\source\common\unicode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\icu\source\common\unicode\ucnv.h">
+      <Filter>icu\source\common\unicode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\icu\source\common\unicode\utrie2.h">
+      <Filter>icu\source\common\unicode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\icu\source\common\unicode\mini_uchar.h">
+      <Filter>icu\source\common\unicode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\icu\source\common\unicode\uprops.h">
+      <Filter>icu\source\common\unicode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\icu\source\common\uchar_props_data.h">
+      <Filter>icu\source\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\icu\source\common\unicode\umachine.h">
+      <Filter>icu\source\common\unicode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebView.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebViewClient.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebWidget.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebWidgetClient.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebWindowFeatures.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebWorkerContentSettingsClientProxy.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebActiveWheelFlingParameters.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebArrayBuffer.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebArrayBufferConverter.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebArrayBufferView.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebAutofillClient.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebAXEnums.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebAXObject.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebBeginFrameArgs.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebBindings.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebBlob.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebCache.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebCachedURLRequest.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebColorChooser.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebColorChooserClient.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebColorName.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebColorSuggestion.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebCompositionUnderline.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebConsoleMessage.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebContentDetectionResult.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebContentSecurityPolicy.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebContentSettingsClient.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebContextMenuData.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebCryptoNormalize.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebCustomElement.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebDatabase.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebDataSource.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebDateTimeChooserCompletion.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebDateTimeChooserParams.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebDateTimeInputType.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebDateTimeSuggestion.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebDeviceEmulationParams.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebDevToolsAgent.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebDevToolsAgentClient.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebDevToolsFrontend.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebDevToolsFrontendClient.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebDocument.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebDocumentType.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebDOMActivityLogger.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebDOMCustomEvent.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebDOMError.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebDOMEvent.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebDOMFileSystem.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebDOMMediaStreamTrack.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebDOMMessageEvent.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebDOMMouseEvent.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebDOMProgressEvent.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebDOMResourceProgressEvent.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebDraggableRegion.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebDragOperation.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebDragStatus.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebElement.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebElementCollection.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebEmbeddedWorker.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebEmbeddedWorkerStartData.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebExceptionCode.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebExternalPopupMenu.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebExternalPopupMenuClient.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebFileChooserCompletion.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebFileChooserParams.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebFindOptions.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebFont.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebFontDescription.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebFormControlElement.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebFormElement.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebFrame.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebFrameClient.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebFrameLoadType.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebFrameWidget.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebGeolocationClient.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebGeolocationController.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebGeolocationError.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebGeolocationPermissionRequest.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebGeolocationPermissionRequestManager.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebGeolocationPosition.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebGlyphCache.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebGraphicsContext.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebHeap.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebHelperPlugin.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebHistoryCommitType.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebHistoryItem.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebHitTestResult.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebIconURL.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebImageCache.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebImageDecoder.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebInputElement.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebInputEvent.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebKit.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebLabelElement.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebLeakDetector.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebLocalFrame.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebMediaDevicesRequest.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebMediaPlayerAction.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebMediaStreamRegistry.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebMemoryUsageInfo.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebMenuItemInfo.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebMIDIClient.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebMIDIPermissionRequest.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebNavigationPolicy.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebNavigationType.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebNavigatorContentUtilsClient.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebNetworkStateNotifier.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebNode.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebNodeList.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebOptionElement.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebPageOverlay.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebPagePopup.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebPageSerializer.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebPageSerializerClient.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebPerformance.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebPlugin.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebPluginAction.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebPluginContainer.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebPluginDocument.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebPluginParams.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebPluginPlaceholder.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebPluginScriptForbiddenScope.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebPopupMenuInfo.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebPopupType.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebPrerendererClient.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebPrintParams.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebPrintPresetOptions.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebPrintScalingOption.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebRange.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebRemoteFrame.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebRemoteFrameClient.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebRuntimeFeatures.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebSandboxFlags.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebScopedMicrotaskSuppression.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebScopedUserGesture.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebScopedWindowFocusAllowedIndicator.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebScriptBindings.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebScriptController.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebScriptExecutionCallback.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebScriptSource.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebSearchableFormData.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebSecurityOrigin.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebSecurityPolicy.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebSelectElement.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebSelection.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebSelector.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebSerializedScriptValue.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebSerializedScriptValueVersion.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebServiceWorkerContextClient.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebServiceWorkerContextProxy.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebServiceWorkerNetworkProvider.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebSettings.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebSharedWorker.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebSharedWorkerClient.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebSharedWorkerConnector.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebSharedWorkerRepositoryClient.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebSocket.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebSocketClient.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebSpeechGrammar.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebSpeechRecognitionHandle.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebSpeechRecognitionParams.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebSpeechRecognitionResult.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebSpeechRecognizer.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebSpeechRecognizerClient.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebSpellCheckClient.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebStorageEventDispatcher.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebSurroundingText.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebTestingSupport.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebTestInterfaceFactory.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebTextAffinity.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebTextAreaElement.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebTextCheckingCompletion.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebTextCheckingResult.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebTextCheckingType.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebTextDecorationType.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebTextDirection.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebTextInputInfo.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebTextInputType.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebTextRun.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebTouchAction.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebTouchPoint.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebTreeScopeType.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebURLLoaderOptions.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebUserGestureIndicator.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebUserGestureToken.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebUserMediaClient.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\third_party\WebKit\public\web\WebUserMediaRequest.h">
+      <Filter>Webkit\public\web</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\..\third_party\WebKit\Source\devtools\front_end\Images\src\optimize_png.hashes">
+      <Filter>Webkit\Source\devtools\front_end\Images\src</Filter>
+    </None>
+    <None Include="..\..\..\..\third_party\WebKit\Source\devtools\front_end\Images\src\svg2png.hashes">
+      <Filter>Webkit\Source\devtools\front_end\Images\src</Filter>
+    </None>
+    <None Include="..\..\..\..\third_party\WebKit\Source\devtools\front_end\inspector.html">
+      <Filter>Webkit\Source\devtools\front_end</Filter>
+    </None>
+    <None Include="..\..\..\..\third_party\WebKit\Source\devtools\front_end\toolbox.html">
+      <Filter>Webkit\Source\devtools\front_end</Filter>
+    </None>
+  </ItemGroup>
+</Project>

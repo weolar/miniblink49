@@ -1,0 +1,2584 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="platform">
+      <UniqueIdentifier>{78fd4d92-8ea2-43f7-8615-5e8d31f37ecb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platform\animation">
+      <UniqueIdentifier>{ef099118-f352-4b9b-ad53-80e90dfe348f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platform\blob">
+      <UniqueIdentifier>{f8fa2ebc-e5e5-45a3-8f0f-9f1406e19ab4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platform\clipboard">
+      <UniqueIdentifier>{bc8bd0d8-d256-4c14-b068-7bce28c6e245}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platform\credentialmanager">
+      <UniqueIdentifier>{14fee85e-9e8e-4487-9f2e-eef37b563afc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platform\fonts">
+      <UniqueIdentifier>{d751f36c-5e3f-4ab6-a939-6055ed5f6388}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platform\fonts\android">
+      <UniqueIdentifier>{534f7231-02f2-4383-97ec-53cc3cb64812}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platform\fonts\linux">
+      <UniqueIdentifier>{0e55f22f-81c6-456f-95b6-0ca5e1d31007}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platform\fonts\mac">
+      <UniqueIdentifier>{5dfb19ee-f432-471f-a517-a7e25536d564}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platform\fonts\opentype">
+      <UniqueIdentifier>{4afd7c17-fe16-4d5a-9b04-f74319ca7e99}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platform\fonts\shaping">
+      <UniqueIdentifier>{6abc44af-766f-49fb-89e2-d6790936929c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platform\fonts\skia">
+      <UniqueIdentifier>{246ce73d-5658-4abd-a053-3dc81894c381}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platform\fonts\win">
+      <UniqueIdentifier>{4f084c4a-03cb-43b3-80f2-c67dbbbb066f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platform\geometry">
+      <UniqueIdentifier>{732ced4c-56f1-4e09-a0cd-3f1ea101fe45}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platform\graphics">
+      <UniqueIdentifier>{d73591df-2ce0-4c46-9749-babb3b5b2585}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platform\graphics\cpu">
+      <UniqueIdentifier>{4c9e8e44-0439-4b9c-abbc-3ed65ddff208}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platform\graphics\cpu\arm">
+      <UniqueIdentifier>{36a862af-ff3d-4643-8c82-3c67eaf74685}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platform\graphics\cpu\x86">
+      <UniqueIdentifier>{50b93546-77b2-4137-91c8-dc2abf9583cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platform\graphics\filters">
+      <UniqueIdentifier>{cb322cca-1437-414f-acc4-23b1586b7d28}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platform\graphics\gpu">
+      <UniqueIdentifier>{a5849b46-1bf8-4213-86f9-de2e9fd284ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platform\graphics\skia">
+      <UniqueIdentifier>{1f96b6e5-95b2-43ba-a6e8-f61dd877712a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platform\graphics\test">
+      <UniqueIdentifier>{4548f6b3-adf4-414a-b950-4fa2c285032a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platform\graphics\media">
+      <UniqueIdentifier>{6383c3d0-3c4b-4772-a59c-ab2b59f10348}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platform\heap">
+      <UniqueIdentifier>{71e84066-eb14-4516-a522-8750ec9dd659}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platform\heap\glue">
+      <UniqueIdentifier>{e821af7e-be04-45ca-904f-8e3f2abf7730}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platform\heap\asm">
+      <UniqueIdentifier>{067d5c05-0ea3-4b1e-a7d5-40ed535c7156}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platform\image-decoders">
+      <UniqueIdentifier>{da21f7a7-187b-4891-a42b-80f2d8d43862}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platform\image-decoders\bmp">
+      <UniqueIdentifier>{deacd323-b7c6-4835-ab05-ab6deb86476a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platform\image-decoders\gif">
+      <UniqueIdentifier>{ed710802-92ac-4321-995e-979d30d098fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platform\image-decoders\ico">
+      <UniqueIdentifier>{bc72d84b-a922-4afe-9145-7ce5f7a36bd5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platform\image-decoders\jpeg">
+      <UniqueIdentifier>{95cf5560-10a2-4328-b28b-79492ff2771f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platform\image-decoders\png">
+      <UniqueIdentifier>{4f269ff4-29f7-4ad3-ab50-7a0ce72fa799}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platform\image-decoders\webp">
+      <UniqueIdentifier>{7cb2b90f-1d0a-47ad-917e-f679109389df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platform\image-decoders\GDIPlus">
+      <UniqueIdentifier>{6f6bd026-0437-4366-bec6-4e3572d68ec0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platform\image-encoders">
+      <UniqueIdentifier>{554cd5d0-a1ae-4385-a52f-31ce60125990}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platform\image-encoders\skia">
+      <UniqueIdentifier>{ed06fe73-4b63-4a1a-81c3-cc21072ca82b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platform\image-encoders\gdiplus">
+      <UniqueIdentifier>{f0d1ae62-5f16-435f-86a0-7dd566df2a20}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platform\mac">
+      <UniqueIdentifier>{f05239be-2488-4d38-8b74-2b5092d8f2eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platform\mediastream">
+      <UniqueIdentifier>{fcb889e6-2d94-4066-b48a-2a6d9565f054}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platform\mhtml">
+      <UniqueIdentifier>{7b1a64d6-240f-4466-a7f2-041144ba5acd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platform\network">
+      <UniqueIdentifier>{d4ff9580-185f-4e97-8e74-dd9debfcf25e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platform\plugins">
+      <UniqueIdentifier>{3d8754dc-2f24-4ed1-b64a-8a078dde22d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platform\scheduler">
+      <UniqueIdentifier>{3d74c671-d45f-4c39-9733-006e1dd8d9e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platform\scroll">
+      <UniqueIdentifier>{2524e572-8ec6-41d5-92e4-ecbb6b553cd1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platform\speech">
+      <UniqueIdentifier>{7b3040cc-906d-487c-8e29-2f6943a9b04d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platform\text">
+      <UniqueIdentifier>{d3cb52cb-7bcc-4736-906a-c4225ccb9f97}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platform\transforms">
+      <UniqueIdentifier>{20cf826c-7001-4880-9a37-1dc5ab531016}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platform\weborigin">
+      <UniqueIdentifier>{76534323-444d-47b5-b39d-ccad666191dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platform\win">
+      <UniqueIdentifier>{9e5148e6-333b-4aa3-8bbd-486a3c501372}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platform\exported">
+      <UniqueIdentifier>{4b2638ab-aaef-4217-a44f-11852f45b1e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platform\paint">
+      <UniqueIdentifier>{d174e841-ff2f-48d1-af58-e6e0a658235a}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\animation\TimingFunction.cpp">
+      <Filter>platform\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\blob\BlobData.cpp">
+      <Filter>platform\blob</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\blob\BlobRegistry.cpp">
+      <Filter>platform\blob</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\blob\BlobURL.cpp">
+      <Filter>platform\blob</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\clipboard\ClipboardMimeTypes.cpp">
+      <Filter>platform\clipboard</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\clipboard\ClipboardUtilities.cpp">
+      <Filter>platform\clipboard</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\clipboard\ClipboardUtilitiesWin.cpp">
+      <Filter>platform\clipboard</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\Clock.cpp">
+      <Filter>platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\ContentType.cpp">
+      <Filter>platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\ContextMenu.cpp">
+      <Filter>platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\ContextMenuItem.cpp">
+      <Filter>platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\credentialmanager\PlatformCredential.cpp">
+      <Filter>platform\credentialmanager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\credentialmanager\PlatformFederatedCredential.cpp">
+      <Filter>platform\credentialmanager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\CrossThreadCopier.cpp">
+      <Filter>platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\Crypto.cpp">
+      <Filter>platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\Cursor.cpp">
+      <Filter>platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\DateComponents.cpp">
+      <Filter>platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\Decimal.cpp">
+      <Filter>platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\EventTracer.cpp">
+      <Filter>platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\FileChooser.cpp">
+      <Filter>platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\FileMetadata.cpp">
+      <Filter>platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\fonts\Character.cpp">
+      <Filter>platform\fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\fonts\Font.cpp">
+      <Filter>platform\fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\fonts\FontCache.cpp">
+      <Filter>platform\fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\fonts\FontData.cpp">
+      <Filter>platform\fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\fonts\FontDataCache.cpp">
+      <Filter>platform\fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\fonts\FontDescription.cpp">
+      <Filter>platform\fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\fonts\FontFallbackList.cpp">
+      <Filter>platform\fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\fonts\FontFamily.cpp">
+      <Filter>platform\fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\fonts\FontFeatureSettings.cpp">
+      <Filter>platform\fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\fonts\FontPlatformData.cpp">
+      <Filter>platform\fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\fonts\GenericFontFamilySettings.cpp">
+      <Filter>platform\fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\fonts\GlyphPageTreeNode.cpp">
+      <Filter>platform\fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\fonts\SegmentedFontData.cpp">
+      <Filter>platform\fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\fonts\shaping\SimpleShaper.cpp">
+      <Filter>platform\fonts\shaping</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\fonts\SimpleFontData.cpp">
+      <Filter>platform\fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\fonts\skia\FontCacheSkia.cpp">
+      <Filter>platform\fonts\skia</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\fonts\VDMXParser.cpp">
+      <Filter>platform\fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\fonts\win\FontCacheSkiaWin.cpp">
+      <Filter>platform\fonts\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\fonts\win\FontFallbackWin.cpp">
+      <Filter>platform\fonts\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\fonts\win\FontPlatformDataWin.cpp">
+      <Filter>platform\fonts\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\geometry\DoubleSize.cpp">
+      <Filter>platform\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\geometry\FloatPoint.cpp">
+      <Filter>platform\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\geometry\FloatPoint3D.cpp">
+      <Filter>platform\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\geometry\FloatPolygon.cpp">
+      <Filter>platform\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\geometry\FloatQuad.cpp">
+      <Filter>platform\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\geometry\FloatRect.cpp">
+      <Filter>platform\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\geometry\FloatRoundedRect.cpp">
+      <Filter>platform\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\geometry\FloatSize.cpp">
+      <Filter>platform\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\geometry\IntRect.cpp">
+      <Filter>platform\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\geometry\LayoutRect.cpp">
+      <Filter>platform\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\geometry\Region.cpp">
+      <Filter>platform\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\geometry\TransformState.cpp">
+      <Filter>platform\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\filters\DistantLightSource.cpp">
+      <Filter>platform\graphics\filters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\filters\FEBlend.cpp">
+      <Filter>platform\graphics\filters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\filters\FEColorMatrix.cpp">
+      <Filter>platform\graphics\filters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\filters\FEComponentTransfer.cpp">
+      <Filter>platform\graphics\filters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\filters\FEComposite.cpp">
+      <Filter>platform\graphics\filters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\filters\FEConvolveMatrix.cpp">
+      <Filter>platform\graphics\filters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\filters\FEDiffuseLighting.cpp">
+      <Filter>platform\graphics\filters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\filters\FEDisplacementMap.cpp">
+      <Filter>platform\graphics\filters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\filters\FEDropShadow.cpp">
+      <Filter>platform\graphics\filters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\filters\FEFlood.cpp">
+      <Filter>platform\graphics\filters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\filters\FEGaussianBlur.cpp">
+      <Filter>platform\graphics\filters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\filters\FELighting.cpp">
+      <Filter>platform\graphics\filters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\filters\FEMerge.cpp">
+      <Filter>platform\graphics\filters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\filters\FEMorphology.cpp">
+      <Filter>platform\graphics\filters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\filters\FEOffset.cpp">
+      <Filter>platform\graphics\filters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\filters\FESpecularLighting.cpp">
+      <Filter>platform\graphics\filters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\filters\FETile.cpp">
+      <Filter>platform\graphics\filters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\filters\FETurbulence.cpp">
+      <Filter>platform\graphics\filters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\filters\FilterEffect.cpp">
+      <Filter>platform\graphics\filters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\filters\FilterOperation.cpp">
+      <Filter>platform\graphics\filters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\filters\FilterOperations.cpp">
+      <Filter>platform\graphics\filters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\filters\LightSource.cpp">
+      <Filter>platform\graphics\filters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\filters\PointLightSource.cpp">
+      <Filter>platform\graphics\filters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\filters\ReferenceFilter.cpp">
+      <Filter>platform\graphics\filters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\filters\SkiaImageFilterBuilder.cpp">
+      <Filter>platform\graphics\filters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\filters\SourceAlpha.cpp">
+      <Filter>platform\graphics\filters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\filters\SourceGraphic.cpp">
+      <Filter>platform\graphics\filters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\filters\SpotLightSource.cpp">
+      <Filter>platform\graphics\filters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\skia\SkiaUtils.cpp">
+      <Filter>platform\graphics\skia</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\image-decoders\bmp\BMPImageDecoder.cpp">
+      <Filter>platform\image-decoders\bmp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\image-decoders\bmp\BMPImageReader.cpp">
+      <Filter>platform\image-decoders\bmp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\image-decoders\ImageDecoder.cpp">
+      <Filter>platform\image-decoders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\image-decoders\ImageFrame.cpp">
+      <Filter>platform\image-decoders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\JSONValues.cpp">
+      <Filter>platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\KillRingNone.cpp">
+      <Filter>platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\Language.cpp">
+      <Filter>platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\LayoutTestSupport.cpp">
+      <Filter>platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\Length.cpp">
+      <Filter>platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\LengthBox.cpp">
+      <Filter>platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\LengthFunctions.cpp">
+      <Filter>platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\LinkHash.cpp">
+      <Filter>platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\Logging.cpp">
+      <Filter>platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\mediastream\MediaStreamCenter.cpp">
+      <Filter>platform\mediastream</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\mediastream\MediaStreamComponent.cpp">
+      <Filter>platform\mediastream</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\mediastream\MediaStreamDescriptor.cpp">
+      <Filter>platform\mediastream</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\mediastream\MediaStreamSource.cpp">
+      <Filter>platform\mediastream</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\mediastream\MediaStreamWebAudioSource.cpp">
+      <Filter>platform\mediastream</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\mhtml\ArchiveResourceCollection.cpp">
+      <Filter>platform\mhtml</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\MIMETypeFromURL.cpp">
+      <Filter>platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\MIMETypeRegistry.cpp">
+      <Filter>platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\network\ContentSecurityPolicyParsers.cpp">
+      <Filter>platform\network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\network\ContentSecurityPolicyResponseHeaders.cpp">
+      <Filter>platform\network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\network\FormData.cpp">
+      <Filter>platform\network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\network\FormDataBuilder.cpp">
+      <Filter>platform\network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\network\HTTPHeaderMap.cpp">
+      <Filter>platform\network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\network\HTTPParsers.cpp">
+      <Filter>platform\network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\network\HTTPRequest.cpp">
+      <Filter>platform\network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\network\ParsedContentType.cpp">
+      <Filter>platform\network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\network\ResourceError.cpp">
+      <Filter>platform\network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\network\ResourceRequest.cpp">
+      <Filter>platform\network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\network\ResourceResponse.cpp">
+      <Filter>platform\network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\network\WebSocketHandshakeRequest.cpp">
+      <Filter>platform\network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\network\WebSocketHandshakeResponse.cpp">
+      <Filter>platform\network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\NotImplemented.cpp">
+      <Filter>platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\PlatformInstrumentation.cpp">
+      <Filter>platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\PlatformKeyboardEvent.cpp">
+      <Filter>platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\PlatformResourceLoader.cpp">
+      <Filter>platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\plugins\PluginData.cpp">
+      <Filter>platform\plugins</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\plugins\PluginListBuilder.cpp">
+      <Filter>platform\plugins</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\Prerender.cpp">
+      <Filter>platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\PurgeableVector.cpp">
+      <Filter>platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\ScriptForbiddenScope.cpp">
+      <Filter>platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\scroll\ProgrammaticScrollAnimator.cpp">
+      <Filter>platform\scroll</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\scroll\ScrollableArea.cpp">
+      <Filter>platform\scroll</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\scroll\ScrollAnimator.cpp">
+      <Filter>platform\scroll</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\scroll\ScrollAnimatorNone.cpp">
+      <Filter>platform\scroll</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\scroll\Scrollbar.cpp">
+      <Filter>platform\scroll</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\scroll\ScrollbarTheme.cpp">
+      <Filter>platform\scroll</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\scroll\ScrollbarThemeAura.cpp">
+      <Filter>platform\scroll</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\scroll\ScrollbarThemeMock.cpp">
+      <Filter>platform\scroll</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\scroll\ScrollbarThemeNonMacCommon.cpp">
+      <Filter>platform\scroll</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\scroll\ScrollbarThemeOverlay.cpp">
+      <Filter>platform\scroll</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\SecureTextInput.cpp">
+      <Filter>platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\SharedBuffer.cpp">
+      <Filter>platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\SharedBufferChunkReader.cpp">
+      <Filter>platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\TaskSynchronizer.cpp">
+      <Filter>platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\TestingPlatformSupport.cpp">
+      <Filter>platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\text\BidiCharacterRun.cpp">
+      <Filter>platform\text</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\text\BidiContext.cpp">
+      <Filter>platform\text</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\text\BidiTextRun.cpp">
+      <Filter>platform\text</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\text\DateTimeFormat.cpp">
+      <Filter>platform\text</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\text\LineEnding.cpp">
+      <Filter>platform\text</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\text\LocaleToScriptMapping.cpp">
+      <Filter>platform\text</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\text\LocaleWin.cpp">
+      <Filter>platform\text</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\text\PlatformLocale.cpp">
+      <Filter>platform\text</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\text\QuotedPrintable.cpp">
+      <Filter>platform\text</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\text\SegmentedString.cpp">
+      <Filter>platform\text</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\text\StringTruncator.cpp">
+      <Filter>platform\text</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\text\TextBoundaries.cpp">
+      <Filter>platform\text</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\text\TextBreakIterator.cpp">
+      <Filter>platform\text</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\text\TextBreakIteratorICU.cpp">
+      <Filter>platform\text</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\text\TextBreakIteratorInternalICU.cpp">
+      <Filter>platform\text</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\text\TextEncodingDetector.cpp">
+      <Filter>platform\text</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\text\TextRun.cpp">
+      <Filter>platform\text</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\text\TextStream.cpp">
+      <Filter>platform\text</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\text\UnicodeRange.cpp">
+      <Filter>platform\text</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\text\UnicodeUtilities.cpp">
+      <Filter>platform\text</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\Theme.cpp">
+      <Filter>platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\Timer.cpp">
+      <Filter>platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\TracedValue.cpp">
+      <Filter>platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\transforms\AffineTransform.cpp">
+      <Filter>platform\transforms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\transforms\InterpolatedTransformOperation.cpp">
+      <Filter>platform\transforms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\transforms\Matrix3DTransformOperation.cpp">
+      <Filter>platform\transforms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\transforms\MatrixTransformOperation.cpp">
+      <Filter>platform\transforms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\transforms\PerspectiveTransformOperation.cpp">
+      <Filter>platform\transforms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\transforms\RotateTransformOperation.cpp">
+      <Filter>platform\transforms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\transforms\ScaleTransformOperation.cpp">
+      <Filter>platform\transforms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\transforms\SkewTransformOperation.cpp">
+      <Filter>platform\transforms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\transforms\TransformationMatrix.cpp">
+      <Filter>platform\transforms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\transforms\TransformOperations.cpp">
+      <Filter>platform\transforms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\transforms\TranslateTransformOperation.cpp">
+      <Filter>platform\transforms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\UserGestureIndicator.cpp">
+      <Filter>platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\UUID.cpp">
+      <Filter>platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\weborigin\DatabaseIdentifier.cpp">
+      <Filter>platform\weborigin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\weborigin\KnownPorts.cpp">
+      <Filter>platform\weborigin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\weborigin\KURL.cpp">
+      <Filter>platform\weborigin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\weborigin\OriginAccessEntry.cpp">
+      <Filter>platform\weborigin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\weborigin\SchemeRegistry.cpp">
+      <Filter>platform\weborigin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\weborigin\SecurityOrigin.cpp">
+      <Filter>platform\weborigin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\weborigin\SecurityPolicy.cpp">
+      <Filter>platform\weborigin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\WebThread.cpp">
+      <Filter>platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\WebThreadSupportingGC.cpp">
+      <Filter>platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\Widget.cpp">
+      <Filter>platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\win\SystemInfo.cpp">
+      <Filter>platform\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\Supplementable.cpp">
+      <Filter>platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\heap\BlinkGCMemoryDumpProvider.cpp">
+      <Filter>platform\heap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\heap\CallbackStack.cpp">
+      <Filter>platform\heap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\heap\GCInfo.cpp">
+      <Filter>platform\heap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\heap\Heap.cpp">
+      <Filter>platform\heap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\heap\HeapAllocator.cpp">
+      <Filter>platform\heap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\heap\PagePool.cpp">
+      <Filter>platform\heap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\heap\PersistentNode.cpp">
+      <Filter>platform\heap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\heap\SafePoint.cpp">
+      <Filter>platform\heap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\heap\StackFrameDepth.cpp">
+      <Filter>platform\heap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\heap\ThreadState.cpp">
+      <Filter>platform\heap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\BitmapPatternBase.cpp">
+      <Filter>platform\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\BitmapImage.cpp">
+      <Filter>platform\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\BitmapPattern.cpp">
+      <Filter>platform\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\GraphicsContext.cpp">
+      <Filter>platform\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\GraphicsContextState.cpp">
+      <Filter>platform\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\GraphicsLayer.cpp">
+      <Filter>platform\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\GraphicsLayerDebugInfo.cpp">
+      <Filter>platform\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\GraphicsTypes.cpp">
+      <Filter>platform\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\Image.cpp">
+      <Filter>platform\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\ImageBuffer.cpp">
+      <Filter>platform\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\ImageDecodingStore.cpp">
+      <Filter>platform\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\ImageFrameGenerator.cpp">
+      <Filter>platform\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\ImageObserver.cpp">
+      <Filter>platform\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\ImageOrientation.cpp">
+      <Filter>platform\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\ImageSource.cpp">
+      <Filter>platform\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\InterceptingCanvas.cpp">
+      <Filter>platform\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\ListContainer.cpp">
+      <Filter>platform\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\LoggingCanvas.cpp">
+      <Filter>platform\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\PaintInvalidationReason.cpp">
+      <Filter>platform\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\Path.cpp">
+      <Filter>platform\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\PathTraversalState.cpp">
+      <Filter>platform\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\Pattern.cpp">
+      <Filter>platform\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\PicturePattern.cpp">
+      <Filter>platform\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\PictureSnapshot.cpp">
+      <Filter>platform\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\ProfilingCanvas.cpp">
+      <Filter>platform\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\RecordingImageBufferSurface.cpp">
+      <Filter>platform\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\ReplayingCanvas.cpp">
+      <Filter>platform\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\StaticBitmapImage.cpp">
+      <Filter>platform\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\StaticBitmapPattern.cpp">
+      <Filter>platform\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\StrokeData.cpp">
+      <Filter>platform\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\ThreadSafeDataTransport.cpp">
+      <Filter>platform\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\UnacceleratedImageBufferSurface.cpp">
+      <Filter>platform\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\Color.cpp">
+      <Filter>platform\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\ColorSpace.cpp">
+      <Filter>platform\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\CompositingReasons.cpp">
+      <Filter>platform\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\ContentLayerDelegate.cpp">
+      <Filter>platform\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\CrossfadeGeneratedImage.cpp">
+      <Filter>platform\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\DecodingImageGenerator.cpp">
+      <Filter>platform\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\DeferredImageDecoder.cpp">
+      <Filter>platform\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\DrawLooperBuilder.cpp">
+      <Filter>platform\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\FirstPaintInvalidationTracking.cpp">
+      <Filter>platform\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\FrameData.cpp">
+      <Filter>platform\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\GeneratedImage.cpp">
+      <Filter>platform\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\Gradient.cpp">
+      <Filter>platform\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\GradientGeneratedImage.cpp">
+      <Filter>platform\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\geometry\DoubleRect.cpp">
+      <Filter>platform\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\geometry\DoublePoint.cpp">
+      <Filter>platform\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\geometry\LayoutRectOutsets.cpp">
+      <Filter>platform\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\network\NetworkHints.cpp">
+      <Filter>platform\network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\EventDispatchForbiddenScope.cpp">
+      <Filter>platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\PluginScriptForbiddenScope.cpp">
+      <Filter>platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebString.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebURL.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebURLError.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebURLLoaderClient.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebURLLoadTiming.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebURLRequest.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebURLResponse.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\Platform.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebCommon.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebHTTPBody.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebHTTPLoadInfo.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebImageSkia.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\scheduler\CancellableTaskFactory.cpp">
+      <Filter>platform\scheduler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\fonts\FontCustomPlatformData.cpp">
+      <Filter>platform\fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebThreadedDataReceiver.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\paint\DisplayItem.cpp">
+      <Filter>platform\paint</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\paint\DisplayItemList.cpp">
+      <Filter>platform\paint</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\paint\DisplayItemTransformTree.cpp">
+      <Filter>platform\paint</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\paint\DisplayItemTransformTreeBuilder.cpp">
+      <Filter>platform\paint</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\paint\DrawingDisplayItem.cpp">
+      <Filter>platform\paint</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\paint\DrawingRecorder.cpp">
+      <Filter>platform\paint</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\paint\FilterDisplayItem.cpp">
+      <Filter>platform\paint</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\paint\FixedPositionContainerDisplayItem.cpp">
+      <Filter>platform\paint</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\paint\FixedPositionDisplayItem.cpp">
+      <Filter>platform\paint</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\paint\FloatClipDisplayItem.cpp">
+      <Filter>platform\paint</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\paint\ScrollDisplayItem.cpp">
+      <Filter>platform\paint</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\paint\SubtreeDisplayItem.cpp">
+      <Filter>platform\paint</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\paint\TransformDisplayItem.cpp">
+      <Filter>platform\paint</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\paint\ClipDisplayItem.cpp">
+      <Filter>platform\paint</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\paint\ClipPathDisplayItem.cpp">
+      <Filter>platform\paint</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\paint\ClipPathRecorder.cpp">
+      <Filter>platform\paint</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\paint\ClipRecorder.cpp">
+      <Filter>platform\paint</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\paint\CompositingDisplayItem.cpp">
+      <Filter>platform\paint</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebConvertableToTraceFormat.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\network\ResourceTimingInfo.cpp">
+      <Filter>platform\network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebScrollbarImpl.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\animation\CubicBezierControlPoints.cpp">
+      <Filter>platform\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebBlobData.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebMediaStreamTrackSourcesRequest.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebMediaStream.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebMediaStreamSource.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebMediaStreamTrack.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebPrerenderingSupport.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebPrerender.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebStorageQuotaCallbacks.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebTraceLocation.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebScrollbarThemePainter.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebFilterKeyframe.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebCString.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebData.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebTransformKeyframe.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\DragImage.cpp">
+      <Filter>platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\paint\Transform3DDisplayItem.cpp">
+      <Filter>platform\paint</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\PartitionAllocMemoryDumpProvider.cpp">
+      <Filter>platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebThreadSafeData.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebMediaConstraints.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebSecurityOrigin.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\ImageBufferSurface.cpp">
+      <Filter>platform\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\WebScheduler.cpp">
+      <Filter>platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\fonts\shaping\CachingWordShaper.cpp">
+      <Filter>platform\fonts\shaping</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebMemoryDumpProvider.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\media\MediaPlayer.cpp">
+      <Filter>platform\graphics\media</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebScrollbarThemeGeometryNative.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\fonts\shaping\Shaper.cpp">
+      <Filter>platform\fonts\shaping</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\fonts\UTF16TextIterator.cpp">
+      <Filter>platform\fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebScrollbarThemeClientImpl.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\win\PlatformMouseEventWin.cpp">
+      <Filter>platform\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebCursorInfo.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebActiveGestureAnimation.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\heap\asm\SaveRegisters_x86.cpp">
+      <Filter>platform\heap\asm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\text\IcuCharsetDetector.cpp">
+      <Filter>platform\text</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\image-decoders\GDIPlus\ImageGDIPlusDecoder.cpp">
+      <Filter>platform\image-decoders\GDIPlus</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\GDIPlusInit.cpp">
+      <Filter>platform\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\image-encoders\gdiplus\GDIPlusImageEncoder.cpp">
+      <Filter>platform\image-encoders\gdiplus</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\image-decoders\gif\GIFImageDecoder.cpp">
+      <Filter>platform\image-decoders\gif</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\image-decoders\gif\GIFImageReader.cpp">
+      <Filter>platform\image-decoders\gif</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\image-decoders\FastSharedBufferReader.cpp">
+      <Filter>platform\image-decoders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebContentDecryptionModuleResultEmpty.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\fonts\opentype\OpenTypeSanitizer.cpp">
+      <Filter>platform\fonts\opentype</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\fonts\opentype\OpenTypeVerticalData.cpp">
+      <Filter>platform\fonts\opentype</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebSerializedOrigin.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\image-decoders\GDIPlus\GDIPlusReader.cpp">
+      <Filter>platform\image-decoders\GDIPlus</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebDragData.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\image-decoders\jpeg\JPEGImageDecoder.cpp">
+      <Filter>platform\image-decoders\jpeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\image-decoders\png\PNGImageDecoder.cpp">
+      <Filter>platform\image-decoders\png</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\config.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\animation\AnimationUtilities.h">
+      <Filter>platform\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\animation\CubicBezierControlPoints.h">
+      <Filter>platform\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\animation\TimingFunction.h">
+      <Filter>platform\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\animation\UnitBezier.h">
+      <Filter>platform\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\AsyncFileSystemCallbacks.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\AsyncMethodRunner.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\blob\BlobData.h">
+      <Filter>platform\blob</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\blob\BlobRegistry.h">
+      <Filter>platform\blob</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\blob\BlobURL.h">
+      <Filter>platform\blob</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\CalculationValue.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\CheckedInt.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\clipboard\ClipboardMimeTypes.h">
+      <Filter>platform\clipboard</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\clipboard\ClipboardUtilities.h">
+      <Filter>platform\clipboard</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\Clock.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\ColorSuggestion.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\ContentDecryptionModuleResult.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\ContentType.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\ContextMenu.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\ContextMenuItem.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\credentialmanager\PlatformCredential.h">
+      <Filter>platform\credentialmanager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\credentialmanager\PlatformFederatedCredential.h">
+      <Filter>platform\credentialmanager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\CrossOriginAttributeValue.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\CrossThreadCopier.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\Crypto.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\CryptoResult.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\Cursor.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\DateComponents.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\Decimal.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\DragImage.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\EncryptedMediaRequest.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\EventTracer.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\FileChooser.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\FileMetadata.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\FileSystemType.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\FloatConversion.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\fonts\AlternateFontFamily.h">
+      <Filter>platform\fonts</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\fonts\Character.h">
+      <Filter>platform\fonts</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\fonts\CustomFontData.h">
+      <Filter>platform\fonts</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\fonts\Font.h">
+      <Filter>platform\fonts</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\fonts\FontBaseline.h">
+      <Filter>platform\fonts</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\fonts\FontCache.h">
+      <Filter>platform\fonts</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\fonts\FontCacheClient.h">
+      <Filter>platform\fonts</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\fonts\FontCacheKey.h">
+      <Filter>platform\fonts</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\fonts\FontData.h">
+      <Filter>platform\fonts</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\fonts\FontDataCache.h">
+      <Filter>platform\fonts</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\fonts\FontDescription.h">
+      <Filter>platform\fonts</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\fonts\FontFaceCreationParams.h">
+      <Filter>platform\fonts</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\fonts\FontFallbackList.h">
+      <Filter>platform\fonts</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\fonts\FontFamily.h">
+      <Filter>platform\fonts</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\fonts\FontFeatureSettings.h">
+      <Filter>platform\fonts</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\fonts\FontMetrics.h">
+      <Filter>platform\fonts</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\fonts\FontOrientation.h">
+      <Filter>platform\fonts</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\fonts\FontPlatformData.h">
+      <Filter>platform\fonts</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\fonts\FontRenderStyle.h">
+      <Filter>platform\fonts</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\fonts\FontSelector.h">
+      <Filter>platform\fonts</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\fonts\FontSmoothingMode.h">
+      <Filter>platform\fonts</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\fonts\FontTraits.h">
+      <Filter>platform\fonts</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\fonts\FontWidthVariant.h">
+      <Filter>platform\fonts</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\fonts\GenericFontFamilySettings.h">
+      <Filter>platform\fonts</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\fonts\Glyph.h">
+      <Filter>platform\fonts</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\fonts\GlyphBuffer.h">
+      <Filter>platform\fonts</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\fonts\GlyphMetricsMap.h">
+      <Filter>platform\fonts</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\fonts\GlyphPage.h">
+      <Filter>platform\fonts</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\fonts\GlyphPageTreeNode.h">
+      <Filter>platform\fonts</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\fonts\Latin1TextIterator.h">
+      <Filter>platform\fonts</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\fonts\mac\FontFamilyMatcherMac.h">
+      <Filter>platform\fonts\mac</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\fonts\opentype\OpenTypeSanitizer.h">
+      <Filter>platform\fonts\opentype</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\fonts\opentype\OpenTypeTypes.h">
+      <Filter>platform\fonts\opentype</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\fonts\opentype\OpenTypeVerticalData.h">
+      <Filter>platform\fonts\opentype</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\fonts\SegmentedFontData.h">
+      <Filter>platform\fonts</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\fonts\shaping\CachingWordShapeIterator.h">
+      <Filter>platform\fonts\shaping</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\fonts\shaping\CachingWordShaper.h">
+      <Filter>platform\fonts\shaping</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\fonts\shaping\HarfBuzzFace.h">
+      <Filter>platform\fonts\shaping</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\fonts\shaping\HarfBuzzShaper.h">
+      <Filter>platform\fonts\shaping</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\fonts\shaping\ShapeCache.h">
+      <Filter>platform\fonts\shaping</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\fonts\shaping\SimpleShaper.h">
+      <Filter>platform\fonts\shaping</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\fonts\SimpleFontData.h">
+      <Filter>platform\fonts</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\fonts\TestFontSelector.h">
+      <Filter>platform\fonts</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\fonts\TextBlob.h">
+      <Filter>platform\fonts</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\fonts\TextRenderingMode.h">
+      <Filter>platform\fonts</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\fonts\TypesettingFeatures.h">
+      <Filter>platform\fonts</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\fonts\VDMXParser.h">
+      <Filter>platform\fonts</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\fonts\win\FontFallbackWin.h">
+      <Filter>platform\fonts\win</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\geometry\DoubleSize.h">
+      <Filter>platform\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\geometry\FloatBox.h">
+      <Filter>platform\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\geometry\FloatBoxTestHelpers.h">
+      <Filter>platform\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\geometry\FloatPoint.h">
+      <Filter>platform\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\geometry\FloatPoint3D.h">
+      <Filter>platform\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\geometry\FloatPolygon.h">
+      <Filter>platform\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\geometry\FloatQuad.h">
+      <Filter>platform\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\geometry\FloatRect.h">
+      <Filter>platform\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\geometry\FloatRectOutsets.h">
+      <Filter>platform\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\geometry\FloatRoundedRect.h">
+      <Filter>platform\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\geometry\FloatSize.h">
+      <Filter>platform\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\geometry\IntPoint.h">
+      <Filter>platform\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\geometry\IntRect.h">
+      <Filter>platform\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\geometry\IntRectOutsets.h">
+      <Filter>platform\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\geometry\IntSize.h">
+      <Filter>platform\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\geometry\IntSizeHash.h">
+      <Filter>platform\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\geometry\LayoutPoint.h">
+      <Filter>platform\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\geometry\LayoutRect.h">
+      <Filter>platform\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\geometry\LayoutSize.h">
+      <Filter>platform\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\geometry\Region.h">
+      <Filter>platform\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\geometry\TransformState.h">
+      <Filter>platform\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\cpu\arm\WebGLImageConversionNEON.h">
+      <Filter>platform\graphics\cpu\arm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\cpu\x86\WebGLImageConversionSSE.h">
+      <Filter>platform\graphics\cpu\x86</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\filters\DistantLightSource.h">
+      <Filter>platform\graphics\filters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\filters\FEBlend.h">
+      <Filter>platform\graphics\filters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\filters\FEColorMatrix.h">
+      <Filter>platform\graphics\filters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\filters\FEComponentTransfer.h">
+      <Filter>platform\graphics\filters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\filters\FEComposite.h">
+      <Filter>platform\graphics\filters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\filters\FEConvolveMatrix.h">
+      <Filter>platform\graphics\filters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\filters\FEDiffuseLighting.h">
+      <Filter>platform\graphics\filters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\filters\FEDisplacementMap.h">
+      <Filter>platform\graphics\filters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\filters\FEDropShadow.h">
+      <Filter>platform\graphics\filters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\filters\FEFlood.h">
+      <Filter>platform\graphics\filters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\filters\FEGaussianBlur.h">
+      <Filter>platform\graphics\filters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\filters\FELighting.h">
+      <Filter>platform\graphics\filters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\filters\FEMerge.h">
+      <Filter>platform\graphics\filters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\filters\FEMorphology.h">
+      <Filter>platform\graphics\filters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\filters\FEOffset.h">
+      <Filter>platform\graphics\filters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\filters\FESpecularLighting.h">
+      <Filter>platform\graphics\filters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\filters\FETile.h">
+      <Filter>platform\graphics\filters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\filters\FETurbulence.h">
+      <Filter>platform\graphics\filters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\filters\Filter.h">
+      <Filter>platform\graphics\filters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\filters\FilterEffect.h">
+      <Filter>platform\graphics\filters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\filters\FilterOperation.h">
+      <Filter>platform\graphics\filters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\filters\FilterOperations.h">
+      <Filter>platform\graphics\filters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\filters\LightSource.h">
+      <Filter>platform\graphics\filters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\filters\PointLightSource.h">
+      <Filter>platform\graphics\filters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\filters\ReferenceFilter.h">
+      <Filter>platform\graphics\filters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\filters\SkiaImageFilterBuilder.h">
+      <Filter>platform\graphics\filters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\filters\SourceAlpha.h">
+      <Filter>platform\graphics\filters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\filters\SourceGraphic.h">
+      <Filter>platform\graphics\filters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\filters\SpotLightSource.h">
+      <Filter>platform\graphics\filters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\gpu\AcceleratedImageBufferSurface.h">
+      <Filter>platform\graphics\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\gpu\DrawingBuffer.h">
+      <Filter>platform\graphics\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\gpu\Extensions3DUtil.h">
+      <Filter>platform\graphics\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\gpu\WebGLImageConversion.h">
+      <Filter>platform\graphics\gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\skia\SkiaUtils.h">
+      <Filter>platform\graphics\skia</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\skia\SkSizeHash.h">
+      <Filter>platform\graphics\skia</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\test\MockImageDecoder.h">
+      <Filter>platform\graphics\test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\test\MockWebGraphicsContext3D.h">
+      <Filter>platform\graphics\test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\heap\glue\MessageLoopInterruptor.h">
+      <Filter>platform\heap\glue</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\heap\glue\PendingGCRunner.h">
+      <Filter>platform\heap\glue</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\HostWindow.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\image-decoders\bmp\BMPImageDecoder.h">
+      <Filter>platform\image-decoders\bmp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\image-decoders\bmp\BMPImageReader.h">
+      <Filter>platform\image-decoders\bmp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\image-decoders\gif\GIFImageDecoder.h">
+      <Filter>platform\image-decoders\gif</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\image-decoders\gif\GIFImageReader.h">
+      <Filter>platform\image-decoders\gif</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\image-decoders\ico\ICOImageDecoder.h">
+      <Filter>platform\image-decoders\ico</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\image-decoders\ImageAnimation.h">
+      <Filter>platform\image-decoders</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\image-decoders\ImageDecoder.h">
+      <Filter>platform\image-decoders</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\image-decoders\ImageFrame.h">
+      <Filter>platform\image-decoders</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\image-decoders\jpeg\JPEGImageDecoder.h">
+      <Filter>platform\image-decoders\jpeg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\image-decoders\png\PNGImageDecoder.h">
+      <Filter>platform\image-decoders\png</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\image-decoders\webp\WEBPImageDecoder.h">
+      <Filter>platform\image-decoders\webp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\image-encoders\skia\JPEGImageEncoder.h">
+      <Filter>platform\image-encoders\skia</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\image-encoders\skia\PNGImageEncoder.h">
+      <Filter>platform\image-encoders\skia</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\image-encoders\skia\WEBPImageEncoder.h">
+      <Filter>platform\image-encoders\skia</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\JSONValues.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\KeyboardCodes.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\KillRing.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\Language.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\LayoutTestSupport.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\LayoutUnit.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\Length.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\LengthBox.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\LengthFunctions.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\LengthPoint.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\LengthSize.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\LifecycleNotifier.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\LifecycleObserver.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\LinkHash.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\Logging.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\mac\BlockExceptions.h">
+      <Filter>platform\mac</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\mac\ColorMac.h">
+      <Filter>platform\mac</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\mac\LocalCurrentGraphicsContext.h">
+      <Filter>platform\mac</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\mac\NSScrollerImpDetails.h">
+      <Filter>platform\mac</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\mac\ScrollAnimatorMac.h">
+      <Filter>platform\mac</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\mac\ThemeMac.h">
+      <Filter>platform\mac</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\mac\VersionUtilMac.h">
+      <Filter>platform\mac</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\mac\WebCoreNSCellExtras.h">
+      <Filter>platform\mac</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\mediastream\MediaStreamCenter.h">
+      <Filter>platform\mediastream</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\mediastream\MediaStreamComponent.h">
+      <Filter>platform\mediastream</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\mediastream\MediaStreamDescriptor.h">
+      <Filter>platform\mediastream</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\mediastream\MediaStreamSource.h">
+      <Filter>platform\mediastream</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\mediastream\MediaStreamTrackSourcesRequest.h">
+      <Filter>platform\mediastream</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\mediastream\MediaStreamWebAudioSource.h">
+      <Filter>platform\mediastream</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\mediastream\RTCConfiguration.h">
+      <Filter>platform\mediastream</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\mediastream\RTCOfferOptions.h">
+      <Filter>platform\mediastream</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\mediastream\RTCSessionDescriptionRequest.h">
+      <Filter>platform\mediastream</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\mediastream\RTCStatsRequest.h">
+      <Filter>platform\mediastream</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\mediastream\RTCStatsResponseBase.h">
+      <Filter>platform\mediastream</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\mediastream\RTCVoidRequest.h">
+      <Filter>platform\mediastream</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\mhtml\ArchiveResource.h">
+      <Filter>platform\mhtml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\mhtml\ArchiveResourceCollection.h">
+      <Filter>platform\mhtml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\mhtml\MHTMLArchive.h">
+      <Filter>platform\mhtml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\mhtml\MHTMLParser.h">
+      <Filter>platform\mhtml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\MIMETypeFromURL.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\MIMETypeRegistry.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\network\ContentSecurityPolicyParsers.h">
+      <Filter>platform\network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\network\ContentSecurityPolicyResponseHeaders.h">
+      <Filter>platform\network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\network\FormData.h">
+      <Filter>platform\network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\network\FormDataBuilder.h">
+      <Filter>platform\network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\network\HTTPHeaderMap.h">
+      <Filter>platform\network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\network\HTTPParsers.h">
+      <Filter>platform\network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\network\HTTPRequest.h">
+      <Filter>platform\network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\network\ParsedContentType.h">
+      <Filter>platform\network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\network\ResourceError.h">
+      <Filter>platform\network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\network\ResourceLoadInfo.h">
+      <Filter>platform\network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\network\ResourceLoadPriority.h">
+      <Filter>platform\network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\network\ResourceLoadTiming.h">
+      <Filter>platform\network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\network\ResourceRequest.h">
+      <Filter>platform\network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\network\ResourceResponse.h">
+      <Filter>platform\network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\network\ResourceTimingInfo.h">
+      <Filter>platform\network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\network\WebSocketHandshakeRequest.h">
+      <Filter>platform\network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\network\WebSocketHandshakeResponse.h">
+      <Filter>platform\network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\NotImplemented.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\ParsingUtilities.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\PasteMode.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\PlatformEvent.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\PlatformExport.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\PlatformGestureEvent.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\PlatformInstrumentation.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\PlatformKeyboardEvent.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\PlatformMouseEvent.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\PlatformResourceLoader.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\PlatformTouchEvent.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\PlatformTouchPoint.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\PlatformWheelEvent.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\plugins\PluginData.h">
+      <Filter>platform\plugins</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\plugins\PluginListBuilder.h">
+      <Filter>platform\plugins</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\PODArena.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\PODFreeListArena.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\PODInterval.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\PODIntervalTree.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\PODRedBlackTree.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\PopupMenu.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\Prerender.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\PrerenderClient.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\PurgeableVector.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\RefCountedSupplement.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\ScriptForbiddenScope.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\scroll\ProgrammaticScrollAnimator.h">
+      <Filter>platform\scroll</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\scroll\ScrollableArea.h">
+      <Filter>platform\scroll</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\scroll\ScrollAnimator.h">
+      <Filter>platform\scroll</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\scroll\ScrollAnimatorNone.h">
+      <Filter>platform\scroll</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\scroll\Scrollbar.h">
+      <Filter>platform\scroll</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\scroll\ScrollbarTheme.h">
+      <Filter>platform\scroll</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\scroll\ScrollbarThemeAura.h">
+      <Filter>platform\scroll</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\scroll\ScrollbarThemeClient.h">
+      <Filter>platform\scroll</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\scroll\ScrollbarThemeMacCommon.h">
+      <Filter>platform\scroll</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\scroll\ScrollbarThemeMacNonOverlayAPI.h">
+      <Filter>platform\scroll</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\scroll\ScrollbarThemeMacOverlayAPI.h">
+      <Filter>platform\scroll</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\scroll\ScrollbarThemeMock.h">
+      <Filter>platform\scroll</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\scroll\ScrollbarThemeNonMacCommon.h">
+      <Filter>platform\scroll</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\scroll\ScrollbarThemeOverlay.h">
+      <Filter>platform\scroll</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\scroll\ScrollbarThemeOverlayMock.h">
+      <Filter>platform\scroll</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\scroll\ScrollTypes.h">
+      <Filter>platform\scroll</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\SecureTextInput.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\SerializedResource.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\SharedBuffer.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\SharedBufferChunkReader.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\speech\PlatformSpeechSynthesisUtterance.h">
+      <Filter>platform\speech</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\speech\PlatformSpeechSynthesisVoice.h">
+      <Filter>platform\speech</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\speech\PlatformSpeechSynthesizer.h">
+      <Filter>platform\speech</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\StorageQuotaCallbacks.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\Task.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\TaskSynchronizer.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\TestingPlatformSupport.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\text\BidiCharacterRun.h">
+      <Filter>platform\text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\text\BidiContext.h">
+      <Filter>platform\text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\text\BidiResolver.h">
+      <Filter>platform\text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\text\BidiRunList.h">
+      <Filter>platform\text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\text\BidiTestHarness.h">
+      <Filter>platform\text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\text\BidiTextRun.h">
+      <Filter>platform\text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\text\DateTimeFormat.h">
+      <Filter>platform\text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\text\DecodeEscapeSequences.h">
+      <Filter>platform\text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\text\LineEnding.h">
+      <Filter>platform\text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\text\LocaleICU.h">
+      <Filter>platform\text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\text\LocaleMac.h">
+      <Filter>platform\text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\text\LocaleToScriptMapping.h">
+      <Filter>platform\text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\text\LocaleWin.h">
+      <Filter>platform\text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\text\ParserUtilities.h">
+      <Filter>platform\text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\text\PlatformLocale.h">
+      <Filter>platform\text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\text\QuotedPrintable.h">
+      <Filter>platform\text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\text\SegmentedString.h">
+      <Filter>platform\text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\text\StringTruncator.h">
+      <Filter>platform\text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\text\SuffixTree.h">
+      <Filter>platform\text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\text\TabSize.h">
+      <Filter>platform\text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\text\TextBoundaries.h">
+      <Filter>platform\text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\text\TextBreakIterator.h">
+      <Filter>platform\text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\text\TextBreakIteratorInternalICU.h">
+      <Filter>platform\text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\text\TextCheckerClient.h">
+      <Filter>platform\text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\text\TextChecking.h">
+      <Filter>platform\text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\text\TextDecoration.h">
+      <Filter>platform\text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\text\TextDirection.h">
+      <Filter>platform\text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\text\TextEncodingDetector.h">
+      <Filter>platform\text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\text\TextPath.h">
+      <Filter>platform\text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\text\TextRun.h">
+      <Filter>platform\text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\text\TextRunIterator.h">
+      <Filter>platform\text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\text\TextStream.h">
+      <Filter>platform\text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\text\UnicodeBidi.h">
+      <Filter>platform\text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\text\UnicodeRange.h">
+      <Filter>platform\text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\text\UnicodeUtilities.h">
+      <Filter>platform\text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\text\WritingMode.h">
+      <Filter>platform\text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\Theme.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\ThemeTypes.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\ThreadedDataReceiver.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\ThreadSafeFunctional.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\Timer.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\TracedValue.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\TraceEvent.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\TraceEventCommon.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\transforms\AffineTransform.h">
+      <Filter>platform\transforms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\transforms\IdentityTransformOperation.h">
+      <Filter>platform\transforms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\transforms\InterpolatedTransformOperation.h">
+      <Filter>platform\transforms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\transforms\Matrix3DTransformOperation.h">
+      <Filter>platform\transforms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\transforms\MatrixTransformOperation.h">
+      <Filter>platform\transforms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\transforms\PerspectiveTransformOperation.h">
+      <Filter>platform\transforms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\transforms\RotateTransformOperation.h">
+      <Filter>platform\transforms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\transforms\ScaleTransformOperation.h">
+      <Filter>platform\transforms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\transforms\SkewTransformOperation.h">
+      <Filter>platform\transforms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\transforms\TransformationMatrix.h">
+      <Filter>platform\transforms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\transforms\TransformOperation.h">
+      <Filter>platform\transforms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\transforms\TransformOperations.h">
+      <Filter>platform\transforms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\transforms\TransformTestHelper.h">
+      <Filter>platform\transforms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\transforms\TranslateTransformOperation.h">
+      <Filter>platform\transforms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\UserGestureIndicator.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\UUID.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\weborigin\DatabaseIdentifier.h">
+      <Filter>platform\weborigin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\weborigin\KnownPorts.h">
+      <Filter>platform\weborigin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\weborigin\KURL.h">
+      <Filter>platform\weborigin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\weborigin\KURLHash.h">
+      <Filter>platform\weborigin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\weborigin\OriginAccessEntry.h">
+      <Filter>platform\weborigin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\weborigin\Referrer.h">
+      <Filter>platform\weborigin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\weborigin\ReferrerPolicy.h">
+      <Filter>platform\weborigin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\weborigin\SchemeRegistry.h">
+      <Filter>platform\weborigin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\weborigin\SecurityOrigin.h">
+      <Filter>platform\weborigin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\weborigin\SecurityOriginCache.h">
+      <Filter>platform\weborigin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\weborigin\SecurityOriginHash.h">
+      <Filter>platform\weborigin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\weborigin\SecurityPolicy.h">
+      <Filter>platform\weborigin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\WebThreadSupportingGC.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\Widget.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\win\HWndDC.h">
+      <Filter>platform\win</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\win\SystemInfo.h">
+      <Filter>platform\win</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\WindowsKeyboardCodes.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\Supplementable.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\heap\GCInfo.h">
+      <Filter>platform\heap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\heap\BlinkGCMemoryDumpProvider.h">
+      <Filter>platform\heap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\heap\CallbackStack.h">
+      <Filter>platform\heap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\heap\GarbageCollected.h">
+      <Filter>platform\heap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\heap\Heap.h">
+      <Filter>platform\heap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\heap\HeapAllocator.h">
+      <Filter>platform\heap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\heap\HeapLinkedStack.h">
+      <Filter>platform\heap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\heap\HeapTerminatedArray.h">
+      <Filter>platform\heap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\heap\HeapTerminatedArrayBuilder.h">
+      <Filter>platform\heap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\heap\InlinedGlobalMarkingVisitor.h">
+      <Filter>platform\heap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\heap\MarkingVisitor.h">
+      <Filter>platform\heap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\heap\MarkingVisitorImpl.h">
+      <Filter>platform\heap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\heap\PageMemory.h">
+      <Filter>platform\heap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\heap\PagePool.h">
+      <Filter>platform\heap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\heap\PersistentNode.h">
+      <Filter>platform\heap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\heap\SafePoint.h">
+      <Filter>platform\heap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\heap\StackFrameDepth.h">
+      <Filter>platform\heap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\heap\ThreadingTraits.h">
+      <Filter>platform\heap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\heap\ThreadState.h">
+      <Filter>platform\heap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\heap\TraceTraits.h">
+      <Filter>platform\heap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\heap\Visitor.h">
+      <Filter>platform\heap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\heap\Handle.h">
+      <Filter>platform\heap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\BitmapPattern.h">
+      <Filter>platform\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\BitmapPatternBase.h">
+      <Filter>platform\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\BitmapImage.h">
+      <Filter>platform\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\GradientGeneratedImage.h">
+      <Filter>platform\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\GraphicsContext.h">
+      <Filter>platform\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\GraphicsContextState.h">
+      <Filter>platform\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\GraphicsContextStateSaver.h">
+      <Filter>platform\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\GraphicsLayer.h">
+      <Filter>platform\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\GraphicsLayerClient.h">
+      <Filter>platform\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\GraphicsLayerDebugInfo.h">
+      <Filter>platform\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\GraphicsLayerFactory.h">
+      <Filter>platform\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\GraphicsTypes.h">
+      <Filter>platform\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\GraphicsTypes3D.h">
+      <Filter>platform\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\Image.h">
+      <Filter>platform\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\ImageAnimationPolicy.h">
+      <Filter>platform\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\ImageBuffer.h">
+      <Filter>platform\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\ImageBufferClient.h">
+      <Filter>platform\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\ImageBufferSurface.h">
+      <Filter>platform\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\ImageDecodingStore.h">
+      <Filter>platform\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\ImageFrameGenerator.h">
+      <Filter>platform\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\ImageObserver.h">
+      <Filter>platform\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\ImageOrientation.h">
+      <Filter>platform\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\ImageSource.h">
+      <Filter>platform\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\InterceptingCanvas.h">
+      <Filter>platform\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\ListContainer.h">
+      <Filter>platform\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\LoggingCanvas.h">
+      <Filter>platform\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\PaintInvalidationReason.h">
+      <Filter>platform\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\Path.h">
+      <Filter>platform\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\PathTraversalState.h">
+      <Filter>platform\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\Pattern.h">
+      <Filter>platform\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\PicturePattern.h">
+      <Filter>platform\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\PictureSnapshot.h">
+      <Filter>platform\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\ProfilingCanvas.h">
+      <Filter>platform\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\RecordingImageBufferSurface.h">
+      <Filter>platform\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\ReplayingCanvas.h">
+      <Filter>platform\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\StaticBitmapImage.h">
+      <Filter>platform\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\StaticBitmapPattern.h">
+      <Filter>platform\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\StrokeData.h">
+      <Filter>platform\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\ThreadSafeDataTransport.h">
+      <Filter>platform\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\UnacceleratedImageBufferSurface.h">
+      <Filter>platform\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\Color.h">
+      <Filter>platform\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\ColorSpace.h">
+      <Filter>platform\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\CompositingReasons.h">
+      <Filter>platform\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\ContentLayerDelegate.h">
+      <Filter>platform\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\CrossfadeGeneratedImage.h">
+      <Filter>platform\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\DashArray.h">
+      <Filter>platform\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\DecodingImageGenerator.h">
+      <Filter>platform\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\DeferredImageDecoder.h">
+      <Filter>platform\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\DrawLooperBuilder.h">
+      <Filter>platform\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\ExpensiveCanvasHeuristicParameters.h">
+      <Filter>platform\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\FirstPaintInvalidationTracking.h">
+      <Filter>platform\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\FrameData.h">
+      <Filter>platform\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\GeneratedImage.h">
+      <Filter>platform\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\Gradient.h">
+      <Filter>platform\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\geometry\DoubleRect.h">
+      <Filter>platform\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\geometry\DoublePoint.h">
+      <Filter>platform\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\geometry\LayoutRectOutsets.h">
+      <Filter>platform\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\network\NetworkHints.h">
+      <Filter>platform\network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebURLRequestPrivate.h">
+      <Filter>platform\exported</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebURLResponsePrivate.h">
+      <Filter>platform\exported</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WrappedResourceRequest.h">
+      <Filter>platform\exported</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WrappedResourceResponse.h">
+      <Filter>platform\exported</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\scheduler\CancellableTaskFactory.h">
+      <Filter>platform\scheduler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\fonts\FontCustomPlatformData.h">
+      <Filter>platform\fonts</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\paint\DisplayItem.h">
+      <Filter>platform\paint</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\paint\DisplayItemCacheSkipper.h">
+      <Filter>platform\paint</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\paint\DisplayItemClient.h">
+      <Filter>platform\paint</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\paint\DisplayItemList.h">
+      <Filter>platform\paint</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\paint\DisplayItemTransformTree.h">
+      <Filter>platform\paint</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\paint\DisplayItemTransformTreeBuilder.h">
+      <Filter>platform\paint</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\paint\DrawingDisplayItem.h">
+      <Filter>platform\paint</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\paint\DrawingRecorder.h">
+      <Filter>platform\paint</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\paint\FilterDisplayItem.h">
+      <Filter>platform\paint</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\paint\FixedPositionContainerDisplayItem.h">
+      <Filter>platform\paint</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\paint\FixedPositionDisplayItem.h">
+      <Filter>platform\paint</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\paint\FloatClipDisplayItem.h">
+      <Filter>platform\paint</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\paint\ScrollDisplayItem.h">
+      <Filter>platform\paint</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\paint\SkPictureBuilder.h">
+      <Filter>platform\paint</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\paint\SubtreeDisplayItem.h">
+      <Filter>platform\paint</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\paint\TransformDisplayItem.h">
+      <Filter>platform\paint</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\paint\CachedDisplayItem.h">
+      <Filter>platform\paint</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\paint\ClipDisplayItem.h">
+      <Filter>platform\paint</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\paint\ClipPathDisplayItem.h">
+      <Filter>platform\paint</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\paint\ClipPathRecorder.h">
+      <Filter>platform\paint</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\paint\ClipRecorder.h">
+      <Filter>platform\paint</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\paint\CompositingDisplayItem.h">
+      <Filter>platform\paint</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\PartitionAllocMemoryDumpProvider.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\media\MediaPlayer.h">
+      <Filter>platform\graphics\media</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebScrollbarThemeGeometryNative.h">
+      <Filter>platform\exported</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\win\PlatformMouseEventWin.h">
+      <Filter>platform\win</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebActiveGestureAnimation.h">
+      <Filter>platform\exported</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\text\SimpleTextBreakIterator.h">
+      <Filter>platform\text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\fonts\UTF16TextIterator.h">
+      <Filter>platform\fonts</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\text\IcuCharsetDetector.h">
+      <Filter>platform\text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\image-decoders\GDIPlus\ImageGDIPlusDecoder.h">
+      <Filter>platform\image-decoders\GDIPlus</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\graphics\GDIPlusInit.h">
+      <Filter>platform\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\image-encoders\gdiplus\GDIPlusImageEncoder.h">
+      <Filter>platform\image-encoders\gdiplus</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\image-decoders\FastSharedBufferReader.h">
+      <Filter>platform\image-decoders</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebScrollbarImpl.h">
+      <Filter>platform\exported</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\image-decoders\GDIPlus\GDIPlusReader.h">
+      <Filter>platform\image-decoders\GDIPlus</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\config.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\..\..\..\..\third_party\WebKit\Source\platform\heap\asm\SaveRegisters_x86.asm">
+      <Filter>platform\heap\asm</Filter>
+    </CustomBuild>
+  </ItemGroup>
+</Project>

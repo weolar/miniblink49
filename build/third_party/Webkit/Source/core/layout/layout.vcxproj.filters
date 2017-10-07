@@ -1,0 +1,1186 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="core">
+      <UniqueIdentifier>{8d5b50a9-8799-4f87-b846-bacd5b9929ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\layout">
+      <UniqueIdentifier>{5bf4d7d1-6381-4c2c-a6fe-f9208f679a0c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\layout\api">
+      <UniqueIdentifier>{48e77cc1-cd59-4799-be42-aaadb5482035}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\layout\compositing">
+      <UniqueIdentifier>{fe408d7b-2640-49cf-bdbf-14b3ff8ba572}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\layout\line">
+      <UniqueIdentifier>{d40d7b33-d962-41ea-be86-279bdcf6a535}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\layout\shapes">
+      <UniqueIdentifier>{291f1c87-8120-4b1f-a988-1b807d576a1b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\layout\svg">
+      <UniqueIdentifier>{284a4df4-3ccb-473a-a674-2434b9093335}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\layout\svg\line">
+      <UniqueIdentifier>{02933d63-3a2a-4125-a262-93d671648075}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\compositing\CompositingInputsUpdater.cpp">
+      <Filter>core\layout\compositing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\compositing\CompositingLayerAssigner.cpp">
+      <Filter>core\layout\compositing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\compositing\CompositingReasonFinder.cpp">
+      <Filter>core\layout\compositing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\compositing\CompositingRequirementsUpdater.cpp">
+      <Filter>core\layout\compositing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\compositing\DeprecatedPaintLayerCompositor.cpp">
+      <Filter>core\layout\compositing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\compositing\GraphicsLayerTreeBuilder.cpp">
+      <Filter>core\layout\compositing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\compositing\GraphicsLayerUpdater.cpp">
+      <Filter>core\layout\compositing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\compositing\CompositedDeprecatedPaintLayerMapping.cpp">
+      <Filter>core\layout\compositing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\line\InlineFlowBox.cpp">
+      <Filter>core\layout\line</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\line\InlineTextBox.cpp">
+      <Filter>core\layout\line</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\line\LineBoxList.cpp">
+      <Filter>core\layout\line</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\line\LineBreaker.cpp">
+      <Filter>core\layout\line</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\line\LineWidth.cpp">
+      <Filter>core\layout\line</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\line\RootInlineBox.cpp">
+      <Filter>core\layout\line</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\line\TrailingObjects.cpp">
+      <Filter>core\layout\line</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\line\AbstractInlineTextBox.cpp">
+      <Filter>core\layout\line</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\line\BreakingContext.cpp">
+      <Filter>core\layout\line</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\line\EllipsisBox.cpp">
+      <Filter>core\layout\line</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\line\InlineBox.cpp">
+      <Filter>core\layout\line</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\shapes\Shape.cpp">
+      <Filter>core\layout\shapes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\shapes\ShapeOutsideInfo.cpp">
+      <Filter>core\layout\shapes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\shapes\BoxShape.cpp">
+      <Filter>core\layout\shapes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\shapes\PolygonShape.cpp">
+      <Filter>core\layout\shapes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\shapes\RasterShape.cpp">
+      <Filter>core\layout\shapes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\shapes\RectangleShape.cpp">
+      <Filter>core\layout\shapes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\line\SVGRootInlineBox.cpp">
+      <Filter>core\layout\svg\line</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\line\SVGInlineFlowBox.cpp">
+      <Filter>core\layout\svg\line</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\line\SVGInlineTextBox.cpp">
+      <Filter>core\layout\svg\line</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\SVGTextLayoutEngine.cpp">
+      <Filter>core\layout\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\SVGTextLayoutEngineBaseline.cpp">
+      <Filter>core\layout\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\SVGTextLayoutEngineSpacing.cpp">
+      <Filter>core\layout\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\SVGTextMetrics.cpp">
+      <Filter>core\layout\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\SVGTextMetricsBuilder.cpp">
+      <Filter>core\layout\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\SVGTextQuery.cpp">
+      <Filter>core\layout\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGBlock.cpp">
+      <Filter>core\layout\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGContainer.cpp">
+      <Filter>core\layout\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGEllipse.cpp">
+      <Filter>core\layout\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGForeignObject.cpp">
+      <Filter>core\layout\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGGradientStop.cpp">
+      <Filter>core\layout\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGHiddenContainer.cpp">
+      <Filter>core\layout\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGImage.cpp">
+      <Filter>core\layout\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGInline.cpp">
+      <Filter>core\layout\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGInlineText.cpp">
+      <Filter>core\layout\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGModelObject.cpp">
+      <Filter>core\layout\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGPath.cpp">
+      <Filter>core\layout\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGRect.cpp">
+      <Filter>core\layout\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGResourceClipper.cpp">
+      <Filter>core\layout\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGResourceContainer.cpp">
+      <Filter>core\layout\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGResourceFilter.cpp">
+      <Filter>core\layout\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGResourceFilterPrimitive.cpp">
+      <Filter>core\layout\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGResourceGradient.cpp">
+      <Filter>core\layout\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGResourceLinearGradient.cpp">
+      <Filter>core\layout\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGResourceMarker.cpp">
+      <Filter>core\layout\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGResourceMasker.cpp">
+      <Filter>core\layout\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGResourcePaintServer.cpp">
+      <Filter>core\layout\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGResourcePattern.cpp">
+      <Filter>core\layout\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGResourceRadialGradient.cpp">
+      <Filter>core\layout\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGRoot.cpp">
+      <Filter>core\layout\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGShape.cpp">
+      <Filter>core\layout\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGText.cpp">
+      <Filter>core\layout\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGTextPath.cpp">
+      <Filter>core\layout\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGTransformableContainer.cpp">
+      <Filter>core\layout\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGTSpan.cpp">
+      <Filter>core\layout\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGViewportContainer.cpp">
+      <Filter>core\layout\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\ReferenceFilterBuilder.cpp">
+      <Filter>core\layout\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\SVGLayoutSupport.cpp">
+      <Filter>core\layout\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\SVGLayoutTreeAsText.cpp">
+      <Filter>core\layout\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\SVGResources.cpp">
+      <Filter>core\layout\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\SVGResourcesCache.cpp">
+      <Filter>core\layout\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\SVGResourcesCycleSolver.cpp">
+      <Filter>core\layout\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\SVGTextChunkBuilder.cpp">
+      <Filter>core\layout\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\SVGTextLayoutAttributes.cpp">
+      <Filter>core\layout\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\SVGTextLayoutAttributesBuilder.cpp">
+      <Filter>core\layout\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\SubtreeLayoutScope.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\TableLayoutAlgorithmAuto.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\TableLayoutAlgorithmFixed.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\TextAutosizer.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\TextRunConstructor.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\TracedLayoutObject.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\BidiRunForLine.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\ClipRect.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\CounterNode.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\FloatingObjects.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\HitTestCache.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\HitTestingTransformState.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\HitTestLocation.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\HitTestResult.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\ImageQualityController.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutAnalyzer.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutApplet.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutBlock.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutBlockFlow.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutBlockFlowLine.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutBox.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutBoxModelObject.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutBR.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutButton.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutCounter.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutDeprecatedFlexibleBox.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutDetailsMarker.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutEmbeddedObject.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutFieldset.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutFileUploadControl.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutFlexibleBox.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutFlowThread.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutFrame.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutFrameSet.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutFullScreen.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutGeometryMap.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutGrid.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutHTMLCanvas.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutIFrame.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutImage.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutImageResource.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutImageResourceStyleImage.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutInline.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutListBox.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutListItem.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutListMarker.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutMedia.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutMenuList.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutMeter.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutMultiColumnFlowThread.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutMultiColumnSet.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutMultiColumnSpannerPlaceholder.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutObject.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutObjectChildList.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutPagedFlowThread.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutPart.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutProgress.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutQuote.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutReplaced.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutReplica.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutRuby.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutRubyBase.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutRubyRun.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutRubyText.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutScrollbar.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutScrollbarPart.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutScrollbarTheme.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutSearchField.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutSlider.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutSliderContainer.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutSliderThumb.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutState.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutTable.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutTableCaption.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutTableCell.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutTableCol.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutTableRow.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutTableSection.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutText.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutTextCombine.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutTextControl.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutTextControlMultiLine.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutTextControlSingleLine.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutTextFragment.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutTextTrackContainer.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutTheme.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutThemeDefault.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutThemeFontProvider.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutThemeFontProviderWin.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutThemeWin.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutTreeAsText.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutVideo.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutView.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutVTTCue.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutWordBreak.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\MultiColumnFragmentainerGroup.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\OrderIterator.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\PaintInvalidationState.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\PendingSelection.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\PointerEventsHitRules.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\ScrollAlignment.cpp">
+      <Filter>core\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\config.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\api\LineLayoutInline.h">
+      <Filter>core\layout\api</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\api\LineLayoutItem.h">
+      <Filter>core\layout\api</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\api\LineLayoutText.h">
+      <Filter>core\layout\api</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\api\LineLayoutBlockFlow.h">
+      <Filter>core\layout\api</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\api\LineLayoutBox.h">
+      <Filter>core\layout\api</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\compositing\CompositingInputsUpdater.h">
+      <Filter>core\layout\compositing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\compositing\CompositingLayerAssigner.h">
+      <Filter>core\layout\compositing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\compositing\CompositingReasonFinder.h">
+      <Filter>core\layout\compositing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\compositing\CompositingRequirementsUpdater.h">
+      <Filter>core\layout\compositing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\compositing\CompositingState.h">
+      <Filter>core\layout\compositing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\compositing\CompositingTriggers.h">
+      <Filter>core\layout\compositing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\compositing\DeprecatedPaintLayerCompositor.h">
+      <Filter>core\layout\compositing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\compositing\GraphicsLayerTreeBuilder.h">
+      <Filter>core\layout\compositing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\compositing\GraphicsLayerUpdater.h">
+      <Filter>core\layout\compositing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\compositing\CompositedDeprecatedPaintLayerMapping.h">
+      <Filter>core\layout\compositing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\compositing\CompositedSelection.h">
+      <Filter>core\layout\compositing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\compositing\CompositedSelectionBound.h">
+      <Filter>core\layout\compositing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\line\InlineBox.h">
+      <Filter>core\layout\line</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\line\InlineFlowBox.h">
+      <Filter>core\layout\line</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\line\InlineIterator.h">
+      <Filter>core\layout\line</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\line\InlineTextBox.h">
+      <Filter>core\layout\line</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\line\LayoutTextInfo.h">
+      <Filter>core\layout\line</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\line\LineBoxList.h">
+      <Filter>core\layout\line</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\line\LineBreaker.h">
+      <Filter>core\layout\line</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\line\LineInfo.h">
+      <Filter>core\layout\line</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\line\LineLayoutState.h">
+      <Filter>core\layout\line</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\line\LineWidth.h">
+      <Filter>core\layout\line</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\line\RootInlineBox.h">
+      <Filter>core\layout\line</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\line\TrailingFloatsRootInlineBox.h">
+      <Filter>core\layout\line</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\line\TrailingObjects.h">
+      <Filter>core\layout\line</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\line\WordMeasurement.h">
+      <Filter>core\layout\line</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\line\AbstractInlineTextBox.h">
+      <Filter>core\layout\line</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\line\BreakingContextInlineHeaders.h">
+      <Filter>core\layout\line</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\line\EllipsisBox.h">
+      <Filter>core\layout\line</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\line\GlyphOverflow.h">
+      <Filter>core\layout\line</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\shapes\RectangleShape.h">
+      <Filter>core\layout\shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\shapes\Shape.h">
+      <Filter>core\layout\shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\shapes\ShapeInterval.h">
+      <Filter>core\layout\shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\shapes\ShapeOutsideInfo.h">
+      <Filter>core\layout\shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\shapes\BoxShape.h">
+      <Filter>core\layout\shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\shapes\PolygonShape.h">
+      <Filter>core\layout\shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\shapes\RasterShape.h">
+      <Filter>core\layout\shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\line\SVGRootInlineBox.h">
+      <Filter>core\layout\svg\line</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\line\SVGInlineFlowBox.h">
+      <Filter>core\layout\svg\line</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\line\SVGInlineTextBox.h">
+      <Filter>core\layout\svg\line</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\SVGTextLayoutEngine.h">
+      <Filter>core\layout\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\SVGTextLayoutEngineBaseline.h">
+      <Filter>core\layout\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\SVGTextLayoutEngineSpacing.h">
+      <Filter>core\layout\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\SVGTextMetrics.h">
+      <Filter>core\layout\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\SVGTextMetricsBuilder.h">
+      <Filter>core\layout\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\SVGTextQuery.h">
+      <Filter>core\layout\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGBlock.h">
+      <Filter>core\layout\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGContainer.h">
+      <Filter>core\layout\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGEllipse.h">
+      <Filter>core\layout\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGForeignObject.h">
+      <Filter>core\layout\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGGradientStop.h">
+      <Filter>core\layout\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGHiddenContainer.h">
+      <Filter>core\layout\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGImage.h">
+      <Filter>core\layout\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGInline.h">
+      <Filter>core\layout\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGInlineText.h">
+      <Filter>core\layout\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGModelObject.h">
+      <Filter>core\layout\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGPath.h">
+      <Filter>core\layout\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGRect.h">
+      <Filter>core\layout\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGResourceClipper.h">
+      <Filter>core\layout\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGResourceContainer.h">
+      <Filter>core\layout\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGResourceFilter.h">
+      <Filter>core\layout\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGResourceFilterPrimitive.h">
+      <Filter>core\layout\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGResourceGradient.h">
+      <Filter>core\layout\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGResourceLinearGradient.h">
+      <Filter>core\layout\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGResourceMarker.h">
+      <Filter>core\layout\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGResourceMasker.h">
+      <Filter>core\layout\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGResourcePaintServer.h">
+      <Filter>core\layout\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGResourcePattern.h">
+      <Filter>core\layout\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGResourceRadialGradient.h">
+      <Filter>core\layout\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGRoot.h">
+      <Filter>core\layout\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGShape.h">
+      <Filter>core\layout\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGText.h">
+      <Filter>core\layout\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGTextPath.h">
+      <Filter>core\layout\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGTransformableContainer.h">
+      <Filter>core\layout\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGTSpan.h">
+      <Filter>core\layout\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\LayoutSVGViewportContainer.h">
+      <Filter>core\layout\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\ReferenceFilterBuilder.h">
+      <Filter>core\layout\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\SVGLayoutSupport.h">
+      <Filter>core\layout\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\SVGLayoutTreeAsText.h">
+      <Filter>core\layout\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\SVGMarkerData.h">
+      <Filter>core\layout\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\SVGResources.h">
+      <Filter>core\layout\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\SVGResourcesCache.h">
+      <Filter>core\layout\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\SVGResourcesCycleSolver.h">
+      <Filter>core\layout\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\SVGSubpathData.h">
+      <Filter>core\layout\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\SVGTextChunkBuilder.h">
+      <Filter>core\layout\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\SVGTextFragment.h">
+      <Filter>core\layout\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\SVGTextLayoutAttributes.h">
+      <Filter>core\layout\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\svg\SVGTextLayoutAttributesBuilder.h">
+      <Filter>core\layout\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\ScrollAlignment.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\SubtreeLayoutScope.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\TableLayoutAlgorithm.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\TableLayoutAlgorithmAuto.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\TableLayoutAlgorithmFixed.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\TextAutosizer.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\TextRunConstructor.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\TracedLayoutObject.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\VerticalPositionCache.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\BidiRun.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\BidiRunForLine.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\ClipPathOperation.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\ClipRect.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\ClipRects.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\ClipRectsCache.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\CounterNode.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\FloatingObjects.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\GapRects.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\GeneratedChildren.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\HitTestCache.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\HitTestingTransformState.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\HitTestLocation.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\HitTestRequest.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\HitTestResult.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\ImageQualityController.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutAnalyzer.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutApplet.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutBlock.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutBlockFlow.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutBox.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutBoxModelObject.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutBR.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutButton.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutCounter.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutDeprecatedFlexibleBox.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutDetailsMarker.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutEmbeddedObject.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutFieldset.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutFileUploadControl.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutFlexibleBox.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutFlowThread.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutFrame.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutFrameSet.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutFullScreen.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutGeometryMap.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutGeometryMapStep.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutGrid.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutHTMLCanvas.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutIFrame.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutImage.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutImageResource.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutImageResourceStyleImage.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutInline.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutListBox.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutListItem.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutListMarker.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutMedia.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutMenuList.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutMeter.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutMultiColumnFlowThread.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutMultiColumnSet.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutMultiColumnSpannerPlaceholder.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutObject.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutObjectChildList.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutObjectInlines.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutPagedFlowThread.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutPart.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutProgress.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutQuote.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutReplaced.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutReplica.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutRuby.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutRubyBase.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutRubyRun.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutRubyText.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutScrollbar.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutScrollbarPart.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutScrollbarTheme.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutSearchField.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutSlider.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutSliderContainer.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutSliderThumb.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutState.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutTable.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutTableCaption.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutTableCell.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutTableCol.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutTableRow.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutTableSection.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutText.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutTextCombine.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutTextControl.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutTextControlMultiLine.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutTextControlSingleLine.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutTextFragment.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutTextTrackContainer.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutTheme.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutThemeAndroid.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutThemeDefault.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutThemeFontProvider.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutThemeLinux.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutThemeMac.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutThemeWin.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutTreeAsText.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutVideo.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutView.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutVTTCue.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutWordBreak.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\MultiColumnFragmentainerGroup.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\OrderIterator.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\OverflowModel.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\PaintInvalidationState.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\PendingSelection.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\PointerEventsHitRules.h">
+      <Filter>core\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\config.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\LayoutThemeMac.mm">
+      <Filter>core\layout</Filter>
+    </None>
+    <None Include="..\..\..\..\..\..\third_party\WebKit\Source\core\layout\OWNERS">
+      <Filter>core\layout</Filter>
+    </None>
+  </ItemGroup>
+</Project>

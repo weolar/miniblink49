@@ -11,6 +11,7 @@
 #include "content/web_impl_win/WebBlobRegistryImpl.h"
 #include "content/web_impl_win/WebClipboardImpl.h"
 #include "content/web_impl_win/WebFileUtilitiesImpl.h"
+#include "content/web_impl_win/WaitableEvent.h"
 #include "content/web_impl_win/npapi/WebPluginImpl.h"
 #include "content/resources/MissingImageData.h"
 #include "content/resources/TextAreaResizeCornerData.h"
@@ -651,6 +652,24 @@ blink::WebFileUtilities* BlinkPlatformImpl::fileUtilities()
     if (!m_webFileUtilitiesImpl)
         m_webFileUtilitiesImpl = new WebFileUtilitiesImpl();
     return m_webFileUtilitiesImpl;
+}
+
+// WaitableEvent -------------------------------------------------------
+
+WebWaitableEvent* BlinkPlatformImpl::createWaitableEvent(blink::WebWaitableEvent::ResetPolicy policy, blink::WebWaitableEvent::InitialState state)
+{
+    return new WaitableEvent(policy == blink::WebWaitableEvent::ResetPolicy::Manual, state == blink::WebWaitableEvent::InitialState::Signaled);
+}
+
+WebWaitableEvent* BlinkPlatformImpl::waitMultipleEvents(const blink::WebVector<blink::WebWaitableEvent*>& webEvents)
+{
+    Vector<WaitableEvent*> events;
+    for (size_t i = 0; i < webEvents.size(); ++i)
+        events.append((WaitableEvent*)(webEvents[i]));
+
+    size_t idx = WaitableEvent::waitMany(events.data(), events.size());
+    ASSERT(idx < webEvents.size());
+    return webEvents[idx];
 }
 
 } // namespace content

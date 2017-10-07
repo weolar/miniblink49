@@ -1,0 +1,379 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="core">
+      <UniqueIdentifier>{8d5b50a9-8799-4f87-b846-bacd5b9929ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\frame">
+      <UniqueIdentifier>{f9f6e6b4-8c57-43dc-abac-c37223672166}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\frame\csp">
+      <UniqueIdentifier>{c258871a-96df-4b8e-a47a-94ec5f44f95b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\csp\ContentSecurityPolicy.cpp">
+      <Filter>core\frame\csp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\csp\CSPDirectiveList.cpp">
+      <Filter>core\frame\csp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\csp\CSPSource.cpp">
+      <Filter>core\frame\csp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\csp\CSPSourceList.cpp">
+      <Filter>core\frame\csp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\csp\MediaListDirective.cpp">
+      <Filter>core\frame\csp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\csp\SourceListDirective.cpp">
+      <Filter>core\frame\csp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\SubresourceIntegrity.cpp">
+      <Filter>core\frame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\SuspendableTimer.cpp">
+      <Filter>core\frame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\TopControls.cpp">
+      <Filter>core\frame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\UseCounter.cpp">
+      <Filter>core\frame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\BarProp.cpp">
+      <Filter>core\frame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\Console.cpp">
+      <Filter>core\frame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\ConsoleBase.cpp">
+      <Filter>core\frame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\DeprecatedScheduleStyleRecalcDuringLayout.cpp">
+      <Filter>core\frame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\DeviceSingleWindowEventController.cpp">
+      <Filter>core\frame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\DOMTimer.cpp">
+      <Filter>core\frame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\DOMTimerCoordinator.cpp">
+      <Filter>core\frame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\DOMWindow.cpp">
+      <Filter>core\frame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\DOMWindowBase64.cpp">
+      <Filter>core\frame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\DOMWindowLifecycleNotifier.cpp">
+      <Filter>core\frame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\DOMWindowProperty.cpp">
+      <Filter>core\frame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\DOMWindowTimers.cpp">
+      <Filter>core\frame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\EventHandlerRegistry.cpp">
+      <Filter>core\frame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\Frame.cpp">
+      <Filter>core\frame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\FrameConsole.cpp">
+      <Filter>core\frame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\FrameHost.cpp">
+      <Filter>core\frame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\FrameView.cpp">
+      <Filter>core\frame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\FrameViewAutoSizeInfo.cpp">
+      <Filter>core\frame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\History.cpp">
+      <Filter>core\frame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\ImageBitmap.cpp">
+      <Filter>core\frame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\LayoutSubtreeRootList.cpp">
+      <Filter>core\frame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\LocalDOMWindow.cpp">
+      <Filter>core\frame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\LocalFrame.cpp">
+      <Filter>core\frame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\LocalFrameLifecycleNotifier.cpp">
+      <Filter>core\frame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\Location.cpp">
+      <Filter>core\frame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\Navigator.cpp">
+      <Filter>core\frame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\NavigatorCPU.cpp">
+      <Filter>core\frame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\NavigatorID.cpp">
+      <Filter>core\frame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\NavigatorLanguage.cpp">
+      <Filter>core\frame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\OriginsUsingFeatures.cpp">
+      <Filter>core\frame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\PageScaleConstraints.cpp">
+      <Filter>core\frame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\PageScaleConstraintsSet.cpp">
+      <Filter>core\frame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\PinchViewport.cpp">
+      <Filter>core\frame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\PlatformEventController.cpp">
+      <Filter>core\frame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\PlatformEventDispatcher.cpp">
+      <Filter>core\frame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\RemoteDOMWindow.cpp">
+      <Filter>core\frame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\RemoteFrame.cpp">
+      <Filter>core\frame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\RemoteFrameView.cpp">
+      <Filter>core\frame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\RootFrameViewport.cpp">
+      <Filter>core\frame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\Screen.cpp">
+      <Filter>core\frame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\Settings.cpp">
+      <Filter>core\frame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\SettingsDelegate.cpp">
+      <Filter>core\frame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\SmartClip.cpp">
+      <Filter>core\frame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\config.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\csp\ContentSecurityPolicy.h">
+      <Filter>core\frame\csp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\csp\CSPDirective.h">
+      <Filter>core\frame\csp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\csp\CSPDirectiveList.h">
+      <Filter>core\frame\csp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\csp\CSPSource.h">
+      <Filter>core\frame\csp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\csp\CSPSourceList.h">
+      <Filter>core\frame\csp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\csp\MediaListDirective.h">
+      <Filter>core\frame\csp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\csp\SourceListDirective.h">
+      <Filter>core\frame\csp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\SubresourceIntegrity.h">
+      <Filter>core\frame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\SuspendableTimer.h">
+      <Filter>core\frame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\TopControls.h">
+      <Filter>core\frame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\UseCounter.h">
+      <Filter>core\frame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\BarProp.h">
+      <Filter>core\frame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\Console.h">
+      <Filter>core\frame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\ConsoleBase.h">
+      <Filter>core\frame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\ConsoleTypes.h">
+      <Filter>core\frame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\DeprecatedScheduleStyleRecalcDuringLayout.h">
+      <Filter>core\frame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\DeviceSingleWindowEventController.h">
+      <Filter>core\frame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\DOMTimer.h">
+      <Filter>core\frame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\DOMTimerCoordinator.h">
+      <Filter>core\frame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\DOMWindow.h">
+      <Filter>core\frame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\DOMWindowBase64.h">
+      <Filter>core\frame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\DOMWindowEventHandlers.h">
+      <Filter>core\frame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\DOMWindowLifecycleNotifier.h">
+      <Filter>core\frame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\DOMWindowLifecycleObserver.h">
+      <Filter>core\frame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\DOMWindowProperty.h">
+      <Filter>core\frame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\DOMWindowTimers.h">
+      <Filter>core\frame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\EventHandlerRegistry.h">
+      <Filter>core\frame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\Frame.h">
+      <Filter>core\frame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\FrameClient.h">
+      <Filter>core\frame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\FrameConsole.h">
+      <Filter>core\frame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\FrameHost.h">
+      <Filter>core\frame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\FrameOwner.h">
+      <Filter>core\frame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\FrameTypes.h">
+      <Filter>core\frame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\FrameView.h">
+      <Filter>core\frame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\FrameViewAutoSizeInfo.h">
+      <Filter>core\frame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\History.h">
+      <Filter>core\frame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\ImageBitmap.h">
+      <Filter>core\frame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\LayoutSubtreeRootList.h">
+      <Filter>core\frame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\LocalDOMWindow.h">
+      <Filter>core\frame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\LocalFrame.h">
+      <Filter>core\frame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\LocalFrameLifecycleNotifier.h">
+      <Filter>core\frame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\LocalFrameLifecycleObserver.h">
+      <Filter>core\frame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\Location.h">
+      <Filter>core\frame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\Navigator.h">
+      <Filter>core\frame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\NavigatorCPU.h">
+      <Filter>core\frame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\NavigatorID.h">
+      <Filter>core\frame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\NavigatorLanguage.h">
+      <Filter>core\frame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\NavigatorOnLine.h">
+      <Filter>core\frame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\OriginsUsingFeatures.h">
+      <Filter>core\frame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\PageScaleConstraints.h">
+      <Filter>core\frame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\PageScaleConstraintsSet.h">
+      <Filter>core\frame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\PinchViewport.h">
+      <Filter>core\frame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\PlatformEventController.h">
+      <Filter>core\frame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\PlatformEventDispatcher.h">
+      <Filter>core\frame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\RemoteDOMWindow.h">
+      <Filter>core\frame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\RemoteFrame.h">
+      <Filter>core\frame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\RemoteFrameClient.h">
+      <Filter>core\frame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\RemoteFrameView.h">
+      <Filter>core\frame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\RootFrameViewport.h">
+      <Filter>core\frame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\Screen.h">
+      <Filter>core\frame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\Settings.h">
+      <Filter>core\frame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\SettingsDelegate.h">
+      <Filter>core\frame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\SmartClip.h">
+      <Filter>core\frame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\config.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\OWNERS">
+      <Filter>core\frame</Filter>
+    </None>
+    <None Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\PRESUBMIT.py">
+      <Filter>core\frame</Filter>
+    </None>
+    <None Include="..\..\..\..\..\..\third_party\WebKit\Source\core\frame\Settings.in">
+      <Filter>core\frame</Filter>
+    </None>
+  </ItemGroup>
+</Project>

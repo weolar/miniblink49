@@ -1,0 +1,931 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="core">
+      <UniqueIdentifier>{8d5b50a9-8799-4f87-b846-bacd5b9929ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\css">
+      <UniqueIdentifier>{5df75821-7512-4eba-a7ab-cd14a1439aad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\css\invalidation">
+      <UniqueIdentifier>{ac90659f-0777-4267-8e22-e653afab1ef8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\css\parser">
+      <UniqueIdentifier>{f78f7725-9cc4-45f7-b4db-7fbc0ee8c926}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\css\resolver">
+      <UniqueIdentifier>{1e99ec99-7e07-4658-b9fb-2ddcfba7b7ee}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\BasicShapeFunctions.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\BinaryDataFontFaceSource.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSBasicShapes.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSBorderImage.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSBorderImageSliceValue.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSCalculationValue.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSCanvasValue.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSComputedStyleDeclaration.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSContentDistributionValue.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSCrossfadeValue.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSCursorImageValue.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSDefaultStyleSheets.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSFontFace.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSFontFaceRule.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSFontFaceSource.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSFontFaceSrcValue.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSFontFeatureValue.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSFontSelector.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSFunctionValue.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSGradientValue.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSGridLineNamesValue.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSGridTemplateAreasValue.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSGroupingRule.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSImageGeneratorValue.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSImageSetValue.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSImageValue.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSImportRule.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSInheritedValue.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSInitialValue.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSKeyframeRule.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSKeyframesRule.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSLineBoxContainValue.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSMarkup.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSMatrix.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSMediaRule.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSPageRule.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSPrimitiveValue.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSProperty.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSPropertySourceData.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSReflectValue.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSRule.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSRuleList.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSSegmentedFontFace.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSSelector.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSSelectorList.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSShadowValue.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSStyleRule.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSStyleSheet.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSSupportsRule.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSSVGDocumentValue.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSTimingFunctionValue.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSToLengthConversionData.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSUnicodeRangeValue.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSValue.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSValueList.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSValuePool.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSViewportRule.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\DocumentFontFaceSet.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\DOMWindowCSS.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\ElementRuleCollector.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\FontFace.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\FontFaceCache.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\FontFaceSet.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\FontFaceSetLoadEvent.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\FontLoader.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\FontSize.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\invalidation\DescendantInvalidationSet.cpp">
+      <Filter>core\css\invalidation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\invalidation\StyleInvalidator.cpp">
+      <Filter>core\css\invalidation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\invalidation\StyleSheetInvalidationAnalysis.cpp">
+      <Filter>core\css\invalidation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\LocalFontFaceSource.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\MediaList.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\MediaQuery.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\MediaQueryEvaluator.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\MediaQueryExp.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\MediaQueryList.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\MediaQueryListListener.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\MediaQueryMatcher.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\MediaValues.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\MediaValuesCached.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\MediaValuesDynamic.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\PageRuleCollector.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\Pair.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\PropertySetCSSStyleDeclaration.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\Rect.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\RemoteFontFaceSource.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\resolver\AnimatedStyleBuilder.cpp">
+      <Filter>core\css\resolver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\resolver\CSSToStyleMap.cpp">
+      <Filter>core\css\resolver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\resolver\ElementResolveContext.cpp">
+      <Filter>core\css\resolver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\resolver\ElementStyleResources.cpp">
+      <Filter>core\css\resolver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\resolver\FilterOperationResolver.cpp">
+      <Filter>core\css\resolver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\resolver\FontBuilder.cpp">
+      <Filter>core\css\resolver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\resolver\MatchedPropertiesCache.cpp">
+      <Filter>core\css\resolver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\resolver\MatchResult.cpp">
+      <Filter>core\css\resolver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\resolver\ScopedStyleResolver.cpp">
+      <Filter>core\css\resolver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\resolver\SharedStyleFinder.cpp">
+      <Filter>core\css\resolver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\resolver\StyleAdjuster.cpp">
+      <Filter>core\css\resolver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\resolver\StyleBuilderConverter.cpp">
+      <Filter>core\css\resolver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\resolver\StyleBuilderCustom.cpp">
+      <Filter>core\css\resolver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\resolver\StyleResolver.cpp">
+      <Filter>core\css\resolver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\resolver\StyleResolverParentScope.cpp">
+      <Filter>core\css\resolver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\resolver\StyleResolverState.cpp">
+      <Filter>core\css\resolver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\resolver\StyleResolverStats.cpp">
+      <Filter>core\css\resolver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\resolver\StyleResourceLoader.cpp">
+      <Filter>core\css\resolver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\resolver\TransformBuilder.cpp">
+      <Filter>core\css\resolver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\resolver\ViewportStyleResolver.cpp">
+      <Filter>core\css\resolver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\RuleFeature.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\RuleSet.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\SelectorChecker.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\SelectorFilter.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\StyleMedia.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\StylePropertySerializer.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\StylePropertySet.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\StylePropertyShorthandCustom.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\StyleRule.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\StyleRuleImport.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\StyleSheet.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\StyleSheetContents.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\StyleSheetList.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\parser\CSSParserFastPaths.cpp">
+      <Filter>core\css\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\parser\CSSParserMode.cpp">
+      <Filter>core\css\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\parser\CSSParserToken.cpp">
+      <Filter>core\css\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\parser\CSSParserValues.cpp">
+      <Filter>core\css\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\parser\CSSPropertyParser.cpp">
+      <Filter>core\css\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\parser\CSSTokenizer.cpp">
+      <Filter>core\css\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\parser\CSSTokenizerInputStream.cpp">
+      <Filter>core\css\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\parser\MediaQueryBlockWatcher.cpp">
+      <Filter>core\css\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\parser\MediaQueryParser.cpp">
+      <Filter>core\css\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\parser\SizesAttributeParser.cpp">
+      <Filter>core\css\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\parser\SizesCalcParser.cpp">
+      <Filter>core\css\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\parser\CSSParser.cpp">
+      <Filter>core\css\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\StyleRuleKeyframe.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\parser\CSSParserImpl.cpp">
+      <Filter>core\css\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\parser\CSSSelectorParser.cpp">
+      <Filter>core\css\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\parser\CSSSupportsParser.cpp">
+      <Filter>core\css\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\parser\CSSParserTokenRange.cpp">
+      <Filter>core\css\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSPathValue.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\TreeBoundaryCrossingRules.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\parser\CSSParserObserverWrapper.cpp">
+      <Filter>core\css\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\KeyframeStyleRuleCSSStyleDeclaration.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSUnsetValue.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\Counter.cpp">
+      <Filter>core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\config.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\BasicShapeFunctions.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\BinaryDataFontFaceSource.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSBasicShapes.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSBorderImage.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSBorderImageSliceValue.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSCalculationValue.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSCanvasValue.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSComputedStyleDeclaration.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSContentDistributionValue.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSCrossfadeValue.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSCursorImageValue.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSCustomFontData.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSDefaultStyleSheets.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSFontFace.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSFontFaceRule.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSFontFaceSource.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSFontFaceSrcValue.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSFontFeatureValue.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSFontSelector.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSFontSelectorClient.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSFunctionValue.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSGradientValue.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSGridLineNamesValue.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSGridTemplateAreasValue.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSGroupingRule.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSHelper.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSImageGeneratorValue.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSImageSetValue.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSImageValue.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSImportRule.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSInheritedValue.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSInitialValue.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSKeyframeRule.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSKeyframesRule.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSLineBoxContainValue.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSMarkup.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSMatrix.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSMediaRule.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSPageRule.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSPrimitiveValue.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSPrimitiveValueMappings.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSProperty.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSPropertyMetadata.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSPropertySourceData.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSReflectionDirection.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSReflectValue.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSRule.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSRuleList.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSSegmentedFontFace.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSSelector.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSSelectorList.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSShadowValue.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSStyleDeclaration.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSStyleRule.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSStyleSheet.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSSupportsRule.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSSVGDocumentValue.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSTimingFunctionValue.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSToLengthConversionData.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSUnicodeRangeValue.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSValue.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSValueList.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSValuePool.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSValueTestHelper.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSViewportRule.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\DocumentFontFaceSet.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\DOMWindowCSS.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\ElementRuleCollector.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\FontFace.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\FontFaceCache.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\FontFaceSet.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\FontFaceSetForEachCallback.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\FontFaceSetLoadEvent.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\FontLoader.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\FontSize.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\HashTools.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\invalidation\DescendantInvalidationSet.h">
+      <Filter>core\css\invalidation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\invalidation\StyleInvalidator.h">
+      <Filter>core\css\invalidation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\invalidation\StyleSheetInvalidationAnalysis.h">
+      <Filter>core\css\invalidation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\LocalFontFaceSource.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\MediaList.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\MediaQuery.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\MediaQueryEvaluator.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\MediaQueryExp.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\MediaQueryList.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\MediaQueryListEvent.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\MediaQueryListListener.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\MediaQueryMatcher.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\MediaValues.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\MediaValuesCached.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\MediaValuesDynamic.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\PageRuleCollector.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\Pair.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\PointerProperties.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\PropertySetCSSStyleDeclaration.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\PseudoStyleRequest.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\Rect.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\RemoteFontFaceSource.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\resolver\AnimatedStyleBuilder.h">
+      <Filter>core\css\resolver</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\resolver\CSSPropertyPriority.h">
+      <Filter>core\css\resolver</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\resolver\CSSToStyleMap.h">
+      <Filter>core\css\resolver</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\resolver\ElementResolveContext.h">
+      <Filter>core\css\resolver</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\resolver\ElementStyleResources.h">
+      <Filter>core\css\resolver</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\resolver\FilterOperationResolver.h">
+      <Filter>core\css\resolver</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\resolver\FontBuilder.h">
+      <Filter>core\css\resolver</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\resolver\MatchedPropertiesCache.h">
+      <Filter>core\css\resolver</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\resolver\MatchRequest.h">
+      <Filter>core\css\resolver</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\resolver\MatchResult.h">
+      <Filter>core\css\resolver</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\resolver\MediaQueryResult.h">
+      <Filter>core\css\resolver</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\resolver\ScopedStyleResolver.h">
+      <Filter>core\css\resolver</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\resolver\SharedStyleFinder.h">
+      <Filter>core\css\resolver</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\resolver\StyleAdjuster.h">
+      <Filter>core\css\resolver</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\resolver\StyleBuilder.h">
+      <Filter>core\css\resolver</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\resolver\StyleBuilderConverter.h">
+      <Filter>core\css\resolver</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\resolver\StyleResolver.h">
+      <Filter>core\css\resolver</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\resolver\StyleResolverParentScope.h">
+      <Filter>core\css\resolver</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\resolver\StyleResolverState.h">
+      <Filter>core\css\resolver</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\resolver\StyleResolverStats.h">
+      <Filter>core\css\resolver</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\resolver\StyleResourceLoader.h">
+      <Filter>core\css\resolver</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\resolver\TransformBuilder.h">
+      <Filter>core\css\resolver</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\resolver\ViewportStyleResolver.h">
+      <Filter>core\css\resolver</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\RuleFeature.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\RuleSet.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\SelectorChecker.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\SelectorFilter.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\StyleColor.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\StyleMedia.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\StylePropertySerializer.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\StylePropertySet.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\StyleRule.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\StyleRuleImport.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\StyleRuleNamespace.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\StyleSheet.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\StyleSheetContents.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\StyleSheetList.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\parser\CSSParser.h">
+      <Filter>core\css\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\parser\CSSParserFastPaths.h">
+      <Filter>core\css\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\parser\CSSParserIdioms.h">
+      <Filter>core\css\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\parser\CSSParserMode.h">
+      <Filter>core\css\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\parser\CSSParserObserver.h">
+      <Filter>core\css\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\parser\CSSParserToken.h">
+      <Filter>core\css\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\parser\CSSParserValues.h">
+      <Filter>core\css\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\parser\CSSPropertyParser.h">
+      <Filter>core\css\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\parser\CSSTokenizer.h">
+      <Filter>core\css\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\parser\CSSTokenizerInputStream.h">
+      <Filter>core\css\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\parser\MediaQueryBlockWatcher.h">
+      <Filter>core\css\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\parser\MediaQueryParser.h">
+      <Filter>core\css\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\parser\SizesAttributeParser.h">
+      <Filter>core\css\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\parser\SizesCalcParser.h">
+      <Filter>core\css\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\parser\BisonCSSParser.h">
+      <Filter>core\css\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\parser\BisonCSSTokenizer.h">
+      <Filter>core\css\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\StyleRuleKeyframe.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\parser\CSSSupportsParser.h">
+      <Filter>core\css\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\parser\CSSParserTokenRange.h">
+      <Filter>core\css\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\TreeBoundaryCrossingRules.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\parser\CSSParserObserverWrapper.h">
+      <Filter>core\css\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\KeyframeStyleRuleCSSStyleDeclaration.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\CSSUnsetValue.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\Counter.h">
+      <Filter>core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\config.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\..\..\..\third_party\WebKit\Source\core\css\parser\CSSGrammar.y">
+      <Filter>core\css\parser</Filter>
+    </None>
+  </ItemGroup>
+</Project>

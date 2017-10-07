@@ -1,0 +1,701 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="wtf">
+      <UniqueIdentifier>{4bf8accb-4571-49d7-87ae-91c0df4a0466}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="wtf\asm">
+      <UniqueIdentifier>{f1bb224e-9cf3-468d-9b4e-f17e21bb210a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="wtf\dtoa">
+      <UniqueIdentifier>{66bab3f6-a931-4cbc-9aef-d01cedd5c6d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="wtf\text">
+      <UniqueIdentifier>{42633e11-e676-41a7-9058-d84cfb344f10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="wtf\text\icu">
+      <UniqueIdentifier>{f5af4590-0c04-4ee4-8d5e-aff975d1f61d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="wtf\text\qt4">
+      <UniqueIdentifier>{3121caea-e35e-4115-8c65-c5306a0f5727}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\wtf\AddressSpaceRandomization.cpp">
+      <Filter>wtf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\wtf\ArrayBuffer.cpp">
+      <Filter>wtf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\wtf\ArrayBufferBuilder.cpp">
+      <Filter>wtf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\wtf\ArrayBufferContents.cpp">
+      <Filter>wtf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\wtf\ArrayBufferView.cpp">
+      <Filter>wtf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\wtf\ArrayPiece.cpp">
+      <Filter>wtf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\wtf\Assertions.cpp">
+      <Filter>wtf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\wtf\BitVector.cpp">
+      <Filter>wtf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\wtf\CryptographicallyRandomNumber.cpp">
+      <Filter>wtf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\wtf\CurrentTime.cpp">
+      <Filter>wtf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\wtf\DataLog.cpp">
+      <Filter>wtf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\wtf\DateMath.cpp">
+      <Filter>wtf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\wtf\DefaultAllocator.cpp">
+      <Filter>wtf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\wtf\dtoa\bignum-dtoa.cc">
+      <Filter>wtf\dtoa</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\wtf\dtoa\bignum.cc">
+      <Filter>wtf\dtoa</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\wtf\dtoa\cached-powers.cc">
+      <Filter>wtf\dtoa</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\wtf\dtoa\diy-fp.cc">
+      <Filter>wtf\dtoa</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\wtf\dtoa\double-conversion.cc">
+      <Filter>wtf\dtoa</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\wtf\dtoa\fast-dtoa.cc">
+      <Filter>wtf\dtoa</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\wtf\dtoa\fixed-dtoa.cc">
+      <Filter>wtf\dtoa</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\wtf\dtoa\strtod.cc">
+      <Filter>wtf\dtoa</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\wtf\dtoa.cpp">
+      <Filter>wtf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\wtf\DynamicAnnotations.cpp">
+      <Filter>wtf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\wtf\FastMalloc.cpp">
+      <Filter>wtf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\wtf\FilePrintStream.cpp">
+      <Filter>wtf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\wtf\HashTable.cpp">
+      <Filter>wtf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\wtf\InstanceCounter.cpp">
+      <Filter>wtf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\wtf\MainThread.cpp">
+      <Filter>wtf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\wtf\PageAllocator.cpp">
+      <Filter>wtf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\wtf\PartitionAlloc.cpp">
+      <Filter>wtf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\wtf\PrintStream.cpp">
+      <Filter>wtf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\wtf\RefCountedLeakCounter.cpp">
+      <Filter>wtf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\wtf\SizeLimits.cpp">
+      <Filter>wtf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\wtf\text\AtomicString.cpp">
+      <Filter>wtf\text</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\wtf\text\AtomicStringCF.cpp">
+      <Filter>wtf\text</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\wtf\text\Base64.cpp">
+      <Filter>wtf\text</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\wtf\text\CString.cpp">
+      <Filter>wtf\text</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\wtf\text\StringBuilder.cpp">
+      <Filter>wtf\text</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\wtf\text\StringCF.cpp">
+      <Filter>wtf\text</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\wtf\text\StringConcatenate.cpp">
+      <Filter>wtf\text</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\wtf\text\StringImpl.cpp">
+      <Filter>wtf\text</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\wtf\text\StringImplCF.cpp">
+      <Filter>wtf\text</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\wtf\text\StringStatics.cpp">
+      <Filter>wtf\text</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\wtf\text\TextCodec.cpp">
+      <Filter>wtf\text</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\wtf\text\TextCodecICU.cpp">
+      <Filter>wtf\text</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\wtf\text\TextCodecLatin1.cpp">
+      <Filter>wtf\text</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\wtf\text\TextCodecReplacement.cpp">
+      <Filter>wtf\text</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\wtf\text\TextCodecUserDefined.cpp">
+      <Filter>wtf\text</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\wtf\text\TextCodecUTF16.cpp">
+      <Filter>wtf\text</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\wtf\text\TextCodecUTF8.cpp">
+      <Filter>wtf\text</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\wtf\text\TextEncoding.cpp">
+      <Filter>wtf\text</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\wtf\text\TextEncodingRegistry.cpp">
+      <Filter>wtf\text</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\wtf\text\TextPosition.cpp">
+      <Filter>wtf\text</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\wtf\text\WTFString.cpp">
+      <Filter>wtf\text</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\wtf\ThreadingPthreads.cpp">
+      <Filter>wtf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\wtf\ThreadingWin.cpp">
+      <Filter>wtf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\wtf\ThreadSpecificWin.cpp">
+      <Filter>wtf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\wtf\TypeTraits.cpp">
+      <Filter>wtf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\wtf\WTF.cpp">
+      <Filter>wtf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\wtf\WTFThreadData.cpp">
+      <Filter>wtf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\wtf\Partitions.cpp">
+      <Filter>wtf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\wtf\text\qt4\UnicodeQt4.cpp">
+      <Filter>wtf\text\qt4</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\wtf\text\UTF8.cpp">
+      <Filter>wtf\text</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\wtf\text\WTFStringUtil.cpp">
+      <Filter>wtf\text</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\config.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\AddressSanitizer.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\AddressSpaceRandomization.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\Alignment.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\Allocator.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\ArrayBuffer.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\ArrayBufferBuilder.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\ArrayBufferContents.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\ArrayBufferView.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\ArrayPiece.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\ASCIICType.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\asm\SaturatedArithmeticARM.h">
+      <Filter>wtf\asm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\Assertions.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\Atomics.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\BitArray.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\BitVector.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\BitwiseOperations.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\BloomFilter.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\ByteOrder.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\ByteSwap.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\CheckedArithmetic.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\Compiler.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\ConditionalDestructor.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\ContainerAnnotations.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\CPU.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\CryptographicallyRandomNumber.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\CurrentTime.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\DataLog.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\DateMath.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\DefaultAllocator.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\Deque.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\DoublyLinkedList.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\dtoa\bignum-dtoa.h">
+      <Filter>wtf\dtoa</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\dtoa\bignum.h">
+      <Filter>wtf\dtoa</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\dtoa\cached-powers.h">
+      <Filter>wtf\dtoa</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\dtoa\diy-fp.h">
+      <Filter>wtf\dtoa</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\dtoa\double-conversion.h">
+      <Filter>wtf\dtoa</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\dtoa\double.h">
+      <Filter>wtf\dtoa</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\dtoa\fast-dtoa.h">
+      <Filter>wtf\dtoa</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\dtoa\fixed-dtoa.h">
+      <Filter>wtf\dtoa</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\dtoa\strtod.h">
+      <Filter>wtf\dtoa</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\dtoa\utils.h">
+      <Filter>wtf\dtoa</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\dtoa.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\DynamicAnnotations.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\FastAllocBase.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\FastMalloc.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\FilePrintStream.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\Float32Array.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\Float64Array.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\Forward.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\Functional.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\GetPtr.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\HashCountedSet.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\HashFunctions.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\HashIterators.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\HashMap.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\HashSet.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\HashTable.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\HashTableDeletedValueType.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\HashTraits.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\HexNumber.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\InstanceCounter.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\Int16Array.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\Int32Array.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\Int8Array.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\IntegralTypedArrayBase.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\LeakAnnotations.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\LinkedHashSet.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\LinkedStack.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\ListHashSet.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\Locker.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\MainThread.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\MathExtras.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\MessageQueue.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\Noncopyable.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\NonCopyingSort.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\NotFound.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\NullPtr.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\Optional.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\OwnPtr.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\OwnPtrCommon.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\PageAllocator.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\PartitionAlloc.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\PassOwnPtr.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\PassRefPtr.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\PassTraits.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\PrintStream.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\RawPtr.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\RefCounted.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\RefCountedLeakCounter.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\RefPtr.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\RefVector.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\RetainPtr.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\SaturatedArithmetic.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\SpinLock.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\StaticConstructors.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\StdLibExtras.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\StringExtras.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\StringHasher.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\TemporaryChange.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\TerminatedArray.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\TerminatedArrayBuilder.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\text\ASCIIFastPath.h">
+      <Filter>wtf\text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\text\AtomicString.h">
+      <Filter>wtf\text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\text\AtomicStringHash.h">
+      <Filter>wtf\text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\text\Base64.h">
+      <Filter>wtf\text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\text\CharacterNames.h">
+      <Filter>wtf\text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\text\Collator.h">
+      <Filter>wtf\text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\text\CString.h">
+      <Filter>wtf\text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\text\IntegerToStringConversion.h">
+      <Filter>wtf\text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\text\StringBuffer.h">
+      <Filter>wtf\text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\text\StringBuilder.h">
+      <Filter>wtf\text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\text\StringConcatenate.h">
+      <Filter>wtf\text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\text\StringHash.h">
+      <Filter>wtf\text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\text\StringImpl.h">
+      <Filter>wtf\text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\text\StringOperators.h">
+      <Filter>wtf\text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\text\StringStatics.h">
+      <Filter>wtf\text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\text\StringUTF8Adaptor.h">
+      <Filter>wtf\text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\text\StringView.h">
+      <Filter>wtf\text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\text\TextCodec.h">
+      <Filter>wtf\text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\text\TextCodecASCIIFastPath.h">
+      <Filter>wtf\text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\text\TextCodecICU.h">
+      <Filter>wtf\text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\text\TextCodecLatin1.h">
+      <Filter>wtf\text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\text\TextCodecReplacement.h">
+      <Filter>wtf\text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\text\TextCodecUserDefined.h">
+      <Filter>wtf\text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\text\TextCodecUTF16.h">
+      <Filter>wtf\text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\text\TextCodecUTF8.h">
+      <Filter>wtf\text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\text\TextEncoding.h">
+      <Filter>wtf\text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\text\TextEncodingRegistry.h">
+      <Filter>wtf\text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\text\TextPosition.h">
+      <Filter>wtf\text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\text\Unicode.h">
+      <Filter>wtf\text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\text\WTFString.h">
+      <Filter>wtf\text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\Threading.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\ThreadingPrimitives.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\ThreadRestrictionVerifier.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\ThreadSafeRefCounted.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\ThreadSpecific.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\TreeNode.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\TriState.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\TypedArrayBase.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\TypeTraits.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\Uint16Array.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\Uint32Array.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\Uint8Array.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\Uint8ClampedArray.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\Utility.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\Vector.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\VectorTraits.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\WeakPtr.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\WTF.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\WTFExport.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\WTFThreadData.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\Partitions.h">
+      <Filter>wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\text\qt4\qunicodetables.h">
+      <Filter>wtf\text\qt4</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\text\qt4\UnicodeMacrosFromICU.h">
+      <Filter>wtf\text\qt4</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\text\qt4\UnicodeQt4.h">
+      <Filter>wtf\text\qt4</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\text\qt4\QChar.h">
+      <Filter>wtf\text\qt4</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\text\qt4\QString.h">
+      <Filter>wtf\text\qt4</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\text\qt4\QtGlobal.h">
+      <Filter>wtf\text\qt4</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\text\UTF8.h">
+      <Filter>wtf\text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\wtf\text\WTFStringUtil.h">
+      <Filter>wtf\text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\config.h" />
+  </ItemGroup>
+</Project>

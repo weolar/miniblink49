@@ -1,0 +1,644 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{9A255812-D061-4C75-992E-BDB1CDF5298E}</ProjectGuid>
+    <RootNamespace>miniblink</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectName>svg</ProjectName>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v140_xp</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v140_xp</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v140_xp</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v140_xp</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>11.0.50727.1</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(SolutionDir)..\out\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)..\out\tmp\$(Platform)\$(ProjectName)\$(Configuration)\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)..\out\$(Platform)$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)..\out\tmp\$(Platform)$(ProjectName)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)..\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)..\tmp\$(ProjectName)\$(Configuration)\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)..\out\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)..\out\tmp\$(Platform)\$(ProjectName)\$(Configuration)\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(SolutionDir)..\vc6\include\crt;$(SolutionDir)..\vc6\include\wnet;$(SolutionDir)..\third_party\GDIPlus\Includes</IncludePath>
+    <ReferencePath />
+    <LibraryPath>$(SolutionDir)..\vc6\lib;$(SolutionDir)..\third_party\GDIPlus\lib</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <GenerateManifest>false</GenerateManifest>
+    <OutDir>$(SolutionDir)..\out\$(Platform)$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)..\out\tmp\$(Platform)$(ProjectName)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>BUILDING_CEF_SHARED;DCHECK_ALWAYS_ON=1;WIN32;_DEBUG;_WINDOWS;INSIDE_BLINK=1;BLINK_IMPLEMENTATION=1;ENABLE_OILPAN=1;ENABLE_GC_PROFILING=1;ENABLE_WKE=1;CARES_STATICLIB=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalIncludeDirectories>../../../../../../;../../../../../../v8_4_8/;../../../../../../v8_4_8/include;../../../../../../base;../../../../../../third_party/;../../../../../../third_party/npapi;../../../../../../third_party/WebKit;../../../../../../third_party/WebKit/Source;../../../../../../cef;../../../../../../third_party/icu/source/common;../../../../../../gen/blink;../../../../../../gen/blink/core;../../../../../../gen/blink/bindings/modules/v8;../../../../../../gen/blink/bindings/core/v8;../../../../../../gpu;../../../../../../third_party/khronos;../../../../../../third_party/libxml/src/include;../../../../../../third_party/libxml/win32/include;../../../../../../third_party/skia/include/core;../../../../../../third_party/skia/include/config;../../../../../../third_party/skia/include/codec;../../../../../../third_party/skia/include/device;../../../../../../third_party/skia/include/effects;../../../../../../third_party/skia/include/images;../../../../../../third_party/skia/include/pathops;../../../../../../third_party/skia/include/ports;../../../../../../third_party/skia/include/private;../../../../../../third_party/skia/include/utils</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4800;4291;4996;4244;4305;4577;4091;4251</DisableSpecificWarnings>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <PrecompiledHeaderFile>config.h</PrecompiledHeaderFile>
+      <ForcedIncludeFiles>config.h</ForcedIncludeFiles>
+      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <TargetMachine>MachineX86</TargetMachine>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\out\$(Configuration)\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>InjectTool.lib;version.lib;ots.lib;Crypt32.lib;Wldap32.lib;Imm32.lib;libxml.lib;zlib.lib;libcurl.lib;v8_4_8.lib;skia.lib;winmm.lib;Ws2_32.lib;Usp10.lib;Shlwapi.lib;wininet.lib;GDIPlus.lib;DbgHelp.lib;libjpeg.lib;libpng.lib;wolfssl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)node$(TargetExt)</OutputFile>
+      <ImportLibrary>$(OutDir)miniblink.lib</ImportLibrary>
+      <IgnoreSpecificDefaultLibraries>LIBCMT.lib</IgnoreSpecificDefaultLibraries>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>BUILDING_CEF_SHARED;DCHECK_ALWAYS_ON=1;WIN32;_DEBUG;_WINDOWS;INSIDE_BLINK=1;BLINK_IMPLEMENTATION=1;ENABLE_OILPAN=1;ENABLE_GC_PROFILING=1;ENABLE_WKE=1;ENABLE_CEF=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalIncludeDirectories>../../;../../v8/;../../v8/include;../../third_party/;../../third_party/npapi;../../third_party/WebKit;../../third_party/WebKit/Source;../../cef;../../third_party/icu/source/common;../../gen/blink;../../gen/blink/core;../../gen/blink/bindings/modules/v8;../../gen/blink/bindings/core/v8;../../gpu;../../third_party/khronos;../../third_party/libxml/src/include;../../third_party/libxml/win32/include;../../third_party/skia/include/core;../../third_party/skia/include/config;../../third_party/skia/include/codec;../../third_party/skia/include/device;../../third_party/skia/include/effects;../../third_party/skia/include/images;../../third_party/skia/include/pathops;../../third_party/skia/include/ports;../../third_party/skia/include/private;../../third_party/skia/include/utils;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4800;4291;4996;4244;4305;4577;4267;</DisableSpecificWarnings>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <PrecompiledHeaderFile>config.h</PrecompiledHeaderFile>
+      <ForcedIncludeFiles>config.h</ForcedIncludeFiles>
+      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <MinimalRebuild>true</MinimalRebuild>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\Debug\;$(SolutionDir)..\lib\;</AdditionalLibraryDirectories>
+      <AdditionalDependencies>InjectTool.lib;version.lib;ots_d.lib;Crypt32.lib;Wldap32.lib;Imm32.lib;libxml.lib;zlib_d.lib;libcurl_d.lib;v8_d.lib;skia_d.lib;winmm.lib;Ws2_32.lib;Usp10.lib;Shlwapi.lib;wininet.lib;GDIPlus.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(SolutionDir)..\Debug\miniblink.dll</OutputFile>
+      <ImportLibrary>$(OutDir)miniblink.lib</ImportLibrary>
+      <IgnoreSpecificDefaultLibraries>LIBCMT.lib</IgnoreSpecificDefaultLibraries>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>BUILDING_CEF_SHARED;NDEBUG;WIN32;_WINDOWS;INSIDE_BLINK=1;BLINK_IMPLEMENTATION=1;ENABLE_OILPAN=1;USING_VC6RT=1;ENABLE_WKE=1;ENABLE_CEF=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalIncludeDirectories>../../;../../v8_5_1/;../../v8_5_1/include;../../third_party/;../../third_party/GDIPlus/Includes;../../third_party/npapi;../../third_party/WebKit;../../third_party/WebKit/Source;../../cef;../../third_party/icu/source/common;../../gen/blink;../../gen/blink/core;../../gen/blink/bindings/modules/v8;../../gen/blink/bindings/core/v8;../../gpu;../../third_party/khronos;../../third_party/libxml/src/include;../../third_party/libxml/win32/include;../../third_party/skia/include/core;../../third_party/skia/include/config;../../third_party/skia/include/codec;../../third_party/skia/include/device;../../third_party/skia/include/effects;../../third_party/skia/include/images;../../third_party/skia/include/pathops;../../third_party/skia/include/ports;../../third_party/skia/include/private;../../third_party/skia/include/utils;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PrecompiledHeaderFile>config.h</PrecompiledHeaderFile>
+      <DisableSpecificWarnings>4800;4291;4996;4244;4305;4577;4530;4595;4049</DisableSpecificWarnings>
+      <ForcedIncludeFiles>config.h</ForcedIncludeFiles>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <Optimization>MinSpace</Optimization>
+      <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
+      <ExceptionHandling>false</ExceptionHandling>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
+      <StringPooling>true</StringPooling>
+      <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>Debug</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <TargetMachine>MachineX86</TargetMachine>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\third_party\GDIPlus\Lib;$(SolutionDir)..\out\$(Configuration)\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>version.lib;Crypt32.lib;Advapi32.lib;wldap32.lib;libcurl.lib;zlib.lib;ots.lib;Imm32.lib;libxml.lib;v8.lib;skia.lib;winmm.lib;Ws2_32.lib;Usp10.lib;Shlwapi.lib;wininet.lib;GDIPlus.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>/FORCE:UNRESOLVED %(AdditionalOptions)</AdditionalOptions>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <ImportLibrary>$(OutDir)miniblink.lib</ImportLibrary>
+      <IgnoreSpecificDefaultLibraries>LIBCMT.lib;libcpmt.lib</IgnoreSpecificDefaultLibraries>
+      <ShowProgress>NotSet</ShowProgress>
+      <EntryPointSymbol>
+      </EntryPointSymbol>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>_WIN32_WINNT=0x0500;USING_VC6RT=1;_USING_V110_SDK71_;_WINDLL;_UNICODE;UNICODE;BUILDING_CEF_SHARED;NDEBUG;WIN32;_WINDOWS;INSIDE_BLINK=1;BLINK_IMPLEMENTATION=1;ENABLE_OILPAN=1;ENABLE_WKE=1</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <AdditionalIncludeDirectories>../../../../../../;../../../../../../v8_4_8/;../../../../../../v8_4_8/include;../../../../../../base;../../../../../../third_party/;../../../../../../third_party/GDIPlus/Includes;../../../../../../third_party/npapi;../../../../../../third_party/WebKit;../../../../../../third_party/WebKit/Source;../../../../../../cef;../../../../../../third_party/icu/source/common;../../../../../../gen/blink;../../../../../../gen/blink/core;../../../../../../gen/blink/bindings/modules/v8;../../../../../../gen/blink/bindings/core/v8;../../../../../../gpu;../../../../../../third_party/khronos;../../../../../../third_party/libxml/src/include;../../../../../../third_party/libxml/win32/include;../../../../../../third_party/skia/include/core;../../../../../../third_party/skia/include/config;../../../../../../third_party/skia/include/codec;../../../../../../third_party/skia/include/device;../../../../../../third_party/skia/include/effects;../../../../../../third_party/skia/include/images;../../../../../../third_party/skia/include/pathops;../../../../../../third_party/skia/include/ports;../../../../../../third_party/skia/include/private;../../../../../../third_party/skia/include/utils</AdditionalIncludeDirectories>
+      <PrecompiledHeaderFile>config.h</PrecompiledHeaderFile>
+      <DisableSpecificWarnings>4800;4291;4996;4244;4305;4577;4530;4595;4049;4273</DisableSpecificWarnings>
+      <ForcedIncludeFiles>config.h</ForcedIncludeFiles>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <Optimization>Full</Optimization>
+      <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
+      <ExceptionHandling>false</ExceptionHandling>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <StringPooling>true</StringPooling>
+      <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <AdditionalOptions>/Zc:threadSafeInit- %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <TargetMachine>MachineX86</TargetMachine>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\third_party\GDIPlus\Lib;$(SolutionDir)..\out\Release\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libcurl.lib;zlib.lib;ots.lib;libxml.lib;v8_4_8.lib;skia.lib;winmm.lib;Ws2_32.lib;Usp10.lib;Shlwapi.lib;wininet.lib;GDIPlus.lib;version.lib;Crypt32.lib;wldap32.lib;Imm32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;wolfssl.lib;libpng.lib;libjpeg.lib</AdditionalDependencies>
+      <AdditionalOptions>/FORCE:UNRESOLVED %(AdditionalOptions)</AdditionalOptions>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <ImportLibrary>$(OutDir)miniblink.lib</ImportLibrary>
+      <IgnoreSpecificDefaultLibraries>LIBCMT.lib</IgnoreSpecificDefaultLibraries>
+      <ShowProgress>NotSet</ShowProgress>
+      <EntryPointSymbol>
+      </EntryPointSymbol>
+      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;BUILDING_CEF_SHARED;INSIDE_BLINK=1;BLINK_IMPLEMENTATION=1;ENABLE_OILPAN=1;ENABLE_WKE=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalIncludeDirectories>../../;../../v8_5_7/;../../v8_5_7/include;../../third_party/;../../third_party/GDIPlus/Includes;../../third_party/npapi;../../third_party/WebKit;../../third_party/WebKit/Source;../../cef;../../third_party/icu/source/common;../../gen/blink;../../gen/blink/core;../../gen/blink/bindings/modules/v8;../../gen/blink/bindings/core/v8;../../gpu;../../third_party/khronos;../../third_party/libxml/src/include;../../third_party/libxml/win32/include;../../third_party/skia/include/core;../../third_party/skia/include/config;../../third_party/skia/include/codec;../../third_party/skia/include/device;../../third_party/skia/include/effects;../../third_party/skia/include/images;../../third_party/skia/include/pathops;../../third_party/skia/include/ports;../../third_party/skia/include/private;../../third_party/skia/include/utils;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PrecompiledHeaderFile>config.h</PrecompiledHeaderFile>
+      <DisableSpecificWarnings>4800;4291;4996;4244;4305;4577;4530;4595;4049;4267;4302;4311</DisableSpecificWarnings>
+      <ForcedIncludeFiles>config.h</ForcedIncludeFiles>
+      <Optimization>Full</Optimization>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
+      <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\out\$(Platform)$(Configuration)\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>version.lib;Crypt32.lib;Advapi32.lib;wldap32.lib;libcurl.lib;zlib.lib;ots.lib;Imm32.lib;libxml.lib;v8_5_7.lib;skia.lib;winmm.lib;Ws2_32.lib;Usp10.lib;Shlwapi.lib;wininet.lib;GDIPlus.lib;DbgHelp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>/FORCE:UNRESOLVED %(AdditionalOptions)</AdditionalOptions>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <ImportLibrary>
+      </ImportLibrary>
+      <ShowProgress>NotSet</ShowProgress>
+      <EntryPointSymbol>
+      </EntryPointSymbol>
+      <GenerateDebugInformation>No</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\config.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAnimatedString.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\animation\SMILTime.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\animation\SMILTimeContainer.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\animation\SVGSMILElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\ColorDistance.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\graphics\filters\SVGFEImage.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\graphics\filters\SVGFilter.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\graphics\filters\SVGFilterBuilder.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\graphics\SVGImage.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\graphics\SVGImageChromeClient.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\graphics\SVGImageForContainer.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\properties\SVGAnimatedProperty.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\properties\SVGPropertyTearOff.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAngle.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAngleTearOff.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAnimatedAngle.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAnimatedColor.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAnimatedEnumerationBase.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAnimatedInteger.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAnimatedIntegerOptionalInteger.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAnimatedLength.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAnimatedNumber.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAnimatedNumberOptionalNumber.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAnimatedPath.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAnimatedTypeAnimator.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAnimateElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAnimateMotionElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAnimateTransformElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAnimationElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGBoolean.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGCircleElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGClipPathElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGComponentTransferFunctionElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGCursorElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGDefsElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGDescElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGDiscardElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGDocumentExtensions.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGElementRareData.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGEllipseElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGEnumeration.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEBlendElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEColorMatrixElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEComponentTransferElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFECompositeElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEConvolveMatrixElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEDiffuseLightingElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEDisplacementMapElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEDistantLightElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEDropShadowElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEFloodElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEFuncAElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEFuncBElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEFuncGElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEFuncRElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEGaussianBlurElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEImageElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFELightElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEMergeElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEMergeNodeElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEMorphologyElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEOffsetElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEPointLightElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFESpecularLightingElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFESpotLightElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFETileElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFETurbulenceElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFilterElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFilterPrimitiveStandardAttributes.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFitToViewBox.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGForeignObjectElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGGElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGGeometryElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGGradientElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGGraphicsElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGImageElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGImageLoader.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGInteger.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGIntegerOptionalInteger.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGLength.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGLengthContext.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGLengthList.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGLengthTearOff.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGLinearGradientElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGLineElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGMarkerElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGMaskElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGMatrixTearOff.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGMetadataElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGMPathElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGNumber.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGNumberList.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGNumberOptionalNumber.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGNumberTearOff.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGParserUtilities.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathBlender.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathBuilder.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathByteStreamBuilder.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathByteStreamSource.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathParser.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathSeg.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathSegList.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathSegListBuilder.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathSegListSource.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathStringBuilder.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathStringSource.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathTraversalStateBuilder.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathUtilities.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPatternElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPoint.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPointList.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPointTearOff.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPolyElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPolygonElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPolylineElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPreserveAspectRatio.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPreserveAspectRatioTearOff.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGRadialGradientElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGRect.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGRectElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGRectTearOff.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGScriptElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGSetElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGStaticStringList.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGStopElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGString.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGStringList.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGStringListTearOff.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGStyleElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGSVGElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGSwitchElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGSymbolElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGTests.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGTextContentElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGTextElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGTextPathElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGTextPositioningElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGTitleElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGTransform.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGTransformDistance.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGTransformList.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGTransformListTearOff.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGTransformTearOff.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGTSpanElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGUnitTypes.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGUnknownElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGURIReference.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGUseElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGViewElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGViewSpec.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGZoomAndPan.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGZoomEvent.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAnimatedString.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\config.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\animation\SMILTime.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\animation\SMILTimeContainer.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\animation\SVGSMILElement.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\ColorDistance.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\GradientAttributes.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\graphics\filters\SVGFEImage.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\graphics\filters\SVGFilter.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\graphics\filters\SVGFilterBuilder.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\graphics\SVGImage.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\graphics\SVGImageChromeClient.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\graphics\SVGImageForContainer.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\LinearGradientAttributes.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\PatternAttributes.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\properties\SVGAnimatedProperty.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\properties\SVGListPropertyHelper.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\properties\SVGListPropertyTearOffHelper.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\properties\SVGProperty.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\properties\SVGPropertyHelper.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\properties\SVGPropertyInfo.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\properties\SVGPropertyTearOff.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\RadialGradientAttributes.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAElement.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAngle.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAngleTearOff.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAnimatedAngle.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAnimatedBoolean.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAnimatedColor.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAnimatedEnumeration.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAnimatedEnumerationBase.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAnimatedInteger.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAnimatedIntegerOptionalInteger.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAnimatedLength.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAnimatedLengthList.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAnimatedNumber.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAnimatedNumberList.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAnimatedNumberOptionalNumber.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAnimatedPath.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAnimatedPointList.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAnimatedPreserveAspectRatio.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAnimatedRect.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAnimatedTransformList.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAnimatedTypeAnimator.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAnimateElement.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAnimateMotionElement.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAnimateTransformElement.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAnimationElement.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGBoolean.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGCircleElement.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGClipPathElement.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGComponentTransferFunctionElement.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGCursorElement.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGDefsElement.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGDescElement.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGDiscardElement.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGDocumentExtensions.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGElement.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGElementRareData.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGEllipseElement.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGEnumeration.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEBlendElement.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEColorMatrixElement.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEComponentTransferElement.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFECompositeElement.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEConvolveMatrixElement.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEDiffuseLightingElement.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEDisplacementMapElement.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEDistantLightElement.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEDropShadowElement.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEFloodElement.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEFuncAElement.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEFuncBElement.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEFuncGElement.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEFuncRElement.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEGaussianBlurElement.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEImageElement.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFELightElement.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEMergeElement.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEMergeNodeElement.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEMorphologyElement.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEOffsetElement.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEPointLightElement.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFESpecularLightingElement.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFESpotLightElement.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFETileElement.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFETurbulenceElement.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFilterElement.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFilterPrimitiveStandardAttributes.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFitToViewBox.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGForeignObjectElement.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGGElement.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGGeometryElement.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGGradientElement.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGGraphicsElement.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGImageElement.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGImageLoader.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGInteger.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGIntegerOptionalInteger.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGLength.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGLengthContext.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGLengthList.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGLengthListTearOff.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGLengthTearOff.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGLinearGradientElement.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGLineElement.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGMarkerElement.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGMaskElement.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGMatrixTearOff.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGMetadataElement.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGMPathElement.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGNumber.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGNumberList.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGNumberListTearOff.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGNumberOptionalNumber.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGNumberTearOff.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGParserUtilities.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGParsingError.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathBlender.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathBuilder.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathByteStream.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathByteStreamBuilder.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathByteStreamSource.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathConsumer.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathElement.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathParser.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathSeg.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathSegArc.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathSegArcAbs.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathSegArcRel.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathSegClosePath.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathSegCurvetoCubic.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathSegCurvetoCubicAbs.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathSegCurvetoCubicRel.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathSegCurvetoCubicSmooth.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathSegCurvetoCubicSmoothAbs.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathSegCurvetoCubicSmoothRel.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathSegCurvetoQuadratic.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathSegCurvetoQuadraticAbs.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathSegCurvetoQuadraticRel.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathSegCurvetoQuadraticSmoothAbs.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathSegCurvetoQuadraticSmoothRel.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathSegLinetoAbs.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathSegLinetoHorizontal.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathSegLinetoHorizontalAbs.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathSegLinetoHorizontalRel.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathSegLinetoRel.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathSegLinetoVertical.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathSegLinetoVerticalAbs.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathSegLinetoVerticalRel.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathSegList.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathSegListBuilder.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathSegListSource.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathSegListTearOff.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathSegMovetoAbs.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathSegMovetoRel.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathSource.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathStringBuilder.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathStringSource.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathTraversalStateBuilder.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathUtilities.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPatternElement.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPoint.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPointList.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPointListTearOff.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPointTearOff.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPolyElement.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPolygonElement.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPolylineElement.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPreserveAspectRatio.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPreserveAspectRatioTearOff.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGRadialGradientElement.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGRect.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGRectElement.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGRectTearOff.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGScriptElement.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGSetElement.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGStaticStringList.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGStopElement.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGString.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGStringList.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGStringListTearOff.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGStyleElement.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGSVGElement.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGSwitchElement.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGSymbolElement.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGTests.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGTextContentElement.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGTextElement.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGTextPathElement.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGTextPositioningElement.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGTitleElement.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGTransform.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGTransformDistance.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGTransformList.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGTransformListTearOff.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGTransformTearOff.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGTSpanElement.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGUnitTypes.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGUnknownElement.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGURIReference.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGUseElement.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGViewElement.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGViewSpec.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGZoomAndPan.h" />
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGZoomEvent.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

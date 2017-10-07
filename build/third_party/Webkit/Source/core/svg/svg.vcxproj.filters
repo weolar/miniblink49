@@ -1,0 +1,1109 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="core">
+      <UniqueIdentifier>{8d5b50a9-8799-4f87-b846-bacd5b9929ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\svg">
+      <UniqueIdentifier>{2f94e122-bf4d-488a-abe9-a78147865bfe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\svg\animation">
+      <UniqueIdentifier>{dd2a9379-5c26-413e-9859-05338c9756b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\svg\graphics">
+      <UniqueIdentifier>{100c3f46-d294-4aea-9bc2-aaf5bbd56e99}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\svg\graphics\filters">
+      <UniqueIdentifier>{b8187019-20b9-4ad8-b122-0687cbd8f4c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\svg\properties">
+      <UniqueIdentifier>{bf19a2a7-004a-4ac5-9008-8a504203c32a}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\animation\SMILTime.cpp">
+      <Filter>core\svg\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\animation\SMILTimeContainer.cpp">
+      <Filter>core\svg\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\animation\SVGSMILElement.cpp">
+      <Filter>core\svg\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\ColorDistance.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\graphics\filters\SVGFEImage.cpp">
+      <Filter>core\svg\graphics\filters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\graphics\filters\SVGFilter.cpp">
+      <Filter>core\svg\graphics\filters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\graphics\filters\SVGFilterBuilder.cpp">
+      <Filter>core\svg\graphics\filters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\graphics\SVGImage.cpp">
+      <Filter>core\svg\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\graphics\SVGImageChromeClient.cpp">
+      <Filter>core\svg\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\graphics\SVGImageForContainer.cpp">
+      <Filter>core\svg\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\properties\SVGAnimatedProperty.cpp">
+      <Filter>core\svg\properties</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\properties\SVGPropertyTearOff.cpp">
+      <Filter>core\svg\properties</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAElement.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAngle.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAngleTearOff.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAnimatedAngle.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAnimatedColor.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAnimatedEnumerationBase.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAnimatedInteger.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAnimatedIntegerOptionalInteger.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAnimatedLength.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAnimatedNumber.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAnimatedNumberOptionalNumber.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAnimatedPath.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAnimatedTypeAnimator.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAnimateElement.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAnimateMotionElement.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAnimateTransformElement.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAnimationElement.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGBoolean.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGCircleElement.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGClipPathElement.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGComponentTransferFunctionElement.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGCursorElement.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGDefsElement.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGDescElement.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGDiscardElement.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGDocumentExtensions.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGElement.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGElementRareData.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGEllipseElement.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGEnumeration.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEBlendElement.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEColorMatrixElement.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEComponentTransferElement.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFECompositeElement.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEConvolveMatrixElement.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEDiffuseLightingElement.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEDisplacementMapElement.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEDistantLightElement.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEDropShadowElement.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEFloodElement.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEFuncAElement.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEFuncBElement.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEFuncGElement.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEFuncRElement.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEGaussianBlurElement.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEImageElement.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFELightElement.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEMergeElement.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEMergeNodeElement.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEMorphologyElement.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEOffsetElement.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEPointLightElement.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFESpecularLightingElement.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFESpotLightElement.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFETileElement.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFETurbulenceElement.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFilterElement.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFilterPrimitiveStandardAttributes.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFitToViewBox.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGForeignObjectElement.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGGElement.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGGeometryElement.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGGradientElement.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGGraphicsElement.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGImageElement.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGImageLoader.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGInteger.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGIntegerOptionalInteger.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGLength.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGLengthContext.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGLengthList.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGLengthTearOff.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGLinearGradientElement.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGLineElement.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGMarkerElement.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGMaskElement.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGMatrixTearOff.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGMetadataElement.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGMPathElement.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGNumber.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGNumberList.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGNumberOptionalNumber.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGNumberTearOff.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGParserUtilities.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathBlender.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathBuilder.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathByteStreamBuilder.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathByteStreamSource.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathElement.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathParser.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathSeg.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathSegList.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathSegListBuilder.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathSegListSource.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathStringBuilder.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathStringSource.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathTraversalStateBuilder.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathUtilities.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPatternElement.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPoint.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPointList.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPointTearOff.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPolyElement.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPolygonElement.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPolylineElement.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPreserveAspectRatio.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPreserveAspectRatioTearOff.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGRadialGradientElement.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGRect.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGRectElement.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGRectTearOff.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGScriptElement.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGSetElement.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGStaticStringList.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGStopElement.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGString.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGStringList.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGStringListTearOff.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGStyleElement.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGSVGElement.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGSwitchElement.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGSymbolElement.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGTests.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGTextContentElement.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGTextElement.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGTextPathElement.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGTextPositioningElement.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGTitleElement.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGTransform.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGTransformDistance.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGTransformList.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGTransformListTearOff.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGTransformTearOff.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGTSpanElement.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGUnitTypes.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGUnknownElement.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGURIReference.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGUseElement.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGViewElement.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGViewSpec.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGZoomAndPan.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGZoomEvent.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAnimatedString.cpp">
+      <Filter>core\svg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\third_party\WebKit\Source\config.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\animation\SMILTime.h">
+      <Filter>core\svg\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\animation\SMILTimeContainer.h">
+      <Filter>core\svg\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\animation\SVGSMILElement.h">
+      <Filter>core\svg\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\ColorDistance.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\GradientAttributes.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\graphics\filters\SVGFEImage.h">
+      <Filter>core\svg\graphics\filters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\graphics\filters\SVGFilter.h">
+      <Filter>core\svg\graphics\filters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\graphics\filters\SVGFilterBuilder.h">
+      <Filter>core\svg\graphics\filters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\graphics\SVGImage.h">
+      <Filter>core\svg\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\graphics\SVGImageChromeClient.h">
+      <Filter>core\svg\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\graphics\SVGImageForContainer.h">
+      <Filter>core\svg\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\LinearGradientAttributes.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\PatternAttributes.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\properties\SVGAnimatedProperty.h">
+      <Filter>core\svg\properties</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\properties\SVGListPropertyHelper.h">
+      <Filter>core\svg\properties</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\properties\SVGListPropertyTearOffHelper.h">
+      <Filter>core\svg\properties</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\properties\SVGProperty.h">
+      <Filter>core\svg\properties</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\properties\SVGPropertyHelper.h">
+      <Filter>core\svg\properties</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\properties\SVGPropertyInfo.h">
+      <Filter>core\svg\properties</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\properties\SVGPropertyTearOff.h">
+      <Filter>core\svg\properties</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\RadialGradientAttributes.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAElement.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAngle.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAngleTearOff.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAnimatedAngle.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAnimatedBoolean.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAnimatedColor.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAnimatedEnumeration.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAnimatedEnumerationBase.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAnimatedInteger.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAnimatedIntegerOptionalInteger.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAnimatedLength.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAnimatedLengthList.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAnimatedNumber.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAnimatedNumberList.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAnimatedNumberOptionalNumber.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAnimatedPath.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAnimatedPointList.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAnimatedPreserveAspectRatio.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAnimatedRect.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAnimatedTransformList.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAnimatedTypeAnimator.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAnimateElement.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAnimateMotionElement.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAnimateTransformElement.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAnimationElement.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGBoolean.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGCircleElement.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGClipPathElement.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGComponentTransferFunctionElement.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGCursorElement.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGDefsElement.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGDescElement.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGDiscardElement.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGDocumentExtensions.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGElement.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGElementRareData.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGEllipseElement.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGEnumeration.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEBlendElement.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEColorMatrixElement.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEComponentTransferElement.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFECompositeElement.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEConvolveMatrixElement.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEDiffuseLightingElement.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEDisplacementMapElement.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEDistantLightElement.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEDropShadowElement.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEFloodElement.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEFuncAElement.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEFuncBElement.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEFuncGElement.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEFuncRElement.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEGaussianBlurElement.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEImageElement.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFELightElement.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEMergeElement.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEMergeNodeElement.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEMorphologyElement.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEOffsetElement.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFEPointLightElement.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFESpecularLightingElement.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFESpotLightElement.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFETileElement.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFETurbulenceElement.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFilterElement.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFilterPrimitiveStandardAttributes.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGFitToViewBox.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGForeignObjectElement.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGGElement.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGGeometryElement.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGGradientElement.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGGraphicsElement.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGImageElement.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGImageLoader.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGInteger.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGIntegerOptionalInteger.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGLength.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGLengthContext.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGLengthList.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGLengthListTearOff.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGLengthTearOff.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGLinearGradientElement.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGLineElement.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGMarkerElement.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGMaskElement.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGMatrixTearOff.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGMetadataElement.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGMPathElement.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGNumber.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGNumberList.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGNumberListTearOff.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGNumberOptionalNumber.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGNumberTearOff.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGParserUtilities.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGParsingError.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathBlender.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathBuilder.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathByteStream.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathByteStreamBuilder.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathByteStreamSource.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathConsumer.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathElement.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathParser.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathSeg.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathSegArc.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathSegArcAbs.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathSegArcRel.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathSegClosePath.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathSegCurvetoCubic.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathSegCurvetoCubicAbs.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathSegCurvetoCubicRel.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathSegCurvetoCubicSmooth.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathSegCurvetoCubicSmoothAbs.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathSegCurvetoCubicSmoothRel.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathSegCurvetoQuadratic.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathSegCurvetoQuadraticAbs.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathSegCurvetoQuadraticRel.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathSegCurvetoQuadraticSmoothAbs.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathSegCurvetoQuadraticSmoothRel.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathSegLinetoAbs.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathSegLinetoHorizontal.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathSegLinetoHorizontalAbs.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathSegLinetoHorizontalRel.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathSegLinetoRel.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathSegLinetoVertical.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathSegLinetoVerticalAbs.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathSegLinetoVerticalRel.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathSegList.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathSegListBuilder.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathSegListSource.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathSegListTearOff.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathSegMovetoAbs.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathSegMovetoRel.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathSource.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathStringBuilder.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathStringSource.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathTraversalStateBuilder.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPathUtilities.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPatternElement.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPoint.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPointList.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPointListTearOff.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPointTearOff.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPolyElement.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPolygonElement.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPolylineElement.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPreserveAspectRatio.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGPreserveAspectRatioTearOff.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGRadialGradientElement.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGRect.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGRectElement.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGRectTearOff.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGScriptElement.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGSetElement.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGStaticStringList.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGStopElement.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGString.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGStringList.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGStringListTearOff.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGStyleElement.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGSVGElement.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGSwitchElement.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGSymbolElement.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGTests.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGTextContentElement.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGTextElement.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGTextPathElement.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGTextPositioningElement.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGTitleElement.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGTransform.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGTransformDistance.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGTransformList.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGTransformListTearOff.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGTransformTearOff.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGTSpanElement.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGUnitTypes.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGUnknownElement.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGURIReference.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGUseElement.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGViewElement.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGViewSpec.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGZoomAndPan.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGZoomEvent.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\core\svg\SVGAnimatedString.h">
+      <Filter>core\svg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\third_party\WebKit\Source\config.h" />
+  </ItemGroup>
+</Project>

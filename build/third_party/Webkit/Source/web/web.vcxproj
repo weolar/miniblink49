@@ -1,0 +1,411 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{4324D701-9280-4B38-B589-EEBCBE9FB294}</ProjectGuid>
+    <RootNamespace>miniblink</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectName>web</ProjectName>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v140_xp</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v140_xp</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v140_xp</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v140_xp</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>11.0.50727.1</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(SolutionDir)..\out\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)..\out\tmp\$(Platform)\$(ProjectName)\$(Configuration)\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)..\out\$(Platform)$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)..\out\tmp\$(Platform)$(ProjectName)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)..\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)..\tmp\$(ProjectName)\$(Configuration)\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)..\out\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)..\out\tmp\$(Platform)\$(ProjectName)\$(Configuration)\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(SolutionDir)..\vc6\include\crt;$(SolutionDir)..\vc6\include\wnet;$(SolutionDir)..\third_party\GDIPlus\Includes</IncludePath>
+    <ReferencePath />
+    <LibraryPath>$(SolutionDir)..\vc6\lib;$(SolutionDir)..\third_party\GDIPlus\lib</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <GenerateManifest>false</GenerateManifest>
+    <OutDir>$(SolutionDir)..\out\$(Platform)$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)..\out\tmp\$(Platform)$(ProjectName)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>BUILDING_CEF_SHARED;DCHECK_ALWAYS_ON=1;WIN32;_DEBUG;_WINDOWS;INSIDE_BLINK=1;BLINK_IMPLEMENTATION=1;ENABLE_OILPAN=1;ENABLE_GC_PROFILING=1;ENABLE_WKE=1;CARES_STATICLIB=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalIncludeDirectories>../../../../../;../../../../../v8_4_8/;../../../../../v8_4_8/include;../../../../../base;../../../../../third_party/;../../../../../third_party/npapi;../../../../../third_party/WebKit;../../../../../third_party/WebKit/Source;../../../../../cef;../../../../../third_party/icu/source/common;../../../../../gen/blink;../../../../../gen/blink/core;../../../../../gen/blink/bindings/modules/v8;../../../../../gen/blink/bindings/core/v8;../../../../../gpu;../../../../../third_party/khronos;../../../../../third_party/libxml/src/include;../../../../../third_party/libxml/win32/include;../../../../../third_party/skia/include/core;../../../../../third_party/skia/include/config;../../../../../third_party/skia/include/codec;../../../../../third_party/skia/include/device;../../../../../third_party/skia/include/effects;../../../../../third_party/skia/include/images;../../../../../third_party/skia/include/pathops;../../../../../third_party/skia/include/ports;../../../../../third_party/skia/include/private;../../../../../third_party/skia/include/utils</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4800;4291;4996;4244;4305;4577;4091;4251</DisableSpecificWarnings>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <PrecompiledHeaderFile>config.h</PrecompiledHeaderFile>
+      <ForcedIncludeFiles>config.h</ForcedIncludeFiles>
+      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <TargetMachine>MachineX86</TargetMachine>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\out\$(Configuration)\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>InjectTool.lib;version.lib;ots.lib;Crypt32.lib;Wldap32.lib;Imm32.lib;libxml.lib;zlib.lib;libcurl.lib;v8_4_8.lib;skia.lib;winmm.lib;Ws2_32.lib;Usp10.lib;Shlwapi.lib;wininet.lib;GDIPlus.lib;DbgHelp.lib;libjpeg.lib;libpng.lib;wolfssl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)node$(TargetExt)</OutputFile>
+      <ImportLibrary>$(OutDir)miniblink.lib</ImportLibrary>
+      <IgnoreSpecificDefaultLibraries>LIBCMT.lib</IgnoreSpecificDefaultLibraries>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>BUILDING_CEF_SHARED;DCHECK_ALWAYS_ON=1;WIN32;_DEBUG;_WINDOWS;INSIDE_BLINK=1;BLINK_IMPLEMENTATION=1;ENABLE_OILPAN=1;ENABLE_GC_PROFILING=1;ENABLE_WKE=1;ENABLE_CEF=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalIncludeDirectories>../../;../../v8/;../../v8/include;../../third_party/;../../third_party/npapi;../../third_party/WebKit;../../third_party/WebKit/Source;../../cef;../../third_party/icu/source/common;../../gen/blink;../../gen/blink/core;../../gen/blink/bindings/modules/v8;../../gen/blink/bindings/core/v8;../../gpu;../../third_party/khronos;../../third_party/libxml/src/include;../../third_party/libxml/win32/include;../../third_party/skia/include/core;../../third_party/skia/include/config;../../third_party/skia/include/codec;../../third_party/skia/include/device;../../third_party/skia/include/effects;../../third_party/skia/include/images;../../third_party/skia/include/pathops;../../third_party/skia/include/ports;../../third_party/skia/include/private;../../third_party/skia/include/utils;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4800;4291;4996;4244;4305;4577;4267;</DisableSpecificWarnings>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <PrecompiledHeaderFile>config.h</PrecompiledHeaderFile>
+      <ForcedIncludeFiles>config.h</ForcedIncludeFiles>
+      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <MinimalRebuild>true</MinimalRebuild>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\Debug\;$(SolutionDir)..\lib\;</AdditionalLibraryDirectories>
+      <AdditionalDependencies>InjectTool.lib;version.lib;ots_d.lib;Crypt32.lib;Wldap32.lib;Imm32.lib;libxml.lib;zlib_d.lib;libcurl_d.lib;v8_d.lib;skia_d.lib;winmm.lib;Ws2_32.lib;Usp10.lib;Shlwapi.lib;wininet.lib;GDIPlus.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(SolutionDir)..\Debug\miniblink.dll</OutputFile>
+      <ImportLibrary>$(OutDir)miniblink.lib</ImportLibrary>
+      <IgnoreSpecificDefaultLibraries>LIBCMT.lib</IgnoreSpecificDefaultLibraries>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>BUILDING_CEF_SHARED;NDEBUG;WIN32;_WINDOWS;INSIDE_BLINK=1;BLINK_IMPLEMENTATION=1;ENABLE_OILPAN=1;USING_VC6RT=1;ENABLE_WKE=1;ENABLE_CEF=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalIncludeDirectories>../../;../../v8_5_1/;../../v8_5_1/include;../../third_party/;../../third_party/GDIPlus/Includes;../../third_party/npapi;../../third_party/WebKit;../../third_party/WebKit/Source;../../cef;../../third_party/icu/source/common;../../gen/blink;../../gen/blink/core;../../gen/blink/bindings/modules/v8;../../gen/blink/bindings/core/v8;../../gpu;../../third_party/khronos;../../third_party/libxml/src/include;../../third_party/libxml/win32/include;../../third_party/skia/include/core;../../third_party/skia/include/config;../../third_party/skia/include/codec;../../third_party/skia/include/device;../../third_party/skia/include/effects;../../third_party/skia/include/images;../../third_party/skia/include/pathops;../../third_party/skia/include/ports;../../third_party/skia/include/private;../../third_party/skia/include/utils;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PrecompiledHeaderFile>config.h</PrecompiledHeaderFile>
+      <DisableSpecificWarnings>4800;4291;4996;4244;4305;4577;4530;4595;4049</DisableSpecificWarnings>
+      <ForcedIncludeFiles>config.h</ForcedIncludeFiles>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <Optimization>MinSpace</Optimization>
+      <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
+      <ExceptionHandling>false</ExceptionHandling>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
+      <StringPooling>true</StringPooling>
+      <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>Debug</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <TargetMachine>MachineX86</TargetMachine>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\third_party\GDIPlus\Lib;$(SolutionDir)..\out\$(Configuration)\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>version.lib;Crypt32.lib;Advapi32.lib;wldap32.lib;libcurl.lib;zlib.lib;ots.lib;Imm32.lib;libxml.lib;v8.lib;skia.lib;winmm.lib;Ws2_32.lib;Usp10.lib;Shlwapi.lib;wininet.lib;GDIPlus.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>/FORCE:UNRESOLVED %(AdditionalOptions)</AdditionalOptions>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <ImportLibrary>$(OutDir)miniblink.lib</ImportLibrary>
+      <IgnoreSpecificDefaultLibraries>LIBCMT.lib;libcpmt.lib</IgnoreSpecificDefaultLibraries>
+      <ShowProgress>NotSet</ShowProgress>
+      <EntryPointSymbol>
+      </EntryPointSymbol>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>_WIN32_WINNT=0x0500;USING_VC6RT=1;_USING_V110_SDK71_;_WINDLL;_UNICODE;UNICODE;BUILDING_CEF_SHARED;NDEBUG;WIN32;_WINDOWS;INSIDE_BLINK=1;BLINK_IMPLEMENTATION=1;ENABLE_OILPAN=1;ENABLE_WKE=1</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <AdditionalIncludeDirectories>../../../../../;../../../../../v8_4_8/;../../../../../v8_4_8/include;../../../../../base;../../../../../third_party/;../../../../../third_party/GDIPlus/Includes;../../../../../third_party/npapi;../../../../../third_party/WebKit;../../../../../third_party/WebKit/Source;../../../../../cef;../../../../../third_party/icu/source/common;../../../../../gen/blink;../../../../../gen/blink/core;../../../../../gen/blink/bindings/modules/v8;../../../../../gen/blink/bindings/core/v8;../../../../../gpu;../../../../../third_party/khronos;../../../../../third_party/libxml/src/include;../../../../../third_party/libxml/win32/include;../../../../../third_party/skia/include/core;../../../../../third_party/skia/include/config;../../../../../third_party/skia/include/codec;../../../../../third_party/skia/include/device;../../../../../third_party/skia/include/effects;../../../../../third_party/skia/include/images;../../../../../third_party/skia/include/pathops;../../../../../third_party/skia/include/ports;../../../../../third_party/skia/include/private;../../../../../third_party/skia/include/utils</AdditionalIncludeDirectories>
+      <PrecompiledHeaderFile>config.h</PrecompiledHeaderFile>
+      <DisableSpecificWarnings>4800;4291;4996;4244;4305;4577;4530;4595;4049;4273</DisableSpecificWarnings>
+      <ForcedIncludeFiles>config.h</ForcedIncludeFiles>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <Optimization>Full</Optimization>
+      <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
+      <ExceptionHandling>false</ExceptionHandling>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <StringPooling>true</StringPooling>
+      <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <AdditionalOptions>/Zc:threadSafeInit- %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <TargetMachine>MachineX86</TargetMachine>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\third_party\GDIPlus\Lib;$(SolutionDir)..\out\Release\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libcurl.lib;zlib.lib;ots.lib;libxml.lib;v8_4_8.lib;skia.lib;winmm.lib;Ws2_32.lib;Usp10.lib;Shlwapi.lib;wininet.lib;GDIPlus.lib;version.lib;Crypt32.lib;wldap32.lib;Imm32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;wolfssl.lib;libpng.lib;libjpeg.lib</AdditionalDependencies>
+      <AdditionalOptions>/FORCE:UNRESOLVED %(AdditionalOptions)</AdditionalOptions>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <ImportLibrary>$(OutDir)miniblink.lib</ImportLibrary>
+      <IgnoreSpecificDefaultLibraries>LIBCMT.lib</IgnoreSpecificDefaultLibraries>
+      <ShowProgress>NotSet</ShowProgress>
+      <EntryPointSymbol>
+      </EntryPointSymbol>
+      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;BUILDING_CEF_SHARED;INSIDE_BLINK=1;BLINK_IMPLEMENTATION=1;ENABLE_OILPAN=1;ENABLE_WKE=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalIncludeDirectories>../../;../../v8_5_7/;../../v8_5_7/include;../../third_party/;../../third_party/GDIPlus/Includes;../../third_party/npapi;../../third_party/WebKit;../../third_party/WebKit/Source;../../cef;../../third_party/icu/source/common;../../gen/blink;../../gen/blink/core;../../gen/blink/bindings/modules/v8;../../gen/blink/bindings/core/v8;../../gpu;../../third_party/khronos;../../third_party/libxml/src/include;../../third_party/libxml/win32/include;../../third_party/skia/include/core;../../third_party/skia/include/config;../../third_party/skia/include/codec;../../third_party/skia/include/device;../../third_party/skia/include/effects;../../third_party/skia/include/images;../../third_party/skia/include/pathops;../../third_party/skia/include/ports;../../third_party/skia/include/private;../../third_party/skia/include/utils;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PrecompiledHeaderFile>config.h</PrecompiledHeaderFile>
+      <DisableSpecificWarnings>4800;4291;4996;4244;4305;4577;4530;4595;4049;4267;4302;4311</DisableSpecificWarnings>
+      <ForcedIncludeFiles>config.h</ForcedIncludeFiles>
+      <Optimization>Full</Optimization>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
+      <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\out\$(Platform)$(Configuration)\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>version.lib;Crypt32.lib;Advapi32.lib;wldap32.lib;libcurl.lib;zlib.lib;ots.lib;Imm32.lib;libxml.lib;v8_5_7.lib;skia.lib;winmm.lib;Ws2_32.lib;Usp10.lib;Shlwapi.lib;wininet.lib;GDIPlus.lib;DbgHelp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>/FORCE:UNRESOLVED %(AdditionalOptions)</AdditionalOptions>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <ImportLibrary>
+      </ImportLibrary>
+      <ShowProgress>NotSet</ShowProgress>
+      <EntryPointSymbol>
+      </EntryPointSymbol>
+      <GenerateDebugInformation>No</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\config.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\web\AssociatedURLLoader.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\web\ChromeClientImpl.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\web\ColorChooserPopupUIController.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\web\ColorChooserUIController.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\web\CompositionUnderlineVectorBuilder.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\web\ContextFeaturesClientImpl.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\web\ContextMenuClientImpl.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\web\DevToolsEmulator.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\web\DragClientImpl.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\web\EditorClientImpl.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\web\ExternalDateTimeChooser.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\web\ExternalPopupMenu.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\web\FrameLoaderClientImpl.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\web\FullscreenControllerNone.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\web\GraphicsLayerFactoryChromium.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\web\InspectorOverlayImplNone.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\web\LinkHighlight.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\web\OpenedFrameTracker.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\web\PageOverlay.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\web\PageOverlayList.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\web\PageWidgetDelegate.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\web\painting\ContinuousPainter.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\web\PluginPlaceholderImpl.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\web\PopupMenuImpl.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\web\RemoteFrameClientImpl.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\web\ResizeViewportAnchor.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\web\RotationViewportAnchor.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\web\SpellCheckerClientImpl.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\web\StorageClientImpl.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\web\StorageQuotaClientImpl.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\web\SuspendableScriptExecutor.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\web\ValidationMessageClientImpl.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\web\WebCachedURLRequest.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\web\WebColorSuggestion.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\web\WebDataSourceImpl.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\web\WebDateTimeSuggestion.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\web\WebDevToolsAgentImplNone.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\web\WebDocument.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\web\WebDocumentType.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\web\WebDOMEvent.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\web\WebElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\web\WebElementCollection.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\web\WebFileChooserCompletionImpl.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\web\WebFormControlElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\web\WebFormElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\web\WebFrame.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\web\WebFrameWidgetImpl.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\web\WebGraphicsContextImpl.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\web\WebHistoryItem.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\web\WebHitTestResult.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\web\WebInputElement.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\web\WebInputEventConversion.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\web\WebKit.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\web\WebLocalFrameImpl.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\web\WebMediaPlayerClientImpl.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\web\WebNode.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\web\WebNodeList.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\web\WebPagePopupImpl.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\web\WebPluginContainerImpl.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\web\WebPluginLoadObserver.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\web\WebRange.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\web\WebRemoteFrameImpl.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\web\WebScriptController.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\web\WebScriptSource.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\web\WebSearchableFormData.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\web\WebSecurityPolicy.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\web\WebSelection.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\web\WebSerializedScriptValue.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\web\WebSettingsImpl.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\web\WebStorageAreaImpl.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\web\WebStorageNamespaceImpl.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\web\WebTextCheckingCompletionImpl.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\web\WebTextCheckingResult.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\web\WebTextRun.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\web\WebUserGestureIndicator.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\web\WebUserGestureToken.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\web\WebViewImpl.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\web\WorkerContentSettingsClient.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\web\WorkerGlobalScopeProxyProviderImpl.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\web\ChromeClientImpl.h" />
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\web\ColorChooserPopupUIController.h" />
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\web\ColorChooserUIController.h" />
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\web\CompositionUnderlineBuilder.h" />
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\web\CompositionUnderlineVectorBuilder.h" />
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\web\ContextFeaturesClientImpl.h" />
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\web\ContextMenuClientImpl.h" />
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\web\DragClientImpl.h" />
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\web\EditorClientImpl.h" />
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\web\ExternalDateTimeChooser.h" />
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\web\ExternalPopupMenu.h" />
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\web\FrameLoaderClientImpl.h" />
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\web\GraphicsLayerFactoryChromium.h" />
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\web\LinkHighlight.h" />
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\web\NotificationPermissionClientImpl.h" />
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\web\OpenedFrameTracker.h" />
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\web\PageOverlay.h" />
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\web\PageOverlayList.h" />
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\web\PageWidgetDelegate.h" />
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\web\painting\ContinuousPainter.h" />
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\web\PluginPlaceholderImpl.h" />
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\web\PopupMenuImpl.h" />
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\web\RemoteFrameClientImpl.h" />
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\web\ResizeViewportAnchor.h" />
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\web\RotationViewportAnchor.h" />
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\web\SpellCheckerClientImpl.h" />
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\web\StorageClientImpl.h" />
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\web\StorageQuotaClientImpl.h" />
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\web\SuspendableScriptExecutor.h" />
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\web\ValidationMessageClientImpl.h" />
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\web\WebDataSourceImpl.h" />
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\web\WebFileChooserCompletionImpl.h" />
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\web\WebFrameWidgetImpl.h" />
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\web\WebGraphicsContextImpl.h" />
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\web\WebInputEventConversion.h" />
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\web\WebLocalFrameImpl.h" />
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\web\WebMediaPlayerClientImpl.h" />
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\web\WebPagePopupImpl.h" />
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\web\WebPluginContainerImpl.h" />
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\web\WebPluginLoadObserver.h" />
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\web\WebRemoteFrameImpl.h" />
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\web\WebSettingsImpl.h" />
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\web\WebStorageAreaImpl.h" />
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\web\WebStorageNamespaceImpl.h" />
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\web\WebTextCheckingCompletionImpl.h" />
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\web\WebViewImpl.h" />
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\web\WorkerContentSettingsClient.h" />
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\web\WorkerGlobalScopeProxyProviderImpl.h" />
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\config.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
