@@ -497,11 +497,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\minichrome49\third_party\WebKit\Source\modules\compositorworker\CompositorWorker.cpp" />
-    <ClCompile Include="..\..\..\..\minichrome49\third_party\WebKit\Source\modules\compositorworker\CompositorWorkerGlobalScope.cpp" />
-    <ClCompile Include="..\..\..\..\minichrome49\third_party\WebKit\Source\modules\compositorworker\CompositorWorkerManager.cpp" />
-    <ClCompile Include="..\..\..\..\minichrome49\third_party\WebKit\Source\modules\compositorworker\CompositorWorkerMessagingProxy.cpp" />
-    <ClCompile Include="..\..\..\..\minichrome49\third_party\WebKit\Source\modules\compositorworker\CompositorWorkerThread.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\compositorworker\CompositorWorker.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\compositorworker\CompositorWorkerGlobalScope.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\compositorworker\CompositorWorkerManager.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\compositorworker\CompositorWorkerMessagingProxy.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\compositorworker\CompositorWorkerThread.cpp" />
     <ClCompile Include="..\..\base\algorithmvc6.cpp">
       <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">false</WholeProgramOptimization>
       <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</WholeProgramOptimization>
@@ -5304,11 +5304,11 @@
     <ClCompile Include="..\..\third_party\WebKit\Source\wtf\WTFThreadData.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\minichrome49\third_party\WebKit\Source\modules\compositorworker\CompositorWorker.h" />
-    <ClInclude Include="..\..\..\..\minichrome49\third_party\WebKit\Source\modules\compositorworker\CompositorWorkerGlobalScope.h" />
-    <ClInclude Include="..\..\..\..\minichrome49\third_party\WebKit\Source\modules\compositorworker\CompositorWorkerManager.h" />
-    <ClInclude Include="..\..\..\..\minichrome49\third_party\WebKit\Source\modules\compositorworker\CompositorWorkerMessagingProxy.h" />
-    <ClInclude Include="..\..\..\..\minichrome49\third_party\WebKit\Source\modules\compositorworker\CompositorWorkerThread.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\compositorworker\CompositorWorker.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\compositorworker\CompositorWorkerGlobalScope.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\compositorworker\CompositorWorkerManager.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\compositorworker\CompositorWorkerMessagingProxy.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\compositorworker\CompositorWorkerThread.h" />
     <ClInclude Include="..\..\base\command_line.h" />
     <ClInclude Include="..\..\base\debug\alias.h" />
     <ClInclude Include="..\..\base\debug\gdi_debug_util_win.h" />
@@ -9468,7 +9468,7 @@
     <ClInclude Include="..\..\third_party\WebKit\Source\wtf\WTFThreadData.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\..\..\minichrome49\third_party\WebKit\Source\modules\compositorworker\DEPS" />
+    <None Include="..\..\third_party\WebKit\Source\modules\compositorworker\DEPS" />
     <None Include="..\..\gen\blink\core\EventInterfaces.in" />
     <None Include="..\..\third_party\WebKit\Source\core\animation\OWNERS" />
     <None Include="..\..\third_party\WebKit\Source\core\css\parser\CSSGrammar.y" />
