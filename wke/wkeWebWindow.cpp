@@ -190,6 +190,9 @@ LRESULT CALLBACK CWebWindow::_staticWindowProc(HWND hwnd, UINT message, WPARAM w
 
 LRESULT CWebWindow::_windowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+//     String outstring = String::format(" CWebWindow::_windowProc:0x%x \n", message);
+//     OutputDebugStringA(outstring.utf8().data());
+
     switch(message) {
     case WM_CREATE:
         DragAcceptFiles(hwnd, TRUE);
@@ -648,20 +651,22 @@ void CWebWindow::move(int x, int y, int width, int height)
 void CWebWindow::resize(int width, int height)
 {
     POINT point = { 0 };
-    {
-        RECT rect = { 0 };
-        GetWindowRect(m_hWnd, &rect);
-        point.x = rect.left;
-        point.y = rect.top;
+    
+    RECT rect = { 0 };
+    ::GetWindowRect(m_hWnd, &rect);
+    point.x = rect.left;
+    point.y = rect.top;
+    
+    DWORD style = ::GetWindowLong(m_hWnd, GWL_STYLE);
+    style &= WS_CHILD;
+    if (0 != style) {
+        HWND parent = ::GetParent(m_hWnd);
+        ::ScreenToClient(parent, &point);
     }
 
-    if (WS_CHILD == GetWindowLong(m_hWnd, GWL_STYLE))
-    {
-        HWND parent = GetParent(m_hWnd);
-        ScreenToClient(parent, &point);
-    }
+    ::MoveWindow(m_hWnd, point.x, point.y, width, height, FALSE);
+    //::SetWindowPos(m_hWnd, NULL, 0, 0, width, height, SWP_NOZORDER | SWP_NOMOVE);
 
-    MoveWindow(m_hWnd, point.x, point.y, width, height, FALSE);
     CWebView::resize(width, height);
 }
 
