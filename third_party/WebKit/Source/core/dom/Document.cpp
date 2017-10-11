@@ -718,11 +718,8 @@ PassRefPtrWillBeRawPtr<Element> Document::createElement(const AtomicString& loca
             return nullptr;
     }
 
-#ifdef MINIBLINK_NOT_IMPLEMENTED
     if (!typeExtension.isEmpty())
         CustomElementRegistrationContext::setIsAttributeAndTypeExtension(element.get(), typeExtension);
-#endif // MINIBLINK_NOT_IMPLEMENTED
-	notImplemented();
 
     return element.release();
 }
@@ -763,11 +760,8 @@ PassRefPtrWillBeRawPtr<Element> Document::createElementNS(const AtomicString& na
     else
         element = createElement(qName, false);
 
-#ifdef MINIBLINK_NOT_IMPLEMENTED
     if (!typeExtension.isEmpty())
         CustomElementRegistrationContext::setIsAttributeAndTypeExtension(element.get(), typeExtension);
-#endif // MINIBLINK_NOT_IMPLEMENTED
-	notImplemented();
 
     return element.release();
 }
