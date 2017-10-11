@@ -1396,7 +1396,13 @@ void DeprecatedPaintLayer::updateStackingNode()
 {
     ASSERT(!m_stackingNode);
     if (requiresStackingNode())
-        m_stackingNode = adoptPtr(new DeprecatedPaintLayerStackingNode(*layoutObject()));
+        m_stackingNode = adoptPtr(new DeprecatedPaintLayerStackingNode(this));
+}
+
+bool DeprecatedPaintLayer::isInTopLayer() const
+{
+    Node* node = layoutObject()->node();
+    return node && node->isElementNode() && toElement(node)->isInTopLayer();
 }
 
 void DeprecatedPaintLayer::updateScrollableArea()
