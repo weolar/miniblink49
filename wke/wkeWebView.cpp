@@ -130,7 +130,7 @@ void CWebView::loadPostURL(const wchar_t * inUrl,const char * poastData, int nLe
     loadPostURL(String(inUrl).utf8().data(), poastData,nLen);
 }
 
-static bool trimPathBody(const utf8* inUrl, int length, std::vector<char>* out)
+static bool trimPathBody(const utf8* inUrl, int length, bool isFile, std::vector<char>* out)
 {
     out->clear();
 
@@ -141,7 +141,7 @@ static bool trimPathBody(const utf8* inUrl, int length, std::vector<char>* out)
         return false;
 
     int len = 0;
-    if (fileBody[1] != ':') { // xxx.htm
+    if (fileBody[1] != ':' && isFile) { // xxx.htm
         Vector<WCHAR> filenameBuffer;
         filenameBuffer.resize(MAX_PATH + 3);
 
@@ -169,7 +169,7 @@ static bool trimPathBody(const utf8* inUrl, int length, std::vector<char>* out)
     return true;
 }
 
-static bool trimPath(const utf8* inUrl, std::vector<char>* out)
+static bool trimPath(const utf8* inUrl, bool isFile, std::vector<char>* out)
 {
     int length = strlen(inUrl);
     const char* fileHead = "file:///";
@@ -187,18 +187,18 @@ static bool trimPath(const utf8* inUrl, std::vector<char>* out)
             if (fileBodyLength < 3)
                 return false;
 
-            return trimPathBody(fileBody, fileBodyLength, out);
+            return trimPathBody(fileBody, fileBodyLength, isFile, out);
         } else {
-            return trimPathBody(fileBody, fileBodyLength, out); // xxx.htm  c:/xxx.htm
+            return trimPathBody(fileBody, fileBodyLength, isFile, out); // xxx.htm  c:/xxx.htm
         }
     } else
-        return trimPathBody(fileBody, fileBodyLength, out); // xxx.htm  c:/xxx.htm
+        return trimPathBody(fileBody, fileBodyLength, isFile, out); // xxx.htm  c:/xxx.htm
 }
 
-void CWebView::loadURL(const utf8* inUrl)
+void CWebView::_loadURL(const utf8* inUrl, bool isFile)
 {
     std::vector<char> inUrlBuf;
-    if (!trimPath(inUrl, &inUrlBuf))
+    if (!trimPath(inUrl, isFile, &inUrlBuf))
         return;
 
     //cexer 必须调用String::fromUTF8显示构造第二个参数，否则String::String会把inUrl当作latin1处理。
@@ -219,6 +219,11 @@ void CWebView::loadURL(const utf8* inUrl)
     request.setCachePolicy(blink::WebURLRequest::UseProtocolCachePolicy);
     request.setHTTPMethod(blink::WebString::fromUTF8("GET"));
     m_webPage->loadRequest(content::WebPage::kMainFrameId, request);
+}
+
+void CWebView::loadURL(const utf8* inUrl)
+{
+    _loadURL(inUrl, false);
 }
 
 void CWebView::loadURL(const wchar_t* url)
@@ -267,12 +272,8 @@ void CWebView::loadFile(const wchar_t* filename)
     if (length < 4)
         return;
 
-    String filenameUTF8(filename, length);
-
-    Vector<WCHAR> filenameBuffer;
-    filenameBuffer.resize(MAX_PATH + 1);
-    memcpy(filenameBuffer.data(), filename, length * sizeof(wchar_t));
-    loadURL(filenameBuffer.data());
+    String filenameA(filename, length);
+    _loadURL(WTF::ensureStringToUTF8(filenameA, true).data(), true);
 }
 
 const utf8* CWebView::url() const
