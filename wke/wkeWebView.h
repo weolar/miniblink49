@@ -104,7 +104,7 @@ public:
 
     const utf8* url() const override;
 
-	void setUserAgent(const utf8 * useragent);
+	  void setUserAgent(const utf8 * useragent);
     void setUserAgent(const wchar_t * useragent);
 
     bool isLoading() const;
@@ -135,11 +135,11 @@ public:
     void layoutIfNeeded() override;
     void paint(void* bits, int pitch) override;
     void paint(void* bits, int bufWid, int bufHei, int xDst, int yDst, int w, int h, int xSrc, int ySrc, bool fKeepAlpha);
-	void repaintIfNeeded();
+    void repaintIfNeeded();
     HDC viewDC();
     HWND windowHandle() const;
-	void setHandle(HWND wnd);
-	void setHandleOffset(int x, int y);
+    void setHandle(HWND wnd);
+    void setHandleOffset(int x, int y);
     bool canGoBack() const override;
     bool goBack() override;
     bool canGoForward() const override;
@@ -237,6 +237,8 @@ protected:
     void _initHandler();
     void _initPage();
     void _initMemoryDC();
+
+    void _loadURL(const utf8* inUrl, bool isFile);
 
     std::map<std::string, void*> m_userKayValues;
 
