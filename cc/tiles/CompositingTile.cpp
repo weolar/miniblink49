@@ -18,38 +18,42 @@ namespace cc {
 DEFINE_DEBUG_ONLY_GLOBAL(WTF::RefCountedLeakCounter, compositingTileCounter, ("compositingTileCounter"));
 #endif
 
-CompositingTile::CompositingTile(CompositingLayer* compositingLayer, int xIndex, int yIndex)
+CompositingTile::CompositingTile()
+    : TileBase()
 {
-    m_compositingLayer = compositingLayer;
+
+}
+
+TileBase* CompositingTile::init(void* parent, int xIndex, int yIndex)
+{
+    m_compositingLayer = (CompositingLayer*)parent;
     m_isNotInit = true;
     m_refCnt = 1;
     m_xIndex = xIndex;
     m_yIndex = yIndex;
     m_postion = blink::IntRect(xIndex * kDefaultTileWidth, yIndex * kDefaultTileHeight, kDefaultTileWidth, kDefaultTileHeight);
     m_bitmap = nullptr;
-
 #ifndef NDEBUG
     compositingTileCounter.increment();
 #endif
+    return this;
 }
 
 CompositingTile::~CompositingTile()
 {
     clearBitmap();
-    //m_tileGrid->unregisterTile(this);
-
 #ifndef NDEBUG
     compositingTileCounter.decrement();
 #endif
 }
 
-void CompositingTile::ref()
+void CompositingTile::ref(const blink::WebTraceLocation&)
 {
 	  ASSERT(m_refCnt > 0);
 	  (void)sk_atomic_fetch_add(&m_refCnt, +1, sk_memory_order_relaxed);  // No barrier required.
 }
 
-void CompositingTile::unref()
+void CompositingTile::unref(const blink::WebTraceLocation&)
 {
     ASSERT(m_refCnt > 0);
     if (1 == sk_atomic_fetch_add(&m_refCnt, -1, sk_memory_order_acq_rel)) {

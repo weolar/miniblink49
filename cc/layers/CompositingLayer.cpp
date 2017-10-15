@@ -19,6 +19,7 @@
 #include "cc/raster/SkBitmapRefWrap.h"
 #include "cc/tiles/CompositingTile.h"
 #include "cc/tiles/TileWidthHeight.h"
+#include "cc/tiles/TilesAddr.h"
 #include "cc/playback/TileActionInfo.h"
 
 namespace blink {
@@ -52,7 +53,8 @@ DEFINE_DEBUG_ONLY_GLOBAL(WTF::RefCountedLeakCounter, compositingLayerCounter, ("
 CompositingLayer::CompositingLayer(int id)
 {
     m_prop = new DrawToCanvasProperties();
-    m_tiles = new Vector<CompositingTile*>();
+    //m_tiles = new Vector<CompositingTile*>();
+    m_tilesAddr = new TilesAddr(this);
     m_numTileX = 0;
     m_numTileY = 0;
     m_parent = nullptr;
@@ -69,11 +71,13 @@ CompositingLayer::CompositingLayer(int id)
 CompositingLayer::~CompositingLayer()
 {
     delete m_prop;
-    for (size_t i = 0; i < m_tiles->size(); ++i) {
-        CompositingTile* tile = m_tiles->at(i);
-        tile->unref();
-    }
-    delete m_tiles;
+//     for (size_t i = 0; i < m_tiles->size(); ++i) {
+//         CompositingTile* tile = m_tiles->at(i);
+//         tile->unref(FROM_HERE);
+//     }
+//     delete m_tiles;
+    delete m_tilesAddr;
+
     ASSERT(!m_parent);
 
 //     String outString = String::format("CompositingLayer::~~~~~~~~CompositingLayer:%p %d \n", this, m_id);
@@ -188,45 +192,48 @@ void CompositingLayer::updataDrawProp(DrawToCanvasProperties* prop)
 
 size_t CompositingLayer::tilesSize() const
 {
-    if (!m_tiles)
-        return 0;
-    return m_tiles->size();
+//     if (!m_tiles)
+//         return 0;
+//     return m_tiles->size();
+    return m_tilesAddr->getSize();
 }
 
-CompositingTile* CompositingLayer::getTileByXY(int xIndex, int yIndex)
-{
-    if (m_numTileX <= xIndex || m_numTileY <= yIndex)
-        return nullptr;
-    return *(m_tiles->data() + m_numTileX * yIndex + xIndex);
-}
+// CompositingTile* CompositingLayer::getTileByXY(int xIndex, int yIndex)
+// {
+//     if (m_numTileX <= xIndex || m_numTileY <= yIndex)
+//         return nullptr;
+//     return *(m_tiles->data() + m_numTileX * yIndex + xIndex);
+// }
 
 void CompositingLayer::updataTile(int newIndexNumX, int newIndexNumY, DrawToCanvasProperties* prop)
 {
-    Vector<CompositingTile*>* newTiles = new Vector<CompositingTile*>;
-    newTiles->resize(newIndexNumX * newIndexNumY);
-    int index = 0;
-    for (int y = 0; y < newIndexNumY; ++y) {
-        for (int x = 0; x < newIndexNumX; ++x) {
-            CompositingTile* tile = getTileByXY(x, y);
-            if (!tile)
-                tile = new CompositingTile(this, x, y);
-            else {
-                ASSERT(x == tile->xIndex() && y == tile->yIndex());
-                tile->ref();
-            }
+//     Vector<CompositingTile*>* newTiles = new Vector<CompositingTile*>;
+//     newTiles->resize(newIndexNumX * newIndexNumY);
+//     int index = 0;
+//     for (int y = 0; y < newIndexNumY; ++y) {
+//         for (int x = 0; x < newIndexNumX; ++x) {
+//             CompositingTile* tile = getTileByXY(x, y);
+//             if (!tile)
+//                 tile = new CompositingTile(this, x, y);
+//             else {
+//                 ASSERT(x == tile->xIndex() && y == tile->yIndex());
+//                 tile->ref(FROM_HERE);
+//             }
+// 
+//             newTiles->at(index) = tile;
+//             ++index;
+//         }
+//     }
+// 
+//     for (size_t i = 0; i < m_tiles->size(); ++i) {
+//         CompositingTile* tile = m_tiles->at(i);
+//         tile->unref(FROM_HERE);
+//     }
+// 
+//     delete m_tiles;
+//     m_tiles = newTiles;
+    TilesAddr::realloByNewXY(&m_tilesAddr, newIndexNumX, newIndexNumY);
 
-            newTiles->at(index) = tile;
-            ++index;
-        }
-    }
-
-    for (size_t i = 0; i < m_tiles->size(); ++i) {
-        CompositingTile* tile = m_tiles->at(i);
-        tile->unref();
-    }
-
-    delete m_tiles;
-    m_tiles = newTiles;
     m_numTileX = newIndexNumX;
     m_numTileY = newIndexNumY;
 
@@ -240,10 +247,10 @@ void CompositingLayer::cleanupUnnecessaryTile(const WTF::Vector<TileActionInfo*>
 {
     for (size_t i = 0; i < tiles.size(); ++i) {
         TileActionInfo* info = tiles[i];
-        CompositingTile* tile = getTileByXY(info->xIndex, info->yIndex);
-        ASSERT(tile == m_tiles->at(info->index));
-        
+        CompositingTile* tile = (CompositingTile*)m_tilesAddr->getTileByXY(info->xIndex, info->yIndex, [] { return new CompositingTile(); });
+        ASSERT(tile == m_tilesAddr->getTileByIndex(info->index));        
         tile->clearBitmap();
+        m_tilesAddr->remove(tile);
     }
 }
 
@@ -252,27 +259,13 @@ void CompositingLayer::blendToTiles(TileActionInfoVector* willRasteredTiles, con
     const Vector<TileActionInfo*>& infos = willRasteredTiles->infos();
     for (size_t i = 0; i < infos.size(); ++i) {
         TileActionInfo* info = infos[i];
-        CompositingTile* tile = getTileByXY(info->xIndex, info->yIndex);
-        ASSERT(tile == m_tiles->at(info->index));
+        CompositingTile* tile = (CompositingTile*)m_tilesAddr->getTileByXY(info->xIndex, info->yIndex, [] { return new CompositingTile(); });
+        ASSERT(tile == m_tilesAddr->getTileByIndex(info->index));
+        //ASSERT(tile == m_tiles->at(info->index));
 
         blendToTile(tile, bitmap, dirtyRect);
     }
 }
-
-#if 0 // debug
-bool saveDumpFile(const String& url, char* buffer, unsigned int size) {
-    HANDLE hFile = CreateFileA(url.utf8().data(),
-        GENERIC_WRITE, FILE_SHARE_WRITE, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-
-    if (INVALID_HANDLE_VALUE != hFile) {
-        DWORD dwSize = 0;
-        WriteFile(hFile, buffer, size, &dwSize, NULL);
-        CloseHandle(hFile);
-        return TRUE;
-    }
-    return FALSE;
-}
-#endif
 
 void CompositingLayer::blendToTile(CompositingTile* tile, const SkBitmap& bitmap, const SkRect& dirtyRect)
 {
@@ -473,8 +466,9 @@ void CompositingLayer::drawToCanvas(LayerTreeHost* host, blink::WebCanvas* canva
     if (!drawsContent())
         return;
 
-    for (size_t i = 0; i < m_tiles->size(); ++i) {
-        CompositingTile* tile = m_tiles->at(i);
+    for (TilesAddr::iterator it = m_tilesAddr->begin(); it != m_tilesAddr->end(); ++it/*size_t i = 0; i < m_tiles->size(); ++i*/) {
+        //CompositingTile* tile = m_tiles->at(i);
+        CompositingTile* tile = (CompositingTile*)it->value;
         if (!tile->postion().intersects(clip) || !tile->bitmap())
             continue;
 
