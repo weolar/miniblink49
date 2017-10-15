@@ -24,6 +24,8 @@ class SkPicture;
 namespace cc {
 
 class Tile;
+
+class TilesAddr;
 class RasterTaskGroup;
 
 // 理论上由DisplayListRecordingSource统一调用本类
@@ -46,7 +48,7 @@ public:
     bool isInWillBeShowedArea(Tile* tile) const;
     blink::IntRect getInWillBeShowedAreaPos() const;
 
-    Tile* getTileByXY(int xIndex, int yIndex);
+    //Tile* getTileByXY(int xIndex, int yIndex);
     void invalidate(const blink::IntRect& dirtyRect, bool directSaveToDirtyRects);
     //void appendPendingInvalidateRect(const blink::IntRect& r);
 
@@ -59,7 +61,8 @@ public:
     void lockTiles();
     void unlockTiles();
 
-    Vector<Tile*>* m_tiles; // for test!~!!!!!!!!!!!!!!
+    //Vector<Tile*>* m_tiles; // for test!~!!!!!!!!!!!!!!
+    size_t getRegisterTilesSize() const { return m_registerTiles.size(); }
 
 private:
     void updateTilePriorityAndCommitInvalidate(Vector<size_t>* hasBitmapTiles);
@@ -86,6 +89,7 @@ private:
     WTF::Mutex* m_registerTileMutex; // for debug
     int m_rasterTaskCount;
 
+    TilesAddr* m_tilesAddr;
     WTF::Mutex* m_tilesMutex; // from layerTreeHost()->tilesMutex()
 };
 
