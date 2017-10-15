@@ -81,8 +81,6 @@ LayerTreeHost::LayerTreeHost(LayerTreeHostClent* hostClient, LayerTreeHostUiThre
     gLayerTreeHost = this;
 }
 
-extern WTF::Vector<LayerChangeAction*>* gTestActions;
-
 LayerTreeHost::~LayerTreeHost()
 {
     m_isDestroying = true;
@@ -98,21 +96,9 @@ LayerTreeHost::~LayerTreeHost()
     m_compositeMutex.unlock();
 
     //while (0 != m_paintToMemoryCanvasInUiThreadTaskCount) { ::Sleep(20); }
- 
-    int finishCount = 0;
-    do {
-        m_compositeMutex.lock();
-        finishCount = m_drawFrameFinishCount;
-        m_compositeMutex.unlock();
-        Sleep(20);
-    } while (0 != finishCount);
+    waitForApplyActions();
 
-    do {
-        m_compositeMutex.lock();
-        finishCount = m_requestApplyActionsFinishCount;
-        m_compositeMutex.unlock();
-        Sleep(20);
-    } while (0 != finishCount);
+    ASSERT(0 == m_actionsFrameGroup->getFramesSize());
 
     if (m_compositeThread)
         delete m_compositeThread;
@@ -127,12 +113,16 @@ LayerTreeHost::~LayerTreeHost()
     }
     m_liveLayers.clear();
 
+    ASSERT(0 == m_actionsFrameGroup->getFramesSize());
+
     for (WTF::HashMap<int, CompositingLayer*>::iterator it = m_liveCCLayers.begin(); m_liveCCLayers.end() != it; ++it) {
         CompositingLayer* ccLayer = it->value;
         ccLayer->setParent(nullptr);
         delete ccLayer;
     }
     m_liveCCLayers.clear();
+
+    ASSERT(0 == m_actionsFrameGroup->getFramesSize());
     
     for (size_t i = 0; i < m_dirtyLayersGroup.size(); ++i) {
         DirtyLayers* dirtyLayers = m_dirtyLayersGroup[i];
@@ -140,15 +130,41 @@ LayerTreeHost::~LayerTreeHost()
     }
     m_dirtyLayersGroup.clear();
 
+    ASSERT(0 == m_actionsFrameGroup->getFramesSize());
+
     delete m_rasterNotifMutex;
     m_rasterNotifMutex = nullptr;
+
+    ASSERT(0 == m_actionsFrameGroup->getFramesSize());
 
     delete m_tilesMutex;
     m_tilesMutex = nullptr;
 
+    waitForApplyActions();
+    ASSERT(0 == m_actionsFrameGroup->getFramesSize());
+
     delete m_actionsFrameGroup;
     m_actionsFrameGroup = nullptr;
 }
+
+void LayerTreeHost::waitForApplyActions()
+{
+    int finishCount = 0;
+    do {
+        m_compositeMutex.lock();
+        finishCount = m_drawFrameFinishCount;
+        m_compositeMutex.unlock();
+        Sleep(20);
+    } while (0 != finishCount);
+
+    do {
+        m_compositeMutex.lock();
+        finishCount = m_requestApplyActionsFinishCount;
+        m_compositeMutex.unlock();
+        Sleep(20);
+    } while (0 != finishCount);
+}
+
 
 bool LayerTreeHost::isDestroying() const
 {
@@ -755,7 +771,11 @@ blink::IntRect LayerTreeHost::getClientRect()
 void LayerTreeHost::requestDrawFrameToRunIntoCompositeThread()
 {
     WTF::Locker<WTF::Mutex> locker(m_compositeMutex);
-    if (0 != m_drawFrameCount || !m_compositeThread)
+    if (!m_compositeThread) {
+        RELEASE_ASSERT(!m_uiThreadClient);
+        return;
+    }
+    if (0 != m_drawFrameCount)
         return;
 
     atomicIncrement(&m_drawFrameCount);
@@ -766,15 +786,19 @@ void LayerTreeHost::requestDrawFrameToRunIntoCompositeThread()
 void LayerTreeHost::requestApplyActionsToRunIntoCompositeThread(bool needCheck)
 {
     WTF::Locker<WTF::Mutex> locker(m_compositeMutex);
-    if (0 != m_requestApplyActionsCount || !m_compositeThread)
+    if (!m_compositeThread) {
+        RELEASE_ASSERT(!m_uiThreadClient);
+        return;
+    }
+    if (0 != m_requestApplyActionsCount && !needCheck) // 如果needCheck==true，则表示是退出流程，必须执行一次onApply
         return;
 
     atomicIncrement(&m_requestApplyActionsCount);
     atomicIncrement(&m_requestApplyActionsFinishCount);
-    m_compositeThread->postTask(FROM_HERE, WTF::bind(&LayerTreeHost::applyActionsInCompositeThread, this, needCheck));
+    m_compositeThread->postTask(FROM_HERE, WTF::bind(&LayerTreeHost::onApplyActionsInCompositeThread, this, needCheck));
 }
 
-void LayerTreeHost::applyActionsInCompositeThread(bool needCheck)
+void LayerTreeHost::onApplyActionsInCompositeThread(bool needCheck)
 {
     atomicDecrement(&m_requestApplyActionsCount);
     applyActions(needCheck);
@@ -803,7 +827,8 @@ void LayerTreeHost::clearCanvas(SkCanvas* canvas, const IntRect& rect, bool useL
     canvas->drawRect(skrc, clearPaint);
 }
 
-static void mergeDirty(Vector<blink::IntRect>* dirtyRects) {
+static void mergeDirty(Vector<blink::IntRect>* dirtyRects)
+{
     const bool forceMerge = false;
     do {
         int nDirty = (int)dirtyRects->size();
