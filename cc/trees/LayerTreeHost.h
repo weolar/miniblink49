@@ -176,7 +176,8 @@ public:
     void appendPendingRepaintRect(SkRect r);
 private:
     void requestPaintToMemoryCanvasInUiThread(const blink::IntRect& r);
-    void applyActionsInCompositeThread(bool needCheck);
+    void onApplyActionsInCompositeThread(bool needCheck);
+    void waitForApplyActions();
     void drawFrameInCompositeThread();
     void paintToMemoryCanvasInUiThread(const blink::IntRect& paintRect);
     void paintToMemoryCanvas(const blink::IntRect& r);

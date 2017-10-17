@@ -9,6 +9,8 @@
 
 #include "public/platform/WebTraceLocation.h" // TODO
 
+#include "cc/tiles/TileBase.h"
+
 class SkBitmap;
 
 namespace cc_blink {
@@ -35,17 +37,18 @@ private:
     bool m_isRef;
 };
 
-class Tile {
+class Tile : public TileBase {
 public:
-    Tile(TileGrid* tileGrid, int xIndex, int yIndex);
+    Tile();
     ~Tile();
 
-    void ref(const blink::WebTraceLocation&);
-    void unref(const blink::WebTraceLocation&);
+    virtual TileBase* init(void* parent, int xIndex, int yIndex) override;
+    virtual void ref(const blink::WebTraceLocation&) override;
+    virtual void unref(const blink::WebTraceLocation&) override;
     int32_t getRefCnt() const;
 
-    int xIndex() const { return m_xIndex; }
-    int yIndex() const { return m_yIndex; }
+    virtual int xIndex() const override { return m_xIndex; };
+    virtual int yIndex() const override { return m_yIndex; };
     Mutex& mutex() { return m_mutex; }
 
 //     SkBitmap* bitmap() { return m_bitmap; }

@@ -19,6 +19,7 @@ struct TileActionInfo;
 class TileActionInfoVector;
 class SkBitmapRefWrap;
 class LayerTreeHost;
+class TilesAddr;
 
 class CompositingLayer {
 public:
@@ -53,7 +54,7 @@ public:
     bool opaque() const;
     float opacity() const;
 
-    CompositingTile* getTileByXY(int xIndex, int yIndex);
+    //CompositingTile* getTileByXY(int xIndex, int yIndex);
     void updataTile(int newIndexNumX, int newIndexNumY, DrawToCanvasProperties* prop);
     void cleanupUnnecessaryTile(const WTF::Vector<TileActionInfo*>& tiles);
 
@@ -72,7 +73,8 @@ protected:
     int m_id;
     DrawToCanvasProperties* m_prop;
 
-    WTF::Vector<CompositingTile*>* m_tiles;
+    //WTF::Vector<CompositingTile*>* m_tiles;
+    TilesAddr* m_tilesAddr;
     int m_numTileX;
     int m_numTileY;
 

@@ -125,15 +125,84 @@ void CWebView::loadPostURL(const utf8* inUrl, const char * poastData, int nLen )
     m_webPage->loadRequest(content::WebPage::kMainFrameId, request);
 }
 
-void CWebView::loadPostURL(const wchar_t * inUrl,const char * poastData,int nLen )
+void CWebView::loadPostURL(const wchar_t * inUrl,const char * poastData, int nLen)
 {
     loadPostURL(String(inUrl).utf8().data(), poastData,nLen);
 }
 
-void CWebView::loadURL(const utf8* inUrl)
+static bool trimPathBody(const utf8* inUrl, int length, bool isFile, std::vector<char>* out)
 {
+    out->clear();
+
+    const char* fileBody = inUrl;
+    int fileBodyLength = length;
+
+    if (fileBodyLength <= 3)
+        return false;
+
+    int len = 0;
+    if (fileBody[1] != ':' && isFile) { // xxx.htm
+        Vector<WCHAR> filenameBuffer;
+        filenameBuffer.resize(MAX_PATH + 3);
+
+        ::GetModuleFileNameW(NULL, filenameBuffer.data(), MAX_PATH);
+        ::PathRemoveFileSpecW(filenameBuffer.data());
+        int pathLength = wcslen(filenameBuffer.data());
+        if (pathLength <= 1 || pathLength > MAX_PATH)
+            return false;
+
+        if (filenameBuffer[pathLength - 1] != L'\\') {
+            filenameBuffer[pathLength] = L'\\';
+            filenameBuffer[pathLength + 1] = L'\0';
+            pathLength += 1;
+        }
+
+        WTF::WCharToMByte(filenameBuffer.data(), pathLength, out, CP_UTF8);
+        len = out->size();
+    } else { // c:/xxx.htm
+
+    }
+
+    out->resize(len + fileBodyLength);
+    strncpy(&out->at(0) + len, fileBody, fileBodyLength);
+    out->push_back('\0');
+    return true;
+}
+
+static bool trimPath(const utf8* inUrl, bool isFile, std::vector<char>* out)
+{
+    int length = strlen(inUrl);
+    const char* fileHead = "file:///";
+    int fileHeadLength = strlen(fileHead);
+    const char* fileBody = inUrl;
+    int fileBodyLength = length;
+
+    if (length < 3)
+        return false;
+
+    if (length > fileHeadLength) { 
+        if (0 == strncmp(inUrl, fileHead, fileHeadLength)) { // file:///xxx.htm  file:///c:/xxx.htm
+            fileBody = inUrl + fileHeadLength;
+            fileBodyLength = length - fileHeadLength;
+            if (fileBodyLength < 3)
+                return false;
+
+            return trimPathBody(fileBody, fileBodyLength, isFile, out);
+        } else {
+            return trimPathBody(fileBody, fileBodyLength, isFile, out); // xxx.htm  c:/xxx.htm
+        }
+    } else
+        return trimPathBody(fileBody, fileBodyLength, isFile, out); // xxx.htm  c:/xxx.htm
+}
+
+void CWebView::_loadURL(const utf8* inUrl, bool isFile)
+{
+    std::vector<char> inUrlBuf;
+    if (!trimPath(inUrl, isFile, &inUrlBuf))
+        return;
+
     //cexer 必须调用String::fromUTF8显示构造第二个参数，否则String::String会把inUrl当作latin1处理。
-    blink::KURL url(blink::ParsedURLString, inUrl);
+    blink::KURL url(blink::ParsedURLString, &inUrlBuf[0]);
     if (!url.isValid())
         url.setProtocol("http:");
 
@@ -145,11 +214,16 @@ void CWebView::loadURL(const utf8* inUrl)
         return;
     }
 
-    m_url = inUrl;
+    m_url = &inUrlBuf[0];
     blink::WebURLRequest request(url);
     request.setCachePolicy(blink::WebURLRequest::UseProtocolCachePolicy);
     request.setHTTPMethod(blink::WebString::fromUTF8("GET"));
     m_webPage->loadRequest(content::WebPage::kMainFrameId, request);
+}
+
+void CWebView::loadURL(const utf8* inUrl)
+{
+    _loadURL(inUrl, false);
 }
 
 void CWebView::loadURL(const wchar_t* url)
@@ -198,16 +272,8 @@ void CWebView::loadFile(const wchar_t* filename)
     if (length < 4)
         return;
 
-    String filenameUTF8(filename, length);
-
-    Vector<WCHAR> filenameBuffer;
-    filenameBuffer.resize(MAX_PATH + 1);
-    if (filename[1] != ':') {
-        ::GetModuleFileNameW(NULL, filenameBuffer.data(), MAX_PATH);
-        ::PathRemoveFileSpecW(filenameBuffer.data());
-        ::PathAppend(filenameBuffer.data(), filenameUTF8.charactersWithNullTermination().data());
-    }
-    loadURL(filenameBuffer.data());
+    String filenameA(filename, length);
+    _loadURL(WTF::ensureStringToUTF8(filenameA, true).data(), true);
 }
 
 const utf8* CWebView::url() const

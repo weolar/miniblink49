@@ -7,7 +7,8 @@
 #include "third_party/WebKit/Source/platform/geometry/IntRect.h"
 #include "third_party/skia/include/core/SkColor.h"
 
-#include "public/platform/WebTraceLocation.h" // TODO
+#include "public/platform/WebTraceLocation.h"
+#include "cc/tiles/TileBase.h"
 
 class SkBitmap;
 
@@ -19,17 +20,18 @@ namespace cc {
 
 class CompositingLayer;
 
-class CompositingTile {
+class CompositingTile : public TileBase {
 public:
-    CompositingTile(CompositingLayer* compositingLayer, int xIndex, int yIndex);
+    CompositingTile();
     ~CompositingTile();
 
-    void ref();
-    void unref();
+    virtual TileBase* init(void* parent, int xIndex, int yIndex) override;
+    virtual void ref(const blink::WebTraceLocation&) override;
+    virtual void unref(const blink::WebTraceLocation&) override;
     int32_t getRefCnt() const;
 
-    int xIndex() const { return m_xIndex; }
-    int yIndex() const { return m_yIndex; }
+    virtual int xIndex() const override { return m_xIndex; }
+    virtual int yIndex() const override { return m_yIndex; }
 
     SkBitmap* bitmap() { return m_bitmap; }
     void clearBitmap();
