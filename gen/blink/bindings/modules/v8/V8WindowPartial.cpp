@@ -908,7 +908,7 @@ static void webkitOfflineAudioContextConstructorGetterCallback(v8::Local<v8::Nam
 
 static void fetchMethodPromise(const v8::FunctionCallbackInfo<v8::Value>& info, ExceptionState& exceptionState)
 {
-#ifdef MINIBLINK_NOT_IMPLEMENTED
+#if 1 // def MINIBLINK_NOT_IMPLEMENTED
     if (UNLIKELY(info.Length() < 1)) {
         setMinimumArityTypeError(exceptionState, 1, info.Length());
         return;
@@ -937,6 +937,7 @@ static void fetchMethodPromise(const v8::FunctionCallbackInfo<v8::Value>& info, 
         return;
     }
     v8SetReturnValue(info, result.v8Value());
+    return;
 #endif
     v8SetReturnValue(info, exceptionState.reject(ScriptState::current(info.GetIsolate())).v8Value());
 }
@@ -944,10 +945,11 @@ static void fetchMethodPromise(const v8::FunctionCallbackInfo<v8::Value>& info, 
 static void fetchMethod(const v8::FunctionCallbackInfo<v8::Value>& info)
 {
     ExceptionState exceptionState(ExceptionState::ExecutionContext, "fetch", "Window", info.Holder(), info.GetIsolate());
-#ifdef MINIBLINK_NOT_IMPLEMENTED
+#if 1 // def MINIBLINK_NOT_IMPLEMENTED
     fetchMethodPromise(info, exceptionState);
     if (exceptionState.hadException())
         v8SetReturnValue(info, exceptionState.reject(ScriptState::current(info.GetIsolate())).v8Value());
+    return;
 #endif
     v8SetReturnValue(info, exceptionState.reject(ScriptState::current(info.GetIsolate())).v8Value());
 }
