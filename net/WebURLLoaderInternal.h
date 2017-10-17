@@ -29,6 +29,7 @@
 #include "content/web_impl_win/WebURLLoaderImplCurl.h"
 
 #include "net/MultipartHandle.h"
+#include "net/SharedMemoryDataConsumerHandle.h"
 #include "third_party/WebKit/public/platform/WebURLLoader.h"
 #include "third_party/WebKit/public/platform/WebURLResponse.h"
 #include "third_party/WebKit/public/platform/WebURLError.h"
@@ -137,6 +138,8 @@ public:
     State m_state;
 
     Vector<WebURLLoaderManagerMainTask*> m_syncTasks;
+
+    SharedMemoryDataConsumerHandle::Writer* m_bodyStreamWriter;
 
     String m_debugPath;
 
