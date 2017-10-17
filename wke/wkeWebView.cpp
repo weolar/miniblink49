@@ -458,14 +458,14 @@ HWND CWebView::windowHandle() const
 
 void CWebView::setHandle(HWND wnd)
 {
-	m_hWnd = wnd;
-	m_webPage->setHWND(wnd);
+    m_hWnd = wnd;
+    m_webPage->setHWND(wnd);
 }
 
 void CWebView::setHandleOffset(int x, int y)
 {
-	blink::IntPoint offset(x, y);
-	m_webPage->setHwndRenderOffset(offset);
+    blink::IntPoint offset(x, y);
+    m_webPage->setHwndRenderOffset(offset);
 }
 
 void CWebView::paint(void* bits, int pitch)
@@ -1060,14 +1060,14 @@ void CWebView::onDocumentReady(wkeDocumentReadyCallback callback, void* callback
 
 void CWebView::onLoadUrlBegin(wkeLoadUrlBeginCallback callback, void* callbackParam)
 {
-	m_webPage->wkeHandler().loadUrlBeginCallback = callback;
-	m_webPage->wkeHandler().loadUrlBeginCallbackParam = callbackParam;
+    m_webPage->wkeHandler().loadUrlBeginCallback = callback;
+    m_webPage->wkeHandler().loadUrlBeginCallbackParam = callbackParam;
 }
 
 void CWebView::onLoadUrlEnd(wkeLoadUrlEndCallback callback, void* callbackParam)
 {
-	m_webPage->wkeHandler().loadUrlEndCallback = callback;
-	m_webPage->wkeHandler().loadUrlEndCallbackParam = callbackParam;
+    m_webPage->wkeHandler().loadUrlEndCallback = callback;
+    m_webPage->wkeHandler().loadUrlEndCallbackParam = callbackParam;
 }
 
 void CWebView::onDidCreateScriptContext(wkeDidCreateScriptContextCallback callback, void* callbackParam)
@@ -1090,6 +1090,14 @@ void CWebView::setClientHandler(const wkeClientHandler* handler)
 const wkeClientHandler* CWebView::getClientHandler() const
 {
     return (const wkeClientHandler *)m_webPage->wkeClientHandler();
+}
+
+CWebViewHandler* CWebView::getWkeHandler() const
+{
+    if (!m_webPage)
+        return nullptr;
+
+    return &m_webPage->wkeHandler();
 }
 
 void CWebView::setUserKayValue(const char* key, void* value)
@@ -1167,6 +1175,12 @@ wkeWebView wkeCreateWebView()
 
 void wkeDestroyWebView(wkeWebView webView)
 {
+    if (!webView)
+        return;
+
+    if (webView->getWkeHandler()->m_windowDestroyCallback)
+        webView->getWkeHandler()->m_windowDestroyCallback(webView, webView->getWkeHandler()->m_windowDestroyCallbackParam);
+
     //size_t pos = s_webViews.find(webView);
 
     //ASSERT(pos != notFound);

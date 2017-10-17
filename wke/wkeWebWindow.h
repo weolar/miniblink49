@@ -63,11 +63,11 @@ protected:
     wkeLoadingFinishCallback m_originalLoadingFinishCallback;
     void* m_originalLoadingFinishCallbackParam;
 
-    wkeWindowClosingCallback m_windowClosingCallback;
-    void* m_windowClosingCallbackParam;
-
-    wkeWindowDestroyCallback m_windowDestroyCallback;
-    void* m_windowDestroyCallbackParam;
+//     wkeWindowClosingCallback m_windowClosingCallback;
+//     void* m_windowClosingCallbackParam;
+// 
+//     wkeWindowDestroyCallback m_windowDestroyCallback;
+//     void* m_windowDestroyCallbackParam;
 };
 
 };//namespace wke
