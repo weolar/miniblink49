@@ -465,12 +465,13 @@ void TileGrid::cleanupUnnecessaryTile(Vector<size_t>* hasBitmapTiles)
 
         ++willWithoutBitmapCount;
 
-        MutexLocker locker(tile->mutex());
+        tile->mutex().lock();
         tile->setPriority(TilePriorityNormal);
         tile->setAllBoundDirty();
         tile->clearBitmap();
-        
         cleanupAction->appendTile(index, tile->xIndex(), tile->yIndex());
+        tile->mutex().unlock();
+
         m_tilesAddr->remove(tile);
     }
 
