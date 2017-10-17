@@ -655,7 +655,7 @@ void CWebWindow::resize(int width, int height)
         point.y = rect.top;
     }
 
-    if (WS_CHILD == GetWindowLong(m_hWnd, GWL_STYLE))
+    if ((WS_CHILD & GetWindowLong(m_hWnd, GWL_STYLE)) == WS_CHILD)
     {
         HWND parent = GetParent(m_hWnd);
         ScreenToClient(parent, &point);

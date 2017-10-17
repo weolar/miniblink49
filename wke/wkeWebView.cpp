@@ -815,10 +815,26 @@ bool CWebView::isAwake() const
 void CWebView::setZoomFactor(float factor)
 {
     //m_mainFrame->setPageZoomFactor(factor);
+	if (m_webPage)
+	{
+		WebViewImpl* view = m_webPage->webViewImpl();
+		if (view)
+		{
+			view->setZoomFactorOverride(factor);
+		}
+	}
 }
 
 float CWebView::zoomFactor() const
 {
+	if (m_webPage)
+	{
+		WebViewImpl* view = m_webPage->webViewImpl();
+		if (view)
+		{
+			return view->zoomLevelToZoomFactor(view->zoomLevel());
+		}
+	}
     //return m_mainFrame->pageZoomFactor();
     return 1;
 }
