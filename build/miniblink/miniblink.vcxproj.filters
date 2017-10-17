@@ -781,6 +781,9 @@
     <Filter Include="gen\blink\modules\encoding">
       <UniqueIdentifier>{d38df5f6-c525-4ffb-9239-d84f6bb56d4c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="third_party\Webkit\Source\modules\fetch">
+      <UniqueIdentifier>{71e7f5a2-69e2-41d1-aa16-f8dbab0e49f8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\third_party\WebKit\Source\bindings\core\v8\ActiveDOMCallback.cpp">
@@ -9695,6 +9698,81 @@
     </ClCompile>
     <ClCompile Include="..\..\content\web_impl_win\WaitableEventWin.cpp">
       <Filter>content\web_impl_win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\fetch\Body.cpp">
+      <Filter>third_party\Webkit\Source\modules\fetch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\fetch\BodyStreamBuffer.cpp">
+      <Filter>third_party\Webkit\Source\modules\fetch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\fetch\CompositeDataConsumerHandle.cpp">
+      <Filter>third_party\Webkit\Source\modules\fetch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\fetch\DataConsumerHandleUtil.cpp">
+      <Filter>third_party\Webkit\Source\modules\fetch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\fetch\DataConsumerTee.cpp">
+      <Filter>third_party\Webkit\Source\modules\fetch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\fetch\FetchBlobDataConsumerHandle.cpp">
+      <Filter>third_party\Webkit\Source\modules\fetch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\fetch\FetchDataLoader.cpp">
+      <Filter>third_party\Webkit\Source\modules\fetch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\fetch\FetchHeaderList.cpp">
+      <Filter>third_party\Webkit\Source\modules\fetch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\fetch\FetchManager.cpp">
+      <Filter>third_party\Webkit\Source\modules\fetch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\fetch\FetchRequestData.cpp">
+      <Filter>third_party\Webkit\Source\modules\fetch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\fetch\FetchResponseData.cpp">
+      <Filter>third_party\Webkit\Source\modules\fetch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\fetch\GlobalFetch.cpp">
+      <Filter>third_party\Webkit\Source\modules\fetch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\fetch\Headers.cpp">
+      <Filter>third_party\Webkit\Source\modules\fetch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\fetch\Request.cpp">
+      <Filter>third_party\Webkit\Source\modules\fetch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\fetch\RequestInit.cpp">
+      <Filter>third_party\Webkit\Source\modules\fetch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\fetch\Response.cpp">
+      <Filter>third_party\Webkit\Source\modules\fetch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8Body.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\exported\WebDataConsumerHandle.cpp">
+      <Filter>third_party\Webkit\Source\platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\exported\WebServiceWorkerRequest.cpp">
+      <Filter>third_party\Webkit\Source\platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\exported\WebServiceWorkerResponse.cpp">
+      <Filter>third_party\Webkit\Source\platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8Request.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8Response.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8Headers.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\net\SharedMemoryDataConsumerHandle.cpp">
+      <Filter>net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\net\FixedReceivedData.cpp">
+      <Filter>net</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -22184,6 +22262,81 @@
     <ClInclude Include="..\..\content\web_impl_win\WaitableEvent.h">
       <Filter>content\web_impl_win</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\cc\tiles\TilesAddr.h">
+      <Filter>cc\tiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\cc\tiles\TileBase.h">
+      <Filter>cc\tiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\fetch\Response.h">
+      <Filter>third_party\Webkit\Source\modules\fetch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\fetch\ResponseInit.h">
+      <Filter>third_party\Webkit\Source\modules\fetch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\fetch\Body.h">
+      <Filter>third_party\Webkit\Source\modules\fetch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\fetch\BodyStreamBuffer.h">
+      <Filter>third_party\Webkit\Source\modules\fetch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\fetch\CompositeDataConsumerHandle.h">
+      <Filter>third_party\Webkit\Source\modules\fetch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\fetch\DataConsumerHandleUtil.h">
+      <Filter>third_party\Webkit\Source\modules\fetch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\fetch\DataConsumerTee.h">
+      <Filter>third_party\Webkit\Source\modules\fetch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\fetch\FetchBlobDataConsumerHandle.h">
+      <Filter>third_party\Webkit\Source\modules\fetch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\fetch\FetchDataConsumerHandle.h">
+      <Filter>third_party\Webkit\Source\modules\fetch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\fetch\FetchDataLoader.h">
+      <Filter>third_party\Webkit\Source\modules\fetch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\fetch\FetchHeaderList.h">
+      <Filter>third_party\Webkit\Source\modules\fetch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\fetch\FetchManager.h">
+      <Filter>third_party\Webkit\Source\modules\fetch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\fetch\FetchRequestData.h">
+      <Filter>third_party\Webkit\Source\modules\fetch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\fetch\FetchResponseData.h">
+      <Filter>third_party\Webkit\Source\modules\fetch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\fetch\GlobalFetch.h">
+      <Filter>third_party\Webkit\Source\modules\fetch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\fetch\Headers.h">
+      <Filter>third_party\Webkit\Source\modules\fetch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\fetch\Request.h">
+      <Filter>third_party\Webkit\Source\modules\fetch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\fetch\RequestInit.h">
+      <Filter>third_party\Webkit\Source\modules\fetch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8Body.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\net\SharedMemoryReceivedDataFactory.h">
+      <Filter>net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\net\SharedMemoryDataConsumerHandle.h">
+      <Filter>net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\net\RequestPeer.h">
+      <Filter>net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\net\FixedReceivedData.h">
+      <Filter>net</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\third_party\WebKit\Source\devtools\front_end\Images\src\optimize_png.hashes">
@@ -22263,6 +22416,12 @@
     </None>
     <None Include="..\..\third_party\WebKit\Source\modules\encoding\OWNERS">
       <Filter>third_party\Webkit\Source\modules\encoding</Filter>
+    </None>
+    <None Include="..\..\third_party\WebKit\Source\modules\fetch\DEPS">
+      <Filter>third_party\Webkit\Source\modules\fetch</Filter>
+    </None>
+    <None Include="..\..\third_party\WebKit\Source\modules\fetch\OWNERS">
+      <Filter>third_party\Webkit\Source\modules\fetch</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
