@@ -61,6 +61,8 @@
 #include "net/DataURL.h"
 #include "net/RequestExtraData.h"
 #include "net/BlobResourceLoader.h"
+#include "net/SharedMemoryDataConsumerHandle.h"
+#include "net/FixedReceivedData.h"
 #include "third_party/WebKit/Source/wtf/Threading.h"
 #include "third_party/WebKit/Source/wtf/Vector.h"
 #include "third_party/WebKit/Source/wtf/text/CString.h"
@@ -381,6 +383,13 @@ void WebURLLoaderManager::didReceiveDataOrDownload(WebURLLoaderInternal* job, co
 
     job->m_dataLength += dataLength;
 
+    if (job->m_firstRequest->useStreamOnResponse()) {
+        // We don't support ftp_listening_delegate_ and multipart_delegate_ for
+        // now.
+        // TODO(yhirano): Support ftp listening and multipart.
+        job->m_bodyStreamWriter->addData(adoptPtr(new FixedReceivedData(data, dataLength, encodedDataLength)));
+    }
+
     if (!job->m_firstRequest->downloadToFile()) {
         client->didReceiveData(loader, data, dataLength, encodedDataLength);
         return;
@@ -441,15 +450,83 @@ static void setBlobDataLengthByTempPath(WebURLLoaderInternal* job)
 
 void WebURLLoaderManager::handleDidFinishLoading(WebURLLoaderInternal* job, double finishTime, int64_t totalEncodedDataLength)
 {
+    if (job->m_bodyStreamWriter) {
+        delete job->m_bodyStreamWriter;
+        job->m_bodyStreamWriter = nullptr;
+    }
+
     setBlobDataLengthByTempPath(job);
     job->client()->didFinishLoading(job->loader(), finishTime, totalEncodedDataLength);
 }
 
 void WebURLLoaderManager::handleDidFail(WebURLLoaderInternal* job, const blink::WebURLError& error)
 {
+#if 0
+    String out = String::format("WebURLLoaderManager::handleDidFail: %s\n", job->m_firstRequest->url().string().utf8().data());
+    OutputDebugStringA(out.utf8().data());
+#endif
+    if (job->m_bodyStreamWriter) {
+        job->m_bodyStreamWriter->fail();
+        delete job->m_bodyStreamWriter;
+        job->m_bodyStreamWriter = nullptr;
+    }
+
     setBlobDataLengthByTempPath(job);
     job->client()->didFail(job->loader(), error);
 }
+
+static void cancelBodyStreaming(int jobId)
+{
+    AutoLockJob autoLockJob(WebURLLoaderManager::sharedInstance(), jobId);
+    WebURLLoaderInternal* job = autoLockJob.lock();
+    if (!job)
+        return;
+
+    if (job->m_bodyStreamWriter) {
+        job->m_bodyStreamWriter->fail();
+        delete job->m_bodyStreamWriter;
+        job->m_bodyStreamWriter = nullptr;
+    }
+
+    if (job->client()) {
+        // TODO(yhirano): Set |stale_copy_in_cache| appropriately if possible.
+        WebURLError error;
+        error.domain = WebString(String(job->m_url));
+        error.reason = -3;
+        error.localizedDescription = WebString::fromUTF8("cancelBodyStreaming");
+        job->client()->didFail(job->loader(), error);
+    }
+
+    // Notify the browser process that the request is canceled.
+    WebURLLoaderManager::sharedInstance()->cancel(jobId);
+}
+
+void WebURLLoaderManager::handleDidReceiveResponse(WebURLLoaderInternal* job)
+{
+    const blink::WebURLResponse& response = job->m_response;
+    WebDataConsumerHandle* readHandle = nullptr;
+    if (job->m_firstRequest && job->m_firstRequest->useStreamOnResponse()) {
+        SharedMemoryDataConsumerHandle::BackpressureMode mode = SharedMemoryDataConsumerHandle::kDoNotApplyBackpressure;
+
+        String cacheControl = response.httpHeaderField("Cache-Control");
+        if (cacheControl == "no-store")
+            mode = SharedMemoryDataConsumerHandle::kApplyBackpressure;
+
+        readHandle = new SharedMemoryDataConsumerHandle(mode, WTF::bind(&cancelBodyStreaming, job->m_id), &job->m_bodyStreamWriter);
+
+        // Here |body_stream_writer_| has an indirect reference to |this| and that
+        // creates a reference cycle, but it is not a problem because the cycle
+        // will break if one of the following happens:
+        //  1) The body data transfer is done (with or without an error).
+        //  2) |readHandle| (and its reader) is detached.
+
+        // The client takes |readHandle|'s ownership.
+        // TODO(yhirano): Support ftp listening and multipart
+    }
+
+    job->client()->didReceiveResponse(job->loader(), response, readHandle);
+}
+
 
 // 回调回main线程的task
 class WebURLLoaderManagerMainTask : public WebThread::Task {
@@ -647,7 +724,8 @@ void WebURLLoaderManagerMainTask::handleLocalReceiveResponseOnMainThread(WebURLL
     // TODO: See if there is a better approach for handling this.
     job->m_response.setURL(KURL(ParsedURLString, args->hdr));
     if (job->client() && job->loader() && !job->responseFired())
-        job->client()->didReceiveResponse(job->loader(), job->m_response);
+        WebURLLoaderManager::sharedInstance()->handleDidReceiveResponse(job);
+    
     job->setResponseFired(true);
 }
 
@@ -685,7 +763,6 @@ size_t WebURLLoaderManagerMainTask::handleWriteCallbackOnMainThread(WebURLLoader
     return totalSize;
 }
 
-// 响应http头部
 size_t WebURLLoaderManagerMainTask::handleHeaderCallbackOnMainThread(WebURLLoaderManagerMainTask::Args* args, WebURLLoaderInternal* job)
 {
     if (job->m_cancelled)
@@ -750,38 +827,47 @@ size_t WebURLLoaderManagerMainTask::handleHeaderCallbackOnMainThread(WebURLLoade
             if (!location.isEmpty()) {
                 //重定向
                 KURL newURL = KURL((KURL)(job->firstRequest()->url()), location);
-                blink::WebURLRequest redirectedRequest(*job->firstRequest());
-                redirectedRequest.setURL(newURL);
+                blink::WebURLRequest* redirectedRequest = new blink::WebURLRequest(*job->firstRequest());
+                redirectedRequest->setURL(newURL);
                 if (client && job->loader())
-                    client->willSendRequest(job->loader(), redirectedRequest, job->m_response);
+                    client->willSendRequest(job->loader(), *redirectedRequest, job->m_response);
+#if 0
+                String outString = String::format("redirection:%p, %s\n", job, job->m_response.url().string().utf8().c_str());
+                OutputDebugStringW(outString.charactersWithNullTermination().data());
+#endif
+                job->m_response.initialize();
 
-                job->m_firstRequest->setURL(newURL);
+                delete job->m_firstRequest;
+                job->m_firstRequest = redirectedRequest;
                 return totalSize;
             }
         } else if (isHttpAuthentication(args->httpCode)) {
-            //             ProtectionSpace protectionSpace;
-            //             if (getProtectionSpace(job->m_handle, job->m_response, protectionSpace)) {
-            //                 Credential credential;
-            //                 AuthenticationChallenge challenge(protectionSpace, credential, job->m_authFailureCount, job->m_response, ResourceError());
-            //                 challenge.setAuthenticationClient(job);
-            //                 job->didReceiveAuthenticationChallenge(challenge);
-            //                 job->m_authFailureCount++;
-            //                 return totalSize;
-            //             }
+#if 0
+            ProtectionSpace protectionSpace;
+            if (getProtectionSpace(job->m_handle, job->m_response, protectionSpace)) {
+                Credential credential;
+                AuthenticationChallenge challenge(protectionSpace, credential, job->m_authFailureCount, job->m_response, ResourceError());
+                challenge.setAuthenticationClient(job);
+                job->didReceiveAuthenticationChallenge(challenge);
+                job->m_authFailureCount++;
+                return totalSize;
+            }
+#endif
         }
 
         if (client && job->loader()) {
-            //            if (isHttpNotModified(httpCode)) {
-            //                 const String& url = job->firstRequest()->url().string();
-            //                 if (CurlCacheManager::getInstance().getCachedResponse(url, job->m_response)) {
-            //                     if (job->m_addedCacheValidationHeaders) {
-            //                         job->m_response.setHTTPStatusCode(200);
-            //                         job->m_response.setHTTPStatusText("OK");
-            //                     }
-            //                 }
-            //            }
-            //回到main线程
-            client->didReceiveResponse(job->loader(), job->m_response);
+#if 0
+            if (isHttpNotModified(httpCode)) {
+                 const String& url = job->firstRequest()->url().string();
+                 if (CurlCacheManager::getInstance().getCachedResponse(url, job->m_response)) {
+                     if (job->m_addedCacheValidationHeaders) {
+                         job->m_response.setHTTPStatusCode(200);
+                         job->m_response.setHTTPStatusText("OK");
+                     }
+                 }
+            }
+#endif
+            WebURLLoaderManager::sharedInstance()->handleDidReceiveResponse(job);
             //CurlCacheManager::getInstance().didReceiveResponse(*job, job->m_response);
         }
         job->setResponseFired(true);
@@ -1441,13 +1527,11 @@ int WebURLLoaderManager::addAsynchronousJob(WebURLLoaderInternal* job)
 
     String url = job->firstRequest()->url().string();
 #if 0
-    double timeout = WTF::currentTimeMS();
-    String outString = String::format("addAsynchronousJob:%d, %f, %s\n", m_liveJobs.size(), (float)(timeout - g_timeout), url.utf8().data());
+    String outString = String::format("addAsynchronousJob:%d, %s\n", m_liveJobs.size(), WTF::ensureStringToUTF8(url, true).data());
     OutputDebugStringW(outString.charactersWithNullTermination().data());
-    g_timeout = timeout;
 
-    if (WTF::kNotFound != url.find("messaging.teambition.net/websocket"))
-        OutputDebugStringA("add.find messaging.teambition.net/websocket !\n");
+    if (WTF::kNotFound != url.find("get.json"))
+        OutputDebugStringA("get.json !\n");
 #endif
 
     job->m_manager = this;
@@ -1563,7 +1647,7 @@ void WebURLLoaderManager::dispatchSynchronousJob(WebURLLoaderInternal* job)
         }
     } else {
         if (job->client() && job->loader())
-            job->client()->didReceiveResponse(job->loader(), job->m_response);
+            handleDidReceiveResponse(job);
     }
 
     removeLiveJobs(jobId);
@@ -1820,6 +1904,11 @@ void WebURLLoaderManager::initializeHandleOnIoThread(int jobId, InitializeHandle
 
     // url is in ASCII so latin1() will only convert it to char* without character translation.
     job->m_url = fastStrDup(info->url.c_str());
+
+    KURL url = job->m_firstRequest->url();
+    String urlString = job->m_url;
+    ASSERT(url.string() == urlString);
+
     curl_easy_setopt(job->m_handle, CURLOPT_URL, job->m_url);
 
     if (m_cookieJarFileName)
@@ -1936,6 +2025,7 @@ WebURLLoaderInternal::WebURLLoaderInternal(WebURLLoaderImplCurl* loader, const W
     , m_asynWkeNetSetDataLength(0)
     , m_isWkeNetSetDataBeSetted(false)
 #endif
+    , m_bodyStreamWriter(nullptr)
 {
     m_firstRequest = new blink::WebURLRequest(request);
     KURL url = (KURL)m_firstRequest->url();
@@ -1959,6 +2049,12 @@ WebURLLoaderInternal::~WebURLLoaderInternal()
     fastFree(m_url);
     if (m_customHeaders)
         curl_slist_free_all(m_customHeaders);
+
+    if (m_bodyStreamWriter) {
+        delete m_bodyStreamWriter;
+        m_bodyStreamWriter = nullptr;
+    }
+
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
     if (m_hookBuf)
         free(m_hookBuf);
