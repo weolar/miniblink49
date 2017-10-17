@@ -49,8 +49,8 @@ struct CWebViewHandler {
     wkeLoadingFinishCallback loadingFinishCallback;
     void* loadingFinishCallbackParam;
 
-	wkeDownloadCallback downloadCallback;
-	void* downloadCallbackParam;
+    wkeDownloadCallback downloadCallback;
+    void* downloadCallbackParam;
 
     wkeConsoleCallback consoleCallback;
     void* consoleCallbackParam;
@@ -58,11 +58,11 @@ struct CWebViewHandler {
     wkeCallUiThread callUiThreadCallback;
     void* callUiThreadCallbackParam;
     
-	wkeLoadUrlBeginCallback loadUrlBeginCallback;
-	void* loadUrlBeginCallbackParam;
+    wkeLoadUrlBeginCallback loadUrlBeginCallback;
+    void* loadUrlBeginCallbackParam;
 
-	wkeLoadUrlEndCallback loadUrlEndCallback;
-	void* loadUrlEndCallbackParam;
+    wkeLoadUrlEndCallback loadUrlEndCallback;
+    void* loadUrlEndCallbackParam;
 
     wkeDidCreateScriptContextCallback didCreateScriptContextCallback;
     void* didCreateScriptContextCallbackParam;
@@ -70,7 +70,13 @@ struct CWebViewHandler {
     wkeWillReleaseScriptContextCallback willReleaseScriptContextCallback;
     void* willReleaseScriptContextCallbackParam;
 
-	bool isWke;//是否是使用的wke接口
+    wkeWindowClosingCallback m_windowClosingCallback;
+    void* m_windowClosingCallbackParam;
+    
+    wkeWindowDestroyCallback m_windowDestroyCallback;
+    void* m_windowDestroyCallbackParam;
+
+    bool isWke;//是否是使用的wke接口
 };
 
 class CWebView : public IWebView {
@@ -217,6 +223,8 @@ public:
 
     void setClientHandler(const wkeClientHandler* handler) override;
     const wkeClientHandler* getClientHandler() const override;
+
+    CWebViewHandler* getWkeHandler() const;
 
     content::WebPage* webPage() { return m_webPage; }
 

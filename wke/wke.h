@@ -256,7 +256,7 @@ WKE_API void wkeSetUserAgentW(wkeWebView webView, const wchar_t* userAgent);
 WKE_API void wkeLoadW(wkeWebView webView, const wchar_t* url);
 WKE_API void wkeLoadURL(wkeWebView webView, const utf8* url);
 WKE_API void wkeLoadURLW(wkeWebView webView, const wchar_t* url);
-WKE_API void wkePostURL(wkeWebView wkeView, const utf8* url, const char* postData, int  postLen);
+WKE_API void wkePostURL(wkeWebView wkeView, const utf8* url, const char* postData, int postLen);
 WKE_API void wkePostURLW(wkeWebView wkeView, const wchar_t* url, const char* postData, int postLen);
 
 WKE_API void wkeLoadHTML(wkeWebView webView, const utf8* html);
