@@ -145,7 +145,6 @@ PlatformEventHandler::PlatformEventHandler(WebWidget* webWidget, WebViewImpl* we
     m_isAlert = false;
     m_isDraggableRegionNcHitTest = false;
     m_lastTimeMouseDown = 0;
-    m_clickCount = 0;
     m_webWidget = webWidget;
     m_webViewImpl = webViewImpl;
 }
@@ -286,20 +285,12 @@ LRESULT PlatformEventHandler::fireMouseEvent(HWND hWnd, UINT message, WPARAM wPa
         handle = true;
 
         double time = WTF::currentTime();
-        const double minInterval = 0.3;
-        if (0 == m_clickCount) {
-            m_lastTimeMouseDown = time;
-            m_clickCount = 1;
-            if (time - m_lastTimeMouseDown > minInterval) {
-                m_clickCount = 0;
-            }
-        } else if (1 == m_clickCount) {
-            m_clickCount = 0;
-            if (time - m_lastTimeMouseDown < minInterval) {
-                webMouseEvent.clickCount = 2;
-            }
-        }
+        const static double minInterval = GetDoubleClickTime() / 1000.0;
 
+        if (time - m_lastTimeMouseDown < minInterval)
+            webMouseEvent.clickCount = 2;
+        
+        m_lastTimeMouseDown = time;
         if (hWnd && needSetFocus) {
             ::SetFocus(hWnd);
             ::SetCapture(hWnd);
