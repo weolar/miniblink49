@@ -588,6 +588,11 @@ void wkeOnURLChanged(wkeWebView webView, wkeURLChangedCallback callback, void* c
     webView->onURLChanged(callback, callbackParam);
 }
 
+void wkeOnURLChanged2(wkeWebView webView, wkeURLChangedCallback2 callback, void* callbackParam)
+{
+    webView->onURLChanged2(callback, callbackParam);
+}
+
 void wkeOnPaintUpdated(wkeWebView webView, wkePaintUpdatedCallback callback, void* callbackParam)
 {
     webView->onPaintUpdated(callback, callbackParam);

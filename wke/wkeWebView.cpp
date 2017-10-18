@@ -923,6 +923,13 @@ void CWebView::onURLChanged(wkeURLChangedCallback callback, void* callbackParam)
     m_webPage->wkeHandler().urlChangedCallbackParam = callbackParam;
 }
 
+void CWebView::onURLChanged2(wkeURLChangedCallback2 callback, void* callbackParam)
+{
+    m_webPage->wkeHandler().urlChangedCallback2 = callback;
+    m_webPage->wkeHandler().urlChangedCallback2Param = callbackParam;
+}
+
+
 void CWebView::onPaintUpdated(wkePaintUpdatedCallback callback, void* callbackParam)
 {
     m_webPage->wkeHandler().paintUpdatedCallback = callback;

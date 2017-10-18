@@ -25,6 +25,9 @@ struct CWebViewHandler {
     wkeURLChangedCallback urlChangedCallback;
     void* urlChangedCallbackParam;
 
+    wkeURLChangedCallback2 urlChangedCallback2;
+    void* urlChangedCallback2Param;
+
     wkePaintUpdatedCallback paintUpdatedCallback;
     void* paintUpdatedCallbackParam;
 
@@ -199,6 +202,7 @@ public:
     void setEditable(bool editable) override;
     
     void onURLChanged(wkeURLChangedCallback callback, void* callbackParam);
+    void onURLChanged2(wkeURLChangedCallback2 callback, void* callbackParam);
     void onTitleChanged(wkeTitleChangedCallback callback, void* callbackParam);
     virtual void onPaintUpdated(wkePaintUpdatedCallback callback, void* callbackParam);
 
