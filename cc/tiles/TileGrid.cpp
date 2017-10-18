@@ -450,7 +450,7 @@ void TileGrid::cleanupUnnecessaryTile(Vector<size_t>* hasBitmapTiles)
 
     int willWithoutBitmapCount = 0;
     int hasBitmapTilesSize = hasBitmapTiles->size();
-    for (int i = hasBitmapTilesSize - 1; i >= 0; --i) {
+	for (int i = hasBitmapTilesSize - 1; i >= 0; --i) {
         size_t index = hasBitmapTiles->at(i);
         if ((int)index >= m_tilesAddr->getSize()) {
             ASSERT(false);
@@ -464,13 +464,13 @@ void TileGrid::cleanupUnnecessaryTile(Vector<size_t>* hasBitmapTiles)
         ASSERT(!isInWillBeShowedArea(tile));
 
         ++willWithoutBitmapCount;
+		tile->mutex().lock();
+		tile->setPriority(TilePriorityNormal);
+		tile->setAllBoundDirty();
+		tile->clearBitmap();
+		cleanupAction->appendTile(index, tile->xIndex(), tile->yIndex());
+		tile->mutex().unlock();
 
-        MutexLocker locker(tile->mutex());
-        tile->setPriority(TilePriorityNormal);
-        tile->setAllBoundDirty();
-        tile->clearBitmap();
-        
-        cleanupAction->appendTile(index, tile->xIndex(), tile->yIndex());
         m_tilesAddr->remove(tile);
     }
 
@@ -479,8 +479,7 @@ void TileGrid::cleanupUnnecessaryTile(Vector<size_t>* hasBitmapTiles)
         cleanupAction = nullptr;
         return;
     }
-
-    LayerTreeHost* host = layer()->layerTreeHost();
+	LayerTreeHost* host = layer()->layerTreeHost();
     cleanupAction->setActionId(host->genActionId());
     host->appendLayerChangeAction(cleanupAction);
 }

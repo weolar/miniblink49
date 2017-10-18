@@ -219,7 +219,6 @@ void CWebView::_loadURL(const utf8* inUrl, bool isFile)
     request.setCachePolicy(blink::WebURLRequest::UseProtocolCachePolicy);
     request.setHTTPMethod(blink::WebString::fromUTF8("GET"));
     m_webPage->loadRequest(content::WebPage::kMainFrameId, request);
-}
 
 void CWebView::loadURL(const utf8* inUrl)
 {

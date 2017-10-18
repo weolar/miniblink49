@@ -98,7 +98,7 @@ bool CWebWindow::_createWindow(HWND parent, unsigned styles, unsigned styleEx, i
     MSG msg = { 0 };
     WNDCLASSW wndClass = { 0 };
     if (!GetClassInfoW(NULL, szClassName, &wndClass)) {
-        wndClass.style        = CS_HREDRAW | CS_VREDRAW;
+        wndClass.style        = CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS;
         wndClass.lpfnWndProc  = &CWebWindow::_staticWindowProc;
         wndClass.cbClsExtra   = 200;
         wndClass.cbWndExtra   = 200;
