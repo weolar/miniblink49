@@ -144,6 +144,8 @@ PlatformEventHandler::PlatformEventHandler(WebWidget* webWidget, WebViewImpl* we
     m_mouseInWindow = false;
     m_isAlert = false;
     m_isDraggableRegionNcHitTest = false;
+    m_lastTimeMouseDown = 0;
+    m_clickCount = 0;
     m_webWidget = webWidget;
     m_webViewImpl = webViewImpl;
 }
@@ -251,8 +253,7 @@ LRESULT PlatformEventHandler::fireMouseEvent(HWND hWnd, UINT message, WPARAM wPa
         pos = IntPoint(ptCursor.x, ptCursor.y);
 
         lParam = MAKELPARAM(ptCursor.x, ptCursor.y);
-    }
-    else {
+    } else {
         m_postMouseLeave = false;
         pos.setX(((int)(short)LOWORD(lParam)));
         pos.setY(((int)(short)HIWORD(lParam)));
@@ -283,12 +284,27 @@ LRESULT PlatformEventHandler::fireMouseEvent(HWND hWnd, UINT message, WPARAM wPa
 
     if (WM_LBUTTONDOWN == message || WM_MBUTTONDOWN == message || WM_RBUTTONDOWN == message) {
         handle = true;
+
+        double time = WTF::currentTime();
+        const double minInterval = 0.3;
+        if (0 == m_clickCount) {
+            m_lastTimeMouseDown = time;
+            m_clickCount = 1;
+            if (time - m_lastTimeMouseDown > minInterval) {
+                m_clickCount = 0;
+            }
+        } else if (1 == m_clickCount) {
+            m_clickCount = 0;
+            if (time - m_lastTimeMouseDown < minInterval) {
+                webMouseEvent.clickCount = 2;
+            }
+        }
+
         if (hWnd && needSetFocus) {
             ::SetFocus(hWnd);
             ::SetCapture(hWnd);
         }
-        switch (message)
-        {
+        switch (message) {
         case WM_LBUTTONDOWN:
             webMouseEvent.button = WebMouseEvent::ButtonLeft;
             break;
@@ -321,8 +337,7 @@ LRESULT PlatformEventHandler::fireMouseEvent(HWND hWnd, UINT message, WPARAM wPa
             m_webViewImpl->dragSourceSystemDragEnded();
         webMouseEvent.type = WebInputEvent::MouseUp;
         m_webWidget->handleInputEvent(webMouseEvent);
-    }
-    else if (WM_MOUSEMOVE == message || WM_MOUSELEAVE == message) {
+    } else if (WM_MOUSEMOVE == message || WM_MOUSELEAVE == message) {
         handle = true;
         if (wParam & MK_LBUTTON)
             webMouseEvent.button = WebMouseEvent::ButtonLeft;

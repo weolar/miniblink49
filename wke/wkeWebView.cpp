@@ -923,6 +923,13 @@ void CWebView::onURLChanged(wkeURLChangedCallback callback, void* callbackParam)
     m_webPage->wkeHandler().urlChangedCallbackParam = callbackParam;
 }
 
+void CWebView::onURLChanged2(wkeURLChangedCallback2 callback, void* callbackParam)
+{
+    m_webPage->wkeHandler().urlChangedCallback2 = callback;
+    m_webPage->wkeHandler().urlChangedCallback2Param = callbackParam;
+}
+
+
 void CWebView::onPaintUpdated(wkePaintUpdatedCallback callback, void* callbackParam)
 {
     m_webPage->wkeHandler().paintUpdatedCallback = callback;
@@ -1157,6 +1164,11 @@ void CWebView::setDragFiles(const POINT* clintPos, const POINT* screenPos, wkeSt
     webView->dragTargetDragEnter(webDragData, clientPoint, screenPoint, blink::WebDragOperationMove, 0);
     webView->dragTargetDragOver(clientPoint, screenPoint, blink::WebDragOperationMove, 0);
     webView->dragTargetDrop(clientPoint, screenPoint, 0);
+}
+
+void CWebView::setNetInterface(const char* netInterface)
+{
+    m_netInterface = netInterface;
 }
 
 void CWebView::setProxyInfo(const String& host,	unsigned long port,	net::WebURLLoaderManager::ProxyType type, const String& username, const String& password)

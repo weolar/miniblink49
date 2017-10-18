@@ -147,6 +147,8 @@ WKE_API void wkeShutdown();
 WKE_API unsigned int wkeVersion();
 WKE_API const utf8* wkeVersionString();
 
+typedef void* wkeWebFrameHandle;
+
 typedef void* (*FILE_OPEN_) (const char* path);
 typedef void(*FILE_CLOSE_) (void* handle);
 typedef size_t(*FILE_SIZE) (void* handle);
@@ -237,6 +239,9 @@ WKE_API const utf8* wkeGetVersionString();
 WKE_API wkeWebView wkeCreateWebView();
 WKE_API wkeWebView wkeGetWebView(const char* name);
 WKE_API void wkeDestroyWebView(wkeWebView webView);
+
+WKE_API void wkeSeCspCheckEnable(wkeWebView webView, bool b);
+WKE_API void wkeSetViewNetInterface(wkeWebView webView, const char* netInterface);
 
 WKE_API void wkeSetProxy(const wkeProxy* proxy);
 WKE_API void wkeSetViewProxy(wkeWebView webView, wkeProxy *proxy);
@@ -388,6 +393,9 @@ WKE_API void wkeOnTitleChanged(wkeWebView webView, wkeTitleChangedCallback callb
 typedef void(*wkeURLChangedCallback)(wkeWebView webView, void* param, const wkeString url);
 WKE_API void wkeOnURLChanged(wkeWebView webView, wkeURLChangedCallback callback, void* callbackParam);
 
+typedef void(*wkeURLChangedCallback2)(wkeWebView webView, void* param, wkeWebFrameHandle frame, const wkeString url);
+WKE_API void wkeOnURLChanged2(wkeWebView webView, wkeURLChangedCallback2 callback, void* callbackParam);
+
 typedef void(*wkePaintUpdatedCallback)(wkeWebView webView, void* param, const HDC hdc, int x, int y, int cx, int cy);
 WKE_API void wkeOnPaintUpdated(wkeWebView webView, wkePaintUpdatedCallback callback, void* callbackParam);
 
@@ -468,7 +476,6 @@ WKE_API void wkeOnLoadUrlBegin(wkeWebView webView, wkeLoadUrlBeginCallback callb
 typedef void(*wkeLoadUrlEndCallback)(wkeWebView webView, void* param, const char *url, void *job, void* buf, int len);
 WKE_API void wkeOnLoadUrlEnd(wkeWebView webView, wkeLoadUrlEndCallback callback, void* callbackParam);
 
-typedef void* wkeWebFrameHandle;
 typedef void(*wkeDidCreateScriptContextCallback)(wkeWebView webView, void* param, wkeWebFrameHandle frame, void* context, int extensionGroup, int worldId);
 WKE_API void wkeOnDidCreateScriptContext(wkeWebView webView, wkeDidCreateScriptContextCallback callback, void* callbackParam);
 
