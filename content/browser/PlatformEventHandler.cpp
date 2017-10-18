@@ -286,7 +286,7 @@ LRESULT PlatformEventHandler::fireMouseEvent(HWND hWnd, UINT message, WPARAM wPa
         handle = true;
 
         double time = WTF::currentTime();
-        const double minInterval = 0.3;
+        const double minInterval = GetDoubleClickTime() /1000.0;
         if (0 == m_clickCount) {
             m_lastTimeMouseDown = time;
             m_clickCount = 1;
