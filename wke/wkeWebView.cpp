@@ -219,6 +219,7 @@ void CWebView::_loadURL(const utf8* inUrl, bool isFile)
     request.setCachePolicy(blink::WebURLRequest::UseProtocolCachePolicy);
     request.setHTTPMethod(blink::WebString::fromUTF8("GET"));
     m_webPage->loadRequest(content::WebPage::kMainFrameId, request);
+}
 
 void CWebView::loadURL(const utf8* inUrl)
 {
@@ -457,14 +458,14 @@ HWND CWebView::windowHandle() const
 
 void CWebView::setHandle(HWND wnd)
 {
-	m_hWnd = wnd;
-	m_webPage->setHWND(wnd);
+    m_hWnd = wnd;
+    m_webPage->setHWND(wnd);
 }
 
 void CWebView::setHandleOffset(int x, int y)
 {
-	blink::IntPoint offset(x, y);
-	m_webPage->setHwndRenderOffset(offset);
+    blink::IntPoint offset(x, y);
+    m_webPage->setHwndRenderOffset(offset);
 }
 
 void CWebView::paint(void* bits, int pitch)
@@ -880,28 +881,24 @@ bool CWebView::isAwake() const
 void CWebView::setZoomFactor(float factor)
 {
     //m_mainFrame->setPageZoomFactor(factor);
-	if (m_webPage)
-	{
-		WebViewImpl* view = m_webPage->webViewImpl();
-		if (view)
-		{
-			view->setZoomFactorOverride(factor);
-		}
-	}
+    if (!m_webPage)
+        return;
+    
+    WebViewImpl* view = m_webPage->webViewImpl();
+    if (view)
+        view->setZoomFactorOverride(factor);
 }
 
 float CWebView::zoomFactor() const
 {
-	if (m_webPage)
-	{
-		WebViewImpl* view = m_webPage->webViewImpl();
-		if (view)
-		{
-			return view->zoomLevelToZoomFactor(view->zoomLevel());
-		}
-	}
     //return m_mainFrame->pageZoomFactor();
-    return 1;
+    if (!m_webPage)
+        return 1.0;
+    
+    WebViewImpl* view = m_webPage->webViewImpl();
+    if (view)
+        return view->zoomLevelToZoomFactor(view->zoomLevel());
+    return 1.0;
 }
 
 void CWebView::setEditable(bool editable)
@@ -1075,14 +1072,14 @@ void CWebView::onDocumentReady(wkeDocumentReadyCallback callback, void* callback
 
 void CWebView::onLoadUrlBegin(wkeLoadUrlBeginCallback callback, void* callbackParam)
 {
-	m_webPage->wkeHandler().loadUrlBeginCallback = callback;
-	m_webPage->wkeHandler().loadUrlBeginCallbackParam = callbackParam;
+    m_webPage->wkeHandler().loadUrlBeginCallback = callback;
+    m_webPage->wkeHandler().loadUrlBeginCallbackParam = callbackParam;
 }
 
 void CWebView::onLoadUrlEnd(wkeLoadUrlEndCallback callback, void* callbackParam)
 {
-	m_webPage->wkeHandler().loadUrlEndCallback = callback;
-	m_webPage->wkeHandler().loadUrlEndCallbackParam = callbackParam;
+    m_webPage->wkeHandler().loadUrlEndCallback = callback;
+    m_webPage->wkeHandler().loadUrlEndCallbackParam = callbackParam;
 }
 
 void CWebView::onDidCreateScriptContext(wkeDidCreateScriptContextCallback callback, void* callbackParam)
@@ -1105,6 +1102,14 @@ void CWebView::setClientHandler(const wkeClientHandler* handler)
 const wkeClientHandler* CWebView::getClientHandler() const
 {
     return (const wkeClientHandler *)m_webPage->wkeClientHandler();
+}
+
+CWebViewHandler* CWebView::getWkeHandler() const
+{
+    if (!m_webPage)
+        return nullptr;
+
+    return &m_webPage->wkeHandler();
 }
 
 void CWebView::setUserKayValue(const char* key, void* value)
@@ -1182,6 +1187,12 @@ wkeWebView wkeCreateWebView()
 
 void wkeDestroyWebView(wkeWebView webView)
 {
+    if (!webView)
+        return;
+
+    if (webView->getWkeHandler()->m_windowDestroyCallback)
+        webView->getWkeHandler()->m_windowDestroyCallback(webView, webView->getWkeHandler()->m_windowDestroyCallbackParam);
+
     //size_t pos = s_webViews.find(webView);
 
     //ASSERT(pos != notFound);

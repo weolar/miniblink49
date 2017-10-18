@@ -42,6 +42,7 @@
 
 namespace blink {
 class WebURLRequest;
+class WebURLResponse;
 struct WebURLError;
 }
 
@@ -106,6 +107,7 @@ public:
     void didReceiveDataOrDownload(WebURLLoaderInternal* job, const char* data, int dataLength, int encodedDataLength);
     void handleDidFinishLoading(WebURLLoaderInternal* job, double finishTime, int64_t totalEncodedDataLength);
     void handleDidFail(WebURLLoaderInternal* job, const blink::WebURLError& error);
+    void handleDidReceiveResponse(WebURLLoaderInternal* job);
 
 private:
     WebURLLoaderManager();
@@ -150,7 +152,7 @@ private:
     WTF::Mutex m_liveJobsMutex;
     WTF::HashMap<int, WebURLLoaderInternal*> m_liveJobs;
     int m_newestJobId;
-
+    
     WTF::HashMap<String, BlobTempFileInfo*> m_blobCache; // real url -> <temp, data>
 };
 
