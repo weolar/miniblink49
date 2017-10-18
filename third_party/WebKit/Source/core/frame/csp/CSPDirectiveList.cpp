@@ -18,6 +18,10 @@
 #include "wtf/text/StringUTF8Adaptor.h"
 #include "wtf/text/WTFString.h"
 
+namespace net {
+extern bool g_cspCheckEnable;
+}
+
 namespace blink {
 
 namespace {
@@ -128,6 +132,7 @@ bool CSPDirectiveList::checkHash(SourceListDirective* directive, const CSPHashVa
 
 bool CSPDirectiveList::checkSource(SourceListDirective* directive, const KURL& url, ContentSecurityPolicy::RedirectStatus redirectStatus) const
 {
+    //return true; // weolar
     return !directive || directive->allows(url, redirectStatus);
 }
 
@@ -220,6 +225,9 @@ bool CSPDirectiveList::checkInlineAndReportViolation(SourceListDirective* direct
 
 bool CSPDirectiveList::checkSourceAndReportViolation(SourceListDirective* directive, const KURL& url, const String& effectiveDirective, ContentSecurityPolicy::RedirectStatus redirectStatus) const
 {
+    if (!net::g_cspCheckEnable)
+        return true;
+
     if (checkSource(directive, url, redirectStatus))
         return true;
 
