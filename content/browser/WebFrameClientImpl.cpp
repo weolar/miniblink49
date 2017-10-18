@@ -238,11 +238,13 @@ void WebFrameClientImpl::didCommitProvisionalLoad(WebLocalFrame* frame, const We
 
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
     wke::CWebViewHandler& handler = m_webPage->wkeHandler();
-    if (handler.urlChangedCallback) {
-        String url = history.urlString();
-        wke::CString string(url);
+    String url = history.urlString();
+    wke::CString string(url);
+    if (handler.urlChangedCallback) 
         handler.urlChangedCallback(m_webPage->wkeWebView(), handler.urlChangedCallbackParam, &string);
-    }
+
+    if (handler.urlChangedCallback2)
+        handler.urlChangedCallback2(m_webPage->wkeWebView(), handler.urlChangedCallback2Param, frame, &string);
 #endif
 
     m_webPage->didCommitProvisionalLoad(frame, history, type);
