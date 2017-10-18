@@ -70,7 +70,7 @@ void NavigationController::insertOrReplaceEntry(const blink::WebHistoryItem& ite
         if (m_currentOffset == m_items.size()) {
             m_items.append(item);
         } else {
-            m_items[m_currentOffset - 1] = item;
+            m_items[m_currentOffset] = item;
             m_items.resize(m_currentOffset + 1);
         }
         break;

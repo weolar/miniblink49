@@ -26,6 +26,8 @@ private:
     bool m_postMouseLeave;
     bool m_mouseInWindow;
     bool m_isAlert;
+    double m_lastTimeMouseDown;
+    int m_clickCount;
     blink::IntRect m_lastPosForDrag;
     blink::WebViewImpl* m_webViewImpl;
     blink::WebWidget* m_webWidget;
