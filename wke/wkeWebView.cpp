@@ -1159,6 +1159,11 @@ void CWebView::setDragFiles(const POINT* clintPos, const POINT* screenPos, wkeSt
     webView->dragTargetDrop(clientPoint, screenPoint, 0);
 }
 
+void CWebView::setNetInterface(const char* netInterface)
+{
+    m_netInterface = netInterface;
+}
+
 void CWebView::setProxyInfo(const String& host,	unsigned long port,	net::WebURLLoaderManager::ProxyType type, const String& username, const String& password)
 {
     m_proxyType = type;

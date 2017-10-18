@@ -19,6 +19,7 @@
 namespace net {
 
 void setCookieJarPath(const WCHAR* path);
+bool g_cspCheckEnable = true;
 
 }
 
@@ -88,6 +89,14 @@ void wkeSetViewProxy(wkeWebView webView, wkeProxy* proxy)
     webView->setProxyInfo(info->hostname, proxy->port, info->proxyType, info->username, info->password);
 }
 
+void wkeSetViewNetInterface(wkeWebView webView, const char* netInterface)
+{
+    if (!webView || !netInterface)
+        return;
+
+    webView->setNetInterface(netInterface);
+}
+
 void wkeConfigure(const wkeSettings* settings)
 {
     if (settings->mask & WKE_SETTING_PROXY)
@@ -120,6 +129,11 @@ void wkeFinalize()
     if (s_versionString)
         delete s_versionString;
     s_versionString = nullptr;
+}
+
+void wkeSeCspCheckEnable(wkeWebView webView, bool b)
+{
+    net::g_cspCheckEnable = b;
 }
 
 void wkeSetDebugConfig(wkeWebView webView, const char* debugString)
@@ -638,7 +652,6 @@ void wkeOnLoadUrlEnd(wkeWebView webView, wkeLoadUrlEndCallback callback, void* c
 {
 	webView->onLoadUrlEnd(callback, callbackParam);
 }
-
 
 void wkeOnDidCreateScriptContext(wkeWebView webView, wkeDidCreateScriptContextCallback callback, void* callbackParam)
 {
