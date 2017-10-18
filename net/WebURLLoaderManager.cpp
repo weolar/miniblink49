@@ -383,14 +383,14 @@ void WebURLLoaderManager::didReceiveDataOrDownload(WebURLLoaderInternal* job, co
 
     job->m_dataLength += dataLength;
 
-    if (job->m_firstRequest->useStreamOnResponse()) {
+    if (job->firstRequest()->useStreamOnResponse()) {
         // We don't support ftp_listening_delegate_ and multipart_delegate_ for
         // now.
         // TODO(yhirano): Support ftp listening and multipart.
         job->m_bodyStreamWriter->addData(adoptPtr(new FixedReceivedData(data, dataLength, encodedDataLength)));
     }
 
-    if (!job->m_firstRequest->downloadToFile()) {
+    if (!job->firstRequest()->downloadToFile()) {
         client->didReceiveData(loader, data, dataLength, encodedDataLength);
         return;
     }
@@ -441,7 +441,7 @@ String WebURLLoaderManager::handleHeaderForBlobOnMainThread(WebURLLoaderInternal
 
 static void setBlobDataLengthByTempPath(WebURLLoaderInternal* job)
 {
-    if (!job->m_firstRequest->downloadToFile())
+    if (!job->firstRequest()->downloadToFile())
         return;
 
     content::WebBlobRegistryImpl* blolReg = (content::WebBlobRegistryImpl*)blink::Platform::current()->blobRegistry();
@@ -462,7 +462,7 @@ void WebURLLoaderManager::handleDidFinishLoading(WebURLLoaderInternal* job, doub
 void WebURLLoaderManager::handleDidFail(WebURLLoaderInternal* job, const blink::WebURLError& error)
 {
 #if 0
-    String out = String::format("WebURLLoaderManager::handleDidFail: %s\n", job->m_firstRequest->url().string().utf8().data());
+    String out = String::format("WebURLLoaderManager::handleDidFail: %s\n", job->firstRequest()->url().string().utf8().data());
     OutputDebugStringA(out.utf8().data());
 #endif
     if (job->m_bodyStreamWriter) {
@@ -505,7 +505,7 @@ void WebURLLoaderManager::handleDidReceiveResponse(WebURLLoaderInternal* job)
 {
     const blink::WebURLResponse& response = job->m_response;
     WebDataConsumerHandle* readHandle = nullptr;
-    if (job->m_firstRequest && job->m_firstRequest->useStreamOnResponse()) {
+    if (job->firstRequest() && job->firstRequest()->useStreamOnResponse()) {
         SharedMemoryDataConsumerHandle::BackpressureMode mode = SharedMemoryDataConsumerHandle::kDoNotApplyBackpressure;
 
         String cacheControl = response.httpHeaderField("Cache-Control");
@@ -792,7 +792,7 @@ size_t WebURLLoaderManagerMainTask::handleHeaderCallbackOnMainThread(WebURLLoade
             return totalSize;
         }
 
-        if (job->m_firstRequest->downloadToFile()) {
+        if (job->firstRequest()->downloadToFile()) {
             String tempPath = WebURLLoaderManager::sharedInstance()->handleHeaderForBlobOnMainThread(job, totalSize);
             job->m_response.setDownloadFilePath(tempPath);
         }
@@ -1768,6 +1768,7 @@ struct WebURLLoaderManager::InitializeHandleInfo {
     std::string method;
     curl_slist* headers;
     std::string proxy;
+    std::string wkeNetInterface;
     ProxyType proxyType;
     SetupHttpMethodInfo* methodInfo;
 
@@ -1788,11 +1789,10 @@ WebURLLoaderManager::InitializeHandleInfo* WebURLLoaderManager::preInitializeHan
 {
     InitializeHandleInfo* info = new InitializeHandleInfo();
     KURL url = job->firstRequest()->url();
+    String urlString = url.string();
 
     // Remove any fragment part, otherwise curl will send it as part of the request.
     url.removeFragmentIdentifier();
-
-    String urlString = url.string();
     if (url.isLocalFile()) {
         // Remove any query part sent to a local file.
         if (!url.query().isEmpty()) {
@@ -1806,7 +1806,11 @@ WebURLLoaderManager::InitializeHandleInfo* WebURLLoaderManager::preInitializeHan
     }
 
     info->url = WTF::ensureStringToUTF8(urlString, true).data();
-
+    ASSERT(info->url.size() == urlString.length());
+#if 0
+    String output = String::format("preInit: %d %s\n", urlString.length(), info->url.c_str());
+    OutputDebugStringA(output.utf8().data());
+#endif
     info->method = job->firstRequest()->httpMethod().utf8();
 
     curl_slist* headers = nullptr;
@@ -1846,9 +1850,14 @@ WebURLLoaderManager::InitializeHandleInfo* WebURLLoaderManager::preInitializeHan
         return info;
 
     String wkeProxy = page->wkeWebView()->getProxy();
-    if (wkeProxy.length()) {
+    if (0 != wkeProxy.length()) {
         info->proxy = wkeProxy.utf8().data();
         info->proxyType = page->wkeWebView()->getProxyType();
+    }
+
+    String wkeNetInterface = page->wkeWebView()->getNetInterface();
+    if (0 != wkeNetInterface.length()) {
+        info->wkeNetInterface = wkeNetInterface.utf8().data();
     }
 #endif
 
@@ -1905,7 +1914,7 @@ void WebURLLoaderManager::initializeHandleOnIoThread(int jobId, InitializeHandle
     // url is in ASCII so latin1() will only convert it to char* without character translation.
     job->m_url = fastStrDup(info->url.c_str());
 
-    KURL url = job->m_firstRequest->url();
+    KURL url = job->firstRequest()->url();
     String urlString = job->m_url;
     ASSERT(url.string() == urlString);
 
@@ -1938,7 +1947,11 @@ void WebURLLoaderManager::initializeHandleOnIoThread(int jobId, InitializeHandle
         curl_easy_setopt(job->m_handle, CURLOPT_PROXY, info->proxy.c_str());
         curl_easy_setopt(job->m_handle, CURLOPT_PROXYTYPE, info->proxyType);
     }
+
+    if (info->wkeNetInterface.size())
+        curl_easy_setopt(job->m_handle, CURLOPT_INTERFACE, info->wkeNetInterface.c_str());
 #endif
+
     delete info;
 }
 
@@ -1950,7 +1963,7 @@ void WebURLLoaderManager::timeoutOnMainThread(int jobId)
         return;
 
     OutputDebugStringW(L"timeoutOnMainThread:");
-    KURL kUrl = job->m_firstRequest->url();
+    KURL kUrl = job->firstRequest()->url();
     OutputDebugStringA(kUrl.string().utf8().data());
     OutputDebugStringW(L"\n");
 

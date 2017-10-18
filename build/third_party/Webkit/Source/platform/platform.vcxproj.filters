@@ -1159,6 +1159,150 @@
       <Filter>platform\image-decoders\png</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\config.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebAudioBus.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebAudioDevice.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebCompositorAnimationPlayerClient.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebContentDecryptionModule.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebContentDecryptionModuleAccess.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebContentDecryptionModuleResult.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebContentDecryptionModuleSession.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebContentSettingCallbacks.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebCredential.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebCryptoAlgorithm.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebCryptoKey.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebCryptoKeyAlgorithm.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebCryptoResult.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebDataConsumerHandle.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebDeviceMotionData.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebDeviceOrientationData.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebDisplayItemTransformTree.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebEncryptedMediaClient.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebEncryptedMediaKeyInformation.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebEncryptedMediaRequest.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebFederatedCredential.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebFileSystemCallbacks.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebMediaDeviceInfo.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebMemoryAllocatorDump.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebMessagePortChannelClient.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebPasswordCredential.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebPresentationController.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebProcessMemoryDump.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebPushSubscription.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebRTCConfiguration.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebRTCICECandidate.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebRTCOfferOptions.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebRTCSessionDescription.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebRTCSessionDescriptionRequest.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebRTCStatsRequest.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebRTCStatsResponse.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebRTCVoidRequest.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebServicePortProviderClient.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebServiceWorkerProviderClient.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebServiceWorkerProxy.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebServiceWorkerRequest.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebServiceWorkerResponse.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebSocketHandshakeRequestInfo.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebSocketHandshakeResponseInfo.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebSourceInfo.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebSpeechSynthesisUtterance.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebSpeechSynthesisVoice.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebSpeechSynthesizerClientImpl.cpp">
+      <Filter>platform\exported</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\animation\AnimationUtilities.h">
@@ -2575,6 +2719,12 @@
       <Filter>platform\image-decoders\GDIPlus</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\config.h" />
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebScrollbarThemeClientImpl.h">
+      <Filter>platform\exported</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\platform\exported\WebSpeechSynthesizerClientImpl.h">
+      <Filter>platform\exported</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="..\..\..\..\..\third_party\WebKit\Source\platform\heap\asm\SaveRegisters_x86.asm">

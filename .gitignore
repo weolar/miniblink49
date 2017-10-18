@@ -34,3 +34,6 @@ build/third_party/Webkit/Source/core/svg/svg.vcxproj.user
 build/third_party/Webkit/Source/core/frame/frame.vcxproj.user
 build/third_party/Webkit/Source/core/editing/editing.vcxproj.user
 build/third_party/Webkit/Source/core/animation/animation.vcxproj.user
+bin/wkexe.exe
+wkexe/cookies.dat
+GitHub.lnk

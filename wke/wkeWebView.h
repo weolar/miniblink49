@@ -25,6 +25,9 @@ struct CWebViewHandler {
     wkeURLChangedCallback urlChangedCallback;
     void* urlChangedCallbackParam;
 
+    wkeURLChangedCallback2 urlChangedCallback2;
+    void* urlChangedCallback2Param;
+
     wkePaintUpdatedCallback paintUpdatedCallback;
     void* paintUpdatedCallbackParam;
 
@@ -199,6 +202,7 @@ public:
     void setEditable(bool editable) override;
     
     void onURLChanged(wkeURLChangedCallback callback, void* callbackParam);
+    void onURLChanged2(wkeURLChangedCallback2 callback, void* callbackParam);
     void onTitleChanged(wkeTitleChangedCallback callback, void* callbackParam);
     virtual void onPaintUpdated(wkePaintUpdatedCallback callback, void* callbackParam);
 
@@ -235,8 +239,10 @@ public:
 
     void setDragFiles(const POINT* clintPos, const POINT* screenPos, wkeString files[], int filesCount);
 
-    void setProxyInfo(const String& host, unsigned long port, net::WebURLLoaderManager::ProxyType type, const String& username, const String& password);
+    void setNetInterface(const char* netInterface);
+    String getNetInterface() const { return m_netInterface; }
 
+    void setProxyInfo(const String& host, unsigned long port, net::WebURLLoaderManager::ProxyType type, const String& username, const String& password);
     String getProxy() const { return m_proxy; }
     net::WebURLLoaderManager::ProxyType getProxyType() const { return m_proxyType; }
 
@@ -281,6 +287,8 @@ protected:
     //void* m_pixels;
 
     bool m_awake;
+
+    String m_netInterface;
 
     String m_proxy;
     net::WebURLLoaderManager::ProxyType m_proxyType;

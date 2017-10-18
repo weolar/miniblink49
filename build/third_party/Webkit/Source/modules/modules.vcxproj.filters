@@ -31,6 +31,9 @@
     <Filter Include="modules\encoding">
       <UniqueIdentifier>{012b5879-56ff-44a6-b29f-e19e795c2829}</UniqueIdentifier>
     </Filter>
+    <Filter Include="modules\fetch">
+      <UniqueIdentifier>{d639571f-10ff-4cac-9f6b-641c247fe25d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\modules\canvas2d\CanvasStyle.cpp">
@@ -187,6 +190,54 @@
       <Filter>modules\encoding</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\config.cpp" />
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\modules\fetch\Body.cpp">
+      <Filter>modules\fetch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\modules\fetch\BodyStreamBuffer.cpp">
+      <Filter>modules\fetch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\modules\fetch\CompositeDataConsumerHandle.cpp">
+      <Filter>modules\fetch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\modules\fetch\DataConsumerHandleUtil.cpp">
+      <Filter>modules\fetch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\modules\fetch\DataConsumerTee.cpp">
+      <Filter>modules\fetch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\modules\fetch\FetchBlobDataConsumerHandle.cpp">
+      <Filter>modules\fetch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\modules\fetch\FetchDataLoader.cpp">
+      <Filter>modules\fetch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\modules\fetch\FetchHeaderList.cpp">
+      <Filter>modules\fetch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\modules\fetch\FetchManager.cpp">
+      <Filter>modules\fetch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\modules\fetch\FetchRequestData.cpp">
+      <Filter>modules\fetch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\modules\fetch\FetchResponseData.cpp">
+      <Filter>modules\fetch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\modules\fetch\GlobalFetch.cpp">
+      <Filter>modules\fetch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\modules\fetch\Headers.cpp">
+      <Filter>modules\fetch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\modules\fetch\Request.cpp">
+      <Filter>modules\fetch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\modules\fetch\RequestInit.cpp">
+      <Filter>modules\fetch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\third_party\WebKit\Source\modules\fetch\Response.cpp">
+      <Filter>modules\fetch</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\modules\canvas2d\CanvasRenderingContext2DState.h">
@@ -361,6 +412,60 @@
       <Filter>modules\encoding</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\config.h" />
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\modules\fetch\Body.h">
+      <Filter>modules\fetch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\modules\fetch\BodyStreamBuffer.h">
+      <Filter>modules\fetch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\modules\fetch\CompositeDataConsumerHandle.h">
+      <Filter>modules\fetch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\modules\fetch\DataConsumerHandleUtil.h">
+      <Filter>modules\fetch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\modules\fetch\DataConsumerTee.h">
+      <Filter>modules\fetch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\modules\fetch\FetchBlobDataConsumerHandle.h">
+      <Filter>modules\fetch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\modules\fetch\FetchDataConsumerHandle.h">
+      <Filter>modules\fetch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\modules\fetch\FetchDataLoader.h">
+      <Filter>modules\fetch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\modules\fetch\FetchHeaderList.h">
+      <Filter>modules\fetch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\modules\fetch\FetchManager.h">
+      <Filter>modules\fetch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\modules\fetch\FetchRequestData.h">
+      <Filter>modules\fetch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\modules\fetch\FetchResponseData.h">
+      <Filter>modules\fetch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\modules\fetch\GlobalFetch.h">
+      <Filter>modules\fetch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\modules\fetch\Headers.h">
+      <Filter>modules\fetch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\modules\fetch\Request.h">
+      <Filter>modules\fetch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\modules\fetch\RequestInit.h">
+      <Filter>modules\fetch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\modules\fetch\Response.h">
+      <Filter>modules\fetch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\third_party\WebKit\Source\modules\fetch\ResponseInit.h">
+      <Filter>modules\fetch</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\..\..\third_party\WebKit\Source\modules\storage\OWNERS">
