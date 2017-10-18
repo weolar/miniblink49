@@ -307,6 +307,8 @@
     <ClCompile Include="..\..\cc\trees\ActionsFrameGroup.cpp" />
     <ClCompile Include="..\..\cc\trees\LayerSorter.cc" />
     <ClCompile Include="..\..\cc\trees\LayerTreeHost.cpp" />
+    <ClCompile Include="..\..\cef\libcef_dll\base\cef_lock.cc" />
+    <ClCompile Include="..\..\cef\libcef_dll\base\cef_lock_impl.cc" />
     <ClCompile Include="..\..\content\browser\CheckReEnter.cpp" />
     <ClCompile Include="..\..\content\browser\NavigationController.cpp" />
     <ClCompile Include="..\..\content\browser\PlatformEventHandler.cpp" />
@@ -802,6 +804,7 @@
     <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8XMLHttpRequestUpload.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\modules\v8\initPartialInterfacesInModules.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\modules\v8\UnionTypesModulesNone.cpp" />
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8Body.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8Canvas2DContextAttributes.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8CanvasGradient.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8CanvasPattern.cpp" />
@@ -813,6 +816,7 @@
     <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8DedicatedWorkerGlobalScopePartial.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8DeprecatedStorageInfo.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8DeprecatedStorageQuota.cpp" />
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8Headers.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8HeadersNone.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8HitRegionOptions.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8HTMLVideoElementPartial.cpp" />
@@ -824,6 +828,8 @@
     <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8Path2D.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8Plugin.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8PluginArray.cpp" />
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8Request.cpp" />
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8Response.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8SharedWorkerGlobalScopePartial.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8Storage.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8StorageErrorCallback.cpp" />
@@ -941,8 +947,10 @@
     <ClCompile Include="..\..\net\FileStream.cpp" />
     <ClCompile Include="..\..\net\FileSystem.cpp" />
     <ClCompile Include="..\..\net\FileSystemWin.cpp" />
+    <ClCompile Include="..\..\net\FixedReceivedData.cpp" />
     <ClCompile Include="..\..\net\MultipartHandle.cpp" />
     <ClCompile Include="..\..\net\PathWalker.cpp" />
+    <ClCompile Include="..\..\net\SharedMemoryDataConsumerHandle.cpp" />
     <ClCompile Include="..\..\net\websocket\SocketStreamErrorBase.cpp" />
     <ClCompile Include="..\..\net\websocket\SocketStreamHandleBase.cpp" />
     <ClCompile Include="..\..\net\websocket\SocketStreamHandleCurl.cpp" />
@@ -1516,6 +1524,7 @@
     <ClInclude Include="..\..\gen\blink\bindings\core\v8\V8XMLHttpRequestProgressEvent.h" />
     <ClInclude Include="..\..\gen\blink\bindings\core\v8\V8XMLHttpRequestUpload.h" />
     <ClInclude Include="..\..\gen\blink\bindings\modules\v8\UnionTypesModules.h" />
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8Body.h" />
     <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8Canvas2DContextAttributes.h" />
     <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8CanvasGradient.h" />
     <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8CanvasPattern.h" />
@@ -1526,6 +1535,7 @@
     <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8DedicatedWorkerGlobalScopePartial.h" />
     <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8DeprecatedStorageInfo.h" />
     <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8DeprecatedStorageQuota.h" />
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8Headers.h" />
     <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8HitRegionOptions.h" />
     <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8HTMLVideoElementPartial.h" />
     <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8MimeType.h" />
@@ -1533,6 +1543,8 @@
     <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8Path2D.h" />
     <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8Plugin.h" />
     <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8PluginArray.h" />
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8Request.h" />
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8Response.h" />
     <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8SharedWorkerGlobalScopePartial.h" />
     <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8Storage.h" />
     <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8StorageErrorCallback.h" />
@@ -1676,10 +1688,13 @@
     <ClInclude Include="..\..\net\FileStream.h" />
     <ClInclude Include="..\..\net\FileStreamClient.h" />
     <ClInclude Include="..\..\net\FileSystem.h" />
+    <ClInclude Include="..\..\net\FixedReceivedData.h" />
     <ClInclude Include="..\..\net\MemBlobStream.h" />
     <ClInclude Include="..\..\net\MultipartHandle.h" />
     <ClInclude Include="..\..\net\PathWalker.h" />
     <ClInclude Include="..\..\net\RequestExtraData.h" />
+    <ClInclude Include="..\..\net\RequestPeer.h" />
+    <ClInclude Include="..\..\net\SharedMemoryDataConsumerHandle.h" />
     <ClInclude Include="..\..\net\StreamReader.h" />
     <ClInclude Include="..\..\net\websocket\SocketStreamError.h" />
     <ClInclude Include="..\..\net\websocket\SocketStreamErrorBase.h" />
