@@ -255,12 +255,12 @@ jsType jsTypeOf(jsValue v)
     if (value->IsString())
         return JSTYPE_STRING;
 
-    if (value->IsObject())
-        return JSTYPE_OBJECT;
-    
     if (value->IsFunction())
         return JSTYPE_FUNCTION;
 
+    if (value->IsObject())
+        return JSTYPE_OBJECT;
+    
     return JSTYPE_UNDEFINED;
 }
 
@@ -306,8 +306,6 @@ bool jsIsNull(jsValue v)
 
     v8::Isolate* isolate = wkeValue->isolate;
     v8::HandleScope handleScope(isolate);
-    v8::Local<v8::Context> context = v8::Local<v8::Context>::New(isolate, wkeValue->context);
-    v8::Context::Scope contextScope(context);
     v8::Local<v8::Value> value = v8::Local<v8::Value>::New(wkeValue->isolate, wkeValue->value);
 
     return value->IsNull();
@@ -322,6 +320,9 @@ bool jsIsArray(jsValue v)
     WkeJsValue* wkeValue = it->value;
     if (WkeJsValue::wkeJsValueV8Value != wkeValue->type)
         return false;
+
+    v8::Isolate* isolate = wkeValue->isolate;
+    v8::HandleScope handleScope(isolate);
     v8::Local<v8::Value> value = v8::Local<v8::Value>::New(wkeValue->isolate, wkeValue->value);
     return value->IsArray();
 
@@ -338,6 +339,8 @@ bool jsIsTrue(jsValue v)
     if (WkeJsValue::wkeJsValueBool == wkeValue->type)
         return wkeValue->boolVal;
     else if (WkeJsValue::wkeJsValueV8Value == wkeValue->type) {
+        v8::Isolate* isolate = wkeValue->isolate;
+        v8::HandleScope handleScope(isolate);
         v8::Local<v8::Value> value = v8::Local<v8::Value>::New(wkeValue->isolate, wkeValue->value);
         if (!value->IsBoolean())
             return false;
@@ -363,6 +366,8 @@ int jsToInt(jsExecState es, jsValue v)
         return 0;
     WkeJsValue* wkeValue = it->value;
     if (WkeJsValue::wkeJsValueV8Value == wkeValue->type) {
+        v8::Isolate* isolate = wkeValue->isolate;
+        v8::HandleScope handleScope(isolate);
         v8::Local<v8::Value> value = v8::Local<v8::Value>::New(wkeValue->isolate, wkeValue->value);
         return value->ToInt32()->Value();
     } else if (WkeJsValue::wkeJsValueInt == wkeValue->type) {
@@ -386,6 +391,8 @@ double jsToDouble(jsExecState es, jsValue v)
         return 0.0;
     WkeJsValue* wkeValue = it->value;
     if (WkeJsValue::wkeJsValueV8Value == wkeValue->type) {
+        v8::Isolate* isolate = wkeValue->isolate;
+        v8::HandleScope handleScope(isolate);
         v8::Local<v8::Value> value = v8::Local<v8::Value>::New(wkeValue->isolate, wkeValue->value);
         return value->ToNumber()->Value();
     } else if (WkeJsValue::wkeJsValueFloat == wkeValue->type)
@@ -403,6 +410,8 @@ bool jsToBoolean(jsExecState es, jsValue v)
         return false;
     WkeJsValue* wkeValue = it->value;
     if (WkeJsValue::wkeJsValueV8Value == wkeValue->type) {
+        v8::Isolate* isolate = wkeValue->isolate;
+        v8::HandleScope handleScope(isolate);
         v8::Local<v8::Value> value = v8::Local<v8::Value>::New(wkeValue->isolate, wkeValue->value);
         return value->ToBoolean()->Value();
     } else if (WkeJsValue::wkeJsValueBool == wkeValue->type)
