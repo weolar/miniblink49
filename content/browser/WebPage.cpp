@@ -420,6 +420,12 @@ void WebPage::didCommitProvisionalLoad(blink::WebLocalFrame* frame, const blink:
         m_pageImpl->didCommitProvisionalLoad(frame, history, type);
 }
 
+void WebPage::setTransparent(bool transparent)
+{
+    if (m_pageImpl)
+        m_pageImpl->setTransparent(transparent);
+}
+
 WebPage* WebPage::getSelfForCurrentContext()
 {
     WebPageImpl* impl = WebPageImpl::getSelfForCurrentContext();

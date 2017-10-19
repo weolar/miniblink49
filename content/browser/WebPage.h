@@ -111,6 +111,8 @@ public:
     void goForward();
     void didCommitProvisionalLoad(blink::WebLocalFrame* frame, const blink::WebHistoryItem& history, blink::WebHistoryCommitType type);
 
+    void setTransparent(bool transparent);
+
     HDC viewDC();
     void paintToBit(void* bits, int pitch);
 

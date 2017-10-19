@@ -128,9 +128,6 @@ WebPageImpl::WebPageImpl()
     m_webViewImpl->setMainFrame(webLocalFrameImpl);
     initSetting();
 
-    //m_frameLoaderClient = new FrameLoaderClientImpl(webLocalFrameImpl);
-    //m_frame->view()->setTransparent(m_useLayeredBuffer);
-
     m_platformEventHandler = new PlatformEventHandler(m_webViewImpl, m_webViewImpl);
 
     m_layerTreeHost->setWebGestureCurveTarget(m_webViewImpl);
@@ -143,9 +140,6 @@ WebPageImpl::WebPageImpl()
         CefRefPtr<CefRenderProcessHandler> handler = application->GetRenderProcessHandler();
         if (!handler.get())
             return;
-
-        //     CefRefPtr<CefListValue> extraInfo = CefListValue::Create();
-        //     handler->OnRenderThreadCreated(extraInfo);
         handler->OnWebKitInitialized();
     }
 #endif
@@ -773,27 +767,24 @@ void WebPageImpl::paintToMemoryCanvasInUiThread(SkCanvas* canvas, const IntRect&
 
     drawDebugLine(canvas, paintRect);
 
-    if (m_useLayeredBuffer) { // 再把内存dc画到hdc上
-#if ENABLE_WKE != 1
-        RECT rtWnd;
-        ::GetWindowRect(m_pagePtr->getHWND(), &rtWnd);
-        //m_winodwRect = winRectToIntRect(rtWnd);
-        //skia::DrawToNativeLayeredContext(canvas.get(), hdc, m_winodwRect.x(), m_winodwRect.y(), &((RECT)m_clientRect));
-#endif
-    } else {
-        bool drawToScreen = false;
+    bool drawToScreen = false;
 #if ENABLE_CEF == 1
-        drawToScreen = !!m_browser;
+    drawToScreen = !!m_browser;
 #endif
-        if (drawToScreen) { // 使用wke接口不由此上屏
-            HDC hdc = GetDC(m_pagePtr->getHWND());
+    if (drawToScreen) { // 使用wke接口不由此上屏
+        HDC hdc = GetDC(m_pagePtr->getHWND());
+        if (m_useLayeredBuffer) {
+            RECT rtWnd;
+            ::GetWindowRect(m_pagePtr->getHWND(), &rtWnd);
+            IntRect winodwRect = winRectToIntRect(rtWnd);
+            skia::DrawToNativeLayeredContext(canvas, hdc, &intRectToWinRect(paintRect), &intRectToWinRect(paintRect));
+        } else
             skia::DrawToNativeContext(canvas, hdc, paintRect.x(), paintRect.y(), &intRectToWinRect(paintRect));
-            ::ReleaseDC(m_pagePtr->getHWND(), hdc);
-        } else {
-            copyToMemoryCanvasForUi();
-        }
+        ::ReleaseDC(m_pagePtr->getHWND(), hdc);
+    } else {
+        copyToMemoryCanvasForUi();
     }
-
+    
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
     if (m_pagePtr->wkeHandler().paintUpdatedCallback) {
         m_pagePtr->wkeHandler().paintUpdatedCallback(
@@ -1179,6 +1170,11 @@ void WebPageImpl::loadHTMLString(int64 frameId, const WebData& html, const WebUR
     //AutoRecordActions autoRecordActions(this, m_layerTreeHost, false);
     webFrame->loadHTMLString(html, baseURL, unreachableURL, replace);
     m_webViewImpl->setFocus(true);
+}
+
+void WebPageImpl::setTransparent(bool transparent)
+{
+    m_useLayeredBuffer = transparent;
 }
 
 WebPageImpl* WebPageImpl::getSelfForCurrentContext()

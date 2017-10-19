@@ -151,6 +151,8 @@ public:
     void loadRequest(int64 frameId, const blink::WebURLRequest& request);
     void loadHTMLString(int64 frameId, const blink::WebData& html, const blink::WebURL& baseURL, const blink::WebURL& unreachableURL, bool replace);
 
+    void setTransparent(bool transparent);
+
     // Session history -----------------------------------------------------
     void didCommitProvisionalLoad(blink::WebLocalFrame* frame, const blink::WebHistoryItem& history, blink::WebHistoryCommitType type);
     virtual void navigateBackForwardSoon(int offset) override;
