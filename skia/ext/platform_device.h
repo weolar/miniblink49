@@ -121,6 +121,8 @@ class SK_API PlatformDevice {
   virtual void DrawToNativeContext(PlatformSurface surface, int x, int y,
                                    const PlatformRect* src_rect) = 0;
 
+  virtual void DrawToNativeLayeredContext(PlatformSurface surface, const RECT* src_rect, const RECT* client_rect) = 0;
+
   // Returns true if GDI operations can be used for drawing into the bitmap.
   virtual bool SupportsPlatformPaint();
 

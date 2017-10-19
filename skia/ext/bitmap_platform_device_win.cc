@@ -268,6 +268,116 @@ void BitmapPlatformDevice::DrawToNativeContext(HDC dc, int x, int y,
     ReleaseBitmapDC();
 }
 
+void BitmapPlatformDevice::DrawToNativeLayeredContext(HDC dc, const RECT* src_rect, const RECT* client_rect)
+{
+    bool created_dc = !IsBitmapDCCreated();
+    HDC source_dc = BeginPlatformPaint();
+
+    RECT temp_rect;
+    if (!src_rect) {
+        temp_rect.left = 0;
+        temp_rect.right = width();
+        temp_rect.top = 0;
+        temp_rect.bottom = height();
+        src_rect = &temp_rect;
+    }
+
+    int copy_width = src_rect->right - src_rect->left;
+    int copy_height = src_rect->bottom - src_rect->top;
+
+    int client_width = client_rect->right - client_rect->left;
+    int client_height = client_rect->bottom - client_rect->top;
+
+    // We need to reset the translation for our bitmap or (0,0) won't be in the
+    // upper left anymore
+    SkMatrix identity;
+    identity.reset();
+
+    //LoadTransformToDC(source_dc, identity);
+    {
+#define ULW_COLORKEY            0x00000001
+#define ULW_ALPHA               0x00000002
+#define ULW_OPAQUE              0x00000004
+        BLENDFUNCTION blend_function = { AC_SRC_OVER, 0, 255, AC_SRC_ALPHA };
+        typedef BOOL(WINAPI* PFN_UpdateLayeredWindow) (
+            __in HWND hWnd,
+            __in_opt HDC hdcDst,
+            __in_opt POINT *pptDst,
+            __in_opt SIZE *psize,
+            __in_opt HDC hdcSrc,
+            __in_opt POINT *pptSrc,
+            __in COLORREF crKey,
+            __in_opt BLENDFUNCTION *pblend,
+            __in DWORD dwFlags
+            );
+        static PFN_UpdateLayeredWindow s_pUpdateLayeredWindow = NULL;
+        if (NULL == s_pUpdateLayeredWindow) {
+            s_pUpdateLayeredWindow = reinterpret_cast<PFN_UpdateLayeredWindow>(
+                GetProcAddress(GetModuleHandleW(L"user32.dll"), "UpdateLayeredWindow"));
+        }
+
+        SIZE client_size = { client_width, client_height };
+        //POINT zero = { src_rect->left, src_rect->top };
+        POINT zero = { 0 };
+
+        typedef struct tagUPDATELAYEREDWINDOWINFO {
+            DWORD               cbSize;
+            HDC                 hdcDst;
+            POINT CONST         *pptDst;
+            SIZE CONST          *psize;
+            HDC                 hdcSrc;
+            POINT CONST         *pptSrc;
+            COLORREF            crKey;
+            BLENDFUNCTION CONST *pblend;
+            DWORD               dwFlags;
+            RECT CONST          *prcDirty;
+        } UPDATELAYEREDWINDOWINFO, *PUPDATELAYEREDWINDOWINFO;
+
+        typedef BOOL(WINAPI* PFN_UpdateLayeredWindowIndirect) (HWND hWnd, UPDATELAYEREDWINDOWINFO const* pULWInfo);
+        static PFN_UpdateLayeredWindowIndirect s_pUpdateLayeredWindowIndirect = NULL;
+        static BOOL s_bHaveCheckUpdateLayeredWindowIndirect = FALSE;
+
+        if (!s_bHaveCheckUpdateLayeredWindowIndirect) {
+            s_bHaveCheckUpdateLayeredWindowIndirect = TRUE;
+
+            if (NULL == s_pUpdateLayeredWindowIndirect) {
+                s_pUpdateLayeredWindowIndirect = reinterpret_cast<PFN_UpdateLayeredWindowIndirect>(
+                    GetProcAddress(GetModuleHandleW(L"user32.dll"), "UpdateLayeredWindowIndirect"));
+            }
+        }
+
+        BOOL b;
+        if (s_pUpdateLayeredWindowIndirect) {
+            UPDATELAYEREDWINDOWINFO info = { 0 };
+            info.cbSize = sizeof(UPDATELAYEREDWINDOWINFO);
+            info.hdcDst = dc;
+            info.pptDst = 0;
+            info.psize = &client_size;
+            info.hdcSrc = source_dc;
+            info.pptSrc = &zero;
+            info.crKey = RGB(0xFF, 0xFF, 0xFF);
+            info.pblend = &blend_function;
+            info.dwFlags = ULW_ALPHA;
+            info.prcDirty = src_rect;
+            b = s_pUpdateLayeredWindowIndirect(::WindowFromDC(dc), &info);
+        } else {
+            b = s_pUpdateLayeredWindow(::WindowFromDC(dc),
+                dc,
+                0, // &position,
+                &client_size,
+                source_dc,
+                &zero,
+                RGB(0xFF, 0xFF, 0xFF), &blend_function, ULW_ALPHA);
+        }
+    }
+
+    //LoadTransformToDC(source_dc, data_->transform());
+
+    EndPlatformPaint();
+    if (created_dc)
+        ReleaseBitmapDC();
+}
+
 const SkBitmap& BitmapPlatformDevice::onAccessBitmap() {
   // FIXME(brettw) OPTIMIZATION: We should only flush if we know a GDI
   // operation has occurred on our DC.

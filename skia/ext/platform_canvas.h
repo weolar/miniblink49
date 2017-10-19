@@ -122,6 +122,9 @@ SK_API void DrawToNativeContext(SkCanvas* canvas,
                                 int y,
                                 const PlatformRect* src_rect);
 
+SK_API void DrawToNativeLayeredContext(SkCanvas* canvas, PlatformSurface context,
+    const PlatformRect* src_rect, const PlatformRect* client_rect);
+
 // Sets the opacity of each pixel in the specified region to be opaque.
 SK_API void MakeOpaque(SkCanvas* canvas, int x, int y, int width, int height);
 

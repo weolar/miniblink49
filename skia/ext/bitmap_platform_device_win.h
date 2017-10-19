@@ -56,6 +56,7 @@ class SK_API BitmapPlatformDevice : public SkBitmapDevice, public PlatformDevice
 
   virtual void DrawToNativeContext(HDC dc, int x, int y,
                                    const RECT* src_rect) OVERRIDE;
+  virtual void DrawToNativeLayeredContext(HDC dc, const RECT* src_rect, const RECT* client_rect) OVERRIDE;
 
   // Loads the given transform and clipping region into the HDC. This is
   // overridden from SkBaseDevice.
