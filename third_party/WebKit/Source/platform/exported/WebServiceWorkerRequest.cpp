@@ -71,14 +71,14 @@ WebString WebServiceWorkerRequest::method() const
 
 void WebServiceWorkerRequest::setHeader(const WebString& key, const WebString& value)
 {
-    if (equalIgnoringCase(key, "referer"))
+    if (equalIgnoringCase((String)key, "referer"))
         return;
     m_private->m_headers.set(key, value);
 }
 
 void WebServiceWorkerRequest::appendHeader(const WebString& key, const WebString& value)
 {
-    if (equalIgnoringCase(key, "referer"))
+    if (equalIgnoringCase((String)key, "referer"))
         return;
     HTTPHeaderMap::AddResult result = m_private->m_headers.add(key, value);
     if (!result.isNewEntry)
