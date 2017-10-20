@@ -240,6 +240,7 @@ WKE_API wkeWebView wkeCreateWebView();
 WKE_API wkeWebView wkeGetWebView(const char* name);
 WKE_API void wkeDestroyWebView(wkeWebView webView);
 
+WKE_API void wkeSetNavigationToNewWindowEnable(wkeWebView webView, bool b);
 WKE_API void wkeSeCspCheckEnable(wkeWebView webView, bool b);
 WKE_API void wkeSetViewNetInterface(wkeWebView webView, const char* netInterface);
 

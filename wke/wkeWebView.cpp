@@ -88,7 +88,10 @@ void CWebView::setTransparent(bool transparent)
     if (m_transparent == transparent)
         return;
 
-//     m_transparent = transparent;
+    m_transparent = transparent;
+
+    m_webPage->setTransparent(transparent);
+
 //     m_dirtyArea = blink::IntRect(0, 0, m_width, m_height);
 //     setDirty(true);
 // 
@@ -928,7 +931,6 @@ void CWebView::onURLChanged2(wkeURLChangedCallback2 callback, void* callbackPara
     m_webPage->wkeHandler().urlChangedCallback2 = callback;
     m_webPage->wkeHandler().urlChangedCallback2Param = callbackParam;
 }
-
 
 void CWebView::onPaintUpdated(wkePaintUpdatedCallback callback, void* callbackParam)
 {

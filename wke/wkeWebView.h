@@ -6,6 +6,7 @@
 
 //cexer: 必须包含在后面，因为其中的 windows.h 会定义 max、min，导致 WebCore 内部的 max、min 出现错乱。
 #include "wke/wkeString.h"
+#include "wke/wkeJsBindFreeTempObject.h"
 #include "third_party/WebKit/Source/platform/geometry/IntRect.h"
 #include "net/WebURLLoaderManager.h"
 #include <map>

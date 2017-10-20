@@ -7,6 +7,17 @@ namespace wke {
 
 void freeV8TempObejctOnOneFrameBefore();
 
+class AutoDisableFreeV8TempObejct {
+public:
+    AutoDisableFreeV8TempObejct();
+    ~AutoDisableFreeV8TempObejct();
+
+    static bool isDisable() { return m_isDisable; }
+
+private:
+    static bool m_isDisable;
+};
+
 }
 
 #endif

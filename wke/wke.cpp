@@ -20,6 +20,7 @@ namespace net {
 
 void setCookieJarPath(const WCHAR* path);
 bool g_cspCheckEnable = true;
+bool g_navigationToNewWindowEnable = true;
 
 }
 
@@ -131,6 +132,11 @@ void wkeFinalize()
     s_versionString = nullptr;
 }
 
+void wkeSetNavigationToNewWindowEnable(wkeWebView webView, bool b)
+{
+    net::g_navigationToNewWindowEnable = b;
+}
+
 void wkeSeCspCheckEnable(wkeWebView webView, bool b)
 {
     net::g_cspCheckEnable = b;
@@ -200,7 +206,7 @@ void wkeSetHandle(wkeWebView webView, HWND wnd)
 
 void wkeSetHandleOffset(wkeWebView webView, int x, int y)
 {
-	webView->setHandleOffset(x, y);
+    webView->setHandleOffset(x, y);
 }
 
 bool wkeIsTransparent(wkeWebView webView)
@@ -225,7 +231,7 @@ void wkeSetUserAgentW(wkeWebView webView, const wchar_t* userAgent)
 
 void wkePostURL(wkeWebView wkeView,const utf8 * url,const char *szPostData,int nLen)
 {
-	wkeView->loadPostURL(url,szPostData,nLen);
+    wkeView->loadPostURL(url,szPostData,nLen);
 }
 
 void wkePostURLW(wkeWebView wkeView,const wchar_t * url,const char *szPostData,int nLen)
@@ -520,11 +526,15 @@ bool wkeFireWindowsMessage(wkeWebView webView, HWND hWnd, UINT message, WPARAM w
 
 void wkeSetFocus(wkeWebView webView)
 {
+    if (!webView)
+        return;
     webView->setFocus();
 }
 
 void wkeKillFocus(wkeWebView webView)
 {
+    if (!webView)
+        return;
     webView->killFocus();
 }
 
@@ -760,22 +770,22 @@ wkeWebView wkeGetWebViewForCurrentContext()
     return webview;
 }
 
-WKE_API void wkeSetUserKayValue(wkeWebView webView, const char* key, void* value)
+void wkeSetUserKayValue(wkeWebView webView, const char* key, void* value)
 {
     webView->setUserKayValue(key, value);
 }
 
-WKE_API void* wkeGetUserKayValue(wkeWebView webView, const char* key)
+void* wkeGetUserKayValue(wkeWebView webView, const char* key)
 {
     return webView->getUserKayValue(key);
 }
 
-WKE_API int wkeGetCursorInfoType(wkeWebView webView)
+int wkeGetCursorInfoType(wkeWebView webView)
 {
     return webView->getCursorInfoType();
 }
 
-WKE_API void wkeSetDragFiles(wkeWebView webView, const POINT* clintPos, const POINT* screenPos, wkeString files[], int filesCount)
+void wkeSetDragFiles(wkeWebView webView, const POINT* clintPos, const POINT* screenPos, wkeString files[], int filesCount)
 {
     webView->setDragFiles(clintPos, screenPos, files, filesCount);
 }
