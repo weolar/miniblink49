@@ -338,7 +338,7 @@ void WebPageImpl::init(WebPage* pagePtr, HWND hWnd)
     m_hWnd = hWnd;
 
     LONG windowStyle = GetWindowLongPtr(hWnd, GWL_EXSTYLE);
-    m_useLayeredBuffer = !!((windowStyle)& WS_EX_LAYERED);
+    m_useLayeredBuffer = !!(windowStyle & WS_EX_LAYERED);
     m_layerTreeHost->setUseLayeredBuffer(m_useLayeredBuffer);
 
     m_pagePtr = pagePtr;
@@ -404,9 +404,6 @@ void WebPageImpl::close()
 
 void WebPageImpl::doClose()
 {
-    for (size_t i = 0; i < m_destroyNotifs.size(); ++i)
-        m_destroyNotifs[i]->destroy();
-
     m_layerTreeHost->requestApplyActionsToRunIntoCompositeThread(false);
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
     if (!m_pagePtr->wkeHandler().isWke) {
@@ -423,10 +420,11 @@ void WebPageImpl::doClose()
     content::WebThreadImpl* threadImpl = nullptr;
     threadImpl = (content::WebThreadImpl*)(blink::Platform::current()->currentThread());
 
-    //blink::V8GCController::collectGarbage(v8::Isolate::GetCurrent());
-    m_webViewImpl->mainFrameImpl()->close();
+    //m_webViewImpl->mainFrameImpl()->close();
     m_webViewImpl->close();
-    //v8::Isolate::GetCurrent()->CollectAllGarbage("WebPage close");
+
+    for (size_t i = 0; i < m_destroyNotifs.size(); ++i)
+        m_destroyNotifs[i]->destroy();
 
     m_state = pageDestroyed;
 }
@@ -672,6 +670,11 @@ HDC WebPageImpl::viewDC()
 
 void WebPageImpl::copyToMemoryCanvasForUi()
 {
+    if (m_hWnd) {
+        LONG windowStyle = GetWindowLongPtr(m_hWnd, GWL_EXSTYLE);
+        m_useLayeredBuffer = !!(windowStyle & WS_EX_LAYERED);
+    }
+
     SkCanvas* memoryCanvas = m_layerTreeHost->getMemoryCanvasLocked();
     if (!memoryCanvas) {
         m_layerTreeHost->releaseMemoryCanvasLocked();
@@ -681,7 +684,8 @@ void WebPageImpl::copyToMemoryCanvasForUi()
     int width = memoryCanvas->imageInfo().width();
     int height = memoryCanvas->imageInfo().height();
     if (0 != width && 0 != height) {
-        if (/*!m_memoryCanvasForUi ||*/ (m_memoryCanvasForUi && (width != m_memoryCanvasForUi->imageInfo().width() || height != m_memoryCanvasForUi->imageInfo().height()))) {
+        if ((!m_memoryCanvasForUi && 0 != width * height) || 
+            (m_memoryCanvasForUi && (width != m_memoryCanvasForUi->imageInfo().width() || height != m_memoryCanvasForUi->imageInfo().height()))) {
             if (m_memoryCanvasForUi)
                 delete m_memoryCanvasForUi;
             m_memoryCanvasForUi = skia::CreatePlatformCanvas(width, height, !m_useLayeredBuffer);
@@ -699,7 +703,11 @@ void WebPageImpl::copyToMemoryCanvasForUi()
 
     HDC hMemoryDC = skia::BeginPlatformPaint(m_memoryCanvasForUi);
     RECT srcRect = { 0, 0, memoryCanvas->imageInfo().width(), memoryCanvas->imageInfo().height() };
-    skia::DrawToNativeContext(memoryCanvas, hMemoryDC, 0, 0, &srcRect);
+    if (!m_useLayeredBuffer)
+        skia::DrawToNativeContext(memoryCanvas, hMemoryDC, 0, 0, &srcRect);
+    else {
+        skia::DrawToNativeLayeredContext(memoryCanvas, hMemoryDC, &srcRect, &srcRect);
+    }
     skia::EndPlatformPaint(m_memoryCanvasForUi);
 
     m_layerTreeHost->releaseMemoryCanvasLocked();
