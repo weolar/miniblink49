@@ -365,7 +365,6 @@ PassRefPtr<OpenTypeVerticalData> FontPlatformData::verticalData() const
 #ifdef MINIBLINK_NOT_IMPLEMENTED
     return FontCache::fontCache()->getVerticalData(typeface()->uniqueID(), *this);
 #endif // MINIBLINK_NOT_IMPLEMENTED
-    notImplemented();
     return nullptr;
 }
 
