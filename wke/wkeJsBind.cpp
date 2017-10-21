@@ -1296,13 +1296,13 @@ WKE_API jsValue jsObject(jsExecState es, jsData* data)
     
     NativeGetterSetterWrap* wrap = NativeGetterSetterWrap::createWrapAndAddToGlobalObjForRelease(isolate, globalObj);
 
-    jsData* dummyData = new jsData();
-    strcpy(dummyData->typeName, data->typeName);
-    dummyData->propertyGet = data->propertyGet;
-    dummyData->propertySet = data->propertySet;
-    dummyData->finalize = data->finalize;
-    dummyData->callAsFunction = data->callAsFunction;
-    wrap->set(dummyData);
+//     jsData* dummyData = new jsData();
+//     strcpy(dummyData->typeName, data->typeName);
+//     dummyData->propertyGet = data->propertyGet;
+//     dummyData->propertySet = data->propertySet;
+//     dummyData->finalize = data->finalize;
+//     dummyData->callAsFunction = data->callAsFunction;
+    wrap->set(data);
     obj->SetNamedPropertyHandler(namedPropertyGetterCallback, namedPropertySetterCallback, nullptr, nullptr, nullptr, v8::External::New(isolate, wrap));
 
     jsValue retValue = createJsValueByLocalValue(isolate, context, obj->NewInstance(context).ToLocalChecked());
