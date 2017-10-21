@@ -46,11 +46,7 @@ WebFrameClientImpl::WebFrameClientImpl()
 
 WebFrameClientImpl::~WebFrameClientImpl()
 {
-    for (size_t i = 0; i < m_unusedFrames.size(); ++i) {
-        WebFrame* frame = m_unusedFrames[i];
-        frame->close();
-    }
-    m_unusedFrames.clear();
+    RELEASE_ASSERT(0 == m_unusedFrames.size());
 }
 
 void WebFrameClientImpl::didAddMessageToConsole(const WebConsoleMessage& message,
@@ -112,6 +108,9 @@ void WebFrameClientImpl::frameDetached(WebFrame* child, DetachType)
     // |frame| is invalid after here.  Be sure to clear frame_ as well, since this
     // object may not be deleted immediately and other methods may try to access
     // it.
+    size_t findChildIt = m_unusedFrames.find(child);
+    if (WTF::kNotFound == findChildIt)
+        m_unusedFrames.remove(findChildIt);
     child->close();
 }
 
