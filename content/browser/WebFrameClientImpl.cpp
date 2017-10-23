@@ -109,7 +109,7 @@ void WebFrameClientImpl::frameDetached(WebFrame* child, DetachType)
     // object may not be deleted immediately and other methods may try to access
     // it.
     size_t findChildIt = m_unusedFrames.find(child);
-    if (WTF::kNotFound == findChildIt)
+    if (WTF::kNotFound != findChildIt)
         m_unusedFrames.remove(findChildIt);
     child->close();
 }
