@@ -97,9 +97,11 @@ public:
 
     // Sets the background color for the viewport.
     virtual void setBackgroundColor(blink::WebColor) override;
+    blink::WebColor getBackgroundColor() const;
 
     // Sets the background transparency for the viewport. The default is 'false'.
     virtual void setHasTransparentBackground(bool) override;
+    bool getHasTransparentBackground() const;
 
     virtual void registerForAnimations(blink::WebLayer* layer) override;
 
@@ -157,7 +159,8 @@ public:
     void paintToBit(void* bits, int pitch);
     void requestDrawFrameToRunIntoCompositeThread();
     void requestApplyActionsToRunIntoCompositeThread(bool needCheck);
-    void setUseLayeredBuffer(bool b);
+    //void setUseLayeredBuffer(bool b);
+    //bool getIsUseLayeredBuffer() const { return m_useLayeredBuffer; }
     static void clearCanvas(SkCanvas* canvas, const blink::IntRect& rect, bool useLayeredBuffer);
     
     void postPaintMessage(const blink::IntRect& paintRect);
@@ -174,6 +177,7 @@ public:
     const cc_blink::WebLayerImpl* getConstRootLayer() { return m_rootLayer; }
 
     void appendPendingRepaintRect(SkRect r);
+
 private:
     void requestPaintToMemoryCanvasInUiThread(const blink::IntRect& r);
     void onApplyActionsInCompositeThread(bool needCheck);
@@ -239,7 +243,7 @@ private:
     int m_drawFrameFinishCount;
     int m_requestApplyActionsCount;
     int m_requestApplyActionsFinishCount;
-    bool m_useLayeredBuffer;
+    //bool m_useLayeredBuffer;
 
     struct WrapSelfForUiThread {
         WrapSelfForUiThread(LayerTreeHost* host)

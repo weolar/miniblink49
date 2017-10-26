@@ -220,9 +220,7 @@ public:
     {
         SkBitmap* bitmap = new SkBitmap;
         bitmap->allocN32Pixels(m_dirtyRect.width(), m_dirtyRect.height());
-        if (!m_isOpaque)
-            bitmap->eraseColor(0x00ff11ff); // TODO
-        
+
         // Uses kPremul_SkAlphaType since the result is not known to be opaque.
         SkImageInfo info = SkImageInfo::MakeN32(m_dirtyRect.width(), m_dirtyRect.height(), m_isOpaque ? kOpaque_SkAlphaType : kPremul_SkAlphaType); // TODO
         SkSurfaceProps surfaceProps(0, kUnknown_SkPixelGeometry);
@@ -233,11 +231,13 @@ public:
         SkPaint paint;
         paint.setAntiAlias(false);
 
+        if (!m_isOpaque)
+            bitmap->eraseARGB(0, 0xff, 0xff, 0xff); // TODO
+
         canvas->save();
         canvas->scale(1, 1);
-        //canvas->clipRect(SkRect::MakeIWH(m_dirtyRect.width(), m_dirtyRect.height()));
         canvas->translate(-m_dirtyRect.x(), -m_dirtyRect.y());
-        canvas->drawPicture(m_picture, nullptr, /*&paint*/nullptr);
+        canvas->drawPicture(m_picture, nullptr, nullptr);
         canvas->restore();
 
         return bitmap;

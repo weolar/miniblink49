@@ -73,7 +73,6 @@ LayerTreeHost::LayerTreeHost(LayerTreeHostClent* hostClient, LayerTreeHostUiThre
     m_requestApplyActionsFinishCount = 0;
     m_postpaintMessageCount = 0;
     m_hasResize = false;
-    m_useLayeredBuffer = false;
     m_compositeThread = nullptr;
     if (m_uiThreadClient)
         m_compositeThread = blink::Platform::current()->createThread("CompositeThread");
@@ -173,6 +172,7 @@ bool LayerTreeHost::isDestroying() const
 
 void LayerTreeHost::registerLayer(cc_blink::WebLayerImpl* layer)
 {
+    layer->setBackgroundColor(getRealColor(m_hasTransparentBackground, m_backgroundColor));
     m_liveLayers.add(layer->id(), layer);
 }
 
@@ -527,21 +527,19 @@ void LayerTreeHost::drawToCanvas(SkCanvas* canvas, const IntRect& dirtyRect)
     canvas->clipRect(dirtyRect);
 
     SkPaint paint;
-    paint.setAntiAlias(false);
-    paint.setColor(0xffffffff); // 0xfff0504a
-    paint.setXfermodeMode(SkXfermode::kSrcOver_Mode); // SkXfermode::kSrcOver_Mode
-    canvas->drawRect((SkRect)dirtyRect, paint);
-
+//     paint.setAntiAlias(false);
+//     paint.setColor(0xffffffff); // 0xfff0504a
+//     paint.setXfermodeMode(SkXfermode::kSrcOver_Mode); // SkXfermode::kSrcOver_Mode
+//     canvas->drawRect((SkRect)dirtyRect, paint);
+    
     SkPaint clearColorPaint;
-    clearColorPaint.setColor(0xffffffff | m_backgroundColor);
-
-//     String outString = String::format("LayerTreeHost::drawToCanvas:%d, %d, %d, %d\n", dirtyRect.x(), dirtyRect.y(), dirtyRect.width(), dirtyRect.height());
-//     OutputDebugStringW(outString.charactersWithNullTermination().data());
+    clearColorPaint.setColor(getRealColor(m_hasTransparentBackground, m_backgroundColor));
 
     // http://blog.csdn.net/to_be_designer/article/details/48530921
-    clearColorPaint.setXfermodeMode(SkXfermode::kSrcOver_Mode); // SkXfermode::kSrcOver_Mode
-    canvas->drawRect((SkRect)dirtyRect, clearColorPaint);
-
+    if (m_hasTransparentBackground) {
+        clearColorPaint.setXfermodeMode(SkXfermode::kSrcOver_Mode); // SkXfermode::kSrcOver_Mode
+        canvas->drawRect((SkRect)dirtyRect, clearColorPaint);
+    }
     m_rootCCLayer->drawToCanvasChildren(this, canvas, dirtyRect, 0);
 
     canvas->restore();
@@ -706,16 +704,34 @@ float LayerTreeHost::deviceScaleFactor() const
     return m_deviceScaleFactor;
 }
 
-// Sets the background color for the viewport.
+static void recursiveSetColor(WTF::HashMap<int, cc_blink::WebLayerImpl*>* layers, bool hasTransparentBackground, SkColor backgroundColor)
+{
+    for (auto it = layers->begin(); it != layers->end(); ++it) {
+        cc_blink::WebLayerImpl* layer = it->value;
+        layer->setBackgroundColor(getRealColor(hasTransparentBackground, backgroundColor));
+    }
+}
+
 void LayerTreeHost::setBackgroundColor(blink::WebColor color)
 {
     m_backgroundColor = color;
+    recursiveSetColor(&m_liveLayers, m_hasTransparentBackground, m_backgroundColor);
 }
 
-// Sets the background transparency for the viewport. The default is 'false'.
+blink::WebColor LayerTreeHost::getBackgroundColor() const
+{
+    return m_backgroundColor;
+}
+
 void LayerTreeHost::setHasTransparentBackground(bool b)
 {
     m_hasTransparentBackground = b;
+    recursiveSetColor(&m_liveLayers, m_hasTransparentBackground, m_backgroundColor);
+}
+
+bool LayerTreeHost::getHasTransparentBackground() const
+{ 
+    return m_hasTransparentBackground;
 }
 
 void LayerTreeHost::registerForAnimations(blink::WebLayer* layer)
@@ -803,11 +819,6 @@ void LayerTreeHost::onApplyActionsInCompositeThread(bool needCheck)
     atomicDecrement(&m_requestApplyActionsCount);
     applyActions(needCheck);
     atomicDecrement(&m_requestApplyActionsFinishCount);
-}
-
-void LayerTreeHost::setUseLayeredBuffer(bool b)
-{
-    m_useLayeredBuffer = b;
 }
 
 void LayerTreeHost::clearCanvas(SkCanvas* canvas, const IntRect& rect, bool useLayeredBuffer)
@@ -899,7 +910,11 @@ void LayerTreeHost::firePaintEvent(HDC hdc, const RECT* paintRect)
 #endif
 
     WTF::Locker<WTF::Mutex> locker(m_compositeMutex);
-    skia::DrawToNativeContext(m_memoryCanvas, hdc, paintRect->left, paintRect->top, paintRect);
+
+    if (!m_hasTransparentBackground)
+        skia::DrawToNativeContext(m_memoryCanvas, hdc, paintRect->left, paintRect->top, paintRect);
+    else
+        skia::DrawToNativeLayeredContext(m_memoryCanvas, hdc, paintRect, &intRectToWinRect(m_clientRect));
 }
 
 void LayerTreeHost::drawFrameInCompositeThread()
@@ -1032,8 +1047,8 @@ void LayerTreeHost::paintToMemoryCanvas(const IntRect& r)
 
         if (m_memoryCanvas)
             delete m_memoryCanvas;
-        m_memoryCanvas = skia::CreatePlatformCanvas(m_clientRect.width(), m_clientRect.height(), !m_useLayeredBuffer);
-        clearCanvas(m_memoryCanvas, m_clientRect, m_useLayeredBuffer);
+        m_memoryCanvas = skia::CreatePlatformCanvas(m_clientRect.width(), m_clientRect.height(), !m_hasTransparentBackground);
+        clearCanvas(m_memoryCanvas, m_clientRect, m_hasTransparentBackground);
     }
 
     paintRect.intersect(m_clientRect);
@@ -1046,8 +1061,8 @@ void LayerTreeHost::paintToMemoryCanvas(const IntRect& r)
     }
 
     m_isDrawDirty = true;
-    if (m_useLayeredBuffer)
-        clearCanvas(m_memoryCanvas, paintRect, m_useLayeredBuffer);
+    if (m_hasTransparentBackground)
+        clearCanvas(m_memoryCanvas, paintRect, m_hasTransparentBackground);
 
     drawToCanvas(m_memoryCanvas, paintRect); // ªÊ÷∆‘‡æÿ–Œ
 
@@ -1110,8 +1125,7 @@ void LayerTreeHost::paintToBit(void* bits, int pitch)
 
     if (pitch == 0 || pitch == width * 4) {
         memcpy(bits, pixels, width * height * 4);
-    }
-    else {
+    } else {
         unsigned char* src = (unsigned char*)pixels;
         unsigned char* dst = (unsigned char*)bits;
         for (int i = 0; i < height; ++i) {

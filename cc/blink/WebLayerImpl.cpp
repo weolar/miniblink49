@@ -264,6 +264,7 @@ void WebLayerImpl::updataDrawToCanvasProperties(cc::DrawToCanvasProperties* prop
     prop->opaque = opaque();
     prop->maskLayerId = maskLayerId();
     prop->replicaLayerId = replicaLayerId();
+    prop->backgroundColor = m_backgroundColor;
 }
 
 const SkMatrix44& WebLayerImpl::drawTransform() const

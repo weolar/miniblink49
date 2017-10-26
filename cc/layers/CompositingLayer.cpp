@@ -112,6 +112,11 @@ bool CompositingLayer::opaque() const
     return m_prop->opaque;
 }
 
+SkColor CompositingLayer::backgroundColor() const
+{
+    return m_prop->backgroundColor;
+}
+
 void CompositingLayer::insertChild(CompositingLayer* child, size_t index)
 {
     CompositingLayer* childOfImpl = static_cast<CompositingLayer*>(child);

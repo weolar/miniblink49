@@ -4,6 +4,7 @@
 #include "cc/tiles/TileWidthHeight.h"
 #include "cc/layers/CompositingLayer.h"
 #include "cc/trees/DrawProperties.h"
+#include "cc/base/bdcolor.h"
 
 #include "SkBitmap.h"
 #include "SkCanvas.h"
@@ -83,8 +84,8 @@ SkBitmap* CompositingTile::allocBitmap(int width, int height, bool isOpaque)
     bitmap->allocPixels(info);
 
     SkColor color = 0x00ffffff;
-    if (!isOpaque) // TODO 
-         bitmap->eraseColor(color); // TODO: 根据是否透明窗口决定背景色
+//     if (!isOpaque) // TODO 
+//          bitmap->eraseColor(color); // TODO: 根据是否透明窗口决定背景色
     return bitmap;
 }
 
@@ -215,8 +216,7 @@ void CompositingTile::eraseColor(const blink::IntRect& r, const SkColor* color)
 
     SkPaint clearColorPaint;
     clearColorPaint.setXfermodeMode(SkXfermode::kClear_Mode);
-    //clearColorPaint.setColor(color ? *color : (0x00ffffff | (layer()->backgroundColor())));
-    clearColorPaint.setColor(0x00ffff11);
+    clearColorPaint.setColor(color ? *color : layer()->backgroundColor());
     canvas.drawIRect(rect, clearColorPaint);
 }
 

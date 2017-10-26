@@ -5,6 +5,7 @@
 #ifndef CC_LAYERS_DRAW_PROPERTIES_H_
 #define CC_LAYERS_DRAW_PROPERTIES_H_
 
+#include "cc/base/bdcolor.h"
 #include "third_party/WebKit/Source/platform/geometry/IntRect.h"
 #include "third_party/WebKit/Source/platform/geometry/FloatPoint.h"
 #include "third_party/skia/include/utils/SkMatrix44.h"
@@ -35,6 +36,7 @@ struct DrawToCanvasProperties : public DrawProperties {
         drawsContent = true;
         opaque = true;
         opacity = 0;
+        backgroundColor = s_kBgColor;
     }
 
     void copyDrawProperties(const DrawProperties& other, float otherOpacity)
@@ -60,6 +62,7 @@ struct DrawToCanvasProperties : public DrawProperties {
         opacity = other.opacity;
         maskLayerId = other.maskLayerId;
         replicaLayerId = other.replicaLayerId;
+        backgroundColor = other.backgroundColor;
     }
 
     blink::IntSize bounds;
@@ -70,6 +73,7 @@ struct DrawToCanvasProperties : public DrawProperties {
     float opacity;
     int maskLayerId;
     int replicaLayerId;
+    SkColor backgroundColor;
 };
 
 }  // namespace cc

@@ -3,6 +3,7 @@
 
 #include "third_party/WebKit/Source/wtf/Vector.h"
 #include "third_party/WebKit/public/platform/WebCanvas.h"
+#include "third_party/skia/include/core/SkColor.h"
 
 class SkBitmap;
 struct SkRect;
@@ -53,8 +54,8 @@ public:
     bool drawsContent() const;
     bool opaque() const;
     float opacity() const;
+    SkColor backgroundColor() const;
 
-    //CompositingTile* getTileByXY(int xIndex, int yIndex);
     void updataTile(int newIndexNumX, int newIndexNumY, DrawToCanvasProperties* prop);
     void cleanupUnnecessaryTile(const WTF::Vector<TileActionInfo*>& tiles);
 
@@ -73,7 +74,6 @@ protected:
     int m_id;
     DrawToCanvasProperties* m_prop;
 
-    //WTF::Vector<CompositingTile*>* m_tiles;
     TilesAddr* m_tilesAddr;
     int m_numTileX;
     int m_numTileY;
