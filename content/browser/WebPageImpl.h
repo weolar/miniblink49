@@ -188,7 +188,7 @@ public:
 
     friend class AutoRecordActions;
 
-    bool m_useLayeredBuffer;
+    //bool m_useLayeredBuffer;
 
     blink::IntRect m_winodwRect;
 
