@@ -685,6 +685,7 @@ void WebPageImpl::copyToMemoryCanvasForUi()
         return;
     }
     
+    bool isCreatedThisTime = false;
     int width = memoryCanvas->imageInfo().width();
     int height = memoryCanvas->imageInfo().height();
     if (0 != width && 0 != height) {
@@ -694,6 +695,7 @@ void WebPageImpl::copyToMemoryCanvasForUi()
                 delete m_memoryCanvasForUi;
             m_memoryCanvasForUi = skia::CreatePlatformCanvas(width, height, !useLayeredBuffer);
             cc::LayerTreeHost::clearCanvas(m_memoryCanvasForUi, IntRect(0, 0, width, height), useLayeredBuffer);
+            isCreatedThisTime = true;
         }
     } else if (m_memoryCanvasForUi) {
         delete m_memoryCanvasForUi;
@@ -705,15 +707,14 @@ void WebPageImpl::copyToMemoryCanvasForUi()
         return;
     }
 
-    HDC hMemoryDC = skia::BeginPlatformPaint(m_memoryCanvasForUi);
-    RECT srcRect = { 0, 0, memoryCanvas->imageInfo().width(), memoryCanvas->imageInfo().height() };
-    if (!useLayeredBuffer)
-        skia::DrawToNativeContext(memoryCanvas, hMemoryDC, 0, 0, &srcRect);
-    else {
-        skia::DrawToNativeLayeredContext(memoryCanvas, hMemoryDC, &srcRect, &srcRect);
-    }
-    skia::EndPlatformPaint(m_memoryCanvasForUi);
+    if (useLayeredBuffer && !isCreatedThisTime)
+        cc::LayerTreeHost::clearCanvas(m_memoryCanvasForUi, IntRect(0, 0, width, height), useLayeredBuffer);
 
+    SkBaseDevice* device = skia::GetTopDevice(*memoryCanvas);
+    if (device) {
+        const SkBitmap& memoryCanvasBitmap = device->accessBitmap(false);
+        m_memoryCanvasForUi->drawBitmap(memoryCanvasBitmap, 0, 0, nullptr);
+    }
     m_layerTreeHost->releaseMemoryCanvasLocked();
 }
 
