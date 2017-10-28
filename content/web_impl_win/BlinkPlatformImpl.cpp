@@ -13,6 +13,7 @@
 #include "content/web_impl_win/WebFileUtilitiesImpl.h"
 #include "content/web_impl_win/WaitableEvent.h"
 #include "content/web_impl_win/npapi/WebPluginImpl.h"
+#include "content/web_impl_win/npapi/PluginDatabase.h"
 #include "content/resources/MissingImageData.h"
 #include "content/resources/TextAreaResizeCornerData.h"
 #include "content/resources/LocalizedString.h"
@@ -26,6 +27,7 @@
 #include "third_party/WebKit/Source/web/WebStorageNamespaceImpl.h"
 #include "third_party/WebKit/public/platform/WebScrollbarBehavior.h"
 #include "third_party/WebKit/public/platform/WebPluginListBuilder.h"
+#include "third_party/WebKit/Source/platform/plugins/PluginData.h"
 #include "third_party/WebKit/Source/platform/PartitionAllocMemoryDumpProvider.h"
 #include "third_party/WebKit/Source/platform/heap/BlinkGCMemoryDumpProvider.h"
 #include "third_party/WebKit/Source/bindings/core/v8/V8GCController.h"
@@ -642,9 +644,33 @@ blink::WebClipboard* BlinkPlatformImpl::clipboard()
 // Plugins -------------------------------------------------------------
 void BlinkPlatformImpl::getPluginList(bool refresh, blink::WebPluginListBuilder* builder)
 {
-    builder->addPlugin(blink::WebString::fromUTF8("Shockwave Flash"), blink::WebString::fromUTF8("flashPlugin"), blink::WebString::fromUTF8(".swf"));
-    builder->addMediaTypeToLastPlugin(blink::WebString::fromUTF8("application/x-shockwave-flash"), blink::WebString::fromUTF8("flashPlugin"));
-    builder->addFileExtensionToLastMediaType(blink::WebString::fromUTF8(".swf"));
+//     builder->addPlugin(blink::WebString::fromUTF8("Shockwave Flash"), blink::WebString::fromUTF8("flashPlugin"), blink::WebString::fromUTF8(".swf"));
+//     builder->addMediaTypeToLastPlugin(blink::WebString::fromUTF8("application/x-shockwave-flash"), blink::WebString::fromUTF8("flashPlugin"));
+//     builder->addFileExtensionToLastMediaType(blink::WebString::fromUTF8(".swf"));
+
+    const Vector<PluginPackage*>& plugins = PluginDatabase::installedPlugins()->plugins();
+
+    for (size_t i = 0; i < plugins.size(); ++i) {
+        PluginPackage* package = plugins[i];
+        String name = package->name();
+        String desc = package->description();
+        String file = package->fileName();
+        builder->addPlugin(name, desc, file);
+
+        const MIMEToDescriptionsMap& mimeToDescriptions = package->mimeToDescriptions();
+        MIMEToDescriptionsMap::const_iterator end = mimeToDescriptions.end();
+
+        for (MIMEToDescriptionsMap::const_iterator it = mimeToDescriptions.begin(); it != end; ++it) {
+            String type = it->key;
+            String desc = it->value;
+            builder->addMediaTypeToLastPlugin(type, desc);
+
+            Vector<String> extensions = package->mimeToExtensions().get(type);
+            for (size_t j = 0; j < extensions.size(); ++j) {
+                builder->addFileExtensionToLastMediaType(extensions[j]);
+            }
+        }
+    }
 }
 
 blink::WebFileUtilities* BlinkPlatformImpl::fileUtilities()
