@@ -288,7 +288,7 @@ void WebFrameClientImpl::didReceiveTitle(WebLocalFrame* frame, const WebString& 
 
 void WebFrameClientImpl::didChangeIcon(WebLocalFrame*, WebIconURL::Type) { }
 
-void WebFrameClientImpl::didFinishDocumentLoad(WebLocalFrame*)
+void WebFrameClientImpl::didFinishDocumentLoad(WebLocalFrame* frame)
 {
     m_documentReady = true;
     //     cef_load_handler_t* loadHandler = m_cefBrowserHostImpl->m_browserImpl->m_loadHandler;
@@ -299,6 +299,8 @@ void WebFrameClientImpl::didFinishDocumentLoad(WebLocalFrame*)
     wke::CWebViewHandler& handler = m_webPage->wkeHandler();
     if (handler.documentReadyCallback)
         handler.documentReadyCallback(m_webPage->wkeWebView(), handler.documentReadyCallbackParam);
+    if (handler.documentReady2Callback)
+        handler.documentReady2Callback(m_webPage->wkeWebView(), handler.documentReady2CallbackParam, frame);
 #endif
 
     //OutputDebugStringA("WebFrameClientImpl::didFinishDocumentLoad\n");
