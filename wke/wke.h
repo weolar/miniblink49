@@ -319,6 +319,7 @@ WKE_API const utf8* wkeGetCookie(wkeWebView webView);
 WKE_API void wkeSetCookieEnabled(wkeWebView webView, bool enable);
 WKE_API bool wkeIsCookieEnabled(wkeWebView webView);
 WKE_API void wkeSetCookieJarPath(wkeWebView webView, const WCHAR* path);
+WKE_API void wkeSetCookieJarFullPath(wkeWebView webView, const WCHAR* path);
 
 WKE_API void wkeSetMediaVolume(wkeWebView webView, float volume);
 WKE_API float wkeGetMediaVolume(wkeWebView webView);
@@ -441,6 +442,9 @@ WKE_API void wkeOnCreateView(wkeWebView webView, wkeCreateViewCallback callback,
 
 typedef void(*wkeDocumentReadyCallback)(wkeWebView webView, void* param);
 WKE_API void wkeOnDocumentReady(wkeWebView webView, wkeDocumentReadyCallback callback, void* param);
+
+typedef void(*wkeDocumentReady2Callback)(wkeWebView webView, void* param, wkeWebFrameHandle frame);
+WKE_API void wkeOnDocumentReady2(wkeWebView webView, wkeDocumentReady2Callback callback, void* param);
 
 typedef enum {
     WKE_LOADING_SUCCEEDED,
@@ -624,6 +628,7 @@ WKE_API wkeWebView jsGetWebView(jsExecState es);
 
 WKE_API jsValue jsEval(jsExecState es, const utf8* str);
 WKE_API jsValue jsEvalW(jsExecState es, const wchar_t* str);
+WKE_API jsValue jsEvalExW(jsExecState es, const wchar_t* str, bool isInClosure);
 
 WKE_API jsValue jsCall(jsExecState es, jsValue func, jsValue thisObject, jsValue* args, int argCount);
 WKE_API jsValue jsCallGlobal(jsExecState es, jsValue func, jsValue* args, int argCount);

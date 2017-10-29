@@ -19,6 +19,7 @@
 namespace net {
 
 void setCookieJarPath(const WCHAR* path);
+void setCookieJarFullPath(const WCHAR* path);
 bool g_cspCheckEnable = true;
 bool g_navigationToNewWindowEnable = true;
 
@@ -479,6 +480,11 @@ void wkeSetCookieJarPath(wkeWebView webView, const WCHAR* path)
     net::setCookieJarPath(path);
 }
 
+void wkeSetCookieJarFullPath(wkeWebView webView, const WCHAR* path)
+{
+    net::setCookieJarFullPath(path);
+}
+
 void wkeSetMediaVolume(wkeWebView webView, float volume)
 {
     webView->setMediaVolume(volume);
@@ -636,6 +642,11 @@ void wkeOnCreateView(wkeWebView webView, wkeCreateViewCallback callback, void* p
 void wkeOnDocumentReady(wkeWebView webView, wkeDocumentReadyCallback callback, void* param)
 {
     webView->onDocumentReady(callback, param);
+}
+
+void wkeOnDocumentReady2(wkeWebView webView, wkeDocumentReady2Callback callback, void* param)
+{
+    webView->onDocumentReady2(callback, param);
 }
 
 void wkeOnLoadingFinish(wkeWebView webView, wkeLoadingFinishCallback callback, void* param)

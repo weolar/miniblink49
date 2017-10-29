@@ -642,6 +642,11 @@ jsValue jsEval(jsExecState es, const utf8* str)
 
 jsValue jsEvalW(jsExecState es, const wchar_t* str)
 {
+    return jsEvalExW(es, str, true);
+}
+
+jsValue jsEvalExW(jsExecState es, const wchar_t* str, bool isInClosure)
+{
     if (!s_execStates || !es || !s_execStates->contains(es) || !es->isolate || es->context.IsEmpty() || !str)
         return jsUndefined();
     if (es->context.IsEmpty())
@@ -650,8 +655,10 @@ jsValue jsEvalW(jsExecState es, const wchar_t* str)
     String codeString(str);
     if (codeString.startsWith("javascript:", WTF::TextCaseInsensitive))
         codeString.remove(0, sizeof("javascript:") - 1);
-    codeString.insert("(function(){", 0);
-    codeString.append("})();");
+    if (isInClosure) {
+        codeString.insert("(function(){", 0);
+        codeString.append("})();");
+    }
 
     v8::Isolate* isolate = es->isolate;
     blink::V8RecursionScope::MicrotaskSuppression microtaskSuppression(isolate);
@@ -1332,6 +1339,7 @@ void jsFunctionConstructCallback(const v8::FunctionCallbackInfo<v8::Value>& args
         argv[i] = createJsValueByLocalValue(isolate, context, args[i]);
 
     jsValue retWkeValue = wrap->jsDataObj->callAsFunction(execState, wkeData, argv, argsLength);
+    args.GetReturnValue().Set(getV8Value(retWkeValue, context));
 }
 
 WKE_API jsValue jsFunction(jsExecState es, jsData* data)

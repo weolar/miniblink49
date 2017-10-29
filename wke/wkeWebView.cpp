@@ -1079,6 +1079,12 @@ void CWebView::onDocumentReady(wkeDocumentReadyCallback callback, void* callback
     m_webPage->wkeHandler().documentReadyCallbackParam = callbackParam;
 }
 
+void CWebView::onDocumentReady2(wkeDocumentReady2Callback callback, void* callbackParam)
+{
+    m_webPage->wkeHandler().documentReady2Callback = callback;
+    m_webPage->wkeHandler().documentReady2CallbackParam = callbackParam;
+}
+
 void CWebView::onLoadUrlBegin(wkeLoadUrlBeginCallback callback, void* callbackParam)
 {
     m_webPage->wkeHandler().loadUrlBeginCallback = callback;
