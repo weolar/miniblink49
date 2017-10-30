@@ -456,6 +456,7 @@ void WebPluginImpl::performRequest(PluginRequest* request)
     
     // Executing a script can cause the plugin view to be destroyed, so we keep a reference to it.
     RefPtr<WebPluginImpl> protector(this);
+    v8::HandleScope handleScope(toIsolate(m_parentFrame));
     blink::ScriptSourceCode jsCode(jsString);
     v8::Local<v8::Value> result = m_parentFrame->script().executeScriptInMainWorldAndReturnValue(jsCode);
 
