@@ -103,18 +103,13 @@ static CString certificatePath()
 
 static char* g_cookieJarPath = nullptr;
 
-void setCookieJarPath(const WCHAR* path)
+void setCookieJarFullPath(const WCHAR* path)
 {
-    if (!path || !::PathIsDirectoryW(path))
+    if (!path)
         return;
 
-    Vector<WCHAR> jarPath;
-    jarPath.resize(MAX_PATH + 1);
-    wcscpy(jarPath.data(), path);
-    ::PathAppendW(jarPath.data(), L"cookies.dat");
-
     std::vector<char> jarPathA;
-    WTF::WCharToMByte(jarPath.data(), wcslen(jarPath.data()), &jarPathA, CP_ACP);
+    WTF::WCharToMByte(path, wcslen(path), &jarPathA, CP_ACP);
     if (0 == jarPathA.size())
         return;
 
@@ -126,6 +121,19 @@ void setCookieJarPath(const WCHAR* path)
     memset(g_cookieJarPath, 0, pathLen);
 
     strncpy(g_cookieJarPath, &jarPathA[0], jarPathA.size());
+}
+
+void setCookieJarPath(const WCHAR* path)
+{
+    if (!path || !::PathIsDirectoryW(path))
+        return;
+
+    Vector<WCHAR> jarPath;
+    jarPath.resize(MAX_PATH + 1);
+    wcscpy(jarPath.data(), path);
+    ::PathAppendW(jarPath.data(), L"cookies.dat");
+
+    setCookieJarFullPath(jarPath.data());
 }
 
 static char* cookieJarPath()
