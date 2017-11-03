@@ -59,6 +59,8 @@ namespace blink {
 class WebPluginContainer;
 class GraphicsContext;
 class WebViewClient;
+class WebMouseEvent;
+class WebKeyboardEvent;
 }
 
 namespace content {
@@ -231,7 +233,10 @@ public:
     void pushPopupsEnabledState(bool state);
     void popPopupsEnabledState();
 
-    /*virtual*/ void invalidateRect(const blink::IntRect&);
+    bool handleMouseEvent(const blink::WebMouseEvent& evt);
+    bool handleKeyboardEvent(const blink::WebKeyboardEvent& evt);
+
+    void invalidateRect(const blink::IntRect&);
 
     bool arePopupsAllowed() const;
 

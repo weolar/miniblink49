@@ -34,6 +34,7 @@
 #include "third_party/WebKit/Source/core/frame/FrameView.h"
 #include "third_party/WebKit/Source/platform/graphics/Image.h"
 #include "third_party/WebKit/public/platform/Platform.h"
+#include "third_party/WebKit/public/web/WebInputEvent.h"
 #include "third_party/WebKit/Source/wtf/Functional.h"
 #include "skia/ext/bitmap_platform_device_win.h"
 #include "skia/ext/platform_canvas.h"
@@ -240,10 +241,7 @@ static inline IntRect contentsToNativeWindow(WebPluginContainer* pluginContainer
 {
     IntPoint posXY(rect.x(), rect.y());
     IntPoint posOutXY = pluginContainer->localToRootFramePoint(posXY);
-
-    IntPoint posMaxXY(rect.maxX(), rect.maxY());
-    IntPoint posMaxOutXY = pluginContainer->localToRootFramePoint(posMaxXY);
-    return IntRect(posOutXY.x(), posOutXY.y(), posOutXY.x() + posMaxOutXY.x(), posOutXY.y() + posMaxOutXY.y());
+    return IntRect(posOutXY.x(), posOutXY.y(), rect.width(), rect.height());
 }
 
 LRESULT WebPluginImpl::wndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -582,9 +580,119 @@ bool WebPluginImpl::acceptsInputEvents()
     return true;
 }
 
-bool WebPluginImpl::handleInputEvent(const blink::WebInputEvent&, blink::WebCursorInfo&)
+bool WebPluginImpl::handleMouseEvent(const blink::WebMouseEvent& evt)
 {
-    return true;
+    ASSERT(m_plugin && !m_isWindowed);
+
+    bool isDefaultHandled = false;
+    NPEvent npEvent;
+
+    //blink::IntPoint p = contentsToNativeWindow(m_pluginContainer, blink::IntPoint(evt.x, evt.y));
+    blink::IntPoint p(evt.x, evt.y);
+
+    npEvent.lParam = MAKELPARAM(p.x(), p.y());
+    npEvent.wParam = 0;
+
+    if (evt.modifiers & WebInputEvent::ControlKey)
+        npEvent.wParam |= MK_CONTROL;
+    if (evt.modifiers & WebInputEvent::ShiftKey)
+        npEvent.wParam |= MK_SHIFT;
+
+    if (evt.type == blink::WebInputEvent::Type::MouseMove
+        || evt.type == blink::WebInputEvent::Type::MouseLeave
+        || evt.type == blink::WebInputEvent::Type::MouseEnter) {
+        npEvent.event = WM_MOUSEMOVE;
+        if (evt.button != blink::WebMouseEvent::Button::ButtonNone) {
+            switch (evt.button) {
+            case blink::WebMouseEvent::Button::ButtonLeft:
+                npEvent.wParam |= MK_LBUTTON;
+                break;
+            case blink::WebMouseEvent::Button::ButtonMiddle:
+                npEvent.wParam |= MK_MBUTTON;
+                break;
+            case blink::WebMouseEvent::Button::ButtonRight:
+                npEvent.wParam |= MK_RBUTTON;
+                break;
+            }
+        }
+    } else if (evt.type == blink::WebInputEvent::Type::MouseDown) {
+        focusPluginElement();
+        switch (evt.button) {
+        case blink::WebMouseEvent::Button::ButtonLeft:
+            npEvent.event = WM_LBUTTONDOWN;
+            break;
+        case blink::WebMouseEvent::Button::ButtonMiddle:
+            npEvent.event = WM_MBUTTONDOWN;
+            break;
+        case blink::WebMouseEvent::Button::ButtonRight:
+            npEvent.event = WM_RBUTTONDOWN;
+            break;
+        }
+    } else if (evt.type == blink::WebInputEvent::Type::MouseUp) {
+        switch (evt.button) {
+        case blink::WebMouseEvent::Button::ButtonLeft:
+            npEvent.event = WM_LBUTTONUP;
+            break;
+        case blink::WebMouseEvent::Button::ButtonMiddle:
+            npEvent.event = WM_MBUTTONUP;
+            break;
+        case blink::WebMouseEvent::Button::ButtonRight:
+            npEvent.event = WM_RBUTTONUP;
+            break;
+        }
+    } else
+        return isDefaultHandled;
+
+    // FIXME: Consider back porting the http://webkit.org/b/58108 fix here.
+    if (dispatchNPEvent(npEvent))
+        isDefaultHandled = true;
+
+    // Currently, Widget::setCursor is always called after this function in EventHandler.cpp
+    // and since we don't want that we set ignoreNextSetCursor to true here to prevent that.
+//     ignoreNextSetCursor = true;
+//     if (Page* page = m_parentFrame->page())
+//         page->chrome().client().setLastSetCursorToCurrentCursor();
+
+    return isDefaultHandled;
+}
+
+bool WebPluginImpl::handleKeyboardEvent(const blink::WebKeyboardEvent& evt)
+{
+    ASSERT(m_plugin && !m_isWindowed);
+    bool isDefaultHandled = false;
+    NPEvent npEvent;
+
+    npEvent.wParam = evt.windowsKeyCode;
+
+    if (evt.type == blink::WebInputEvent::Type::KeyDown) {
+        npEvent.event = WM_KEYDOWN;
+        npEvent.lParam = 0;
+    } else if (evt.type == blink::WebInputEvent::Type::Char) {
+        npEvent.event = WM_CHAR;
+        npEvent.lParam = 0;
+    } else if (evt.type == blink::WebInputEvent::Type::KeyUp) {
+        npEvent.event = WM_KEYUP;
+        npEvent.lParam = 0x8000;
+    } else
+        return isDefaultHandled;
+
+    if (dispatchNPEvent(npEvent))
+        return true;
+    return isDefaultHandled;
+}
+
+bool WebPluginImpl::handleInputEvent(const blink::WebInputEvent& evt, blink::WebCursorInfo&)
+{
+    if (m_isWindowed)
+        return false;
+
+    if (blink::WebInputEvent::isMouseEventType(evt.type))
+        return handleMouseEvent(static_cast<const blink::WebMouseEvent&>(evt));
+
+    if (blink::WebInputEvent::isKeyboardEventType(evt.type))
+        return handleKeyboardEvent(static_cast<const blink::WebKeyboardEvent&>(evt));
+
+    return false;
 }
 
 void WebPluginImpl::paintIntoTransformedContext(HDC hdc)
@@ -600,10 +708,12 @@ void WebPluginImpl::paintIntoTransformedContext(HDC hdc)
     WINDOWPOS windowpos = { 0, 0, 0, 0, 0, 0, 0 };
 
     WebPluginContainerImpl* container = (WebPluginContainerImpl*)m_pluginContainer;
-    IntRect r = contentsToNativeWindow(m_pluginContainer, container->frameRect());
+    //IntRect r = contentsToNativeWindow(m_pluginContainer, container->frameRect());
+    blink::IntPoint documentScrollOffsetRelativeToViewOrigin = contentsToNativeWindow(m_pluginContainer, blink::IntPoint());
+    blink::IntRect r = container->frameRect();
 
-    windowpos.x = r.x();
-    windowpos.y = r.y();
+    windowpos.x = 0; // r.x();
+    windowpos.y = 0; // r.y();
     windowpos.cx = r.width();
     windowpos.cy = r.height();
 
@@ -662,13 +772,6 @@ void WebPluginImpl::paintWindowedPluginIntoContext(GraphicsContext& context, con
 //#endif
 }
 
-class BitmapDeviceForGetBitmap : public skia::BitmapPlatformDevice {
-public:
-    const SkBitmap& getBitmap() {
-        return onAccessBitmap();
-    }
-};
-
 void WebPluginImpl::paint(blink::WebCanvas* canvas, const blink::WebRect& rect)
 {
     if (!m_isStarted) {
@@ -698,18 +801,19 @@ void WebPluginImpl::paint(blink::WebCanvas* canvas, const blink::WebRect& rect)
     // On Safari/Windows without transparency layers the GraphicsContext returns the HDC
     // of the window and the plugin expects that the passed in DC has window coordinates.
     //if (!context.isInTransparencyLayer()) {
-        XFORM transform;
-        GetWorldTransform(hMemoryDC, &transform);
-        transform.eDx = -m_windowRect.x();
-        transform.eDy = -m_windowRect.y();
-        SetWorldTransform(hMemoryDC, &transform);
+//         XFORM transform;
+//         GetWorldTransform(hMemoryDC, &transform);
+//         transform.eDx = -m_windowRect.x();
+//         transform.eDy = -m_windowRect.y();
+//         SetWorldTransform(hMemoryDC, &transform);
     //}
 
     paintIntoTransformedContext(hMemoryDC);
     skia::EndPlatformPaint(m_memoryCanvas);
 
-    BitmapDeviceForGetBitmap* bitmapDevice = (BitmapDeviceForGetBitmap*)skia::GetTopDevice(*m_memoryCanvas);
-    const SkBitmap& bitmap = bitmapDevice->getBitmap();
+    SkBaseDevice* bitmapDevice = skia::GetTopDevice(*m_memoryCanvas);
+    const SkBitmap& bitmap = bitmapDevice->accessBitmap(false);
+    
     canvas->drawBitmap(bitmap, m_windowRect.x(), m_windowRect.y());
 }
 
@@ -727,8 +831,8 @@ void WebPluginImpl::setNPWindowRect(const IntRect& rect)
         return;
 
     IntPoint p = container->localToRootFramePoint(rect.location());
-    m_npWindow.x = rect.x(); // windowless模式是直接画在0，0点的独立canvas
-    m_npWindow.y = rect.y();
+    m_npWindow.x = 0; // rect.x(); // windowless模式是直接画在0，0点的独立canvas
+    m_npWindow.y = 0; // rect.y();
 
     m_npWindow.width = rect.width();
     m_npWindow.height = rect.height();
