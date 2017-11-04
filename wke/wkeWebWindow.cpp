@@ -429,8 +429,9 @@ LRESULT CWebWindow::_windowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM l
     case WM_RBUTTONUP:
     case WM_MOUSEMOVE: {
         if (message == WM_LBUTTONDOWN || message == WM_MBUTTONDOWN || message == WM_RBUTTONDOWN) {
-            SetFocus(hwnd);
-            SetCapture(hwnd);
+            if (::GetFocus() != hwnd)
+                ::SetFocus(hwnd);
+            ::SetCapture(hwnd);
         }
         else if (message == WM_LBUTTONUP || message == WM_MBUTTONUP || message == WM_RBUTTONUP) {
             ReleaseCapture();

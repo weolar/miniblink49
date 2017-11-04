@@ -292,7 +292,8 @@ LRESULT PlatformEventHandler::fireMouseEvent(HWND hWnd, UINT message, WPARAM wPa
         
         m_lastTimeMouseDown = time;
         if (hWnd && needSetFocus) {
-            ::SetFocus(hWnd);
+            if (::GetFocus() != hWnd)
+                ::SetFocus(hWnd);
             ::SetCapture(hWnd);
         }
         switch (message) {
