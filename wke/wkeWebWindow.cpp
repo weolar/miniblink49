@@ -18,12 +18,6 @@ CWebWindow::CWebWindow()
     m_originalLoadingFinishCallback = NULL;
     m_originalLoadingFinishCallbackParam = NULL;
 
-//     m_windowClosingCallback = NULL;
-//     m_windowClosingCallbackParam = NULL;
-// 
-//     m_windowDestroyCallback = NULL;
-//     m_windowDestroyCallbackParam = NULL;
-
     _initCallbacks();
 }
 
@@ -554,35 +548,49 @@ void CWebWindow::_staticOnPaintUpdated(wkeWebView webView, void* param, const HD
 
 void CWebWindow::_onPaintUpdated(const HDC hdc, int x, int y, int cx, int cy)
 {
+    BOOL callOk = FALSE;
     if (WS_EX_LAYERED == (WS_EX_LAYERED & GetWindowLong(m_hWnd, GWL_EXSTYLE))) {
         RECT rectDest;
         ::GetWindowRect(m_hWnd, &rectDest);
 
         SIZE sizeDest = { rectDest.right - rectDest.left, rectDest.bottom - rectDest.top };
-        POINT pointDest = { rectDest.left, rectDest.top };
+        POINT pointDest = { 0, 0 }; // { rectDest.left, rectDest.top };
         POINT pointSource = { 0, 0 };
 
-        HDC hdcScreen = GetDC(NULL);
-        //HDC hdcMemory = CreateCompatibleDC(hdcScreen);
-        //HBITMAP hbmpMemory = CreateCompatibleBitmap(hdcScreen, sizeDest.cx, sizeDest.cy);
-        //HBITMAP hbmpOld = (HBITMAP)SelectObject(hdcMemory, hbmpMemory);
-        //BitBlt(hdcMemory, 0, 0, sizeDest.cx, sizeDest.cy, wkeGetViewDC(this), 0, 0, SRCCOPY);
+        BITMAP bmp = { 0 };
+        HBITMAP hBmp = (HBITMAP)::GetCurrentObject(hdc, OBJ_BITMAP);
+        ::GetObject(hBmp, sizeof(BITMAP), (LPSTR)&bmp);
+
+        sizeDest.cx = bmp.bmWidth;
+        sizeDest.cy = bmp.bmHeight;
+
+        HDC hdcScreen = GetDC(m_hWnd);
 
         BLENDFUNCTION blend = { 0 };
-        memset(&blend, 0, sizeof(blend));
         blend.BlendOp = AC_SRC_OVER;
         blend.SourceConstantAlpha = 255;
         blend.AlphaFormat = AC_SRC_ALPHA;
-        ::UpdateLayeredWindow(m_hWnd, hdcScreen, &pointDest, &sizeDest, wkeGetViewDC(this), &pointSource, RGB(0,0,0), &blend, ULW_ALPHA);
+        callOk = ::UpdateLayeredWindow(m_hWnd, hdcScreen, nullptr, &sizeDest, hdc, &pointSource, RGB(0xFF, 0xFF, 0xFF), &blend, ULW_ALPHA);
+        if (!callOk) {
+            HDC hdcMemory = ::CreateCompatibleDC(hdcScreen);
+            HBITMAP hbmpMemory = ::CreateCompatibleBitmap(hdcScreen, sizeDest.cx, sizeDest.cy);
+            HBITMAP hbmpOld = (HBITMAP)::SelectObject(hdcMemory, hbmpMemory);
 
-        //SelectObject(hdcMemory, (HGDIOBJ)hbmpOld);
-        //DeleteObject((HGDIOBJ)hbmpMemory);
-        //DeleteDC(hdcMemory);
+            ::BitBlt(hdcMemory, 0, 0, sizeDest.cx, sizeDest.cy, hdc, 0, 0, SRCCOPY | CAPTUREBLT);
 
-        ::ReleaseDC(NULL, hdcScreen);
+            ::BitBlt(hdc, 0, 0, sizeDest.cx, sizeDest.cy, hdcMemory, 0, 0, SRCCOPY | CAPTUREBLT); //!
+
+            b = ::UpdateLayeredWindow(m_hWnd, hdcScreen, nullptr, &sizeDest, hdcMemory, &pointSource, RGB(0xFF, 0xFF, 0xFF), &blend, ULW_ALPHA);
+
+            ::SelectObject(hdcMemory, (HGDIOBJ)hbmpOld);
+            ::DeleteObject((HGDIOBJ)hbmpMemory);
+            ::DeleteDC(hdcMemory);
+        }
+
+        ::ReleaseDC(m_hWnd, hdcScreen);
     } else {
         RECT rc = {x, y, x + cx, y + cy};
-        BOOL b = ::InvalidateRect(m_hWnd, &rc, TRUE);
+        callOk = ::InvalidateRect(m_hWnd, &rc, TRUE);
     }
 
     if (m_originalPaintUpdatedCallback)
@@ -705,6 +713,15 @@ void CWebWindow::setTitle(const utf8* text)
     wchar_t wtext[1024 * 64 + 1] = { 0 };
     MultiByteToWideChar(CP_UTF8, 0, text, strlen(text), wtext, 1024*64);
     setTitle(wtext);
+}
+
+void CWebWindow::setTransparent(bool transparent)
+{
+    DWORD style = ::GetWindowLong(m_hWnd, GWL_EXSTYLE);
+    SetWindowLongW(m_hWnd, GWL_EXSTYLE, (!transparent) ? (~WS_EX_LAYERED & style) : (WS_EX_LAYERED | style));
+    ::UpdateWindow(m_hWnd);
+
+    CWebView::setTransparent(transparent);
 }
 
 } // namespace wke

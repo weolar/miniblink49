@@ -91,17 +91,6 @@ void CWebView::setTransparent(bool transparent)
     m_transparent = transparent;
 
     m_webPage->setTransparent(transparent);
-
-//     m_dirtyArea = blink::IntRect(0, 0, m_width, m_height);
-//     setDirty(true);
-// 
-//     if (m_graphicsContext) {
-//         delete m_graphicsContext;
-//         m_graphicsContext = NULL;
-//     }
-// 
-//     blink::Color backgroundColor = transparent ? blink::Color::transparent : blink::Color::white;
-//     m_mainFrame->view()->updateBackgroundRecursively(backgroundColor, transparent);
 }
 
 void CWebView::loadPostURL(const utf8* inUrl, const char * poastData, int nLen )
@@ -584,18 +573,14 @@ void CWebView::editorRedo()
 
 void CWebView::setCookieEnabled(bool enable)
 {
-//     if (!m_webPage->mainFrame())
-//         return;
-// 
-//     blink::WebDocument webDocument = m_webPage->mainFrame()->document();
-//     if (webDocument.isNull())
-//         return;
+    if (!m_webPage || !m_webPage->webViewImpl())
+        return;
 
     blink::WebSettingsImpl* settings = m_webPage->webViewImpl()->settingsImpl();
+    if (!settings)
+        return;
+
     settings->setCookieEnabled(enable);
-
-   // const blink::Document* doc = webDocument.constUnwrap<blink::Document>();
-
     m_isCokieEnabled = enable;
 }
 
