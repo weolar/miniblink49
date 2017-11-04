@@ -581,7 +581,7 @@ void CWebWindow::_onPaintUpdated(const HDC hdc, int x, int y, int cx, int cy)
 
             ::BitBlt(hdc, 0, 0, sizeDest.cx, sizeDest.cy, hdcMemory, 0, 0, SRCCOPY | CAPTUREBLT); //!
 
-            b = ::UpdateLayeredWindow(m_hWnd, hdcScreen, nullptr, &sizeDest, hdcMemory, &pointSource, RGB(0xFF, 0xFF, 0xFF), &blend, ULW_ALPHA);
+            callOk = ::UpdateLayeredWindow(m_hWnd, hdcScreen, nullptr, &sizeDest, hdcMemory, &pointSource, RGB(0xFF, 0xFF, 0xFF), &blend, ULW_ALPHA);
 
             ::SelectObject(hdcMemory, (HGDIOBJ)hbmpOld);
             ::DeleteObject((HGDIOBJ)hbmpMemory);
