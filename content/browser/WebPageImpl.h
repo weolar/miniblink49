@@ -40,6 +40,7 @@ class WebPage;
 class PlatformEventHandler;
 class NavigationController;
 class PopupMenuWin;
+class ToolTip;
 
 class WebPageImpl 
     : public blink::WebViewClient
@@ -80,6 +81,9 @@ public:
     virtual blink::WebStorageNamespace* createSessionStorageNamespace() override;
     virtual blink::WebString acceptLanguages() override;
     virtual blink::WebScreenInfo screenInfo() override;
+
+    virtual void setToolTipText(const blink::WebString&, blink::WebTextDirection hint) override;
+
     // Editing --------------------------------------------------------
     virtual bool handleCurrentKeyboardEvent() override;
 
@@ -188,7 +192,7 @@ public:
 
     friend class AutoRecordActions;
 
-    //bool m_useLayeredBuffer;
+    ToolTip* m_toolTip;
 
     blink::IntRect m_winodwRect;
 
