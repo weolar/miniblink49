@@ -178,6 +178,9 @@ WebPageImpl::~WebPageImpl()
 
     m_pagePtr = 0;
     m_popupHandle = nullptr;
+
+    BlinkPlatformImpl* platform = (BlinkPlatformImpl*)blink::Platform::current();
+    platform->startGarbageCollectedThread(0);
 }
 
 bool WebPageImpl::checkForRepeatEnter()

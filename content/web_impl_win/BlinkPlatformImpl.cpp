@@ -156,7 +156,7 @@ void BlinkPlatformImpl::initialize()
     const size_t kImageCacheSingleAllocationByteLimit = 64 * 1024 * 1024;
     SkGraphics::SetResourceCacheSingleAllocationByteLimit(kImageCacheSingleAllocationByteLimit);
 
-    platform->startGarbageCollectedThread();
+    platform->startGarbageCollectedThread(30000);
 
     OutputDebugStringW(L"BlinkPlatformImpl::initBlink\n");
 }
@@ -177,6 +177,7 @@ BlinkPlatformImpl::BlinkPlatformImpl()
     m_storageNamespaceIdCount = 1;
     m_lock = new CRITICAL_SECTION();
     m_threadNum = 0;
+    m_gcTimer = nullptr;
     m_ioThread = nullptr;
     m_firstMonotonicallyIncreasingTime = currentTimeImpl(); // (GetTickCount() / 1000.0);
     ::InitializeCriticalSection(m_lock);
@@ -327,6 +328,13 @@ void BlinkPlatformImpl::shutdown()
     delete this;
 }
 
+void BlinkPlatformImpl::garbageCollectedTimer(blink::Timer<BlinkPlatformImpl>*)
+{
+    doGarbageCollected();
+    m_gcTimer->stop();
+    m_gcTimer->startOneShot(30000, FROM_HERE);
+}
+
 void BlinkPlatformImpl::doGarbageCollected()
 {
     //net::gActivatingLoaderCheck->doGarbageCollected(false);
@@ -337,15 +345,17 @@ void BlinkPlatformImpl::doGarbageCollected()
     //     v8::Isolate::GetCurrent()->ContextDisposedNotification(false);
     SkGraphics::PurgeResourceCache();
 
-    mainThread()->postDelayedTask(FROM_HERE, WTF::bind(&BlinkPlatformImpl::doGarbageCollected, this), 30000);
-
 //     String out = String::format("BlinkPlatformImpl::doGarbageCollected: %d %d %d\n", g_v8MemSize, g_blinkMemSize, g_skiaMemSize);
 //     OutputDebugStringA(out.utf8().data());
 }
 
-void BlinkPlatformImpl::startGarbageCollectedThread()
+void BlinkPlatformImpl::startGarbageCollectedThread(double delayMs)
 {
-    mainThread()->postDelayedTask(FROM_HERE, WTF::bind(&BlinkPlatformImpl::doGarbageCollected, this), 30000);
+    if (!m_gcTimer)
+        m_gcTimer = new blink::Timer<BlinkPlatformImpl>(this, &BlinkPlatformImpl::garbageCollectedTimer);
+
+    m_gcTimer->stop();
+    m_gcTimer->startOneShot(delayMs, FROM_HERE);
 }
 
 void BlinkPlatformImpl::closeThread()

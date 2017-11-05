@@ -5,6 +5,11 @@ namespace WTF {
 class Mutex;
 }
 
+namespace blink {
+
+template <typename T> class Timer;
+}
+
 namespace cc_blink {
 class WebCompositorSupportImpl;
 }
@@ -27,7 +32,7 @@ public:
 
     static void initialize();
 
-    void startGarbageCollectedThread();
+    void startGarbageCollectedThread(double delayMs);
    
     virtual void cryptographicallyRandomValues(unsigned char* buffer, size_t length) override;
 
@@ -103,16 +108,19 @@ public:
     //////////////////////////////////////////////////////////////////////////
     blink::WebThread* tryGetIoThread() const;
     blink::WebThread* ioThread();
+    void doGarbageCollected();
 
 private:
     void destroyWebInfo();
     void closeThread();
-    void doGarbageCollected();
+    void garbageCollectedTimer(blink::Timer<BlinkPlatformImpl>*);
 
     CRITICAL_SECTION* m_lock;
     static const int m_maxThreadNum = 1000;
     std::vector<WebThreadImpl*> m_threads;
     int m_threadNum;
+
+    blink::Timer<BlinkPlatformImpl>* m_gcTimer;
 
     blink::WebThread* m_ioThread;
 
