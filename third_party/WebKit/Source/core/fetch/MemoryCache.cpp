@@ -36,6 +36,10 @@
 #include "wtf/TemporaryChange.h"
 #include "wtf/text/CString.h"
 
+#if ENABLE_WKE
+extern bool g_wkeMemoryCacheEnable;
+#endif
+
 namespace blink {
 
 static Persistent<MemoryCache>* gMemoryCache;
@@ -170,6 +174,11 @@ MemoryCache::ResourceMap* MemoryCache::ensureResourceMap(const String& cacheIden
 
 void MemoryCache::add(Resource* resource)
 {
+#if ENABLE_WKE
+    if (!g_wkeMemoryCacheEnable)
+        return;
+#endif
+
     ASSERT(WTF::isMainThread());
     ASSERT(resource->url().isValid());
     ResourceMap* resources = ensureResourceMap(resource->cacheIdentifier());

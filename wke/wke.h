@@ -171,6 +171,8 @@ WKE_API bool wkeIsLoaded(wkeWebView webView);
 WKE_API bool wkeIsLoadFailed(wkeWebView webView);
 WKE_API bool wkeIsLoadComplete(wkeWebView webView);
 
+WKE_API const utf8* wkeGetSource(wkeWebView webView);
+
 WKE_API const utf8* wkeTitle(wkeWebView webView);
 WKE_API const wchar_t* wkeTitleW(wkeWebView webView);
 
@@ -239,6 +241,8 @@ WKE_API const utf8* wkeGetVersionString();
 WKE_API wkeWebView wkeCreateWebView();
 WKE_API wkeWebView wkeGetWebView(const char* name);
 WKE_API void wkeDestroyWebView(wkeWebView webView);
+
+WKE_API void wkeSetMemoryCacheEnable(wkeWebView webView, bool b);
 
 WKE_API void wkeSetNavigationToNewWindowEnable(wkeWebView webView, bool b);
 WKE_API void wkeSeCspCheckEnable(wkeWebView webView, bool b);

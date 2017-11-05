@@ -28,6 +28,7 @@ bool g_navigationToNewWindowEnable = true;
 //////////////////////////////////////////////////////////////////////////
 static std::string* s_versionString = nullptr;
 static bool wkeIsInit = false;
+bool g_wkeMemoryCacheEnable = true;
 
 bool wkeIsUpdataInOtherThread = false;
 
@@ -131,6 +132,11 @@ void wkeFinalize()
     if (s_versionString)
         delete s_versionString;
     s_versionString = nullptr;
+}
+
+void wkeSetMemoryCacheEnable(wkeWebView webView, bool b)
+{
+    g_wkeMemoryCacheEnable = b;
 }
 
 void wkeSetNavigationToNewWindowEnable(wkeWebView webView, bool b)
@@ -961,6 +967,11 @@ bool wkeIsLoadFailed(wkeWebView webView)
 bool wkeIsLoadComplete(wkeWebView webView)
 {
     return wkeIsLoadingCompleted(webView);
+}
+
+const utf8* wkeGetSource(wkeWebView webView)
+{
+    return nullptr;
 }
 
 const utf8* wkeTitle(wkeWebView webView)
