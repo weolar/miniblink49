@@ -516,12 +516,26 @@ void WebClipboardImpl::writeText(String string)
     writeToClipboard(CF_UNICODETEXT, glob);
 }
 
+void WebClipboardImpl::clearClipboard()
+{
+	ScopedClipboard clipboard;
+	if (clipboard.acquire(getClipboardWindow())) {
+		EmptyClipboard();
+	}
+}
+
 void WebClipboardImpl::writePlainText(const WebString& plainText)
 {
+	clearClipboard();
     writeText(plainText);
 }
 
 void WebClipboardImpl::writeHTML(const WebString& htmlText, const WebURL& sourceUrl, const WebString& plainText, bool writeSmartPaste)
+{
+	clearClipboard();
+	writeHTMLInternal(htmlText, sourceUrl, plainText, writeSmartPaste);
+}
+void WebClipboardImpl::writeHTMLInternal(const WebString& htmlText, const WebURL& sourceUrl, const WebString& plainText, bool writeSmartPaste)
 {
     std::string markup = WTF::WTFStringToStdString(htmlText);
     std::string url;
@@ -533,7 +547,7 @@ void WebClipboardImpl::writeHTML(const WebString& htmlText, const WebURL& source
     WTF::String htmlFragment = ClipboardUtil::HtmlToCFHtml(markup, url);
     HGLOBAL glob = createGlobalData(ensureUTF16UChar(htmlFragment, false));
     writeToClipboard(getHtmlFormatType(), glob);
-    writePlainText(plainText);
+	writeText(plainText);
 
     if (writeSmartPaste) {
         ASSERT(m_clipboardOwner != NULL);
@@ -646,6 +660,8 @@ void WebClipboardImpl::writeBookmark(const String& titleData , const String& url
 
 void WebClipboardImpl::writeImage(const WebImage& image, const WebURL& url, const WebString& title)
 {
+	clearClipboard();
+
     ASSERT(!image.isNull());
     const SkBitmap& bitmap = image.getSkBitmap();
     if (!writeBitmap(bitmap))
@@ -674,6 +690,8 @@ void WebClipboardImpl::writeDataObject(const WebDragData& data)
     // written by extension functions such as chrome.bookmarkManagerPrivate.copy.
 
     // DataObject::toWebDragData()
+	clearClipboard();
+
     WebVector<WebDragData::Item> items = data.items();
     for (size_t i = 0; items.size(); ++i) {
         WebDragData::Item& it = items[i];
