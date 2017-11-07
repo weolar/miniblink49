@@ -274,7 +274,6 @@ inline static bool isAppendableHeader(const String &key)
     return false;
 }
 
-
 WebURLLoaderManager::WebURLLoaderManager()
     : m_cookieJarFileName(cookieJarPath())
     , m_certificatePath(certificatePath())
@@ -392,8 +391,7 @@ void WebURLLoaderManager::didReceiveDataOrDownload(WebURLLoaderInternal* job, co
     job->m_dataLength += dataLength;
 
     if (job->firstRequest()->useStreamOnResponse()) {
-        // We don't support ftp_listening_delegate_ and multipart_delegate_ for
-        // now.
+        // We don't support ftp_listening_delegate_ and multipart_delegate_ for now.
         // TODO(yhirano): Support ftp listening and multipart.
         job->m_bodyStreamWriter->addData(adoptPtr(new FixedReceivedData(data, dataLength, encodedDataLength)));
     }
@@ -469,10 +467,6 @@ void WebURLLoaderManager::handleDidFinishLoading(WebURLLoaderInternal* job, doub
 
 void WebURLLoaderManager::handleDidFail(WebURLLoaderInternal* job, const blink::WebURLError& error)
 {
-#if 0
-    String out = String::format("WebURLLoaderManager::handleDidFail: %s\n", job->firstRequest()->url().string().utf8().data());
-    OutputDebugStringA(out.utf8().data());
-#endif
     if (job->m_bodyStreamWriter) {
         job->m_bodyStreamWriter->fail();
         delete job->m_bodyStreamWriter;
@@ -490,7 +484,7 @@ static void cancelBodyStreaming(int jobId)
     if (!job)
         return;
 
-    if (job->m_bodyStreamWriter) {
+     if (job->m_bodyStreamWriter) {
         job->m_bodyStreamWriter->fail();
         delete job->m_bodyStreamWriter;
         job->m_bodyStreamWriter = nullptr;
@@ -1131,7 +1125,7 @@ void WebURLLoaderManager::removeFromCurlOnIoThread(int jobId)
     if (WebURLLoaderInternal::kNormal == state) {
         m_runningJobs--;
 
-        if (!job->m_isWkeNetSetDataBeSetted) {
+        if (!job->m_isWkeNetSetDataBeSetted && !job->m_isBlackList) {
             ASSERT(job->m_handle);
             WebURLLoaderManagerMainTask* task = WebURLLoaderManagerMainTask::createTask(jobId, WebURLLoaderManagerMainTask::TaskType::kRemoveFromCurl, nullptr, 0, 0, 0);
                         
@@ -1411,6 +1405,8 @@ public:
 
     static void cancel(WebURLLoaderInternal* job)
     {
+        job->m_isBlackList = true;
+        job->m_response.setURL(job->firstRequest()->url());
         job->client()->didReceiveResponse(job->loader(), job->m_response);
         if (job->m_asynWkeNetSetData && !job->m_cancelled) { // 可能在didReceiveResponse里被cancel
             WebURLLoaderManager::sharedInstance()->didReceiveDataOrDownload(job, static_cast<char*>(""), 0, 0);
@@ -1508,8 +1504,7 @@ void WebURLLoaderManager::removeLiveJobs(int jobId)
 
 bool isBlackListUrl(const String& url)
 {
-    if (false
-        //WTF::kNotFound != url.find("google-analytics.com")
+    if (false//WTF::kNotFound != url.find(".woff")
         //|| WTF::kNotFound != url.find("doubleclick.net")
         // || WTF::kNotFound != url.find("messaging.teambition.net")
         ) {
@@ -1814,7 +1809,7 @@ WebURLLoaderManager::InitializeHandleInfo* WebURLLoaderManager::preInitializeHan
     }
 
     info->url = WTF::ensureStringToUTF8(urlString, true).data();
-    ASSERT(info->url.size() == urlString.length());
+    //ASSERT(info->url.size() == urlString.length());
 #if 0
     String output = String::format("preInit: %d %s\n", urlString.length(), info->url.c_str());
     OutputDebugStringA(output.utf8().data());
@@ -1924,7 +1919,7 @@ void WebURLLoaderManager::initializeHandleOnIoThread(int jobId, InitializeHandle
 
     KURL url = job->firstRequest()->url();
     String urlString = job->m_url;
-    ASSERT(url.string() == urlString);
+    //ASSERT(url.string() == urlString);
 
     curl_easy_setopt(job->m_handle, CURLOPT_URL, job->m_url);
 
@@ -2056,6 +2051,7 @@ WebURLLoaderInternal::WebURLLoaderInternal(WebURLLoaderImplCurl* loader, const W
     m_response.initialize();
 
     m_dataLength = 0;
+    m_isBlackList = false;
 
 #ifndef NDEBUG
     webURLLoaderInternalCounter.increment();
@@ -2087,21 +2083,6 @@ WebURLLoaderInternal::~WebURLLoaderInternal()
     webURLLoaderInternalCounter.decrement();
 #endif
 }
-
-// void WebURLLoaderInternal::ref(int addr)
-// {
-//     m_refs.append(addr);
-// }
-// 
-// void WebURLLoaderInternal::deref(int addr)
-// {
-//     for (size_t i = 0; i < m_refs.size(); ++i) {
-//         if (m_refs[i] == addr) {
-//             m_refs.remove(i);
-//             return;
-//         }
-//     }
-// }
 
 // 初始化HTTP头
 #if 0

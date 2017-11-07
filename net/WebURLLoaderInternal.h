@@ -144,14 +144,15 @@ public:
     String m_debugPath;
 
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
-	bool m_isHookRequest;
-	void* m_hookBuf;
-	int m_hookLength;
+    bool m_isHookRequest;
+    void* m_hookBuf;
+    int m_hookLength;
 
-  void* m_asynWkeNetSetData;
-  int m_asynWkeNetSetDataLength;
-  bool m_isWkeNetSetDataBeSetted;
+    void* m_asynWkeNetSetData;
+    int m_asynWkeNetSetDataLength;
+    bool m_isWkeNetSetDataBeSetted;
 #endif
+    bool m_isBlackList;
 };
 
 } // namespace net
