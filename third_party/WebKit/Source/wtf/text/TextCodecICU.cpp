@@ -264,6 +264,8 @@ TextCodecICU::TextCodecICU(const TextEncoding& encoding)
     , m_needsGBKFallbacks(false)
 #endif
 {
+    memset(m_incrementalDataChunk, 0, kIncrementalDataChunkLength);
+    m_incrementalDataChunkLength = 0;
 }
 
 TextCodecICU::~TextCodecICU()
@@ -370,6 +372,40 @@ private:
 };
 #endif // MINIBLINK_NOT_IMPLEMENTED
 
+
+// 1）GB 18030 与 GB 2312 - 1980 和 GBK 兼容，共收录汉字70244个。
+//   1，与 UTF - 8 相同，采用多字节编码，每个字可以由 1 个、2 个或 4 个字节组成。
+//   2，编码空间庞大，最多可定义 161 万个字符。
+//   3，支持中国国内少数民族的文字，不需要动用造字区。
+//   4，汉字收录范围包含繁体汉字以及日韩汉字
+// 2）GB 18030 编码是一二四字节变长编码。
+//   1，单字节，其值从 0 到 0x7F，与 ASCII 编码兼容。
+//   2，双字节，第一个字节的值从 0x81 到 0xFE，第二个字节的值从 0x40 到 0xFE（不包括0x7F），与 GBK 标准兼容。
+//   四字节，第一个字节的值从 0x81 到 0xFE，第二个字节的值从 0x30 到 0x39，第三个字节从0x81 到 0xFE，第四个字节从 0x30 到 0x39。
+bool isValideGB(const unsigned char* str, int length)
+{
+    if (1 == length) {
+        char c = str[0];
+        return c >= 0 && c <= 0x7f;
+    }
+
+    if (2 == length) {
+        char c1 = str[0];
+        char c2 = str[1];
+        return (c1 >= 0x81 && c1 <= 0xFE) && (c2 >= 0x40 && c2 <= 0xFE);
+    }
+
+    if (4 == length) {
+        char c1 = str[0];
+        char c2 = str[1];
+        char c3 = str[2];
+        char c4 = str[3];
+        return (c1 >= 0x81 && c1 <= 0xFE) && (c2 >= 0x30 && c2 <= 0x39) && (c3 >= 0x81 && c3 <= 0xFE) && (c4 >= 0x30 && c4 <= 0x39);
+    }
+
+    return false;
+}
+
 String TextCodecICU::decode(const char* bytes, size_t length, FlushBehavior flush, bool stopOnError, bool& sawError)
 {
 #ifdef MINIBLINK_NOT_IMPLEMENTED
@@ -432,11 +468,27 @@ String TextCodecICU::decode(const char* bytes, size_t length, FlushBehavior flus
     if (strcasecmp(m_encoding.name(), "gb2312") && strcasecmp(m_encoding.name(), "GBK"))
         return String();
 
-    MByteToWChar(bytes, length, &resultBuffer, CP_ACP);
+    if (0 == length)
+        return String();
+
+    Vector<char> valideBytes;
+
+    valideBytes.resize(length + m_incrementalDataChunkLength);
+    memcpy(valideBytes.data(), m_incrementalDataChunk, m_incrementalDataChunkLength);
+    memcpy(valideBytes.data() + m_incrementalDataChunkLength, bytes, length);
+
+    m_incrementalDataChunkLength = 0;
+    const unsigned char* lastInvalideChar = (const unsigned char*)bytes + length - 1;
+    if (length > 2 && !isValideGB(lastInvalideChar, 1) && !isValideGB(lastInvalideChar - 1, 2)) {
+        m_incrementalDataChunkLength = 1; // 目前不支持GB-18030四字节编码
+        m_incrementalDataChunk[0] = *lastInvalideChar;
+    }
+
+    WTF::MByteToWChar(valideBytes.data(), valideBytes.size() - m_incrementalDataChunkLength, &resultBuffer, CP_ACP);
     if (0 == resultBuffer.size())
         return String();
+
     return String(&resultBuffer[0], resultBuffer.size());
-    
 #endif // MINIBLINK_NOT_IMPLEMENTED
 }
 

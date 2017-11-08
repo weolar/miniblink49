@@ -71,6 +71,9 @@ private:
 #if defined(USING_SYSTEM_ICU)
     mutable bool m_needsGBKFallbacks;
 #endif
+    static const int kIncrementalDataChunkLength = 5;
+    char m_incrementalDataChunk[kIncrementalDataChunkLength];
+    int m_incrementalDataChunkLength = 0;
 };
 
 struct ICUConverterWrapper {
