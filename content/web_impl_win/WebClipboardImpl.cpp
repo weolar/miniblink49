@@ -518,22 +518,22 @@ void WebClipboardImpl::writeText(String string)
 
 void WebClipboardImpl::clearClipboard()
 {
-	ScopedClipboard clipboard;
-	if (clipboard.acquire(getClipboardWindow())) {
-		EmptyClipboard();
-	}
+    ScopedClipboard clipboard;
+    if (clipboard.acquire(getClipboardWindow())) {
+        EmptyClipboard();
+    }
 }
 
 void WebClipboardImpl::writePlainText(const WebString& plainText)
 {
-	clearClipboard();
+    clearClipboard();
     writeText(plainText);
 }
 
 void WebClipboardImpl::writeHTML(const WebString& htmlText, const WebURL& sourceUrl, const WebString& plainText, bool writeSmartPaste)
 {
-	clearClipboard();
-	writeHTMLInternal(htmlText, sourceUrl, plainText, writeSmartPaste);
+    clearClipboard();
+    writeHTMLInternal(htmlText, sourceUrl, plainText, writeSmartPaste);
 }
 void WebClipboardImpl::writeHTMLInternal(const WebString& htmlText, const WebURL& sourceUrl, const WebString& plainText, bool writeSmartPaste)
 {
@@ -660,7 +660,7 @@ void WebClipboardImpl::writeBookmark(const String& titleData , const String& url
 
 void WebClipboardImpl::writeImage(const WebImage& image, const WebURL& url, const WebString& title)
 {
-	clearClipboard();
+    clearClipboard();
 
     ASSERT(!image.isNull());
     const SkBitmap& bitmap = image.getSkBitmap();
@@ -690,7 +690,7 @@ void WebClipboardImpl::writeDataObject(const WebDragData& data)
     // written by extension functions such as chrome.bookmarkManagerPrivate.copy.
 
     // DataObject::toWebDragData()
-	clearClipboard();
+    clearClipboard();
 
     WebVector<WebDragData::Item> items = data.items();
     for (size_t i = 0; items.size(); ++i) {
@@ -701,16 +701,14 @@ void WebClipboardImpl::writeDataObject(const WebDragData& data)
             if (blink::mimeTypeTextPlain == stringType || blink::mimeTypeTextPlainEtc == stringType) {
                 writeText(it.stringData);
             } else if (blink::mimeTypeTextHTML == stringType) {
-                writeHTML(it.stringData, it.baseURL, WebString(), false);
+                writeHTMLInternal(it.stringData, it.baseURL, WebString(), false);
             }
         }
             
 //         if (!data_object.html.is_null())
-//             writeHTML(ui::CLIPBOARD_TYPE_COPY_PASTE,
-//                 data_object.html.string(), GURL());
+//             writeHTML(ui::CLIPBOARD_TYPE_COPY_PASTE, data_object.html.string(), GURL());
 //         if (!data_object.custom_data.empty())
-//             writeCustomData(ui::CLIPBOARD_TYPE_COPY_PASTE,
-//                 data_object.custom_data);
+//             writeCustomData(ui::CLIPBOARD_TYPE_COPY_PASTE, data_object.custom_data);
     }
 }
 
