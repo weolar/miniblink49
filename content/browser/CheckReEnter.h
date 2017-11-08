@@ -18,19 +18,12 @@ private:
     WebPageImpl* m_webPageImpl;
 };
 
-#define CHECK_FOR_REENTER(ret) \
-    if (!checkForRepeatEnter()) \
+#define CHECK_FOR_REENTER(self, ret) \
+    if (!self->checkForRepeatEnter()) \
         return ret; \
-    if (pageInited != m_state) \
+    if (WebPageImpl::pageInited != self->m_state) \
         return ret; \
-    CheckReEnter checker(this);
-
-#define CHECK_FOR_REENTER0() \
-    if (!checkForRepeatEnter()) \
-        return; \
-    if (pageInited != m_state) \
-        return; \
-    CheckReEnter checker(this);
+    CheckReEnter checker(self);
 
 } // content
 

@@ -489,6 +489,8 @@ public:
 
     virtual void run() override
     {
+        CHECK_FOR_REENTER(m_client, (void)0);
+
         if (m_client) {
             atomicDecrement(&m_client->m_commitCount);
             m_client->beginMainFrame();
@@ -591,7 +593,7 @@ void WebPageImpl::executeMainFrame()
 
 bool WebPageImpl::fireTimerEvent()
 {
-    CHECK_FOR_REENTER(false);
+    CHECK_FOR_REENTER(this, false);
         
     beginMainFrame();
     return false;
@@ -655,7 +657,7 @@ void WebPageImpl::setViewportSize(const IntSize& size)
 
 void WebPageImpl::firePaintEvent(HDC hdc, const RECT* paintRect)
 {
-    CHECK_FOR_REENTER0();
+    CHECK_FOR_REENTER(this, (void)0);
     freeV8TempObejctOnOneFrameBefore();
 
     beginMainFrame();
@@ -782,6 +784,16 @@ void WebPageImpl::paintToMemoryCanvasInUiThread(SkCanvas* canvas, const IntRect&
     if (m_disablePaint)
         return;
 
+    blink::Page* page = m_webViewImpl->page();
+    if (page) {
+        blink::LocalFrame* frame = page->deprecatedLocalMainFrame();
+        Document* document = frame->document();
+        if (document) {
+            if (!document->timing().firstLayout())
+                return;
+        }
+    }
+
 //     String outString = String::format("WebPageImpl::paintToMemoryCanvasInUiThread:%d %d %d %d\n",
 //         paintRect.x(), paintRect.y(), paintRect.width(), paintRect.height());
 //     OutputDebugStringW(outString.charactersWithNullTermination().data());
@@ -822,7 +834,7 @@ void WebPageImpl::paintToMemoryCanvasInUiThread(SkCanvas* canvas, const IntRect&
 
 void WebPageImpl::paintToBit(void* bits, int pitch)
 {
-    CHECK_FOR_REENTER0();
+    CHECK_FOR_REENTER(this, (void)0);
 
     beginMainFrame();
 
@@ -902,7 +914,7 @@ int WebPageImpl::getCursorInfoType() const
 
 void WebPageImpl::fireCursorEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, BOOL* handle)
 {
-    CHECK_FOR_REENTER0();
+    CHECK_FOR_REENTER(this, (void)0);
     freeV8TempObejctOnOneFrameBefore();
 
     if (handle)
@@ -958,7 +970,7 @@ void WebPageImpl::fireCursorEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM
 
 LRESULT WebPageImpl::fireWheelEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    CHECK_FOR_REENTER(0);
+    CHECK_FOR_REENTER(this, 0);
     freeV8TempObejctOnOneFrameBefore();
     AutoRecordActions autoRecordActions(this, m_layerTreeHost, false);
     
@@ -972,7 +984,7 @@ LRESULT WebPageImpl::fireWheelEvent(HWND hWnd, UINT message, WPARAM wParam, LPAR
 
 bool WebPageImpl::fireKeyUpEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    CHECK_FOR_REENTER(false);
+    CHECK_FOR_REENTER(this, false);
     freeV8TempObejctOnOneFrameBefore();
     AutoRecordActions autoRecordActions(this, m_layerTreeHost, false);
     
@@ -982,7 +994,7 @@ bool WebPageImpl::fireKeyUpEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM 
 
 bool WebPageImpl::fireKeyDownEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    CHECK_FOR_REENTER(false);
+    CHECK_FOR_REENTER(this, false);
     freeV8TempObejctOnOneFrameBefore();
     AutoRecordActions autoRecordActions(this, m_layerTreeHost, false);
 
@@ -1076,7 +1088,7 @@ bool WebPageImpl::handleCurrentKeyboardEvent()
 
 bool WebPageImpl::fireKeyPressEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    CHECK_FOR_REENTER(false);
+    CHECK_FOR_REENTER(this, false);
     freeV8TempObejctOnOneFrameBefore();
     AutoRecordActions autoRecordActions(this, m_layerTreeHost, false);
 
@@ -1094,7 +1106,7 @@ bool WebPageImpl::fireKeyPressEvent(HWND hWnd, UINT message, WPARAM wParam, LPAR
 
 void WebPageImpl::fireCaptureChangedEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    CHECK_FOR_REENTER0();
+    CHECK_FOR_REENTER(this, (void)0);
     freeV8TempObejctOnOneFrameBefore();
     AutoRecordActions autoRecordActions(this, m_layerTreeHost, false);
 
@@ -1103,7 +1115,7 @@ void WebPageImpl::fireCaptureChangedEvent(HWND hWnd, UINT message, WPARAM wParam
 
 void WebPageImpl::fireSetFocusEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    CHECK_FOR_REENTER0();
+    CHECK_FOR_REENTER(this, (void)0);
     freeV8TempObejctOnOneFrameBefore();
     m_webViewImpl->setFocus(true);
     m_webViewImpl->setIsActive(true);
@@ -1111,7 +1123,7 @@ void WebPageImpl::fireSetFocusEvent(HWND hWnd, UINT message, WPARAM wParam, LPAR
 
 void WebPageImpl::fireKillFocusEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    CHECK_FOR_REENTER0();
+    CHECK_FOR_REENTER(this, (void)0);
     freeV8TempObejctOnOneFrameBefore();
 
     HWND currentFocus = ::GetFocus();
@@ -1130,7 +1142,7 @@ void WebPageImpl::fireTouchEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM 
 
 LRESULT WebPageImpl::fireMouseEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, BOOL* bHandle)
 {
-    CHECK_FOR_REENTER(0);
+    CHECK_FOR_REENTER(this, 0);
     freeV8TempObejctOnOneFrameBefore();
     AutoRecordActions autoRecordActions(this, m_layerTreeHost, false);
 
