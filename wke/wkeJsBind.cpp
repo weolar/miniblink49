@@ -1338,6 +1338,7 @@ void jsFunctionConstructCallback(const v8::FunctionCallbackInfo<v8::Value>& args
     for (int i = 0; i < argsLength; ++i)
         argv[i] = createJsValueByLocalValue(isolate, context, args[i]);
 
+    wke::AutoDisableFreeV8TempObejct autoDisableFreeV8TempObejct;
     jsValue retWkeValue = wrap->jsDataObj->callAsFunction(execState, wkeData, argv, argsLength);
     args.GetReturnValue().Set(getV8Value(retWkeValue, context));
 }
