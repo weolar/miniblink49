@@ -143,6 +143,9 @@ public:
 
     String m_debugPath;
 
+    bool m_isBlackList;
+    bool m_isDataUrl;
+
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
     bool m_isHookRequest;
     void* m_hookBuf;
@@ -152,7 +155,6 @@ public:
     int m_asynWkeNetSetDataLength;
     bool m_isWkeNetSetDataBeSetted;
 #endif
-    bool m_isBlackList;
 };
 
 } // namespace net

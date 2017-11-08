@@ -1125,7 +1125,7 @@ void WebURLLoaderManager::removeFromCurlOnIoThread(int jobId)
     if (WebURLLoaderInternal::kNormal == state) {
         m_runningJobs--;
 
-        if (!job->m_isWkeNetSetDataBeSetted && !job->m_isBlackList) {
+        if (!job->m_isWkeNetSetDataBeSetted && !job->m_isBlackList && !job->m_isDataUrl) {
             ASSERT(job->m_handle);
             WebURLLoaderManagerMainTask* task = WebURLLoaderManagerMainTask::createTask(jobId, WebURLLoaderManagerMainTask::TaskType::kRemoveFromCurl, nullptr, 0, 0, 0);
                         
@@ -1499,9 +1499,6 @@ void WebURLLoaderManager::removeLiveJobs(int jobId)
     m_liveJobs.remove(jobId);
 }
 
-// bool isMessagingTeambitionNet = false;
-// int g_messagingTeambitionNetCount = 0;
-
 bool isBlackListUrl(const String& url)
 {
     if (false//WTF::kNotFound != url.find(".woff")
@@ -1514,21 +1511,39 @@ bool isBlackListUrl(const String& url)
     return false;
 }
 
-static void cancelMessagingTeambitionURL(WebURLLoaderManager* manager, int jobId)
-{
-    WebURLLoaderInternal* job = manager->checkJob(jobId);
-    if (!job || job->m_cancelled)
-        return;
+class HandleDataURLTask : public WebThread::Task {
+public:
+    HandleDataURLTask(WebURLLoaderManager* manager, int jobId)
+    {
+        m_manager = manager;
+        m_jobId = jobId;
+    }
 
-    BlackListCancelTask::cancel(job);
-    manager->cancel(jobId);
-}
+    ~HandleDataURLTask() override
+    {
+    }
+
+    virtual void run() override
+    {
+        WebURLLoaderInternal* job = m_manager->checkJob(m_jobId);
+        if (!job || job->m_cancelled)
+            return;
+
+        KURL url = job->firstRequest()->url();
+        handleDataURL(job->loader(), job->client(), url);
+    }
+
+private:
+    WebURLLoaderManager* m_manager;
+    int m_jobId;
+};
 
 int WebURLLoaderManager::addAsynchronousJob(WebURLLoaderInternal* job)
 {
     ASSERT(WTF::isMainThread());
 
-    String url = job->firstRequest()->url().string();
+    KURL kurl = job->firstRequest()->url();
+    String url = kurl.string();
 #if 0
     String outString = String::format("addAsynchronousJob:%d, %s\n", m_liveJobs.size(), WTF::ensureStringToUTF8(url, true).data());
     OutputDebugStringW(outString.charactersWithNullTermination().data());
@@ -1543,6 +1558,13 @@ int WebURLLoaderManager::addAsynchronousJob(WebURLLoaderInternal* job)
     if (isBlackListUrl(url)) {
         jobId = addLiveJobs(job);
         Platform::current()->currentThread()->postTask(FROM_HERE, new BlackListCancelTask(this, jobId));
+        return jobId;
+    }    
+
+    if (kurl.protocolIsData()) {
+        jobId = addLiveJobs(job);
+        job->m_isDataUrl = true;
+        Platform::current()->currentThread()->postTask(FROM_HERE, new HandleDataURLTask(this, jobId));
         return jobId;
     }
 
@@ -1688,14 +1710,6 @@ static bool dispatchWkeLoadUrlBegin(WebURLLoaderInternal* job)
 
 int WebURLLoaderManager::startJobOnMainThread(WebURLLoaderInternal* job)
 {
-    KURL url = job->firstRequest()->url();
-
-    if (url.protocolIsData()) {
-        handleDataURL(job->loader(), job->client(), url);
-        delete job;
-        return 0;
-    }
-
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
     if (dispatchWkeLoadUrlBegin(job))
         return addLiveJobs(job);
@@ -2052,6 +2066,7 @@ WebURLLoaderInternal::WebURLLoaderInternal(WebURLLoaderImplCurl* loader, const W
 
     m_dataLength = 0;
     m_isBlackList = false;
+    m_isDataUrl = false;
 
 #ifndef NDEBUG
     webURLLoaderInternalCounter.increment();
