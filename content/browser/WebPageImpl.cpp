@@ -487,14 +487,17 @@ public:
         m_client = nullptr;
     }
 
-    virtual void run() override
+    void doRun()
     {
         CHECK_FOR_REENTER(m_client, (void)0);
-
-        if (m_client) {
-            atomicDecrement(&m_client->m_commitCount);
+        if (m_client)
             m_client->beginMainFrame();
-        }
+    }
+
+    virtual void run() override
+    {
+        doRun();
+        atomicDecrement(&m_client->m_commitCount);
     }
 
 private:
