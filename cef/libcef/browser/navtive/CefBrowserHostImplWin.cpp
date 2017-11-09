@@ -66,6 +66,7 @@ bool CefBrowserHostImpl::CreateHostWindow(const CefWindowInfo& windowInfo) {
         return false;
 
     ::UpdateWindow(hWnd);
+    ::SetTimer(hWnd, (UINT_PTR)this, 50, nullptr);
 
     m_webPage->setBrowser(this);
     return true;
@@ -163,9 +164,9 @@ LRESULT CALLBACK CefBrowserHostImpl::WndProc(HWND hWnd, UINT message, WPARAM wPa
         COMPOSITIONFORM.ptCurrentPos.x = caret.x();
         COMPOSITIONFORM.ptCurrentPos.y = caret.y();
 
-        HIMC hIMC = ImmGetContext(hWnd);
-        ImmSetCompositionWindow(hIMC, &COMPOSITIONFORM);
-        ImmReleaseContext(hWnd, hIMC);
+        HIMC hIMC = ::ImmGetContext(hWnd);
+        ::ImmSetCompositionWindow(hIMC, &COMPOSITIONFORM);
+        ::ImmReleaseContext(hWnd, hIMC);
         return 0;
     }
         break;
