@@ -144,7 +144,7 @@ void wkeSetNavigationToNewWindowEnable(wkeWebView webView, bool b)
     net::g_navigationToNewWindowEnable = b;
 }
 
-void wkeSeCspCheckEnable(wkeWebView webView, bool b)
+void wkeSetCspCheckEnable(wkeWebView webView, bool b)
 {
     net::g_cspCheckEnable = b;
 }

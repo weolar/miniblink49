@@ -245,7 +245,7 @@ WKE_API void wkeDestroyWebView(wkeWebView webView);
 WKE_API void wkeSetMemoryCacheEnable(wkeWebView webView, bool b);
 
 WKE_API void wkeSetNavigationToNewWindowEnable(wkeWebView webView, bool b);
-WKE_API void wkeSeCspCheckEnable(wkeWebView webView, bool b);
+WKE_API void wkeSetCspCheckEnable(wkeWebView webView, bool b);
 WKE_API void wkeSetViewNetInterface(wkeWebView webView, const char* netInterface);
 
 WKE_API void wkeSetProxy(const wkeProxy* proxy);
