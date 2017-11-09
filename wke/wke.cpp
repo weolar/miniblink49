@@ -787,14 +787,14 @@ wkeWebView wkeGetWebViewForCurrentContext()
     return webview;
 }
 
-void wkeSetUserKayValue(wkeWebView webView, const char* key, void* value)
+void wkeSetUserKeyValue(wkeWebView webView, const char* key, void* value)
 {
-    webView->setUserKayValue(key, value);
+    webView->setUserKeyValue(key, value);
 }
 
-void* wkeGetUserKayValue(wkeWebView webView, const char* key)
+void* wkeGetUserKeyValue(wkeWebView webView, const char* key)
 {
-    return webView->getUserKayValue(key);
+    return webView->getUserKeyValue(key);
 }
 
 int wkeGetCursorInfoType(wkeWebView webView)

@@ -237,8 +237,8 @@ public:
 
     content::WebPage* webPage() { return m_webPage; }
 
-    void setUserKayValue(const char* key, void* value);
-    void* getUserKayValue(const char* key);
+    void setUserKeyValue(const char* key, void* value);
+    void* getUserKeyValue(const char* key);
 
     int getCursorInfoType();
 
@@ -259,7 +259,7 @@ protected:
 
     void _loadURL(const utf8* inUrl, bool isFile);
 
-    std::map<std::string, void*> m_userKayValues;
+    std::map<std::string, void*> m_userKeyValues;
 
     //按理这些接口应该使用CWebView来实现的，可以把它们想像成一个类，因此设置为友员符合情理。
 //     friend class ToolTip;

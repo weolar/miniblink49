@@ -365,8 +365,8 @@ WKE_API wkeString wkeCreateStringW(const wchar_t* str, size_t len);
 WKE_API void wkeDeleteString(wkeString str);
 
 WKE_API wkeWebView wkeGetWebViewForCurrentContext();
-WKE_API void wkeSetUserKayValue(wkeWebView webView, const char* key, void* value);
-WKE_API void* wkeGetUserKayValue(wkeWebView webView, const char* key);
+WKE_API void wkeSetUserKeyValue(wkeWebView webView, const char* key, void* value);
+WKE_API void* wkeGetUserKeyValue(wkeWebView webView, const char* key);
 
 #define WkeCursorInfoPointer 0
 #define WkeCursorInfoCross 1
@@ -537,6 +537,99 @@ WKE_API void wkeResizeWindow(wkeWebView webWindow, int width, int height);
 
 WKE_API void wkeSetWindowTitle(wkeWebView webWindow, const utf8* title);
 WKE_API void wkeSetWindowTitleW(wkeWebView webWindow, const wchar_t* title);
+
+// v3 api
+// #define WKE_CALL __cdecl
+// WKE_API void        WKE_CALL wkeLoad(wkeWebView* webView, const utf8* str);
+// WKE_API void        WKE_CALL wkeLoadW(wkeWebView* webView, const wchar_t* str);
+// 
+// WKE_API void        WKE_CALL wkeSetRepaintInterval(wkeWebView* webView, int ms);
+// WKE_API int         WKE_CALL wkeGetRepaintInterval(wkeWebView* webView);
+// WKE_API bool        WKE_CALL wkeRepaintIfNeededAfterInterval(wkeWebView* webView);
+// WKE_API bool        WKE_CALL wkeRepaintAllNeeded();
+// WKE_API int         WKE_CALL wkeRunMessageLoop(const bool *quit);
+// 
+// WKE_API void        WKE_CALL wkeSetHostWindow(wkeWebView* webWindow, void* hostWindow);
+// WKE_API void*       WKE_CALL wkeGetHostWindow(wkeWebView* webWindow);
+// 
+// typedef enum {
+//     WKE_MESSAGE_SOURCE_HTML,
+//     WKE_MESSAGE_SOURCE_XML,
+//     WKE_MESSAGE_SOURCE_JS,
+//     WKE_MESSAGE_SOURCE_NETWORK,
+//     WKE_MESSAGE_SOURCE_CONSOLE_API,
+//     WKE_MESSAGE_SOURCE_OTHER
+// } wkeMessageSource;
+// 
+// typedef enum {
+//     WKE_MESSAGE_TYPE_LOG,
+//     WKE_MESSAGE_TYPE_DIR,
+//     WKE_MESSAGE_TYPE_DIR_XML,
+//     WKE_MESSAGE_TYPE_TRACE,
+//     WKE_MESSAGE_TYPE_START_GROUP,
+//     WKE_MESSAGE_TYPE_START_GROUP_COLLAPSED,
+//     WKE_MESSAGE_TYPE_END_GROUP,
+//     WKE_MESSAGE_TYPE_ASSERT
+// 
+// } wkeMessageType;
+// 
+// typedef enum {
+//     WKE_MESSAGE_LEVEL_TIP,
+//     WKE_MESSAGE_LEVEL_LOG,
+//     WKE_MESSAGE_LEVEL_WARNING,
+//     WKE_MESSAGE_LEVEL_ERROR,
+//     WKE_MESSAGE_LEVEL_DEBUG
+// 
+// } wkeMessageLevel;
+// 
+// typedef struct {
+//     wkeMessageSource source;
+//     wkeMessageType type;
+//     wkeMessageLevel level;
+//     wkeString* message;
+//     wkeString* url;
+//     unsigned int lineNumber;
+// 
+// } wkeConsoleMessage;
+// 
+// typedef void (WKE_CALL *wkeConsoleMessageCallback)(wkeWebView* webView, void* param, const wkeConsoleMessage* message);
+// WKE_API void WKE_CALL wkeOnConsoleMessage(wkeWebView* webView, wkeConsoleMessageCallback callback, void* callbackParam);
+// 
+// typedef struct {
+//     wkeNavigationType navigationType;
+//     wkeString* url;
+//     wkeString* target;
+// 
+//     int x;
+//     int y;
+//     int width;
+//     int height;
+// 
+//     bool menuBarVisible;
+//     bool statusBarVisible;
+//     bool toolBarVisible;
+//     bool locationBarVisible;
+//     bool scrollbarsVisible;
+//     bool resizable;
+//     bool fullscreen;
+// 
+// } wkeNewViewInfo;
+// 
+// typedef struct {
+//     wkeString* url;
+//     wkeJSState* frameJSState;
+//     wkeJSState* mainFrameJSState;
+// 
+// } wkeDocumentReadyInfo;
+// 
+// WKE_API int         WKE_CALL wkeJSParamCount(wkeJSState* es);
+// WKE_API wkeJSType   WKE_CALL wkeJSParamType(wkeJSState* es, int index);
+// WKE_API wkeJSValue  WKE_CALL wkeJSParam(wkeJSState* es, int index);
+// 
+// WKE_API void       WKE_CALL  wkeJSAddRef(wkeJSState* es, wkeJSValue v);
+// WKE_API void       WKE_CALL  wkeJSReleaseRef(wkeJSState* es, wkeJSValue v);
+// WKE_API void       WKE_CALL  wkeJSCollectGarbge();
+//////////////////////////////////////////////////////////////////////////
 
 //JavaScript Bind-----------------------------------------------------------------------------------
 #define JS_CALL __fastcall

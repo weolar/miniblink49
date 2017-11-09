@@ -1112,19 +1112,19 @@ CWebViewHandler* CWebView::getWkeHandler() const
     return &m_webPage->wkeHandler();
 }
 
-void CWebView::setUserKayValue(const char* key, void* value)
+void CWebView::setUserKeyValue(const char* key, void* value)
 {
     if (!key)
         return;
-    m_userKayValues[key] = value;
+    m_userKeyValues[key] = value;
 }
 
-void* CWebView::getUserKayValue(const char* key)
+void* CWebView::getUserKeyValue(const char* key)
 {
     if (!key)
         return nullptr;
-    std::map<std::string, void*>::const_iterator it = m_userKayValues.find(key);
-    if (m_userKayValues.end() == it)
+    std::map<std::string, void*>::const_iterator it = m_userKeyValues.find(key);
+    if (m_userKeyValues.end() == it)
         return nullptr;
     return it->second;
 }
