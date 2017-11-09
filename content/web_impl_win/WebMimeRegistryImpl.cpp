@@ -185,7 +185,7 @@ blink::WebMimeRegistry::SupportsType WebMimeRegistryImpl::supportsNonImageMIMETy
 //#endif
             "application/x-ftp-directory",
             "multipart/x-mixed-replace",
-            "application/x-shockwave-flash",
+            //"application/x-shockwave-flash",
             // Note: ADDING a new type here will probably render it as HTML. This can
             // result in cross-site scripting.
         };
