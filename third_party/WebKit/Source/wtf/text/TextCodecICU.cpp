@@ -385,21 +385,21 @@ private:
 bool isValideGB(const unsigned char* str, int length)
 {
     if (1 == length) {
-        char c = str[0];
+        unsigned char c = str[0];
         return c >= 0 && c <= 0x7f;
     }
 
     if (2 == length) {
-        char c1 = str[0];
-        char c2 = str[1];
+        unsigned char c1 = str[0];
+        unsigned char c2 = str[1];
         return (c1 >= 0x81 && c1 <= 0xFE) && (c2 >= 0x40 && c2 <= 0xFE);
     }
 
     if (4 == length) {
-        char c1 = str[0];
-        char c2 = str[1];
-        char c3 = str[2];
-        char c4 = str[3];
+        unsigned char c1 = str[0];
+        unsigned char c2 = str[1];
+        unsigned char c3 = str[2];
+        unsigned char c4 = str[3];
         return (c1 >= 0x81 && c1 <= 0xFE) && (c2 >= 0x30 && c2 <= 0x39) && (c3 >= 0x81 && c3 <= 0xFE) && (c4 >= 0x30 && c4 <= 0x39);
     }
 
