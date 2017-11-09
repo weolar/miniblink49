@@ -487,20 +487,21 @@ public:
         m_client = nullptr;
     }
 
-    void doRun()
-    {
-        CHECK_FOR_REENTER(m_client, (void)0);
-        if (m_client)
-            m_client->beginMainFrame();
-    }
-
     virtual void run() override
     {
+        if (!m_client)
+            return;
         doRun();
         atomicDecrement(&m_client->m_commitCount);
     }
 
 private:
+    void doRun()
+    {
+        CHECK_FOR_REENTER(m_client, (void)0);
+        m_client->beginMainFrame();
+    }
+
     WebPageImpl* m_client;
 };
 
