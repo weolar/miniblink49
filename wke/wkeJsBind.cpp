@@ -680,26 +680,6 @@ jsValue jsEvalExW(jsExecState es, const wchar_t* str, bool isInClosure)
 
 jsValue jsCall(jsExecState es, jsValue func, jsValue thisValue, jsValue* args, int argCount)
 {
-//     JSC::ExecState* exec = (JSC::ExecState*)es;
-// 
-//     if (!jsIsFunction(func))
-//         return jsUndefined();
-// 
-//     JSC::JSValue jsThisValue = JSC::JSValue::decode(thisValue);
-//     if (!jsThisValue.isObject())
-//         jsThisValue = exec->globalThisValue();
-// 
-//     JSC::MarkedArgumentBuffer argList;
-//     for (int i = 0; i < argCount; i++)
-//         argList.append(JSC::JSValue::decode(args[i]));
-// 
-//     JSC::CallData callData;
-//     JSC::JSObject* object = JSC::asObject(JSC::JSValue::decode(func));
-//     JSC::CallType callType = object->methodTable()->getCallData(object, callData);
-// 
-//     JSC::JSValue value = JSC::call(exec, object, callType, callData, jsThisValue, argList);
-//     return JSC::JSValue::encode(value);
-
     if (!s_execStates || !s_execStates->contains(es) || !es || !es->isolate)
         return jsUndefined();
     if (es->context.IsEmpty())
@@ -893,12 +873,14 @@ static void functionCallbackImpl(const v8::FunctionCallbackInfo<v8::Value>& info
     v8::Isolate* isolate = info.GetIsolate();
     AddFunctionInfo* addFunctionInfo = static_cast<AddFunctionInfo*>(v8::External::Cast(*info.Data())->Value());
     wkeJsNativeFunction func = addFunctionInfo->nativeFunction;
-    //wkeJsNativeFunction func = static_cast<wkeJsNativeFunction>(v8::External::Cast(*info.Data())->Value());
+
     JsExecStateInfo* execState = JsExecStateInfo::create();
     execState->args = &info;
     execState->isolate = isolate;
     v8::Local<v8::Context> context = isolate->GetCurrentContext();
     execState->context.Reset(isolate, context);
+
+    wke::AutoDisableFreeV8TempObejct autoDisableFreeV8TempObejct;
     jsValue retVal = func(execState, addFunctionInfo->param);
 
     v8::Local<v8::Value> rv = getV8Value(retVal, context);
@@ -976,6 +958,8 @@ public:
         execState->args = nullptr;
         execState->isolate = isolate;
         execState->context.Reset(isolate, isolate->GetCurrentContext());
+
+        wke::AutoDisableFreeV8TempObejct autoDisableFreeV8TempObejct;
         jsValue retJsValue = getterSetter->getter(execState, getterSetter->getterParam);
 
         info.GetReturnValue().Set(getV8Value(retJsValue, isolate->GetCurrentContext()));
@@ -992,6 +976,8 @@ public:
         execState->accessorSetterArg = value;
         execState->isolate = isolate;
         execState->context.Reset(isolate, isolate->GetCurrentContext());
+
+        wke::AutoDisableFreeV8TempObejct autoDisableFreeV8TempObejct;
         getterSetter->setter(execState, getterSetter->setterParam);
 
         info.GetReturnValue().SetUndefined();
@@ -1506,15 +1492,15 @@ void onReleaseGlobalObject(content::WebFrameClientImpl* client, blink::WebLocalF
 
 AutoDisableFreeV8TempObejct::AutoDisableFreeV8TempObejct()
 {
-    m_isDisable = true;
+    ++m_disableCount;
 }
 
 AutoDisableFreeV8TempObejct::~AutoDisableFreeV8TempObejct()
 {
-    m_isDisable = false;
+    --m_disableCount;
 }
 
-bool AutoDisableFreeV8TempObejct::m_isDisable = false;
+int AutoDisableFreeV8TempObejct::m_disableCount = 0;
 
 void freeV8TempObejctOnOneFrameBefore()
 {

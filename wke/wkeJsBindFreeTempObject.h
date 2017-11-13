@@ -12,10 +12,10 @@ public:
     AutoDisableFreeV8TempObejct();
     ~AutoDisableFreeV8TempObejct();
 
-    static bool isDisable() { return m_isDisable; }
+    static bool isDisable() { return 0 != m_disableCount; }
 
 private:
-    static bool m_isDisable;
+    static int m_disableCount;
 };
 
 }
