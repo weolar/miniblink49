@@ -312,6 +312,8 @@ LRESULT WebPluginImpl::wndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
 
 void WebPluginImpl::updatePluginWidget(const IntRect& windowRect, const IntRect& clipRect)
 {
+    CheckReEnter enterContent(nullptr);
+
     WebPluginContainerImpl* container = (WebPluginContainerImpl*)m_pluginContainer;
     if (!container->parent())
         return;
