@@ -117,6 +117,7 @@ WebPageImpl::WebPageImpl()
     m_commitCount = 0;
     m_needsLayout = 1;
     m_layerDirty = 1;
+    m_executeMainFrameCount = 0;
     m_lastFrameTimeMonotonic = 0;
     m_popupHandle = nullptr;
     m_postCloseWidgetSoonMessage = false;
@@ -124,6 +125,7 @@ WebPageImpl::WebPageImpl()
     m_layerTreeHost = new cc::LayerTreeHost(this, this);
     m_memoryCanvasForUi = nullptr;
     m_disablePaint = false;
+    m_firstDrawCount = 0;
     m_webFrameClient = new content::WebFrameClientImpl();
 
     m_toolTip = new ToolTip();
@@ -491,15 +493,17 @@ public:
     {
         if (!m_client)
             return;
-        doRun();
+        
         atomicDecrement(&m_client->m_commitCount);
+        if (!doRun())
+            m_client->clearNeedsCommit();
     }
 
 private:
-    void doRun()
+    bool doRun()
     {
-        CHECK_FOR_REENTER(m_client, (void)0);
         m_client->beginMainFrame();
+        return true;
     }
 
     WebPageImpl* m_client;
@@ -571,10 +575,15 @@ void WebPageImpl::executeMainFrame()
     freeV8TempObejctOnOneFrameBefore();
     clearNeedsCommit();
 
+    if (0 != m_executeMainFrameCount)
+        return;
+    atomicIncrement(&m_executeMainFrameCount);
+
     double lastFrameTimeMonotonic = WTF::monotonicallyIncreasingTime();
 
     if (!m_layerTreeHost->canRecordActions()) {
         setNeedsCommitAndNotLayout();
+        atomicDecrement(&m_executeMainFrameCount);
         return;
     }
 
@@ -593,6 +602,7 @@ void WebPageImpl::executeMainFrame()
         v8::Isolate::GetCurrent()->LowMemoryNotification();
     }
 #endif
+    atomicDecrement(&m_executeMainFrameCount);
 }
 
 bool WebPageImpl::fireTimerEvent()
@@ -782,21 +792,34 @@ void WebPageImpl::enablePaint()
     m_disablePaint = false;
 }
 
+static bool canPaintToScreen(blink::WebViewImpl* webViewImpl)
+{
+    blink::Page* page = webViewImpl->page();
+    if (!page)
+        return true;
+
+    blink::LocalFrame* frame = page->deprecatedLocalMainFrame();
+    Document* document = frame->document();
+    if (!document)
+        return true;
+
+    if (!document->timing().firstLayout())
+        return false;
+
+    if (document->hasActiveParser())
+        return false;
+
+    return true;
+}
+
 // 本函数可能被调用在ui线程，也可以是合成线程
 void WebPageImpl::paintToMemoryCanvasInUiThread(SkCanvas* canvas, const IntRect& paintRect)
 {
     if (m_disablePaint)
         return;
 
-    blink::Page* page = m_webViewImpl->page();
-    if (page) {
-        blink::LocalFrame* frame = page->deprecatedLocalMainFrame();
-        Document* document = frame->document();
-        if (document) {
-            if (!document->timing().firstLayout())
-                return;
-        }
-    }
+    if (0 == m_firstDrawCount && !canPaintToScreen(m_webViewImpl)) { }
+    ++m_firstDrawCount;
 
 //     String outString = String::format("WebPageImpl::paintToMemoryCanvasInUiThread:%d %d %d %d\n",
 //         paintRect.x(), paintRect.y(), paintRect.width(), paintRect.height());
@@ -1334,6 +1357,11 @@ void WebPageImpl::onPopupMenuCreate(HWND hWnd)
 void WebPageImpl::onPopupMenuHide()
 {
     //m_popup = nullptr;
+}
+
+void WebPageImpl::didStartProvisionalLoad()
+{
+    m_firstDrawCount = 0;
 }
 
 bool WebPageImpl::initSetting()

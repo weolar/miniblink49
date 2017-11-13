@@ -119,6 +119,8 @@ public:
     void disablePaint();
     void enablePaint();
 
+    void didStartProvisionalLoad();
+
 #if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
     CefBrowserHostImpl* browser();
     void setBrowser(CefBrowserHostImpl* browserImpl);

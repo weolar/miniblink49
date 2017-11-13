@@ -55,7 +55,7 @@ void WebSchedulerImpl::postIdleTaskAfterWakeup(const blink::WebTraceLocation& lo
 
 void WebSchedulerImpl::postLoadingTask(const blink::WebTraceLocation& location, blink::WebThread::Task* task) 
 {
-    m_thread->postDelayedTask(location, task, 0);
+    m_thread->postDelayedTaskWithPriorityCrossThread(location, task, 0, WebThreadImpl::kDefaultPriority);
 }
 
 void WebSchedulerImpl::postTimerTask(const blink::WebTraceLocation& location, blink::WebThread::Task* task, long long delayMs)

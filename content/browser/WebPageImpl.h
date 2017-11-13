@@ -100,6 +100,8 @@ public:
     virtual void disablePaint() override;
     virtual void enablePaint() override;
 
+    void didStartProvisionalLoad();
+
     // PopupMenuWinClient --------------------------------------------------------
     virtual void onPopupMenuCreate(HWND hWnd) override;
     virtual void onPopupMenuHide() override;
@@ -246,10 +248,12 @@ public:
     int m_commitCount;
     int m_needsLayout;
     int m_layerDirty;
+    int m_executeMainFrameCount;
     double m_lastFrameTimeMonotonic;
 
     SkCanvas* m_memoryCanvasForUi;
     bool m_disablePaint;
+    int m_firstDrawCount;
 
     blink::Persistent<PopupMenuWin> m_popup;
 };

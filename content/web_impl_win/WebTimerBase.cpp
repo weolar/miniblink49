@@ -35,8 +35,6 @@
 #include "third_party/WebKit/Source/platform/Task.h"
 #include "ActivatingTimerCheck.h"
 
-//using namespace std;
-
 namespace content {
 
 // Timers are stored in a heap data structure, used to implement a priority queue.
@@ -111,9 +109,17 @@ bool operator<(const TimerHeapElement& a, const TimerHeapElement& b)
     // element first and we want the lowest time to be the first one in the heap.
     double aFireTime = a.timer()->m_nextFireTime;
     double bFireTime = b.timer()->m_nextFireTime;
+
     if (bFireTime != aFireTime)
         return bFireTime < aFireTime;
-    
+
+#if 0
+    int aPriority = a.timer()->m_priority;
+    int bPriority = b.timer()->m_priority;
+    if (aPriority != bPriority)
+        return aPriority < bPriority;
+#endif
+
     // We need to look at the difference of the insertion orders instead of comparing the two 
     // outright in case of overflow. 
     unsigned difference = a.timer()->m_heapInsertionOrder - b.timer()->m_heapInsertionOrder;
@@ -191,7 +197,7 @@ const std::vector<WebTimerBase*>& WebTimerBase::timerHeap() const
 extern ActivatingTimerCheck* gActivatingTimerCheck;
 #endif
 
-WebTimerBase::WebTimerBase(WebThreadImpl* threadTimers, const blink::WebTraceLocation& location, blink::WebThread::Task* task)
+WebTimerBase::WebTimerBase(WebThreadImpl* threadTimers, const blink::WebTraceLocation& location, blink::WebThread::Task* task, int priority)
     : m_nextFireTime(0)
     , m_threadTimers(threadTimers)
     , m_repeatInterval(0)
@@ -199,6 +205,7 @@ WebTimerBase::WebTimerBase(WebThreadImpl* threadTimers, const blink::WebTraceLoc
     , m_location(location)
     , m_task(task)
     , m_ref(0)
+    , m_priority(priority)
 #ifndef NDEBUG
     , m_thread(currentThread())
 #endif
@@ -242,12 +249,24 @@ int WebTimerBase::refCount() const
     return m_ref;
 }
 
+void WebTimerBase::startFromOtherThread(double interval, double* createTimeOnOtherThread, unsigned* heapInsertionOrder)
+{
+    if (!createTimeOnOtherThread || !heapInsertionOrder) {
+        start(interval, 0);
+        return;
+    }
+
+    ASSERT(m_thread == currentThread());
+    m_repeatInterval = 0;
+    setNextFireTime(*createTimeOnOtherThread + interval, heapInsertionOrder);
+}
+
 void WebTimerBase::start(double nextFireInterval, double repeatInterval)
 {
     ASSERT(m_thread == currentThread());
 
     m_repeatInterval = repeatInterval;
-    setNextFireTime(currentTime() + nextFireInterval);
+    setNextFireTime(currentTime() + nextFireInterval, nullptr);
 }
 
 void WebTimerBase::stop()
@@ -255,7 +274,7 @@ void WebTimerBase::stop()
     ASSERT(m_thread == currentThread());
 
     m_repeatInterval = 0;
-    setNextFireTime(0);
+    setNextFireTime(0, nullptr);
 
     ASSERT(m_nextFireTime == 0);
     ASSERT(m_repeatInterval == 0);
@@ -355,7 +374,7 @@ void WebTimerBase::heapPopMin()
     ASSERT(this == timerHeap().back());
 }
 
-void WebTimerBase::setNextFireTime(double newTime)
+void WebTimerBase::setNextFireTime(double newTime, unsigned* heapInsertionOrder)
 {
     ASSERT(m_thread == currentThread());
 
@@ -363,8 +382,13 @@ void WebTimerBase::setNextFireTime(double newTime)
     double oldTime = m_nextFireTime;
     if (oldTime != newTime) {
         m_nextFireTime = newTime;
-        static unsigned currentHeapInsertionOrder = 0;
-        m_heapInsertionOrder = atomicIncrement((volatile int *)&currentHeapInsertionOrder);
+
+//         static unsigned currentHeapInsertionOrder = 0;
+//         m_heapInsertionOrder = atomicIncrement((volatile int *)&currentHeapInsertionOrder);
+        if (heapInsertionOrder)
+            m_heapInsertionOrder = *heapInsertionOrder;
+        else
+            m_heapInsertionOrder = WebThreadImpl::getNewCurrentHeapInsertionOrder();
 
         bool wasFirstTimerInHeap = m_heapIndex == 0;
 

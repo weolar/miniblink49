@@ -28,18 +28,25 @@ class WebThreadImpl : public blink::WebThread {
 public:
     explicit WebThreadImpl(const char* name);
     virtual ~WebThreadImpl();
+    
+    static const int kDefaultPriority = 100;
+    static const int kLoadingPriority = 200;
 
-    virtual void postTask(const blink::WebTraceLocation&, blink::WebThread::Task*) OVERRIDE;
-    virtual void postDelayedTask(const blink::WebTraceLocation&, blink::WebThread::Task*, long long delayMs) OVERRIDE;
+    virtual void postTask(const blink::WebTraceLocation&, blink::WebThread::Task*) override;
+    virtual void postDelayedTask(const blink::WebTraceLocation&, blink::WebThread::Task*, long long delayMs) override;
+    void postDelayedTaskWithPriorityCrossThread(const blink::WebTraceLocation& location,
+        blink::WebThread::Task* task,
+        long long delayMs,
+        int priority);
 
-    virtual bool isCurrentThread() const OVERRIDE;
-    virtual blink::PlatformThreadId threadId() const OVERRIDE;
+    virtual bool isCurrentThread() const override;
+    virtual blink::PlatformThreadId threadId() const override;
 
-    virtual void addTaskObserver(TaskObserver*) OVERRIDE;
-    virtual void removeTaskObserver(TaskObserver*) OVERRIDE;
+    virtual void addTaskObserver(TaskObserver*) override;
+    virtual void removeTaskObserver(TaskObserver*) override;
 
     // Returns the scheduler associated with the thread.
-    virtual blink::WebScheduler* scheduler() const OVERRIDE;
+    virtual blink::WebScheduler* scheduler() const override;
 
     void willExit();
 
@@ -59,20 +66,26 @@ public:
 
     void shutdown();
 
+    static unsigned getNewCurrentHeapInsertionOrder();
+
 private:
-    //void shutdown();
     void fireOnExit();
     void waitForExit();
-	void fireTimeOnExit();
+    void fireTimeOnExit();
 
     struct TaskPair {
-        TaskPair(const blink::WebTraceLocation& location, blink::WebThread::Task* task, long long delayMs);
+        TaskPair(const blink::WebTraceLocation& location, blink::WebThread::Task* task, long long delayMs, int priority);
+        static void sortByPriority(std::vector<TaskPair*>*);
 
         blink::WebTraceLocation location;
         blink::WebThread::Task* task;
         long long delayMs;
+        int priority;
+        double createTime;
+        unsigned heapInsertionOrder;
     };
-    void postDelayedTaskImpl(const blink::WebTraceLocation& location, blink::WebThread::Task* task, long long delayMs);
+    void postDelayedTaskImpl(
+        const blink::WebTraceLocation& location, blink::WebThread::Task* task, long long delayMs, double* createTimeOnOtherThread, int priority, unsigned* heapInsertionOrder);
     
     static unsigned __stdcall WebThreadImplThreadEntryPoint(void* param);
     void threadEntryPoint();
@@ -103,6 +116,9 @@ private:
 
     bool m_hadThreadInit;
     HANDLE m_threadHandle;
+
+    double m_currentFrameCreateTime; // 当前帧全部使用这个创建时间
+    static unsigned m_currentHeapInsertionOrder;
 };
 
 } // namespace content

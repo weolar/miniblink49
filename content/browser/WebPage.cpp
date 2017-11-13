@@ -160,6 +160,11 @@ void WebPage::enablePaint()
         m_pageImpl->enablePaint();
 }
 
+void WebPage::didStartProvisionalLoad()
+{
+    if (m_pageImpl)
+        m_pageImpl->didStartProvisionalLoad();
+}
 
 bool WebPage::fireTimerEvent()
 {

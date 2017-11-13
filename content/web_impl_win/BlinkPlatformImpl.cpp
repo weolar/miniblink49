@@ -138,7 +138,8 @@ void BlinkPlatformImpl::initialize()
     scrt_initialize_thread_safe_statics();
 #endif
     x86_check_features();
-    ::CoInitializeEx(NULL, 0); // COINIT_MULTITHREADED
+    ::CoInitializeEx(nullptr, 0); // COINIT_MULTITHREADED
+    ::OleInitialize(nullptr);
 
     setRuntimeEnabledFeatures();
 

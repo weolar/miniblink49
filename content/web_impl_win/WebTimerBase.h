@@ -50,9 +50,9 @@ class WebThreadImpl;
 class WebTimerBase {
     WTF_MAKE_NONCOPYABLE(WebTimerBase); WTF_MAKE_FAST_ALLOCATED(WebTimerBase);
 public:
-    static WebTimerBase* create(WebThreadImpl* threadTimers, const blink::WebTraceLocation& location, blink::WebThread::Task* task)
+    static WebTimerBase* create(WebThreadImpl* threadTimers, const blink::WebTraceLocation& location, blink::WebThread::Task* task, int priority)
     {
-        return new WebTimerBase(threadTimers, location, task);
+        return new WebTimerBase(threadTimers, location, task, priority);
     }
     ~WebTimerBase();
 
@@ -70,7 +70,7 @@ public:
     double nextFireInterval() const;
     double repeatInterval() const { return m_repeatInterval; }
 
-    void augmentFireInterval(double delta) { setNextFireTime(m_nextFireTime + delta); }
+    void augmentFireInterval(double delta) { setNextFireTime(m_nextFireTime + delta, nullptr); }
     void augmentRepeatInterval(double delta) { augmentFireInterval(delta); m_repeatInterval += delta; }
 
     static void fireTimersInNestedEventLoop();
@@ -82,12 +82,14 @@ public:
     int refCount() const;
 
 private:
-    WebTimerBase(WebThreadImpl* threadTimers, const blink::WebTraceLocation& location, blink::WebThread::Task* task);
+    WebTimerBase(WebThreadImpl* threadTimers, const blink::WebTraceLocation& location, blink::WebThread::Task* task, int priority);
+
+    void startFromOtherThread(double interval, double* createTimeOnOtherThread, unsigned* heapInsertionOrder);
 
     void checkConsistency() const;
     void checkHeapIndex() const;
 
-    void setNextFireTime(double);
+    void setNextFireTime(double, unsigned* heapInsertionOrder);
 
     bool inHeap() const { return m_heapIndex != -1; }
 
@@ -120,6 +122,7 @@ private:
     blink::WebThread::Task* m_task;
 
     int m_ref;
+    int m_priority;
 };
 
 inline bool WebTimerBase::isActive() const

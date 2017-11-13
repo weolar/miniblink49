@@ -205,6 +205,8 @@ void WebFrameClientImpl::didStartProvisionalLoad(WebLocalFrame* localFrame, doub
     if (browser)
         browser->DidStartProvisionalLoad(localFrame, triggeringEventTime);
 #endif
+    if (localFrame && localFrame->parent())
+        m_webPage->didStartProvisionalLoad();
 }
 
 void WebFrameClientImpl::didReceiveServerRedirectForProvisionalLoad(WebLocalFrame*) { }
