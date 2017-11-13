@@ -178,8 +178,6 @@ WebPluginImpl::WebPluginImpl(WebLocalFrame* parentFrame, const blink::WebPluginP
 
 WebPluginImpl::~WebPluginImpl()
 {
-    //WTF_LOG(Plugins, "WebPluginImpl::~WebPluginImpl()");
-
     ASSERT(!m_lifeSupportTimer.isActive());
 
     // If we failed to find the plug-in, we'll return early in our constructor, and
@@ -199,8 +197,8 @@ WebPluginImpl::~WebPluginImpl()
 
     //m_parentFrame->script().cleanupScriptObjectsForPlugin(this);
 
-    if (m_plugin && !(m_plugin->quirks().contains(PluginQuirkDontUnloadPlugin)))
-        m_plugin->unload();
+//     if (m_plugin && !(m_plugin->quirks().contains(PluginQuirkDontUnloadPlugin)))
+//         m_plugin->unload(); // 不卸载了，卸载容易出各种问题
 
 #ifndef NDEBUG
     webPluginImplCount.decrement();
@@ -325,8 +323,6 @@ void WebPluginImpl::stop()
     if (!m_isStarted)
         return;
 
-    //WTF_LOG(Plugins, "WebPluginImpl::stop(): Stopping plug-in '%s'", m_plugin->name().utf8().data());
-
     HashSetStreams streams = m_streams;
     HashSetStreams::iterator end = streams.end();
     for (HashSetStreams::iterator it = streams.begin(); it != end; ++it) {
@@ -338,9 +334,7 @@ void WebPluginImpl::stop()
     ASSERT(m_streams.isEmpty());
 
     m_isStarted = false;
-
-    //JSC::JSLock::DropAllLocks dropAllLocks(JSDOMWindowBase::commonVM());
-
+    
     // Unsubclass the window
     if (m_isWindowed) {
         WNDPROC currentWndProc = (WNDPROC)GetWindowLongPtr(platformPluginWidget(), GWLP_WNDPROC);
@@ -362,12 +356,12 @@ void WebPluginImpl::stop()
 
     PluginMainThreadScheduler::scheduler().unregisterPlugin(m_instance);
 
+#if 0 // 这里调用destroy会有问题，如果是在_NPN_Evaluate走到这里的话。例子：http://music.yule.sohu.com/20170926/n514522612.shtml
     NPSavedData* savedData = 0;
     WebPluginImpl::setCurrentPluginView(this);
     setCallingPlugin(true);
     NPError npErr = m_plugin->pluginFuncs()->destroy(m_instance, &savedData);
     setCallingPlugin(false);
-    //LOG_NPERROR(npErr);
     WebPluginImpl::setCurrentPluginView(0);
 
     if (savedData) {
@@ -376,6 +370,7 @@ void WebPluginImpl::stop()
             NPN_MemFree(savedData->buf);
         NPN_MemFree(savedData);
     }
+#endif
 
     m_instance->pdata = 0;
 }
