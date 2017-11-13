@@ -94,6 +94,12 @@
 
 using blink::WebURLRequest;
 
+namespace net {
+
+extern bool g_navigationToNewWindowEnable;
+
+}
+
 namespace blink {
 
 using namespace HTMLNames;
@@ -770,6 +776,9 @@ bool FrameLoader::prepareRequestForThisFrame(FrameLoadRequest& request)
 
 static bool shouldOpenInNewWindow(Frame* targetFrame, const FrameLoadRequest& request, NavigationPolicy policy)
 {
+    if (!net::g_navigationToNewWindowEnable)
+        return false;
+
     if (!targetFrame && !request.frameName().isEmpty())
         return true;
     // FIXME: This case is a workaround for the fact that ctrl+clicking a form submission incorrectly
