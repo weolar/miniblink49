@@ -1869,6 +1869,10 @@ void Document::updateLayoutTreeForNodeIfNeeded(Node* node)
         return;
     if (!needsLayoutTreeUpdate())
         return;
+
+    // https://chromium.googlesource.com/chromium/src/+log/daf0427f8e0301729a905fad746c6e8afbeffd11/third_party/WebKit/Source/core/dom/Document.cpp?s=7a4cc8d341b50e4f51c73ec408f038940f38c6b0
+    // https://chromium.googlesource.com/chromium/src/+/73a40db1b07fbd9b67286a6cbda1491418fec3d9%5E%21/#F0
+    // https://chromium.googlesource.com/chromium/src/+/40fbf8f4d6a7af7041d45319d92312755aa28977%5E%21/#F4
     if (!node->inDocument())
         return;
 
