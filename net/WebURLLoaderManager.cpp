@@ -822,7 +822,8 @@ size_t WebURLLoaderManagerMainTask::handleHeaderCallbackOnMainThread(WebURLLoade
             RequestExtraData* requestExtraData = reinterpret_cast<RequestExtraData*>(job->firstRequest()->extraData());
             WebPage* page = requestExtraData->page;
             if (page->wkeHandler().downloadCallback) {
-                if (page->wkeHandler().downloadCallback(page->wkeWebView(), page->wkeHandler().downloadCallbackParam, /*encodeWithURLEscapeSequences*/(job->firstRequest()->url().string()).latin1().data())) {
+                Vector<char> urlBuf = WTF::ensureStringToUTF8(job->firstRequest()->url().string(), true);
+                if (page->wkeHandler().downloadCallback(page->wkeWebView(), page->wkeHandler().downloadCallbackParam, urlBuf.data())) {
                     blink::WebLocalFrame* frame = requestExtraData->frame;
                     frame->stopLoading();
                     return totalSize;
@@ -924,8 +925,9 @@ void WebURLLoaderManagerMainTask::handleHookRequestOnMainThread(WebURLLoaderInte
     RequestExtraData* requestExtraData = reinterpret_cast<RequestExtraData*>(job->firstRequest()->extraData());
     content::WebPage* page = requestExtraData->page;
     if (page->wkeHandler().loadUrlEndCallback) {
+        Vector<char> urlBuf = WTF::ensureStringToUTF8(job->firstRequest()->url().string(), true);
         page->wkeHandler().loadUrlEndCallback(page->wkeWebView(), page->wkeHandler().loadUrlEndCallbackParam,
-            /*encodeWithURLEscapeSequences*/(job->firstRequest()->url().string()).utf8().data(), job,
+            urlBuf.data(), job,
             job->m_hookBuf, job->m_hookLength);
     }
 }
@@ -1687,8 +1689,9 @@ void WebURLLoaderManager::dispatchSynchronousJob(WebURLLoaderInternal* job)
     RequestExtraData* requestExtraData = reinterpret_cast<RequestExtraData*>(job->firstRequest()->extraData());
     WebPage* page = requestExtraData->page;
     if (page->wkeHandler().loadUrlBeginCallback) {
+        Vector<char> url = WTF::ensureStringToUTF8(job->firstRequest()->url().string(), true);
         if (page->wkeHandler().loadUrlBeginCallback(page->wkeWebView(), page->wkeHandler().loadUrlBeginCallbackParam,
-            /*encodeWithURLEscapeSequences*/(job->firstRequest()->url().string()).utf8().data(), job)) {
+            url.data(), job)) {
             WebURLLoaderManager::sharedInstance()->handleDidFinishLoading(job, WTF::currentTime(), 0);
             delete job;
             return;
@@ -1752,10 +1755,10 @@ static bool dispatchWkeLoadUrlBegin(WebURLLoaderInternal* job)
     if (!page->wkeHandler().loadUrlBeginCallback)
         return false;
 
-    String url = job->firstRequest()->url().string();
+    Vector<char> urlBuf = WTF::ensureStringToUTF8(job->firstRequest()->url().string(), true);
     if (!page->wkeHandler().loadUrlBeginCallback(page->wkeWebView(),
         page->wkeHandler().loadUrlBeginCallbackParam,
-        /*encodeWithURLEscapeSequences*/(url).utf8().data(), job))
+        urlBuf.data(), job))
         return false;
 
     return true;
