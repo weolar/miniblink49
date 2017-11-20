@@ -13,9 +13,10 @@ using blink::WebString;
 
 namespace blink {
 
-WebStorageNamespaceImpl::WebStorageNamespaceImpl(int64 namespaceId, DOMStorageMap& cachedArea)
+WebStorageNamespaceImpl::WebStorageNamespaceImpl(int64 namespaceId, DOMStorageMap* cachedArea, bool isLocal)
     : m_cachedArea(cachedArea)
     , m_namespaceId(namespaceId)
+    , m_isLocal(isLocal)
 {
 
 }
@@ -26,7 +27,7 @@ WebStorageNamespaceImpl::~WebStorageNamespaceImpl() {
 
 WebStorageArea* WebStorageNamespaceImpl::createStorageArea(const WebString& origin) 
 {
-    return new WebStorageAreaImpl(m_cachedArea, origin);
+    return new WebStorageAreaImpl(m_cachedArea, origin, m_isLocal);
 }
 
 WebStorageNamespace* WebStorageNamespaceImpl::copy() {
