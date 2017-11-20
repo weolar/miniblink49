@@ -32,6 +32,8 @@ bool g_wkeMemoryCacheEnable = true;
 
 bool wkeIsUpdataInOtherThread = false;
 
+unsigned int g_mbRuntimeEnabledFeatures = 0;
+
 void wkeInitialize()
 {
     if (wkeIsInit)
@@ -940,8 +942,13 @@ extern "C" void curl_set_file_system(
     WKE_FILE_SEEK pfnSeek,
     WKE_EXISTS_FILE pfnExistsFile);
 
+WKE_FILE_OPEN g_pfnOpen = nullptr;
+WKE_FILE_CLOSE g_pfnClose = nullptr;
+
 void wkeSetFileSystem(WKE_FILE_OPEN pfnOpen, WKE_FILE_CLOSE pfnClose, WKE_FILE_SIZE pfnSize, WKE_FILE_READ pfnRead, WKE_FILE_SEEK pfnSeek)
 {
+    WKE_FILE_OPEN g_pfnOpen = pfnOpen;
+    WKE_FILE_CLOSE g_pfnClose = pfnClose;
     curl_set_file_system(pfnOpen, pfnClose, pfnSize, pfnRead, pfnSeek, nullptr);
 }
 
