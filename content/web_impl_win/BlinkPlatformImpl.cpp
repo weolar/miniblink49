@@ -604,14 +604,14 @@ blink::WebStorageNamespace* BlinkPlatformImpl::createLocalStorageNamespace()
 {
     if (!m_localStorageStorageMap)
         m_localStorageStorageMap = new DOMStorageMapWrap();
-    return new blink::WebStorageNamespaceImpl(blink::kLocalStorageNamespaceId, m_localStorageStorageMap->map);
+    return new blink::WebStorageNamespaceImpl(blink::kLocalStorageNamespaceId, &m_localStorageStorageMap->map, true);
 }
 
 blink::WebStorageNamespace* BlinkPlatformImpl::createSessionStorageNamespace()
 {
     if (!m_sessionStorageStorageMap)
         m_sessionStorageStorageMap = new DOMStorageMapWrap();
-    return new blink::WebStorageNamespaceImpl(m_storageNamespaceIdCount++, m_sessionStorageStorageMap->map);
+    return new blink::WebStorageNamespaceImpl(m_storageNamespaceIdCount++, &m_sessionStorageStorageMap->map, false);
 }
 
 bool BlinkPlatformImpl::portAllowed(const blink::WebURL&) const
