@@ -139,6 +139,7 @@ struct FileMetadata;
 bool fileExists(const String&);
 bool deleteFile(const String&);
 bool deleteEmptyDirectory(const String&);
+bool createDirectory(const String&);
 bool moveFile(const String& oldPath, const String& newPath);
 bool getFileSize(const String&, long long& result);
 bool getFileSize(PlatformFileHandle, long long& result);

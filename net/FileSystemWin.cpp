@@ -59,7 +59,8 @@ private:
 
 static bool getFindData(String path, WIN32_FIND_DATAW& findData)
 {
-    HANDLE handle = FindFirstFileW(path.charactersWithNullTermination().data(), &findData);
+    Vector<UChar> buffer = WTF::ensureUTF16UChar(path, true);
+    HANDLE handle = FindFirstFileW(buffer.data(), &findData);
     if (handle == INVALID_HANDLE_VALUE)
         return false;
     FindClose(handle);
@@ -177,14 +178,20 @@ bool fileExists(const String& path)
 
 bool deleteFile(const String& path)
 {
-    String filename = path;
-    return !!DeleteFileW(filename.charactersWithNullTermination().data());
+    Vector<UChar> buffer = WTF::ensureUTF16UChar(path, true);
+    return !!DeleteFileW(buffer.data());
+}
+
+bool createDirectory(const String& path)
+{
+    Vector<UChar> buffer = WTF::ensureUTF16UChar(path, true);
+    return !!CreateDirectoryW(buffer.data(), nullptr);
 }
 
 bool deleteEmptyDirectory(const String& path)
 {
-    String filename = path;
-    return !!RemoveDirectoryW(filename.charactersWithNullTermination().data());
+    Vector<UChar> buffer = WTF::ensureUTF16UChar(path, true);
+    return !!RemoveDirectoryW(buffer.data());
 }
 
 String pathByAppendingComponent(const String& path, const String& component)
@@ -230,8 +237,8 @@ std::vector<char> fileSystemRepresentation(const String& path)
 
 bool makeAllDirectories(const String& path)
 {
-    String fullPath = path;
-    if (SHCreateDirectoryEx(0, fullPath.charactersWithNullTermination().data(), 0) != ERROR_SUCCESS) {
+    Vector<UChar> pathBuffer = WTF::ensureUTF16UChar(path, true);
+    if (SHCreateDirectoryEx(0, pathBuffer.data(), 0) != ERROR_SUCCESS) {
         DWORD error = GetLastError();
         if (error != ERROR_FILE_EXISTS && error != ERROR_ALREADY_EXISTS) {
             //LOG_ERROR("Failed to create path %s", path.ascii().data());
@@ -249,7 +256,8 @@ String homeDirectoryPath()
 
 String pathGetFileName(const String& path)
 {
-    return String(::PathFindFileName(String(path).charactersWithNullTermination().data()));
+    Vector<UChar> pathBuffer = WTF::ensureUTF16UChar(path, true);
+    return String(::PathFindFileName(pathBuffer.data()));
 }
 
 String directoryName(const String& path)
@@ -316,9 +324,10 @@ String openTemporaryFile(const String&, PlatformFileHandle& handle)
 {
     handle = INVALID_HANDLE_VALUE;
 
-    wchar_t tempPath[MAX_PATH];
-    int tempPathLength = ::GetTempPathW(WTF_ARRAY_LENGTH(tempPath), tempPath);
-    if (tempPathLength <= 0 || tempPathLength > WTF_ARRAY_LENGTH(tempPath))
+    Vector<wchar_t> tempPath;
+    tempPath.resize(MAX_PATH);
+    int tempPathLength = ::GetTempPathW(MAX_PATH, tempPath.data());
+    if (tempPathLength <= 0 || tempPathLength > MAX_PATH)
         return String();
 
     String proposedPath;
@@ -335,7 +344,7 @@ String openTemporaryFile(const String&, PlatformFileHandle& handle)
 
         ASSERT(wcslen(tempFile) == WTF_ARRAY_LENGTH(tempFile) - 1);
 
-        proposedPath = pathByAppendingComponent(tempPath, tempFile);
+        proposedPath = pathByAppendingComponent(tempPath.data(), tempFile);
         if (proposedPath.isEmpty())
             break;
 
@@ -366,8 +375,8 @@ PlatformFileHandle openFile(const String& path, FileOpenMode mode)
         ASSERT_NOT_REACHED();
     }
 
-    String destination = path;
-    return CreateFile(destination.charactersWithNullTermination().data(), desiredAccess, 0, 0, creationDisposition, FILE_ATTRIBUTE_NORMAL, 0);
+    Vector<UChar> pathBuffer = WTF::ensureUTF16UChar(path, true);
+    return CreateFile(pathBuffer.data(), desiredAccess, 0, 0, creationDisposition, FILE_ATTRIBUTE_NORMAL, 0);
 }
 
 void closeFile(PlatformFileHandle& handle)
