@@ -148,6 +148,8 @@ void CompositingTile::allocBitmapIfNeeded()
     
     int newWidth = bounds.width() < kDefaultTileWidth ? bounds.width() : kDefaultTileWidth;
     int newHeight = bounds.height() < kDefaultTileHeight ? bounds.height() : kDefaultTileHeight;
+    newWidth = newWidth <= 0 ? 1 : newWidth;
+    newHeight = newHeight <= 0 ? 1 : newHeight;
 
     bool needResize = newWidth != width || newHeight != height;
     m_postion = blink::IntRect(m_xIndex * kDefaultTileWidth, m_yIndex * kDefaultTileHeight, newWidth, newHeight);

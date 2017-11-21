@@ -297,8 +297,6 @@ void CompositingLayer::blendToTile(CompositingTile* tile, const SkBitmap& bitmap
 
     blink::IntRect postion = tile->postion();
     if (!postion.intersects((blink::IntRect)dirtyRect)) {
-//         if (postion.width() == 1 && postion.height() == 1 && dirtyRect.width() == 1 && dirtyRect.height() == 1)
-//             return;
         postion.setWidth(kDefaultTileWidth);
         postion.setHeight(kDefaultTileHeight);
         if (!postion.intersects((blink::IntRect)dirtyRect))
