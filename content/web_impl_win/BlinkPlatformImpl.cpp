@@ -588,10 +588,11 @@ blink::WebScrollbarBehavior* BlinkPlatformImpl::scrollbarBehavior()
 blink::WebURLError BlinkPlatformImpl::cancelledError(const blink::WebURL& url) const
 {
     blink::WebURLError error;
-    error.reason = -1;
+    error.reason = -3; // net::ERR_ABORTED
     error.domain = blink::WebString(url.string());
     error.localizedDescription = blink::WebString::fromUTF8("url cancelledError\n");
-
+    error.isCancellation = true;
+    error.staleCopyInCache = false;
     WTF::String outError = "url cancelledError:";
     outError.append((WTF::String)url.string());
     outError.append("\n");
