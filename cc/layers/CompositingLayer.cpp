@@ -469,15 +469,14 @@ void CompositingLayer::drawToCanvas(LayerTreeHost* host, blink::WebCanvas* canva
     if (!drawsContent())
         return;
 
-    for (TilesAddr::iterator it = m_tilesAddr->begin(); it != m_tilesAddr->end(); ++it/*size_t i = 0; i < m_tiles->size(); ++i*/) {
-        //CompositingTile* tile = m_tiles->at(i);
+    for (TilesAddr::iterator it = m_tilesAddr->begin(); it != m_tilesAddr->end(); ++it) {
         CompositingTile* tile = (CompositingTile*)it->value;
         if (!tile->postion().intersects(clip) || !tile->bitmap())
             continue;
 
         blink::IntRect tilePostion = tile->postion();
-        SkIRect dst = (SkIRect)(tilePostion);
-        SkIRect src = SkIRect::MakeWH(tile->bitmap()->width(), tile->bitmap()->height());
+        SkRect dst = (SkRect)(tilePostion);
+        SkRect src = SkRect::MakeWH(tile->bitmap()->width(), tile->bitmap()->height());
 
         SkPaint paint;
         paint.setAntiAlias(true);
@@ -497,7 +496,7 @@ void CompositingLayer::drawToCanvas(LayerTreeHost* host, blink::WebCanvas* canva
         //context->fillRect(tilePostion, 0x00000000 | (::GetTickCount() + rand()));
 #endif
 
-        canvas->drawBitmapRect(*tile->bitmap(), nullptr, SkRect::MakeFromIRect(dst), &paint);
+        canvas->drawBitmapRect(*tile->bitmap(), nullptr, (dst), &paint);
 
 //         if (0) {
 //             SkPaint paintTest;
