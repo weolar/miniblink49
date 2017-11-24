@@ -34,7 +34,7 @@ public:
         wkeWebView view = wkeGetWebViewForCurrentContext();
         if (!view)
             return;
-        WebContents* webContents = (WebContents*)wkeGetUserKayValue(view, "WebContents");
+        WebContents* webContents = (WebContents*)wkeGetUserKeyValue(view, "WebContents");
         if (!webContents)
             return;
         webContents->rendererPostMessageToMain(channel, arguments);
@@ -44,7 +44,7 @@ public:
         wkeWebView view = wkeGetWebViewForCurrentContext();
         if (!view)
             return "";
-        WebContents* webContents = (WebContents*)wkeGetUserKayValue(view, "WebContents");
+        WebContents* webContents = (WebContents*)wkeGetUserKeyValue(view, "WebContents");
         if (!webContents)
             return "";
 
