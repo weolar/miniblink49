@@ -40,10 +40,16 @@ private:
     void loadFromFile();
     void delaySaveTimerFired(blink::Timer<WebStorageAreaImpl>*);
 
+    void invalidateIterator();
+    void setIteratorToIndex(unsigned);
+
     String m_origin;
     DOMStorageMap* m_cachedArea;
     bool m_isLocal;
     blink::Timer<WebStorageAreaImpl> m_delaySaveTimer;
+
+    HashMap<String, String>::iterator m_iterator;
+    unsigned m_iteratorIndex;
 };
 
 }  // namespace blink

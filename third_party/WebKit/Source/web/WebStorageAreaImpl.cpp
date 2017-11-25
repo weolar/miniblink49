@@ -52,8 +52,6 @@ static char* kLocalStorageDirectoryName = "LocalStorage";
 static char* kLocalStorageExtensionName = ".localstorage";
 static char kSeparator = (char)0x1f;
 
-
-
 static String buildLocalStorageFileNameString(const KURL& originUrl)
 {
     String localStoragePath = kLocalStorageDirectoryName;
@@ -184,8 +182,11 @@ unsigned WebStorageAreaImpl::length()
 
 WebString WebStorageAreaImpl::key(unsigned index)
 {
-    notImplemented();
-    return WebString();
+    if (index >= length())
+        return String();
+
+    setIteratorToIndex(index);
+    return m_iterator->key;
 }
 
 WebString WebStorageAreaImpl::getItem(const WebString& key)
@@ -200,8 +201,7 @@ WebString WebStorageAreaImpl::getItem(const WebString& key)
     return WebString(keyValueIt->value);
 }
 
-void WebStorageAreaImpl::setItem(const WebString& key, const WebString& value,
-    const WebURL& pageUrl, WebStorageArea::Result& result)
+void WebStorageAreaImpl::setItem(const WebString& key, const WebString& value, const WebURL& pageUrl, WebStorageArea::Result& result)
 {
     String pageString = (String)pageUrl.string();
     String origin = buildOriginString(pageUrl);
@@ -220,32 +220,77 @@ void WebStorageAreaImpl::setItem(const WebString& key, const WebString& value,
     if (m_delaySaveTimer.isActive())
         m_delaySaveTimer.stop();
     m_delaySaveTimer.startOneShot(30000, FROM_HERE);
+
+    invalidateIterator();
 }
 
 void WebStorageAreaImpl::removeItem(const WebString& key, const WebURL& pageUrl)
 {
     String pageString = (String)pageUrl.string();
-    DOMStorageMap::iterator it = m_cachedArea->find(pageString);
+    String origin = buildOriginString(pageUrl);
+    DOMStorageMap::iterator it = m_cachedArea->find(origin);
     if (it == m_cachedArea->end())
         return;
 
     it->value->remove((String)key);
 
     if (0 == it->value->size()) {
+        invalidateIterator();
+
         delete it->value;
         m_cachedArea->remove(it);
     }
 }
 
-void WebStorageAreaImpl::clear(const WebURL& url)
+void WebStorageAreaImpl::clear(const WebURL& pageUrl)
 {
-    String pageString = (String)url.string();
-    DOMStorageMap::iterator it = m_cachedArea->find(pageString);
+    String pageString = (String)pageUrl.string();
+    String origin = buildOriginString(pageUrl);
+
+    DOMStorageMap::iterator it = m_cachedArea->find(origin);
     if (it == m_cachedArea->end())
         return;
 
     delete it->value;
     m_cachedArea->remove(it);
+
+    invalidateIterator();
+}
+
+void WebStorageAreaImpl::invalidateIterator()
+{
+    DOMStorageMap::iterator it = m_cachedArea->find(m_origin);
+    if (it == m_cachedArea->end())
+        return;
+
+    m_iterator = it->value->end();
+    m_iteratorIndex = UINT_MAX;
+}
+
+void WebStorageAreaImpl::setIteratorToIndex(unsigned index)
+{
+    // FIXME: Once we have bidirectional iterators for HashMap we can be more intelligent about this.
+    // The requested index will be closest to begin(), our current iterator, or end(), and we
+    // can take the shortest route.
+    // Until that mechanism is available, we'll always increment our iterator from begin() or current.
+    DOMStorageMap::iterator it = m_cachedArea->find(m_origin);
+    if (it == m_cachedArea->end())
+        return;
+
+    if (m_iteratorIndex == index)
+        return;
+
+    if (index < m_iteratorIndex) {
+        m_iteratorIndex = 0;
+        m_iterator = it->value->begin();
+        ASSERT(m_iterator != it->value->end());
+    }
+
+    while (m_iteratorIndex < index) {
+        ++m_iteratorIndex;
+        ++m_iterator;
+        ASSERT(m_iterator != it->value->end());
+    }
 }
 
 size_t WebStorageAreaImpl::memoryBytesUsedByCache() const
