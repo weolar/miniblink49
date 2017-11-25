@@ -930,6 +930,7 @@ void WebPageImpl::didChangeCursor(const WebCursorInfo& cursor)
     if (m_cursorType == cursor.type)
         return;
     m_cursorType = cursor.type;
+
     if (m_hWnd)
         ::PostMessage(m_hWnd, WM_SETCURSOR, 0, 0);
 }

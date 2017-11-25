@@ -36,7 +36,7 @@ int NavigationController::historyForwardListCount()
 void NavigationController::navigate(int offset)
 {
     int pos = m_currentOffset + offset;
-    if (pos < 0 && pos > (int)(m_items.size() - 1))
+    if (pos < 0 || pos > (int)(m_items.size() - 1))
         return;
     blink::WebHistoryItem item = m_items[pos];
 #ifdef DEBUG
