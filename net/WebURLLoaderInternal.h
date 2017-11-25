@@ -115,6 +115,7 @@ public:
 
     //FormDataStream m_formDataStream;
     WTF::Vector<char> m_postBytes;
+    size_t m_postBytesReadOffset;
 
     enum FailureType {
         NoFailure,

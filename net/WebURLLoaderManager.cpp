@@ -1001,7 +1001,18 @@ size_t readCallbackOnIoThread(void* ptr, size_t size, size_t nmemb, void* data)
     // 
     //     return sent;
 
-    return 0;
+    size_t sentSize = job->m_postBytes.size() - job->m_postBytesReadOffset;
+    if (0 == sentSize)
+        return 0;
+
+    if (size * nmemb <= sentSize)
+        sentSize = size * nmemb;
+
+    memcpy(ptr, job->m_postBytes.data() + job->m_postBytesReadOffset, sentSize);
+    job->m_postBytesReadOffset += sentSize;
+    ASSERT(job->m_postBytesReadOffset <= job->m_postBytes.size());
+
+    return sentSize;
 }
 
 bool WebURLLoaderManager::downloadOnIoThread()
@@ -1307,13 +1318,27 @@ static SetupPutInfo* setupPutOnMainThread(WebURLLoaderInternal* job, struct curl
     return result;
 }
 
-static void flattenHttpBody(const WebHTTPBody& httpBody, WTF::Vector<char>& data)
+static void flattenHttpBody(const WebHTTPBody& httpBody, WTF::Vector<char>* data)
 {
     for (size_t i = 0; i < httpBody.elementCount(); ++i) {
         WebHTTPBody::Element element;
-        if (!httpBody.elementAt(i, element) || WebHTTPBody::Element::TypeData != element.type)
+        if (!httpBody.elementAt(i, element))
             continue;
-        data.append(element.data.data(), static_cast<size_t>(element.data.size()));
+
+        if (WebHTTPBody::Element::TypeData == element.type) {
+            data->append(element.data.data(), element.data.size());
+        } else if (WebHTTPBody::Element::TypeBlob == element.type) {
+            WebBlobRegistryImpl* blobReg = (WebBlobRegistryImpl*)blink::Platform::current()->blobRegistry();
+            net::BlobDataWrap* blobData = blobReg->getBlobDataFromUUID(element.blobUUID);
+            if (!blobData)
+                continue;
+
+            const Vector<blink::WebBlobData::Item*>& items = blobData->items();
+            for (size_t i = 0; i < items.size(); ++i) {
+                blink::WebBlobData::Item* item = items[i];
+                data->append(item->data.data(), item->data.size());
+            }
+        }
     }
 }
 
@@ -1330,8 +1355,8 @@ static void setupPostOnIoThread(WebURLLoaderInternal* job, SetupPostInfo* info)
         curl_easy_setopt(job->m_handle, CURLOPT_POSTFIELDS, job->m_postBytes.data());
     }
 
-    if (info->data)
-        setupFormDataOnIoThread(job, info->data);
+//     if (info->data)
+//         setupFormDataOnIoThread(job, info->data);
 }
 
 static SetupPostInfo* setupPostOnMainThread(WebURLLoaderInternal* job, struct curl_slist** headers)
@@ -1343,11 +1368,12 @@ static SetupPostInfo* setupPostOnMainThread(WebURLLoaderInternal* job, struct cu
     SetupPostInfo* result = new SetupPostInfo();
 
     // Do not stream for simple POST data
-    if (numElements == 1) {
-        flattenHttpBody(job->firstRequest()->httpBody(), job->m_postBytes);
-        return result;
-    }
+//     if (numElements == 1) {
+//         flattenHttpBody(job->firstRequest()->httpBody(), &job->m_postBytes);
+//         return result;
+//     }
 
+    flattenHttpBody(job->firstRequest()->httpBody(), &job->m_postBytes);
     result->data = setupFormDataOnMainThread(job, CURLOPT_POSTFIELDSIZE_LARGE, headers);
     return result;
 }
@@ -2130,6 +2156,7 @@ WebURLLoaderInternal::WebURLLoaderInternal(WebURLLoaderImplCurl* loader, const W
     m_dataLength = 0;
     m_isBlackList = false;
     m_isDataUrl = false;
+    m_postBytesReadOffset = 0;
 
 #ifndef NDEBUG
     webURLLoaderInternalCounter.increment();
