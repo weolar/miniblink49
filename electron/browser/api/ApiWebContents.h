@@ -196,6 +196,8 @@ private:
     void capturePageApi();
 
     void setEmbedderApi();
+
+    bool isDestroyedApi() const;
     
     void nullFunction();
 
