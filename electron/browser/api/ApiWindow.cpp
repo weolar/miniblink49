@@ -669,6 +669,8 @@ public:
             compositionForm.ptCurrentPos.x = caret->x;
             compositionForm.ptCurrentPos.y = caret->y;
 
+            delete caret;
+
             HIMC hIMC = ::ImmGetContext(hWnd);
             ::ImmSetCompositionWindow(hIMC, &compositionForm);
             ::ImmReleaseContext(hWnd, hIMC);
