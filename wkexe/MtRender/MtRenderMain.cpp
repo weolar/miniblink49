@@ -196,8 +196,6 @@ public:
 
     ~Window()
     {
-        DebugBreak();
-
         if (m_memoryBMP)
             ::DeleteObject(m_memoryBMP);
         if (m_memoryDC)
@@ -703,6 +701,8 @@ public:
             compositionForm.dwStyle = CFS_POINT | CFS_FORCE_POSITION;
             compositionForm.ptCurrentPos.x = caret->x;
             compositionForm.ptCurrentPos.y = caret->y;
+
+            delete caret;
 
             HIMC hIMC = ::ImmGetContext(hWnd);
             ::ImmSetCompositionWindow(hIMC, &compositionForm);
