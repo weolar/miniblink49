@@ -588,10 +588,11 @@ blink::WebScrollbarBehavior* BlinkPlatformImpl::scrollbarBehavior()
 blink::WebURLError BlinkPlatformImpl::cancelledError(const blink::WebURL& url) const
 {
     blink::WebURLError error;
-    error.reason = -1;
+    error.reason = -3; // net::ERR_ABORTED
     error.domain = blink::WebString(url.string());
     error.localizedDescription = blink::WebString::fromUTF8("url cancelledError\n");
-
+    error.isCancellation = true;
+    error.staleCopyInCache = false;
     WTF::String outError = "url cancelledError:";
     outError.append((WTF::String)url.string());
     outError.append("\n");
@@ -604,14 +605,14 @@ blink::WebStorageNamespace* BlinkPlatformImpl::createLocalStorageNamespace()
 {
     if (!m_localStorageStorageMap)
         m_localStorageStorageMap = new DOMStorageMapWrap();
-    return new blink::WebStorageNamespaceImpl(blink::kLocalStorageNamespaceId, m_localStorageStorageMap->map);
+    return new blink::WebStorageNamespaceImpl(blink::kLocalStorageNamespaceId, &m_localStorageStorageMap->map, true);
 }
 
 blink::WebStorageNamespace* BlinkPlatformImpl::createSessionStorageNamespace()
 {
     if (!m_sessionStorageStorageMap)
         m_sessionStorageStorageMap = new DOMStorageMapWrap();
-    return new blink::WebStorageNamespaceImpl(m_storageNamespaceIdCount++, m_sessionStorageStorageMap->map);
+    return new blink::WebStorageNamespaceImpl(m_storageNamespaceIdCount++, &m_sessionStorageStorageMap->map, false);
 }
 
 bool BlinkPlatformImpl::portAllowed(const blink::WebURL&) const

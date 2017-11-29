@@ -94,6 +94,7 @@ void WebContents::init(v8::Isolate* isolate, v8::Local<v8::Object> target, node:
     builder.SetMethod("copyImageAt", &WebContents::copyImageAtApi);
     builder.SetMethod("capturePage", &WebContents::capturePageApi);
     builder.SetMethod("setEmbedder", &WebContents::setEmbedderApi);
+    builder.SetMethod("isDestroyed", &WebContents::isDestroyedApi);
     builder.SetProperty("id", &WebContents::getIdApi);
 //     NODE_SET_PROTOTYPE_METHOD(tpl, "id", nullFunction);
 //     NODE_SET_PROTOTYPE_METHOD(tpl, "session", nullFunction);
@@ -130,7 +131,7 @@ WebContents::WebContents(v8::Isolate* isolate, v8::Local<v8::Object> wrapper) {
             return;
 
         self->m_view = wkeCreateWebView();
-        wkeSetUserKayValue(self->m_view, "WebContents", self);
+        wkeSetUserKeyValue(self->m_view, "WebContents", self);
     });    
 }
 
@@ -737,6 +738,10 @@ void WebContents::capturePageApi() {
 
 void WebContents::setEmbedderApi() {
     //todo
+}
+
+bool WebContents::isDestroyedApi() const {
+    return false;
 }
 
 void WebContents::nullFunction() {

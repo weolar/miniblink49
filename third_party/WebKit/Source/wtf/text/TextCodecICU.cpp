@@ -406,6 +406,57 @@ bool isValideGB(const unsigned char* str, int length)
     return false;
 }
 
+static Vector<UChar> decodeGbkWithLastData(char* data, int len, char* lastData, int* lastLength)
+{
+    std::string valideBytes;
+    valideBytes.resize(len + *lastLength);
+
+    char* buffer = &valideBytes[0];
+    memcpy(buffer, lastData, *lastLength);
+    memcpy(buffer + *lastLength, data, len);
+
+    *lastLength = 0;
+    int size = valideBytes.size();
+
+    int i = 0;
+    for (i = 0; i < size; i++) {
+        unsigned char c = buffer[0];
+        if (c < 0x80 || c == 0xA0) {
+            continue;
+        }
+        if ((i + 1) < size) {
+            i++;
+        } else {
+            break;
+        }
+    }
+
+    // 考虑兼容4字节， 用 MB_ERR_INVALID_CHARS 标志是用来报告错误
+    int size2 = MultiByteToWideChar(54936, MB_ERR_INVALID_CHARS, buffer, i, NULL, 0);
+    if (size2 <= 0) {
+        if (i < size) {
+            // 失败， 末尾有可能是 4字节截断
+            // 也有可能中间有乱码， 这样，我们再回退2字节不会更坏吧？
+            if (i >= 2) {
+                unsigned char c = buffer[i - 2];
+                if (c >= 0x80 && c != 0xA0) {
+                    i -= 2;
+                }
+            }
+        }
+        size2 = MultiByteToWideChar(54936, 0, buffer, i, NULL, 0);
+    }
+    *lastLength = size - i;
+    memcpy(lastData, buffer + i, *lastLength);
+    size2 = MultiByteToWideChar(54936, 0, buffer, i, NULL, 0);
+
+    Vector<UChar> result;
+    result.resize(size2);
+    if (size2> 0)
+        MultiByteToWideChar(54936, 0, buffer, i, &result[0], size2);
+    return result;
+}
+
 String TextCodecICU::decode(const char* bytes, size_t length, FlushBehavior flush, bool stopOnError, bool& sawError)
 {
 #ifdef MINIBLINK_NOT_IMPLEMENTED
@@ -464,7 +515,7 @@ String TextCodecICU::decode(const char* bytes, size_t length, FlushBehavior flus
 #endif
 
 #else
-    std::vector<UChar> resultBuffer;
+    Vector<UChar> resultBuffer;
     if (strcasecmp(m_encoding.name(), "gb2312") && strcasecmp(m_encoding.name(), "GBK"))
         return String();
 
@@ -479,6 +530,7 @@ String TextCodecICU::decode(const char* bytes, size_t length, FlushBehavior flus
 
     m_incrementalDataChunkLength = 0;
     const unsigned char* lastInvalideChar = (const unsigned char*)bytes + length - 1;
+#if 0
     if (length > 2 && !isValideGB(lastInvalideChar, 1) && !isValideGB(lastInvalideChar - 1, 2)) {
         m_incrementalDataChunkLength = 1; // 目前不支持GB-18030四字节编码
         m_incrementalDataChunk[0] = *lastInvalideChar;
@@ -487,7 +539,9 @@ String TextCodecICU::decode(const char* bytes, size_t length, FlushBehavior flus
     WTF::MByteToWChar(valideBytes.data(), valideBytes.size() - m_incrementalDataChunkLength, &resultBuffer, CP_ACP);
     if (0 == resultBuffer.size())
         return String();
-
+#else
+    resultBuffer = decodeGbkWithLastData(valideBytes.data(), valideBytes.size(), m_incrementalDataChunk, &m_incrementalDataChunkLength);
+#endif
     return String(&resultBuffer[0], resultBuffer.size());
 #endif // MINIBLINK_NOT_IMPLEMENTED
 }

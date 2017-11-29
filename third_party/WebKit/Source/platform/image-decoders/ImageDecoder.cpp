@@ -107,11 +107,11 @@ PassOwnPtr<ImageDecoder> ImageDecoder::create(const SharedBuffer& data, ImageSou
     if (matchesICOSignature(contents) || matchesCURSignature(contents))
         return adoptPtr(new ICOImageDecoder(alphaOption, gammaAndColorProfileOption, maxDecodedBytes));
 #else
-	if (matchesPNGSignature(contents))
-		return adoptPtr(new PNGImageDecoder(alphaOption, gammaAndColorProfileOption, maxDecodedBytes));
+    if (matchesPNGSignature(contents))
+        return adoptPtr(new PNGImageDecoder(alphaOption, gammaAndColorProfileOption, maxDecodedBytes));
 
-	if (matchesJPEGSignature(contents))
-		return adoptPtr(new JPEGImageDecoder(alphaOption, gammaAndColorProfileOption, maxDecodedBytes));
+    if (matchesJPEGSignature(contents))
+        return adoptPtr(new JPEGImageDecoder(alphaOption, gammaAndColorProfileOption, maxDecodedBytes));
 
     //if (matchesPNGSignature(contents))
     //    return adoptPtr(new ImageGDIPlusDecoder(alphaOption, gammaAndColorProfileOption, ImageGDIPlusDecoder::GDIPlusDecoderPNG, maxDecodedBytes));

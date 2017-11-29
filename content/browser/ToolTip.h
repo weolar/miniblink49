@@ -1,4 +1,5 @@
 
+#include "third_party/WebKit/Source/platform/Timer.h"
 #include <windows.h>
 #include <xstring>
 
@@ -8,6 +9,13 @@ namespace content {
 
 class ToolTip {
 public:
+    ToolTip()
+        : m_delayShowTimer(this, &ToolTip::delayShowTimerFired)
+        , m_delayHideTimer(this, &ToolTip::delayHideTimerFired)
+    {
+        m_delayShowCount = 0;
+        m_delayHideCount = 0;
+    }
     void init()
     {
         m_isShow = false;
@@ -62,22 +70,17 @@ public:
         bool isSameText = textString == m_text;
         if (!isSameText) {
             m_text = textString;
-            SIZE size;
+
             HDC hScreenDc = ::GetDC(m_hTipWnd);
             HFONT hOldFont = (HFONT)::SelectObject(hScreenDc, m_hFont);
-            ::GetTextExtentPoint32(hScreenDc, m_text.c_str(), m_text.size(), &size);
+            ::GetTextExtentPoint32(hScreenDc, m_text.c_str(), m_text.size(), &m_size);
             ::SelectObject(hScreenDc, hOldFont);
             ::ReleaseDC(m_hTipWnd, hScreenDc);
 
-            POINT point;
-            ::GetCursorPos(&point);
-            ::SetWindowPos(m_hTipWnd, HWND_TOPMOST, point.x + 15, point.y + 15, size.cx, size.cy, SWP_NOACTIVATE);
+            ::GetCursorPos(&m_pos);
+
+            resetShowState();
         }
-
-        ::ShowWindow(m_hTipWnd, SW_SHOWNOACTIVATE);
-        ::UpdateWindow(m_hTipWnd);
-
-        resetShowState();
     }
 
     static LRESULT CALLBACK wndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -88,19 +91,13 @@ public:
 
         switch (uMsg) {
         case WM_TIMER:
-            self->hide();
+            //self->hide();
             break;
 
-        case WM_PAINT: {
+        case WM_PAINT:
             hdc = ::BeginPaint(hWnd, &ps);
-         
-            ::SelectObject(hdc, self->m_hFont);
-            ::SetTextColor(hdc, RGB(0x0, 0x0, 0x0));
-            ::SetBkColor(hdc, RGB(255, 255, 225));
-            ::TextOut(hdc, 0, 0, self->m_text.c_str(), self->m_text.size());
-
+            self->onPaint(hWnd, hdc);
             ::EndPaint(hWnd, &ps);
-        }
             break;
         case WM_CLOSE:
             break;
@@ -109,14 +106,72 @@ public:
         return ::DefWindowProc(hWnd, uMsg, wParam, lParam);
     }
 
+    void onPaint(HWND hWnd, HDC hdc)
+    {
+        RECT rc = { 0 };
+        ::GetClientRect(hWnd, &rc);
+        ::Rectangle(hdc, 0, 0, rc.right - rc.left, rc.bottom - rc.top);
+        HBRUSH hbrush = ::CreateSolidBrush(RGB(0x10, 0x10, 0x10));
+        ::SelectObject(hdc, hbrush);
+        ::Rectangle(hdc, 220, 40, 366, 266);
+        ::DeleteObject(hbrush);
+
+        ::SelectObject(hdc, m_hFont);
+        ::SetTextColor(hdc, RGB(0x0, 0x0, 0x0));
+        ::SetBkColor(hdc, RGB(255, 255, 225));
+        ::TextOut(hdc, 2, 2, m_text.c_str(), m_text.size());
+    }
+
     std::wstring getText() const { return m_text; }
 
 private:
     void resetShowState()
     {
         m_isShow = true;
-        ::KillTimer(m_hTipWnd, m_kTimerId);
-        ::SetTimer(m_hTipWnd, m_kTimerId, 5000, nullptr);
+
+        if (m_delayShowTimer.isActive())
+            m_delayShowTimer.stop();
+        m_delayShowCount = 0;
+        m_delayShowTimer.start(0.02, 0.02, FROM_HERE);
+    }
+
+    bool isNearPos(const POINT& a, const POINT& b)
+    {
+        return std::abs(a.x - b.x) + std::abs(a.y - b.y) < 15;
+    }
+
+    void delayShowTimerFired(blink::Timer<ToolTip>*)
+    {
+        ++m_delayShowCount;
+
+        POINT point;
+        ::GetCursorPos(&point);
+        if (!isNearPos(m_pos, m_pos))
+            return hide();
+
+        if (30 < m_delayShowCount) {
+            ::SetWindowPos(m_hTipWnd, HWND_TOPMOST, point.x + 15, point.y + 15, m_size.cx + 5, m_size.cy + 5, SWP_NOACTIVATE);
+            ::ShowWindow(m_hTipWnd, SW_SHOWNOACTIVATE);
+            ::UpdateWindow(m_hTipWnd);
+            if (m_delayShowTimer.isActive())
+                m_delayShowTimer.stop();
+            m_delayShowCount = 0;
+
+//             if (m_delayHideTimer.isActive())
+//                 m_delayHideTimer.stop();
+//             m_delayHideCount = 0;
+//             m_delayHideTimer.start(0.02, 0.02, FROM_HERE);
+        }
+    }
+
+    void delayHideTimerFired(blink::Timer<ToolTip>*)
+    {
+        ++m_delayHideCount;
+
+        POINT point;
+        ::GetCursorPos(&point);
+        if (!isNearPos(m_pos, m_pos) || 30 < m_delayHideCount)
+            return hide();
     }
 
     void hide()
@@ -124,13 +179,27 @@ private:
         m_text = L"";
         m_isShow = false;
         ::ShowWindow(m_hTipWnd, SW_HIDE);
+
+        if (m_delayShowTimer.isActive())
+            m_delayShowTimer.stop();
+        m_delayShowCount = 0;
+
+        if (m_delayHideTimer.isActive())
+            m_delayHideTimer.stop();
+        m_delayHideCount = 0;
     }
 
     HWND m_hTipWnd;
     HFONT m_hFont;
     bool m_isShow;
-    static const int m_kTimerId = 1;
     std::wstring m_text;
+
+    blink::Timer<ToolTip> m_delayShowTimer;
+    int m_delayShowCount;
+    blink::Timer<ToolTip> m_delayHideTimer;
+    int m_delayHideCount;
+    POINT m_pos;
+    SIZE m_size;
 };
 
 }

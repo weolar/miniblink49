@@ -525,21 +525,14 @@ void LayerTreeHost::drawToCanvas(SkCanvas* canvas, const IntRect& dirtyRect)
 
     canvas->save();
     canvas->clipRect(dirtyRect);
-
-    SkPaint paint;
-//     paint.setAntiAlias(false);
-//     paint.setColor(0xffffffff); // 0xfff0504a
-//     paint.setXfermodeMode(SkXfermode::kSrcOver_Mode); // SkXfermode::kSrcOver_Mode
-//     canvas->drawRect((SkRect)dirtyRect, paint);
-    
+       
     SkPaint clearColorPaint;
     clearColorPaint.setColor(getRealColor(m_hasTransparentBackground, m_backgroundColor));
 
     // http://blog.csdn.net/to_be_designer/article/details/48530921
-    if (m_hasTransparentBackground) {
-        clearColorPaint.setXfermodeMode(SkXfermode::kSrcOver_Mode); // SkXfermode::kSrcOver_Mode
-        canvas->drawRect((SkRect)dirtyRect, clearColorPaint);
-    }
+    clearColorPaint.setXfermodeMode(SkXfermode::kSrcOver_Mode); // SkXfermode::kSrcOver_Mode
+    canvas->drawRect((SkRect)dirtyRect, clearColorPaint);
+    
     m_rootCCLayer->drawToCanvasChildren(this, canvas, dirtyRect, 0);
 
     canvas->restore();
@@ -1118,10 +1111,22 @@ void LayerTreeHost::paintToBit(void* bits, int pitch)
     SkBaseDevice* device = (SkBaseDevice*)m_memoryCanvas->getTopDevice();
     if (!device)
         return;
+
     const SkBitmap& bitmap = device->accessBitmap(false);
-    if (bitmap.info().width() != width || bitmap.info().height() != height)
-        return;
-    uint32_t* pixels = bitmap.getAddr32(0, 0);
+    SkCanvas* tempCanvas = nullptr;
+    uint32_t* pixels = nullptr;
+
+    if (bitmap.info().width() != width || bitmap.info().height() != height) {
+        tempCanvas = skia::CreatePlatformCanvas(width, height, !m_hasTransparentBackground);
+        clearCanvas(tempCanvas, m_clientRect, m_hasTransparentBackground);
+        tempCanvas->drawBitmap(bitmap, 0, 0, nullptr);
+        device = (SkBaseDevice*)tempCanvas->getTopDevice();
+        if (!device)
+            return;
+        const SkBitmap& tempBitmap = device->accessBitmap(false);
+        pixels = tempBitmap.getAddr32(0, 0);
+    } else
+        pixels = bitmap.getAddr32(0, 0);
 
     if (pitch == 0 || pitch == width * 4) {
         memcpy(bits, pixels, width * height * 4);
@@ -1136,6 +1141,11 @@ void LayerTreeHost::paintToBit(void* bits, int pitch)
     }
 
     m_isDrawDirty = false;
+
+    if (tempCanvas) {
+        delete m_memoryCanvas;
+        m_memoryCanvas = tempCanvas;
+    }
 }
 
 } // cc

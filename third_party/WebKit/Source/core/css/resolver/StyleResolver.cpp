@@ -1397,7 +1397,9 @@ void StyleResolver::computeFont(ComputedStyle* style, const StylePropertySet& pr
     };
 
     // TODO(timloh): This is weird, the style is being used as its own parent
-    StyleResolverState state(document(), document().documentElement(), style);
+    // https://chromium.googlesource.com/chromium/src/+/0a340869532dfb0739d87a963905839c24baff21%5E%21/#F2
+    // Fix assert when resolving font on canvas with dirty shadow distribution
+    StyleResolverState state(document(), /*document().documentElement()*/nullptr, style);
     state.setStyle(style);
 
     for (CSSPropertyID property : properties) {

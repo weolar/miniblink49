@@ -8,6 +8,7 @@
 #include "third_party/WebKit/public/platform/WebStorageArea.h"
 #include "third_party/WebKit/public/platform/WebString.h"
 #include "third_party/WebKit/Source/web/WebStorageNamespaceImpl.h"
+#include "third_party/WebKit/Source/platform/Timer.h"
 #include "wtf/HashMap.h"
 
 namespace blink {
@@ -17,7 +18,7 @@ class DOMStorageCachedArea;
 
 class WebStorageAreaImpl : public WebStorageArea {
 public:
-    WebStorageAreaImpl(DOMStorageMap& cachedArea, const WebString& origin);
+    WebStorageAreaImpl(DOMStorageMap* cachedArea, const WebString& origin, bool isLocal);
     virtual ~WebStorageAreaImpl();
 
     // See WebStorageArea.h for documentation on these functions.
@@ -27,8 +28,7 @@ public:
 
     virtual WebString getItem(const WebString& key);
 
-    virtual void setItem(const WebString& key, const WebString& value,
-        const WebURL& page_url, WebStorageArea::Result& result);
+    virtual void setItem(const WebString& key, const WebString& value, const WebURL& page_url, WebStorageArea::Result& result);
 
     virtual void removeItem(const WebString& key, const WebURL& page_url);
 
@@ -37,8 +37,19 @@ public:
     virtual size_t memoryBytesUsedByCache() const;
 
 private:
+    void loadFromFile();
+    void delaySaveTimerFired(blink::Timer<WebStorageAreaImpl>*);
+
+    void invalidateIterator();
+    void setIteratorToIndex(unsigned);
+
     String m_origin;
-    DOMStorageMap& m_cachedArea;
+    DOMStorageMap* m_cachedArea;
+    bool m_isLocal;
+    blink::Timer<WebStorageAreaImpl> m_delaySaveTimer;
+
+    HashMap<String, String>::iterator m_iterator;
+    unsigned m_iteratorIndex;
 };
 
 }  // namespace blink

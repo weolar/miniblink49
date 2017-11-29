@@ -808,6 +808,7 @@ static jsValue runJSImpl(blink::WebFrame* mainFrame, String* codeString)
         codeString->remove(0, sizeof("javascript:") - 1);
     codeString->insert("(function(){", 0);
     codeString->append("})();");
+
     blink::WebScriptSource code(*codeString, KURL(ParsedURLString, "CWebView::runJS"));
     blink::Frame* coreFrame = blink::toCoreFrame(mainFrame);
     if (!mainFrame || !coreFrame || !coreFrame->isLocalFrame())
