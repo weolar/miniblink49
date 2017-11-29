@@ -56,6 +56,21 @@ static bool domainMatch(const String& cookieDomain, const String& host)
     return false;
 }
 
+static const char* equalDelimiters = "__curlequal__";
+
+static void appendDotIfNeeded(String* domain)
+{
+    Vector<char> domainBuffer = WTF::ensureStringToUTF8(*domain, false);
+    int dotCount = 0;
+    for (size_t i = 0; i < domainBuffer.size(); ++i) {
+        if ('.' == domainBuffer[i])
+            ++dotCount;
+    }
+
+    if (1 == dotCount)
+        domain->insert((const LChar *)".", 1, 0);
+}
+
 static void addMatchingCurlCookie(const char* cookie, const String& domain, const String& path, StringBuilder& cookies, bool httponly)
 {
     // Check if the cookie matches domain and path, and is not expired.
@@ -164,9 +179,16 @@ static String getNetscapeCookieFormat(const KURL& url, const String& value)
         Vector<String> nameValuePair;
         attribute->split('=', true, nameValuePair);
         cookieName = nameValuePair[0];
-        cookieValue = nameValuePair[1];
-    }
-    else {
+
+        if (2 < nameValuePair.size()) {
+            for (size_t i = 1; i < nameValuePair.size() - 1; ++i) {
+                cookieName.append('='); // equalDelimiters
+                cookieName.append(nameValuePair[i]);
+            }
+            
+        }
+        cookieValue = nameValuePair.last();
+    } else {
         // According to RFC6265 we should ignore the entire
         // set-cookie string now, but other browsers appear
         // to treat this as <cookiename>=<empty>
@@ -205,6 +227,7 @@ static String getNetscapeCookieFormat(const KURL& url, const String& value)
         }
     }
 
+    appendDotIfNeeded(&domain);
     String allowSubdomains = domain.startsWith('.') ? "TRUE" : "FALSE";
     String expiresStr = String::number(expires);
 
