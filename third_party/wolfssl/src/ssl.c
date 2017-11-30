@@ -16756,7 +16756,7 @@ WOLFSSL_API int SSL_SESSION_set1_id(WOLFSSL_SESSION *s, const unsigned char *sid
 }
 
 /*** TBD ***/
-WOLFSSL_API int SSL_SESSION_set1_id_context(WOLFSSL_SESSION *s, const unsigned char *sid_ctx, unsigned int sid_ctx_len)
+WOLFSSL_API int wolfssl_SSL_SESSION_set1_id_context(WOLFSSL_SESSION *s, const unsigned char *sid_ctx, unsigned int sid_ctx_len)
 {
     (void)s;
     (void)sid_ctx;
@@ -16774,7 +16774,7 @@ WOLFSSL_API void *X509_get0_tbs_sigalg(const WOLFSSL_X509 *x)
 }
 
 /*** TBD ***/
-WOLFSSL_API void X509_ALGOR_get0(WOLFSSL_ASN1_OBJECT **paobj, int *pptype, const void **ppval, const void *algor)
+WOLFSSL_API void wolfssl_X509_ALGOR_get0(WOLFSSL_ASN1_OBJECT **paobj, int *pptype, const void **ppval, const void *algor)
 {
     (void)paobj;
     (void)pptype;
@@ -16792,7 +16792,7 @@ WOLFSSL_API void *X509_get_X509_PUBKEY(void * x)
 }
 
 /*** TBD ***/
-WOLFSSL_API int X509_PUBKEY_get0_param(WOLFSSL_ASN1_OBJECT **ppkalg, const unsigned char **pk, int *ppklen, void **pa, WOLFSSL_EVP_PKEY *pub)
+WOLFSSL_API int wolfssl_X509_PUBKEY_get0_param(WOLFSSL_ASN1_OBJECT **ppkalg, const unsigned char **pk, int *ppklen, void **pa, WOLFSSL_EVP_PKEY *pub)
 {
     (void)ppkalg;
     (void)pk;
@@ -16812,7 +16812,7 @@ WOLFSSL_API WOLFSSL_EVP_PKEY *wolfSSL_get_privatekey(const WOLFSSL *ssl)
 }
 
 /*** TBD ***/
-WOLFSSL_API int EVP_PKEY_bits(WOLFSSL_EVP_PKEY *pkey)
+WOLFSSL_API int wolfssl_EVP_PKEY_bits(WOLFSSL_EVP_PKEY *pkey)
 {
     (void)pkey;
     WOLFSSL_STUB("EVP_PKEY_bits");
@@ -16820,7 +16820,7 @@ WOLFSSL_API int EVP_PKEY_bits(WOLFSSL_EVP_PKEY *pkey)
 }
 
 /*** TBD ***/
-WOLFSSL_API int i2d_X509(WOLFSSL_X509 *x, unsigned char **out)
+WOLFSSL_API int wolfssl_i2d_X509(WOLFSSL_X509 *x, unsigned char **out)
 {
     (void)x;
     (void)out;
@@ -16829,7 +16829,7 @@ WOLFSSL_API int i2d_X509(WOLFSSL_X509 *x, unsigned char **out)
 }
 
 /*** TBD ***/
-WOLFSSL_API int i2t_ASN1_OBJECT(char *buf, int buf_len, WOLFSSL_ASN1_OBJECT *a)
+WOLFSSL_API int wolfssl_i2t_ASN1_OBJECT(char *buf, int buf_len, WOLFSSL_ASN1_OBJECT *a)
 {
     (void)buf;
     (void)buf_len;
@@ -16861,7 +16861,7 @@ WOLFSSL_API size_t SSL_get_peer_finished(const WOLFSSL *s, void *buf, size_t cou
 #endif /* WOLFSSL_HAPROXY */
 
 /*** TBD ***/
-WOLFSSL_API void SSL_CTX_set_tmp_dh_callback(WOLFSSL_CTX *ctx, WOLFSSL_DH *(*dh) (WOLFSSL *ssl, int is_export, int keylength))
+WOLFSSL_API void wolfssl_SSL_CTX_set_tmp_dh_callback(WOLFSSL_CTX *ctx, WOLFSSL_DH *(*dh) (WOLFSSL *ssl, int is_export, int keylength))
 {
     (void)ctx;
     (void)dh;
@@ -16869,7 +16869,7 @@ WOLFSSL_API void SSL_CTX_set_tmp_dh_callback(WOLFSSL_CTX *ctx, WOLFSSL_DH *(*dh)
 }
 
 /*** TBD ***/
-WOLFSSL_API STACK_OF(SSL_COMP) *SSL_COMP_get_compression_methods(void)
+WOLFSSL_API STACK_OF(SSL_COMP) *wolfssl_SSL_COMP_get_compression_methods(void)
 {
     WOLFSSL_STUB("SSL_COMP_get_compression_methods");
     return NULL;
@@ -16908,7 +16908,7 @@ WOLFSSL_API WOLFSSL_EVP_PKEY *wolfSSL_PEM_read_PrivateKey(FILE *fp, WOLFSSL_EVP_
 #endif
 
 /*** TBD ***/
-WOLFSSL_API int X509_STORE_load_locations(WOLFSSL_X509_STORE *ctx, const char *file, const char *dir)
+WOLFSSL_API int wolfssl_X509_STORE_load_locations(WOLFSSL_X509_STORE *ctx, const char *file, const char *dir)
 {
     (void)ctx;
     (void)file;
