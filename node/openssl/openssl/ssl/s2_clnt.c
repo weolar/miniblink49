@@ -838,7 +838,7 @@ static int client_certificate(SSL *s)
         EVP_SignInit_ex(&ctx, s->ctx->rsa_md5, NULL);
         EVP_SignUpdate(&ctx, s->s2->key_material, s->s2->key_material_length);
         EVP_SignUpdate(&ctx, cert_ch, (unsigned int)cert_ch_len);
-        i = i2d_X509(s->session->sess_cert->peer_key->x509, &p);
+        i = openssl_i2d_X509(s->session->sess_cert->peer_key->x509, &p);
         /*
          * Don't update the signature if it fails - FIXME: probably should
          * handle this better
@@ -850,7 +850,7 @@ static int client_certificate(SSL *s)
         d = p + 6;
         *(p++) = SSL2_MT_CLIENT_CERTIFICATE;
         *(p++) = SSL2_CT_X509_CERTIFICATE;
-        n = i2d_X509(s->cert->key->x509, &d);
+        n = openssl_i2d_X509(s->cert->key->x509, &d);
         s2n(n, p);
 
         if (!EVP_SignFinal(&ctx, d, &n, s->cert->key->privatekey)) {

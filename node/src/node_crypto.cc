@@ -1195,11 +1195,11 @@ void SecureContext::GetCertificate(const FunctionCallbackInfo<Value>& args) {
   if (cert == nullptr)
     return args.GetReturnValue().Set(Null(env->isolate()));
 
-  int size = i2d_X509(cert, nullptr);
+  int size = openssl_i2d_X509(cert, nullptr);
   Local<Object> buff = Buffer::New(env, size).ToLocalChecked();
   unsigned char* serialized = reinterpret_cast<unsigned char*>(
       Buffer::Data(buff));
-  i2d_X509(cert, &serialized);
+  openssl_i2d_X509(cert, &serialized);
 
   args.GetReturnValue().Set(buff);
 }
@@ -1546,13 +1546,13 @@ static Local<Object> X509ToObject(Environment* env, X509* cert) {
       BN_free(bn);
     }
   }
-
+  
   // Raw DER certificate
-  int size = i2d_X509(cert, nullptr);
+  int size = openssl_i2d_X509(cert, nullptr);
   Local<Object> buff = Buffer::New(env, size).ToLocalChecked();
   unsigned char* serialized = reinterpret_cast<unsigned char*>(
       Buffer::Data(buff));
-  i2d_X509(cert, &serialized);
+  openssl_i2d_X509(cert, &serialized);
   info->Set(env->raw_string(), buff);
 
   return scope.Escape(info);
@@ -1875,7 +1875,7 @@ void SSLWrap<Base>::GetEphemeralKeyInfo(
         info->Set(env->type_string(),
                   FIXED_ONE_BYTE_STRING(env->isolate(), "DH"));
         info->Set(env->size_string(),
-                  Integer::New(env->isolate(), EVP_PKEY_bits(key)));
+            Integer::New(env->isolate(), openssl_EVP_PKEY_bits(key)));
         break;
       case EVP_PKEY_EC:
         {
@@ -1887,12 +1887,12 @@ void SSLWrap<Base>::GetEphemeralKeyInfo(
           info->Set(env->name_string(),
                     OneByteString(args.GetIsolate(), OBJ_nid2sn(nid)));
           info->Set(env->size_string(),
-                    Integer::New(env->isolate(), EVP_PKEY_bits(key)));
+                    Integer::New(env->isolate(), openssl_EVP_PKEY_bits(key)));
         }
     }
     EVP_PKEY_free(key);
   }
-
+  
   return args.GetReturnValue().Set(info);
 }
 
@@ -5838,7 +5838,7 @@ void InitCryptoOnce() {
 
   // Turn off compression. Saves memory and protects against CRIME attacks.
   // No-op with OPENSSL_NO_COMP builds of OpenSSL.
-  sk_SSL_COMP_zero(SSL_COMP_get_compression_methods());
+  sk_SSL_COMP_zero(openssl_SSL_COMP_get_compression_methods());
 
 #ifndef OPENSSL_NO_ENGINE
   ERR_load_ENGINE_strings();

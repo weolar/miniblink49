@@ -65,4 +65,6 @@
 #include <openssl/pkcs7.h>
 #include <openssl/pem.h>
 
+#define i2d_X509 openssl_i2d_X509
+
 IMPLEMENT_PEM_rw(X509, X509, PEM_STRING_X509, X509)

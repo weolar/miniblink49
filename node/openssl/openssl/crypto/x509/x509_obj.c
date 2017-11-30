@@ -112,7 +112,7 @@ char *X509_NAME_oneline(X509_NAME *a, char *buf, int len)
         ne = sk_X509_NAME_ENTRY_value(a->entries, i);
         n = OBJ_obj2nid(ne->object);
         if ((n == NID_undef) || ((s = OBJ_nid2sn(n)) == NULL)) {
-            i2t_ASN1_OBJECT(tmp_buf, sizeof(tmp_buf), ne->object);
+            openssl_i2t_ASN1_OBJECT(tmp_buf, sizeof(tmp_buf), ne->object);
             s = tmp_buf;
         }
         l1 = strlen(s);

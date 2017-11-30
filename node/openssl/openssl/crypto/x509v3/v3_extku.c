@@ -109,7 +109,7 @@ static STACK_OF(CONF_VALUE) *i2v_EXTENDED_KEY_USAGE(const X509V3_EXT_METHOD
     char obj_tmp[80];
     for (i = 0; i < sk_ASN1_OBJECT_num(eku); i++) {
         obj = sk_ASN1_OBJECT_value(eku, i);
-        i2t_ASN1_OBJECT(obj_tmp, 80, obj);
+        openssl_i2t_ASN1_OBJECT(obj_tmp, 80, obj);
         X509V3_add_value(NULL, obj_tmp, &ext_list);
     }
     return ext_list;

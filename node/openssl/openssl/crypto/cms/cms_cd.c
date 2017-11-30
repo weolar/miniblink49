@@ -122,7 +122,7 @@ BIO *cms_CompressedData_init_bio(CMS_ContentInfo *cms)
         return NULL;
     }
     cd = cms->d.compressedData;
-    X509_ALGOR_get0(&compoid, NULL, NULL, cd->compressionAlgorithm);
+    openssl_X509_ALGOR_get0(&compoid, NULL, NULL, cd->compressionAlgorithm);
     if (OBJ_obj2nid(compoid) != NID_zlib_compression) {
         CMSerr(CMS_F_CMS_COMPRESSEDDATA_INIT_BIO,
                CMS_R_UNSUPPORTED_COMPRESSION_ALGORITHM);

@@ -806,9 +806,9 @@ static int server_hello(SSL *s)
             /* put certificate type */
             *(p++) = SSL2_CT_X509_CERTIFICATE;
             s2n(s->version, p); /* version */
-            n = i2d_X509(s->cert->pkeys[SSL_PKEY_RSA_ENC].x509, NULL);
+            n = openssl_i2d_X509(s->cert->pkeys[SSL_PKEY_RSA_ENC].x509, NULL);
             s2n(n, p);          /* certificate length */
-            i2d_X509(s->cert->pkeys[SSL_PKEY_RSA_ENC].x509, &d);
+            openssl_i2d_X509(s->cert->pkeys[SSL_PKEY_RSA_ENC].x509, &d);
             n = 0;
 
             /*
@@ -1097,14 +1097,14 @@ static int request_certificate(SSL *s)
             || !EVP_VerifyUpdate(&ctx, ccd, SSL2_MIN_CERT_CHALLENGE_LENGTH))
             goto msg_end;
 
-        i = i2d_X509(s->cert->pkeys[SSL_PKEY_RSA_ENC].x509, NULL);
+        i = openssl_i2d_X509(s->cert->pkeys[SSL_PKEY_RSA_ENC].x509, NULL);
         buf2 = OPENSSL_malloc((unsigned int)i);
         if (buf2 == NULL) {
             SSLerr(SSL_F_REQUEST_CERTIFICATE, ERR_R_MALLOC_FAILURE);
             goto msg_end;
         }
         p2 = buf2;
-        i = i2d_X509(s->cert->pkeys[SSL_PKEY_RSA_ENC].x509, &p2);
+        i = openssl_i2d_X509(s->cert->pkeys[SSL_PKEY_RSA_ENC].x509, &p2);
         if (!EVP_VerifyUpdate(&ctx, buf2, (unsigned int)i)) {
             OPENSSL_free(buf2);
             goto msg_end;

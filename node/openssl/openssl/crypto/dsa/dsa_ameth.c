@@ -79,9 +79,9 @@ static int dsa_pub_decode(EVP_PKEY *pkey, X509_PUBKEY *pubkey)
 
     DSA *dsa = NULL;
 
-    if (!X509_PUBKEY_get0_param(NULL, &p, &pklen, &palg, pubkey))
+    if (!openssl_X509_PUBKEY_get0_param(NULL, &p, &pklen, &palg, pubkey))
         return 0;
-    X509_ALGOR_get0(NULL, &ptype, &pval, palg);
+    openssl_X509_ALGOR_get0(NULL, &ptype, &pval, palg);
 
     if (ptype == V_ASN1_SEQUENCE) {
         pstr = pval;
@@ -195,7 +195,7 @@ static int dsa_priv_decode(EVP_PKEY *pkey, PKCS8_PRIV_KEY_INFO *p8)
 
     if (!PKCS8_pkey_get0(NULL, &p, &pklen, &palg, p8))
         return 0;
-    X509_ALGOR_get0(NULL, &ptype, &pval, palg);
+    openssl_X509_ALGOR_get0(NULL, &ptype, &pval, palg);
 
     /* Check for broken DSA PKCS#8, UGH! */
     if (*p == (V_ASN1_SEQUENCE | V_ASN1_CONSTRUCTED)) {

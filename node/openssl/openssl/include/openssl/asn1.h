@@ -918,7 +918,7 @@ int i2a_ASN1_OBJECT(BIO *bp, ASN1_OBJECT *a);
 int a2i_ASN1_STRING(BIO *bp, ASN1_STRING *bs, char *buf, int size);
 int i2a_ASN1_STRING(BIO *bp, ASN1_STRING *a, int type);
 # endif
-int i2t_ASN1_OBJECT(char *buf, int buf_len, ASN1_OBJECT *a);
+int openssl_i2t_ASN1_OBJECT(char *buf, int buf_len, ASN1_OBJECT *a);
 
 int a2d_ASN1_OBJECT(unsigned char *out, int olen, const char *buf, int num);
 ASN1_OBJECT *ASN1_OBJECT_create(int nid, unsigned char *data, int len,

@@ -210,7 +210,7 @@ int a2d_ASN1_OBJECT(unsigned char *out, int olen, const char *buf, int num)
     return (0);
 }
 
-int i2t_ASN1_OBJECT(char *buf, int buf_len, ASN1_OBJECT *a)
+int openssl_i2t_ASN1_OBJECT(char *buf, int buf_len, ASN1_OBJECT *a)
 {
     return OBJ_obj2txt(buf, buf_len, a, 0);
 }
@@ -222,12 +222,12 @@ int i2a_ASN1_OBJECT(BIO *bp, ASN1_OBJECT *a)
 
     if ((a == NULL) || (a->data == NULL))
         return (BIO_write(bp, "NULL", 4));
-    i = i2t_ASN1_OBJECT(buf, sizeof buf, a);
+    i = openssl_i2t_ASN1_OBJECT(buf, sizeof buf, a);
     if (i > (int)(sizeof(buf) - 1)) {
         p = OPENSSL_malloc(i + 1);
         if (!p)
             return -1;
-        i2t_ASN1_OBJECT(p, i + 1, a);
+        openssl_i2t_ASN1_OBJECT(p, i + 1, a);
     }
     if (i <= 0)
         return BIO_write(bp, "<INVALID>", 9);

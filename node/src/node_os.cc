@@ -360,6 +360,17 @@ static void GetUserInfo(const FunctionCallbackInfo<Value>& args) {
 }
 
 
+static void NodeSleep(const FunctionCallbackInfo<Value>& args) {
+  Environment* env = Environment::GetCurrent(args);
+  if (!args[0]->IsUint32())
+      return;
+
+  v8::Local<v8::Uint32> sleepTime = args[0]->ToUint32();
+  uint32_t timeMs = sleepTime->Value();
+  ::Sleep(timeMs);
+}
+
+
 void Initialize(Local<Object> target,
                 Local<Value> unused,
                 Local<Context> context) {
@@ -375,6 +386,7 @@ void Initialize(Local<Object> target,
   env->SetMethod(target, "getInterfaceAddresses", GetInterfaceAddresses);
   env->SetMethod(target, "getHomeDirectory", GetHomeDirectory);
   env->SetMethod(target, "getUserInfo", GetUserInfo);
+  env->SetMethod(target, "sleep", NodeSleep);
   target->Set(FIXED_ONE_BYTE_STRING(env->isolate(), "isBigEndian"),
               Boolean::New(env->isolate(), IsBigEndian()));
 }

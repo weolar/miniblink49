@@ -140,7 +140,26 @@ ASN1_SEQUENCE_ref(X509, x509_cb, CRYPTO_LOCK_X509) = {
         ASN1_SIMPLE(X509, signature, ASN1_BIT_STRING)
 } ASN1_SEQUENCE_END_ref(X509, X509)
 
-IMPLEMENT_ASN1_FUNCTIONS(X509)
+//IMPLEMENT_ASN1_FUNCTIONS(X509)
+X509 *d2i_X509(X509 **a, const unsigned char **in, long len)
+{
+    return (X509 *)ASN1_item_d2i((ASN1_VALUE **)a, in, len, (X509_it()));
+}
+
+int openssl_i2d_X509(X509 *a, unsigned char **out)
+{
+    return ASN1_item_i2d((ASN1_VALUE *)a, out, (X509_it()));
+}
+
+X509 *X509_new(void)
+{
+    return (X509 *)ASN1_item_new((X509_it()));
+}
+
+void X509_free(X509 *a)
+{
+    ASN1_item_free((ASN1_VALUE *)a, (X509_it()));
+}
 
 IMPLEMENT_ASN1_DUP_FUNCTION(X509)
 
@@ -203,7 +222,7 @@ int i2d_X509_AUX(X509 *a, unsigned char **pp)
 {
     int length, tmplen;
     unsigned char *start = pp != NULL ? *pp : NULL;
-    length = i2d_X509(a, pp);
+    length = openssl_i2d_X509(a, pp);
     if (length < 0 || a == NULL)
         return length;
 
