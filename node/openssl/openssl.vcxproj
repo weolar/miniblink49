@@ -166,7 +166,7 @@
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <OmitFramePointers>true</OmitFramePointers>
-      <Optimization>Disabled</Optimization>
+      <Optimization>MaxSpeed</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PreprocessorDefinitions>_REENTRANT;PURIFY;OPENSSL_NO_COMP;OPENSSL_NO_SSL3;OPENSSL_NO_HEARTBEATS;MK1MF_BUILD;WIN32_LEAN_AND_MEAN;OPENSSL_SYSNAME_WIN32;WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;_HAS_EXCEPTIONS=0;BUILDING_V8_SHARED=1;BUILDING_UV_SHARED=1;L_ENDIAN;AES_ASM;CPUID_ASM;OPENSSL_BN_ASM_MONT;OPENSSL_CPUID_OBJ;SHA1_ASM;SHA256_ASM;SHA512_ASM;GHASH_ASM;VPAES_ASM;BN_ASM;BF_ASM;BNCO_ASM;DES_ASM;LIB_BN_ASM;MD5_ASM;OPENSSL_BN_ASM;RIP_ASM;RMD160_ASM;WHIRLPOOL_ASM;WP_ASM;OPENSSL_BN_ASM_PART_WORDS;DSO_WIN32;OPENSSL_NO_DYNAMIC_ENGINE;OPENSSL_NO_CAPIENG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -177,6 +177,7 @@
       <WarningLevel>Level3</WarningLevel>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Lib>
       <AdditionalOptions>/LTCG %(AdditionalOptions)</AdditionalOptions>
@@ -270,7 +271,7 @@
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <OmitFramePointers>true</OmitFramePointers>
-      <Optimization>Full</Optimization>
+      <Optimization>MaxSpeed</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PreprocessorDefinitions>_REENTRANT;PURIFY;OPENSSL_NO_HEARTBEATS;MK1MF_BUILD;WIN32_LEAN_AND_MEAN;OPENSSL_SYSNAME_WIN32;WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;_HAS_EXCEPTIONS=0;BUILDING_V8_SHARED=1;BUILDING_UV_SHARED=1;L_ENDIAN;AES_ASM;CPUID_ASM;OPENSSL_BN_ASM_MONT;OPENSSL_CPUID_OBJ;SHA1_ASM;SHA256_ASM;SHA512_ASM;GHASH_ASM;VPAES_ASM;BN_ASM;BF_ASM;BNCO_ASM;DES_ASM;LIB_BN_ASM;MD5_ASM;OPENSSL_BN_ASM;RIP_ASM;RMD160_ASM;WHIRLPOOL_ASM;WP_ASM;OPENSSL_BN_ASM_PART_WORDS;DSO_WIN32;OPENSSL_NO_DYNAMIC_ENGINE;OPENSSL_NO_CAPIENG;OPENSSL_NO_COMP=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
