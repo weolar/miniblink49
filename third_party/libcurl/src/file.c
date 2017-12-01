@@ -71,12 +71,6 @@
 #define DOS_FILESYSTEM 1
 #endif
 
-#ifdef OPEN_NEEDS_ARG3
-#  define open_readonly(p,f) open((p),(f),(0))
-#else
-#  define open_readonly(p,f) open((p),(f))
-#endif
-
 void* (__cdecl *userOpenFile)(const char * _Filename) = 0;
 void (__cdecl *userCloseFile)(void* userFileHandle) = 0;
 size_t (__cdecl *userFileSize)(void* userFileHandle) = 0;
@@ -99,6 +93,85 @@ void curl_set_file_system(
   userReadFile = lpReadFile;
   userSeekFile = lpSeekFile;
   userFileSize = lpFileSize;
+}
+
+int fstat_hook(int file_handle, struct_stat* stat_info)
+{
+  if (userFileSize) {
+    stat_info->st_size = userFileSize((void*)file_handle);
+    return stat_info->st_size >= 0 ? 0 : -1;
+  }
+  return fstat(file_handle, stat_info);
+}
+
+wchar_t* utf8_to_wide_char(const char * inStr)
+{
+  int cbMultiByte = 0;
+  DWORD dwMinSize = 0;
+  wchar_t* outStr = 0;
+
+  FILE* fp = 0;
+
+  cbMultiByte = strlen(inStr);
+  if (0 == cbMultiByte)
+      return 0;
+
+  dwMinSize = MultiByteToWideChar(CP_UTF8, 0, inStr, cbMultiByte, NULL, 0);
+  if (0 == dwMinSize)
+      return 0;
+
+  outStr = (wchar_t*)malloc((dwMinSize + 1) * 2);
+  memset(outStr, 0, (dwMinSize + 1) * 2);
+
+  // Convert headers from ASCII to Unicode.
+  MultiByteToWideChar(CP_UTF8, 0, inStr, cbMultiByte, outStr, dwMinSize);
+
+  return outStr;
+}
+
+FILE* fopen_wrap(/*_In_z_*/ const char * _Filename, /*_In_*/ const char * _OpenFlag)
+{
+  wchar_t* filenameW = 0;
+  wchar_t* openFlagW = 0;
+
+  FILE* fp = 0;
+
+  filenameW = utf8_to_wide_char(_Filename);
+  openFlagW = utf8_to_wide_char(_OpenFlag);
+
+  fp = _wfopen(filenameW, openFlagW);
+
+  free(filenameW);
+  free(openFlagW);
+
+  if (fp)
+      return fp;
+
+  fp = fopen(_Filename, _OpenFlag);
+  return fp;
+}
+
+// #ifdef OPEN_NEEDS_ARG3
+// #  define open_readonly(p,f) open((p),(f),(0))
+// #else
+// #  define open_readonly(p,f) open((p),(f))
+// #endif
+int open_readonly(const char * filename, int flag)
+{
+  wchar_t* filenameW = 0;
+
+  int fp = -1;
+
+  filenameW = utf8_to_wide_char(filename);
+  fp = _wopen(filenameW, flag);
+
+  free(filenameW);
+
+  if (-1 != fp)
+      return fp;
+
+  fp = _open(filename, flag);
+  return fp;
 }
 
 /*
@@ -299,7 +372,7 @@ static CURLcode file_done(struct connectdata *conn,
     Curl_safefree(file->freepath);
     file->path = NULL;
     if(file->fd != -1)
-      close(file->fd);
+      userCloseFile ? userCloseFile((void*)(file->fd)) : close(file->fd);
     file->fd = -1;
   }
 
@@ -316,7 +389,7 @@ static CURLcode file_disconnect(struct connectdata *conn,
     Curl_safefree(file->freepath);
     file->path = NULL;
     if(file->fd != -1)
-      close(file->fd);
+      userCloseFile ? userCloseFile((void*)(file->fd)) : close(file->fd);
     file->fd = -1;
   }
 
@@ -367,7 +440,7 @@ static CURLcode file_upload(struct connectdata *conn)
   else
     mode = MODE_DEFAULT|O_TRUNC;
 
-  fd = open(file->path, mode, conn->data->set.new_file_perms);
+  fd = (userOpenFile ? (int)userOpenFile(file->path) : open(file->path, mode, conn->data->set.new_file_perms));
   if(fd < 0) {
     failf(data, "Can't open %s for writing", file->path);
     return CURLE_WRITE_ERROR;
@@ -379,8 +452,8 @@ static CURLcode file_upload(struct connectdata *conn)
 
   /* treat the negative resume offset value as the case of "-" */
   if(data->state.resume_from < 0) {
-    if(fstat(fd, &file_stat)) {
-      close(fd);
+    if(fstat_hook(fd, &file_stat)) {
+      userCloseFile ? userCloseFile((void*)(fd)) : close(fd);
       failf(data, "Can't get the size of %s", file->path);
       return CURLE_WRITE_ERROR;
     }
@@ -433,7 +506,7 @@ static CURLcode file_upload(struct connectdata *conn)
   if(!result && Curl_pgrsUpdate(conn))
     result = CURLE_ABORTED_BY_CALLBACK;
 
-  close(fd);
+  userCloseFile ? userCloseFile((void*)(fd)) : close(fd);
 
   return result;
 }
@@ -481,7 +554,7 @@ static CURLcode file_do(struct connectdata *conn, bool *done)
   fd = file->fd;
 
   /* VMS: This only works reliable for STREAMLF files */
-  if(-1 != fstat(fd, &statbuf)) {
+  if(-1 != fstat_hook(fd, &statbuf)) {
     /* we could stat it, then read out the size */
     expected_size = statbuf.st_size;
     /* and store the modification time */
@@ -574,8 +647,13 @@ static CURLcode file_do(struct connectdata *conn, bool *done)
     Curl_pgrsSetDownloadSize(data, expected_size);
 
   if(data->state.resume_from) {
-    if(data->state.resume_from !=
-       lseek(fd, data->state.resume_from, SEEK_SET))
+    curl_off_t resume_from = 0;
+    if (userSeekFile)
+      resume_from = userSeekFile((void*)fd, (size_t)data->state.resume_from, SEEK_SET);
+    else
+      resume_from = lseek(fd, data->state.resume_from, SEEK_SET);
+
+    if (data->state.resume_from != resume_from)
       return CURLE_BAD_DOWNLOAD_RESUME;
   }
 
@@ -592,7 +670,7 @@ static CURLcode file_do(struct connectdata *conn, bool *done)
     else
       bytestoread = data->set.buffer_size-1;
 
-    nread = read(fd, buf, bytestoread);
+    nread = (userReadFile ? userReadFile((void*)fd, buf, bytestoread) : read(fd, buf, bytestoread));
 
     if(nread > 0)
       buf[nread] = 0;
