@@ -149,7 +149,7 @@ private:
         if (!isNearPos(m_pos, m_pos))
             return hide();
 
-        if (30 < m_delayShowCount) {
+        if (15 < m_delayShowCount) {
             ::SetWindowPos(m_hTipWnd, HWND_TOPMOST, point.x + 15, point.y + 15, m_size.cx + 5, m_size.cy + 5, SWP_NOACTIVATE);
             ::ShowWindow(m_hTipWnd, SW_SHOWNOACTIVATE);
             ::UpdateWindow(m_hTipWnd);
