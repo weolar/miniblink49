@@ -420,7 +420,7 @@ bool getCookiesFromHost(const KURL& url, Vector<char>* cookies) {
 #endif
 	int32 cookie_action = COOKIEACTION_READ;
 #undef COOKIEACTION_READ
-
+	// TODO string utf8 -> UTF16
 	BOOL result = InternetGetCookieA(url.string().utf8().data(), NULL, NULL, &cookie_size);
 	DWORD error = 0;
 	if (!result || 0 == cookie_size) {

@@ -1117,7 +1117,7 @@ bool WebURLLoaderManager::downloadOnIoThread()
                 OutputDebugStringW(outString.charactersWithNullTermination().data());
             }
         }
-
+        
         removeFromCurlOnIoThread(jobId);
     }
 
@@ -1624,13 +1624,13 @@ int WebURLLoaderManager::addAsynchronousJob(WebURLLoaderInternal* job)
     ASSERT(WTF::isMainThread());
 
     KURL kurl = job->firstRequest()->url();
-    String url = kurl.string();
+    String url = WTF::ensureStringToUTF8String(kurl.string());
 #if 0
     String outString = String::format("addAsynchronousJob:%d, %s\n", m_liveJobs.size(), WTF::ensureStringToUTF8(url, true).data());
     OutputDebugStringW(outString.charactersWithNullTermination().data());
 
-    if (WTF::kNotFound != url.find("get.json"))
-        OutputDebugStringA("get.json !\n");
+    if (WTF::kNotFound != url.find("ensearch=1"))
+        OutputDebugStringA("ensearch=1!\n");
 #endif
 
     job->m_manager = this;
