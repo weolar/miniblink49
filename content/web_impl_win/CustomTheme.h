@@ -124,8 +124,8 @@ namespace {
 
     const SkColor kMenuPopupBackgroundColor = SkColorSetRGB(210, 225, 246);
 
-    const unsigned int kDefaultScrollbarWidth = 15;
-    const unsigned int kDefaultScrollbarButtonLength = 14;
+    const unsigned int kDefaultScrollbarWidth = 13; // 15
+    const unsigned int kDefaultScrollbarButtonLength = 12; // 14
 
     const SkColor kCheckboxTinyColor = SK_ColorGRAY;
     const SkColor kCheckboxShadowColor = SkColorSetARGB(0x15, 0, 0, 0);
@@ -366,11 +366,11 @@ public:
             break;
         case blink::WebThemeEngine::PartScrollbarHorizontalThumb:
         case blink::WebThemeEngine::PartScrollbarVerticalThumb:
-            PaintScrollbarThumb(canvas, part, state, rect);
+            PaintScrollbarThumb2(canvas, part, state, rect);
             break;
         case blink::WebThemeEngine::PartScrollbarHorizontalTrack:
         case blink::WebThemeEngine::PartScrollbarVerticalTrack:
-            PaintScrollbarTrack(canvas, part, state, extra.scrollbarTrack, rect);
+            PaintScrollbarTrack2(canvas, part, state, extra.scrollbarTrack, rect);
             break;
 //         case kScrollbarHorizontalGripper:
 //         case kScrollbarVerticalGripper:
@@ -537,6 +537,37 @@ public:
         gc->drawPath(path, paint);
     }
 
+    void PaintScrollbarTrack2(SkCanvas* canvas,
+        blink::WebThemeEngine::Part part, blink::WebThemeEngine::State state,
+        const blink::WebThemeEngine::ScrollbarTrackExtraParams& extra_params,
+        const blink::IntRect& rect) const {
+        SkPaint paint;
+        SkIRect skrect;
+
+        skrect.set(rect.x(), rect.y(), rect.maxX(), rect.maxY());
+
+        paint.setColor(SkColorSetRGB(241, 241, 241));
+        canvas->drawIRect(skrect, paint);
+    }
+
+    void PaintScrollbarThumb2(SkCanvas* canvas, blink::WebThemeEngine::Part part, blink::WebThemeEngine::State state, const blink::IntRect& rect) const {
+        const bool hovered = state == blink::WebThemeEngine::StateHover;
+        const bool vertical = part == blink::WebThemeEngine::PartScrollbarVerticalThumb;
+
+        SkPaint paint;
+        SkIRect skrect;
+
+        int padding = 1;
+        skrect.set(rect.x() + padding, rect.y() + padding, rect.x() + rect.width() - 2 * padding, rect.y() + rect.height() - 2 * padding);
+        paint.setColor(hovered ? SkColorSetRGB(0xA8, 0xA8, 0xA8) : SkColorSetRGB(0xC1, 0xC1, 0xC1));
+        canvas->drawIRect(skrect, paint);
+
+        paint.setStyle(SkPaint::kStroke_Style);
+        paint.setStrokeWidth(1);
+        paint.setColor(SkColorSetRGB(212, 208, 200));
+        canvas->drawIRect(skrect, paint);
+    }
+
     void PaintScrollbarTrack(SkCanvas* canvas,
         blink::WebThemeEngine::Part part, blink::WebThemeEngine::State state,
         const blink::WebThemeEngine::ScrollbarTrackExtraParams& extra_params,
@@ -557,9 +588,7 @@ public:
         DrawBox(canvas, rect, paint);
     }
 
-    void PaintScrollbarThumb(SkCanvas* canvas,
-        blink::WebThemeEngine::Part part, blink::WebThemeEngine::State state,
-        const blink::IntRect& rect) const {
+    void PaintScrollbarThumb(SkCanvas* canvas, blink::WebThemeEngine::Part part, blink::WebThemeEngine::State state, const blink::IntRect& rect) const {
         const bool hovered = state == blink::WebThemeEngine::StateHover;
         const int midx = rect.x() + rect.width() / 2;
         const int midy = rect.y() + rect.height() / 2;
@@ -616,8 +645,7 @@ public:
                     midx + grippy_half_width,
                     midy + inter_grippy_offset,
                     paint);
-            }
-            else {
+            } else {
                 DrawVertLine(canvas,
                     midx - inter_grippy_offset,
                     midy - grippy_half_width,

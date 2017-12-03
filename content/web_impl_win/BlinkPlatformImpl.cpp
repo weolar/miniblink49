@@ -338,6 +338,7 @@ void BlinkPlatformImpl::garbageCollectedTimer(blink::Timer<BlinkPlatformImpl>*)
 
 void BlinkPlatformImpl::doGarbageCollected()
 {
+    blink::memoryCache()->evictResources();
     //net::gActivatingLoaderCheck->doGarbageCollected(false);
     //blink::memoryCache()->evictResources();
     //Heap::collectGarbage(ThreadState::HeapPointersOnStack, ThreadState::GCWithSweep, Heap::ForcedGC);
@@ -345,6 +346,7 @@ void BlinkPlatformImpl::doGarbageCollected()
     //     v8::Isolate::GetCurrent()->IdleNotificationDeadline(currentMonotonicallyTime + 0.1);
     //     v8::Isolate::GetCurrent()->ContextDisposedNotification(false);
     SkGraphics::PurgeResourceCache();
+    SkGraphics::PurgeFontCache();
 
 //     String out = String::format("BlinkPlatformImpl::doGarbageCollected: %d %d %d\n", g_v8MemSize, g_blinkMemSize, g_skiaMemSize);
 //     OutputDebugStringA(out.utf8().data());

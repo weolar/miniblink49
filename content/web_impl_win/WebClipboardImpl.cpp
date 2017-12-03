@@ -648,9 +648,9 @@ bool WebClipboardImpl::writeBitmap(const SkBitmap& bitmap)
 
 void WebClipboardImpl::writeBookmark(const String& titleData , const String& urlData)
 {
-    String bookmark = titleData;
-    bookmark.append('\n');
-    bookmark.append(urlData);
+    String bookmark = WTF::ensureUTF16String(titleData);
+    bookmark.append(L'\n');
+    bookmark.append(WTF::ensureUTF16String(urlData));
 
     Vector<UChar> wideBookmark = WTF::ensureUTF16UChar(bookmark, false);
     HGLOBAL glob = createGlobalData(wideBookmark);
