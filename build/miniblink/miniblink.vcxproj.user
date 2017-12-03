@@ -1,13 +1,31 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">
-    <LocalDebuggerCommand>E:\mycode\miniblink49\trunk\out\release_vc6\wkexe.exe</LocalDebuggerCommand>
+    <LocalDebuggerCommand>C:\Users\weo\Desktop\wke\BugFuck\Gnad中文.exe</LocalDebuggerCommand>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
-    <LocalDebuggerCommandArguments>--url=http://www.codes51.com</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>--url=file:///E:/test/w3school/bing/testimage.html</LocalDebuggerCommandArguments>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <LocalDebuggerCommand>E:\mycode\miniblink49\trunk\out\Debug\cefclient.exe</LocalDebuggerCommand>
-    <LocalDebuggerCommandArguments>--url=file:///E:/test/xicp/test.htm</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommand>E:\mycode\miniblink49\trunk\out\debug\wkexe.exe</LocalDebuggerCommand>
+    <LocalDebuggerCommandArguments>--url=https://pan.toaone.com</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+    <LocalDebuggerWorkingDirectory>E:\mycode\miniblink49\trunk\out\debug</LocalDebuggerWorkingDirectory>
+    <LocalDebuggerAttach>false</LocalDebuggerAttach>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ShowAllFiles>false</ShowAllFiles>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LocalDebuggerCommand>E:\mycode\miniblink49\trunk\out\Release\wkexe.exe</LocalDebuggerCommand>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+    <LocalDebuggerCommandArguments>
+    </LocalDebuggerCommandArguments>
+    <LocalDebuggerWorkingDirectory>E:\mycode\miniblink49\trunk\out\Release\</LocalDebuggerWorkingDirectory>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">
+    <LocalDebuggerCommand>E:\mycode\miniblink49\trunk\out\Release_NoNode\wkexe.exe</LocalDebuggerCommand>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+    <LocalDebuggerCommandArguments>--url=http://so.news.cn/#search/0/%e6%90%9c%e7%b4%a2/1/</LocalDebuggerCommandArguments>
+    <LocalDebuggerWorkingDirectory>E:\mycode\miniblink49\trunk\out\Release_NoNode\</LocalDebuggerWorkingDirectory>
   </PropertyGroup>
 </Project>

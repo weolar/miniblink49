@@ -22337,6 +22337,9 @@
     <ClInclude Include="..\..\net\FixedReceivedData.h">
       <Filter>net</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\content\browser\ToolTip.h">
+      <Filter>content\browser</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\third_party\WebKit\Source\devtools\front_end\Images\src\optimize_png.hashes">
