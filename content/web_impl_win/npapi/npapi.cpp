@@ -39,7 +39,7 @@ using namespace content;
 // This specifically works around Flash and Shockwave. When we call NPP_New, they call NPN_Useragent with a NULL instance.
 static WebPluginImpl* pluginViewForInstance(NPP instance)
 {
-    if (instance && instance->ndata)
+    if (instance && WebPluginImpl::isAlive(instance) && instance->ndata)
         return static_cast<WebPluginImpl*>(instance->ndata);
     return WebPluginImpl::currentPluginView();
 }
@@ -72,37 +72,58 @@ NPError NPN_RequestRead(NPStream*, NPByteRange*)
 
 NPError NPN_GetURLNotify(NPP instance, const char* url, const char* target, void* notifyData)
 {
-    return pluginViewForInstance(instance)->getURLNotify(url, target, notifyData);
+    WebPluginImpl* view = pluginViewForInstance(instance);
+    if (!view)
+        return NPERR_INVALID_INSTANCE_ERROR;
+    return view->getURLNotify(url, target, notifyData);
 }
 
 NPError NPN_GetURL(NPP instance, const char* url, const char* target)
 {
-    return pluginViewForInstance(instance)->getURL(url, target);
+    WebPluginImpl* view = pluginViewForInstance(instance);
+    if (!view)
+        return NPERR_INVALID_INSTANCE_ERROR;
+    return view->getURL(url, target);
 }
 
 NPError NPN_PostURLNotify(NPP instance, const char* url, const char* target, uint32_t len, const char* buf, NPBool file, void* notifyData)
 {
-    return pluginViewForInstance(instance)->postURLNotify(url, target, len, buf, file, notifyData);
+    WebPluginImpl* view = pluginViewForInstance(instance);
+    if (!view)
+        return NPERR_INVALID_INSTANCE_ERROR;
+    return view->postURLNotify(url, target, len, buf, file, notifyData);
 }
 
 NPError NPN_PostURL(NPP instance, const char* url, const char* target, uint32_t len, const char* buf, NPBool file)
 {
-    return pluginViewForInstance(instance)->postURL(url, target, len, buf, file);
+    WebPluginImpl* view = pluginViewForInstance(instance);
+    if (!view)
+        return NPERR_INVALID_INSTANCE_ERROR;
+    return view->postURL(url, target, len, buf, file);
 }
 
 NPError NPN_NewStream(NPP instance, NPMIMEType type, const char* target, NPStream** stream)
 {
-    return pluginViewForInstance(instance)->newStream(type, target, stream);
+    WebPluginImpl* view = pluginViewForInstance(instance);
+    if (!view)
+        return NPERR_INVALID_INSTANCE_ERROR;
+    return view->newStream(type, target, stream);
 }
 
 int32_t NPN_Write(NPP instance, NPStream* stream, int32_t len, void* buffer)
 {
-    return pluginViewForInstance(instance)->write(stream, len, buffer);
+    WebPluginImpl* view = pluginViewForInstance(instance);
+    if (!view)
+        return NPERR_INVALID_INSTANCE_ERROR;
+    return view->write(stream, len, buffer);
 }
 
 NPError NPN_DestroyStream(NPP instance, NPStream* stream, NPReason reason)
 {
-    return pluginViewForInstance(instance)->destroyStream(stream, reason);
+    WebPluginImpl* view = pluginViewForInstance(instance);
+    if (!view)
+        return NPERR_INVALID_INSTANCE_ERROR;
+    return view->destroyStream(stream, reason);
 }
 
 const char* NPN_UserAgent(NPP instance)
@@ -117,23 +138,34 @@ const char* NPN_UserAgent(NPP instance)
 
 void NPN_Status(NPP instance, const char* message)
 {
-    pluginViewForInstance(instance)->status(message);
+    WebPluginImpl* view = pluginViewForInstance(instance);
+    if (!view)
+        return;
+    view->status(message);
 }
 
 void NPN_InvalidateRect(NPP instance, NPRect* invalidRect)
 {
     WebPluginImpl* view = pluginViewForInstance(instance);
+    if (!view)
+        return;
     view->invalidateRect(invalidRect);
 }
 
 void NPN_InvalidateRegion(NPP instance, NPRegion invalidRegion)
 {
-    pluginViewForInstance(instance)->invalidateRegion(invalidRegion);
+    WebPluginImpl* view = pluginViewForInstance(instance);
+    if (!view)
+        return;
+    view->invalidateRegion(invalidRegion);
 }
 
 void NPN_ForceRedraw(NPP instance)
 {
-    pluginViewForInstance(instance)->forceRedraw();
+    WebPluginImpl* view = pluginViewForInstance(instance);
+    if (!view)
+        return;
+    view->forceRedraw();
 }
 
 NPError NPN_GetValue(NPP instance, NPNVariable variable, void* value)
@@ -143,12 +175,15 @@ NPError NPN_GetValue(NPP instance, NPNVariable variable, void* value)
      if (!view)
          return WebPluginImpl::getValueStatic(variable, value);
 
-    return pluginViewForInstance(instance)->getValue(variable, value);
+    return view->getValue(variable, value);
 }
 
 NPError NPN_SetValue(NPP instance, NPPVariable variable, void* value)
 {
-   return pluginViewForInstance(instance)->setValue(variable, value);
+    WebPluginImpl* view = pluginViewForInstance(instance);
+    if (!view)
+        return NPERR_INVALID_INSTANCE_ERROR;
+    return view->setValue(variable, value);
 }
 
 void* NPN_GetJavaEnv()
@@ -165,12 +200,18 @@ void* NPN_GetJavaPeer(NPP)
 
 void NPN_PushPopupsEnabledState(NPP instance, NPBool enabled)
 {
-    pluginViewForInstance(instance)->pushPopupsEnabledState(enabled);
+    WebPluginImpl* view = pluginViewForInstance(instance);
+    if (!view)
+        return;
+    view->pushPopupsEnabledState(enabled);
 }
 
 void NPN_PopPopupsEnabledState(NPP instance)
 {
-    pluginViewForInstance(instance)->popPopupsEnabledState();
+    WebPluginImpl* view = pluginViewForInstance(instance);
+    if (!view)
+        return;
+    view->popPopupsEnabledState();
 }
 
 extern "C" typedef void PluginThreadAsyncCallFunction(void*);
@@ -182,17 +223,26 @@ void NPN_PluginThreadAsyncCall(NPP instance, PluginThreadAsyncCallFunction func,
 
 NPError NPN_GetValueForURL(NPP instance, NPNURLVariable variable, const char* url, char** value, uint32_t* len)
 {
-    return pluginViewForInstance(instance)->getValueForURL(variable, url, value, len);
+    WebPluginImpl* view = pluginViewForInstance(instance);
+    if (!view)
+        return NPERR_INVALID_INSTANCE_ERROR;
+    return view->getValueForURL(variable, url, value, len);
 }
 
 NPError NPN_SetValueForURL(NPP instance, NPNURLVariable variable, const char* url, const char* value, uint32_t len)
 {
-    return pluginViewForInstance(instance)->setValueForURL(variable, url, value, len);
+    WebPluginImpl* view = pluginViewForInstance(instance);
+    if (!view)
+        return NPERR_INVALID_INSTANCE_ERROR;
+    return view->setValueForURL(variable, url, value, len);
 }
 
 NPError NPN_GetAuthenticationInfo(NPP instance, const char* protocol, const char* host, int32_t port, const char* scheme, const char* realm, char** username, uint32_t* ulen, char** password, uint32_t* plen)
 {
-    return pluginViewForInstance(instance)->getAuthenticationInfo(protocol, host, port, scheme, realm, username, ulen, password, plen);
+    WebPluginImpl* view = pluginViewForInstance(instance);
+    if (!view)
+        return NPERR_INVALID_INSTANCE_ERROR;
+    return view->getAuthenticationInfo(protocol, host, port, scheme, realm, username, ulen, password, plen);
 }
 
 NPError NPN_PopUpContextMenu(NPP instance, NPMenu* menu)

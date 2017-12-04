@@ -264,6 +264,7 @@ public:
     bool start();
 
     static void keepAlive(NPP);
+    static bool isAlive(NPP);
 
     void keepAlive();
 
