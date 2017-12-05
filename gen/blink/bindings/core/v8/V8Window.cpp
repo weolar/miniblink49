@@ -5016,7 +5016,7 @@ static void onunhandledrejectionAttributeSetterCallback(v8::Local<v8::Name>, v8:
     TRACE_EVENT_SET_SAMPLING_STATE("v8", "V8Execution");
 }
 
-#ifdef MINIBLINK_NOT_IMPLEMENTED
+#if 1 // def MINIBLINK_NOT_IMPLEMENTED
 static void performanceAttributeGetter(const v8::PropertyCallbackInfo<v8::Value>& info)
 {
 
@@ -7232,7 +7232,7 @@ static const V8DOMConfiguration::AttributeConfiguration V8WindowAttributes[] = {
     {"onpopstate", DOMWindowV8Internal::onpopstateAttributeGetterCallback, DOMWindowV8Internal::onpopstateAttributeSetterCallback, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnPrototype, V8DOMConfiguration::CheckHolder},
     {"onstorage", DOMWindowV8Internal::onstorageAttributeGetterCallback, DOMWindowV8Internal::onstorageAttributeSetterCallback, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnPrototype, V8DOMConfiguration::CheckHolder},
     {"onunload", DOMWindowV8Internal::onunloadAttributeGetterCallback, DOMWindowV8Internal::onunloadAttributeSetterCallback, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnPrototype, V8DOMConfiguration::CheckHolder},
-#ifdef MINIBLINK_NOT_IMPLEMENTED
+#if 1 // def MINIBLINK_NOT_IMPLEMENTED
     {"performance", DOMWindowV8Internal::performanceAttributeGetterCallback, DOMWindowV8Internal::performanceAttributeSetterCallback, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
 #endif // MINIBLINK_NOT_IMPLEMENTED
     {"AnimationEvent", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8AnimationEvent::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
