@@ -129,27 +129,27 @@ wchar_t* utf8_to_wide_char(const char * inStr)
   return outStr;
 }
 
-FILE* fopen_wrap(/*_In_z_*/ const char * _Filename, /*_In_*/ const char * _OpenFlag)
-{
-  wchar_t* filenameW = 0;
-  wchar_t* openFlagW = 0;
-
-  FILE* fp = 0;
-
-  filenameW = utf8_to_wide_char(_Filename);
-  openFlagW = utf8_to_wide_char(_OpenFlag);
-
-  fp = _wfopen(filenameW, openFlagW);
-
-  free(filenameW);
-  free(openFlagW);
-
-  if (fp)
-      return fp;
-
-  fp = fopen(_Filename, _OpenFlag);
-  return fp;
-}
+// FILE* fopen_wrap(/*_In_z_*/ const char * _Filename, /*_In_*/ const char * _OpenFlag)
+// {
+//   wchar_t* filenameW = 0;
+//   wchar_t* openFlagW = 0;
+// 
+//   FILE* fp = 0;
+// 
+//   filenameW = utf8_to_wide_char(_Filename);
+//   openFlagW = utf8_to_wide_char(_OpenFlag);
+// 
+//   fp = _wfopen(filenameW, openFlagW);
+// 
+//   free(filenameW);
+//   free(openFlagW);
+// 
+//   if (fp)
+//       return fp;
+// 
+//   fp = fopen(_Filename, _OpenFlag);
+//   return fp;
+// }
 
 // #ifdef OPEN_NEEDS_ARG3
 // #  define open_readonly(p,f) open((p),(f),(0))
@@ -161,6 +161,9 @@ int open_readonly(const char * filename, int flag)
   wchar_t* filenameW = 0;
 
   int fp = -1;
+
+  if (userOpenFile)
+      return (int)userOpenFile(filename);
 
   filenameW = utf8_to_wide_char(filename);
   fp = _wopen(filenameW, flag);
