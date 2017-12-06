@@ -33,9 +33,9 @@
 #include "third_party/WebKit/Source/web/WebPluginContainerImpl.h"
 #include "third_party/WebKit/Source/core/frame/FrameView.h"
 #include "third_party/WebKit/Source/platform/graphics/Image.h"
+#include "third_party/WebKit/Source/wtf/Functional.h"
 #include "third_party/WebKit/public/platform/Platform.h"
 #include "third_party/WebKit/public/web/WebInputEvent.h"
-#include "third_party/WebKit/Source/wtf/Functional.h"
 #include "skia/ext/bitmap_platform_device_win.h"
 #include "skia/ext/platform_canvas.h"
 
@@ -1027,6 +1027,32 @@ void WebPluginImpl::platformStartAsyn(blink::Timer<WebPluginImpl>*)
         setNPWindowRect(container->frameRect());
 }
 
+class PlatformStartAsynTask : public blink::WebThread::TaskObserver {
+public:
+    PlatformStartAsynTask(WebPluginImpl* webPluginImpl)
+    {
+        m_webPluginImpl = webPluginImpl;
+    }
+
+    virtual ~PlatformStartAsynTask() override
+    {
+    }
+
+    virtual void willProcessTask() override
+    {
+    }
+
+    virtual void didProcessTask() override
+    {
+        m_webPluginImpl->platformStartAsyn(nullptr);
+        blink::Platform::current()->currentThread()->removeTaskObserver(this);
+        delete this;
+    }
+
+private:
+    WebPluginImpl* m_webPluginImpl;
+};
+
 bool WebPluginImpl::platformStart()
 {
     ASSERT(m_isStarted);
@@ -1035,7 +1061,8 @@ bool WebPluginImpl::platformStart()
     if (!container)
         return false;
 
-    m_asynStartTimer.startOneShot(0, FROM_HERE);
+    //m_asynStartTimer.startOneShot(0, FROM_HERE);
+    blink::Platform::current()->currentThread()->addTaskObserver(new PlatformStartAsynTask(this));
 
     return true;
 }

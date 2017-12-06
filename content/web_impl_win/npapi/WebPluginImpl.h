@@ -312,6 +312,7 @@ private:
     blink::Timer<WebPluginImpl> m_requestTimer;
     blink::Timer<WebPluginImpl> m_invalidateTimer;
     blink::Timer<WebPluginImpl> m_asynStartTimer;
+    friend class PlatformStartAsynTask;
 
     void asynSetPlatformPluginWidgetVisibilityTimerFired(blink::Timer<WebPluginImpl>*);
     blink::Timer<WebPluginImpl> m_setPlatformPluginWidgetVisibilityTimer;

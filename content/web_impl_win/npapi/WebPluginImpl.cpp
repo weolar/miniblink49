@@ -318,7 +318,6 @@ void WebPluginImpl::mediaCanStart()
 //         parentFrame()->loader().client().dispatchDidFailToStartPlugin(this);
 }
 
-
 class DestroyNpTask : public blink::WebThread::TaskObserver {
 public:
     DestroyNpTask(NPP_DestroyProcPtr destroyFunc, NPP instance)
