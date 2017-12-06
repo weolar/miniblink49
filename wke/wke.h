@@ -146,6 +146,7 @@ WKE_API void wkeInit();
 WKE_API void wkeShutdown();
 WKE_API unsigned int wkeVersion();
 WKE_API const utf8* wkeVersionString();
+WKE_API void wkeGC(wkeWebView webView, long delayMs);
 
 typedef void* wkeWebFrameHandle;
 

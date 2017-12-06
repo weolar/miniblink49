@@ -934,6 +934,12 @@ const utf8* wkeVersionString()
     return wkeGetVersionString();
 }
 
+void wkeGC(wkeWebView webView, long delayMs)
+{
+    content::BlinkPlatformImpl* platformImpl = (content::BlinkPlatformImpl*)blink::Platform::current();
+    platformImpl->startGarbageCollectedThread((double)delayMs);
+}
+
 extern "C" void curl_set_file_system(
     WKE_FILE_OPEN pfnOpen,
     WKE_FILE_CLOSE pfnClose,

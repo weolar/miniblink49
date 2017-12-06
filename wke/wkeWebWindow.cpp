@@ -44,14 +44,14 @@ bool CWebWindow::create(HWND parent, wkeWindowType type, int x, int y, int width
         break;
 
     case WKE_WINDOW_TYPE_TRANSPARENT:
-        styles = WS_POPUP;
+        styles = WS_POPUP | WS_CLIPSIBLINGS | WS_CLIPCHILDREN;
         styleEx = WS_EX_LAYERED;
         wkeSetTransparent(this, true);
         break;
 
     case WKE_WINDOW_TYPE_POPUP:
     default:
-        styles = WS_OVERLAPPEDWINDOW;
+        styles = WS_OVERLAPPEDWINDOW | WS_CLIPSIBLINGS | WS_CLIPCHILDREN;
         styleEx = 0;
         wkeSetTransparent(this, false);
     }
