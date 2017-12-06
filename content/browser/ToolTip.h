@@ -127,8 +127,6 @@ public:
 private:
     void resetShowState()
     {
-        m_isShow = true;
-
         if (m_delayShowTimer.isActive())
             m_delayShowTimer.stop();
         m_delayShowCount = 0;
@@ -146,16 +144,18 @@ private:
 
         POINT point;
         ::GetCursorPos(&point);
-        if (!isNearPos(m_pos, m_pos))
+        if (!isNearPos(point, m_pos))
             return hide();
 
-        if (15 < m_delayShowCount) {
+        if (15 < m_delayShowCount && !m_isShow) {
+            m_isShow = true;
+
             ::SetWindowPos(m_hTipWnd, HWND_TOPMOST, point.x + 15, point.y + 15, m_size.cx + 5, m_size.cy + 5, SWP_NOACTIVATE);
             ::ShowWindow(m_hTipWnd, SW_SHOWNOACTIVATE);
             ::UpdateWindow(m_hTipWnd);
-            if (m_delayShowTimer.isActive())
-                m_delayShowTimer.stop();
-            m_delayShowCount = 0;
+//             if (m_delayShowTimer.isActive())
+//                 m_delayShowTimer.stop();
+//             m_delayShowCount = 0;
 
 //             if (m_delayHideTimer.isActive())
 //                 m_delayHideTimer.stop();
@@ -170,7 +170,7 @@ private:
 
         POINT point;
         ::GetCursorPos(&point);
-        if (!isNearPos(m_pos, m_pos) || 30 < m_delayHideCount)
+        if (!isNearPos(point, m_pos) || 30 < m_delayHideCount)
             return hide();
     }
 
