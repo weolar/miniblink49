@@ -328,6 +328,7 @@ public:
 
     virtual ~DestroyNpTask() override
     {
+        delete m_instance;
     }
 
     virtual void willProcessTask() override
@@ -338,10 +339,13 @@ public:
     {
         NPSavedData* savedData = 0;
         //WebPluginImpl::setCurrentPluginView(this);
-        //setCallingPlugin(true);
+        //SetCallingPlugin(true);
         NPError npErr = m_destroyFunc(m_instance, &savedData);
         //setCallingPlugin(false);
         //WebPluginImpl::setCurrentPluginView(0);
+
+        String out = String::format("DestroyNpTask: %p, m_instance: %p\n", this, m_instance);
+        OutputDebugStringA(out.utf8().data());
 
         if (savedData) {
             // TODO: Actually save this data instead of just discarding it
@@ -349,9 +353,6 @@ public:
                 NPN_MemFree(savedData->buf);
             NPN_MemFree(savedData);
         }
-
-        String out = String::format("DestroyNpTask: %p, m_instance: %p\n", this, m_instance);
-        OutputDebugStringA(out.utf8().data());
 
         blink::Platform::current()->currentThread()->removeTaskObserver(this);
         delete this;
@@ -401,7 +402,10 @@ void WebPluginImpl::stop()
     PluginMainThreadScheduler::scheduler().unregisterPlugin(m_instance);
 
 #if 1 // 这里调用destroy会有问题，如果是在_NPN_Evaluate走到这里的话。例子：http://music.yule.sohu.com/20170926/n514522612.shtml
-    blink::Platform::current()->currentThread()->addTaskObserver(new DestroyNpTask(m_plugin->pluginFuncs()->destroy, m_instance));
+    NPP_t* instance = new NPP_t();
+    instance->ndata = m_instance->ndata;
+    instance->pdata = m_instance->pdata;
+    blink::Platform::current()->currentThread()->addTaskObserver(new DestroyNpTask(m_plugin->pluginFuncs()->destroy, instance));
 #endif
 
     m_instance->pdata = 0;
