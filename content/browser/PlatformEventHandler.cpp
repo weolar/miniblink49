@@ -207,6 +207,11 @@ void PlatformEventHandler::fireTouchEvent(HWND hWnd, UINT message, WPARAM wParam
     m_webWidget->handleInputEvent(webTouchEvent);
 }
 
+bool isNearPos(const blink::IntPoint& a, const blink::IntPoint& b)
+{
+    return std::abs(a.x() - b.x()) + std::abs(a.y() - b.y()) < 15;
+}
+
 LRESULT PlatformEventHandler::fireMouseEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, bool needSetFocus, BOOL* bHandle)
 {
     bool handle = false;
@@ -287,10 +292,12 @@ LRESULT PlatformEventHandler::fireMouseEvent(HWND hWnd, UINT message, WPARAM wPa
         double time = WTF::currentTime();
         const static double minInterval = GetDoubleClickTime() / 1000.0;
 
-        if (time - m_lastTimeMouseDown < minInterval)
+        if (time - m_lastTimeMouseDown < minInterval && isNearPos(m_lastPosMouseDown, pos))
             webMouseEvent.clickCount = 2;
         
         m_lastTimeMouseDown = time;
+        m_lastPosMouseDown = pos;
+
         if (hWnd && needSetFocus) {
             if (::GetFocus() != hWnd)
                 ::SetFocus(hWnd);
