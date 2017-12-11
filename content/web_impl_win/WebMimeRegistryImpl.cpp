@@ -2,6 +2,7 @@
 #include "WebMimeRegistryImpl.h"
 #include "third_party/WebKit/public/platform/WebString.h"
 #include <wtf/text/StringHash.h>
+#include <wtf/text/WTFStringUtil.h>
 #include <wtf/HashMap.h>
 
 namespace content {
@@ -205,12 +206,7 @@ blink::WebString WebMimeRegistryImpl::mimeTypeForExtension(const blink::WebStrin
     if (ext.isNull() || ext.isEmpty())
         return blink::WebString();
 
-    WTF::String extension = ext;
-    if (!extension.is8Bit()) {
-        CString utf8String = extension.utf8();
-        extension = WTF::String(utf8String.data(), utf8String.length() - 1);
-    }
-
+    WTF::String extension = WTF::ensureStringToUTF8String(ext);
     if (!m_mimetypeMap) {
         m_mimetypeMap = new WTF::HashMap<WTF::String, WTF::String>();
         //fill with initial values

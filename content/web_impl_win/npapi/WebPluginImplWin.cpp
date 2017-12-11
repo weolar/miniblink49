@@ -985,8 +985,11 @@ void WebPluginImpl::forceRedraw()
 //         ::UpdateWindow(windowHandleForPageClient(parent() ? parent()->hostWindow()->platformPageClient() : 0));
 }
 
-void WebPluginImpl::platformStartAsyn(blink::Timer<WebPluginImpl>*)
+void WebPluginImpl::platformStartAsyn()
 {
+    if (m_asynStartTask)
+        m_asynStartTask = nullptr;
+
     WebPluginContainerImpl* container = (WebPluginContainerImpl*)m_pluginContainer;
     if (!container)
         return;
@@ -1027,42 +1030,31 @@ void WebPluginImpl::platformStartAsyn(blink::Timer<WebPluginImpl>*)
         setNPWindowRect(container->frameRect());
 }
 
-class PlatformStartAsynTask : public blink::WebThread::TaskObserver {
-public:
-    PlatformStartAsynTask(WebPluginImpl* webPluginImpl)
-    {
-        m_webPluginImpl = webPluginImpl;
-    }
+void WebPluginImpl::PlatformStartAsynTask::didProcessTask()
+{
+    //         String out = String::format("didProcessTask, WeakPtr: %p parent:%p\n", m_parentWeakPtr, *m_parentWeakPtr);
+    //         OutputDebugStringA(out.utf8().data());
 
-    virtual ~PlatformStartAsynTask() override
-    {
-    }
+    if (m_parentPtr)
+        m_parentPtr->platformStartAsyn();
 
-    virtual void willProcessTask() override
-    {
-    }
-
-    virtual void didProcessTask() override
-    {
-        m_webPluginImpl->platformStartAsyn(nullptr);
-        blink::Platform::current()->currentThread()->removeTaskObserver(this);
-        delete this;
-    }
-
-private:
-    WebPluginImpl* m_webPluginImpl;
-};
+    blink::Platform::current()->currentThread()->removeTaskObserver(this);
+    delete this;
+}
 
 bool WebPluginImpl::platformStart()
 {
     ASSERT(m_isStarted);
     ASSERT(m_status == PluginStatusLoadedSuccessfully);
+    if (m_asynStartTask)
+        return false;
+
     WebPluginContainerImpl* container = (WebPluginContainerImpl*)m_pluginContainer;
     if (!container)
         return false;
 
-    //m_asynStartTimer.startOneShot(0, FROM_HERE);
-    blink::Platform::current()->currentThread()->addTaskObserver(new PlatformStartAsynTask(this));
+    m_asynStartTask = new PlatformStartAsynTask(this);
+    blink::Platform::current()->currentThread()->addTaskObserver(m_asynStartTask);
 
     return true;
 }

@@ -123,7 +123,7 @@ WebPluginImpl::WebPluginImpl(WebLocalFrame* parentFrame, const blink::WebPluginP
     , m_invalidateTimer(this, &WebPluginImpl::invalidateTimerFired)
     , m_popPopupsStateTimer(this, &WebPluginImpl::popPopupsStateTimerFired)
     , m_lifeSupportTimer(this, &WebPluginImpl::lifeSupportTimerFired)
-    , m_asynStartTimer(this, &WebPluginImpl::platformStartAsyn)
+    , m_asynStartTask(nullptr)
     , m_setPlatformPluginWidgetVisibilityTimer(this, &WebPluginImpl::asynSetPlatformPluginWidgetVisibilityTimerFired)
     , m_mode(params.loadManually ? NP_FULL : NP_EMBED)
     , m_paramNames(0)
@@ -179,6 +179,9 @@ WebPluginImpl::WebPluginImpl(WebLocalFrame* parentFrame, const blink::WebPluginP
 WebPluginImpl::~WebPluginImpl()
 {
     ASSERT(!m_lifeSupportTimer.isActive());
+
+    if (m_asynStartTask)
+        m_asynStartTask->onParentDestroy();
 
     // If we failed to find the plug-in, we'll return early in our constructor, and
     // m_instance will be 0.
