@@ -27,16 +27,24 @@
 
 7、例子可见源码中的wkexe工程，或者cefclient（被废弃）
 
-三、关于讨论
+三、联系方式
 ========================================================
 大家有问题可以选择：
 1，加群178168957
+
 2，邮箱weolar@qq.com
+
 3，csdn：blog.csdn.net/weolar
+
 4，http://miniblink.net/
+
 5，github里留言讨论
+
 6，关注知乎专栏：https://zhuanlan.zhihu.com/chrome
+
 当然我不会所有问题都回答的，毕竟还要去工地搬砖养家糊口。
 
+
 最后特别感谢zero，他帮我提交了很多代码。
+
 另外感谢网友core，他赞助了一个论坛：http://miniblink.net/
