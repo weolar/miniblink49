@@ -43,6 +43,7 @@ namespace cc_blink {
 
 class WebToCCAnimationDelegateAdapter;
 class WebLayerImpl;
+class WebFilterOperationsImpl;
 
 typedef WTF::Vector<WebLayerImpl*> WebLayerImplList;
 
@@ -114,6 +115,7 @@ public:
     void setBackgroundColor(blink::WebColor color) override;
     blink::WebColor backgroundColor() const override;
     void setFilters(const blink::WebFilterOperations& filters) override;
+    const WebFilterOperationsImpl* getFilters() const;
     //void setBackgroundFilters(const blink::WebFilterOperations& filters) override;
     void setAnimationDelegate(
         blink::WebCompositorAnimationDelegate* delegate) override;
@@ -264,6 +266,8 @@ protected:
     bool m_hasMaskLayerChild;
     bool m_isMaskLayer;
     bool m_isReplicaLayer;
+
+    cc_blink::WebFilterOperationsImpl* m_filterOperations;
 
 private:
     DISALLOW_COPY_AND_ASSIGN(WebLayerImpl);

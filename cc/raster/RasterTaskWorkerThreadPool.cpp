@@ -30,9 +30,11 @@
 
 #include "skia/ext/refptr.h"
 #include "cc/raster/RasterResouce.h"
+#include "cc/raster/RasterFilters.h"
 #include "cc/tiles/Tile.h"
 #include "cc/tiles/TileGrid.h"
 #include "cc/blink/WebLayerImpl.h"
+#include "cc/blink/WebFilterOperationsImpl.h"
 #include "cc/trees/LayerTreeHost.h"
 #include "cc/trees/DrawProperties.h"
 #include "cc/playback/LayerChangeAction.h"
@@ -152,6 +154,7 @@ public:
         const SkRect& dirtyRect, 
         int threadIndex,
         bool isOpaque,
+        const cc_blink::WebFilterOperationsImpl* filterOperations,
         LayerChangeActionBlend* blendAction,
         RasterTaskGroup* group
         )
@@ -162,6 +165,7 @@ public:
         , m_isOpaque(isOpaque)
         , m_blendAction(blendAction)
         , m_group(group)
+        , m_filterOperations(filterOperations ? new cc_blink::WebFilterOperationsImpl(*filterOperations) : nullptr)
     {
 #ifndef NDEBUG
         rasterTaskCounter.increment();
@@ -204,13 +208,15 @@ public:
 
     virtual void run() override
     {
+        DWORD nowTime = (DWORD)(WTF::currentTimeMS() * 100);
+        //DWORD detTime = nowTime - g_nowTime;
+        //InterlockedExchange((LONG*)&g_nowTime, nowTime);
+
         SkBitmap* bitmap = raster();
         m_blendAction->setBitmap(bitmap);
         releaseRource();
 
-//         DWORD nowTime = (DWORD)(WTF::currentTimeMS() * 100);
-//         DWORD detTime = nowTime - g_nowTime;
-//         InterlockedExchange((LONG*)&g_nowTime, nowTime);
+        DWORD detTime = (DWORD)(WTF::currentTimeMS() * 100) - nowTime;
 
 //         String out = String::format("RasterTask.run: %d\n", detTime);
 //         OutputDebugStringA(out.utf8().data());
@@ -240,7 +246,30 @@ public:
         canvas->drawPicture(m_picture, nullptr, nullptr);
         canvas->restore();
 
-        return bitmap;
+        skia::RefPtr<SkImageFilter> filter = RasterFilter::buildImageFilter(m_filterOperations, FloatSize(m_dirtyRect.width(), m_dirtyRect.height()));
+        // TODO(ajuma): Apply the filter in the same pass as the content where
+        // possible (e.g. when there's no origin offset). See crbug.com/308201.
+        return applyImageFilter(filter.get(), bitmap);        
+    }
+
+    SkBitmap* applyImageFilter(SkImageFilter* filter, SkBitmap* toFilter) const
+    {
+        if (!filter)
+            return toFilter;
+
+        SkBitmap* filterBitmap = new SkBitmap();
+        if (!filterBitmap->tryAllocPixels(SkImageInfo::MakeN32Premul(toFilter->width(), toFilter->height()))) {
+            delete filterBitmap;
+            return toFilter;
+        }
+
+        SkCanvas canvas(*filterBitmap);
+        SkPaint paint;
+        paint.setImageFilter(filter);
+        canvas.clear(SK_ColorTRANSPARENT);
+        canvas.drawBitmap(*toFilter, 0, 0, &paint);
+        delete toFilter;
+        return filterBitmap;
     }
 
     int threadIndex() const { return m_threadIndex; }
@@ -260,6 +289,7 @@ private:
     LayerChangeActionBlend* m_blendAction;
     bool m_isOpaque;
     RasterTaskGroup* m_group;
+    const cc_blink::WebFilterOperationsImpl* m_filterOperations;
 };
 
 RasterTaskGroup* RasterTaskWorkerThreadPool::beginPostRasterTask(LayerTreeHost* host)
@@ -320,7 +350,7 @@ int64 RasterTaskGroup::postRasterTask(cc_blink::WebLayerImpl* layer, SkPicture* 
 
     int threadIndex = m_pool->selectOneIdleThread();
 
-    RasterTask* task = new RasterTask(m_pool, picture, dirtyRect, threadIndex, layer->opaque(), blendAction, this);
+    RasterTask* task = new RasterTask(m_pool, picture, dirtyRect, threadIndex, layer->opaque(), layer->getFilters(), blendAction, this);
     m_pool->increasePendingRasterTaskNum();
     m_pool->increaseBusyCountByIndex(task->threadIndex());
     m_pool->m_threads[task->threadIndex()]->postTask(FROM_HERE, task);

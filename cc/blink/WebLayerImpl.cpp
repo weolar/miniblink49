@@ -14,6 +14,7 @@
 #include "cc/raster/RasterTaskWorkerThreadPool.h"
 #include "cc/playback/LayerChangeAction.h"
 #include "cc/base/MathUtil.h"
+#include "cc/blink/WebFilterOperationsImpl.h"
 #include "third_party/WebKit/public/platform/WebFloatPoint.h"
 #include "third_party/WebKit/public/platform/WebFloatRect.h"
 #include "third_party/WebKit/public/platform/WebGraphicsLayerDebugInfo.h"
@@ -81,8 +82,8 @@ WebLayerImpl::WebLayerImpl(WebLayerImplClient* client)
     , m_contentsOpaqueIsFixed(false)
     , m_masksToBounds(false)
     , m_webLayerScrollClient(nullptr)
-//     , m_maskLayerId(-1)
-//     , m_replicaLayerId(-1)
+    //     , m_maskLayerId(-1)
+    //     , m_replicaLayerId(-1)
     , m_maskLayer(nullptr)
     , m_replicaLayer(nullptr)
     , m_layerTreeHost(nullptr)
@@ -96,6 +97,7 @@ WebLayerImpl::WebLayerImpl(WebLayerImplClient* client)
     , m_isMaskLayer(false)
     , m_isReplicaLayer(false)
     , m_hasMaskLayerChild(false)
+    , m_filterOperations(nullptr)
 {
     m_id = atomicIncrement(&g_next_layer_id);
     m_webLayerClient = nullptr;
@@ -118,6 +120,10 @@ WebLayerImpl::~WebLayerImpl()
     if (m_tileGrid)
         delete m_tileGrid;
     m_tileGrid = nullptr;
+
+    if (m_filterOperations)
+        delete m_filterOperations;
+    m_filterOperations = nullptr;
 
     m_webLayerClient = nullptr;
 
@@ -885,7 +891,15 @@ void WebLayerImpl::setFilters(const WebFilterOperations& filters)
 {
     if (filters.isEmpty())
         return;
-    //setNeedsCommit(true);
+    if (m_filterOperations)
+        delete m_filterOperations;
+    m_filterOperations = new WebFilterOperationsImpl(filters);
+    setNeedsCommit(true);
+}
+
+const WebFilterOperationsImpl* WebLayerImpl::getFilters() const
+{
+    return m_filterOperations;
 }
 
 void WebLayerImpl::setAnimationDelegate(blink::WebCompositorAnimationDelegate* delegate)
