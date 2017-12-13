@@ -9,6 +9,8 @@ class ParsedCookie;
 class CookieMonster;
 }
 
+struct curl_slist;
+
 namespace content {
 
 class HttpCookie;
@@ -26,6 +28,8 @@ public:
     void setToRecordFromRawHeads(const blink::KURL& url, const WTF::String& rawHeadsString);
 
     static String cookiesForSession(const blink::KURL&, const blink::KURL& url, bool httponly);
+    static const curl_slist* WebCookieJarImpl::getAllCookiesBegin();
+    static void WebCookieJarImpl::getAllCookiesEnd(curl_slist* list);
 
     static WebCookieJarImpl* inst();
 

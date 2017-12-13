@@ -283,6 +283,27 @@ static void setCookiesFromDOM(const KURL&, const KURL& url, const String& value)
 //     OutputDebugStringA("\n");
 }
 
+const curl_slist* WebCookieJarImpl::getAllCookiesBegin()
+{
+    CURL* curl = curl_easy_init();
+    if (!curl)
+        return nullptr;
+
+    CURLSH* curlsh = net::WebURLLoaderManager::sharedInstance()->getCurlShareHandle();
+
+    curl_easy_setopt(curl, CURLOPT_SHARE, curlsh);
+
+    curl_slist* list = nullptr;
+    curl_easy_getinfo(curl, CURLINFO_COOKIELIST, &list);
+    curl_easy_cleanup(curl);
+    return list;
+}
+
+void WebCookieJarImpl::getAllCookiesEnd(curl_slist* list)
+{
+    curl_slist_free_all(list); 
+}
+
 String WebCookieJarImpl::cookiesForSession(const KURL&, const KURL& url, bool httponly)
 {
     if (!net::WebURLLoaderManager::sharedInstance())
@@ -298,7 +319,7 @@ String WebCookieJarImpl::cookiesForSession(const KURL&, const KURL& url, bool ht
 
     curl_easy_setopt(curl, CURLOPT_SHARE, curlsh);
 
-    struct curl_slist* list = 0;
+    curl_slist* list = nullptr;
     curl_easy_getinfo(curl, CURLINFO_COOKIELIST, &list);
 
     if (list) {
