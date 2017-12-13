@@ -321,6 +321,22 @@ WKE_API void wkeEditorRedo(wkeWebView webView);
 
 WKE_API const wchar_t* wkeGetCookieW(wkeWebView webView);
 WKE_API const utf8* wkeGetCookie(wkeWebView webView);
+
+struct wkeCookieList {
+    char *data;
+    wkeCookieList* next;
+};
+WKE_API const wkeCookieList* wkeGetAllCookie();
+WKE_API void wkeFreeCookieList(const wkeCookieList* cookieList);
+
+enum wkeCookieCommand {
+    wkeCookieCommandClearAllCookies,
+    wkeCookieCommandClearSessionCookies,
+    wkeCookieCommandFlushCookiesToFile,
+    wkeCookieCommandReloadCookiesFromFile,
+};
+WKE_API void wkePerformCookieCommand(wkeCookieCommand command);
+
 WKE_API void wkeSetCookieEnabled(wkeWebView webView, bool enable);
 WKE_API bool wkeIsCookieEnabled(wkeWebView webView);
 WKE_API void wkeSetCookieJarPath(wkeWebView webView, const WCHAR* path);
