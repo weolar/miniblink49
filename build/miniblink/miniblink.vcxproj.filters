@@ -9774,6 +9774,12 @@
     <ClCompile Include="..\..\net\FixedReceivedData.cpp">
       <Filter>net</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\bindings\core\v8\custom\V8MutationObserverCustom.cpp">
+      <Filter>third_party\Webkit\Source\bindings\core\v8\custom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\cc\raster\RasterFilters.cpp">
+      <Filter>cc\raster</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\public\platform\modules\app_banner\WebAppBannerClient.h">
@@ -22339,6 +22345,9 @@
     </ClInclude>
     <ClInclude Include="..\..\content\browser\ToolTip.h">
       <Filter>content\browser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\cc\raster\RasterFilters.h">
+      <Filter>cc\raster</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
