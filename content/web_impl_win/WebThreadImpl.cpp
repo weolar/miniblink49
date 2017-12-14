@@ -1,25 +1,28 @@
 
 #include "config.h"
 
-#include "WebThreadImpl.h"
-
-#include <windows.h>
-#include <process.h>
-#include "base/compiler_specific.h"
-#include "base/thread.h"
+#include "content/web_impl_win/WebThreadImpl.h"
 #include "content/web_impl_win/BlinkPlatformImpl.h"
+#include "content/web_impl_win/WebTimerBase.h"
+#include "content/web_impl_win/WebSchedulerImpl.h"
+#include "content/web_impl_win/ActivatingTimerCheck.h"
+#include "content/browser/SharedTimerWin.h"
 #include "third_party/WebKit/public/platform/WebTraceLocation.h"
 #include "third_party/WebKit/Source/wtf/ThreadingPrimitives.h"
 
-#include "WebTimerBase.h"
-#include "WebSchedulerImpl.h"
-#include "ActivatingTimerCheck.h"
 #if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "libcef/browser/CefContext.h"
 #endif
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
 #include "wke/wkeJsBindFreeTempObject.h"
 #endif
+
+#include "base/compiler_specific.h"
+#include "base/thread.h"
+
+#include <windows.h>
+#include <process.h>
+#include <mmsystem.h>
 
 namespace content {
 
@@ -61,13 +64,15 @@ WebThreadImpl::WebThreadImpl(const char* name)
     m_name = name;
     ::InitializeCriticalSection(&m_taskPairsMutex);
 
-    if (0 == strcmp("MainThread", name)) {
+    m_isMainThread = (0 == strcmp("MainThread", name));
+    if (m_isMainThread) {
 #ifdef _DEBUG
         if (!gActivatingTimerCheck)
             gActivatingTimerCheck = new ActivatingTimerCheck();
 #endif
         m_hadThreadInit = true;
         m_threadId = WTF::currentThread();
+        updateSharedTimer();
         return;
     }
 
@@ -173,6 +178,8 @@ void WebThreadImpl::postDelayedTaskWithPriorityCrossThread(
     int priority)
 {
     if (m_willExit) {
+        if (m_hEvent)
+            ::SetEvent(m_hEvent);
         delete task;
         return;
     }
@@ -439,6 +446,12 @@ void WebThreadImpl::schedulerTasks()
     m_firingTimers = false;
 
     updateSharedTimer();
+}
+
+void WebThreadImpl::updateSharedTimer()
+{
+    if (m_isMainThread)
+        setSharedTimerFireInterval(0.016);
 }
 
 std::vector<WebTimerBase*>& WebThreadImpl::timerHeap()

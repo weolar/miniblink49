@@ -18,7 +18,7 @@
 #include "content/resources/TextAreaResizeCornerData.h"
 #include "content/resources/LocalizedString.h"
 #include "content/resources/WebKitWebRes.h"
-#include "content/browser/SharedTimerWin.h"
+
 #include "content/browser/WebPage.h"
 #include "cc/blink/WebCompositorSupportImpl.h"
 #include "cc/raster/RasterTaskWorkerThreadPool.h"
@@ -148,7 +148,7 @@ void BlinkPlatformImpl::initialize()
     blink::Platform::initialize(platform);
     gin::IsolateHolder::Initialize(gin::IsolateHolder::kNonStrictMode, gin::ArrayBufferAllocator::SharedInstance());
     blink::initialize(blink::Platform::current());
-    initializeOffScreenTimerWindow();
+    //initializeOffScreenTimerWindow();
 
     // Maximum allocation size allowed for image scaling filters that
     // require pre-scaling. Skia will fallback to a filter that doesn't

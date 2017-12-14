@@ -59,7 +59,7 @@ public:
     void resumeTimerQueue();
 
     std::vector<WebTimerBase*>& timerHeap();
-    void updateSharedTimer() {}
+    void updateSharedTimer();
     void appendUnusedTimerToDelete(WebTimerBase* timer) { m_unusedTimersToDelete.push_back(timer); }
 
     bool threadClosed() { return m_threadClosed; }
@@ -119,6 +119,8 @@ private:
 
     double m_currentFrameCreateTime; // 当前帧全部使用这个创建时间
     static unsigned m_currentHeapInsertionOrder;
+
+    bool m_isMainThread;
 };
 
 } // namespace content
