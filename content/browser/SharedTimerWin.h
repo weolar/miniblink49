@@ -44,6 +44,7 @@ static HANDLE timerQueue;
 static bool highResTimerActive;
 static bool processingCustomTimerMessage = false;
 static LONG pendingTimers;
+static double lastIntervalInMS = 0;
 
 const int timerResolution = 1; // To improve timer resolution, we call timeBeginPeriod/timeEndPeriod with this value to increase timer resolution to 1ms.
 const int highResolutionThresholdMsec = 16; // Only activate high-res timer for sub-16ms timers (Windows can fire timers at 16ms intervals without changing the system resolution).
@@ -63,10 +64,10 @@ static LRESULT CALLBACK TimerWindowWndProc(HWND hWnd, UINT message, WPARAM wPara
     LRESULT result = 0;
     if (message == WM_TIMER) {
         if (wParam == sharedTimerID) {
-            KillTimer(timerWindowHandle, sharedTimerID);
+            //KillTimer(timerWindowHandle, sharedTimerID);
             sharedTimerFiredFunction();
         } else if (wParam == endHighResTimerID) {
-            KillTimer(timerWindowHandle, endHighResTimerID);
+            //KillTimer(timerWindowHandle, endHighResTimerID);
             highResTimerActive = false;
             timeEndPeriod(timerResolution);
         }
@@ -108,10 +109,15 @@ void setSharedTimerFireInterval(double interval)
     else
         intervalInMS = static_cast<unsigned>(interval);
 
+    if (lastIntervalInMS == intervalInMS)
+        return;
+    lastIntervalInMS = intervalInMS;
+
     initializeOffScreenTimerWindow();
     bool timerSet = false;
 
     // shouldUseHighResolutionTimers begin
+#if 0
     if (interval < highResolutionThresholdMsec) {
         if (!highResTimerActive) {
             highResTimerActive = true;
@@ -142,7 +148,7 @@ void setSharedTimerFireInterval(double interval)
         }
     }
     // shouldUseHighResolutionTimers end
-
+#endif
     if (timerSet) {
         if (timerID) {
             ::KillTimer(timerWindowHandle, timerID);
