@@ -311,17 +311,6 @@ void CompositingLayer::blendToTile(CompositingTile* tile, const SkBitmap& bitmap
     canvas.drawBitmapRect(bitmap, nullptr, SkRect::MakeFromIRect(dst), &paint);
 
 #if 0 // debug
-    static bool s_startDump = false;
-    if (s_startDump) {
-        s_startDump = true;
-
-        Vector<unsigned char> output;
-        blink::GDIPlusImageEncoder::encode(bitmap, blink::GDIPlusImageEncoder::PNG, &output);
-        cc::saveDumpFile("E:\\mycode\\miniblink49\\trunk\\out\\2.png", (char*)output.data(), output.size());
-    }
-#endif
-
-#if 0 // debug
     SkPaint paintTest;
     const SkColor color = 0xff000000 | (rand() % 3) * (rand() % 7) * GetTickCount();
 	//const SkColor color = 0x11FFFFFF;

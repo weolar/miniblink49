@@ -318,7 +318,7 @@ bool LayerTreeHost::canRecordActions() const
     if (!m_actionsFrameGroup->containComefromMainframeLocked())
         return true;
 
-    if (RasterTaskWorkerThreadPool::shared()->getPendingRasterTaskNum() > 2)
+    if (RasterTaskWorkerThreadPool::shared()->getPendingRasterTaskNum() > 10)
         return false;
 
 //     if (!m_actionsFrameGroup || m_actionsFrameGroup->getFramesSize() > 10)
