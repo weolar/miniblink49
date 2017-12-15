@@ -839,8 +839,6 @@ extern "C" int snprintf(char* buffer, size_t count, const char* format, ...)
     return result;
 }
 
-FILE _iob[3] = { 0 };
-
 extern __declspec(dllimport) double _HUGE;
 
 float nearbyintf(float x) {

@@ -239,4 +239,217 @@ void __stdcall _ReadWriteBarrier(void)
 {
 }
 
+//////////////////////////////////////////////////////////////////////////
+
+/* Copyright (c) Robert Walker, support@tunesmithy.co.uk
+* Free source. Do what you wish with it - treat it as you would
+* example code in a book on c programming.
+*/
+
+#undef time   
+#undef localtime   
+#undef mktime   
+#undef difftime   
+#undef gmtime   
+
+#include <time.h>   
+#include <assert.h>   
+#undef time_t
+
+static_assert(sizeof(time_t) == sizeof(__int64), "the value of time_t does not match with int64");
+
+#define SECS_TO_FT_MULT 10000000   
+// #ifdef _DEBUG   
+// #define DEBUG_TIME_T   
+// #endif   
+
+/* From MSVC help:
+* The gmtime, mktime, and localtime functions use the same single,
+* statically allocated structure to hold their results. Each call to
+* one of these functions destroys the result of any previous call.
+* If timer represents a date before midnight, January 1, 1970,
+* gmtime returns NULL. There is no error return.
+*
+* So here is the struct to use for our 64 bit implementation
+*
+* However, it may be useful to be able to make this thread safe
+*/
+
+#ifdef USE_THREAD_LOCAL_VARIABLES   
+#define  TIME64_THREAD_LOCAL _declspec(thread)   
+#else   
+#define TIME64_THREAD_LOCAL   
+#endif   
+
+//TIME64_THREAD_LOCAL static struct tm today_ret;
+
+static void t64ToFileTime(time_t *pt, FILETIME *pft)
+{
+    LARGE_INTEGER li;
+    li.QuadPart = *pt*SECS_TO_FT_MULT;
+    pft->dwLowDateTime = li.LowPart;
+    pft->dwHighDateTime = li.HighPart;
+}
+
+static void fileTimeToT64(FILETIME *pft, time_t *pt)
+{
+    LARGE_INTEGER li;
+    li.LowPart = pft->dwLowDateTime;
+    li.HighPart = pft->dwHighDateTime;
+    *pt = li.QuadPart;
+    *pt /= SECS_TO_FT_MULT;
+}
+
+#define  FindTimeTBase() (time_t) 11644473600   
+// calculated using   
+/**
+static __int64 FindTimeTBase(void)
+{
+// Find 1st Jan 1970 as a FILETIME
+SYSTEMTIME st;
+FILETIME ft;
+memset(&st,0,sizeof(st));
+st.wYear=1970;
+st.wMonth=1;
+st.wDay=1;
+SystemTimeToFileTime(&st, &ft);
+FileTimeToT64(&ft,&tbase);
+return tbase;
+}
+**/
+
+static void systemTimeToT64(SYSTEMTIME* pst, time_t* pt)
+{
+    FILETIME ft;
+    ::SystemTimeToFileTime(pst, &ft);
+    fileTimeToT64(&ft, pt);
+    *pt -= FindTimeTBase();
+}
+
+static void t64ToSystemTime(const time_t* pt, SYSTEMTIME* pst)
+{
+    FILETIME ft;
+    time_t t = *pt;
+    t += FindTimeTBase();
+    t64ToFileTime(&t, &ft);
+    ::FileTimeToSystemTime(&ft, pst);
+}
+
+
+extern "C" time_t time_64(time_t* pt)
+{
+    time_t t;
+    SYSTEMTIME st;
+    ::GetSystemTime(&st);
+    systemTimeToT64(&st, &t);
+#ifdef DEBUG_TIME_T   
+    {
+        time_t t2 = time(NULL);
+        if (t2 >= 0)
+            assert(abs(t2 - (int)t) <= 1);
+        // the <=1 here is in case the seconds get incremented   
+        // betweeen the GetSystemTime(..) call and the time(..) call   
+    }
+#endif   
+    if (pt)
+        *pt = t;
+    return t;
+}
+
+double difftime_64(time_t time1, time_t time0)
+{
+    return (double)(time1 - time0);
+}
+
+time_t mktime_64(struct tm *today)
+{
+    time_t t;
+    SYSTEMTIME st;
+    st.wDay = (WORD)today->tm_mday;
+    st.wDayOfWeek = (WORD)today->tm_wday;
+    st.wHour = (WORD)today->tm_hour;
+    st.wMinute = (WORD)today->tm_min;
+    st.wMonth = (WORD)(today->tm_mon + 1);
+    st.wSecond = (WORD)today->tm_sec;
+    st.wYear = (WORD)(today->tm_year + 1900);
+    st.wMilliseconds = 0;
+    systemTimeToT64(&st, &t);
+    return t;
+}
+
+#define DAY_IN_SECS (60*60*24)
+
+extern "C" struct tm* gmtime_64(const time_t* t)
+{
+    static struct tm today_ret;
+    SYSTEMTIME st;
+    t64ToSystemTime(t, &st);
+    today_ret.tm_wday = st.wDayOfWeek;
+    today_ret.tm_min = st.wMinute;
+    today_ret.tm_sec = st.wSecond;
+    today_ret.tm_mon = st.wMonth - 1;
+    today_ret.tm_mday = st.wDay;
+    today_ret.tm_hour = st.wHour;
+    today_ret.tm_year = st.wYear - 1900;
+    {
+        SYSTEMTIME styear;
+        __int64 t64Year;
+        memset(&styear, 0, sizeof(styear));
+        styear.wYear = st.wYear;
+        styear.wMonth = 1;
+        styear.wDay = 1;
+        systemTimeToT64(&styear, &t64Year);
+        today_ret.tm_yday = (int)((*t - t64Year) / DAY_IN_SECS);
+    }
+    today_ret.tm_isdst = 0;
+#ifdef DEBUG_TIME_T   
+    {
+        struct tm today2;
+        long t32 = (int)t;
+        if (t32 >= 0) {
+            today2 = *gmtime(&t32);
+            assert(today_ret.tm_yday == today2.tm_yday);
+            assert(today_ret.tm_wday == today2.tm_wday);
+            assert(today_ret.tm_min == today2.tm_min);
+            assert(today_ret.tm_sec == today2.tm_sec);
+            assert(today_ret.tm_mon == today2.tm_mon);
+            assert(today_ret.tm_mday == today2.tm_mday);
+            assert(today_ret.tm_hour == today2.tm_hour);
+            assert(today_ret.tm_year == today2.tm_year);
+        }
+    }
+    {
+        __int64 t2 = mktime_64(&today_ret);
+        assert(t2 == t);
+    }
+#endif   
+    return &today_ret;
+}
+
+struct tm* localtime_64(const time_t* pt)
+{
+    static struct tm today_ret;
+    time_t t = *pt;
+    FILETIME ft, ftlocal;
+    t64ToFileTime(&t, &ft);
+    FileTimeToLocalFileTime(&ft, &ftlocal);
+    fileTimeToT64(&ftlocal, &t);
+    today_ret = *gmtime_64(&t);
+    
+    TIME_ZONE_INFORMATION timeZoneInformation;
+    switch (GetTimeZoneInformation(&timeZoneInformation)) {
+    case TIME_ZONE_ID_DAYLIGHT:
+        today_ret.tm_isdst = 1;
+        break;
+    case TIME_ZONE_ID_STANDARD:
+        today_ret.tm_isdst = 0;
+        break;
+    case TIME_ZONE_ID_UNKNOWN:
+        today_ret.tm_isdst = -1;
+        break;
+    }
+    
+    return &today_ret;
+}
+
 #endif // #if USING_VC6RT == 1
