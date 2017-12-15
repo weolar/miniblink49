@@ -432,23 +432,23 @@ _CRTIMP inline basic_ostream<wchar_t, char_traits<wchar_t> >&
 #ifdef _DLL
 #pragma warning(disable:4231) /* the extern before template is a non-standard extension */
 
-extern template _CRTIMP basic_ostream<char, char_traits<char> >& __cdecl operator<<(
+extern template /*_CRTIMP*/ basic_ostream<char, char_traits<char> >& __cdecl operator<<(
        basic_ostream<char, char_traits<char> >&, const char *);
-extern template _CRTIMP basic_ostream<char, char_traits<char> >& __cdecl operator<<(
+extern template /*_CRTIMP*/ basic_ostream<char, char_traits<char> >& __cdecl operator<<(
        basic_ostream<char, char_traits<char> >&, char);
-extern template _CRTIMP basic_ostream<char, char_traits<char> >& __cdecl operator<<(
+extern template /*_CRTIMP*/ basic_ostream<char, char_traits<char> >& __cdecl operator<<(
        basic_ostream<char, char_traits<char> >&, const signed char *);
-extern template _CRTIMP basic_ostream<char, char_traits<char> >& __cdecl operator<<(
+extern template /*_CRTIMP*/ basic_ostream<char, char_traits<char> >& __cdecl operator<<(
        basic_ostream<char, char_traits<char> >&, const signed char);
-extern template _CRTIMP basic_ostream<char, char_traits<char> >& __cdecl operator<<(
+extern template /*_CRTIMP*/ basic_ostream<char, char_traits<char> >& __cdecl operator<<(
        basic_ostream<char, char_traits<char> >&, const unsigned char *);
-extern template _CRTIMP basic_ostream<char, char_traits<char> >& __cdecl operator<<(
+extern template /*_CRTIMP*/ basic_ostream<char, char_traits<char> >& __cdecl operator<<(
        basic_ostream<char, char_traits<char> >&, const unsigned char);
-extern template _CRTIMP basic_ostream<wchar_t, char_traits<wchar_t> >& __cdecl operator<<(
+extern template /*_CRTIMP*/ basic_ostream<wchar_t, char_traits<wchar_t> >& __cdecl operator<<(
        basic_ostream<wchar_t, char_traits<wchar_t> >&, const wchar_t *);
-extern template _CRTIMP basic_ostream<wchar_t, char_traits<wchar_t> >& __cdecl operator<<(
+extern template /*_CRTIMP*/ basic_ostream<wchar_t, char_traits<wchar_t> >& __cdecl operator<<(
        basic_ostream<wchar_t, char_traits<wchar_t> >&, wchar_t);
-extern template _CRTIMP basic_ostream<wchar_t, char_traits<wchar_t> >& __cdecl operator<<(
+extern template /*_CRTIMP*/ basic_ostream<wchar_t, char_traits<wchar_t> >& __cdecl operator<<(
        basic_ostream<wchar_t, char_traits<wchar_t> >&, const signed short *);
 
 basic_ostream<char, char_traits<char> > & __cdecl operator<< (basic_ostream<char, char_traits<char> > & a, __int64 b);
