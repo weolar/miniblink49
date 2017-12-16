@@ -1345,10 +1345,11 @@ static void flattenHttpBody(const WebHTTPBody& httpBody, WTF::Vector<char>* data
 static void setupPostOnIoThread(WebURLLoaderInternal* job, SetupPostInfo* info)
 {
     curl_easy_setopt(job->m_handle, CURLOPT_POST, true);
-    curl_easy_setopt(job->m_handle, CURLOPT_POSTFIELDSIZE, 0);
 
-    if (!info)
+    if (!info) {
+        curl_easy_setopt(job->m_handle, CURLOPT_POSTFIELDSIZE, 0);
         return;
+    }
 
     if (0 != job->m_postBytes.size()) {
         curl_easy_setopt(job->m_handle, CURLOPT_POSTFIELDSIZE, job->m_postBytes.size());
@@ -1626,7 +1627,7 @@ int WebURLLoaderManager::addAsynchronousJob(WebURLLoaderInternal* job)
     KURL kurl = job->firstRequest()->url();
     String url = WTF::ensureStringToUTF8String(kurl.string());
 #if 0
-    String outString = String::format("addAsynchronousJob:%d, %s\n", m_liveJobs.size(), WTF::ensureStringToUTF8(url, true).data());
+    String outString = String::format("addAsynchronousJob : %d, %s\n", m_liveJobs.size(), WTF::ensureStringToUTF8(url, true).data());
     OutputDebugStringW(outString.charactersWithNullTermination().data());
 
     if (WTF::kNotFound != url.find("ensearch=1"))

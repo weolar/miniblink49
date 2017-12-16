@@ -83,9 +83,6 @@ public:
 
     bool aborted() const { return m_aborted; }
 
-    static void doStartInMainThread(void* param);
-    static void doNotifyFinishOnMainThread(void* param);
-
     // ResourceHandle methods.
     /*virtual*/ void cancel() /*override*/;
     /*virtual*/ void continueDidReceiveResponse() /*override*/;
@@ -140,6 +137,17 @@ private:
     unsigned m_sizeItemCount;
     unsigned m_readItemCount;
     bool m_fileOpened;
+
+    friend class LoaderWrap;
+    enum RunType {
+        kStart,
+        kNotifyFinish
+    };
+    LoaderWrap* m_doNotifyFinishAsynTaskWeakPtr;
+    LoaderWrap* m_doStartAsynTaskWeakPtr;
+    void asynTaskFinish(RunType runType);
+
+    bool* m_isDestroied;
 };
 
 } // namespace WebCore

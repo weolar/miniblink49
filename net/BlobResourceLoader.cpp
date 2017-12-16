@@ -72,12 +72,12 @@ enum {
 
 BlobDataWrap::BlobDataWrap()
 {
-    //OutputDebugStringA("BlobDataWrap()\n");
+
 }
 
 BlobDataWrap::~BlobDataWrap()
 {
-    //OutputDebugStringA("~BlobDataWrap()\n");
+
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -264,6 +264,46 @@ private:
     FileStreamClient* m_client;
 };
 
+class LoaderWrap {
+public:
+    LoaderWrap(BlobResourceLoader* client, BlobResourceLoader::RunType runType)
+    {
+        m_client = client;
+        m_runType = runType;
+    }
+
+    static void doStartInMainThread(void* param)
+    {
+        LoaderWrap* self = (LoaderWrap*)param;
+
+        if (self->m_client) {
+            self->m_client->asynTaskFinish(self->m_runType);
+            self->m_client->doStart();
+        }
+
+        self->m_client = nullptr;
+        delete self;
+    }
+
+    static void doNotifyFinishOnMainThread(void* param)
+    {
+        LoaderWrap* self = (LoaderWrap*)param;
+        if (self->m_client) {
+            self->m_client->asynTaskFinish(self->m_runType);
+            self->m_client->doNotifyFinish();
+        }
+
+        self->m_client = nullptr;
+        delete self;
+    }
+
+    void cancel() { m_client = nullptr; }
+
+private:
+    BlobResourceLoader* m_client;
+    BlobResourceLoader::RunType m_runType;
+};
+
 BlobResourceLoader::BlobResourceLoader(BlobDataWrap* blobData, const blink::WebURLRequest& request, blink::WebURLLoaderClient* client, blink::WebURLLoader* loader, bool async)
     : m_request(request)
     , m_client(client)
@@ -280,6 +320,9 @@ BlobResourceLoader::BlobResourceLoader(BlobDataWrap* blobData, const blink::WebU
     , m_sizeItemCount(0)
     , m_readItemCount(0)
     , m_fileOpened(false)
+    , m_doNotifyFinishAsynTaskWeakPtr(nullptr)
+    , m_doStartAsynTaskWeakPtr(nullptr)
+    , m_isDestroied(nullptr)
 {
     m_streamWrap = std::unique_ptr<StreamWrap>(new StreamWrap(this, m_async));
 }
@@ -294,6 +337,17 @@ void BlobResourceLoader::cancel()
     m_streamWrap = nullptr;
     m_aborted = true;
 
+    if (m_doStartAsynTaskWeakPtr)
+        m_doStartAsynTaskWeakPtr->cancel();
+    m_doStartAsynTaskWeakPtr = nullptr;
+
+    if (m_doNotifyFinishAsynTaskWeakPtr)
+        m_doNotifyFinishAsynTaskWeakPtr->cancel();
+    m_doNotifyFinishAsynTaskWeakPtr = nullptr;
+
+    if (m_isDestroied)
+        *m_isDestroied = true;
+
     //ResourceHandle::cancel();
 }
 
@@ -302,10 +356,16 @@ void BlobResourceLoader::continueDidReceiveResponse()
     // BlobResourceLoader doesn't wait for didReceiveResponse, and it currently cannot be used for downloading.
 }
 
-void BlobResourceLoader::doStartInMainThread(void* param)
+void BlobResourceLoader::asynTaskFinish(RunType runType)
 {
-    BlobResourceLoader* handle = (BlobResourceLoader*)param;
-    handle->doStart();
+    switch (runType) {
+    case BlobResourceLoader::kStart:
+        m_doStartAsynTaskWeakPtr = nullptr;
+        break;
+    case BlobResourceLoader::kNotifyFinish:
+        m_doNotifyFinishAsynTaskWeakPtr = nullptr;
+        break;
+    }
 }
 
 void BlobResourceLoader::start()
@@ -318,7 +378,10 @@ void BlobResourceLoader::start()
     //RefPtr<BlobResourceLoader> handle(this);
 
     // Finish this async call quickly and return.
-    WTF::internal::callOnMainThread(doStartInMainThread, this);
+    if (!m_doStartAsynTaskWeakPtr) {
+        m_doStartAsynTaskWeakPtr = new LoaderWrap(this, BlobResourceLoader::kStart);
+        WTF::internal::callOnMainThread(LoaderWrap::doStartInMainThread, m_doStartAsynTaskWeakPtr);
+    }
 }
 
 void BlobResourceLoader::doStart()
@@ -348,8 +411,16 @@ void BlobResourceLoader::doStart()
         getSizeForNext();
     else {
         //Ref<BlobResourceLoader> protect(*this); // getSizeForNext calls the client
-        for (size_t i = 0; i < m_blobData->items().size() && !m_aborted && !m_errorCode; ++i)
+        bool isDestroied = false;
+        m_isDestroied = &isDestroied;
+
+        for (size_t i = 0; i < m_blobData->items().size() && !m_aborted && !m_errorCode; ++i) {
             getSizeForNext();
+            if (isDestroied)
+                return;
+        }
+
+        m_isDestroied = nullptr;
         notifyResponse();
     }
 }
@@ -365,7 +436,11 @@ void BlobResourceLoader::getSizeForNext()
         // Start reading if in asynchronous mode.
         if (m_async) {
             //Ref<BlobResourceLoader> protect(*this);
+            bool isDestroied = false;
+            m_isDestroied = &isDestroied;
             notifyResponse();
+            if (isDestroied)
+                return;
             m_buffer.resize(bufferSize);
             readAsync();
         }
@@ -375,7 +450,7 @@ void BlobResourceLoader::getSizeForNext()
     const blink::WebBlobData::Item* item = m_blobData->items().at(m_sizeItemCount);
     switch (item->type) {
     case blink::WebBlobData::Item::TypeData:
-        didGetSize(item->length);
+        didGetSize(item->data.size());
         break;
     case blink::WebBlobData::Item::TypeFile:
         // Files know their sizes, but asking the stream to verify that the file wasn't modified.
@@ -407,6 +482,8 @@ void BlobResourceLoader::didGetSize(long long size)
     // The size passed back is the size of the whole file. If the underlying item is a sliced file, we need to use the slice length.
     const blink::WebBlobData::Item* item = m_blobData->items().at(m_sizeItemCount);
     size = item->length;
+    if (blink::WebBlobData::Item::TypeData == item->type)
+        size = item->data.size();
 
     // Cache the size.
     m_itemLengthList.append(size);
@@ -489,10 +566,14 @@ int BlobResourceLoader::readSync(char* buf, int length)
     else
         result = length - remaining;
 
+    bool isDestroied = false;
+    m_isDestroied = &isDestroied;
+
     if (result > 0)
         notifyReceiveData(buf, result);
 
-    if (!result)
+    m_isDestroied = nullptr;
+    if (!result && !isDestroied)
         notifyFinish();
 
     return result;
@@ -504,7 +585,11 @@ int BlobResourceLoader::readDataSync(const blink::WebBlobData::Item& item, char*
 
     ASSERT(!m_async);
 
-    long long remaining = item.length - m_currentItemReadSize;
+    int itemLength = item.length;
+    if (blink::WebBlobData::Item::TypeData == item.type)
+        itemLength = item.data.size();
+
+    long long remaining = itemLength - m_currentItemReadSize;
     int bytesToRead = (length > remaining) ? static_cast<int>(remaining) : length;
     if (bytesToRead > m_totalRemainingSize)
         bytesToRead = static_cast<int>(m_totalRemainingSize);
@@ -512,7 +597,7 @@ int BlobResourceLoader::readDataSync(const blink::WebBlobData::Item& item, char*
     m_totalRemainingSize -= bytesToRead;
 
     m_currentItemReadSize += bytesToRead;
-    if (m_currentItemReadSize == item.length) {
+    if (m_currentItemReadSize == itemLength) {
         m_readItemCount++;
         m_currentItemReadSize = 0;
     }
@@ -588,7 +673,11 @@ void BlobResourceLoader::readDataAsync(const blink::WebBlobData::Item& item)
     ASSERT(m_async);
     //Ref<BlobResourceLoader> protect(*this);
 
-    long long bytesToRead = item.length - m_currentItemReadSize;
+    int itemLength = item.length;
+    if (blink::WebBlobData::Item::TypeData == item.type)
+        itemLength = item.data.size();
+
+    long long bytesToRead = itemLength - m_currentItemReadSize;
     if (bytesToRead > m_totalRemainingSize)
         bytesToRead = m_totalRemainingSize;
     consumeData(item.data.data() + item.offset + m_currentItemReadSize, static_cast<int>(bytesToRead));
@@ -673,7 +762,11 @@ void BlobResourceLoader::failed(int errorCode)
     //Ref<BlobResourceLoader> protect(*this);
 
     // Notify the client.
+    bool isDestroied = false;
+    m_isDestroied = &isDestroied;
     notifyFail(errorCode);
+    if (m_isDestroied)
+        return;
 
     // Close the file if needed.
     if (m_fileOpened) {
@@ -690,8 +783,12 @@ void BlobResourceLoader::notifyResponse()
 
     if (m_errorCode) {
         //Ref<BlobResourceLoader> protect(*this);
+        bool isDestroied = false;
+        m_isDestroied = &isDestroied;
         notifyResponseOnError();
-        notifyFinish();
+
+        if (!isDestroied)
+            notifyFinish();
     } else
         notifyResponseOnSuccess();
 }
@@ -774,12 +871,6 @@ void BlobResourceLoader::notifyFail(int errorCode)
         m_client->didFail(m_loader, error);
 }
 
-void BlobResourceLoader::doNotifyFinishOnMainThread(void* param)
-{
-    BlobResourceLoader* handle = (BlobResourceLoader*)param;
-    handle->doNotifyFinish();
-}
-
 void BlobResourceLoader::doNotifyFinish()
 {
     if (aborted())
@@ -799,9 +890,10 @@ void BlobResourceLoader::notifyFinish()
 
     // Schedule to notify the client from a standalone function because the client might dispose the handle immediately from the callback function
     // while we still have BlobResourceLoader calls in the stack.
-    //RefPtr<BlobResourceLoader> handle(this);
-    WTF::internal::callOnMainThread(doNotifyFinishOnMainThread, this);
-
+    if (!m_doNotifyFinishAsynTaskWeakPtr) {
+        m_doNotifyFinishAsynTaskWeakPtr = new LoaderWrap(this, BlobResourceLoader::kNotifyFinish);
+        WTF::internal::callOnMainThread(LoaderWrap::doNotifyFinishOnMainThread, m_doNotifyFinishAsynTaskWeakPtr);
+    }
 }
 
 } // namespace WebCore

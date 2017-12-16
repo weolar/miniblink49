@@ -188,6 +188,8 @@ bool SocketStreamHandle::waitForAvailableData(CURL* curlHandle, long long select
     if (curl_easy_getinfo(curlHandle, CURLINFO_LASTSOCKET, &socket) != CURLE_OK)
         return false;
 
+    ::Sleep(50);
+
     fd_set fdread;
     FD_ZERO(&fdread);
     FD_SET(socket, &fdread);
