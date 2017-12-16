@@ -491,6 +491,9 @@ void wkePerformCookieCommand(wkeCookieCommand command)
     if (!curl)
         return;
 
+    CURLSH* curlsh = net::WebURLLoaderManager::sharedInstance()->getCurlShareHandle();
+    curl_easy_setopt(curl, CURLOPT_SHARE, curlsh);
+
     switch (command) {
     case wkeCookieCommandClearAllCookies:
         curl_easy_setopt(curl, CURLOPT_COOKIELIST, "ALL");
