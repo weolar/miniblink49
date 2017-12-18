@@ -809,7 +809,7 @@ static void setResponseDataToJobWhenDidReceiveResponseOnMainThread(WebURLLoaderI
     if (url.protocolIsInHTTPFamily())
         needSetResponseFired = setHttpResponseDataToJobWhenDidReceiveResponseOnMainThread(job, args);
     
-    if (needSetResponseFired) {
+    if (needSetResponseFired && !job->m_cancelled) {
         if (job->client() && job->loader())
             WebURLLoaderManager::sharedInstance()->handleDidReceiveResponse(job);
         job->setResponseFired(true);
@@ -2015,7 +2015,7 @@ void WebURLLoaderManager::initializeHandleOnIoThread(int jobId, InitializeHandle
     if (getenv("DEBUG_CURL"))
         curl_easy_setopt(job->m_handle, CURLOPT_VERBOSE, 1);
 #endif
-    curl_easy_setopt(job->m_handle, CURLOPT_TIMEOUT, 3000);
+    curl_easy_setopt(job->m_handle, CURLOPT_TIMEOUT, 30000);
     curl_easy_setopt(job->m_handle, CURLOPT_SSL_VERIFYPEER, false); // ignoreSSLErrors
     curl_easy_setopt(job->m_handle, CURLOPT_SSL_VERIFYHOST, 2L);
     curl_easy_setopt(job->m_handle, CURLOPT_PRIVATE, jobId);
