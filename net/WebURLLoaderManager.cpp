@@ -575,7 +575,7 @@ public:
             delete resourceError;
         }
 
-        static Args* build(void* ptr, size_t size, size_t nmemb, size_t totalSize, CURL* handle)
+        static Args* build(void* ptr, size_t size, size_t nmemb, size_t totalSize, CURL* handle, bool isProxy)
         {
             Args* args = new Args();
             args->size = size;
@@ -584,7 +584,7 @@ public:
             args->resourceError = new WebURLError();
             memcpy(args->ptr, ptr, totalSize);
 
-            curl_easy_getinfo(handle, CURLINFO_RESPONSE_CODE, &args->httpCode);
+            curl_easy_getinfo(handle, !isProxy ? CURLINFO_RESPONSE_CODE : CURLINFO_HTTP_CONNECTCODE, &args->httpCode);
 
             double contentLength = 0;
             curl_easy_getinfo(handle, CURLINFO_CONTENT_LENGTH_DOWNLOAD, &args->contentLength);
@@ -692,7 +692,7 @@ public:
         if (!job)
             return nullptr;
 
-        Args* args = Args::build(ptr, size, nmemb, totalSize, job->m_handle);
+        Args* args = Args::build(ptr, size, nmemb, totalSize, job->m_handle, job->m_isProxy);
         WebURLLoaderManagerMainTask* task = new WebURLLoaderManagerMainTask(jobId, type, args);
 
         if (job->m_isSynchronous)
@@ -708,7 +708,7 @@ public:
         WebURLLoaderInternal* job = autoLockJob.lock();
         if (!job)
             return nullptr;
-        Args* args = Args::build(ptr, size, nmemb, totalSize, job->m_handle);
+        Args* args = Args::build(ptr, size, nmemb, totalSize, job->m_handle, job->m_isProxy);
         WebURLLoaderManagerMainTask* task = new WebURLLoaderManagerMainTask(jobId, type, args);
         return task;
     }
@@ -731,18 +731,107 @@ private:
     }
 };
 
+static bool setResponseDataToJobWhenDidReceiveResponseOnMainThread(WebURLLoaderInternal* job, WebURLLoaderManagerMainTask::Args* args)
+{
+    WebURLLoaderClient* client = job->client();
+    size_t size = args->size;
+    size_t nmemb = args->nmemb;
+    size_t totalSize = size * nmemb;
+
+    if (isHttpInfo(args->httpCode)) {
+        // Just return when receiving http info, e.g. HTTP/1.1 100 Continue.
+        // If not, the request might be cancelled, because the MIME type will be empty for this response.
+        return true;
+    }
+
+    if (job->firstRequest()->downloadToFile()) {
+        String tempPath = WebURLLoaderManager::sharedInstance()->handleHeaderForBlobOnMainThread(job, totalSize);
+        job->m_response.setDownloadFilePath(tempPath);
+    }
+    job->m_response.setExpectedContentLength(static_cast<long long int>(args->contentLength));
+    job->m_response.setURL(KURL(ParsedURLString, args->hdr));
+    job->m_response.setHTTPStatusCode(args->httpCode);
+    job->m_response.setMIMEType(extractMIMETypeFromMediaType(job->m_response.httpHeaderField(WebString::fromUTF8("Content-Type"))).lower());
+    job->m_response.setTextEncodingName(extractCharsetFromMediaType(job->m_response.httpHeaderField(WebString::fromUTF8("Content-Type"))));
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
+    if (job->m_response.httpHeaderField(WebString::fromUTF8("Content-Type")).equals("application/octet-stream")) {
+        RequestExtraData* requestExtraData = reinterpret_cast<RequestExtraData*>(job->firstRequest()->extraData());
+        WebPage* page = requestExtraData->page;
+        if (page->wkeHandler().downloadCallback) {
+            Vector<char> urlBuf = WTF::ensureStringToUTF8(job->firstRequest()->url().string(), true);
+            if (page->wkeHandler().downloadCallback(page->wkeWebView(), page->wkeHandler().downloadCallbackParam, urlBuf.data())) {
+                blink::WebLocalFrame* frame = requestExtraData->frame;
+                frame->stopLoading();
+                return true;
+            }
+        }
+    }
+#endif
+    if (equalIgnoringCase((String)(job->m_response.mimeType()), "multipart/x-mixed-replace")) {
+        String boundary;
+        bool parsed = MultipartHandle::extractBoundary(job->m_response.httpHeaderField(WebString::fromUTF8("Content-Type")), boundary);
+        if (parsed)
+            job->m_multipartHandle = adoptPtr(new MultipartHandle(job, boundary));
+    }
+
+    // HTTP redirection
+    if (isHttpRedirect(args->httpCode)) {
+        String location = job->m_response.httpHeaderField(WebString::fromUTF8("location"));
+        if (!location.isEmpty()) {
+            //重定向
+            KURL newURL = KURL((KURL)(job->firstRequest()->url()), location);
+            blink::WebURLRequest* redirectedRequest = new blink::WebURLRequest(*job->firstRequest());
+            redirectedRequest->setURL(newURL);
+            if (client && job->loader())
+                client->willSendRequest(job->loader(), *redirectedRequest, job->m_response);
+#if 0
+            String outString = String::format("redirection:%p, %s\n", job, job->m_response.url().string().utf8().c_str());
+            OutputDebugStringW(outString.charactersWithNullTermination().data());
+#endif
+            job->m_response.initialize();
+
+            delete job->m_firstRequest;
+            job->m_firstRequest = redirectedRequest;
+            return true;
+        }
+    } else if (isHttpAuthentication(args->httpCode)) {
+#if 0
+        ProtectionSpace protectionSpace;
+        if (getProtectionSpace(job->m_handle, job->m_response, protectionSpace)) {
+            Credential credential;
+            AuthenticationChallenge challenge(protectionSpace, credential, job->m_authFailureCount, job->m_response, ResourceError());
+            challenge.setAuthenticationClient(job);
+            job->didReceiveAuthenticationChallenge(challenge);
+            job->m_authFailureCount++;
+            return true;
+        }
+#endif
+    }
+
+    if (client && job->loader())
+        WebURLLoaderManager::sharedInstance()->handleDidReceiveResponse(job);
+
+    job->setResponseFired(true);
+    return false;
+}
+
 void WebURLLoaderManagerMainTask::handleLocalReceiveResponseOnMainThread(WebURLLoaderManagerMainTask::Args* args, WebURLLoaderInternal* job)
 {
+    if (job->responseFired())
+        return;
+
     // since the code in headerCallbackOnIoThread will not have run for local files
     // the code to set the KURL and fire didReceiveResponse is never run,
     // which means the ResourceLoader's response does not contain the KURL.
     // Run the code here for local files to resolve the issue.
     // TODO: See if there is a better approach for handling this.
     job->m_response.setURL(KURL(ParsedURLString, args->hdr));
-    if (job->client() && job->loader() && !job->responseFired())
-        WebURLLoaderManager::sharedInstance()->handleDidReceiveResponse(job);
-    
-    job->setResponseFired(true);
+
+    setResponseDataToJobWhenDidReceiveResponseOnMainThread(job, args);
+
+//     if (job->client() && job->loader() && !job->responseFired())
+//         WebURLLoaderManager::sharedInstance()->handleDidReceiveResponse(job);
+//     job->setResponseFired(true);
 }
 
 // called with data after all headers have been processed via headerCallbackOnIoThread
@@ -801,94 +890,9 @@ size_t WebURLLoaderManagerMainTask::handleHeaderCallbackOnMainThread(WebURLLoade
     * The HTTP standard requires to use \r\n but for compatibility it recommends to
     * accept also \n.
     */
-    if (header == String("\r\n") || header == String("\n")) {
-        if (isHttpInfo(args->httpCode)) {
-            // Just return when receiving http info, e.g. HTTP/1.1 100 Continue.
-            // If not, the request might be cancelled, because the MIME type will be empty for this response.
+    if (header == String("\r\n") || header == String("\n")) {       
+        if (setResponseDataToJobWhenDidReceiveResponseOnMainThread(job, args))
             return totalSize;
-        }
-
-        if (job->firstRequest()->downloadToFile()) {
-            String tempPath = WebURLLoaderManager::sharedInstance()->handleHeaderForBlobOnMainThread(job, totalSize);
-            job->m_response.setDownloadFilePath(tempPath);
-        }
-        job->m_response.setExpectedContentLength(static_cast<long long int>(args->contentLength));
-        job->m_response.setURL(KURL(ParsedURLString, args->hdr));
-        job->m_response.setHTTPStatusCode(args->httpCode);
-        job->m_response.setMIMEType(extractMIMETypeFromMediaType(job->m_response.httpHeaderField(WebString::fromUTF8("Content-Type"))).lower());
-        job->m_response.setTextEncodingName(extractCharsetFromMediaType(job->m_response.httpHeaderField(WebString::fromUTF8("Content-Type"))));
-#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
-        if (job->m_response.httpHeaderField(WebString::fromUTF8("Content-Type")).equals("application/octet-stream")) {
-            RequestExtraData* requestExtraData = reinterpret_cast<RequestExtraData*>(job->firstRequest()->extraData());
-            WebPage* page = requestExtraData->page;
-            if (page->wkeHandler().downloadCallback) {
-                Vector<char> urlBuf = WTF::ensureStringToUTF8(job->firstRequest()->url().string(), true);
-                if (page->wkeHandler().downloadCallback(page->wkeWebView(), page->wkeHandler().downloadCallbackParam, urlBuf.data())) {
-                    blink::WebLocalFrame* frame = requestExtraData->frame;
-                    frame->stopLoading();
-                    return totalSize;
-                }
-            }
-        }
-#endif
-        if (equalIgnoringCase((String)(job->m_response.mimeType()), "multipart/x-mixed-replace")) {
-            String boundary;
-            bool parsed = MultipartHandle::extractBoundary(job->m_response.httpHeaderField(WebString::fromUTF8("Content-Type")), boundary);
-            if (parsed)
-                job->m_multipartHandle = adoptPtr(new MultipartHandle(job, boundary));
-        }
-
-        // HTTP redirection
-        if (isHttpRedirect(args->httpCode)) {
-            String location = job->m_response.httpHeaderField(WebString::fromUTF8("location"));
-            if (!location.isEmpty()) {
-                //重定向
-                KURL newURL = KURL((KURL)(job->firstRequest()->url()), location);
-                blink::WebURLRequest* redirectedRequest = new blink::WebURLRequest(*job->firstRequest());
-                redirectedRequest->setURL(newURL);
-                if (client && job->loader())
-                    client->willSendRequest(job->loader(), *redirectedRequest, job->m_response);
-#if 0
-                String outString = String::format("redirection:%p, %s\n", job, job->m_response.url().string().utf8().c_str());
-                OutputDebugStringW(outString.charactersWithNullTermination().data());
-#endif
-                job->m_response.initialize();
-
-                delete job->m_firstRequest;
-                job->m_firstRequest = redirectedRequest;
-                return totalSize;
-            }
-        } else if (isHttpAuthentication(args->httpCode)) {
-#if 0
-            ProtectionSpace protectionSpace;
-            if (getProtectionSpace(job->m_handle, job->m_response, protectionSpace)) {
-                Credential credential;
-                AuthenticationChallenge challenge(protectionSpace, credential, job->m_authFailureCount, job->m_response, ResourceError());
-                challenge.setAuthenticationClient(job);
-                job->didReceiveAuthenticationChallenge(challenge);
-                job->m_authFailureCount++;
-                return totalSize;
-            }
-#endif
-        }
-
-        if (client && job->loader()) {
-#if 0
-            if (isHttpNotModified(httpCode)) {
-                 const String& url = job->firstRequest()->url().string();
-                 if (CurlCacheManager::getInstance().getCachedResponse(url, job->m_response)) {
-                     if (job->m_addedCacheValidationHeaders) {
-                         job->m_response.setHTTPStatusCode(200);
-                         job->m_response.setHTTPStatusText("OK");
-                     }
-                 }
-            }
-#endif
-            WebURLLoaderManager::sharedInstance()->handleDidReceiveResponse(job);
-            //CurlCacheManager::getInstance().didReceiveResponse(*job, job->m_response);
-        }
-        job->setResponseFired(true);
-
     } else {
         int splitPos = header.find(":");
         if (splitPos != -1) {
@@ -907,6 +911,8 @@ size_t WebURLLoaderManagerMainTask::handleHeaderCallbackOnMainThread(WebURLLoade
             // curl will follow the redirections internally. Thus this header callback
             // will be called more than one time with the line starting "HTTP" for one job.
             String httpCodeString = String::number(args->httpCode);
+            if (job->m_isProxy && 0 == args->httpCode)
+                httpCodeString = "200";
             int statusCodePos = header.find(httpCodeString);
 
             if (statusCodePos != -1) {
@@ -960,6 +966,28 @@ static size_t writeCallbackOnIoThread(void* ptr, size_t size, size_t nmemb, void
     return totalSize;
 }
 
+static bool checkIsProxyHead(WebURLLoaderInternal* job, char* ptr, size_t size)
+{
+    if (0 == size)
+        return false;
+
+    Vector<char> buffer;
+    buffer.resize(size + 1);
+    memset(buffer.data(), 0, buffer.size());
+    memcpy(buffer.data(), ptr, size);
+
+    if ((2 == size && buffer[0] == '\r' && buffer[1] == '\n') || (1 == size && buffer[0] == '\n')) {
+        job->m_isProxyHeadRequest = false;
+        return true;
+    }
+
+    if (job->m_isProxyHeadRequest)
+        return true;
+
+    job->m_isProxyHeadRequest = (0 != strstr(buffer.data(), "Connection Established"));
+    return job->m_isProxyHeadRequest;
+}
+
 static size_t headerCallbackOnIoThread(char* ptr, size_t size, size_t nmemb, void* data)
 {
     int jobId = (int)data;
@@ -972,6 +1000,9 @@ static size_t headerCallbackOnIoThread(char* ptr, size_t size, size_t nmemb, voi
     ASSERT(!job->m_defersLoading);
 
     size_t totalSize = size * nmemb;
+    if (checkIsProxyHead(job, ptr, totalSize))
+        return totalSize;
+
     WebURLLoaderManagerMainTask::pushTask(jobId, WebURLLoaderManagerMainTask::TaskType::kHeaderCallback, ptr, size, nmemb, totalSize);
     return totalSize;
 }
@@ -1086,8 +1117,6 @@ bool WebURLLoaderManager::downloadOnIoThread()
             calculateWebTimingInformations(job);
 #endif
             if (!job->responseFired()) {
-                //回到main线程
-                //handleLocalReceiveResponse(job->m_handle, job, job);
                 WebURLLoaderManagerMainTask::pushTask(jobId, WebURLLoaderManagerMainTask::TaskType::kHandleLocalReceiveResponse, nullptr, 0, 0, 0);
                 if (job->m_cancelled) {
                     removeFromCurlOnIoThread(jobId);
@@ -1135,7 +1164,9 @@ void WebURLLoaderManager::setProxyInfo(const String& host, unsigned long port, P
         if (username.length() || password.length())
             userPass = username + ":" + password + "@";
 
-        m_proxy = String("http://") + userPass + host + ":" + String::number(port);
+        m_proxy = userPass + host + ":" + String::number(port);
+        if (!m_proxy.startsWith("https://") && !m_proxy.startsWith("http://"))
+            m_proxy.insert("http://", 0);
     }
 }
 
@@ -2045,6 +2076,7 @@ void WebURLLoaderManager::initializeHandleOnIoThread(int jobId, InitializeHandle
 
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
     if (info->proxy.size()) {
+        job->m_isProxy = true;
         curl_easy_setopt(job->m_handle, CURLOPT_PROXY, info->proxy.c_str());
         curl_easy_setopt(job->m_handle, CURLOPT_PROXYTYPE, info->proxyType);
     }
@@ -2157,6 +2189,8 @@ WebURLLoaderInternal::WebURLLoaderInternal(WebURLLoaderImplCurl* loader, const W
     m_dataLength = 0;
     m_isBlackList = false;
     m_isDataUrl = false;
+    m_isProxy = false;
+    m_isProxyHeadRequest = false;
     m_postBytesReadOffset = 0;
 
 #ifndef NDEBUG
@@ -2190,131 +2224,5 @@ WebURLLoaderInternal::~WebURLLoaderInternal()
 #endif
 }
 
-// 初始化HTTP头
-#if 0
-void WebURLLoaderManager::initializeHandle(WebURLLoaderInternal* job)
-{
-    KURL url = job->firstRequest()->url();
-
-    // Remove any fragment part, otherwise curl will send it as part of the request.
-    url.removeFragmentIdentifier();
-
-    String urlString = url.string();
-
-    if (url.isLocalFile()) {
-        // Remove any query part sent to a local file.
-        if (!url.query().isEmpty()) {
-            // By setting the query to a null string it'll be removed.
-            url.setQuery(String());
-            urlString = url.string();
-        }
-        // Determine the MIME type based on the path.
-        job->m_response.setMIMEType(MIMETypeRegistry::getMIMETypeForPath(url));
-    }
-
-    job->m_handle = curl_easy_init();
-
-    if (job->m_defersLoading) {
-        CURLcode error = curl_easy_pause(job->m_handle, CURLPAUSE_ALL);
-        // If we did not pause the handle, we would ASSERT in the
-        // header callback. So just assert here.
-        ASSERT_UNUSED(error, error == CURLE_OK);
-    }
-#ifndef NDEBUG
-    if (getenv("DEBUG_CURL"))
-        curl_easy_setopt(job->m_handle, CURLOPT_VERBOSE, 1);
-#endif
-    curl_easy_setopt(job->m_handle, CURLOPT_SSL_VERIFYPEER, 1L);
-    curl_easy_setopt(job->m_handle, CURLOPT_SSL_VERIFYHOST, 2L);
-    curl_easy_setopt(job->m_handle, CURLOPT_PRIVATE, job);
-    curl_easy_setopt(job->m_handle, CURLOPT_ERRORBUFFER, m_curlErrorBuffer);
-    curl_easy_setopt(job->m_handle, CURLOPT_WRITEFUNCTION, writeCallback);
-    curl_easy_setopt(job->m_handle, CURLOPT_WRITEDATA, job);
-    curl_easy_setopt(job->m_handle, CURLOPT_HEADERFUNCTION, headerCallbackOnIoThread);
-    curl_easy_setopt(job->m_handle, CURLOPT_WRITEHEADER, job);
-    curl_easy_setopt(job->m_handle, CURLOPT_AUTOREFERER, 1);
-    curl_easy_setopt(job->m_handle, CURLOPT_FOLLOWLOCATION, 1);
-    curl_easy_setopt(job->m_handle, CURLOPT_MAXREDIRS, 10);
-    curl_easy_setopt(job->m_handle, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
-    curl_easy_setopt(job->m_handle, CURLOPT_SHARE, m_curlShareHandle);
-    curl_easy_setopt(job->m_handle, CURLOPT_DNS_CACHE_TIMEOUT, 60 * 5); // 5 minutes
-    curl_easy_setopt(job->m_handle, CURLOPT_PROTOCOLS, kAllowedProtocols);
-    curl_easy_setopt(job->m_handle, CURLOPT_REDIR_PROTOCOLS, kAllowedProtocols);
-    //setSSLClientCertificate(job);
-
-    //     if (ignoreSSLErrors)
-    curl_easy_setopt(job->m_handle, CURLOPT_SSL_VERIFYPEER, false);
-    //     else
-    //         setSSLVerifyOptions(job);
-
-    if (!m_certificatePath.isNull())
-        curl_easy_setopt(job->m_handle, CURLOPT_CAINFO, m_certificatePath.data());
-
-    // enable gzip and deflate through Accept-Encoding:
-    curl_easy_setopt(job->m_handle, CURLOPT_ENCODING, "");
-
-    // url must remain valid through the request
-    ASSERT(!job->m_url);
-
-    // url is in ASCII so latin1() will only convert it to char* without character translation.
-    job->m_url = fastStrDup(urlString.latin1().data());
-    curl_easy_setopt(job->m_handle, CURLOPT_URL, job->m_url);
-
-    if (m_cookieJarFileName)
-        curl_easy_setopt(job->m_handle, CURLOPT_COOKIEJAR, m_cookieJarFileName);
-
-    curl_slist* headers = nullptr;
-    HeaderVisitor visitor(&headers);
-    job->firstRequest()->visitHTTPHeaderFields(&visitor);
-
-    String method = job->firstRequest()->httpMethod();
-    if ("GET" == method)
-        curl_easy_setopt(job->m_handle, CURLOPT_HTTPGET, TRUE);
-    else if ("POST" == method)
-        setupPOST(job, &headers);
-    else if ("PUT" == method)
-        setupPUT(job, &headers);
-    else if ("HEAD" == method)
-        curl_easy_setopt(job->m_handle, CURLOPT_NOBODY, TRUE);
-    else {
-        curl_easy_setopt(job->m_handle, CURLOPT_CUSTOMREQUEST, method.ascii().data());
-        setupPUT(job, &headers);
-    }
-
-    if (headers) {
-        curl_easy_setopt(job->m_handle, CURLOPT_HTTPHEADER, headers);
-        job->m_customHeaders = headers;
-    }
-
-    applyAuthenticationToRequest(job, job->firstRequest());
-    return;
-
-#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
-    RequestExtraData* requestExtraData = reinterpret_cast<RequestExtraData*>(job->firstRequest()->extraData());
-    if (!requestExtraData) // 在退出时候js调用同步XHR请求，会导致ExtraData为0情况
-        return;
-
-    WebPage* page = requestExtraData->page;
-    if (!page->wkeWebView())
-        return;
-
-    if (page->wkeWebView()->m_proxy.length()) {
-        curl_easy_setopt(job->m_handle, CURLOPT_PROXY, page->wkeWebView()->m_proxy.utf8().data());
-        curl_easy_setopt(job->m_handle, CURLOPT_PROXYTYPE, page->wkeWebView()->m_proxyType);
-    } else {
-        if (m_proxy.length()) {
-            curl_easy_setopt(job->m_handle, CURLOPT_PROXY, m_proxy.utf8().data());
-            curl_easy_setopt(job->m_handle, CURLOPT_PROXYTYPE, m_proxyType);
-        }
-    }
-#else
-    // Set proxy options if we have them.
-    if (m_proxy.length()) {
-        curl_easy_setopt(job->m_handle, CURLOPT_PROXY, m_proxy.utf8().data());
-        curl_easy_setopt(job->m_handle, CURLOPT_PROXYTYPE, m_proxyType);
-    }
-#endif
-}
-#endif
-
 } // namespace net
+;

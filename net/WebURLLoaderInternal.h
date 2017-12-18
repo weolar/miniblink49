@@ -146,6 +146,8 @@ public:
 
     bool m_isBlackList;
     bool m_isDataUrl;
+    bool m_isProxy;
+    bool m_isProxyHeadRequest;
 
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
     bool m_isHookRequest;
