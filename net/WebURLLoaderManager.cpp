@@ -731,7 +731,7 @@ private:
     }
 };
 
-static bool setResponseDataToJobWhenDidReceiveResponseOnMainThread(WebURLLoaderInternal* job, WebURLLoaderManagerMainTask::Args* args)
+static bool setHttpResponseDataToJobWhenDidReceiveResponseOnMainThread(WebURLLoaderInternal* job, WebURLLoaderManagerMainTask::Args* args)
 {
     WebURLLoaderClient* client = job->client();
     size_t size = args->size;
@@ -741,7 +741,7 @@ static bool setResponseDataToJobWhenDidReceiveResponseOnMainThread(WebURLLoaderI
     if (isHttpInfo(args->httpCode)) {
         // Just return when receiving http info, e.g. HTTP/1.1 100 Continue.
         // If not, the request might be cancelled, because the MIME type will be empty for this response.
-        return true;
+        return false;
     }
 
     if (job->firstRequest()->downloadToFile()) {
@@ -792,27 +792,28 @@ static bool setResponseDataToJobWhenDidReceiveResponseOnMainThread(WebURLLoaderI
 
             delete job->m_firstRequest;
             job->m_firstRequest = redirectedRequest;
-            return true;
+            return false;
         }
     } else if (isHttpAuthentication(args->httpCode)) {
-#if 0
-        ProtectionSpace protectionSpace;
-        if (getProtectionSpace(job->m_handle, job->m_response, protectionSpace)) {
-            Credential credential;
-            AuthenticationChallenge challenge(protectionSpace, credential, job->m_authFailureCount, job->m_response, ResourceError());
-            challenge.setAuthenticationClient(job);
-            job->didReceiveAuthenticationChallenge(challenge);
-            job->m_authFailureCount++;
-            return true;
-        }
-#endif
+
     }
 
-    if (client && job->loader())
-        WebURLLoaderManager::sharedInstance()->handleDidReceiveResponse(job);
+    return true;
+}
 
-    job->setResponseFired(true);
-    return false;
+static void setResponseDataToJobWhenDidReceiveResponseOnMainThread(WebURLLoaderInternal* job, WebURLLoaderManagerMainTask::Args* args)
+{
+    KURL url = job->firstRequest()->url();
+    bool needSetResponseFired = true;
+
+    if (url.protocolIsInHTTPFamily())
+        needSetResponseFired = setHttpResponseDataToJobWhenDidReceiveResponseOnMainThread(job, args);
+    
+    if (needSetResponseFired) {
+        if (job->client() && job->loader())
+            WebURLLoaderManager::sharedInstance()->handleDidReceiveResponse(job);
+        job->setResponseFired(true);
+    }
 }
 
 void WebURLLoaderManagerMainTask::handleLocalReceiveResponseOnMainThread(WebURLLoaderManagerMainTask::Args* args, WebURLLoaderInternal* job)
@@ -891,8 +892,8 @@ size_t WebURLLoaderManagerMainTask::handleHeaderCallbackOnMainThread(WebURLLoade
     * accept also \n.
     */
     if (header == String("\r\n") || header == String("\n")) {       
-        if (setResponseDataToJobWhenDidReceiveResponseOnMainThread(job, args))
-            return totalSize;
+        setResponseDataToJobWhenDidReceiveResponseOnMainThread(job, args);
+        return totalSize;
     } else {
         int splitPos = header.find(":");
         if (splitPos != -1) {
