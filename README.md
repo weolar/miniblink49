@@ -43,6 +43,8 @@
 
 6，关注知乎专栏：https://zhuanlan.zhihu.com/chrome
 
+7，关注论坛：miniblink.net  (这个更推荐！)
+
 当然我不会所有问题都回答的，毕竟还要去工地搬砖养家糊口。
 
 
