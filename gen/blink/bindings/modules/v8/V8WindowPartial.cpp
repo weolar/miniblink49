@@ -80,7 +80,9 @@
 #include "bindings/modules/v8/V8GamepadButton.h"
 #include "bindings/modules/v8/V8GamepadEvent.h"
 #include "bindings/modules/v8/V8HMDVRDevice.h"
+#endif
 #include "bindings/modules/v8/V8Headers.h"
+#if MINIBLINK_NOT_IMPLEMENTED
 #include "bindings/modules/v8/V8IDBCursor.h"
 #include "bindings/modules/v8/V8IDBCursorWithValue.h"
 #include "bindings/modules/v8/V8IDBDatabase.h"
@@ -115,22 +117,28 @@
 #include "bindings/modules/v8/V8MediaStreamAudioSourceNode.h"
 #include "bindings/modules/v8/V8MediaStreamEvent.h"
 #include "bindings/modules/v8/V8MediaStreamTrack.h"
+#endif
 #include "bindings/modules/v8/V8MimeType.h"
 #include "bindings/modules/v8/V8MimeTypeArray.h"
+#if MINIBLINK_NOT_IMPLEMENTED
 #include "bindings/modules/v8/V8NetworkInformation.h"
 #include "bindings/modules/v8/V8Notification.h"
 #include "bindings/modules/v8/V8OfflineAudioCompletionEvent.h"
 #include "bindings/modules/v8/V8OfflineAudioContext.h"
 #include "bindings/modules/v8/V8OscillatorNode.h"
 #include "bindings/modules/v8/V8PasswordCredential.h"
+#endif
 #include "bindings/modules/v8/V8Path2D.h"
+#if MINIBLINK_NOT_IMPLEMENTED
 #include "bindings/modules/v8/V8PeriodicSyncManager.h"
 #include "bindings/modules/v8/V8PeriodicSyncRegistration.h"
 #include "bindings/modules/v8/V8PeriodicWave.h"
 #include "bindings/modules/v8/V8PermissionStatus.h"
 #include "bindings/modules/v8/V8Permissions.h"
+#endif
 #include "bindings/modules/v8/V8Plugin.h"
 #include "bindings/modules/v8/V8PluginArray.h"
+#if MINIBLINK_NOT_IMPLEMENTED
 #include "bindings/modules/v8/V8PositionSensorVRDevice.h"
 #include "bindings/modules/v8/V8Presentation.h"
 #include "bindings/modules/v8/V8PresentationAvailability.h"
@@ -1609,7 +1617,9 @@ static const V8DOMConfiguration::AttributeConfiguration V8WindowAttributes[] = {
     {"GamepadButton", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8GamepadButton::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
     {"Gamepad", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8Gamepad::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
     {"GamepadEvent", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8GamepadEvent::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
+#endif // MINIBLINK_NOT_IMPLEMENTED
     {"Headers", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8Headers::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
+#if MINIBLINK_NOT_IMPLEMENTED
     {"IDBCursor", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8IDBCursor::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
     {"IDBCursorWithValue", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8IDBCursorWithValue::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
     {"IDBDatabase", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8IDBDatabase::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
@@ -1632,11 +1642,13 @@ static const V8DOMConfiguration::AttributeConfiguration V8WindowAttributes[] = {
     {"MediaKeyStatusMap", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8MediaKeyStatusMap::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
     {"MediaStreamEvent", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8MediaStreamEvent::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
     {"MediaStreamTrack", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8MediaStreamTrack::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
+#endif // MINIBLINK_NOT_IMPLEMENTED
     {"MimeTypeArray", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8MimeTypeArray::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
     {"MimeType", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8MimeType::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
     {"Path2D", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8Path2D::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
     {"PluginArray", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8PluginArray::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
     {"Plugin", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8Plugin::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
+#if MINIBLINK_NOT_IMPLEMENTED
     {"RTCIceCandidate", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8RTCIceCandidate::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
     {"RTCSessionDescription", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8RTCSessionDescription::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
 #endif // MINIBLINK_NOT_IMPLEMENTED
