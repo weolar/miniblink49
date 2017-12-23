@@ -79,6 +79,91 @@ static void itemMethodCallback(const v8::FunctionCallbackInfo<v8::Value>& info)
     TRACE_EVENT_SET_SAMPLING_STATE("v8", "V8Execution");
 }
 
+static void keysMethod(const v8::FunctionCallbackInfo<v8::Value>& info)
+{
+    ExceptionState exceptionState(ExceptionState::ExecutionContext, "keys", "NodeList", info.Holder(), info.GetIsolate());
+    NodeList* impl = V8NodeList::toImpl(info.Holder());
+    ScriptState* scriptState = ScriptState::forReceiverObject(info);
+
+    Iterator* result = impl->keysForBinding(scriptState, exceptionState);
+    if (exceptionState.hadException())
+        return;
+    
+    v8SetReturnValue(info, result);
+}
+
+CORE_EXPORT  void keysMethodCallback(const v8::FunctionCallbackInfo<v8::Value>& info)
+{
+    NodeListV8Internal::keysMethod(info);
+}
+
+static void valuesMethod(const v8::FunctionCallbackInfo<v8::Value>& info)
+{
+    ExceptionState exceptionState(ExceptionState::ExecutionContext, "values", "NodeList", info.Holder(), info.GetIsolate());
+    NodeList* impl = V8NodeList::toImpl(info.Holder());
+    ScriptState* scriptState = ScriptState::forReceiverObject(info);
+
+    Iterator* result = impl->valuesForBinding(scriptState, exceptionState);
+    if (exceptionState.hadException())
+        return;
+    
+    v8SetReturnValue(info, result);
+}
+
+CORE_EXPORT void valuesMethodCallback(const v8::FunctionCallbackInfo<v8::Value>& info)
+{
+    NodeListV8Internal::valuesMethod(info);
+}
+
+static void entriesMethod(const v8::FunctionCallbackInfo<v8::Value>& info)
+{
+    ExceptionState exceptionState(ExceptionState::ExecutionContext, "entries", "NodeList", info.Holder(), info.GetIsolate());
+    NodeList* impl = V8NodeList::toImpl(info.Holder());
+    ScriptState* scriptState = ScriptState::forReceiverObject(info);
+
+    Iterator* result = impl->entriesForBinding(scriptState, exceptionState);
+    if (exceptionState.hadException())
+        return;
+    
+    v8SetReturnValue(info, result);
+}
+
+CORE_EXPORT  void entriesMethodCallback(const v8::FunctionCallbackInfo<v8::Value>& info)
+{
+    NodeListV8Internal::entriesMethod(info);
+}
+
+static void forEachMethod(const v8::FunctionCallbackInfo<v8::Value>& info)
+{
+    ExceptionState exceptionState(ExceptionState::ExecutionContext, "forEach", "NodeList", info.Holder(), info.GetIsolate());
+    NodeList* impl = V8NodeList::toImpl(info.Holder());
+    ScriptState* scriptState = ScriptState::forReceiverObject(info);
+
+    if (UNLIKELY(info.Length() < 1)) {
+        exceptionState.throwTypeError(ExceptionMessages::notEnoughArguments(1, info.Length()));
+        return;
+    }
+
+    ScriptValue callback;
+    ScriptValue thisArg;
+    if (!(info[0]->IsObject() && v8::Local<v8::Object>::Cast(info[0])->IsCallable())) {
+        exceptionState.throwTypeError("The callback provided as parameter 1 is not a function.");
+        return;
+    }
+
+    callback = ScriptValue(ScriptState::current(info.GetIsolate()), info[0]);
+    thisArg = ScriptValue(ScriptState::current(info.GetIsolate()), info[1]);
+
+    impl->forEachForBinding(scriptState, ScriptValue(scriptState, info.Holder()), callback, thisArg, exceptionState);
+    if (exceptionState.hadException())
+        return;
+}
+
+CORE_EXPORT void forEachMethodCallback(const v8::FunctionCallbackInfo<v8::Value>& info)
+{
+    NodeListV8Internal::forEachMethod(info);
+}
+
 static void indexedPropertyGetter(uint32_t index, const v8::PropertyCallbackInfo<v8::Value>& info)
 {
     NodeList* impl = V8NodeList::toImpl(info.Holder());
@@ -114,6 +199,10 @@ static const V8DOMConfiguration::AccessorConfiguration V8NodeListAccessors[] = {
 
 static const V8DOMConfiguration::MethodConfiguration V8NodeListMethods[] = {
     {"item", NodeListV8Internal::itemMethodCallback, 0, 1, V8DOMConfiguration::ExposedToAllScripts},
+    { "keys", NodeListV8Internal::keysMethodCallback, 0, 0, V8DOMConfiguration::ExposedToAllScripts },
+    { "values", NodeListV8Internal::valuesMethodCallback, 0, 0, V8DOMConfiguration::ExposedToAllScripts },
+    { "entries", NodeListV8Internal::entriesMethodCallback, 0, 0, V8DOMConfiguration::ExposedToAllScripts },
+    { "forEach", NodeListV8Internal::forEachMethodCallback, 0, 1, V8DOMConfiguration::ExposedToAllScripts },
 };
 
 static void installV8NodeListTemplate(v8::Local<v8::FunctionTemplate> functionTemplate, v8::Isolate* isolate)
