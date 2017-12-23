@@ -88,6 +88,21 @@ public:
     static ScriptState* forMainWorld(LocalFrame*);
     static ScriptState* forWorld(LocalFrame*, DOMWrapperWorld&);
 
+    static ScriptState* forReceiverObject(const v8::FunctionCallbackInfo<v8::Value>& info)
+    {
+        return from(info.Holder()->CreationContext());
+    }
+
+    static ScriptState* forReceiverObject(const v8::PropertyCallbackInfo<v8::Value>& info)
+    {
+        return from(info.Holder()->CreationContext());
+    }
+
+    static ScriptState* forReceiverObject(const v8::PropertyCallbackInfo<void>& info)
+    {
+        return from(info.Holder()->CreationContext());
+    }
+
     v8::Isolate* isolate() const { return m_isolate; }
     DOMWrapperWorld& world() const { return *m_world; }
     LocalDOMWindow* domWindow() const;
