@@ -717,12 +717,12 @@ void wkeSetUIThreadCallback(wkeWebView webView, wkeCallUiThread callback, void* 
 
 void wkeOnLoadUrlBegin(wkeWebView webView, wkeLoadUrlBeginCallback callback, void* callbackParam)
 {
-	webView->onLoadUrlBegin(callback, callbackParam);
+    webView->onLoadUrlBegin(callback, callbackParam);
 }
 
 void wkeOnLoadUrlEnd(wkeWebView webView, wkeLoadUrlEndCallback callback, void* callbackParam)
 {
-	webView->onLoadUrlEnd(callback, callbackParam);
+    webView->onLoadUrlEnd(callback, callbackParam);
 }
 
 void wkeOnDidCreateScriptContext(wkeWebView webView, wkeDidCreateScriptContextCallback callback, void* callbackParam)

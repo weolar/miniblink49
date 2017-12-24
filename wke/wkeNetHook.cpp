@@ -16,8 +16,13 @@ void wkeNetSetHTTPHeaderField(void* jobPtr, wchar_t *key, wchar_t *value, bool r
 
     if (response)
         job->m_response.setHTTPHeaderField(String(key), String(value));
-    else
-        job->firstRequest()->setHTTPHeaderField(String(key), String(value));
+    else {
+        String keyString(key);
+        if (equalIgnoringCase(keyString, "referer")) {
+            job->firstRequest()->setHTTPReferrer(keyString, WebReferrerPolicyDefault);
+        } else
+            job->firstRequest()->setHTTPHeaderField(keyString, String(value));
+    }
 }
 
 void wkeNetSetMIMEType(void* jobPtr, char *type)
