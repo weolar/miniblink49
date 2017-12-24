@@ -34,6 +34,10 @@
 #include "public/platform/WebURLRequest.h"
 #include "wtf/HashSet.h"
 
+namespace net {
+extern bool g_cspCheckEnable;
+}
+
 namespace blink {
 
 class FetchManager::Loader final : public NoBaseWillBeGarbageCollectedFinalized<FetchManager::Loader>, public ThreadableLoaderClient, public ContextLifecycleObserver {
@@ -322,7 +326,15 @@ void FetchManager::Loader::performHTTPFetch(bool corsFlag, bool corsPreflightFla
     request.setHTTPMethod(m_request->method());
     const Vector<OwnPtr<FetchHeaderList::Header>>& list = m_request->headerList()->list();
     for (size_t i = 0; i < list.size(); ++i) {
-        request.addHTTPHeaderField(AtomicString(list[i]->first), AtomicString(list[i]->second));
+        AtomicString name(list[i]->first);
+        AtomicString value(list[i]->second);
+        request.addHTTPHeaderField(name, value);
+        if (!net::g_cspCheckEnable) { // weolar 
+            if (equalIgnoringCase(name, "Referer")) {
+                Referrer referrer(value, ReferrerPolicyDefault);
+                request.setHTTPReferrer(referrer);
+            }
+        }
     }
 
     if (m_request->method() != "GET" && m_request->method() != "HEAD") {
