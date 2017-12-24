@@ -12,6 +12,10 @@
 #include "wtf/text/AtomicString.h"
 #include "wtf/text/WTFString.h"
 
+namespace net {
+extern bool g_cspCheckEnable;
+}
+
 namespace blink {
 
 namespace {
@@ -119,6 +123,9 @@ bool FetchUtils::isSimpleRequest(const String& method, const HTTPHeaderMap& head
 
 bool FetchUtils::isForbiddenMethod(const String& method)
 {
+    if (!net::g_cspCheckEnable) // weolar
+        return false;
+
     // http://fetch.spec.whatwg.org/#forbidden-method
     // "A forbidden method is a method that is a byte case-insensitive match"
     //  for one of `CONNECT`, `TRACE`, and `TRACK`."
@@ -129,6 +136,9 @@ bool FetchUtils::isForbiddenMethod(const String& method)
 
 bool FetchUtils::isForbiddenHeaderName(const String& name)
 {
+    if (!net::g_cspCheckEnable) // weolar
+        return false;
+
     // http://fetch.spec.whatwg.org/#forbidden-header-name
     // "A forbidden header name is a header names that is one of:
     //   `Accept-Charset`, `Accept-Encoding`, `Access-Control-Request-Headers`,
@@ -144,6 +154,9 @@ bool FetchUtils::isForbiddenHeaderName(const String& name)
 
 bool FetchUtils::isForbiddenResponseHeaderName(const String& name)
 {
+    if (!net::g_cspCheckEnable) // weolar
+        return false;
+
     // http://fetch.spec.whatwg.org/#forbidden-response-header-name
     // "A forbidden response header name is a header name that is one of:
     // `Set-Cookie`, `Set-Cookie2`"
