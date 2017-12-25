@@ -575,7 +575,7 @@ void FlagList::EnforceFlagImplications() {
   ComputeFlagListHash();
 
   FLAG_harmony_sloppy = true; // TODO weolar
-  FLAG_harmony_sloppy_function = true;
+  //FLAG_harmony_sloppy_function = true;
   FLAG_harmony_sloppy_let = true;
 }
 
