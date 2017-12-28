@@ -750,13 +750,17 @@ static bool setHttpResponseDataToJobWhenDidReceiveResponseOnMainThread(WebURLLoa
         String tempPath = WebURLLoaderManager::sharedInstance()->handleHeaderForBlobOnMainThread(job, totalSize);
         job->m_response.setDownloadFilePath(tempPath);
     }
+
+    AtomicString contentType = job->m_response.httpHeaderField(WebString::fromUTF8("Content-Type"));
+
     job->m_response.setExpectedContentLength(static_cast<long long int>(args->contentLength));
     job->m_response.setURL(KURL(ParsedURLString, args->hdr));
     job->m_response.setHTTPStatusCode(args->httpCode);
-    job->m_response.setMIMEType(extractMIMETypeFromMediaType(job->m_response.httpHeaderField(WebString::fromUTF8("Content-Type"))).lower());
-    job->m_response.setTextEncodingName(extractCharsetFromMediaType(job->m_response.httpHeaderField(WebString::fromUTF8("Content-Type"))));
+    job->m_response.setMIMEType(extractMIMETypeFromMediaType(contentType).lower());
+    job->m_response.setTextEncodingName(extractCharsetFromMediaType(contentType));
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
-    if (job->m_response.httpHeaderField(WebString::fromUTF8("Content-Type")).equals("application/octet-stream")) {
+    if (equalIgnoringCase(contentType, "application/octet-stream") ||
+        contentDispositionType(job->m_response.httpHeaderField("Content-Disposition")) == ContentDispositionAttachment) {
         RequestExtraData* requestExtraData = reinterpret_cast<RequestExtraData*>(job->firstRequest()->extraData());
         WebPage* page = requestExtraData->page;
         if (page->wkeHandler().downloadCallback) {
