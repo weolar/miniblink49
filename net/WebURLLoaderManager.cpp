@@ -585,6 +585,8 @@ public:
             memcpy(args->ptr, ptr, totalSize);
 
             curl_easy_getinfo(handle, !isProxy ? CURLINFO_RESPONSE_CODE : CURLINFO_HTTP_CONNECTCODE, &args->httpCode);
+            if (isProxy && 0 == args->httpCode)
+                args->httpCode = 200;
 
             double contentLength = 0;
             curl_easy_getinfo(handle, CURLINFO_CONTENT_LENGTH_DOWNLOAD, &args->contentLength);
@@ -959,7 +961,7 @@ static size_t writeCallbackOnIoThread(void* ptr, size_t size, size_t nmemb, void
     // of html page even if it is a redirect that was handled internally
     // can be observed e.g. on gmail.com
     long httpCode = 0;
-    CURLcode err = curl_easy_getinfo(job->m_handle, CURLINFO_RESPONSE_CODE, &httpCode);
+    CURLcode err = curl_easy_getinfo(job->m_handle, !job->m_isProxy ? CURLINFO_RESPONSE_CODE : CURLINFO_HTTP_CONNECTCODE, &httpCode);
     if (CURLE_OK == err && httpCode >= 300 && httpCode < 400)
         return totalSize;
 
@@ -1666,6 +1668,7 @@ int WebURLLoaderManager::addAsynchronousJob(WebURLLoaderInternal* job)
         OutputDebugStringA("ensearch=1!\n");
 #endif
 
+    String referer = job->firstRequest()->httpHeaderField(WebString::fromUTF8("referer"));
     job->m_manager = this;
 
     int jobId = 0;
