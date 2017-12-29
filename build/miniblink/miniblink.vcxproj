@@ -497,7 +497,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\cc\playback\TileActionInfo.cpp" />
     <ClCompile Include="..\..\cc\raster\RasterFilters.cpp" />
+    <ClCompile Include="..\..\cc\raster\RasterResouce.cpp" />
+    <ClCompile Include="..\..\cc\raster\RasterTask.cpp" />
+    <ClCompile Include="..\..\content\browser\PlatformMessagePortChannel.cpp" />
+    <ClCompile Include="..\..\content\web_impl_win\WebMessagePortChannelImpl.cpp" />
+    <ClCompile Include="..\..\skia\ext\analysis_canvas.cc" />
     <ClCompile Include="..\..\third_party\WebKit\Source\bindings\core\v8\custom\V8MutationObserverCustom.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\modules\compositorworker\CompositorWorker.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\modules\compositorworker\CompositorWorkerGlobalScope.cpp" />
@@ -543,7 +549,6 @@
     <ClCompile Include="..\..\cc\blink\WebScrollbarLayerImpl.cpp" />
     <ClCompile Include="..\..\cc\layers\CompositingLayer.cpp" />
     <ClCompile Include="..\..\cc\playback\LayerChangeAction.cpp" />
-    <ClCompile Include="..\..\cc\raster\RasterTaskWorkerThreadPool.cpp" />
     <ClCompile Include="..\..\cc\tiles\CompositingTile.cpp" />
     <ClCompile Include="..\..\cc\tiles\Tile.cpp" />
     <ClCompile Include="..\..\cc\tiles\TileGrid.cpp" />
@@ -5332,7 +5337,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\cc\raster\RasterFilters.h" />
+    <ClInclude Include="..\..\cc\raster\RasterTask.h" />
+    <ClInclude Include="..\..\cc\tiles\TileWidthHeight.h" />
+    <ClInclude Include="..\..\content\browser\PlatformMessagePortChannel.h" />
     <ClInclude Include="..\..\content\browser\ToolTip.h" />
+    <ClInclude Include="..\..\content\web_impl_win\WebMessagePortChannelImpl.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\modules\compositorworker\CompositorWorker.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\modules\compositorworker\CompositorWorkerGlobalScope.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\modules\compositorworker\CompositorWorkerManager.h" />
@@ -5368,7 +5377,6 @@
     <ClInclude Include="..\..\cc\playback\TileActionInfo.h" />
     <ClInclude Include="..\..\cc\raster\RasterResouce.h" />
     <ClInclude Include="..\..\cc\raster\RasterTaskClient.h" />
-    <ClInclude Include="..\..\cc\raster\RasterTaskWorkerThreadPool.h" />
     <ClInclude Include="..\..\cc\raster\RecordDrawHelp.h" />
     <ClInclude Include="..\..\cc\raster\SkBitmapRefWrap.h" />
     <ClInclude Include="..\..\cc\tiles\CompositingTile.h" />

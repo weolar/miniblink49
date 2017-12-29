@@ -8283,9 +8283,6 @@
     <ClCompile Include="..\..\third_party\WebKit\Source\core\xml\parser\XMLDocumentParserScope.cpp">
       <Filter>third_party\Webkit\Source\core\xml\parser</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\cc\raster\RasterTaskWorkerThreadPool.cpp">
-      <Filter>cc\raster</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\third_party\WebKit\Source\bindings\core\v8\custom\V8DocumentCustom.cpp">
       <Filter>third_party\Webkit\Source\bindings\core\v8\custom</Filter>
     </ClCompile>
@@ -9779,6 +9776,24 @@
     </ClCompile>
     <ClCompile Include="..\..\cc\raster\RasterFilters.cpp">
       <Filter>cc\raster</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\cc\raster\RasterTask.cpp">
+      <Filter>cc\raster</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\skia\ext\analysis_canvas.cc">
+      <Filter>skia\ext</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\cc\playback\TileActionInfo.cpp">
+      <Filter>cc\playback</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\cc\raster\RasterResouce.cpp">
+      <Filter>cc\raster</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\content\web_impl_win\WebMessagePortChannelImpl.cpp">
+      <Filter>content\web_impl_win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\content\browser\PlatformMessagePortChannel.cpp">
+      <Filter>content\browser</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -20507,9 +20522,6 @@
     <ClInclude Include="..\..\third_party\WebKit\Source\core\xml\parser\XMLDocumentParserScope.h">
       <Filter>third_party\Webkit\Source\core\xml\parser</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\cc\raster\RasterTaskWorkerThreadPool.h">
-      <Filter>cc\raster</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\cc\raster\RasterResouce.h">
       <Filter>cc\raster</Filter>
     </ClInclude>
@@ -22348,6 +22360,18 @@
     </ClInclude>
     <ClInclude Include="..\..\cc\raster\RasterFilters.h">
       <Filter>cc\raster</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\cc\raster\RasterTask.h">
+      <Filter>cc\raster</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\cc\tiles\TileWidthHeight.h">
+      <Filter>cc\tiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\content\web_impl_win\WebMessagePortChannelImpl.h">
+      <Filter>content\web_impl_win</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\content\browser\PlatformMessagePortChannel.h">
+      <Filter>content\browser</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
