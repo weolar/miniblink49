@@ -2,14 +2,11 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "base/debug/trace_event.h"
-#include "base/logging.h"
 #include "skia/ext/analysis_canvas.h"
 #include "third_party/skia/include/core/SkDraw.h"
 #include "third_party/skia/include/core/SkRRect.h"
 #include "third_party/skia/include/core/SkShader.h"
 #include "third_party/skia/src/core/SkRasterClip.h"
-#include "ui/gfx/rect_conversions.h"
 
 namespace {
 
@@ -401,7 +398,7 @@ SkCanvas::SaveLayerStrategy AnalysisCanvas::willSaveLayer(
 }
 
 void AnalysisCanvas::willRestore() {
-  DCHECK(saved_stack_size_);
+  //DCHECK(saved_stack_size_);
   if (saved_stack_size_) {
     --saved_stack_size_;
     if (saved_stack_size_ < force_not_solid_stack_level_) {
