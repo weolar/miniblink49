@@ -223,12 +223,29 @@ void CWebView::loadURL(const wchar_t* url)
     loadURL(String(url).utf8().data());
 }
 
+static String createMemoryUrl()
+{
+    std::vector<wchar_t> path;
+    path.resize(MAX_PATH + 1);
+    memset(&path[0], 0, sizeof(wchar_t) * (MAX_PATH + 1));
+    ::GetModuleFileNameW(nullptr, &path[0], MAX_PATH);
+    ::PathRemoveFileSpecW(&path[0]);
+
+    String result(&path[0]);
+    result = WTF::ensureUTF16String(result);
+    result.replace(L"\\", L"/");
+    result.insert(L"file:///", 0);
+    result.append(String::format("/data_%d.htm", GetTickCount()));
+
+    return WTF::ensureStringToUTF8String(result);
+}
+
 void CWebView::loadHTML(const utf8* html)
 {
     size_t length = strlen(html);
     if (0 == length)
         return;
-    String url = String::format("MemoryURL://data.com/%d", GetTickCount());
+    String url = createMemoryUrl(); // String::format("MemoryURL://data.com/%d", GetTickCount());
     m_webPage->loadHTMLString(content::WebPage::kMainFrameId, blink::WebData(html, length), blink::KURL(blink::ParsedURLString, url), blink::WebURL(), true);
 }
 
@@ -240,7 +257,7 @@ void CWebView::loadHTML(const wchar_t* html)
     String htmlUTF8((UChar*)html, length);
     Vector<char> htmlUTF8Buf = WTF::ensureStringToUTF8(htmlUTF8, false);
 
-    String url = String::format("MemoryURL://data.com/%d", GetTickCount());
+    String url = createMemoryUrl(); // String::format("MemoryURL://data.com/%d", GetTickCount());
     m_webPage->loadHTMLString(content::WebPage::kMainFrameId, blink::WebData(htmlUTF8Buf.data(), htmlUTF8Buf.size()), blink::KURL(blink::ParsedURLString, url), blink::WebURL(), true);
 }
 

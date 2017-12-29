@@ -19,7 +19,7 @@ void wkeNetSetHTTPHeaderField(void* jobPtr, wchar_t *key, wchar_t *value, bool r
     else {
         String keyString(key);
         if (equalIgnoringCase(keyString, "referer")) {
-            job->firstRequest()->setHTTPReferrer(keyString, WebReferrerPolicyDefault);
+            job->firstRequest()->setHTTPReferrer(String(value), WebReferrerPolicyDefault);
         } else
             job->firstRequest()->setHTTPHeaderField(keyString, String(value));
     }
