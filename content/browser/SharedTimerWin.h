@@ -100,8 +100,6 @@ static void initializeOffScreenTimerWindow();
 
 void setSharedTimerFireInterval(double interval)
 {
-    ASSERT(sharedTimerFiredFunction);
-
     unsigned intervalInMS;
     interval *= 1000;
     if (interval > USER_TIMER_MAXIMUM)
