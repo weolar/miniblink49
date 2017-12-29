@@ -93,10 +93,13 @@ PopupMenuWin::~PopupMenuWin()
         delete m_layerTreeHost;
     }
     m_layerTreeHost = nullptr;
+
+    ::SetPropW(m_hPopup, kPopupWindowClassName, nullptr);
 }
 
 static void destroyWindowAsyn(HWND hWnd)
 {
+    //::SetWindowLongPtr(hWnd, 0, 0);
     ::DestroyWindow(hWnd);
 }
 
@@ -108,9 +111,8 @@ void PopupMenuWin::closeWidgetSoon()
     m_layerTreeHost->applyActions(false);
     m_initialize = false;
     m_isVisible = false;
+    ::SetPropW(m_hPopup, kPopupWindowClassName, nullptr);
     ::ShowWindow(m_hPopup, SW_HIDE);
-    ::SetWindowLongPtr(m_hPopup, 0, 0);
-    //blink::Platform::current()->currentThread()->postTask(FROM_HERE, WTF::bind(&destroyWindowAsyn, m_hPopup));
 }
 
 void PopupMenuWin::registerClass()
@@ -156,15 +158,18 @@ bool PopupMenuWin::fireKeyUpEvent(UINT message, WPARAM wParam, LPARAM lParam)
 
 LRESULT CALLBACK PopupMenuWin::PopupMenuWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    PopupMenuWin* popup = nullptr;
-    if (popup = reinterpret_cast<PopupMenuWin*>(::GetWindowLongPtr(hWnd, 0)))
-        return popup->wndProc(hWnd, message, wParam, lParam);
+    PopupMenuWin* self = nullptr;
+    //if (self = reinterpret_cast<PopupMenuWin*>(::GetWindowLongPtr(hWnd, GWL_USERDATA)))
+    self = (PopupMenuWin*)GetPropW(hWnd, kPopupWindowClassName);
+    if (self)
+        return self->wndProc(hWnd, message, wParam, lParam);
 
     if (message == WM_CREATE) {
         LPCREATESTRUCT createStruct = reinterpret_cast<LPCREATESTRUCT>(lParam);
-        popup = (PopupMenuWin*)createStruct->lpCreateParams;
+        self = (PopupMenuWin*)createStruct->lpCreateParams;
         // Associate the PopupMenu with the window.
-        ::SetWindowLongPtr(hWnd, 0, reinterpret_cast<LONG_PTR>(popup));
+        //::SetWindowLongPtr(hWnd, GWL_USERDATA, reinterpret_cast<LONG_PTR>(popup));
+        ::SetPropW(hWnd, kPopupWindowClassName, (HANDLE)self);
         return 0;
     }
 
@@ -179,6 +184,9 @@ LRESULT PopupMenuWin::wndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPa
 //     OutputDebugStringA(out.utf8().data());
 
     switch (message) {
+    case WM_NCDESTROY:
+        OutputDebugStringA("PopupMenuWin::wndProc WM_NCDESTROY\n");
+        break;
     case WM_MOUSEMOVE:
     case WM_LBUTTONDOWN:
     case WM_LBUTTONUP: {
@@ -374,17 +382,18 @@ void PopupMenuWin::updataPaint()
 static void initWndStyle(HWND hPopup)
 {
     // 这里会重入到WebPageImpl::fireKillFocusEvent
-    // ::SetWindowPos(hPopup, HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW | SWP_NOACTIVATE);
+    // ::SetWindowPos(hPopup, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW | SWP_NOACTIVATE);
     // ::SetFocus(hPopup);
     // ::SetCapture(hPopup);
     // ::SetForegroundWindow(hPopup);
+    ::SetWindowPos(hPopup, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOREPOSITION);
     ::ShowWindow(hPopup, SW_HIDE);
 }
 
 static HHOOK g_hMouseHook = nullptr;
 
 struct MY_MOUSEHOOKSTRUCTEX : public tagMOUSEHOOKSTRUCT {
-    DWORD   mouseData;
+    DWORD mouseData;
 };
 
 LRESULT CALLBACK PopupMenuWin::mouseHookProc(int nCode, WPARAM wParam, LPARAM lParam)
@@ -393,8 +402,8 @@ LRESULT CALLBACK PopupMenuWin::mouseHookProc(int nCode, WPARAM wParam, LPARAM lP
     if (pMouseStruct == NULL || nullptr == m_hPopup || pMouseStruct->hwnd == m_hPopup)
         return CallNextHookEx(g_hMouseHook, nCode, wParam, lParam);
 
-    PopupMenuWin* popup = reinterpret_cast<PopupMenuWin*>(::GetWindowLongPtr(m_hPopup, 0));
-    if (!popup || !popup->m_isVisible)
+    PopupMenuWin* self = (PopupMenuWin*)GetPropW(m_hPopup, kPopupWindowClassName);
+    if (!self || !self->m_isVisible)
         return CallNextHookEx(g_hMouseHook, nCode, wParam, lParam);
 
     if (wParam == WM_LBUTTONDOWN || wParam == WM_NCLBUTTONDOWN ||
@@ -417,10 +426,9 @@ void PopupMenuWin::asynStartCreateWnd(blink::Timer<PopupMenuWin>*)
         registerClass();
 
         m_hPopup = CreateWindowEx(WS_EX_NOACTIVATE, kPopupWindowClassName, L"MbPopupMenu", WS_POPUP,
-            CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, m_hParentWnd, 0, 0, this);
+            CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, /*m_hParentWnd*/nullptr, 0, 0, this);
         
         g_hMouseHook = SetWindowsHookEx(WH_MOUSE, mouseHookProc, GetModuleHandle(NULL), GetCurrentThreadId());
-
     }
     m_client->onPopupMenuCreate(m_hPopup);
     initWndStyle(m_hPopup);
@@ -441,7 +449,8 @@ WebWidget* PopupMenuWin::createWnd()
     else {
         if (m_needsCommit)
             ::PostMessage(m_hPopup, WM_COMMIT, 0, 0);
-        ::SetWindowLongPtr(m_hPopup, 0, reinterpret_cast<LONG_PTR>(this));
+        ::SetPropW(m_hPopup, kPopupWindowClassName, (HANDLE)this);
+        ::SetWindowPos(m_hPopup, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOREPOSITION);
     }
 
     initialize();
@@ -480,7 +489,6 @@ void PopupMenuWin::postCommit()
 
 void PopupMenuWin::didInvalidateRect(const blink::WebRect& r)
 {
-    //::InvalidateRect(m_hPopup, NULL, TRUE);
     postCommit();
 }
 

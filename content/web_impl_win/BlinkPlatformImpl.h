@@ -69,6 +69,9 @@ public:
     // Scrollbar ----------------------------------------------------------
     virtual blink::WebScrollbarBehavior* scrollbarBehavior() override;
 
+    // Message Ports -------------------------------------------------------
+    virtual void createMessageChannel(blink::WebMessagePortChannel** channel1, blink::WebMessagePortChannel** channel2) override;
+
     // Network -------------------------------------------------------------
     blink::WebURLLoader* createURLLoader() override;
     virtual blink::WebURLError cancelledError(const blink::WebURL&) const override;

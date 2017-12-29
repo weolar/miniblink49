@@ -14,14 +14,16 @@
 #include "content/web_impl_win/WaitableEvent.h"
 #include "content/web_impl_win/npapi/WebPluginImpl.h"
 #include "content/web_impl_win/npapi/PluginDatabase.h"
+#include "content/web_impl_win/WebMessagePortChannelImpl.h"
 #include "content/resources/MissingImageData.h"
 #include "content/resources/TextAreaResizeCornerData.h"
 #include "content/resources/LocalizedString.h"
 #include "content/resources/WebKitWebRes.h"
 
 #include "content/browser/WebPage.h"
+#include "content/browser/PlatformMessagePortChannel.h"
 #include "cc/blink/WebCompositorSupportImpl.h"
-#include "cc/raster/RasterTaskWorkerThreadPool.h"
+#include "cc/raster/RasterTask.h"
 #include "third_party/WebKit/public/web/WebKit.h"
 #include "third_party/WebKit/Source/core/fetch/MemoryCache.h"
 #include "third_party/WebKit/Source/web/WebStorageNamespaceImpl.h"
@@ -585,6 +587,21 @@ blink::WebScrollbarBehavior* BlinkPlatformImpl::scrollbarBehavior()
     if (!m_webScrollbarBehavior)
         m_webScrollbarBehavior = new blink::WebScrollbarBehavior();
     return m_webScrollbarBehavior;
+}
+
+void BlinkPlatformImpl::createMessageChannel(blink::WebMessagePortChannel** channel1, blink::WebMessagePortChannel** channel2)
+{
+    PlatformMessagePortChannel::MessagePortQueue* queue1 = PlatformMessagePortChannel::MessagePortQueue::create();
+    PlatformMessagePortChannel::MessagePortQueue* queue2 = PlatformMessagePortChannel::MessagePortQueue::create();
+
+    WebMessagePortChannelImpl* channelImpl1 = new WebMessagePortChannelImpl(queue1, queue2);
+    WebMessagePortChannelImpl* channelImpl2 = new WebMessagePortChannelImpl(queue2, queue1);
+
+    channelImpl1->getChannel()->m_entangledChannel = channelImpl2->getChannel();
+    channelImpl2->getChannel()->m_entangledChannel = channelImpl1->getChannel();
+
+    *channel1 = channelImpl1;
+    *channel2 = channelImpl2;
 }
 
 blink::WebURLError BlinkPlatformImpl::cancelledError(const blink::WebURL& url) const

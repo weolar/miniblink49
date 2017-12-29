@@ -74,6 +74,8 @@ extern bool wkeIsUpdataInOtherThread;
 
 using namespace blink;
 
+extern bool g_drawDirtyDebugLine;
+
 namespace blink {
 bool saveDumpFile(const String& url, char* buffer, unsigned int size);
 }
@@ -767,13 +769,15 @@ void drawDebugLine(SkCanvas* memoryCanvas, const IntRect& paintRect)
     ::DeleteObject(hbrush);
 #endif
 
-#if 0 // debug
-    OwnPtr<GraphicsContext> context = GraphicsContext::deprecatedCreateWithCanvas(memoryCanvas, GraphicsContext::NothingDisabled);
-    context->setStrokeStyle(SolidStroke);
-    context->setStrokeColor(0xff000000 | (::GetTickCount() + base::RandInt(0, 0x1223345)));
-    context->drawLine(IntPoint(paintRect.x(), paintRect.y()), IntPoint(paintRect.maxX(), paintRect.maxY()));
-    context->drawLine(IntPoint(paintRect.maxX(), paintRect.y()), IntPoint(paintRect.x(), paintRect.maxY()));
-    context->strokeRect(paintRect, 2);
+#if 1 // debug
+    if (g_drawDirtyDebugLine) {
+        OwnPtr<GraphicsContext> context = GraphicsContext::deprecatedCreateWithCanvas(memoryCanvas, GraphicsContext::NothingDisabled);
+        context->setStrokeStyle(SolidStroke);
+        context->setStrokeColor(0xff000000 | (::GetTickCount() + base::RandInt(0, 0x1223345)));
+        context->drawLine(IntPoint(paintRect.x(), paintRect.y()), IntPoint(paintRect.maxX(), paintRect.maxY()));
+        context->drawLine(IntPoint(paintRect.maxX(), paintRect.y()), IntPoint(paintRect.x(), paintRect.maxY()));
+        context->strokeRect(paintRect, 2);
+    }
 #endif
 
 #if 0

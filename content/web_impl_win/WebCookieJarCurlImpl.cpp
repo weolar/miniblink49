@@ -130,7 +130,7 @@ static void addMatchingCurlCookie(const char* cookie, const String& domain, cons
 
     int expires = strExpires.toInt();
 
-    time_t now = 0;
+    __int64 now = 0;
     time(&now);
 
     // Check if cookie has expired

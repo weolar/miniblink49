@@ -22,6 +22,7 @@ public:
     ~WebFrameClientImpl();
 
     virtual void didAddMessageToConsole(const WebConsoleMessage& message, const WebString& sourceName, unsigned sourceLine, const WebString& stackTrace) override;
+    virtual bool shouldReportDetailedMessageForSource(const WebString& source) override { return true; };
 
     virtual WebFrame* createChildFrame(WebLocalFrame* parent, WebTreeScopeType, const WebString& frameName, WebSandboxFlags sandboxFlags) override;
 
