@@ -13,6 +13,8 @@
 
 #include "WTF/text/WTFString.h"
 
+extern bool g_drawTileLine;
+
 namespace cc {
 
 #ifndef NDEBUG
@@ -34,6 +36,7 @@ TileBase* CompositingTile::init(void* parent, int xIndex, int yIndex)
     m_yIndex = yIndex;
     m_postion = blink::IntRect(xIndex * kDefaultTileWidth, yIndex * kDefaultTileHeight, kDefaultTileWidth, kDefaultTileHeight);
     m_bitmap = nullptr;
+    m_solidColor = new SkColor(0xffffffff);
 #ifndef NDEBUG
     compositingTileCounter.increment();
 #endif
@@ -43,6 +46,9 @@ TileBase* CompositingTile::init(void* parent, int xIndex, int yIndex)
 CompositingTile::~CompositingTile()
 {
     clearBitmap();
+
+    if (m_solidColor)
+        delete m_solidColor;
 #ifndef NDEBUG
     compositingTileCounter.decrement();
 #endif
@@ -81,7 +87,8 @@ SkBitmap* CompositingTile::allocBitmap(int width, int height, bool isOpaque)
 
     SkBitmap* bitmap = new SkBitmap();
     SkImageInfo info = SkImageInfo::Make(width, height, kN32_SkColorType, kPremul_SkAlphaType, kLinear_SkColorProfileType);
-    bitmap->allocPixels(info);
+    if (!m_solidColor)
+        bitmap->allocPixels(info);
 
     SkColor color = 0x00ffffff;
 //     if (!isOpaque) // TODO 
@@ -105,14 +112,35 @@ void CompositingTile::resizeBitmap(int dstWidth, int dstHeight)
     paint.setFilterQuality(kHigh_SkFilterQuality);
 
     SkCanvas canvas(*dst);
-    canvas.drawBitmapRect(*m_bitmap, &isrc, SkRect::MakeIWH(isrc.width(), isrc.height()), &paint);
+    if (!m_solidColor || g_drawTileLine)
+        canvas.drawBitmapRect(*m_bitmap, &isrc, SkRect::MakeIWH(isrc.width(), isrc.height()), &paint);
 
     clearBitmap();
     m_bitmap = dst;
 }
 
-void CompositingTile::allocBitmapIfNeeded()
+void CompositingTile::allocBitmapIfNeeded(SkColor* solidColor, bool isSolidColorCoverWholeTile)
 {
+    //solidColor = nullptr; // todo weolar
+
+    if (m_solidColor && !solidColor) { // 纯色 -> bitmap
+        clearBitmap();
+        cancelSolidColor();
+    } else if (!m_solidColor && solidColor) { // bitmap -> 纯色
+        if (isSolidColorCoverWholeTile) {
+            clearBitmap();
+            setSolidColor(*solidColor);
+        }
+    } else if (!m_solidColor && !solidColor) { // 都不是纯色
+        if (m_bitmap)
+            ASSERT(m_bitmap->getPixels());
+    } else if (m_solidColor && solidColor) { // 都是纯色
+        cancelSolidColor();
+        setSolidColor(*solidColor);
+        if (m_bitmap)
+            ASSERT(!m_bitmap->getPixels());
+    }
+
     m_isNotInit = false;
     // 有可能在还没光栅化，就被滚动导致clearBitmap了，所以不需要ASSERT(!(!m_bitmap && 1 != getRefCnt())); 
     if (!m_compositingLayer)
@@ -121,7 +149,6 @@ void CompositingTile::allocBitmapIfNeeded()
     int width = m_postion.width();
     int height = m_postion.height();
     
-    //m_postion = blink::IntRect(m_xIndex * kDefaultTileWidth, m_yIndex * kDefaultTileHeight, kDefaultTileWidth, kDefaultTileHeight);
     blink::IntSize bounds = m_compositingLayer->drawToCanvasProperties()->bounds;
     bool isBoundsDirty = m_layerBounds != bounds;
     m_layerBounds = bounds;
@@ -130,22 +157,6 @@ void CompositingTile::allocBitmapIfNeeded()
         return;
     }
 
-    
-    //         if (kDefaultTileWidth >= bounds.width() && kDefaultTileHeight >= bounds.height()) {
-    //             if (1 != m_compositingLayer->tilesSize()) {
-    //                 WTF::String outstr = WTF::String::format("CompositingTile::allocBitmapIfNeeded %p %d %d\n", this, m_compositingLayer->id(), m_compositingLayer->tilesSize());
-    //                 OutputDebugStringW(outstr.charactersWithNullTermination().data());
-    // 
-    //                 DebugBreak();
-    //                 return;
-    //             } else {
-    //                 needResize = (width != bounds.width() || height != bounds.height());
-    //                 width = bounds.width();
-    //                 height = bounds.height();
-    //                 m_postion = blink::IntRect(0, 0, width, height);
-    //             }
-    //         }
-    
     int newWidth = bounds.width() < kDefaultTileWidth ? bounds.width() : kDefaultTileWidth;
     int newHeight = bounds.height() < kDefaultTileHeight ? bounds.height() : kDefaultTileHeight;
     newWidth = newWidth <= 0 ? 1 : newWidth;
@@ -155,9 +166,13 @@ void CompositingTile::allocBitmapIfNeeded()
     m_postion = blink::IntRect(m_xIndex * kDefaultTileWidth, m_yIndex * kDefaultTileHeight, newWidth, newHeight);
 
     if (m_bitmap && needResize) {
+        if (!m_solidColor)
+            ASSERT(m_bitmap->getPixels());
         resizeBitmap(newWidth, newHeight);
         return;
     } else if (m_bitmap && !needResize) {
+        if (!m_solidColor)
+            ASSERT(m_bitmap->getPixels());
         return;
     }
 
@@ -165,42 +180,21 @@ void CompositingTile::allocBitmapIfNeeded()
     m_bitmap = allocBitmap(newWidth, newHeight, m_compositingLayer->opaque());
 }
 
-// void CompositingTile::allocBitmapIfNeeded()
-// {
-//     m_isNotInit = false;
-//     // 有可能在还没光栅化，就被滚动导致clearBitmap了，所以不需要ASSERT(!(!m_bitmap && 1 != getRefCnt())); 
-// 
-//     if (m_bitmap)
-//         return;
-// 
-//     int width = m_postion.width();
-//     int height = m_postion.height();
-//     m_postion = blink::IntRect(m_xIndex * kDefaultTileWidth, m_yIndex * kDefaultTileHeight, kDefaultTileWidth, kDefaultTileHeight);
-//     if (m_compositingLayer) {
-//         blink::IntSize bounds = m_compositingLayer->drawToCanvasProperties()->bounds;
-//         if (width >= bounds.width() && height >= bounds.height()) {
-//             if (1 != m_compositingLayer->tilesSize()) {
-//                 ASSERT(false);
-//                 return;
-//             } else {
-//                 width = bounds.width();
-//                 height = bounds.height();
-//                 m_postion = blink::IntRect(0, 0, width, height);
-//             }
-//         }
-//     }
-//     
-//     m_bitmap = new SkBitmap();
-//     SkImageInfo info = SkImageInfo::Make(width, height, kN32_SkColorType, kPremul_SkAlphaType, kLinear_SkColorProfileType);
-//     m_bitmap->allocPixels(info);
-// 
-//     SkColor color = 0x00ffffff;
-//     m_bitmap->eraseColor(color); // 根据是否透明窗口决定背景色
-// }
-
 CompositingLayer* CompositingTile::layer() const
 {
     return m_compositingLayer;
+}
+
+void CompositingTile::setSolidColor(SkColor color)
+{
+    m_solidColor = new SkColor();
+    *m_solidColor = color;
+}
+
+void CompositingTile::cancelSolidColor()
+{
+    delete m_solidColor;
+    m_solidColor = nullptr;
 }
 
 blink::IntRect CompositingTile::postion() const

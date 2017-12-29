@@ -13,7 +13,7 @@
 #include "cc/trees/LayerTreeHostClient.h"
 #include "cc/tiles/Tile.h"
 #include "cc/tiles/TileGrid.h"
-#include "cc/raster/RasterTaskWorkerThreadPool.h"
+#include "cc/raster/RasterTask.h"
 #include "cc/layers/CompositingLayer.h"
 #include "cc/playback/LayerChangeAction.h"
 
@@ -321,8 +321,8 @@ bool LayerTreeHost::canRecordActions() const
     if (RasterTaskWorkerThreadPool::shared()->getPendingRasterTaskNum() > 10)
         return false;
 
-//     if (!m_actionsFrameGroup || m_actionsFrameGroup->getFramesSize() > 10)
-//         return false;
+    if (!m_actionsFrameGroup || m_actionsFrameGroup->getFramesSize() > 30)
+        return false;
     
     double lastRecordTime = WTF::monotonicallyIncreasingTime();
     double detTime = lastRecordTime - m_lastRecordTime;
@@ -976,7 +976,7 @@ void LayerTreeHost::paintToMemoryCanvasInUiThread(const IntRect& paintRect)
 
 void LayerTreeHost::WrapSelfForUiThread::endPaint() {
     m_host->m_compositeMutex.lock();
-    m_host->m_wrapSelfForUiThreads.erase(this);
+    m_host->m_wrapSelfForUiThreads.remove(this);
     m_host->m_compositeMutex.unlock();
 
     int* paintToMemoryCanvasInUiThreadTaskCount = &m_host->m_paintToMemoryCanvasInUiThreadTaskCount;
@@ -1023,8 +1023,11 @@ void LayerTreeHost::requestPaintToMemoryCanvasInUiThread(const IntRect& r)
     m_dirtyRectsForUi.append(dirtyRect);
     mergeDirty(&m_dirtyRectsForUi);
 
+    if (m_paintToMemoryCanvasInUiThreadTaskCount > 30)
+        return;
+
     WrapSelfForUiThread* wrap = new WrapSelfForUiThread(this);
-    m_wrapSelfForUiThreads.insert(wrap);
+    m_wrapSelfForUiThreads.add(wrap);
     atomicIncrement(&m_paintToMemoryCanvasInUiThreadTaskCount);
     Platform::current()->mainThread()->postTask(FROM_HERE, WTF::bind(&LayerTreeHost::WrapSelfForUiThread::paintInUiThread, wrap));
 }

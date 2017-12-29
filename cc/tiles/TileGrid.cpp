@@ -7,7 +7,7 @@
 #include "cc/tiles/TilesAddr.h"
 
 #include "cc/blink/WebLayerImpl.h"
-#include "cc/raster/RasterTaskWorkerThreadPool.h"
+#include "cc/raster/RasterTask.h"
 #include "cc/trees/LayerTreeHost.h"
 #include "cc/trees/DrawProperties.h"
 #include "cc/playback/TileActionInfo.h"

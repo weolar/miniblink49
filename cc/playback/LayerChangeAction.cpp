@@ -281,15 +281,18 @@ void LayerChangeActionUpdataImageLayer::run(LayerTreeHost* host)
 
 //////////////////////////////////////////////////////////////////////////
 
-LayerChangeActionBlend::Item::~Item()
-{
-    delete bitmap;
-    delete willRasteredTiles;
-}
+// LayerChangeActionBlend::Item::~Item()
+// {
+//     delete bitmap;
+//     delete willRasteredTiles;
+// }
 
-LayerChangeActionBlend::LayerChangeActionBlend(int actionId, int layerId, TileActionInfoVector* willRasteredTiles, const SkRect& dirtyRect, SkBitmap* bitmap)
+LayerChangeActionBlend::LayerChangeActionBlend(int actionId, int layerId, TileActionInfoVector* willRasteredTiles, const SkRect& dirtyRect)
     : LayerChangeAction(actionId, LayerChangeBlend)
-    , m_item(new Item(layerId, willRasteredTiles, dirtyRect, bitmap))
+    , m_layerId(layerId)
+    , m_willRasteredTiles(willRasteredTiles)
+    , m_dirtyRect(dirtyRect)
+    , m_dirtyRectBitmap(nullptr)
 {
 //     String outString = String::format("LayerChangeActionBlend: %d %d, %d %d\n", dirtyRect.x(), dirtyRect.y(), dirtyRect.width(), dirtyRect.height());
 //     OutputDebugStringW(outString.charactersWithNullTermination().data());
@@ -297,12 +300,16 @@ LayerChangeActionBlend::LayerChangeActionBlend(int actionId, int layerId, TileAc
 
 LayerChangeActionBlend::~LayerChangeActionBlend()
 {
-    delete m_item;
+    //delete m_item;
+    if (m_dirtyRectBitmap)
+        delete m_dirtyRectBitmap;
+    delete m_willRasteredTiles;
 }
 
-void LayerChangeActionBlend::setBitmap(/*size_t itemId, */SkBitmap* bitmap)
+void LayerChangeActionBlend::setDirtyRectBitmap(SkBitmap* bitmap)
 {
-    m_item->bitmap = bitmap;
+    ASSERT(!m_dirtyRectBitmap);
+    m_dirtyRectBitmap = bitmap;
 }
 
 void LayerChangeActionBlend::appendPendingInvalidateRect(const SkRect& r)
@@ -317,12 +324,10 @@ void LayerChangeActionBlend::appendPendingInvalidateRects(const WTF::Vector<SkRe
 
 void LayerChangeActionBlend::run(LayerTreeHost* host)
 {
-    Item* item = m_item;
-    CompositingLayer* layer = host->getCCLayerById(item->layerId);
+    CompositingLayer* layer = host->getCCLayerById(m_layerId);
     CHECK_LAYER_EMPTY(layer);
 
-    if (item->bitmap)
-        layer->blendToTiles(item->willRasteredTiles, *(item->bitmap), item->dirtyRect);
+    layer->blendToTiles(m_willRasteredTiles, m_dirtyRectBitmap, m_dirtyRect);
 
     for (size_t i = 0; i < m_pendingInvalidateRects.size(); ++i) {
         const SkRect& r = m_pendingInvalidateRects[i];

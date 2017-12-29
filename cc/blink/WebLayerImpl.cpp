@@ -11,7 +11,7 @@
 #include "cc/trees/LayerTreeHost.h"
 #include "cc/tiles/TileGrid.h"
 #include "cc/trees/DrawProperties.h"
-#include "cc/raster/RasterTaskWorkerThreadPool.h"
+#include "cc/raster/RasterTask.h"
 #include "cc/playback/LayerChangeAction.h"
 #include "cc/base/MathUtil.h"
 #include "cc/blink/WebFilterOperationsImpl.h"

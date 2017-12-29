@@ -1,15 +1,14 @@
 #ifndef LayerTreeHost_h
 #define LayerTreeHost_h
 
-#include "cc/trees/LayerTreeHost.h"
 #include "third_party/WebKit/public/platform/WebLayerTreeView.h"
 #include "third_party/WebKit/Source/platform/geometry/IntRect.h"
 #include "third_party/WebKit/Source/platform/geometry/IntSize.h"
+#include "third_party/WebKit/Source/wtf/HashMap.h"
+#include "third_party/WebKit/Source/wtf/Vector.h"
+#include "third_party/WebKit/Source/wtf/ThreadingPrimitives.h"
+#include "third_party/WebKit/Source/wtf/HashSet.h"
 #include "third_party/skia/include/core/SkRect.h"
-#include "wtf/HashMap.h"
-#include "wtf/Vector.h"
-#include "wtf/ThreadingPrimitives.h"
-#include <set>
 
 namespace blink {
 class WebViewClient;
@@ -253,7 +252,7 @@ private:
         void endPaint();
     };
     friend WrapSelfForUiThread;
-    std::set<WrapSelfForUiThread*> m_wrapSelfForUiThreads;
+    WTF::HashSet<WrapSelfForUiThread*> m_wrapSelfForUiThreads;
     int m_paintToMemoryCanvasInUiThreadTaskCount;
 
     bool m_isDrawDirty;

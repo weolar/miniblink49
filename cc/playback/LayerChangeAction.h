@@ -177,32 +177,24 @@ private:
 
 class LayerChangeActionBlend : public LayerChangeAction {
 public:
-    LayerChangeActionBlend(int actionId, int layerId, TileActionInfoVector* willRasteredTiles, const SkRect& dirtyRect, SkBitmap* bitmap);
+    LayerChangeActionBlend(int actionId, int layerId, TileActionInfoVector* willRasteredTiles, const SkRect& dirtyRect);
     virtual ~LayerChangeActionBlend() override;
 
     void run(LayerTreeHost* host);
-    void setBitmap(SkBitmap* bitmap);
+    void setDirtyRectBitmap(SkBitmap* bitmap);
     void appendPendingInvalidateRect(const SkRect& r);
     void appendPendingInvalidateRects(const WTF::Vector<SkRect>& rects);
 
-    struct Item {
-        Item(int layerId, TileActionInfoVector* willRasteredTiles, SkRect dirtyRect, SkBitmap* bitmap)
-        {
-            this->layerId = layerId;
-            this->willRasteredTiles = willRasteredTiles;
-            this->dirtyRect = dirtyRect;
-            this->bitmap = bitmap;
-        }
-        ~Item();
+    int getLayerId() const { return m_layerId; }
 
-        int layerId;
-        TileActionInfoVector* willRasteredTiles;
-        SkRect dirtyRect;
-        SkBitmap* bitmap;
-    };
+    const TileActionInfoVector* getWillRasteredTiles() const { return m_willRasteredTiles; }
 
-    Item* m_item;
 private:
+    int m_layerId;
+    TileActionInfoVector* m_willRasteredTiles;
+    SkRect m_dirtyRect;
+    SkBitmap* m_dirtyRectBitmap;
+
     WTF::Vector<SkRect> m_pendingInvalidateRects;
 };
 

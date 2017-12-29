@@ -27,26 +27,32 @@
 #include "third_party/skia/include/core/SkPicture.h"
 #include "third_party/skia/include/core/SkSurface.h"
 #include "third_party/skia/include/core/SkCanvas.h"
+#include "skia/ext/analysis_canvas.h"
 
 #include "skia/ext/refptr.h"
 #include "cc/raster/RasterResouce.h"
 #include "cc/raster/RasterFilters.h"
 #include "cc/tiles/Tile.h"
 #include "cc/tiles/TileGrid.h"
+#include "cc/tiles/TileWidthHeight.h"
 #include "cc/blink/WebLayerImpl.h"
 #include "cc/blink/WebFilterOperationsImpl.h"
 #include "cc/trees/LayerTreeHost.h"
 #include "cc/trees/DrawProperties.h"
 #include "cc/playback/LayerChangeAction.h"
+#include "cc/playback/TileActionInfo.h"
 
-#include "platform/image-encoders/gdiplus/GDIPlusImageEncoder.h" // TODO
+#include "third_party/WebKit/Source/platform/image-encoders/gdiplus/GDIPlusImageEncoder.h"
 
 extern DWORD g_rasterTime;
 extern DWORD g_nowTime;
 extern int g_mouseTest;
 extern DWORD g_rasterTimeInMouse;
+extern bool g_alwaysIsNotSolideColor;
 
-using namespace blink;
+namespace blink {
+bool saveDumpFile(const String& url, char* buffer, unsigned int size);
+}
 
 namespace content {
 extern int debugPaint;
@@ -75,7 +81,7 @@ void RasterTaskWorkerThreadPool::init(int threadNum)
         threadNum = 1;
 
     for (int i = 0; i < threadNum; ++i) {
-        m_threads.append(Platform::current()->createThread("RasterTaskWorkerThreadPool"));
+        m_threads.append(blink::Platform::current()->createThread("RasterTaskWorkerThreadPool"));
         m_threadBusyCount.append(0);
     }
 }
@@ -138,11 +144,35 @@ void RasterTaskWorkerThreadPool::decreaseBusyCountByIndex(int index)
     atomicDecrement(&m_threadBusyCount[index]);
 }
 
+class RasteredTileBitmap {
+public:
+    RasteredTileBitmap()
+    {
+        m_isSolidColor = false;
+    }
+
+    ~RasteredTileBitmap()
+    {
+
+    }
+
+    bool isSolidColor() const
+    {
+        return m_isSolidColor;
+    }
+
+private:
+    int xIndex;
+    int yIndex;
+    bool m_isSolidColor;
+    SkColor m_solidColor;
+};
+
 #ifndef NDEBUG
 DEFINE_DEBUG_ONLY_GLOBAL(WTF::RefCountedLeakCounter, rasterTaskCounter, ("ccRasterTask"));
 #endif
 
-class RasterTask : public WebThread::Task {
+class RasterTask : public blink::WebThread::Task {
 public:
     explicit RasterTask(
         RasterTaskWorkerThreadPool* pool, 
@@ -205,26 +235,76 @@ public:
     virtual void run() override
     {
         DWORD nowTime = (DWORD)(WTF::currentTimeMS() * 100);
-        //DWORD detTime = nowTime - g_nowTime;
-        //InterlockedExchange((LONG*)&g_nowTime, nowTime);
-
-        SkBitmap* bitmap = raster();
-        m_blendAction->setBitmap(bitmap);
+        raster();
         releaseRource();
-
-        DWORD detTime = (DWORD)(WTF::currentTimeMS() * 100) - nowTime;
-
-//         String out = String::format("RasterTask.run: %d\n", detTime);
-//         OutputDebugStringA(out.utf8().data());
     }
 
-    SkBitmap* raster()
+    bool performSolidColorAnalysis(const SkRect& tilePos, SkColor* color)
+    {
+        skia::AnalysisCanvas canvas(tilePos.width(), tilePos.height());
+        canvas.translate(-tilePos.x(), -tilePos.y());
+        canvas.clipRect(tilePos, SkRegion::kIntersect_Op);
+        canvas.drawPicture(m_picture);
+
+        return canvas.GetColorIfSolid(color);
+    }
+
+    void raster()
+    {
+        const Vector<TileActionInfo*>& infos = m_blendAction->getWillRasteredTiles()->infos();
+#if 0
+        for (size_t i = 0; i < infos.size(); ++i) {
+            TileActionInfo* info = infos[i];
+            SkRect tilePos = SkRect::MakeXYWH(info->xIndex * kDefaultTileWidth, info->yIndex * kDefaultTileHeight, kDefaultTileWidth, kDefaultTileHeight);
+            tilePos.intersect(m_dirtyRect);
+
+            if (1 == info->xIndex && 0 == info->yIndex)
+                OutputDebugStringA("");
+
+            info->m_isSolidColor = performSolidColorAnalysis(tilePos, &info->m_solidColor);
+
+            ASSERT(!info->m_bitmap);
+            if (!info->m_isSolidColor)
+                info->m_bitmap = doRaster(m_dirtyRect);
+        }
+#elif 1
+        for (size_t i = 0; i < infos.size(); ++i) {
+            TileActionInfo* info = infos[i];
+            ASSERT(!info->m_solidColor);
+            SkRect tilePos = SkRect::MakeXYWH(info->xIndex * kDefaultTileWidth, info->yIndex * kDefaultTileHeight, kDefaultTileWidth, kDefaultTileHeight);
+            SkRect dirtyRectInTile(tilePos);
+
+            dirtyRectInTile.intersect(m_dirtyRect);
+            SkColor solidColor;
+            bool isSolidColor = performSolidColorAnalysis(dirtyRectInTile, &solidColor);
+
+            if (g_alwaysIsNotSolideColor)
+                isSolidColor = false;
+
+            if (isSolidColor) {
+                info->m_solidColor = new SkColor(solidColor);
+                info->m_isSolidColorCoverWholeTile = m_dirtyRect.contains(tilePos);
+            }
+        }
+
+        SkBitmap* bitmap = doRaster(m_dirtyRect);
+        m_blendAction->setDirtyRectBitmap(bitmap);
+
+        if (0) {
+            Vector<unsigned char> output;
+            blink::GDIPlusImageEncoder::encode(*bitmap, blink::GDIPlusImageEncoder::PNG, &output);
+            blink::saveDumpFile("E:\\mycode\\miniblink49\\trunk\\out\\1.png", (char*)output.data(), output.size());
+        }
+#endif
+    }
+
+    SkBitmap* doRaster(const SkRect& dirtyRect)
     {
         SkBitmap* bitmap = new SkBitmap;
-        bitmap->allocN32Pixels(m_dirtyRect.width(), m_dirtyRect.height());
+        bitmap->allocN32Pixels(dirtyRect.width(), dirtyRect.height());
 
         // Uses kPremul_SkAlphaType since the result is not known to be opaque.
-        SkImageInfo info = SkImageInfo::MakeN32(m_dirtyRect.width(), m_dirtyRect.height(), m_isOpaque ? kOpaque_SkAlphaType : kPremul_SkAlphaType); // TODO
+        SkImageInfo info = SkImageInfo::MakeN32(dirtyRect.width(), dirtyRect.height(), m_isOpaque ? kOpaque_SkAlphaType : kPremul_SkAlphaType); // TODO
         SkSurfaceProps surfaceProps(0, kUnknown_SkPixelGeometry);
         size_t stride = info.minRowBytes();
         skia::RefPtr<SkSurface> surface = skia::AdoptRef(SkSurface::NewRasterDirect(info, bitmap->getPixels(), stride, &surfaceProps));
@@ -238,11 +318,11 @@ public:
 
         canvas->save();
         canvas->scale(1, 1);
-        canvas->translate(-m_dirtyRect.x(), -m_dirtyRect.y());
+        canvas->translate(-dirtyRect.x(), -dirtyRect.y());
         canvas->drawPicture(m_picture, nullptr, nullptr);
         canvas->restore();
 
-        skia::RefPtr<SkImageFilter> filter = RasterFilter::buildImageFilter(m_filterOperations, FloatSize(m_dirtyRect.width(), m_dirtyRect.height()));
+        skia::RefPtr<SkImageFilter> filter = RasterFilter::buildImageFilter(m_filterOperations, blink::FloatSize(dirtyRect.width(), dirtyRect.height()));
         // TODO(ajuma): Apply the filter in the same pass as the content where
         // possible (e.g. when there's no origin offset). See crbug.com/308201.
         return applyImageFilter(filter.get(), bitmap);        
@@ -340,7 +420,7 @@ int64 RasterTaskGroup::postRasterTask(cc_blink::WebLayerImpl* layer, SkPicture* 
 
     int layerId = layer->id();
     
-    LayerChangeActionBlend* blendAction = new LayerChangeActionBlend(m_host->genActionId(), layerId, willRasteredTiles, dirtyRect, nullptr);
+    LayerChangeActionBlend* blendAction = new LayerChangeActionBlend(m_host->genActionId(), layerId, willRasteredTiles, dirtyRect);
     m_blendAndImageActions.append(blendAction);
     m_lastBlendActionForPendingInvalidateRect = blendAction;
 

@@ -37,11 +37,16 @@ public:
     void clearBitmap();
     blink::IntRect postion() const;
     void eraseColor(const blink::IntRect& r, const SkColor* color);
-    void allocBitmapIfNeeded();
+    void allocBitmapIfNeeded(SkColor* solidColor, bool isSolidColorCoverWholeTile);
 
     CompositingLayer* layer() const;
 
     bool isNotInit() { return m_isNotInit; } // for debug
+
+    void setSolidColor(SkColor color);
+    void cancelSolidColor();
+    bool isSolidColor() const { return !!m_solidColor; }
+    SkColor* getSolidColor() const { return m_solidColor; }
 
 private:
     void resizeBitmap(int dstWidth, int dstHeight);
@@ -56,6 +61,8 @@ private:
     blink::IntRect m_postion;
     blink::IntSize m_layerBounds;
     SkBitmap* m_bitmap;
+
+    SkColor* m_solidColor;
 };
 
 }

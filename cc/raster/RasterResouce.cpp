@@ -1,5 +1,5 @@
 /*
-* Copyright (C) 2013 Google Inc.  All rights reserved.
+* Copyright (C) 2013 weolar Inc.  All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
 * modification, are permitted provided that the following conditions are
@@ -28,44 +28,31 @@
 * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef RasterResouce_h
-#define RasterResouce_h
-
-#include "third_party/WebKit/Source/platform/geometry/FloatRect.h"
-#include "third_party/WebKit/Source/platform/geometry/IntSize.h"
-#include "cc/raster/SkBitmapRefWrap.h"
-#include "cc/raster/RasterTaskClient.h"
-
-class SkBitmap;
-class SkPicture;
-
-namespace blink {
-class RecursiveMutex;
-}
+#include "cc/raster/RasterResouce.h"
+#include "third_party/skia/include/core/SkPicture.h"
+#include "third_party/WebKit/Source/wtf/ThreadingPrimitives.h"
 
 namespace cc {
 
-class RasterResouce {
-public:
-    RasterResouce(SkBitmapRefWrap* bitmapWrap, blink::RecursiveMutex* mutex, SkPicture* picture, blink::FloatRect layerRect, RasterTaskClient* client);
-    ~RasterResouce();
+RasterResouce::RasterResouce(SkBitmapRefWrap* bitmapWrap, blink::RecursiveMutex* mutex, SkPicture* picture, blink::FloatRect layerRect, RasterTaskClient* client)
+    : m_bitmapWrap(bitmapWrap)
+    , m_mutex(mutex)
+    , m_picture(picture)
+    , m_layerRect(layerRect)
+    , m_client(client)
+{
+}
 
-    bool willBeDelete();
+RasterResouce::~RasterResouce()
+{
+    delete m_picture;
+    m_bitmapWrap->deref();
+    m_client->rasterTaskFinish();
+}
 
-    SkBitmap* bitmap() { return m_bitmapWrap->get(); }
-    blink::RecursiveMutex* mutex(){ return m_mutex; }
-    SkPicture* picture(){ return m_picture; }
-    blink::FloatRect layerRect() { return m_layerRect; }
-    blink::IntSize bitmapSize() { return blink::IntSize(m_bitmapWrap->get()->width(), m_bitmapWrap->get()->height()); }
-
-private:
-    cc::SkBitmapRefWrap* m_bitmapWrap;
-    blink::RecursiveMutex* m_mutex;
-    SkPicture* m_picture;
-    blink::FloatRect m_layerRect;
-    RasterTaskClient* m_client;
-};
+bool RasterResouce::willBeDelete()
+{
+    return m_client->willBeDelete();
+}
 
 } // cc
-
-#endif // RasterResouce_h
