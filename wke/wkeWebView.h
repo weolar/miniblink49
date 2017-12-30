@@ -207,6 +207,7 @@ public:
     
     void onURLChanged(wkeURLChangedCallback callback, void* callbackParam);
     void onURLChanged2(wkeURLChangedCallback2 callback, void* callbackParam);
+    void onUrlChanged(const wkeString url);
     void onTitleChanged(wkeTitleChangedCallback callback, void* callbackParam);
     virtual void onPaintUpdated(wkePaintUpdatedCallback callback, void* callbackParam);
 

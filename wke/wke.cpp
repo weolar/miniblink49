@@ -152,9 +152,26 @@ void wkeSetCspCheckEnable(wkeWebView webView, bool b)
     net::g_cspCheckEnable = b;
 }
 
+bool g_alwaysIsNotSolideColor = false;
+bool g_drawDirtyDebugLine = false;
+bool g_drawTileLine = false;
+
 void wkeSetDebugConfig(wkeWebView webView, const char* debugString)
 {
+    String stringDebug(debugString);
 
+    Vector<String> result;
+    stringDebug.split(",", result);
+    for (size_t i = 0; i < result.size(); ++i) {
+        String item = result[i];
+        if ("alwaysIsNotSolideColor" == item) {
+            g_alwaysIsNotSolideColor = true;
+        } else if ("drawDirtyDebugLine" == item) {
+            g_drawDirtyDebugLine = true;
+        } else if ("drawTileLine" == item) {
+            g_drawTileLine = true;
+        }
+    }
 }
 
 void wkeUpdate()

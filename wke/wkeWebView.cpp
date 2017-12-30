@@ -290,6 +290,11 @@ const utf8* CWebView::url() const
     return m_url.string();
 }
 
+void CWebView::onUrlChanged(const wkeString url)
+{
+    m_url = *url;
+}
+
 bool CWebView::isLoading() const
 {
     content::WebFrameClientImpl* frameClient = m_webPage->webFrameClientImpl();

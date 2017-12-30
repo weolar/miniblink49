@@ -409,6 +409,9 @@ WKE_API void* wkeGetUserKeyValue(wkeWebView webView, const char* key);
 WKE_API int wkeGetCursorInfoType(wkeWebView webView);
 WKE_API void wkeSetDragFiles(wkeWebView webView, const POINT* clintPos, const POINT* screenPos, wkeString files[], int filesCount);
 
+// blink内部窗口创建回调，例如下拉框
+WKE_API void wkeOnBlinkWindowCreate();
+
 //wke callback-----------------------------------------------------------------------------------
 typedef void(*wkeTitleChangedCallback)(wkeWebView webView, void* param, const wkeString title);
 WKE_API void wkeOnTitleChanged(wkeWebView webView, wkeTitleChangedCallback callback, void* callbackParam);
