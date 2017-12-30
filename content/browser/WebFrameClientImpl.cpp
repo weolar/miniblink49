@@ -266,6 +266,10 @@ void WebFrameClientImpl::didCommitProvisionalLoad(WebLocalFrame* frame, const We
     wke::CWebViewHandler& handler = m_webPage->wkeHandler();
     String url = history.urlString();
     wke::CString string(url);
+
+    if (m_webPage->wkeWebView())
+        m_webPage->wkeWebView()->onUrlChanged(&string);
+
     if (handler.urlChangedCallback) 
         handler.urlChangedCallback(m_webPage->wkeWebView(), handler.urlChangedCallbackParam, &string);
 
