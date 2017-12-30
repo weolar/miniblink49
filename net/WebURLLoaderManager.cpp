@@ -975,7 +975,7 @@ static size_t writeCallbackOnIoThread(void* ptr, size_t size, size_t nmemb, void
 
 static bool checkIsProxyHead(WebURLLoaderInternal* job, char* ptr, size_t size)
 {
-    if (0 == size)
+    if (0 == size || !job->m_isProxy)
         return false;
 
     Vector<char> buffer;
