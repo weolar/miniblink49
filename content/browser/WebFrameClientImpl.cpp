@@ -1,7 +1,4 @@
-#include "third_party/WebKit/public/web/WebFrameClient.h"
-#include "third_party/WebKit/public/web/WebDocument.h"
-#include "third_party/WebKit/Source/web/WebLocalFrameImpl.h"
-#include "third_party/WebKit/Source/web/WebViewImpl.h"
+
 #include "content/browser/WebFrameClientImpl.h"
 #include "content/browser/WebPage.h"
 #include "content/web_impl_win/WebCookieJarCurlImpl.h"
@@ -23,15 +20,20 @@
 #include "cef/libcef/browser/CefBrowserHostImpl.h"
 #include "cef/libcef/renderer/CefV8Impl.h"
 #endif
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
+#include "wke/wkeWebView.h"
+#include "wke/wkeJsBind.h"
+#endif
+#include "third_party/WebKit/public/web/WebFrameClient.h"
+#include "third_party/WebKit/public/web/WebDocument.h"
+#include "third_party/WebKit/public/web/WebUserGestureIndicator.h"
+#include "third_party/WebKit/Source/web/WebLocalFrameImpl.h"
+#include "third_party/WebKit/Source/web/WebViewImpl.h"
 #include "third_party/WebKit/Source/platform/Language.h"
 #include "third_party/WebKit/Source/core/frame/Settings.h"
 #include "third_party/WebKit/Source/core/page/Page.h"
 #include "third_party/WebKit/Source/wtf/text/WTFStringUtil.h"
 #include "net/RequestExtraData.h"
-#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
-#include "wke/wkeWebView.h"
-#include "wke/wkeJsBind.h"
-#endif
 
 namespace content {
 
@@ -515,10 +517,6 @@ void WebFrameClientImpl::willSendRequest(WebLocalFrame* webFrame, unsigned ident
 
     request.setExtraData(requestExtraData);
 
-//     String headerFieldValue = blink::defaultLanguage();
-//     headerFieldValue.append(",en,*");
-// 
-//     CString value = headerFieldValue.latin1().data();
      request.addHTTPHeaderField("Accept-Language", "zh-cn,zh;q=0.5");
 // 
 //     WebViewImpl* viewImpl = m_webPage->webViewImpl();
@@ -533,6 +531,50 @@ void WebFrameClientImpl::willSendRequest(WebLocalFrame* webFrame, unsigned ident
 //     headerFieldValue.append(",utf-8;q=0.7,*;q=0.3");
 //     value = headerFieldValue.latin1().data();
 //     request.addHTTPHeaderField("Accept-Charset", WebString::fromLatin1((const WebLChar*)value.data(), value.length()));
+
+// Set the first party for cookies url if it has not been set yet (new
+// requests). For redirects, it is updated by WebURLLoaderImpl.
+     if (request.firstPartyForCookies().isEmpty()) {
+         if (request.frameType() == blink::WebURLRequest::FrameTypeTopLevel) {
+             request.setFirstPartyForCookies(request.url());
+         } else {
+             // TODO(nasko): When the top-level frame is remote, there is no document.
+             // This is broken and should be fixed to propagate the first party.
+             WebFrame* top = webFrame->top();
+             if (top->isWebLocalFrame())
+                 request.setFirstPartyForCookies(webFrame->top()->document().firstPartyForCookies());
+         }
+     }
+
+     const char kDefaultAcceptHeader[] = "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8";
+     const char kAcceptHeader[] = "Accept";
+
+     WebDataSource* provisional_data_source = webFrame->provisionalDataSource();
+     WebDataSource* data_source = provisional_data_source ? provisional_data_source : webFrame->dataSource();
+
+     // The request's extra data may indicate that we should set a custom user
+     // agent. This needs to be done here, after WebKit is through with setting the
+     // user agent on its own. Similarly, it may indicate that we should set an
+     // X-Requested-With header. This must be done here to avoid breaking CORS
+     // checks.
+     // PlzNavigate: there may also be a stream url associated with the request.
+
+     // Add the default accept header for frame request if it has not been set
+     // already.
+     if ((request.frameType() == blink::WebURLRequest::FrameTypeTopLevel || 
+         request.frameType() == blink::WebURLRequest::FrameTypeNested) && request.httpHeaderField(WebString::fromUTF8(kAcceptHeader)).isEmpty()) {
+         request.setHTTPHeaderField(WebString::fromUTF8(kAcceptHeader), WebString::fromUTF8(kDefaultAcceptHeader));
+     }
+
+     // Add an empty HTTP origin header for non GET methods if none is currently
+     // present.
+     request.addHTTPOriginIfNeeded(WebString());
+
+     // This is an instance where we embed a copy of the routing id
+     // into the data portion of the message. This can cause problems if we
+     // don't register this id on the browser side, since the download manager
+     // expects to find a RenderViewHost based off the id.
+     request.setHasUserGesture(blink::WebUserGestureIndicator::isProcessingUserGesture());
 }
 
 void WebFrameClientImpl::didReceiveResponse(WebLocalFrame*, unsigned identifier, const WebURLResponse&)
