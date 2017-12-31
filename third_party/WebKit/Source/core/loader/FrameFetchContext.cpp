@@ -61,6 +61,10 @@
 #include "platform/weborigin/SchemeRegistry.h"
 #include "platform/weborigin/SecurityPolicy.h"
 
+namespace net {
+extern bool g_cspCheckEnable;
+}
+    
 namespace blink {
 
 FrameFetchContext::FrameFetchContext(DocumentLoader* loader)
@@ -95,7 +99,7 @@ void FrameFetchContext::addAdditionalRequestHeaders(ResourceRequest& request, Fe
             outgoingOrigin = m_document->outgoingOrigin();
             request.setHTTPReferrer(SecurityPolicy::generateReferrer(m_document->referrerPolicy(), request.url(), m_document->outgoingReferrer()));
         } else {
-            RELEASE_ASSERT(SecurityPolicy::generateReferrer(request.referrerPolicy(), request.url(), request.httpReferrer()).referrer == request.httpReferrer());
+            RELEASE_ASSERT(!net::g_cspCheckEnable || SecurityPolicy::generateReferrer(request.referrerPolicy(), request.url(), request.httpReferrer()).referrer == request.httpReferrer());
             outgoingOrigin = SecurityOrigin::createFromString(request.httpReferrer())->toString();
         }
 
