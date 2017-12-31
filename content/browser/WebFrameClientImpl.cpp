@@ -517,7 +517,7 @@ void WebFrameClientImpl::willSendRequest(WebLocalFrame* webFrame, unsigned ident
 
     request.setExtraData(requestExtraData);
 
-     request.addHTTPHeaderField("Accept-Language", "zh-cn,zh;q=0.5");
+    request.addHTTPHeaderField("Accept-Language", "zh-cn,zh;q=0.5");
 // 
 //     WebViewImpl* viewImpl = m_webPage->webViewImpl();
 //     if (!viewImpl)
