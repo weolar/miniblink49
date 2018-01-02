@@ -64,9 +64,11 @@ public:
     void blendToTiles(TileActionInfoVector* willRasteredTiles, const SkBitmap* bitmap, const SkRect& dirtyRect);
     void blendToTilesByTiles(TileActionInfoVector* willRasteredTiles);
     
-    void drawToCanvasChildren(LayerTreeHost* host, SkCanvas* canvas, const blink::IntRect& clip, int deep);
+    void drawToCanvasChildren(LayerTreeHost* host, SkCanvas* canvas, const SkRect& clip, int deep);
 
     size_t tilesSize() const;
+
+    SkColor getBackgroundColor() const;
 
 protected:
     friend class DoClipLayer;

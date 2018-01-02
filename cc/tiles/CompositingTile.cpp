@@ -80,7 +80,7 @@ void CompositingTile::clearBitmap()
     m_bitmap = nullptr;
 }
 
-SkBitmap* CompositingTile::allocBitmap(int width, int height, bool isOpaque)
+SkBitmap* CompositingTile::allocBitmap(int width, int height, SkColor backgroundColor)
 {
     if (0 == width || 0 == height)
         return nullptr;
@@ -90,9 +90,8 @@ SkBitmap* CompositingTile::allocBitmap(int width, int height, bool isOpaque)
     if (!m_solidColor)
         bitmap->allocPixels(info);
 
-    SkColor color = 0x00ffffff;
-//     if (!isOpaque) // TODO 
-//          bitmap->eraseColor(color); // TODO: 根据是否透明窗口决定背景色
+    //backgroundColor = 0xff1811ff;
+    bitmap->eraseColor(backgroundColor);
     return bitmap;
 }
 
@@ -103,7 +102,7 @@ void CompositingTile::resizeBitmap(int dstWidth, int dstHeight)
     if (isrc.width() == dstWidth && isrc.height() == dstHeight)
         return;
 
-    SkBitmap* dst = allocBitmap(dstWidth, dstHeight, m_compositingLayer->opaque());
+    SkBitmap* dst = allocBitmap(dstWidth, dstHeight, m_compositingLayer->getBackgroundColor());
 
     SkPaint paint;
     paint.setAntiAlias(true);
@@ -177,7 +176,7 @@ void CompositingTile::allocBitmapIfNeeded(SkColor* solidColor, bool isSolidColor
     }
 
     clearBitmap();
-    m_bitmap = allocBitmap(newWidth, newHeight, m_compositingLayer->opaque());
+    m_bitmap = allocBitmap(newWidth, newHeight, m_compositingLayer->getBackgroundColor());
 }
 
 CompositingLayer* CompositingTile::layer() const

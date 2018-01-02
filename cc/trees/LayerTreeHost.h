@@ -60,7 +60,7 @@ public:
 
     //void updateLayers(SkCanvas* canvas, const blink::IntRect& clip, bool needsFullTreeSync);
     void recordDraw();
-    void drawToCanvas(SkCanvas* canvas, const blink::IntRect& clip);
+    void drawToCanvas(SkCanvas* canvas, const SkRect& clip);
     void updateLayersDrawProperties();
 
     //void setNeedsCommit();
@@ -160,9 +160,9 @@ public:
     void requestApplyActionsToRunIntoCompositeThread(bool needCheck);
     //void setUseLayeredBuffer(bool b);
     //bool getIsUseLayeredBuffer() const { return m_useLayeredBuffer; }
-    static void clearCanvas(SkCanvas* canvas, const blink::IntRect& rect, bool useLayeredBuffer);
+    static void clearCanvas(SkCanvas* canvas, const SkRect& rect, bool useLayeredBuffer);
     
-    void postPaintMessage(const blink::IntRect& paintRect);
+    void postPaintMessage(const SkRect& paintRect);
     void firePaintEvent(HDC hdc, const RECT* paintRect);
     blink::IntRect getClientRect();
 
@@ -175,15 +175,15 @@ public:
     cc_blink::WebLayerImpl* getRootLayer() { return m_rootLayer; }
     const cc_blink::WebLayerImpl* getConstRootLayer() { return m_rootLayer; }
 
-    void appendPendingRepaintRect(SkRect r);
+    void appendPendingRepaintRect(const SkRect& r);
 
 private:
-    void requestPaintToMemoryCanvasInUiThread(const blink::IntRect& r);
+    void requestPaintToMemoryCanvasToUiThread(const SkRect& r);
     void onApplyActionsInCompositeThread(bool needCheck);
     void waitForApplyActions();
     void drawFrameInCompositeThread();
-    void paintToMemoryCanvasInUiThread(const blink::IntRect& paintRect);
-    void paintToMemoryCanvas(const blink::IntRect& r);
+    void paintToMemoryCanvasInUiThread(const SkRect& paintRect);
+    void paintToMemoryCanvas(const SkRect& r);
     
     bool m_isDestroying;
 
@@ -235,8 +235,8 @@ private:
     mutable double m_lastRecordTime;
 
     static const int m_paintMessageQueueSize = 200;
-    Vector<blink::IntRect> m_dirtyRectsForComposite;
-    Vector<blink::IntRect> m_dirtyRectsForUi;
+    Vector<SkRect> m_dirtyRectsForComposite;
+    Vector<SkRect> m_dirtyRectsForUi;
     int m_postpaintMessageCount;
     int m_drawFrameCount;
     int m_drawFrameFinishCount;
@@ -258,7 +258,7 @@ private:
     bool m_isDrawDirty;
     bool m_hasResize;
 
-    SkRect m_pendingRepaintRectInRootLayerCoordinate;
+    WTF::Vector<SkRect> m_pendingRepaintRectsInRootLayerCoordinate;
 };
 
 } // cc

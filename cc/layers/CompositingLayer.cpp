@@ -188,6 +188,11 @@ size_t CompositingLayer::tilesSize() const
     return m_tilesAddr->getSize();
 }
 
+SkColor CompositingLayer::getBackgroundColor() const
+{
+    return m_prop->backgroundColor;
+}
+
 void CompositingLayer::updataTile(int newIndexNumX, int newIndexNumY, DrawToCanvasProperties* prop)
 {
     TilesAddr::realloByNewXY(&m_tilesAddr, newIndexNumX, newIndexNumY);
@@ -241,7 +246,7 @@ void CompositingLayer::drawDebugLine(SkCanvas& canvas, CompositingTile* tile)
     canvas.drawLine(0, 0, tile->postion().width(), tile->postion().height(), paintTest);
     canvas.drawLine(tile->postion().width(), 0, 0, tile->postion().height(), paintTest);
 
-    String textTest = String::format("%d %d, (%d %d), %d", m_id, m_children.size(), tile->xIndex(), tile->yIndex(), tile->isSolidColor());
+    String textTest = String::format("%d %d %d, (%d %d), (%d %d)", m_id, tile->isSolidColor(), m_children.size(), tile->xIndex(), tile->yIndex(), m_prop->bounds.width(), m_prop->bounds.height());
     CString cText = textTest.utf8();
     canvas.drawText(cText.data(), cText.length(), 5, 15, paintTest);
 }
@@ -351,7 +356,7 @@ public:
         if (1 != child->tilesSize() && 0 != child->tilesSize()) {
             m_isClipChild = true;            
             canvas->save();
-            canvas->clipRect(SkRect::MakeIWH(child->drawToCanvasProperties()->bounds.width(), child->drawToCanvasProperties()->bounds.height()));
+            canvas->clipRect(SkRect::MakeIWH(child->drawToCanvasProperties()->bounds.width() - 1, child->drawToCanvasProperties()->bounds.height() - 1));
         }
     }
 
@@ -367,7 +372,7 @@ private:
     bool m_isClipChild;
 };
  
-void CompositingLayer::drawToCanvasChildren(LayerTreeHost* host, SkCanvas* canvas, const blink::IntRect& clip, int deep)
+void CompositingLayer::drawToCanvasChildren(LayerTreeHost* host, SkCanvas* canvas, const SkRect& clip, int deep)
 {
     for (size_t i = 0; i < children().size(); ++i) {
         CompositingLayer* child = children()[i];
@@ -427,21 +432,24 @@ void CompositingLayer::drawToCanvas(LayerTreeHost* host, blink::WebCanvas* canva
 
         blink::IntRect tilePostion = tile->postion();
         SkRect dst = (SkRect)(tilePostion);
-        SkRect src = SkRect::MakeWH(tile->bitmap()->width(), tile->bitmap()->height());
-
+        // SkRect src = SkRect::MakeWH(tile->bitmap()->width(), tile->bitmap()->height());
+        // dst.intersect(SkRect::MakeXYWH(clip.x(), clip.y(), clip.width(), clip.height()));
+        // SkIRect src = dst.makeOffset(-tile->postion().x(), -tile->postion().y()).roundOut();
+       
         SkPaint paint;
         paint.setAntiAlias(true);
         paint.setAlpha(alpha);
         paint.setXfermodeMode(SkXfermode::kSrcOver_Mode);
-        //paint.setColor(0xffffffff);
+        
         paint.setFilterQuality(kHigh_SkFilterQuality);
 
-        if (SkColor* color = tile->getSolidColor()) {
+        SkColor* color = tile->getSolidColor();
+        if (color) {
             paint.setColor(*color);
-            canvas->drawRect(dst, paint);
-        } else  { // weolar
-//         if (!tile->bitmap()->getPixels())
-//             DebugBreak();
+            canvas->drawRect(dst, paint);            
+        } else {
+            if (!tile->bitmap() || !tile->bitmap()->getPixels())
+                DebugBreak();
             canvas->drawBitmapRect(*tile->bitmap(), nullptr, dst, &paint);
         }    
     }
