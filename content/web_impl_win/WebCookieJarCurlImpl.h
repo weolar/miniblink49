@@ -27,9 +27,13 @@ public:
     void setCookieFromWinINet(const blink::KURL& url, const WTF::Vector<char>& cookiesLine);
     void setToRecordFromRawHeads(const blink::KURL& url, const WTF::String& rawHeadsString);
 
+    static void deleteCookies(const blink::KURL& url, const String& cookieName);
     static String cookiesForSession(const blink::KURL&, const blink::KURL& url, bool httponly);
     static const curl_slist* WebCookieJarImpl::getAllCookiesBegin();
-    static void WebCookieJarImpl::getAllCookiesEnd(curl_slist* list);
+    static void WebCookieJarImpl::getAllCookiesEnd(const curl_slist* list);
+
+    typedef bool(*CookieVisitor)(void* params, const char* name, const char* value, const char* domain, const char* path, int secure, int httpOnly, int* expires);
+    static void visitAllCookie(void* params, CookieVisitor visit);
 
     static WebCookieJarImpl* inst();
 

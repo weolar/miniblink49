@@ -160,11 +160,7 @@ static String getNetscapeCookieFormat(const KURL& url, const String& value)
     if (value.isEmpty())
         return "";
 
-    String valueStr;
-    if (value.is8Bit())
-        valueStr = value;
-    else
-        valueStr = String::make8BitFrom16BitSource(value.characters16(), value.length());
+    String valueStr = WTF::ensureStringToUTF8String(value);
 
     Vector<String> attributes;
     valueStr.split(';', false, attributes);
@@ -269,9 +265,7 @@ static void setCookiesFromDOM(const KURL&, const KURL& url, const String& value)
     // should not allow cookies to be read from subdomains, which is the
     // required behavior if the domain field is not explicity specified.
     String cookie = getNetscapeCookieFormat(url, value);
-
-    if (!cookie.is8Bit())
-        cookie = String::make8BitFrom16BitSource(cookie.characters16(), cookie.length());
+    cookie = WTF::ensureStringToUTF8String(cookie);
 
     CString strCookie(reinterpret_cast<const char*>(cookie.characters8()), cookie.length());
 
@@ -299,9 +293,118 @@ const curl_slist* WebCookieJarImpl::getAllCookiesBegin()
     return list;
 }
 
-void WebCookieJarImpl::getAllCookiesEnd(curl_slist* list)
+void WebCookieJarImpl::getAllCookiesEnd(const curl_slist* list)
 {
-    curl_slist_free_all(list); 
+    curl_slist_free_all((curl_slist*)list);
+}
+
+void WebCookieJarImpl::visitAllCookie(void* params, CookieVisitor visit)
+{
+    if (!net::WebURLLoaderManager::sharedInstance())
+        return;
+
+    CURL* curl = curl_easy_init();
+    if (!curl)
+        return;
+
+    CURLSH* curlsh = net::WebURLLoaderManager::sharedInstance()->getCurlShareHandle();
+    curl_easy_setopt(curl, CURLOPT_SHARE, curlsh);
+
+    curl_slist* list = nullptr;
+    curl_easy_getinfo(curl, CURLINFO_COOKIELIST, &list);
+
+    if (!list) {
+        curl_easy_cleanup(curl);
+        return;
+    }
+
+    Vector<String> needDeleteCookies;
+
+    struct curl_slist* item = list;
+    while (item) {
+        const char* cookie = item->data;
+
+        String cookieDomain;
+        String domain;
+        readCurlCookieToken(cookie, cookieDomain);
+        domain = cookieDomain;
+        bool isHttponly = cookieDomain.startsWith("#HttpOnly_");
+        if (isHttponly)
+            domain.remove(0, 10);
+
+        String strBoolean;
+        readCurlCookieToken(cookie, strBoolean);
+
+        String strPath;
+        readCurlCookieToken(cookie, strPath);
+
+        String strSecure;
+        readCurlCookieToken(cookie, strSecure);
+
+        String strExpires;
+        readCurlCookieToken(cookie, strExpires);
+
+        int expires = strExpires.toInt();
+        int secure = (strSecure == "TRUE" ? 1 : 0);
+
+        String strName;
+        readCurlCookieToken(cookie, strName);
+
+        String strValue;
+        readCurlCookieToken(cookie, strValue);
+
+        bool isDelete = visit(params, strName.utf8().data(), strValue.utf8().data(), domain.utf8().data(), strPath.utf8().data(),
+            secure, isHttponly, strExpires.isEmpty() ? nullptr : &expires);
+        if (isDelete) {
+            //String deleteCooie = "Set-cookie: " + strName + "=none;expires=Monday, 13-Jun-1988 03:04:55 GMT; domain=" + cookieDomain + "; path=/;";
+            String deleteCooie = cookieDomain;
+            deleteCooie.append("\t");
+            deleteCooie.append(strBoolean);
+            deleteCooie.append("\t");
+            deleteCooie.append(strPath);
+            deleteCooie.append("\t");
+            deleteCooie.append(strSecure);
+            deleteCooie.append("\t");
+            deleteCooie.append("123");
+            deleteCooie.append("\t");
+            deleteCooie.append(strName);
+            deleteCooie.append("\t");
+            deleteCooie.append("none");
+            needDeleteCookies.append(deleteCooie);
+        }
+
+        item = item->next;
+    }
+
+    for (size_t i = 0; i < needDeleteCookies.size(); ++i) {
+        String deleteCooie = needDeleteCookies[i];
+        curl_easy_setopt(curl, CURLOPT_COOKIELIST, deleteCooie.utf8().data());
+    }
+    curl_easy_setopt(curl, CURLOPT_COOKIELIST, "Set-cookie: __deleteCookie__=none;expires=Monday, 13-Jun-1988 03:04:55 GMT; domain=testmbcookie.com");
+
+    curl_slist_free_all(list);
+    curl_easy_cleanup(curl);
+}
+
+struct CookieVisitorForDeleteInfo {
+    KURL url;
+    String cookieName;
+};
+
+static bool cookieVisitorForDelete(void* params, const char* name, const char* value, const char* domain, const char* path, int secure, int httpOnly, int* expires)
+{
+    CookieVisitorForDeleteInfo* info = (CookieVisitorForDeleteInfo*)params;
+    if (domainMatch(domain, info->url.host()))
+        return true;
+    return false;
+}
+
+void WebCookieJarImpl::deleteCookies(const KURL& url, const String& cookieName)
+{
+    CookieVisitorForDeleteInfo info;
+    info.url = url;
+    info.cookieName = cookieName;
+    visitAllCookie(&info, cookieVisitorForDelete);
 }
 
 String WebCookieJarImpl::cookiesForSession(const KURL&, const KURL& url, bool httponly)
