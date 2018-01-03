@@ -322,12 +322,24 @@ WKE_API void wkeEditorRedo(wkeWebView webView);
 WKE_API const wchar_t* wkeGetCookieW(wkeWebView webView);
 WKE_API const utf8* wkeGetCookie(wkeWebView webView);
 
-struct wkeCookieList {
-    char *data;
-    wkeCookieList* next;
-};
-WKE_API const wkeCookieList* wkeGetAllCookie();
-WKE_API void wkeFreeCookieList(const wkeCookieList* cookieList);
+// struct wkeCookieList {
+//     char *data;
+//     wkeCookieList* next;
+// };
+// WKE_API const wkeCookieList* wkeGetAllCookie();
+// WKE_API void wkeFreeCookieList(const wkeCookieList* cookieList);
+typedef bool(*wkeCookieVisitor)(
+    void* params,
+    const char* name, 
+    const char* value, 
+    const char* domain,
+    const char* path, // If |path| is non-empty only URLs at or below the path will get the cookie value.
+    int secure, // If |secure| is true the cookie will only be sent for HTTPS requests.
+    int httpOnly, // If |httponly| is true the cookie will only be sent for HTTP requests.
+    int* expires // The cookie expiration date is only valid if |has_expires| is true.
+    );
+
+void wkeVisitAllCookie(wkeCookieVisitor visitor);
 
 enum wkeCookieCommand {
     wkeCookieCommandClearAllCookies,
