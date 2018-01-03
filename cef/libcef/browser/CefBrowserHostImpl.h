@@ -194,16 +194,16 @@ public:
     static CefBrowserHostImpl* GetBrowserForMainFrame(blink::WebFrame* webFrame);
 
     void DidFinishLoad(blink::WebLocalFrame* frame);
-	void DidFailLoad(blink::WebLocalFrame* frame, const blink::WebURLError& error, blink::WebHistoryCommitType type);
+    void DidFailLoad(blink::WebLocalFrame* frame, const blink::WebURLError& error, blink::WebHistoryCommitType type);
     void DidCommitProvisionalLoadForFrame(blink::WebLocalFrame* frame, const blink::WebHistoryItem&);
-	void DidStartProvisionalLoad(blink::WebLocalFrame* localFrame, double triggeringEventTime);
-	void DidFailProvisionalLoad(blink::WebLocalFrame* frame, const blink::WebURLError& error, blink::WebHistoryCommitType);
+    void DidStartProvisionalLoad(blink::WebLocalFrame* localFrame, double triggeringEventTime);
+    void DidFailProvisionalLoad(blink::WebLocalFrame* frame, const blink::WebURLError& error, blink::WebHistoryCommitType);
 
     void OnLoadStart(CefRefPtr<CefFrame> fram);
-	void OnLoadError(CefRefPtr<CefFrame> frame, const blink::KURL& url, int errorCode, const WTF::String& errorDescription);
+    void OnLoadError(CefRefPtr<CefFrame> frame, const blink::KURL& url, int errorCode, const WTF::String& errorDescription);
     void OnAddressChange(CefRefPtr<CefFrame> frame, const CefString& url);
     void OnTitleChange(blink::WebLocalFrame* frame, const String& title);
-	void OnFrameIdentified(blink::WebLocalFrame* frame, blink::WebLocalFrame* parent);
+    void OnFrameIdentified(blink::WebLocalFrame* frame, blink::WebLocalFrame* parent);
 
     CefRefPtr<CefFrame> GetOrCreateFrame(const blink::WebLocalFrame* webFrame, int64 parentFrameId, const blink::KURL& frameUrl);
 
@@ -216,7 +216,7 @@ private:
         CefRefPtr<CefBrowserHostImpl> opener,
         CefRefPtr<CefRequestContext> requestContext);
 
-	static void CreateAndLoadOnWebkitThread(CreateBrowserHostWindowArgs* args);
+    static void CreateAndLoadOnWebkitThread(CreateBrowserHostWindowArgs* args);
 
     static void RegisterWindowClass();
     static LPCTSTR GetWndClass();
@@ -242,14 +242,16 @@ private:
 
     bool m_windowDestroyed;
 
-	bool m_isLoading;
+    bool m_isLoading;
 
-	typedef std::map<int64, CefRefPtr<CefFrameHostImpl> > FrameMap;
-	FrameMap m_frames;
-	int64 m_mainFrameId;
-	int64 m_focusedFrameId;
+    typedef std::map<int64, CefRefPtr<CefFrameHostImpl> > FrameMap;
+    FrameMap m_frames;
+    int64 m_mainFrameId;
+    int64 m_focusedFrameId;
 
-	bool m_frameDestructionPending;
+    bool m_frameDestructionPending;
+
+    int64 m_identifier;
 	
     IMPLEMENT_REFCOUNTING(CefBrowserHostImpl);
     DISALLOW_COPY_AND_ASSIGN(CefBrowserHostImpl);

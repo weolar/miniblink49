@@ -11,6 +11,7 @@ struct Cef_Response_Params;
 
 namespace blink {
 class WebLocalFrame;
+class WebFrame;
 }
 
 // Implementation of CefFrame. CefFrameHostImpl objects are owned by the
@@ -71,6 +72,7 @@ public:
     void Detach() {}
 
     static int64 GetFrameIdByBlinkFrame(const blink::WebLocalFrame* frame);
+    static int64 GetFrameIdByBlinkFrame(const blink::WebFrame* frame);
     static WTF::String GetFrameNameByBlinkFrame(const blink::WebLocalFrame* frame);
     
 protected:

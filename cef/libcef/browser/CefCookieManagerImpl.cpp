@@ -8,13 +8,18 @@
 #include <string>
 #include <vector>
 
-//#include "libcef/browser/content_browser_client.h"
 #include "libcef/browser/CefContext.h"
 #include "libcef/browser/ThreadUtil.h"
-//#include "libcef/common/time_util.h"
 
-#include "third_party/WebKit/Source/wtf/text/WTFString.h" // Test
-#include "third_party/WebKit/Source/wtf/FastMalloc.h" // Test
+#include "content/web_impl_win/WebCookieJarCurlImpl.h"
+#include "third_party/WebKit/Source/platform/weborigin/KURL.h"
+#include "third_party/WebKit/public/platform/WebURL.h"
+#include "third_party/WebKit/public/platform/WebTraceLocation.h"
+#include "third_party/WebKit/public/platform/Platform.h"
+#include "third_party/WebKit/Source/wtf/Functional.h"
+#include "third_party/WebKit/Source/wtf/text/WTFString.h"
+#include "third_party/WebKit/Source/wtf/FastMalloc.h"
+#include "third_party/libcurl/include/curl/curl.h"
 
 namespace {
 
@@ -193,30 +198,152 @@ void CefCookieManagerImpl::SetSupportedSchemes(
 //   SetSupportedSchemesInternal(scheme_set, callback);
 }
 
-bool CefCookieManagerImpl::VisitAllCookies(
-    CefRefPtr<CefCookieVisitor> visitor) {
+class CefCookieVisitorImpl {
+public:
+    CefCookieVisitorImpl(CefCookieVisitor* cefVisitor, const CefString* url, bool includeHttpOnly) {
+        if (url)
+            m_url = *url;
+        m_visitor = cefVisitor;
+        m_includeHttpOnly = includeHttpOnly;
+    }
+
+    struct Item {
+        std::string name;
+        std::string value;
+        std::string domain;
+        std::string path;
+        int secure;
+        int httponly;
+        int* expires;
+
+        ~Item() {
+            if (expires)
+                delete expires;
+        }
+    };
+
+    static bool Visitor(void* params, const char* name, const char* value, const char* domain, const char* path, int secure, int httponly, int* expires) {
+        CefCookieVisitorImpl* self = (CefCookieVisitorImpl*)params;
+
+        if (!self->m_url.empty() && -1 == std::string(domain).find(self->m_url))
+            return false;
+            
+        if (!self->m_includeHttpOnly && httponly)           
+            return false;
+
+        Item* item = new Item();
+        item->name = name;
+        item->value = value;
+        item->domain = domain;
+        item->path = path;
+        item->secure = secure;
+        item->httponly = httponly;
+        item->expires = nullptr;
+        if (expires) {
+            item->expires = new int();
+            *item->expires = *expires;
+        }
+        self->m_items.push_back(item);
+
+        return false;
+    }
+
+    void PushToVisitor() {
+        for (size_t i = 0; i < m_items.size(); ++i) {
+            Item* it = m_items[i];
+            bool deleteCookie = false;
+            CefCookie cookie;
+
+            CefString(&cookie.name).FromString(it->name);
+            CefString(&cookie.value).FromString(it->value);
+            CefString(&cookie.domain).FromString(it->domain);
+            CefString(&cookie.path).FromString(it->path);
+            cookie.secure = it->secure;
+            cookie.httponly = it->httponly;
+            cookie.has_expires = 0;
+
+            m_visitor->Visit(cookie, i, m_items.size(), deleteCookie);
+
+            delete it;
+        }
+    }
+
+private:
+    CefCookieVisitor* m_visitor;
+    std::vector<Item*> m_items;
+    std::string m_url;
+    bool m_includeHttpOnly;
+};
+
+bool CefCookieManagerImpl::VisitAllCookies(CefRefPtr<CefCookieVisitor> visitor) {
 //   GetCookieMonster(
 //       BrowserThread::GetMessageLoopProxyForThread(BrowserThread::IO),
 //       base::Bind(&CefCookieManagerImpl::VisitAllCookiesInternal, this,
 //                  visitor));
-  return true;
+    CefCookieVisitorImpl visitorImpl(visitor.get(), nullptr, true);
+    content::WebCookieJarImpl::visitAllCookie(&visitorImpl, &CefCookieVisitorImpl::Visitor);
+    visitorImpl.PushToVisitor();
+
+    return true;
 }
 
-bool CefCookieManagerImpl::VisitUrlCookies(
-    const CefString& url,
-    bool includeHttpOnly,
-    CefRefPtr<CefCookieVisitor> visitor) {
+bool CefCookieManagerImpl::VisitUrlCookies(const CefString& url, bool includeHttpOnly, CefRefPtr<CefCookieVisitor> visitor) {
 //   GetCookieMonster(
 //       BrowserThread::GetMessageLoopProxyForThread(BrowserThread::IO),
 //       base::Bind(&CefCookieManagerImpl::VisitUrlCookiesInternal, this, url,
 //                  includeHttpOnly, visitor));
-  return true;
+
+    CefCookieVisitorImpl visitorImpl(visitor.get(), &url, includeHttpOnly);
+    content::WebCookieJarImpl::visitAllCookie(&visitorImpl, &CefCookieVisitorImpl::Visitor);
+    visitorImpl.PushToVisitor();
+
+    return true;
 }
 
-bool CefCookieManagerImpl::SetCookie(
-    const CefString& url,
-    const CefCookie& cookie,
-    CefRefPtr<CefSetCookieCallback> callback) {
+std::string CefCookieToString(const CefCookie& cookie)
+{
+    std::string name = CefString(&cookie.name).ToString();
+    std::string value = CefString(&cookie.value).ToString();
+    std::string domain = CefString(&cookie.domain).ToString();
+    std::string path = CefString(&cookie.path).ToString();
+
+//     base::Time expiration_time;
+//     if (cookie.has_expires)
+//         cef_time_to_basetime(cookie.expires, expiration_time);
+
+    //Set-cookie: DisPend=none;expires=Monday, 13-Jun-1988 03:04:55 GMT; domain=.fidelity.com; path=/; secure
+    std::string result;
+    result += name;
+    result += "=";
+    result += value;
+    result += ";";
+
+    result += " domain=";
+    result += domain;
+    result += ";";
+
+    result += " path=";
+    result += path;
+    result += ";";
+
+    if (cookie.secure)
+        result += " secure";
+    return result;
+}
+
+static void CefOnSetCookieCallback(CefSetCookieCallback* callback)
+{
+    callback->OnComplete(true);
+    callback->Release();
+}
+
+static void CefOnDelCookieCallback(CefDeleteCookiesCallback* callback)
+{
+    callback->OnComplete(1);
+    callback->Release();
+}
+
+bool CefCookieManagerImpl::SetCookie(const CefString& url, const CefCookie& cookie, CefRefPtr<CefSetCookieCallback> callback) {
     if (!CEF_CURRENTLY_ON_UIT())
         return false;
 
@@ -224,31 +351,52 @@ bool CefCookieManagerImpl::SetCookie(
     if (urlString.empty())
         return false;
 
-//   GURL gurl = GURL(url.ToString());
-//   if (!gurl.is_valid())
-//     return false;
-// 
-//   GetCookieMonster(
-//       BrowserThread::GetMessageLoopProxyForThread(BrowserThread::IO),
-//       base::Bind(&CefCookieManagerImpl::SetCookieInternal, this, gurl, cookie,
-//                  callback));
-  return true;
+    std::string cookieString = CefCookieToString(cookie);
+    if (cookieString.empty())
+        return false;
+
+    blink::KURL kurl(blink::ParsedURLString, url.ToString().c_str());
+    if (!kurl.isValid())
+        return false;
+
+    content::WebCookieJarImpl::inst()->setCookie(blink::WebURL(), kurl, blink::WebString::fromUTF8(cookieString.c_str()));
+
+    if (callback.get()) {
+        callback->AddRef();
+        blink::Platform::current()->currentThread()->postTask(FROM_HERE, WTF::bind(CefOnSetCookieCallback, callback.get()));
+    }
+
+    return true;
 }
 
-bool CefCookieManagerImpl::DeleteCookies(
-    const CefString& url,
-    const CefString& cookie_name,
-    CefRefPtr<CefDeleteCookiesCallback> callback) {
-  // Empty URLs are allowed but not invalid URLs.
-//   GURL gurl = GURL(url.ToString());
-//   if (!gurl.is_empty() && !gurl.is_valid())
-//     return false;
-// 
-//   GetCookieMonster(
-//       BrowserThread::GetMessageLoopProxyForThread(BrowserThread::IO),
-//       base::Bind(&CefCookieManagerImpl::DeleteCookiesInternal, this, gurl,
-//                  cookie_name, callback));
-  return true;
+bool CefCookieManagerImpl::DeleteCookies(const CefString& url, const CefString& cookie_name, CefRefPtr<CefDeleteCookiesCallback> callback) {
+    // Empty URLs are allowed but not invalid URLs.
+    blink::KURL gurl(blink::ParsedURLString, url.ToString().c_str());
+    if (!gurl.isEmpty() && !gurl.isValid())
+        return false;
+
+    if (!CEF_CURRENTLY_ON_UIT())
+        return false;
+
+    std::string urlString = url.ToString();
+    if (urlString.empty())
+        return false;
+
+    std::string cookieName = cookie_name.ToString();
+    if (cookieName.empty())
+        return false;
+
+    blink::KURL kurl(blink::ParsedURLString, url.ToString().c_str());
+    if (!kurl.isValid())
+        return false;
+
+    content::WebCookieJarImpl::inst()->deleteCookies(kurl, blink::WebString::fromUTF8(cookieName.c_str()));
+
+    if (callback.get()) {
+        callback->AddRef();
+        blink::Platform::current()->currentThread()->postTask(FROM_HERE, WTF::bind(CefOnDelCookieCallback, callback.get()));
+    }
+    return true;
 }
 
 bool CefCookieManagerImpl::SetStoragePath(
