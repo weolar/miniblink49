@@ -40,6 +40,8 @@ using blink::IntRect;
 using blink::WebDoublePoint;
 using blink::WebFloatPoint3D;
 
+extern bool g_alwaysInflateDirtyRect;
+
 namespace cc_blink {
 namespace {
 
@@ -1298,6 +1300,10 @@ void WebLayerImpl::requestBoundRepaint(bool directOrPending)
 void WebLayerImpl::invalidateRect(const blink::WebRect& rect)
 {
     blink::IntRect dirtyRect(rect);
+
+    if (g_alwaysInflateDirtyRect)
+        dirtyRect.inflate(1);
+
     if (m_tileGrid)
         m_tileGrid->invalidate(dirtyRect, false);
     setNeedsCommit(false);

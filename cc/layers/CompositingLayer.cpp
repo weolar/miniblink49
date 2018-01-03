@@ -354,9 +354,10 @@ public:
         m_isClipChild = false;
 
         if (1 != child->tilesSize() && 0 != child->tilesSize()) {
-            m_isClipChild = true;            
+            m_isClipChild = true;
             canvas->save();
-            canvas->clipRect(SkRect::MakeIWH(child->drawToCanvasProperties()->bounds.width() - 1, child->drawToCanvasProperties()->bounds.height() - 1));
+            int bugFixMagicNum = child->drawToCanvasProperties()->currentTransform.isTranslate() ? 0 : 1;
+            canvas->clipRect(SkRect::MakeIWH(child->drawToCanvasProperties()->bounds.width() - bugFixMagicNum, child->drawToCanvasProperties()->bounds.height() - bugFixMagicNum));
         }
     }
 
@@ -421,8 +422,8 @@ void CompositingLayer::drawToCanvasChildren(LayerTreeHost* host, SkCanvas* canva
 
 void CompositingLayer::drawToCanvas(LayerTreeHost* host, blink::WebCanvas* canvas, const blink::IntRect& clip)
 {
-    int alpha = (int)(255 * opacity());
-    if (!drawsContent())
+    U8CPU alphaVal = (int)ceil(opacity() * 255);
+    if (!drawsContent() || 0 == alphaVal)
         return;
 
     for (TilesAddr::iterator it = m_tilesAddr->begin(); it != m_tilesAddr->end(); ++it) {
@@ -438,18 +439,35 @@ void CompositingLayer::drawToCanvas(LayerTreeHost* host, blink::WebCanvas* canva
        
         SkPaint paint;
         paint.setAntiAlias(true);
-        paint.setAlpha(alpha);
         paint.setXfermodeMode(SkXfermode::kSrcOver_Mode);
-        
         paint.setFilterQuality(kHigh_SkFilterQuality);
 
         SkColor* color = tile->getSolidColor();
         if (color) {
             paint.setColor(*color);
-            canvas->drawRect(dst, paint);            
+            paint.setAlpha((int)ceil((alphaVal * SkColorGetA(*color)) / 255.0));
+            canvas->drawRect(dst, paint);
+
+//             SkPaint paintTest;
+//             const SkColor color2 = 0xff000000 | (rand() % 3) * (rand() % 7) * GetTickCount();
+//             paintTest.setColor(color2);
+//             paintTest.setStrokeWidth(4);
+//             paintTest.setTextSize(13);
+//             paintTest.setTextEncoding(SkPaint::kUTF8_TextEncoding);
+// 
+//             static SkTypeface* typeface = nullptr;
+//             if (!typeface)
+//                 typeface = SkTypeface::RefDefault(SkTypeface::kNormal);
+//             paintTest.setTypeface(typeface);
+// 
+//             paintTest.setStrokeWidth(1);
+//             String textTest = String::format("%d %d %x", m_id, alpha, *color);
+//             CString cText = textTest.utf8();
+//             canvas->drawText(cText.data(), cText.length(), 5 + (int)tilePostion.x(), 15 + (int)tilePostion.y(), paintTest);
         } else {
             if (!tile->bitmap() || !tile->bitmap()->getPixels())
                 DebugBreak();
+            paint.setAlpha(alphaVal);
             canvas->drawBitmapRect(*tile->bitmap(), nullptr, dst, &paint);
         }    
     }
