@@ -59,6 +59,16 @@ static bool isKeypadEvent(WPARAM code, LPARAM keyData, WebInputEvent::Type type)
 
 static inline String singleCharacterString(UChar c) { return String(&c, 1); }
 
+static void buildModifiers(WebInputEvent* evt)
+{
+    if (GetKeyState(VK_SHIFT) & HIGH_BIT_MASK_SHORT)
+        evt->modifiers |= WebInputEvent::ShiftKey;
+    if (GetKeyState(VK_CONTROL) & HIGH_BIT_MASK_SHORT)
+        evt->modifiers |= WebInputEvent::ControlKey;
+    if (GetKeyState(VK_MENU) & HIGH_BIT_MASK_SHORT)
+        evt->modifiers |= WebInputEvent::AltKey;
+}
+
 WebKeyboardEvent PlatformEventHandler::buildKeyboardEvent(WebInputEvent::Type type, UINT message, WPARAM wParam, LPARAM lParam)
 {
     unsigned int virtualKeyCode = wParam;
@@ -78,12 +88,8 @@ WebKeyboardEvent PlatformEventHandler::buildKeyboardEvent(WebInputEvent::Type ty
     keyEvent.timeStampSeconds = WTF::currentTime();
     keyEvent.size = sizeof(WebMouseEvent);
     keyEvent.type = type;
-    if (GetKeyState(VK_SHIFT) & HIGH_BIT_MASK_SHORT)
-        keyEvent.modifiers |= WebInputEvent::ShiftKey;
-    if (GetKeyState(VK_CONTROL) & HIGH_BIT_MASK_SHORT)
-        keyEvent.modifiers |= WebInputEvent::ControlKey;
-    if (GetKeyState(VK_MENU) & HIGH_BIT_MASK_SHORT)
-        keyEvent.modifiers |= WebInputEvent::AltKey;
+
+    buildModifiers(&keyEvent);
     if (isKeypadEvent(wParam, keyData, type))
         keyEvent.modifiers |= WebInputEvent::IsKeyPad;
 
@@ -285,6 +291,7 @@ LRESULT PlatformEventHandler::fireMouseEvent(HWND hWnd, UINT message, WPARAM wPa
     webMouseEvent.globalX = globalPos.x();
     webMouseEvent.globalY = globalPos.y();
     webMouseEvent.clickCount = 1;
+    buildModifiers(&webMouseEvent);
 
     if (WM_LBUTTONDOWN == message || WM_MBUTTONDOWN == message || WM_RBUTTONDOWN == message) {
         handle = true;
