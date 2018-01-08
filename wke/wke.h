@@ -339,7 +339,7 @@ typedef bool(*wkeCookieVisitor)(
     int* expires // The cookie expiration date is only valid if |has_expires| is true.
     );
 
-void wkeVisitAllCookie(wkeCookieVisitor visitor);
+WKE_API void wkeVisitAllCookie(void* params, wkeCookieVisitor visitor);
 
 enum wkeCookieCommand {
     wkeCookieCommandClearAllCookies,
@@ -353,6 +353,7 @@ WKE_API void wkeSetCookieEnabled(wkeWebView webView, bool enable);
 WKE_API bool wkeIsCookieEnabled(wkeWebView webView);
 WKE_API void wkeSetCookieJarPath(wkeWebView webView, const WCHAR* path);
 WKE_API void wkeSetCookieJarFullPath(wkeWebView webView, const WCHAR* path);
+WKE_API void wkeSetLocalStorageFullPath(wkeWebView webView, const WCHAR* path);
 
 WKE_API void wkeSetMediaVolume(wkeWebView webView, float volume);
 WKE_API float wkeGetMediaVolume(wkeWebView webView);
@@ -491,7 +492,7 @@ typedef enum {
 typedef void(*wkeLoadingFinishCallback)(wkeWebView webView, void* param, const wkeString url, wkeLoadingResult result, const wkeString failedReason);
 WKE_API void wkeOnLoadingFinish(wkeWebView webView, wkeLoadingFinishCallback callback, void* param);
 
-typedef bool(*wkeDownloadCallback)(wkeWebView webView, void* param, const char *url);
+typedef bool(*wkeDownloadCallback)(wkeWebView webView, void* param, const char* url);
 WKE_API void wkeOnDownload(wkeWebView webView, wkeDownloadCallback callback, void* param);
 
 typedef enum {
@@ -523,14 +524,19 @@ WKE_API void wkeOnDidCreateScriptContext(wkeWebView webView, wkeDidCreateScriptC
 typedef void(*wkeWillReleaseScriptContextCallback)(wkeWebView webView, void* param, wkeWebFrameHandle frame, void* context, int worldId);
 WKE_API void wkeOnWillReleaseScriptContext(wkeWebView webView, wkeWillReleaseScriptContextCallback callback, void* callbackParam);
 
-WKE_API void wkeNetSetMIMEType(void *job, char *type);
-WKE_API void wkeNetSetHTTPHeaderField(void *job, wchar_t *key, wchar_t *value, bool response);
-WKE_API void wkeNetSetURL(void *job, const char *url);
-WKE_API void wkeNetSetData(void *job, void *buf, int len);
+WKE_API void wkeNetSetMIMEType(void* job, char *type);
+WKE_API void wkeNetSetHTTPHeaderField(void* job, wchar_t* key, wchar_t* value, bool response);
+WKE_API void wkeNetSetURL(void* job, const char *url);
+WKE_API void wkeNetSetData(void* job, void *buf, int len);
 // 调用此函数后,网络层收到数据会存储在一buf内,接收数据完成后响应OnLoadUrlEnd事件.#此调用严重影响性能,慎用
 // 此函数和wkeNetSetData的区别是，wkeNetHookRequest会在接受到真正网络数据后再调用回调，并允许回调修改网络数据。
 // 而wkeNetSetData是在网络数据还没发送的时候修改
-WKE_API void wkeNetHookRequest(void *job);	
+WKE_API void wkeNetHookRequest(void *job);
+
+typedef bool(*wkeNetResponseCallback)(wkeWebView webView, void* param, const char* url, void* job);
+WKE_API void wkeNetOnResponse(wkeWebView webView, wkeNetResponseCallback callback, void* param);
+
+WKE_API void wkeNetGetMIMEType(void* job, wkeString mime);
 
 WKE_API bool wkeWebFrameIsMainFrame(wkeWebFrameHandle webFrame);
 WKE_API bool wkeIsWebRemoteFrame(wkeWebFrameHandle webFrame);

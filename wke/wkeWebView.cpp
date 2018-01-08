@@ -1065,8 +1065,14 @@ void CWebView::onLoadingFinish(wkeLoadingFinishCallback callback, void* callback
 
 void CWebView::onDownload(wkeDownloadCallback callback, void* callbackParam)
 {
-	m_webPage->wkeHandler().downloadCallback = callback;
-	m_webPage->wkeHandler().downloadCallbackParam = callbackParam;
+    m_webPage->wkeHandler().downloadCallback = callback;
+    m_webPage->wkeHandler().downloadCallbackParam = callbackParam;
+}
+
+void CWebView::onNetResponse(wkeNetResponseCallback callback, void* callbackParam)
+{
+    m_webPage->wkeHandler().netResponseCallback = callback;
+    m_webPage->wkeHandler().netResponseCallbackParam = callbackParam;
 }
 
 void CWebView::onConsole(wkeConsoleCallback callback, void* callbackParam)

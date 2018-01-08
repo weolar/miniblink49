@@ -9,6 +9,7 @@
 #include "net/WebURLLoaderInternal.h"
 
 #include "wke/wke.h"
+#include "wke/wkeString.h"
 
 void wkeNetSetHTTPHeaderField(void* jobPtr, wchar_t *key, wchar_t *value, bool response)
 {
@@ -25,10 +26,18 @@ void wkeNetSetHTTPHeaderField(void* jobPtr, wchar_t *key, wchar_t *value, bool r
     }
 }
 
-void wkeNetSetMIMEType(void* jobPtr, char *type)
+void wkeNetSetMIMEType(void* jobPtr, char* type)
 {
     net::WebURLLoaderInternal* job = (net::WebURLLoaderInternal*)jobPtr;
     job->m_response.setMIMEType(WebString::fromUTF8(type));
+}
+
+void wkeNetGetMIMEType(void* jobPtr, wkeString mime)
+{
+    net::WebURLLoaderInternal* job = (net::WebURLLoaderInternal*)jobPtr;
+    AtomicString contentType = job->m_response.httpHeaderField(WebString::fromUTF8("Content-Type"));
+    WTF::CString contentTypeUtf8 = contentType.utf8();
+    mime->setString(contentTypeUtf8.data(), contentTypeUtf8.length());
 }
 
 void wkeNetSetURL(void* jobPtr, const char *url)

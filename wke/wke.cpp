@@ -556,6 +556,26 @@ void wkeSetCookieJarFullPath(wkeWebView webView, const WCHAR* path)
     net::setCookieJarFullPath(path);
 }
 
+String* kLocalStorageFullPath = nullptr;
+
+void wkeSetLocalStorageFullPath(wkeWebView webView, const WCHAR* path)
+{
+    if (!path)
+        return;
+
+    if (kLocalStorageFullPath)
+        delete kLocalStorageFullPath;
+    kLocalStorageFullPath = new String(path);
+    if (kLocalStorageFullPath->isEmpty()) {
+        delete kLocalStorageFullPath;
+        kLocalStorageFullPath = nullptr;
+        return;
+    }
+
+    if (!kLocalStorageFullPath->endsWith(L'\\'))
+        kLocalStorageFullPath->append(L'\\');
+}
+
 void wkeSetMediaVolume(wkeWebView webView, float volume)
 {
     webView->setMediaVolume(volume);
@@ -727,7 +747,12 @@ void wkeOnLoadingFinish(wkeWebView webView, wkeLoadingFinishCallback callback, v
 
 void wkeOnDownload(wkeWebView webView, wkeDownloadCallback callback, void* param)
 {
-	webView->onDownload(callback, param);
+    webView->onDownload(callback, param);
+}
+
+void wkeNetOnResponse(wkeWebView webView, wkeNetResponseCallback callback, void* param)
+{
+    webView->onNetResponse(callback, param);
 }
 
 void wkeOnConsole(wkeWebView webView, wkeConsoleCallback callback, void* param)
