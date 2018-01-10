@@ -135,9 +135,12 @@ void CompositingTile::allocBitmapIfNeeded(SkColor* solidColor, bool isSolidColor
             ASSERT(m_bitmap->getPixels());
     } else if (m_solidColor && solidColor) { // ¶¼ÊÇ´¿É«
         cancelSolidColor();
-        setSolidColor(*solidColor);
-        if (m_bitmap)
-            ASSERT(!m_bitmap->getPixels());
+        clearBitmap();
+        if (isSolidColorCoverWholeTile) {
+            setSolidColor(*solidColor);
+            if (m_bitmap)
+                ASSERT(!m_bitmap->getPixels());
+        }
     }
 
     m_isNotInit = false;
