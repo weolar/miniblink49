@@ -223,6 +223,14 @@ static bool isWordBreak(UChar c)
 }
 
 struct WordBreakIterator : TextBreakIterator {
+    WordBreakIterator()
+    {
+    }
+
+    ~WordBreakIterator()
+    {
+    }
+
     virtual int first() OVERRIDE
     {
         m_currentPos = 0;
@@ -231,7 +239,8 @@ struct WordBreakIterator : TextBreakIterator {
 
     virtual int next() OVERRIDE
     {
-        if (m_currentPos == m_length) {
+        ++m_currentPos;
+        if (m_currentPos >= m_length) {
             m_currentPos = -1;
             return m_currentPos;
         }
@@ -248,26 +257,27 @@ struct WordBreakIterator : TextBreakIterator {
         return m_currentPos;
     }
 
-    int nextError()
-    {
-        if (m_currentPos == m_length) {
-            m_currentPos = -1;
-            return m_currentPos;
-        }
-        bool haveSpace = false;
-        while (m_currentPos < m_length) {
-            if (haveSpace && !isWordBreak(m_string[m_currentPos]))
-                break;
-            if (isWordBreak(m_string[m_currentPos]))
-                haveSpace = true;
-            ++m_currentPos;
-        }
-        return m_currentPos;
-    }
+//     int nextError2()
+//     {
+//         if (m_currentPos == m_length) {
+//             m_currentPos = -1;
+//             return m_currentPos;
+//         }
+//         bool haveSpace = false;
+//         while (m_currentPos < m_length) {
+//             if (haveSpace && !isWordBreak(m_string[m_currentPos]))
+//                 break;
+//             if (isWordBreak(m_string[m_currentPos]))
+//                 haveSpace = true;
+//             ++m_currentPos;
+//         }
+//         return m_currentPos;
+//     }
 
     virtual int previous() OVERRIDE
     {
-        if (!m_currentPos) {
+        --m_currentPos;
+        if (m_currentPos <= 0) {
             m_currentPos = -1;
             return m_currentPos;
         }
@@ -285,26 +295,34 @@ struct WordBreakIterator : TextBreakIterator {
         return m_currentPos + haveSpace;
     }
 
-    int previousError()
-    {
-        if (!m_currentPos) {
-            m_currentPos = -1;
-            return m_currentPos;
-        }
-
-        bool haveSpace = false;
-        while (m_currentPos > 0) {
-            if (haveSpace && !isWordBreak(m_string[m_currentPos]))
-                break;
-            if (isWordBreak(m_string[m_currentPos]))
-                haveSpace = true;
-            --m_currentPos;
-        }
-        return m_currentPos;
-    }
+//     int previousError2()
+//     {
+//         if (!m_currentPos) {
+//             m_currentPos = -1;
+//             return m_currentPos;
+//         }
+// 
+//         bool haveSpace = false;
+//         while (m_currentPos > 0) {
+//             if (haveSpace && !isWordBreak(m_string[m_currentPos]))
+//                 break;
+//             if (isWordBreak(m_string[m_currentPos]))
+//                 haveSpace = true;
+//             --m_currentPos;
+//         }
+//         return m_currentPos;
+//     }
 };
 
 struct CharBreakIterator : TextBreakIterator {
+    CharBreakIterator()
+    {
+    }
+
+    ~CharBreakIterator()
+    {
+    }
+
     virtual int first() OVERRIDE
     {
         m_currentPos = 0;
@@ -362,8 +380,15 @@ struct LineBreakIterator : TextBreakIterator {
     }
 };
 
-struct SentenceBreakIterator : TextBreakIterator
-{
+struct SentenceBreakIterator : TextBreakIterator {
+    SentenceBreakIterator()
+    {
+    }
+
+    ~SentenceBreakIterator()
+    {
+    }
+
     virtual int first() OVERRIDE
     {
         m_currentPos = 0;
@@ -372,10 +397,11 @@ struct SentenceBreakIterator : TextBreakIterator
 
     virtual int next() OVERRIDE
     {
-        if (m_currentPos == m_length) {
+        m_currentPos++;
+        if (m_currentPos >= m_length) {
             m_currentPos = -1;
             return m_currentPos;
-        }
+        }       
 
         bool haveSpace = false;
         while (m_currentPos < m_length) {
@@ -390,7 +416,8 @@ struct SentenceBreakIterator : TextBreakIterator
 
     virtual int previous() OVERRIDE
     {
-        if (!m_currentPos) {
+        --m_currentPos;
+        if (m_currentPos <= 0) {
             m_currentPos = -1;
             return m_currentPos;
         }
