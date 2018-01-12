@@ -255,6 +255,12 @@ void WebFrameClientImpl::didFailProvisionalLoad(WebLocalFrame* frame, const WebU
 #endif
 }
 
+static wkeWebFrameHandle frameIdToWkeFrame(WebPage* webPage, WebLocalFrame* frame)
+{
+    wkeWebFrameHandle result = (wkeWebFrameHandle)(webPage->getFrameIdByBlinkFrame(frame) - WebPage::getFirstFrameId() + 1);
+    return result;
+}
+
 void WebFrameClientImpl::didCommitProvisionalLoad(WebLocalFrame* frame, const WebHistoryItem& history, WebHistoryCommitType type)
 {
 #if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
@@ -276,7 +282,7 @@ void WebFrameClientImpl::didCommitProvisionalLoad(WebLocalFrame* frame, const We
         handler.urlChangedCallback(m_webPage->wkeWebView(), handler.urlChangedCallbackParam, &string);
 
     if (handler.urlChangedCallback2)
-        handler.urlChangedCallback2(m_webPage->wkeWebView(), handler.urlChangedCallback2Param, frame, &string);
+        handler.urlChangedCallback2(m_webPage->wkeWebView(), handler.urlChangedCallback2Param, frameIdToWkeFrame(m_webPage, frame), &string);
 #endif
 
     m_webPage->didCommitProvisionalLoad(frame, history, type);
@@ -316,16 +322,14 @@ void WebFrameClientImpl::didChangeIcon(WebLocalFrame*, WebIconURL::Type) { }
 void WebFrameClientImpl::didFinishDocumentLoad(WebLocalFrame* frame)
 {
     m_documentReady = true;
-    //     cef_load_handler_t* loadHandler = m_cefBrowserHostImpl->m_browserImpl->m_loadHandler;
-    //     m_cefBrowserHostImpl->m_browserImpl->ref();
-    //     loadHandler->on_loading_state_change(loadHandler, &m_cefBrowserHostImpl->m_browserImpl->m_baseClass, false, false, false);
+
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
     wke::AutoDisableFreeV8TempObejct autoDisableFreeV8TempObejct;
     wke::CWebViewHandler& handler = m_webPage->wkeHandler();
     if (handler.documentReadyCallback)
         handler.documentReadyCallback(m_webPage->wkeWebView(), handler.documentReadyCallbackParam);
     if (handler.documentReady2Callback)
-        handler.documentReady2Callback(m_webPage->wkeWebView(), handler.documentReady2CallbackParam, frame);
+        handler.documentReady2Callback(m_webPage->wkeWebView(), handler.documentReady2CallbackParam, frameIdToWkeFrame(m_webPage, frame));
 #endif
 
     //OutputDebugStringA("WebFrameClientImpl::didFinishDocumentLoad\n");
@@ -644,7 +648,7 @@ void WebFrameClientImpl::didCreateScriptContext(WebLocalFrame* frame, v8::Local<
     wke::AutoDisableFreeV8TempObejct autoDisableFreeV8TempObejct;
     if (m_webPage->wkeHandler().didCreateScriptContextCallback)
         m_webPage->wkeHandler().didCreateScriptContextCallback(m_webPage->wkeWebView(), m_webPage->wkeHandler().didCreateScriptContextCallbackParam,
-            frame, &context, extensionGroup, worldId);
+            frameIdToWkeFrame(m_webPage, frame), &context, extensionGroup, worldId);
 #endif
 #if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
     if (!CefContentClient::Get())
@@ -675,7 +679,7 @@ void WebFrameClientImpl::willReleaseScriptContext(WebLocalFrame* frame, v8::Loca
     wke::AutoDisableFreeV8TempObejct autoDisableFreeV8TempObejct;
     if (m_webPage->wkeHandler().willReleaseScriptContextCallback)
         m_webPage->wkeHandler().willReleaseScriptContextCallback(m_webPage->wkeWebView(), m_webPage->wkeHandler().willReleaseScriptContextCallbackParam,
-            frame, &context, worldId);
+            frameIdToWkeFrame(m_webPage, frame), &context, worldId);
 #endif
 #if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
     if (!CefContentClient::Get())

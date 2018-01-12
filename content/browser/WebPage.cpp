@@ -465,11 +465,28 @@ WebFrameClientImpl* WebPage::webFrameClientImpl()
     return m_pageImpl->m_webFrameClient;
 }
 
-WebFrame* WebPage::getWebFrameFromFrameId(int64 frameId)
+WebFrame* WebPage::getWebFrameFromFrameId(int64_t frameId)
 {
     if (!m_pageImpl)
         return nullptr;
     return m_pageImpl->getWebFrameFromFrameId(frameId);
+}
+
+
+int64_t WebPage::getFrameIdByBlinkFrame(const blink::WebFrame* frame)
+{
+    if (!frame)
+        return content::WebPage::kInvalidFrameId;
+
+    blink::Frame* blinkFrame = blink::toCoreFrame(frame);
+    if (!blinkFrame)
+        return content::WebPage::kInvalidFrameId;
+    return blinkFrame->frameID();
+}
+
+int64_t WebPage::getFirstFrameId()
+{
+    return WebPageImpl::getFirstFrameId();
 }
 
 } // namespace WebCore

@@ -48,6 +48,7 @@
 #include "content/browser/WebFrameClientImpl.h"
 #include "content/browser/NavigationController.h"
 #include "content/browser/CheckReEnter.h"
+#include "content/browser/PlatformCursor.h"
 #include "content/web_impl_win/BlinkPlatformImpl.h"
 #include "content/web_impl_win/WebThreadImpl.h"
 #include "content/web_impl_win/npapi/PluginDatabase.h"
@@ -101,6 +102,8 @@ void WebPageImpl::unregisterDestroyNotif(DestroyNotif* destroyNotif)
         m_destroyNotifs.remove(pos);
 }
 
+int64_t WebPageImpl::m_firstFrameId = 0;
+
 WebPageImpl::WebPageImpl()
 {
     m_pagePtr = 0;
@@ -129,6 +132,7 @@ WebPageImpl::WebPageImpl()
     m_disablePaint = false;
     m_firstDrawCount = 0;
     m_webFrameClient = new content::WebFrameClientImpl();
+    m_platformCursor = nullptr;
 
     m_toolTip = new ToolTip();
     m_toolTip->init();
@@ -136,6 +140,11 @@ WebPageImpl::WebPageImpl()
     WebLocalFrameImpl* webLocalFrameImpl = (WebLocalFrameImpl*)WebLocalFrame::create(WebTreeScopeType::Document, m_webFrameClient);
     m_webViewImpl = WebViewImpl::create(this);
     m_webViewImpl->setMainFrame(webLocalFrameImpl);
+
+    Frame* frame = toCoreFrame(m_webViewImpl->mainFrame());
+    if (0 == m_firstFrameId)
+        m_firstFrameId  = frame->frameID();
+
     initSetting();
 
     m_platformEventHandler = new PlatformEventHandler(m_webViewImpl, m_webViewImpl);
@@ -931,9 +940,14 @@ WebLayerTreeView* WebPageImpl::layerTreeView()
 
 void WebPageImpl::didChangeCursor(const WebCursorInfo& cursor)
 {
-    if (m_cursorType == cursor.type)
+    if (m_cursor.type == cursor.type)
         return;
-    m_cursorType = cursor.type;
+
+    if (m_platformCursor)
+        ::DestroyIcon(m_platformCursor);
+    m_platformCursor = nullptr;
+
+    m_cursor = cursor;
 
     if (m_hWnd)
         ::PostMessage(m_hWnd, WM_SETCURSOR, 0, 0);
@@ -941,7 +955,7 @@ void WebPageImpl::didChangeCursor(const WebCursorInfo& cursor)
 
 int WebPageImpl::getCursorInfoType() const
 {
-    return (int)m_cursorType;
+    return (int)m_cursor.type;
 }
 
 void WebPageImpl::fireCursorEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, BOOL* handle)
@@ -951,11 +965,31 @@ void WebPageImpl::fireCursorEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM
 
     if (handle)
         *handle = FALSE;
+
     HCURSOR hCur = NULL;
-    switch (m_cursorType) {
+    switch (m_cursor.type) {
     case WebCursorInfo::TypeIBeam:
         hCur = ::LoadCursor(NULL, IDC_IBEAM);
         break;
+        //////////////////////////////////////////////////////////////////////////
+    case WebCursorInfo::TypeProgress:
+        hCur = ::LoadCursor(NULL, IDC_APPSTARTING);
+        break;
+    case WebCursorInfo::TypeCross:
+        hCur = ::LoadCursor(NULL, IDC_CROSS);
+        break;
+    case WebCursorInfo::TypeMove:
+        hCur = ::LoadCursor(NULL, IDC_SIZEALL);
+        break;
+
+    case WebCursorInfo::TypeColumnResize:
+        hCur = ::LoadCursor(NULL, IDC_SIZEWE);
+        break;
+    case WebCursorInfo::TypeRowResize:
+        hCur = ::LoadCursor(NULL, IDC_SIZENS);
+        break;
+        //////////////////////////////////////////////////////////////////////////
+        
     case WebCursorInfo::TypeHand:
         hCur = ::LoadCursor(NULL, IDC_HAND);
         break;
@@ -990,6 +1024,14 @@ void WebPageImpl::fireCursorEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM
     case WebCursorInfo::TypeNorthEastSouthWestResize:
     case WebCursorInfo::TypeNorthWestSouthEastResize:
         hCur = ::LoadCursor(NULL, IDC_SIZEALL);
+        break;
+    case WebCursorInfo::TypeNoDrop:
+    case WebCursorInfo::TypeNotAllowed:
+        hCur = ::LoadCursor(NULL, IDC_NO);
+        break;
+    case WebCursorInfo::TypeCustom:
+        m_platformCursor = createSharedCursorImpl(m_cursor);
+        hCur = m_platformCursor;
         break;
     }
 
@@ -1293,7 +1335,7 @@ int WebPageImpl::historyForwardListCount()
     return m_navigationController->historyForwardListCount();
 }
 
-WebFrame* WebPageImpl::getWebFrameFromFrameId(int64 frameId)
+WebFrame* WebPageImpl::getWebFrameFromFrameId(int64_t frameId)
 {
     blink::WebFrame* webFrame = nullptr;
     if (WebPage::kMainFrameId != frameId) {
@@ -1309,6 +1351,11 @@ WebFrame* WebPageImpl::getWebFrameFromFrameId(int64 frameId)
         webFrame = m_webViewImpl->mainFrame();
 
     return webFrame;
+}
+
+int64_t WebPageImpl::getFirstFrameId()
+{
+    return m_firstFrameId;
 }
 
 WebStorageNamespace* WebPageImpl::createSessionStorageNamespace()

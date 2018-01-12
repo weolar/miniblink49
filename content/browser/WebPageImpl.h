@@ -172,7 +172,8 @@ public:
     CefBrowserHostImpl* browser() const;
     void setBrowser(CefBrowserHostImpl* browser);
 #endif
-    blink::WebFrame* getWebFrameFromFrameId(int64 frameId);
+    blink::WebFrame* getWebFrameFromFrameId(int64_t frameId);
+    static int64_t getFirstFrameId();
 
     blink::WebView* createWkeView(blink::WebLocalFrame* creator,
         const blink::WebURLRequest& request,
@@ -193,6 +194,8 @@ public:
     void copyToMemoryCanvasForUi();
 
     friend class AutoRecordActions;
+
+    static int64_t m_firstFrameId;
 
     ToolTip* m_toolTip;
 
@@ -230,7 +233,8 @@ public:
     WebFrameClientImpl* m_webFrameClient;
     PlatformEventHandler* m_platformEventHandler;
 
-    blink::WebCursorInfo::Type m_cursorType;
+    blink::WebCursorInfo m_cursor;
+    HICON m_platformCursor;
 
     int m_enterCount;
     bool checkForRepeatEnter();

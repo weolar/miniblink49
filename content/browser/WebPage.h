@@ -133,7 +133,9 @@ public:
 
     WebFrameClientImpl* webFrameClientImpl();
 
-    blink::WebFrame* getWebFrameFromFrameId(int64 frameId);
+    blink::WebFrame* getWebFrameFromFrameId(int64_t frameId);
+    int64_t getFrameIdByBlinkFrame(const blink::WebFrame* frame);
+    static int64_t getFirstFrameId();
 
     // kMainFrameId must be -1 to align with renderer expectations.
     static const int64 kMainFrameId = -1;
