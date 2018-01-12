@@ -9795,6 +9795,9 @@
     <ClCompile Include="..\..\content\browser\PlatformMessagePortChannel.cpp">
       <Filter>content\browser</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\image-decoders\ico\ICOImageDecoder.cpp">
+      <Filter>third_party\Webkit\Source\platform\image-decoders\ico</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\public\platform\modules\app_banner\WebAppBannerClient.h">
@@ -22371,6 +22374,15 @@
       <Filter>content\web_impl_win</Filter>
     </ClInclude>
     <ClInclude Include="..\..\content\browser\PlatformMessagePortChannel.h">
+      <Filter>content\browser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\net\WebURLLoaderManagerUtil.h">
+      <Filter>net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\net\WebURLLoaderManagerMainTask.h">
+      <Filter>net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\content\browser\PlatformCursor.h">
       <Filter>content\browser</Filter>
     </ClInclude>
   </ItemGroup>

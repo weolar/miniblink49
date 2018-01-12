@@ -4362,6 +4362,7 @@
     <ClCompile Include="..\..\third_party\WebKit\Source\platform\image-decoders\GDIPlus\ImageGDIPlusDecoder.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\platform\image-decoders\gif\GIFImageDecoder.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\platform\image-decoders\gif\GIFImageReader.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\image-decoders\ico\ICOImageDecoder.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\platform\image-decoders\jpeg\JPEGImageDecoder.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\platform\image-decoders\png\PNGImageDecoder.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\platform\image-encoders\gdiplus\GDIPlusImageEncoder.cpp" />
@@ -5339,9 +5340,12 @@
     <ClInclude Include="..\..\cc\raster\RasterFilters.h" />
     <ClInclude Include="..\..\cc\raster\RasterTask.h" />
     <ClInclude Include="..\..\cc\tiles\TileWidthHeight.h" />
+    <ClInclude Include="..\..\content\browser\PlatformCursor.h" />
     <ClInclude Include="..\..\content\browser\PlatformMessagePortChannel.h" />
     <ClInclude Include="..\..\content\browser\ToolTip.h" />
     <ClInclude Include="..\..\content\web_impl_win\WebMessagePortChannelImpl.h" />
+    <ClInclude Include="..\..\net\WebURLLoaderManagerMainTask.h" />
+    <ClInclude Include="..\..\net\WebURLLoaderManagerUtil.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\modules\compositorworker\CompositorWorker.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\modules\compositorworker\CompositorWorkerGlobalScope.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\modules\compositorworker\CompositorWorkerManager.h" />
