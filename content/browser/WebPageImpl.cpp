@@ -312,7 +312,7 @@ WebView* WebPageImpl::createWkeView(WebLocalFrame* creator,
 
     wke::CWebViewHandler& handler = m_pagePtr->wkeHandler();
     if (!handler.createViewCallback)
-        return createWkeViewDefault(m_hWnd, name, url);
+        return createWkeViewDefault(/*m_hWnd*/nullptr, name, url);
 
     wkeNavigationType type = WKE_NAVIGATION_TYPE_LINKCLICK;
     wke::CString wkeUrl(url.data(), url.length());
