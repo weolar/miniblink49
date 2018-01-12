@@ -217,11 +217,18 @@ int32_t TextBreakIterator::current(void) const
 
 //////////////////////////////////////////////////////////////////////////
 
-static bool isWordBreak(UChar c)
+static bool isAlphaOrNum(UChar c)
 {
-    return WTF::Unicode::isSpace(c) || L'\n' == c;
+    return (c < '9' && c > '0') || (c < 'z' && c > 'a') || (c < 'Z' && c > 'A') || (' ' == c);
 }
 
+static bool isWordBreak(UChar c)
+{
+    //return WTF::Unicode::isSpace(c) || L'\n' == c;
+    return !isAlphaOrNum(c);
+}
+
+// 拆分单词。中文的话一字就是一个单词
 struct WordBreakIterator : TextBreakIterator {
     WordBreakIterator()
     {
@@ -237,81 +244,79 @@ struct WordBreakIterator : TextBreakIterator {
         return m_currentPos;
     }
 
+//     virtual int next() OVERRIDE
+//     {
+//         ++m_currentPos;
+//         if (m_currentPos >= m_length) {
+//             m_currentPos = m_length;
+//             return m_currentPos;
+//         }
+//         
+//         while (m_currentPos < m_length) {
+//             bool isBreak = isWordBreak(m_string[m_currentPos]);
+//             if (isBreak) {
+//                 break;
+//             }
+//             ++m_currentPos;
+//         }
+//         return m_currentPos;
+//     }
+
     virtual int next() OVERRIDE
     {
-        ++m_currentPos;
-        if (m_currentPos >= m_length) {
+        if (m_currentPos == m_length) {
             m_currentPos = -1;
             return m_currentPos;
         }
-        
-        int haveSpace = 0;
+        bool haveSpace = false;
         while (m_currentPos < m_length) {
-            bool isBreak = isWordBreak(m_string[m_currentPos]);
-            ++m_currentPos;
-            if (isBreak) {
-                haveSpace = 1;
+            UChar c = m_string[m_currentPos];
+            if (haveSpace && (WTF::Unicode::isChineseUtf16Char(c) || !isWordBreak(c)))
                 break;
-            }
+            if (isWordBreak(c))
+                haveSpace = true;
+            ++m_currentPos;
         }
         return m_currentPos;
     }
 
-//     int nextError2()
+//     virtual int previous() OVERRIDE
 //     {
-//         if (m_currentPos == m_length) {
+//         --m_currentPos;
+//         if (m_currentPos < 0) {
 //             m_currentPos = -1;
 //             return m_currentPos;
 //         }
-//         bool haveSpace = false;
-//         while (m_currentPos < m_length) {
-//             if (haveSpace && !isWordBreak(m_string[m_currentPos]))
+// 
+//         while (m_currentPos > 0) {
+//             bool isBreak = isWordBreak(m_string[m_currentPos]);
+//             
+//             if (isBreak) {
 //                 break;
-//             if (isWordBreak(m_string[m_currentPos]))
-//                 haveSpace = true;
-//             ++m_currentPos;
+//             }
+//             --m_currentPos;
 //         }
 //         return m_currentPos;
 //     }
 
     virtual int previous() OVERRIDE
     {
-        --m_currentPos;
-        if (m_currentPos <= 0) {
+        if (!m_currentPos) {
             m_currentPos = -1;
             return m_currentPos;
         }
 
-        int haveSpace = 0;
+        bool haveSpace = false;
         while (m_currentPos > 0) {
-            bool isBreak = isWordBreak(m_string[m_currentPos]);
-            --m_currentPos;
-            if (isBreak) {
-                haveSpace = 1;
+            UChar c = m_string[m_currentPos];
+            if (haveSpace && (WTF::Unicode::isChineseUtf16Char(c) || !isWordBreak(c)))
                 break;
-            }
-            
+            if (isWordBreak(c))
+                haveSpace = true;
+            --m_currentPos;
         }
-        return m_currentPos + haveSpace;
+        return m_currentPos;
     }
-
-//     int previousError2()
-//     {
-//         if (!m_currentPos) {
-//             m_currentPos = -1;
-//             return m_currentPos;
-//         }
-// 
-//         bool haveSpace = false;
-//         while (m_currentPos > 0) {
-//             if (haveSpace && !isWordBreak(m_string[m_currentPos]))
-//                 break;
-//             if (isWordBreak(m_string[m_currentPos]))
-//                 haveSpace = true;
-//             --m_currentPos;
-//         }
-//         return m_currentPos;
-//     }
 };
 
 struct CharBreakIterator : TextBreakIterator {
