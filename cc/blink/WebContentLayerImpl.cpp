@@ -43,9 +43,9 @@ blink::WebLayer* WebContentLayerImpl::layer()
     return m_layer;
 }
 
-void WebContentLayerImpl::setDoubleSided(bool double_sided)
+void WebContentLayerImpl::setDoubleSided(bool doubleSided)
 {
-    //m_layer->setDoubleSided(double_sided);
+    m_layer->setDoubleSided(doubleSided);
 }
 
 void WebContentLayerImpl::setDrawCheckerboardForMissingTiles(bool enable)

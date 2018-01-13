@@ -70,6 +70,7 @@ WebLayerImpl::WebLayerImpl(WebLayerImplClient* client)
     , m_shouldFlattenTransform(true)
     , m_3dSortingContextId(0)
     , m_useParentBackfaceVisibility(false)
+    , m_isDoubleSided(false)
     , m_backgroundColor(0xff00ffff)
     , m_scrollClipLayerId(-1)
     , m_userScrollableHorizontal(true)
@@ -273,6 +274,8 @@ void WebLayerImpl::updataDrawToCanvasProperties(cc::DrawToCanvasProperties* prop
     prop->maskLayerId = maskLayerId();
     prop->replicaLayerId = replicaLayerId();
     prop->backgroundColor = m_backgroundColor;
+    prop->useParentBackfaceVisibility = m_useParentBackfaceVisibility;
+    prop->isDoubleSided = m_isDoubleSided;
 }
 
 const SkMatrix44& WebLayerImpl::drawTransform() const
@@ -868,11 +871,19 @@ void WebLayerImpl::setRenderingContext(int context)
     setNeedsCommit(true);
 }
 
-void WebLayerImpl::setUseParentBackfaceVisibility(bool use_parent_backface_visibility) 
+void WebLayerImpl::setUseParentBackfaceVisibility(bool useParentBackfaceVisibility)
 {
-    if (m_useParentBackfaceVisibility == use_parent_backface_visibility)
+    if (m_useParentBackfaceVisibility == useParentBackfaceVisibility)
         return;
-    m_useParentBackfaceVisibility = use_parent_backface_visibility;
+    m_useParentBackfaceVisibility = useParentBackfaceVisibility;
+    setNeedsCommit(true);
+}
+
+void WebLayerImpl::setDoubleSided(bool isDoubleSided)
+{
+    if (m_isDoubleSided == isDoubleSided)
+        return;
+    m_isDoubleSided = isDoubleSided;
     setNeedsCommit(true);
 }
 

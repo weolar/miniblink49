@@ -10,6 +10,7 @@ struct SkRect;
 
 namespace blink {
 class IntRect;
+class IntSize;
 }
 
 namespace cc {
@@ -52,9 +53,12 @@ public:
 
     bool masksToBounds() const;
     bool drawsContent() const;
+    const blink::IntSize& bounds() const;
     bool opaque() const;
     float opacity() const;
     SkColor backgroundColor() const;
+    bool isDoubleSided() const;
+    bool useParentBackfaceVisibility() const;
 
     void updataTile(int newIndexNumX, int newIndexNumY, DrawToCanvasProperties* prop);
     void cleanupUnnecessaryTile(const WTF::Vector<TileActionInfo*>& tiles);

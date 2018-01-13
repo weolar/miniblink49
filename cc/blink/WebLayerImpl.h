@@ -112,6 +112,7 @@ public:
     bool shouldFlattenTransform();
     void setRenderingContext(int context) override;
     void setUseParentBackfaceVisibility(bool visible) override;
+    void setDoubleSided(bool isDoubleSided);
     void setBackgroundColor(blink::WebColor color) override;
     blink::WebColor backgroundColor() const override;
     void setFilters(const blink::WebFilterOperations& filters) override;
@@ -230,6 +231,7 @@ protected:
     int context;
     int  m_3dSortingContextId;
     bool m_useParentBackfaceVisibility;
+    bool m_isDoubleSided;
     blink::WebColor m_backgroundColor;
     blink::WebDoublePoint m_scrollPositionDouble;
     blink::WebDoublePoint m_scrollCompensationAdjustment;

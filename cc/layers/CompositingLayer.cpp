@@ -90,6 +90,11 @@ bool CompositingLayer::drawsContent() const
     return m_prop->drawsContent;
 }
 
+const blink::IntSize& CompositingLayer::bounds() const
+{
+    return m_prop->bounds;
+}
+
 float CompositingLayer::opacity() const
 {
     return m_prop->opacity;
@@ -103,6 +108,16 @@ bool CompositingLayer::opaque() const
 SkColor CompositingLayer::backgroundColor() const
 {
     return m_prop->backgroundColor;
+}
+
+bool CompositingLayer::isDoubleSided() const
+{
+    return m_prop->isDoubleSided;
+}
+
+bool CompositingLayer::useParentBackfaceVisibility() const
+{
+    return m_prop->useParentBackfaceVisibility;
 }
 
 void CompositingLayer::insertChild(CompositingLayer* child, size_t index)
@@ -214,15 +229,108 @@ void CompositingLayer::cleanupUnnecessaryTile(const WTF::Vector<TileActionInfo*>
     }
 }
 
-void CompositingLayer::blendToTiles(TileActionInfoVector* willRasteredTiles, const SkBitmap* bitmap, const SkRect& dirtyRect)
+
+static bool isBackFaceVisible(const SkMatrix44& matrix)
 {
-    const Vector<TileActionInfo*>& infos = willRasteredTiles->infos();
-    for (size_t i = 0; i < infos.size(); ++i) {
-        TileActionInfo* info = infos[i];
-        CompositingTile* tile = (CompositingTile*)m_tilesAddr->getTileByXY(info->xIndex, info->yIndex, [] { return new CompositingTile(); });
-        ASSERT(tile == m_tilesAddr->getTileByIndex(info->index));
-        blendToTile(tile, bitmap ? bitmap : info->m_bitmap, dirtyRect, info->m_solidColor, info->m_isSolidColorCoverWholeTile);
-    } 
+    // Compute whether a layer with a forward-facing normal of (0, 0, 1, 0)
+    // would have its back face visible after applying the transform.
+    if (matrix.isIdentity())
+        return false;
+
+    // This is done by transforming the normal and seeing if the resulting z
+    // value is positive or negative. However, note that transforming a normal
+    // actually requires using the inverse-transpose of the original transform.
+    //
+    // We can avoid inverting and transposing the matrix since we know we want
+    // to transform only the specific normal vector (0, 0, 1, 0). In this case,
+    // we only need the 3rd row, 3rd column of the inverse-transpose. We can
+    // calculate only the 3rd row 3rd column element of the inverse, skipping
+    // everything else.
+    //
+    // For more information, refer to:
+    //   http://en.wikipedia.org/wiki/Invertible_matrix#Analytic_solution
+    //
+
+    double determinant = matrix.determinant();
+
+    // If matrix was not invertible, then just assume back face is not visible.
+    if (determinant == 0)
+        return false;
+
+    // Compute the cofactor of the 3rd row, 3rd column.
+    double cofactorPart1 = matrix.get(0, 0) * matrix.get(1, 1) * matrix.get(3, 3);
+    double cofactorPart2 = matrix.get(0, 1) * matrix.get(1, 3) * matrix.get(3, 0);
+    double cofactorPart3 = matrix.get(0, 3) * matrix.get(1, 0) * matrix.get(3, 1);
+    double cofactorPart4 = matrix.get(0, 0) * matrix.get(1, 3) * matrix.get(3, 1);
+    double cofactorPart5 = matrix.get(0, 1) * matrix.get(1, 0) * matrix.get(3, 3);
+    double cofactorPart6 = matrix.get(0, 3) * matrix.get(1, 1) * matrix.get(3, 0);
+
+    double cofactor33 = cofactorPart1 + cofactorPart2 + cofactorPart3 - cofactorPart4 - cofactorPart5 - cofactorPart6;
+
+    const SkMScalar kEpsilon = std::numeric_limits<float>::epsilon();
+
+    // Technically the transformed z component is cofactor33 / determinant.  But
+    // we can avoid the costly division because we only care about the resulting
+    // +/- sign; we can check this equivalently by multiplication.
+    return cofactor33 * determinant < -kEpsilon;
+}
+
+static bool isLayerBackFaceVisible(CompositingLayer* layer)
+{
+    // A layer with singular transform is not drawn. So, we can assume that its backface is not visible.
+//     if (HasSingularTransform(layer, tree))
+//         return false;
+    // The current W3C spec on CSS transforms says that backface visibility should
+    // be determined differently depending on whether the layer is in a "3d
+    // rendering context" or not. For Chromium code, we can determine whether we
+    // are in a 3d rendering context by checking if the parent preserves 3d.
+
+//     if (LayerIsInExisting3DRenderingContext(layer))
+//         return DrawTransformFromPropertyTrees(layer, tree).IsBackFaceVisible();
+
+    // In this case, either the layer establishes a new 3d rendering context, or
+    // is not in a 3d rendering context at all.
+    return isBackFaceVisible(layer->drawToCanvasProperties()->currentTransform);
+}
+
+static bool layerShouldBeSkipped(CompositingLayer* layer, bool layerIsDrawn)
+{
+    // Layers can be skipped if any of these conditions are met.
+    //   - is not drawn due to it or one of its ancestors being hidden (or having
+    //     no copy requests).
+    //   - does not draw content.
+    //   - is transparent.
+    //   - has empty bounds
+    //   - the layer is not double-sided, but its back face is visible.
+    //
+    // Some additional conditions need to be computed at a later point after the
+    // recursion is finished.
+    //   - the intersection of render_surface content and layer clip_rect is empty
+    //   - the visible_layer_rect is empty
+    //
+    // Note, if the layer should not have been drawn due to being fully
+    // transparent, we would have skipped the entire subtree and never made it
+    // into this function, so it is safe to omit this check here.
+
+    if (!layerIsDrawn)
+        return true;
+
+    if (!layer->drawsContent() || layer->bounds().isEmpty())
+        return true;
+
+    CompositingLayer* backfaceTestLayer = layer;
+    if (layer->useParentBackfaceVisibility()) {
+        ASSERT(layer->parent());
+        ASSERT(!layer->parent()->useParentBackfaceVisibility());
+        if (layer)
+            backfaceTestLayer = layer->parent();
+    }
+
+    // The layer should not be drawn if (1) it is not double-sided and (2) the back of the layer is known to be facing the screen.
+    if (!backfaceTestLayer->isDoubleSided() && isLayerBackFaceVisible(backfaceTestLayer))
+        return true;
+
+    return false;
 }
 
 void CompositingLayer::drawDebugLine(SkCanvas& canvas, CompositingTile* tile)
@@ -249,6 +357,17 @@ void CompositingLayer::drawDebugLine(SkCanvas& canvas, CompositingTile* tile)
     String textTest = String::format("%d %d %d, (%d %d), (%d %d)", m_id, tile->isSolidColor(), m_children.size(), tile->xIndex(), tile->yIndex(), m_prop->bounds.width(), m_prop->bounds.height());
     CString cText = textTest.utf8();
     canvas.drawText(cText.data(), cText.length(), 5, 15, paintTest);
+}
+
+void CompositingLayer::blendToTiles(TileActionInfoVector* willRasteredTiles, const SkBitmap* bitmap, const SkRect& dirtyRect)
+{
+    const Vector<TileActionInfo*>& infos = willRasteredTiles->infos();
+    for (size_t i = 0; i < infos.size(); ++i) {
+        TileActionInfo* info = infos[i];
+        CompositingTile* tile = (CompositingTile*)m_tilesAddr->getTileByXY(info->xIndex, info->yIndex, [] { return new CompositingTile(); });
+        ASSERT(tile == m_tilesAddr->getTileByIndex(info->index));
+        blendToTile(tile, bitmap ? bitmap : info->m_bitmap, dirtyRect, info->m_solidColor, info->m_isSolidColorCoverWholeTile);
+    } 
 }
 
 void CompositingLayer::blendToTile(CompositingTile* tile, const SkBitmap* bitmap, const SkRect& dirtyRect, SkColor* solidColor, bool isSolidColorCoverWholeTile)
@@ -423,7 +542,7 @@ void CompositingLayer::drawToCanvasChildren(LayerTreeHost* host, SkCanvas* canva
 void CompositingLayer::drawToCanvas(LayerTreeHost* host, blink::WebCanvas* canvas, const blink::IntRect& clip)
 {
     U8CPU alphaVal = (int)ceil(opacity() * 255);
-    if (!drawsContent() || 0 == alphaVal)
+    if (layerShouldBeSkipped(this, true) || 0 == alphaVal)
         return;
 
     for (TilesAddr::iterator it = m_tilesAddr->begin(); it != m_tilesAddr->end(); ++it) {
