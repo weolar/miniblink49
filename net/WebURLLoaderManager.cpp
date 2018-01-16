@@ -66,6 +66,8 @@
 #include "net/FixedReceivedData.h"
 #include "net/WebURLLoaderManagerUtil.h"
 #include "net/WebURLLoaderManagerMainTask.h"
+#include "net/FlattenHTTPBodyElement.h"
+#include "net/WebURLLoaderManagerSetupInfo.h"
 #include "third_party/WebKit/Source/wtf/Threading.h"
 #include "third_party/WebKit/Source/wtf/Vector.h"
 #include "third_party/WebKit/Source/wtf/text/CString.h"
@@ -432,29 +434,29 @@ size_t readCallbackOnIoThread(void* ptr, size_t size, size_t nmemb, void* data)
     if (!size || !nmemb)
         return 0;
 
-    //     if (!job->m_formDataStream.hasMoreElements())
-    //         return 0;
-    // 
-    //     size_t sent = job->m_formDataStream.read(ptr, size, nmemb);
-    // 
-    //     // Something went wrong so cancel the job.
-    //     if (!sent && job->loader())
-    //         job->loader()->cancel();
-    // 
-    //     return sent;
-
-    size_t sentSize = job->m_postBytes.size() - job->m_postBytesReadOffset;
-    if (0 == sentSize)
+    if (!job->m_formDataStream->hasMoreElements())
         return 0;
 
-    if (size * nmemb <= sentSize)
-        sentSize = size * nmemb;
+    size_t sent = job->m_formDataStream->read(ptr, size, nmemb);
 
-    memcpy(ptr, job->m_postBytes.data() + job->m_postBytesReadOffset, sentSize);
-    job->m_postBytesReadOffset += sentSize;
-    ASSERT(job->m_postBytesReadOffset <= job->m_postBytes.size());
+    // Something went wrong so cancel the job.
+    if (!sent && job->loader())
+        job->loader()->cancel();
 
-    return sentSize;
+    return sent;
+
+//     size_t sentSize = job->m_postBytes.size() - job->m_postBytesReadOffset;
+//     if (0 == sentSize)
+//         return 0;
+// 
+//     if (size * nmemb <= sentSize)
+//         sentSize = size * nmemb;
+// 
+//     memcpy(ptr, job->m_postBytes.data() + job->m_postBytesReadOffset, sentSize);
+//     job->m_postBytesReadOffset += sentSize;
+//     ASSERT(job->m_postBytesReadOffset <= job->m_postBytes.size());
+// 
+//     return sentSize;
 }
 
 bool WebURLLoaderManager::downloadOnIoThread()
@@ -624,48 +626,6 @@ static inline size_t getFormElementsCount(WebURLLoaderInternal* job)
     return httpBody.elementCount();
 }
 
-struct SetupDataInfo {
-    CURLoption sizeOption;
-    curl_off_t size;
-    bool islongLong;
-};
-
-struct SetupInfoBase {
-    SetupDataInfo* data;
-
-    SetupInfoBase() { data = nullptr; }
-
-    ~SetupInfoBase()
-    {
-        if (data)
-            delete data;
-    }
-};
-
-struct SetupPutInfo : public SetupInfoBase {
-};
-
-struct SetupPostInfo : public SetupInfoBase {
-};
-
-struct SetupHttpMethodInfo {
-    SetupHttpMethodInfo()
-    {
-        put = nullptr;
-        post = nullptr;
-    }
-
-    ~SetupHttpMethodInfo()
-    {
-        if (put)
-            delete put;
-        if (post)
-            delete post;
-    }
-    SetupPutInfo* put;
-    SetupPostInfo* post;
-};
-
 static void setupFormDataOnIoThread(WebURLLoaderInternal* job, SetupDataInfo* info)
 {
     if (info) {
@@ -675,11 +635,14 @@ static void setupFormDataOnIoThread(WebURLLoaderInternal* job, SetupDataInfo* in
             curl_easy_setopt(job->m_handle, info->sizeOption, (int)info->size);
     }
 
+    ASSERT(!job->m_formDataStream);
+    job->m_formDataStream = new FlattenHTTPBodyElementStream(info->flattenElements);
     curl_easy_setopt(job->m_handle, CURLOPT_READFUNCTION, readCallbackOnIoThread);
-    curl_easy_setopt(job->m_handle, CURLOPT_READDATA, job);
+    curl_easy_setopt(job->m_handle, CURLOPT_READDATA, job->m_id);
 }
 
-SetupDataInfo* setupFormDataOnMainThread(WebURLLoaderInternal* job, CURLoption sizeOption, struct curl_slist** headers)
+
+static SetupDataInfo* setupFormDataOnMainThread(WebURLLoaderInternal* job, CURLoption sizeOption, struct curl_slist** headers)
 {
     WebHTTPBody httpBody = job->firstRequest()->httpBody();
 
@@ -693,39 +656,67 @@ SetupDataInfo* setupFormDataOnMainThread(WebURLLoaderInternal* job, CURLoption s
         else
             expectedSizeOfCurlOffT = sizeof(int);
     }
-
+    
     static const long long maxCurlOffT = (1LL << (expectedSizeOfCurlOffT * 8 - 1)) - 1;
     // Obtain the total size of the form data
     curl_off_t size = 0;
     bool chunkedTransfer = false;
+    SetupDataInfo* result = new SetupDataInfo();
+    
     for (size_t i = 0; i < httpBody.elementCount(); ++i) {
         WebHTTPBody::Element element;
         if (!httpBody.elementAt(i, element))
             continue;
 
+        FlattenHTTPBodyElement* flattenElement = nullptr;
         if (WebHTTPBody::Element::TypeFile == element.type) {
-            // long long fileSizeResult;
-            //             if (getFileSize(element.m_filename, fileSizeResult)) {
-            //                 if (fileSizeResult > maxCurlOffT) {
-            //                     // File size is too big for specifying it to cURL
-            //                     chunkedTransfer = true;
-            //                     break;
-            //                 }
-            //                 size += fileSizeResult;
-            //             } else {
-            //                 chunkedTransfer = true;
-            //                 break;
-            //             }
-        } else
+            long long fileSizeResult;
+            if (getFileSize(element.filePath, fileSizeResult)) {
+                if (fileSizeResult > maxCurlOffT) {
+                    // File size is too big for specifying it to cURL
+                    chunkedTransfer = true;
+                    break;
+                }
+                size += fileSizeResult;
+            } else {
+                chunkedTransfer = true;
+                break;
+            }
+
+            flattenElement = new FlattenHTTPBodyElement();
+            flattenElement->type = WebHTTPBody::Element::TypeFile;
+            Vector<UChar> filePath = WTF::ensureUTF16UChar(element.filePath, true);
+            flattenElement->filePath = filePath.data();
+        } else if (WebHTTPBody::Element::TypeData == element.type) {
             size += element.data.size();
+
+            flattenElement = new FlattenHTTPBodyElement();
+            flattenElement->type = WebHTTPBody::Element::TypeData;
+            flattenElement->data.append(element.data.data(), element.data.size());
+        } else if (WebHTTPBody::Element::TypeBlob == element.type) {
+            WebBlobRegistryImpl* blobReg = (WebBlobRegistryImpl*)blink::Platform::current()->blobRegistry();
+            net::BlobDataWrap* blobData = blobReg->getBlobDataFromUUID(element.blobUUID);
+            if (!blobData)
+                continue;
+
+            flattenElement = new FlattenHTTPBodyElement();
+            flattenElement->type = WebHTTPBody::Element::TypeData;
+
+            const Vector<blink::WebBlobData::Item*>& items = blobData->items();
+            for (size_t i = 0; i < items.size(); ++i) {
+                blink::WebBlobData::Item* item = items[i];
+                flattenElement->data.append(item->data.data(), item->data.size());
+                size += item->data.size();
+            }
+        }
+        if (flattenElement)
+            result->flattenElements.append(flattenElement);
     }
 
-    SetupDataInfo* result = nullptr;
     // cURL guesses that we want chunked encoding as long as we specify the header
     if (chunkedTransfer)
         *headers = curl_slist_append(*headers, "Transfer-Encoding: chunked");
     else {
-        result = new SetupDataInfo();
         result->sizeOption = sizeOption;
         result->size = size;
         result->islongLong = (sizeof(long long) == expectedSizeOfCurlOffT);
@@ -760,29 +751,40 @@ static SetupPutInfo* setupPutOnMainThread(WebURLLoaderInternal* job, struct curl
     return result;
 }
 
-static void flattenHttpBody(const WebHTTPBody& httpBody, WTF::Vector<char>* data)
-{
-    for (size_t i = 0; i < httpBody.elementCount(); ++i) {
-        WebHTTPBody::Element element;
-        if (!httpBody.elementAt(i, element))
-            continue;
-
-        if (WebHTTPBody::Element::TypeData == element.type) {
-            data->append(element.data.data(), element.data.size());
-        } else if (WebHTTPBody::Element::TypeBlob == element.type) {
-            WebBlobRegistryImpl* blobReg = (WebBlobRegistryImpl*)blink::Platform::current()->blobRegistry();
-            net::BlobDataWrap* blobData = blobReg->getBlobDataFromUUID(element.blobUUID);
-            if (!blobData)
-                continue;
-
-            const Vector<blink::WebBlobData::Item*>& items = blobData->items();
-            for (size_t i = 0; i < items.size(); ++i) {
-                blink::WebBlobData::Item* item = items[i];
-                data->append(item->data.data(), item->data.size());
-            }
-        }
-    }
-}
+// static void flattenHttpBody(const WebHTTPBody& httpBody, std::vector<FlattenHTTPBodyElement*>* data)
+// {
+//     for (size_t i = 0; i < httpBody.elementCount(); ++i) {
+//         WebHTTPBody::Element element;
+//         if (!httpBody.elementAt(i, element))
+//             continue;
+// 
+//         FlattenHTTPBodyElement* flattenElement = nullptr;
+//         if (WebHTTPBody::Element::TypeData == element.type) {
+//             flattenElement = new FlattenHTTPBodyElement();
+//             flattenElement->type = WebHTTPBody::Element::TypeData;
+//             flattenElement->data.append(element.data.data(), element.data.size());
+//         } else if (WebHTTPBody::Element::TypeBlob == element.type) {
+//             WebBlobRegistryImpl* blobReg = (WebBlobRegistryImpl*)blink::Platform::current()->blobRegistry();
+//             net::BlobDataWrap* blobData = blobReg->getBlobDataFromUUID(element.blobUUID);
+//             if (!blobData)
+//                 continue;
+//             flattenElement->type = WebHTTPBody::Element::TypeData;
+// 
+//             const Vector<blink::WebBlobData::Item*>& items = blobData->items();
+//             for (size_t i = 0; i < items.size(); ++i) {
+//                 blink::WebBlobData::Item* item = items[i];
+//                 flattenElement->data.append(item->data.data(), item->data.size());
+//             }
+//         } else if (WebHTTPBody::Element::TypeFile == element.type) {
+//             flattenElement = new FlattenHTTPBodyElement();
+//             flattenElement->type = WebHTTPBody::Element::TypeFile;
+//             Vector<UChar> filePath = WTF::ensureUTF16UChar(element.filePath, true);
+//             flattenElement->filePath = filePath.data();
+//         }
+//         if (flattenElement)
+//             data->push_back(flattenElement);
+//     }
+// }
 
 static void setupPostOnIoThread(WebURLLoaderInternal* job, SetupPostInfo* info)
 {
@@ -793,13 +795,19 @@ static void setupPostOnIoThread(WebURLLoaderInternal* job, SetupPostInfo* info)
         return;
     }
 
-    if (0 != job->m_postBytes.size()) {
-        curl_easy_setopt(job->m_handle, CURLOPT_POSTFIELDSIZE, job->m_postBytes.size());
-        curl_easy_setopt(job->m_handle, CURLOPT_POSTFIELDS, job->m_postBytes.data());
+    if (info->data && 1 == info->data->flattenElements.size()) {
+        FlattenHTTPBodyElement* element = info->data->flattenElements[0];
+        if (WebHTTPBody::Element::TypeData == element->type || WebHTTPBody::Element::TypeBlob == element->type) {
+            curl_easy_setopt(job->m_handle, CURLOPT_POSTFIELDSIZE, element->data.size());
+            curl_easy_setopt(job->m_handle, CURLOPT_COPYPOSTFIELDS, element->data.data());
+
+            delete element;
+            return;
+        }
     }
 
-//     if (info->data)
-//         setupFormDataOnIoThread(job, info->data);
+    if (info->data)
+        setupFormDataOnIoThread(job, info->data);
 }
 
 static SetupPostInfo* setupPostOnMainThread(WebURLLoaderInternal* job, struct curl_slist** headers)
@@ -815,8 +823,8 @@ static SetupPostInfo* setupPostOnMainThread(WebURLLoaderInternal* job, struct cu
 //         flattenHttpBody(job->firstRequest()->httpBody(), &job->m_postBytes);
 //         return result;
 //     }
-
-    flattenHttpBody(job->firstRequest()->httpBody(), &job->m_postBytes);
+// 
+//     flattenHttpBody(job->firstRequest()->httpBody(), &job->m_postBytes);
     result->data = setupFormDataOnMainThread(job, CURLOPT_POSTFIELDSIZE_LARGE, headers);
     return result;
 }
@@ -1603,7 +1611,8 @@ WebURLLoaderInternal::WebURLLoaderInternal(WebURLLoaderImplCurl* loader, const W
     m_isDataUrl = false;
     m_isProxy = false;
     m_isProxyHeadRequest = false;
-    m_postBytesReadOffset = 0;
+    //m_postBytesReadOffset = 0;
+    m_formDataStream = nullptr;
 
 #ifndef NDEBUG
     webURLLoaderInternalCounter.increment();
@@ -1623,6 +1632,9 @@ WebURLLoaderInternal::~WebURLLoaderInternal()
         delete m_bodyStreamWriter;
         m_bodyStreamWriter = nullptr;
     }
+
+    if (m_formDataStream)
+        delete m_formDataStream;
 
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
     if (m_hookBuf)
