@@ -94,7 +94,7 @@ PopupMenuWin::~PopupMenuWin()
     }
     m_layerTreeHost = nullptr;
 
-    ::SetPropW(m_hPopup, kPopupWindowClassName, nullptr);
+//     ::SetPropW(m_hPopup, kPopupWindowClassName, nullptr);
 }
 
 static void destroyWindowAsyn(HWND hWnd)
@@ -256,7 +256,7 @@ LRESULT PopupMenuWin::wndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPa
         beginMainFrame();
         break;
     case WM_PMW_KILLFOCUS:
-    //case WM_KILLFOCUS:
+    case WM_KILLFOCUS:
         m_isVisible = false;
         m_webViewImpl->hidePopups();
         break;

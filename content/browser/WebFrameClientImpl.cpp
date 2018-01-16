@@ -263,6 +263,8 @@ static wkeWebFrameHandle frameIdToWkeFrame(WebPage* webPage, WebLocalFrame* fram
 
 void WebFrameClientImpl::didCommitProvisionalLoad(WebLocalFrame* frame, const WebHistoryItem& history, WebHistoryCommitType type)
 {
+    m_webPage->didCommitProvisionalLoad(frame, history, type);
+
 #if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
     CefBrowserHostImpl* browser = m_webPage->browser();
     if (browser)
@@ -283,9 +285,7 @@ void WebFrameClientImpl::didCommitProvisionalLoad(WebLocalFrame* frame, const We
 
     if (handler.urlChangedCallback2)
         handler.urlChangedCallback2(m_webPage->wkeWebView(), handler.urlChangedCallback2Param, frameIdToWkeFrame(m_webPage, frame), &string);
-#endif
-
-    m_webPage->didCommitProvisionalLoad(frame, history, type);
+#endif    
 }
 
 void WebFrameClientImpl::didCreateNewDocument(WebLocalFrame* frame)

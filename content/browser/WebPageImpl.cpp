@@ -49,6 +49,7 @@
 #include "content/browser/NavigationController.h"
 #include "content/browser/CheckReEnter.h"
 #include "content/browser/PlatformCursor.h"
+#include "content/browser/RunFileChooserImpl.h"
 #include "content/web_impl_win/BlinkPlatformImpl.h"
 #include "content/web_impl_win/WebThreadImpl.h"
 #include "content/web_impl_win/npapi/PluginDatabase.h"
@@ -1414,6 +1415,69 @@ void WebPageImpl::onPopupMenuHide()
 void WebPageImpl::didStartProvisionalLoad()
 {
     m_firstDrawCount = 0;
+}
+
+bool WebPageImpl::runFileChooser(const blink::WebFileChooserParams& params, blink::WebFileChooserCompletion* completion)
+{
+    return runFileChooserImpl(params, completion);
+//     static const size_t maxFilePathsListSize = USHRT_MAX;
+//     bool multiFile = params.multiSelect;
+//     Vector<WCHAR> fileBuf(multiFile ? maxFilePathsListSize : MAX_PATH);
+// 
+//     OPENFILENAME ofn = { 0 };
+//     // Need to zero out the first char of fileBuf so GetOpenFileName doesn't think it's an initialization string
+//     fileBuf[0] = '\0';
+// 
+//     ofn.lStructSize = sizeof(ofn);
+//     ofn.hwndOwner = nullptr;
+//     String allFiles = L"all files";
+//     allFiles.append(L"\0*.*\0\0", 6);
+// 
+//     Vector<UChar> filterCharacters = allFiles.charactersWithNullTermination(); // Retain buffer long enough to make the GetOpenFileName call
+//     ofn.lpstrFilter = filterCharacters.data();
+// 
+//     ofn.lpstrFile = fileBuf.data();
+//     ofn.nMaxFile = fileBuf.size();
+//     String dialogTitle = L"upload";
+//     Vector<UChar> dialogTitleCharacters = dialogTitle.charactersWithNullTermination(); // Retain buffer long enough to make the GetOpenFileName call
+//     ofn.lpstrTitle = dialogTitleCharacters.data();
+//     ofn.Flags = OFN_ENABLESIZING | OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST | OFN_EXPLORER;
+//     if (multiFile)
+//         ofn.Flags = ofn.Flags | OFN_ALLOWMULTISELECT;
+// 
+//     Vector<WebString> fileList;
+//     WebVector<WebString> wsFileNames(fileList.size());
+//     if (!::GetOpenFileName(&ofn))
+//         return false;
+//     
+//     WCHAR* files = fileBuf.data();
+// 
+//     String file(files);
+//     if (multiFile) {
+//         while (!file.isEmpty()) {
+//             // When using the OFN_EXPLORER flag, the file list is null delimited.
+//             // When you create a String from a ptr to this list, it will use strlen to look for the null character.
+//             // Then we find the next file path string by using the length of the string we just created.
+//             WCHAR* nextFilePtr = files + file.length() + 1;
+//             String nextFile(nextFilePtr);
+//             // If multiple files are selected, there will be a directory name first, which we don't want to add to the vector.
+//             // We know a single file was selected if there is only one filename in the list.  
+//             // In that case, we don't want to skip adding the first (and only) name.
+//             if (files != fileBuf.data() || nextFile.isEmpty())
+//                 fileList.append(file);
+//             files = nextFilePtr;
+//             file = nextFile;
+//         }
+//     } else
+//         fileList.append(file);
+//     ASSERT(fileList.size());
+// 
+//     for (size_t i = 0; i < fileList.size(); ++i)
+//         wsFileNames[i] = fileList[i];
+//     completion->didChooseFile(wsFileNames);
+//
+//     // FIXME: Show some sort of error if too many files are selected and the buffer is too small.  For now, this will fail silently.
+//     return true;
 }
 
 bool WebPageImpl::initSetting()

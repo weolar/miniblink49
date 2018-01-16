@@ -188,6 +188,8 @@ public:
         blink::WebNavigationPolicy policy,
         bool suppressOpener);
 
+    virtual bool runFileChooser(const blink::WebFileChooserParams& params, blink::WebFileChooserCompletion* completion) override;
+
     // ----
     void executeMainFrame();
 
