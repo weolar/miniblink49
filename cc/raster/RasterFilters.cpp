@@ -202,7 +202,7 @@ skia::RefPtr<SkImageFilter> RasterFilter::buildImageFilter(const cc_blink::WebFi
             imageFilter = createMatrixImageFilter(matrix, imageFilter);
             break;
         case blink::FilterOperation::CONTRAST:
-            getContrastMatrix(blink::toBasicColorMatrixFilterOperation(op).amount(), matrix);
+            getContrastMatrix(blink::toBasicComponentTransferFilterOperation(op).amount(), matrix);
             imageFilter = createMatrixImageFilter(matrix, imageFilter);
             break;
         case blink::FilterOperation::BLUR:
