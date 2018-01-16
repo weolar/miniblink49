@@ -484,6 +484,10 @@ void BlobResourceLoader::didGetSize(long long size)
     size = item->length;
     if (blink::WebBlobData::Item::TypeData == item->type)
         size = item->data.size();
+    else if (blink::WebBlobData::Item::TypeFile == item->type) {
+        if (!getFileSize(item->filePath, size))
+            size = 0;
+    }
 
     // Cache the size.
     m_itemLengthList.append(size);
@@ -741,8 +745,7 @@ void BlobResourceLoader::consumeData(const char* data, int bytesRead)
         if (!bytesRead) {
             // Close the file.
             m_fileOpened = false;
-            //m_asyncStream->close();
-            DebugBreak();
+            m_streamWrap->close();
 
             // Move to the next item.
             m_readItemCount++;
@@ -771,8 +774,7 @@ void BlobResourceLoader::failed(int errorCode)
     // Close the file if needed.
     if (m_fileOpened) {
         m_fileOpened = false;
-        //m_asyncStream->close();
-        DebugBreak();
+        m_streamWrap->close();
     }
 }
 

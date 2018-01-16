@@ -147,7 +147,7 @@ WebSocketChannelImpl::WebSocketChannelImpl(ExecutionContext* context, WebSocketC
 WebSocketChannelImpl::~WebSocketChannelImpl()
 {
     ASSERT(!m_blobLoader);
-    ASSERT(0 == m_ref);
+    //ASSERT(0 == m_ref);
     WTF_LOG(Network, "WebSocketChannelImpl %p dtor", this);
 }
 
