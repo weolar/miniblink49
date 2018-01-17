@@ -944,10 +944,6 @@ void WebPageImpl::didChangeCursor(const WebCursorInfo& cursor)
     if (m_cursor.type == cursor.type)
         return;
 
-    if (m_platformCursor)
-        ::DestroyIcon(m_platformCursor);
-    m_platformCursor = nullptr;
-
     m_cursor = cursor;
 
     if (m_hWnd)
@@ -1031,6 +1027,8 @@ void WebPageImpl::fireCursorEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM
         hCur = ::LoadCursor(NULL, IDC_NO);
         break;
     case WebCursorInfo::TypeCustom:
+        if (m_platformCursor)
+            ::DestroyIcon(m_platformCursor);
         m_platformCursor = createSharedCursorImpl(m_cursor);
         hCur = m_platformCursor;
         break;
