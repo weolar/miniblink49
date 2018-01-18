@@ -379,7 +379,7 @@ private:
     WTF::CString m_userAgent;
 
     NPP m_instance;
-    NPP_t m_instanceStruct;
+    //NPP_t m_instanceStruct;
     NPWindow m_npWindow;
 
     Vector<bool, 4> m_popupStateStack;
