@@ -1365,20 +1365,23 @@ WebURLLoaderManager::InitializeHandleInfo* WebURLLoaderManager::preInitializeHan
 #endif
     info->method = job->firstRequest()->httpMethod().utf8();
 
+    String contentType = job->firstRequest()->httpHeaderField("Content-Type");
+    if (contentType.isNull() && "POST" == info->method && job->firstRequest()->httpBody().isNull())
+        job->firstRequest()->setHTTPHeaderField("Content-Type", ""); // 修复火币网登录不了的bug
+
     curl_slist* headers = nullptr;
     HeaderVisitor visitor(&headers);
     job->firstRequest()->visitHTTPHeaderFields(&visitor);
 
-    String method = job->firstRequest()->httpMethod();
-    if ("GET" == method) {
+    if ("GET" == info->method) {
 
-    } else if ("POST" == method) {
+    } else if ("POST" == info->method) {
         info->methodInfo = new SetupHttpMethodInfo();
         info->methodInfo->post = setupPostOnMainThread(job, &headers);
-    } else if ("PUT" == method) {
+    } else if ("PUT" == info->method) {
         info->methodInfo = new SetupHttpMethodInfo();
         info->methodInfo->put = setupPutOnMainThread(job, &headers);
-    } else if ("HEAD" == method) {
+    } else if ("HEAD" == info->method) {
 
     } else {
         info->methodInfo = new SetupHttpMethodInfo();
