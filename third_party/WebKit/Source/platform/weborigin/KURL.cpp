@@ -307,8 +307,12 @@ static int findFirstOf(const LChar* s, int sLen, int startPos, const char* toFin
 #ifndef NDEBUG
 static void checkEncodedString(const String& url)
 {
-    for (unsigned i = 0; i < url.length(); ++i)
-        ASSERT(!(url[i] & ~0x7F));
+    for (unsigned i = 0; i < url.length(); ++i) {
+        if ((url[i] & ~0x7F)) {
+            OutputDebugStringA("checkEncodedString fail\n");
+            break;
+        }
+    }
 
     ASSERT(!url.length() || isSchemeFirstChar(url[0]));
 }
@@ -657,6 +661,19 @@ KURL KURL::copy() const
 bool KURL::hasPath() const
 {
     return m_pathEnd != m_portEnd;
+}
+
+const String& KURL::string() const
+{
+    if (m_string.containsOnlyASCII())
+        return m_string;
+    m_utf16String = WTF::ensureUTF16String(m_string);
+    return m_utf16String;
+}
+
+String KURL::getUTF8String() const
+{
+    return WTF::ensureStringToUTF8String(m_string);
 }
 
 String KURL::lastPathComponent() const
@@ -1146,10 +1163,12 @@ static void escapeAndAppendFragment(char*& buffer, const char* strStart, size_t 
 
         // Chrome and IE allow non-ascii characters in fragments, however doing
         // so would hit an ASSERT in checkEncodedString, so for now we don't.
+#if 0 // Be same to Chrome
         if (c < 0x20 || c >= 127) {
             appendEscapedChar(p, c);
             continue;
         }
+#endif
         *p++ = c;
     }
 
@@ -1225,10 +1244,12 @@ void KURL::parse(const String& string)
     if (!string.startsWith("file:///"))
         checkEncodedString(string);
 
-    CharBuffer buffer(string.length() + 1);
-    copyASCII(string.characters8(), string.length(), buffer.data());
-    buffer[string.length()] = '\0';
-    parse(buffer.data(), &string);
+    Vector<char> utf8 = WTF::ensureStringToUTF8(string, false);
+
+    CharBuffer buffer(utf8.size() + 1);
+    copyASCII((const LChar*)utf8.data(), utf8.size(), buffer.data());
+    buffer[utf8.size()] = '\0';
+    parse(buffer.data(), &String(utf8.data(), utf8.size()));
 }
 
 static inline bool equal(const char* a, size_t lenA, const char* b, size_t lenB)
@@ -1598,9 +1619,11 @@ bool equalIgnoringFragmentIdentifier(const KURL& a, const KURL& b)
     if (a.m_queryEnd != b.m_queryEnd)
         return false;
     unsigned queryLength = a.m_queryEnd;
-    for (unsigned i = 0; i < queryLength; ++i)
-        if (a.string()[i] != b.string()[i])
+    for (unsigned i = 0; i < queryLength; ++i) {
+        if (a.getUTF8String()[i] != b.getUTF8String()[i]) {
             return false;
+        }
+    }
     return true;
 }
 
@@ -1618,12 +1641,12 @@ bool protocolHostAndPortAreEqual(const KURL& a, const KURL& b)
 
     // Check the scheme
     for (int i = 0; i < a.m_schemeEnd; ++i)
-        if (a.string()[i] != b.string()[i])
+        if (a.getUTF8String()[i] != b.getUTF8String()[i])
             return false;
 
     // And the host
     for (int i = 0; i < hostLengthA; ++i)
-        if (a.string()[hostStartA + i] != b.string()[hostStartB + i])
+        if (a.getUTF8String()[hostStartA + i] != b.getUTF8String()[hostStartB + i])
             return false;
 
     if (a.port() != b.port())
