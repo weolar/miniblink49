@@ -844,9 +844,7 @@ void GraphicsContext::drawText(const Font& font, const TextRunPaintInfo& runInfo
         return;
 
     TextRunPaintInfo runInfo = runInfo1;
-    if (0) {
-        runInfo.to = 1;
-    }
+
     drawTextPasses([&font, &runInfo, &point, this](const SkPaint& paint) {
         font.drawText(m_canvas, runInfo, point, m_deviceScaleFactor, paint);
     });
