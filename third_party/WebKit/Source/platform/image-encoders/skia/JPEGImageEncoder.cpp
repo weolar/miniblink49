@@ -38,7 +38,7 @@
 extern "C" {
 #include <setjmp.h>
 #include <stdio.h> // jpeglib.h needs stdio.h FILE
-#include "jpeglib.h"
+#include "libjpeg/jpeglib.h"
 }
 
 namespace blink {
