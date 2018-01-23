@@ -9798,6 +9798,13 @@
     <ClCompile Include="..\..\third_party\WebKit\Source\platform\image-decoders\ico\ICOImageDecoder.cpp">
       <Filter>third_party\Webkit\Source\platform\image-decoders\ico</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\bindings\core\v8\custom\V8MutationObserverCustom.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\image-encoders\skia\PNGImageEncoder.cpp">
+      <Filter>third_party\Webkit\Source\platform\image-encoders\skia</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\image-encoders\skia\JPEGImageEncoder.cpp">
+      <Filter>third_party\Webkit\Source\platform\image-encoders\skia</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\public\platform\modules\app_banner\WebAppBannerClient.h">
@@ -22384,6 +22391,18 @@
     </ClInclude>
     <ClInclude Include="..\..\content\browser\PlatformCursor.h">
       <Filter>content\browser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wke\wkedefine.h">
+      <Filter>wke</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\content\browser\RunFileChooserImpl.h">
+      <Filter>content\browser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\net\WebURLLoaderManagerSetupInfo.h">
+      <Filter>net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\net\FlattenHTTPBodyElement.h">
+      <Filter>net</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
