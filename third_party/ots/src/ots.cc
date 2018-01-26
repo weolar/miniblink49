@@ -16,6 +16,8 @@
 #ifdef MINIBLINK_NOT_IMPLEMENTED
 #include "third_party/woff2/src/woff2_dec.h"
 #endif
+#include "woff2.h"
+
 // The OpenType Font File
 // http://www.microsoft.com/typography/otspec/cmap.htm
 
@@ -468,8 +470,8 @@ bool ProcessWOFF2(ots::OpenTypeFile *header,
                   const uint8_t *data,
                   size_t length,
                   uint32_t index) {
-#ifdef MINIBLINK_NOT_IMPLEMENTED
-  size_t decompressed_size = woff2::ComputeWOFF2FinalSize(data, length);
+#if 1 // def MINIBLINK_NOT_IMPLEMENTED
+  size_t decompressed_size = ots::ComputeWOFF2FinalSize(data, length);
 
   if (decompressed_size == 0) {
     return OTS_FAILURE_MSG_HDR("Size of decompressed WOFF 2.0 is set to 0");
@@ -480,7 +482,7 @@ bool ProcessWOFF2(ots::OpenTypeFile *header,
   }
 
   std::vector<uint8_t> decompressed_buffer(decompressed_size);
-  if (!woff2::ConvertWOFF2ToTTF(&decompressed_buffer[0], decompressed_size,
+  if (!ots::ConvertWOFF2ToTTF(&decompressed_buffer[0], decompressed_size,
                                 data, length)) {
     return OTS_FAILURE_MSG_HDR("Failed to convert WOFF 2.0 font to SFNT");
   }
