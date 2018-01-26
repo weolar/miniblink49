@@ -171,6 +171,8 @@ CodePath Character::characterRangeCodePath(const UChar* characters, unsigned len
 
 static CodePath checkCharacterRangeCodePathAndFixIfNeeded(UChar* characters, unsigned len, bool needFixToSimple)
 {
+    return SimplePath; // weolar
+
     const UChar kUnknowChar = L'?';
     CodePath result = SimplePath;
     for (unsigned i = 0; i < len; i++) {
