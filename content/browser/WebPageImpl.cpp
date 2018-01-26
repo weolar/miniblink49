@@ -78,6 +78,9 @@ using namespace blink;
 
 extern bool g_drawDirtyDebugLine;
 
+extern DWORD g_paintToMemoryCanvasInUiThreadCount;
+extern DWORD g_mouseCount;
+
 namespace blink {
 bool saveDumpFile(const String& url, char* buffer, unsigned int size);
 }
@@ -464,6 +467,11 @@ void WebPageImpl::closeWidgetSoon()
     m_postCloseWidgetSoonMessage = true;
 }
 
+void WebPageImpl::gc()
+{
+    m_layerTreeHost->gc();
+}
+
 void WebPageImpl::showDebugNodeData()
 {
 #ifndef NDEBUG
@@ -844,12 +852,16 @@ void WebPageImpl::paintToMemoryCanvasInUiThread(SkCanvas* canvas, const IntRect&
 
     drawDebugLine(canvas, paintRect);
 
+    g_paintToMemoryCanvasInUiThreadCount++;
+
     bool drawToScreen = false;
 #if ENABLE_CEF == 1
     drawToScreen = !!m_browser;
 #endif
-    if (drawToScreen) { // 使用wke接口不由此上屏
-        HDC hdc = GetDC(m_pagePtr->getHWND());
+    //if (drawToScreen) { // 使用wke接口不由此上屏
+    HWND hWnd = m_pagePtr->getHWND();
+    if (hWnd) {
+        HDC hdc = ::GetDC(hWnd);
         if (m_layerTreeHost->getHasTransparentBackground()) {
             RECT rtWnd;
             ::GetWindowRect(m_pagePtr->getHWND(), &rtWnd);
@@ -858,9 +870,10 @@ void WebPageImpl::paintToMemoryCanvasInUiThread(SkCanvas* canvas, const IntRect&
         } else
             skia::DrawToNativeContext(canvas, hdc, paintRect.x(), paintRect.y(), &intRectToWinRect(paintRect));
         ::ReleaseDC(m_pagePtr->getHWND(), hdc);
-    } else {
-        copyToMemoryCanvasForUi();
     }
+    //} else {
+    copyToMemoryCanvasForUi();
+    //}
     
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
     if (m_pagePtr->wkeHandler().paintUpdatedCallback) {

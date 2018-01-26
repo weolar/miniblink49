@@ -47,6 +47,11 @@
 #include "gin/array_buffer.h"
 #include "net/WebURLLoaderManager.h"
 
+DWORD g_paintToMemoryCanvasInUiThreadCount = 0;
+DWORD g_rasterTaskCount = 0;
+DWORD g_mouseCount = 0;
+DWORD g_paintCount = 0;
+
 #ifdef _DEBUG
 
 #include "base/process/InjectTool.h"
@@ -159,7 +164,10 @@ void BlinkPlatformImpl::initialize()
     const size_t kImageCacheSingleAllocationByteLimit = 64 * 1024 * 1024;
     SkGraphics::SetResourceCacheSingleAllocationByteLimit(kImageCacheSingleAllocationByteLimit);
 
-    platform->startGarbageCollectedThread(30000);
+    platform->startGarbageCollectedThread(30);
+
+//     platform->m_perfTimer = new blink::Timer<BlinkPlatformImpl>(platform, &BlinkPlatformImpl::perfTimer);
+//     platform->m_perfTimer->start(2, 2, FROM_HERE);
 
     OutputDebugStringW(L"BlinkPlatformImpl::initBlink\n");
 }
@@ -181,6 +189,7 @@ BlinkPlatformImpl::BlinkPlatformImpl()
     m_lock = new CRITICAL_SECTION();
     m_threadNum = 0;
     m_gcTimer = nullptr;
+    m_perfTimer = nullptr;
     m_ioThread = nullptr;
     m_firstMonotonicallyIncreasingTime = currentTimeImpl(); // (GetTickCount() / 1000.0);
     ::InitializeCriticalSection(m_lock);
@@ -331,6 +340,18 @@ void BlinkPlatformImpl::shutdown()
     delete this;
 }
 
+void BlinkPlatformImpl::perfTimer(blink::Timer<BlinkPlatformImpl>*)
+{
+    String output = String::format("perfTimer: paintToMemory:%d raster:%d, raster:%d paint:%d\n",
+        g_paintToMemoryCanvasInUiThreadCount, g_rasterTaskCount, g_mouseCount, g_paintCount);
+    OutputDebugStringA(output.utf8().data());
+
+    g_paintToMemoryCanvasInUiThreadCount = 0;
+    g_rasterTaskCount = 0;
+    g_mouseCount = 0;
+    g_paintCount = 0;
+}
+
 void BlinkPlatformImpl::garbageCollectedTimer(blink::Timer<BlinkPlatformImpl>*)
 {
     doGarbageCollected();
@@ -349,6 +370,8 @@ void BlinkPlatformImpl::doGarbageCollected()
     //     v8::Isolate::GetCurrent()->ContextDisposedNotification(false);
     SkGraphics::PurgeResourceCache();
     SkGraphics::PurgeFontCache();
+
+    WebPage::gcAll();
 
 //     String out = String::format("BlinkPlatformImpl::doGarbageCollected: %d %d %d\n", g_v8MemSize, g_blinkMemSize, g_skiaMemSize);
 //     OutputDebugStringA(out.utf8().data());

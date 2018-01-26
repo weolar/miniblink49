@@ -43,6 +43,7 @@ void WebPage::shutdown()
         delete *it;
     }
     delete m_webPageSet;
+    m_webPageSet = nullptr;
 }
 
 WebPage::WebPage(void* foreignPtr)
@@ -487,6 +488,25 @@ int64_t WebPage::getFrameIdByBlinkFrame(const blink::WebFrame* frame)
 int64_t WebPage::getFirstFrameId()
 {
     return WebPageImpl::getFirstFrameId();
+}
+
+void WebPage::gcAll()
+{
+    if (!m_webPageSet)
+        return;
+
+    WTF::HashSet<WebPage*> webPageSet = *m_webPageSet;
+    for (WTF::HashSet<WebPage*>::iterator it = webPageSet.begin(); it != webPageSet.end(); ++it) {
+        WebPage* page = *it;
+        page->gc();
+    }
+}
+
+void WebPage::gc()
+{
+    if (!m_pageImpl)
+        return;
+    return m_pageImpl->gc();
 }
 
 } // namespace WebCore

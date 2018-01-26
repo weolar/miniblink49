@@ -85,8 +85,8 @@ void WebBlobRegistryImpl::registerBlobData(const WebString& uuid, const WebBlobD
         dataWrap->appendItem(new WebBlobData::Item(dataItem));
     }
 
-    String out = String::format("WebBlobRegistryImpl::registerBlobData: %p, %s\n", dataWrap, uuidString.utf8().data());
-    OutputDebugStringA(out.utf8().data());
+//     String out = String::format("WebBlobRegistryImpl::registerBlobData: %p, %s\n", dataWrap, uuidString.utf8().data());
+//     OutputDebugStringA(out.utf8().data());
 
     check();
 

@@ -117,6 +117,7 @@ private:
     void destroyWebInfo();
     void closeThread();
     void garbageCollectedTimer(blink::Timer<BlinkPlatformImpl>*);
+    void perfTimer(blink::Timer<BlinkPlatformImpl>*);
 
     CRITICAL_SECTION* m_lock;
     static const int m_maxThreadNum = 1000;
@@ -124,6 +125,7 @@ private:
     int m_threadNum;
 
     blink::Timer<BlinkPlatformImpl>* m_gcTimer;
+    blink::Timer<BlinkPlatformImpl>* m_perfTimer;
 
     blink::WebThread* m_ioThread;
 

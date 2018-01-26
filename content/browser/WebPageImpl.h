@@ -69,6 +69,8 @@ public:
 
     void init(WebPage* pagePtr, HWND hWnd);
     void close();
+
+    void gc();
     
     // WebViewClient
     virtual void didInvalidateRect(const blink::WebRect&) override;

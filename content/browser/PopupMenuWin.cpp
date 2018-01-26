@@ -323,7 +323,7 @@ void PopupMenuWin::updataSize()
 
     POINT pos = { m_rect.x() + m_offset.x(), m_rect.y() + m_offset.y() };
     ::ClientToScreen(m_hParentWnd, &pos);
-    ::SetWindowPos(m_hPopup, HWND_TOP, pos.x, pos.y, m_rect.width(), m_rect.height(), SWP_SHOWWINDOW | SWP_NOACTIVATE);
+    ::SetWindowPos(m_hPopup, HWND_TOP, pos.x, pos.y, m_rect.width(), m_rect.height(), /*SWP_SHOWWINDOW |*/ SWP_NOACTIVATE);
 }
 
 void PopupMenuWin::show(WebNavigationPolicy)
@@ -335,8 +335,8 @@ void PopupMenuWin::show(WebNavigationPolicy)
     
     updataSize();
 
-    if (m_hPopup)
-        ::ShowWindow(m_hPopup, SW_SHOWNOACTIVATE);
+//     if (m_hPopup)
+//         ::ShowWindow(m_hPopup, SW_SHOWNOACTIVATE);
 }
 
 void PopupMenuWin::paint(HDC hdc, RECT rcPaint)
@@ -370,13 +370,23 @@ void PopupMenuWin::updataPaint()
     m_layerTreeHost->drawToCanvas(m_memoryCanvas, clip);
     m_memoryCanvas->restore();
 
-    if (m_hPopup) {
+    COLORREF color = ::GetPixel(hMemoryDC, 1, 1);
+
+    bool canShow = false;
+    if (m_hPopup && 0 != color) {
+        canShow = true;
+
         HDC hdc = GetDC(m_hPopup);
         RECT rc = { 0, 0, m_rect.width(), m_rect.height() };
         skia::DrawToNativeContext(m_memoryCanvas, hdc, 0, 0, &rc);
         ::ReleaseDC(m_hPopup, hdc);
     }
     skia::EndPlatformPaint(m_memoryCanvas);
+
+    if (m_isVisible && canShow) {
+        updataSize();
+        ::ShowWindow(m_hPopup, SW_SHOWNOACTIVATE);
+    }
 }
 
 static void initWndStyle(HWND hPopup)
@@ -433,11 +443,6 @@ void PopupMenuWin::asynStartCreateWnd(blink::Timer<PopupMenuWin>*)
     m_client->onPopupMenuCreate(m_hPopup);
     initWndStyle(m_hPopup);
 
-    if (m_isVisible) {
-        updataSize();
-        ::ShowWindow(m_hPopup, SW_SHOWNOACTIVATE);
-    }
-
     if (m_needsCommit)
         ::PostMessage(m_hPopup, WM_COMMIT, 0, 0);
 }
@@ -451,6 +456,7 @@ WebWidget* PopupMenuWin::createWnd()
             ::PostMessage(m_hPopup, WM_COMMIT, 0, 0);
         ::SetPropW(m_hPopup, kPopupWindowClassName, (HANDLE)this);
         ::SetWindowPos(m_hPopup, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOREPOSITION);
+        ::ShowWindow(m_hPopup, SW_HIDE);
     }
 
     initialize();
