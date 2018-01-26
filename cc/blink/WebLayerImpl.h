@@ -56,6 +56,8 @@ public:
     void setLayerTreeHost(cc::LayerTreeHost* host);
     cc::LayerTreeHost* layerTreeHost() const;
 
+    void gc();
+
     // WebLayerImplClient
     virtual void updataAndPaintContents(blink::WebCanvas* canvas, const blink::IntRect& clip) override;
     virtual WebLayerImplClient::Type type() const override { return m_layerType; }

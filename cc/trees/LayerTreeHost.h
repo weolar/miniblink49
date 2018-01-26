@@ -56,6 +56,8 @@ public:
     void unregisterLayer(cc_blink::WebLayerImpl* layer);
     cc_blink::WebLayerImpl* getLayerById(int id);
 
+    void gc();
+
     bool isDestroying() const;
 
     //void updateLayers(SkCanvas* canvas, const blink::IntRect& clip, bool needsFullTreeSync);

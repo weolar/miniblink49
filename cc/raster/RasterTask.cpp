@@ -44,10 +44,7 @@
 
 #include "third_party/WebKit/Source/platform/image-encoders/gdiplus/GDIPlusImageEncoder.h"
 
-extern DWORD g_rasterTime;
-extern DWORD g_nowTime;
-extern int g_mouseTest;
-extern DWORD g_rasterTimeInMouse;
+extern DWORD g_rasterTaskCount;
 extern bool g_alwaysIsNotSolideColor;
 
 namespace blink {
@@ -237,6 +234,7 @@ public:
         DWORD nowTime = (DWORD)(WTF::currentTimeMS() * 100);
         raster();
         releaseRource();
+        g_rasterTaskCount++;
     }
 
     bool performSolidColorAnalysis(const SkRect& tilePos, SkColor* color)
@@ -284,6 +282,8 @@ public:
             if (isSolidColor) {
                 info->m_solidColor = new SkColor(solidColor);
                 info->m_isSolidColorCoverWholeTile = m_dirtyRect.contains(tilePos);
+            } else {
+                
             }
         }
 

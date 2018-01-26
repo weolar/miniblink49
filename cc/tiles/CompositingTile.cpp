@@ -95,14 +95,14 @@ SkBitmap* CompositingTile::allocBitmap(int width, int height, SkColor background
     return bitmap;
 }
 
-void CompositingTile::resizeBitmap(int dstWidth, int dstHeight)
+void CompositingTile::resizeBitmap(int dstWidth, int dstHeight, SkColor backgroundColor)
 {
     SkIRect isrc;
     m_bitmap->getBounds(&isrc);
     if (isrc.width() == dstWidth && isrc.height() == dstHeight)
         return;
 
-    SkBitmap* dst = allocBitmap(dstWidth, dstHeight, m_compositingLayer->getBackgroundColor());
+    SkBitmap* dst = allocBitmap(dstWidth, dstHeight, backgroundColor);
 
     SkPaint paint;
     paint.setAntiAlias(true);
@@ -121,6 +121,10 @@ void CompositingTile::resizeBitmap(int dstWidth, int dstHeight)
 void CompositingTile::allocBitmapIfNeeded(SkColor* solidColor, bool isSolidColorCoverWholeTile)
 {
     //solidColor = nullptr; // todo weolar
+
+    SkColor backgroundColor = m_compositingLayer->getBackgroundColor();
+    if (m_solidColor)
+        backgroundColor = *m_solidColor;
 
     if (m_solidColor && !solidColor) { // ´¿É« -> bitmap
         clearBitmap();
@@ -170,7 +174,7 @@ void CompositingTile::allocBitmapIfNeeded(SkColor* solidColor, bool isSolidColor
     if (m_bitmap && needResize) {
         if (!m_solidColor)
             ASSERT(m_bitmap->getPixels());
-        resizeBitmap(newWidth, newHeight);
+        resizeBitmap(newWidth, newHeight, backgroundColor);
         return;
     } else if (m_bitmap && !needResize) {
         if (!m_solidColor)
@@ -179,7 +183,7 @@ void CompositingTile::allocBitmapIfNeeded(SkColor* solidColor, bool isSolidColor
     }
 
     clearBitmap();
-    m_bitmap = allocBitmap(newWidth, newHeight, m_compositingLayer->getBackgroundColor());
+    m_bitmap = allocBitmap(newWidth, newHeight, backgroundColor);
 }
 
 CompositingLayer* CompositingTile::layer() const

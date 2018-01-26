@@ -49,7 +49,7 @@ public:
     SkColor* getSolidColor() const { return m_solidColor; }
 
 private:
-    void resizeBitmap(int dstWidth, int dstHeight);
+    void resizeBitmap(int dstWidth, int dstHeight, SkColor backgroundColor);
     SkBitmap* allocBitmap(int width, int height, SkColor getBackgroundColor);
 
     CompositingLayer* m_compositingLayer;

@@ -229,7 +229,6 @@ void CompositingLayer::cleanupUnnecessaryTile(const WTF::Vector<TileActionInfo*>
     }
 }
 
-
 static bool isBackFaceVisible(const SkMatrix44& matrix)
 {
     // Compute whether a layer with a forward-facing normal of (0, 0, 1, 0)

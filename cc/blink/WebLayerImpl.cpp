@@ -197,6 +197,12 @@ cc::LayerTreeHost* WebLayerImpl::layerTreeHost() const
     return m_layerTreeHost;
 }
 
+void WebLayerImpl::gc()
+{
+    if (m_tileGrid)
+        m_tileGrid->forceCleanupUnnecessaryTile();
+}
+
 static void applyLayerActions(cc::LayerTreeHost* host, WTF::Vector<cc::LayerChangeAction*>* actions)
 {
     for (size_t i = 0; i < actions->size(); ++i) {

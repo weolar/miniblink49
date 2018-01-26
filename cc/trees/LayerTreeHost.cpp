@@ -210,6 +210,14 @@ CompositingLayer* LayerTreeHost::getCCLayerById(int id)
     return nullptr;
 }
 
+void LayerTreeHost::gc()
+{
+    for (auto it = m_liveLayers.begin(); it != m_liveLayers.end(); ++it) {
+        cc_blink::WebLayerImpl* layer = it->value;
+        layer->gc();
+    }
+}
+
 void LayerTreeHost::increaseNodesCount()
 {
     ++m_3dNodesCount;
