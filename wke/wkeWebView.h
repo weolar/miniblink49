@@ -191,10 +191,13 @@ public:
     virtual void killFocus() override;
     
     virtual wkeRect getCaret() override;
-    wkeRect caretRect() ;
+    wkeRect caretRect();
+
+    static int64_t wkeWebFrameHandleToFrameId(content::WebPage* page, wkeWebFrameHandle frameId);
     
     jsValue runJS(const wchar_t* script) override;
     jsValue runJS(const utf8* script) override;
+    jsValue runJsInFrame(wkeWebFrameHandle frameId, const utf8* script, bool isInClosure);
     jsExecState globalExec() override;
     
     void sleep() override;

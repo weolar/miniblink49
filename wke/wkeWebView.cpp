@@ -11,7 +11,6 @@
 #include "content/web_impl_win/BlinkPlatformImpl.h"
 #include "content/web_impl_win/WebCookieJarCurlImpl.h"
 #include "content/browser/WebFrameClientImpl.h"
-
 #include "third_party/WebKit/public/platform/WebDragData.h"
 #include "third_party/WebKit/public/web/WebDocument.h"
 #include "third_party/WebKit/public/web/WebScriptSource.h"
@@ -112,6 +111,7 @@ void CWebView::loadPostURL(const utf8* inUrl, const char * poastData, int nLen )
     request.setHTTPMethod(blink::WebString::fromUTF8("POST"));
 
     blink::WebHTTPBody body;
+    body.initialize();
     body.appendData(blink::WebData(poastData, nLen));
     request.setHTTPBody(body);
     m_webPage->loadRequest(content::WebPage::kMainFrameId, request);
@@ -137,8 +137,10 @@ static bool trimPathBody(const utf8* inUrl, int length, bool isFile, std::vector
         Vector<WCHAR> filenameBuffer;
         filenameBuffer.resize(MAX_PATH + 3);
 
-        ::GetModuleFileNameW(NULL, filenameBuffer.data(), MAX_PATH);
-        ::PathRemoveFileSpecW(filenameBuffer.data());
+//         ::GetModuleFileNameW(NULL, filenameBuffer.data(), MAX_PATH);
+//         ::PathRemoveFileSpecW(filenameBuffer.data());
+        ::GetCurrentDirectory(MAX_PATH, filenameBuffer.data());
+
         int pathLength = wcslen(filenameBuffer.data());
         if (pathLength <= 1 || pathLength > MAX_PATH)
             return false;
@@ -235,7 +237,7 @@ static String createMemoryUrl()
     result = WTF::ensureUTF16String(result);
     result.replace(L"\\", L"/");
     result.insert(L"file:///", 0);
-    result.append(String::format("/data_%d.htm", GetTickCount()));
+    result.append(String::format("/_miniblink__data_%d.htm", GetTickCount()));
 
     return WTF::ensureStringToUTF8String(result);
 }
@@ -824,13 +826,19 @@ wkeRect CWebView::caretRect()
     return rect;
 }
 
-static jsValue runJSImpl(blink::WebFrame* mainFrame, String* codeString)
+int64_t CWebView::wkeWebFrameHandleToFrameId(content::WebPage* page, wkeWebFrameHandle frameId)
+{
+    return (int64_t)frameId + page->getFirstFrameId() - 1;
+}
+
+static jsValue runJsImpl(blink::WebFrame* mainFrame, String* codeString, bool isInClosure)
 {
     if (codeString->startsWith("javascript:", WTF::TextCaseInsensitive))
         codeString->remove(0, sizeof("javascript:") - 1);
-    codeString->insert("(function(){", 0);
-    codeString->append("})();");
-
+    if (isInClosure) {
+        codeString->insert("(function(){", 0);
+        codeString->append("})();");
+    }
     blink::WebScriptSource code(*codeString, KURL(ParsedURLString, "CWebView::runJS"));
     blink::Frame* coreFrame = blink::toCoreFrame(mainFrame);
     if (!mainFrame || !coreFrame || !coreFrame->isLocalFrame())
@@ -850,7 +858,7 @@ jsValue CWebView::runJS(const wchar_t* script)
         return jsUndefined();
 
     String codeString(script);
-    return runJSImpl(m_webPage->mainFrame(), &codeString);
+    return runJsImpl(m_webPage->mainFrame(), &codeString, true);
 }
 
 jsValue CWebView::runJS(const utf8* script)
@@ -859,7 +867,19 @@ jsValue CWebView::runJS(const utf8* script)
         return jsUndefined();
 
     String codeString = String::fromUTF8(script);
-    return runJSImpl(m_webPage->mainFrame(), &codeString);
+    return runJsImpl(m_webPage->mainFrame(), &codeString, true);
+}
+
+jsValue CWebView::runJsInFrame(wkeWebFrameHandle frameId, const utf8* script, bool isInClosure)
+{
+    if (!m_webPage)
+        return jsUndefined();
+    blink::WebFrame* webFrame = m_webPage->getWebFrameFromFrameId(wkeWebFrameHandleToFrameId(m_webPage, frameId));
+    if (!webFrame)
+        return jsUndefined();
+
+    String codeString = String::fromUTF8(script);
+    return runJsImpl(webFrame, &codeString, isInClosure);
 }
 
 jsExecState CWebView::globalExec()

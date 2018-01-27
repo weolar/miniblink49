@@ -7,7 +7,9 @@
 *
 */
 
-#ifndef WKE_H
+#include "wkedefine.h"
+
+#if 0
 #define WKE_H
 
 //////////////////////////////////////////////////////////////////////////
@@ -432,7 +434,7 @@ WKE_API void wkeOnTitleChanged(wkeWebView webView, wkeTitleChangedCallback callb
 typedef void(*wkeURLChangedCallback)(wkeWebView webView, void* param, const wkeString url);
 WKE_API void wkeOnURLChanged(wkeWebView webView, wkeURLChangedCallback callback, void* callbackParam);
 
-typedef void(*wkeURLChangedCallback2)(wkeWebView webView, void* param, wkeWebFrameHandle frame, const wkeString url);
+typedef void(*wkeURLChangedCallback2)(wkeWebView webView, void* param, wkeWebFrameHandle frameId, const wkeString url);
 WKE_API void wkeOnURLChanged2(wkeWebView webView, wkeURLChangedCallback2 callback, void* callbackParam);
 
 typedef void(*wkePaintUpdatedCallback)(wkeWebView webView, void* param, const HDC hdc, int x, int y, int cx, int cy);
@@ -480,7 +482,7 @@ WKE_API void wkeOnCreateView(wkeWebView webView, wkeCreateViewCallback callback,
 typedef void(*wkeDocumentReadyCallback)(wkeWebView webView, void* param);
 WKE_API void wkeOnDocumentReady(wkeWebView webView, wkeDocumentReadyCallback callback, void* param);
 
-typedef void(*wkeDocumentReady2Callback)(wkeWebView webView, void* param, wkeWebFrameHandle frame);
+typedef void(*wkeDocumentReady2Callback)(wkeWebView webView, void* param, wkeWebFrameHandle frameId);
 WKE_API void wkeOnDocumentReady2(wkeWebView webView, wkeDocumentReady2Callback callback, void* param);
 
 typedef enum {
@@ -518,10 +520,10 @@ WKE_API void wkeOnLoadUrlBegin(wkeWebView webView, wkeLoadUrlBeginCallback callb
 typedef void(*wkeLoadUrlEndCallback)(wkeWebView webView, void* param, const char *url, void *job, void* buf, int len);
 WKE_API void wkeOnLoadUrlEnd(wkeWebView webView, wkeLoadUrlEndCallback callback, void* callbackParam);
 
-typedef void(*wkeDidCreateScriptContextCallback)(wkeWebView webView, void* param, wkeWebFrameHandle frame, void* context, int extensionGroup, int worldId);
+typedef void(*wkeDidCreateScriptContextCallback)(wkeWebView webView, void* param, wkeWebFrameHandle frameId, void* context, int extensionGroup, int worldId);
 WKE_API void wkeOnDidCreateScriptContext(wkeWebView webView, wkeDidCreateScriptContextCallback callback, void* callbackParam);
 
-typedef void(*wkeWillReleaseScriptContextCallback)(wkeWebView webView, void* param, wkeWebFrameHandle frame, void* context, int worldId);
+typedef void(*wkeWillReleaseScriptContextCallback)(wkeWebView webView, void* param, wkeWebFrameHandle frameId, void* context, int worldId);
 WKE_API void wkeOnWillReleaseScriptContext(wkeWebView webView, wkeWillReleaseScriptContextCallback callback, void* callbackParam);
 
 WKE_API void wkeNetSetMIMEType(void* job, char *type);
@@ -538,12 +540,14 @@ WKE_API void wkeNetOnResponse(wkeWebView webView, wkeNetResponseCallback callbac
 
 WKE_API void wkeNetGetMIMEType(void* job, wkeString mime);
 
-WKE_API bool wkeWebFrameIsMainFrame(wkeWebFrameHandle webFrame);
-WKE_API bool wkeIsWebRemoteFrame(wkeWebFrameHandle webFrame);
+WKE_API bool wkeIsMainFrame(wkeWebView webView, wkeWebFrameHandle frameId);
+WKE_API bool wkeIsWebRemoteFrame(wkeWebView webView, wkeWebFrameHandle frameId);
 WKE_API wkeWebFrameHandle wkeWebFrameGetMainFrame(wkeWebView webView);
+WKE_API jsValue wkeRunJsByFrame(wkeWebView webView, wkeWebFrameHandle frameId, const utf8* script, bool isInClosure);
+//WKE_API const utf8* wkeGetFrameUrl(wkeWebView webView, wkeWebFrameHandle frameId);
 
 typedef void* v8ContextPtr;
-WKE_API void wkeWebFrameGetMainWorldScriptContext(wkeWebFrameHandle frame, v8ContextPtr contextOut);
+WKE_API void wkeWebFrameGetMainWorldScriptContext(wkeWebView webView, wkeWebFrameHandle webFrameId, v8ContextPtr contextOut);
 
 typedef void* v8Isolate;
 WKE_API v8Isolate wkeGetBlinkMainThreadIsolate();
@@ -749,13 +753,13 @@ WKE_API jsValue jsFunction(jsExecState es, jsData* obj);
 WKE_API jsData* jsGetData(jsExecState es, jsValue object);
 
 WKE_API jsValue jsGet(jsExecState es, jsValue object, const char* prop);
-WKE_API void   jsSet(jsExecState es, jsValue object, const char* prop, jsValue v);
+WKE_API void jsSet(jsExecState es, jsValue object, const char* prop, jsValue v);
 
 WKE_API jsValue jsGetAt(jsExecState es, jsValue object, int index);
-WKE_API void   jsSetAt(jsExecState es, jsValue object, int index, jsValue v);
+WKE_API void jsSetAt(jsExecState es, jsValue object, int index, jsValue v);
 
-WKE_API int     jsGetLength(jsExecState es, jsValue object);
-WKE_API void    jsSetLength(jsExecState es, jsValue object, int length);
+WKE_API int jsGetLength(jsExecState es, jsValue object);
+WKE_API void jsSetLength(jsExecState es, jsValue object, int length);
 
 //window object
 WKE_API jsValue jsGlobalObject(jsExecState es);

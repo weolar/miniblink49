@@ -1273,7 +1273,7 @@ static void namedPropertySetterCallback(v8::Local<v8::String> property, v8::Loca
     wrap->jsDataObj->propertySet(execState, object, stringWTF.utf8().data(), value);
 }
 
-WKE_API jsValue jsObject(jsExecState es, jsData* data)
+jsValue jsObject(jsExecState es, jsData* data)
 {
     if (!s_execStates || !s_execStates->contains(es) || !es || es->context.IsEmpty())
         return jsUndefined();
@@ -1329,7 +1329,7 @@ void jsFunctionConstructCallback(const v8::FunctionCallbackInfo<v8::Value>& args
     args.GetReturnValue().Set(getV8Value(retWkeValue, context));
 }
 
-WKE_API jsValue jsFunction(jsExecState es, jsData* data)
+jsValue jsFunction(jsExecState es, jsData* data)
 {
     if (!s_execStates || !s_execStates->contains(es) || !es || es->context.IsEmpty() || !es->isolate)
         return jsUndefined();
@@ -1352,7 +1352,7 @@ WKE_API jsValue jsFunction(jsExecState es, jsData* data)
     return retVal;
 }
 
-WKE_API jsData* jsGetData(jsExecState es, jsValue value)
+jsData* jsGetData(jsExecState es, jsValue value)
 {
     if (!s_execStates || !s_execStates->contains(es) || !es || es->context.IsEmpty() || !es->isolate)
         return nullptr;

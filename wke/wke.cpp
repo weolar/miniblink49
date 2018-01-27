@@ -6,6 +6,7 @@
 #include "content/browser/WebPage.h"
 #include "content/web_impl_win/BlinkPlatformImpl.h"
 #include "content/web_impl_win/WebCookieJarCurlImpl.h"
+#include "content/web_impl_win/WebThreadImpl.h"
 #include "net/WebURLLoaderManager.h"
 
 //cexer: 必须包含在后面，因为其中的 wke.h -> windows.h 会定义 max、min，导致 WebCore 内部的 max、min 出现错乱。
@@ -105,6 +106,8 @@ void wkeSetViewNetInterface(wkeWebView webView, const char* netInterface)
 
 void wkeConfigure(const wkeSettings* settings)
 {
+    if (!settings)
+        return;
     if (settings->mask & WKE_SETTING_PROXY)
         wkeSetProxy(&settings->proxy);
     if (settings->mask & WKE_SETTING_PAINTCALLBACK_IN_OTHER_THREAD)
@@ -155,7 +158,7 @@ void wkeSetCspCheckEnable(wkeWebView webView, bool b)
 bool g_alwaysIsNotSolideColor = false;
 bool g_drawDirtyDebugLine = false;
 bool g_drawTileLine = false;
-bool g_alwaysInflateDirtyRect = false;
+bool g_alwaysInflateDirtyRect = true;
 
 void wkeSetDebugConfig(wkeWebView webView, const char* debugString)
 {
@@ -401,7 +404,7 @@ void wkeLayoutIfNeeded(wkeWebView webView)
 
 void wkePaint2(wkeWebView webView, void* bits, int bufWid, int bufHei, int xDst, int yDst, int w, int h, int xSrc, int ySrc, bool bCopyAlpha)
 {
-    webView->paint(bits, bufWid, bufHei, xDst, yDst, w, h, xSrc, ySrc,bCopyAlpha);
+    webView->paint(bits, bufWid, bufHei, xDst, yDst, w, h, xSrc, ySrc, bCopyAlpha);
 }
 
 void wkePaint(wkeWebView webView, void* bits, int pitch)
@@ -411,7 +414,8 @@ void wkePaint(wkeWebView webView, void* bits, int pitch)
 
 void wkeRepaintIfNeeded(wkeWebView webView)
 {
-    webView->repaintIfNeeded();
+    if (webView)
+        webView->repaintIfNeeded();
 }
 
 HDC wkeGetViewDC(wkeWebView webView)
@@ -421,7 +425,7 @@ HDC wkeGetViewDC(wkeWebView webView)
 
 HWND wkeGetHostHWND(wkeWebView webView)
 {
-	return webView->windowHandle();
+    return webView->windowHandle();
 }
 
 bool wkeCanGoBack(wkeWebView webView)
@@ -494,15 +498,13 @@ const utf8* wkeGetCookie(wkeWebView webView)
     return webView->cookie();
 }
 
-// const wkeCookieList* wkeGetAllCookie()
-// {
-//     return (const wkeCookieList*)content::WebCookieJarImpl::getAllCookiesBegin();
-// }
-// 
-// void wkeFreeCookieList(const wkeCookieList* cookieList)
-// {
-//     content::WebCookieJarImpl::getAllCookiesEnd((curl_slist*)cookieList);
-// }
+void wkeSetCookie(wkeWebView webView, const utf8* url, const utf8* cookie)
+{
+    blink::KURL webUrl(blink::ParsedURLString, url);
+    blink::KURL webFirstPartyForCookies;
+    String webCookie(cookie);
+    content::WebCookieJarImpl::inst()->setCookie(webUrl, webFirstPartyForCookies, webCookie);
+}
 
 void wkeVisitAllCookie(void* params, wkeCookieVisitor visitor)
 {
@@ -662,7 +664,23 @@ void wkeSleep(wkeWebView webView)
 
 void wkeWake(wkeWebView webView)
 {
-    webView->wake();
+    if (webView)
+        webView->wake();
+
+    static DWORD lastTime = 0;
+
+    DWORD time = ::GetTickCount();
+
+//     String output = String::format("wkeWake: %d\n", time - lastTime);
+//     OutputDebugStringA(output.utf8().data());
+    if (time - lastTime < 300)
+        return;
+
+    lastTime = time;
+
+    content::WebThreadImpl* threadImpl = (content::WebThreadImpl*)(blink::Platform::current()->currentThread());
+    threadImpl->fire();
+
 }
 
 bool wkeIsAwake(wkeWebView webView)
@@ -785,27 +803,59 @@ void wkeOnWillReleaseScriptContext(wkeWebView webView, wkeWillReleaseScriptConte
     webView->onWillReleaseScriptContext(callback, callbackParam);
 }
 
-bool wkeWebFrameIsMainFrame(wkeWebFrameHandle webFrame)
+bool wkeIsMainFrame(wkeWebView webView, wkeWebFrameHandle frameId)
 {
-    blink::WebFrame* frame = (blink::WebFrame*)webFrame;
-    return !frame->parent();
+    content::WebPage* page = webView->webPage();
+    if (!page)
+        return false;
+    blink::WebFrame* webFrame = page->getWebFrameFromFrameId(wke::CWebView::wkeWebFrameHandleToFrameId(page, frameId));
+    if (!webFrame)
+        return false;
+    return !webFrame->parent();
 }
 
-bool wkeIsWebRemoteFrame(wkeWebFrameHandle webFrame)
+bool wkeIsWebRemoteFrame(wkeWebView webView, wkeWebFrameHandle frameId)
 {
-    blink::WebFrame* frame = (blink::WebFrame*)webFrame;
-    return frame->isWebRemoteFrame();
+    content::WebPage* page = webView->webPage();
+    if (!page)
+        return false;
+    blink::WebFrame* webFrame = page->getWebFrameFromFrameId(wke::CWebView::wkeWebFrameHandleToFrameId(page, frameId));
+    if (!webFrame)
+        return false;
+    return webFrame->isWebRemoteFrame();
 }
 
 wkeWebFrameHandle wkeWebFrameGetMainFrame(wkeWebView webView)
 {
-    return webView->webPage()->mainFrame();
+    blink::WebFrame* frame = webView->webPage()->mainFrame();
+    return (wkeWebFrameHandle)webView->webPage()->getFrameIdByBlinkFrame(frame);
 }
 
-void wkeWebFrameGetMainWorldScriptContext(wkeWebFrameHandle wkeFrame, v8ContextPtr contextOut)
+jsValue wkeRunJsByFrame(wkeWebView webView, wkeWebFrameHandle frameId, const utf8* script, bool isInClosure)
 {
-    blink::WebFrame* frame = (blink::WebFrame*)wkeFrame;
-    v8::Local<v8::Context> result = frame->mainWorldScriptContext();
+    return webView->runJsInFrame(frameId, script, isInClosure);
+}
+
+const utf8* wkeGetFrameUrl(wkeWebView webView, wkeWebFrameHandle frameId)
+{
+    content::WebPage* page = webView->webPage();
+    if (!page)
+        return "";
+    blink::WebFrame* webFrame = page->getWebFrameFromFrameId(wke::CWebView::wkeWebFrameHandleToFrameId(page, frameId));
+    if (!webFrame)
+        return "";
+    return "";
+}
+
+void wkeWebFrameGetMainWorldScriptContext(wkeWebView webView, wkeWebFrameHandle frameId, v8ContextPtr contextOut)
+{
+    content::WebPage* page = webView->webPage();
+    if (!page)
+        return;
+    blink::WebFrame* webFrame = page->getWebFrameFromFrameId(wke::CWebView::wkeWebFrameHandleToFrameId(page, frameId));
+    if (!webFrame)
+        return;
+    v8::Local<v8::Context> result = webFrame->mainWorldScriptContext();
     v8::Local<v8::Context>* contextOutPtr = (v8::Local<v8::Context>*)contextOut;
     *contextOutPtr = result;
 }
@@ -857,13 +907,13 @@ void wkeSetStringW(wkeString string, const wchar_t* str, size_t len)
     string->setString(str, len);
 }
 
-WKE_API wkeString wkeCreateStringW(const wchar_t* str, size_t len)
+wkeString wkeCreateStringW(const wchar_t* str, size_t len)
 {
     wkeString wkeStr = new wke::CString(str, len);
     return wkeStr;
 }
 
-WKE_API void wkeDeleteString(wkeString str)
+void wkeDeleteString(wkeString str)
 {
     delete str;
 }

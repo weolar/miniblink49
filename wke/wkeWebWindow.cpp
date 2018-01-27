@@ -3,6 +3,8 @@
 
 #include "wkeWebWindow.h"
 
+extern DWORD g_paintCount;
+
 ////////////////////////////////////////////////////////////////////////////
 
 namespace wke {
@@ -211,6 +213,7 @@ LRESULT CWebWindow::_windowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM l
         return 0;
 
     case WM_PAINT:
+        g_paintCount++;
         if (WS_EX_LAYERED != (WS_EX_LAYERED & GetWindowLong(hwnd, GWL_EXSTYLE))) {
             wkeRepaintIfNeeded(this);
 
@@ -549,50 +552,50 @@ void CWebWindow::_staticOnPaintUpdated(wkeWebView webView, void* param, const HD
 
 void CWebWindow::_onPaintUpdated(const HDC hdc, int x, int y, int cx, int cy)
 {
-    BOOL callOk = FALSE;
-    if (WS_EX_LAYERED == (WS_EX_LAYERED & GetWindowLong(m_hWnd, GWL_EXSTYLE))) {
-        RECT rectDest;
-        ::GetWindowRect(m_hWnd, &rectDest);
-
-        SIZE sizeDest = { rectDest.right - rectDest.left, rectDest.bottom - rectDest.top };
-        POINT pointDest = { 0, 0 }; // { rectDest.left, rectDest.top };
-        POINT pointSource = { 0, 0 };
-
-        BITMAP bmp = { 0 };
-        HBITMAP hBmp = (HBITMAP)::GetCurrentObject(hdc, OBJ_BITMAP);
-        ::GetObject(hBmp, sizeof(BITMAP), (LPSTR)&bmp);
-
-        sizeDest.cx = bmp.bmWidth;
-        sizeDest.cy = bmp.bmHeight;
-
-        HDC hdcScreen = GetDC(m_hWnd);
-
-        BLENDFUNCTION blend = { 0 };
-        blend.BlendOp = AC_SRC_OVER;
-        blend.SourceConstantAlpha = 255;
-        blend.AlphaFormat = AC_SRC_ALPHA;
-        callOk = ::UpdateLayeredWindow(m_hWnd, hdcScreen, nullptr, &sizeDest, hdc, &pointSource, RGB(0xFF, 0xFF, 0xFF), &blend, ULW_ALPHA);
-        if (!callOk) {
-            HDC hdcMemory = ::CreateCompatibleDC(hdcScreen);
-            HBITMAP hbmpMemory = ::CreateCompatibleBitmap(hdcScreen, sizeDest.cx, sizeDest.cy);
-            HBITMAP hbmpOld = (HBITMAP)::SelectObject(hdcMemory, hbmpMemory);
-
-            ::BitBlt(hdcMemory, 0, 0, sizeDest.cx, sizeDest.cy, hdc, 0, 0, SRCCOPY | CAPTUREBLT);
-
-            ::BitBlt(hdc, 0, 0, sizeDest.cx, sizeDest.cy, hdcMemory, 0, 0, SRCCOPY | CAPTUREBLT); //!
-
-            callOk = ::UpdateLayeredWindow(m_hWnd, hdcScreen, nullptr, &sizeDest, hdcMemory, &pointSource, RGB(0xFF, 0xFF, 0xFF), &blend, ULW_ALPHA);
-
-            ::SelectObject(hdcMemory, (HGDIOBJ)hbmpOld);
-            ::DeleteObject((HGDIOBJ)hbmpMemory);
-            ::DeleteDC(hdcMemory);
-        }
-
-        ::ReleaseDC(m_hWnd, hdcScreen);
-    } else {
-        RECT rc = {x, y, x + cx, y + cy};
-        callOk = ::InvalidateRect(m_hWnd, &rc, TRUE);
-    }
+//     BOOL callOk = FALSE;
+//     if (WS_EX_LAYERED == (WS_EX_LAYERED & GetWindowLong(m_hWnd, GWL_EXSTYLE))) {
+//         RECT rectDest;
+//         ::GetWindowRect(m_hWnd, &rectDest);
+// 
+//         SIZE sizeDest = { rectDest.right - rectDest.left, rectDest.bottom - rectDest.top };
+//         POINT pointDest = { 0, 0 }; // { rectDest.left, rectDest.top };
+//         POINT pointSource = { 0, 0 };
+// 
+//         BITMAP bmp = { 0 };
+//         HBITMAP hBmp = (HBITMAP)::GetCurrentObject(hdc, OBJ_BITMAP);
+//         ::GetObject(hBmp, sizeof(BITMAP), (LPSTR)&bmp);
+// 
+//         sizeDest.cx = bmp.bmWidth;
+//         sizeDest.cy = bmp.bmHeight;
+// 
+//         HDC hdcScreen = GetDC(m_hWnd);
+// 
+//         BLENDFUNCTION blend = { 0 };
+//         blend.BlendOp = AC_SRC_OVER;
+//         blend.SourceConstantAlpha = 255;
+//         blend.AlphaFormat = AC_SRC_ALPHA;
+//         callOk = ::UpdateLayeredWindow(m_hWnd, hdcScreen, nullptr, &sizeDest, hdc, &pointSource, RGB(0xFF, 0xFF, 0xFF), &blend, ULW_ALPHA);
+//         if (!callOk) {
+//             HDC hdcMemory = ::CreateCompatibleDC(hdcScreen);
+//             HBITMAP hbmpMemory = ::CreateCompatibleBitmap(hdcScreen, sizeDest.cx, sizeDest.cy);
+//             HBITMAP hbmpOld = (HBITMAP)::SelectObject(hdcMemory, hbmpMemory);
+// 
+//             ::BitBlt(hdcMemory, 0, 0, sizeDest.cx, sizeDest.cy, hdc, 0, 0, SRCCOPY | CAPTUREBLT);
+// 
+//             ::BitBlt(hdc, 0, 0, sizeDest.cx, sizeDest.cy, hdcMemory, 0, 0, SRCCOPY | CAPTUREBLT); //!
+// 
+//             callOk = ::UpdateLayeredWindow(m_hWnd, hdcScreen, nullptr, &sizeDest, hdcMemory, &pointSource, RGB(0xFF, 0xFF, 0xFF), &blend, ULW_ALPHA);
+// 
+//             ::SelectObject(hdcMemory, (HGDIOBJ)hbmpOld);
+//             ::DeleteObject((HGDIOBJ)hbmpMemory);
+//             ::DeleteDC(hdcMemory);
+//         }
+// 
+//         ::ReleaseDC(m_hWnd, hdcScreen);
+//     } else {
+//         RECT rc = {x, y, x + cx, y + cy};
+//         callOk = ::InvalidateRect(m_hWnd, &rc, TRUE);
+//     }
 
     if (m_originalPaintUpdatedCallback)
         m_originalPaintUpdatedCallback(this, m_originalPaintUpdatedCallbackParam, hdc, x, y, cx, cy);
