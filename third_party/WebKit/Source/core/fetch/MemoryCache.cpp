@@ -175,7 +175,7 @@ MemoryCache::ResourceMap* MemoryCache::ensureResourceMap(const String& cacheIden
 void MemoryCache::add(Resource* resource)
 {
 #if ENABLE_WKE
-    if (!g_wkeMemoryCacheEnable)
+    if (!g_wkeMemoryCacheEnable && WTF::kNotFound == resource->url().string().find("_miniblink__data_"))
         return;
 #endif
 
