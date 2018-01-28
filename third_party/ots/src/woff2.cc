@@ -485,7 +485,7 @@ bool ProcessComposite(ots::Buffer* composite_stream, uint8_t* dst,
     return OTS_FAILURE();
   }
   Store16(dst, 0, 0xffff);  // nContours = -1 for composite glyph
-  std::memcpy(dst + kCompositeGlyphBegin,
+  /*std::*/memcpy(dst + kCompositeGlyphBegin,
       composite_stream->buffer() + start_offset,
       composite_glyph_size);
   *glyph_size = kCompositeGlyphBegin + composite_glyph_size;
@@ -1018,7 +1018,7 @@ bool ConvertWOFF2ToTTF(uint8_t* result, size_t result_length,
           result_length) {
         return OTS_FAILURE();
       }
-      std::memcpy(result + table->dst_offset, transform_buf,
+      /*std::*/memcpy(result + table->dst_offset, transform_buf,
           transform_length);
     } else {
       if (!ReconstructTransformed(tables, table->tag,
