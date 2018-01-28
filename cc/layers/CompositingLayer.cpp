@@ -390,10 +390,10 @@ void CompositingLayer::blendToTile(CompositingTile* tile, const SkBitmap* bitmap
 #endif
 
     SkPaint paint;
-    paint.setAntiAlias(true);
+    paint.setAntiAlias(false);
     paint.setColor(0xFFFFFFFF);
     paint.setXfermodeMode(SkXfermode::kSrc_Mode);
-    paint.setFilterQuality(kHigh_SkFilterQuality);
+    paint.setFilterQuality(kLow_SkFilterQuality);
 
     blink::IntRect postion = tile->postion();
     if (!postion.intersects((blink::IntRect)dirtyRect)) {
@@ -509,9 +509,9 @@ void CompositingLayer::drawToCanvasChildren(LayerTreeHost* host, SkCanvas* canva
             canvas->save();
 
         SkPaint paint;
-        paint.setAntiAlias(true);
+        paint.setAntiAlias(false);
         paint.setXfermodeMode(SkXfermode::kSrcOver_Mode);
-        paint.setFilterQuality(kHigh_SkFilterQuality);
+        paint.setFilterQuality(kLow_SkFilterQuality);
 
         canvas->setMatrix(matrixToAncestor);
 
@@ -556,9 +556,9 @@ void CompositingLayer::drawToCanvas(LayerTreeHost* host, blink::WebCanvas* canva
         // SkIRect src = dst.makeOffset(-tile->postion().x(), -tile->postion().y()).roundOut();
        
         SkPaint paint;
-        paint.setAntiAlias(true);
+        paint.setAntiAlias(false);
         paint.setXfermodeMode(SkXfermode::kSrcOver_Mode);
-        paint.setFilterQuality(kHigh_SkFilterQuality);
+        paint.setFilterQuality(kLow_SkFilterQuality);
 
         SkColor* color = tile->getSolidColor();
         if (color) {
