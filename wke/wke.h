@@ -400,26 +400,52 @@ WKE_API wkeWebView wkeGetWebViewForCurrentContext();
 WKE_API void wkeSetUserKeyValue(wkeWebView webView, const char* key, void* value);
 WKE_API void* wkeGetUserKeyValue(wkeWebView webView, const char* key);
 
-#define WkeCursorInfoPointer 0
-#define WkeCursorInfoCross 1
-#define WkeCursorInfoHand 2
-#define WkeCursorInfoIBeam 3
-#define WkeCursorInfoWait 4
-#define WkeCursorInfoHelp 5
-#define WkeCursorInfoEastResize 6
-#define WkeCursorInfoNorthResize 7
-#define WkeCursorInfoNorthEastResize 8
-#define WkeCursorInfoNorthWestResize 9
-#define WkeCursorInfoSouthResize 10
-#define WkeCursorInfoSouthEastResize 11
-#define WkeCursorInfoSouthWestResize 12
-#define WkeCursorInfoWestResize 13
-#define WkeCursorInfoNorthSouthResize 14
-#define WkeCursorInfoEastWestResize 15
-#define WkeCursorInfoNorthEastSouthWestResize 16
-#define WkeCursorInfoNorthWestSouthEastResize 17
-#define WkeCursorInfoColumnResize 18
-#define WkeCursorInfoRowResize 19
+enum WkeCursorInfoType {
+    WkeCursorInfoPointer,
+    WkeCursorInfoCross,
+    WkeCursorInfoHand,
+    WkeCursorInfoIBeam,
+    WkeCursorInfoWait,
+    WkeCursorInfoHelp,
+    WkeCursorInfoEastResize,
+    WkeCursorInfoNorthResize,
+    WkeCursorInfoNorthEastResize,
+    WkeCursorInfoNorthWestResize,
+    WkeCursorInfoSouthResize,
+    WkeCursorInfoSouthEastResize,
+    WkeCursorInfoSouthWestResize,
+    WkeCursorInfoWestResize,
+    WkeCursorInfoNorthSouthResize,
+    WkeCursorInfoEastWestResize,
+    WkeCursorInfoNorthEastSouthWestResize,
+    WkeCursorInfoNorthWestSouthEastResize,
+    WkeCursorInfoColumnResize,
+    WkeCursorInfoRowResize,
+    WkeCursorInfoMiddlePanning,
+    WkeCursorInfoEastPanning,
+    WkeCursorInfoNorthPanning,
+    WkeCursorInfoNorthEastPanning,
+    WkeCursorInfoNorthWestPanning,
+    WkeCursorInfoSouthPanning,
+    WkeCursorInfoSouthEastPanning,
+    WkeCursorInfoSouthWestPanning,
+    WkeCursorInfoWestPanning,
+    WkeCursorInfoMove,
+    WkeCursorInfoVerticalText,
+    WkeCursorInfoCell,
+    WkeCursorInfoContextMenu,
+    WkeCursorInfoAlias,
+    WkeCursorInfoProgress,
+    WkeCursorInfoNoDrop,
+    WkeCursorInfoCopy,
+    WkeCursorInfoNone,
+    WkeCursorInfoNotAllowed,
+    WkeCursorInfoZoomIn,
+    WkeCursorInfoZoomOut,
+    WkeCursorInfoGrab,
+    WkeCursorInfoGrabbing,
+    WkeCursorInfoCustom
+};
 
 WKE_API int wkeGetCursorInfoType(wkeWebView webView);
 WKE_API void wkeSetDragFiles(wkeWebView webView, const POINT* clintPos, const POINT* screenPos, wkeString files[], int filesCount);
