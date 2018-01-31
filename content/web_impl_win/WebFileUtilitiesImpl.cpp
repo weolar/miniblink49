@@ -174,7 +174,7 @@ blink::WebString WebFileUtilitiesImpl::baseName(const blink::WebString& path)
     if (result.isEmpty())
         return "";
     ::PathStripPathW(result.data());
-    return blink::WebString(result.data(), result.size() - 1);
+    return String(result.data());
 }
 
 bool WebFileUtilitiesImpl::isDirectory(const blink::WebString& path)
