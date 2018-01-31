@@ -864,12 +864,12 @@ void WebPageImpl::paintToMemoryCanvasInUiThread(SkCanvas* canvas, const IntRect&
         HDC hdc = ::GetDC(hWnd);
         if (m_layerTreeHost->getHasTransparentBackground()) {
             RECT rtWnd;
-            ::GetWindowRect(m_pagePtr->getHWND(), &rtWnd);
+            ::GetWindowRect(hWnd, &rtWnd);
             IntRect winodwRect = winRectToIntRect(rtWnd);
-            skia::DrawToNativeLayeredContext(canvas, hdc, &intRectToWinRect(paintRect), &intRectToWinRect(paintRect));
+            skia::DrawToNativeLayeredContext(canvas, hdc, &intRectToWinRect(paintRect), &rtWnd);
         } else
             skia::DrawToNativeContext(canvas, hdc, paintRect.x(), paintRect.y(), &intRectToWinRect(paintRect));
-        ::ReleaseDC(m_pagePtr->getHWND(), hdc);
+        ::ReleaseDC(hWnd, hdc);
     }
     //} else {
     copyToMemoryCanvasForUi();
