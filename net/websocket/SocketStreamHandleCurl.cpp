@@ -232,13 +232,12 @@ void SocketStreamHandle::threadFunction()
 
     String url = m_url.host();
     unsigned short port = m_url.port();
-    if (0 == port) {
-        port = 80;
-        if (!m_url.protocolIs("ws")) {
-            port = 443;
-            url = "https://" + url;
-        }
-    }
+    bool isSSL = !m_url.protocolIs("ws");
+    if (0 == port)
+        port = isSSL ? 443 : 80;
+    
+    if (isSSL)
+        url = "https://" + url;
 
     //curl_easy_setopt(curlHandle, CURLOPT_URL, m_url.host().utf8().data());
     curl_easy_setopt(curlHandle, CURLOPT_URL, url.utf8().data());
