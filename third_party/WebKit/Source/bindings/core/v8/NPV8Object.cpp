@@ -342,7 +342,9 @@ bool _NPN_Evaluate(NPP npp, NPObject* npObject, NPString* npScript, NPVariant* r
 
 bool _NPN_EvaluateHelper(NPP npp, bool popupsAllowed, NPObject* npObject, NPString* npScript, NPVariant* result)
 {
-    VOID_TO_NPVARIANT(*result);
+    if (result) {
+        VOID_TO_NPVARIANT(*result);
+    }
     if (ScriptForbiddenScope::isScriptForbidden())
         return false;
 
@@ -377,7 +379,7 @@ bool _NPN_EvaluateHelper(NPP npp, bool popupsAllowed, NPObject* npObject, NPStri
     if (v8result.IsEmpty())
         return false;
 
-    if (_NPN_IsAlive(npObject))
+    if (_NPN_IsAlive(npObject) && result)
         convertV8ObjectToNPVariant(isolate, v8result, npObject, result);
     return true;
 }
