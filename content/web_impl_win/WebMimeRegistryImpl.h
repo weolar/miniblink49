@@ -51,7 +51,11 @@ public:
 
     virtual blink::WebMimeRegistry::SupportsType supportsImagePrefixedMIMEType(const blink::WebString& mimeType) OVERRIDE;
 
+    blink::WebString extensionFormimeType(const blink::WebString& ext);
+
 private:
+    void ensureMimeTypeMap();
+
     WTF::HashSet<WTF::String>* m_supportedMIMETypes;
     WTF::HashSet<WTF::String>* m_supportedImageResourceMIMETypes;
     WTF::HashSet<WTF::String>* m_supportedJavaScriptMIMETypes;
