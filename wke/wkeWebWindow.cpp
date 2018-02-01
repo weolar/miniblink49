@@ -213,7 +213,6 @@ LRESULT CWebWindow::_windowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM l
         return 0;
 
     case WM_PAINT:
-        g_paintCount++;
         if (WS_EX_LAYERED != (WS_EX_LAYERED & GetWindowLong(hwnd, GWL_EXSTYLE))) {
             wkeRepaintIfNeeded(this);
 
@@ -658,6 +657,9 @@ void CWebWindow::move(int x, int y, int width, int height)
 
 void CWebWindow::resize(int width, int height)
 {
+    if (0 >= width || 0 >= height)
+        return;
+
     POINT point = { 0 };
     
     RECT rect = { 0 };
