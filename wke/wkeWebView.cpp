@@ -986,7 +986,22 @@ void CWebView::onPromptBox(wkePromptBoxCallback callback, void* callbackParam)
 
 void defaultRunAlertBox(wkeWebView webView, void* param, const wkeString msg)
 {
-    MessageBoxW(NULL, wkeGetStringW(msg), L"wke", MB_OK);
+    const int maxShowLength = 500;
+    Vector<wchar_t> msgBuf;
+    const wchar_t* msgString = wkeGetStringW(msg);
+    if (wcslen(msgString) > maxShowLength) {
+        msgBuf.resize(maxShowLength);
+        memcpy(msgBuf.data(), msgString, maxShowLength * sizeof(wchar_t));
+        msgBuf[maxShowLength - 1] = L'\0';
+        msgBuf[maxShowLength - 2] = L'.';
+        msgBuf[maxShowLength - 3] = L'.';
+        msgBuf[maxShowLength - 4] = L'.';
+        msgBuf[maxShowLength - 5] = L'.';
+        msgBuf[maxShowLength - 6] = L'.';
+        msgBuf[maxShowLength - 7] = L'.';
+        msgString = msgBuf.data();
+    }
+    MessageBoxW(NULL, msgString, L"wke", MB_OK);
 }
 
 bool defaultRunConfirmBox(wkeWebView webView, void* param, const wkeString msg)

@@ -296,6 +296,7 @@ typedef enum {
     JSTYPE_OBJECT,
     JSTYPE_FUNCTION,
     JSTYPE_UNDEFINED,
+    JSTYPE_ARRAY,
 } jsType;
 
 // cexer JS对象、函数绑定支持

@@ -255,6 +255,9 @@ jsType jsTypeOf(jsValue v)
     if (value->IsString())
         return JSTYPE_STRING;
 
+    if (value->IsArray())
+        return JSTYPE_ARRAY;
+
     if (value->IsFunction())
         return JSTYPE_FUNCTION;
 
@@ -294,6 +297,11 @@ bool jsIsUndefined(jsValue v)
     return jsTypeOf(v) == JSTYPE_UNDEFINED ? true : false;
 }
 
+bool jsIsArray(jsValue v)
+{
+    return jsTypeOf(v) == JSTYPE_ARRAY ? true : false;
+}
+
 bool jsIsNull(jsValue v)
 {
     JsValueMap::iterator it = findJsValueMap(v);
@@ -311,23 +319,23 @@ bool jsIsNull(jsValue v)
     return value->IsNull();
 }
 
-bool jsIsArray(jsValue v)
-{
-    JsValueMap::iterator it = findJsValueMap(v);
-    if (it == s_jsValueMap->end())
-        return false;
-
-    WkeJsValue* wkeValue = it->value;
-    if (WkeJsValue::wkeJsValueV8Value != wkeValue->type)
-        return false;
-
-    v8::Isolate* isolate = wkeValue->isolate;
-    v8::HandleScope handleScope(isolate);
-    v8::Local<v8::Value> value = v8::Local<v8::Value>::New(wkeValue->isolate, wkeValue->value);
-    return value->IsArray();
-
-    return false;
-}
+// bool jsIsArray(jsValue v)
+// {
+//     JsValueMap::iterator it = findJsValueMap(v);
+//     if (it == s_jsValueMap->end())
+//         return false;
+// 
+//     WkeJsValue* wkeValue = it->value;
+//     if (WkeJsValue::wkeJsValueV8Value != wkeValue->type)
+//         return false;
+// 
+//     v8::Isolate* isolate = wkeValue->isolate;
+//     v8::HandleScope handleScope(isolate);
+//     v8::Local<v8::Value> value = v8::Local<v8::Value>::New(wkeValue->isolate, wkeValue->value);
+//     return value->IsArray();
+// 
+//     return false;
+// }
 
 bool jsIsTrue(jsValue v)
 {
@@ -797,15 +805,62 @@ jsValue jsGetAt(jsExecState es, jsValue object, int index)
 // 
 //     JSC::JSValue ret = o.get((JSC::ExecState*)es, index);
 //     return JSC::JSValue::encode(ret);
-    return jsUndefined();
+
+    if (!s_execStates || !s_execStates->contains(es) || !es || !es->isolate)
+        return jsUndefined();
+    if (es->context.IsEmpty())
+        DebugBreak();
+
+    v8::Isolate* isolate = es->isolate;
+    v8::HandleScope handleScope(isolate);
+    v8::Local<v8::Context> context = v8::Local<v8::Context>::New(es->isolate, es->context);
+    v8::Context::Scope contextScope(context);
+
+    v8::Local<v8::Value> value = getV8Value(object, context);
+    if (value.IsEmpty() || !value->IsArray())
+        return jsUndefined();
+
+    v8::Local<v8::Array> obj = v8::Local<v8::Array>::Cast(value);
+    v8::MaybeLocal<v8::Value> retValue = obj->Get(context, index);
+    if (retValue.IsEmpty())
+        return jsUndefined();
+
+    v8::TryCatch tryCatch;
+    tryCatch.SetVerbose(true);
+    if (tryCatch.HasCaught() || retValue.IsEmpty())
+        return jsUndefined();
+
+    return createJsValueByLocalValue(isolate, context, retValue.ToLocalChecked());
 }
 
 void jsSetAt(jsExecState es, jsValue object, int index, jsValue value)
 {
 //     JSC::JSValue o = JSC::JSValue::decode(object);
 //     JSC::JSValue v = JSC::JSValue::decode(value);
-// 
 //     o.put((JSC::ExecState*)es, index, v);
+
+    if (!s_execStates || !s_execStates->contains(es) || !es || !es->isolate)
+        return;
+    if (es->context.IsEmpty())
+        DebugBreak();
+
+    v8::Isolate* isolate = es->isolate;
+    v8::HandleScope handleScope(isolate);
+    v8::Local<v8::Context> context = v8::Local<v8::Context>::New(es->isolate, es->context);
+    v8::Context::Scope contextScope(context);
+
+    v8::Local<v8::Value> v8Object = getV8Value(object, context);
+    if (v8Object.IsEmpty() || !v8Object->IsArray())
+        return;
+
+    v8::Local<v8::Value> v8Value = getV8Value(value, context);
+    if (v8Value.IsEmpty())
+        return;
+
+    v8::Local<v8::Array> obj = v8::Local<v8::Array>::Cast(v8Object);
+    v8::Maybe<bool> result = obj->Set(context, index, v8Value);
+
+    return;
 }
 
 int jsGetLength(jsExecState es, jsValue object)
@@ -813,7 +868,25 @@ int jsGetLength(jsExecState es, jsValue object)
 //     JSC::ExecState* exec = (JSC::ExecState*)es;
 //     JSC::JSValue o = JSC::JSValue::decode(object);
 //     return o.get(exec, JSC::Identifier(exec, "length")).toInt32(exec);
-    return jsUndefined();
+
+    if (!s_execStates || !s_execStates->contains(es) || !es || !es->isolate)
+        return jsUndefined();
+    if (es->context.IsEmpty())
+        DebugBreak();
+
+    v8::Isolate* isolate = es->isolate;
+    v8::HandleScope handleScope(isolate);
+    v8::Local<v8::Context> context = v8::Local<v8::Context>::New(es->isolate, es->context);
+    v8::Context::Scope contextScope(context);
+
+    v8::Local<v8::Value> value = getV8Value(object, context);
+    if (value.IsEmpty() || !value->IsArray())
+        return 0;
+
+    v8::Local<v8::Array> obj = v8::Local<v8::Array>::Cast(value);
+    uint32_t retValue = obj->Length();
+
+    return retValue;
 }
 
 void jsSetLength(jsExecState es, jsValue object, int length)

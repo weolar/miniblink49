@@ -712,6 +712,7 @@ typedef enum {
     JSTYPE_OBJECT,
     JSTYPE_FUNCTION,
     JSTYPE_UNDEFINED,
+    JSTYPE_ARRAY,
 } jsType;
 
 WKE_API void jsBindFunction(const char* name, jsNativeFunction fn, unsigned int argCount);
