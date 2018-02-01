@@ -7,9 +7,11 @@
 #include "third_party/WebKit/public/platform/WebVector.h"
 #include "third_party/WebKit/public/platform/WebString.h"
 #include "third_party/WebKit/public/platform/Platform.h"
+#include "third_party/WebKit/public/platform/WebFileUtilities.h"
 #include "third_party/WebKit/Source/wtf/text/WTFStringUtil.h"
 #include "content/web_impl_win/WebMimeRegistryImpl.h"
 #include <vector>
+#include <shlwapi.h>
 
 namespace content {
 
@@ -123,7 +125,7 @@ static bool runFileChooserImpl(const blink::WebFileChooserParams& params, blink:
     String initialValue = params.initialValue;
     Vector<UChar> initialValueBuf;
     if (!initialValue.isNull() && !initialValue.isEmpty()) {
-        initialValueBuf = WTF::ensureUTF16UChar(initialValue, false);
+        initialValueBuf = WTF::ensureUTF16UChar(initialValue, true);
         if (initialValueBuf.size() < fileNameBufLen - 1)
             wcscpy(&fileNameBuf[0], initialValueBuf.data());
     }
@@ -186,9 +188,21 @@ static bool runFileChooserImpl(const blink::WebFileChooserParams& params, blink:
     if (0 == selectedFilesRef.size())
         return false;
 
-    blink::WebVector<blink::WebString> wsFileNames(selectedFilesRef.size());
-    for (size_t i = 0; i < selectedFilesRef.size(); ++i)
-        wsFileNames[i] = String(selectedFilesRef[i].c_str());
+    blink::WebVector<blink::WebFileChooserCompletion::SelectedFileInfo> wsFileNames(selectedFilesRef.size());
+    for (size_t i = 0; i < selectedFilesRef.size(); ++i) {
+        blink::WebFileChooserCompletion::SelectedFileInfo info;
+        const std::wstring& filePath = selectedFilesRef[i];
+        
+        info.path = String(filePath.c_str());
+        info.displayName = blink::Platform::current()->fileUtilities()->baseName(info.path);
+        const std::wstring& fileSystemURL = L"file:///" + filePath;
+        info.fileSystemURL = blink::KURL(blink::ParsedURLString, String(fileSystemURL.c_str()));
+        info.modificationTime = 0;
+        info.length = 0;
+        info.isDirectory = ::PathIsDirectoryW(filePath.c_str());
+
+        wsFileNames[i] = info;
+    }
     completion->didChooseFile(wsFileNames);
 
     return true;
