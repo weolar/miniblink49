@@ -667,6 +667,9 @@ IntRect WebPageImpl::caretRect() const
 
 void WebPageImpl::setViewportSize(const IntSize& size)
 {
+    if (size.isEmpty())
+        return;
+
     if (m_viewportSize == size)
         return;
     m_viewportSize = size;

@@ -6,7 +6,9 @@
 #include "third_party/WebKit/public/web/WebFileChooserCompletion.h"
 #include "third_party/WebKit/public/platform/WebVector.h"
 #include "third_party/WebKit/public/platform/WebString.h"
+#include "third_party/WebKit/public/platform/Platform.h"
 #include "third_party/WebKit/Source/wtf/text/WTFStringUtil.h"
+#include "content/web_impl_win/WebMimeRegistryImpl.h"
 #include <vector>
 
 namespace content {
@@ -51,17 +53,34 @@ std::string extentionForMimeType(const std::string& mimeType)
     return extentionForMimeType(mimeTypeBuf);
 }
 
+static Vector<char> getMimeType(const WebString& mime)
+{
+    String mimeType = mime;
+    if (mimeType.isNull() || mimeType.isEmpty())
+        return Vector<char>();
+
+    WebMimeRegistryImpl* mimeRegistry = (WebMimeRegistryImpl*)blink::Platform::current()->mimeRegistry();
+    mimeType = mimeRegistry->extensionFormimeType(mime);
+    if (mimeType.isNull() || mimeType.isEmpty()) {
+        mimeType = mime;
+        if (mimeType[0] == '.')
+            mimeType.remove(0);
+    }
+    Vector<char> mimeTypeBuf = WTF::ensureStringToUTF8(mimeType, false);
+    return mimeTypeBuf;
+}
+
 static bool runFileChooserImpl(const blink::WebFileChooserParams& params, blink::WebFileChooserCompletion* completion)
 {
     std::vector<char> filter;
     if (0 != params.acceptTypes.size()) {
         if (1 == params.acceptTypes.size()) {
             String mimeType = params.acceptTypes[0];
-            Vector<char> mimeTypeBuf = WTF::ensureStringToUTF8(mimeType, false);
+            Vector<char> mimeTypeBuf = getMimeType(mimeType);
             appendStringToVector(&filter, mimeTypeBuf);
             filter.push_back('\0');
             appendStringToVector(&filter, "*.");
-            appendStringToVector(&filter, extentionForMimeType(mimeTypeBuf));
+            appendStringToVector(&filter, /*extentionForMimeType*/(mimeTypeBuf));
         } else {
             appendStringToVector(&filter, "Custom Types");
             filter.push_back('\0');
@@ -70,17 +89,17 @@ static bool runFileChooserImpl(const blink::WebFileChooserParams& params, blink:
                     filter.push_back(';');
                 appendStringToVector(&filter, "*.");
                 String mimeType = params.acceptTypes[i];
-                Vector<char> mimeTypeBuf = WTF::ensureStringToUTF8(mimeType, false);
-                appendStringToVector(&filter, extentionForMimeType(mimeTypeBuf));
+                Vector<char> mimeTypeBuf = getMimeType(mimeType);
+                appendStringToVector(&filter, /*extentionForMimeType*/(mimeTypeBuf));
             }
             for (size_t i = 0; i < params.acceptTypes.size(); ++i) {
                 filter.push_back('\0');
                 String mimeType = params.acceptTypes[i];
-                Vector<char> mimeTypeBuf = WTF::ensureStringToUTF8(mimeType, false);
+                Vector<char> mimeTypeBuf = getMimeType(mimeType);
                 appendStringToVector(&filter, mimeTypeBuf);
                 filter.push_back('\0');
                 appendStringToVector(&filter, "*.");
-                appendStringToVector(&filter, extentionForMimeType(mimeTypeBuf));
+                appendStringToVector(&filter, /*extentionForMimeType*/(mimeTypeBuf));
             }
         }
         filter.push_back('\0');
