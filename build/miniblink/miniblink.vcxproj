@@ -503,8 +503,10 @@
     <ClCompile Include="..\..\cc\raster\RasterTask.cpp" />
     <ClCompile Include="..\..\content\browser\PlatformMessagePortChannel.cpp" />
     <ClCompile Include="..\..\content\web_impl_win\WebMessagePortChannelImpl.cpp" />
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8XMLSerializer.cpp" />
     <ClCompile Include="..\..\skia\ext\analysis_canvas.cc" />
     <ClCompile Include="..\..\third_party\WebKit\Source\bindings\core\v8\custom\V8MutationObserverCustom.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\xml\XMLSerializer.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\modules\compositorworker\CompositorWorker.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\modules\compositorworker\CompositorWorkerGlobalScope.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\modules\compositorworker\CompositorWorkerManager.cpp" />
@@ -5347,10 +5349,12 @@
     <ClInclude Include="..\..\content\browser\RunFileChooserImpl.h" />
     <ClInclude Include="..\..\content\browser\ToolTip.h" />
     <ClInclude Include="..\..\content\web_impl_win\WebMessagePortChannelImpl.h" />
+    <ClInclude Include="..\..\gen\blink\bindings\core\v8\V8XMLSerializer.h" />
     <ClInclude Include="..\..\net\FlattenHTTPBodyElement.h" />
     <ClInclude Include="..\..\net\WebURLLoaderManagerMainTask.h" />
     <ClInclude Include="..\..\net\WebURLLoaderManagerSetupInfo.h" />
     <ClInclude Include="..\..\net\WebURLLoaderManagerUtil.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\xml\XMLSerializer.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\modules\compositorworker\CompositorWorker.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\modules\compositorworker\CompositorWorkerGlobalScope.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\modules\compositorworker\CompositorWorkerManager.h" />

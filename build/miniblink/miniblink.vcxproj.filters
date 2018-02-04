@@ -9805,6 +9805,12 @@
     <ClCompile Include="..\..\third_party\WebKit\Source\platform\image-encoders\skia\JPEGImageEncoder.cpp">
       <Filter>third_party\Webkit\Source\platform\image-encoders\skia</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\xml\XMLSerializer.cpp">
+      <Filter>third_party\Webkit\Source\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8XMLSerializer.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\public\platform\modules\app_banner\WebAppBannerClient.h">
@@ -22403,6 +22409,12 @@
     </ClInclude>
     <ClInclude Include="..\..\net\FlattenHTTPBodyElement.h">
       <Filter>net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\xml\XMLSerializer.h">
+      <Filter>third_party\Webkit\Source\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\core\v8\V8XMLSerializer.h">
+      <Filter>gen\blink\bindings\core\v8</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
