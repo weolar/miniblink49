@@ -26,6 +26,7 @@
 #include "core/fetch/ResourcePtr.h"
 #include "platform/Logging.h"
 #include "platform/TraceEvent.h"
+#include "platform/RuntimeEnabledFeatures.h"
 #include "platform/weborigin/SecurityOrigin.h"
 #include "platform/weborigin/SecurityOriginHash.h"
 #include "public/platform/Platform.h"
@@ -175,7 +176,7 @@ MemoryCache::ResourceMap* MemoryCache::ensureResourceMap(const String& cacheIden
 void MemoryCache::add(Resource* resource)
 {
 #if ENABLE_WKE
-    if (!g_wkeMemoryCacheEnable && Resource::MainResource != resource->type())
+    if (!RuntimeEnabledFeatures::memoryCacheEnabled() && Resource::MainResource != resource->type())
         return;
 #endif
 
