@@ -42,10 +42,6 @@
 #include "wtf/StdLibExtras.h"
 #include "wtf/text/StringBuilder.h"
 
-namespace net {
-extern bool g_cspCheckEnable;
-}
-
 namespace blink {
 
 const int InvalidPort = 0;
@@ -244,7 +240,7 @@ bool SecurityOrigin::isSecure(const KURL& url)
 
 bool SecurityOrigin::canAccess(const SecurityOrigin* other) const
 {
-    if (!net::g_cspCheckEnable)
+    if (!RuntimeEnabledFeatures::cspCheckEnabled())
         return true;
 
     if (m_universalAccess)
@@ -301,7 +297,7 @@ bool SecurityOrigin::passesFileCheck(const SecurityOrigin* other) const
 
 bool SecurityOrigin::canRequest(const KURL& url) const
 {
-    if (!net::g_cspCheckEnable)
+    if (!RuntimeEnabledFeatures::cspCheckEnabled())
         return true;
 
     if (m_universalAccess)
@@ -331,7 +327,7 @@ bool SecurityOrigin::canRequest(const KURL& url) const
 
 bool SecurityOrigin::canRequestNoSuborigin(const KURL& url) const
 {
-    if (!net::g_cspCheckEnable)
+    if (!RuntimeEnabledFeatures::cspCheckEnabled())
         return true;
 
     return !hasSuborigin() && canRequest(url);
@@ -356,7 +352,7 @@ bool SecurityOrigin::taintsCanvas(const KURL& url) const
 
 bool SecurityOrigin::canDisplay(const KURL& url) const
 {
-    if (!net::g_cspCheckEnable)
+    if (!RuntimeEnabledFeatures::cspCheckEnabled())
         return true;
 
     if (m_universalAccess)

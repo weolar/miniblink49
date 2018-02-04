@@ -94,12 +94,6 @@
 
 using blink::WebURLRequest;
 
-namespace net {
-
-extern bool g_navigationToNewWindowEnable;
-
-}
-
 namespace blink {
 
 using namespace HTMLNames;
@@ -776,7 +770,7 @@ bool FrameLoader::prepareRequestForThisFrame(FrameLoadRequest& request)
 
 static bool shouldOpenInNewWindow(Frame* targetFrame, const FrameLoadRequest& request, NavigationPolicy policy)
 {
-    if (!net::g_navigationToNewWindowEnable)
+    if (!RuntimeEnabledFeatures::navigationToNewWindowEnabled())
         return false;
 
     if (!targetFrame && !request.frameName().isEmpty())

@@ -451,6 +451,18 @@ public:
     static void setHeadlessEnabled(bool isEnabled) { isHeadlessEnabled = isEnabled; }
     static bool headlessEnabled() { return isHeadlessEnabled; }
 
+    static void setFreshLocalFileEnabled(bool isEnabled) { isFreshLocalFileEnabled = isEnabled; }
+    static bool freshLocalFileEnabled() { return isFreshLocalFileEnabled; }
+
+    static void setAlwaysIsNotSolideColorEnabled(bool isEnabled) { isAlwaysIsNotSolideColor = isEnabled; }
+    static bool alwaysIsNotSolideColorEnabled() { return isAlwaysIsNotSolideColor; }
+
+    static void setDrawDirtyDebugLineEnabled(bool isEnabled) { isDrawDirtyDebugLineEnabled = isEnabled; }
+    static bool drawDirtyDebugLineEnabled() { return isDrawDirtyDebugLineEnabled; }
+
+    static void setDrawTileLineEnabled(bool isEnabled) { isDrawTileLineEnabled = isEnabled; }
+    static bool drawTileLineEnabled() { return isDrawTileLineEnabled; }
+
 private:
     RuntimeEnabledFeatures() { }
 
@@ -598,6 +610,10 @@ private:
     static bool isUpdataInOtherThreadEnabled;
     static bool isNpapiPluginsEnabled;
     static bool isHeadlessEnabled;
+    static bool isFreshLocalFileEnabled;
+    static bool isAlwaysIsNotSolideColor;
+    static bool isDrawDirtyDebugLineEnabled;
+    static bool isDrawTileLineEnabled;
 };
 
 } // namespace blink

@@ -350,9 +350,9 @@ double Resource::currentAge() const
 
 static double freshnessLifetime(ResourceResponse& response, double responseTimestamp)
 {
-#if !OS(ANDROID)
+#if !OS(ANDROID) // weolar TODO
     // On desktop, local files should be reloaded in case they change.
-    if (response.url().isLocalFile())
+    if (response.url().isLocalFile() && RuntimeEnabledFeatures::freshLocalFileEnabled())
         return 0;
 #endif
 

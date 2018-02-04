@@ -7,14 +7,11 @@
 
 #include "platform/network/HTTPHeaderMap.h"
 #include "platform/network/HTTPParsers.h"
+#include "platform/RuntimeEnabledFeatures.h"
 #include "wtf/HashSet.h"
 #include "wtf/Threading.h"
 #include "wtf/text/AtomicString.h"
 #include "wtf/text/WTFString.h"
-
-namespace net {
-extern bool g_cspCheckEnable;
-}
 
 namespace blink {
 
@@ -123,7 +120,7 @@ bool FetchUtils::isSimpleRequest(const String& method, const HTTPHeaderMap& head
 
 bool FetchUtils::isForbiddenMethod(const String& method)
 {
-    if (!net::g_cspCheckEnable) // weolar
+    if (!RuntimeEnabledFeatures::cspCheckEnabled()) // weolar
         return false;
 
     // http://fetch.spec.whatwg.org/#forbidden-method
@@ -136,7 +133,7 @@ bool FetchUtils::isForbiddenMethod(const String& method)
 
 bool FetchUtils::isForbiddenHeaderName(const String& name)
 {
-    if (!net::g_cspCheckEnable) // weolar
+    if (!RuntimeEnabledFeatures::cspCheckEnabled()) // weolar
         return false;
 
     // http://fetch.spec.whatwg.org/#forbidden-header-name
@@ -154,7 +151,7 @@ bool FetchUtils::isForbiddenHeaderName(const String& name)
 
 bool FetchUtils::isForbiddenResponseHeaderName(const String& name)
 {
-    if (!net::g_cspCheckEnable) // weolar
+    if (!RuntimeEnabledFeatures::cspCheckEnabled()) // weolar
         return false;
 
     // http://fetch.spec.whatwg.org/#forbidden-response-header-name
