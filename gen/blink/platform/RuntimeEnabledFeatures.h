@@ -433,6 +433,23 @@ public:
     static void setScrollRestorationEnabled(bool isEnabled) { isScrollRestorationEnabled = isEnabled; }
     static bool scrollRestorationEnabled() { return isScrollRestorationEnabled; }
 
+    static void setCspCheckEnabled(bool isEnabled) { isCspCheckEnabled = isEnabled; }
+    static bool cspCheckEnabled() { return isCspCheckEnabled; }
+
+    static void setMemoryCacheEnabled(bool isEnabled) { isMemoryCacheEnabled = isEnabled; }
+    static bool memoryCacheEnabled() { return isMemoryCacheEnabled; }
+
+    static void setNavigationToNewWindowEnabled(bool isEnabled) { isNavigationToNewWindowEnabled = isEnabled; }
+    static bool navigationToNewWindowEnabled() { return isNavigationToNewWindowEnabled; }
+    
+    static void setUpdataInOtherThreadEnabled(bool isEnabled) { isUpdataInOtherThreadEnabled = isEnabled; }
+    static bool updataInOtherThreadEnabled() { return isUpdataInOtherThreadEnabled; }
+    
+    static void setNpapiPluginsEnabled(bool isEnabled) { isNpapiPluginsEnabled = isEnabled; }
+    static bool npapiPluginsEnabled() { return isNpapiPluginsEnabled; }
+
+    static void setHeadlessEnabled(bool isEnabled) { isHeadlessEnabled = isEnabled; }
+    static bool headlessEnabled() { return isHeadlessEnabled; }
 
 private:
     RuntimeEnabledFeatures() { }
@@ -575,6 +592,12 @@ private:
     static bool isSVG1DOMEnabled;
     static bool isScrollCustomizationEnabled;
     static bool isScrollRestorationEnabled;
+    static bool isCspCheckEnabled;
+    static bool isMemoryCacheEnabled;
+    static bool isNavigationToNewWindowEnabled;
+    static bool isUpdataInOtherThreadEnabled;
+    static bool isNpapiPluginsEnabled;
+    static bool isHeadlessEnabled;
 };
 
 } // namespace blink
