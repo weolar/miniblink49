@@ -57,10 +57,12 @@ HBITMAP CreateHBitmap(int width, int height, bool is_opaque,
 
 namespace skia {
 
-HDC BitmapPlatformDevice::GetBitmapDC() {
+HDC BitmapPlatformDevice::GetBitmapDC(void* hWnd) {
   if (!hdc_) {
-    hdc_ = CreateCompatibleDC(NULL);
-    InitializeDC(hdc_);
+    HDC hWndDc = ::GetDC((HWND)hWnd);
+    hdc_ = CreateCompatibleDC(hWndDc);
+    ::ReleaseDC((HWND)hWnd, hWndDc);
+    InitializeDC(hdc_); // weolar TODO
     old_hbitmap_ = static_cast<HBITMAP>(SelectObject(hdc_, hbitmap_));
   }
 
@@ -68,8 +70,8 @@ HDC BitmapPlatformDevice::GetBitmapDC() {
   return hdc_;
 }
 
-HDC BitmapPlatformDevice::GetBitmapDCUgly() {
-    return GetBitmapDC();
+HDC BitmapPlatformDevice::GetBitmapDCUgly(void* hWnd) {
+    return GetBitmapDC(hWnd);
 }
 
 void BitmapPlatformDevice::ReleaseBitmapDC() {
@@ -197,9 +199,9 @@ BitmapPlatformDevice::~BitmapPlatformDevice() {
     ReleaseBitmapDC();
 }
 
-HDC BitmapPlatformDevice::BeginPlatformPaint() {
+HDC BitmapPlatformDevice::BeginPlatformPaint(void* hWnd) {
   SkDEBUGCODE(begin_paint_count_++);
-  return GetBitmapDC();
+  return GetBitmapDC(hWnd);
 }
 
 void BitmapPlatformDevice::EndPlatformPaint() {
@@ -213,10 +215,10 @@ void BitmapPlatformDevice::setMatrixClip(const SkMatrix& transform,
   SetMatrixClip(transform, region);
 }
 
-void BitmapPlatformDevice::DrawToNativeContext(HDC dc, int x, int y,
+bool BitmapPlatformDevice::DrawToNativeContext(HDC dc, int x, int y,
                                                const RECT* src_rect) {
   bool created_dc = !IsBitmapDCCreated();
-  HDC source_dc = BeginPlatformPaint();
+  HDC source_dc = BeginPlatformPaint(nullptr);
 
   RECT temp_rect;
   if (!src_rect) {
@@ -266,12 +268,14 @@ void BitmapPlatformDevice::DrawToNativeContext(HDC dc, int x, int y,
   EndPlatformPaint();
   if (created_dc)
     ReleaseBitmapDC();
+
+  return true;
 }
 
-void BitmapPlatformDevice::DrawToNativeLayeredContext(HDC dc, const RECT* src_rect, const RECT* client_rect)
+bool BitmapPlatformDevice::DrawToNativeLayeredContext(HDC dc, const RECT* src_rect, const RECT* client_rect)
 {
     bool created_dc = !IsBitmapDCCreated();
-    HDC source_dc = BeginPlatformPaint();
+    HDC source_dc = BeginPlatformPaint(nullptr);
 
     RECT temp_rect;
     if (!src_rect) {
@@ -293,6 +297,7 @@ void BitmapPlatformDevice::DrawToNativeLayeredContext(HDC dc, const RECT* src_re
     SkMatrix identity;
     identity.reset();
 
+    BOOL b = FALSE;
     //LoadTransformToDC(source_dc, identity);
     {
 #define ULW_COLORKEY            0x00000001
@@ -346,7 +351,6 @@ void BitmapPlatformDevice::DrawToNativeLayeredContext(HDC dc, const RECT* src_re
             }
         }
 
-        BOOL b;
         if (s_pUpdateLayeredWindowIndirect) {
             UPDATELAYEREDWINDOWINFO info = { 0 };
             info.cbSize = sizeof(UPDATELAYEREDWINDOWINFO);
@@ -376,6 +380,8 @@ void BitmapPlatformDevice::DrawToNativeLayeredContext(HDC dc, const RECT* src_re
     EndPlatformPaint();
     if (created_dc)
         ReleaseBitmapDC();
+
+    return b;
 }
 
 const SkBitmap& BitmapPlatformDevice::onAccessBitmap() {
