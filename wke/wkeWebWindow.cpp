@@ -243,7 +243,7 @@ LRESULT CWebWindow::_windowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM l
         break;
 
     case WM_ERASEBKGND:
-        return TRUE;
+        return 0;
 
     case WM_SIZE: {
         RECT rc = { 0 };
