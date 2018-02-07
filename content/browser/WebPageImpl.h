@@ -248,8 +248,6 @@ public:
 
     WTF::Vector<DestroyNotif*> m_destroyNotifs;
 
-    NavigationController* m_navigationController;
-
     HWND m_popupHandle;
     int m_debugCount;
     int m_needsCommit;
@@ -263,6 +261,7 @@ public:
     bool m_disablePaint;
     int m_firstDrawCount;
 
+    blink::Persistent<NavigationController> m_navigationController;
     blink::Persistent<PopupMenuWin> m_popup;
 };
 

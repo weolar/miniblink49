@@ -361,7 +361,7 @@ void PopupMenuWin::updataPaint()
 
     IntRect clip(0, 0, m_rect.width(), m_rect.height());
 
-    HDC hMemoryDC = skia::BeginPlatformPaint(m_memoryCanvas);
+    HDC hMemoryDC = skia::BeginPlatformPaint(m_hParentWnd, m_memoryCanvas);
     m_memoryCanvas->save();
 
     SkPaint paint;

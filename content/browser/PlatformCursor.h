@@ -5,107 +5,9 @@
 #include <windows.h>
 #include "third_party/WebKit/Source/platform/win/HWndDC.h"
 #include "skia/ext/platform_canvas.h"
+#include "base/WindowsVersion.h"
 
 namespace content {
-
-// NOTE: Keep these in order so callers can do things like
-// "if (windowsVersion() >= WindowsVista) ...". It's OK to change or add values,
-// though.
-enum WindowsVersion {
-    // CE-based versions
-    WindowsCE1 = 0,
-    WindowsCE2,
-    WindowsCE3,
-    WindowsCE4,
-    WindowsCE5,
-    WindowsCE6,
-    WindowsCE7,
-    // 3.x-based versions
-    Windows3_1,
-    // 9x-based versions
-    Windows95,
-    Windows98,
-    WindowsME,
-    // NT-based versions
-    WindowsNT3,
-    WindowsNT4,
-    Windows2000,
-    WindowsXP,
-    WindowsServer2003,
-    WindowsVista,
-    WindowsServer2008,
-    Windows7,
-};
-
-// typedef struct _OSVERSIONINFOEXW {
-//     DWORD dwOSVersionInfoSize;
-//     DWORD dwMajorVersion;
-//     DWORD dwMinorVersion;
-//     DWORD dwBuildNumber;
-//     DWORD dwPlatformId;
-//     WCHAR  szCSDVersion[128];     // Maintenance string for PSS usage
-//     WORD   wServicePackMajor;
-//     WORD   wServicePackMinor;
-//     WORD   wSuiteMask;
-//     BYTE  wProductType;
-//     BYTE  wReserved;
-// } OSVERSIONINFOEXW, *POSVERSIONINFOEXW, *LPOSVERSIONINFOEXW, RTL_OSVERSIONINFOEXW, *PRTL_OSVERSIONINFOEXW;
-// 
-// typedef OSVERSIONINFOEXW OSVERSIONINFOEX;
-
-// typedef struct _OSVERSIONINFOW {
-//     DWORD dwOSVersionInfoSize;
-//     DWORD dwMajorVersion;
-//     DWORD dwMinorVersion;
-//     DWORD dwBuildNumber;
-//     DWORD dwPlatformId;
-//     WCHAR  szCSDVersion[128];     // Maintenance string for PSS usage
-// } OSVERSIONINFOW, *POSVERSIONINFOW, *LPOSVERSIONINFOW, RTL_OSVERSIONINFOW, *PRTL_OSVERSIONINFO;
-
-WindowsVersion getWindowsVersion(int* major, int* minor)
-{
-    static bool initialized = false;
-    static WindowsVersion version;
-    static int majorVersion, minorVersion;
-
-    if (initialized)
-        return version;
-    initialized = true;
-
-    OSVERSIONINFOEX versionInfo = { 0 };
-    versionInfo.dwOSVersionInfoSize = sizeof(versionInfo);
-    GetVersionEx(reinterpret_cast<OSVERSIONINFO*>(&versionInfo));
-    majorVersion = versionInfo.dwMajorVersion;
-    minorVersion = versionInfo.dwMinorVersion;
-
-    if (versionInfo.dwPlatformId == VER_PLATFORM_WIN32s)
-        version = Windows3_1;
-    else if (versionInfo.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS) {
-        if (!minorVersion)
-            version = Windows95;
-        else
-            version = (minorVersion == 10) ? Windows98 : WindowsME;
-    } else {
-        if (majorVersion == 5) {
-            if (!minorVersion)
-                version = Windows2000;
-            else
-                version = (minorVersion == 1) ? WindowsXP : WindowsServer2003;
-        } else if (majorVersion >= 6) {
-            if (versionInfo.wProductType == VER_NT_WORKSTATION)
-                version = (majorVersion == 6 && !minorVersion) ? WindowsVista : Windows7;
-            else
-                version = WindowsServer2008;
-        } else
-            version = (majorVersion == 4) ? WindowsNT4 : WindowsNT3;
-    }
-
-    if (major)
-        *major = majorVersion;
-    if (minor)
-        *minor = minorVersion;
-    return version;
-}
 
 BITMAPINFO createBitmapInfoForSize(int width, int height, int bitCount)
 {
@@ -126,7 +28,7 @@ HICON createSharedCursorImpl(const blink::WebCursorInfo& cursorInfo)
     HICON impl;
 
     IntPoint effectiveHotSpot = hotSpot; // determineHotSpot(img, hotSpot);
-    static bool doAlpha = getWindowsVersion(nullptr, nullptr);
+    static bool doAlpha = base::getWindowsVersion(nullptr, nullptr) > base::WindowsVista;
     HWndDC dc(0);
     HDC workingDC = /*adoptGDIObject*/(::CreateCompatibleDC(dc));
     HBITMAP hCursor = nullptr;

@@ -6,6 +6,7 @@
 #include <wtf/HashMap.h>
 
 namespace content {
+
 WebMimeRegistryImpl::WebMimeRegistryImpl() 
 {
     m_supportedMIMETypes = nullptr;
@@ -63,6 +64,7 @@ blink::WebMimeRegistry::SupportsType WebMimeRegistryImpl::supportsMIMEType(const
     WTF::String extension = checkAndEnsureBit8String(ext);
     if (extension.isEmpty())
         return blink::WebMimeRegistry::IsNotSupported;
+    extension = extension.lower();
 
     if (!m_supportedMIMETypes) {
         m_supportedMIMETypes = new WTF::HashSet<WTF::String>();
@@ -94,6 +96,7 @@ blink::WebMimeRegistry::SupportsType WebMimeRegistryImpl::supportsImageMIMEType(
     WTF::String extension = checkAndEnsureBit8String(ext);
     if (extension.isEmpty())
         return blink::WebMimeRegistry::IsNotSupported;
+    extension = extension.lower();
 
     if (!m_supportedImageResourceMIMETypes) {
         m_supportedImageResourceMIMETypes = new WTF::HashSet<WTF::String>();
@@ -119,6 +122,7 @@ blink::WebMimeRegistry::SupportsType WebMimeRegistryImpl::supportsJavaScriptMIME
     WTF::String extension = checkAndEnsureBit8String(ext);
     if (extension.isEmpty())
         return blink::WebMimeRegistry::IsNotSupported;
+    extension = extension.lower();
 
     if (!m_supportedJavaScriptMIMETypes) {
         m_supportedJavaScriptMIMETypes = new WTF::HashSet<WTF::String>();
@@ -165,6 +169,7 @@ blink::WebMimeRegistry::SupportsType WebMimeRegistryImpl::supportsNonImageMIMETy
     WTF::String extension = checkAndEnsureBit8String(ext);
     if (extension.isEmpty())
         return blink::WebMimeRegistry::IsNotSupported;
+    extension = extension.lower();
     
     if (!m_supportedNonImageMIMETypes) {
         m_supportedNonImageMIMETypes = new HashSet<String>();
@@ -242,6 +247,7 @@ blink::WebString WebMimeRegistryImpl::mimeTypeForExtension(const blink::WebStrin
 
     ensureMimeTypeMap();
     WTF::String extension = WTF::ensureStringToUTF8String(ext);
+    extension = extension.lower();
     WTF::String result = m_mimetypeMap->get(extension);
     return result;
 }

@@ -3,7 +3,7 @@
 
 #include "base/basictypes.h"
 #include "base/rand_util.h"
-
+#include "base/WindowsVersion.h"
 #include "third_party/WebKit/Source/wtf/text/qt4/UnicodeQt4.h"
 #include "third_party/WebKit/Source/core/frame/Frame.h"
 #include "third_party/WebKit/Source/core/frame/Settings.h"
@@ -69,17 +69,15 @@
 #include "wke/wkeWebView.h"
 #include "wke/wkeJsBindFreeTempObject.h"
 #include "wke/wkeWebWindow.h"
-extern bool wkeIsUpdataInOtherThread;
 #endif
 
 #include "content/browser/ToolTip.h"
 
 using namespace blink;
 
-extern bool g_drawDirtyDebugLine;
-
 extern DWORD g_paintToMemoryCanvasInUiThreadCount;
 extern DWORD g_mouseCount;
+extern bool g_isTouchEnabled;
 
 namespace blink {
 bool saveDumpFile(const String& url, char* buffer, unsigned int size);
@@ -179,7 +177,6 @@ WebPageImpl::~WebPageImpl()
         delete m_memoryCanvasForUi;
     m_memoryCanvasForUi = nullptr;
     
-    delete m_navigationController;
     m_navigationController = nullptr;
 
     delete m_layerTreeHost;
@@ -716,7 +713,7 @@ HDC WebPageImpl::viewDC()
     skia::BitmapPlatformDevice* device = (skia::BitmapPlatformDevice*)skia::GetPlatformDevice(skia::GetTopDevice(*m_memoryCanvasForUi));
     if (!device)
         return nullptr;
-    HDC hDC = device->GetBitmapDCUgly();
+    HDC hDC = device->GetBitmapDCUgly(m_hWnd);
     return hDC;
 }
 
@@ -791,7 +788,7 @@ void drawDebugLine(SkCanvas* memoryCanvas, const IntRect& paintRect)
 #endif
 
 #if 1 // debug
-    if (g_drawDirtyDebugLine) {
+    if (blink::RuntimeEnabledFeatures::drawDirtyDebugLineEnabled()) {
         OwnPtr<GraphicsContext> context = GraphicsContext::deprecatedCreateWithCanvas(memoryCanvas, GraphicsContext::NothingDisabled);
         context->setStrokeStyle(SolidStroke);
         context->setStrokeColor(0xff000000 | (::GetTickCount() + base::RandInt(0, 0x1223345)));
@@ -850,8 +847,9 @@ void WebPageImpl::paintToMemoryCanvasInUiThread(SkCanvas* canvas, const IntRect&
 //         paintRect.x(), paintRect.y(), paintRect.width(), paintRect.height());
 //     OutputDebugStringW(outString.charactersWithNullTermination().data());
 
+    HWND hWnd = m_pagePtr->getHWND();
     HDC hMemoryDC = nullptr;
-    hMemoryDC = skia::BeginPlatformPaint(canvas);
+    hMemoryDC = skia::BeginPlatformPaint(hWnd, canvas);
 
     drawDebugLine(canvas, paintRect);
 
@@ -862,14 +860,37 @@ void WebPageImpl::paintToMemoryCanvasInUiThread(SkCanvas* canvas, const IntRect&
     drawToScreen = !!m_browser;
 #endif
     //if (drawToScreen) { // 使用wke接口不由此上屏
-    HWND hWnd = m_pagePtr->getHWND();
     if (hWnd) {
         HDC hdc = ::GetDC(hWnd);
         if (m_layerTreeHost->getHasTransparentBackground()) {
             RECT rtWnd;
             ::GetWindowRect(hWnd, &rtWnd);
             IntRect winodwRect = winRectToIntRect(rtWnd);
-            skia::DrawToNativeLayeredContext(canvas, hdc, &intRectToWinRect(paintRect), &rtWnd);
+            if (!skia::DrawToNativeLayeredContext(canvas, hdc, &intRectToWinRect(paintRect), &rtWnd)) {
+                BITMAP bmp = { 0 };
+                HBITMAP hBmp = (HBITMAP)::GetCurrentObject(hMemoryDC, OBJ_BITMAP);
+                ::GetObject(hBmp, sizeof(BITMAP), (LPSTR)&bmp);
+
+                POINT pointSource = { 0, 0 };
+                SIZE sizeDest = { 0 };
+                sizeDest.cx = bmp.bmWidth;
+                sizeDest.cy = bmp.bmHeight;
+
+                HDC hdcMemory = ::CreateCompatibleDC(hdc);
+                HBITMAP hbmpMemory = ::CreateCompatibleBitmap(hdc, sizeDest.cx, sizeDest.cy);
+                HBITMAP hbmpOld = (HBITMAP)::SelectObject(hdcMemory, hbmpMemory);
+
+                BLENDFUNCTION blend = { 0 };
+                blend.BlendOp = AC_SRC_OVER;
+                blend.SourceConstantAlpha = 255;
+                blend.AlphaFormat = AC_SRC_ALPHA;
+                ::BitBlt(hdcMemory, 0, 0, sizeDest.cx, sizeDest.cy, hdc, 0, 0, SRCCOPY | CAPTUREBLT);
+                ::UpdateLayeredWindow(m_hWnd, hdc, nullptr, &sizeDest, hMemoryDC, &pointSource, RGB(0xFF, 0xFF, 0xFF), &blend, ULW_ALPHA);
+
+                ::SelectObject(hdcMemory, (HGDIOBJ)hbmpOld);
+                ::DeleteObject((HGDIOBJ)hbmpMemory);
+                ::DeleteDC(hdcMemory);
+            }
         } else
             skia::DrawToNativeContext(canvas, hdc, paintRect.x(), paintRect.y(), &intRectToWinRect(paintRect));
         ::ReleaseDC(hWnd, hdc);
@@ -1236,8 +1257,10 @@ LRESULT WebPageImpl::fireMouseEvent(HWND hWnd, UINT message, WPARAM wParam, LPAR
     AutoRecordActions autoRecordActions(this, m_layerTreeHost, false);
 
     bool handle = false;
-//     fireTouchEvent(hWnd, message, wParam, lParam);
-//     return; // TODO
+
+    if (blink::RuntimeEnabledFeatures::touchEnabled())
+        //if (g_isTouchEnabled)
+        fireTouchEvent(hWnd, message, wParam, lParam);
 
     m_platformEventHandler->fireMouseEvent(hWnd, message, wParam, lParam, true, bHandle);
     return 0;

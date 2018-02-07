@@ -461,7 +461,7 @@ WebData WebClipboardImpl::readImage(Buffer buffer)
     skBitmap.eraseColor(0x00ffffff);
     SkCanvas canvas(skBitmap);
     {
-        skia::ScopedPlatformPaint scopedPlatformPaint(&canvas);
+        skia::ScopedPlatformPaint scopedPlatformPaint(nullptr, &canvas);
         HDC dc = scopedPlatformPaint.GetPlatformSurface();
         ::SetDIBitsToDevice(dc, 0, 0, bitmap->bmiHeader.biWidth,
             bitmap->bmiHeader.biHeight, 0, 0, 0,

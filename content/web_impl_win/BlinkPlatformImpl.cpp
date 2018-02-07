@@ -51,6 +51,8 @@ DWORD g_paintToMemoryCanvasInUiThreadCount = 0;
 DWORD g_rasterTaskCount = 0;
 DWORD g_mouseCount = 0;
 DWORD g_paintCount = 0;
+DWORD g_scheduledActionCount = 0;
+double g_autoRecordActionsTime = 0;
 
 #ifdef _DEBUG
 
@@ -137,6 +139,9 @@ static void setRuntimeEnabledFeatures()
     blink::RuntimeEnabledFeatures::setSharedWorkerEnabled(false);
     blink::RuntimeEnabledFeatures::setOverlayScrollbarsEnabled(false);
     blink::RuntimeEnabledFeatures::setTouchEnabled(false);
+    blink::RuntimeEnabledFeatures::setMemoryCacheEnabled(false);
+    blink::RuntimeEnabledFeatures::setCspCheckEnabled(true);
+    blink::RuntimeEnabledFeatures::setNpapiPluginsEnabled(true);
 }
 
 void BlinkPlatformImpl::initialize()
@@ -342,14 +347,16 @@ void BlinkPlatformImpl::shutdown()
 
 void BlinkPlatformImpl::perfTimer(blink::Timer<BlinkPlatformImpl>*)
 {
-    String output = String::format("perfTimer: paintToMemory:%d raster:%d, raster:%d paint:%d\n",
-        g_paintToMemoryCanvasInUiThreadCount, g_rasterTaskCount, g_mouseCount, g_paintCount);
+    String output = String::format("perfTimer: paintToMemory:%d raster:%d, scheduled:%d, AutoRecordActions:%f\n",
+        g_paintToMemoryCanvasInUiThreadCount, g_rasterTaskCount, g_scheduledActionCount, (float)g_autoRecordActionsTime);
     OutputDebugStringA(output.utf8().data());
 
     g_paintToMemoryCanvasInUiThreadCount = 0;
     g_rasterTaskCount = 0;
     g_mouseCount = 0;
     g_paintCount = 0;
+    g_scheduledActionCount = 0;
+    g_autoRecordActionsTime = 0;
 }
 
 void BlinkPlatformImpl::garbageCollectedTimer(blink::Timer<BlinkPlatformImpl>*)
