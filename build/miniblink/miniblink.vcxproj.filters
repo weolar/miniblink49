@@ -9811,6 +9811,9 @@
     <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8XMLSerializer.cpp">
       <Filter>gen\blink\bindings\core\v8</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\base\WindowsVersion.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\public\platform\modules\app_banner\WebAppBannerClient.h">
@@ -22415,6 +22418,9 @@
     </ClInclude>
     <ClInclude Include="..\..\gen\blink\bindings\core\v8\V8XMLSerializer.h">
       <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\base\WindowsVersion.h">
+      <Filter>base</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

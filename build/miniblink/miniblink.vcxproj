@@ -497,6 +497,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\base\WindowsVersion.cpp" />
     <ClCompile Include="..\..\cc\playback\TileActionInfo.cpp" />
     <ClCompile Include="..\..\cc\raster\RasterFilters.cpp" />
     <ClCompile Include="..\..\cc\raster\RasterResouce.cpp" />
@@ -5341,6 +5342,7 @@
     <ClCompile Include="..\..\third_party\WebKit\Source\wtf\WTFThreadData.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\base\WindowsVersion.h" />
     <ClInclude Include="..\..\cc\raster\RasterFilters.h" />
     <ClInclude Include="..\..\cc\raster\RasterTask.h" />
     <ClInclude Include="..\..\cc\tiles\TileWidthHeight.h" />
