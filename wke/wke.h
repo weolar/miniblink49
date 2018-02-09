@@ -246,9 +246,13 @@ WKE_API wkeWebView wkeGetWebView(const char* name);
 WKE_API void wkeDestroyWebView(wkeWebView webView);
 
 WKE_API void wkeSetMemoryCacheEnable(wkeWebView webView, bool b);
-
+WKE_API void wkeSetTouchEnabled(wkeWebView webView, bool b);
 WKE_API void wkeSetNavigationToNewWindowEnable(wkeWebView webView, bool b);
 WKE_API void wkeSetCspCheckEnable(wkeWebView webView, bool b);
+WKE_API void wkeSetNpapiPluginsEnabled(wkeWebView webView, bool b);
+WKE_API void wkeSetHeadlessEnabled(wkeWebView webView, bool b);
+WKE_API void wkeSetDragEnable(wkeWebView webView, bool b);
+
 WKE_API void wkeSetViewNetInterface(wkeWebView webView, const char* netInterface);
 
 WKE_API void wkeSetProxy(const wkeProxy* proxy);
@@ -456,6 +460,7 @@ WKE_API void wkeOnBlinkWindowCreate();
 //wke callback-----------------------------------------------------------------------------------
 typedef void(*wkeTitleChangedCallback)(wkeWebView webView, void* param, const wkeString title);
 WKE_API void wkeOnTitleChanged(wkeWebView webView, wkeTitleChangedCallback callback, void* callbackParam);
+WKE_API void wkeOnMouseOverUrlChanged(wkeWebView webView, wkeTitleChangedCallback callback, void* callbackParam);
 
 typedef void(*wkeURLChangedCallback)(wkeWebView webView, void* param, const wkeString url);
 WKE_API void wkeOnURLChanged(wkeWebView webView, wkeURLChangedCallback callback, void* callbackParam);

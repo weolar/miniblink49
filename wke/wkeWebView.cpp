@@ -948,6 +948,12 @@ void CWebView::onTitleChanged(wkeTitleChangedCallback callback, void* callbackPa
     m_webPage->wkeHandler().titleChangedCallbackParam = callbackParam;
 }
 
+void CWebView::onMouseOverUrlChanged(wkeTitleChangedCallback callback, void* callbackParam)
+{
+    m_webPage->wkeHandler().mouseOverUrlChangedCallback = callback;
+    m_webPage->wkeHandler().mouseOverUrlChangedCallbackParam = callbackParam;
+}
+
 void CWebView::onURLChanged(wkeURLChangedCallback callback, void* callbackParam)
 {
     m_webPage->wkeHandler().urlChangedCallback = callback;

@@ -23,6 +23,9 @@ struct CWebViewHandler {
     wkeTitleChangedCallback titleChangedCallback;
     void* titleChangedCallbackParam;
 
+    wkeTitleChangedCallback mouseOverUrlChangedCallback;
+    void* mouseOverUrlChangedCallbackParam;
+
     wkeURLChangedCallback urlChangedCallback;
     void* urlChangedCallbackParam;
 
@@ -215,6 +218,7 @@ public:
     void onURLChanged2(wkeURLChangedCallback2 callback, void* callbackParam);
     void onUrlChanged(const wkeString url);
     void onTitleChanged(wkeTitleChangedCallback callback, void* callbackParam);
+    void onMouseOverUrlChanged(wkeTitleChangedCallback callback, void* callbackParam);
     virtual void onPaintUpdated(wkePaintUpdatedCallback callback, void* callbackParam);
 
     void onAlertBox(wkeAlertBoxCallback callback, void* callbackParam);

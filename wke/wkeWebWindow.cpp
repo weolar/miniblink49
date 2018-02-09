@@ -4,6 +4,7 @@
 #include "wkeWebWindow.h"
 
 extern DWORD g_paintCount;
+extern bool g_isSetDragEnable;
 
 ////////////////////////////////////////////////////////////////////////////
 
@@ -256,26 +257,27 @@ LRESULT CWebWindow::_windowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM l
 
         return 0;
     }
-    case WM_DROPFILES: {
-        Vector<wchar_t> szFile;
-        szFile.resize(2 * MAX_PATH);
-        memset(szFile.data(), 0, sizeof(wchar_t) * 2 * (MAX_PATH));
+    case WM_DROPFILES:
+        if (g_isSetDragEnable) {
+            Vector<wchar_t> szFile;
+            szFile.resize(2 * MAX_PATH);
+            memset(szFile.data(), 0, sizeof(wchar_t) * 2 * (MAX_PATH));
         
-        wcscpy(szFile.data(), L"file:///");
+            wcscpy(szFile.data(), L"file:///");
 
-        HDROP hDrop = reinterpret_cast<HDROP>(wParam);
+            HDROP hDrop = reinterpret_cast<HDROP>(wParam);
 
-        UINT uFilesCount = ::DragQueryFileW(hDrop, 0xFFFFFFFF, szFile.data(), MAX_PATH);
-        if (uFilesCount != 0) {
-            UINT uRet = ::DragQueryFileW(hDrop, 0, (wchar_t*)szFile.data() + 8, MAX_PATH);
-            if (uRet != 0) {
-                wkeLoadURLW(this, szFile.data());
-                ::SetWindowTextW(hwnd, szFile.data());
+            UINT uFilesCount = ::DragQueryFileW(hDrop, 0xFFFFFFFF, szFile.data(), MAX_PATH);
+            if (uFilesCount != 0) {
+                UINT uRet = ::DragQueryFileW(hDrop, 0, (wchar_t*)szFile.data() + 8, MAX_PATH);
+                if (uRet != 0) {
+                    wkeLoadURLW(this, szFile.data());
+                    ::SetWindowTextW(hwnd, szFile.data());
+                }
             }
+            ::DragFinish(hDrop);
         }
-        ::DragFinish(hDrop);
         return 0;
-    }
     //case WM_NCHITTEST:
     //    if (IsWindow(m_hWnd) && flagsOff(GetWindowLong(m_hWnd, GWL_STYLE), WS_CAPTION))
     //    {

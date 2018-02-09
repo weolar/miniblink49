@@ -15,26 +15,20 @@
 #include "wkeWebWindow.h"
 #include "third_party/WebKit/public/web/WebKit.h"
 #include "third_party/WebKit/public/web/WebFrame.h"
+#include "gen/blink/platform/RuntimeEnabledFeatures.h"
 #include <v8.h>
 #include "wtf/text/WTFString.h"
 
 namespace net {
-
 void setCookieJarPath(const WCHAR* path);
 void setCookieJarFullPath(const WCHAR* path);
-bool g_cspCheckEnable = true;
-bool g_navigationToNewWindowEnable = true;
-
 }
+
+bool g_isSetDragEnable = true;
 
 //////////////////////////////////////////////////////////////////////////
 static std::string* s_versionString = nullptr;
 static bool wkeIsInit = false;
-bool g_wkeMemoryCacheEnable = true;
-
-bool wkeIsUpdataInOtherThread = false;
-
-unsigned int g_mbRuntimeEnabledFeatures = 0;
 
 void wkeInitialize()
 {
@@ -111,7 +105,7 @@ void wkeConfigure(const wkeSettings* settings)
     if (settings->mask & WKE_SETTING_PROXY)
         wkeSetProxy(&settings->proxy);
     if (settings->mask & WKE_SETTING_PAINTCALLBACK_IN_OTHER_THREAD)
-        wkeIsUpdataInOtherThread = true;
+        blink::RuntimeEnabledFeatures::setUpdataInOtherThreadEnabled(true);
 }
 
 void wkeInitializeEx(const wkeSettings* settings)
@@ -142,23 +136,41 @@ void wkeFinalize()
 
 void wkeSetMemoryCacheEnable(wkeWebView webView, bool b)
 {
-    g_wkeMemoryCacheEnable = b;
+    blink::RuntimeEnabledFeatures::setMemoryCacheEnabled(b);
+}
+
+bool g_isTouchEnabled = false;
+
+void wkeSetTouchEnabled(wkeWebView webView, bool b)
+{
+    blink::RuntimeEnabledFeatures::setTouchEnabled(b);
+    //g_isTouchEnabled = b;
 }
 
 void wkeSetNavigationToNewWindowEnable(wkeWebView webView, bool b)
 {
-    net::g_navigationToNewWindowEnable = b;
+    blink::RuntimeEnabledFeatures::setNavigationToNewWindowEnabled(b);
 }
 
 void wkeSetCspCheckEnable(wkeWebView webView, bool b)
 {
-    net::g_cspCheckEnable = b;
+    blink::RuntimeEnabledFeatures::setCspCheckEnabled(b);
 }
 
-bool g_alwaysIsNotSolideColor = false;
-bool g_drawDirtyDebugLine = false;
-bool g_drawTileLine = false;
-bool g_alwaysInflateDirtyRect = true;
+void wkeSetNpapiPluginsEnabled(wkeWebView webView, bool b)
+{
+    blink::RuntimeEnabledFeatures::setNpapiPluginsEnabled(b);
+}
+
+void wkeSetHeadlessEnabled(wkeWebView webView, bool b)
+{
+    blink::RuntimeEnabledFeatures::setHeadlessEnabled(b);
+}
+
+void wkeSetDragEnable(wkeWebView webView, bool b)
+{
+    g_isSetDragEnable = b;
+}
 
 void wkeSetDebugConfig(wkeWebView webView, const char* debugString)
 {
@@ -169,13 +181,13 @@ void wkeSetDebugConfig(wkeWebView webView, const char* debugString)
     for (size_t i = 0; i < result.size(); ++i) {
         String item = result[i];
         if ("alwaysIsNotSolideColor" == item) {
-            g_alwaysIsNotSolideColor = true;
+            blink::RuntimeEnabledFeatures::setAlwaysIsNotSolideColorEnabled(true);
         } else if ("drawDirtyDebugLine" == item) {
-            g_drawDirtyDebugLine = true;
+            blink::RuntimeEnabledFeatures::setDrawDirtyDebugLineEnabled(true);
         } else if ("drawTileLine" == item) {
-            g_drawTileLine = true;
+            blink::RuntimeEnabledFeatures::setDrawTileLineEnabled(true);
         } else if ("alwaysInflateDirtyRect" == item) {
-            g_alwaysInflateDirtyRect = true;
+
         }
     }
 }
@@ -707,6 +719,12 @@ void wkeOnTitleChanged(wkeWebView webView, wkeTitleChangedCallback callback, voi
 {
     webView->onTitleChanged(callback, callbackParam);
 }
+
+void wkeOnMouseOverUrlChanged(wkeWebView webView, wkeTitleChangedCallback callback, void* callbackParam)
+{
+    webView->onMouseOverUrlChanged(callback, callbackParam);
+}
+
 
 void wkeOnURLChanged(wkeWebView webView, wkeURLChangedCallback callback, void* callbackParam)
 {
