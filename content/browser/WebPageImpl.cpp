@@ -891,8 +891,9 @@ void WebPageImpl::paintToMemoryCanvasInUiThread(SkCanvas* canvas, const IntRect&
                 ::DeleteObject((HGDIOBJ)hbmpMemory);
                 ::DeleteDC(hdcMemory);
             }
-        } else
+        } else {
             skia::DrawToNativeContext(canvas, hdc, paintRect.x(), paintRect.y(), &intRectToWinRect(paintRect));
+        }
         ::ReleaseDC(hWnd, hdc);
     }
     //} else {
@@ -1420,6 +1421,17 @@ WebScreenInfo WebPageImpl::screenInfo()
     info.availableRect = WebRect(winRectToIntRect(mi.rcWork));
 
     return info;
+}
+
+void WebPageImpl::setMouseOverURL(const blink::WebURL& url)
+{
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
+    wke::CString string(((KURL)url).string());
+    if (m_pagePtr->wkeHandler().mouseOverUrlChangedCallback) {
+        m_pagePtr->wkeHandler().mouseOverUrlChangedCallback(
+            m_pagePtr->wkeWebView(), m_pagePtr->wkeHandler().mouseOverUrlChangedCallbackParam, &string);
+    }
+#endif
 }
 
 void WebPageImpl::setToolTipText(const blink::WebString& toolTip, blink::WebTextDirection hint)

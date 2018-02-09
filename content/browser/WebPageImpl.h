@@ -83,7 +83,7 @@ public:
     virtual blink::WebStorageNamespace* createSessionStorageNamespace() override;
     virtual blink::WebString acceptLanguages() override;
     virtual blink::WebScreenInfo screenInfo() override;
-
+    virtual void setMouseOverURL(const blink::WebURL&) override;
     virtual void setToolTipText(const blink::WebString&, blink::WebTextDirection hint) override;
 
     // Editing --------------------------------------------------------
