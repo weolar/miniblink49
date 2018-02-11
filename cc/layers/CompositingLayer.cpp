@@ -11,6 +11,7 @@
 #include "platform/image-encoders/gdiplus/GDIPlusImageEncoder.h" // TODO
 #include "platform/graphics/GraphicsContext.h" // TODO
 #include "platform/graphics/BitmapImage.h" // TODO
+#include "platform/RuntimeEnabledFeatures.h"
 #include "third_party/skia/include/core/SkTypeface.h"
 #include "third_party/skia/include/core/SkBitmap.h"
 
@@ -21,8 +22,6 @@
 #include "cc/tiles/TileWidthHeight.h"
 #include "cc/tiles/TilesAddr.h"
 #include "cc/playback/TileActionInfo.h"
-
-extern bool g_drawTileLine;
 
 namespace blink {
 bool saveDumpFile(const String& url, char* buffer, unsigned int size);
@@ -334,7 +333,7 @@ static bool layerShouldBeSkipped(CompositingLayer* layer, bool layerIsDrawn)
 
 void CompositingLayer::drawDebugLine(SkCanvas& canvas, CompositingTile* tile)
 {
-    if (!g_drawTileLine || tile->isSolidColor())
+    if (!blink::RuntimeEnabledFeatures::drawTileLineEnabled() || tile->isSolidColor())
         return;
 
     SkPaint paintTest;

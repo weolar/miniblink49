@@ -10,10 +10,8 @@
 #include "SkCanvas.h"
 
 #include "third_party/WebKit/Source/wtf/RefCountedLeakCounter.h"
-
+#include "gen/blink/platform/RuntimeEnabledFeatures.h"
 #include "WTF/text/WTFString.h"
-
-extern bool g_drawTileLine;
 
 namespace cc {
 
@@ -111,7 +109,7 @@ void CompositingTile::resizeBitmap(int dstWidth, int dstHeight, SkColor backgrou
     paint.setFilterQuality(kHigh_SkFilterQuality);
 
     SkCanvas canvas(*dst);
-    if (!m_solidColor || g_drawTileLine)
+    if (!m_solidColor || blink::RuntimeEnabledFeatures::drawTileLineEnabled())
         canvas.drawBitmapRect(*m_bitmap, &isrc, SkRect::MakeIWH(isrc.width(), isrc.height()), &paint);
 
     clearBitmap();

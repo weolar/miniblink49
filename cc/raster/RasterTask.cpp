@@ -19,6 +19,7 @@
 #include "config.h"
 #include "cc/raster/RasterTask.h"
 
+#include "platform/RuntimeEnabledFeatures.h"
 #include "third_party/WebKit/public/platform/Platform.h"
 #include "third_party/WebKit/public/platform/WebTraceLocation.h"
 #include "third_party/WebKit/Source/wtf/ThreadingPrimitives.h"
@@ -45,7 +46,6 @@
 #include "third_party/WebKit/Source/platform/image-encoders/gdiplus/GDIPlusImageEncoder.h"
 
 extern DWORD g_rasterTaskCount;
-extern bool g_alwaysIsNotSolideColor;
 
 namespace blink {
 bool saveDumpFile(const String& url, char* buffer, unsigned int size);
@@ -276,7 +276,7 @@ public:
             SkColor solidColor;
             bool isSolidColor = performSolidColorAnalysis(dirtyRectInTile, &solidColor);
 
-            if (g_alwaysIsNotSolideColor)
+            if (blink::RuntimeEnabledFeatures::alwaysIsNotSolideColorEnabled())
                 isSolidColor = false;
 
             if (isSolidColor) {

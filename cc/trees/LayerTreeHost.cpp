@@ -17,6 +17,7 @@
 #include "cc/layers/CompositingLayer.h"
 #include "cc/playback/LayerChangeAction.h"
 
+#include "platform/RuntimeEnabledFeatures.h"
 #include "third_party/WebKit/public/web/WebViewClient.h"
 #include "third_party/WebKit/public/platform/WebFloatSize.h"
 #include "third_party/WebKit/public/platform/WebGestureCurveTarget.h"
@@ -29,8 +30,6 @@
 extern DWORD g_nowTime;
 
 using namespace blink;
-
-extern bool wkeIsUpdataInOtherThread;
 
 namespace cc {
 
@@ -493,6 +492,8 @@ static void flattenTo2d(SkMatrix44& matrix)
 
 void LayerTreeHost::recordDraw()
 {
+    if (blink::RuntimeEnabledFeatures::headlessEnabled())
+        return;
     if (!m_rootLayer)
         return;
 
@@ -1127,7 +1128,7 @@ void LayerTreeHost::paintToMemoryCanvas(const SkRect& r)
     drawToCanvas(m_memoryCanvas, paintRect); // »æÖÆÔà¾ØÐÎ
 
 #if ENABLE_WKE == 1
-    if (wkeIsUpdataInOtherThread) {
+    if (blink::RuntimeEnabledFeatures::updataInOtherThreadEnabled()) {
         blink::IntRect intPaintRect(paintRect.x(), paintRect.y(), paintRect.width(), paintRect.height());
         m_uiThreadClient->paintToMemoryCanvasInUiThread(m_memoryCanvas, intPaintRect);
         return;

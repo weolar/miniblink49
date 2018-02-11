@@ -27,6 +27,7 @@
 #include "third_party/WebKit/Source/platform/geometry/FloatRect.h"
 #include "third_party/WebKit/Source/platform/transforms/TransformationMatrix.h"
 #include "third_party/WebKit/Source/wtf/RefCountedLeakCounter.h"
+#include "platform/RuntimeEnabledFeatures.h"
 
 using blink::WebLayer;
 using blink::WebFloatPoint;
@@ -39,8 +40,6 @@ using blink::FloatRect;
 using blink::IntRect;
 using blink::WebDoublePoint;
 using blink::WebFloatPoint3D;
-
-extern bool g_alwaysInflateDirtyRect;
 
 namespace cc_blink {
 namespace {
@@ -1321,9 +1320,12 @@ void WebLayerImpl::requestBoundRepaint(bool directOrPending)
 
 void WebLayerImpl::invalidateRect(const blink::WebRect& rect)
 {
+    if (blink::RuntimeEnabledFeatures::headlessEnabled())
+        return;
+
     blink::IntRect dirtyRect(rect);
 
-    if (g_alwaysInflateDirtyRect)
+    if (1)
         dirtyRect.inflate(1);
 
     if (m_tileGrid)
