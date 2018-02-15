@@ -185,13 +185,13 @@ private:
         agent->client()->willEnterDebugLoop();
 
         // 3. Disable active objects
-        WebView::willEnterModalLoop();
+        //WebView::willEnterModalLoop(); // TODO test
 
         // 4. Process messages until quitNow is called.
         m_messageLoop->run();
 
         // 5. Resume active objects
-        WebView::didExitModalLoop();
+        //WebView::didExitModalLoop(); // TODO test
 
         // 6. Resume input events.
         for (Vector<WebViewImpl*>::iterator it = views.begin(); it != views.end(); ++it) {
@@ -289,15 +289,15 @@ PassOwnPtrWillBeRawPtr<WebDevToolsAgentImpl> WebDevToolsAgentImpl::create(WebLoc
 
     WebDevToolsAgentImpl* agent = new WebDevToolsAgentImpl(frame, client, view->inspectorOverlay());
     agent->registerAgent(InspectorRenderingAgent::create(view));
-    agent->registerAgent(InspectorEmulationAgent::create(view));
+    //agent->registerAgent(InspectorEmulationAgent::create(view));
     // TODO(dgozman): migrate each of the following agents to frame once module is ready.
-    agent->registerAgent(InspectorDatabaseAgent::create(view->page()));
-    agent->registerAgent(DeviceOrientationInspectorAgent::create(view->page()));
-    agent->registerAgent(InspectorFileSystemAgent::create(view->page()));
-    agent->registerAgent(InspectorIndexedDBAgent::create(view->page()));
-    agent->registerAgent(InspectorAccessibilityAgent::create(view->page()));
-    agent->registerAgent(InspectorDOMStorageAgent::create(view->page()));
-    agent->registerAgent(InspectorCacheStorageAgent::create());
+    //agent->registerAgent(InspectorDatabaseAgent::create(view->page()));
+    //agent->registerAgent(DeviceOrientationInspectorAgent::create(view->page()));
+    //agent->registerAgent(InspectorFileSystemAgent::create(view->page()));
+    //agent->registerAgent(InspectorIndexedDBAgent::create(view->page()));
+    //agent->registerAgent(InspectorAccessibilityAgent::create(view->page())); // weolar
+    //agent->registerAgent(InspectorDOMStorageAgent::create(view->page()));
+    //agent->registerAgent(InspectorCacheStorageAgent::create());
     agent->layerTreeViewChanged(view->layerTreeView());
     return adoptPtrWillBeNoop(agent);
 }
@@ -368,7 +368,7 @@ WebDevToolsAgentImpl::WebDevToolsAgentImpl(
     m_agents.append(workerAgentPtr.release());
     m_agents.append(pageConsoleAgentPtr.release());
 
-    m_agents.append(ScreenOrientationInspectorAgent::create(*m_webLocalFrameImpl->frame()));
+    //m_agents.append(ScreenOrientationInspectorAgent::create(*m_webLocalFrameImpl->frame())); // weolar
 }
 
 WebDevToolsAgentImpl::~WebDevToolsAgentImpl()

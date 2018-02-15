@@ -34,9 +34,8 @@
 #include "wtf/text/CString.h"
 #include "wtf/text/CharacterNames.h"
 #include "wtf/text/StringBuilder.h"
+#include "wtf/text/StringBuffer.h"
 #include "wtf/text/WTFStringUtil.h"
-// #include <unicode/ucnv.h>
-// #include <unicode/ucnv_cb.h>
 
 using std::min;
 
@@ -522,6 +521,7 @@ String TextCodecICU::decode(const char* bytes, size_t length, FlushBehavior flus
     if (0 == length)
         return String();
 
+#if 0
     Vector<char> valideBytes;
 
     valideBytes.resize(length + m_incrementalDataChunkLength);
@@ -530,6 +530,8 @@ String TextCodecICU::decode(const char* bytes, size_t length, FlushBehavior flus
 
     m_incrementalDataChunkLength = 0;
     const unsigned char* lastInvalideChar = (const unsigned char*)bytes + length - 1;
+#endif
+
 #if 0
     if (length > 2 && !isValideGB(lastInvalideChar, 1) && !isValideGB(lastInvalideChar - 1, 2)) {
         m_incrementalDataChunkLength = 1; // 目前不支持GB-18030四字节编码
@@ -539,11 +541,58 @@ String TextCodecICU::decode(const char* bytes, size_t length, FlushBehavior flus
     WTF::MByteToWChar(valideBytes.data(), valideBytes.size() - m_incrementalDataChunkLength, &resultBuffer, CP_ACP);
     if (0 == resultBuffer.size())
         return String();
-#else
-    resultBuffer = decodeGbkWithLastData(valideBytes.data(), valideBytes.size(), m_incrementalDataChunk, &m_incrementalDataChunkLength);
 #endif
+
+#if 0
+    resultBuffer = decodeGbkWithLastData(valideBytes.data(), valideBytes.size(), m_incrementalDataChunk, &m_incrementalDataChunkLength);
     return String(&resultBuffer[0], resultBuffer.size());
+#endif
+
+    StringBuffer<UChar> buffer(m_incrementalDataChunkLength + length);
+    const uint8_t* source = reinterpret_cast<const uint8_t*>(bytes);
+    const uint8_t* end = source + length;
+    UChar* destination = buffer.characters();
+
+    UChar ch;
+    while (source < end) {
+        if (toUnicode(*source, ch)) {
+            *destination = ch;
+            destination++;
+        }
+        source++;
+    }
+    buffer.shrink(destination - buffer.characters());
+    return String::adopt(buffer);
+
+    
 #endif // MINIBLINK_NOT_IMPLEMENTED
+}
+
+bool TextCodecICU::hasValidChar()
+{
+    if (m_incrementalDataChunk == 0)
+        return false;
+
+    m_incrementalDataChunk[m_incrementalDataChunkLength] = 'A';
+    m_incrementalDataChunk[m_incrementalDataChunkLength + 1] = '\0';
+    char* ptr = CharNextExA(CP_ACP, (LPCSTR)m_incrementalDataChunk, 0);
+    if (ptr > ((char*)m_incrementalDataChunk + m_incrementalDataChunkLength))
+        return false;
+
+    return true;
+}
+
+bool TextCodecICU::toUnicode(unsigned char c, UChar& uc)
+{
+    m_incrementalDataChunk[m_incrementalDataChunkLength++] = c;
+    if (m_incrementalDataChunkLength + 2 >= kIncrementalDataChunkLength || hasValidChar()) {
+        int ret = MultiByteToWideChar(CP_ACP, 0, (LPSTR)m_incrementalDataChunk, m_incrementalDataChunkLength, &uc, 1);
+        m_incrementalDataChunkLength = 0;
+
+        return ret == 1 ? true : false;
+    }
+
+    return false;
 }
 
 #if defined(USING_SYSTEM_ICU)

@@ -45,7 +45,7 @@ namespace blink {
 
 ScriptValue InjectedScriptManager::createInjectedScript(const String& scriptSource, ScriptState* inspectedScriptState, int id, InjectedScriptNative* injectedScriptNative)
 {
-#ifdef MINIBLINK_NOT_IMPLEMENTED
+#if 1 // def MINIBLINK_NOT_IMPLEMENTED
     v8::Isolate* isolate = inspectedScriptState->isolate();
     ScriptState::Scope scope(inspectedScriptState);
 
@@ -78,7 +78,6 @@ ScriptValue InjectedScriptManager::createInjectedScript(const String& scriptSour
         return ScriptValue();
     return ScriptValue(inspectedScriptState, injectedScriptValue);
 #endif // MINIBLINK_NOT_IMPLEMENTED
-    notImplemented();
     return ScriptValue();
 }
 

@@ -255,7 +255,7 @@ bool WindowProxy::initialize()
     }
     if (m_frame->isLocalFrame()) {
         LocalFrame* frame = toLocalFrame(m_frame);
-#ifdef MINIBLINK_NOT_IMPLEMENTED
+#ifndef MINIBLINK_NO_DEVTOOLS
         MainThreadDebugger::initializeContext(context, m_world->worldId());
 #endif // MINIBLINK_NOT_IMPLEMENTED
         InspectorInstrumentation::didCreateScriptContext(frame, m_scriptState.get(), origin, m_world->worldId());

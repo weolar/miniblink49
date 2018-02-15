@@ -6,6 +6,8 @@
 #include "net/FileSystem.h"
 #include "wtf/text/WTFStringUtil.h"
 
+extern String* kLocalStorageFullPath;
+
 namespace blink {
 
 static String buildOriginString(const KURL& pageUrl)
@@ -52,9 +54,19 @@ static char* kLocalStorageDirectoryName = "LocalStorage";
 static char* kLocalStorageExtensionName = ".localstorage";
 static char kSeparator = (char)0x1f;
 
+static String buildLocalStorageDirectoryPath()
+{
+    String localStoragePath;
+    if (kLocalStorageFullPath)
+        localStoragePath = *kLocalStorageFullPath;
+    localStoragePath.append(kLocalStorageDirectoryName);
+    return localStoragePath;
+}
+
 static String buildLocalStorageFileNameString(const KURL& originUrl)
 {
-    String localStoragePath = kLocalStorageDirectoryName;
+    String localStoragePath;
+    localStoragePath.append(buildLocalStorageDirectoryPath());
     localStoragePath.append('\\');
     localStoragePath.append(buildOriginLocalFileNameString(originUrl));
     localStoragePath.append(kLocalStorageExtensionName);
@@ -144,8 +156,8 @@ void WebStorageAreaImpl::delaySaveTimerFired(blink::Timer<WebStorageAreaImpl>*)
     if (0 == pageStorageArea->size())
         return;
 
-    if (!net::fileExists(kLocalStorageDirectoryName))
-        net::createDirectory(kLocalStorageDirectoryName);
+    if (!net::fileExists(buildLocalStorageDirectoryPath()))
+        net::createDirectory(buildLocalStorageDirectoryPath());
 
     String localStoragePath = buildLocalStorageFileNameString(originUrl);
 
@@ -234,9 +246,9 @@ void WebStorageAreaImpl::removeItem(const WebString& key, const WebURL& pageUrl)
 
     it->value->remove((String)key);
 
-    if (0 == it->value->size()) {
-        invalidateIterator();
+    invalidateIterator();
 
+    if (0 == it->value->size()) {
         delete it->value;
         m_cachedArea->remove(it);
     }
