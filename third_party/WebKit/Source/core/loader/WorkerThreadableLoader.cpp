@@ -114,7 +114,6 @@ void WorkerThreadableLoader::didReceiveResourceTiming(const ResourceTimingInfo& 
 #ifdef MINIBLINK_NOT_IMPLEMENTED
     WorkerGlobalScopePerformance::performance(*m_workerGlobalScope)->addResourceTiming(info);
 #endif // MINIBLINK_NOT_IMPLEMENTED
-    notImplemented();
 }
 
 WorkerThreadableLoader::MainThreadBridge::MainThreadBridge(
