@@ -185,13 +185,13 @@ private:
         agent->client()->willEnterDebugLoop();
 
         // 3. Disable active objects
-        //WebView::willEnterModalLoop(); // TODO test
+        WebView::willEnterModalLoop();
 
         // 4. Process messages until quitNow is called.
         m_messageLoop->run();
 
         // 5. Resume active objects
-        //WebView::didExitModalLoop(); // TODO test
+        WebView::didExitModalLoop();
 
         // 6. Resume input events.
         for (Vector<WebViewImpl*>::iterator it = views.begin(); it != views.end(); ++it) {
