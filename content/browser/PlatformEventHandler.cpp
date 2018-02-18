@@ -120,6 +120,8 @@ WebKeyboardEvent PlatformEventHandler::buildKeyboardEvent(WebInputEvent::Type ty
         strcpy(keyEvent.keyIdentifier, "U+0008");
     else if (VK_ESCAPE == keyEvent.windowsKeyCode)
         strcpy(keyEvent.keyIdentifier, "U+001B");
+    else if (VK_RETURN == keyEvent.windowsKeyCode)
+        strcpy(keyEvent.keyIdentifier, "Enter");
 
     memset(keyEvent.text, 0, sizeof(WebUChar) * WebKeyboardEvent::textLengthCap);
     keyEvent.text[0] = (WebUChar)wParam;
