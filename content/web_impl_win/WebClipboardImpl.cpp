@@ -693,7 +693,7 @@ void WebClipboardImpl::writeDataObject(const WebDragData& data)
     clearClipboard();
 
     WebVector<WebDragData::Item> items = data.items();
-    for (size_t i = 0; items.size(); ++i) {
+    for (size_t i = 0; i < items.size(); ++i) {
         WebDragData::Item& it = items[i];
 
         if (WebDragData::Item::StorageTypeString == it.storageType) {
