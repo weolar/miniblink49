@@ -195,13 +195,6 @@ WebPageImpl::~WebPageImpl()
     delete m_platformEventHandler;
     m_platformEventHandler = nullptr;
 
-    // TODO m_devToolsClient;
-    if (m_devToolsClient)
-        delete m_devToolsClient;
-
-    if (m_devToolsAgent)
-        delete m_devToolsAgent;
-
     m_pagePtr = 0;
     m_popupHandle = nullptr;
 
@@ -496,8 +489,13 @@ void WebPageImpl::doClose()
     content::WebThreadImpl* threadImpl = nullptr;
     threadImpl = (content::WebThreadImpl*)(blink::Platform::current()->currentThread());
 
-    if (m_devToolsAgent)
+    if (m_devToolsClient)
+        delete m_devToolsClient;
+
+    if (m_devToolsAgent) {
         m_devToolsAgent->onDetach();
+        delete m_devToolsAgent;
+    }
 
     //m_webViewImpl->mainFrameImpl()->close();
     m_webViewImpl->close();
