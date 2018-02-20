@@ -65,6 +65,12 @@ public:
     static void gcAll();
     void gc();
 
+    void onDocumentReady();
+
+    static void connetDevTools(WebPage* frontEnd, WebPage* embedder);
+    bool isDevtoolsConneted() const;
+    void inspectElementAt(int x, int y);
+
     void loadURL(int64 frameId, const wchar_t* url, const blink::Referrer& referrer, const wchar_t* extraHeaders);
     void loadRequest(int64 frameId, const blink::WebURLRequest& request);
     void loadHTMLString(int64 frameId, const blink::WebData& html, const blink::WebURL& baseURL, const blink::WebURL& unreachableURL = blink::WebURL(), bool replace = false);
@@ -121,6 +127,9 @@ public:
 
     void disablePaint();
     void enablePaint();
+
+    void willEnterDebugLoop();
+    void didExitDebugLoop();
 
     void didStartProvisionalLoad();
 

@@ -16,6 +16,8 @@
 #endif
 #include "content/browser/WebPage.h"
 #include "content/browser/WebPageImpl.h"
+#include "content/devtools/DevToolsClient.h"
+#include "content/devtools/DevToolsAgent.h"
 
 extern WCHAR szTitle[];
 extern WCHAR szWindowClass[];
@@ -159,6 +161,18 @@ void WebPage::enablePaint()
 {
     if (m_pageImpl)
         m_pageImpl->enablePaint();
+}
+
+void WebPage::willEnterDebugLoop()
+{
+    if (m_pageImpl)
+        m_pageImpl->willEnterDebugLoop();
+}
+
+void WebPage::didExitDebugLoop()
+{
+    if (m_pageImpl)
+        m_pageImpl->didExitDebugLoop();
 }
 
 void WebPage::didStartProvisionalLoad()
@@ -507,6 +521,34 @@ void WebPage::gc()
     if (!m_pageImpl)
         return;
     return m_pageImpl->gc();
+}
+
+void WebPage::onDocumentReady()
+{
+    if (m_pageImpl->m_devToolsClient)
+        m_pageImpl->m_devToolsClient->onDocumentReady();
+}
+
+void WebPage::connetDevTools(WebPage* frontEnd, WebPage* embedder)
+{
+    DevToolsAgent* devToolsAgent = embedder->m_pageImpl->createOrGetDevToolsAgent();
+    DevToolsClient* devToolsClient = frontEnd->m_pageImpl->createOrGetDevToolsClient();
+
+    devToolsAgent->setDevToolsClient(devToolsClient);
+    devToolsClient->setDevToolsAgent(devToolsAgent);
+}
+
+bool WebPage::isDevtoolsConneted() const
+{
+    if (!m_pageImpl->m_devToolsAgent)
+        return false;
+    return m_pageImpl->m_devToolsAgent->isDevToolsClientConnet();
+}
+
+void WebPage::inspectElementAt(int x, int y)
+{
+    if (m_pageImpl->m_devToolsAgent)
+        m_pageImpl->m_devToolsAgent->inspectElementAt(x, y);
 }
 
 } // namespace WebCore

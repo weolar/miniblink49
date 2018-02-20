@@ -533,6 +533,24 @@ void BlinkPlatformImpl::setUserAgent(char* ua)
 	m_userAgent = new String(ua);
 }
 
+void readJsFile(const wchar_t* path, std::vector<char>* buffer)
+{
+    HANDLE hFile = CreateFileW(path, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+    if (INVALID_HANDLE_VALUE == hFile) {
+        DebugBreak();
+        return;
+    }
+
+    DWORD fileSizeHigh;
+    const DWORD bufferSize = ::GetFileSize(hFile, &fileSizeHigh);
+
+    DWORD numberOfBytesRead = 0;
+    buffer->resize(bufferSize);
+    BOOL b = ::ReadFile(hFile, &buffer->at(0), bufferSize, &numberOfBytesRead, nullptr);
+    ::CloseHandle(hFile);
+    b = b;
+}
+
 blink::WebData BlinkPlatformImpl::loadResource(const char* name)
 {
     if (0 == strcmp("html.css", name))
@@ -586,6 +604,15 @@ blink::WebData BlinkPlatformImpl::loadResource(const char* name)
         return blink::WebData((const char*)content::HTMLMarqueeElementJs, sizeof(content::HTMLMarqueeElementJs));
     else if (0 == strcmp("PluginPlaceholderElement.js", name))
         return blink::WebData((const char*)content::PluginPlaceholderElementJs, sizeof(content::PluginPlaceholderElementJs));
+    else if (0 == strcmp("DebuggerScriptSource.js", name)) {
+//         std::vector<char> buffer;
+//         readJsFile(L"E:\\mycode\\miniblink49\\trunk\\third_party\\WebKit\\Source\\core\\inspector\\DebuggerScript.js", &buffer);
+//         return blink::WebData(buffer.data(), buffer.size());
+        return blink::WebData((const char*)content::DebuggerScriptSourceJs, sizeof(content::DebuggerScriptSourceJs));
+    } else if (0 == strcmp("InjectedScriptSource.js", name))
+        return blink::WebData((const char*)content::InjectedScriptSourceJs, sizeof(content::InjectedScriptSourceJs));
+    else if (0 == strcmp("InspectorOverlayPage.html", name))
+        return blink::WebData((const char*)content::InspectorOverlayPageHtml, sizeof(content::InspectorOverlayPageHtml));
     
     notImplemented();
     return blink::WebData(" ", 1);
@@ -617,6 +644,11 @@ blink::WebScrollbarBehavior* BlinkPlatformImpl::scrollbarBehavior()
     if (!m_webScrollbarBehavior)
         m_webScrollbarBehavior = new blink::WebScrollbarBehavior();
     return m_webScrollbarBehavior;
+}
+
+uint32_t BlinkPlatformImpl::getUniqueIdForProcess()
+{
+    return ::GetCurrentProcessId();
 }
 
 void BlinkPlatformImpl::createMessageChannel(blink::WebMessagePortChannel** channel1, blink::WebMessagePortChannel** channel2)

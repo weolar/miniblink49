@@ -1,3 +1,5 @@
+#ifndef content_browser_ToolTip_h
+#define content_browser_ToolTip_h
 
 #include "third_party/WebKit/Source/platform/Timer.h"
 #include <windows.h>
@@ -99,6 +101,7 @@ public:
             self->onPaint(hWnd, hdc);
             ::EndPaint(hWnd, &ps);
             break;
+
         case WM_CLOSE:
             break;
         }
@@ -203,3 +206,5 @@ private:
 };
 
 }
+
+#endif // content_browser_ToolTip_h

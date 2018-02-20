@@ -400,7 +400,7 @@ void WebThreadImpl::fireOnExit()
 void WebThreadImpl::schedulerTasks()
 {
     // Do a re-entrancy check.
-    if (m_firingTimers || m_suspendTimerQueue) 
+    if (m_firingTimers /*|| m_suspendTimerQueue*/) 
         return;
     m_firingTimers = true;
 

@@ -41,6 +41,8 @@ class PlatformEventHandler;
 class NavigationController;
 class PopupMenuWin;
 class ToolTip;
+class DevToolsClient;
+class DevToolsAgent;
 
 class WebPageImpl 
     : public blink::WebViewClient
@@ -71,6 +73,9 @@ public:
     void close();
 
     void gc();
+
+    DevToolsAgent* createOrGetDevToolsAgent();
+    DevToolsClient* createOrGetDevToolsClient();
     
     // WebViewClient
     virtual void didInvalidateRect(const blink::WebRect&) override;
@@ -263,6 +268,13 @@ public:
 
     blink::Persistent<NavigationController> m_navigationController;
     blink::Persistent<PopupMenuWin> m_popup;
+
+    bool isDevToolsClient() const { return !!m_devToolsClient; }
+    DevToolsClient* m_devToolsClient;
+    DevToolsAgent* m_devToolsAgent;
+    void willEnterDebugLoop();
+    void didExitDebugLoop();
+    bool m_isEnterDebugLoop;
 };
 
 } // blink

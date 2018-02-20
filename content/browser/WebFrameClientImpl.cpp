@@ -1,5 +1,6 @@
 
 #include "content/browser/WebFrameClientImpl.h"
+#include "content/browser/ContextMeun.h"
 #include "content/browser/WebPage.h"
 #include "content/web_impl_win/WebCookieJarCurlImpl.h"
 #include "content/web_impl_win/WebMediaPlayerImpl.h"
@@ -44,11 +45,14 @@ WebFrameClientImpl::WebFrameClientImpl()
     m_loaded = false;
     m_documentReady = false;
     m_webPage = nullptr;
+    m_menu = nullptr;
 }
 
 WebFrameClientImpl::~WebFrameClientImpl()
 {
     RELEASE_ASSERT(0 == m_unusedFrames.size());
+    if (m_menu)
+        delete m_menu;
 }
 
 void WebFrameClientImpl::didAddMessageToConsole(const WebConsoleMessage& message,
@@ -322,6 +326,8 @@ void WebFrameClientImpl::didChangeIcon(WebLocalFrame*, WebIconURL::Type) { }
 void WebFrameClientImpl::didFinishDocumentLoad(WebLocalFrame* frame)
 {
     m_documentReady = true;
+
+    m_webPage->onDocumentReady();
 
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
     wke::AutoDisableFreeV8TempObejct autoDisableFreeV8TempObejct;
@@ -637,6 +643,18 @@ bool WebFrameClientImpl::runModalPromptDialog(const WebString& message, const We
 bool WebFrameClientImpl::runModalBeforeUnloadDialog(bool isReload, const WebString& message)
 {
     return true;
+}
+
+void WebFrameClientImpl::showContextMenu(const blink::WebContextMenuData& data)
+{
+    if (!m_menu)
+        m_menu = new ContextMenu(m_webPage);
+    m_menu->show(data);
+}
+
+void WebFrameClientImpl::clearContextMenu()
+{
+
 }
 
 void WebFrameClientImpl::didCreateScriptContext(WebLocalFrame* frame, v8::Local<v8::Context> context, int extensionGroup, int worldId)

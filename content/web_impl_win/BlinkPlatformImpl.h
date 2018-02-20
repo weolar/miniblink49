@@ -66,6 +66,12 @@ public:
 
     virtual blink::WebCompositorSupport* compositorSupport() override;
 
+    // Process -------------------------------------------------------------
+
+    // Returns a unique identifier for a process. This may not necessarily be
+    // the process's process ID.
+    virtual uint32_t getUniqueIdForProcess() override;
+
     // Scrollbar ----------------------------------------------------------
     virtual blink::WebScrollbarBehavior* scrollbarBehavior() override;
 

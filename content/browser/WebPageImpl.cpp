@@ -53,6 +53,8 @@
 #include "content/web_impl_win/BlinkPlatformImpl.h"
 #include "content/web_impl_win/WebThreadImpl.h"
 #include "content/web_impl_win/npapi/PluginDatabase.h"
+#include "content/devtools/DevToolsClient.h"
+#include "content/devtools/DevToolsAgent.h"
 
 #include "cc/trees/LayerTreeHost.h"
 #include "cc/base/BdColor.h"
@@ -135,6 +137,9 @@ WebPageImpl::WebPageImpl()
     m_firstDrawCount = 0;
     m_webFrameClient = new content::WebFrameClientImpl();
     m_platformCursor = nullptr;
+    m_devToolsClient = nullptr;
+    m_devToolsAgent = nullptr;
+    m_isEnterDebugLoop = false;
 
     m_toolTip = new ToolTip();
     m_toolTip->init();
@@ -189,6 +194,13 @@ WebPageImpl::~WebPageImpl()
 
     delete m_platformEventHandler;
     m_platformEventHandler = nullptr;
+
+    // TODO m_devToolsClient;
+    if (m_devToolsClient)
+        delete m_devToolsClient;
+
+    if (m_devToolsAgent)
+        delete m_devToolsAgent;
 
     m_pagePtr = 0;
     m_popupHandle = nullptr;
@@ -358,6 +370,26 @@ WebView* WebPageImpl::createView(WebLocalFrame* creator,
 #endif
 }
 
+class CreateDevToolsAgentTaskObserver : public blink::WebThread::TaskObserver {
+public:
+    CreateDevToolsAgentTaskObserver(WebPageImpl* parent)
+    {
+        m_parent = parent;
+    }
+    virtual ~CreateDevToolsAgentTaskObserver() {}
+
+    virtual void willProcessTask() override { }
+    virtual void didProcessTask() override
+    {
+        if (!m_parent->isDevToolsClient())
+            m_parent->createOrGetDevToolsAgent();
+        blink::Platform::current()->currentThread()->removeTaskObserver(this);
+    }
+
+private:
+    WebPageImpl* m_parent;
+};
+
 void WebPageImpl::init(WebPage* pagePtr, HWND hWnd)
 {
     m_hWnd = hWnd;
@@ -371,7 +403,26 @@ void WebPageImpl::init(WebPage* pagePtr, HWND hWnd)
 
     m_webViewImpl->setFocus(true);
 
+    // DevToolsAgent必须先创建，不然无法记录执行环境，会导致console无法执行js
+    blink::Platform::current()->currentThread()->addTaskObserver(new CreateDevToolsAgentTaskObserver(this));
+   
     m_state = pageInited;
+}
+
+DevToolsAgent* WebPageImpl::createOrGetDevToolsAgent()
+{
+    if (m_devToolsAgent)
+        return m_devToolsAgent;
+    m_devToolsAgent = new DevToolsAgent(m_pagePtr, (blink::WebLocalFrame*)m_webViewImpl->mainFrame());
+    return m_devToolsAgent;    
+}
+
+DevToolsClient* WebPageImpl::createOrGetDevToolsClient()
+{
+    if (m_devToolsClient)
+        return m_devToolsClient;
+    m_devToolsClient = new DevToolsClient(m_pagePtr, (blink::WebLocalFrame*)m_webViewImpl->mainFrame());
+    return m_devToolsClient;
 }
 
 void WebPageImpl::testPaint()
@@ -444,6 +495,9 @@ void WebPageImpl::doClose()
 
     content::WebThreadImpl* threadImpl = nullptr;
     threadImpl = (content::WebThreadImpl*)(blink::Platform::current()->currentThread());
+
+    if (m_devToolsAgent)
+        m_devToolsAgent->onDetach();
 
     //m_webViewImpl->mainFrameImpl()->close();
     m_webViewImpl->close();
@@ -592,7 +646,7 @@ void WebPageImpl::executeMainFrame()
     freeV8TempObejctOnOneFrameBefore();
     clearNeedsCommit();
 
-    if (0 != m_executeMainFrameCount)
+    if (0 != m_executeMainFrameCount || m_isEnterDebugLoop)
         return;
     atomicIncrement(&m_executeMainFrameCount);
 
@@ -1260,7 +1314,6 @@ LRESULT WebPageImpl::fireMouseEvent(HWND hWnd, UINT message, WPARAM wParam, LPAR
     bool handle = false;
 
     if (blink::RuntimeEnabledFeatures::touchEnabled())
-        //if (g_isTouchEnabled)
         fireTouchEvent(hWnd, message, wParam, lParam);
 
     m_platformEventHandler->fireMouseEvent(hWnd, message, wParam, lParam, true, bHandle);
@@ -1469,64 +1522,24 @@ void WebPageImpl::didStartProvisionalLoad()
 bool WebPageImpl::runFileChooser(const blink::WebFileChooserParams& params, blink::WebFileChooserCompletion* completion)
 {
     return runFileChooserImpl(params, completion);
-//     static const size_t maxFilePathsListSize = USHRT_MAX;
-//     bool multiFile = params.multiSelect;
-//     Vector<WCHAR> fileBuf(multiFile ? maxFilePathsListSize : MAX_PATH);
-// 
-//     OPENFILENAME ofn = { 0 };
-//     // Need to zero out the first char of fileBuf so GetOpenFileName doesn't think it's an initialization string
-//     fileBuf[0] = '\0';
-// 
-//     ofn.lStructSize = sizeof(ofn);
-//     ofn.hwndOwner = nullptr;
-//     String allFiles = L"all files";
-//     allFiles.append(L"\0*.*\0\0", 6);
-// 
-//     Vector<UChar> filterCharacters = allFiles.charactersWithNullTermination(); // Retain buffer long enough to make the GetOpenFileName call
-//     ofn.lpstrFilter = filterCharacters.data();
-// 
-//     ofn.lpstrFile = fileBuf.data();
-//     ofn.nMaxFile = fileBuf.size();
-//     String dialogTitle = L"upload";
-//     Vector<UChar> dialogTitleCharacters = dialogTitle.charactersWithNullTermination(); // Retain buffer long enough to make the GetOpenFileName call
-//     ofn.lpstrTitle = dialogTitleCharacters.data();
-//     ofn.Flags = OFN_ENABLESIZING | OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST | OFN_EXPLORER;
-//     if (multiFile)
-//         ofn.Flags = ofn.Flags | OFN_ALLOWMULTISELECT;
-// 
-//     Vector<WebString> fileList;
-//     WebVector<WebString> wsFileNames(fileList.size());
-//     if (!::GetOpenFileName(&ofn))
-//         return false;
-//     
-//     WCHAR* files = fileBuf.data();
-// 
-//     String file(files);
-//     if (multiFile) {
-//         while (!file.isEmpty()) {
-//             // When using the OFN_EXPLORER flag, the file list is null delimited.
-//             // When you create a String from a ptr to this list, it will use strlen to look for the null character.
-//             // Then we find the next file path string by using the length of the string we just created.
-//             WCHAR* nextFilePtr = files + file.length() + 1;
-//             String nextFile(nextFilePtr);
-//             // If multiple files are selected, there will be a directory name first, which we don't want to add to the vector.
-//             // We know a single file was selected if there is only one filename in the list.  
-//             // In that case, we don't want to skip adding the first (and only) name.
-//             if (files != fileBuf.data() || nextFile.isEmpty())
-//                 fileList.append(file);
-//             files = nextFilePtr;
-//             file = nextFile;
-//         }
-//     } else
-//         fileList.append(file);
-//     ASSERT(fileList.size());
-// 
-//     for (size_t i = 0; i < fileList.size(); ++i)
-//         wsFileNames[i] = fileList[i];
-//     completion->didChooseFile(wsFileNames);
-//
-//     // FIXME: Show some sort of error if too many files are selected and the buffer is too small.  For now, this will fail silently.
-//     return true;
+}
+
+void WebPageImpl::willEnterDebugLoop()
+{
+    if (m_devToolsAgent)
+        m_isEnterDebugLoop = true;
+
+    if (m_devToolsClient)
+        m_webViewImpl->setIgnoreInputEvents(false);
+}
+
+void WebPageImpl::didExitDebugLoop()
+{
+    if (m_devToolsAgent)
+        m_isEnterDebugLoop = false;
+
+    if (m_devToolsClient)
+        m_webViewImpl->setIgnoreInputEvents(true);
 }
 
 bool WebPageImpl::initSetting()
