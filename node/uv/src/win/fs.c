@@ -658,7 +658,7 @@ void fs__write(uv_fs_t* req) {
       output[len] = '\n';
       output[len + 1] = 0;
       strncpy(output, base, len);
-      OutputDebugStringW(L"Node:");
+      OutputDebugStringW(L"fs.c.Node:");
       OutputDebugStringA(output);
       free(output);
       incremental_bytes = len;
