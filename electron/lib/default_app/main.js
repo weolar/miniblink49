@@ -174,7 +174,7 @@ if (option.file && !option.webdriver) {
 } else if (option.interactive) {
   startRepl()
 } else {
-  const indexPath = path.join(__dirname, '/index.html')
+  const indexPath = path.join(__dirname, '/testmenu.html')
   loadApplicationByUrl(`file://${indexPath}`)
 }
 
@@ -252,130 +252,10 @@ app.once('ready', () => {
         }
       ]
     },
-    {
-      role: 'window',
-      submenu: [
-        {
-          role: 'minimize'
-        },
-        {
-          role: 'close'
-        }
-      ]
-    },
-    {
-      role: 'help',
-      submenu: [
-        {
-          label: 'Learn More',
-          click () {
-            shell.openExternal('http://electron.atom.io')
-          }
-        },
-        {
-          label: 'Documentation',
-          click () {
-            shell.openExternal(
-              `https://github.com/electron/electron/tree/v${process.versions.electron}/docs#readme`
-            )
-          }
-        },
-        {
-          label: 'Community Discussions',
-          click () {
-            shell.openExternal('https://discuss.atom.io/c/electron')
-          }
-        },
-        {
-          label: 'Search Issues',
-          click () {
-            shell.openExternal('https://github.com/electron/electron/issues')
-          }
-        }
-      ]
-    }
   ]
 
-  if (process.platform === 'darwin') {
-    template.unshift({
-      label: 'Electron',
-      submenu: [
-        {
-          role: 'about'
-        },
-        {
-          type: 'separator'
-        },
-        {
-          role: 'services',
-          submenu: []
-        },
-        {
-          type: 'separator'
-        },
-        {
-          role: 'hide'
-        },
-        {
-          role: 'hideothers'
-        },
-        {
-          role: 'unhide'
-        },
-        {
-          type: 'separator'
-        },
-        {
-          role: 'quit'
-        }
-      ]
-    })
-    template[1].submenu.push(
-      {
-        type: 'separator'
-      },
-      {
-        label: 'Speech',
-        submenu: [
-          {
-            role: 'startspeaking'
-          },
-          {
-            role: 'stopspeaking'
-          }
-        ]
-      }
-    )
-    template[3].submenu = [
-      {
-        role: 'close'
-      },
-      {
-        role: 'minimize'
-      },
-      {
-        role: 'zoom'
-      },
-      {
-        type: 'separator'
-      },
-      {
-        role: 'front'
-      }
-    ]
-  } else {
-    template.unshift({
-      label: 'File',
-      submenu: [
-        {
-          role: 'quit'
-        }
-      ]
-    })
-  }
-
-  const menu = Menu.buildFromTemplate(template)
-  Menu.setApplicationMenu(menu)
+  //const menu = Menu.buildFromTemplate(template)
+  //Menu.setApplicationMenu(menu)
 })
 
 // test

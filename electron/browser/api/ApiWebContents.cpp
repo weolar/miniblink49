@@ -192,7 +192,7 @@ void WebContents::staticDidCreateScriptContextCallback(wkeWebView webView, wkeWe
 }
 
 void WebContents::onDidCreateScriptContext(wkeWebView webView, wkeWebFrameHandle frame, v8::Local<v8::Context>* context, int extensionGroup, int worldId) {
-    if (m_nodeBinding || !wkeWebFrameIsMainFrame(frame))
+    if (m_nodeBinding || !wkeIsMainFrame(webView, frame))
         return;
 
     BlinkMicrotaskSuppressionHandle handle = nodeBlinkMicrotaskSuppressionEnter((*context)->GetIsolate());
@@ -271,15 +271,15 @@ static std::vector<v8::Local<v8::Value>> listValueToVector(v8::Isolate* isolate,
     return result;
 }
 
-static void emitIPCEvent(wkeWebFrameHandle frame, const std::string& channel, const base::ListValue& args) {
-    if (!frame || wkeIsWebRemoteFrame(frame))
+static void emitIPCEvent(wkeWebView view, wkeWebFrameHandle frame, const std::string& channel, const base::ListValue& args) {
+    if (!frame || wkeIsWebRemoteFrame(view, frame))
         return;
 
     v8::Isolate* isolate = (v8::Isolate*)wkeGetBlinkMainThreadIsolate();
     v8::HandleScope handleScope(isolate);
 
     v8::Local<v8::Context> context;
-    wkeWebFrameGetMainWorldScriptContext(frame, &context);
+    wkeWebFrameGetMainWorldScriptContext(view, frame, &context);
     v8::Context::Scope contextScope(context);
 
     // Only emit IPC event for context with node integration.
@@ -307,7 +307,7 @@ void WebContents::anyPostMessageToRenderer(const std::string& channel, const bas
 
     ThreadCall::callBlinkThreadAsync([self, id, channelWrap, listParamsWrap] {
         if (IdLiveDetect::get()->isLive(id)) {
-            emitIPCEvent(wkeWebFrameGetMainFrame(self->m_view), *channelWrap, *listParamsWrap);
+            emitIPCEvent(self->m_view, wkeWebFrameGetMainFrame(self->m_view), *channelWrap, *listParamsWrap);
         }
 
         delete channelWrap;

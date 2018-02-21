@@ -11,17 +11,20 @@ electron.app = new App();
 const EventEmitter = require('events').EventEmitter;
 Object.setPrototypeOf(App.prototype, EventEmitter.prototype);
 ////////////////////////////////////////////////////////////////
+const MenuItem = require('./api/menu-item');
+electron.MenuItem = MenuItem;
+
 const Menu = require('./api/menu');
 electron.Menu = Menu;
 ////////////////////////////////////////////////////////////////
-function MenuItem(option) {
-	this.enabled = false;
-	this.visible = false;
-	this.checked = false;
-	this.label = false;
-	this.click = false;
-}
-electron.MenuItem = MenuItem;
+//function MenuItem(option) {
+//	this.enabled = false;
+//	this.visible = false;
+//	this.checked = false;
+//	this.label = false;
+//	this.click = false;
+//}
+//electron.MenuItem = MenuItem;
 ////////////////////////////////////////////////////////////////
 const isPromise = require('./../common/api/is-promise').isPromise;
 electron.isPromise = isPromise;
