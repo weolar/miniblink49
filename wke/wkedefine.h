@@ -418,35 +418,35 @@ public:
 
 #define WKE_DEFINE_ITERATOR0(returnVal, name, description) \
     typedef returnVal(WKE_CALL_TYPE* FN_##name)(); \
-    __declspec(selectany) FN_##name name;
+    __declspec(selectany) FN_##name name = ((void*)0);
 
 #define WKE_DEFINE_ITERATOR1(returnVal, name, p1, description) \
     typedef returnVal(WKE_CALL_TYPE* FN_##name)(p1); \
-    __declspec(selectany) FN_##name name;
+    __declspec(selectany) FN_##name name = ((void*)0);
 
 #define WKE_DEFINE_ITERATOR2(returnVal, name, p1, p2, description) \
     typedef returnVal(WKE_CALL_TYPE* FN_##name)(p1, p2); \
-    __declspec(selectany) FN_##name name;
+    __declspec(selectany) FN_##name name = ((void*)0);
 
 #define WKE_DEFINE_ITERATOR3(returnVal, name, p1, p2, p3, description) \
     typedef returnVal(WKE_CALL_TYPE* FN_##name)(p1, p2, p3); \
-    __declspec(selectany) FN_##name name;
+    __declspec(selectany) FN_##name name = ((void*)0);
 
 #define WKE_DEFINE_ITERATOR4(returnVal, name, p1, p2, p3, p4, description) \
     typedef returnVal(WKE_CALL_TYPE* FN_##name)(p1, p2, p3, p4); \
-    __declspec(selectany) FN_##name name;
+    __declspec(selectany) FN_##name name = ((void*)0);
 
 #define WKE_DEFINE_ITERATOR5(returnVal, name, p1, p2, p3, p4, p5, description) \
     typedef returnVal(WKE_CALL_TYPE* FN_##name)(p1, p2, p3, p4, p5); \
-    __declspec(selectany) FN_##name name;
+    __declspec(selectany) FN_##name name = ((void*)0);
 
 #define WKE_DEFINE_ITERATOR6(returnVal, name, p1, p2, p3, p4, p5, p6, description) \
     typedef returnVal(WKE_CALL_TYPE* FN_##name)(p1, p2, p3, p4, p5, p6); \
-    __declspec(selectany) FN_##name name;
+    __declspec(selectany) FN_##name name = ((void*)0);
 
 #define WKE_DEFINE_ITERATOR11(returnVal, name, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, description) \
     typedef returnVal(WKE_CALL_TYPE* FN_##name)(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11); \
-    __declspec(selectany) FN_##name name;
+    __declspec(selectany) FN_##name name = ((void*)0);
 
 // ---
 
@@ -479,7 +479,7 @@ public:
 #define WKE_GET_PTR_ITERATOR(name) \
     name = (FN_##name)::GetProcAddress(hMod, #name); \
     if (!name) \
-        MessageBoxA(nullptr, "wke api not found", #name, 0);
+        MessageBoxA(((void*)0), "wke api not found", #name, 0);
 
 #define WKE_GET_PTR_ITERATOR0(returnVal, name, description) \
     WKE_GET_PTR_ITERATOR(name);
@@ -882,13 +882,13 @@ inline void wkeInitializeEx(const wkeSettings* settings)
 
 inline void wkeInit()
 {
-    wkeInitializeEx(nullptr);
+    wkeInitializeEx(((void*)0));
     return;
 }
 
 inline void wkeInitialize()
 {
-    wkeInitializeEx(nullptr);
+    wkeInitializeEx(((void*)0));
     return;
 }
 
