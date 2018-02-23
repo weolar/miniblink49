@@ -172,7 +172,7 @@ void wkeSetDragEnable(wkeWebView webView, bool b)
     g_isSetDragEnable = b;
 }
 
-void wkeSetDebugConfig(wkeWebView webView, const char* debugString)
+void wkeSetDebugConfig(wkeWebView webView, const char* debugString, const char* param)
 {
     String stringDebug(debugString);
 
@@ -188,6 +188,8 @@ void wkeSetDebugConfig(wkeWebView webView, const char* debugString)
             blink::RuntimeEnabledFeatures::setDrawTileLineEnabled(true);
         } else if ("alwaysInflateDirtyRect" == item) {
 
+        } else if ("showDevTools" == item) {
+            webView->showDevTools(param);
         }
     }
 }
@@ -845,8 +847,13 @@ bool wkeIsWebRemoteFrame(wkeWebView webView, wkeWebFrameHandle frameId)
 
 wkeWebFrameHandle wkeWebFrameGetMainFrame(wkeWebView webView)
 {
-    blink::WebFrame* frame = webView->webPage()->mainFrame();
-    return (wkeWebFrameHandle)webView->webPage()->getFrameIdByBlinkFrame(frame);
+    content::WebPage* page = webView->webPage();
+    if (!page)
+        return nullptr;
+    blink::WebFrame* frame = page->mainFrame();
+    if (!frame)
+        return nullptr;
+    return wke::CWebView::frameIdTowkeWebFrameHandle(page, page->getFrameIdByBlinkFrame(frame));
 }
 
 jsValue wkeRunJsByFrame(wkeWebView webView, wkeWebFrameHandle frameId, const utf8* script, bool isInClosure)

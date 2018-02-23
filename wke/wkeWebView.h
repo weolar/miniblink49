@@ -197,7 +197,8 @@ public:
     wkeRect caretRect();
 
     static int64_t wkeWebFrameHandleToFrameId(content::WebPage* page, wkeWebFrameHandle frameId);
-    
+    static wkeWebFrameHandle frameIdTowkeWebFrameHandle(content::WebPage* page, int64_t frameId);
+
     jsValue runJS(const wchar_t* script) override;
     jsValue runJS(const utf8* script) override;
     jsValue runJsInFrame(wkeWebFrameHandle frameId, const utf8* script, bool isInClosure);
@@ -263,7 +264,11 @@ public:
     String getProxy() const { return m_proxy; }
     net::WebURLLoaderManager::ProxyType getProxyType() const { return m_proxyType; }
 
+    void showDevTools(const utf8* url);
+
 protected:
+    friend class ShowDevToolsTaskObserver;
+
     HWND m_hWnd;
     void _initHandler();
     void _initPage();
@@ -309,6 +314,10 @@ protected:
 
     String m_proxy;
     net::WebURLLoaderManager::ProxyType m_proxyType;
+
+    friend class ShowDevToolsTaskObserver;
+    bool m_isCreatedDevTools;
+    wkeWebView m_devToolsWebView;
 };
 
 };//namespace wke

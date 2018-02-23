@@ -567,7 +567,7 @@ public:
     ITERATOR1(void, wkeConfigure, const wkeSettings* settings, "") \
     ITERATOR0(bool, wkeIsInitialize, "") \
     \
-    ITERATOR2(void, wkeSetDebugConfig, wkeWebView webView, const char* debugString, "") \
+    ITERATOR3(void, wkeSetDebugConfig, wkeWebView webView, const char* debugString, const char* param, "") \
     \
     ITERATOR0(void, wkeFinalize, "") \
     ITERATOR0(void, wkeUpdate, "") \

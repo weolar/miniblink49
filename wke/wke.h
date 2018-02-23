@@ -234,7 +234,7 @@ WKE_API void wkeInitializeEx(const wkeSettings* settings);
 WKE_API void wkeConfigure(const wkeSettings* settings);
 WKE_API bool wkeIsInitialize();
 
-WKE_API void wkeSetDebugConfig(wkeWebView webView, const char* debugString);
+WKE_API void wkeSetDebugConfig(wkeWebView webView, const char* debugString, const char* param);
 
 WKE_API void wkeFinalize();
 WKE_API void wkeUpdate();

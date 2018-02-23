@@ -12,6 +12,7 @@
 #include "content/web_impl_win/WebCookieJarCurlImpl.h"
 #include "content/browser/WebFrameClientImpl.h"
 #include "third_party/WebKit/public/platform/WebDragData.h"
+#include "third_party/WebKit/public/platform/WebThread.h"
 #include "third_party/WebKit/public/web/WebDocument.h"
 #include "third_party/WebKit/public/web/WebScriptSource.h"
 #include "third_party/WebKit/Source/web/WebViewImpl.h"
@@ -36,6 +37,7 @@ CWebView::CWebView()
     , m_name("", 0)
     , m_url("", 0)
     , m_isCokieEnabled(true)
+    , m_isCreatedDevTools(false)
 {
     _initPage();
     _initHandler();
@@ -120,6 +122,17 @@ void CWebView::loadPostURL(const utf8* inUrl, const char * poastData, int nLen )
 void CWebView::loadPostURL(const wchar_t * inUrl,const char * poastData, int nLen)
 {
     loadPostURL(String(inUrl).utf8().data(), poastData,nLen);
+}
+
+static bool checkIsFileUrl(const utf8* inUrl)
+{
+    if (nullptr != strstr(inUrl, "http:"))
+        return false;
+    if (nullptr != strstr(inUrl, "https:"))
+        return false;
+    if (nullptr != strstr(inUrl, "file:"))
+        return true;
+    return false;
 }
 
 static bool trimPathBody(const utf8* inUrl, int length, bool isFile, std::vector<char>* out)
@@ -217,7 +230,7 @@ void CWebView::_loadURL(const utf8* inUrl, bool isFile)
 
 void CWebView::loadURL(const utf8* inUrl)
 {
-    _loadURL(inUrl, false);
+    _loadURL(inUrl, checkIsFileUrl(inUrl));
 }
 
 void CWebView::loadURL(const wchar_t* url)
@@ -831,6 +844,11 @@ int64_t CWebView::wkeWebFrameHandleToFrameId(content::WebPage* page, wkeWebFrame
     return (int64_t)frameId + page->getFirstFrameId() - 1;
 }
 
+wkeWebFrameHandle CWebView::frameIdTowkeWebFrameHandle(content::WebPage* page, int64_t frameId)
+{
+    return (wkeWebFrameHandle)(frameId - page->getFirstFrameId() + 1);
+}
+
 static jsValue runJsImpl(blink::WebFrame* mainFrame, String* codeString, bool isInClosure)
 {
     if (codeString->startsWith("javascript:", WTF::TextCaseInsensitive))
@@ -1247,6 +1265,48 @@ void CWebView::setProxyInfo(const String& host,	unsigned long port,	net::WebURLL
 
         m_proxy = String("http://") + userPass + host + ":" + String::number(port);
     }
+}
+
+class ShowDevToolsTaskObserver : public blink::WebThread::TaskObserver {
+public:
+    ShowDevToolsTaskObserver(CWebView* parent, const String& url)
+    {
+        m_parent = parent;
+        m_url = url;
+    }
+    virtual ~ShowDevToolsTaskObserver() {}
+
+    static void handleDevToolsWebViewDestroy(wkeWebView webWindow, void* param)
+    {
+        CWebView* parent = (CWebView*)param;
+        parent->m_isCreatedDevTools = false;
+    }
+
+    virtual void willProcessTask() override
+    {
+        wkeWebView devToolsWebView = wkeCreateWebWindow(WKE_WINDOW_TYPE_POPUP, nullptr, 200, 200, 800, 600);
+        m_parent->m_devToolsWebView = devToolsWebView;
+
+        content::WebPage::connetDevTools(devToolsWebView->webPage(), m_parent->webPage());
+
+        wkeLoadURL(devToolsWebView, m_url.utf8().data());
+        wkeShowWindow(devToolsWebView, TRUE);
+        wkeOnWindowDestroy(devToolsWebView, handleDevToolsWebViewDestroy, m_parent);
+        blink::Platform::current()->currentThread()->removeTaskObserver(this);
+    }
+    virtual void didProcessTask() {}
+
+private:
+    CWebView* m_parent;
+    String m_url;
+};
+
+void CWebView::showDevTools(const utf8* url)
+{
+    if (m_isCreatedDevTools)
+        return;
+    m_isCreatedDevTools = true;
+    blink::Platform::current()->currentThread()->addTaskObserver(new ShowDevToolsTaskObserver(this, url));
 }
 
 } // namespace wke
