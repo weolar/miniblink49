@@ -271,43 +271,43 @@ DECLARE_INTERFACE_(IKsClockPropertySet, IUnknown)
     STDMETHOD(KsGetTime)(
         THIS_
         LONGLONG* Time
-    ) PURE;
+    ) = 0;
     STDMETHOD(KsSetTime)(
         THIS_
         LONGLONG Time
-    ) PURE;
+    ) = 0;
     STDMETHOD(KsGetPhysicalTime)(
         THIS_
         LONGLONG* Time
-    ) PURE;
+    ) = 0;
     STDMETHOD(KsSetPhysicalTime)(
         THIS_
         LONGLONG Time
-    ) PURE;
+    ) = 0;
     STDMETHOD(KsGetCorrelatedTime)(
         THIS_
         KSCORRELATED_TIME* CorrelatedTime
-    ) PURE;
+    ) = 0;
     STDMETHOD(KsSetCorrelatedTime)(
         THIS_
         KSCORRELATED_TIME* CorrelatedTime
-    ) PURE;
+    ) = 0;
     STDMETHOD(KsGetCorrelatedPhysicalTime)(
         THIS_
         KSCORRELATED_TIME* CorrelatedTime
-    ) PURE;
+    ) = 0;
     STDMETHOD(KsSetCorrelatedPhysicalTime)(
         THIS_
         KSCORRELATED_TIME* CorrelatedTime
-    ) PURE;
+    ) = 0;
     STDMETHOD(KsGetResolution)(
         THIS_
         KSRESOLUTION* Resolution
-    ) PURE;
+    ) = 0;
     STDMETHOD(KsGetState)(
         THIS_
         KSSTATE* State
-    ) PURE;
+    ) = 0;
 };
 
 
@@ -318,18 +318,18 @@ DECLARE_INTERFACE_(IKsAllocator, IUnknown)
 {
     STDMETHOD_(HANDLE, KsGetAllocatorHandle)(
         THIS
-    ) PURE;
+    ) = 0;
     STDMETHOD_(KSALLOCATORMODE, KsGetAllocatorMode)(
         THIS
-    ) PURE;
+    ) = 0;
     STDMETHOD(KsGetAllocatorStatus)(
         THIS_
         PKSSTREAMALLOCATOR_STATUS AllocatorStatus
-    ) PURE;
+    ) = 0;
     STDMETHOD_(VOID, KsSetAllocatorMode)(
         THIS_
         KSALLOCATORMODE Mode
-    ) PURE;
+    ) = 0;
 };
 
 interface DECLSPEC_UUID("091bb63a-603f-11d1-b067-00a0c9062802") IKsAllocatorEx;
@@ -339,19 +339,19 @@ DECLARE_INTERFACE_(IKsAllocatorEx, IKsAllocator)
 {
     STDMETHOD_(PALLOCATOR_PROPERTIES_EX, KsGetProperties)(
         THIS
-    ) PURE;
+    ) = 0;
     STDMETHOD_(VOID, KsSetProperties)(
         THIS_
         PALLOCATOR_PROPERTIES_EX 
-    ) PURE;
+    ) = 0;
     STDMETHOD_(VOID, KsSetAllocatorHandle)(
         THIS_
         HANDLE AllocatorHandle
-    ) PURE;
+    ) = 0;
     STDMETHOD_(HANDLE, KsCreateAllocatorAndGetHandle)(
         THIS_
         IKsPin*   KsPin
-    ) PURE;
+    ) = 0;
 };  
 
 typedef enum {
@@ -370,56 +370,56 @@ DECLARE_INTERFACE_(IKsPin, IUnknown)
     STDMETHOD(KsQueryMediums)(
         THIS_
         PKSMULTIPLE_ITEM* MediumList
-    ) PURE;
+    ) = 0;
     STDMETHOD(KsQueryInterfaces)(
         THIS_
         PKSMULTIPLE_ITEM* InterfaceList
-    ) PURE;
+    ) = 0;
     STDMETHOD(KsCreateSinkPinHandle)(
         THIS_
         KSPIN_INTERFACE& Interface,
         KSPIN_MEDIUM& Medium
-    ) PURE;
+    ) = 0;
     STDMETHOD(KsGetCurrentCommunication)(
         THIS_
         KSPIN_COMMUNICATION *Communication,
         KSPIN_INTERFACE *Interface,
         KSPIN_MEDIUM *Medium
-    ) PURE;
+    ) = 0;
     STDMETHOD(KsPropagateAcquire)(
         THIS
-    ) PURE;
+    ) = 0;
     STDMETHOD(KsDeliver)(
         THIS_
         IMediaSample* Sample,
         ULONG Flags
-    ) PURE;
+    ) = 0;
     STDMETHOD(KsMediaSamplesCompleted)(
         THIS_
         PKSSTREAM_SEGMENT StreamSegment
-    ) PURE;
+    ) = 0;
     STDMETHOD_(IMemAllocator *, KsPeekAllocator)(
         THIS_
         KSPEEKOPERATION Operation
-    ) PURE;
+    ) = 0;
     STDMETHOD(KsReceiveAllocator)(
         THIS_
         IMemAllocator *MemAllocator
-    ) PURE;
+    ) = 0;
     STDMETHOD(KsRenegotiateAllocator)(
         THIS
-    ) PURE;
+    ) = 0;
     STDMETHOD_(LONG, KsIncrementPendingIoCount)(
         THIS
-    ) PURE;
+    ) = 0;
     STDMETHOD_(LONG, KsDecrementPendingIoCount)(
         THIS
-    ) PURE;
+    ) = 0;
     STDMETHOD(KsQualityNotify)(
         THIS_
         ULONG Proportion,
         REFERENCE_TIME TimeDelta
-    ) PURE;
+    ) = 0;
 };
 
 interface DECLSPEC_UUID("7bb38260-d19c-11d2-b38a-00a0c95ec22e") IKsPinEx;
@@ -431,7 +431,7 @@ DECLARE_INTERFACE_(IKsPinEx, IKsPin)
         THIS_
         IMediaSample* Sample,
         HRESULT hr
-    ) PURE;        
+    ) = 0;        
 };
                          
 interface DECLSPEC_UUID("e539cd90-a8b4-11d1-8189-00a0c9062802") IKsPinPipe;
@@ -444,47 +444,47 @@ DECLARE_INTERFACE_(IKsPinPipe, IUnknown)
         PKSALLOCATOR_FRAMING_EX *FramingEx,
         PFRAMING_PROP FramingProp,
         FRAMING_CACHE_OPS Option
-    ) PURE;
+    ) = 0;
     STDMETHOD(KsSetPinFramingCache)(
         THIS_
         PKSALLOCATOR_FRAMING_EX FramingEx,
         PFRAMING_PROP FramingProp,
         FRAMING_CACHE_OPS Option
-    ) PURE;
+    ) = 0;
     STDMETHOD_(IPin*, KsGetConnectedPin)(
         THIS
-    ) PURE;
+    ) = 0;
     STDMETHOD_(IKsAllocatorEx*, KsGetPipe)(
         THIS_
         KSPEEKOPERATION Operation
-    ) PURE;
+    ) = 0;
     STDMETHOD(KsSetPipe)(
         THIS_
         IKsAllocatorEx *KsAllocator
-    ) PURE;
+    ) = 0;
     STDMETHOD_(ULONG, KsGetPipeAllocatorFlag)(
         THIS
-    ) PURE;
+    ) = 0;
     STDMETHOD(KsSetPipeAllocatorFlag)(
         THIS_
         ULONG Flag
-    ) PURE;
+    ) = 0;
     STDMETHOD_(GUID, KsGetPinBusCache)(
         THIS
-    ) PURE;
+    ) = 0;
     STDMETHOD(KsSetPinBusCache)(
         THIS_
         GUID Bus
-    ) PURE;
+    ) = 0;
 //
 // very useful methods for tracing.
 //
     STDMETHOD_(PWCHAR, KsGetPinName)(
         THIS
-    ) PURE;
+    ) = 0;
     STDMETHOD_(PWCHAR, KsGetFilterName)(
         THIS
-    ) PURE;
+    ) = 0;
 };
 
 
@@ -496,7 +496,7 @@ DECLARE_INTERFACE_(IKsPinFactory, IUnknown)
     STDMETHOD(KsPinFactory)(
         THIS_
         ULONG* PinFactory
-    ) PURE;
+    ) = 0;
 };
 
 typedef enum {
@@ -515,25 +515,25 @@ DECLARE_INTERFACE_(IKsDataTypeHandler, IUnknown)
         PVOID StreamHeader,
         KSIOOPERATION IoOperation,
         BOOL Cancelled
-    ) PURE;
+    ) = 0;
     STDMETHOD(KsIsMediaTypeInRanges)(
         THIS_
         PVOID DataRanges
-        ) PURE;
+        ) = 0;
     STDMETHOD(KsPrepareIoOperation)(
         THIS_
         IMediaSample *Sample,
         PVOID StreamHeader,
         KSIOOPERATION IoOperation
-    ) PURE;
+    ) = 0;
     STDMETHOD(KsQueryExtendedSize)(
         THIS_
         ULONG* ExtendedSize
-    ) PURE;
+    ) = 0;
     STDMETHOD(KsSetMediaType)(
         THIS_
         const AM_MEDIA_TYPE* AmMediaType
-    ) PURE;
+    ) = 0;
 };
 
 interface DECLSPEC_UUID("827D1A0E-0F73-11D2-B27A-00A0C9223196") IKsDataTypeCompletion;
@@ -546,7 +546,7 @@ DECLARE_INTERFACE_(IKsDataTypeCompletion, IUnknown)
         HANDLE FilterHandle,
         ULONG PinFactoryId,
         AM_MEDIA_TYPE* AmMediaType
-    ) PURE;
+    ) = 0;
 };
 
 interface DECLSPEC_UUID("D3ABC7E0-9A61-11d0-A40D-00A0C9223196") IKsInterfaceHandler;
@@ -557,7 +557,7 @@ DECLARE_INTERFACE_(IKsInterfaceHandler, IUnknown)
     STDMETHOD(KsSetPin)(
         THIS_
         IKsPin *KsPin
-    ) PURE;
+    ) = 0;
     STDMETHOD(KsProcessMediaSamples)(
         THIS_
         IKsDataTypeHandler *KsDataTypeHandler,
@@ -565,11 +565,11 @@ DECLARE_INTERFACE_(IKsInterfaceHandler, IUnknown)
         PLONG SampleCount,
         KSIOOPERATION IoOperation,
         PKSSTREAM_SEGMENT *StreamSegment
-    ) PURE;
+    ) = 0;
     STDMETHOD(KsCompleteIo)(
         THIS_
         PKSSTREAM_SEGMENT StreamSegment
-    ) PURE;
+    ) = 0;
 };
 
 
@@ -595,7 +595,7 @@ DECLARE_INTERFACE_(IKsObject, IUnknown)
 {
     STDMETHOD_(HANDLE, KsGetObjectHandle)(
         THIS
-    ) PURE;
+    ) = 0;
 };
 
 interface DECLSPEC_UUID("97ebaacb-95bd-11d0-a3ea-00a0c9223196") IKsQualityForwarder;
@@ -606,7 +606,7 @@ DECLARE_INTERFACE_(IKsQualityForwarder, IKsObject)
     STDMETHOD_(VOID, KsFlushClient)(
         THIS_
         IKsPin* Pin
-    ) PURE;
+    ) = 0;
 };
 
 interface DECLSPEC_UUID("412bd695-f84b-46c1-ac73-54196dbc8fa7") IKsNotifyEvent;
@@ -619,7 +619,7 @@ DECLARE_INTERFACE_(IKsNotifyEvent, IUnknown)
         ULONG Event,
         ULONG_PTR lParam1,
         ULONG_PTR lParam2
-    ) PURE;
+    ) = 0;
 };
 
 KSDDKAPI
@@ -741,7 +741,7 @@ DECLARE_INTERFACE_(IKsPropertySet, IUnknown)
         IN ULONG InstanceLength,
         IN LPVOID PropertyData,
         IN ULONG DataLength
-    ) PURE;
+    ) = 0;
 
     STDMETHOD(Get)(
         THIS_
@@ -752,14 +752,14 @@ DECLARE_INTERFACE_(IKsPropertySet, IUnknown)
         OUT LPVOID PropertyData,
         IN ULONG DataLength,
         OUT ULONG* BytesReturned
-    ) PURE;
+    ) = 0;
 
     STDMETHOD(QuerySupported)(
         THIS_
         IN REFGUID PropSet,
         IN ULONG Id,
         OUT ULONG* TypeSupport
-    ) PURE;
+    ) = 0;
 };
 
 #endif // DECLARE_INTERFACE_
@@ -783,7 +783,7 @@ DECLARE_INTERFACE_(IKsControl, IUnknown)
         IN OUT LPVOID PropertyData,
         IN ULONG DataLength,
         OUT ULONG* BytesReturned
-    ) PURE;
+    ) = 0;
     STDMETHOD(KsMethod)(
         THIS_
         IN PKSMETHOD Method,
@@ -791,7 +791,7 @@ DECLARE_INTERFACE_(IKsControl, IUnknown)
         IN OUT LPVOID MethodData,
         IN ULONG DataLength,
         OUT ULONG* BytesReturned
-    ) PURE;
+    ) = 0;
     STDMETHOD(KsEvent)(
         THIS_
         IN PKSEVENT Event OPTIONAL,
@@ -799,7 +799,7 @@ DECLARE_INTERFACE_(IKsControl, IUnknown)
         IN OUT LPVOID EventData,
         IN ULONG DataLength,
         OUT ULONG* BytesReturned
-    ) PURE;
+    ) = 0;
 };
 
 #endif // DECLARE_INTERFACE_
@@ -817,11 +817,11 @@ DECLARE_INTERFACE_(IKsAggregateControl, IUnknown)
     STDMETHOD(KsAddAggregate)(
         THIS_
         IN REFGUID AggregateClass
-    ) PURE;
+    ) = 0;
     STDMETHOD(KsRemoveAggregate)(
         THIS_
         IN REFGUID AggregateClass
-    ) PURE;
+    ) = 0;
 };
 
 #endif // DECLARE_INTERFACE_
@@ -844,7 +844,7 @@ DECLARE_INTERFACE_(IKsTopology, IUnknown)
         IN IUnknown* UnkOuter OPTIONAL,
         IN REFGUID InterfaceId,
         OUT LPVOID* Interface
-    ) PURE;
+    ) = 0;
 };
 
 #endif // DECLARE_INTERFACE_

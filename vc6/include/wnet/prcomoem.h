@@ -165,9 +165,9 @@ DECLARE_INTERFACE_(IPrintOemCommon, IUnknown)
     // IUnknown methods
     //
 
-    STDMETHOD(QueryInterface) (THIS_ REFIID riid, LPVOID* ppvObj) PURE;
-    STDMETHOD_(ULONG, AddRef) (THIS) PURE;
-    STDMETHOD_(ULONG, Release) (THIS) PURE;
+    STDMETHOD(QueryInterface) (THIS_ REFIID riid, LPVOID* ppvObj) = 0;
+    STDMETHOD_(ULONG, AddRef) (THIS) = 0;
+    STDMETHOD_(ULONG, Release) (THIS) = 0;
 
     //
     // IPrintOemCommon methods
@@ -180,13 +180,13 @@ DECLARE_INTERFACE_(IPrintOemCommon, IUnknown)
     STDMETHOD(GetInfo) (THIS_   DWORD   dwMode,
                                 PVOID   pBuffer,
                                 DWORD   cbSize,
-                                PDWORD  pcbNeeded) PURE;
+                                PDWORD  pcbNeeded) = 0;
     //
     // Method for OEM private devmode handling
     //
 
     STDMETHOD(DevMode) (THIS_   DWORD       dwMode,
-                                POEMDMPARAM pOemDMParam) PURE;
+                                POEMDMPARAM pOemDMParam) = 0;
 };
 
 #ifndef KERNEL_MODE
@@ -210,9 +210,9 @@ DECLARE_INTERFACE_(IPrintOemUI, IPrintOemCommon)
     // IUnknown methods
     //
 
-    STDMETHOD(QueryInterface) (THIS_ REFIID riid, LPVOID* ppvObj)PURE;
-    STDMETHOD_(ULONG, AddRef) (THIS)PURE;
-    STDMETHOD_(ULONG, Release) (THIS)PURE;
+    STDMETHOD(QueryInterface) (THIS_ REFIID riid, LPVOID* ppvObj)= 0;
+    STDMETHOD_(ULONG, AddRef) (THIS)= 0;
+    STDMETHOD_(ULONG, Release) (THIS)= 0;
 
     //
     // IPrintOemCommon methods
@@ -225,13 +225,13 @@ DECLARE_INTERFACE_(IPrintOemUI, IPrintOemCommon)
     STDMETHOD(GetInfo) (THIS_   DWORD   dwMode,
                                 PVOID   pBuffer,
                                 DWORD   cbSize,
-                                PDWORD  pcbNeeded) PURE;
+                                PDWORD  pcbNeeded) = 0;
     //
     // Method for OEM private devmode handling
     //
 
     STDMETHOD(DevMode) (THIS_   DWORD       dwMode,
-                                POEMDMPARAM pOemDMParam) PURE;
+                                POEMDMPARAM pOemDMParam) = 0;
 
     //
     // IPrintOemUI methods
@@ -241,7 +241,7 @@ DECLARE_INTERFACE_(IPrintOemUI, IPrintOemCommon)
     // Method for publishing Driver interface.
     //
 
-    STDMETHOD(PublishDriverInterface) (THIS_ IUnknown *pIUnknown) PURE;
+    STDMETHOD(PublishDriverInterface) (THIS_ IUnknown *pIUnknown) = 0;
 
 
     //
@@ -251,7 +251,7 @@ DECLARE_INTERFACE_(IPrintOemUI, IPrintOemCommon)
     STDMETHOD(CommonUIProp) (THIS_
             DWORD  dwMode,
             POEMCUIPPARAM   pOemCUIPParam
-            )PURE;
+            )= 0;
 
     //
     // DocumentPropertySheets
@@ -260,7 +260,7 @@ DECLARE_INTERFACE_(IPrintOemUI, IPrintOemCommon)
     STDMETHOD(DocumentPropertySheets) (THIS_
             PPROPSHEETUI_INFO   pPSUIInfo,
             LPARAM              lParam
-            )PURE;
+            )= 0;
 
     //
     // DevicePropertySheets
@@ -269,7 +269,7 @@ DECLARE_INTERFACE_(IPrintOemUI, IPrintOemCommon)
     STDMETHOD(DevicePropertySheets) (THIS_
             PPROPSHEETUI_INFO   pPSUIInfo,
             LPARAM              lParam
-            )PURE;
+            )= 0;
 
 
     //
@@ -281,7 +281,7 @@ DECLARE_INTERFACE_(IPrintOemUI, IPrintOemCommon)
             PDEVQUERYPRINT_INFO     pDQPInfo,
             PDEVMODE                pPublicDM,
             PVOID                   pOEMDM
-            )PURE;
+            )= 0;
 
     //
     // DeviceCapabilities
@@ -297,7 +297,7 @@ DECLARE_INTERFACE_(IPrintOemUI, IPrintOemCommon)
             PVOID       pOEMDM,
             DWORD       dwOld,
             DWORD       *dwResult
-            )PURE;
+            )= 0;
 
     //
     // UpgradePrinter
@@ -306,7 +306,7 @@ DECLARE_INTERFACE_(IPrintOemUI, IPrintOemCommon)
     STDMETHOD(UpgradePrinter) (THIS_
             DWORD   dwLevel,
             PBYTE   pDriverUpgradeInfo
-            )PURE;
+            )= 0;
 
     //
     // PrinterEvent
@@ -317,7 +317,7 @@ DECLARE_INTERFACE_(IPrintOemUI, IPrintOemCommon)
             INT     iDriverEvent,
             DWORD   dwFlags,
             LPARAM  lParam
-            )PURE;
+            )= 0;
 
     //
     // DriverEvent
@@ -328,7 +328,7 @@ DECLARE_INTERFACE_(IPrintOemUI, IPrintOemCommon)
             DWORD   dwLevel,
             LPBYTE  pDriverInfo,
             LPARAM  lParam
-            )PURE;
+            )= 0;
 
     //
     // QueryColorProfile
@@ -343,7 +343,7 @@ DECLARE_INTERFACE_(IPrintOemUI, IPrintOemCommon)
             VOID       *pvProfileData,
             ULONG      *pcbProfileData,
             FLONG      *pflProfileData
-            )PURE;
+            )= 0;
 
     //
     // FontInstallerDlgProc
@@ -354,7 +354,7 @@ DECLARE_INTERFACE_(IPrintOemUI, IPrintOemCommon)
             UINT    usMsg,
             WPARAM  wParam,
             LPARAM  lParam
-            )PURE;
+            )= 0;
 
     //
     // UpdateExternalFonts
@@ -364,7 +364,7 @@ DECLARE_INTERFACE_(IPrintOemUI, IPrintOemCommon)
             HANDLE  hPrinter,
             HANDLE  hHeap,
             PWSTR   pwstrCartridges
-           )PURE;
+           )= 0;
 };
 
 
@@ -382,9 +382,9 @@ DECLARE_INTERFACE_(IPrintOemUI2, IPrintOemUI)
     // IUnknown methods
     //
 
-    STDMETHOD(QueryInterface) (THIS_ REFIID riid, LPVOID* ppvObj)PURE;
-    STDMETHOD_(ULONG, AddRef) (THIS)PURE;
-    STDMETHOD_(ULONG, Release) (THIS)PURE;
+    STDMETHOD(QueryInterface) (THIS_ REFIID riid, LPVOID* ppvObj)= 0;
+    STDMETHOD_(ULONG, AddRef) (THIS)= 0;
+    STDMETHOD_(ULONG, Release) (THIS)= 0;
 
     //
     // IPrintOemCommon methods
@@ -397,13 +397,13 @@ DECLARE_INTERFACE_(IPrintOemUI2, IPrintOemUI)
     STDMETHOD(GetInfo) (THIS_   DWORD   dwMode,
                                 PVOID   pBuffer,
                                 DWORD   cbSize,
-                                PDWORD  pcbNeeded) PURE;
+                                PDWORD  pcbNeeded) = 0;
     //
     // Method for OEM private devmode handling
     //
 
     STDMETHOD(DevMode) (THIS_   DWORD       dwMode,
-                                POEMDMPARAM pOemDMParam) PURE;
+                                POEMDMPARAM pOemDMParam) = 0;
 
     //
     // IPrintOemUI methods
@@ -413,7 +413,7 @@ DECLARE_INTERFACE_(IPrintOemUI2, IPrintOemUI)
     // Method for publishing Driver interface.
     //
 
-    STDMETHOD(PublishDriverInterface) (THIS_ IUnknown *pIUnknown) PURE;
+    STDMETHOD(PublishDriverInterface) (THIS_ IUnknown *pIUnknown) = 0;
 
 
     //
@@ -423,7 +423,7 @@ DECLARE_INTERFACE_(IPrintOemUI2, IPrintOemUI)
     STDMETHOD(CommonUIProp) (THIS_
             DWORD  dwMode,
             POEMCUIPPARAM   pOemCUIPParam
-            )PURE;
+            )= 0;
 
     //
     // DocumentPropertySheets
@@ -432,7 +432,7 @@ DECLARE_INTERFACE_(IPrintOemUI2, IPrintOemUI)
     STDMETHOD(DocumentPropertySheets) (THIS_
             PPROPSHEETUI_INFO   pPSUIInfo,
             LPARAM              lParam
-            )PURE;
+            )= 0;
 
     //
     // DevicePropertySheets
@@ -441,7 +441,7 @@ DECLARE_INTERFACE_(IPrintOemUI2, IPrintOemUI)
     STDMETHOD(DevicePropertySheets) (THIS_
             PPROPSHEETUI_INFO   pPSUIInfo,
             LPARAM              lParam
-            )PURE;
+            )= 0;
 
 
     //
@@ -453,7 +453,7 @@ DECLARE_INTERFACE_(IPrintOemUI2, IPrintOemUI)
             PDEVQUERYPRINT_INFO     pDQPInfo,
             PDEVMODE                pPublicDM,
             PVOID                   pOEMDM
-            )PURE;
+            )= 0;
 
     //
     // DeviceCapabilities
@@ -469,7 +469,7 @@ DECLARE_INTERFACE_(IPrintOemUI2, IPrintOemUI)
             PVOID       pOEMDM,
             DWORD       dwOld,
             DWORD       *dwResult
-            )PURE;
+            )= 0;
 
     //
     // UpgradePrinter
@@ -478,7 +478,7 @@ DECLARE_INTERFACE_(IPrintOemUI2, IPrintOemUI)
     STDMETHOD(UpgradePrinter) (THIS_
             DWORD   dwLevel,
             PBYTE   pDriverUpgradeInfo
-            )PURE;
+            )= 0;
 
     //
     // PrinterEvent
@@ -489,7 +489,7 @@ DECLARE_INTERFACE_(IPrintOemUI2, IPrintOemUI)
             INT     iDriverEvent,
             DWORD   dwFlags,
             LPARAM  lParam
-            )PURE;
+            )= 0;
 
     //
     // DriverEvent
@@ -500,7 +500,7 @@ DECLARE_INTERFACE_(IPrintOemUI2, IPrintOemUI)
             DWORD   dwLevel,
             LPBYTE  pDriverInfo,
             LPARAM  lParam
-            )PURE;
+            )= 0;
 
     //
     // QueryColorProfile
@@ -515,7 +515,7 @@ DECLARE_INTERFACE_(IPrintOemUI2, IPrintOemUI)
             VOID       *pvProfileData,
             ULONG      *pcbProfileData,
             FLONG      *pflProfileData
-            )PURE;
+            )= 0;
 
     //
     // FontInstallerDlgProc
@@ -526,7 +526,7 @@ DECLARE_INTERFACE_(IPrintOemUI2, IPrintOemUI)
             UINT    usMsg,
             WPARAM  wParam,
             LPARAM  lParam
-            )PURE;
+            )= 0;
 
     //
     // UpdateExternalFonts
@@ -536,7 +536,7 @@ DECLARE_INTERFACE_(IPrintOemUI2, IPrintOemUI)
             HANDLE  hPrinter,
             HANDLE  hHeap,
             PWSTR   pwstrCartridges
-           )PURE;
+           )= 0;
 
     //
     // IPrintOemUI2 methods
@@ -551,7 +551,7 @@ DECLARE_INTERFACE_(IPrintOemUI2, IPrintOemUI)
             PDEVMODE    pDevmode,
             DWORD       dwLevel,
             LPBYTE      lpAttributeInfo
-           )PURE;
+           )= 0;
 
     //
     // Hide Standard UI
@@ -559,7 +559,7 @@ DECLARE_INTERFACE_(IPrintOemUI2, IPrintOemUI)
 
     STDMETHOD(HideStandardUI)  (THIS_
             DWORD       dwMode
-           )PURE;
+           )= 0;
 
     //
     // DocumentEvent
@@ -574,7 +574,7 @@ DECLARE_INTERFACE_(IPrintOemUI2, IPrintOemUI)
             ULONG       cbOut,
             PVOID       pvOut,
             PINT        piResult
-           )PURE;
+           )= 0;
 };
 
 
@@ -592,9 +592,9 @@ DECLARE_INTERFACE_(IPrintOemDriverUI, IUnknown)
     // IUnknown methods
     //
 
-    STDMETHOD(QueryInterface) (THIS_ REFIID riid, LPVOID* ppvObj)PURE;
-    STDMETHOD_(ULONG, AddRef) (THIS)PURE;
-    STDMETHOD_(ULONG, Release) (THIS)PURE;
+    STDMETHOD(QueryInterface) (THIS_ REFIID riid, LPVOID* ppvObj)= 0;
+    STDMETHOD_(ULONG, AddRef) (THIS)= 0;
+    STDMETHOD_(ULONG, Release) (THIS)= 0;
 
     //
     // IPrintOemDriverUI methods
@@ -611,7 +611,7 @@ DECLARE_INTERFACE_(IPrintOemDriverUI, IUnknown)
                         DWORD   cbSize,
                         PDWORD  pcbNeeded,
                         PDWORD  pdwOptionsReturned
-                        )PURE;
+                        )= 0;
 
     //
     // Helper function to allow OEM plugins upgrade private registry
@@ -622,7 +622,7 @@ DECLARE_INTERFACE_(IPrintOemDriverUI, IUnknown)
                         HANDLE   hPrinter,
                         PCSTR    pFeature,
                         PCSTR    pOption
-                        )PURE;
+                        )= 0;
 
     //
     // Helper function to allow OEM plugins to update the driver UI
@@ -635,7 +635,7 @@ DECLARE_INTERFACE_(IPrintOemDriverUI, IUnknown)
                         PVOID    pOptItem,
                         DWORD    dwPreviousSelection,
                         DWORD    dwMode
-                        )PURE;
+                        )= 0;
 };
 
 //
@@ -655,9 +655,9 @@ DECLARE_INTERFACE_(IPrintCoreUI2, IPrintOemDriverUI)
     // IUnknown methods
     //
 
-    STDMETHOD(QueryInterface) (THIS_ REFIID riid, LPVOID* ppvObj)PURE;
-    STDMETHOD_(ULONG, AddRef) (THIS)PURE;
-    STDMETHOD_(ULONG, Release) (THIS)PURE;
+    STDMETHOD(QueryInterface) (THIS_ REFIID riid, LPVOID* ppvObj)= 0;
+    STDMETHOD_(ULONG, AddRef) (THIS)= 0;
+    STDMETHOD_(ULONG, Release) (THIS)= 0;
 
     //
     // IPrintOemDriverUI methods
@@ -675,7 +675,7 @@ DECLARE_INTERFACE_(IPrintCoreUI2, IPrintOemDriverUI)
                         DWORD   cbSize,
                         PDWORD  pcbNeeded,
                         PDWORD  pdwOptionsReturned
-                        )PURE;
+                        )= 0;
 
     //
     // Helper function to allow OEM plugins upgrade private registry
@@ -687,7 +687,7 @@ DECLARE_INTERFACE_(IPrintCoreUI2, IPrintOemDriverUI)
                         HANDLE   hPrinter,
                         PCSTR    pFeature,
                         PCSTR    pOption
-                        )PURE;
+                        )= 0;
 
     //
     // Helper function to allow OEM plugins to update the driver UI settings.
@@ -700,7 +700,7 @@ DECLARE_INTERFACE_(IPrintCoreUI2, IPrintOemDriverUI)
                         PVOID    pOptItem,
                         DWORD    dwPreviousSelection,
                         DWORD    dwMode
-                        )PURE;
+                        )= 0;
 
     //
     // IPrintCoreUI2 new methods
@@ -723,7 +723,7 @@ DECLARE_INTERFACE_(IPrintCoreUI2, IPrintOemDriverUI)
                            IN  DWORD      cbIn,
                            OUT PSTR       pmszFeatureOptionBuf,
                            IN  DWORD      cbSize,
-                           OUT PDWORD     pcbNeeded) PURE;
+                           OUT PDWORD     pcbNeeded) = 0;
 
     //
     // Helper function to change driver's setting using a list of feature/option
@@ -735,7 +735,7 @@ DECLARE_INTERFACE_(IPrintCoreUI2, IPrintOemDriverUI)
                            IN  DWORD      dwFlags,
                            IN  PCSTR      pmszFeatureOptionBuf,
                            IN  DWORD      cbIn,
-                           OUT PDWORD     pdwResult) PURE;
+                           OUT PDWORD     pdwResult) = 0;
 
     //
     // Helper function to retrieve the option(s) of a given feature that are
@@ -748,7 +748,7 @@ DECLARE_INTERFACE_(IPrintCoreUI2, IPrintOemDriverUI)
                                        IN  PCSTR      pszFeatureKeyword,
                                        OUT PSTR       pmszConstrainedOptionList,
                                        IN  DWORD      cbSize,
-                                       OUT PDWORD     pcbNeeded) PURE;
+                                       OUT PDWORD     pcbNeeded) = 0;
 
     //
     // Helper function to retrieve a list of feature/option keyword pairs from
@@ -762,7 +762,7 @@ DECLARE_INTERFACE_(IPrintCoreUI2, IPrintOemDriverUI)
                                IN  PCSTR      pszOptionKeyword,
                                OUT PSTR       pmszReasonList,
                                IN  DWORD      cbSize,
-                               OUT PDWORD     pcbNeeded) PURE;
+                               OUT PDWORD     pcbNeeded) = 0;
 
     //
     // Following five helper functions are supported for any UI plugins.
@@ -777,7 +777,7 @@ DECLARE_INTERFACE_(IPrintCoreUI2, IPrintOemDriverUI)
                                    OUT PDWORD     pdwDataType,
                                    OUT PBYTE      pbData,
                                    IN  DWORD      cbSize,
-                                   OUT PDWORD     pcbNeeded) PURE;
+                                   OUT PDWORD     pcbNeeded) = 0;
 
 
     //
@@ -792,7 +792,7 @@ DECLARE_INTERFACE_(IPrintCoreUI2, IPrintOemDriverUI)
                                     OUT PDWORD     pdwDataType,
                                     OUT PBYTE      pbData,
                                     IN  DWORD      cbSize,
-                                    OUT PDWORD     pcbNeeded) PURE;
+                                    OUT PDWORD     pcbNeeded) = 0;
 
     //
     // Helper function to retrieve attribute of a given feature/option selection.
@@ -807,7 +807,7 @@ DECLARE_INTERFACE_(IPrintCoreUI2, IPrintOemDriverUI)
                                    OUT PDWORD     pdwDataType,
                                    OUT PBYTE      pbData,
                                    IN  DWORD      cbSize,
-                                   OUT PDWORD     pcbNeeded) PURE;
+                                   OUT PDWORD     pcbNeeded) = 0;
 
     //
     // Helper function to retrieve the list of feature keyword.
@@ -818,7 +818,7 @@ DECLARE_INTERFACE_(IPrintCoreUI2, IPrintOemDriverUI)
                              IN  DWORD      dwFlags,
                              OUT PSTR       pmszFeatureList,
                              IN  DWORD      cbSize,
-                             OUT PDWORD     pcbNeeded) PURE;
+                             OUT PDWORD     pcbNeeded) = 0;
 
     //
     // Helper function to retrieve the list of options keyword of a given feature.
@@ -830,7 +830,7 @@ DECLARE_INTERFACE_(IPrintCoreUI2, IPrintOemDriverUI)
                             IN  PCSTR      pszFeatureKeyword,
                             OUT PSTR       pmszOptionList,
                             IN  DWORD      cbSize,
-                            OUT PDWORD     pcbNeeded) PURE;
+                            OUT PDWORD     pcbNeeded) = 0;
 
     //
     // Helper function to query system simulation support
@@ -841,7 +841,7 @@ DECLARE_INTERFACE_(IPrintCoreUI2, IPrintOemDriverUI)
                                        IN  DWORD   dwLevel,
                                        OUT PBYTE   pCaps,
                                        IN  DWORD   cbSize,
-                                       OUT PDWORD  pcbNeeded) PURE;
+                                       OUT PDWORD  pcbNeeded) = 0;
 };
 
 #else   // KERNEL_MODE
@@ -865,9 +865,9 @@ DECLARE_INTERFACE_(IPrintOemEngine, IPrintOemCommon)
     // IUnknown methods
     //
 
-    STDMETHOD(QueryInterface) (THIS_ REFIID riid, LPVOID* ppvObj) PURE;
-    STDMETHOD_(ULONG, AddRef) (THIS) PURE;
-    STDMETHOD_(ULONG, Release) (THIS) PURE;
+    STDMETHOD(QueryInterface) (THIS_ REFIID riid, LPVOID* ppvObj) = 0;
+    STDMETHOD_(ULONG, AddRef) (THIS) = 0;
+    STDMETHOD_(ULONG, Release) (THIS) = 0;
 
     //
     // IPrintOemCommon methods
@@ -880,13 +880,13 @@ DECLARE_INTERFACE_(IPrintOemEngine, IPrintOemCommon)
     STDMETHOD(GetInfo) (THIS_   DWORD   dwMode,
                                 PVOID   pBuffer,
                                 DWORD   cbSize,
-                                PDWORD  pcbNeeded) PURE;
+                                PDWORD  pcbNeeded) = 0;
     //
     // Method for OEM private devmode handling
     //
 
     STDMETHOD(DevMode) (THIS_   DWORD       dwMode,
-                                POEMDMPARAM pOemDMParam) PURE;
+                                POEMDMPARAM pOemDMParam) = 0;
 
     //
     // IPrintOemEngine methods
@@ -898,13 +898,13 @@ DECLARE_INTERFACE_(IPrintOemEngine, IPrintOemCommon)
 
     STDMETHOD(EnableDriver)  (THIS_   DWORD           DriverVersion,
                                       DWORD           cbSize,
-                                      PDRVENABLEDATA  pded) PURE;
+                                      PDRVENABLEDATA  pded) = 0;
 
     //
     // Method to notify OEM plugin that it is no longer required
     //
 
-    STDMETHOD(DisableDriver) (THIS) PURE;
+    STDMETHOD(DisableDriver) (THIS) = 0;
 
     //
     // Method for OEM to contruct its own PDEV
@@ -919,20 +919,20 @@ DECLARE_INTERFACE_(IPrintOemEngine, IPrintOemCommon)
                                       ULONG           cjDevInfo,
                                       DEVINFO        *pDevInfo,
                                       DRVENABLEDATA  *pded,
-                                      OUT PDEVOEM    *pDevOem) PURE;
+                                      OUT PDEVOEM    *pDevOem) = 0;
 
     //
     // Method for OEM to free any resource associated with its PDEV
     //
 
-    STDMETHOD(DisablePDEV)   (THIS_   PDEVOBJ         pdevobj) PURE;
+    STDMETHOD(DisablePDEV)   (THIS_   PDEVOBJ         pdevobj) = 0;
 
     //
     // Method for OEM to transfer from old PDEV to new PDEV
     //
 
     STDMETHOD(ResetPDEV)     (THIS_   PDEVOBJ         pdevobjOld,
-                                      PDEVOBJ         pdevobjNew) PURE;
+                                      PDEVOBJ         pdevobjNew) = 0;
 };
 
 //
@@ -949,9 +949,9 @@ DECLARE_INTERFACE_(IPrintOemPS, IPrintOemEngine)
     // IUnknown methods
     //
 
-    STDMETHOD(QueryInterface) (THIS_ REFIID riid, LPVOID* ppvObj) PURE;
-    STDMETHOD_(ULONG, AddRef) (THIS) PURE;
-    STDMETHOD_(ULONG, Release) (THIS) PURE;
+    STDMETHOD(QueryInterface) (THIS_ REFIID riid, LPVOID* ppvObj) = 0;
+    STDMETHOD_(ULONG, AddRef) (THIS) = 0;
+    STDMETHOD_(ULONG, Release) (THIS) = 0;
 
     //
     // IPrintOemCommon methods
@@ -964,13 +964,13 @@ DECLARE_INTERFACE_(IPrintOemPS, IPrintOemEngine)
     STDMETHOD(GetInfo) (THIS_   DWORD   dwMode,
                                 PVOID   pBuffer,
                                 DWORD   cbSize,
-                                PDWORD  pcbNeeded) PURE;
+                                PDWORD  pcbNeeded) = 0;
     //
     // Method for OEM private devmode handling
     //
 
     STDMETHOD(DevMode) (THIS_   DWORD       dwMode,
-                                POEMDMPARAM pOemDMParam) PURE;
+                                POEMDMPARAM pOemDMParam) = 0;
 
     //
     // IPrintOemEngine methods
@@ -982,13 +982,13 @@ DECLARE_INTERFACE_(IPrintOemPS, IPrintOemEngine)
 
     STDMETHOD(EnableDriver)  (THIS_   DWORD           DriverVersion,
                                       DWORD           cbSize,
-                                      PDRVENABLEDATA  pded) PURE;
+                                      PDRVENABLEDATA  pded) = 0;
 
     //
     // Method to notify OEM plugin that it is no longer required
     //
 
-    STDMETHOD(DisableDriver) (THIS) PURE;
+    STDMETHOD(DisableDriver) (THIS) = 0;
 
     //
     // Method for OEM to construct its own PDEV
@@ -1003,20 +1003,20 @@ DECLARE_INTERFACE_(IPrintOemPS, IPrintOemEngine)
                                       ULONG           cjDevInfo,
                                       DEVINFO        *pDevInfo,
                                       DRVENABLEDATA  *pded,
-                                      OUT PDEVOEM    *pDevOem) PURE;
+                                      OUT PDEVOEM    *pDevOem) = 0;
 
     //
     // Method for OEM to free any resource associated with its PDEV
     //
 
-    STDMETHOD(DisablePDEV)   (THIS_   PDEVOBJ         pdevobj) PURE;
+    STDMETHOD(DisablePDEV)   (THIS_   PDEVOBJ         pdevobj) = 0;
 
     //
     // Method for OEM to transfer from old PDEV to new PDEV
     //
 
     STDMETHOD(ResetPDEV)     (THIS_   PDEVOBJ         pdevobjOld,
-                                      PDEVOBJ         pdevobjNew) PURE;
+                                      PDEVOBJ         pdevobjNew) = 0;
 
     //
     // IPrintOemPS methods
@@ -1026,7 +1026,7 @@ DECLARE_INTERFACE_(IPrintOemPS, IPrintOemEngine)
     // Method for publishing Driver interface.
     //
 
-    STDMETHOD(PublishDriverInterface)(THIS_  IUnknown *pIUnknown) PURE;
+    STDMETHOD(PublishDriverInterface)(THIS_  IUnknown *pIUnknown) = 0;
 
     //
     // Method for OEM to generate output at specific injection point
@@ -1036,7 +1036,7 @@ DECLARE_INTERFACE_(IPrintOemPS, IPrintOemEngine)
                                 DWORD       dwIndex,
                                 PVOID       pData,
                                 DWORD       cbSize,
-                                OUT DWORD   *pdwResult) PURE;
+                                OUT DWORD   *pdwResult) = 0;
 };
 
 //
@@ -1053,9 +1053,9 @@ DECLARE_INTERFACE_(IPrintOemPS2, IPrintOemPS)
     // IUnknown methods
     //
 
-    STDMETHOD(QueryInterface) (THIS_ REFIID riid, LPVOID* ppvObj) PURE;
-    STDMETHOD_(ULONG, AddRef) (THIS) PURE;
-    STDMETHOD_(ULONG, Release) (THIS) PURE;
+    STDMETHOD(QueryInterface) (THIS_ REFIID riid, LPVOID* ppvObj) = 0;
+    STDMETHOD_(ULONG, AddRef) (THIS) = 0;
+    STDMETHOD_(ULONG, Release) (THIS) = 0;
 
     //
     // IPrintOemCommon methods
@@ -1068,13 +1068,13 @@ DECLARE_INTERFACE_(IPrintOemPS2, IPrintOemPS)
     STDMETHOD(GetInfo) (THIS_   DWORD   dwMode,
                                 PVOID   pBuffer,
                                 DWORD   cbSize,
-                                PDWORD  pcbNeeded) PURE;
+                                PDWORD  pcbNeeded) = 0;
     //
     // Method for OEM private devmode handling
     //
 
     STDMETHOD(DevMode) (THIS_   DWORD       dwMode,
-                                POEMDMPARAM pOemDMParam) PURE;
+                                POEMDMPARAM pOemDMParam) = 0;
 
     //
     // IPrintOemEngine methods
@@ -1086,13 +1086,13 @@ DECLARE_INTERFACE_(IPrintOemPS2, IPrintOemPS)
 
     STDMETHOD(EnableDriver)  (THIS_   DWORD           DriverVersion,
                                       DWORD           cbSize,
-                                      PDRVENABLEDATA  pded) PURE;
+                                      PDRVENABLEDATA  pded) = 0;
 
     //
     // Method to notify OEM plugin that it is no longer required
     //
 
-    STDMETHOD(DisableDriver) (THIS) PURE;
+    STDMETHOD(DisableDriver) (THIS) = 0;
 
     //
     // Method for OEM to construct its own PDEV
@@ -1107,20 +1107,20 @@ DECLARE_INTERFACE_(IPrintOemPS2, IPrintOemPS)
                                       ULONG           cjDevInfo,
                                       DEVINFO        *pDevInfo,
                                       DRVENABLEDATA  *pded,
-                                      OUT PDEVOEM    *pDevOem) PURE;
+                                      OUT PDEVOEM    *pDevOem) = 0;
 
     //
     // Method for OEM to free any resource associated with its PDEV
     //
 
-    STDMETHOD(DisablePDEV)   (THIS_   PDEVOBJ         pdevobj) PURE;
+    STDMETHOD(DisablePDEV)   (THIS_   PDEVOBJ         pdevobj) = 0;
 
     //
     // Method for OEM to transfer from old PDEV to new PDEV
     //
 
     STDMETHOD(ResetPDEV)     (THIS_   PDEVOBJ         pdevobjOld,
-                                      PDEVOBJ         pdevobjNew) PURE;
+                                      PDEVOBJ         pdevobjNew) = 0;
 
     //
     // IPrintOemPS methods
@@ -1130,7 +1130,7 @@ DECLARE_INTERFACE_(IPrintOemPS2, IPrintOemPS)
     // Method for publishing Driver interface.
     //
 
-    STDMETHOD(PublishDriverInterface)(THIS_  IUnknown *pIUnknown) PURE;
+    STDMETHOD(PublishDriverInterface)(THIS_  IUnknown *pIUnknown) = 0;
 
     //
     // Method for OEM to generate output at specific injection point
@@ -1140,7 +1140,7 @@ DECLARE_INTERFACE_(IPrintOemPS2, IPrintOemPS)
                                 DWORD       dwIndex,
                                 PVOID       pData,
                                 DWORD       cbSize,
-                                OUT DWORD   *pdwResult) PURE;
+                                OUT DWORD   *pdwResult) = 0;
 
     //
     // IPrintOemPS2 methods
@@ -1163,7 +1163,7 @@ DECLARE_INTERFACE_(IPrintOemPS2, IPrintOemPS)
     STDMETHOD(WritePrinter) (THIS_   PDEVOBJ    pdevobj,
                                      PVOID      pBuf,
                                      DWORD      cbBuffer,
-                                     PDWORD     pcbWritten) PURE;
+                                     PDWORD     pcbWritten) = 0;
 
     //
     // Method for plugin to implement if it wants to be called to get the chance
@@ -1181,7 +1181,7 @@ DECLARE_INTERFACE_(IPrintOemPS2, IPrintOemPS)
                                         DWORD      dwAdjustType,
                                         PVOID      pBuf,
                                         DWORD      cbBuffer,
-                                        OUT BOOL  *pbAdjustmentDone) PURE;
+                                        OUT BOOL  *pbAdjustmentDone) = 0;
 };
 
 //
@@ -1198,9 +1198,9 @@ DECLARE_INTERFACE_(IPrintOemDriverPS, IUnknown)
     // IUnknown methods
     //
 
-    STDMETHOD(QueryInterface) (THIS_ REFIID riid, LPVOID* ppvObj) PURE;
-    STDMETHOD_(ULONG, AddRef) (THIS) PURE;
-    STDMETHOD_(ULONG, Release) (THIS) PURE;
+    STDMETHOD(QueryInterface) (THIS_ REFIID riid, LPVOID* ppvObj) = 0;
+    STDMETHOD_(ULONG, AddRef) (THIS) = 0;
+    STDMETHOD_(ULONG, Release) (THIS) = 0;
 
     //
     // IPrintOemDriverPS methods
@@ -1215,7 +1215,7 @@ DECLARE_INTERFACE_(IPrintOemDriverPS, IUnknown)
                                             PVOID   pOutput,
                                             DWORD   cbSize,
                                             PDWORD  pcbNeeded,
-                                            PDWORD  pdwOptionsReturned) PURE;
+                                            PDWORD  pdwOptionsReturned) = 0;
 
     //
     // Method for OEM to write to spooler buffer
@@ -1224,7 +1224,7 @@ DECLARE_INTERFACE_(IPrintOemDriverPS, IUnknown)
     STDMETHOD(DrvWriteSpoolBuf)(THIS_       PDEVOBJ     pdevobj,
                                             PVOID       pBuffer,
                                             DWORD       cbSize,
-                                            OUT DWORD   *pdwResult) PURE;
+                                            OUT DWORD   *pdwResult) = 0;
 };
 
 //
@@ -1244,9 +1244,9 @@ DECLARE_INTERFACE_(IPrintCorePS2, IUnknown)
     // IUnknown methods
     //
 
-    STDMETHOD(QueryInterface) (THIS_ REFIID riid, LPVOID* ppvObj) PURE;
-    STDMETHOD_(ULONG, AddRef) (THIS) PURE;
-    STDMETHOD_(ULONG, Release) (THIS) PURE;
+    STDMETHOD(QueryInterface) (THIS_ REFIID riid, LPVOID* ppvObj) = 0;
+    STDMETHOD_(ULONG, AddRef) (THIS) = 0;
+    STDMETHOD_(ULONG, Release) (THIS) = 0;
 
     //
     // IPrintCorePS2 methods
@@ -1260,7 +1260,7 @@ DECLARE_INTERFACE_(IPrintCorePS2, IUnknown)
                            IN  PDEVOBJ  pdevobj,
                            IN  PVOID    pBuffer,
                            IN  DWORD    cbSize,
-                           OUT DWORD    *pdwResult) PURE;
+                           OUT DWORD    *pdwResult) = 0;
 
     //
     // Helper function to retrieve driver's current setting as a list of
@@ -1274,7 +1274,7 @@ DECLARE_INTERFACE_(IPrintCorePS2, IUnknown)
                            IN  DWORD    cbIn,
                            OUT PSTR     pmszFeatureOptionBuf,
                            IN  DWORD    cbSize,
-                           OUT PDWORD   pcbNeeded) PURE;
+                           OUT PDWORD   pcbNeeded) = 0;
 
     //
     // Helper function to retrieve global attribute.
@@ -1287,7 +1287,7 @@ DECLARE_INTERFACE_(IPrintCorePS2, IUnknown)
                                    OUT PDWORD   pdwDataType,
                                    OUT PBYTE    pbData,
                                    IN  DWORD    cbSize,
-                                   OUT PDWORD   pcbNeeded) PURE;
+                                   OUT PDWORD   pcbNeeded) = 0;
 
 
     //
@@ -1302,7 +1302,7 @@ DECLARE_INTERFACE_(IPrintCorePS2, IUnknown)
                                     OUT PDWORD   pdwDataType,
                                     OUT PBYTE    pbData,
                                     IN  DWORD    cbSize,
-                                    OUT PDWORD   pcbNeeded) PURE;
+                                    OUT PDWORD   pcbNeeded) = 0;
 
     //
     // Helper function to retrieve attribute of a given feature/option selection.
@@ -1317,7 +1317,7 @@ DECLARE_INTERFACE_(IPrintCorePS2, IUnknown)
                                    OUT PDWORD   pdwDataType,
                                    OUT PBYTE    pbData,
                                    IN  DWORD    cbSize,
-                                   OUT PDWORD   pcbNeeded) PURE;
+                                   OUT PDWORD   pcbNeeded) = 0;
 
     //
     // Helper function to retrieve the list of feature keyword.
@@ -1328,7 +1328,7 @@ DECLARE_INTERFACE_(IPrintCorePS2, IUnknown)
                              IN  DWORD    dwFlags,
                              OUT PSTR     pmszFeatureList,
                              IN  DWORD    cbSize,
-                             OUT PDWORD   pcbNeeded) PURE;
+                             OUT PDWORD   pcbNeeded) = 0;
 
     //
     // Helper function to retrieve the list of options keyword of a given feature.
@@ -1340,7 +1340,7 @@ DECLARE_INTERFACE_(IPrintCorePS2, IUnknown)
                             IN  PCSTR    pszFeatureKeyword,
                             OUT PSTR     pmszOptionList,
                             IN  DWORD    cbSize,
-                            OUT PDWORD   pcbNeeded) PURE;
+                            OUT PDWORD   pcbNeeded) = 0;
 };
 
 //
@@ -1357,9 +1357,9 @@ DECLARE_INTERFACE_(IPrintOemUni, IPrintOemEngine)
     // IUnknown methods
     //
 
-    STDMETHOD(QueryInterface) (THIS_ REFIID riid, LPVOID* ppvObj) PURE;
-    STDMETHOD_(ULONG, AddRef) (THIS) PURE;
-    STDMETHOD_(ULONG, Release) (THIS) PURE;
+    STDMETHOD(QueryInterface) (THIS_ REFIID riid, LPVOID* ppvObj) = 0;
+    STDMETHOD_(ULONG, AddRef) (THIS) = 0;
+    STDMETHOD_(ULONG, Release) (THIS) = 0;
 
     //
     // IPrintOemCommon methods
@@ -1372,13 +1372,13 @@ DECLARE_INTERFACE_(IPrintOemUni, IPrintOemEngine)
     STDMETHOD(GetInfo) (THIS_   DWORD   dwMode,
                                 PVOID   pBuffer,
                                 DWORD   cbSize,
-                                PDWORD  pcbNeeded) PURE;
+                                PDWORD  pcbNeeded) = 0;
     //
     // Method for OEM private devmode handling
     //
 
     STDMETHOD(DevMode) (THIS_   DWORD       dwMode,
-                                POEMDMPARAM pOemDMParam) PURE;
+                                POEMDMPARAM pOemDMParam) = 0;
 
     //
     // IPrintOemEngine methods
@@ -1390,13 +1390,13 @@ DECLARE_INTERFACE_(IPrintOemUni, IPrintOemEngine)
 
     STDMETHOD(EnableDriver)  (THIS_   DWORD           DriverVersion,
                                       DWORD           cbSize,
-                                      PDRVENABLEDATA  pded) PURE;
+                                      PDRVENABLEDATA  pded) = 0;
 
     //
     // Method to notify OEM plugin that it is no longer required
     //
 
-    STDMETHOD(DisableDriver) (THIS) PURE;
+    STDMETHOD(DisableDriver) (THIS) = 0;
 
     //
     // Method for OEM to construct its own PDEV
@@ -1411,20 +1411,20 @@ DECLARE_INTERFACE_(IPrintOemUni, IPrintOemEngine)
                                       ULONG           cjDevInfo,
                                       DEVINFO        *pDevInfo,
                                       DRVENABLEDATA  *pded,
-                                      OUT PDEVOEM    *pDevOem) PURE;
+                                      OUT PDEVOEM    *pDevOem) = 0;
 
     //
     // Method for OEM to free any resource associated with its PDEV
     //
 
-    STDMETHOD(DisablePDEV)   (THIS_   PDEVOBJ         pdevobj) PURE;
+    STDMETHOD(DisablePDEV)   (THIS_   PDEVOBJ         pdevobj) = 0;
 
     //
     // Method for OEM to transfer from old PDEV to new PDEV
     //
 
     STDMETHOD(ResetPDEV)     (THIS_   PDEVOBJ         pdevobjOld,
-                                      PDEVOBJ         pdevobjNew) PURE;
+                                      PDEVOBJ         pdevobjNew) = 0;
 
     //
     // IPrintOemUni methods
@@ -1434,7 +1434,7 @@ DECLARE_INTERFACE_(IPrintOemUni, IPrintOemEngine)
     // Method for publishing Driver interface.
     //
 
-    STDMETHOD(PublishDriverInterface)(THIS_ IUnknown *pIUnknown) PURE;
+    STDMETHOD(PublishDriverInterface)(THIS_ IUnknown *pIUnknown) = 0;
 
     //
     // Method for getting OEM implemented methods.
@@ -1443,7 +1443,7 @@ DECLARE_INTERFACE_(IPrintOemUni, IPrintOemEngine)
     //
     //
 
-    STDMETHOD(GetImplementedMethod) (THIS_  PSTR    pMethodName) PURE;
+    STDMETHOD(GetImplementedMethod) (THIS_  PSTR    pMethodName) = 0;
 
     //
     // DriverDMS
@@ -1452,7 +1452,7 @@ DECLARE_INTERFACE_(IPrintOemUni, IPrintOemEngine)
     STDMETHOD(DriverDMS)(THIS_  PVOID   pDevObj,
                                 PVOID   pBuffer,
                                 DWORD   cbSize,
-                                PDWORD  pcbNeeded) PURE;
+                                PDWORD  pcbNeeded) = 0;
 
     //
     // CommandCallback
@@ -1462,7 +1462,7 @@ DECLARE_INTERFACE_(IPrintOemUni, IPrintOemEngine)
                                         DWORD       dwCallbackID,
                                         DWORD       dwCount,
                                         PDWORD      pdwParams,
-                                        OUT INT     *piResult) PURE;
+                                        OUT INT     *piResult) = 0;
 
 
     //
@@ -1475,7 +1475,7 @@ DECLARE_INTERFACE_(IPrintOemUni, IPrintOemEngine)
                                         PBYTE               pColorTable,
                                         DWORD               dwCallbackID,
                                         PIPPARAMS           pIPParams,
-                                        OUT PBYTE           *ppbResult) PURE;
+                                        OUT PBYTE           *ppbResult) = 0;
 
     //
     // FilterGraphics
@@ -1483,7 +1483,7 @@ DECLARE_INTERFACE_(IPrintOemUni, IPrintOemEngine)
 
     STDMETHOD(FilterGraphics) (THIS_    PDEVOBJ     pdevobj,
                                         PBYTE       pBuf,
-                                        DWORD       dwLen) PURE;
+                                        DWORD       dwLen) = 0;
 
     //
     // Compression
@@ -1494,7 +1494,7 @@ DECLARE_INTERFACE_(IPrintOemUni, IPrintOemEngine)
                                     PBYTE       pOutBuf,
                                     DWORD       dwInLen,
                                     DWORD       dwOutLen,
-                                    OUT INT     *piResult) PURE;
+                                    OUT INT     *piResult) = 0;
 
     //
     // HalftonePattern
@@ -1507,14 +1507,14 @@ DECLARE_INTERFACE_(IPrintOemUni, IPrintOemEngine)
                                         DWORD       dwHTNumPatterns,
                                         DWORD       dwCallbackID,
                                         PBYTE       pResource,
-                                        DWORD       dwResourceSize) PURE;
+                                        DWORD       dwResourceSize) = 0;
 
     //
     // MemoryUsage
     //
 
     STDMETHOD(MemoryUsage) (THIS_   PDEVOBJ         pdevobj,
-                                    POEMMEMORYUSAGE pMemoryUsage) PURE;
+                                    POEMMEMORYUSAGE pMemoryUsage) = 0;
 
     //
     // TTYGetInfo
@@ -1525,14 +1525,14 @@ DECLARE_INTERFACE_(IPrintOemUni, IPrintOemEngine)
                                     PVOID       pOutputBuf,
                                     DWORD       dwSize,
                                     DWORD       *pcbcNeeded
-                                    ) PURE;
+                                    ) = 0;
     //
     // DownloadFontheader
     //
 
     STDMETHOD(DownloadFontHeader)(THIS_     PDEVOBJ     pdevobj,
                                             PUNIFONTOBJ pUFObj,
-                                            OUT DWORD   *pdwResult) PURE;
+                                            OUT DWORD   *pdwResult) = 0;
 
     //
     // DownloadCharGlyph
@@ -1542,7 +1542,7 @@ DECLARE_INTERFACE_(IPrintOemUni, IPrintOemEngine)
                                             PUNIFONTOBJ pUFObj,
                                             HGLYPH      hGlyph,
                                             PDWORD      pdwWidth,
-                                            OUT DWORD   *pdwResult) PURE;
+                                            OUT DWORD   *pdwResult) = 0;
 
 
     //
@@ -1551,7 +1551,7 @@ DECLARE_INTERFACE_(IPrintOemUni, IPrintOemEngine)
 
     STDMETHOD(TTDownloadMethod)(THIS_       PDEVOBJ     pdevobj,
                                             PUNIFONTOBJ pUFObj,
-                                            OUT DWORD   *pdwResult) PURE;
+                                            OUT DWORD   *pdwResult) = 0;
 
     //
     // OutputCharStr
@@ -1561,7 +1561,7 @@ DECLARE_INTERFACE_(IPrintOemUni, IPrintOemEngine)
                                         PUNIFONTOBJ pUFObj,
                                         DWORD       dwType,
                                         DWORD       dwCount,
-                                        PVOID       pGlyph) PURE;
+                                        PVOID       pGlyph) = 0;
 
     //
     // SendFontCmd
@@ -1570,7 +1570,7 @@ DECLARE_INTERFACE_(IPrintOemUni, IPrintOemEngine)
 
     STDMETHOD(SendFontCmd)(THIS_    PDEVOBJ      pdevobj,
                                     PUNIFONTOBJ  pUFObj,
-                                    PFINVOCATION pFInv) PURE;
+                                    PFINVOCATION pFInv) = 0;
 
     //
     // TextOutAsBitmap
@@ -1585,7 +1585,7 @@ DECLARE_INTERFACE_(IPrintOemUni, IPrintOemEngine)
                                             BRUSHOBJ   *pboFore,
                                             BRUSHOBJ   *pboOpaque,
                                             POINTL     *pptlOrg,
-                                            MIX         mix) PURE;
+                                            MIX         mix) = 0;
 };
 
 //
@@ -1602,9 +1602,9 @@ DECLARE_INTERFACE_(IPrintOemUni2, IPrintOemUni)
     // IUnknown methods
     //
 
-    STDMETHOD(QueryInterface) (THIS_ REFIID riid, LPVOID* ppvObj) PURE;
-    STDMETHOD_(ULONG, AddRef) (THIS) PURE;
-    STDMETHOD_(ULONG, Release) (THIS) PURE;
+    STDMETHOD(QueryInterface) (THIS_ REFIID riid, LPVOID* ppvObj) = 0;
+    STDMETHOD_(ULONG, AddRef) (THIS) = 0;
+    STDMETHOD_(ULONG, Release) (THIS) = 0;
 
     //
     // IPrintOemCommon methods
@@ -1617,13 +1617,13 @@ DECLARE_INTERFACE_(IPrintOemUni2, IPrintOemUni)
     STDMETHOD(GetInfo) (THIS_   DWORD   dwMode,
                                 PVOID   pBuffer,
                                 DWORD   cbSize,
-                                PDWORD  pcbNeeded) PURE;
+                                PDWORD  pcbNeeded) = 0;
     //
     // Method for OEM private devmode handling
     //
 
     STDMETHOD(DevMode) (THIS_   DWORD       dwMode,
-                                POEMDMPARAM pOemDMParam) PURE;
+                                POEMDMPARAM pOemDMParam) = 0;
 
     //
     // IPrintOemEngine methods
@@ -1635,13 +1635,13 @@ DECLARE_INTERFACE_(IPrintOemUni2, IPrintOemUni)
 
     STDMETHOD(EnableDriver)  (THIS_   DWORD           DriverVersion,
                                       DWORD           cbSize,
-                                      PDRVENABLEDATA  pded) PURE;
+                                      PDRVENABLEDATA  pded) = 0;
 
     //
     // Method to notify OEM plugin that it is no longer required
     //
 
-    STDMETHOD(DisableDriver) (THIS) PURE;
+    STDMETHOD(DisableDriver) (THIS) = 0;
 
     //
     // Method for OEM to construct its own PDEV
@@ -1656,20 +1656,20 @@ DECLARE_INTERFACE_(IPrintOemUni2, IPrintOemUni)
                                       ULONG           cjDevInfo,
                                       DEVINFO        *pDevInfo,
                                       DRVENABLEDATA  *pded,
-                                      OUT PDEVOEM    *pDevOem) PURE;
+                                      OUT PDEVOEM    *pDevOem) = 0;
 
     //
     // Method for OEM to free any resource associated with its PDEV
     //
 
-    STDMETHOD(DisablePDEV)   (THIS_   PDEVOBJ         pdevobj) PURE;
+    STDMETHOD(DisablePDEV)   (THIS_   PDEVOBJ         pdevobj) = 0;
 
     //
     // Method for OEM to transfer from old PDEV to new PDEV
     //
 
     STDMETHOD(ResetPDEV)     (THIS_   PDEVOBJ         pdevobjOld,
-                                      PDEVOBJ         pdevobjNew) PURE;
+                                      PDEVOBJ         pdevobjNew) = 0;
 
     //
     // IPrintOemUni methods
@@ -1679,7 +1679,7 @@ DECLARE_INTERFACE_(IPrintOemUni2, IPrintOemUni)
     // Method for publishing Driver interface.
     //
 
-    STDMETHOD(PublishDriverInterface)(THIS_ IUnknown *pIUnknown) PURE;
+    STDMETHOD(PublishDriverInterface)(THIS_ IUnknown *pIUnknown) = 0;
 
     //
     // Method for getting OEM implemented methods.
@@ -1688,7 +1688,7 @@ DECLARE_INTERFACE_(IPrintOemUni2, IPrintOemUni)
     //
     //
 
-    STDMETHOD(GetImplementedMethod) (THIS_  PSTR    pMethodName) PURE;
+    STDMETHOD(GetImplementedMethod) (THIS_  PSTR    pMethodName) = 0;
 
     //
     // DriverDMS
@@ -1697,7 +1697,7 @@ DECLARE_INTERFACE_(IPrintOemUni2, IPrintOemUni)
     STDMETHOD(DriverDMS)(THIS_  PVOID   pDevObj,
                                 PVOID   pBuffer,
                                 DWORD   cbSize,
-                                PDWORD  pcbNeeded) PURE;
+                                PDWORD  pcbNeeded) = 0;
 
     //
     // CommandCallback
@@ -1707,7 +1707,7 @@ DECLARE_INTERFACE_(IPrintOemUni2, IPrintOemUni)
                                         DWORD       dwCallbackID,
                                         DWORD       dwCount,
                                         PDWORD      pdwParams,
-                                        OUT INT     *piResult) PURE;
+                                        OUT INT     *piResult) = 0;
 
 
     //
@@ -1720,7 +1720,7 @@ DECLARE_INTERFACE_(IPrintOemUni2, IPrintOemUni)
                                         PBYTE               pColorTable,
                                         DWORD               dwCallbackID,
                                         PIPPARAMS           pIPParams,
-                                        OUT PBYTE           *ppbResult) PURE;
+                                        OUT PBYTE           *ppbResult) = 0;
 
     //
     // FilterGraphics
@@ -1728,7 +1728,7 @@ DECLARE_INTERFACE_(IPrintOemUni2, IPrintOemUni)
 
     STDMETHOD(FilterGraphics) (THIS_    PDEVOBJ     pdevobj,
                                         PBYTE       pBuf,
-                                        DWORD       dwLen) PURE;
+                                        DWORD       dwLen) = 0;
 
     //
     // Compression
@@ -1739,7 +1739,7 @@ DECLARE_INTERFACE_(IPrintOemUni2, IPrintOemUni)
                                     PBYTE       pOutBuf,
                                     DWORD       dwInLen,
                                     DWORD       dwOutLen,
-                                    OUT INT     *piResult) PURE;
+                                    OUT INT     *piResult) = 0;
 
     //
     // HalftonePattern
@@ -1752,14 +1752,14 @@ DECLARE_INTERFACE_(IPrintOemUni2, IPrintOemUni)
                                         DWORD       dwHTNumPatterns,
                                         DWORD       dwCallbackID,
                                         PBYTE       pResource,
-                                        DWORD       dwResourceSize) PURE;
+                                        DWORD       dwResourceSize) = 0;
 
     //
     // MemoryUsage
     //
 
     STDMETHOD(MemoryUsage) (THIS_   PDEVOBJ         pdevobj,
-                                    POEMMEMORYUSAGE pMemoryUsage) PURE;
+                                    POEMMEMORYUSAGE pMemoryUsage) = 0;
 
     //
     // TTYGetInfo
@@ -1770,14 +1770,14 @@ DECLARE_INTERFACE_(IPrintOemUni2, IPrintOemUni)
                                     PVOID       pOutputBuf,
                                     DWORD       dwSize,
                                     DWORD       *pcbcNeeded
-                                    ) PURE;
+                                    ) = 0;
     //
     // DownloadFontheader
     //
 
     STDMETHOD(DownloadFontHeader)(THIS_     PDEVOBJ     pdevobj,
                                             PUNIFONTOBJ pUFObj,
-                                            OUT DWORD   *pdwResult) PURE;
+                                            OUT DWORD   *pdwResult) = 0;
 
     //
     // DownloadCharGlyph
@@ -1787,7 +1787,7 @@ DECLARE_INTERFACE_(IPrintOemUni2, IPrintOemUni)
                                             PUNIFONTOBJ pUFObj,
                                             HGLYPH      hGlyph,
                                             PDWORD      pdwWidth,
-                                            OUT DWORD   *pdwResult) PURE;
+                                            OUT DWORD   *pdwResult) = 0;
 
 
     //
@@ -1796,7 +1796,7 @@ DECLARE_INTERFACE_(IPrintOemUni2, IPrintOemUni)
 
     STDMETHOD(TTDownloadMethod)(THIS_       PDEVOBJ     pdevobj,
                                             PUNIFONTOBJ pUFObj,
-                                            OUT DWORD   *pdwResult) PURE;
+                                            OUT DWORD   *pdwResult) = 0;
 
     //
     // OutputCharStr
@@ -1806,7 +1806,7 @@ DECLARE_INTERFACE_(IPrintOemUni2, IPrintOemUni)
                                         PUNIFONTOBJ pUFObj,
                                         DWORD       dwType,
                                         DWORD       dwCount,
-                                        PVOID       pGlyph) PURE;
+                                        PVOID       pGlyph) = 0;
 
     //
     // SendFontCmd
@@ -1815,7 +1815,7 @@ DECLARE_INTERFACE_(IPrintOemUni2, IPrintOemUni)
 
     STDMETHOD(SendFontCmd)(THIS_    PDEVOBJ      pdevobj,
                                     PUNIFONTOBJ  pUFObj,
-                                    PFINVOCATION pFInv) PURE;
+                                    PFINVOCATION pFInv) = 0;
 
     //
     // TextOutAsBitmap
@@ -1830,7 +1830,7 @@ DECLARE_INTERFACE_(IPrintOemUni2, IPrintOemUni)
                                             BRUSHOBJ   *pboFore,
                                             BRUSHOBJ   *pboOpaque,
                                             POINTL     *pptlOrg,
-                                            MIX         mix) PURE;
+                                            MIX         mix) = 0;
 
     //
     // IPrintOemUni2 methods
@@ -1853,7 +1853,7 @@ DECLARE_INTERFACE_(IPrintOemUni2, IPrintOemUni)
     STDMETHOD(WritePrinter) (THIS_   PDEVOBJ    pdevobj,
                                      PVOID      pBuf,
                                      DWORD      cbBuffer,
-                                     PDWORD     pcbWritten) PURE;
+                                     PDWORD     pcbWritten) = 0;
 };
 
 
@@ -1871,9 +1871,9 @@ DECLARE_INTERFACE_(IPrintOemDriverUni, IUnknown)
     // IUnknown methods
     //
 
-    STDMETHOD(QueryInterface) (THIS_ REFIID riid, LPVOID* ppvObj) PURE;
-    STDMETHOD_(ULONG, AddRef) (THIS) PURE;
-    STDMETHOD_(ULONG, Release) (THIS) PURE;
+    STDMETHOD(QueryInterface) (THIS_ REFIID riid, LPVOID* ppvObj) = 0;
+    STDMETHOD_(ULONG, AddRef) (THIS) = 0;
+    STDMETHOD_(ULONG, Release) (THIS) = 0;
 
     //
     // IPrintOemDriverUni methods
@@ -1888,7 +1888,7 @@ DECLARE_INTERFACE_(IPrintOemDriverUni, IUnknown)
                                             PVOID   pOutput,
                                             DWORD   cbSize,
                                             PDWORD  pcbNeeded,
-                                            PDWORD  pdwOptionsReturned) PURE;
+                                            PDWORD  pdwOptionsReturned) = 0;
 
     //
     // Common to both Unidrv & Pscript
@@ -1897,7 +1897,7 @@ DECLARE_INTERFACE_(IPrintOemDriverUni, IUnknown)
     STDMETHOD(DrvWriteSpoolBuf)(THIS_       PDEVOBJ     pdevobj,
                                             PVOID       pBuffer,
                                             DWORD       cbSize,
-                                            OUT DWORD   *pdwResult) PURE;
+                                            OUT DWORD   *pdwResult) = 0;
 
     //
     // Unidrv specific XMoveTo and YMoveTo. Returns E_NOT_IMPL in Pscript
@@ -1906,12 +1906,12 @@ DECLARE_INTERFACE_(IPrintOemDriverUni, IUnknown)
     STDMETHOD(DrvXMoveTo)(THIS_     PDEVOBJ     pdevobj,
                                     INT         x,
                                     DWORD       dwFlags,
-                                    OUT INT     *piResult) PURE;
+                                    OUT INT     *piResult) = 0;
 
     STDMETHOD(DrvYMoveTo)(THIS_     PDEVOBJ     pdevobj,
                                     INT         y,
                                     DWORD       dwFlags,
-                                    OUT INT     *piResult) PURE;
+                                    OUT INT     *piResult) = 0;
     //
     // Unidrv specific. To get the standard variable value.
     //
@@ -1920,7 +1920,7 @@ DECLARE_INTERFACE_(IPrintOemDriverUni, IUnknown)
                                                 DWORD       dwIndex,
                                                 PVOID       pBuffer,
                                                 DWORD       cbSize,
-                                                PDWORD      pcbNeeded) PURE;
+                                                PDWORD      pcbNeeded) = 0;
 
     //
     // Unidrv specific.  To Provide OEM plugins access to GPD data.
@@ -1932,7 +1932,7 @@ DECLARE_INTERFACE_(IPrintOemDriverUni, IUnknown)
                                      PVOID          pBuffer,     // Caller allocated Buffer to be copied
                                      DWORD       cbSize,     // Size of the buffer
                                      PDWORD      pcbNeeded   // New Size of the buffer if needed.
-                             ) PURE;
+                             ) = 0;
 
 
     //
@@ -1948,7 +1948,7 @@ DECLARE_INTERFACE_(IPrintOemDriverUni, IUnknown)
                                       BRUSHOBJ   *pboFore,
                                       BRUSHOBJ   *pboOpaque,
                                       POINTL     *pptlBrushOrg,
-                                      MIX         mix) PURE;
+                                      MIX         mix) = 0;
 
     //
     //   Warning!!!  new method!!  must place at end of
@@ -1959,7 +1959,7 @@ DECLARE_INTERFACE_(IPrintOemDriverUni, IUnknown)
                                             PVOID       pBuffer,
                                             DWORD       cbSize,
                                             DWORD       dwWait  //  pause data transmission for this many millisecs.
-                               ) PURE;
+                               ) = 0;
 };
 
 #endif  // !KERNEL_MODE

@@ -1327,7 +1327,7 @@ typedef enum tagSHCONTF
     SHCONTF_NETPRINTERSRCH      = 0x0200,   // hint that client is looking for printers
     SHCONTF_SHAREABLE           = 0x0400,   // hint that client is looking sharable resources (remote shares)
     SHCONTF_STORAGE             = 0x0800,   // include all items with accessible storage and their ancestors
-};
+} __SHCONTF__;
 typedef DWORD SHCONTF;
 
 #define SHCIDS_ALLFIELDS        0x80000000L
