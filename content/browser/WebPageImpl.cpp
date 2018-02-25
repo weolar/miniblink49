@@ -39,23 +39,21 @@
 #include "third_party/WebKit/Source/wtf/RefCountedLeakCounter.h"
 #include "third_party/WebKit/Source/wtf/text/WTFStringUtil.h"
 #include "third_party/WebKit/Source/bindings/core/v8/V8GCController.h"
-
-#include "skia/ext/bitmap_platform_device_win.h"
-
 #include "content/browser/WebPage.h"
 #include "content/browser/PlatformEventHandler.h"
-#include "content/browser/PopupMenuWin.h"
 #include "content/browser/WebFrameClientImpl.h"
 #include "content/browser/NavigationController.h"
 #include "content/browser/CheckReEnter.h"
-#include "content/browser/PlatformCursor.h"
-#include "content/browser/RunFileChooserImpl.h"
+#include "content/ui/PopupMenuWin.h"
+#include "content/ui/PlatformCursor.h"
+#include "content/ui/RunFileChooserImpl.h"
+#include "content/ui/DragHandle.h"
+#include "content/ui/ToolTip.h"
 #include "content/web_impl_win/BlinkPlatformImpl.h"
 #include "content/web_impl_win/WebThreadImpl.h"
 #include "content/web_impl_win/npapi/PluginDatabase.h"
 #include "content/devtools/DevToolsClient.h"
 #include "content/devtools/DevToolsAgent.h"
-
 #include "cc/trees/LayerTreeHost.h"
 #include "cc/base/BdColor.h"
 
@@ -72,8 +70,7 @@
 #include "wke/wkeJsBindFreeTempObject.h"
 #include "wke/wkeWebWindow.h"
 #endif
-
-#include "content/browser/ToolTip.h"
+#include "skia/ext/bitmap_platform_device_win.h"
 
 using namespace blink;
 
@@ -140,6 +137,7 @@ WebPageImpl::WebPageImpl()
     m_devToolsClient = nullptr;
     m_devToolsAgent = nullptr;
     m_isEnterDebugLoop = false;
+    m_dragHandle = new DragHandle();
 
     m_toolTip = new ToolTip();
     m_toolTip->init();
@@ -396,6 +394,9 @@ void WebPageImpl::init(WebPage* pagePtr, HWND hWnd)
 
     m_webViewImpl->setFocus(true);
 
+    if (hWnd)
+        ::RegisterDragDrop(hWnd, m_dragHandle);
+
     // DevToolsAgent必须先创建，不然无法记录执行环境，会导致console无法执行js
     blink::Platform::current()->currentThread()->addTaskObserver(new CreateDevToolsAgentTaskObserver(this));
    
@@ -485,6 +486,13 @@ void WebPageImpl::doClose()
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
     }
 #endif
+
+    if (m_hWnd)
+        ::RevokeDragDrop(m_hWnd);
+
+    ASSERT(0 == m_dragHandle->getRefCount());
+    delete m_dragHandle;
+    m_dragHandle = nullptr;
 
     content::WebThreadImpl* threadImpl = nullptr;
     threadImpl = (content::WebThreadImpl*)(blink::Platform::current()->currentThread());
@@ -1318,6 +1326,12 @@ LRESULT WebPageImpl::fireMouseEvent(HWND hWnd, UINT message, WPARAM wParam, LPAR
     return 0;
 }
 
+void WebPageImpl::startDragging(blink::WebLocalFrame* frame, const blink::WebDragData& data,
+    blink::WebDragOperationsMask mask, const blink::WebImage& image, const blink::WebPoint& dragImageOffset)
+{
+    m_dragHandle->startDragging(frame, data, mask, image, dragImageOffset);
+}
+
 void WebPageImpl::loadHistoryItem(int64 frameId, const WebHistoryItem& item, WebHistoryLoadType type, WebURLRequest::CachePolicy policy)
 {
     WebFrame* webFrame = getWebFrameFromFrameId(frameId);
@@ -1378,6 +1392,15 @@ void WebPageImpl::setTransparent(bool transparent)
     m_layerTreeHost->setBackgroundColor(cc::getRealColor(transparent, cc::s_kBgColor));
     m_webViewImpl->setIsTransparent(transparent);
     m_webViewImpl->setBaseBackgroundColor(cc::getRealColor(transparent, cc::s_kBgColor));
+}
+
+void WebPageImpl::setHWND(HWND hWnd)
+{
+    m_hWnd = hWnd;
+    if (m_hWnd) {
+        m_dragHandle->setViewWindow(m_hWnd, m_webViewImpl);
+        ::RegisterDragDrop(m_hWnd, m_dragHandle);
+    }
 }
 
 WebPageImpl* WebPageImpl::getSelfForCurrentContext()

@@ -5,7 +5,7 @@
 #include "config.h"
 #include "content/web_impl_win/WebClipboardImpl.h"
 
-#include "content/web_impl_win/ui/ClipboardUtil.h"
+#include "content/ui/ClipboardUtil.h"
 #include "third_party/WebKit/public/platform/WebData.h"
 #include "third_party/WebKit/public/platform/WebDragData.h"
 #include "third_party/WebKit/public/platform/WebImage.h"
@@ -39,25 +39,6 @@ using blink::WebURL;
 using blink::WebVector;
 
 namespace {
-
-const char kMimeTypeText[] = "text/plain";
-const char kMimeTypeURIList[] = "text/uri-list";
-const char kMimeTypeDownloadURL[] = "downloadurl";
-const char kMimeTypeHTML[] = "text/html";
-const char kMimeTypeRTF[] = "text/rtf";
-const char kMimeTypePNG[] = "image/png";
-
-HGLOBAL createGlobalData(const Vector<UChar>& str)
-{
-    HGLOBAL data = ::GlobalAlloc(GMEM_MOVEABLE, ((str.size() + 1) * sizeof(UChar)));
-    if (data) {
-        UChar* raw_data = static_cast<UChar*>(::GlobalLock(data));
-        memcpy(raw_data, str.data(), str.size() * sizeof(UChar));
-        raw_data[str.size()] = '\0';
-        ::GlobalUnlock(data);
-    }
-    return data;
-}
 
 
 void freeData(unsigned int format, HANDLE data)
@@ -252,37 +233,6 @@ private:
     bool m_isOpened;
 };
 
-static UINT getHtmlFormatType()
-{
-    static UINT s_HtmlFormatType = ::RegisterClipboardFormat(L"HTML Format");
-    return s_HtmlFormatType;
-}
-
-static UINT getWebKitSmartPasteFormatType()
-{
-    static UINT s_WebKitSmartPasteFormatType = ::RegisterClipboardFormat(L"WebKit Smart Paste Format");
-    return s_WebKitSmartPasteFormatType;
-}
-
-static UINT getUrlWFormatType()
-{
-    static UINT s_UrlWFormatType = ::RegisterClipboardFormat(CFSTR_INETURLW);
-    return s_UrlWFormatType;
-}
-
-static UINT getRtfFormatType()
-{
-    static UINT s_RtfFormatType = ::RegisterClipboardFormat(L"Rich Text Format");
-    return s_RtfFormatType;
-}
-
-const UINT getWebCustomDataFormatType() {
-
-    // TODO(dcheng): This name is temporary. See http://crbug.com/106449.
-    static UINT s_WebCustomDataFormatType = ::RegisterClipboardFormat(L"Chromium Web Custom MIME Data Format");
-    return s_WebCustomDataFormatType;
-}
-
 }
 
 namespace content {
@@ -313,12 +263,12 @@ bool WebClipboardImpl::isFormatAvailable(Format format, Buffer buffer)
     case FormatPlainText:
         return ::IsClipboardFormatAvailable(CF_UNICODETEXT) || ::IsClipboardFormatAvailable(CF_TEXT);
     case FormatHTML: {
-        return ::IsClipboardFormatAvailable(getHtmlFormatType());
+        return ::IsClipboardFormatAvailable(ClipboardUtil::getHtmlFormatType());
     }
     case FormatSmartPaste:
-        return ::IsClipboardFormatAvailable(getWebKitSmartPasteFormatType());
+        return ::IsClipboardFormatAvailable(ClipboardUtil::getWebKitSmartPasteFormatType());
     case FormatBookmark:
-        return ::IsClipboardFormatAvailable(getUrlWFormatType());
+        return ::IsClipboardFormatAvailable(ClipboardUtil::getUrlWFormatType());
     default:
         notImplemented();
     }
@@ -345,9 +295,9 @@ void WebClipboardImpl::readAvailableTypes(ClipboardType type, Vector<WebString>*
     types->clear();
     if (::IsClipboardFormatAvailable(CF_TEXT))
         types->append(WebString::fromUTF8(kMimeTypeText));
-    if (::IsClipboardFormatAvailable(getHtmlFormatType()))
+    if (::IsClipboardFormatAvailable(ClipboardUtil::getHtmlFormatType()))
         types->append(WebString::fromUTF8(kMimeTypeHTML));
-    if (::IsClipboardFormatAvailable(getRtfFormatType()))
+    if (::IsClipboardFormatAvailable(ClipboardUtil::getRtfFormatType()))
         types->append(WebString::fromUTF8(kMimeTypeRTF));
     if (::IsClipboardFormatAvailable(CF_DIB))
         types->append(WebString::fromUTF8(kMimeTypePNG));
@@ -393,7 +343,7 @@ WebString WebClipboardImpl::readHTML(Buffer buffer, WebURL* source_url,
     if (!clipboard.acquire(getClipboardWindow()))
         return WebString();
 
-    HANDLE data = ::GetClipboardData(getHtmlFormatType());
+    HANDLE data = ::GetClipboardData(ClipboardUtil::getHtmlFormatType());
     if (!data)
         return WebString();
 
@@ -512,7 +462,7 @@ void WebClipboardImpl::writeToClipboard(unsigned int format, HANDLE handle)
 
 void WebClipboardImpl::writeText(String string)
 {
-    HGLOBAL glob = createGlobalData(WTF::ensureUTF16UChar(string, false));
+    HGLOBAL glob = ClipboardUtil::createGlobalData(WTF::ensureUTF16UChar(string, false));
     writeToClipboard(CF_UNICODETEXT, glob);
 }
 
@@ -545,13 +495,13 @@ void WebClipboardImpl::writeHTMLInternal(const WebString& htmlText, const WebURL
         url = WTFStringToStdString(urlString);
 
     WTF::String htmlFragment = ClipboardUtil::HtmlToCFHtml(markup, url);
-    HGLOBAL glob = createGlobalData(ensureUTF16UChar(htmlFragment, false));
-    writeToClipboard(getHtmlFormatType(), glob);
-	writeText(plainText);
+    HGLOBAL glob = ClipboardUtil::createGlobalData(ensureUTF16UChar(htmlFragment, false));
+    writeToClipboard(ClipboardUtil::getHtmlFormatType(), glob);
+    writeText(plainText);
 
     if (writeSmartPaste) {
         ASSERT(m_clipboardOwner != NULL);
-        ::SetClipboardData(getWebKitSmartPasteFormatType(), NULL);
+        ::SetClipboardData(ClipboardUtil::getWebKitSmartPasteFormatType(), NULL);
     }
 
     ::GlobalUnlock(glob);
@@ -653,9 +603,9 @@ void WebClipboardImpl::writeBookmark(const String& titleData , const String& url
     bookmark.append(WTF::ensureUTF16String(urlData));
 
     Vector<UChar> wideBookmark = WTF::ensureUTF16UChar(bookmark, false);
-    HGLOBAL glob = createGlobalData(wideBookmark);
+    HGLOBAL glob = ClipboardUtil::createGlobalData(wideBookmark);
 
-    writeToClipboard(getUrlWFormatType(), glob);
+    writeToClipboard(ClipboardUtil::getUrlWFormatType(), glob);
 }
 
 void WebClipboardImpl::writeImage(const WebImage& image, const WebURL& url, const WebString& title)

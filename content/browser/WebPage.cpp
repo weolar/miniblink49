@@ -295,7 +295,7 @@ HWND WebPage::getHWND() const
 void WebPage::setHWND(HWND hwnd)
 {
     if (m_pageImpl)
-        m_pageImpl->m_hWnd = hwnd;
+        m_pageImpl->setHWND(hwnd);
 }
 
 void WebPage::setHwndRenderOffset(const blink::IntPoint& offset)

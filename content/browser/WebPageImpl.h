@@ -12,7 +12,7 @@
 #include "cc/trees/LayerTreeHostClient.h"
 #include "skia/ext/platform_canvas.h"
 
-#include "content/browser/PopupMenuWinClient.h"
+#include "content/ui/PopupMenuWinClient.h"
 
 namespace cc {
 class LayerTreeHost;
@@ -43,6 +43,7 @@ class PopupMenuWin;
 class ToolTip;
 class DevToolsClient;
 class DevToolsAgent;
+class DragHandle;
 
 class WebPageImpl 
     : public blink::WebViewClient
@@ -93,6 +94,10 @@ public:
 
     // Editing --------------------------------------------------------
     virtual bool handleCurrentKeyboardEvent() override;
+
+    // Called when a drag-n-drop operation should begin.
+    virtual void startDragging(blink::WebLocalFrame* frame, const blink::WebDragData& data, 
+        blink::WebDragOperationsMask mask, const blink::WebImage& image, const blink::WebPoint& dragImageOffset) override;
 
     // Return a compositing view used for this widget. This is owned by the
     // WebWidgetClient.
@@ -165,6 +170,7 @@ public:
     void loadHTMLString(int64 frameId, const blink::WebData& html, const blink::WebURL& baseURL, const blink::WebURL& unreachableURL, bool replace);
 
     void setTransparent(bool transparent);
+    void setHWND(HWND hWnd);
 
     // Session history -----------------------------------------------------
     void didCommitProvisionalLoad(blink::WebLocalFrame* frame, const blink::WebHistoryItem& history, blink::WebHistoryCommitType type);
@@ -275,6 +281,8 @@ public:
     void willEnterDebugLoop();
     void didExitDebugLoop();
     bool m_isEnterDebugLoop;
+
+    DragHandle* m_dragHandle;
 };
 
 } // blink

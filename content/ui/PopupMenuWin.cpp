@@ -18,8 +18,8 @@
 * Boston, MA 02110-1301, USA.
 */
 
-#include "content/browser/PopupMenuWin.h"
-#include "content/browser/PopupMenuWinClient.h"
+#include "content/ui/PopupMenuWin.h"
+#include "content/ui/PopupMenuWinClient.h"
 #include "content/browser/PlatformEventHandler.h"
 #include "third_party/WebKit/Source/platform/geometry/win/IntRectWin.h"
 #include "third_party/WebKit/Source/web/WebPagePopupImpl.h"

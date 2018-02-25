@@ -76,7 +76,8 @@ public:
         if (m_popMenu)
             ::DestroyMenu(m_popMenu);
         m_popMenu = ::CreatePopupMenu();
-        m_data = data;
+        
+        m_data = blink::WebContextMenuData();
 
         if (!data.selectedText.isNull() && !data.selectedText.isEmpty())
             ::AppendMenu(m_popMenu, MF_STRING, kCopySelectedTextId, L"¸´ÖÆ");
@@ -88,6 +89,14 @@ public:
             ::AppendMenu(m_popMenu, MF_STRING, kCutId, L"¼ôÇÐ");
             ::AppendMenu(m_popMenu, MF_STRING, kPasteId, L"Õ³Ìù");
         }
+
+        if (0 == ::GetMenuItemCount(m_popMenu)) {
+            ::DestroyMenu(m_popMenu);
+            m_popMenu = nullptr;
+            return;
+        }
+
+        m_data = data;
 
         UINT flags = TPM_RIGHTBUTTON | TPM_TOPALIGN | TPM_VERPOSANIMATION | TPM_HORIZONTAL | TPM_LEFTALIGN | TPM_HORPOSANIMATION;
         ::TrackPopupMenuEx(m_popMenu, flags, clientPt.x, clientPt.y, m_hWnd, 0);
