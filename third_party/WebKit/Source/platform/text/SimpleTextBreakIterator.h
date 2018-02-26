@@ -20,14 +20,14 @@ public:
     void setText(const UChar* string, int length);
     void scan();
 
-    virtual int32_t first(void) OVERRIDE;
-    virtual int32_t last(void) OVERRIDE;
-    virtual int32_t previous(void) OVERRIDE;
-    virtual int32_t next() OVERRIDE;
-    virtual bool isBoundary(int32_t offset) OVERRIDE;
-    virtual int32_t following(int32_t offset) OVERRIDE;
-    virtual int32_t preceding(int32_t offset) OVERRIDE;
-    virtual int32_t current(void) const OVERRIDE;
+    virtual int32_t first(void) override;
+    virtual int32_t last(void) override;
+    virtual int32_t previous(void) override;
+    virtual int32_t next() override;
+    virtual bool isBoundary(int32_t offset) override;
+    virtual int32_t following(int32_t offset) override;
+    virtual int32_t preceding(int32_t offset) override;
+    virtual int32_t current(void) const override;
 
 private:
     struct BreakRun {
@@ -238,83 +238,92 @@ struct WordBreakIterator : TextBreakIterator {
     {
     }
 
-    virtual int first() OVERRIDE
+    virtual int first() override
     {
         m_currentPos = 0;
         return m_currentPos;
     }
 
-//     virtual int next() OVERRIDE
-//     {
-//         ++m_currentPos;
-//         if (m_currentPos >= m_length) {
-//             m_currentPos = m_length;
-//             return m_currentPos;
-//         }
-//         
-//         while (m_currentPos < m_length) {
-//             bool isBreak = isWordBreak(m_string[m_currentPos]);
-//             if (isBreak) {
-//                 break;
-//             }
-//             ++m_currentPos;
-//         }
-//         return m_currentPos;
-//     }
-
-    virtual int next() OVERRIDE
+    // next和previous算法的区别是字节交界处，012\n4，pos=3，next到4即可，previous要遍历到0
+    virtual int next() override
     {
-        if (m_currentPos == m_length) {
-            m_currentPos = -1;
+        if (m_currentPos >= m_length) {
+            m_currentPos = m_length;
+            return -1;
+        }
+        if (m_currentPos < 0) {
+            m_currentPos = 0;
             return m_currentPos;
         }
+
         bool haveSpace = false;
-        while (m_currentPos < m_length) {
-            UChar c = m_string[m_currentPos];
-            if (haveSpace && (WTF::Unicode::isChineseUtf16Char(c) || !isWordBreak(c)))
-                break;
-            if (isWordBreak(c))
-                haveSpace = true;
-            ++m_currentPos;
+
+        UChar c = m_string[m_currentPos];
+        if (isWordBreak(c)) {
+            m_currentPos++;
+            return m_currentPos;
         }
+
+        while (m_currentPos < m_length) {
+            c = m_string[m_currentPos];
+
+            if (!isWordBreak(c)) {
+                m_currentPos++;
+                continue;
+            }
+
+            break;
+        }
+
         return m_currentPos;
     }
 
-//     virtual int previous() OVERRIDE
-//     {
-//         --m_currentPos;
-//         if (m_currentPos < 0) {
-//             m_currentPos = -1;
-//             return m_currentPos;
-//         }
-// 
-//         while (m_currentPos > 0) {
-//             bool isBreak = isWordBreak(m_string[m_currentPos]);
-//             
-//             if (isBreak) {
-//                 break;
-//             }
-//             --m_currentPos;
-//         }
-//         return m_currentPos;
-//     }
-
-    virtual int previous() OVERRIDE
+    virtual int previous() override
     {
-        if (!m_currentPos) {
-            m_currentPos = -1;
+        if (0 == m_currentPos)
+            return -1;
+
+        if (m_currentPos < 0) {
+            m_currentPos = 0;
             return m_currentPos;
         }
 
-        bool haveSpace = false;
-        while (m_currentPos > 0) {
-            UChar c = m_string[m_currentPos];
-            if (haveSpace && (WTF::Unicode::isChineseUtf16Char(c) || !isWordBreak(c)))
-                break;
-            if (isWordBreak(c))
-                haveSpace = true;
-            --m_currentPos;
+        if (m_currentPos > m_length) {
+            m_currentPos = m_length;
+            return m_currentPos;
         }
+
+        UChar c;
+        if (m_currentPos == m_length) {
+            m_currentPos = m_length - 1;
+            c = m_string[m_currentPos];
+            if (isWordBreak(c))
+                return m_currentPos;
+        }
+
+        c = m_string[m_currentPos];
+        UChar cPrev = m_string[m_currentPos - 1];
+
+        if (isWordBreak(cPrev)) {
+            m_currentPos--;
+            return m_currentPos;
+        }
+
+        if (!isWordBreak(cPrev) && isWordBreak(c)) {
+            m_currentPos--;
+            c = m_string[m_currentPos];
+        }
+
+        while (m_currentPos > 0) {
+            c = m_string[m_currentPos];
+
+            if (isWordBreak(c)) {
+                return m_currentPos + 1;
+            }
+            m_currentPos--;
+            continue;
+        }
+
         return m_currentPos;
     }
 };
@@ -328,13 +337,13 @@ struct CharBreakIterator : TextBreakIterator {
     {
     }
 
-    virtual int first() OVERRIDE
+    virtual int first() override
     {
         m_currentPos = 0;
         return m_currentPos;
     }
 
-    virtual int next() OVERRIDE
+    virtual int next() override
     {
         if (m_currentPos >= m_length)
             return m_length - 1;
@@ -342,7 +351,7 @@ struct CharBreakIterator : TextBreakIterator {
         return m_currentPos;
     }
 
-    virtual int previous() OVERRIDE
+    virtual int previous() override
     {
         if (m_currentPos <= 0)
             return -1;
@@ -354,13 +363,13 @@ struct CharBreakIterator : TextBreakIterator {
 };
 
 struct LineBreakIterator : TextBreakIterator {
-    virtual int first() OVERRIDE
+    virtual int first() override
     {
         m_currentPos = 0;
         return m_currentPos;
     }
 
-    virtual int next() OVERRIDE
+    virtual int next() override
     {
         if (m_currentPos >= m_length) {
             return -1;
@@ -372,7 +381,7 @@ struct LineBreakIterator : TextBreakIterator {
         return m_currentPos;
     }
 
-    virtual int previous() OVERRIDE
+    virtual int previous() override
     {
         if (m_currentPos <= 0)
             return -1;
@@ -394,13 +403,13 @@ struct SentenceBreakIterator : TextBreakIterator {
     {
     }
 
-    virtual int first() OVERRIDE
+    virtual int first() override
     {
         m_currentPos = 0;
         return m_currentPos;
     }
 
-    virtual int next() OVERRIDE
+    virtual int next() override
     {
         m_currentPos++;
         if (m_currentPos >= m_length) {
@@ -419,7 +428,7 @@ struct SentenceBreakIterator : TextBreakIterator {
         return m_currentPos;
     }
 
-    virtual int previous() OVERRIDE
+    virtual int previous() override
     {
         --m_currentPos;
         if (m_currentPos <= 0) {
