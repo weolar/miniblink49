@@ -388,13 +388,26 @@ bool moveItemToTrash(const base::FilePath& path) {
 
     // Create an IShellItem from the supplied source path.
     base::win::ScopedComPtr<IShellItem> delete_item;
-    if (FAILED(SHCreateItemFromParsingName(path.value().c_str(),
-        NULL,
-        IID_PPV_ARGS(delete_item.Receive()))))
-        return false;
+//     if (FAILED(SHCreateItemFromParsingName(path.value().c_str(), NULL, IID_PPV_ARGS(delete_item.Receive()))))
+//         return false;
 
-    base::win::ScopedComPtr<IFileOperationProgressSink> delete_sink(
-        new DeleteFileProgressSink);
+    // https://stackoverflow.com/questions/20885556/replacement-for-shcreateitemfromparsingname-on-windows-xp
+    // http://blog.csdn.net/infoworld/article/details/54574953
+    IFileDialog *pfd = nullptr;
+    PIDLIST_ABSOLUTE pidl = nullptr;
+    HRESULT hresult = ::SHParseDisplayName(path.value().c_str(), 0, &pidl, SFGAO_FOLDER, 0);
+    if (SUCCEEDED(hresult)) {
+        IShellFolder* psf = nullptr;
+        hresult = ::SHGetDesktopFolder(&psf);
+        if (SUCCEEDED(hresult)) {
+            hresult = psf->BindToObject(pidl, 0, IID_IShellFolder, (void**)delete_item.Receive());
+            if (SUCCEEDED(hresult)) {
+                pfd->SetFolder(delete_item.get());
+            }
+        }
+    }
+
+    base::win::ScopedComPtr<IFileOperationProgressSink> delete_sink(new DeleteFileProgressSink);
     if (!delete_sink)
         return false;
 
