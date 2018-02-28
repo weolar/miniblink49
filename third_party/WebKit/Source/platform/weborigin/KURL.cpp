@@ -840,7 +840,9 @@ String KURL::query() const
 
 String KURL::path() const
 {
-    return decodeURLEscapeSequences(m_string.substring(m_portEnd, m_pathEnd - m_portEnd)); 
+    String path = decodeURLEscapeSequences(m_string.substring(m_portEnd, m_pathEnd - m_portEnd));
+    // 这个函数会给v8用，blink在处理传给v8的字符串的时候，只要是复杂字符，都是16位编码的
+    return WTF::ensureUTF16String(path);
 }
 
 bool KURL::setProtocol(const String& s)
