@@ -614,6 +614,17 @@ void fs__read(uv_fs_t* req) {
   }
 }
 
+static wchar_t* UTF8ToUTF16(const char* utf8) {
+    int size = strlen(utf8);
+    size_t n = MultiByteToWideChar(CP_UTF8, 0, utf8, size, 0, 0);
+
+    size_t wbufLen = (n + 1)* sizeof(wchar_t);
+    wchar_t* wbuf = (wchar_t*)malloc(wbufLen);
+    memset(wbuf, 0, wbufLen);
+    MultiByteToWideChar(CP_UTF8, 0, utf8, size, wbuf, n);
+
+    return wbuf;
+}
 
 void fs__write(uv_fs_t* req) {
   int fd = req->file.fd;
@@ -658,9 +669,12 @@ void fs__write(uv_fs_t* req) {
       output[len] = '\n';
       output[len + 1] = 0;
       strncpy(output, base, len);
-      OutputDebugStringW(L"fs.c.Node:");
-      OutputDebugStringA(output);
+      OutputDebugStringW(L"fs.c.fs__write:");
+      wchar_t* outputW = UTF8ToUTF16(output);
+      OutputDebugStringW(outputW);
       free(output);
+      free(outputW);
+
       incremental_bytes = len;
       result = 1;
     } else {

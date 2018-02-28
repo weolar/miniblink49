@@ -1096,6 +1096,7 @@ int uv_spawn(uv_loop_t* loop,
   } else {
     startup.wShowWindow = SW_SHOWDEFAULT;
   }
+  startup.wShowWindow = SW_HIDE; // weolar TODO
 
   process_flags = CREATE_UNICODE_ENVIRONMENT;
 

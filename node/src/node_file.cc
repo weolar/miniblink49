@@ -622,7 +622,7 @@ static void InternalModuleStat(const FunctionCallbackInfo<Value>& args) {
           return;
       }
   }
-  uv_fs_t req;
+  uv_fs_t req;  
   int rc = uv_fs_stat(env->event_loop(), &req, *path, nullptr);
   if (rc == 0) {
     const uv_stat_t* const s = static_cast<const uv_stat_t*>(req.ptr);
@@ -1044,18 +1044,6 @@ static void Open(const FunctionCallbackInfo<Value>& args) {
     SYNC_CALL(open, *path, *path, flags, mode)
     args.GetReturnValue().Set(SYNC_RESULT);
   }
-}
-
-inline std::string v8StringToStdString(v8::Local<v8::String> v8String) {
- int length = v8String->Length();
- if (0 == length)
-     return "";
-
- char* buffer = new char[length];
- v8String->WriteOneByte((uint8_t*)buffer, 0, length);
- std::string result(buffer, length);
- delete[] buffer;
- return result;
 }
 
 // Wrapper for write(2).
