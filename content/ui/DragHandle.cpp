@@ -20,7 +20,8 @@ void DragHandle::setViewWindow(HWND viewWindow, blink::WebViewImpl* webViewImpl)
 {
     m_viewWindow = viewWindow;
     m_webViewImpl = webViewImpl;
-    CoCreateInstance(CLSID_DragDropHelper, 0, CLSCTX_INPROC_SERVER, IID_IDropTargetHelper, (void**)&m_dropTargetHelper);
+
+    ::CoCreateInstance(CLSID_DragDropHelper, 0, CLSCTX_INPROC_SERVER, IID_IDropTargetHelper, (void**)&m_dropTargetHelper);
 }
 
 DWORD DragHandle::draggingSourceOperationMaskToDragCursors(blink::WebDragOperationsMask op)
@@ -125,6 +126,10 @@ blink::WebDragOperation DragHandle::doStartDragging(blink::WebLocalFrame* frame,
     const blink::WebPoint& dragImageOffset)
 {
     blink::WebDragOperation operation = blink::WebDragOperationNone;
+
+    if (!m_viewWindow)
+        return operation;
+
     //FIXME: Allow UIDelegate to override behaviour <rdar://problem/5015953>
 
     //We liberally protect everything, to protect against a load occurring mid-drag

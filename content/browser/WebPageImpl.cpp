@@ -200,6 +200,46 @@ WebPageImpl::~WebPageImpl()
     platform->startGarbageCollectedThread(0);
 }
 
+class CreateDevToolsAgentTaskObserver : public blink::WebThread::TaskObserver {
+public:
+    CreateDevToolsAgentTaskObserver(WebPageImpl* parent)
+    {
+        m_parent = parent;
+    }
+    virtual ~CreateDevToolsAgentTaskObserver() {}
+
+    virtual void willProcessTask() override {}
+    virtual void didProcessTask() override
+    {
+        if (!m_parent->isDevToolsClient())
+            m_parent->createOrGetDevToolsAgent();
+        blink::Platform::current()->currentThread()->removeTaskObserver(this);
+    }
+
+private:
+    WebPageImpl* m_parent;
+};
+
+void WebPageImpl::init(WebPage* pagePtr, HWND hWnd)
+{
+    if (hWnd)
+        setHWND(hWnd);
+
+    LONG windowStyle = GetWindowLongPtr(hWnd, GWL_EXSTYLE);
+    bool useLayeredBuffer = !!(windowStyle & WS_EX_LAYERED);
+    m_layerTreeHost->setHasTransparentBackground(useLayeredBuffer);
+
+    m_pagePtr = pagePtr;
+    m_webFrameClient->setWebPage(m_pagePtr);
+
+    m_webViewImpl->setFocus(true);
+
+    // DevToolsAgent必须先创建，不然无法记录执行环境，会导致console无法执行js
+    blink::Platform::current()->currentThread()->addTaskObserver(new CreateDevToolsAgentTaskObserver(this));
+
+    m_state = pageInited;
+}
+
 bool WebPageImpl::checkForRepeatEnter()
 {
     if (m_enterCount == 0 && 0 == CheckReEnter::s_kEnterContent)
@@ -359,48 +399,6 @@ WebView* WebPageImpl::createView(WebLocalFrame* creator,
 #else
     return nullptr;
 #endif
-}
-
-class CreateDevToolsAgentTaskObserver : public blink::WebThread::TaskObserver {
-public:
-    CreateDevToolsAgentTaskObserver(WebPageImpl* parent)
-    {
-        m_parent = parent;
-    }
-    virtual ~CreateDevToolsAgentTaskObserver() {}
-
-    virtual void willProcessTask() override { }
-    virtual void didProcessTask() override
-    {
-        if (!m_parent->isDevToolsClient())
-            m_parent->createOrGetDevToolsAgent();
-        blink::Platform::current()->currentThread()->removeTaskObserver(this);
-    }
-
-private:
-    WebPageImpl* m_parent;
-};
-
-void WebPageImpl::init(WebPage* pagePtr, HWND hWnd)
-{
-    m_hWnd = hWnd;
-
-    LONG windowStyle = GetWindowLongPtr(hWnd, GWL_EXSTYLE);
-    bool useLayeredBuffer = !!(windowStyle & WS_EX_LAYERED);
-    m_layerTreeHost->setHasTransparentBackground(useLayeredBuffer);
-
-    m_pagePtr = pagePtr;
-    m_webFrameClient->setWebPage(m_pagePtr);
-
-    m_webViewImpl->setFocus(true);
-
-    if (hWnd)
-        ::RegisterDragDrop(hWnd, m_dragHandle);
-
-    // DevToolsAgent必须先创建，不然无法记录执行环境，会导致console无法执行js
-    blink::Platform::current()->currentThread()->addTaskObserver(new CreateDevToolsAgentTaskObserver(this));
-   
-    m_state = pageInited;
 }
 
 DevToolsAgent* WebPageImpl::createOrGetDevToolsAgent()
@@ -1397,7 +1395,7 @@ void WebPageImpl::setTransparent(bool transparent)
 void WebPageImpl::setHWND(HWND hWnd)
 {
     m_hWnd = hWnd;
-    if (m_hWnd) {
+    if (m_hWnd && blink::RuntimeEnabledFeatures::updataInOtherThreadEnabled) {
         m_dragHandle->setViewWindow(m_hWnd, m_webViewImpl);
         ::RegisterDragDrop(m_hWnd, m_dragHandle);
     }
