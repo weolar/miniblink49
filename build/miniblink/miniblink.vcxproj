@@ -363,6 +363,7 @@
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
       <InlineFunctionExpansion>Default</InlineFunctionExpansion>
       <FunctionLevelLinking>true</FunctionLevelLinking>
+      <AdditionalOptions>/Zc:threadSafeInit- %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>Debug</GenerateDebugInformation>
@@ -515,6 +516,11 @@
     <ClCompile Include="..\..\content\resources\DebuggerScriptSourceJs.cpp" />
     <ClCompile Include="..\..\content\resources\InjectedScriptSourceJs.cpp" />
     <ClCompile Include="..\..\content\resources\InspectorOverlayPageHtml.cpp" />
+    <ClCompile Include="..\..\content\ui\ClipboardUtil.cpp" />
+    <ClCompile Include="..\..\content\ui\DragHandle.cpp" />
+    <ClCompile Include="..\..\content\ui\PopupMenuWin.cpp" />
+    <ClCompile Include="..\..\content\ui\WCDataObject.cpp" />
+    <ClCompile Include="..\..\content\ui\WebDropSource.cpp" />
     <ClCompile Include="..\..\content\web_impl_win\WebMessagePortChannelImpl.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8DevToolsHost.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8InspectorOverlayHost.cpp" />
@@ -789,7 +795,6 @@
     <ClCompile Include="..\..\content\browser\CheckReEnter.cpp" />
     <ClCompile Include="..\..\content\browser\NavigationController.cpp" />
     <ClCompile Include="..\..\content\browser\PlatformEventHandler.cpp" />
-    <ClCompile Include="..\..\content\browser\PopupMenuWin.cpp" />
     <ClCompile Include="..\..\content\browser\WebFrameClientImpl.cpp" />
     <ClCompile Include="..\..\content\browser\WebPage.cpp" />
     <ClCompile Include="..\..\content\browser\WebPageImpl.cpp" />
@@ -5436,15 +5441,22 @@
     <ClInclude Include="..\..\cc\raster\RasterFilters.h" />
     <ClInclude Include="..\..\cc\raster\RasterTask.h" />
     <ClInclude Include="..\..\cc\tiles\TileWidthHeight.h" />
-    <ClInclude Include="..\..\content\browser\ContextMeun.h" />
-    <ClInclude Include="..\..\content\browser\PlatformCursor.h" />
     <ClInclude Include="..\..\content\browser\PlatformMessagePortChannel.h" />
-    <ClInclude Include="..\..\content\browser\RunFileChooserImpl.h" />
-    <ClInclude Include="..\..\content\browser\ToolTip.h" />
     <ClInclude Include="..\..\content\devtools\DevToolsAgent.h" />
     <ClInclude Include="..\..\content\devtools\DevToolsClient.h" />
     <ClInclude Include="..\..\content\devtools\DevToolsMgr.h" />
     <ClInclude Include="..\..\content\devtools\DevToolsProtocolDispatcher.h" />
+    <ClInclude Include="..\..\content\ui\ClipboardUtil.h" />
+    <ClInclude Include="..\..\content\ui\COMPtr.h" />
+    <ClInclude Include="..\..\content\ui\ContextMeun.h" />
+    <ClInclude Include="..\..\content\ui\DragHandle.h" />
+    <ClInclude Include="..\..\content\ui\PlatformCursor.h" />
+    <ClInclude Include="..\..\content\ui\PopupMenuWin.h" />
+    <ClInclude Include="..\..\content\ui\PopupMenuWinClient.h" />
+    <ClInclude Include="..\..\content\ui\RunFileChooserImpl.h" />
+    <ClInclude Include="..\..\content\ui\ToolTip.h" />
+    <ClInclude Include="..\..\content\ui\WCDataObject.h" />
+    <ClInclude Include="..\..\content\ui\WebDropSource.h" />
     <ClInclude Include="..\..\content\web_impl_win\WebMessagePortChannelImpl.h" />
     <ClInclude Include="..\..\gen\blink\bindings\core\v8\V8XMLSerializer.h" />
     <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8DevToolsHostPartial.h" />
@@ -5811,7 +5823,6 @@
     <ClInclude Include="..\..\content\browser\CheckReEnter.h" />
     <ClInclude Include="..\..\content\browser\NavigationController.h" />
     <ClInclude Include="..\..\content\browser\PlatformEventHandler.h" />
-    <ClInclude Include="..\..\content\browser\PopupMenuWin.h" />
     <ClInclude Include="..\..\content\browser\SharedTimerWin.h" />
     <ClInclude Include="..\..\content\browser\WebFrameClientImpl.h" />
     <ClInclude Include="..\..\content\browser\WebPage.h" />
@@ -5832,7 +5843,6 @@
     <ClInclude Include="..\..\content\web_impl_win\npapi\PluginQuirkSet.h" />
     <ClInclude Include="..\..\content\web_impl_win\npapi\PluginStream.h" />
     <ClInclude Include="..\..\content\web_impl_win\npapi\WebPluginImpl.h" />
-    <ClInclude Include="..\..\content\web_impl_win\ui\ClipboardUtil.h" />
     <ClInclude Include="..\..\content\web_impl_win\WaitableEvent.h" />
     <ClInclude Include="..\..\content\web_impl_win\WebBlobRegistryImpl.h" />
     <ClInclude Include="..\..\content\web_impl_win\WebClipboardImpl.h" />

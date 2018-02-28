@@ -706,9 +706,6 @@
     <Filter Include="cc\layers">
       <UniqueIdentifier>{213bd9dc-f6b0-4fcf-9e5f-b444713df395}</UniqueIdentifier>
     </Filter>
-    <Filter Include="content\web_impl_win\ui">
-      <UniqueIdentifier>{b468b82a-41a2-4896-a4b4-8ec26f8a3ae0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="net\websocket">
       <UniqueIdentifier>{eac8e4db-7f21-4a45-9040-df20582d4727}</UniqueIdentifier>
     </Filter>
@@ -792,6 +789,9 @@
     </Filter>
     <Filter Include="base\json">
       <UniqueIdentifier>{dd65231d-d14f-4a97-b2b3-3ee72313ad61}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="content\ui">
+      <UniqueIdentifier>{b468b82a-41a2-4896-a4b4-8ec26f8a3ae0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -8595,9 +8595,6 @@
     <ClCompile Include="..\..\content\browser\PlatformEventHandler.cpp">
       <Filter>content\browser</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\content\browser\PopupMenuWin.cpp">
-      <Filter>content\browser</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\content\resources\pickerButtonCss.cpp">
       <Filter>content\resources</Filter>
     </ClCompile>
@@ -10077,6 +10074,21 @@
     </ClCompile>
     <ClCompile Include="..\..\content\resources\InjectedScriptSourceJs.cpp">
       <Filter>content\resources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\content\ui\PopupMenuWin.cpp">
+      <Filter>content\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\content\ui\WCDataObject.cpp">
+      <Filter>content\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\content\ui\WebDropSource.cpp">
+      <Filter>content\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\content\ui\ClipboardUtil.cpp">
+      <Filter>content\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\content\ui\DragHandle.cpp">
+      <Filter>content\ui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -20883,9 +20895,6 @@
     <ClInclude Include="..\..\cef\libcef\renderer\CefV8Impl.h">
       <Filter>cef\libcef\renderer</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\content\browser\PopupMenuWin.h">
-      <Filter>content\browser</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\third_party\WebKit\public\web\WebView.h">
       <Filter>third_party\Webkit\public\web</Filter>
     </ClInclude>
@@ -21876,9 +21885,6 @@
     <ClInclude Include="..\..\content\web_impl_win\WebClipboardImpl.h">
       <Filter>content\web_impl_win</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\content\web_impl_win\ui\ClipboardUtil.h">
-      <Filter>content\web_impl_win\ui</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\base\strings\string_util.h">
       <Filter>base\strings</Filter>
     </ClInclude>
@@ -22626,9 +22632,6 @@
     <ClInclude Include="..\..\net\FixedReceivedData.h">
       <Filter>net</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\content\browser\ToolTip.h">
-      <Filter>content\browser</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\cc\raster\RasterFilters.h">
       <Filter>cc\raster</Filter>
     </ClInclude>
@@ -22650,14 +22653,8 @@
     <ClInclude Include="..\..\net\WebURLLoaderManagerMainTask.h">
       <Filter>net</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\content\browser\PlatformCursor.h">
-      <Filter>content\browser</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\wke\wkedefine.h">
       <Filter>wke</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\content\browser\RunFileChooserImpl.h">
-      <Filter>content\browser</Filter>
     </ClInclude>
     <ClInclude Include="..\..\net\WebURLLoaderManagerSetupInfo.h">
       <Filter>net</Filter>
@@ -22971,8 +22968,38 @@
     <ClInclude Include="..\..\third_party\WebKit\Source\web\InspectorOverlayImpl.h">
       <Filter>third_party\Webkit\Source\web</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\content\browser\ContextMeun.h">
-      <Filter>content\browser</Filter>
+    <ClInclude Include="..\..\content\ui\DragHandle.h">
+      <Filter>content\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\content\ui\PlatformCursor.h">
+      <Filter>content\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\content\ui\PopupMenuWin.h">
+      <Filter>content\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\content\ui\PopupMenuWinClient.h">
+      <Filter>content\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\content\ui\RunFileChooserImpl.h">
+      <Filter>content\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\content\ui\ToolTip.h">
+      <Filter>content\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\content\ui\WCDataObject.h">
+      <Filter>content\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\content\ui\WebDropSource.h">
+      <Filter>content\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\content\ui\ClipboardUtil.h">
+      <Filter>content\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\content\ui\COMPtr.h">
+      <Filter>content\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\content\ui\ContextMeun.h">
+      <Filter>content\ui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
