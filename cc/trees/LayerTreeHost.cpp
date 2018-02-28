@@ -182,11 +182,13 @@ void LayerTreeHost::unregisterLayer(cc_blink::WebLayerImpl* layer)
 
 void LayerTreeHost::registerCCLayer(CompositingLayer* layer)
 {
+    WTF::Locker<WTF::Mutex> locker(m_compositeMutex);
     m_liveCCLayers.add(layer->id(), layer);
 }
 
 void LayerTreeHost::unregisterCCLayer(CompositingLayer* layer)
 {
+    WTF::Locker<WTF::Mutex> locker(m_compositeMutex);
     m_liveCCLayers.remove(layer->id());
 }
 
