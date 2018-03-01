@@ -42,6 +42,7 @@ void initPartialInterfacesInModules()
 #else
     V8NavigatorPartial::initialize();
     V8WindowPartial::initialize();
+    V8DevToolsHostPartial::initialize();
     V8ScreenPartial::initialize();
     V8HTMLInputElementPartial::initialize();
     V8MouseEventPartial::initialize();
