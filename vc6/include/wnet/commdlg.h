@@ -887,6 +887,9 @@ WINCOMMDLGAPI BOOL APIENTRY PrintDlgW(LPPRINTDLGW);
 #undef  INTERFACE
 #define INTERFACE   IPrintDialogCallback
 
+
+#ifdef __cplusplus
+
 DECLARE_INTERFACE_(IPrintDialogCallback, IUnknown)
 {
     // *** IUnknown methods ***
@@ -932,8 +935,9 @@ DECLARE_INTERFACE_(IPrintDialogServices, IUnknown)
     STDMETHOD(GetCurrentPortName) (THIS_ LPTSTR pPortName, UINT *pcchSize) = 0;
 };
 
+#endif // __cplusplus
 
-//
+
 //  Page Range structure for PrintDlgEx.
 //
 typedef struct tagPRINTPAGERANGE {
