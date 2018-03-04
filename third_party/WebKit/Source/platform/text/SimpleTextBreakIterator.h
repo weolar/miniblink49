@@ -301,6 +301,9 @@ struct WordBreakIterator : TextBreakIterator {
                 return m_currentPos;
         }
 
+        if (0 == m_currentPos)
+            return 0;
+
         c = m_string[m_currentPos];
         UChar cPrev = m_string[m_currentPos - 1];
 
