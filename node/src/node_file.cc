@@ -1046,6 +1046,18 @@ static void Open(const FunctionCallbackInfo<Value>& args) {
   }
 }
 
+std::string v8StringToStdString(v8::Local<v8::String> v8String) {
+    int length = v8String->Length();
+    if (0 == length)
+        return "";
+
+    char* buffer = new char[length];
+    v8String->WriteOneByte((uint8_t*)buffer, 0, length);
+    std::string result(buffer, length);
+    delete[] buffer;
+    return result;
+}
+
 // Wrapper for write(2).
 //
 // bytesWritten = write(fd, buffer, offset, length, position, callback)
