@@ -59,7 +59,7 @@ typedef unsigned short wchar_t;
 #endif
 
 #if 1 // ndef _TIME_T_DEFINED
-#ifdef  _WIN64
+#if 1 // def  _WIN64
 typedef __int64 time_t;         /* time value */
 #else
 typedef long    time_t;         /* time value */
