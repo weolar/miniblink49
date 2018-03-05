@@ -674,6 +674,10 @@ static CURLcode file_do(struct connectdata *conn, bool *done)
       bytestoread = data->set.buffer_size-1;
 
     nread = (userReadFile ? userReadFile((void*)fd, buf, bytestoread) : read(fd, buf, bytestoread));
+    if (nread < 0 || (size_t)nread > bytestoread) {
+        OutputDebugStringA("read nread error\n");
+        DebugBreak();
+    }
 
     if(nread > 0)
       buf[nread] = 0;
