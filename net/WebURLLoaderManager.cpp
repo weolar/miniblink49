@@ -894,6 +894,8 @@ public:
     {
         m_manager = manager;
         m_jobId = jobId;
+        WebURLLoaderInternal* job = m_manager->checkJob(m_jobId);
+        job->m_isBlackList = true;
     }
 
     ~BlackListCancelTask() override
@@ -1077,11 +1079,11 @@ int WebURLLoaderManager::addAsynchronousJob(WebURLLoaderInternal* job)
     KURL kurl = job->firstRequest()->url();
     String url = WTF::ensureStringToUTF8String(kurl.string());
 #if 0
-    String outString = String::format("addAsynchronousJob : %d, %s\n", m_liveJobs.size(), WTF::ensureStringToUTF8(url, true).data());
-    OutputDebugStringW(outString.charactersWithNullTermination().data());
-
-    if (WTF::kNotFound != url.find("ensearch=1"))
-        OutputDebugStringA("ensearch=1!\n");
+    //if (WTF::kNotFound != url.find("nav_sprite_v") || WTF::kNotFound != url.find("products_sprites")) 
+    {
+        String outString = String::format("addAsynchronousJob : %d, %s\n", m_liveJobs.size(), WTF::ensureStringToUTF8(url, true).data());
+        OutputDebugStringW(outString.charactersWithNullTermination().data());
+    }
 #endif
 
     String referer = job->firstRequest()->httpHeaderField(WebString::fromUTF8("referer"));

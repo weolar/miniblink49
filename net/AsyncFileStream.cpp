@@ -53,6 +53,11 @@ struct AsyncTaskInfo {
         destroyed = false;
     }
 
+    ~AsyncTaskInfo()
+    {
+        delete stream;
+    }
+
     FileStream* stream;
     FileStreamClient* client;
     blink::WebThread* blinkThread;
@@ -103,6 +108,8 @@ static void callOnBlinkThread(AsyncTaskInfo* info, std::function<void()>&& func)
 AsyncFileStream::~AsyncFileStream()
 {
     ASSERT(isMainThread());
+
+    close();
 
     AsyncTaskInfo* asyncTaskInfo = m_asyncTaskInfo;
     // Set flag to prevent client callbacks and also prevent queued operations from starting.
@@ -226,8 +233,6 @@ void AsyncFileStream::close()
 
     AsyncTaskInfo* info = m_asyncTaskInfo;
     callOnFileThread(info, [info] {
-        if (info->destroyed)
-            return;
         info->stream->close();
     });
 }
