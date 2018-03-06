@@ -4,6 +4,7 @@
 #include "browser/api/WindowList.h"
 #include "browser/api/ApiApp.h"
 #include "browser/api/WindowInterface.h"
+#include "browser/api/MenuUitl.h"
 #include "common/OptionsSwitches.h"
 #include "common/NodeRegisterHelp.h"
 #include "common/ThreadCall.h"
@@ -18,6 +19,8 @@
 #include <ole2.h>
 
 namespace atom {
+
+static const wchar_t kElectronClassName[] = L"mb_electron_window";
 
 class Window : public mate::EventEmitter<Window>, public WindowInterface {
 public:
@@ -58,7 +61,25 @@ public:
         ::DeleteCriticalSection(&m_memoryCanvasLock);
     }
 
+    static const int WM_COPYGLOBALDATA = 0x0049;
+    static const int MSGFLT_ADD = 1;
+    typedef WINUSERAPI BOOL WINAPI CHANGEWINDOWMESSAGEFILTER(UINT message, DWORD dwFlag);
+    static void changeMessageProi() {
+         HINSTANCE hDllInst = LoadLibraryW(L"user32.dll");
+        if (hDllInst) {
+            CHANGEWINDOWMESSAGEFILTER *pAddMessageFilterFunc = (CHANGEWINDOWMESSAGEFILTER *)GetProcAddress(hDllInst, "ChangeWindowMessageFilter");
+            if (pAddMessageFilterFunc) {
+                pAddMessageFilterFunc(WM_DROPFILES, MSGFLT_ADD);
+                pAddMessageFilterFunc(WM_COPYDATA, MSGFLT_ADD);
+                pAddMessageFilterFunc(WM_COPYGLOBALDATA, MSGFLT_ADD);
+            }
+            FreeLibrary(hDllInst);
+        }
+    }
+
     static void init(v8::Local<v8::Object> target, node::Environment* env) {
+        changeMessageProi();
+
         v8::Isolate* isolate = env->isolate();
         gin::PerIsolateData* perIsolateData = new gin::PerIsolateData(isolate, nullptr);
 
@@ -174,6 +195,7 @@ public:
         target->Set(v8::String::NewFromUtf8(isolate, "BrowserWindow"), prototype->GetFunction());
     }
 
+    // WindowInterface impl
     virtual bool isClosed() override {
         return m_state == WindowDestroyed;
     }
@@ -192,6 +214,10 @@ public:
 
     virtual WebContents* getWebContents() const override {
         return m_webContents;
+    }
+
+    virtual HWND getHWND() const override {
+        return m_hWnd;
     }
 
     void onPaintUpdatedInCompositeThread(const HDC hdc, int x, int y, int cx, int cy) {
@@ -405,7 +431,7 @@ public:
 
             fileNames->push_back(new std::vector<wchar_t>());
             fileNames->at(i)->resize(pathlength);
-            ::DragQueryFile(hDrop, i, fileNames->at(i)->data(), pathlength);
+            ::DragQueryFile(hDrop, i,&(fileNames->at(i)->at(0)), pathlength);
         }
 
         ::DragFinish(hDrop);
@@ -424,9 +450,9 @@ public:
 
             std::vector<wkeString> files;
             for (size_t i = 0; i < fileNames->size(); ++i) {
-                files.push_back(wkeCreateStringW(fileNames->at(i)->data(), fileNames->at(i)->size()));
+                files.push_back(wkeCreateStringW(&(fileNames->at(i)->at(0)), fileNames->at(i)->size()));
             }
-            wkeSetDragFiles(webContents->getWkeView(), curPos, screenPos, files.data(), files.size());
+            wkeSetDragFiles(webContents->getWkeView(), curPos, screenPos, &files[0], files.size());
             
             delete curPos;
             delete screenPos;
@@ -487,6 +513,10 @@ public:
         case WM_TIMER:
             //wkeRepaintIfNeeded(pthis);
             return 0;
+
+        case WM_COMMAND:
+            MenuUitl::onMenuCommon(message, wParam, lParam);
+            break;
 
         case WM_PAINT:
             win->onPaintMessage(hWnd);
@@ -1161,16 +1191,29 @@ private:
 
         v8::Local<v8::Value> transparent;
         options->Get("transparent", &transparent);
+
         v8::Local<v8::Value> height;
         options->Get("height", &height);
+
         v8::Local<v8::Value> width;
         options->Get("width", &width);
+
         v8::Local<v8::Value> x;
         options->Get("x", &x);
+
         v8::Local<v8::Value> y;
         options->Get("y", &y);
+
+        v8::Local<v8::Value> show;
+        options->Get("show", &show);
+        bool isShow = true;
+        v8::MaybeLocal<v8::Boolean> v8Show = show->ToBoolean();
+        if (show->IsBoolean() && !show->ToBoolean()->BooleanValue())
+            isShow = false;
+
         v8::Local<v8::Value> title;
         options->Get("title", &title);
+
         if (title->IsString()) {
             v8::String::Utf8Value str(title);
             createWindowParam->title = StringUtil::UTF8ToUTF16(*str);
@@ -1193,26 +1236,33 @@ private:
             createWindowParam->styleEx = 0;
         }
 
+        createWindowParam->isShow = isShow;
+        createWindowParam->styleEx |= WS_EX_ACCEPTFILES;
+
         //ThreadCall::callUiThreadSync([win, &createWindowParam] {
         win->newWindowTaskInUiThread(createWindowParam);
         //});
         return win;
     }
 
+    static void onConsoleCallback(wkeWebView webView, void* param, wkeConsoleLevel level, const wkeString message, const wkeString sourceName, unsigned sourceLine, const wkeString stackTrace) {
+        const utf8* msg = wkeToString(message);
+    }
+
     void newWindowTaskInUiThread(const WebContents::CreateWindowParam* createWindowParam) {
         m_hWnd = ::CreateWindowEx(
-            createWindowParam->styleEx,        // window ex-style
-            L"mb_electron_window",    // window class name
-            createWindowParam->title.c_str(), // window caption
-            createWindowParam->styles,         // window style
-            createWindowParam->x,              // initial x position
-            createWindowParam->y,              // initial y position
-            createWindowParam->width,          // initial x size
-            createWindowParam->height,         // initial y size
+            createWindowParam->styleEx,
+            kElectronClassName,
+            createWindowParam->title.c_str(),
+            createWindowParam->styles,
+            createWindowParam->x,
+            createWindowParam->y,
+            createWindowParam->width,
+            createWindowParam->height,
             NULL,         // parent window handle
             NULL,           // window menu handle
-            ::GetModuleHandleW(NULL),           // program instance handle
-            this);         // creation parameters
+            ::GetModuleHandleW(NULL),
+            this);
 
         if (!::IsWindow(m_hWnd))
             return;
@@ -1237,15 +1287,18 @@ private:
 
             win->m_webContents->onNewWindowInBlinkThread(width, height, createWindowParam);
             wkeOnPaintUpdated(win->m_webContents->getWkeView(), (wkePaintUpdatedCallback)staticOnPaintUpdatedInCompositeThread, win);
+            wkeOnConsole(win->m_webContents->getWkeView(), onConsoleCallback, nullptr);
             delete createWindowParam;
         });
 
-        ::ShowWindow(m_hWnd, TRUE);
+        ::ShowWindow(m_hWnd, createWindowParam->isShow ? SW_SHOWNORMAL : SW_HIDE);
+
         m_state = WindowInited;
     }
 
     static void newFunction(const v8::FunctionCallbackInfo<v8::Value>& args) {
         v8::Isolate* isolate = args.GetIsolate();
+
         if (args.IsConstructCall()) {
             if (args.Length() > 1)
                 return;
@@ -1257,8 +1310,7 @@ private:
             // win->Wrap(args.This(), isolate); // 包装this指针 // weolar
             args.GetReturnValue().Set(args.This());
             // args.GetReturnValue().Set(win->GetWrapper());
-        }
-        else {
+        } else {
             // 使用`Point(...)`
             const int argc = 2;
             v8::Local<v8::Value> argv[argc] = { args[0], args[1] };
@@ -1269,9 +1321,9 @@ private:
         }
     }
 
-
     static v8::Persistent<v8::Function> constructor;
     WebContents* getWebContents() { return m_webContents; }
+
 public:
     static gin::WrapperInfo kWrapperInfo;
 
@@ -1305,7 +1357,7 @@ static void initializeWindowApi(v8::Local<v8::Object> target, v8::Local<v8::Valu
     node::Environment* env = node::Environment::GetCurrent(context);
     Window::init(target, env);
     WNDCLASS wndClass = { 0 };
-    if (!GetClassInfoW(NULL, L"mb_electron_window", &wndClass)) {
+    if (!GetClassInfoW(NULL, kElectronClassName, &wndClass)) {
         wndClass.style = CS_HREDRAW | CS_VREDRAW;
         wndClass.lpfnWndProc = &Window::windowProc;
         wndClass.cbClsExtra = 200;
@@ -1315,7 +1367,7 @@ static void initializeWindowApi(v8::Local<v8::Object> target, v8::Local<v8::Valu
         wndClass.hCursor = LoadCursor(NULL, IDC_ARROW);
         wndClass.hbrBackground = NULL;
         wndClass.lpszMenuName = NULL;
-        wndClass.lpszClassName = L"mb_electron_window";
+        wndClass.lpszClassName = kElectronClassName;
         RegisterClass(&wndClass);
     }
 }

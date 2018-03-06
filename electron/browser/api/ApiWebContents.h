@@ -35,6 +35,7 @@ public:
         unsigned styleEx;
         bool transparent;
         std::wstring title;
+        bool isShow;
     };
 
     static void init(v8::Isolate* isolate, v8::Local<v8::Object> target, node::Environment* env);

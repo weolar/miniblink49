@@ -12,7 +12,6 @@ Menu.prototype._init = function () {
         return;
 
     this.items = [];
-    console.log("Menu.prototype._init");
 	
 	this.on('click', function (event, click) {
 		click(event, null, null);
@@ -32,7 +31,6 @@ Menu.prototype.append = function (item) {
 }
 
 Menu.prototype.insert = function (pos, item) {
-    console.log('Menu.insert');
     this._init();
     this._insert(pos, item);
     this.items.splice(pos, 0, item)
@@ -119,7 +117,6 @@ var indexToInsertByPosition = function (items, position) {
 }
 
 Menu.getApplicationMenu = function () {
-	console.log('Menu.getApplicationMenu');
     return null;
 }
 
@@ -131,6 +128,8 @@ Menu.setApplicationMenu = function (menu) {
 
 	// Keep a reference.
 	applicationMenu = menu;
+	
+	menu._setApplicationMenu();
 }
 
 module.exports = Menu;

@@ -9,6 +9,7 @@
 #include "common/IdLiveDetect.h"
 #include "common/NodeBinding.h"
 #include "common/api/EventEmitterCaller.h"
+#include "common/StringUtil.h"
 #include "gin/dictionary.h"
 #include "gin/object_template_builder.h"
 #include "base/values.h"
@@ -327,12 +328,31 @@ bool WebContents::equalApi() const {
     return false;
 }
 
+static std::string* trimUrl(const std::string& url) {
+    std::string* str = new std::string(url);
+    if (str->size() > 9 && str->substr(0, 7) == "file://") {
+        if (str->at(7) != '/')
+            str->insert(7, 1, '/');
+
+        for (size_t i = 0; i < str->size(); ++i) { // 如果是中文路径，则把问号前面的内容解码
+            char c = str->at(i);
+            if ('?' != c)
+                continue;
+
+            std::string urldecodeHead = StringUtil::urlDecode(str->c_str(), i + 1);
+            urldecodeHead += str->substr(i, str->size() - i);
+            *str = urldecodeHead;
+            break;
+        }
+    }
+
+    return str;
+}
+
 void WebContents::_loadURLApi(const std::string& url) {
     WebContents* self = this;
-    std::string* str = new std::string(url);
-    if (str->size() > 9 && str->substr(0, 7) == "file://" && str->at(7) != '/')
-        str->insert(7, 1, '/');
-
+    std::string* str = trimUrl(url);
+    
     int id = m_id;
     ThreadCall::callBlinkThreadAsync([self, str, id] {
         if (IdLiveDetect::get()->isLive(id))

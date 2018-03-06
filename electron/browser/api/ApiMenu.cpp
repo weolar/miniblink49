@@ -1,5 +1,8 @@
 ﻿
 #include "node/include/nodeblink.h"
+#include "browser/api/WindowInterface.h"
+#include "browser/api/WindowList.h"
+#include "browser/api/MenuUitl.h"
 #include "common/NodeRegisterHelp.h"
 #include "common/api/EventEmitter.h"
 #include "gin/object_template_builder.h"
@@ -9,21 +12,106 @@
 
 namespace atom {
 
+class Menu;
+
+class MenuItem {
+public:
+    enum MenuItemType {
+        ActionType,
+        CheckableActionType,
+        SeparatorType,
+        SubmenuType
+    };
+
+    MenuItem(v8::Isolate* isolate, Menu* menu);
+
+    ~MenuItem();
+
+    v8::Isolate* getIsolate() const {
+        return m_isolate;
+    }
+
+    Menu* getMenu() const {
+        return m_menu;;
+    }
+
+    void setType(MenuItemType type) {
+        m_type = type;
+    }
+
+    Menu* getSubMenu() const {
+        return m_subMenu;
+    }
+
+    void setSubMenu(Menu* subMenu);
+
+    void setLabel(const std::string label) {
+        m_label = label;
+    }
+
+    void setEnabled(bool b) {
+        m_isEnabled = b;
+    }
+
+    void setChecked(bool b) {
+        m_isChecked = b;
+    }
+
+    bool getChecked() const {
+        return m_isChecked;
+    }
+
+    void setClickCallback(v8::Local<v8::Value> callback) {
+        m_clickCallbackValue.Reset(m_isolate, callback);
+    }
+
+    v8::Local<v8::Value> getClickCallbackValue() const {
+        return m_clickCallbackValue.Get(m_isolate);
+    }
+
+    void setId(int id) {
+        m_id = id;
+    }
+
+    int getId() const {
+        return m_id;
+    }
+
+    void insertPlatformMenu(size_t pos, HMENU hMenu) const;
+
+private:
+    MenuItemType m_type;
+    HMENU m_hSubMenu;
+    Menu* m_subMenu;
+    std::string m_label;
+    bool m_isEnabled;
+    bool m_isChecked;
+    UINT m_action;
+    v8::Persistent<v8::Value> m_clickCallbackValue;
+    Menu* m_menu;
+    int m_id;
+    v8::Isolate* m_isolate;
+};
+
 class Menu : public mate::EventEmitter<Menu> {
 public:
     explicit Menu(v8::Isolate* isolate, v8::Local<v8::Object> wrapper) {
         gin::Wrappable<Menu>::InitWith(isolate, wrapper);
         m_menuTemplate = nullptr;
         m_hMenu = NULL;
+        m_isItemNeedRebuilt = false;
+        m_isAppOrPopupMenu = kNoInit;
     }
 
     virtual ~Menu() override {
         OutputDebugStringA("~Menu\n");
         DebugBreak();
+        ::DestroyMenu(m_hMenu);
+        m_hMenu = nullptr;
     }
 
     static void init(v8::Isolate* isolate, v8::Local<v8::Object> target) {
-        m_liveMenuItem = new std::set<Menu::MenuItem*>();
+        m_liveMenuItem = new std::set<MenuItem*>();
         v8::Local<v8::FunctionTemplate> prototype = v8::FunctionTemplate::New(isolate, newFunction);
 
         prototype->SetClassName(v8::String::NewFromUtf8(isolate, "Menu"));
@@ -45,8 +133,15 @@ public:
     }
 
     // Set the global menubar.
-    void setApplicationMenuApi(/*Menu* menu*/int menuTemplateId) {
-        DebugBreak();
+    void setApplicationMenuApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
+        HMENU hmenuBar = buildMenus(true);
+        
+        WindowList::iterator winIt = WindowList::getInstance()->begin();
+        for (; winIt != WindowList::getInstance()->end(); ++winIt) {
+            WindowInterface* windowInterface = *winIt;
+            HWND hParentWnd = windowInterface->getHWND();
+            ::SetMenu(hParentWnd, hmenuBar);
+        }
     }
 
     void sendActionToFirstResponderApi(const std::string& action) {
@@ -115,11 +210,11 @@ public:
             }
             
             if ("submenu" == keyNameStr) {
-                Menu* submenu = nullptr;
-                if (!gin::Converter<Menu*>::FromV8(isolate, outValue, &submenu))
-                    submenu = nullptr;
-                if (submenu)
-                    item->setSubMenu(submenu->m_hMenu);
+                Menu* subMenu = nullptr;
+                if (!gin::Converter<Menu*>::FromV8(isolate, outValue, &subMenu))
+                    subMenu = nullptr;
+                if (subMenu)
+                    item->setSubMenu(subMenu);
             }
 
             if ("click" == keyNameStr && outValue->IsFunction()) {
@@ -131,10 +226,8 @@ public:
             label = role;
         item->setLabel(label);
 
-        if (!m_hMenu)
-            m_hMenu = ::CreatePopupMenu();
-        item->insertPlatformMenu(pos, m_hMenu);
-        m_items.push_back(item);
+        m_items.insert(m_items.begin() + pos, item);
+        m_isItemNeedRebuilt = true;
     }
     
     static void newFunction(const v8::FunctionCallbackInfo<v8::Value>& args) {  
@@ -150,137 +243,69 @@ public:
         if (!m_hHideParentWindow)
             createHideParentWindow();
 
+        buildMenus(false);
+
         POINT pt;
         ::GetCursorPos(&pt);
         ::TrackPopupMenu(m_hMenu, TPM_LEFTALIGN | TPM_TOPALIGN | TPM_RIGHTBUTTON, pt.x, pt.y, 0, m_hHideParentWindow, NULL);
-        ::DestroyMenu(m_hMenu);
-        m_hMenu = nullptr;
+    }
+
+    void onCommon(MenuItem* item, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+        if (item->getChecked()) {
+            MENUITEMINFOW info = { 0 };
+            int index = findItemIndex(item) - 1;
+            ::GetMenuItemInfo(m_hMenu, (UINT)item, false, &info);
+
+            info.fState = MFS_UNCHECKED;
+            ::SetMenuItemInfo(m_hMenu, (UINT)item, TRUE, &info);
+
+            item->setChecked(false);
+        }
+
+        //v8::Local<v8::Object> recv = item->getIsolate()->GetCurrentContext()->Global();
+        //item->getClickCallback()->Call(recv, 0, nullptr);
+        item->getMenu()->mate::EventEmitter<Menu>::emit("click", item->getClickCallbackValue());
     }
 
 public:
     static gin::WrapperInfo kWrapperInfo;
     static v8::Persistent<v8::Function> constructor;
+    static std::set<MenuItem*>* m_liveMenuItem;
 
 private:
-    class MenuItem {
-    public:
-        enum MenuItemType {
-            ActionType,
-            CheckableActionType,
-            SeparatorType,
-            SubmenuType
-        };
+    friend class MenuItem;
 
-        MenuItem(v8::Isolate* isolate, Menu* menu) {
-            m_isolate = isolate;
-            m_type = ActionType;
-            m_isEnabled = true;
-            m_isChecked = false;
-            m_action = (UINT)this;
-            m_menu = menu;
-            m_id = 0;
-            Menu::m_liveMenuItem->insert(this);
+    static HMENU buildMenu(Menu* menu, bool isAppOrPopupMenu) {
+        size_t size = menu->m_items.size();
+        if (0 == size)
+            return nullptr;
+
+        menu->m_hMenu = ((isAppOrPopupMenu) ? ::CreateMenu() : ::CreatePopupMenu());
+
+        for (size_t i = 0; i < size; ++i) {
+            MenuItem* item = menu->m_items[i];
+            item->insertPlatformMenu(i, menu->m_hMenu);
         }
+        return menu->m_hMenu;
+    }
 
-        ~MenuItem() {
-            Menu::m_liveMenuItem->erase(this);
-        }
+    HMENU buildMenus(bool isAppOrPopupMenu) {
+        if (!m_isItemNeedRebuilt)
+            return nullptr;
+        m_isItemNeedRebuilt = false;
 
-        v8::Isolate* getIsolate() const {
-            return m_isolate;
-        }
+        AppOrPopupType appOrPopupMenuType = isAppOrPopupMenu ? kIsApp : kIsPopup;;
+        if (kNoInit == m_isAppOrPopupMenu)
+            m_isAppOrPopupMenu = appOrPopupMenuType;
+        else if (m_isAppOrPopupMenu != appOrPopupMenuType)
+            return nullptr;
 
-        Menu* getMenu() const {
-            return m_menu;;
-        }
+        if (m_hMenu)
+            ::DestroyMenu(m_hMenu);
+        m_hMenu = nullptr;
 
-        void setType(MenuItemType type) {
-            m_type = type;
-        }
-
-        void setSubMenu(HMENU hSubMenu) {
-            m_hSubMenu = hSubMenu;
-            m_type = SubmenuType;
-        }
-
-        void setLabel(const std::string label) {
-            m_label = label;
-        }
-
-        void setEnabled(bool b) {
-            m_isEnabled = b;
-        }
-
-        void setChecked(bool b) {
-            m_isChecked = b;
-        }
-       
-        void setClickCallback(v8::Local<v8::Value> callback) {
-            m_clickCallbackValue.Reset(m_isolate, callback);
-        }
-        
-        v8::Local<v8::Value> getClickCallbackValue() const {
-            return m_clickCallbackValue.Get(m_isolate);
-        }
-
-        void setId(int id) {
-            m_id = id;
-        }
-
-        int getId() const {
-            return m_id;
-        }
-
-        void insertPlatformMenu(size_t pos, HMENU hMenu) const {
-            int count = ::GetMenuItemCount(hMenu);
-            if (count < 0 && pos > count)
-                return;
-
-            MENUITEMINFO info = { 0 };
-            info.cbSize = sizeof(MENUITEMINFO);
-
-            if (m_type == SeparatorType) {
-                info.fMask = MIIM_FTYPE;
-                info.fType = MFT_SEPARATOR;
-                ::InsertMenuItem(hMenu, count, TRUE, &info);
-                return;
-            }
-
-            info.fMask = MIIM_FTYPE | MIIM_ID | MIIM_STATE;
-            info.fType = MFT_STRING;
-
-            info.wID = m_action;
-
-            if (m_type == SubmenuType) {
-                info.fMask |= MIIM_SUBMENU;
-                info.hSubMenu = m_hSubMenu;
-            }
-
-            std::wstring labelW = base::UTF8ToWide(m_label);
-            if (!labelW.empty()) {
-                info.fMask |= MIIM_STRING;
-                info.cch = labelW.size();
-                info.dwTypeData = const_cast<LPWSTR>(labelW.c_str());
-            }
-
-            info.fState |= m_isEnabled ? MFS_ENABLED : MFS_DISABLED;
-            if (CheckableActionType == m_type)
-                info.fState |= m_isChecked ? MFS_CHECKED : MFS_UNCHECKED;
-            ::InsertMenuItem(hMenu, count, TRUE, &info);
-        }
-
-    private:
-        MenuItemType m_type;
-        HMENU m_hSubMenu;
-        std::string m_label;
-        bool m_isEnabled;
-        bool m_isChecked;
-        UINT m_action;
-        v8::Persistent<v8::Value> m_clickCallbackValue;
-        Menu* m_menu;
-        int m_id;
-        v8::Isolate* m_isolate;
-    };
+        return buildMenu(this, isAppOrPopupMenu);
+    }
 
     void createHideParentWindow() {
         if (m_hHideParentWindow)
@@ -305,17 +330,20 @@ private:
             WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, 1, 1, NULL, NULL, NULL, NULL);
     }
 
+    int findItemIndex(MenuItem* item) {
+        for (size_t i = 0; i < m_items.size(); ++i) {
+            MenuItem* it = m_items[i];
+            if (it == item)
+                return i;
+        }
+        return -1;
+    }   
+
     static LRESULT APIENTRY mainWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
         MenuItem* item = nullptr;
         switch (uMsg) {
         case WM_COMMAND: {
-            item = (MenuItem*)wParam;
-            if (!m_liveMenuItem || m_liveMenuItem->find(item) == m_liveMenuItem->end())
-                return 0;
-
-            //v8::Local<v8::Object> recv = item->getIsolate()->GetCurrentContext()->Global();
-            //item->getClickCallback()->Call(recv, 0, nullptr);
-            item->getMenu()->mate::EventEmitter<Menu>::emit("click", item->getClickCallbackValue());
+            MenuUitl::onMenuCommon(uMsg, wParam, lParam);
             return 0;
         }
         default:
@@ -327,14 +355,90 @@ private:
     base::ListValue* m_menuTemplate;
     HMENU m_hMenu;
     std::vector<MenuItem*> m_items;
+    bool m_isItemNeedRebuilt;
+
+    enum AppOrPopupType {
+        kNoInit,
+        kIsApp,
+        kIsPopup,
+    };
+    AppOrPopupType m_isAppOrPopupMenu;
 
     static HWND m_hHideParentWindow;
-    static std::set<MenuItem*>* m_liveMenuItem;
 };
+
+MenuItem::MenuItem(v8::Isolate* isolate, Menu* menu) {
+    m_isolate = isolate;
+    m_type = ActionType;
+    m_isEnabled = true;
+    m_isChecked = false;
+    m_action = (UINT)this;
+    m_menu = menu;
+    m_subMenu = nullptr;
+    m_id = 0;
+    Menu::m_liveMenuItem->insert(this);
+}
+
+MenuItem::~MenuItem() {
+    Menu::m_liveMenuItem->erase(this);
+}
+
+void MenuItem::setSubMenu(Menu* subMenu)
+{
+    HMENU hSubMenu = subMenu->m_hMenu;
+    m_hSubMenu = hSubMenu;
+    m_subMenu = subMenu;
+    m_type = SubmenuType;
+}
+
+void MenuUitl::onMenuCommon(UINT uMsg, WPARAM wParam, LPARAM lParam) {
+    MenuItem* item = (MenuItem*)wParam;
+    if (!Menu::m_liveMenuItem || Menu::m_liveMenuItem->find(item) == Menu::m_liveMenuItem->end())
+        return;
+
+    item->getMenu()->onCommon(item, uMsg, wParam, lParam);
+}
+
+void MenuItem::insertPlatformMenu(size_t pos, HMENU hMenu) const {
+    int count = ::GetMenuItemCount(hMenu);
+    if (count < 0 && (int)pos > count)
+        return;
+
+    MENUITEMINFO info = { 0 };
+    info.cbSize = sizeof(MENUITEMINFO);
+
+    if (m_type == SeparatorType) {
+        info.fMask = MIIM_FTYPE;
+        info.fType = MFT_SEPARATOR;
+        ::InsertMenuItem(hMenu, count, TRUE, &info);
+        return;
+    }
+
+    info.fMask = MIIM_FTYPE | MIIM_ID | MIIM_STATE;
+    info.fType = MFT_STRING;
+    info.wID = m_action;
+
+    if (m_type == SubmenuType) {
+        info.fMask |= MIIM_SUBMENU;
+        info.hSubMenu = Menu::buildMenu(m_subMenu, false); // m_hSubMenu;
+    }
+
+    std::wstring labelW = base::UTF8ToWide(m_label);
+    if (!labelW.empty()) {
+        info.fMask |= MIIM_STRING;
+        info.cch = labelW.size();
+        info.dwTypeData = const_cast<LPWSTR>(labelW.c_str());
+    }
+
+    info.fState |= m_isEnabled ? MFS_ENABLED : MFS_DISABLED;
+    if (CheckableActionType == m_type)
+        info.fState |= m_isChecked ? MFS_CHECKED : MFS_UNCHECKED;
+    ::InsertMenuItem(hMenu, count, TRUE, &info);
+}
 
 v8::Persistent<v8::Function> Menu::constructor;
 gin::WrapperInfo Menu::kWrapperInfo = { gin::kEmbedderNativeGin };
-std::set<Menu::MenuItem*>* Menu::m_liveMenuItem = nullptr;
+std::set<MenuItem*>* Menu::m_liveMenuItem = nullptr;
 HWND Menu::m_hHideParentWindow = nullptr;
 
 static void initializeMenuApi(v8::Local<v8::Object> target, v8::Local<v8::Value> unused, v8::Local<v8::Context> context, const NodeNative* native) {

@@ -8,7 +8,6 @@
 #include "common/NodeRegisterHelp.h"
 #include "gin/object_template_builder.h"
 #include "gin/converter.h"
-#include "include/v8-profiler.h"
 #include <string>
 #include <utility>
 
@@ -92,7 +91,7 @@ int32_t getObjectHash(v8::Local<v8::Object> object) {
 }
 
 void takeHeapSnapshot(v8::Isolate* isolate) {
-    isolate->GetHeapProfiler()->TakeHeapSnapshot();
+    //isolate->GetHeapProfiler()->TakeHeapSnapshot();
 }
 
 void newV8UtilFunction(const v8::FunctionCallbackInfo<v8::Value>& args) {
