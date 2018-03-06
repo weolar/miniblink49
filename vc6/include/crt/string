@@ -282,7 +282,7 @@ extern template _CRTIMP bool __cdecl operator==(
         const wchar_t *, const basic_string<wchar_t, char_traits<wchar_t>, allocator<wchar_t> >&);
 extern template /*_CRTIMP*/ bool __cdecl operator==(
         const basic_string<wchar_t, char_traits<wchar_t>, allocator<wchar_t> >&, const wchar_t *);
-extern template _CRTIMP bool __cdecl operator!=(
+extern template /*_CRTIMP*/ bool __cdecl operator!=(
         const basic_string<wchar_t, char_traits<wchar_t>, allocator<wchar_t> >&,
         const basic_string<wchar_t, char_traits<wchar_t>, allocator<wchar_t> >&);
 extern template _CRTIMP bool __cdecl operator!=(

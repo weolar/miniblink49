@@ -378,6 +378,32 @@ bool __cdecl operator==<char, char_traits<char>, allocator<char> >(
 	return b.compare(a) == 0;
 }
 
+bool __cdecl operator!=<unsigned short, char_traits<unsigned short>, allocator<unsigned short> >(
+    basic_string<unsigned short, char_traits<unsigned short>, allocator<unsigned short> > const & a,
+    basic_string<unsigned short, char_traits<unsigned short>, allocator<unsigned short> > const & b)
+{
+    return a.compare(b) != 0;
+}
+
+basic_string<unsigned short, struct std::char_traits<unsigned short>, class std::allocator<unsigned short> > __cdecl 
+    operator+<unsigned short, char_traits<unsigned short>, allocator<unsigned short> >(
+        basic_string<unsigned short, char_traits<unsigned short>, allocator<unsigned short> > const & a,
+        basic_string<unsigned short, char_traits<unsigned short>, allocator<unsigned short> > const & b)
+{
+    wstring aCopy(a);
+    aCopy.append(b);
+    return aCopy;
+}
+
+basic_string<unsigned short, char_traits<unsigned short>, allocator<unsigned short> > __cdecl 
+    operator+<unsigned short, char_traits<unsigned short>, allocator<unsigned short> >(
+        basic_string<unsigned short, char_traits<unsigned short>, allocator<unsigned short> > const & a, unsigned short const * b)
+{
+    wstring aCopy(a);
+    aCopy.append(b);
+    return aCopy;
+}
+
 basic_string<char, char_traits<char>, class std::allocator<char> > __cdecl std::operator + <char, char_traits<char>, class std::allocator<char> >(
     basic_string<char, char_traits<char>, allocator<char> > const & a, char const * b)
 {
