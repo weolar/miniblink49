@@ -126,14 +126,22 @@ public:
     _A get_allocator() const {
         return (_Tr.get_allocator());
     }
+
     _Tref operator[](const key_type& _Kv) {
-        iterator _P = insert(value_type(_Kv, _Ty())).first;
+        iterator _P = insert(move(pair<const _K, _Ty>(move(_Kv), _Ty()))).first;
         return ((*_P).second);
     }
-    _Pairib insert(const value_type& _X) {
-        _Imp::_Pairib _Ans = _Tr.insert(_X);
-        return (_Pairib(_Ans.first, _Ans.second));
+
+    _Tref operator[](key_type&& _Kv) {
+        iterator _P = insert(move(pair<const _K, _Ty>(move(_Kv), _Ty()))).first;
+        return ((*_P).second);
     }
+
+    _Pairib insert(value_type&& _X) {
+        _Imp::_Pairib _Ans = _Tr.insert(move(_X));
+        return (make_pair(move(_Ans.first), move(_Ans.second)));
+    }
+
     iterator insert(iterator _P, const value_type& _X) {
         return (_Tr.insert((_Imp::iterator&)_P, _X));
     }
@@ -346,7 +354,7 @@ public:
         return (_Tr.get_allocator());
     }
     iterator insert(const value_type& _X) {
-        return (_Tr.insert(_X).first);
+        return (_Tr.insert(_STD move(value_type(_X))).first);
     }
     iterator insert(iterator _P, const value_type& _X) {
         return (_Tr.insert((_Imp::iterator&)_P, _X));

@@ -1,3 +1,4 @@
+
 // utility standard header
 #ifndef _UTILITY_
 #define _UTILITY_
@@ -15,12 +16,59 @@ _STD_BEGIN
 template<class _T1, class _T2> struct pair {
     typedef _T1 first_type;
     typedef _T2 second_type;
+    typedef pair<_T1, _T2> _Myt;
     pair()
         : first(_T1()), second(_T2()) {
     }
-    pair(const _T1& _V1, const _T2& _V2)
-        : first(_V1), second(_V2) {
+
+    template<class U, class V>
+    pair(U&& _V1, V&& _V2)
+        : first(_STD forward<U>(_V1))
+        , second(_STD forward<V>(_V2)) {
     }
+
+    template<class U, class V>
+    pair(const U& _V1, const V& _V2)
+        : first((_V1))
+        , second((_V2)) {
+    }
+
+    pair(const pair& other)
+        : first(other.first)
+        , second(other.second) {
+    }
+   
+    pair(pair&& other)
+        : first(_STD forward<_T1>(other.first))
+        , second(_STD forward<_T2>(other.second)) {
+    }
+
+    template<class U, class V>
+    _Myt& operator = (const pair<U, V>& _Right) {	// assign from compatible pair
+        first = _Right.first;
+        second = _Right.second;
+        return (*this);
+    }
+
+    template<class U, class V>
+    _Myt& operator = (pair<U, V>&& _Right) {	// assign from moved compatible pair
+        first = _STD forward<U>(_Right.first);
+        second = _STD forward<V>(_Right.second);
+        return (*this);
+    }
+
+    _Myt& operator=(_Myt&& _Right) {	// assign from moved pair
+        first = _STD forward<_T1>(_Right.first);
+        second = _STD forward<_T2>(_Right.second);
+        return (*this);
+    }
+
+    _Myt& operator=(const _Myt& _Right) {	// assign from copied pair
+        first = _Right.first;
+        second = _Right.second;
+        return (*this);
+    }
+
     template<class U, class V> pair(const pair<U, V> &p)
         : first(p.first), second(p.second) {
     }
@@ -58,10 +106,14 @@ bool __cdecl operator>=(const pair<_T1, _T2>& _X,
     const pair<_T1, _T2>& _Y) {
     return (!(_X < _Y));
 }
+
 template<class _T1, class _T2> inline
-pair<_T1, _T2> __cdecl make_pair(const _T1& _X, const _T2& _Y) {
-    return (pair<_T1, _T2>(_X, _Y));
+pair<_T1, _T2> __cdecl make_pair(_T1&& _Val1, _T2&& _Val2) {	// return pair composed from arguments
+    typedef pair<_T1, _T2> _Mypair;
+    return (_Mypair(_STD forward<_T1>(_Val1), _STD forward<_T2>(_Val2)));
 }
+
+
 // ITERATOR TAGS (from <iterator>)
 struct input_iterator_tag {};
 struct output_iterator_tag {};

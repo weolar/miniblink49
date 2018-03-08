@@ -95,9 +95,13 @@ public:
 		{return (_Tr.empty()); }
 	_A get_allocator() const
 		{return (_Tr.get_allocator()); }
-	_Pairib insert(const value_type& _X)
-		{_Imp::_Pairib _Ans = _Tr.insert(_X);
+	_Pairib insert(value_type&& _X)
+		{_Imp::_Pairib _Ans = _Tr.insert(_STD move(_X));
 		return (_Pairib(_Ans.first, _Ans.second)); }
+  _Pairib insert(const value_type& _X) {
+      _Imp::_Pairib _Ans = _Tr.insert(_STD move(value_type(_X)));
+      return (_Pairib(_Ans.first, _Ans.second));
+  }
 	iterator insert(iterator _P, const value_type& _X)
 		{return (_Tr.insert((_Imp::iterator&)_P, _X)); }
 	void insert(_It _F, _It _L)
