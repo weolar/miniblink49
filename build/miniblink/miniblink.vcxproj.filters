@@ -9375,9 +9375,6 @@
     <ClCompile Include="..\..\base\ostreamvc6.cpp">
       <Filter>base</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\base\ostream_for_other_vc6.cpp">
-      <Filter>base</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\third_party\WebKit\Source\platform\exported\WebDragData.cpp">
       <Filter>third_party\Webkit\Source\platform\exported</Filter>
     </ClCompile>
@@ -10089,6 +10086,9 @@
     </ClCompile>
     <ClCompile Include="..\..\content\ui\DragHandle.cpp">
       <Filter>content\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\net\WebURLLoaderManagerUtil.cpp">
+      <Filter>net</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
