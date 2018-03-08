@@ -272,7 +272,7 @@ public:
         std::vector<ScreenWinDisplay> screen_win_displays;
         const size_t num_displays = display_infos.size();
         for (size_t i = 0; i < num_displays; ++i)
-            screen_win_displays.emplace_back(displays[i], display_infos[i]);
+            screen_win_displays.push_back(ScreenWinDisplay(displays[i], display_infos[i]));
 
         return screen_win_displays;
     }
