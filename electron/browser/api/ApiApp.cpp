@@ -163,7 +163,7 @@ bool App::setUserTasksApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
 }
 
 void App::setDesktopNameApi(const std::string& desktopName) { 
-    OutputDebugStringA("setDesktopNameApi\n");
+    OutputDebugStringA("App::setDesktopNameApi\n");
 }
 
 v8::Local<v8::Value> App::getJumpListSettingsApi(const v8::FunctionCallbackInfo<v8::Value>& args) {

@@ -18,7 +18,7 @@ const MenuItem = function (options) {
   this.checked = options.checked
 
   this.submenu = options.submenu
-  if (this.submenu != null && this.submenu.constructor !== Menu) {console.log("MenuItem.submenu");
+  if (this.submenu != null && this.submenu.constructor !== Menu) {
     this.submenu = Menu.buildFromTemplate(this.submenu)
   }
   if (this.type == null && this.submenu != null) {

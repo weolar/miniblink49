@@ -8,53 +8,36 @@
 #include "NodeBlink.h"
 #include <windows.h>
 
-#if USING_VC6RT == 1
-void __cdecl operator delete(void * p, unsigned int)
-{
-    ::free(p);
-}
-
-extern "C" int __security_cookie = 0;
-#endif
-
 #pragma comment(lib,"zlib.lib")
 #pragma comment(lib, "Psapi.lib")
 #pragma comment(lib, "IPHLPAPI.lib")
 #pragma comment(lib, "Userenv.lib")
 #pragma comment(lib, "Psapi.lib")
 
+#define NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT_REG_IN_MAIN(fn) \
+    fn(atom_browser_web_contents) \
+    fn(atom_browser_app) \
+    fn(atom_browser_electron) \
+    fn(atom_browser_window) \
+    fn(atom_browser_menu) \
+    fn(atom_browser_dialog) \
+    fn(atom_renderer_ipc) \
+    fn(atom_common_v8_util) \
+    fn(atom_common_shell) \
+    fn(atom_common_original_fs) \
+    fn(atom_common_screen) \
+    fn(atom_renerer_webframe) \
+    fn(atom_common_intl_collator) \
+    fn(atom_common_asar)
+
 namespace atom {
 
 unzFile gPeResZip = nullptr;
 
-NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT_DECLARE_IN_MAIN(atom_browser_web_contents);
-NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT_DECLARE_IN_MAIN(atom_browser_app);
-NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT_DECLARE_IN_MAIN(atom_browser_electron);
-NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT_DECLARE_IN_MAIN(atom_browser_window);
-NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT_DECLARE_IN_MAIN(atom_browser_menu);
-NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT_DECLARE_IN_MAIN(atom_browser_dialog);
-NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT_DECLARE_IN_MAIN(atom_renderer_ipc);
-NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT_DECLARE_IN_MAIN(atom_common_v8_util);
-NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT_DECLARE_IN_MAIN(atom_common_shell);
-NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT_DECLARE_IN_MAIN(atom_common_original_fs);
-NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT_DECLARE_IN_MAIN(atom_common_screen);
-NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT_DECLARE_IN_MAIN(atom_renerer_webframe);
-NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT_DECLARE_IN_MAIN(atom_common_intl_collator);
+NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT_REG_IN_MAIN(NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT_DECLARE_IN_MAIN)
 
 static void registerNodeMod() {
-    NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT_DEFINDE_IN_MAIN(atom_browser_web_contents);
-    NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT_DEFINDE_IN_MAIN(atom_browser_app);
-    NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT_DEFINDE_IN_MAIN(atom_browser_electron);
-    NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT_DEFINDE_IN_MAIN(atom_browser_window);
-    NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT_DEFINDE_IN_MAIN(atom_browser_menu);
-    NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT_DEFINDE_IN_MAIN(atom_browser_dialog);
-    NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT_DEFINDE_IN_MAIN(atom_renderer_ipc);
-    NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT_DEFINDE_IN_MAIN(atom_common_v8_util);
-    NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT_DEFINDE_IN_MAIN(atom_common_shell);
-    NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT_DEFINDE_IN_MAIN(atom_common_original_fs);
-    NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT_DEFINDE_IN_MAIN(atom_common_screen);
-    NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT_DEFINDE_IN_MAIN(atom_renerer_webframe);
-    NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT_DEFINDE_IN_MAIN(atom_common_intl_collator);
+    NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT_REG_IN_MAIN(NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT_DEFINDE_IN_MAIN)
 }
 
 static void initPeRes(HINSTANCE hInstance) {
@@ -89,9 +72,9 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
     // E:\mycode\vscode-master\out\main.js
     // E:\mycode\miniblink49\trunk\electron\lib\test\css3-3d-cube-loading\main.js
     std::vector<std::wstring> argv = atom::AtomCommandLine::wargv();
-    if (-1 != argv[1].find(L"bootstrap", 0)) {
-        //MessageBoxW(0, 0, 0, 0);
-    }
+//     if (-1 != argv[1].find(L"bootstrap", 0)) {
+//         MessageBoxW(0, 0, 0, 0);
+//     }
 
     atom::NodeArgc* node = atom::runNodeThread();
     
