@@ -4,9 +4,9 @@
 
 #include "base/win/shell.h"
 
-#include <dwmapi.h>
+//#include <dwmapi.h>
 #include <shlobj.h>  // Must be before propkey.
-#include <propkey.h>
+//#include <propkey.h>
 #include <shellapi.h>
 
 #include "base/command_line.h"
@@ -34,7 +34,7 @@ namespace {
 // thread whose message loop may not wait around long enough for the
 // asynchronous tasks initiated by ShellExecuteEx to complete. Using this flag
 // causes ShellExecuteEx() to block until these tasks complete.
-const DWORD kDefaultOpenAsFlags = SEE_MASK_NOASYNC;
+    const DWORD kDefaultOpenAsFlags = 0x00000100; // SEE_MASK_NOASYNC;
 
 // Default ShellExecuteEx flags used with the "explore", "open" or default verb.
 //
@@ -43,7 +43,7 @@ const DWORD kDefaultOpenAsFlags = SEE_MASK_NOASYNC;
 // displayed if there is an error in opening the file. Failure in invoking the
 // "open" actions result in invocation of the "saveas" verb, making the error
 // dialog superfluous.
-const DWORD kDefaultOpenFlags = SEE_MASK_NOASYNC | SEE_MASK_FLAG_NO_UI;
+    const DWORD kDefaultOpenFlags = 0x00000100 | 0x00000400; // SEE_MASK_NOASYNC | SEE_MASK_FLAG_NO_UI;
 
 // Invokes ShellExecuteExW() with the given parameters.
 DWORD InvokeShellExecute(const base::string16 path,

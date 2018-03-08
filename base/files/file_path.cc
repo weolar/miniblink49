@@ -138,12 +138,12 @@ StringType::size_type ExtensionSeparatorPosition(const StringType& path) {
   }
 
   for (size_t i = 0; i < arraysize(kCommonDoubleExtensions); ++i) {
-    StringType extension(path, penultimate_dot + 1);
+    StringType extension(path.c_str(), penultimate_dot + 1);
     if (LowerCaseEqualsASCII(extension, kCommonDoubleExtensions[i]))
       return penultimate_dot;
   }
 
-  StringType extension(path, last_dot + 1);
+  StringType extension(path.c_str(), last_dot + 1);
   for (size_t i = 0; i < arraysize(kCommonDoubleExtensionSuffixes); ++i) {
     if (LowerCaseEqualsASCII(extension, kCommonDoubleExtensionSuffixes[i])) {
       if ((last_dot - penultimate_dot) <= 5U &&
@@ -249,7 +249,9 @@ void FilePath::GetComponents(std::vector<StringType>* components) const {
     ret_val.push_back(StringType(dir.value(), 0, letter + 1));
   }
 
-  *components = std::vector<StringType>(ret_val.rbegin(), ret_val.rend());
+  //*components = std::vector<StringType>(ret_val.rbegin(), ret_val.rend());
+  for (std::vector<StringType>::reverse_iterator r_iter = ret_val.rbegin(); r_iter != ret_val.rend(); ++r_iter)
+    components->push_back(*r_iter);
 }
 
 bool FilePath::IsParent(const FilePath& child) const {
@@ -505,7 +507,7 @@ FilePath FilePath::Append(StringPieceType component) const {
   if (!appended.empty() && !new_path.path_.empty()) {
     // Don't append a separator if the path still ends with a trailing
     // separator after stripping (indicating the root directory).
-    if (!IsSeparator(new_path.path_.back())) {
+    if (!IsSeparator(new_path.path_[new_path.path_.size() - 1])) {
       // Don't append a separator if the path is just a drive letter.
       if (FindDriveLetter(new_path.path_) + 1 != new_path.path_.length()) {
         new_path.path_.append(1, kSeparators[0]);
@@ -538,7 +540,7 @@ bool FilePath::IsAbsolute() const {
 bool FilePath::EndsWithSeparator() const {
   if (empty())
     return false;
-  return IsSeparator(path_.back());
+  return IsSeparator(path_[path_.size() - 1]);
 }
 
 FilePath FilePath::AsEndingWithSeparator() const {

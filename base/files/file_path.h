@@ -195,7 +195,7 @@ class BASE_EXPORT FilePath {
 
   bool empty() const { return path_.empty(); }
 
-  void clear() { path_.clear(); }
+  void clear() { path_ = StringType(); }
 
   // Returns true if |character| is in kSeparators.
   static bool IsSeparator(CharType character);
