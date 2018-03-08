@@ -5,7 +5,7 @@
 
 #include <vector>
 #include <limits>
-#include "third_party/WebKit/Source/wtf/dtoa.h"
+//#include "third_party/WebKit/Source/wtf/dtoa.h"
 
 // namespace WTF {
 // double parseDouble(const unsigned char* string, size_t length, size_t& parsedLength);
@@ -379,7 +379,8 @@ bool EscapeJSONStringImpl(const S& str, bool put_in_quotes, std::string* dest)
         *dest += ('"');
 
     // Casting is necessary because ICU uses int32. Try and do so safely.
-    ASSERT(str.length() <= static_cast<size_t>(kint32max));
+    if (str.length() > static_cast<size_t>(kint32max))
+        *(int*)1 = 1;
     const int32 length = static_cast<int32>(str.length());
 
     for (int32 i = 0; i < length; ++i) {
@@ -680,13 +681,17 @@ bool StringToInt(const StringPiece& input, int* output)
 
 bool StringToDouble(const std::string& input, double* output)
 {
-    size_t parsedLength;
-    double result = WTF::parseDouble((const unsigned char*)input.c_str(), input.size(), parsedLength);
-    if (0 == parsedLength)
+    size_t parsedLength = 0;
+//     double result = WTF::parseDouble((const unsigned char*)input.c_str(), input.size(), parsedLength);
+//     if (0 == parsedLength)
+//         return false;
+
+    char* endptr = nullptr;
+    double result = strtod(input.c_str(), &endptr);
+    if (*endptr)
         return false;
 
     *output = result;
-
     return true;
 }
 

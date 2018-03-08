@@ -165,7 +165,8 @@ FILETIME Time::ToFileTime() const {
 void Time::EnableHighResolutionTimer(bool enable) {
     // Test for single-threaded access.
     static DWORD my_thread = ::GetCurrentThreadId();
-    ASSERT(::GetCurrentThreadId() == my_thread);
+    if (::GetCurrentThreadId() != my_thread)
+        DebugBreak();
 
     if (high_resolution_timer_enabled_ == enable)
         return;
@@ -387,7 +388,10 @@ public:
     int64 GetQPCDriftMicroseconds() {
         if (!IsUsingHighResClock())
             return 0;
-        return std::abs((UnreliableNow() - ReliableNow()) - skew_);
+        int64 val = ((UnreliableNow() - ReliableNow()) - skew_);
+        if (val < 0)
+            return -val;
+        return val;
     }
 
     int64 QPCValueToMicroseconds(LONGLONG qpc_value) {
