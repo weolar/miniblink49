@@ -12,9 +12,11 @@
 #include "common/api/EventEmitter.h"
 #include "common/IdLiveDetect.h"
 #include "common/WinUserMsg.h"
+#include "common/asar/AsarUtil.h"
 #include "wke.h"
 #include "gin/per_isolate_data.h"
 #include "gin/object_template_builder.h"
+#include "base/files/file_path.h"
 #include <shellapi.h>
 #include <ole2.h>
 
@@ -1153,6 +1155,26 @@ private:
         DebugBreak();
     }
 
+    static bool handleLoadUrlBegin(wkeWebView webView, void* param, const char *url, void *job) {
+        if (0 == strstr(url, "file:///") || 0 == strstr(url, ".asar"))
+            return false;
+
+        size_t fileHeadLength = sizeof("file:///") - 1;
+        base::StringPiece urlString(url);
+        urlString = urlString.substr(fileHeadLength, urlString.size() - fileHeadLength);
+        base::FilePath path = base::FilePath::FromUTF8Unsafe(urlString);
+        std::string contents;
+        if (!asar::ReadFileToString(path, &contents) || 0 == contents.size())
+            return false;
+        wkeNetSetData(job, &contents.at(0), contents.size());
+
+        OutputDebugStringA("HookUrl:");
+        OutputDebugStringA(url);
+        OutputDebugStringA("\n");
+
+        return true;
+    }
+
     static Window* newWindow(gin::Dictionary* options, v8::Local<v8::Object> wrapper) {
         Window* win = new Window(options->isolate(), wrapper);
         WebContents::CreateWindowParam* createWindowParam = new WebContents::CreateWindowParam();
@@ -1285,9 +1307,11 @@ private:
             if (!IdLiveDetect::get()->isLive(id))
                 return;
 
+            wkeWebView webview = win->m_webContents->getWkeView();
             win->m_webContents->onNewWindowInBlinkThread(width, height, createWindowParam);
-            wkeOnPaintUpdated(win->m_webContents->getWkeView(), (wkePaintUpdatedCallback)staticOnPaintUpdatedInCompositeThread, win);
-            wkeOnConsole(win->m_webContents->getWkeView(), onConsoleCallback, nullptr);
+            wkeOnPaintUpdated(webview, (wkePaintUpdatedCallback)staticOnPaintUpdatedInCompositeThread, win);
+            wkeOnConsole(webview, onConsoleCallback, nullptr);
+            wkeOnLoadUrlBegin(webview, handleLoadUrlBegin, nullptr);
             delete createWindowParam;
         });
 
