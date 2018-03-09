@@ -13,8 +13,8 @@ Menu.prototype._init = function () {
 
     this.items = [];
 	
-	this.on('click', function (event, click) {
-		click(event, null, null);
+    this.on('click', function (event, click, focusedWindow, focusedWebContents) {
+        click(event, focusedWindow, focusedWebContents);
 	});
 }
 
