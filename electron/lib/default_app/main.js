@@ -112,7 +112,7 @@ function loadApplicationByUrl (appUrl) {
   require('./default_app').load(appUrl)
 }
 
-function loadApplicationByJsUrl (appJsUrl) {console.log("loadApplicationByJsUrl");
+function loadApplicationByJsUrl (appJsUrl) {
   require(appJsUrl);
 }
 
@@ -132,14 +132,14 @@ function startRepl () {
 // Start the specified app if there is one specified in command line, otherwise
 // start the default app.
 if (option.file && !option.webdriver) {
-  const file = option.file
+  const file = option.file;
   const protocol = url.parse(file).protocol
   const extension = path.extname(file)
   if (protocol === 'http:' || protocol === 'https:' || protocol === 'file:') {
     loadApplicationByUrl(file)
   } else if (extension === '.html' || extension === '.htm') {
     loadApplicationByUrl('file://' + path.resolve(file))
-  } else if (extension === '.js') {
+    } else if (extension === '.js') {
   	loadApplicationByJsUrl(path.resolve(file))
   } else {
     loadApplicationPackage(file)
