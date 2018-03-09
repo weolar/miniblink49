@@ -4,7 +4,7 @@
 #include "browser/api/WindowList.h"
 #include "browser/api/ApiApp.h"
 #include "browser/api/WindowInterface.h"
-#include "browser/api/MenuUitl.h"
+#include "browser/api/MenuEventNotif.h"
 #include "common/OptionsSwitches.h"
 #include "common/NodeRegisterHelp.h"
 #include "common/ThreadCall.h"
@@ -517,7 +517,7 @@ public:
             return 0;
 
         case WM_COMMAND:
-            MenuUitl::onMenuCommon(message, wParam, lParam);
+            MenuEventNotif::onMenuCommon(message, wParam, lParam);
             break;
 
         case WM_PAINT:
@@ -1102,13 +1102,7 @@ private:
     }
 
     static void getFocusedWindowApi(const v8::FunctionCallbackInfo<v8::Value>& info) {
-        v8::Local<v8::Value> result;
-        HWND focusWnd = ::GetFocus();
-        Window* win = (Window*)::GetPropW(focusWnd, kPrppW);
-        if (!win)
-            result = v8::Null(info.GetIsolate());
-        else
-            result = win->GetWrapper(info.GetIsolate());
+        v8::Local<v8::Value> result = WindowInterface::getFocusedWindow(info.GetIsolate());
         info.GetReturnValue().Set(result);
     }
 
@@ -1239,8 +1233,7 @@ private:
         if (title->IsString()) {
             v8::String::Utf8Value str(title);
             createWindowParam->title = StringUtil::UTF8ToUTF16(*str);
-        }
-        else
+        } else
             createWindowParam->title = L"Electron";
 
         createWindowParam->x = x->Int32Value();
@@ -1315,6 +1308,8 @@ private:
             delete createWindowParam;
         });
 
+        MenuEventNotif::onWindowDidCreated(this);
+
         ::ShowWindow(m_hWnd, createWindowParam->isShow ? SW_SHOWNORMAL : SW_HIDE);
 
         m_state = WindowInited;
@@ -1350,6 +1345,7 @@ private:
 
 public:
     static gin::WrapperInfo kWrapperInfo;
+    static const WCHAR* kPrppW;
 
 private:
     enum WindowState {
@@ -1359,7 +1355,6 @@ private:
         WindowDestroyed
     };
     WindowState m_state;
-    static const WCHAR* kPrppW;
     WebContents* m_webContents;
     
     HWND m_hWnd;
@@ -1372,6 +1367,17 @@ private:
     bool m_isLayerWindow;
     int m_id;
 };
+
+v8::Local<v8::Value> WindowInterface::getFocusedWindow(v8::Isolate* isolate) {
+    v8::Local<v8::Value> result;
+    HWND focusWnd = ::GetFocus();
+    Window* win = (Window*)::GetPropW(focusWnd, Window::kPrppW);
+    if (!win)
+        result = v8::Null(isolate);
+    else
+        result = win->GetWrapper(isolate);
+    return result;
+}
 
 const WCHAR* Window::kPrppW = L"mele";
 v8::Persistent<v8::Function> Window::constructor;

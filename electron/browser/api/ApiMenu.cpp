@@ -2,7 +2,7 @@
 #include "node/include/nodeblink.h"
 #include "browser/api/WindowInterface.h"
 #include "browser/api/WindowList.h"
-#include "browser/api/MenuUitl.h"
+#include "browser/api/MenuEventNotif.h"
 #include "common/NodeRegisterHelp.h"
 #include "common/api/EventEmitter.h"
 #include "gin/object_template_builder.h"
@@ -108,6 +108,9 @@ public:
         DebugBreak();
         ::DestroyMenu(m_hMenu);
         m_hMenu = nullptr;
+
+        if (m_appMenu == this)
+            m_appMenu = nullptr;
     }
 
     static void init(v8::Isolate* isolate, v8::Local<v8::Object> target) {
@@ -133,7 +136,7 @@ public:
     }
 
     // Set the global menubar.
-    void setApplicationMenuApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    void setApplicationMenuApi() {
         HMENU hmenuBar = buildMenus(true);
         
         WindowList::iterator winIt = WindowList::getInstance()->begin();
@@ -142,6 +145,7 @@ public:
             HWND hParentWnd = windowInterface->getHWND();
             ::SetMenu(hParentWnd, hmenuBar);
         }
+        m_appMenu = this;
     }
 
     void sendActionToFirstResponderApi(const std::string& action) {
@@ -262,9 +266,19 @@ public:
             item->setChecked(false);
         }
 
+        v8::Local<v8::Value> focusedWindow = WindowInterface::getFocusedWindow(isolate());
+
+        if (focusedWindow->IsNull())
+            DebugBreak();
+
         //v8::Local<v8::Object> recv = item->getIsolate()->GetCurrentContext()->Global();
         //item->getClickCallback()->Call(recv, 0, nullptr);
-        item->getMenu()->mate::EventEmitter<Menu>::emit("click", item->getClickCallbackValue());
+        item->getMenu()->mate::EventEmitter<Menu>::emit("click", 
+            item->getClickCallbackValue(), focusedWindow /*, focusedWebContents*/);
+    }
+
+    static Menu* getAppMenu() {
+        return m_appMenu;
     }
 
 public:
@@ -272,26 +286,11 @@ public:
     static v8::Persistent<v8::Function> constructor;
     static std::set<MenuItem*>* m_liveMenuItem;
 
-private:
     friend class MenuItem;
-
-    static HMENU buildMenu(Menu* menu, bool isAppOrPopupMenu) {
-        size_t size = menu->m_items.size();
-        if (0 == size)
-            return nullptr;
-
-        menu->m_hMenu = ((isAppOrPopupMenu) ? ::CreateMenu() : ::CreatePopupMenu());
-
-        for (size_t i = 0; i < size; ++i) {
-            MenuItem* item = menu->m_items[i];
-            item->insertPlatformMenu(i, menu->m_hMenu);
-        }
-        return menu->m_hMenu;
-    }
 
     HMENU buildMenus(bool isAppOrPopupMenu) {
         if (!m_isItemNeedRebuilt)
-            return nullptr;
+            return m_hMenu;
         m_isItemNeedRebuilt = false;
 
         AppOrPopupType appOrPopupMenuType = isAppOrPopupMenu ? kIsApp : kIsPopup;;
@@ -305,6 +304,21 @@ private:
         m_hMenu = nullptr;
 
         return buildMenu(this, isAppOrPopupMenu);
+    }
+
+private:
+    static HMENU buildMenu(Menu* menu, bool isAppOrPopupMenu) {
+        size_t size = menu->m_items.size();
+        if (0 == size)
+            return nullptr;
+
+        menu->m_hMenu = ((isAppOrPopupMenu) ? ::CreateMenu() : ::CreatePopupMenu());
+
+        for (size_t i = 0; i < size; ++i) {
+            MenuItem* item = menu->m_items[i];
+            item->insertPlatformMenu(i, menu->m_hMenu);
+        }
+        return menu->m_hMenu;
     }
 
     void createHideParentWindow() {
@@ -343,7 +357,7 @@ private:
         MenuItem* item = nullptr;
         switch (uMsg) {
         case WM_COMMAND: {
-            MenuUitl::onMenuCommon(uMsg, wParam, lParam);
+            MenuEventNotif::onMenuCommon(uMsg, wParam, lParam);
             return 0;
         }
         default:
@@ -356,6 +370,8 @@ private:
     HMENU m_hMenu;
     std::vector<MenuItem*> m_items;
     bool m_isItemNeedRebuilt;
+
+    static Menu* m_appMenu;
 
     enum AppOrPopupType {
         kNoInit,
@@ -389,14 +405,6 @@ void MenuItem::setSubMenu(Menu* subMenu)
     m_hSubMenu = hSubMenu;
     m_subMenu = subMenu;
     m_type = SubmenuType;
-}
-
-void MenuUitl::onMenuCommon(UINT uMsg, WPARAM wParam, LPARAM lParam) {
-    MenuItem* item = (MenuItem*)wParam;
-    if (!Menu::m_liveMenuItem || Menu::m_liveMenuItem->find(item) == Menu::m_liveMenuItem->end())
-        return;
-
-    item->getMenu()->onCommon(item, uMsg, wParam, lParam);
 }
 
 void MenuItem::insertPlatformMenu(size_t pos, HMENU hMenu) const {
@@ -436,10 +444,28 @@ void MenuItem::insertPlatformMenu(size_t pos, HMENU hMenu) const {
     ::InsertMenuItem(hMenu, count, TRUE, &info);
 }
 
+void MenuEventNotif::onWindowDidCreated(WindowInterface* window) {
+    HWND hParentWnd = window->getHWND();
+    if (Menu::getAppMenu()) {
+        HMENU hmenuBar = Menu::getAppMenu()->buildMenus(true);
+        bool b = ::SetMenu(hParentWnd, hmenuBar);
+        b = b;
+    }
+}
+
+void MenuEventNotif::onMenuCommon(UINT uMsg, WPARAM wParam, LPARAM lParam) {
+    MenuItem* item = (MenuItem*)wParam;
+    if (!Menu::m_liveMenuItem || Menu::m_liveMenuItem->find(item) == Menu::m_liveMenuItem->end())
+        return;
+
+    item->getMenu()->onCommon(item, uMsg, wParam, lParam);
+}
+
 v8::Persistent<v8::Function> Menu::constructor;
 gin::WrapperInfo Menu::kWrapperInfo = { gin::kEmbedderNativeGin };
 std::set<MenuItem*>* Menu::m_liveMenuItem = nullptr;
 HWND Menu::m_hHideParentWindow = nullptr;
+Menu* Menu::m_appMenu = nullptr;
 
 static void initializeMenuApi(v8::Local<v8::Object> target, v8::Local<v8::Value> unused, v8::Local<v8::Context> context, const NodeNative* native) {
     node::Environment* env = node::Environment::GetCurrent(context);

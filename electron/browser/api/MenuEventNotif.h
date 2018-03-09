@@ -8,9 +8,10 @@ namespace atom {
 
 class MenuItem;
 
-class MenuUitl {
+class MenuEventNotif {
 public:
     static void onMenuCommon(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    static void onWindowDidCreated(WindowInterface* window);
 };
 
 }

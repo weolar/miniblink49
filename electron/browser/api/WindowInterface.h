@@ -17,6 +17,7 @@ public:
     virtual int getId() const = 0;
     virtual WebContents* getWebContents() const = 0;
     virtual HWND getHWND() const = 0;
+    static v8::Local<v8::Value> getFocusedWindow(v8::Isolate* isolate);
 };
 
 } // atom
