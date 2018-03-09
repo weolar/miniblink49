@@ -114,7 +114,7 @@ std::wstring getResourcesPath(const std::wstring& name) {
     std::wstring temp(out);
     temp += L"\\node.exp";
     if (!::PathFileExists(temp.c_str()))
-        out += L"\\electron.asar\\";
+        out += L"\\resources\\electron.asar\\";
     else
         out += L"\\..\\..\\electron\\lib\\";
     
