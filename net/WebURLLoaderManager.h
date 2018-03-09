@@ -88,7 +88,6 @@ public:
 
     CURLSH* getCurlShareHandle() const;
 
-    void setCookieJarFileName(const char* cookieJarFileName);
     const char* getCookieJarFileName() const;
 
     void dispatchSynchronousJob(WebURLLoaderInternal*);

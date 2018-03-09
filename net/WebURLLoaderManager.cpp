@@ -115,7 +115,7 @@ WebURLLoaderManager::~WebURLLoaderManager()
     curl_multi_cleanup(m_curlMultiHandle);
     curl_share_cleanup(m_curlShareHandle);
     if (m_cookieJarFileName)
-        fastFree(m_cookieJarFileName);
+        free(m_cookieJarFileName);
     curl_global_cleanup();
 }
 
@@ -162,8 +162,8 @@ void WebURLLoaderManager::initCookieSession()
     curl_easy_setopt(curl, CURLOPT_SHARE, m_curlShareHandle);
 
     if (m_cookieJarFileName) {
-        curl_easy_setopt(curl, CURLOPT_COOKIEFILE, m_cookieJarFileName);
         curl_easy_setopt(curl, CURLOPT_COOKIEJAR, m_cookieJarFileName);
+        curl_easy_setopt(curl, CURLOPT_COOKIEFILE, m_cookieJarFileName);
     }
 
     curl_easy_setopt(curl, CURLOPT_COOKIESESSION, 1);
@@ -174,11 +174,6 @@ void WebURLLoaderManager::initCookieSession()
 CURLSH* WebURLLoaderManager::getCurlShareHandle() const
 {
     return m_curlShareHandle;
-}
-
-void WebURLLoaderManager::setCookieJarFileName(const char* cookieJarFileName)
-{
-    m_cookieJarFileName = fastStrDup(cookieJarFileName);
 }
 
 const char* WebURLLoaderManager::getCookieJarFileName() const
@@ -875,7 +870,11 @@ public:
         if (!job || job->m_cancelled)
             return;
 
-        job->m_response.setURL(job->firstRequest()->url());
+        KURL url = job->firstRequest()->url();
+        job->m_response.setURL(url);
+        if (job->m_response.mimeType().isNull() || job->m_response.mimeType().isEmpty())
+            job->m_response.setMIMEType(MIMETypeRegistry::getMIMETypeForPath(url.getUTF8String()));
+
         job->client()->didReceiveResponse(job->loader(), job->m_response);
         if (job->m_asynWkeNetSetData && !job->m_cancelled) { // 可能在didReceiveResponse里被cancel
             WebURLLoaderManager::sharedInstance()->didReceiveDataOrDownload(job, static_cast<char*>(job->m_asynWkeNetSetData), job->m_asynWkeNetSetDataLength, 0);
@@ -1477,8 +1476,10 @@ void WebURLLoaderManager::initializeHandleOnIoThread(int jobId, InitializeHandle
 
     curl_easy_setopt(job->m_handle, CURLOPT_URL, job->m_url);
 
-    if (m_cookieJarFileName)
+    if (m_cookieJarFileName) {
         curl_easy_setopt(job->m_handle, CURLOPT_COOKIEJAR, m_cookieJarFileName);
+        curl_easy_setopt(job->m_handle, CURLOPT_COOKIEFILE, m_cookieJarFileName);
+    }
 
     if ("GET" == info->method) {
         curl_easy_setopt(job->m_handle, CURLOPT_HTTPGET, TRUE);
@@ -1575,6 +1576,10 @@ void WebURLLoaderManager::startOnIoThread(int jobId)
         curl_easy_setopt(job->m_handle, CURLOPT_SHARE, nullptr);
     }
 }
+
+#ifndef NDEBUG
+DEFINE_DEBUG_ONLY_GLOBAL(WTF::RefCountedLeakCounter, webURLLoaderInternalCounter, ("WebURLLoaderInternal"));
+#endif
 
 WebURLLoaderInternal::WebURLLoaderInternal(WebURLLoaderImplCurl* loader, const WebURLRequest& request, WebURLLoaderClient* client, bool defersLoading, bool shouldContentSniff)
     : m_ref(0)
