@@ -14,6 +14,7 @@ DragHandle::DragHandle()
 {
     m_refCount = 0;
     m_viewWindow = nullptr;
+    m_webViewImpl = nullptr;
 }
 
 void DragHandle::setViewWindow(HWND viewWindow, blink::WebViewImpl* webViewImpl)
@@ -107,6 +108,9 @@ void DragHandle::startDragging(blink::WebLocalFrame* frame,
     const blink::WebImage& image,
     const blink::WebPoint& dragImageOffset)
 {
+    if (!m_webViewImpl)
+        return;
+
     blink::WebDragOperation op = doStartDragging(frame, data, mask, image, dragImageOffset);
 
     POINT screenPoint = { 0 };
@@ -196,6 +200,9 @@ blink::WebDragOperation DragHandle::doStartDragging(blink::WebLocalFrame* frame,
 // IDropTarget impl
 HRESULT __stdcall DragHandle::DragEnter(IDataObject* pDataObject, DWORD grfKeyState, POINTL pt, DWORD* pdwEffect)
 {
+    if (!m_webViewImpl)
+        return S_OK;
+
     m_dragData = nullptr;
 
     if (m_dropTargetHelper)
@@ -222,6 +229,9 @@ HRESULT __stdcall DragHandle::DragEnter(IDataObject* pDataObject, DWORD grfKeySt
 
 HRESULT __stdcall DragHandle::DragOver(DWORD grfKeyState, POINTL pt, DWORD* pdwEffect) 
 {
+    if (!m_webViewImpl)
+        return S_OK;
+
     if (m_dropTargetHelper)
         m_dropTargetHelper->DragOver((POINT*)&pt, *pdwEffect);
 
@@ -251,7 +261,8 @@ HRESULT __stdcall DragHandle::DragLeave()
         m_dropTargetHelper->DragLeave();
 
     if (m_dragData) {
-        m_webViewImpl->dragTargetDragLeave();
+        if (m_webViewImpl)
+            m_webViewImpl->dragTargetDragLeave();
         m_dragData = nullptr;
     }
     return S_OK;
@@ -259,6 +270,9 @@ HRESULT __stdcall DragHandle::DragLeave()
 
 HRESULT __stdcall DragHandle::Drop(IDataObject* pDataObject, DWORD grfKeyState, POINTL pt, DWORD* pdwEffect)
 {
+    if (!m_webViewImpl)
+        return S_OK;
+
     if (m_dropTargetHelper)
         m_dropTargetHelper->Drop(pDataObject, (POINT*)&pt, *pdwEffect);
 
