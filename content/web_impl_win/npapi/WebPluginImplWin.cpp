@@ -798,6 +798,15 @@ void WebPluginImpl::paint(blink::WebCanvas* canvas, const blink::WebRect& rect)
         return;
     }
 
+    SkPaint clearPaint;
+    clearPaint.setARGB(0xff, 0xFF, 0xFF, 0xFF);
+    clearPaint.setXfermodeMode(SkXfermode::kClear_Mode);
+
+    SkRect skrc;
+    blink::IntRect r = container->frameRect();
+    skrc.set(0, 0, r.width(), r.height());
+    m_memoryCanvas->drawRect(skrc, clearPaint);
+
     HDC hMemoryDC = skia::BeginPlatformPaint(m_parentWidget, m_memoryCanvas);
 
     // On Safari/Windows without transparency layers the GraphicsContext returns the HDC
