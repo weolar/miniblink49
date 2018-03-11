@@ -36,6 +36,7 @@ class ScrollToOptions;
 class SerializedScriptValue;
 class Storage;
 class StyleMedia;
+class External;
 
 typedef HeapVector<Member<MessagePort>, 1> MessagePortArray;
 
@@ -170,6 +171,7 @@ public:
 
     void captureEvents() { }
     void releaseEvents() { }
+    External* external();
 
     // FIXME: This handles both window[index] and window.frames[index]. However,
     // the spec exposes window.frames[index] across origins but not
@@ -221,6 +223,7 @@ protected:
 
 private:
     mutable RefPtrWillBeMember<Location> m_location;
+    RefPtrWillBeMember<External> m_external;
 };
 
 } // namespace blink
