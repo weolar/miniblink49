@@ -192,7 +192,7 @@ void PluginStream::startStream()
 
     long long expectedContentLength = m_resourceResponse.expectedContentLength();
 
-    if (((KURL)(m_resourceResponse.url())).protocolIsInHTTPFamily()) {
+    if (responseURL.protocolIsInHTTPFamily()) {
         StringBuilder stringBuilder;
         String separator = /*ASCIILiteral*/(": ");
 
