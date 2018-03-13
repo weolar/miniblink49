@@ -825,7 +825,8 @@ void WebPluginImpl::paint(blink::WebCanvas* canvas, const blink::WebRect& rect)
     SkBaseDevice* bitmapDevice = skia::GetTopDevice(*m_memoryCanvas);
     const SkBitmap& bitmap = bitmapDevice->accessBitmap(false);
     
-    canvas->drawBitmap(bitmap, m_windowRect.x(), m_windowRect.y());
+    if (canvas != m_memoryCanvas)
+        canvas->drawBitmap(bitmap, m_windowRect.x(), m_windowRect.y());
 }
 
 void WebPluginImpl::setNPWindowRect(const IntRect& rect)
@@ -1035,8 +1036,10 @@ void WebPluginImpl::platformStartAsyn()
     
     updatePluginWidget(m_windowRect, m_clipRect);
 
-    if (!m_plugin->quirks().contains(PluginQuirkDeferFirstSetWindowCall))
-        setNPWindowRect(container->frameRect());
+    if (!m_plugin->quirks().contains(PluginQuirkDeferFirstSetWindowCall)) {
+        IntRect r = container->frameRect();
+        paint(m_memoryCanvas, r);
+    }
 }
 
 void WebPluginImpl::PlatformStartAsynTask::didProcessTask()
