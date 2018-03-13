@@ -13,6 +13,7 @@
 #include "bindings/core/v8/ScriptPromise.h"
 #include "bindings/core/v8/ScriptState.h"
 #include "bindings/core/v8/ScriptValue.h"
+#include "bindings/core/v8/V8External.h"
 #include "bindings/core/v8/V8AbstractEventListener.h"
 #include "bindings/core/v8/V8AnimationEffectReadOnly.h"
 #include "bindings/core/v8/V8AnimationEffectTiming.h"
@@ -1024,6 +1025,43 @@ static void applicationCacheAttributeGetter(const v8::PropertyCallbackInfo<v8::V
         V8HiddenValue::setHiddenValue(info.GetIsolate(), holder, v8AtomicString(info.GetIsolate(), "applicationCache"), v8Value);
         v8SetReturnValue(info, v8Value);
     }
+}
+
+static void externalAttributeGetter(const v8::PropertyCallbackInfo<v8::Value>& info)
+{
+    v8::Local<v8::Object> holder = info.Holder();
+
+    DOMWindow* impl = V8Window::toImpl(holder);
+
+    External* cppValue(WTF::getPtr(impl->external()));
+
+    // Keep the wrapper object for the return value alive as long as |this|
+    // object is alive in order to save creation time of the wrapper object.
+    if (cppValue && DOMDataStore::setReturnValue(info.GetReturnValue(), cppValue))
+        return;
+    v8::Local<v8::Value> v8Value(toV8(cppValue, holder, info.GetIsolate()));
+    const char kKeepAliveKey[] = "KeepAlive#Window#external";
+    //V8HiddenValue::setHiddenValue(ScriptState::current(info.GetIsolate()), holder, v8AtomicString(info.GetIsolate(), StringView(kKeepAliveKey, sizeof kKeepAliveKey)), v8Value);
+    V8HiddenValue::setHiddenValue(info.GetIsolate(), holder, v8AtomicString(info.GetIsolate(), kKeepAliveKey), v8Value);
+
+    v8SetReturnValue(info, v8Value);
+}
+
+static void externalAttributeGetterCallback(v8::Local<v8::Name>, const v8::PropertyCallbackInfo<v8::Value>& info)
+{
+    DOMWindowV8Internal::externalAttributeGetter(info);
+}
+
+static void externalAttributeSetter(v8::Local<v8::Value> v8Value, const v8::PropertyCallbackInfo<void>& info)
+{
+    // Prepare the value to be set.
+    v8::Local<v8::String> propertyName = v8AtomicString(info.GetIsolate(), "external");
+    v8CallBoolean(info.Holder()->CreateDataProperty(info.GetIsolate()->GetCurrentContext(), propertyName, v8Value));
+}
+
+static void externalAttributeSetterCallback(v8::Local<v8::Name>, v8::Local<v8::Value> v8Value, const v8::PropertyCallbackInfo<void>& info)
+{
+    DOMWindowV8Internal::externalAttributeSetter(v8Value, info);
 }
 
 static void applicationCacheAttributeGetterCallback(v8::Local<v8::Name>, const v8::PropertyCallbackInfo<v8::Value>& info)
@@ -7127,6 +7165,7 @@ static const V8DOMConfiguration::AttributeConfiguration V8WindowAttributes[] = {
     {"parent", DOMWindowV8Internal::parentAttributeGetterCallback, DOMWindowV8Internal::parentAttributeSetterCallback, 0, 0, 0, static_cast<v8::AccessControl>(v8::ALL_CAN_READ | v8::ALL_CAN_WRITE), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
     {"frameElement", DOMWindowV8Internal::frameElementAttributeGetterCallback, 0, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
     {"navigator", DOMWindowV8Internal::navigatorAttributeGetterCallback, 0, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
+    {"external", DOMWindowV8Internal::externalAttributeGetterCallback,   DOMWindowV8Internal::externalAttributeSetterCallback, 0, 0, 0,      static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
     {"screen", DOMWindowV8Internal::screenAttributeGetterCallback, DOMWindowV8Internal::screenAttributeSetterCallback, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
     {"innerWidth", DOMWindowV8Internal::innerWidthAttributeGetterCallback, DOMWindowV8Internal::innerWidthAttributeSetterCallback, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
     {"innerHeight", DOMWindowV8Internal::innerHeightAttributeGetterCallback, DOMWindowV8Internal::innerHeightAttributeSetterCallback, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
