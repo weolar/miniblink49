@@ -1395,7 +1395,7 @@ void WebPageImpl::setTransparent(bool transparent)
 void WebPageImpl::setHWND(HWND hWnd)
 {
     m_hWnd = hWnd;
-    if (m_hWnd && blink::RuntimeEnabledFeatures::updataInOtherThreadEnabled) {
+    if (m_hWnd && blink::RuntimeEnabledFeatures::updataInOtherThreadEnabled()) {
         m_dragHandle->setViewWindow(m_hWnd, m_webViewImpl);
         ::RegisterDragDrop(m_hWnd, m_dragHandle);
     }
