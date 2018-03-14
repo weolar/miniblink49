@@ -21,8 +21,6 @@ void DragHandle::setViewWindow(HWND viewWindow, blink::WebViewImpl* webViewImpl)
 {
     m_viewWindow = viewWindow;
     m_webViewImpl = webViewImpl;
-
-    ::CoCreateInstance(CLSID_DragDropHelper, 0, CLSCTX_INPROC_SERVER, IID_IDropTargetHelper, (void**)&m_dropTargetHelper);
 }
 
 DWORD DragHandle::draggingSourceOperationMaskToDragCursors(blink::WebDragOperationsMask op)
@@ -204,6 +202,9 @@ HRESULT __stdcall DragHandle::DragEnter(IDataObject* pDataObject, DWORD grfKeySt
         return S_OK;
 
     m_dragData = nullptr;
+
+    if (!m_dropTargetHelper)
+        ::CoCreateInstance(CLSID_DragDropHelper, 0, CLSCTX_INPROC_SERVER, IID_IDropTargetHelper, (void**)&m_dropTargetHelper);
 
     if (m_dropTargetHelper)
         m_dropTargetHelper->DragEnter(m_viewWindow, pDataObject, (POINT*)&pt, *pdwEffect);

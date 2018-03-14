@@ -396,7 +396,7 @@ static void initWndStyle(HWND hPopup)
     // ::SetFocus(hPopup);
     // ::SetCapture(hPopup);
     // ::SetForegroundWindow(hPopup);
-    ::SetWindowPos(hPopup, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOREPOSITION);
+    ::SetWindowPos(hPopup, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOREPOSITION | SWP_NOACTIVATE);
     ::ShowWindow(hPopup, SW_HIDE);
 }
 
@@ -435,7 +435,7 @@ void PopupMenuWin::asynStartCreateWnd(blink::Timer<PopupMenuWin>*)
     if (!m_hPopup) {
         registerClass();
 
-        m_hPopup = CreateWindowEx(WS_EX_NOACTIVATE, kPopupWindowClassName, L"MbPopupMenu", WS_POPUP,
+        m_hPopup = CreateWindowEx(WS_EX_NOACTIVATE, kPopupWindowClassName, L"MbPopupMenu", WS_POPUP/* | WS_DISABLED*/,
             CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, /*m_hParentWnd*/nullptr, 0, 0, this);
         
         g_hMouseHook = SetWindowsHookEx(WH_MOUSE, mouseHookProc, GetModuleHandle(NULL), GetCurrentThreadId());
@@ -455,7 +455,7 @@ WebWidget* PopupMenuWin::createWnd()
         if (m_needsCommit)
             ::PostMessage(m_hPopup, WM_COMMIT, 0, 0);
         ::SetPropW(m_hPopup, kPopupWindowClassName, (HANDLE)this);
-        ::SetWindowPos(m_hPopup, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOREPOSITION);
+        ::SetWindowPos(m_hPopup, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOREPOSITION | SWP_NOACTIVATE);
         ::ShowWindow(m_hPopup, SW_HIDE);
     }
 
