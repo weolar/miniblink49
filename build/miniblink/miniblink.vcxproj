@@ -525,8 +525,10 @@
     <ClCompile Include="..\..\content\ui\WebDropSource.cpp" />
     <ClCompile Include="..\..\content\web_impl_win\WebMessagePortChannelImpl.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8DevToolsHost.cpp" />
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8External.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8InspectorOverlayHost.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8XMLSerializer.cpp" />
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8Crypto.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8DevToolsHostPartial.cpp" />
     <ClCompile Include="..\..\gen\blink\core\InspectorBackendDispatcher.cpp" />
     <ClCompile Include="..\..\gen\blink\core\InspectorFrontend.cpp" />
@@ -4261,6 +4263,8 @@
     <ClCompile Include="..\..\third_party\WebKit\Source\modules\canvas2d\ContextAttributeHelpers.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\modules\canvas2d\HitRegion.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\modules\canvas2d\Path2D.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\crypto\DOMWindowCrypto.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\crypto\ModulesCrypto.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\modules\encoding\Encoding.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\modules\encoding\TextDecoder.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\modules\encoding\TextEncoder.cpp" />
@@ -5460,7 +5464,9 @@
     <ClInclude Include="..\..\content\ui\WCDataObject.h" />
     <ClInclude Include="..\..\content\ui\WebDropSource.h" />
     <ClInclude Include="..\..\content\web_impl_win\WebMessagePortChannelImpl.h" />
+    <ClInclude Include="..\..\gen\blink\bindings\core\v8\V8External.h" />
     <ClInclude Include="..\..\gen\blink\bindings\core\v8\V8XMLSerializer.h" />
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8Crypto.h" />
     <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8DevToolsHostPartial.h" />
     <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8DOMFileSystem.h" />
     <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8DOMFileSystemSync.h" />
@@ -5473,6 +5479,7 @@
     <ClInclude Include="..\..\third_party\WebKit\Source\bindings\core\v8\inspector\V8JavaScriptCallFrame.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\bindings\core\v8\ScriptHeapSnapshot.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\bindings\core\v8\ScriptProfiler.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\frame\External.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\AsyncCallChain.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\AsyncCallTracker.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\AsyncOperationMap.h" />
@@ -8127,6 +8134,8 @@
     <ClInclude Include="..\..\third_party\WebKit\Source\modules\canvas2d\HitRegion.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\modules\canvas2d\MouseEventHitRegion.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\modules\canvas2d\Path2D.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\crypto\Crypto.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\crypto\DOMWindowCrypto.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\modules\encoding\Encoding.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\modules\encoding\TextDecoder.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\modules\encoding\TextEncoder.h" />
