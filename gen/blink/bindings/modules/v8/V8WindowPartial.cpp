@@ -65,8 +65,10 @@
 #include "bindings/modules/v8/V8ConvolverNode.h"
 #include "bindings/modules/v8/V8Credential.h"
 #include "bindings/modules/v8/V8CredentialsContainer.h"
+#endif
 #include "bindings/modules/v8/V8Crypto.h"
-#include "bindings/modules/v8/V8CryptoKey.h"
+//#include "bindings/modules/v8/V8CryptoKey.h"
+#if MINIBLINK_NOT_IMPLEMENTED
 #include "bindings/modules/v8/V8Database.h"
 #include "bindings/modules/v8/V8DatabaseCallback.h"
 #include "bindings/modules/v8/V8DefaultSessionStartEvent.h"
@@ -209,7 +211,9 @@
 #include "core/dom/Document.h"
 #include "core/frame/UseCounter.h"
 #include "modules/cachestorage/GlobalCacheStorage.h"
+#endif // MINIBLINK_NOT_IMPLEMENTED
 #include "modules/crypto/DOMWindowCrypto.h"
+#ifdef MINIBLINK_NOT_IMPLEMENTED
 #include "modules/device_light/DOMWindowDeviceLight.h"
 #include "modules/device_orientation/DOMWindowDeviceMotion.h"
 #include "modules/device_orientation/DOMWindowDeviceOrientation.h"
@@ -301,6 +305,8 @@ static void cachesAttributeGetterCallback(v8::Local<v8::Name>, const v8::Propert
     TRACE_EVENT_SET_SAMPLING_STATE("v8", "V8Execution");
 }
 
+#endif
+
 static void cryptoAttributeGetter(const v8::PropertyCallbackInfo<v8::Value>& info)
 {
     v8::Local<v8::Object> holder = info.Holder();
@@ -321,6 +327,8 @@ static void cryptoAttributeGetterCallback(v8::Local<v8::Name>, const v8::Propert
     DOMWindowPartialV8Internal::cryptoAttributeGetter(info);
     TRACE_EVENT_SET_SAMPLING_STATE("v8", "V8Execution");
 }
+
+#ifdef MINIBLINK_NOT_IMPLEMENTED
 
 static void ondevicelightAttributeGetter(const v8::PropertyCallbackInfo<v8::Value>& info)
 {
@@ -1515,8 +1523,8 @@ static void openDatabaseMethodCallback(const v8::FunctionCallbackInfo<v8::Value>
 #pragma clang diagnostic ignored "-Wglobal-constructors"
 #endif
 static const V8DOMConfiguration::AttributeConfiguration V8WindowAttributes[] = {
-#ifdef MINIBLINK_NOT_IMPLEMENTED
     {"crypto", DOMWindowPartialV8Internal::cryptoAttributeGetterCallback, 0, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
+#ifdef MINIBLINK_NOT_IMPLEMENTED
     {"ondevicemotion", DOMWindowPartialV8Internal::ondevicemotionAttributeGetterCallback, DOMWindowPartialV8Internal::ondevicemotionAttributeSetterCallback, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnPrototype, V8DOMConfiguration::CheckHolder},
     {"ondeviceorientation", DOMWindowPartialV8Internal::ondeviceorientationAttributeGetterCallback, DOMWindowPartialV8Internal::ondeviceorientationAttributeSetterCallback, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnPrototype, V8DOMConfiguration::CheckHolder},
     {"webkitIndexedDB", DOMWindowPartialV8Internal::webkitIndexedDBAttributeGetterCallback, 0, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
@@ -1615,8 +1623,8 @@ static const V8DOMConfiguration::AttributeConfiguration V8WindowAttributes[] = {
     {"CanvasPattern", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8CanvasPattern::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
     {"CanvasRenderingContext2D", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8CanvasRenderingContext2D::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
     {"CloseEvent", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8CloseEvent::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
-#ifdef MINIBLINK_NOT_IMPLEMENTED
     {"Crypto", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8Crypto::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
+#ifdef MINIBLINK_NOT_IMPLEMENTED
     {"CryptoKey", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8CryptoKey::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
     {"DeviceMotionEvent", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8DeviceMotionEvent::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
     {"DeviceOrientationEvent", v8ConstructorAttributeGetter, DOMWindowPartialV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8DeviceOrientationEvent::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
