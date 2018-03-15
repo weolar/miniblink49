@@ -1273,23 +1273,22 @@ void WebURLLoaderManager::applyAuthenticationToRequest(WebURLLoaderInternal* han
     //         }
     //     }
     // 
-    //     String user = job->m_user;
-    //     String password = job->m_pass;
-    // 
-    //     if (!job->m_initialCredential.isEmpty()) {
-    //         user = job->m_initialCredential.user();
-    //         password = job->m_initialCredential.password();
-    //         curl_easy_setopt(job->m_handle, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-    //     }
-    // 
-    //     // It seems we need to set CURLOPT_USERPWD even if username and password is empty.
-    //     // Otherwise cURL will not automatically continue with a new request after a 401 response.
-    // 
-    //     // curl CURLOPT_USERPWD expects username:password
-    //     String userpass = user + ":" + password;
-    //     curl_easy_setopt(job->m_handle, CURLOPT_USERPWD, userpass.utf8().data());
+    String user = job->m_user;
+    String password = job->m_pass;
 
-    curl_easy_setopt(job->m_handle, CURLOPT_USERPWD, ":");
+//     if (!job->m_initialCredential.isEmpty()) {
+//         user = job->m_initialCredential.user();
+//         password = job->m_initialCredential.password();
+//         curl_easy_setopt(job->m_handle, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+//     }
+
+    // It seems we need to set CURLOPT_USERPWD even if username and password is empty.
+    // Otherwise cURL will not automatically continue with a new request after a 401 response.
+
+    // curl CURLOPT_USERPWD expects username:password
+    String userpass = user + ":" + password;
+    curl_easy_setopt(job->m_handle, CURLOPT_USERPWD, userpass.utf8().data());
+    //curl_easy_setopt(job->m_handle, CURLOPT_USERPWD, ":");
 }
 
 class HeaderVisitor : public blink::WebHTTPHeaderVisitor {
@@ -1367,7 +1366,10 @@ WebURLLoaderManager::InitializeHandleInfo* WebURLLoaderManager::preInitializeHan
     info->method = job->firstRequest()->httpMethod().utf8();
 
     String contentType = job->firstRequest()->httpHeaderField("Content-Type");
-    if (contentType.isNull() && "POST" == info->method && job->firstRequest()->httpBody().isNull())
+    if (WTF::kNotFound == url.host().find("apple.com") // 苹果开发者网，非要去掉0长度的Content-Type字段
+        && contentType.isNull()
+        && "POST" == info->method
+        && job->firstRequest()->httpBody().isNull())
         job->firstRequest()->setHTTPHeaderField("Content-Type", ""); // 修复火币网登录不了的bug
 
     curl_slist* headers = nullptr;
@@ -1498,14 +1500,16 @@ void WebURLLoaderManager::initializeHandleOnIoThread(int jobId, InitializeHandle
         job->m_customHeaders = info->headers;
     }
 
-    curl_easy_setopt(job->m_handle, CURLOPT_USERPWD, ":");
+    // curl_easy_setopt(job->m_handle, CURLOPT_USERPWD, ":");
+
+    applyAuthenticationToRequest(job, job->firstRequest());
 
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
     if (info->proxy.size()) {
         job->m_isProxy = true;
         curl_easy_setopt(job->m_handle, CURLOPT_PROXY, info->proxy.c_str());
         curl_easy_setopt(job->m_handle, CURLOPT_PROXYTYPE, info->proxyType);
-    }
+    }  
 
     if (info->wkeNetInterface.size())
         curl_easy_setopt(job->m_handle, CURLOPT_INTERFACE, info->wkeNetInterface.c_str());
