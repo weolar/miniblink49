@@ -71,16 +71,16 @@ DOMArrayBufferView* Crypto::getRandomValues(DOMArrayBufferView* array, Exception
     return array;
 }
 
-SubtleCrypto* Crypto::subtle()
-{
-    if (!m_subtleCrypto)
-        m_subtleCrypto = SubtleCrypto::create();
-    return m_subtleCrypto.get();
-}
+// SubtleCrypto* Crypto::subtle()
+// {
+//     if (!m_subtleCrypto)
+//         m_subtleCrypto = SubtleCrypto::create();
+//     return m_subtleCrypto.get();
+// }
 
 DEFINE_TRACE(Crypto)
 {
-    visitor->trace(m_subtleCrypto);
+    //visitor->trace(m_subtleCrypto);
 }
 
 } // namespace blink
