@@ -37,7 +37,8 @@ DevToolsClient::DevToolsClient(WebPage* page, blink::WebLocalFrame* frame)
 
 DevToolsClient::~DevToolsClient()
 {
-    m_devToolsAgent->setDevToolsClient(nullptr);
+    if (m_devToolsAgent)
+        m_devToolsAgent->setDevToolsClient(nullptr);
     delete m_webToolsFrontend;
     delete m_preferences;
     delete m_devToolsProtocolDispatcher;
