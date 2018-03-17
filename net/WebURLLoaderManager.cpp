@@ -162,8 +162,8 @@ void WebURLLoaderManager::initCookieSession()
     curl_easy_setopt(curl, CURLOPT_SHARE, m_curlShareHandle);
 
     if (m_cookieJarFileName) {
-        curl_easy_setopt(curl, CURLOPT_COOKIEJAR, m_cookieJarFileName);
         curl_easy_setopt(curl, CURLOPT_COOKIEFILE, m_cookieJarFileName);
+        curl_easy_setopt(curl, CURLOPT_COOKIEJAR, m_cookieJarFileName);
     }
 
     curl_easy_setopt(curl, CURLOPT_COOKIESESSION, 1);
