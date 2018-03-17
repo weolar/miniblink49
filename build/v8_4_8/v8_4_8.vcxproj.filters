@@ -7,9 +7,6 @@
     <Filter Include="include">
       <UniqueIdentifier>{b69ee987-2dd2-4b97-b9bd-91c20d758848}</UniqueIdentifier>
     </Filter>
-    <Filter Include="include\NewFilter1">
-      <UniqueIdentifier>{8b20f5ed-59f3-4b8a-b737-5550289e686c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\base">
       <UniqueIdentifier>{d44991a5-123c-44a7-ac95-3e118679a910}</UniqueIdentifier>
     </Filter>
@@ -88,6 +85,9 @@
     <Filter Include="src\libplatform">
       <UniqueIdentifier>{63e43a30-50d6-42f6-8ac1-aca837dd463f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\libplatform">
+      <UniqueIdentifier>{8b20f5ed-59f3-4b8a-b737-5550289e686c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\v8_4_8\include\v8.h">
@@ -115,7 +115,7 @@
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\v8_4_8\include\libplatform\libplatform.h">
-      <Filter>include\NewFilter1</Filter>
+      <Filter>include\libplatform</Filter>
     </ClInclude>
     <ClInclude Include="..\..\v8_4_8\src\base\adapters.h">
       <Filter>src\base</Filter>
