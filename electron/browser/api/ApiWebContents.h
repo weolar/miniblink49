@@ -36,6 +36,8 @@ public:
         bool transparent;
         std::wstring title;
         bool isShow;
+        bool isCenter;
+        bool isResizable;
     };
 
     static void init(v8::Isolate* isolate, v8::Local<v8::Object> target, node::Environment* env);

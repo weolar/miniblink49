@@ -1,5 +1,4 @@
-﻿
-#include <node_buffer.h>
+﻿#include <node_buffer.h>
 #include "browser/api/ApiWebContents.h"
 #include "browser/api/WindowList.h"
 #include "browser/api/ApiApp.h"
@@ -36,6 +35,8 @@ public:
         m_memoryBMP = nullptr;
         m_memoryDC = nullptr;
         m_isLayerWindow = false;
+        m_isUseContentSize = false;
+
         m_clientRect.left = 0;
         m_clientRect.top = 0;
         m_clientRect.right = 0;
@@ -349,6 +350,17 @@ public:
         });
     }
 
+    void resetCursorWhenOutClientRect() {
+//         RECT rc;
+//         ::GetClientRect(m_hWnd, &rc);
+// 
+//         POINT pt;
+//         ::GetCursorPos(&pt);
+//         ::ScreenToClient(m_hWnd, &pt);
+//         if (!::PtInRect(&rc, pt))
+//             m_cursorInfoType = WkeCursorInfoIBeam;
+    }
+
     void onCursorChange() {
         if (m_isCursorInfoTypeAsynGetting)
             return;
@@ -367,9 +379,12 @@ public:
             win->m_cursorInfoType = cursorType;
             ::PostMessage(win->m_hWnd, WM_SETCURSOR_ASYN, 0, 0);
         });
+        resetCursorWhenOutClientRect();
     }
 
     void setCursorInfoTypeByCache() {
+        resetCursorWhenOutClientRect();
+
         HCURSOR hCur = NULL;
         switch (m_cursorInfoType) {
         case WkeCursorInfoIBeam:
@@ -526,6 +541,16 @@ public:
 
         case WM_ERASEBKGND:
             return TRUE;
+            
+        case WM_GETMINMAXINFO: {
+            MINMAXINFO* minmaxInfo = (MINMAXINFO*)lParam;
+            minmaxInfo->ptMinTrackSize.x = win->m_minWidth;
+            minmaxInfo->ptMinTrackSize.y = win->m_minHeight;
+
+            minmaxInfo->ptMaxTrackSize.x = win->m_maxWidth;
+            minmaxInfo->ptMaxTrackSize.y = win->m_maxHeight;
+        }
+            break;
 
         case WM_SIZE: {
             ::EnterCriticalSection(&win->m_memoryCanvasLock);
@@ -595,6 +620,11 @@ public:
             return 0;
             break;
         }
+        case WM_NCMOUSEMOVE:
+            //::SetCursor(::LoadCursor(NULL, IDC_ARROW));
+            win->m_cursorInfoType = WkeCursorInfoPointer;
+            ::PostMessage(win->m_hWnd, WM_SETCURSOR_ASYN, 0, 0);
+            break;
         case WM_LBUTTONDOWN:
         case WM_MBUTTONDOWN:
         case WM_RBUTTONDOWN:
@@ -685,7 +715,7 @@ public:
 
         case WM_SETCURSOR_ASYN:
             win->setCursorInfoTypeByCache();
-
+            break;
         case WM_IME_STARTCOMPOSITION: {
             ThreadCall::callBlinkThreadAsync([pthis, hWnd] {
                 wkeRect* caret = new wkeRect();
@@ -1149,12 +1179,21 @@ private:
         DebugBreak();
     }
 
-    static bool handleLoadUrlBegin(wkeWebView webView, void* param, const char *url, void *job) {
+    static bool handleLoadUrlBegin(wkeWebView webView, void* param, const char* url, void* job) {
         if (0 == strstr(url, "file:///") || 0 == strstr(url, ".asar"))
             return false;
 
+        int urlLength = strlen(url);
+        int urlHostLength = urlLength;
+        for (int i = 0; i < urlLength; ++i) {
+            if ('?' != url[i])
+                continue;
+            urlHostLength = i;
+            break;
+        }
+
         size_t fileHeadLength = sizeof("file:///") - 1;
-        base::StringPiece urlString(url);
+        base::StringPiece urlString(url, urlHostLength);
         urlString = urlString.substr(fileHeadLength, urlString.size() - fileHeadLength);
         base::FilePath path = base::FilePath::FromUTF8Unsafe(urlString);
         std::string contents;
@@ -1168,7 +1207,7 @@ private:
 
         return true;
     }
-
+    
     static Window* newWindow(gin::Dictionary* options, v8::Local<v8::Object> wrapper) {
         Window* win = new Window(options->isolate(), wrapper);
         WebContents::CreateWindowParam* createWindowParam = new WebContents::CreateWindowParam();
@@ -1202,56 +1241,36 @@ private:
         } else
             DebugBreak();
         //webContents = WebContents::ObjectWrap::Unwrap<WebContents>(webContentsV8);
-
         win->m_webContents = webContents;
 
-        v8::Local<v8::Value> transparent;
-        options->Get("transparent", &transparent);
+        options->GetBydefaultVal("minWidth", 1, &win->m_minWidth);
+        options->GetBydefaultVal("minHeight", 1, &win->m_minHeight);
+        options->GetBydefaultVal("maxWidth", ::GetSystemMetrics(SM_CXSCREEN), &win->m_maxWidth);
+        options->GetBydefaultVal("maxHeight", ::GetSystemMetrics(SM_CYSCREEN), &win->m_maxHeight);
+        options->GetBydefaultVal("useContentSize", false, &win->m_isUseContentSize);
+        options->GetBydefaultVal("transparent", false, &createWindowParam->transparent);
+        options->GetBydefaultVal("center", false, &createWindowParam->isCenter);
+        options->GetBydefaultVal("resizable", true, &createWindowParam->isResizable);
+        options->GetBydefaultVal("show", true, &createWindowParam->isShow);
 
-        v8::Local<v8::Value> height;
-        options->Get("height", &height);
+        options->GetBydefaultVal("x", 1, &createWindowParam->x);
+        options->GetBydefaultVal("y", 1, &createWindowParam->y);
+        options->GetBydefaultVal("width", 1, &createWindowParam->width);
+        options->GetBydefaultVal("height", 1, &createWindowParam->height);
 
-        v8::Local<v8::Value> width;
-        options->Get("width", &width);
+        std::string title;
+        options->GetBydefaultVal("title", "Electron", &title);
+        createWindowParam->title = StringUtil::UTF8ToUTF16(title);
+        if (createWindowParam->isResizable)
+            createWindowParam->styles |= WS_THICKFRAME;
 
-        v8::Local<v8::Value> x;
-        options->Get("x", &x);
-
-        v8::Local<v8::Value> y;
-        options->Get("y", &y);
-
-        v8::Local<v8::Value> show;
-        options->Get("show", &show);
-        bool isShow = true;
-        v8::MaybeLocal<v8::Boolean> v8Show = show->ToBoolean();
-        if (show->IsBoolean() && !show->ToBoolean()->BooleanValue())
-            isShow = false;
-
-        v8::Local<v8::Value> title;
-        options->Get("title", &title);
-
-        if (title->IsString()) {
-            v8::String::Utf8Value str(title);
-            createWindowParam->title = StringUtil::UTF8ToUTF16(*str);
-        } else
-            createWindowParam->title = L"Electron";
-
-        createWindowParam->x = x->Int32Value();
-        createWindowParam->y = y->Int32Value();
-        createWindowParam->width = width->Int32Value();
-        createWindowParam->height = height->Int32Value();
-
-        if (transparent->IsBoolean() && transparent->ToBoolean()->BooleanValue()) {
-            createWindowParam->transparent = true;
+        if (createWindowParam->transparent) {
             createWindowParam->styles = WS_POPUP;
             createWindowParam->styleEx = WS_EX_LAYERED;
-        }
-        else {
+        } else {
             createWindowParam->styles = WS_OVERLAPPEDWINDOW;
             createWindowParam->styleEx = 0;
-        }
-
-        createWindowParam->isShow = isShow;
+        }        
         createWindowParam->styleEx |= WS_EX_ACCEPTFILES;
 
         //ThreadCall::callUiThreadSync([win, &createWindowParam] {
@@ -1262,6 +1281,27 @@ private:
 
     static void onConsoleCallback(wkeWebView webView, void* param, wkeConsoleLevel level, const wkeString message, const wkeString sourceName, unsigned sourceLine, const wkeString stackTrace) {
         const utf8* msg = wkeToString(message);
+    }
+
+    void moveToCenter() {
+        int width = 0;
+        int height = 0;
+        
+        RECT rect = { 0 };
+        GetWindowRect(m_hWnd, &rect);
+        width = rect.right - rect.left;
+        height = rect.bottom - rect.top;
+
+        int parentWidth = 0;
+        int parentHeight = 0;
+
+        parentWidth = ::GetSystemMetrics(SM_CXSCREEN);
+        parentHeight = ::GetSystemMetrics(SM_CYSCREEN);
+        
+        int x = (parentWidth - width) / 2;
+        int y = (parentHeight - height) / 2;
+
+        ::MoveWindow(m_hWnd, x, y, width, height, FALSE);
     }
 
     void newWindowTaskInUiThread(const WebContents::CreateWindowParam* createWindowParam) {
@@ -1287,6 +1327,9 @@ private:
 
         RECT clientRect;
         ::GetClientRect(m_hWnd, &clientRect);
+
+        if (createWindowParam->isCenter)
+            moveToCenter();
 
         int width = clientRect.right - clientRect.left;
         int height = clientRect.bottom - clientRect.top;
@@ -1329,14 +1372,6 @@ private:
             // win->Wrap(args.This(), isolate); // 包装this指针 // weolar
             args.GetReturnValue().Set(args.This());
             // args.GetReturnValue().Set(win->GetWrapper());
-        } else {
-            // 使用`Point(...)`
-            const int argc = 2;
-            v8::Local<v8::Value> argv[argc] = { args[0], args[1] };
-            // 使用constructor构建Function
-            v8::Local<v8::Function> cons = v8::Local<v8::Function>::New(isolate, constructor);
-            args.GetReturnValue().Set(cons->NewInstance(argc, argv));
-            DebugBreak();
         }
     }
 
@@ -1365,6 +1400,13 @@ private:
     HDC m_memoryDC;
     RECT m_clientRect;
     bool m_isLayerWindow;
+    bool m_isUseContentSize;
+    
+    int m_minWidth;
+    int m_minHeight;
+    int m_maxWidth;
+    int m_maxHeight;
+
     int m_id;
 };
 
@@ -1379,7 +1421,7 @@ v8::Local<v8::Value> WindowInterface::getFocusedWindow(v8::Isolate* isolate) {
     return result;
 }
 
-const WCHAR* Window::kPrppW = L"mele";
+const WCHAR* Window::kPrppW = L"ElectronWindow";
 v8::Persistent<v8::Function> Window::constructor;
 gin::WrapperInfo Window::kWrapperInfo = { gin::kEmbedderNativeGin };
 
