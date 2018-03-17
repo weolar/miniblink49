@@ -872,8 +872,18 @@ public:
 
         KURL url = job->firstRequest()->url();
         job->m_response.setURL(url);
-        if (job->m_response.mimeType().isNull() || job->m_response.mimeType().isEmpty())
-            job->m_response.setMIMEType(MIMETypeRegistry::getMIMETypeForPath(url.getUTF8String()));
+        if (job->m_response.mimeType().isNull() || job->m_response.mimeType().isEmpty()) {
+            String urlString = url.getUTF8String();
+            int urlHostLength = urlString.length();
+            for (int i = 0; i < urlHostLength; ++i) {
+                if ('?' != urlString[i])
+                    continue;
+                urlHostLength = i;
+                break;
+            }
+            String urlWithoutQuery(urlString.characters8(), urlHostLength);
+            job->m_response.setMIMEType(MIMETypeRegistry::getMIMETypeForPath(urlWithoutQuery));
+        }
 
         job->client()->didReceiveResponse(job->loader(), job->m_response);
         if (job->m_asynWkeNetSetData && !job->m_cancelled) { // 可能在didReceiveResponse里被cancel
