@@ -1161,6 +1161,16 @@ bool WebPageImpl::fireKeyUpEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM 
     return m_webViewImpl->handleInputEvent(keyEvent);
 }
 
+bool WebPageImpl::fireKeyPressEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+    CHECK_FOR_REENTER(this, false);
+    freeV8TempObejctOnOneFrameBefore();
+    AutoRecordActions autoRecordActions(this, m_layerTreeHost, false);
+
+    WebKeyboardEvent keyEvent = PlatformEventHandler::buildKeyboardEvent(WebInputEvent::Char, message, wParam, lParam);
+    return m_webViewImpl->handleInputEvent(keyEvent);
+}
+
 bool WebPageImpl::fireKeyDownEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     CHECK_FOR_REENTER(this, false);
@@ -1179,98 +1189,17 @@ bool WebPageImpl::fireKeyDownEvent(HWND hWnd, UINT message, WPARAM wParam, LPARA
     if (systemKey && virtualKeyCode != VK_RETURN)
         return false;
 
-    if (handled) {
-        MSG msg;
-        ::PeekMessage(&msg, NULL, WM_CHAR, WM_CHAR, PM_REMOVE);
-        return true;
-    }
-
-    // We need to handle back/forward using either Ctrl+Left/Right Arrow keys.
-    // FIXME: This logic should probably be in EventHandler::defaultArrowEventHandler().
-    // FIXME: Should check that other modifiers aren't pressed.
-//     if (virtualKeyCode == VK_RIGHT && keyEvent.modifiers & WebInputEvent::ControlKey)
-//         return page()->goForward();
-//     if (virtualKeyCode == VK_LEFT && keyEvent.modifiers & WebInputEvent::ControlKey)
-//         return page()->goBack();
-
-    // Need to scroll the page if the arrow keys, pgup/dn, or home/end are hit.
-//     WebCore::ScrollDirection direction;
-//     WebCore::ScrollGranularity granularity;
-//     switch (virtualKeyCode) {
-//     case VK_LEFT:
-//         granularity = WebCore::ScrollByLine;
-//         direction = WebCore::ScrollLeft;
-//         break;
-// 
-//     case VK_RIGHT:
-//         granularity = WebCore::ScrollByLine;
-//         direction = WebCore::ScrollRight;
-//         break;
-// 
-//     case VK_UP:
-//         granularity = WebCore::ScrollByLine;
-//         direction = WebCore::ScrollUp;
-//         break;
-// 
-//     case VK_DOWN:
-//         granularity = WebCore::ScrollByLine;
-//         direction = WebCore::ScrollDown;
-//         break;
-// 
-//     case VK_HOME:
-//         granularity = WebCore::ScrollByDocument;
-//         direction = WebCore::ScrollUp;
-//         break;
-// 
-//     case VK_END:
-//         granularity = WebCore::ScrollByDocument;
-//         direction = WebCore::ScrollDown;
-//         break;
-// 
-//     case VK_PRIOR:
-//         granularity = WebCore::ScrollByPage;
-//         direction = WebCore::ScrollUp;
-//         break;
-// 
-//     case VK_NEXT:
-//         granularity = WebCore::ScrollByPage;
-//         direction = WebCore::ScrollDown;
-//         break;
-// 
-//     default:
-//         return false;
-//     }
-// 
-//     if (frame->eventHandler()->scrollRecursively(direction, granularity)) {
+//     if (handled) {
 //         MSG msg;
 //         ::PeekMessage(&msg, NULL, WM_CHAR, WM_CHAR, PM_REMOVE);
 //         return true;
 //     }
-
-    return false;
+    return handled;
 }
 
 bool WebPageImpl::handleCurrentKeyboardEvent()
 {
     return false;
-}
-
-bool WebPageImpl::fireKeyPressEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
-{
-    CHECK_FOR_REENTER(this, false);
-    freeV8TempObejctOnOneFrameBefore();
-    AutoRecordActions autoRecordActions(this, m_layerTreeHost, false);
-
-    unsigned int charCode = wParam;
-    unsigned int flags = 0;
-    if (HIWORD(lParam) & KF_REPEAT)
-        flags |= KF_REPEAT;
-    if (HIWORD(lParam) & KF_EXTENDED)
-        flags |= KF_EXTENDED;
-    LPARAM keyData = MAKELPARAM(0, (WORD)flags);
-    bool systemKey = false;
-    WebKeyboardEvent keyEvent = PlatformEventHandler::buildKeyboardEvent(WebInputEvent::Char, message, wParam, lParam);
-    return m_webViewImpl->handleInputEvent(keyEvent);
 }
 
 void WebPageImpl::fireCaptureChangedEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -1395,7 +1324,7 @@ void WebPageImpl::setTransparent(bool transparent)
 void WebPageImpl::setHWND(HWND hWnd)
 {
     m_hWnd = hWnd;
-    if (m_hWnd && blink::RuntimeEnabledFeatures::updataInOtherThreadEnabled()) {
+    if (m_hWnd && !blink::RuntimeEnabledFeatures::updataInOtherThreadEnabled()) {
         m_dragHandle->setViewWindow(m_hWnd, m_webViewImpl);
         ::RegisterDragDrop(m_hWnd, m_dragHandle);
     }
