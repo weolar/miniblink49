@@ -637,7 +637,30 @@ bool WebFrameClientImpl::runModalConfirmDialog(const WebString& message)
 
 bool WebFrameClientImpl::runModalPromptDialog(const WebString& message, const WebString& defaultValue, WebString* actualValue)
 {
-    return false;
+    bool needCall = true;
+    bool result = false;
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
+    wke::AutoDisableFreeV8TempObejct autoDisableFreeV8TempObejct;
+    if (m_webPage->wkeHandler().promptBoxCallback) {
+        needCall = false;
+        wke::CString wkeMsg(message);
+        wke::CString defaultResult(defaultValue);
+        wke::CString resultString("", 0);
+        result = m_webPage->wkeHandler().promptBoxCallback(m_webPage->wkeWebView(),
+            m_webPage->wkeHandler().promptBoxCallbackParam, &wkeMsg, &defaultResult, &resultString);
+
+        const wchar_t* resultStringW = resultString.stringW();
+        actualValue->assign(resultStringW, wcslen(resultStringW));
+        return result;
+    }
+#endif
+
+    if (!needCall)
+        return false;
+
+    Vector<UChar> text = WTF::ensureUTF16UChar(message, true);
+    int resultOk = ::MessageBoxW(NULL, text.data(), L"Miniblink Prompt", MB_OKCANCEL);
+    return resultOk == IDOK;
 }
 
 bool WebFrameClientImpl::runModalBeforeUnloadDialog(bool isReload, const WebString& message)
