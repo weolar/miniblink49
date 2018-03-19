@@ -1252,6 +1252,8 @@ private:
         options->GetBydefaultVal("center", false, &createWindowParam->isCenter);
         options->GetBydefaultVal("resizable", true, &createWindowParam->isResizable);
         options->GetBydefaultVal("show", true, &createWindowParam->isShow);
+        options->GetBydefaultVal("alwaysOnTop", true, &win->m_isAlwaysOnTop);
+        
 
         options->GetBydefaultVal("x", 1, &createWindowParam->x);
         options->GetBydefaultVal("y", 1, &createWindowParam->y);
@@ -1304,6 +1306,19 @@ private:
         ::MoveWindow(m_hWnd, x, y, width, height, FALSE);
     }
 
+    static void onDocumentReadyInBlinkThread(wkeWebView webWindow, void* param) {
+        int width = wkeGetContentWidth(webWindow);
+        int height = wkeGetContentHeight(webWindow);
+        Window* self = (Window*)param;
+
+        if (self->m_isUseContentSize && 0 != width && 0 != height) {
+            HWND dwFlag = HWND_NOTOPMOST;
+            if (self->m_isAlwaysOnTop)
+                dwFlag = HWND_TOPMOST;
+            ::SetWindowPos(self->m_hWnd, dwFlag, 0, 0, width, height, SWP_NOMOVE | SWP_NOREPOSITION);
+        }
+    }
+
     void newWindowTaskInUiThread(const WebContents::CreateWindowParam* createWindowParam) {
         m_hWnd = ::CreateWindowEx(
             createWindowParam->styleEx,
@@ -1347,6 +1362,7 @@ private:
             win->m_webContents->onNewWindowInBlinkThread(width, height, createWindowParam);
             wkeOnPaintUpdated(webview, (wkePaintUpdatedCallback)staticOnPaintUpdatedInCompositeThread, win);
             wkeOnConsole(webview, onConsoleCallback, nullptr);
+            wkeOnDocumentReady(webview, onDocumentReadyInBlinkThread, win);
             wkeOnLoadUrlBegin(webview, handleLoadUrlBegin, nullptr);
             delete createWindowParam;
         });
@@ -1399,8 +1415,10 @@ private:
     HBITMAP m_memoryBMP;
     HDC m_memoryDC;
     RECT m_clientRect;
+
     bool m_isLayerWindow;
     bool m_isUseContentSize;
+    bool m_isAlwaysOnTop;
     
     int m_minWidth;
     int m_minHeight;
