@@ -36,11 +36,14 @@ public:
         m_memoryDC = nullptr;
         m_isLayerWindow = false;
         m_isUseContentSize = false;
+        m_isMaximized = false;
 
         m_clientRect.left = 0;
         m_clientRect.top = 0;
         m_clientRect.right = 0;
         m_clientRect.bottom = 0;
+        m_memoryBmpSize.cx = 0;
+        m_memoryBmpSize.cy = 0;
         ::InitializeCriticalSection(&m_memoryCanvasLock);
         m_id = IdLiveDetect::get()->constructed();
     }
@@ -222,6 +225,10 @@ public:
     virtual HWND getHWND() const override {
         return m_hWnd;
     }
+    
+    static bool isRectEqual(const RECT& a, const RECT& b) {
+        return (a.left == b.left) && (a.top == b.top) && (a.right == b.right) && (a.bottom == b.bottom);
+    }
 
     void onPaintUpdatedInCompositeThread(const HDC hdc, int x, int y, int cx, int cy) {
         HWND hWnd = m_hWnd;
@@ -234,9 +241,9 @@ public:
         if (!m_memoryDC)
             m_memoryDC = ::CreateCompatibleDC(nullptr);
 
-        if (!m_memoryBMP || m_clientRect.top != rectDest.top || m_clientRect.bottom != rectDest.bottom ||
-            m_clientRect.right != rectDest.right || m_clientRect.left != rectDest.left) {
+        if (!m_memoryBMP || !isRectEqual(m_clientRect, rectDest)) {
             m_clientRect = rectDest;
+            m_memoryBmpSize = sizeDest;
 
             if (m_memoryBMP)
                 ::DeleteObject((HGDIOBJ)m_memoryBMP);
@@ -245,16 +252,6 @@ public:
 
         HBITMAP hbmpOld = (HBITMAP)::SelectObject(m_memoryDC, m_memoryBMP);
         ::BitBlt(m_memoryDC, x, y, cx, cy, hdc, x, y, SRCCOPY);
-
-//         HBRUSH hbrush;
-//         HPEN hpen;
-//         hbrush = ::CreateSolidBrush(rand());
-//         ::SelectObject(m_memoryDC, hbrush);
-//         ::Rectangle(m_memoryDC, 220, 40, 366, 266);
-//         ::DeleteObject(hbrush);
-// 
-//         OutputDebugStringA("onPaintUpdatedInCompositeThread\n");
-
         ::SelectObject(m_memoryDC, (HGDIOBJ)hbmpOld);
     }
 
@@ -304,12 +301,18 @@ public:
         int width = rcInvalid.right - rcInvalid.left;
         int height = rcInvalid.bottom - rcInvalid.top;
 
+        bool isResied = !isRectEqual(rcClient, m_clientRect);
+
         ::EnterCriticalSection(&m_memoryCanvasLock);
+        if (m_memoryBmpSize.cx < width)
+            width = m_memoryBmpSize.cx;
+        if (m_memoryBmpSize.cy < height)
+            height = m_memoryBmpSize.cy;
+
         if (0 != width && 0 != height && m_memoryBMP && m_memoryDC) {
             HBITMAP hbmpOld = (HBITMAP)::SelectObject(m_memoryDC, m_memoryBMP);
             BOOL b = ::BitBlt(hdc, destX, destY, width, height, m_memoryDC, srcX, srcY, SRCCOPY);
             ::SelectObject(m_memoryDC, hbmpOld);
-            b = b;
         }
         ::LeaveCriticalSection(&m_memoryCanvasLock);
 
@@ -350,17 +353,6 @@ public:
         });
     }
 
-    void resetCursorWhenOutClientRect() {
-//         RECT rc;
-//         ::GetClientRect(m_hWnd, &rc);
-// 
-//         POINT pt;
-//         ::GetCursorPos(&pt);
-//         ::ScreenToClient(m_hWnd, &pt);
-//         if (!::PtInRect(&rc, pt))
-//             m_cursorInfoType = WkeCursorInfoIBeam;
-    }
-
     void onCursorChange() {
         if (m_isCursorInfoTypeAsynGetting)
             return;
@@ -377,16 +369,25 @@ public:
             if (cursorType == win->m_cursorInfoType)
                 return;
             win->m_cursorInfoType = cursorType;
-            ::PostMessage(win->m_hWnd, WM_SETCURSOR_ASYN, 0, 0);
+            ::PostMessage(win->m_hWnd, WM_SETCURSOR/*_ASYN*/, 0, 0);
         });
-        resetCursorWhenOutClientRect();
     }
 
-    void setCursorInfoTypeByCache() {
-        resetCursorWhenOutClientRect();
+    bool setCursorInfoTypeByCache() {
+        RECT rc;
+        ::GetClientRect(m_hWnd, &rc);
+
+        POINT pt;
+        ::GetCursorPos(&pt);
+        ::ScreenToClient(m_hWnd, &pt);
+        if (!::PtInRect(&rc, pt))
+            return false;
 
         HCURSOR hCur = NULL;
         switch (m_cursorInfoType) {
+        case WkeCursorInfoPointer:
+            hCur = ::LoadCursor(NULL, IDC_ARROW);
+            break;
         case WkeCursorInfoIBeam:
             hCur = ::LoadCursor(NULL, IDC_IBEAM);
             break;
@@ -432,7 +433,10 @@ public:
 
         if (hCur) {
             ::SetCursor(hCur);
+            return true;
         }
+
+        return false;
     }
 
     void onDragFiles(HDROP hDrop) {
@@ -507,12 +511,17 @@ public:
         if (!pthis)
             return ::DefWindowProcW(hWnd, message, wParam, lParam);
         switch (message) {
-        case WM_CLOSE:
+        case WM_CLOSE: {
             win->m_state = WindowDestroying;
+            bool isPreventDefault = win->mate::EventEmitter<Window>::emit("close");
+            if (isPreventDefault)
+                return 0;
             ::ShowWindow(hWnd, SW_HIDE);
+        }
             break;
 
         case WM_NCDESTROY:
+            win->mate::EventEmitter<Window>::emit("closed");
             ::KillTimer(hWnd, (UINT_PTR)win);
             ::RemovePropW(hWnd, kPrppW);
             ThreadCall::callBlinkThreadSync([pthis, win] {
@@ -553,26 +562,26 @@ public:
             break;
 
         case WM_SIZE: {
-            ::EnterCriticalSection(&win->m_memoryCanvasLock);
-            //             if (win->m_memoryDC)
-            //                 ::DeleteDC(win->m_memoryDC);
-            //             win->m_memoryDC = nullptr;
-            //
-            //             if (win->m_memoryBMP)
-            //                 ::DeleteObject((HGDIOBJ)win->m_memoryBMP);
-            //             win->m_memoryBMP = nullptr;
-            // 
-            //             ::GetClientRect(hWnd, &win->m_clientRect);
-            ::LeaveCriticalSection(&win->m_memoryCanvasLock);
-
             ThreadCall::callBlinkThreadAsync([pthis, lParam] {
                 wkeResize(pthis, LOWORD(lParam), HIWORD(lParam));
                 wkeRepaintIfNeeded(pthis);
             });
 
-            if (WindowInited == win->m_state) {
+            if (WindowInited == win->m_state)
                 win->mate::EventEmitter<Window>::emit("resize");
+            
+            if (SIZE_MAXIMIZED == wParam) {
+                win->m_isMaximized = true;
+                win->mate::EventEmitter<Window>::emit("maximize");
             }
+            if (SIZE_MINIMIZED == wParam)
+                win->mate::EventEmitter<Window>::emit("minimize");
+            if (SIZE_RESTORED == wParam) {
+                if (win->m_isMaximized)
+                    win->mate::EventEmitter<Window>::emit("unmaximize");
+                win->m_isMaximized = false;
+            }
+            
             return 0;
         }
         case WM_KEYDOWN: {
@@ -620,11 +629,6 @@ public:
             return 0;
             break;
         }
-        case WM_NCMOUSEMOVE:
-            //::SetCursor(::LoadCursor(NULL, IDC_ARROW));
-            win->m_cursorInfoType = WkeCursorInfoPointer;
-            ::PostMessage(win->m_hWnd, WM_SETCURSOR_ASYN, 0, 0);
-            break;
         case WM_LBUTTONDOWN:
         case WM_MBUTTONDOWN:
         case WM_RBUTTONDOWN:
@@ -696,6 +700,7 @@ public:
             break;
         }
         case WM_SETFOCUS:
+            win->mate::EventEmitter<Window>::emit("focus");
             ThreadCall::callBlinkThreadAsync([id, pthis] {
                 if (IdLiveDetect::get()->isLive(id))
                     wkeSetFocus(pthis);
@@ -703,6 +708,8 @@ public:
             return 0;
 
         case WM_KILLFOCUS:
+            win->mate::EventEmitter<Window>::emit("blur");
+            
             ThreadCall::callBlinkThreadAsync([id, pthis] {
                 if (IdLiveDetect::get()->isLive(id))
                     wkeKillFocus(pthis);
@@ -710,11 +717,8 @@ public:
             return 0;
 
         case WM_SETCURSOR:
-            return 0;
-            break;
-
-        case WM_SETCURSOR_ASYN:
-            win->setCursorInfoTypeByCache();
+            if (win->setCursorInfoTypeByCache())
+                return 0;
             break;
         case WM_IME_STARTCOMPOSITION: {
             ThreadCall::callBlinkThreadAsync([pthis, hWnd] {
@@ -867,9 +871,8 @@ private:
 
     v8::Local<v8::Object> getBoundsApi() {
         RECT clientRect;
-        ::EnterCriticalSection(&m_memoryCanvasLock);
-        clientRect = m_clientRect;
-        ::LeaveCriticalSection(&m_memoryCanvasLock);
+        ::GetClientRect(m_hWnd, &clientRect);
+
         v8::Local<v8::Integer> x = v8::Integer::New(isolate(), clientRect.left);
         v8::Local<v8::Integer> y = v8::Integer::New(isolate(), clientRect.top);
         v8::Local<v8::Integer> width = v8::Integer::New(isolate(), clientRect.right - clientRect.left);
@@ -892,9 +895,8 @@ private:
 
     v8::Local<v8::Object> getSizeApi() {
         RECT clientRect;
-        ::EnterCriticalSection(&m_memoryCanvasLock);
-        clientRect = m_clientRect;
-        ::LeaveCriticalSection(&m_memoryCanvasLock);
+        ::GetClientRect(m_hWnd, &clientRect);
+
         v8::Local<v8::Integer> width = v8::Integer::New(isolate(), clientRect.right - clientRect.left);
         v8::Local<v8::Integer> height = v8::Integer::New(isolate(), clientRect.bottom - clientRect.top);
         v8::Local<v8::Array> size = v8::Array::New(isolate(), 2);
@@ -1234,27 +1236,32 @@ private:
 
             // Offscreen windows are always created frameless.
             bool offscreen;
-            if (webPreferences.Get("offscreen", &offscreen) && offscreen) {
+            if (webPreferences.Get("offscreen", &offscreen) && offscreen)
                 options->Set(options::kFrame, false);
-            }
+            
             webContents = WebContents::create(options->isolate(), webPreferences, win);
+
+            webPreferences.GetBydefaultVal("nodeIntegration", true, &webContents->m_isNodeIntegration);
         } else
             DebugBreak();
-        //webContents = WebContents::ObjectWrap::Unwrap<WebContents>(webContentsV8);
         win->m_webContents = webContents;
 
         options->GetBydefaultVal("minWidth", 1, &win->m_minWidth);
         options->GetBydefaultVal("minHeight", 1, &win->m_minHeight);
         options->GetBydefaultVal("maxWidth", ::GetSystemMetrics(SM_CXSCREEN), &win->m_maxWidth);
         options->GetBydefaultVal("maxHeight", ::GetSystemMetrics(SM_CYSCREEN), &win->m_maxHeight);
-        options->GetBydefaultVal("useContentSize", false, &win->m_isUseContentSize);
         options->GetBydefaultVal("transparent", false, &createWindowParam->transparent);
         options->GetBydefaultVal("center", false, &createWindowParam->isCenter);
         options->GetBydefaultVal("resizable", true, &createWindowParam->isResizable);
         options->GetBydefaultVal("show", true, &createWindowParam->isShow);
-        options->GetBydefaultVal("alwaysOnTop", true, &win->m_isAlwaysOnTop);
+        options->GetBydefaultVal("minimizable", true, &createWindowParam->isMinimizable);
+        options->GetBydefaultVal("maximizable", true, &createWindowParam->isMaximizable);
+        options->GetBydefaultVal("frame", true, &createWindowParam->isFrame);
         
-
+        options->GetBydefaultVal("useContentSize", false, &win->m_isUseContentSize);
+        options->GetBydefaultVal("alwaysOnTop", false, &win->m_isAlwaysOnTop);
+        options->GetBydefaultVal("closable ", true, &win->m_isClosable);
+        
         options->GetBydefaultVal("x", 1, &createWindowParam->x);
         options->GetBydefaultVal("y", 1, &createWindowParam->y);
         options->GetBydefaultVal("width", 1, &createWindowParam->width);
@@ -1263,21 +1270,30 @@ private:
         std::string title;
         options->GetBydefaultVal("title", "Electron", &title);
         createWindowParam->title = StringUtil::UTF8ToUTF16(title);
-        if (createWindowParam->isResizable)
-            createWindowParam->styles |= WS_THICKFRAME;
 
         if (createWindowParam->transparent) {
             createWindowParam->styles = WS_POPUP;
             createWindowParam->styleEx = WS_EX_LAYERED;
         } else {
-            createWindowParam->styles = WS_OVERLAPPEDWINDOW;
+            createWindowParam->styles = WS_OVERLAPPED | WS_SYSMENU | WS_CAPTION | WS_CLIPSIBLINGS | WS_CLIPCHILDREN;
             createWindowParam->styleEx = 0;
-        }        
+        }
+
+        if (createWindowParam->isMinimizable)
+            createWindowParam->styles |= WS_MINIMIZEBOX;
+        if (createWindowParam->isMaximizable)
+            createWindowParam->styles |= WS_MAXIMIZEBOX;
+
+        if (createWindowParam->isResizable)
+            createWindowParam->styles |= WS_THICKFRAME;
         createWindowParam->styleEx |= WS_EX_ACCEPTFILES;
 
-        //ThreadCall::callUiThreadSync([win, &createWindowParam] {
+        if (!createWindowParam->isFrame)
+            createWindowParam->styles = WS_CLIPCHILDREN | WS_CLIPSIBLINGS | WS_POPUP;
+
+
         win->newWindowTaskInUiThread(createWindowParam);
-        //});
+
         return win;
     }
 
@@ -1311,12 +1327,22 @@ private:
         int height = wkeGetContentHeight(webWindow);
         Window* self = (Window*)param;
 
-        if (self->m_isUseContentSize && 0 != width && 0 != height) {
-            HWND dwFlag = HWND_NOTOPMOST;
-            if (self->m_isAlwaysOnTop)
-                dwFlag = HWND_TOPMOST;
-            ::SetWindowPos(self->m_hWnd, dwFlag, 0, 0, width, height, SWP_NOMOVE | SWP_NOREPOSITION);
-        }
+        if (self->m_isUseContentSize && 0 != width && 0 != height)
+            ::SetWindowPos(self->m_hWnd, HWND_NOTOPMOST, 0, 0, width, height, SWP_NOMOVE | SWP_NOREPOSITION);
+    }
+
+    static void onTitleChangedInBlinkThread(wkeWebView webWindow, void* param, const wkeString title) {
+        std::wstring* titleW = new std::wstring(wkeGetStringW(title));
+        Window* win = (Window*)param;
+        int id = win->m_id;
+        ThreadCall::callUiThreadAsync([id, win, titleW] {
+            if (!IdLiveDetect::get()->isLive(id))
+                return;
+
+            ::SetWindowText(win->m_hWnd, titleW->c_str());
+            win->mate::EventEmitter<Window>::emit("page-title-updated");
+            delete titleW;
+        });
     }
 
     void newWindowTaskInUiThread(const WebContents::CreateWindowParam* createWindowParam) {
@@ -1340,16 +1366,21 @@ private:
         //::RegisterDragDrop(m_hWnd, nullptr);
         ::DragAcceptFiles(m_hWnd, true);
 
-        RECT clientRect;
-        ::GetClientRect(m_hWnd, &clientRect);
+        HWND dwFlag = HWND_NOTOPMOST;
+        if (m_isAlwaysOnTop)
+            dwFlag = HWND_TOPMOST;
+        ::SetWindowPos(m_hWnd, dwFlag, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_NOREPOSITION);
+
+        if (!m_isClosable)
+            ::EnableMenuItem(::GetSystemMenu(m_hWnd, false), SC_CLOSE, MF_BYCOMMAND | MF_GRAYED);
+
+        ::GetClientRect(m_hWnd, &m_clientRect);
 
         if (createWindowParam->isCenter)
             moveToCenter();
 
-        int width = clientRect.right - clientRect.left;
-        int height = clientRect.bottom - clientRect.top;
-        m_clientRect.right = width;
-        m_clientRect.bottom = height;
+        int width = m_clientRect.right - m_clientRect.left;
+        int height = m_clientRect.bottom - m_clientRect.top;
 
         Window* win = this;
         int id = win->m_id;
@@ -1364,6 +1395,7 @@ private:
             wkeOnConsole(webview, onConsoleCallback, nullptr);
             wkeOnDocumentReady(webview, onDocumentReadyInBlinkThread, win);
             wkeOnLoadUrlBegin(webview, handleLoadUrlBegin, nullptr);
+            wkeOnTitleChanged(webview, onTitleChangedInBlinkThread, win);
             delete createWindowParam;
         });
 
@@ -1381,13 +1413,11 @@ private:
             if (args.Length() > 1)
                 return;
 
-            gin::Dictionary options(isolate, args[0]->ToObject()); // 使用new调用 `new Point(...)`
+            gin::Dictionary options(isolate, args[0]->ToObject());
             Window* win = newWindow(&options, args.This());
             WindowList::getInstance()->addWindow(win);
 
-            // win->Wrap(args.This(), isolate); // 包装this指针 // weolar
             args.GetReturnValue().Set(args.This());
-            // args.GetReturnValue().Set(win->GetWrapper());
         }
     }
 
@@ -1415,10 +1445,14 @@ private:
     HBITMAP m_memoryBMP;
     HDC m_memoryDC;
     RECT m_clientRect;
+    SIZE m_memoryBmpSize;
+
+    bool m_isMaximized;
 
     bool m_isLayerWindow;
     bool m_isUseContentSize;
     bool m_isAlwaysOnTop;
+    bool m_isClosable;
     
     int m_minWidth;
     int m_minHeight;

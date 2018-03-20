@@ -27,6 +27,8 @@ electron.screen = new Screen();
 const dialog = require('./api/dialog').dialog;
 electron.dialog = dialog;
 ////////////////////////////////////////////////////////////////
+electron.shell = require("./../common/api/shell").Shell;
+////////////////////////////////////////////////////////////////
 function SystemPreferences () {}
 SystemPreferences.prototype.isDarkMode = function() { return false; }
 SystemPreferences.prototype.isSwipeTrackingFromScrollEventsEnabled = function() { return false; }

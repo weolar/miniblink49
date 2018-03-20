@@ -12,11 +12,12 @@
 
     const getOrCreateArchive = function (p) {
         let archive = cachedArchives[p];
-        if (archive != null) {
+        if (archive != null)
             return archive;
-        }
-        archive = new ArchiveClass(p);//asar.createArchive(p);
-        if (!archive) {
+        
+        archive = new ArchiveClass();//asar.createArchive(p);
+        if (!archive.init(p)) {
+            console.log("getOrCreateArchive fail");
             return null;
         }
         cachedArchives[p] = archive;
@@ -403,11 +404,11 @@
             if (!isAsar) {
                 return existsSync(p);
             }
-            const archive = getOrCreateArchive(asarPath);
-            if (!archive) {
-                return false;
-            }
 
+            const archive = getOrCreateArchive(asarPath);
+            if (!archive)
+                return false;
+            
             var result = archive.stat(filePath) !== false;
             return result;
         }

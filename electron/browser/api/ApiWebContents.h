@@ -38,6 +38,9 @@ public:
         bool isShow;
         bool isCenter;
         bool isResizable;
+        bool isMinimizable;
+        bool isMaximizable;
+        bool isFrame;
     };
 
     static void init(v8::Isolate* isolate, v8::Local<v8::Object> target, node::Environment* env);
@@ -212,12 +215,17 @@ public:
     static v8::Persistent<v8::Function> constructor;
     static gin::WrapperInfo kWrapperInfo;
 
+
 private:
+    friend class Window;
+
     NodeBindings* m_nodeBinding;
     int m_id;
     std::set<WebContentsObserver*> m_observers;
     wkeWebView m_view;
     WindowInterface* m_owner;
+
+    bool m_isNodeIntegration;
 };
 
 } // atom

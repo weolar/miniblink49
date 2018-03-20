@@ -119,7 +119,7 @@ WebContents* WebContents::create(v8::Isolate* isolate, gin::Dictionary options, 
 }
 
 WebContents::WebContents(v8::Isolate* isolate, v8::Local<v8::Object> wrapper) {
-    
+    m_isNodeIntegration = true;
     m_nodeBinding = nullptr;
     m_id = IdLiveDetect::get()->constructed();
     m_view = nullptr;
@@ -193,7 +193,7 @@ void WebContents::staticDidCreateScriptContextCallback(wkeWebView webView, wkeWe
 }
 
 void WebContents::onDidCreateScriptContext(wkeWebView webView, wkeWebFrameHandle frame, v8::Local<v8::Context>* context, int extensionGroup, int worldId) {
-    if (m_nodeBinding || !wkeIsMainFrame(webView, frame))
+    if (m_nodeBinding || !wkeIsMainFrame(webView, frame) || !m_isNodeIntegration)
         return;
 
     BlinkMicrotaskSuppressionHandle handle = nodeBlinkMicrotaskSuppressionEnter((*context)->GetIsolate());

@@ -14,9 +14,11 @@ const app = require('electron').app;
 require('./../common/init');
 require('./rpc-server');
 
-let packagePath = __dirname + '/../default_app/';
-//packagePath = 'E:\\mycode\\electron-v1.3.3\\electron-v1.3.3-win32-ia32\\demo\\ffftp\\';
-//packagePath = 'E:\\mycode\\electron-v1.3.3\\electron-v1.3.3-win32-ia32\\demo\\AiTing\\';
+let packagePath = __dirname + '/../../app.asar/'; //__dirname + '/../default_app/';
+//console.log("lib/browser/init.js, packagePath: " + packagePath);
+
+if (!fs.existsSync(packagePath))
+    packagePath = __dirname + '/../default_app/';
 
 let packageJson = null;
 packageJson = require(packagePath + 'package.json');
@@ -54,6 +56,8 @@ if (packageJson.v8Flags != null) {
 
 // Set main startup script of the app.
 const mainStartupScript = packageJson.main || 'index.js';
+
+console.log("browser.init.js.packagePath:" + packagePath);
 
 // Finally load app's main.js and transfer control to C++.
 Module._load(path.join(packagePath, mainStartupScript), Module, true);

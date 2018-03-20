@@ -41,8 +41,13 @@ for (let i = 1; i < argv.length; i++) {
     }
 }
 
-if (null == option.file)
-    option.file = __dirname + '/index.html';
+if (null == option.file) {
+    var optionFile = __dirname + '../../app.asar/main.js';
+    if (fs.existsSync(optionFile))
+        option.file = optionFile;
+    else
+        option.file = __dirname + '/index.html';
+}
 
 // Quit when all windows are closed and no other one is listening to this.
 app.on('window-all-closed', () => {

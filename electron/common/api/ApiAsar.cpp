@@ -25,21 +25,18 @@ public:
             return;
         }
 
-        std::string pathString;
-        if (!gin::ConvertFromV8(args.GetIsolate(), args[0], &pathString)) {
-            args.GetReturnValue().Set(v8::False(isolate));
-            return;
-        }
+        new V8Archive(isolate, args.This()/*, std::move(archive)*/);
+        args.GetReturnValue().Set(args.This());
+    }
 
+    bool init(const std::string& pathString) {
         base::FilePath path = base::FilePath::FromUTF8Unsafe(base::StringPiece(pathString));
         std::unique_ptr<asar::Archive> archive(new asar::Archive(path));
-        if (!archive->Init()) {
-            args.GetReturnValue().Set(v8::False(isolate));
-            return;
-        }
+        if (!archive->Init())
+            return false;
 
-        new V8Archive(isolate, args.This(), std::move(archive));
-        args.GetReturnValue().Set(args.This());
+        m_archive = std::move(archive);
+        return true;
     }
 
     static void buildPrototype(v8::Isolate* isolate, v8::Local<v8::Object> target) {
@@ -47,6 +44,7 @@ public:
         prototype->SetClassName(v8::String::NewFromUtf8(isolate, "Archive"));
 
         gin::ObjectTemplateBuilder(isolate, prototype->InstanceTemplate())
+            .SetMethod("init", &V8Archive::init)
             .SetMethod("path", &V8Archive::getPath)
             .SetMethod("getFileInfo", &V8Archive::getFileInfo)
             .SetMethod("stat", &V8Archive::stat)
@@ -61,8 +59,8 @@ public:
     }
 
 protected:
-    V8Archive(v8::Isolate* isolate, v8::Local<v8::Object> wrapper, std::unique_ptr<asar::Archive> archive)
-        : m_archive(std::move(archive)) {
+    V8Archive(v8::Isolate* isolate, v8::Local<v8::Object> wrapper/*, std::unique_ptr<asar::Archive> archive*/)
+        : m_archive(nullptr /*std::move(archive)*/) {
         gin::Wrappable<V8Archive>::InitWith(isolate, wrapper);
     }
 
@@ -189,9 +187,7 @@ void initAsarSupport(const v8::FunctionCallbackInfo<v8::Value>& info) {
     v8::Local<v8::Value> vals[] = { process, require, asarNativeV8 };
 
     // Initialize asar support.
-    v8::MaybeLocal<v8::Value> ret = resultFunc->Call(
-        isolate->GetCurrentContext(), v8::Undefined(isolate), 3, vals);
-
+    v8::MaybeLocal<v8::Value> ret = resultFunc->Call(isolate->GetCurrentContext(), v8::Undefined(isolate), 3, vals);
 }
 
 void initializeAsarApi(v8::Local<v8::Object> exports, v8::Local<v8::Value> unused, v8::Local<v8::Context> context, void* priv) {
