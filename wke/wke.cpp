@@ -256,6 +256,11 @@ void wkeSetHandleOffset(wkeWebView webView, int x, int y)
     webView->setHandleOffset(x, y);
 }
 
+void wkeSetViewSettings(wkeWebView webView, const wkeViewSettings* settings)
+{
+    webView->setViewSettings(settings);
+}
+
 bool wkeIsTransparent(wkeWebView webView)
 {
     return webView->isTransparent();

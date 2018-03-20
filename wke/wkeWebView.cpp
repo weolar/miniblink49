@@ -31,6 +31,7 @@ CWebView::CWebView()
     , m_transparent(false)
     , m_width(0)
     , m_height(0)
+    , m_zoomFactor(1)
     , m_awake(true)
     , m_title("", 0)
     , m_cookie("", 0)
@@ -42,6 +43,8 @@ CWebView::CWebView()
     _initPage();
     _initHandler();
     _initMemoryDC();
+
+    m_settings.size = 0;
     m_webPage->wkeHandler().isWke = true;
 }
 
@@ -497,6 +500,17 @@ void CWebView::setHandleOffset(int x, int y)
     m_webPage->setHwndRenderOffset(offset);
 }
 
+void CWebView::setViewSettings(const wkeViewSettings* settings)
+{
+    if (!settings)
+        return;
+
+    m_settings = *settings;
+
+    if (m_webPage)
+        m_webPage->setBackgroundColor(m_settings.bgColor);
+}
+
 void CWebView::paint(void* bits, int pitch)
 {
     if (m_webPage->needsCommit())
@@ -932,22 +946,18 @@ void CWebView::setZoomFactor(float factor)
     //m_mainFrame->setPageZoomFactor(factor);
     if (!m_webPage)
         return;
-    
+
     WebViewImpl* view = m_webPage->webViewImpl();
-    if (view)
+    if (view) {
         view->setZoomFactorOverride(factor);
+        m_zoomFactor = factor;
+    }
 }
 
 float CWebView::zoomFactor() const
 {
     //return m_mainFrame->pageZoomFactor();
-    if (!m_webPage)
-        return 1.0;
-    
-    WebViewImpl* view = m_webPage->webViewImpl();
-    if (view)
-        return view->zoomLevelToZoomFactor(view->zoomLevel());
-    return 1.0;
+    return m_zoomFactor;
 }
 
 void CWebView::setEditable(bool editable)
@@ -1292,6 +1302,7 @@ public:
         wkeLoadURL(devToolsWebView, m_url.utf8().data());
         wkeShowWindow(devToolsWebView, TRUE);
         wkeOnWindowDestroy(devToolsWebView, handleDevToolsWebViewDestroy, m_parent);
+        wkeSetWindowTitle(devToolsWebView, "Miniblink Devtools");
         blink::Platform::current()->currentThread()->removeTaskObserver(this);
     }
     virtual void didProcessTask() {}

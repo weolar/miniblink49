@@ -46,22 +46,33 @@ void wkeNetSetURL(void* jobPtr, const char *url)
     job->m_response.setURL(KURL(ParsedURLString, url));
 }
 
-void wkeNetSetData(void *jobPtr, void *buf, int len)
+void wkeNetSetData(void* jobPtr, void* buf, int len)
 {
+    if (0 == len)
+        return;
+
     net::WebURLLoaderInternal* job = (net::WebURLLoaderInternal*)jobPtr;
     WebURLLoaderClient* client = job->client();
     WebURLLoaderImplCurl* loader = job->loader();
 
-    //client->didReceiveResponse(loader, job->m_response);
-    //client->didReceiveData(loader, static_cast<char *>(buf), len, 0);
+    if (job->m_hookBuf) {
+        free(job->m_hookBuf);
+
+        job->m_hookBuf = malloc(len);
+        job->m_hookLength = len;
+        memcpy(job->m_hookBuf, buf, len);
+
+        return;
+    }
+
     if (job->m_asynWkeNetSetData)
         free(job->m_asynWkeNetSetData);
 
-    if (0 != len) {
-        job->m_asynWkeNetSetData = malloc(len);
-        job->m_asynWkeNetSetDataLength = len;
-        memcpy(job->m_asynWkeNetSetData, buf, len);
-    }
+
+    job->m_asynWkeNetSetData = malloc(len);
+    job->m_asynWkeNetSetDataLength = len;
+    memcpy(job->m_asynWkeNetSetData, buf, len);
+    
     job->m_isWkeNetSetDataBeSetted = true;
 }
 

@@ -469,8 +469,8 @@ const utf8* jsToTempString(jsExecState es, jsValue v) {
         v8::Context::Scope contextScope(context);
 
         v8::Local<v8::Value> value = v8::Local<v8::Value>::New(wkeValue->isolate, wkeValue->value);
-        if (!value->IsString())
-            return "";
+//         if (!value->IsString())
+//             return "";
 
         v8::Local<v8::String> stringValue = value->ToString();
         String stringWTF = blink::v8StringToWebCoreString<String>(stringValue, blink::DoNotExternalize);
@@ -709,8 +709,14 @@ jsValue jsCall(jsExecState es, jsValue func, jsValue thisValue, jsValue* args, i
 
     v8::Function* cb = v8::Function::Cast(*cbValue);
 
+    v8::Local<v8::Value> thisValueV8 = getV8Value(thisValue, context);
+
     blink::V8RecursionScope::MicrotaskSuppression recursionScope(isolate);
-    v8::MaybeLocal<v8::Value> ret = cb->Call(context, context->Global(), argCount, argv);
+    
+    if (thisValueV8.IsEmpty() || thisValueV8->IsUndefined())
+        thisValueV8 = context->Global();
+    v8::MaybeLocal<v8::Value> ret = cb->Call(context, thisValueV8, argCount, argv);
+
     delete[] argv;
 
     if (ret.IsEmpty())
@@ -1630,7 +1636,8 @@ jsValue v8ValueToJsValue(v8::Local<v8::Context> context, v8::Local<v8::Value> v8
     } else if (v8Value->IsUndefined()) {
         return jsUndefined();
     } else if (v8Value->IsObject()) {
-        return wke::createJsValueString(context, "Object");
+        //return wke::createJsValueString(context, "Object");
+        return createJsValueByLocalValue(context->GetIsolate(), context, v8Value);
     } else if (v8Value->IsNumber()) {
         v8::Local<v8::Number> v8Number = v8Value->ToNumber();
         return jsDouble(v8Number->Value());

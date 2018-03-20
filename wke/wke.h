@@ -131,6 +131,11 @@ typedef struct {
     unsigned int mask;
 } wkeSettings;
 
+typedef struct {
+    int size;
+    unsigned int bgColor;
+} wkeViewSettings;
+
 /*
 *c interface
 *----------------------------------------------------------------------------------------------------------
@@ -234,6 +239,7 @@ WKE_API void wkeInitializeEx(const wkeSettings* settings);
 WKE_API void wkeConfigure(const wkeSettings* settings);
 WKE_API bool wkeIsInitialize();
 
+WKE_API void wkeSetViewSettings(wkeWebView webView, const wkeViewSettings* settings);
 WKE_API void wkeSetDebugConfig(wkeWebView webView, const char* debugString, const char* param);
 
 WKE_API void wkeFinalize();

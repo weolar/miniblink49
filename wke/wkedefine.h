@@ -111,6 +111,11 @@ typedef struct {
     unsigned int mask;
 } wkeSettings;
 
+typedef struct {
+    int size;
+    unsigned int bgColor;
+} wkeViewSettings;
+
 typedef void* wkeWebFrameHandle;
 
 typedef void* (*FILE_OPEN_) (const char* path);
@@ -567,6 +572,7 @@ public:
     ITERATOR1(void, wkeConfigure, const wkeSettings* settings, "") \
     ITERATOR0(bool, wkeIsInitialize, "") \
     \
+    ITERATOR2(void, wkeSetViewSettings, wkeWebView webView, const wkeViewSettings* settings, "") \
     ITERATOR3(void, wkeSetDebugConfig, wkeWebView webView, const char* debugString, const char* param, "") \
     \
     ITERATOR0(void, wkeFinalize, "") \

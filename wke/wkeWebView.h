@@ -159,6 +159,7 @@ public:
     HWND windowHandle() const;
     void setHandle(HWND wnd);
     void setHandleOffset(int x, int y);
+    void setViewSettings(const wkeViewSettings*);
     bool canGoBack() const override;
     bool goBack() override;
     bool canGoForward() const override;
@@ -304,6 +305,8 @@ protected:
 
     content::WebPage* m_webPage;
 
+    float m_zoomFactor;
+
     OwnPtr<HDC> m_hdc;
     OwnPtr<HBITMAP> m_hbitmap;
     //void* m_pixels;
@@ -318,6 +321,8 @@ protected:
     friend class ShowDevToolsTaskObserver;
     bool m_isCreatedDevTools;
     wkeWebView m_devToolsWebView;
+
+    wkeViewSettings m_settings;
 };
 
 };//namespace wke
