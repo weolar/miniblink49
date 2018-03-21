@@ -2,9 +2,6 @@
 // Use of this source code is governed by the MIT license that can be
 // found in the LICENSE file.
 
-
-//#include "atom_natives.h"  // NOLINT: This file is generated with coffee2c.
-
 #include "node/include/nodeblink.h"
 #include "common/NodeRegisterHelp.h"
 #include "gin/object_template_builder.h"
@@ -12,6 +9,9 @@
 #include "gin/dictionary.h"
 #include "common/asar/Archive.h"
 #include "common/asar/AsarUtil.h"
+#include "common/asar/AsarJs.h"
+#include "common/asar/AsarInitJs.h"
+
 #include <vector>
 
 namespace atom {
@@ -164,10 +164,12 @@ void initAsarSupport(const v8::FunctionCallbackInfo<v8::Value>& info) {
     v8::Local<v8::Value> require = info[1];
     // Evaluate asar_init.coffee.
     //const char* asar_init_native = reinterpret_cast<const char*>(static_cast<const unsigned char*>(node::asar_init_native));
-    std::string buffer;
-    asar::ReadFileToString(L"E:\\mycode\\miniblink49\\trunk\\electron\\lib\\common\\asar_init.js", &buffer);
-    const char* asarInitNative = &buffer.at(0);
-    size_t asarInitNativeLength = buffer.size();
+//     std::string buffer;
+//     asar::ReadFileToString(L"E:\\mycode\\miniblink49\\trunk\\electron\\lib\\common\\asar_init.js", &buffer);
+//     const char* asarInitNative = &buffer.at(0);
+//     size_t asarInitNativeLength = buffer.size();
+    const char* asarInitNative = atom::AsarInitJs;
+    size_t asarInitNativeLength = 690;
 
     v8::Local<v8::Script> asar_init = v8::Script::Compile(v8::String::NewFromUtf8(
         isolate,
@@ -178,12 +180,12 @@ void initAsarSupport(const v8::FunctionCallbackInfo<v8::Value>& info) {
     if (!result->IsFunction())
         return;
 
-    asar::ReadFileToString(L"E:\\mycode\\miniblink49\\trunk\\electron\\lib\\common\\asar.js", &buffer);
+    //asar::ReadFileToString(L"E:\\mycode\\miniblink49\\trunk\\electron\\lib\\common\\asar.js", &buffer);
 
     v8::Function* resultFunc = v8::Function::Cast(*result);
 
-    v8::Local<v8::String> asarNativeV8 = v8::String::NewFromUtf8(isolate, &buffer.at(0),
-        v8::String::kNormalString, buffer.size());
+    //v8::Local<v8::String> asarNativeV8 = v8::String::NewFromUtf8(isolate, &buffer.at(0), v8::String::kNormalString, buffer.size());
+    v8::Local<v8::String> asarNativeV8 = v8::String::NewFromUtf8(isolate, atom::AsarJs, v8::String::kNormalString, 25171);
     v8::Local<v8::Value> vals[] = { process, require, asarNativeV8 };
 
     // Initialize asar support.
