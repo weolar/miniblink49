@@ -164,10 +164,11 @@ void initAsarSupport(const v8::FunctionCallbackInfo<v8::Value>& info) {
     v8::Local<v8::Value> require = info[1];
     // Evaluate asar_init.coffee.
     //const char* asar_init_native = reinterpret_cast<const char*>(static_cast<const unsigned char*>(node::asar_init_native));
-//     std::string buffer;
+    std::string buffer;
 //     asar::ReadFileToString(L"E:\\mycode\\miniblink49\\trunk\\electron\\lib\\common\\asar_init.js", &buffer);
 //     const char* asarInitNative = &buffer.at(0);
 //     size_t asarInitNativeLength = buffer.size();
+
     const char* asarInitNative = atom::AsarInitJs;
     size_t asarInitNativeLength = 690;
 
@@ -180,12 +181,12 @@ void initAsarSupport(const v8::FunctionCallbackInfo<v8::Value>& info) {
     if (!result->IsFunction())
         return;
 
-    //asar::ReadFileToString(L"E:\\mycode\\miniblink49\\trunk\\electron\\lib\\common\\asar.js", &buffer);
-
     v8::Function* resultFunc = v8::Function::Cast(*result);
 
-    //v8::Local<v8::String> asarNativeV8 = v8::String::NewFromUtf8(isolate, &buffer.at(0), v8::String::kNormalString, buffer.size());
-    v8::Local<v8::String> asarNativeV8 = v8::String::NewFromUtf8(isolate, atom::AsarJs, v8::String::kNormalString, 25171);
+//     asar::ReadFileToString(L"E:\\mycode\\miniblink49\\trunk\\electron\\lib\\common\\asar.js", &buffer);
+//     v8::Local<v8::String> asarNativeV8 = v8::String::NewFromUtf8(isolate, &buffer.at(0), v8::String::kNormalString, buffer.size());
+    v8::Local<v8::String> asarNativeV8 = v8::String::NewFromUtf8(isolate, atom::AsarJs, v8::String::kNormalString, 25147);
+    
     v8::Local<v8::Value> vals[] = { process, require, asarNativeV8 };
 
     // Initialize asar support.
