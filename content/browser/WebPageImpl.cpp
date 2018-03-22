@@ -30,6 +30,8 @@
 #include "third_party/WebKit/public/web/WebWindowFeatures.h"
 #include "third_party/WebKit/public/web/WebKit.h"
 #include "third_party/WebKit/public/web/WebFrameClient.h"
+#include "third_party/WebKit/public/web/WebDraggableRegion.h"
+#include "third_party/WebKit/public/web/WebDocument.h"
 #include "third_party/WebKit/Source/web/WebViewImpl.h"
 #include "third_party/WebKit/Source/web/FrameLoaderClientImpl.h"
 #include "third_party/WebKit/Source/web/WebLocalFrameImpl.h"
@@ -222,13 +224,13 @@ private:
 
 void WebPageImpl::init(WebPage* pagePtr, HWND hWnd)
 {
-    if (hWnd)
+    if (hWnd) {
         setHWND(hWnd);
 
-    LONG windowStyle = GetWindowLongPtr(hWnd, GWL_EXSTYLE);
-    bool useLayeredBuffer = !!(windowStyle & WS_EX_LAYERED);
-    m_layerTreeHost->setHasTransparentBackground(useLayeredBuffer);
-
+        LONG windowStyle = GetWindowLongPtr(hWnd, GWL_EXSTYLE);
+        bool useLayeredBuffer = !!(windowStyle & WS_EX_LAYERED);
+        m_layerTreeHost->setHasTransparentBackground(useLayeredBuffer);
+    }
     m_pagePtr = pagePtr;
     m_webFrameClient->setWebPage(m_pagePtr);
 
@@ -778,7 +780,7 @@ HDC WebPageImpl::viewDC()
 void WebPageImpl::copyToMemoryCanvasForUi()
 {
     bool useLayeredBuffer = m_layerTreeHost->getHasTransparentBackground();
-    if (m_hWnd) {
+    if (m_hWnd && !useLayeredBuffer) {
         LONG windowStyle = GetWindowLongPtr(m_hWnd, GWL_EXSTYLE);
         useLayeredBuffer = !!(windowStyle & WS_EX_LAYERED);
         m_layerTreeHost->setHasTransparentBackground(useLayeredBuffer);
@@ -918,7 +920,7 @@ void WebPageImpl::paintToMemoryCanvasInUiThread(SkCanvas* canvas, const IntRect&
     drawToScreen = !!m_browser;
 #endif
     //if (drawToScreen) { // 使用wke接口不由此上屏
-    if (hWnd) {
+    if (hWnd && !blink::RuntimeEnabledFeatures::updataInOtherThreadEnabled()) {
         HDC hdc = ::GetDC(hWnd);
         if (m_layerTreeHost->getHasTransparentBackground()) {
             RECT rtWnd;
@@ -1249,7 +1251,7 @@ LRESULT WebPageImpl::fireMouseEvent(HWND hWnd, UINT message, WPARAM wParam, LPAR
     if (blink::RuntimeEnabledFeatures::touchEnabled())
         fireTouchEvent(hWnd, message, wParam, lParam);
 
-    m_platformEventHandler->fireMouseEvent(hWnd, message, wParam, lParam, true, bHandle);
+    m_platformEventHandler->fireMouseEvent(hWnd, message, wParam, lParam, true, m_draggableRegion, bHandle);
     return 0;
 }
 
@@ -1438,6 +1440,45 @@ void WebPageImpl::setMouseOverURL(const blink::WebURL& url)
 void WebPageImpl::setToolTipText(const blink::WebString& toolTip, blink::WebTextDirection hint)
 {
     m_toolTip->show(WTF::ensureUTF16UChar((String)toolTip, true).data());
+}
+
+void WebPageImpl::draggableRegionsChanged()
+{
+    WebFrame* frame = m_webViewImpl->mainFrame();
+    if (!frame)
+        return;
+    blink::WebDocument doc = frame->document();
+    blink::WebVector<blink::WebDraggableRegion> regions = doc.draggableRegions();
+    ::SetRectRgn(m_draggableRegion, 0, 0, 0, 0);
+
+    wkeDraggableRegion* wkeRegions = nullptr;
+    size_t size = regions.size();
+    if (0 != size)
+        wkeRegions = new wkeDraggableRegion[size];
+
+    for (size_t i = 0; i < size; ++i) {
+        blink::IntRect r = regions[i].bounds;
+
+        wkeRegions[i].bounds.left = r.x();
+        wkeRegions[i].bounds.top = r.y();
+        wkeRegions[i].bounds.right = r.maxX();
+        wkeRegions[i].bounds.bottom = r.maxY();
+        wkeRegions[i].draggable = regions[i].draggable;
+
+        HRGN region = ::CreateRectRgn(wkeRegions[i].bounds.left, wkeRegions[i].bounds.top, wkeRegions[i].bounds.right, wkeRegions[i].bounds.bottom);
+        ::CombineRgn(m_draggableRegion, m_draggableRegion, region,
+            wkeRegions[i].draggable ? RGN_OR : RGN_DIFF);
+        ::DeleteObject(region);
+    }
+
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
+    if (m_pagePtr->wkeHandler().draggableRegionsChangedCallback) {
+        m_pagePtr->wkeHandler().draggableRegionsChangedCallback(m_pagePtr->wkeWebView(),
+            m_pagePtr->wkeHandler().draggableRegionsChangedCallbackParam, wkeRegions, regions.size());
+    }
+#endif
+    if (wkeRegions)
+        delete[] wkeRegions;
 }
 
 WebWidget* WebPageImpl::createPopupMenu(WebPopupType type)

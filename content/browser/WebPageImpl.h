@@ -91,6 +91,7 @@ public:
     virtual blink::WebScreenInfo screenInfo() override;
     virtual void setMouseOverURL(const blink::WebURL&) override;
     virtual void setToolTipText(const blink::WebString&, blink::WebTextDirection hint) override;
+    virtual void draggableRegionsChanged() override;
 
     // Editing --------------------------------------------------------
     virtual bool handleCurrentKeyboardEvent() override;
@@ -258,6 +259,8 @@ public:
     bool m_postCloseWidgetSoonMessage;
 
     WTF::Vector<DestroyNotif*> m_destroyNotifs;
+    //WTF::Vector<blink::IntRect> m_dragRegions;
+    HRGN m_draggableRegion;
 
     HWND m_popupHandle;
     int m_debugCount;
