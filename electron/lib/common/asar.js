@@ -1,5 +1,4 @@
 (function () {
-    mbConsoleLog("asar.js");
     const ArchiveClass = process.binding('atom_common_asar').Archive; // asar
     const childProcess = require('child_process');
     const path = require('path');
@@ -17,7 +16,7 @@
         
         archive = new ArchiveClass();//asar.createArchive(p);
         if (!archive.init(p)) {
-            console.log("getOrCreateArchive fail");
+            console.log("getOrCreateArchive fail:" + p);
             return null;
         }
         cachedArchives[p] = archive;

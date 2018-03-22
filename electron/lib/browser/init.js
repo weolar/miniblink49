@@ -10,18 +10,30 @@ const Module = require('module');
 const v8 = require('v8');
 const app = require('electron').app;
 
-// Import common settings.
+// Import common settings. 
 require('./../common/init');
 require('./rpc-server');
 
+/*
+let packageJson = null;
 let packagePath = __dirname + '/../../app.asar/'; //__dirname + '/../default_app/';
-//console.log("lib/browser/init.js, packagePath: " + packagePath);
-
 if (!fs.existsSync(packagePath))
     packagePath = __dirname + '/../default_app/';
-
-let packageJson = null;
 packageJson = require(packagePath + 'package.json');
+*/
+let packageJson = null;
+let packagePath = null;
+const searchPaths = ['/../default_app/', 'app', 'app.asar', 'default_app.asar']
+for (packagePath of searchPaths) {
+	try {
+		packagePath = path.join(__dirname, packagePath)
+		packageJson = require(path.join(packagePath, 'package.json'))
+		break
+	} catch (error) {
+		continue
+	}
+}
+console.log("lib/browser/init.js, packagePath: " + packagePath);
 
 if (packageJson == null) {
 	process.nextTick(function () {
@@ -54,6 +66,11 @@ if (packageJson.v8Flags != null) {
 	v8.setFlagsFromString(packageJson.v8Flags);
 }
 
+// Set the user path according to application's name.
+app.setPath('userData', path.join(app.getPath('appData'), app.getName()));
+app.setPath('userCache', path.join(app.getPath('cache'), app.getName()));
+app.setAppPath(packagePath);
+
 // Set main startup script of the app.
 const mainStartupScript = packageJson.main || 'index.js';
 
@@ -62,6 +79,7 @@ console.log("browser.init.js.packagePath:" + packagePath);
 // Finally load app's main.js and transfer control to C++.
 Module._load(path.join(packagePath, mainStartupScript), Module, true);
 
+app.emit('will-finish-launching', {});
 app.emit('ready', {});
 
 // test

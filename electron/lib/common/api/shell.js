@@ -5,5 +5,3 @@ exports.Shell = Shell;
 
 const shell = binding.Shell;
 exports.shell = shell;
-
-console.log("lib/common/api/shell");

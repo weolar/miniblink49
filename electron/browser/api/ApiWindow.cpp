@@ -34,6 +34,7 @@ public:
         m_isCursorInfoTypeAsynGetting = false;
         m_memoryBMP = nullptr;
         m_memoryDC = nullptr;
+        m_isDestroyApiBeCalled = false;
         m_isLayerWindow = false;
         m_isUseContentSize = false;
         m_isMaximized = false;
@@ -45,11 +46,16 @@ public:
         m_memoryBmpSize.cx = 0;
         m_memoryBmpSize.cy = 0;
         ::InitializeCriticalSection(&m_memoryCanvasLock);
+
+        m_draggableRegion = ::CreateRectRgn(0, 0, 0, 0);
+        
         m_id = IdLiveDetect::get()->constructed();
     }
 
     ~Window() {
         DebugBreak();
+
+        ::DeleteObject(m_draggableRegion);
 
         if (m_memoryBMP)
             ::DeleteObject(m_memoryBMP);
@@ -101,6 +107,7 @@ public:
         builder.SetMethod("show", &Window::showApi);
         builder.SetMethod("showInactive", &Window::showInactiveApi);
         builder.SetMethod("hide", &Window::hideApi);
+        builder.SetMethod("destroy", &Window::destroyApi);
         builder.SetMethod("isVisible", &Window::isVisibleApi);
         builder.SetMethod("isEnabled", &Window::isEnabledApi);
         builder.SetMethod("maximize", &Window::maximizeApi);
@@ -230,6 +237,11 @@ public:
         return (a.left == b.left) && (a.top == b.top) && (a.right == b.right) && (a.bottom == b.bottom);
     }
 
+    static bool isPointInRect(const RECT& a, const POINT& b) {
+        return b.x >= a.left && b.x <= a.right
+            && b.y >= a.top && b.y <= a.bottom;
+    }
+
     void onPaintUpdatedInCompositeThread(const HDC hdc, int x, int y, int cx, int cy) {
         HWND hWnd = m_hWnd;
         RECT rectDest;
@@ -319,12 +331,27 @@ public:
         ::EndPaint(hWnd, &ps);
     }
 
+    bool doDraggableRegionNcHitTest(HWND hWnd) {
+        bool handle = false;
+        if (!m_draggableRegion)
+            return handle;
+
+        POINT pos;
+        ::GetCursorPos(&pos);
+        ::ScreenToClient(hWnd, &pos);
+
+        handle = ::PtInRegion(m_draggableRegion, pos.x, pos.y);
+        if (handle)
+            ::PostMessage(hWnd, WM_SYSCOMMAND, SC_MOVE | HTCAPTION, 0);
+        return handle;
+    }
+
     void onMouseMessage(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
         int id = m_id;
-        wkeWebView pthis = m_webContents->getWkeView();
+        wkeWebView webview = m_webContents->getWkeView();
         if (message == WM_LBUTTONDOWN || message == WM_MBUTTONDOWN || message == WM_RBUTTONDOWN) {
             ::SetFocus(hWnd);
-            ::SetCapture(hWnd);
+            //::SetCapture(hWnd);
         }
         else if (message == WM_LBUTTONUP || message == WM_MBUTTONUP || message == WM_RBUTTONUP) {
             ::ReleaseCapture();
@@ -347,10 +374,12 @@ public:
         if (wParam & MK_RBUTTON)
             flags |= WKE_RBUTTON;
 
-        ThreadCall::callBlinkThreadAsync([id, pthis, message, x, y, flags] {
+        ThreadCall::callBlinkThreadAsync([id, webview, message, x, y, flags] {
             if (IdLiveDetect::get()->isLive(id))
-                wkeFireMouseEvent(pthis, message, x, y, flags);
+                wkeFireMouseEvent(webview, message, x, y, flags);
         });
+        if (WM_LBUTTONDOWN == message)
+            doDraggableRegionNcHitTest(hWnd);
     }
 
     void onCursorChange() {
@@ -359,13 +388,13 @@ public:
         m_isCursorInfoTypeAsynGetting = true;
 
         int id = m_id;
-        wkeWebView pthis = m_webContents->getWkeView();
+        wkeWebView webview = m_webContents->getWkeView();
         Window* win = this;
-        ThreadCall::callBlinkThreadAsync([pthis, win, id] {
+        ThreadCall::callBlinkThreadAsync([webview, win, id] {
             if (!IdLiveDetect::get()->isLive(id))
                 return;
             win->m_isCursorInfoTypeAsynGetting = false;
-            int cursorType = wkeGetCursorInfoType(pthis);
+            int cursorType = wkeGetCursorInfoType(webview);
             if (cursorType == win->m_cursorInfoType)
                 return;
             win->m_cursorInfoType = cursorType;
@@ -485,59 +514,43 @@ public:
         });
     }
 
-    static LRESULT CALLBACK windowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
-        int id = -1;
-        Window* win = (Window *)::GetPropW(hWnd, kPrppW);
-        if (!win) {
-            if (message == WM_CREATE) {
-                LPCREATESTRUCTW cs = (LPCREATESTRUCTW)lParam;
-                Window *win = (Window *)cs->lpCreateParams;
-                id = win->m_id;
-                ThreadCall::callBlinkThreadAsync([win, hWnd, id] {
-                    if (IdLiveDetect::get()->isLive(id))
-                        wkeSetHandle(win->m_webContents->getWkeView(), hWnd);
-                });
-                
-                ::SetPropW(hWnd, kPrppW, (HANDLE)win);
-                ::SetTimer(hWnd, (UINT_PTR)win, 70, NULL);
-                return 0;
-            }
-        }
-        if (!win)
-            return ::DefWindowProcW(hWnd, message, wParam, lParam);
-
-        id = win->m_id;
-        wkeWebView pthis = win->m_webContents->getWkeView();
-        if (!pthis)
-            return ::DefWindowProcW(hWnd, message, wParam, lParam);
+    LRESULT windowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
+        wkeWebView webview = m_webContents->getWkeView();
+        Window* self = this;
+        int id = m_id;
         switch (message) {
         case WM_CLOSE: {
-            win->m_state = WindowDestroying;
-            bool isPreventDefault = win->mate::EventEmitter<Window>::emit("close");
-            if (isPreventDefault)
-                return 0;
+            m_state = WindowDestroying;
+            if (!m_isDestroyApiBeCalled) {
+                bool isPreventDefault = mate::EventEmitter<Window>::emit("close");
+                if (isPreventDefault)
+                    return 0;
+            }
             ::ShowWindow(hWnd, SW_HIDE);
         }
-            break;
+        break;
 
         case WM_NCDESTROY:
-            win->mate::EventEmitter<Window>::emit("closed");
-            ::KillTimer(hWnd, (UINT_PTR)win);
+            mate::EventEmitter<Window>::emit("closed");
+            ::KillTimer(hWnd, (UINT_PTR)this);
             ::RemovePropW(hWnd, kPrppW);
-            ThreadCall::callBlinkThreadSync([pthis, win] {
-                wkeDestroyWebView(pthis);
-                win->m_webContents = nullptr;
+
+            ThreadCall::callBlinkThreadAsync([webview, self] {
+                wkeDestroyWebView(webview);
+                self->m_webContents = nullptr;
             });
-            WindowList::getInstance()->removeWindow(win);
-            if (WindowList::getInstance()->empty()) {
+
+            WindowList::getInstance()->removeWindow(self);
+            if (WindowList::getInstance()->empty())
                 App::getInstance()->onWindowAllClosed();
-            }
-            win->m_state = WindowDestroyed;
-            //delete win->m_webContents;
-            return 0;
+            
+            m_state = WindowDestroyed;
+            m_webContents = nullptr;
+            //delete m_webContents;
+            break;
 
         case WM_TIMER:
-            //wkeRepaintIfNeeded(pthis);
+            //wkeRepaintIfNeeded(webview);
             return 0;
 
         case WM_COMMAND:
@@ -545,45 +558,48 @@ public:
             break;
 
         case WM_PAINT:
-            win->onPaintMessage(hWnd);
+            onPaintMessage(hWnd);
             break;
 
         case WM_ERASEBKGND:
             return TRUE;
-            
+
         case WM_GETMINMAXINFO: {
             MINMAXINFO* minmaxInfo = (MINMAXINFO*)lParam;
-            minmaxInfo->ptMinTrackSize.x = win->m_minWidth;
-            minmaxInfo->ptMinTrackSize.y = win->m_minHeight;
+            minmaxInfo->ptMinTrackSize.x = m_minWidth;
+            minmaxInfo->ptMinTrackSize.y = m_minHeight;
 
-            minmaxInfo->ptMaxTrackSize.x = win->m_maxWidth;
-            minmaxInfo->ptMaxTrackSize.y = win->m_maxHeight;
+            minmaxInfo->ptMaxTrackSize.x = m_maxWidth;
+            minmaxInfo->ptMaxTrackSize.y = m_maxHeight;
         }
+        break;
+
+        case WM_MOVE:
+            mate::EventEmitter<Window>::emit("move");
             break;
 
-        case WM_SIZE: {
-            ThreadCall::callBlinkThreadAsync([pthis, lParam] {
-                wkeResize(pthis, LOWORD(lParam), HIWORD(lParam));
-                wkeRepaintIfNeeded(pthis);
+        case WM_SIZE:
+            ThreadCall::callBlinkThreadAsync([webview, lParam] {
+                wkeResize(webview, LOWORD(lParam), HIWORD(lParam));
+                wkeRepaintIfNeeded(webview);
             });
 
-            if (WindowInited == win->m_state)
-                win->mate::EventEmitter<Window>::emit("resize");
-            
+            if (WindowInited == m_state)
+                mate::EventEmitter<Window>::emit("resize");
+
             if (SIZE_MAXIMIZED == wParam) {
-                win->m_isMaximized = true;
-                win->mate::EventEmitter<Window>::emit("maximize");
+                m_isMaximized = true;
+                mate::EventEmitter<Window>::emit("maximize");
             }
             if (SIZE_MINIMIZED == wParam)
-                win->mate::EventEmitter<Window>::emit("minimize");
+                mate::EventEmitter<Window>::emit("minimize");
             if (SIZE_RESTORED == wParam) {
-                if (win->m_isMaximized)
-                    win->mate::EventEmitter<Window>::emit("unmaximize");
-                win->m_isMaximized = false;
+                if (m_isMaximized)
+                    mate::EventEmitter<Window>::emit("unmaximize");
+                m_isMaximized = false;
             }
-            
+
             return 0;
-        }
         case WM_KEYDOWN: {
             unsigned int virtualKeyCode = wParam;
             unsigned int flags = 0;
@@ -592,8 +608,8 @@ public:
             if (HIWORD(lParam) & KF_EXTENDED)
                 flags |= WKE_EXTENDED;
 
-            ThreadCall::callBlinkThreadAsync([pthis, virtualKeyCode, flags] {
-                wkeFireKeyDownEvent(pthis, virtualKeyCode, flags, false);
+            ThreadCall::callBlinkThreadAsync([webview, virtualKeyCode, flags] {
+                wkeFireKeyDownEvent(webview, virtualKeyCode, flags, false);
             });
 
             return 0;
@@ -607,8 +623,8 @@ public:
             if (HIWORD(lParam) & KF_EXTENDED)
                 flags |= WKE_EXTENDED;
 
-            ThreadCall::callBlinkThreadAsync([pthis, virtualKeyCode, flags] {
-                wkeFireKeyUpEvent(pthis, virtualKeyCode, flags, false);
+            ThreadCall::callBlinkThreadAsync([webview, virtualKeyCode, flags] {
+                wkeFireKeyUpEvent(webview, virtualKeyCode, flags, false);
             });
 
             return 0;
@@ -622,9 +638,9 @@ public:
             if (HIWORD(lParam) & KF_EXTENDED)
                 flags |= WKE_EXTENDED;
 
-            ThreadCall::callBlinkThreadAsync([pthis, id, charCode, flags] {
+            ThreadCall::callBlinkThreadAsync([webview, id, charCode, flags] {
                 if (IdLiveDetect::get()->isLive(id))
-                    wkeFireKeyPressEvent(pthis, charCode, flags, false);
+                    wkeFireKeyPressEvent(webview, charCode, flags, false);
             });
             return 0;
             break;
@@ -638,11 +654,10 @@ public:
         case WM_LBUTTONUP:
         case WM_MBUTTONUP:
         case WM_RBUTTONUP:
-        case WM_MOUSEMOVE: {
-            win->onCursorChange();
-            win->onMouseMessage(hWnd, message, wParam, lParam);
+        case WM_MOUSEMOVE:
+            onCursorChange();
+            onMouseMessage(hWnd, message, wParam, lParam);
             break;
-        }
         case WM_CONTEXTMENU: {
             POINT pt;
             pt.x = LOWORD(lParam);
@@ -665,9 +680,9 @@ public:
             if (wParam & MK_RBUTTON)
                 flags |= WKE_RBUTTON;
 
-            ThreadCall::callBlinkThreadAsync([id, pthis, pt, flags] {
+            ThreadCall::callBlinkThreadAsync([id, webview, pt, flags] {
                 if (IdLiveDetect::get()->isLive(id))
-                    wkeFireContextMenuEvent(pthis, pt.x, pt.y, flags);
+                    wkeFireContextMenuEvent(webview, pt.x, pt.y, flags);
             });
             break;
         }
@@ -693,41 +708,41 @@ public:
             if (wParam & MK_RBUTTON)
                 flags |= WKE_RBUTTON;
 
-            ThreadCall::callBlinkThreadAsync([id, pthis, pt, delta, flags] {
+            ThreadCall::callBlinkThreadAsync([id, webview, pt, delta, flags] {
                 if (IdLiveDetect::get()->isLive(id))
-                    wkeFireMouseWheelEvent(pthis, pt.x, pt.y, delta, flags);
+                    wkeFireMouseWheelEvent(webview, pt.x, pt.y, delta, flags);
             });
             break;
         }
         case WM_SETFOCUS:
-            win->mate::EventEmitter<Window>::emit("focus");
-            ThreadCall::callBlinkThreadAsync([id, pthis] {
+            mate::EventEmitter<Window>::emit("focus");
+            ThreadCall::callBlinkThreadAsync([id, webview] {
                 if (IdLiveDetect::get()->isLive(id))
-                    wkeSetFocus(pthis);
+                    wkeSetFocus(webview);
             });
             return 0;
 
         case WM_KILLFOCUS:
-            win->mate::EventEmitter<Window>::emit("blur");
-            
-            ThreadCall::callBlinkThreadAsync([id, pthis] {
+            mate::EventEmitter<Window>::emit("blur");
+
+            ThreadCall::callBlinkThreadAsync([id, webview] {
                 if (IdLiveDetect::get()->isLive(id))
-                    wkeKillFocus(pthis);
+                    wkeKillFocus(webview);
             });
             return 0;
 
         case WM_SETCURSOR:
-            if (win->setCursorInfoTypeByCache())
+            if (setCursorInfoTypeByCache())
                 return 0;
             break;
         case WM_IME_STARTCOMPOSITION: {
-            ThreadCall::callBlinkThreadAsync([pthis, hWnd] {
+            ThreadCall::callBlinkThreadAsync([webview, hWnd] {
                 wkeRect* caret = new wkeRect();
-                *caret = wkeGetCaretRect(pthis);
+                *caret = wkeGetCaretRect(webview);
                 ::PostMessage(hWnd, WM_IME_STARTCOMPOSITION_ASYN, (WPARAM)caret, 0);
             });
         }
-            return 0;
+        return 0;
         case WM_IME_STARTCOMPOSITION_ASYN: {
             wkeRect* caret = (wkeRect*)wParam;
             COMPOSITIONFORM compositionForm;
@@ -741,13 +756,42 @@ public:
             ::ImmSetCompositionWindow(hIMC, &compositionForm);
             ::ImmReleaseContext(hWnd, hIMC);
         }
-            break;
+        break;
         case WM_DROPFILES:
-            win->onDragFiles((HDROP)wParam);
+            onDragFiles((HDROP)wParam);
             break;
         }
 
         return ::DefWindowProcW(hWnd, message, wParam, lParam);
+    }
+
+    static LRESULT CALLBACK staticWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
+        int id = -1;
+        Window* win = (Window *)::GetPropW(hWnd, kPrppW);
+        if (!win) {
+            if (message == WM_CREATE) {
+                LPCREATESTRUCTW cs = (LPCREATESTRUCTW)lParam;
+                Window *win = (Window *)cs->lpCreateParams;
+                id = win->m_id;
+                ThreadCall::callBlinkThreadAsync([win, hWnd, id] {
+                    if (IdLiveDetect::get()->isLive(id))
+                        wkeSetHandle(win->m_webContents->getWkeView(), hWnd);
+                });
+                
+                ::SetPropW(hWnd, kPrppW, (HANDLE)win);
+                ::SetTimer(hWnd, (UINT_PTR)win, 70, NULL);
+                return 0;
+            }
+        }
+        if (!win)
+            return ::DefWindowProcW(hWnd, message, wParam, lParam);
+
+        id = win->m_id;
+        wkeWebView webview = win->m_webContents->getWkeView();
+        if (!webview)
+            return ::DefWindowProcW(hWnd, message, wParam, lParam);
+
+        return win->windowProc(hWnd, message, wParam, lParam);
     }
 
     static v8::Local<v8::Value> toBuffer(v8::Isolate* isolate, void* val, int size) {
@@ -761,7 +805,13 @@ public:
 
 private:
     void closeApi() {
-        ::SendMessage(m_hWnd, WM_CLOSE, 0, 0);
+        m_state = WindowDestroying;
+        ::PostMessage(m_hWnd, WM_CLOSE, 0, 0);
+    }
+
+    void destroyApi() {
+        m_isDestroyApiBeCalled = true;
+        closeApi();
     }
 
     void focusApi() {
@@ -1262,8 +1312,8 @@ private:
         options->GetBydefaultVal("alwaysOnTop", false, &win->m_isAlwaysOnTop);
         options->GetBydefaultVal("closable ", true, &win->m_isClosable);
         
-        options->GetBydefaultVal("x", 1, &createWindowParam->x);
-        options->GetBydefaultVal("y", 1, &createWindowParam->y);
+        options->GetBydefaultVal("x", kNotSetXYFlag, &createWindowParam->x);
+        options->GetBydefaultVal("y", kNotSetXYFlag, &createWindowParam->y);
         options->GetBydefaultVal("width", 1, &createWindowParam->width);
         options->GetBydefaultVal("height", 1, &createWindowParam->height);
 
@@ -1291,14 +1341,13 @@ private:
         if (!createWindowParam->isFrame)
             createWindowParam->styles = WS_CLIPCHILDREN | WS_CLIPSIBLINGS | WS_POPUP;
 
-
         win->newWindowTaskInUiThread(createWindowParam);
 
         return win;
     }
 
     static void onConsoleCallback(wkeWebView webView, void* param, wkeConsoleLevel level, const wkeString message, const wkeString sourceName, unsigned sourceLine, const wkeString stackTrace) {
-        const utf8* msg = wkeToString(message);
+        //const utf8* msg = wkeToString(message);
     }
 
     void moveToCenter() {
@@ -1306,7 +1355,7 @@ private:
         int height = 0;
         
         RECT rect = { 0 };
-        GetWindowRect(m_hWnd, &rect);
+        ::GetWindowRect(m_hWnd, &rect);
         width = rect.right - rect.left;
         height = rect.bottom - rect.top;
 
@@ -1322,43 +1371,100 @@ private:
         ::MoveWindow(m_hWnd, x, y, width, height, FALSE);
     }
 
+    static const int kNotSetXYFlag = -8467;
+
     static void onDocumentReadyInBlinkThread(wkeWebView webWindow, void* param) {
         int width = wkeGetContentWidth(webWindow);
         int height = wkeGetContentHeight(webWindow);
         Window* self = (Window*)param;
+        int id = self->m_id;
 
-        if (self->m_isUseContentSize && 0 != width && 0 != height)
-            ::SetWindowPos(self->m_hWnd, HWND_NOTOPMOST, 0, 0, width, height, SWP_NOMOVE | SWP_NOREPOSITION);
+        bool needSetPos = false;
+        if (self->m_isUseContentSize && 0 != width && 0 != height) {
+            needSetPos = true;
+        }
+
+        ThreadCall::callUiThreadAsync([self, id, needSetPos, width, height] {
+            if (!IdLiveDetect::get()->isLive(id))
+                return;
+
+            RECT rect = { 0 };
+            ::GetWindowRect(self->m_hWnd, &rect);
+            if (rect.left == kNotSetXYFlag || rect.top == kNotSetXYFlag)
+                self->moveToCenter();
+
+            if (needSetPos)
+                ::SetWindowPos(self->m_hWnd, HWND_NOTOPMOST, 0, 0, width, height, SWP_NOMOVE | SWP_NOREPOSITION);
+            self->mate::EventEmitter<Window>::emit("ready-to-show");
+        });
     }
 
     static void onTitleChangedInBlinkThread(wkeWebView webWindow, void* param, const wkeString title) {
         std::wstring* titleW = new std::wstring(wkeGetStringW(title));
-        Window* win = (Window*)param;
-        int id = win->m_id;
-        ThreadCall::callUiThreadAsync([id, win, titleW] {
+        Window* self = (Window*)param;
+        int id = self->m_id;
+        ThreadCall::callUiThreadAsync([id, self, titleW] {
             if (!IdLiveDetect::get()->isLive(id))
                 return;
 
-            ::SetWindowText(win->m_hWnd, titleW->c_str());
-            win->mate::EventEmitter<Window>::emit("page-title-updated");
+            ::SetWindowText(self->m_hWnd, titleW->c_str());
+            self->mate::EventEmitter<Window>::emit("page-title-updated");
             delete titleW;
         });
     }
 
+    static void onLoadingFinishCallback(wkeWebView webView, void* param, const wkeString url, wkeLoadingResult result, const wkeString failedReason) {
+        Window* self = (Window*)param;
+        int id = self->m_id;
+        WindowState state = self->m_state;
+        bool isDestroyApiBeCalled = self->m_isDestroyApiBeCalled;
+        ThreadCall::callUiThreadAsync([id, self, result, state, isDestroyApiBeCalled] {
+            if (!IdLiveDetect::get()->isLive(id) || 
+                WindowDestroying == state || 
+                WindowDestroyed == state || 
+                isDestroyApiBeCalled)
+                return;
+
+            if (result == WKE_LOADING_SUCCEEDED)
+                self->m_webContents->mate::EventEmitter<WebContents>::emit("did-finish-load");
+            else
+                self->m_webContents->mate::EventEmitter<WebContents>::emit("did-fail-load");
+        });
+    }
+
+    static void onDraggableRegionsChanged(wkeWebView webWindow, void* param, const wkeDraggableRegion* regions, int rectCount) {
+        Window* self = (Window*)param;
+        int id = self->m_id;
+        wkeDraggableRegion* newRegions = nullptr;
+        if (regions) {
+            newRegions = new wkeDraggableRegion[rectCount];
+            memcpy(newRegions, regions, rectCount * sizeof(wkeDraggableRegion));
+        }      
+
+        ThreadCall::callUiThreadAsync([id, self, newRegions, rectCount] {
+            if (!IdLiveDetect::get()->isLive(id))
+                return;
+
+            ::SetRectRgn(self->m_draggableRegion, 0, 0, 0, 0);
+
+            if (newRegions) {
+                for (int i = 0; i < rectCount; ++i) {
+                    RECT r = newRegions[i].bounds;
+                    HRGN region = ::CreateRectRgn(r.left, r.top, r.right, r.bottom);
+                    ::CombineRgn(self->m_draggableRegion, self->m_draggableRegion, region,
+                        newRegions[i].draggable ? RGN_OR : RGN_DIFF);
+                    ::DeleteObject(region);
+                }
+            }
+        });
+    }
+
     void newWindowTaskInUiThread(const WebContents::CreateWindowParam* createWindowParam) {
-        m_hWnd = ::CreateWindowEx(
-            createWindowParam->styleEx,
-            kElectronClassName,
-            createWindowParam->title.c_str(),
-            createWindowParam->styles,
-            createWindowParam->x,
-            createWindowParam->y,
-            createWindowParam->width,
-            createWindowParam->height,
-            NULL,         // parent window handle
-            NULL,           // window menu handle
-            ::GetModuleHandleW(NULL),
-            this);
+        m_hWnd = ::CreateWindowEx(createWindowParam->styleEx,
+            kElectronClassName, createWindowParam->title.c_str(),
+            createWindowParam->styles, createWindowParam->x,
+            createWindowParam->y, createWindowParam->width,
+            createWindowParam->height, NULL, NULL, ::GetModuleHandleW(NULL), this);
 
         if (!::IsWindow(m_hWnd))
             return;
@@ -1370,6 +1476,15 @@ private:
         if (m_isAlwaysOnTop)
             dwFlag = HWND_TOPMOST;
         ::SetWindowPos(m_hWnd, dwFlag, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_NOREPOSITION);
+
+        if (createWindowParam->isFrame) {
+            RECT windowRect;
+            ::GetWindowRect(m_hWnd, &windowRect);
+            int nWidthEllipse = 7;
+            int nHeightEllipse = 7;
+            HRGN hRgn = ::CreateRoundRectRgn(0, 0, windowRect.right - windowRect.left, windowRect.bottom - windowRect.top, nWidthEllipse, nHeightEllipse);
+            ::SetWindowRgn(m_hWnd, hRgn, TRUE);
+        }
 
         if (!m_isClosable)
             ::EnableMenuItem(::GetSystemMenu(m_hWnd, false), SC_CLOSE, MF_BYCOMMAND | MF_GRAYED);
@@ -1396,6 +1511,8 @@ private:
             wkeOnDocumentReady(webview, onDocumentReadyInBlinkThread, win);
             wkeOnLoadUrlBegin(webview, handleLoadUrlBegin, nullptr);
             wkeOnTitleChanged(webview, onTitleChangedInBlinkThread, win);
+            wkeOnLoadingFinish(webview, onLoadingFinishCallback, win);
+            wkeOnDraggableRegionsChanged(webview, onDraggableRegionsChanged, win);
             delete createWindowParam;
         });
 
@@ -1437,6 +1554,8 @@ private:
     };
     WindowState m_state;
     WebContents* m_webContents;
+
+    bool m_isDestroyApiBeCalled;
     
     HWND m_hWnd;
     int m_cursorInfoType;
@@ -1446,6 +1565,8 @@ private:
     HDC m_memoryDC;
     RECT m_clientRect;
     SIZE m_memoryBmpSize;
+
+    HRGN m_draggableRegion;
 
     bool m_isMaximized;
 
@@ -1482,8 +1603,8 @@ static void initializeWindowApi(v8::Local<v8::Object> target, v8::Local<v8::Valu
     Window::init(target, env);
     WNDCLASS wndClass = { 0 };
     if (!GetClassInfoW(NULL, kElectronClassName, &wndClass)) {
-        wndClass.style = CS_HREDRAW | CS_VREDRAW;
-        wndClass.lpfnWndProc = &Window::windowProc;
+        wndClass.style = CS_HREDRAW | CS_VREDRAW | CS_DROPSHADOW;
+        wndClass.lpfnWndProc = &Window::staticWindowProc;
         wndClass.cbClsExtra = 200;
         wndClass.cbWndExtra = 200;
         wndClass.hInstance = GetModuleHandleW(NULL);

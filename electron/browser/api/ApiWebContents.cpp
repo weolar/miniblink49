@@ -346,6 +346,20 @@ static std::string* trimUrl(const std::string& url) {
         }
     }
 
+    char invalideHead[] = "http:\\";
+    int invalideHeadLength = sizeof(invalideHead) - 1;
+    if (str->size() > invalideHeadLength && str->substr(0, invalideHeadLength) == invalideHead) {
+        for (size_t i = 0; i < str->size(); ++i) { // 反斜杠替换成斜杠
+            char c = str->at(i);
+            if ('\\' != c)
+                continue;
+            str->at(i) = '/';
+        }
+        char c = str->at(invalideHeadLength);
+        if (c != '/')
+            str->insert(str->begin() + invalideHeadLength, 1, '/');
+    }
+
     return str;
 }
 

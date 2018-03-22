@@ -72,20 +72,30 @@ void App::nullFunction() {
     OutputDebugStringA("nullFunction\n");
 }
 
+void quit() {
+    ::TerminateProcess(::GetCurrentProcess(), 0);
+    WindowList::closeAllWindows();
+
+    ThreadCall::exitMessageLoop(ThreadCall::getBlinkThreadId());
+    ThreadCall::exitMessageLoop(ThreadCall::getUiThreadId());
+}
+
 void App::quitApi() {
     OutputDebugStringA("quitApi\n");
+    quit();
+
+    if (ThreadCall::isUiThread()) {
+        quit();
+        return;
+    }
 
     ThreadCall::callUiThreadAsync([] {
-        WindowList::closeAllWindows();
-
-        ThreadCall::exitMessageLoop(ThreadCall::getBlinkThreadId());
-        ThreadCall::exitMessageLoop(ThreadCall::getUiThreadId());
+        quit();
     });
 }
 
 void App::exitApi() {
-    ::TerminateProcess(::GetCurrentProcess(), 0);
-    OutputDebugStringA("exitApi\n");
+    quitApi();
 }
 
 void App::focusApi() {
@@ -210,6 +220,11 @@ void App::newFunction(const v8::FunctionCallbackInfo<v8::Value>& args) {
 }
 
 void App::onWindowAllClosed() {
+    if (ThreadCall::isUiThread()) {
+        emit("window-all-closed");
+        return;
+    }
+
     App* self = this;
     ThreadCall::callUiThreadAsync([self] {
         self->emit("window-all-closed");
@@ -229,4 +244,4 @@ static NodeNative nativeBrowserAppNative{ "App", BrowserAppNative, sizeof(Browse
 
 NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT_MANUAL(atom_browser_app, initializeAppApi, &nativeBrowserAppNative)
 
-}
+} 
