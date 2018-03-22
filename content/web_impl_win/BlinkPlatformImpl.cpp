@@ -139,7 +139,7 @@ static void setRuntimeEnabledFeatures()
     blink::RuntimeEnabledFeatures::setSharedWorkerEnabled(false);
     blink::RuntimeEnabledFeatures::setOverlayScrollbarsEnabled(false);
     blink::RuntimeEnabledFeatures::setTouchEnabled(false);
-    blink::RuntimeEnabledFeatures::setMemoryCacheEnabled(false);
+    blink::RuntimeEnabledFeatures::setMemoryCacheEnabled(true);
     blink::RuntimeEnabledFeatures::setCspCheckEnabled(true);
     blink::RuntimeEnabledFeatures::setNpapiPluginsEnabled(true);
 }
@@ -150,6 +150,7 @@ void BlinkPlatformImpl::initialize()
     scrt_initialize_thread_safe_statics();
 #endif
     x86_check_features();
+    
     ::CoInitializeEx(nullptr, 0); // COINIT_MULTITHREADED
     ::OleInitialize(nullptr);
 

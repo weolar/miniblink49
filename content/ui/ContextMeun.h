@@ -117,8 +117,8 @@ public:
 
     static LRESULT CALLBACK wndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
     {
-        String output = String::format("ContextMenu.wndProc: %d\n", uMsg);
-        OutputDebugStringA(output.utf8().data());
+//         String output = String::format("ContextMenu.wndProc: %d\n", uMsg);
+//         OutputDebugStringA(output.utf8().data());
 
         PAINTSTRUCT ps;
         HDC hdc = nullptr;
