@@ -35,8 +35,6 @@ public:
         m_memoryBMP = nullptr;
         m_memoryDC = nullptr;
         m_isDestroyApiBeCalled = false;
-        m_isLayerWindow = false;
-        m_isUseContentSize = false;
         m_isMaximized = false;
 
         m_clientRect.left = 0;
@@ -54,6 +52,8 @@ public:
 
     ~Window() {
         DebugBreak();
+
+        delete m_createWindowParam;
 
         ::DeleteObject(m_draggableRegion);
 
@@ -77,7 +77,7 @@ public:
     static const int MSGFLT_ADD = 1;
     typedef WINUSERAPI BOOL WINAPI CHANGEWINDOWMESSAGEFILTER(UINT message, DWORD dwFlag);
     static void changeMessageProi() {
-         HINSTANCE hDllInst = LoadLibraryW(L"user32.dll");
+        HINSTANCE hDllInst = LoadLibraryW(L"user32.dll");
         if (hDllInst) {
             CHANGEWINDOWMESSAGEFILTER *pAddMessageFilterFunc = (CHANGEWINDOWMESSAGEFILTER *)GetProcAddress(hDllInst, "ChangeWindowMessageFilter");
             if (pAddMessageFilterFunc) {
@@ -282,7 +282,7 @@ public:
         win->onPaintUpdatedInCompositeThread(hdc, x, y, cx, cy);
         ::LeaveCriticalSection(&win->m_memoryCanvasLock);
 
-        if (win->m_isLayerWindow) {
+        if (win->m_createWindowParam->transparent) {
             int id = win->m_id;
             ThreadCall::callUiThreadAsync([id, win, x, y, cx, cy] {
                 if (IdLiveDetect::get()->isLive(id))
@@ -566,11 +566,11 @@ public:
 
         case WM_GETMINMAXINFO: {
             MINMAXINFO* minmaxInfo = (MINMAXINFO*)lParam;
-            minmaxInfo->ptMinTrackSize.x = m_minWidth;
-            minmaxInfo->ptMinTrackSize.y = m_minHeight;
+            minmaxInfo->ptMinTrackSize.x = m_createWindowParam->minWidth;
+            minmaxInfo->ptMinTrackSize.y = m_createWindowParam->minHeight;
 
-            minmaxInfo->ptMaxTrackSize.x = m_maxWidth;
-            minmaxInfo->ptMaxTrackSize.y = m_maxHeight;
+            minmaxInfo->ptMaxTrackSize.x = m_createWindowParam->maxWidth;
+            minmaxInfo->ptMaxTrackSize.y = m_createWindowParam->maxHeight;
         }
         break;
 
@@ -1259,92 +1259,6 @@ private:
 
         return true;
     }
-    
-    static Window* newWindow(gin::Dictionary* options, v8::Local<v8::Object> wrapper) {
-        Window* win = new Window(options->isolate(), wrapper);
-        WebContents::CreateWindowParam* createWindowParam = new WebContents::CreateWindowParam();
-        createWindowParam->styles = 0;
-        createWindowParam->styleEx = 0;
-        createWindowParam->transparent = false;
-
-        WebContents* webContents = nullptr;
-        v8::Handle<v8::Object> webContentsV8;
-        // If no WebContents was passed to the constructor, create it from options.
-        if (!options->Get("webContents", &webContentsV8)) {
-            // Use options.webPreferences to create WebContents.
-            gin::Dictionary webPreferences = gin::Dictionary::CreateEmpty(options->isolate());
-            options->Get(options::kWebPreferences, &webPreferences);
-
-            // Copy the backgroundColor to webContents.
-            v8::Local<v8::Value> value;
-            if (options->Get(options::kBackgroundColor, &value))
-                webPreferences.Set(options::kBackgroundColor, value);
-
-            v8::Local<v8::Value> transparent;
-            if (options->Get("transparent", &transparent))
-                webPreferences.Set("transparent", transparent);
-
-            // Offscreen windows are always created frameless.
-            bool offscreen;
-            if (webPreferences.Get("offscreen", &offscreen) && offscreen)
-                options->Set(options::kFrame, false);
-            
-            webContents = WebContents::create(options->isolate(), webPreferences, win);
-
-            webPreferences.GetBydefaultVal("nodeIntegration", true, &webContents->m_isNodeIntegration);
-        } else
-            DebugBreak();
-        win->m_webContents = webContents;
-
-        options->GetBydefaultVal("minWidth", 1, &win->m_minWidth);
-        options->GetBydefaultVal("minHeight", 1, &win->m_minHeight);
-        options->GetBydefaultVal("maxWidth", ::GetSystemMetrics(SM_CXSCREEN), &win->m_maxWidth);
-        options->GetBydefaultVal("maxHeight", ::GetSystemMetrics(SM_CYSCREEN), &win->m_maxHeight);
-        options->GetBydefaultVal("transparent", false, &createWindowParam->transparent);
-        options->GetBydefaultVal("center", false, &createWindowParam->isCenter);
-        options->GetBydefaultVal("resizable", true, &createWindowParam->isResizable);
-        options->GetBydefaultVal("show", true, &createWindowParam->isShow);
-        options->GetBydefaultVal("minimizable", true, &createWindowParam->isMinimizable);
-        options->GetBydefaultVal("maximizable", true, &createWindowParam->isMaximizable);
-        options->GetBydefaultVal("frame", true, &createWindowParam->isFrame);
-        
-        options->GetBydefaultVal("useContentSize", false, &win->m_isUseContentSize);
-        options->GetBydefaultVal("alwaysOnTop", false, &win->m_isAlwaysOnTop);
-        options->GetBydefaultVal("closable ", true, &win->m_isClosable);
-        
-        options->GetBydefaultVal("x", kNotSetXYFlag, &createWindowParam->x);
-        options->GetBydefaultVal("y", kNotSetXYFlag, &createWindowParam->y);
-        options->GetBydefaultVal("width", 1, &createWindowParam->width);
-        options->GetBydefaultVal("height", 1, &createWindowParam->height);
-
-        std::string title;
-        options->GetBydefaultVal("title", "Electron", &title);
-        createWindowParam->title = StringUtil::UTF8ToUTF16(title);
-
-        if (createWindowParam->transparent) {
-            createWindowParam->styles = WS_POPUP;
-            createWindowParam->styleEx = WS_EX_LAYERED;
-        } else {
-            createWindowParam->styles = WS_OVERLAPPED | WS_SYSMENU | WS_CAPTION | WS_CLIPSIBLINGS | WS_CLIPCHILDREN;
-            createWindowParam->styleEx = 0;
-        }
-
-        if (createWindowParam->isMinimizable)
-            createWindowParam->styles |= WS_MINIMIZEBOX;
-        if (createWindowParam->isMaximizable)
-            createWindowParam->styles |= WS_MAXIMIZEBOX;
-
-        if (createWindowParam->isResizable)
-            createWindowParam->styles |= WS_THICKFRAME;
-        createWindowParam->styleEx |= WS_EX_ACCEPTFILES;
-
-        if (!createWindowParam->isFrame)
-            createWindowParam->styles = WS_CLIPCHILDREN | WS_CLIPSIBLINGS | WS_POPUP;
-
-        win->newWindowTaskInUiThread(createWindowParam);
-
-        return win;
-    }
 
     static void onConsoleCallback(wkeWebView webView, void* param, wkeConsoleLevel level, const wkeString message, const wkeString sourceName, unsigned sourceLine, const wkeString stackTrace) {
         //const utf8* msg = wkeToString(message);
@@ -1353,7 +1267,7 @@ private:
     void moveToCenter() {
         int width = 0;
         int height = 0;
-        
+
         RECT rect = { 0 };
         ::GetWindowRect(m_hWnd, &rect);
         width = rect.right - rect.left;
@@ -1364,11 +1278,11 @@ private:
 
         parentWidth = ::GetSystemMetrics(SM_CXSCREEN);
         parentHeight = ::GetSystemMetrics(SM_CYSCREEN);
-        
+
         int x = (parentWidth - width) / 2;
         int y = (parentHeight - height) / 2;
 
-        ::MoveWindow(m_hWnd, x, y, width, height, FALSE);
+        ::MoveWindow(m_hWnd, x, y, width, height, TRUE);
     }
 
     static const int kNotSetXYFlag = -8467;
@@ -1380,7 +1294,7 @@ private:
         int id = self->m_id;
 
         bool needSetPos = false;
-        if (self->m_isUseContentSize && 0 != width && 0 != height) {
+        if (self->m_createWindowParam->isUseContentSize && 0 != width && 0 != height) {
             needSetPos = true;
         }
 
@@ -1419,9 +1333,9 @@ private:
         WindowState state = self->m_state;
         bool isDestroyApiBeCalled = self->m_isDestroyApiBeCalled;
         ThreadCall::callUiThreadAsync([id, self, result, state, isDestroyApiBeCalled] {
-            if (!IdLiveDetect::get()->isLive(id) || 
-                WindowDestroying == state || 
-                WindowDestroyed == state || 
+            if (!IdLiveDetect::get()->isLive(id) ||
+                WindowDestroying == state ||
+                WindowDestroyed == state ||
                 isDestroyApiBeCalled)
                 return;
 
@@ -1439,7 +1353,7 @@ private:
         if (regions) {
             newRegions = new wkeDraggableRegion[rectCount];
             memcpy(newRegions, regions, rectCount * sizeof(wkeDraggableRegion));
-        }      
+        }
 
         ThreadCall::callUiThreadAsync([id, self, newRegions, rectCount] {
             if (!IdLiveDetect::get()->isLive(id))
@@ -1458,8 +1372,95 @@ private:
             }
         });
     }
+    
+    static Window* newWindow(gin::Dictionary* options, v8::Local<v8::Object> wrapper) {
+        Window* win = new Window(options->isolate(), wrapper);
+        WebContents::CreateWindowParam* createWindowParam = new WebContents::CreateWindowParam();
+        createWindowParam->styles = 0;
+        createWindowParam->styleEx = 0;
+        createWindowParam->transparent = false;
+
+        WebContents* webContents = nullptr;
+        v8::Handle<v8::Object> webContentsV8;
+        // If no WebContents was passed to the constructor, create it from options.
+        if (!options->Get("webContents", &webContentsV8)) {
+            // Use options.webPreferences to create WebContents.
+            gin::Dictionary webPreferences = gin::Dictionary::CreateEmpty(options->isolate());
+            options->Get(options::kWebPreferences, &webPreferences);
+
+            // Copy the backgroundColor to webContents.
+            v8::Local<v8::Value> value;
+            if (options->Get(options::kBackgroundColor, &value))
+                webPreferences.Set(options::kBackgroundColor, value);
+
+            v8::Local<v8::Value> transparent;
+            if (options->Get("transparent", &transparent))
+                webPreferences.Set("transparent", transparent);
+
+            // Offscreen windows are always created frameless.
+            bool offscreen;
+            if (webPreferences.Get("offscreen", &offscreen) && offscreen)
+                options->Set(options::kFrame, false);
+            
+            webContents = WebContents::create(options->isolate(), webPreferences, win);
+
+            webPreferences.GetBydefaultVal("nodeIntegration", true, &webContents->m_isNodeIntegration);
+        } else
+            DebugBreak();
+        win->m_webContents = webContents;
+        
+        options->GetBydefaultVal("minWidth", 1, &createWindowParam->minWidth);
+        options->GetBydefaultVal("minHeight", 1, &createWindowParam->minHeight);
+        options->GetBydefaultVal("maxWidth", ::GetSystemMetrics(SM_CXSCREEN), &createWindowParam->maxWidth);
+        options->GetBydefaultVal("maxHeight", ::GetSystemMetrics(SM_CYSCREEN), &createWindowParam->maxHeight);
+        options->GetBydefaultVal("transparent", false, &createWindowParam->transparent);
+        options->GetBydefaultVal("center", false, &createWindowParam->isCenter);
+        options->GetBydefaultVal("resizable", true, &createWindowParam->isResizable);
+        options->GetBydefaultVal("show", true, &createWindowParam->isShow);
+        options->GetBydefaultVal("minimizable", true, &createWindowParam->isMinimizable);
+        options->GetBydefaultVal("maximizable", true, &createWindowParam->isMaximizable);
+        options->GetBydefaultVal("frame", true, &createWindowParam->isFrame);
+        
+        options->GetBydefaultVal("useContentSize", false, &createWindowParam->isUseContentSize);
+        options->GetBydefaultVal("alwaysOnTop", false, &createWindowParam->isAlwaysOnTop);
+        options->GetBydefaultVal("closable ", true, &createWindowParam->isClosable);
+        
+        options->GetBydefaultVal("x", kNotSetXYFlag, &createWindowParam->x);
+        options->GetBydefaultVal("y", kNotSetXYFlag, &createWindowParam->y);
+        options->GetBydefaultVal("width", 1, &createWindowParam->width);
+        options->GetBydefaultVal("height", 1, &createWindowParam->height);
+
+        std::string title;
+        options->GetBydefaultVal("title", "Electron", &title);
+        createWindowParam->title = StringUtil::UTF8ToUTF16(title);
+
+        if (createWindowParam->transparent) {
+            createWindowParam->styles = WS_POPUP;
+            createWindowParam->styleEx = WS_EX_LAYERED;
+        } else {
+            createWindowParam->styles = WS_OVERLAPPED | WS_SYSMENU | WS_CAPTION | WS_CLIPSIBLINGS | WS_CLIPCHILDREN;
+            createWindowParam->styleEx = 0;
+        }
+
+        if (createWindowParam->isMinimizable)
+            createWindowParam->styles |= WS_MINIMIZEBOX;
+        if (createWindowParam->isMaximizable)
+            createWindowParam->styles |= WS_MAXIMIZEBOX;
+
+        if (createWindowParam->isResizable)
+            createWindowParam->styles |= WS_THICKFRAME;
+        createWindowParam->styleEx |= WS_EX_ACCEPTFILES;
+
+        if (!createWindowParam->isFrame)
+            createWindowParam->styles = WS_CLIPCHILDREN | WS_CLIPSIBLINGS | WS_POPUP;
+
+        win->newWindowTaskInUiThread(createWindowParam);
+
+        return win;
+    }
 
     void newWindowTaskInUiThread(const WebContents::CreateWindowParam* createWindowParam) {
+        m_createWindowParam = createWindowParam;
         m_hWnd = ::CreateWindowEx(createWindowParam->styleEx,
             kElectronClassName, createWindowParam->title.c_str(),
             createWindowParam->styles, createWindowParam->x,
@@ -1473,20 +1474,20 @@ private:
         ::DragAcceptFiles(m_hWnd, true);
 
         HWND dwFlag = HWND_NOTOPMOST;
-        if (m_isAlwaysOnTop)
+        if (createWindowParam->isAlwaysOnTop)
             dwFlag = HWND_TOPMOST;
         ::SetWindowPos(m_hWnd, dwFlag, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_NOREPOSITION);
 
-        if (createWindowParam->isFrame) {
-            RECT windowRect;
-            ::GetWindowRect(m_hWnd, &windowRect);
-            int nWidthEllipse = 7;
-            int nHeightEllipse = 7;
-            HRGN hRgn = ::CreateRoundRectRgn(0, 0, windowRect.right - windowRect.left, windowRect.bottom - windowRect.top, nWidthEllipse, nHeightEllipse);
-            ::SetWindowRgn(m_hWnd, hRgn, TRUE);
-        }
+//         if (!createWindowParam->isFrame) {
+//             RECT windowRect;
+//             ::GetWindowRect(m_hWnd, &windowRect);
+//             int nWidthEllipse = 7;
+//             int nHeightEllipse = 7;
+//             HRGN hRgn = ::CreateRoundRectRgn(0, 0, windowRect.right - windowRect.left, windowRect.bottom - windowRect.top, nWidthEllipse, nHeightEllipse);
+//             ::SetWindowRgn(m_hWnd, hRgn, TRUE);
+//         }
 
-        if (!m_isClosable)
+        if (!createWindowParam->isClosable)
             ::EnableMenuItem(::GetSystemMenu(m_hWnd, false), SC_CLOSE, MF_BYCOMMAND | MF_GRAYED);
 
         ::GetClientRect(m_hWnd, &m_clientRect);
@@ -1513,7 +1514,7 @@ private:
             wkeOnTitleChanged(webview, onTitleChangedInBlinkThread, win);
             wkeOnLoadingFinish(webview, onLoadingFinishCallback, win);
             wkeOnDraggableRegionsChanged(webview, onDraggableRegionsChanged, win);
-            delete createWindowParam;
+
         });
 
         MenuEventNotif::onWindowDidCreated(this);
@@ -1570,15 +1571,7 @@ private:
 
     bool m_isMaximized;
 
-    bool m_isLayerWindow;
-    bool m_isUseContentSize;
-    bool m_isAlwaysOnTop;
-    bool m_isClosable;
-    
-    int m_minWidth;
-    int m_minHeight;
-    int m_maxWidth;
-    int m_maxHeight;
+    const WebContents::CreateWindowParam* m_createWindowParam;
 
     int m_id;
 };

@@ -39,10 +39,8 @@ public:
     void setNameApi(const std::string& name) { m_name = name; }
     std::string getNameApi() const { return m_name; }
 
-    void setPathApi(const std::string& path) { m_path = path; }
-    std::string getPathApi() const {
-        return m_path;
-    }
+    void setPathApi(const std::string& name, const std::string& path);
+    std::string getPathApi(const std::string& name) const;
 
     void setDesktopNameApi(const std::string& desktopName);
 
@@ -69,7 +67,7 @@ private:
 
     std::string m_version;
     std::string m_name;
-    std::string m_path;
+    std::map<std::string, std::string> m_pathMap;
 };
 
 } // atom
