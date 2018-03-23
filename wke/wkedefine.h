@@ -288,6 +288,12 @@ typedef enum {
 typedef bool(*wkeWindowClosingCallback)(wkeWebView webWindow, void* param);
 typedef void(*wkeWindowDestroyCallback)(wkeWebView webWindow, void* param);
 
+struct wkeDraggableRegion {
+    RECT bounds;
+    bool draggable;
+};
+typedef void(*wkeDraggableRegionsChangedCallback)(wkeWebView webWindow, void* param, const wkeDraggableRegion* rects, int rectCount);
+
 //JavaScript Bind-----------------------------------------------------------------------------------
 #define JS_CALL __fastcall
 typedef jsValue(JS_CALL* jsNativeFunction) (jsExecState es);
@@ -742,6 +748,7 @@ public:
     ITERATOR3(void, wkeOnWillReleaseScriptContext, wkeWebView webView, wkeWillReleaseScriptContextCallback callback, void* callbackParam, "") \
     ITERATOR3(void, wkeOnWindowClosing, wkeWebView webWindow, wkeWindowClosingCallback callback, void* param, "") \
     ITERATOR3(void, wkeOnWindowDestroy, wkeWebView webWindow, wkeWindowDestroyCallback callback, void* param, "") \
+    ITERATOR3(void, wkeOnDraggableRegionsChanged, wkeWebView webWindow, wkeDraggableRegionsChangedCallback callback, void* param, "") \
     \
     ITERATOR2(void, wkeNetSetMIMEType, void* job, char *type, "") \
     ITERATOR4(void, wkeNetSetHTTPHeaderField, void* job, wchar_t* key, wchar_t* value, bool response, "") \

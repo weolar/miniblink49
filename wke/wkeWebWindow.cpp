@@ -193,8 +193,8 @@ LRESULT CWebWindow::_windowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM l
         return 0;
 
     case WM_CLOSE:
-        if (getWkeHandler()->m_windowClosingCallback) {
-            if (!getWkeHandler()->m_windowClosingCallback(this, getWkeHandler()->m_windowClosingCallbackParam))
+        if (getWkeHandler()->windowClosingCallback) {
+            if (!getWkeHandler()->windowClosingCallback(this, getWkeHandler()->windowClosingCallbackParam))
                 return 0;
         }
 
@@ -628,18 +628,14 @@ void CWebWindow::_onDocumentReady()
 
 void CWebWindow::onClosing(wkeWindowClosingCallback callback, void* param)
 {
-//     m_windowClosingCallback = callback;
-//     m_windowClosingCallbackParam = param;
-    getWkeHandler()->m_windowClosingCallback = callback;
-    getWkeHandler()->m_windowClosingCallbackParam = param;
+    getWkeHandler()->windowClosingCallback = callback;
+    getWkeHandler()->windowClosingCallbackParam = param;
 }
 
 void CWebWindow::onDestroy(wkeWindowDestroyCallback callback, void* param)
 {
-//     m_windowDestroyCallback = callback;
-//     m_windowDestroyCallbackParam = param;
-    getWkeHandler()->m_windowDestroyCallback = callback;
-    getWkeHandler()->m_windowDestroyCallbackParam = param;
+    getWkeHandler()->windowDestroyCallback = callback;
+    getWkeHandler()->windowDestroyCallbackParam = param;
 }
 
 void CWebWindow::show(bool b)

@@ -83,11 +83,16 @@ struct CWebViewHandler {
     wkeWillReleaseScriptContextCallback willReleaseScriptContextCallback;
     void* willReleaseScriptContextCallbackParam;
 
-    wkeWindowClosingCallback m_windowClosingCallback;
-    void* m_windowClosingCallbackParam;
+    wkeWindowClosingCallback windowClosingCallback;
+    void* windowClosingCallbackParam;
     
-    wkeWindowDestroyCallback m_windowDestroyCallback;
-    void* m_windowDestroyCallbackParam;
+    wkeWindowDestroyCallback windowDestroyCallback;
+    void* windowDestroyCallbackParam;
+
+    wkeDraggableRegionsChangedCallback draggableRegionsChangedCallback;
+    void* draggableRegionsChangedCallbackParam;
+
+    
 
     bool isWke;//是否是使用的wke接口
 };
@@ -243,6 +248,8 @@ public:
 
     void onDidCreateScriptContext(wkeDidCreateScriptContextCallback callback, void* callbackParam);
     void onWillReleaseScriptContext(wkeWillReleaseScriptContextCallback callback, void* callbackParam);
+
+    void onDraggableRegionsChanged(wkeDraggableRegionsChangedCallback callback, void* param);
 
     void setClientHandler(const wkeClientHandler* handler) override;
     const wkeClientHandler* getClientHandler() const override;

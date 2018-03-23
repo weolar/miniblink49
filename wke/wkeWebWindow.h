@@ -30,7 +30,7 @@ public:
 
     void onClosing(wkeWindowClosingCallback callback, void* param);
     void onDestroy(wkeWindowDestroyCallback callback, void* param);
-
+    
     virtual void setTransparent(bool transparent) override;
 
 protected:

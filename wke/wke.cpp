@@ -1037,6 +1037,12 @@ void wkeOnWindowDestroy(wkeWebView webWindow, wkeWindowDestroyCallback callback,
         return window->onDestroy(callback, param);
 }
 
+void wkeOnDraggableRegionsChanged(wkeWebView webWindow, wkeDraggableRegionsChangedCallback callback, void* param)
+{
+    if (wke::CWebView* window = static_cast<wke::CWebView*>(webWindow))
+        return window->onDraggableRegionsChanged(callback, param);
+}
+
 void wkeShowWindow(wkeWebView webWindow, bool showFlag)
 {
     if (wke::CWebWindow* window = static_cast<wke::CWebWindow*>(webWindow))

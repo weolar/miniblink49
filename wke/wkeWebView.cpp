@@ -1192,6 +1192,12 @@ void CWebView::onWillReleaseScriptContext(wkeWillReleaseScriptContextCallback ca
     m_webPage->wkeHandler().willReleaseScriptContextCallbackParam = callbackParam;
 }
 
+void CWebView::onDraggableRegionsChanged(wkeDraggableRegionsChangedCallback callback, void* callbackParam)
+{
+    m_webPage->wkeHandler().draggableRegionsChangedCallback = callback;
+    m_webPage->wkeHandler().draggableRegionsChangedCallbackParam = callbackParam;
+}
+
 void CWebView::setClientHandler(const wkeClientHandler* handler)
 {
     m_webPage->wkeSetClientHandler((void*)handler);
@@ -1255,6 +1261,7 @@ void CWebView::setDragFiles(const POINT* clintPos, const POINT* screenPos, wkeSt
     webView->dragTargetDragEnter(webDragData, clientPoint, screenPoint, blink::WebDragOperationMove, 0);
     webView->dragTargetDragOver(clientPoint, screenPoint, blink::WebDragOperationMove, 0);
     webView->dragTargetDrop(clientPoint, screenPoint, 0);
+    webView->dragTargetDragLeave();
 }
 
 void CWebView::setNetInterface(const char* netInterface)
@@ -1336,8 +1343,8 @@ void wkeDestroyWebView(wkeWebView webView)
     if (!webView)
         return;
 
-    if (webView->getWkeHandler()->m_windowDestroyCallback)
-        webView->getWkeHandler()->m_windowDestroyCallback(webView, webView->getWkeHandler()->m_windowDestroyCallbackParam);
+    if (webView->getWkeHandler()->windowDestroyCallback)
+        webView->getWkeHandler()->windowDestroyCallback(webView, webView->getWkeHandler()->windowDestroyCallbackParam);
 
     //size_t pos = s_webViews.find(webView);
 

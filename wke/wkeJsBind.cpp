@@ -807,11 +807,6 @@ void jsSetGlobal(jsExecState es, const char* prop, jsValue v)
 
 jsValue jsGetAt(jsExecState es, jsValue object, int index)
 {
-//     JSC::JSValue o = JSC::JSValue::decode(object);
-// 
-//     JSC::JSValue ret = o.get((JSC::ExecState*)es, index);
-//     return JSC::JSValue::encode(ret);
-
     if (!s_execStates || !s_execStates->contains(es) || !es || !es->isolate)
         return jsUndefined();
     if (es->context.IsEmpty())
@@ -1484,6 +1479,8 @@ static void setWkeWebViewToV8Context(content::WebFrameClientImpl* client, v8::Lo
 
 jsExecState createTempExecStateByV8Context(v8::Local<v8::Context> context)
 {
+    if (context.IsEmpty())
+        return nullptr;
     JsExecStateInfo* execState = JsExecStateInfo::create();
     execState->context.Reset(context->GetIsolate(), context);
     execState->isolate = context->GetIsolate();
