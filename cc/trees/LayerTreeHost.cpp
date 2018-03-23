@@ -806,6 +806,8 @@ blink::WebColor LayerTreeHost::getBackgroundColor() const
 
 void LayerTreeHost::setHasTransparentBackground(bool b)
 {
+    if (m_hasTransparentBackground == b)
+        return;
     m_hasTransparentBackground = b;
     recursiveSetColor(&m_liveLayers, m_hasTransparentBackground, m_backgroundColor);
 }
