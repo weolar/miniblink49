@@ -960,6 +960,15 @@ void uv_process_endgame(uv_loop_t* loop, uv_process_t* handle) {
   uv__handle_close(handle);
 }
 
+void hideCmdApp(WCHAR* application_path, STARTUPINFOW* startup) {
+  int application_path_len = wcslen(application_path);
+  for (int i = 0; i < application_path_len - 6; ++i) {
+    if (0 != wcsnicmp(application_path + i, L"cmd.exe", 7))
+      continue;
+    startup->wShowWindow = SW_HIDE;
+    return;
+  }
+}
 
 int uv_spawn(uv_loop_t* loop,
              uv_process_t* process,
@@ -1096,7 +1105,7 @@ int uv_spawn(uv_loop_t* loop,
   } else {
     startup.wShowWindow = SW_SHOWDEFAULT;
   }
-  startup.wShowWindow = SW_HIDE; // weolar TODO
+  hideCmdApp(application_path, &startup); // weolar TODO
 
   process_flags = CREATE_UNICODE_ENVIRONMENT;
 
