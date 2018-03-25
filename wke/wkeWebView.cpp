@@ -1258,10 +1258,9 @@ void CWebView::setDragFiles(const POINT* clintPos, const POINT* screenPos, wkeSt
     }
 
     blink::WebViewImpl* webView = m_webPage->webViewImpl();
-    webView->dragTargetDragEnter(webDragData, clientPoint, screenPoint, blink::WebDragOperationMove, 0);
-    webView->dragTargetDragOver(clientPoint, screenPoint, blink::WebDragOperationMove, 0);
+    webView->dragTargetDragEnter(webDragData, clientPoint, screenPoint, blink::WebDragOperationEvery, 0);
+    webView->dragTargetDragOver(clientPoint, screenPoint, blink::WebDragOperationEvery, 0);
     webView->dragTargetDrop(clientPoint, screenPoint, 0);
-    webView->dragTargetDragLeave();
 }
 
 void CWebView::setNetInterface(const char* netInterface)

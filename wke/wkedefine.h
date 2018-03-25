@@ -228,6 +228,66 @@ typedef struct {
     bool fullscreen;
 } wkeWindowFeatures;
 
+struct wkeWebDragData {
+    struct Item {
+        enum wkeStorageType {
+            // String data with an associated MIME type. Depending on the MIME type, there may be
+            // optional metadata attributes as well.
+            StorageTypeString,
+            // Stores the name of one file being dragged into the renderer.
+            StorageTypeFilename,
+            // An image being dragged out of the renderer. Contains a buffer holding the image data
+            // as well as the suggested name for saving the image to.
+            StorageTypeBinaryData,
+            // Stores the filesystem URL of one file being dragged into the renderer.
+            StorageTypeFileSystemFile,
+        };
+
+        wkeStorageType storageType;
+
+        // Only valid when storageType == StorageTypeString.
+        wkeString stringType;
+        wkeString stringData;
+
+        // Only valid when storageType == StorageTypeFilename.
+        wkeString filenameData;
+        wkeString displayNameData;
+
+        // Only valid when storageType == StorageTypeBinaryData.
+        char* binaryData;
+        int binaryDataLength;
+
+        // Title associated with a link when stringType == "text/uri-list".
+        // Filename when storageType == StorageTypeBinaryData.
+        wkeString title;
+
+        // Only valid when storageType == StorageTypeFileSystemFile.
+        wkeString fileSystemURL;
+        long long fileSystemFileSize;
+
+        // Only valid when stringType == "text/html".
+        wkeString baseURL;
+    };
+
+    Item* m_itemList;
+    int m_itemListLength;
+
+    int m_modifierKeyState; // State of Shift/Ctrl/Alt/Meta keys.
+    wkeString m_filesystemId;
+};
+
+enum wkeWebDragOperation {
+    wkeWebDragOperationNone = 0,
+    wkeWebDragOperationCopy = 1,
+    wkeWebDragOperationLink = 2,
+    wkeWebDragOperationGeneric = 4,
+    wkeWebDragOperationPrivate = 8,
+    wkeWebDragOperationMove = 16,
+    wkeWebDragOperationDelete = 32,
+    wkeWebDragOperationEvery = 0xffffffff
+};
+typedef wkeWebDragOperation wkeWebDragOperationsMask;
+
 typedef void(*wkeTitleChangedCallback)(wkeWebView webView, void* param, const wkeString title);
 typedef void(*wkeURLChangedCallback)(wkeWebView webView, void* param, const wkeString url);
 typedef void(*wkeURLChangedCallback2)(wkeWebView webView, void* param, wkeWebFrameHandle frameId, const wkeString url);
@@ -779,6 +839,11 @@ public:
     ITERATOR5(void, wkeMoveWindow, wkeWebView webWindow, int x, int y, int width, int height, "") \
     ITERATOR1(void, wkeMoveToCenter, wkeWebView webWindow, "") \
     ITERATOR3(void, wkeResizeWindow, wkeWebView webWindow, int width, int height, "") \
+    \
+    ITERATOR6(wkeWebDragOperation, wkeDragTargetDragEnter, wkeWebView webWindow, const wkeWebDragData* webDragData, const POINT* clientPoint, const POINT* screenPoint, wkeWebDragOperationsMask operationsAllowed, int modifiers, "") \
+    ITERATOR5(wkeWebDragOperation, wkeDragTargetDragOver, wkeWebView webWindow, const POINT* clientPoint, const POINT* screenPoint, wkeWebDragOperationsMask operationsAllowed, int modifiers, "") \
+    ITERATOR1(void, wkeDragTargetDragLeave, wkeWebView webWindow, ""); \
+    ITERATOR4(void, wkeDragTargetDrop, wkeWebView webWindow, const POINT* clientPoint, const POINT* screenPoint, int modifiers, "") \
     \
     ITERATOR2(void, wkeSetWindowTitle, wkeWebView webWindow, const utf8* title, "") \
     ITERATOR2(void, wkeSetWindowTitleW, wkeWebView webWindow, const wchar_t* title, "") \

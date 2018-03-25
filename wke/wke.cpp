@@ -15,6 +15,9 @@
 #include "wkeWebWindow.h"
 #include "third_party/WebKit/public/web/WebKit.h"
 #include "third_party/WebKit/public/web/WebFrame.h"
+#include "third_party/WebKit/public/web/WebDragOperation.h"
+#include "third_party/WebKit/public/platform/WebDragData.h"
+#include "third_party/WebKit/Source/web/WebViewImpl.h"
 #include "gen/blink/platform/RuntimeEnabledFeatures.h"
 #include <v8.h>
 #include "wtf/text/WTFString.h"
@@ -1083,6 +1086,89 @@ void wkeSetWindowTitleW(wkeWebView webWindow, const wchar_t* title)
 {
     if (wke::CWebWindow* window = static_cast<wke::CWebWindow*>(webWindow))
         return window->setTitle(title);
+}
+
+static void convertDragData(blink::WebDragData* data, const wkeWebDragData* webDragData) {
+    data->initialize();
+
+    if (webDragData->m_filesystemId)
+        data->setFilesystemId(webDragData->m_filesystemId->original());
+    for (int i = 0; i < webDragData->m_itemListLength; ++i) {
+        wkeWebDragData::Item* it = &webDragData->m_itemList[i];
+        blink::WebDragData::Item item;
+        item.storageType = (blink::WebDragData::Item::StorageType)it->storageType;
+        if (it->stringType)
+            item.stringType = it->stringType->original();
+        if (it->stringData)
+            item.stringData = it->stringData->original();
+        if (it->filenameData)
+            item.filenameData = it->filenameData->original();
+        if (it->displayNameData)
+            item.displayNameData = it->displayNameData->original();
+        if (it->binaryData)
+            item.binaryData.assign(it->binaryData, it->binaryDataLength);
+        if (it->title)
+            item.title = it->title->original();
+        if (it->fileSystemURL)
+            item.fileSystemURL = blink::KURL(blink::ParsedURLString, it->fileSystemURL->original());
+        item.fileSystemFileSize = it->fileSystemFileSize;
+        if (it->baseURL)
+            item.baseURL = blink::KURL(blink::ParsedURLString, it->baseURL->original());
+
+        data->addItem(item);
+    }
+}
+
+wkeWebDragOperation wkeDragTargetDragEnter(wkeWebView webWindow, const wkeWebDragData* webDragData, const POINT* clientPoint, const POINT* screenPoint, wkeWebDragOperationsMask operationsAllowed, int modifiers)
+{
+    if (!webWindow->webPage())
+        return wkeWebDragOperationNone;
+    blink::WebViewImpl* view = webWindow->webPage()->webViewImpl();
+    if (!view)
+        return wkeWebDragOperationNone;
+
+    blink::WebDragData data;
+    convertDragData(&data, webDragData);
+    blink::WebDragOperation op = view->dragTargetDragEnter(data,
+        blink::WebPoint(clientPoint->x, clientPoint->y),
+        blink::WebPoint(screenPoint->x, screenPoint->y),
+        (blink::WebDragOperationsMask)operationsAllowed, modifiers);
+
+    return (wkeWebDragOperation)op;
+}
+
+wkeWebDragOperation wkeDragTargetDragOver(wkeWebView webWindow, const POINT* clientPoint, const POINT* screenPoint, wkeWebDragOperationsMask operationsAllowed, int modifiers)
+{
+    if (!webWindow->webPage())
+        return wkeWebDragOperationNone;
+    blink::WebViewImpl* view = webWindow->webPage()->webViewImpl();
+    if (!view)
+        return wkeWebDragOperationNone;
+
+    blink::WebDragOperation op = view->dragTargetDragOver(blink::WebPoint(clientPoint->x, clientPoint->y),
+        blink::WebPoint(screenPoint->x, screenPoint->y), (blink::WebDragOperationsMask)operationsAllowed, modifiers);
+    return (wkeWebDragOperation)op;
+}
+
+void wkeDragTargetDragLeave(wkeWebView webWindow)
+{
+    if (!webWindow->webPage())
+        return;
+    blink::WebViewImpl* view = webWindow->webPage()->webViewImpl();
+    if (view)
+        view->dragTargetDragLeave();
+}
+
+void wkeDragTargetDrop(wkeWebView webWindow, const POINT* clientPoint, const POINT* screenPoint, int modifiers)
+{
+    if (!webWindow->webPage())
+        return;
+    blink::WebViewImpl* view = webWindow->webPage()->webViewImpl();
+    if (!view)
+        return;
+
+    view->dragTargetDrop(blink::WebPoint(clientPoint->x, clientPoint->y),
+        blink::WebPoint(screenPoint->x, screenPoint->y), modifiers);
 }
 
 //////////////////////////////////////////////////////////////////////////
