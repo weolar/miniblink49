@@ -4,7 +4,7 @@
 
 #include "third_party/WebKit/public/web/WebDragOperation.h"
 #include "third_party/WebKit/public/platform/WebDragData.h"
-#include "content/ui/COMPtr.h"
+#include "base/COMPtr.h"
 #include <shlobj.h>
 
 namespace blink {
