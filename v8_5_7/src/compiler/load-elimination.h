@@ -138,7 +138,7 @@ class V8_EXPORT_PRIVATE LoadElimination final
         auto that_it = that->info_for_node_.find(this_object);
         if (that_it != that->info_for_node_.end() &&
             that_it->second == this_value) {
-          copy->info_for_node_.insert(this_it);
+          copy->info_for_node_.insert(std::move(this_it));
         }
       }
       return copy;
