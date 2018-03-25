@@ -2,6 +2,7 @@
 #define content_browser_ContextMeun_h
 
 #include "content/browser/WebPage.h"
+#include "third_party/WebKit/Source/web/WebViewImpl.h"
 #include "third_party/WebKit/Source/platform/Timer.h"
 #include "third_party/WebKit/public/web/WebContextMenuData.h"
 #include "third_party/WebKit/public/web/WebFrame.h"
@@ -105,13 +106,13 @@ public:
     void onCommand(UINT itemID)
     {
         if (kCopySelectedTextId == itemID) {
-            m_webPage->mainFrame()->executeCommand("Copy");
+            m_webPage->webViewImpl()->focusedFrame()->executeCommand("Copy");
         } else if (kInspectElementAtId == itemID) {
             m_webPage->inspectElementAt(m_data.mousePosition.x, m_data.mousePosition.y);
         } else if (kCutId == itemID) {
-            m_webPage->mainFrame()->executeCommand("Cut");
+            m_webPage->webViewImpl()->focusedFrame()->executeCommand("Cut");
         } else if (kPasteId == itemID) {
-            m_webPage->mainFrame()->executeCommand("Paste");
+            m_webPage->webViewImpl()->focusedFrame()->executeCommand("Paste");
         }
     }
 
