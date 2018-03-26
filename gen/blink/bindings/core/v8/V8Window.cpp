@@ -7062,7 +7062,7 @@ static bool isOriginAccessibleFromDOMWindow(const SecurityOrigin* targetOrigin, 
     return accessingWindow && accessingWindow->document()->securityOrigin()->canAccessCheckSuborigins(targetOrigin);
 }
 
-static bool mycanAccessFrame(v8::Isolate* isolate, LocalDOMWindow* accessingWindow, SecurityOrigin* targetFrameOrigin, DOMWindow* targetWindow,
+static bool canAccessFrame(v8::Isolate* isolate, LocalDOMWindow* accessingWindow, SecurityOrigin* targetFrameOrigin, DOMWindow* targetWindow,
     SecurityReportingOption reportingOption = ReportSecurityError)
 {
     ASSERT_WITH_SECURITY_IMPLICATION(!(targetWindow && targetWindow->frame()) || targetWindow == targetWindow->frame()->domWindow());
@@ -7079,29 +7079,25 @@ static bool mycanAccessFrame(v8::Isolate* isolate, LocalDOMWindow* accessingWind
     return false;
 }
 
-static bool myshouldAllowAccessTo(v8::Isolate* isolate, LocalDOMWindow* accessingWindow, DOMWindow* target, SecurityReportingOption reportingOption)
+static bool shouldAllowAccessTo(v8::Isolate* isolate, LocalDOMWindow* accessingWindow, DOMWindow* target, SecurityReportingOption reportingOption)
 {
     ASSERT(target);
     const Frame* frame = target->frame();
     if (!frame || !frame->securityContext())
         return false;
 
-    bool b = mycanAccessFrame(isolate, accessingWindow, frame->securityContext()->securityOrigin(), target, reportingOption);
-
-    OutputDebugStringA("myshouldAllowAccessTo:\n");
-    String url1 = accessingWindow->document()->url().string();
-    url1.append("\n");
-    OutputDebugStringA(url1.utf8().data());
-
-    String url2 = target->document()->url().string();
-    url2.append(String::format("\n---- %d ----\n", b));
-    OutputDebugStringA(url2.utf8().data());
-
+    bool b = canAccessFrame(isolate, accessingWindow, frame->securityContext()->securityOrigin(), target, reportingOption);
     return b;
 }
 
-static bool securityCheck(v8::Local<v8::Context> accessingContext, v8::Local<v8::Object> accessedObject)
+static bool securityCheck(v8::Local<v8::Context> accessingContext, v8::Local<v8::Object> accessedObject
+#if V8_MINOR_VERSION == 7
+    , v8::Local<v8::Value> data
+#endif
+    )
 {
+    return false; // 全部放行
+
     v8::Isolate* isolate = v8::Isolate::GetCurrent();
     v8::Local<v8::Object> window = V8Window::findInstanceInPrototypeChain(accessedObject, isolate);
     if (window.IsEmpty())
@@ -7120,7 +7116,7 @@ static bool securityCheck(v8::Local<v8::Context> accessingContext, v8::Local<v8:
     if (targetFrame->loader().stateMachine()->isDisplayingInitialEmptyDocument())
         targetFrame->loader().didAccessInitialDocument();
 
-    return myshouldAllowAccessTo(isolate, toLocalDOMWindow(toDOMWindow(accessingContext)), targetWindow, DoNotReportSecurityError);
+    return shouldAllowAccessTo(isolate, toLocalDOMWindow(toDOMWindow(accessingContext)), targetWindow, DoNotReportSecurityError);
 }
 
 } // namespace DOMWindowV8Internal
@@ -8192,8 +8188,10 @@ void V8Window::installV8WindowTemplate(v8::Local<v8::FunctionTemplate> functionT
     instanceTemplate->SetInternalFieldCount(V8Window::internalFieldCount);
 
     // Cross-origin access check
-    //instanceTemplate->SetAccessCheckCallback(DOMWindowV8Internal::securityCheck, v8::External::New(isolate, const_cast<WrapperTypeInfo*>(&V8Window::wrapperTypeInfo)));
-
+#if V8_MINOR_VERSION == 7
+    instanceTemplate->SetAccessCheckCallback(DOMWindowV8Internal::securityCheck, v8::External::New(isolate, const_cast<WrapperTypeInfo*>(&V8Window::wrapperTypeInfo)));
+#endif
+    
     // Custom toString template
     functionTemplate->Set(v8AtomicString(isolate, "toString"), V8PerIsolateData::from(isolate)->toStringTemplate());
 }
