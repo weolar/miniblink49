@@ -109,7 +109,7 @@ WebInspector.Main.prototype = {
             }
         }
 
-        Object.observe(prefs, trackPrefsObject);
+        //Object.observe(prefs, trackPrefsObject);
         WebInspector.settings = new WebInspector.Settings(prefs);
 
         if (!InspectorFrontendHost.isUnderTest())
