@@ -239,9 +239,13 @@
 #include "wtf/GetPtr.h"
 #include "wtf/RefPtr.h"
 
+#if V8_MINOR_VERSION == 7
+namespace v8 {
+extern bool g_patchForCreateDataProperty;
+}
+#endif
+
 namespace blink {
-
-
 
 namespace DOMWindowPartialV8Internal {
     
@@ -256,7 +260,14 @@ static bool DOMWindowCreateDataProperty(v8::Local<v8::Name> name, v8::Local<v8::
         return false;
     }
     ASSERT(info.This()->IsObject());
-    return v8CallBoolean(v8::Local<v8::Object>::Cast(info.This())->CreateDataProperty(info.GetIsolate()->GetCurrentContext(), name, v8Value));
+#if V8_MINOR_VERSION == 7
+    v8::g_patchForCreateDataProperty = true;
+#endif
+    bool b = v8CallBoolean(v8::Local<v8::Object>::Cast(info.This())->CreateDataProperty(info.GetIsolate()->GetCurrentContext(), name, v8Value));
+#if V8_MINOR_VERSION == 7
+    v8::g_patchForCreateDataProperty = false;
+#endif
+    return b;
 }
 
 static void DOMWindowConstructorAttributeSetterCallback(v8::Local<v8::Name>, v8::Local<v8::Value> v8Value, const v8::PropertyCallbackInfo<void>& info)

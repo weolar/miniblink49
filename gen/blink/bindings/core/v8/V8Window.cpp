@@ -402,6 +402,12 @@
 #include "wtf/GetPtr.h"
 #include "wtf/RefPtr.h"
 
+#if V8_MINOR_VERSION == 7
+namespace v8 {
+extern bool g_patchForCreateDataProperty;
+}
+#endif
+
 namespace blink {
 
 // Suppress warning: global constructors, because struct WrapperTypeInfo is trivial
@@ -434,7 +440,15 @@ static bool DOMWindowCreateDataProperty(v8::Local<v8::Name> name, v8::Local<v8::
         return false;
     }
     ASSERT(info.This()->IsObject());
-    return v8CallBoolean(v8::Local<v8::Object>::Cast(info.This())->CreateDataProperty(info.GetIsolate()->GetCurrentContext(), name, v8Value));
+#if V8_MINOR_VERSION == 7
+    v8::g_patchForCreateDataProperty = true;
+#endif
+    bool b = v8CallBoolean(v8::Local<v8::Object>::Cast(info.This())->CreateDataProperty(info.GetIsolate()->GetCurrentContext(), name, v8Value));
+#if V8_MINOR_VERSION == 7
+    v8::g_patchForCreateDataProperty = false;
+#endif
+
+    return b;
 }
 
 static void DOMWindowConstructorAttributeSetterCallback(v8::Local<v8::Name>, v8::Local<v8::Value> v8Value, const v8::PropertyCallbackInfo<void>& info)
@@ -7096,7 +7110,7 @@ static bool securityCheck(v8::Local<v8::Context> accessingContext, v8::Local<v8:
 #endif
     )
 {
-    return false; // 全部放行
+    return true; // 全部放行
 
     v8::Isolate* isolate = v8::Isolate::GetCurrent();
     v8::Local<v8::Object> window = V8Window::findInstanceInPrototypeChain(accessedObject, isolate);
@@ -8189,7 +8203,7 @@ void V8Window::installV8WindowTemplate(v8::Local<v8::FunctionTemplate> functionT
 
     // Cross-origin access check
 #if V8_MINOR_VERSION == 7
-    instanceTemplate->SetAccessCheckCallback(DOMWindowV8Internal::securityCheck, v8::External::New(isolate, const_cast<WrapperTypeInfo*>(&V8Window::wrapperTypeInfo)));
+    //instanceTemplate->SetAccessCheckCallback(DOMWindowV8Internal::securityCheck, v8::External::New(isolate, const_cast<WrapperTypeInfo*>(&V8Window::wrapperTypeInfo)));
 #endif
     
     // Custom toString template
