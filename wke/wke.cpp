@@ -1401,16 +1401,6 @@ const wchar_t* wkeToStringW(const wkeString string)
     return wkeGetStringW(string);
 }
 
-const utf8* jsToString(jsExecState es, jsValue v)
-{
-    return jsToTempString(es, v);
-}
-
-const wchar_t* jsToStringW(jsExecState es, jsValue v)
-{
-    return jsToTempStringW(es, v);
-}
-
 // V1 API end
 //////////////////////////////////////////////////////////////////////////
 

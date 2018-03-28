@@ -480,6 +480,22 @@ const utf8* jsToTempString(jsExecState es, jsValue v) {
         if (0 == wkeValue->stringVal.length() || 1 == wkeValue->stringVal.length())
             return "";
         sharedStringBuffer.append(wkeValue->stringVal.data(), wkeValue->stringVal.length() - 1);
+    } else if (WkeJsValue::wkeJsValueInt == wkeValue->type) {
+            WTF::CString intVal = String::format("%d", wkeValue->intVal).utf8();
+            int len = intVal.length();
+            sharedStringBuffer.append(intVal.data(), len);
+    } else if (WkeJsValue::wkeJsValueFloat == wkeValue->type) {
+        WTF::CString floatVal = String::format("%f", wkeValue->floatVal).utf8();
+        int len = floatVal.length();
+        sharedStringBuffer.append(floatVal.data(), len);
+    } else if (WkeJsValue::wkeJsValueBool == wkeValue->type) {
+        wkeValue->boolVal ?
+            sharedStringBuffer.append("true", 4) :
+            sharedStringBuffer.append("false", 5);
+    } else if (WkeJsValue::wkeJsValueNull == wkeValue->type) {
+        sharedStringBuffer.append("null", 4);
+    } else if (WkeJsValue::wkeJsValueUndefined == wkeValue->type) {
+        sharedStringBuffer.append("undefined", 9);
     }
 
     if (0 == sharedStringBuffer.size())
@@ -492,6 +508,16 @@ const utf8* jsToTempString(jsExecState es, jsValue v) {
     memcpy(&stringBuffer->at(0), sharedStringBuffer.data(), sharedStringBuffer.size());
     stringBuffer->push_back('\0');
     return &stringBuffer->at(0);
+}
+
+const utf8* jsToString(jsExecState es, jsValue v)
+{
+    return jsToTempString(es, v);
+}
+
+const wchar_t* jsToStringW(jsExecState es, jsValue v)
+{
+    return jsToTempStringW(es, v);
 }
 
 jsValue jsInt(int n)
@@ -1635,6 +1661,12 @@ jsValue v8ValueToJsValue(v8::Local<v8::Context> context, v8::Local<v8::Value> v8
     } else if (v8Value->IsObject()) {
         //return wke::createJsValueString(context, "Object");
         return createJsValueByLocalValue(context->GetIsolate(), context, v8Value);
+    } else if (v8Value->IsInt32()) {
+        v8::Local<v8::Int32> v8Number = v8Value->ToInt32();
+        return jsInt(v8Number->Value());
+    } else if (v8Value->IsUint32()) {
+        v8::Local<v8::Uint32> v8Number = v8Value->ToUint32();
+        return jsInt(v8Number->Value());
     } else if (v8Value->IsNumber()) {
         v8::Local<v8::Number> v8Number = v8Value->ToNumber();
         return jsDouble(v8Number->Value());
