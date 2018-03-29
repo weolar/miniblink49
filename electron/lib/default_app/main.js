@@ -37,6 +37,14 @@ for (let i = 1; i < argv.length; i++) {
         continue;
     } else {
         option.file = argv[i];
+        for (let j = option.file.length - 1; j >= 0; --j) {
+            const code = option.file.charCodeAt(j);
+            if (code === 92 || code === 47 || code === 58) {
+                const path = (option.file.slice(0, j));
+                process.mainModule.paths = module.paths.concat(path);
+                break;
+            }
+        }
         break;
     }
 }
