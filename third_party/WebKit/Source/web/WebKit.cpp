@@ -163,8 +163,17 @@ static void callOnMainThreadFunction(WTF::MainThreadFunction function, void* con
     Platform::current()->mainThread()->postTask(FROM_HERE, new MainThreadTaskRunner(function, context));
 }
 
+static void mainThreadadjustAmountOfExternalAllocatedMemory(void* sizePtr)
+{
+    v8::Isolate::GetCurrent()->AdjustAmountOfExternalAllocatedMemory((int)sizePtr);
+}
+
 static void adjustAmountOfExternalAllocatedMemory(int size)
 {
+    if (!v8::Isolate::GetCurrent()) {
+        callOnMainThreadFunction(mainThreadadjustAmountOfExternalAllocatedMemory, (void*)size);
+        return;
+    }
     v8::Isolate::GetCurrent()->AdjustAmountOfExternalAllocatedMemory(size);
 }
 
