@@ -55,10 +55,10 @@ long long FileStream::getSize(const String& path, double expectedModificationTim
     time_t modificationTime;
     if (!getFileModificationTime(path, modificationTime))
         return -1;
-    if (isValidFileTime(expectedModificationTime)) {
-        if (static_cast<time_t>(expectedModificationTime) != modificationTime)
-            return -1;
-    }
+//     if (isValidFileTime(expectedModificationTime)) {
+//         if (static_cast<time_t>(expectedModificationTime) != modificationTime)
+//             return -1;
+//     }
 
     // Now get the file size.
     long long length;

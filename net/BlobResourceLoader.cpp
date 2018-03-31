@@ -36,6 +36,7 @@
 #include "net/FileStream.h"
 #include "net/MemBlobStream.h"
 #include "third_party/WebKit/Source/platform/network/HTTPParsers.h"
+#include "third_party/WebKit/Source/platform/weborigin/KURL.h"
 #include "third_party/WebKit/public/platform/WebURLLoaderClient.h"
 #include "third_party/WebKit/public/platform/WebTraceLocation.h"
 #include "third_party/WebKit/public/platform/WebURLResponse.h"
@@ -148,7 +149,7 @@ void BlobResourceSynchronousLoader::didFail(blink::WebURLLoader*, const blink::W
 BlobResourceLoader* BlobResourceLoader::createAsync(BlobDataWrap* blobData, const blink::WebURLRequest& request, blink::WebURLLoaderClient* client, blink::WebURLLoader* loader)
 {
     // FIXME: Should probably call didFail() instead of blocking the load without explanation.
-    if (!equalIgnoringCase(request.httpMethod(), "GET"))
+    if (!equalIgnoringCase((String)request.httpMethod(), "GET"))
         return nullptr;
 
     return /*adoptRef*/(new BlobResourceLoader(blobData, request, client, loader, true));
@@ -157,7 +158,7 @@ BlobResourceLoader* BlobResourceLoader::createAsync(BlobDataWrap* blobData, cons
 void BlobResourceLoader::loadResourceSynchronously(BlobDataWrap* blobData, const blink::WebURLRequest& request, blink::WebURLLoader* loader,
     blink::WebURLError& error, blink::WebURLResponse& response, Vector<char>& data)
 {
-    if (!equalIgnoringCase(request.httpMethod(), "GET")) {
+    if (!equalIgnoringCase((String)request.httpMethod(), "GET")) {
         error.domain = blink::WebString::fromUTF8(webKitBlobResourceDomain);
         error.reason = methodNotAllowed;
         error.unreachableURL = response.url();
@@ -425,6 +426,15 @@ void BlobResourceLoader::doStart()
     }
 }
 
+static String getPathBySystemURL(const blink::WebURL& fileSystemURL)
+{
+    blink::KURL url = fileSystemURL;
+    String urlString = url.getUTF8String();
+    if (urlString.startsWith("file:///"))
+        urlString.remove(0, 8);
+    return urlString;
+}
+
 void BlobResourceLoader::getSizeForNext()
 {
     ASSERT(isMainThread());
@@ -447,11 +457,13 @@ void BlobResourceLoader::getSizeForNext()
         return;
     }
 
-    const blink::WebBlobData::Item* item = m_blobData->items().at(m_sizeItemCount);
+    blink::WebBlobData::Item* item = m_blobData->items().at(m_sizeItemCount);
     switch (item->type) {
     case blink::WebBlobData::Item::TypeData:
         didGetSize(item->data.size());
         break;
+    case blink::WebBlobData::Item::TypeFileSystemURL:
+        item->filePath = getPathBySystemURL(item->fileSystemURL); // no break
     case blink::WebBlobData::Item::TypeFile:
         // Files know their sizes, but asking the stream to verify that the file wasn't modified.
         if (m_async)
@@ -484,9 +496,9 @@ void BlobResourceLoader::didGetSize(long long size)
     size = item->length;
     if (blink::WebBlobData::Item::TypeData == item->type)
         size = item->data.size();
-    else if (blink::WebBlobData::Item::TypeFile == item->type) {
+    else if (blink::WebBlobData::Item::TypeFile == item->type || blink::WebBlobData::Item::TypeFileSystemURL) {
         if (!getFileSize(item->filePath, size))
-            size = 0;
+            size = 0;        
     }
 
     // Cache the size.
@@ -553,7 +565,7 @@ int BlobResourceLoader::readSync(char* buf, int length)
         int bytesRead = 0;
         if (item->type == blink::WebBlobData::Item::TypeData)
             bytesRead = readDataSync(*item, buf + offset, remaining);
-        else if (item->type == blink::WebBlobData::Item::TypeFile)
+        else if (item->type == blink::WebBlobData::Item::TypeFile || item->type == blink::WebBlobData::Item::TypeFileSystemURL)
             bytesRead = readFileSync(*item, buf + offset, remaining);
         else
             ASSERT_NOT_REACHED();
@@ -665,7 +677,7 @@ void BlobResourceLoader::readAsync()
     const blink::WebBlobData::Item* item = m_blobData->items().at(m_readItemCount);
     if (item->type == blink::WebBlobData::Item::TypeData)
         readDataAsync(*item);
-    else if (item->type == blink::WebBlobData::Item::TypeFile)
+    else if (item->type == blink::WebBlobData::Item::TypeFile || item->type == blink::WebBlobData::Item::TypeFileSystemURL)
         readFileAsync(*item);
     else
         ASSERT_NOT_REACHED();
