@@ -394,14 +394,35 @@ void WebFrameClientImpl::didFinishLoad(WebLocalFrame* frame)
     //OutputDebugStringA("WebFrameClientImpl::didFinishLoad\n");
 }
 
-void WebFrameClientImpl::didNavigateWithinPage(WebLocalFrame*, const WebHistoryItem&, WebHistoryCommitType)
+void WebFrameClientImpl::didNavigateWithinPage(WebLocalFrame* frame, const WebHistoryItem& history, WebHistoryCommitType type)
 {
     //     cef_load_handler_t* loadHandler = m_cefBrowserHostImpl->m_browserImpl->m_loadHandler;
     //     m_cefBrowserHostImpl->m_browserImpl->ref();
     //     loadHandler->on_loading_state_change(loadHandler, &m_cefBrowserHostImpl->m_browserImpl->m_baseClass, false, false, false);
+    
+    m_webPage->didCommitProvisionalLoad(frame, history, type);
+
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
+    wke::AutoDisableFreeV8TempObejct autoDisableFreeV8TempObejct;
+    wke::CWebViewHandler& handler = m_webPage->wkeHandler();
+    String url = history.urlString();
+    wke::CString string(url);
+
+    if (m_webPage->wkeWebView() && !frame->parent())
+        m_webPage->wkeWebView()->onUrlChanged(&string);
+
+    if (handler.urlChangedCallback)
+        handler.urlChangedCallback(m_webPage->wkeWebView(), handler.urlChangedCallbackParam, &string);
+
+    if (handler.urlChangedCallback2)
+        handler.urlChangedCallback2(m_webPage->wkeWebView(), handler.urlChangedCallback2Param, frameIdToWkeFrame(m_webPage, frame), &string);
+#endif 
 }
 
-void WebFrameClientImpl::didUpdateCurrentHistoryItem(WebLocalFrame*) { }
+void WebFrameClientImpl::didUpdateCurrentHistoryItem(WebLocalFrame*)
+{
+    //OutputDebugStringA("didUpdateCurrentHistoryItem\n");
+}
 
 void WebFrameClientImpl::didChangeManifest(WebLocalFrame*) { }
 
@@ -528,7 +549,14 @@ void WebFrameClientImpl::willSendRequest(WebLocalFrame* webFrame, unsigned ident
     request.setExtraData(requestExtraData);
 
     request.addHTTPHeaderField("Accept-Language", "zh-cn,zh;q=0.5");
-// 
+//     KURL url = request.url();
+//     if (WTF::kNotFound != url.string().find("get_navigation_list")) {
+//         request.addHTTPHeaderField("Content-Length", "0");
+//         request.addHTTPHeaderField("Accept-Encoding", "gzip, deflate");
+//         request.addHTTPHeaderField("Connection", "keep-alive");
+//         request.addHTTPHeaderField("Host", "demo.dtcms.net");
+//     }
+
 //     WebViewImpl* viewImpl = m_webPage->webViewImpl();
 //     if (!viewImpl)
 //         return;
@@ -541,6 +569,7 @@ void WebFrameClientImpl::willSendRequest(WebLocalFrame* webFrame, unsigned ident
 //     headerFieldValue.append(",utf-8;q=0.7,*;q=0.3");
 //     value = headerFieldValue.latin1().data();
 //     request.addHTTPHeaderField("Accept-Charset", WebString::fromLatin1((const WebLChar*)value.data(), value.length()));
+
 
 // Set the first party for cookies url if it has not been set yet (new
 // requests). For redirects, it is updated by WebURLLoaderImpl.

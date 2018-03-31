@@ -43,7 +43,7 @@ void NavigationController::navigate(int offset)
 #ifdef DEBUG
     String url = item->urlString();
 #endif // DEBUG    
-    m_page->loadHistoryItem(WebPage::kMainFrameId, *item, blink::WebHistoryDifferentDocumentLoad, blink::WebURLRequest::UseProtocolCachePolicy);
+    m_page->loadHistoryItem(WebPage::kMainFrameId, *item, blink::WebHistorySameDocumentLoad, blink::WebURLRequest::UseProtocolCachePolicy);
 }
 
 void NavigationController::navigateBackForwardSoon(int offset)
@@ -74,6 +74,7 @@ void NavigationController::insertOrReplaceEntry(const blink::WebHistoryItem& ite
     historyItem->setPageScaleFactor(item.pageScaleFactor());
     historyItem->setItemSequenceNumber(item.itemSequenceNumber());
     historyItem->setDocumentSequenceNumber(item.documentSequenceNumber());
+    historyItem->setPinchViewportScrollOffset(item.pinchViewportScrollOffset());
     historyItem->setHTTPContentType(item.httpContentType());
     historyItem->setHTTPBody(item.httpBody());
 
@@ -103,7 +104,12 @@ void NavigationController::insertOrReplaceEntry(const blink::WebHistoryItem& ite
     }
     case blink::WebInitialCommitInChildFrame:
         break;
-    case blink::WebHistoryInertCommit:
+    case blink::WebHistoryInertCommit: // reload£¬»òreplaceState
+        if (0 != m_items.size()) {
+            delete m_items[m_items.size() - 1];
+            m_items.removeLast();
+        }
+        m_items.append(historyItem);
         break;
     default:
         break;
