@@ -10105,6 +10105,9 @@
     <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8Crypto.cpp">
       <Filter>gen\blink\bindings\modules\v8</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\content\web_impl_win\WebCryptoImpl.cpp">
+      <Filter>content\web_impl_win</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\public\platform\modules\app_banner\WebAppBannerClient.h">
@@ -23010,9 +23013,6 @@
     <ClInclude Include="..\..\content\ui\ClipboardUtil.h">
       <Filter>content\ui</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\content\ui\COMPtr.h">
-      <Filter>content\ui</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\content\ui\ContextMeun.h">
       <Filter>content\ui</Filter>
     </ClInclude>
@@ -23030,6 +23030,12 @@
     </ClInclude>
     <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8Crypto.h">
       <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\content\ui\COMPtr.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\content\web_impl_win\WebCryptoImpl.h">
+      <Filter>content\web_impl_win</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
