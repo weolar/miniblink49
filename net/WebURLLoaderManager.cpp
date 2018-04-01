@@ -852,6 +852,18 @@ private:
     bool m_start;
 };
 
+const int kBlackListCancelJobId = -2;
+
+static void releaseJobWithoutCurl(WebURLLoaderInternal* job, int jobId)
+{
+    if (kBlackListCancelJobId == jobId)
+        return;
+    RELEASE_ASSERT(job->m_ref == 0);
+    job->m_handle = nullptr;
+    WebURLLoaderManager::sharedInstance()->removeLiveJobs(jobId);
+    delete job;
+}
+
 class WkeAsynTask : public WebThread::Task {
 public:
     WkeAsynTask(WebURLLoaderManager* manager, int jobId)
@@ -867,11 +879,13 @@ public:
     virtual void run() override
     {
         WebURLLoaderInternal* job = m_manager->checkJob(m_jobId);
-        if (!job || job->m_cancelled)
+        if (!job || job->m_cancelled) {
+            releaseJobWithoutCurl(job, m_jobId);
             return;
-
+        }
         KURL url = job->firstRequest()->url();
         job->m_response.setURL(url);
+
         if (job->m_response.mimeType().isNull() || job->m_response.mimeType().isEmpty()) {
             String urlString = url.getUTF8String();
             int urlHostLength = urlString.length();
@@ -890,6 +904,7 @@ public:
             WebURLLoaderManager::sharedInstance()->didReceiveDataOrDownload(job, static_cast<char*>(job->m_asynWkeNetSetData), job->m_asynWkeNetSetDataLength, 0);
             WebURLLoaderManager::sharedInstance()->handleDidFinishLoading(job, WTF::currentTime(), 0);
         }
+        releaseJobWithoutCurl(job, m_jobId);
     }
 
 private:
@@ -911,7 +926,7 @@ public:
     {
     }
 
-    static void cancel(WebURLLoaderInternal* job)
+    static void cancel(WebURLLoaderInternal* job, int jobId)
     {
         job->m_isBlackList = true;
         job->m_response.setURL(job->firstRequest()->url());
@@ -926,6 +941,7 @@ public:
             WebURLLoaderManager::sharedInstance()->handleDidFail(job, error);
             RELEASE_ASSERT(job->m_cancelled);
         }
+        releaseJobWithoutCurl(job, jobId);
     }
 
     virtual void run() override
@@ -934,7 +950,7 @@ public:
         if (!job || job->m_cancelled)
             return;
 
-        cancel(job);
+        cancel(job, m_jobId);
     }
 
 private:
@@ -1245,12 +1261,11 @@ static bool dispatchWkeLoadUrlBegin(WebURLLoaderInternal* job)
         return false;
 
     Vector<char> urlBuf = WTF::ensureStringToUTF8(job->firstRequest()->url().string(), true);
-    if (!page->wkeHandler().loadUrlBeginCallback(page->wkeWebView(),
+    bool b = page->wkeHandler().loadUrlBeginCallback(page->wkeWebView(),
         page->wkeHandler().loadUrlBeginCallbackParam,
-        urlBuf.data(), job))
-        return false;
+        urlBuf.data(), job);
 
-    return true;
+    return job->m_isWkeNetSetDataBeSetted || b;
 }
 #endif
 
@@ -1376,7 +1391,8 @@ WebURLLoaderManager::InitializeHandleInfo* WebURLLoaderManager::preInitializeHan
     info->method = job->firstRequest()->httpMethod().utf8();
 
     String contentType = job->firstRequest()->httpHeaderField("Content-Type");
-    if (WTF::kNotFound == url.host().find("apple.com") // 苹果开发者网，非要去掉0长度的Content-Type字段
+    if (WTF::kNotFound == url.host().find("apple.com") && // 苹果开发者网，非要去掉0长度的Content-Type字段
+        WTF::kNotFound == url.host().find("dtcms.net")
         && contentType.isNull()
         && "POST" == info->method
         && job->firstRequest()->httpBody().isNull())
@@ -1508,6 +1524,7 @@ void WebURLLoaderManager::initializeHandleOnIoThread(int jobId, InitializeHandle
     if (info->headers) {
         curl_easy_setopt(job->m_handle, CURLOPT_HTTPHEADER, info->headers);
         job->m_customHeaders = info->headers;
+        RELEASE_ASSERT(!job->m_asynWkeNetSetData);
     }
 
     // curl_easy_setopt(job->m_handle, CURLOPT_USERPWD, ":");
@@ -1540,7 +1557,7 @@ void WebURLLoaderManager::timeoutOnMainThread(int jobId)
     OutputDebugStringA(kUrl.string().utf8().data());
     OutputDebugStringW(L"\n");
 
-    BlackListCancelTask::cancel(job);
+    BlackListCancelTask::cancel(job, kBlackListCancelJobId);
     cancel(jobId);
 }
 
@@ -1649,6 +1666,17 @@ WebURLLoaderInternal::~WebURLLoaderInternal()
     delete m_firstRequest;
 
     fastFree(m_url);
+
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
+    if (m_hookBuf)
+        free(m_hookBuf);
+
+    if (m_asynWkeNetSetData) {
+        RELEASE_ASSERT(!m_customHeaders);
+        free(m_asynWkeNetSetData);
+    }
+#endif
+
     if (m_customHeaders)
         curl_slist_free_all(m_customHeaders);
 
@@ -1659,13 +1687,6 @@ WebURLLoaderInternal::~WebURLLoaderInternal()
 
     if (m_formDataStream)
         delete m_formDataStream;
-
-#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
-    if (m_hookBuf)
-        free(m_hookBuf);
-    if (m_asynWkeNetSetData)
-        free(m_asynWkeNetSetData);
-#endif
 
 #ifndef NDEBUG
     webURLLoaderInternalCounter.decrement();

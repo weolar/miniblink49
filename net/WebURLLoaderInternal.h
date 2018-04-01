@@ -81,6 +81,8 @@ public:
     int m_id;
     bool m_isSynchronous;
 
+    blink::WebURLRequest* m_firstRequest;
+
     WebURLLoaderClient* client() { return m_client; }
     WebURLLoaderClient* m_client;
 
@@ -132,7 +134,6 @@ public:
     bool m_responseFired;
 
     WebURLLoaderImplCurl* m_loader;
-    blink::WebURLRequest* m_firstRequest;
     WebURLLoaderManager* m_manager;
 
     WTF::Mutex m_destroingMutex;

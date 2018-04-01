@@ -158,14 +158,14 @@ bool parseDataURL(const blink::KURL& kurl, String& mimeType, String& charset, Ve
 
     int64_t totalEncodedDataLength = 0;
     if (base64) {
-        data = blink::decodeURLEscapeSequences(data);
+        data = WTF::ensureStringToUTF8String(blink::decodeURLEscapeSequences(data));
         if (!(WTF::base64Decode(data, out, WTF::isSpaceOrNewline) && out.size() > 0))
             return false;
         
         totalEncodedDataLength = out.size();
     } else {
         WTF::TextEncoding encoding(charset);
-        data = blink::decodeURLEscapeSequences(data, encoding);
+        data = WTF::ensureStringToUTF8String(blink::decodeURLEscapeSequences(data, encoding));
 
         WTF::CString encodedData = encoding.encode(data, WTF::URLEncodedEntitiesForUnencodables);
         if (0 == encodedData.length())
