@@ -83,7 +83,7 @@ static String scriptStringIfJavaScriptURL(const KURL& url)
         return String();
 
     // This returns an unescaped string
-    return decodeURLEscapeSequences(url.string().substring(11));
+    return WTF::ensureStringToUTF8String(decodeURLEscapeSequences(url.string().substring(11)));
 }
 
 static void buildResourceRequest(FrameLoadRequest* frameLoadRequest, blink::LocalFrame* parentFrame, const KURL& url, const char* target)

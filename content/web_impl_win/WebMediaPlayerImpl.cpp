@@ -19,12 +19,16 @@
 #include "third_party/WebKit/public/web/WebSecurityOrigin.h"
 #include "third_party/WebKit/public/web/WebView.h"
 #include "v8.h"
+#include "wke/wke.h"
 
 using blink::WebCanvas;
 using blink::WebMediaPlayer;
 using blink::WebRect;
 using blink::WebSize;
 using blink::WebString;
+
+extern wkeWillMediaLoadCallback g_wkeWillMediaLoadCallback;
+extern void* g_wkeWillMediaLoadCallbackCallbackParam;
 
 namespace content {
 
@@ -33,6 +37,9 @@ WebMediaPlayerImpl::WebMediaPlayerImpl(
     const blink::WebURL& url,
     blink::WebMediaPlayerClient* client)
 {
+    m_width = 50;
+    m_height = 50;
+    m_duration = 1.0;
 
     m_paused = false;
     m_seeking = false;
@@ -47,9 +54,19 @@ WebMediaPlayerImpl::~WebMediaPlayerImpl()
   
 }
 
-void WebMediaPlayerImpl::load(blink::WebMediaPlayer::LoadType, const blink::WebURL&, blink::WebMediaPlayer::CORSMode)
+void WebMediaPlayerImpl::load(blink::WebMediaPlayer::LoadType, const blink::WebURL& url, blink::WebMediaPlayer::CORSMode)
 {
     ASSERT(isMainThread());
+
+    if (g_wkeWillMediaLoadCallback) {
+        wkeMediaLoadInfo info = { 0 };
+        blink::KURL url(url);
+        g_wkeWillMediaLoadCallback(nullptr, g_wkeWillMediaLoadCallbackCallbackParam, url.getUTF8String().utf8().data(), &info);
+        m_width = info.width;
+        m_height = info.height;
+        m_duration = info.duration;
+    }
+
     for (int i = 0; i <= blink::WebMediaPlayer::ReadyStateHaveEnoughData; ++i) {
         blink::Platform::current()->mainThread()->postTask(FROM_HERE, WTF::bind(&WebMediaPlayerImpl::onLoad, this, (blink::WebMediaPlayer::ReadyState)i));
     }
@@ -124,22 +141,25 @@ bool WebMediaPlayerImpl::isRemote() const { return false; }
 WebSize WebMediaPlayerImpl::naturalSize() const
 {
     if (m_hasVideo)
-        return WebSize(50, 50);
-    return WebSize(0, 0);
+        return WebSize(m_width, m_height);
+    return WebSize(m_width, m_height);
 }
 
 bool WebMediaPlayerImpl::paused() const
 {
     return m_paused;
 }
+
 bool WebMediaPlayerImpl::seeking() const
 {
     return m_seeking;
 }
+
 double WebMediaPlayerImpl::duration() const
 {
-    return 1.0;
+    return m_duration;
 }
+
 double WebMediaPlayerImpl::currentTime() const 
 {
     return 1.0;

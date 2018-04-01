@@ -128,6 +128,10 @@ private:
     bool m_hasAudio;
     blink::WebMediaPlayerClient* m_client;
 
+    int m_width;
+    int m_height;
+    double m_duration;
+
     blink::WebMediaPlayer::ReadyState m_readyState;
 };
 
