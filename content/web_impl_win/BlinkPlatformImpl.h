@@ -22,6 +22,7 @@ class WebMimeRegistryImpl;
 class WebClipboardImpl;
 class WebFileUtilitiesImpl;
 class WebBlobRegistryImpl;
+class WebCryptoImpl;
 
 class BlinkPlatformImpl : NON_EXPORTED_BASE(public blink::Platform) {
 public:
@@ -110,6 +111,10 @@ public:
     // fileUtilities -------------------------------------------------------
     virtual blink::WebFileUtilities* fileUtilities() override;
 
+    // WebCrypto ----------------------------------------------------------
+
+    virtual blink::WebCrypto* crypto() override;
+
     //////////////////////////////////////////////////////////////////////////
     virtual void registerMemoryDumpProvider(blink::WebMemoryDumpProvider*) override;
     virtual void unregisterMemoryDumpProvider(blink::WebMemoryDumpProvider*) override;
@@ -141,6 +146,7 @@ private:
     WebClipboardImpl* m_clipboardImpl;
     WebBlobRegistryImpl* m_blobRegistryImpl;
     WebFileUtilitiesImpl* m_webFileUtilitiesImpl;
+    WebCryptoImpl* m_webCryptoImpl;
     cc_blink::WebCompositorSupportImpl* m_webCompositorSupport;
     blink::WebScrollbarBehavior* m_webScrollbarBehavior;
     DOMStorageMapWrap* m_localStorageStorageMap;

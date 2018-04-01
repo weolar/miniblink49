@@ -236,6 +236,9 @@ void WebMimeRegistryImpl::ensureMimeTypeMap()
     m_mimetypeMap->add("wml", "text/vnd.wap.wml");
     m_mimetypeMap->add("wmlc", "application/vnd.wap.wmlc");
     m_mimetypeMap->add("swf", "application/x-shockwave-flash");
+    m_mimetypeMap->add("mp4", "video/mp4");
+    m_mimetypeMap->add("ogg", "video/ogg");
+    m_mimetypeMap->add("webm", "video/webm");
 }
 
 blink::WebString WebMimeRegistryImpl::mimeTypeForExtension(const blink::WebString& ext)
@@ -252,12 +255,12 @@ blink::WebString WebMimeRegistryImpl::mimeTypeForExtension(const blink::WebStrin
     return result;
 }
 
-blink::WebString WebMimeRegistryImpl::wellKnownMimeTypeForExtension(const blink::WebString&)
+blink::WebString WebMimeRegistryImpl::wellKnownMimeTypeForExtension(const blink::WebString& ext)
 {
-    return blink::WebString();
+    return mimeTypeForExtension(ext);
 }
 
-blink::WebString WebMimeRegistryImpl::mimeTypeFromFile(const blink::WebString&)
+blink::WebString WebMimeRegistryImpl::mimeTypeFromFile(const blink::WebString& ext)
 {
     return blink::WebString();
 }

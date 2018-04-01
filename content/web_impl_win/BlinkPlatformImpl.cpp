@@ -11,6 +11,7 @@
 #include "content/web_impl_win/WebBlobRegistryImpl.h"
 #include "content/web_impl_win/WebClipboardImpl.h"
 #include "content/web_impl_win/WebFileUtilitiesImpl.h"
+#include "content/web_impl_win/WebCryptoImpl.h"
 #include "content/web_impl_win/WaitableEvent.h"
 #include "content/web_impl_win/npapi/WebPluginImpl.h"
 #include "content/web_impl_win/npapi/PluginDatabase.h"
@@ -190,6 +191,7 @@ BlinkPlatformImpl::BlinkPlatformImpl()
     m_sessionStorageStorageMap = nullptr;
     m_webFileUtilitiesImpl = nullptr;
     m_blobRegistryImpl = nullptr;
+    m_webCryptoImpl = nullptr;
     m_userAgent = nullptr;
     m_storageNamespaceIdCount = 1;
     m_lock = new CRITICAL_SECTION();
@@ -608,7 +610,7 @@ blink::WebData BlinkPlatformImpl::loadResource(const char* name)
     else if (0 == strcmp("DebuggerScriptSource.js", name)) {
 //         std::vector<char> buffer;
 //         readJsFile(L"E:\\mycode\\miniblink49\\trunk\\third_party\\WebKit\\Source\\core\\inspector\\DebuggerScript.js", &buffer);
-//         return blink::WebData(buffer.data(), buffer.size());
+//         return blink::WebData(&buffer[0], buffer.size());
         return blink::WebData((const char*)content::DebuggerScriptSourceJs, sizeof(content::DebuggerScriptSourceJs));
     } else if (0 == strcmp("InjectedScriptSource.js", name))
         return blink::WebData((const char*)content::InjectedScriptSourceJs, sizeof(content::InjectedScriptSourceJs));
@@ -716,6 +718,13 @@ blink::WebString BlinkPlatformImpl::queryLocalizedString(blink::WebLocalizedStri
 blink::WebString BlinkPlatformImpl::queryLocalizedString(blink::WebLocalizedString::Name, const blink::WebString& parameter1, const blink::WebString& parameter2)
 {
     return blink::WebString();
+}
+
+blink::WebCrypto* BlinkPlatformImpl::crypto() {
+    
+    if (!m_webCryptoImpl)
+        m_webCryptoImpl = new WebCryptoImpl();
+    return m_webCryptoImpl;
 }
 
 // Blob ----------------------------------------------------------------
