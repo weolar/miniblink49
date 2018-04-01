@@ -831,6 +831,14 @@ void wkeOnWillReleaseScriptContext(wkeWebView webView, wkeWillReleaseScriptConte
     webView->onWillReleaseScriptContext(callback, callbackParam);
 }
 
+wkeWillMediaLoadCallback g_wkeWillMediaLoadCallback = nullptr;
+void* g_wkeWillMediaLoadCallbackCallbackParam = nullptr;
+void wkeOnWillMediaLoad(wkeWebView webView, wkeWillMediaLoadCallback callback, void* callbackParam)
+{
+    g_wkeWillMediaLoadCallback = callback;
+    g_wkeWillMediaLoadCallbackCallbackParam = callbackParam;
+}
+
 bool wkeIsMainFrame(wkeWebView webView, wkeWebFrameHandle frameId)
 {
     content::WebPage* page = webView->webPage();

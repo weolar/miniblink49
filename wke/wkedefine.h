@@ -304,6 +304,14 @@ typedef wkeWebView(*wkeCreateViewCallback)(wkeWebView webView, void* param, wkeN
 typedef void(*wkeDocumentReadyCallback)(wkeWebView webView, void* param);
 typedef void(*wkeDocumentReady2Callback)(wkeWebView webView, void* param, wkeWebFrameHandle frameId);
 
+struct wkeMediaLoadInfo {
+    int size;
+    int width;
+    int height;
+    double duration;
+};
+typedef void(*wkeWillMediaLoadCallback)(wkeWebView webView, void* param, const char* url, wkeMediaLoadInfo* info);
+
 typedef enum {
     WKE_LOADING_SUCCEEDED,
     WKE_LOADING_FAILED,
@@ -809,6 +817,7 @@ public:
     ITERATOR3(void, wkeOnWindowClosing, wkeWebView webWindow, wkeWindowClosingCallback callback, void* param, "") \
     ITERATOR3(void, wkeOnWindowDestroy, wkeWebView webWindow, wkeWindowDestroyCallback callback, void* param, "") \
     ITERATOR3(void, wkeOnDraggableRegionsChanged, wkeWebView webWindow, wkeDraggableRegionsChangedCallback callback, void* param, "") \
+    ITERATOR3(void, wkeOnWillMediaLoad, wkeWebView webWindow, wkeWillMediaLoadCallback callback, void* param, "") \
     \
     ITERATOR2(void, wkeNetSetMIMEType, void* job, char *type, "") \
     ITERATOR4(void, wkeNetSetHTTPHeaderField, void* job, wchar_t* key, wchar_t* value, bool response, "") \
