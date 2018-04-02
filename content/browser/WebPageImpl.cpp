@@ -1553,6 +1553,7 @@ bool WebPageImpl::initSetting()
     settings->setDefaultFixedFontSize(16);
     settings->setLoadsImagesAutomatically(true);
     settings->setPluginsEnabled(true);
+    settings->setJavaScriptCanOpenWindowsAutomatically(true);
 
     PluginDatabase::installedPlugins()->refresh();
 
