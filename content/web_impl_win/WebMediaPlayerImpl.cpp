@@ -51,7 +51,9 @@ WebMediaPlayerImpl::WebMediaPlayerImpl(
 
 WebMediaPlayerImpl::~WebMediaPlayerImpl()
 {
-  
+    for (size_t i = 0; i < m_asynLoadCancelNotifers.size(); ++i) {
+        *(m_asynLoadCancelNotifers[i]) = true;
+    }
 }
 
 void WebMediaPlayerImpl::load(blink::WebMediaPlayer::LoadType, const blink::WebURL& url, blink::WebMediaPlayer::CORSMode)
@@ -68,12 +70,26 @@ void WebMediaPlayerImpl::load(blink::WebMediaPlayer::LoadType, const blink::WebU
     }
 
     for (int i = 0; i <= blink::WebMediaPlayer::ReadyStateHaveEnoughData; ++i) {
-        blink::Platform::current()->mainThread()->postTask(FROM_HERE, WTF::bind(&WebMediaPlayerImpl::onLoad, this, (blink::WebMediaPlayer::ReadyState)i));
+        bool* cancelNotifer = new bool();
+        *cancelNotifer = false;
+        m_asynLoadCancelNotifers.append(cancelNotifer);
+
+        blink::Platform::current()->mainThread()->postTask(FROM_HERE, 
+            WTF::bind(&WebMediaPlayerImpl::onLoad, this, (blink::WebMediaPlayer::ReadyState)i, cancelNotifer));
     }
 }
 
-void WebMediaPlayerImpl::onLoad(blink::WebMediaPlayer::ReadyState readyState)
+void WebMediaPlayerImpl::onLoad(blink::WebMediaPlayer::ReadyState readyState, bool* cancelNotifer)
 {
+    if (*cancelNotifer) {
+        delete cancelNotifer;
+        return;
+    }
+
+    size_t notiferPos = m_asynLoadCancelNotifers.find(cancelNotifer);
+    delete cancelNotifer;
+    m_asynLoadCancelNotifers.remove(notiferPos);
+
     m_readyState = readyState;
     m_client->readyStateChanged();
 }

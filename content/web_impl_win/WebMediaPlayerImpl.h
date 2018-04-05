@@ -119,7 +119,7 @@ public:
     // |selectedTrackId| is null if no track is selected.
     virtual void selectedVideoTrackChanged(blink::WebMediaPlayer::TrackId* selectedTrackId) override;
 
-    void onLoad(blink::WebMediaPlayer::ReadyState readyState);
+    void onLoad(blink::WebMediaPlayer::ReadyState readyState, bool* cancelNotifer);
 
 private:
     bool m_paused;
@@ -133,6 +133,8 @@ private:
     double m_duration;
 
     blink::WebMediaPlayer::ReadyState m_readyState;
+
+    Vector<bool*> m_asynLoadCancelNotifers;
 };
 
 }  // namespace content
