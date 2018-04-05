@@ -319,7 +319,7 @@ ipcMain.on('ELECTRON_BROWSER_MEMBER_CALL', function (event, id, method, args) {
     let obj = objectsRegistry.get(id);
     callFunction(event, obj[method], obj, args);
   } catch (error) {
-  	console.log("ELECTRON_BROWSER_MEMBER_CALL error:" + error);
+    console.log("ELECTRON_BROWSER_MEMBER_CALL error:" + method + "," + error);
     event.returnValue = exceptionToMeta(error)
   }
 })

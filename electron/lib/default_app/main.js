@@ -41,7 +41,10 @@ for (let i = 1; i < argv.length; i++) {
             const code = option.file.charCodeAt(j);
             if (code === 92 || code === 47 || code === 58) {
                 const path = (option.file.slice(0, j));
-                process.mainModule.paths = module.paths.concat(path);
+                process.mainModule.paths = process.mainModule.paths.concat(Module._nodeModulePaths(path));
+                process.mainModule.paths = process.mainModule.paths.concat(path);
+                process.mainModule.filename = option.file;
+                //console.log("default_app/main.js:" + path);
                 break;
             }
         }
@@ -99,7 +102,6 @@ function loadApplicationPackage(packagePath) {
         }
 
         try {
-            console.log("packagePath.packagePath:" + "file:///" + packagePath);;
             Module._resolveFilename(packagePath, module, true);
         } catch (e) {
             showErrorMessage(`Unable to find Electron app at ${packagePath}\n\n${e.message}`);
