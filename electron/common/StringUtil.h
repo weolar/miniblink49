@@ -13,20 +13,24 @@ public:
     static std::wstring UTF8ToUTF16(const std::string& utf8) {
         std::wstring utf16;
         size_t n = ::MultiByteToWideChar(CP_UTF8, 0, utf8.c_str(), utf8.size(), nullptr, 0);
+        if (0 == n || 1 == n)
+            return std::wstring();
         std::vector<wchar_t> wbuf(n);
         MultiByteToWideChar(CP_UTF8, 0, utf8.c_str(), utf8.size(), &wbuf[0], n);
-        utf16.resize(n);
-        utf16.assign(&wbuf[0], n);
+        utf16.resize(n - 1);
+        utf16.assign(&wbuf[0], n - 1);
         return utf16;
     }
 
     static std::string UTF16ToUTF8(const std::wstring& utf16) {
         std::string utf8;
         size_t n = ::WideCharToMultiByte(CP_UTF8, 0, utf16.c_str(), -1, NULL, 0, NULL, NULL);
+        if (0 == n || 1 == n)
+            return std::string();
         std::vector<char> buf(n + 1);
         ::WideCharToMultiByte(CP_UTF8, 0, utf16.c_str(), -1, &buf[0], n, NULL, NULL);
-        utf8.resize(n);
-        utf8.assign(&buf[0], n);
+        utf8.resize(n - 1);
+        utf8.assign(&buf[0], n - 1);
         return utf8;
     }
 

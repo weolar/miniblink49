@@ -10,6 +10,7 @@
 #include <string.h>
 #include <Windows.h>
 #include <process.h>
+#include <objbase.h>
 
 namespace atom {
 
@@ -98,6 +99,8 @@ static void workerRun(NodeArgc* nodeArgc) {
     int err = uv_loop_init(nodeArgc->childLoop);
     if (err != 0)
         goto loop_init_failed;
+
+    ::CoInitialize(NULL);
 
     // Interruption signal handler
     err = uv_async_init(nodeArgc->childLoop, &nodeArgc->async, childSignalCallback);
