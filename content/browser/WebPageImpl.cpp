@@ -920,7 +920,7 @@ void WebPageImpl::paintToMemoryCanvasInUiThread(SkCanvas* canvas, const IntRect&
     drawToScreen = !!m_browser;
 #endif
     //if (drawToScreen) { // 使用wke接口不由此上屏
-    if (hWnd && !blink::RuntimeEnabledFeatures::updataInOtherThreadEnabled()) {
+    if (hWnd && (!blink::RuntimeEnabledFeatures::updataInOtherThreadEnabled() || m_devToolsClient)) {
         HDC hdc = ::GetDC(hWnd);
         if (m_layerTreeHost->getHasTransparentBackground()) {
             RECT rtWnd;
