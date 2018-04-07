@@ -2006,7 +2006,7 @@ namespace node {
     v8::String::Utf8Value messageScriptNameUtf8(messageScriptName);
 
     char* error_mesage_buf = new char[1000];
-    sprintf(error_mesage_buf, "node.cc, FatalException:%d %s, %s\n", message->GetLineNumber(), *error_mesage_utf8, *messageScriptNameUtf8);
+    snprintf(error_mesage_buf, 999, "node.cc, FatalException:%d %s, %s\n", message->GetLineNumber(), *error_mesage_utf8, *messageScriptNameUtf8);
     OutputDebugStringA(error_mesage_buf);
 
     v8::Local<v8::StackTrace> stackTrace = message->GetStackTrace();
@@ -2017,7 +2017,7 @@ namespace node {
 
             Local<String> scriptName = stackFrame->GetScriptNameOrSourceURL();
             v8::String::Utf8Value scriptNameUtf8(scriptName);
-            sprintf(error_mesage_buf, "node.cc, FatalExceptionStackTrace:%d, %s\n", stackFrame->GetLineNumber(), *scriptNameUtf8);
+            snprintf(error_mesage_buf, 999, "node.cc, FatalExceptionStackTrace:%d, %s\n", stackFrame->GetLineNumber(), *scriptNameUtf8);
             OutputDebugStringA(error_mesage_buf);
         }
     }
