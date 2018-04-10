@@ -13,6 +13,11 @@
 
 namespace content {
 
+class HistoryEntry : public blink::WebHistoryItem {
+public:
+    bool m_isSameDocument;
+};
+
 NavigationController::NavigationController(WebPageImpl* page)
 {
     m_currentOffset = -1;
@@ -39,11 +44,13 @@ void NavigationController::navigate(int offset)
     int pos = m_currentOffset + offset;
     if (pos < 0 || pos > (int)(m_items.size() - 1))
         return;
-    blink::WebHistoryItem* item = m_items[pos];
+    HistoryEntry* item = m_items[pos];
 #ifdef DEBUG
     String url = item->urlString();
-#endif // DEBUG    
-    m_page->loadHistoryItem(WebPage::kMainFrameId, *item, blink::WebHistorySameDocumentLoad, blink::WebURLRequest::UseProtocolCachePolicy);
+#endif // DEBUG
+    blink::WebHistoryLoadType type = (item->m_isSameDocument ?
+        blink::WebHistorySameDocumentLoad : blink::WebHistoryDifferentDocumentLoad);
+    m_page->loadHistoryItem(WebPage::kMainFrameId, *item, type, blink::WebURLRequest::UseProtocolCachePolicy);
 }
 
 void NavigationController::navigateBackForwardSoon(int offset)
@@ -60,9 +67,9 @@ int NavigationController::findEntry(const blink::WebHistoryItem& item) const
     return -1;
 }
 
-void NavigationController::insertOrReplaceEntry(const blink::WebHistoryItem& item, blink::WebHistoryCommitType type)
+void NavigationController::insertOrReplaceEntry(const blink::WebHistoryItem& item, blink::WebHistoryCommitType type, bool isSameDocument)
 {
-    blink::WebHistoryItem* historyItem = new blink::WebHistoryItem();
+    HistoryEntry* historyItem = new HistoryEntry();
     historyItem->initialize();
     historyItem->setURLString(item.urlString());
     historyItem->setReferrer(item.referrer(), item.referrerPolicy());
@@ -77,6 +84,7 @@ void NavigationController::insertOrReplaceEntry(const blink::WebHistoryItem& ite
     historyItem->setPinchViewportScrollOffset(item.pinchViewportScrollOffset());
     historyItem->setHTTPContentType(item.httpContentType());
     historyItem->setHTTPBody(item.httpBody());
+    historyItem->m_isSameDocument = isSameDocument;
 
     //     |  
     switch (type) {

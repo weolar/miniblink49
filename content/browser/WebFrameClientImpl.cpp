@@ -204,6 +204,17 @@ void WebFrameClientImpl::onLoadingStateChange(bool isLoading, bool toDifferentDo
 void WebFrameClientImpl::didStartLoading(bool toDifferentDocument)
 {
     onLoadingStateChange(true, toDifferentDocument);
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
+    wke::AutoDisableFreeV8TempObejct autoDisableFreeV8TempObejct;
+    wke::CWebViewHandler& handler = m_webPage->wkeHandler();
+    if (handler.otherLoadCallback) {
+        wkeTempCallbackInfo* tempInfo = wkeGetTempCallbackInfo(m_webPage->wkeWebView());
+        tempInfo->size = sizeof(wkeTempCallbackInfo);
+        tempInfo->frame = nullptr;
+        handler.otherLoadCallback(m_webPage->wkeWebView(), handler.otherLoadCallbackParam,
+            WKE_DID_START_LOADING, tempInfo);
+    }
+#endif
 }
 
 void WebFrameClientImpl::didStopLoading()
@@ -267,7 +278,7 @@ static wkeWebFrameHandle frameIdToWkeFrame(WebPage* webPage, WebLocalFrame* fram
 
 void WebFrameClientImpl::didCommitProvisionalLoad(WebLocalFrame* frame, const WebHistoryItem& history, WebHistoryCommitType type)
 {
-    m_webPage->didCommitProvisionalLoad(frame, history, type);
+    m_webPage->didCommitProvisionalLoad(frame, history, type, true);
 
 #if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
     CefBrowserHostImpl* browser = m_webPage->browser();
@@ -289,6 +300,14 @@ void WebFrameClientImpl::didCommitProvisionalLoad(WebLocalFrame* frame, const We
 
     if (handler.urlChangedCallback2)
         handler.urlChangedCallback2(m_webPage->wkeWebView(), handler.urlChangedCallback2Param, frameIdToWkeFrame(m_webPage, frame), &string);
+
+    if (handler.otherLoadCallback) {
+        wkeTempCallbackInfo* tempInfo = wkeGetTempCallbackInfo(m_webPage->wkeWebView());
+        tempInfo->size = sizeof(wkeTempCallbackInfo);
+        tempInfo->frame = frameIdToWkeFrame(m_webPage, frame);
+        handler.otherLoadCallback(m_webPage->wkeWebView(), handler.otherLoadCallbackParam,
+            WKE_DID_NAVIGATE, tempInfo);
+    }
 #endif    
 }
 
@@ -385,8 +404,12 @@ void WebFrameClientImpl::didFinishLoad(WebLocalFrame* frame)
     wke::CWebViewHandler& handler = m_webPage->wkeHandler();
     if (handler.loadingFinishCallback) {
         wkeLoadingResult result = WKE_LOADING_SUCCEEDED;
-        blink::WebFrame* frame = m_webPage->mainFrame();
+        //blink::WebFrame* webFrame = m_webPage->mainFrame();
         wke::CString url(frame->document().url().string());
+
+        wkeTempCallbackInfo* tempInfo = wkeGetTempCallbackInfo(m_webPage->wkeWebView());
+        tempInfo->size = sizeof(wkeTempCallbackInfo);
+        tempInfo->frame = frameIdToWkeFrame(m_webPage, frame);
         handler.loadingFinishCallback(m_webPage->wkeWebView(), handler.loadingFinishCallbackParam, &url, result, NULL);
     }
 #endif
@@ -400,7 +423,7 @@ void WebFrameClientImpl::didNavigateWithinPage(WebLocalFrame* frame, const WebHi
     //     m_cefBrowserHostImpl->m_browserImpl->ref();
     //     loadHandler->on_loading_state_change(loadHandler, &m_cefBrowserHostImpl->m_browserImpl->m_baseClass, false, false, false);
     
-    m_webPage->didCommitProvisionalLoad(frame, history, type);
+    m_webPage->didCommitProvisionalLoad(frame, history, type, false);
 
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
     wke::AutoDisableFreeV8TempObejct autoDisableFreeV8TempObejct;
@@ -416,6 +439,14 @@ void WebFrameClientImpl::didNavigateWithinPage(WebLocalFrame* frame, const WebHi
 
     if (handler.urlChangedCallback2)
         handler.urlChangedCallback2(m_webPage->wkeWebView(), handler.urlChangedCallback2Param, frameIdToWkeFrame(m_webPage, frame), &string);
+
+    if (handler.otherLoadCallback) {
+        wkeTempCallbackInfo* tempInfo = wkeGetTempCallbackInfo(m_webPage->wkeWebView());
+        tempInfo->size = sizeof(wkeTempCallbackInfo);
+        tempInfo->frame = frameIdToWkeFrame(m_webPage, frame);
+        handler.otherLoadCallback(m_webPage->wkeWebView(), handler.otherLoadCallbackParam,
+            WKE_DID_NAVIGATE_IN_PAGE, tempInfo);
+    }
 #endif 
 }
 
@@ -549,13 +580,6 @@ void WebFrameClientImpl::willSendRequest(WebLocalFrame* webFrame, unsigned ident
     request.setExtraData(requestExtraData);
 
     request.addHTTPHeaderField("Accept-Language", "zh-cn,zh;q=0.5");
-//     KURL url = request.url();
-//     if (WTF::kNotFound != url.string().find("get_navigation_list")) {
-//         request.addHTTPHeaderField("Content-Length", "0");
-//         request.addHTTPHeaderField("Accept-Encoding", "gzip, deflate");
-//         request.addHTTPHeaderField("Connection", "keep-alive");
-//         request.addHTTPHeaderField("Host", "demo.dtcms.net");
-//     }
 
 //     WebViewImpl* viewImpl = m_webPage->webViewImpl();
 //     if (!viewImpl)
@@ -570,50 +594,49 @@ void WebFrameClientImpl::willSendRequest(WebLocalFrame* webFrame, unsigned ident
 //     value = headerFieldValue.latin1().data();
 //     request.addHTTPHeaderField("Accept-Charset", WebString::fromLatin1((const WebLChar*)value.data(), value.length()));
 
+    // Set the first party for cookies url if it has not been set yet (new
+    // requests). For redirects, it is updated by WebURLLoaderImpl.
+    if (request.firstPartyForCookies().isEmpty()) {
+        if (request.frameType() == blink::WebURLRequest::FrameTypeTopLevel) {
+            request.setFirstPartyForCookies(request.url());
+        } else {
+            // TODO(nasko): When the top-level frame is remote, there is no document.
+            // This is broken and should be fixed to propagate the first party.
+            WebFrame* top = webFrame->top();
+            if (top->isWebLocalFrame())
+                request.setFirstPartyForCookies(webFrame->top()->document().firstPartyForCookies());
+        }
+    }
 
-// Set the first party for cookies url if it has not been set yet (new
-// requests). For redirects, it is updated by WebURLLoaderImpl.
-     if (request.firstPartyForCookies().isEmpty()) {
-         if (request.frameType() == blink::WebURLRequest::FrameTypeTopLevel) {
-             request.setFirstPartyForCookies(request.url());
-         } else {
-             // TODO(nasko): When the top-level frame is remote, there is no document.
-             // This is broken and should be fixed to propagate the first party.
-             WebFrame* top = webFrame->top();
-             if (top->isWebLocalFrame())
-                 request.setFirstPartyForCookies(webFrame->top()->document().firstPartyForCookies());
-         }
-     }
+    const char kDefaultAcceptHeader[] = "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8";
+    const char kAcceptHeader[] = "Accept";
 
-     const char kDefaultAcceptHeader[] = "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8";
-     const char kAcceptHeader[] = "Accept";
+    WebDataSource* provisional_data_source = webFrame->provisionalDataSource();
+    WebDataSource* data_source = provisional_data_source ? provisional_data_source : webFrame->dataSource();
 
-     WebDataSource* provisional_data_source = webFrame->provisionalDataSource();
-     WebDataSource* data_source = provisional_data_source ? provisional_data_source : webFrame->dataSource();
+    // The request's extra data may indicate that we should set a custom user
+    // agent. This needs to be done here, after WebKit is through with setting the
+    // user agent on its own. Similarly, it may indicate that we should set an
+    // X-Requested-With header. This must be done here to avoid breaking CORS
+    // checks.
+    // PlzNavigate: there may also be a stream url associated with the request.
 
-     // The request's extra data may indicate that we should set a custom user
-     // agent. This needs to be done here, after WebKit is through with setting the
-     // user agent on its own. Similarly, it may indicate that we should set an
-     // X-Requested-With header. This must be done here to avoid breaking CORS
-     // checks.
-     // PlzNavigate: there may also be a stream url associated with the request.
+    // Add the default accept header for frame request if it has not been set
+    // already.
+    if ((request.frameType() == blink::WebURLRequest::FrameTypeTopLevel ||
+        request.frameType() == blink::WebURLRequest::FrameTypeNested) && request.httpHeaderField(WebString::fromUTF8(kAcceptHeader)).isEmpty()) {
+        request.setHTTPHeaderField(WebString::fromUTF8(kAcceptHeader), WebString::fromUTF8(kDefaultAcceptHeader));
+    }
 
-     // Add the default accept header for frame request if it has not been set
-     // already.
-     if ((request.frameType() == blink::WebURLRequest::FrameTypeTopLevel || 
-         request.frameType() == blink::WebURLRequest::FrameTypeNested) && request.httpHeaderField(WebString::fromUTF8(kAcceptHeader)).isEmpty()) {
-         request.setHTTPHeaderField(WebString::fromUTF8(kAcceptHeader), WebString::fromUTF8(kDefaultAcceptHeader));
-     }
+    // Add an empty HTTP origin header for non GET methods if none is currently
+    // present.
+    request.addHTTPOriginIfNeeded(WebString());
 
-     // Add an empty HTTP origin header for non GET methods if none is currently
-     // present.
-     request.addHTTPOriginIfNeeded(WebString());
-
-     // This is an instance where we embed a copy of the routing id
-     // into the data portion of the message. This can cause problems if we
-     // don't register this id on the browser side, since the download manager
-     // expects to find a RenderViewHost based off the id.
-     request.setHasUserGesture(blink::WebUserGestureIndicator::isProcessingUserGesture());
+    // This is an instance where we embed a copy of the routing id
+    // into the data portion of the message. This can cause problems if we
+    // don't register this id on the browser side, since the download manager
+    // expects to find a RenderViewHost based off the id.
+    request.setHasUserGesture(blink::WebUserGestureIndicator::isProcessingUserGesture());
 }
 
 void WebFrameClientImpl::didReceiveResponse(WebLocalFrame*, unsigned identifier, const WebURLResponse&)

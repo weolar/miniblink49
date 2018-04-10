@@ -118,7 +118,8 @@ public:
     void goBack();
     bool canGoForward();
     void goForward();
-    void didCommitProvisionalLoad(blink::WebLocalFrame* frame, const blink::WebHistoryItem& history, blink::WebHistoryCommitType type);
+    void didCommitProvisionalLoad(blink::WebLocalFrame* frame,
+        const blink::WebHistoryItem& history, blink::WebHistoryCommitType type, bool isSameDocument);
 
     void setTransparent(bool transparent);
 

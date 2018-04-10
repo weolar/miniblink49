@@ -15,6 +15,7 @@ class WebLocalFrame;
 namespace content {
 
 class WebPageImpl;
+class HistoryEntry;
 
 class NavigationController : public NoBaseWillBeGarbageCollectedFinalized<NavigationController> {
 public:
@@ -25,7 +26,7 @@ public:
     int historyForwardListCount();
     void navigateBackForwardSoon(int offset);
     
-    void insertOrReplaceEntry(const blink::WebHistoryItem& item, blink::WebHistoryCommitType type);
+    void insertOrReplaceEntry(const blink::WebHistoryItem& item, blink::WebHistoryCommitType type, bool isSameDocument);
     
     DECLARE_TRACE();
 
@@ -36,7 +37,7 @@ private:
     WebPageImpl* m_page;
     int m_currentOffset;
     //blink::HeapVector<RawPtrWillBeMember<blink::HistoryItem>> m_items;
-    Vector<blink::WebHistoryItem*> m_items;
+    Vector<HistoryEntry*> m_items;
 };
 
 }

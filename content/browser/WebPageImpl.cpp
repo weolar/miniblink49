@@ -1357,9 +1357,10 @@ void WebPageImpl::setBrowser(CefBrowserHostImpl* browser)
 }
 #endif
 
-void WebPageImpl::didCommitProvisionalLoad(blink::WebLocalFrame* frame, const blink::WebHistoryItem& history, blink::WebHistoryCommitType type)
+void WebPageImpl::didCommitProvisionalLoad(blink::WebLocalFrame* frame, const blink::WebHistoryItem& history, 
+    blink::WebHistoryCommitType type, bool isSameDocument)
 {
-    m_navigationController->insertOrReplaceEntry(history, type);
+    m_navigationController->insertOrReplaceEntry(history, type, isSameDocument);
 }
 
 void WebPageImpl::navigateBackForwardSoon(int offset)

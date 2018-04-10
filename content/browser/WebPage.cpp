@@ -434,10 +434,11 @@ void WebPage::goForward()
         m_pageImpl->navigateBackForwardSoon(1);
 }
 
-void WebPage::didCommitProvisionalLoad(blink::WebLocalFrame* frame, const blink::WebHistoryItem& history, blink::WebHistoryCommitType type)
+void WebPage::didCommitProvisionalLoad(blink::WebLocalFrame* frame, const blink::WebHistoryItem& history, 
+    blink::WebHistoryCommitType type, bool isSameDocument)
 {
     if (m_pageImpl)
-        m_pageImpl->didCommitProvisionalLoad(frame, history, type);
+        m_pageImpl->didCommitProvisionalLoad(frame, history, type, isSameDocument);
 }
 
 void WebPage::setTransparent(bool transparent)

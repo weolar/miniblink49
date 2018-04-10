@@ -174,7 +174,8 @@ public:
     void setHWND(HWND hWnd);
 
     // Session history -----------------------------------------------------
-    void didCommitProvisionalLoad(blink::WebLocalFrame* frame, const blink::WebHistoryItem& history, blink::WebHistoryCommitType type);
+    void didCommitProvisionalLoad(blink::WebLocalFrame* frame, const blink::WebHistoryItem& history, 
+        blink::WebHistoryCommitType type, bool isSameDocument);
     virtual void navigateBackForwardSoon(int offset) override;
     virtual int historyBackListCount() override;
     virtual int historyForwardListCount() override;
