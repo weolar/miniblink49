@@ -288,6 +288,45 @@ enum wkeWebDragOperation {
 };
 typedef wkeWebDragOperation wkeWebDragOperationsMask;
 
+enum wkeResourceType {
+    WKE_RESOURCE_TYPE_MAIN_FRAME = 0,       // top level page
+    WKE_RESOURCE_TYPE_SUB_FRAME = 1,        // frame or iframe
+    WKE_RESOURCE_TYPE_STYLESHEET = 2,       // a CSS stylesheet
+    WKE_RESOURCE_TYPE_SCRIPT = 3,           // an external script
+    WKE_RESOURCE_TYPE_IMAGE = 4,            // an image (jpg/gif/png/etc)
+    WKE_RESOURCE_TYPE_FONT_RESOURCE = 5,    // a font
+    WKE_RESOURCE_TYPE_SUB_RESOURCE = 6,     // an "other" subresource.
+    WKE_RESOURCE_TYPE_OBJECT = 7,           // an object (or embed) tag for a plugin,
+                                            // or a resource that a plugin requested.
+    WKE_RESOURCE_TYPE_MEDIA = 8,            // a media resource.
+    WKE_RESOURCE_TYPE_WORKER = 9,           // the main resource of a dedicated
+                                            // worker.
+    WKE_RESOURCE_TYPE_SHARED_WORKER = 10,   // the main resource of a shared worker.
+    WKE_RESOURCE_TYPE_PREFETCH = 11,        // an explicitly requested prefetch
+    WKE_RESOURCE_TYPE_FAVICON = 12,         // a favicon
+    WKE_RESOURCE_TYPE_XHR = 13,             // a XMLHttpRequest
+    WKE_RESOURCE_TYPE_PING = 14,            // a ping request for <a ping>
+    WKE_RESOURCE_TYPE_SERVICE_WORKER = 15,  // the main resource of a service worker.
+    WKE_RESOURCE_TYPE_LAST_TYPE
+};
+
+struct wkeWillSendRequestInfo {
+    bool isHolded;
+    wkeString url;
+    wkeString newUrl;
+    wkeResourceType resourceType;
+    int httpResponseCode;
+    wkeString method;
+    wkeString referrer;
+    void* headers;
+};
+
+struct wkeTempCallbackInfo {
+    int size;
+    wkeWebFrameHandle frame;
+    wkeWillSendRequestInfo* willSendRequestInfo;
+};
+
 typedef void(*wkeTitleChangedCallback)(wkeWebView webView, void* param, const wkeString title);
 typedef void(*wkeURLChangedCallback)(wkeWebView webView, void* param, const wkeString url);
 typedef void(*wkeURLChangedCallback2)(wkeWebView webView, void* param, wkeWebFrameHandle frameId, const wkeString url);
@@ -311,6 +350,16 @@ struct wkeMediaLoadInfo {
     double duration;
 };
 typedef void(*wkeWillMediaLoadCallback)(wkeWebView webView, void* param, const char* url, wkeMediaLoadInfo* info);
+
+typedef enum {
+    WKE_DID_START_LOADING,
+    WKE_DID_STOP_LOADING,
+    WKE_DID_NAVIGATE,
+    WKE_DID_NAVIGATE_IN_PAGE,
+    WKE_DID_GET_RESPONSE_DETAILS,
+    WKE_DID_GET_REDIRECT_REQUEST,
+} wkeOtherLoadType;
+typedef void(*wkeOnOtherLoadCallback)(wkeWebView webView, void* param, wkeOtherLoadType type, wkeTempCallbackInfo* info);
 
 typedef enum {
     WKE_LOADING_SUCCEEDED,
@@ -794,6 +843,8 @@ public:
     ITERATOR1(int, wkeGetCursorInfoType, wkeWebView webView, "") \
     ITERATOR5(void, wkeSetDragFiles, wkeWebView webView, const POINT* clintPos, const POINT* screenPos, wkeString files[], int filesCount, "") \
     \
+    ITERATOR1(wkeTempCallbackInfo*, wkeGetTempCallbackInfo, wkeWebView webView, "") \
+    \
     ITERATOR3(void, wkeOnMouseOverUrlChanged, wkeWebView webView, wkeTitleChangedCallback callback, void* callbackParam, "") \
     ITERATOR3(void, wkeOnTitleChanged, wkeWebView webView, wkeTitleChangedCallback callback, void* callbackParam, "") \
     ITERATOR3(void, wkeOnURLChanged, wkeWebView webView, wkeURLChangedCallback callback, void* callbackParam, "") \
@@ -818,6 +869,9 @@ public:
     ITERATOR3(void, wkeOnWindowDestroy, wkeWebView webWindow, wkeWindowDestroyCallback callback, void* param, "") \
     ITERATOR3(void, wkeOnDraggableRegionsChanged, wkeWebView webWindow, wkeDraggableRegionsChangedCallback callback, void* param, "") \
     ITERATOR3(void, wkeOnWillMediaLoad, wkeWebView webWindow, wkeWillMediaLoadCallback callback, void* param, "") \
+    \
+    ITERATOR3(void, wkeOnOtherLoad, wkeWebView webWindow, wkeOnOtherLoadCallback callback, void* param, "") \
+    ITERATOR2(void, wkeDeleteWillSendRequestInfo, wkeWebView webWindow, wkeWillSendRequestInfo* info, "") \
     \
     ITERATOR2(void, wkeNetSetMIMEType, void* job, char *type, "") \
     ITERATOR4(void, wkeNetSetHTTPHeaderField, void* job, wchar_t* key, wchar_t* value, bool response, "") \
@@ -885,6 +939,7 @@ public:
     ITERATOR2(float, jsToFloat, jsExecState es, jsValue v, "") \
     ITERATOR2(double, jsToDouble, jsExecState es, jsValue v, "") \
     ITERATOR2(bool, jsToBoolean, jsExecState es, jsValue v, "") \
+    ITERATOR3(jsValue, jsArrayBuffer, jsExecState es, char * buffer, size_t size, "") \
     ITERATOR2(const utf8*, jsToTempString, jsExecState es, jsValue v, "") \
     ITERATOR2(const wchar_t*, jsToTempStringW, jsExecState es, jsValue v, "") \
     \

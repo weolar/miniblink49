@@ -839,6 +839,28 @@ void wkeOnWillMediaLoad(wkeWebView webView, wkeWillMediaLoadCallback callback, v
     g_wkeWillMediaLoadCallbackCallbackParam = callbackParam;
 }
 
+wkeTempCallbackInfo g_wkeTempCallbackInfo;
+
+wkeTempCallbackInfo* wkeGetTempCallbackInfo(wkeWebView webView)
+{
+    return &g_wkeTempCallbackInfo;
+}
+
+void wkeOnOtherLoad(wkeWebView webWindow, wkeOnOtherLoadCallback callback, void* param)
+{
+    webWindow->onOtherLoad(callback, param);
+}
+
+void wkeDeleteWillSendRequestInfo(wkeWebView webWindow, wkeWillSendRequestInfo* info)
+{
+    wkeDeleteString(info->url);
+    if (info->newUrl)
+        wkeDeleteString(info->newUrl);
+    wkeDeleteString(info->method);
+    wkeDeleteString(info->referrer);
+    delete info;
+}
+
 bool wkeIsMainFrame(wkeWebView webView, wkeWebFrameHandle frameId)
 {
     content::WebPage* page = webView->webPage();

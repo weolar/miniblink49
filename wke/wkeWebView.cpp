@@ -1192,6 +1192,12 @@ void CWebView::onWillReleaseScriptContext(wkeWillReleaseScriptContextCallback ca
     m_webPage->wkeHandler().willReleaseScriptContextCallbackParam = callbackParam;
 }
 
+void CWebView::onOtherLoad(wkeOnOtherLoadCallback callback, void* callbackParam)
+{
+    m_webPage->wkeHandler().otherLoadCallback = callback;
+    m_webPage->wkeHandler().otherLoadCallbackParam = callbackParam;
+}
+
 void CWebView::onDraggableRegionsChanged(wkeDraggableRegionsChangedCallback callback, void* callbackParam)
 {
     m_webPage->wkeHandler().draggableRegionsChangedCallback = callback;
@@ -1300,6 +1306,8 @@ public:
 
     virtual void willProcessTask() override
     {
+        OutputDebugStringA("Devtools willProcessTask\n");
+
         wkeWebView devToolsWebView = wkeCreateWebWindow(WKE_WINDOW_TYPE_POPUP, nullptr, 200, 200, 800, 600);
         m_parent->m_devToolsWebView = devToolsWebView;
 
@@ -1324,6 +1332,7 @@ void CWebView::showDevTools(const utf8* url)
         return;
     m_isCreatedDevTools = true;
     blink::Platform::current()->currentThread()->addTaskObserver(new ShowDevToolsTaskObserver(this, url));
+    OutputDebugStringA("Devtools showDevTools\n");
 }
 
 } // namespace wke

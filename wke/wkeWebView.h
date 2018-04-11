@@ -83,6 +83,9 @@ struct CWebViewHandler {
     wkeWillReleaseScriptContextCallback willReleaseScriptContextCallback;
     void* willReleaseScriptContextCallbackParam;
 
+    wkeOnOtherLoadCallback otherLoadCallback;
+    void* otherLoadCallbackParam;
+
     wkeWindowClosingCallback windowClosingCallback;
     void* windowClosingCallbackParam;
     
@@ -92,9 +95,7 @@ struct CWebViewHandler {
     wkeDraggableRegionsChangedCallback draggableRegionsChangedCallback;
     void* draggableRegionsChangedCallbackParam;
 
-    
-
-    bool isWke;//是否是使用的wke接口
+    bool isWke; // 是否是使用的wke接口
 };
 
 class CWebView : public IWebView {
@@ -248,6 +249,8 @@ public:
 
     void onDidCreateScriptContext(wkeDidCreateScriptContextCallback callback, void* callbackParam);
     void onWillReleaseScriptContext(wkeWillReleaseScriptContextCallback callback, void* callbackParam);
+
+    void onOtherLoad(wkeOnOtherLoadCallback callback, void* callbackParam);
 
     void onDraggableRegionsChanged(wkeDraggableRegionsChangedCallback callback, void* param);
 

@@ -614,6 +614,28 @@ jsValue jsStringW(jsExecState es, const wchar_t* str)
     return createJsValueByLocalValue(es->isolate, context, value.ToLocalChecked());
 }
 
+jsValue jsArrayBuffer(jsExecState es, char * buffer, size_t size)
+{
+    if (!s_execStates || !s_execStates->contains(es) || !es || !es->isolate)
+        return jsUndefined();
+    if (es->context.IsEmpty())
+        DebugBreak();
+
+    v8::Isolate* isolate = es->isolate;
+    v8::HandleScope handleScope(isolate);
+    v8::Local<v8::Context> context = v8::Local<v8::Context>::New(es->isolate, es->context);
+    v8::Context::Scope contextScope(context);
+
+    v8::Handle<v8::ArrayBuffer> value = v8::ArrayBuffer::New(es->isolate, size);
+    memcpy(value->GetContents().Data(), buffer, size);
+
+    if (value.IsEmpty())
+        return jsUndefined();
+
+    return createJsValueByLocalValue(es->isolate, context, value);
+}
+
+
 jsValue jsEmptyObject(jsExecState es)
 {
     if (!s_execStates || !s_execStates->contains(es) || !es || !es->isolate)
