@@ -686,6 +686,11 @@ String KURL::lastPathComponent() const
         --end;
 
     size_t start = m_string.reverseFind('/', end);
+    if (isLocalFile()) {
+        size_t start2 = m_string.reverseFind('\\', end);
+        if (start < start2)
+            start = start2;
+    }
     if (start < static_cast<unsigned>(m_portEnd))
         return String();
     ++start;
@@ -1062,7 +1067,8 @@ String KURL::prettyURL() const
     return String::adopt(result);
 }
 
-// 这两函数返回的一定是UTF8，8字节的字符串，外面也不需要调用String::utf8()了
+// 这两函数返回的一定是UTF16，2字节的字符串，外面还是需要调用String::utf8()。
+// 以前是确定返回uf8，现在改成16是因为blink返回给js的字符串，如果是复杂字节必须是16。
 String decodeURLEscapeSequences(const String& str)
 {
     return decodeURLEscapeSequences(str, UTF8Encoding());
@@ -1120,7 +1126,7 @@ String decodeURLEscapeSequences(const String& strURL, const TextEncoding& encodi
 
     String returnVal = String::adopt(result);
     ASSERT(returnVal.is8Bit());
-    return returnVal;
+    return WTF::ensureUTF16String(returnVal);
 }
 
 // Caution: This function does not bounds check.
