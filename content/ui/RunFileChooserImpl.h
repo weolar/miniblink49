@@ -197,8 +197,12 @@ static bool runFileChooserImpl(const blink::WebFileChooserParams& params, blink:
         info.displayName = blink::Platform::current()->fileUtilities()->baseName(info.path);
         const std::wstring& fileSystemURL = L"file:///" + filePath;
         info.fileSystemURL = blink::KURL(blink::ParsedURLString, String(fileSystemURL.c_str()));
+
+        long long fileSizeResult = 0;
+        if (!getFileSize(filePath.c_str(), fileSizeResult))
+            fileSizeResult = 0;
         info.modificationTime = 0;
-        info.length = 0;
+        info.length = fileSizeResult;
         info.isDirectory = ::PathIsDirectoryW(filePath.c_str());
 
         wsFileNames[i] = info;
