@@ -1677,7 +1677,7 @@ jsValue v8ValueToJsValue(v8::Local<v8::Context> context, v8::Local<v8::Value> v8
     } else if (v8Value->IsTrue()) {
         return jsBoolean(true);
     } else if (v8Value->IsFalse()) {
-        return jsBoolean(true);
+        return jsBoolean(false);
     } else if (v8Value->IsUndefined()) {
         return jsUndefined();
     } else if (v8Value->IsObject()) {
