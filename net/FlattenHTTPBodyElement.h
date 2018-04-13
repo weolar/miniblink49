@@ -35,30 +35,41 @@ public:
     size_t read(void* ptr, size_t blockSize, size_t numberOfBlocks)
     {
         // Check for overflow.
-        if (!numberOfBlocks || blockSize > std::numeric_limits<size_t>::max() / numberOfBlocks)
+        if (!numberOfBlocks || blockSize > std::numeric_limits<size_t>::max() / numberOfBlocks) {
+            //DebugBreak();
             return 0;
+        }
 
-        if (m_formDataElementIndex >= m_elements.size())
+        if (m_formDataElementIndex >= m_elements.size()) {
+            //DebugBreak();
             return 0;
+        }
 
         const FlattenHTTPBodyElement& element = *(m_elements[m_formDataElementIndex]);
 
         size_t toSend = blockSize * numberOfBlocks;
         size_t sent;
-
-        if (blink::WebHTTPBody::Element::Type::TypeFile == element.type) {
+        
+        if (blink::WebHTTPBody::Element::Type::TypeFile == element.type ||
+            blink::WebHTTPBody::Element::Type::TypeFileSystemURL == element.type) {
             std::vector<char> filePath;
             WTF::WCharToMByte(element.filePath.c_str(), element.filePath.size(), &filePath, CP_ACP);
             if (!m_file)
                 m_file = _wfopen(element.filePath.c_str(), L"rb");
 
             if (!m_file) {
+                OutputDebugStringW(L"FlattenHTTPBodyElementStream._wfopen Fail:");
+                OutputDebugStringW(element.filePath.c_str());
+                OutputDebugStringW(L"\n");
                 // FIXME: show a user error?
                 return 0;
             }
 
             sent = fread(ptr, blockSize, numberOfBlocks, m_file);
             if (!blockSize && ferror(m_file)) {
+                OutputDebugStringW(L"FlattenHTTPBodyElementStream.ferror Fail:");
+                OutputDebugStringW(element.filePath.c_str());
+                OutputDebugStringW(L"\n");
                 // FIXME: show a user error?
                 return 0;
             }
@@ -70,7 +81,10 @@ public:
         } else {
             size_t elementSize = element.data.size() - m_formDataElementDataOffset;
             sent = elementSize > toSend ? toSend : elementSize;
-            memcpy(ptr, element.data.data() + m_formDataElementDataOffset, sent);
+
+            const char* realData = element.data.data() + m_formDataElementDataOffset;
+            memcpy(ptr, realData, sent);
+
             if (elementSize > sent)
                 m_formDataElementDataOffset += sent;
             else {

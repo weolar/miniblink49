@@ -636,6 +636,54 @@ static void setupFormDataOnIoThread(WebURLLoaderInternal* job, SetupDataInfo* in
     curl_easy_setopt(job->m_handle, CURLOPT_READDATA, job->m_id);
 }
 
+static void flattenHTTPBodyBlobElement(const WebString& blobUUID, curl_off_t* size, WTF::Vector<FlattenHTTPBodyElement*>* flattenElements)
+{
+    FlattenHTTPBodyElement* flattenElement = nullptr;
+    WebBlobRegistryImpl* blobReg = (WebBlobRegistryImpl*)blink::Platform::current()->blobRegistry();
+    net::BlobDataWrap* blobData = blobReg->getBlobDataFromUUID(blobUUID);
+    if (!blobData)
+        return;
+
+    long long fileSizeResult = 0;
+    const Vector<blink::WebBlobData::Item*>& items = blobData->items();
+    for (size_t i = 0; i < items.size(); ++i) {
+        blink::WebBlobData::Item* item = items[i];
+        if (blink::WebBlobData::Item::TypeData == item->type) {
+            flattenElement = new FlattenHTTPBodyElement();
+            flattenElement->type = WebHTTPBody::Element::TypeData;
+            flattenElement->data.append(item->data.data(), item->data.size());
+            *size += item->data.size();
+        } else if (blink::WebBlobData::Item::TypeFile == item->type) {
+            if (getFileSize(item->filePath, fileSizeResult)) {
+                *size += fileSizeResult;
+
+                flattenElement = new FlattenHTTPBodyElement();
+                flattenElement->type = WebHTTPBody::Element::TypeFile;
+                Vector<UChar> filePath = WTF::ensureUTF16UChar(item->filePath, true);
+                flattenElement->filePath = filePath.data();
+                flattenElements->append(flattenElement);
+            }
+        } else if (blink::WebBlobData::Item::TypeFileSystemURL == item->type) {
+            blink::KURL fileSystemURL = item->fileSystemURL;
+            String fileSystemPath(fileSystemURL.getUTF8String());
+            if (fileSystemPath.startsWith("file:///"))
+                fileSystemPath.remove(0, sizeof("file:///") - 1);
+            fileSystemPath.replace("/", "\\");
+            if (!getFileSize(fileSystemPath, fileSizeResult))
+                continue;
+
+            *size += fileSizeResult;
+
+            flattenElement = new FlattenHTTPBodyElement();
+            flattenElement->type = WebHTTPBody::Element::TypeFile;
+            Vector<UChar> filePath = WTF::ensureUTF16UChar(fileSystemPath, true);
+            flattenElement->filePath = filePath.data();
+            flattenElements->append(flattenElement);
+        } else if (blink::WebBlobData::Item::TypeBlob == item->type) {
+            flattenHTTPBodyBlobElement(item->blobUUID, size, flattenElements);
+        }
+    }
+}
 
 static SetupDataInfo* setupFormDataOnMainThread(WebURLLoaderInternal* job, CURLoption sizeOption, struct curl_slist** headers)
 {
@@ -658,14 +706,14 @@ static SetupDataInfo* setupFormDataOnMainThread(WebURLLoaderInternal* job, CURLo
     bool chunkedTransfer = false;
     SetupDataInfo* result = new SetupDataInfo();
     
+    long long fileSizeResult = 0;
     for (size_t i = 0; i < httpBody.elementCount(); ++i) {
-        WebHTTPBody::Element element;
+        blink::WebHTTPBody::Element element;
         if (!httpBody.elementAt(i, element))
             continue;
 
         FlattenHTTPBodyElement* flattenElement = nullptr;
-        if (WebHTTPBody::Element::TypeFile == element.type) {
-            long long fileSizeResult;
+        if (blink::WebHTTPBody::Element::TypeFile == element.type) {
             if (getFileSize(element.filePath, fileSizeResult)) {
                 if (fileSizeResult > maxCurlOffT) {
                     // File size is too big for specifying it to cURL
@@ -679,33 +727,20 @@ static SetupDataInfo* setupFormDataOnMainThread(WebURLLoaderInternal* job, CURLo
             }
 
             flattenElement = new FlattenHTTPBodyElement();
-            flattenElement->type = WebHTTPBody::Element::TypeFile;
+            flattenElement->type = blink::WebHTTPBody::Element::TypeFile;
             Vector<UChar> filePath = WTF::ensureUTF16UChar(element.filePath, true);
             flattenElement->filePath = filePath.data();
+            result->flattenElements.append(flattenElement);
         } else if (WebHTTPBody::Element::TypeData == element.type) {
             size += element.data.size();
 
             flattenElement = new FlattenHTTPBodyElement();
-            flattenElement->type = WebHTTPBody::Element::TypeData;
+            flattenElement->type = blink::WebHTTPBody::Element::TypeData;
             flattenElement->data.append(element.data.data(), element.data.size());
-        } else if (WebHTTPBody::Element::TypeBlob == element.type) {
-            WebBlobRegistryImpl* blobReg = (WebBlobRegistryImpl*)blink::Platform::current()->blobRegistry();
-            net::BlobDataWrap* blobData = blobReg->getBlobDataFromUUID(element.blobUUID);
-            if (!blobData)
-                continue;
-
-            flattenElement = new FlattenHTTPBodyElement();
-            flattenElement->type = WebHTTPBody::Element::TypeData;
-
-            const Vector<blink::WebBlobData::Item*>& items = blobData->items();
-            for (size_t i = 0; i < items.size(); ++i) {
-                blink::WebBlobData::Item* item = items[i];
-                flattenElement->data.append(item->data.data(), item->data.size());
-                size += item->data.size();
-            }
-        }
-        if (flattenElement)
             result->flattenElements.append(flattenElement);
+        } else if (WebHTTPBody::Element::TypeBlob == element.type) {
+            flattenHTTPBodyBlobElement(element.blobUUID, &size, &result->flattenElements);
+        }
     }
 
     // cURL guesses that we want chunked encoding as long as we specify the header
@@ -1391,11 +1426,12 @@ WebURLLoaderManager::InitializeHandleInfo* WebURLLoaderManager::preInitializeHan
     info->method = job->firstRequest()->httpMethod().utf8();
 
     String contentType = job->firstRequest()->httpHeaderField("Content-Type");
-    if (WTF::kNotFound == url.host().find("apple.com") && // 苹果开发者网，非要去掉0长度的Content-Type字段
-        WTF::kNotFound == url.host().find("dtcms.net")
-        && contentType.isNull()
-        && "POST" == info->method
-        && job->firstRequest()->httpBody().isNull())
+//     if (WTF::kNotFound == url.host().find("apple.com") && // 苹果开发者网，非要去掉0长度的Content-Type字段
+//         WTF::kNotFound == url.host().find("dtcms.net")
+//         && contentType.isNull()
+//         && "POST" == info->method
+//         && job->firstRequest()->httpBody().isNull())
+    if (WTF::kNotFound != url.host().find("huobi.pro") && "POST" == info->method && job->firstRequest()->httpBody().isNull())
         job->firstRequest()->setHTTPHeaderField("Content-Type", ""); // 修复火币网登录不了的bug
 
     curl_slist* headers = nullptr;

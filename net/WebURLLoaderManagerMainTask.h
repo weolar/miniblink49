@@ -238,6 +238,154 @@ static bool dispatchResponseToWke(WebURLLoaderInternal* job, const AtomicString&
 }
 #endif
 
+wkeResourceType WebURLRequestToResourceType(const blink::WebURLRequest& request)
+{
+    blink::WebURLRequest::RequestContext requestContext = request.requestContext();
+    if (request.frameType() != blink::WebURLRequest::FrameTypeNone) {
+        ASSERT(requestContext == blink::WebURLRequest::RequestContextForm ||
+            requestContext == blink::WebURLRequest::RequestContextFrame ||
+            requestContext == blink::WebURLRequest::RequestContextHyperlink ||
+            requestContext == blink::WebURLRequest::RequestContextIframe ||
+            requestContext == blink::WebURLRequest::RequestContextInternal ||
+            requestContext == blink::WebURLRequest::RequestContextLocation);
+        if (request.frameType() == WebURLRequest::FrameTypeTopLevel ||
+            request.frameType() == WebURLRequest::FrameTypeAuxiliary) {
+            return WKE_RESOURCE_TYPE_MAIN_FRAME;
+        }
+        if (request.frameType() == WebURLRequest::FrameTypeNested)
+            return WKE_RESOURCE_TYPE_SUB_FRAME;
+        DebugBreak();
+        return WKE_RESOURCE_TYPE_SUB_RESOURCE;
+    }
+
+    switch (requestContext) {
+        // Favicon
+    case blink::WebURLRequest::RequestContextFavicon:
+        return WKE_RESOURCE_TYPE_FAVICON;
+
+        // Font
+    case blink::WebURLRequest::RequestContextFont:
+        return WKE_RESOURCE_TYPE_FONT_RESOURCE;
+
+        // Image
+    case blink::WebURLRequest::RequestContextImage:
+    case blink::WebURLRequest::RequestContextImageSet:
+        return WKE_RESOURCE_TYPE_IMAGE;
+
+        // Media
+    case blink::WebURLRequest::RequestContextAudio:
+    case blink::WebURLRequest::RequestContextVideo:
+        return WKE_RESOURCE_TYPE_MEDIA;
+
+        // Object
+    case blink::WebURLRequest::RequestContextEmbed:
+    case blink::WebURLRequest::RequestContextObject:
+        return WKE_RESOURCE_TYPE_OBJECT;
+
+        // Ping
+    case blink::WebURLRequest::RequestContextBeacon:
+    case blink::WebURLRequest::RequestContextCSPReport:
+    case blink::WebURLRequest::RequestContextPing:
+        return WKE_RESOURCE_TYPE_PING;
+
+        // Prefetch
+    case blink::WebURLRequest::RequestContextPrefetch:
+        return WKE_RESOURCE_TYPE_PREFETCH;
+
+        // Script
+    case blink::WebURLRequest::RequestContextImport:
+    case blink::WebURLRequest::RequestContextScript:
+        return WKE_RESOURCE_TYPE_SCRIPT;
+
+        // Style
+    case WebURLRequest::RequestContextXSLT:
+    case WebURLRequest::RequestContextStyle:
+        return WKE_RESOURCE_TYPE_STYLESHEET;
+
+        // Subresource
+    case blink::WebURLRequest::RequestContextDownload:
+    case blink::WebURLRequest::RequestContextManifest:
+    case blink::WebURLRequest::RequestContextSubresource:
+    case blink::WebURLRequest::RequestContextPlugin:
+        return WKE_RESOURCE_TYPE_SUB_RESOURCE;
+
+        // TextTrack
+    case blink::WebURLRequest::RequestContextTrack:
+        return WKE_RESOURCE_TYPE_MEDIA;
+
+        // Workers
+    case blink::WebURLRequest::RequestContextServiceWorker:
+        return WKE_RESOURCE_TYPE_SERVICE_WORKER;
+    case blink::WebURLRequest::RequestContextSharedWorker:
+        return WKE_RESOURCE_TYPE_SHARED_WORKER;
+    case blink::WebURLRequest::RequestContextWorker:
+        return WKE_RESOURCE_TYPE_WORKER;
+
+        // Unspecified
+    case blink::WebURLRequest::RequestContextInternal:
+    case blink::WebURLRequest::RequestContextUnspecified:
+        return WKE_RESOURCE_TYPE_SUB_RESOURCE;
+
+        // XHR
+    case WebURLRequest::RequestContextEventSource:
+    case WebURLRequest::RequestContextFetch:
+    case WebURLRequest::RequestContextXMLHttpRequest:
+        return WKE_RESOURCE_TYPE_XHR;
+
+        // These should be handled by the FrameType checks at the top of the
+        // function.
+    case blink::WebURLRequest::RequestContextForm:
+    case blink::WebURLRequest::RequestContextHyperlink:
+    case blink::WebURLRequest::RequestContextLocation:
+    case blink::WebURLRequest::RequestContextFrame:
+    case blink::WebURLRequest::RequestContextIframe:
+        DebugBreak();
+        return WKE_RESOURCE_TYPE_SUB_RESOURCE;
+
+    default:
+        DebugBreak();
+        return WKE_RESOURCE_TYPE_SUB_RESOURCE;
+    }
+}
+
+static void distpatchWkeWillSendRequest(WebURLLoaderInternal* job, const KURL* newURL, long httpCode)
+{
+    net::RequestExtraData* requestExtraData = (net::RequestExtraData*)job->firstRequest()->extraData();
+    if (!requestExtraData)
+        return;
+
+    content::WebPage* page = requestExtraData->page;
+    if (!page->wkeHandler().otherLoadCallback)
+        return;
+
+    Vector<UChar> url = WTF::ensureUTF16UChar(job->firstRequest()->url().string(), false);
+    Vector<UChar> newUrl;
+    if (newURL)
+        newUrl = WTF::ensureUTF16UChar(newURL->getUTF8String(), false);
+    Vector<UChar> method = WTF::ensureUTF16UChar(job->firstRequest()->httpMethod(), false);
+    Vector<UChar> referrer = WTF::ensureUTF16UChar(job->firstRequest()->httpHeaderField(blink::WebString::fromUTF8("Referer")), false);
+    
+    wkeTempCallbackInfo* info = wkeGetTempCallbackInfo(page->wkeWebView());
+    info->willSendRequestInfo = new wkeWillSendRequestInfo();
+    info->willSendRequestInfo->isHolded = false;
+    info->willSendRequestInfo->url = wkeCreateStringW(url.data(), url.size());
+    info->willSendRequestInfo->newUrl = newURL ? wkeCreateStringW(newUrl.data(), newUrl.size()) : nullptr;
+    info->willSendRequestInfo->resourceType = WebURLRequestToResourceType(*job->firstRequest());
+    info->willSendRequestInfo->httpResponseCode = httpCode;
+    info->willSendRequestInfo->method = wkeCreateStringW(method.data(), method.size());
+    info->willSendRequestInfo->referrer = wkeCreateStringW(referrer.data(), referrer.size());
+    info->willSendRequestInfo->headers = nullptr;
+
+    page->wkeHandler().otherLoadCallback(page->wkeWebView(), page->wkeHandler().otherLoadCallbackParam,
+        newURL ? WKE_DID_GET_REDIRECT_REQUEST : WKE_DID_GET_RESPONSE_DETAILS,
+        info);
+
+    if (!info->willSendRequestInfo->isHolded) {
+        wkeDeleteWillSendRequestInfo(page->wkeWebView(), info->willSendRequestInfo);
+        info->willSendRequestInfo = nullptr;
+    }
+}
+
 static bool setHttpResponseDataToJobWhenDidReceiveResponseOnMainThread(WebURLLoaderInternal* job, WebURLLoaderManagerMainTask::Args* args)
 {
     WebURLLoaderClient* client = job->client();
@@ -274,12 +422,16 @@ static bool setHttpResponseDataToJobWhenDidReceiveResponseOnMainThread(WebURLLoa
             job->m_multipartHandle = adoptPtr(new MultipartHandle(job, boundary));
     }
 
-    // HTTP redirection
+    // HTTP redirection 重定向
     if (isHttpRedirect(args->httpCode)) {
         String location = job->m_response.httpHeaderField(WebString::fromUTF8("location"));
         if (!location.isEmpty()) {
-            //重定向
             KURL newURL = KURL((KURL)(job->firstRequest()->url()), location);
+
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
+            distpatchWkeWillSendRequest(job, &newURL, args->httpCode);
+#endif
+
             blink::WebURLRequest* redirectedRequest = new blink::WebURLRequest(*job->firstRequest());
             redirectedRequest->setURL(newURL);
             if (client && job->loader())
@@ -296,7 +448,8 @@ static bool setHttpResponseDataToJobWhenDidReceiveResponseOnMainThread(WebURLLoa
         }
     } else if (isHttpAuthentication(args->httpCode)) {
 
-    }
+    } else
+        distpatchWkeWillSendRequest(job, nullptr, args->httpCode);
 
     return true;
 }
