@@ -278,7 +278,7 @@ static wkeWebFrameHandle frameIdToWkeFrame(WebPage* webPage, WebLocalFrame* fram
 
 void WebFrameClientImpl::didCommitProvisionalLoad(WebLocalFrame* frame, const WebHistoryItem& history, WebHistoryCommitType type)
 {
-    m_webPage->didCommitProvisionalLoad(frame, history, type, true);
+    m_webPage->didCommitProvisionalLoad(frame, history, type, false);
 
 #if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
     CefBrowserHostImpl* browser = m_webPage->browser();
@@ -423,7 +423,7 @@ void WebFrameClientImpl::didNavigateWithinPage(WebLocalFrame* frame, const WebHi
     //     m_cefBrowserHostImpl->m_browserImpl->ref();
     //     loadHandler->on_loading_state_change(loadHandler, &m_cefBrowserHostImpl->m_browserImpl->m_baseClass, false, false, false);
     
-    m_webPage->didCommitProvisionalLoad(frame, history, type, false);
+    m_webPage->didCommitProvisionalLoad(frame, history, type, true);
 
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
     wke::AutoDisableFreeV8TempObejct autoDisableFreeV8TempObejct;

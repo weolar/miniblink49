@@ -59,9 +59,9 @@ public:
     virtual blink::WebString userAgent() override;
     void setUserAgent(char* ua);
 
-    virtual blink::WebData BlinkPlatformImpl::loadResource(const char* name) override;
+    virtual blink::WebData loadResource(const char* name) override;
 
-    virtual blink::WebThemeEngine* BlinkPlatformImpl::themeEngine() override;
+    virtual blink::WebThemeEngine* themeEngine() override;
 
     virtual blink::WebMimeRegistry* mimeRegistry() override;
 
@@ -106,7 +106,7 @@ public:
     virtual blink::WebClipboard* clipboard() override;
 
     // Plugin --------------------------------------------------------------
-    void BlinkPlatformImpl::getPluginList(bool refresh, blink::WebPluginListBuilder* builder) override;
+    void getPluginList(bool refresh, blink::WebPluginListBuilder* builder) override;
 
     // fileUtilities -------------------------------------------------------
     virtual blink::WebFileUtilities* fileUtilities() override;
@@ -123,6 +123,10 @@ public:
     blink::WebThread* tryGetIoThread() const;
     blink::WebThread* ioThread();
     void doGarbageCollected();
+
+    //////////////////////////////////////////////////////////////////////////
+    virtual size_t numberOfProcessors() override;
+    void setNumberOfProcessors(size_t num);
 
 private:
     void destroyWebInfo();
@@ -155,6 +159,8 @@ private:
     double m_firstMonotonicallyIncreasingTime;
 
     WTF::String* m_userAgent;
+
+    size_t m_numberOfProcessors;
 };
 
 } // namespace content

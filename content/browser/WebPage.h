@@ -134,6 +134,9 @@ public:
 
     void didStartProvisionalLoad();
 
+    void setScreenInfo(const blink::WebScreenInfo& info);
+    blink::WebScreenInfo screenInfo();
+
 #if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
     CefBrowserHostImpl* browser();
     void setBrowser(CefBrowserHostImpl* browserImpl);

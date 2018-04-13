@@ -88,6 +88,7 @@ public:
     virtual blink::WebWidget* createPopupMenu(blink::WebPopupType) override;
     virtual blink::WebStorageNamespace* createSessionStorageNamespace() override;
     virtual blink::WebString acceptLanguages() override;
+    void setScreenInfo(const blink::WebScreenInfo& info);
     virtual blink::WebScreenInfo screenInfo() override;
     virtual void setMouseOverURL(const blink::WebURL&) override;
     virtual void setToolTipText(const blink::WebString&, blink::WebTextDirection hint) override;
@@ -287,6 +288,8 @@ public:
     bool m_isEnterDebugLoop;
 
     DragHandle* m_dragHandle;
+
+    blink::WebScreenInfo* m_screenInfo;
 };
 
 } // blink

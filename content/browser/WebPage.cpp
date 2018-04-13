@@ -447,6 +447,19 @@ void WebPage::setTransparent(bool transparent)
         m_pageImpl->setTransparent(transparent);
 }
 
+void WebPage::setScreenInfo(const blink::WebScreenInfo& info)
+{
+    if (m_pageImpl)
+        m_pageImpl->setScreenInfo(info);
+}
+
+blink::WebScreenInfo WebPage::screenInfo()
+{
+    if (m_pageImpl)
+        return m_pageImpl->screenInfo();
+    return blink::WebScreenInfo();
+}
+
 WebPage* WebPage::getSelfForCurrentContext()
 {
     WebPageImpl* impl = WebPageImpl::getSelfForCurrentContext();

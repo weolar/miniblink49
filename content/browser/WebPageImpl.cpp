@@ -140,6 +140,7 @@ WebPageImpl::WebPageImpl()
     m_devToolsAgent = nullptr;
     m_isEnterDebugLoop = false;
     m_dragHandle = new DragHandle();
+    m_screenInfo = nullptr;
 
     m_toolTip = new ToolTip();
     m_toolTip->init();
@@ -175,6 +176,9 @@ WebPageImpl::~WebPageImpl()
 {
     ASSERT(pageDestroyed == m_state);
     m_state = pageDestroyed;
+
+    if (m_screenInfo)
+        delete m_screenInfo;
 
     delete m_toolTip;
 
@@ -1411,8 +1415,18 @@ WebString WebPageImpl::acceptLanguages()
     return WebString::fromUTF8("zh-CN,zh");
 }
 
+void WebPageImpl::setScreenInfo(const WebScreenInfo& info)
+{
+    if (m_screenInfo)
+        delete m_screenInfo;
+    m_screenInfo = new WebScreenInfo();
+    *m_screenInfo = info;
+}
+
 WebScreenInfo WebPageImpl::screenInfo()
 {
+    if (m_screenInfo)
+        return *m_screenInfo;
     POINT pt = { 0, 0 };
     HMONITOR hMonitor = ::MonitorFromPoint(pt, MONITOR_DEFAULTTOPRIMARY);
 
@@ -1420,11 +1434,11 @@ WebScreenInfo WebPageImpl::screenInfo()
     mi.cbSize = sizeof(MONITORINFO);
     ::GetMonitorInfo(hMonitor, &mi);
 
-    WebScreenInfo info;
-    info.rect = WebRect(winRectToIntRect(mi.rcMonitor));
-    info.availableRect = WebRect(winRectToIntRect(mi.rcWork));
+    m_screenInfo = new blink::WebScreenInfo();
+    m_screenInfo->rect = WebRect(winRectToIntRect(mi.rcMonitor));
+    m_screenInfo->availableRect = WebRect(winRectToIntRect(mi.rcWork));
 
-    return info;
+    return *m_screenInfo;
 }
 
 void WebPageImpl::setMouseOverURL(const blink::WebURL& url)

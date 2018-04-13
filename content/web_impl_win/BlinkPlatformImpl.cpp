@@ -200,6 +200,7 @@ BlinkPlatformImpl::BlinkPlatformImpl()
     m_perfTimer = nullptr;
     m_ioThread = nullptr;
     m_firstMonotonicallyIncreasingTime = currentTimeImpl(); // (GetTickCount() / 1000.0);
+    m_numberOfProcessors = 1;
     ::InitializeCriticalSection(m_lock);
 
     setUserAgent("Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.2171.99 Safari/537.36");
@@ -616,7 +617,11 @@ blink::WebData BlinkPlatformImpl::loadResource(const char* name)
         return blink::WebData((const char*)content::InjectedScriptSourceJs, sizeof(content::InjectedScriptSourceJs));
     else if (0 == strcmp("InspectorOverlayPage.html", name))
         return blink::WebData((const char*)content::InspectorOverlayPageHtml, sizeof(content::InspectorOverlayPageHtml));
-    
+    else if (0 == strcmp("xhtmlmp.css", name)) {
+        char xhtmlmpCss[] = "@viewport {width: auto;min-zoom: 0.25;max-zoom: 5;}";
+        return blink::WebData(xhtmlmpCss, sizeof(xhtmlmpCss));
+    }
+
     notImplemented();
     return blink::WebData(" ", 1);
 }
@@ -800,5 +805,8 @@ WebWaitableEvent* BlinkPlatformImpl::waitMultipleEvents(const blink::WebVector<b
     ASSERT(idx < webEvents.size());
     return webEvents[idx];
 }
+
+size_t BlinkPlatformImpl::numberOfProcessors() { return m_numberOfProcessors; }
+void BlinkPlatformImpl::setNumberOfProcessors(size_t num) { m_numberOfProcessors = num; }
 
 } // namespace content
