@@ -63,7 +63,7 @@ blink::WebMimeRegistry::SupportsType WebMimeRegistryImpl::supportsMIMEType(const
 {
     WTF::String extension = checkAndEnsureBit8String(ext);
     if (extension.isEmpty())
-        return blink::WebMimeRegistry::IsNotSupported;
+        return blink::WebMimeRegistry::IsSupported;
     extension = extension.lower();
 
     if (!m_supportedMIMETypes) {
