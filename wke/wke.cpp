@@ -18,6 +18,7 @@
 #include "third_party/WebKit/public/web/WebDragOperation.h"
 #include "third_party/WebKit/public/platform/WebDragData.h"
 #include "third_party/WebKit/Source/web/WebViewImpl.h"
+#include "third_party/WebKit/Source/web/WebSettingsImpl.h"
 #include "gen/blink/platform/RuntimeEnabledFeatures.h"
 #include <v8.h>
 #include "wtf/text/WTFString.h"
@@ -28,6 +29,10 @@ void setCookieJarFullPath(const WCHAR* path);
 }
 
 bool g_isSetDragEnable = true;
+
+namespace blink {
+extern char* g_navigatorPlatform;
+}
 
 //////////////////////////////////////////////////////////////////////////
 static std::string* s_versionString = nullptr;
@@ -1199,6 +1204,49 @@ void wkeDragTargetDrop(wkeWebView webWindow, const POINT* clientPoint, const POI
 
     view->dragTargetDrop(blink::WebPoint(clientPoint->x, clientPoint->y),
         blink::WebPoint(screenPoint->x, screenPoint->y), modifiers);
+}
+
+void wkeSetDeviceParameter(wkeWebView webView, const char* device, const char* paramStr, int paramInt, float paramFloat)
+{
+    if (0 == strcmp(device, "navigator.maxTouchPoints")) {
+        blink::WebSettingsImpl* settings = webView->webPage()->webViewImpl()->settingsImpl();
+        if (settings)
+            settings->setMaxTouchPoints(paramInt);
+    } else if (0 == strcmp(device, "navigator.platform")) {
+        if (blink::g_navigatorPlatform)
+            free(blink::g_navigatorPlatform);
+        int length = strlen(paramStr);
+        blink::g_navigatorPlatform = (char*)malloc(length + 1);
+        memset(blink::g_navigatorPlatform, 0, length + 1);
+        strncpy(blink::g_navigatorPlatform, paramStr, length);
+    } else if (0 == strcmp(device, "navigator.hardwareConcurrency")) {
+        content::BlinkPlatformImpl* platform = (content::BlinkPlatformImpl*)blink::Platform::current();
+        platform->setNumberOfProcessors(paramInt);
+    } else if (0 == strcmp(device, "navigator.vibrate")) {
+        ;
+    } else if (0 == strcmp(device, "screen.width")) {
+        blink::WebScreenInfo info = webView->webPage()->screenInfo();
+        info.rect.width = paramInt;
+        webView->webPage()->setScreenInfo(info);
+    } else if (0 == strcmp(device, "screen.height")) {
+        blink::WebScreenInfo info = webView->webPage()->screenInfo();
+        info.rect.height = paramInt;
+        webView->webPage()->setScreenInfo(info);
+    } else if (0 == strcmp(device, "screen.availWidth")) {
+        blink::WebScreenInfo info = webView->webPage()->screenInfo();
+        info.availableRect.width = paramInt;
+        webView->webPage()->setScreenInfo(info);
+    } else if (0 == strcmp(device, "screen.availHeight")) {
+        blink::WebScreenInfo info = webView->webPage()->screenInfo();
+        info.availableRect.height = paramInt;
+        webView->webPage()->setScreenInfo(info);
+    } else if (0 == strcmp(device, "screen.pixelDepth") || 0 == strcmp(device, "screen.pixelDepth")) {
+        blink::WebScreenInfo info = webView->webPage()->screenInfo();
+        info.depth = paramInt;
+        webView->webPage()->setScreenInfo(info);
+    } else if (0 == strcmp(device, "window.devicePixelRatio")) {
+        wkeSetZoomFactor(webView, paramFloat);
+    }
 }
 
 //////////////////////////////////////////////////////////////////////////
