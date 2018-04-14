@@ -199,6 +199,7 @@ DEFINE_TRACE(PlatformMessagePortChannel)
 {
     visitor->trace(m_entangledChannel);
     visitor->trace(m_outgoingQueue);
+    visitor->trace(m_incomingQueue);
 }
 
 DEFINE_TRACE(PlatformMessagePortChannel::MessagePortQueue)
