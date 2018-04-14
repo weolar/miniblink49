@@ -142,7 +142,7 @@ blink::WebPluginPlaceholder* WebFrameClientImpl::createPluginPlaceholder(WebLoca
 blink::WebPlugin* WebFrameClientImpl::createPlugin(WebLocalFrame* frame, const WebPluginParams& params)
 {
     PassRefPtr<WebPluginImpl> plugin = adoptRef(new WebPluginImpl(frame, params));
-    plugin->setParentPlatformWidget(m_webPage->getHWND());
+    plugin->setParentPlatformPluginWidget(m_webPage->getHWND());
     plugin->setHwndRenderOffset(m_webPage->getHwndRenderOffset());
     plugin->setWebViewClient(m_webPage->webViewImpl()->client());
     return plugin.leakRef();

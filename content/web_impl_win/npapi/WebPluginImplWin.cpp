@@ -916,7 +916,7 @@ bool WebPluginImpl::platformGetValue(NPNVariable variable, void* value, NPError*
     switch (variable) {
         case NPNVnetscapeWindow: {
             HWND* w = reinterpret_cast<HWND*>(value);
-            *w = windowHandleForPageClient(platformPluginWidget());
+            *w = windowHandleForPageClient(platformPluginWidget() ? platformPluginWidget() : parentPlatformPluginWidget());
             *result = NPERR_NO_ERROR;
             return true;
         }
@@ -1016,7 +1016,7 @@ void WebPluginImpl::platformStartAsyn()
         HWND window = ::CreateWindowEx(0, kWebPluginViewClassName, 0, flags,
             0, 0, 0, 0, parentWindowHandle, 0, /*WebCore::instanceHandle()*/nullptr, 0);
 
-        setPlatformWidget(window);
+        setPlatformPluginWidget(window);
 
         // Calling SetWindowLongPtrA here makes the window proc ASCII, which is required by at least
         // the Shockwave Director plug-in.
