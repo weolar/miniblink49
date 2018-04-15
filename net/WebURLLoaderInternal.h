@@ -30,6 +30,7 @@
 
 #include "net/MultipartHandle.h"
 #include "net/SharedMemoryDataConsumerHandle.h"
+#include "net/CancelledReason.h"
 #include "third_party/WebKit/public/platform/WebURLLoader.h"
 #include "third_party/WebKit/public/platform/WebURLResponse.h"
 #include "third_party/WebKit/public/platform/WebURLError.h"
@@ -77,12 +78,6 @@ public:
     void ref() { atomicIncrement(&m_ref); }
     void deref() { atomicDecrement(&m_ref); }
 
-    int m_ref;
-    int m_id;
-    bool m_isSynchronous;
-
-    blink::WebURLRequest* m_firstRequest;
-
     WebURLLoaderClient* client() { return m_client; }
     WebURLLoaderClient* m_client;
 
@@ -97,6 +92,12 @@ public:
     void setLoader(WebURLLoaderImplCurl* loader) { m_loader = loader; }
 
     blink::WebURLRequest* firstRequest() { return m_firstRequest; }
+
+    int m_ref;
+    int m_id;
+    bool m_isSynchronous;
+
+    blink::WebURLRequest* m_firstRequest;
 
     String m_lastHTTPMethod;
 
@@ -118,11 +119,14 @@ public:
     struct curl_slist* m_customHeaders;
     WebURLResponse m_response;
     OwnPtr<MultipartHandle> m_multipartHandle;
-    bool m_cancelled;
+
+    CancelledReason m_cancelledReason;
+    bool isCancelled() const
+    {
+        return kNoCancelled != m_cancelledReason;
+    }
 
     FlattenHTTPBodyElementStream* m_formDataStream;
-//     WTF::Vector<FlattenHTTPBodyElement*> m_postBytes;
-//     size_t m_postBytesReadOffset;
 
     enum FailureType {
         NoFailure,

@@ -31,6 +31,8 @@
 #define CURL_STATICLIB  
 #define HTTP_ONLY 
 
+#include "net/CancelledReason.h"
+
 #include "third_party/libcurl/include/curl/curl.h"
 #include "third_party/WebKit/Source/platform/Timer.h"
 
@@ -108,11 +110,13 @@ public:
     void handleDidFail(WebURLLoaderInternal* job, const blink::WebURLError& error);
     void handleDidReceiveResponse(WebURLLoaderInternal* job);
 
+    void cancelWithHookRedirect(WebURLLoaderInternal* job);
+
 private:
     WebURLLoaderManager();
     ~WebURLLoaderManager();
 
-    void doCancel(int jobId, WebURLLoaderInternal* job);
+    void doCancel(WebURLLoaderInternal* job, CancelledReason cancelledReason);
     
     void setupPOST(WebURLLoaderInternal*, struct curl_slist**);
     void setupPUT(WebURLLoaderInternal*, struct curl_slist**);

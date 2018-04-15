@@ -4,6 +4,7 @@
 
 #include "net/WebURLLoaderInternal.h"
 #include "net/WebURLLoaderManagerUtil.h"
+#include "net/WebURLLoaderManagerAsynTask.h"
 #include "net/RequestExtraData.h"
 #include "content/browser/WebPage.h"
 #include "third_party/WebKit/Source/platform/network/HTTPParsers.h"
@@ -120,7 +121,7 @@ public:
             return;
         }
 
-        if (WebURLLoaderManager::sharedInstance()->isShutdown() || job->m_cancelled)
+        if (WebURLLoaderManager::sharedInstance()->isShutdown() || job->isCancelled())
             return;
 
         switch (m_type) {
@@ -432,6 +433,24 @@ static bool setHttpResponseDataToJobWhenDidReceiveResponseOnMainThread(WebURLLoa
             distpatchWkeWillSendRequest(job, &newURL, args->httpCode);
 #endif
 
+            RequestExtraData* requestExtraData = reinterpret_cast<RequestExtraData*>(job->firstRequest()->extraData());
+            WebPage* page = requestExtraData->page;
+            if (page->wkeHandler().loadUrlBeginCallback) {
+                CString newURLBuf(newURL.getUTF8String().utf8());
+                if (page->wkeHandler().loadUrlBeginCallback(
+                    page->wkeWebView(), 
+                    page->wkeHandler().loadUrlBeginCallbackParam,
+                    newURLBuf.data(), job)) {
+                    //WebURLLoaderManager::sharedInstance()->handleDidFinishLoading(job, WTF::currentTime(), 0);
+                    WebURLLoaderManager::sharedInstance()->cancelWithHookRedirect(job);
+
+                    if (job->m_isWkeNetSetDataBeSetted)
+                        Platform::current()->currentThread()->scheduler()->postLoadingTask(FROM_HERE, new WkeAsynTask(WebURLLoaderManager::sharedInstance(), job->m_id));
+                    
+                    return false;
+                }
+            }
+
             blink::WebURLRequest* redirectedRequest = new blink::WebURLRequest(*job->firstRequest());
             redirectedRequest->setURL(newURL);
             if (client && job->loader())
@@ -462,7 +481,7 @@ static void setResponseDataToJobWhenDidReceiveResponseOnMainThread(WebURLLoaderI
     if (url.protocolIsInHTTPFamily())
         needSetResponseFired = setHttpResponseDataToJobWhenDidReceiveResponseOnMainThread(job, args);
 
-    if (needSetResponseFired && !job->m_cancelled) {
+    if (needSetResponseFired && !job->isCancelled()) {
         if (job->client() && job->loader())
             WebURLLoaderManager::sharedInstance()->handleDidReceiveResponse(job);
         job->setResponseFired(true);
@@ -499,7 +518,7 @@ size_t WebURLLoaderManagerMainTask::handleWriteCallbackOnMainThread(WebURLLoader
 
     if (!job->responseFired()) {
         handleLocalReceiveResponseOnMainThread(args, job);
-        if (job->m_cancelled)
+        if (job->isCancelled())
             return 0;
     }
 
@@ -524,7 +543,7 @@ size_t WebURLLoaderManagerMainTask::handleWriteCallbackOnMainThread(WebURLLoader
 
 size_t WebURLLoaderManagerMainTask::handleHeaderCallbackOnMainThread(WebURLLoaderManagerMainTask::Args* args, WebURLLoaderInternal* job)
 {
-    if (job->m_cancelled)
+    if (job->isCancelled())
         return 0;
 
     // We should never be called when deferred loading is activated.

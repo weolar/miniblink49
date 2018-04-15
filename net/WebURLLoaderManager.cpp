@@ -68,6 +68,7 @@
 #include "net/WebURLLoaderManagerMainTask.h"
 #include "net/FlattenHTTPBodyElement.h"
 #include "net/WebURLLoaderManagerSetupInfo.h"
+#include "net/WebURLLoaderManagerAsynTask.h"
 #include "third_party/WebKit/Source/wtf/Threading.h"
 #include "third_party/WebKit/Source/wtf/Vector.h"
 #include "third_party/WebKit/Source/wtf/text/CString.h"
@@ -352,10 +353,7 @@ static size_t writeCallbackOnIoThread(void* ptr, size_t size, size_t nmemb, void
     int jobId = (int)data;
     AutoLockJob autoLockJob(WebURLLoaderManager::sharedInstance(), jobId);
     WebURLLoaderInternal* job = autoLockJob.lock();
-    if (!job)
-        return 0;
-
-    if (job->m_cancelled)
+    if (!job || job->isCancelled())
         return 0;
 
     // We should never be called when deferred loading is activated.
@@ -401,7 +399,7 @@ static size_t headerCallbackOnIoThread(char* ptr, size_t size, size_t nmemb, voi
     int jobId = (int)data;
     AutoLockJob autoLockJob(WebURLLoaderManager::sharedInstance(), jobId);
     WebURLLoaderInternal* job = autoLockJob.lock();
-    if (!job || job->m_cancelled)
+    if (!job || job->isCancelled())
         return 0;
 
     // We should never be called when deferred loading is activated.
@@ -420,7 +418,7 @@ size_t readCallbackOnIoThread(void* ptr, size_t size, size_t nmemb, void* data)
     int jobId = (int)data;
     AutoLockJob autoLockJob(WebURLLoaderManager::sharedInstance(), jobId);
     WebURLLoaderInternal* job = autoLockJob.lock();
-    if (!job || job->m_cancelled)
+    if (!job || job->isCancelled())
         return 0;
 
     // We should never be called when deferred loading is activated.
@@ -512,7 +510,7 @@ bool WebURLLoaderManager::downloadOnIoThread()
             continue;
 
         ASSERT(job->m_handle == handle);
-        if (job->m_cancelled) {
+        if (job->isCancelled()) {
             removeFromCurlOnIoThread(jobId);
             continue;
         }
@@ -526,7 +524,7 @@ bool WebURLLoaderManager::downloadOnIoThread()
 #endif
             if (!job->responseFired()) {
                 WebURLLoaderManagerMainTask::pushTask(jobId, WebURLLoaderManagerMainTask::TaskType::kHandleLocalReceiveResponse, nullptr, 0, 0, 0);
-                if (job->m_cancelled) {
+                if (job->isCancelled()) {
                     removeFromCurlOnIoThread(jobId);
                     continue;
                 }
@@ -859,140 +857,6 @@ static SetupPostInfo* setupPostOnMainThread(WebURLLoaderInternal* job, struct cu
     return result;
 }
 
-class WebURLLoaderManager::IoTask : public WebThread::Task {
-public:
-    IoTask(WebURLLoaderManager* manager, blink::WebThread* thread, bool start)
-        : m_manager(manager)
-        , m_thread(thread)
-        , m_start(start)
-    {
-    }
-
-    ~IoTask() override
-    {
-    }
-
-    virtual void run() override
-    {
-        if (!m_manager->downloadOnIoThread())
-            return;
-
-        IoTask* task = new IoTask(m_manager, m_thread, true);
-        m_thread->postDelayedTask(FROM_HERE, task, 1);
-    }
-
-private:
-    WebURLLoaderManager* m_manager;
-    blink::WebThread* m_thread;
-    bool m_start;
-};
-
-const int kBlackListCancelJobId = -2;
-
-static void releaseJobWithoutCurl(WebURLLoaderInternal* job, int jobId)
-{
-    if (kBlackListCancelJobId == jobId)
-        return;
-    RELEASE_ASSERT(job->m_ref == 0);
-    job->m_handle = nullptr;
-    WebURLLoaderManager::sharedInstance()->removeLiveJobs(jobId);
-    delete job;
-}
-
-class WkeAsynTask : public WebThread::Task {
-public:
-    WkeAsynTask(WebURLLoaderManager* manager, int jobId)
-    {
-        m_manager = manager;
-        m_jobId = jobId;
-    }
-
-    ~WkeAsynTask() override
-    {
-    }
-
-    virtual void run() override
-    {
-        WebURLLoaderInternal* job = m_manager->checkJob(m_jobId);
-        if (!job || job->m_cancelled) {
-            releaseJobWithoutCurl(job, m_jobId);
-            return;
-        }
-        KURL url = job->firstRequest()->url();
-        job->m_response.setURL(url);
-
-        if (job->m_response.mimeType().isNull() || job->m_response.mimeType().isEmpty()) {
-            String urlString = url.getUTF8String();
-            int urlHostLength = urlString.length();
-            for (int i = 0; i < urlHostLength; ++i) {
-                if ('?' != urlString[i])
-                    continue;
-                urlHostLength = i;
-                break;
-            }
-            String urlWithoutQuery(urlString.characters8(), urlHostLength);
-            job->m_response.setMIMEType(MIMETypeRegistry::getMIMETypeForPath(urlWithoutQuery));
-        }
-
-        job->client()->didReceiveResponse(job->loader(), job->m_response);
-        if (job->m_asynWkeNetSetData && !job->m_cancelled) { // 可能在didReceiveResponse里被cancel
-            WebURLLoaderManager::sharedInstance()->didReceiveDataOrDownload(job, static_cast<char*>(job->m_asynWkeNetSetData), job->m_asynWkeNetSetDataLength, 0);
-            WebURLLoaderManager::sharedInstance()->handleDidFinishLoading(job, WTF::currentTime(), 0);
-        }
-        releaseJobWithoutCurl(job, m_jobId);
-    }
-
-private:
-    WebURLLoaderManager* m_manager;
-    int m_jobId;
-};
-
-class BlackListCancelTask : public WebThread::Task {
-public:
-    BlackListCancelTask(WebURLLoaderManager* manager, int jobId)
-    {
-        m_manager = manager;
-        m_jobId = jobId;
-        WebURLLoaderInternal* job = m_manager->checkJob(m_jobId);
-        job->m_isBlackList = true;
-    }
-
-    ~BlackListCancelTask() override
-    {
-    }
-
-    static void cancel(WebURLLoaderInternal* job, int jobId)
-    {
-        job->m_isBlackList = true;
-        job->m_response.setURL(job->firstRequest()->url());
-        job->client()->didReceiveResponse(job->loader(), job->m_response);
-        if (!job->m_cancelled) { // 可能在didReceiveResponse里被cancel
-            //WebURLLoaderManager::sharedInstance()->didReceiveDataOrDownload(job, static_cast<char*>(""), 0, 0);
-
-            WebURLError error;
-            error.domain = WebString(String(job->m_url));
-            error.reason = -1;
-            error.localizedDescription = WebString::fromUTF8("black list");
-            WebURLLoaderManager::sharedInstance()->handleDidFail(job, error);
-            RELEASE_ASSERT(job->m_cancelled);
-        }
-        releaseJobWithoutCurl(job, jobId);
-    }
-
-    virtual void run() override
-    {
-        WebURLLoaderInternal* job = m_manager->checkJob(m_jobId);
-        if (!job || job->m_cancelled)
-            return;
-
-        cancel(job, m_jobId);
-    }
-
-private:
-    WebURLLoaderManager* m_manager;
-    int m_jobId;
-};
-
 AutoLockJob::AutoLockJob(WebURLLoaderManager* manager, int jobId)
 {
     m_manager = manager;
@@ -1091,7 +955,7 @@ public:
     virtual void run() override
     {
         WebURLLoaderInternal* job = m_manager->checkJob(m_jobId);
-        if (!job || job->m_cancelled)
+        if (!job || job->isCancelled())
             return;
 
         KURL url = job->firstRequest()->url();
@@ -1177,13 +1041,25 @@ int WebURLLoaderManager::addAsynchronousJob(WebURLLoaderInternal* job)
     return jobId;
 }
 
-void WebURLLoaderManager::doCancel(int jobId, WebURLLoaderInternal* job)
+void WebURLLoaderManager::cancelWithHookRedirect(WebURLLoaderInternal* job)
+{
+    doCancel(job, kHookRedirectCancelled);
+}
+
+void WebURLLoaderManager::doCancel(WebURLLoaderInternal* job, CancelledReason cancelledReason)
 {
     WTF::Locker<WTF::Mutex> locker(job->m_destroingMutex);
-    bool cancelled = job->m_cancelled;
-    job->m_cancelled = true;
-    if (!cancelled && job->m_state != WebURLLoaderInternal::kDestroying)
-        m_thread->postTask(FROM_HERE, WTF::bind(&WebURLLoaderManager::removeFromCurlOnIoThread, this, jobId));
+    bool cancelled = job->isCancelled();
+
+    RELEASE_ASSERT(kNoCancelled != cancelledReason);
+    //RELEASE_ASSERT(!(kHookRedirectCancelled == job->m_cancelledReason && kNormalCancelled == cancelledReason));
+
+    if (!(kHookRedirectCancelled == job->m_cancelledReason && kHookRedirectCancelled != cancelledReason)) {
+        job->m_cancelledReason = cancelledReason;
+    }
+
+    if (WebURLLoaderInternal::kDestroying != job->m_state && !cancelled)
+        m_thread->postTask(FROM_HERE, WTF::bind(&WebURLLoaderManager::removeFromCurlOnIoThread, this, job->m_id));
 }
 
 void WebURLLoaderManager::cancel(int jobId)
@@ -1195,7 +1071,7 @@ void WebURLLoaderManager::cancel(int jobId)
     if (!job)
         return;
 
-    doCancel(jobId, job);
+    doCancel(job, kNormalCancelled);
 }
 
 void WebURLLoaderManager::cancelAll()
@@ -1206,7 +1082,7 @@ void WebURLLoaderManager::cancelAll()
     for (; it != m_liveJobs.end(); ++it) {
         WebURLLoaderInternal* job = it->value;
         int jobId = it->key;
-        doCancel(jobId, job);
+        doCancel(job, kNormalCancelled);
     }
 }
 
@@ -1633,7 +1509,7 @@ void WebURLLoaderManager::startOnIoThread(int jobId)
         //         OutputDebugStringW(outstr.charactersWithNullTermination().data());
 #endif
         WTF::Locker<WTF::Mutex> locker(job->m_destroingMutex);
-        job->m_cancelled = true;
+        job->m_cancelledReason = kNormalCancelled;
         removeFromCurlOnIoThread(jobId);
 
         curl_easy_setopt(job->m_handle, CURLOPT_PRIVATE, nullptr);
@@ -1661,7 +1537,7 @@ WebURLLoaderInternal::WebURLLoaderInternal(WebURLLoaderImplCurl* loader, const W
     , m_handle(0)
     , m_url(0)
     , m_customHeaders(0)
-    , m_cancelled(false)
+    , m_cancelledReason(kNoCancelled)
     //, m_formDataStream(loader)
     , m_scheduledFailureType(NoFailure)
     , m_loader(loader)
