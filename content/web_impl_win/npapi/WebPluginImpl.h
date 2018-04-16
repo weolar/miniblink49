@@ -266,22 +266,37 @@ public:
 
     void keepAlive();
 
-    void setPlatformPluginWidget(PlatformPluginWidget widget) { setPlatformWidget(widget); }
-    PlatformPluginWidget platformPluginWidget() const { return platformWidget(); }
-
-    PlatformWidget platformWidget() const { return m_widget; }
-    void setPlatformWidget(PlatformWidget widget)
+    void setPlatformPluginWidget(PlatformPluginWidget widget)
     {
         if (widget != m_widget) {
             m_widget = widget;
         }
     }
 
-    void setParentPlatformWidget(PlatformWidget widget)
+    PlatformPluginWidget platformPluginWidget() const 
+    { 
+        return m_widget;
+    }
+
+//     PlatformWidget platformWidget() const { return m_widget; }
+//     void setPlatformWidget(PlatformWidget widget)
+//     {
+//         if (widget != m_widget) {
+//             m_widget = widget;
+//         }
+//     }
+
+    void setParentPlatformPluginWidget(PlatformWidget widget)
     {
         if (widget != m_parentWidget)
             m_parentWidget = widget;
     }
+
+    PlatformPluginWidget parentPlatformPluginWidget() const
+    {
+        return m_parentWidget;
+    }
+    
 
     void setWebViewClient(blink::WebViewClient* client) { m_webviewClient = client; }
 
