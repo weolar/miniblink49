@@ -650,6 +650,7 @@ static void flattenHTTPBodyBlobElement(const WebString& blobUUID, curl_off_t* si
             flattenElement = new FlattenHTTPBodyElement();
             flattenElement->type = WebHTTPBody::Element::TypeData;
             flattenElement->data.append(item->data.data(), item->data.size());
+            flattenElements->append(flattenElement);
             *size += item->data.size();
         } else if (blink::WebBlobData::Item::TypeFile == item->type) {
             if (getFileSize(item->filePath, fileSizeResult)) {
@@ -767,8 +768,7 @@ static void setupPutOnIoThread(WebURLLoaderInternal* job, SetupPutInfo* info)
 
 static SetupPutInfo* setupPutOnMainThread(WebURLLoaderInternal* job, struct curl_slist** headers)
 {
-    // Disable the Expect: 100 continue header
-    *headers = curl_slist_append(*headers, "Expect:");
+    *headers = curl_slist_append(*headers, "Expect:"); // Disable the Expect: 100 continue header
 
     size_t numElements = getFormElementsCount(job);
     if (!numElements)
@@ -778,41 +778,6 @@ static SetupPutInfo* setupPutOnMainThread(WebURLLoaderInternal* job, struct curl
     result->data = setupFormDataOnMainThread(job, CURLOPT_INFILESIZE_LARGE, headers);
     return result;
 }
-
-// static void flattenHttpBody(const WebHTTPBody& httpBody, std::vector<FlattenHTTPBodyElement*>* data)
-// {
-//     for (size_t i = 0; i < httpBody.elementCount(); ++i) {
-//         WebHTTPBody::Element element;
-//         if (!httpBody.elementAt(i, element))
-//             continue;
-// 
-//         FlattenHTTPBodyElement* flattenElement = nullptr;
-//         if (WebHTTPBody::Element::TypeData == element.type) {
-//             flattenElement = new FlattenHTTPBodyElement();
-//             flattenElement->type = WebHTTPBody::Element::TypeData;
-//             flattenElement->data.append(element.data.data(), element.data.size());
-//         } else if (WebHTTPBody::Element::TypeBlob == element.type) {
-//             WebBlobRegistryImpl* blobReg = (WebBlobRegistryImpl*)blink::Platform::current()->blobRegistry();
-//             net::BlobDataWrap* blobData = blobReg->getBlobDataFromUUID(element.blobUUID);
-//             if (!blobData)
-//                 continue;
-//             flattenElement->type = WebHTTPBody::Element::TypeData;
-// 
-//             const Vector<blink::WebBlobData::Item*>& items = blobData->items();
-//             for (size_t i = 0; i < items.size(); ++i) {
-//                 blink::WebBlobData::Item* item = items[i];
-//                 flattenElement->data.append(item->data.data(), item->data.size());
-//             }
-//         } else if (WebHTTPBody::Element::TypeFile == element.type) {
-//             flattenElement = new FlattenHTTPBodyElement();
-//             flattenElement->type = WebHTTPBody::Element::TypeFile;
-//             Vector<UChar> filePath = WTF::ensureUTF16UChar(element.filePath, true);
-//             flattenElement->filePath = filePath.data();
-//         }
-//         if (flattenElement)
-//             data->push_back(flattenElement);
-//     }
-// }
 
 static void setupPostOnIoThread(WebURLLoaderInternal* job, SetupPostInfo* info)
 {
@@ -840,6 +805,8 @@ static void setupPostOnIoThread(WebURLLoaderInternal* job, SetupPostInfo* info)
 
 static SetupPostInfo* setupPostOnMainThread(WebURLLoaderInternal* job, struct curl_slist** headers)
 {
+    *headers = curl_slist_append(*headers, "Expect:100-continue"); // Disable the Expect: 100 continue header
+
     size_t numElements = getFormElementsCount(job);
     if (!numElements)
         return nullptr;
@@ -1101,13 +1068,20 @@ void WebURLLoaderManager::dispatchSynchronousJob(WebURLLoaderInternal* job)
         return;
     }
 
+    Vector<char> urlBuf = WTF::ensureStringToUTF8(job->firstRequest()->url().string(), true);
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
     RequestExtraData* requestExtraData = reinterpret_cast<RequestExtraData*>(job->firstRequest()->extraData());
     WebPage* page = requestExtraData->page;
     if (page->wkeHandler().loadUrlBeginCallback) {
-        Vector<char> url = WTF::ensureStringToUTF8(job->firstRequest()->url().string(), true);
-        if (page->wkeHandler().loadUrlBeginCallback(page->wkeWebView(), page->wkeHandler().loadUrlBeginCallbackParam,
-            url.data(), job)) {
+        
+        if (page->wkeHandler().loadUrlBeginCallback(
+            page->wkeWebView(), 
+            page->wkeHandler().loadUrlBeginCallbackParam,
+            urlBuf.data(),
+            job)) {
+            if (job->m_asynWkeNetSetData && kNormalCancelled != job->m_cancelledReason)
+                WebURLLoaderManager::sharedInstance()->didReceiveDataOrDownload(job, static_cast<char*>(job->m_asynWkeNetSetData), job->m_asynWkeNetSetDataLength, 0);
+
             WebURLLoaderManager::sharedInstance()->handleDidFinishLoading(job, WTF::currentTime(), 0);
             delete job;
             return;
@@ -1145,6 +1119,15 @@ void WebURLLoaderManager::dispatchSynchronousJob(WebURLLoaderInternal* job)
     } else {
         if (job->client() && job->loader())
             handleDidReceiveResponse(job);
+
+        wkeLoadUrlEndCallback loadUrlEndCallback = page->wkeHandler().loadUrlEndCallback;
+        void* loadUrlEndCallbackParam = page->wkeHandler().loadUrlEndCallbackParam;
+        if (job->m_isHookRequest && loadUrlEndCallback)
+            loadUrlEndCallback(page->wkeWebView(), loadUrlEndCallbackParam, urlBuf.data(), job, job->m_hookBuf, job->m_hookLength);
+
+        if (job->m_hookBuf)
+            didReceiveDataOrDownload(job, static_cast<char*>(job->m_hookBuf), job->m_hookLength, 0);
+        handleDidFinishLoading(job, 0, 0);
     }
 
     removeLiveJobs(jobId);

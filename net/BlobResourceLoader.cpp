@@ -35,6 +35,7 @@
 #include "net/AsyncFileStream.h"
 #include "net/FileStream.h"
 #include "net/MemBlobStream.h"
+#include "content/web_impl_win/WebBlobRegistryImpl.h"
 #include "third_party/WebKit/Source/platform/network/HTTPParsers.h"
 #include "third_party/WebKit/Source/platform/weborigin/KURL.h"
 #include "third_party/WebKit/public/platform/WebURLLoaderClient.h"
@@ -457,6 +458,7 @@ void BlobResourceLoader::getSizeForNext()
         return;
     }
 
+    String filePath;
     blink::WebBlobData::Item* item = m_blobData->items().at(m_sizeItemCount);
     switch (item->type) {
     case blink::WebBlobData::Item::TypeData:
@@ -471,6 +473,34 @@ void BlobResourceLoader::getSizeForNext()
         else
             didGetSize(m_streamWrap->getSize(item->filePath, item->expectedModificationTime));
         break;
+    case blink::WebBlobData::Item::TypeBlob: {
+        content::WebBlobRegistryImpl* blobReg = (content::WebBlobRegistryImpl*)blink::Platform::current()->blobRegistry();
+        net::BlobDataWrap* blobData = blobReg->getBlobDataFromUUID(item->blobUUID);
+        
+        const Vector<blink::WebBlobData::Item*>& items = blobData->items();
+        for (size_t i = 0; i < items.size(); ++i) {
+            blink::WebBlobData::Item* it = items[i];
+            switch (it->type) {
+            case blink::WebBlobData::Item::TypeData:
+                didGetSize(it->data.size());
+                break;
+            case blink::WebBlobData::Item::TypeFileSystemURL:
+                filePath = getPathBySystemURL(item->fileSystemURL); // no break
+                break;
+            case blink::WebBlobData::Item::TypeFile:
+                if (m_async)
+                    m_streamWrap->getSize(filePath, it->expectedModificationTime);
+                else
+                    didGetSize(m_streamWrap->getSize(filePath, it->expectedModificationTime));
+                break;
+            case blink::WebBlobData::Item::TypeBlob:
+                DebugBreak();
+                break;
+            }
+        }
+
+        break;
+    }
     default:
         ASSERT_NOT_REACHED();
     }
