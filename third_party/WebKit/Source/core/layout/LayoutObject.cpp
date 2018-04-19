@@ -854,17 +854,37 @@ LayoutBlock* LayoutObject::containerForFixedPosition(const LayoutBoxModelObject*
     return toLayoutBlock(ancestor);
 }
 
+LayoutObject* LayoutObject::containerForAbsolutePosition(const LayoutBoxModelObject* paintInvalidationContainer, bool* paintInvalidationContainerSkipped) const
+{
+    // We technically just want our containing block, but
+    // we may not have one if we're part of an uninstalled
+    // subtree. We'll climb as high as we can though.
+    for (LayoutObject* object = parent(); object; object = object->parent()) {
+        if (object->style()->position() != StaticPosition)
+            return object;
+
+        if (object->canContainFixedPositionObjects())
+            return object;
+
+        if (paintInvalidationContainerSkipped && object == paintInvalidationContainer)
+            *paintInvalidationContainerSkipped = true;
+    }
+    return nullptr;
+}
+
 LayoutBlock* LayoutObject::containingBlockForAbsolutePosition() const
 {
-    LayoutObject* o = parent();
-    while (o) {
-        if (o->style()->position() != StaticPosition && (!o->isInline() || o->isReplaced()))
-            break;
-
-        if (o->canContainFixedPositionObjects())
-            break;
-
-        o = o->parent();
+    // https://chromium.googlesource.com/chromium/src/+log/87c6ba998684a8e2f6866e55e8d6ee5229cbde36/third_party/WebKit/Source/core/layout/LayoutObject.cpp?s=6fe9d9762eb66a24bbbd3a5c2badf6e5ea98d1e2
+    // https://chromium.googlesource.com/chromium/src/+/6f9a69691d825e9bb62802b2ea5ac65ed29eb0ba%5E%21/#F0
+    LayoutObject* o = containerForAbsolutePosition();
+    // For relpositioned inlines, we return the nearest non-anonymous enclosing block. We don't try
+    // to return the inline itself.  This allows us to avoid having a positioned objects
+    // list in all LayoutInlines and lets us return a strongly-typed LayoutBlock* result
+    // from this method.  The container() method can actually be used to obtain the
+    // inline directly.
+    if (o && o->isInline() && !o->isReplaced()) {
+        ASSERT(o->style()->hasInFlowPosition());
+        o = o->containingBlock();
     }
 
     if (o && !o->isLayoutBlock())
@@ -2281,23 +2301,10 @@ LayoutObject* LayoutObject::container(const LayoutBoxModelObject* paintInvalidat
     if (pos == FixedPosition)
         return containerForFixedPosition(paintInvalidationContainer, paintInvalidationContainerSkipped);
 
-    if (pos == AbsolutePosition) {
-        // We technically just want our containing block, but
-        // we may not have one if we're part of an uninstalled
-        // subtree. We'll climb as high as we can though.
-        while (o) {
-            if (o->style()->position() != StaticPosition)
-                break;
-
-            if (o->canContainFixedPositionObjects())
-                break;
-
-            if (paintInvalidationContainerSkipped && o == paintInvalidationContainer)
-                *paintInvalidationContainerSkipped = true;
-
-            o = o->parent();
-        }
-    } else if (isColumnSpanAll()) {
+    if (pos == AbsolutePosition)
+        return containerForAbsolutePosition(paintInvalidationContainer, paintInvalidationContainerSkipped);
+        
+    if (isColumnSpanAll()) {
         LayoutObject* multicolContainer = spannerPlaceholder()->container();
         if (paintInvalidationContainerSkipped && paintInvalidationContainer) {
             // We jumped directly from the spanner to the multicol container. Need to check if
@@ -3310,6 +3317,163 @@ void LayoutObject::setIsSlowRepaintObject(bool isSlowRepaintObject)
     else
         frameView()->removeSlowRepaintObject();
 }
+
+
+void LayoutObject::setSelfNeedsLayout(bool b)
+{
+    m_bitfields.setSelfNeedsLayout(b);
+    // rt_rt_
+    Node* n = node();
+    if (n && n->isElementNode()) {
+        Element* e = (Element*)n;
+        String id = e->getIdAttribute();
+        if (WTF::kNotFound != id.find("rt_rt_")) {
+            OutputDebugStringA("");
+        }
+    }
+}
+
+void LayoutObject::setNeedsPositionedMovementLayout()
+{
+    bool alreadyNeededLayout = needsPositionedMovementLayout();
+    setNeedsPositionedMovementLayout(true);
+    ASSERT(!isSetNeedsLayoutForbidden());
+    if (!alreadyNeededLayout)
+        markContainerChainForLayout();
+}
+
+void LayoutObject::setNeedsPositionedMovementLayout(bool b)
+{
+    m_bitfields.setNeedsPositionedMovementLayout(b);
+}
+
+void LayoutObject::setNormalChildNeedsLayout(bool b)
+{
+    m_bitfields.setNormalChildNeedsLayout(b);
+
+//     if (isLayoutView())
+//         OutputDebugStringA("");
+// 
+//     Node* n = node();
+//     if (!n || !n->isElementNode())
+//         return;
+//     Element* e = (Element*)n;
+//     const AtomicString& id = e->getIdAttribute();
+//     if (id == "js-player-decorator") {
+//         if (b)
+//             OutputDebugStringA("setNormalChildNeedsLayout.js-player-decorator.true\n");
+//         else
+//             OutputDebugStringA("setNormalChildNeedsLayout.js-player-decorator.false\n");
+// 
+//         if (0) {
+//             n->showTreeForThis();
+//         }
+//     }
+}
+
+void LayoutObject::setPosChildNeedsLayout(bool b) { m_bitfields.setPosChildNeedsLayout(b); }
+void LayoutObject::setNeedsSimplifiedNormalFlowLayout(bool b) { m_bitfields.setNeedsSimplifiedNormalFlowLayout(b); }
+void LayoutObject::setIsDragging(bool b) { m_bitfields.setIsDragging(b); }
+void LayoutObject::setEverHadLayout(bool b) { m_bitfields.setEverHadLayout(b); }
+void LayoutObject::setShouldInvalidateOverflowForPaint(bool b) { m_bitfields.setShouldInvalidateOverflowForPaint(b); }
+void LayoutObject::setSelfNeedsOverflowRecalcAfterStyleChange(bool b) { m_bitfields.setSelfNeedsOverflowRecalcAfterStyleChange(b); }
+void LayoutObject::setChildNeedsOverflowRecalcAfterStyleChange(bool b) { m_bitfields.setChildNeedsOverflowRecalcAfterStyleChange(b); }
+
+void LayoutObject::setNeedsLayout(LayoutInvalidationReasonForTracing reason, MarkingBehavior markParents, SubtreeLayoutScope* layouter)
+{
+    ASSERT(!isSetNeedsLayoutForbidden());
+    bool alreadyNeededLayout = m_bitfields.selfNeedsLayout();
+    setSelfNeedsLayout(true);
+    if (!alreadyNeededLayout) {
+        TRACE_EVENT_INSTANT1(
+            TRACE_DISABLED_BY_DEFAULT("devtools.timeline.invalidationTracking"),
+            "LayoutInvalidationTracking",
+            TRACE_EVENT_SCOPE_THREAD,
+            "data",
+            InspectorLayoutInvalidationTrackingEvent::data(this, reason));
+        if (markParents == MarkContainerChain && (!layouter || layouter->root() != this))
+            markContainerChainForLayout(true, layouter);
+    }
+}
+
+void LayoutObject::setNeedsLayoutAndFullPaintInvalidation(LayoutInvalidationReasonForTracing reason, MarkingBehavior markParents, SubtreeLayoutScope* layouter)
+{
+    setNeedsLayout(reason, markParents, layouter);
+    setShouldDoFullPaintInvalidation();
+}
+
+void LayoutObject::setChildNeedsLayout(MarkingBehavior markParents, SubtreeLayoutScope* layouter)
+{
+    ASSERT(!isSetNeedsLayoutForbidden());
+    bool alreadyNeededLayout = normalChildNeedsLayout();
+    setNormalChildNeedsLayout(true);
+    // FIXME: Replace MarkOnlyThis with the SubtreeLayoutScope code path and remove the MarkingBehavior argument entirely.
+    if (!alreadyNeededLayout && markParents == MarkContainerChain && (!layouter || layouter->root() != this))
+        markContainerChainForLayout(true, layouter);
+}
+
+void LayoutObject::clearNeedsLayout()
+{
+    setNeededLayoutBecauseOfChildren(needsLayoutBecauseOfChildren());
+    setLayoutDidGetCalledSinceLastFrame();
+    setSelfNeedsLayout(false);
+    setEverHadLayout(true);
+    setPosChildNeedsLayout(false);
+    setNeedsSimplifiedNormalFlowLayout(false);
+    setNormalChildNeedsLayout(false);
+    setNeedsPositionedMovementLayout(false);
+    setAncestorLineBoxDirty(false);
+#if ENABLE(ASSERT)
+    checkBlockPositionedObjectsNeedLayout();
+#endif
+}
+
+bool LayoutObject::normalChildNeedsLayout() const
+{ 
+    return m_bitfields.normalChildNeedsLayout();
+}
+
+bool LayoutObject::selfNeedsLayout() const
+{
+    return m_bitfields.selfNeedsLayout();
+}
+
+#if ENABLE(ASSERT)
+
+void LayoutObject::assertLaidOut() const
+{
+#ifndef NDEBUG
+    if (needsLayout()) {
+        //showLayoutTreeForThis();
+        OutputDebugStringA("LayoutObject::assertLaidOut fail! \n");
+    }
+#endif
+    //ASSERT_WITH_SECURITY_IMPLICATION(!needsLayout());
+}
+
+void LayoutObject::assertSubtreeIsLaidOut() const
+{
+    for (const LayoutObject* layoutObject = this; layoutObject; layoutObject = layoutObject->nextInPreOrder())
+        layoutObject->assertLaidOut();
+}
+
+void LayoutObject::assertClearedPaintInvalidationState() const
+{
+#ifndef NDEBUG
+    if (paintInvalidationStateIsDirty()) {
+        showLayoutTreeForThis();
+        ASSERT_NOT_REACHED();
+    }
+#endif
+}
+
+void LayoutObject::assertSubtreeClearedPaintInvalidationState() const
+{
+    for (const LayoutObject* layoutObject = this; layoutObject; layoutObject = layoutObject->nextInPreOrder())
+        layoutObject->assertClearedPaintInvalidationState();
+}
+
+#endif // ENABLE(ASSERT)
 
 } // namespace blink
 
