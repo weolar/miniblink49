@@ -52,13 +52,10 @@ typedef enum {
 #ifndef HAVE_WCHAR_T
 typedef unsigned short wchar_t;
 #endif
+#endif
 
-#ifndef HAVE_BOOL
-typedef unsigned char bool;
-#define true 1
-#define false 0
-#endif
-#endif
+#include <stdbool.h>
+
 
 typedef char utf8;
 #if !defined(__cplusplus)
@@ -131,6 +128,7 @@ typedef FILE_READ WKE_FILE_READ;
 typedef FILE_SEEK WKE_FILE_SEEK;
 typedef bool(*WKE_EXISTS_FILE)(const char * path);
 
+struct _wkeClientHandler; // declare warning fix
 typedef void(*ON_TITLE_CHANGED) (const struct _wkeClientHandler* clientHandler, const wkeString title);
 typedef void(*ON_URL_CHANGED) (const struct _wkeClientHandler* clientHandler, const wkeString url);
 
@@ -150,12 +148,12 @@ typedef bool(*wkeCookieVisitor)(
     int* expires // The cookie expiration date is only valid if |has_expires| is true.
     );
 
-enum wkeCookieCommand {
+typedef enum {
     wkeCookieCommandClearAllCookies,
     wkeCookieCommandClearSessionCookies,
     wkeCookieCommandFlushCookiesToFile,
     wkeCookieCommandReloadCookiesFromFile,
-};
+} wkeCookieCommand;
 
 typedef enum {
     WKE_NAVIGATION_TYPE_LINKCLICK,
@@ -166,7 +164,7 @@ typedef enum {
     WKE_NAVIGATION_TYPE_OTHER
 } wkeNavigationType;
 
-enum WkeCursorInfoType {
+typedef enum {
     WkeCursorInfoPointer,
     WkeCursorInfoCross,
     WkeCursorInfoHand,
@@ -211,7 +209,7 @@ enum WkeCursorInfoType {
     WkeCursorInfoGrab,
     WkeCursorInfoGrabbing,
     WkeCursorInfoCustom
-};
+} WkeCursorInfoType;
 
 typedef struct {
     int x;
@@ -228,7 +226,7 @@ typedef struct {
     bool fullscreen;
 } wkeWindowFeatures;
 
-struct wkeWebDragData {
+typedef struct {
     struct Item {
         enum wkeStorageType {
             // String data with an associated MIME type. Depending on the MIME type, there may be
@@ -241,9 +239,7 @@ struct wkeWebDragData {
             StorageTypeBinaryData,
             // Stores the filesystem URL of one file being dragged into the renderer.
             StorageTypeFileSystemFile,
-        };
-
-        wkeStorageType storageType;
+        } storageType;
 
         // Only valid when storageType == StorageTypeString.
         wkeString stringType;
@@ -269,14 +265,14 @@ struct wkeWebDragData {
         wkeString baseURL;
     };
 
-    Item* m_itemList;
+    struct Item* m_itemList;
     int m_itemListLength;
 
     int m_modifierKeyState; // State of Shift/Ctrl/Alt/Meta keys.
     wkeString m_filesystemId;
-};
+} wkeWebDragData;
 
-enum wkeWebDragOperation {
+typedef enum {
     wkeWebDragOperationNone = 0,
     wkeWebDragOperationCopy = 1,
     wkeWebDragOperationLink = 2,
@@ -285,10 +281,11 @@ enum wkeWebDragOperation {
     wkeWebDragOperationMove = 16,
     wkeWebDragOperationDelete = 32,
     wkeWebDragOperationEvery = 0xffffffff
-};
+} wkeWebDragOperation;
+
 typedef wkeWebDragOperation wkeWebDragOperationsMask;
 
-enum wkeResourceType {
+typedef enum {
     WKE_RESOURCE_TYPE_MAIN_FRAME = 0,       // top level page
     WKE_RESOURCE_TYPE_SUB_FRAME = 1,        // frame or iframe
     WKE_RESOURCE_TYPE_STYLESHEET = 2,       // a CSS stylesheet
@@ -308,9 +305,9 @@ enum wkeResourceType {
     WKE_RESOURCE_TYPE_PING = 14,            // a ping request for <a ping>
     WKE_RESOURCE_TYPE_SERVICE_WORKER = 15,  // the main resource of a service worker.
     WKE_RESOURCE_TYPE_LAST_TYPE
-};
+} wkeResourceType;
 
-struct wkeWillSendRequestInfo {
+typedef struct {
     bool isHolded;
     wkeString url;
     wkeString newUrl;
@@ -319,13 +316,13 @@ struct wkeWillSendRequestInfo {
     wkeString method;
     wkeString referrer;
     void* headers;
-};
+} wkeWillSendRequestInfo;
 
-struct wkeTempCallbackInfo {
+typedef struct {
     int size;
     wkeWebFrameHandle frame;
     wkeWillSendRequestInfo* willSendRequestInfo;
-};
+} wkeTempCallbackInfo;
 
 typedef void(*wkeTitleChangedCallback)(wkeWebView webView, void* param, const wkeString title);
 typedef void(*wkeURLChangedCallback)(wkeWebView webView, void* param, const wkeString url);
@@ -343,12 +340,12 @@ typedef wkeWebView(*wkeCreateViewCallback)(wkeWebView webView, void* param, wkeN
 typedef void(*wkeDocumentReadyCallback)(wkeWebView webView, void* param);
 typedef void(*wkeDocumentReady2Callback)(wkeWebView webView, void* param, wkeWebFrameHandle frameId);
 
-struct wkeMediaLoadInfo {
+typedef struct {
     int size;
     int width;
     int height;
     double duration;
-};
+} wkeMediaLoadInfo;
 typedef void(*wkeWillMediaLoadCallback)(wkeWebView webView, void* param, const char* url, wkeMediaLoadInfo* info);
 
 typedef enum {
@@ -405,10 +402,10 @@ typedef enum {
 typedef bool(*wkeWindowClosingCallback)(wkeWebView webWindow, void* param);
 typedef void(*wkeWindowDestroyCallback)(wkeWebView webWindow, void* param);
 
-struct wkeDraggableRegion {
+typedef struct {
     RECT bounds;
     bool draggable;
-};
+} wkeDraggableRegion;
 typedef void(*wkeDraggableRegionsChangedCallback)(wkeWebView webWindow, void* param, const wkeDraggableRegion* rects, int rectCount);
 
 //JavaScript Bind-----------------------------------------------------------------------------------
@@ -427,10 +424,11 @@ typedef enum {
     JSTYPE_ARRAY,
 } jsType;
 
-// cexer JS¶ÔÏó¡¢º¯Êı°ó¶¨Ö§³Ö
+// cexer JSå¯¹è±¡ã€å‡½æ•°ç»‘å®šæ”¯æŒ
 typedef jsValue(*jsGetPropertyCallback)(jsExecState es, jsValue object, const char* propertyName);
 typedef bool(*jsSetPropertyCallback)(jsExecState es, jsValue object, const char* propertyName, jsValue value);
 typedef jsValue(*jsCallAsFunctionCallback)(jsExecState es, jsValue object, jsValue* args, int argCount);
+struct tagjsData; // declare warning fix
 typedef void(*jsFinalizeCallback)(struct tagjsData* data);
 
 typedef struct tagjsData {
@@ -442,6 +440,7 @@ typedef struct tagjsData {
 } jsData;
 
 
+#if defined(__cplusplus)
 namespace wke {
 
 class IWebView {
@@ -539,6 +538,7 @@ public:
 };
 
 }
+#endif
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -604,10 +604,17 @@ public:
 
 // ---
 
-#define WKE_GET_PTR_ITERATOR(name) \
-    name = (FN_##name)::GetProcAddress(hMod, #name); \
-    if (!name) \
-        MessageBoxA(((HWND)0), "wke api not found", #name, 0);
+#if defined(__cplusplus)
+    #define WKE_GET_PTR_ITERATOR(name) \
+        name = (FN_##name)::GetProcAddress(hMod, #name); \
+        if (!name) \
+            MessageBoxA(((HWND)0), "wke api not found", #name, 0);
+#else
+    #define WKE_GET_PTR_ITERATOR(name) \
+        name = (FN_##name)GetProcAddress(hMod, #name); \
+        if (!name) \
+            MessageBoxA(((HWND)0), "wke api not found", #name, 0);
+#endif
 
 #define WKE_GET_PTR_ITERATOR0(returnVal, name, description) \
     WKE_GET_PTR_ITERATOR(name);
@@ -633,7 +640,7 @@ public:
 #define WKE_GET_PTR_ITERATOR11(returnVal, name, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, description) \
     WKE_GET_PTR_ITERATOR(name);
 
-// ÒÔÏÂÊÇwkeµÄµ¼³öº¯Êı¡£¸ñÊ½°´ÕÕ¡¾·µ»ØÀàĞÍ¡¿¡¾º¯ÊıÃû¡¿¡¾²ÎÊı¡¿À´ÅÅÁĞ
+// ä»¥ä¸‹æ˜¯wkeçš„å¯¼å‡ºå‡½æ•°ã€‚æ ¼å¼æŒ‰ç…§ã€è¿”å›ç±»å‹ã€‘ã€å‡½æ•°åã€‘ã€å‚æ•°ã€‘æ¥æ’åˆ—
 
 #define WKE_FOR_EACH_DEFINE_FUNCTION(ITERATOR0, ITERATOR1, ITERATOR2, ITERATOR3, ITERATOR4, ITERATOR5, ITERATOR6, ITERATOR11) \
     ITERATOR0(void, wkeShutdown, "") \
@@ -711,8 +718,8 @@ public:
     ITERATOR2(void, wkeSetNavigationToNewWindowEnable, wkeWebView webView, bool b, "") \
     ITERATOR2(void, wkeSetCspCheckEnable, wkeWebView webView, bool b, "") \
     ITERATOR2(void, wkeSetNpapiPluginsEnabled, wkeWebView webView, bool b, "") \
-    ITERATOR2(void, wkeSetHeadlessEnabled, wkeWebView webView, bool b, "¿ÉÒÔ¹Ø±ÕäÖÈ¾") \
-    ITERATOR2(void, wkeSetDragEnable, wkeWebView webView, bool b, "¿É¹Ø±ÕÍÏ×§ÎÄ¼ş¼ÓÔØÍøÒ³") \
+    ITERATOR2(void, wkeSetHeadlessEnabled, wkeWebView webView, bool b, "å¯ä»¥å…³é—­æ¸²æŸ“") \
+    ITERATOR2(void, wkeSetDragEnable, wkeWebView webView, bool b, "å¯å…³é—­æ‹–æ‹½æ–‡ä»¶åŠ è½½ç½‘é¡µ") \
     \
     ITERATOR2(void, wkeSetViewNetInterface, wkeWebView webView, const char* netInterface, "") \
     \
@@ -788,7 +795,7 @@ public:
     \
     ITERATOR1(const wchar_t*, wkeGetCookieW, wkeWebView webView, "") \
     ITERATOR1(const utf8*, wkeGetCookie, wkeWebView webView, "") \
-    ITERATOR3(void, wkeSetCookie, wkeWebView webView, const utf8* url, const utf8* cookie, "cookie¸ñÊ½±ØĞëÊÇ:Set-cookie: PRODUCTINFO=webxpress; domain=.fidelity.com; path=/; secure") \
+    ITERATOR3(void, wkeSetCookie, wkeWebView webView, const utf8* url, const utf8* cookie, "cookieæ ¼å¼å¿…é¡»æ˜¯:Set-cookie: PRODUCTINFO=webxpress; domain=.fidelity.com; path=/; secure") \
     ITERATOR2(void, wkeVisitAllCookie, void* params, wkeCookieVisitor visitor, "") \
     ITERATOR1(void, wkePerformCookieCommand, wkeCookieCommand command, "") \
     ITERATOR2(void, wkeSetCookieEnabled, wkeWebView webView, bool enable, "") \
@@ -877,9 +884,9 @@ public:
     ITERATOR2(void, wkeNetSetMIMEType, void* job, char *type, "") \
     ITERATOR4(void, wkeNetSetHTTPHeaderField, void* job, wchar_t* key, wchar_t* value, bool response, "") \
     ITERATOR2(void, wkeNetSetURL, void* job, const char *url, "") \
-    ITERATOR3(void, wkeNetSetData, void* job, void *buf, int len, "µ÷ÓÃ´Ëº¯Êıºó,ÍøÂç²ãÊÕµ½Êı¾İ»á´æ´¢ÔÚÒ»bufÄÚ,½ÓÊÕÊı¾İÍê³ÉºóÏìÓ¦OnLoadUrlEndÊÂ¼ş.#´Ëµ÷ÓÃÑÏÖØÓ°ÏìĞÔÄÜ,É÷ÓÃ" \
-        "´Ëº¯ÊıºÍwkeNetSetDataµÄÇø±ğÊÇ£¬wkeNetHookRequest»áÔÚ½ÓÊÜµ½ÕæÕıÍøÂçÊı¾İºóÔÙµ÷ÓÃ»Øµ÷£¬²¢ÔÊĞí»Øµ÷ĞŞ¸ÄÍøÂçÊı¾İ¡£"\
-        "¶øwkeNetSetDataÊÇÔÚÍøÂçÊı¾İ»¹Ã»·¢ËÍµÄÊ±ºòĞŞ¸Ä") \
+    ITERATOR3(void, wkeNetSetData, void* job, void *buf, int len, "è°ƒç”¨æ­¤å‡½æ•°å,ç½‘ç»œå±‚æ”¶åˆ°æ•°æ®ä¼šå­˜å‚¨åœ¨ä¸€bufå†…,æ¥æ”¶æ•°æ®å®Œæˆåå“åº”OnLoadUrlEndäº‹ä»¶.#æ­¤è°ƒç”¨ä¸¥é‡å½±å“æ€§èƒ½,æ…ç”¨" \
+        "æ­¤å‡½æ•°å’ŒwkeNetSetDataçš„åŒºåˆ«æ˜¯ï¼ŒwkeNetHookRequestä¼šåœ¨æ¥å—åˆ°çœŸæ­£ç½‘ç»œæ•°æ®åå†è°ƒç”¨å›è°ƒï¼Œå¹¶å…è®¸å›è°ƒä¿®æ”¹ç½‘ç»œæ•°æ®ã€‚"\
+        "è€ŒwkeNetSetDataæ˜¯åœ¨ç½‘ç»œæ•°æ®è¿˜æ²¡å‘é€çš„æ—¶å€™ä¿®æ”¹") \
     ITERATOR1(void, wkeNetHookRequest, void *job, "") \
     ITERATOR3(void, wkeNetOnResponse, wkeWebView webView, wkeNetResponseCallback callback, void* param, "") \
     ITERATOR2(void, wkeNetGetMIMEType, void* job, wkeString mime, "") \
@@ -1012,10 +1019,17 @@ inline void wkeSetWkeDllPath(const wchar_t* dllPath)
 
 inline void wkeInitializeEx(const wkeSettings* settings)
 {
+#if defined(__cplusplus)
     HMODULE hMod = ::LoadLibraryW(kWkeDllPath);
 
     FN_wkeInitializeEx wkeInitializeExFunc = (FN_wkeInitializeEx)::GetProcAddress(hMod, "wkeInitializeEx");
     wkeInitializeExFunc(settings);
+#else
+    HMODULE hMod = LoadLibraryW(kWkeDllPath);
+
+    FN_wkeInitializeEx wkeInitializeExFunc = (FN_wkeInitializeEx)GetProcAddress(hMod, "wkeInitializeEx");
+    wkeInitializeExFunc(settings);
+#endif
 
     WKE_FOR_EACH_DEFINE_FUNCTION(WKE_GET_PTR_ITERATOR0, WKE_GET_PTR_ITERATOR1, WKE_GET_PTR_ITERATOR2, WKE_GET_PTR_ITERATOR3, \
         WKE_GET_PTR_ITERATOR4, WKE_GET_PTR_ITERATOR5, WKE_GET_PTR_ITERATOR6, WKE_GET_PTR_ITERATOR11);
