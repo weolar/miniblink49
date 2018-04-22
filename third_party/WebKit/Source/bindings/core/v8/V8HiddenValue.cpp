@@ -44,11 +44,9 @@ bool V8HiddenValue::setHiddenValue(v8::Isolate* isolate, v8::Local<v8::Object> o
 {
 	//zero
 #if V8_MINOR_VERSION == 7
-	if (UNLIKELY(value.IsEmpty()))
-		return false;
-	return v8CallBoolean(object->SetPrivate(
-		isolate->GetCurrentContext(), v8::Private::ForApi(isolate, key),
-		value));
+    if (UNLIKELY(value.IsEmpty()))
+        return false;
+    return v8CallBoolean(object->SetPrivate(isolate->GetCurrentContext(), v8::Private::ForApi(isolate, key), value));
 #else
     return object->SetHiddenValue(key, value);
 #endif

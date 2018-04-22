@@ -57,7 +57,7 @@ void installAttributeInternal(v8::Isolate* isolate, v8::Local<v8::ObjectTemplate
     if (attribute.propertyLocationConfiguration & V8DOMConfiguration::OnInstance)
         instanceTemplate->SetAccessor(name, getter, setter, data, attribute.settings, attribute.attribute);
     if (attribute.propertyLocationConfiguration & V8DOMConfiguration::OnPrototype)
-      prototypeTemplate->SetAccessor(name, getter, setter, data, attribute.settings, attribute.attribute);
+        prototypeTemplate->SetAccessor(name, getter, setter, data, attribute.settings, attribute.attribute);
     if (attribute.propertyLocationConfiguration & V8DOMConfiguration::OnInterface)
         ASSERT_NOT_REACHED();
 }
@@ -218,7 +218,7 @@ void V8DOMConfiguration::installAccessor(v8::Isolate* isolate, v8::Local<v8::Obj
 void V8DOMConfiguration::installAccessor(v8::Isolate* isolate, v8::Local<v8::Object> instance, v8::Local<v8::Object> prototype, v8::Local<v8::Function> interface_name, v8::Local<v8::Signature> signature, const AccessorConfiguration& accessor)
 {
     const DOMWrapperWorld& world = DOMWrapperWorld::current(isolate);
-	installAccessorInternal(isolate, instance, prototype, interface_name, signature, accessor, world);
+    installAccessorInternal(isolate, instance, prototype, interface_name, signature, accessor, world);
 }
 
 void V8DOMConfiguration::installConstants(v8::Isolate* isolate, v8::Local<v8::FunctionTemplate> functionDescriptor, v8::Local<v8::ObjectTemplate> prototypeTemplate, const ConstantConfiguration* constants, size_t constantCount)

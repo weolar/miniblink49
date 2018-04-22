@@ -54,6 +54,8 @@
 #include "wtf/Vector.h"
 #include <algorithm>
 
+#if V8_MAJOR_VERSION == 4
+
 namespace blink {
 
 // FIXME: This should use opaque GC roots.
@@ -526,3 +528,5 @@ void V8GCController::traceDOMWrappers(v8::Isolate* isolate, Visitor* visitor)
 }
 
 } // namespace blink
+
+#endif
