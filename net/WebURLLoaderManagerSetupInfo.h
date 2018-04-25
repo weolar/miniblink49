@@ -13,6 +13,11 @@ struct SetupDataInfo {
     curl_off_t size;
     bool islongLong;
     WTF::Vector<FlattenHTTPBodyElement*> flattenElements;
+
+    ~SetupDataInfo()
+    {
+
+    }
 };
 
 struct SetupInfoBase {

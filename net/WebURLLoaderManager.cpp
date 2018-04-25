@@ -69,6 +69,7 @@
 #include "net/FlattenHTTPBodyElement.h"
 #include "net/WebURLLoaderManagerSetupInfo.h"
 #include "net/WebURLLoaderManagerAsynTask.h"
+#include "wke/wkeNetHook.h"
 #include "third_party/WebKit/Source/wtf/Threading.h"
 #include "third_party/WebKit/Source/wtf/Vector.h"
 #include "third_party/WebKit/Source/wtf/text/CString.h"
@@ -684,6 +685,29 @@ static void flattenHTTPBodyBlobElement(const WebString& blobUUID, curl_off_t* si
     }
 }
 
+static void dispatchPostBodyToWke(WebURLLoaderInternal* job, WTF::Vector<FlattenHTTPBodyElement*>* flattenElements)
+{
+    RequestExtraData* requestExtraData = reinterpret_cast<RequestExtraData*>(job->firstRequest()->extraData());
+    if (!requestExtraData)
+        return;
+
+    WebPage* page = requestExtraData->page;
+    if (!page->wkeHandler().otherLoadCallback)
+        return;
+
+    wkeTempCallbackInfo* tempInfo = wkeGetTempCallbackInfo(page->wkeWebView());
+    Vector<char> urlBuf = WTF::ensureStringToUTF8(job->firstRequest()->url().string(), true);
+    tempInfo->url = urlBuf.data();
+
+    tempInfo->postBody = wke::flattenHTTPBodyElementToWke(*flattenElements);
+    
+    page->wkeHandler().otherLoadCallback(page->wkeWebView(), page->wkeHandler().otherLoadCallbackParam, WKE_DID_POST_REQUEST, tempInfo);
+    if (tempInfo->postBody->isDirty)
+        wke::wkeflattenElementToBlink(*tempInfo->postBody, flattenElements);
+    else
+        wkeFreePostFlattenBodyElements(tempInfo->postBody);
+}
+
 static SetupDataInfo* setupFormDataOnMainThread(WebURLLoaderInternal* job, CURLoption sizeOption, struct curl_slist** headers)
 {
     WebHTTPBody httpBody = job->firstRequest()->httpBody();
@@ -741,6 +765,8 @@ static SetupDataInfo* setupFormDataOnMainThread(WebURLLoaderInternal* job, CURLo
             flattenHTTPBodyBlobElement(element.blobUUID, &size, &result->flattenElements);
         }
     }
+
+    dispatchPostBodyToWke(job, &result->flattenElements);
 
     // cURL guesses that we want chunked encoding as long as we specify the header
     if (chunkedTransfer)

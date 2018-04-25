@@ -3,6 +3,8 @@
 #define net_FlattenHTTPBodyElement_h
 
 #include "third_party/WebKit/public/platform/WebHTTPBody.h"
+#include "third_party/WebKit/Source/wtf/text/WTFStringUtil.h"
+#include <vector>
 
 namespace net {
 
@@ -29,6 +31,8 @@ public:
     {
         for (size_t i = 0; i < m_elements.size(); ++i) {
             delete m_elements[i];
+            if (!m_file)
+                fclose(m_file);
         }
     }
     
