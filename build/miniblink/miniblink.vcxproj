@@ -170,7 +170,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <AdditionalIncludeDirectories>../../;../../v8_4_8/;../../v8_4_8/include;../../third_party/;../../third_party/npapi;../../third_party/WebKit;../../third_party/WebKit/Source;../../cef;../../third_party/icu/source/common;../../gen/blink;../../gen/blink/core;../../gen/blink/bindings/modules/v8;../../gen/blink/bindings/core/v8;../../gpu;../../third_party/khronos;../../third_party/libxml/src/include;../../third_party/libxml/win32/include;../../third_party/skia/include/core;../../third_party/skia/include/config;../../third_party/skia/include/codec;../../third_party/skia/include/device;../../third_party/skia/include/effects;../../third_party/skia/include/images;../../third_party/skia/include/pathops;../../third_party/skia/include/ports;../../third_party/skia/include/private;../../third_party/skia/include/utils;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../;../../v8_5_7/;../../v8_5_7/include;../../third_party/;../../third_party/npapi;../../third_party/WebKit;../../third_party/WebKit/Source;../../cef;../../third_party/icu/source/common;../../gen/blink;../../gen/blink/core;../../gen/blink/bindings/modules/v8;../../gen/blink/bindings/core/v8;../../gpu;../../third_party/khronos;../../third_party/libxml/src/include;../../third_party/libxml/win32/include;../../third_party/skia/include/core;../../third_party/skia/include/config;../../third_party/skia/include/codec;../../third_party/skia/include/device;../../third_party/skia/include/effects;../../third_party/skia/include/images;../../third_party/skia/include/pathops;../../third_party/skia/include/ports;../../third_party/skia/include/private;../../third_party/skia/include/utils;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4800;4291;4996;4244;4305;4577;4091;4251</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PrecompiledHeaderFile>config.h</PrecompiledHeaderFile>
@@ -182,7 +182,7 @@
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
       <AdditionalLibraryDirectories>$(SolutionDir)..\out\$(Configuration)\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>InjectTool.lib;version.lib;ots.lib;Crypt32.lib;Wldap32.lib;Imm32.lib;libxml.lib;zlib.lib;libcurl.lib;v8_4_8.lib;skia.lib;winmm.lib;Ws2_32.lib;Usp10.lib;Shlwapi.lib;wininet.lib;GDIPlus.lib;DbgHelp.lib;libjpeg.lib;libpng.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>InjectTool.lib;version.lib;ots.lib;Crypt32.lib;Wldap32.lib;Imm32.lib;libxml.lib;zlib.lib;libcurl.lib;v8_5_7.lib;v8_5_7_1.lib;skia.lib;winmm.lib;Ws2_32.lib;Usp10.lib;Shlwapi.lib;wininet.lib;GDIPlus.lib;DbgHelp.lib;libjpeg.lib;libpng.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)node$(TargetExt)</OutputFile>
       <ImportLibrary>$(OutDir)node.lib</ImportLibrary>
       <IgnoreSpecificDefaultLibraries>LIBCMT.lib</IgnoreSpecificDefaultLibraries>
@@ -544,6 +544,7 @@
     <ClCompile Include="..\..\third_party\WebKit\Source\bindings\core\v8\inspector\V8JavaScriptCallFrame.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\bindings\core\v8\ScriptHeapSnapshot.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\bindings\core\v8\ScriptProfiler.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\bindings\core\v8\V8GCController_v8_5_7.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\AsyncCallChain.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\AsyncCallTracker.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\ConsoleMessage.cpp" />
@@ -5472,7 +5473,9 @@
     <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8DevToolsHostPartial.h" />
     <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8DOMFileSystem.h" />
     <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8DOMFileSystemSync.h" />
+    <ClInclude Include="..\..\net\CancelledReason.h" />
     <ClInclude Include="..\..\net\FlattenHTTPBodyElement.h" />
+    <ClInclude Include="..\..\net\WebURLLoaderManagerAsynTask.h" />
     <ClInclude Include="..\..\net\WebURLLoaderManagerMainTask.h" />
     <ClInclude Include="..\..\net\WebURLLoaderManagerSetupInfo.h" />
     <ClInclude Include="..\..\net\WebURLLoaderManagerUtil.h" />
@@ -8386,6 +8389,7 @@
     <ClInclude Include="..\..\wke\wkedefine.h" />
     <ClInclude Include="..\..\wke\wkeJsBind.h" />
     <ClInclude Include="..\..\wke\wkeJsBindFreeTempObject.h" />
+    <ClInclude Include="..\..\wke\wkeNetHook.h" />
     <ClInclude Include="..\..\wke\wkeString.h" />
     <ClInclude Include="..\..\wke\wkeWebView.h" />
     <ClInclude Include="..\..\wke\wkeWebWindow.h" />

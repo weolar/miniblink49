@@ -9744,9 +9744,6 @@
     <ClCompile Include="..\..\net\FixedReceivedData.cpp">
       <Filter>net</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\third_party\WebKit\Source\bindings\core\v8\custom\V8MutationObserverCustom.cpp">
-      <Filter>third_party\Webkit\Source\bindings\core\v8\custom</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\cc\raster\RasterFilters.cpp">
       <Filter>cc\raster</Filter>
     </ClCompile>
@@ -9771,7 +9768,6 @@
     <ClCompile Include="..\..\third_party\WebKit\Source\platform\image-decoders\ico\ICOImageDecoder.cpp">
       <Filter>third_party\Webkit\Source\platform\image-decoders\ico</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\third_party\WebKit\Source\bindings\core\v8\custom\V8MutationObserverCustom.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\platform\image-encoders\skia\PNGImageEncoder.cpp">
       <Filter>third_party\Webkit\Source\platform\image-encoders\skia</Filter>
     </ClCompile>
@@ -10105,8 +10101,14 @@
     <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8Crypto.cpp">
       <Filter>gen\blink\bindings\modules\v8</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\bindings\core\v8\custom\V8MutationObserverCustom.cpp">
+      <Filter>third_party\Webkit\Source\bindings\core\v8\custom</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\content\web_impl_win\WebCryptoImpl.cpp">
       <Filter>content\web_impl_win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\bindings\core\v8\V8GCController_v8_5_7.cpp">
+      <Filter>third_party\Webkit\Source\bindings\core\v8</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -23036,6 +23038,15 @@
     </ClInclude>
     <ClInclude Include="..\..\content\web_impl_win\WebCryptoImpl.h">
       <Filter>content\web_impl_win</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\net\CancelledReason.h">
+      <Filter>net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\net\WebURLLoaderManagerAsynTask.h">
+      <Filter>net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wke\wkeNetHook.h">
+      <Filter>wke</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
