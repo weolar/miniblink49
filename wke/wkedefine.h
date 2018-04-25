@@ -318,10 +318,39 @@ typedef struct {
     void* headers;
 } wkeWillSendRequestInfo;
 
+typedef enum {
+    wkeHttBodyElementTypeData,
+    wkeHttBodyElementTypeFile,
+} wkeHttBodyElementType;
+
+typedef struct {
+    int size;
+    void* data;
+    size_t length;
+} wkeMemBuf;
+
+typedef struct {
+    int size;
+    wkeHttBodyElementType type;
+    wkeMemBuf* data;
+    wkeString filePath;
+    long long fileStart;
+    long long fileLength; // -1 means to the end of the file.
+} wkePostFlattenBodyElement;
+
+typedef struct {
+    int size;
+    wkePostFlattenBodyElement** element;
+    size_t elementSize;
+    bool isDirty;
+} wkePostFlattenBodyElements;
+
 typedef struct {
     int size;
     wkeWebFrameHandle frame;
     wkeWillSendRequestInfo* willSendRequestInfo;
+    const char* url;
+    wkePostFlattenBodyElements* postBody;
 } wkeTempCallbackInfo;
 
 typedef void(*wkeTitleChangedCallback)(wkeWebView webView, void* param, const wkeString title);
@@ -355,6 +384,7 @@ typedef enum {
     WKE_DID_NAVIGATE_IN_PAGE,
     WKE_DID_GET_RESPONSE_DETAILS,
     WKE_DID_GET_REDIRECT_REQUEST,
+    WKE_DID_POST_REQUEST,
 } wkeOtherLoadType;
 typedef void(*wkeOnOtherLoadCallback)(wkeWebView webView, void* param, wkeOtherLoadType type, wkeTempCallbackInfo* info);
 
@@ -424,7 +454,7 @@ typedef enum {
     JSTYPE_ARRAY,
 } jsType;
 
-// cexer JSå¯¹è±¡ã€å‡½æ•°ç»‘å®šæ”¯æŒ
+// cexer JS¶ÔÏó¡¢º¯Êı°ó¶¨Ö§³Ö
 typedef jsValue(*jsGetPropertyCallback)(jsExecState es, jsValue object, const char* propertyName);
 typedef bool(*jsSetPropertyCallback)(jsExecState es, jsValue object, const char* propertyName, jsValue value);
 typedef jsValue(*jsCallAsFunctionCallback)(jsExecState es, jsValue object, jsValue* args, int argCount);
@@ -604,17 +634,10 @@ public:
 
 // ---
 
-#if defined(__cplusplus)
-    #define WKE_GET_PTR_ITERATOR(name) \
-        name = (FN_##name)::GetProcAddress(hMod, #name); \
-        if (!name) \
-            MessageBoxA(((HWND)0), "wke api not found", #name, 0);
-#else
-    #define WKE_GET_PTR_ITERATOR(name) \
-        name = (FN_##name)GetProcAddress(hMod, #name); \
-        if (!name) \
-            MessageBoxA(((HWND)0), "wke api not found", #name, 0);
-#endif
+#define WKE_GET_PTR_ITERATOR(name) \
+    name = (FN_##name)GetProcAddress(hMod, #name); \
+    if (!name) \
+        MessageBoxA(((HWND)0), "wke api not found", #name, 0);
 
 #define WKE_GET_PTR_ITERATOR0(returnVal, name, description) \
     WKE_GET_PTR_ITERATOR(name);
@@ -640,7 +663,7 @@ public:
 #define WKE_GET_PTR_ITERATOR11(returnVal, name, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, description) \
     WKE_GET_PTR_ITERATOR(name);
 
-// ä»¥ä¸‹æ˜¯wkeçš„å¯¼å‡ºå‡½æ•°ã€‚æ ¼å¼æŒ‰ç…§ã€è¿”å›ç±»å‹ã€‘ã€å‡½æ•°åã€‘ã€å‚æ•°ã€‘æ¥æ’åˆ—
+// ÒÔÏÂÊÇwkeµÄµ¼³öº¯Êı¡£¸ñÊ½°´ÕÕ¡¾·µ»ØÀàĞÍ¡¿¡¾º¯ÊıÃû¡¿¡¾²ÎÊı¡¿À´ÅÅÁĞ
 
 #define WKE_FOR_EACH_DEFINE_FUNCTION(ITERATOR0, ITERATOR1, ITERATOR2, ITERATOR3, ITERATOR4, ITERATOR5, ITERATOR6, ITERATOR11) \
     ITERATOR0(void, wkeShutdown, "") \
@@ -718,8 +741,8 @@ public:
     ITERATOR2(void, wkeSetNavigationToNewWindowEnable, wkeWebView webView, bool b, "") \
     ITERATOR2(void, wkeSetCspCheckEnable, wkeWebView webView, bool b, "") \
     ITERATOR2(void, wkeSetNpapiPluginsEnabled, wkeWebView webView, bool b, "") \
-    ITERATOR2(void, wkeSetHeadlessEnabled, wkeWebView webView, bool b, "å¯ä»¥å…³é—­æ¸²æŸ“") \
-    ITERATOR2(void, wkeSetDragEnable, wkeWebView webView, bool b, "å¯å…³é—­æ‹–æ‹½æ–‡ä»¶åŠ è½½ç½‘é¡µ") \
+    ITERATOR2(void, wkeSetHeadlessEnabled, wkeWebView webView, bool b, "¿ÉÒÔ¹Ø±ÕäÖÈ¾") \
+    ITERATOR2(void, wkeSetDragEnable, wkeWebView webView, bool b, "¿É¹Ø±ÕÍÏ×§ÎÄ¼ş¼ÓÔØÍøÒ³") \
     \
     ITERATOR2(void, wkeSetViewNetInterface, wkeWebView webView, const char* netInterface, "") \
     \
@@ -795,7 +818,7 @@ public:
     \
     ITERATOR1(const wchar_t*, wkeGetCookieW, wkeWebView webView, "") \
     ITERATOR1(const utf8*, wkeGetCookie, wkeWebView webView, "") \
-    ITERATOR3(void, wkeSetCookie, wkeWebView webView, const utf8* url, const utf8* cookie, "cookieæ ¼å¼å¿…é¡»æ˜¯:Set-cookie: PRODUCTINFO=webxpress; domain=.fidelity.com; path=/; secure") \
+    ITERATOR3(void, wkeSetCookie, wkeWebView webView, const utf8* url, const utf8* cookie, "cookie¸ñÊ½±ØĞëÊÇ:Set-cookie: PRODUCTINFO=webxpress; domain=.fidelity.com; path=/; secure") \
     ITERATOR2(void, wkeVisitAllCookie, void* params, wkeCookieVisitor visitor, "") \
     ITERATOR1(void, wkePerformCookieCommand, wkeCookieCommand command, "") \
     ITERATOR2(void, wkeSetCookieEnabled, wkeWebView webView, bool enable, "") \
@@ -884,12 +907,19 @@ public:
     ITERATOR2(void, wkeNetSetMIMEType, void* job, char *type, "") \
     ITERATOR4(void, wkeNetSetHTTPHeaderField, void* job, wchar_t* key, wchar_t* value, bool response, "") \
     ITERATOR2(void, wkeNetSetURL, void* job, const char *url, "") \
-    ITERATOR3(void, wkeNetSetData, void* job, void *buf, int len, "è°ƒç”¨æ­¤å‡½æ•°å,ç½‘ç»œå±‚æ”¶åˆ°æ•°æ®ä¼šå­˜å‚¨åœ¨ä¸€bufå†…,æ¥æ”¶æ•°æ®å®Œæˆåå“åº”OnLoadUrlEndäº‹ä»¶.#æ­¤è°ƒç”¨ä¸¥é‡å½±å“æ€§èƒ½,æ…ç”¨" \
-        "æ­¤å‡½æ•°å’ŒwkeNetSetDataçš„åŒºåˆ«æ˜¯ï¼ŒwkeNetHookRequestä¼šåœ¨æ¥å—åˆ°çœŸæ­£ç½‘ç»œæ•°æ®åå†è°ƒç”¨å›è°ƒï¼Œå¹¶å…è®¸å›è°ƒä¿®æ”¹ç½‘ç»œæ•°æ®ã€‚"\
-        "è€ŒwkeNetSetDataæ˜¯åœ¨ç½‘ç»œæ•°æ®è¿˜æ²¡å‘é€çš„æ—¶å€™ä¿®æ”¹") \
+    ITERATOR3(void, wkeNetSetData, void* job, void *buf, int len, "µ÷ÓÃ´Ëº¯Êıºó,ÍøÂç²ãÊÕµ½Êı¾İ»á´æ´¢ÔÚÒ»bufÄÚ,½ÓÊÕÊı¾İÍê³ÉºóÏìÓ¦OnLoadUrlEndÊÂ¼ş.#´Ëµ÷ÓÃÑÏÖØÓ°ÏìĞÔÄÜ,É÷ÓÃ" \
+        "´Ëº¯ÊıºÍwkeNetSetDataµÄÇø±ğÊÇ£¬wkeNetHookRequest»áÔÚ½ÓÊÜµ½ÕæÕıÍøÂçÊı¾İºóÔÙµ÷ÓÃ»Øµ÷£¬²¢ÔÊĞí»Øµ÷ĞŞ¸ÄÍøÂçÊı¾İ¡£"\
+        "¶øwkeNetSetDataÊÇÔÚÍøÂçÊı¾İ»¹Ã»·¢ËÍµÄÊ±ºòĞŞ¸Ä") \
     ITERATOR1(void, wkeNetHookRequest, void *job, "") \
     ITERATOR3(void, wkeNetOnResponse, wkeWebView webView, wkeNetResponseCallback callback, void* param, "") \
     ITERATOR2(void, wkeNetGetMIMEType, void* job, wkeString mime, "") \
+    \
+    ITERATOR2(wkePostFlattenBodyElements*, wkeCreatePostFlattenBodyElements, wkeWebView webView, size_t length, "") \
+    ITERATOR1(void, wkeFreePostFlattenBodyElements, wkePostFlattenBodyElements*, "") \
+    ITERATOR1(wkePostFlattenBodyElement*, wkeCreatePostFlattenBodyElement, wkeWebView webView, "") \
+    ITERATOR1(void, wkeFreePostFlattenBodyElement, wkePostFlattenBodyElement*, "") \
+    ITERATOR3(wkeMemBuf*, wkeCreateMemBuf, wkeWebView webView, void* buf, size_t length, "") \
+    ITERATOR1(void, wkeFreeMemBuf, wkeMemBuf*, "") \
     \
     ITERATOR2(bool, wkeIsMainFrame, wkeWebView webView, wkeWebFrameHandle frameId, "") \
     ITERATOR2(bool, wkeIsWebRemoteFrame, wkeWebView webView, wkeWebFrameHandle frameId, "") \
@@ -1019,17 +1049,10 @@ inline void wkeSetWkeDllPath(const wchar_t* dllPath)
 
 inline void wkeInitializeEx(const wkeSettings* settings)
 {
-#if defined(__cplusplus)
-    HMODULE hMod = ::LoadLibraryW(kWkeDllPath);
-
-    FN_wkeInitializeEx wkeInitializeExFunc = (FN_wkeInitializeEx)::GetProcAddress(hMod, "wkeInitializeEx");
-    wkeInitializeExFunc(settings);
-#else
     HMODULE hMod = LoadLibraryW(kWkeDllPath);
 
     FN_wkeInitializeEx wkeInitializeExFunc = (FN_wkeInitializeEx)GetProcAddress(hMod, "wkeInitializeEx");
     wkeInitializeExFunc(settings);
-#endif
 
     WKE_FOR_EACH_DEFINE_FUNCTION(WKE_GET_PTR_ITERATOR0, WKE_GET_PTR_ITERATOR1, WKE_GET_PTR_ITERATOR2, WKE_GET_PTR_ITERATOR3, \
         WKE_GET_PTR_ITERATOR4, WKE_GET_PTR_ITERATOR5, WKE_GET_PTR_ITERATOR6, WKE_GET_PTR_ITERATOR11);

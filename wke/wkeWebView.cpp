@@ -1291,7 +1291,7 @@ void CWebView::setProxyInfo(const String& host,	unsigned long port,	net::WebURLL
 
 class ShowDevToolsTaskObserver : public blink::WebThread::TaskObserver {
 public:
-    ShowDevToolsTaskObserver(CWebView* parent, const String& url)
+    ShowDevToolsTaskObserver(CWebView* parent, const std::string& url)
     {
         m_parent = parent;
         m_url = url;
@@ -1313,7 +1313,7 @@ public:
 
         content::WebPage::connetDevTools(devToolsWebView->webPage(), m_parent->webPage());
 
-        wkeLoadURL(devToolsWebView, m_url.utf8().data());
+        wkeLoadURL(devToolsWebView, m_url.c_str());
         wkeShowWindow(devToolsWebView, TRUE);
         wkeOnWindowDestroy(devToolsWebView, handleDevToolsWebViewDestroy, m_parent);
         wkeSetWindowTitle(devToolsWebView, "Miniblink Devtools");
@@ -1323,7 +1323,7 @@ public:
 
 private:
     CWebView* m_parent;
-    String m_url;
+    std::string m_url;
 };
 
 void CWebView::showDevTools(const utf8* url)
