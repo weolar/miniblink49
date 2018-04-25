@@ -319,12 +319,15 @@ LRESULT PlatformEventHandler::fireMouseEvent(HWND hWnd, UINT message, WPARAM wPa
         switch (message) {
         case WM_LBUTTONDOWN:
             webMouseEvent.button = WebMouseEvent::ButtonLeft;
+            webMouseEvent.modifiers |= WebMouseEvent::LeftButtonDown;
             break;
         case WM_MBUTTONDOWN:
             webMouseEvent.button = WebMouseEvent::ButtonMiddle;
+            webMouseEvent.modifiers |= WebMouseEvent::MiddleButtonDown;
             break;
         case WM_RBUTTONDOWN:
             webMouseEvent.button = WebMouseEvent::ButtonRight;
+            webMouseEvent.modifiers |= WebMouseEvent::RightButtonDown;
             break;
         }
         m_isDraggableRegionNcHitTest = false;
@@ -338,12 +341,15 @@ LRESULT PlatformEventHandler::fireMouseEvent(HWND hWnd, UINT message, WPARAM wPa
         switch (message) {
         case WM_LBUTTONUP:
             webMouseEvent.button = WebMouseEvent::ButtonLeft;
+            webMouseEvent.modifiers |= WebMouseEvent::LeftButtonDown;
             break;
         case WM_MBUTTONUP:
             webMouseEvent.button = WebMouseEvent::ButtonMiddle;
+            webMouseEvent.modifiers |= WebMouseEvent::MiddleButtonDown;
             break;
         case WM_RBUTTONUP:
             webMouseEvent.button = WebMouseEvent::ButtonRight;
+            webMouseEvent.modifiers |= WebMouseEvent::RightButtonDown;
             break;
         }
         ::ReleaseCapture();
@@ -353,14 +359,18 @@ LRESULT PlatformEventHandler::fireMouseEvent(HWND hWnd, UINT message, WPARAM wPa
         m_webWidget->handleInputEvent(webMouseEvent);        
     } else if (WM_MOUSEMOVE == message || WM_MOUSELEAVE == message) {
         handle = true;
-        if (wParam & MK_LBUTTON)
+        if (wParam & MK_LBUTTON) {
             webMouseEvent.button = WebMouseEvent::ButtonLeft;
-        else if (wParam & MK_MBUTTON)
+            webMouseEvent.modifiers |= WebMouseEvent::LeftButtonDown;
+        } else if (wParam & MK_MBUTTON) {
             webMouseEvent.button = WebMouseEvent::ButtonMiddle;
-        else if (wParam & MK_RBUTTON)
+            webMouseEvent.modifiers |= WebMouseEvent::MiddleButtonDown;
+        } else if (wParam & MK_RBUTTON) {
             webMouseEvent.button = WebMouseEvent::ButtonRight;
-        else
+            webMouseEvent.modifiers |= WebMouseEvent::RightButtonDown;
+        } else {
             webMouseEvent.button = WebMouseEvent::ButtonNone;
+        }
 
         bool b = false;
         switch (message) {

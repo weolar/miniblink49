@@ -83,6 +83,12 @@ public:
             return m_queue.isEmpty();
         }
 
+        ~MessagePortQueue()
+        {
+            String output = String::format("~MessagePortQueue: %p\n", this);
+            OutputDebugStringA(output.utf8().data());
+        }
+
         DECLARE_TRACE();
 
     private:
