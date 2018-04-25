@@ -123,7 +123,7 @@ void WebStorageAreaImpl::loadFromFile()
     String key;
     String value;
     for (size_t i = 0; i < buffer.size(); ++i) {
-        if ('\n' != buffer[i])
+        if (kSeparator != buffer[i])
             continue;
 
         const char* posEnd = &buffer[i];
@@ -144,6 +144,8 @@ void WebStorageAreaImpl::loadFromFile()
 
 void WebStorageAreaImpl::delaySaveTimerFired(blink::Timer<WebStorageAreaImpl>*)
 {
+    if (!m_isLocal)
+        return;
     KURL originUrl(ParsedURLString, m_origin);
     if (!originUrl.isValid())
         return;
@@ -203,12 +205,20 @@ WebString WebStorageAreaImpl::key(unsigned index)
 
 WebString WebStorageAreaImpl::getItem(const WebString& key)
 {
+    String keyString = key;
+
     DOMStorageMap::iterator it = m_cachedArea->find(m_origin);
     if (it == m_cachedArea->end())
         return WebString();
 
-    HashMap<String, String>::iterator keyValueIt = (it->value)->find((String)key);
-    if (keyValueIt == (it->value)->end())
+    HashMap<String, String>* pageStorageArea = it->value;
+    size_t size = pageStorageArea->size();
+
+//     String output = String::format("getItem: %p %s, %d\n", m_cachedArea, keyString.utf8().data(), size);
+//     OutputDebugStringA(output.utf8().data());
+
+    HashMap<String, String>::iterator keyValueIt = pageStorageArea->find(keyString);
+    if (keyValueIt == pageStorageArea->end())
         return WebString();
     return WebString(keyValueIt->value);
 }
@@ -217,6 +227,7 @@ void WebStorageAreaImpl::setItem(const WebString& key, const WebString& value, c
 {
     String pageString = (String)pageUrl.string();
     String origin = buildOriginString(pageUrl);
+    String keyString = key;
 
     DOMStorageMap::iterator it = m_cachedArea->find(origin);
     HashMap<String, String>* pageStorageArea;
@@ -226,12 +237,19 @@ void WebStorageAreaImpl::setItem(const WebString& key, const WebString& value, c
     } else
         pageStorageArea = it->value;
 
-    pageStorageArea->set(key, value);
+    size_t sizeOld = pageStorageArea->size();
+    pageStorageArea->set(keyString, value);
+    size_t size = pageStorageArea->size();
+
+//     String output = String::format("sssetItem: %p %s, %d %d\n", m_cachedArea, keyString.utf8().data(), sizeOld, size);
+//     OutputDebugStringA(output.utf8().data());
+
     result = WebStorageArea::ResultOK;
 
     if (m_delaySaveTimer.isActive())
         m_delaySaveTimer.stop();
-    m_delaySaveTimer.startOneShot(30000, FROM_HERE);
+    if (m_isLocal)
+        m_delaySaveTimer.startOneShot(0.5, FROM_HERE);
 
     invalidateIterator();
 }
@@ -240,15 +258,23 @@ void WebStorageAreaImpl::removeItem(const WebString& key, const WebURL& pageUrl)
 {
     String pageString = (String)pageUrl.string();
     String origin = buildOriginString(pageUrl);
+    String keyString = key;
+
     DOMStorageMap::iterator it = m_cachedArea->find(origin);
     if (it == m_cachedArea->end())
         return;
 
-    it->value->remove((String)key);
+    HashMap<String, String>* pageStorageArea = it->value;
+    size_t size = pageStorageArea->size();
 
+//     String output = String::format("removeItem: %p %s %d\n", m_cachedArea, keyString.utf8().data(), size);
+//     OutputDebugStringA(output.utf8().data());
+
+    pageStorageArea->remove(keyString);
     invalidateIterator();
 
-    if (0 == it->value->size()) {
+    size = pageStorageArea->size();
+    if (0 == size) {
         delete it->value;
         m_cachedArea->remove(it);
     }
