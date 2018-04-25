@@ -11,6 +11,8 @@
 #include "third_party/WebKit/Source/core/frame/LocalFrame.h"
 #include "third_party/WebKit/Source/core/page/ChromeClient.h"
 #include "third_party/WebKit/Source/bindings/core/v8/V8RecursionScope.h"
+#include "third_party/WebKit/public/web/WebScriptSource.h"
+#include "third_party/WebKit/public/web/WebLocalFrame.h"
 #include "content/browser/WebFrameClientImpl.h"
 #include "content/browser/WebPage.h"
 
@@ -1308,60 +1310,6 @@ jsValue js_setWebViewName(jsExecState es, void* param)
     return jsUndefined();
 }
 
-// JSValueRef objectGetPropertyCallback(JSContextRef ctx, JSObjectRef object, JSStringRef propertyName, JSValueRef* exception)
-// {
-//     JSC::ExecState* exec = toJS(ctx);
-//     JSC::JSObject* obj = toJS(object);
-// 
-//     jsData* p = (jsData*)JSObjectGetPrivate(object);
-//     if (!p || !p->propertyGet)
-//         return false;
-// 
-//     WTF::CString str = propertyName->ustring().latin1();
-//     const char* name = str.data();
-//     jsValue ret = p->propertyGet(exec, JSC::JSValue::encode(obj), name);
-// 
-//     return toRef(exec, JSC::JSValue::decode(ret));
-// }
-// 
-// bool objectSetPropertyCallback(JSContextRef ctx, JSObjectRef object, JSStringRef propertyName, JSValueRef value, JSValueRef* exception)
-// {
-//     JSC::ExecState* exec = toJS(ctx);
-//     JSC::JSObject* obj = toJS(object);
-// 
-//     jsData* p = (jsData*)JSObjectGetPrivate(object);
-//     if (!p || !p->propertySet)
-//         return false;
-// 
-//     WTF::CString str = propertyName->ustring().latin1();
-//     const char* name = str.data();
-//     return p->propertySet(exec, JSC::JSValue::encode(obj), name, JSC::JSValue::encode(toJS(exec,value)));
-// }
-// 
-// void objectFinalize(JSObjectRef object)
-// {
-//     jsData* p = (jsData*)JSObjectGetPrivate(object);
-//     if (p && p->finalize)
-//         p->finalize(p);
-// }
-// 
-// JSValueRef objectCallAsFunctionCallback(JSContextRef ctx, JSObjectRef function, JSObjectRef thisObject, size_t argumentCount, const JSValueRef arguments[], JSValueRef* exception)
-// {
-//     JSC::ExecState* exec = toJS(ctx);
-//     JSC::JSObject* obj = toJS(function);
-// 
-//     jsData* p = (jsData*)JSObjectGetPrivate(function);
-//     if (!p || !p->callAsFunction)
-//         return false;
-// 
-//     jsValue args[10] = { 0 };
-//     for (int i = 0; i < argumentCount; ++i)
-//         args[i] = JSC::JSValue::encode(toJS(exec, arguments[i]));
-// 
-//     jsValue ret = p->callAsFunction(exec, JSC::JSValue::encode(toJS(function)), args, argumentCount);
-//     return toRef(exec, JSC::JSValue::decode(ret));
-// }
-
 static void namedPropertyGetterCallback(v8::Local<v8::String> property, const v8::PropertyCallbackInfo<v8::Value>& info)
 {
     NativeGetterSetterWrap* wrap = static_cast<NativeGetterSetterWrap*>(v8::External::Cast(*info.Data())->Value());
@@ -1411,12 +1359,6 @@ jsValue jsObject(jsExecState es, jsData* data)
     
     NativeGetterSetterWrap* wrap = NativeGetterSetterWrap::createWrapAndAddToGlobalObjForRelease(isolate, globalObj);
 
-//     jsData* dummyData = new jsData();
-//     strcpy(dummyData->typeName, data->typeName);
-//     dummyData->propertyGet = data->propertyGet;
-//     dummyData->propertySet = data->propertySet;
-//     dummyData->finalize = data->finalize;
-//     dummyData->callAsFunction = data->callAsFunction;
     wrap->set(data);
     obj->SetNamedPropertyHandler(namedPropertyGetterCallback, namedPropertySetterCallback, nullptr, nullptr, nullptr, v8::External::New(isolate, wrap));
 
@@ -1552,6 +1494,9 @@ void onCreateGlobalObject(content::WebFrameClientImpl* client, blink::WebLocalFr
 
     addFunction(context, "outputMsg", js_outputMsg, nullptr, 1);
     addAccessor(context, "webViewName", js_getWebViewName, nullptr, js_setWebViewName, nullptr);
+    
+    blink::WebScriptSource injectSource("window.chrome = {app:null, runtime:null}");
+    frame->executeScript(injectSource);
 
     v8::HandleScope handleScope(isolate);
     v8::Context::Scope contextScope(context);
