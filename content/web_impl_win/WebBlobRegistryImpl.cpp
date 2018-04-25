@@ -82,7 +82,15 @@ void WebBlobRegistryImpl::registerBlobData(const WebString& uuid, const WebBlobD
     dataWrap->m_ref = 1;
 
     while (data.itemAt(i++, dataItem)) {
-        dataWrap->appendItem(new WebBlobData::Item(dataItem));
+        if (blink::WebBlobData::Item::TypeBlob == dataItem.type) {
+            net::BlobDataWrap* blobData = getBlobDataFromUUID(dataItem.blobUUID);
+            blobData->items();
+            for (size_t i = 0; i < blobData->items().size(); ++i) {
+                blink::WebBlobData::Item* it = blobData->items()[i];
+                dataWrap->appendItem(new WebBlobData::Item(*it));
+            }
+        } else
+            dataWrap->appendItem(new WebBlobData::Item(dataItem));
     }
 
 //     String out = String::format("WebBlobRegistryImpl::registerBlobData: %p, %s\n", dataWrap, uuidString.utf8().data());
