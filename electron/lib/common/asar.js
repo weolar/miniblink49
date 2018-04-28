@@ -9,14 +9,17 @@
     // Cache asar archive objects.
     const cachedArchives = {};
 
+    const internalModuleStat = process.binding('fs').internalModuleStat;
+
     const getOrCreateArchive = function (p) {
         let archive = cachedArchives[p];
         if (archive != null)
             return archive;
         
-        archive = new ArchiveClass();//asar.createArchive(p);
+        archive = new ArchiveClass(); // asar.createArchive(p);
         if (!archive.init(p)) {
             console.log("getOrCreateArchive fail:" + p);
+            
             return null;
         }
         cachedArchives[p] = archive;
@@ -48,6 +51,9 @@
         }
 
         if (p.substr(-5) === '.asar') {
+            const stats = internalModuleStat(p);
+            if (1 == stats)
+                return [false];
             return [true, p, ''];
         }
 
@@ -57,7 +63,11 @@
             return [false];
         }
 
-        return [true, p.substr(0, index + 5), p.substr(index + 6)];
+        const asarPath = p.substr(0, index + 5);
+        const stats = internalModuleStat(asarPath);
+        if (1 == stats)
+            return [false];
+        return [true, asarPath, p.substr(index + 6)];
     }
 
     // Convert asar archive's Stats object to fs's Stats object.
@@ -667,17 +677,17 @@
             return buffer.toString('utf8');
         }
 
-        const internalModuleStat = process.binding('fs').internalModuleStat;
         process.binding('fs').internalModuleStat = function (p) {
             const paths = splitPath(p);
             const isAsar = paths[0];
             const asarPath = paths[1];
             const filePath = paths[2];
+            
             if (!isAsar) {
                 return internalModuleStat(p);
             }
-            const archive = getOrCreateArchive(asarPath);
 
+            const archive = getOrCreateArchive(asarPath);
             // -ENOENT
             if (!archive) {
                 return -34;
