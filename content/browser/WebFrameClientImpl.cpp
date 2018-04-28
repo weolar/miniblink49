@@ -166,13 +166,21 @@ blink::WebWorkerContentSettingsClientProxy* WebFrameClientImpl::createWorkerCont
 
 // Create a new WebPopupMenu. In the "createExternalPopupMenu" form, the
 // client is responsible for rendering the contents of the popup menu.
-WebExternalPopupMenu* WebFrameClientImpl::createExternalPopupMenu(const WebPopupMenuInfo&, WebExternalPopupMenuClient*) {
+WebExternalPopupMenu* WebFrameClientImpl::createExternalPopupMenu(const WebPopupMenuInfo&, WebExternalPopupMenuClient*)
+{
     return 0;
 }
 
 WebCookieJar* WebFrameClientImpl::cookieJar(WebLocalFrame*)
 {
     return WebCookieJarImpl::inst();
+}
+
+void WebFrameClientImpl::resetLoadState()
+{
+    m_loadFailed = false;
+    m_loaded = false;
+    m_documentReady = false;
 }
 
 void WebFrameClientImpl::onLoadingStateChange(bool isLoading, bool toDifferentDocument)
@@ -203,6 +211,7 @@ void WebFrameClientImpl::onLoadingStateChange(bool isLoading, bool toDifferentDo
 
 void WebFrameClientImpl::didStartLoading(bool toDifferentDocument)
 {
+    resetLoadState();
     onLoadingStateChange(true, toDifferentDocument);
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
     wke::AutoDisableFreeV8TempObejct autoDisableFreeV8TempObejct;
@@ -234,6 +243,8 @@ void WebFrameClientImpl::didCreateDataSource(WebLocalFrame*, WebDataSource*) { }
 
 void WebFrameClientImpl::didStartProvisionalLoad(WebLocalFrame* localFrame, double triggeringEventTime)
 {
+    resetLoadState();
+
 #if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
     CefBrowserHostImpl* browser = m_webPage->browser();
     if (browser)

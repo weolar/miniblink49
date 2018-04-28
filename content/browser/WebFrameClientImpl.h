@@ -239,6 +239,7 @@ public:
     String title() const { return m_title; }
 #endif
 private:
+    void resetLoadState();
     void onLoadingStateChange(bool isLoading, bool toDifferentDocument);
 
     WebPage* m_webPage;
