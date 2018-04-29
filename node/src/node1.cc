@@ -2002,23 +2002,29 @@ namespace node {
     Local<String> error_mesage = message->Get();
     v8::String::Utf8Value error_mesage_utf8(error_mesage);
 
-    Local<String> messageScriptName = message->GetSourceLine();
-    v8::String::Utf8Value messageScriptNameUtf8(messageScriptName);
+//     Local<String> sourceLine = message->GetSourceLine();
+//     v8::String::Utf8Value sourceLineUtf8(sourceLine);
 
     char* error_mesage_buf = new char[1000];
-    snprintf(error_mesage_buf, 999, "node.cc, FatalException:%d %s, %s\n", message->GetLineNumber(), *error_mesage_utf8, *messageScriptNameUtf8);
-    OutputDebugStringA(error_mesage_buf);
 
+    Local<Value> scriptResourceName = message->GetScriptResourceName();
+
+    v8::String::Utf8Value scriptResourceNameUtf8(scriptResourceName);
+
+    snprintf(error_mesage_buf, 999, "node.cc, FatalException:%d %s, %s\n",
+        message->GetLineNumber(), *error_mesage_utf8, *scriptResourceNameUtf8);
+    OutputDebugStringA(error_mesage_buf);
+    
     v8::Local<v8::StackTrace> stackTrace = message->GetStackTrace();
     if (!stackTrace.IsEmpty()) {
-        int frameCount = stackTrace->GetFrameCount();
+      int frameCount = stackTrace->GetFrameCount();
         for (int i = 0; i < frameCount; ++i) {
-            v8::Local<v8::StackFrame> stackFrame = stackTrace->GetFrame(i);
+          v8::Local<v8::StackFrame> stackFrame = stackTrace->GetFrame(i);
 
-            Local<String> scriptName = stackFrame->GetScriptNameOrSourceURL();
-            v8::String::Utf8Value scriptNameUtf8(scriptName);
-            snprintf(error_mesage_buf, 999, "node.cc, FatalExceptionStackTrace:%d, %s\n", stackFrame->GetLineNumber(), *scriptNameUtf8);
-            OutputDebugStringA(error_mesage_buf);
+          Local<String> scriptName = stackFrame->GetScriptNameOrSourceURL();
+          v8::String::Utf8Value scriptNameUtf8(scriptName);
+          snprintf(error_mesage_buf, 999, "node.cc, FatalExceptionStackTrace:%d, %s\n", stackFrame->GetLineNumber(), *scriptNameUtf8);
+          OutputDebugStringA(error_mesage_buf);
         }
     }
     delete[] error_mesage_buf;

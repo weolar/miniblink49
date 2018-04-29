@@ -291,6 +291,11 @@ void TLSWrap::EncOut() {
   write_size_ = NodeBIO::FromBIO(enc_out_)->PeekMultiple(data, size, &count);
   CHECK(write_size_ != 0 && count != 0);
 
+#ifndef MINIBLINK_NOT_IMPLEMENTED
+  if (env()->is_blink_core())
+    env()->BlinkMicrotaskSuppressionEnter(env());
+#endif
+
   Local<Object> req_wrap_obj =
       env()->write_wrap_constructor_function()
           ->NewInstance(env()->context()).ToLocalChecked();
@@ -298,6 +303,11 @@ void TLSWrap::EncOut() {
                                         req_wrap_obj,
                                         this,
                                         EncOutCb);
+
+#ifndef MINIBLINK_NOT_IMPLEMENTED
+  if (env()->is_blink_core())
+    env()->BlinkMicrotaskSuppressionLeave(env());
+#endif
 
   uv_buf_t buf[arraysize(data)];
   for (size_t i = 0; i < count; i++)
