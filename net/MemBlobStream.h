@@ -22,30 +22,30 @@ public:
 
     long long getSize(const String& path, double expectedModificationTime) {
         if (m_info) {
-            if (!m_async)
+            //if (!m_async)
                 return  m_info->data.size();
-            blink::Platform::current()->currentThread()->postTask(FROM_HERE, WTF::bind(&FileStreamClient::didGetSize, m_client, m_info->data.size()));
-            return 0;
+//             blink::Platform::current()->currentThread()->postTask(FROM_HERE, WTF::bind(&FileStreamClient::didGetSize, m_client, m_info->data.size()));
+//             return 0;
         }
 
         if (!path.startsWith("file:///c:/miniblink_blob_download_")) {
             DebugBreak();
             if (m_async)
                 blink::Platform::current()->currentThread()->postTask(FROM_HERE, WTF::bind(&FileStreamClient::didGetSize, m_client, 0));
-            return 0;
+            return -1;
         }
 
         BlobTempFileInfo* info = WebURLLoaderManager::sharedInstance()->getBlobTempFileInfoByTempFilePath(path);
         if (!info) {
-            if (m_async)
-                blink::Platform::current()->currentThread()->postTask(FROM_HERE, WTF::bind(&FileStreamClient::didGetSize, m_client, 0));
-            return 0;
+//             if (m_async)
+//                 blink::Platform::current()->currentThread()->postTask(FROM_HERE, WTF::bind(&FileStreamClient::didGetSize, m_client, 0));
+            return -1;
         }
         m_info = info;
         ++m_info->refCount;
 
-        if (m_async)
-            blink::Platform::current()->currentThread()->postTask(FROM_HERE, WTF::bind(&FileStreamClient::didGetSize, m_client, m_info->data.size()));
+//         if (m_async)
+//             blink::Platform::current()->currentThread()->postTask(FROM_HERE, WTF::bind(&FileStreamClient::didGetSize, m_client, m_info->data.size()));
         return m_info->data.size();
     }
 

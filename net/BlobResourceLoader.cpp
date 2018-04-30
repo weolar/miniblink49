@@ -174,6 +174,8 @@ void BlobResourceLoader::loadResourceSynchronously(BlobDataWrap* blobData, const
 
 class StreamWrap {
 public:
+    static const long long kIsAsynSize = -2;
+
     StreamWrap(FileStreamClient* client, bool isAsyn)
     {
         m_blob = nullptr;
@@ -220,7 +222,7 @@ public:
         else if (m_isAsyn)
             m_fileAsyn->getSize(path, expectedModificationTime);
 
-        return 0;
+        return kIsAsynSize;
     }
 
     bool openForRead(const String& path, long long offset, long long length)
@@ -458,6 +460,7 @@ void BlobResourceLoader::getSizeForNext()
         return;
     }
 
+    size_t size = 0;
     String filePath;
     blink::WebBlobData::Item* item = m_blobData->items().at(m_sizeItemCount);
     switch (item->type) {
@@ -468,10 +471,9 @@ void BlobResourceLoader::getSizeForNext()
         item->filePath = getPathBySystemURL(item->fileSystemURL); // no break
     case blink::WebBlobData::Item::TypeFile:
         // Files know their sizes, but asking the stream to verify that the file wasn't modified.
-        if (m_async)
-            m_streamWrap->getSize(item->filePath, item->expectedModificationTime);
-        else
-            didGetSize(m_streamWrap->getSize(item->filePath, item->expectedModificationTime));
+        size = m_streamWrap->getSize(item->filePath, item->expectedModificationTime);
+        if (StreamWrap::kIsAsynSize != size) // 有可能是miniblink_blob_download类型的blob文件名
+            didGetSize(size);
         break;
     case blink::WebBlobData::Item::TypeBlob: {
         content::WebBlobRegistryImpl* blobReg = (content::WebBlobRegistryImpl*)blink::Platform::current()->blobRegistry();
@@ -488,10 +490,9 @@ void BlobResourceLoader::getSizeForNext()
                 filePath = getPathBySystemURL(item->fileSystemURL); // no break
                 break;
             case blink::WebBlobData::Item::TypeFile:
-                if (m_async)
-                    m_streamWrap->getSize(filePath, it->expectedModificationTime);
-                else
-                    didGetSize(m_streamWrap->getSize(filePath, it->expectedModificationTime));
+                size = m_streamWrap->getSize(item->filePath, item->expectedModificationTime);
+                if (StreamWrap::kIsAsynSize != size)
+                    didGetSize(size);
                 break;
             case blink::WebBlobData::Item::TypeBlob:
                 DebugBreak();
@@ -506,6 +507,8 @@ void BlobResourceLoader::getSizeForNext()
     }
 }
 
+// WebBlobData::Item::length的长度表示需要取多长，如果是-1，表示全部取。并且
+// WebBlobRegistryImpl::setBlobDataLengthByTempPath里会对blob型设置个真实长度
 void BlobResourceLoader::didGetSize(long long size)
 {
     ASSERT(isMainThread());
@@ -516,6 +519,8 @@ void BlobResourceLoader::didGetSize(long long size)
 
     // If the size is -1, it means the file has been moved or changed. Fail now.
     if (size == -1) {
+        OutputDebugStringA("BlobResourceLoader::didGetSize fail\n");
+
         m_errorCode = notFoundError;
         notifyResponse();
         return;
@@ -523,13 +528,18 @@ void BlobResourceLoader::didGetSize(long long size)
 
     // The size passed back is the size of the whole file. If the underlying item is a sliced file, we need to use the slice length.
     const blink::WebBlobData::Item* item = m_blobData->items().at(m_sizeItemCount);
-    size = item->length;
-    if (blink::WebBlobData::Item::TypeData == item->type)
-        size = item->data.size();
-    else if (blink::WebBlobData::Item::TypeFile == item->type || blink::WebBlobData::Item::TypeFileSystemURL) {
-        if (!getFileSize(item->filePath, size))
-            size = 0;        
+    RELEASE_ASSERT(item->length != 0);
+
+    if (item->length < size) {
+        size = item->length;
     }
+
+//     if (blink::WebBlobData::Item::TypeData == item->type)
+//         size = item->data.size();
+//     else if (blink::WebBlobData::Item::TypeFile == item->type || blink::WebBlobData::Item::TypeFileSystemURL) {
+//         if (!getFileSize(item->filePath, size))
+//             size = 0;
+//     }
 
     // Cache the size.
     m_itemLengthList.append(size);
