@@ -18,7 +18,7 @@
 
 5、如果只想看demo，可以只下载https://github.com/weolar/miniblink49/tree/master/wkexe 目录然后编译
 
-6、需要编译好的dll，可在https://mp.csdn.net/postedit/80146895 下载
+6、需要编译好的dll以及demo的源码和工程，可在https://mp.csdn.net/postedit/80146895 下载
 
 二、杂项说明
 ========================================================
