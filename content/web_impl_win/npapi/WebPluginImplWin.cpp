@@ -590,7 +590,7 @@ bool WebPluginImpl::handleMouseEvent(const blink::WebMouseEvent& evt)
     NPEvent npEvent;
 
     //blink::IntPoint p = contentsToNativeWindow(m_pluginContainer, blink::IntPoint(evt.x, evt.y));
-    blink::IntPoint p(evt.x, evt.y);
+    blink::IntPoint p(evt.movementX, evt.movementY);
 
     npEvent.lParam = MAKELPARAM(p.x(), p.y());
     npEvent.wParam = 0;
@@ -843,8 +843,8 @@ void WebPluginImpl::setNPWindowRect(const IntRect& rect)
         return;
 
     IntPoint p = container->localToRootFramePoint(rect.location());
-    m_npWindow.x = 0; // rect.x(); // windowless模式是直接画在0，0点的独立canvas
-    m_npWindow.y = 0; // rect.y();
+    m_npWindow.x = rect.x(); // windowless模式是直接画在0，0点的独立canvas
+    m_npWindow.y = rect.y();
 
     m_npWindow.width = rect.width();
     m_npWindow.height = rect.height();

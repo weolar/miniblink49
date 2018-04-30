@@ -169,8 +169,9 @@ void WebBlobRegistryImpl::setBlobDataLengthByTempPath(const String& tempPath, si
         for (size_t i = 0; i < items.size(); ++i) {
             blink::WebBlobData::Item* item = items[i];
             if ((String)item->filePath == tempPath) {
-                item->offset = 0;
-                item->length = length;
+                //item->offset = 0;
+                if (-1 == item->length || item->length > length)
+                    item->length = length;
 
 //                 String out = String::format("WebBlobRegistryImpl::setBlobDataLengthByTempPath: %p %s\n", dataWrap, it->key.utf8().data());
 //                 OutputDebugStringA(out.utf8().data());
