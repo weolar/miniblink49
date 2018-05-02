@@ -590,7 +590,10 @@ bool WebPluginImpl::handleMouseEvent(const blink::WebMouseEvent& evt)
     NPEvent npEvent;
 
     //blink::IntPoint p = contentsToNativeWindow(m_pluginContainer, blink::IntPoint(evt.x, evt.y));
-    blink::IntPoint p(evt.movementX, evt.movementY);
+    blink::IntPoint p(evt.x, evt.y);
+
+    p.setX(evt.movementX);
+    p.setY(evt.movementY);
 
     npEvent.lParam = MAKELPARAM(p.x(), p.y());
     npEvent.wParam = 0;
@@ -714,8 +717,9 @@ void WebPluginImpl::paintIntoTransformedContext(HDC hdc)
     blink::IntPoint documentScrollOffsetRelativeToViewOrigin = contentsToNativeWindow(m_pluginContainer, blink::IntPoint());
     blink::IntRect r = container->frameRect();
 
-    windowpos.x = 0; // r.x();
-    windowpos.y = 0; // r.y();
+    windowpos.x = r.x();
+    windowpos.y = r.y();
+    
     windowpos.cx = r.width();
     windowpos.cy = r.height();
 
@@ -726,7 +730,7 @@ void WebPluginImpl::paintIntoTransformedContext(HDC hdc)
 
     dispatchNPEvent(npEvent);
 
-    setNPWindowRect(container->frameRect());
+    setNPWindowRect(r);
 
     npEvent.event = WM_PAINT;
     npEvent.wParam = reinterpret_cast<uintptr_t>(hdc);
@@ -812,14 +816,18 @@ void WebPluginImpl::paint(blink::WebCanvas* canvas, const blink::WebRect& rect)
     // On Safari/Windows without transparency layers the GraphicsContext returns the HDC
     // of the window and the plugin expects that the passed in DC has window coordinates.
     //if (!context.isInTransparencyLayer()) {
-//         XFORM transform;
-//         GetWorldTransform(hMemoryDC, &transform);
-//         transform.eDx = -m_windowRect.x();
-//         transform.eDy = -m_windowRect.y();
-//         SetWorldTransform(hMemoryDC, &transform);
+    XFORM originalTransform;
+    XFORM transform;
+    ::GetWorldTransform(hMemoryDC, &originalTransform);
+    transform = originalTransform;
+    transform.eDx = -r.x();
+    transform.eDy = -r.y();
+    ::SetWorldTransform(hMemoryDC, &transform);
     //}
 
     paintIntoTransformedContext(hMemoryDC);
+
+    ::SetWorldTransform(hMemoryDC, &originalTransform);
     skia::EndPlatformPaint(m_memoryCanvas);
 
     SkBaseDevice* bitmapDevice = skia::GetTopDevice(*m_memoryCanvas);
@@ -843,7 +851,8 @@ void WebPluginImpl::setNPWindowRect(const IntRect& rect)
         return;
 
     IntPoint p = container->localToRootFramePoint(rect.location());
-    m_npWindow.x = rect.x(); // windowless模式是直接画在0，0点的独立canvas
+    // windowless模式是直接画在rect.x，rect.y点的独立canvas
+    m_npWindow.x = rect.x();
     m_npWindow.y = rect.y();
 
     m_npWindow.width = rect.width();

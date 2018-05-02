@@ -130,7 +130,7 @@ WebPluginImpl::WebPluginImpl(WebLocalFrame* parentFrame, const blink::WebPluginP
     , m_paramValues(0)
     , m_mimeType(params.mimeType)
     , m_instance(0)
-    , m_isWindowed(true)
+    , m_isWindowed(false)
     , m_isTransparent(false)
     , m_haveInitialized(false)
     , m_isWaitingToStart(false)
@@ -640,10 +640,11 @@ void WebPluginImpl::status(const char* message)
 NPError WebPluginImpl::setValue(NPPVariable variable, void* value)
 {
     //LOG(Plugins, "WebPluginImpl::setValue(%s): ", prettyNameForNPPVariable(variable, value).data());
-
     switch (variable) {
     case NPPVpluginWindowBool:
         m_isWindowed = value;
+        m_isWindowed = false; // weolar
+
         return NPERR_NO_ERROR;
     case NPPVpluginTransparentBool:
         m_isTransparent = value;
