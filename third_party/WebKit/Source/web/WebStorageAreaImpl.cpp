@@ -132,6 +132,10 @@ void WebStorageAreaImpl::loadFromFile()
             key = keyOrValue;
         else {
             value = keyOrValue;
+
+            key = WTF::ensureUTF16String(key);
+            value = WTF::ensureUTF16String(value);
+
             WebStorageArea::Result result;
             setItem(key, value, originUrl, result);
         }
@@ -214,12 +218,10 @@ WebString WebStorageAreaImpl::getItem(const WebString& key)
     HashMap<String, String>* pageStorageArea = it->value;
     size_t size = pageStorageArea->size();
 
-//     String output = String::format("getItem: %p %s, %d\n", m_cachedArea, keyString.utf8().data(), size);
-//     OutputDebugStringA(output.utf8().data());
-
     HashMap<String, String>::iterator keyValueIt = pageStorageArea->find(keyString);
     if (keyValueIt == pageStorageArea->end())
         return WebString();
+
     return WebString(keyValueIt->value);
 }
 
@@ -240,9 +242,6 @@ void WebStorageAreaImpl::setItem(const WebString& key, const WebString& value, c
     size_t sizeOld = pageStorageArea->size();
     pageStorageArea->set(keyString, value);
     size_t size = pageStorageArea->size();
-
-//     String output = String::format("sssetItem: %p %s, %d %d\n", m_cachedArea, keyString.utf8().data(), sizeOld, size);
-//     OutputDebugStringA(output.utf8().data());
 
     result = WebStorageArea::ResultOK;
 
