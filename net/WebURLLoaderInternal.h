@@ -67,6 +67,7 @@ namespace net {
 class WebURLLoaderManagerMainTask;
 class WebURLLoaderManager;
 class FlattenHTTPBodyElementStream;
+struct InitializeHandleInfo;
 
 class WebURLLoaderInternal {
 public:
@@ -159,9 +160,12 @@ public:
     bool m_isProxy;
     bool m_isProxyHeadRequest;
 
+    InitializeHandleInfo* m_initializeHandleInfo;
+    bool m_isHoldJobToAsynCommit;
+
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
     bool m_isHookRequest;
-    void* m_hookBuf;
+    void* m_hookBufForEndHook;
     int m_hookLength;
 
     void* m_asynWkeNetSetData;

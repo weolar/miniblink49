@@ -132,8 +132,8 @@ public:
             handleHeaderCallbackOnMainThread(m_args, job);
             break;
         case kDidFinishLoading:
-            if (job->m_hookBuf)
-                WebURLLoaderManager::sharedInstance()->didReceiveDataOrDownload(job, static_cast<char*>(job->m_hookBuf), job->m_hookLength, 0);
+            if (job->m_hookBufForEndHook)
+                WebURLLoaderManager::sharedInstance()->didReceiveDataOrDownload(job, static_cast<char*>(job->m_hookBufForEndHook), job->m_hookLength, 0);
             WebURLLoaderManager::sharedInstance()->handleDidFinishLoading(job, 0, 0);
             break;
         case kRemoveFromCurl:
@@ -144,8 +144,8 @@ public:
             handleLocalReceiveResponseOnMainThread(m_args, job);
             break;
         case kContentEnded:
-            if (job->m_hookBuf)
-                job->m_multipartHandle->contentReceived(static_cast<const char*>(job->m_hookBuf), job->m_hookLength);
+            if (job->m_hookBufForEndHook)
+                job->m_multipartHandle->contentReceived(static_cast<const char*>(job->m_hookBufForEndHook), job->m_hookLength);
             job->m_multipartHandle->contentEnded();
             break;
         case kDidFail:
@@ -523,12 +523,12 @@ size_t WebURLLoaderManagerMainTask::handleWriteCallbackOnMainThread(WebURLLoader
     }
 
     if (job->m_isHookRequest) {
-        if (!job->m_hookBuf) {
-            job->m_hookBuf = malloc(totalSize);
+        if (!job->m_hookBufForEndHook) {
+            job->m_hookBufForEndHook = malloc(totalSize);
         } else {
-            job->m_hookBuf = realloc(job->m_hookBuf, job->m_hookLength + totalSize);
+            job->m_hookBufForEndHook = realloc(job->m_hookBufForEndHook, job->m_hookLength + totalSize);
         }
-        memcpy(((char *)job->m_hookBuf + job->m_hookLength), ptr, totalSize);
+        memcpy(((char *)job->m_hookBufForEndHook + job->m_hookLength), ptr, totalSize);
         job->m_hookLength += totalSize;
         return totalSize;
     }
@@ -607,7 +607,7 @@ void WebURLLoaderManagerMainTask::handleHookRequestOnMainThread(WebURLLoaderInte
         Vector<char> urlBuf = WTF::ensureStringToUTF8(job->firstRequest()->url().string(), true);
         page->wkeHandler().loadUrlEndCallback(page->wkeWebView(), page->wkeHandler().loadUrlEndCallbackParam,
             urlBuf.data(), job,
-            job->m_hookBuf, job->m_hookLength);
+            job->m_hookBufForEndHook, job->m_hookLength);
     }
 }
 

@@ -69,6 +69,7 @@
 #include "net/FlattenHTTPBodyElement.h"
 #include "net/WebURLLoaderManagerSetupInfo.h"
 #include "net/WebURLLoaderManagerAsynTask.h"
+#include "net/InitializeHandleInfo.h"
 #include "wke/wkeNetHook.h"
 #include "third_party/WebKit/Source/wtf/Threading.h"
 #include "third_party/WebKit/Source/wtf/Vector.h"
@@ -705,7 +706,7 @@ static void dispatchPostBodyToWke(WebURLLoaderInternal* job, WTF::Vector<Flatten
     if (tempInfo->postBody->isDirty)
         wke::wkeflattenElementToBlink(*tempInfo->postBody, flattenElements);
     else
-        wkeFreePostFlattenBodyElements(tempInfo->postBody);
+        wkeNetFreePostBodyElements(tempInfo->postBody);
 }
 
 static SetupDataInfo* setupFormDataOnMainThread(WebURLLoaderInternal* job, CURLoption sizeOption, struct curl_slist** headers)
@@ -766,7 +767,7 @@ static SetupDataInfo* setupFormDataOnMainThread(WebURLLoaderInternal* job, CURLo
         }
     }
 
-    dispatchPostBodyToWke(job, &result->flattenElements);
+    // dispatchPostBodyToWke(job, &result->flattenElements);
 
     // cURL guesses that we want chunked encoding as long as we specify the header
     if (chunkedTransfer)
@@ -1020,18 +1021,24 @@ int WebURLLoaderManager::addAsynchronousJob(WebURLLoaderInternal* job)
         return jobId;
     }
 
-    jobId = startJobOnMainThread(job);
+    jobId = initializeHandleOnMainThread(job);
     if (0 == jobId)
         return 0;
 
-    if (job->m_isWkeNetSetDataBeSetted) {
-        Platform::current()->currentThread()->scheduler()->postLoadingTask(FROM_HERE, new WkeAsynTask(this, jobId)); // postLoadingTask
+    if (job->m_isWkeNetSetDataBeSetted || job->m_isHoldJobToAsynCommit || job->m_isBlackList)
         return jobId;
-    }
+
+    continueJob(job);
+    return jobId;
+}
+
+void WebURLLoaderManager::continueJob(WebURLLoaderInternal* job)
+{
+    m_thread->postTask(FROM_HERE, WTF::bind(&WebURLLoaderManager::initializeHandleOnIoThread, this, job->m_id, job->m_initializeHandleInfo));
+    m_thread->postTask(FROM_HERE, WTF::bind(&WebURLLoaderManager::startOnIoThread, this, job->m_id));
 
     IoTask* task = new IoTask(this, m_thread, false);
     m_thread->postTask(FROM_HERE, task);
-    return jobId;
 }
 
 void WebURLLoaderManager::cancelWithHookRedirect(WebURLLoaderInternal* job)
@@ -1149,10 +1156,10 @@ void WebURLLoaderManager::dispatchSynchronousJob(WebURLLoaderInternal* job)
         wkeLoadUrlEndCallback loadUrlEndCallback = page->wkeHandler().loadUrlEndCallback;
         void* loadUrlEndCallbackParam = page->wkeHandler().loadUrlEndCallbackParam;
         if (job->m_isHookRequest && loadUrlEndCallback)
-            loadUrlEndCallback(page->wkeWebView(), loadUrlEndCallbackParam, urlBuf.data(), job, job->m_hookBuf, job->m_hookLength);
+            loadUrlEndCallback(page->wkeWebView(), loadUrlEndCallbackParam, urlBuf.data(), job, job->m_hookBufForEndHook, job->m_hookLength);
 
-        if (job->m_hookBuf)
-            didReceiveDataOrDownload(job, static_cast<char*>(job->m_hookBuf), job->m_hookLength, 0);
+        if (job->m_hookBufForEndHook)
+            didReceiveDataOrDownload(job, static_cast<char*>(job->m_hookBufForEndHook), job->m_hookLength, 0);
         handleDidFinishLoading(job, 0, 0);
     }
 
@@ -1169,8 +1176,10 @@ void WebURLLoaderManager::dispatchSynchronousJobOnIoThread(WebURLLoaderInternal*
     *isCallFinish = true;
 }
 
+//  dispatchPostBodyToWke(job, &result->flattenElements);
+
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
-static bool dispatchWkeLoadUrlBegin(WebURLLoaderInternal* job)
+static bool dispatchWkeLoadUrlBegin(WebURLLoaderInternal* job, InitializeHandleInfo* info)
 {
     RequestExtraData* requestExtraData = reinterpret_cast<RequestExtraData*>(job->firstRequest()->extraData());
     if (!requestExtraData)
@@ -1181,23 +1190,12 @@ static bool dispatchWkeLoadUrlBegin(WebURLLoaderInternal* job)
         return false;
 
     Vector<char> urlBuf = WTF::ensureStringToUTF8(job->firstRequest()->url().string(), true);
-    bool b = page->wkeHandler().loadUrlBeginCallback(page->wkeWebView(),
-        page->wkeHandler().loadUrlBeginCallbackParam,
-        urlBuf.data(), job);
+    void* param = page->wkeHandler().loadUrlBeginCallbackParam;
+    bool b = page->wkeHandler().loadUrlBeginCallback(page->wkeWebView(), param, urlBuf.data(), job);
 
     return job->m_isWkeNetSetDataBeSetted || b;
 }
 #endif
-
-int WebURLLoaderManager::startJobOnMainThread(WebURLLoaderInternal* job)
-{
-#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
-    if (dispatchWkeLoadUrlBegin(job))
-        return addLiveJobs(job);
-#endif
-
-    return initializeHandleOnMainThread(job);
-}
 
 void WebURLLoaderManager::applyAuthenticationToRequest(WebURLLoaderInternal* handle, blink::WebURLRequest* request)
 {
@@ -1260,36 +1258,14 @@ private:
     curl_slist** m_headers;
 };
 
-struct WebURLLoaderManager::InitializeHandleInfo {
-    std::string url;
-    std::string method;
-    curl_slist* headers;
-    std::string proxy;
-    std::string wkeNetInterface;
-    ProxyType proxyType;
-    SetupHttpMethodInfo* methodInfo;
-
-    InitializeHandleInfo()
-    {
-        methodInfo = nullptr;
-    }
-
-    ~InitializeHandleInfo()
-    {
-        if (methodInfo) {
-            delete methodInfo;
-        }
-    }
-};
-
-WebURLLoaderManager::InitializeHandleInfo* WebURLLoaderManager::preInitializeHandleOnMainThread(WebURLLoaderInternal* job)
+InitializeHandleInfo* WebURLLoaderManager::preInitializeHandleOnMainThread(WebURLLoaderInternal* job)
 {
     InitializeHandleInfo* info = new InitializeHandleInfo();
     KURL url = job->firstRequest()->url();
-    String urlString = url.string();
-
+    
     // Remove any fragment part, otherwise curl will send it as part of the request.
     url.removeFragmentIdentifier();
+    String urlString = url.string();
     if (url.isLocalFile()) {
         // Remove any query part sent to a local file.
         if (!url.query().isEmpty()) {
@@ -1303,19 +1279,10 @@ WebURLLoaderManager::InitializeHandleInfo* WebURLLoaderManager::preInitializeHan
     }
 
     info->url = WTF::ensureStringToUTF8(urlString, true).data();
-    //ASSERT(info->url.size() == urlString.length());
-#if 0
-    String output = String::format("preInit: %d %s\n", urlString.length(), info->url.c_str());
-    OutputDebugStringA(output.utf8().data());
-#endif
+
     info->method = job->firstRequest()->httpMethod().utf8();
 
     String contentType = job->firstRequest()->httpHeaderField("Content-Type");
-//     if (WTF::kNotFound == url.host().find("apple.com") && // 苹果开发者网，非要去掉0长度的Content-Type字段
-//         WTF::kNotFound == url.host().find("dtcms.net")
-//         && contentType.isNull()
-//         && "POST" == info->method
-//         && job->firstRequest()->httpBody().isNull())
     if (WTF::kNotFound != url.host().find("huobi.pro") && "POST" == info->method && job->firstRequest()->httpBody().isNull())
         job->firstRequest()->setHTTPHeaderField("Content-Type", ""); // 修复火币网登录不了的bug
 
@@ -1463,6 +1430,7 @@ void WebURLLoaderManager::initializeHandleOnIoThread(int jobId, InitializeHandle
         curl_easy_setopt(job->m_handle, CURLOPT_INTERFACE, info->wkeNetInterface.c_str());
 #endif
 
+    job->m_initializeHandleInfo = nullptr;
     delete info;
 }
 
@@ -1487,15 +1455,28 @@ int WebURLLoaderManager::initializeHandleOnMainThread(WebURLLoaderInternal* job)
     int jobId = addLiveJobs(job);
 
     InitializeHandleInfo* info = preInitializeHandleOnMainThread(job);
+    
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
+    if (dispatchWkeLoadUrlBegin(job, info)) {
+        if (job->m_isWkeNetSetDataBeSetted)
+            Platform::current()->currentThread()->scheduler()->postLoadingTask(FROM_HERE, new WkeAsynTask(this, jobId)); // postLoadingTask
+        
+        if (!job->m_isHoldJobToAsynCommit)
+            delete info;
+        else
+            job->m_initializeHandleInfo = info;
+        return jobId;
+    }
+#endif
+
     KURL kurl = job->firstRequest()->url();
     if (kurl.isLocalFile() && isLocalFileNotExist(info->url.c_str(), job)) {
         Platform::current()->currentThread()->scheduler()->postLoadingTask(FROM_HERE, new BlackListCancelTask(this, jobId));
+        delete info;
         return jobId;
     }
 
-    m_thread->postTask(FROM_HERE, WTF::bind(&WebURLLoaderManager::initializeHandleOnIoThread, this, jobId, info));
-    m_thread->postTask(FROM_HERE, WTF::bind(&WebURLLoaderManager::startOnIoThread, this, jobId));
-
+    job->m_initializeHandleInfo = info;
     return jobId;
 }
 
@@ -1529,6 +1510,12 @@ void WebURLLoaderManager::startOnIoThread(int jobId)
     }
 }
 
+InitializeHandleInfo::~InitializeHandleInfo() {
+    if (methodInfo) {
+        delete methodInfo;
+    }
+}
+
 #ifndef NDEBUG
 DEFINE_DEBUG_ONLY_GLOBAL(WTF::RefCountedLeakCounter, webURLLoaderInternalCounter, ("WebURLLoaderInternal"));
 #endif
@@ -1552,7 +1539,7 @@ WebURLLoaderInternal::WebURLLoaderInternal(WebURLLoaderImplCurl* loader, const W
     , m_loader(loader)
     , m_state(kNormal)
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
-    , m_hookBuf(nullptr)
+    , m_hookBufForEndHook(nullptr)
     , m_hookLength(0)
     , m_isHookRequest(false)
     , m_asynWkeNetSetData(nullptr)
@@ -1573,7 +1560,8 @@ WebURLLoaderInternal::WebURLLoaderInternal(WebURLLoaderImplCurl* loader, const W
     m_isDataUrl = false;
     m_isProxy = false;
     m_isProxyHeadRequest = false;
-    //m_postBytesReadOffset = 0;
+    m_isHoldJobToAsynCommit = false;
+    m_initializeHandleInfo = nullptr;
     m_formDataStream = nullptr;
 
 #ifndef NDEBUG
@@ -1589,8 +1577,8 @@ WebURLLoaderInternal::~WebURLLoaderInternal()
     fastFree(m_url);
 
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
-    if (m_hookBuf)
-        free(m_hookBuf);
+    if (m_hookBufForEndHook)
+        free(m_hookBufForEndHook);
 
     if (m_asynWkeNetSetData) {
         RELEASE_ASSERT(!m_customHeaders);
