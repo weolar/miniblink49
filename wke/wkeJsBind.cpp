@@ -430,9 +430,6 @@ bool jsToBoolean(jsExecState es, jsValue v)
     return false;
 }
 
-static std::vector<std::vector<char>*> s_sharedStringBuffers;
-static std::vector<std::vector<wchar_t>*> s_sharedStringBuffersW;
-
 const wchar_t* jsToTempStringW(jsExecState es, jsValue v)
 {
     const utf8* utf8String = jsToTempString(es, v);
@@ -440,14 +437,7 @@ const wchar_t* jsToTempStringW(jsExecState es, jsValue v)
     if (0 == utf16.size())
         return L"";
 
-    std::vector<wchar_t>* stringBuffer = new std::vector<wchar_t>();
-    s_sharedStringBuffersW.push_back(stringBuffer);
-
-    stringBuffer->resize(utf16.size());
-    memcpy(&stringBuffer->at(0), utf16.data(), utf16.size() * sizeof(wchar_t));
-    stringBuffer->push_back('\0');
-
-    return &stringBuffer->at(0);
+    return wke::createTempWCharString(utf16.data(), utf16.size());
 }
 
 const utf8* jsToTempString(jsExecState es, jsValue v) {
@@ -503,13 +493,7 @@ const utf8* jsToTempString(jsExecState es, jsValue v) {
     if (0 == sharedStringBuffer.size())
         return "";
 
-    std::vector<char>* stringBuffer = new std::vector<char>();
-    s_sharedStringBuffers.push_back(stringBuffer);
-
-    stringBuffer->resize(sharedStringBuffer.size());
-    memcpy(&stringBuffer->at(0), sharedStringBuffer.data(), sharedStringBuffer.size());
-    stringBuffer->push_back('\0');
-    return &stringBuffer->at(0);
+    return wke::createTempCharString(sharedStringBuffer.data(), sharedStringBuffer.size());
 }
 
 const utf8* jsToString(jsExecState es, jsValue v)
@@ -1588,15 +1572,7 @@ void freeV8TempObejctOnOneFrameBefore()
     } 
     s_execStates->clear();
 
-    for (size_t i = 0; i < s_sharedStringBuffers.size(); ++i) {
-        delete s_sharedStringBuffers[i];
-    }
-    s_sharedStringBuffers.clear();
-
-    for (size_t i = 0; i < s_sharedStringBuffersW.size(); ++i) {
-        delete s_sharedStringBuffersW[i];
-    }
-    s_sharedStringBuffersW.clear();
+    freeTempCharStrings();
 }
 
 jsValue createJsValueString(v8::Local<v8::Context> context, const utf8* str)

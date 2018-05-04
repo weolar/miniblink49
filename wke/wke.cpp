@@ -52,23 +52,23 @@ void wkeInitialize()
     wkeIsInit = true;
 }
 
-struct ProxyInfo {
-    net::WebURLLoaderManager::ProxyType proxyType;
+struct wkeProxyInfo {
+    net::ProxyType proxyType;
     String hostname;
     String username;
     String password;
 
-    static WTF::PassOwnPtr<ProxyInfo> create(const wkeProxy& proxy) {
-        WTF::PassOwnPtr<ProxyInfo> info = WTF::adoptPtr(new ProxyInfo());
-        info->proxyType = net::WebURLLoaderManager::HTTP;
+    static WTF::PassOwnPtr<wkeProxyInfo> create(const wkeProxy& proxy) {
+        WTF::PassOwnPtr<wkeProxyInfo> info = WTF::adoptPtr(new wkeProxyInfo());
+        info->proxyType = net::HTTP;
 
         if (proxy.hostname[0] != 0 && proxy.type >= WKE_PROXY_HTTP && proxy.type <= WKE_PROXY_SOCKS5HOSTNAME) {
             switch (proxy.type) {
-            case WKE_PROXY_HTTP:           info->proxyType = net::WebURLLoaderManager::HTTP; break;
-            case WKE_PROXY_SOCKS4:         info->proxyType = net::WebURLLoaderManager::Socks4; break;
-            case WKE_PROXY_SOCKS4A:        info->proxyType = net::WebURLLoaderManager::Socks4A; break;
-            case WKE_PROXY_SOCKS5:         info->proxyType = net::WebURLLoaderManager::Socks5; break;
-            case WKE_PROXY_SOCKS5HOSTNAME: info->proxyType = net::WebURLLoaderManager::Socks5Hostname; break;
+            case WKE_PROXY_HTTP:           info->proxyType = net::HTTP; break;
+            case WKE_PROXY_SOCKS4:         info->proxyType = net::Socks4; break;
+            case WKE_PROXY_SOCKS4A:        info->proxyType = net::Socks4A; break;
+            case WKE_PROXY_SOCKS5:         info->proxyType = net::Socks5; break;
+            case WKE_PROXY_SOCKS5HOSTNAME: info->proxyType = net::Socks5Hostname; break;
             }
 
             info->hostname = String::fromUTF8(proxy.hostname);
@@ -84,7 +84,7 @@ void wkeSetProxy(const wkeProxy* proxy)
     if (!proxy)
         return;
 
-    WTF::PassOwnPtr<ProxyInfo> info = ProxyInfo::create(*proxy);
+    WTF::PassOwnPtr<wkeProxyInfo> info = wkeProxyInfo::create(*proxy);
 
     if (net::WebURLLoaderManager::sharedInstance())
         net::WebURLLoaderManager::sharedInstance()->setProxyInfo(info->hostname, proxy->port, info->proxyType, info->username, info->password);
@@ -94,7 +94,7 @@ void wkeSetViewProxy(wkeWebView webView, wkeProxy* proxy)
 {
     if (!webView || !proxy)
         return;
-    WTF::PassOwnPtr<ProxyInfo> info = ProxyInfo::create(*proxy);
+    WTF::PassOwnPtr<wkeProxyInfo> info = wkeProxyInfo::create(*proxy);
     webView->setProxyInfo(info->hostname, proxy->port, info->proxyType, info->username, info->password);
 }
 
@@ -147,12 +147,16 @@ void wkeSetMemoryCacheEnable(wkeWebView webView, bool b)
     blink::RuntimeEnabledFeatures::setMemoryCacheEnabled(b);
 }
 
-bool g_isTouchEnabled = false;
+bool g_isMouseEnabled = true;
 
 void wkeSetTouchEnabled(wkeWebView webView, bool b)
 {
     blink::RuntimeEnabledFeatures::setTouchEnabled(b);
-    //g_isTouchEnabled = b;
+}
+
+void wkeSetMouseEnabled(wkeWebView webView, bool b)
+{
+    g_isMouseEnabled = b;
 }
 
 void wkeSetNavigationToNewWindowEnable(wkeWebView webView, bool b)
@@ -180,6 +184,10 @@ void wkeSetDragEnable(wkeWebView webView, bool b)
     g_isSetDragEnable = b;
 }
 
+bool g_usingMouseZero = false;
+bool g_usingMovement = false;
+bool g_usingWindow = false;
+
 void wkeSetDebugConfig(wkeWebView webView, const char* debugString, const char* param)
 {
     String stringDebug(debugString);
@@ -198,6 +206,12 @@ void wkeSetDebugConfig(wkeWebView webView, const char* debugString, const char* 
 
         } else if ("showDevTools" == item) {
             webView->showDevTools(param);
+        } else if ("usingMouseZero" == item) {
+            g_usingMouseZero = true;
+        } else if ("usingMovement" == item) {
+            g_usingMovement = true;
+        } else if ("usingWindow" == item) {
+            g_usingWindow = true;
         }
     }
 }

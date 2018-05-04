@@ -11,8 +11,8 @@ struct FlattenHTTPBodyElement;
 
 namespace wke {
 
-wkePostFlattenBodyElements* flattenHTTPBodyElementToWke(const WTF::Vector<net::FlattenHTTPBodyElement*>& body);
-void wkeflattenElementToBlink(const wkePostFlattenBodyElements& body, WTF::Vector<net::FlattenHTTPBodyElement*>* out);
+wkePostBodyElements* flattenHTTPBodyElementToWke(const WTF::Vector<net::FlattenHTTPBodyElement*>& body);
+void wkeflattenElementToBlink(const wkePostBodyElements& body, WTF::Vector<net::FlattenHTTPBodyElement*>* out);
 
 }
 

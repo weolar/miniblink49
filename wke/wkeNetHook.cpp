@@ -13,8 +13,11 @@
 #include "third_party/WebKit/Source/platform/network/HTTPParsers.h"
 #include "net/WebURLLoaderInternal.h"
 #include "net/FlattenHTTPBodyElement.h"
+#include "net/InitializeHandleInfo.h"
+#include "net/WebURLLoaderManagerSetupInfo.h"
+#include "net/WebURLLoaderManager.h"
 
-void wkeNetSetHTTPHeaderField(void* jobPtr, wchar_t *key, wchar_t *value, bool response)
+void wkeNetSetHTTPHeaderField(void* jobPtr, wchar_t* key, wchar_t* value, bool response)
 {
     net::WebURLLoaderInternal* job = (net::WebURLLoaderInternal*)jobPtr;
 
@@ -27,6 +30,15 @@ void wkeNetSetHTTPHeaderField(void* jobPtr, wchar_t *key, wchar_t *value, bool r
         } else
             job->firstRequest()->setHTTPHeaderField(keyString, String(value));
     }
+}
+
+const char* wkeNetGetHTTPHeaderField(void* jobPtr, const char* key)
+{
+    net::WebURLLoaderInternal* job = (net::WebURLLoaderInternal*)jobPtr;
+    String value = job->firstRequest()->httpHeaderField(String(key));
+    Vector<char> valueBuffer = WTF::ensureStringToUTF8(value, false);
+
+    return wke::createTempCharString(valueBuffer.data(), valueBuffer.size());
 }
 
 void wkeNetSetMIMEType(void* jobPtr, char* type)
@@ -58,12 +70,12 @@ void wkeNetSetData(void* jobPtr, void* buf, int len)
     WebURLLoaderClient* client = job->client();
     WebURLLoaderImplCurl* loader = job->loader();
 
-    if (job->m_hookBuf) {
-        free(job->m_hookBuf);
+    if (job->m_hookBufForEndHook) {
+        free(job->m_hookBufForEndHook);
 
-        job->m_hookBuf = malloc(len);
+        job->m_hookBufForEndHook = malloc(len);
         job->m_hookLength = len;
-        memcpy(job->m_hookBuf, buf, len);
+        memcpy(job->m_hookBufForEndHook, buf, len);
 
         return;
     }
@@ -79,23 +91,98 @@ void wkeNetSetData(void* jobPtr, void* buf, int len)
     job->m_isWkeNetSetDataBeSetted = true;
 }
 
-void wkeNetHookRequest(void *jobPtr)
+void wkeNetHookRequest(void* jobPtr)
 {
     net::WebURLLoaderInternal* job = (net::WebURLLoaderInternal*)jobPtr;
+    job->m_isWkeNetSetDataBeSetted = false;
+    if (job->m_asynWkeNetSetData)
+        free(job->m_asynWkeNetSetData);
+    job->m_asynWkeNetSetData = nullptr;
+    job->m_isHoldJobToAsynCommit = false;
+
     job->m_isHookRequest = true;
 }
 
-wkePostFlattenBodyElements* wkeCreatePostFlattenBodyElements(wkeWebView webView, size_t length)
+void wkeNetCancelRequest(void* jobPtr)
+{
+    net::WebURLLoaderInternal* job = (net::WebURLLoaderInternal*)jobPtr;
+    job->m_cancelledReason = net::kNormalCancelled;
+}
+
+const char* wkeNetGetUrlByJob(void* jobPtr)
+{
+    net::WebURLLoaderInternal* job = (net::WebURLLoaderInternal*)jobPtr;
+    blink::KURL kurl = job->firstRequest()->url();
+
+    CString urlString = kurl.getUTF8String().utf8();
+    return wke::createTempCharString(urlString.data(), urlString.length());
+}
+
+void wkeNetContinueJob(void* jobPtr)
+{
+    net::WebURLLoaderInternal* job = (net::WebURLLoaderInternal*)jobPtr;
+    net::WebURLLoaderManager::sharedInstance()->continueJob(job);
+}
+
+void wkeNetChangeRequestUrl(void* jobPtr, const char* url)
+{
+    net::WebURLLoaderInternal* job = (net::WebURLLoaderInternal*)jobPtr;
+    blink::KURL newUrl(blink::ParsedURLString, url);
+    job->firstRequest()->setURL(newUrl);
+    //job->m_url = fastStrDup(url);
+    job->m_initializeHandleInfo->url = url;
+    //curl_easy_setopt(job->m_handle, CURLOPT_URL, job->m_url);
+}
+
+void wkeNetHoldJobToAsynCommit(void* jobPtr)
+{
+    net::WebURLLoaderInternal* job = (net::WebURLLoaderInternal*)jobPtr;
+
+    job->m_isWkeNetSetDataBeSetted = false;
+    if (job->m_asynWkeNetSetData)
+        free(job->m_asynWkeNetSetData);
+    job->m_asynWkeNetSetData = nullptr;
+
+    if (job->m_hookBufForEndHook)
+        free(job->m_hookBufForEndHook);
+    job->m_hookBufForEndHook = nullptr;
+
+    job->m_isHookRequest = false;
+
+    job->m_isHoldJobToAsynCommit = true;
+}
+
+wkePostBodyElements* wkeNetGetPostBodyByJob(void *jobPtr)
+{
+    net::WebURLLoaderInternal* job = (net::WebURLLoaderInternal*)jobPtr;
+    net::InitializeHandleInfo* info = job->m_initializeHandleInfo;
+    if (!info)
+        return nullptr;
+
+    WTF::Vector<net::FlattenHTTPBodyElement*>* flattenElements = nullptr;
+    if ("POST" == info->method) {
+        flattenElements = &info->methodInfo->post->data->flattenElements;
+    } else if ("PUT" == info->method) {
+        flattenElements = &info->methodInfo->put->data->flattenElements;
+    }
+    if (!flattenElements)
+        return nullptr;
+
+    wkePostBodyElements* postBody = wke::flattenHTTPBodyElementToWke(*flattenElements);
+    return postBody;
+}
+
+wkePostBodyElements* wkeNetCreatePostBodyElements(wkeWebView webView, size_t length)
 {
     if (0 == length)
         return nullptr;
 
-    wkePostFlattenBodyElements* result = new wkePostFlattenBodyElements();
-    result->size = sizeof(wkePostFlattenBodyElements);
-    result->isDirty = false;
+    wkePostBodyElements* result = new wkePostBodyElements();
+    result->size = sizeof(wkePostBodyElements);
+    result->isDirty = true;
 
-    size_t allocLength = sizeof(wkePostFlattenBodyElement*) * length;
-    result->element = (wkePostFlattenBodyElement**)malloc(allocLength);
+    size_t allocLength = sizeof(wkePostBodyElement*) * length;
+    result->element = (wkePostBodyElement**)malloc(allocLength);
     memset(result->element, 0, allocLength);
 
     result->elementSize = length;
@@ -103,23 +190,23 @@ wkePostFlattenBodyElements* wkeCreatePostFlattenBodyElements(wkeWebView webView,
     return result;
 }
 
-void wkeFreePostFlattenBodyElements(wkePostFlattenBodyElements* elements)
+void wkeNetFreePostBodyElements(wkePostBodyElements* elements)
 {
     for (size_t i = 0; i < elements->elementSize; ++i) {
-        wkeFreePostFlattenBodyElement(elements->element[i]);
+        wkeNetFreePostBodyElement(elements->element[i]);
     }
     free(elements->element);
     delete elements;
 }
 
-wkePostFlattenBodyElement* wkeCreatePostFlattenBodyElement(wkeWebView webView)
+wkePostBodyElement* wkeNetCreatePostBodyElement(wkeWebView webView)
 {
-    wkePostFlattenBodyElement* wkeElement = new wkePostFlattenBodyElement();
-    wkeElement->size = sizeof(wkePostFlattenBodyElement);
+    wkePostBodyElement* wkeElement = new wkePostBodyElement();
+    wkeElement->size = sizeof(wkePostBodyElement);
     return wkeElement;
 }
 
-void wkeFreePostFlattenBodyElement(wkePostFlattenBodyElement* element)
+void wkeNetFreePostBodyElement(wkePostBodyElement* element)
 {
     wkeFreeMemBuf(element->data);
     wkeDeleteString(element->filePath);
@@ -149,14 +236,15 @@ void wkeFreeMemBuf(wkeMemBuf* buf)
 
 namespace wke {
 
-wkePostFlattenBodyElements* flattenHTTPBodyElementToWke(const WTF::Vector<net::FlattenHTTPBodyElement*>& body)
+wkePostBodyElements* flattenHTTPBodyElementToWke(const WTF::Vector<net::FlattenHTTPBodyElement*>& body)
 {
     if (0 == body.size())
         return nullptr;
 
-    wkePostFlattenBodyElements* result = wkeCreatePostFlattenBodyElements(nullptr, body.size());
+    wkePostBodyElements* result = wkeNetCreatePostBodyElements(nullptr, body.size());
+    result->isDirty = false;
     for (size_t i = 0; i < result->elementSize; ++i) {
-        wkePostFlattenBodyElement*wkeElement = wkeCreatePostFlattenBodyElement(nullptr);
+        wkePostBodyElement*wkeElement = wkeNetCreatePostBodyElement(nullptr);
         result->element[i] = wkeElement;
         const net::FlattenHTTPBodyElement* element = body[i];
 
@@ -179,7 +267,7 @@ wkePostFlattenBodyElements* flattenHTTPBodyElementToWke(const WTF::Vector<net::F
     return result;
 }
 
-void wkeflattenElementToBlink(const wkePostFlattenBodyElements& body, WTF::Vector<net::FlattenHTTPBodyElement*>* out)
+void wkeflattenElementToBlink(const wkePostBodyElements& body, WTF::Vector<net::FlattenHTTPBodyElement*>* out)
 {
     out->clear();
 
@@ -187,7 +275,7 @@ void wkeflattenElementToBlink(const wkePostFlattenBodyElements& body, WTF::Vecto
         return;
 
     for (size_t i = 0; i < body.elementSize; ++i) {
-        const wkePostFlattenBodyElement* wkeElement = body.element[i];
+        const wkePostBodyElement* wkeElement = body.element[i];
         net::FlattenHTTPBodyElement* blinkElement = new net::FlattenHTTPBodyElement();
 
         blinkElement->type = (wkeElement->type == wkeHttBodyElementTypeFile ? 

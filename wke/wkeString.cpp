@@ -135,9 +135,53 @@ void CString::_free()
     }
 }
 
+std::vector<std::vector<char>*>* s_sharedStringBuffers = nullptr;
+std::vector<std::vector<wchar_t>*>* s_sharedStringBuffersW = nullptr;
 
+const char* createTempCharString(const char* str, size_t length)
+{
+    if (!str || 0 == length)
+        return "";
+    std::vector<char>* stringBuffer = new std::vector<char>(length);
+    memcpy(&stringBuffer->at(0), str, length * sizeof(char));
+    stringBuffer->push_back('\0');
 
+    if (!s_sharedStringBuffers)
+        s_sharedStringBuffers = new std::vector<std::vector<char>*>();
+    s_sharedStringBuffers->push_back(stringBuffer);
+    return &stringBuffer->at(0);
+}
 
+const wchar_t* createTempWCharString(const wchar_t* str, size_t length)
+{
+    if (!str || 0 == length)
+        return L"";
+    std::vector<wchar_t>* stringBuffer = new std::vector<wchar_t>(length);
+    memcpy(&stringBuffer->at(0), str, length * sizeof(wchar_t));
+    stringBuffer->push_back(L'\0');
+
+    if (!s_sharedStringBuffersW)
+        s_sharedStringBuffersW = new std::vector<std::vector<wchar_t>*>();
+    s_sharedStringBuffersW->push_back(stringBuffer);
+    return &stringBuffer->at(0);
+}
+
+void freeTempCharStrings()
+{
+    if (s_sharedStringBuffers) {
+        for (size_t i = 0; i < s_sharedStringBuffers->size(); ++i) {
+            delete s_sharedStringBuffers->at(i);
+        }
+        s_sharedStringBuffers->clear();
+    }
+
+    if (s_sharedStringBuffersW) {
+        for (size_t i = 0; i < s_sharedStringBuffersW->size(); ++i) {
+            delete s_sharedStringBuffersW->at(i);
+        }
+        s_sharedStringBuffersW->clear();
+    }
+}
 
 };
 

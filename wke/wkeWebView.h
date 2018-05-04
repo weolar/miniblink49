@@ -271,9 +271,9 @@ public:
     void setNetInterface(const char* netInterface);
     String getNetInterface() const { return m_netInterface; }
 
-    void setProxyInfo(const String& host, unsigned long port, net::WebURLLoaderManager::ProxyType type, const String& username, const String& password);
+    void setProxyInfo(const String& host, unsigned long port, net::ProxyType type, const String& username, const String& password);
     String getProxy() const { return m_proxy; }
-    net::WebURLLoaderManager::ProxyType getProxyType() const { return m_proxyType; }
+    net::ProxyType getProxyType() const { return m_proxyType; }
 
     void showDevTools(const utf8* url);
 
@@ -326,7 +326,7 @@ protected:
     String m_netInterface;
 
     String m_proxy;
-    net::WebURLLoaderManager::ProxyType m_proxyType;
+    net::ProxyType m_proxyType;
 
     friend class ShowDevToolsTaskObserver;
     bool m_isCreatedDevTools;

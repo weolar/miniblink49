@@ -322,18 +322,21 @@ bool CWebView::isLoading() const
 bool CWebView::isLoadingSucceeded() const
 {
     content::WebFrameClientImpl* frameClient = m_webPage->webFrameClientImpl();
-    return frameClient->isLoaded();
+    bool b = frameClient->isLoaded();
+    return b;
 }
 
 bool CWebView::isLoadingFailed() const
 {
     content::WebFrameClientImpl* frameClient = m_webPage->webFrameClientImpl();
-    return frameClient->isLoadFailed();
+    bool b = frameClient->isLoadFailed();
+    return b;
 }
 
 bool CWebView::isLoadingCompleted() const
 {
-    return isLoadingSucceeded() || isLoadingFailed();
+    bool b = isLoadingSucceeded() || isLoadingFailed();
+    return b;
 }
 
 bool CWebView::isDocumentReady() const
@@ -1274,7 +1277,7 @@ void CWebView::setNetInterface(const char* netInterface)
     m_netInterface = netInterface;
 }
 
-void CWebView::setProxyInfo(const String& host,	unsigned long port,	net::WebURLLoaderManager::ProxyType type, const String& username, const String& password)
+void CWebView::setProxyInfo(const String& host,	unsigned long port,	net::ProxyType type, const String& username, const String& password)
 {
     m_proxyType = type;
 
@@ -1306,6 +1309,10 @@ public:
 
     virtual void willProcessTask() override
     {
+        
+    }
+    virtual void didProcessTask() override
+    {
         OutputDebugStringA("Devtools willProcessTask\n");
 
         wkeWebView devToolsWebView = wkeCreateWebWindow(WKE_WINDOW_TYPE_POPUP, nullptr, 200, 200, 800, 600);
@@ -1319,7 +1326,6 @@ public:
         wkeSetWindowTitle(devToolsWebView, "Miniblink Devtools");
         blink::Platform::current()->currentThread()->removeTaskObserver(this);
     }
-    virtual void didProcessTask() {}
 
 private:
     CWebView* m_parent;

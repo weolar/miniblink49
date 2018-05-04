@@ -42,6 +42,10 @@ protected:
     mutable wchar_t* m_wide;
 };
 
+const char* createTempCharString(const char* str, size_t length);
+const wchar_t* createTempWCharString(const wchar_t* str, size_t length);
+void freeTempCharStrings();
+
 };
 
 #endif
