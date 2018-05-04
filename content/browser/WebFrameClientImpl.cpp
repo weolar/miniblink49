@@ -141,11 +141,41 @@ blink::WebPluginPlaceholder* WebFrameClientImpl::createPluginPlaceholder(WebLoca
 
 blink::WebPlugin* WebFrameClientImpl::createPlugin(WebLocalFrame* frame, const WebPluginParams& params)
 {
-    PassRefPtr<WebPluginImpl> plugin = adoptRef(new WebPluginImpl(frame, params));
+    WebPluginParams newParam = params;
+    Vector<String> paramNames;
+    Vector<String> paramValues;
+
+    bool isWmode = false;
+    for (size_t i = 0; i < newParam.attributeNames.size(); i++) {
+        if (String(newParam.attributeNames[i]) == "wmode") {
+            isWmode = true;
+
+            paramNames.append(newParam.attributeNames[i]);
+            if (String(newParam.attributeValues[i]) != "opaque" &&
+                String(newParam.attributeValues[i]) != "transparent") {
+                paramValues.append("opaque");
+            } else
+                paramValues.append(newParam.attributeValues[i]);
+        } else {
+            paramNames.append(newParam.attributeNames[i]);
+            paramValues.append(newParam.attributeValues[i]);
+        }
+    }
+    if (!isWmode) {
+        paramNames.append("wmode");
+        paramValues.append("opaque");
+    }
+
+    newParam.attributeNames = WebVector<WebString>(paramNames);
+    newParam.attributeValues = WebVector<WebString>(paramValues);  
+
+    PassRefPtr<WebPluginImpl> plugin = adoptRef(new WebPluginImpl(frame, newParam));
     plugin->setParentPlatformPluginWidget(m_webPage->getHWND());
     plugin->setHwndRenderOffset(m_webPage->getHwndRenderOffset());
     plugin->setWebViewClient(m_webPage->webViewImpl()->client());
     return plugin.leakRef();
+
+
 }
 
 blink::WebMediaPlayer* WebFrameClientImpl::createMediaPlayer(WebLocalFrame* frame, const WebURL& url , WebMediaPlayerClient* client, WebContentDecryptionModule*)
