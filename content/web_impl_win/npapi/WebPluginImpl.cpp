@@ -130,7 +130,7 @@ WebPluginImpl::WebPluginImpl(WebLocalFrame* parentFrame, const blink::WebPluginP
     , m_paramValues(0)
     , m_mimeType(params.mimeType)
     , m_instance(0)
-    , m_isWindowed(false)
+    , m_isWindowed(true)
     , m_isTransparent(false)
     , m_haveInitialized(false)
     , m_isWaitingToStart(false)
@@ -643,7 +643,7 @@ NPError WebPluginImpl::setValue(NPPVariable variable, void* value)
     switch (variable) {
     case NPPVpluginWindowBool:
         m_isWindowed = value;
-        m_isWindowed = false; // weolar
+        //m_isWindowed = false; // weolar
 
         return NPERR_NO_ERROR;
     case NPPVpluginTransparentBool:
@@ -661,7 +661,6 @@ void WebPluginImpl::invalidateTimerFired(blink::Timer<WebPluginImpl>*)
         invalidateRect(m_invalidRects[i]);
     m_invalidRects.clear();
 }
-
 
 void WebPluginImpl::pushPopupsEnabledState(bool state)
 {
@@ -1372,8 +1371,7 @@ v8::Local<v8::Object> WebPluginImpl::v8ScriptableObject(v8::Isolate*)
 }
 
 bool WebPluginImpl::getFormValue(WebString&)
-{ 
-    DebugBreak();
+{
     return false;
 }
 

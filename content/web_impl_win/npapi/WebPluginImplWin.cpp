@@ -802,6 +802,9 @@ void WebPluginImpl::paint(blink::WebCanvas* canvas, const blink::WebRect& rect)
         return;
     }
 
+    if (!m_memoryCanvas) // start()里有可能为nullptr
+        return;
+
     SkPaint clearPaint;
     clearPaint.setARGB(0xff, 0xFF, 0xFF, 0xFF);
     clearPaint.setXfermodeMode(SkXfermode::kClear_Mode);
@@ -843,11 +846,7 @@ void WebPluginImpl::setNPWindowRect(const IntRect& rect)
         return;
 
     WebPluginContainerImpl* container = (WebPluginContainerImpl*)m_pluginContainer;
-    if (!container->parent())
-        return;
-
-    FrameView* frameView = toFrameView(container->parent());
-    if (!frameView)
+    if (!container)
         return;
 
     IntPoint p = container->localToRootFramePoint(rect.location());
@@ -1067,15 +1066,18 @@ bool WebPluginImpl::platformStart()
 {
     ASSERT(m_isStarted);
     ASSERT(m_status == PluginStatusLoadedSuccessfully);
-    if (m_asynStartTask)
-        return false;
+//     if (m_asynStartTask)
+//         return false;
+// 
+//     WebPluginContainerImpl* container = (WebPluginContainerImpl*)m_pluginContainer;
+//     if (!container)
+//         return false;
+// 
+//     m_asynStartTask = new PlatformStartAsynTask(this);
+//     blink::Platform::current()->currentThread()->addTaskObserver(m_asynStartTask);
 
-    WebPluginContainerImpl* container = (WebPluginContainerImpl*)m_pluginContainer;
-    if (!container)
-        return false;
-
-    m_asynStartTask = new PlatformStartAsynTask(this);
-    blink::Platform::current()->currentThread()->addTaskObserver(m_asynStartTask);
+    // 淘宝npaliedit控件需要同步调用，否则会因为setwindow没被调用到而在namedPropertyGetterCustom里崩溃
+    platformStartAsyn();
 
     return true;
 }
