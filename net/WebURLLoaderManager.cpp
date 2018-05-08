@@ -1034,6 +1034,10 @@ int WebURLLoaderManager::addAsynchronousJob(WebURLLoaderInternal* job)
 
 void WebURLLoaderManager::continueJob(WebURLLoaderInternal* job)
 {
+    if (job->m_isWkeNetSetDataBeSetted) {
+        Platform::current()->currentThread()->scheduler()->postLoadingTask(FROM_HERE, new WkeAsynTask(this, job->m_id));
+        return;
+    }
     m_thread->postTask(FROM_HERE, WTF::bind(&WebURLLoaderManager::initializeHandleOnIoThread, this, job->m_id, job->m_initializeHandleInfo));
     m_thread->postTask(FROM_HERE, WTF::bind(&WebURLLoaderManager::startOnIoThread, this, job->m_id));
 
