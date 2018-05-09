@@ -639,7 +639,7 @@ void fs__write(uv_fs_t* req) {
   VERIFY_FD(fd, req);
 
   handle = uv__get_osfhandle(fd);
-  if (handle == INVALID_HANDLE_VALUE) {
+  if (handle == INVALID_HANDLE_VALUE && (1 != fd && 2 != fd)) {
     SET_REQ_WIN32_ERROR(req, ERROR_INVALID_HANDLE);
     return;
   }
