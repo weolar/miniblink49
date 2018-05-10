@@ -460,7 +460,7 @@ void BlobResourceLoader::getSizeForNext()
         return;
     }
 
-    size_t size = 0;
+    long long size = 0;
     String filePath;
     blink::WebBlobData::Item* item = m_blobData->items().at(m_sizeItemCount);
     switch (item->type) {
