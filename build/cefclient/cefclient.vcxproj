@@ -363,6 +363,7 @@
     <ClInclude Include="..\..\cef\tests\cefclient\browser\client_handler_osr.h" />
     <ClInclude Include="..\..\cef\tests\cefclient\browser\client_handler_std.h" />
     <ClInclude Include="..\..\cef\tests\cefclient\browser\client_types.h" />
+    <ClInclude Include="..\..\cef\tests\cefclient\browser\common_handler.h" />
     <ClInclude Include="..\..\cef\tests\cefclient\browser\dialog_handler_gtk.h" />
     <ClInclude Include="..\..\cef\tests\cefclient\browser\dialog_test.h" />
     <ClInclude Include="..\..\cef\tests\cefclient\browser\geometry_util.h" />
@@ -374,6 +375,7 @@
     <ClInclude Include="..\..\cef\tests\cefclient\browser\osr_dragdrop_events.h" />
     <ClInclude Include="..\..\cef\tests\cefclient\browser\osr_dragdrop_win.h" />
     <ClInclude Include="..\..\cef\tests\cefclient\browser\osr_renderer.h" />
+    <ClInclude Include="..\..\cef\tests\cefclient\browser\osr_window_gdi.h" />
     <ClInclude Include="..\..\cef\tests\cefclient\browser\osr_window_win.h" />
     <ClInclude Include="..\..\cef\tests\cefclient\browser\preferences_test.h" />
     <ClInclude Include="..\..\cef\tests\cefclient\browser\print_handler_gtk.h" />
@@ -1338,6 +1340,11 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\cef\tests\cefclient\browser\osr_window_gdi.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\..\cef\tests\cefclient\browser\osr_window_win.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
