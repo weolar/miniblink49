@@ -93,16 +93,16 @@ public:
     virtual void WasHidden(bool hidden) override;
     virtual void NotifyScreenInfoChanged() override {}
     virtual void Invalidate(PaintElementType type) override {}
-    virtual void SendKeyEvent(const CefKeyEvent& event) override {}
+    virtual void SendKeyEvent(const CefKeyEvent& event) override;
     virtual void SendMouseClickEvent(const CefMouseEvent& event,
-        MouseButtonType type,
-        bool mouseUp, int clickCount) override {}
+            MouseButtonType type,
+            bool mouseUp, int clickCount) override;
     virtual void SendMouseMoveEvent(const CefMouseEvent& event,
-        bool mouseLeave) override {}
+            bool mouseLeave) override;
     virtual void SendMouseWheelEvent(const CefMouseEvent& event,
-        int deltaX, int deltaY) override {}
+            int deltaX, int deltaY) override;
     virtual void SendFocusEvent(bool setFocus) override;
-    virtual void SendCaptureLostEvent() override {}
+    virtual void SendCaptureLostEvent() override;
     virtual void NotifyMoveOrResizeStarted() override {}
     virtual int GetWindowlessFrameRate() override { return 10; }
     virtual void SetWindowlessFrameRate(int frame_rate) override {}
@@ -142,14 +142,16 @@ public:
     virtual void GetFrameNames(std::vector<CefString>& names) override;
     virtual bool SendProcessMessage(CefProcessId target_process, CefRefPtr<CefProcessMessage> message) override;
 
-	void OnLoadingStateChange(bool isLoading, bool toDifferentDocument);
+    void OnPaintUpdated(const uint32_t* buffer, const CefRect& paintRect, int width, int height);
+
+    void OnLoadingStateChange(bool isLoading, bool toDifferentDocument);
 
     void OnSetFocus(cef_focus_source_t source);
 
     void CancelContextMenu();
 
     // Returns true if windowless rendering is enabled.
-    bool IsWindowless() const { return false; }
+    bool IsWindowless() const { return m_isWindowless; }
 
     // Called when the OS window hosting the browser is destroyed.
     void WindowDestroyed();
@@ -218,6 +220,8 @@ private:
 
     static void CreateAndLoadOnWebkitThread(CreateBrowserHostWindowArgs* args);
 
+    static LONG __stdcall SubClassFunc(HWND hWnd, UINT Message, WPARAM wParam, LONG lParam);
+
     static void RegisterWindowClass();
     static LPCTSTR GetWndClass();
     static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
@@ -226,6 +230,14 @@ private:
     void CloseHostWindow();
 
     content::WebPage* m_webPage;
+
+    bool m_hasLMouseUp;
+    bool m_hasRMouseUp;
+    bool m_isWindowless;
+
+    WNDPROC m_lpfnOldWndProc;
+
+    CefScreenInfo m_screenInfo;
 
     CefBrowserSettings m_settings;
     CefRefPtr<CefClient> m_client;

@@ -26,6 +26,7 @@
 #include "libcef/common/CefContentClient.h"
 #include "libcef/common/StringUtil.h"
 #include "libcef/common/CefMessages.h"
+#include "libcef/common/GeometryUtil.h"
 
 static int64 CefBrowserHostImplIdentifierCount = 0;
 
@@ -35,8 +36,12 @@ CefBrowserHostImpl::CefBrowserHostImpl(
     scoped_refptr<CefBrowserInfo> browserInfo,
     CefRefPtr<CefBrowserHostImpl> opener,
     CefRefPtr<CefRequestContext> requestContext)
-    : m_settings(settings)
-    , m_webPage(nullptr)
+    : m_webPage(nullptr)
+    , m_hasLMouseUp(true)
+    , m_hasRMouseUp(true)
+    , m_isWindowless(false)
+    , m_lpfnOldWndProc(nullptr)
+    , m_settings(settings)
     , m_client(client)
     , m_browserInfo(browserInfo)
     , m_opener(kNullWindowHandle)
@@ -48,7 +53,6 @@ CefBrowserHostImpl::CefBrowserHostImpl(
     , m_frameDestructionPending(false)
     , m_identifier(CefBrowserHostImplIdentifierCount++) {
     DCHECK(requestContext.get());
-
     DCHECK(!browserInfo->Browser().get());
     browserInfo->SetBrowser(this);
     CefContext::Get()->RegisterBrowser(this);
@@ -138,9 +142,11 @@ CefRefPtr<CefBrowserHostImpl> CefBrowserHostImpl::Create(
 
 void CefBrowserHostImpl::CreateAndLoadOnWebkitThread(CreateBrowserHostWindowArgs* args) {
     scoped_refptr<CefBrowserInfo> info = CefBrowserInfoManager::GetInstance()->CreateBrowserInfo(args->isPopup, false);
-    *(args->result) = CefBrowserHostImpl::CreateInternal(*(args->windowInfo), *(args->settings), *(args->client), info, *(args->opener), *(args->requestContext));
-    if ((*(args->result)).get() && !args->url->empty()) {
-        (*(args->result))->LoadURL(content::WebPage::kMainFrameId, *(args->url), blink::Referrer(), CefString());
+    CefRefPtr<CefBrowserHostImpl> self = CefBrowserHostImpl::CreateInternal(*(args->windowInfo), *(args->settings), *(args->client), info, *(args->opener), *(args->requestContext));
+    *(args->result) = self;
+
+    if (self.get() && !args->url->empty()) {
+        self->LoadURL(content::WebPage::kMainFrameId, *(args->url), blink::Referrer(), CefString());
     }
     *(args->waitForFinish) = true;
 }
@@ -158,6 +164,7 @@ CefRefPtr<CefBrowserHostImpl> CefBrowserHostImpl::CreateInternal(
     content::WebPage* webPage = new content::WebPage(nullptr);
 
     CefRefPtr<CefBrowserHostImpl> browser = new CefBrowserHostImpl(settings, client, browserInfo, opener, requestContext);
+    browser->m_isWindowless = windowInfo.windowless_rendering_enabled;
     if (!browser->CreateHostWindow(windowInfo))
         return nullptr;
 
@@ -344,6 +351,16 @@ CefWindowHandle CefBrowserHostImpl::GetWindowHandle() {
     if (!m_webPage)
         return kNullWindowHandle;
     return m_webPage->getHWND();
+}
+
+void CefBrowserHostImpl::OnPaintUpdated(const uint32_t* buffer, const CefRect& r, int width, int height) {
+    if (!m_client || !m_client->GetRenderHandler().get())
+        return;
+    CefRefPtr<CefRenderHandler> render = m_client->GetRenderHandler();
+
+    CefRenderHandler::RectList dirtyRects;
+    dirtyRects.push_back(r);
+    render->OnPaint(this, PET_VIEW, dirtyRects, buffer, width, height);
 }
 
 void CefBrowserHostImpl::OnLoadingStateChange(bool isLoading, bool toDifferentDocument) {
@@ -648,9 +665,11 @@ void CefBrowserHostImpl::CloseBrowser(bool forceClose) {
 }
 
 void CefBrowserHostImpl::CloseHostWindow() {
-    if (m_webPage && m_webPage->getHWND()) {
+    if (m_webPage && m_webPage->getHWND() && !IsWindowless()) {
         HWND frameWnd = ::GetAncestor(m_webPage->getHWND(), GA_ROOT);
         ::PostMessage(frameWnd, WM_CLOSE, 0, 0);
+    } else if (IsWindowless()) {
+        ::PostMessage(m_webPage->getHWND(), WM_CLOSE, 0, 0);
     }
 }
 
@@ -708,6 +727,16 @@ bool CefBrowserHostImpl::IsMouseCursorChangeDisabled() {
 }
 
 void CefBrowserHostImpl::WasResized() {
+    if (!m_client || !m_client->GetRenderHandler().get())
+        return;
+    CefRefPtr<CefRenderHandler> render = m_client->GetRenderHandler();
+    CefRect rect;
+
+    render->GetScreenInfo(this, m_screenInfo);
+    rect = m_screenInfo.rect;
+    float scale = m_screenInfo.device_scale_factor;
+    m_webPage->fireResizeEvent(nullptr, WM_SIZE, 0, 
+        MAKELPARAM(cef::LogicalToDevice(rect.width, scale), cef::LogicalToDevice(rect.height, scale)));
 }
 
 void CefBrowserHostImpl::WasHidden(bool hidden) {
