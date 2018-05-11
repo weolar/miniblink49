@@ -10110,6 +10110,9 @@
     <ClCompile Include="..\..\third_party\WebKit\Source\bindings\core\v8\V8GCController_v8_5_7.cpp">
       <Filter>third_party\Webkit\Source\bindings\core\v8</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\cef\libcef\common\GeometryUtil.cpp">
+      <Filter>cef\libcef\common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\public\platform\modules\app_banner\WebAppBannerClient.h">
@@ -23047,6 +23050,18 @@
     </ClInclude>
     <ClInclude Include="..\..\wke\wkeNetHook.h">
       <Filter>wke</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\net\InitializeHandleInfo.h">
+      <Filter>net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\net\ProxyType.h">
+      <Filter>net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\cef\libcef\common\GeometryUtil.h">
+      <Filter>cef\libcef\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\cef\include\cef_version.h">
+      <Filter>cef\include</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

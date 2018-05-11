@@ -510,6 +510,7 @@
     <ClCompile Include="..\..\cc\raster\RasterFilters.cpp" />
     <ClCompile Include="..\..\cc\raster\RasterResouce.cpp" />
     <ClCompile Include="..\..\cc\raster\RasterTask.cpp" />
+    <ClCompile Include="..\..\cef\libcef\common\GeometryUtil.cpp" />
     <ClCompile Include="..\..\content\browser\PlatformMessagePortChannel.cpp" />
     <ClCompile Include="..\..\content\devtools\DevToolsAgent.cpp" />
     <ClCompile Include="..\..\content\devtools\DevToolsClient.cpp" />
@@ -5449,6 +5450,8 @@
     <ClInclude Include="..\..\cc\raster\RasterFilters.h" />
     <ClInclude Include="..\..\cc\raster\RasterTask.h" />
     <ClInclude Include="..\..\cc\tiles\TileWidthHeight.h" />
+    <ClInclude Include="..\..\cef\include\cef_version.h" />
+    <ClInclude Include="..\..\cef\libcef\common\GeometryUtil.h" />
     <ClInclude Include="..\..\content\browser\PlatformMessagePortChannel.h" />
     <ClInclude Include="..\..\content\devtools\DevToolsAgent.h" />
     <ClInclude Include="..\..\content\devtools\DevToolsClient.h" />
@@ -5475,6 +5478,8 @@
     <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8DOMFileSystemSync.h" />
     <ClInclude Include="..\..\net\CancelledReason.h" />
     <ClInclude Include="..\..\net\FlattenHTTPBodyElement.h" />
+    <ClInclude Include="..\..\net\InitializeHandleInfo.h" />
+    <ClInclude Include="..\..\net\ProxyType.h" />
     <ClInclude Include="..\..\net\WebURLLoaderManagerAsynTask.h" />
     <ClInclude Include="..\..\net\WebURLLoaderManagerMainTask.h" />
     <ClInclude Include="..\..\net\WebURLLoaderManagerSetupInfo.h" />
