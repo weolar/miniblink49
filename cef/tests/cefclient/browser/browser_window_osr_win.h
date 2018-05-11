@@ -8,6 +8,7 @@
 
 #include "cefclient/browser/browser_window.h"
 #include "cefclient/browser/osr_window_win.h"
+#include "cefclient/browser/osr_window_gdi.h"
 
 namespace client {
 
@@ -15,7 +16,7 @@ namespace client {
 // instance. The methods of this class must be called on the main thread unless
 // otherwise indicated.
 class BrowserWindowOsrWin : public BrowserWindow,
-                            public OsrWindowWin::Delegate {
+                            public OsrWindowGdi::Delegate {
  public:
   // Constructor may be called on any thread.
   // |delegate| must outlive this object.
@@ -52,7 +53,7 @@ class BrowserWindowOsrWin : public BrowserWindow,
   const bool transparent_;
 
   // The below members are only accessed on the main thread.
-  scoped_refptr<OsrWindowWin> osr_window_;
+  scoped_refptr</*OsrWindowWin*/OsrWindowGdi> osr_window_;
   HWND osr_hwnd_;
 
   float device_scale_factor_;
