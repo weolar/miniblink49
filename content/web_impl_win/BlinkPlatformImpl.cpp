@@ -171,7 +171,8 @@ void BlinkPlatformImpl::initialize()
     const size_t kImageCacheSingleAllocationByteLimit = 64 * 1024 * 1024;
     SkGraphics::SetResourceCacheSingleAllocationByteLimit(kImageCacheSingleAllocationByteLimit);
 
-    platform->startGarbageCollectedThread(30);
+    platform->m_defaultGcTimer = new blink::Timer<BlinkPlatformImpl>(platform, &BlinkPlatformImpl::garbageCollectedTimer);
+    platform->m_defaultGcTimer->start(5, 5, FROM_HERE);
 
 //     platform->m_perfTimer = new blink::Timer<BlinkPlatformImpl>(platform, &BlinkPlatformImpl::perfTimer);
 //     platform->m_perfTimer->start(2, 2, FROM_HERE);
@@ -201,6 +202,7 @@ BlinkPlatformImpl::BlinkPlatformImpl()
     m_ioThread = nullptr;
     m_firstMonotonicallyIncreasingTime = currentTimeImpl(); // (GetTickCount() / 1000.0);
     m_numberOfProcessors = 1;
+
     ::InitializeCriticalSection(m_lock);
 
     setUserAgent("Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.2171.99 Safari/537.36");
@@ -213,6 +215,10 @@ BlinkPlatformImpl::BlinkPlatformImpl()
 
 BlinkPlatformImpl::~BlinkPlatformImpl()
 {
+    if (m_gcTimer)
+        delete m_gcTimer;
+    delete m_defaultGcTimer;
+
     ::DeleteCriticalSection(m_lock);
     delete m_lock;
     m_lock = nullptr;
@@ -366,8 +372,6 @@ void BlinkPlatformImpl::perfTimer(blink::Timer<BlinkPlatformImpl>*)
 void BlinkPlatformImpl::garbageCollectedTimer(blink::Timer<BlinkPlatformImpl>*)
 {
     doGarbageCollected();
-    m_gcTimer->stop();
-    m_gcTimer->startOneShot(30000, FROM_HERE);
 }
 
 void BlinkPlatformImpl::doGarbageCollected()
@@ -384,8 +388,10 @@ void BlinkPlatformImpl::doGarbageCollected()
 
     WebPage::gcAll();
 
+#ifdef _DEBUG
 //     String out = String::format("BlinkPlatformImpl::doGarbageCollected: %d %d %d\n", g_v8MemSize, g_blinkMemSize, g_skiaMemSize);
 //     OutputDebugStringA(out.utf8().data());
+#endif
 }
 
 void BlinkPlatformImpl::startGarbageCollectedThread(double delayMs)
@@ -393,8 +399,8 @@ void BlinkPlatformImpl::startGarbageCollectedThread(double delayMs)
     if (!m_gcTimer)
         m_gcTimer = new blink::Timer<BlinkPlatformImpl>(this, &BlinkPlatformImpl::garbageCollectedTimer);
 
-    m_gcTimer->stop();
-    m_gcTimer->startOneShot(delayMs, FROM_HERE);
+    if (!m_gcTimer->isActive() || delayMs < m_gcTimer->nextFireInterval())
+        m_gcTimer->startOneShot(delayMs, FROM_HERE);
 }
 
 void BlinkPlatformImpl::closeThread()

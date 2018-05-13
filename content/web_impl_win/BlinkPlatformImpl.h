@@ -140,6 +140,7 @@ private:
     int m_threadNum;
 
     blink::Timer<BlinkPlatformImpl>* m_gcTimer;
+    blink::Timer<BlinkPlatformImpl>* m_defaultGcTimer;
     blink::Timer<BlinkPlatformImpl>* m_perfTimer;
 
     blink::WebThread* m_ioThread;
