@@ -35,6 +35,9 @@ struct CWebViewHandler {
     wkePaintUpdatedCallback paintUpdatedCallback;
     void* paintUpdatedCallbackParam;
 
+    wkePaintBitUpdatedCallback paintBitUpdatedCallback;
+    void* paintBitUpdatedCallbackParam;
+
     wkeAlertBoxCallback alertBoxCallback;
     void* alertBoxCallbackParam;
 
@@ -228,6 +231,7 @@ public:
     void onTitleChanged(wkeTitleChangedCallback callback, void* callbackParam);
     void onMouseOverUrlChanged(wkeTitleChangedCallback callback, void* callbackParam);
     virtual void onPaintUpdated(wkePaintUpdatedCallback callback, void* callbackParam);
+    void onPaintBitUpdated(wkePaintBitUpdatedCallback callback, void* callbackParam);
 
     void onAlertBox(wkeAlertBoxCallback callback, void* callbackParam);
     void onConfirmBox(wkeConfirmBoxCallback callback, void* callbackParam);

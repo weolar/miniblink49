@@ -154,8 +154,8 @@ bool CWebWindow::_createWindow(HWND parent, unsigned styles, unsigned styleEx, i
 void CWebWindow::_destroyWindow()
 {
     ::KillTimer(m_hWnd, (UINT_PTR)this);
-    ::RemovePropW(m_hWnd, L"wkeWebWindow");
     ::DestroyWindow(m_hWnd);
+    ::RemovePropW(m_hWnd, L"wkeWebWindow");
     m_hWnd = NULL;
 }
 
@@ -202,7 +202,7 @@ LRESULT CWebWindow::_windowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM l
         ::DestroyWindow(hwnd);
         return 0;
 
-    case WM_DESTROY:
+    case WM_NCDESTROY:
         ::KillTimer(hwnd, (UINT_PTR)this);
         ::RemovePropW(hwnd, L"wkeWebWindow");
         m_hWnd = NULL;

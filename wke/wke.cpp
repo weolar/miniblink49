@@ -714,8 +714,8 @@ void wkeWake(wkeWebView webView)
 
 //     String output = String::format("wkeWake: %d\n", time - lastTime);
 //     OutputDebugStringA(output.utf8().data());
-    if (time - lastTime < 300)
-        return;
+//     if (time - lastTime < 50)
+//         return;
 
     lastTime = time;
 
@@ -768,6 +768,11 @@ void wkeOnURLChanged2(wkeWebView webView, wkeURLChangedCallback2 callback, void*
 void wkeOnPaintUpdated(wkeWebView webView, wkePaintUpdatedCallback callback, void* callbackParam)
 {
     webView->onPaintUpdated(callback, callbackParam);
+}
+
+void wkeOnPaintBitUpdated(wkeWebView webView, wkePaintBitUpdatedCallback callback, void* callbackParam)
+{
+    webView->onPaintBitUpdated(callback, callbackParam);
 }
 
 void wkeOnAlertBox(wkeWebView webView, wkeAlertBoxCallback callback, void* callbackParam)

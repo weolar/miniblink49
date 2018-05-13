@@ -1003,6 +1003,12 @@ void CWebView::onPaintUpdated(wkePaintUpdatedCallback callback, void* callbackPa
     m_webPage->wkeHandler().paintUpdatedCallbackParam = callbackParam;
 }
 
+void CWebView::onPaintBitUpdated(wkePaintBitUpdatedCallback callback, void* callbackParam)
+{
+    m_webPage->wkeHandler().paintBitUpdatedCallback = callback;
+    m_webPage->wkeHandler().paintBitUpdatedCallbackParam = callbackParam;
+}
+
 void CWebView::onAlertBox(wkeAlertBoxCallback callback, void* callbackParam)
 {
     m_webPage->wkeHandler().alertBoxCallback = callback;
@@ -1348,6 +1354,8 @@ void CWebView::showDevTools(const utf8* url)
 wkeWebView wkeCreateWebView()
 {
     wke::CWebView* webView = new wke::CWebView();
+    webView->webPage()->setNeedAutoDrawToHwnd(false);
+
     //s_webViews.append(webView);
     return webView;
 }

@@ -477,6 +477,9 @@ WKE_API void wkeOnURLChanged2(wkeWebView webView, wkeURLChangedCallback2 callbac
 typedef void(*wkePaintUpdatedCallback)(wkeWebView webView, void* param, const HDC hdc, int x, int y, int cx, int cy);
 WKE_API void wkeOnPaintUpdated(wkeWebView webView, wkePaintUpdatedCallback callback, void* callbackParam);
 
+typedef void(*wkePaintBitUpdatedCallback)(wkeWebView webView, void* param, const void* buffer, const wkeRect* r, int width, int height);
+WKE_API void wkeOnPaintBitUpdated(wkeWebView webView, wkePaintBitUpdatedCallback callback, void* callbackParam);
+
 typedef void(*wkeAlertBoxCallback)(wkeWebView webView, void* param, const wkeString msg);
 WKE_API void wkeOnAlertBox(wkeWebView webView, wkeAlertBoxCallback callback, void* callbackParam);
 

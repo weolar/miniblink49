@@ -89,6 +89,8 @@ public:
     float floatVal;
     bool boolVal;
     WTF::CString stringVal;
+
+    bool isAutoGC;
 };
 
 typedef WTF::HashMap<jsValue, WkeJsValue*> JsValueMap;
@@ -140,17 +142,19 @@ static v8::Local<v8::Value> getV8Value(jsValue v, v8::Local<v8::Context> context
     }
     
     v8::Isolate* isolate = wkeValue->isolate;
-//     v8::HandleScope handleScope(isolate);
-//     v8::Context::Scope contextScope(context);
-
     v8::Local<v8::Value> out = v8::Local<v8::Value>::New(isolate, wkeValue->value);
     return out;
 }
 
 static __int64 s_handleCount = 0;
 
-static jsValue createJsValueByLocalValue(v8::Isolate* isolate, v8::Local<v8::Context> context, v8::Local<v8::Value> value)
-{
+static jsValue createJsValueByLocalValue2(
+    v8::Isolate* isolate, 
+    v8::Local<v8::Context> context, 
+    v8::Local<v8::Value> value,
+    WkeJsValue** outWkeJsValue,
+    bool isAutoGC
+    ) {
     s_handleCount++;
 
     WkeJsValue* out = new WkeJsValue();
@@ -159,9 +163,18 @@ static jsValue createJsValueByLocalValue(v8::Isolate* isolate, v8::Local<v8::Con
 
     out->type = WkeJsValue::wkeJsValueV8Value;
     out->context.Reset(isolate, context);
+    out->isAutoGC = false;
+
+    if (outWkeJsValue)
+        *outWkeJsValue = out;
 
     s_jsValueMap->add(s_handleCount, out);
     return s_handleCount;
+}
+
+static jsValue createJsValueByLocalValue(v8::Isolate* isolate, v8::Local<v8::Context> context, v8::Local<v8::Value> value)
+{
+    return createJsValueByLocalValue2(isolate, context, value, nullptr, true);
 }
 
 static jsValue createEmptyJsValue(WkeJsValue** out)
@@ -1057,6 +1070,8 @@ public:
         this->jsDataObj = nullptr;
     }
 
+    ~NativeGetterSetterWrap() {}
+
     static void AccessorGetterCallbackImpl(v8::Local<v8::Name> property, const v8::PropertyCallbackInfo<v8::Value>& info)
     {
         v8::Isolate* isolate = info.GetIsolate();
@@ -1118,8 +1133,41 @@ public:
         }
         NativeGetterSetterWrap* wrap = new NativeGetterSetterWrap();
         cachedWraps->append(wrap);
+
+        wrap->m_cachedWraps = cachedWraps;
         return wrap;
     }
+
+    static void secondJsObjectWeakCallback(const v8::WeakCallbackInfo<NativeGetterSetterWrap>& data)
+    {
+        NativeGetterSetterWrap* self = data.GetParameter();
+        self->gc();
+    }
+
+    void gc() {
+        for (size_t i = 0; i < m_cachedWraps->size(); ++i) {
+            NativeGetterSetterWrap* wrap = m_cachedWraps->at(i);
+            if (wrap != this)
+                continue;
+
+            if (jsDataObj && jsDataObj->finalize)
+                jsDataObj->finalize(jsDataObj);
+
+            m_cachedWraps->remove(i);
+
+            delete this;
+            return;
+        }
+    }
+
+    static void firstJsObjectWeakCallback(const v8::WeakCallbackInfo<NativeGetterSetterWrap>& data)
+    {
+        NativeGetterSetterWrap* self = data.GetParameter();
+        self->gc();
+    }
+
+private:
+    Vector<NativeGetterSetterWrap*>* m_cachedWraps;
 };
 
 static void addAccessor(v8::Local<v8::Context> context, const char* name, wkeJsNativeFunction getter, void* getterParam, wkeJsNativeFunction setter, void* setterParam)
@@ -1327,6 +1375,8 @@ static void namedPropertySetterCallback(v8::Local<v8::String> property, v8::Loca
     wrap->jsDataObj->propertySet(execState, object, stringWTF.utf8().data(), value);
 }
 
+void* g_testObject = nullptr;
+
 jsValue jsObject(jsExecState es, jsData* data)
 {
     if (!s_execStates || !s_execStates->contains(es) || !es || es->context.IsEmpty())
@@ -1339,14 +1389,18 @@ jsValue jsObject(jsExecState es, jsData* data)
     v8::Context::Scope contextScope(context);
     v8::Local<v8::Object> globalObj = context->Global();
 
-    v8::Local<v8::ObjectTemplate> obj = v8::ObjectTemplate::New(isolate);
+    v8::Local<v8::ObjectTemplate> objTemplate = v8::ObjectTemplate::New(isolate);
     
     NativeGetterSetterWrap* wrap = NativeGetterSetterWrap::createWrapAndAddToGlobalObjForRelease(isolate, globalObj);
 
     wrap->set(data);
-    obj->SetNamedPropertyHandler(namedPropertyGetterCallback, namedPropertySetterCallback, nullptr, nullptr, nullptr, v8::External::New(isolate, wrap));
-
-    jsValue retValue = createJsValueByLocalValue(isolate, context, obj->NewInstance(context).ToLocalChecked());
+    objTemplate->SetNamedPropertyHandler(namedPropertyGetterCallback, namedPropertySetterCallback, nullptr, nullptr, nullptr, v8::External::New(isolate, wrap));
+    
+    WkeJsValue* wkeJsValue = nullptr;
+    v8::Local<v8::Object> objInst = objTemplate->NewInstance(context).ToLocalChecked();
+    jsValue retValue = createJsValueByLocalValue2(isolate, context, objInst, &wkeJsValue, false);
+    wkeJsValue->value.SetWeak<NativeGetterSetterWrap>(wrap, &NativeGetterSetterWrap::firstJsObjectWeakCallback, v8::WeakCallbackType::kParameter);
+    
     return retValue;
 }
 
@@ -1562,7 +1616,8 @@ void freeV8TempObejctOnOneFrameBefore()
 
     for (JsValueMap::iterator it = s_jsValueMap->begin(); it != s_jsValueMap->end(); ++it) {
         WkeJsValue* value = it->value;
-        delete value;
+        if (value->isAutoGC)
+            delete value;
     }
     s_jsValueMap->clear();
 
