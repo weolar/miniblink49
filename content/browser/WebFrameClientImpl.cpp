@@ -147,12 +147,12 @@ blink::WebPlugin* WebFrameClientImpl::createPlugin(WebLocalFrame* frame, const W
 
     bool isWmode = false;
     for (size_t i = 0; i < newParam.attributeNames.size(); i++) {
-        if (String(newParam.attributeNames[i]) == "wmode") {
+        if (String(newParam.attributeNames[i]).lower() == "wmode") {
             isWmode = true;
 
             paramNames.append(newParam.attributeNames[i]);
-            if (String(newParam.attributeValues[i]) != "opaque" &&
-                String(newParam.attributeValues[i]) != "transparent") {
+            if (String(newParam.attributeValues[i]).lower() != "opaque" &&
+                String(newParam.attributeValues[i]).lower() != "transparent") {
                 paramValues.append("opaque");
             } else
                 paramValues.append(newParam.attributeValues[i]);

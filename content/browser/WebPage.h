@@ -67,6 +67,8 @@ public:
 
     void onDocumentReady();
 
+    void setNeedAutoDrawToHwnd(bool b);
+
     static void connetDevTools(WebPage* frontEnd, WebPage* embedder);
     bool isDevtoolsConneted() const;
     void inspectElementAt(int x, int y);

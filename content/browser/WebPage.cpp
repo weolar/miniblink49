@@ -90,10 +90,10 @@ void WebPage::setViewportSize(const IntSize& size)
     m_pageImpl->setViewportSize(size);
 }
 
-// LocalFrame* WebPage::localFrame()
-// {
-//     return m_pageImpl->m_webViewImpl->mainFrameImpl()->frame();
-// }
+void WebPage::setNeedAutoDrawToHwnd(bool b)
+{
+    m_pageImpl->n_needAutoDrawToHwnd = b;
+}
 
 IntRect WebPage::caretRect()
 {

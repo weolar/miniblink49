@@ -79,6 +79,7 @@ using namespace blink;
 extern DWORD g_paintToMemoryCanvasInUiThreadCount;
 extern DWORD g_mouseCount;
 extern bool g_isTouchEnabled;
+extern bool g_isMouseEnabled;
 
 namespace blink {
 bool saveDumpFile(const String& url, char* buffer, unsigned int size);
@@ -111,6 +112,8 @@ WebPageImpl::WebPageImpl()
 {
     m_pagePtr = 0;
     m_bdColor = RGB(199, 237, 204) | 0xff000000;
+    m_createDevToolsAgentTaskObserver = nullptr;
+    n_needAutoDrawToHwnd = true;
     m_webViewImpl = nullptr;
     m_debugCount = 0;
     m_enterCount = 0;
@@ -167,7 +170,10 @@ WebPageImpl::WebPageImpl()
         CefRefPtr<CefRenderProcessHandler> handler = application->GetRenderProcessHandler();
         if (!handler.get())
             return;
+
+        handler->OnRenderThreadCreated(nullptr);
         handler->OnWebKitInitialized();
+        handler->OnBrowserCreated(m_browser);
     }
 #endif
 }
@@ -176,6 +182,11 @@ WebPageImpl::~WebPageImpl()
 {
     ASSERT(pageDestroyed == m_state);
     m_state = pageDestroyed;
+
+    if (m_createDevToolsAgentTaskObserver) {
+        blink::Platform::current()->currentThread()->removeTaskObserver(m_createDevToolsAgentTaskObserver);
+        delete m_createDevToolsAgentTaskObserver;
+    }
 
     if (m_screenInfo)
         delete m_screenInfo;
@@ -204,6 +215,9 @@ WebPageImpl::~WebPageImpl()
 
     BlinkPlatformImpl* platform = (BlinkPlatformImpl*)blink::Platform::current();
     platform->startGarbageCollectedThread(0);
+
+    String output = String::format("WebPageImpl::~WebPageImpl: %p\n", this);
+    OutputDebugStringA(output.utf8().data());
 }
 
 class CreateDevToolsAgentTaskObserver : public blink::WebThread::TaskObserver {
@@ -212,7 +226,9 @@ public:
     {
         m_parent = parent;
     }
-    virtual ~CreateDevToolsAgentTaskObserver() {}
+    virtual ~CreateDevToolsAgentTaskObserver()
+    {
+    }
 
     virtual void willProcessTask() override {}
     virtual void didProcessTask() override
@@ -220,11 +236,18 @@ public:
         if (!m_parent->isDevToolsClient())
             m_parent->createOrGetDevToolsAgent();
         blink::Platform::current()->currentThread()->removeTaskObserver(this);
+        m_parent->didRunCreateDevToolsAgentTaskObserver();
+        delete this;
     }
 
 private:
     WebPageImpl* m_parent;
 };
+
+void WebPageImpl::didRunCreateDevToolsAgentTaskObserver()
+{
+    m_createDevToolsAgentTaskObserver = nullptr;
+}
 
 void WebPageImpl::init(WebPage* pagePtr, HWND hWnd)
 {
@@ -240,8 +263,12 @@ void WebPageImpl::init(WebPage* pagePtr, HWND hWnd)
 
     m_webViewImpl->setFocus(true);
 
+    String output = String::format("WebPageImpl::init: %p\n", this);
+    OutputDebugStringA(output.utf8().data());
+
     // DevToolsAgent必须先创建，不然无法记录执行环境，会导致console无法执行js
-    blink::Platform::current()->currentThread()->addTaskObserver(new CreateDevToolsAgentTaskObserver(this));
+    m_createDevToolsAgentTaskObserver = new CreateDevToolsAgentTaskObserver(this);
+    blink::Platform::current()->currentThread()->addTaskObserver(m_createDevToolsAgentTaskObserver);
 
     m_state = pageInited;
 }
@@ -491,6 +518,18 @@ void WebPageImpl::doClose()
     }
 #endif
 
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
+    if (CefContentClient::Get()) {
+        CefRefPtr<CefApp> application = CefContentClient::Get()->rendererApplication();
+        if (application.get()) {
+            CefRefPtr<CefRenderProcessHandler> handler = application->GetRenderProcessHandler();
+            if (handler.get())
+                handler->OnBrowserDestroyed(m_browser);
+        }
+    }
+#endif
+
+
     if (m_hWnd)
         ::RevokeDragDrop(m_hWnd);
 
@@ -718,11 +757,14 @@ IntRect WebPageImpl::caretRect() const
         return IntRect();
 
     blink::IntRect caret;
-    if (RefPtrWillBeRawPtr<Range> range = targetFrame->selection().selection().toNormalizedRange()) {
+    if (RefPtrWillBeRawPtr<Range> range = targetFrame->selection().selection().toNormalizedRange())
         caret = targetFrame->editor().firstRectForRange(range.get());
-    }
 
     caret = targetFrame->view()->contentsToViewport(caret);
+
+    if (!targetFrame->selection().hasEditableStyle() && !targetFrame->selection().isContentEditable())
+        caret.setHeight(0);
+
     return caret;
 }
 
@@ -898,6 +940,53 @@ static bool canPaintToScreen(blink::WebViewImpl* webViewImpl)
     return true;
 }
 
+bool WebPageImpl::needDrawToScreen(HWND hWnd) const
+{
+    if (!hWnd)
+        return false;
+
+    if (blink::RuntimeEnabledFeatures::updataInOtherThreadEnabled() && !m_devToolsClient)
+        return false;
+
+    if (m_browser && m_browser->IsWindowless())
+        return false;
+
+    return n_needAutoDrawToHwnd;
+}
+
+void WebPageImpl::drawLayeredWindow(HWND hWnd, SkCanvas* canvas, HDC hdc, const IntRect& paintRect, HDC hMemoryDC) const
+{
+    RECT rtWnd;
+    ::GetWindowRect(hWnd, &rtWnd);
+    IntRect winodwRect = winRectToIntRect(rtWnd);
+    if (skia::DrawToNativeLayeredContext(canvas, hdc, &intRectToWinRect(paintRect), &rtWnd))
+        return;
+    
+    BITMAP bmp = { 0 };
+    HBITMAP hBmp = (HBITMAP)::GetCurrentObject(hMemoryDC, OBJ_BITMAP);
+    ::GetObject(hBmp, sizeof(BITMAP), (LPSTR)&bmp);
+
+    POINT pointSource = { 0, 0 };
+    SIZE sizeDest = { 0 };
+    sizeDest.cx = bmp.bmWidth;
+    sizeDest.cy = bmp.bmHeight;
+
+    HDC hdcMemory = ::CreateCompatibleDC(hdc);
+    HBITMAP hbmpMemory = ::CreateCompatibleBitmap(hdc, sizeDest.cx, sizeDest.cy);
+    HBITMAP hbmpOld = (HBITMAP)::SelectObject(hdcMemory, hbmpMemory);
+
+    BLENDFUNCTION blend = { 0 };
+    blend.BlendOp = AC_SRC_OVER;
+    blend.SourceConstantAlpha = 255;
+    blend.AlphaFormat = AC_SRC_ALPHA;
+    ::BitBlt(hdcMemory, 0, 0, sizeDest.cx, sizeDest.cy, hdc, 0, 0, SRCCOPY | CAPTUREBLT);
+    ::UpdateLayeredWindow(m_hWnd, hdc, nullptr, &sizeDest, hMemoryDC, &pointSource, RGB(0xFF, 0xFF, 0xFF), &blend, ULW_ALPHA);
+
+    ::SelectObject(hdcMemory, (HGDIOBJ)hbmpOld);
+    ::DeleteObject((HGDIOBJ)hbmpMemory);
+    ::DeleteDC(hdcMemory);
+}
+
 // 本函数可能被调用在ui线程，也可以是合成线程
 void WebPageImpl::paintToMemoryCanvasInUiThread(SkCanvas* canvas, const IntRect& paintRect)
 {
@@ -907,10 +996,6 @@ void WebPageImpl::paintToMemoryCanvasInUiThread(SkCanvas* canvas, const IntRect&
     if (0 == m_firstDrawCount && !canPaintToScreen(m_webViewImpl)) { }
     ++m_firstDrawCount;
 
-//     String outString = String::format("WebPageImpl::paintToMemoryCanvasInUiThread:%d %d %d %d\n",
-//         paintRect.x(), paintRect.y(), paintRect.width(), paintRect.height());
-//     OutputDebugStringW(outString.charactersWithNullTermination().data());
-
     HWND hWnd = m_pagePtr->getHWND();
     HDC hMemoryDC = nullptr;
     hMemoryDC = skia::BeginPlatformPaint(hWnd, canvas);
@@ -919,51 +1004,18 @@ void WebPageImpl::paintToMemoryCanvasInUiThread(SkCanvas* canvas, const IntRect&
 
     g_paintToMemoryCanvasInUiThreadCount++;
 
-    bool drawToScreen = false;
-#if ENABLE_CEF == 1
-    drawToScreen = !!m_browser;
-#endif
-    //if (drawToScreen) { // 使用wke接口不由此上屏
-    if (hWnd && (!blink::RuntimeEnabledFeatures::updataInOtherThreadEnabled() || m_devToolsClient)) {
+    if (needDrawToScreen(hWnd)) { // 使用wke接口不由此上屏
         HDC hdc = ::GetDC(hWnd);
         if (m_layerTreeHost->getHasTransparentBackground()) {
-            RECT rtWnd;
-            ::GetWindowRect(hWnd, &rtWnd);
-            IntRect winodwRect = winRectToIntRect(rtWnd);
-            if (!skia::DrawToNativeLayeredContext(canvas, hdc, &intRectToWinRect(paintRect), &rtWnd)) {
-                BITMAP bmp = { 0 };
-                HBITMAP hBmp = (HBITMAP)::GetCurrentObject(hMemoryDC, OBJ_BITMAP);
-                ::GetObject(hBmp, sizeof(BITMAP), (LPSTR)&bmp);
-
-                POINT pointSource = { 0, 0 };
-                SIZE sizeDest = { 0 };
-                sizeDest.cx = bmp.bmWidth;
-                sizeDest.cy = bmp.bmHeight;
-
-                HDC hdcMemory = ::CreateCompatibleDC(hdc);
-                HBITMAP hbmpMemory = ::CreateCompatibleBitmap(hdc, sizeDest.cx, sizeDest.cy);
-                HBITMAP hbmpOld = (HBITMAP)::SelectObject(hdcMemory, hbmpMemory);
-
-                BLENDFUNCTION blend = { 0 };
-                blend.BlendOp = AC_SRC_OVER;
-                blend.SourceConstantAlpha = 255;
-                blend.AlphaFormat = AC_SRC_ALPHA;
-                ::BitBlt(hdcMemory, 0, 0, sizeDest.cx, sizeDest.cy, hdc, 0, 0, SRCCOPY | CAPTUREBLT);
-                ::UpdateLayeredWindow(m_hWnd, hdc, nullptr, &sizeDest, hMemoryDC, &pointSource, RGB(0xFF, 0xFF, 0xFF), &blend, ULW_ALPHA);
-
-                ::SelectObject(hdcMemory, (HGDIOBJ)hbmpOld);
-                ::DeleteObject((HGDIOBJ)hbmpMemory);
-                ::DeleteDC(hdcMemory);
-            }
+            drawLayeredWindow(hWnd, canvas, hdc, paintRect, hMemoryDC);
         } else {
             skia::DrawToNativeContext(canvas, hdc, paintRect.x(), paintRect.y(), &intRectToWinRect(paintRect));
         }
         ::ReleaseDC(hWnd, hdc);
     }
-    //} else {
+
     copyToMemoryCanvasForUi();
-    //}
-    
+
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
     if (m_pagePtr->wkeHandler().paintUpdatedCallback) {
         m_pagePtr->wkeHandler().paintUpdatedCallback(
@@ -972,7 +1024,35 @@ void WebPageImpl::paintToMemoryCanvasInUiThread(SkCanvas* canvas, const IntRect&
             hMemoryDC, paintRect.x(), paintRect.y(), paintRect.width(), paintRect.height());
     }
 #endif
+
     skia::EndPlatformPaint(canvas);
+
+    cc::LayerTreeHost::BitInfo* bitInfo = nullptr;
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
+    if (m_pagePtr->wkeHandler().paintBitUpdatedCallback) {
+        bitInfo = m_layerTreeHost->getBitBegin();
+        if (bitInfo) {
+            wkeRect r = { paintRect.x(), paintRect.y(), paintRect.width(), paintRect.height() };
+            wke::CWebView* webview = m_pagePtr->wkeWebView();
+            void* paintBitUpdatedCallbackParam = m_pagePtr->wkeHandler().paintBitUpdatedCallbackParam;
+
+            m_pagePtr->wkeHandler().paintBitUpdatedCallback(webview, paintBitUpdatedCallbackParam,
+                bitInfo->pixels, &r, bitInfo->width, bitInfo->height);
+            m_layerTreeHost->getBitEnd(bitInfo);
+        }
+    }
+#endif
+
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
+    if (m_browser && m_layerTreeHost) {
+        bitInfo = m_layerTreeHost->getBitBegin();
+        if (bitInfo) {
+            CefRect r(paintRect.x(), paintRect.y(), paintRect.width(), paintRect.height());
+            m_browser->OnPaintUpdated(bitInfo->pixels, r, bitInfo->width, bitInfo->height);
+            m_layerTreeHost->getBitEnd(bitInfo);
+        }
+    }
+#endif
 }
 
 void WebPageImpl::paintToBit(void* bits, int pitch)
@@ -1255,7 +1335,8 @@ LRESULT WebPageImpl::fireMouseEvent(HWND hWnd, UINT message, WPARAM wParam, LPAR
     if (blink::RuntimeEnabledFeatures::touchEnabled())
         fireTouchEvent(hWnd, message, wParam, lParam);
 
-    m_platformEventHandler->fireMouseEvent(hWnd, message, wParam, lParam, true, m_draggableRegion, bHandle);
+    if (g_isMouseEnabled)
+        m_platformEventHandler->fireMouseEvent(hWnd, message, wParam, lParam, true, m_draggableRegion, bHandle);
     return 0;
 }
 

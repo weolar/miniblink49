@@ -75,6 +75,8 @@ public:
 
     void gc();
 
+    void didRunCreateDevToolsAgentTaskObserver();
+
     DevToolsAgent* createOrGetDevToolsAgent();
     DevToolsClient* createOrGetDevToolsClient();
     
@@ -207,6 +209,9 @@ public:
     virtual bool runFileChooser(const blink::WebFileChooserParams& params, blink::WebFileChooserCompletion* completion) override;
 
     // ----
+    bool needDrawToScreen(HWND hWnd) const;
+    void drawLayeredWindow(HWND hWnd, SkCanvas* canvas, HDC hdc, const blink::IntRect& paintRect, HDC hMemoryDC) const;
+
     void executeMainFrame();
 
     void copyToMemoryCanvasForUi();
@@ -215,9 +220,13 @@ public:
 
     static int64_t m_firstFrameId;
 
+    blink::WebThread::TaskObserver* m_createDevToolsAgentTaskObserver;
+
     ToolTip* m_toolTip;
 
     blink::IntRect m_winodwRect;
+
+    bool n_needAutoDrawToHwnd;
 
     bool m_postMouseLeave; // 系统的MouseLeave获取到的鼠标位置不太准确，自己在定时器里再抛一次
     blink::RGBA32 m_bdColor;
