@@ -33,7 +33,6 @@ for (packagePath of searchPaths) {
 		continue
 	}
 }
-console.log("lib/browser/init.js, packagePath: " + packagePath);
 
 if (packageJson == null) {
 	process.nextTick(function () {

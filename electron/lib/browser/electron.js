@@ -33,25 +33,27 @@ SystemPreferences.prototype.isAeroGlassEnabled = function() { return false; }
 SystemPreferences.prototype.isInvertedColorScheme = function() { return false; }
 Object.setPrototypeOf(SystemPreferences.prototype, EventEmitter.prototype);
 electron.systemPreferences = new SystemPreferences();
+
 ////////////////////////////////////////////////////////////////
 
-function Protocol() {}
+electron.protocol = require("./protocol").protocol;
 
-Protocol.prototype.registerStandardSchemes = function(schemes) {}
-Protocol.prototype.registerServiceWorkerSchemes = function(scheme) {}
-Protocol.prototype.registerFileProtocol = function(scheme, handler, completion) {}
-Protocol.prototype.registerBufferProtocol = function(scheme, handler, completion) {}
-Protocol.prototype.registerStringProtocol = function(scheme, handler, completion) {}
-Protocol.prototype.registerHttpProtocol = function(scheme, handler, completion) {}
-Protocol.prototype.unregisterProtocol = function(scheme, completion) {}
-Protocol.prototype.isProtocolHandled = function(scheme, callback) {}
-Protocol.prototype.interceptFileProtocol = function(scheme, handler, completion) {}
-Protocol.prototype.interceptStringProtocol = function(scheme, handler, completion) {}
-Protocol.prototype.interceptBufferProtocol = function(scheme, handler, completion) {}
-Protocol.prototype.interceptHttpProtocol = function(scheme, handler, completion) {}
-Protocol.prototype.uninterceptProtocol = function(scheme, completion) {}
+// function Protocol() {}
+// Protocol.prototype.registerStandardSchemes = function(schemes) {}
+// Protocol.prototype.registerServiceWorkerSchemes = function(scheme) {}
+// Protocol.prototype.registerFileProtocol = function(scheme, handler, completion) {}
+// Protocol.prototype.registerBufferProtocol = function(scheme, handler, completion) {}
+// Protocol.prototype.registerStringProtocol = function(scheme, handler, completion) {}
+// Protocol.prototype.registerHttpProtocol = function(scheme, handler, completion) {}
+// Protocol.prototype.unregisterProtocol = function(scheme, completion) {}
+// Protocol.prototype.isProtocolHandled = function(scheme, callback) {}
+// Protocol.prototype.interceptFileProtocol = function(scheme, handler, completion) {}
+// Protocol.prototype.interceptStringProtocol = function(scheme, handler, completion) {}
+// Protocol.prototype.interceptBufferProtocol = function(scheme, handler, completion) {}
+// Protocol.prototype.interceptHttpProtocol = function(scheme, handler, completion) {}
+// Protocol.prototype.uninterceptProtocol = function(scheme, completion) {}
 
-electron.protocol = new Protocol();
+// electron.protocol = new Protocol();
 ////////////////////////////////////////////////////////////////
 
 function AutoUpdater() {}

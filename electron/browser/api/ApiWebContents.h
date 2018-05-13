@@ -94,6 +94,7 @@ public:
     void rendererPostMessageToMain(const std::string& channel, const base::ListValue& listParams);
     void rendererSendMessageToMain(const std::string& channel, const base::ListValue& listParams, std::string* jsonRet);
     void anyPostMessageToRenderer(const std::string& channel, const base::ListValue& listParams);
+
 private:
     static void newFunction(const v8::FunctionCallbackInfo<v8::Value>& args);
 
@@ -246,10 +247,10 @@ private:
     void onDidCreateScriptContext(wkeWebView webView, void* frame, v8::Local<v8::Context>* context, int extensionGroup, int worldId);
     static void staticOnWillReleaseScriptContextCallback(wkeWebView webView, void* param, void* frame, void* context, int worldId);
     void onWillReleaseScriptContextCallback(wkeWebView webView, void* frame, v8::Local<v8::Context>* context, int worldId);
+
 public:
     static v8::Persistent<v8::Function> constructor;
     static gin::WrapperInfo kWrapperInfo;
-
 
 private:
     friend class Window;
@@ -261,6 +262,9 @@ private:
     WindowInterface* m_owner;
 
     bool m_isNodeIntegration;
+    bool m_isLoading;
+
+    v8::Persistent<v8::Object> m_liveSelf;
 };
 
 } // atom

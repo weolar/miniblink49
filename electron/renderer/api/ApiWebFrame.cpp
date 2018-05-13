@@ -39,9 +39,19 @@ public:
         builder.SetMethod("setSpellCheckProvider", &WebFrame::setSpellCheckProviderApi);
         builder.SetMethod("executeJavaScript", &WebFrame::executeJavaScriptApi);
         builder.SetMethod("setMaxListeners", &WebFrame::setMaxListenersApi);
+        builder.SetMethod("setVisualZoomLevelLimits", &WebFrame::setVisualZoomLevelLimitsApi);
+        builder.SetMethod("setLayoutZoomLevelLimits", &WebFrame::setLayoutZoomLevelLimitsApi);
         
         constructor.Reset(isolate, prototype->GetFunction());
         target->Set(v8::String::NewFromUtf8(isolate, "WebFrame"), prototype->GetFunction());
+    }
+
+    void setVisualZoomLevelLimitsApi(int Level1, int Level2) {
+
+    }
+
+    void setLayoutZoomLevelLimitsApi(int Level1, int Level2) {
+
     }
 
     void setZoomFactorApi(float factor) {
@@ -89,7 +99,7 @@ public:
     }
 
     void setMaxListenersApi(int number) {
-        OutputDebugStringA("setMaxListenersApi\n");
+        //OutputDebugStringA("setMaxListenersApi\n");
     }
         
     static void newFunction(const v8::FunctionCallbackInfo<v8::Value>& args) {

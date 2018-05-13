@@ -113,15 +113,19 @@ WebContents* WebContents::create(v8::Isolate* isolate, gin::Dictionary options, 
     v8::Local<v8::Function> constructorFunction = v8::Local<v8::Function>::New(isolate, constructor);
 
     v8::MaybeLocal<v8::Object> obj = constructorFunction->NewInstance(argc, argv);
-    WebContents* self = (WebContents*)WrappableBase::GetNativePtr(obj.ToLocalChecked(), &kWrapperInfo);
+    v8::Local<v8::Object> objV8 = obj.ToLocalChecked();
+
+    WebContents* self = (WebContents*)WrappableBase::GetNativePtr(objV8, &kWrapperInfo);
+    self->m_liveSelf.Reset(isolate, objV8);
     self->m_owner = owner;
     return self;
 }
 
 WebContents::WebContents(v8::Isolate* isolate, v8::Local<v8::Object> wrapper) {
     m_isNodeIntegration = true;
+    m_isLoading = false;
     m_nodeBinding = nullptr;
-    m_id = IdLiveDetect::get()->constructed();
+    m_id = IdLiveDetect::get()->constructed(this);
     m_view = nullptr;
     int id = m_id;
     gin::Wrappable<WebContents>::InitWith(isolate, wrapper);
@@ -133,17 +137,33 @@ WebContents::WebContents(v8::Isolate* isolate, v8::Local<v8::Object> wrapper) {
 
         self->m_view = wkeCreateWebView();
         wkeSetUserKeyValue(self->m_view, "WebContents", self);
-    });    
+    });
 }
 
-WebContents::~WebContents() {
-    //wkeDestroyWebView(m_view);
-    if (m_nodeBinding)
-        delete m_nodeBinding;
+WebContents::~WebContents() { // 在ui线程的js环境中可能因为gc机制被触发析构
+    char* output = (char*)malloc(0x100);
+    sprintf(output, "~WebContents %p\n", this);
+    OutputDebugStringA(output);
+    free(output);
 
     for (auto it : m_observers) {
         (it)->onWebContentsDeleted(this);
     }
+
+    m_owner->close();
+    
+    wkeSetUserKeyValue(m_view, "WebContents", nullptr);
+
+//     NodeBindings* nodeBinding = m_nodeBinding;
+//     wkeWebView view = m_view;
+//     ThreadCall::callBlinkThreadAsync([view, nodeBinding] {
+//         wkeDestroyWebView(view);
+// 
+//         char* output = (char*)malloc(0x100);
+//         sprintf(output, "~wkeDestroyWebView %p\n", view);
+//         OutputDebugStringA(output);
+//         free(output);
+//     });
 
     IdLiveDetect::get()->deconstructed(m_id);
 }
@@ -184,7 +204,7 @@ void WebContents::onNewWindowInBlinkThread(int width, int height, const CreateWi
     wkeConfigure(&settings);
     wkeResize(getWkeView(), width, height);
     wkeOnDidCreateScriptContext(getWkeView(), &WebContents::staticDidCreateScriptContextCallback, this);
-    wkeOnWillReleaseScriptContext(getWkeView(), &WebContents::staticOnWillReleaseScriptContextCallback, this);
+    wkeOnWillReleaseScriptContext(getWkeView(), &WebContents::staticOnWillReleaseScriptContextCallback, m_nodeBinding);
 }
 
 void WebContents::staticDidCreateScriptContextCallback(wkeWebView webView, wkeWebFrameHandle param, wkeWebFrameHandle frame, void* context, int extensionGroup, int worldId) {
@@ -204,19 +224,18 @@ void WebContents::onDidCreateScriptContext(wkeWebView webView, wkeWebFrameHandle
 }
 
 void WebContents::staticOnWillReleaseScriptContextCallback(wkeWebView webView, void* param, wkeWebFrameHandle frame, void* context, int worldId) {
-    WebContents* self = (WebContents*)param;
-    self->onWillReleaseScriptContextCallback(webView, frame, (v8::Local<v8::Context>*)context, worldId);
+    NodeBindings* nodeBinding = (NodeBindings*)param;
+    //self->onWillReleaseScriptContextCallback(webView, frame, (v8::Local<v8::Context>*)context, worldId);
+    v8::Local<v8::Context>* contextV8 = (v8::Local<v8::Context>*)context;
+//     node::Environment* env = node::Environment::GetCurrent(*contextV8);
+//     if (env)
+//         mate::emitEvent(env->isolate(), env->process_object(), "exit");
+
+    delete nodeBinding;
 }
 
 void WebContents::onWillReleaseScriptContextCallback(wkeWebView webView, wkeWebFrameHandle frame, v8::Local<v8::Context>* context, int worldId) {
-    if (!m_nodeBinding)
-        return;
-    node::Environment* env = node::Environment::GetCurrent(*context);
-    if (env)
-        mate::emitEvent(env->isolate(), env->process_object(), "exit");
-
-    delete m_nodeBinding;
-    m_nodeBinding = nullptr;
+    DebugBreak();
 }
 
 void WebContents::rendererPostMessageToMain(const std::string& channel, const base::ListValue& listParams) {
@@ -348,7 +367,7 @@ static std::string* trimUrl(const std::string& url) {
 
     char invalideHead[] = "http:\\";
     int invalideHeadLength = sizeof(invalideHead) - 1;
-    if (str->size() > invalideHeadLength && str->substr(0, invalideHeadLength) == invalideHead) {
+    if (((int)str->size() > invalideHeadLength) && str->substr(0, invalideHeadLength) == invalideHead) {
         for (size_t i = 0; i < str->size(); ++i) { // 反斜杠替换成斜杠
             char c = str->at(i);
             if ('\\' != c)
@@ -366,11 +385,14 @@ static std::string* trimUrl(const std::string& url) {
 void WebContents::_loadURLApi(const std::string& url) {
     WebContents* self = this;
     std::string* str = trimUrl(url);
-    
+    m_isLoading = true;
+
     int id = m_id;
     ThreadCall::callBlinkThreadAsync([self, str, id] {
-        if (IdLiveDetect::get()->isLive(id))
-            wkeLoadURL(self->m_view, str->c_str());
+        if (!IdLiveDetect::get()->isLive(id))
+            return;
+        wkeLoadURL(self->m_view, str->c_str());
+        self->m_isLoading = false;
         delete str;
     });
 }

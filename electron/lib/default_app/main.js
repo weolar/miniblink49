@@ -53,11 +53,16 @@ for (let i = 1; i < argv.length; i++) {
 }
 
 if (null == option.file) {
-    var optionFile = __dirname + '../../app.asar/main.js';
-    if (fs.existsSync(optionFile))
-        option.file = optionFile;
-    else
-        option.file = __dirname + '/index.html';
+    let tryPaths = ['../../app.asar/package.json', '../../app.asar/main.js', '../../app/package.json', '/index.html'];
+    for (let i = 0; i < tryPaths.length; ++i) {
+        let tryPath = tryPaths[i];
+        let fileName = path.join(__dirname, tryPath);
+        if (!fs.existsSync(fileName))
+            continue;
+        option.file = fileName;
+        break;
+    }
+    console.log("default_app, option.file:" + option.file);
 }
 
 // Quit when all windows are closed and no other one is listening to this.
@@ -78,7 +83,13 @@ function loadApplicationPackage(packagePath) {
     try {
         // Override app name and version.
         packagePath = path.resolve(packagePath);
-        const packageJsonPath = path.join(packagePath, 'package.json');
+
+        let packageJsonPath = packagePath;
+        if (-1 == packagePath.indexOf('package.json'))
+            packageJsonPath = path.join(packagePath, 'package.json');
+        else
+            packagePath = path.dirname(packagePath);
+
         if (fs.existsSync(packageJsonPath)) {
             let packageJson;
             try {
@@ -99,16 +110,19 @@ function loadApplicationPackage(packagePath) {
             app.setPath('userData', path.join(app.getPath('appData'), app.getName()));
             app.setPath('userCache', path.join(app.getPath('cache'), app.getName()));
             app.setAppPath(packagePath);
+            
+            packagePath = path.join(packagePath, packageJson.main);
         }
 
         try {
             Module._resolveFilename(packagePath, module, true);
         } catch (e) {
-            showErrorMessage(`Unable to find Electron app at ${packagePath}\n\n${e.message}`);
+            console.log(`default_app/main.js: Unable to find Electron app at ${packagePath}\n\n${e.message}`);
             return;
         }
 
         // Run the app.
+        console.log("default_app main.js packagePath," + packagePath);
         Module._load(packagePath, module, true);
     } catch (e) {
         console.error('App threw an error during load');

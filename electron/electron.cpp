@@ -7,6 +7,7 @@
 #include "third_party/zlib/unzip.h"
 #include "NodeBlink.h"
 #include <windows.h>
+#include <objbase.h>
 
 #pragma comment(lib,"zlib.lib")
 #pragma comment(lib, "Psapi.lib")
@@ -21,6 +22,7 @@
     fn(atom_browser_window) \
     fn(atom_browser_menu) \
     fn(atom_browser_dialog) \
+    fn(atom_browser_protocol) \
     fn(atom_renderer_ipc) \
     fn(atom_common_v8_util) \
     fn(atom_common_shell) \
@@ -63,6 +65,8 @@ static void initPeRes(HINSTANCE hInstance) {
 int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow) {
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
+
+    ::CoInitialize(NULL);
 
     atom::AtomCommandLine::initAW();
     atom::ThreadCall::setMainThread();

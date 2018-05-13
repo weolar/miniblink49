@@ -105,7 +105,6 @@ public:
 
     virtual ~Menu() override {
         OutputDebugStringA("~Menu\n");
-        DebugBreak();
         ::DestroyMenu(m_hMenu);
         m_hMenu = nullptr;
 
@@ -448,8 +447,7 @@ void MenuEventNotif::onWindowDidCreated(WindowInterface* window) {
     HWND hParentWnd = window->getHWND();
     if (Menu::getAppMenu()) {
         HMENU hmenuBar = Menu::getAppMenu()->buildMenus(true);
-        bool b = ::SetMenu(hParentWnd, hmenuBar);
-        b = b;
+        ::SetMenu(hParentWnd, hmenuBar);
     }
 }
 

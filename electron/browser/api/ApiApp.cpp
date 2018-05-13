@@ -25,6 +25,7 @@ App::App(v8::Isolate* isolate, v8::Local<v8::Object> wrapper) {
     gin::Wrappable<App>::InitWith(isolate, wrapper);
     ASSERT(!m_instance);
     m_instance = this;
+    m_version = "1.3.3";
 }
 
 App::~App() {
