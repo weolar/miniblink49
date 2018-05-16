@@ -279,6 +279,9 @@ bool SecurityOrigin::canAccess(const SecurityOrigin* other) const
 
 bool SecurityOrigin::canAccessCheckSuborigins(const SecurityOrigin* other) const
 {
+    if (!RuntimeEnabledFeatures::cspCheckEnabled())
+        return true;
+
     if (hasSuborigin() != other->hasSuborigin())
         return false;
 

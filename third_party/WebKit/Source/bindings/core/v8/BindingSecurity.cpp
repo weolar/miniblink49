@@ -48,6 +48,9 @@ static bool isOriginAccessibleFromDOMWindow(SecurityOrigin* targetOrigin, LocalD
 
 static bool canAccessFrame(v8::Isolate* isolate, SecurityOrigin* targetFrameOrigin, DOMWindow* targetWindow, ExceptionState& exceptionState)
 {
+    if (!RuntimeEnabledFeatures::cspCheckEnabled())
+        return true;
+
     LocalDOMWindow* callingWindow = callingDOMWindow(isolate);
     if (isOriginAccessibleFromDOMWindow(targetFrameOrigin, callingWindow))
         return true;
@@ -59,6 +62,9 @@ static bool canAccessFrame(v8::Isolate* isolate, SecurityOrigin* targetFrameOrig
 
 static bool canAccessFrame(v8::Isolate* isolate, SecurityOrigin* targetFrameOrigin, DOMWindow* targetWindow, SecurityReportingOption reportingOption = ReportSecurityError)
 {
+    if (!RuntimeEnabledFeatures::cspCheckEnabled())
+        return true;
+
     LocalDOMWindow* callingWindow = callingDOMWindow(isolate);
     if (isOriginAccessibleFromDOMWindow(targetFrameOrigin, callingWindow))
         return true;
@@ -70,6 +76,9 @@ static bool canAccessFrame(v8::Isolate* isolate, SecurityOrigin* targetFrameOrig
 
 bool BindingSecurity::shouldAllowAccessToFrame(v8::Isolate* isolate, Frame* target, SecurityReportingOption reportingOption)
 {
+    if (!RuntimeEnabledFeatures::cspCheckEnabled())
+        return true;
+
     if (!target || !target->securityContext())
         return false;
     return canAccessFrame(isolate, target->securityContext()->securityOrigin(), target->domWindow(), reportingOption);
@@ -77,6 +86,9 @@ bool BindingSecurity::shouldAllowAccessToFrame(v8::Isolate* isolate, Frame* targ
 
 bool BindingSecurity::shouldAllowAccessToFrame(v8::Isolate* isolate, Frame* target, ExceptionState& exceptionState)
 {
+    if (!RuntimeEnabledFeatures::cspCheckEnabled())
+        return true;
+
     if (!target || !target->securityContext())
         return false;
     return canAccessFrame(isolate, target->securityContext()->securityOrigin(), target->domWindow(), exceptionState);
@@ -84,6 +96,9 @@ bool BindingSecurity::shouldAllowAccessToFrame(v8::Isolate* isolate, Frame* targ
 
 bool BindingSecurity::shouldAllowAccessToNode(v8::Isolate* isolate, Node* target, ExceptionState& exceptionState)
 {
+    if (!RuntimeEnabledFeatures::cspCheckEnabled())
+        return true;
+
     return target && canAccessFrame(isolate, target->document().securityOrigin(), target->document().domWindow(), exceptionState);
 }
 
