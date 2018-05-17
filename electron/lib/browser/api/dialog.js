@@ -24,6 +24,10 @@ Dialog.prototype.showMessageBox = function(/* [browserWindow, ]options[, callbac
 	return this._trimArgsCallDialogFunction("showMessageBox", args);
 }
 
+Dialog.prototype.showErrorBox = function(title, content) {
+	this._showErrorBox(title, content);
+}
+
 Dialog.prototype._callDialogFunction = function(funcType, browserWindowID, options, callback) {
 	if ("showSaveDialog" === funcType)
 		return this._showSaveDialog(browserWindowID, options, callback);
