@@ -816,7 +816,7 @@ void BlobResourceLoader::failed(int errorCode)
     notifyFail(errorCode);
     if (m_isDestroied)
         return;
-    m_isDestroied == nullptr;
+    m_isDestroied = nullptr;
 
     // Close the file if needed.
     if (m_fileOpened) {
@@ -837,7 +837,7 @@ void BlobResourceLoader::notifyResponse()
         notifyResponseOnError();
 
         if (!isDestroied) {
-            m_isDestroied == nullptr;
+            m_isDestroied = nullptr;
             notifyFinish();
         }
     } else
