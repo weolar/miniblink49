@@ -12,6 +12,8 @@ namespace wke {
 
 CWebWindow::CWebWindow()
 {
+    m_state = kWkeWebWindowUninit;
+
     m_originalPaintUpdatedCallback = NULL;
     m_originalPaintUpdatedCallbackParam = NULL;
 
@@ -153,10 +155,12 @@ bool CWebWindow::_createWindow(HWND parent, unsigned styles, unsigned styleEx, i
 
 void CWebWindow::_destroyWindow()
 {
+    if (kWkeWebWindowDestroing == m_state)
+        return;
+    m_state = kWkeWebWindowDestroing;
+
     ::KillTimer(m_hWnd, (UINT_PTR)this);
-    ::DestroyWindow(m_hWnd);
-    ::RemovePropW(m_hWnd, L"wkeWebWindow");
-    m_hWnd = NULL;
+    ::DestroyWindow(m_hWnd); // 这里会重入到本函数
 }
 
 void CWebWindow::_initCallbacks()
@@ -174,6 +178,7 @@ LRESULT CALLBACK CWebWindow::_staticWindowProc(HWND hwnd, UINT message, WPARAM w
             LPCREATESTRUCTW cs = (LPCREATESTRUCTW)lParam;
             pthis = (CWebWindow*)cs->lpCreateParams;
             ((CWebWindow*)cs->lpCreateParams)->setHandle(hwnd);
+            pthis->m_state = kWkeWebWindowInit;
             ::SetPropW(hwnd, L"wkeWebWindow", (HANDLE)pthis);
         }
     }

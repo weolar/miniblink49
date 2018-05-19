@@ -104,6 +104,17 @@ static JsValueMap::iterator findJsValueMap(jsValue value)
     return it;
 }
 
+static void freeJsValue(jsValue value)
+{
+    if (0 == value)
+        return;
+    JsValueMap::iterator it = s_jsValueMap->find(value);
+    if (it == s_jsValueMap->end())
+        return;
+    WkeJsValue* v = it->value;
+    delete v;
+}
+
 static bool isJsValueValid(jsValue value)
 {
     if (0 == value)
@@ -163,7 +174,7 @@ static jsValue createJsValueByLocalValue2(
 
     out->type = WkeJsValue::wkeJsValueV8Value;
     out->context.Reset(isolate, context);
-    out->isAutoGC = false;
+    out->isAutoGC = isAutoGC;
 
     if (outWkeJsValue)
         *outWkeJsValue = out;
@@ -1163,10 +1174,17 @@ public:
     static void firstJsObjectWeakCallback(const v8::WeakCallbackInfo<NativeGetterSetterWrap>& data)
     {
         NativeGetterSetterWrap* self = data.GetParameter();
-        self->gc();
+        freeJsValue(self->m_persistentValue);
+        //data.SetSecondPassCallback(secondJsObjectWeakCallback);
+        self->gc();       
+    }
+
+    void set(jsValue persistentValue) {
+        m_persistentValue = persistentValue;
     }
 
 private:
+    jsValue m_persistentValue;
     Vector<NativeGetterSetterWrap*>* m_cachedWraps;
 };
 
@@ -1399,8 +1417,9 @@ jsValue jsObject(jsExecState es, jsData* data)
     WkeJsValue* wkeJsValue = nullptr;
     v8::Local<v8::Object> objInst = objTemplate->NewInstance(context).ToLocalChecked();
     jsValue retValue = createJsValueByLocalValue2(isolate, context, objInst, &wkeJsValue, false);
-    wkeJsValue->value.SetWeak<NativeGetterSetterWrap>(wrap, &NativeGetterSetterWrap::firstJsObjectWeakCallback, v8::WeakCallbackType::kParameter);
-    
+    wkeJsValue->value.SetWeak<NativeGetterSetterWrap>(wrap, &NativeGetterSetterWrap::firstJsObjectWeakCallback, v8::WeakCallbackType::kInternalFields);
+    wrap->set(retValue);
+
     return retValue;
 }
 

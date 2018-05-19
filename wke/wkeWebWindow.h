@@ -70,6 +70,14 @@ protected:
 // 
 //     wkeWindowDestroyCallback m_windowDestroyCallback;
 //     void* m_windowDestroyCallbackParam;
+
+    enum State {
+        kWkeWebWindowUninit,
+        kWkeWebWindowInit,
+        kWkeWebWindowDestroing,
+        kWkeWebWindowDestroyed,
+    };
+    State m_state;
 };
 
 };//namespace wke
