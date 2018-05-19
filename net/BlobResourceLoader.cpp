@@ -292,6 +292,7 @@ public:
     static void doNotifyFinishOnMainThread(void* param)
     {
         LoaderWrap* self = (LoaderWrap*)param;
+
         if (self->m_client) {
             self->m_client->asynTaskFinish(self->m_runType);
             self->m_client->doNotifyFinish();
@@ -454,6 +455,7 @@ void BlobResourceLoader::getSizeForNext()
             notifyResponse();
             if (isDestroied)
                 return;
+            m_isDestroied = nullptr;
             m_buffer.resize(bufferSize);
             readAsync();
         }
@@ -530,16 +532,8 @@ void BlobResourceLoader::didGetSize(long long size)
     const blink::WebBlobData::Item* item = m_blobData->items().at(m_sizeItemCount);
     RELEASE_ASSERT(item->length != 0);
 
-    if (item->length < size) {
+    if (-1 != item->length && item->length < size)
         size = item->length;
-    }
-
-//     if (blink::WebBlobData::Item::TypeData == item->type)
-//         size = item->data.size();
-//     else if (blink::WebBlobData::Item::TypeFile == item->type || blink::WebBlobData::Item::TypeFileSystemURL) {
-//         if (!getFileSize(item->filePath, size))
-//             size = 0;
-//     }
 
     // Cache the size.
     m_itemLengthList.append(size);
@@ -822,6 +816,7 @@ void BlobResourceLoader::failed(int errorCode)
     notifyFail(errorCode);
     if (m_isDestroied)
         return;
+    m_isDestroied == nullptr;
 
     // Close the file if needed.
     if (m_fileOpened) {
@@ -841,8 +836,10 @@ void BlobResourceLoader::notifyResponse()
         m_isDestroied = &isDestroied;
         notifyResponseOnError();
 
-        if (!isDestroied)
+        if (!isDestroied) {
+            m_isDestroied == nullptr;
             notifyFinish();
+        }
     } else
         notifyResponseOnSuccess();
 }
