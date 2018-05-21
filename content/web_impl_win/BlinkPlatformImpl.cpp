@@ -47,6 +47,7 @@
 #include "gin/public/isolate_holder.h"
 #include "gin/array_buffer.h"
 #include "net/WebURLLoaderManager.h"
+#include "wke/wkeJsBindFreeTempObject.h"
 
 DWORD g_paintToMemoryCanvasInUiThreadCount = 0;
 DWORD g_rasterTaskCount = 0;
@@ -172,7 +173,7 @@ void BlinkPlatformImpl::initialize()
     SkGraphics::SetResourceCacheSingleAllocationByteLimit(kImageCacheSingleAllocationByteLimit);
 
     platform->m_defaultGcTimer = new blink::Timer<BlinkPlatformImpl>(platform, &BlinkPlatformImpl::garbageCollectedTimer);
-    platform->m_defaultGcTimer->start(5, 5, FROM_HERE);
+    platform->m_defaultGcTimer->start(10, 10, FROM_HERE);
 
 //     platform->m_perfTimer = new blink::Timer<BlinkPlatformImpl>(platform, &BlinkPlatformImpl::perfTimer);
 //     platform->m_perfTimer->start(2, 2, FROM_HERE);
@@ -286,6 +287,7 @@ void BlinkPlatformImpl::preShutdown()
 
 void BlinkPlatformImpl::shutdown()
 {
+    wke::freeV8TempObejctOnOneFrameBefore();
     ((WebThreadImpl*)currentThread())->fire();
 
     net::WebURLLoaderManager::sharedInstance()->shutdown();
