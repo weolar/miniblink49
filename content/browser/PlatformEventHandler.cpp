@@ -286,8 +286,11 @@ LRESULT PlatformEventHandler::fireMouseEvent(HWND hWnd, UINT message, WPARAM wPa
     webMouseEvent.modifiers = 0;
     webMouseEvent.x = pos.x();
     webMouseEvent.y = pos.y();
-    webMouseEvent.movementX = pos.x();
-    webMouseEvent.movementY = pos.y();
+
+    webMouseEvent.movementX = pos.x() - m_lastPosMouseMove.x();
+    webMouseEvent.movementY = pos.y() - m_lastPosMouseMove.y();
+    m_lastPosMouseMove = pos;
+
     webMouseEvent.windowX = pos.x();
     webMouseEvent.windowY = pos.y();
     webMouseEvent.globalX = globalPos.x();

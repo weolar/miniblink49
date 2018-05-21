@@ -30,6 +30,7 @@ private:
     bool m_isAlert;
     double m_lastTimeMouseDown;
     blink::IntPoint m_lastPosMouseDown;
+    blink::IntPoint m_lastPosMouseMove;
     blink::IntRect m_lastPosForDrag;
     blink::WebViewImpl* m_webViewImpl;
     blink::WebWidget* m_webWidget;
