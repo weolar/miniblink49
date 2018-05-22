@@ -590,10 +590,7 @@ bool WebPluginImpl::handleMouseEvent(const blink::WebMouseEvent& evt)
     NPEvent npEvent;
 
     //blink::IntPoint p = contentsToNativeWindow(m_pluginContainer, blink::IntPoint(evt.x, evt.y));
-    blink::IntPoint p(evt.x, evt.y);
-
-    p.setX(evt.movementX);
-    p.setY(evt.movementY);
+    blink::IntPoint p(evt.windowX, evt.windowY);
 
     npEvent.lParam = MAKELPARAM(p.x(), p.y());
     npEvent.wParam = 0;
@@ -802,7 +799,7 @@ void WebPluginImpl::paint(blink::WebCanvas* canvas, const blink::WebRect& rect)
         return;
     }
 
-    if (!m_memoryCanvas) // start()里有可能为nullptr
+    if (!m_memoryCanvas || !canvas) // start()里有可能这两其中一个为nullptr，看打开哪个宏
         return;
 
     SkPaint clearPaint;
@@ -863,7 +860,6 @@ void WebPluginImpl::setNPWindowRect(const IntRect& rect)
     m_npWindow.clipRect.top = 0;
 
     if (m_plugin->pluginFuncs()->setwindow) {
-        //JSC::JSLock::DropAllLocks dropAllLocks(JSDOMWindowBase::commonVM());
         setCallingPlugin(true);
         m_plugin->pluginFuncs()->setwindow(m_instance, &m_npWindow);
         setCallingPlugin(false);
@@ -999,11 +995,13 @@ void WebPluginImpl::forceRedraw()
 {
     if (m_isWindowed)
         ::UpdateWindow(platformPluginWidget());
-//      else
-//         ::UpdateWindow(windowHandleForPageClient(parent() ? parent()->hostWindow()->platformPageClient() : 0));
+#if 0
+     else
+        ::UpdateWindow(windowHandleForPageClient(parent() ? parent()->hostWindow()->platformPageClient() : 0));
+#endif
 }
 
-void WebPluginImpl::platformStartAsyn()
+void WebPluginImpl::platformStartImpl(bool isSync)
 {
     if (m_asynStartTask)
         m_asynStartTask = nullptr;
@@ -1044,20 +1042,25 @@ void WebPluginImpl::platformStartAsyn()
     
     updatePluginWidget(m_windowRect, m_clipRect);
 
-    if (!m_plugin->quirks().contains(PluginQuirkDeferFirstSetWindowCall)) {
+    if (!isSync && !m_plugin->quirks().contains(PluginQuirkDeferFirstSetWindowCall)) {
         IntRect r = container->frameRect();
         paint(m_memoryCanvas, r);
     }
 }
 
+#define USING_ASYNC_START 1
+
 void WebPluginImpl::PlatformStartAsynTask::didProcessTask()
 {
-    //         String out = String::format("didProcessTask, WeakPtr: %p parent:%p\n", m_parentWeakPtr, *m_parentWeakPtr);
-    //         OutputDebugStringA(out.utf8().data());
-
+#if USING_ASYNC_START
     if (m_parentPtr)
-        m_parentPtr->platformStartAsyn();
-
+        m_parentPtr->platformStartImpl(false);
+#else
+    if (m_parentPtr) {
+        IntRect r(0, 0, 1, 1);
+        m_parentPtr->paint(m_parentPtr->m_memoryCanvas, r);
+    }
+#endif
     blink::Platform::current()->currentThread()->removeTaskObserver(this);
     delete this;
 }
@@ -1066,18 +1069,16 @@ bool WebPluginImpl::platformStart()
 {
     ASSERT(m_isStarted);
     ASSERT(m_status == PluginStatusLoadedSuccessfully);
-//     if (m_asynStartTask)
-//         return false;
-// 
-//     WebPluginContainerImpl* container = (WebPluginContainerImpl*)m_pluginContainer;
-//     if (!container)
-//         return false;
-// 
-//     m_asynStartTask = new PlatformStartAsynTask(this);
-//     blink::Platform::current()->currentThread()->addTaskObserver(m_asynStartTask);
 
+#if USING_ASYNC_START == 0
     // 淘宝npaliedit控件需要同步调用，否则会因为setwindow没被调用到而在namedPropertyGetterCustom里崩溃
-    platformStartAsyn();
+    platformStartImpl(true);
+#else
+    if (m_asynStartTask)
+        return false;
+    m_asynStartTask = new PlatformStartAsynTask(this);
+    blink::Platform::current()->currentThread()->addTaskObserver(m_asynStartTask);
+#endif
 
     return true;
 }

@@ -345,7 +345,7 @@ private:
     void scheduleRequest(PassOwnPtr<PluginRequest>);
     void requestTimerFired(blink::Timer<WebPluginImpl>*);
     void invalidateTimerFired(blink::Timer<WebPluginImpl>*);
-    void platformStartAsyn();
+    void platformStartImpl(bool isSync);
     blink::Timer<WebPluginImpl> m_requestTimer;
     blink::Timer<WebPluginImpl> m_invalidateTimer;
 
