@@ -70,6 +70,7 @@
 #include "net/WebURLLoaderManagerSetupInfo.h"
 #include "net/WebURLLoaderManagerAsynTask.h"
 #include "net/InitializeHandleInfo.h"
+#include "net/HeaderVisitor.h"
 #include "wke/wkeNetHook.h"
 #include "third_party/WebKit/Source/wtf/Threading.h"
 #include "third_party/WebKit/Source/wtf/Vector.h"
@@ -1238,30 +1239,6 @@ void WebURLLoaderManager::applyAuthenticationToRequest(WebURLLoaderInternal* han
     //curl_easy_setopt(job->m_handle, CURLOPT_USERPWD, ":");
 }
 
-class HeaderVisitor : public blink::WebHTTPHeaderVisitor {
-public:
-    explicit HeaderVisitor(curl_slist** headers) : m_headers(headers) {}
-
-    virtual void visitHeader(const WebString& webName, const WebString& webValue) override
-    {
-        String value = webValue;
-        String headerString(webName);
-        if (value.isNull() || value.isEmpty())
-            // Insert the ; to tell curl that this header has an empty value.
-            headerString.append(";");
-        else {
-            headerString.append(": ");
-            headerString.append(value);
-        }
-        CString headerLatin1 = headerString.latin1();
-        *m_headers = curl_slist_append(*m_headers, headerLatin1.data());
-    }
-
-    curl_slist* headers() { return*m_headers; }
-private:
-    curl_slist** m_headers;
-};
-
 InitializeHandleInfo* WebURLLoaderManager::preInitializeHandleOnMainThread(WebURLLoaderInternal* job)
 {
     InitializeHandleInfo* info = new InitializeHandleInfo();
@@ -1459,16 +1436,17 @@ int WebURLLoaderManager::initializeHandleOnMainThread(WebURLLoaderInternal* job)
     int jobId = addLiveJobs(job);
 
     InitializeHandleInfo* info = preInitializeHandleOnMainThread(job);
-    
+    job->m_initializeHandleInfo = info;
+
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
     if (dispatchWkeLoadUrlBegin(job, info)) {
         if (job->m_isWkeNetSetDataBeSetted)
             Platform::current()->currentThread()->scheduler()->postLoadingTask(FROM_HERE, new WkeAsynTask(this, jobId)); // postLoadingTask
         
-        if (!job->m_isHoldJobToAsynCommit)
+        if (!job->m_isHoldJobToAsynCommit) {
+            job->m_initializeHandleInfo = nullptr;
             delete info;
-        else
-            job->m_initializeHandleInfo = info;
+        }
         return jobId;
     }
 #endif

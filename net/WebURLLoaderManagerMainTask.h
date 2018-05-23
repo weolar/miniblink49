@@ -387,6 +387,44 @@ static void distpatchWkeWillSendRequest(WebURLLoaderInternal* job, const KURL* n
     }
 }
 
+static bool doRedirect(WebURLLoaderInternal* job, const String& location, WebURLLoaderManagerMainTask::Args* args)
+{
+    WebURLLoaderClient* client = job->client();
+    KURL newURL = KURL((KURL)(job->firstRequest()->url()), location);
+
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
+    distpatchWkeWillSendRequest(job, &newURL, args->httpCode);
+
+    RequestExtraData* requestExtraData = reinterpret_cast<RequestExtraData*>(job->firstRequest()->extraData());
+    WebPage* page = requestExtraData->page;
+    wkeLoadUrlBeginCallback loadUrlBeginCallback = page->wkeHandler().loadUrlBeginCallback;
+    void* param = page->wkeHandler().loadUrlBeginCallbackParam;
+
+    if (loadUrlBeginCallback) {
+        CString newURLBuf(newURL.getUTF8String().utf8());
+        if (loadUrlBeginCallback(page->wkeWebView(), param, newURLBuf.data(), job)) {
+            WebURLLoaderManager::sharedInstance()->cancelWithHookRedirect(job);
+
+            if (job->m_isWkeNetSetDataBeSetted)
+                Platform::current()->currentThread()->scheduler()->postLoadingTask(FROM_HERE, new WkeAsynTask(WebURLLoaderManager::sharedInstance(), job->m_id));
+
+            return false;
+        }
+    }
+#endif
+
+    blink::WebURLRequest* redirectedRequest = new blink::WebURLRequest(*job->firstRequest());
+    redirectedRequest->setURL(newURL);
+    if (client && job->loader())
+        client->willSendRequest(job->loader(), *redirectedRequest, job->m_response);
+
+    job->m_response.initialize();
+
+    delete job->m_firstRequest;
+    job->m_firstRequest = redirectedRequest;
+    return false;
+}
+
 static bool setHttpResponseDataToJobWhenDidReceiveResponseOnMainThread(WebURLLoaderInternal* job, WebURLLoaderManagerMainTask::Args* args)
 {
     WebURLLoaderClient* client = job->client();
@@ -427,43 +465,7 @@ static bool setHttpResponseDataToJobWhenDidReceiveResponseOnMainThread(WebURLLoa
     if (isHttpRedirect(args->httpCode)) {
         String location = job->m_response.httpHeaderField(WebString::fromUTF8("location"));
         if (!location.isEmpty()) {
-            KURL newURL = KURL((KURL)(job->firstRequest()->url()), location);
-
-#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
-            distpatchWkeWillSendRequest(job, &newURL, args->httpCode);
-#endif
-
-            RequestExtraData* requestExtraData = reinterpret_cast<RequestExtraData*>(job->firstRequest()->extraData());
-            WebPage* page = requestExtraData->page;
-            if (page->wkeHandler().loadUrlBeginCallback) {
-                CString newURLBuf(newURL.getUTF8String().utf8());
-                if (page->wkeHandler().loadUrlBeginCallback(
-                    page->wkeWebView(), 
-                    page->wkeHandler().loadUrlBeginCallbackParam,
-                    newURLBuf.data(), job)) {
-                    //WebURLLoaderManager::sharedInstance()->handleDidFinishLoading(job, WTF::currentTime(), 0);
-                    WebURLLoaderManager::sharedInstance()->cancelWithHookRedirect(job);
-
-                    if (job->m_isWkeNetSetDataBeSetted)
-                        Platform::current()->currentThread()->scheduler()->postLoadingTask(FROM_HERE, new WkeAsynTask(WebURLLoaderManager::sharedInstance(), job->m_id));
-                    
-                    return false;
-                }
-            }
-
-            blink::WebURLRequest* redirectedRequest = new blink::WebURLRequest(*job->firstRequest());
-            redirectedRequest->setURL(newURL);
-            if (client && job->loader())
-                client->willSendRequest(job->loader(), *redirectedRequest, job->m_response);
-#if 0
-            String outString = String::format("redirection:%p, %s\n", job, job->m_response.url().string().utf8().c_str());
-            OutputDebugStringW(outString.charactersWithNullTermination().data());
-#endif
-            job->m_response.initialize();
-
-            delete job->m_firstRequest;
-            job->m_firstRequest = redirectedRequest;
-            return false;
+            return doRedirect(job, location, args);
         }
     } else if (isHttpAuthentication(args->httpCode)) {
 
