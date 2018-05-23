@@ -353,6 +353,13 @@ typedef struct {
     wkePostBodyElements* postBody;
 } wkeTempCallbackInfo;
 
+typedef enum _wkeRequestType {
+    kWkeRequestTypeInvalidation,
+    kWkeRequestTypeGet,
+    kWkeRequestTypePost,
+    kWkeRequestTypePut,
+} wkeRequestType;
+
 typedef void(*wkeTitleChangedCallback)(wkeWebView webView, void* param, const wkeString title);
 typedef void(*wkeURLChangedCallback)(wkeWebView webView, void* param, const wkeString url);
 typedef void(*wkeURLChangedCallback2)(wkeWebView webView, void* param, wkeWebFrameHandle frameId, const wkeString url);
@@ -828,6 +835,7 @@ public:
     ITERATOR2(void, wkeSetCookieJarPath, wkeWebView webView, const WCHAR* path, "") \
     ITERATOR2(void, wkeSetCookieJarFullPath, wkeWebView webView, const WCHAR* path, "") \
     ITERATOR2(void, wkeSetLocalStorageFullPath, wkeWebView webView, const WCHAR* path, "") \
+    ITERATOR2(void, wkeAddPluginDirectory, wkeWebView webView, const WCHAR* path, "") \
     \
     ITERATOR2(void, wkeSetMediaVolume, wkeWebView webView, float volume, "") \
     ITERATOR1(float, wkeGetMediaVolume, wkeWebView webView, "") \
@@ -908,6 +916,7 @@ public:
     ITERATOR2(void, wkeDeleteWillSendRequestInfo, wkeWebView webWindow, wkeWillSendRequestInfo* info, "") \
     \
     ITERATOR2(void, wkeNetSetMIMEType, void* job, char *type, "") \
+    ITERATOR2(void, wkeNetGetMIMEType, void* job, wkeString mime, "") \
     ITERATOR4(void, wkeNetSetHTTPHeaderField, void* job, wchar_t* key, wchar_t* value, bool response, "") \
     ITERATOR2(const char*, wkeNetGetHTTPHeaderField, void* job, const char* key, "") \
     ITERATOR2(void, wkeNetSetURL, void* job, const char *url, "") \
@@ -916,7 +925,8 @@ public:
         "而wkeNetSetData是在网络数据还没发送的时候修改") \
     ITERATOR1(void, wkeNetHookRequest, void *job, "") \
     ITERATOR3(void, wkeNetOnResponse, wkeWebView webView, wkeNetResponseCallback callback, void* param, "") \
-    ITERATOR2(void, wkeNetGetMIMEType, void* job, wkeString mime, "") \
+    ITERATOR1(wkePostBodyElements*, wkeNetGetPostBody, void* jobPtr, "") \
+    ITERATOR1(wkeRequestType, wkeNetGetRequestMethod, void* jobPtr, "") \
     \
     ITERATOR1(void, wkeNetContinueJob, void* jobPtr, "")\
     ITERATOR1(const char*, wkeNetGetUrlByJob, void* jobPtr, "")\

@@ -16,19 +16,29 @@
 #include "net/InitializeHandleInfo.h"
 #include "net/WebURLLoaderManagerSetupInfo.h"
 #include "net/WebURLLoaderManager.h"
+#include "net/HeaderVisitor.h"
 
 void wkeNetSetHTTPHeaderField(void* jobPtr, wchar_t* key, wchar_t* value, bool response)
 {
     net::WebURLLoaderInternal* job = (net::WebURLLoaderInternal*)jobPtr;
 
-    if (response)
+    if (response) {
         job->m_response.setHTTPHeaderField(String(key), String(value));
-    else {
+    } else {
         String keyString(key);
-        if (equalIgnoringCase(keyString, "referer")) {
+        if (equalIgnoringCase(keyString, "referer"))
             job->firstRequest()->setHTTPReferrer(String(value), WebReferrerPolicyDefault);
-        } else
+        else
             job->firstRequest()->setHTTPHeaderField(keyString, String(value));
+
+        if (job->m_initializeHandleInfo) { // setHttpResponseDataToJobWhenDidReceiveResponseOnMainThread里m_initializeHandleInfo为空
+            curl_slist* headers = job->m_initializeHandleInfo->headers;
+            curl_slist_free_all(headers);
+            headers = nullptr;
+            net::HeaderVisitor visitor(&headers);
+            job->firstRequest()->visitHTTPHeaderFields(&visitor);
+            job->m_initializeHandleInfo->headers = headers;
+        }
     }
 }
 
@@ -82,7 +92,6 @@ void wkeNetSetData(void* jobPtr, void* buf, int len)
 
     if (job->m_asynWkeNetSetData)
         free(job->m_asynWkeNetSetData);
-
 
     job->m_asynWkeNetSetData = malloc(len);
     job->m_asynWkeNetSetDataLength = len;
@@ -152,7 +161,25 @@ void wkeNetHoldJobToAsynCommit(void* jobPtr)
     job->m_isHoldJobToAsynCommit = true;
 }
 
-wkePostBodyElements* wkeNetGetPostBodyByJob(void *jobPtr)
+wkeRequestType wkeNetGetRequestMethod(void *jobPtr)
+{
+    net::WebURLLoaderInternal* job = (net::WebURLLoaderInternal*)jobPtr;
+    net::InitializeHandleInfo* info = job->m_initializeHandleInfo;
+    if (!info)
+        return kWkeRequestTypeInvalidation;
+
+    WTF::Vector<net::FlattenHTTPBodyElement*>* flattenElements = nullptr;
+    if ("POST" == info->method) {
+        return kWkeRequestTypePost;
+    } else if ("PUT" == info->method) {
+        return kWkeRequestTypePut;
+    } else if ("GET" == info->method) {
+        return kWkeRequestTypeGet;
+    }
+    return kWkeRequestTypeInvalidation;
+}
+
+wkePostBodyElements* wkeNetGetPostBody(void *jobPtr)
 {
     net::WebURLLoaderInternal* job = (net::WebURLLoaderInternal*)jobPtr;
     net::InitializeHandleInfo* info = job->m_initializeHandleInfo;

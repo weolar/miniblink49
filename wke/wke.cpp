@@ -7,6 +7,7 @@
 #include "content/web_impl_win/BlinkPlatformImpl.h"
 #include "content/web_impl_win/WebCookieJarCurlImpl.h"
 #include "content/web_impl_win/WebThreadImpl.h"
+#include "content/web_impl_win/npapi/PluginDatabase.h"
 #include "net/WebURLLoaderManager.h"
 
 //cexer: 必须包含在后面，因为其中的 wke.h -> windows.h 会定义 max、min，导致 WebCore 内部的 max、min 出现错乱。
@@ -617,6 +618,12 @@ void wkeSetLocalStorageFullPath(wkeWebView webView, const WCHAR* path)
 
     if (!kLocalStorageFullPath->endsWith(L'\\'))
         kLocalStorageFullPath->append(L'\\');
+}
+
+void wkeAddPluginDirectory(wkeWebView webView, const WCHAR* path)
+{
+    String directory(path);
+    content::PluginDatabase::installedPlugins()->addExtraPluginDirectory(directory);
 }
 
 void wkeSetMediaVolume(wkeWebView webView, float volume)
