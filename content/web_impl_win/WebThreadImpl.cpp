@@ -107,7 +107,8 @@ WebThreadImpl::~WebThreadImpl()
 
 void WebThreadImpl::shutdown()
 {
-    stopSharedTimer();
+    if (m_isMainThread)
+        stopSharedTimer();
     willExit();
     waitForExit();
 }
