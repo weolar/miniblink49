@@ -70,6 +70,11 @@ void WebBlobRegistryImpl::BuilderImpl::build()
 
 }
 
+WebBlobRegistryImpl::WebBlobRegistryImpl()
+{
+
+}
+
 WebBlobRegistryImpl::~WebBlobRegistryImpl() { }
 
 void WebBlobRegistryImpl::registerBlobData(const WebString& uuid, const WebBlobData& data)
@@ -145,7 +150,8 @@ void WebBlobRegistryImpl::check() const
 
 net::BlobDataWrap* WebBlobRegistryImpl::getBlobDataFromUUID(const String& url) const
 {
-    ASSERT(isMainThread());
+    //ASSERT(isMainThread());
+    MutexLocker locker(m_lock);
 
     check();
 
@@ -159,7 +165,8 @@ net::BlobDataWrap* WebBlobRegistryImpl::getBlobDataFromUUID(const String& url) c
 // url is temp path
 void WebBlobRegistryImpl::setBlobDataLengthByTempPath(const String& tempPath, size_t length) const
 {
-    ASSERT(isMainThread());
+    //ASSERT(isMainThread());
+    MutexLocker locker(m_lock);
 
     net::BlobDataWrap* dataWrap = nullptr;
     HashMap<String, net::BlobDataWrap*>::const_iterator it = m_datasSet.begin();
@@ -184,6 +191,8 @@ void WebBlobRegistryImpl::setBlobDataLengthByTempPath(const String& tempPath, si
 
 void WebBlobRegistryImpl::addBlobDataRef(const WebString& uuid)
 {
+    MutexLocker locker(m_lock);
+
     net::BlobDataWrap* dataWrap = getBlobDataFromUUID(uuid);
     if (!dataWrap)
         return;
@@ -195,6 +204,8 @@ void WebBlobRegistryImpl::addBlobDataRef(const WebString& uuid)
 
 void WebBlobRegistryImpl::removeBlobDataRef(const WebString& uuid)
 {
+    MutexLocker locker(m_lock);
+
     net::BlobDataWrap* dataWrap = getBlobDataFromUUID(uuid);
     if (!dataWrap)
         return;
@@ -223,6 +234,8 @@ void WebBlobRegistryImpl::removeBlobDataRef(const WebString& uuid)
 // 从uuid对应的data取出，再建立url到data的对应，相当于一个data有两个uuid
 void WebBlobRegistryImpl::registerPublicBlobURL(const WebURL& url, const WebString& uuid)
 {
+    MutexLocker locker(m_lock);
+
     HashMap<String, net::BlobDataWrap*>::iterator it = m_datasSet.find(uuid);
     if (m_datasSet.end() == it)
         return;
@@ -239,6 +252,8 @@ void WebBlobRegistryImpl::registerPublicBlobURL(const WebURL& url, const WebStri
 
 void WebBlobRegistryImpl::revokePublicBlobURL(const WebURL& url)
 {
+    MutexLocker locker(m_lock);
+
     removeBlobDataRef(url.string());
     m_datasSet.remove(url.string());
 
