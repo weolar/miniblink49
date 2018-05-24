@@ -177,6 +177,11 @@ static void adjustAmountOfExternalAllocatedMemory(int size)
     v8::Isolate::GetCurrent()->AdjustAmountOfExternalAllocatedMemory(size);
 }
 
+void blinkAdjustAmountOfExternalAllocatedMemory(int size)
+{
+    return adjustAmountOfExternalAllocatedMemory(size);
+}
+
 void initializeWithoutV8(Platform* platform)
 {
     ASSERT(!s_webKitInitialized);
