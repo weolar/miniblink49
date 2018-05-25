@@ -1728,14 +1728,19 @@ String CanvasRenderingContext2D::font() const
     return serializedFont.toString();
 }
 
-void CanvasRenderingContext2D::setFont(const String& newFont)
+void CanvasRenderingContext2D::setFont(const String& newFontOrgi)
 {
+    String newFont(newFontOrgi);
     if (newFont == state().unparsedFont() && state().hasRealizedFont())
         return;
 
     // The style resolution required for rendering text is not available in frame-less documents.
     if (!canvas()->document().frame())
         return;
+
+    // pdf.js显示这个new FontFace出来的自定义字体有显示错误，暂时规避一下。可能是ots的库比较老
+    if (WTF::kNotFound != newFont.find("g_d0_f1"))
+        newFont.replace("g_d0_f1", "Arial");
 
     CanvasFontCache* canvasFontCache = canvas()->document().canvasFontCache();
 
