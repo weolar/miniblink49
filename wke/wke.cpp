@@ -185,9 +185,12 @@ void wkeSetDragEnable(wkeWebView webView, bool b)
     g_isSetDragEnable = b;
 }
 
-bool g_usingMouseZero = false;
-bool g_usingMovement = false;
-bool g_usingWindow = false;
+// bool g_usingMouseZero = false;
+// bool g_usingMovement = false;
+// bool g_usingWindow = false;
+
+DWORD g_kWakeMinInterval = 5;
+double g_kDrawMinInterval = 0.003;
 
 void wkeSetDebugConfig(wkeWebView webView, const char* debugString, const char* param)
 {
@@ -207,12 +210,11 @@ void wkeSetDebugConfig(wkeWebView webView, const char* debugString, const char* 
 
         } else if ("showDevTools" == item) {
             webView->showDevTools(param);
-        } else if ("usingMouseZero" == item) {
-            g_usingMouseZero = true;
-        } else if ("usingMovement" == item) {
-            g_usingMovement = true;
-        } else if ("usingWindow" == item) {
-            g_usingWindow = true;
+        } else if ("wakeMinInterval" == item) {
+            g_kWakeMinInterval = atoi(param);
+        } else if ("drawMinInterval" == item) {
+            int drawMinInterval = atoi(param);
+            g_kDrawMinInterval = drawMinInterval / 1000.0;
         }
     }
 }
@@ -721,8 +723,8 @@ void wkeWake(wkeWebView webView)
 
 //     String output = String::format("wkeWake: %d\n", time - lastTime);
 //     OutputDebugStringA(output.utf8().data());
-//     if (time - lastTime < 50)
-//         return;
+    if (time - lastTime < g_kWakeMinInterval)
+        return;
 
     lastTime = time;
 

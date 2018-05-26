@@ -464,7 +464,8 @@ const wchar_t* jsToTempStringW(jsExecState es, jsValue v)
     return wke::createTempWCharString(utf16.data(), utf16.size());
 }
 
-const utf8* jsToTempString(jsExecState es, jsValue v) {
+const utf8* jsToTempString(jsExecState es, jsValue v)
+{
     if (!s_execStates || !s_execStates->contains(es) || !es)
         return "";
 
@@ -1423,7 +1424,8 @@ jsValue jsObject(jsExecState es, jsData* data)
     return retValue;
 }
 
-void jsFunctionConstructCallback(const v8::FunctionCallbackInfo<v8::Value>& args) {
+void jsFunctionConstructCallback(const v8::FunctionCallbackInfo<v8::Value>& args)
+{
     v8::Isolate* isolate = args.GetIsolate();
 //     if (!args.IsConstructCall())
 //         return;

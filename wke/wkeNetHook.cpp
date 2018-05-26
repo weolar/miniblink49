@@ -65,10 +65,14 @@ void wkeNetGetMIMEType(void* jobPtr, wkeString mime)
     mime->setString(contentTypeUtf8.data(), contentTypeUtf8.length());
 }
 
-void wkeNetSetURL(void* jobPtr, const char *url)
+void wkeNetSetURL(void* jobPtr, const char* url)
 {
     net::WebURLLoaderInternal* job = (net::WebURLLoaderInternal*)jobPtr;
-    job->m_response.setURL(KURL(ParsedURLString, url));
+    KURL kurl(ParsedURLString, url);
+    job->m_response.setURL(kurl);
+    job->firstRequest()->setURL(kurl);
+    job->m_initializeHandleInfo->url = url;
+    ASSERT(!job->m_url);
 }
 
 void wkeNetSetData(void* jobPtr, void* buf, int len)
