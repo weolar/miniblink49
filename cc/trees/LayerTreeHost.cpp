@@ -28,6 +28,7 @@
 #include "wke/wkeWebView.h"
 
 extern DWORD g_nowTime;
+extern double g_kDrawMinInterval;
 
 using namespace blink;
 
@@ -320,8 +321,6 @@ static bool compareAction(LayerChangeAction*& left, LayerChangeAction*& right)
     return left->actionId() < right->actionId();
 }
 
-const double kMinDetTime = 0.003;
-
 bool LayerTreeHost::canRecordActions() const
 {
     if (!m_actionsFrameGroup->containComefromMainframeLocked())
@@ -335,7 +334,7 @@ bool LayerTreeHost::canRecordActions() const
     
     double lastRecordTime = WTF::monotonicallyIncreasingTime();
     double detTime = lastRecordTime - m_lastRecordTime;
-    if (detTime < kMinDetTime)
+    if (detTime < g_kDrawMinInterval)
         return false;
     m_lastRecordTime = lastRecordTime;
 
@@ -979,7 +978,7 @@ void LayerTreeHost::drawFrameInCompositeThread()
 
     double lastCompositeTime = WTF::monotonicallyIncreasingTime();
     double detTime = lastCompositeTime - m_lastCompositeTime;
-    if (detTime < kMinDetTime && !m_isDestroying) { // 如果刷新频率太快，缓缓再画
+    if (detTime < g_kDrawMinInterval && !m_isDestroying) { // 如果刷新频率太快，缓缓再画
         requestDrawFrameToRunIntoCompositeThread();
         atomicDecrement(&m_drawFrameFinishCount);
         return;
@@ -1055,7 +1054,7 @@ void LayerTreeHost::WrapSelfForUiThread::paintInUiThread()
 
     double lastPaintTime = WTF::monotonicallyIncreasingTime();
     double detTime = lastPaintTime - m_host->m_lastPaintTime;
-    if (detTime < kMinDetTime) {
+    if (detTime < g_kDrawMinInterval) {
         m_host->requestPaintToMemoryCanvasToUiThread(IntRect());
         endPaint();
         return;
