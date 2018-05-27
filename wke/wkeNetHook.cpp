@@ -231,14 +231,14 @@ wkeRequestType wkeNetGetRequestMethod(void *jobPtr)
 // wkePostBodyElement* wkeNetCreatePostBodyElement(wkeWebView webView)
 // {
 //     wkePostBodyElement* wkeElement = new wkePostBodyElement();
-    wkeElement->size = sizeof(wkePostBodyElement);
+//     wkeElement->size = sizeof(wkePostBodyElement);
 //     return wkeElement;
 // }
 // 
 // void wkeNetFreePostBodyElement(wkePostBodyElement* element)
 // {
 //     wkeFreeMemBuf(element->data);
-    wkeDeleteString(element->filePath);
+//     wkeDeleteString(element->filePath);
 //     delete element;
 // }
 
@@ -265,65 +265,65 @@ void wkeFreeMemBuf(wkeMemBuf* buf)
 
 namespace wke {
 
-wkePostBodyElements* flattenHTTPBodyElementToWke(const WTF::Vector<net::FlattenHTTPBodyElement*>& body)
-{
-    if (0 == body.size())
-        return nullptr;
-
-    wkePostBodyElements* result = wkeNetCreatePostBodyElements(nullptr, body.size());
-    result->isDirty = false;
-    for (size_t i = 0; i < result->elementSize; ++i) {
-        wkePostBodyElement*wkeElement = wkeNetCreatePostBodyElement(nullptr);
-        result->element[i] = wkeElement;
-        const net::FlattenHTTPBodyElement* element = body[i];
-
-        if (blink::WebHTTPBody::Element::Type::TypeFile == element->type ||
-            blink::WebHTTPBody::Element::Type::TypeFileSystemURL == element->type) {
-
-            wkeElement->type = wkeHttBodyElementTypeFile;
-            wkeElement->filePath = wkeCreateStringW(element->filePath.c_str(), element->filePath.size());
-            wkeElement->fileLength = element->fileLength;
-            wkeElement->fileStart = element->fileStart;
-            wkeElement->data = nullptr;
-        } else {
-            wkeElement->type = wkeHttBodyElementTypeData;
-            wkeElement->filePath = nullptr;
-            wkeElement->fileLength = 0;
-            wkeElement->fileStart = 0;
-            wkeElement->data = wkeCreateMemBuf(nullptr, (void*)element->data.data(), element->data.size());
-        }
-    }
-    return result;
-}
-
-void wkeflattenElementToBlink(const wkePostBodyElements& body, WTF::Vector<net::FlattenHTTPBodyElement*>* out)
-{
-    out->clear();
-
-    if (0 == body.elementSize)
-        return;
-
-    for (size_t i = 0; i < body.elementSize; ++i) {
-        const wkePostBodyElement* wkeElement = body.element[i];
-        net::FlattenHTTPBodyElement* blinkElement = new net::FlattenHTTPBodyElement();
-
-        blinkElement->type = (wkeElement->type == wkeHttBodyElementTypeFile ? 
-            blink::WebHTTPBody::Element::TypeFile : blink::WebHTTPBody::Element::TypeData);
-
-        if (blink::WebHTTPBody::Element::Type::TypeFile == blinkElement->type) {
-            const wchar_t* filePath = wkeGetStringW(wkeElement->filePath);
-            blinkElement->filePath = filePath;
-            blinkElement->fileLength = wkeElement->fileLength;
-            blinkElement->fileStart = wkeElement->fileStart;
-        } else {
-            if (wkeElement->data && wkeElement->data->length) {
-                blinkElement->data.resize(wkeElement->data->length);
-                memcpy(blinkElement->data.data(), wkeElement->data->data, wkeElement->data->length);
-            }
-        }
-        out->append(blinkElement);
-    }
-}
+// wkePostBodyElements* flattenHTTPBodyElementToWke(const WTF::Vector<net::FlattenHTTPBodyElement*>& body)
+// {
+//     if (0 == body.size())
+//         return nullptr;
+// 
+//     wkePostBodyElements* result = wkeNetCreatePostBodyElements(nullptr, body.size());
+//     result->isDirty = false;
+//     for (size_t i = 0; i < result->elementSize; ++i) {
+//         wkePostBodyElement*wkeElement = wkeNetCreatePostBodyElement(nullptr);
+//         result->element[i] = wkeElement;
+//         const net::FlattenHTTPBodyElement* element = body[i];
+// 
+//         if (blink::WebHTTPBody::Element::Type::TypeFile == element->type ||
+//             blink::WebHTTPBody::Element::Type::TypeFileSystemURL == element->type) {
+// 
+//             wkeElement->type = wkeHttBodyElementTypeFile;
+//             wkeElement->filePath = wkeCreateStringW(element->filePath.c_str(), element->filePath.size());
+//             wkeElement->fileLength = element->fileLength;
+//             wkeElement->fileStart = element->fileStart;
+//             wkeElement->data = nullptr;
+//         } else {
+//             wkeElement->type = wkeHttBodyElementTypeData;
+//             wkeElement->filePath = nullptr;
+//             wkeElement->fileLength = 0;
+//             wkeElement->fileStart = 0;
+//             wkeElement->data = wkeCreateMemBuf(nullptr, (void*)element->data.data(), element->data.size());
+//         }
+//     }
+//     return result;
+// }
+// 
+// void wkeflattenElementToBlink(const wkePostBodyElements& body, WTF::Vector<net::FlattenHTTPBodyElement*>* out)
+// {
+//     out->clear();
+// 
+//     if (0 == body.elementSize)
+//         return;
+// 
+//     for (size_t i = 0; i < body.elementSize; ++i) {
+//         const wkePostBodyElement* wkeElement = body.element[i];
+//         net::FlattenHTTPBodyElement* blinkElement = new net::FlattenHTTPBodyElement();
+// 
+//         blinkElement->type = (wkeElement->type == wkeHttBodyElementTypeFile ? 
+//             blink::WebHTTPBody::Element::TypeFile : blink::WebHTTPBody::Element::TypeData);
+// 
+//         if (blink::WebHTTPBody::Element::Type::TypeFile == blinkElement->type) {
+//             const wchar_t* filePath = wkeGetStringW(wkeElement->filePath);
+//             blinkElement->filePath = filePath;
+//             blinkElement->fileLength = wkeElement->fileLength;
+//             blinkElement->fileStart = wkeElement->fileStart;
+//         } else {
+//             if (wkeElement->data && wkeElement->data->length) {
+//                 blinkElement->data.resize(wkeElement->data->length);
+//                 memcpy(blinkElement->data.data(), wkeElement->data->data, wkeElement->data->length);
+//             }
+//         }
+//         out->append(blinkElement);
+//     }
+// }
     
 }
 

@@ -689,25 +689,25 @@ static void flattenHTTPBodyBlobElement(const WebString& blobUUID, curl_off_t* si
 
 static void dispatchPostBodyToWke(WebURLLoaderInternal* job, WTF::Vector<FlattenHTTPBodyElement*>* flattenElements)
 {
-    RequestExtraData* requestExtraData = reinterpret_cast<RequestExtraData*>(job->firstRequest()->extraData());
-    if (!requestExtraData)
-        return;
-
-    WebPage* page = requestExtraData->page;
-    if (!page->wkeHandler().otherLoadCallback)
-        return;
-
-    wkeTempCallbackInfo* tempInfo = wkeGetTempCallbackInfo(page->wkeWebView());
-    Vector<char> urlBuf = WTF::ensureStringToUTF8(job->firstRequest()->url().string(), true);
-    tempInfo->url = urlBuf.data();
-
-    tempInfo->postBody = wke::flattenHTTPBodyElementToWke(*flattenElements);
-    
-    page->wkeHandler().otherLoadCallback(page->wkeWebView(), page->wkeHandler().otherLoadCallbackParam, WKE_DID_POST_REQUEST, tempInfo);
-    if (tempInfo->postBody->isDirty)
-        wke::wkeflattenElementToBlink(*tempInfo->postBody, flattenElements);
-    else
-        wkeNetFreePostBodyElements(tempInfo->postBody);
+//     RequestExtraData* requestExtraData = reinterpret_cast<RequestExtraData*>(job->firstRequest()->extraData());
+//     if (!requestExtraData)
+//         return;
+// 
+//     WebPage* page = requestExtraData->page;
+//     if (!page->wkeHandler().otherLoadCallback)
+//         return;
+// 
+//     wkeTempCallbackInfo* tempInfo = wkeGetTempCallbackInfo(page->wkeWebView());
+//     Vector<char> urlBuf = WTF::ensureStringToUTF8(job->firstRequest()->url().string(), true);
+//     tempInfo->url = urlBuf.data();
+// 
+//     tempInfo->postBody = wke::flattenHTTPBodyElementToWke(*flattenElements);
+//     
+//     page->wkeHandler().otherLoadCallback(page->wkeWebView(), page->wkeHandler().otherLoadCallbackParam, WKE_DID_POST_REQUEST, tempInfo);
+//     if (tempInfo->postBody->isDirty)
+//         wke::wkeflattenElementToBlink(*tempInfo->postBody, flattenElements);
+//     else
+//         wkeNetFreePostBodyElements(tempInfo->postBody);
 }
 
 static SetupDataInfo* setupFormDataOnMainThread(WebURLLoaderInternal* job, CURLoption sizeOption, struct curl_slist** headers)
