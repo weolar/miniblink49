@@ -927,6 +927,9 @@ void BlobResourceLoader::doNotifyFinish()
     if (aborted())
         return;
 
+    m_streamWrap->close();
+    m_fileOpened = false;
+
     if (!m_client)
         return;
     m_client->didFinishLoading(m_loader, 0, 0);

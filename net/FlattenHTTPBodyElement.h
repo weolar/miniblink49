@@ -31,7 +31,7 @@ public:
     {
         for (size_t i = 0; i < m_elements.size(); ++i) {
             delete m_elements[i];
-            if (!m_file)
+            if (m_file)
                 fclose(m_file);
         }
     }
