@@ -53,9 +53,9 @@ public:
     void addAllResources(MHTMLArchive*);
 
     ArchiveResource* archiveResourceForURL(const KURL&);
-#ifdef MINIBLINK_NOT_IMPLEMENTED
+#ifndef MINIBLINK_NOT_MHTML
     PassRefPtrWillBeRawPtr<MHTMLArchive> popSubframeArchive(const String& frameName, const KURL&);
-#endif // MINIBLINK_NOT_IMPLEMENTED
+#endif // MINIBLINK_NOT_MHTML
 
     DECLARE_TRACE();
 
@@ -63,7 +63,7 @@ private:
     ArchiveResourceCollection();
 
     WillBeHeapHashMap<String, RefPtrWillBeMember<ArchiveResource>> m_subresources;
-    //WillBeHeapHashMap<String, RefPtrWillBeMember<MHTMLArchive>> m_subframes;
+    WillBeHeapHashMap<String, RefPtrWillBeMember<MHTMLArchive>> m_subframes;
 };
 
 }

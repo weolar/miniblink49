@@ -43,11 +43,13 @@ ArchiveResourceCollection::~ArchiveResourceCollection()
 {
 }
 
+#ifdef MINIBLINK_NOT_MHTML
 ArchiveResource::~ArchiveResource() {}
+#endif
 
 void ArchiveResourceCollection::addAllResources(MHTMLArchive* archive)
 {
-#ifdef MINIBLINK_NOT_IMPLEMENTED
+#ifndef MINIBLINK_NOT_MHTML
     ASSERT(archive);
     if (!archive)
         return;
@@ -66,11 +68,13 @@ void ArchiveResourceCollection::addAllResources(MHTMLArchive* archive)
             m_subframes.set(frameName, archive.get());
         } else {
             // In the MHTML case, frames don't have a name so we use the URL instead.
-            m_subframes.set(archive->mainResource()->url().string(), archive.get());
+            String url = archive->mainResource()->url().string();
+            if (url.isNull())
+                url = "";
+            m_subframes.set(url, archive.get());
         }
     }
-#endif // MINIBLINK_NOT_IMPLEMENTED
-	notImplemented();
+#endif // MINIBLINK_NOT_MHTML
 }
 
 // FIXME: Adding a resource directly to a DocumentLoader/ArchiveResourceCollection seems like bad design, but is API some apps rely on.
@@ -94,7 +98,7 @@ ArchiveResource* ArchiveResourceCollection::archiveResourceForURL(const KURL& ur
     return resource;
 }
 
-#ifdef MINIBLINK_NOT_IMPLEMENTED
+#ifndef MINIBLINK_NOT_MHTML
 PassRefPtrWillBeRawPtr<MHTMLArchive> ArchiveResourceCollection::popSubframeArchive(const String& frameName, const KURL& url)
 {
 
@@ -104,16 +108,16 @@ PassRefPtrWillBeRawPtr<MHTMLArchive> ArchiveResourceCollection::popSubframeArchi
 
     return m_subframes.take(url.string());
 }
-#endif // MINIBLINK_NOT_IMPLEMENTED
+#endif // MINIBLINK_NOT_MHTML
 
 
 DEFINE_TRACE(ArchiveResourceCollection)
 {
 #if ENABLE(OILPAN)
     visitor->trace(m_subresources);
-#ifdef MINIBLINK_NOT_IMPLEMENTED
+#ifndef MINIBLINK_NOT_MHTML
     visitor->trace(m_subframes);
-#endif // MINIBLINK_NOT_IMPLEMENTED
+#endif // MINIBLINK_NOT_MHTML
 #endif
 }
 
