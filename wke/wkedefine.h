@@ -919,7 +919,6 @@ public:
     ITERATOR2(void, wkeNetGetMIMEType, void* job, wkeString mime, "") \
     ITERATOR4(void, wkeNetSetHTTPHeaderField, void* job, wchar_t* key, wchar_t* value, bool response, "") \
     ITERATOR2(const char*, wkeNetGetHTTPHeaderField, void* job, const char* key, "") \
-    ITERATOR2(void, wkeNetSetURL, void* job, const char *url, "") \
     ITERATOR3(void, wkeNetSetData, void* job, void *buf, int len, "调用此函数后,网络层收到数据会存储在一buf内,接收数据完成后响应OnLoadUrlEnd事件.#此调用严重影响性能,慎用" \
         "此函数和wkeNetSetData的区别是，wkeNetHookRequest会在接受到真正网络数据后再调用回调，并允许回调修改网络数据。"\
         "而wkeNetSetData是在网络数据还没发送的时候修改") \
@@ -933,13 +932,6 @@ public:
     ITERATOR1(void, wkeNetCancelRequest, void* jobPtr, "")\
     ITERATOR2(void, wkeNetChangeRequestUrl, void* jobPtr, const char* url, "")\
     ITERATOR1(void, wkeNetHoldJobToAsynCommit, void* jobPtr, "")\
-    \
-    ITERATOR2(wkePostBodyElements*, wkeNetCreatePostBodyElements, wkeWebView webView, size_t length, "") \
-    ITERATOR1(void, wkeNetFreePostBodyElements, wkePostBodyElements*, "") \
-    ITERATOR1(wkePostBodyElement*, wkeNetCreatePostBodyElement, wkeWebView webView, "") \
-    ITERATOR1(void, wkeNetFreePostBodyElement, wkePostBodyElement*, "") \
-    ITERATOR3(wkeMemBuf*, wkeCreateMemBuf, wkeWebView webView, void* buf, size_t length, "") \
-    ITERATOR1(void, wkeFreeMemBuf, wkeMemBuf*, "") \
     \
     ITERATOR2(bool, wkeIsMainFrame, wkeWebView webView, wkeWebFrameHandle frameId, "") \
     ITERATOR2(bool, wkeIsWebRemoteFrame, wkeWebView webView, wkeWebFrameHandle frameId, "") \

@@ -65,15 +65,15 @@ void wkeNetGetMIMEType(void* jobPtr, wkeString mime)
     mime->setString(contentTypeUtf8.data(), contentTypeUtf8.length());
 }
 
-void wkeNetSetURL(void* jobPtr, const char* url)
-{
-    net::WebURLLoaderInternal* job = (net::WebURLLoaderInternal*)jobPtr;
-    KURL kurl(ParsedURLString, url);
-    job->m_response.setURL(kurl);
-    job->firstRequest()->setURL(kurl);
-    job->m_initializeHandleInfo->url = url;
-    ASSERT(!job->m_url);
-}
+// void wkeNetSetURL(void* jobPtr, const char* url)
+// {
+//     net::WebURLLoaderInternal* job = (net::WebURLLoaderInternal*)jobPtr;
+//     KURL kurl(ParsedURLString, url);
+//     job->m_response.setURL(kurl);
+//     job->firstRequest()->setURL(kurl);
+//     job->m_initializeHandleInfo->url = url;
+//     ASSERT(!job->m_url);
+// }
 
 void wkeNetSetData(void* jobPtr, void* buf, int len)
 {
@@ -142,9 +142,7 @@ void wkeNetChangeRequestUrl(void* jobPtr, const char* url)
     net::WebURLLoaderInternal* job = (net::WebURLLoaderInternal*)jobPtr;
     blink::KURL newUrl(blink::ParsedURLString, url);
     job->firstRequest()->setURL(newUrl);
-    //job->m_url = fastStrDup(url);
     job->m_initializeHandleInfo->url = url;
-    //curl_easy_setopt(job->m_handle, CURLOPT_URL, job->m_url);
 }
 
 void wkeNetHoldJobToAsynCommit(void* jobPtr)
@@ -183,66 +181,66 @@ wkeRequestType wkeNetGetRequestMethod(void *jobPtr)
     return kWkeRequestTypeInvalidation;
 }
 
-wkePostBodyElements* wkeNetGetPostBody(void *jobPtr)
-{
-    net::WebURLLoaderInternal* job = (net::WebURLLoaderInternal*)jobPtr;
-    net::InitializeHandleInfo* info = job->m_initializeHandleInfo;
-    if (!info)
-        return nullptr;
-
-    WTF::Vector<net::FlattenHTTPBodyElement*>* flattenElements = nullptr;
-    if ("POST" == info->method) {
-        flattenElements = &info->methodInfo->post->data->flattenElements;
-    } else if ("PUT" == info->method) {
-        flattenElements = &info->methodInfo->put->data->flattenElements;
-    }
-    if (!flattenElements)
-        return nullptr;
-
-    wkePostBodyElements* postBody = wke::flattenHTTPBodyElementToWke(*flattenElements);
-    return postBody;
-}
-
-wkePostBodyElements* wkeNetCreatePostBodyElements(wkeWebView webView, size_t length)
-{
-    if (0 == length)
-        return nullptr;
-
-    wkePostBodyElements* result = new wkePostBodyElements();
-    result->size = sizeof(wkePostBodyElements);
-    result->isDirty = true;
-
-    size_t allocLength = sizeof(wkePostBodyElement*) * length;
-    result->element = (wkePostBodyElement**)malloc(allocLength);
-    memset(result->element, 0, allocLength);
-
-    result->elementSize = length;
-
-    return result;
-}
-
-void wkeNetFreePostBodyElements(wkePostBodyElements* elements)
-{
-    for (size_t i = 0; i < elements->elementSize; ++i) {
-        wkeNetFreePostBodyElement(elements->element[i]);
-    }
-    free(elements->element);
-    delete elements;
-}
-
-wkePostBodyElement* wkeNetCreatePostBodyElement(wkeWebView webView)
-{
-    wkePostBodyElement* wkeElement = new wkePostBodyElement();
+// wkePostBodyElements* wkeNetGetPostBody(void *jobPtr)
+// {
+//     net::WebURLLoaderInternal* job = (net::WebURLLoaderInternal*)jobPtr;
+//     net::InitializeHandleInfo* info = job->m_initializeHandleInfo;
+//     if (!info)
+//         return nullptr;
+// 
+//     WTF::Vector<net::FlattenHTTPBodyElement*>* flattenElements = nullptr;
+//     if ("POST" == info->method) {
+//         flattenElements = &info->methodInfo->post->data->flattenElements;
+//     } else if ("PUT" == info->method) {
+//         flattenElements = &info->methodInfo->put->data->flattenElements;
+//     }
+//     if (!flattenElements)
+//         return nullptr;
+// 
+//     wkePostBodyElements* postBody = wke::flattenHTTPBodyElementToWke(*flattenElements);
+//     return postBody;
+// }
+//
+// wkePostBodyElements* wkeNetCreatePostBodyElements(wkeWebView webView, size_t length)
+// {
+//     if (0 == length)
+//         return nullptr;
+// 
+//     wkePostBodyElements* result = new wkePostBodyElements();
+//     result->size = sizeof(wkePostBodyElements);
+//     result->isDirty = true;
+// 
+//     size_t allocLength = sizeof(wkePostBodyElement*) * length;
+//     result->element = (wkePostBodyElement**)malloc(allocLength);
+//     memset(result->element, 0, allocLength);
+// 
+//     result->elementSize = length;
+// 
+//     return result;
+// }
+// 
+// void wkeNetFreePostBodyElements(wkePostBodyElements* elements)
+// {
+//     for (size_t i = 0; i < elements->elementSize; ++i) {
+//         wkeNetFreePostBodyElement(elements->element[i]);
+//     }
+//     free(elements->element);
+//     delete elements;
+// }
+// 
+// wkePostBodyElement* wkeNetCreatePostBodyElement(wkeWebView webView)
+// {
+//     wkePostBodyElement* wkeElement = new wkePostBodyElement();
     wkeElement->size = sizeof(wkePostBodyElement);
-    return wkeElement;
-}
-
-void wkeNetFreePostBodyElement(wkePostBodyElement* element)
-{
-    wkeFreeMemBuf(element->data);
+//     return wkeElement;
+// }
+// 
+// void wkeNetFreePostBodyElement(wkePostBodyElement* element)
+// {
+//     wkeFreeMemBuf(element->data);
     wkeDeleteString(element->filePath);
-    delete element;
-}
+//     delete element;
+// }
 
 wkeMemBuf* wkeCreateMemBuf(wkeWebView webView, void* buf, size_t length)
 {
