@@ -73,6 +73,7 @@ blink::WebMimeRegistry::SupportsType WebMimeRegistryImpl::supportsMIMEType(const
             "text/plain",
             "text/html",
             "text/xml",
+            "multipart/related",
             "application/x-javascript",
             "application/xhtml+xml",
             "image/svg+xml",
@@ -191,6 +192,7 @@ blink::WebMimeRegistry::SupportsType WebMimeRegistryImpl::supportsNonImageMIMETy
 //#endif
             "application/x-ftp-directory",
             "multipart/x-mixed-replace",
+            "multipart/related",
             //"application/x-shockwave-flash",
             // Note: ADDING a new type here will probably render it as HTML. This can
             // result in cross-site scripting.
@@ -239,6 +241,8 @@ void WebMimeRegistryImpl::ensureMimeTypeMap()
     m_mimetypeMap->add("mp4", "video/mp4");
     m_mimetypeMap->add("ogg", "video/ogg");
     m_mimetypeMap->add("webm", "video/webm");
+    m_mimetypeMap->add("mht", "multipart/related");
+    m_mimetypeMap->add("mhtml", "multipart/related");
 }
 
 blink::WebString WebMimeRegistryImpl::mimeTypeForExtension(const blink::WebString& ext)
