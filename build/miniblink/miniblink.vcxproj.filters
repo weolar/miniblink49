@@ -616,48 +616,6 @@
     <Filter Include="third_party\Webkit\Source\modules\storage">
       <UniqueIdentifier>{30a3ea81-4479-4e9c-89de-2aa24ca5074a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="cef">
-      <UniqueIdentifier>{73142b09-0224-4a7e-95fe-0a8033b08393}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="cef\include">
-      <UniqueIdentifier>{47a4516c-b9c2-4804-bc99-0b82ee8d951e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="cef\include\base">
-      <UniqueIdentifier>{ee517406-d120-45ad-aa45-1bd6841be149}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="cef\include\capi">
-      <UniqueIdentifier>{97b1a332-1f20-42b3-9477-e197da8ab9a2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="cef\include\internal">
-      <UniqueIdentifier>{8cac6ecc-0527-49c0-910b-f6b6133da506}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="cef\include\wrapper">
-      <UniqueIdentifier>{6a4cec0b-4ab8-474b-89ab-b150a6d6d67d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="cef\include\base\internal">
-      <UniqueIdentifier>{38bd4236-0638-4b4d-92ca-672238d0c58d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="cef\libcef_dll">
-      <UniqueIdentifier>{ff0f8cfa-385c-4c5b-8420-347a810a59c0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="cef\libcef">
-      <UniqueIdentifier>{54614d6f-13b2-4bef-8546-a195120c38be}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="cef\libcef\common">
-      <UniqueIdentifier>{0404acee-0e1d-46e5-bba3-4d1c62cbc8b6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="cef\libcef\browser">
-      <UniqueIdentifier>{de23e259-d1c0-4805-a3cf-ce18137a2dfd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="cef\libcef\browser\native">
-      <UniqueIdentifier>{f4bc710e-d830-4676-a0d8-56b1d8a7b46d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="cef\libcef_dll\base">
-      <UniqueIdentifier>{d3a623d9-9121-469d-b0fa-ee085559736f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="cef\libcef_dll\cpptoc">
-      <UniqueIdentifier>{abfa096f-2a1d-4a19-a1ef-4fd73cac37ee}</UniqueIdentifier>
-    </Filter>
     <Filter Include="gen\blink\bindings\modules\storage">
       <UniqueIdentifier>{72f304ee-90ee-4f98-b111-8995f4a96035}</UniqueIdentifier>
     </Filter>
@@ -685,14 +643,8 @@
     <Filter Include="cc\playback">
       <UniqueIdentifier>{cfc3fc5b-0967-4e76-8faa-9749f45f9bf8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="cef\libcef_dll\ctocpp">
-      <UniqueIdentifier>{6bda40bc-d176-470d-ac2d-e7509601aa80}</UniqueIdentifier>
-    </Filter>
     <Filter Include="wke">
       <UniqueIdentifier>{f0273d7d-b7d0-415a-8719-84b47d715888}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="cef\libcef\renderer">
-      <UniqueIdentifier>{0ab055c5-d093-4e58-9ccc-4386731abe93}</UniqueIdentifier>
     </Filter>
     <Filter Include="third_party\ots">
       <UniqueIdentifier>{87c7c286-e140-4d27-867f-f7df8252c4c3}</UniqueIdentifier>
@@ -795,6 +747,54 @@
     </Filter>
     <Filter Include="third_party\Webkit\Source\modules\crypto">
       <UniqueIdentifier>{afea0f63-e862-4517-9aaf-749d564f726f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="cef">
+      <UniqueIdentifier>{73142b09-0224-4a7e-95fe-0a8033b08393}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="cef\include">
+      <UniqueIdentifier>{47a4516c-b9c2-4804-bc99-0b82ee8d951e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="cef\include\base">
+      <UniqueIdentifier>{ee517406-d120-45ad-aa45-1bd6841be149}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="cef\include\base\internal">
+      <UniqueIdentifier>{38bd4236-0638-4b4d-92ca-672238d0c58d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="cef\include\capi">
+      <UniqueIdentifier>{97b1a332-1f20-42b3-9477-e197da8ab9a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="cef\include\internal">
+      <UniqueIdentifier>{8cac6ecc-0527-49c0-910b-f6b6133da506}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="cef\include\wrapper">
+      <UniqueIdentifier>{6a4cec0b-4ab8-474b-89ab-b150a6d6d67d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="cef\libcef_dll">
+      <UniqueIdentifier>{ff0f8cfa-385c-4c5b-8420-347a810a59c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="cef\libcef_dll\base">
+      <UniqueIdentifier>{d3a623d9-9121-469d-b0fa-ee085559736f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="cef\libcef_dll\cpptoc">
+      <UniqueIdentifier>{abfa096f-2a1d-4a19-a1ef-4fd73cac37ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="cef\libcef_dll\ctocpp">
+      <UniqueIdentifier>{6bda40bc-d176-470d-ac2d-e7509601aa80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="cef\libcef">
+      <UniqueIdentifier>{54614d6f-13b2-4bef-8546-a195120c38be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="cef\libcef\common">
+      <UniqueIdentifier>{0404acee-0e1d-46e5-bba3-4d1c62cbc8b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="cef\libcef\browser">
+      <UniqueIdentifier>{de23e259-d1c0-4805-a3cf-ce18137a2dfd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="cef\libcef\browser\native">
+      <UniqueIdentifier>{f4bc710e-d830-4676-a0d8-56b1d8a7b46d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="cef\libcef\renderer">
+      <UniqueIdentifier>{0ab055c5-d093-4e58-9ccc-4386731abe93}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -10112,6 +10112,15 @@
     </ClCompile>
     <ClCompile Include="..\..\cef\libcef\common\GeometryUtil.cpp">
       <Filter>cef\libcef\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\mhtml\MHTMLParser.cpp">
+      <Filter>third_party\Webkit\Source\platform\mhtml</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\mhtml\ArchiveResource.cpp">
+      <Filter>third_party\Webkit\Source\platform\mhtml</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\mhtml\MHTMLArchive.cpp">
+      <Filter>third_party\Webkit\Source\platform\mhtml</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -23062,6 +23071,9 @@
     </ClInclude>
     <ClInclude Include="..\..\cef\include\cef_version.h">
       <Filter>cef\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\net\HeaderVisitor.h">
+      <Filter>net</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

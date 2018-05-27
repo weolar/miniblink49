@@ -349,7 +349,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <AdditionalIncludeDirectories>../../;../../v8_4_8/;../../v8_4_8/include;../../third_party/;../../third_party/npapi;../../third_party/WebKit;../../third_party/WebKit/Source;../../cef;../../third_party/icu/source/common;../../gen/blink;../../gen/blink/core;../../gen/blink/bindings/modules/v8;../../gen/blink/bindings/core/v8;../../gpu;../../third_party/khronos;../../third_party/libxml/src/include;../../third_party/libxml/win32/include;../../third_party/skia/include/core;../../third_party/skia/include/config;../../third_party/skia/include/codec;../../third_party/skia/include/device;../../third_party/skia/include/effects;../../third_party/skia/include/images;../../third_party/skia/include/pathops;../../third_party/skia/include/ports;../../third_party/skia/include/private;../../third_party/skia/include/utils;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../;../../v8_5_7/;../../v8_5_7/include;../../third_party/;../../third_party/npapi;../../third_party/WebKit;../../third_party/WebKit/Source;../../cef;../../third_party/icu/source/common;../../gen/blink;../../gen/blink/core;../../gen/blink/bindings/modules/v8;../../gen/blink/bindings/core/v8;../../gpu;../../third_party/khronos;../../third_party/libxml/src/include;../../third_party/libxml/win32/include;../../third_party/skia/include/core;../../third_party/skia/include/config;../../third_party/skia/include/codec;../../third_party/skia/include/device;../../third_party/skia/include/effects;../../third_party/skia/include/images;../../third_party/skia/include/pathops;../../third_party/skia/include/ports;../../third_party/skia/include/private;../../third_party/skia/include/utils;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile>config.h</PrecompiledHeaderFile>
       <DisableSpecificWarnings>4800;4291;4996;4244;4305;4577;4530;4595;4049</DisableSpecificWarnings>
       <ForcedIncludeFiles>config.h</ForcedIncludeFiles>
@@ -374,7 +374,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <TargetMachine>MachineX86</TargetMachine>
       <AdditionalLibraryDirectories>$(SolutionDir)..\third_party\GDIPlus\Lib;$(SolutionDir)..\out\$(Configuration)\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libcurl.lib;zlib.lib;ots.lib;libxml.lib;v8_4_8.lib;skia.lib;winmm.lib;Ws2_32.lib;Usp10.lib;Shlwapi.lib;wininet.lib;GDIPlus.lib;version.lib;Crypt32.lib;wldap32.lib;Imm32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;DbgHelp.lib;libjpeg.lib;libpng.lib;openssl.lib</AdditionalDependencies>
+      <AdditionalDependencies>libcurl.lib;zlib.lib;ots.lib;libxml.lib;v8_5_7.lib;v8_5_7_1.lib;skia.lib;winmm.lib;Ws2_32.lib;Usp10.lib;Shlwapi.lib;wininet.lib;GDIPlus.lib;version.lib;Crypt32.lib;wldap32.lib;Imm32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;DbgHelp.lib;libjpeg.lib;libpng.lib;openssl.lib</AdditionalDependencies>
       <AdditionalOptions>/FORCE:UNRESOLVED %(AdditionalOptions)</AdditionalOptions>
       <OutputFile>$(OutDir)node$(TargetExt)</OutputFile>
       <ImportLibrary>$(OutDir)node.lib</ImportLibrary>
@@ -4468,6 +4468,9 @@
     <ClCompile Include="..\..\third_party\WebKit\Source\platform\image-encoders\gdiplus\GDIPlusImageEncoder.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\platform\image-encoders\skia\JPEGImageEncoder.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\platform\image-encoders\skia\PNGImageEncoder.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\mhtml\ArchiveResource.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\mhtml\MHTMLArchive.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\mhtml\MHTMLParser.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\platform\network\NetworkHints.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\platform\network\ResourceTimingInfo.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\platform\PartitionAllocMemoryDumpProvider.cpp" />
@@ -5478,6 +5481,7 @@
     <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8DOMFileSystemSync.h" />
     <ClInclude Include="..\..\net\CancelledReason.h" />
     <ClInclude Include="..\..\net\FlattenHTTPBodyElement.h" />
+    <ClInclude Include="..\..\net\HeaderVisitor.h" />
     <ClInclude Include="..\..\net\InitializeHandleInfo.h" />
     <ClInclude Include="..\..\net\ProxyType.h" />
     <ClInclude Include="..\..\net\WebURLLoaderManagerAsynTask.h" />
