@@ -213,9 +213,9 @@ namespace blink {
         bool m_replacesCurrentHistoryItem;
 
         NavigationType m_navigationType;
-#ifdef MINIBLINK_NOT_IMPLEMENTED
+#ifndef MINIBLINK_NOT_MHTML
         RefPtrWillBeMember<MHTMLArchive> m_archive;
-#endif // MINIBLINK_NOT_IMPLEMENTED      
+#endif // MINIBLINK_NOT_MHTML      
 
         bool m_loadingMainResource;
         DocumentLoadTiming m_documentLoadTiming;
