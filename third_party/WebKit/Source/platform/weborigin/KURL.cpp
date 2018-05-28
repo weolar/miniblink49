@@ -665,14 +665,21 @@ bool KURL::hasPath() const
 
 const String& KURL::string() const
 {
+    if (m_string.isNull())
+        return emptyString();
+
     if (m_string.containsOnlyASCII())
         return m_string;
+
     m_utf16String = WTF::ensureUTF16String(m_string);
     return m_utf16String;
 }
 
 String KURL::getUTF8String() const
 {
+    if (m_string.isNull())
+        return emptyString();
+
     return WTF::ensureStringToUTF8String(m_string);
 }
 
