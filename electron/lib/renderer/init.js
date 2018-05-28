@@ -15,10 +15,21 @@ const path = require('path');
 const Module = require('module');
 const timers = require('timers');
 
+let nodeRequire = require;
+let nodeProcess = process;
+
+function __mbRequire__(name) {
+    var oldProcess = process;
+    process = nodeProcess;
+    var result = nodeRequire(name);
+    process = oldProcess;
+    return result;
+}
+
 // Export node bindings to global.
-window.require = require;
+window.require = __mbRequire__;
 window.module = module;
-window.miniNodeRequire = require;
+window.miniNodeRequire = __mbRequire__;
 window.miniNodeModule = module;
 window.setImmediate = timers.setImmediate;
 window.Intl = intlCollator;
