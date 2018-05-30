@@ -30,6 +30,7 @@ void setCookieJarFullPath(const WCHAR* path);
 }
 
 bool g_isSetDragEnable = true;
+bool g_isSetDragDropEnable = true;
 
 namespace blink {
 extern char* g_navigatorPlatform;
@@ -185,9 +186,10 @@ void wkeSetDragEnable(wkeWebView webView, bool b)
     g_isSetDragEnable = b;
 }
 
-// bool g_usingMouseZero = false;
-// bool g_usingMovement = false;
-// bool g_usingWindow = false;
+void wkeSetDragDropEnable(wkeWebView webView, bool b)
+{
+    g_isSetDragDropEnable = b;
+}
 
 DWORD g_kWakeMinInterval = 5;
 double g_kDrawMinInterval = 0.003;
@@ -705,6 +707,11 @@ jsValue wkeRunJSW(wkeWebView webView, const wchar_t* script)
 jsExecState wkeGlobalExec(wkeWebView webView)
 {
     return webView->globalExec();
+}
+
+jsExecState wkeGetGlobalExecByFrame(wkeWebView webView, wkeWebFrameHandle frameId)
+{
+    return webView->globalExecByFrame(frameId);
 }
 
 void wkeSleep(wkeWebView webView)

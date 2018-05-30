@@ -752,6 +752,7 @@ public:
     ITERATOR2(void, wkeSetNpapiPluginsEnabled, wkeWebView webView, bool b, "") \
     ITERATOR2(void, wkeSetHeadlessEnabled, wkeWebView webView, bool b, "可以关闭渲染") \
     ITERATOR2(void, wkeSetDragEnable, wkeWebView webView, bool b, "可关闭拖拽文件加载网页") \
+    ITERATOR2(void, wkeSetDragDropEnable, wkeWebView webView, bool b, "可关闭拖拽到其他进程") \
     \
     ITERATOR2(void, wkeSetViewNetInterface, wkeWebView webView, const char* netInterface, "") \
     \
@@ -857,6 +858,7 @@ public:
     ITERATOR2(jsValue, wkeRunJSW, wkeWebView webView, const wchar_t* script, "") \
     \
     ITERATOR1(jsExecState, wkeGlobalExec, wkeWebView webView, "") \
+    ITERATOR2(jsExecState, wkeGetGlobalExecByFrame, wkeWebView webView, wkeWebFrameHandle frameId, "") \
     \
     ITERATOR1(void, wkeSleep, wkeWebView webView, "") \
     ITERATOR1(void, wkeWake, wkeWebView webView, "") \
@@ -924,7 +926,6 @@ public:
         "而wkeNetSetData是在网络数据还没发送的时候修改") \
     ITERATOR1(void, wkeNetHookRequest, void *job, "") \
     ITERATOR3(void, wkeNetOnResponse, wkeWebView webView, wkeNetResponseCallback callback, void* param, "") \
-    ITERATOR1(wkePostBodyElements*, wkeNetGetPostBody, void* jobPtr, "") \
     ITERATOR1(wkeRequestType, wkeNetGetRequestMethod, void* jobPtr, "") \
     \
     ITERATOR1(void, wkeNetContinueJob, void* jobPtr, "")\

@@ -213,6 +213,7 @@ public:
     jsValue runJS(const utf8* script) override;
     jsValue runJsInFrame(wkeWebFrameHandle frameId, const utf8* script, bool isInClosure);
     jsExecState globalExec() override;
+    jsExecState globalExecByFrame(wkeWebFrameHandle frameId);
     
     void sleep() override;
     void wake() override;

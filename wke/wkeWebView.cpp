@@ -925,6 +925,15 @@ jsExecState CWebView::globalExec()
     return wke::createTempExecStateByV8Context(m_webPage->mainFrame()->mainWorldScriptContext());
 }
 
+jsExecState CWebView::globalExecByFrame(wkeWebFrameHandle frameId)
+{
+    v8::Isolate* isolate = v8::Isolate::GetCurrent();
+    v8::HandleScope handleScope(isolate);
+
+    blink::WebFrame* webFrame = m_webPage->getWebFrameFromFrameId(wkeWebFrameHandleToFrameId(m_webPage, frameId));
+    return wke::createTempExecStateByV8Context(webFrame->mainWorldScriptContext());
+}
+
 void CWebView::sleep()
 {
     m_awake = false;

@@ -1536,7 +1536,19 @@ jsExecState createTempExecStateByV8Context(v8::Local<v8::Context> context)
     return execState;
 }
 
-void onCreateGlobalObject(content::WebFrameClientImpl* client, blink::WebLocalFrame* frame, v8::Local<v8::Context> context, int extensionGroup, int worldId)
+void onCreateGlobalObjectInSubFrame(content::WebFrameClientImpl* client, blink::WebLocalFrame* frame, 
+    v8::Local<v8::Context> context, int extensionGroup, int worldId)
+{
+    content::WebPage* webPage = client->webPage();
+    CWebView* wkeWebView = webPage->wkeWebView();
+    if (!wkeWebView)
+        return;
+
+    v8::Isolate* isolate = context->GetIsolate();
+    setWkeWebViewToV8Context(client, context);
+}
+
+void onCreateGlobalObjectInMainFrame(content::WebFrameClientImpl* client, blink::WebLocalFrame* frame, v8::Local<v8::Context> context, int extensionGroup, int worldId)
 {
     content::WebPage* webPage = client->webPage();
     CWebView* wkeWebView = webPage->wkeWebView();
