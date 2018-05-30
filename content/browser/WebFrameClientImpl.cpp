@@ -211,6 +211,9 @@ void WebFrameClientImpl::resetLoadState()
     m_loadFailed = false;
     m_loaded = false;
     m_documentReady = false;
+    m_loading = true;
+
+    //OutputDebugStringA("WebFrameClientImpl::resetLoadState\n");
 }
 
 void WebFrameClientImpl::onLoadingStateChange(bool isLoading, bool toDifferentDocument)
@@ -777,7 +780,9 @@ void WebFrameClientImpl::didCreateScriptContext(WebLocalFrame* frame, v8::Local<
 {
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
     if (frame->top() == frame)
-        wke::onCreateGlobalObject(this, frame, context, extensionGroup, worldId);
+        wke::onCreateGlobalObjectInMainFrame(this, frame, context, extensionGroup, worldId);
+    else
+        wke::onCreateGlobalObjectInSubFrame(this, frame, context, extensionGroup, worldId);
 
     wke::AutoDisableFreeV8TempObejct autoDisableFreeV8TempObejct;
     if (m_webPage->wkeHandler().didCreateScriptContextCallback)

@@ -213,10 +213,18 @@ public:
     void drawLayeredWindow(HWND hWnd, SkCanvas* canvas, HDC hdc, const blink::IntRect& paintRect, HDC hMemoryDC) const;
 
     void executeMainFrame();
+    friend class AutoRecordActions;
+    int m_autoRecordActionsCount;
+    bool m_runningInMouseMessage;
 
     void copyToMemoryCanvasForUi();
 
-    friend class AutoRecordActions;
+    void handleMouseWhenDraging(UINT message);
+    void onEnterDragSimulate();
+    void onLeaveDragSimulate();
+    void onDraggingSimulate();
+    bool m_isDragging;
+    bool m_isFirstEnterDrag;
 
     static int64_t m_firstFrameId;
 

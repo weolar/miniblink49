@@ -6,6 +6,7 @@
 #include "third_party/WebKit/public/platform/WebDragData.h"
 #include "base/COMPtr.h"
 #include <shlobj.h>
+#include <functional>
 
 namespace blink {
 class WebViewImpl;
@@ -18,7 +19,11 @@ namespace content {
 
 class DragHandle : public IDropTarget {
 public:
-    DragHandle();
+    DragHandle(
+        std::function<void(void)>&& notifOnEnterDrag,
+        std::function<void(void)>&& notifOnLeaveDrag,
+        std::function<void(void)>&& notifOnDragging
+        );
 
     void setViewWindow(HWND viewWindow, blink::WebViewImpl* webViewImpl);
 
@@ -59,7 +64,11 @@ public:
 
     ULONG getRefCount() const;
 
+    IDataObject* getDragData() const { return m_dragData.get(); }
+
 private:
+    void simulateDrag();
+
     long m_refCount;
 
     blink::WebViewImpl* m_webViewImpl;
@@ -74,6 +83,12 @@ private:
     DWORD m_lastDropEffect{ 0 };
 
     blink::WebDragOperationsMask m_mask;
+
+    std::function<void(void)> m_notifOnEnterDrag;
+    std::function<void(void)> m_notifOnLeaveDrag;
+    std::function<void(void)> m_notifOnDragging;
+
+    COMPtr<IDataObject> m_tempDataObjectForSimulate;
 };
 
 }

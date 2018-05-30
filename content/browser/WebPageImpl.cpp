@@ -142,7 +142,17 @@ WebPageImpl::WebPageImpl()
     m_devToolsClient = nullptr;
     m_devToolsAgent = nullptr;
     m_isEnterDebugLoop = false;
-    m_dragHandle = new DragHandle();
+
+    WebPageImpl* self = this;
+    m_dragHandle = new DragHandle(
+        [self] { self->onEnterDragSimulate(); },
+        [self] { self->onLeaveDragSimulate(); },
+        [self] { self->onDraggingSimulate(); });
+    m_isDragging = false;
+    m_isFirstEnterDrag = false;
+    m_autoRecordActionsCount = 0;
+    m_runningInMouseMessage = false;
+
     m_screenInfo = nullptr;
 
     m_toolTip = new ToolTip();
@@ -275,6 +285,9 @@ void WebPageImpl::init(WebPage* pagePtr, HWND hWnd)
 
 bool WebPageImpl::checkForRepeatEnter()
 {
+    if (m_isDragging && m_runningInMouseMessage)
+        return true;
+
     if (m_enterCount == 0 && 0 == CheckReEnter::s_kEnterContent)
         return true;
     return false;
@@ -282,11 +295,46 @@ bool WebPageImpl::checkForRepeatEnter()
 
 class AutoRecordActions {
 public:
+//     AutoRecordActions(WebPageImpl* page, cc::LayerTreeHost* host, bool isComefromMainFrame)
+//     {
+//         m_isDragging = page->m_isDragging;
+// 
+//         if (page->m_autoRecordActionsCount > 0) {
+//             RELEASE_ASSERT(page->m_isDragging);
+//             init(page, host, false);
+//             leave();
+//         }
+//         init(page, host, isComefromMainFrame);
+//         enter();
+//     }
+
     AutoRecordActions(WebPageImpl* page, cc::LayerTreeHost* host, bool isComefromMainFrame)
+    {
+//         m_isDragging = false;
+//         init(page, host, isComefromMainFrame);
+//         enter();
+        m_isDragging = page->m_isDragging;
+
+        if (page->m_autoRecordActionsCount > 0) {
+            RELEASE_ASSERT(page->m_isDragging && 1 == page->m_autoRecordActionsCount);
+            init(page, host, false);
+            leave();
+        }
+        init(page, host, isComefromMainFrame);
+        enter();
+    }
+
+    void init(WebPageImpl* page, cc::LayerTreeHost* host, bool isComefromMainFrame)
     {
         m_host = host;
         m_page = page;
         m_isComefromMainFrame = isComefromMainFrame;
+    }
+
+    void enter()
+    {
+        m_page->m_autoRecordActionsCount++;
+
         if (!m_host)
             return;
 
@@ -299,11 +347,19 @@ public:
             InterlockedExchange(reinterpret_cast<long volatile*>(&m_page->m_needsLayout), 0);
         }
         m_isLayout = (0 != layerDirty || 0 != needsLayout);
-        m_host->beginRecordActions(isComefromMainFrame);
+        m_host->beginRecordActions(m_isComefromMainFrame);
     }
 
     ~AutoRecordActions()
+    { 
+        leave();
+        if (m_isDragging)
+            enter();
+    }
+
+    void leave()
     {
+        m_page->m_autoRecordActionsCount--;
         if (!m_host)
             return;
         
@@ -336,6 +392,7 @@ private:
     cc::LayerTreeHost* m_host;
     bool m_isLayout;
     bool m_isComefromMainFrame;
+    bool m_isDragging;
     double m_lastFrameTimeMonotonic;
 };
 
@@ -467,6 +524,8 @@ void WebPageImpl::close()
     if (pageInited != m_state)
         return;
 
+    m_state = pageDestroying;
+
     if (m_enterCount == 0) { // 把dragState().m_dragSrc之类的占用抵消
         WTF::TemporaryChange<int> temporaryChange(m_enterCount, 0);
         LPARAM lParam = MAKELONG(-10000, -10000);
@@ -477,8 +536,6 @@ void WebPageImpl::close()
         fireMouseEvent(m_hWnd, WM_RBUTTONUP, 0, lParam, nullptr);
     }
 
-    m_state = pageDestroying;
-    
     // 在KFrameLoaderClient::frameLoaderDestroyed()也会调用到此，所以在给脚本发消息的时候注意一下
     // WebCore::WebPage::windowCloseRequested+0x1a           
     // WebCore::KFrameLoaderClient::frameLoaderDestroyed+0xc  
@@ -706,12 +763,11 @@ void WebPageImpl::executeMainFrame()
         atomicDecrement(&m_executeMainFrameCount);
         return;
     }
-
-    //OutputDebugStringW(L"WebPageImpl::executeMainFrame ------------------------\n");
+    
     {
         AutoRecordActions autoRecordActions(this, m_layerTreeHost, true);
     }
-    //OutputDebugStringW(L"WebPageImpl::executeMainFrame end =====================\n\n");
+    
 #ifndef NDEBUG
     if (0) {
         showDebugNodeData();
@@ -1326,6 +1382,7 @@ void WebPageImpl::fireTouchEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM 
 
 LRESULT WebPageImpl::fireMouseEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, BOOL* bHandle)
 {
+    TemporaryChange<bool> autoSet(m_runningInMouseMessage, true);
     CHECK_FOR_REENTER(this, 0);
     freeV8TempObejctOnOneFrameBefore();
     AutoRecordActions autoRecordActions(this, m_layerTreeHost, false);
@@ -1335,9 +1392,54 @@ LRESULT WebPageImpl::fireMouseEvent(HWND hWnd, UINT message, WPARAM wParam, LPAR
     if (blink::RuntimeEnabledFeatures::touchEnabled())
         fireTouchEvent(hWnd, message, wParam, lParam);
 
-    if (g_isMouseEnabled)
-        m_platformEventHandler->fireMouseEvent(hWnd, message, wParam, lParam, true, m_draggableRegion, bHandle);
+    PlatformEventHandler::MouseEvtInfo info = { true, pageDestroying == m_state, m_draggableRegion };
+    if (g_isMouseEnabled) {
+        if (m_isDragging) {
+            handleMouseWhenDraging(message);
+        } else
+            m_platformEventHandler->fireMouseEvent(hWnd, message, wParam, lParam, info, bHandle);
+    }
     return 0;
+}
+
+void WebPageImpl::handleMouseWhenDraging(UINT message)
+{
+    POINT screenPoint = { 0 };
+    ::GetCursorPos(&screenPoint);
+
+    POINT clientPoint = screenPoint;
+    ::ScreenToClient(m_hWnd, &clientPoint);
+
+    POINTL pt = { screenPoint.x, screenPoint.y };
+    DWORD pdwEffect;
+
+    if (WM_MOUSEMOVE == message) {
+        if (!m_isFirstEnterDrag) {
+            m_dragHandle->DragEnter(m_dragHandle->getDragData(), 0, pt, &pdwEffect);
+            m_isFirstEnterDrag = true;
+        } else
+            m_dragHandle->DragOver(0, pt, &pdwEffect);
+    } else if (WM_LBUTTONUP == message)
+        m_dragHandle->DragLeave();
+}
+
+void WebPageImpl::onEnterDragSimulate()
+{
+    m_isDragging = true;
+}
+
+void WebPageImpl::onLeaveDragSimulate()
+{
+    m_isFirstEnterDrag = false;
+    m_isDragging = false;
+}
+
+void WebPageImpl::onDraggingSimulate()
+{
+    beginMainFrame();
+
+    content::WebThreadImpl* threadImpl = (content::WebThreadImpl*)(blink::Platform::current()->currentThread());
+    threadImpl->fire();
 }
 
 void WebPageImpl::startDragging(blink::WebLocalFrame* frame, const blink::WebDragData& data,

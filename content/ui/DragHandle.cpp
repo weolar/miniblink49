@@ -8,9 +8,18 @@
 #include "third_party/WebKit/public/platform/WebImage.h"
 #include "third_party/WebKit/public/platform/WebPoint.h"
 
+extern bool g_isSetDragDropEnable;
+
 namespace content {
 
-DragHandle::DragHandle()
+DragHandle::DragHandle(
+    std::function<void(void)>&& notifOnEnterDrag,
+    std::function<void(void)>&& notifOnLeaveDrag,
+    std::function<void(void)>&& notifOnDragging
+    )
+    : m_notifOnEnterDrag(std::move(notifOnEnterDrag))
+    , m_notifOnLeaveDrag(std::move(notifOnLeaveDrag))
+    , m_notifOnDragging(std::move(notifOnDragging))
 {
     m_refCount = 0;
     m_viewWindow = nullptr;
@@ -121,6 +130,26 @@ void DragHandle::startDragging(blink::WebLocalFrame* frame,
     m_webViewImpl->dragSourceSystemDragEnded();
 }
 
+void DragHandle::simulateDrag()
+{
+    m_notifOnEnterDrag();
+
+    MSG msg = { 0 };
+    while (WM_QUIT != msg.message) {
+        if (::PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
+            ::TranslateMessage(&msg);
+            ::DispatchMessageW(&msg);
+
+            m_notifOnDragging();
+
+            if (WM_LBUTTONUP == msg.message || WM_MOUSELEAVE == msg.message)
+                break;
+        }
+        ::Sleep(10);
+    }
+    m_notifOnLeaveDrag();
+}
+
 blink::WebDragOperation DragHandle::doStartDragging(blink::WebLocalFrame* frame,
     const blink::WebDragData& data,
     const blink::WebDragOperationsMask mask,
@@ -129,14 +158,13 @@ blink::WebDragOperation DragHandle::doStartDragging(blink::WebLocalFrame* frame,
 {
     blink::WebDragOperation operation = blink::WebDragOperationNone;
 
-    if (!m_viewWindow)
+    if (!m_viewWindow) // updataInOtherThreadEnabled下这个值为空
         return operation;
 
     //FIXME: Allow UIDelegate to override behaviour <rdar://problem/5015953>
 
     //We liberally protect everything, to protect against a load occurring mid-drag
     COMPtr<IDragSourceHelper> helper;
-    COMPtr<IDataObject> dataObject;
     COMPtr<IDropSource> source;
     if (FAILED(WebDropSource::createInstance(&source)))
         return operation;
@@ -153,9 +181,15 @@ blink::WebDragOperation DragHandle::doStartDragging(blink::WebLocalFrame* frame,
             }
         }
     }
-    dataObject = dataObjectPtr;
 
-    if (source && (!image.isNull() || dataObject)) {
+    m_dragData = dataObjectPtr;
+
+    if (!g_isSetDragDropEnable) {
+        simulateDrag();
+        return blink::WebDragOperationCopy;
+    }
+
+    if (source && (!image.isNull() || m_dragData)) {
         if (!image.isNull()) {
             //                 if (SUCCEEDED(::CoCreateInstance(CLSID_DragDropHelper, 0, CLSCTX_INPROC_SERVER,
             //                     IID_IDragSourceHelper, (LPVOID*)&helper))) {
@@ -171,7 +205,7 @@ blink::WebDragOperation DragHandle::doStartDragging(blink::WebLocalFrame* frame,
             //                     if (isLink)
             //                         sdi.ptOffset.y = b.bmHeight - sdi.ptOffset.y;
             // 
-            //                     helper->InitializeFromBitmap(&sdi, dataObject.get());
+            //                     helper->InitializeFromBitmap(&sdi, m_dragData.get());
             //                 }
         }
 
@@ -180,8 +214,7 @@ blink::WebDragOperation DragHandle::doStartDragging(blink::WebLocalFrame* frame,
         HRESULT hr = E_NOTIMPL;
 
         m_mask = mask;
-
-        hr = ::DoDragDrop(dataObject.get(), source.get(), okEffect, &effect);
+        hr = ::DoDragDrop(m_dragData.get(), source.get(), okEffect, &effect);
 
         if (hr == DRAGDROP_S_DROP) {
             if (effect & DROPEFFECT_COPY)
@@ -200,9 +233,7 @@ HRESULT __stdcall DragHandle::DragEnter(IDataObject* pDataObject, DWORD grfKeySt
 {
     if (!m_webViewImpl)
         return S_OK;
-
-    m_dragData = nullptr;
-
+    
     if (!m_dropTargetHelper)
         ::CoCreateInstance(CLSID_DragDropHelper, 0, CLSCTX_INPROC_SERVER, IID_IDropTargetHelper, (void**)&m_dropTargetHelper);
 
@@ -223,34 +254,33 @@ HRESULT __stdcall DragHandle::DragEnter(IDataObject* pDataObject, DWORD grfKeySt
     *pdwEffect = dragOperationToDragCursor(op);
 
     m_lastDropEffect = *pdwEffect;
-    m_dragData = pDataObject;
+    ASSERT(m_dragData.get() == pDataObject);
 
     return S_OK;
 }
 
-HRESULT __stdcall DragHandle::DragOver(DWORD grfKeyState, POINTL pt, DWORD* pdwEffect) 
+HRESULT __stdcall DragHandle::DragOver(DWORD grfKeyState, POINTL pt, DWORD* pdwEffect)
 {
     if (!m_webViewImpl)
         return S_OK;
-
+    
     if (m_dropTargetHelper)
         m_dropTargetHelper->DragOver((POINT*)&pt, *pdwEffect);
 
-    if (m_dragData) {
-        POINT screenPoint = { 0 };
-        ::GetCursorPos(&screenPoint);
+    POINT screenPoint = { 0 };
+    ::GetCursorPos(&screenPoint);
 
-        POINT clientPoint = screenPoint;
-        ::ScreenToClient(m_viewWindow, &clientPoint);
+    POINT clientPoint = screenPoint;
+    ::ScreenToClient(m_viewWindow, &clientPoint);
 
-        blink::WebDragOperation op = m_webViewImpl->dragTargetDragOver(
-            blink::WebPoint(clientPoint.x, clientPoint.y),
-            blink::WebPoint(screenPoint.x, screenPoint.y),
-            m_mask, keyStateToDragOperation(grfKeyState));
+    blink::WebDragOperation op = m_webViewImpl->dragTargetDragOver(
+        blink::WebPoint(clientPoint.x, clientPoint.y),
+        blink::WebPoint(screenPoint.x, screenPoint.y),
+        m_mask, keyStateToDragOperation(grfKeyState));
 
-        *pdwEffect = dragOperationToDragCursor(op);
-    } else
-        *pdwEffect = DROPEFFECT_NONE;
+    *pdwEffect = DROPEFFECT_NONE;
+    if (m_dragData)
+        *pdwEffect = dragOperationToDragCursor(op);       
 
     m_lastDropEffect = *pdwEffect;
     return S_OK;
@@ -277,7 +307,7 @@ HRESULT __stdcall DragHandle::Drop(IDataObject* pDataObject, DWORD grfKeyState, 
     if (m_dropTargetHelper)
         m_dropTargetHelper->Drop(pDataObject, (POINT*)&pt, *pdwEffect);
 
-    m_dragData = 0;
+    m_dragData = nullptr;
     *pdwEffect = m_lastDropEffect;
 
     POINT screenPoint = { 0 };

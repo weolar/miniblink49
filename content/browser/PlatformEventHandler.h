@@ -16,7 +16,12 @@ public:
     PlatformEventHandler(blink::WebWidget* webWidget, blink::WebViewImpl* webViewImpl);
     static blink::WebKeyboardEvent buildKeyboardEvent(blink::WebInputEvent::Type type, UINT message, WPARAM wParam, LPARAM lParam);
 
-    LRESULT fireMouseEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, bool needSetFocus, HRGN draggableRegion, BOOL* bHandle);
+    struct MouseEvtInfo {
+        bool isNeedSetFocus;
+        bool isWillDestroy;
+        HRGN draggableRegion;
+    };
+    LRESULT fireMouseEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, const MouseEvtInfo& info, BOOL* bHandle);
     LRESULT fireWheelEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
     void fireCaptureChangedEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
     void fireTouchEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);

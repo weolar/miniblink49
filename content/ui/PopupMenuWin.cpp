@@ -193,7 +193,8 @@ LRESULT PopupMenuWin::wndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPa
         if (!m_initialize)
             break;
         BOOL bHandle = FALSE;
-        m_platformEventHandler->fireMouseEvent(hWnd, message, wParam, lParam, false, nullptr, &bHandle);
+        PlatformEventHandler::MouseEvtInfo info = { false, false, nullptr };
+        m_platformEventHandler->fireMouseEvent(hWnd, message, wParam, lParam, info, &bHandle);
         if (bHandle)
             return 0;
         break;
