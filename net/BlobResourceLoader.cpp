@@ -188,12 +188,9 @@ public:
 
     ~StreamWrap()
     {
-        if (m_blob)
-            delete m_blob;
-        if (m_fileAsyn)
-            delete m_fileAsyn;
-        if (m_fileSyn)
-            delete m_fileSyn;
+        m_blob = nullptr;
+        m_fileAsyn = nullptr;
+        m_fileSyn = nullptr;
     }
 
     bool initCheck(const String& path)
@@ -201,12 +198,12 @@ public:
         bool isBlob = path.startsWith("file:///c:/miniblink_blob_download_");
         if (isBlob) {
             if (!m_blob)
-                m_blob = new MemBlobStream(m_client, true);
+                m_blob.reset(new MemBlobStream(m_client, true));
         } else {
             if (m_isAsyn && !m_fileAsyn)
-                m_fileAsyn = new AsyncFileStream(m_client);
+                m_fileAsyn.reset(new AsyncFileStream(m_client));
             if (!m_isAsyn && !m_fileSyn)
-                m_fileSyn = new FileStream();
+                m_fileSyn.reset(new FileStream());
         }
         return isBlob;
     }
@@ -260,9 +257,9 @@ public:
     }
 
 private:
-    MemBlobStream* m_blob;
-    AsyncFileStream* m_fileAsyn;
-    FileStream* m_fileSyn;
+    std::unique_ptr<MemBlobStream> m_blob;
+    std::unique_ptr<AsyncFileStream> m_fileAsyn;
+    std::unique_ptr<FileStream> m_fileSyn;
     bool m_isBlob;
     bool m_isAsyn;
     FileStreamClient* m_client;
