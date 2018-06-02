@@ -1057,7 +1057,7 @@ void WebPageImpl::paintToMemoryCanvasInUiThread(SkCanvas* canvas, const IntRect&
     hMemoryDC = skia::BeginPlatformPaint(hWnd, canvas);
 
     drawDebugLine(canvas, paintRect);
-
+    
     g_paintToMemoryCanvasInUiThreadCount++;
 
     if (needDrawToScreen(hWnd)) { // 使用wke接口不由此上屏
@@ -1419,8 +1419,11 @@ void WebPageImpl::handleMouseWhenDraging(UINT message)
             m_isFirstEnterDrag = true;
         } else
             m_dragHandle->DragOver(0, pt, &pdwEffect);
-    } else if (WM_LBUTTONUP == message)
+    } else if (WM_LBUTTONUP == message) {
+        m_isFirstEnterDrag = false;
+        m_dragHandle->Drop(m_dragHandle->getDragData(), 0, pt, &pdwEffect);
         m_dragHandle->DragLeave();
+    }
 }
 
 void WebPageImpl::onEnterDragSimulate()

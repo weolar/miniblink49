@@ -183,6 +183,7 @@ blink::WebDragOperation DragHandle::doStartDragging(blink::WebLocalFrame* frame,
     }
 
     m_dragData = dataObjectPtr;
+    m_mask = mask;
 
     if (!g_isSetDragDropEnable) {
         simulateDrag();
@@ -213,7 +214,6 @@ blink::WebDragOperation DragHandle::doStartDragging(blink::WebLocalFrame* frame,
         DWORD effect = DROPEFFECT_NONE;
         HRESULT hr = E_NOTIMPL;
 
-        m_mask = mask;
         hr = ::DoDragDrop(m_dragData.get(), source.get(), okEffect, &effect);
 
         if (hr == DRAGDROP_S_DROP) {
