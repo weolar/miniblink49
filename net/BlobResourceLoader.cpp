@@ -236,11 +236,11 @@ public:
 
     void close()
     {
-        if (m_isBlob)
+        if (m_isBlob && m_blob)
             m_blob->close();
-        else if (!m_isAsyn)
+        else if (!m_isAsyn && m_fileSyn)
             m_fileSyn->close();
-        else if (m_isAsyn)
+        else if (m_isAsyn && m_fileAsyn)
             m_fileAsyn->close();
     }
 
