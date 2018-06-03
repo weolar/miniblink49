@@ -115,7 +115,19 @@ static void indexedPropertyGetterCallback(uint32_t index, const v8::PropertyCall
 
 static void namedPropertyGetter(v8::Local<v8::Name> name, const v8::PropertyCallbackInfo<v8::Value>& info)
 {
-    auto nameString = name.As<v8::String>();
+    v8::Local<v8::String> nameString;
+    if (name->IsSymbol()) {
+       v8::Local<v8::Symbol> nameSymbol = name.As<v8::Symbol>();
+       v8::Local<v8::Value> nameSymbolValue = nameSymbol->Name();
+       if (nameSymbolValue->IsString()) {
+           nameString = nameSymbolValue.As<v8::String>();
+       } else
+           return;
+    } else if (name->IsString())
+        nameString = name.As<v8::String>();
+    else
+        return;
+
     HTMLCollection* impl = V8HTMLCollection::toImpl(info.Holder());
     AtomicString propertyName = toCoreAtomicString(nameString);
     RefPtrWillBeRawPtr<Element> result = impl->namedItem(propertyName);
