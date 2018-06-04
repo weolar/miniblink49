@@ -669,7 +669,9 @@ void fs__write(uv_fs_t* req) {
       output[len] = '\n';
       output[len + 1] = 0;
       strncpy(output, base, len);
-      OutputDebugStringW(L"fs.c.fs__write:");
+      if ('\n' == output[len - 1])
+        output[len] = 0;
+      OutputDebugStringW(L"fs__write console.log:");
       wchar_t* outputW = UTF8ToUTF16(output);
       OutputDebugStringW(outputW);
       free(output);
