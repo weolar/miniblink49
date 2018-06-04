@@ -77,7 +77,7 @@ void WebContents::init(v8::Isolate* isolate, v8::Local<v8::Object> target, node:
     builder.SetMethod("isOffscreen", &WebContents::isOffscreenApi);
     builder.SetMethod("startPainting", &WebContents::startPaintingApi);
     builder.SetMethod("stopPainting", &WebContents::stopPaintingApi);
-    builder.SetMethod("isPainting", &WebContents::isPaintingApi);
+    builder.SetMethod("isPainting", &WebContents::isPaintingApi);    
     builder.SetMethod("setFrameRate", &WebContents::setFrameRateApi);
     builder.SetMethod("getFrameRate", &WebContents::getFrameRateApi);
     builder.SetMethod("invalidate", &WebContents::invalidateApi);
@@ -97,11 +97,9 @@ void WebContents::init(v8::Isolate* isolate, v8::Local<v8::Object> target, node:
     builder.SetMethod("setEmbedder", &WebContents::setEmbedderApi);
     builder.SetMethod("isDestroyed", &WebContents::isDestroyedApi);
     builder.SetProperty("id", &WebContents::getIdApi);
-//     NODE_SET_PROTOTYPE_METHOD(tpl, "id", nullFunction);
-//     NODE_SET_PROTOTYPE_METHOD(tpl, "session", nullFunction);
-//     NODE_SET_PROTOTYPE_METHOD(tpl, "hostWebContents", nullFunction);
-//     NODE_SET_PROTOTYPE_METHOD(tpl, "devToolsWebContents", nullFunction);
-//     NODE_SET_PROTOTYPE_METHOD(tpl, "debugger", nullFunction);
+
+    gin::Dictionary webContentsClass(isolate, prototype->GetFunction());
+    webContentsClass.SetMethod("getFocusedWebContents", &WebContents::getFocusedWebContentsApi);
 
     constructor.Reset(isolate, prototype->GetFunction());
     target->Set(v8::String::NewFromUtf8(isolate, "WebContents"), prototype->GetFunction());
@@ -291,7 +289,7 @@ static std::vector<v8::Local<v8::Value>> listValueToVector(v8::Isolate* isolate,
     return result;
 }
 
-static void emitIPCEvent(wkeWebView view, wkeWebFrameHandle frame, const std::string& channel, const base::ListValue& args) {
+static void emitIPCEvent(WebContents* webContents, wkeWebView view, wkeWebFrameHandle frame, const std::string& channel, const base::ListValue& args) {
     if (!frame || wkeIsWebRemoteFrame(view, frame))
         return;
 
@@ -307,14 +305,18 @@ static void emitIPCEvent(wkeWebView view, wkeWebFrameHandle frame, const std::st
     if (!env)
         return;
 
+
     v8::Local<v8::Object> ipc;
     if (getIPCObject(isolate, context, &ipc)) {
-        std::vector<v8::Local<v8::Value>> argsVector = listValueToVector(isolate, args);
-        // Insert the Event object, event.sender is ipc.
-        gin::Dictionary evt = gin::Dictionary::CreateEmpty(isolate);
-        evt.Set("sender", ipc);
-        argsVector.insert(argsVector.begin(), evt.GetHandle());
 
+        std::vector<v8::Local<v8::Value>> argsVector = listValueToVector(isolate, args);
+        gin::Dictionary evt = gin::Dictionary::CreateEmpty(isolate);
+#if 1 // 2.x版本electron的sender改成webContents(此处存疑，应该不是的)
+        evt.Set("sender", ipc); // Insert the Event object, event.sender is ipc.
+#else
+        evt.Set("sender", webContents->GetWrapper(isolate));
+#endif
+        argsVector.insert(argsVector.begin(), evt.GetHandle());
         mate::emitEvent(isolate, ipc, channel, argsVector);
     }
 }
@@ -327,12 +329,18 @@ void WebContents::anyPostMessageToRenderer(const std::string& channel, const bas
 
     ThreadCall::callBlinkThreadAsync([self, id, channelWrap, listParamsWrap] {
         if (IdLiveDetect::get()->isLive(id)) {
-            emitIPCEvent(self->m_view, wkeWebFrameGetMainFrame(self->m_view), *channelWrap, *listParamsWrap);
+            emitIPCEvent(self, self->m_view, wkeWebFrameGetMainFrame(self->m_view), *channelWrap, *listParamsWrap);
         }
 
         delete channelWrap;
         delete listParamsWrap;
     });
+}
+
+void WebContents::getFocusedWebContentsApi(const v8::FunctionCallbackInfo<v8::Value>& info) {
+    v8::Local<v8::Value> result = WindowInterface::getFocusedContents(info.GetIsolate());
+    info.GetReturnValue().Set(result);
+    //return result;
 }
 
 int WebContents::getIdApi() const {

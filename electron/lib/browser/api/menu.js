@@ -18,9 +18,13 @@ Menu.prototype._init = function () {
 	});
 }
 
-Menu.prototype.popup = function (windowObj, x, y, positioningItem) {
+Menu.prototype.popup = function (options) {
+	// windowObj, x, y, positioningItem
     this._init();
-	this._popup();
+    if (options && ('x' in options) && 'y' in options)
+		this._popup(options.x, options.y);
+	else
+		this._popup();
 }
 
 Menu.prototype.append = function (item) {
@@ -82,7 +86,6 @@ var indexToInsertByPosition = function (items, position) {
   if (!position) {
     return items.length;
   }
-  //const [query, id] = position.split('=');
   const positionSplit = position.split('=');
   const query = positionSplit[0];
   const id = positionSplit[1];

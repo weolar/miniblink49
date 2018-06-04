@@ -23,6 +23,7 @@
     fn(atom_browser_menu) \
     fn(atom_browser_dialog) \
     fn(atom_browser_protocol) \
+    fn(atom_browser_tray) \
     fn(atom_renderer_ipc) \
     fn(atom_common_v8_util) \
     fn(atom_common_shell) \
@@ -82,7 +83,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
 
     atom::NodeArgc* node = atom::runNodeThread();
     
-    uv_loop_t* loop = uv_default_loop();
+    uv_loop_t* loop = nullptr; // uv_default_loop();
     atom::ThreadCall::messageLoop(loop, nullptr, nullptr);
     atom::ThreadCall::shutdown();
 

@@ -101,9 +101,9 @@ public:
     }
 
     virtual bool handleLoadUrlBegin(void* param, const char* url, void* jobPtr) override {
-        OutputDebugStringA("handleLoadUrlBegin:");
-        OutputDebugStringA(url);
-        OutputDebugStringA("\n");
+//         OutputDebugStringA("handleLoadUrlBegin:");
+//         OutputDebugStringA(url);
+//         OutputDebugStringA("\n");
 
         const char* pos = strstr(url, "://");
         if (!pos)

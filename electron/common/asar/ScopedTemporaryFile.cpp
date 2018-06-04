@@ -203,7 +203,7 @@ bool ScopedTemporaryFile::InitFromFile(base::File* src,
   if (!Init(ext))
     return false;
 
-  std::vector<char> buf(size);
+  std::vector<char> buf((size_t)size);
   int len = src->Read(offset, &buf[0], buf.size());
   if (len != static_cast<int>(size))
     return false;
@@ -212,8 +212,7 @@ bool ScopedTemporaryFile::InitFromFile(base::File* src,
   if (!dest.IsValid())
     return false;
 
-  return dest.WriteAtCurrentPos(&buf[0], buf.size()) ==
-      static_cast<int>(size);
+  return dest.WriteAtCurrentPos(&buf[0], buf.size()) == static_cast<int>(size);
 }
 
 }  // namespace asar

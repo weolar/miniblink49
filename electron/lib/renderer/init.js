@@ -28,6 +28,11 @@ function __mbRequire__(name) {
 
 // Export node bindings to global.
 window.require = __mbRequire__;
+window.require.resolve = nodeRequire.resolve;
+window.require.main = nodeRequire.main;
+window.require.extensions = nodeRequire.extensions;
+window.require.cache = nodeRequire.cache;
+
 window.module = module;
 window.miniNodeRequire = __mbRequire__;
 window.miniNodeModule = module;

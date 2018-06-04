@@ -4,6 +4,7 @@
 #include "browser/api/WindowList.h"
 #include "browser/api/MenuEventNotif.h"
 #include "common/NodeRegisterHelp.h"
+#include "common/HideWndHelp.h"
 #include "common/api/EventEmitter.h"
 #include "gin/object_template_builder.h"
 #include "gin/dictionary.h"
@@ -93,9 +94,12 @@ private:
     v8::Isolate* m_isolate;
 };
 
+//////////////////////////////////////////////////////////////////////////
+
 class Menu : public mate::EventEmitter<Menu> {
 public:
-    explicit Menu(v8::Isolate* isolate, v8::Local<v8::Object> wrapper) {
+    explicit Menu(v8::Isolate* isolate, v8::Local<v8::Object> wrapper)
+        : m_hideWndHelp(nullptr) {
         gin::Wrappable<Menu>::InitWith(isolate, wrapper);
         m_menuTemplate = nullptr;
         m_hMenu = NULL;
@@ -242,15 +246,26 @@ public:
         }
     }
 
-    void _popupApi() {
-        if (!m_hHideParentWindow)
-            createHideParentWindow();
+    void _popupApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
+        Menu* self = this;
+        if (!m_hideWndHelp) {
+            m_hideWndHelp = new HideWndHelp(L"HideParentWindowClass", [self] (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) ->LRESULT {
+                return hideWndProc(hWnd, uMsg, wParam, lParam);
+            });
+        }
 
         buildMenus(false);
 
+        ::SetForegroundWindow(m_hideWndHelp->getWnd());
+
         POINT pt;
-        ::GetCursorPos(&pt);
-        ::TrackPopupMenu(m_hMenu, TPM_LEFTALIGN | TPM_TOPALIGN | TPM_RIGHTBUTTON, pt.x, pt.y, 0, m_hHideParentWindow, NULL);
+        if (args.Length() == 2 && args[0]->IsInt32() && args[1]->IsInt32()) {
+            pt.x = args[0]->ToInt32()->Value();
+            pt.y = args[0]->ToInt32()->Value();
+        } else {
+            ::GetCursorPos(&pt);
+        }
+        ::TrackPopupMenu(m_hMenu, TPM_LEFTALIGN | TPM_TOPALIGN | TPM_RIGHTBUTTON, pt.x, pt.y, 0, m_hideWndHelp->getWnd(), NULL);
     }
 
     void onCommon(MenuItem* item, UINT uMsg, WPARAM wParam, LPARAM lParam) {
@@ -266,12 +281,6 @@ public:
         }
 
         v8::Local<v8::Value> focusedWindow = WindowInterface::getFocusedWindow(isolate());
-
-        if (focusedWindow->IsNull())
-            DebugBreak();
-
-        //v8::Local<v8::Object> recv = item->getIsolate()->GetCurrentContext()->Global();
-        //item->getClickCallback()->Call(recv, 0, nullptr);
         item->getMenu()->mate::EventEmitter<Menu>::emit("click", 
             item->getClickCallbackValue(), focusedWindow /*, focusedWebContents*/);
     }
@@ -284,6 +293,8 @@ public:
     static gin::WrapperInfo kWrapperInfo;
     static v8::Persistent<v8::Function> constructor;
     static std::set<MenuItem*>* m_liveMenuItem;
+
+    HideWndHelp* m_hideWndHelp;
 
     friend class MenuItem;
 
@@ -320,29 +331,6 @@ private:
         return menu->m_hMenu;
     }
 
-    void createHideParentWindow() {
-        if (m_hHideParentWindow)
-            return;
-
-        WNDCLASS wc = { 0 };
-        wc.style = 0;
-        wc.lpfnWndProc = (WNDPROC)mainWndProc;
-        wc.cbClsExtra = 0;
-        wc.cbWndExtra = 0;
-        wc.hInstance = NULL;
-        wc.hIcon = LoadIcon(NULL, IDI_APPLICATION);
-        wc.hCursor = LoadCursor(NULL, IDC_ARROW);
-//         wc.hbrBackground = GetStockObject(WHITE_BRUSH);
-//         wc.lpszMenuName = MAKEINTRESOURCE(IDM_MYMENURESOURCE);
-        wc.lpszClassName = L"HideParentWindowClass";
-
-        if (!RegisterClass(&wc))
-            return;
-
-        m_hHideParentWindow = ::CreateWindow(L"HideParentWindowClass", L"HideParentWindowClass",
-            WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, 1, 1, NULL, NULL, NULL, NULL);
-    }
-
     int findItemIndex(MenuItem* item) {
         for (size_t i = 0; i < m_items.size(); ++i) {
             MenuItem* it = m_items[i];
@@ -352,8 +340,9 @@ private:
         return -1;
     }   
 
-    static LRESULT APIENTRY mainWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+    static LRESULT APIENTRY hideWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
         MenuItem* item = nullptr;
+
         switch (uMsg) {
         case WM_COMMAND: {
             MenuEventNotif::onMenuCommon(uMsg, wParam, lParam);
@@ -378,9 +367,9 @@ private:
         kIsPopup,
     };
     AppOrPopupType m_isAppOrPopupMenu;
-
-    static HWND m_hHideParentWindow;
 };
+
+//////////////////////////////////////////////////////////////////////////
 
 MenuItem::MenuItem(v8::Isolate* isolate, Menu* menu) {
     m_isolate = isolate;
@@ -462,7 +451,7 @@ void MenuEventNotif::onMenuCommon(UINT uMsg, WPARAM wParam, LPARAM lParam) {
 v8::Persistent<v8::Function> Menu::constructor;
 gin::WrapperInfo Menu::kWrapperInfo = { gin::kEmbedderNativeGin };
 std::set<MenuItem*>* Menu::m_liveMenuItem = nullptr;
-HWND Menu::m_hHideParentWindow = nullptr;
+
 Menu* Menu::m_appMenu = nullptr;
 
 static void initializeMenuApi(v8::Local<v8::Object> target, v8::Local<v8::Value> unused, v8::Local<v8::Context> context, const NodeNative* native) {
@@ -470,9 +459,7 @@ static void initializeMenuApi(v8::Local<v8::Object> target, v8::Local<v8::Value>
     Menu::init(env->isolate(), target);
 }
 
-static const char BrowserMenuNative[] =
-"console.log('BrowserMenuNative');"
-"exports = function {};";
+static const char BrowserMenuNative[] = "exports = function {};";
 
 static NodeNative nativeBrowserMenuNative{ "Menu", BrowserMenuNative, sizeof(BrowserMenuNative) - 1 };
 

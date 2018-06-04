@@ -23,7 +23,7 @@
 
 namespace atom {
 
-static const wchar_t kElectronClassName[] = L"mb_electron_window";
+const wchar_t WindowInterface::kElectronClassName[] = L"mb_electron_window";
 
 class Window : public mate::EventEmitter<Window>, public WindowInterface {
 public:
@@ -804,26 +804,26 @@ public:
 
     static LRESULT CALLBACK staticWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
         int id = -1;
-        Window* win = (Window *)::GetPropW(hWnd, kPrppW);
-        if (!win) {
-            if (message == WM_CREATE) {
-                LPCREATESTRUCTW cs = (LPCREATESTRUCTW)lParam;
-                Window *win = (Window *)cs->lpCreateParams;
-                id = win->m_id;               
-                ::SetPropW(hWnd, kPrppW, (HANDLE)win);
-                ::SetTimer(hWnd, (UINT_PTR)win, 70, NULL);
-                return 0;
-            }
+        Window* self = (Window*)::GetPropW(hWnd, kPrppW);
+        if (!self && message == WM_CREATE) {
+            
+            LPCREATESTRUCTW cs = (LPCREATESTRUCTW)lParam;
+            self = (Window *)cs->lpCreateParams;
+            id = self->m_id;
+            ::SetPropW(hWnd, kPrppW, (HANDLE)self);
+            ::SetTimer(hWnd, (UINT_PTR)self, 70, NULL);
+            return 0;
+            
         }
-        if (!win)
+        if (!self)
             return ::DefWindowProcW(hWnd, message, wParam, lParam);
 
-        id = win->m_id;
-        wkeWebView webview = win->m_webContents->getWkeView();
+        id = self->m_id;
+        wkeWebView webview = self->m_webContents->getWkeView();
         if (!webview)
             return ::DefWindowProcW(hWnd, message, wParam, lParam);
 
-        return win->windowProc(hWnd, message, wParam, lParam);
+        return self->windowProc(hWnd, message, wParam, lParam);
     }
 
     static v8::Local<v8::Value> toBuffer(v8::Isolate* isolate, void* val, int size) {
@@ -1719,6 +1719,8 @@ public:
     static const WCHAR* kPrppW;
 
 private:
+    friend class WindowInterface;
+
     enum WindowState {
         WindowUninited,
         WindowInited,
@@ -1762,6 +1764,20 @@ v8::Local<v8::Value> WindowInterface::getFocusedWindow(v8::Isolate* isolate) {
     return result;
 }
 
+v8::Local<v8::Value> WindowInterface::getFocusedContents(v8::Isolate* isolate) {
+    v8::Local<v8::Value> result;
+    HWND focusWnd = ::GetFocus();
+    Window* win = (Window*)::GetPropW(focusWnd, Window::kPrppW);
+    if (!win)
+       return v8::Null(isolate);
+    
+    WebContents* content = win->getWebContents();
+    if (!content)
+        return v8::Null(isolate);
+    result = content->GetWrapper(isolate);
+    return result;
+}
+
 const WCHAR* Window::kPrppW = L"ElectronWindow";
 v8::Persistent<v8::Function> Window::constructor;
 gin::WrapperInfo Window::kWrapperInfo = { gin::kEmbedderNativeGin };
@@ -1770,7 +1786,7 @@ static void initializeWindowApi(v8::Local<v8::Object> target, v8::Local<v8::Valu
     node::Environment* env = node::Environment::GetCurrent(context);
     Window::init(target, env);
     WNDCLASS wndClass = { 0 };
-    if (!GetClassInfoW(NULL, kElectronClassName, &wndClass)) {
+    if (!GetClassInfoW(NULL, WindowInterface::kElectronClassName, &wndClass)) {
         wndClass.style = CS_HREDRAW | CS_VREDRAW | CS_DROPSHADOW;
         wndClass.lpfnWndProc = &Window::staticWindowProc;
         wndClass.cbClsExtra = 200;
@@ -1780,7 +1796,7 @@ static void initializeWindowApi(v8::Local<v8::Object> target, v8::Local<v8::Valu
         wndClass.hCursor = LoadCursor(NULL, IDC_ARROW);
         wndClass.hbrBackground = NULL;
         wndClass.lpszMenuName = NULL;
-        wndClass.lpszClassName = kElectronClassName;
+        wndClass.lpszClassName = WindowInterface::kElectronClassName;
         RegisterClass(&wndClass);
     }
 }

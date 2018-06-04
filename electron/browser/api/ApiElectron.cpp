@@ -53,7 +53,7 @@ static void initializeElectronApi(v8::Local<v8::Object> target, v8::Local<v8::Va
 
 static const char BrowserElectronNative[] =
 "var Module = require('module');"
-"console.log('BrowserElectronNative:' + module);"
+"//console.log('BrowserElectronNative:' + module);"
 "//require('./../browser/browser-window');"
 "//var electron = Module._load('./common/electron', null, false);"
 "//const App = process.binding('atom_browser_app').App;"

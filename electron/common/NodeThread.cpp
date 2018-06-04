@@ -100,6 +100,8 @@ static void workerRun(NodeArgc* nodeArgc) {
     if (err != 0)
         goto loop_init_failed;
 
+    uv_default_loop();
+
     ::CoInitialize(NULL);
 
     // Interruption signal handler

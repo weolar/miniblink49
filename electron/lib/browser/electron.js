@@ -8,6 +8,8 @@ electron.BrowserWindow = require("./../browser/api/browser-window");
 var App = require("./../browser/api/app").App;
 electron.app = new App();
 
+electron.webContents = require("./../browser/api/web-contents");
+
 const EventEmitter = require('events').EventEmitter;
 Object.setPrototypeOf(App.prototype, EventEmitter.prototype);
 
@@ -25,6 +27,7 @@ electron.dialog = dialog;
 
 electron.shell = require("./../common/api/shell").Shell;
 electron.screen = require("./../common/api/screen").Screen;
+electron.tray = require("./../common/api/screen").Tray;
 
 function SystemPreferences () {}
 SystemPreferences.prototype.isDarkMode = function() { return false; }
@@ -36,7 +39,7 @@ electron.systemPreferences = new SystemPreferences();
 
 ////////////////////////////////////////////////////////////////
 
-electron.protocol = require("./protocol").protocol;
+electron.protocol = require("./api/protocol").protocol;
 
 // function Protocol() {}
 // Protocol.prototype.registerStandardSchemes = function(schemes) {}
@@ -64,6 +67,7 @@ AutoUpdater.prototype.quitAndInstall = function() {}
 
 electron.autoUpdater = new AutoUpdater();
 ////////////////////////////////////////////////////////////////
+/*
 function Tray() {}
 Tray.prototype.on = function(evt, callback) {}
 Tray.prototype.destroy = function() {}
@@ -76,6 +80,8 @@ Tray.prototype.popUpContextMenu = function(menu, position) {}
 Tray.prototype.setContextMenu = function(menu) {}
 
 electron.Tray = Tray;
+*/
+electron.Tray = require("./api/tray").Tray;
 ////////////////////////////////////////////////////////////////
 function GlobalShortcut() {}
 GlobalShortcut.prototype.register = function(accelerator, callback) {}
@@ -83,6 +89,16 @@ GlobalShortcut.prototype.isRegistered = function(accelerator) { return true; }
 GlobalShortcut.prototype.unregister= function() {}
 GlobalShortcut.prototype.unregisterAll = function() {}
 electron.globalShortcut = new GlobalShortcut();
+////////////////////////////////////////////////////////////////
+function PowerMonitor() {}
+PowerMonitor.prototype.on = function(evtName, callback) {}
+electron.powerMonitor = new PowerMonitor();
+////////////////////////////////////////////////////////////////
+function PowerSaveBlocker() {}
+PowerSaveBlocker.prototype.start = function(type) { return 0 }
+PowerSaveBlocker.prototype.stop = function(id) {}
+PowerSaveBlocker.prototype.isStarted = function(id) { return false; }
+electron.powerSaveBlocker = new PowerSaveBlocker();
 ////////////////////////////////////////////////////////////////
 
 module.exports = electron;

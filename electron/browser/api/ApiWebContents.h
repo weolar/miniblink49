@@ -103,6 +103,8 @@ private:
     int getProcessIdApi() const;
     bool equalApi() const;
 
+    static void getFocusedWebContentsApi(const v8::FunctionCallbackInfo<v8::Value>& info);
+
     std::string _getURLApi();
 
     std::string getTitleApi();

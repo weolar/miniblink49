@@ -1,21 +1,32 @@
 ﻿
+#define _CRT_NON_CONFORMING_SWPRINTFS
+
 #include "browser/api/ApiApp.h"
 
 #include "common/NodeRegisterHelp.h"
-#include "common/api/EventEmitter.h"
 #include "common/ThreadCall.h"
-#include "gin/object_template_builder.h"
+#include "common/AtomCommandLine.h"
+#include "common/api/EventEmitter.h"
 #include "browser/api/WindowList.h"
+#include "browser/api/WindowInterface.h"
 #include "base/values.h"
+#include "base/json/json_writer.h"
+#include "gin/object_template_builder.h"
 #include "wke.h"
 #include "nodeblink.h"
 #include "base/strings/string_util.h"
 #include "base/files/file_path.h"
 #include <shlobj.h>
+#include <Shlwapi.h>
+
+typedef BOOL(__stdcall *FN_ChangeWindowMessageFilterEx)(HWND hwnd, UINT message, DWORD action, void* pChangeFilterStruct);
 
 namespace atom {
 
 App* App::m_instance = nullptr;
+static const wchar_t kMutexName[] = L"LocalAtomProcessSingletonStartup!";
+const wchar_t kHiddenWindowPropName[] = L"mb_app_hidden_window";
+const int BUFSIZE = 4096;
 
 App* App::getInstance() {
     return m_instance;
@@ -26,9 +37,13 @@ App::App(v8::Isolate* isolate, v8::Local<v8::Object> wrapper) {
     ASSERT(!m_instance);
     m_instance = this;
     m_version = "1.3.3";
+    m_singleInstanceHandle = nullptr;
 }
 
 App::~App() {
+    ::CloseHandle(m_singleInstanceHandle);
+    m_singleInstanceHandle = nullptr;
+
     DebugBreak();
 }
 
@@ -62,12 +77,11 @@ void App::init(v8::Local<v8::Object> target, v8::Isolate* isolate) {
     builder.SetMethod("getPath", &App::getPathApi);
     builder.SetMethod("setDesktopName", &App::setDesktopNameApi);
     builder.SetMethod("getLocale", &App::getLocaleApi);
-    builder.SetMethod("makeSingleInstance", &App::makeSingleInstanceApi);
+    builder.SetMethod("makeSingleInstanceImpl", &App::makeSingleInstanceImplApi);
     builder.SetMethod("releaseSingleInstance", &App::releaseSingleInstanceApi);
     builder.SetMethod("relaunch", &App::relaunchApi);
     builder.SetMethod("isAccessibilitySupportEnabled", &App::isAccessibilitySupportEnabled);
     builder.SetMethod("disableHardwareAcceleration", &App::disableHardwareAcceleration);
-
     constructor.Reset(isolate, prototype->GetFunction());
     target->Set(v8::String::NewFromUtf8(isolate, "App"), prototype->GetFunction());
 }
@@ -85,7 +99,61 @@ void quit() {
 }
 
 void App::quitApi() {
-    OutputDebugStringA("quitApi\n");
+    OutputDebugStringA("quitApi\n");  
+    
+    const v8::StackTrace::StackTraceOptions options = static_cast<v8::StackTrace::StackTraceOptions>(
+        v8::StackTrace::kLineNumber
+        | v8::StackTrace::kColumnOffset
+        | v8::StackTrace::kScriptId
+        | v8::StackTrace::kScriptNameOrSourceURL
+        | v8::StackTrace::kFunctionName);
+
+    int stackNum = 50;
+    v8::HandleScope handleScope(isolate());
+    v8::Local<v8::StackTrace> stackTrace(v8::StackTrace::CurrentStackTrace(isolate(), stackNum, options));
+    int count = stackTrace->GetFrameCount();
+
+    char* output = (char*)malloc(0x100);
+    sprintf(output, "FatalException: %d\n", count);
+    OutputDebugStringA(output);
+    free(output);
+
+    for (int i = 0; i < count; ++i) {
+        v8::Local<v8::StackFrame> stackFrame = stackTrace->GetFrame(i);
+        int frameCount = stackTrace->GetFrameCount();
+        int line = stackFrame->GetLineNumber();
+        v8::Local<v8::String> scriptName = stackFrame->GetScriptNameOrSourceURL();
+        v8::Local<v8::String> funcName = stackFrame->GetFunctionName();
+
+        std::string scriptNameWTF;
+        std::string funcNameWTF;
+
+        if (!scriptName.IsEmpty()) {
+            v8::String::Utf8Value scriptNameUtf8(scriptName);
+            scriptNameWTF = *scriptNameUtf8;
+        }
+
+        if (!funcName.IsEmpty()) {
+            v8::String::Utf8Value funcNameUtf8(funcName);
+            funcNameWTF = *funcNameUtf8;
+        }
+        std::vector<char> output;
+        output.resize(1000);
+        sprintf(&output[0], "line:%d, [", line);
+        OutputDebugStringA(&output[0]);
+
+        if (!scriptNameWTF.empty()) {
+            OutputDebugStringA(scriptNameWTF.c_str());
+        }
+        OutputDebugStringA("] , [");
+
+        if (!funcNameWTF.empty()) {
+            OutputDebugStringA(funcNameWTF.c_str());
+        }
+        OutputDebugStringA("]\n");
+    }
+    OutputDebugStringA("\n");
+
     quit();
 
     if (ThreadCall::isUiThread()) {
@@ -168,7 +236,6 @@ int App::getLoginItemSettingsApi(const v8::FunctionCallbackInfo<v8::Value>& args
 // const base::DictionaryValue& obj, const std::string& path, const std::string& args
 void App::setLoginItemSettingsApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
     OutputDebugStringA("setLoginItemSettingsApi");
-    DebugBreak();
 }
 
 bool App::setUserTasksApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
@@ -202,16 +269,194 @@ std::string App::getLocaleApi() {
     return "zh-cn";
 }
 
-void App::makeSingleInstanceApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
-    OutputDebugStringA("makeSingleInstanceApi\n");
+static unsigned int hashString(const wchar_t* p) {
+    int prime = 25013;
+    unsigned int h = 0;
+    unsigned int g;
+    for (; *p; p++) {
+        h = (h << 4) + *p;
+        g = h & 0xF0000000;
+        if (g) {
+            h ^= (g >> 24);
+            h ^= g;
+        }
+    }
+    return h % prime;
+}
+
+static LRESULT CALLBACK staticWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+static void registerHiddenWindowClass(LPCWSTR lpszClassName) {
+    WNDCLASS wndClass = { 0 };
+    if (!GetClassInfoW(NULL, lpszClassName, &wndClass)) {
+        wndClass.style = CS_HREDRAW | CS_VREDRAW | CS_DROPSHADOW;
+        wndClass.lpfnWndProc = &staticWindowProc;
+        wndClass.cbClsExtra = 200;
+        wndClass.cbWndExtra = 200;
+        wndClass.hInstance = GetModuleHandleW(NULL);
+        wndClass.hCursor = LoadCursor(NULL, IDC_ARROW);
+        wndClass.hbrBackground = NULL;
+        wndClass.lpszMenuName = NULL;
+        wndClass.lpszClassName = lpszClassName;
+        ATOM r = RegisterClass(&wndClass);
+        r = r;
+    }
+}
+
+static LRESULT CALLBACK staticWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
+    int id = -1;
+    App* self = (App*)::GetPropW(hWnd, kHiddenWindowPropName);
+    if (!self && message == WM_CREATE) {
+        LPCREATESTRUCTW cs = (LPCREATESTRUCTW)lParam;
+        self = (App*)cs->lpCreateParams;
+        ::SetPropW(hWnd, kHiddenWindowPropName, (HANDLE)self);
+        return 0;
+    }
+
+    if (!self)
+        return ::DefWindowProcW(hWnd, message, wParam, lParam);
+
+    if (message == WM_COPYDATA) {
+        COPYDATASTRUCT* copyData = (COPYDATASTRUCT*)lParam;
+        if (copyData->dwData == WindowInterface::kSingleInstanceMessage) {
+            self->onCopyData(copyData);
+        }
+    }
+
+    return ::DefWindowProcW(hWnd, message, wParam, lParam);
+}
+
+void App::onCopyData(const COPYDATASTRUCT* copyData) {
+    if (copyData->dwData != WindowInterface::kSingleInstanceMessage || 0 == copyData->cbData)
+        return;
+    if (m_singleInstanceCall.IsEmpty())
+        return;
+
+    std::string json((const char*)copyData->lpData, copyData->cbData);
+
+    v8::Function* callback = nullptr;
+    v8::Local<v8::Value> f = m_singleInstanceCall.Get(isolate());
+    callback = v8::Function::Cast(*(f));
+
+    v8::MaybeLocal<v8::String> argString = v8::String::NewFromUtf8(isolate(), json.c_str(), v8::NewStringType::kNormal, json.length());
+
+    v8::Local<v8::Value> argv[1];
+    argv[0] = argString.ToLocalChecked();
+    callback->Call(v8::Undefined(isolate()), 1, argv);
+}
+
+static std::wstring getNormalizeFilePath() {
+    std::vector<wchar_t> path;
+    path.resize(BUFSIZE + 1);
+    ::GetModuleFileNameW(::GetModuleHandleW(NULL), &path[0], BUFSIZE);
+
+    std::vector<wchar_t> buffer;
+    buffer.resize(BUFSIZE + 1);
+    // ::GetLongPathName(path.data(), &buffer[0], BUFSIZE);
+
+    WCHAR** lppPart = { nullptr };
+    ::GetFullPathName(&path[0], BUFSIZE, &buffer[0], lppPart);
+
+    int i = 0;
+    for (; i < BUFSIZE; ++i) {
+        wchar_t c = buffer[i];
+        if (c >= L'A' && c <= L'Z')
+            buffer[i] += 32;
+        else if (c == L'/')
+            buffer[i] = L'\\';
+        if (L'\0' == c)
+            break;
+    }
+
+    return std::wstring(&buffer[0], i);
+}
+
+static void notifSingleProcess(HWND hWnd) {
+    std::vector<std::string> argv = atom::AtomCommandLine::argv();
+
+    std::vector<wchar_t> buffer;
+    buffer.resize(MAX_PATH + 1);
+    ::GetModuleFileNameW(::GetModuleHandleW(NULL), &buffer[0], MAX_PATH);
+    ::PathRemoveFileSpecW(&buffer[0]);
+
+    std::string workingDirectory = base::WideToUTF8(base::string16(&buffer[0]));
+
+    base::ListValue value;
+    std::string json;
+
+    value.AppendStrings(argv);
+    value.AppendString(workingDirectory);
+    base::JSONWriter::Write(value, &json);
+
+    COPYDATASTRUCT copyData;
+    copyData.dwData = WindowInterface::kSingleInstanceMessage;
+    copyData.cbData = json.length();
+    copyData.lpData = (PVOID)json.c_str();
+    ::SendMessage(hWnd, WM_COPYDATA, (WPARAM)hWnd, (LPARAM)&copyData);
+}
+
+bool App::makeSingleInstanceImplApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
+    v8::Function* callback = nullptr;
+    if (args[0]->IsFunction())
+        m_singleInstanceCall.Reset(args.GetIsolate(), args[0]);
+    else
+        m_singleInstanceCall.Reset();
+
+    std::wstring filePath = getNormalizeFilePath();
+    unsigned int pathHash = hashString(filePath.c_str());
+
+    std::vector<wchar_t> buffer;
+    buffer.resize(BUFSIZE);
+    swprintf(&buffer[0], L"mb_app_hidden_window_%d\n", pathHash);
+
+    m_singleInstanceHandle = ::CreateMutex(NULL, FALSE, kMutexName);
+    if (GetLastError() == ERROR_ALREADY_EXISTS) {
+        HWND hWnd = ::FindWindowEx(NULL, NULL, &buffer[0], nullptr);
+        if (hWnd)
+            notifSingleProcess(hWnd);
+        ::CloseHandle(m_singleInstanceHandle);
+        m_singleInstanceHandle = nullptr;
+        return true;
+    }
+
+    registerHiddenWindowClass(&buffer[0]);
+    m_hiddenWindow = ::CreateWindowExW(0,
+        &buffer[0], L"title",
+        WS_OVERLAPPED, 0, 0, 100, 100, NULL, NULL, ::GetModuleHandleW(NULL), this);
+    ::ShowWindow(m_hiddenWindow, SW_SHOW);
+
+    // NB: Ensure that if the primary app gets started as elevated
+    // admin inadvertently, secondary windows running not as elevated
+    // will still be able to send messages
+    HMODULE hinstLib = LoadLibraryW(L"User32.dll");
+    static FN_ChangeWindowMessageFilterEx ChangeWindowMessageFilterFunc = nullptr;
+    static bool isFind = false;
+    if (!isFind) {
+        isFind = true;
+        ChangeWindowMessageFilterFunc = (FN_ChangeWindowMessageFilterEx)GetProcAddress(hinstLib, "ChangeWindowMessageFilterEx");
+        if (ChangeWindowMessageFilterFunc)
+            ChangeWindowMessageFilterFunc(m_hiddenWindow, WM_COPYDATA, /*MSGFLT_ALLOW*/1, NULL);
+    }   
+
+    return false;
 }
 
 void App::releaseSingleInstanceApi() {
-    OutputDebugStringA("releaseSingleInstanceApi\n");
+    ::CloseHandle(m_singleInstanceHandle);
+    m_singleInstanceHandle = nullptr;
 }
 
 void App::relaunchApi(const base::DictionaryValue& options) {
-    OutputDebugStringA("relaunchApi\n");
+    std::string argsStr;
+    std::string execPathStr;
+    const base::Value* args = nullptr;
+    if (options.Get("args", &args))
+        args->GetAsString(&argsStr);
+    
+    const base::Value* execPath = nullptr;
+    if (options.Get("args", &execPath))
+        args->GetAsString(&execPathStr);
+
+    OutputDebugStringA("");    
 }
 
 void App::setPathApi(const std::string& name, const std::string& path) { 

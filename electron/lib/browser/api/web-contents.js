@@ -13,6 +13,17 @@ WebContents.prototype._init = function () {
 		return;
 	this.m_isInited = true;
 	
+	///
+	this.session = {
+		"webRequest" : {
+			"onBeforeSendHeaders" : function() {},
+			"onBeforeRequest" : function() {},
+			"onHeadersReceived" : function() {},
+		}
+	};
+	this.webContents = this; // ºÊ»›vscode 1.23
+	///
+	
 	// Every remote callback from renderer process would add a listenter to the
 	// render-view-deleted event, so ignore the listenters warning.
 	this.setMaxListeners(0);

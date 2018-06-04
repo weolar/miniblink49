@@ -142,10 +142,11 @@ void ThreadCall::exitMessageLoop(DWORD threadId) {
 
 void ThreadCall::messageLoop(uv_loop_t* loop, v8::Platform* platform, v8::Isolate* isolate) {
     MSG msg;
-    bool more;
+    bool more = false;
     
     while (true) {
-        more = (0 != uv_run(loop, UV_RUN_NOWAIT));
+        if (loop)
+            more = (0 != uv_run(loop, UV_RUN_NOWAIT));
         if (platform && isolate)
             v8::platform::PumpMessageLoop(platform, isolate);
         if (::PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
