@@ -54,8 +54,6 @@ static void clearLayerActions(WTF::Vector<cc::LayerChangeAction*>* actions);
 DEFINE_DEBUG_ONLY_GLOBAL(WTF::RefCountedLeakCounter, webLayerImplCounter, ("ccWebLayerImpl"));
 #endif
 
-int debugMaskLayerId = -1;
-
 WebLayerImpl::WebLayerImpl(WebLayerImplClient* client)
     : m_client(client)
     , m_layerType(client->type())
@@ -680,8 +678,6 @@ void WebLayerImpl::setMaskLayer(WebLayer* maskLayer)
     m_maskLayer->m_isMaskLayer = true;
     m_maskLayer->setParent(this);
     setNeedsCommit(true);
-
-    debugMaskLayerId = m_id;
 
     // for debug
     WebLayerImpl* parentLayer = m_parent;
