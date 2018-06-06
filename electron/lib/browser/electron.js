@@ -95,10 +95,16 @@ PowerMonitor.prototype.on = function(evtName, callback) {}
 electron.powerMonitor = new PowerMonitor();
 ////////////////////////////////////////////////////////////////
 function PowerSaveBlocker() {}
-PowerSaveBlocker.prototype.start = function(type) { return 0 }
+PowerSaveBlocker.prototype.start = function(type) { return 0; }
 PowerSaveBlocker.prototype.stop = function(id) {}
 PowerSaveBlocker.prototype.isStarted = function(id) { return false; }
 electron.powerSaveBlocker = new PowerSaveBlocker();
+////////////////////////////////////////////////////////////////
+function CrashReporter () {}
+CrashReporter.prototype.start = function(options) { return; }
+CrashReporter.prototype.getLastCrashReport = function() { return null; }
+CrashReporter.prototype.getUploadedReports = function() { return 0; }
+electron.crashReporter = new CrashReporter();
 ////////////////////////////////////////////////////////////////
 
 module.exports = electron;
