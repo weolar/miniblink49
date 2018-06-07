@@ -254,9 +254,6 @@ LRESULT CWebWindow::_windowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM l
         }
         break;
 
-    case WM_ERASEBKGND:
-        return 0;
-
     case WM_SIZE: {
         RECT rc = { 0 };
         ::GetClientRect(hwnd, &rc);
