@@ -7,10 +7,11 @@
 #include "third_party/WebKit/Source/wtf/text/WTFStringUtil.h"
 #include "third_party/WebKit/Source/bindings/core/v8/V8StringResource.h"
 #include "third_party/WebKit/Source/bindings/core/v8/V8Binding.h"
+#include "third_party/WebKit/Source/bindings/core/v8/V8RecursionScope.h"
 #include "third_party/WebKit/Source/core/frame/LocalDOMWindow.h"
 #include "third_party/WebKit/Source/core/frame/LocalFrame.h"
 #include "third_party/WebKit/Source/core/page/ChromeClient.h"
-#include "third_party/WebKit/Source/bindings/core/v8/V8RecursionScope.h"
+#include "third_party/WebKit/Source/platform/UserGestureIndicator.h"
 #include "third_party/WebKit/public/web/WebScriptSource.h"
 #include "third_party/WebKit/public/web/WebLocalFrame.h"
 #include "content/browser/WebFrameClientImpl.h"
@@ -756,6 +757,7 @@ jsValue jsCall(jsExecState es, jsValue func, jsValue thisValue, jsValue* args, i
     v8::HandleScope handleScope(isolate);
     v8::Local<v8::Context> context = v8::Local<v8::Context>::New(es->isolate, es->context);
     v8::Context::Scope contextScope(context);
+    blink::UserGestureIndicator gestureIndicator(blink::DefinitelyProcessingUserGesture);
 
     v8::Local<v8::Value>* argv = new v8::Local<v8::Value>[argCount];
     for (int i = 0; i < argCount; ++i) {

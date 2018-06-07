@@ -97,7 +97,7 @@ struct CWebViewHandler {
 
     wkeDraggableRegionsChangedCallback draggableRegionsChangedCallback;
     void* draggableRegionsChangedCallbackParam;
-
+    
     bool isWke; // 是否是使用的wke接口
 };
 
@@ -134,7 +134,7 @@ public:
 
 	  void setUserAgent(const utf8 * useragent);
     void setUserAgent(const wchar_t * useragent);
-
+    
     bool isLoading() const;
     bool isLoadingSucceeded() const;
     bool isLoadingFailed() const;
@@ -280,7 +280,7 @@ public:
     String getProxy() const { return m_proxy; }
     net::ProxyType getProxyType() const { return m_proxyType; }
 
-    void showDevTools(const utf8* url);
+    void showDevTools(const utf8* url, wkeOnShowDevtoolsCallback callback, void* param);
 
 protected:
     friend class ShowDevToolsTaskObserver;

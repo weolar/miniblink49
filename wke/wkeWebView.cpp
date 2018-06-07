@@ -17,6 +17,7 @@
 #include "third_party/WebKit/public/web/WebScriptSource.h"
 #include "third_party/WebKit/Source/web/WebViewImpl.h"
 #include "third_party/WebKit/Source/web/WebSettingsImpl.h"
+#include "third_party/WebKit/Source/platform/UserGestureIndicator.h"
 #include "third_party/WebKit/Source/bindings/core/v8/ExceptionState.h"
 #include "third_party/WebKit/Source/wtf/text/WTFStringUtil.h"
 
@@ -868,6 +869,8 @@ wkeWebFrameHandle CWebView::frameIdTowkeWebFrameHandle(content::WebPage* page, i
 
 static jsValue runJsImpl(blink::WebFrame* mainFrame, String* codeString, bool isInClosure)
 {
+    blink::UserGestureIndicator gestureIndicator(blink::DefinitelyProcessingUserGesture);
+
     if (codeString->startsWith("javascript:", WTF::TextCaseInsensitive))
         codeString->remove(0, sizeof("javascript:") - 1);
     if (isInClosure) {
@@ -1309,10 +1312,12 @@ void CWebView::setProxyInfo(const String& host,	unsigned long port,	net::ProxyTy
 
 class ShowDevToolsTaskObserver : public blink::WebThread::TaskObserver {
 public:
-    ShowDevToolsTaskObserver(CWebView* parent, const std::string& url)
+    ShowDevToolsTaskObserver(CWebView* parent, const std::string& url, wkeOnShowDevtoolsCallback callback, void* param)
     {
         m_parent = parent;
         m_url = url;
+        m_callback = callback;
+        m_param = param;
     }
     virtual ~ShowDevToolsTaskObserver() {}
 
@@ -1339,21 +1344,26 @@ public:
         wkeShowWindow(devToolsWebView, TRUE);
         wkeOnWindowDestroy(devToolsWebView, handleDevToolsWebViewDestroy, m_parent);
         wkeSetWindowTitle(devToolsWebView, "Miniblink Devtools");
+        wkeSetZoomFactor(devToolsWebView, m_parent->zoomFactor());
         blink::Platform::current()->currentThread()->removeTaskObserver(this);
+
+        if (m_callback)
+            m_callback(devToolsWebView, m_param);
     }
 
 private:
     CWebView* m_parent;
     std::string m_url;
+    wkeOnShowDevtoolsCallback m_callback;
+    void* m_param;
 };
 
-void CWebView::showDevTools(const utf8* url)
+void CWebView::showDevTools(const utf8* url, wkeOnShowDevtoolsCallback callback, void* param)
 {
     if (m_isCreatedDevTools)
         return;
     m_isCreatedDevTools = true;
-    blink::Platform::current()->currentThread()->addTaskObserver(new ShowDevToolsTaskObserver(this, url));
-    OutputDebugStringA("Devtools showDevTools\n");
+    blink::Platform::current()->currentThread()->addTaskObserver(new ShowDevToolsTaskObserver(this, url, callback, param));
 }
 
 } // namespace wke

@@ -192,6 +192,12 @@ LRESULT CALLBACK CWebWindow::_staticWindowProc(HWND hwnd, UINT message, WPARAM w
 LRESULT CWebWindow::_windowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch(message) {
+    case WM_NCPAINT:
+        break;
+
+    case WM_ERASEBKGND:
+        break;
+
     case WM_CREATE:
         ::DragAcceptFiles(hwnd, TRUE);
         SetTimer(hwnd, (UINT_PTR)this, 20, NULL);

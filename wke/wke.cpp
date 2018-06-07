@@ -23,6 +23,7 @@
 #include "gen/blink/platform/RuntimeEnabledFeatures.h"
 #include <v8.h>
 #include "wtf/text/WTFString.h"
+#include "wtf/text/WTFStringUtil.h"
 
 namespace net {
 void setCookieJarPath(const WCHAR* path);
@@ -86,7 +87,7 @@ void wkeSetProxy(const wkeProxy* proxy)
     if (!proxy)
         return;
 
-    WTF::PassOwnPtr<wkeProxyInfo> info = wkeProxyInfo::create(*proxy);
+    WTF::OwnPtr<wkeProxyInfo> info = wkeProxyInfo::create(*proxy);
 
     if (net::WebURLLoaderManager::sharedInstance())
         net::WebURLLoaderManager::sharedInstance()->setProxyInfo(info->hostname, proxy->port, info->proxyType, info->username, info->password);
@@ -96,7 +97,7 @@ void wkeSetViewProxy(wkeWebView webView, wkeProxy* proxy)
 {
     if (!webView || !proxy)
         return;
-    WTF::PassOwnPtr<wkeProxyInfo> info = wkeProxyInfo::create(*proxy);
+    WTF::OwnPtr<wkeProxyInfo> info = wkeProxyInfo::create(*proxy);
     webView->setProxyInfo(info->hostname, proxy->port, info->proxyType, info->username, info->password);
 }
 
@@ -211,7 +212,7 @@ void wkeSetDebugConfig(wkeWebView webView, const char* debugString, const char* 
         } else if ("alwaysInflateDirtyRect" == item) {
 
         } else if ("showDevTools" == item) {
-            webView->showDevTools(param);
+            webView->showDevTools(param, nullptr, nullptr);
         } else if ("wakeMinInterval" == item) {
             g_kWakeMinInterval = atoi(param);
         } else if ("drawMinInterval" == item) {
@@ -306,6 +307,13 @@ void wkeSetUserAgent(wkeWebView webView, const utf8* userAgent)
 void wkeSetUserAgentW(wkeWebView webView, const wchar_t* userAgent)
 {
     webView->setUserAgent(userAgent);
+}
+
+void wkeShowDevtools(wkeWebView webView, const wchar_t* path, wkeOnShowDevtoolsCallback callback, void* param)
+{
+    std::vector<char> pathUtf8;
+    WTF::WCharToMByte(path, wcslen(path), &pathUtf8, CP_UTF8);
+    webView->showDevTools(&pathUtf8[0], callback, param);
 }
 
 void wkePostURL(wkeWebView wkeView,const utf8 * url,const char *szPostData,int nLen)
@@ -1158,6 +1166,15 @@ void wkeSetWindowTitleW(wkeWebView webWindow, const wchar_t* title)
         return window->setTitle(title);
 }
 
+WKE_EXTERN_C wkeNodeOnCreateProcessCallback g_wkeNodeOnCreateProcessCallback = nullptr;
+WKE_EXTERN_C void* g_wkeNodeOnCreateProcessCallbackparam = nullptr;
+
+void wkeNodeOnCreateProcess(wkeWebView webWindow, wkeNodeOnCreateProcessCallback callback, void* param)
+{
+    g_wkeNodeOnCreateProcessCallback = callback;
+    g_wkeNodeOnCreateProcessCallbackparam = param;
+}
+
 static void convertDragData(blink::WebDragData* data, const wkeWebDragData* webDragData) {
     data->initialize();
 
@@ -1313,7 +1330,7 @@ void wkeGC(wkeWebView webView, long delayMs)
     platformImpl->startGarbageCollectedThread((double)delayMs);
 }
 
-extern "C" void curl_set_file_system(
+WKE_EXTERN_C void curl_set_file_system(
     WKE_FILE_OPEN pfnOpen,
     WKE_FILE_CLOSE pfnClose,
     WKE_FILE_SIZE pfnSize,

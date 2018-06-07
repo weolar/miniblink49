@@ -56,6 +56,11 @@ typedef unsigned short wchar_t;
 
 #include <stdbool.h>
 
+#if defined(__cplusplus)
+#define WKE_EXTERN_C extern "C" 
+#else
+#define WKE_EXTERN_C 
+#endif
 
 typedef char utf8;
 #if !defined(__cplusplus)
@@ -377,6 +382,12 @@ typedef wkeWebView(*wkeCreateViewCallback)(wkeWebView webView, void* param, wkeN
 typedef void(*wkeDocumentReadyCallback)(wkeWebView webView, void* param);
 typedef void(*wkeDocumentReady2Callback)(wkeWebView webView, void* param, wkeWebFrameHandle frameId);
 
+typedef void(*wkeOnShowDevtoolsCallback)(wkeWebView webView, void* param);
+
+typedef void(*wkeNodeOnCreateProcessCallback)(
+    wkeWebView webView, void* param, const WCHAR* applicationPath,
+    const WCHAR* arguments, STARTUPINFOW* startup);
+
 typedef struct {
     int size;
     int width;
@@ -617,28 +628,28 @@ public:
 // ---
 
 #define WKE_DECLARE_ITERATOR0(returnVal, name, description) \
-    extern "C" __declspec(dllexport) returnVal WKE_CALL_TYPE name();
+    WKE_EXTERN_C __declspec(dllexport) returnVal WKE_CALL_TYPE name();
 
 #define WKE_DECLARE_ITERATOR1(returnVal, name, p1, description) \
-    extern "C" __declspec(dllexport) returnVal WKE_CALL_TYPE name(p1);
+    WKE_EXTERN_C __declspec(dllexport) returnVal WKE_CALL_TYPE name(p1);
 
 #define WKE_DECLARE_ITERATOR2(returnVal, name, p1, p2, description) \
-    extern "C" __declspec(dllexport) returnVal WKE_CALL_TYPE name(p1, p2);
+    WKE_EXTERN_C __declspec(dllexport) returnVal WKE_CALL_TYPE name(p1, p2);
 
 #define WKE_DECLARE_ITERATOR3(returnVal, name, p1, p2, p3, description) \
-    extern "C" __declspec(dllexport) returnVal WKE_CALL_TYPE name(p1, p2, p3);
+    WKE_EXTERN_C __declspec(dllexport) returnVal WKE_CALL_TYPE name(p1, p2, p3);
 
 #define WKE_DECLARE_ITERATOR4(returnVal, name, p1, p2, p3, p4, description) \
-    extern "C" __declspec(dllexport) returnVal WKE_CALL_TYPE name(p1, p2, p3, p4);
+    WKE_EXTERN_C __declspec(dllexport) returnVal WKE_CALL_TYPE name(p1, p2, p3, p4);
 
 #define WKE_DECLARE_ITERATOR5(returnVal, name, p1, p2, p3, p4, p5, description) \
-    extern "C" __declspec(dllexport) returnVal WKE_CALL_TYPE name(p1, p2, p3, p4, p5);
+    WKE_EXTERN_C __declspec(dllexport) returnVal WKE_CALL_TYPE name(p1, p2, p3, p4, p5);
 
 #define WKE_DECLARE_ITERATOR6(returnVal, name, p1, p2, p3, p4, p5, p6, description) \
-    extern "C" __declspec(dllexport) returnVal WKE_CALL_TYPE name(p1, p2, p3, p4, p5, p6);
+    WKE_EXTERN_C __declspec(dllexport) returnVal WKE_CALL_TYPE name(p1, p2, p3, p4, p5, p6);
 
 #define WKE_DECLARE_ITERATOR11(returnVal, name, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, description) \
-    extern "C" __declspec(dllexport) returnVal WKE_CALL_TYPE name(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11);
+    WKE_EXTERN_C __declspec(dllexport) returnVal WKE_CALL_TYPE name(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11);
 
 // ---
 
@@ -770,6 +781,8 @@ public:
     \
     ITERATOR2(void, wkeSetUserAgent, wkeWebView webView, const utf8* userAgent, "") \
     ITERATOR2(void, wkeSetUserAgentW, wkeWebView webView, const wchar_t* userAgent, "") \
+    \
+    ITERATOR4(void, wkeShowDevtools, wkeWebView webView, const wchar_t* path, wkeOnShowDevtoolsCallback callback, void* param, "") \
     \
     ITERATOR2(void, wkeLoadW, wkeWebView webView, const wchar_t* url, "") \
     ITERATOR2(void, wkeLoadURL, wkeWebView webView, const utf8* url, "") \
@@ -962,6 +975,8 @@ public:
     ITERATOR2(void, wkeSetWindowTitle, wkeWebView webWindow, const utf8* title, "") \
     ITERATOR2(void, wkeSetWindowTitleW, wkeWebView webWindow, const wchar_t* title, "") \
     \
+    ITERATOR3(void, wkeNodeOnCreateProcess, wkeWebView webWindow, wkeNodeOnCreateProcessCallback callback, void* param, "") \
+    \
     ITERATOR3(void, jsBindFunction, const char* name, jsNativeFunction fn, unsigned int argCount, "") \
     ITERATOR2(void, jsBindGetter, const char* name, jsNativeFunction fn, "") \
     ITERATOR2(void, jsBindSetter, const char* name, jsNativeFunction fn, "") \
@@ -1039,9 +1054,9 @@ public:
 
 #if ENABLE_WKE == 1
 
-extern "C" __declspec(dllexport) void wkeInit();
-extern "C" __declspec(dllexport) void wkeInitialize();
-extern "C" __declspec(dllexport) void wkeInitializeEx(const wkeSettings* settings);
+WKE_EXTERN_C __declspec(dllexport) void wkeInit();
+WKE_EXTERN_C __declspec(dllexport) void wkeInitialize();
+WKE_EXTERN_C __declspec(dllexport) void wkeInitializeEx(const wkeSettings* settings);
 
 WKE_FOR_EACH_DEFINE_FUNCTION(WKE_DECLARE_ITERATOR0, WKE_DECLARE_ITERATOR1, WKE_DECLARE_ITERATOR2, \
     WKE_DECLARE_ITERATOR3, WKE_DECLARE_ITERATOR4, WKE_DECLARE_ITERATOR5, WKE_DECLARE_ITERATOR6, WKE_DECLARE_ITERATOR11)
