@@ -242,7 +242,7 @@ public:
         skia::AnalysisCanvas canvas(tilePos.width(), tilePos.height());
         canvas.translate(-tilePos.x(), -tilePos.y());
         canvas.clipRect(tilePos, SkRegion::kIntersect_Op);
-        canvas.drawPicture(m_picture);
+        m_picture->playback(&canvas, &canvas);
 
         return canvas.GetColorIfSolid(color);
     }
@@ -282,8 +282,6 @@ public:
             if (isSolidColor) {
                 info->m_solidColor = new SkColor(solidColor);
                 info->m_isSolidColorCoverWholeTile = m_dirtyRect.contains(tilePos);
-            } else {
-                
             }
         }
 
