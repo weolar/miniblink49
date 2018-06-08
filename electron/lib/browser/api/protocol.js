@@ -13,12 +13,13 @@ function onLoadUrlBegin(id, request, jobPtr, isCallOnHandlerFinishPtr, typePtr) 
 
     handler(request, function(filePath) {
         var filePathTrim = filePath
-        if ("string" != (typeof filePathTrim))
+        if ("string" != (typeof filePathTrim)) {
             filePathTrim = filePath.path;
+        }
         if ("string" != (typeof filePathTrim))
             return;
         
-        protocol.onHandlerFinish(filePath, jobPtr, isCallOnHandlerFinishPtr, typePtr);
+        protocol.onHandlerFinish(filePathTrim, jobPtr, isCallOnHandlerFinishPtr, typePtr);
     });
 }
 
