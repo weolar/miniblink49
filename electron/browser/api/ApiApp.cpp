@@ -21,6 +21,27 @@
 
 typedef BOOL(__stdcall *FN_ChangeWindowMessageFilterEx)(HWND hwnd, UINT message, DWORD action, void* pChangeFilterStruct);
 
+namespace {
+
+static void onOnUvCreateProcessCallback(
+    wkeWebView webView, 
+    void* param, 
+    const WCHAR* applicationPath,
+    const WCHAR* arguments, 
+    STARTUPINFOW* startup
+    ) {
+    OutputDebugStringW(L"onOnUvCreateProcessCallback:");
+    OutputDebugStringW(applicationPath);
+    OutputDebugStringW(L"\n");
+
+    if (nullptr != wcsstr(applicationPath, L"git.exe"))
+        startup->wShowWindow = SW_HIDE;
+    if (nullptr != wcsstr(applicationPath, L"Microsoft.VSCode.CPP.Extension.exe"))
+        startup->wShowWindow = SW_HIDE;
+}
+
+}
+
 namespace atom {
 
 App* App::m_instance = nullptr;
@@ -38,6 +59,8 @@ App::App(v8::Isolate* isolate, v8::Local<v8::Object> wrapper) {
     m_instance = this;
     m_version = "1.3.3";
     m_singleInstanceHandle = nullptr;
+
+    wkeNodeOnCreateProcess(nullptr, onOnUvCreateProcessCallback, nullptr);
 }
 
 App::~App() {

@@ -61,6 +61,8 @@ static void initPeRes(HINSTANCE hInstance) {
     }
 }
 
+
+
 } // atom
 
 int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow) {

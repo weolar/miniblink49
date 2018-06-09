@@ -33,7 +33,7 @@ public:
     }
 
     Menu* getMenu() const {
-        return m_menu;;
+        return m_menu;
     }
 
     void setType(MenuItemType type) {
@@ -80,6 +80,8 @@ public:
 
     void insertPlatformMenu(size_t pos, HMENU hMenu) const;
 
+    void clear();
+
 private:
     MenuItemType m_type;
     HMENU m_hSubMenu;
@@ -101,7 +103,7 @@ public:
     explicit Menu(v8::Isolate* isolate, v8::Local<v8::Object> wrapper)
         : m_hideWndHelp(nullptr) {
         gin::Wrappable<Menu>::InitWith(isolate, wrapper);
-        m_menuTemplate = nullptr;
+        //m_menuTemplate = nullptr;
         m_hMenu = NULL;
         m_isItemNeedRebuilt = false;
         m_isAppOrPopupMenu = kNoInit;
@@ -127,6 +129,7 @@ public:
         builder.SetMethod("_insert", &Menu::_insertApi);
         builder.SetMethod("_append", &Menu::_appendeApi);
         builder.SetMethod("_popup", &Menu::_popupApi);
+        builder.SetMethod("_clear", &Menu::_clearApi);
         builder.SetMethod("getItemCount", &Menu::getItemCountApi);
         builder.SetMethod("quit", &Menu::nullFunction);
 
@@ -268,6 +271,19 @@ public:
         ::TrackPopupMenu(m_hMenu, TPM_LEFTALIGN | TPM_TOPALIGN | TPM_RIGHTBUTTON, pt.x, pt.y, 0, m_hideWndHelp->getWnd(), NULL);
     }
 
+    void _clearApi() {
+        clear();
+    }
+    void clear() {
+        ::DestroyMenu(m_hMenu);
+        for (size_t i = 0; i < m_items.size(); ++i) {
+            MenuItem* it = m_items[i];
+            it->clear();
+            delete it;
+        }
+        m_items.clear();
+    }
+
     void onCommon(MenuItem* item, UINT uMsg, WPARAM wParam, LPARAM lParam) {
         if (item->getChecked()) {
             MENUITEMINFOW info = { 0 };
@@ -354,7 +370,7 @@ private:
         return 0;
     }
 
-    base::ListValue* m_menuTemplate;
+    //base::ListValue* m_menuTemplate;
     HMENU m_hMenu;
     std::vector<MenuItem*> m_items;
     bool m_isItemNeedRebuilt;
@@ -430,6 +446,11 @@ void MenuItem::insertPlatformMenu(size_t pos, HMENU hMenu) const {
     if (CheckableActionType == m_type)
         info.fState |= m_isChecked ? MFS_CHECKED : MFS_UNCHECKED;
     ::InsertMenuItem(hMenu, count, TRUE, &info);
+}
+
+void MenuItem::clear() {
+    ::DestroyMenu(m_hSubMenu);
+    m_subMenu->clear();
 }
 
 void MenuEventNotif::onWindowDidCreated(WindowInterface* window) {

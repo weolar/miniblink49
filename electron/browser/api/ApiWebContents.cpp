@@ -83,7 +83,7 @@ void WebContents::init(v8::Isolate* isolate, v8::Local<v8::Object> target, node:
     builder.SetMethod("invalidate", &WebContents::invalidateApi);
     builder.SetMethod("getType", &WebContents::getTypeApi);
     builder.SetMethod("getWebPreferences", &WebContents::getWebPreferencesApi);
-    builder.SetMethod("getOwnerBrowserWindow", &WebContents::getOwnerBrowserWindowApi);
+    builder.SetMethod("getOwnerBrowserWindow", &WebContents::getOwnerBrowserWindowApi);    
     builder.SetMethod("hasServiceWorker", &WebContents::hasServiceWorkerApi);
     builder.SetMethod("unregisterServiceWorker", &WebContents::unregisterServiceWorkerApi);
     builder.SetMethod("inspectServiceWorker", &WebContents::inspectServiceWorkerApi);

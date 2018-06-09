@@ -18,6 +18,7 @@
 #include "gin/per_isolate_data.h"
 #include "gin/object_template_builder.h"
 #include "base/files/file_path.h"
+#include "base/win/windows_version.h"
 #include <shellapi.h>
 #include <ole2.h>
 
@@ -211,10 +212,9 @@ public:
         browserWindowClass.SetMethod("getFocusedWindow", &Window::getFocusedWindowApi);
         browserWindowClass.SetMethod("fromId", &Window::fromIdApi);
         browserWindowClass.SetMethod("getAllWindows", &Window::getAllWindowsApi);
-
-        // 设置constructor
+        browserWindowClass.SetMethod("fromWebContents", &Window::fromWebContentsApi);
+        
         constructor.Reset(isolate, prototype->GetFunction());
-        // export `BrowserWindow`
         target->Set(v8::String::NewFromUtf8(isolate, "BrowserWindow"), prototype->GetFunction());
     }
 
@@ -361,7 +361,7 @@ public:
         wkeWebView webview = m_webContents->getWkeView();
         if (message == WM_LBUTTONDOWN || message == WM_MBUTTONDOWN || message == WM_RBUTTONDOWN) {
             ::SetFocus(hWnd);
-            //::SetCapture(hWnd);
+            ::SetCapture(hWnd);
         }
         else if (message == WM_LBUTTONUP || message == WM_MBUTTONUP || message == WM_RBUTTONUP) {
             ::ReleaseCapture();
@@ -1260,6 +1260,28 @@ private:
 
         info.GetReturnValue().Set(result);
     }
+    
+    static void fromWebContentsApi(const v8::FunctionCallbackInfo<v8::Value>& info) {
+        if (1 != info.Length())
+            return;
+        v8::Local<v8::Value> arg0 = info[0];
+        if (!arg0->IsObject())
+            return;
+
+        v8::Local<v8::Object> webContents = arg0->ToObject();
+
+        WrappableBase* webContentsPtr = GetNativePtr(webContents, &WebContents::kWrapperInfo);
+        if (!webContentsPtr)
+            return;
+
+        WebContents* contents = (WebContents*)webContentsPtr;
+        WindowInterface* win = contents->getOwner();
+        if (!win)
+            return;
+        Window* self = (Window*)(win);
+        v8::Local<v8::Object> winObject = self->GetWrapperImpl(info.GetIsolate(), &Window::kWrapperInfo);
+        info.GetReturnValue().Set(winObject);
+    }
 
     int getIdApi() const {
         return m_id;
@@ -1314,8 +1336,8 @@ private:
     }
     
     static bool handleLoadUrlBegin(wkeWebView webView, void* param, const char* url, void* job) {
-        if (hookUrl(job, url, "frameworks-4a55ab3fcf005abef1e8b859483f3cce.js", L"D:\\ProgramData\\Lepton\\resources\\frameworks-4a55ab3fcf005abef1e8b859483f3cce.js", "text/javascript"))
-            return true;
+//         if (hookUrl(job, url, "frameworks-4a55ab3fcf005abef1e8b859483f3cce.js", L"D:\\ProgramData\\Lepton\\resources\\frameworks-4a55ab3fcf005abef1e8b859483f3cce.js", "text/javascript"))
+//             return true;
 
         if (ProtocolInterface::inst()->handleLoadUrlBegin(param, url, job))
             return true;
@@ -1638,6 +1660,17 @@ private:
         return win;
     }
 
+    static void matchDpi(wkeWebView webview) {
+        HDC hdc = ::GetDC(nullptr);
+        int t = ::GetDeviceCaps(hdc, DESKTOPHORZRES);
+        int d = ::GetDeviceCaps(hdc, HORZRES);
+        int logPixelsx = ::GetDeviceCaps(hdc, LOGPIXELSX);
+        float s_kScaleX = (float)t / (float)d;
+        s_kScaleX = logPixelsx / 96.0f;
+
+        wkeSetZoomFactor(webview, s_kScaleX);
+    }
+
     void newWindowTaskInUiThread(const WebContents::CreateWindowParam* createWindowParam) {
         m_createWindowParam = createWindowParam;
 
@@ -1677,6 +1710,8 @@ private:
 
             wkeWebView webview = win->m_webContents->getWkeView();
             win->m_webContents->onNewWindowInBlinkThread(width, height, createWindowParam);
+
+            matchDpi(webview);
             wkeSetHandle(webview, hWnd);
             wkeOnPaintUpdated(webview, (wkePaintUpdatedCallback)staticOnPaintUpdatedInCompositeThread, win);
             wkeOnConsole(webview, onConsoleCallback, nullptr);
@@ -1687,6 +1722,7 @@ private:
             wkeOnOtherLoad(webview, onOtherLoadCallback, win);
             wkeOnNavigation(webview, onNavigationCallback, win);
             wkeOnDraggableRegionsChanged(webview, onDraggableRegionsChanged, win);
+            wkeSetDebugConfig(webview, "decodeUrlRequest", nullptr);
         });
 
         MenuEventNotif::onWindowDidCreated(this);
@@ -1787,7 +1823,11 @@ static void initializeWindowApi(v8::Local<v8::Object> target, v8::Local<v8::Valu
     Window::init(target, env);
     WNDCLASS wndClass = { 0 };
     if (!GetClassInfoW(NULL, WindowInterface::kElectronClassName, &wndClass)) {
-        wndClass.style = CS_HREDRAW | CS_VREDRAW | CS_DROPSHADOW;
+
+        wndClass.style = CS_HREDRAW | CS_VREDRAW;
+        if (base::win::OSInfo::GetInstance()->version() < base::win::VERSION_WIN8)
+            wndClass.style |= CS_DROPSHADOW;
+
         wndClass.lpfnWndProc = &Window::staticWindowProc;
         wndClass.cbClsExtra = 200;
         wndClass.cbWndExtra = 200;

@@ -117,8 +117,6 @@ std::wstring getResourcesPath(const std::wstring& name) {
         out += L"\\resources\\miniblink.asar\\";
     else
         out += L"\\..\\..\\electron\\lib\\";
-
-    OutputDebugStringA("getResourcesPath\n");
     
     kResPath = new std::wstring(out);
     out += name;

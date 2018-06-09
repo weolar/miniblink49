@@ -28,6 +28,7 @@ electron.dialog = dialog;
 electron.shell = require("./../common/api/shell").Shell;
 electron.screen = require("./../common/api/screen").Screen;
 electron.tray = require("./../common/api/screen").Tray;
+electron.clipboard = require("./../common/api/clipboard");
 
 function SystemPreferences () {}
 SystemPreferences.prototype.isDarkMode = function() { return false; }
@@ -107,5 +108,5 @@ CrashReporter.prototype.getUploadedReports = function() { return 0; }
 electron.crashReporter = new CrashReporter();
 ////////////////////////////////////////////////////////////////
 
-module.exports = electron;
+module.exports = electron;;
 

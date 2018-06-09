@@ -88,6 +88,7 @@ public:
     void removeObserver(WebContentsObserver* observer);
 
     wkeWebView getWkeView() const { return m_view; }
+    WindowInterface* getOwner() const { return m_owner; }
 
     void onNewWindowInBlinkThread(int width, int height, const CreateWindowParam* createWindowParam);
 
