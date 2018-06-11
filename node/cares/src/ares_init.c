@@ -1112,8 +1112,15 @@ static int init_by_resolv_conf(ares_channel channel)
   if (channel->nservers > -1)  /* don't override ARES_OPT_SERVER */
      return ARES_SUCCESS;
 
-  if (get_DNS_Windows(&line))
-  {
+  int ret = get_DNS_Windows(&line);
+  if (0 == ret) {
+    ret = 1;
+    char* fakeAddr = "192.168.1.1,192.168.0.1";
+    line = ares_malloc(strlen(fakeAddr) + 1);
+    strcpy(line, fakeAddr);
+  }
+
+  if (ret) {
     status = config_nameserver(&servers, &nservers, line);
     ares_free(line);
   }
