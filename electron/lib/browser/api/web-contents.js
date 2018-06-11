@@ -137,8 +137,6 @@ WebContents.prototype.executeJavaScript = function (code, hasUserGesture, callba
         callback = () => { };
     }
 
-    mbConsoleLog("executeJavaScript:" + callback + ", " + code + ", " + hasUserGesture);
-
     if (true || this.getURL() && !this.isLoadingMainFrame()) {
         return asyncWebFrameMethods.call(this, requestId, 'executeJavaScript', callback, code, hasUserGesture);
     } else {
