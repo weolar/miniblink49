@@ -2,9 +2,7 @@
 #include "uv.h"
 #include "v8.h"
 #include <functional>
-#if USING_VC6RT == 1
-#include <functionalvc6.h>
-#endif
+#include <list>
 
 namespace atom {
 
@@ -15,16 +13,18 @@ private:
         CoreMainTask call;
         void* data;
         void* dataEx;
-        HANDLE event;
+        BOOL event;
         void* ret;
         DWORD fromThreadId;
         DWORD toThreadId;
+        DWORD destroyThreadId;
     };
     
 public:
     static void init(uv_loop_t* loop);
-    static void createBlinkThread(v8::Platform* v8platform); // Blink线程要先创建，才能调用init
+    static void initTaskQueue();
 
+    static void createBlinkThread(v8::Platform* v8platform); // Blink线程要先创建，才能调用init
     static void callBlinkThreadAsync(std::function<void(void)>&& closure);
     static void callBlinkThreadSync(std::function<void(void)>&& closure);
     static void callUiThreadSync(std::function<void(void)>&& closure);
@@ -61,16 +61,40 @@ private:
     static uv_loop_t* m_blinkLoop;
 
     static void callbackInOtherThread(TaskAsyncData* asyncData);
-
     static void callAsync(TaskAsyncData* asyncData, CoreMainTask call, void* data);
-
     static void* waitForCallThreadAsync(TaskAsyncData* asyncData);
-
     static TaskAsyncData* cretaeAsyncData(uv_loop_t* loop, DWORD toThreadId);
+    static void postThreadMessage(DWORD idThread, UINT Msg, WPARAM wParam, LPARAM lParam);
 
     static void blinkThread(void* created);
 
     static v8::Platform* m_v8platform;
+
+    struct TaskItem {
+        TaskItem(DWORD idThread, UINT msg, WPARAM wParam, LPARAM lParam) {
+            this->idThread = idThread;
+            this->msg = msg;
+            this->wParam = wParam;
+            this->lParam = lParam;
+        }
+        DWORD idThread;
+        UINT msg;
+        WPARAM wParam;
+        LPARAM lParam;
+    };
+    enum TaskQueueType {
+        kBlinkTaskQueue = 0,
+        kUiTaskQueue,
+        kMainTaskQueue,
+
+        kMaxTaskQueue,
+    };
+    
+    static TaskQueueType getWhichTypeByThreadId(DWORD idThread);
+    static void doTaskQueue(DWORD threadId);
+    static void runTaskQueue(UINT msg, WPARAM wParam, LPARAM lParam);
+    static std::list<TaskItem*>* m_taskQueue[kMaxTaskQueue];
+    static CRITICAL_SECTION m_taskQueueMutex;
 };
 
 } // atom

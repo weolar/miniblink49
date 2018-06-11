@@ -86,6 +86,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
     atom::NodeArgc* node = atom::runNodeThread();
     
     uv_loop_t* loop = nullptr; // uv_default_loop();
+    atom::ThreadCall::initTaskQueue();
     atom::ThreadCall::messageLoop(loop, nullptr, nullptr);
     atom::ThreadCall::shutdown();
 

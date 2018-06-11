@@ -275,7 +275,9 @@ public:
         clear();
     }
     void clear() {
-        ::DestroyMenu(m_hMenu);
+        if (m_hMenu)
+            ::DestroyMenu(m_hMenu);
+        m_hMenu = nullptr;
         for (size_t i = 0; i < m_items.size(); ++i) {
             MenuItem* it = m_items[i];
             it->clear();
@@ -449,8 +451,12 @@ void MenuItem::insertPlatformMenu(size_t pos, HMENU hMenu) const {
 }
 
 void MenuItem::clear() {
-    ::DestroyMenu(m_hSubMenu);
-    m_subMenu->clear();
+    if (m_hSubMenu)
+        ::DestroyMenu(m_hSubMenu);
+    m_hSubMenu = nullptr;
+    if (m_subMenu)
+        m_subMenu->clear();
+    m_subMenu = nullptr;
 }
 
 void MenuEventNotif::onWindowDidCreated(WindowInterface* window) {

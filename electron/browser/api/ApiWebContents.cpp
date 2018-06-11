@@ -426,12 +426,12 @@ std::string WebContents::getTitleApi() {
 }
 
 bool WebContents::isLoadingApi() {
-    bool isLoading;
+    bool isLoading = false;
     WebContents* self = this;
     int id = m_id;
-    ThreadCall::callBlinkThreadSync([self, &isLoading] {
-        isLoading = wkeIsLoading(self->m_view);
-    });
+//     ThreadCall::callBlinkThreadSync([self, &isLoading] {
+//         isLoading = wkeIsLoading(self->m_view);
+//     });
     return isLoading;
 }
 
