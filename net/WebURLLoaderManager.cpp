@@ -81,6 +81,7 @@
 
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
 #include "wke/wkeWebView.h"
+extern bool g_isDecodeUrlRequest;
 #endif
 #include "wtf/RefCountedLeakCounter.h"
 
@@ -416,6 +417,22 @@ static size_t headerCallbackOnIoThread(char* ptr, size_t size, size_t nmemb, voi
     return totalSize;
 }
 
+static curlioerr ioctlCallbackOnIoThread(CURL* handle, int cmd, void* data)
+{
+    int jobId = (int)data;
+    AutoLockJob autoLockJob(WebURLLoaderManager::sharedInstance(), jobId);
+    WebURLLoaderInternal* job = autoLockJob.lock();
+    if (!job || job->isCancelled())
+        return CURLIOE_UNKNOWNCMD;
+
+    if (cmd == CURLIOCMD_RESTARTREAD) {
+        job->m_formDataStream->reset();
+
+        return CURLIOE_OK;
+    }
+    return CURLIOE_UNKNOWNCMD;
+}
+
 size_t readCallbackOnIoThread(void* ptr, size_t size, size_t nmemb, void* data)
 {
     int jobId = (int)data;
@@ -635,6 +652,9 @@ static void setupFormDataOnIoThread(WebURLLoaderInternal* job, SetupDataInfo* in
     job->m_formDataStream = new FlattenHTTPBodyElementStream(info->flattenElements);
     curl_easy_setopt(job->m_handle, CURLOPT_READFUNCTION, readCallbackOnIoThread);
     curl_easy_setopt(job->m_handle, CURLOPT_READDATA, job->m_id);
+
+    curl_easy_setopt(job->m_handle, CURLOPT_IOCTLFUNCTION, ioctlCallbackOnIoThread);
+    curl_easy_setopt(job->m_handle, CURLOPT_IOCTLDATA, job->m_id);
 }
 
 static void flattenHTTPBodyBlobElement(const WebString& blobUUID, curl_off_t* size, WTF::Vector<FlattenHTTPBodyElement*>* flattenElements)
@@ -1005,6 +1025,11 @@ int WebURLLoaderManager::addAsynchronousJob(WebURLLoaderInternal* job)
     }
 #endif
 
+    if (g_isDecodeUrlRequest) {
+        url = blink::decodeURLEscapeSequences(url);
+        job->firstRequest()->setURL((blink::KURL(blink::ParsedURLString, url)));
+    }
+
     String referer = job->firstRequest()->httpHeaderField(WebString::fromUTF8("referer"));
     job->m_manager = this;
 
@@ -1373,7 +1398,7 @@ void WebURLLoaderManager::initializeHandleOnIoThread(int jobId, InitializeHandle
 
     curl_easy_setopt(job->m_handle, CURLOPT_URL, job->m_url);
 
-    if (m_cookieJarFileName) {
+    if (m_cookieJarFileName && '\0' != m_cookieJarFileName[0]) {
         curl_easy_setopt(job->m_handle, CURLOPT_COOKIEJAR, m_cookieJarFileName);
         curl_easy_setopt(job->m_handle, CURLOPT_COOKIEFILE, m_cookieJarFileName);
     }
