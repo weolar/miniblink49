@@ -23,7 +23,8 @@ private:
         return ret; \
     if (WebPageImpl::pageInited != self->m_state) \
         return ret; \
-    CheckReEnter checker(self);
+    CheckReEnter checker(self); \
+    BlinkPlatformImpl::AutoDisableGC autoDisableGC;
 
 } // content
 

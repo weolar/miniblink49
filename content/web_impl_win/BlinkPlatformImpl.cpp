@@ -203,6 +203,7 @@ BlinkPlatformImpl::BlinkPlatformImpl()
     m_ioThread = nullptr;
     m_firstMonotonicallyIncreasingTime = currentTimeImpl(); // (GetTickCount() / 1000.0);
     m_numberOfProcessors = 1;
+    m_isDisableGC = false;
 
     ::InitializeCriticalSection(m_lock);
 
@@ -371,6 +372,16 @@ void BlinkPlatformImpl::perfTimer(blink::Timer<BlinkPlatformImpl>*)
     g_autoRecordActionsTime = 0;
 }
 
+BlinkPlatformImpl::AutoDisableGC::AutoDisableGC() {
+    BlinkPlatformImpl* platform = (BlinkPlatformImpl*)blink::Platform::current();
+    platform->m_isDisableGC = true;
+}
+
+BlinkPlatformImpl::AutoDisableGC::~AutoDisableGC() {
+    BlinkPlatformImpl* platform = (BlinkPlatformImpl*)blink::Platform::current();
+    platform->m_isDisableGC = true;
+}
+
 void BlinkPlatformImpl::garbageCollectedTimer(blink::Timer<BlinkPlatformImpl>*)
 {
     doGarbageCollected();
@@ -378,6 +389,9 @@ void BlinkPlatformImpl::garbageCollectedTimer(blink::Timer<BlinkPlatformImpl>*)
 
 void BlinkPlatformImpl::doGarbageCollected()
 {
+    if (m_isDisableGC)
+        return;
+
     blink::memoryCache()->evictResources();
     //net::gActivatingLoaderCheck->doGarbageCollected(false);
     //blink::memoryCache()->evictResources();

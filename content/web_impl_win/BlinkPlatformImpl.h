@@ -128,11 +128,19 @@ public:
     virtual size_t numberOfProcessors() override;
     void setNumberOfProcessors(size_t num);
 
+    //////////////////////////////////////////////////////////////////////////
+    class AutoDisableGC {
+    public:
+        AutoDisableGC();
+        ~AutoDisableGC();
+    };
+
 private:
     void destroyWebInfo();
     void closeThread();
     void garbageCollectedTimer(blink::Timer<BlinkPlatformImpl>*);
     void perfTimer(blink::Timer<BlinkPlatformImpl>*);
+    bool m_isDisableGC;
 
     CRITICAL_SECTION* m_lock;
     static const int m_maxThreadNum = 1000;
