@@ -853,21 +853,13 @@ static void setupPostOnIoThread(WebURLLoaderInternal* job, SetupPostInfo* info)
 
 static SetupPostInfo* setupPostOnMainThread(WebURLLoaderInternal* job, struct curl_slist** headers)
 {
-    *headers = curl_slist_append(*headers, "Expect:100-continue"); // Disable the Expect: 100 continue header
+    // *headers = curl_slist_append(*headers, "Expect:100-continue"); // Disable the Expect: 100 continue header
 
     size_t numElements = getFormElementsCount(job);
     if (!numElements)
         return nullptr;
 
     SetupPostInfo* result = new SetupPostInfo();
-
-    // Do not stream for simple POST data
-//     if (numElements == 1) {
-//         flattenHttpBody(job->firstRequest()->httpBody(), &job->m_postBytes);
-//         return result;
-//     }
-// 
-//     flattenHttpBody(job->firstRequest()->httpBody(), &job->m_postBytes);
     result->data = setupFormDataOnMainThread(job, CURLOPT_POSTFIELDSIZE_LARGE, headers);
     return result;
 }
