@@ -16,6 +16,7 @@ exports.resolveObject = urlResolveObject;
 exports.format = urlFormat;
 
 exports.Url = Url;
+exports.URL= Url;
 
 function Url() {
   this.protocol = null;
