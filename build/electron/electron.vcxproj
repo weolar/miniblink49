@@ -61,10 +61,15 @@
     <ClCompile Include="..\..\cef\libcef_dll\base\cef_thread_checker_impl.cc" />
     <ClCompile Include="..\..\cef\libcef_dll\base\cef_thread_collision_warner.cc" />
     <ClCompile Include="..\..\cef\libcef_dll\base\cef_weak_ptr.cc" />
+    <ClCompile Include="..\..\content\ui\ClipboardUtil.cpp" />
+    <ClCompile Include="..\..\content\ui\WCDataObject.cpp" />
+    <ClCompile Include="..\..\content\ui\WebDropSource.cpp" />
     <ClCompile Include="..\..\electron\browser\api\ApiApp.cpp" />
     <ClCompile Include="..\..\electron\browser\api\ApiDialag.cpp" />
     <ClCompile Include="..\..\electron\browser\api\ApiElectron.cpp" />
     <ClCompile Include="..\..\electron\browser\api\ApiMenu.cpp" />
+    <ClCompile Include="..\..\electron\browser\api\ApiProtocol.cpp" />
+    <ClCompile Include="..\..\electron\browser\api\ApiTray.cpp" />
     <ClCompile Include="..\..\electron\browser\api\ApiWebContents.cpp" />
     <ClCompile Include="..\..\electron\browser\api\ApiWindow.cpp" />
     <ClCompile Include="..\..\electron\browser\api\WindowList.cpp" />
@@ -89,6 +94,7 @@
     <ClCompile Include="..\..\electron\common\NodeThread.cpp" />
     <ClCompile Include="..\..\electron\common\OptionsSwitches.cpp" />
     <ClCompile Include="..\..\electron\common\PlatformUtilWin.cpp" />
+    <ClCompile Include="..\..\electron\common\SystemTray.cpp" />
     <ClCompile Include="..\..\electron\common\ThreadCall.cpp" />
     <ClCompile Include="..\..\electron\Electron.cpp" />
     <ClCompile Include="..\..\electron\renderer\api\ApiRendererIpc.cpp" />
@@ -126,9 +132,13 @@
     <ClInclude Include="..\..\base\win\shell.h" />
     <ClInclude Include="..\..\base\win\shortcut.h" />
     <ClInclude Include="..\..\base\win\windows_version.h" />
+    <ClInclude Include="..\..\content\ui\ClipboardUtil.h" />
+    <ClInclude Include="..\..\content\ui\WCDataObject.h" />
+    <ClInclude Include="..\..\content\ui\WebDropSource.h" />
     <ClInclude Include="..\..\electron\browser\api\ApiApp.h" />
     <ClInclude Include="..\..\electron\browser\api\ApiWebContents.h" />
-    <ClInclude Include="..\..\electron\browser\api\MenuUitl.h" />
+    <ClInclude Include="..\..\electron\browser\api\MenuEventNotif.h" />
+    <ClInclude Include="..\..\electron\browser\api\ProtocolInterface.h" />
     <ClInclude Include="..\..\electron\browser\api\WindowInterface.h" />
     <ClInclude Include="..\..\electron\browser\api\WindowList.h" />
     <ClInclude Include="..\..\electron\common\api\ApiKeyWeakMap.h" />
@@ -145,6 +155,8 @@
     <ClInclude Include="..\..\electron\common\AtomCommandLine.h" />
     <ClInclude Include="..\..\electron\common\AtomVersion.h" />
     <ClInclude Include="..\..\electron\common\ChromeVersion.h" />
+    <ClInclude Include="..\..\electron\common\DragAction.h" />
+    <ClInclude Include="..\..\electron\common\HideWndHelp.h" />
     <ClInclude Include="..\..\electron\common\IdLiveDetect.h" />
     <ClInclude Include="..\..\electron\common\KeyWeakMap.h" />
     <ClInclude Include="..\..\electron\common\NodeBinding.h" />
@@ -153,10 +165,12 @@
     <ClInclude Include="..\..\electron\common\OptionsSwitches.h" />
     <ClInclude Include="..\..\electron\common\PlatformUtil.h" />
     <ClInclude Include="..\..\electron\common\StringUtil.h" />
+    <ClInclude Include="..\..\electron\common\SystemTray.h" />
     <ClInclude Include="..\..\electron\common\ThreadCall.h" />
     <ClInclude Include="..\..\electron\common\WinUserMsg.h" />
     <ClInclude Include="..\..\electron\Electron.h" />
     <ClInclude Include="..\..\electron\renderer\api\ApiRendererIpc.h" />
+    <ClInclude Include="..\..\electron\resource.h" />
     <ClInclude Include="..\..\gin\arguments.h" />
     <ClInclude Include="..\..\gin\converter.h" />
     <ClInclude Include="..\..\gin\dictionary.h" />
@@ -164,6 +178,9 @@
     <ClInclude Include="..\..\gin\object_template_builder.h" />
     <ClInclude Include="..\..\gin\per_isolate_data.h" />
     <ClInclude Include="..\..\gin\wrappable.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\..\electron\electron.rc" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{419D9B69-AC50-49EA-9188-40FB63BE1C90}</ProjectGuid>
@@ -269,7 +286,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>STATIC_GETOPT;WIN32;_DEBUG;_WINDOWS;WIN32_LEAN_AND_MEAN;_CRT_SECURE_NO_WARNINGS;ENABLE_CEF=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)../;$(SolutionDir)../../;$(SolutionDir)../electron/;$(SolutionDir)../cef;$(SolutionDir)../wke;$(SolutionDir)../node/include;$(SolutionDir)../v8_4_8;$(SolutionDir)../v8_4_8/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)../;$(SolutionDir)../../;$(SolutionDir)../electron/;$(SolutionDir)../cef;$(SolutionDir)../wke;$(SolutionDir)../node/uv/include;$(SolutionDir)../node/cares/include;$(SolutionDir)../node/src;$(SolutionDir)../v8_5_7;$(SolutionDir)../v8_5_7/include</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
       <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
@@ -289,9 +306,9 @@
       <Optimization>Disabled</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;STATIC_GETOPT;WIN32_LEAN_AND_MEAN;BUILDING_NODE_EXTENSION=1;ENABLE_CEF=1;USING_VC6RT=1;USING_CHROMIUM_BASE=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;STATIC_GETOPT;WIN32_LEAN_AND_MEAN;ENABLE_CEF=1;USING_VC6RT=1;USING_CHROMIUM_BASE=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)../electron/;$(SolutionDir)../;$(SolutionDir)../cef;$(SolutionDir)../wke;$(SolutionDir)../node/include;$(SolutionDir)../v8_4_8/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)../electron/;$(SolutionDir)../;$(SolutionDir)../cef;$(SolutionDir)../wke;$(SolutionDir)../node/uv/include;$(SolutionDir)../node/cares/include;$(SolutionDir)../node/src;$(SolutionDir)../v8_5_7/include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <ExceptionHandling>false</ExceptionHandling>
       <BufferSecurityCheck>false</BufferSecurityCheck>
@@ -301,6 +318,7 @@
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
       <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
       <AdditionalOptions>/Zc:threadSafeInit- %(AdditionalOptions)</AdditionalOptions>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

@@ -1,10 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="资源文件">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
     <Filter Include="base">
       <UniqueIdentifier>{c3786756-fb55-4fad-88b9-cd0721fd7040}</UniqueIdentifier>
     </Filter>
@@ -68,6 +64,10 @@
     </Filter>
     <Filter Include="base\json">
       <UniqueIdentifier>{c5d8eee8-09ac-45a0-a140-81a4851ddd8d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resource">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -305,6 +305,24 @@
     <ClCompile Include="..\..\base\json\json_parser.cc">
       <Filter>base\json</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\electron\browser\api\ApiProtocol.cpp">
+      <Filter>src\browser\api</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\electron\browser\api\ApiTray.cpp">
+      <Filter>src\browser\api</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\electron\common\SystemTray.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\content\ui\WCDataObject.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\content\ui\WebDropSource.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\content\ui\ClipboardUtil.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\base\thread.h">
@@ -445,9 +463,6 @@
     <ClInclude Include="..\..\electron\browser\api\WindowInterface.h">
       <Filter>src\browser\api</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\electron\browser\api\MenuUitl.h">
-      <Filter>src\browser\api</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\electron\common\asar\AsarUtil.h">
       <Filter>src\common\asar</Filter>
     </ClInclude>
@@ -490,5 +505,37 @@
     <ClInclude Include="..\..\base\json\json_parser.h">
       <Filter>base\json</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\electron\browser\api\MenuEventNotif.h">
+      <Filter>src\browser\api</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\electron\browser\api\ProtocolInterface.h">
+      <Filter>src\browser\api</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\electron\common\SystemTray.h">
+      <Filter>src\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\electron\common\HideWndHelp.h">
+      <Filter>src\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\content\ui\ClipboardUtil.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\content\ui\WCDataObject.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\content\ui\WebDropSource.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\electron\common\DragAction.h">
+      <Filter>src\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\electron\resource.h">
+      <Filter>resource</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\..\electron\electron.rc">
+      <Filter>resource</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>
