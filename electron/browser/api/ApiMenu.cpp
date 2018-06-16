@@ -1,5 +1,5 @@
 ﻿
-#include "node/include/nodeblink.h"
+#include "node/nodeblink.h"
 #include "browser/api/WindowInterface.h"
 #include "browser/api/WindowList.h"
 #include "browser/api/MenuEventNotif.h"

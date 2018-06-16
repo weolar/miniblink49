@@ -2,7 +2,7 @@
 // Use of this source code is governed by the MIT license that can be
 // found in the LICENSE file.
 
-#include "node/include/nodeblink.h"
+#include "node/nodeblink.h"
 #include "browser/api/ProtocolInterface.h"
 #include "common/NodeRegisterHelp.h"
 #include "common/ThreadCall.h"

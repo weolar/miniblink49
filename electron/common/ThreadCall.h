@@ -1,5 +1,5 @@
 
-#include "uv.h"
+#include "node/uv/include/uv.h"
 #include "v8.h"
 #include <functional>
 #include <list>
@@ -35,6 +35,7 @@ public:
     static void shutdown();
 
     static void exitMessageLoop(DWORD threadId);
+    static void exitReEnterMessageLoop(DWORD threadId); // 拖拽消息时候会启动重入的消息循环
     static void messageLoop(uv_loop_t* loop, v8::Platform* platform, v8::Isolate* isolate);
 
     static uv_loop_t* getUiLoop() { return m_uiLoop; }
@@ -48,7 +49,10 @@ public:
 
     static void setMainThread();
 
+    static v8::Platform* getBlinkThreadV8Platform() { return m_v8platform; }
+
 private:
+    static void callSyncAndWait(TaskAsyncData* asyncData);
     static void callThreadAsync(std::function<void(void)> closure);
     static void threadCallbackWrap(void* data);
     static void asynThreadCallbackWrap(void* data);
@@ -63,7 +67,7 @@ private:
     static void callbackInOtherThread(TaskAsyncData* asyncData);
     static void callAsync(TaskAsyncData* asyncData, CoreMainTask call, void* data);
     static void* waitForCallThreadAsync(TaskAsyncData* asyncData);
-    static TaskAsyncData* cretaeAsyncData(uv_loop_t* loop, DWORD toThreadId);
+    static TaskAsyncData* cretaeAsyncData(uv_loop_t* loop, DWORD toThreadId, void* dataEx, DWORD destroyThreadId);
     static void postThreadMessage(DWORD idThread, UINT Msg, WPARAM wParam, LPARAM lParam);
 
     static void blinkThread(void* created);
@@ -91,8 +95,8 @@ private:
     };
     
     static TaskQueueType getWhichTypeByThreadId(DWORD idThread);
-    static void doTaskQueue(DWORD threadId);
-    static void runTaskQueue(UINT msg, WPARAM wParam, LPARAM lParam);
+    static bool doTaskQueue(DWORD threadId);
+    static bool runTaskQueue(UINT msg, WPARAM wParam, LPARAM lParam);
     static std::list<TaskItem*>* m_taskQueue[kMaxTaskQueue];
     static CRITICAL_SECTION m_taskQueueMutex;
 };

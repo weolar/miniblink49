@@ -4,7 +4,7 @@
 
 #include "common/SystemTray.h"
 
-#include "node/include/nodeblink.h"
+#include "node/nodeblink.h"
 #include "common/NodeRegisterHelp.h"
 #include "common/HideWndHelp.h"
 #include "common/api/EventEmitter.h"

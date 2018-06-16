@@ -5,7 +5,7 @@
 #include "common/NodeThread.h"
 #include "common/AtomCommandLine.h"
 #include "third_party/zlib/unzip.h"
-#include "NodeBlink.h"
+#include "node/NodeBlink.h"
 #include <windows.h>
 #include <objbase.h>
 
@@ -69,7 +69,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
 
-    ::CoInitialize(NULL);
+    ::OleInitialize(nullptr);
 
     atom::AtomCommandLine::initAW();
     atom::ThreadCall::setMainThread();

@@ -2,7 +2,7 @@
 #ifndef browser_api_ApiWebContents_h
 #define browser_api_ApiWebContents_h
 
-#include "nodeblink.h"
+#include "node/nodeblink.h"
 #include "wke.h"
 #include "gin/dictionary.h"
 #include "common/api/EventEmitter.h"

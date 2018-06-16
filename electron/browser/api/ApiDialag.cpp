@@ -1,5 +1,5 @@
 ﻿
-#include "node/include/nodeblink.h"
+#include "node/nodeblink.h"
 #include "common/NodeRegisterHelp.h"
 #include "common/StringUtil.h"
 #include "common/api/EventEmitter.h"

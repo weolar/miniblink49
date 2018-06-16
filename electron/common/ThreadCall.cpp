@@ -16,6 +16,8 @@ uv_loop_t* ThreadCall::m_blinkLoop;
 
 v8::Platform* ThreadCall::m_v8platform = nullptr;
 
+const int WM_QUIT_REENTER = (WM_USER + 0x5326);
+
 std::list<ThreadCall::TaskItem*>* ThreadCall::m_taskQueue[] = { 0 };
 CRITICAL_SECTION ThreadCall::m_taskQueueMutex;
 
@@ -33,15 +35,6 @@ void ThreadCall::initTaskQueue() {
     }
 }
 
-void ThreadCall::callUiThreadSync(std::function<void(void)>&& closure) {
-    TaskAsyncData* asyncData = cretaeAsyncData(m_uiLoop, m_uiThreadId);
-    asyncData->dataEx = &closure;
-    asyncData->destroyThreadId = ::GetCurrentThreadId();
-    callAsync(asyncData, threadCallbackWrap, asyncData);
-    waitForCallThreadAsync(asyncData);
-    delete asyncData;
-}
-
 void ThreadCall::threadCallbackWrap(void* data) {
     TaskAsyncData* asyncData = (TaskAsyncData*)data;
     std::function<void(void)>* closure = (std::function<void(void)>*)asyncData->dataEx;
@@ -56,28 +49,31 @@ void ThreadCall::asynThreadCallbackWrap(void* data) {
 }
 
 void ThreadCall::callBlinkThreadAsync(std::function<void(void)>&& closure) {
-    TaskAsyncData* asyncData = cretaeAsyncData(m_blinkLoop, m_blinkThreadId);
-
     std::function<void(void)>* closureDummy = new std::function<void(void)>(std::move(closure));
-    asyncData->dataEx = closureDummy;
+    TaskAsyncData* asyncData = cretaeAsyncData(m_blinkLoop, m_blinkThreadId, closureDummy, m_blinkThreadId);
     callAsync(asyncData, asynThreadCallbackWrap, asyncData);
 }
 
 void ThreadCall::callUiThreadAsync(std::function<void(void)>&& closure) {
-    TaskAsyncData* asyncData = cretaeAsyncData(m_uiLoop, m_uiThreadId);
-
     std::function<void(void)>* closureDummy = new std::function<void(void)>(std::move(closure));
-    asyncData->dataEx = closureDummy;
+    TaskAsyncData* asyncData = cretaeAsyncData(m_uiLoop, m_uiThreadId, closureDummy, m_uiThreadId);
     callAsync(asyncData, asynThreadCallbackWrap, asyncData);
 }
 
-void ThreadCall::callBlinkThreadSync(std::function<void(void)>&& closure) {
-    TaskAsyncData* asyncData = cretaeAsyncData(m_blinkLoop, m_blinkThreadId);
-    asyncData->dataEx = &closure;
-    asyncData->destroyThreadId = ::GetCurrentThreadId();
+void ThreadCall::callSyncAndWait(TaskAsyncData* asyncData) {
     callAsync(asyncData, threadCallbackWrap, asyncData);
     waitForCallThreadAsync(asyncData);
     delete asyncData;
+}
+
+void ThreadCall::callUiThreadSync(std::function<void(void)>&& closure) {
+    TaskAsyncData* asyncData = cretaeAsyncData(m_uiLoop, m_uiThreadId, &closure, ::GetCurrentThreadId());
+    callSyncAndWait(asyncData);
+}
+
+void ThreadCall::callBlinkThreadSync(std::function<void(void)>&& closure) {
+    TaskAsyncData* asyncData = cretaeAsyncData(m_blinkLoop, m_blinkThreadId, &closure, ::GetCurrentThreadId());
+    callSyncAndWait(asyncData);
 }
 
 void ThreadCall::postNodeCoreThreadTask(std::function<void(void)>&& closure) {
@@ -103,7 +99,6 @@ void ThreadCall::callbackInOtherThread(TaskAsyncData* asyncData) {
     if (asyncData->call) {
         asyncData->ret = nullptr;
         asyncData->call(asyncData->data);
-        //::SetEvent(asyncData->event);
         asyncData->event = TRUE;
     }
 }
@@ -127,19 +122,19 @@ void ThreadCall::callAsync(TaskAsyncData* asyncData, CoreMainTask call, void* da
 void* ThreadCall::waitForCallThreadAsync(TaskAsyncData* asyncData) {
     void* ret = asyncData->ret;
     DWORD waitResult = 0;
-    // waitResult = ::WaitForSingleObject(asyncData->event, INFINITE); // INFINITE
     while (!asyncData->event)
-        ::Sleep(3);
+        ::Sleep(1);
 
     return ret;
 }
 
-ThreadCall::TaskAsyncData* ThreadCall::cretaeAsyncData(uv_loop_t* loop, DWORD toThreadId) {
+ThreadCall::TaskAsyncData* ThreadCall::cretaeAsyncData(uv_loop_t* loop, DWORD toThreadId, void* dataEx, DWORD destroyThreadId) {
     TaskAsyncData* asyncData = new TaskAsyncData();
-    asyncData->event = FALSE; // ::CreateEvent(NULL, FALSE, FALSE, NULL);
+    asyncData->event = FALSE;
+    asyncData->dataEx = dataEx;
     asyncData->fromThreadId = ::GetCurrentThreadId();
     asyncData->toThreadId = toThreadId;
-    asyncData->destroyThreadId = toThreadId;
+    asyncData->destroyThreadId = destroyThreadId;
 
     return asyncData;
 }
@@ -157,6 +152,10 @@ void ThreadCall::exitMessageLoop(DWORD threadId) {
     }
 }
 
+void ThreadCall::exitReEnterMessageLoop(DWORD threadId) {
+    postThreadMessage(threadId, WM_QUIT_REENTER, (WPARAM)::GetCurrentThreadId(), 0);
+}
+
 void ThreadCall::postThreadMessage(DWORD idThread, UINT msg, WPARAM wParam, LPARAM lParam) {
     if (WM_QUIT == msg) {
         ::PostThreadMessage(idThread, msg, wParam, lParam);
@@ -172,7 +171,7 @@ void ThreadCall::postThreadMessage(DWORD idThread, UINT msg, WPARAM wParam, LPAR
     ::LeaveCriticalSection(&m_taskQueueMutex);
 }
 
-void ThreadCall::doTaskQueue(DWORD threadId) {
+bool ThreadCall::doTaskQueue(DWORD threadId) {
     TaskQueueType type = getWhichTypeByThreadId(threadId);
     TaskItem* it = nullptr;
     ::EnterCriticalSection(&m_taskQueueMutex);
@@ -182,15 +181,20 @@ void ThreadCall::doTaskQueue(DWORD threadId) {
     }
     ::LeaveCriticalSection(&m_taskQueueMutex);
     if (!it)
-        return;
+        return false;
 
-    runTaskQueue(it->msg, it->wParam, it->lParam);
+    bool b = runTaskQueue(it->msg, it->wParam, it->lParam);
     delete it;
+
+    return b;
 }
 
-void ThreadCall::runTaskQueue(UINT msg, WPARAM wParam, LPARAM lParam) {
+bool ThreadCall::runTaskQueue(UINT msg, WPARAM wParam, LPARAM lParam) {
+    if (WM_QUIT_REENTER == msg)
+        return true;
+
     if (WM_THREAD_CALL != msg)
-        return;
+        return false;
 
     if (wParam != (WPARAM)callbackInOtherThread)
         DebugBreak();
@@ -201,6 +205,8 @@ void ThreadCall::runTaskQueue(UINT msg, WPARAM wParam, LPARAM lParam) {
         delete asyncData;
     else if (asyncData->destroyThreadId != asyncData->fromThreadId)
         DebugBreak();
+
+    return false;
 }
 
 void ThreadCall::messageLoop(uv_loop_t* loop, v8::Platform* platform, v8::Isolate* isolate) {
@@ -216,7 +222,9 @@ void ThreadCall::messageLoop(uv_loop_t* loop, v8::Platform* platform, v8::Isolat
         if (platform && isolate)
             v8::platform::PumpMessageLoop(platform, isolate);
 
-        doTaskQueue(threadId);
+        if (doTaskQueue(threadId))
+            return;
+
         if (::PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
             if (WM_QUIT == msg.message) {
                 if (0 != msg.lParam)
@@ -226,10 +234,8 @@ void ThreadCall::messageLoop(uv_loop_t* loop, v8::Platform* platform, v8::Isolat
                 break;
             }
             
-            //runTaskQueue(msg.message, msg.wParam, msg.lParam);
             if (WM_THREAD_CALL == msg.message)
                 DebugBreak();
-            
             
             ::TranslateMessage(&msg);
             ::DispatchMessageW(&msg);

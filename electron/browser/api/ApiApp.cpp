@@ -13,7 +13,8 @@
 #include "base/json/json_writer.h"
 #include "gin/object_template_builder.h"
 #include "wke.h"
-#include "nodeblink.h"
+#include "node/nodeblink.h"
+
 #include "base/strings/string_util.h"
 #include "base/files/file_path.h"
 #include <shlobj.h>
@@ -429,7 +430,7 @@ bool App::makeSingleInstanceImplApi(const v8::FunctionCallbackInfo<v8::Value>& a
 
     std::vector<wchar_t> buffer;
     buffer.resize(BUFSIZE);
-    swprintf(&buffer[0], L"mb_app_hidden_window_%d\n", pathHash);
+    swprintf(&buffer[0], L"MbAppMakeSingleInstanceHiddenWindow_%d\n", pathHash);
 
     m_singleInstanceHandle = ::CreateMutex(NULL, FALSE, kMutexName);
     if (GetLastError() == ERROR_ALREADY_EXISTS) {
@@ -444,8 +445,8 @@ bool App::makeSingleInstanceImplApi(const v8::FunctionCallbackInfo<v8::Value>& a
     registerHiddenWindowClass(&buffer[0]);
     m_hiddenWindow = ::CreateWindowExW(0,
         &buffer[0], L"title",
-        WS_OVERLAPPED, 0, 0, 100, 100, NULL, NULL, ::GetModuleHandleW(NULL), this);
-    ::ShowWindow(m_hiddenWindow, SW_SHOW);
+        WS_OVERLAPPED, 0, 0, 1, 1, NULL, NULL, ::GetModuleHandleW(NULL), this);
+    ::ShowWindow(m_hiddenWindow, SW_HIDE);
 
     // NB: Ensure that if the primary app gets started as elevated
     // admin inadvertently, secondary windows running not as elevated
@@ -483,10 +484,15 @@ void App::relaunchApi(const base::DictionaryValue& options) {
 }
 
 void App::setPathApi(const std::string& name, const std::string& path) { 
-    if (name == "userData" || name == "cache" || name == "userCache" || name == "documents"
-        || name == "downloads" || name == "music" || name == "videos" || name == "pepperFlashSystemPlugin") {
+    if (!(name == "userData" || name == "cache" || name == "userCache" || name == "documents"
+        || name == "downloads" || name == "music" || name == "videos" || name == "pepperFlashSystemPlugin"))
+        return;
+    
+    std::map<std::string, std::string>::iterator it = m_pathMap.find(name);
+    if (it == m_pathMap.end())
         m_pathMap.insert(std::make_pair(name, path));
-    }
+    else
+        it->second = path;
 }
 
 bool getTempDir(base::FilePath* path) {

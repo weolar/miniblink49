@@ -2,7 +2,7 @@
 // Use of this source code is governed by the MIT license that can be
 // found in the LICENSE file.
 
-#include "node/include/nodeblink.h"
+#include "node/nodeblink.h"
 #include "common/NodeRegisterHelp.h"
 #include "gin/object_template_builder.h"
 #include "gin/wrappable.h"
@@ -158,6 +158,8 @@ public:
 v8::Persistent<v8::Function> V8Archive::constructor;
 gin::WrapperInfo V8Archive::kWrapperInfo = { gin::kEmbedderNativeGin };
 
+#define FAKE_ASAR 0
+
 void initAsarSupport(const v8::FunctionCallbackInfo<v8::Value>& info) {
     v8::Isolate* isolate = info.GetIsolate();
     v8::Local<v8::Value> process = info[0];
@@ -165,13 +167,14 @@ void initAsarSupport(const v8::FunctionCallbackInfo<v8::Value>& info) {
     // Evaluate asar_init.coffee.
     std::string buffer;
 
-//     asar::ReadFileToString(L"E:\\mycode\\miniblink49\\trunk\\electron\\lib\\common\\asar_init.js", &buffer);
-//     const char* asarInitNative = &buffer.at(0);
-//     size_t asarInitNativeLength = buffer.size();
-
+#if FAKE_ASAR
+    asar::ReadFileToString(L"E:\\mycode\\miniblink49\\trunk\\electron\\lib\\common\\asar_init.js", &buffer);
+    const char* asarInitNative = &buffer.at(0);
+    size_t asarInitNativeLength = buffer.size();
+#else
     const char* asarInitNative = atom::AsarInitJs;
     size_t asarInitNativeLength = 690;
-
+#endif
     v8::Local<v8::Script> asar_init = v8::Script::Compile(v8::String::NewFromUtf8(
         isolate,
         asarInitNative,
@@ -183,10 +186,12 @@ void initAsarSupport(const v8::FunctionCallbackInfo<v8::Value>& info) {
 
     v8::Function* resultFunc = v8::Function::Cast(*result);
 
-//     asar::ReadFileToString(L"E:\\mycode\\miniblink49\\trunk\\electron\\lib\\common\\asar.js", &buffer);
-//     v8::Local<v8::String> asarNativeV8 = v8::String::NewFromUtf8(isolate, &buffer.at(0), v8::String::kNormalString, buffer.size());
+#if FAKE_ASAR
+    asar::ReadFileToString(L"E:\\mycode\\miniblink49\\trunk\\electron\\lib\\common\\asar.js", &buffer);
+    v8::Local<v8::String> asarNativeV8 = v8::String::NewFromUtf8(isolate, &buffer.at(0), v8::String::kNormalString, buffer.size());
+#else
     v8::Local<v8::String> asarNativeV8 = v8::String::NewFromUtf8(isolate, AsarJs, v8::String::kNormalString, AsarJsLength);
-    
+#endif
     v8::Local<v8::Value> vals[] = { process, require, asarNativeV8 };
 
     // Initialize asar support.
