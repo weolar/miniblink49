@@ -257,6 +257,7 @@ namespace node {
   V(tty_constructor_template, v8::FunctionTemplate)                           \
   V(udp_constructor_function, v8::Function)                                   \
   V(write_wrap_constructor_function, v8::Function)                            \
+  V(url_constructor_function, v8::Function)                                   \
 
 class Environment;
 

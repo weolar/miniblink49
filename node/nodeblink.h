@@ -10,13 +10,14 @@
 #define V8_INSPECTOR_USE_STL 1
 #define NODE_USE_V8_PLATFORM 0
 #define USING_V8_SHARED 0
-#define USING_UV_SHARED 1
+//#define USING_UV_SHARED 0
+#define BUILDING_UV_SHARED 1
 #define CARES_BUILDING_LIBRARY 0
 
-#include "node.h"
-#include "env.h"
-#include "env-inl.h"
-#include "uv.h"
+#include "node/src/node.h"
+#include "node/src/env.h"
+#include "node/src/env-inl.h"
+#include "node/uv/include/uv.h"
 
 struct NodeNative {
     const char* name;

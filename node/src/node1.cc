@@ -38,6 +38,8 @@
 
 #include "node_natives.h"
 
+#include <shlwapi.h>
+
 #include <errno.h>
 #include <limits.h>  // PATH_MAX
 #include <locale.h>
@@ -1890,6 +1892,113 @@ namespace node {
 
 	typedef void (UV_DYNAMIC* extInit)(Local<Object> exports);
 
+  void PrintCallStack(v8::Isolate* isolate) {
+    const v8::StackTrace::StackTraceOptions options = static_cast<v8::StackTrace::StackTraceOptions>(
+      v8::StackTrace::kLineNumber
+      | v8::StackTrace::kColumnOffset
+      | v8::StackTrace::kScriptId
+      | v8::StackTrace::kScriptNameOrSourceURL
+      | v8::StackTrace::kFunctionName);
+
+    int stackNum = 50;
+    v8::HandleScope handleScope(isolate);
+    v8::Local<v8::StackTrace> stackTrace(v8::StackTrace::CurrentStackTrace(isolate, stackNum, options));
+    int count = stackTrace->GetFrameCount();
+
+    for (int i = 0; i < count; ++i) {
+      v8::Local<v8::StackFrame> stackFrame = stackTrace->GetFrame(i);
+      int frameCount = stackTrace->GetFrameCount();
+      int line = stackFrame->GetLineNumber();
+      v8::Local<v8::String> scriptName = stackFrame->GetScriptNameOrSourceURL();
+      v8::Local<v8::String> funcName = stackFrame->GetFunctionName();
+
+      std::string scriptNameWTF;
+      std::string funcNameWTF;
+
+      if (!scriptName.IsEmpty()) {
+        v8::String::Utf8Value scriptNameUtf8(scriptName);
+        scriptNameWTF = *scriptNameUtf8;
+      }
+
+      if (!funcName.IsEmpty()) {
+        v8::String::Utf8Value funcNameUtf8(funcName);
+        funcNameWTF = *funcNameUtf8;
+      }
+      std::vector<char> output;
+      output.resize(1000);
+      sprintf(&output[0], "line:%d, [", line);
+      OutputDebugStringA(&output[0]);
+
+      if (!scriptNameWTF.empty()) {
+        OutputDebugStringA(scriptNameWTF.c_str());
+      }
+      OutputDebugStringA("] , [");
+
+      if (!funcNameWTF.empty()) {
+        OutputDebugStringA(funcNameWTF.c_str());
+      }
+      OutputDebugStringA("]\n");
+    }
+    OutputDebugStringA("\n");
+  }
+
+  bool CopyFile(const wchar_t* to, const wchar_t* from) {
+    if (::PathFileExistsW(to))
+      return true;
+
+    size_t size = wcslen(to) + 3;
+    std::vector<WCHAR> to_buf;
+    to_buf.resize(size);
+    memset(&to_buf[0], 0, size * sizeof(WCHAR));
+    wcscpy(&to_buf[0], to);
+
+    size = wcslen(from) + 3;
+    std::vector<WCHAR> from_buf;
+    from_buf.resize(size);
+    memset(&from_buf[0], 0, size * sizeof(WCHAR));
+    wcscpy(&from_buf[0], from);
+
+    SHFILEOPSTRUCTW FileOp = { 0 };
+    FileOp.fFlags = FOF_NOCONFIRMATION | FOF_SILENT | FOF_NOERRORUI;
+    FileOp.pFrom = &from_buf[0];
+    FileOp.pTo = &to_buf[0];
+    FileOp.wFunc = FO_COPY;
+    return SHFileOperationW(&FileOp) == 0;
+  }
+
+  bool CopyAndLoad(const char* filename, uv_lib_t* lib) {
+    std::vector<WCHAR> filename_buffer;
+    filename_buffer.resize(32768);
+
+    std::wstring filename_dummy;
+
+    const wchar_t* postfix = L"_dummy";
+
+    if (!MultiByteToWideChar(CP_UTF8, 0, filename, -1, &filename_buffer[0], /*ARRAY_SIZE(filename_w)*/32768))
+      return false;
+
+    if (nullptr != wcsstr(&filename_buffer[0], postfix))
+      return false;
+
+    std::wstring filename_w(&filename_buffer[0]);
+
+    filename_dummy = filename_w;
+    filename_dummy += postfix;
+
+    std::wstring prefix(L"\\\\?\\");
+    if (0 == filename_dummy.compare(0, prefix.size(), prefix))
+      filename_dummy = filename_dummy.substr(prefix.size());
+
+    if (0 == filename_w.compare(0, prefix.size(), prefix))
+      filename_w = filename_w.substr(prefix.size());
+
+    if (!CopyFile(filename_dummy.c_str(), filename_w.c_str()))
+      return false;
+
+    lib->handle = LoadLibraryExW(filename_dummy.c_str(), NULL, LOAD_WITH_ALTERED_SEARCH_PATH);
+    return lib->handle != nullptr;
+  }
+
 	// DLOpen is process.dlopen(module, filename).
 	// Used to load 'module.node' dynamically shared objects.
 	//
@@ -1910,11 +2019,11 @@ namespace node {
 		Local<Object> module = args[0]->ToObject(env->isolate());  // Cast
 		node::Utf8Value filename(env->isolate(), args[1]);  // Cast
 		const bool is_dlopen_error = uv_dlopen(*filename, &lib);
-
+    
 		// Objects containing v14 or later modules will have registered themselves
 		// on the pending list.  Activate all of them now.  At present, only one
 		// module per object is supported.
-		node_module* const mp = modpending;
+		node_module* /*const*/ mp = modpending;
 		modpending = nullptr;
 
 		if (is_dlopen_error) {
@@ -1928,22 +2037,33 @@ namespace node {
 			return;
 		}
 
+#if 0
+    if (lib.handle && nullptr == mp) {
+      CopyAndLoad(*filename, &lib);
+
+      mp = modpending;
+      modpending = nullptr;
+    }
+#endif
+
 		if (mp == nullptr) {
+      PrintCallStack(args.GetIsolate());
+      
 			uv_dlclose(&lib);
 			env->ThrowError("Module did not self-register.");
 			return;
 		}
-		if (mp->nm_version != NODE_MODULE_VERSION && mp->nm_version != 50) { // 特别支持下50版
+		if (false && mp->nm_version != NODE_MODULE_VERSION && mp->nm_version != 50 && mp->nm_version != 54) { // 特别支持下50\54版
 			char errmsg[1024];
 			snprintf(errmsg,
 				sizeof(errmsg),
 				"Module version mismatch. Expected %d, got %d.",
 				NODE_MODULE_VERSION, mp->nm_version);
 
+      ::DebugBreak();
 			// NOTE: `mp` is allocated inside of the shared library's memory, calling
 			// `uv_dlclose` will deallocate it
 			uv_dlclose(&lib);
-            ::DebugBreak();
 			env->ThrowError(errmsg);
 			return;
 		}
@@ -1995,6 +2115,19 @@ namespace node {
 		ABORT();
 	}
 
+  FatalTryCatch::FatalTryCatch(Environment* env)
+    : v8::TryCatch(env->isolate())
+    , env_(env) {
+  }
+
+  FatalTryCatch::~FatalTryCatch() {
+    if (HasCaught()) {
+      HandleScope scope(env_->isolate());
+      ReportException(env_, *this);
+      exit(7);
+    }
+  }
+
 
 	void FatalException(Isolate* isolate, Local<Value> error, Local<Message> message) {
 		HandleScope scope(isolate);
@@ -2022,6 +2155,8 @@ namespace node {
         message->GetLineNumber(), *error_mesage_utf8, *scriptResourceNameUtf8);
     OutputDebugStringA(error_mesage_buf);
     delete[] error_mesage_buf;
+
+    DebugBreak();
 
     ::TerminateProcess((HANDLE)-1, 0);
     return;

@@ -174,7 +174,8 @@ struct _native {
   size_t source_len;
 };
 
-static const struct _native natives[] = {   { "internal/bootstrap_node", internal_bootstrap_node_native, sizeof(internal_bootstrap_node_native) },
+static const struct _native natives[] = { 
+  { "internal/bootstrap_node", internal_bootstrap_node_native, sizeof(internal_bootstrap_node_native) },
 
   { "_debug_agent", _debug_agent_native, sizeof(_debug_agent_native) },
 
@@ -271,6 +272,8 @@ static const struct _native natives[] = {   { "internal/bootstrap_node", interna
   { "tty", tty_native, sizeof(tty_native) },
 
   { "url", url_native, sizeof(url_native) },
+  { "internal/url", url_native, sizeof(url_native) },
+  { "internal/querystring", url_native, sizeof(url_native) },
 
   { "util", util_native, sizeof(util_native) },
 

@@ -11,7 +11,7 @@
 #include <stdio.h>
 
 #ifndef MINIBLINK_NOT_IMPLEMENTED
-#include "node/include/nodeblink.h"
+#include "node/nodeblink.h"
 #include <list>
 #endif
 

@@ -1,4 +1,7 @@
-﻿#include "include/nodeblink.h"
+﻿
+#define USING_UV_SHARED 1
+
+#include "nodeblink.h"
 
 #include "gin/v8_initializer.h"
 #include "libplatform/libplatform.h"
