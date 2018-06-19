@@ -693,6 +693,48 @@ ScriptDebugListener::ParsedScript V8Debugger::createParsedScript(v8::Local<v8::O
     return parsedScript;
 }
 
+static void functionCallbackImpl(const v8::FunctionCallbackInfo<v8::Value>& info) {
+    v8::Isolate* isolate = info.GetIsolate();
+    v8::Local<v8::Context> context = isolate->GetCurrentContext();
+
+    v8::Local<v8::Value> param0 = info[0];
+    v8::Local<v8::String> param0V8String = param0->ToString(isolate);
+
+    v8::String::Utf8Value param0String(param0V8String);
+    const char* str = *param0String;
+    OutputDebugStringA("consoleLog:");
+    OutputDebugStringA(str);
+    OutputDebugStringA("\n");
+}
+
+static void addFunction(v8::Local<v8::Context> context, const char* name) {
+    v8::Isolate* isolate = context->GetIsolate();
+    if (!isolate->InContext())
+        return;
+    v8::HandleScope handleScope(isolate);
+    v8::Context::Scope contextScope(context);
+
+    v8::Local<v8::Object> object = context->Global();
+    v8::Local<v8::FunctionTemplate> tmpl = v8::FunctionTemplate::New(isolate);
+    v8::Local<v8::Value> data = v8::External::New(isolate, nullptr);
+
+    // Set the function handler callback.
+    tmpl->SetCallHandler(functionCallbackImpl, data);
+
+    // Retrieve the function object and set the name.
+    v8::Local<v8::Function> func = tmpl->GetFunction();
+    if (func.IsEmpty())
+        return;
+
+    v8::MaybeLocal<v8::String> nameV8 = v8::String::NewFromUtf8(isolate, name, v8::NewStringType::kNormal, -1);
+    if (nameV8.IsEmpty())
+        return;
+    v8::Local<v8::String> nameV8Local = nameV8.ToLocalChecked();
+    func->SetName(nameV8Local);
+
+    object->Set(nameV8Local, func);
+}
+
 void V8Debugger::compileDebuggerScript()
 {
     if (!m_debuggerScript.IsEmpty()) {
@@ -706,6 +748,8 @@ void V8Debugger::compileDebuggerScript()
     if (value.IsEmpty())
         return;
     m_debuggerScript.Reset(m_isolate, value);
+
+    addFunction(debuggerContext(), "consoleLog");
 }
 
 v8::Local<v8::Object> V8Debugger::debuggerScriptLocal() const

@@ -425,6 +425,13 @@ void WindowProxy::setSecurityToken(SecurityOrigin* origin)
     // calling canAccess when a script accesses its own objects.
     v8::HandleScope handleScope(m_isolate);
     v8::Local<v8::Context> context = m_scriptState->context();
+
+    if (!RuntimeEnabledFeatures::cspCheckEnabled()) {
+        const char defaultSecurityToken[] = "CspCheckClose";
+        context->SetSecurityToken(v8AtomicString(m_isolate, defaultSecurityToken, sizeof(defaultSecurityToken)));
+        return;
+    }
+
     if (token.isEmpty() || token == "null") {
         context->UseDefaultSecurityToken();
         return;

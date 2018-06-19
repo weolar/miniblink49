@@ -803,7 +803,7 @@ void crashIfV8IsDead()
     if (v8::V8::IsDead()) {
         // FIXME: We temporarily deal with V8 internal error situations
         // such as out-of-memory by crashing the renderer.
-        CRASH();
+        //CRASH(); // weolar
     }
 }
 

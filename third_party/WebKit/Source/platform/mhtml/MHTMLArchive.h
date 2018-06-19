@@ -52,13 +52,48 @@ public:
     static PassRefPtrWillBeRawPtr<MHTMLArchive> create(const KURL&, SharedBuffer*);
     ~MHTMLArchive();
 
+    // Binary encoding results in smaller MHTML files but they might not work in other browsers.
     enum EncodingPolicy {
         UseDefaultEncoding,
         UseBinaryEncoding
     };
 
-    // Binary encoding results in smaller MHTML files but they might not work in other browsers.
-    static PassRefPtr<SharedBuffer> generateMHTMLData(const Vector<SerializedResource>&, EncodingPolicy, const String& title, const String& mimeType);
+    // Generates a random/unique boundary that can be used as a separator of
+    // MHTML parts.
+    static String generateMHTMLBoundary();
+
+    // Generates an MHTML header and appends it to |outputBuffer|.
+    //
+    // Same |boundary| needs to used for all generateMHTMLHeader and
+    // generateMHTMLPart and generateMHTMLFooter calls that belong to the same
+    // MHTML document (see also generateMHTMLBoundary method).
+    static void generateMHTMLHeader(
+        const String& boundary, const String& title, const String& mimeType,
+        SharedBuffer& outputBuffer);
+
+    // Serializes SerializedResource as an MHTML part and appends it in
+    // |outputBuffer|.
+    //
+    // Same |boundary| needs to used for all generateMHTMLHeader and
+    // generateMHTMLPart and generateMHTMLFooter calls that belong to the same
+    // MHTML document (see also generateMHTMLBoundary method).
+    static void generateMHTMLPart(
+        const String& boundary, EncodingPolicy, const SerializedResource&,
+        SharedBuffer& outputBuffer);
+
+    // Generates an MHTML footer and appends it to |outputBuffer|.
+    //
+    // Same |boundary| needs to used for all generateMHTMLHeader and
+    // generateMHTMLPart and generateMHTMLFooter calls that belong to the same
+    // MHTML document (see also generateMHTMLBoundary method).
+    static void generateMHTMLFooter(
+        const String& boundary,
+        SharedBuffer& outputBuffer);
+
+    // Generates and returns a full MHTML document.
+    static PassRefPtr<SharedBuffer> generateMHTMLData(
+        const Vector<SerializedResource>&, EncodingPolicy,
+        const String& title, const String& mimeType);
 
     typedef WillBeHeapVector<RefPtrWillBeMember<ArchiveResource>> SubArchiveResources;
     typedef WillBeHeapVector<RefPtrWillBeMember<MHTMLArchive>> SubFrameArchives;

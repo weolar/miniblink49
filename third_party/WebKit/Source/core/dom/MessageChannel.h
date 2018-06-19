@@ -50,6 +50,8 @@ public:
 
     DECLARE_TRACE();
 
+    ~MessageChannel();
+
 private:
     explicit MessageChannel(ExecutionContext*);
 

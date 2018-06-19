@@ -4901,9 +4901,6 @@ void LayoutBox::setSize(const LayoutSize& size)
         return;
     m_frameRect.setSize(size);
 
-    if (size.width().toInt() == 1000000)
-        OutputDebugStringA("LayoutBox::setSize\n");
-
     frameRectChanged();
 }
 
@@ -4921,9 +4918,6 @@ void LayoutBox::setFrameRect(const LayoutRect& rect) {
     if (rect == m_frameRect)
         return;
     m_frameRect = rect;
-
-    if (m_frameRect.width().toInt() == 1000000)
-        OutputDebugStringA("LayoutBox::setWidth\n");
 
     frameRectChanged();
 }

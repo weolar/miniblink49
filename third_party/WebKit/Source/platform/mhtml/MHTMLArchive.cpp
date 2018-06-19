@@ -50,9 +50,10 @@ const char* const quotedPrintable = "quoted-printable";
 const char* const base64 = "base64";
 const char* const binary = "binary";
 
-static String generateRandomBoundary()
+String MHTMLArchive::generateMHTMLBoundary()
 {
-    // Trying to generate random boundaries similar to IE/UnMHT (ex: ----=_NextPart_000_001B_01CC157B.96F808A0).
+    // Trying to generate random boundaries similar to IE/UnMHT
+    // (ex: ----=_NextPart_000_001B_01CC157B.96F808A0).
     const size_t randomValuesLength = 10;
     char randomValues[randomValuesLength];
     cryptographicallyRandomValues(&randomValues, randomValuesLength);
@@ -122,14 +123,16 @@ PassRefPtrWillBeRawPtr<MHTMLArchive> MHTMLArchive::create(const KURL& url, Share
     return mainArchive.release();
 }
 
-PassRefPtr<SharedBuffer> MHTMLArchive::generateMHTMLData(const Vector<SerializedResource>& resources, EncodingPolicy encodingPolicy, const String& title, const String& mimeType)
+void MHTMLArchive::generateMHTMLHeader(
+    const String& boundary, const String& title, const String& mimeType,
+    SharedBuffer& outputBuffer)
 {
-    String boundary = generateRandomBoundary();
-    String endOfResourceBoundary = "--" + boundary + "\r\n";
-
     DateComponents now;
     now.setMillisecondsSinceEpochForDateTime(currentTimeMS());
-    String dateString = makeRFC2822DateString(now.weekDay(), now.monthDay(), now.month(), now.fullYear(), now.hour(), now.minute(), now.second(), 0);
+    // TODO(lukasza): Passing individual date/time components seems fragile.
+    String dateString = makeRFC2822DateString(
+        now.weekDay(), now.monthDay(), now.month(), now.fullYear(),
+        now.hour(), now.minute(), now.second(), 0);
 
     StringBuilder stringBuilder;
     stringBuilder.appendLiteral("From: <Saved by Blink>\r\n");
@@ -147,73 +150,97 @@ PassRefPtr<SharedBuffer> MHTMLArchive::generateMHTMLData(const Vector<Serialized
     stringBuilder.append(boundary);
     stringBuilder.appendLiteral("\"\r\n\r\n");
 
-    // We use utf8() below instead of ascii() as ascii() replaces CRLFs with ?? (we still only have put ASCII characters in it).
+    // We use utf8() below instead of ascii() as ascii() replaces CRLFs with ??
+    // (we still only have put ASCII characters in it).
     ASSERT(stringBuilder.toString().containsOnlyASCII());
     CString asciiString = stringBuilder.toString().utf8();
-    RefPtr<SharedBuffer> mhtmlData = SharedBuffer::create();
-    mhtmlData->append(asciiString.data(), asciiString.length());
 
-    for (size_t i = 0; i < resources.size(); ++i) {
-        const SerializedResource& resource = resources[i];
+    outputBuffer.append(asciiString.data(), asciiString.length());
+}
 
-        stringBuilder.clear();
-        stringBuilder.append(endOfResourceBoundary);
-        stringBuilder.appendLiteral("Content-Type: ");
-        stringBuilder.append(resource.mimeType);
+void MHTMLArchive::generateMHTMLPart(
+    const String& boundary,
+    EncodingPolicy encodingPolicy,
+    const SerializedResource& resource,
+    SharedBuffer& outputBuffer)
+{
+    StringBuilder stringBuilder;
+    stringBuilder.append("--" + boundary + "\r\n");
+    stringBuilder.appendLiteral("Content-Type: ");
+    stringBuilder.append(resource.mimeType);
 
-        const char* contentEncoding = 0;
-        if (encodingPolicy == UseBinaryEncoding)
-            contentEncoding = binary;
-        else if (MIMETypeRegistry::isSupportedJavaScriptMIMEType(resource.mimeType) || MIMETypeRegistry::isSupportedNonImageMIMEType(resource.mimeType))
-            contentEncoding = quotedPrintable;
-        else
-            contentEncoding = base64;
+    const char* contentEncoding = 0;
+    if (encodingPolicy == UseBinaryEncoding)
+        contentEncoding = binary;
+    else if (MIMETypeRegistry::isSupportedJavaScriptMIMEType(resource.mimeType) || MIMETypeRegistry::isSupportedNonImageMIMEType(resource.mimeType))
+        contentEncoding = quotedPrintable;
+    else
+        contentEncoding = base64;
 
-        stringBuilder.appendLiteral("\r\nContent-Transfer-Encoding: ");
-        stringBuilder.append(contentEncoding);
-        stringBuilder.appendLiteral("\r\nContent-Location: ");
-        stringBuilder.append(resource.url);
-        stringBuilder.appendLiteral("\r\n\r\n");
+    stringBuilder.appendLiteral("\r\nContent-Transfer-Encoding: ");
+    stringBuilder.append(contentEncoding);
+    stringBuilder.appendLiteral("\r\nContent-Location: ");
+    stringBuilder.append(resource.url);
+    stringBuilder.appendLiteral("\r\n\r\n");
 
-        asciiString = stringBuilder.toString().utf8();
-        mhtmlData->append(asciiString.data(), asciiString.length());
+    CString asciiString = stringBuilder.toString().utf8();
+    outputBuffer.append(asciiString.data(), asciiString.length());
 
-        if (!strcmp(contentEncoding, binary)) {
-            const char* data;
-            size_t position = 0;
-            while (size_t length = resource.data->getSomeData(data, position)) {
-                mhtmlData->append(data, length);
-                position += length;
-            }
+    if (!strcmp(contentEncoding, binary)) {
+        const char* data;
+        size_t position = 0;
+        while (size_t length = resource.data->getSomeData(data, position)) {
+            outputBuffer.append(data, length);
+            position += length;
+        }
+    } else {
+        // FIXME: ideally we would encode the content as a stream without having to fetch it all.
+        const char* data = resource.data->data();
+        size_t dataLength = resource.data->size();
+        Vector<char> encodedData;
+        if (!strcmp(contentEncoding, quotedPrintable)) {
+            quotedPrintableEncode(data, dataLength, encodedData);
+            outputBuffer.append(encodedData.data(), encodedData.size());
+            outputBuffer.append("\r\n", 2);
         } else {
-            // FIXME: ideally we would encode the content as a stream without having to fetch it all.
-            const char* data = resource.data->data();
-            size_t dataLength = resource.data->size();
-            Vector<char> encodedData;
-            if (!strcmp(contentEncoding, quotedPrintable)) {
-                quotedPrintableEncode(data, dataLength, encodedData);
-                mhtmlData->append(encodedData.data(), encodedData.size());
-                mhtmlData->append("\r\n", 2);
-            } else {
-                ASSERT(!strcmp(contentEncoding, base64));
-                // We are not specifying insertLFs = true below as it would cut the lines with LFs and MHTML requires CRLFs.
-                base64Encode(data, dataLength, encodedData);
-                const size_t maximumLineLength = 76;
-                size_t index = 0;
-                size_t encodedDataLength = encodedData.size();
-                do {
-                    size_t lineLength = std::min(encodedDataLength - index, maximumLineLength);
-                    mhtmlData->append(encodedData.data() + index, lineLength);
-                    mhtmlData->append("\r\n", 2);
-                    index += maximumLineLength;
-                } while (index < encodedDataLength);
-            }
+            ASSERT(!strcmp(contentEncoding, base64));
+            // We are not specifying insertLFs = true below as it would cut the lines with LFs and MHTML requires CRLFs.
+            base64Encode(data, dataLength, encodedData);
+            const size_t maximumLineLength = 76;
+            size_t index = 0;
+            size_t encodedDataLength = encodedData.size();
+            do {
+                size_t lineLength = std::min(encodedDataLength - index, maximumLineLength);
+                outputBuffer.append(encodedData.data() + index, lineLength);
+                outputBuffer.append("\r\n", 2);
+                index += maximumLineLength;
+            } while (index < encodedDataLength);
         }
     }
+}
 
-    asciiString = String("--" + boundary + "--\r\n").utf8();
-    mhtmlData->append(asciiString.data(), asciiString.length());
+void MHTMLArchive::generateMHTMLFooter(
+    const String& boundary,
+    SharedBuffer& outputBuffer)
+{
+    CString asciiString = String("--" + boundary + "--\r\n").utf8();
+    outputBuffer.append(asciiString.data(), asciiString.length());
+}
 
+PassRefPtr<SharedBuffer> MHTMLArchive::generateMHTMLData(
+    const Vector<SerializedResource>& resources,
+    EncodingPolicy encodingPolicy,
+    const String& title, const String& mimeType)
+{
+    String boundary = MHTMLArchive::generateMHTMLBoundary();
+
+    RefPtr<SharedBuffer> mhtmlData = SharedBuffer::create();
+    MHTMLArchive::generateMHTMLHeader(boundary, title, mimeType, *mhtmlData);
+    for (const auto& resource : resources) {
+        MHTMLArchive::generateMHTMLPart(
+            boundary, encodingPolicy, resource, *mhtmlData);
+    }
+    MHTMLArchive::generateMHTMLFooter(boundary, *mhtmlData);
     return mhtmlData.release();
 }
 

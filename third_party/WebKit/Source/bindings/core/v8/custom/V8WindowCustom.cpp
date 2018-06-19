@@ -300,10 +300,24 @@ static bool installTestInterfaceIfNeeded(LocalFrame& frame, v8::Local<v8::String
 
 void V8Window::namedPropertyGetterCustom(v8::Local<v8::Name> name, const v8::PropertyCallbackInfo<v8::Value>& info)
 {
-    if (!name->IsString())
+    v8::Local<v8::String> nameString;
+    v8::Local<v8::Symbol> s;
+    v8::Local<v8::Value> nameV;
+    int length = 0;
+
+    if (name->IsSymbol()) {
+        s = name.As<v8::Symbol>();
+        nameV = s->Name();
+        if (nameV->IsString()) {
+            nameString = nameV.As<v8::String>();
+            length = nameString->Length();
+        } else
+            return;
+    } else if (name->IsString()) {
+        nameString = name.As<v8::String>();
+    } else
         return;
 
-    auto nameString = name.As<v8::String>();
     DOMWindow* window = V8Window::toImpl(info.Holder());
     if (!window)
         return;
@@ -314,6 +328,9 @@ void V8Window::namedPropertyGetterCustom(v8::Local<v8::Name> name, const v8::Pro
         return;
 
     AtomicString propName = toCoreAtomicString(nameString);
+    if (propName == "Symbol.toPrimitive") {
+        return;
+    }
 
     // Note that the spec doesn't allow any cross-origin named access to the window object. However,
     // UAs have traditionally allowed named access to named child browsing contexts, even across
