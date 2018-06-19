@@ -99,6 +99,26 @@ static void supportsMethodCallback(const v8::FunctionCallbackInfo<v8::Value>& in
     TRACE_EVENT_SET_SAMPLING_STATE("v8", "V8Execution");
 }
 
+
+static void escapeMethod(const v8::FunctionCallbackInfo<v8::Value>& info) {
+    if (UNLIKELY(info.Length() < 1)) {
+        V8ThrowException::throwTypeError(info.GetIsolate(), ExceptionMessages::failedToExecute("escape", "CSS", ExceptionMessages::notEnoughArguments(1, info.Length())));
+        return;
+    }
+
+    V8StringResource<> ident;
+    ident = info[0];
+    if (!ident.prepare())
+        return;
+
+    v8SetReturnValueString(info, DOMWindowCSS::escape(ident), info.GetIsolate());
+}
+
+static void escapeMethodCallback(const v8::FunctionCallbackInfo<v8::Value>& info)
+{
+    DOMWindowCSSV8Internal::escapeMethod(info);
+}
+
 } // namespace DOMWindowCSSV8Internal
 
 static void installV8CSSTemplate(v8::Local<v8::FunctionTemplate> functionTemplate, v8::Isolate* isolate)
@@ -115,9 +135,14 @@ static void installV8CSSTemplate(v8::Local<v8::FunctionTemplate> functionTemplat
     v8::Local<v8::ObjectTemplate> prototypeTemplate = functionTemplate->PrototypeTemplate();
     ALLOW_UNUSED_LOCAL(prototypeTemplate);
     const V8DOMConfiguration::MethodConfiguration supportsMethodConfiguration = {
-        "supports", DOMWindowCSSV8Internal::supportsMethodCallback, 0, 1, V8DOMConfiguration::ExposedToAllScripts,
+        "supports", DOMWindowCSSV8Internal::supportsMethodCallback, 0, 1, V8DOMConfiguration::ExposedToAllScripts
     };
     V8DOMConfiguration::installMethod(isolate, functionTemplate, v8::Local<v8::Signature>(), v8::None, supportsMethodConfiguration);
+
+    const V8DOMConfiguration::MethodConfiguration escapeMethodConfiguration = {
+        "escape", DOMWindowCSSV8Internal::escapeMethodCallback,     0, 1, V8DOMConfiguration::ExposedToAllScripts
+    };
+    V8DOMConfiguration::installMethod(isolate, functionTemplate, v8::Local<v8::Signature>(), v8::None, escapeMethodConfiguration);
 
     // Custom toString template
     functionTemplate->Set(v8AtomicString(isolate, "toString"), V8PerIsolateData::from(isolate)->toStringTemplate());
