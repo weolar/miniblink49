@@ -235,7 +235,11 @@ void DevToolsAgent::didExitDebugLoopInRun()
     m_page->didExitDebugLoop();
     m_devToolsClient->didExitDebugLoop();
 
-    CheckReEnter::s_kEnterContent++;
+    if (blink::RuntimeEnabledFeatures::updataInOtherThreadEnabled()) {
+        RELEASE_ASSERT(0 == CheckReEnter::s_kEnterContent);
+    } else {
+        CheckReEnter::s_kEnterContent++;
+    }
 }
 
 void DevToolsAgent::willEnterDebugLoop()
