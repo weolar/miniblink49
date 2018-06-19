@@ -18,7 +18,32 @@ const timers = require('timers');
 let nodeRequire = require;
 let nodeProcess = process;
 
+let isSetModulePaths = false;
+
+// Set the __filename to the path of html file if it is file: protocol.
+function addModulePaths() {
+	if (isSetModulePaths)
+		return;
+	
+	if (window.location.protocol !== 'file:')
+		return;
+	
+    var pathname = process.platform === 'win32' && window.location.pathname[0] === '/' ? window.location.pathname.substr(1) : window.location.pathname;
+    window.__filename = path.normalize(decodeURIComponent(pathname));
+    window.__dirname = path.dirname(window.__filename);
+
+    // Set module's filename so relative require can work as expected.
+    module.filename = window.__filename;
+
+    // Also search for module under the html file.
+    module.paths = module.paths.concat(Module._nodeModulePaths(window.__dirname));
+    
+    isSetModulePaths = true;
+}
+
 function __mbRequire__(name) {
+	addModulePaths();
+	
     var oldProcess = process;
     process = nodeProcess;
     var result = nodeRequire(name);
@@ -39,18 +64,7 @@ window.miniNodeModule = module;
 window.setImmediate = timers.setImmediate;
 window.Intl = intlCollator;
 
-// Set the __filename to the path of html file if it is file: protocol.
-if (window.location.protocol === 'file:') {
-    var pathname = process.platform === 'win32' && window.location.pathname[0] === '/' ? window.location.pathname.substr(1) : window.location.pathname;
-    window.__filename = path.normalize(decodeURIComponent(pathname));
-    window.__dirname = path.dirname(window.__filename);
-
-    // Set module's filename so relative require can work as expected.
-    module.filename = window.__filename;
-
-    // Also search for module under the html file.
-    module.paths = module.paths.concat(Module._nodeModulePaths(window.__dirname));
-}
+addModulePaths();
 
 function outputObj(obj) {  
     var props = "";  

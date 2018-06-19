@@ -7,6 +7,8 @@ Object.setPrototypeOf(BrowserWindow.prototype, EventEmitter.prototype);
 
 require('./web-contents');
 
+
+
 // Helpers.
 Object.defineProperty(BrowserWindow.prototype, "webContents", {
 	get: function () {
