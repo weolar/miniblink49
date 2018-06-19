@@ -191,6 +191,7 @@ public:
     void setBrowser(CefBrowserHostImpl* browser);
 #endif
     blink::WebFrame* getWebFrameFromFrameId(int64_t frameId);
+    int64_t getFrameIdByBlinkFrame(const blink::WebFrame* frame);
     static int64_t getFirstFrameId();
 
     blink::WebView* createWkeView(blink::WebLocalFrame* creator,

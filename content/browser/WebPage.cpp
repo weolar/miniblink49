@@ -501,16 +501,11 @@ WebFrame* WebPage::getWebFrameFromFrameId(int64_t frameId)
     return m_pageImpl->getWebFrameFromFrameId(frameId);
 }
 
-
 int64_t WebPage::getFrameIdByBlinkFrame(const blink::WebFrame* frame)
 {
-    if (!frame)
+    if (!m_pageImpl)
         return content::WebPage::kInvalidFrameId;
-
-    blink::Frame* blinkFrame = blink::toCoreFrame(frame);
-    if (!blinkFrame)
-        return content::WebPage::kInvalidFrameId;
-    return blinkFrame->frameID();
+    return m_pageImpl->getFrameIdByBlinkFrame(frame);
 }
 
 int64_t WebPage::getFirstFrameId()
