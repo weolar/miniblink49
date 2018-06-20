@@ -7606,6 +7606,42 @@
     <ClCompile Include="openssl\crypto\comp\comp_err.c">
       <Filter>openssl\crypto\comp</Filter>
     </ClCompile>
+    <ClCompile Include="openssl\crypto\des\des_enc.c">
+      <Filter>openssl\crypto\des</Filter>
+    </ClCompile>
+    <ClCompile Include="openssl\crypto\bn\bn_asm.c">
+      <Filter>openssl\crypto\bn</Filter>
+    </ClCompile>
+    <ClCompile Include="openssl\crypto\cast\c_enc.c">
+      <Filter>openssl\crypto\cast</Filter>
+    </ClCompile>
+    <ClCompile Include="openssl\crypto\bf\bf_enc.c">
+      <Filter>openssl\crypto\bf</Filter>
+    </ClCompile>
+    <ClCompile Include="openssl\crypto\aes\aes_core.c">
+      <Filter>openssl\crypto\aes</Filter>
+    </ClCompile>
+    <ClCompile Include="openssl\crypto\aes\aes_cbc.c">
+      <Filter>openssl\crypto\aes</Filter>
+    </ClCompile>
+    <ClCompile Include="openssl\crypto\camellia\camellia.c">
+      <Filter>openssl\crypto\camellia</Filter>
+    </ClCompile>
+    <ClCompile Include="openssl\crypto\rc4\rc4_enc.c">
+      <Filter>openssl\crypto\rc4</Filter>
+    </ClCompile>
+    <ClCompile Include="openssl\crypto\camellia\cmll_cbc.c">
+      <Filter>openssl\crypto\camellia</Filter>
+    </ClCompile>
+    <ClCompile Include="openssl\crypto\camellia\cmll_misc.c">
+      <Filter>openssl\crypto\camellia</Filter>
+    </ClCompile>
+    <ClCompile Include="openssl\crypto\rc4\rc4_skey.c">
+      <Filter>openssl\crypto\rc4</Filter>
+    </ClCompile>
+    <ClCompile Include="openssl\crypto\mem_clr.c">
+      <Filter>openssl\crypto</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="openssl\crypto\comp\comp.h">
