@@ -1225,6 +1225,12 @@ void CWebView::onDraggableRegionsChanged(wkeDraggableRegionsChangedCallback call
     m_webPage->wkeHandler().draggableRegionsChangedCallbackParam = callbackParam;
 }
 
+void CWebView::onStartDragging(wkeStartDraggingCallback callback, void* callbackParam)
+{
+    m_webPage->wkeHandler().startDraggingCallback = callback;
+    m_webPage->wkeHandler().startDraggingCallbackParam = callbackParam;
+}
+
 void CWebView::setClientHandler(const wkeClientHandler* handler)
 {
     m_webPage->wkeSetClientHandler((void*)handler);

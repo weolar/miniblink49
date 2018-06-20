@@ -97,6 +97,9 @@ struct CWebViewHandler {
 
     wkeDraggableRegionsChangedCallback draggableRegionsChangedCallback;
     void* draggableRegionsChangedCallbackParam;
+
+    wkeStartDraggingCallback startDraggingCallback;
+    void* startDraggingCallbackParam;
     
     bool isWke; // 是否是使用的wke接口
 };
@@ -255,6 +258,8 @@ public:
     void onDidCreateScriptContext(wkeDidCreateScriptContextCallback callback, void* callbackParam);
     void onWillReleaseScriptContext(wkeWillReleaseScriptContextCallback callback, void* callbackParam);
 
+    void onStartDragging(wkeStartDraggingCallback callback, void* callbackParam);
+    
     void onOtherLoad(wkeOnOtherLoadCallback callback, void* callbackParam);
 
     void onDraggableRegionsChanged(wkeDraggableRegionsChangedCallback callback, void* param);
@@ -281,6 +286,8 @@ public:
     net::ProxyType getProxyType() const { return m_proxyType; }
 
     void showDevTools(const utf8* url, wkeOnShowDevtoolsCallback callback, void* param);
+
+    content::WebPage* getWebPage() const { return m_webPage; }
 
 protected:
     friend class ShowDevToolsTaskObserver;

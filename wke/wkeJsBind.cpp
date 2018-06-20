@@ -532,6 +532,22 @@ const wchar_t* jsToStringW(jsExecState es, jsValue v)
     return jsToTempStringW(es, v);
 }
 
+void* jsToV8Value(jsExecState es, jsValue v)
+{
+    if (!s_execStates || !s_execStates->contains(es) || !es)
+        return nullptr;
+
+    JsValueMap::iterator it = findJsValueMap(v);
+    if (it == s_jsValueMap->end())
+        return nullptr;
+
+    WkeJsValue* wkeValue = it->value;
+
+    if (WkeJsValue::wkeJsValueV8Value != wkeValue->type)
+        return nullptr;
+    return &wkeValue->value;
+}
+
 jsValue jsInt(int n)
 {
     WkeJsValue* out;

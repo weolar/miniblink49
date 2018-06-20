@@ -195,10 +195,21 @@ void wkeSetDragDropEnable(wkeWebView webView, bool b)
 DWORD g_kWakeMinInterval = 5;
 double g_kDrawMinInterval = 0.003;
 
-void wkeSetDebugConfig(wkeWebView webView, const char* debugString, const char* param)
-{
-    String stringDebug(debugString);
+bool g_isDecodeUrlRequest = false;
 
+void wkeSetDebugConfig(wkeWebView webview, const char* debugString, const char* param)
+{
+    content::WebPage* webpage = nullptr;
+    blink::WebViewImpl* webViewImpl = nullptr;
+    blink::WebSettingsImpl* settings = nullptr;
+    if (webview)
+        webpage = webview->getWebPage();
+    if (webpage)
+        webViewImpl = webpage->webViewImpl();
+    if (webViewImpl)
+        settings = webViewImpl->settingsImpl();
+
+    String stringDebug(debugString);
     Vector<String> result;
     stringDebug.split(",", result);
     for (size_t i = 0; i < result.size(); ++i) {
@@ -211,13 +222,28 @@ void wkeSetDebugConfig(wkeWebView webView, const char* debugString, const char* 
             blink::RuntimeEnabledFeatures::setDrawTileLineEnabled(true);
         } else if ("alwaysInflateDirtyRect" == item) {
 
+        } else if ("decodeUrlRequest" == item) {
+            g_isDecodeUrlRequest = true;
         } else if ("showDevTools" == item) {
-            webView->showDevTools(param, nullptr, nullptr);
+            webview->showDevTools(param, nullptr, nullptr);
         } else if ("wakeMinInterval" == item) {
             g_kWakeMinInterval = atoi(param);
         } else if ("drawMinInterval" == item) {
             int drawMinInterval = atoi(param);
             g_kDrawMinInterval = drawMinInterval / 1000.0;
+
+        } else if ("minimumFontSize" == item) {
+            if (settings)
+                settings->setMinimumFontSize(atoi(param));
+        } else if ("minimumLogicalFontSize" == item) {
+            if (settings)
+                settings->setMinimumLogicalFontSize(atoi(param));
+        } else if ("defaultFontSize" == item) {
+            if (settings)
+                settings->setDefaultFontSize(atoi(param));
+        } else if ("defaultFixedFontSize" == item) {
+            if (settings)
+                settings->setDefaultFixedFontSize(atoi(param));
         }
     }
 }
@@ -276,7 +302,7 @@ void wkeSetName(wkeWebView webView, const char* name)
 
 void wkeSetHandle(wkeWebView webView, HWND wnd)
 {
-	webView->setHandle(wnd);
+    webView->setHandle(wnd);
 }
 
 void wkeSetHandleOffset(wkeWebView webView, int x, int y)
@@ -778,7 +804,6 @@ void wkeOnMouseOverUrlChanged(wkeWebView webView, wkeTitleChangedCallback callba
     webView->onMouseOverUrlChanged(callback, callbackParam);
 }
 
-
 void wkeOnURLChanged(wkeWebView webView, wkeURLChangedCallback callback, void* callbackParam)
 {
     webView->onURLChanged(callback, callbackParam);
@@ -877,6 +902,11 @@ void wkeOnDidCreateScriptContext(wkeWebView webView, wkeDidCreateScriptContextCa
 void wkeOnWillReleaseScriptContext(wkeWebView webView, wkeWillReleaseScriptContextCallback callback, void* callbackParam)
 {
     webView->onWillReleaseScriptContext(callback, callbackParam);
+}
+
+void wkeOnStartDragging(wkeWebView webView, wkeStartDraggingCallback callback, void* param)
+{
+    webView->onStartDragging(callback, param);
 }
 
 wkeWillMediaLoadCallback g_wkeWillMediaLoadCallback = nullptr;
@@ -1016,6 +1046,12 @@ void wkeSetStringW(wkeString string, const wchar_t* str, size_t len)
     }
 
     string->setString(str, len);
+}
+
+wkeString wkeCreateString(const utf8* str, size_t len)
+{
+    wkeString wkeStr = new wke::CString(str, len);
+    return wkeStr;
 }
 
 wkeString wkeCreateStringW(const wchar_t* str, size_t len)

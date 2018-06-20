@@ -21,6 +21,11 @@ typedef struct {
     int h;
 } wkeRect;
 
+typedef struct {
+    int x;
+    int y;
+} wkePoint;
+
 typedef enum {
     WKE_LBUTTON = 0x01,
     WKE_RBUTTON = 0x02,
@@ -395,6 +400,16 @@ typedef struct {
     double duration;
 } wkeMediaLoadInfo;
 typedef void(*wkeWillMediaLoadCallback)(wkeWebView webView, void* param, const char* url, wkeMediaLoadInfo* info);
+
+typedef void(*wkeStartDraggingCallback)(
+    wkeWebView webView,
+    void* param, 
+    wkeWebFrameHandle frame,
+    const wkeWebDragData* data,
+    wkeWebDragOperationsMask mask, 
+    const void* image, 
+    const wkePoint* dragImageOffset
+    );
 
 typedef enum {
     WKE_DID_START_LOADING,
@@ -888,6 +903,7 @@ public:
     ITERATOR3(void, wkeSetString, wkeString string, const utf8* str, size_t len, "") \
     ITERATOR3(void, wkeSetStringW, wkeString string, const wchar_t* str, size_t len, "") \
     \
+    ITERATOR2(wkeString, wkeCreateString, const utf8* str, size_t len, "") \
     ITERATOR2(wkeString, wkeCreateStringW, const wchar_t* str, size_t len, "") \
     ITERATOR1(void, wkeDeleteString, wkeString str, "") \
     \
@@ -926,6 +942,7 @@ public:
     ITERATOR3(void, wkeOnWindowDestroy, wkeWebView webWindow, wkeWindowDestroyCallback callback, void* param, "") \
     ITERATOR3(void, wkeOnDraggableRegionsChanged, wkeWebView webWindow, wkeDraggableRegionsChangedCallback callback, void* param, "") \
     ITERATOR3(void, wkeOnWillMediaLoad, wkeWebView webWindow, wkeWillMediaLoadCallback callback, void* param, "") \
+    ITERATOR3(void, wkeOnStartDragging, wkeWebView webWindow, wkeStartDraggingCallback callback, void* param, "") \
     \
     ITERATOR3(void, wkeOnOtherLoad, wkeWebView webWindow, wkeOnOtherLoadCallback callback, void* param, "") \
     ITERATOR2(void, wkeDeleteWillSendRequestInfo, wkeWebView webWindow, wkeWillSendRequestInfo* info, "") \
@@ -1008,6 +1025,7 @@ public:
     ITERATOR3(jsValue, jsArrayBuffer, jsExecState es, char * buffer, size_t size, "") \
     ITERATOR2(const utf8*, jsToTempString, jsExecState es, jsValue v, "") \
     ITERATOR2(const wchar_t*, jsToTempStringW, jsExecState es, jsValue v, "") \
+    ITERATOR2(void*, jsToV8Value, jsExecState es, jsValue v, "return v8::Persistent<v8::Value>*") \
     \
     ITERATOR1(jsValue, jsInt, int n, "") \
     ITERATOR1(jsValue, jsFloat, float f, "") \
