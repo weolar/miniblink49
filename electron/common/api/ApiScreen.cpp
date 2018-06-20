@@ -334,7 +334,6 @@ public:
 
         prototype->SetClassName(v8::String::NewFromUtf8(isolate, "Screen"));
         gin::ObjectTemplateBuilder builder(isolate, prototype->InstanceTemplate());
-        builder.SetMethod("quit", &Screen::nullFunction);
         builder.SetMethod("getCursorScreenPoint", &Screen::getCursorScreenPointApi);
         builder.SetMethod("getPrimaryDisplay", &Screen::getPrimaryDisplayApi);
         builder.SetMethod("getAllDisplays", &Screen::getAllDisplaysApi);

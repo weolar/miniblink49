@@ -222,9 +222,6 @@ void ThreadCall::messageLoop(uv_loop_t* loop, v8::Platform* platform, v8::Isolat
         if (platform && isolate)
             v8::platform::PumpMessageLoop(platform, isolate);
 
-        if (doTaskQueue(threadId))
-            return;
-
         if (::PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
             if (WM_QUIT == msg.message) {
                 if (0 != msg.lParam)
@@ -242,6 +239,9 @@ void ThreadCall::messageLoop(uv_loop_t* loop, v8::Platform* platform, v8::Isolat
         } else {
             ::Sleep(2);
         }
+
+        if (doTaskQueue(threadId))
+            return;
     }
 
     if (::GetCurrentThreadId() == m_uiThreadId)

@@ -21,19 +21,15 @@ public:
 
         prototype->SetClassName(v8::String::NewFromUtf8(isolate, "IntlCollator"));
         gin::ObjectTemplateBuilder builder(isolate, prototype->InstanceTemplate());
-        builder.SetMethod("quit", &IntlCollator::intlCollatorCompareApi);
-
-        //builder.SetMemberAccessor("items", &itemsGet, &itemsSet);
+        builder.SetMethod("compare", &IntlCollator::compareApi);
 
         constructor.Reset(isolate, prototype->GetFunction());
         target->Set(v8::String::NewFromUtf8(isolate, "IntlCollator"), prototype->GetFunction());
     }
 
-    int intlCollatorCompareApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
-        if (args.Length() != 2) {
-            DebugBreak();
+    int compareApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
+        if (args.Length() != 2 || !args[0]->IsString() || !args[1]->IsString())
             return -1;
-        }
 
         v8::String::Utf8Value str0(args[0]);
         v8::String::Utf8Value str1(args[1]);

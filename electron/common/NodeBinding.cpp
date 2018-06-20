@@ -1,7 +1,7 @@
 #include "common/NodeBinding.h"
 
 #include "uv.h"
-#include "nodeblink.h"
+#include "node/nodeblink.h"
 #include "gin/dictionary.h"
 #include "base/file_path.h"
 #include "common/StringUtil.h"
@@ -291,6 +291,9 @@ node::Environment* NodeBindings::createEnvironment(v8::Local<v8::Context> contex
             resourcesPath = std::wstring(resourcesPath.c_str(), resourcesPos - resourcesPath.c_str() + 9);
         }
     }
+
+    if (scriptPath.length() > 0 && scriptPath[0] >= L'a' && scriptPath[0] <= L'z')
+        scriptPath[0] += L'A' - L'a';
 
     std::string scriptPathStr = StringUtil::UTF16ToUTF8(scriptPath);
     args.insert(args.begin() + 1, scriptPathStr.c_str());
