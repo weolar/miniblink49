@@ -1097,8 +1097,8 @@ bool ParseHost(const std::string& input,
                bool is_special,
                bool unicode = false) {
   if (input.length() == 0) {
-    output->clear();
-    //*output = "";
+    //output->clear();
+    *output = "";
     return true;
   }
   URLHost host;

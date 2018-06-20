@@ -1003,10 +1003,10 @@ bool WebPageImpl::needDrawToScreen(HWND hWnd) const
 
     if (blink::RuntimeEnabledFeatures::updataInOtherThreadEnabled() && !m_devToolsClient)
         return false;
-
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
     if (m_browser && m_browser->IsWindowless())
         return false;
-
+#endif
     return n_needAutoDrawToHwnd;
 }
 
