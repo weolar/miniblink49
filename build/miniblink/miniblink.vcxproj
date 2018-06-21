@@ -550,6 +550,7 @@
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|x64'">../../third_party/zlib;../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;BUILDING_V8_SHARED=1;BUILDING_UV_SHARED=1;CARES_STATICLIB;NODE_ARCH="ia32";NODE_PLATFORM="win32";NODE_WANT_INTERNALS=1;HAVE_OPENSSL=1;HAVE_ETW=1;HAVE_PERFCTR=1;V8_INSPECTOR_USE_STL=1;NODE_USE_V8_PLATFORM=0</PreprocessorDefinitions>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\skia\ext\analysis_canvas.cc" />
     <ClCompile Include="..\..\third_party\WebKit\Source\bindings\core\v8\custom\V8DevToolsHostCustom.cpp" />
