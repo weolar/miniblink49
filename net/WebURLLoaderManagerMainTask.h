@@ -226,6 +226,7 @@ static bool dispatchResponseToWke(WebURLLoaderInternal* job, const AtomicString&
     if (equalIgnoringCase(contentType, "application/octet-stream") ||
         equalIgnoringCase(contentType, "application/zip") ||
         equalIgnoringCase(contentType, "application/rar") ||
+        equalIgnoringCase(contentType, "application/x-7z-compressed") ||
         contentDispositionType(job->m_response.httpHeaderField("Content-Disposition")) == ContentDispositionAttachment) {
         if (page->wkeHandler().downloadCallback) {
             if (page->wkeHandler().downloadCallback(page->wkeWebView(), page->wkeHandler().downloadCallbackParam, urlBuf.data())) {
