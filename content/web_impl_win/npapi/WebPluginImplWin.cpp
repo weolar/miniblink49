@@ -642,6 +642,10 @@ bool WebPluginImpl::handleMouseEvent(const blink::WebMouseEvent& evt)
             npEvent.event = WM_RBUTTONUP;
             break;
         }
+    } else if (evt.type == blink::WebInputEvent::Type::MouseWheel) {
+        const blink::WebMouseWheelEvent& wheelEvt = static_cast<const blink::WebMouseWheelEvent&>(evt);
+        npEvent.event = WM_MOUSEWHEEL;
+        npEvent.wParam = MAKEWPARAM(wheelEvt.deltaX, wheelEvt.deltaY);
     } else
         return isDefaultHandled;
 
@@ -688,7 +692,7 @@ bool WebPluginImpl::handleInputEvent(const blink::WebInputEvent& evt, blink::Web
     if (m_isWindowed)
         return false;
 
-    if (blink::WebInputEvent::isMouseEventType(evt.type))
+    if (blink::WebInputEvent::isMouseEventType(evt.type) || blink::WebInputEvent::MouseWheel == evt.type)
         return handleMouseEvent(static_cast<const blink::WebMouseEvent&>(evt));
 
     if (blink::WebInputEvent::isKeyboardEventType(evt.type))
@@ -815,7 +819,6 @@ void WebPluginImpl::paint(blink::WebCanvas* canvas, const blink::WebRect& rect)
 
     // On Safari/Windows without transparency layers the GraphicsContext returns the HDC
     // of the window and the plugin expects that the passed in DC has window coordinates.
-    //if (!context.isInTransparencyLayer()) {
     XFORM originalTransform;
     XFORM transform;
     ::GetWorldTransform(hMemoryDC, &originalTransform);
@@ -823,7 +826,6 @@ void WebPluginImpl::paint(blink::WebCanvas* canvas, const blink::WebRect& rect)
     transform.eDx = -r.x();
     transform.eDy = -r.y();
     ::SetWorldTransform(hMemoryDC, &transform);
-    //}
 
     paintIntoTransformedContext(hMemoryDC);
 
