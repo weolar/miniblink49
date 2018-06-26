@@ -23,19 +23,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
  */
 
-#include "config.h"
 #include "content/ui/WCDataObject.h"
 #include "content/ui/ClipboardUtil.h"
-#include "third_party/WebKit/Source/platform/weborigin/KURL.h"
-#include <wtf/text/WTFString.h>
+
+#include "base/strings/string_util.h"
 
 namespace content {
 
 class WCEnumFormatEtc : public IEnumFORMATETC
 {
 public:
-    WCEnumFormatEtc(const Vector<FORMATETC*>& formats);
-    WCEnumFormatEtc(const Vector<FORMATETC>& formats);
+    WCEnumFormatEtc(const std::vector<FORMATETC*>& formats);
+    WCEnumFormatEtc(const std::vector<FORMATETC>& formats);
 
     //IUnknown members
     HRESULT __stdcall QueryInterface(REFIID, void**) override;
@@ -50,24 +49,24 @@ public:
 
 private:
     long m_ref;
-    Vector<FORMATETC> m_formats;
+    std::vector<FORMATETC> m_formats;
     size_t m_current;
 };
 
-WCEnumFormatEtc::WCEnumFormatEtc(const Vector<FORMATETC>& formats)
+WCEnumFormatEtc::WCEnumFormatEtc(const std::vector<FORMATETC>& formats)
     : m_ref(1)
     , m_current(0)
 {
     for(size_t i = 0; i < formats.size(); ++i)
-        m_formats.append(formats[i]);
+        m_formats.push_back(formats[i]);
 }
 
-WCEnumFormatEtc::WCEnumFormatEtc(const Vector<FORMATETC*>& formats)
+WCEnumFormatEtc::WCEnumFormatEtc(const std::vector<FORMATETC*>& formats)
     : m_ref(1)
     , m_current(0)
 {
     for (size_t i = 0; i < formats.size(); ++i)
-        m_formats.append(*(formats[i]));
+        m_formats.push_back(*(formats[i]));
 }
 
 HRESULT WCEnumFormatEtc::QueryInterface(REFIID riid, void** ppvObject)
@@ -157,17 +156,17 @@ HRESULT WCDataObject::createInstance(WCDataObject** result)
     return S_OK;
 }
 
-HRESULT WCDataObject::createInstance(WCDataObject** result, const DragDataMap& dataMap)
-{
-//     if (!result)
-//         return E_POINTER;
-//     *result = new WCDataObject;
-// 
-//     for (DragDataMap::const_iterator it = dataMap.begin(); it != dataMap.end(); ++it)
-//         setClipboardData(*result, it->key, it->value);
-    DebugBreak();
-    return S_OK;
-}
+// HRESULT WCDataObject::createInstance(WCDataObject** result, const DragDataMap& dataMap)
+// {
+// //     if (!result)
+// //         return E_POINTER;
+// //     *result = new WCDataObject;
+// // 
+// //     for (DragDataMap::const_iterator it = dataMap.begin(); it != dataMap.end(); ++it)
+// //         setClipboardData(*result, it->key, it->value);
+//     DebugBreak();
+//     return S_OK;
+// }
 
 WCDataObject::WCDataObject()
     : m_ref(0)
@@ -262,13 +261,13 @@ HRESULT WCDataObject::SetData(FORMATETC* pformatetc, STGMEDIUM* pmedium, BOOL fR
     memset(pStgMed, 0, sizeof(STGMEDIUM));
 
     *fetc = *pformatetc;
-    m_formats.append(fetc);
+    m_formats.push_back(fetc);
 
     if(fRelease)
         *pStgMed = *pmedium;
     else
         CopyMedium(pStgMed, pmedium, pformatetc);
-    m_medium.append(pStgMed);
+    m_medium.push_back(pStgMed);
 
     return S_OK;
 }
@@ -355,12 +354,12 @@ void WCDataObject::clearData(CLIPFORMAT format)
     while (ptr < m_formats.size()) {
         if (m_formats[ptr]->cfFormat == format) {
             delete m_formats[ptr];
-            m_formats[ptr] = m_formats.last();
-            m_formats.removeLast();
+            m_formats[ptr] = m_formats.back();
+            m_formats.pop_back();
 
             ::ReleaseStgMedium(m_medium[ptr]);
-            m_medium[ptr] = m_medium.last();
-            m_medium.removeLast();
+            m_medium[ptr] = m_medium.back();
+            m_medium.pop_back();
             continue;
         }
         ptr++;
@@ -370,12 +369,14 @@ void WCDataObject::clearData(CLIPFORMAT format)
 
 enum ClipboardDataType { ClipboardDataTypeNone, ClipboardDataTypeURL, ClipboardDataTypeText, ClipboardDataTypeTextHTML };
 
-static ClipboardDataType clipboardTypeFromMIMEType(const String& type)
+static ClipboardDataType clipboardTypeFromMIMEType(const std::string& type)
 {
-    String qType = type.stripWhiteSpace().lower();
+    std::string qType;
+    base::TrimWhitespace(type, base::TRIM_ALL, &qType);
+    qType = base::ToLowerASCII(qType);
 
     // two special cases for IE compatibility
-    if (qType == "text" || qType == "text/plain" || qType.startsWith("text/plain;"))
+    if (qType == "text" || qType == "text/plain" || base::StartsWith(qType, "text/plain;"))
         return ClipboardDataTypeText;
     if (qType == "url" || qType == "text/uri-list")
         return ClipboardDataTypeURL;
@@ -385,17 +386,14 @@ static ClipboardDataType clipboardTypeFromMIMEType(const String& type)
     return ClipboardDataTypeNone;
 }
 
-static bool writeURL(WCDataObject *data, const blink::KURL& url, String title, bool withPlainText, bool withHTML)
+static bool writeURL(WCDataObject *data, const std::string& url, std::string title, bool withPlainText, bool withHTML)
 {
-    ASSERT(data);
-
-    if (url.isEmpty())
+    //ASSERT(data);
+    if (url.empty())
         return false;
 
-    if (title.isEmpty()) {
-        title = url.lastPathComponent();
-        if (title.isEmpty())
-            title = url.host();
+    if (title.empty()) {
+        title = url;
     }
 
     STGMEDIUM medium = { 0 };
@@ -419,8 +417,7 @@ static bool writeURL(WCDataObject *data, const blink::KURL& url, String title, b
     }
 
     if (withPlainText) {
-        Vector<UChar> url16 = WTF::ensureUTF16UChar(url.getUTF8String(), false);
-        medium.hGlobal = ClipboardUtil::createGlobalData(url16);
+        medium.hGlobal = ClipboardUtil::createGlobalData(url);
         if (medium.hGlobal && (data->SetData(ClipboardUtil::getPlainTextWFormatType(), &medium, 1)) < 0)
             ::GlobalFree(medium.hGlobal);
         else
@@ -430,19 +427,19 @@ static bool writeURL(WCDataObject *data, const blink::KURL& url, String title, b
     return success;
 }
 
-void WCDataObject::writeString(const String& type, const String& data)
+void WCDataObject::writeString(const std::string& type, const std::string& data)
 {
     ClipboardDataType winType = clipboardTypeFromMIMEType(type);
 
     if (winType == ClipboardDataTypeURL) {
-        writeURL(this, blink::KURL(blink::ParsedURLString, data), String(), false, true);
+        writeURL(this, data, std::string(), false, true);
         return;
     }
 
     if (winType == ClipboardDataTypeText) {
         STGMEDIUM medium = { 0 };
         medium.tymed = TYMED_HGLOBAL;
-        medium.hGlobal = ClipboardUtil::createGlobalData(WTF::ensureUTF16UChar(data, false));
+        medium.hGlobal = ClipboardUtil::createGlobalData(data);
         if (!medium.hGlobal)
             return;
 

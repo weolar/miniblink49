@@ -7,48 +7,43 @@
 #include "content/ui/ClipboardUtil.h"
 
 #include "base/strings/string_util.h"
-#include "third_party/WebKit/Source/platform/weborigin/KURL.h"
-#include "third_party/WebKit/Source/wtf/text/WTFString.h"
-#include "third_party/WebKit/Source/wtf/text/WTFStringUtil.h"
 
-#include <string>
-
-#if USING_VC6RT == 1
-#define PURE = 0
-#endif
-#include <ShlObj.h>
+// #if USING_VC6RT == 1
+// #define PURE = 0
+// #endif
+// #include <ShlObj.h>
 
 namespace content {
 
-UINT ClipboardUtil::getHtmlFormatType()
+unsigned int ClipboardUtil::getHtmlFormatType()
 {
-    static UINT s_HtmlFormatType = ::RegisterClipboardFormat(L"HTML Format");
+    static unsigned int s_HtmlFormatType = ::RegisterClipboardFormat(L"HTML Format");
     return s_HtmlFormatType;
 }
 
 
-UINT ClipboardUtil::getWebKitSmartPasteFormatType()
+unsigned int ClipboardUtil::getWebKitSmartPasteFormatType()
 {
-    static UINT s_WebKitSmartPasteFormatType = ::RegisterClipboardFormat(L"WebKit Smart Paste Format");
+    static unsigned int s_WebKitSmartPasteFormatType = ::RegisterClipboardFormat(L"WebKit Smart Paste Format");
     return s_WebKitSmartPasteFormatType;
 }
 
-UINT ClipboardUtil::getUrlWFormatType()
+unsigned int ClipboardUtil::getUrlWFormatType()
 {
-    static UINT s_UrlWFormatType = ::RegisterClipboardFormat(CFSTR_INETURLW);
+    static unsigned int s_UrlWFormatType = ::RegisterClipboardFormat(CFSTR_INETURLW);
     return s_UrlWFormatType;
 }
 
-UINT ClipboardUtil::getRtfFormatType()
+unsigned int ClipboardUtil::getRtfFormatType()
 {
-    static UINT s_RtfFormatType = ::RegisterClipboardFormat(L"Rich Text Format");
+    static unsigned int s_RtfFormatType = ::RegisterClipboardFormat(L"Rich Text Format");
     return s_RtfFormatType;
 }
 
-const UINT ClipboardUtil::getWebCustomDataFormatType()
+const unsigned int ClipboardUtil::getWebCustomDataFormatType()
 {
     // TODO(dcheng): This name is temporary. See http://crbug.com/106449.
-    static UINT s_WebCustomDataFormatType = ::RegisterClipboardFormat(L"Chromium Web Custom MIME Data Format");
+    static unsigned int s_WebCustomDataFormatType = ::RegisterClipboardFormat(L"Chromium Web Custom MIME Data Format");
     return s_WebCustomDataFormatType;
 }
 
@@ -66,74 +61,76 @@ FORMATETC* ClipboardUtil::getPlainTextFormatType()
 
 FORMATETC* ClipboardUtil::urlWFormat()
 {
-    UINT cf = getUrlWFormatType();
+    unsigned int cf = getUrlWFormatType();
     static FORMATETC urlFormat = { (CLIPFORMAT)cf, 0, DVASPECT_CONTENT, -1, TYMED_HGLOBAL };
     return &urlFormat;
 }
 
 FORMATETC* ClipboardUtil::urlFormat()
 {
-    static UINT cf = RegisterClipboardFormat(L"UniformResourceLocator");
+    static unsigned int cf = RegisterClipboardFormat(L"UniformResourceLocator");
     static FORMATETC urlFormat = { (CLIPFORMAT)cf, 0, DVASPECT_CONTENT, -1, TYMED_HGLOBAL };
     return &urlFormat;
 }
 
-bool ClipboardUtil::getWebLocData(IDataObject* dataObject, String& url, String* title)
+bool ClipboardUtil::getWebLocData(IDataObject* dataObject, std::string& url, std::string* title)
 {
     bool succeeded = false;
     return succeeded;
 }
 
-String ClipboardUtil::extractURL(const String &inURL, String* title)
+std::string ClipboardUtil::extractURL(const std::string& inURL, std::string* title)
 {
-    String url = inURL;
+    std::string url = inURL;
     int splitLoc = url.find('\n');
     if (splitLoc > 0) {
         if (title)
-            *title = url.substring(splitLoc + 1);
-        url.truncate(splitLoc);
+            *title = url.substr(splitLoc + 1);
+        url = url.substr(0, splitLoc);
     } else if (title)
         *title = url;
     return url;
 }
 
-String ClipboardUtil::getURL(IDataObject* dataObject, String* title)
+std::string ClipboardUtil::getURL(IDataObject* dataObject, std::string* title)
 {
     STGMEDIUM store;
-    String url;
+    std::string url;
     if (getWebLocData(dataObject, url, title))
         return url;
 
     if (dataObject->GetData(urlWFormat(), &store) >= 0) {
         // URL using Unicode
-        UChar* data = static_cast<UChar*>(GlobalLock(store.hGlobal));
-        url = extractURL(String(data), title);
+        wchar_t* data = static_cast<wchar_t*>(GlobalLock(store.hGlobal));
+
+        std::string dataA = base::WideToUTF8(std::wstring(data, wcslen(data)));
+        url = extractURL(dataA, title);
         GlobalUnlock(store.hGlobal);
         ReleaseStgMedium(&store);
     } else if (dataObject->GetData(urlFormat(), &store) >= 0) {
         // URL using ASCII
         char* data = static_cast<char*>(GlobalLock(store.hGlobal));
-        url = extractURL(String(data), title);
+        url = extractURL(std::string(data), title);
         GlobalUnlock(store.hGlobal);
         ReleaseStgMedium(&store);
     }
     return url;
 }
 
-String ClipboardUtil::getPlainText(IDataObject* dataObject)
+std::string ClipboardUtil::getPlainText(IDataObject* dataObject)
 {
     STGMEDIUM store;
-    String text;
+    std::string text;
     if (SUCCEEDED(dataObject->GetData(getPlainTextWFormatType(), &store))) {
         // Unicode text
-        UChar* data = static_cast<UChar*>(::GlobalLock(store.hGlobal));
-        text = String(data);
+        wchar_t* data = static_cast<wchar_t*>(::GlobalLock(store.hGlobal));
+        text = base::WideToUTF8(std::wstring(data, wcslen(data)));
         GlobalUnlock(store.hGlobal);
         ReleaseStgMedium(&store);
     } else if (SUCCEEDED(dataObject->GetData(getPlainTextFormatType(), &store))) {
         // ASCII text
         char* data = static_cast<char*>(GlobalLock(store.hGlobal));
-        text = String(data);
+        text = (data);
         GlobalUnlock(store.hGlobal);
         ReleaseStgMedium(&store);
     } else {
@@ -145,49 +142,39 @@ String ClipboardUtil::getPlainText(IDataObject* dataObject)
     return text;
 }
 
-HGLOBAL ClipboardUtil::createGlobalData(const blink::KURL& url, const String& title)
+HGLOBAL ClipboardUtil::createGlobalData(const std::string& url, const std::string& title)
 {
-    Vector<UChar> mutableURL(WTF::ensureUTF16UChar(url.getUTF8String(), true));
-    Vector<UChar> mutableTitle(WTF::ensureUTF16UChar(title, true));
+    std::wstring mutableURL(base::UTF8ToWide(url));
+    std::wstring mutableTitle(base::UTF8ToWide(title));
+
     SIZE_T size = mutableURL.size() + mutableTitle.size() + 2; // +1 for "\n" and +1 for null terminator
-    HGLOBAL cbData = ::GlobalAlloc(GPTR, size * sizeof(UChar));
+    HGLOBAL cbData = ::GlobalAlloc(GPTR, size * sizeof(wchar_t));
 
     if (cbData) {
-
         PWSTR buffer = static_cast<PWSTR>(GlobalLock(cbData));
-        _snwprintf(buffer, size, L"%s\n%s", mutableURL.data(), mutableTitle.data());
+        _snwprintf(buffer, size, L"%s\n%s", &mutableURL[0], &mutableTitle[0]);
         GlobalUnlock(cbData);
     }
     return cbData;
 }
 
-HGLOBAL ClipboardUtil::createGlobalData(const Vector<UChar>& str)
+HGLOBAL ClipboardUtil::createGlobalData(const std::string& str)
 {
-    HGLOBAL data = ::GlobalAlloc(GMEM_MOVEABLE, ((str.size() + 1) * sizeof(UChar)));
+    std::wstring strW(base::UTF8ToWide(str));
+    HGLOBAL data = ::GlobalAlloc(GMEM_MOVEABLE, ((strW.size() + 1) * sizeof(wchar_t)));
     if (data) {
-        UChar* raw_data = static_cast<UChar*>(::GlobalLock(data));
-        memcpy(raw_data, str.data(), str.size() * sizeof(UChar));
-        raw_data[str.size()] = '\0';
+        wchar_t* rawData = static_cast<wchar_t*>(::GlobalLock(data));
+        memcpy(rawData, &strW[0], strW.size() * sizeof(wchar_t));
+        rawData[strW.size()] = L'\0';
         ::GlobalUnlock(data);
     }
     return data;
 }
 
-//     static String urlToMarkup(const blink::KURL& url, const String& title)
-//     {
-//         blink::StringBuilder markup;
-//         markup.appendLiteral("<a href=\"");
-//         markup.append(url.string());
-//         markup.appendLiteral("\">");
-//         MarkupAccumulator::appendCharactersReplacingEntities(markup, title, 0, title.length(), EntityMaskInPCDATA);
-//         markup.appendLiteral("</a>");
-//         return markup.toString();
-//     }
-
-WTF::String ClipboardUtil::HtmlToCFHtml(const std::string& html, const std::string& base_url)
+std::string ClipboardUtil::HtmlToCFHtml(const std::string& html, const std::string& base_url)
 {
     if (html.empty())
-        return WTF::String();
+        return std::string();
 
 #define MAX_DIGITS 10
 #define MAKE_NUMBER_FORMAT_1(digits) MAKE_NUMBER_FORMAT_2(digits)
@@ -217,8 +204,11 @@ WTF::String ClipboardUtil::HtmlToCFHtml(const std::string& html, const std::stri
     size_t end_fragment_offset = start_fragment_offset + html.length();
     size_t end_html_offset = end_fragment_offset + strlen(end_markup);
 
-    WTF::String result = WTF::String::format(header, start_html_offset,
-        end_html_offset, start_fragment_offset, end_fragment_offset);
+    std::vector<char> buffer;
+    buffer.resize(2000);
+    sprintf(&buffer[0], header, start_html_offset, end_html_offset, start_fragment_offset, end_fragment_offset);
+    std::string result = &buffer[0];
+
     if (!base_url.empty()) {
         result.append(source_url_prefix);
         result.append(base_url.c_str());

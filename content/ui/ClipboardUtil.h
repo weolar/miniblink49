@@ -7,11 +7,10 @@
 #ifndef UI_BASE_CLIPBOARD_CLIPBOARD_UTIL_WIN_H_
 #define UI_BASE_CLIPBOARD_CLIPBOARD_UTIL_WIN_H_
 
-#include "third_party/WebKit/Source/platform/weborigin/KURL.h"
-#include "third_party/WebKit/Source/wtf/text/WTFString.h"
-#include "third_party/WebKit/Source/wtf/text/WTFStringUtil.h"
-
 #include <string>
+#include <vector>
+
+#include <ShlObj.h>
 
 #define kMimeTypeText "text/plain"
 #define kMimeTypeURIList "text/uri-list"
@@ -27,15 +26,15 @@ namespace content {
 
 class ClipboardUtil {
 public:
-    static UINT getHtmlFormatType();
+    static unsigned int getHtmlFormatType();
 
-    static UINT getWebKitSmartPasteFormatType();
+    static unsigned int getWebKitSmartPasteFormatType();
 
-    static UINT getUrlWFormatType();
+    static unsigned int getUrlWFormatType();
 
-    static UINT getRtfFormatType();
+    static unsigned int getRtfFormatType();
 
-    static const UINT getWebCustomDataFormatType();
+    static const unsigned int getWebCustomDataFormatType();
 
     static FORMATETC* getPlainTextWFormatType();
 
@@ -45,19 +44,18 @@ public:
 
     static FORMATETC* urlFormat();
 
-    static bool getWebLocData(IDataObject* dataObject, String& url, String* title);
+    static bool getWebLocData(IDataObject* dataObject, std::string& url, std::string* title);
 
-    static String extractURL(const String &inURL, String* title);
+    static std::string extractURL(const std::string& inURL, std::string* title);
 
-    static String getURL(IDataObject* dataObject, String* title);
+    static std::string getURL(IDataObject* dataObject, std::string* title);
 
-    static String getPlainText(IDataObject* dataObject);
+    static std::string getPlainText(IDataObject* dataObject);
 
-    static HGLOBAL createGlobalData(const blink::KURL& url, const String& title);
+    static HGLOBAL createGlobalData(const std::string& url, const std::string& title);
+    static HGLOBAL createGlobalData(const std::string& str);
 
-    static HGLOBAL createGlobalData(const Vector<UChar>& str);
-
-    static WTF::String ClipboardUtil::HtmlToCFHtml(const std::string& html, const std::string& base_url);
+    static std::string ClipboardUtil::HtmlToCFHtml(const std::string& html, const std::string& base_url);
 
     static void CFHtmlExtractMetadata(const std::string& cf_html,
         std::string* base_url,

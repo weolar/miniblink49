@@ -29,9 +29,8 @@
 #include <ShlObj.h>
 #include <objidl.h>
 #include <memory>
-#include <wtf/Forward.h>
-#include <wtf/Vector.h>
-#include <wtf/HashMap.h>
+#include <string>
+#include <vector>
 
 namespace content {
 
@@ -42,13 +41,13 @@ struct StgMediumDeleter {
     }
 };
 
-typedef HashMap<unsigned, Vector<String>> DragDataMap;
+//typedef HashMap<unsigned, Vector<String>> DragDataMap;
 
 class WCDataObject : public IDataObject {
 public:
     void CopyMedium(STGMEDIUM* pMedDest, STGMEDIUM* pMedSrc, FORMATETC* pFmtSrc);
 
-    void writeString(const String& type, const String& data);
+    void writeString(const std::string& type, const std::string& data);
 
     //IUnknown
     virtual HRESULT __stdcall QueryInterface(REFIID riid, void** ppvObject);
@@ -69,15 +68,15 @@ public:
     void clearData(CLIPFORMAT);
     
     static HRESULT createInstance(WCDataObject**);
-    static HRESULT createInstance(WCDataObject**, const DragDataMap&);
+    //static HRESULT createInstance(WCDataObject**, const DragDataMap&);
 
 private:
     WCDataObject();
     long m_ref;
 //     Vector<std::unique_ptr<FORMATETC>> m_formats;
 //     Vector<std::unique_ptr<STGMEDIUM, StgMediumDeleter>> m_medium;
-    Vector<FORMATETC*> m_formats;
-    Vector<STGMEDIUM*> m_medium;
+    std::vector<FORMATETC*> m_formats;
+    std::vector<STGMEDIUM*> m_medium;
 };
 
 }

@@ -5,6 +5,9 @@
 #include <windows.h>
 #include <xstring>
 
+typedef void (*TipPaintCallback) (HWND hWnd, HDC hdc, const wchar_t * text, size_t textLength);
+extern void* g_tipPaintCallback;
+
 namespace content {
 
 #define kToolTipClassName L"MbToolTip"
@@ -111,18 +114,25 @@ public:
 
     void onPaint(HWND hWnd, HDC hdc)
     {
+        if (g_tipPaintCallback) {
+            TipPaintCallback fun = (TipPaintCallback)g_tipPaintCallback;
+            fun(hWnd, hdc, m_text.c_str(), m_text.size());
+            return;
+        }
+
         RECT rc = { 0 };
         ::GetClientRect(hWnd, &rc);
+
+        HPEN hCurrentPen = ::CreatePen(PS_SOLID, 1, RGB(126, 126, 126));
+        HGDIOBJ hOldPen = SelectObject(hdc, hCurrentPen);
         ::Rectangle(hdc, 0, 0, rc.right - rc.left, rc.bottom - rc.top);
-        HBRUSH hbrush = ::CreateSolidBrush(RGB(0x10, 0x10, 0x10));
-        ::SelectObject(hdc, hbrush);
-        ::Rectangle(hdc, 220, 40, 366, 266);
-        ::DeleteObject(hbrush);
+        ::SelectObject(hdc, hOldPen);
+        ::DeleteObject(hCurrentPen);
 
         ::SelectObject(hdc, m_hFont);
-        ::SetTextColor(hdc, RGB(0x0, 0x0, 0x0));
-        ::SetBkColor(hdc, RGB(255, 255, 225));
-        ::TextOut(hdc, 2, 2, m_text.c_str(), m_text.size());
+        ::SetTextColor(hdc, RGB(86, 86, 86));
+        ::SetBkColor(hdc, RGB(255, 255, 255));
+        ::TextOut(hdc, 4, 2, m_text.c_str(), m_text.size());
     }
 
     std::wstring getText() const { return m_text; }
@@ -153,17 +163,9 @@ private:
         if (15 < m_delayShowCount && !m_isShow) {
             m_isShow = true;
 
-            ::SetWindowPos(m_hTipWnd, HWND_TOPMOST, point.x + 15, point.y + 15, m_size.cx + 5, m_size.cy + 5, SWP_NOACTIVATE);
+            ::SetWindowPos(m_hTipWnd, HWND_TOPMOST, point.x + 15, point.y + 15, m_size.cx + 7, m_size.cy + 5, SWP_NOACTIVATE);
             ::ShowWindow(m_hTipWnd, SW_SHOWNOACTIVATE);
             ::UpdateWindow(m_hTipWnd);
-//             if (m_delayShowTimer.isActive())
-//                 m_delayShowTimer.stop();
-//             m_delayShowCount = 0;
-
-//             if (m_delayHideTimer.isActive())
-//                 m_delayHideTimer.stop();
-//             m_delayHideCount = 0;
-//             m_delayHideTimer.start(0.02, 0.02, FROM_HERE);
         }
     }
 

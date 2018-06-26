@@ -85,7 +85,7 @@ blink::WebDragData DragHandle::dropDataToWebDragData(IDataObject* pDataObject)
         blink::WebDragData::Item item;
         item.storageType = blink::WebDragData::Item::StorageTypeString;
         item.stringType = blink::WebString::fromUTF8(kMimeTypeText);
-        item.stringData = ClipboardUtil::getPlainText(pDataObject);
+        item.stringData = blink::WebString::fromUTF8(ClipboardUtil::getPlainText(pDataObject));
         itemList.push_back(item);
     }
 
@@ -177,7 +177,7 @@ blink::WebDragOperation DragHandle::doStartDragging(blink::WebLocalFrame* frame,
         for (size_t i = 0; i < items.size(); ++i) {
             blink::WebDragData::Item it = items[i];
             if (blink::WebDragData::Item::StorageTypeString == it.storageType) {
-                dataObjectPtr->writeString(it.stringType, it.stringData);
+                dataObjectPtr->writeString(it.stringType.utf8(), it.stringData.utf8());
             }
         }
     }
