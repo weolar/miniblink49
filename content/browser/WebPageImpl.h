@@ -167,6 +167,7 @@ public:
     virtual void paintToMemoryCanvasInUiThread(SkCanvas* canvas, const blink::IntRect& paintRect) override;
     
     cc::LayerTreeHost* layerTreeHost() { return m_layerTreeHost; }
+    void setDrawMinInterval(double drawMinInterval);
 
     void loadHistoryItem(int64 frameId, const blink::WebHistoryItem& item, blink::WebHistoryLoadType type, blink::WebURLRequest::CachePolicy policy);
     void loadURL(int64 frameId, const wchar_t* url, const blink::Referrer& referrer, const wchar_t* extraHeaders);

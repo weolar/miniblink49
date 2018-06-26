@@ -36,6 +36,12 @@
 #include "third_party/WebKit/Source/wtf/text/WTFStringUtil.h"
 #include "net/RequestExtraData.h"
 
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
+namespace wke {
+class CWebView;
+}
+#endif
+
 namespace content {
 
 WebFrameClientImpl::WebFrameClientImpl()
@@ -172,10 +178,8 @@ blink::WebPlugin* WebFrameClientImpl::createPlugin(WebLocalFrame* frame, const W
     PassRefPtr<WebPluginImpl> plugin = adoptRef(new WebPluginImpl(frame, newParam));
     plugin->setParentPlatformPluginWidget(m_webPage->getHWND());
     plugin->setHwndRenderOffset(m_webPage->getHwndRenderOffset());
-    plugin->setWebViewClient(m_webPage->webViewImpl()->client());
+    plugin->setWkeWebView(m_webPage->wkeWebView());
     return plugin.leakRef();
-
-
 }
 
 blink::WebMediaPlayer* WebFrameClientImpl::createMediaPlayer(WebLocalFrame* frame, const WebURL& url , WebMediaPlayerClient* client, WebContentDecryptionModule*)

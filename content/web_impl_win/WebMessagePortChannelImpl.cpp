@@ -29,7 +29,8 @@ WebMessagePortChannelImpl::WebMessagePortChannelImpl(
 
 WebMessagePortChannelImpl::~WebMessagePortChannelImpl()
 {
-    ;
+    String output = String::format("WebMessagePortChannelImpl::~WebMessagePortChannelImpl: %p\n", this);
+    OutputDebugStringA(output.utf8().data());
 }
 
 void WebMessagePortChannelImpl::setClient(blink::WebMessagePortChannelClient* client)

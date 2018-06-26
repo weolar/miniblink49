@@ -106,6 +106,8 @@ public:
 
     void setIsDraggableRegionNcHitTest();
 
+    void setDrawMinInterval(double drawMinInterval);
+
     void setNeedsCommit();
     bool needsCommit() const;
     bool isDrawDirty() const;

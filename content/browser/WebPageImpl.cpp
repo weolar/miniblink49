@@ -1121,6 +1121,12 @@ void WebPageImpl::paintToBit(void* bits, int pitch)
         m_layerTreeHost->paintToBit(bits, pitch);
 }
 
+void WebPageImpl::setDrawMinInterval(double drawMinInterval)
+{
+    if (m_layerTreeHost)
+        m_layerTreeHost->setDrawMinInterval(drawMinInterval);
+}
+
 void WebPageImpl::repaintRequested(const IntRect& windowRect)
 {
     freeV8TempObejctOnOneFrameBefore();

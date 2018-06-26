@@ -94,6 +94,8 @@ public:
     static void setPersistentMetadataCachePath(const String& persistentMetadataCachePath);
 #endif
 
+    bool addVirtualPlugin(PassRefPtr<PluginPackage> package) { return add(package); }
+
 private:
     void getPluginPathsInDirectories(HashSet<String>&) const;
     void getDeletedPlugins(PluginSet&) const;

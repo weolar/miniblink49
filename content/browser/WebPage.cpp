@@ -108,6 +108,12 @@ void WebPage::setIsDraggableRegionNcHitTest()
     //m_pageImpl->m_isDraggableRegionNcHitTest = true;
 }
 
+void WebPage::setDrawMinInterval(double drawMinInterval)
+{
+    if (m_pageImpl)
+        m_pageImpl->setDrawMinInterval(drawMinInterval);
+}
+
 void WebPage::setNeedsCommit()
 {
     if (m_pageImpl)

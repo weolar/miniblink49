@@ -60,7 +60,8 @@ PluginPackage::~PluginPackage()
 void PluginPackage::freeLibrarySoon()
 {
     ASSERT(!m_freeLibraryTimer.isActive());
-    ASSERT(m_module);
+    if (!m_isVirtual)
+        ASSERT(m_module);
     ASSERT(!m_loadCount);
 
     m_freeLibraryTimer.startOneShot(0, FROM_HERE);
@@ -68,7 +69,8 @@ void PluginPackage::freeLibrarySoon()
 
 void PluginPackage::freeLibraryTimerFired(blink::Timer<PluginPackage>*)
 {
-    ASSERT(m_module);
+    if (!m_isVirtual)
+        ASSERT(m_module);
     // Do nothing if the module got loaded again meanwhile
     if (!m_loadCount) {
         //::FreeLibrary(m_module); // by weolar: 不卸载模块，因为_NPN_IsAlive里的liveObjectMap还有NPObject，那个有模块里的虚函数表
@@ -114,6 +116,10 @@ PluginPackage::PluginPackage(const String& path, const time_t& lastModified)
     , m_infoIsFromCache(true)
 #endif
 {
+    m_isVirtual = false;
+    m_NP_GetEntryPoints = nullptr;
+    m_NP_Initialize = nullptr;
+
     m_fileName = String(::PathFindFileName(WTF::ensureUTF16UChar(m_path, true).data()));
     m_parentDirectory = m_path.left(m_path.length() - m_fileName.length() - 1);
 }
@@ -137,7 +143,9 @@ void PluginPackage::unloadWithoutShutdown()
         return;
 
     ASSERT(!m_loadCount);
-    ASSERT(m_module);
+
+    if (!m_isVirtual)
+        ASSERT(m_module);
 
     // <rdar://5530519>: Crash when closing tab with pdf file (Reader 7 only)
     // If the plugin has subclassed its parent window, as with Reader 7, we may have
@@ -162,6 +170,32 @@ PassRefPtr<PluginPackage> PluginPackage::createPackage(const String& path, const
     if (!package->fetchInfo())
         return nullptr;
 
+    return package.release();
+}
+
+PassRefPtr<PluginPackage> PluginPackage::createVirtualPackage(
+    NP_InitializeFuncPtr NP_Initialize,
+    NP_GetEntryPointsFuncPtr NP_GetEntryPoints,
+    NPP_ShutdownProcPtr NPP_Shutdown,
+    const time_t& lastModified,
+    const String& name,
+    const String& description,
+    const String& mimeDescription
+    )
+{
+    RefPtr<PluginPackage> package = adoptRef(new PluginPackage("", lastModified));
+    package->m_isVirtual = true;
+    package->m_NP_GetEntryPoints = NP_GetEntryPoints;
+    package->m_NP_Initialize = NP_Initialize;
+    package->m_NPP_Shutdown = NPP_Shutdown;
+    package->m_name = name;
+    package->m_description = description;
+
+    Vector<String> extensionsVector;
+    extensionsVector.append(description);
+
+    package->m_mimeToExtensions.add(mimeDescription, extensionsVector);
+    package->m_mimeToDescriptions.add(mimeDescription, description);
     return package.release();
 }
 

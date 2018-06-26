@@ -462,7 +462,7 @@ void WebClipboardImpl::writeToClipboard(unsigned int format, HANDLE handle)
 
 void WebClipboardImpl::writeText(String string)
 {
-    HGLOBAL glob = ClipboardUtil::createGlobalData(WTF::ensureUTF16UChar(string, false));
+    HGLOBAL glob = ClipboardUtil::createGlobalData(WTF::WTFStringToStdString(string));
     writeToClipboard(CF_UNICODETEXT, glob);
 }
 
@@ -485,6 +485,7 @@ void WebClipboardImpl::writeHTML(const WebString& htmlText, const WebURL& source
     clearClipboard();
     writeHTMLInternal(htmlText, sourceUrl, plainText, writeSmartPaste);
 }
+
 void WebClipboardImpl::writeHTMLInternal(const WebString& htmlText, const WebURL& sourceUrl, const WebString& plainText, bool writeSmartPaste)
 {
     std::string markup = WTF::WTFStringToStdString(htmlText);
@@ -494,9 +495,9 @@ void WebClipboardImpl::writeHTMLInternal(const WebString& htmlText, const WebURL
     if (!urlString.isNull() && !urlString.isEmpty())
         url = WTFStringToStdString(urlString);
 
-    WTF::String htmlFragment = ClipboardUtil::HtmlToCFHtml(markup, url);
-    HGLOBAL glob = ClipboardUtil::createGlobalData(ensureUTF16UChar(htmlFragment, false));
-    writeToClipboard(ClipboardUtil::getHtmlFormatType(), glob);
+    std::string htmlFragment = ClipboardUtil::HtmlToCFHtml(markup, url);
+    HGLOBAL glob = ClipboardUtil::createGlobalData(htmlFragment);
+    // writeToClipboard(ClipboardUtil::getHtmlFormatType(), glob);
     writeText(plainText);
 
     if (writeSmartPaste) {
@@ -602,7 +603,7 @@ void WebClipboardImpl::writeBookmark(const String& titleData , const String& url
     bookmark.append(L'\n');
     bookmark.append(WTF::ensureUTF16String(urlData));
 
-    Vector<UChar> wideBookmark = WTF::ensureUTF16UChar(bookmark, false);
+    std::string wideBookmark = WTF::WTFStringToStdString(bookmark);
     HGLOBAL glob = ClipboardUtil::createGlobalData(wideBookmark);
 
     writeToClipboard(ClipboardUtil::getUrlWFormatType(), glob);
@@ -651,7 +652,7 @@ void WebClipboardImpl::writeDataObject(const WebDragData& data)
             if (blink::mimeTypeTextPlain == stringType || blink::mimeTypeTextPlainEtc == stringType) {
                 writeText(it.stringData);
             } else if (blink::mimeTypeTextHTML == stringType) {
-                writeHTMLInternal(it.stringData, it.baseURL, WebString(), false);
+                //writeHTMLInternal(it.stringData, it.baseURL, WebString(), false);
             }
         }
             

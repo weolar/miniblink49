@@ -333,6 +333,8 @@ void PluginDatabase::getDeletedPlugins(PluginSet& plugins) const
 {
     PluginSet::const_iterator end = m_plugins.end();
     for (PluginSet::const_iterator it = m_plugins.begin(); it != end; ++it) {
+        if ((*it)->isVirtual())
+            continue;
         if (!fileExistsAndIsNotDisabled((*it)->path()))
             plugins.add(*it);
     }

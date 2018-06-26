@@ -55,6 +55,10 @@
 typedef HWND PlatformWidget;
 typedef PlatformWidget PlatformPluginWidget;
 
+namespace wke {
+class CWebView;
+}
+
 namespace blink {
 class WebPluginContainer;
 class GraphicsContext;
@@ -297,8 +301,8 @@ public:
         return m_parentWidget;
     }
     
-
-    void setWebViewClient(blink::WebViewClient* client) { m_webviewClient = client; }
+    void setWkeWebView(wke::CWebView* wkeWebview) { m_wkeWebview = wkeWebview; }
+    wke::CWebView* getWkeWebView() { return m_wkeWebview; }
 
     void setHwndRenderOffset(const blink::IntPoint& offset)
     {
@@ -433,7 +437,7 @@ private:
     static WebPluginImpl* s_currentPluginView;
 
     SkCanvas* m_memoryCanvas;
-    blink::WebViewClient* m_webviewClient;
+    wke::CWebView* m_wkeWebview;
 };
 
 } // namespace content

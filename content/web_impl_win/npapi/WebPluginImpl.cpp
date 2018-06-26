@@ -144,7 +144,7 @@ WebPluginImpl::WebPluginImpl(WebLocalFrame* parentFrame, const blink::WebPluginP
     , m_isJavaScriptPaused(false)
     , m_haveCalledSetWindow(false)
     , m_memoryCanvas(nullptr)
-    , m_webviewClient(nullptr)
+    , m_wkeWebview(nullptr)
 {
 #ifndef NDEBUG
     webPluginImplCount.increment();
@@ -1038,7 +1038,6 @@ void WebPluginImpl::invalidateWindowlessPluginRect(const IntRect& rect)
 //     dirtyRect.move(renderer.borderLeft() + renderer.paddingLeft(), renderer.borderTop() + renderer.paddingTop());
 //     renderer.repaintRectangle(dirtyRect);
 
-    //m_webviewClient->didInvalidateRect(rect);
     m_pluginContainer->invalidateRect(rect);
 }
 
