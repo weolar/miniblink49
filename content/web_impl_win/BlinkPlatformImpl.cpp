@@ -379,7 +379,7 @@ BlinkPlatformImpl::AutoDisableGC::AutoDisableGC() {
 
 BlinkPlatformImpl::AutoDisableGC::~AutoDisableGC() {
     BlinkPlatformImpl* platform = (BlinkPlatformImpl*)blink::Platform::current();
-    platform->m_isDisableGC = true;
+    platform->m_isDisableGC = false;
 }
 
 void BlinkPlatformImpl::garbageCollectedTimer(blink::Timer<BlinkPlatformImpl>*)
