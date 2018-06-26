@@ -7,6 +7,7 @@
 #include "content/web_impl_win/BlinkPlatformImpl.h"
 #include "content/web_impl_win/WebCookieJarCurlImpl.h"
 #include "content/web_impl_win/WebThreadImpl.h"
+#include "content/web_impl_win/npapi/WebPluginImpl.h"
 #include "content/web_impl_win/npapi/PluginDatabase.h"
 #include "net/WebURLLoaderManager.h"
 
@@ -17,6 +18,8 @@
 #include "third_party/WebKit/public/web/WebKit.h"
 #include "third_party/WebKit/public/web/WebFrame.h"
 #include "third_party/WebKit/public/web/WebDragOperation.h"
+#include "third_party/WebKit/public/web/WebDocument.h"
+#include "third_party/WebKit/public/web/WebCustomElement.h"
 #include "third_party/WebKit/public/platform/WebDragData.h"
 #include "third_party/WebKit/Source/web/WebViewImpl.h"
 #include "third_party/WebKit/Source/web/WebSettingsImpl.h"
@@ -197,6 +200,8 @@ double g_kDrawMinInterval = 0.003;
 
 bool g_isDecodeUrlRequest = false;
 
+void* g_tipPaintCallback = nullptr;
+
 void wkeSetDebugConfig(wkeWebView webview, const char* debugString, const char* param)
 {
     content::WebPage* webpage = nullptr;
@@ -230,8 +235,8 @@ void wkeSetDebugConfig(wkeWebView webview, const char* debugString, const char* 
             g_kWakeMinInterval = atoi(param);
         } else if ("drawMinInterval" == item) {
             int drawMinInterval = atoi(param);
-            g_kDrawMinInterval = drawMinInterval / 1000.0;
-
+            drawMinInterval = drawMinInterval / 1000.0;
+            webpage->setDrawMinInterval(drawMinInterval);
         } else if ("minimumFontSize" == item) {
             if (settings)
                 settings->setMinimumFontSize(atoi(param));
@@ -244,6 +249,8 @@ void wkeSetDebugConfig(wkeWebView webview, const char* debugString, const char* 
         } else if ("defaultFixedFontSize" == item) {
             if (settings)
                 settings->setDefaultFixedFontSize(atoi(param));
+        } else if ("tipPaintCallback" == item) {
+            g_tipPaintCallback = (void*)param;
         }
     }
 }
@@ -1335,6 +1342,45 @@ void wkeSetDeviceParameter(wkeWebView webView, const char* device, const char* p
     } else if (0 == strcmp(device, "window.devicePixelRatio")) {
         wkeSetZoomFactor(webView, paramFloat);
     }
+}
+
+void wkeAddNpapiPlugin(wkeWebView webView, const char* mime, void* initializeFunc, void* getEntryPointsFunc, void* shutdownFunc)
+{
+    RefPtr<content::PluginPackage> package = content::PluginPackage::createVirtualPackage(
+        (NP_InitializeFuncPtr)initializeFunc,
+        (NP_GetEntryPointsFuncPtr) getEntryPointsFunc,
+        (NPP_ShutdownProcPtr) shutdownFunc,
+        0, "virtualPlugin", mime, mime);
+
+    content::PluginDatabase* database = content::PluginDatabase::installedPlugins();
+    database->addVirtualPlugin(package);
+    database->setPreferredPluginForMIMEType(mime, package.get());
+}
+
+wkeWebView wkeGetWebviewByNData(void* ndata)
+{
+    content::WebPluginImpl* plugin = (content::WebPluginImpl*)ndata;
+    return plugin->getWkeWebView();
+}
+
+bool wkeRegisterEmbedderCustomElement(wkeWebView webView, wkeWebFrameHandle frameId, const char* name, void* options, void* outResult)
+{
+    content::WebPage* page = webView->webPage();
+    if (!page)
+        return false;
+    blink::WebFrame* webFrame = page->getWebFrameFromFrameId(wke::CWebView::wkeWebFrameHandleToFrameId(page, frameId));
+    if (!webFrame)
+        return false;
+
+    blink::WebExceptionCode c = 0;
+    v8::Local<v8::Value>& optionsV8 = *(v8::Local<v8::Value>*)options;
+
+    blink::WebString nameString = blink::WebString::fromUTF8(name);
+    blink::WebCustomElement::addEmbedderCustomElementName(nameString);
+    v8::Local<v8::Value> elementConstructor = webFrame->document().registerEmbedderCustomElement(nameString, optionsV8, c);
+    v8::Persistent<v8::Value>* result = (v8::Persistent<v8::Value>*)outResult;
+    result->Reset(v8::Isolate::GetCurrent(), elementConstructor);
+    return true;
 }
 
 //////////////////////////////////////////////////////////////////////////
