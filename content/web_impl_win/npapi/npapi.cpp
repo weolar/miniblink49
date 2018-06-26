@@ -172,8 +172,8 @@ NPError NPN_GetValue(NPP instance, NPNVariable variable, void* value)
 {
     WebPluginImpl* view = pluginViewForInstance(instance);
 
-     if (!view)
-         return WebPluginImpl::getValueStatic(variable, value);
+    if (!view)
+        return WebPluginImpl::getValueStatic(variable, value);
 
     return view->getValue(variable, value);
 }
