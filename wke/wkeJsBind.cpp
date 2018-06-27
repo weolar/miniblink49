@@ -984,10 +984,11 @@ wkeWebView jsGetWebView(jsExecState es)
         DebugBreak();
 
     v8::Isolate* isolate = es->isolate;
-    v8::Local<v8::Context> context = v8::Local<v8::Context>::New(es->isolate, es->context);
-
     v8::HandleScope handleScope(isolate);
+    
+    v8::Local<v8::Context> context = v8::Local<v8::Context>::New(es->isolate, es->context);
     v8::Context::Scope contextScope(context);
+
     v8::Local<v8::Object> globalObj = context->Global();
 
     v8::MaybeLocal<v8::String> nameMaybeLocal = v8::String::NewFromUtf8(isolate, "wkeWebViewToV8Context", v8::NewStringType::kNormal, -1);
