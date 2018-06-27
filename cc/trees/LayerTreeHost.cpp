@@ -28,7 +28,6 @@
 #include "wke/wkeWebView.h"
 
 extern DWORD g_nowTime;
-extern double g_kDrawMinInterval;
 
 using namespace blink;
 
@@ -62,6 +61,7 @@ LayerTreeHost::LayerTreeHost(LayerTreeHostClent* hostClient, LayerTreeHostUiThre
     
     m_memoryCanvas = nullptr;
     m_paintToMemoryCanvasInUiThreadTaskCount = 0;
+    m_drawMinInterval = 0.003;
 
     m_isDrawDirty = true;
     m_lastCompositeTime = 0.0;
@@ -334,7 +334,7 @@ bool LayerTreeHost::canRecordActions() const
     
     double lastRecordTime = WTF::monotonicallyIncreasingTime();
     double detTime = lastRecordTime - m_lastRecordTime;
-    if (detTime < g_kDrawMinInterval)
+    if (detTime < m_drawMinInterval)
         return false;
     m_lastRecordTime = lastRecordTime;
 
@@ -920,6 +920,11 @@ void LayerTreeHost::clearCanvas(SkCanvas* canvas, const SkRect& rect, bool useLa
     canvas->drawRect(skrc, clearPaint);
 }
 
+void LayerTreeHost::setDrawMinInterval(double drawMinInterval)
+{
+    m_drawMinInterval = drawMinInterval;
+}
+
 void LayerTreeHost::postPaintMessage(const SkRect& paintRect)
 {
     SkRect dirtyRect = paintRect;
@@ -978,7 +983,7 @@ void LayerTreeHost::drawFrameInCompositeThread()
 
     double lastCompositeTime = WTF::monotonicallyIncreasingTime();
     double detTime = lastCompositeTime - m_lastCompositeTime;
-    if (detTime < g_kDrawMinInterval && !m_isDestroying) { // 如果刷新频率太快，缓缓再画
+    if (detTime < m_drawMinInterval && !m_isDestroying) { // 如果刷新频率太快，缓缓再画
         requestDrawFrameToRunIntoCompositeThread();
         atomicDecrement(&m_drawFrameFinishCount);
         return;
@@ -1054,7 +1059,7 @@ void LayerTreeHost::WrapSelfForUiThread::paintInUiThread()
 
     double lastPaintTime = WTF::monotonicallyIncreasingTime();
     double detTime = lastPaintTime - m_host->m_lastPaintTime;
-    if (detTime < g_kDrawMinInterval) {
+    if (detTime < m_host->m_drawMinInterval) {
         m_host->requestPaintToMemoryCanvasToUiThread(IntRect());
         endPaint();
         return;
