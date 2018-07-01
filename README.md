@@ -2,6 +2,7 @@
 =======================================================
 
 关于miniblink的介绍见这篇文章：https://zhuanlan.zhihu.com/p/22611497?group_id=764036386641707008
+API文档见：https://blog.csdn.net/weolar/article/details/80458523
 
 
 简单的说，miniblink是个浏览器控件，如果你用过cef、wke、webbrowser，应该很好理解。
@@ -16,9 +17,10 @@
 
 4、更详细内容请见 http://miniblink.net/article/4 编译指南
 
-5、如果只想看demo，可以只下载https://github.com/weolar/miniblink49/tree/master/wkexe 目录然后编译
+5、如果只想看demo，可以编译 https://github.com/weolar/miniblink49/releases 里自带的demo_src
+   或者只下载https://github.com/weolar/miniblink49/tree/master/wkexe 目录然后编译
 
-6、需要编译好的dll以及demo的源码和工程，在 https://blog.csdn.net/weolar/article/details/80146895 下载
+6、需要编译好的dll以及demo的源码和工程，在 https://github.com/weolar/miniblink49/releases 下载
 
 二、杂项说明
 ========================================================
@@ -38,13 +40,10 @@
 
 3，csdn：blog.csdn.net/weolar
 
-4，http://miniblink.net/
+4，github里留言issue讨论
 
-5，github里留言issue讨论
+5，关注知乎专栏：https://zhuanlan.zhihu.com/chrome
 
-6，关注知乎专栏：https://zhuanlan.zhihu.com/chrome
-
-7，关注论坛：miniblink.net  (这个更推荐)
 
 当然我不会所有问题都回答的，毕竟还要去工地搬砖养家糊口。
 
