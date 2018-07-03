@@ -137,41 +137,11 @@ double exp(double x)
 int isinf(double d)
 {
     return fpclassify(d) == FP_INFINITE;
-//     int expon = 0;
-//     double val = frexp(d, &expon);
-//     if (expon == 1025) {
-//         if (val == 0.5) {
-//             return 1;
-//         } else if (val == -0.5) {
-//             return -1;
-//         } else {
-//             return 0;
-//         }
-//     } else {
-//         return 0;
-//     }
 }
 
 int isnan(double d)
 {
     return fpclassify(d) == FP_NAN;
-
-//     int expon = 0;
-//     double val = frexp(d, &expon);
-//     if (expon == 1025) {
-//         if (val == 0.5) {
-//             return 0;
-//         }
-//         else if (val == -0.5) {
-//             return 0;
-//         }
-//         else {
-//             return 1;
-//         }
-//     }
-//     else {
-//         return 0;
-//     }
 }
 
 double log(double val)
@@ -207,6 +177,30 @@ __int64 abs(__int64 val)
 {
     return (val > 0 ? val : -val);
 }
+
+unsigned __int64 abs(unsigned __int64 val)
+{
+    return val;
+}
+
+int abs(int val)
+{
+    return (val > 0 ? val : -val);
+}
+
+unsigned int abs(unsigned int val)
+{
+    return val;
+}
+
+double abs(double val) {
+    return (val > 0 ? val : -val);
+}
+
+float abs(float val) {
+    return (val > 0 ? val : -val);
+}
+
 
 double fabs(double val)
 {
@@ -410,6 +404,11 @@ basic_string<char, char_traits<char>, class std::allocator<char> > __cdecl std::
     string aCopy(a);
     aCopy.append(b);
     return aCopy;
+}
+
+void std::basic_string<char, std::char_traits<char>, std::allocator<char> >::clear(void)
+{
+    _Eos(0);
 }
 
 } // std

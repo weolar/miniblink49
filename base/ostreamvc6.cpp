@@ -93,6 +93,13 @@ basic_ostream<char, char_traits<char> > & __cdecl operator<< <char, char_traits<
 //     return a;
 // }
 
+// basic_istream<char, char_traits<char> > & __cdecl getline<char, char_traits<char>, allocator<char> >(
+//     basic_istream<char, struct char_traits<char> > &,
+//     basic_string<char, struct char_traits<char>, allocator<char> > &, char)
+// {
+// 
+// }
+
 }
 
 #endif // USING_VC6RT

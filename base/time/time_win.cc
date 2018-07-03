@@ -370,11 +370,11 @@ public:
     }
 
     bool IsUsingHighResClock() {
-        return ticks_per_second_ != 0.0;
+        return ticks_per_second_ != 0;
     }
 
     void DisableHighResClock() {
-        ticks_per_second_ = 0.0;
+        ticks_per_second_ = 0;
     }
 
     TimeDelta Now() {
