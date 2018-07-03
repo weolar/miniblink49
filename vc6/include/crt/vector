@@ -159,6 +159,15 @@ public:
 		{if (size() <= _P)
 			_Xran();
 		return (*(begin() + _P)); }
+
+  _Tptr data() {	// return address of first element
+    return _First;
+  }
+
+  _Ctptr data() const {	// return address of first element
+    return _First;
+  }
+
 	const_reference operator[](size_type _P) const
 		{return (*(begin() + _P)); }
 	reference operator[](size_type _P)
