@@ -775,7 +775,10 @@ v8::Local<v8::Value> V8Debugger::functionScopes(v8::Local<v8::Function> function
         return v8::Local<v8::Value>::New(m_isolate, v8::Undefined(m_isolate));
     }
     v8::Local<v8::Value> argv[] = { function };
-    return callDebuggerMethod("getFunctionScopes", 1, argv).ToLocalChecked();
+    v8::MaybeLocal<v8::Value> result = callDebuggerMethod("getFunctionScopes", 1, argv);
+    if (result.IsEmpty())
+        return v8::Local<v8::Value>();
+    return result.ToLocalChecked();
 }
 
 v8::Local<v8::Value> V8Debugger::generatorObjectDetails(v8::Local<v8::Object>& object)
@@ -785,7 +788,10 @@ v8::Local<v8::Value> V8Debugger::generatorObjectDetails(v8::Local<v8::Object>& o
         return v8::Local<v8::Value>::New(m_isolate, v8::Undefined(m_isolate));
     }
     v8::Local<v8::Value> argv[] = { object };
-    return callDebuggerMethod("getGeneratorObjectDetails", 1, argv).ToLocalChecked();
+    v8::MaybeLocal<v8::Value> result = callDebuggerMethod("getGeneratorObjectDetails", 1, argv).ToLocalChecked();
+    if (result.IsEmpty())
+        return v8::Local<v8::Value>();
+    return result.ToLocalChecked();
 }
 
 v8::Local<v8::Value> V8Debugger::collectionEntries(v8::Local<v8::Object>& object)
@@ -795,7 +801,10 @@ v8::Local<v8::Value> V8Debugger::collectionEntries(v8::Local<v8::Object>& object
         return v8::Local<v8::Value>::New(m_isolate, v8::Undefined(m_isolate));
     }
     v8::Local<v8::Value> argv[] = { object };
-    return callDebuggerMethod("getCollectionEntries", 1, argv).ToLocalChecked();
+    v8::MaybeLocal<v8::Value> result = callDebuggerMethod("getCollectionEntries", 1, argv).ToLocalChecked();
+    if (result.IsEmpty())
+        return v8::Local<v8::Value>();
+    return result.ToLocalChecked();
 }
 
 v8::MaybeLocal<v8::Value> V8Debugger::setFunctionVariableValue(v8::Local<v8::Value> functionValue, int scopeNumber, const String& variableName, v8::Local<v8::Value> newValue)
@@ -811,7 +820,10 @@ v8::MaybeLocal<v8::Value> V8Debugger::setFunctionVariableValue(v8::Local<v8::Val
         v8String(m_isolate, variableName),
         newValue
     };
-    return callDebuggerMethod("setFunctionVariableValue", 4, argv);
+    v8::MaybeLocal<v8::Value> result = callDebuggerMethod("setFunctionVariableValue", 4, argv);
+    if (result.IsEmpty())
+        return v8::Local<v8::Value>();
+    return result.ToLocalChecked();
 }
 
 
