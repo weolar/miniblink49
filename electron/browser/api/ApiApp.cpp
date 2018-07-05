@@ -39,6 +39,8 @@ static void onOnUvCreateProcessCallback(
         startup->wShowWindow = SW_HIDE;
     if (nullptr != wcsstr(applicationPath, L"Microsoft.VSCode.CPP.Extension.exe"))
         startup->wShowWindow = SW_HIDE;
+    if (nullptr != wcsstr(applicationPath, L"watcher\\win32\\CodeHelper.exe"))
+        startup->wShowWindow = SW_HIDE;
 }
 
 }

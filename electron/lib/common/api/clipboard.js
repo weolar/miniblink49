@@ -1,11 +1,12 @@
-const clipboard = {}; // process.atomBinding('clipboard');
+const clipboard = {}; // process.binding('atom_common_clipboard').Clipboard;
 
 clipboard.readText = function () {
+	console.log("--------------clipboard.readText");
     return "";
 }
 
 clipboard.writeText = function (text, type) {
-    ;
+    console.log("--------------clipboard.writeText");
 }
 
 clipboard.readImage = function (type) {

@@ -8,12 +8,34 @@ v8Util.setHiddenValue(global, 'ipc', new EventEmitter());
 const electron = require('./electron');
 require('../common/init.js');
 
+require('./web-view/web-view');
+
 const intlCollator = require('../common/api/intl-collator');
 
 const events = require('events');
 const path = require('path');
 const Module = require('module');
 const timers = require('timers');
+
+// Process command line arguments.
+let nodeIntegration = 'false'
+let preloadScript = null
+let isBackgroundPage = false
+for (let arg of process.argv) {
+    if (arg.indexOf('--guest-instance-id=') === 0) {
+        // This is a guest web view.
+        process.guestInstanceId = parseInt(arg.substr(arg.indexOf('=') + 1))
+    } else if (arg.indexOf('--opener-id=') === 0) {
+        // This is a guest BrowserWindow.
+        process.openerId = parseInt(arg.substr(arg.indexOf('=') + 1))
+    } else if (arg.indexOf('--node-integration=') === 0) {
+        nodeIntegration = arg.substr(arg.indexOf('=') + 1)
+    } else if (arg.indexOf('--preload=') === 0) {
+        preloadScript = arg.substr(arg.indexOf('=') + 1)
+    } else if (arg === '--background-page') {
+        isBackgroundPage = true
+    }
+}
 
 let nodeRequire = require;
 let nodeProcess = process;
@@ -34,7 +56,7 @@ function addModulePaths() {
 
     // Set module's filename so relative require can work as expected.
     module.filename = window.__filename;
-
+    
     // Also search for module under the html file.
     module.paths = module.paths.concat(Module._nodeModulePaths(window.__dirname));
     
@@ -48,6 +70,7 @@ function __mbRequire__(name) {
     process = nodeProcess;
     var result = nodeRequire(name);
     process = oldProcess;
+    
     return result;
 }
 
@@ -124,4 +147,14 @@ electron.ipcRenderer.on('ELECTRON_INTERNAL_RENDERER_ASYNC_WEB_FRAME_METHOD',
     }
     args.push(responseCallback);
     electron.webFrame[method](...args);
-})
+});
+
+// Load the script specfied by the "preload" attribute.
+if (preloadScript) {
+    try {
+        require(preloadScript)
+    } catch (error) {
+        console.error('Unable to load preload script: ' + preloadScript)
+        console.error(error.stack || error.message)
+    }
+}

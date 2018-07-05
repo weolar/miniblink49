@@ -95,6 +95,7 @@ public:
     void rendererPostMessageToMain(const std::string& channel, const base::ListValue& listParams);
     void rendererSendMessageToMain(const std::string& channel, const base::ListValue& listParams, std::string* jsonRet);
     void anyPostMessageToRenderer(const std::string& channel, const base::ListValue& listParams);
+    static void rendererSendMessageToRenderer(wkeWebView view, wkeWebFrameHandle frame, const std::string& channel, const base::ListValue& args);
 
 private:
     static void newFunction(const v8::FunctionCallbackInfo<v8::Value>& args);

@@ -202,7 +202,7 @@ void WebContents::onNewWindowInBlinkThread(int width, int height, const CreateWi
     wkeConfigure(&settings);
     wkeResize(getWkeView(), width, height);
     wkeOnDidCreateScriptContext(getWkeView(), &WebContents::staticDidCreateScriptContextCallback, this);
-    wkeOnWillReleaseScriptContext(getWkeView(), &WebContents::staticOnWillReleaseScriptContextCallback, m_nodeBinding);
+    wkeOnWillReleaseScriptContext(getWkeView(), &WebContents::staticOnWillReleaseScriptContextCallback, this);
 }
 
 void WebContents::staticDidCreateScriptContextCallback(wkeWebView webView, wkeWebFrameHandle param, wkeWebFrameHandle frame, void* context, int extensionGroup, int worldId) {
@@ -222,18 +222,18 @@ void WebContents::onDidCreateScriptContext(wkeWebView webView, wkeWebFrameHandle
 }
 
 void WebContents::staticOnWillReleaseScriptContextCallback(wkeWebView webView, void* param, wkeWebFrameHandle frame, void* context, int worldId) {
-    NodeBindings* nodeBinding = (NodeBindings*)param;
-    //self->onWillReleaseScriptContextCallback(webView, frame, (v8::Local<v8::Context>*)context, worldId);
-    v8::Local<v8::Context>* contextV8 = (v8::Local<v8::Context>*)context;
-//     node::Environment* env = node::Environment::GetCurrent(*contextV8);
-//     if (env)
-//         mate::emitEvent(env->isolate(), env->process_object(), "exit");
-
-    delete nodeBinding;
+    WebContents* self = (WebContents*)param;
+    self->onWillReleaseScriptContextCallback(webView, frame, (v8::Local<v8::Context>*)context, worldId);
 }
 
 void WebContents::onWillReleaseScriptContextCallback(wkeWebView webView, wkeWebFrameHandle frame, v8::Local<v8::Context>* context, int worldId) {
-    DebugBreak();
+    node::Environment* env = node::Environment::GetCurrent(*context);
+
+    if (env)
+        mate::emitEvent(env->isolate(), env->process_object(), "exit");
+
+    delete m_nodeBinding;
+    m_nodeBinding = nullptr;
 }
 
 void WebContents::rendererPostMessageToMain(const std::string& channel, const base::ListValue& listParams) {
@@ -241,7 +241,7 @@ void WebContents::rendererPostMessageToMain(const std::string& channel, const ba
     WebContents* self = this;
     std::string* channelWrap = new std::string(channel);
     base::ListValue* listParamsWrap = listParams.DeepCopy();
-
+    
     ThreadCall::callUiThreadAsync([self, id, channelWrap, listParamsWrap] {
         if (IdLiveDetect::get()->isLive(id)) {
             self->mate::EventEmitter<WebContents>::emit("ipc-message", *listParamsWrap);
@@ -255,12 +255,6 @@ void WebContents::rendererSendMessageToMain(const std::string& channel, const ba
     WebContents* self = this;
     const std::string* channelWrap = &channel;
     const base::ListValue* listParamsWrap = &listParams;
-
-    std::string outValue;
-    listParams.GetString(0, &outValue);
-
-    std::string outValue2;
-    listParams.GetString(2, &outValue2);
 
     ThreadCall::callUiThreadSync([self, channelWrap, listParamsWrap, jsonRet] {
         self->mate::EventEmitter<WebContents>::emitWithSender("ipc-message-sync", [jsonRet](const std::string& json) {
@@ -305,7 +299,6 @@ static void emitIPCEvent(WebContents* webContents, wkeWebView view, wkeWebFrameH
     if (!env)
         return;
 
-
     v8::Local<v8::Object> ipc;
     if (getIPCObject(isolate, context, &ipc)) {
 
@@ -321,19 +314,26 @@ static void emitIPCEvent(WebContents* webContents, wkeWebView view, wkeWebFrameH
     }
 }
 
+void WebContents::rendererSendMessageToRenderer(wkeWebView view, wkeWebFrameHandle frame, const std::string& channel, const base::ListValue& args) {
+    emitIPCEvent(nullptr, view, frame, channel, args);
+}
+
 void WebContents::anyPostMessageToRenderer(const std::string& channel, const base::ListValue& listParams) {
     int id = m_id;
     WebContents* self = this;
     std::string* channelWrap = new std::string(channel);
     base::ListValue* listParamsWrap = listParams.DeepCopy();
 
-    ThreadCall::callBlinkThreadAsync([self, id, channelWrap, listParamsWrap] {
+    //std::string* strCallstack = catchCallstack(isolate());
+
+    ThreadCall::callBlinkThreadAsync([self, id, channelWrap, listParamsWrap/*, strCallstack*/] {
         if (IdLiveDetect::get()->isLive(id)) {
             emitIPCEvent(self, self->m_view, wkeWebFrameGetMainFrame(self->m_view), *channelWrap, *listParamsWrap);
         }
 
         delete channelWrap;
         delete listParamsWrap;
+        //delete strCallstack;
     });
 }
 
@@ -684,8 +684,8 @@ bool WebContents::_sendApi(bool isAllFrames, const std::string& channel, const b
     WindowList::iterator winIt = WindowList::getInstance()->begin();
     for (; winIt != WindowList::getInstance()->end(); ++winIt) {
         WindowInterface* windowInterface = *winIt;
-        WebContents* webCcontents = windowInterface->getWebContents();
-        webCcontents->anyPostMessageToRenderer(channel, args);
+        WebContents* webContents = windowInterface->getWebContents();
+        webContents->anyPostMessageToRenderer(channel, args);
     }
     return true;
 }

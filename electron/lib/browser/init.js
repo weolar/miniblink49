@@ -80,20 +80,3 @@ Module._load(path.join(packagePath, mainStartupScript), Module, true);
 
 app.emit('will-finish-launching', {});
 app.emit('ready', {});
-
-// test
-/*
-//var BrowserWindow = require("electron").BrowserWindow;
-//var win = new BrowserWindow({x:200, y:300, width: 800, height: 700, title:"test"});
-win.on('resize', function (e) {
-	console.log("emit resize");
-})
-
-// file:///E:/test/weibo/html_link.htm
-// file:///E:/test/txmap/drag.htm
-// file:///C:/Users/weo/Desktop/wke/3d-cube-loading/index.html
-var webContent = win.webContents();
-console.log("webContents:" + webContent);
-webContent._loadURL("https://segmentfault.com/news");
-//win = undefined;
-*/

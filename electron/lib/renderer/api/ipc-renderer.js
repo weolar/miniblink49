@@ -9,31 +9,31 @@ var binding = new IpcRendererBinding();
 const ipcRenderer = v8Util.getHiddenValue(global, 'ipc'); //var ipcRenderer = new EventEmitter();
 
 ipcRenderer.send = function (...args) {
-  return binding.send('ipc-message', args)
+    return binding.send('ipc-message', args);
 }
 
 ipcRenderer.sendSync = function (...args) {
-  return JSON.parse(binding.sendSync('ipc-message-sync', args))
+    return JSON.parse(binding.sendSync('ipc-message-sync', args));
 }
 
 ipcRenderer.sendToHost = function (...args) {
-  return binding.send('ipc-message-host', args)
+    return binding.send('ipc-message-host', args);
 }
 
 ipcRenderer.sendTo = function (webContentsId, channel, ...args) {
-  if (typeof webContentsId !== 'number') {
-    throw new TypeError('First argument has to be webContentsId')
-  }
+    if (typeof webContentsId !== 'number') {
+        throw new TypeError('First argument has to be webContentsId');
+    }
 
-  ipcRenderer.send('ELECTRON_BROWSER_SEND_TO', false, webContentsId, channel, ...args)
+    ipcRenderer.send('ELECTRON_BROWSER_SEND_TO', false, webContentsId, channel, ...args);
 }
 
 ipcRenderer.sendToAll = function (webContentsId, channel, ...args) {
-  if (typeof webContentsId !== 'number') {
-    throw new TypeError('First argument has to be webContentsId')
-  }
+    if (typeof webContentsId !== 'number') {
+        throw new TypeError('First argument has to be webContentsId');
+    }
 
-  ipcRenderer.send('ELECTRON_BROWSER_SEND_TO', true, webContentsId, channel, ...args)
+    ipcRenderer.send('ELECTRON_BROWSER_SEND_TO', true, webContentsId, channel, ...args);
 }
 
 //electron.ipcRenderer = ipcRenderer;

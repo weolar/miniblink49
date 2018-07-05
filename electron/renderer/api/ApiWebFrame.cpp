@@ -26,6 +26,7 @@ public:
 
         prototype->SetClassName(v8::String::NewFromUtf8(isolate, "WebFrame"));
         gin::ObjectTemplateBuilder builder(isolate, prototype->InstanceTemplate());
+        builder.SetMethod("registerEmbedderCustomElement", &WebFrame::registerEmbedderCustomElementApi);
         builder.SetMethod("setZoomFactor", &WebFrame::setZoomFactorApi);
         builder.SetMethod("getZoomFactor", &WebFrame::getZoomFactorApi);
         builder.SetMethod("getZoomLevel", &WebFrame::getZoomLevelApi);
@@ -45,6 +46,24 @@ public:
         constructor.Reset(isolate, prototype->GetFunction());
         target->Set(v8::String::NewFromUtf8(isolate, "WebFrame"), prototype->GetFunction());
     }
+
+    v8::Local<v8::Value> registerEmbedderCustomElementApi(const std::string& name, v8::Local<v8::Object> options) {
+        wkeWebView webview = wkeGetWebViewForCurrentContext();
+        wkeWebFrameHandle mainFrame = wkeWebFrameGetMainFrame(webview);
+
+        v8::Persistent<v8::Value> result;
+        wkeRegisterEmbedderCustomElement(webview, mainFrame, name.c_str(), &options, &result);
+        v8::Local<v8::Value> elementConstructor = result.Get(isolate());
+        result.Reset();
+        return elementConstructor;
+    }
+
+    void registerElementResizeCallbackApi(/*int element_instance_id, const GuestViewContainer::ResizeCallback& callback*/) {
+//         auto guest_view_container = GuestViewContainer::FromID(element_instance_id);
+//         if (guest_view_container)
+//             guest_view_container->RegisterElementResizeCallback(callback);
+    }
+
 
     void setVisualZoomLevelLimitsApi(int Level1, int Level2) {
 
@@ -136,9 +155,6 @@ public:
         f = executeJavaScriptCallback.Get(isolate());
         callback = v8::Function::Cast(*(f));
         callback->Call(v8::Undefined(isolate()), 0, nullptr);
-
-        f = executeJavaScriptCallback.Get(isolate());
-        callback = v8::Function::Cast(*(f));
 
         v8::Persistent<v8::Value>* v = (v8::Persistent<v8::Value>*)jsToV8Value(wkeGetGlobalExecByFrame(webview, mainFrame), ret);
         v8::Local<v8::Value> value = v8::Undefined(isolate());

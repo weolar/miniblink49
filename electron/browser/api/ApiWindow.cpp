@@ -14,6 +14,7 @@
 #include "common/WinUserMsg.h"
 #include "common/DragAction.h"
 #include "common/asar/AsarUtil.h"
+#include "renderer/WebviewPlugin.h"
 #include "wke.h"
 #include "gin/per_isolate_data.h"
 #include "gin/object_template_builder.h"
@@ -1410,6 +1411,60 @@ private:
         return true;
     }
 
+    static std::string* catchCallstack(v8::Isolate* isolate) {
+        std::string* outString = new std::string();
+
+        const v8::StackTrace::StackTraceOptions options = static_cast<v8::StackTrace::StackTraceOptions>(
+            v8::StackTrace::kLineNumber
+            | v8::StackTrace::kColumnOffset
+            | v8::StackTrace::kScriptId
+            | v8::StackTrace::kScriptNameOrSourceURL
+            | v8::StackTrace::kFunctionName);
+
+        int stackNum = 50;
+        v8::HandleScope handleScope(isolate);
+        v8::Local<v8::StackTrace> stackTrace(v8::StackTrace::CurrentStackTrace(isolate, stackNum, options));
+        int count = stackTrace->GetFrameCount();
+
+        for (int i = 0; i < count; ++i) {
+            v8::Local<v8::StackFrame> stackFrame = stackTrace->GetFrame(i);
+            int frameCount = stackTrace->GetFrameCount();
+            int line = stackFrame->GetLineNumber();
+            v8::Local<v8::String> scriptName = stackFrame->GetScriptNameOrSourceURL();
+            v8::Local<v8::String> funcName = stackFrame->GetFunctionName();
+
+            std::string scriptNameWTF;
+            std::string funcNameWTF;
+
+            if (!scriptName.IsEmpty()) {
+                v8::String::Utf8Value scriptNameUtf8(scriptName);
+                scriptNameWTF = *scriptNameUtf8;
+            }
+
+            if (!funcName.IsEmpty()) {
+                v8::String::Utf8Value funcNameUtf8(funcName);
+                funcNameWTF = *funcNameUtf8;
+            }
+            std::vector<char> output;
+            output.resize(1000);
+            sprintf(&output[0], "line:%d, [", line);
+            *outString += (&output[0]);
+
+            if (!scriptNameWTF.empty()) {
+                *outString += (scriptNameWTF.c_str());
+            }
+            *outString += ("] , [");
+
+            if (!funcNameWTF.empty()) {
+                *outString += (funcNameWTF.c_str());
+            }
+            *outString += ("]\n");
+        }
+        *outString += ("\n");
+
+        return outString;
+    }
+
     static void onConsoleCallback(wkeWebView webView, void* param, wkeConsoleLevel level, const wkeString message, const wkeString sourceName, unsigned sourceLine, const wkeString stackTrace) {
         const utf8* msg = wkeToString(message);
     }
@@ -1525,6 +1580,9 @@ private:
         if (willSendRequestInfo)
             willSendRequestInfo->isHolded = true;
 
+        if (WKE_DID_NAVIGATE == type)
+            wkeRunJS(self->m_webContents->getWkeView(), ";"); // 为了<webview>标签，强制触发js创建回调
+
         ThreadCall::callUiThreadAsync([id, self, state, isDestroyApiBeCalled, type, willSendRequestInfo] {
             if (!IdLiveDetect::get()->isLive(id) ||
                 WindowDestroying == state ||
@@ -1624,16 +1682,13 @@ private:
         const wkePoint* dragImageOffset
         ) {
         Window* self = (Window*)param;
-
-        //::CoInitializeEx(0, COINIT_MULTITHREADED);
-
+        
         ThreadCall::callUiThreadAsync([self, webView, param, frame, data, mask, image, dragImageOffset] {
             self->m_dragAction->onStartDragging(webView, param, frame, data, mask, image, dragImageOffset);
             ThreadCall::exitReEnterMessageLoop(ThreadCall::getBlinkThreadId());
         });
 
         ThreadCall::messageLoop(ThreadCall::getBlinkLoop(), ThreadCall::getBlinkThreadV8Platform(), v8::Isolate::GetCurrent());
-        OutputDebugStringA("");
     }
     
     static Window* newWindow(gin::Dictionary* options, v8::Local<v8::Object> wrapper) {
@@ -1723,6 +1778,9 @@ private:
     }
 
     static void matchDpi(wkeWebView webview) {
+        if (base::win::OSInfo::GetInstance()->version() < base::win::VERSION_WIN8)
+            return;
+
         HDC hdc = ::GetDC(nullptr);
         int t = ::GetDeviceCaps(hdc, DESKTOPHORZRES);
         int d = ::GetDeviceCaps(hdc, HORZRES);
@@ -1774,6 +1832,8 @@ private:
             win->m_webContents->onNewWindowInBlinkThread(width, height, createWindowParam);
 
             matchDpi(webview);
+
+            //wkeSetDebugConfig(webview, "drawDirtyDebugLine", nullptr);
             wkeSetHandle(webview, hWnd);
             wkeOnPaintUpdated(webview, (wkePaintUpdatedCallback)staticOnPaintUpdatedInCompositeThread, win);
             wkeOnConsole(webview, onConsoleCallback, nullptr);
@@ -1788,6 +1848,10 @@ private:
             wkeSetFocus(webview);
             wkeSetDebugConfig(webview, "decodeUrlRequest", nullptr);
             wkeSetDragDropEnable(webview, false);
+            wkeAddNpapiPlugin(webview, "application/browser-plugin", &Webview_NP_Initialize, &Webview_NP_GetEntryPoints, &Webview_NP_Shutdown);
+            wkeSetDebugConfig(webview, "wakeMinInterval", "1");
+            wkeSetDebugConfig(webview, "drawMinInterval", "30");
+            //wkeSetDebugConfig(webview, "contentScale", "50");
         });
 
         MenuEventNotif::onWindowDidCreated(this);
