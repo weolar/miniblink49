@@ -173,8 +173,11 @@ void BlinkPlatformImpl::initialize()
     SkGraphics::SetResourceCacheSingleAllocationByteLimit(kImageCacheSingleAllocationByteLimit);
 
     platform->m_defaultGcTimer = new blink::Timer<BlinkPlatformImpl>(platform, &BlinkPlatformImpl::garbageCollectedTimer);
-    platform->m_defaultGcTimer->start(10, 10, FROM_HERE);
+    platform->m_defaultGcTimer->start(40, 40, FROM_HERE);
 
+    platform->m_resTimer = new blink::Timer<BlinkPlatformImpl>(platform, &BlinkPlatformImpl::resourceGarbageCollectedTimer);
+    platform->m_resTimer->start(120, 120, FROM_HERE);
+    
 //     platform->m_perfTimer = new blink::Timer<BlinkPlatformImpl>(platform, &BlinkPlatformImpl::perfTimer);
 //     platform->m_perfTimer->start(2, 2, FROM_HERE);
 
@@ -220,6 +223,7 @@ BlinkPlatformImpl::~BlinkPlatformImpl()
     if (m_gcTimer)
         delete m_gcTimer;
     delete m_defaultGcTimer;
+    delete m_resTimer;
 
     ::DeleteCriticalSection(m_lock);
     delete m_lock;
@@ -372,14 +376,21 @@ void BlinkPlatformImpl::perfTimer(blink::Timer<BlinkPlatformImpl>*)
     g_autoRecordActionsTime = 0;
 }
 
-BlinkPlatformImpl::AutoDisableGC::AutoDisableGC() {
+BlinkPlatformImpl::AutoDisableGC::AutoDisableGC()
+{
     BlinkPlatformImpl* platform = (BlinkPlatformImpl*)blink::Platform::current();
     platform->m_isDisableGC = true;
 }
 
-BlinkPlatformImpl::AutoDisableGC::~AutoDisableGC() {
+BlinkPlatformImpl::AutoDisableGC::~AutoDisableGC()
+{
     BlinkPlatformImpl* platform = (BlinkPlatformImpl*)blink::Platform::current();
     platform->m_isDisableGC = false;
+}
+
+void BlinkPlatformImpl::resourceGarbageCollectedTimer(blink::Timer<BlinkPlatformImpl>*)
+{
+    blink::memoryCache()->evictResources();
 }
 
 void BlinkPlatformImpl::garbageCollectedTimer(blink::Timer<BlinkPlatformImpl>*)
@@ -391,14 +402,8 @@ void BlinkPlatformImpl::doGarbageCollected()
 {
     if (m_isDisableGC)
         return;
-
-    blink::memoryCache()->evictResources();
-    //net::gActivatingLoaderCheck->doGarbageCollected(false);
-    //blink::memoryCache()->evictResources();
-    //Heap::collectGarbage(ThreadState::HeapPointersOnStack, ThreadState::GCWithSweep, Heap::ForcedGC);
+    
     v8::Isolate::GetCurrent()->LowMemoryNotification();
-    //     v8::Isolate::GetCurrent()->IdleNotificationDeadline(currentMonotonicallyTime + 0.1);
-    //     v8::Isolate::GetCurrent()->ContextDisposedNotification(false);
     SkGraphics::PurgeResourceCache();
     SkGraphics::PurgeFontCache();
 
@@ -410,13 +415,23 @@ void BlinkPlatformImpl::doGarbageCollected()
 #endif
 }
 
-void BlinkPlatformImpl::startGarbageCollectedThread(double delayMs)
+void BlinkPlatformImpl::setGcTimer(double intervalSec)
 {
     if (!m_gcTimer)
         m_gcTimer = new blink::Timer<BlinkPlatformImpl>(this, &BlinkPlatformImpl::garbageCollectedTimer);
 
-    if (!m_gcTimer->isActive() || delayMs < m_gcTimer->nextFireInterval())
-        m_gcTimer->startOneShot(delayMs, FROM_HERE);
+    if (!m_gcTimer->isActive() || intervalSec < m_gcTimer->nextFireInterval())
+        m_gcTimer->startOneShot(intervalSec, FROM_HERE);
+
+    if (m_defaultGcTimer)
+        delete m_defaultGcTimer;
+    m_defaultGcTimer = nullptr;
+}
+
+void BlinkPlatformImpl::setResGcTimer(double intervalSec)
+{
+    m_resTimer->stop();
+    m_resTimer->startOneShot(intervalSec, FROM_HERE);
 }
 
 void BlinkPlatformImpl::closeThread()

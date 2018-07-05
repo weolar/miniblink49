@@ -15,10 +15,12 @@
 #include "third_party/WebKit/public/platform/WebVector.h"
 #include "third_party/WebKit/Source/platform/geometry/IntSize.h"
 #include "third_party/WebKit/Source/platform/image-encoders/gdiplus/GDIPlusImageEncoder.h"
+#include "third_party/WebKit/Source/platform/image-encoders/skia/PNGImageEncoder.h"
 #include "third_party/WebKit/Source/platform/clipboard/ClipboardMimeTypes.h"
 #include "third_party/skia/include/core/SkBitmap.h"
 #include "third_party/skia/include/core/SkCanvas.h"
 #include "skia/ext/platform_canvas.h"
+#include "skia/ext/bitmap_platform_device_win.h"
 #include "wtf/text/WTFStringUtil.h"
 
 #include <windows.h>
@@ -39,7 +41,6 @@ using blink::WebURL;
 using blink::WebVector;
 
 namespace {
-
 
 void freeData(unsigned int format, HANDLE data)
 {
@@ -301,6 +302,9 @@ void WebClipboardImpl::readAvailableTypes(ClipboardType type, Vector<WebString>*
         types->append(WebString::fromUTF8(kMimeTypeRTF));
     if (::IsClipboardFormatAvailable(CF_DIB))
         types->append(WebString::fromUTF8(kMimeTypePNG));
+    if (::IsClipboardFormatAvailable(CF_BITMAP))
+        types->append(WebString::fromUTF8(kMimeTypeBMP));
+
     *containsFilenames = false;
 }
 
@@ -404,20 +408,21 @@ WebData WebClipboardImpl::readImage(Buffer buffer)
     default:
         notImplemented();
     }
-    const void* bitmap_bits = reinterpret_cast<const char*>(bitmap) + bitmap->bmiHeader.biSize + colorTableLength * sizeof(RGBQUAD);
+    const void* bitmapBits = reinterpret_cast<const char*>(bitmap) + bitmap->bmiHeader.biSize + colorTableLength * sizeof(RGBQUAD);
 
-    SkBitmap skBitmap;
-    skBitmap.allocN32Pixels(bitmap->bmiHeader.biWidth, bitmap->bmiHeader.biHeight);
-    skBitmap.eraseColor(0x00ffffff);
-    SkCanvas canvas(skBitmap);
-    {
-        skia::ScopedPlatformPaint scopedPlatformPaint(nullptr, &canvas);
-        HDC dc = scopedPlatformPaint.GetPlatformSurface();
-        ::SetDIBitsToDevice(dc, 0, 0, bitmap->bmiHeader.biWidth,
-            bitmap->bmiHeader.biHeight, 0, 0, 0,
-            bitmap->bmiHeader.biHeight, bitmap_bits, bitmap,
-            DIB_RGB_COLORS);
+    WTF::PassOwnPtr<SkCanvas> canvas = WTF::adoptPtr(skia::CreatePlatformCanvas(bitmap->bmiHeader.biWidth, bitmap->bmiHeader.biHeight, false));
+    skia::BitmapPlatformDevice* device = (skia::BitmapPlatformDevice*)skia::GetPlatformDevice(skia::GetTopDevice(*canvas));
+    if (!device) {
+        GlobalUnlock(hBitmap);
+        return WebData();
     }
+    HDC dc = device->GetBitmapDCUgly(getClipboardWindow());
+    ::SetDIBitsToDevice(dc, 0, 0, bitmap->bmiHeader.biWidth,
+        bitmap->bmiHeader.biHeight, 0, 0, 0,
+        bitmap->bmiHeader.biHeight, bitmapBits, bitmap,
+        DIB_RGB_COLORS);
+    const SkBitmap& skBitmap = device->accessBitmap(false);
+
     // Windows doesn't really handle alpha channels well in many situations. When
     // the source image is < 32 bpp, we force the bitmap to be opaque. When the
     // source image is 32 bpp, the alpha channel might still contain garbage data.
@@ -428,17 +433,18 @@ WebData WebClipboardImpl::readImage(Buffer buffer)
     // containing only black pixels...
     {
         SkAutoLockPixels lock(skBitmap);
-        bool hasInvalidAlphaChannel = bitmap->bmiHeader.biBitCount < 32 ||
-            bitmapHasInvalidPremultipliedColors(skBitmap);
-        if (hasInvalidAlphaChannel) {
+        bool hasInvalidAlphaChannel = bitmap->bmiHeader.biBitCount < 32 || bitmapHasInvalidPremultipliedColors(skBitmap);
+        if (hasInvalidAlphaChannel)
             makeBitmapOpaque(skBitmap);
-        }
     }
 
     GlobalUnlock(hBitmap);
 
     Vector<unsigned char> output;
+#if 0
     blink::GDIPlusImageEncoder::encode(skBitmap, blink::GDIPlusImageEncoder::PNG, &output);
+#endif
+    blink::PNGImageEncoder::encode(skBitmap, &output);
     return WebData((const char*)output.data(), output.size());
 }
 
@@ -617,6 +623,8 @@ void WebClipboardImpl::writeImage(const WebImage& image, const WebURL& url, cons
     const SkBitmap& bitmap = image.getSkBitmap();
     if (!writeBitmap(bitmap))
         return;
+
+    return; // weolar
 
     if (!url.isEmpty()) {
         writeBookmark(url.string(), title);

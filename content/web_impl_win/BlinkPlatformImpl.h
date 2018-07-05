@@ -33,7 +33,8 @@ public:
 
     static void initialize();
 
-    void startGarbageCollectedThread(double delayMs);
+    void setGcTimer(double intervalSec);
+    void setResGcTimer(double intervalSec);
    
     virtual void cryptographicallyRandomValues(unsigned char* buffer, size_t length) override;
 
@@ -138,6 +139,7 @@ public:
 private:
     void destroyWebInfo();
     void closeThread();
+    void resourceGarbageCollectedTimer(blink::Timer<BlinkPlatformImpl>*);
     void garbageCollectedTimer(blink::Timer<BlinkPlatformImpl>*);
     void perfTimer(blink::Timer<BlinkPlatformImpl>*);
     bool m_isDisableGC;
@@ -150,6 +152,7 @@ private:
     blink::Timer<BlinkPlatformImpl>* m_gcTimer;
     blink::Timer<BlinkPlatformImpl>* m_defaultGcTimer;
     blink::Timer<BlinkPlatformImpl>* m_perfTimer;
+    blink::Timer<BlinkPlatformImpl>* m_resTimer; // 资源单独一个定时器
 
     blink::WebThread* m_ioThread;
 

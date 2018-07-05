@@ -18,6 +18,7 @@
 #define kMimeTypeHTML "text/html"
 #define kMimeTypeRTF "text/rtf"
 #define kMimeTypePNG "image/png"
+#define kMimeTypeBMP "image/bmp"
 
 struct tagFORMATETC;
 typedef tagFORMATETC FORMATETC;

@@ -223,8 +223,8 @@ WebPageImpl::~WebPageImpl()
     m_pagePtr = 0;
     m_popupHandle = nullptr;
 
-    BlinkPlatformImpl* platform = (BlinkPlatformImpl*)blink::Platform::current();
-    platform->startGarbageCollectedThread(0);
+//     BlinkPlatformImpl* platform = (BlinkPlatformImpl*)blink::Platform::current();
+//     platform->setGcTimer(0);
 
     String output = String::format("WebPageImpl::~WebPageImpl: %p\n", this);
     OutputDebugStringA(output.utf8().data());

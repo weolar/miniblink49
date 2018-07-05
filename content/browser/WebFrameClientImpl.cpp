@@ -824,6 +824,7 @@ void WebFrameClientImpl::willReleaseScriptContext(WebLocalFrame* frame, v8::Loca
         m_webPage->wkeHandler().willReleaseScriptContextCallback(m_webPage->wkeWebView(), m_webPage->wkeHandler().willReleaseScriptContextCallbackParam,
             frameIdToWkeFrame(m_webPage, frame), &context, worldId);
 #endif
+
 #if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
     if (!CefContentClient::Get())
         return;

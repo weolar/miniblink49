@@ -18,6 +18,7 @@ public:
     {
         m_popMenu = nullptr;
         m_hWnd = nullptr;
+        m_imagePos = nullptr;
         m_webPage = webPage;
 
         init();
@@ -40,6 +41,8 @@ public:
         ::DestroyWindow(m_hWnd);
         if (m_popMenu)
             ::DestroyMenu(m_popMenu);
+        if (m_imagePos)
+            delete m_imagePos;
     }
 
     bool registerClass()
@@ -61,10 +64,18 @@ public:
         return !!RegisterClassEx(&wcex);
     }
 
-    static const int kCopySelectedTextId = 1;
-    static const int kInspectElementAtId = 2;
-    static const int kCutId = 3;
-    static const int kPasteId = 4;
+    enum MenuId {
+        kCopySelectedTextId,
+        kCopyImageId,
+        kInspectElementAtId,
+        kCutId,
+        kPasteId
+    };
+//     static const int kCopySelectedTextId = 1;
+//     static const int kCopySelectedTextId = 1;
+//     static const int kInspectElementAtId = 2;
+//     static const int kCutId = 3;
+//     static const int kPasteId = 4;
 
     void show(const blink::WebContextMenuData& data)
     {
@@ -74,14 +85,23 @@ public:
         POINT clientPt = screenPt;
         ::ScreenToClient(m_hWnd, &clientPt);
 
+        if (m_imagePos)
+            delete m_imagePos;
+        m_imagePos = nullptr;
+
         if (m_popMenu)
             ::DestroyMenu(m_popMenu);
         m_popMenu = ::CreatePopupMenu();
         
         m_data = blink::WebContextMenuData();
 
-        if (!data.selectedText.isNull() && !data.selectedText.isEmpty())
+        if ((!data.selectedText.isNull() && !data.selectedText.isEmpty()))
             ::AppendMenu(m_popMenu, MF_STRING, kCopySelectedTextId, L"¸´ÖÆ");
+
+        if (data.hasImageContents) {
+            ::AppendMenu(m_popMenu, MF_STRING, kCopyImageId, L"¸´ÖÆÍ¼Æ¬");
+            m_imagePos = new blink::IntPoint(data.mousePosition);
+        }
 
         if (m_webPage->isDevtoolsConneted())
             ::AppendMenu(m_popMenu, MF_STRING, kInspectElementAtId, L"¼ì²é");
@@ -107,6 +127,10 @@ public:
     {
         if (kCopySelectedTextId == itemID) {
             m_webPage->webViewImpl()->focusedFrame()->executeCommand("Copy");
+        } else if (kCopyImageId == itemID) {
+            m_webPage->webViewImpl()->copyImageAt(*m_imagePos);
+            delete m_imagePos;
+            m_imagePos = nullptr;
         } else if (kInspectElementAtId == itemID) {
             m_webPage->inspectElementAt(m_data.mousePosition.x, m_data.mousePosition.y);
         } else if (kCutId == itemID) {
@@ -156,6 +180,8 @@ public:
     HMENU m_popMenu;
     blink::WebContextMenuData m_data;
     WebPage* m_webPage;
+
+    blink::IntPoint* m_imagePos;
 
     int m_lastX;
     int m_lastY;
