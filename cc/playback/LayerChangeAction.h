@@ -180,6 +180,9 @@ public:
     LayerChangeActionBlend(int actionId, int layerId, TileActionInfoVector* willRasteredTiles, const SkRect& dirtyRect);
     virtual ~LayerChangeActionBlend() override;
 
+    void setContentScale(float contentScale) { m_contentScale = contentScale; }
+    float getContentScale() const { return m_contentScale; }
+
     void run(LayerTreeHost* host);
     void setDirtyRectBitmap(SkBitmap* bitmap);
     void appendPendingInvalidateRect(const SkRect& r);
@@ -194,6 +197,7 @@ private:
     TileActionInfoVector* m_willRasteredTiles;
     SkRect m_dirtyRect;
     SkBitmap* m_dirtyRectBitmap;
+    float m_contentScale;
 
     WTF::Vector<SkRect> m_pendingInvalidateRects;
 };

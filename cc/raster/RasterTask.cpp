@@ -19,18 +19,6 @@
 #include "config.h"
 #include "cc/raster/RasterTask.h"
 
-#include "platform/RuntimeEnabledFeatures.h"
-#include "third_party/WebKit/public/platform/Platform.h"
-#include "third_party/WebKit/public/platform/WebTraceLocation.h"
-#include "third_party/WebKit/Source/wtf/ThreadingPrimitives.h"
-#include "third_party/WebKit/Source/wtf/RefCountedLeakCounter.h"
-#include "third_party/skia/include/core/SkBitmap.h"
-#include "third_party/skia/include/core/SkPicture.h"
-#include "third_party/skia/include/core/SkSurface.h"
-#include "third_party/skia/include/core/SkCanvas.h"
-#include "skia/ext/analysis_canvas.h"
-
-#include "skia/ext/refptr.h"
 #include "cc/raster/RasterResouce.h"
 #include "cc/raster/RasterFilters.h"
 #include "cc/tiles/Tile.h"
@@ -42,10 +30,21 @@
 #include "cc/trees/DrawProperties.h"
 #include "cc/playback/LayerChangeAction.h"
 #include "cc/playback/TileActionInfo.h"
-
+#include "skia/ext/refptr.h"
+#include "skia/ext/analysis_canvas.h"
+#include "platform/RuntimeEnabledFeatures.h"
+#include "third_party/WebKit/public/platform/Platform.h"
+#include "third_party/WebKit/public/platform/WebTraceLocation.h"
+#include "third_party/WebKit/Source/wtf/ThreadingPrimitives.h"
+#include "third_party/WebKit/Source/wtf/RefCountedLeakCounter.h"
+#include "third_party/skia/include/core/SkBitmap.h"
+#include "third_party/skia/include/core/SkPicture.h"
+#include "third_party/skia/include/core/SkSurface.h"
+#include "third_party/skia/include/core/SkCanvas.h"
 #include "third_party/WebKit/Source/platform/image-encoders/gdiplus/GDIPlusImageEncoder.h"
 
 extern DWORD g_rasterTaskCount;
+extern float g_contentScale;
 
 namespace blink {
 bool saveDumpFile(const String& url, char* buffer, unsigned int size);
@@ -189,6 +188,7 @@ public:
         , m_blendAction(blendAction)
         , m_group(group)
         , m_filterOperations(filterOperations ? new cc_blink::WebFilterOperationsImpl(*filterOperations) : nullptr)
+        , m_contentScale(g_contentScale)
     {
 #ifndef NDEBUG
         rasterTaskCounter.increment();
@@ -235,6 +235,11 @@ public:
         raster();
         releaseRource();
         g_rasterTaskCount++;
+
+        DWORD nowTime2 = (DWORD)(WTF::currentTimeMS() * 100);
+        
+//         String output = String::format("RasterTask.run: %d\n", nowTime2 - nowTime);
+//         OutputDebugStringA(output.utf8().data());
     }
 
     bool performSolidColorAnalysis(const SkRect& tilePos, SkColor* color)
@@ -286,7 +291,9 @@ public:
         }
 
         SkBitmap* bitmap = doRaster(m_dirtyRect);
+
         m_blendAction->setDirtyRectBitmap(bitmap);
+        m_blendAction->setContentScale(m_contentScale);
 
         if (0) {
             Vector<unsigned char> output;
@@ -315,7 +322,7 @@ public:
             bitmap->eraseARGB(0, 0xff, 0xff, 0xff); // TODO
 
         canvas->save();
-        canvas->scale(1, 1);
+        canvas->scale(m_contentScale, m_contentScale);
         canvas->translate(-dirtyRect.x(), -dirtyRect.y());
         canvas->drawPicture(m_picture, nullptr, nullptr);
         canvas->restore();
@@ -364,6 +371,8 @@ private:
     bool m_isOpaque;
     RasterTaskGroup* m_group;
     const cc_blink::WebFilterOperationsImpl* m_filterOperations;
+
+    float m_contentScale; // 绘制低分辨率的时候用
 };
 
 RasterTaskGroup* RasterTaskWorkerThreadPool::beginPostRasterTask(LayerTreeHost* host)

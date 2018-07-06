@@ -357,18 +357,18 @@ void CompositingLayer::drawDebugLine(SkCanvas& canvas, CompositingTile* tile)
     canvas.drawText(cText.data(), cText.length(), 5, 15, paintTest);
 }
 
-void CompositingLayer::blendToTiles(TileActionInfoVector* willRasteredTiles, const SkBitmap* bitmap, const SkRect& dirtyRect)
+void CompositingLayer::blendToTiles(TileActionInfoVector* willRasteredTiles, const SkBitmap* bitmap, const SkRect& dirtyRect, float contentScale)
 {
     const Vector<TileActionInfo*>& infos = willRasteredTiles->infos();
     for (size_t i = 0; i < infos.size(); ++i) {
         TileActionInfo* info = infos[i];
         CompositingTile* tile = (CompositingTile*)m_tilesAddr->getTileByXY(info->xIndex, info->yIndex, [] { return new CompositingTile(); });
         ASSERT(tile == m_tilesAddr->getTileByIndex(info->index));
-        blendToTile(tile, bitmap ? bitmap : info->m_bitmap, dirtyRect, info->m_solidColor, info->m_isSolidColorCoverWholeTile);
+        blendToTile(tile, bitmap ? bitmap : info->m_bitmap, dirtyRect, info->m_solidColor, info->m_isSolidColorCoverWholeTile, contentScale);
     } 
 }
 
-void CompositingLayer::blendToTile(CompositingTile* tile, const SkBitmap* bitmap, const SkRect& dirtyRect, SkColor* solidColor, bool isSolidColorCoverWholeTile)
+void CompositingLayer::blendToTile(CompositingTile* tile, const SkBitmap* bitmap, const SkRect& dirtyRect, SkColor* solidColor, bool isSolidColorCoverWholeTile, float contentScale)
 {
     tile->allocBitmapIfNeeded(solidColor, isSolidColorCoverWholeTile);
     if (!tile->bitmap())
@@ -403,8 +403,14 @@ void CompositingLayer::blendToTile(CompositingTile* tile, const SkBitmap* bitmap
         return;
     }
 
-    SkIRect dst = (blink::IntRect)(dirtyRect);
-    dst = dst.makeOffset(-tile->postion().x(), -tile->postion().y());
+    SkIRect dstI = (blink::IntRect)(dirtyRect);
+    dstI = dstI.makeOffset(-tile->postion().x(), -tile->postion().y());
+
+    //SkIRect srcRect = SkIRect::MakeXYWH(dstI.left() * contentScale, dstI.top() * contentScale, dstI.width() * contentScale, dstI.height() * contentScale);
+    blink::IntRect srcRectI = (blink::IntRect)dirtyRect;
+    srcRectI.intersect(tile->postion());
+    srcRectI.move(/*tile->postion().x()*/ - dirtyRect.x(), /*tile->postion().y()*/ - dirtyRect.y());
+    SkIRect srcRect = SkIRect::MakeXYWH(srcRectI.x() * contentScale, srcRectI.y() * contentScale, srcRectI.width() * contentScale, srcRectI.height() * contentScale);
 
     if (!tile->bitmap()->getPixels()) {
         ASSERT(solidColor);
@@ -412,9 +418,11 @@ void CompositingLayer::blendToTile(CompositingTile* tile, const SkBitmap* bitmap
     }
 
     SkCanvas canvas(*tile->bitmap());
-    if (bitmap)
-        canvas.drawBitmapRect(*bitmap, nullptr, SkRect::MakeFromIRect(dst), &paint);
-
+    if (bitmap) {
+        //canvas.scale(1 / contentScale, 1 / contentScale);
+        canvas.drawBitmapRect(*bitmap, &srcRect, SkRect::MakeFromIRect(dirtyRectInTile), &paint);
+        //canvas.drawBitmapRect(*bitmap, nullptr, dst, &paint);
+    }
     drawDebugLine(canvas, tile);
 }
 
