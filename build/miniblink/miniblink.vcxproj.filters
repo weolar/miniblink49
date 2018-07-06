@@ -10122,6 +10122,12 @@
     <ClCompile Include="..\..\node\src\node_url.cc">
       <Filter>node\src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\web\WebCustomElement.cpp">
+      <Filter>third_party\Webkit\Source\web</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8DataTransferItemPartial.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\public\platform\modules\app_banner\WebAppBannerClient.h">
@@ -23003,6 +23009,10 @@
     <ClInclude Include="..\..\node\nodeblink.h">
       <Filter>node</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8DataTransferItemPartial.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\third_party\WebKit\Source\devtools\front_end\Images\src\optimize_png.hashes">
@@ -23127,5 +23137,8 @@
     <CustomBuild Include="..\..\third_party\WebKit\Source\platform\heap\asm\SaveRegisters_x86.asm">
       <Filter>third_party\Webkit\Source\platform\heap\asm</Filter>
     </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="miniblink.rc" />
   </ItemGroup>
 </Project>

@@ -232,6 +232,9 @@
       <Command>
       </Command>
     </PostBuildEvent>
+    <ResourceCompile>
+      <ResourceOutputFileName>$(ProjectDir)miniblink.res</ResourceOutputFileName>
+    </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -368,7 +371,7 @@
       <AdditionalOptions>/Zc:threadSafeInit- %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
-      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <GenerateDebugInformation>Debug</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -453,9 +456,9 @@
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <AdditionalLibraryDirectories>$(SolutionDir)..\out\$(Platform)$(Configuration)\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>version.lib;Crypt32.lib;Advapi32.lib;wldap32.lib;libcurl.lib;zlib.lib;ots.lib;Imm32.lib;libxml.lib;v8_5_7.lib;v8_5_7_1.lib;skia.lib;winmm.lib;Ws2_32.lib;Usp10.lib;Shlwapi.lib;wininet.lib;GDIPlus.lib;DbgHelp.lib;libjpeg.lib;libpng.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>version.lib;Crypt32.lib;Advapi32.lib;wldap32.lib;libcurl.lib;zlib.lib;ots.lib;Imm32.lib;libxml.lib;v8_5_7.lib;skia.lib;winmm.lib;Ws2_32.lib;Usp10.lib;Shlwapi.lib;wininet.lib;GDIPlus.lib;DbgHelp.lib;libjpeg.lib;libpng.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>/FORCE:UNRESOLVED %(AdditionalOptions)</AdditionalOptions>
-      <OutputFile>$(OutDir)node$(TargetExt)</OutputFile>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
       <ImportLibrary>
       </ImportLibrary>
       <ShowProgress>NotSet</ShowProgress>
@@ -531,6 +534,7 @@
     <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8InspectorOverlayHost.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8XMLSerializer.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8Crypto.cpp" />
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8DataTransferItemPartial.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8DevToolsHostPartial.cpp" />
     <ClCompile Include="..\..\gen\blink\core\InspectorBackendDispatcher.cpp" />
     <ClCompile Include="..\..\gen\blink\core\InspectorFrontend.cpp" />
@@ -4912,6 +4916,7 @@
     <ClCompile Include="..\..\third_party\WebKit\Source\web\ValidationMessageClientImpl.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\web\WebCachedURLRequest.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\web\WebColorSuggestion.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\web\WebCustomElement.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\web\WebDataSourceImpl.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\web\WebDateTimeSuggestion.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\web\WebDevToolsAgentImpl.cpp" />
@@ -5873,6 +5878,7 @@
     <ClInclude Include="..\..\gen\blink\bindings\core\v8\V8External.h" />
     <ClInclude Include="..\..\gen\blink\bindings\core\v8\V8XMLSerializer.h" />
     <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8Crypto.h" />
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8DataTransferItemPartial.h" />
     <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8DevToolsHostPartial.h" />
     <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8DOMFileSystem.h" />
     <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8DOMFileSystemSync.h" />
@@ -10134,6 +10140,7 @@
     <ClInclude Include="..\..\third_party\WebKit\Source\wtf\WTF.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\wtf\WTFExport.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\wtf\WTFThreadData.h" />
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\third_party\WebKit\Source\core\inspector\BUILD.gn" />
@@ -10190,6 +10197,9 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="miniblink.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
