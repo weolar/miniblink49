@@ -1,9 +1,12 @@
 ﻿const binding = process.binding('atom_browser_web_contents');
 const WebContents = binding.WebContents;
 
-const app = require('electron').app;
-const ipcMain = require('electron').ipcMain;
+const electron = require('electron');
+const app = electron.app;
+const ipcMain = electron.ipcMain;
 const EventEmitter = require('events').EventEmitter;
+const url = require('url');
+const path = require('path');
 
 Object.setPrototypeOf(WebContents.prototype, EventEmitter.prototype);
 
@@ -70,6 +73,17 @@ WebContents.prototype.send = function (channel, ...args) {
 WebContents.prototype.sendToAll = function (channel, ...args) {
   if (channel == null) throw new Error('Missing required channel argument')
   return this._send(true, channel, args)
+}
+
+WebContents.prototype.loadFile = function (filePath) {
+    if (typeof filePath !== 'string')
+        throw new Error('Must pass filePath as a string')
+    
+    return this._loadURL(url.format({
+        protocol: 'file',
+        slashes: true,
+        pathname: path.resolve(app.getAppPath(), filePath)
+    }));
 }
 
 let nextId = 0;

@@ -3,10 +3,10 @@ const electron = require('electron');
 const ipcMain = require('./api/ipc-main');
 electron.ipcMain = ipcMain;
 
-electron.BrowserWindow = require("./../browser/api/browser-window");
-
 var App = require("./../browser/api/app").App;
 electron.app = new App();
+
+electron.BrowserWindow = require("./../browser/api/browser-window");
 
 electron.webContents = require("./../browser/api/web-contents");
 
@@ -108,5 +108,5 @@ CrashReporter.prototype.getUploadedReports = function() { return 0; }
 electron.crashReporter = new CrashReporter();
 ////////////////////////////////////////////////////////////////
 
-module.exports = electron;;
+module.exports = electron;
 
