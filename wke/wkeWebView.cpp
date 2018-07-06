@@ -261,11 +261,24 @@ static String createMemoryUrl()
 
 void CWebView::loadHTML(const utf8* html)
 {
+    loadHtmlWithBaseUrl(html, nullptr);
+}
+
+void CWebView::loadHtmlWithBaseUrl(const utf8* html, const utf8* baseUrl)
+{
     size_t length = strlen(html);
     if (0 == length)
         return;
     String url = createMemoryUrl(); // String::format("MemoryURL://data.com/%d", GetTickCount());
-    m_webPage->loadHTMLString(content::WebPage::kMainFrameId, blink::WebData(html, length), blink::KURL(blink::ParsedURLString, url), blink::WebURL(), true);
+
+    blink::KURL kurl(blink::ParsedURLString, url);
+    blink::KURL kbaseUrl;
+    if (baseUrl)
+        kbaseUrl = blink::KURL(blink::ParsedURLString, baseUrl);
+    if (!kbaseUrl.isValid())
+        kbaseUrl = blink::KURL();
+
+    m_webPage->loadHTMLString(content::WebPage::kMainFrameId, blink::WebData(html, length), kbaseUrl, kbaseUrl, true);
 }
 
 void CWebView::loadHTML(const wchar_t* html)
@@ -365,6 +378,16 @@ void CWebView::stopLoading()
 void CWebView::reload()
 {
     m_webPage->mainFrame()->reload();
+}
+
+void CWebView::goToOffset(int offset)
+{
+    m_webPage->goToOffset(offset);
+}
+
+void CWebView::goToIndex(int index)
+{
+    m_webPage->goToIndex(index);
 }
 
 const utf8* CWebView::title()

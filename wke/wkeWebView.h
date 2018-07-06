@@ -10,6 +10,7 @@
 #include "third_party/WebKit/Source/platform/geometry/IntRect.h"
 #include "net/WebURLLoaderManager.h"
 #include <map>
+#include <set>
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -128,6 +129,7 @@ public:
     void loadPostURL(const wchar_t * inUrl,const char * poastData,int nLen);
 
     void loadHTML(const utf8* html) override;
+    void loadHtmlWithBaseUrl(const utf8* html, const utf8* baseUrl);
     void loadHTML(const wchar_t* html) override;
 
     void loadFile(const utf8* filename) override;
@@ -145,6 +147,8 @@ public:
     virtual bool isDocumentReady() const override;
     void stopLoading();
     void reload();
+    void goToOffset(int offset);
+    void goToIndex(int index);
 
     const utf8* title() override;
     const wchar_t* titleW() override;
@@ -289,6 +293,8 @@ public:
 
     content::WebPage* getWebPage() const { return m_webPage; }
 
+    std::set<jsValue>& getPersistentJsValue() { return m_persistentJsValue; }
+
 protected:
     friend class ShowDevToolsTaskObserver;
 
@@ -300,6 +306,7 @@ protected:
     void _loadURL(const utf8* inUrl, bool isFile);
 
     std::map<std::string, void*> m_userKeyValues;
+    std::set<jsValue> m_persistentJsValue;
 
     //按理这些接口应该使用CWebView来实现的，可以把它们想像成一个类，因此设置为友员符合情理。
 //     friend class ToolTip;

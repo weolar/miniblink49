@@ -197,10 +197,10 @@ void wkeSetDragDropEnable(wkeWebView webView, bool b)
 
 DWORD g_kWakeMinInterval = 5;
 double g_kDrawMinInterval = 0.003;
-
 bool g_isDecodeUrlRequest = false;
-
 void* g_tipPaintCallback = nullptr;
+float g_contentScale = 1;
+bool g_rendererAntiAlias = false;
 
 void wkeSetDebugConfig(wkeWebView webview, const char* debugString, const char* param)
 {
@@ -251,6 +251,10 @@ void wkeSetDebugConfig(wkeWebView webview, const char* debugString, const char* 
                 settings->setDefaultFixedFontSize(atoi(param));
         } else if ("tipPaintCallback" == item) {
             g_tipPaintCallback = (void*)param;
+        } else if ("contentScale" == item) {
+            g_contentScale = atoi(param) / 100.0;
+        } else if ("antiAlias" == item) {
+            g_rendererAntiAlias = atoi(param) == 1;
         }
     }
 }
@@ -337,6 +341,11 @@ void wkeSetUserAgent(wkeWebView webView, const utf8* userAgent)
     webView->setUserAgent(userAgent);
 }
 
+const utf8* wkeGetUserAgent(wkeWebView webView)
+{
+    return content::BlinkPlatformImpl::getUserAgent();
+}
+
 void wkeSetUserAgentW(wkeWebView webView, const wchar_t* userAgent)
 {
     webView->setUserAgent(userAgent);
@@ -377,6 +386,11 @@ void wkeLoadURLW(wkeWebView webView, const wchar_t* url)
 void wkeLoadHTML(wkeWebView webView, const utf8* html)
 {
     webView->loadHTML(html);
+}
+
+void wkeLoadHtmlWithBaseUrl(wkeWebView webView, const utf8* html, const utf8* baseUrl)
+{
+    webView->loadHtmlWithBaseUrl(html, baseUrl);
 }
 
 void wkeLoadHTMLW(wkeWebView webView, const wchar_t* html)
@@ -432,6 +446,16 @@ void wkeStopLoading(wkeWebView webView)
 void wkeReload(wkeWebView webView)
 {
     webView->reload();
+}
+
+void wkeGoToOffset(wkeWebView webView, int offset)
+{
+    webView->goToOffset(offset);
+}
+
+void wkeGoToIndex(wkeWebView webView, int index)
+{
+    webView->goToIndex(index);
 }
 
 const utf8* wkeGetTitle(wkeWebView webView)
@@ -984,6 +1008,17 @@ jsValue wkeRunJsByFrame(wkeWebView webView, wkeWebFrameHandle frameId, const utf
     return webView->runJsInFrame(frameId, script, isInClosure);
 }
 
+void wkeInsertCSSByFrame(wkeWebView webView, wkeWebFrameHandle frameId, const utf8* cssText)
+{
+    content::WebPage* page = webView->webPage();
+    if (!page)
+        return;
+    blink::WebFrame* frame = page->mainFrame();
+    if (!frame)
+        return;
+    frame->document().insertStyleSheet(blink::WebString::fromUTF8(cssText));
+}
+
 const utf8* wkeGetFrameUrl(wkeWebView webView, wkeWebFrameHandle frameId)
 {
     content::WebPage* page = webView->webPage();
@@ -1406,10 +1441,16 @@ const utf8* wkeVersionString()
     return wkeGetVersionString();
 }
 
-void wkeGC(wkeWebView webView, long delayMs)
+void wkeGC(wkeWebView webView, long intervalSec)
 {
     content::BlinkPlatformImpl* platformImpl = (content::BlinkPlatformImpl*)blink::Platform::current();
-    platformImpl->startGarbageCollectedThread((double)delayMs);
+    platformImpl->setGcTimer((double)intervalSec);
+}
+
+void wkeSetResourceGc(wkeWebView webView, long intervalSec)
+{
+    content::BlinkPlatformImpl* platformImpl = (content::BlinkPlatformImpl*)blink::Platform::current();
+    platformImpl->setResGcTimer((double)intervalSec);
 }
 
 WKE_EXTERN_C void curl_set_file_system(

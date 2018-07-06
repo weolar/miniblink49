@@ -3,6 +3,7 @@
 * wolar@qq.com
 * http://miniblink.net
 * https://github.com/weolar/miniblink49
+* https://blog.csdn.net/weolar/article/details/80458523 api文档地址
 * licence MIT
 *
 */
@@ -486,6 +487,7 @@ typedef enum {
     JSTYPE_FUNCTION,
     JSTYPE_UNDEFINED,
     JSTYPE_ARRAY,
+    JSTYPE_NULL,
 } jsType;
 
 // cexer JS对象、函数绑定支持
@@ -704,7 +706,9 @@ public:
     \
     ITERATOR0(unsigned int, wkeVersion, "") \
     ITERATOR0(const utf8*, wkeVersionString, "") \
-    ITERATOR2(void, wkeGC, wkeWebView webView, long delayMs, "") \
+    ITERATOR2(void, wkeGC, wkeWebView webView, long intervalSec, "") \
+    ITERATOR2(void, wkeSetResourceGc, wkeWebView webView, long intervalSec, "") \
+    \
     ITERATOR5(void, wkeSetFileSystem, WKE_FILE_OPEN pfnOpen, WKE_FILE_CLOSE pfnClose, WKE_FILE_SIZE pfnSize, WKE_FILE_READ pfnRead, WKE_FILE_SEEK pfnSeek, "") \
     \
     ITERATOR1(const char*, wkeWebViewName, wkeWebView webView, "") \
@@ -795,6 +799,7 @@ public:
     ITERATOR2(void, wkeSetTransparent, wkeWebView webView, bool transparent, "") \
     \
     ITERATOR2(void, wkeSetUserAgent, wkeWebView webView, const utf8* userAgent, "") \
+    ITERATOR1(const char*, wkeGetUserAgent, wkeWebView webView, "") \
     ITERATOR2(void, wkeSetUserAgentW, wkeWebView webView, const wchar_t* userAgent, "") \
     \
     ITERATOR4(void, wkeShowDevtools, wkeWebView webView, const wchar_t* path, wkeOnShowDevtoolsCallback callback, void* param, "") \
@@ -806,12 +811,14 @@ public:
     ITERATOR4(void, wkePostURLW, wkeWebView wkeView, const wchar_t* url, const char* postData, int postLen, "") \
     \
     ITERATOR2(void, wkeLoadHTML, wkeWebView webView, const utf8* html, "") \
+    ITERATOR3(void, wkeLoadHtmlWithBaseUrl, wkeWebView webView, const utf8* html, const utf8* baseUrl, "") \
     ITERATOR2(void, wkeLoadHTMLW, wkeWebView webView, const wchar_t* html, "") \
     \
     ITERATOR2(void, wkeLoadFile, wkeWebView webView, const utf8* filename, "") \
     ITERATOR2(void, wkeLoadFileW, wkeWebView webView, const wchar_t* filename, "") \
     \
     ITERATOR1(const utf8*, wkeGetURL, wkeWebView webView, "") \
+    ITERATOR2(const utf8*, wkeGetFrameUrl, wkeWebView webView, wkeWebFrameHandle frameId, "") \
     \
     ITERATOR1(bool, wkeIsLoading, wkeWebView webView, "") \
     ITERATOR1(bool, wkeIsLoadingSucceeded, wkeWebView webView, "") \
@@ -820,6 +827,8 @@ public:
     ITERATOR1(bool, wkeIsDocumentReady, wkeWebView webView, "") \
     ITERATOR1(void, wkeStopLoading, wkeWebView webView, "") \
     ITERATOR1(void, wkeReload, wkeWebView webView, "") \
+    ITERATOR2(void, wkeGoToOffset, wkeWebView webView, int offset, "") \
+    ITERATOR2(void, wkeGoToIndex, wkeWebView webView, int index, "") \
     \
     ITERATOR1(const utf8*, wkeGetTitle, wkeWebView webView, "") \
     ITERATOR1(const wchar_t*, wkeGetTitleW, wkeWebView webView, "") \
@@ -968,6 +977,7 @@ public:
     ITERATOR2(bool, wkeIsWebRemoteFrame, wkeWebView webView, wkeWebFrameHandle frameId, "") \
     ITERATOR1(wkeWebFrameHandle, wkeWebFrameGetMainFrame, wkeWebView webView, "") \
     ITERATOR4(jsValue, wkeRunJsByFrame, wkeWebView webView, wkeWebFrameHandle frameId, const utf8* script, bool isInClosure, "") \
+    ITERATOR3(void, wkeInsertCSSByFrame, wkeWebView webView, wkeWebFrameHandle frameId, const utf8* cssText, "") \
     \
     ITERATOR3(void, wkeWebFrameGetMainWorldScriptContext, wkeWebView webView, wkeWebFrameHandle webFrameId, v8ContextPtr contextOut, "") \
     \
@@ -1056,6 +1066,9 @@ public:
     \
     ITERATOR3(jsValue, jsGetAt, jsExecState es, jsValue object, int index, "") \
     ITERATOR4(void, jsSetAt, jsExecState es, jsValue object, int index, jsValue v, "") \
+    ITERATOR2(bool, jsIsJsValueValid, jsExecState es, jsValue object, "") \
+    ITERATOR1(bool, jsIsValidExecState, jsExecState es, "") \
+    ITERATOR3(void, jsDeleteObjectProp, jsExecState es, jsValue object, const char* prop, "") \
     \
     ITERATOR2(int, jsGetLength, jsExecState es, jsValue object, "") \
     ITERATOR3(void, jsSetLength, jsExecState es, jsValue object, int length, "") \
@@ -1073,7 +1086,9 @@ public:
     ITERATOR2(jsValue, jsGetGlobal, jsExecState es, const char* prop, "") \
     ITERATOR3(void, jsSetGlobal, jsExecState es, const char* prop, jsValue v, "") \
     \
-    ITERATOR0(void, jsGC, "")
+    ITERATOR0(void, jsGC, "") \
+    ITERATOR2(bool, jsAddRef, jsExecState es, jsValue val, "") \
+    ITERATOR2(bool, jsReleaseRef, jsExecState es, jsValue val, "")
 
 #if ENABLE_WKE == 1
 
