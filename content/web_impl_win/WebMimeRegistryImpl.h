@@ -51,7 +51,8 @@ public:
 
     virtual blink::WebMimeRegistry::SupportsType supportsImagePrefixedMIMEType(const blink::WebString& mimeType) OVERRIDE;
 
-    blink::WebString extensionFormimeType(const blink::WebString& ext);
+    blink::WebString extensionForMimeType(const blink::WebString& mime);
+    Vector<blink::WebString> extensionsForMimeType(const blink::WebString& mime);
 
 private:
     void ensureMimeTypeMap();
