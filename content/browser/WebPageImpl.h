@@ -183,6 +183,7 @@ public:
     virtual void navigateBackForwardSoon(int offset) override;
     virtual int historyBackListCount() override;
     virtual int historyForwardListCount() override;
+    void navigateToIndex(int index);
 
     static WebPageImpl* getSelfForCurrentContext();
 

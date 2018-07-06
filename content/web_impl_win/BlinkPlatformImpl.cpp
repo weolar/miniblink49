@@ -181,7 +181,7 @@ void BlinkPlatformImpl::initialize()
 //     platform->m_perfTimer = new blink::Timer<BlinkPlatformImpl>(platform, &BlinkPlatformImpl::perfTimer);
 //     platform->m_perfTimer->start(2, 2, FROM_HERE);
 
-    OutputDebugStringW(L"BlinkPlatformImpl::initBlink\n");
+    //OutputDebugStringW(L"BlinkPlatformImpl::initBlink\n");
 }
 
 BlinkPlatformImpl::BlinkPlatformImpl() 
@@ -210,7 +210,7 @@ BlinkPlatformImpl::BlinkPlatformImpl()
 
     ::InitializeCriticalSection(m_lock);
 
-    setUserAgent("Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.2171.99 Safari/537.36");
+    setUserAgent(getUserAgent());
 
 #ifdef _DEBUG
     myFree = (MyFree)ReplaceFuncAndCopy(free, newFree);
@@ -563,15 +563,23 @@ double BlinkPlatformImpl::systemTraceTime()
 
 blink::WebString BlinkPlatformImpl::userAgent()
 {
-    return *m_userAgent; // PC
-    //return blink::WebString("Mozilla/5.0 (Linux; Android 4.4.4; en-us; Nexus 4 Build/JOP40D) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2307.2 Mobile Safari/537.36");
+    return *m_userAgent;
 }
 
-void BlinkPlatformImpl::setUserAgent(char* ua)
+const char* BlinkPlatformImpl::getUserAgent()
+{
+    const char* defaultUA = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.2171.99 Safari/537.36";
+    BlinkPlatformImpl* self = (BlinkPlatformImpl*)blink::Platform::current();
+    if (!self)
+        return defaultUA;
+    return self->m_userAgent->utf8().data();
+}
+
+void BlinkPlatformImpl::setUserAgent(const char* ua)
 {
     if (m_userAgent)
         delete m_userAgent;
-	m_userAgent = new String(ua);
+    m_userAgent = new String(ua);
 }
 
 void readJsFile(const wchar_t* path, std::vector<char>* buffer)

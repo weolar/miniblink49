@@ -58,7 +58,8 @@ public:
     virtual double systemTraceTime() override;
 
     virtual blink::WebString userAgent() override;
-    void setUserAgent(char* ua);
+    static const char* getUserAgent();
+    void setUserAgent(const char* ua);
 
     virtual blink::WebData loadResource(const char* name) override;
 

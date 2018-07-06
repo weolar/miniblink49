@@ -58,6 +58,12 @@ void NavigationController::navigateBackForwardSoon(int offset)
     blink::Platform::current()->currentThread()->postTask(FROM_HERE, WTF::bind(&NavigationController::navigate, this, offset));
 }
 
+void NavigationController::navigateToIndex(int index)
+{
+    int offset = m_currentOffset - index;
+    navigateBackForwardSoon(offset);
+}
+
 int NavigationController::findEntry(const blink::WebHistoryItem& item) const
 {
     for (size_t i = 0; i < m_items.size(); ++i) {

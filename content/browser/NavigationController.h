@@ -25,7 +25,8 @@ public:
     int historyBackListCount();
     int historyForwardListCount();
     void navigateBackForwardSoon(int offset);
-    
+    void navigateToIndex(int index);
+
     void insertOrReplaceEntry(const blink::WebHistoryItem& item, blink::WebHistoryCommitType type, bool isSameDocument);
     
     DECLARE_TRACE();

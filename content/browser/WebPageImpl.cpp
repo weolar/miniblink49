@@ -1664,6 +1664,11 @@ int WebPageImpl::historyForwardListCount()
     return m_navigationController->historyForwardListCount();
 }
 
+void WebPageImpl::navigateToIndex(int index)
+{
+    m_navigationController->navigateToIndex(index);
+}
+
 WebFrame* WebPageImpl::getWebFrameFromFrameId(int64_t frameId)
 {
     blink::WebFrame* webFrame = nullptr;

@@ -122,6 +122,9 @@ public:
     void goBack();
     bool canGoForward();
     void goForward();
+    void goToOffset(int offset);
+    void goToIndex(int index);
+
     void didCommitProvisionalLoad(blink::WebLocalFrame* frame,
         const blink::WebHistoryItem& history, blink::WebHistoryCommitType type, bool isSameDocument);
 

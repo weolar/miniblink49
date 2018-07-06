@@ -440,6 +440,18 @@ void WebPage::goForward()
         m_pageImpl->navigateBackForwardSoon(1);
 }
 
+void WebPage::goToOffset(int offset)
+{
+    if (m_pageImpl)
+        m_pageImpl->navigateBackForwardSoon(offset);
+}
+
+void WebPage::goToIndex(int index)
+{
+    if (m_pageImpl)
+        m_pageImpl->navigateToIndex(index);
+}
+
 void WebPage::didCommitProvisionalLoad(blink::WebLocalFrame* frame, const blink::WebHistoryItem& history, 
     blink::WebHistoryCommitType type, bool isSameDocument)
 {
