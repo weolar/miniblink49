@@ -26,6 +26,7 @@
 #include "content/ui/WCDataObject.h"
 #include "content/ui/ClipboardUtil.h"
 
+#include "base/strings/string_piece.h"
 #include "base/strings/string_util.h"
 
 namespace content {
@@ -376,7 +377,7 @@ static ClipboardDataType clipboardTypeFromMIMEType(const std::string& type)
     qType = base::ToLowerASCII(qType);
 
     // two special cases for IE compatibility
-    if (qType == "text" || qType == "text/plain" || base::StartsWith(qType, "text/plain;"))
+    if (qType == "text" || qType == "text/plain" || base::StartsWith(qType, "text/plain;", base::CompareCase::INSENSITIVE_ASCII))
         return ClipboardDataTypeText;
     if (qType == "url" || qType == "text/uri-list")
         return ClipboardDataTypeURL;

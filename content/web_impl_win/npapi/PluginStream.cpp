@@ -404,7 +404,7 @@ void PluginStream::deliverData()
         } else {
             deliveryBytes = min(deliveryBytes, totalBytes - totalBytesDelivered);
             int32_t dataLength = deliveryBytes;
-            char* data = m_deliveryData->data() + totalBytesDelivered;
+            char* data = m_deliveryData->begin() + totalBytesDelivered;
 
             // Write the data
             deliveryBytes = m_pluginFuncs->write(m_instance, &m_stream, m_offset, dataLength, (void*)data);
@@ -426,7 +426,7 @@ void PluginStream::deliverData()
     if (totalBytesDelivered > 0) {
         if (totalBytesDelivered < totalBytes) {
             int remainingBytes = totalBytes - totalBytesDelivered;
-            memmove(m_deliveryData->data(), m_deliveryData->data() + totalBytesDelivered, remainingBytes);
+            memmove(m_deliveryData->begin(), m_deliveryData->begin() + totalBytesDelivered, remainingBytes);
             m_deliveryData->resize(remainingBytes);
         } else {
             m_deliveryData->resize(0);
@@ -492,7 +492,7 @@ void PluginStream::didReceiveData(WebURLLoader* loader, const char* data, int da
 
         int oldSize = m_deliveryData->size();
         m_deliveryData->resize(oldSize + dataLength);
-        memcpy(m_deliveryData->data() + oldSize, data, dataLength);
+        memcpy(m_deliveryData->begin() + oldSize, data, dataLength);
 
         deliverData();
     }
