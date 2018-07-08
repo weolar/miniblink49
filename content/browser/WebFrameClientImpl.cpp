@@ -326,7 +326,8 @@ static wkeWebFrameHandle frameIdToWkeFrame(WebPage* webPage, WebLocalFrame* fram
 
 void WebFrameClientImpl::didCommitProvisionalLoad(WebLocalFrame* frame, const WebHistoryItem& history, WebHistoryCommitType type)
 {
-    m_webPage->didCommitProvisionalLoad(frame, history, type, false);
+    if (!frame->parent())
+        m_webPage->didCommitProvisionalLoad(frame, history, type, false);
 
 #if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
     CefBrowserHostImpl* browser = m_webPage->browser();
@@ -452,7 +453,6 @@ void WebFrameClientImpl::didFinishLoad(WebLocalFrame* frame)
     wke::CWebViewHandler& handler = m_webPage->wkeHandler();
     if (handler.loadingFinishCallback) {
         wkeLoadingResult result = WKE_LOADING_SUCCEEDED;
-        //blink::WebFrame* webFrame = m_webPage->mainFrame();
         wke::CString url(frame->document().url().string());
 
         wkeTempCallbackInfo* tempInfo = wkeGetTempCallbackInfo(m_webPage->wkeWebView());
@@ -466,11 +466,7 @@ void WebFrameClientImpl::didFinishLoad(WebLocalFrame* frame)
 }
 
 void WebFrameClientImpl::didNavigateWithinPage(WebLocalFrame* frame, const WebHistoryItem& history, WebHistoryCommitType type)
-{
-    //     cef_load_handler_t* loadHandler = m_cefBrowserHostImpl->m_browserImpl->m_loadHandler;
-    //     m_cefBrowserHostImpl->m_browserImpl->ref();
-    //     loadHandler->on_loading_state_change(loadHandler, &m_cefBrowserHostImpl->m_browserImpl->m_baseClass, false, false, false);
-    
+{    
     m_webPage->didCommitProvisionalLoad(frame, history, type, true);
 
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
