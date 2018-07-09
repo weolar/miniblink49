@@ -463,8 +463,7 @@ WebView* WebPageImpl::createWkeView(WebLocalFrame* creator,
     windowFeatures.fullscreen = features.fullscreen;
 
     wke::CWebView* createdWebView = handler.createViewCallback(m_pagePtr->wkeWebView(), handler.createViewCallbackParam, type, &wkeUrl, &windowFeatures);
-    if (!createdWebView)
-        //return createWkeViewDefault(m_hWnd, name, url);
+    if (!createdWebView || createdWebView == m_pagePtr->wkeWebView())
         return nullptr;
 
     if (!createdWebView->webPage())
@@ -1336,12 +1335,7 @@ bool WebPageImpl::fireKeyDownEvent(HWND hWnd, UINT message, WPARAM wParam, LPARA
     // FIXME: match IE list more closely, see <http://msdn2.microsoft.com/en-us/library/ms536938.aspx>.
     if (systemKey && virtualKeyCode != VK_RETURN)
         return false;
-
-//     if (handled) {
-//         MSG msg;
-//         ::PeekMessage(&msg, NULL, WM_CHAR, WM_CHAR, PM_REMOVE);
-//         return true;
-//     }
+    
     return handled;
 }
 
