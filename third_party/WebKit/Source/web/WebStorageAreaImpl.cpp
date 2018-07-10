@@ -1,8 +1,10 @@
 
 #include "third_party/WebKit/Source/web/WebStorageAreaImpl.h"
+#include "third_party/WebKit/public/web/WebStorageEventDispatcher.h"
 #include "third_party/WebKit/public/platform/WebURL.h"
 #include "third_party/WebKit/Source/platform/weborigin/KURL.h"
 #include "third_party/WebKit/Source/wtf/text/StringBuilder.h"
+#include "content/web_impl_win/BlinkPlatformImpl.h"
 #include "net/FileSystem.h"
 #include "wtf/text/WTFStringUtil.h"
 
@@ -240,6 +242,11 @@ void WebStorageAreaImpl::setItem(const WebString& key, const WebString& value, c
         pageStorageArea = it->value;
 
     size_t sizeOld = pageStorageArea->size();
+
+    String oldValue;
+    HashMap<String, String>::iterator iter = pageStorageArea->find(keyString);
+    if (pageStorageArea->end() != iter)
+        oldValue = iter->value;
     pageStorageArea->set(keyString, value);
     size_t size = pageStorageArea->size();
 
@@ -251,6 +258,7 @@ void WebStorageAreaImpl::setItem(const WebString& key, const WebString& value, c
         m_delaySaveTimer.startOneShot(0.5, FROM_HERE);
 
     invalidateIterator();
+    dispatchStorageEvent(key, oldValue, value, pageUrl);
 }
 
 void WebStorageAreaImpl::removeItem(const WebString& key, const WebURL& pageUrl)
@@ -269,6 +277,11 @@ void WebStorageAreaImpl::removeItem(const WebString& key, const WebURL& pageUrl)
 //     String output = String::format("removeItem: %p %s %d\n", m_cachedArea, keyString.utf8().data(), size);
 //     OutputDebugStringA(output.utf8().data());
 
+    String oldValue;
+    HashMap<String, String>::iterator iter = pageStorageArea->find(keyString);
+    if (pageStorageArea->end() != iter)
+        oldValue = iter->value;
+
     pageStorageArea->remove(keyString);
     invalidateIterator();
 
@@ -277,6 +290,8 @@ void WebStorageAreaImpl::removeItem(const WebString& key, const WebURL& pageUrl)
         delete it->value;
         m_cachedArea->remove(it);
     }
+
+    dispatchStorageEvent(key, oldValue, String(), pageUrl);
 }
 
 void WebStorageAreaImpl::clear(const WebURL& pageUrl)
@@ -292,6 +307,20 @@ void WebStorageAreaImpl::clear(const WebURL& pageUrl)
     m_cachedArea->remove(it);
 
     invalidateIterator();
+    dispatchStorageEvent(String(), String(), String(), pageUrl);
+}
+
+void WebStorageAreaImpl::dispatchStorageEvent(const String& key, const String& oldValue, const String& newValue, const WebURL& pageUrl)
+{
+    if (oldValue == newValue)
+        return;
+
+    if (m_isLocal) {
+        WebStorageEventDispatcher::dispatchLocalStorageEvent(key, oldValue, newValue, KURL(ParsedURLString, m_origin), pageUrl, nullptr, true);
+    } else {
+        WebStorageNamespace* webStorageNamespace = ((content::BlinkPlatformImpl*)Platform::current())->createSessionStorageNamespace();
+        WebStorageEventDispatcher::dispatchSessionStorageEvent(key, oldValue, newValue, KURL(ParsedURLString, m_origin), pageUrl, *webStorageNamespace, nullptr, true);
+    }
 }
 
 void WebStorageAreaImpl::invalidateIterator()
