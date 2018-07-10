@@ -131,10 +131,10 @@ void FrameLoaderClientImpl::dispatchDidClearWindowObjectInMainWorld()
                 DeviceLightController::from(*document);
             NavigatorGamepad::from(*document);
             NavigatorServiceWorker::from(*document);
-            DOMWindowStorageController::from(*document);
             if (RuntimeEnabledFeatures::webVREnabled())
                 NavigatorVRDevice::from(*document);
 #endif // MINIBLINK_NOT_IMPLEMENTED
+            DOMWindowStorageController::from(*document);
         }
     }
 
