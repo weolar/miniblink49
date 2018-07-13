@@ -305,11 +305,11 @@ node::Environment* NodeBindings::createEnvironment(v8::Local<v8::Context> contex
 
 //     const char* argv1[] = { "electron.exe", "E:\\mycode\\miniblink49\\trunk\\electron\\lib\\init.js" };
 //     node::Environment* env = node::CreateEnvironment(context->GetIsolate(), m_uvLoop, context, 2, argv1, 2, argv1);
+//     node::Environment* env = node::CreateEnvironment(context->GetIsolate(), m_uvLoop, context, 2, argv1, 2, argv1);
 
     // Node turns off AutorunMicrotasks, but we need it in web pages to match the
     // behavior of Chrome.
 //     if (!m_isBrowser)
-//         context->GetIsolate()->SetAutorunMicrotasks(true);
 
     gin::Dictionary process(context->GetIsolate(), m_env->process_object());
     process.Set("type", StringUtil::UTF16ToUTF8(processType));

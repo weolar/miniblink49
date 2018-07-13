@@ -31,7 +31,9 @@
     fn(atom_common_screen) \
     fn(atom_renerer_webframe) \
     fn(atom_common_intl_collator) \
-    fn(atom_common_asar)
+    fn(atom_common_asar) \
+    fn(atom_common_nativeImage) \
+    fn(atom_common_clipboard)
 
 namespace atom {
 
@@ -61,15 +63,19 @@ static void initPeRes(HINSTANCE hInstance) {
     }
 }
 
-
-
 } // atom
+
+void scrt_initialize_thread_safe_statics();
 
 int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow) {
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
 
     ::OleInitialize(nullptr);
+
+#if USING_VC6RT == 1
+    scrt_initialize_thread_safe_statics();
+#endif
 
     atom::AtomCommandLine::initAW();
     atom::ThreadCall::setMainThread();

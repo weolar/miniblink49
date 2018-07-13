@@ -29,6 +29,7 @@ electron.shell = require("./../common/api/shell").Shell;
 electron.screen = require("./../common/api/screen").Screen;
 electron.tray = require("./../common/api/screen").Tray;
 electron.clipboard = require("./../common/api/clipboard");
+electron.nativeImage = require("./../common/api/native-image").NativeImage;
 
 function SystemPreferences () {}
 SystemPreferences.prototype.isDarkMode = function() { return false; }

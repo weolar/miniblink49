@@ -8,6 +8,7 @@
 #include "common/NodeRegisterHelp.h"
 #include "common/HideWndHelp.h"
 #include "common/api/EventEmitter.h"
+#include "common/api/ApiNativeImage.h"
 #include "gin/object_template_builder.h"
 #include "gin/wrappable.h"
 #include "gin/dictionary.h"
@@ -28,12 +29,10 @@
 namespace atom {
 
 const UINT WM_TRAY_MESSAGE = WM_APP + 100;
-//#define	WM_ICON_NOTIFY WM_APP + 10
-//const WCHAR* kPrppW = L"ElectronWindow";
 
 class Tray : public mate::EventEmitter<Tray> {
 public:
-    Tray(v8::Isolate* isolate, v8::Local<v8::Object> wrapper, std::string trayPath)
+    Tray(v8::Isolate* isolate, v8::Local<v8::Object> wrapper, std::string trayPath, NativeImage* nativeImage)
         : m_hideWndHelp(nullptr) {
         gin::Wrappable<Tray>::InitWith(isolate, wrapper);
 
@@ -48,8 +47,14 @@ public:
         m_tray.create(nullptr, m_hideWndHelp->getWnd(), WM_TRAY_MESSAGE,
             L"TrayIcon", NULL, IDR_POPUP_MENU);
 
-        std::wstring trayPathW = base::UTF8ToWide(trayPath);
-        m_tray.setIcon(trayPathW.c_str());
+        if (nativeImage) {
+            HICON hIcon = nativeImage->getIcon();
+            if (hIcon)
+                m_tray.setIcon(hIcon);
+        } else {
+            std::wstring trayPathW = base::UTF8ToWide(trayPath);
+            m_tray.setIcon(trayPathW.c_str());
+        }
     }
 
     static void init(v8::Isolate* isolate, v8::Local<v8::Object> target) {
@@ -71,14 +76,18 @@ public:
         if (!args.IsConstructCall())
             return;
 
+        NativeImage* nativeImage = nullptr;
         std::string trayPathString;
         v8::Local<v8::Value> trayPath = args[0];
         if (trayPath->IsString()) {
             v8::String::Utf8Value v(trayPath);
             trayPathString = *v;
+        } else if (trayPath->IsObject()) {
+            v8::Local<v8::Object> handle = trayPath->ToObject();
+            nativeImage = NativeImage::GetSelf(handle);
         }
 
-        new Tray(isolate, args.This(), trayPathString);
+        new Tray(isolate, args.This(), trayPathString, nativeImage);
         args.GetReturnValue().Set(args.This());
         return;
     }
