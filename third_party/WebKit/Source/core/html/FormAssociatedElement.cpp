@@ -53,7 +53,7 @@ private:
 
 FormAssociatedElement::FormAssociatedElement()
     : m_formWasSetByParser(false)
-    , m_customValidationMessage("Please write here")
+    , m_customValidationMessage()
 {
 }
 
