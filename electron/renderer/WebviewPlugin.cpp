@@ -241,7 +241,7 @@ static bool doExecuteJavaScript(WebviewPluginImpl* impl, const NPVariant* args, 
     wkeWebFrameHandle mainFrame = wkeWebFrameGetMainFrame(webview);
     jsValue ret = wkeRunJsByFrame(webview, mainFrame, codeText.c_str(), true);
     jsExecState es = wkeGlobalExec(webview);
-    jsType type = jsArgType(es, ret);
+    jsType type = jsTypeOf(ret);
     jsValue func = wkeRunJsByFrame(webview, mainFrame, "return function(args){ return JSON.stringify({\"ret\": args}); }", true);
     jsValue json = jsCall(es, func, jsUndefined(), &ret, 1);
     const utf8* jsonStr = jsToString(es, json);
@@ -249,8 +249,8 @@ static bool doExecuteJavaScript(WebviewPluginImpl* impl, const NPVariant* args, 
     return true;
 }
 
-bool pluginInvoke(NPObject* obj, NPIdentifier methodName, const NPVariant* args, uint32_t argCount, NPVariant* result) {
-
+bool pluginInvoke(NPObject* obj, NPIdentifier methodName, const NPVariant* args, uint32_t argCount, NPVariant* result)
+{
     char* methodNameBuffer = g_npBrowserFunctions->utf8fromidentifier(methodName);
     std::string method = methodNameBuffer;
     g_npBrowserFunctions->memfree(methodNameBuffer);
@@ -469,7 +469,7 @@ bool pluginInvoke(NPObject* obj, NPIdentifier methodName, const NPVariant* args,
     }
     if ("native_setZoomFactor" == method) {
         if (argCount >= 1 && NPVariantType_Double == args[0].type) {
-            wkeSetZoomFactor(impl->getWebview(), args[0].value.doubleValue);
+            wkeSetZoomFactor(impl->getWebview(), (float)args[0].value.doubleValue);
         }
     }
     if ("native_insertCSS" == method) {
