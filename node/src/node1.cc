@@ -2131,6 +2131,9 @@ namespace node {
 
 	void FatalException(Isolate* isolate, Local<Value> error, Local<Message> message) {
 		HandleScope scope(isolate);
+    Environment* env = Environment::GetCurrent(isolate);
+    if (!env || env->is_blink_core())
+      return;
 
     Local<String> error_mesage = message->Get();
     v8::String::Utf8Value error_mesage_utf8(error_mesage);
@@ -2161,7 +2164,6 @@ namespace node {
     ::TerminateProcess((HANDLE)-1, 0);
     return;
 
-		Environment* env = Environment::GetCurrent(isolate);
 		Local<Object> process_object = env->process_object();
 		Local<String> fatal_exception_string = env->fatal_exception_string();
 		Local<Function> fatal_exception_function =
@@ -2995,7 +2997,7 @@ namespace node {
 
 		env->isolate()->SetFatalErrorHandler(node::OnFatalError);
 		env->isolate()->AddMessageListener(OnMessage);
-    env->isolate()->SetCaptureStackTraceForUncaughtExceptions(true, 10, v8::StackTrace::kOverview);
+    env->isolate()->SetCaptureStackTraceForUncaughtExceptions(true, 50, v8::StackTrace::kDetailed);
 
 		atexit(AtProcessExit);//×¢²áÍË³öº¯Êý
 
