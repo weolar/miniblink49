@@ -248,7 +248,7 @@ void SocketStreamHandle::threadFunction()
 
     static const int kAllowedProtocols = CURLPROTO_FILE | CURLPROTO_FTP | CURLPROTO_FTPS | CURLPROTO_HTTP | CURLPROTO_HTTPS;
     curl_easy_setopt(curlHandle, CURLOPT_SSL_VERIFYPEER, false); // ignoreSSLErrors
-    curl_easy_setopt(curlHandle, CURLOPT_SSL_VERIFYHOST, 2L);
+    curl_easy_setopt(curlHandle, CURLOPT_SSL_VERIFYHOST, FALSE);
     curl_easy_setopt(curlHandle, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
     curl_easy_setopt(curlHandle, CURLOPT_DNS_CACHE_TIMEOUT, 60 * 5); // 5 minutes
     curl_easy_setopt(curlHandle, CURLOPT_PROTOCOLS, kAllowedProtocols);
