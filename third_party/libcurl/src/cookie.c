@@ -347,6 +347,38 @@ static bool isip(const char *domain)
   return FALSE;
 }
 
+bool domainIsContain(char* oldDomain, char* newDomain) {
+  int oldDomainLength = strlen(oldDomain);
+  int newDomainLength = strlen(newDomain);
+
+  if (oldDomainLength < newDomainLength && NULL != strstr(newDomain, oldDomain) ||
+    oldDomainLength >= newDomainLength && NULL != strstr(oldDomain, newDomain))
+    return TRUE;
+
+  return FALSE;
+}
+
+bool checkNeedReplace(struct Cookie* oldCo, struct Cookie* newCo) {
+  if (oldCo->value && oldCo->value[0] != '\0')
+    return FALSE;
+
+  if (!newCo->value || newCo->value[0] == '\0')
+    return FALSE;
+
+  return domainIsContain(oldCo->domain, newCo->domain);
+}
+
+// X_HTTP_TOKEN="xxx", y.x.com -> X_HTTP_TOKEN="", x.com
+bool checkIsBadCookie(struct Cookie* oldCo, struct Cookie* newCo) {
+  if (!domainIsContain(oldCo->domain, newCo->domain))
+    return FALSE;
+
+  if (oldCo->value && oldCo->value[0] != '\0' && (!newCo->value || newCo->value[0] == '\0'))
+    return TRUE;
+
+  return FALSE;
+}
+
 /****************************************************************************
  *
  * Curl_cookie_add()
@@ -846,10 +878,15 @@ Curl_cookie_add(struct Curl_easy *data,
       /* the names are identical */
 
       if(clist->domain && co->domain) {
-        if(strcasecompare(clist->domain, co->domain) &&
-          (clist->tailmatch == co->tailmatch))
+        if(strcasecompare(clist->domain, co->domain) && (clist->tailmatch == co->tailmatch))
           /* The domains are identical */
           replace_old = TRUE;
+        else if (checkNeedReplace(clist, co))
+          replace_old = TRUE;
+        else if (checkIsBadCookie(clist, co)) {
+          freecookie(co);
+          return NULL;
+        }
       }
       else if(!clist->domain && !co->domain)
         replace_old = TRUE;
