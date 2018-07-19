@@ -25,20 +25,23 @@ public:
     virtual unsigned length();
     virtual WebString key(unsigned index);
     virtual WebString getItem(const WebString& key);
-    virtual void setItem(const WebString& key, const WebString& value, const WebURL& page_url, WebStorageArea::Result& result);
+    virtual void setItem(const WebString& key, const WebString& value, const WebURL& pageUrl, WebStorageArea::Result& result);
     virtual void removeItem(const WebString& key, const WebURL& page_url);
     virtual void clear(const WebURL& url);
     virtual size_t memoryBytesUsedByCache() const;
 
 private:
     void loadFromFile();
+    void loadFromBufferImpl(const Vector<char>& buffer, const KURL& originUrl);
     void delaySaveTimerFired(blink::Timer<WebStorageAreaImpl>*);
 
+    void setItemImpl(const WebString& key, const WebString& value, const WebURL& page_url, WebStorageArea::Result& result, bool isFromLoad);
+        
     void invalidateIterator();
     void setIteratorToIndex(unsigned);
 
     void dispatchStorageEvent(const String& key, const String& oldValue, const String& newValue, const WebURL& pageUrl);
-
+    
     String m_origin;
     DOMStorageMap* m_cachedArea;
     bool m_isLocal;

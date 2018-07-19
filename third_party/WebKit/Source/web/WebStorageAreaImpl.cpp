@@ -54,7 +54,12 @@ static String buildOriginLocalFileNameString(const KURL& pageUrl)
 
 static char* kLocalStorageDirectoryName = "LocalStorage";
 static char* kLocalStorageExtensionName = ".localstorage";
-static char kSeparator = (char)0x1f;
+
+static char* kSeparator = "--mb-sep--\n";
+static size_t kSeparatorLength = 11;
+
+static char* kEmptySeprator = "--mb-ept--";// (char)0x1f;
+static size_t kEmptySepratorLength = 10;
 
 static String buildLocalStorageDirectoryPath()
 {
@@ -92,8 +97,45 @@ WebStorageAreaImpl::~WebStorageAreaImpl()
     delaySaveTimerFired(nullptr);
 }
 
+void WebStorageAreaImpl::loadFromBufferImpl(const Vector<char>& buffer, const KURL& originUrl)
+{
+    const char* pos = &buffer[0];
+    bool isKey = true;
+    String key;
+    String value;
+    for (size_t i = 0; i < buffer.size() - kSeparatorLength; ++i) {
+        if (0 != strncmp(kSeparator, &buffer[i], kSeparatorLength))
+            continue;
+
+        const char* posEnd = &buffer[i];
+        String keyOrValue(pos, posEnd - pos);
+        if (isKey)
+            key = keyOrValue;
+        else {
+            value = keyOrValue;
+
+            key = WTF::ensureUTF16String(key);
+            value = WTF::ensureUTF16String(value);
+
+            if (value == kEmptySeprator)
+                value = "";
+
+            WebStorageArea::Result result;
+            setItemImpl(key, value, originUrl, result, true);
+        }
+        pos = posEnd + kSeparatorLength;
+        isKey = !isKey;
+        i += kSeparatorLength;
+    }
+}
+
 void WebStorageAreaImpl::loadFromFile()
 {
+    static bool isFirstLoad = true;
+    if (!isFirstLoad)
+        return;
+    isFirstLoad = false;
+
     KURL originUrl(ParsedURLString, m_origin);
     if (!originUrl.isValid())
         return;
@@ -117,34 +159,11 @@ void WebStorageAreaImpl::loadFromFile()
         return;
     }
 
-    if (kSeparator != buffer[buffer.size() - 1])
-        buffer.append(kSeparator);
-
-    const char* pos = &buffer[0];
-    bool isKey = true;
-    String key;
-    String value;
-    for (size_t i = 0; i < buffer.size(); ++i) {
-        if (kSeparator != buffer[i])
-            continue;
-
-        const char* posEnd = &buffer[i];
-        String keyOrValue(pos, posEnd - pos);
-        if (isKey)
-            key = keyOrValue;
-        else {
-            value = keyOrValue;
-
-            key = WTF::ensureUTF16String(key);
-            value = WTF::ensureUTF16String(value);
-
-            WebStorageArea::Result result;
-            setItem(key, value, originUrl, result);
-        }
-        pos = posEnd + 1;
-        isKey = !isKey;
-        ++i;
-    }
+    if (buffer.size() < kSeparatorLength || 0 != strncmp(kSeparator, &buffer[buffer.size() - kSeparatorLength], kSeparatorLength))
+        buffer.append(kSeparator, kSeparatorLength);
+    
+    loadFromBufferImpl(buffer, originUrl);
+    
     net::closeFile(handle);
 }
 
@@ -181,10 +200,17 @@ void WebStorageAreaImpl::delaySaveTimerFired(blink::Timer<WebStorageAreaImpl>*)
         const String& value = it->value;
         Vector<char> valueBuffer = WTF::ensureStringToUTF8(value, false);
 
-        buffer.append(keyBuffer.data(), keyBuffer.size());
-        buffer.append(kSeparator);
-        buffer.append(valueBuffer.data(), valueBuffer.size());
-        buffer.append(kSeparator);
+        if (0 == keyBuffer.size())
+            buffer.append(kEmptySeprator, kEmptySepratorLength);
+        else
+            buffer.append(keyBuffer.data(), keyBuffer.size());
+        buffer.append(kSeparator, kSeparatorLength);
+
+        if (0 == valueBuffer.size())
+            buffer.append(kEmptySeprator, kEmptySepratorLength);
+        else
+            buffer.append(valueBuffer.data(), valueBuffer.size());
+        buffer.append(kSeparator, kSeparatorLength);
     }
 
     net::writeToFile(handle, buffer.data(), buffer.size());
@@ -227,11 +253,12 @@ WebString WebStorageAreaImpl::getItem(const WebString& key)
     return WebString(keyValueIt->value);
 }
 
-void WebStorageAreaImpl::setItem(const WebString& key, const WebString& value, const WebURL& pageUrl, WebStorageArea::Result& result)
+void WebStorageAreaImpl::setItemImpl(const WebString& key, const WebString& value, const WebURL& pageUrl, WebStorageArea::Result& result, bool isFromLoad)
 {
     String pageString = (String)pageUrl.string();
     String origin = buildOriginString(pageUrl);
     String keyString = key;
+    String valueString = value;
 
     DOMStorageMap::iterator it = m_cachedArea->find(origin);
     HashMap<String, String>* pageStorageArea;
@@ -261,6 +288,11 @@ void WebStorageAreaImpl::setItem(const WebString& key, const WebString& value, c
     dispatchStorageEvent(key, oldValue, value, pageUrl);
 }
 
+void WebStorageAreaImpl::setItem(const WebString& key, const WebString& value, const WebURL& pageUrl, WebStorageArea::Result& result)
+{
+    setItemImpl(key, value, pageUrl, result, false);
+}
+
 void WebStorageAreaImpl::removeItem(const WebString& key, const WebURL& pageUrl)
 {
     String pageString = (String)pageUrl.string();
@@ -273,9 +305,6 @@ void WebStorageAreaImpl::removeItem(const WebString& key, const WebURL& pageUrl)
 
     HashMap<String, String>* pageStorageArea = it->value;
     size_t size = pageStorageArea->size();
-
-//     String output = String::format("removeItem: %p %s %d\n", m_cachedArea, keyString.utf8().data(), size);
-//     OutputDebugStringA(output.utf8().data());
 
     String oldValue;
     HashMap<String, String>::iterator iter = pageStorageArea->find(keyString);
