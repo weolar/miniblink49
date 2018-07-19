@@ -1,9 +1,9 @@
-/*
+ï»¿/*
 *
 * wolar@qq.com
 * http://miniblink.net
 * https://github.com/weolar/miniblink49
-* https://blog.csdn.net/weolar/article/details/80458523 apiÎÄµµµØÖ·
+* https://blog.csdn.net/weolar/article/details/80458523 apiæ–‡æ¡£åœ°å€
 * licence MIT
 *
 */
@@ -490,7 +490,7 @@ typedef enum {
     JSTYPE_NULL,
 } jsType;
 
-// cexer JS¶ÔÏó¡¢º¯Êı°ó¶¨Ö§³Ö
+// cexer JSå¯¹è±¡ã€å‡½æ•°ç»‘å®šæ”¯æŒ
 typedef jsValue(*jsGetPropertyCallback)(jsExecState es, jsValue object, const char* propertyName);
 typedef bool(*jsSetPropertyCallback)(jsExecState es, jsValue object, const char* propertyName, jsValue value);
 typedef jsValue(*jsCallAsFunctionCallback)(jsExecState es, jsValue object, jsValue* args, int argCount);
@@ -504,6 +504,18 @@ typedef struct tagjsData {
     jsFinalizeCallback finalize;
     jsCallAsFunctionCallback callAsFunction;
 } jsData;
+
+typedef struct _jsExceptionInfo {
+    const utf8* message; // Returns the exception message.
+    const utf8* sourceLine; // Returns the line of source code that the exception occurred within.
+    const utf8* scriptResourceName; // Returns the resource name for the script from where the function causing the error originates.
+    int lineNumber; // Returns the 1-based number of the line where the error occurred or 0 if the line number is unknown.
+    int startPosition; // Returns the index within the script of the first character where the error occurred.
+    int endPosition; // Returns the index within the script of the last character where the error occurred.
+    int startColumn; // Returns the index within the line of the first character where the error occurred.
+    int endColumn; // Returns the index within the line of the last character where the error occurred.
+    const utf8* callstackString;
+} jsExceptionInfo;
 
 
 #if defined(__cplusplus)
@@ -699,7 +711,7 @@ public:
 #define WKE_GET_PTR_ITERATOR11(returnVal, name, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, description) \
     WKE_GET_PTR_ITERATOR(name);
 
-// ÒÔÏÂÊÇwkeµÄµ¼³öº¯Êı¡£¸ñÊ½°´ÕÕ¡¾·µ»ØÀàĞÍ¡¿¡¾º¯ÊıÃû¡¿¡¾²ÎÊı¡¿À´ÅÅÁĞ
+// ä»¥ä¸‹æ˜¯wkeçš„å¯¼å‡ºå‡½æ•°ã€‚æ ¼å¼æŒ‰ç…§ã€è¿”å›ç±»å‹ã€‘ã€å‡½æ•°åã€‘ã€å‚æ•°ã€‘æ¥æ’åˆ—
 
 #define WKE_FOR_EACH_DEFINE_FUNCTION(ITERATOR0, ITERATOR1, ITERATOR2, ITERATOR3, ITERATOR4, ITERATOR5, ITERATOR6, ITERATOR11) \
     ITERATOR0(void, wkeShutdown, "") \
@@ -780,9 +792,9 @@ public:
     ITERATOR2(void, wkeSetNavigationToNewWindowEnable, wkeWebView webView, bool b, "") \
     ITERATOR2(void, wkeSetCspCheckEnable, wkeWebView webView, bool b, "") \
     ITERATOR2(void, wkeSetNpapiPluginsEnabled, wkeWebView webView, bool b, "") \
-    ITERATOR2(void, wkeSetHeadlessEnabled, wkeWebView webView, bool b, "¿ÉÒÔ¹Ø±ÕäÖÈ¾") \
-    ITERATOR2(void, wkeSetDragEnable, wkeWebView webView, bool b, "¿É¹Ø±ÕÍÏ×§ÎÄ¼ş¼ÓÔØÍøÒ³") \
-    ITERATOR2(void, wkeSetDragDropEnable, wkeWebView webView, bool b, "¿É¹Ø±ÕÍÏ×§µ½ÆäËû½ø³Ì") \
+    ITERATOR2(void, wkeSetHeadlessEnabled, wkeWebView webView, bool b, "å¯ä»¥å…³é—­æ¸²æŸ“") \
+    ITERATOR2(void, wkeSetDragEnable, wkeWebView webView, bool b, "å¯å…³é—­æ‹–æ‹½æ–‡ä»¶åŠ è½½ç½‘é¡µ") \
+    ITERATOR2(void, wkeSetDragDropEnable, wkeWebView webView, bool b, "å¯å…³é—­æ‹–æ‹½åˆ°å…¶ä»–è¿›ç¨‹") \
     \
     ITERATOR2(void, wkeSetViewNetInterface, wkeWebView webView, const char* netInterface, "") \
     \
@@ -830,6 +842,9 @@ public:
     ITERATOR2(void, wkeGoToOffset, wkeWebView webView, int offset, "") \
     ITERATOR2(void, wkeGoToIndex, wkeWebView webView, int index, "") \
     \
+    ITERATOR3(wkeMemBuf*, wkeCreateMemBuf, wkeWebView webView, void* buf, size_t length, "") \
+    ITERATOR1(void, wkeFreeMemBuf, wkeMemBuf* buf, "") \
+    \
     ITERATOR1(const utf8*, wkeGetTitle, wkeWebView webView, "") \
     ITERATOR1(const wchar_t*, wkeGetTitleW, wkeWebView webView, "") \
     \
@@ -865,7 +880,7 @@ public:
     \
     ITERATOR1(const wchar_t*, wkeGetCookieW, wkeWebView webView, "") \
     ITERATOR1(const utf8*, wkeGetCookie, wkeWebView webView, "") \
-    ITERATOR3(void, wkeSetCookie, wkeWebView webView, const utf8* url, const utf8* cookie, "cookie¸ñÊ½±ØĞëÊÇ:Set-cookie: PRODUCTINFO=webxpress; domain=.fidelity.com; path=/; secure") \
+    ITERATOR3(void, wkeSetCookie, wkeWebView webView, const utf8* url, const utf8* cookie, "cookieæ ¼å¼å¿…é¡»æ˜¯:Set-cookie: PRODUCTINFO=webxpress; domain=.fidelity.com; path=/; secure") \
     ITERATOR2(void, wkeVisitAllCookie, void* params, wkeCookieVisitor visitor, "") \
     ITERATOR1(void, wkePerformCookieCommand, wkeCookieCommand command, "") \
     ITERATOR2(void, wkeSetCookieEnabled, wkeWebView webView, bool enable, "") \
@@ -957,12 +972,12 @@ public:
     ITERATOR2(void, wkeDeleteWillSendRequestInfo, wkeWebView webWindow, wkeWillSendRequestInfo* info, "") \
     \
     ITERATOR2(void, wkeNetSetMIMEType, void* job, char *type, "") \
-    ITERATOR2(void, wkeNetGetMIMEType, void* job, wkeString mime, "") \
+    ITERATOR2(const char*, wkeNetGetMIMEType, void* job, wkeString mime, "") \
     ITERATOR4(void, wkeNetSetHTTPHeaderField, void* job, wchar_t* key, wchar_t* value, bool response, "") \
     ITERATOR2(const char*, wkeNetGetHTTPHeaderField, void* job, const char* key, "") \
-    ITERATOR3(void, wkeNetSetData, void* job, void *buf, int len, "µ÷ÓÃ´Ëº¯Êıºó,ÍøÂç²ãÊÕµ½Êı¾İ»á´æ´¢ÔÚÒ»bufÄÚ,½ÓÊÕÊı¾İÍê³ÉºóÏìÓ¦OnLoadUrlEndÊÂ¼ş.#´Ëµ÷ÓÃÑÏÖØÓ°ÏìĞÔÄÜ,É÷ÓÃ" \
-        "´Ëº¯ÊıºÍwkeNetSetDataµÄÇø±ğÊÇ£¬wkeNetHookRequest»áÔÚ½ÓÊÜµ½ÕæÕıÍøÂçÊı¾İºóÔÙµ÷ÓÃ»Øµ÷£¬²¢ÔÊĞí»Øµ÷ĞŞ¸ÄÍøÂçÊı¾İ¡£"\
-        "¶øwkeNetSetDataÊÇÔÚÍøÂçÊı¾İ»¹Ã»·¢ËÍµÄÊ±ºòĞŞ¸Ä") \
+    ITERATOR3(void, wkeNetSetData, void* job, void *buf, int len, "è°ƒç”¨æ­¤å‡½æ•°å,ç½‘ç»œå±‚æ”¶åˆ°æ•°æ®ä¼šå­˜å‚¨åœ¨ä¸€bufå†…,æ¥æ”¶æ•°æ®å®Œæˆåå“åº”OnLoadUrlEndäº‹ä»¶.#æ­¤è°ƒç”¨ä¸¥é‡å½±å“æ€§èƒ½,æ…ç”¨" \
+        "æ­¤å‡½æ•°å’ŒwkeNetSetDataçš„åŒºåˆ«æ˜¯ï¼ŒwkeNetHookRequestä¼šåœ¨æ¥å—åˆ°çœŸæ­£ç½‘ç»œæ•°æ®åå†è°ƒç”¨å›è°ƒï¼Œå¹¶å…è®¸å›è°ƒä¿®æ”¹ç½‘ç»œæ•°æ®ã€‚"\
+        "è€ŒwkeNetSetDataæ˜¯åœ¨ç½‘ç»œæ•°æ®è¿˜æ²¡å‘é€çš„æ—¶å€™ä¿®æ”¹") \
     ITERATOR1(void, wkeNetHookRequest, void *job, "") \
     ITERATOR3(void, wkeNetOnResponse, wkeWebView webView, wkeNetResponseCallback callback, void* param, "") \
     ITERATOR1(wkeRequestType, wkeNetGetRequestMethod, void* jobPtr, "") \
@@ -972,6 +987,12 @@ public:
     ITERATOR1(void, wkeNetCancelRequest, void* jobPtr, "")\
     ITERATOR2(void, wkeNetChangeRequestUrl, void* jobPtr, const char* url, "")\
     ITERATOR1(void, wkeNetHoldJobToAsynCommit, void* jobPtr, "")\
+    \
+    ITERATOR1(wkePostBodyElements*, wkeNetGetPostBody, void *jobPtr, "") \
+    ITERATOR2(wkePostBodyElements*, wkeNetCreatePostBodyElements, wkeWebView webView, size_t length, "") \
+    ITERATOR1(void, wkeNetFreePostBodyElements, wkePostBodyElements* elements, "") \
+    ITERATOR1(wkePostBodyElement*, wkeNetCreatePostBodyElement, wkeWebView webView, "") \
+    ITERATOR1(void, wkeNetFreePostBodyElement, wkePostBodyElement* element, "") \
     \
     ITERATOR2(bool, wkeIsMainFrame, wkeWebView webView, wkeWebFrameHandle frameId, "") \
     ITERATOR2(bool, wkeIsWebRemoteFrame, wkeWebView webView, wkeWebFrameHandle frameId, "") \
@@ -1037,7 +1058,8 @@ public:
     ITERATOR2(float, jsToFloat, jsExecState es, jsValue v, "") \
     ITERATOR2(double, jsToDouble, jsExecState es, jsValue v, "") \
     ITERATOR2(bool, jsToBoolean, jsExecState es, jsValue v, "") \
-    ITERATOR3(jsValue, jsArrayBuffer, jsExecState es, char * buffer, size_t size, "") \
+    ITERATOR3(jsValue, jsArrayBuffer, jsExecState es, char* buffer, size_t size, "") \
+    ITERATOR2(wkeMemBuf*, jsGetArrayBuffer, jsExecState es, jsValue value, "") \
     ITERATOR2(const utf8*, jsToTempString, jsExecState es, jsValue v, "") \
     ITERATOR2(const wchar_t*, jsToTempStringW, jsExecState es, jsValue v, "") \
     ITERATOR2(void*, jsToV8Value, jsExecState es, jsValue v, "return v8::Persistent<v8::Value>*") \
@@ -1088,7 +1110,10 @@ public:
     \
     ITERATOR0(void, jsGC, "") \
     ITERATOR2(bool, jsAddRef, jsExecState es, jsValue val, "") \
-    ITERATOR2(bool, jsReleaseRef, jsExecState es, jsValue val, "")
+    ITERATOR2(bool, jsReleaseRef, jsExecState es, jsValue val, "") \
+    ITERATOR1(jsExceptionInfo*, jsGetLastErrorIfException, jsExecState es, "") \
+    ITERATOR2(jsValue, jsThrowException, jsExecState es, const utf8* exception, "") \
+    ITERATOR1(const utf8*, jsGetCallstack, jsExecState es, "") \
 
 #if ENABLE_WKE == 1
 

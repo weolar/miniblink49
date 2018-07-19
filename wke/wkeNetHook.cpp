@@ -57,23 +57,17 @@ void wkeNetSetMIMEType(void* jobPtr, char* type)
     job->m_response.setMIMEType(WebString::fromUTF8(type));
 }
 
-void wkeNetGetMIMEType(void* jobPtr, wkeString mime)
+const char* wkeNetGetMIMEType(void* jobPtr, wkeString mime)
 {
     net::WebURLLoaderInternal* job = (net::WebURLLoaderInternal*)jobPtr;
     AtomicString contentType = job->m_response.httpHeaderField(WebString::fromUTF8("Content-Type"));
     WTF::CString contentTypeUtf8 = contentType.utf8();
-    mime->setString(contentTypeUtf8.data(), contentTypeUtf8.length());
-}
 
-// void wkeNetSetURL(void* jobPtr, const char* url)
-// {
-//     net::WebURLLoaderInternal* job = (net::WebURLLoaderInternal*)jobPtr;
-//     KURL kurl(ParsedURLString, url);
-//     job->m_response.setURL(kurl);
-//     job->firstRequest()->setURL(kurl);
-//     job->m_initializeHandleInfo->url = url;
-//     ASSERT(!job->m_url);
-// }
+    if (mime)
+        mime->setString(contentTypeUtf8.data(), contentTypeUtf8.length());
+
+    return wke::createTempCharString(contentTypeUtf8.data(), contentTypeUtf8.length());
+}
 
 void wkeNetSetData(void* jobPtr, void* buf, int len)
 {
@@ -137,12 +131,24 @@ void wkeNetContinueJob(void* jobPtr)
     net::WebURLLoaderManager::sharedInstance()->continueJob(job);
 }
 
+// void wkeNetSetURL(void* jobPtr, const char* url)
+// {
+//     net::WebURLLoaderInternal* job = (net::WebURLLoaderInternal*)jobPtr;
+//     KURL kurl(ParsedURLString, url);
+//     job->m_response.setURL(kurl);
+//     job->firstRequest()->setURL(kurl);
+//     job->m_initializeHandleInfo->url = url;
+//     ASSERT(!job->m_url);
+// }
+
 void wkeNetChangeRequestUrl(void* jobPtr, const char* url)
 {
     net::WebURLLoaderInternal* job = (net::WebURLLoaderInternal*)jobPtr;
     blink::KURL newUrl(blink::ParsedURLString, url);
+    job->m_response.setURL(newUrl);
     job->firstRequest()->setURL(newUrl);
     job->m_initializeHandleInfo->url = url;
+    ASSERT(!job->m_url);
 }
 
 void wkeNetHoldJobToAsynCommit(void* jobPtr)
@@ -181,66 +187,70 @@ wkeRequestType wkeNetGetRequestMethod(void *jobPtr)
     return kWkeRequestTypeInvalidation;
 }
 
-// wkePostBodyElements* wkeNetGetPostBody(void *jobPtr)
-// {
-//     net::WebURLLoaderInternal* job = (net::WebURLLoaderInternal*)jobPtr;
-//     net::InitializeHandleInfo* info = job->m_initializeHandleInfo;
-//     if (!info)
-//         return nullptr;
-// 
-//     WTF::Vector<net::FlattenHTTPBodyElement*>* flattenElements = nullptr;
-//     if ("POST" == info->method) {
-//         flattenElements = &info->methodInfo->post->data->flattenElements;
-//     } else if ("PUT" == info->method) {
-//         flattenElements = &info->methodInfo->put->data->flattenElements;
-//     }
-//     if (!flattenElements)
-//         return nullptr;
-// 
-//     wkePostBodyElements* postBody = wke::flattenHTTPBodyElementToWke(*flattenElements);
-//     return postBody;
-// }
-//
-// wkePostBodyElements* wkeNetCreatePostBodyElements(wkeWebView webView, size_t length)
-// {
-//     if (0 == length)
-//         return nullptr;
-// 
-//     wkePostBodyElements* result = new wkePostBodyElements();
-//     result->size = sizeof(wkePostBodyElements);
-//     result->isDirty = true;
-// 
-//     size_t allocLength = sizeof(wkePostBodyElement*) * length;
-//     result->element = (wkePostBodyElement**)malloc(allocLength);
-//     memset(result->element, 0, allocLength);
-// 
-//     result->elementSize = length;
-// 
-//     return result;
-// }
-// 
-// void wkeNetFreePostBodyElements(wkePostBodyElements* elements)
-// {
-//     for (size_t i = 0; i < elements->elementSize; ++i) {
-//         wkeNetFreePostBodyElement(elements->element[i]);
-//     }
-//     free(elements->element);
-//     delete elements;
-// }
-// 
-// wkePostBodyElement* wkeNetCreatePostBodyElement(wkeWebView webView)
-// {
-//     wkePostBodyElement* wkeElement = new wkePostBodyElement();
-//     wkeElement->size = sizeof(wkePostBodyElement);
-//     return wkeElement;
-// }
-// 
-// void wkeNetFreePostBodyElement(wkePostBodyElement* element)
-// {
-//     wkeFreeMemBuf(element->data);
-//     wkeDeleteString(element->filePath);
-//     delete element;
-// }
+wkePostBodyElements* wkeNetGetPostBody(void *jobPtr)
+{
+    net::WebURLLoaderInternal* job = (net::WebURLLoaderInternal*)jobPtr;
+    net::InitializeHandleInfo* info = job->m_initializeHandleInfo;
+    if (!info)
+        return nullptr;
+
+    WTF::Vector<net::FlattenHTTPBodyElement*>* flattenElements = nullptr;
+    if ("POST" == info->method) {
+        if (!info->methodInfo || !info->methodInfo->post || !info->methodInfo->post->data)
+            return nullptr;
+        flattenElements = &info->methodInfo->post->data->flattenElements;
+    } else if ("PUT" == info->method) {
+        if (!info->methodInfo || !info->methodInfo->put || !info->methodInfo->put->data)
+            return nullptr;
+        flattenElements = &info->methodInfo->put->data->flattenElements;
+    }
+    if (!flattenElements)
+        return nullptr;
+
+    wkePostBodyElements* postBody = wke::flattenHTTPBodyElementToWke(*flattenElements);
+    return postBody;
+}
+
+wkePostBodyElements* wkeNetCreatePostBodyElements(wkeWebView webView, size_t length)
+{
+    if (0 == length)
+        return nullptr;
+
+    wkePostBodyElements* result = new wkePostBodyElements();
+    result->size = sizeof(wkePostBodyElements);
+    result->isDirty = true;
+
+    size_t allocLength = sizeof(wkePostBodyElement*) * length;
+    result->element = (wkePostBodyElement**)malloc(allocLength);
+    memset(result->element, 0, allocLength);
+
+    result->elementSize = length;
+
+    return result;
+}
+
+void wkeNetFreePostBodyElements(wkePostBodyElements* elements)
+{
+    for (size_t i = 0; i < elements->elementSize; ++i) {
+        wkeNetFreePostBodyElement(elements->element[i]);
+    }
+    free(elements->element);
+    delete elements;
+}
+
+wkePostBodyElement* wkeNetCreatePostBodyElement(wkeWebView webView)
+{
+    wkePostBodyElement* wkeElement = new wkePostBodyElement();
+    wkeElement->size = sizeof(wkePostBodyElement);
+    return wkeElement;
+}
+
+void wkeNetFreePostBodyElement(wkePostBodyElement* element)
+{
+    wkeFreeMemBuf(element->data);
+    wkeDeleteString(element->filePath);
+    delete element;
+}
 
 wkeMemBuf* wkeCreateMemBuf(wkeWebView webView, void* buf, size_t length)
 {
@@ -265,84 +275,66 @@ void wkeFreeMemBuf(wkeMemBuf* buf)
 
 namespace wke {
 
-// wkePostBodyElements* flattenHTTPBodyElementToWke(const WTF::Vector<net::FlattenHTTPBodyElement*>& body)
-// {
-//     if (0 == body.size())
-//         return nullptr;
-// 
-//     wkePostBodyElements* result = wkeNetCreatePostBodyElements(nullptr, body.size());
-//     result->isDirty = false;
-//     for (size_t i = 0; i < result->elementSize; ++i) {
-//         wkePostBodyElement*wkeElement = wkeNetCreatePostBodyElement(nullptr);
-//         result->element[i] = wkeElement;
-//         const net::FlattenHTTPBodyElement* element = body[i];
-// 
-//         if (blink::WebHTTPBody::Element::Type::TypeFile == element->type ||
-//             blink::WebHTTPBody::Element::Type::TypeFileSystemURL == element->type) {
-// 
-//             wkeElement->type = wkeHttBodyElementTypeFile;
-//             wkeElement->filePath = wkeCreateStringW(element->filePath.c_str(), element->filePath.size());
-//             wkeElement->fileLength = element->fileLength;
-//             wkeElement->fileStart = element->fileStart;
-//             wkeElement->data = nullptr;
-//         } else {
-//             wkeElement->type = wkeHttBodyElementTypeData;
-//             wkeElement->filePath = nullptr;
-//             wkeElement->fileLength = 0;
-//             wkeElement->fileStart = 0;
-//             wkeElement->data = wkeCreateMemBuf(nullptr, (void*)element->data.data(), element->data.size());
-//         }
-//     }
-//     return result;
-// }
-// 
-// void wkeflattenElementToBlink(const wkePostBodyElements& body, WTF::Vector<net::FlattenHTTPBodyElement*>* out)
-// {
-//     out->clear();
-// 
-//     if (0 == body.elementSize)
-//         return;
-// 
-//     for (size_t i = 0; i < body.elementSize; ++i) {
-//         const wkePostBodyElement* wkeElement = body.element[i];
-//         net::FlattenHTTPBodyElement* blinkElement = new net::FlattenHTTPBodyElement();
-// 
-//         blinkElement->type = (wkeElement->type == wkeHttBodyElementTypeFile ? 
-//             blink::WebHTTPBody::Element::TypeFile : blink::WebHTTPBody::Element::TypeData);
-// 
-//         if (blink::WebHTTPBody::Element::Type::TypeFile == blinkElement->type) {
-//             const wchar_t* filePath = wkeGetStringW(wkeElement->filePath);
-//             blinkElement->filePath = filePath;
-//             blinkElement->fileLength = wkeElement->fileLength;
-//             blinkElement->fileStart = wkeElement->fileStart;
-//         } else {
-//             if (wkeElement->data && wkeElement->data->length) {
-//                 blinkElement->data.resize(wkeElement->data->length);
-//                 memcpy(blinkElement->data.data(), wkeElement->data->data, wkeElement->data->length);
-//             }
-//         }
-//         out->append(blinkElement);
-//     }
-// }
-    
+wkePostBodyElements* flattenHTTPBodyElementToWke(const WTF::Vector<net::FlattenHTTPBodyElement*>& body)
+{
+    if (0 == body.size())
+        return nullptr;
+
+    wkePostBodyElements* result = wkeNetCreatePostBodyElements(nullptr, body.size());
+    result->isDirty = false;
+    for (size_t i = 0; i < result->elementSize; ++i) {
+        wkePostBodyElement*wkeElement = wkeNetCreatePostBodyElement(nullptr);
+        result->element[i] = wkeElement;
+        const net::FlattenHTTPBodyElement* element = body[i];
+
+        if (blink::WebHTTPBody::Element::Type::TypeFile == element->type ||
+            blink::WebHTTPBody::Element::Type::TypeFileSystemURL == element->type) {
+
+            wkeElement->type = wkeHttBodyElementTypeFile;
+            wkeElement->filePath = wkeCreateStringW(element->filePath.c_str(), element->filePath.size());
+            wkeElement->fileLength = element->fileLength;
+            wkeElement->fileStart = element->fileStart;
+            wkeElement->data = nullptr;
+        } else {
+            wkeElement->type = wkeHttBodyElementTypeData;
+            wkeElement->filePath = nullptr;
+            wkeElement->fileLength = 0;
+            wkeElement->fileStart = 0;
+            wkeElement->data = wkeCreateMemBuf(nullptr, (void*)element->data.data(), element->data.size());
+        }
+    }
+    return result;
 }
 
-//WebURLResponse req = job->m_response;
-//req.setHTTPStatusText(String("OK"));
-//req.setHTTPHeaderField("Content-Leng", "4");
-//req.setHTTPHeaderField("Content-Type", "text/html");
-//req.setExpectedContentLength(static_cast<long long int>(4));
-//req.setURL(KURL(ParsedURLString, "http://127.0.0.1/a.html"));
-//req.setHTTPStatusCode(200);
-//req.setMIMEType(extractMIMETypeFromMediaType(req.httpHeaderField(WebString::fromUTF8("Content-Type"))).lower());
+void wkeflattenElementToBlink(const wkePostBodyElements& body, WTF::Vector<net::FlattenHTTPBodyElement*>* out)
+{
+    out->clear();
 
-//req.setTextEncodingName(extractCharsetFromMediaType(req.httpHeaderField(WebString::fromUTF8("Content-Type"))));
-//job->client()->didReceiveResponse(job->loader(), req);
-//job->setResponseFired(true);
+    if (0 == body.elementSize)
+        return;
 
-//job->client()->didReceiveData(job->loader(), "aaaa", 4, 0);
-//job->client()->didFinishLoading(job->loader(), WTF::currentTime(), 0);
+    for (size_t i = 0; i < body.elementSize; ++i) {
+        const wkePostBodyElement* wkeElement = body.element[i];
+        net::FlattenHTTPBodyElement* blinkElement = new net::FlattenHTTPBodyElement();
 
+        blinkElement->type = (wkeElement->type == wkeHttBodyElementTypeFile ? 
+            blink::WebHTTPBody::Element::TypeFile : blink::WebHTTPBody::Element::TypeData);
 
+        if (blink::WebHTTPBody::Element::Type::TypeFile == blinkElement->type) {
+            const wchar_t* filePath = wkeGetStringW(wkeElement->filePath);
+            blinkElement->filePath = filePath;
+            blinkElement->fileLength = wkeElement->fileLength;
+            blinkElement->fileStart = wkeElement->fileStart;
+        } else {
+            if (wkeElement->data && wkeElement->data->length) {
+                blinkElement->data.resize(wkeElement->data->length);
+                memcpy(blinkElement->data.data(), wkeElement->data->data, wkeElement->data->length);
+            }
+        }
+        out->append(blinkElement);
+    }
+}
+    
+}
 
 #endif

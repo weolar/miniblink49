@@ -1136,30 +1136,6 @@ void wkeSetDragFiles(wkeWebView webView, const POINT* clintPos, const POINT* scr
     webView->setDragFiles(clintPos, screenPos, files, filesCount);
 }
 
-// typedef void (__cdecl* _PVFV) ();
-// #pragma section(".CRT$XCG", long, read)
-// 
-// STDAPI_(BOOL) DllMain( HMODULE hModule, DWORD  ul_reason_for_call, LPVOID /*lpReserved*/)
-// {
-//      BOOL ret = FALSE;
-//      switch (ul_reason_for_call) {
-//          case DLL_PROCESS_ATTACH:
-//              ret = TRUE;
-//              break;
-//  
-//          case DLL_PROCESS_DETACH:
-// 
-//              break;
-//  
-//          case DLL_THREAD_ATTACH:
-//              break;
-//  
-//          case DLL_THREAD_DETACH:
-//              break;
-//      }
-//      return ret;
-// }
-
 wkeWebView wkeCreateWebWindow(wkeWindowType type, HWND parent, int x, int y, int width, int height)
 {
     wke::CWebWindow* webWindow = new wke::CWebWindow();
