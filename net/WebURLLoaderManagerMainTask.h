@@ -133,7 +133,7 @@ public:
             break;
         case kDidFinishLoading:
             if (job->m_hookBufForEndHook)
-                WebURLLoaderManager::sharedInstance()->didReceiveDataOrDownload(job, static_cast<char*>(job->m_hookBufForEndHook), job->m_hookLength, 0);
+                WebURLLoaderManager::sharedInstance()->didReceiveDataOrDownload(job, job->m_hookBufForEndHook->data(), job->m_hookBufForEndHook->size(), 0);
             WebURLLoaderManager::sharedInstance()->handleDidFinishLoading(job, 0, 0);
             break;
         case kRemoveFromCurl:
@@ -145,7 +145,7 @@ public:
             break;
         case kContentEnded:
             if (job->m_hookBufForEndHook)
-                job->m_multipartHandle->contentReceived(static_cast<const char*>(job->m_hookBufForEndHook), job->m_hookLength);
+                job->m_multipartHandle->contentReceived(job->m_hookBufForEndHook->data(), job->m_hookBufForEndHook->size());
             job->m_multipartHandle->contentEnded();
             break;
         case kDidFail:
@@ -205,6 +205,56 @@ private:
     }
 };
 
+static bool isDownloadResponse(WebURLLoaderInternal* job, const AtomicString& contentType)
+{
+    if (contentDispositionType(job->m_response.httpHeaderField("Content-Disposition")) == ContentDispositionAttachment)
+        return true;
+
+    const char* disableDownloadMimes[] = {
+        "text/css",
+        "text/javascript",
+        "text/plain",
+        "text/html",
+        "text/xml",
+        "text/xsl",
+        "image/png",
+        "image/gif",
+        "image/jpeg",
+        "image/bmp",
+        "image/webp",
+        "image/x-icon",
+        "image/svg+xml",
+        "audio/ogg",
+        "audio/midi",
+        "audio/x-midi",
+        "video/x-msvideo",
+        "video/mpeg",
+        "video/mp4",
+        "video/x-ms-wmv",
+        "font/woff2",
+        "font/opentype",
+        "application/xhtml+xml",
+        "application/font-woff",
+
+        "application/xhtml+xml",
+        "application/x-javascript",
+        "application/javascript",
+        nullptr
+    };
+    for (int i = 0; ; ++i) {
+        const char* type = disableDownloadMimes[i];
+        if (!type)
+            break;
+
+        String contentMime = contentType.lower();
+        
+        if (contentMime.startsWith(type))
+            return false;
+    }
+
+    return true;
+}
+
 #if ENABLE_WKE == 1
 static bool dispatchResponseToWke(WebURLLoaderInternal* job, const AtomicString& contentType)
 {
@@ -223,11 +273,7 @@ static bool dispatchResponseToWke(WebURLLoaderInternal* job, const AtomicString&
         }
     }
 
-    if (equalIgnoringCase(contentType, "application/octet-stream") ||
-        equalIgnoringCase(contentType, "application/zip") ||
-        equalIgnoringCase(contentType, "application/rar") ||
-        equalIgnoringCase(contentType, "application/x-7z-compressed") ||
-        contentDispositionType(job->m_response.httpHeaderField("Content-Disposition")) == ContentDispositionAttachment) {
+    if (isDownloadResponse(job, contentType)) {
         if (page->wkeHandler().downloadCallback) {
             if (page->wkeHandler().downloadCallback(page->wkeWebView(), page->wkeHandler().downloadCallbackParam, urlBuf.data())) {
                 blink::WebLocalFrame* frame = requestExtraData->frame;
@@ -473,6 +519,12 @@ static bool setHttpResponseDataToJobWhenDidReceiveResponseOnMainThread(WebURLLoa
     } else
         distpatchWkeWillSendRequest(job, nullptr, args->httpCode);
 
+#if 0
+    if (/*8000 < args->contentLength &&*/ args->contentLength < 25000) {
+        wkeNetHookRequest(job);
+        job->m_isHookRequest |= 2;
+    }
+#endif
     return true;
 }
 
@@ -526,13 +578,9 @@ size_t WebURLLoaderManagerMainTask::handleWriteCallbackOnMainThread(WebURLLoader
     }
 
     if (job->m_isHookRequest) {
-        if (!job->m_hookBufForEndHook) {
-            job->m_hookBufForEndHook = malloc(totalSize);
-        } else {
-            job->m_hookBufForEndHook = realloc(job->m_hookBufForEndHook, job->m_hookLength + totalSize);
-        }
-        memcpy(((char *)job->m_hookBufForEndHook + job->m_hookLength), ptr, totalSize);
-        job->m_hookLength += totalSize;
+        if (!job->m_hookBufForEndHook)
+            job->m_hookBufForEndHook = new Vector<char>();
+        job->m_hookBufForEndHook->append((char*)ptr, totalSize);
         return totalSize;
     }
 
@@ -604,14 +652,18 @@ size_t WebURLLoaderManagerMainTask::handleHeaderCallbackOnMainThread(WebURLLoade
 
 void WebURLLoaderManagerMainTask::handleHookRequestOnMainThread(WebURLLoaderInternal* job)
 {
+    if (1 != job->m_isHookRequest)
+        return;
     RequestExtraData* requestExtraData = reinterpret_cast<RequestExtraData*>(job->firstRequest()->extraData());
     content::WebPage* page = requestExtraData->page;
-    if (page->wkeHandler().loadUrlEndCallback) {
-        Vector<char> urlBuf = WTF::ensureStringToUTF8(job->firstRequest()->url().string(), true);
-        page->wkeHandler().loadUrlEndCallback(page->wkeWebView(), page->wkeHandler().loadUrlEndCallbackParam,
-            urlBuf.data(), job,
-            job->m_hookBufForEndHook, job->m_hookLength);
-    }
+    if (!page->wkeHandler().loadUrlEndCallback)
+        return;
+
+    Vector<char> urlBuf = WTF::ensureStringToUTF8(job->firstRequest()->url().string(), true);
+    void* loadUrlEndCallbackParam = page->wkeHandler().loadUrlEndCallbackParam;
+    void* data = job->m_hookBufForEndHook ? job->m_hookBufForEndHook->data() : nullptr;
+    size_t size = job->m_hookBufForEndHook ? job->m_hookBufForEndHook->size() : 0;
+    page->wkeHandler().loadUrlEndCallback(page->wkeWebView(), loadUrlEndCallbackParam, urlBuf.data(), job, data, size);
 }
 
 }

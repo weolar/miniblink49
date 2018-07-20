@@ -108,6 +108,8 @@ public:
     void continueJob(WebURLLoaderInternal* job);
     void cancelWithHookRedirect(WebURLLoaderInternal* job);
 
+    blink::WebThread* getIoThread() const { return m_thread; }
+
 private:
     WebURLLoaderManager();
     ~WebURLLoaderManager();

@@ -5,7 +5,7 @@
 #include <wininet.h>
 #endif
 #include "net/WebURLLoaderWinINet.h"
-#include "net/ActivatingLoaderCheck.h"
+#include "net/ActivatingObjCheck.h"
 #include "content/web_impl_win/WebURLLoaderImpl.h"
 #include "content/web_impl_win/CurrentTimeImpl.h"
 #include "content/web_impl_win/WebCookieJarImpl.h"
@@ -152,7 +152,7 @@ WebURLLoaderWinINet::WebURLLoaderWinINet(content::WebURLLoaderImpl* loader)
     : m_loader(loader)
 {
     ASSERT(isMainThread());
-    ActivatingLoaderCheck::inst()->addActivatingLoader(this);
+    ActivatingObjCheck::inst()->add((intptr_t)this);
     
     String outString = String::format("WebURLLoaderWinINet::WebURLLoaderWinINet: %p\n", this);
     OutputDebugStringW(outString.charactersWithNullTermination().data());
@@ -170,7 +170,7 @@ WebURLLoaderWinINet::~WebURLLoaderWinINet()
     OutputDebugStringW(outString.charactersWithNullTermination().data());
 
     ASSERT(isMainThread());
-    if (!ActivatingLoaderCheck::inst()->isActivating(this))
+    if (!ActivatingObjCheck::inst()->isActivating((intptr_t)this))
         DebugBreak();
 
     ASSERT(!m_internetHandle);
@@ -190,9 +190,9 @@ WebURLLoaderWinINet::~WebURLLoaderWinINet()
         delete m_debugRedirectPath;
     m_debugRedirectPath = nullptr;
 
-    ActivatingLoaderCheck::inst()->removeActivatingLoader(this);
+    ActivatingObjCheck::inst()->remove((intptr_t)this);
 
-    if (ActivatingLoaderCheck::inst()->isActivating(this))
+    if (ActivatingObjCheck::inst()->isActivating((intptr_t)this))
         DebugBreak();
 
     if (m_loader)
@@ -214,7 +214,7 @@ static void callOnRedirect(void* context)
     ASSERT(isMainThread());
 
     WebURLLoaderWinINet* handle = static_cast<WebURLLoaderWinINet*>(context);
-    if (!ActivatingLoaderCheck::inst()->isActivating(handle))
+    if (!ActivatingObjCheck::inst()->isActivating((intptr_t)handle))
         return;
 
     handle->onRedirect();
@@ -224,7 +224,7 @@ static void callOnRequestComplete(void* context)
 {
     ASSERT(isMainThread());
     WebURLLoaderWinINet* handle = static_cast<WebURLLoaderWinINet*>(context);
-    if (!ActivatingLoaderCheck::inst()->isActivating(handle))
+    if (!ActivatingObjCheck::inst()->isActivating((intptr_t)handle))
         return;
 
     bool b = handle->onRequestComplete();
@@ -270,7 +270,7 @@ void WebURLLoaderWinINet::internetStatusCallback(HINTERNET internetHandle, DWORD
     LPVOID statusInformation, DWORD statusInformationLength)
 {
     WebURLLoaderWinINet* handle = reinterpret_cast<WebURLLoaderWinINet*>(context);
-    if (!ActivatingLoaderCheck::inst()->isActivating(handle))
+    if (!ActivatingObjCheck::inst()->isActivating((intptr_t)handle))
         return;
 
     switch (internetStatus) {
@@ -724,7 +724,7 @@ bool WebURLLoaderWinINet::onRequestComplete()
             if (m_client && m_loader) {
                 WTF::TemporaryChange<bool> cannotDestroy(m_canDestroy, false);
                 m_client->didReceiveResponse(m_loader, response);
-                if (!ActivatingLoaderCheck::inst()->isActivating(this)) // 有可能在didReceiveResponse把整个类析构掉
+                if (!ActivatingObjCheck::inst()->isActivating((intptr_t)this)) // 有可能在didReceiveResponse把整个类析构掉
                     return false;
             }
         }
@@ -740,7 +740,7 @@ bool WebURLLoaderWinINet::onRequestComplete()
         } else
             m_gzipDecompressData.append(buffer.data(), buffers.dwBufferLength);
 
-        if (!ActivatingLoaderCheck::inst()->isActivating(this))
+        if (!ActivatingObjCheck::inst()->isActivating((intptr_t)this))
             return false;
 
         buffers.dwBufferLength = bufferSize;
@@ -974,7 +974,7 @@ bool saveDumpFile(const String& url, char* buffer, unsigned int size)
         static int i = 0;
         ++i;
         String savePath;
-        savePath = String::format("e:\\mycode\\miniblink\\Debug\\test\\DumpFile_%d.png", i);
+        savePath = String::format("E:\\mycode\\miniblink49\\trunk\\out\\dump\\DumpFile_%d.png", i);
 
         String output;
         output = String::format("saveDumpFile:%d ", i);
@@ -997,23 +997,23 @@ bool saveDumpFile(const String& url, char* buffer, unsigned int size)
 
 void readScript(const WCHAR* path, Vector<char>& buffer)
 {
-	HANDLE hFile = NULL;
+    HANDLE hFile = NULL;
 
-	hFile = CreateFileW(path,
-		GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
-	if (!hFile || INVALID_HANDLE_VALUE == hFile)
-		return;
+    hFile = CreateFileW(path,
+        GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+    if (!hFile || INVALID_HANDLE_VALUE == hFile)
+        return;
 
-	DWORD nNumberOfBytesToRead = 0;
-	DWORD dwFileSizeHigh = 0;
-	nNumberOfBytesToRead = ::GetFileSize(hFile, &dwFileSizeHigh);
+    DWORD nNumberOfBytesToRead = 0;
+    DWORD dwFileSizeHigh = 0;
+    nNumberOfBytesToRead = ::GetFileSize(hFile, &dwFileSizeHigh);
 
-	buffer.resize(nNumberOfBytesToRead);
+    buffer.resize(nNumberOfBytesToRead);
 
-	DWORD nNumberOfBytesRead = 0;
-	::ReadFile(hFile, buffer.data(), nNumberOfBytesToRead, &nNumberOfBytesRead, nullptr);
+    DWORD nNumberOfBytesRead = 0;
+    ::ReadFile(hFile, buffer.data(), nNumberOfBytesToRead, &nNumberOfBytesRead, nullptr);
 
-	::CloseHandle(hFile);
+    ::CloseHandle(hFile);
 }
 
 }

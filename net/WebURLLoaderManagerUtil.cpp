@@ -1,6 +1,13 @@
 
 #include "net/WebURLLoaderManagerUtil.h"
+
+#include "net/WebURLLoaderManager.h"
+#include "net/ActivatingObjCheck.h"
+#include "third_party/WebKit/public/platform/Platform.h"
+#include "third_party/WebKit/public/web/WebIconURL.h"
 #include "third_party/WebKit/Source/wtf/ThreadingPrimitives.h"
+#include "wke/wkeWebView.h"
+#include "content/browser/WebPage.h"
 #include <shlwapi.h>
 
 namespace net {
@@ -169,6 +176,106 @@ bool isAppendableHeader(const String &key) {
             return true;
 
     return false;
+}
+
+struct GetFaviconTask {
+    int m_ref;
+    int m_id;
+
+    std::string url;
+    wkeOnNetGetFavicon callback;
+    wkeWebView webView;
+    void* param;
+    wkeMemBuf* buf;
+
+    static size_t writeData(void* buffer, size_t size, size_t nmemb, void* userp)
+    {
+        Vector<char>* bufferCache = (Vector<char>*)userp;
+        bufferCache->append((char*)buffer, size * nmemb);
+
+        return size * nmemb;
+    }
+
+    static void onNetGetFaviconFinish(int jobId, int webviewId)
+    {
+        AutoLockJob autoLockJob(WebURLLoaderManager::sharedInstance(), jobId);
+        WebURLLoaderInternal* job = autoLockJob.lock();
+        if (!job || !net::ActivatingObjCheck::inst()->isActivating(webviewId))
+            return;
+
+        GetFaviconTask* self = (GetFaviconTask*)job;
+        self->callback(self->webView, self->param, self->url.c_str(), self->buf);
+    }
+
+    static void onNetGetFavicon(int jobId, int webviewId)
+    {
+        AutoLockJob autoLockJob(WebURLLoaderManager::sharedInstance(), jobId);
+        WebURLLoaderInternal* job = autoLockJob.lock();
+        if (!job || !net::ActivatingObjCheck::inst()->isActivating(webviewId))
+            return;
+
+        GetFaviconTask* self = (GetFaviconTask*)job;
+        CURL* curl = curl_easy_init();
+        if (!curl) {
+            blink::Platform::current()->mainThread()->postTask(FROM_HERE, WTF::bind(onNetGetFaviconFinish, jobId, webviewId));
+            return;
+        }
+
+        curl_easy_setopt(curl, CURLOPT_URL, self->url.c_str());
+        curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1);
+        curl_easy_setopt(curl, CURLOPT_TIMEOUT, 5000);
+        curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, false);
+        curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, FALSE);
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeData);
+
+        Vector<char> buffer;
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &buffer);
+        int res = curl_easy_perform(curl);
+        if (CURLE_OK != res) {
+            curl_easy_cleanup(curl);
+            blink::Platform::current()->mainThread()->postTask(FROM_HERE, WTF::bind(onNetGetFaviconFinish, jobId, webviewId));
+            return;
+        }
+
+        wkeMemBuf* buf = wkeCreateMemBuf(self->webView, buffer.data(), buffer.size());
+        self->callback(self->webView, self->param, self->url.c_str(), buf);
+
+        curl_easy_cleanup(curl);
+        blink::Platform::current()->mainThread()->postTask(FROM_HERE, WTF::bind(onNetGetFaviconFinish, jobId, webviewId));
+    }
+};
+
+int getFavicon(wkeWebView webView, wkeOnNetGetFavicon callback, void* param)
+{
+    if (!webView || !webView->getWebPage() || !webView->getWebPage()->mainFrame())
+        return -1;
+
+    blink::WebVector<blink::WebIconURL> urls = webView->getWebPage()->mainFrame()->iconURLs(blink::WebIconURL::TypeFavicon);
+    if (urls.isEmpty())
+        return -1;
+
+    GetFaviconTask* task = new GetFaviconTask();
+    task->m_ref = 0;
+    task->callback = callback;
+    task->param = param;
+    task->webView = webView;
+    task->buf = nullptr;
+    WebURLLoaderInternal* job = (WebURLLoaderInternal*)task;
+    
+    for (size_t i = 0; i < urls.size(); ++i) {
+        blink::WebIconURL iconURL = urls[i];
+        blink::KURL kurl = iconURL.iconURL();
+        task->url = kurl.getUTF8String().utf8().data();
+    }
+
+    if (task->url.empty()) {
+        delete task;
+        return -1;
+    }
+
+    int jobId = WebURLLoaderManager::sharedInstance()->addLiveJobs(job);
+    WebURLLoaderManager::sharedInstance()->getIoThread()->postTask(FROM_HERE, WTF::bind(&GetFaviconTask::onNetGetFavicon, jobId, webView->getId()));
+    return jobId;
 }
 
 }

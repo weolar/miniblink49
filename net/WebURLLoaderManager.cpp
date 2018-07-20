@@ -1010,14 +1010,14 @@ int WebURLLoaderManager::addAsynchronousJob(WebURLLoaderInternal* job)
     KURL kurl = job->firstRequest()->url();
     String url = WTF::ensureStringToUTF8String(kurl.string());
 #if 0
-    //if (WTF::kNotFound != url.find("nav_sprite_v") || WTF::kNotFound != url.find("products_sprites")) 
-    {
-        String outString = String::format("addAsynchronousJob : %d, %s\n", m_liveJobs.size(), WTF::ensureStringToUTF8(url, true).data());
-        OutputDebugStringW(outString.charactersWithNullTermination().data());
-    }
+    if (WTF::kNotFound != url.find("electron-ui/file:")) 
+        OutputDebugStringA("");
+    
+    String outString = String::format("addAsynchronousJob : %d, %s\n", m_liveJobs.size(), WTF::ensureStringToUTF8(url, true).data());
+    OutputDebugStringW(outString.charactersWithNullTermination().data());
 #endif
 
-    if (g_isDecodeUrlRequest) {
+    if (g_isDecodeUrlRequest && !kurl.protocolIsData()) {
         url = blink::decodeURLEscapeSequences(url);
         job->firstRequest()->setURL((blink::KURL(blink::ParsedURLString, url)));
     }
@@ -1129,13 +1129,9 @@ void WebURLLoaderManager::dispatchSynchronousJob(WebURLLoaderInternal* job)
     WebPage* page = requestExtraData->page;
     if (page->wkeHandler().loadUrlBeginCallback) {
         
-        if (page->wkeHandler().loadUrlBeginCallback(
-            page->wkeWebView(), 
-            page->wkeHandler().loadUrlBeginCallbackParam,
-            urlBuf.data(),
-            job)) {
+        if (page->wkeHandler().loadUrlBeginCallback(page->wkeWebView(), page->wkeHandler().loadUrlBeginCallbackParam, urlBuf.data(), job)) {
             if (job->m_asynWkeNetSetData && kNormalCancelled != job->m_cancelledReason)
-                WebURLLoaderManager::sharedInstance()->didReceiveDataOrDownload(job, static_cast<char*>(job->m_asynWkeNetSetData), job->m_asynWkeNetSetDataLength, 0);
+                WebURLLoaderManager::sharedInstance()->didReceiveDataOrDownload(job, job->m_asynWkeNetSetData->data(), job->m_asynWkeNetSetData->size(), 0);
 
             WebURLLoaderManager::sharedInstance()->handleDidFinishLoading(job, WTF::currentTime(), 0);
             delete job;
@@ -1175,13 +1171,16 @@ void WebURLLoaderManager::dispatchSynchronousJob(WebURLLoaderInternal* job)
         if (job->client() && job->loader())
             handleDidReceiveResponse(job);
 
+        void* hookBuf = job->m_hookBufForEndHook ? job->m_hookBufForEndHook->data() : nullptr;
+        int hookLength = job->m_hookBufForEndHook ? job->m_hookBufForEndHook->size() : 0;
+
         wkeLoadUrlEndCallback loadUrlEndCallback = page->wkeHandler().loadUrlEndCallback;
         void* loadUrlEndCallbackParam = page->wkeHandler().loadUrlEndCallbackParam;
-        if (job->m_isHookRequest && loadUrlEndCallback)
-            loadUrlEndCallback(page->wkeWebView(), loadUrlEndCallbackParam, urlBuf.data(), job, job->m_hookBufForEndHook, job->m_hookLength);
+        if (1 == job->m_isHookRequest && loadUrlEndCallback)
+            loadUrlEndCallback(page->wkeWebView(), loadUrlEndCallbackParam, urlBuf.data(), job, hookBuf, hookLength);
 
         if (job->m_hookBufForEndHook)
-            didReceiveDataOrDownload(job, static_cast<char*>(job->m_hookBufForEndHook), job->m_hookLength, 0);
+            didReceiveDataOrDownload(job, static_cast<char*>(job->m_hookBufForEndHook->data()), hookLength, 0);
         handleDidFinishLoading(job, 0, 0);
     }
 
@@ -1197,8 +1196,6 @@ void WebURLLoaderManager::dispatchSynchronousJobOnIoThread(WebURLLoaderInternal*
 
     *isCallFinish = true;
 }
-
-//  dispatchPostBodyToWke(job, &result->flattenElements);
 
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
 static bool dispatchWkeLoadUrlBegin(WebURLLoaderInternal* job, InitializeHandleInfo* info)
@@ -1354,7 +1351,7 @@ void WebURLLoaderManager::initializeHandleOnIoThread(int jobId, InitializeHandle
 #endif
     curl_easy_setopt(job->m_handle, CURLOPT_TIMEOUT, 30000);
     curl_easy_setopt(job->m_handle, CURLOPT_SSL_VERIFYPEER, false); // ignoreSSLErrors
-    curl_easy_setopt(job->m_handle, CURLOPT_SSL_VERIFYHOST, 2L);
+    curl_easy_setopt(job->m_handle, CURLOPT_SSL_VERIFYHOST, FALSE);
     curl_easy_setopt(job->m_handle, CURLOPT_PRIVATE, jobId);
     curl_easy_setopt(job->m_handle, CURLOPT_ERRORBUFFER, m_curlErrorBuffer);
     curl_easy_setopt(job->m_handle, CURLOPT_WRITEFUNCTION, writeCallbackOnIoThread);
@@ -1539,10 +1536,8 @@ WebURLLoaderInternal::WebURLLoaderInternal(WebURLLoaderImplCurl* loader, const W
     , m_state(kNormal)
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
     , m_hookBufForEndHook(nullptr)
-    , m_hookLength(0)
     , m_isHookRequest(false)
     , m_asynWkeNetSetData(nullptr)
-    , m_asynWkeNetSetDataLength(0)
     , m_isWkeNetSetDataBeSetted(false)
 #endif
     , m_bodyStreamWriter(nullptr)
@@ -1577,11 +1572,11 @@ WebURLLoaderInternal::~WebURLLoaderInternal()
 
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
     if (m_hookBufForEndHook)
-        free(m_hookBufForEndHook);
+        delete m_hookBufForEndHook;
 
     if (m_asynWkeNetSetData) {
         RELEASE_ASSERT(!m_customHeaders);
-        free(m_asynWkeNetSetData);
+        delete m_asynWkeNetSetData;
     }
 #endif
 

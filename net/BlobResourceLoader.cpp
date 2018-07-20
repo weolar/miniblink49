@@ -527,7 +527,7 @@ void BlobResourceLoader::didGetSize(long long size)
 
     // The size passed back is the size of the whole file. If the underlying item is a sliced file, we need to use the slice length.
     const blink::WebBlobData::Item* item = m_blobData->items().at(m_sizeItemCount);
-    RELEASE_ASSERT(item->length != 0);
+    //RELEASE_ASSERT(item->length != 0); // 知乎可能是空的blob
 
     if (-1 != item->length && item->length < size)
         size = item->length;

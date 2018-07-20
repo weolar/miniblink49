@@ -6,6 +6,7 @@
 #include "third_party/WebKit/Source/wtf/text/CString.h"
 #include "third_party/WebKit/Source/wtf/text/WTFStringUtil.h"
 #include "curl/curl.h"
+#include "wke/wkedefine.h"
 
 namespace WTF {
 class Mutex;
@@ -17,8 +18,8 @@ const int selectTimeoutMS = 5;
 const double pollTimeSeconds = 0.05;
 const int maxRunningJobs = 5;
 
-static const bool ignoreSSLErrors = true; //  ("WEBKIT_IGNORE_SSL_ERRORS");
-static const int kAllowedProtocols = CURLPROTO_FILE | CURLPROTO_FTP | CURLPROTO_FTPS | CURLPROTO_HTTP | CURLPROTO_HTTPS;
+const bool ignoreSSLErrors = true; //  ("WEBKIT_IGNORE_SSL_ERRORS");
+const int kAllowedProtocols = CURLPROTO_FILE | CURLPROTO_FTP | CURLPROTO_FTPS | CURLPROTO_HTTP | CURLPROTO_HTTPS;
 
 extern char* g_cookieJarPath;
 
@@ -61,6 +62,8 @@ inline static bool isHttpNotModified(int statusCode)
 }
 
 bool isAppendableHeader(const String &key);
+
+int getFavicon(wkeWebView webView, wkeOnNetGetFavicon callback, void* param);
 
 }
 
