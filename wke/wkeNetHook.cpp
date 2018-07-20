@@ -7,11 +7,11 @@
 #include "wke/wkeNetHook.h"
 #include "wke/wke.h"
 #include "wke/wkeString.h"
-
 #include "third_party/WebKit/public/platform/WebURLRequest.h"
 #include "third_party/WebKit/public/platform/WebURLResponse.h"
 #include "third_party/WebKit/Source/platform/network/HTTPParsers.h"
 #include "net/WebURLLoaderInternal.h"
+#include "net/WebURLLoaderManagerUtil.h"
 #include "net/FlattenHTTPBodyElement.h"
 #include "net/InitializeHandleInfo.h"
 #include "net/WebURLLoaderManagerSetupInfo.h"
@@ -79,21 +79,15 @@ void wkeNetSetData(void* jobPtr, void* buf, int len)
     WebURLLoaderImplCurl* loader = job->loader();
 
     if (job->m_hookBufForEndHook) {
-        free(job->m_hookBufForEndHook);
-
-        job->m_hookBufForEndHook = malloc(len);
-        job->m_hookLength = len;
-        memcpy(job->m_hookBufForEndHook, buf, len);
-
+        job->m_hookBufForEndHook->resize(len);
+        memcpy(job->m_hookBufForEndHook->data(), buf, len);
         return;
     }
 
-    if (job->m_asynWkeNetSetData)
-        free(job->m_asynWkeNetSetData);
-
-    job->m_asynWkeNetSetData = malloc(len);
-    job->m_asynWkeNetSetDataLength = len;
-    memcpy(job->m_asynWkeNetSetData, buf, len);
+    if (!job->m_asynWkeNetSetData)
+        job->m_asynWkeNetSetData = new Vector<char>();
+    job->m_asynWkeNetSetData->resize(len);
+    memcpy(job->m_asynWkeNetSetData->data(), buf, len);
     
     job->m_isWkeNetSetDataBeSetted = true;
 }
@@ -103,7 +97,7 @@ void wkeNetHookRequest(void* jobPtr)
     net::WebURLLoaderInternal* job = (net::WebURLLoaderInternal*)jobPtr;
     job->m_isWkeNetSetDataBeSetted = false;
     if (job->m_asynWkeNetSetData)
-        free(job->m_asynWkeNetSetData);
+        delete (job->m_asynWkeNetSetData);
     job->m_asynWkeNetSetData = nullptr;
     job->m_isHoldJobToAsynCommit = false;
 
@@ -157,14 +151,14 @@ void wkeNetHoldJobToAsynCommit(void* jobPtr)
 
     job->m_isWkeNetSetDataBeSetted = false;
     if (job->m_asynWkeNetSetData)
-        free(job->m_asynWkeNetSetData);
+        delete job->m_asynWkeNetSetData;
     job->m_asynWkeNetSetData = nullptr;
 
     if (job->m_hookBufForEndHook)
-        free(job->m_hookBufForEndHook);
+        delete job->m_hookBufForEndHook;
     job->m_hookBufForEndHook = nullptr;
 
-    job->m_isHookRequest = false;
+    job->m_isHookRequest &= (~((unsigned int)1));
 
     job->m_isHoldJobToAsynCommit = true;
 }
@@ -271,6 +265,11 @@ void wkeFreeMemBuf(wkeMemBuf* buf)
     if (buf->data)
         free(buf->data);
     free(buf);
+}
+
+int wkeNetGetFavicon(wkeWebView webView, wkeOnNetGetFavicon callback, void* param)
+{
+    return net::getFavicon(webView, callback, param);
 }
 
 namespace wke {

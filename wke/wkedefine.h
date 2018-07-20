@@ -452,6 +452,7 @@ typedef void(*wkeLoadUrlEndCallback)(wkeWebView webView, void* param, const char
 typedef void(*wkeDidCreateScriptContextCallback)(wkeWebView webView, void* param, wkeWebFrameHandle frameId, void* context, int extensionGroup, int worldId);
 typedef void(*wkeWillReleaseScriptContextCallback)(wkeWebView webView, void* param, wkeWebFrameHandle frameId, void* context, int worldId);
 typedef bool(*wkeNetResponseCallback)(wkeWebView webView, void* param, const char* url, void* job);
+typedef void(*wkeOnNetGetFavicon)(wkeWebView webView, void* param, const utf8* url, wkeMemBuf* buf);
 
 typedef void* v8ContextPtr;
 typedef void* v8Isolate;
@@ -981,6 +982,7 @@ public:
     ITERATOR1(void, wkeNetHookRequest, void *job, "") \
     ITERATOR3(void, wkeNetOnResponse, wkeWebView webView, wkeNetResponseCallback callback, void* param, "") \
     ITERATOR1(wkeRequestType, wkeNetGetRequestMethod, void* jobPtr, "") \
+    ITERATOR3(int, wkeNetGetFavicon, wkeWebView webView, wkeOnNetGetFavicon callback, void* param, "") \
     \
     ITERATOR1(void, wkeNetContinueJob, void* jobPtr, "")\
     ITERATOR1(const char*, wkeNetGetUrlByJob, void* jobPtr, "")\

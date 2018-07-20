@@ -20,6 +20,7 @@
 #include "third_party/WebKit/Source/platform/UserGestureIndicator.h"
 #include "third_party/WebKit/Source/bindings/core/v8/ExceptionState.h"
 #include "third_party/WebKit/Source/wtf/text/WTFStringUtil.h"
+#include "net/ActivatingObjCheck.h"
 
 #undef  PURE
 #define PURE = 0;
@@ -41,6 +42,9 @@ CWebView::CWebView()
     , m_isCokieEnabled(true)
     , m_isCreatedDevTools(false)
 {
+    m_id = net::ActivatingObjCheck::inst()->genId();
+    net::ActivatingObjCheck::inst()->add(m_id);
+
     _initPage();
     _initHandler();
     _initMemoryDC();
@@ -51,6 +55,7 @@ CWebView::CWebView()
 
 CWebView::~CWebView()
 {
+    net::ActivatingObjCheck::inst()->remove(m_id);
     m_webPage->close();
 }
 

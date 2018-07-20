@@ -295,6 +295,8 @@ public:
 
     std::set<jsValue>& getPersistentJsValue() { return m_persistentJsValue; }
 
+    int getId() const { return m_id; }
+
 protected:
     friend class ShowDevToolsTaskObserver;
 
@@ -307,6 +309,8 @@ protected:
 
     std::map<std::string, void*> m_userKeyValues;
     std::set<jsValue> m_persistentJsValue;
+
+    int m_id;
 
     //按理这些接口应该使用CWebView来实现的，可以把它们想像成一个类，因此设置为友员符合情理。
 //     friend class ToolTip;
