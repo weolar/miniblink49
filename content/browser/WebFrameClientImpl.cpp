@@ -778,6 +778,8 @@ void WebFrameClientImpl::clearContextMenu()
 
 void WebFrameClientImpl::didCreateScriptContext(WebLocalFrame* frame, v8::Local<v8::Context> context, int extensionGroup, int worldId)
 {
+    v8::V8::SetCaptureStackTraceForUncaughtExceptions(true, 50, v8::StackTrace::kDetailed);
+
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
     if (frame->top() == frame)
         wke::onCreateGlobalObjectInMainFrame(this, frame, context, extensionGroup, worldId);

@@ -216,9 +216,9 @@ blink::WebDevToolsAgentClient::WebKitClientMessageLoop* DevToolsAgent::createCli
 void DevToolsAgent::willEnterDebugLoopInRun()
 {
     if (blink::RuntimeEnabledFeatures::updataInOtherThreadEnabled()) {
-        RELEASE_ASSERT(0 == CheckReEnter::s_kEnterContent);
+        RELEASE_ASSERT(0 == CheckReEnter::getEnterCount());
     } else
-        CheckReEnter::s_kEnterContent--;
+        CheckReEnter::decrementEnterCount();
     blink::ThreadState* threadState = blink::ThreadState::current();
     threadState->enterGCForbiddenScope();
 
@@ -236,9 +236,9 @@ void DevToolsAgent::didExitDebugLoopInRun()
     m_devToolsClient->didExitDebugLoop();
 
     if (blink::RuntimeEnabledFeatures::updataInOtherThreadEnabled()) {
-        RELEASE_ASSERT(0 == CheckReEnter::s_kEnterContent);
+        RELEASE_ASSERT(0 == CheckReEnter::getEnterCount());
     } else {
-        CheckReEnter::s_kEnterContent++;
+        CheckReEnter::incrementEnterCount();
     }
 }
 

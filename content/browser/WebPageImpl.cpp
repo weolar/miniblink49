@@ -155,8 +155,8 @@ WebPageImpl::WebPageImpl()
 
     m_screenInfo = nullptr;
 
-    m_toolTip = new ToolTip();
-    m_toolTip->init();
+    m_toolTip = new ToolTip(true, 0.02);
+    m_validationMessageTip = new ToolTip(false, 1);
     
     WebLocalFrameImpl* webLocalFrameImpl = (WebLocalFrameImpl*)WebLocalFrame::create(WebTreeScopeType::Document, m_webFrameClient);
     m_webViewImpl = WebViewImpl::create(this);
@@ -288,35 +288,25 @@ bool WebPageImpl::checkForRepeatEnter()
     if (m_isDragging && m_runningInMouseMessage)
         return true;
 
-    if (m_enterCount == 0 && 0 == CheckReEnter::s_kEnterContent)
+    if (m_enterCount == 0 && 0 == CheckReEnter::getEnterCount())
         return true;
     return false;
 }
 
 class AutoRecordActions {
 public:
-//     AutoRecordActions(WebPageImpl* page, cc::LayerTreeHost* host, bool isComefromMainFrame)
-//     {
-//         m_isDragging = page->m_isDragging;
-// 
-//         if (page->m_autoRecordActionsCount > 0) {
-//             RELEASE_ASSERT(page->m_isDragging);
-//             init(page, host, false);
-//             leave();
-//         }
-//         init(page, host, isComefromMainFrame);
-//         enter();
-//     }
-
     AutoRecordActions(WebPageImpl* page, cc::LayerTreeHost* host, bool isComefromMainFrame)
     {
-//         m_isDragging = false;
-//         init(page, host, isComefromMainFrame);
-//         enter();
         m_isDragging = page->m_isDragging;
+        m_forceExit = false;
 
         if (page->m_autoRecordActionsCount > 0) {
-            RELEASE_ASSERT(page->m_isDragging && 1 == page->m_autoRecordActionsCount);
+            //RELEASE_ASSERT(page->m_isDragging && 1 == page->m_autoRecordActionsCount);
+            if (!(page->m_isDragging && 1 == page->m_autoRecordActionsCount)) {
+                m_forceExit = true;
+                return; // 在鼠标点击时候调用createwebview的时候调用wkeWake会触发这
+            }
+
             init(page, host, false);
             leave();
         }
@@ -351,7 +341,9 @@ public:
     }
 
     ~AutoRecordActions()
-    { 
+    {
+        if (m_forceExit)
+            return;
         leave();
         if (m_isDragging)
             enter();
@@ -394,6 +386,8 @@ private:
     bool m_isComefromMainFrame;
     bool m_isDragging;
     double m_lastFrameTimeMonotonic;
+
+    bool m_forceExit;
 };
 
 #if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
@@ -447,7 +441,7 @@ WebView* WebPageImpl::createWkeView(WebLocalFrame* creator,
     wke::CWebViewHandler& handler = m_pagePtr->wkeHandler();
     if (!handler.createViewCallback)
         return createWkeViewDefault(/*m_hWnd*/nullptr, name, url);
-
+    
     wkeNavigationType type = WKE_NAVIGATION_TYPE_LINKCLICK;
     wke::CString wkeUrl(url.data(), url.length());
     wkeWindowFeatures windowFeatures;
@@ -1746,7 +1740,7 @@ void WebPageImpl::setMouseOverURL(const blink::WebURL& url)
 
 void WebPageImpl::setToolTipText(const blink::WebString& toolTip, blink::WebTextDirection hint)
 {
-    m_toolTip->show(WTF::ensureUTF16UChar((String)toolTip, true).data());
+    m_toolTip->show(WTF::ensureUTF16UChar((String)toolTip, true).data(), nullptr);
 }
 
 void WebPageImpl::draggableRegionsChanged()
@@ -1808,6 +1802,29 @@ void WebPageImpl::onPopupMenuCreate(HWND hWnd)
 void WebPageImpl::onPopupMenuHide()
 {
     //m_popup = nullptr;
+}
+
+void WebPageImpl::showValidationMessage(
+    const blink::WebRect& anchorInViewport,
+    const blink::WebString& mainText,
+    blink::WebTextDirection mainTextDir,
+    const blink::WebString& supplementalText,
+    blink::WebTextDirection supplementalTextDir
+    )
+{
+    POINT pos = { anchorInViewport.x, anchorInViewport.y };
+    ::ClientToScreen(m_hWnd, &pos);
+    m_validationMessageTip->show(WTF::ensureUTF16UChar((String)mainText, true).data(), &pos);
+}
+
+void WebPageImpl::hideValidationMessage()
+{
+
+}
+
+void WebPageImpl::moveValidationMessage(const blink::WebRect& anchorInViewport)
+{
+
 }
 
 void WebPageImpl::didStartProvisionalLoad()

@@ -1113,10 +1113,10 @@ void WebPluginImpl::platformDestroy()
 
     blink::Platform::current()->currentThread()->postTask(FROM_HERE, WTF::bind(platformDestroyWindow, widget));
 
-    ++CheckReEnter::s_kEnterContent;
+    CheckReEnter::incrementEnterCount();
     ::ShowWindow(widget, SW_HIDE);
     setPlatformPluginWidget(0);
-    --CheckReEnter::s_kEnterContent;
+    CheckReEnter::decrementEnterCount();
 }
 
 PassRefPtr<Image> WebPluginImpl::snapshot()

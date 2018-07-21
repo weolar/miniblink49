@@ -12,9 +12,12 @@ public:
 
     ~CheckReEnter();
 
-    static int s_kEnterContent;
+    static void incrementEnterCount();
+    static void decrementEnterCount();
+    static int getEnterCount();
 
 private:
+    static int s_kEnterCount;
     WebPageImpl* m_webPageImpl;
 };
 

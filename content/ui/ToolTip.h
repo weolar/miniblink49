@@ -14,17 +14,22 @@ namespace content {
 
 class ToolTip {
 public:
-    ToolTip()
+    ToolTip(bool isToolsTip, double repeatInterval)
         : m_delayShowTimer(this, &ToolTip::delayShowTimerFired)
         , m_delayHideTimer(this, &ToolTip::delayHideTimerFired)
+        , m_isToolsTip(isToolsTip)
+        , m_delayShowCount(0)
+        , m_delayHideCount(0)
+        , m_isShow(false)
+        , m_hTipWnd(nullptr)
+        , m_hFont(nullptr)
+        , m_repeatInterval(repeatInterval)
     {
-        m_delayShowCount = 0;
-        m_delayHideCount = 0;
+        init();
     }
+
     void init()
     {
-        m_isShow = false;
-
         registerClass();
         m_hTipWnd = CreateWindowEx(WS_EX_TOOLWINDOW, kToolTipClassName, kToolTipClassName, WS_POPUP | WS_MINIMIZEBOX, CW_USEDEFAULT, CW_USEDEFAULT, 225, 140, HWND_DESKTOP, NULL, nullptr, this);
         ::SetPropW(m_hTipWnd, kToolTipClassName, (HANDLE)this);
@@ -60,20 +65,22 @@ public:
         return !!RegisterClassEx(&wcex);
     }
 
-    void show(const WCHAR* text)
+    void show(const WCHAR* text, POINT* pos)
     {
         if (!text) {
-            hide();
+            if (m_isToolsTip)
+                hide();
             return;
         }
         std::wstring textString = text;
         if (0 == textString.size()) {
-            hide();
+            if (m_isToolsTip)
+                hide();
             return;
         }
 
         bool isSameText = textString == m_text;
-        if (!isSameText) {
+        if (!isSameText || !m_isToolsTip) {
             m_text = textString;
 
             HDC hScreenDc = ::GetDC(m_hTipWnd);
@@ -82,7 +89,10 @@ public:
             ::SelectObject(hScreenDc, hOldFont);
             ::ReleaseDC(m_hTipWnd, hScreenDc);
 
-            ::GetCursorPos(&m_pos);
+            if (pos)
+                m_pos = *pos;
+            else
+                ::GetCursorPos(&m_pos);
 
             resetShowState();
         }
@@ -143,7 +153,7 @@ private:
         if (m_delayShowTimer.isActive())
             m_delayShowTimer.stop();
         m_delayShowCount = 0;
-        m_delayShowTimer.start(0.02, 0.02, FROM_HERE);
+        m_delayShowTimer.start(0.02, m_repeatInterval, FROM_HERE);
     }
 
     bool isNearPos(const POINT& a, const POINT& b)
@@ -157,16 +167,22 @@ private:
 
         POINT point;
         ::GetCursorPos(&point);
-        if (!isNearPos(point, m_pos))
+        if (!isNearPos(point, m_pos) && m_isToolsTip)
             return hide();
 
-        if (15 < m_delayShowCount && !m_isShow) {
+        if (!m_isToolsTip)
+            point = m_pos;
+
+        if (/*(15 < m_delayShowCount || !m_isToolsTip) && */!m_isShow) {
             m_isShow = true;
 
             ::SetWindowPos(m_hTipWnd, HWND_TOPMOST, point.x + 15, point.y + 15, m_size.cx + 7, m_size.cy + 5, SWP_NOACTIVATE);
             ::ShowWindow(m_hTipWnd, SW_SHOWNOACTIVATE);
             ::UpdateWindow(m_hTipWnd);
         }
+
+        if (!m_isToolsTip && 3 < m_delayShowCount * m_repeatInterval)
+            hide();
     }
 
     void delayHideTimerFired(blink::Timer<ToolTip>*)
@@ -205,6 +221,8 @@ private:
     int m_delayHideCount;
     POINT m_pos;
     SIZE m_size;
+    bool m_isToolsTip;
+    double m_repeatInterval;
 };
 
 }

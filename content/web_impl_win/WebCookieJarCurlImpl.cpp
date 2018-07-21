@@ -207,21 +207,24 @@ static String getNetscapeCookieFormat(const KURL& url, const String& value)
             String val = keyValuePair[1].stripWhiteSpace();
             if (key == "expires") {
                 CString dateStr(reinterpret_cast<const char*>(val.characters8()), val.length());
-                expires = WTF::parseDateFromNullTerminatedCharacters(dateStr.data()) / WTF::msPerSecond;
-            }
-            else if (key == "max-age")
+                double expiresDouble = WTF::parseDateFromNullTerminatedCharacters(dateStr.data()) / WTF::msPerSecond;
+                expires = (int)expiresDouble;
+                
+            } else if (key == "max-age")
                 expires = time(0) + val.toInt();
             else if (key == "domain")
                 domain = val;
             else if (key == "path")
                 path = val;
-        }
-        else {
+        } else {
             String key = attribute->stripWhiteSpace().lower();
             if (key == "secure")
                 secure = "TRUE";
         }
     }
+
+    if (expires < 0)
+        expires = std::numeric_limits<__int32>::max();
 
     appendDotIfNeeded(&domain);
     String allowSubdomains = domain.startsWith('.') ? "TRUE" : "FALSE";

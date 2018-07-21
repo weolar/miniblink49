@@ -73,33 +73,34 @@ static Vector<char> getMimeType(const WebString& mime)
     return mimeTypeBuf;
 }
 
+static void addForExtensions(const Vector<blink::WebString>& exts, const String& description, std::vector<char>* filter)
+{
+    appendStringToVector(filter, description.utf8().data());
+    filter->push_back('\0');
+
+    for (Vector<blink::WebString>::const_iterator it = exts.begin(); it != exts.end(); ++it) {
+        std::string str = "*.";
+        str += it->utf8().data();
+        appendStringToVector(filter, str);
+        filter->push_back(';');
+    }
+    filter->push_back('\0');
+}
+
 static bool runFileChooserImpl(const blink::WebFileChooserParams& params, blink::WebFileChooserCompletion* completion)
 {
     // image/gif, image/jpeg, image/*
-    // Text Files(*.txt)\0*.txt\0All Files(*.*)\0*.*\0\0
+    // Image Files(*.txt)\0*.gif;*.jpeg;*.png\0All Files(*.*)\0*.*\0\0
     std::vector<char> filter;
-    HashSet<String> extsNoRepeat;
+    
     for (size_t i = 0; i < params.acceptTypes.size(); ++i) {
-        String mimeType = params.acceptTypes[0];
+        String mimeType = params.acceptTypes[i];
 
         WebMimeRegistryImpl* mimeRegistry = (WebMimeRegistryImpl*)blink::Platform::current()->mimeRegistry();
         Vector<blink::WebString> exts = mimeRegistry->extensionsForMimeType(mimeType);
-        for (size_t j = 0; j <exts.size(); ++j) {
-            String ext = exts[j];
-            extsNoRepeat.add(ext);
-        }
+        addForExtensions(exts, mimeType, &filter);
     }
 
-    for (HashSet<String>::iterator it = extsNoRepeat.begin(); it != extsNoRepeat.end(); ++it) {
-        std::string description = "*.";
-        description += it->utf8().data();
-        appendStringToVector(&filter, description);
-        filter.push_back('\0');
-
-        appendStringToVector(&filter, description);
-        filter.push_back('\0');
-    }
-    
     appendStringToVector(&filter, "All Files");
     filter.push_back('\0');
     appendStringToVector(&filter, "*.*");

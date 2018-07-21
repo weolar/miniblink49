@@ -85,14 +85,18 @@ public:
 
         ~MessagePortQueue()
         {
-            String output = String::format("~MessagePortQueue: %p\n", this);
-            OutputDebugStringA(output.utf8().data());
+//             String output = String::format("~MessagePortQueue: %p\n", this);
+//             OutputDebugStringA(output.utf8().data());
         }
 
         DECLARE_TRACE();
 
     private:
-        MessagePortQueue() {}
+        MessagePortQueue()
+        {
+//             String output = String::format("MessagePortQueue: %p\n", this);
+//             OutputDebugStringA(output.utf8().data());
+        }
 
         MessageQueue<PlatformMessagePortChannel::EventData> m_queue;
     };

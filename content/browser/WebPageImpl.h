@@ -121,6 +121,11 @@ public:
     // PopupMenuWinClient --------------------------------------------------------
     virtual void onPopupMenuCreate(HWND hWnd) override;
     virtual void onPopupMenuHide() override;
+
+    // Dialogs -------------------------------------------------------------
+    virtual void showValidationMessage(const blink::WebRect& anchorInViewport, const blink::WebString& mainText, blink::WebTextDirection mainTextDir, const blink::WebString& supplementalText, blink::WebTextDirection supplementalTextDir) override;
+    virtual void hideValidationMessage() override;
+    virtual void moveValidationMessage(const blink::WebRect& anchorInViewport) override;
     
     void testPaint();
 
@@ -234,6 +239,7 @@ public:
     blink::WebThread::TaskObserver* m_createDevToolsAgentTaskObserver;
 
     ToolTip* m_toolTip;
+    ToolTip* m_validationMessageTip;
 
     blink::IntRect m_winodwRect;
 

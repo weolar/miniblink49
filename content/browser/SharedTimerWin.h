@@ -57,9 +57,9 @@ enum {
 
 static LRESULT CALLBACK TimerWindowWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    if (0 != CheckReEnter::s_kEnterContent)
+    if (0 != CheckReEnter::getEnterCount())
         return 0;
-    ++CheckReEnter::s_kEnterContent;
+    CheckReEnter::incrementEnterCount();
 
     LRESULT result = 0;
     if (message == WM_TIMER) {
@@ -79,7 +79,7 @@ static LRESULT CALLBACK TimerWindowWndProc(HWND hWnd, UINT message, WPARAM wPara
     } else
         result = DefWindowProc(hWnd, message, wParam, lParam);
 
-    --CheckReEnter::s_kEnterContent;
+    CheckReEnter::decrementEnterCount();
     return result;
 }
 
@@ -169,6 +169,8 @@ void stopSharedTimer()
         ::KillTimer(timerWindowHandle, timerID);
         timerID = 0;
     }
+
+    ::DestroyWindow(timerWindowHandle);
 }
 
 static void initializeOffScreenTimerWindow()
