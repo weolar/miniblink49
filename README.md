@@ -1,9 +1,10 @@
 # miniblink49
 =======================================================
 
+https://weolar.github.io/miniblink/ 是miniblink的新官网。
+
 关于miniblink的介绍见这篇文章：https://zhuanlan.zhihu.com/p/22611497?group_id=764036386641707008
 API文档见：https://blog.csdn.net/weolar/article/details/80458523
-
 
 简单的说，miniblink是个浏览器控件，如果你用过cef、wke、webbrowser，应该很好理解。
 
