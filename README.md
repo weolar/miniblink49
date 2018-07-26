@@ -4,7 +4,8 @@
 https://weolar.github.io/miniblink/ 是miniblink的新官网。
 
 关于miniblink的介绍见这篇文章：https://zhuanlan.zhihu.com/p/22611497?group_id=764036386641707008
-API文档见：https://blog.csdn.net/weolar/article/details/80458523
+
+API文档见：https://weolar.github.io/miniblink/doc-main.html 
 
 简单的说，miniblink是个浏览器控件，如果你用过cef、wke、webbrowser，应该很好理解。
 
@@ -23,13 +24,15 @@ API文档见：https://blog.csdn.net/weolar/article/details/80458523
 
 6、需要编译好的dll以及demo的源码和工程，在 https://github.com/weolar/miniblink49/releases 下载
 
+7、如果编译有错误，请等待我最新代码提交（重要！）。
+
 二、杂项说明
 ========================================================
 1、miniblink主要是用来做PC端的浏览器嵌入组件，由于导出的是wke和cef的接口，所以你可以替换到你的项目中去体验和学习。基本相当于一个wke的升级版本，或者cef的精简版。
 
 2、electron的接口目前已经实现绝大部分接口，可以实战使用
 
-3、例子可见源码中的wkexe工程，或者cefclient（被废弃）
+3、例子可见源码中的wkexe工程，或者cefclient（被废弃），或者新手文档
 
 三、联系方式
 ========================================================
