@@ -452,7 +452,7 @@ typedef void(*wkeLoadUrlEndCallback)(wkeWebView webView, void* param, const char
 typedef void(*wkeDidCreateScriptContextCallback)(wkeWebView webView, void* param, wkeWebFrameHandle frameId, void* context, int extensionGroup, int worldId);
 typedef void(*wkeWillReleaseScriptContextCallback)(wkeWebView webView, void* param, wkeWebFrameHandle frameId, void* context, int worldId);
 typedef bool(*wkeNetResponseCallback)(wkeWebView webView, void* param, const char* url, void* job);
-typedef void(*wkeOnNetGetFavicon)(wkeWebView webView, void* param, const utf8* url, wkeMemBuf* buf);
+typedef void(*wkeOnNetGetFaviconCallback)(wkeWebView webView, void* param, const utf8* url, wkeMemBuf* buf);
 
 typedef void* v8ContextPtr;
 typedef void* v8Isolate;
@@ -517,6 +517,15 @@ typedef struct _jsExceptionInfo {
     int endColumn; // Returns the index within the line of the last character where the error occurred.
     const utf8* callstackString;
 } jsExceptionInfo;
+
+typedef struct _jsKeys {
+    unsigned int length;
+    const char** keys;
+
+#if defined(__cplusplus)
+    ~_jsKeys();
+#endif
+} jsKeys;
 
 
 #if defined(__cplusplus)
@@ -982,7 +991,7 @@ public:
     ITERATOR1(void, wkeNetHookRequest, void *job, "") \
     ITERATOR3(void, wkeNetOnResponse, wkeWebView webView, wkeNetResponseCallback callback, void* param, "") \
     ITERATOR1(wkeRequestType, wkeNetGetRequestMethod, void* jobPtr, "") \
-    ITERATOR3(int, wkeNetGetFavicon, wkeWebView webView, wkeOnNetGetFavicon callback, void* param, "") \
+    ITERATOR3(int, wkeNetGetFavicon, wkeWebView webView, wkeOnNetGetFaviconCallback callback, void* param, "") \
     \
     ITERATOR1(void, wkeNetContinueJob, void* jobPtr, "")\
     ITERATOR1(const char*, wkeNetGetUrlByJob, void* jobPtr, "")\
@@ -1090,6 +1099,7 @@ public:
     \
     ITERATOR3(jsValue, jsGetAt, jsExecState es, jsValue object, int index, "") \
     ITERATOR4(void, jsSetAt, jsExecState es, jsValue object, int index, jsValue v, "") \
+    ITERATOR2(jsKeys*, jsGetKeys, jsExecState es, jsValue object, "") \
     ITERATOR2(bool, jsIsJsValueValid, jsExecState es, jsValue object, "") \
     ITERATOR1(bool, jsIsValidExecState, jsExecState es, "") \
     ITERATOR3(void, jsDeleteObjectProp, jsExecState es, jsValue object, const char* prop, "") \

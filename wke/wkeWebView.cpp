@@ -1423,6 +1423,8 @@ void wkeDestroyWebView(wkeWebView webView)
     if (webView->getWkeHandler()->windowDestroyCallback)
         webView->getWkeHandler()->windowDestroyCallback(webView, webView->getWkeHandler()->windowDestroyCallbackParam);
 
+    net::ActivatingObjCheck::inst()->remove(webView->getId());
+
     //size_t pos = s_webViews.find(webView);
 
     //ASSERT(pos != notFound);

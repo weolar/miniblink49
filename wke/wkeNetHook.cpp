@@ -267,7 +267,7 @@ void wkeFreeMemBuf(wkeMemBuf* buf)
     free(buf);
 }
 
-int wkeNetGetFavicon(wkeWebView webView, wkeOnNetGetFavicon callback, void* param)
+int wkeNetGetFavicon(wkeWebView webView, wkeOnNetGetFaviconCallback callback, void* param)
 {
     return net::getFavicon(webView, callback, param);
 }

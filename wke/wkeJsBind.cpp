@@ -932,6 +932,8 @@ jsValue jsCall(jsExecState es, jsValue func, jsValue thisValue, jsValue* args, i
         return jsUndefined();
 
     v8::Local<v8::Value> v8Ret = ret.ToLocalChecked();
+    if (v8Ret->IsUndefined())
+        return jsUndefined();
     return createJsValueByLocalValue(isolate, context, v8Ret);
 }
 
@@ -1092,10 +1094,11 @@ jsValue jsGetAt(jsExecState es, jsValue object, int index)
     v8::Context::Scope contextScope(context);
 
     v8::Local<v8::Value> value = getV8Value(object, context);
-    if (value.IsEmpty() || !value->IsArray())
+    if (value.IsEmpty()/* || !value->IsArray()*/)
         return jsUndefined();
 
-    v8::Local<v8::Array> obj = v8::Local<v8::Array>::Cast(value);
+    //v8::Local<v8::Array> obj = v8::Local<v8::Array>::Cast(value);
+    v8::Local<v8::Object> obj = v8::Local<v8::Object>::Cast(value);
     v8::MaybeLocal<v8::Value> retValue = obj->Get(context, index);
     if (retValue.IsEmpty())
         return jsUndefined();
@@ -1110,10 +1113,6 @@ jsValue jsGetAt(jsExecState es, jsValue object, int index)
 
 void jsSetAt(jsExecState es, jsValue object, int index, jsValue value)
 {
-//     JSC::JSValue o = JSC::JSValue::decode(object);
-//     JSC::JSValue v = JSC::JSValue::decode(value);
-//     o.put((JSC::ExecState*)es, index, v);
-
     if (!s_execStates || !s_execStates->contains(es) || !es || !es->isolate)
         return;
     if (es->context.IsEmpty())
@@ -1136,6 +1135,38 @@ void jsSetAt(jsExecState es, jsValue object, int index, jsValue value)
     v8::Maybe<bool> result = obj->Set(context, index, v8Value);
 
     return;
+}
+
+jsKeys* jsGetKeys(jsExecState es, jsValue object)
+{
+    if (!s_execStates || !s_execStates->contains(es) || !es || !es->isolate)
+        return nullptr;
+    RELEASE_ASSERT(!es->context.IsEmpty());
+
+    v8::Isolate* isolate = es->isolate;
+    v8::HandleScope handleScope(isolate);
+    v8::Local<v8::Context> context = v8::Local<v8::Context>::New(es->isolate, es->context);
+    v8::Context::Scope contextScope(context);
+
+    v8::Local<v8::Value> value = getV8Value(object, context);
+    v8::Local<v8::Object> obj = value->ToObject();
+
+    v8::Local<v8::Array> arrKeys = obj->GetPropertyNames();
+    if (0 == arrKeys->Length())
+        return nullptr;
+    jsKeys* result = wke::createTempJsKeys(arrKeys->Length());
+    
+    for (uint32_t i = 0; i < result->length; ++i) {
+        v8::Local<v8::Value> value = arrKeys->Get(v8::Integer::New(isolate, i));
+        v8::Local<v8::String> str = value->ToString();
+        v8::String::Utf8Value strUtf8(str);
+        if (0 == strUtf8.length())
+            continue;
+        char* keyPtr = new char[strUtf8.length() + 1];
+        strncpy(keyPtr, *strUtf8, strUtf8.length() + 1);
+        result->keys[i] = keyPtr;
+    }
+    return result;
 }
 
 int jsGetLength(jsExecState es, jsValue object)

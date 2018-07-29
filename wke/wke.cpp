@@ -652,6 +652,7 @@ void wkePerformCookieCommand(wkeCookieCommand command)
 void wkeSetCookieEnabled(wkeWebView webView, bool enable)
 {
     webView->setCookieEnabled(enable);
+    wkePerformCookieCommand(wkeCookieCommandClearSessionCookies);
 }
 
 bool wkeIsCookieEnabled(wkeWebView webView)
