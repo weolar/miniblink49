@@ -129,13 +129,13 @@ void WebURLLoaderManager::shutdown()
     m_isShutdown = true;
 
     m_liveJobsMutex.lock();
-    WTF::HashMap<int, WebURLLoaderInternal*> liveJobs = m_liveJobs;
+    WTF::HashMap<int, JobHead*> liveJobs = m_liveJobs;
     m_liveJobs.clear();
     m_liveJobsMutex.unlock();
 
-    WTF::HashMap<int, WebURLLoaderInternal*>::iterator it = liveJobs.begin();
+    WTF::HashMap<int, JobHead*>::iterator it = liveJobs.begin();
     for (; it != liveJobs.end(); ++it) {
-        WebURLLoaderInternal* job = it->value;
+        JobHead* job = it->value;
 
         while (true) {
             m_liveJobsMutex.lock();
@@ -876,12 +876,28 @@ WebURLLoaderInternal* AutoLockJob::lock()
     if (!m_manager)
         return nullptr;
 
-    WebURLLoaderInternal* job = m_manager->checkJob(m_jobId);
-    if (!job)
+    JobHead* jobHead = m_manager->checkJob(m_jobId);
+    if (!jobHead)
+        return nullptr;
+    if (JobHead::kLoaderInternal != jobHead->getType())
         return nullptr;
 
-    job->ref();
+    jobHead->ref();
+    WebURLLoaderInternal* job = (WebURLLoaderInternal*)jobHead;
     return job;
+}
+
+JobHead* AutoLockJob::lockJobHead()
+{
+    if (!m_manager)
+        return nullptr;
+
+    JobHead* jobHead = m_manager->checkJob(m_jobId);
+    if (!jobHead)
+        return nullptr;
+
+    jobHead->ref();
+    return jobHead;
 }
 
 void AutoLockJob::setNotDerefForDelete()
@@ -893,22 +909,21 @@ AutoLockJob::~AutoLockJob()
 {
     if (m_isNotDerefForDelete || !m_manager)
         return;
-    WebURLLoaderInternal* job = m_manager->checkJob(m_jobId);
+    JobHead* job = m_manager->checkJob(m_jobId);
     if (job)
         job->deref();
 }
 
-WebURLLoaderInternal* WebURLLoaderManager::checkJob(int jobId)
+JobHead* WebURLLoaderManager::checkJob(int jobId)
 {
     WTF::Locker<WTF::Mutex> locker(m_liveJobsMutex);
-
-    WTF::HashMap<int, WebURLLoaderInternal*>::iterator it = m_liveJobs.find(jobId);
+    WTF::HashMap<int, JobHead*>::iterator it = m_liveJobs.find(jobId);
     if (it == m_liveJobs.end())
         return nullptr;
     return it->value;
 }
 
-int WebURLLoaderManager::addLiveJobs(WebURLLoaderInternal* job)
+int WebURLLoaderManager::addLiveJobs(JobHead* job)
 {
     if (m_isShutdown)
         return 0;
@@ -961,7 +976,11 @@ public:
 
     virtual void run() override
     {
-        WebURLLoaderInternal* job = m_manager->checkJob(m_jobId);
+        JobHead* jobHead = m_manager->checkJob(m_jobId);
+        if (JobHead::kLoaderInternal != jobHead->getType())
+            return;
+
+        WebURLLoaderInternal* job = (WebURLLoaderInternal*)jobHead;
         if (!job || job->isCancelled())
             return;
 
@@ -1068,20 +1087,27 @@ void WebURLLoaderManager::cancelWithHookRedirect(WebURLLoaderInternal* job)
     doCancel(job, kHookRedirectCancelled);
 }
 
-void WebURLLoaderManager::doCancel(WebURLLoaderInternal* job, CancelledReason cancelledReason)
+bool WebURLLoaderManager::doCancel(JobHead* jobHeead, CancelledReason cancelledReason)
 {
+    if (JobHead::kLoaderInternal != jobHeead->getType()) {
+        jobHeead->cancel();
+        return true;
+    }
+
+    WebURLLoaderInternal* job = (WebURLLoaderInternal*)jobHeead;
     WTF::Locker<WTF::Mutex> locker(job->m_destroingMutex);
     bool cancelled = job->isCancelled();
 
     RELEASE_ASSERT(kNoCancelled != cancelledReason);
     //RELEASE_ASSERT(!(kHookRedirectCancelled == job->m_cancelledReason && kNormalCancelled == cancelledReason));
 
-    if (!(kHookRedirectCancelled == job->m_cancelledReason && kHookRedirectCancelled != cancelledReason)) {
+    if (!(kHookRedirectCancelled == job->m_cancelledReason && kHookRedirectCancelled != cancelledReason))
         job->m_cancelledReason = cancelledReason;
-    }
 
     if (WebURLLoaderInternal::kDestroying != job->m_state && !cancelled)
         m_thread->postTask(FROM_HERE, WTF::bind(&WebURLLoaderManager::removeFromCurlOnIoThread, this, job->m_id));
+
+    return false;
 }
 
 void WebURLLoaderManager::cancel(int jobId)
@@ -1100,11 +1126,20 @@ void WebURLLoaderManager::cancelAll()
 {
     WTF::Locker<WTF::Mutex> locker(m_liveJobsMutex);
 
-    WTF::HashMap<int, WebURLLoaderInternal*>::iterator it = m_liveJobs.begin();
+    int jobId = -1;
+    WTF::HashSet<int> removedSet;
+    WTF::HashMap<int, JobHead*>::iterator it = m_liveJobs.begin();
     for (; it != m_liveJobs.end(); ++it) {
-        WebURLLoaderInternal* job = it->value;
-        int jobId = it->key;
-        doCancel(job, kNormalCancelled);
+        JobHead* jobHead = it->value;
+        jobId = it->key;
+        if (doCancel(jobHead, kNormalCancelled))
+            removedSet.add(jobId);
+    }
+
+    WTF::HashSet<int>::iterator itor = removedSet.begin();
+    for (; itor != removedSet.end(); ++itor) {
+        jobId = *itor;
+        m_liveJobs.remove(jobId);
     }
 }
 
@@ -1517,9 +1552,7 @@ DEFINE_DEBUG_ONLY_GLOBAL(WTF::RefCountedLeakCounter, webURLLoaderInternalCounter
 #endif
 
 WebURLLoaderInternal::WebURLLoaderInternal(WebURLLoaderImplCurl* loader, const WebURLRequest& request, WebURLLoaderClient* client, bool defersLoading, bool shouldContentSniff)
-    : m_ref(0)
-    , m_id(0)
-    , m_isSynchronous(false)
+    : m_isSynchronous(false)
     , m_client(client)
     , m_lastHTTPMethod(request.httpMethod())
     , status(0)
@@ -1542,6 +1575,9 @@ WebURLLoaderInternal::WebURLLoaderInternal(WebURLLoaderImplCurl* loader, const W
 #endif
     , m_bodyStreamWriter(nullptr)
 {
+    m_ref = 0;
+    m_id = 0;
+    m_type = kLoaderInternal;
     m_firstRequest = new blink::WebURLRequest(request);
     KURL url = (KURL)m_firstRequest->url();
     m_user = url.user();

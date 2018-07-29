@@ -69,15 +69,27 @@ class WebURLLoaderManager;
 class FlattenHTTPBodyElementStream;
 struct InitializeHandleInfo;
 
-class WebURLLoaderInternal {
+class JobHead {
+public:
+    enum Type {
+        kLoaderInternal,
+        kGetFaviconTask,
+    };
+    virtual ~JobHead() {}
+    virtual int getRefCount() const { return m_ref; }
+    virtual void ref() { atomicIncrement(&m_ref); }
+    virtual void deref() { atomicDecrement(&m_ref); }
+    virtual Type getType() { return m_type; }
+    virtual void cancel() {}
+    int m_id;
+    int m_ref;
+    Type m_type;
+};
+
+class WebURLLoaderInternal : public JobHead {
 public:
     WebURLLoaderInternal(WebURLLoaderImplCurl* loader, const WebURLRequest& request, WebURLLoaderClient* client, bool defersLoading, bool shouldContentSniff);
-    ~WebURLLoaderInternal();
-
-    int getRefCount() const { return m_ref; }
-
-    void ref() { atomicIncrement(&m_ref); }
-    void deref() { atomicDecrement(&m_ref); }
+    virtual ~WebURLLoaderInternal() override;
 
     WebURLLoaderClient* client() { return m_client; }
 
@@ -92,9 +104,6 @@ public:
     bool isCancelled() const { return kNoCancelled != m_cancelledReason; }
 
 public:
-    int m_ref;
-    int m_id;
-
     WebURLLoaderClient* m_client;
     bool m_isSynchronous;
 
@@ -116,7 +125,8 @@ public:
     bool m_shouldContentSniff;
 
     CURL* m_handle;
-    char* m_url;
+    char* m_url; // 设置给curl的地址。和request可能不同，主要是fragment
+    std::string m_effectiveUrl; // curl收到网络包后返回的最后有效地址，如果有重定向redirect，则可能和上面的变量不同
     struct curl_slist* m_customHeaders;
     WebURLResponse m_response;
     OwnPtr<MultipartHandle> m_multipartHandle;

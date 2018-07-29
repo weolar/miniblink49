@@ -57,7 +57,7 @@ bool ActivatingObjCheck::isActivating(intptr_t loader)
 
 int ActivatingObjCheck::genId()
 {
-    InterlockedIncrement((unsigned int *)&m_newestId);
+    InterlockedIncrement((long *)&m_newestId);
     return m_newestId;
 }
 

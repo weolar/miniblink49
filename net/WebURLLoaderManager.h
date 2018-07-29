@@ -51,6 +51,7 @@ struct WebURLError;
 
 namespace net {
 
+class JobHead;
 class WebURLLoaderInternal;
 class WebURLLoaderManager;
 struct BlobTempFileInfo;
@@ -60,6 +61,7 @@ class AutoLockJob {
 public:
     AutoLockJob(WebURLLoaderManager* manager, int jobId);
     WebURLLoaderInternal* lock();
+    JobHead* lockJobHead();
     ~AutoLockJob();
 
     void setNotDerefForDelete();
@@ -79,9 +81,9 @@ public:
     void cancel(int jobId);
     void cancelAll();
 
-    WebURLLoaderInternal* checkJob(int jobId);
+    JobHead* checkJob(int jobId);
     void removeLiveJobs(int jobId);
-    int addLiveJobs(WebURLLoaderInternal* job);
+    int addLiveJobs(JobHead* job);
 
     CURLSH* getCurlShareHandle() const;
 
@@ -114,7 +116,7 @@ private:
     WebURLLoaderManager();
     ~WebURLLoaderManager();
 
-    void doCancel(WebURLLoaderInternal* job, CancelledReason cancelledReason);
+    bool doCancel(JobHead* jobHeead, CancelledReason cancelledReason);
     
     void setupPOST(WebURLLoaderInternal*, struct curl_slist**);
     void setupPUT(WebURLLoaderInternal*, struct curl_slist**);
@@ -148,7 +150,7 @@ private:
 
     friend class WebURLLoaderManagerMainTask;
     WTF::Mutex m_liveJobsMutex;
-    WTF::HashMap<int, WebURLLoaderInternal*> m_liveJobs;
+    WTF::HashMap<int, JobHead*> m_liveJobs;
     int m_newestJobId;
     
     WTF::HashMap<String, BlobTempFileInfo*> m_blobCache; // real url -> <temp, data>

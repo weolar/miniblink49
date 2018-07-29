@@ -63,7 +63,7 @@ inline static bool isHttpNotModified(int statusCode)
 
 bool isAppendableHeader(const String &key);
 
-int getFavicon(wkeWebView webView, wkeOnNetGetFavicon callback, void* param);
+int getFavicon(wkeWebView webView, wkeOnNetGetFaviconCallback callback, void* param);
 
 }
 

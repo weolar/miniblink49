@@ -434,7 +434,7 @@ static void distpatchWkeWillSendRequest(WebURLLoaderInternal* job, const KURL* n
     }
 }
 
-static bool doRedirect(WebURLLoaderInternal* job, const String& location, WebURLLoaderManagerMainTask::Args* args)
+static void doRedirect(WebURLLoaderInternal* job, const String& location, WebURLLoaderManagerMainTask::Args* args, bool isRedirectByHttpCode)
 {
     WebURLLoaderClient* client = job->client();
     KURL newURL = KURL((KURL)(job->firstRequest()->url()), location);
@@ -454,8 +454,7 @@ static bool doRedirect(WebURLLoaderInternal* job, const String& location, WebURL
 
             if (job->m_isWkeNetSetDataBeSetted)
                 Platform::current()->currentThread()->scheduler()->postLoadingTask(FROM_HERE, new WkeAsynTask(WebURLLoaderManager::sharedInstance(), job->m_id));
-
-            return false;
+            return;
         }
     }
 #endif
@@ -465,11 +464,11 @@ static bool doRedirect(WebURLLoaderInternal* job, const String& location, WebURL
     if (client && job->loader())
         client->willSendRequest(job->loader(), *redirectedRequest, job->m_response);
 
-    job->m_response.initialize();
+    if (isRedirectByHttpCode)
+        job->m_response.initialize();
 
     delete job->m_firstRequest;
     job->m_firstRequest = redirectedRequest;
-    return false;
 }
 
 static bool setHttpResponseDataToJobWhenDidReceiveResponseOnMainThread(WebURLLoaderInternal* job, WebURLLoaderManagerMainTask::Args* args)
@@ -508,11 +507,26 @@ static bool setHttpResponseDataToJobWhenDidReceiveResponseOnMainThread(WebURLLoa
             job->m_multipartHandle = adoptPtr(new MultipartHandle(job, boundary));
     }
 
+    if (job->m_effectiveUrl.empty())
+        job->m_effectiveUrl = args->hdr;
+
+    bool isRedirectByHttpCode = isHttpRedirect(args->httpCode);
+    bool isRedirectByUrl = (!job->m_effectiveUrl.empty() && job->m_effectiveUrl != job->m_url); // 有时有代理时，url会变，但没有30x码
+
+    job->m_effectiveUrl = args->hdr;
+
     // HTTP redirection 重定向
-    if (isHttpRedirect(args->httpCode)) {
+    if (isRedirectByHttpCode || isRedirectByUrl) {
         String location = job->m_response.httpHeaderField(WebString::fromUTF8("location"));
+
+        if (isRedirectByUrl)
+            OutputDebugStringA("isRedirectByUrl! \n");
+
         if (!location.isEmpty()) {
-            return doRedirect(job, location, args);
+            doRedirect(job, location, args, isRedirectByHttpCode);
+            if (isRedirectByHttpCode)
+                return false;
+            return true;
         }
     } else if (isHttpAuthentication(args->httpCode)) {
 

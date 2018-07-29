@@ -57,8 +57,11 @@ public:
 
     virtual void run() override
     {
-        WebURLLoaderInternal* job = m_manager->checkJob(m_jobId);
-        if (!job || kNormalCancelled == job->m_cancelledReason) {
+        JobHead* jobHead = m_manager->checkJob(m_jobId);
+        if (!jobHead || JobHead::kLoaderInternal != jobHead->getType())
+            return;
+        WebURLLoaderInternal* job = (WebURLLoaderInternal*)jobHead;
+        if (kNormalCancelled == job->m_cancelledReason) {
             releaseJobWithoutCurl(job, m_jobId);
             return;
         }
@@ -104,7 +107,12 @@ public:
     {
         m_manager = manager;
         m_jobId = jobId;
-        WebURLLoaderInternal* job = m_manager->checkJob(m_jobId);
+        
+        JobHead* jobHead = m_manager->checkJob(m_jobId);
+        if (!jobHead || JobHead::kLoaderInternal != jobHead->getType())
+            return;
+        WebURLLoaderInternal* job = (WebURLLoaderInternal*)jobHead;
+
         job->m_isBlackList = true;
     }
 
@@ -130,8 +138,11 @@ public:
 
     virtual void run() override
     {
-        WebURLLoaderInternal* job = m_manager->checkJob(m_jobId);
-        if (!job || job->isCancelled())
+        JobHead* jobHead = m_manager->checkJob(m_jobId);
+        if (!jobHead || JobHead::kLoaderInternal != jobHead->getType())
+            return;
+        WebURLLoaderInternal* job = (WebURLLoaderInternal*)jobHead;
+        if (job->isCancelled())
             return;
 
         cancel(job, m_jobId);
