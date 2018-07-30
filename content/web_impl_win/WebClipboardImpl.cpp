@@ -328,9 +328,9 @@ WebString WebClipboardImpl::readPlainText(Buffer buffer) {
     return text;
 }
 
-WebString WebClipboardImpl::readHTML(Buffer buffer, WebURL* source_url,
-    unsigned* fragment_start,
-    unsigned* fragment_end) {
+WebString WebClipboardImpl::readHTML(Buffer buffer, WebURL* sourceUrl,
+    unsigned* fragmentStart,
+    unsigned* fragmentEnd) {
     ClipboardType clipboardType;
     if (!convertBufferType(buffer, &clipboardType))
         return WebString();
@@ -339,8 +339,8 @@ WebString WebClipboardImpl::readHTML(Buffer buffer, WebURL* source_url,
 
     std::string srcUrl;
 
-    *fragment_start = 0;
-    *fragment_end = 0;
+    *fragmentStart = 0;
+    *fragmentEnd = 0;
 
     // Acquire the clipboard.
     ScopedClipboard clipboard;
@@ -367,6 +367,8 @@ WebString WebClipboardImpl::readHTML(Buffer buffer, WebURL* source_url,
     if (startIndex < htmlStart || endIndex < startIndex)
         return WebString();
 
+    *fragmentStart = startIndex;
+    *fragmentEnd = endIndex;
     return WebString::fromUTF8(cf_html.data() + htmlStart);
 }
 
