@@ -12,7 +12,7 @@
 _jsKeys::~_jsKeys()
 {
     for (size_t i = 0; i < length; ++i) {
-        char* key = (char*)(keys + i);
+        char* key = *(char**)(keys + i);
         delete[] key;
     }
     delete keys;
