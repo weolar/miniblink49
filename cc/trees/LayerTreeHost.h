@@ -2,6 +2,7 @@
 #define LayerTreeHost_h
 
 #include "third_party/WebKit/public/platform/WebLayerTreeView.h"
+#include "third_party/WebKit/public/platform/WebThread.h"
 #include "third_party/WebKit/Source/platform/geometry/IntRect.h"
 #include "third_party/WebKit/Source/platform/geometry/IntSize.h"
 #include "third_party/WebKit/Source/wtf/HashMap.h"
@@ -197,7 +198,7 @@ private:
     void waitForApplyActions();
     void drawFrameInCompositeThread();
     void paintToMemoryCanvasInUiThread(const SkRect& paintRect);
-    void paintToMemoryCanvas(const SkRect& r);
+    void paintToMemoryCanvasInCompositeThread(const SkRect& r);
     
     bool m_isDestroying;
 
@@ -217,8 +218,6 @@ private:
     float m_pageScaleFactor;
     float m_minimum;
     float m_maximum;
-
-    //bool m_needsFullTreeSync;
     bool m_needTileRender;
     bool m_layerTreeDirty; // ÐèÒªWebPageImpl.recordDraw
 
@@ -257,14 +256,17 @@ private:
     int m_drawFrameFinishCount;
     int m_requestApplyActionsCount;
     int m_requestApplyActionsFinishCount;
-    //bool m_useLayeredBuffer;
 
-    struct WrapSelfForUiThread {
+    struct WrapSelfForUiThread : public blink::WebThread::TaskObserver {
         WrapSelfForUiThread(LayerTreeHost* host)
             : m_host(host) { }
         LayerTreeHost* m_host;
         void paintInUiThread();
         void endPaint();
+
+        virtual ~WrapSelfForUiThread() override;
+        virtual void willProcessTask() override;
+        virtual void didProcessTask() override;
     };
     friend WrapSelfForUiThread;
     WTF::HashSet<WrapSelfForUiThread*> m_wrapSelfForUiThreads;

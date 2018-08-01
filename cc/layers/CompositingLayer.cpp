@@ -23,6 +23,8 @@
 #include "cc/tiles/TilesAddr.h"
 #include "cc/playback/TileActionInfo.h"
 
+extern bool g_rendererAntiAlias;
+
 namespace blink {
 bool saveDumpFile(const String& url, char* buffer, unsigned int size);
 }
@@ -389,7 +391,7 @@ void CompositingLayer::blendToTile(CompositingTile* tile, const SkBitmap* bitmap
 #endif
 
     SkPaint paint;
-    paint.setAntiAlias(false);
+    paint.setAntiAlias(g_rendererAntiAlias);
     paint.setColor(0xFFFFFFFF);
     paint.setXfermodeMode(SkXfermode::kSrc_Mode);
     paint.setFilterQuality(kLow_SkFilterQuality);
@@ -516,7 +518,7 @@ void CompositingLayer::drawToCanvasChildren(LayerTreeHost* host, SkCanvas* canva
             canvas->save();
 
         SkPaint paint;
-        paint.setAntiAlias(false);
+        paint.setAntiAlias(g_rendererAntiAlias);
         paint.setXfermodeMode(SkXfermode::kSrcOver_Mode);
         paint.setFilterQuality(kLow_SkFilterQuality);
 
@@ -558,12 +560,9 @@ void CompositingLayer::drawToCanvas(LayerTreeHost* host, blink::WebCanvas* canva
 
         blink::IntRect tilePostion = tile->postion();
         SkRect dst = (SkRect)(tilePostion);
-        // SkRect src = SkRect::MakeWH(tile->bitmap()->width(), tile->bitmap()->height());
-        // dst.intersect(SkRect::MakeXYWH(clip.x(), clip.y(), clip.width(), clip.height()));
-        // SkIRect src = dst.makeOffset(-tile->postion().x(), -tile->postion().y()).roundOut();
        
         SkPaint paint;
-        paint.setAntiAlias(false);
+        paint.setAntiAlias(g_rendererAntiAlias);
         paint.setXfermodeMode(SkXfermode::kSrcOver_Mode);
         paint.setFilterQuality(kLow_SkFilterQuality);
 
