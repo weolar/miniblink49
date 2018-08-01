@@ -171,6 +171,7 @@ void stopSharedTimer()
     }
 
     ::DestroyWindow(timerWindowHandle);
+    ::UnregisterClassW(kTimerWindowClassName, NULL);
 }
 
 static void initializeOffScreenTimerWindow()

@@ -3,6 +3,7 @@
 #include "content/ui/WCDataObject.h"
 #include "content/ui/WebDropSource.h"
 #include "content/ui/ClipboardUtil.h"
+#include "content/browser/CheckReEnter.h"
 #include "third_party/WebKit/public/web/WebLocalFrame.h"
 #include "third_party/WebKit/Source/web/WebViewImpl.h"
 #include "third_party/WebKit/public/platform/WebImage.h"
@@ -97,16 +98,30 @@ blink::WebDragData DragHandle::dropDataToWebDragData(IDataObject* pDataObject)
 
 DWORD DragHandle::dragOperationToDragCursor(blink::WebDragOperation op)
 {
-    DWORD res = DROPEFFECT_NONE;
+    DWORD result = DROPEFFECT_NONE;
     if (op & blink::WebDragOperationCopy)
-        res = DROPEFFECT_COPY;
+        result = DROPEFFECT_COPY;
     else if (op & blink::WebDragOperationLink)
-        res = DROPEFFECT_LINK;
+        result = DROPEFFECT_LINK;
     else if (op & blink::WebDragOperationMove)
-        res = DROPEFFECT_MOVE;
+        result = DROPEFFECT_MOVE;
     else if (op & blink::WebDragOperationGeneric)
-        res = DROPEFFECT_MOVE; //This appears to be the Firefox behaviour
-    return res;
+        result = DROPEFFECT_MOVE; //This appears to be the Firefox behaviour
+    return result;
+}
+
+blink::WebDragOperation DragHandle::dragCursorTodragOperation(DWORD op)
+{
+    blink::WebDragOperation result = blink::WebDragOperationNone;
+    if (op & DROPEFFECT_COPY)
+        result = blink::WebDragOperationCopy;
+    else if (op & DROPEFFECT_LINK)
+        result = blink::WebDragOperationLink;
+    else if (op & DROPEFFECT_MOVE)
+        result = blink::WebDragOperationMove;
+    else if (op & DROPEFFECT_MOVE)
+        result = blink::WebDragOperationGeneric;
+    return result;
 }
 
 void DragHandle::startDragging(blink::WebLocalFrame* frame,
@@ -214,7 +229,11 @@ blink::WebDragOperation DragHandle::doStartDragging(blink::WebLocalFrame* frame,
         DWORD effect = DROPEFFECT_NONE;
         HRESULT hr = E_NOTIMPL;
 
+        m_notifOnEnterDrag();
+        CheckReEnter::decrementEnterCount();
         hr = ::DoDragDrop(m_dragData.get(), source.get(), okEffect, &effect);
+        CheckReEnter::incrementEnterCount();
+        m_notifOnLeaveDrag();
 
         if (hr == DRAGDROP_S_DROP) {
             if (effect & DROPEFFECT_COPY)

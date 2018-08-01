@@ -36,6 +36,7 @@ public:
     blink::WebDragData dropDataToWebDragData(IDataObject* pDataObject);
 
     static DWORD dragOperationToDragCursor(blink::WebDragOperation op);
+    static blink::WebDragOperation dragCursorTodragOperation(DWORD op);
 
     void startDragging(blink::WebLocalFrame* frame,
         const blink::WebDragData& data,

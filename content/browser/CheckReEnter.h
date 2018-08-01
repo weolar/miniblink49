@@ -24,7 +24,7 @@ private:
 #define CHECK_FOR_REENTER(self, ret) \
     if (!self->checkForRepeatEnter()) \
         return ret; \
-    if (WebPageImpl::pageInited != self->m_state) \
+    if (pageInited != self->m_state) \
         return ret; \
     CheckReEnter checker(self); \
     BlinkPlatformImpl::AutoDisableGC autoDisableGC;

@@ -1,6 +1,9 @@
 ﻿#ifndef WebPageImpl_h
 #define WebPageImpl_h
 
+#include "content/browser/WebPageState.h"
+#include "content/ui/PopupMenuWinClient.h"
+
 #include "base/rand_util.h"
 
 #include "third_party/WebKit/public/web/WebViewClient.h"
@@ -12,7 +15,7 @@
 #include "cc/trees/LayerTreeHostClient.h"
 #include "skia/ext/platform_canvas.h"
 
-#include "content/ui/PopupMenuWinClient.h"
+typedef struct HWND__ *HWND;
 
 namespace cc {
 class LayerTreeHost;
@@ -263,12 +266,7 @@ public:
     cc::LayerTreeHost* m_layerTreeHost;
     bool m_painting;
         
-    enum WebPageState {
-        pageUninited,
-        pageInited,
-        pageDestroying,
-        pageDestroyed
-    } m_state;
+    WebPageState m_state;
 
     bool m_LMouseDown;
     bool m_RMouseDown;

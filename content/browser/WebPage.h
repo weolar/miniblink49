@@ -2,6 +2,8 @@
 #ifndef content_WebPage_h
 #define content_WebPage_h
 
+#include "content/browser/WebPageState.h"
+
 #include "third_party/WebKit/Source/platform/geometry/IntSize.h"
 #include "third_party/WebKit/Source/platform/geometry/IntPoint.h"
 #include "third_party/WebKit/Source/platform/geometry/IntRect.h"
@@ -57,6 +59,8 @@ public:
 
     WebPage(void* foreignPtr);
     ~WebPage();
+
+    WebPageState getState() const;
 
     bool init(HWND hWnd);
 

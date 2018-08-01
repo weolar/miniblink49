@@ -134,6 +134,13 @@ bool WebPage::isDrawDirty() const
     return false;
 }
 
+WebPageState WebPage::getState() const
+{
+    if (m_pageImpl)
+        return m_pageImpl->m_state;
+    return pageUninited;
+}
+
 void WebPage::close()
 {
     if (!m_pageImpl)
