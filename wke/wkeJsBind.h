@@ -3,7 +3,7 @@
 
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
 
-#include "wke/wkeJsBindFreeTempObject.h"
+#include "wke/wkeUtil.h"
 
 namespace blink {
 class WebLocalFrame;

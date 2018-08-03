@@ -1041,6 +1041,8 @@ public:
     \
     ITERATOR5(bool, wkeRegisterEmbedderCustomElement, wkeWebView webView, wkeWebFrameHandle frameId, const char* name, void* options, void* outResult, "") \
     \
+    ITERATOR1(const utf8*, wkeUtilDecodeURLEscape, const utf8* url, "") \
+    \
     ITERATOR3(void, jsBindFunction, const char* name, jsNativeFunction fn, unsigned int argCount, "") \
     ITERATOR2(void, jsBindGetter, const char* name, jsNativeFunction fn, "") \
     ITERATOR2(void, jsBindSetter, const char* name, jsNativeFunction fn, "") \

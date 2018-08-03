@@ -87,6 +87,7 @@ struct wkeProxyInfo {
 
 void wkeSetProxy(const wkeProxy* proxy)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     if (!proxy)
         return;
 
@@ -98,6 +99,7 @@ void wkeSetProxy(const wkeProxy* proxy)
 
 void wkeSetViewProxy(wkeWebView webView, wkeProxy* proxy)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     if (!webView || !proxy)
         return;
     WTF::OwnPtr<wkeProxyInfo> info = wkeProxyInfo::create(*proxy);
@@ -106,6 +108,7 @@ void wkeSetViewProxy(wkeWebView webView, wkeProxy* proxy)
 
 void wkeSetViewNetInterface(wkeWebView webView, const char* netInterface)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     if (!webView || !netInterface)
         return;
 
@@ -114,6 +117,7 @@ void wkeSetViewNetInterface(wkeWebView webView, const char* netInterface)
 
 void wkeConfigure(const wkeSettings* settings)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     if (!settings)
         return;
     if (settings->mask & WKE_SETTING_PROXY)
@@ -135,11 +139,9 @@ bool wkeIsInitialize()
 
 void wkeFinalize()
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     content::BlinkPlatformImpl* platform = (content::BlinkPlatformImpl*)blink::Platform::current();
     platform->shutdown();
-
-//     WebCore::iconDatabase().close();
-//     WebCore::PageGroup::closeLocalStorage();
 
     CoUninitialize();
 
@@ -150,6 +152,7 @@ void wkeFinalize()
 
 void wkeSetMemoryCacheEnable(wkeWebView webView, bool b)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     blink::RuntimeEnabledFeatures::setMemoryCacheEnabled(b);
 }
 
@@ -157,41 +160,49 @@ bool g_isMouseEnabled = true;
 
 void wkeSetTouchEnabled(wkeWebView webView, bool b)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     blink::RuntimeEnabledFeatures::setTouchEnabled(b);
 }
 
 void wkeSetMouseEnabled(wkeWebView webView, bool b)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     g_isMouseEnabled = b;
 }
 
 void wkeSetNavigationToNewWindowEnable(wkeWebView webView, bool b)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     blink::RuntimeEnabledFeatures::setNavigationToNewWindowEnabled(b);
 }
 
 void wkeSetCspCheckEnable(wkeWebView webView, bool b)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     blink::RuntimeEnabledFeatures::setCspCheckEnabled(b);
 }
 
 void wkeSetNpapiPluginsEnabled(wkeWebView webView, bool b)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     blink::RuntimeEnabledFeatures::setNpapiPluginsEnabled(b);
 }
 
 void wkeSetHeadlessEnabled(wkeWebView webView, bool b)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     blink::RuntimeEnabledFeatures::setHeadlessEnabled(b);
 }
 
 void wkeSetDragEnable(wkeWebView webView, bool b)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     g_isSetDragEnable = b;
 }
 
 void wkeSetDragDropEnable(wkeWebView webView, bool b)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     g_isSetDragDropEnable = b;
 }
 
@@ -204,6 +215,7 @@ bool g_rendererAntiAlias = false;
 
 void wkeSetDebugConfig(wkeWebView webview, const char* debugString, const char* param)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     content::WebPage* webpage = nullptr;
     blink::WebViewImpl* webViewImpl = nullptr;
     blink::WebSettingsImpl* settings = nullptr;
@@ -308,51 +320,61 @@ const char* wkeGetName(wkeWebView webView)
 
 void wkeSetName(wkeWebView webView, const char* name)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     webView->setName(name);
 }
 
 void wkeSetHandle(wkeWebView webView, HWND wnd)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     webView->setHandle(wnd);
 }
 
 void wkeSetHandleOffset(wkeWebView webView, int x, int y)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     webView->setHandleOffset(x, y);
 }
 
 void wkeSetViewSettings(wkeWebView webView, const wkeViewSettings* settings)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     webView->setViewSettings(settings);
 }
 
 bool wkeIsTransparent(wkeWebView webView)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     return webView->isTransparent();
 }
 
 void wkeSetTransparent(wkeWebView webView, bool transparent)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     webView->setTransparent(transparent);
 }
 
 void wkeSetUserAgent(wkeWebView webView, const utf8* userAgent)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     webView->setUserAgent(userAgent);
 }
 
 const utf8* wkeGetUserAgent(wkeWebView webView)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     return content::BlinkPlatformImpl::getUserAgent();
 }
 
 void wkeSetUserAgentW(wkeWebView webView, const wchar_t* userAgent)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     webView->setUserAgent(userAgent);
 }
 
 void wkeShowDevtools(wkeWebView webView, const wchar_t* path, wkeOnShowDevtoolsCallback callback, void* param)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     std::vector<char> pathUtf8;
     WTF::WCharToMByte(path, wcslen(path), &pathUtf8, CP_UTF8);
     webView->showDevTools(&pathUtf8[0], callback, param);
@@ -360,257 +382,308 @@ void wkeShowDevtools(wkeWebView webView, const wchar_t* path, wkeOnShowDevtoolsC
 
 void wkePostURL(wkeWebView wkeView,const utf8 * url,const char *szPostData,int nLen)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     wkeView->loadPostURL(url,szPostData,nLen);
 }
 
 void wkePostURLW(wkeWebView wkeView,const wchar_t * url,const char *szPostData,int nLen)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     wkeView->loadPostURL(url,szPostData,nLen);
 }
 
 void wkeLoadW(wkeWebView webView, const wchar_t* url)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     wkeLoadURLW(webView, url);
 }
 
 void wkeLoadURL(wkeWebView webView, const utf8* url)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     webView->loadURL(url);
 }
 
 void wkeLoadURLW(wkeWebView webView, const wchar_t* url)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     webView->loadURL(url);
 }
 
 void wkeLoadHTML(wkeWebView webView, const utf8* html)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     webView->loadHTML(html);
 }
 
 void wkeLoadHtmlWithBaseUrl(wkeWebView webView, const utf8* html, const utf8* baseUrl)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     webView->loadHtmlWithBaseUrl(html, baseUrl);
 }
 
 void wkeLoadHTMLW(wkeWebView webView, const wchar_t* html)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     webView->loadHTML(html);
 }
 
 void wkeLoadFile(wkeWebView webView, const utf8* filename)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     return webView->loadFile(filename);
 }
 
 void wkeLoadFileW(wkeWebView webView, const wchar_t* filename)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     return webView->loadFile(filename);
 }
 
 const utf8* wkeGetURL(wkeWebView webView)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     return webView->url();
 }
 
 bool wkeIsLoading(wkeWebView webView)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     return webView->isLoading();
 }
 
 bool wkeIsLoadingSucceeded(wkeWebView webView)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     return webView->isLoadingSucceeded();
 }
 
 bool wkeIsLoadingFailed(wkeWebView webView)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     return webView->isLoadingFailed();
 }
 
 bool wkeIsLoadingCompleted(wkeWebView webView)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     return webView->isLoadingCompleted();
 }
 
 bool wkeIsDocumentReady(wkeWebView webView)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     return webView->isDocumentReady();
 }
 
 void wkeStopLoading(wkeWebView webView)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     webView->stopLoading();
 }
 
 void wkeReload(wkeWebView webView)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     webView->reload();
 }
 
 void wkeGoToOffset(wkeWebView webView, int offset)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     webView->goToOffset(offset);
 }
 
 void wkeGoToIndex(wkeWebView webView, int index)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     webView->goToIndex(index);
 }
 
 const utf8* wkeGetTitle(wkeWebView webView)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     return webView->title();
 }
 
 const wchar_t* wkeGetTitleW(wkeWebView webView)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     return webView->titleW();
 }
 
 void wkeResize(wkeWebView webView, int w, int h)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     webView->resize(w, h);
 }
 
 int wkeGetWidth(wkeWebView webView)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     return webView->width();
 }
 
 int wkeGetHeight(wkeWebView webView)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     return webView->height();
 }
 
 int wkeGetContentWidth(wkeWebView webView)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     return webView->contentWidth();
 }
 
 int wkeGetContentHeight(wkeWebView webView)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     return webView->contentHeight();
 }
 
 void wkeSetDirty(wkeWebView webView, bool dirty)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     webView->setDirty(dirty);
 }
 
 bool wkeIsDirty(wkeWebView webView)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     return webView->isDirty();
 }
 
 void wkeAddDirtyArea(wkeWebView webView, int x, int y, int w, int h)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     webView->addDirtyArea(x, y, w, h);
 }
 
 void wkeLayoutIfNeeded(wkeWebView webView)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     webView->layoutIfNeeded();
 }
 
 void wkePaint2(wkeWebView webView, void* bits, int bufWid, int bufHei, int xDst, int yDst, int w, int h, int xSrc, int ySrc, bool bCopyAlpha)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     webView->paint(bits, bufWid, bufHei, xDst, yDst, w, h, xSrc, ySrc, bCopyAlpha);
 }
 
 void wkePaint(wkeWebView webView, void* bits, int pitch)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     webView->paint(bits, pitch);
 }
 
 void wkeRepaintIfNeeded(wkeWebView webView)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     if (webView)
         webView->repaintIfNeeded();
 }
 
 HDC wkeGetViewDC(wkeWebView webView)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     return webView->viewDC();
 }
 
 HWND wkeGetHostHWND(wkeWebView webView)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     return webView->windowHandle();
 }
 
 bool wkeCanGoBack(wkeWebView webView)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     return webView->canGoBack();
 }
 
 bool wkeGoBack(wkeWebView webView)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     return webView->goBack();
 }
 
 bool wkeCanGoForward(wkeWebView webView)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     return webView->canGoForward();
 }
 
 bool wkeGoForward(wkeWebView webView)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     return webView->goForward();
 }
 
 void wkeEditorSelectAll(wkeWebView webView)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     webView->editorSelectAll();
 }
 
 void wkeEditorUnSelect(wkeWebView webView)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     webView->editorUnSelect();
 }
 
 void wkeEditorCopy(wkeWebView webView)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     webView->editorCopy();
 }
 
 void wkeEditorCut(wkeWebView webView)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     webView->editorCut();
 }
 
 void wkeEditorPaste(wkeWebView webView)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     webView->editorPaste();
 }
 
 void wkeEditorDelete(wkeWebView webView)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     webView->editorDelete();
 }
 
 void wkeEditorUndo(wkeWebView webView)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     webView->editorUndo();
 }
 
 void wkeEditorRedo(wkeWebView webView)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     webView->editorRedo();
 }
 
 const wchar_t * wkeGetCookieW(wkeWebView webView)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     return webView->cookieW();
 }
 
 const utf8* wkeGetCookie(wkeWebView webView)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     return webView->cookie();
 }
 
 void wkeSetCookie(wkeWebView webView, const utf8* url, const utf8* cookie)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     blink::KURL webUrl(blink::ParsedURLString, url);
     blink::KURL webFirstPartyForCookies;
     String webCookie(cookie);
@@ -619,11 +692,13 @@ void wkeSetCookie(wkeWebView webView, const utf8* url, const utf8* cookie)
 
 void wkeVisitAllCookie(void* params, wkeCookieVisitor visitor)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     content::WebCookieJarImpl::visitAllCookie(params, (content::WebCookieJarImpl::CookieVisitor)visitor);
 }
 
 void wkePerformCookieCommand(wkeCookieCommand command)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     CURL* curl = curl_easy_init();
 
     if (!curl)
@@ -651,22 +726,25 @@ void wkePerformCookieCommand(wkeCookieCommand command)
 
 void wkeSetCookieEnabled(wkeWebView webView, bool enable)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     webView->setCookieEnabled(enable);
-    wkePerformCookieCommand(wkeCookieCommandClearSessionCookies);
 }
 
 bool wkeIsCookieEnabled(wkeWebView webView)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     return webView->isCookieEnabled();
 }
 
 void wkeSetCookieJarPath(wkeWebView webView, const WCHAR* path)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     net::setCookieJarPath(path);
 }
 
 void wkeSetCookieJarFullPath(wkeWebView webView, const WCHAR* path)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     net::setCookieJarFullPath(path);
 }
 
@@ -674,6 +752,7 @@ String* kLocalStorageFullPath = nullptr;
 
 void wkeSetLocalStorageFullPath(wkeWebView webView, const WCHAR* path)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     if (!path)
         return;
 
@@ -692,57 +771,68 @@ void wkeSetLocalStorageFullPath(wkeWebView webView, const WCHAR* path)
 
 void wkeAddPluginDirectory(wkeWebView webView, const WCHAR* path)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     String directory(path);
     content::PluginDatabase::installedPlugins()->addExtraPluginDirectory(directory);
 }
 
 void wkeSetMediaVolume(wkeWebView webView, float volume)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     webView->setMediaVolume(volume);
 }
 
 float wkeGetMediaVolume(wkeWebView webView)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     return webView->mediaVolume();
 }
 
 bool wkeFireMouseEvent(wkeWebView webView, unsigned int message, int x, int y, unsigned int flags)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     return webView->fireMouseEvent(message, x, y, flags);
 }
 
 bool wkeFireContextMenuEvent(wkeWebView webView, int x, int y, unsigned int flags)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     return webView->fireContextMenuEvent(x, y, flags);
 }
 
 bool wkeFireMouseWheelEvent(wkeWebView webView, int x, int y, int delta, unsigned int flags)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     return webView->fireMouseWheelEvent(x, y, delta, flags);
 }
 
 bool wkeFireKeyUpEvent(wkeWebView webView, unsigned int virtualKeyCode, unsigned int flags, bool systemKey)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     return webView->fireKeyUpEvent(virtualKeyCode, flags, systemKey);
 }
 
 bool wkeFireKeyDownEvent(wkeWebView webView, unsigned int virtualKeyCode, unsigned int flags, bool systemKey)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     return webView->fireKeyDownEvent(virtualKeyCode, flags, systemKey);
 }
 
 bool wkeFireKeyPressEvent(wkeWebView webView, unsigned int charCode, unsigned int flags, bool systemKey)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     return webView->fireKeyPressEvent(charCode, flags, systemKey);
 }
 
 bool wkeFireWindowsMessage(wkeWebView webView, HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, LRESULT* result)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     return webView->fireWindowsMessage(hWnd, message, wParam, lParam, result);
 }
 
 void wkeSetFocus(wkeWebView webView)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     if (!webView)
         return;
     webView->setFocus();
@@ -750,6 +840,7 @@ void wkeSetFocus(wkeWebView webView)
 
 void wkeKillFocus(wkeWebView webView)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     if (!webView)
         return;
     webView->killFocus();
@@ -757,45 +848,49 @@ void wkeKillFocus(wkeWebView webView)
 
 wkeRect wkeGetCaretRect(wkeWebView webView)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     return webView->caretRect();
 }
 
 jsValue wkeRunJS(wkeWebView webView, const utf8* script)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     return webView->runJS(script);
 }
 
 jsValue wkeRunJSW(wkeWebView webView, const wchar_t* script)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     return webView->runJS(script);
 }
 
 jsExecState wkeGlobalExec(wkeWebView webView)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     return webView->globalExec();
 }
 
 jsExecState wkeGetGlobalExecByFrame(wkeWebView webView, wkeWebFrameHandle frameId)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     return webView->globalExecByFrame(frameId);
 }
 
 void wkeSleep(wkeWebView webView)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     webView->sleep();
 }
 
 void wkeWake(wkeWebView webView)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     if (webView)
         webView->wake();
 
     static DWORD lastTime = 0;
 
     DWORD time = ::GetTickCount();
-
-//     String output = String::format("wkeWake: %d\n", time - lastTime);
-//     OutputDebugStringA(output.utf8().data());
     if (time - lastTime < g_kWakeMinInterval)
         return;
 
@@ -808,136 +903,163 @@ void wkeWake(wkeWebView webView)
 
 bool wkeIsAwake(wkeWebView webView)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     return webView->isAwake();
 }
 
 void wkeSetZoomFactor(wkeWebView webView, float factor)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     webView->setZoomFactor(factor);
 }
 
 float wkeGetZoomFactor(wkeWebView webView)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     return webView->zoomFactor();
 }
 
 void wkeSetEditable(wkeWebView webView, bool editable)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     webView->setEditable(editable);
 }
 
 void wkeOnTitleChanged(wkeWebView webView, wkeTitleChangedCallback callback, void* callbackParam)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     webView->onTitleChanged(callback, callbackParam);
 }
 
 void wkeOnMouseOverUrlChanged(wkeWebView webView, wkeTitleChangedCallback callback, void* callbackParam)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     webView->onMouseOverUrlChanged(callback, callbackParam);
 }
 
 void wkeOnURLChanged(wkeWebView webView, wkeURLChangedCallback callback, void* callbackParam)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     webView->onURLChanged(callback, callbackParam);
 }
 
 void wkeOnURLChanged2(wkeWebView webView, wkeURLChangedCallback2 callback, void* callbackParam)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     webView->onURLChanged2(callback, callbackParam);
 }
 
 void wkeOnPaintUpdated(wkeWebView webView, wkePaintUpdatedCallback callback, void* callbackParam)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     webView->onPaintUpdated(callback, callbackParam);
 }
 
 void wkeOnPaintBitUpdated(wkeWebView webView, wkePaintBitUpdatedCallback callback, void* callbackParam)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     webView->onPaintBitUpdated(callback, callbackParam);
 }
 
 void wkeOnAlertBox(wkeWebView webView, wkeAlertBoxCallback callback, void* callbackParam)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     webView->onAlertBox(callback, callbackParam);
 }
 
 void wkeOnConfirmBox(wkeWebView webView, wkeConfirmBoxCallback callback, void* callbackParam)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     webView->onConfirmBox(callback, callbackParam);
 }
 
 void wkeOnPromptBox(wkeWebView webView, wkePromptBoxCallback callback, void* callbackParam)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     webView->onPromptBox(callback, callbackParam);
 }
 
 void wkeOnNavigation(wkeWebView webView, wkeNavigationCallback callback, void* param)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     webView->onNavigation(callback, param);
 }
 
 void wkeOnCreateView(wkeWebView webView, wkeCreateViewCallback callback, void* param)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     webView->onCreateView(callback, param);
 }
 
 void wkeOnDocumentReady(wkeWebView webView, wkeDocumentReadyCallback callback, void* param)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     webView->onDocumentReady(callback, param);
 }
 
 void wkeOnDocumentReady2(wkeWebView webView, wkeDocumentReady2Callback callback, void* param)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     webView->onDocumentReady2(callback, param);
 }
 
 void wkeOnLoadingFinish(wkeWebView webView, wkeLoadingFinishCallback callback, void* param)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     webView->onLoadingFinish(callback, param);
 }
 
 void wkeOnDownload(wkeWebView webView, wkeDownloadCallback callback, void* param)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     webView->onDownload(callback, param);
 }
 
 void wkeNetOnResponse(wkeWebView webView, wkeNetResponseCallback callback, void* param)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     webView->onNetResponse(callback, param);
 }
 
 void wkeOnConsole(wkeWebView webView, wkeConsoleCallback callback, void* param)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     webView->onConsole(callback, param);
 }
 
 void wkeSetUIThreadCallback(wkeWebView webView, wkeCallUiThread callback, void* param)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     webView->onCallUiThread(callback, param);
 }
 
 void wkeOnLoadUrlBegin(wkeWebView webView, wkeLoadUrlBeginCallback callback, void* callbackParam)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     webView->onLoadUrlBegin(callback, callbackParam);
 }
 
 void wkeOnLoadUrlEnd(wkeWebView webView, wkeLoadUrlEndCallback callback, void* callbackParam)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     webView->onLoadUrlEnd(callback, callbackParam);
 }
 
 void wkeOnDidCreateScriptContext(wkeWebView webView, wkeDidCreateScriptContextCallback callback, void* callbackParam)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     webView->onDidCreateScriptContext(callback, callbackParam);
 }
 
 void wkeOnWillReleaseScriptContext(wkeWebView webView, wkeWillReleaseScriptContextCallback callback, void* callbackParam)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     webView->onWillReleaseScriptContext(callback, callbackParam);
 }
 
 void wkeOnStartDragging(wkeWebView webView, wkeStartDraggingCallback callback, void* param)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     webView->onStartDragging(callback, param);
 }
 
@@ -945,6 +1067,7 @@ wkeWillMediaLoadCallback g_wkeWillMediaLoadCallback = nullptr;
 void* g_wkeWillMediaLoadCallbackCallbackParam = nullptr;
 void wkeOnWillMediaLoad(wkeWebView webView, wkeWillMediaLoadCallback callback, void* callbackParam)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     g_wkeWillMediaLoadCallback = callback;
     g_wkeWillMediaLoadCallbackCallbackParam = callbackParam;
 }
@@ -953,16 +1076,19 @@ wkeTempCallbackInfo g_wkeTempCallbackInfo;
 
 wkeTempCallbackInfo* wkeGetTempCallbackInfo(wkeWebView webView)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     return &g_wkeTempCallbackInfo;
 }
 
 void wkeOnOtherLoad(wkeWebView webWindow, wkeOnOtherLoadCallback callback, void* param)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     webWindow->onOtherLoad(callback, param);
 }
 
 void wkeDeleteWillSendRequestInfo(wkeWebView webWindow, wkeWillSendRequestInfo* info)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     wkeDeleteString(info->url);
     if (info->newUrl)
         wkeDeleteString(info->newUrl);
@@ -973,6 +1099,7 @@ void wkeDeleteWillSendRequestInfo(wkeWebView webWindow, wkeWillSendRequestInfo* 
 
 bool wkeIsMainFrame(wkeWebView webView, wkeWebFrameHandle frameId)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     content::WebPage* page = webView->webPage();
     if (!page)
         return false;
@@ -984,6 +1111,7 @@ bool wkeIsMainFrame(wkeWebView webView, wkeWebFrameHandle frameId)
 
 bool wkeIsWebRemoteFrame(wkeWebView webView, wkeWebFrameHandle frameId)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     content::WebPage* page = webView->webPage();
     if (!page)
         return false;
@@ -995,6 +1123,7 @@ bool wkeIsWebRemoteFrame(wkeWebView webView, wkeWebFrameHandle frameId)
 
 wkeWebFrameHandle wkeWebFrameGetMainFrame(wkeWebView webView)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     content::WebPage* page = webView->webPage();
     if (!page)
         return nullptr;
@@ -1006,11 +1135,13 @@ wkeWebFrameHandle wkeWebFrameGetMainFrame(wkeWebView webView)
 
 jsValue wkeRunJsByFrame(wkeWebView webView, wkeWebFrameHandle frameId, const utf8* script, bool isInClosure)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     return webView->runJsInFrame(frameId, script, isInClosure);
 }
 
 void wkeInsertCSSByFrame(wkeWebView webView, wkeWebFrameHandle frameId, const utf8* cssText)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     content::WebPage* page = webView->webPage();
     if (!page)
         return;
@@ -1022,6 +1153,7 @@ void wkeInsertCSSByFrame(wkeWebView webView, wkeWebFrameHandle frameId, const ut
 
 const utf8* wkeGetFrameUrl(wkeWebView webView, wkeWebFrameHandle frameId)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     content::WebPage* page = webView->webPage();
     if (!page)
         return "";
@@ -1033,6 +1165,7 @@ const utf8* wkeGetFrameUrl(wkeWebView webView, wkeWebFrameHandle frameId)
 
 void wkeWebFrameGetMainWorldScriptContext(wkeWebView webView, wkeWebFrameHandle frameId, v8ContextPtr contextOut)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     content::WebPage* page = webView->webPage();
     if (!page)
         return;
@@ -1046,21 +1179,25 @@ void wkeWebFrameGetMainWorldScriptContext(wkeWebView webView, wkeWebFrameHandle 
 
 v8Isolate wkeGetBlinkMainThreadIsolate()
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     return blink::mainThreadIsolate();
 }
 
 const utf8* wkeGetString(const wkeString s)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     return s ? s->string() : "";
 }
 
 const wchar_t* wkeGetStringW(const wkeString string)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     return string ? string->stringW() : L"";
 }
 
 void wkeSetString(wkeString string, const utf8* str, size_t len)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     if (!string)
         return;
 
@@ -1077,6 +1214,7 @@ void wkeSetString(wkeString string, const utf8* str, size_t len)
 
 void wkeSetStringW(wkeString string, const wchar_t* str, size_t len)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     if (!string)
         return;
 
@@ -1093,23 +1231,27 @@ void wkeSetStringW(wkeString string, const wchar_t* str, size_t len)
 
 wkeString wkeCreateString(const utf8* str, size_t len)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     wkeString wkeStr = new wke::CString(str, len);
     return wkeStr;
 }
 
 wkeString wkeCreateStringW(const wchar_t* str, size_t len)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     wkeString wkeStr = new wke::CString(str, len);
     return wkeStr;
 }
 
 void wkeDeleteString(wkeString str)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     delete str;
 }
 
 wkeWebView wkeGetWebViewForCurrentContext()
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     content::WebPage* webpage = content::WebPage::getSelfForCurrentContext();
     if (!webpage)
         return nullptr;
@@ -1119,26 +1261,31 @@ wkeWebView wkeGetWebViewForCurrentContext()
 
 void wkeSetUserKeyValue(wkeWebView webView, const char* key, void* value)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     webView->setUserKeyValue(key, value);
 }
 
 void* wkeGetUserKeyValue(wkeWebView webView, const char* key)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     return webView->getUserKeyValue(key);
 }
 
 int wkeGetCursorInfoType(wkeWebView webView)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     return webView->getCursorInfoType();
 }
 
 void wkeSetDragFiles(wkeWebView webView, const POINT* clintPos, const POINT* screenPos, wkeString files[], int filesCount)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     webView->setDragFiles(clintPos, screenPos, files, filesCount);
 }
 
 wkeWebView wkeCreateWebWindow(wkeWindowType type, HWND parent, int x, int y, int width, int height)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     wke::CWebWindow* webWindow = new wke::CWebWindow();
     if (!webWindow->create(parent, type, x, y, width, height)) {
         delete webWindow;
@@ -1150,11 +1297,13 @@ wkeWebView wkeCreateWebWindow(wkeWindowType type, HWND parent, int x, int y, int
 
 void wkeDestroyWebWindow(wkeWebView webWindow)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     webWindow->destroy();
 }
 
 HWND wkeGetWindowHandle(wkeWebView webWindow)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     if (wke::CWebWindow* window = static_cast<wke::CWebWindow*>(webWindow))
         return window->windowHandle();
     else
@@ -1163,30 +1312,35 @@ HWND wkeGetWindowHandle(wkeWebView webWindow)
 
 void wkeOnWindowClosing(wkeWebView webWindow, wkeWindowClosingCallback callback, void* param)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     if (wke::CWebWindow* window = static_cast<wke::CWebWindow*>(webWindow))
         return window->onClosing(callback, param);
 }
 
 void wkeOnWindowDestroy(wkeWebView webWindow, wkeWindowDestroyCallback callback, void* param)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     if (wke::CWebWindow* window = static_cast<wke::CWebWindow*>(webWindow))
         return window->onDestroy(callback, param);
 }
 
 void wkeOnDraggableRegionsChanged(wkeWebView webWindow, wkeDraggableRegionsChangedCallback callback, void* param)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     if (wke::CWebView* window = static_cast<wke::CWebView*>(webWindow))
         return window->onDraggableRegionsChanged(callback, param);
 }
 
 void wkeShowWindow(wkeWebView webWindow, bool showFlag)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     if (wke::CWebWindow* window = static_cast<wke::CWebWindow*>(webWindow))
         return window->show(showFlag);
 }
 
 void wkeEnableWindow(wkeWebView webWindow, bool enableFlag)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     if (wke::CWebWindow* window = static_cast<wke::CWebWindow*>(webWindow))
         return window->enable(enableFlag);
 }
@@ -1199,18 +1353,21 @@ void wkeMoveWindow(wkeWebView webWindow, int x, int y, int width, int height)
 
 void wkeMoveToCenter(wkeWebView webWindow)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     if (wke::CWebWindow* window = static_cast<wke::CWebWindow*>(webWindow))
         return window->moveToCenter();
 }
 
 void wkeResizeWindow(wkeWebView webWindow, int width, int height)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     if (wke::CWebWindow* window = static_cast<wke::CWebWindow*>(webWindow))
         return window->resize(width, height);
 }
 
 void wkeSetWindowTitle(wkeWebView webWindow, const utf8* title)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     if (wke::CWebWindow* window = static_cast<wke::CWebWindow*>(webWindow))
         return window->setTitle(title);
 }
@@ -1226,11 +1383,13 @@ WKE_EXTERN_C void* g_wkeNodeOnCreateProcessCallbackparam = nullptr;
 
 void wkeNodeOnCreateProcess(wkeWebView webWindow, wkeNodeOnCreateProcessCallback callback, void* param)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     g_wkeNodeOnCreateProcessCallback = callback;
     g_wkeNodeOnCreateProcessCallbackparam = param;
 }
 
-static void convertDragData(blink::WebDragData* data, const wkeWebDragData* webDragData) {
+static void convertDragData(blink::WebDragData* data, const wkeWebDragData* webDragData)
+{
     data->initialize();
 
     if (webDragData->m_filesystemId)
@@ -1263,6 +1422,7 @@ static void convertDragData(blink::WebDragData* data, const wkeWebDragData* webD
 
 wkeWebDragOperation wkeDragTargetDragEnter(wkeWebView webWindow, const wkeWebDragData* webDragData, const POINT* clientPoint, const POINT* screenPoint, wkeWebDragOperationsMask operationsAllowed, int modifiers)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     if (!webWindow->webPage())
         return wkeWebDragOperationNone;
     blink::WebViewImpl* view = webWindow->webPage()->webViewImpl();
@@ -1281,6 +1441,7 @@ wkeWebDragOperation wkeDragTargetDragEnter(wkeWebView webWindow, const wkeWebDra
 
 wkeWebDragOperation wkeDragTargetDragOver(wkeWebView webWindow, const POINT* clientPoint, const POINT* screenPoint, wkeWebDragOperationsMask operationsAllowed, int modifiers)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     if (!webWindow->webPage())
         return wkeWebDragOperationNone;
     blink::WebViewImpl* view = webWindow->webPage()->webViewImpl();
@@ -1294,6 +1455,7 @@ wkeWebDragOperation wkeDragTargetDragOver(wkeWebView webWindow, const POINT* cli
 
 void wkeDragTargetDragLeave(wkeWebView webWindow)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     if (!webWindow->webPage())
         return;
     blink::WebViewImpl* view = webWindow->webPage()->webViewImpl();
@@ -1303,6 +1465,7 @@ void wkeDragTargetDragLeave(wkeWebView webWindow)
 
 void wkeDragTargetDrop(wkeWebView webWindow, const POINT* clientPoint, const POINT* screenPoint, int modifiers)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     if (!webWindow->webPage())
         return;
     blink::WebViewImpl* view = webWindow->webPage()->webViewImpl();
@@ -1315,6 +1478,7 @@ void wkeDragTargetDrop(wkeWebView webWindow, const POINT* clientPoint, const POI
 
 void wkeSetDeviceParameter(wkeWebView webView, const char* device, const char* paramStr, int paramInt, float paramFloat)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     if (0 == strcmp(device, "navigator.maxTouchPoints")) {
         blink::WebSettingsImpl* settings = webView->webPage()->webViewImpl()->settingsImpl();
         if (settings)
@@ -1358,6 +1522,7 @@ void wkeSetDeviceParameter(wkeWebView webView, const char* device, const char* p
 
 void wkeAddNpapiPlugin(wkeWebView webView, const char* mime, void* initializeFunc, void* getEntryPointsFunc, void* shutdownFunc)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     RefPtr<content::PluginPackage> package = content::PluginPackage::createVirtualPackage(
         (NP_InitializeFuncPtr)initializeFunc,
         (NP_GetEntryPointsFuncPtr) getEntryPointsFunc,
@@ -1371,12 +1536,14 @@ void wkeAddNpapiPlugin(wkeWebView webView, const char* mime, void* initializeFun
 
 wkeWebView wkeGetWebviewByNData(void* ndata)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     content::WebPluginImpl* plugin = (content::WebPluginImpl*)ndata;
     return plugin->getWkeWebView();
 }
 
 bool wkeRegisterEmbedderCustomElement(wkeWebView webView, wkeWebFrameHandle frameId, const char* name, void* options, void* outResult)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     content::WebPage* page = webView->webPage();
     if (!page)
         return false;
@@ -1393,6 +1560,16 @@ bool wkeRegisterEmbedderCustomElement(wkeWebView webView, wkeWebFrameHandle fram
     v8::Persistent<v8::Value>* result = (v8::Persistent<v8::Value>*)outResult;
     result->Reset(v8::Isolate::GetCurrent(), elementConstructor);
     return true;
+}
+
+const utf8* wkeUtilDecodeURLEscape(const utf8* url)
+{
+    String result = blink::decodeURLEscapeSequences(url);
+    if (result.isNull() || result.isEmpty())
+        return url;
+    Vector<char> buffer = WTF::ensureStringToUTF8(result, false);
+    const char* resultStr = wke::createTempCharString((const char*)buffer.data(), buffer.size());
+    return resultStr;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -1420,12 +1597,14 @@ const utf8* wkeVersionString()
 
 void wkeGC(wkeWebView webView, long intervalSec)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     content::BlinkPlatformImpl* platformImpl = (content::BlinkPlatformImpl*)blink::Platform::current();
     platformImpl->setGcTimer((double)intervalSec);
 }
 
 void wkeSetResourceGc(wkeWebView webView, long intervalSec)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     content::BlinkPlatformImpl* platformImpl = (content::BlinkPlatformImpl*)blink::Platform::current();
     platformImpl->setResGcTimer((double)intervalSec);
 }
@@ -1443,6 +1622,7 @@ WKE_FILE_CLOSE g_pfnClose = nullptr;
 
 void wkeSetFileSystem(WKE_FILE_OPEN pfnOpen, WKE_FILE_CLOSE pfnClose, WKE_FILE_SIZE pfnSize, WKE_FILE_READ pfnRead, WKE_FILE_SEEK pfnSeek)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     WKE_FILE_OPEN g_pfnOpen = pfnOpen;
     WKE_FILE_CLOSE g_pfnClose = pfnClose;
     curl_set_file_system(pfnOpen, pfnClose, pfnSize, pfnRead, pfnSeek, nullptr);
@@ -1452,6 +1632,7 @@ const char* wkeWebViewName(wkeWebView webView)
 {
     return wkeGetName(webView);
 }
+
 void wkeSetWebViewName(wkeWebView webView, const char* name)
 {
     wkeSetName(webView, name);
@@ -1598,12 +1779,14 @@ float wkeZoomFactor(wkeWebView webView)
 
 void wkeTitleChangedCallbackWrap(wkeWebView webView, void* param, const wkeString title)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     const wkeClientHandler* handler = (const wkeClientHandler*)param;
     handler->onTitleChanged(handler, title);
 }
 
 void wkeURLChangedCallbackWrap(wkeWebView webView, void* param, const wkeString url)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     const wkeClientHandler* handler = (const wkeClientHandler*)param;
     handler->onTitleChanged(handler, url);
 }
@@ -1633,5 +1816,23 @@ const wchar_t* wkeToStringW(const wkeString string)
 
 // V1 API end
 //////////////////////////////////////////////////////////////////////////
+
+namespace wke {
+
+bool checkThreadCallIsValid(const char* funcName)
+{
+    if (WTF::isMainThread())
+        return true;
+        
+    String output = L"禁止多线程调用此接口：";
+    output.append(funcName);
+    output.append(L"。如果确实需要调用，请购买付费版。点击确定后程序退出");
+
+    ::MessageBoxW(nullptr, output.charactersWithNullTermination().data(), L"警告！", MB_OK);
+    ::TerminateProcess((HANDLE)-1, 5);
+    return false;
+}
+
+}
 
 #endif

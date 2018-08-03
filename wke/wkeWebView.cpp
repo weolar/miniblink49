@@ -6,7 +6,6 @@
 
 #include "wke/wkeWebView.h"
 #include "wke/wkeJsBind.h"
-#include "wke/wkeRecordExceptionInfo.h"
 
 #include "content/web_impl_win/BlinkPlatformImpl.h"
 #include "content/web_impl_win/WebCookieJarCurlImpl.h"
