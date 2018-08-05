@@ -29,9 +29,13 @@ Dialog.prototype.showErrorBox = function(title, content) {
 }
 
 Dialog.prototype._callDialogFunction = function(funcType, browserWindowID, options, callback) {
-	if ("showSaveDialog" === funcType)
-		return this._showSaveDialog(browserWindowID, options, callback);
-	else if ("showOpenDialog" === funcType)
+	if ("showSaveDialog" === funcType) {
+		var callbackWrap = function(files) {
+			var file = (1 <= files.length) ? files[0] : "";
+			callback(file);
+		}
+		return this._showSaveDialog(browserWindowID, options, callbackWrap);
+	} else if ("showOpenDialog" === funcType)
 		return this._showOpenDialog(browserWindowID, options, callback);
 	else if ("showMessageBox" === funcType)
 		return this._showMessageBox(browserWindowID, options, callback);

@@ -41,6 +41,7 @@ public:
         bool isMinimizable;
         bool isMaximizable;
         bool isFrame;
+        bool isMovable;
 
         bool isUseContentSize;
         bool isAlwaysOnTop;
@@ -66,6 +67,7 @@ public:
             isMinimizable = true;
             isMaximizable = true;
             isFrame = true;
+            isMovable = true;
 
             isUseContentSize = false;
             isAlwaysOnTop = false;
@@ -168,7 +170,7 @@ private:
     void getTypeApi();
     void getWebPreferencesApi();
     v8::Local<v8::Value> getOwnerBrowserWindowApi();
-    void hasServiceWorkerApi();
+    bool hasServiceWorkerApi();
     void unregisterServiceWorkerApi();
     void inspectServiceWorkerApi();
     void printApi();

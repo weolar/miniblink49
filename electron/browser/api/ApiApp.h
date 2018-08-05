@@ -1,4 +1,6 @@
-﻿//#include "nodeblink.h"
+﻿#ifndef browser_api_ApiApp_h
+#define browser_api_ApiApp_h
+
 #include "common/api/EventEmitter.h"
 
 typedef struct HWND__ *HWND;
@@ -81,3 +83,5 @@ private:
 };
 
 } // atom
+
+#endif // browser_api_ApiApp_h

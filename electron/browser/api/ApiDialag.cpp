@@ -391,7 +391,7 @@ private:
 
         OPENFILENAMEW ofn = { 0 };
         std::vector<wchar_t> fileResult;
-        fileResult.resize(1 * MAX_PATH + 1);
+        fileResult.resize(4 * MAX_PATH + 1);
 
         ofn.lStructSize = sizeof(ofn);
         ofn.hwndOwner = parentWindow;
@@ -417,7 +417,7 @@ private:
             return false;
 
         unsigned short size = *((unsigned short*)&fileResult[0]);
-        fileResult.resize(size + 2);
+        fileResult.resize(2 * size + 2);
         ofn.lpstrFile = &fileResult[0];
         ofn.nMaxFile = size;
         b = isOpenOrSave ? GetOpenFileNameW(&ofn) : GetSaveFileNameW(&ofn);

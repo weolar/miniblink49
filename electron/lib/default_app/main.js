@@ -44,7 +44,7 @@ for (let i = 1; i < argv.length; i++) {
                 process.mainModule.paths = process.mainModule.paths.concat(Module._nodeModulePaths(path));
                 process.mainModule.paths = process.mainModule.paths.concat(path);
                 process.mainModule.filename = option.file;
-                //console.log("default_app/main.js:" + path);
+                //
                 break;
             }
         }
@@ -285,12 +285,5 @@ app.once('ready', () => {
 
     //const menu = Menu.buildFromTemplate(template)
     //Menu.setApplicationMenu(menu)
-})
-
-// test
-// const ipc = require('electron').ipcMain;
-// ipc.on('zqz-show', function (evt, a1, a2) { // evt, a1, a2
-//     evt.returnValue = "{test: 'returnValue'}";
-//     console.log('test ipcMain:' + evt + ", " + a1 + ", " + a2);
-// });
+});
 ////////

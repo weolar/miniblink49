@@ -23,12 +23,6 @@
 
 #include "SystemTray.h"
 
-#ifdef _DEBUG
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#define new DEBUG_NEW
-#endif
-
 #ifndef ASSERT
 #include <assert.h>
 #define ASSERT assert
@@ -37,6 +31,17 @@ static char THIS_FILE[] = __FILE__;
 #ifndef _countof
 #define _countof(x) (sizeof(x)/sizeof(x[0]))
 #endif
+
+#undef max
+#undef min
+
+#include <algorithm>
+
+using std::max;
+using std::min;
+
+#include <Unknwn.h>
+#include <gdiplus.h>
 
 #define TRAYICON_CLASS L"TrayIconClass"
 
@@ -261,16 +266,17 @@ BOOL SystemTray::setIcon(HICON hIcon) {
 }
 
 BOOL SystemTray::setIcon(LPCTSTR lpszIconName) {
-    HICON hIcon = (HICON) ::LoadImage(m_hInstance,
-        lpszIconName,
-        IMAGE_ICON,
-        0, 0,
-        LR_LOADFROMFILE);
+
+    HICON hIcon = nullptr;
+    Gdiplus::Bitmap* gdipBitmap = Gdiplus::Bitmap::FromFile(lpszIconName, false);
+    if (gdipBitmap)
+        gdipBitmap->GetHICON(&hIcon);
 
     if (!hIcon)
         return FALSE;
     BOOL returnCode = setIcon(hIcon);
     ::DestroyIcon(hIcon);
+    delete gdipBitmap;
     return returnCode;
 }
 

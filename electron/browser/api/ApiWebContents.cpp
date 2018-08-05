@@ -128,7 +128,7 @@ WebContents::WebContents(v8::Isolate* isolate, v8::Local<v8::Object> wrapper) {
     m_id = IdLiveDetect::get()->constructed(this);
     m_view = nullptr;
     int id = m_id;
-    m_ua = wkeGetUserAgent(nullptr);
+    
 
     gin::Wrappable<WebContents>::InitWith(isolate, wrapper);
 
@@ -137,6 +137,7 @@ WebContents::WebContents(v8::Isolate* isolate, v8::Local<v8::Object> wrapper) {
         if (!IdLiveDetect::get()->isLive(id))
             return;
 
+        self->m_ua = wkeGetUserAgent(nullptr);
         self->m_view = wkeCreateWebView();
         wkeSetUserKeyValue(self->m_view, "WebContents", self);
     });
@@ -218,6 +219,8 @@ void WebContents::onDidCreateScriptContext(wkeWebView webView, wkeWebFrameHandle
     if (m_nodeBinding || !wkeIsMainFrame(webView, frame) || !m_isNodeIntegration)
         return;
 
+    const utf8* script = "window.Notification = function(){};";
+    wkeRunJsByFrame(webView, frame, script, false);
     BlinkMicrotaskSuppressionHandle handle = nodeBlinkMicrotaskSuppressionEnter((*context)->GetIsolate());
     m_nodeBinding = new NodeBindings(false, ThreadCall::getBlinkLoop());
     node::Environment* env = m_nodeBinding->createEnvironment(*context);
@@ -409,8 +412,6 @@ static std::string* trimUrl(const std::string& url) {
         if (c != '/')
             str->insert(str->begin() + invalideHeadLength, 1, '/');
     }
-
-    
 
     return str;
 }
@@ -803,8 +804,8 @@ v8::Local<v8::Value> WebContents::getOwnerBrowserWindowApi() {
     return v8::Null(isolate());
 }
 
-void WebContents::hasServiceWorkerApi() {
-    //todo
+bool WebContents::hasServiceWorkerApi() {
+    return false;
 }
 
 void WebContents::unregisterServiceWorkerApi() {

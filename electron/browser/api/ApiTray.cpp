@@ -13,6 +13,7 @@
 #include "gin/wrappable.h"
 #include "gin/dictionary.h"
 #include "base/strings/string_util.h"
+#include "base/files/file_path.h"
 #include <vector>
 #include <ShellAPI.h>
 
@@ -44,8 +45,7 @@ public:
         });
 
         ::LoadCursor(NULL, IDC_ARROW);
-        m_tray.create(nullptr, m_hideWndHelp->getWnd(), WM_TRAY_MESSAGE,
-            L"TrayIcon", NULL, IDR_POPUP_MENU);
+        m_tray.create(nullptr, m_hideWndHelp->getWnd(), WM_TRAY_MESSAGE, L"TrayIcon", NULL, IDR_POPUP_MENU);
 
         if (nativeImage) {
             HICON hIcon = nativeImage->getIcon();
@@ -53,7 +53,9 @@ public:
                 m_tray.setIcon(hIcon);
         } else {
             std::wstring trayPathW = base::UTF8ToWide(trayPath);
-            m_tray.setIcon(trayPathW.c_str());
+            base::FilePath file = base::FilePath::FromUTF16Unsafe(base::StringPiece16 (trayPathW));
+            file = file.NormalizePathSeparators();
+            m_tray.setIcon(file.AsUTF16Unsafe().c_str());
         }
     }
 
@@ -140,8 +142,7 @@ public:
         v8::Local<v8::Value> f = m_nativeMessageCallback.Get(isolate());
         callback = v8::Function::Cast(*(f));
 
-        v8::MaybeLocal<v8::String> argStringV8 = v8::String::NewFromUtf8(isolate(),
-            argString.c_str(), v8::NewStringType::kNormal, argString.length());
+        v8::MaybeLocal<v8::String> argStringV8 = v8::String::NewFromUtf8(isolate(), argString.c_str(), v8::NewStringType::kNormal, argString.length());
 
         v8::Local<v8::Value> argv[1];
         argv[0] = argStringV8.ToLocalChecked();
@@ -155,8 +156,9 @@ public:
 
             if (LOWORD(lParam) == WM_RBUTTONUP) {
                 onClick("right-click");
+                mate::EventEmitter<Tray>::emit("right-click");
             } else if (LOWORD(lParam) == WM_LBUTTONUP) {
-                onClick("click");
+                mate::EventEmitter<Tray>::emit("click");
             }
             break;
         }

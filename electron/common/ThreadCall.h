@@ -1,4 +1,7 @@
 
+#ifndef common_ThreadCall_h
+#define common_ThreadCall_h
+
 #include "node/uv/include/uv.h"
 #include "v8.h"
 #include <functional>
@@ -102,3 +105,5 @@ private:
 };
 
 } // atom
+
+#endif // common_ThreadCall_h

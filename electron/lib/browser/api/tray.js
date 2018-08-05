@@ -12,7 +12,6 @@ Tray.prototype._init = function () {
 
 Tray.prototype.onNativeMessage = function(msg) {
 	if ("right-click" == msg) {
-		console.log("Tray.prototype.onNativeMessage:" + this.menu);
 		if (this.menu)
 			this.menu.popup();
 		this.emit("right-click");

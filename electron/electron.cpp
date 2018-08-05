@@ -4,6 +4,7 @@
 #include "common/NodeRegisterHelp.h"
 #include "common/NodeThread.h"
 #include "common/AtomCommandLine.h"
+#include "common/InitGdiPlus.h"
 #include "third_party/zlib/unzip.h"
 #include "node/NodeBlink.h"
 #include <windows.h>
@@ -76,7 +77,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
 #if USING_VC6RT == 1
     scrt_initialize_thread_safe_statics();
 #endif
-
+    atom::initGDIPlusClsids();
     atom::AtomCommandLine::initAW();
     atom::ThreadCall::setMainThread();
     atom::initPeRes(hInstance); // 初始化PE打包的资源

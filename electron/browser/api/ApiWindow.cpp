@@ -42,6 +42,8 @@ public:
         m_memoryDC = nullptr;
         m_isDestroyApiBeCalled = false;
         m_isMaximized = false;
+        m_isDocumentEdited = false;
+        m_isIgnoreMouseEvents = false;
 
         m_clientRect.left = 0;
         m_clientRect.top = 0;
@@ -49,6 +51,9 @@ public:
         m_clientRect.bottom = 0;
         m_memoryBmpSize.cx = 0;
         m_memoryBmpSize.cy = 0;
+        m_contentsSize.cx = 0;
+        m_contentsSize.cy = 0;
+        
         ::InitializeCriticalSection(&m_memoryCanvasLock);
         ::InitializeCriticalSection(&m_mouseMsgQueueLock);
 
@@ -157,6 +162,7 @@ public:
         builder.SetMethod("setMinimizable", &Window::setMinimizableApi);
         builder.SetMethod("isMinimizable", &Window::isMinimizableApi);
         builder.SetMethod("isMaximizable", &Window::isMaximizableApi);
+        builder.SetMethod("setMaximizable", &Window::setMaximizableApi);
         builder.SetMethod("setFullScreenable", &Window::setFullScreenableApi);
         builder.SetMethod("isFullScreenable", &Window::isFullScreenableApi);
         builder.SetMethod("setClosable", &Window::setClosableApi);
@@ -290,7 +296,8 @@ public:
 //             int copy_height = cy;
 //             BLENDFUNCTION blendFunction = { AC_SRC_OVER, 0, 255, AC_SRC_ALPHA };
 //             b = ::GdiAlphaBlend(m_memoryDC, x, y, copy_width, copy_height, hdc, x, y, copy_width, copy_height, blendFunction);
-//         }
+//         }
+
     }
 
     bool drawToNativeLayeredContext(HDC dc, HDC source_dc, const RECT* srcRect, const RECT* clientRect) {
@@ -322,8 +329,15 @@ public:
         return !!b;
     }
 
+    void saveContentWidthHeight() {
+        m_contentsSize.cx = wkeGetContentWidth(m_webContents->getWkeView());
+        m_contentsSize.cy = wkeGetContentHeight(m_webContents->getWkeView());
+    }
+
     void onPaintUpdatedInUiThread(int x, int y, int cx, int cy) {
         ::EnterCriticalSection(&m_memoryCanvasLock);
+
+        saveContentWidthHeight();
 
         HDC hdcScreen = ::GetDC(m_hWnd);
         DWORD flag = SRCCOPY;
@@ -379,9 +393,16 @@ public:
         int width = rcInvalid.right - rcInvalid.left;
         int height = rcInvalid.bottom - rcInvalid.top;
 
-        bool isResied = !isRectEqual(rcClient, m_clientRect);
+        Window* self = this;
+        int id = self->m_id;
+        ThreadCall::callBlinkThreadAsync([id, self] {
+            if (IdLiveDetect::get()->isLive(id))
+                self->saveContentWidthHeight();
+        });
 
+        bool isResied = !isRectEqual(rcClient, m_clientRect);
         ::EnterCriticalSection(&m_memoryCanvasLock);
+        
         if (m_memoryBmpSize.cx < width)
             width = m_memoryBmpSize.cx;
         if (m_memoryBmpSize.cy < height)
@@ -449,6 +470,9 @@ public:
     }
 
     void onMouseMessage(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
+        if (m_isIgnoreMouseEvents)
+            return;
+
         int id = m_id;
         wkeWebView webview = m_webContents->getWkeView();
         if (message == WM_LBUTTONDOWN || message == WM_MBUTTONDOWN || message == WM_RBUTTONDOWN) {
@@ -818,6 +842,8 @@ public:
             break;
         }
         case WM_MOUSEWHEEL: {
+            if (m_isIgnoreMouseEvents)
+                break;
             POINT pt;
             pt.x = LOWORD(lParam);
             pt.y = HIWORD(lParam);
@@ -926,15 +952,6 @@ public:
         return self->windowProc(hWnd, message, wParam, lParam);
     }
 
-//     static v8::Local<v8::Value> toBuffer(v8::Isolate* isolate, void* val, int size) {
-//         auto buffer = node::Buffer::Copy(isolate, static_cast<char*>(val), size);
-//         if (buffer.IsEmpty()) {
-//             return v8::Null(isolate);
-//         } else {
-//             return buffer.ToLocalChecked();
-//         }
-//     }
-
 private:
     void closeApi() {
         m_state = WindowDestroying;
@@ -975,7 +992,6 @@ private:
         return !!::IsWindowVisible(m_hWnd);
     }
 
-    //isEnabled
     bool isEnabledApi() {
         return !!::IsWindowEnabled(m_hWnd);
     }
@@ -1103,13 +1119,15 @@ private:
 
     std::vector<int> getContentSizeApi() {
         Window* self = this;
+
+        SIZE contentsSize;
+        ::EnterCriticalSection(&m_memoryCanvasLock);
+        contentsSize = m_contentsSize;
+        ::LeaveCriticalSection(&m_memoryCanvasLock);
+
         int width = 300;
         int height = 450;
-//         ThreadCall::callBlinkThreadSync([self, &width, &height] {
-//             width = wkeGetContentWidth(self->m_webContents->getWkeView());
-//             height = wkeGetContentHeight(self->m_webContents->getWkeView());
-//         }); // weolar
-        std::vector<int> size = { width, height };
+        std::vector<int> size = { contentsSize.cx, contentsSize.cy };
         return size;
     }
 
@@ -1124,49 +1142,93 @@ private:
         });
     }
 
-    void setMinimumSizeApi() {
+    void setMinimumSizeApi(int width, int height) {
+        m_createWindowParam->minWidth = width;
+        m_createWindowParam->minHeight = height;
     }
 
-    void getMinimumSizeApi() {
+    std::vector<int> getMinimumSizeApi() {
+        std::vector<int> size = { m_createWindowParam->minWidth, m_createWindowParam->minHeight };
+        return size;
     }
 
-    void setMaximumSizeApi() {
+    void setMaximumSizeApi(int width, int height) {
+        m_createWindowParam->maxWidth = width;
+        m_createWindowParam->maxHeight = height;
     }
 
-    void getMaximumSizeApi() {
+    std::vector<int> getMaximumSizeApi() {
+        std::vector<int> size = { m_createWindowParam->maxWidth, m_createWindowParam->maxHeight };
+        return size;
     }
 
-    void setResizableApi() {
+    void setResizableApi(bool resizable) {
+        m_createWindowParam->isResizable = resizable;
+
+        DWORD style = ::GetWindowLong(m_hWnd, GWL_EXSTYLE);
+        if (resizable)
+            style |= WS_THICKFRAME;
+        else
+            style &= (~WS_THICKFRAME);
+        ::SetWindowLong(m_hWnd, GWL_EXSTYLE, style);
+        m_createWindowParam->styles = style;
     }
 
-    void isResizableApi() {
+    bool isResizableApi() {
+        return m_createWindowParam->isResizable;
     }
 
-    void setMovableApi() {
+    void setMovableApi(bool isMovable) {
+        m_createWindowParam->isMovable = isMovable;
     }
 
-    void isMovableApi() {
+    bool isMovableApi() {
+        return m_createWindowParam->isMovable;
     }
 
-    void setMinimizableApi() {
+    void setMinimizableApi(bool isMinimizable) {
+        DWORD style = ::GetWindowLong(m_hWnd, GWL_EXSTYLE);
+        if (isMinimizable)
+            style |= WS_MINIMIZEBOX;
+        else
+            style &= (~WS_MINIMIZEBOX);
+        m_createWindowParam->styles = style;
+        m_createWindowParam->isMaximizable;
+        ::SetWindowLong(m_hWnd, GWL_EXSTYLE, style);
     }
 
-    void isMinimizableApi() {
+    bool isMinimizableApi() {
+        return m_createWindowParam->isMinimizable;
     }
 
-    void isMaximizableApi() {
+    bool isMaximizableApi() {
+        return m_createWindowParam->isMaximizable;
     }
 
-    void setFullScreenableApi() {
+    void setMaximizableApi(bool isMaximizable) {
+        DWORD style = ::GetWindowLong(m_hWnd, GWL_EXSTYLE);
+        if (isMaximizable)
+            style |= WS_MAXIMIZEBOX;
+        else
+            style &= (~WS_MAXIMIZEBOX);
+        m_createWindowParam->styles = style;
+        m_createWindowParam->isMaximizable;
+        ::SetWindowLong(m_hWnd, GWL_EXSTYLE, style);
     }
 
-    void isFullScreenableApi() {
+    void setFullScreenableApi(bool isFullScreenable) {
     }
 
-    void setClosableApi() {
+    bool isFullScreenableApi() {
+        return false;
     }
 
-    void isClosableApi() {
+    void setClosableApi(bool isClosable) {
+        m_createWindowParam->isClosable = isClosable;
+    }
+
+    bool isClosableApi() {
+        return m_createWindowParam->isClosable;
     }
 
     void setAlwaysOnTopApi(bool b) {
@@ -1240,12 +1302,18 @@ private:
         ThreadCall::callBlinkThreadSync([self, b] {
             wkeSetEditable(self->m_webContents->getWkeView(), b);
         });
+        m_isDocumentEdited = true;
     }
 
-    void isDocumentEditedApi() {
+    bool isDocumentEditedApi() {
+        return m_isDocumentEdited;
     }
 
-    void setIgnoreMouseEventsApi() {
+    void setIgnoreMouseEventsApi(const v8::FunctionCallbackInfo<v8::Value>& info) {
+        if (0 == info.Length())
+            return;
+        if (info[0]->IsBoolean())
+            m_isIgnoreMouseEvents = info[0]->ToBoolean()->Value();
     }
 
     void setContentProtectionApi() {
@@ -1439,6 +1507,10 @@ private:
 //         if (hookUrl(job, url, "frameworks-4a55ab3fcf005abef1e8b859483f3cce.js", L"D:\\ProgramData\\Lepton\\resources\\frameworks-4a55ab3fcf005abef1e8b859483f3cce.js", "text/javascript"))
 //             return true;
 
+        //OutputDebugStringA("apiwindow.load:");
+        //OutputDebugStringA(url);
+        //OutputDebugStringA("\n");
+
         if (ProtocolInterface::inst()->handleLoadUrlBegin(param, url, job))
             return true;
 
@@ -1463,69 +1535,12 @@ private:
             return false;
         wkeNetSetData(job, &contents.at(0), contents.size());
 
-        OutputDebugStringA("apiwindow.load:");
-        OutputDebugStringA(url);
-        OutputDebugStringA("\n");
-
         return true;
     }
 
-    static std::string* catchCallstack(v8::Isolate* isolate) {
-        std::string* outString = new std::string();
-
-        const v8::StackTrace::StackTraceOptions options = static_cast<v8::StackTrace::StackTraceOptions>(
-            v8::StackTrace::kLineNumber
-            | v8::StackTrace::kColumnOffset
-            | v8::StackTrace::kScriptId
-            | v8::StackTrace::kScriptNameOrSourceURL
-            | v8::StackTrace::kFunctionName);
-
-        int stackNum = 50;
-        v8::HandleScope handleScope(isolate);
-        v8::Local<v8::StackTrace> stackTrace(v8::StackTrace::CurrentStackTrace(isolate, stackNum, options));
-        int count = stackTrace->GetFrameCount();
-
-        for (int i = 0; i < count; ++i) {
-            v8::Local<v8::StackFrame> stackFrame = stackTrace->GetFrame(i);
-            int frameCount = stackTrace->GetFrameCount();
-            int line = stackFrame->GetLineNumber();
-            v8::Local<v8::String> scriptName = stackFrame->GetScriptNameOrSourceURL();
-            v8::Local<v8::String> funcName = stackFrame->GetFunctionName();
-
-            std::string scriptNameWTF;
-            std::string funcNameWTF;
-
-            if (!scriptName.IsEmpty()) {
-                v8::String::Utf8Value scriptNameUtf8(scriptName);
-                scriptNameWTF = *scriptNameUtf8;
-            }
-
-            if (!funcName.IsEmpty()) {
-                v8::String::Utf8Value funcNameUtf8(funcName);
-                funcNameWTF = *funcNameUtf8;
-            }
-            std::vector<char> output;
-            output.resize(1000);
-            sprintf(&output[0], "line:%d, [", line);
-            *outString += (&output[0]);
-
-            if (!scriptNameWTF.empty()) {
-                *outString += (scriptNameWTF.c_str());
-            }
-            *outString += ("] , [");
-
-            if (!funcNameWTF.empty()) {
-                *outString += (funcNameWTF.c_str());
-            }
-            *outString += ("]\n");
-        }
-        *outString += ("\n");
-
-        return outString;
-    }
-
     static void onConsoleCallback(wkeWebView webView, void* param, wkeConsoleLevel level, const wkeString message, const wkeString sourceName, unsigned sourceLine, const wkeString stackTrace) {
-        const utf8* msg = wkeToString(message);
+        const utf8* msg = wkeToString(stackTrace);
+        //std::string* outString = new std::string();
     }
 
     void moveToCenter() {
@@ -1869,7 +1884,7 @@ private:
         wkeSetZoomFactor(webview, s_kScaleX);
     }
 
-    void newWindowTaskInUiThread(const WebContents::CreateWindowParam* createWindowParam) {
+    void newWindowTaskInUiThread(WebContents::CreateWindowParam* createWindowParam) {
         m_createWindowParam = createWindowParam;
 
         m_hWnd = ::CreateWindowEx(createWindowParam->styleEx,
@@ -1926,10 +1941,10 @@ private:
             wkeOnStartDragging(webview, onStartDraggingCallback, self);
             wkeSetFocus(webview);
             wkeSetDebugConfig(webview, "decodeUrlRequest", nullptr);
-            wkeSetDragDropEnable(webview, false);
+            wkeSetDragDropEnable(webview, true);
             wkeAddNpapiPlugin(webview, "application/browser-plugin", &Webview_NP_Initialize, &Webview_NP_GetEntryPoints, &Webview_NP_Shutdown);
             wkeSetDebugConfig(webview, "wakeMinInterval", "1");
-            wkeSetDebugConfig(webview, "drawMinInterval", "30");
+            wkeSetDebugConfig(webview, "drawMinInterval", "20");
             //wkeSetDebugConfig(webview, "contentScale", "50");
 
             if (createWindowParam->transparent)
@@ -1993,8 +2008,12 @@ private:
     HRGN m_draggableRegion;
 
     bool m_isMaximized;
+    bool m_isDocumentEdited;
+    bool m_isIgnoreMouseEvents;
 
-    const WebContents::CreateWindowParam* m_createWindowParam;
+    SIZE m_contentsSize;
+
+    WebContents::CreateWindowParam* m_createWindowParam;
     DragAction* m_dragAction;
 
     CRITICAL_SECTION m_mouseMsgQueueLock;
@@ -2063,9 +2082,11 @@ static void initializeWindowApi(v8::Local<v8::Object> target, v8::Local<v8::Valu
         isInitClass = true;
 
         wndClass.style = CS_HREDRAW | CS_VREDRAW;
+
+#if 0
         if (base::win::OSInfo::GetInstance()->version() < base::win::VERSION_WIN8)
             wndClass.style |= CS_DROPSHADOW;
-
+#endif
         HMODULE hMod = ::GetModuleHandleW(NULL);
         wndClass.cbSize = sizeof(WNDCLASSEX);
         wndClass.lpfnWndProc = &Window::staticWindowProc;
@@ -2096,4 +2117,4 @@ static NodeNative nativeBrowserWindowNative{ "BrowserWindow", BrowserWindowNativ
 
 NODE_MODULE_CONTEXT_AWARE_BUILTIN_SCRIPT_MANUAL(atom_browser_window, initializeWindowApi, &nativeBrowserWindowNative)
 
-} // atom
+} // atom﻿
