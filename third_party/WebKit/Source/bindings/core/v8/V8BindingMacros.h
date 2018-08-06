@@ -32,7 +32,7 @@
 #define V8BindingMacros_h
 
 #if ENABLE_WKE
-#include "wke/wkeRecordExceptionInfo.h"
+#include "wke/wkeUtil.h"
 #endif
 
 namespace blink {

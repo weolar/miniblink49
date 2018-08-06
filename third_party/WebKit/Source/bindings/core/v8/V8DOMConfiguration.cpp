@@ -266,6 +266,11 @@ void V8DOMConfiguration::installMethod(v8::Isolate* isolate, v8::Local<v8::Objec
     installMethodInternal(isolate, prototypeTemplate, signature, attribute, callback, world);
 }
 
+static void setClassString(v8::Isolate* isolate, v8::Local<v8::ObjectTemplate> objectTemplate, const char* classString)
+{
+    objectTemplate->Set(v8::Symbol::GetToStringTag(isolate), v8AtomicString(isolate, classString), static_cast<v8::PropertyAttribute>(v8::ReadOnly | v8::DontEnum));
+}
+
 v8::Local<v8::Signature> V8DOMConfiguration::installDOMClassTemplate(v8::Isolate* isolate, v8::Local<v8::FunctionTemplate> functionDescriptor, const char* interfaceName, v8::Local<v8::FunctionTemplate> parentClass, size_t fieldCount,
     const AttributeConfiguration* attributes, size_t attributeCount,
     const AccessorConfiguration* accessors, size_t accessorCount,
@@ -274,6 +279,7 @@ v8::Local<v8::Signature> V8DOMConfiguration::installDOMClassTemplate(v8::Isolate
     functionDescriptor->SetClassName(v8AtomicString(isolate, interfaceName));
     v8::Local<v8::ObjectTemplate> instanceTemplate = functionDescriptor->InstanceTemplate();
     v8::Local<v8::ObjectTemplate> prototypeTemplate = functionDescriptor->PrototypeTemplate();
+    setClassString(isolate, prototypeTemplate, interfaceName);
     instanceTemplate->SetInternalFieldCount(fieldCount);
     if (!parentClass.IsEmpty()) {
         functionDescriptor->Inherit(parentClass);
