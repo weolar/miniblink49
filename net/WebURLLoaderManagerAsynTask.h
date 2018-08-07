@@ -86,7 +86,8 @@ public:
             String tempPath = m_manager->handleHeaderForBlobOnMainThread(job, job->m_asynWkeNetSetData->size());
             job->m_response.setDownloadFilePath(tempPath);
         }
-        job->client()->didReceiveResponse(job->loader(), job->m_response);
+        // job->client()->didReceiveResponse(job->loader(), job->m_response);
+        m_manager->handleDidReceiveResponse(job);
 
         if (job->m_asynWkeNetSetData && kNormalCancelled != job->m_cancelledReason) { // 可能在didReceiveResponse里被cancel
             m_manager->didReceiveDataOrDownload(job, job->m_asynWkeNetSetData->data(), job->m_asynWkeNetSetData->size(), 0);

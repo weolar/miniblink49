@@ -74,6 +74,7 @@ public:
     enum Type {
         kLoaderInternal,
         kGetFaviconTask,
+        kSetCookiesTask,
     };
     virtual ~JobHead() {}
     virtual int getRefCount() const { return m_ref; }

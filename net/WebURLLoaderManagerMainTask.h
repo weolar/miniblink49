@@ -7,11 +7,11 @@
 #include "net/WebURLLoaderManagerAsynTask.h"
 #include "net/RequestExtraData.h"
 #include "content/browser/WebPage.h"
+#include "third_party/WebKit/Source/wtf/Threading.h"
 #include "third_party/WebKit/Source/platform/network/HTTPParsers.h"
 #include "third_party/WebKit/public/platform/Platform.h"
 #include "third_party/WebKit/public/platform/WebScheduler.h"
 #include "third_party/WebKit/public/web/WebLocalFrame.h"
-#include "third_party/WebKit/Source/wtf/Threading.h"
 #include "wke/wkeWebView.h"
 
 namespace net {
