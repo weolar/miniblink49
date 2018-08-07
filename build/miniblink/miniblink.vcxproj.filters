@@ -8847,9 +8847,6 @@
     <ClCompile Include="..\..\base\windowsvc6.cpp">
       <Filter>base</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\net\ActivatingLoaderCheck.cpp">
-      <Filter>net</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\content\web_impl_win\WebClipboardImpl.cpp">
       <Filter>content\web_impl_win</Filter>
     </ClCompile>
@@ -10127,6 +10124,12 @@
     </ClCompile>
     <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8DataTransferItemPartial.cpp">
       <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\web\WebStorageEventDispatcherImpl.cpp">
+      <Filter>third_party\Webkit\Source\web</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\net\ActivatingObjCheck.cpp">
+      <Filter>net</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -21914,9 +21917,6 @@
     <ClInclude Include="..\..\third_party\WebKit\Source\core\css\Counter.h">
       <Filter>third_party\Webkit\Source\core\css</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\net\ActivatingLoaderCheck.h">
-      <Filter>net</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\third_party\WebKit\Source\platform\exported\WebScrollbarImpl.h">
       <Filter>third_party\Webkit\Source\platform\exported</Filter>
     </ClInclude>
@@ -23012,6 +23012,18 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8DataTransferItemPartial.h">
       <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wke\wkeRecordExceptionInfo.h">
+      <Filter>wke</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\net\ActivatingObjCheck.h">
+      <Filter>net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\content\browser\WebPageState.h">
+      <Filter>content\browser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wke\wkeUtil.h">
+      <Filter>wke</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
