@@ -69,7 +69,7 @@
 #endif
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
 #include "wke/wkeWebView.h"
-#include "wke/wkeJsBindFreeTempObject.h"
+#include "wke/wkeUtil.h"
 #include "wke/wkeWebWindow.h"
 #endif
 #include "skia/ext/bitmap_platform_device_win.h"
@@ -1184,7 +1184,7 @@ void WebPageImpl::didChangeCursor(const WebCursorInfo& cursor)
     m_cursor = cursor;
 
     if (m_hWnd)
-        ::PostMessage(m_hWnd, WM_SETCURSOR, 0, 0);
+        ::PostMessage(m_hWnd, WM_SETCURSOR, (WPARAM)m_hWnd, MAKELONG(HTCLIENT, 0)); // COleControl::OnSetCursor
 }
 
 int WebPageImpl::getCursorInfoType() const
@@ -1455,11 +1455,17 @@ static void initWkeWebDragDataItem(wkeWebDragData::Item* item)
     item->filenameData = nullptr; // wkeCreateStringW(L"", 0);
     item->displayNameData = nullptr; // wkeCreateStringW(L"", 0);
     item->binaryData = nullptr;
-    item->binaryDataLength = 0;
     item->title = nullptr; // wkeCreateStringW(L"", 0);
     item->fileSystemURL = nullptr; // wkeCreateStringW(L"", 0);
     item->fileSystemFileSize = 0;
     item->baseURL = nullptr; // wkeCreateStringW(L"", 0);
+}
+
+static void freeUtf8String(wkeMemBuf* str)
+{
+    if (!str)
+        return;
+    wkeFreeMemBuf(str);
 }
 
 static void destroyWkeDragData(wkeWebDragData* data)
@@ -1469,16 +1475,28 @@ static void destroyWkeDragData(wkeWebDragData* data)
         wkeWebDragData::Item* it = items + i;
 
         if (wkeWebDragData::Item::StorageTypeFilename == it->storageType) {
-            wkeDeleteString(it->filenameData);
+            freeUtf8String(it->filenameData);
         } else if (wkeWebDragData::Item::StorageTypeFileSystemFile == it->storageType) {
-            wkeDeleteString(it->fileSystemURL);
+            freeUtf8String(it->fileSystemURL);
         } else if (wkeWebDragData::Item::StorageTypeString == it->storageType) {
-            wkeDeleteString(it->stringType);
-            wkeDeleteString(it->stringData);
+            freeUtf8String(it->stringType);
+            freeUtf8String(it->stringData);
         }
     }
     delete items;
     delete data;
+}
+
+static wkeMemBuf* createUtf8String(const char* str, size_t len)
+{
+    if (!str)
+        return nullptr;
+//     char* result = new char[len + 1];
+//     strncpy(result, str, len);
+//     result[len - 1] = '\0';
+//     return result;
+
+    return wkeCreateMemBuf(nullptr, (void*)str, len);
 }
 
 static wkeWebDragData* webDropDataToWkeDragData(const blink::WebDragData& data)
@@ -1500,21 +1518,21 @@ static wkeWebDragData* webDropDataToWkeDragData(const blink::WebDragData& data)
             result->m_itemList[i].storageType = wkeWebDragData::Item::StorageTypeFilename;
 
             std::string fileName = item.filenameData.utf8();
-            result->m_itemList[i].filenameData = wkeCreateString(fileName.c_str(), fileName.size());
+            result->m_itemList[i].filenameData = createUtf8String(fileName.c_str(), fileName.size());
             
         } else if (blink::WebDragData::Item::StorageTypeFileSystemFile == item.storageType) {
             result->m_itemList[i].storageType = wkeWebDragData::Item::StorageTypeFileSystemFile;
 
             blink::KURL fileSystemURL = item.fileSystemURL;
             String fileSystemURLString = fileSystemURL.getUTF8String();
-            result->m_itemList[i].fileSystemURL = wkeCreateString((const utf8*)fileSystemURLString.characters8(), fileSystemURLString.length());
+            result->m_itemList[i].fileSystemURL = createUtf8String((const utf8*)fileSystemURLString.characters8(), fileSystemURLString.length());
         } else if (blink::WebDragData::Item::StorageTypeString == item.storageType) {
             result->m_itemList[i].storageType = wkeWebDragData::Item::StorageTypeString;
 
             std::string stringType = item.stringType.utf8();
-            result->m_itemList[i].stringType = wkeCreateString(stringType.c_str(), stringType.size());
+            result->m_itemList[i].stringType = createUtf8String(stringType.c_str(), stringType.size());
             std::string stringData = item.stringData.utf8();
-            result->m_itemList[i].stringData = wkeCreateString(stringData.c_str(), stringData.size());
+            result->m_itemList[i].stringData = createUtf8String(stringData.c_str(), stringData.size());
         }
     }
 
@@ -1535,9 +1553,16 @@ void WebPageImpl::startDragging(blink::WebLocalFrame* frame, const blink::WebDra
     wkePoint offset = { dragImageOffset.x, dragImageOffset.y };
 
     wkeWebDragData* dragDate = webDropDataToWkeDragData(data);
+
+    onEnterDragSimulate();
+    CheckReEnter::decrementEnterCount();
+
     callback(m_pagePtr->wkeWebView(), param,
         wke::CWebView::frameIdTowkeWebFrameHandle(m_pagePtr, getFrameIdByBlinkFrame(frame)),
         dragDate, (wkeWebDragOperationsMask)mask, nullptr, &offset);
+
+    CheckReEnter::incrementEnterCount();
+    onLeaveDragSimulate();
 
     destroyWkeDragData(dragDate);
 }

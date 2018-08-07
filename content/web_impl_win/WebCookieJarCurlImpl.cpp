@@ -7,6 +7,7 @@
 #include "third_party/libcurl/include/curl/curl.h"
 
 #include "net/WebURLLoaderManager.h"
+#include "net/WebURLLoaderInternal.h"
 
 #include "third_party/WebKit/public/platform/WebURL.h"
 #include "third_party/WebKit/Source/wtf/text/WTFStringUtil.h"
@@ -247,21 +248,66 @@ static String getNetscapeCookieFormat(const KURL& url, const String& value)
     return cookieStr.toString();
 }
 
+class AsynSetCookies : public net::JobHead {
+public:
+    AsynSetCookies(const CString& cookie)
+    {
+        m_cookie = cookie.data();
+        m_ref = 0;
+        m_id = 0;
+        m_type = kSetCookiesTask;
+    }
+
+    virtual ~AsynSetCookies() override {}
+    virtual void cancel() override { m_cookie = ""; }
+
+    void exit()
+    {
+        net::WebURLLoaderManager* manager = net::WebURLLoaderManager::sharedInstance();
+        if (manager)
+            manager->removeLiveJobs(m_id);
+        delete this;
+    }
+
+    static void setCookie(int jobId)
+    {
+        net::AutoLockJob autoLockJob(net::WebURLLoaderManager::sharedInstance(), jobId);
+        JobHead* job = autoLockJob.lockJobHead();
+        if (!job || JobHead::kGetFaviconTask != job->getType())
+            return;
+        AsynSetCookies* self = (AsynSetCookies*)job;
+        self->onCookie();
+    }
+
+    void onCookie()
+    {
+        if (m_cookie.empty()) {
+            exit();
+            return;
+        }
+        CURL* curl = curl_easy_init();
+        if (!curl) {
+            exit();
+            return;
+        }
+
+        const char* cookieJarFileName = net::WebURLLoaderManager::sharedInstance()->getCookieJarFileName();
+        CURLSH* curlsh = net::WebURLLoaderManager::sharedInstance()->getCurlShareHandle();
+        curl_easy_setopt(curl, CURLOPT_SHARE, curlsh);
+        curl_easy_setopt(curl, CURLOPT_COOKIELIST, m_cookie.c_str());
+        curl_easy_cleanup(curl);
+
+        exit();
+    }
+
+private:
+    std::string m_cookie;
+};
+
 static void setCookiesFromDOM(const KURL&, const KURL& url, const String& value)
 {
     if (!net::WebURLLoaderManager::sharedInstance())
         return;
-
-    CURL* curl = curl_easy_init();
-
-    if (!curl)
-        return;
-
-    const char* cookieJarFileName = net::WebURLLoaderManager::sharedInstance()->getCookieJarFileName();
-    CURLSH* curlsh = net::WebURLLoaderManager::sharedInstance()->getCurlShareHandle();
-
-    curl_easy_setopt(curl, CURLOPT_COOKIEJAR, cookieJarFileName); // weolar
-    curl_easy_setopt(curl, CURLOPT_SHARE, curlsh);
 
     // CURL accepts cookies in either Set-Cookie or Netscape file format.
     // However with Set-Cookie format, there is no way to specify that we
@@ -272,12 +318,13 @@ static void setCookiesFromDOM(const KURL&, const KURL& url, const String& value)
 
     CString strCookie(reinterpret_cast<const char*>(cookie.characters8()), cookie.length());
 
-    curl_easy_setopt(curl, CURLOPT_COOKIELIST, strCookie.data());
-
-    curl_easy_cleanup(curl);
-
-//     OutputDebugStringA(strCookie.data());
-//     OutputDebugStringA("\n");
+    net::WebURLLoaderManager* manager = net::WebURLLoaderManager::sharedInstance();
+    if (!manager)
+        return;
+    
+    AsynSetCookies* job = new AsynSetCookies(strCookie);
+    int jobId = manager->addLiveJobs(job);
+    manager->getIoThread()->postTask(FROM_HERE, WTF::bind(&AsynSetCookies::setCookie, jobId));
 }
 
 const curl_slist* WebCookieJarImpl::getAllCookiesBegin()

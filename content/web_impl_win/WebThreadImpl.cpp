@@ -14,7 +14,7 @@
 #include "libcef/browser/CefContext.h"
 #endif
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
-#include "wke/wkeJsBindFreeTempObject.h"
+#include "wke/wkeUtil.h"
 #endif
 
 #include "base/compiler_specific.h"
@@ -53,6 +53,7 @@ WebThreadImpl::WebThreadImpl(const char* name)
     , m_threadId(-1)
     , m_firingTimers(false)
     , m_webSchedulerImpl(new WebSchedulerImpl(this))
+    , m_isObserversDirty(false)
     , m_name(name)
     , m_suspendTimerQueue(false)
     , m_hadThreadInit(false)
@@ -305,26 +306,61 @@ void WebThreadImpl::addTaskObserver(TaskObserver* observer)
 
     m_observers.push_back(observer);
     postTask(FROM_HERE, new EmptyTask());
+    m_isObserversDirty = true;
 }
 
 void WebThreadImpl::removeTaskObserver(TaskObserver* observer)
 {
-    std::vector<WebThreadImpl::TaskObserver*>::iterator pos = findObserver(m_observers, observer);
-    if (m_observers.end() != pos)
-        m_observers.erase(pos);
+//     std::vector<WebThreadImpl::TaskObserver*>::iterator pos = findObserver(m_observers, observer);
+//     if (m_observers.end() != pos) {
+//         m_observers.erase(pos);
+//         *pos = nullptr;
+//     }
+
+    for (size_t i = 0; i < m_observers.size(); ++i) {
+        if (observer == m_observers[i])
+            m_observers[i] = nullptr;
+    }
+    m_isObserversDirty = true;
 }
 
 void WebThreadImpl::willProcessTasks()
 {
     // 有些回调，比如Microtask::enqueueMicrotask，会在退出的时候append进来，需要在最后执行，否则一些ImageLoad没法释放
-    for (size_t i = 0; i < m_observers.size(); ++i)
-        m_observers[i]->willProcessTask();
+    for (size_t i = 0; i < m_observers.size(); ++i) {
+        TaskObserver* observer = m_observers[i];
+        if (observer)
+            observer->willProcessTask();
+    }
+    clearEmptyObservers();
 }
 
 void WebThreadImpl::didProcessTasks()
 {
-    for (size_t i = 0; i < m_observers.size(); ++i)
-        m_observers[i]->didProcessTask();
+    for (size_t i = 0; i < m_observers.size(); ++i) {
+        TaskObserver* observer = m_observers[i];
+        if (observer)
+            observer->didProcessTask();
+    }
+    clearEmptyObservers();
+}
+
+void WebThreadImpl::clearEmptyObservers()
+{
+    if (!m_isObserversDirty)
+        return;
+    m_isObserversDirty = false;
+
+    std::vector<WebThreadImpl::TaskObserver*>::iterator it = m_observers.begin();
+    for (; it != m_observers.end();) {
+        if (nullptr == *it)
+            it = m_observers.erase(it);
+        else
+            ++it;
+
+        if (it == m_observers.end())
+            break;
+    }
 }
 
 blink::WebScheduler* WebThreadImpl::scheduler() const

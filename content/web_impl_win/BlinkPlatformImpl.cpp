@@ -47,7 +47,7 @@
 #include "gin/public/isolate_holder.h"
 #include "gin/array_buffer.h"
 #include "net/WebURLLoaderManager.h"
-#include "wke/wkeJsBindFreeTempObject.h"
+#include "wke/wkeUtil.h"
 
 DWORD g_paintToMemoryCanvasInUiThreadCount = 0;
 DWORD g_rasterTaskCount = 0;
@@ -144,6 +144,7 @@ static void setRuntimeEnabledFeatures()
     blink::RuntimeEnabledFeatures::setMemoryCacheEnabled(true);
     blink::RuntimeEnabledFeatures::setCspCheckEnabled(true);
     blink::RuntimeEnabledFeatures::setNpapiPluginsEnabled(true);
+    blink::RuntimeEnabledFeatures::setDOMConvenienceAPIEnabled(true);
 }
 
 void BlinkPlatformImpl::initialize()

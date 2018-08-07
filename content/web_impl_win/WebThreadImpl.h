@@ -95,6 +95,7 @@ private:
 
     void willProcessTasks();
     void didProcessTasks();
+    void clearEmptyObservers();
 
     HANDLE m_hEvent;
     blink::PlatformThreadId m_threadId;
@@ -109,6 +110,7 @@ private:
     std::vector<WebTimerBase*> m_unusedTimersToDelete;
     std::vector<TaskPair*> m_taskPairsToPost;
     std::vector<TaskObserver*> m_observers;
+    bool m_isObserversDirty;
     const char* m_name;
 
     CRITICAL_SECTION m_taskPairsMutex; // weolar
