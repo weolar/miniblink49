@@ -238,6 +238,12 @@ typedef struct {
 } wkeWindowFeatures;
 
 typedef struct {
+    int size;
+    void* data;
+    size_t length;
+} wkeMemBuf;
+
+typedef struct {
     struct Item {
         enum wkeStorageType {
             // String data with an associated MIME type. Depending on the MIME type, there may be
@@ -253,34 +259,33 @@ typedef struct {
         } storageType;
 
         // Only valid when storageType == StorageTypeString.
-        wkeString stringType;
-        wkeString stringData;
+        wkeMemBuf* stringType;
+        wkeMemBuf* stringData;
 
         // Only valid when storageType == StorageTypeFilename.
-        wkeString filenameData;
-        wkeString displayNameData;
+        wkeMemBuf* filenameData;
+        wkeMemBuf* displayNameData;
 
         // Only valid when storageType == StorageTypeBinaryData.
-        char* binaryData;
-        int binaryDataLength;
+        wkeMemBuf* binaryData;
 
         // Title associated with a link when stringType == "text/uri-list".
         // Filename when storageType == StorageTypeBinaryData.
-        wkeString title;
+        wkeMemBuf* title;
 
         // Only valid when storageType == StorageTypeFileSystemFile.
-        wkeString fileSystemURL;
+        wkeMemBuf* fileSystemURL;
         long long fileSystemFileSize;
 
         // Only valid when stringType == "text/html".
-        wkeString baseURL;
+        wkeMemBuf* baseURL;
     };
 
     struct Item* m_itemList;
     int m_itemListLength;
 
     int m_modifierKeyState; // State of Shift/Ctrl/Alt/Meta keys.
-    wkeString m_filesystemId;
+    wkeMemBuf* m_filesystemId;
 } wkeWebDragData;
 
 typedef enum {
@@ -336,12 +341,6 @@ typedef enum {
 
 typedef struct {
     int size;
-    void* data;
-    size_t length;
-} wkeMemBuf;
-
-typedef struct {
-    int size;
     wkeHttBodyElementType type;
     wkeMemBuf* data;
     wkeString filePath;
@@ -380,10 +379,6 @@ typedef void(*wkeAlertBoxCallback)(wkeWebView webView, void* param, const wkeStr
 typedef bool(*wkeConfirmBoxCallback)(wkeWebView webView, void* param, const wkeString msg);
 typedef bool(*wkePromptBoxCallback)(wkeWebView webView, void* param, const wkeString msg, const wkeString defaultResult, wkeString result);
 typedef bool(*wkeNavigationCallback)(wkeWebView webView, void* param, wkeNavigationType navigationType, const wkeString url);
-typedef wkeWebView(*wkeCreateViewCallback)(wkeWebView webView, void* param, wkeNavigationType navigationType, const wkeString url, const wkeWindowFeatures* windowFeatures);
-typedef void(*wkeDocumentReadyCallback)(wkeWebView webView, void* param);
-typedef void(*wkeDocumentReady2Callback)(wkeWebView webView, void* param, wkeWebFrameHandle frameId);
-
 typedef wkeWebView(*wkeCreateViewCallback)(wkeWebView webView, void* param, wkeNavigationType navigationType, const wkeString url, const wkeWindowFeatures* windowFeatures);
 typedef void(*wkeDocumentReadyCallback)(wkeWebView webView, void* param);
 typedef void(*wkeDocumentReady2Callback)(wkeWebView webView, void* param, wkeWebFrameHandle frameId);
@@ -981,6 +976,8 @@ public:
     ITERATOR3(void, wkeOnOtherLoad, wkeWebView webWindow, wkeOnOtherLoadCallback callback, void* param, "") \
     ITERATOR2(void, wkeDeleteWillSendRequestInfo, wkeWebView webWindow, wkeWillSendRequestInfo* info, "") \
     \
+    ITERATOR1(bool, wkeIsProcessingUserGesture, wkeWebView webWindow, "") \
+    \
     ITERATOR2(void, wkeNetSetMIMEType, void* job, char *type, "") \
     ITERATOR2(const char*, wkeNetGetMIMEType, void* job, wkeString mime, "") \
     ITERATOR4(void, wkeNetSetHTTPHeaderField, void* job, wchar_t* key, wchar_t* value, bool response, "") \
@@ -1030,6 +1027,7 @@ public:
     ITERATOR5(wkeWebDragOperation, wkeDragTargetDragOver, wkeWebView webWindow, const POINT* clientPoint, const POINT* screenPoint, wkeWebDragOperationsMask operationsAllowed, int modifiers, "") \
     ITERATOR1(void, wkeDragTargetDragLeave, wkeWebView webWindow, ""); \
     ITERATOR4(void, wkeDragTargetDrop, wkeWebView webWindow, const POINT* clientPoint, const POINT* screenPoint, int modifiers, "") \
+    ITERATOR4(void, wkeDragTargetEnd, wkeWebView webWindow, const POINT* clientPoint, const POINT* screenPoint, wkeWebDragOperation operation, "") \
     \
     ITERATOR2(void, wkeSetWindowTitle, wkeWebView webWindow, const utf8* title, "") \
     ITERATOR2(void, wkeSetWindowTitleW, wkeWebView webWindow, const wchar_t* title, "") \

@@ -1239,6 +1239,7 @@ wkeWebView jsGetWebView(jsExecState es)
 void jsGC()
 {
     //WebCore::gcController().garbageCollectNow();
+    wkeGC(nullptr, 1);
 }
 
 bool jsAddRef(jsExecState es, jsValue val)
@@ -1300,9 +1301,9 @@ bool jsReleaseRef(jsExecState es, jsValue val)
         return false;
 
     RELEASE_ASSERT(WkeJsValue::wkeJsValueV8Value == wkeValue->type);
-    wkeValue->value.Reset();
-    delete wkeValue;
-    s_jsValueMap->remove(it);
+//     wkeValue->value.Reset();
+//     delete wkeValue;
+//     s_jsValueMap->remove(it);
 
     wke::CWebView* webview = jsGetWebView(es);
     std::set<jsValue>& persistentJsValues = webview->getPersistentJsValue();
@@ -2143,6 +2144,8 @@ void recordJsExceptionInfo(const v8::TryCatch& tryCatch)
 
 AutoAllowRecordJsExceptionInfo::AutoAllowRecordJsExceptionInfo()
 {
+    if (0 == m_allowCount)
+        freeExceptionInfo();
     m_allowCount++;
 }
 

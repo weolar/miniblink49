@@ -20,6 +20,7 @@
 #include "third_party/WebKit/public/web/WebDragOperation.h"
 #include "third_party/WebKit/public/web/WebDocument.h"
 #include "third_party/WebKit/public/web/WebCustomElement.h"
+#include "third_party/WebKit/public/web/WebUserGestureIndicator.h"
 #include "third_party/WebKit/public/platform/WebDragData.h"
 #include "third_party/WebKit/Source/web/WebViewImpl.h"
 #include "third_party/WebKit/Source/web/WebSettingsImpl.h"
@@ -991,6 +992,13 @@ void wkeOnCreateView(wkeWebView webView, wkeCreateViewCallback callback, void* p
     webView->onCreateView(callback, param);
 }
 
+bool wkeIsProcessingUserGesture(wkeWebView webWindow)
+{
+    wke::checkThreadCallIsValid(__FUNCTION__);
+    bool isUserGesture = blink::WebUserGestureIndicator::isProcessingUserGesture();
+    return isUserGesture;
+}
+
 void wkeOnDocumentReady(wkeWebView webView, wkeDocumentReadyCallback callback, void* param)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
@@ -1383,38 +1391,36 @@ WKE_EXTERN_C void* g_wkeNodeOnCreateProcessCallbackparam = nullptr;
 
 void wkeNodeOnCreateProcess(wkeWebView webWindow, wkeNodeOnCreateProcessCallback callback, void* param)
 {
-    wke::checkThreadCallIsValid(__FUNCTION__);
     g_wkeNodeOnCreateProcessCallback = callback;
     g_wkeNodeOnCreateProcessCallbackparam = param;
+}
+
+static String memBufToString(wkeMemBuf* stringType) {
+    if (!stringType || !stringType->length)
+        return String();
+    return String((const char*)stringType->data, stringType->length);
 }
 
 static void convertDragData(blink::WebDragData* data, const wkeWebDragData* webDragData)
 {
     data->initialize();
 
-    if (webDragData->m_filesystemId)
-        data->setFilesystemId(webDragData->m_filesystemId->original());
+    data->setFilesystemId(memBufToString(webDragData->m_filesystemId));
     for (int i = 0; i < webDragData->m_itemListLength; ++i) {
         wkeWebDragData::Item* it = &webDragData->m_itemList[i];
         blink::WebDragData::Item item;
         item.storageType = (blink::WebDragData::Item::StorageType)it->storageType;
-        if (it->stringType)
-            item.stringType = it->stringType->original();
-        if (it->stringData)
-            item.stringData = it->stringData->original();
-        if (it->filenameData)
-            item.filenameData = it->filenameData->original();
-        if (it->displayNameData)
-            item.displayNameData = it->displayNameData->original();
+        item.stringType = memBufToString(it->stringType);
+        item.stringData = memBufToString(it->stringData);
+        item.filenameData = memBufToString(it->filenameData);
+        item.displayNameData = memBufToString(it->displayNameData);
         if (it->binaryData)
-            item.binaryData.assign(it->binaryData, it->binaryDataLength);
-        if (it->title)
-            item.title = it->title->original();
+            item.binaryData.assign((const char *)it->binaryData->data, it->binaryData->length);
+        item.title = memBufToString(it->title);
         if (it->fileSystemURL)
-            item.fileSystemURL = blink::KURL(blink::ParsedURLString, it->fileSystemURL->original());
+            item.fileSystemURL = blink::KURL(blink::ParsedURLString, memBufToString(it->fileSystemURL));
         item.fileSystemFileSize = it->fileSystemFileSize;
-        if (it->baseURL)
-            item.baseURL = blink::KURL(blink::ParsedURLString, it->baseURL->original());
+        item.baseURL = blink::KURL(blink::ParsedURLString, memBufToString(it->baseURL));
 
         data->addItem(item);
     }
@@ -1448,8 +1454,11 @@ wkeWebDragOperation wkeDragTargetDragOver(wkeWebView webWindow, const POINT* cli
     if (!view)
         return wkeWebDragOperationNone;
 
-    blink::WebDragOperation op = view->dragTargetDragOver(blink::WebPoint(clientPoint->x, clientPoint->y),
-        blink::WebPoint(screenPoint->x, screenPoint->y), (blink::WebDragOperationsMask)operationsAllowed, modifiers);
+    blink::WebDragOperation op = view->dragTargetDragOver(
+        blink::WebPoint(clientPoint->x, clientPoint->y),
+        blink::WebPoint(screenPoint->x, screenPoint->y),
+        (blink::WebDragOperationsMask)operationsAllowed,
+        modifiers);
     return (wkeWebDragOperation)op;
 }
 
@@ -1472,8 +1481,20 @@ void wkeDragTargetDrop(wkeWebView webWindow, const POINT* clientPoint, const POI
     if (!view)
         return;
 
-    view->dragTargetDrop(blink::WebPoint(clientPoint->x, clientPoint->y),
-        blink::WebPoint(screenPoint->x, screenPoint->y), modifiers);
+    view->dragTargetDrop(blink::WebPoint(clientPoint->x, clientPoint->y), blink::WebPoint(screenPoint->x, screenPoint->y), modifiers);
+}
+
+void wkeDragTargetEnd(wkeWebView webWindow, const POINT* clientPoint, const POINT* screenPoint, wkeWebDragOperation op)
+{
+    wke::checkThreadCallIsValid(__FUNCTION__);
+    if (!webWindow->webPage())
+        return;
+    blink::WebViewImpl* view = webWindow->webPage()->webViewImpl();
+    if (!view)
+        return;
+
+    view->dragSourceEndedAt(blink::WebPoint(clientPoint->x, clientPoint->y), blink::WebPoint(screenPoint->x, screenPoint->y), (blink::WebDragOperation)op);
+    view->dragSourceSystemDragEnded();
 }
 
 void wkeSetDeviceParameter(wkeWebView webView, const char* device, const char* paramStr, int paramInt, float paramFloat)
@@ -1826,7 +1847,8 @@ bool checkThreadCallIsValid(const char* funcName)
         
     String output = L"禁止多线程调用此接口：";
     output.append(funcName);
-    output.append(L"。如果确实需要调用，请购买付费版。点击确定后程序退出");
+    output.append(L"。当前线程id：");
+    output.append(String::number(::GetCurrentThreadId()));
 
     ::MessageBoxW(nullptr, output.charactersWithNullTermination().data(), L"警告！", MB_OK);
     ::TerminateProcess((HANDLE)-1, 5);

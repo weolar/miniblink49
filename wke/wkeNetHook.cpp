@@ -7,6 +7,7 @@
 #include "wke/wkeNetHook.h"
 #include "wke/wke.h"
 #include "wke/wkeString.h"
+#include "wke/wkeUtil.h"
 #include "third_party/WebKit/public/platform/WebURLRequest.h"
 #include "third_party/WebKit/public/platform/WebURLResponse.h"
 #include "third_party/WebKit/Source/platform/network/HTTPParsers.h"
@@ -20,6 +21,7 @@
 
 void wkeNetSetHTTPHeaderField(void* jobPtr, wchar_t* key, wchar_t* value, bool response)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     net::WebURLLoaderInternal* job = (net::WebURLLoaderInternal*)jobPtr;
 
     if (response) {
@@ -44,6 +46,7 @@ void wkeNetSetHTTPHeaderField(void* jobPtr, wchar_t* key, wchar_t* value, bool r
 
 const char* wkeNetGetHTTPHeaderField(void* jobPtr, const char* key)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     net::WebURLLoaderInternal* job = (net::WebURLLoaderInternal*)jobPtr;
     String value = job->firstRequest()->httpHeaderField(String(key));
     Vector<char> valueBuffer = WTF::ensureStringToUTF8(value, false);
@@ -53,12 +56,14 @@ const char* wkeNetGetHTTPHeaderField(void* jobPtr, const char* key)
 
 void wkeNetSetMIMEType(void* jobPtr, char* type)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     net::WebURLLoaderInternal* job = (net::WebURLLoaderInternal*)jobPtr;
     job->m_response.setMIMEType(WebString::fromUTF8(type));
 }
 
 const char* wkeNetGetMIMEType(void* jobPtr, wkeString mime)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     net::WebURLLoaderInternal* job = (net::WebURLLoaderInternal*)jobPtr;
     AtomicString contentType = job->m_response.httpHeaderField(WebString::fromUTF8("Content-Type"));
     WTF::CString contentTypeUtf8 = contentType.utf8();
@@ -71,6 +76,7 @@ const char* wkeNetGetMIMEType(void* jobPtr, wkeString mime)
 
 void wkeNetSetData(void* jobPtr, void* buf, int len)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     if (0 == len)
         return;
 
@@ -94,6 +100,7 @@ void wkeNetSetData(void* jobPtr, void* buf, int len)
 
 void wkeNetHookRequest(void* jobPtr)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     net::WebURLLoaderInternal* job = (net::WebURLLoaderInternal*)jobPtr;
     job->m_isWkeNetSetDataBeSetted = false;
     if (job->m_asynWkeNetSetData)
@@ -106,12 +113,14 @@ void wkeNetHookRequest(void* jobPtr)
 
 void wkeNetCancelRequest(void* jobPtr)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     net::WebURLLoaderInternal* job = (net::WebURLLoaderInternal*)jobPtr;
     job->m_cancelledReason = net::kNormalCancelled;
 }
 
 const char* wkeNetGetUrlByJob(void* jobPtr)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     net::WebURLLoaderInternal* job = (net::WebURLLoaderInternal*)jobPtr;
     blink::KURL kurl = job->firstRequest()->url();
 
@@ -121,6 +130,7 @@ const char* wkeNetGetUrlByJob(void* jobPtr)
 
 void wkeNetContinueJob(void* jobPtr)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     net::WebURLLoaderInternal* job = (net::WebURLLoaderInternal*)jobPtr;
     net::WebURLLoaderManager::sharedInstance()->continueJob(job);
 }
@@ -137,6 +147,7 @@ void wkeNetContinueJob(void* jobPtr)
 
 void wkeNetChangeRequestUrl(void* jobPtr, const char* url)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     net::WebURLLoaderInternal* job = (net::WebURLLoaderInternal*)jobPtr;
     blink::KURL newUrl(blink::ParsedURLString, url);
     job->m_response.setURL(newUrl);
@@ -147,6 +158,7 @@ void wkeNetChangeRequestUrl(void* jobPtr, const char* url)
 
 void wkeNetHoldJobToAsynCommit(void* jobPtr)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     net::WebURLLoaderInternal* job = (net::WebURLLoaderInternal*)jobPtr;
 
     job->m_isWkeNetSetDataBeSetted = false;
@@ -165,6 +177,7 @@ void wkeNetHoldJobToAsynCommit(void* jobPtr)
 
 wkeRequestType wkeNetGetRequestMethod(void *jobPtr)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     net::WebURLLoaderInternal* job = (net::WebURLLoaderInternal*)jobPtr;
     net::InitializeHandleInfo* info = job->m_initializeHandleInfo;
     if (!info)
@@ -183,6 +196,7 @@ wkeRequestType wkeNetGetRequestMethod(void *jobPtr)
 
 wkePostBodyElements* wkeNetGetPostBody(void *jobPtr)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     net::WebURLLoaderInternal* job = (net::WebURLLoaderInternal*)jobPtr;
     net::InitializeHandleInfo* info = job->m_initializeHandleInfo;
     if (!info)
@@ -207,6 +221,7 @@ wkePostBodyElements* wkeNetGetPostBody(void *jobPtr)
 
 wkePostBodyElements* wkeNetCreatePostBodyElements(wkeWebView webView, size_t length)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     if (0 == length)
         return nullptr;
 
@@ -225,6 +240,7 @@ wkePostBodyElements* wkeNetCreatePostBodyElements(wkeWebView webView, size_t len
 
 void wkeNetFreePostBodyElements(wkePostBodyElements* elements)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     for (size_t i = 0; i < elements->elementSize; ++i) {
         wkeNetFreePostBodyElement(elements->element[i]);
     }
@@ -234,6 +250,7 @@ void wkeNetFreePostBodyElements(wkePostBodyElements* elements)
 
 wkePostBodyElement* wkeNetCreatePostBodyElement(wkeWebView webView)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     wkePostBodyElement* wkeElement = new wkePostBodyElement();
     wkeElement->size = sizeof(wkePostBodyElement);
     return wkeElement;
@@ -248,7 +265,7 @@ void wkeNetFreePostBodyElement(wkePostBodyElement* element)
 
 wkeMemBuf* wkeCreateMemBuf(wkeWebView webView, void* buf, size_t length)
 {
-    if (0 == length)
+    if (!buf || 0 == length)
         return nullptr;
     wkeMemBuf* result = (wkeMemBuf*)malloc(sizeof(wkeMemBuf));
     result->size = sizeof(wkeMemBuf);
@@ -269,6 +286,7 @@ void wkeFreeMemBuf(wkeMemBuf* buf)
 
 int wkeNetGetFavicon(wkeWebView webView, wkeOnNetGetFaviconCallback callback, void* param)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     return net::getFavicon(webView, callback, param);
 }
 
