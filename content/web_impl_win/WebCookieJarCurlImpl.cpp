@@ -273,7 +273,7 @@ public:
     {
         net::AutoLockJob autoLockJob(net::WebURLLoaderManager::sharedInstance(), jobId);
         JobHead* job = autoLockJob.lockJobHead();
-        if (!job || JobHead::kGetFaviconTask != job->getType())
+        if (!job || JobHead::kSetCookiesTask != job->getType())
             return;
         AsynSetCookies* self = (AsynSetCookies*)job;
         self->onCookie();
