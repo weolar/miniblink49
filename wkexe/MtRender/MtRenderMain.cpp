@@ -1,4 +1,4 @@
-
+ï»¿
 #include "wke.h"
 #include "CallMgr.h"
 
@@ -182,6 +182,7 @@ public:
         m_hWnd = nullptr;
         m_cursorInfoType = 0;
         m_isCursorInfoTypeAsynGetting = false;
+        m_isCursorInfoTypeAsynChanged = false;
         m_memoryBMP = nullptr;
         m_memoryDC = nullptr;
         m_isLayerWindow = false;
@@ -192,6 +193,7 @@ public:
         m_clientRect.bottom = 0;
         ::InitializeCriticalSection(&m_memoryCanvasLock);
         m_id = LiveIdDetect::get()->constructed();
+        WindowsMgr::getInstance()->addWindow(this);
     }
 
     ~Window()
@@ -206,9 +208,13 @@ public:
         LiveIdDetect::get()->deconstructed(m_id);
 
         ::DeleteCriticalSection(&m_memoryCanvasLock);
+
+        WindowsMgr::getInstance()->removeWindow(this);
+        if (WindowsMgr::getInstance()->empty()) {
+            WindowsMgr::getInstance()->onWindowAllClosed();
+        }
     }
 
-    
     bool isClosed()
     {
         return m_state == WindowDestroyed;
@@ -355,25 +361,50 @@ public:
         int id = m_id;
         wkeWebView wkeWebview = m_wkeWebview;
         Window* win = this;
-        CallMgr::callBlinkThreadAsync([wkeWebview, win, id] {
+        HWND hWnd = m_hWnd;
+        CallMgr::callBlinkThreadAsync([wkeWebview, win, hWnd, id] {
             if (!LiveIdDetect::get()->isLive(id))
                 return;
             win->m_isCursorInfoTypeAsynGetting = false;
+            win->m_isCursorInfoTypeAsynChanged = true;
             int cursorType = wkeGetCursorInfoType(wkeWebview);
             if (cursorType == win->m_cursorInfoType)
                 return;
             win->m_cursorInfoType = cursorType;
-            ::PostMessage(win->m_hWnd, WM_SETCURSOR_ASYN, 0, 0);
+            ::PostMessage(win->m_hWnd, WM_SETCURSOR, 0, 0);
         });
     }
 
-    void setCursorInfoTypeByCache()
+    bool setCursorInfoTypeByCache()
     {
+        if (!m_isCursorInfoTypeAsynChanged)
+            return false;
+        m_isCursorInfoTypeAsynChanged = false;
+
         HCURSOR hCur = NULL;
         switch (m_cursorInfoType) {
         case WkeCursorInfoIBeam:
             hCur = ::LoadCursor(NULL, IDC_IBEAM);
             break;
+            //////////////////////////////////////////////////////////////////////////
+        case WkeCursorInfoProgress:
+            hCur = ::LoadCursor(NULL, IDC_APPSTARTING);
+            break;
+        case WkeCursorInfoCross:
+            hCur = ::LoadCursor(NULL, IDC_CROSS);
+            break;
+        case WkeCursorInfoMove:
+            hCur = ::LoadCursor(NULL, IDC_SIZEALL);
+            break;
+
+        case WkeCursorInfoColumnResize:
+            hCur = ::LoadCursor(NULL, IDC_SIZEWE);
+            break;
+        case WkeCursorInfoRowResize:
+            hCur = ::LoadCursor(NULL, IDC_SIZENS);
+            break;
+            //////////////////////////////////////////////////////////////////////////
+
         case WkeCursorInfoHand:
             hCur = ::LoadCursor(NULL, IDC_HAND);
             break;
@@ -409,14 +440,18 @@ public:
         case WkeCursorInfoNorthWestSouthEastResize:
             hCur = ::LoadCursor(NULL, IDC_SIZEALL);
             break;
-        default:
-            hCur = ::LoadCursor(NULL, IDC_ARROW);
+        case WkeCursorInfoNoDrop:
+        case WkeCursorInfoNotAllowed:
+            hCur = ::LoadCursor(NULL, IDC_NO);
             break;
         }
 
         if (hCur) {
             ::SetCursor(hCur);
+            return true;
         }
+
+        return false;
     }
 
     void onDragFiles(HDROP hDrop)
@@ -504,10 +539,6 @@ public:
             });
 
             self->m_state = WindowDestroyed;
-            WindowsMgr::getInstance()->removeWindow(self);
-            if (WindowsMgr::getInstance()->empty()) {
-                WindowsMgr::getInstance()->onWindowAllClosed();
-            }
             delete self;
             return 0;
 
@@ -679,12 +710,13 @@ public:
             return 0;
 
         case WM_SETCURSOR:
-            return 0;
+            if (self->setCursorInfoTypeByCache())
+                return 1;
             break;
 
         case WM_SETCURSOR_ASYN:
-            self->setCursorInfoTypeByCache();
-
+            //self->setCursorInfoTypeByCache();
+            return 0;
         case WM_IME_STARTCOMPOSITION:
         {
             CallMgr::callBlinkThreadAsync([wkeWebview, hWnd] {
@@ -966,15 +998,15 @@ private:
     void centerApi()
     {
         int screenX, screenY;
-        screenX = ::GetSystemMetrics(SM_CXSCREEN);  //È¡µÃÆÁÄ»µÄ¿í¶È
-        screenY = ::GetSystemMetrics(SM_CYSCREEN);  //È¡µÃÆÁÄ»µÄ¸ß¶È
+        screenX = ::GetSystemMetrics(SM_CXSCREEN);  //å–å¾—å±å¹•çš„å®½åº¦
+        screenY = ::GetSystemMetrics(SM_CYSCREEN);  //å–å¾—å±å¹•çš„é«˜åº¦
 
         RECT rect;
         ::GetWindowRect(m_hWnd, &rect);
         rect.left = (screenX - rect.right) / 2;
         rect.top = (screenY - rect.bottom) / 2;
 
-        //ÉèÖÃ´°ÌåÎ»ÖÃ
+        //è®¾ç½®çª—ä½“ä½ç½®
         ::SetWindowPos(m_hWnd, NULL, rect.left, rect.top, rect.right, rect.bottom, SWP_NOSIZE);
     }
 
@@ -1018,7 +1050,7 @@ private:
         if (b) {
             style |= WS_EX_TOOLWINDOW;
             style &= ~WS_EX_APPWINDOW;
-        } else {  //todo Èç¹û´°¿ÚÔ­À´µÄstyleÃ»ÓĞWS_EX_APPWINDOW£¬¾Í¿ÉÄÜÓĞÎÊÌâ
+        } else {  //todo å¦‚æœçª—å£åŸæ¥çš„styleæ²¡æœ‰WS_EX_APPWINDOWï¼Œå°±å¯èƒ½æœ‰é—®é¢˜
             style &= ~WS_EX_TOOLWINDOW;
             style |= WS_EX_APPWINDOW;
         }
@@ -1262,24 +1294,25 @@ private:
         wkeConfigure(&settings);
         wkeResize(m_wkeWebview, width, height);
         wkeOnCreateView(m_wkeWebview, onCreateViewCallbackStatic, this);
+        wkeSetCspCheckEnable(m_wkeWebview, false);
 
         const wchar_t* htmlW = L"<html><head></head><body style='font-size:16px;'>"
-            L"ÊäÈëÍøÖ·: &nbsp<input id=myurl style='width:400px;' onkeydown=if(event.keyCode==13)GoURL(); value='http://news.baidu.com'><button onclick=GoURL();>GO</button><hr />"
-            L"<a href='http://www.taobao.com/'>ÌÔ±¦</a><br />"
-            L"<a href='http://www.youku.com/'>ÓÅ¿á</a><br />"
-            L"<a href='http://kugou.id.sn.cn/parse.php'>audioÔªËØ²âÊÔ</a><br />"
-            L"<a href='http://www.youzu.com/'>ÓÎ×å</a><br />"
-            L"<a href='http://www.baidu.com/'>°Ù¶È</a><br />"
-            L"<a href='http://pan.baidu.com/'>°Ù¶ÈÍøÅÌ</a><br />"
-            L"<a href='http://map.baidu.com/'>°Ù¶ÈµØÍ¼</a><br />"
-            L"<a href='http://www.le.com/'>ÀÖÊÓ</a><br />"
+            L"è¾“å…¥ç½‘å€: &nbsp<input id=myurl style='width:400px;' onkeydown=if(event.keyCode==13)GoURL(); value='https://www.bilibili.com/video/av16935770/?spm_id_from=333.334.home_popularize.4'><button onclick=GoURL();>GO</button><hr />"
+            L"<a href='http://www.taobao.com/'>æ·˜å®</a><br />"
+            L"<a href='http://www.youku.com/'>ä¼˜é…·</a><br />"
+            L"<a href='http://kugou.id.sn.cn/parse.php'>audioå…ƒç´ æµ‹è¯•</a><br />"
+            L"<a href='http://www.youzu.com/'>æ¸¸æ—</a><br />"
+            L"<a href='http://www.baidu.com/'>ç™¾åº¦</a><br />"
+            L"<a href='http://pan.baidu.com/'>ç™¾åº¦ç½‘ç›˜</a><br />"
+            L"<a href='http://map.baidu.com/'>ç™¾åº¦åœ°å›¾</a><br />"
+            L"<a href='http://www.le.com/'>ä¹è§†</a><br />"
             L"<a href='http://download.csdn.net/'>CSDN</a><br />"
-            L"<a href='http://www.yvoschaap.com/chainrxn/'>2D²âÊÔ</a><br />"
-            L"<a href='https://www.benjoffe.com/code/demos/canvascape/textures'>3D²âÊÔ</a><br />"
-            L"<a href='http://www.jz5u.com/soft/softdown.asp?softid=18109'>ÏÂÔØ²âÊÔ</a><br />"
-            L"<a href='http://workerman.net:8383/'>òòò½ÁÄÌìÊÒ</a><br />"
-            L"<a href='http://chat.workerman.net/'>WebsocketÁÄÌìÊÒ</a><br />"
-            L"<a href='http://www.workerman.net/demos/browserquest/'>WebsocketÔÚÏßÓÎÏ·</a><br />"
+            L"<a href='http://www.yvoschaap.com/chainrxn/'>2Dæµ‹è¯•</a><br />"
+            L"<a href='https://www.benjoffe.com/code/demos/canvascape/textures'>3Dæµ‹è¯•</a><br />"
+            L"<a href='http://www.jz5u.com/soft/softdown.asp?softid=18109'>ä¸‹è½½æµ‹è¯•</a><br />"
+            L"<a href='http://workerman.net:8383/'>èŒèšªèŠå¤©å®¤</a><br />"
+            L"<a href='http://chat.workerman.net/'>WebsocketèŠå¤©å®¤</a><br />"
+            L"<a href='http://www.workerman.net/demos/browserquest/'>Websocketåœ¨çº¿æ¸¸æˆ</a><br />"
             L"<span onclick=JsCall('')>JsCall</span>"
             L"</body><script>function GoURL(){document.location=document.getElementById('myurl').value;}</script></html>";
         std::string htmlA = utf16ToUtf8(htmlW);
@@ -1396,6 +1429,7 @@ private:
     HWND m_hWnd;
     int m_cursorInfoType;
     bool m_isCursorInfoTypeAsynGetting;
+    bool m_isCursorInfoTypeAsynChanged;
     CRITICAL_SECTION m_memoryCanvasLock;
     HBITMAP m_memoryBMP;
     HDC m_memoryDC;
