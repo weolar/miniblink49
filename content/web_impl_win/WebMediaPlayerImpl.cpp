@@ -20,15 +20,13 @@
 #include "third_party/WebKit/public/web/WebView.h"
 #include "v8.h"
 #include "wke/wke.h"
+#include "wke/wkeGlobalVar.h"
 
 using blink::WebCanvas;
 using blink::WebMediaPlayer;
 using blink::WebRect;
 using blink::WebSize;
 using blink::WebString;
-
-extern wkeWillMediaLoadCallback g_wkeWillMediaLoadCallback;
-extern void* g_wkeWillMediaLoadCallbackCallbackParam;
 
 namespace content {
 
@@ -60,10 +58,10 @@ void WebMediaPlayerImpl::load(blink::WebMediaPlayer::LoadType, const blink::WebU
 {
     ASSERT(isMainThread());
 
-    if (g_wkeWillMediaLoadCallback) {
+    if (wke::g_wkeWillMediaLoadCallback) {
         wkeMediaLoadInfo info = { 0 };
         blink::KURL url(url);
-        g_wkeWillMediaLoadCallback(nullptr, g_wkeWillMediaLoadCallbackCallbackParam, url.getUTF8String().utf8().data(), &info);
+        wke::g_wkeWillMediaLoadCallback(nullptr, wke::g_wkeWillMediaLoadCallbackCallbackParam, url.getUTF8String().utf8().data(), &info);
         m_width = info.width;
         m_height = info.height;
         m_duration = info.duration;

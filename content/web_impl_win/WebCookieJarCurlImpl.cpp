@@ -250,12 +250,15 @@ static String getNetscapeCookieFormat(const KURL& url, const String& value)
 
 class AsynSetCookies : public net::JobHead {
 public:
-    AsynSetCookies(const CString& cookie)
+    AsynSetCookies(const CString& cookie, int* count)
     {
         m_cookie = cookie.data();
         m_ref = 0;
         m_id = 0;
         m_type = kSetCookiesTask;
+        m_count = count;
+
+        *m_count += 1;
     }
 
     virtual ~AsynSetCookies() override {}
@@ -266,6 +269,8 @@ public:
         net::WebURLLoaderManager* manager = net::WebURLLoaderManager::sharedInstance();
         if (manager)
             manager->removeLiveJobs(m_id);
+
+        *m_count -= 1;
         delete this;
     }
 
@@ -301,6 +306,7 @@ public:
     }
 
 private:
+    int* m_count;
     std::string m_cookie;
 };
 
@@ -322,9 +328,13 @@ static void setCookiesFromDOM(const KURL&, const KURL& url, const String& value)
     if (!manager)
         return;
     
-    AsynSetCookies* job = new AsynSetCookies(strCookie);
+    int count = 0;
+    AsynSetCookies* job = new AsynSetCookies(strCookie, &count);
     int jobId = manager->addLiveJobs(job);
     manager->getIoThread()->postTask(FROM_HERE, WTF::bind(&AsynSetCookies::setCookie, jobId));
+    while (0 != count) {
+        ::Sleep(5);
+    }
 }
 
 const curl_slist* WebCookieJarImpl::getAllCookiesBegin()

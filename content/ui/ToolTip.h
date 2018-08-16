@@ -1,12 +1,12 @@
 #ifndef content_browser_ToolTip_h
 #define content_browser_ToolTip_h
 
+#include "wke/wkeGlobalVar.h"
 #include "third_party/WebKit/Source/platform/Timer.h"
 #include <windows.h>
 #include <xstring>
 
 typedef void (*TipPaintCallback) (HWND hWnd, HDC hdc, const wchar_t * text, size_t textLength);
-extern void* g_tipPaintCallback;
 
 namespace content {
 
@@ -124,8 +124,8 @@ public:
 
     void onPaint(HWND hWnd, HDC hdc)
     {
-        if (g_tipPaintCallback) {
-            TipPaintCallback fun = (TipPaintCallback)g_tipPaintCallback;
+        if (wke::g_tipPaintCallback) {
+            TipPaintCallback fun = (TipPaintCallback)wke::g_tipPaintCallback;
             fun(hWnd, hdc, m_text.c_str(), m_text.size());
             return;
         }

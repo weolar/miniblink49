@@ -1,5 +1,4 @@
-﻿
-#include "content/browser/WebPageImpl.h"
+﻿#include "content/browser/WebPageImpl.h"
 
 #include "base/basictypes.h"
 #include "base/rand_util.h"
@@ -71,6 +70,7 @@
 #include "wke/wkeWebView.h"
 #include "wke/wkeUtil.h"
 #include "wke/wkeWebWindow.h"
+#include "wke/wkeGlobalVar.h"
 #endif
 #include "skia/ext/bitmap_platform_device_win.h"
 
@@ -1543,6 +1543,7 @@ void WebPageImpl::startDragging(blink::WebLocalFrame* frame, const blink::WebDra
     blink::WebDragOperationsMask mask, const blink::WebImage& image, const blink::WebPoint& dragImageOffset)
 {
     BlinkPlatformImpl::AutoDisableGC autoDisableGC;
+
     wkeStartDraggingCallback callback = m_pagePtr->wkeHandler().startDraggingCallback;
     if (!callback) {
         m_dragHandle->startDragging(frame, data, mask, image, dragImageOffset);
@@ -1629,10 +1630,122 @@ void WebPageImpl::setTransparent(bool transparent)
     m_webViewImpl->setBaseBackgroundColor(cc::getRealColor(transparent, cc::s_kBgColor));
 }
 
+struct RegisterDragDropTask {
+    RegisterDragDropTask(int id, HWND hWnd, DragHandle* dragHandle)
+    {
+        m_id = id;
+        m_hWnd = hWnd;
+        m_dragHandle = dragHandle;
+    }
+
+    static void registerDragDropInUiThread(HWND hWnd, void* param)
+    {
+        ::OleInitialize(nullptr);
+
+        RegisterDragDropTask* self = (RegisterDragDropTask*)param;
+
+        do {
+            if (!wkeIsWebviewAlive(self->m_id))
+                break;
+            ::RegisterDragDrop(self->m_hWnd, self->m_dragHandle);
+        } while (false);
+
+        delete self;
+    }
+
+private:
+    int m_id;
+    HWND m_hWnd;
+    DragHandle* m_dragHandle;
+};
+
+struct PostTaskWrap {
+    PostTaskWrap(HWND hWnd, wkeUiThreadRunCallback callback, void* param)
+    {
+        m_hWnd = hWnd;
+        m_callback = callback;
+        m_param = param;
+    }
+
+    static void init()
+    {
+        if (wke::g_wkeUiThreadPostTaskCallback)
+            return;
+        wke::g_wkeUiThreadPostTaskCallback = PostTaskWrap::uiThreadPostTaskCallback;
+
+        m_uiPostTasks = new std::vector<PostTaskWrap*>();
+        ::InitializeCriticalSection(&m_uiPostTasksMutex);
+    }
+
+    WTF::String getProp() const { return m_prop; }
+
+    static void WINAPI timerProc(HWND hWnd, UINT message, UINT_PTR iTimerID, DWORD dwTime)
+    {
+        ::KillTimer(hWnd, kPostTaskTimerId);
+        
+        ::EnterCriticalSection(&m_uiPostTasksMutex);
+        std::vector<PostTaskWrap*>* tasksToRun = new std::vector<PostTaskWrap*>();
+        std::vector<PostTaskWrap*>* tasksToSave = new std::vector<PostTaskWrap*>();
+
+        for (size_t i = 0; i < m_uiPostTasks->size(); ++i) {
+            PostTaskWrap* task = m_uiPostTasks->at(i);
+            if (task->m_hWnd == hWnd)
+                tasksToRun->push_back(task);
+            else
+                tasksToSave->push_back(task);
+        }
+        delete m_uiPostTasks;
+        m_uiPostTasks = tasksToSave;
+        ::LeaveCriticalSection(&m_uiPostTasksMutex);
+
+        for (size_t i = 0; i < tasksToRun->size(); ++i) {
+            PostTaskWrap* task = tasksToRun->at(i);
+            task->m_callback(task->m_hWnd, task->m_param);
+            delete task;
+        }
+    }
+
+    static int uiThreadPostTaskCallback(HWND hWnd, wkeUiThreadRunCallback callback, void* param)
+    {
+        PostTaskWrap* task = new PostTaskWrap(hWnd, callback, param);
+
+        ::EnterCriticalSection(&m_uiPostTasksMutex);
+        m_uiPostTasks->push_back(task);
+        ::LeaveCriticalSection(&m_uiPostTasksMutex);
+
+        ::SetTimer(hWnd, kPostTaskTimerId, 10, &timerProc);
+        return 1;
+    }
+
+private:
+    HWND m_hWnd;
+    wkeUiThreadRunCallback m_callback;
+    void* m_param;
+    WTF::String m_prop;
+
+    static const int kPostTaskTimerId = 0x15324546;
+    static std::vector<PostTaskWrap*>* m_uiPostTasks;
+    static CRITICAL_SECTION m_uiPostTasksMutex;
+};
+std::vector<PostTaskWrap*>* PostTaskWrap::m_uiPostTasks = nullptr;
+CRITICAL_SECTION PostTaskWrap::m_uiPostTasksMutex;
+
 void WebPageImpl::setHWND(HWND hWnd)
 {
     m_hWnd = hWnd;
-    if (m_hWnd && !blink::RuntimeEnabledFeatures::updataInOtherThreadEnabled()) {
+    if (!m_hWnd)
+        return;
+
+    DWORD processID;
+    DWORD threadID;
+    threadID = ::GetWindowThreadProcessId(hWnd, &processID);
+    if (threadID != ::GetCurrentThreadId())
+        PostTaskWrap::init();
+    
+    if (wke::g_wkeUiThreadPostTaskCallback) {
+        m_dragHandle->setViewWindow(m_hWnd, m_webViewImpl);
+        wke::g_wkeUiThreadPostTaskCallback(m_hWnd, RegisterDragDropTask::registerDragDropInUiThread, new RegisterDragDropTask(m_pagePtr->wkeWebView()->getId(), m_hWnd, m_dragHandle));
+    } else if (!blink::RuntimeEnabledFeatures::updataInOtherThreadEnabled()) {
         m_dragHandle->setViewWindow(m_hWnd, m_webViewImpl);
         ::RegisterDragDrop(m_hWnd, m_dragHandle);
     }

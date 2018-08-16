@@ -1,4 +1,4 @@
-#ifndef content_browser_ContextMeun_h
+ï»¿#ifndef content_browser_ContextMeun_h
 #define content_browser_ContextMeun_h
 
 #include "content/browser/WebPage.h"
@@ -96,19 +96,19 @@ public:
         m_data = blink::WebContextMenuData();
 
         if ((!data.selectedText.isNull() && !data.selectedText.isEmpty()))
-            ::AppendMenu(m_popMenu, MF_STRING, kCopySelectedTextId, L"¸´ÖÆ");
+            ::AppendMenu(m_popMenu, MF_STRING, kCopySelectedTextId, L"å¤åˆ¶");
 
         if (data.hasImageContents) {
-            ::AppendMenu(m_popMenu, MF_STRING, kCopyImageId, L"¸´ÖÆÍ¼Æ¬");
+            ::AppendMenu(m_popMenu, MF_STRING, kCopyImageId, L"å¤åˆ¶å›¾ç‰‡");
             m_imagePos = new blink::IntPoint(data.mousePosition);
         }
 
         if (m_webPage->isDevtoolsConneted())
-            ::AppendMenu(m_popMenu, MF_STRING, kInspectElementAtId, L"¼ì²é");
+            ::AppendMenu(m_popMenu, MF_STRING, kInspectElementAtId, L"æ£€æŸ¥");
 
         if (data.isEditable) {
-            ::AppendMenu(m_popMenu, MF_STRING, kCutId, L"¼ôÇÐ");
-            ::AppendMenu(m_popMenu, MF_STRING, kPasteId, L"Õ³Ìù");
+            ::AppendMenu(m_popMenu, MF_STRING, kCutId, L"å‰ªåˆ‡");
+            ::AppendMenu(m_popMenu, MF_STRING, kPasteId, L"ç²˜è´´");
         }
 
         if (0 == ::GetMenuItemCount(m_popMenu)) {

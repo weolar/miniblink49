@@ -44,19 +44,16 @@ public:
         const blink::WebImage& image,
         const blink::WebPoint& dragImageOffset);
 
-    blink::WebDragOperation doStartDragging(blink::WebLocalFrame* frame,
-        const blink::WebDragData& data,
+    blink::WebDragOperation startDraggingInUiThread(blink::WebLocalFrame* frame,
+        const blink::WebDragData* data,
         const blink::WebDragOperationsMask mask,
-        const blink::WebImage& image,
-        const blink::WebPoint& dragImageOffset);
+        const blink::WebImage* image,
+        const blink::WebPoint* dragImageOffset);
     
     // IDropTarget
     virtual HRESULT __stdcall DragEnter(IDataObject* pDataObject, DWORD grfKeyState, POINTL pt, DWORD* pdwEffect) override;
-
     HRESULT __stdcall DragOver(DWORD grfKeyState, POINTL pt, DWORD* pdwEffect) override;
-
     HRESULT __stdcall DragLeave() override;
-
     HRESULT __stdcall Drop(IDataObject* pDataObject, DWORD grfKeyState, POINTL pt, DWORD* pdwEffect) override;
     HRESULT __stdcall QueryInterface(REFIID riid, void** ppvObject) override;
 
@@ -68,9 +65,11 @@ public:
     IDataObject* getDragData() const { return m_dragData.get(); }
 
 private:
+    
     void simulateDrag();
 
     long m_refCount;
+    int m_taskCount;
 
     blink::WebViewImpl* m_webViewImpl;
 
