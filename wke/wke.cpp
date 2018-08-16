@@ -3,6 +3,10 @@
 //////////////////////////////////////////////////////////////////////////
 #define BUILDING_wke 1
 
+#include "wke/wkeString.h"
+#include "wke/wkeWebView.h"
+#include "wke/wkeWebWindow.h"
+#include "wke/wkeGlobalVar.h"
 #include "content/browser/WebPage.h"
 #include "content/web_impl_win/BlinkPlatformImpl.h"
 #include "content/web_impl_win/WebCookieJarCurlImpl.h"
@@ -10,11 +14,7 @@
 #include "content/web_impl_win/npapi/WebPluginImpl.h"
 #include "content/web_impl_win/npapi/PluginDatabase.h"
 #include "net/WebURLLoaderManager.h"
-
-//cexer: 必须包含在后面，因为其中的 wke.h -> windows.h 会定义 max、min，导致 WebCore 内部的 max、min 出现错乱。
-#include "wkeString.h"
-#include "wkeWebView.h"
-#include "wkeWebWindow.h"
+#include "net/ActivatingObjCheck.h"
 #include "third_party/WebKit/public/web/WebKit.h"
 #include "third_party/WebKit/public/web/WebFrame.h"
 #include "third_party/WebKit/public/web/WebDragOperation.h"
@@ -25,29 +25,24 @@
 #include "third_party/WebKit/Source/web/WebViewImpl.h"
 #include "third_party/WebKit/Source/web/WebSettingsImpl.h"
 #include "gen/blink/platform/RuntimeEnabledFeatures.h"
-#include <v8.h>
 #include "wtf/text/WTFString.h"
 #include "wtf/text/WTFStringUtil.h"
+#include <v8.h>
 
 namespace net {
 void setCookieJarPath(const WCHAR* path);
 void setCookieJarFullPath(const WCHAR* path);
 }
 
-bool g_isSetDragEnable = true;
-bool g_isSetDragDropEnable = true;
-
 namespace blink {
 extern char* g_navigatorPlatform;
 }
 
 //////////////////////////////////////////////////////////////////////////
-static std::string* s_versionString = nullptr;
-static bool wkeIsInit = false;
 
 void wkeInitialize()
 {
-    if (wkeIsInit)
+    if (wke::wkeIsInit)
         return;
 
     //double-precision float
@@ -56,7 +51,7 @@ void wkeInitialize()
     CoInitialize(NULL);
 
     content::WebPage::initBlink();
-    wkeIsInit = true;
+    wke::wkeIsInit = true;
 }
 
 struct wkeProxyInfo {
@@ -135,7 +130,7 @@ void wkeInitializeEx(const wkeSettings* settings)
 
 bool wkeIsInitialize()
 {
-    return wkeIsInit;
+    return wke::wkeIsInit;
 }
 
 void wkeFinalize()
@@ -146,9 +141,9 @@ void wkeFinalize()
 
     CoUninitialize();
 
-    if (s_versionString)
-        delete s_versionString;
-    s_versionString = nullptr;
+    if (wke::s_versionString)
+        delete wke::s_versionString;
+    wke::s_versionString = nullptr;
 }
 
 void wkeSetMemoryCacheEnable(wkeWebView webView, bool b)
@@ -198,21 +193,14 @@ void wkeSetHeadlessEnabled(wkeWebView webView, bool b)
 void wkeSetDragEnable(wkeWebView webView, bool b)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
-    g_isSetDragEnable = b;
+    wke::g_isSetDragEnable = b;
 }
 
 void wkeSetDragDropEnable(wkeWebView webView, bool b)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
-    g_isSetDragDropEnable = b;
+    wke::g_isSetDragDropEnable = b;
 }
-
-DWORD g_kWakeMinInterval = 5;
-double g_kDrawMinInterval = 0.003;
-bool g_isDecodeUrlRequest = false;
-void* g_tipPaintCallback = nullptr;
-float g_contentScale = 1;
-bool g_rendererAntiAlias = false;
 
 void wkeSetDebugConfig(wkeWebView webview, const char* debugString, const char* param)
 {
@@ -241,11 +229,11 @@ void wkeSetDebugConfig(wkeWebView webview, const char* debugString, const char* 
         } else if ("alwaysInflateDirtyRect" == item) {
 
         } else if ("decodeUrlRequest" == item) {
-            g_isDecodeUrlRequest = true;
+            wke::g_isDecodeUrlRequest = true;
         } else if ("showDevTools" == item) {
             webview->showDevTools(param, nullptr, nullptr);
         } else if ("wakeMinInterval" == item) {
-            g_kWakeMinInterval = atoi(param);
+            wke::g_kWakeMinInterval = atoi(param);
         } else if ("drawMinInterval" == item) {
             int drawMinInterval = atoi(param);
             drawMinInterval = drawMinInterval / 1000.0;
@@ -263,11 +251,11 @@ void wkeSetDebugConfig(wkeWebView webview, const char* debugString, const char* 
             if (settings)
                 settings->setDefaultFixedFontSize(atoi(param));
         } else if ("tipPaintCallback" == item) {
-            g_tipPaintCallback = (void*)param;
+            wke::g_tipPaintCallback = (void*)param;
         } else if ("contentScale" == item) {
-            g_contentScale = atoi(param) / 100.0;
+            wke::g_contentScale = atoi(param) / 100.0;
         } else if ("antiAlias" == item) {
-            g_rendererAntiAlias = atoi(param) == 1;
+            wke::g_rendererAntiAlias = atoi(param) == 1;
         }
     }
 }
@@ -299,8 +287,8 @@ unsigned int wkeGetVersion()
 
 const utf8* wkeGetVersionString()
 {
-    if (s_versionString)
-        return s_versionString->c_str();
+    if (wke::s_versionString)
+        return wke::s_versionString->c_str();
 
     String versionString = String::format("wke version %d.%02d\n"
         "blink build %d\n"
@@ -310,8 +298,8 @@ const utf8* wkeGetVersionString()
         WEBKIT_BUILD,
         __TIMESTAMP__);
 
-    s_versionString = new std::string(versionString.utf8().data());
-    return s_versionString->c_str();
+    wke::s_versionString = new std::string(versionString.utf8().data());
+    return wke::s_versionString->c_str();
 }
 
 const char* wkeGetName(wkeWebView webView)
@@ -892,7 +880,7 @@ void wkeWake(wkeWebView webView)
     static DWORD lastTime = 0;
 
     DWORD time = ::GetTickCount();
-    if (time - lastTime < g_kWakeMinInterval)
+    if (time - lastTime < wke::g_kWakeMinInterval)
         return;
 
     lastTime = time;
@@ -1035,6 +1023,11 @@ void wkeOnConsole(wkeWebView webView, wkeConsoleCallback callback, void* param)
     webView->onConsole(callback, param);
 }
 
+void wkeUtilSetUiCallback(wkeUiThreadPostTaskCallback callback) 
+{
+    wke::g_wkeUiThreadPostTaskCallback = callback;
+}
+
 void wkeSetUIThreadCallback(wkeWebView webView, wkeCallUiThread callback, void* param)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
@@ -1071,21 +1064,17 @@ void wkeOnStartDragging(wkeWebView webView, wkeStartDraggingCallback callback, v
     webView->onStartDragging(callback, param);
 }
 
-wkeWillMediaLoadCallback g_wkeWillMediaLoadCallback = nullptr;
-void* g_wkeWillMediaLoadCallbackCallbackParam = nullptr;
 void wkeOnWillMediaLoad(wkeWebView webView, wkeWillMediaLoadCallback callback, void* callbackParam)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
-    g_wkeWillMediaLoadCallback = callback;
-    g_wkeWillMediaLoadCallbackCallbackParam = callbackParam;
+    wke::g_wkeWillMediaLoadCallback = callback;
+    wke::g_wkeWillMediaLoadCallbackCallbackParam = callbackParam;
 }
-
-wkeTempCallbackInfo g_wkeTempCallbackInfo;
 
 wkeTempCallbackInfo* wkeGetTempCallbackInfo(wkeWebView webView)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
-    return &g_wkeTempCallbackInfo;
+    return &wke::g_wkeTempCallbackInfo;
 }
 
 void wkeOnOtherLoad(wkeWebView webWindow, wkeOnOtherLoadCallback callback, void* param)
@@ -1593,6 +1582,17 @@ const utf8* wkeUtilDecodeURLEscape(const utf8* url)
     return resultStr;
 }
 
+int wkeGetWebviewId(wkeWebView webView)
+{
+    wke::checkThreadCallIsValid(__FUNCTION__);
+    return webView->getId();
+}
+
+bool wkeIsWebviewAlive(int id)
+{
+    return net::ActivatingObjCheck::inst()->isActivating(id);
+}
+
 //////////////////////////////////////////////////////////////////////////
 // V1 API
 
@@ -1637,9 +1637,6 @@ WKE_EXTERN_C void curl_set_file_system(
     WKE_FILE_READ pfnRead,
     WKE_FILE_SEEK pfnSeek,
     WKE_EXISTS_FILE pfnExistsFile);
-
-WKE_FILE_OPEN g_pfnOpen = nullptr;
-WKE_FILE_CLOSE g_pfnClose = nullptr;
 
 void wkeSetFileSystem(WKE_FILE_OPEN pfnOpen, WKE_FILE_CLOSE pfnClose, WKE_FILE_SIZE pfnSize, WKE_FILE_READ pfnRead, WKE_FILE_SEEK pfnSeek)
 {

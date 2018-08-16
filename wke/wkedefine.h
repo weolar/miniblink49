@@ -3,8 +3,8 @@
 * wolar@qq.com
 * http://miniblink.net
 * https://github.com/weolar/miniblink49
-* https://blog.csdn.net/weolar/article/details/80458523 api文档地址
-* licence MIT
+* https://weolar.github.io/miniblink/doc-main.html api文档地址
+* licence Apache-2.0
 *
 */
 
@@ -406,6 +406,9 @@ typedef void(*wkeStartDraggingCallback)(
     const void* image, 
     const wkePoint* dragImageOffset
     );
+
+typedef void(*wkeUiThreadRunCallback)(HWND hWnd, void* param);
+typedef int(*wkeUiThreadPostTaskCallback)(HWND hWnd, wkeUiThreadRunCallback callback, void* param);
 
 typedef enum {
     WKE_DID_START_LOADING,
@@ -847,6 +850,9 @@ public:
     ITERATOR2(void, wkeGoToOffset, wkeWebView webView, int offset, "") \
     ITERATOR2(void, wkeGoToIndex, wkeWebView webView, int index, "") \
     \
+    ITERATOR1(int, wkeGetWebviewId, wkeWebView webWindow, "") \
+    ITERATOR1(bool, wkeIsWebviewAlive, int id, "") \
+    \
     ITERATOR3(wkeMemBuf*, wkeCreateMemBuf, wkeWebView webView, void* buf, size_t length, "") \
     ITERATOR1(void, wkeFreeMemBuf, wkeMemBuf* buf, "") \
     \
@@ -1025,9 +1031,11 @@ public:
     \
     ITERATOR6(wkeWebDragOperation, wkeDragTargetDragEnter, wkeWebView webWindow, const wkeWebDragData* webDragData, const POINT* clientPoint, const POINT* screenPoint, wkeWebDragOperationsMask operationsAllowed, int modifiers, "") \
     ITERATOR5(wkeWebDragOperation, wkeDragTargetDragOver, wkeWebView webWindow, const POINT* clientPoint, const POINT* screenPoint, wkeWebDragOperationsMask operationsAllowed, int modifiers, "") \
-    ITERATOR1(void, wkeDragTargetDragLeave, wkeWebView webWindow, ""); \
+    ITERATOR1(void, wkeDragTargetDragLeave, wkeWebView webWindow, "") \
     ITERATOR4(void, wkeDragTargetDrop, wkeWebView webWindow, const POINT* clientPoint, const POINT* screenPoint, int modifiers, "") \
     ITERATOR4(void, wkeDragTargetEnd, wkeWebView webWindow, const POINT* clientPoint, const POINT* screenPoint, wkeWebDragOperation operation, "") \
+    \
+    ITERATOR1(void, wkeUtilSetUiCallback, wkeUiThreadPostTaskCallback callback, "") \
     \
     ITERATOR2(void, wkeSetWindowTitle, wkeWebView webWindow, const utf8* title, "") \
     ITERATOR2(void, wkeSetWindowTitleW, wkeWebView webWindow, const wchar_t* title, "") \

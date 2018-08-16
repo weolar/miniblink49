@@ -1,10 +1,8 @@
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
 #define BUILDING_wke
 
-#include "wkeWebWindow.h"
-
-extern DWORD g_paintCount;
-extern bool g_isSetDragEnable;
+#include "wke/wkeWebWindow.h"
+#include "wke/wkeGlobalVar.h"
 
 ////////////////////////////////////////////////////////////////////////////
 
@@ -266,7 +264,7 @@ LRESULT CWebWindow::_windowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM l
         return 0;
     }
     case WM_DROPFILES:
-        if (g_isSetDragEnable) {
+        if (wke::g_isSetDragEnable) {
             Vector<wchar_t> szFile;
             szFile.resize(2 * MAX_PATH);
             memset(szFile.data(), 0, sizeof(wchar_t) * 2 * (MAX_PATH));
