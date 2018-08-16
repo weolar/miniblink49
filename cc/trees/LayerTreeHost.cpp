@@ -1115,7 +1115,7 @@ void LayerTreeHost::requestPaintToMemoryCanvasToUiThread(const SkRect& r)
     WrapSelfForUiThread* wrap = new WrapSelfForUiThread(this);
     m_wrapSelfForUiThreads.add(wrap);
     atomicIncrement(&m_paintToMemoryCanvasInUiThreadTaskCount);
-    Platform::current()->mainThread()->addTaskObserver(wrap);
+    Platform::current()->mainThread()->postTask(FROM_HERE, WTF::bind(&LayerTreeHost::WrapSelfForUiThread::paintInUiThread, wrap)); //addTaskObserver(wrap);
 }
 
 void LayerTreeHost::paintToMemoryCanvasInCompositeThread(const SkRect& r)

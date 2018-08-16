@@ -42,13 +42,13 @@
 #include "third_party/skia/include/core/SkSurface.h"
 #include "third_party/skia/include/core/SkCanvas.h"
 #include "third_party/WebKit/Source/platform/image-encoders/gdiplus/GDIPlusImageEncoder.h"
-
-extern DWORD g_rasterTaskCount;
-extern float g_contentScale;
+#include "wke/wkeGlobalVar.h"
 
 namespace blink {
 bool saveDumpFile(const String& url, char* buffer, unsigned int size);
 }
+
+extern DWORD g_rasterTaskCount;
 
 namespace content {
 extern int debugPaint;
@@ -188,7 +188,7 @@ public:
         , m_blendAction(blendAction)
         , m_group(group)
         , m_filterOperations(filterOperations ? new cc_blink::WebFilterOperationsImpl(*filterOperations) : nullptr)
-        , m_contentScale(g_contentScale)
+        , m_contentScale(wke::g_contentScale)
     {
 #ifndef NDEBUG
         rasterTaskCounter.increment();
