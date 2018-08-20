@@ -81,7 +81,9 @@
 
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
 #include "wke/wkeWebView.h"
-extern bool g_isDecodeUrlRequest;
+namespace wke {
+    extern bool g_isDecodeUrlRequest;
+}
 #endif
 #include "wtf/RefCountedLeakCounter.h"
 
@@ -1036,7 +1038,7 @@ int WebURLLoaderManager::addAsynchronousJob(WebURLLoaderInternal* job)
     OutputDebugStringW(outString.charactersWithNullTermination().data());
 #endif
 
-    if (g_isDecodeUrlRequest && !kurl.protocolIsData()) {
+    if (wke::g_isDecodeUrlRequest && !kurl.protocolIsData()) {
         url = blink::decodeURLEscapeSequences(url);
         job->firstRequest()->setURL((blink::KURL(blink::ParsedURLString, url)));
     }
