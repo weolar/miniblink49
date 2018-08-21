@@ -580,10 +580,15 @@ void WebPageImpl::doClose()
 #endif
 
 
-    if (m_hWnd)
-        ::RevokeDragDrop(m_hWnd);
+    if (m_hWnd) {
+        if (::IsWindow(m_hWnd)) {
+            ::RevokeDragDrop(m_hWnd);
+            ASSERT(0 == m_dragHandle->getRefCount());
+        } else {
+            ASSERT(1 == m_dragHandle->getRefCount());
+        }
+    }
 
-    ASSERT(0 == m_dragHandle->getRefCount());
     delete m_dragHandle;
     m_dragHandle = nullptr;
 
