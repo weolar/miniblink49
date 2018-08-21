@@ -10131,6 +10131,9 @@
     <ClCompile Include="..\..\net\ActivatingObjCheck.cpp">
       <Filter>net</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\wke\wkeGlobalVar.cpp">
+      <Filter>wke</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\public\platform\modules\app_banner\WebAppBannerClient.h">
@@ -20921,9 +20924,6 @@
     <ClInclude Include="..\..\wke\wkeJsBind.h">
       <Filter>wke</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\wke\wkeJsBindFreeTempObject.h">
-      <Filter>wke</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\third_party\WebKit\Source\web\WebMediaPlayerClientImpl.h">
       <Filter>third_party\Webkit\Source\web</Filter>
     </ClInclude>
@@ -23013,9 +23013,6 @@
     <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8DataTransferItemPartial.h">
       <Filter>gen\blink\bindings\modules\v8</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\wke\wkeRecordExceptionInfo.h">
-      <Filter>wke</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\net\ActivatingObjCheck.h">
       <Filter>net</Filter>
     </ClInclude>
@@ -23023,6 +23020,9 @@
       <Filter>content\browser</Filter>
     </ClInclude>
     <ClInclude Include="..\..\wke\wkeUtil.h">
+      <Filter>wke</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wke\wkeGlobalVar.h">
       <Filter>wke</Filter>
     </ClInclude>
   </ItemGroup>

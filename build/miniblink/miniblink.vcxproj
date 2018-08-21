@@ -4582,6 +4582,7 @@
     <ClCompile Include="..\..\third_party\WebKit\Source\wtf\text\WTFStringUtil.cpp" />
     <ClCompile Include="..\..\ui\gfx\win\dpi.cc" />
     <ClCompile Include="..\..\wke\wke.cpp" />
+    <ClCompile Include="..\..\wke\wkeGlobalVar.cpp" />
     <ClCompile Include="..\..\wke\wkeJsBind.cpp" />
     <ClCompile Include="..\..\wke\wkeNetHook.cpp" />
     <ClCompile Include="..\..\wke\wkeString.cpp" />
@@ -8389,8 +8390,8 @@
     <ClInclude Include="..\..\ui\gfx\win\dpi.h" />
     <ClInclude Include="..\..\wke\wke.h" />
     <ClInclude Include="..\..\wke\wkedefine.h" />
+    <ClInclude Include="..\..\wke\wkeGlobalVar.h" />
     <ClInclude Include="..\..\wke\wkeJsBind.h" />
-    <ClInclude Include="..\..\wke\wkeJsBindFreeTempObject.h" />
     <ClInclude Include="..\..\wke\wkeNetHook.h" />
     <ClInclude Include="..\..\wke\wkeString.h" />
     <ClInclude Include="..\..\wke\wkeUtil.h" />
