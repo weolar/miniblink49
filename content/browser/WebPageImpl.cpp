@@ -1848,7 +1848,14 @@ WebStorageNamespace* WebPageImpl::createSessionStorageNamespace()
 
 WebString WebPageImpl::acceptLanguages()
 {
-    return WebString::fromUTF8("zh-CN,zh");
+    if (m_webViewImpl) {
+        blink::Page *page = m_webViewImpl->page();
+        if (page) {
+            blink::Settings &setings = page->settings();
+            return setings.Language();
+        }
+    }
+    return WebString::fromUTF8("zh-CN,cn");
 }
 
 void WebPageImpl::setScreenInfo(const WebScreenInfo& info)

@@ -803,6 +803,7 @@ public:
     ITERATOR2(void, wkeSetHeadlessEnabled, wkeWebView webView, bool b, "可以关闭渲染") \
     ITERATOR2(void, wkeSetDragEnable, wkeWebView webView, bool b, "可关闭拖拽文件加载网页") \
     ITERATOR2(void, wkeSetDragDropEnable, wkeWebView webView, bool b, "可关闭拖拽到其他进程") \
+    ITERATOR2(void, wkeSetLanguage, wkeWebView webView, const char* language, "可关闭拖拽到其他进程") \
     \
     ITERATOR2(void, wkeSetViewNetInterface, wkeWebView webView, const char* netInterface, "") \
     \

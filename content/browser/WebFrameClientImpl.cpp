@@ -1,6 +1,7 @@
 
 #include "content/browser/WebFrameClientImpl.h"
 #include "content/browser/WebPage.h"
+#include "content/browser/WebPageImpl.h"
 #include "content/ui/ContextMeun.h"
 #include "content/web_impl_win/WebCookieJarCurlImpl.h"
 #include "content/web_impl_win/WebMediaPlayerImpl.h"
@@ -623,7 +624,7 @@ void WebFrameClientImpl::willSendRequest(WebLocalFrame* webFrame, unsigned ident
 
     request.setExtraData(requestExtraData);
 
-    request.addHTTPHeaderField("Accept-Language", "zh-cn,zh;q=0.5");
+    request.addHTTPHeaderField("Accept-Language", m_webPage->webPageImpl()->acceptLanguages());
 
 //     WebViewImpl* viewImpl = m_webPage->webViewImpl();
 //     if (!viewImpl)

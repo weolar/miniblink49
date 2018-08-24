@@ -501,6 +501,11 @@ WebViewImpl* WebPage::webViewImpl()
     return nullptr;
 }
 
+WebPageImpl* WebPage::webPageImpl()
+{
+    return m_pageImpl;
+}
+
 WebFrame* WebPage::mainFrame()
 {
     if (!webViewImpl())

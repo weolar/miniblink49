@@ -24,6 +24,8 @@
 #include "third_party/WebKit/public/platform/WebDragData.h"
 #include "third_party/WebKit/Source/web/WebViewImpl.h"
 #include "third_party/WebKit/Source/web/WebSettingsImpl.h"
+#include "third_party/WebKit/Source/core/frame/Settings.h"
+#include "third_party/WebKit/Source/core/page/Page.h"
 #include "gen/blink/platform/RuntimeEnabledFeatures.h"
 #include "wtf/text/WTFString.h"
 #include "wtf/text/WTFStringUtil.h"
@@ -258,6 +260,11 @@ void wkeSetDebugConfig(wkeWebView webview, const char* debugString, const char* 
             wke::g_rendererAntiAlias = atoi(param) == 1;
         }
     }
+}
+
+void wkeSetLanguage(wkeWebView webview, const char* language)
+{
+    webview->webPage()->webViewImpl()->page()->settings().setLanguage(String(language));
 }
 
 void wkeUpdate()

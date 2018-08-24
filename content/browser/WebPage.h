@@ -154,6 +154,7 @@ public:
 #endif
 
     blink::WebViewImpl* webViewImpl();
+    WebPageImpl* webPageImpl();
     blink::WebFrame* mainFrame();
 
     static WebPage* getSelfForCurrentContext();
