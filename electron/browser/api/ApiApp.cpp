@@ -105,7 +105,7 @@ void App::init(v8::Local<v8::Object> target, v8::Isolate* isolate) {
     builder.SetMethod("getLocale", &App::getLocaleApi);
     builder.SetMethod("makeSingleInstanceImpl", &App::makeSingleInstanceImplApi);
     builder.SetMethod("releaseSingleInstance", &App::releaseSingleInstanceApi);
-    builder.SetMethod("relaunch", &App::relaunchApi);
+    builder.SetMethod("_relaunch", &App::relaunchApi);
     builder.SetMethod("isAccessibilitySupportEnabled", &App::isAccessibilitySupportEnabled);
     builder.SetMethod("disableHardwareAcceleration", &App::disableHardwareAcceleration);
     constructor.Reset(isolate, prototype->GetFunction());
@@ -471,18 +471,185 @@ void App::releaseSingleInstanceApi() {
     m_singleInstanceHandle = nullptr;
 }
 
+
+static std::wstring addQuoteForArg(const std::wstring& arg)
+{
+    // We follow the quoting rules of CommandLineToArgvW.
+    // http://msdn.microsoft.com/en-us/library/17w5ykft.aspx
+    std::wstring quotable_chars(L" \\\"");
+    if (arg.find_first_of(quotable_chars) == std::wstring::npos) {
+        // No quoting necessary.
+        return arg;
+    }
+
+    std::wstring out;
+    out.push_back(L'"');
+    for (size_t i = 0; i < arg.size(); ++i) {
+        if (arg[i] == '\\') {
+            // Find the extent of this run of backslashes.
+            size_t start = i, end = start + 1;
+            for (; end < arg.size() && arg[end] == '\\'; ++end) {}
+            size_t backslash_count = end - start;
+
+            // Backslashes are escapes only if the run is followed by a double quote.
+            // Since we also will end the string with a double quote, we escape for
+            // either a double quote or the end of the string.
+            if (end == arg.size() || arg[end] == '"') {
+                // To quote, we need to output 2x as many backslashes.
+                backslash_count *= 2;
+            }
+            for (size_t j = 0; j < backslash_count; ++j)
+                out.push_back('\\');
+
+            // Advance i to one before the end to balance i++ in loop.
+            i = end - 1;
+        } else if (arg[i] == '"') {
+            out.push_back('\\');
+            out.push_back('"');
+        } else {
+            out.push_back(arg[i]);
+        }
+    }
+    out.push_back('"');
+
+    return out;
+}
+
+static std::wstring argvToCommandLineString(const std::vector<std::wstring>& argv)
+{
+    std::wstring commandLine;
+    for (const std::wstring& arg : argv) {
+        if (!commandLine.empty())
+            commandLine += L' ';
+        commandLine += addQuoteForArg(arg);
+    }
+    return commandLine;
+}
+
+const char* kWaitEventName = "ElectronRelauncherWaitEvent";
+const WCHAR* kRelauncherTypeArg = L"--type=relauncher";
+const WCHAR* kRelauncherArgSeparator = L"---";
+
+static PROCESS_INFORMATION* launchProcess(const base::string16& cmdline) {
+    STARTUPINFO startup_info = {0};
+    DWORD flags = 0;
+
+    startup_info.dwFlags = STARTF_USESHOWWINDOW;
+    startup_info.wShowWindow = SW_SHOW;
+
+    PROCESS_INFORMATION* tempProcessInfo = new PROCESS_INFORMATION();
+    memset(tempProcessInfo, 0, sizeof(PROCESS_INFORMATION));
+    base::string16 writableCmdline = cmdline;
+
+    if (!::CreateProcessW(NULL, &writableCmdline[0], NULL, NULL, FALSE, flags, NULL, NULL, &startup_info, tempProcessInfo)) {
+        tempProcessInfo->hProcess = INVALID_HANDLE_VALUE;
+        return tempProcessInfo;
+    }
+    
+    return tempProcessInfo;
+}
+
+static std::wstring getWaitEventName(DWORD pid) {
+    std::vector<char> buffer;
+    buffer.resize(0x1000);
+    memset(&buffer[0], 0, 0x1000);
+    sprintf_s(&buffer[0], 0x999, "%s-%d", kWaitEventName, static_cast<int>(pid));
+    return base::UTF8ToWide(&buffer[0]);
+}
+
+static bool relaunchAppWithHelper(const base::FilePath& helper, const std::vector<std::wstring>& relauncher_args, const std::vector<std::wstring>& argv) {
+    std::vector<std::wstring> relaunchArgv;
+    relaunchArgv.push_back(helper.value());
+#if 0 // https://github.com/electron/electron/pull/5837/files
+    relaunchArgv.push_back(kRelauncherTypeArg);
+    relaunchArgv.insert(relaunchArgv.end(), relauncher_args.begin(), relauncher_args.end());
+    relaunchArgv.push_back(kRelauncherArgSeparator);
+    relaunchArgv.insert(relaunchArgv.end(), argv.begin(), argv.end());
+#endif
+    PROCESS_INFORMATION* process = launchProcess(argvToCommandLineString(relaunchArgv));
+    if (!process || INVALID_HANDLE_VALUE == process->hProcess) {
+        if (process)
+            delete process;
+        return false;
+    }
+    
+    // The relauncher process is now starting up, or has started up. The
+    // original parent process continues.
+    // Synchronize with the relauncher process.
+    std::wstring name = getWaitEventName(process->dwProcessId);
+    HANDLE waitEvent = ::CreateEventW(NULL, TRUE, FALSE, name.c_str());
+    if (waitEvent != NULL) {
+        ::WaitForSingleObject(waitEvent, 1000);
+        ::CloseHandle(waitEvent);
+    }
+
+    return true;
+}
+
+static bool relaunchApp(const std::vector<std::wstring>& argv) {
+    // Use the currently-running application's helper process. The automatic
+    // update feature is careful to leave the currently-running version alone,
+    // so this is safe even if the relaunch is the result of an update having
+    // been applied. In fact, it's safer than using the updated version of the
+    // helper process, because there's no guarantee that the updated version's
+    // relauncher implementation will be compatible with the running version's.
+    base::FilePath childPath;
+    std::vector<WCHAR> currentExePath;
+    currentExePath.resize(MAX_PATH);
+    ::GetModuleFileName(NULL, &currentExePath[0], MAX_PATH);
+    childPath = base::FilePath::FromUTF16Unsafe(base::StringPiece16(&currentExePath[0]));
+
+    std::vector<std::wstring> relauncherArgs;
+    return relaunchAppWithHelper(childPath, relauncherArgs, argv);
+}
+
 void App::relaunchApi(const base::DictionaryValue& options) {
     std::string argsStr;
     std::string execPathStr;
+    bool isOverrideArgv = false;
     const base::Value* args = nullptr;
-    if (options.Get("args", &args))
-        args->GetAsString(&argsStr);
+    const base::ListValue* argsList = nullptr;
+    std::vector<std::wstring> argsArray;
+
+    if (options.Get("args", &args)) {
+        args->GetAsList(&argsList);
+        for (size_t i = 0; i < argsList->GetSize(); ++i) {
+            std::string arg;
+            if (!argsList->GetString(i, &arg))
+                continue;
+            if (arg.size() > 0)
+                argsArray.push_back(base::UTF8ToWide(arg));
+        }
+        if (argsArray.size() > 0)
+            isOverrideArgv = true;
+    }
     
     const base::Value* execPath = nullptr;
-    if (options.Get("args", &execPath))
-        args->GetAsString(&execPathStr);
+    if (options.Get("execPath", &execPath)) {
+        execPath->GetAsString(&execPathStr);
+        if (execPathStr.size() > 0)
+            isOverrideArgv = true;
+    }
 
-    OutputDebugStringA("");    
+    if (!isOverrideArgv) {
+        const std::vector<std::wstring>& argv = atom::AtomCommandLine::wargv();
+        relaunchApp(argv);
+    }
+
+    std::vector<std::wstring> argv;
+    argv.reserve(1 + argsArray.size());
+
+    if (execPathStr.empty()) {
+        std::vector<WCHAR> currentExePath;
+        currentExePath.resize(MAX_PATH);
+        if (GetModuleFileName(NULL, &currentExePath[0], MAX_PATH))
+            argv.push_back(&currentExePath[0]);
+    } else {
+        argv.push_back(base::UTF8ToWide(execPathStr));
+    }
+
+    argv.insert(argv.end(), argsArray.begin(), argsArray.end());
+    relaunchApp(argv);
 }
 
 void App::setPathApi(const std::string& name, const std::string& path) { 

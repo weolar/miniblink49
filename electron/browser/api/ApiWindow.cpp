@@ -563,9 +563,6 @@ public:
         case WkeCursorInfoHelp:
             hCur = ::LoadCursor(NULL, IDC_HELP);
             break;
-        case WkeCursorInfoEastResize:
-            hCur = ::LoadCursor(NULL, IDC_SIZEWE);
-            break;
         case WkeCursorInfoNorthResize:
             hCur = ::LoadCursor(NULL, IDC_SIZENS);
             break;
@@ -583,6 +580,8 @@ public:
             break;
         case WkeCursorInfoWestResize:
         case WkeCursorInfoEastWestResize:
+        case WkeCursorInfoColumnResize:
+        case WkeCursorInfoEastResize:
             hCur = ::LoadCursor(NULL, IDC_SIZEWE);
             break;
         case WkeCursorInfoNorthEastSouthWestResize:
@@ -668,7 +667,7 @@ public:
         case WM_NCDESTROY:
             mate::EventEmitter<Window>::emit("closed");
             ::KillTimer(hWnd, (UINT_PTR)this);
-            ::RemovePropW(hWnd, kPrppW);
+            ::RemovePropW(hWnd, kPropW);
 
             ThreadCall::callBlinkThreadAsync([webview, self] {
                 wkeDestroyWebView(webview);
@@ -930,13 +929,13 @@ public:
 
     static LRESULT CALLBACK staticWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
         int id = -1;
-        Window* self = (Window*)::GetPropW(hWnd, kPrppW);
+        Window* self = (Window*)::GetPropW(hWnd, kPropW);
         if (!self && message == WM_CREATE) {
             
             LPCREATESTRUCTW cs = (LPCREATESTRUCTW)lParam;
             self = (Window *)cs->lpCreateParams;
             id = self->m_id;
-            ::SetPropW(hWnd, kPrppW, (HANDLE)self);
+            ::SetPropW(hWnd, kPropW, (HANDLE)self);
             ::SetTimer(hWnd, (UINT_PTR)self, 70, NULL);
             return 0;
             
@@ -1841,6 +1840,12 @@ private:
         options->GetBydefaultVal("width", 1, &createWindowParam->width);
         options->GetBydefaultVal("height", 1, &createWindowParam->height);
 
+        if (createWindowParam->width < createWindowParam->minWidth)
+            createWindowParam->width = createWindowParam->minWidth;
+
+        if (createWindowParam->height < createWindowParam->minHeight)
+            createWindowParam->height = createWindowParam->minHeight;
+
         std::string title;
         options->GetBydefaultVal("title", "Electron", &title);
         createWindowParam->title = StringUtil::UTF8ToUTF16(title);
@@ -1978,7 +1983,7 @@ private:
 
 public:
     static gin::WrapperInfo kWrapperInfo;
-    static const WCHAR* kPrppW;
+    static const WCHAR* kPropW;
 
 private:
     friend class WindowInterface;
@@ -2045,7 +2050,7 @@ private:
 v8::Local<v8::Value> WindowInterface::getFocusedWindow(v8::Isolate* isolate) {
     v8::Local<v8::Value> result;
     HWND focusWnd = ::GetFocus();
-    Window* self = (Window*)::GetPropW(focusWnd, Window::kPrppW);
+    Window* self = (Window*)::GetPropW(focusWnd, Window::kPropW);
     if (!self)
         result = v8::Null(isolate);
     else
@@ -2056,7 +2061,7 @@ v8::Local<v8::Value> WindowInterface::getFocusedWindow(v8::Isolate* isolate) {
 v8::Local<v8::Value> WindowInterface::getFocusedContents(v8::Isolate* isolate) {
     v8::Local<v8::Value> result;
     HWND focusWnd = ::GetFocus();
-    Window* self = (Window*)::GetPropW(focusWnd, Window::kPrppW);
+    Window* self = (Window*)::GetPropW(focusWnd, Window::kPropW);
     if (!self)
        return v8::Null(isolate);
     
@@ -2067,7 +2072,7 @@ v8::Local<v8::Value> WindowInterface::getFocusedContents(v8::Isolate* isolate) {
     return result;
 }
 
-const WCHAR* Window::kPrppW = L"ElectronWindow";
+const WCHAR* Window::kPropW = L"ElectronWindow";
 v8::Persistent<v8::Function> Window::constructor;
 gin::WrapperInfo Window::kWrapperInfo = { gin::kEmbedderNativeGin };
 

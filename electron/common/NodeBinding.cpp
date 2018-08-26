@@ -1,4 +1,4 @@
-#include "common/NodeBinding.h"
+ï»¿#include "common/NodeBinding.h"
 
 #include "uv.h"
 #include "node/nodeblink.h"
@@ -142,7 +142,7 @@ void loadNodeScriptFromRes(void* path) {
     if (fileHandle == INVALID_HANDLE_VALUE)
         return;
 
-    std::vector<char>* buffer = new std::vector<char>(); // ÄÚ´æÐ¹Â©
+    std::vector<char>* buffer = new std::vector<char>(); // å†…å­˜æ³„æ¼
     buffer->resize(attrs.nFileSizeLow);
 
     DWORD bytesRead;
@@ -277,9 +277,9 @@ node::Environment* NodeBindings::createEnvironment(v8::Local<v8::Context> contex
         .append(processType)
         .append(FILE_PATH_LITERAL("\\init.js"));
 
-    // electronÀïµÄprocess.resourcesPathÖ¸µÄÊÇxxx/resourcesÄ¿Â¼¡£¶ømain.jsÒ»°ãÔÚxxx/resources/appÏÂ
+    // electroné‡Œçš„process.resourcesPathæŒ‡çš„æ˜¯xxx/resourcesç›®å½•ã€‚è€Œmain.jsä¸€èˆ¬åœ¨xxx/resources/appä¸‹
     if (args.size() > 1) {
-        resourcesPath = StringUtil::MultiByteToUTF16(CP_ACP, args[1]);
+        resourcesPath = StringUtil::MultiByteToUTF16(/*CP_ACP*/(936), args[1]);
         const wchar_t* resourcesPos = wcsstr(resourcesPath.c_str(), L"resources");
         if (!resourcesPos) {
             std::vector<wchar_t> wbuf(resourcesPath.size() + 1);

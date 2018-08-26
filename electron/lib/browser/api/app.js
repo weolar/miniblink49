@@ -23,7 +23,17 @@ App.prototype.getApplicationMenu = function() {
 	return Menu.getApplicationMenu()
 }
 
-/**/
+App.prototype.relaunch = function(options) {
+	if (!options)
+		options = {};
+	if (!options.args || Object.prototype.toString.call(options.args) != '[object Array]')
+		options.args = [""];
+	
+	if (!options.execPath || typeof (execPath) != "string")
+		options.execPath = "";
+	this._relaunch(options);
+}
+
 var singleInstanceCallbackMap = [];
 var singleInstanceCallbackMapIdGen = 0;
 

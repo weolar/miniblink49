@@ -198,14 +198,17 @@ private:
         optionsDict.GetString("message", message);
         optionsDict.GetString("type", type);
 
-        base::ListValue* buttonsList;
-        optionsDict.GetList("buttons", &buttonsList);
+        base::ListValue* buttonsList = nullptr;
+        bool b = optionsDict.GetList("buttons", &buttonsList);
+        if (!b || !buttonsList)
+            return;
+        
         for (size_t i = 0; i < buttonsList->GetSize(); ++i) {
             std::string button;
             buttonsList->GetString(i, &button);
             if (!button.empty())
                 buttons->push_back(button);
-        }        
+        }
     }
 
     void getOptions(v8::Isolate* isolate, 
