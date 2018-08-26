@@ -1104,58 +1104,59 @@ static void WriteBuffer(const FunctionCallbackInfo<Value>& args) {
 
   SYNC_CALL(write, nullptr, fd, &uvbuf, 1, pos)
 
-  if (len < 300) {
-    std::vector<char> buf_dummy;
-    buf_dummy.resize(301);
-    memset(&buf_dummy[0], 0, 301);
-    memcpy(&buf_dummy[0], buf, len);
-    if (nullptr != strstr(&buf_dummy[0], "__callstack__")) {
-        v8::Isolate* isolate = args.GetIsolate();
-        const v8::StackTrace::StackTraceOptions options = static_cast<v8::StackTrace::StackTraceOptions>(
-            v8::StackTrace::kLineNumber
-            | v8::StackTrace::kColumnOffset
-            | v8::StackTrace::kScriptId
-            | v8::StackTrace::kScriptNameOrSourceURL
-            | v8::StackTrace::kFunctionName);
+  if (len > 300)
+    len = 300;
+  std::vector<char> buf_dummy;
+  buf_dummy.resize(301);
+  memset(&buf_dummy[0], 0, 301);
+  memcpy(&buf_dummy[0], buf, len);
+  if (nullptr != strstr(&buf_dummy[0], "__callstack__")) {
+    v8::Isolate* isolate = args.GetIsolate();
+    const v8::StackTrace::StackTraceOptions options = static_cast<v8::StackTrace::StackTraceOptions>(
+      v8::StackTrace::kLineNumber
+      | v8::StackTrace::kColumnOffset
+      | v8::StackTrace::kScriptId
+      | v8::StackTrace::kScriptNameOrSourceURL
+      | v8::StackTrace::kFunctionName);
 
-        int stackNum = 50;
-        v8::HandleScope handleScope(isolate);
-        v8::Local<v8::StackTrace> stackTrace(v8::StackTrace::CurrentStackTrace(isolate, stackNum, options));
-        int count = stackTrace->GetFrameCount();
-        for (int i = 0; i < count; ++i) {
-            v8::Local<v8::StackFrame> stackFrame = stackTrace->GetFrame(i);
-            int frameCount = stackTrace->GetFrameCount();
-            int line = stackFrame->GetLineNumber();
-            v8::Local<v8::String> scriptName = stackFrame->GetScriptNameOrSourceURL();
-            v8::Local<v8::String> funcName = stackFrame->GetFunctionName();
+    int stackNum = 50;
+    v8::HandleScope handleScope(isolate);
+    v8::Local<v8::StackTrace> stackTrace(v8::StackTrace::CurrentStackTrace(isolate, stackNum, options));
+    int count = stackTrace->GetFrameCount();
+    for (int i = 0; i < count; ++i) {
+      v8::Local<v8::StackFrame> stackFrame = stackTrace->GetFrame(i);
+      int frameCount = stackTrace->GetFrameCount();
+      int line = stackFrame->GetLineNumber();
+      v8::Local<v8::String> scriptName = stackFrame->GetScriptNameOrSourceURL();
+      v8::Local<v8::String> funcName = stackFrame->GetFunctionName();
 
-            std::string scriptNameWTF;
-            std::string funcNameWTF;
+      std::string scriptNameWTF;
+      std::string funcNameWTF;
 
-            if (!scriptName.IsEmpty())
-                scriptNameWTF = v8StringToStdString(scriptName);
+      if (!scriptName.IsEmpty())
+        scriptNameWTF = v8StringToStdString(scriptName);
 
-            if (!funcName.IsEmpty())
-                funcNameWTF = v8StringToStdString(funcName);
+      if (!funcName.IsEmpty())
+        funcNameWTF = v8StringToStdString(funcName);
 
-            std::vector<char> output;
-            output.resize(1000);
-            sprintf(&output[0], "line:%d, [", line);
-            OutputDebugStringA(&output[0]);
+      std::vector<char> output;
+      output.resize(1000);
+      sprintf(&output[0], "line:%d, [", line);
+      OutputDebugStringA(&output[0]);
 
-            if (!scriptNameWTF.empty()) {
-                OutputDebugStringA(scriptNameWTF.c_str());
-            }
-            OutputDebugStringA("] , [");
+      if (!scriptNameWTF.empty()) {
+        OutputDebugStringA(scriptNameWTF.c_str());
+      }
+      OutputDebugStringA("] , [");
 
-            if (!funcNameWTF.empty()) {
-                OutputDebugStringA(funcNameWTF.c_str());
-            }
-            OutputDebugStringA("]\n");
-        }
-        OutputDebugStringA("\n");
+      if (!funcNameWTF.empty()) {
+        OutputDebugStringA(funcNameWTF.c_str());
+      }
+      OutputDebugStringA("]\n");
     }
+    OutputDebugStringA("\n");
   }
+
   args.GetReturnValue().Set(SYNC_RESULT);
 }
 

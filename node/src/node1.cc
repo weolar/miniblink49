@@ -1,4 +1,4 @@
-#include "node.h"
+ï»¿#include "node.h"
 #include "node_buffer.h"
 #include "node_constants.h"
 #include "node_file.h"
@@ -693,7 +693,7 @@ namespace node {
 
 	// Convenience methods
 
-	//Òì³£´¦Àíº¯Êı
+	//å¼‚å¸¸å¤„ç†å‡½æ•°
 	void ThrowError(v8::Isolate* isolate, const char* errmsg) {
 		Environment::GetCurrent(isolate)->ThrowError(errmsg);
 	}
@@ -1538,7 +1538,7 @@ namespace node {
 
 
 	// Executes a str within the current v8 context.
-	// Ö´ĞĞjs
+	// æ‰§è¡Œjs
 	Local<Value> ExecuteString(Environment* env, Local<String> source, Local<String> filename) {
 		EscapableHandleScope scope(env->isolate());
 		TryCatch try_catch(env->isolate());
@@ -2053,7 +2053,7 @@ namespace node {
 			env->ThrowError("Module did not self-register.");
 			return;
 		}
-		if (false && mp->nm_version != NODE_MODULE_VERSION && mp->nm_version != 50 && mp->nm_version != 54) { // ÌØ±ğÖ§³ÖÏÂ50\54°æ
+		if (false && mp->nm_version != NODE_MODULE_VERSION && mp->nm_version != 50 && mp->nm_version != 54) { // ç‰¹åˆ«æ”¯æŒä¸‹50\54ç‰ˆ
 			char errmsg[1024];
 			snprintf(errmsg,
 				sizeof(errmsg),
@@ -2240,7 +2240,7 @@ namespace node {
 			env->domain_string(),
 			Undefined(env->isolate())).FromJust();
 	}
-	//¼ÓÔØÄ£¿éjs
+	//åŠ è½½æ¨¡å—js
 	void ModuleJavaScript(Environment* env, Local<Object> target) {
 		HandleScope scope(env->isolate());
 
@@ -2301,7 +2301,7 @@ namespace node {
 		else if (!strcmp(*module_v, "natives")) {
 			exports = Object::New(env->isolate());
 			DefineJavaScript(env, exports);
-			//¼ÓÔØ½Å±¾
+			//åŠ è½½è„šæœ¬
 			ModuleJavaScript(env, exports);
 
 			cache->Set(module, exports);
@@ -2627,7 +2627,7 @@ namespace node {
         .FromJust();                                                          \
   } while (0)
 
-	//°²×°½ø³ÌÊı¾İ
+	//å®‰è£…è¿›ç¨‹æ•°æ®
 	void SetupProcessObject(Environment* env, int argc, const char* const* argv, int exec_argc, const char* const* exec_argv) {
 		HandleScope scope(env->isolate());
 
@@ -2999,7 +2999,7 @@ namespace node {
 		env->isolate()->AddMessageListener(OnMessage);
     env->isolate()->SetCaptureStackTraceForUncaughtExceptions(true, 50, v8::StackTrace::kDetailed);
 
-		atexit(AtProcessExit);//×¢²áÍË³öº¯Êı
+		atexit(AtProcessExit);//æ³¨å†Œé€€å‡ºå‡½æ•°
 
 		TryCatch try_catch(env->isolate());
 
@@ -3062,7 +3062,7 @@ namespace node {
 		env->Dispose();
 	}
 
-	//½âÎöµ÷ÊÔ²ÎÊı
+	//è§£æè°ƒè¯•å‚æ•°
 	static bool ParseDebugOpt(const char* arg) {
 		const char* port = nullptr;
 
@@ -3136,7 +3136,6 @@ namespace node {
 		return true;
 	}
 
-	//½âÎö²ÎÊı
 	static void ParseArgs(int* argc, const char** argv, int* exec_argc, const char*** exec_argv, int* v8_argc, const char*** v8_argv) {
 		const unsigned int nargs = static_cast<unsigned int>(*argc);
 		const char** new_exec_argv = new const char*[nargs];
@@ -3277,7 +3276,9 @@ namespace node {
 				strcmp(arg, "--expose_internals") == 0) {
 				// consumed in js
 			}
-			else {
+      else if (strcmp(arg, "--type=relauncher") == 0 || strcmp(arg, "---") == 0) { //  NodeBindings::initNodeEnv https://github.com/electron/electron/pull/5837/files
+
+      } else {
 				// V8 option.  Pass through as-is.
 				new_v8_argv[new_v8_argc] = arg;
 				new_v8_argc += 1;
