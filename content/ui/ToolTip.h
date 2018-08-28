@@ -1,4 +1,4 @@
-#ifndef content_browser_ToolTip_h
+ï»¿#ifndef content_browser_ToolTip_h
 #define content_browser_ToolTip_h
 
 #include "wke/wkeGlobalVar.h"
@@ -36,7 +36,7 @@ public:
 
         m_hFont = CreateFont(18, 0, 0, 0, FW_THIN, FALSE, FALSE, FALSE,
             GB2312_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS,
-            DEFAULT_QUALITY, FIXED_PITCH | FF_MODERN, L"Î¢ÈíÑÅºÚ");
+            DEFAULT_QUALITY, FIXED_PITCH | FF_MODERN, L"å¾®è½¯é›…é»‘");
     }
 
     ~ToolTip()
