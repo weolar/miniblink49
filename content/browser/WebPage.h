@@ -11,6 +11,7 @@
 #include "third_party/WebKit/public/web/WebViewClient.h"
 #include "third_party/WebKit/public/web/WebHistoryCommitType.h"
 #include "third_party/WebKit/Source/wtf/HashSet.h"
+#include "net/PageNetExtraData.h"
 
 #if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 class CefBrowserHostImpl;
@@ -158,6 +159,9 @@ public:
     blink::WebFrame* mainFrame();
 
     static WebPage* getSelfForCurrentContext();
+
+    PassRefPtr<net::PageNetExtraData> getPageNetExtraData();
+    void setCookieJarPath(const char* path);
 
     WebFrameClientImpl* webFrameClientImpl();
 

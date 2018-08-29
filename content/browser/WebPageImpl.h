@@ -14,6 +14,7 @@
 #include "cc/trees/LayerTreeHost.h"
 #include "cc/trees/LayerTreeHostClient.h"
 #include "skia/ext/platform_canvas.h"
+#include "net/PageNetExtraData.h"
 
 typedef struct HWND__ *HWND;
 
@@ -35,6 +36,10 @@ class WebViewImpl;
 #if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 class CefBrowserHostImpl;
 #endif
+
+namespace net {
+class PageNetExtraData;
+}
 
 namespace content {
 
@@ -236,6 +241,9 @@ public:
     void onDraggingSimulate();
     bool m_isDragging;
     bool m_isFirstEnterDrag;
+
+    void setCookieJarPath(const char* path);
+    RefPtr<net::PageNetExtraData> m_pageNetExtraData;
 
     static int64_t m_firstFrameId;
 

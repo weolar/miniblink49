@@ -143,6 +143,8 @@ WebPageImpl::WebPageImpl()
     m_devToolsAgent = nullptr;
     m_isEnterDebugLoop = false;
 
+    m_pageNetExtraData = nullptr;
+
     WebPageImpl* self = this;
     m_dragHandle = new DragHandle(
         [self] { self->onEnterDragSimulate(); },
@@ -2010,6 +2012,13 @@ void WebPageImpl::didExitDebugLoop()
 
     if (m_devToolsClient)
         m_webViewImpl->setIgnoreInputEvents(true);
+}
+
+void WebPageImpl::setCookieJarPath(const char* path)
+{
+    if (!m_pageNetExtraData)
+        m_pageNetExtraData = new net::PageNetExtraData();
+    m_pageNetExtraData->setCookieJarPath(path);
 }
 
 bool WebPageImpl::initSetting()

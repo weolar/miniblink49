@@ -485,6 +485,19 @@ blink::WebScreenInfo WebPage::screenInfo()
     return blink::WebScreenInfo();
 }
 
+PassRefPtr<net::PageNetExtraData> WebPage::getPageNetExtraData()
+{
+    if (m_pageImpl)
+        return m_pageImpl->m_pageNetExtraData;
+    return nullptr;
+}
+
+void WebPage::setCookieJarPath(const char* path)
+{
+    if (m_pageImpl)
+        return m_pageImpl->setCookieJarPath(path);
+}
+
 WebPage* WebPage::getSelfForCurrentContext()
 {
     WebPageImpl* impl = WebPageImpl::getSelfForCurrentContext();
