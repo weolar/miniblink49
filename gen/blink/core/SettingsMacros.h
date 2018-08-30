@@ -256,7 +256,7 @@
     void setXSSAuditorEnabled(bool xssAuditorEnabled); \
     void setFromStrings(const String& name, const String& value); \
     void setLanguage(const String& language); \
-    const String& Language()  const { return m_language; } \
+    const String& language()  const { return m_language; } \
 // End of SETTINGS_GETTERS_AND_SETTERS.
 
 #define SETTINGS_MEMBER_VARIABLES \
