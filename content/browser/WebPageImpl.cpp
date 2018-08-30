@@ -1854,7 +1854,7 @@ WebString WebPageImpl::acceptLanguages()
         blink::Page *page = m_webViewImpl->page();
         if (page) {
             blink::Settings &setings = page->settings();
-            return setings.Language();
+            return setings.language();
         }
     }
     return WebString::fromUTF8("zh-CN,cn");

@@ -1,4 +1,4 @@
-
+ï»¿
 #include "content/browser/NavigationController.h"
 
 #include "content/browser/WebPage.h"
@@ -45,8 +45,16 @@ void NavigationController::navigate(int offset)
     if (pos < 0 || pos > (int)(m_items.size() - 1))
         return;
     HistoryEntry* item = m_items[pos];
-#ifdef DEBUG
-    String url = item->urlString();
+#if 0 // def DEBUG
+    OutputDebugStringA("navigate:\n");
+    for (size_t i = 0; i < m_items.size(); ++i) {
+        HistoryEntry* it = m_items[i];
+        String url = it->urlString();
+        OutputDebugStringA(url.utf8().data());
+        OutputDebugStringA("\n");
+    }
+    OutputDebugStringA("navigate end\n");
+    
 #endif // DEBUG
     blink::WebHistoryLoadType type = (item->m_isSameDocument ?
         blink::WebHistorySameDocumentLoad : blink::WebHistoryDifferentDocumentLoad);
@@ -118,12 +126,14 @@ void NavigationController::insertOrReplaceEntry(const blink::WebHistoryItem& ite
     }
     case blink::WebInitialCommitInChildFrame:
         break;
-    case blink::WebHistoryInertCommit: // reload£¬»òreplaceState
-        if (0 != m_items.size()) {
-            delete m_items[m_items.size() - 1];
-            m_items.removeLast();
-        }
-        m_items.append(historyItem);
+    case blink::WebHistoryInertCommit: // reloadï¼Œæˆ–replaceState
+//         if (0 != m_items.size()) {
+//             delete m_items[m_items.size() - 1];
+//             m_items.removeLast();
+//         }
+//         m_items.append(historyItem);
+        if (m_items.size() != 0 && m_currentOffset < m_items.size())
+            m_items[m_currentOffset] = historyItem;
         break;
     default:
         break;
