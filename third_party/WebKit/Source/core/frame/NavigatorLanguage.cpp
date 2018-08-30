@@ -22,7 +22,7 @@ AtomicString NavigatorLanguage::language()
     Page *page = m_frame_->page();
     if (page) {
         Settings &seting = page->settings();
-        return AtomicString(seting.Language());
+        return AtomicString(seting.language());
     } else
         return defaultLanguage();
 }
