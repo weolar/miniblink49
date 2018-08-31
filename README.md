@@ -21,7 +21,7 @@ API文档见：https://weolar.github.io/miniblink/doc-main.html
 wkeWebView window = wkeCreateWebWindow(WKE_WINDOW_TYPE_TRANSPARENT, NULL, 0, 0, 640, 480);  // 无边框窗体 borderless window
 wkeLoadURLW(window, L"miniblink.net");
 ```
-![demo-1](https://raw.githubusercontent.com/wiki/ocornut/imgui_club/images/memory_editor_v19.gif)
+![demo-1](https://weolar.github.io/miniblink/assets/images/demo-0.gif)
 
 # 编译
 
