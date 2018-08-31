@@ -1,13 +1,14 @@
 # miniblink49
+
+miniblink是一个开源、单文件、目前已知的最小的基于chromium的，浏览器控件。通过导出的纯C接口，可以几行代码创建一个浏览器控件。
+
 ----
 
-https://weolar.github.io/miniblink/ 是miniblink的新官网。
+# 文档
 
 关于miniblink的介绍见这篇文章：https://zhuanlan.zhihu.com/p/22611497?group_id=764036386641707008
 
 API文档见：https://weolar.github.io/miniblink/doc-main.html 
-
-miniblink是一个开源、单文件、目前已知的最小的基于chromium的，浏览器控件。通过导出的纯C接口，可以几行代码创建一个浏览器控件。
 
 ----
 
