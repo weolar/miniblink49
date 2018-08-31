@@ -40,6 +40,8 @@ mini-electron项目是一个基于miniblink的独立项目，旨在创建一个�
 
 通过替换mini-electron，打包完后的文件仅仅6m左右。
 
+----
+
 # 联系方式
 
 大家有问题可以选择：
