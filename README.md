@@ -53,10 +53,10 @@ mini-electron项目是一个基于miniblink的独立项目，旨在创建一个�
 
 # 致谢
 
-特别感谢网友zero，他帮我提交了很多代码。
+特别感谢网友zero，他是miniblink的代码的重要共享者。
 
-感谢网友core，他赞助了一个论坛：http://miniblink.net/
+感谢网友core，感谢网友“大清知府”。
 
-感谢网友boxue（https://www.zhihu.com/people/coltor/） ，他致力于在微信小程序里推广miniblink架构
+感谢网友boxue（ https://www.zhihu.com/people/coltor/ ），他致力于在微信小程序里推广miniblink架构。
 
 
