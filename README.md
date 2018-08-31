@@ -1,18 +1,22 @@
-# miniblink49
+# 简介 Abstract
 
 miniblink是一个开源、单文件、目前已知的最小的基于chromium的，浏览器控件。
 
+miniblink is a open source, one file, small browser widget base on chromium.
+
 通过导出的纯C接口，可以几行代码创建一个浏览器控件。
+By using C interface, you can create a browser just some line code.
 
 您可以通过官网https://weolar.github.io/miniblink/ 来获取关于miniblink更多的信息
+more information at https://weolar.github.io/miniblink/
 
 ----
 
-# 特性
+# 特性 Features
 
-- 极致小巧的体积
-- C++，C#，Delphi等语言调用
-- 内嵌Nodejs，支持electron
+- 极致小巧的体积 small size
+- C++，C#，Delphi等语言调用 C++，C#，Delphi language to call
+- 内嵌Nodejs，支持electron 
 - 随心所欲的定制功能、模拟环境
 - 支持Windows xp、npapi
 - 完善的HTML5支持，对各种前端库友好
@@ -64,13 +68,13 @@ mini-electron项目是一个基于miniblink的独立项目，旨在创建一个�
 
 大家有问题可以选择：
 
-1，加Q群94093808
+- 加Q群94093808
 
-2，邮箱weolar@qq.com
+- 邮箱weolar@qq.com
 
-3，github里留言issue讨论
+- github里留言issue讨论
 
-4，关注知乎专栏：https://zhuanlan.zhihu.com/chrome
+- 关注知乎专栏：https://zhuanlan.zhihu.com/chrome
 
 ----
 
