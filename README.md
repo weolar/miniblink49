@@ -1,5 +1,5 @@
 # miniblink49
-=======================================================
+----
 
 https://weolar.github.io/miniblink/ 是miniblink的新官网。
 
@@ -7,50 +7,52 @@ https://weolar.github.io/miniblink/ 是miniblink的新官网。
 
 API文档见：https://weolar.github.io/miniblink/doc-main.html 
 
-简单的说，miniblink是个浏览器控件，如果你用过cef、wke、webbrowser，应该很好理解。
+miniblink是一个开源、单文件、目前已知的最小的基于chromium的，浏览器控件。通过导出的纯C接口，可以几行代码创建一个浏览器控件。
 
-一、关于编译
-========================================================
-1、目前编译尽量使用VS2015以上的编译器，否则可能出现未知错误。尽量用vs2015.bat打开（重要）
+----
 
-2、Release版本默认采用VC6运行时库，此特性可以通过USING_VC6RT宏控制
+# 使用
+* 请前往https://github.com/weolar/miniblink49/releases 下载最新编译后的SDK，里面的demo_src是个完整的用例。
 
-3、miniblink默认同时导出CEF和WKE两种接口，导出接口可以通过ENABLE_CEF和ENABLE_WKE两个宏控制.#这里至少选择一种导出接口
+最简单的创建一个窗口：
+**Usage**
+```cpp
+wkeWebView window = wkeCreateWebWindow(WKE_WINDOW_TYPE_TRANSPARENT, NULL, 0, 0, 640, 480);  // 无边框窗体 borderless window
+wkeLoadURLW(window, L"miniblink.net");
+```
+![demo-1](https://raw.githubusercontent.com/wiki/ocornut/imgui_club/images/memory_editor_v19.gif)
 
-4、更详细内容请见 http://miniblink.net/article/4 编译指南
+# 编译
 
-5、如果只想看demo，可以编译 https://github.com/weolar/miniblink49/releases 里自带的demo_src
-   或者只下载https://github.com/weolar/miniblink49/tree/master/wkexe 目录然后编译
+不推荐自己编译。因为每天有大量更新，我无法确保每次更新都能保证编译通过。如果有编译错误，请等待我的下次提交
 
-6、需要编译好的dll以及demo的源码和工程，在 https://github.com/weolar/miniblink49/releases 下载
+----
 
-7、如果编译有错误，请等待我最新代码提交（重要！）。
+# mini-electron
 
-二、杂项说明
-========================================================
-1、miniblink主要是用来做PC端的浏览器嵌入组件，由于导出的是wke和cef的接口，所以你可以替换到你的项目中去体验和学习。基本相当于一个wke的升级版本，或者cef的精简版。
+mini-electron项目是一个基于miniblink的独立项目，旨在创建一个更小的electron运行环境。目前已经实现了这一目标。
+通过替换mini-electron，打包完后的文件仅仅6m左右。
 
-2、electron的接口目前已经实现绝大部分接口，可以实战使用
+# 联系方式
 
-3、例子可见源码中的wkexe工程，或者cefclient（被废弃），或者新手文档
-
-三、联系方式
-========================================================
 大家有问题可以选择：
 
 1，加Q群94093808
 
 2，邮箱weolar@qq.com
 
-3，csdn：blog.csdn.net/weolar
+3，github里留言issue讨论
 
-4，github里留言issue讨论
+4，关注知乎专栏：https://zhuanlan.zhihu.com/chrome
 
-5，关注知乎专栏：https://zhuanlan.zhihu.com/chrome
+----
+
+# 致谢
+
+特别感谢网友zero，他帮我提交了很多代码。
+
+感谢网友core，他赞助了一个论坛：http://miniblink.net/
+
+感谢网友boxue（https://www.zhihu.com/people/coltor/） ，他致力于在微信小程序里推广miniblink架构
 
 
-当然我不会所有问题都回答的，毕竟还要去工地搬砖养家糊口。
-
-最后特别感谢zero，他帮我提交了很多代码。
-
-另外感谢网友core，他赞助了一个论坛：http://miniblink.net/
