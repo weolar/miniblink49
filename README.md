@@ -6,6 +6,10 @@ miniblink是一个开源、单文件、目前已知的最小的基于chromium的
 
 您可以通过官网https://weolar.github.io/miniblink/ 来获取关于miniblink更多的信息
 
+
+- Tabs https://github.com/ocornut/imgui/issues/261
+- Splitters https://github.com/ocornut/imgui/issues/319
+
 ----
 
 # 文档
