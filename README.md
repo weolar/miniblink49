@@ -30,7 +30,7 @@ more information at https://weolar.github.io/miniblink/
 
 ----
 
-# 文档
+# 文档 Document
 
 关于miniblink的介绍见这篇文章：https://zhuanlan.zhihu.com/p/22611497?group_id=764036386641707008
 
@@ -38,7 +38,7 @@ API文档见：https://weolar.github.io/miniblink/doc-main.html
 
 ----
 
-# 使用
+# 使用 Usage
 请前往https://github.com/weolar/miniblink49/releases 下载最新编译后的SDK，里面的demo_src是个完整的用例。
 
 最简单的创建一个窗口：
@@ -52,7 +52,7 @@ wkeLoadURLW(window, L"miniblink.net");
 ```
 ![demo-1](https://weolar.github.io/miniblink/assets/images/demo-0.gif)
 
-# 编译
+# 编译 Build
 
 不推荐自己编译。因为每天有大量更新，我无法确保每次更新都能保证编译通过。如果有编译错误，请等待我的下次提交。
 
@@ -80,9 +80,9 @@ mini-electron项目是一个基于miniblink的独立项目，旨在创建一个�
 
 ----
 
-# 致谢
+# 致谢 Thanks
 
-特别感谢网友zero，他是miniblink的代码的重要共享者。
+特别感谢网友zero，他是miniblink的代码的重要贡献者。
 
 感谢网友core，感谢网友“大清知府”。
 
