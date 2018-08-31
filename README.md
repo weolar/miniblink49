@@ -1,6 +1,7 @@
 # miniblink49
 
 miniblink是一个开源、单文件、目前已知的最小的基于chromium的，浏览器控件。通过导出的纯C接口，可以几行代码创建一个浏览器控件。
+您可以通过官网https://weolar.github.io/miniblink/ 来获取关于miniblink更多的信息
 
 ----
 
@@ -17,15 +18,17 @@ API文档见：https://weolar.github.io/miniblink/doc-main.html
 
 最简单的创建一个窗口：
 **Usage**
+
 ```cpp
-wkeWebView window = wkeCreateWebWindow(WKE_WINDOW_TYPE_TRANSPARENT, NULL, 0, 0, 640, 480);  // 无边框窗体 borderless window
+// 无边框窗体 borderless window
+wkeWebView window = wkeCreateWebWindow(WKE_WINDOW_TYPE_TRANSPARENT, NULL, 0, 0, 640, 480);  
 wkeLoadURLW(window, L"miniblink.net");
 ```
 ![demo-1](https://weolar.github.io/miniblink/assets/images/demo-0.gif)
 
 # 编译
 
-不推荐自己编译。因为每天有大量更新，我无法确保每次更新都能保证编译通过。如果有编译错误，请等待我的下次提交
+不推荐自己编译。因为每天有大量更新，我无法确保每次更新都能保证编译通过。如果有编译错误，请等待我的下次提交。
 
 ----
 
