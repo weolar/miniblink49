@@ -6,9 +6,21 @@ miniblink是一个开源、单文件、目前已知的最小的基于chromium的
 
 您可以通过官网https://weolar.github.io/miniblink/ 来获取关于miniblink更多的信息
 
+----
 
-- Tabs https://github.com/ocornut/imgui/issues/261
-- Splitters https://github.com/ocornut/imgui/issues/319
+# 特性
+
+- 极致小巧的体积
+- C++，C#，Delphi等语言调用
+- 内嵌Nodejs，支持electron
+- 随心所欲的定制功能、模拟环境
+- 支持Windows xp、npapi
+- 完善的HTML5支持，对各种前端库友好
+- 关闭跨域开关后，可以使用各种跨域功能
+- 整合融入nodejs，可以无缝使用nodejs各种开源框架
+- 网络资源拦截，替换任意网站任意js为本地文件
+- 可无缝模拟移动环境
+- headless模式，极大节省资源，适用于爬虫
 
 ----
 
