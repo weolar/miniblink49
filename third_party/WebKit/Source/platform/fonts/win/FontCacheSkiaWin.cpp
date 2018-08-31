@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  * Copyright (C) 2006, 2007 Apple Computer, Inc.
  * Copyright (c) 2006, 2007, 2008, 2009, 2012 Google Inc. All rights reserved.
  *
@@ -166,8 +166,8 @@ PassRefPtr<SimpleFontData> FontCache::fallbackFontForCharacter(
     };
 
     const static wchar_t* const commonFonts[] = {
-        L"Î¢ÈíÑÅºÚ",
-        L"ËÎÌå",
+        L"å¾®è½¯é›…é»‘",
+        L"å®‹ä½“",
         L"tahoma",
         L"arial unicode ms",
         L"lucida sans unicode",
