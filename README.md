@@ -6,6 +6,7 @@ miniblink是一个开源、单文件、目前已知的最小的基于chromium的
 
 通过导出的纯C接口，可以几行代码创建一个浏览器控件。
 
+
 miniblink is a open source, one file, small browser widget base on chromium.
 
 By using C interface, you can create a browser just some line code.
@@ -16,17 +17,15 @@ more information at https://weolar.github.io/miniblink/
 
 # 特性 Features
 
-- 极致小巧的体积 small size
-- C++，C#，Delphi等语言调用 C++，C#，Delphi language to call
-- 内嵌Nodejs，支持electron 
-- 随心所欲的定制功能、模拟环境
-- 支持Windows xp、npapi
-- 完善的HTML5支持，对各种前端库友好
-- 关闭跨域开关后，可以使用各种跨域功能
-- 整合融入nodejs，可以无缝使用nodejs各种开源框架
-- 网络资源拦截，替换任意网站任意js为本地文件
-- 可无缝模拟移动环境
-- headless模式，极大节省资源，适用于爬虫
+- 极致小巧的体积 (small size)
+- C++，C#，Delphi等语言调用 (support C++，C#，Delphi language to call)
+- 内嵌Nodejs，支持electron (with Nodejs, can run electron)
+- 随心所欲的定制功能、模拟环境 (simulate other browser environment)
+- 支持Windows xp、npapi (support windows xp and npapi)
+- 完善的HTML5支持，对各种前端库友好 (support HTML5, and friendly to front framework)
+- 关闭跨域开关后，可以使用各种跨域功能 (support cross domain)
+- 网络资源拦截，替换任意网站任意js为本地文件 (network intercept, you can replace any resource to local file)
+- headless模式，极大节省资源，适用于爬虫 (headless mode, be suitable for Web Crawler)
 
 ----
 
