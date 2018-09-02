@@ -24,10 +24,6 @@
 #include "cc/playback/TileActionInfo.h"
 #include "wke/wkeGlobalVar.h"
 
-namespace blink {
-bool saveDumpFile(const String& url, char* buffer, unsigned int size);
-}
-
 static void transformToFlattenedSkMatrix(const SkMatrix44& transform, SkMatrix* flattened)
 {
     // Convert from 4x4 to 3x3 by dropping the third row and column.

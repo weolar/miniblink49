@@ -44,10 +44,6 @@
 #include "third_party/WebKit/Source/platform/image-encoders/gdiplus/GDIPlusImageEncoder.h"
 #include "wke/wkeGlobalVar.h"
 
-namespace blink {
-bool saveDumpFile(const String& url, char* buffer, unsigned int size);
-}
-
 extern DWORD g_rasterTaskCount;
 
 namespace content {
@@ -295,11 +291,11 @@ public:
         m_blendAction->setDirtyRectBitmap(bitmap);
         m_blendAction->setContentScale(m_contentScale);
 
-        if (0) {
-            Vector<unsigned char> output;
-            blink::GDIPlusImageEncoder::encode(*bitmap, blink::GDIPlusImageEncoder::PNG, &output);
-            blink::saveDumpFile("E:\\mycode\\miniblink49\\trunk\\out\\1.png", (char*)output.data(), output.size());
-        }
+//         if (0) {
+//             Vector<unsigned char> output;
+//             blink::GDIPlusImageEncoder::encode(*bitmap, blink::GDIPlusImageEncoder::PNG, &output);
+//             blink::saveDumpFile("E:\\mycode\\miniblink49\\trunk\\out\\1.png", (char*)output.data(), output.size());
+//         }
 #endif
     }
 
