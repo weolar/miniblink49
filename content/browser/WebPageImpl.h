@@ -103,6 +103,7 @@ public:
     virtual void setMouseOverURL(const blink::WebURL&) override;
     virtual void setToolTipText(const blink::WebString&, blink::WebTextDirection hint) override;
     virtual void draggableRegionsChanged() override;
+    virtual void onMouseDown(const blink::WebNode& mouseDownNode) override;
 
     // Editing --------------------------------------------------------
     virtual bool handleCurrentKeyboardEvent() override;
@@ -139,7 +140,7 @@ public:
 
     void beginMainFrame();
     
-    void repaintRequested(const blink::IntRect& windowRect);
+    void repaintRequested(const blink::IntRect& windowRect, bool forceRepaintIfEmptyRect);
 
     void freeV8TempObejctOnOneFrameBefore();
 

@@ -26,6 +26,8 @@ public:
     void fireCaptureChangedEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
     void fireTouchEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
+    void setIsDraggableNodeMousedown();
+
 private:
     bool doDraggableRegionNcHitTest(HWND hWnd, const blink::IntPoint& pos, HRGN draggableRegion);
     bool m_isDraggableRegionNcHitTest;
@@ -33,6 +35,7 @@ private:
     bool m_postMouseLeave;
     bool m_mouseInWindow;
     bool m_isAlert;
+    bool m_isDraggableNodeMousedown;
     double m_lastTimeMouseDown;
     blink::IntPoint m_lastPosMouseDown;
     blink::IntPoint m_lastPosMouseMove;

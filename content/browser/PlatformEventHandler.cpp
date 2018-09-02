@@ -152,6 +152,7 @@ PlatformEventHandler::PlatformEventHandler(WebWidget* webWidget, WebViewImpl* we
     m_mouseInWindow = false;
     m_isAlert = false;
     m_isDraggableRegionNcHitTest = false;
+    m_isDraggableNodeMousedown = false;
     m_lastTimeMouseDown = 0;
     m_webWidget = webWidget;
     m_webViewImpl = webViewImpl;
@@ -339,9 +340,10 @@ LRESULT PlatformEventHandler::fireMouseEvent(HWND hWnd, UINT message, WPARAM wPa
         m_isDraggableRegionNcHitTest = false;
         webMouseEvent.type = WebInputEvent::MouseDown;
         bool b = m_webWidget->handleInputEvent(webMouseEvent);
-        //makeDraggableRegionNcHitTest(hWnd, lParam, &m_isDraggableRegionNcHitTest, m_lastPosForDrag);
-        if (isValideWindow && isDraggable)
+
+        if (isValideWindow && isDraggable /*&& m_isDraggableNodeMousedown*/)
             ::PostMessage(hWnd, WM_SYSCOMMAND, SC_MOVE | HTCAPTION, 0);
+        m_isDraggableNodeMousedown = false;
     } else if (WM_LBUTTONUP == message || WM_MBUTTONUP == message || WM_RBUTTONUP == message) {
         handle = true;
         switch (message) {
@@ -403,6 +405,11 @@ LRESULT PlatformEventHandler::fireMouseEvent(HWND hWnd, UINT message, WPARAM wPa
     if (bHandle)
         *bHandle = handle;
     return 0;
+}
+
+void PlatformEventHandler::setIsDraggableNodeMousedown()
+{
+    m_isDraggableNodeMousedown = true;
 }
 
 bool PlatformEventHandler::doDraggableRegionNcHitTest(HWND hWnd, const blink::IntPoint& pos, HRGN draggableRegion)

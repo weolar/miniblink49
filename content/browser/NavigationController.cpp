@@ -132,7 +132,7 @@ void NavigationController::insertOrReplaceEntry(const blink::WebHistoryItem& ite
 //             m_items.removeLast();
 //         }
 //         m_items.append(historyItem);
-        if (m_items.size() != 0 && m_currentOffset < m_items.size())
+        if (m_items.size() != 0 && m_currentOffset < (int)m_items.size())
             m_items[m_currentOffset] = historyItem;
         break;
     default:

@@ -107,7 +107,7 @@ public:
 
     blink::IntRect caretRect();
 
-    void repaintRequested(const blink::IntRect& windowRect);
+    void repaintRequested(const blink::IntRect& windowRect, bool forceRepaintIfEmptyRect);
 
     void setIsDraggableRegionNcHitTest();
 
