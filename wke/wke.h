@@ -554,10 +554,10 @@ typedef void(*wkeCallUiThread)(wkeWebView webView, wkeOnCallUiThread func, void*
 WKE_API void wkeSetUIThreadCallback(wkeWebView webView, wkeCallUiThread callback, void* param);
 
 //wkeNet--------------------------------------------------------------------------------------
-typedef bool(*wkeLoadUrlBeginCallback)(wkeWebView webView, void* param, const char *url, void *job);
+typedef bool(*wkeLoadUrlBeginCallback)(wkeWebView webView, void* param, const char* url, void* job);
 WKE_API void wkeOnLoadUrlBegin(wkeWebView webView, wkeLoadUrlBeginCallback callback, void* callbackParam);
 
-typedef void(*wkeLoadUrlEndCallback)(wkeWebView webView, void* param, const char *url, void *job, void* buf, int len);
+typedef void(*wkeLoadUrlEndCallback)(wkeWebView webView, void* param, const char *url, void* job, void* buf, int len);
 WKE_API void wkeOnLoadUrlEnd(wkeWebView webView, wkeLoadUrlEndCallback callback, void* callbackParam);
 
 typedef void(*wkeDidCreateScriptContextCallback)(wkeWebView webView, void* param, wkeWebFrameHandle frameId, void* context, int extensionGroup, int worldId);

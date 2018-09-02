@@ -1846,10 +1846,19 @@ namespace wke {
 
 bool checkThreadCallIsValid(const char* funcName)
 {
+    String output;
+    if (!wke::wkeIsInit) {
+        output = L"禁止初始化前调用此接口：";
+        output.append(funcName);
+        ::MessageBoxW(nullptr, output.charactersWithNullTermination().data(), L"警告！", MB_OK);
+        ::TerminateProcess((HANDLE)-1, 5);
+        return false;
+    }
+
     if (WTF::isMainThread())
         return true;
         
-    String output = L"禁止多线程调用此接口：";
+    output = L"禁止多线程调用此接口：";
     output.append(funcName);
     output.append(L"。当前线程id：");
     output.append(String::number(::GetCurrentThreadId()));

@@ -3,7 +3,7 @@
 
 #include "wke/wkeWebWindow.h"
 #include "wke/wkeGlobalVar.h"
-
+#include "content/browser/WebPage.h"
 ////////////////////////////////////////////////////////////////////////////
 
 namespace wke {
@@ -222,6 +222,11 @@ LRESULT CWebWindow::_windowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM l
         wkeRepaintIfNeeded(this);
         return 0;
 
+    case WM_SYSCOMMAND:
+        if ((SC_RESTORE == wParam) && WS_EX_LAYERED == (WS_EX_LAYERED & ::GetWindowLong(hwnd, GWL_EXSTYLE)))
+            m_webPage->repaintRequested(blink::IntRect(), true);
+        break;
+
     case WM_PAINT:
         if (WS_EX_LAYERED != (WS_EX_LAYERED & GetWindowLong(hwnd, GWL_EXSTYLE))) {
             wkeRepaintIfNeeded(this);
@@ -438,14 +443,14 @@ LRESULT CWebWindow::_windowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM l
     case WM_MBUTTONUP:
     case WM_RBUTTONUP:
     case WM_MOUSEMOVE: {
-        if (message == WM_LBUTTONDOWN || message == WM_MBUTTONDOWN || message == WM_RBUTTONDOWN) {
-            if (::GetFocus() != hwnd)
-                ::SetFocus(hwnd);
-            ::SetCapture(hwnd);
-        }
-        else if (message == WM_LBUTTONUP || message == WM_MBUTTONUP || message == WM_RBUTTONUP) {
-            ReleaseCapture();
-        }
+//         if (message == WM_LBUTTONDOWN || message == WM_MBUTTONDOWN || message == WM_RBUTTONDOWN) {
+//             if (::GetFocus() != hwnd)
+//                 ::SetFocus(hwnd);
+//             ::SetCapture(hwnd);
+//         }
+//         else if (message == WM_LBUTTONUP || message == WM_MBUTTONUP || message == WM_RBUTTONUP) {
+//             ReleaseCapture();
+//         }
 
         int x = LOWORD(lParam);
         int y = HIWORD(lParam);

@@ -465,48 +465,13 @@ void CWebView::addDirtyArea(int x, int y, int w, int h)
 
 void CWebView::layoutIfNeeded()
 {
-    //m_mainFrame->view()->updateLayoutAndStyleIfNeededRecursive();
     m_webPage->fireTimerEvent();
 }
 
 void CWebView::repaintIfNeeded()
 {
     m_webPage->fireTimerEvent();
-// 	if(!m_dirty)
-//      return;
-// 
-// 	layoutIfNeeded();
-//
-// 	if (m_graphicsContext == NULL)
-// 	{
-// 		blink::BitmapInfo bmp = blink::BitmapInfo::createBottomUp(blink::IntSize(m_width, m_height));
-// 		HBITMAP hbmp = ::CreateDIBSection(0, &bmp, DIB_RGB_COLORS, &m_pixels, NULL, 0);
-// 		::SelectObject(m_hdc.get(), hbmp);
-// 		m_hbitmap = adoptPtr(hbmp);
-// 
-// 		m_graphicsContext = new blink::GraphicsContext(m_hdc.get(), m_transparent);
-// 	}
-// 
-// 	m_graphicsContext->save();
-// 
-// 	if (m_transparent)
-// 		m_graphicsContext->clearRect(m_dirtyArea);
-// 
-// 	m_graphicsContext->clip(m_dirtyArea);
-// 
-// 	m_mainFrame->view()->paint(m_graphicsContext, m_dirtyArea);
-// 
-// 	m_graphicsContext->restore();
-//     ChromeClient* client = (ChromeClient*)page()->chrome()->client();
-//     client->paintPopupMenu(m_pixels,  m_width*4);
-
-//     if (m_webPage->wkeHandler().paintUpdatedCallback) {
-//         blink::IntPoint pt = m_dirtyArea.location();
-//         blink::IntSize sz = m_dirtyArea.size();
-//         m_webPage->wkeHandler().paintUpdatedCallback(this, m_webPage->wkeHandler().paintUpdatedCallbackParam, *m_hdc.get(), pt.x(), pt.y(), sz.width(), sz.height());
-// 	}
     m_dirtyArea = blink::IntRect();
-    //m_dirty = false;
 }
 
 HDC CWebView::viewDC()
@@ -963,6 +928,8 @@ jsExecState CWebView::globalExecByFrame(wkeWebFrameHandle frameId)
     v8::HandleScope handleScope(isolate);
 
     blink::WebFrame* webFrame = m_webPage->getWebFrameFromFrameId(wkeWebFrameHandleToFrameId(m_webPage, frameId));
+    if (!webFrame)
+        return nullptr;
     return wke::createTempExecStateByV8Context(webFrame->mainWorldScriptContext());
 }
 

@@ -1,4 +1,4 @@
-#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
+ï»¿#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
 //////////////////////////////////////////////////////////////////////////
 #define BUILDING_wke
 
@@ -16,8 +16,6 @@
 #include "third_party/WebKit/public/web/WebLocalFrame.h"
 #include "content/browser/WebFrameClientImpl.h"
 #include "content/browser/WebPage.h"
-
-//cexer: ±ØĞë°üº¬ÔÚºóÃæ£¬ÒòÎªÆäÖĞµÄ wke.h -> windows.h »á¶¨Òå max¡¢min£¬µ¼ÖÂ WebCore ÄÚ²¿µÄ max¡¢min ³öÏÖ´íÂÒ¡£
 #include "wke/wke.h"
 #include "wke/wkeJsBind.h"
 #include "wke/wkeWebView.h"
@@ -58,7 +56,7 @@ JsExecStateInfo* JsExecStateInfo::create()
     return retVal;
 }
 
-// jsValue µÄÖµ·ÖÁ½ÖÖÇé¿ö£¬Ò»ÖÖÊÇc++´´½¨µÄ£¬Ò»ÖÖÊÇv8´´½¨ÔÙ×ª»»³ÉjsValueµÄ
+// jsValue çš„å€¼åˆ†ä¸¤ç§æƒ…å†µï¼Œä¸€ç§æ˜¯c++åˆ›å»ºçš„ï¼Œä¸€ç§æ˜¯v8åˆ›å»ºå†è½¬æ¢æˆjsValueçš„
 class WkeJsValue {
 public:
     enum Type {
