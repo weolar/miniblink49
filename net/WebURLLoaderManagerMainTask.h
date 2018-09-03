@@ -1,4 +1,4 @@
-
+ï»¿
 #ifndef net_WebURLLoaderManagerMainTask_h
 #define net_WebURLLoaderManagerMainTask_h
 
@@ -16,7 +16,7 @@
 
 namespace net {
 
-// »Øµ÷»ØmainÏß³ÌµÄtask
+// å›žè°ƒå›žmainçº¿ç¨‹çš„task
 class WebURLLoaderManagerMainTask : public blink::WebThread::Task{
 public:
     enum TaskType {
@@ -495,7 +495,11 @@ static bool setHttpResponseDataToJobWhenDidReceiveResponseOnMainThread(WebURLLoa
     job->m_response.setURL(KURL(ParsedURLString, args->hdr));
     job->m_response.setHTTPStatusCode(args->httpCode);
     job->m_response.setMIMEType(extractMIMETypeFromMediaType(contentType).lower());
-    job->m_response.setTextEncodingName(extractCharsetFromMediaType(contentType));
+
+    String textEncodingName = extractCharsetFromMediaType(contentType);
+//     if (textEncodingName.isNull() || textEncodingName.isEmpty())
+//         textEncodingName = "utf-8";
+    job->m_response.setTextEncodingName(textEncodingName);
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
     if (dispatchResponseToWke(job, contentType))
         return false;
@@ -511,11 +515,11 @@ static bool setHttpResponseDataToJobWhenDidReceiveResponseOnMainThread(WebURLLoa
         job->m_effectiveUrl = args->hdr;
 
     bool isRedirectByHttpCode = isHttpRedirect(args->httpCode);
-    bool isRedirectByUrl = (!job->m_effectiveUrl.empty() && job->m_effectiveUrl != job->m_url); // ÓÐÊ±ÓÐ´úÀíÊ±£¬url»á±ä£¬µ«Ã»ÓÐ30xÂë
+    bool isRedirectByUrl = (!job->m_effectiveUrl.empty() && job->m_effectiveUrl != job->m_url); // æœ‰æ—¶æœ‰ä»£ç†æ—¶ï¼Œurlä¼šå˜ï¼Œä½†æ²¡æœ‰30xç 
 
     job->m_effectiveUrl = args->hdr;
 
-    // HTTP redirection ÖØ¶¨Ïò
+    // HTTP redirection é‡å®šå‘
     if (isRedirectByHttpCode || isRedirectByUrl) {
         String location = job->m_response.httpHeaderField(WebString::fromUTF8("location"));
 

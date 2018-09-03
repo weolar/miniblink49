@@ -3,17 +3,19 @@
 #define net_InitializeHandleInfo_h
 
 #include "net/ProxyType.h"
+#include "net/PageNetExtraData.h"
 #include "curl/curl.h"
 #include <string>
 
 namespace net {
 
 struct SetupHttpMethodInfo;
-
+    
 struct InitializeHandleInfo {
     std::string url;
     std::string method;
     curl_slist* headers;
+    RefPtr<PageNetExtraData> pageNetExtraData;
     std::string proxy;
     std::string wkeNetInterface;
     ProxyType proxyType;

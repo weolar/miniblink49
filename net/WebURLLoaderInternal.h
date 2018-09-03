@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  * Copyright (C) 2004, 2006 Apple Computer, Inc.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -31,6 +31,7 @@
 #include "net/MultipartHandle.h"
 #include "net/SharedMemoryDataConsumerHandle.h"
 #include "net/CancelledReason.h"
+#include "net/PageNetExtraData.h"
 #include "third_party/WebKit/public/platform/WebURLLoader.h"
 #include "third_party/WebKit/public/platform/WebURLResponse.h"
 #include "third_party/WebKit/public/platform/WebURLError.h"
@@ -126,8 +127,8 @@ public:
     bool m_shouldContentSniff;
 
     CURL* m_handle;
-    char* m_url; // ÉèÖÃ¸øcurlµÄµØÖ·¡£ºÍrequest¿ÉÄÜ²»Í¬£¬Ö÷ÒªÊÇfragment
-    std::string m_effectiveUrl; // curlÊÕµ½ÍøÂç°üºó·µ»ØµÄ×îºóÓĞĞ§µØÖ·£¬Èç¹ûÓĞÖØ¶¨Ïòredirect£¬Ôò¿ÉÄÜºÍÉÏÃæµÄ±äÁ¿²»Í¬
+    char* m_url; // è®¾ç½®ç»™curlçš„åœ°å€ã€‚å’Œrequestå¯èƒ½ä¸åŒï¼Œä¸»è¦æ˜¯fragment
+    std::string m_effectiveUrl; // curlæ”¶åˆ°ç½‘ç»œåŒ…åè¿”å›çš„æœ€åæœ‰æ•ˆåœ°å€ï¼Œå¦‚æœæœ‰é‡å®šå‘redirectï¼Œåˆ™å¯èƒ½å’Œä¸Šé¢çš„å˜é‡ä¸åŒ
     struct curl_slist* m_customHeaders;
     WebURLResponse m_response;
     OwnPtr<MultipartHandle> m_multipartHandle;
@@ -171,11 +172,12 @@ public:
     bool m_isHoldJobToAsynCommit;
 
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
-    int m_isHookRequest; // 1±íÊ¾wke½Ó¿ÚÉèÖÃµÄ£¬2±íÊ¾ÄÚ²¿Ö¸¶¨Òª»º´æ£¬3±íÊ¾¼ÈÊÇÄÚ²¿Ö¸¶¨£¬ÓÖ±»»º´æÁË
+    int m_isHookRequest; // 1è¡¨ç¤ºwkeæ¥å£è®¾ç½®çš„ï¼Œ2è¡¨ç¤ºå†…éƒ¨æŒ‡å®šè¦ç¼“å­˜ï¼Œ3è¡¨ç¤ºæ—¢æ˜¯å†…éƒ¨æŒ‡å®šï¼Œåˆè¢«ç¼“å­˜äº†
     Vector<char>* m_hookBufForEndHook;
     Vector<char>* m_asynWkeNetSetData;
     bool m_isWkeNetSetDataBeSetted;
 #endif
+    RefPtr<PageNetExtraData> m_pageNetExtraData;
 };
 
 } // namespace net
