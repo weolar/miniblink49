@@ -296,7 +296,7 @@ PassOwnPtrWillBeRawPtr<WebDevToolsAgentImpl> WebDevToolsAgentImpl::create(WebLoc
     //agent->registerAgent(InspectorFileSystemAgent::create(view->page()));
     //agent->registerAgent(InspectorIndexedDBAgent::create(view->page()));
     //agent->registerAgent(InspectorAccessibilityAgent::create(view->page())); // weolar
-    //agent->registerAgent(InspectorDOMStorageAgent::create(view->page()));
+    agent->registerAgent(InspectorDOMStorageAgent::create(view->page()));
     //agent->registerAgent(InspectorCacheStorageAgent::create());
     agent->layerTreeViewChanged(view->layerTreeView());
     return adoptPtrWillBeNoop(agent);

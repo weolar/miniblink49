@@ -85,6 +85,7 @@ WebStorageAreaImpl::WebStorageAreaImpl(DOMStorageMap* cachedArea, const WebStrin
     : m_cachedArea(cachedArea)
     , m_isLocal(isLocal)
     , m_delaySaveTimer(this, &WebStorageAreaImpl::delaySaveTimerFired)
+    , m_iteratorIndex(UINT_MAX)
 {
     m_origin = (String)origin;
 
@@ -228,15 +229,68 @@ unsigned WebStorageAreaImpl::length()
 
 WebString WebStorageAreaImpl::key(unsigned index)
 {
+    unsigned len = length();
+    if (0 == len)
+        return String();
+
     if (index >= length())
         return String();
 
-    setIteratorToIndex(index);
-    return m_iterator->key;
+    if (!setIteratorToIndex(index))
+        return String();
+
+    const String& key = m_iterator->key;
+    if (key.isNull() || key.isEmpty())
+        return String();
+
+    return key;
+}
+
+bool WebStorageAreaImpl::setIteratorToIndex(unsigned index)
+{
+    // FIXME: Once we have bidirectional iterators for HashMap we can be more intelligent about this.
+    // The requested index will be closest to begin(), our current iterator, or end(), and we
+    // can take the shortest route.
+    // Until that mechanism is available, we'll always increment our iterator from begin() or current.
+    DOMStorageMap::iterator it = m_cachedArea->find(m_origin);
+    if (it == m_cachedArea->end())
+        return false;
+    HashMap<String, String>* pageStorageArea = it->value;
+
+    if (0 == index) {
+        setToIteratorZero(pageStorageArea);
+        return true;
+    }
+
+    if (m_iteratorIndex == index)
+        return true;
+
+    if (index < m_iteratorIndex)
+        setToIteratorZero(pageStorageArea);
+
+    while (m_iteratorIndex < index) {
+        ++m_iteratorIndex;
+        ++m_iterator;
+        RELEASE_ASSERT(m_iterator != pageStorageArea->end());
+    }
+
+    if (m_iterator == pageStorageArea->end())
+        return false;
+    return true;
+}
+
+void WebStorageAreaImpl::setToIteratorZero(HashMap<String, String>* pageStorageArea)
+{
+    m_iteratorIndex = 0;
+    m_iterator = pageStorageArea->begin();
+    RELEASE_ASSERT(m_iterator != pageStorageArea->end());
 }
 
 WebString WebStorageAreaImpl::getItem(const WebString& key)
 {
+    if (key.isNull() || key.isEmpty())
+        return WebString();
+
     String keyString = key;
 
     DOMStorageMap::iterator it = m_cachedArea->find(m_origin);
@@ -245,6 +299,15 @@ WebString WebStorageAreaImpl::getItem(const WebString& key)
 
     HashMap<String, String>* pageStorageArea = it->value;
     size_t size = pageStorageArea->size();
+
+//     HashMap<String, String>::iterator itor = pageStorageArea->begin();
+//     for (; itor != pageStorageArea->end(); ++itor) {
+//         String keyStr = itor->key;
+//         String valueStr = itor->value;
+// 
+//         String output = String::format("WebStorageAreaImpl::getItem: %s , %s\n", keyStr.utf8().data(), valueStr.utf8().data());
+//         OutputDebugStringA(output.utf8().data());
+//     }
 
     HashMap<String, String>::iterator keyValueIt = pageStorageArea->find(keyString);
     if (keyValueIt == pageStorageArea->end())
@@ -259,6 +322,10 @@ void WebStorageAreaImpl::setItemImpl(const WebString& key, const WebString& valu
     String origin = buildOriginString(pageUrl);
     String keyString = key;
     String valueString = value;
+    if (keyString.isNull())
+        keyString = "";
+    if (valueString.isNull())
+        valueString = "";
 
     DOMStorageMap::iterator it = m_cachedArea->find(origin);
     HashMap<String, String>* pageStorageArea;
@@ -274,7 +341,7 @@ void WebStorageAreaImpl::setItemImpl(const WebString& key, const WebString& valu
     HashMap<String, String>::iterator iter = pageStorageArea->find(keyString);
     if (pageStorageArea->end() != iter)
         oldValue = iter->value;
-    pageStorageArea->set(keyString, value);
+    pageStorageArea->set(keyString, valueString);
     size_t size = pageStorageArea->size();
 
     result = WebStorageArea::ResultOK;
@@ -285,7 +352,7 @@ void WebStorageAreaImpl::setItemImpl(const WebString& key, const WebString& valu
         m_delaySaveTimer.startOneShot(0.5, FROM_HERE);
 
     invalidateIterator();
-    dispatchStorageEvent(key, oldValue, value, pageUrl);
+    dispatchStorageEvent(keyString, oldValue, valueString, pageUrl);
 }
 
 void WebStorageAreaImpl::setItem(const WebString& key, const WebString& value, const WebURL& pageUrl, WebStorageArea::Result& result)
@@ -360,32 +427,6 @@ void WebStorageAreaImpl::invalidateIterator()
 
     m_iterator = it->value->end();
     m_iteratorIndex = UINT_MAX;
-}
-
-void WebStorageAreaImpl::setIteratorToIndex(unsigned index)
-{
-    // FIXME: Once we have bidirectional iterators for HashMap we can be more intelligent about this.
-    // The requested index will be closest to begin(), our current iterator, or end(), and we
-    // can take the shortest route.
-    // Until that mechanism is available, we'll always increment our iterator from begin() or current.
-    DOMStorageMap::iterator it = m_cachedArea->find(m_origin);
-    if (it == m_cachedArea->end())
-        return;
-
-    if (m_iteratorIndex == index)
-        return;
-
-    if (index < m_iteratorIndex) {
-        m_iteratorIndex = 0;
-        m_iterator = it->value->begin();
-        ASSERT(m_iterator != it->value->end());
-    }
-
-    while (m_iteratorIndex < index) {
-        ++m_iteratorIndex;
-        ++m_iterator;
-        ASSERT(m_iterator != it->value->end());
-    }
 }
 
 size_t WebStorageAreaImpl::memoryBytesUsedByCache() const

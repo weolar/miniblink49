@@ -38,7 +38,8 @@ private:
     void setItemImpl(const WebString& key, const WebString& value, const WebURL& page_url, WebStorageArea::Result& result, bool isFromLoad);
         
     void invalidateIterator();
-    void setIteratorToIndex(unsigned);
+    bool setIteratorToIndex(unsigned);
+    void setToIteratorZero(HashMap<String, String>* pageStorageArea);
 
     void dispatchStorageEvent(const String& key, const String& oldValue, const String& newValue, const WebURL& pageUrl);
     
