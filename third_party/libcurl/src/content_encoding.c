@@ -851,7 +851,10 @@ CURLcode Curl_unencode_write(struct connectdata *conn, contenc_writer *writer,
 {
   if(!nbytes)
     return CURLE_OK;
-  return writer->handler->unencode_write(conn, writer, buf, nbytes);
+  CURLcode result = writer->handler->unencode_write(conn, writer, buf, nbytes);
+  if (result)
+    result = client_unencode_write(conn, writer, buf, nbytes);
+  return result;
 }
 
 /* Close and clean-up the connection's writer stack. */
