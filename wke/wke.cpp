@@ -1579,6 +1579,11 @@ bool wkeRegisterEmbedderCustomElement(wkeWebView webView, wkeWebFrameHandle fram
     return true;
 }
 
+void wkeSetMediaPlayerFactory(wkeWebView webView, wkeMediaPlayerFactory factory)
+{
+    wke::g_wkeMediaPlayerFactory = factory;
+}
+
 const utf8* wkeUtilDecodeURLEscape(const utf8* url)
 {
     String result = blink::decodeURLEscapeSequences(url);

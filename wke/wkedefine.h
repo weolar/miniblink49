@@ -93,6 +93,17 @@ struct _tagWkeString;
 typedef struct _tagWkeString* wkeString;
 #endif
 
+#if defined(__cplusplus)
+namespace wke { class WkeMediaPlayer; };
+typedef wke::WkeMediaPlayer* wkeMediaPlayer;
+
+namespace wke { class WkeMediaPlayerClient; };
+typedef wke::WkeMediaPlayerClient* wkeMediaPlayerClient;
+#else
+typedef struct _tagWkeMediaPlayer* wkeMediaPlayer;
+typedef struct _tagWkeMediaPlayerClient* wkeMediaPlayerClient;
+#endif
+
 typedef enum {
     WKE_PROXY_NONE,
     WKE_PROXY_HTTP,
@@ -445,18 +456,39 @@ typedef void(WKE_CALL_TYPE*wkeConsoleCallback)(wkeWebView webView, void* param, 
 typedef void(WKE_CALL_TYPE*wkeOnCallUiThread)(wkeWebView webView, void* paramOnInThread);
 typedef void(WKE_CALL_TYPE*wkeCallUiThread)(wkeWebView webView, wkeOnCallUiThread func, void* param);
 
+typedef wkeMediaPlayer(WKE_CALL_TYPE* wkeMediaPlayerFactory)(wkeWebView webView, wkeMediaPlayerClient client);
+
 //wkeNet--------------------------------------------------------------------------------------
-typedef bool(WKE_CALL_TYPE*wkeLoadUrlBeginCallback)(wkeWebView webView, void* param, const char* url, void* job);
-typedef void(WKE_CALL_TYPE*wkeLoadUrlEndCallback)(wkeWebView webView, void* param, const char* url, void* job, void* buf, int len);
+typedef void* wkeNetJob;
+
+typedef struct wkeWebUrlRequest* wkeWebUrlRequestPtr;
+typedef struct wkeWebUrlResponse* wkeWebUrlResponsePtr;
+
+typedef void(WKE_CALL_TYPE* wkeOnUrlRequestWillRedirectCallback)(wkeWebView webView, void* param, wkeWebUrlRequestPtr oldRequest, wkeWebUrlRequestPtr request, wkeWebUrlResponsePtr redirectResponse);
+typedef void(WKE_CALL_TYPE* wkeOnUrlRequestDidReceiveResponseCallback)(wkeWebView webView, void* param, wkeWebUrlRequestPtr request, wkeWebUrlResponsePtr response);
+typedef void(WKE_CALL_TYPE* wkeOnUrlRequestDidReceiveDataCallback)(wkeWebView webView, void* param, wkeWebUrlRequestPtr request, const char* data, int dataLength);
+typedef void(WKE_CALL_TYPE* wkeOnUrlRequestDidFailCallback)(wkeWebView webView, void* param, wkeWebUrlRequestPtr request, const utf8* error);
+typedef void(WKE_CALL_TYPE* wkeOnUrlRequestDidFinishLoadingCallback)(wkeWebView webView, void* param, wkeWebUrlRequestPtr request, double finishTime);
+
+typedef struct _wkeUrlRequestCallbacks {
+    wkeOnUrlRequestWillRedirectCallback willRedirectCallback;
+    wkeOnUrlRequestDidReceiveResponseCallback didReceiveResponseCallback;
+    wkeOnUrlRequestDidReceiveDataCallback didReceiveDataCallback;
+    wkeOnUrlRequestDidFailCallback didFailCallback;
+    wkeOnUrlRequestDidFinishLoadingCallback didFinishLoadingCallback;
+} wkeUrlRequestCallbacks;
+
+typedef bool(WKE_CALL_TYPE*wkeLoadUrlBeginCallback)(wkeWebView webView, void* param, const char* url, wkeNetJob job);
+typedef void(WKE_CALL_TYPE*wkeLoadUrlEndCallback)(wkeWebView webView, void* param, const char* url, wkeNetJob job, void* buf, int len);
 typedef void(WKE_CALL_TYPE*wkeDidCreateScriptContextCallback)(wkeWebView webView, void* param, wkeWebFrameHandle frameId, void* context, int extensionGroup, int worldId);
 typedef void(WKE_CALL_TYPE*wkeWillReleaseScriptContextCallback)(wkeWebView webView, void* param, wkeWebFrameHandle frameId, void* context, int worldId);
-typedef bool(WKE_CALL_TYPE*wkeNetResponseCallback)(wkeWebView webView, void* param, const char* url, void* job);
+typedef bool(WKE_CALL_TYPE*wkeNetResponseCallback)(wkeWebView webView, void* param, const char* url, wkeNetJob job);
 typedef void(WKE_CALL_TYPE*wkeOnNetGetFaviconCallback)(wkeWebView webView, void* param, const utf8* url, wkeMemBuf* buf);
 
 typedef void* v8ContextPtr;
 typedef void* v8Isolate;
 
-//wkewindow-----------------------------------------------------------------------------------
+//wke window-----------------------------------------------------------------------------------
 typedef enum {
     WKE_WINDOW_TYPE_POPUP,
     WKE_WINDOW_TYPE_TRANSPARENT,
@@ -984,25 +1016,32 @@ public:
     \
     ITERATOR1(bool, wkeIsProcessingUserGesture, wkeWebView webWindow, "") \
     \
-    ITERATOR2(void, wkeNetSetMIMEType, void* job, char *type, "") \
-    ITERATOR2(const char*, wkeNetGetMIMEType, void* job, wkeString mime, "") \
-    ITERATOR4(void, wkeNetSetHTTPHeaderField, void* job, wchar_t* key, wchar_t* value, bool response, "") \
-    ITERATOR2(const char*, wkeNetGetHTTPHeaderField, void* job, const char* key, "") \
-    ITERATOR3(void, wkeNetSetData, void* job, void *buf, int len, "调用此函数后,网络层收到数据会存储在一buf内,接收数据完成后响应OnLoadUrlEnd事件.#此调用严重影响性能,慎用" \
+    ITERATOR2(void, wkeNetSetMIMEType, wkeNetJob jobPtr, char *type, "") \
+    ITERATOR2(const char*, wkeNetGetMIMEType, wkeNetJob jobPtr, wkeString mime, "") \
+    ITERATOR4(void, wkeNetSetHTTPHeaderField, wkeNetJob jobPtr, wchar_t* key, wchar_t* value, bool response, "") \
+    ITERATOR2(const char*, wkeNetGetHTTPHeaderField, wkeNetJob jobPtr, const char* key, "") \
+    ITERATOR3(void, wkeNetSetData, wkeNetJob jobPtr, void *buf, int len, "调用此函数后,网络层收到数据会存储在一buf内,接收数据完成后响应OnLoadUrlEnd事件.#此调用严重影响性能,慎用" \
         "此函数和wkeNetSetData的区别是，wkeNetHookRequest会在接受到真正网络数据后再调用回调，并允许回调修改网络数据。"\
         "而wkeNetSetData是在网络数据还没发送的时候修改") \
-    ITERATOR1(void, wkeNetHookRequest, void* job, "") \
+    ITERATOR1(void, wkeNetHookRequest, wkeNetJob jobPtr, "") \
     ITERATOR3(void, wkeNetOnResponse, wkeWebView webView, wkeNetResponseCallback callback, void* param, "") \
-    ITERATOR1(wkeRequestType, wkeNetGetRequestMethod, void* jobPtr, "") \
+    ITERATOR1(wkeRequestType, wkeNetGetRequestMethod, wkeNetJob jobPtr, "") \
     ITERATOR3(int, wkeNetGetFavicon, wkeWebView webView, wkeOnNetGetFaviconCallback callback, void* param, "") \
     \
-    ITERATOR1(void, wkeNetContinueJob, void* jobPtr, "")\
-    ITERATOR1(const char*, wkeNetGetUrlByJob, void* jobPtr, "")\
-    ITERATOR1(void, wkeNetCancelRequest, void* jobPtr, "")\
-    ITERATOR2(void, wkeNetChangeRequestUrl, void* jobPtr, const char* url, "")\
-    ITERATOR1(void, wkeNetHoldJobToAsynCommit, void* jobPtr, "")\
+    ITERATOR1(void, wkeNetContinueJob, wkeNetJob jobPtr, "")\
+    ITERATOR1(const char*, wkeNetGetUrlByJob, wkeNetJob jobPtr, "")\
+    ITERATOR1(void, wkeNetCancelRequest, wkeNetJob jobPtr, "")\
+    ITERATOR2(void, wkeNetChangeRequestUrl, wkeNetJob jobPtr, const char* url, "")\
+    ITERATOR1(void, wkeNetHoldJobToAsynCommit, wkeNetJob jobPtr, "")\
     \
-    ITERATOR1(wkePostBodyElements*, wkeNetGetPostBody, void *jobPtr, "") \
+    ITERATOR3(wkeWebUrlRequestPtr, wkeNetCreateWebUrlRequest, const utf8* url, const utf8* method, const utf8* mime, "")\
+    ITERATOR3(void, wkeNetAddHTTPHeaderFieldToUrlRequest, wkeWebUrlRequestPtr request, const utf8* name, const utf8* value, "")\
+    ITERATOR4(void, wkeNetStartUrlRequest, wkeWebView webView, wkeWebUrlRequestPtr request, void* param, wkeUrlRequestCallbacks callbacks, "")\
+    ITERATOR1(int, wkeNetGetHttpStatusCode, wkeWebUrlResponsePtr response, "")\
+    ITERATOR1(__int64, wkeNetGetExpectedContentLength, wkeWebUrlResponsePtr response, "")\
+    ITERATOR1(const utf8*, wkeNetGetResponseUrl, wkeWebUrlResponsePtr response, "")\
+    \
+    ITERATOR1(wkePostBodyElements*, wkeNetGetPostBody, wkeNetJob jobPtr, "") \
     ITERATOR2(wkePostBodyElements*, wkeNetCreatePostBodyElements, wkeWebView webView, size_t length, "") \
     ITERATOR1(void, wkeNetFreePostBodyElements, wkePostBodyElements* elements, "") \
     ITERATOR1(wkePostBodyElement*, wkeNetCreatePostBodyElement, wkeWebView webView, "") \
@@ -1046,6 +1085,8 @@ public:
     ITERATOR1(wkeWebView, wkeGetWebviewByNData, void* ndata, "") \
     \
     ITERATOR5(bool, wkeRegisterEmbedderCustomElement, wkeWebView webView, wkeWebFrameHandle frameId, const char* name, void* options, void* outResult, "") \
+    \
+    ITERATOR2(void, wkeSetMediaPlayerFactory, wkeWebView webView, wkeMediaPlayerFactory factory, "") \
     \
     ITERATOR1(const utf8*, wkeUtilDecodeURLEscape, const utf8* url, "") \
     \

@@ -24,6 +24,8 @@ extern wkeUiThreadPostTaskCallback g_wkeUiThreadPostTaskCallback;
 extern wkeWillMediaLoadCallback g_wkeWillMediaLoadCallback;
 extern void* g_wkeWillMediaLoadCallbackCallbackParam;
 
+extern wkeMediaPlayerFactory g_wkeMediaPlayerFactory;
+
 extern wkeTempCallbackInfo g_wkeTempCallbackInfo;
 
 }

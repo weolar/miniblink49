@@ -20,6 +20,8 @@ wkeUiThreadPostTaskCallback g_wkeUiThreadPostTaskCallback = nullptr;
 wkeWillMediaLoadCallback g_wkeWillMediaLoadCallback = nullptr;
 void* g_wkeWillMediaLoadCallbackCallbackParam = nullptr;
 
+wkeMediaPlayerFactory g_wkeMediaPlayerFactory = nullptr;
+
 wkeTempCallbackInfo g_wkeTempCallbackInfo;
 
 }
