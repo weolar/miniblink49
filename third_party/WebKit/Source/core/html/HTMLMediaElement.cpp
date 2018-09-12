@@ -75,6 +75,7 @@
 #include "public/platform/Platform.h"
 #include "public/platform/WebContentDecryptionModule.h"
 #include "public/platform/WebInbandTextTrack.h"
+#include "web/WebInputEventConversion.h"
 #include "wtf/CurrentTime.h"
 #include "wtf/MainThread.h"
 #include "wtf/MathExtras.h"
@@ -3623,6 +3624,24 @@ bool HTMLMediaElement::isInteractiveContent() const
 
 void HTMLMediaElement::defaultEventHandler(Event* event)
 {
+    WebMediaPlayer* player = webMediaPlayer();
+    if (player && event->isMouseEvent()) {
+        MouseEvent* evt = (MouseEvent*)event;
+        WebMouseEventBuilder webEvent(nullptr, layoutObject(), *evt);
+        
+        FrameView* view = document().view();
+        IntPoint absolutePoint = roundedIntPoint(layoutObject()->localToAbsolute(FloatPoint(), UseTransforms));
+        IntPoint r = view->contentsToRootFrame(absolutePoint);
+        player->setOriginPointFromRootFrame(r);
+
+        IntPoint pointInRootFrame = IntPoint(webEvent.windowX, webEvent.windowY);
+        pointInRootFrame = view->contentsToRootFrame(pointInRootFrame);
+        webEvent.windowX = pointInRootFrame.x();
+        webEvent.windowY = pointInRootFrame.y();
+
+        player->handleMouseEvent(webEvent);
+    }
+
     if (event->type() == EventTypeNames::focusin) {
         if (mediaControls())
             mediaControls()->mediaElementFocused();
