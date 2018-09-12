@@ -3632,7 +3632,7 @@ void HTMLMediaElement::defaultEventHandler(Event* event)
         FrameView* view = document().view();
         IntPoint absolutePoint = roundedIntPoint(layoutObject()->localToAbsolute(FloatPoint(), UseTransforms));
         IntPoint r = view->contentsToRootFrame(absolutePoint);
-        player->setOriginPointFromRootFrame(r);
+        player->setContentsToNativeWindowOffset(r);
 
         IntPoint pointInRootFrame = IntPoint(webEvent.windowX, webEvent.windowY);
         pointInRootFrame = view->contentsToRootFrame(pointInRootFrame);
