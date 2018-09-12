@@ -141,7 +141,7 @@ public:
     // |selectedTrackId| is null if no track is selected.
     virtual void selectedVideoTrackChanged(TrackId* selectedTrackId) {}
     
-    virtual void setOriginPointFromRootFrame(int x, int y) = 0;
+    virtual void setContentsToNativeWindowOffset(int x, int y) = 0;
     virtual bool handleMouseEvent(unsigned msg, unsigned wParam, unsigned lParam) = 0;
     virtual bool handleKeyboardEvent(unsigned msg, unsigned wParam, unsigned lParam) = 0;
 };
