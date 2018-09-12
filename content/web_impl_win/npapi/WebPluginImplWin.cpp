@@ -590,7 +590,8 @@ bool WebPluginImpl::handleMouseEvent(const blink::WebMouseEvent& evt)
     NPEvent npEvent;
 
     //blink::IntPoint p = contentsToNativeWindow(m_pluginContainer, blink::IntPoint(evt.x, evt.y));
-    blink::IntPoint p(evt.windowX, evt.windowY);
+    blink::IntPoint documentScrollOffsetRelativeToViewOrigin;// = contentsToNativeWindow(m_pluginContainer, blink::IntPoint());
+    blink::IntPoint p(evt.windowX - documentScrollOffsetRelativeToViewOrigin.x(), evt.windowY - documentScrollOffsetRelativeToViewOrigin.y());
 
     npEvent.lParam = MAKELPARAM(p.x(), p.y());
     npEvent.wParam = 0;
@@ -717,6 +718,13 @@ void WebPluginImpl::paintIntoTransformedContext(HDC hdc)
     //IntRect r = contentsToNativeWindow(m_pluginContainer, container->frameRect());
     blink::IntPoint documentScrollOffsetRelativeToViewOrigin = contentsToNativeWindow(m_pluginContainer, blink::IntPoint());
     blink::IntRect r = container->frameRect();
+    blink::IntRect frameRect = container->frameRect();
+
+    // WM_WINDOWPOSCHANGED 存滚动的位置，setNPWindowRect设置原始位置
+    // WM_WINDOWPOSCHANGED是给鼠标键盘消息定位用的，表示flash在原生窗口中的位置
+    // setNPWindowRect表示绘制的目标在HDC的哪个坐标开始
+    r.setX(documentScrollOffsetRelativeToViewOrigin.x());
+    r.setY(documentScrollOffsetRelativeToViewOrigin.y());
 
     windowpos.x = r.x();
     windowpos.y = r.y();
@@ -731,7 +739,7 @@ void WebPluginImpl::paintIntoTransformedContext(HDC hdc)
 
     dispatchNPEvent(npEvent);
 
-    setNPWindowRect(r);
+    setNPWindowRect(frameRect);
 
     npEvent.event = WM_PAINT;
     npEvent.wParam = reinterpret_cast<uintptr_t>(hdc);
@@ -1050,7 +1058,7 @@ void WebPluginImpl::platformStartImpl(bool isSync)
     }
 }
 
-#define USING_ASYNC_START 1
+#define USING_ASYNC_START 0
 
 void WebPluginImpl::PlatformStartAsynTask::didProcessTask()
 {

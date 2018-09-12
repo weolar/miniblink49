@@ -666,6 +666,33 @@ blink::WebData BlinkPlatformImpl::loadResource(const char* name)
     else if (0 == strcmp("xhtmlmp.css", name)) {
         char xhtmlmpCss[] = "@viewport {width: auto;min-zoom: 0.25;max-zoom: 5;}";
         return blink::WebData(xhtmlmpCss, sizeof(xhtmlmpCss));
+    } else if (
+        0 == strcmp("mediaplayerSoundLevel0", name) ||
+        0 == strcmp("mediaplayerSoundLevel1", name) ||
+        0 == strcmp("mediaplayerSoundLevel2", name) ||
+        0 == strcmp("mediaplayerSoundLevel3", name) ||
+        0 == strcmp("mediaplayerSoundDisabled", name) ||
+        
+        0 == strcmp("mediaplayerPlay", name) ||
+        0 == strcmp("mediaplayerPause", name) ||
+        0 == strcmp("mediaplayerPlayDisabled", name) ||
+
+        0 == strcmp("mediaplayerOverlayPlay", name) ||
+        0 == strcmp("mediaplayerSliderThumb", name) ||
+        0 == strcmp("mediaplayerVolumeSliderThumb", name) ||
+
+        0 == strcmp("mediaplayerFullscreen", name) ||
+        0 == strcmp("mediaplayerClosedCaption", name) ||
+        0 == strcmp("mediaplayerClosedCaptionDisabled", name) ||
+
+        0 == strcmp("mediaplayerCastOn", name) ||
+        0 == strcmp("mediaplayerCastOff", name) ||
+        0 == strcmp("mediaplayerOverlayCastOff", name) ||
+
+        0 == strcmp("mediaplayerSliderThumb", name) ||
+        0 == strcmp("mediaplayerVolumeSliderThumb", name)
+        ) {
+        return blink::WebData();
     }
 
     notImplemented();

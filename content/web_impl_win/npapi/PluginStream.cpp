@@ -327,8 +327,6 @@ void PluginStream::destroyStream()
 
             if (m_loader)
                 m_loader->setDefersLoading(false);
-
-            //LOG_NPERROR(npErr);
         }
 
         m_stream.ndata = 0;

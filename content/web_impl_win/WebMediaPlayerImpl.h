@@ -9,13 +9,19 @@
 
 #include "third_party/WebKit/public/platform/WebMediaPlayer.h"
 #include "third_party/WebKit/public/platform/WebMediaPlayerClient.h"
+#include "third_party/WebKit/public/platform/WebSize.h"
 
 namespace blink {
 class WebContentDecryptionModule;
 class WebLocalFrame;
 }
 
+namespace wke {
+class WkeMediaPlayer;
+}
+
 namespace content {
+
 class BufferedDataSource;
 class VideoFrameCompositor;
 class WebAudioSourceProviderImpl;
@@ -24,6 +30,7 @@ class WebLayerImpl;
 class WebMediaPlayerDelegate;
 class WebMediaPlayerParams;
 class WebTextTrackImpl;
+class MediaPlayerClientWkeWrap;
 
 // The canonical implementation of blink::WebMediaPlayer that's backed by
 // media::Pipeline. Handles normal resource loading, Media Source, and
@@ -32,9 +39,7 @@ class WebMediaPlayerImpl : public blink::WebMediaPlayer {
 public:
     // Constructs a WebMediaPlayer implementation using Chromium's media stack.
     // |delegate| may be null.
-    WebMediaPlayerImpl(blink::WebLocalFrame* frame,
-        const blink::WebURL& url,
-        blink::WebMediaPlayerClient* client);
+    WebMediaPlayerImpl(blink::WebLocalFrame* frame, const blink::WebURL& url, blink::WebMediaPlayerClient* client);
     virtual ~WebMediaPlayerImpl();
 
     virtual void load(blink::WebMediaPlayer::LoadType, const blink::WebURL&, blink::WebMediaPlayer::CORSMode) override;
@@ -119,6 +124,10 @@ public:
     // |selectedTrackId| is null if no track is selected.
     virtual void selectedVideoTrackChanged(blink::WebMediaPlayer::TrackId* selectedTrackId) override;
 
+    virtual void setContentsToNativeWindowOffset(const blink::WebPoint& p) override;
+    virtual bool handleMouseEvent(const blink::WebMouseEvent& evt) override;
+    virtual bool handleKeyboardEvent(const blink::WebKeyboardEvent& evt)override;
+
     void onLoad(blink::WebMediaPlayer::ReadyState readyState, bool* cancelNotifer);
 
 private:
@@ -127,6 +136,10 @@ private:
     bool m_hasVideo;
     bool m_hasAudio;
     blink::WebMediaPlayerClient* m_client;
+    MediaPlayerClientWkeWrap* m_wkeClientWrap;
+    wke::WkeMediaPlayer* m_wkePlayer;
+    SkCanvas* m_memoryCanvas;
+    blink::WebSize m_size;
 
     int m_width;
     int m_height;
