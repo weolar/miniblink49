@@ -10134,6 +10134,15 @@
     <ClCompile Include="..\..\wke\wkeGlobalVar.cpp">
       <Filter>wke</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\net\PageNetExtraData.cpp">
+      <Filter>net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\fonts\shaping\HarfBuzzFace.cpp">
+      <Filter>third_party\Webkit\Source\platform\fonts\shaping</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\fonts\shaping\HarfBuzzShaper.cpp">
+      <Filter>third_party\Webkit\Source\platform\fonts\shaping</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\public\platform\modules\app_banner\WebAppBannerClient.h">
@@ -23023,6 +23032,12 @@
       <Filter>wke</Filter>
     </ClInclude>
     <ClInclude Include="..\..\wke\wkeGlobalVar.h">
+      <Filter>wke</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\net\PageNetExtraData.h">
+      <Filter>net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wke\wkeMediaPlayer.h">
       <Filter>wke</Filter>
     </ClInclude>
   </ItemGroup>
