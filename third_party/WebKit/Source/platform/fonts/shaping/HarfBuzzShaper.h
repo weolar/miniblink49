@@ -31,7 +31,7 @@
 #ifndef HarfBuzzShaper_h
 #define HarfBuzzShaper_h
 
-#include "hb.h"
+#include "third_party/harfbuzz-ng/src/hb.h"
 #include "platform/fonts/shaping/Shaper.h"
 #include "platform/geometry/FloatPoint.h"
 #include "platform/geometry/FloatRect.h"

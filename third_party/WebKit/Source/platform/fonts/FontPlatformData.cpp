@@ -23,11 +23,15 @@
 
 #include "SkEndian.h"
 #include "SkTypeface.h"
-// #include "hb-ot.h"
-// #include "hb.h"
+#ifndef MINIBLINK_NO_HARFBUZZ
+#include "third_party/harfbuzz-ng/src/hb-ot.h"
+#include "third_party/harfbuzz-ng/src/hb.h"
+#endif
 #include "platform/fonts/Character.h"
 #include "platform/fonts/FontCache.h"
-// #include "platform/fonts/shaping/HarfBuzzFace.h"
+#ifndef MINIBLINK_NO_HARFBUZZ
+#include "platform/fonts/shaping/HarfBuzzFace.h"
+#endif
 #include "wtf/HashMap.h"
 #include "wtf/text/StringHash.h"
 #include "wtf/text/WTFString.h"
@@ -265,17 +269,18 @@ SkTypeface* FontPlatformData::typeface() const
 
 HarfBuzzFace* FontPlatformData::harfBuzzFace() const
 {
-#ifdef MINIBLINK_NOT_IMPLEMENTED
+#ifndef MINIBLINK_NO_HARFBUZZ
     if (!m_harfBuzzFace)
         m_harfBuzzFace = HarfBuzzFace::create(const_cast<FontPlatformData*>(this), uniqueID());
 
     return m_harfBuzzFace.get();
-#endif // MINIBLINK_NOT_IMPLEMENTED
+#else
 	notImplemented();
 	return nullptr;
+#endif // MINIBLINK_NO_HARFBUZZ
 }
 
-#ifdef MINIBLINK_NOT_IMPLEMENTED
+#ifndef MINIBLINK_NO_HARFBUZZ
 static inline bool tableHasSpace(hb_face_t* face, hb_set_t* glyphs,
     hb_tag_t tag, hb_codepoint_t space)
 {
@@ -288,12 +293,12 @@ static inline bool tableHasSpace(hb_face_t* face, hb_set_t* glyphs,
     }
     return false;
 }
-#endif // MINIBLINK_NOT_IMPLEMENTED
+#endif // MINIBLINK_NO_HARFBUZZ
 
 bool FontPlatformData::hasSpaceInLigaturesOrKerning(
     TypesettingFeatures features) const
 {
-#ifdef MINIBLINK_NOT_IMPLEMENTED
+#ifndef MINIBLINK_NO_HARFBUZZ
     const HarfBuzzFace* hbFace = harfBuzzFace();
     if (!hbFace)
         return true;
@@ -326,9 +331,10 @@ bool FontPlatformData::hasSpaceInLigaturesOrKerning(
     hb_font_destroy(font);
 
     return foundSpaceInTable;
-#endif // MINIBLINK_NOT_IMPLEMENTED
+#else
 	notImplemented();
 	return false;
+#endif // MINIBLINK_NOT_IMPLEMENTED
 }
 
 unsigned FontPlatformData::hash() const
@@ -362,10 +368,11 @@ bool FontPlatformData::fontContainsCharacter(UChar32 character)
 
 PassRefPtr<OpenTypeVerticalData> FontPlatformData::verticalData() const
 {
-#ifdef MINIBLINK_NOT_IMPLEMENTED
+#ifndef MINIBLINK_NO_HARFBUZZ
     return FontCache::fontCache()->getVerticalData(typeface()->uniqueID(), *this);
-#endif // MINIBLINK_NOT_IMPLEMENTED
+#else
     return nullptr;
+#endif // MINIBLINK_NO_HARFBUZZ
 }
 
 PassRefPtr<SharedBuffer> FontPlatformData::openTypeTable(uint32_t table) const

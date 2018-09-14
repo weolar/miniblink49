@@ -36,7 +36,7 @@
 #include "wtf/RefCounted.h"
 #include "wtf/RefPtr.h"
 
-#include <hb.h>
+#include "third_party/harfbuzz-ng/src/hb.h"
 
 namespace blink {
 

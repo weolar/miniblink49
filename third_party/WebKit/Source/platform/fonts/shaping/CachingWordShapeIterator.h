@@ -28,7 +28,9 @@
 
 #include "platform/fonts/SimpleFontData.h"
 #include "platform/fonts/shaping/CachingWordShapeIterator.h"
-//#include "platform/fonts/shaping/HarfBuzzShaper.h"
+#ifndef MINIBLINK_NO_HARFBUZZ
+#include "platform/fonts/shaping/HarfBuzzShaper.h"
+#endif
 #include "platform/fonts/shaping/ShapeCache.h"
 #include "wtf/text/CharacterNames.h"
 
