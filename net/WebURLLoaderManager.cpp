@@ -800,11 +800,24 @@ static SetupDataInfo* setupFormDataOnMainThread(WebURLLoaderInternal* job, CURLo
 
 static void setupPutOnIoThread(WebURLLoaderInternal* job, SetupPutInfo* info)
 {
-    curl_easy_setopt(job->m_handle, CURLOPT_UPLOAD, TRUE);
-    curl_easy_setopt(job->m_handle, CURLOPT_INFILESIZE, 0);
-
     if (!info)
         return;
+
+    curl_easy_setopt(job->m_handle, CURLOPT_UPLOAD, TRUE); // CURLOPT_PUT
+    curl_easy_setopt(job->m_handle, CURLOPT_INFILESIZE, 0);
+
+    if (info->data)
+        setupFormDataOnIoThread(job, info->data);
+}
+
+static void setupDelOnIoThread(WebURLLoaderInternal* job, SetupDeleteInfo* info)
+{
+    if (!info)
+        return;
+
+    curl_easy_setopt(job->m_handle, CURLOPT_CUSTOMREQUEST, "DELETE");
+    curl_easy_setopt(job->m_handle, CURLOPT_UPLOAD, TRUE);
+    curl_easy_setopt(job->m_handle, CURLOPT_INFILESIZE, 0);
 
     if (info->data)
         setupFormDataOnIoThread(job, info->data);
@@ -819,6 +832,19 @@ static SetupPutInfo* setupPutOnMainThread(WebURLLoaderInternal* job, struct curl
         return nullptr;
 
     SetupPutInfo* result = new SetupPutInfo();
+    result->data = setupFormDataOnMainThread(job, CURLOPT_INFILESIZE_LARGE, headers);
+    return result;
+}
+
+static SetupDeleteInfo* setupDelOnMainThread(WebURLLoaderInternal* job, struct curl_slist** headers)
+{
+    *headers = curl_slist_append(*headers, "Expect:"); // Disable the Expect: 100 continue header
+
+    size_t numElements = getFormElementsCount(job);
+    if (!numElements)
+        return nullptr;
+
+    SetupDeleteInfo* result = new SetupDeleteInfo();
     result->data = setupFormDataOnMainThread(job, CURLOPT_INFILESIZE_LARGE, headers);
     return result;
 }
@@ -1324,6 +1350,9 @@ InitializeHandleInfo* WebURLLoaderManager::preInitializeHandleOnMainThread(WebUR
     } else if ("PUT" == info->method) {
         info->methodInfo = new SetupHttpMethodInfo();
         info->methodInfo->put = setupPutOnMainThread(job, &headers);
+    } else if ("DELETE" == info->method) {
+        info->methodInfo = new SetupHttpMethodInfo();
+        info->methodInfo->del = setupDelOnMainThread(job, &headers);
     } else if ("HEAD" == info->method) {
 
     } else {
@@ -1443,8 +1472,10 @@ void WebURLLoaderManager::initializeHandleOnIoThread(int jobId, InitializeHandle
         curl_easy_setopt(job->m_handle, CURLOPT_HTTPGET, TRUE);
     } else if ("POST" == info->method) {
         setupPostOnIoThread(job, info->methodInfo->post);
-    } else if ("PUT" == info->method) {
+    } else if ("PUT" == info->method ) {
         setupPutOnIoThread(job, info->methodInfo->put);
+    } else if ("DELETE" == info->method) {
+        setupDelOnIoThread(job, info->methodInfo->del);
     } else if ("HEAD" == info->method)
         curl_easy_setopt(job->m_handle, CURLOPT_NOBODY, TRUE);
     else {

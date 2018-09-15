@@ -76,6 +76,7 @@ public:
         kLoaderInternal,
         kGetFaviconTask,
         kSetCookiesTask,
+        kWkeCustomNetRequest,
     };
     virtual ~JobHead() {}
     virtual int getRefCount() const { return m_ref; }

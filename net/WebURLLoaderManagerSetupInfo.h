@@ -38,6 +38,9 @@ struct SetupPutInfo : public SetupInfoBase {
 struct SetupPostInfo : public SetupInfoBase {
 };
 
+struct SetupDeleteInfo : public SetupInfoBase {
+};
+
 struct SetupHttpMethodInfo {
     SetupHttpMethodInfo()
     {
@@ -54,6 +57,7 @@ struct SetupHttpMethodInfo {
     }
     SetupPutInfo* put;
     SetupPostInfo* post;
+    SetupDeleteInfo* del;
 };
 
 }
