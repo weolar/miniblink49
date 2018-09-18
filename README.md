@@ -6,7 +6,7 @@ By using C interface, you can create a browser just some line code.
 
 more information at https://weolar.github.io/miniblink/
 
-**
+----
 
 miniblink是一个开源、单文件、目前已知的最小的基于chromium的，浏览器控件。
 
