@@ -318,8 +318,11 @@ LRESULT PlatformEventHandler::fireMouseEvent(HWND hWnd, UINT message, WPARAM wPa
         if (WM_LBUTTONDOWN == message)
             isDraggable = doDraggableRegionNcHitTest(hWnd, pos, info.draggableRegion);
         if (hWnd && info.isNeedSetFocus) {
-            if (isValideWindow && ::GetFocus() != hWnd)
+            if (isValideWindow && ::GetFocus() != hWnd) {
                 ::SetFocus(hWnd);
+                m_webViewImpl->setFocus(true);
+                m_webViewImpl->setIsActive(true);
+            }
             if (isValideWindow && !isDraggable)
                 ::SetCapture(hWnd);
         }
