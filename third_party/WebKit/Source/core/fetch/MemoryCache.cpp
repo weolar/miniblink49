@@ -183,6 +183,12 @@ void MemoryCache::add(Resource* resource)
     ASSERT(WTF::isMainThread());
     ASSERT(resource->url().isValid());
     ResourceMap* resources = ensureResourceMap(resource->cacheIdentifier());
+
+#ifndef MINIBLINK_NO_CHANGE
+    if (resources->contains(resource->url()))
+        return;
+#endif
+
     RELEASE_ASSERT(!resources->contains(resource->url()));
     resources->set(resource->url(), MemoryCacheEntry::create(resource));
     update(resource, 0, resource->size(), true);
