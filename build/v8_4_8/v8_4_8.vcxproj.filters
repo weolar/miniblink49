@@ -88,6 +88,27 @@
     <Filter Include="include\libplatform">
       <UniqueIdentifier>{8b20f5ed-59f3-4b8a-b737-5550289e686c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\x64">
+      <UniqueIdentifier>{0b9f3cd2-bfbe-45e6-81ed-09f212ef0ff5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\compiler\x64">
+      <UniqueIdentifier>{fa17ff86-03fc-45c3-a72a-5171e72f8282}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\crankshaft\x64">
+      <UniqueIdentifier>{1465abf1-c8a6-40fc-9f08-59abfaba929c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\debug\x64">
+      <UniqueIdentifier>{e54419c8-864d-451f-987f-f9568531e1e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\full-codegen\x64">
+      <UniqueIdentifier>{bdc2188e-1b4d-4acc-8d05-a420efc5b433}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\ic\x64">
+      <UniqueIdentifier>{b42361a2-2011-47f4-8b3e-1f00183358f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\regexp\x64">
+      <UniqueIdentifier>{e3b894c0-799f-4b15-91af-16fb7b72a80f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\v8_4_8\include\v8.h">
@@ -1311,6 +1332,42 @@
     <ClInclude Include="..\..\v8_4_8\src\libplatform\task-queue.h">
       <Filter>src\libplatform</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\x64\assembler-x64.h">
+      <Filter>src\x64</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\x64\assembler-x64-inl.h">
+      <Filter>src\x64</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\x64\codegen-x64.h">
+      <Filter>src\x64</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\x64\code-stubs-x64.h">
+      <Filter>src\x64</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\x64\frames-x64.h">
+      <Filter>src\x64</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\x64\macro-assembler-x64.h">
+      <Filter>src\x64</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\x64\simulator-x64.h">
+      <Filter>src\x64</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\x64\instruction-codes-x64.h">
+      <Filter>src\compiler\x64</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\crankshaft\x64\lithium-codegen-x64.h">
+      <Filter>src\crankshaft\x64</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\crankshaft\x64\lithium-gap-resolver-x64.h">
+      <Filter>src\crankshaft\x64</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\crankshaft\x64\lithium-x64.h">
+      <Filter>src\crankshaft\x64</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\regexp\x64\regexp-macro-assembler-x64.h">
+      <Filter>src\regexp\x64</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\v8_4_8\src\base\bits.cc">
@@ -2383,6 +2440,78 @@
     </ClCompile>
     <ClCompile Include="..\..\v8_4_8\src\libplatform\task-queue.cc">
       <Filter>src\libplatform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\x64\assembler-x64.cc">
+      <Filter>src\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\x64\builtins-x64.cc">
+      <Filter>src\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\x64\codegen-x64.cc">
+      <Filter>src\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\x64\code-stubs-x64.cc">
+      <Filter>src\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\x64\cpu-x64.cc">
+      <Filter>src\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\x64\deoptimizer-x64.cc">
+      <Filter>src\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\x64\disasm-x64.cc">
+      <Filter>src\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\x64\frames-x64.cc">
+      <Filter>src\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\x64\interface-descriptors-x64.cc">
+      <Filter>src\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\x64\macro-assembler-x64.cc">
+      <Filter>src\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\x64\simulator-x64.cc">
+      <Filter>src\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\x64\code-generator-x64.cc">
+      <Filter>src\compiler\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\x64\instruction-selector-x64.cc">
+      <Filter>src\compiler\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\crankshaft\x64\lithium-codegen-x64.cc">
+      <Filter>src\crankshaft\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\crankshaft\x64\lithium-gap-resolver-x64.cc">
+      <Filter>src\crankshaft\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\crankshaft\x64\lithium-x64.cc">
+      <Filter>src\crankshaft\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\debug\x64\debug-x64.cc">
+      <Filter>src\debug\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\full-codegen\x64\full-codegen-x64.cc">
+      <Filter>src\full-codegen\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\ic\x64\access-compiler-x64.cc">
+      <Filter>src\ic\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\ic\x64\handler-compiler-x64.cc">
+      <Filter>src\ic\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\ic\x64\ic-compiler-x64.cc">
+      <Filter>src\ic\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\ic\x64\ic-x64.cc">
+      <Filter>src\ic\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\ic\x64\stub-cache-x64.cc">
+      <Filter>src\ic\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\regexp\x64\regexp-macro-assembler-x64.cc">
+      <Filter>src\regexp\x64</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
