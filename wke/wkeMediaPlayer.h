@@ -55,9 +55,18 @@ public:
         kWkeLoadTypeMediaStream,
     };
 
+    struct MediaTimeRange {
+        MediaTimeRange() : start(0), end(0) {}
+        MediaTimeRange(double s, double e) : start(s), end(e) {}
+
+        double start;
+        double end;
+    };
+
     typedef unsigned TrackId;
 
-    virtual ~WkeMediaPlayer() {}
+    ~WkeMediaPlayer() {}
+    virtual void destroy() = 0;
 
     virtual void load(LoadType, const char*, CORSMode) = 0;
 
@@ -72,8 +81,8 @@ public:
     virtual void requestRemotePlayback() {}
     virtual void requestRemotePlaybackControl() {}
     virtual void setPreload(Preload) {}
-    virtual void* buffered() const = 0;
-    virtual void* seekable() const = 0;
+    virtual wkeMemBuf* buffered() const = 0;
+    virtual wkeMemBuf* seekable() const = 0;
 
     // Attempts to switch the audio output device.
     // Implementations of setSinkId take ownership of the WebCallbacks

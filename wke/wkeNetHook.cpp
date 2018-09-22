@@ -349,12 +349,26 @@ public:
             m_loader->cancel();
             delete m_loader;
         }
+        net::WebURLLoaderManager::sharedInstance()->removeLiveJobs(m_id);
     }
 
-    void start()
+    int start()
     {
         m_loader = blink::Platform::current()->createURLLoader();
         m_loader->loadAsynchronously(m_resourceRequest, this);
+
+        m_id = net::WebURLLoaderManager::sharedInstance()->addLiveJobs(this);
+        return m_id;
+    }
+
+    void cancel()
+    {
+        if (m_loader) {
+            m_loader->cancel();
+            delete m_loader;
+            m_loader = nullptr;
+        }
+        net::WebURLLoaderManager::sharedInstance()->removeLiveJobs(m_id);
     }
 
     void setCallback(void* param, wkeUrlRequestCallbacks callbacks)
@@ -451,10 +465,19 @@ const utf8* wkeNetGetResponseUrl(wkeWebUrlResponsePtr response)
     return wke::createTempCharString((const char*)url.characters8(), url.length());
 }
 
-void wkeNetStartUrlRequest(wkeWebView webView, wkeWebUrlRequestPtr request, void* param, wkeUrlRequestCallbacks callbacks)
+int wkeNetStartUrlRequest(wkeWebView webView, wkeWebUrlRequestPtr request, void* param, wkeUrlRequestCallbacks callbacks)
 {
     NetUrlRequest* netRequest = new NetUrlRequest(webView, request, param, callbacks);
-    netRequest->start();
+    return netRequest->start();
+}
+
+void wkeNetCancelWebUrlRequest(int requestId)
+{
+    net::JobHead* jobHead = net::WebURLLoaderManager::sharedInstance()->checkJob(requestId);
+    if (!jobHead || net::JobHead::kWkeCustomNetRequest != jobHead->getType())
+        return;
+    NetUrlRequest* netRequest = (NetUrlRequest*)jobHead;
+    netRequest->cancel();
 }
 
 namespace wke {

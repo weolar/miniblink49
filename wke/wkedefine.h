@@ -456,13 +456,15 @@ typedef void(WKE_CALL_TYPE*wkeConsoleCallback)(wkeWebView webView, void* param, 
 typedef void(WKE_CALL_TYPE*wkeOnCallUiThread)(wkeWebView webView, void* paramOnInThread);
 typedef void(WKE_CALL_TYPE*wkeCallUiThread)(wkeWebView webView, wkeOnCallUiThread func, void* param);
 
-typedef wkeMediaPlayer(WKE_CALL_TYPE* wkeMediaPlayerFactory)(wkeWebView webView, wkeMediaPlayerClient client);
+typedef wkeMediaPlayer(WKE_CALL_TYPE* wkeMediaPlayerFactory)(wkeWebView webView, wkeMediaPlayerClient client, void* npBrowserFuncs, void* npPluginFuncs);
 
 //wkeNet--------------------------------------------------------------------------------------
 typedef void* wkeNetJob;
 
 typedef struct wkeWebUrlRequest* wkeWebUrlRequestPtr;
 typedef struct wkeWebUrlResponse* wkeWebUrlResponsePtr;
+
+typedef struct wkeWebUrlRequest* wkeWebUrlRequestPtr;
 
 typedef void(WKE_CALL_TYPE* wkeOnUrlRequestWillRedirectCallback)(wkeWebView webView, void* param, wkeWebUrlRequestPtr oldRequest, wkeWebUrlRequestPtr request, wkeWebUrlResponsePtr redirectResponse);
 typedef void(WKE_CALL_TYPE* wkeOnUrlRequestDidReceiveResponseCallback)(wkeWebView webView, void* param, wkeWebUrlRequestPtr request, wkeWebUrlResponsePtr response);
@@ -1036,10 +1038,11 @@ public:
     \
     ITERATOR3(wkeWebUrlRequestPtr, wkeNetCreateWebUrlRequest, const utf8* url, const utf8* method, const utf8* mime, "")\
     ITERATOR3(void, wkeNetAddHTTPHeaderFieldToUrlRequest, wkeWebUrlRequestPtr request, const utf8* name, const utf8* value, "")\
-    ITERATOR4(void, wkeNetStartUrlRequest, wkeWebView webView, wkeWebUrlRequestPtr request, void* param, wkeUrlRequestCallbacks callbacks, "")\
+    ITERATOR4(int, wkeNetStartUrlRequest, wkeWebView webView, wkeWebUrlRequestPtr request, void* param, wkeUrlRequestCallbacks callbacks, "")\
     ITERATOR1(int, wkeNetGetHttpStatusCode, wkeWebUrlResponsePtr response, "")\
     ITERATOR1(__int64, wkeNetGetExpectedContentLength, wkeWebUrlResponsePtr response, "")\
     ITERATOR1(const utf8*, wkeNetGetResponseUrl, wkeWebUrlResponsePtr response, "")\
+    ITERATOR1(void, wkeNetCancelWebUrlRequest, int requestId, "")\
     \
     ITERATOR1(wkePostBodyElements*, wkeNetGetPostBody, wkeNetJob jobPtr, "") \
     ITERATOR2(wkePostBodyElements*, wkeNetCreatePostBodyElements, wkeWebView webView, size_t length, "") \
