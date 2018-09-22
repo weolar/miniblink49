@@ -452,6 +452,7 @@ public:
                     m_maskLayer->m_prop->bounds.height());
                 if (!skClipRect.intersect(skMaskClipRect))
                     skClipRect.setEmpty();
+                // TODO: SoftwareRenderer::DrawRenderPassQuad
             }
         }
 
