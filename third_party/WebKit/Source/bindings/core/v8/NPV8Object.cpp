@@ -42,10 +42,15 @@
 #include "core/frame/LocalFrame.h"
 #include "platform/ScriptForbiddenScope.h"
 #include "platform/UserGestureIndicator.h"
+#include "third_party/npapi/bindings/npfunctions.h"
 #include "wtf/OwnPtr.h"
 #include "wtf/StringExtras.h"
 #include "wtf/text/WTFString.h"
 #include <stdio.h>
+
+#if ENABLE_WKE
+extern NPNetscapeFuncs s_wkeBrowserFuncs;
+#endif
 
 using namespace blink;
 
@@ -232,6 +237,9 @@ bool _NPN_Invoke(NPP npp, NPObject* npObject, NPIdentifier methodName, const NPV
     if (!v8NpObject) {
         if (npObject->_class->invoke)
             return npObject->_class->invoke(npObject, methodName, arguments, argumentCount, result);
+        else if (s_wkeBrowserFuncs.invoke) {
+            return s_wkeBrowserFuncs.invoke(npp, npObject, methodName, arguments, argumentCount, result);
+        }
 
         VOID_TO_NPVARIANT(*result);
         return true;
@@ -296,7 +304,9 @@ bool _NPN_InvokeDefault(NPP npp, NPObject* npObject, const NPVariant* arguments,
     if (!v8NpObject) {
         if (npObject->_class->invokeDefault)
             return npObject->_class->invokeDefault(npObject, arguments, argumentCount, result);
-
+        else if (s_wkeBrowserFuncs.invokeDefault) {
+            return s_wkeBrowserFuncs.invokeDefault(npp, npObject, arguments, argumentCount, result);
+        }
         VOID_TO_NPVARIANT(*result);
         return true;
     }
@@ -345,15 +355,23 @@ bool _NPN_EvaluateHelper(NPP npp, bool popupsAllowed, NPObject* npObject, NPStri
     if (result) {
         VOID_TO_NPVARIANT(*result);
     }
-    if (ScriptForbiddenScope::isScriptForbidden())
+    if (ScriptForbiddenScope::isScriptForbidden()) {
+        if (s_wkeBrowserFuncs.evaluate) {
+            return s_wkeBrowserFuncs.evaluate(npp, npObject, npScript, result);
+        }
         return false;
+    }
 
     if (!npObject)
         return false;
 
     V8NPObject* v8NpObject = npObjectToV8NPObject(npObject);
-    if (!v8NpObject)
+    if (!v8NpObject) {
+        if (s_wkeBrowserFuncs.evaluate) {
+            return s_wkeBrowserFuncs.evaluate(npp, npObject, npScript, result);
+        }
         return false;
+    }
 
     v8::Isolate* isolate = v8::Isolate::GetCurrent();
     ScriptState* scriptState = mainWorldScriptState(isolate, npObject);
@@ -412,6 +430,10 @@ bool _NPN_GetProperty(NPP npp, NPObject* npObject, NPIdentifier propertyName, NP
             return npObject->_class->getProperty(npObject, propertyName, result);
     }
 
+    if (s_wkeBrowserFuncs.getproperty) {
+        return s_wkeBrowserFuncs.getproperty(npp, npObject, propertyName, result);
+    }
+
     VOID_TO_NPVARIANT(*result);
     return false;
 }
@@ -437,6 +459,10 @@ bool _NPN_SetProperty(NPP npp, NPObject* npObject, NPIdentifier propertyName, co
     if (npObject->_class->setProperty)
         return npObject->_class->setProperty(npObject, propertyName, value);
 
+    if (s_wkeBrowserFuncs.setproperty) {
+        return s_wkeBrowserFuncs.setproperty(npp, npObject, propertyName, value);
+    }
+
     return false;
 }
 
@@ -446,8 +472,12 @@ bool _NPN_RemoveProperty(NPP npp, NPObject* npObject, NPIdentifier propertyName)
         return false;
 
     V8NPObject* object = npObjectToV8NPObject(npObject);
-    if (!object)
+    if (!object) {
+        if (s_wkeBrowserFuncs.removeproperty) {
+            return s_wkeBrowserFuncs.removeproperty(npp, npObject, propertyName);
+        }
         return false;
+    }
 
     v8::Isolate* isolate = v8::Isolate::GetCurrent();
     ScriptState* scriptState = mainWorldScriptState(isolate, npObject);
@@ -480,6 +510,11 @@ bool _NPN_HasProperty(NPP npp, NPObject* npObject, NPIdentifier propertyName)
 
     if (npObject->_class->hasProperty)
         return npObject->_class->hasProperty(npObject, propertyName);
+
+    if (s_wkeBrowserFuncs.hasproperty) {
+        return s_wkeBrowserFuncs.hasproperty(npp, npObject, propertyName);
+    }
+
     return false;
 }
 
@@ -505,6 +540,11 @@ bool _NPN_HasMethod(NPP npp, NPObject* npObject, NPIdentifier methodName)
 
     if (npObject->_class->hasMethod)
         return npObject->_class->hasMethod(npObject, methodName);
+
+    if (s_wkeBrowserFuncs.hasmethod) {
+        return s_wkeBrowserFuncs.hasmethod(npp, npObject, methodName);
+    }
+
     return false;
 }
 
@@ -581,6 +621,10 @@ bool _NPN_Enumerate(NPP npp, NPObject* npObject, NPIdentifier** identifier, uint
     if (NP_CLASS_STRUCT_VERSION_HAS_ENUM(npObject->_class) && npObject->_class->enumerate)
        return npObject->_class->enumerate(npObject, identifier, count);
 
+    if (s_wkeBrowserFuncs.enumerate) {
+        return s_wkeBrowserFuncs.enumerate(npp, npObject, identifier, count);
+    }
+
     return false;
 }
 
@@ -619,6 +663,10 @@ bool _NPN_Construct(NPP npp, NPObject* npObject, const NPVariant* arguments, uin
 
     if (NP_CLASS_STRUCT_VERSION_HAS_CTOR(npObject->_class) && npObject->_class->construct)
         return npObject->_class->construct(npObject, arguments, argumentCount, result);
+
+    if (s_wkeBrowserFuncs.construct) {
+        return s_wkeBrowserFuncs.construct(npp, npObject, arguments, argumentCount, result);
+    }
 
     return false;
 }
