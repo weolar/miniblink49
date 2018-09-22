@@ -155,8 +155,12 @@ blink::WebMimeRegistry::SupportsType WebMimeRegistryImpl::supportsJavaScriptMIME
 }
 
 blink::WebMimeRegistry::SupportsType WebMimeRegistryImpl::supportsMediaMIMEType(
-    const blink::WebString&, const blink::WebString&, const blink::WebString&)
+    const blink::WebString& type, const blink::WebString& typeCodecs, const blink::WebString& system)
 {
+    String typeString = type;
+    if (WTF::kNotFound != typeString.find("video/mp4"))
+        return blink::WebMimeRegistry::IsSupported;
+
     return blink::WebMimeRegistry::IsNotSupported;
 }
 

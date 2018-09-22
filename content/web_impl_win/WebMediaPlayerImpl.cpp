@@ -5,6 +5,8 @@
 #include "content/web_impl_win/WebMediaplayerImpl.h"
 
 #include "content/browser/WebPageImpl.h"
+#include "content/web_impl_win/npapi/PluginPackage.h"
+#include "content/web_impl_win/npapi/PluginDatabase.h"
 #include "third_party/WebKit/Source/wtf/Functional.h"
 #include "third_party/WebKit/Source/web/WebViewImpl.h"
 #include "third_party/WebKit/public/platform/Platform.h"
@@ -24,12 +26,16 @@
 #include "wke/wke.h"
 #include "wke/wkeGlobalVar.h"
 #include "wke/wkeMediaPlayer.h"
+#include "third_party/npapi/bindings/npfunctions.h"
+#include "third_party/WebKit/Source/bindings/core/v8/npruntime_impl.h"
 
 using blink::WebCanvas;
 using blink::WebMediaPlayer;
 using blink::WebRect;
 using blink::WebSize;
 using blink::WebString;
+
+extern NPNetscapeFuncs s_wkeBrowserFuncs;
 
 namespace content {
 
@@ -132,6 +138,74 @@ private:
     blink::WebMediaPlayerClient* m_client;
 };
 
+// static uint16_t getNPVersion()
+// {
+//     return NP_VERSION_MINOR;
+// }
+// 
+// static NPNetscapeFuncs* getBrowserFuncs()
+// {
+//     static NPNetscapeFuncs* browserFuncs = nullptr;
+//     if (browserFuncs)
+//         return browserFuncs;
+//     browserFuncs = new NPNetscapeFuncs();
+// 
+//     browserFuncs->size = sizeof(NPNetscapeFuncs);
+//     browserFuncs->version = getNPVersion();
+// 
+//     browserFuncs->geturl = NPN_GetURL;
+//     browserFuncs->posturl = NPN_PostURL;
+//     browserFuncs->requestread = NPN_RequestRead;
+//     browserFuncs->newstream = NPN_NewStream;
+//     browserFuncs->write = NPN_Write;
+//     browserFuncs->destroystream = NPN_DestroyStream;
+//     browserFuncs->status = NPN_Status;
+//     browserFuncs->uagent = NPN_UserAgent;
+//     browserFuncs->memalloc = NPN_MemAlloc;
+//     browserFuncs->memfree = NPN_MemFree;
+//     browserFuncs->memflush = NPN_MemFlush;
+//     browserFuncs->reloadplugins = NPN_ReloadPlugins;
+//     browserFuncs->geturlnotify = NPN_GetURLNotify;
+//     browserFuncs->posturlnotify = NPN_PostURLNotify;
+//     browserFuncs->getvalue = NPN_GetValue;
+//     browserFuncs->setvalue = NPN_SetValue;
+//     browserFuncs->invalidaterect = NPN_InvalidateRect;
+//     browserFuncs->invalidateregion = NPN_InvalidateRegion;
+//     browserFuncs->forceredraw = NPN_ForceRedraw;
+//     browserFuncs->getJavaEnv = NPN_GetJavaEnv;
+//     browserFuncs->getJavaPeer = NPN_GetJavaPeer;
+//     browserFuncs->pushpopupsenabledstate = NPN_PushPopupsEnabledState;
+//     browserFuncs->poppopupsenabledstate = NPN_PopPopupsEnabledState;
+//     browserFuncs->pluginthreadasynccall = NPN_PluginThreadAsyncCall;
+//     browserFuncs->releasevariantvalue = _NPN_ReleaseVariantValue;
+//     browserFuncs->getstringidentifier = _NPN_GetStringIdentifier;
+//     browserFuncs->getstringidentifiers = _NPN_GetStringIdentifiers;
+//     browserFuncs->getintidentifier = _NPN_GetIntIdentifier;
+//     browserFuncs->identifierisstring = _NPN_IdentifierIsString;
+//     browserFuncs->utf8fromidentifier = _NPN_UTF8FromIdentifier;
+//     browserFuncs->intfromidentifier = _NPN_IntFromIdentifier;
+//     browserFuncs->createobject = _NPN_CreateObject;
+//     browserFuncs->retainobject = _NPN_RetainObject;
+//     browserFuncs->releaseobject = _NPN_ReleaseObject;
+//     browserFuncs->invoke = _NPN_Invoke;
+//     browserFuncs->invokeDefault = _NPN_InvokeDefault;
+//     browserFuncs->evaluate = _NPN_Evaluate;
+//     browserFuncs->getproperty = _NPN_GetProperty;
+//     browserFuncs->setproperty = _NPN_SetProperty;
+//     browserFuncs->removeproperty = _NPN_RemoveProperty;
+//     browserFuncs->hasproperty = _NPN_HasProperty;
+//     browserFuncs->hasmethod = _NPN_HasMethod;
+//     browserFuncs->setexception = _NPN_SetException;
+//     browserFuncs->enumerate = _NPN_Enumerate;
+//     browserFuncs->construct = _NPN_Construct;
+//     browserFuncs->getvalueforurl = NPN_GetValueForURL;
+//     browserFuncs->setvalueforurl = NPN_SetValueForURL;
+//     browserFuncs->getauthenticationinfo = NPN_GetAuthenticationInfo;
+//     browserFuncs->popupcontextmenu = NPN_PopUpContextMenu;
+// 
+//     return browserFuncs;
+// }
+
 WebMediaPlayerImpl::WebMediaPlayerImpl(blink::WebLocalFrame* frame, const blink::WebURL& url, blink::WebMediaPlayerClient* client)
 {
     m_width = 50;
@@ -150,19 +224,43 @@ WebMediaPlayerImpl::WebMediaPlayerImpl(blink::WebLocalFrame* frame, const blink:
 
     blink::WebViewImpl* view = (blink::WebViewImpl*)frame->view();
     WebPageImpl* page = (WebPageImpl*)view->client();
-    if (wke::g_wkeMediaPlayerFactory) {
-        m_wkeClientWrap = new MediaPlayerClientWkeWrap(m_client);
-        m_wkePlayer = wke::g_wkeMediaPlayerFactory(page->wkeWebView(), m_wkeClientWrap);
-    }
+    if (!wke::g_wkeMediaPlayerFactory)
+        return;
+
+    String mime("application/x-shockwave-flash");
+    PluginPackage* plugin = PluginDatabase::installedPlugins()->findPlugin(blink::KURL(), mime);
+
+    // No plugin was found, try refreshing the database and searching again
+    if (!plugin && PluginDatabase::installedPlugins()->refresh())
+        plugin = PluginDatabase::installedPlugins()->findPlugin(blink::KURL(), mime);
+
+    if (!plugin)
+        return;
+
+    plugin->load();
+
+     m_wkeClientWrap = new MediaPlayerClientWkeWrap(m_client);
+
+    NPNetscapeFuncs browserFuncs = { 0 } ;
+    memcpy(&browserFuncs, plugin->browserFuncs(), sizeof(NPNetscapeFuncs));
+    m_wkePlayer = wke::g_wkeMediaPlayerFactory(page->wkeWebView(), m_wkeClientWrap, (void*)&browserFuncs, (void*)plugin->pluginFuncs());
+
+    if (s_wkeBrowserFuncs.size != sizeof(NPNetscapeFuncs))
+        memcpy(&s_wkeBrowserFuncs, &browserFuncs, sizeof(NPNetscapeFuncs));
+
+    //m_wkePlayer = wke::g_wkeMediaPlayerFactory(page->wkeWebView(), m_wkeClientWrap, nullptr, nullptr);
 }
 
 WebMediaPlayerImpl::~WebMediaPlayerImpl()
 {
-    for (size_t i = 0; i < m_asynLoadCancelNotifers.size(); ++i) {
+    for (size_t i = 0; i < m_asynLoadCancelNotifers.size(); ++i)
         *(m_asynLoadCancelNotifers[i]) = true;
-    }
+    
     if (m_wkeClientWrap)
         delete m_wkeClientWrap;
+
+    if (m_wkePlayer)
+        m_wkePlayer->destroy();
 }
 
 void WebMediaPlayerImpl::load(blink::WebMediaPlayer::LoadType type, const blink::WebURL& url, blink::WebMediaPlayer::CORSMode mode)
@@ -271,14 +369,37 @@ void WebMediaPlayerImpl::setPreload(Preload preload)
         return m_wkePlayer->setPreload((wke::WkeMediaPlayer::Preload)preload);
 }
 
+static blink::WebTimeRanges getWebTimeRanges(wkeMemBuf* buffer)
+{
+    WTF::Vector<blink::WebTimeRange> ranges;
+    if (!buffer)
+        return ranges;
+    size_t size = buffer->length / sizeof(wke::WkeMediaPlayer::MediaTimeRange);
+
+    for (size_t i = 0; i < size; ++i) {
+        wke::WkeMediaPlayer::MediaTimeRange* range = ((wke::WkeMediaPlayer::MediaTimeRange*)buffer->data) + i;
+        ranges.append(blink::WebTimeRange(range->start, range->end));
+    }
+    wkeFreeMemBuf(buffer);
+    return ranges;
+}
+
 blink::WebTimeRanges WebMediaPlayerImpl::buffered() const
 {
-    return blink::WebVector<blink::WebTimeRange>();
+    if (m_wkePlayer) {
+        wkeMemBuf* buffer = m_wkePlayer->buffered();
+        return getWebTimeRanges(buffer);
+    }
+    return WTF::Vector<blink::WebTimeRange>();
 }
 
 blink::WebTimeRanges WebMediaPlayerImpl::seekable() const
 {
-    return blink::WebVector<blink::WebTimeRange>();
+    if (m_wkePlayer) {
+        wkeMemBuf* buffer = m_wkePlayer->seekable();
+        return getWebTimeRanges(buffer);
+    }
+    return WTF::Vector<blink::WebTimeRange>();
 }
 
 void WebMediaPlayerImpl::setSinkId(const WebString& deviceId, blink::WebCallbacks<void, blink::WebSetSinkIdError>*)

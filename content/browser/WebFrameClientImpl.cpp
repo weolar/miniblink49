@@ -308,7 +308,9 @@ void WebFrameClientImpl::didFailProvisionalLoad(WebLocalFrame* frame, const WebU
     wke::CWebViewHandler& handler = m_webPage->wkeHandler();
     if (handler.loadingFinishCallback && m_webPage->getState() == pageInited) {
         wkeLoadingResult result = WKE_LOADING_FAILED;
-        wke::CString failedReason(error.localizedDescription);
+        String failedReasonStr = String::format("error reason: %d, ", error.reason);
+        failedReasonStr.append(error.localizedDescription);
+        wke::CString failedReason(failedReasonStr);
         wke::CString url(error.unreachableURL.string());
 
         if (error.isCancellation)
@@ -427,7 +429,9 @@ void WebFrameClientImpl::didFailLoad(WebLocalFrame* frame, const WebURLError& er
     wke::CWebViewHandler& handler = m_webPage->wkeHandler();
     if (handler.loadingFinishCallback && m_webPage->getState() == pageInited) {
         wkeLoadingResult result = WKE_LOADING_FAILED;
-        wke::CString failedReason(error.localizedDescription);
+        String failedReasonStr = String::format("error reason: %d, ", error.reason);
+        failedReasonStr.append(error.localizedDescription);
+        wke::CString failedReason(failedReasonStr);
         wke::CString url(error.unreachableURL.string());
 
         if (error.isCancellation)

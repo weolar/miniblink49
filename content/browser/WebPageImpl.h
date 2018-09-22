@@ -41,6 +41,10 @@ namespace net {
 class PageNetExtraData;
 }
 
+namespace wke {
+class CWebView;
+}
+
 namespace content {
 
 class WebFrameClientImpl;
@@ -271,6 +275,10 @@ public:
     // been destroyed.
 #if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
     CefBrowserHostImpl* m_browser;
+#endif
+
+#if ENABLE_WKE == 1
+    wke::CWebView* wkeWebView() const;
 #endif
     cc::LayerTreeHost* m_layerTreeHost;
     bool m_painting;

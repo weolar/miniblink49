@@ -232,6 +232,15 @@ WebPageImpl::~WebPageImpl()
     OutputDebugStringA(output.utf8().data());
 }
 
+#if ENABLE_WKE == 1
+wke::CWebView* WebPageImpl::wkeWebView() const
+{
+    if (!m_pagePtr)
+        return nullptr;
+    return m_pagePtr->wkeWebView();
+}
+#endif
+
 class CreateDevToolsAgentTaskObserver : public blink::WebThread::TaskObserver {
 public:
     CreateDevToolsAgentTaskObserver(WebPageImpl* parent)
@@ -1362,6 +1371,7 @@ void WebPageImpl::fireSetFocusEvent(HWND hWnd, UINT message, WPARAM wParam, LPAR
 {
     CHECK_FOR_REENTER(this, (void)0);
     freeV8TempObejctOnOneFrameBefore();
+    // 见PlatformEventHandler::fireMouseEvent，里面也处理了设置焦点。因为这里有防重入机制
     m_webViewImpl->setFocus(true);
     m_webViewImpl->setIsActive(true);
 }
@@ -1375,6 +1385,8 @@ void WebPageImpl::fireKillFocusEvent(HWND hWnd, UINT message, WPARAM wParam, LPA
     if (currentFocus == m_popupHandle)
         return;
     m_webViewImpl->setFocus(false);
+//     m_webViewImpl->setFocusedFrame(nullptr);
+//     m_webViewImpl->clearFocusedElement();
     m_popupHandle = nullptr;
 }
 

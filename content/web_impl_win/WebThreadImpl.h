@@ -113,7 +113,8 @@ private:
     bool m_isObserversDirty;
     const char* m_name;
 
-    CRITICAL_SECTION m_taskPairsMutex; // weolar
+    CRITICAL_SECTION m_taskPairsMutex;
+    CRITICAL_SECTION m_observersMutex;
     bool m_suspendTimerQueue;
 
     bool m_hadThreadInit;
