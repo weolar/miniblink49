@@ -256,8 +256,12 @@ static bool typefacesMatchesFamily(const SkTypeface* tf, const AtomicString& fam
         if (equalIgnoringCase(family, familyName))
             matchesRequestedFamily = true;
 #ifndef MINIBLINK_NOCHANGE
-        const char data[13] = { 0xE5, 0xBE, 0xAE, 0xE8, 0xBD, 0xAF, 0xE9, 0x9B, 0x85, 0xE9, 0xBB, 0x91, 0 };
-        if (family == "Microsoft YaHei" && familyName.equals(data, 13))
+        const char yaheiData[13] = { 0xE5, 0xBE, 0xAE, 0xE8, 0xBD, 0xAF, 0xE9, 0x9B, 0x85, 0xE9, 0xBB, 0x91, 0 }; // 微软雅黑
+        if (equalIgnoringCase(family, "microsoft yahei") && familyName.equals(yaheiData, 13))
+            matchesRequestedFamily = true;
+
+        const char songtiData[7] = { 0xE5, 0xAE, 0x8B, 0xE4, 0xBD, 0x93, 0 }; // 宋体
+        if (equalIgnoringCase(family, "simsun") && familyName.equals(songtiData, 7))
             matchesRequestedFamily = true;
 #endif
     }
