@@ -42,6 +42,8 @@ API文档见：https://weolar.github.io/miniblink/doc-main.html
 # 使用 Usage
 请前往https://github.com/weolar/miniblink49/releases 下载最新编译后的SDK，里面的demo_src是个完整的用例。
 
+或者前往 https://github.com/weolar/mb-demo 下载
+
 最简单的创建一个窗口：
 
 **Usage**
