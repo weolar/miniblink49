@@ -120,7 +120,7 @@ static const UChar complexCodePathRanges[] = {
     0xFE20, 0xFE2F
 };
 
-#ifdef NO_WEOLAR_CHANGE
+#ifndef MINIBLINK_NO_HARFBUZZ
 
 CodePath Character::characterRangeCodePath(const UChar* characters, unsigned len)
 {
