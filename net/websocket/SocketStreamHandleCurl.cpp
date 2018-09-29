@@ -47,6 +47,7 @@ SocketStreamHandle::SocketStreamHandle(const KURL& url, SocketStreamHandleClient
     : SocketStreamHandleBase(url, client)
     , m_workerThread(0)
     , m_stopThread(0)
+    , m_readDataTaskCount(0)
 {
     WTF_LOG(Network, "SocketStreamHandle %p new client %p", this, m_client);
     ASSERT(isMainThread());
@@ -95,6 +96,7 @@ static void s_mainThreadReadData(void* param)
 
 void SocketStreamHandle::mainThreadReadData()
 {
+    atomicDecrement(&m_readDataTaskCount);
     didReceiveData();
     deref();
 }
@@ -103,7 +105,7 @@ bool SocketStreamHandle::readData(CURL* curlHandle)
 {
     ASSERT(!isMainThread());
 
-    const int bufferSize = 1024;
+    const int bufferSize = 1024 * 30;
     char* data = new char[bufferSize];
     size_t bytesRead = 0;
 
@@ -117,7 +119,10 @@ bool SocketStreamHandle::readData(CURL* curlHandle)
 
         ref();
 
-        WTF::internal::callOnMainThread(s_mainThreadReadData, this);
+        if (0 == m_readDataTaskCount) {
+            atomicIncrement(&m_readDataTaskCount);
+            WTF::internal::callOnMainThread(s_mainThreadReadData, this);
+        }
         return true;
     }
 
