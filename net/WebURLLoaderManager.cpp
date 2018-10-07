@@ -90,9 +90,11 @@ using namespace blink;
 
 namespace net {
 
+MainTaskRunner* MainTaskRunner::m_inst = nullptr;
+
 WebURLLoaderManager::WebURLLoaderManager()
-    : m_cookieJarFileName(cookieJarPath())
-    , m_certificatePath(certificatePath())
+    //: m_cookieJarFileName(cookieJarPath())
+    : m_certificatePath(certificatePath())
     , m_runningJobs(0)
     , m_isShutdown(false)
     , m_newestJobId(1)
@@ -117,8 +119,9 @@ WebURLLoaderManager::~WebURLLoaderManager()
 {
     curl_multi_cleanup(m_curlMultiHandle);
     curl_share_cleanup(m_curlShareHandle);
-    if (m_cookieJarFileName)
-        free(m_cookieJarFileName);
+//     if (m_cookieJarFileName)
+//         free(m_cookieJarFileName);
+    freeJarPath();
     curl_global_cleanup();
 }
 
@@ -130,6 +133,8 @@ void WebURLLoaderManager::shutdown()
     WTF::HashMap<int, JobHead*> liveJobs = m_liveJobs;
     m_liveJobs.clear();
     m_liveJobsMutex.unlock();
+
+    MainTaskRunner::destroy();
 
     WTF::HashMap<int, JobHead*>::iterator it = liveJobs.begin();
     for (; it != liveJobs.end(); ++it) {
@@ -163,9 +168,13 @@ void WebURLLoaderManager::initCookieSession()
 
     curl_easy_setopt(curl, CURLOPT_SHARE, m_curlShareHandle);
 
-    if (m_cookieJarFileName) {
-        curl_easy_setopt(curl, CURLOPT_COOKIEFILE, m_cookieJarFileName);
-        curl_easy_setopt(curl, CURLOPT_COOKIEJAR, m_cookieJarFileName);
+    WTF::Mutex* mutex = sharedResourceMutex(CURL_LOCK_DATA_COOKIE);
+    WTF::Locker<WTF::Mutex> locker(*mutex);
+    const char* cookieJarPathString = cookieJarPath();
+
+    if (cookieJarPathString) {
+        curl_easy_setopt(curl, CURLOPT_COOKIEFILE, cookieJarPathString);
+        curl_easy_setopt(curl, CURLOPT_COOKIEJAR, cookieJarPathString);
     }
 
     curl_easy_setopt(curl, CURLOPT_COOKIESESSION, 1);
@@ -177,10 +186,10 @@ CURLSH* WebURLLoaderManager::getCurlShareHandle() const
     return m_curlShareHandle;
 }
 
-const char* WebURLLoaderManager::getCookieJarFileName() const
-{
-    return m_cookieJarFileName;
-}
+// const char* WebURLLoaderManager::getCookieJarFileName() const
+// {
+//     return m_cookieJarFileName;
+// }
 
 WebURLLoaderManager* WebURLLoaderManager::sharedInstance()
 {
@@ -279,6 +288,23 @@ void WebURLLoaderManager::handleDidFinishLoading(WebURLLoaderInternal* job, doub
     job->client()->didFinishLoading(job->loader(), finishTime, totalEncodedDataLength);
 }
 
+static void handleExternalProtocol(const KURL& url)
+{
+    String urlProtocol = url.protocol();
+    if (WTF::kNotFound == urlProtocol.find("tencent") && WTF::kNotFound == urlProtocol.find("xunlei"))
+        return;
+
+    curl_version_info_data* curlVer = curl_version_info(CURLVERSION_FIRST);
+
+    for (int i = 0; curlVer->protocols[i]; ++i) {
+        const char* protocol = curlVer->protocols[i];
+        if (!equalIgnoringCase(urlProtocol, protocol))
+            continue;
+        return;
+    }
+    ShellExecuteA(NULL, NULL, url.getUTF8String().utf8().data(), NULL, NULL, SW_SHOWNORMAL);
+}
+
 void WebURLLoaderManager::handleDidFail(WebURLLoaderInternal* job, const blink::WebURLError& error)
 {
     if (job->m_bodyStreamWriter) {
@@ -288,8 +314,7 @@ void WebURLLoaderManager::handleDidFail(WebURLLoaderInternal* job, const blink::
     }
     KURL url = job->firstRequest()->url();
 
-//     String outString = String::format("handleDidFail on ui Thread:%d %s\n", error.reason, WTF::ensureStringToUTF8(url.string(), true).data());
-//     OutputDebugStringW(outString.charactersWithNullTermination().data());
+    handleExternalProtocol(url);
 
     setBlobDataLengthByTempPath(job);
     job->client()->didFail(job->loader(), error);
@@ -546,7 +571,7 @@ bool WebURLLoaderManager::downloadOnIoThread()
             curl_easy_getinfo(job->m_handle, CURLINFO_EFFECTIVE_URL, &url);
             if (job->client() && job->loader()) {
 
-                WebURLLoaderManagerMainTask::Args* args = WebURLLoaderManagerMainTask::pushTask(jobId, WebURLLoaderManagerMainTask::TaskType::kDidFail, nullptr, 0, 0, 0);
+                MainTaskArgs* args = WebURLLoaderManagerMainTask::pushTask(jobId, WebURLLoaderManagerMainTask::TaskType::kDidFail, nullptr, 0, 0, 0);
                 args->resourceError->reason = msg->data.result;
                 args->resourceError->domain = WebString::fromLatin1(url);
                 args->resourceError->localizedDescription = WebString::fromLatin1(curl_easy_strerror(msg->data.result));
@@ -1415,16 +1440,18 @@ void WebURLLoaderManager::initializeHandleOnIoThread(int jobId, InitializeHandle
     std::string cookieJarFileName;
     if (job->m_pageNetExtraData) {
         cookieJarFileName = job->m_pageNetExtraData->getCookieJarFileName();
-    } else if (m_cookieJarFileName && '\0' != m_cookieJarFileName[0]) {
-        cookieJarFileName = m_cookieJarFileName;
+    } else {
+        WTF::Mutex* mutex = sharedResourceMutex(CURL_LOCK_DATA_COOKIE);
+        WTF::Locker<WTF::Mutex> locker(*mutex);
+        const char* cookieJarPathString = cookieJarPath();
+        if (cookieJarPathString && '\0' != cookieJarPathString[0])
+            cookieJarFileName = cookieJarPathString;
     }
 
     if (cookieJarFileName.empty()) {
         curl_easy_setopt(job->m_handle, CURLOPT_COOKIEJAR, cookieJarFileName.c_str());
         curl_easy_setopt(job->m_handle, CURLOPT_COOKIEFILE, cookieJarFileName.c_str());
     }
-//     String jarPath = String::format("e:\\cookie-%d.data", info->curlShareHandle);
-//     curl_easy_setopt(job->m_handle, CURLOPT_COOKIEFILE, jarPath.utf8().data());
 
     if ("GET" == info->method) {
         curl_easy_setopt(job->m_handle, CURLOPT_HTTPGET, TRUE);

@@ -26,6 +26,7 @@ extern char* g_cookieJarPath;
 void setCookieJarFullPath(const WCHAR* path);
 void setCookieJarPath(const WCHAR* path);
 char* cookieJarPath();
+void freeJarPath();
 CString certificatePath();
 
 #if ENABLE(WEB_TIMING)

@@ -90,6 +90,7 @@ public:
         m_manager->handleDidReceiveResponse(job);
 
         if (job->m_asynWkeNetSetData && kNormalCancelled != job->m_cancelledReason) { // 可能在didReceiveResponse里被cancel
+            job->m_response.setExpectedContentLength(static_cast<long long int>(job->m_asynWkeNetSetData->size()));
             m_manager->didReceiveDataOrDownload(job, job->m_asynWkeNetSetData->data(), job->m_asynWkeNetSetData->size(), 0);
             m_manager->handleDidFinishLoading(job, WTF::currentTime(), 0);
         }

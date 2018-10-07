@@ -30,6 +30,9 @@ CString certificatePath()
 
 void setCookieJarFullPath(const WCHAR* path)
 {
+    WTF::Mutex* mutex = sharedResourceMutex(CURL_LOCK_DATA_COOKIE);
+    WTF::Locker<WTF::Mutex> locker(*mutex);
+
     if (!path)
         return;
 
@@ -50,6 +53,9 @@ void setCookieJarFullPath(const WCHAR* path)
 
 void setCookieJarPath(const WCHAR* path)
 {
+    WTF::Mutex* mutex = sharedResourceMutex(CURL_LOCK_DATA_COOKIE);
+    WTF::Locker<WTF::Mutex> locker(*mutex);
+
     if (!path || !::PathIsDirectoryW(path))
         return;
 
@@ -63,13 +69,26 @@ void setCookieJarPath(const WCHAR* path)
 
 char* cookieJarPath()
 {
+    WTF::Mutex* mutex = sharedResourceMutex(CURL_LOCK_DATA_COOKIE);
+    WTF::Locker<WTF::Mutex> locker(*mutex);
+
     if (g_cookieJarPath)
         return g_cookieJarPath;
 
     char* cookieJarPathStr = "cookies.dat";
     g_cookieJarPath = (char*)malloc(strlen(cookieJarPathStr) + 1);
     strcpy(g_cookieJarPath, cookieJarPathStr);
+
     return g_cookieJarPath;
+}
+
+void freeJarPath()
+{
+    WTF::Mutex* mutex = sharedResourceMutex(CURL_LOCK_DATA_COOKIE);
+    WTF::Locker<WTF::Mutex> locker(*mutex);
+
+    if (g_cookieJarPath)
+        free(g_cookieJarPath);
 }
 
 #if ENABLE(WEB_TIMING)

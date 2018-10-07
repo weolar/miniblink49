@@ -16,8 +16,86 @@
 
 namespace net {
 
+struct MainTaskArgs {
+    void* ptr;
+    size_t size;
+    size_t nmemb;
+    long httpCode;
+    double contentLength;
+    char* hdr;
+    blink::WebURLError* resourceError;
+
+    int ref;
+
+    ~MainTaskArgs()
+    {
+        free(ptr);
+        free(hdr);
+        delete resourceError;
+    }
+
+    static MainTaskArgs* build(void* ptr, size_t size, size_t nmemb, size_t totalSize, CURL* handle, bool isProxy)
+    {
+        MainTaskArgs* args = new MainTaskArgs();
+        args->size = size;
+        args->nmemb = nmemb;
+        args->ptr = malloc(totalSize);
+        args->resourceError = new blink::WebURLError();
+        args->ref = 0;
+        memcpy(args->ptr, ptr, totalSize);
+
+        curl_easy_getinfo(handle, !isProxy ? CURLINFO_RESPONSE_CODE : CURLINFO_HTTP_CONNECTCODE, &args->httpCode);
+        if (isProxy && 0 == args->httpCode)
+            args->httpCode = 200;
+
+        double contentLength = 0;
+        curl_easy_getinfo(handle, CURLINFO_CONTENT_LENGTH_DOWNLOAD, &args->contentLength);
+
+        const char* hdr = nullptr;
+        args->hdr = nullptr;
+        int hdrLen = 0;
+        curl_easy_getinfo(handle, CURLINFO_EFFECTIVE_URL, &hdr);
+        if (hdr)
+            hdrLen = strlen(hdr);
+
+        args->hdr = (char*)malloc(hdrLen + 1);
+        strncpy(args->hdr, hdr, hdrLen);
+        args->hdr[hdrLen] = '\0';
+        return args;
+    }
+};
+
+class MainTaskRunner : public blink::WebThread::TaskObserver {
+public:
+    MainTaskRunner() : m_isDestroying(false) {}
+    virtual ~MainTaskRunner() override {}
+    virtual void willProcessTask() override;
+    virtual void didProcessTask() override
+    {
+    }
+
+    static void destroy();
+    static void add(WebURLLoaderManagerMainTask* task)
+    {
+        if (!m_inst)
+            m_inst = new MainTaskRunner();
+        
+        blink::Platform::current()->mainThread()->addTaskObserver(m_inst);
+        m_inst->addTask(task);
+    }
+
+private:
+    void destroyImpl();
+    void addTask(WebURLLoaderManagerMainTask* task);
+
+    static MainTaskRunner* m_inst;
+    bool m_isDestroying;
+    WTF::Mutex m_mutex;
+    WTF::Vector<WebURLLoaderManagerMainTask*> m_list;
+};
+
 // 回调回main线程的task
-class WebURLLoaderManagerMainTask : public blink::WebThread::Task{
+class WebURLLoaderManagerMainTask : public blink::WebThread::Task {
 public:
     enum TaskType {
         kWriteCallback,
@@ -29,52 +107,6 @@ public:
         kContentEnded,
         kDidFail,
         kHandleHookRequest,
-    };
-
-    struct Args {
-        void* ptr;
-        size_t size;
-        size_t nmemb;
-        long httpCode;
-        double contentLength;
-        char* hdr;
-        blink::WebURLError* resourceError;
-
-        ~Args()
-        {
-            free(ptr);
-            free(hdr);
-            delete resourceError;
-        }
-
-        static Args* build(void* ptr, size_t size, size_t nmemb, size_t totalSize, CURL* handle, bool isProxy)
-        {
-            Args* args = new Args();
-            args->size = size;
-            args->nmemb = nmemb;
-            args->ptr = malloc(totalSize);
-            args->resourceError = new blink::WebURLError();
-            memcpy(args->ptr, ptr, totalSize);
-
-            curl_easy_getinfo(handle, !isProxy ? CURLINFO_RESPONSE_CODE : CURLINFO_HTTP_CONNECTCODE, &args->httpCode);
-            if (isProxy && 0 == args->httpCode)
-                args->httpCode = 200;
-
-            double contentLength = 0;
-            curl_easy_getinfo(handle, CURLINFO_CONTENT_LENGTH_DOWNLOAD, &args->contentLength);
-
-            const char* hdr = nullptr;
-            args->hdr = nullptr;
-            int hdrLen = 0;
-            curl_easy_getinfo(handle, CURLINFO_EFFECTIVE_URL, &hdr);
-            if (hdr)
-                hdrLen = strlen(hdr);
-
-            args->hdr = (char*)malloc(hdrLen + 1);
-            strncpy(args->hdr, hdr, hdrLen);
-            args->hdr[hdrLen] = '\0';
-            return args;
-        }
     };
 
     virtual ~WebURLLoaderManagerMainTask() override
@@ -159,20 +191,22 @@ public:
         }
     }
 
-    static Args* pushTask(int jobId, TaskType type, void* ptr, size_t size, size_t nmemb, size_t totalSize)
+    static MainTaskArgs* pushTask(int jobId, TaskType type, void* ptr, size_t size, size_t nmemb, size_t totalSize)
     {
         AutoLockJob autoLockJob(WebURLLoaderManager::sharedInstance(), jobId);
         WebURLLoaderInternal* job = autoLockJob.lock();
         if (!job)
             return nullptr;
 
-        Args* args = Args::build(ptr, size, nmemb, totalSize, job->m_handle, job->m_isProxy);
+        MainTaskArgs* args = MainTaskArgs::build(ptr, size, nmemb, totalSize, job->m_handle, job->m_isProxy);
         WebURLLoaderManagerMainTask* task = new WebURLLoaderManagerMainTask(jobId, type, args);
 
         if (job->m_isSynchronous)
             job->m_syncTasks.append(task);
-        else
-            blink::Platform::current()->mainThread()->scheduler()->postLoadingTask(FROM_HERE, task); // postLoadingTask
+        else {
+            //blink::Platform::current()->mainThread()->scheduler()->postLoadingTask(FROM_HERE, task); // postLoadingTask
+            MainTaskRunner::add(task);
+        }
         return args;
     }
 
@@ -182,28 +216,91 @@ public:
         WebURLLoaderInternal* job = autoLockJob.lock();
         if (!job)
             return nullptr;
-        Args* args = Args::build(ptr, size, nmemb, totalSize, job->m_handle, job->m_isProxy);
+        MainTaskArgs* args = MainTaskArgs::build(ptr, size, nmemb, totalSize, job->m_handle, job->m_isProxy);
         WebURLLoaderManagerMainTask* task = new WebURLLoaderManagerMainTask(jobId, type, args);
         return task;
     }
 
-    static size_t handleWriteCallbackOnMainThread(WebURLLoaderManagerMainTask::Args* args, WebURLLoaderInternal* job);
-    static size_t handleHeaderCallbackOnMainThread(WebURLLoaderManagerMainTask::Args* args, WebURLLoaderInternal* job);
-    static void handleLocalReceiveResponseOnMainThread(WebURLLoaderManagerMainTask::Args* args, WebURLLoaderInternal* job);
+    static size_t handleWriteCallbackOnMainThread(MainTaskArgs* args, WebURLLoaderInternal* job);
+    static size_t handleHeaderCallbackOnMainThread(MainTaskArgs* args, WebURLLoaderInternal* job);
+    static void handleLocalReceiveResponseOnMainThread(MainTaskArgs* args, WebURLLoaderInternal* job);
     static void handleHookRequestOnMainThread(WebURLLoaderInternal* job);
 
 private:
     int m_jobId;
     TaskType m_type;
-    Args* m_args;
+    MainTaskArgs* m_args;
 
-    WebURLLoaderManagerMainTask(int jobId, TaskType type, Args* args)
+    WebURLLoaderManagerMainTask(int jobId, TaskType type, MainTaskArgs* args)
         : m_jobId(jobId)
         , m_type(type)
         , m_args(args)
     {
     }
 };
+
+static void checkList(const WTF::Vector<WebURLLoaderManagerMainTask*>& tasks)
+{
+    for (size_t i = 0; i < tasks.size(); ++i) {
+        WebURLLoaderManagerMainTask* task = tasks[i];
+        RELEASE_ASSERT(!task);
+    }
+}
+
+void MainTaskRunner::willProcessTask()
+{
+    for (size_t i = 0; ; ++i) {
+        m_mutex.lock();
+        if (i >= m_list.size()) {
+            checkList(m_list);
+            m_list.clear();
+            m_mutex.unlock();
+            break;
+        }
+        WebURLLoaderManagerMainTask* task = m_list[i];
+        m_list[i] = nullptr;
+        m_mutex.unlock();
+
+        if (!task)
+            continue;
+        task->run();
+        delete task;
+    }
+}
+
+void MainTaskRunner::destroy()
+{
+    if (!m_inst)
+        return;
+    m_inst->destroyImpl();
+}
+
+void MainTaskRunner::destroyImpl()
+{
+    m_mutex.lock();
+    m_isDestroying = true;
+
+    size_t size = m_list.size();
+    for (size_t i = 0; i < size; ++i) {
+        WebURLLoaderManagerMainTask* task = m_list[i];
+        delete task;
+    }
+    RELEASE_ASSERT(size == m_list.size());
+
+    m_list.clear();
+    m_mutex.unlock();
+}
+
+void MainTaskRunner::addTask(WebURLLoaderManagerMainTask* task)
+{
+    WTF::Locker<WTF::Mutex> locker(m_mutex);
+    if (m_isDestroying) {
+        delete task;
+        return;
+    }
+    m_list.append(task);
+}
+
 
 static bool isDownloadResponse(WebURLLoaderInternal* job, const AtomicString& contentType)
 {
@@ -434,7 +531,7 @@ static void distpatchWkeWillSendRequest(WebURLLoaderInternal* job, const KURL* n
     }
 }
 
-static void doRedirect(WebURLLoaderInternal* job, const String& location, WebURLLoaderManagerMainTask::Args* args, bool isRedirectByHttpCode)
+static void doRedirect(WebURLLoaderInternal* job, const String& location, MainTaskArgs* args, bool isRedirectByHttpCode)
 {
     WebURLLoaderClient* client = job->client();
     KURL newURL = KURL((KURL)(job->firstRequest()->url()), location);
@@ -443,6 +540,8 @@ static void doRedirect(WebURLLoaderInternal* job, const String& location, WebURL
     distpatchWkeWillSendRequest(job, &newURL, args->httpCode);
 
     RequestExtraData* requestExtraData = reinterpret_cast<RequestExtraData*>(job->firstRequest()->extraData());
+    if (!requestExtraData)
+        return;
     WebPage* page = requestExtraData->page;
     wkeLoadUrlBeginCallback loadUrlBeginCallback = page->wkeHandler().loadUrlBeginCallback;
     void* param = page->wkeHandler().loadUrlBeginCallbackParam;
@@ -471,7 +570,7 @@ static void doRedirect(WebURLLoaderInternal* job, const String& location, WebURL
     job->m_firstRequest = redirectedRequest;
 }
 
-static bool setHttpResponseDataToJobWhenDidReceiveResponseOnMainThread(WebURLLoaderInternal* job, WebURLLoaderManagerMainTask::Args* args)
+static bool setHttpResponseDataToJobWhenDidReceiveResponseOnMainThread(WebURLLoaderInternal* job, MainTaskArgs* args)
 {
     WebURLLoaderClient* client = job->client();
     size_t size = args->size;
@@ -490,10 +589,6 @@ static bool setHttpResponseDataToJobWhenDidReceiveResponseOnMainThread(WebURLLoa
     }
 
     AtomicString contentType = job->m_response.httpHeaderField(WebString::fromUTF8("Content-Type"));
-
-    job->m_response.setExpectedContentLength(static_cast<long long int>(args->contentLength));
-    job->m_response.setURL(KURL(ParsedURLString, args->hdr));
-    job->m_response.setHTTPStatusCode(args->httpCode);
     job->m_response.setMIMEType(extractMIMETypeFromMediaType(contentType).lower());
 
     String textEncodingName = extractCharsetFromMediaType(contentType);
@@ -546,10 +641,14 @@ static bool setHttpResponseDataToJobWhenDidReceiveResponseOnMainThread(WebURLLoa
     return true;
 }
 
-static void setResponseDataToJobWhenDidReceiveResponseOnMainThread(WebURLLoaderInternal* job, WebURLLoaderManagerMainTask::Args* args)
+static void setResponseDataToJobWhenDidReceiveResponseOnMainThread(WebURLLoaderInternal* job, MainTaskArgs* args)
 {
     KURL url = job->firstRequest()->url();
     bool needSetResponseFired = true;
+
+    job->m_response.setExpectedContentLength(static_cast<long long int>(args->contentLength));
+    job->m_response.setURL(KURL(ParsedURLString, args->hdr));
+    job->m_response.setHTTPStatusCode(args->httpCode);
 
     if (url.protocolIsInHTTPFamily())
         needSetResponseFired = setHttpResponseDataToJobWhenDidReceiveResponseOnMainThread(job, args);
@@ -561,7 +660,7 @@ static void setResponseDataToJobWhenDidReceiveResponseOnMainThread(WebURLLoaderI
     }
 }
 
-void WebURLLoaderManagerMainTask::handleLocalReceiveResponseOnMainThread(WebURLLoaderManagerMainTask::Args* args, WebURLLoaderInternal* job)
+void WebURLLoaderManagerMainTask::handleLocalReceiveResponseOnMainThread(MainTaskArgs* args, WebURLLoaderInternal* job)
 {
     if (job->responseFired())
         return;
@@ -581,7 +680,7 @@ void WebURLLoaderManagerMainTask::handleLocalReceiveResponseOnMainThread(WebURLL
 }
 
 // called with data after all headers have been processed via headerCallbackOnIoThread
-size_t WebURLLoaderManagerMainTask::handleWriteCallbackOnMainThread(WebURLLoaderManagerMainTask::Args* args, WebURLLoaderInternal* job)
+size_t WebURLLoaderManagerMainTask::handleWriteCallbackOnMainThread(MainTaskArgs* args, WebURLLoaderInternal* job)
 {
     void* ptr = args->ptr;
     size_t size = args->size;
@@ -610,7 +709,7 @@ size_t WebURLLoaderManagerMainTask::handleWriteCallbackOnMainThread(WebURLLoader
     return totalSize;
 }
 
-size_t WebURLLoaderManagerMainTask::handleHeaderCallbackOnMainThread(WebURLLoaderManagerMainTask::Args* args, WebURLLoaderInternal* job)
+size_t WebURLLoaderManagerMainTask::handleHeaderCallbackOnMainThread(MainTaskArgs* args, WebURLLoaderInternal* job)
 {
     if (job->isCancelled())
         return 0;
