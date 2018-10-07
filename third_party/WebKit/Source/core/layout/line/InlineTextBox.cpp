@@ -520,7 +520,9 @@ TextRun InlineTextBox::constructTextRun(const ComputedStyle& style, const Font& 
     TextRun run(string, textPos().toFloat(), expansion(), expansionBehavior(), direction(), dirOverride() || style.rtlOrdering() == VisualOrder, !layoutObject().canUseSimpleFontCodePath());
     run.setTabSize(!style.collapseWhiteSpace(), style.tabSize());
     run.setCodePath(layoutObject().canUseSimpleFontCodePath() ? TextRun::ForceSimple : TextRun::ForceComplex);
+#ifdef MINIBLINK_NO_HARFBUZZ
     ASSERT(TextRun::ForceSimple == run.codePath());
+#endif
     run.setTextJustify(style.textJustify());
 
     // Propagate the maximum length of the characters buffer to the TextRun, even when we're only processing a substring.
