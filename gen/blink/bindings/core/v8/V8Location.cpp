@@ -425,32 +425,6 @@ static void replaceMethodCallback(const v8::FunctionCallbackInfo<v8::Value>& inf
     TRACE_EVENT_SET_SAMPLING_STATE("blink", "DOMMethod");
     LocationV8Internal::replaceMethod(info);
     TRACE_EVENT_SET_SAMPLING_STATE("v8", "V8Execution");
-
-    if (0) {
-        v8::Isolate* isolate = info.GetIsolate();
-        const v8::StackTrace::StackTraceOptions options = static_cast<v8::StackTrace::StackTraceOptions>(
-            v8::StackTrace::kLineNumber
-            | v8::StackTrace::kColumnOffset
-            | v8::StackTrace::kScriptId
-            | v8::StackTrace::kScriptNameOrSourceURL
-            | v8::StackTrace::kFunctionName);
-
-        int stackNum = 1;
-        v8::HandleScope handleScope(isolate);
-        v8::Local<v8::StackTrace> stackTrace(v8::StackTrace::CurrentStackTrace(isolate, stackNum, options));
-        v8::Local<v8::StackFrame> stackFrame = stackTrace->GetFrame(0);
-        int frameCount = stackTrace->GetFrameCount();
-        v8::Local<v8::String> scriptName = stackFrame->GetScriptNameOrSourceURL();
-
-        v8::String::Utf8Value error_mesage_utf8(scriptName);
-        char* error_mesage_buf = new char[2000];
-        sprintf(error_mesage_buf, "replaceMethodCallback:%s\n", *error_mesage_utf8);
-        OutputDebugStringA(error_mesage_buf);
-        delete[] error_mesage_buf;
-
-        int line = stackFrame->GetLineNumber();
-        line = 0;
-    }
 }
 
 static void replaceOriginSafeMethodGetter(const v8::PropertyCallbackInfo<v8::Value>& info)

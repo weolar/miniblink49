@@ -423,33 +423,6 @@ static void cookieAttributeGetter(const v8::FunctionCallbackInfo<v8::Value>& inf
 
 static void cookieAttributeGetterCallback(const v8::FunctionCallbackInfo<v8::Value>& info)
 {
-    if (0) {
-        v8::Isolate* isolate = info.GetIsolate();
-        const v8::StackTrace::StackTraceOptions options = static_cast<v8::StackTrace::StackTraceOptions>(
-            v8::StackTrace::kLineNumber
-            | v8::StackTrace::kColumnOffset
-            | v8::StackTrace::kScriptId
-            | v8::StackTrace::kScriptNameOrSourceURL
-            | v8::StackTrace::kFunctionName);
-    
-        int stackNum = 1;
-        v8::HandleScope handleScope(isolate);
-        v8::Local<v8::StackTrace> stackTrace(v8::StackTrace::CurrentStackTrace(isolate, stackNum, options));
-        v8::Local<v8::StackFrame> stackFrame = stackTrace->GetFrame(0);
-        int frameCount = stackTrace->GetFrameCount();
-        int line = stackFrame->GetLineNumber();
-        v8::Local<v8::String> urlName = stackFrame->GetScriptNameOrSourceURL();
-        
-        char* buf = nullptr;
-        int len = urlName->Utf8Length();
-        if (len != 0) {
-            char* buf = new char[len + 1];
-            buf[len] = 0;
-            urlName->WriteUtf8(buf, len + 1);
-            delete[] buf;
-        }
-    }
-
     TRACE_EVENT_SET_SAMPLING_STATE("blink", "DOMGetter");
     DocumentV8Internal::cookieAttributeGetter(info);
     TRACE_EVENT_SET_SAMPLING_STATE("v8", "V8Execution");
