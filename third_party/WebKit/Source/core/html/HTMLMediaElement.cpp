@@ -1033,6 +1033,9 @@ void HTMLMediaElement::startPlayerLoad()
         requestURL.setPass(String());
 
     m_player->load(loadType(), requestURL, corsMode());
+#ifndef MINIBLINK_NO_CHANGE
+    configureMediaControls();
+#endif
 }
 
 void HTMLMediaElement::setPlayerPreload()
@@ -3625,12 +3628,13 @@ bool HTMLMediaElement::isInteractiveContent() const
 void HTMLMediaElement::defaultEventHandler(Event* event)
 {
     WebMediaPlayer* player = webMediaPlayer();
-    if (player && event->isMouseEvent()) {
+    LayoutObject* obj = layoutObject();
+    if (player && event->isMouseEvent() && obj) {
         MouseEvent* evt = (MouseEvent*)event;
-        WebMouseEventBuilder webEvent(nullptr, layoutObject(), *evt);
+        WebMouseEventBuilder webEvent(nullptr, obj, *evt);
         
         FrameView* view = document().view();
-        IntPoint absolutePoint = roundedIntPoint(layoutObject()->localToAbsolute(FloatPoint(), UseTransforms));
+        IntPoint absolutePoint = roundedIntPoint(obj->localToAbsolute(FloatPoint(), UseTransforms));
         IntPoint r = view->contentsToRootFrame(absolutePoint);
         player->setContentsToNativeWindowOffset(r);
 
