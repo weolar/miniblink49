@@ -252,7 +252,8 @@ class AsynSetCookies : public net::JobHead {
 public:
     AsynSetCookies(const CString& cookie, int* count)
     {
-        m_cookie = cookie.data();
+        if (!cookie.isNull() && 0 != cookie.length())
+            m_cookie = cookie.data();
         m_ref = 0;
         m_id = 0;
         m_type = kSetCookiesTask;
@@ -296,7 +297,6 @@ public:
             return;
         }
 
-        const char* cookieJarFileName = net::WebURLLoaderManager::sharedInstance()->getCookieJarFileName();
         CURLSH* curlsh = net::WebURLLoaderManager::sharedInstance()->getCurlShareHandle();
         curl_easy_setopt(curl, CURLOPT_SHARE, curlsh);
         curl_easy_setopt(curl, CURLOPT_COOKIELIST, m_cookie.c_str());

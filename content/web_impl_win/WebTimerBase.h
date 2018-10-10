@@ -81,6 +81,11 @@ public:
     void deref();
     int refCount() const;
 
+    const blink::WebTraceLocation& getTraceLocation()
+    {
+        return m_location;
+    }
+
 private:
     WebTimerBase(WebThreadImpl* threadTimers, const blink::WebTraceLocation& location, blink::WebThread::Task* task, int priority);
 

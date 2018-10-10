@@ -1,6 +1,7 @@
 #include "config.h"
 #include "WebMimeRegistryImpl.h"
 #include "third_party/WebKit/public/platform/WebString.h"
+#include "wke/wkeGlobalVar.h"
 #include <wtf/text/StringHash.h>
 #include <wtf/text/WTFStringUtil.h>
 #include <wtf/HashMap.h>
@@ -158,8 +159,13 @@ blink::WebMimeRegistry::SupportsType WebMimeRegistryImpl::supportsMediaMIMEType(
     const blink::WebString& type, const blink::WebString& typeCodecs, const blink::WebString& system)
 {
     String typeString = type;
-    if (WTF::kNotFound != typeString.find("video/mp4"))
-        return blink::WebMimeRegistry::IsSupported;
+    if (wke::g_onIsMediaPlayerSupportsMIMETypeCallback) {
+
+        std::string typeStr = type.utf8();
+        bool isSupported = wke::g_onIsMediaPlayerSupportsMIMETypeCallback(typeStr.c_str());
+        if (isSupported) // if (WTF::kNotFound != typeString.find("video/mp4"))
+            return blink::WebMimeRegistry::IsSupported;
+    }
 
     return blink::WebMimeRegistry::IsNotSupported;
 }

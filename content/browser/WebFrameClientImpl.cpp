@@ -180,6 +180,7 @@ blink::WebPlugin* WebFrameClientImpl::createPlugin(WebLocalFrame* frame, const W
     plugin->setParentPlatformPluginWidget(m_webPage->getHWND());
     plugin->setHwndRenderOffset(m_webPage->getHwndRenderOffset());
     plugin->setWkeWebView(m_webPage->wkeWebView());
+
     return plugin.leakRef();
 }
 
@@ -593,7 +594,12 @@ WebNavigationPolicy WebFrameClientImpl::decidePolicyForNavigation(const Navigati
         WebString url16 = info.urlRequest.url().string();
         wke::CString url(url16);
 
-        bool ok = m_webPage->wkeHandler().navigationCallback(m_webPage->wkeWebView(), m_webPage->wkeHandler().navigationCallbackParam, navigationType, &url);
+        wkeWebView webView = m_webPage->wkeWebView();
+        wkeTempCallbackInfo* tempInfo = wkeGetTempCallbackInfo(webView);
+        tempInfo->size = sizeof(wkeTempCallbackInfo);
+        tempInfo->frame = frameIdToWkeFrame(m_webPage, info.frame);
+
+        bool ok = m_webPage->wkeHandler().navigationCallback(webView, m_webPage->wkeHandler().navigationCallbackParam, navigationType, &url);
         if (!ok)
             return WebNavigationPolicyIgnore;
     }

@@ -20,6 +20,7 @@
 #include "content/resources/TextAreaResizeCornerData.h"
 #include "content/resources/LocalizedString.h"
 #include "content/resources/WebKitWebRes.h"
+#include "content/resources/MediaPlayerData.h"
 
 #include "content/browser/WebPage.h"
 #include "content/browser/PlatformMessagePortChannel.h"
@@ -624,7 +625,7 @@ blink::WebData BlinkPlatformImpl::loadResource(const char* name)
     else if (0 == strcmp("textAreaResizeCorner@2x", name))
         return blink::WebData((const char*)content::gTextAreaResizeCornerData, sizeof(content::gTextAreaResizeCornerData));
     else if (0 == strcmp("mediaControls.css", name))
-        return blink::WebData((const char*)blink::mediaControlsAndroidUserAgentStyleSheet, sizeof(blink::mediaControlsAndroidUserAgentStyleSheet));
+        return blink::WebData((const char*)blink::mediaControlsUserAgentStyleSheet, sizeof(blink::mediaControlsUserAgentStyleSheet));
     //////////////////////////////////////////////////////////////////////////
     else if (0 == strcmp("calendarPicker.css", name))
         return blink::WebData((const char*)content::calendarPickerCss, sizeof(content::calendarPickerCss));
@@ -666,34 +667,50 @@ blink::WebData BlinkPlatformImpl::loadResource(const char* name)
     else if (0 == strcmp("xhtmlmp.css", name)) {
         char xhtmlmpCss[] = "@viewport {width: auto;min-zoom: 0.25;max-zoom: 5;}";
         return blink::WebData(xhtmlmpCss, sizeof(xhtmlmpCss));
-    } else if (
-        0 == strcmp("mediaplayerSoundLevel0", name) ||
-        0 == strcmp("mediaplayerSoundLevel1", name) ||
-        0 == strcmp("mediaplayerSoundLevel2", name) ||
-        0 == strcmp("mediaplayerSoundLevel3", name) ||
-        0 == strcmp("mediaplayerSoundDisabled", name) ||
-        
-        0 == strcmp("mediaplayerPlay", name) ||
-        0 == strcmp("mediaplayerPause", name) ||
-        0 == strcmp("mediaplayerPlayDisabled", name) ||
-
-        0 == strcmp("mediaplayerOverlayPlay", name) ||
-        0 == strcmp("mediaplayerSliderThumb", name) ||
-        0 == strcmp("mediaplayerVolumeSliderThumb", name) ||
-
-        0 == strcmp("mediaplayerFullscreen", name) ||
-        0 == strcmp("mediaplayerClosedCaption", name) ||
-        0 == strcmp("mediaplayerClosedCaptionDisabled", name) ||
-
-        0 == strcmp("mediaplayerCastOn", name) ||
-        0 == strcmp("mediaplayerCastOff", name) ||
-        0 == strcmp("mediaplayerOverlayCastOff", name) ||
-
-        0 == strcmp("mediaplayerSliderThumb", name) ||
-        0 == strcmp("mediaplayerVolumeSliderThumb", name)
-        ) {
-        return blink::WebData();
     }
+    else if (0 == strcmp("mediaplayerSoundLevel0", name))
+        return blink::WebData((const char*)content::MediaplayerSoundLevel0, sizeof(content::MediaplayerSoundLevel0));
+    else if (0 == strcmp("mediaplayerSoundLevel1", name))
+        return blink::WebData((const char*)content::MediaplayerSoundLevel1, sizeof(content::MediaplayerSoundLevel1));
+    else if (0 == strcmp("mediaplayerSoundLevel2", name))
+        return blink::WebData((const char*)content::MediaplayerSoundLevel2, sizeof(content::MediaplayerSoundLevel2));
+    else if (0 == strcmp("mediaplayerSoundLevel3", name))
+        return blink::WebData((const char*)content::MediaplayerSoundLevel3, sizeof(content::MediaplayerSoundLevel3));
+    else if (0 == strcmp("mediaplayerSoundDisabled", name))
+        return blink::WebData((const char*)content::MediaplayerSoundDisabled, sizeof(content::MediaplayerSoundDisabled));
+    
+    else if (0 == strcmp("mediaplayerPlay", name))
+        return blink::WebData((const char*)content::MediaplayerPlay, sizeof(content::MediaplayerPlay));
+    else if (0 == strcmp("mediaplayerPause", name))
+        return blink::WebData((const char*)content::MediaplayerPause, sizeof(content::MediaplayerPause));
+    else if (0 == strcmp("mediaplayerPlayDisabled", name))
+        return blink::WebData((const char*)content::MediaplayerPlayDisabled, sizeof(content::MediaplayerPlayDisabled));
+
+    else if (0 == strcmp("mediaplayerOverlayPlay", name))
+        return blink::WebData((const char*)content::MediaplayerOverlayPlay, sizeof(content::MediaplayerOverlayPlay));
+    else if (0 == strcmp("mediaplayerSliderThumb", name))
+        return blink::WebData((const char*)content::MediaplayerSliderThumb, sizeof(content::MediaplayerSliderThumb));
+    else if (0 == strcmp("mediaplayerVolumeSliderThumb", name))
+        return blink::WebData((const char*)content::MediaplayerVolumeSliderThumb, sizeof(content::MediaplayerVolumeSliderThumb));
+
+    else if (0 == strcmp("mediaplayerFullscreen", name))
+        return blink::WebData((const char*)content::MediaplayerFullscreen, sizeof(content::MediaplayerFullscreen));
+    else if (0 == strcmp("mediaplayerClosedCaption", name))
+        return blink::WebData((const char*)content::MediaplayerClosedcaption, sizeof(content::MediaplayerClosedcaption));
+    else if (0 == strcmp("mediaplayerClosedCaptionDisabled", name))
+        return blink::WebData((const char*)content::MediaplayerClosedcaptionDisabled, sizeof(content::MediaplayerClosedcaptionDisabled));
+
+    else if (0 == strcmp("mediaplayerCastOn", name))
+        return blink::WebData((const char*)content::MediaplayerCastOn, sizeof(content::MediaplayerCastOn));
+    else if (0 == strcmp("mediaplayerCastOff", name))
+        return blink::WebData((const char*)content::MediaplayerCastOff, sizeof(content::MediaplayerCastOff));
+    else if (0 == strcmp("mediaplayerOverlayCastOff", name))
+        return blink::WebData((const char*)content::MediaplayerOverlayCastOff, sizeof(content::MediaplayerOverlayCastOff));
+
+    else if (0 == strcmp("mediaplayerSliderThumb", name))
+        return blink::WebData((const char*)content::MediaplayerSliderThumb, sizeof(content::MediaplayerSliderThumb));
+    else if (0 == strcmp("mediaplayerVolumeSliderThumb", name))
+        return blink::WebData((const char*)content::MediaplayerVolumeSliderThumb, sizeof(content::MediaplayerVolumeSliderThumb));
 
     notImplemented();
     return blink::WebData(" ", 1);

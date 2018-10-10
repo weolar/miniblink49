@@ -71,11 +71,7 @@ public:
     static PassRefPtr<PluginPackage> createVirtualPackage(
         NP_InitializeFuncPtr NP_Initialize,
         NP_GetEntryPointsFuncPtr NP_GetEntryPoints,
-        NPP_ShutdownProcPtr NPP_Shutdown,
-        const time_t& lastModified, 
-        const String& name, 
-        const String& description, 
-        const String& mimeDescription
+        NPP_ShutdownProcPtr NPP_Shutdown
         );
 
     const String& name() const { return m_name; }

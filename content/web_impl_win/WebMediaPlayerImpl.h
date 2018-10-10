@@ -126,7 +126,10 @@ public:
 
     virtual void setContentsToNativeWindowOffset(const blink::WebPoint& p) override;
     virtual bool handleMouseEvent(const blink::WebMouseEvent& evt) override;
-    virtual bool handleKeyboardEvent(const blink::WebKeyboardEvent& evt)override;
+    virtual bool handleKeyboardEvent(const blink::WebKeyboardEvent& evt) override;
+
+    virtual void showMediaControls() override;
+    virtual void hideMediaControls() override;
 
     void onLoad(blink::WebMediaPlayer::ReadyState readyState, bool* cancelNotifer);
 

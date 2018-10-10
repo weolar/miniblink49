@@ -239,16 +239,18 @@ WebMediaPlayerImpl::WebMediaPlayerImpl(blink::WebLocalFrame* frame, const blink:
 
     plugin->load();
 
-     m_wkeClientWrap = new MediaPlayerClientWkeWrap(m_client);
+    m_wkeClientWrap = new MediaPlayerClientWkeWrap(m_client);
 
-    NPNetscapeFuncs browserFuncs = { 0 } ;
-    memcpy(&browserFuncs, plugin->browserFuncs(), sizeof(NPNetscapeFuncs));
-    m_wkePlayer = wke::g_wkeMediaPlayerFactory(page->wkeWebView(), m_wkeClientWrap, (void*)&browserFuncs, (void*)plugin->pluginFuncs());
+    if (1) {
+        NPNetscapeFuncs browserFuncs = { 0 };
+        memcpy(&browserFuncs, plugin->browserFuncs(), sizeof(NPNetscapeFuncs));
+        m_wkePlayer = wke::g_wkeMediaPlayerFactory(page->wkeWebView(), m_wkeClientWrap, (void*)&browserFuncs, (void*)plugin->pluginFuncs());
 
-    if (s_wkeBrowserFuncs.size != sizeof(NPNetscapeFuncs))
-        memcpy(&s_wkeBrowserFuncs, &browserFuncs, sizeof(NPNetscapeFuncs));
-
-    //m_wkePlayer = wke::g_wkeMediaPlayerFactory(page->wkeWebView(), m_wkeClientWrap, nullptr, nullptr);
+        if (s_wkeBrowserFuncs.size != sizeof(NPNetscapeFuncs))
+            memcpy(&s_wkeBrowserFuncs, &browserFuncs, sizeof(NPNetscapeFuncs));
+    } else {
+        m_wkePlayer = wke::g_wkeMediaPlayerFactory(page->wkeWebView(), m_wkeClientWrap, nullptr, nullptr);
+    }
 }
 
 WebMediaPlayerImpl::~WebMediaPlayerImpl()
@@ -661,6 +663,18 @@ bool WebMediaPlayerImpl::handleMouseEvent(const blink::WebMouseEvent& evt)
 bool WebMediaPlayerImpl::handleKeyboardEvent(const blink::WebKeyboardEvent& evt)
 {
     return false;
+}
+
+void WebMediaPlayerImpl::showMediaControls()
+{
+    if (m_wkePlayer)
+        m_wkePlayer->showMediaControls();
+}
+
+void WebMediaPlayerImpl::hideMediaControls()
+{
+    if (m_wkePlayer)
+        m_wkePlayer->hideMediaControls();
 }
 
 bool WebMediaPlayerImpl::copyVideoTextureToPlatformTexture(blink::WebGraphicsContext3D* cotext, unsigned texture, unsigned internalFormat, unsigned type, bool premultiplyAlpha, bool flipY)
