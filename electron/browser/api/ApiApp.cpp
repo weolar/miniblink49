@@ -483,7 +483,7 @@ static std::wstring addQuoteForArg(const std::wstring& arg)
     }
 
     std::wstring out;
-    out.push_back(L'"');
+    out += (L'"');
     for (size_t i = 0; i < arg.size(); ++i) {
         if (arg[i] == '\\') {
             // Find the extent of this run of backslashes.
@@ -499,18 +499,18 @@ static std::wstring addQuoteForArg(const std::wstring& arg)
                 backslash_count *= 2;
             }
             for (size_t j = 0; j < backslash_count; ++j)
-                out.push_back('\\');
+                out += L'\\';
 
             // Advance i to one before the end to balance i++ in loop.
             i = end - 1;
         } else if (arg[i] == '"') {
-            out.push_back('\\');
-            out.push_back('"');
+            out += L'\\';
+            out += L'"';
         } else {
-            out.push_back(arg[i]);
+            out += (arg[i]);
         }
     }
-    out.push_back('"');
+    out += L'"';
 
     return out;
 }
@@ -553,7 +553,7 @@ static std::wstring getWaitEventName(DWORD pid) {
     std::vector<char> buffer;
     buffer.resize(0x1000);
     memset(&buffer[0], 0, 0x1000);
-    sprintf_s(&buffer[0], 0x999, "%s-%d", kWaitEventName, static_cast<int>(pid));
+    sprintf(&buffer[0], "%s-%d", kWaitEventName, static_cast<int>(pid));
     return base::UTF8ToWide(&buffer[0]);
 }
 

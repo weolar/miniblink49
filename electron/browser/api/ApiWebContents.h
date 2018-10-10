@@ -109,6 +109,7 @@ private:
 
     static void getFocusedWebContentsApi(const v8::FunctionCallbackInfo<v8::Value>& info);
     static void getAllWebContentsApi(const v8::FunctionCallbackInfo<v8::Value>& info);
+    static void fromIdApi(const v8::FunctionCallbackInfo<v8::Value>& info);
 
     std::string _getURLApi();
 

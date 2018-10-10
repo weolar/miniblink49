@@ -5,6 +5,7 @@
 #include "browser/api/WindowInterface.h"
 #include "browser/api/ProtocolInterface.h"
 #include "browser/api/MenuEventNotif.h"
+#include "browser/api/PopupWindow.h"
 #include "common/OptionsSwitches.h"
 #include "common/NodeRegisterHelp.h"
 #include "common/ThreadCall.h"
@@ -337,8 +338,6 @@ public:
     void onPaintUpdatedInUiThread(int x, int y, int cx, int cy) {
         ::EnterCriticalSection(&m_memoryCanvasLock);
 
-        saveContentWidthHeight();
-
         HDC hdcScreen = ::GetDC(m_hWnd);
         DWORD flag = SRCCOPY;
         BOOL b = FALSE;
@@ -362,8 +361,8 @@ public:
         self->onPaintUpdatedInCompositeThread(hdc, x, y, cx, cy);
         ::LeaveCriticalSection(&self->m_memoryCanvasLock);
 
+        int id = self->m_id;
         if (self->m_createWindowParam->transparent) {
-            int id = self->m_id;
             ThreadCall::callUiThreadAsync([id, self, x, y, cx, cy] {
                 if (IdLiveDetect::get()->isLive(id))
                     self->onPaintUpdatedInUiThread(x, y, cx, cy);
@@ -372,6 +371,14 @@ public:
             RECT rc = { x, y, x + cx, y + cy };
             ::InvalidateRect(self->m_hWnd, &rc, false);
         }
+
+        ThreadCall::callBlinkThreadAsync([id, self] {
+            if (!IdLiveDetect::get()->isLive(id))
+                return;
+            ::EnterCriticalSection(&self->m_memoryCanvasLock);
+            self->saveContentWidthHeight();
+            ::LeaveCriticalSection(&self->m_memoryCanvasLock);
+        });
     }
 
     void onPaintMessage(HWND hWnd) {
@@ -1668,22 +1675,32 @@ private:
         WindowState state = self->m_state;
         bool isDestroyApiBeCalled = self->m_isDestroyApiBeCalled;
 
+        std::string* url = nullptr;
+        std::string* newUrl = nullptr;
+        std::string* method = nullptr;
+        std::string* referrer = nullptr;
+        wkeResourceType resourceType = WKE_RESOURCE_TYPE_MAIN_FRAME;
+        int httpResponseCode = 0;
+
         wkeWillSendRequestInfo* willSendRequestInfo = info->willSendRequestInfo;
-        if (willSendRequestInfo)
-            willSendRequestInfo->isHolded = true;
+        if (WKE_DID_GET_REDIRECT_REQUEST == type && willSendRequestInfo) {
+            //willSendRequestInfo->isHolded = true;
+            url = new std::string(wkeGetString(willSendRequestInfo->url));
+            newUrl = new std::string(wkeGetString(willSendRequestInfo->newUrl));
+            method = new std::string(wkeGetString(willSendRequestInfo->method));
+            referrer = new std::string(wkeGetString(willSendRequestInfo->referrer));
+
+            resourceType = willSendRequestInfo->resourceType;
+            httpResponseCode = willSendRequestInfo->resourceType;
+        }
 
         if (WKE_DID_NAVIGATE == type)
             wkeRunJS(self->m_webContents->getWkeView(), ";"); // 为了<webview>标签，强制触发js创建回调
 
-        ThreadCall::callUiThreadAsync([id, self, state, isDestroyApiBeCalled, type, willSendRequestInfo] {
-            if (!IdLiveDetect::get()->isLive(id) ||
-                WindowDestroying == state ||
-                WindowDestroyed == state ||
-                isDestroyApiBeCalled) {
-                return;
-            }
+        ThreadCall::callUiThreadAsync([id, self, state, isDestroyApiBeCalled, type, resourceType, httpResponseCode, url, newUrl, method, referrer] {
+            if (!(!IdLiveDetect::get()->isLive(id) || WindowDestroying == state || WindowDestroyed == state || isDestroyApiBeCalled)) {
 
-            if (WKE_DID_START_LOADING == type)
+            } else if (WKE_DID_START_LOADING == type)
                 self->m_webContents->mate::EventEmitter<WebContents>::emit("did-start-loading");
             else if (WKE_DID_STOP_LOADING == type)
                 self->m_webContents->mate::EventEmitter<WebContents>::emit("did-stop-loading");
@@ -1691,13 +1708,15 @@ private:
 
             } else if (WKE_DID_GET_REDIRECT_REQUEST == type) {
                 self->m_webContents->mate::EventEmitter<WebContents>::emit("did-get-redirect-request",
-                    std::string(wkeGetString(willSendRequestInfo->url)),
-                    std::string(wkeGetString(willSendRequestInfo->newUrl)),
-                    willSendRequestInfo->resourceType == WKE_RESOURCE_TYPE_MAIN_FRAME,
-                    willSendRequestInfo->httpResponseCode,
-                    std::string(wkeGetString(willSendRequestInfo->method)),
-                    std::string(wkeGetString(willSendRequestInfo->referrer)));
-                wkeDeleteWillSendRequestInfo(nullptr, willSendRequestInfo);
+                    *url, *newUrl, resourceType == WKE_RESOURCE_TYPE_MAIN_FRAME,
+                    httpResponseCode, *method, *referrer);
+            }
+
+            if (url) {
+                delete url;
+                delete newUrl;
+                delete method;
+                delete referrer;
             }
         });
     }
@@ -1947,10 +1966,12 @@ private:
             wkeSetFocus(webview);
             wkeSetDebugConfig(webview, "decodeUrlRequest", nullptr);
             wkeSetDragDropEnable(webview, true);
-            wkeAddNpapiPlugin(webview, "application/browser-plugin", &Webview_NP_Initialize, &Webview_NP_GetEntryPoints, &Webview_NP_Shutdown);
+            wkeAddNpapiPlugin(webview, /*"application/browser-plugin",*/ &Webview_NP_Initialize, &Webview_NP_GetEntryPoints, &Webview_NP_Shutdown);
             wkeSetDebugConfig(webview, "wakeMinInterval", "1");
             wkeSetDebugConfig(webview, "drawMinInterval", "20");
             //wkeSetDebugConfig(webview, "contentScale", "50");
+            wkeSetNavigationToNewWindowEnable(webview, true);
+            wkeOnCreateView(webview, PopupWindow::onCreateViewCallbackStatic, nullptr);
 
             if (createWindowParam->transparent)
                 wkeSetTransparent(webview, true);

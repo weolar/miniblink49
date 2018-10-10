@@ -102,6 +102,7 @@ void WebContents::init(v8::Isolate* isolate, v8::Local<v8::Object> target, node:
     gin::Dictionary webContentsClass(isolate, prototype->GetFunction());
     webContentsClass.SetMethod("getFocusedWebContents", &WebContents::getFocusedWebContentsApi);
     webContentsClass.SetMethod("getAllWebContents", &WebContents::getAllWebContentsApi);
+    webContentsClass.SetMethod("fromId", &WebContents::fromIdApi);
 
     constructor.Reset(isolate, prototype->GetFunction());
     target->Set(v8::String::NewFromUtf8(isolate, "WebContents"), prototype->GetFunction());
@@ -200,14 +201,15 @@ void WebContents::newFunction(const v8::FunctionCallbackInfo<v8::Value>& args) {
 }
 
 void WebContents::onNewWindowInBlinkThread(int width, int height, const CreateWindowParam* createWindowParam) {
+    wkeWebView webView = getWkeView();
     if (createWindowParam->transparent)
-        wkeSetTransparent(getWkeView(), true);
+        wkeSetTransparent(webView, true);
     wkeSettings settings;
     settings.mask = WKE_SETTING_PAINTCALLBACK_IN_OTHER_THREAD;
     wkeConfigure(&settings);
-    wkeResize(getWkeView(), width, height);
-    wkeOnDidCreateScriptContext(getWkeView(), &WebContents::staticDidCreateScriptContextCallback, this);
-    wkeOnWillReleaseScriptContext(getWkeView(), &WebContents::staticOnWillReleaseScriptContextCallback, this);
+    wkeResize(webView, width, height);
+    wkeOnDidCreateScriptContext(webView, &WebContents::staticDidCreateScriptContextCallback, this);
+    wkeOnWillReleaseScriptContext(webView, &WebContents::staticOnWillReleaseScriptContextCallback, this);
 }
 
 void WebContents::staticDidCreateScriptContextCallback(wkeWebView webView, wkeWebFrameHandle param, wkeWebFrameHandle frame, void* context, int extensionGroup, int worldId) {
@@ -220,7 +222,7 @@ void WebContents::onDidCreateScriptContext(wkeWebView webView, wkeWebFrameHandle
         return;
 
     const utf8* script = "window.Notification = function(){};";
-    wkeRunJsByFrame(webView, frame, script, false);
+    wkeRunJsByFrame(webView, frame, script, false);
     BlinkMicrotaskSuppressionHandle handle = nodeBlinkMicrotaskSuppressionEnter((*context)->GetIsolate());
     m_nodeBinding = new NodeBindings(false, ThreadCall::getBlinkLoop());
     node::Environment* env = m_nodeBinding->createEnvironment(*context);
@@ -358,6 +360,35 @@ void WebContents::getAllWebContentsApi(const v8::FunctionCallbackInfo<v8::Value>
         results->Set(count, result);
     }
     info.GetReturnValue().Set(results);
+}
+
+void WebContents::fromIdApi(const v8::FunctionCallbackInfo<v8::Value>& info) {
+    if (1 != info.Length())
+        return;
+    v8::Local<v8::Value> arg0 = info[0];
+    if (!arg0->IsInt32())
+        return;
+
+    int32_t id = arg0->Int32Value();
+
+    v8::Isolate* isolate = v8::Isolate::GetCurrent();
+    WindowList* lists = WindowList::getInstance();
+
+    WebContents* findedContent = nullptr;
+    for (WindowList::iterator it = lists->begin(); it != lists->end(); ++it) {
+        WebContents* content = (*it)->getWebContents();
+        if ((int32_t)content != id)
+            continue;
+        findedContent = content;
+        break;
+    }
+    if (!findedContent) {
+        info.GetReturnValue().Set(v8::Null(isolate));
+        return;
+    }
+
+    v8::Local<v8::Value> result = v8::Local<v8::Value>::New(isolate, findedContent->GetWrapper(isolate));
+    info.GetReturnValue().Set(result);
 }
 
 int WebContents::getIdApi() const {

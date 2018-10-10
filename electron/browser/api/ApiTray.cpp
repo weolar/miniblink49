@@ -68,6 +68,7 @@ public:
         builder.SetMethod("_setIsContextMenu", &Tray::_setIsContextMenuApi);
         builder.SetMethod("setToolTip", &Tray::setToolTipApi);
         builder.SetMethod("displayBalloon", &Tray::displayBalloonApi);
+        builder.SetMethod("destroy", &Tray::destroyApi);
         
         constructor.Reset(isolate, prototype->GetFunction());
         target->Set(v8::String::NewFromUtf8(isolate, "Tray"), prototype->GetFunction());
@@ -113,6 +114,10 @@ public:
 
     void setImage(/*image*/) {
         OutputDebugStringA("tray.setImage not impl\n");
+    }
+
+    void destroyApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
+        m_tray.removeIcon();
     }
 
     void displayBalloonApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
