@@ -12,6 +12,8 @@
 #include "node_counters.h"
 #endif
 
+//#undef HAVE_OPENSSL // weolar
+
 #if HAVE_OPENSSL
 #include "node_crypto.h"
 #endif
@@ -2132,8 +2134,8 @@ namespace node {
 	void FatalException(Isolate* isolate, Local<Value> error, Local<Message> message) {
 		HandleScope scope(isolate);
     Environment* env = Environment::GetCurrent(isolate);
-    if (!env || env->is_blink_core())
-      return;
+//     if (!env || env->is_blink_core())
+//       return;
 
     Local<String> error_mesage = message->Get();
     v8::String::Utf8Value error_mesage_utf8(error_mesage);
@@ -2159,9 +2161,9 @@ namespace node {
     OutputDebugStringA(error_mesage_buf);
     delete[] error_mesage_buf;
 
-    DebugBreak();
+    //DebugBreak();
 
-    ::TerminateProcess((HANDLE)-1, 0);
+    //::TerminateProcess((HANDLE)-1, 0);
     return;
 
 		Local<Object> process_object = env->process_object();

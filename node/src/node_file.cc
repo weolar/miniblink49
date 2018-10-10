@@ -651,6 +651,25 @@ static void Stat(const FunctionCallbackInfo<Value>& args) {
   }
 }
 
+static void StatNoException(const FunctionCallbackInfo<Value>& args) {
+  Environment* env = Environment::GetCurrent(args.GetIsolate());
+  HandleScope scope(env->isolate());
+
+  if (args.Length() < 1 || !args[0]->IsString()) {
+    args.GetReturnValue().Set(v8::Boolean::New(env->isolate(), false));
+    return;
+  }
+
+  String::Utf8Value path(args[0]);
+
+  fs_req_wrap req_wrap;
+  int result = uv_fs_stat(uv_default_loop(), &req_wrap.req, *path, NULL);
+  if (result < 0)
+    args.GetReturnValue().Set(v8::Boolean::New(env->isolate(), false));
+  else
+    args.GetReturnValue().Set(BuildStatsObject(env, static_cast<const uv_stat_t*>(SYNC_REQ.ptr)));
+}
+
 static void LStat(const FunctionCallbackInfo<Value>& args) {
   Environment* env = Environment::GetCurrent(args);
 
@@ -667,6 +686,26 @@ static void LStat(const FunctionCallbackInfo<Value>& args) {
     args.GetReturnValue().Set(
         BuildStatsObject(env, static_cast<const uv_stat_t*>(SYNC_REQ.ptr)));
   }
+}
+
+static void LStatNoException(const FunctionCallbackInfo<Value>& args) {
+  Environment* env = Environment::GetCurrent(args.GetIsolate());
+  HandleScope scope(env->isolate());
+
+  String::Utf8Value path(args[0]);
+
+  if (args.Length() < 1 || !args[0]->IsString()) {
+    args.GetReturnValue().Set(v8::Boolean::New(env->isolate(), false));
+    return;
+  }
+
+  fs_req_wrap req_wrap;
+  int result = uv_fs_lstat(uv_default_loop(), &req_wrap.req, *path, NULL);
+  if (result < 0)
+    args.GetReturnValue().Set(v8::Boolean::New(env->isolate(), false));
+  else
+    args.GetReturnValue().Set(
+      BuildStatsObject(env, static_cast<const uv_stat_t*>(SYNC_REQ.ptr)));
 }
 
 static void FStat(const FunctionCallbackInfo<Value>& args) {
@@ -1564,6 +1603,8 @@ void InitFs(Local<Object> target,
   env->SetMethod(target, "stat", Stat);
   env->SetMethod(target, "lstat", LStat);
   env->SetMethod(target, "fstat", FStat);
+  env->SetMethod(target, "statNoException", StatNoException);
+  env->SetMethod(target, "lstatNoException", LStatNoException);
   env->SetMethod(target, "link", Link);
   env->SetMethod(target, "symlink", Symlink);
   env->SetMethod(target, "readlink", ReadLink);
