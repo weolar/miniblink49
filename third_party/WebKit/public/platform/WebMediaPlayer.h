@@ -192,6 +192,8 @@ public:
     virtual void setContentsToNativeWindowOffset(const WebPoint& p) = 0;
     virtual bool handleMouseEvent(const WebMouseEvent& evt) = 0;
     virtual bool handleKeyboardEvent(const WebKeyboardEvent& evt) = 0;
+    virtual void showMediaControls() = 0;
+    virtual void hideMediaControls() = 0;
 #endif
 };
 
