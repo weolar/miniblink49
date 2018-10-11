@@ -230,6 +230,7 @@ void WebMimeRegistryImpl::ensureMimeTypeMap()
     m_mimetypeMap->add("htm", "text/html");
     m_mimetypeMap->add("xml", "text/xml");
     m_mimetypeMap->add("xsl", "text/xsl");
+    m_mimetypeMap->add("xls", "application/xls+vnd.ms-excel");
     m_mimetypeMap->add("js", "application/x-javascript");
     m_mimetypeMap->add("xhtml", "application/xhtml+xml");
     m_mimetypeMap->add("rss", "application/rss+xml");
@@ -318,7 +319,13 @@ static bool match(const char* pattern, const char* content)
 
 static bool wildcardMatch(const WTF::String& pattern, const WTF::String& content)
 {
-    return match(pattern.utf8().data(), content.utf8().data());
+    CString patternStr = pattern.utf8();
+    CString contentStr = content.utf8();
+    bool result = match(patternStr.data(), contentStr.data());
+    if (!result)
+        result = (WTF::kNotFound != content.find(pattern));
+    
+    return result;
 }
 
 Vector<blink::WebString> WebMimeRegistryImpl::extensionsForMimeType(const blink::WebString& mime)

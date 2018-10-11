@@ -39,12 +39,48 @@ int NavigationController::historyForwardListCount()
     return result;
 }
 
+// We do same-document navigation if going to a different item and if either of the following is true:
+// - The other item corresponds to the same document (for history entries created via pushState or fragment changes).
+// - The other item corresponds to the same set of documents, including frames (for history entries created via regular navigation)
+static bool shouldDoSameDocumentNavigationTo(const HistoryEntry* curItem, const HistoryEntry* otherItem)
+{
+    if (otherItem->m_isSameDocument)
+        return true;
+
+    if (curItem == otherItem)
+        return false;
+
+    String curStateObjectString;
+    if (!curItem->stateObject().isNull())
+        curStateObjectString = curItem->stateObject().toString();
+
+    String otherStateObjectString;
+    if (!otherItem->stateObject().isNull())
+        otherStateObjectString = otherItem->stateObject().toString();
+
+    if ((!curStateObjectString.isNull() && !curStateObjectString.isEmpty()) || (!otherStateObjectString.isNull() && !otherStateObjectString.isEmpty()))
+        return curItem->documentSequenceNumber() == otherItem->documentSequenceNumber();
+
+    blink::KURL curUrl(blink::ParsedURLString, curItem->urlString());
+    blink::KURL otherUrl(blink::ParsedURLString, otherItem->urlString());
+    if ((curUrl.hasFragmentIdentifier() || otherUrl.hasFragmentIdentifier()) && equalIgnoringFragmentIdentifier(curUrl, otherUrl))
+        return curItem->documentSequenceNumber() == otherItem->documentSequenceNumber();
+
+    return false;
+}
+
 void NavigationController::navigate(int offset)
 {
     int pos = m_currentOffset + offset;
     if (pos < 0 || pos > (int)(m_items.size() - 1))
         return;
     HistoryEntry* item = m_items[pos];
+    HistoryEntry* curItem = nullptr;
+    if (m_currentOffset > 0 && m_currentOffset < m_items.size())
+        curItem = m_items[m_currentOffset];
+    if (!curItem)
+        return;
+
 #if 0 // def DEBUG
     OutputDebugStringA("navigate:\n");
     for (size_t i = 0; i < m_items.size(); ++i) {
@@ -56,8 +92,9 @@ void NavigationController::navigate(int offset)
     OutputDebugStringA("navigate end\n");
     
 #endif // DEBUG
-    blink::WebHistoryLoadType type = (item->m_isSameDocument ?
-        blink::WebHistorySameDocumentLoad : blink::WebHistoryDifferentDocumentLoad);
+    blink::WebHistoryLoadType type = blink::WebHistoryDifferentDocumentLoad;
+    if (shouldDoSameDocumentNavigationTo(curItem, item))
+        type = blink::WebHistorySameDocumentLoad;
     m_page->loadHistoryItem(WebPage::kMainFrameId, *item, type, blink::WebURLRequest::UseProtocolCachePolicy);
 }
 

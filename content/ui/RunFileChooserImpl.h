@@ -75,6 +75,9 @@ static Vector<char> getMimeType(const WebString& mime)
 
 static void addForExtensions(const Vector<blink::WebString>& exts, const String& description, std::vector<char>* filter)
 {
+    if (exts.isEmpty())
+        return;
+
     appendStringToVector(filter, description.utf8().data());
     filter->push_back('\0');
 
@@ -95,6 +98,10 @@ static bool runFileChooserImpl(const blink::WebFileChooserParams& params, blink:
     
     for (size_t i = 0; i < params.acceptTypes.size(); ++i) {
         String mimeType = params.acceptTypes[i];
+        if (mimeType.isNull() || mimeType.isEmpty())
+            continue;
+        if ('.' == mimeType[0])
+            mimeType.remove(0, 1);
 
         WebMimeRegistryImpl* mimeRegistry = (WebMimeRegistryImpl*)blink::Platform::current()->mimeRegistry();
         Vector<blink::WebString> exts = mimeRegistry->extensionsForMimeType(mimeType);
