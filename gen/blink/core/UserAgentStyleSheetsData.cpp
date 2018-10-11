@@ -2185,6 +2185,9 @@ extern const char mediaControlsUserAgentStyleSheet[7047] = {
     123, 32, 102, 111, 110, 116, 45, 115, 116, 121, 108, 101, 58, 32, 105, 116,
     97, 108, 105, 99, 59, 32, 125
 };
+
+extern const char mediaControlsMbUserAgentStyleSheet[1146] = "audio { width: 300px; height: 35px; } audio::-webkit-media-controls-enclosure { width: 300px; height: 35px; } video::-webkit-media-controls-enclosure { height: 40px; } audio::-webkit-media-controls-panel, video::-webkit-media-controls-panel { height: 35px; } audio::-webkit-media-controls-mute-button, video::-webkit-media-controls-mute-button { display: none; } audio::-webkit-media-controls-play-button, video::-webkit-media-controls-play-button { width: 35px; height: 35px; line-height: 35px; } audio::-webkit-media-controls-current-time-display, video::-webkit-media-controls-current-time-display, audio::-webkit-media-controls-time-remaining-display, video::-webkit-media-controls-time-remaining-display { height: 35px; line-height: 35px; font-size: 18px; } audio::-webkit-media-controls-volume-slider, video::-webkit-media-controls-volume-slider { display: none; } video::-webkit-media-controls-fullscreen-button { width: 35px; height: 35px; line-height: 35px; } audio::-webkit-media-controls-fullscreen-button { display: none; } video::-webkit-media-controls-toggle-closed-captions-button { width: 35px; height: 35px; line-height: 35px; }";
+
 extern const char mediaControlsAndroidUserAgentStyleSheet[1117] = {
     97, 117, 100, 105, 111, 32, 123, 32, 104, 101, 105, 103, 104, 116, 58, 32,
     51, 53, 112, 120, 59, 32, 125, 32, 97, 117, 100, 105, 111, 58, 58, 45,

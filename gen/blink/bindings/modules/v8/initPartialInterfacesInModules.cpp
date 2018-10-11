@@ -25,7 +25,6 @@ namespace blink {
 void initPartialInterfacesInModules()
 {
 #ifdef MINIBLINK_NOT_IMPLEMENTED
-    V8DataTransferItemPartial::initialize();
     V8DedicatedWorkerGlobalScopePartial::initialize();
     V8DevToolsHostPartial::initialize();
     V8HTMLInputElementPartial::initialize();
@@ -40,6 +39,7 @@ void initPartialInterfacesInModules()
     V8WorkerGlobalScopePartial::initialize();
     V8WorkerNavigatorPartial::initialize();
 #else
+    V8DataTransferItemPartial::initialize();
     V8NavigatorPartial::initialize();
     V8WindowPartial::initialize();
     V8DevToolsHostPartial::initialize();
