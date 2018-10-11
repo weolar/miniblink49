@@ -982,9 +982,19 @@ fs.lstatSync = function(path) {
   return binding.lstat(pathModule._makeLong(path));
 };
 
+fs.lstatSyncNoException = function(path) {
+  nullCheck(path);
+  return binding.lstatNoException(pathModule._makeLong(path));
+};
+
 fs.statSync = function(path) {
   nullCheck(path);
   return binding.stat(pathModule._makeLong(path));
+};
+
+fs.statSyncNoException = function(path) {
+  nullCheck(path);
+  return binding.statNoException(pathModule._makeLong(path));
 };
 
 fs.readlink = function(path, options, callback) {
