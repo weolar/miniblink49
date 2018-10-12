@@ -1448,7 +1448,7 @@ void WebURLLoaderManager::initializeHandleOnIoThread(int jobId, InitializeHandle
             cookieJarFileName = cookieJarPathString;
     }
 
-    if (cookieJarFileName.empty()) {
+    if (!cookieJarFileName.empty()) {
         curl_easy_setopt(job->m_handle, CURLOPT_COOKIEJAR, cookieJarFileName.c_str());
         curl_easy_setopt(job->m_handle, CURLOPT_COOKIEFILE, cookieJarFileName.c_str());
     }

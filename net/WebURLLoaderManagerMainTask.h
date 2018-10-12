@@ -14,6 +14,8 @@
 #include "third_party/WebKit/public/web/WebLocalFrame.h"
 #include "wke/wkeWebView.h"
 
+void wkeDeleteWillSendRequestInfo(wkeWebView webWindow, wkeWillSendRequestInfo* info);
+
 namespace net {
 
 struct MainTaskArgs {
@@ -512,7 +514,6 @@ static void distpatchWkeWillSendRequest(WebURLLoaderInternal* job, const KURL* n
     
     wkeTempCallbackInfo* info = wkeGetTempCallbackInfo(page->wkeWebView());
     info->willSendRequestInfo = new wkeWillSendRequestInfo();
-    info->willSendRequestInfo->isHolded = false;
     info->willSendRequestInfo->url = wkeCreateStringW(url.data(), url.size());
     info->willSendRequestInfo->newUrl = newURL ? wkeCreateStringW(newUrl.data(), newUrl.size()) : nullptr;
     info->willSendRequestInfo->resourceType = WebURLRequestToResourceType(*job->firstRequest());
@@ -525,10 +526,8 @@ static void distpatchWkeWillSendRequest(WebURLLoaderInternal* job, const KURL* n
         newURL ? WKE_DID_GET_REDIRECT_REQUEST : WKE_DID_GET_RESPONSE_DETAILS,
         info);
 
-    if (!info->willSendRequestInfo->isHolded) {
-        wkeDeleteWillSendRequestInfo(page->wkeWebView(), info->willSendRequestInfo);
-        info->willSendRequestInfo = nullptr;
-    }
+    wkeDeleteWillSendRequestInfo(page->wkeWebView(), info->willSendRequestInfo);
+    info->willSendRequestInfo = nullptr;
 }
 
 static void doRedirect(WebURLLoaderInternal* job, const String& location, MainTaskArgs* args, bool isRedirectByHttpCode)
