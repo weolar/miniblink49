@@ -25,6 +25,10 @@ extern wkeWillMediaLoadCallback g_wkeWillMediaLoadCallback;
 extern void* g_wkeWillMediaLoadCallbackCallbackParam;
 
 extern wkeMediaPlayerFactory g_wkeMediaPlayerFactory;
+extern wkeOnIsMediaPlayerSupportsMIMEType g_onIsMediaPlayerSupportsMIMETypeCallback;
+
+extern wkeOnPluginFindCallback g_wkePluginFindcallback;
+extern void* g_wkePluginFindcallbackParam;
 
 extern wkeTempCallbackInfo g_wkeTempCallbackInfo;
 

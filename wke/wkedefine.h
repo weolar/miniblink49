@@ -336,7 +336,6 @@ typedef enum {
 } wkeResourceType;
 
 typedef struct {
-    bool isHolded;
     wkeString url;
     wkeString newUrl;
     wkeResourceType resourceType;
@@ -397,9 +396,8 @@ typedef void(WKE_CALL_TYPE*wkeDocumentReady2Callback)(wkeWebView webView, void* 
 
 typedef void(WKE_CALL_TYPE*wkeOnShowDevtoolsCallback)(wkeWebView webView, void* param);
 
-typedef void(WKE_CALL_TYPE*wkeNodeOnCreateProcessCallback)(
-    wkeWebView webView, void* param, const WCHAR* applicationPath,
-    const WCHAR* arguments, STARTUPINFOW* startup);
+typedef void(WKE_CALL_TYPE*wkeNodeOnCreateProcessCallback)(wkeWebView webView, void* param, const WCHAR* applicationPath, const WCHAR* arguments, STARTUPINFOW* startup);
+typedef void(WKE_CALL_TYPE*wkeOnPluginFindCallback)(wkeWebView webView, void* param, const utf8* mime, void* initializeFunc, void* getEntryPointsFunc, void* shutdownFunc);
 
 typedef struct {
     int size;
@@ -457,6 +455,7 @@ typedef void(WKE_CALL_TYPE*wkeOnCallUiThread)(wkeWebView webView, void* paramOnI
 typedef void(WKE_CALL_TYPE*wkeCallUiThread)(wkeWebView webView, wkeOnCallUiThread func, void* param);
 
 typedef wkeMediaPlayer(WKE_CALL_TYPE* wkeMediaPlayerFactory)(wkeWebView webView, wkeMediaPlayerClient client, void* npBrowserFuncs, void* npPluginFuncs);
+typedef bool(WKE_CALL_TYPE* wkeOnIsMediaPlayerSupportsMIMEType)(const utf8* mime);
 
 //wkeNet--------------------------------------------------------------------------------------
 typedef void* wkeNetJob;
@@ -887,6 +886,8 @@ public:
     ITERATOR1(int, wkeGetWebviewId, wkeWebView webWindow, "") \
     ITERATOR1(bool, wkeIsWebviewAlive, int id, "") \
     \
+    ITERATOR3(const utf8*, wkeGetDocumentCompleteURL, wkeWebView webView, wkeWebFrameHandle frameId, const utf8* partialURL, "") \
+    \
     ITERATOR3(wkeMemBuf*, wkeCreateMemBuf, wkeWebView webView, void* buf, size_t length, "") \
     ITERATOR1(void, wkeFreeMemBuf, wkeMemBuf* buf, "") \
     \
@@ -1014,7 +1015,6 @@ public:
     ITERATOR3(void, wkeOnStartDragging, wkeWebView webWindow, wkeStartDraggingCallback callback, void* param, "") \
     \
     ITERATOR3(void, wkeOnOtherLoad, wkeWebView webWindow, wkeOnOtherLoadCallback callback, void* param, "") \
-    ITERATOR2(void, wkeDeleteWillSendRequestInfo, wkeWebView webWindow, wkeWillSendRequestInfo* info, "") \
     \
     ITERATOR1(bool, wkeIsProcessingUserGesture, wkeWebView webWindow, "") \
     \
@@ -1084,12 +1084,14 @@ public:
     \
     ITERATOR3(void, wkeNodeOnCreateProcess, wkeWebView webWindow, wkeNodeOnCreateProcessCallback callback, void* param, "") \
     \
-    ITERATOR5(void, wkeAddNpapiPlugin, wkeWebView webView, const char* mime, void* initializeFunc, void* getEntryPointsFunc, void* shutdownFunc, "") \
-    ITERATOR1(wkeWebView, wkeGetWebviewByNData, void* ndata, "") \
+    ITERATOR4(void, wkeOnPluginFind, wkeWebView webView, const char* mime, wkeOnPluginFindCallback callback, void* param, "") \
+    ITERATOR4(void, wkeAddNpapiPlugin, wkeWebView webView, void* initializeFunc, void* getEntryPointsFunc, void* shutdownFunc, "") \
+    \
+    ITERATOR1(wkeWebView, wkeGetWebViewByNData, void* ndata, "") \
     \
     ITERATOR5(bool, wkeRegisterEmbedderCustomElement, wkeWebView webView, wkeWebFrameHandle frameId, const char* name, void* options, void* outResult, "") \
     \
-    ITERATOR2(void, wkeSetMediaPlayerFactory, wkeWebView webView, wkeMediaPlayerFactory factory, "") \
+    ITERATOR3(void, wkeSetMediaPlayerFactory, wkeWebView webView, wkeMediaPlayerFactory factory, wkeOnIsMediaPlayerSupportsMIMEType callback,"") \
     \
     ITERATOR1(const utf8*, wkeUtilDecodeURLEscape, const utf8* url, "") \
     \

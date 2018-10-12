@@ -153,6 +153,8 @@ public:
     virtual void setContentsToNativeWindowOffset(int x, int y) = 0;
     virtual bool handleMouseEvent(unsigned msg, unsigned wParam, unsigned lParam) = 0;
     virtual bool handleKeyboardEvent(unsigned msg, unsigned wParam, unsigned lParam) = 0;
+    virtual void showMediaControls() = 0;
+    virtual void hideMediaControls() = 0;
 };
 
 class WkeMediaPlayerClient {

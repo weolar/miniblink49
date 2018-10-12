@@ -832,6 +832,7 @@ void wkeSetFocus(wkeWebView webView)
     if (!webView)
         return;
     webView->setFocus();
+    //OutputDebugStringA("wkeSetFocus\n");
 }
 
 void wkeKillFocus(wkeWebView webView)
@@ -839,7 +840,8 @@ void wkeKillFocus(wkeWebView webView)
     wke::checkThreadCallIsValid(__FUNCTION__);
     if (!webView)
         return;
-    webView->killFocus();
+    //webView->killFocus();
+    //OutputDebugStringA("killFocus\n");
 }
 
 wkeRect wkeGetCaretRect(wkeWebView webView)
@@ -1164,7 +1166,14 @@ const utf8* wkeGetFrameUrl(wkeWebView webView, wkeWebFrameHandle frameId)
     blink::WebFrame* webFrame = page->getWebFrameFromFrameId(wke::CWebView::wkeWebFrameHandleToFrameId(page, frameId));
     if (!webFrame)
         return "";
-    return "";
+
+    blink::WebDocument doc = webFrame->document();
+    blink::KURL url = doc.baseURL();
+    if (url.isNull() || url.isEmpty() || !url.isValid())
+        return "";
+
+    String urlString = url.getUTF8String();
+    return wke::createTempCharString((const char *)urlString.characters8(), urlString.length());
 }
 
 void wkeWebFrameGetMainWorldScriptContext(wkeWebView webView, wkeWebFrameHandle frameId, v8ContextPtr contextOut)
@@ -1537,21 +1546,27 @@ void wkeSetDeviceParameter(wkeWebView webView, const char* device, const char* p
     }
 }
 
-void wkeAddNpapiPlugin(wkeWebView webView, const char* mime, void* initializeFunc, void* getEntryPointsFunc, void* shutdownFunc)
+void wkeAddNpapiPlugin(wkeWebView webView, void* initializeFunc, void* getEntryPointsFunc, void* shutdownFunc)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
     RefPtr<content::PluginPackage> package = content::PluginPackage::createVirtualPackage(
         (NP_InitializeFuncPtr)initializeFunc,
         (NP_GetEntryPointsFuncPtr) getEntryPointsFunc,
-        (NPP_ShutdownProcPtr) shutdownFunc,
-        0, "virtualPlugin", mime, mime);
+        (NPP_ShutdownProcPtr) shutdownFunc
+        );
 
-    content::PluginDatabase* database = content::PluginDatabase::installedPlugins();
-    database->addVirtualPlugin(package);
-    database->setPreferredPluginForMIMEType(mime, package.get());
+//     content::PluginDatabase* database = content::PluginDatabase::installedPlugins();
+//     database->addVirtualPlugin(package);
+//     database->setPreferredPluginForMIMEType(mime, package.get());
 }
 
-wkeWebView wkeGetWebviewByNData(void* ndata)
+void wkeOnPluginFind(wkeWebView webView, const char* mime, wkeOnPluginFindCallback callback, void* param)
+{
+    wke::g_wkePluginFindcallback = callback;
+    wke::g_wkePluginFindcallbackParam = param;
+}
+
+wkeWebView wkeGetWebViewByNData(void* ndata)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
     content::WebPluginImpl* plugin = (content::WebPluginImpl*)ndata;
@@ -1579,9 +1594,10 @@ bool wkeRegisterEmbedderCustomElement(wkeWebView webView, wkeWebFrameHandle fram
     return true;
 }
 
-void wkeSetMediaPlayerFactory(wkeWebView webView, wkeMediaPlayerFactory factory)
+void wkeSetMediaPlayerFactory(wkeWebView webView, wkeMediaPlayerFactory factory, wkeOnIsMediaPlayerSupportsMIMEType callback)
 {
     wke::g_wkeMediaPlayerFactory = factory;
+    wke::g_onIsMediaPlayerSupportsMIMETypeCallback = callback;
 }
 
 const utf8* wkeUtilDecodeURLEscape(const utf8* url)
@@ -1603,6 +1619,24 @@ int wkeGetWebviewId(wkeWebView webView)
 bool wkeIsWebviewAlive(int id)
 {
     return net::ActivatingObjCheck::inst()->isActivating(id);
+}
+
+const utf8* wkeGetDocumentCompleteURL(wkeWebView webView, wkeWebFrameHandle frameId, const utf8* partialURL)
+{
+    wke::checkThreadCallIsValid(__FUNCTION__);
+    content::WebPage* page = webView->webPage();
+    if (!page)
+        return nullptr;
+    blink::WebFrame* webFrame = page->getWebFrameFromFrameId(wke::CWebView::wkeWebFrameHandleToFrameId(page, frameId));
+    if (!webFrame)
+        return nullptr;
+
+    blink::KURL url = webFrame->document().completeURL(blink::WebString::fromUTF8(partialURL));
+    if (!url.isValid())
+        return nullptr;
+
+    String result = url.getUTF8String();
+    return wke::createTempCharString((const char*)result.characters8(), result.length());
 }
 
 //////////////////////////////////////////////////////////////////////////
