@@ -522,6 +522,7 @@
     <ClCompile Include="..\..\content\resources\DebuggerScriptSourceJs.cpp" />
     <ClCompile Include="..\..\content\resources\InjectedScriptSourceJs.cpp" />
     <ClCompile Include="..\..\content\resources\InspectorOverlayPageHtml.cpp" />
+    <ClCompile Include="..\..\content\resources\MediaPlayerData.cpp" />
     <ClCompile Include="..\..\content\ui\ClipboardUtil.cpp" />
     <ClCompile Include="..\..\content\ui\DragHandle.cpp" />
     <ClCompile Include="..\..\content\ui\PopupMenuWin.cpp" />
@@ -543,6 +544,24 @@
     <ClCompile Include="..\..\net\ActivatingObjCheck.cpp" />
     <ClCompile Include="..\..\net\PageNetExtraData.cpp" />
     <ClCompile Include="..\..\net\WebURLLoaderManagerUtil.cpp" />
+    <ClCompile Include="..\..\node\src\node_crypto.cc">
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">../../third_party/zlib;../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;BUILDING_V8_SHARED=1;BUILDING_UV_SHARED=1;CARES_STATICLIB;NODE_ARCH="ia32";NODE_PLATFORM="win32";NODE_WANT_INTERNALS=1;HAVE_OPENSSL=1;HAVE_ETW=1;HAVE_PERFCTR=1;V8_INSPECTOR_USE_STL=1;NODE_USE_V8_PLATFORM=0;USING_VC6RT=1</PreprocessorDefinitions>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../node/cares/include;../../node/uv/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;BUILDING_V8_SHARED=1;BUILDING_UV_SHARED=1;CARES_STATICLIB;NODE_ARCH="ia32";NODE_PLATFORM="win32";NODE_WANT_INTERNALS=1;HAVE_OPENSSL=1;HAVE_ETW=1;HAVE_PERFCTR=1;V8_INSPECTOR_USE_STL=1;NODE_USE_V8_PLATFORM=0</PreprocessorDefinitions>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\node_crypto_bio.cc">
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;BUILDING_V8_SHARED=1;BUILDING_UV_SHARED=1;CARES_STATICLIB;NODE_ARCH="ia32";NODE_PLATFORM="win32";NODE_WANT_INTERNALS=1;HAVE_OPENSSL=1;HAVE_ETW=1;HAVE_PERFCTR=1;V8_INSPECTOR_USE_STL=1;NODE_USE_V8_PLATFORM=0;USING_VC6RT=1</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">../../third_party/zlib;../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../node/cares/include;../../node/uv/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;BUILDING_V8_SHARED=1;BUILDING_UV_SHARED=1;CARES_STATICLIB;NODE_ARCH="ia32";NODE_PLATFORM="win32";NODE_WANT_INTERNALS=1;HAVE_OPENSSL=1;HAVE_ETW=1;HAVE_PERFCTR=1;V8_INSPECTOR_USE_STL=1;NODE_USE_V8_PLATFORM=0</PreprocessorDefinitions>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\..\node\src\node_url.cc">
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;BUILDING_V8_SHARED=1;BUILDING_UV_SHARED=1;CARES_STATICLIB;NODE_ARCH="ia32";NODE_PLATFORM="win32";NODE_WANT_INTERNALS=1;HAVE_OPENSSL=1;HAVE_ETW=1;HAVE_PERFCTR=1;V8_INSPECTOR_USE_STL=1;NODE_USE_V8_PLATFORM=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
@@ -557,6 +576,15 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">../../third_party/zlib;../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;BUILDING_V8_SHARED=1;BUILDING_UV_SHARED=1;CARES_STATICLIB;NODE_ARCH="ia32";NODE_PLATFORM="win32";NODE_WANT_INTERNALS=1;HAVE_OPENSSL=1;HAVE_ETW=1;HAVE_PERFCTR=1;V8_INSPECTOR_USE_STL=1;NODE_USE_V8_PLATFORM=0</PreprocessorDefinitions>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\tls_wrap.cc">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">NotUsing</PrecompiledHeader>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;BUILDING_V8_SHARED=1;BUILDING_UV_SHARED=1;CARES_STATICLIB;NODE_ARCH="ia32";NODE_PLATFORM="win32";NODE_WANT_INTERNALS=1;HAVE_OPENSSL=1;HAVE_ETW=1;HAVE_PERFCTR=1;V8_INSPECTOR_USE_STL=1;NODE_USE_V8_PLATFORM=0;USING_VC6RT=1</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">../../third_party/zlib;../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;BUILDING_V8_SHARED=1;BUILDING_UV_SHARED=1;CARES_STATICLIB;NODE_ARCH="ia32";NODE_PLATFORM="win32";NODE_WANT_INTERNALS=1;HAVE_OPENSSL=1;HAVE_ETW=1;HAVE_PERFCTR=1;V8_INSPECTOR_USE_STL=1;NODE_USE_V8_PLATFORM=0</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../node/cares/include;../../node/uv/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\skia\ext\analysis_canvas.cc" />
     <ClCompile Include="..\..\third_party\WebKit\Source\bindings\core\v8\custom\V8DevToolsHostCustom.cpp" />
@@ -5917,6 +5945,7 @@
     <ClInclude Include="..\..\content\devtools\DevToolsClient.h" />
     <ClInclude Include="..\..\content\devtools\DevToolsMgr.h" />
     <ClInclude Include="..\..\content\devtools\DevToolsProtocolDispatcher.h" />
+    <ClInclude Include="..\..\content\resources\MediaPlayerData.h" />
     <ClInclude Include="..\..\content\ui\ClipboardUtil.h" />
     <ClInclude Include="..\..\content\ui\COMPtr.h" />
     <ClInclude Include="..\..\content\ui\ContextMeun.h" />
