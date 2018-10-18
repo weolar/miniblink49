@@ -551,6 +551,7 @@ bool _NPN_HasMethod(NPP npp, NPObject* npObject, NPIdentifier methodName)
 void _NPN_SetException(NPObject* npObject, const NPUTF8 *message)
 {
     if (!npObject || !npObjectToV8NPObject(npObject)) {
+        v8::HandleScope handleScope(v8::Isolate::GetCurrent());
         // We won't be able to find a proper scope for this exception, so just throw it.
         // This is consistent with JSC, which throws a global exception all the time.
         V8ThrowException::throwGeneralError(v8::Isolate::GetCurrent(), message);
