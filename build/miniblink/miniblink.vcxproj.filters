@@ -9084,6 +9084,12 @@
     <ClCompile Include="..\..\node\src\node_crypto_clienthello.cc">
       <Filter>node\src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\node\src\node_crypto_bio.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\node_crypto.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\node\src\node_counters.cc">
       <Filter>node\src</Filter>
     </ClCompile>
@@ -10133,18 +10139,6 @@
     </ClCompile>
     <ClCompile Include="..\..\third_party\WebKit\Source\platform\fonts\shaping\HarfBuzzShaper.cpp">
       <Filter>third_party\Webkit\Source\platform\fonts\shaping</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\node_crypto.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\node_crypto_bio.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\node\src\tls_wrap.cc">
-      <Filter>node\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\content\resources\MediaPlayerData.cpp">
-      <Filter>content\resources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
