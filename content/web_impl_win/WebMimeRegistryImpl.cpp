@@ -254,6 +254,14 @@ void WebMimeRegistryImpl::ensureMimeTypeMap()
     m_mimetypeMap->add("webm", "video/webm");
     m_mimetypeMap->add("mht", "multipart/related");
     m_mimetypeMap->add("mhtml", "multipart/related");
+
+    m_mimetypeMap->add("hex", "application/hex");
+    m_mimetypeMap->add("rbf", "application/rbf");
+    m_mimetypeMap->add("bin", "application/bin");
+    m_mimetypeMap->add("zip", "application/zip");
+    m_mimetypeMap->add("rar", "application/rar");
+    m_mimetypeMap->add("doc", "application/doc");
+    m_mimetypeMap->add("docx", "application/docx");
 }
 
 blink::WebString WebMimeRegistryImpl::mimeTypeForExtension(const blink::WebString& ext)
