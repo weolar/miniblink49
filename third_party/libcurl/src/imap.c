@@ -5,7 +5,7 @@
  *                            | (__| |_| |  _ <| |___
  *                             \___|\___/|_| \_\_____|
  *
- * Copyright (C) 1998 - 2017, Daniel Stenberg, <daniel@haxx.se>, et al.
+ * Copyright (C) 1998 - 2018, Daniel Stenberg, <daniel@haxx.se>, et al.
  *
  * This software is licensed as described in the file COPYING, which
  * you should have received as part of this distribution. The terms
@@ -344,23 +344,30 @@ static bool imap_endofresp(struct connectdata *conn, char *line, size_t len,
  */
 static void imap_get_message(char *buffer, char **outptr)
 {
-  size_t len = 0;
+  size_t len = strlen(buffer);
   char *message = NULL;
 
-  /* Find the start of the message */
-  for(message = buffer + 2; *message == ' ' || *message == '\t'; message++)
-    ;
+  if(len > 2) {
+    /* Find the start of the message */
+    len -= 2;
+    for(message = buffer + 2; *message == ' ' || *message == '\t';
+        message++, len--)
+      ;
 
-  /* Find the end of the message */
-  for(len = strlen(message); len--;)
-    if(message[len] != '\r' && message[len] != '\n' && message[len] != ' ' &&
-        message[len] != '\t')
-      break;
+    /* Find the end of the message */
+    for(; len--;)
+      if(message[len] != '\r' && message[len] != '\n' && message[len] != ' ' &&
+         message[len] != '\t')
+        break;
 
-  /* Terminate the message */
-  if(++len) {
-    message[len] = '\0';
+    /* Terminate the message */
+    if(++len) {
+      message[len] = '\0';
+    }
   }
+  else
+    /* junk input => zero length output */
+    message = &buffer[len];
 
   *outptr = message;
 }
@@ -602,7 +609,6 @@ static CURLcode imap_perform_list(struct connectdata *conn)
   CURLcode result = CURLE_OK;
   struct Curl_easy *data = conn->data;
   struct IMAP *imap = data->req.protop;
-  char *mailbox;
 
   if(imap->custom)
     /* Send the custom request */
@@ -610,7 +616,8 @@ static CURLcode imap_perform_list(struct connectdata *conn)
                         imap->custom_params ? imap->custom_params : "");
   else {
     /* Make sure the mailbox is in the correct atom format if necessary */
-    mailbox = imap->mailbox ? imap_atom(imap->mailbox, true) : strdup("");
+    char *mailbox = imap->mailbox ? imap_atom(imap->mailbox, true)
+                                  : strdup("");
     if(!mailbox)
       return CURLE_OUT_OF_MEMORY;
 
@@ -847,7 +854,6 @@ static CURLcode imap_state_capability_resp(struct connectdata *conn,
   struct Curl_easy *data = conn->data;
   struct imap_conn *imapc = &conn->proto.imapc;
   const char *line = data->state.buffer;
-  size_t wordlen;
 
   (void)instate; /* no use for this yet */
 
@@ -857,6 +863,7 @@ static CURLcode imap_state_capability_resp(struct connectdata *conn,
 
     /* Loop through the data line */
     for(;;) {
+      size_t wordlen;
       while(*line &&
             (*line == ' ' || *line == '\t' ||
               *line == '\r' || *line == '\n')) {
@@ -1039,12 +1046,12 @@ static CURLcode imap_state_select_resp(struct connectdata *conn, int imapcode,
   struct IMAP *imap = conn->data->req.protop;
   struct imap_conn *imapc = &conn->proto.imapc;
   const char *line = data->state.buffer;
-  char tmp[20];
 
   (void)instate; /* no use for this yet */
 
   if(imapcode == '*') {
     /* See if this is an UIDVALIDITY response */
+    char tmp[20];
     if(sscanf(line + 2, "OK [UIDVALIDITY %19[0123456789]]", tmp) == 1) {
       Curl_safefree(imapc->mailbox_uidvalidity);
       imapc->mailbox_uidvalidity = strdup(tmp);
@@ -1112,7 +1119,7 @@ static CURLcode imap_state_fetch_resp(struct connectdata *conn, int imapcode,
   }
 
   if(parsed) {
-    infof(data, "Found %" CURL_FORMAT_CURL_OFF_TU " bytes to download\n",
+    infof(data, "Found %" CURL_FORMAT_CURL_OFF_T " bytes to download\n",
           size);
     Curl_pgrsSetDownloadSize(data, size);
 
@@ -1137,10 +1144,8 @@ static CURLcode imap_state_fetch_resp(struct connectdata *conn, int imapcode,
 
       data->req.bytecount += chunk;
 
-      infof(data, "Written %" CURL_FORMAT_CURL_OFF_TU
-            " bytes, %" CURL_FORMAT_CURL_OFF_TU
-            " bytes are left for transfer\n", (curl_off_t)chunk,
-            size - chunk);
+      infof(data, "Written %zu bytes, %" CURL_FORMAT_CURL_OFF_TU
+            " bytes are left for transfer\n", chunk, size - chunk);
 
       /* Have we used the entire cache or just part of it?*/
       if(pp->cache_size > chunk) {

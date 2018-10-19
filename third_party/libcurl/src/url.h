@@ -7,7 +7,7 @@
  *                            | (__| |_| |  _ <| |___
  *                             \___|\___/|_| \_\_____|
  *
- * Copyright (C) 1998 - 2017, Daniel Stenberg, <daniel@haxx.se>, et al.
+ * Copyright (C) 1998 - 2018, Daniel Stenberg, <daniel@haxx.se>, et al.
  *
  * This software is licensed as described in the file COPYING, which
  * you should have received as part of this distribution. The terms
@@ -33,15 +33,14 @@
 
 CURLcode Curl_init_do(struct Curl_easy *data, struct connectdata *conn);
 CURLcode Curl_open(struct Curl_easy **curl);
-CURLcode Curl_init_userdefined(struct UserDefined *set);
-CURLcode Curl_setopt(struct Curl_easy *data, CURLoption option,
-                     va_list arg);
+CURLcode Curl_init_userdefined(struct Curl_easy *data);
 CURLcode Curl_dupset(struct Curl_easy * dst, struct Curl_easy * src);
 void Curl_freeset(struct Curl_easy * data);
 CURLcode Curl_close(struct Curl_easy *data); /* opposite of curl_open() */
 CURLcode Curl_connect(struct Curl_easy *, struct connectdata **,
                       bool *async, bool *protocol_connect);
-CURLcode Curl_disconnect(struct connectdata *, bool dead_connection);
+CURLcode Curl_disconnect(struct Curl_easy *data,
+                         struct connectdata *, bool dead_connection);
 CURLcode Curl_protocol_connect(struct connectdata *conn, bool *done);
 CURLcode Curl_protocol_connecting(struct connectdata *conn, bool *done);
 CURLcode Curl_protocol_doing(struct connectdata *conn, bool *done);

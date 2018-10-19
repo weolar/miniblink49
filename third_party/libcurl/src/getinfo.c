@@ -5,7 +5,7 @@
  *                            | (__| |_| |  _ <| |___
  *                             \___|\___/|_| \_\_____|
  *
- * Copyright (C) 1998 - 2017, Daniel Stenberg, <daniel@haxx.se>, et al.
+ * Copyright (C) 1998 - 2018, Daniel Stenberg, <daniel@haxx.se>, et al.
  *
  * This software is licensed as described in the file COPYING, which
  * you should have received as part of this distribution. The terms
@@ -156,7 +156,12 @@ static CURLcode getinfo_long(struct Curl_easy *data, CURLINFO info,
     *param_longp = data->info.httpproxycode;
     break;
   case CURLINFO_FILETIME:
-    *param_longp = data->info.filetime;
+    if(data->info.filetime > LONG_MAX)
+      *param_longp = LONG_MAX;
+    else if(data->info.filetime < LONG_MIN)
+      *param_longp = LONG_MIN;
+    else
+      *param_longp = (long)data->info.filetime;
     break;
   case CURLINFO_HEADER_SIZE:
     *param_longp = data->info.header_size;
@@ -253,6 +258,9 @@ static CURLcode getinfo_offt(struct Curl_easy *data, CURLINFO info,
                              curl_off_t *param_offt)
 {
   switch(info) {
+  case CURLINFO_FILETIME_T:
+    *param_offt = (curl_off_t)data->info.filetime;
+    break;
   case CURLINFO_SIZE_UPLOAD_T:
     *param_offt = data->progress.uploaded;
     break;
@@ -273,6 +281,28 @@ static CURLcode getinfo_offt(struct Curl_easy *data, CURLINFO info,
     *param_offt = (data->progress.flags & PGRS_UL_SIZE_KNOWN)?
       data->progress.size_ul:-1;
     break;
+  case CURLINFO_TOTAL_TIME_T:
+    *param_offt = data->progress.timespent;
+    break;
+  case CURLINFO_NAMELOOKUP_TIME_T:
+    *param_offt = data->progress.t_nslookup;
+    break;
+  case CURLINFO_CONNECT_TIME_T:
+    *param_offt = data->progress.t_connect;
+    break;
+  case CURLINFO_APPCONNECT_TIME_T:
+    *param_offt = data->progress.t_appconnect;
+    break;
+  case CURLINFO_PRETRANSFER_TIME_T:
+    *param_offt = data->progress.t_pretransfer;
+    break;
+  case CURLINFO_STARTTRANSFER_TIME_T:
+    *param_offt = data->progress.t_starttransfer;
+    break;
+  case CURLINFO_REDIRECT_TIME_T:
+    *param_offt = data->progress.t_redirect;
+    break;
+
   default:
     return CURLE_UNKNOWN_OPTION;
   }

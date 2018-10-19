@@ -7,7 +7,7 @@
  *                            | (__| |_| |  _ <| |___
  *                             \___|\___/|_| \_\_____|
  *
- * Copyright (C) 1998 - 2017, Daniel Stenberg, <daniel@haxx.se>, et al.
+ * Copyright (C) 1998 - 2018, Daniel Stenberg, <daniel@haxx.se>, et al.
  *
  * This software is licensed as described in the file COPYING, which
  * you should have received as part of this distribution. The terms
@@ -23,6 +23,7 @@
  ***************************************************************************/
 
 #include "conncache.h"
+#include "psl.h"
 
 struct Curl_message {
   struct curl_llist_element list;
@@ -97,6 +98,11 @@ struct Curl_multi {
   /* Hostname cache */
   struct curl_hash hostcache;
 
+#ifdef USE_LIBPSL
+  /* PSL cache. */
+  struct PslCache psl;
+#endif
+
   /* timetree points to the splay-tree of time nodes to figure out expire
      times of all currently set timers */
   struct Curl_tree *timetree;
@@ -146,6 +152,7 @@ struct Curl_multi {
   void *timer_userp;
   struct curltime timer_lastcall; /* the fixed time for the timeout for the
                                     previous callback */
+  bool in_callback;            /* true while executing a callback */
 };
 
 #endif /* HEADER_CURL_MULTIHANDLE_H */

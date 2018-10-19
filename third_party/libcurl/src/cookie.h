@@ -34,7 +34,7 @@ struct Cookie {
   char *domain;      /* domain = <this> */
   curl_off_t expires;  /* expires = <this> */
   char *expirestr;   /* the plain text version */
-  bool tailmatch;    /* weather we do tail-matchning of the domain name */
+  bool tailmatch;    /* whether we do tail-matching of the domain name */
 
   /* RFC 2109 keywords. Version=1 means 2109-compliant cookie sending */
   char *version;     /* Version = <value> */
@@ -43,16 +43,20 @@ struct Cookie {
   bool secure;       /* whether the 'secure' keyword was used */
   bool livecookie;   /* updated from a server, not a stored file */
   bool httponly;     /* true if the httponly directive is present */
+  int creationtime;  /* time when the cookie was written */
 };
+
+#define COOKIE_HASH_SIZE 256
 
 struct CookieInfo {
   /* linked list of cookies we know of */
-  struct Cookie *cookies;
+  struct Cookie *cookies[COOKIE_HASH_SIZE];
 
   char *filename;  /* file we read from/write to */
   bool running;    /* state info, for cookie adding information */
   long numcookies; /* number of cookies in the "jar" */
   bool newsession; /* new session, discard session cookies on load */
+  int lastct;      /* last creation-time used in the jar */
 };
 
 /* This is the maximum line length we accept for a cookie line. RFC 2109
@@ -67,7 +71,6 @@ struct CookieInfo {
 
 */
 #define MAX_COOKIE_LINE 5000
-#define MAX_COOKIE_LINE_TXT "4999"
 
 /* This is the maximum length of a cookie name or content we deal with: */
 #define MAX_NAME 4096
@@ -80,7 +83,8 @@ struct Curl_easy;
  */
 
 struct Cookie *Curl_cookie_add(struct Curl_easy *data,
-                               struct CookieInfo *, bool header, char *lineptr,
+                               struct CookieInfo *, bool header, bool noexpiry,
+                               char *lineptr,
                                const char *domain, const char *path);
 
 struct Cookie *Curl_cookie_getlist(struct CookieInfo *, const char *,

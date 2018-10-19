@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w
+#!/usr/bin/env perl
 # ***************************************************************************
 # *                                  _   _ ____  _
 # *  Project                     ___| | | |  _ \| |
@@ -34,6 +34,7 @@ use Encode;
 use Getopt::Std;
 use MIME::Base64;
 use strict;
+use warnings;
 use vars qw($opt_b $opt_d $opt_f $opt_h $opt_i $opt_k $opt_l $opt_m $opt_n $opt_p $opt_q $opt_s $opt_t $opt_u $opt_v $opt_w);
 use List::Util;
 use Text::Wrap;
@@ -135,6 +136,7 @@ if ($opt_i) {
   print "Perl Version                     : $]\n";
   print "Operating System Name            : $^O\n";
   print "Getopt::Std.pm Version           : ${Getopt::Std::VERSION}\n";
+  print "Encode::Encoding.pm Version      : ${Encode::Encoding::VERSION}\n";
   print "MIME::Base64.pm Version          : ${MIME::Base64::VERSION}\n";
   print "LWP::UserAgent.pm Version        : ${LWP::UserAgent::VERSION}\n" if($LWP::UserAgent::VERSION);
   print "LWP.pm Version                   : ${LWP::VERSION}\n" if($LWP::VERSION);
@@ -375,6 +377,9 @@ my $newhash= sha256($txt);
 
 if(!$opt_f && $oldhash eq $newhash) {
     report "Downloaded file identical to previous run\'s source file. Exiting";
+    if($opt_u && -e $txt && !unlink($txt)) {
+        report "Failed to remove $txt: $!\n";
+    }
     exit;
 }
 
@@ -478,6 +483,7 @@ while (<TXT>) {
 
     if ( !should_output_cert(%trust_purposes_by_level) ) {
       $skipnum ++;
+      report "Skipping: $caname" if ($opt_v);
     } else {
       my $encoded = MIME::Base64::encode_base64($data, '');
       $encoded =~ s/(.{1,${opt_w}})/$1\n/g;
@@ -486,7 +492,7 @@ while (<TXT>) {
               . "-----END CERTIFICATE-----\n";
       print CRT "\n$caname\n";
       print CRT @precert if($opt_m);
-      my $maxStringLength = length(decode('UTF-8', $caname, Encode::FB_CROAK));
+      my $maxStringLength = length(decode('UTF-8', $caname, Encode::FB_CROAK | Encode::LEAVE_SRC));
       if ($opt_t) {
         foreach my $key (keys %trust_purposes_by_level) {
            my $string = $key . ": " . join(", ", @{$trust_purposes_by_level{$key}});

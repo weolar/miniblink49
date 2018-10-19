@@ -25,11 +25,14 @@
 #if defined(USE_OPENSSL)                                \
   || defined(USE_AXTLS)                                 \
   || defined(USE_GSKIT)                                 \
-  || (defined(USE_SCHANNEL) && defined(_WIN32_WCE))
+  || defined(USE_SCHANNEL)
 /* these backends use functions from this file */
 
 #ifdef HAVE_NETINET_IN_H
 #include <netinet/in.h>
+#endif
+#ifdef HAVE_NETINET_IN6_H
+#include <netinet/in6.h>
 #endif
 
 #include "hostcheck.h"

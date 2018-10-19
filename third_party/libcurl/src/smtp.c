@@ -5,7 +5,7 @@
  *                            | (__| |_| |  _ <| |___
  *                             \___|\___/|_| \_\_____|
  *
- * Copyright (C) 1998 - 2017, Daniel Stenberg, <daniel@haxx.se>, et al.
+ * Copyright (C) 1998 - 2018, Daniel Stenberg, <daniel@haxx.se>, et al.
  *
  * This software is licensed as described in the file COPYING, which
  * you should have received as part of this distribution. The terms
@@ -232,23 +232,30 @@ static bool smtp_endofresp(struct connectdata *conn, char *line, size_t len,
  */
 static void smtp_get_message(char *buffer, char **outptr)
 {
-  size_t len = 0;
+  size_t len = strlen(buffer);
   char *message = NULL;
 
-  /* Find the start of the message */
-  for(message = buffer + 4; *message == ' ' || *message == '\t'; message++)
-    ;
+  if(len > 4) {
+    /* Find the start of the message */
+    len -= 4;
+    for(message = buffer + 4; *message == ' ' || *message == '\t';
+        message++, len--)
+      ;
 
-  /* Find the end of the message */
-  for(len = strlen(message); len--;)
-    if(message[len] != '\r' && message[len] != '\n' && message[len] != ' ' &&
-       message[len] != '\t')
-      break;
+    /* Find the end of the message */
+    for(; len--;)
+      if(message[len] != '\r' && message[len] != '\n' && message[len] != ' ' &&
+         message[len] != '\t')
+        break;
 
-  /* Terminate the message */
-  if(++len) {
-    message[len] = '\0';
+    /* Terminate the message */
+    if(++len) {
+      message[len] = '\0';
+    }
   }
+  else
+    /* junk input => zero length output */
+    message = &buffer[len];
 
   *outptr = message;
 }
@@ -697,7 +704,6 @@ static CURLcode smtp_state_ehlo_resp(struct connectdata *conn, int smtpcode,
   struct smtp_conn *smtpc = &conn->proto.smtpc;
   const char *line = data->state.buffer;
   size_t len = strlen(line);
-  size_t wordlen;
 
   (void)instate; /* no use for this yet */
 
@@ -732,6 +738,7 @@ static CURLcode smtp_state_ehlo_resp(struct connectdata *conn, int smtpcode,
       /* Loop through the data line */
       for(;;) {
         size_t llen;
+        size_t wordlen;
         unsigned int mechbit;
 
         while(len &&
@@ -1282,6 +1289,11 @@ static CURLcode smtp_perform(struct connectdata *conn, bool *connected,
   /* Store the first recipient (or NULL if not specified) */
   smtp->rcpt = data->set.mail_rcpt;
 
+  /* Initial data character is the first character in line: it is implicitly
+     preceded by a virtual CRLF. */
+  smtp->trailing_crlf = TRUE;
+  smtp->eob = 2;
+
   /* Start the first command in the DO phase */
   if((data->set.upload || data->set.mimepost.kind) && data->set.mail_rcpt)
     /* MAIL transfer */
@@ -1551,13 +1563,14 @@ CURLcode Curl_smtp_escape_eob(struct connectdata *conn, const ssize_t nread)
   if(!scratch || data->set.crlf) {
     oldscratch = scratch;
 
-    scratch = newscratch = malloc(2 * data->set.buffer_size);
+    scratch = newscratch = malloc(2 * UPLOAD_BUFSIZE);
     if(!newscratch) {
       failf(data, "Failed to alloc scratch buffer!");
 
       return CURLE_OUT_OF_MEMORY;
     }
   }
+  DEBUGASSERT(UPLOAD_BUFSIZE >= nread);
 
   /* Have we already sent part of the EOB? */
   eob_sent = smtp->eob;

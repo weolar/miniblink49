@@ -5,7 +5,7 @@
  *                            | (__| |_| |  _ <| |___
  *                             \___|\___/|_| \_\_____|
  *
- * Copyright (C) 1998 - 2017, Daniel Stenberg, <daniel@haxx.se>, et al.
+ * Copyright (C) 1998 - 2018, Daniel Stenberg, <daniel@haxx.se>, et al.
  *
  * This software is licensed as described in the file COPYING, which
  * you should have received as part of this distribution. The terms
@@ -243,23 +243,30 @@ static bool pop3_endofresp(struct connectdata *conn, char *line, size_t len,
  */
 static void pop3_get_message(char *buffer, char **outptr)
 {
-  size_t len = 0;
+  size_t len = strlen(buffer);
   char *message = NULL;
 
-  /* Find the start of the message */
-  for(message = buffer + 2; *message == ' ' || *message == '\t'; message++)
-    ;
+  if(len > 2) {
+    /* Find the start of the message */
+    len -= 2;
+    for(message = buffer + 2; *message == ' ' || *message == '\t';
+        message++, len--)
+      ;
 
-  /* Find the end of the message */
-  for(len = strlen(message); len--;)
-    if(message[len] != '\r' && message[len] != '\n' && message[len] != ' ' &&
-        message[len] != '\t')
-      break;
+    /* Find the end of the message */
+    for(; len--;)
+      if(message[len] != '\r' && message[len] != '\n' && message[len] != ' ' &&
+         message[len] != '\t')
+        break;
 
-  /* Terminate the message */
-  if(++len) {
-    message[len] = '\0';
+    /* Terminate the message */
+    if(++len) {
+      message[len] = '\0';
+    }
   }
+  else
+    /* junk input => zero length output */
+    message = &buffer[len];
 
   *outptr = message;
 }
@@ -606,7 +613,6 @@ static CURLcode pop3_state_servergreet_resp(struct connectdata *conn,
   struct pop3_conn *pop3c = &conn->proto.pop3c;
   const char *line = data->state.buffer;
   size_t len = strlen(line);
-  size_t i;
 
   (void)instate; /* no use for this yet */
 
@@ -618,6 +624,7 @@ static CURLcode pop3_state_servergreet_resp(struct connectdata *conn,
     /* Does the server support APOP authentication? */
     if(len >= 4 && line[len - 2] == '>') {
       /* Look for the APOP timestamp */
+      size_t i;
       for(i = 3; i < len - 2; ++i) {
         if(line[i] == '<') {
           /* Calculate the length of the timestamp */
@@ -657,7 +664,6 @@ static CURLcode pop3_state_capa_resp(struct connectdata *conn, int pop3code,
   struct pop3_conn *pop3c = &conn->proto.pop3c;
   const char *line = data->state.buffer;
   size_t len = strlen(line);
-  size_t wordlen;
 
   (void)instate; /* no use for this yet */
 
@@ -682,6 +688,7 @@ static CURLcode pop3_state_capa_resp(struct connectdata *conn, int pop3code,
       /* Loop through the data line */
       for(;;) {
         size_t llen;
+        size_t wordlen;
         unsigned int mechbit;
 
         while(len &&

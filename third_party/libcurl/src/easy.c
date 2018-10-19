@@ -5,7 +5,7 @@
  *                            | (__| |_| |  _ <| |___
  *                             \___|\___/|_| \_\_____|
  *
- * Copyright (C) 1998 - 2017, Daniel Stenberg, <daniel@haxx.se>, et al.
+ * Copyright (C) 1998 - 2018, Daniel Stenberg, <daniel@haxx.se>, et al.
  *
  * This software is licensed as described in the file COPYING, which
  * you should have received as part of this distribution. The terms
@@ -61,10 +61,12 @@
 #include "strdup.h"
 #include "progress.h"
 #include "easyif.h"
+#include "multiif.h"
 #include "select.h"
 #include "sendf.h" /* for failf function prototype */
 #include "connect.h" /* for Curl_getconnectinfo */
 #include "slist.h"
+#include "mime.h"
 #include "amigaos.h"
 #include "non-ascii.h"
 #include "warnless.h"
@@ -72,6 +74,7 @@
 #include "sigpipe.h"
 #include "ssh.h"
 #include "setopt.h"
+#include "http_digest.h"
 
 /* The last 3 #include files should be in this order */
 #include "curl_printf.h"
@@ -110,7 +113,7 @@ static CURLcode win32_init(void)
   res = WSAStartup(wVersionRequested, &wsaData);
 
   if(res != 0)
-    /* Tell the user that we couldn't find a useable */
+    /* Tell the user that we couldn't find a usable */
     /* winsock.dll.     */
     return CURLE_FAILED_INIT;
 
@@ -122,7 +125,7 @@ static CURLcode win32_init(void)
 
   if(LOBYTE(wsaData.wVersion) != LOBYTE(wVersionRequested) ||
      HIBYTE(wsaData.wVersion) != HIBYTE(wVersionRequested) ) {
-    /* Tell the user that we couldn't find a useable */
+    /* Tell the user that we couldn't find a usable */
 
     /* winsock.dll. */
     WSACleanup();
@@ -253,6 +256,13 @@ static CURLcode global_init(long flags, bool memoryfuncs)
   }
 #endif
 
+#if defined(USE_LIBSSH)
+  if(ssh_init()) {
+    DEBUGF(fprintf(stderr, "Error: libssh_init failed\n"));
+    return CURLE_FAILED_INIT;
+  }
+#endif
+
   if(flags & CURL_GLOBAL_ACK_EINTR)
     Curl_ack_eintr = 1;
 
@@ -328,6 +338,10 @@ void curl_global_cleanup(void)
 
 #if defined(USE_LIBSSH2) && defined(HAVE_LIBSSH2_EXIT)
   (void)libssh2_exit();
+#endif
+
+#if defined(USE_LIBSSH)
+  (void)ssh_finalize();
 #endif
 
   init_flags  = 0;
@@ -647,38 +661,27 @@ static CURLcode easy_transfer(struct Curl_multi *multi)
   bool done = FALSE;
   CURLMcode mcode = CURLM_OK;
   CURLcode result = CURLE_OK;
-  struct curltime before;
-  int without_fds = 0;  /* count number of consecutive returns from
-                           curl_multi_wait() without any filedescriptors */
 
   while(!done && !mcode) {
     int still_running = 0;
     int rc;
 
-    before = Curl_now();
     mcode = curl_multi_wait(multi, NULL, 0, 1000, &rc);
 
     if(!mcode) {
       if(!rc) {
-        struct curltime after = Curl_now();
+        long sleep_ms;
 
         /* If it returns without any filedescriptor instantly, we need to
            avoid busy-looping during periods where it has nothing particular
            to wait for */
-        if(Curl_timediff(after, before) <= 10) {
-          without_fds++;
-          if(without_fds > 2) {
-            int sleep_ms = without_fds < 10 ? (1 << (without_fds - 1)) : 1000;
-            Curl_wait_ms(sleep_ms);
-          }
+        curl_multi_timeout(multi, &sleep_ms);
+        if(sleep_ms) {
+          if(sleep_ms > 1000)
+            sleep_ms = 1000;
+          Curl_wait_ms((int)sleep_ms);
         }
-        else
-          /* it wasn't "instant", restart counter */
-          without_fds = 0;
       }
-      else
-        /* got file descriptor, restart counter */
-        without_fds = 0;
 
       mcode = curl_multi_perform(multi, &still_running);
     }
@@ -732,6 +735,10 @@ static CURLcode easy_perform(struct Curl_easy *data, bool events)
   if(!data)
     return CURLE_BAD_FUNCTION_ARGUMENT;
 
+  if(data->set.errorbuffer)
+    /* clear this as early as possible */
+    data->set.errorbuffer[0] = 0;
+
   if(data->multi) {
     failf(data, "easy handle already used in multi handle");
     return CURLE_FAILED_INIT;
@@ -747,6 +754,9 @@ static CURLcode easy_perform(struct Curl_easy *data, bool events)
       return CURLE_OUT_OF_MEMORY;
     data->multi_easy = multi;
   }
+
+  if(multi->in_callback)
+    return CURLE_RECURSIVE_API_CALL;
 
   /* Copy the MAXCONNECTS option to the multi handle */
   curl_multi_setopt(multi, CURLMOPT_MAXCONNECTS, data->set.maxconnects);
@@ -844,6 +854,7 @@ static CURLcode dupset(struct Curl_easy *dst, struct Curl_easy *src)
   /* Copy src->set into dst->set first, then deal with the strings
      afterwards */
   dst->set = src->set;
+  Curl_mime_initpart(&dst->set.mimepost, dst);
 
   /* clear all string pointers first */
   memset(dst->set.str, 0, STRING_LAST * sizeof(char *));
@@ -867,7 +878,13 @@ static CURLcode dupset(struct Curl_easy *dst, struct Curl_easy *src)
     dst->set.postfields = dst->set.str[i];
   }
 
-  return CURLE_OK;
+  /* Duplicate mime data. */
+  result = Curl_mime_duppart(&dst->set.mimepost, &src->set.mimepost);
+
+  if(src->set.resolve)
+    dst->change.resolve = dst->set.resolve;
+
+  return result;
 }
 
 /*
@@ -941,6 +958,13 @@ struct Curl_easy *curl_easy_duphandle(struct Curl_easy *data)
     outcurl->change.referer_alloc = TRUE;
   }
 
+  /* Reinitialize an SSL engine for the new handle
+   * note: the engine name has already been copied by dupset */
+  if(outcurl->set.str[STRING_SSL_ENGINE]) {
+    if(Curl_ssl_set_engine(outcurl, outcurl->set.str[STRING_SSL_ENGINE]))
+      goto fail;
+  }
+
   /* Clone the resolver handle, if present, for the new handle */
   if(Curl_resolver_duphandle(&outcurl->state.resolver,
                              data->state.resolver))
@@ -987,7 +1011,7 @@ void curl_easy_reset(struct Curl_easy *data)
   /* zero out UserDefined data: */
   Curl_freeset(data);
   memset(&data->set, 0, sizeof(struct UserDefined));
-  (void)Curl_init_userdefined(&data->set);
+  (void)Curl_init_userdefined(data);
 
   /* zero out Progress data: */
   memset(&data->progress, 0, sizeof(struct Progress));
@@ -1001,6 +1025,7 @@ void curl_easy_reset(struct Curl_easy *data)
   /* zero out authentication data: */
   memset(&data->state.authhost, 0, sizeof(struct auth));
   memset(&data->state.authproxy, 0, sizeof(struct auth));
+  Curl_digest_cleanup(data);
 }
 
 /*
@@ -1012,6 +1037,9 @@ void curl_easy_reset(struct Curl_easy *data)
  * the pausing, you may get your write callback called at this point.
  *
  * Action is a bitmask consisting of CURLPAUSE_* bits in curl/curl.h
+ *
+ * NOTE: This is one of few API functions that are allowed to be called from
+ * within a callback.
  */
 CURLcode curl_easy_pause(struct Curl_easy *data, int action)
 {
@@ -1034,6 +1062,8 @@ CURLcode curl_easy_pause(struct Curl_easy *data, int action)
     unsigned int i;
     unsigned int count = data->state.tempcount;
     struct tempbuf writebuf[3]; /* there can only be three */
+    struct connectdata *conn = data->easy_conn;
+    struct Curl_easy *saved_data = NULL;
 
     /* copy the structs to allow for immediate re-pausing */
     for(i = 0; i < data->state.tempcount; i++) {
@@ -1042,16 +1072,25 @@ CURLcode curl_easy_pause(struct Curl_easy *data, int action)
     }
     data->state.tempcount = 0;
 
+    /* set the connection's current owner */
+    if(conn->data != data) {
+      saved_data = conn->data;
+      conn->data = data;
+    }
+
     for(i = 0; i < count; i++) {
       /* even if one function returns error, this loops through and frees all
          buffers */
       if(!result)
-        result = Curl_client_chop_write(data->easy_conn,
-                                        writebuf[i].type,
-                                        writebuf[i].buf,
-                                        writebuf[i].len);
+        result = Curl_client_write(conn, writebuf[i].type, writebuf[i].buf,
+                                   writebuf[i].len);
       free(writebuf[i].buf);
     }
+
+    /* recover previous owner of the connection */
+    if(saved_data)
+      conn->data = saved_data;
+
     if(result)
       return result;
   }
@@ -1062,6 +1101,10 @@ CURLcode curl_easy_pause(struct Curl_easy *data, int action)
      ((newstate&(KEEP_RECV_PAUSE|KEEP_SEND_PAUSE)) !=
       (KEEP_RECV_PAUSE|KEEP_SEND_PAUSE)) )
     Curl_expire(data, 0, EXPIRE_RUN_NOW); /* get this handle going again */
+
+  /* This transfer may have been moved in or out of the bundle, update
+     the corresponding socket callback, if used */
+  Curl_updatesocket(data);
 
   return result;
 }
@@ -1103,6 +1146,9 @@ CURLcode curl_easy_recv(struct Curl_easy *data, void *buffer, size_t buflen,
   ssize_t n1;
   struct connectdata *c;
 
+  if(Curl_is_in_callback(data))
+    return CURLE_RECURSIVE_API_CALL;
+
   result = easy_connection(data, &sfd, &c);
   if(result)
     return result;
@@ -1129,6 +1175,9 @@ CURLcode curl_easy_send(struct Curl_easy *data, const void *buffer,
   CURLcode result;
   ssize_t n1;
   struct connectdata *c = NULL;
+
+  if(Curl_is_in_callback(data))
+    return CURLE_RECURSIVE_API_CALL;
 
   result = easy_connection(data, &sfd, &c);
   if(result)

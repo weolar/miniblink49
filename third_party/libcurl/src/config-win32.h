@@ -7,7 +7,7 @@
  *                            | (__| |_| |  _ <| |___
  *                             \___|\___/|_| \_\_____|
  *
- * Copyright (C) 1998 - 2017, Daniel Stenberg, <daniel@haxx.se>, et al.
+ * Copyright (C) 1998 - 2018, Daniel Stenberg, <daniel@haxx.se>, et al.
  *
  * This software is licensed as described in the file COPYING, which
  * you should have received as part of this distribution. The terms
@@ -22,18 +22,18 @@
  *
  ***************************************************************************/
 
-/* ================================================================ */
-/*               Hand crafted config file for Windows               */
-/* ================================================================ */
+ /* ================================================================ */
+ /*               Hand crafted config file for Windows               */
+ /* ================================================================ */
 
-/* ---------------------------------------------------------------- */
-/*                          HEADER FILES                            */
-/* ---------------------------------------------------------------- */
+ /* ---------------------------------------------------------------- */
+ /*                          HEADER FILES                            */
+ /* ---------------------------------------------------------------- */
 
-/* Define if you have the <arpa/inet.h> header file. */
-/* #define HAVE_ARPA_INET_H 1 */
+ /* Define if you have the <arpa/inet.h> header file. */
+ /* #define HAVE_ARPA_INET_H 1 */
 
-/* Define if you have the <assert.h> header file. */
+ /* Define if you have the <assert.h> header file. */
 #define HAVE_ASSERT_H 1
 
 /* Define if you have the <crypto.h> header file. */
@@ -60,9 +60,6 @@
 
 /* Define if you have the <io.h> header file. */
 #define HAVE_IO_H 1
-
-/* Define if you have the <limits.h> header file. */
-#define HAVE_LIMITS_H 1
 
 /* Define if you have the <locale.h> header file. */
 #define HAVE_LOCALE_H 1
@@ -228,7 +225,7 @@
    This is present in OpenSSL versions after 0.9.6b */
 #define HAVE_CRYPTO_CLEANUP_ALL_EX_DATA 1
 
-/* Define if you have the select function. */
+   /* Define if you have the select function. */
 #define HAVE_SELECT 1
 
 /* Define if you have the setlocale function. */
@@ -267,7 +264,7 @@
 /* Define if you have the strtoll function. */
 #if defined(__MINGW32__) || defined(__WATCOMC__) || defined(__POCC__) || \
     (defined(_MSC_VER) && (_MSC_VER >= 1800))
-#define HAVE_STRTOLL 1
+//#define HAVE_STRTOLL 1
 #endif
 
 /* Define if you have the tcgetattr function. */
@@ -449,22 +446,22 @@
 /* ---------------------------------------------------------------- */
 
 #ifdef USE_WATT32
-  #include <tcp.h>
-  #undef byte
-  #undef word
-  #undef USE_WINSOCK
-  #undef HAVE_WINSOCK_H
-  #undef HAVE_WINSOCK2_H
-  #undef HAVE_WS2TCPIP_H
-  #define HAVE_GETADDRINFO
-  #define HAVE_GETNAMEINFO
-  #define HAVE_SYS_IOCTL_H
-  #define HAVE_SYS_SOCKET_H
-  #define HAVE_NETINET_IN_H
-  #define HAVE_NETDB_H
-  #define HAVE_ARPA_INET_H
-  #define HAVE_FREEADDRINFO
-  #define SOCKET int
+#include <tcp.h>
+#undef byte
+#undef word
+#undef USE_WINSOCK
+#undef HAVE_WINSOCK_H
+#undef HAVE_WINSOCK2_H
+#undef HAVE_WS2TCPIP_H
+#define HAVE_GETADDRINFO
+#define HAVE_GETNAMEINFO
+#define HAVE_SYS_IOCTL_H
+#define HAVE_SYS_SOCKET_H
+#define HAVE_NETINET_IN_H
+#define HAVE_NETDB_H
+#define HAVE_ARPA_INET_H
+#define HAVE_FREEADDRINFO
+#define SOCKET int
 #endif
 
 
@@ -509,7 +506,7 @@
 #  endif
 #endif
 
-/* Define some minimum and default build targets for Visual Studio */
+   /* Define some minimum and default build targets for Visual Studio */
 #if defined(_MSC_VER)
    /* Officially, Microsoft's Windows SDK versions 6.X does not support Windows
       2000 as a supported build target. VS2008 default installations provides
@@ -519,20 +516,20 @@
       are functional. */
 #  define VS2008_MIN_TARGET 0x0500
 
-   /* The minimum build target for VS2012 is Vista unless Update 1 is installed
-      and the v110_xp toolset is chosen. */
+      /* The minimum build target for VS2012 is Vista unless Update 1 is installed
+         and the v110_xp toolset is chosen. */
 #  if defined(_USING_V110_SDK71_)
 #    define VS2012_MIN_TARGET 0x0501
 #  else
 #    define VS2012_MIN_TARGET 0x0600
 #  endif
 
-   /* VS2008 default build target is Windows Vista. We override default target
-      to be Windows XP. */
+         /* VS2008 default build target is Windows Vista. We override default target
+            to be Windows XP. */
 #  define VS2008_DEF_TARGET 0x0501
 
-   /* VS2012 default build target is Windows Vista unless Update 1 is installed
-      and the v110_xp toolset is chosen. */
+            /* VS2012 default build target is Windows Vista unless Update 1 is installed
+               and the v110_xp toolset is chosen. */
 #  if defined(_USING_V110_SDK71_)
 #    define VS2012_DEF_TARGET 0x0501
 #  else
@@ -540,7 +537,7 @@
 #  endif
 #endif
 
-/* VS2008 default target settings and minimum build target check. */
+               /* VS2008 default target settings and minimum build target check. */
 #if defined(_MSC_VER) && (_MSC_VER >= 1500) && (_MSC_VER <= 1600)
 #  ifndef _WIN32_WINNT
 #    define _WIN32_WINNT VS2008_DEF_TARGET
@@ -582,8 +579,8 @@ Vista
 #  endif
 #endif
 
-/* Availability of freeaddrinfo, getaddrinfo and getnameinfo functions is
-   quite convoluted, compiler dependent and even build target dependent. */
+   /* Availability of freeaddrinfo, getaddrinfo and getnameinfo functions is
+      quite convoluted, compiler dependent and even build target dependent. */
 #if defined(HAVE_WS2TCPIP_H)
 #  if defined(__POCC__)
 #    define HAVE_FREEADDRINFO           1
@@ -612,11 +609,11 @@ Vista
 #  endif
 #endif
 
-/* ---------------------------------------------------------------- */
-/*                          STRUCT RELATED                          */
-/* ---------------------------------------------------------------- */
+      /* ---------------------------------------------------------------- */
+      /*                          STRUCT RELATED                          */
+      /* ---------------------------------------------------------------- */
 
-/* Define if you have struct sockaddr_storage. */
+      /* Define if you have struct sockaddr_storage. */
 #if !defined(__SALFORDC__) && !defined(__BORLANDC__)
 #define HAVE_STRUCT_SOCKADDR_STORAGE 1
 #endif
@@ -668,10 +665,10 @@ Vista
  * Undefine both USE_ARES and USE_THREADS_WIN32 for synchronous DNS.
  */
 
-/* Define to enable c-ares asynchronous DNS lookups. */
-/* #define USE_ARES 1 */
+ /* Define to enable c-ares asynchronous DNS lookups. */
+ /* #define USE_ARES 1 */
 
-/* Default define to enable threaded asynchronous DNS lookups. */
+ /* Default define to enable threaded asynchronous DNS lookups. */
 #if !defined(USE_SYNC_DNS) && !defined(USE_ARES) && \
     !defined(USE_THREADS_WIN32)
 #  define USE_THREADS_WIN32 1
@@ -704,12 +701,17 @@ Vista
 #endif
 #endif
 
-#if 1 // defined(__POCC__) && defined(USE_WIN32_LDAP) // TODO weolar
+#if defined(__POCC__) && defined(USE_WIN32_LDAP)
 #  define CURL_DISABLE_LDAP 1
 #endif
 
 /* Define to use the Windows crypto library. */
 #define USE_WIN32_CRYPTO
+
+/* Define to use Unix sockets. */
+#if defined(_MSC_VER) && _MSC_VER >= 1900
+/* #define USE_UNIX_SOCKETS */
+#endif
 
 /* ---------------------------------------------------------------- */
 /*                       ADDITIONAL DEFINITIONS                     */
