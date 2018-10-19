@@ -178,6 +178,7 @@
     <ClCompile Include="..\..\third_party\libcurl\src\content_encoding.c" />
     <ClCompile Include="..\..\third_party\libcurl\src\cookie.c" />
     <ClCompile Include="..\..\third_party\libcurl\src\curl_addrinfo.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\curl_ctype.c" />
     <ClCompile Include="..\..\third_party\libcurl\src\curl_des.c" />
     <ClCompile Include="..\..\third_party\libcurl\src\curl_endian.c" />
     <ClCompile Include="..\..\third_party\libcurl\src\curl_fnmatch.c" />
@@ -187,6 +188,7 @@
     <ClCompile Include="..\..\third_party\libcurl\src\curl_multibyte.c" />
     <ClCompile Include="..\..\third_party\libcurl\src\curl_ntlm_core.c" />
     <ClCompile Include="..\..\third_party\libcurl\src\curl_ntlm_wb.c" />
+    <ClCompile Include="..\..\third_party\libcurl\src\curl_range.c" />
     <ClCompile Include="..\..\third_party\libcurl\src\curl_rtmp.c" />
     <ClCompile Include="..\..\third_party\libcurl\src\curl_sasl.c" />
     <ClCompile Include="..\..\third_party\libcurl\src\curl_sspi.c" />
@@ -468,7 +470,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Custom</Optimization>
-      <PreprocessorDefinitions>CURL_STATICLIB=1;BUILDING_LIBCURL=1;WIN32;NDEBUG;_LIB;USING_VC6RT=1;USE_OPENSSL=1;HAVE_LIBZ=1;HAVE_ZLIB_H=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>CURL_STATICLIB=1;BUILDING_LIBCURL=1;WIN32;NDEBUG;_LIB;USING_VC6RT=1;HAVE_CYASSL_ERROR_SSL_H;USE_CYASSL=1;HAVE_LIBZ=1;HAVE_ZLIB_H=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>../../third_party/zlib/;../../third_party/libcurl/;../../third_party/libcurl/src;../../third_party/libcurl/include/;../../node/openssl/openssl/include;../../third_party/wolfssl/</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <StringPooling>true</StringPooling>
@@ -542,7 +544,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Full</Optimization>
-      <PreprocessorDefinitions>CURL_STATICLIB=1;BUILDING_LIBCURL=1;HAVE_LIBZ=1;HAVE_ZLIB_H=1;USE_OPENSSL=1;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>CURL_STATICLIB=1;BUILDING_LIBCURL=1;HAVE_LIBZ=1;HAVE_ZLIB_H=1;HAVE_CYASSL_ERROR_SSL_H;USE_CYASSL=1;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
       <StringPooling>true</StringPooling>

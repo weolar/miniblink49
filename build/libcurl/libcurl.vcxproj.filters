@@ -818,6 +818,12 @@
     <ClCompile Include="..\..\third_party\libcurl\src\telnet.c">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\third_party\libcurl\src\curl_ctype.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\libcurl\src\curl_range.c">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\third_party\libcurl\src\checksrc.pl">
