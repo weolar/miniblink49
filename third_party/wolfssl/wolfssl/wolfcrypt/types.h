@@ -581,7 +581,7 @@
         WC_PK_TYPE_MAX = WC_PK_TYPE_EC_KEYGEN
     };
 
-
+#undef SIZEOF_LONG
     /* settings detection for compile vs runtime math incompatibilities */
     enum {
     #if !defined(USE_FAST_MATH) && !defined(SIZEOF_LONG) && !defined(SIZEOF_LONG_LONG)
