@@ -1,6 +1,6 @@
 /* wolfmath.c
  *
- * Copyright (C) 2006-2016 wolfSSL Inc.
+ * Copyright (C) 2006-2017 wolfSSL Inc.
  *
  * This file is part of wolfSSL.
  *
@@ -29,11 +29,7 @@
 /* in case user set USE_FAST_MATH there */
 #include <wolfssl/wolfcrypt/settings.h>
 
-#ifdef USE_FAST_MATH
-    #include <wolfssl/wolfcrypt/tfm.h>
-#else
-    #include <wolfssl/wolfcrypt/integer.h>
-#endif
+#include <wolfssl/wolfcrypt/integer.h>
 
 #include <wolfssl/wolfcrypt/error-crypt.h>
 #include <wolfssl/wolfcrypt/logging.h>
@@ -91,6 +87,7 @@ mp_digit get_digit(mp_int* a, int n)
     return (n >= a->used || n < 0) ? 0 : a->dp[n];
 }
 
+#ifndef WC_NO_RNG
 int get_rand_digit(WC_RNG* rng, mp_digit* d)
 {
     return wc_RNG_GenerateBlock(rng, (byte*)d, sizeof(mp_digit));
@@ -99,47 +96,91 @@ int get_rand_digit(WC_RNG* rng, mp_digit* d)
 #ifdef WC_RSA_BLINDING
 int mp_rand(mp_int* a, int digits, WC_RNG* rng)
 {
-    int ret;
-    mp_digit d;
+    int ret = 0;
+    DECLARE_VAR(d, mp_digit, 1, rng ? rng->heap : NULL);
 
-    if (rng == NULL)
-        return MISSING_RNG_E;
+    if (rng == NULL) {
+        ret = MISSING_RNG_E; goto exit;
+    }
 
-    if (a == NULL)
-        return BAD_FUNC_ARG;
+    if (a == NULL
+    #ifdef WOLFSSL_ASYNC_CRYPT
+        || d == NULL
+    #endif
+    ) {
+        ret = BAD_FUNC_ARG; goto exit;
+    }
 
     mp_zero(a);
     if (digits <= 0) {
-        return MP_OKAY;
+        ret = MP_OKAY; goto exit;
     }
 
     /* first place a random non-zero digit */
     do {
-        ret = get_rand_digit(rng, &d);
+        ret = get_rand_digit(rng, d);
         if (ret != 0) {
-            return ret;
+            goto exit;
         }
-    } while (d == 0);
+    } while (*d == 0);
 
-    if ((ret = mp_add_d(a, d, a)) != MP_OKAY) {
-        return ret;
+    if ((ret = mp_add_d(a, *d, a)) != MP_OKAY) {
+        goto exit;
     }
 
     while (--digits > 0) {
         if ((ret = mp_lshd(a, 1)) != MP_OKAY) {
-            return ret;
+            goto exit;
         }
-        if ((ret = get_rand_digit(rng, &d)) != 0) {
-            return ret;
+        if ((ret = get_rand_digit(rng, d)) != 0) {
+            goto exit;
         }
-        if ((ret = mp_add_d(a, d, a)) != MP_OKAY) {
-            return ret;
+        if ((ret = mp_add_d(a, *d, a)) != MP_OKAY) {
+            goto exit;
         }
     }
+
+exit:
+    FREE_VAR(d, rng ? rng->heap : NULL);
 
     return ret;
 }
 #endif /* WC_RSA_BLINDING */
+#endif
+
+/* export an mp_int as unsigned char or hex string
+ * encType is WC_TYPE_UNSIGNED_BIN or WC_TYPE_HEX_STR
+ * return MP_OKAY on success */
+int wc_export_int(mp_int* mp, byte* buf, word32* len, word32 keySz,
+    int encType)
+{
+    int err;
+
+    if (mp == NULL)
+        return BAD_FUNC_ARG;
+
+    /* check buffer size */
+    if (*len < keySz) {
+        *len = keySz;
+        return BUFFER_E;
+    }
+
+    *len = keySz;
+    XMEMSET(buf, 0, *len);
+
+    if (encType == WC_TYPE_HEX_STR) {
+    #ifdef WC_MP_TO_RADIX
+        err = mp_tohex(mp, (char*)buf);
+    #else
+        err = NOT_COMPILED_IN;
+    #endif
+    }
+    else {
+        err = mp_to_unsigned_bin(mp, buf + (keySz - mp_unsigned_bin_size(mp)));
+    }
+
+    return err;
+}
 
 
 #ifdef HAVE_WOLF_BIGINT
@@ -235,20 +276,44 @@ void wc_bigint_free(WC_BIGINT* a)
     }
 }
 
-int wc_mp_to_bigint(mp_int* src, WC_BIGINT* dst)
+/* sz: make sure the buffer is at least that size and zero padded.
+ *     A `sz == 0` will use the size of `src`.
+ *     The calulcates sz is stored into dst->len in `wc_bigint_alloc`.
+ */
+int wc_mp_to_bigint_sz(mp_int* src, WC_BIGINT* dst, word32 sz)
 {
     int err;
-    word32 sz;
+    word32 x, y;
 
     if (src == NULL || dst == NULL)
         return BAD_FUNC_ARG;
 
-    sz = mp_unsigned_bin_size(src);
+    /* get size of source */
+    x = mp_unsigned_bin_size(src);
+    if (sz < x)
+        sz = x;
+
+    /* make sure destination is allocated and large enough */
     err = wc_bigint_alloc(dst, sz);
-    if (err == MP_OKAY)
-        err = mp_to_unsigned_bin(src, dst->buf);
+    if (err == MP_OKAY) {
+
+        /* leading zero pad */
+        y = sz - x;
+        XMEMSET(dst->buf, 0, y);
+
+        /* export src as unsigned bin to destination buf */
+        err = mp_to_unsigned_bin(src, dst->buf + y);
+    }
 
     return err;
+}
+
+int wc_mp_to_bigint(mp_int* src, WC_BIGINT* dst)
+{
+    if (src == NULL || dst == NULL)
+        return BAD_FUNC_ARG;
+
+    return wc_mp_to_bigint_sz(src, dst, 0);
 }
 
 int wc_bigint_to_mp(WC_BIGINT* src, mp_int* dst)

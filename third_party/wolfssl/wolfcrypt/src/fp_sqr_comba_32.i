@@ -1,6 +1,6 @@
 /* fp_sqr_comba_32.i
  *
- * Copyright (C) 2006-2016 wolfSSL Inc.
+ * Copyright (C) 2006-2017 wolfSSL Inc.
  *
  * This file is part of wolfSSL.
  *
@@ -22,12 +22,23 @@
 
 
 #ifdef TFM_SQR32
-void fp_sqr_comba32(fp_int *A, fp_int *B)
+int fp_sqr_comba32(fp_int *A, fp_int *B)
 {
-   fp_digit *a, b[64], c0, c1, c2, sc0 = 0, sc1 = 0, sc2 = 0;
+   fp_digit *a, c0, c1, c2, sc0 = 0, sc1 = 0, sc2 = 0;
 #ifdef TFM_ISO
-   fp_word   tt;   
-#endif   
+   fp_word tt;
+#endif
+#ifndef WOLFSSL_SMALL_STACK
+   fp_digit b[64];
+#else
+   fp_digit *b;
+#endif
+
+#ifdef WOLFSSL_SMALL_STACK
+   b = (fp_digit*)XMALLOC(sizeof(fp_digit) * 64, NULL, DYNAMIC_TYPE_TMP_BUFFER);
+   if (b == NULL)
+      return FP_MEM;
+#endif
 
    a = A->dp;
    COMBA_START; 
@@ -355,6 +366,11 @@ void fp_sqr_comba32(fp_int *A, fp_int *B)
    B->sign = FP_ZPOS;
    XMEMCPY(B->dp, b, 64 * sizeof(fp_digit));
    fp_clamp(B);
+
+#ifdef WOLFSSL_SMALL_STACK
+   XFREE(b, NULL, DYNAMIC_TYPE_TMP_BUFFER);
+#endif
+   return FP_OKAY;
 }
 #endif
 

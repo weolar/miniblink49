@@ -1,6 +1,6 @@
-/* options.h.in
+/* afalg_hash.h
  *
- * Copyright (C) 2006-2016 wolfSSL Inc.
+ * Copyright (C) 2006-2018 wolfSSL Inc.
  *
  * This file is part of wolfSSL.
  *
@@ -20,21 +20,28 @@
  */
 
 
-/* default blank options for autoconf */
+#ifndef WOLF_CRYPT_AFALG_HASH_H
+#define WOLF_CRYPT_AFALG_HASH_H
 
-#ifndef WOLFSSL_OPTIONS_H
-#define WOLFSSL_OPTIONS_H
+#include <wolfssl/wolfcrypt/types.h>
+
+#undef  WOLFSSL_NO_HASH_RAW
+#define WOLFSSL_NO_HASH_RAW
+
+typedef struct {
+    byte*  msg;
+    void*  heap;
+    word32 used;
+    word32 len;
+    int    alFd;
+    int    rdFd;
+} wolfssl_AFALG_Hash;
 
 
-#ifdef __cplusplus
-extern "C" {
+
+#if !defined(NO_SHA256)
+    typedef wolfssl_AFALG_Hash wc_Sha256;
 #endif
 
-
-#ifdef __cplusplus
-}
-#endif
-
-
-#endif /* WOLFSSL_OPTIONS_H */
+#endif /* WOLF_CRYPT_AFALG_HASH_H  */
 

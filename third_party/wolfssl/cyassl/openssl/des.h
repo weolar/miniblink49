@@ -1,6 +1,6 @@
 /* des.h
  *
- * Copyright (C) 2006-2016 wolfSSL Inc.
+ * Copyright (C) 2006-2017 wolfSSL Inc.
  *
  * This file is part of wolfSSL.
  *
@@ -21,7 +21,7 @@
 
 
 
-/*  des.h defines mini des openssl compatibility layer 
+/*  des.h defines mini des openssl compatibility layer
  *
  */
 

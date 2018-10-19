@@ -1,6 +1,6 @@
 /* cmac.h
  *
- * Copyright (C) 2006-2016 wolfSSL Inc.
+ * Copyright (C) 2006-2017 wolfSSL Inc.
  *
  * This file is part of wolfSSL.
  *
@@ -28,9 +28,18 @@
 
 #if !defined(NO_AES) && defined(WOLFSSL_CMAC)
 
+#if defined(HAVE_FIPS) && \
+    defined(HAVE_FIPS_VERSION) && (HAVE_FIPS_VERSION >= 2)
+    #include <wolfssl/wolfcrypt/fips.h>
+#endif /* HAVE_FIPS_VERSION >= 2 */
+
 #ifdef __cplusplus
     extern "C" {
 #endif
+
+/* avoid redefinition of structs */
+#if !defined(HAVE_FIPS) || \
+    (defined(HAVE_FIPS_VERSION) && (HAVE_FIPS_VERSION >= 2))
 
 typedef struct Cmac {
     Aes aes;
@@ -47,6 +56,10 @@ typedef enum CmacType {
     WC_CMAC_AES = 1
 } CmacType;
 
+#define WC_CMAC_TAG_MAX_SZ AES_BLOCK_SIZE
+#define WC_CMAC_TAG_MIN_SZ (AES_BLOCK_SIZE/4)
+
+#endif /* HAVE_FIPS */
 
 WOLFSSL_API
 int wc_InitCmac(Cmac* cmac,

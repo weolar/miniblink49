@@ -1,3 +1,24 @@
+/* md5.h
+ *
+ * Copyright (C) 2006-2017 wolfSSL Inc.
+ *
+ * This file is part of wolfSSL.
+ *
+ * wolfSSL is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * wolfSSL is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1335, USA
+ */
+
 /* md5.h for openssl */
 
 
@@ -7,6 +28,8 @@
 #include <wolfssl/wolfcrypt/settings.h>
 
 #ifndef NO_MD5
+
+#include <wolfssl/wolfcrypt/hash.h>
 
 #ifdef WOLFSSL_PREFIX
 #include "prefix_md5.h"
@@ -18,7 +41,7 @@
 
 
 typedef struct WOLFSSL_MD5_CTX {
-    int holder[28 + (WC_ASYNC_DEV_SIZE / sizeof(int))];   /* big enough to hold wolfcrypt md5, but check on init */
+    void* holder[(112 + WC_ASYNC_DEV_SIZE) / sizeof(void*)];   /* big enough to hold wolfcrypt md5, but check on init */
 } WOLFSSL_MD5_CTX;
 
 WOLFSSL_API int wolfSSL_MD5_Init(WOLFSSL_MD5_CTX*);
@@ -37,6 +60,12 @@ typedef WOLFSSL_MD5_CTX MD5_CTX;
     #define MD5Update wolfSSL_MD5_Update
     #define MD5Final wolfSSL_MD5_Final
 #endif
+
+#ifndef MD5
+#define MD5(d, n, md) wc_Md5Hash((d), (n), (md))
+#endif
+
+#define MD5_DIGEST_LENGTH MD5_DIGEST_SIZE
 
 #ifdef __cplusplus
     }  /* extern "C" */

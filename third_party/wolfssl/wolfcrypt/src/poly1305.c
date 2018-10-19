@@ -1,6 +1,6 @@
 /* poly1305.c
  *
- * Copyright (C) 2006-2016 wolfSSL Inc.
+ * Copyright (C) 2006-2017 wolfSSL Inc.
  *
  * This file is part of wolfSSL.
  *
@@ -61,6 +61,8 @@
     #if defined(__clang__) && ((__clang_major__ < 3) || \
                                (__clang_major__ == 3 && __clang_minor__ <= 5))
         #define NO_AVX2_SUPPORT
+    #elif defined(__clang__) && defined(NO_AVX2_SUPPORT)
+        #undef NO_AVX2_SUPPORT
     #endif
 
     #define HAVE_INTEL_AVX1
@@ -116,6 +118,11 @@ static word32 cpu_flags_set = 0;
 
 #ifdef USE_INTEL_SPEEDUP
 #ifdef HAVE_INTEL_AVX1
+/* Process one block (16 bytes) of data.
+ *
+ * ctx  Poly1305 context.
+ * m    One block of message data.
+ */
 static void poly1305_block_avx(Poly1305* ctx, const unsigned char *m)
 {
         __asm__ __volatile__ (
@@ -142,20 +149,20 @@ static void poly1305_block_avx(Poly1305* ctx, const unsigned char *m)
             "addq	%%rax, %%r12\n\t"
             "movq	%%r15, %%rax\n\t"
             "adcq	%%rdx, %%r13\n\t"
-            "# r[0] * h[0] => rdx, rax +=> t1, t0\n\t"
+            "# r[0] * h[0] => rdx, rax ==> t4, t0\n\t"
             "mulq	%%r8\n\t"
-            "movq	%%rdx, %%r8\n\t"
             "movq	%%rax, %%r11\n\t"
+            "movq	%%rdx, %%r8\n\t"
             "# r[1] * h[1] => rdx, rax =+> t3, t2\n\t"
             "movq	8(%[ctx]), %%rax\n\t"
             "mulq	%%r9\n\t"
             "#   r[0] * h[2] +> t2\n\t"
-            "addq	64(%[ctx],%%r10,8), %%r13\n\t"
+            "addq	352(%[ctx],%%r10,8), %%r13\n\t"
             "movq	%%rdx, %%r14\n\t"
             "addq	%%r8, %%r12\n\t"
             "adcq	%%rax, %%r13\n\t"
             "#   r[1] * h[2] +> t3\n\t"
-            "adcq	120(%[ctx],%%r10,8), %%r14\n\t"
+            "adcq	408(%[ctx],%%r10,8), %%r14\n\t"
             "# r * h in r14, r13, r12, r11 \n\t"
             "# h = (r * h) mod 2^130 - 5\n\t"
             "movq	%%r13, %%r10\n\t"
@@ -183,6 +190,12 @@ static void poly1305_block_avx(Poly1305* ctx, const unsigned char *m)
         );
 }
 
+/* Process multiple blocks (n * 16 bytes) of data.
+ *
+ * ctx    Poly1305 context.
+ * m      Blocks of message data.
+ * bytes  The number of bytes to process.
+ */
 POLY1305_NOINLINE static void poly1305_blocks_avx(Poly1305* ctx,
                                            const unsigned char* m, size_t bytes)
 {
@@ -209,20 +222,20 @@ POLY1305_NOINLINE static void poly1305_blocks_avx(Poly1305* ctx,
             "addq	%%rax, %%r12\n\t"
             "movq	%%r15, %%rax\n\t"
             "adcq	%%rdx, %%r13\n\t"
-            "# r[0] * h[0] => rdx, rax +=> t1, t0\n\t"
+            "# r[0] * h[0] => rdx, rax ==> t4, t0\n\t"
             "mulq	%%r8\n\t"
-            "movq	%%rdx, %%r8\n\t"
             "movq	%%rax, %%r11\n\t"
+            "movq	%%rdx, %%r8\n\t"
             "# r[1] * h[1] => rdx, rax =+> t3, t2\n\t"
             "movq	8(%[ctx]), %%rax\n\t"
             "mulq	%%r9\n\t"
             "#   r[0] * h[2] +> t2\n\t"
-            "addq	72(%[ctx],%%r10,8), %%r13\n\t"
+            "addq	360(%[ctx],%%r10,8), %%r13\n\t"
             "movq	%%rdx, %%r14\n\t"
             "addq	%%r8, %%r12\n\t"
             "adcq	%%rax, %%r13\n\t"
             "#   r[1] * h[2] +> t3\n\t"
-            "adcq	128(%[ctx],%%r10,8), %%r14\n\t"
+            "adcq	416(%[ctx],%%r10,8), %%r14\n\t"
             "# r * h in r14, r13, r12, r11 \n\t"
             "# h = (r * h) mod 2^130 - 5\n\t"
             "movq	%%r13, %%r10\n\t"
@@ -255,6 +268,12 @@ POLY1305_NOINLINE static void poly1305_blocks_avx(Poly1305* ctx,
         );
 }
 
+/* Set the key to use when processing data.
+ * Initialize the context.
+ *
+ * ctx  Poly1305 context.
+ * key  The key data (16 bytes).
+ */
 static void poly1305_setkey_avx(Poly1305* ctx, const byte* key)
 {
     int i;
@@ -263,8 +282,8 @@ static void poly1305_setkey_avx(Poly1305* ctx, const byte* key)
     ctx->r[1] = *(word64*)(key + 8) & 0x0ffffffc0ffffffcL;
 
     for (i=0; i<7; i++) {
-        ctx->hh[i + 0] = ctx->r[0] * i;
-        ctx->hh[i + 7] = ctx->r[1] * i;
+        ctx->hm[i + 0] = ctx->r[0] * i;
+        ctx->hm[i + 7] = ctx->r[1] * i;
     }
 
     /* h (accumulator) = 0 */
@@ -280,6 +299,12 @@ static void poly1305_setkey_avx(Poly1305* ctx, const byte* key)
     ctx->finished = 1;
 }
 
+/* Calculate the final result - authentication data.
+ * Zeros out the private data in the context.
+ *
+ * ctx  Poly1305 context.
+ * mac  Buffer to hold 16 bytes.
+ */
 static void poly1305_final_avx(Poly1305* ctx, byte* mac)
 {
     word64 h0, h1, h2;
@@ -355,22 +380,15 @@ static void poly1305_final_avx(Poly1305* ctx, byte* mac)
 
 /* Load H into five 256-bit registers.
  *
- * h is the memory location of the data - 26 bits in 32.
+ * h is the memory location of the data - 26 of 32 bits.
  * h0-h4 the 4 H values with 26 bits stored in 64 for multiply.
- * z is zero.
  */
-#define LOAD_H(h, h0, h1, h2, h3, h4, z)  \
-    "vmovdqu      ("#h"), "#h1"\n\t"      \
-    "vmovdqu    32("#h"), "#h3"\n\t"      \
-    "vmovdqu    64("#h"), "#h4"\n\t"      \
-    "vpermq	$0xd8, "#h1", "#h1"\n\t"  \
-    "vpermq	$0xd8, "#h3", "#h3"\n\t"  \
-    "vpermq	$0xd8, "#h4", "#h4"\n\t"  \
-    "vpunpckldq	 "#z", "#h1", "#h0"\n\t"  \
-    "vpunpckhdq	 "#z", "#h1", "#h1"\n\t"  \
-    "vpunpckldq	 "#z", "#h3", "#h2"\n\t"  \
-    "vpunpckhdq	 "#z", "#h3", "#h3"\n\t"  \
-    "vpunpckldq	 "#z", "#h4", "#h4"\n\t"
+#define LOAD_H(h, h0, h1, h2, h3, h4)  \
+    "vmovdqu	   ("#h"), "#h0"\n\t"  \
+    "vmovdqu	 32("#h"), "#h1"\n\t"  \
+    "vmovdqu	 64("#h"), "#h2"\n\t"  \
+    "vmovdqu	 96("#h"), "#h3"\n\t"  \
+    "vmovdqu	128("#h"), "#h4"\n\t"
 
 /* Store H, five 256-bit registers, packed.
  *
@@ -379,35 +397,23 @@ static void poly1305_final_avx(Poly1305* ctx, byte* mac)
  * x4 is the xmm register of h4.
  */
 #define STORE_H(h, h0, h1, h2, h3, h4, x4)      \
-    "vpshufd	$0x08, "#h0", "#h0"\n\t"        \
-    "vpshufd	$0x08, "#h1", "#h1"\n\t"        \
-    "vpshufd	$0x08, "#h2", "#h2"\n\t"        \
-    "vpshufd	$0x08, "#h3", "#h3"\n\t"        \
-    "vpshufd	$0x08, "#h4", "#h4"\n\t"        \
-    "vpermq	$0x08, "#h0", "#h0"\n\t"        \
-    "vpermq	$0x08, "#h1", "#h1"\n\t"        \
-    "vpermq	$0x08, "#h2", "#h2"\n\t"        \
-    "vpermq	$0x08, "#h3", "#h3"\n\t"        \
-    "vpermq	$0x08, "#h4", "#h4"\n\t"        \
-    "vperm2i128	$0x20, "#h1", "#h0", "#h0"\n\t" \
-    "vperm2i128	$0x20, "#h3", "#h2", "#h2"\n\t" \
-    "vmovdqu	 "#h0",   ("#h")\n\t"           \
-    "vmovdqu	 "#h2", 32("#h")\n\t"           \
-    "vmovdqu	 "#x4", 64("#h")\n\t"
+    "vmovdqu	 "#h0",    ("#h")\n\t"          \
+    "vmovdqu	 "#h1",  32("#h")\n\t"          \
+    "vmovdqu	 "#h2",  64("#h")\n\t"          \
+    "vmovdqu	 "#h3",  96("#h")\n\t"          \
+    "vmovdqu	 "#h4", 128("#h")\n\t"
 
 /* Load four powers of r into position to be multiplied by the 4 H values.
  *
- * rp0-rp3 are the register holding pointers to the values of the powers of r.
- * r0-r4 holds the loaded values with 26 bits store in 64 for multiply.
+ * r0-r4 holds the loaded values with 26 bits stored in 64 for multiply.
  * t0-t3 are temporary registers.
  */
-#define LOAD_Rx4(rp0, rp1, rp2, rp3,                     \
-                 r0, r1, r2, r3, r4,                     \
+#define LOAD_Rx4(r0, r1, r2, r3, r4,                     \
                  t0, t1, t2, t3)                         \
-    "vmovdqu		("#rp0"), "#r0"\n\t"             \
-    "vmovdqu		("#rp1"), "#r1"\n\t"             \
-    "vmovdqu		("#rp2"), "#r2"\n\t"             \
-    "vmovdqu		("#rp3"), "#r3"\n\t"             \
+    "vmovdqu		224(%[ctx]), "#r3"\n\t"          \
+    "vmovdqu		256(%[ctx]), "#r2"\n\t"          \
+    "vmovdqu		288(%[ctx]), "#r1"\n\t"          \
+    "vmovdqu		320(%[ctx]), "#r0"\n\t"          \
     "vpermq		$0xd8, "#r0", "#r0"\n\t"         \
     "vpermq		$0xd8, "#r1", "#r1"\n\t"         \
     "vpermq		$0xd8, "#r2", "#r2"\n\t"         \
@@ -425,18 +431,18 @@ static void poly1305_final_avx(Poly1305* ctx, byte* mac)
 /* Load the r^4 value into position to be multiplied by all 4 H values.
  *
  * r4 holds r^4 as five 26 bits each in 32.
- * r0-r4 holds the loaded values with 26 bits store in 64 for multiply.
+ * r0-r4 holds the loaded values with 26 bits stored in 64 for multiply.
  * t0-t1 are temporary registers.
  */
 #define LOAD_R4(r4, r40, r41, r42, r43, r44, \
                 t0, t1)                      \
     "vmovdqu	"#r4", "#t0"\n\t"            \
-    "vpsrlq	  $32, "#t0", "#t1"\n\t"     \
     "vpermq	 $0x0, "#t0", "#r40"\n\t"    \
-    "vpermq	 $0x0, "#t1", "#r41"\n\t"    \
+    "vpsrlq	  $32, "#t0", "#t1"\n\t"     \
     "vpermq	$0x55, "#t0", "#r42"\n\t"    \
-    "vpermq	$0x55, "#t1", "#r43"\n\t"    \
-    "vpermq	$0xaa, "#t0", "#r44"\n\t"
+    "vpermq	$0xaa, "#t0", "#r44"\n\t"    \
+    "vpermq	 $0x0, "#t1", "#r41"\n\t"    \
+    "vpermq	$0x55, "#t1", "#r43"\n\t"
 
 /* Multiply the top 4 26-bit values in 64 bits of each H by 5 for reduction in
  * multiply.
@@ -462,21 +468,21 @@ static void poly1305_final_avx(Poly1305* ctx, byte* mac)
  */
 #define FINALIZE_H(h0, h1, h2, h3, h4,    \
                    t0, t1, t2, t3, t4)    \
-    "vpermq	$0xf5, "#h0", "#t0"\n\t"  \
-    "vpermq	$0xf5, "#h1", "#t1"\n\t"  \
-    "vpermq	$0xf5, "#h2", "#t2"\n\t"  \
-    "vpermq	$0xf5, "#h3", "#t3"\n\t"  \
-    "vpermq	$0xf5, "#h4", "#t4"\n\t"  \
+    "vpsrldq	$8, "#h0", "#t0"\n\t"     \
+    "vpsrldq	$8, "#h1", "#t1"\n\t"     \
+    "vpsrldq	$8, "#h2", "#t2"\n\t"     \
+    "vpsrldq	$8, "#h3", "#t3"\n\t"     \
+    "vpsrldq	$8, "#h4", "#t4"\n\t"     \
     "vpaddq	"#h0", "#t0", "#h0"\n\t"  \
     "vpaddq	"#h1", "#t1", "#h1"\n\t"  \
     "vpaddq	"#h2", "#t2", "#h2"\n\t"  \
     "vpaddq	"#h3", "#t3", "#h3"\n\t"  \
     "vpaddq	"#h4", "#t4", "#h4"\n\t"  \
-    "vpermq	$0xaa, "#h0", "#t0"\n\t"  \
-    "vpermq	$0xaa, "#h1", "#t1"\n\t"  \
-    "vpermq	$0xaa, "#h2", "#t2"\n\t"  \
-    "vpermq	$0xaa, "#h3", "#t3"\n\t"  \
-    "vpermq	$0xaa, "#h4", "#t4"\n\t"  \
+    "vpermq	$0x02, "#h0", "#t0"\n\t"  \
+    "vpermq	$0x02, "#h1", "#t1"\n\t"  \
+    "vpermq	$0x02, "#h2", "#t2"\n\t"  \
+    "vpermq	$0x02, "#h3", "#t3"\n\t"  \
+    "vpermq	$0x02, "#h4", "#t4"\n\t"  \
     "vpaddq	"#h0", "#t0", "#h0"\n\t"  \
     "vpaddq	"#h1", "#t1", "#h1"\n\t"  \
     "vpaddq	"#h2", "#t2", "#h2"\n\t"  \
@@ -560,7 +566,7 @@ static void poly1305_final_avx(Poly1305* ctx, byte* mac)
  *
  * m the address of the message to load.
  * m0-m4 is the loaded message with 32 bits in 64. Loaded so data is parallel.
- * hi is the high bits of the 4 m (1<< 128 if not final block).
+ * hi is the high bits of the 4 m (1 << 128 as not final block).
  * z is zero.
  */
 #define LOAD_M(m, m0, m1, m2, m3, m4, hi, z)     \
@@ -589,7 +595,7 @@ static void poly1305_final_avx(Poly1305* ctx, byte* mac)
  * r0-r4 contain the 4 powers of r.
  * s1-s4 contain r1-r4 times 5.
  * t0-t4 and v0-v3 are temporary registers.
- * hi is the high bits of the 4 m (1<< 128 if not final block).
+ * hi is the high bits of the 4 m (1 << 128 as not final block).
  * z is zero.
  */
 #define MUL_ADD_AVX2(h0, h1, h2, h3, h4,         \
@@ -663,41 +669,6 @@ static void poly1305_final_avx(Poly1305* ctx, byte* mac)
     "vpaddq	"#t4", "#v2", "#t4"\n\t"         \
     "vpaddq	"#t4", "#v3", "#t4"\n\t"
 
-/* Reduce, in place, the 64 bits of data to 26 bits.
- *
- * h0-h4 contain the 4 H values to reduce.
- * t0-t2 are temporaries.
- * mask contains the 26-bit mask for each 64 bit value in the 256 bit register.
- */
-#define REDUCE_IN(h0, h1, h2, h3, h4,       \
-                  t0, t1, t2, mask)         \
-    "vpsrlq	    $26, "#h0", "#t0"\n\t"  \
-    "vpsrlq	    $26, "#h3", "#t1"\n\t"  \
-    "vpand	"#mask", "#h0", "#h0"\n\t"  \
-    "vpand	"#mask", "#h3", "#h3"\n\t"  \
-    "vpaddq	  "#h1", "#t0", "#h1"\n\t"  \
-    "vpaddq	  "#h4", "#t1", "#h4"\n\t"  \
-                                            \
-    "vpsrlq	    $26, "#h1", "#t0"\n\t"  \
-    "vpsrlq	    $26, "#h4", "#t1"\n\t"  \
-    "vpand	"#mask", "#h1", "#h1"\n\t"  \
-    "vpand	"#mask", "#h4", "#h4"\n\t"  \
-    "vpaddq	  "#h2", "#t0", "#h2"\n\t"  \
-    "vpslld	     $2, "#t1", "#t2"\n\t"  \
-    "vpaddd	  "#t2", "#t1", "#t2"\n\t"  \
-    "vpaddq	  "#h0", "#t2", "#h0"\n\t"  \
-                                            \
-    "vpsrlq	    $26, "#h2", "#t0"\n\t"  \
-    "vpsrlq	    $26, "#h0", "#t1"\n\t"  \
-    "vpand	"#mask", "#h2", "#h2"\n\t"  \
-    "vpand	"#mask", "#h0", "#h0"\n\t"  \
-    "vpaddq	  "#h3", "#t0", "#h3"\n\t"  \
-    "vpaddq	  "#h1", "#t1", "#h1"\n\t"  \
-                                            \
-    "vpsrlq	    $26, "#h3", "#t0"\n\t"  \
-    "vpand	"#mask", "#h3", "#h3"\n\t"  \
-    "vpaddq	  "#h4", "#t0", "#h4"\n\t"
-
 /* Reduce the 64 bits of data to 26 bits.
  *
  * h0-h4 contain the reduced H values.
@@ -722,9 +693,9 @@ static void poly1305_final_avx(Poly1305* ctx, byte* mac)
     "vpaddq	  "#m2", "#t0", "#m2"\n\t"  \
     "vpslld	     $2, "#t1", "#t2"\n\t"  \
     "vpaddd	  "#t2", "#t1", "#t2"\n\t"  \
-    "vpaddq	  "#m0", "#t2", "#m0"\n\t"  \
                                             \
     "vpsrlq	    $26, "#m2", "#t0"\n\t"  \
+    "vpaddq	  "#m0", "#t2", "#m0"\n\t"  \
     "vpsrlq	    $26, "#m0", "#t1"\n\t"  \
     "vpand	"#mask", "#m2", "#h2"\n\t"  \
     "vpand	"#mask", "#m0", "#h0"\n\t"  \
@@ -733,56 +704,63 @@ static void poly1305_final_avx(Poly1305* ctx, byte* mac)
                                             \
     "vpsrlq	    $26, "#m3", "#t0"\n\t"  \
     "vpand	"#mask", "#m3", "#h3"\n\t"  \
-    "vpaddq	  "#h4", "#t0", "#h4"\n\t"
+    "vpaddq	  "#h4", "#t0", "#h4"\n\t"  \
 
 
+/* Process multiple blocks (n * 16 bytes) of data.
+ *
+ * ctx    Poly1305 context.
+ * m      Blocks of message data.
+ * bytes  The number of bytes to process.
+ */
 POLY1305_NOINLINE static void poly1305_blocks_avx2(Poly1305* ctx,
                                            const unsigned char* m, size_t bytes)
 {
     ALIGN256 word64 r4[5][4];
     ALIGN256 word64 s[4][4];
-    register word32 t0 asm("r8");
-    register word32 t1 asm("r9");
-    register word32 t2 asm("r10");
-    register word32 t3 asm("r11");
-    register word32 t4 asm("r12");
+    register word32 t0 asm("r8") = 0;
+    register word32 t1 asm("r9") = 0;
+    register word32 t2 asm("r10") = 0;
+    register word32 t3 asm("r11") = 0;
+    register word32 t4 asm("r12") = 0;
     static const word64 mask[4] = { 0x0000000003ffffff, 0x0000000003ffffff,
                                     0x0000000003ffffff, 0x0000000003ffffff };
+    static const word64 hibit[4] = { 0x1000000, 0x1000000,
+                                     0x1000000, 0x1000000 };
 
     __asm__ __volatile__ (
         "vpxor		%%ymm15, %%ymm15, %%ymm15\n\t"
-        "cmpb		$0x0, %[started]\n\t"
-        "jne		L_begin\n\t"
+        "cmpb		$1, %[started]\n\t"
+        "je		L_begin\n\t"
+        "cmpb		$1, %[fin]\n\t"
+        "je		L_begin\n\t"
         "# Load the message data\n\t"
         LOAD_M(m, %%ymm0, %%ymm1, %%ymm2, %%ymm3, %%ymm4, %[hibit], %%ymm15)
         "vmovdqu	%[mask], %%ymm14\n\t"
         "# Reduce, in place, the message data\n\t"
-        REDUCE_IN(%%ymm0, %%ymm1, %%ymm2, %%ymm3, %%ymm4,
-                  %%ymm10, %%ymm11, %%ymm12, %%ymm14)
+        REDUCE(%%ymm0, %%ymm1, %%ymm2, %%ymm3, %%ymm4,
+               %%ymm0, %%ymm1, %%ymm2, %%ymm3, %%ymm4,
+               %%ymm10, %%ymm11, %%ymm12, %%ymm14)
         "addq		$64, %[m]\n\t"
         "subq		$64, %[bytes]\n\t"
         "jz		L_store\n\t"
+        "jmp		L_load_r4\n\t"
         "\n"
     "L_begin:\n\t"
         "# Load the H values.\n\t"
-        LOAD_H(%[h], %%ymm0, %%ymm1, %%ymm2, %%ymm3, %%ymm4, %%ymm15)
-        "movq		336(%[ctx]), %%r8\n\t"
+        LOAD_H(%[h], %%ymm0, %%ymm1, %%ymm2, %%ymm3, %%ymm4)
         "# Check if there is a power of r to load - otherwise use r^4.\n\t"
-        "cmpq		$0x0, %%r8\n\t"
+        "cmpb		$0, %[fin]\n\t"
         "je		L_load_r4\n\t"
         "\n\t"
-        "movq		344(%[ctx]), %%r9\n\t"
-        "movq		352(%[ctx]), %%r10\n\t"
-        "movq		360(%[ctx]), %%r11\n\t"
-        "# Load the 4 powers of r.\n\t"
-        LOAD_Rx4(%%r8, %%r9, %%r10, %%r11, \
-                 %%ymm5, %%ymm6, %%ymm7, %%ymm8, %%ymm9,
+        "# Load the 4 powers of r - r^4, r^3, r^2, r^1.\n\t"
+        LOAD_Rx4(%%ymm5, %%ymm6, %%ymm7, %%ymm8, %%ymm9,
                  %%ymm10, %%ymm11, %%ymm12, %%ymm13)
         "jmp		L_mul_5\n\t"
         "\n"
      "L_load_r4:\n\t"
         "# Load r^4 into all four positions.\n\t"
-        LOAD_R4(304(%[ctx]), %%ymm5, %%ymm6, %%ymm7, %%ymm8, %%ymm9,
+        LOAD_R4(320(%[ctx]), %%ymm5, %%ymm6, %%ymm7, %%ymm8, %%ymm9,
                 %%ymm13, %%ymm14)
         "\n"
     "L_mul_5:\n\t"
@@ -793,11 +771,11 @@ POLY1305_NOINLINE static void poly1305_blocks_avx2(Poly1305* ctx,
         "vmovdqa	%%ymm11,  32(%[s])\n\t"
         "vmovdqa	%%ymm12,  64(%[s])\n\t"
         "vmovdqa	%%ymm13,  96(%[s])\n\t"
-        "vmovdqa	 %%ymm5,    (%[r4])\n\t"
-        "vmovdqa	 %%ymm6,  32(%[r4])\n\t"
-        "vmovdqa	 %%ymm7,  64(%[r4])\n\t"
-        "vmovdqa	 %%ymm8,  96(%[r4])\n\t"
-        "vmovdqa	 %%ymm9, 128(%[r4])\n\t"
+        "vmovdqa	%%ymm5 ,    (%[r4])\n\t"
+        "vmovdqa	%%ymm6 ,  32(%[r4])\n\t"
+        "vmovdqa	%%ymm7 ,  64(%[r4])\n\t"
+        "vmovdqa	%%ymm8 ,  96(%[r4])\n\t"
+        "vmovdqa	%%ymm9 , 128(%[r4])\n\t"
         "vmovdqu	%[mask], %%ymm14\n\t"
         "\n"
         "# If not finished then loop over data\n\t"
@@ -844,7 +822,7 @@ POLY1305_NOINLINE static void poly1305_blocks_avx2(Poly1305* ctx,
         : [ctx] "r" (ctx), [h] "r" (ctx->hh),
           [r4] "r" (r4), [s] "r" (s),
           [fin] "m" (ctx->finished), [started] "m" (ctx->started),
-          [mask] "m" (mask), [hibit] "m" (ctx->hibit)
+          [mask] "m" (mask), [hibit] "m" (hibit)
         : "ymm0", "ymm1", "ymm2", "ymm3", "ymm4", "ymm5", "ymm6", "ymm7",
           "ymm8", "ymm9", "ymm10", "ymm11", "ymm12", "ymm13", "ymm14", "ymm15",
           "memory"
@@ -852,9 +830,9 @@ POLY1305_NOINLINE static void poly1305_blocks_avx2(Poly1305* ctx,
 
     if (ctx->finished)
     {
-        word64 h0, h1, h2, g0, g1, g2, c;
+        word64 h0, h1, h2, c;
 
-        /* Convert to 64 bit form. */
+        /* Convert to 64-bit form. */
         h0 = (((word64)(t1 & 0x3FFFF)) << 26) +  t0;
         h1 = (((word64)(t3 &   0x3FF)) << 34) +
              (((word64) t2           ) <<  8) + (t1 >> 18);
@@ -869,31 +847,17 @@ POLY1305_NOINLINE static void poly1305_blocks_avx2(Poly1305* ctx,
         h0 += c * 5; c = (h0 >> 44); h0 &= 0xfffffffffff;
         h1 += c;
 
-        /* compute h + -p */
-        g0 = h0 + 5; c = (g0 >> 44); g0 &= 0xfffffffffff;
-        g1 = h1 + c; c = (g1 >> 44); g1 &= 0xfffffffffff;
-        g2 = h2 + c - ((word64)1 << 42);
-
-        /* select h if h < p, or h + -p if h >= p */
-        c = (g2 >> ((sizeof(word64) * 8) - 1)) - 1;
-        g0 &= c;
-        g1 &= c;
-        g2 &= c;
-        c = ~c;
-        h0 = (h0 & c) | g0;
-        h1 = (h1 & c) | g1;
-        h2 = (h2 & c) | g2;
-
-        /* Store for return */
-        ctx->h[0] = h0;
-        ctx->h[1] = h1;
-        ctx->h[2] = h2;
+        /* Convert from 42/44/44 to 2/64/64 bits used and store result. */
+        ctx->h[0] =  h0        | (h1 << 44);
+        ctx->h[1] = (h1 >> 20) | (h2 << 24);
+        ctx->h[2] =  h2 >> 40;
     }
 
     ctx->started = 1;
 }
 
 /* Multiply two 130-bit numbers in 64-bit registers and reduce.
+ * 44 + 44 + 42 = 130 bits
  *
  * r0-r2 are the first operand and the result.
  * a0-a2 are the second operand.
@@ -911,10 +875,22 @@ POLY1305_NOINLINE static void poly1305_blocks_avx2(Poly1305* ctx,
     r0  += c * 5; c = (r0 >> 44);  r0 =    r0  & 0xfffffffffff;              \
     r1  += c
 
+#define SQR_64(r0, r1, r2)                                      \
+    s2 = r2 * (5 << 2);                                         \
+    MUL(d0, r1, s2); ADD(d0, d0); MUL(d, r0, r0); ADD(d0, d);   \
+    MUL(d1, r0, r1); ADD(d1, d1); MUL(d, r2, s2); ADD(d1, d);   \
+    MUL(d2, r0, r2); ADD(d2, d2); MUL(d, r1, r1); ADD(d2, d);   \
+                                                                \
+                  c = SHR(d0, 44); r0 = LO(d0) & 0xfffffffffff; \
+    ADDLO(d1, c); c = SHR(d1, 44); r1 = LO(d1) & 0xfffffffffff; \
+    ADDLO(d2, c); c = SHR(d2, 42); r2 = LO(d2) & 0x3ffffffffff; \
+    r0  += c * 5; c = (r0 >> 44);  r0 =    r0  & 0xfffffffffff; \
+    r1  += c
+
 /* Store the 130-bit number in 64-bit registers as 26-bit values in 32 bits.
  *
  * r0-r2 contains the 130-bit number in 64-bit registers.
- * r is the address of where to store the 26 bits in 32 result.
+ * r is the address of where to store the 26 of 32 bits result.
  */
 #define CONV_64_TO_32(r0, r1, r2, r)                      \
     r[0] = (word32)( r0                    ) & 0x3ffffff; \
@@ -922,9 +898,12 @@ POLY1305_NOINLINE static void poly1305_blocks_avx2(Poly1305* ctx,
     r[2] = (word32)( r1 >> 8               ) & 0x3ffffff; \
     r[3] = (word32)((r1 >> 34) | (r2 << 10)) & 0x3ffffff; \
     r[4] = (word32)( r2 >> 16              )
-  
 
-static void poly1305_setkey_avx2(Poly1305* ctx, const byte* key)
+/* Calculate R^1, R^2, R^3 and R^4 and store them in the context.
+ *
+ * ctx    Poly1305 context.
+ */
+static void poly1305_calc_powers(Poly1305* ctx)
 {
     word64 r0, r1, r2, t0, t1, c;
     word64 r20, r21, r22;
@@ -933,46 +912,18 @@ static void poly1305_setkey_avx2(Poly1305* ctx, const byte* key)
     word64 s1, s2;
     word128 d0, d1, d2, d;
 
-    /* r &= 0xffffffc0ffffffc0ffffffc0fffffff */
-    t0 = ((word64*)key)[0];
-    t1 = ((word64*)key)[1];
-    r0 = ( t0                    ) & 0xffc0fffffff;
-    r1 = ((t0 >> 44) | (t1 << 20)) & 0xfffffc0ffff;
-    r2 = ((t1 >> 24)             ) & 0x00ffffffc0f;
-
-    __asm__ __volatile__ (
-        "vpxor		%%ymm0, %%ymm0, %%ymm0\n\t"
-        "vmovdqu	%%ymm0,   (%[h])\n\t"
-        "vmovdqu	%%ymm0, 32(%[h])\n\t"
-        "vmovdqu	%%ymm0, 64(%[h])\n\t"
-        "vmovdqu	%%ymm0,   (%[r0])\n\t"
-        "vmovdqu	%%ymm0,   (%[r1])\n\t"
-        "vmovdqu	%%ymm0,   (%[r2])\n\t"
-        "vmovdqu	%%ymm0,   (%[r3])\n\t"
-        "vmovdqu	%%ymm0,   (%[r4])\n\t"
-        :
-        : [h] "r" (ctx->hh), [r0] "r" (ctx->r0), [r1] "r" (ctx->r1),
-          [r2] "r" (ctx->r2), [r3] "r" (ctx->r3), [r4] "r" (ctx->r4)
-        : "memory", "ymm0"
-    );
-    /* h = 0 */
-    ctx->h[0] = 0;
-    ctx->h[1] = 0;
-    ctx->h[2] = 0;
-
-    /* save pad for later */
-    ctx->pad[0] = ((word64*)key)[2];
-    ctx->pad[1] = ((word64*)key)[3];
-
-    /* Set 1 for r^0 */
-    ctx->r0[0] = 1;
+    t0 = ctx->r[0];
+    t1 = ctx->r[1];
+    r0 = ( t0                    ) & 0xfffffffffff;
+    r1 = ((t0 >> 44) | (t1 << 20)) & 0xfffffffffff;
+    r2 = ((t1 >> 24)             ) & 0x00fffffffff;
 
     /* Store r^1 */
     CONV_64_TO_32(r0, r1, r2, ctx->r1);
 
     /* Calc and store r^2 */
     r20 = r0; r21 = r1; r22 = r2;
-    MUL_64(r20, r21, r22, r0, r1, r2);
+    SQR_64(r20, r21, r22);
     CONV_64_TO_32(r20, r21, r22, ctx->r2);
 
     /* Calc and store r^3 */
@@ -982,133 +933,83 @@ static void poly1305_setkey_avx2(Poly1305* ctx, const byte* key)
 
     /* Calc and store r^4 */
     r40 = r20; r41 = r21; r42 = r22;
-    MUL_64(r40, r41, r42, r20, r21, r22);
+    SQR_64(r40, r41, r42);
     CONV_64_TO_32(r40, r41, r42, ctx->r4);
 
-    /* NULL means use [r^4, r^4, r^4, r^4] */
-    ctx->rp[0] = ctx->rp[1] = ctx->rp[2] = ctx->rp[3] = NULL;
+}
 
-    /* Message high bits set unless last partial block. */
-    ctx->hibit[0] = ctx->hibit[1] = ctx->hibit[2] = ctx->hibit[3] = 0x1000000;
+/* Set the key to use when processing data.
+ * Initialize the context.
+ * Calls AVX set key function as final function calls AVX code.
+ *
+ * ctx  Poly1305 context.
+ * key  The key data (16 bytes).
+ */
+static void poly1305_setkey_avx2(Poly1305* ctx, const byte* key)
+{
+    poly1305_setkey_avx(ctx, key);
+
+    __asm__ __volatile__ (
+        "vpxor		%%ymm0, %%ymm0, %%ymm0\n\t"
+        "vmovdqu	%%ymm0,    (%[hh])\n\t"
+        "vmovdqu	%%ymm0,  32(%[hh])\n\t"
+        "vmovdqu	%%ymm0,  64(%[hh])\n\t"
+        "vmovdqu	%%ymm0,  96(%[hh])\n\t"
+        "vmovdqu	%%ymm0, 128(%[hh])\n\t"
+        :
+        : [hh] "r" (ctx->hh)
+        : "memory", "ymm0"
+    );
 
     ctx->leftover = 0;
     ctx->finished = 0;
     ctx->started = 0;
 }
 
+/* Calculate the final result - authentication data.
+ * Zeros out the private data in the context.
+ * Calls AVX final function to quickly process last blocks.
+ *
+ * ctx  Poly1305 context.
+ * mac  Buffer to hold 16 bytes - authentication data.
+ */
 static void poly1305_final_avx2(Poly1305* ctx, byte* mac)
 {
-    word64 h0, h1, h2, t0, t1, c;
+    int i, j;
+    int l = (int)ctx->leftover;
 
-    /* process the remaining block */
-    if (ctx->leftover) {
-        size_t i = ctx->leftover;
-
-        if (i & 15)
-            ctx->buffer[i++] = 1;
-        for (; i < POLY1305_BLOCK_SIZE * 4; i++)
-            ctx->buffer[i] = 0;
-
-        ctx->hibit[3] = 0;
-        if (ctx->leftover < 48)
-            ctx->hibit[2] = 0;
-        if (ctx->leftover < 32)
-            ctx->hibit[1] = 0;
-        if (ctx->leftover < 16)
-            ctx->hibit[0] = 0;
-
-        if (ctx->started) {
-            if (ctx->leftover <= 16) {
-                ctx->rp[0] = ctx->r4;
-                ctx->rp[1] = ctx->r4;
-                ctx->rp[2] = ctx->r3;
-                ctx->rp[3] = ctx->r2;
-            }
-            else if (ctx->leftover <= 32) {
-                ctx->rp[0] = ctx->r4;
-                ctx->rp[1] = ctx->r4;
-                ctx->rp[2] = ctx->r4;
-                ctx->rp[3] = ctx->r3;
-            }
-        }
-
+    ctx->finished = 1;
+    if (ctx->started)
         poly1305_blocks_avx2(ctx, ctx->buffer, POLY1305_BLOCK_SIZE * 4);
-    }
-    if (ctx->started) {
-        if (ctx->leftover == 0 || ctx->leftover > 48) {
-            ctx->rp[0] = ctx->r4;
-            ctx->rp[1] = ctx->r3;
-            ctx->rp[2] = ctx->r2;
-            ctx->rp[3] = ctx->r1;
-        }
-        else if (ctx->leftover > 32) {
-            ctx->rp[0] = ctx->r3;
-            ctx->rp[1] = ctx->r2;
-            ctx->rp[2] = ctx->r1;
-            ctx->rp[3] = ctx->r0;
-        }
-        else if (ctx->leftover > 16) {
-            ctx->rp[0] = ctx->r2;
-            ctx->rp[1] = ctx->r1;
-            ctx->rp[2] = ctx->r0;
-            ctx->rp[3] = ctx->r0;
-        }
-        else {
-            ctx->rp[0] = ctx->r1;
-            ctx->rp[1] = ctx->r0;
-            ctx->rp[2] = ctx->r0;
-            ctx->rp[3] = ctx->r0;
-        }
-        ctx->finished = 1;
-        poly1305_blocks_avx2(ctx, ctx->buffer, POLY1305_BLOCK_SIZE * 4);
-    }
 
-    h0 = ctx->h[0];
-    h1 = ctx->h[1];
-    h2 = ctx->h[2];
+    i = l & ~(POLY1305_BLOCK_SIZE - 1);
+    if (i > 0)
+        poly1305_blocks_avx(ctx, ctx->buffer, i);
+    ctx->leftover -= i;
+    for (j = 0; i < l; i++, j++)
+        ctx->buffer[j] = ctx->buffer[i];
 
-    /* h = (h + pad) */
-    t0 = ctx->pad[0];
-    t1 = ctx->pad[1];
-
-    h0 += (( t0                    ) & 0xfffffffffff)    ;
-    c = (h0 >> 44); h0 &= 0xfffffffffff;
-    h1 += (((t0 >> 44) | (t1 << 20)) & 0xfffffffffff) + c;
-    c = (h1 >> 44); h1 &= 0xfffffffffff;
-    h2 += (((t1 >> 24)             ) & 0x3ffffffffff) + c;
-    h2 &= 0x3ffffffffff;
-
-    /* mac = h % (2^128) */
-    h0 = ((h0      ) | (h1 << 44));
-    h1 = ((h1 >> 20) | (h2 << 24));
-
-    ((word64*)mac)[0] = h0;
-    ((word64*)mac)[1] = h1;
+    poly1305_final_avx(ctx, mac);
 
     /* zero out the state */
     __asm__ __volatile__ (
         "vpxor		%%ymm0, %%ymm0, %%ymm0\n\t"
-        "vmovdqu	%%ymm0,   (%[h])\n\t"
-        "vmovdqu	%%ymm0, 32(%[h])\n\t"
-        "vmovdqu	%%ymm0, 64(%[h])\n\t"
-        "vmovdqu	%%ymm0,   (%[r1])\n\t"
-        "vmovdqu	%%ymm0,   (%[r2])\n\t"
-        "vmovdqu	%%ymm0,   (%[r3])\n\t"
-        "vmovdqu	%%ymm0,   (%[r4])\n\t"
+        "vmovdqu	%%ymm0,    (%[hh])\n\t"
+        "vmovdqu	%%ymm0,  32(%[hh])\n\t"
+        "vmovdqu	%%ymm0,  64(%[hh])\n\t"
+        "vmovdqu	%%ymm0,  96(%[hh])\n\t"
+        "vmovdqu	%%ymm0, 128(%[hh])\n\t"
+        "vmovdqu	%%ymm0,    (%[r1])\n\t"
+        "vmovdqu	%%ymm0,    (%[r2])\n\t"
+        "vmovdqu	%%ymm0,    (%[r3])\n\t"
+        "vmovdqu	%%ymm0,    (%[r4])\n\t"
         :
-        : [h] "r" (ctx->hh), [r1] "r" (ctx->r1), [r2] "r" (ctx->r2),
+        : [hh] "r" (ctx->hh), [r1] "r" (ctx->r1), [r2] "r" (ctx->r2),
           [r3] "r" (ctx->r3), [r4] "r" (ctx->r4)
         : "memory", "ymm0"
     );
-    ctx->h[0] = 0;
-    ctx->h[1] = 0;
-    ctx->h[2] = 0;
-    ctx->r[0] = 0;
-    ctx->r[1] = 0;
-    ctx->r[2] = 0;
-    ctx->pad[0] = 0;
-    ctx->pad[1] = 0;
 
+    ctx->leftover = 0;
     ctx->finished = 0;
     ctx->started = 0;
 }
@@ -1296,7 +1197,7 @@ static void poly1305_blocks(Poly1305* ctx, const unsigned char *m,
 static void poly1305_block(Poly1305* ctx, const unsigned char *m)
 {
 #ifdef USE_INTEL_SPEEDUP
-    /* AVX2 does 4 blocks at a time - this func not used. */
+    /* No call to poly1305_block when AVX2, AVX2 does 4 blocks at a time. */
     poly1305_block_avx(ctx, m);
 #else
     poly1305_blocks(ctx, m, POLY1305_BLOCK_SIZE);
@@ -1309,6 +1210,9 @@ int wc_Poly1305SetKey(Poly1305* ctx, const byte* key, word32 keySz)
 #if defined(POLY130564)
     word64 t0,t1;
 #endif
+
+    if (key == NULL)
+        return BAD_FUNC_ARG;
 
 #ifdef CHACHA_AEAD_TEST
     word32 k;
@@ -1593,23 +1497,30 @@ int wc_Poly1305Update(Poly1305* ctx, const byte* m, word32 bytes)
     if (IS_INTEL_AVX2(intel_flags)) {
         /* handle leftover */
         if (ctx->leftover) {
-            size_t want = (4 * POLY1305_BLOCK_SIZE - ctx->leftover);
+            size_t want = sizeof(ctx->buffer) - ctx->leftover;
             if (want > bytes)
                 want = bytes;
+
             for (i = 0; i < want; i++)
                 ctx->buffer[ctx->leftover + i] = m[i];
             bytes -= (word32)want;
             m += want;
             ctx->leftover += want;
-            if (ctx->leftover < 4 * POLY1305_BLOCK_SIZE)
+            if (ctx->leftover < sizeof(ctx->buffer))
                 return 0;
-            poly1305_blocks_avx2(ctx, ctx->buffer, 4 * POLY1305_BLOCK_SIZE);
+
+            if (!ctx->started)
+                poly1305_calc_powers(ctx);
+            poly1305_blocks_avx2(ctx, ctx->buffer, sizeof(ctx->buffer));
             ctx->leftover = 0;
         }
 
         /* process full blocks */
-        if (bytes >= 4 * POLY1305_BLOCK_SIZE) {
-            size_t want = (bytes & ~(4 * POLY1305_BLOCK_SIZE - 1));
+        if (bytes >= sizeof(ctx->buffer)) {
+            size_t want = bytes & ~(sizeof(ctx->buffer) - 1);
+
+            if (!ctx->started)
+                poly1305_calc_powers(ctx);
             poly1305_blocks_avx2(ctx, m, want);
             m += want;
             bytes -= (word32)want;
@@ -1679,7 +1590,7 @@ int wc_Poly1305_MAC(Poly1305* ctx, byte* additional, word32 addSz,
     int ret;
     byte padding[WC_POLY1305_PAD_SZ - 1];
     word32 paddingLen;
-    byte little64[8];
+    byte little64[16];
 
     XMEMSET(padding, 0, sizeof(padding));
 
@@ -1719,13 +1630,7 @@ int wc_Poly1305_MAC(Poly1305* ctx, byte* additional, word32 addSz,
 
     /* size of additional data and input as little endian 64 bit types */
     U32TO64(addSz, little64);
-    ret = wc_Poly1305Update(ctx, little64, sizeof(little64));
-    if (ret)
-    {
-        return ret;
-    }
-
-    U32TO64(sz, little64);
+    U32TO64(sz, little64 + 8);
     ret = wc_Poly1305Update(ctx, little64, sizeof(little64));
     if (ret)
     {

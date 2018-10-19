@@ -1,6 +1,6 @@
 /* rsa.h
  *
- * Copyright (C) 2006-2016 wolfSSL Inc.
+ * Copyright (C) 2006-2017 wolfSSL Inc.
  *
  * This file is part of wolfSSL.
  *
@@ -45,6 +45,7 @@
 #ifdef WOLFSSL_KEY_GEN
     #define MakeRsaKey  wc_MakeRsaKey
     #define RsaKeyToDer wc_RsaKeyToDer
+    #define CheckProbablePrime wc_CheckProbablePrime
 #endif
 
 #ifdef WOLFSSL_ASYNC_CRYPT

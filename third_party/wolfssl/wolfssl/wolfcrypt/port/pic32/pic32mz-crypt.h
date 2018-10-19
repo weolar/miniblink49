@@ -1,6 +1,6 @@
 /* pic32mz-crypt.h
  *
- * Copyright (C) 2006-2016 wolfSSL Inc.
+ * Copyright (C) 2006-2017 wolfSSL Inc.
  *
  * This file is part of wolfSSL.
  *
@@ -27,6 +27,8 @@
     extern "C" {
 #endif
 
+#include <wolfssl/wolfcrypt/settings.h>
+
 #ifdef WOLFSSL_MICROCHIP_PIC32MZ
 
 #ifndef MICROCHIP_PIC32
@@ -49,7 +51,6 @@
 /* Enables support for large hashing */
 /* requires exclusive access to crypto hardware done at application layer */
 #define WOLFSSL_PIC32MZ_LARGE_HASH
-
 
 #include <xc.h>
 #include <sys/endian.h>
@@ -194,9 +195,25 @@ int wc_Pic32DesCrypt(word32 *key, int keyLen, word32 *iv, int ivLen,
 #endif
 
 #ifdef WOLFSSL_PIC32MZ_HASH
+#define WOLFSSL_NO_HASH_RAW
+
 int wc_Pic32Hash(const byte* in, int inLen, word32* out, int outLen, int algo);
 int wc_Pic32HashCopy(hashUpdCache* src, hashUpdCache* dst);
+
+#ifndef NO_MD5
+struct wc_Md5;
+void wc_Md5Pic32Free(struct wc_Md5* md5);
 #endif
+#ifndef NO_SHA
+struct wc_Sha;
+void wc_ShaPic32Free(struct wc_Sha* sha);
+#endif
+
+#ifndef NO_SHA256
+struct wc_Sha256;
+void wc_Sha256Pic32Free(struct wc_Sha256* sha256);
+#endif
+#endif /* WOLFSSL_PIC32MZ_HASH */
 
 #endif /* WOLFSSL_MICROCHIP_PIC32MZ */
 

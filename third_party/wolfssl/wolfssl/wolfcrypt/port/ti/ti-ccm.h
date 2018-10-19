@@ -1,6 +1,6 @@
 /* port/ti/ti_ccm.c
  *
- * Copyright (C) 2006-2016 wolfSSL Inc.
+ * Copyright (C) 2006-2017 wolfSSL Inc.
  *
  * This file is part of wolfSSL.
  *
@@ -35,7 +35,7 @@ int wolfSSL_TI_CCMInit(void) ;
 #ifndef SINGLE_THREADED
 void wolfSSL_TI_lockCCM(void) ;
 void wolfSSL_TI_unlockCCM(void) ;
-#else 
+#else
 #define wolfSSL_TI_lockCCM()
 #define wolfSSL_TI_unlockCCM()
 #endif

@@ -1,6 +1,6 @@
 /* aes.h
  *
- * Copyright (C) 2006-2016 wolfSSL Inc.
+ * Copyright (C) 2006-2017 wolfSSL Inc.
  *
  * This file is part of wolfSSL.
  *
@@ -19,6 +19,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1335, USA
  */
 
+/*!
+    \file wolfssl/wolfcrypt/aes.h
+*/
+
 
 #ifndef WOLF_CRYPT_AES_H
 #define WOLF_CRYPT_AES_H
@@ -27,8 +31,14 @@
 
 #ifndef NO_AES
 
+#if defined(HAVE_FIPS) && \
+    defined(HAVE_FIPS_VERSION) && (HAVE_FIPS_VERSION >= 2)
+    #include <wolfssl/wolfcrypt/fips.h>
+#endif /* HAVE_FIPS_VERSION >= 2 */
+
 /* included for fips @wc_fips */
-#ifdef HAVE_FIPS
+#if defined(HAVE_FIPS) && \
+    (!defined(HAVE_FIPS_VERSION) || (HAVE_FIPS_VERSION < 2))
 #include <cyassl/ctaocrypt/aes.h>
 #if defined(CYASSL_AES_COUNTER) && !defined(WOLFSSL_AES_COUNTER)
     #define WOLFSSL_AES_COUNTER
@@ -38,7 +48,12 @@
 #endif
 #endif
 
-#ifndef HAVE_FIPS /* to avoid redefinition of macros */
+#ifndef WC_NO_RNG
+    #include <wolfssl/wolfcrypt/random.h>
+#endif
+#ifdef STM32_CRYPTO
+    #include <wolfssl/wolfcrypt/port/st/stm32.h>
+#endif
 
 #ifdef WOLFSSL_AESNI
 
@@ -48,28 +63,67 @@
 
 #endif /* WOLFSSL_AESNI */
 
+
 #ifdef WOLFSSL_XILINX_CRYPT
 #include "xsecure_aes.h"
 #endif
 
-#endif /* HAVE_FIPS */
+#ifdef WOLFSSL_AFALG
+/* included for struct msghdr */
+#include <sys/socket.h>
+#endif
+
+#if defined(WOLFSSL_DEVCRYPTO_AES) || defined(WOLFSSL_DEVCRYPTO_CBC)
+#include <wolfssl/wolfcrypt/port/devcrypto/wc_devcrypto.h>
+#endif
+
+#if defined(HAVE_AESGCM) && !defined(WC_NO_RNG)
+    #include <wolfssl/wolfcrypt/random.h>
+#endif
+
 
 #ifdef __cplusplus
     extern "C" {
 #endif
 
-#ifndef HAVE_FIPS /* to avoid redefinition of structures */
+/* these are required for FIPS and non-FIPS */
+enum {
+    AES_128_KEY_SIZE    = 16,  /* for 128 bit             */
+    AES_192_KEY_SIZE    = 24,  /* for 192 bit             */
+    AES_256_KEY_SIZE    = 32,  /* for 256 bit             */
+
+    AES_IV_SIZE         = 16,  /* always block size       */
+};
+
+
+/* avoid redefinition of structs */
+#if !defined(HAVE_FIPS) || \
+    (defined(HAVE_FIPS_VERSION) && (HAVE_FIPS_VERSION >= 2))
 
 #ifdef WOLFSSL_ASYNC_CRYPT
     #include <wolfssl/wolfcrypt/async.h>
 #endif
 
 enum {
-    AES_ENC_TYPE   = 1,   /* cipher unique type */
+    AES_ENC_TYPE   = WC_CIPHER_AES,   /* cipher unique type */
     AES_ENCRYPTION = 0,
     AES_DECRYPTION = 1,
-    KEYWRAP_BLOCK_SIZE = 8,
-    AES_BLOCK_SIZE = 16
+
+    AES_BLOCK_SIZE      = 16,
+
+    KEYWRAP_BLOCK_SIZE  = 8,
+
+    GCM_NONCE_MAX_SZ = 16, /* wolfCrypt's maximum nonce size allowed. */
+    GCM_NONCE_MID_SZ = 12, /* The usual default nonce size for AES-GCM. */
+    GCM_NONCE_MIN_SZ = 8,  /* wolfCrypt's minimum nonce size allowed. */
+    CCM_NONCE_MIN_SZ = 7,
+    CCM_NONCE_MAX_SZ = 13,
+    CTR_SZ   = 4,
+    AES_IV_FIXED_SZ = 4,
+
+#ifdef HAVE_PKCS11
+    AES_MAX_ID_LEN   = 32,
+#endif
 };
 
 
@@ -82,6 +136,10 @@ typedef struct Aes {
     ALIGN16 word32 reg[AES_BLOCK_SIZE / sizeof(word32)];      /* for CBC mode */
     ALIGN16 word32 tmp[AES_BLOCK_SIZE / sizeof(word32)];      /* same         */
 
+#if defined(HAVE_AESGCM) || defined(HAVE_AESCCM)
+    word32 invokeCtr[2];
+    word32 nonceSz;
+#endif
 #ifdef HAVE_AESGCM
     ALIGN16 byte H[AES_BLOCK_SIZE];
 #ifdef GCM_TABLE
@@ -92,12 +150,19 @@ typedef struct Aes {
 #ifdef WOLFSSL_AESNI
     byte use_aesni;
 #endif /* WOLFSSL_AESNI */
+#ifdef WOLF_CRYPTO_DEV
+    int   devId;
+#endif
+#ifdef HAVE_PKCS11
+    byte id[AES_MAX_ID_LEN];
+    int  idLen;
+#endif
 #ifdef WOLFSSL_ASYNC_CRYPT
     word32 asyncKey[AES_MAX_KEY_SIZE/8/sizeof(word32)]; /* raw key */
     word32 asyncIv[AES_BLOCK_SIZE/sizeof(word32)]; /* raw IV */
     WC_ASYNC_DEV asyncDev;
 #endif /* WOLFSSL_ASYNC_CRYPT */
-#ifdef WOLFSSL_AES_COUNTER
+#if defined(WOLFSSL_AES_COUNTER) || defined(WOLFSSL_AES_CFB)
     word32  left;            /* unused bytes left from last call */
 #endif
 #ifdef WOLFSSL_XILINX_CRYPT
@@ -105,6 +170,17 @@ typedef struct Aes {
     XCsuDma     dma;
     word32      key_init[8];
     word32      kup;
+#endif
+#ifdef WOLFSSL_AFALG
+    int alFd; /* server socket to bind to */
+    int rdFd; /* socket to read from */
+    struct msghdr msg;
+    int dir;  /* flag for encrpyt or decrypt */
+#endif
+#if defined(WOLFSSL_DEVCRYPTO) && \
+    (defined(WOLFSSL_DEVCRYPTO_AES) || defined(WOLFSSL_DEVCRYPTO_CBC))
+    word32       devKey[AES_MAX_KEY_SIZE/WOLFSSL_BIT_SIZE/sizeof(word32)]; /* raw key */
+    WC_CRYPTODEV ctx;
 #endif
     void*  heap; /* memory hint to use */
 } Aes;
@@ -145,6 +221,15 @@ WOLFSSL_API int  wc_AesCbcEncrypt(Aes* aes, byte* out,
 WOLFSSL_API int  wc_AesCbcDecrypt(Aes* aes, byte* out,
                                   const byte* in, word32 sz);
 
+#ifdef WOLFSSL_AES_CFB
+WOLFSSL_API int wc_AesCfbEncrypt(Aes* aes, byte* out,
+                                    const byte* in, word32 sz);
+#ifdef HAVE_AES_DECRYPT
+WOLFSSL_API int wc_AesCfbDecrypt(Aes* aes, byte* out,
+                                    const byte* in, word32 sz);
+#endif /* HAVE_AES_DECRYPT */
+#endif /* WOLFSSL_AES_CFB */
+
 #ifdef HAVE_AES_ECB
 WOLFSSL_API int wc_AesEcbEncrypt(Aes* aes, byte* out,
                                   const byte* in, word32 sz);
@@ -164,6 +249,7 @@ WOLFSSL_API int wc_AesEcbDecrypt(Aes* aes, byte* out,
  WOLFSSL_API int  wc_AesSetKeyDirect(Aes* aes, const byte* key, word32 len,
                                 const byte* iv, int dir);
 #endif
+
 #ifdef HAVE_AESGCM
 #ifdef WOLFSSL_XILINX_CRYPT
  WOLFSSL_API int  wc_AesGcmSetKey_ex(Aes* aes, const byte* key, word32 len,
@@ -181,10 +267,31 @@ WOLFSSL_API int wc_AesEcbDecrypt(Aes* aes, byte* out,
                                    const byte* authTag, word32 authTagSz,
                                    const byte* authIn, word32 authInSz);
 
+#ifndef WC_NO_RNG
+ WOLFSSL_API int  wc_AesGcmSetExtIV(Aes* aes, const byte* iv, word32 ivSz);
+ WOLFSSL_API int  wc_AesGcmSetIV(Aes* aes, word32 ivSz,
+                                   const byte* ivFixed, word32 ivFixedSz,
+                                   WC_RNG* rng);
+ WOLFSSL_API int  wc_AesGcmEncrypt_ex(Aes* aes, byte* out,
+                                   const byte* in, word32 sz,
+                                   byte* ivOut, word32 ivOutSz,
+                                   byte* authTag, word32 authTagSz,
+                                   const byte* authIn, word32 authInSz);
+#endif /* WC_NO_RNG */
+
  WOLFSSL_API int wc_GmacSetKey(Gmac* gmac, const byte* key, word32 len);
  WOLFSSL_API int wc_GmacUpdate(Gmac* gmac, const byte* iv, word32 ivSz,
                                const byte* authIn, word32 authInSz,
                                byte* authTag, word32 authTagSz);
+#ifndef WC_NO_RNG
+ WOLFSSL_API int wc_Gmac(const byte* key, word32 keySz, byte* iv, word32 ivSz,
+                               const byte* authIn, word32 authInSz,
+                               byte* authTag, word32 authTagSz, WC_RNG* rng);
+ WOLFSSL_API int wc_GmacVerify(const byte* key, word32 keySz,
+                               const byte* iv, word32 ivSz,
+                               const byte* authIn, word32 authInSz,
+                               const byte* authTag, word32 authTagSz);
+#endif /* WC_NO_RNG */
  WOLFSSL_LOCAL void GHASH(Aes* aes, const byte* a, word32 aSz, const byte* c,
                                word32 cSz, byte* s, word32 sSz);
 #endif /* HAVE_AESGCM */
@@ -200,6 +307,13 @@ WOLFSSL_API int wc_AesEcbDecrypt(Aes* aes, byte* out,
                                    const byte* nonce, word32 nonceSz,
                                    const byte* authTag, word32 authTagSz,
                                    const byte* authIn, word32 authInSz);
+ WOLFSSL_API int  wc_AesCcmSetNonce(Aes* aes,
+                                   const byte* nonce, word32 nonceSz);
+ WOLFSSL_API int  wc_AesCcmEncrypt_ex(Aes* aes, byte* out,
+                                   const byte* in, word32 sz,
+                                   byte* ivOut, word32 ivOutSz,
+                                   byte* authTag, word32 authTagSz,
+                                   const byte* authIn, word32 authInSz);
 #endif /* HAVE_AESCCM */
 #ifdef HAVE_AES_KEYWRAP
  WOLFSSL_API int  wc_AesKeyWrap(const byte* key, word32 keySz,
@@ -213,233 +327,33 @@ WOLFSSL_API int wc_AesEcbDecrypt(Aes* aes, byte* out,
 #endif /* HAVE_AES_KEYWRAP */
 
 #ifdef WOLFSSL_AES_XTS
-/*!
-    \ingroup AES
 
-    \brief This is to help with setting keys to correct encrypt or decrypt type.
-
-    \note Is up to user to call wc_AesXtsFree on aes key when done.
-
-    \return 0 Success
-
-    \param aes   AES keys for encrypt/decrypt process
-    \param key   buffer holding aes key | tweak key
-    \param len   length of key buffer in bytes. Should be twice that of key size.
-                 i.e. 32 for a 16 byte key.
-    \param dir   direction, either AES_ENCRYPTION or AES_DECRYPTION
-    \param heap  heap hint to use for memory. Can be NULL
-    \param devId id to use with async crypto. Can be 0
-
-    _Example_
-    \code
-    XtsAes aes;
-
-    if(wc_AesXtsSetKey(&aes, key, sizeof(key), AES_ENCRYPTION, NULL, 0) != 0)
-    {
-        // Handle error
-    }
-    wc_AesXtsFree(&aes);
-    \endcode
-
-    \sa wc_AesXtsEncrypt
-    \sa wc_AesXtsDecrypt
-    \sa wc_AesXtsFree
-*/
 WOLFSSL_API int wc_AesXtsSetKey(XtsAes* aes, const byte* key,
          word32 len, int dir, void* heap, int devId);
 
-
-/*!
-    \ingroup AES
-
-    \brief Same process as wc_AesXtsEncrypt but uses a word64 type as the tweak
-           value instead of a byte array. This just converts the word64 to a
-           byte array and calls wc_AesXtsEncrypt.
-
-    \return 0 Success
-
-    \param aes    AES keys to use for block encrypt/decrypt
-    \param out    output buffer to hold cipher text
-    \param in     input plain text buffer to encrypt
-    \param sz     size of both out and in buffers
-    \param sector value to use for tweak
-
-    _Example_
-    \code
-    XtsAes aes;
-    unsigned char plain[SIZE];
-    unsigned char cipher[SIZE];
-    word64 s = VALUE;
-
-    //set up keys with AES_ENCRYPTION as dir
-
-    if(wc_AesXtsEncryptSector(&aes, cipher, plain, SIZE, s) != 0)
-    {
-        // Handle error
-    }
-    wc_AesXtsFree(&aes);
-    \endcode
-
-    \sa wc_AesXtsEncrypt
-    \sa wc_AesXtsDecrypt
-    \sa wc_AesXtsSetKey
-    \sa wc_AesXtsFree
-*/
 WOLFSSL_API int wc_AesXtsEncryptSector(XtsAes* aes, byte* out,
          const byte* in, word32 sz, word64 sector);
 
-
-/*!
-    \ingroup AES
-
-    \brief Same process as wc_AesXtsDecrypt but uses a word64 type as the tweak
-           value instead of a byte array. This just converts the word64 to a
-           byte array.
-
-    \return 0 Success
-
-    \param aes    AES keys to use for block encrypt/decrypt
-    \param out    output buffer to hold plain text
-    \param in     input cipher text buffer to decrypt
-    \param sz     size of both out and in buffers
-    \param sector value to use for tweak
-
-    _Example_
-    \code
-    XtsAes aes;
-    unsigned char plain[SIZE];
-    unsigned char cipher[SIZE];
-    word64 s = VALUE;
-
-    //set up aes key with AES_DECRYPTION as dir and tweak with AES_ENCRYPTION
-
-    if(wc_AesXtsDecryptSector(&aes, plain, cipher, SIZE, s) != 0)
-    {
-        // Handle error
-    }
-    wc_AesXtsFree(&aes);
-    \endcode
-
-    \sa wc_AesXtsEncrypt
-    \sa wc_AesXtsDecrypt
-    \sa wc_AesXtsSetKey
-    \sa wc_AesXtsFree
-*/
 WOLFSSL_API int wc_AesXtsDecryptSector(XtsAes* aes, byte* out,
          const byte* in, word32 sz, word64 sector);
 
-
-/*!
-    \ingroup AES
-
-    \brief AES with XTS mode. (XTS) XEX encryption with Tweak and cipher text
-           Stealing.
-
-    \return 0 Success
-
-    \param aes   AES keys to use for block encrypt/decrypt
-    \param out   output buffer to hold cipher text
-    \param in    input plain text buffer to encrypt
-    \param sz    size of both out and in buffers
-    \param i     value to use for tweak
-    \param iSz   size of i buffer, should always be AES_BLOCK_SIZE but having
-                 this input adds a sanity check on how the user calls the
-                 function.
-
-    _Example_
-    \code
-    XtsAes aes;
-    unsigned char plain[SIZE];
-    unsigned char cipher[SIZE];
-    unsigned char i[AES_BLOCK_SIZE];
-
-    //set up key with AES_ENCRYPTION as dir
-
-    if(wc_AesXtsEncrypt(&aes, cipher, plain, SIZE, i, sizeof(i)) != 0)
-    {
-        // Handle error
-    }
-    wc_AesXtsFree(&aes);
-    \endcode
-
-    \sa wc_AesXtsDecrypt
-    \sa wc_AesXtsSetKey
-    \sa wc_AesXtsFree
-*/
 WOLFSSL_API int wc_AesXtsEncrypt(XtsAes* aes, byte* out,
          const byte* in, word32 sz, const byte* i, word32 iSz);
 
-
-/*!
-    \ingroup AES
-
-    \brief Same process as encryption but Aes key is AES_DECRYPTION type.
-
-    \return 0 Success
-
-    \param aes   AES keys to use for block encrypt/decrypt
-    \param out   output buffer to hold plain text
-    \param in    input cipher text buffer to decrypt
-    \param sz    size of both out and in buffers
-    \param i     value to use for tweak
-    \param iSz   size of i buffer, should always be AES_BLOCK_SIZE but having
-                 this input adds a sanity check on how the user calls the
-                 function.
-    _Example_
-    \code
-    XtsAes aes;
-    unsigned char plain[SIZE];
-    unsigned char cipher[SIZE];
-    unsigned char i[AES_BLOCK_SIZE];
-
-    //set up key with AES_DECRYPTION as dir and tweak with AES_ENCRYPTION
-
-    if(wc_AesXtsDecrypt(&aes, plain, cipher, SIZE, i, sizeof(i)) != 0)
-    {
-        // Handle error
-    }
-    wc_AesXtsFree(&aes);
-    \endcode
-
-    \sa wc_AesXtsEncrypt
-    \sa wc_AesXtsSetKey
-    \sa wc_AesXtsFree
-*/
 WOLFSSL_API int wc_AesXtsDecrypt(XtsAes* aes, byte* out,
         const byte* in, word32 sz, const byte* i, word32 iSz);
 
-
-/*!
-    \ingroup AES
-
-    \brief This is to free up any resources used by the XtsAes structure
-
-    \return 0 Success
-
-    \param aes AES keys to free
-
-    _Example_
-    \code
-    XtsAes aes;
-
-    if(wc_AesXtsSetKey(&aes, key, sizeof(key), AES_ENCRYPTION, NULL, 0) != 0)
-    {
-        // Handle error
-    }
-    wc_AesXtsFree(&aes);
-    \endcode
-
-    \sa wc_AesXtsEncrypt
-    \sa wc_AesXtsDecrypt
-    \sa wc_AesXtsSetKey
-*/
 WOLFSSL_API int wc_AesXtsFree(XtsAes* aes);
 #endif
 
 WOLFSSL_API int wc_AesGetKeySize(Aes* aes, word32* keySize);
 
-WOLFSSL_API int  wc_AesInit(Aes*, void*, int);
-WOLFSSL_API void wc_AesFree(Aes*);
+WOLFSSL_API int  wc_AesInit(Aes* aes, void* heap, int devId);
+#ifdef HAVE_PKCS11
+WOLFSSL_API int  wc_AesInit_Id(Aes* aes, unsigned char* id, int len, void* heap,
+        int devId);
+#endif
+WOLFSSL_API void wc_AesFree(Aes* aes);
 
 #ifdef __cplusplus
     } /* extern "C" */

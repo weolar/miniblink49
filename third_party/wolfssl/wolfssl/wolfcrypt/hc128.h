@@ -1,6 +1,6 @@
 /* hc128.h
  *
- * Copyright (C) 2006-2016 wolfSSL Inc.
+ * Copyright (C) 2006-2017 wolfSSL Inc.
  *
  * This file is part of wolfSSL.
  *
@@ -19,6 +19,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1335, USA
  */
 
+/*!
+    \file wolfssl/wolfcrypt/hc128.h
+*/
+
 
 #ifndef WOLF_CRYPT_HC128_H
 #define WOLF_CRYPT_HC128_H
@@ -32,7 +36,7 @@
 #endif
 
 enum {
-	HC128_ENC_TYPE    =  6    /* cipher unique type */
+	HC128_ENC_TYPE =  WC_CIPHER_HC128,     /* cipher unique type */
 };
 
 /* HC-128 stream cipher */

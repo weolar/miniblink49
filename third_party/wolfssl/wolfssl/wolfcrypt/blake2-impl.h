@@ -12,7 +12,7 @@
 */
 /* blake2-impl.h
  *
- * Copyright (C) 2006-2016 wolfSSL Inc.
+ * Copyright (C) 2006-2017 wolfSSL Inc.
  *
  * This file is part of wolfSSL.
  *
@@ -38,7 +38,7 @@
 
 #include <wolfssl/wolfcrypt/types.h>
 
-static INLINE word32 load32( const void *src )
+static WC_INLINE word32 load32( const void *src )
 {
 #if defined(LITTLE_ENDIAN_ORDER)
   return *( word32 * )( src );
@@ -52,7 +52,7 @@ static INLINE word32 load32( const void *src )
 #endif
 }
 
-static INLINE word64 load64( const void *src )
+static WC_INLINE word64 load64( const void *src )
 {
 #if defined(LITTLE_ENDIAN_ORDER)
   return *( word64 * )( src );
@@ -70,7 +70,7 @@ static INLINE word64 load64( const void *src )
 #endif
 }
 
-static INLINE void store32( void *dst, word32 w )
+static WC_INLINE void store32( void *dst, word32 w )
 {
 #if defined(LITTLE_ENDIAN_ORDER)
   *( word32 * )( dst ) = w;
@@ -83,7 +83,7 @@ static INLINE void store32( void *dst, word32 w )
 #endif
 }
 
-static INLINE void store64( void *dst, word64 w )
+static WC_INLINE void store64( void *dst, word64 w )
 {
 #if defined(LITTLE_ENDIAN_ORDER)
   *( word64 * )( dst ) = w;
@@ -100,7 +100,7 @@ static INLINE void store64( void *dst, word64 w )
 #endif
 }
 
-static INLINE word64 load48( const void *src )
+static WC_INLINE word64 load48( const void *src )
 {
   const byte *p = ( const byte * )src;
   word64 w = *p++;
@@ -112,7 +112,7 @@ static INLINE word64 load48( const void *src )
   return w;
 }
 
-static INLINE void store48( void *dst, word64 w )
+static WC_INLINE void store48( void *dst, word64 w )
 {
   byte *p = ( byte * )dst;
   *p++ = ( byte )w; w >>= 8;
@@ -123,28 +123,28 @@ static INLINE void store48( void *dst, word64 w )
   *p++ = ( byte )w;
 }
 
-static INLINE word32 rotl32( const word32 w, const unsigned c )
+static WC_INLINE word32 rotl32( const word32 w, const unsigned c )
 {
   return ( w << c ) | ( w >> ( 32 - c ) );
 }
 
-static INLINE word64 rotl64( const word64 w, const unsigned c )
+static WC_INLINE word64 rotl64( const word64 w, const unsigned c )
 {
   return ( w << c ) | ( w >> ( 64 - c ) );
 }
 
-static INLINE word32 rotr32( const word32 w, const unsigned c )
+static WC_INLINE word32 rotr32( const word32 w, const unsigned c )
 {
   return ( w >> c ) | ( w << ( 32 - c ) );
 }
 
-static INLINE word64 rotr64( const word64 w, const unsigned c )
+static WC_INLINE word64 rotr64( const word64 w, const unsigned c )
 {
   return ( w >> c ) | ( w << ( 64 - c ) );
 }
 
 /* prevents compiler optimizing out memset() */
-static INLINE void secure_zero_memory( void *v, word64 n )
+static WC_INLINE void secure_zero_memory( void *v, word64 n )
 {
   volatile byte *p = ( volatile byte * )v;
 

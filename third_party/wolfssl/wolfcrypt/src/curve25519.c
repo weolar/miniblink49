@@ -1,6 +1,6 @@
 /* curve25519.c
  *
- * Copyright (C) 2006-2016 wolfSSL Inc.
+ * Copyright (C) 2006-2017 wolfSSL Inc.
  *
  * This file is part of wolfSSL.
  *
@@ -46,7 +46,7 @@
 
 const curve25519_set_type curve25519_sets[] = {
     {
-        32,
+        CURVE25519_KEYSIZE,
         "CURVE25519",
     }
 };
@@ -66,6 +66,10 @@ int wc_curve25519_make_key(WC_RNG* rng, int keysize, curve25519_key* key)
     /* currently only a key size of 32 bytes is used */
     if (keysize != CURVE25519_KEYSIZE)
         return ECC_BAD_ARG_E;
+
+#ifndef FREESCALE_LTC_ECC
+    fe_init();
+#endif
 
     /* random number for private key */
     ret = wc_RNG_GenerateBlock(rng, key->k.point, keysize);
@@ -182,20 +186,15 @@ int wc_curve25519_export_public(curve25519_key* key, byte* out, word32* outLen)
 int wc_curve25519_export_public_ex(curve25519_key* key, byte* out,
                                    word32* outLen, int endian)
 {
-    word32 keySz;
-
     if (key == NULL || out == NULL || outLen == NULL)
         return BAD_FUNC_ARG;
 
-    /* check size of outgoing key */
-    keySz  = wc_curve25519_size(key);
-
     /* check and set outgoing key size */
-    if (*outLen < keySz) {
-        *outLen = keySz;
+    if (*outLen < CURVE25519_KEYSIZE) {
+        *outLen = CURVE25519_KEYSIZE;
         return ECC_BAD_ARG_E;
     }
-    *outLen = keySz;
+    *outLen = CURVE25519_KEYSIZE;
 
     if (endian == EC25519_BIG_ENDIAN) {
         int i;
@@ -205,7 +204,7 @@ int wc_curve25519_export_public_ex(curve25519_key* key, byte* out,
             out[i] = key->p.point[CURVE25519_KEYSIZE - i - 1];
     }
     else
-        XMEMCPY(out, key->p.point, keySz);
+        XMEMCPY(out, key->p.point, CURVE25519_KEYSIZE);
 
     return 0;
 }
@@ -227,15 +226,12 @@ int wc_curve25519_import_public(const byte* in, word32 inLen,
 int wc_curve25519_import_public_ex(const byte* in, word32 inLen,
                                 curve25519_key* key, int endian)
 {
-    word32 keySz;
-
     /* sanity check */
     if (key == NULL || in == NULL)
         return BAD_FUNC_ARG;
 
     /* check size of incoming keys */
-    keySz = wc_curve25519_size(key);
-    if (inLen != keySz)
+    if (inLen != CURVE25519_KEYSIZE)
        return ECC_BAD_ARG_E;
 
     if (endian == EC25519_BIG_ENDIAN) {
@@ -282,19 +278,16 @@ int wc_curve25519_export_private_raw(curve25519_key* key, byte* out,
 int wc_curve25519_export_private_raw_ex(curve25519_key* key, byte* out,
                                         word32* outLen, int endian)
 {
-    word32 keySz;
-
     /* sanity check */
     if (key == NULL || out == NULL || outLen == NULL)
         return BAD_FUNC_ARG;
 
     /* check size of outgoing buffer */
-    keySz = wc_curve25519_size(key);
-    if (*outLen < keySz) {
-        *outLen = keySz;
+    if (*outLen < CURVE25519_KEYSIZE) {
+        *outLen = CURVE25519_KEYSIZE;
         return ECC_BAD_ARG_E;
     }
-    *outLen = keySz;
+    *outLen = CURVE25519_KEYSIZE;
 
     if (endian == EC25519_BIG_ENDIAN) {
         int i;
@@ -304,7 +297,7 @@ int wc_curve25519_export_private_raw_ex(curve25519_key* key, byte* out,
             out[i] = key->k.point[CURVE25519_KEYSIZE - i - 1];
     }
     else
-        XMEMCPY(out, key->k.point, keySz);
+        XMEMCPY(out, key->k.point, CURVE25519_KEYSIZE);
 
     return 0;
 }
@@ -389,7 +382,7 @@ int wc_curve25519_import_private_ex(const byte* priv, word32 privSz,
         return BAD_FUNC_ARG;
 
     /* check size of incoming keys */
-    if ((int)privSz != wc_curve25519_size(key))
+    if ((int)privSz != CURVE25519_KEYSIZE)
         return ECC_BAD_ARG_E;
 
     if (endian == EC25519_BIG_ENDIAN) {
@@ -400,7 +393,7 @@ int wc_curve25519_import_private_ex(const byte* priv, word32 privSz,
             key->k.point[i] = priv[CURVE25519_KEYSIZE - i - 1];
     }
     else
-        XMEMCPY(key->k.point, priv, privSz);
+        XMEMCPY(key->k.point, priv, CURVE25519_KEYSIZE);
 
     key->dp = &curve25519_sets[0];
 
@@ -420,15 +413,15 @@ int wc_curve25519_init(curve25519_key* key)
     if (key == NULL)
        return BAD_FUNC_ARG;
 
+    XMEMSET(key, 0, sizeof(*key));
+
     /* currently the format for curve25519 */
     key->dp = &curve25519_sets[0];
 
-    XMEMSET(key->k.point, 0, key->dp->size);
-    XMEMSET(key->p.point, 0, key->dp->size);
-    #ifdef FREESCALE_LTC_ECC
-        XMEMSET(key->k.pointY, 0, key->dp->size);
-        XMEMSET(key->p.pointY, 0, key->dp->size);
-    #endif
+#ifndef FREESCALE_LTC_ECC
+    fe_init();
+#endif
+
     return 0;
 }
 

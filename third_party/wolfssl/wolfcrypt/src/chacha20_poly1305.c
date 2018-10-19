@@ -1,6 +1,6 @@
 /* chacha.c
  *
- * Copyright (C) 2006-2016 wolfSSL Inc.
+ * Copyright (C) 2006-2017 wolfSSL Inc.
  *
  * This file is part of wolfSSL.
  *
@@ -178,84 +178,55 @@ static int calculateAuthTag(
     Poly1305 poly1305Ctx;
     byte padding[CHACHA20_POLY1305_MAC_PADDING_ALIGNMENT - 1];
     word32 paddingLen;
-    byte little64[8];
+    byte little64[16];
 
     XMEMSET(padding, 0, sizeof(padding));
 
     /* Initialize Poly1305 */
-
     err = wc_Poly1305SetKey(&poly1305Ctx, inAuthKey,
                             CHACHA20_POLY1305_AEAD_KEYSIZE);
     if (err)
-    {
         return err;
-    }
 
     /* Create the authTag by MAC'ing the following items: */
-
     /* -- AAD */
-
     if (inAAD && inAADLen)
     {
         err = wc_Poly1305Update(&poly1305Ctx, inAAD, inAADLen);
-
         /* -- padding1: pad the AAD to 16 bytes */
-
-        paddingLen = -(int)inAADLen & (CHACHA20_POLY1305_MAC_PADDING_ALIGNMENT - 1);
+        paddingLen = -(int)inAADLen &
+                                  (CHACHA20_POLY1305_MAC_PADDING_ALIGNMENT - 1);
         if (paddingLen)
-        {
             err += wc_Poly1305Update(&poly1305Ctx, padding, paddingLen);
-        }
 
         if (err)
-        {
             return err;
-        }
     }
 
     /* -- Ciphertext */
-
     err = wc_Poly1305Update(&poly1305Ctx, inCiphertext, inCiphertextLen);
     if (err)
-    {
         return err;
-    }
 
     /* -- padding2: pad the ciphertext to 16 bytes */
-
     paddingLen = -(int)inCiphertextLen &
                                   (CHACHA20_POLY1305_MAC_PADDING_ALIGNMENT - 1);
     if (paddingLen)
     {
         err = wc_Poly1305Update(&poly1305Ctx, padding, paddingLen);
         if (err)
-        {
             return err;
-        }
     }
 
     /* -- AAD length as a 64-bit little endian integer */
-
     word32ToLittle64(inAADLen, little64);
-
-    err = wc_Poly1305Update(&poly1305Ctx, little64, sizeof(little64));
-    if (err)
-    {
-        return err;
-    }
-
     /* -- Ciphertext length as a 64-bit little endian integer */
-
-    word32ToLittle64(inCiphertextLen, little64);
-
+    word32ToLittle64(inCiphertextLen, little64 + 8);
     err = wc_Poly1305Update(&poly1305Ctx, little64, sizeof(little64));
     if (err)
-    {
         return err;
-    }
 
     /* Finalize the auth tag */
-
     err = wc_Poly1305Final(&poly1305Ctx, outAuthTag);
 
     return err;
@@ -264,12 +235,16 @@ static int calculateAuthTag(
 
 static void word32ToLittle64(const word32 inLittle32, byte outLittle64[8])
 {
-    XMEMSET(outLittle64, 0, 8);
+#ifndef WOLFSSL_X86_64_BUILD
+    XMEMSET(outLittle64 + 4, 0, 4);
 
     outLittle64[0] = (byte)(inLittle32 & 0x000000FF);
     outLittle64[1] = (byte)((inLittle32 & 0x0000FF00) >> 8);
     outLittle64[2] = (byte)((inLittle32 & 0x00FF0000) >> 16);
     outLittle64[3] = (byte)((inLittle32 & 0xFF000000) >> 24);
+#else
+    *(word64*)outLittle64 = inLittle32;
+#endif
 }
 
 

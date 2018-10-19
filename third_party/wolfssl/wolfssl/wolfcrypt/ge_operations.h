@@ -1,6 +1,6 @@
 /* ge_operations.h
  *
- * Copyright (C) 2006-2016 wolfSSL Inc.
+ * Copyright (C) 2006-2017 wolfSSL Inc.
  *
  * This file is part of wolfSSL.
  *
@@ -47,6 +47,8 @@ Representations:
 
 #ifdef ED25519_SMALL
   typedef byte     ge[F25519_SIZE];
+#elif defined(CURVED25519_X64)
+  typedef int64_t  ge[4];
 #elif defined(CURVED25519_128BIT)
   typedef int64_t  ge[5];
 #else
@@ -101,21 +103,6 @@ typedef struct {
   ge Z;
   ge T2d;
 } ge_cached;
-
-WOLFSSL_LOCAL void ge_p2_0(ge_p2 *);
-WOLFSSL_LOCAL void ge_p3_0(ge_p3 *);
-WOLFSSL_LOCAL void ge_precomp_0(ge_precomp *);
-WOLFSSL_LOCAL void ge_p3_to_p2(ge_p2 *,const ge_p3 *);
-WOLFSSL_LOCAL void ge_p3_to_cached(ge_cached *,const ge_p3 *);
-WOLFSSL_LOCAL void ge_p1p1_to_p2(ge_p2 *,const ge_p1p1 *);
-WOLFSSL_LOCAL void ge_p1p1_to_p3(ge_p3 *,const ge_p1p1 *);
-WOLFSSL_LOCAL void ge_p2_dbl(ge_p1p1 *,const ge_p2 *);
-WOLFSSL_LOCAL void ge_p3_dbl(ge_p1p1 *,const ge_p3 *);
-
-WOLFSSL_LOCAL void ge_madd(ge_p1p1 *,const ge_p3 *,const ge_precomp *);
-WOLFSSL_LOCAL void ge_msub(ge_p1p1 *,const ge_p3 *,const ge_precomp *);
-WOLFSSL_LOCAL void ge_add(ge_p1p1 *,const ge_p3 *,const ge_cached *);
-WOLFSSL_LOCAL void ge_sub(ge_p1p1 *,const ge_p3 *,const ge_cached *);
 
 #endif /* !ED25519_SMALL */
 

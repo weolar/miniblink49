@@ -27,7 +27,7 @@
 
 /* camellia.c
  *
- * Copyright (C) 2006-2016 wolfSSL Inc.
+ * Copyright (C) 2006-2017 wolfSSL Inc.
  *
  * This file is part of wolfSSL.
  *
@@ -1598,10 +1598,11 @@ int wc_CamelliaDecryptDirect(Camellia* cam, byte* out, const byte* in)
 
 int wc_CamelliaCbcEncrypt(Camellia* cam, byte* out, const byte* in, word32 sz)
 {
+    word32 blocks;
     if (cam == NULL || out == NULL || in == NULL) {
         return BAD_FUNC_ARG;
     }
-    word32 blocks = sz / CAMELLIA_BLOCK_SIZE;
+    blocks = sz / CAMELLIA_BLOCK_SIZE;
 
     while (blocks--) {
         xorbuf((byte*)cam->reg, in, CAMELLIA_BLOCK_SIZE);
@@ -1619,10 +1620,11 @@ int wc_CamelliaCbcEncrypt(Camellia* cam, byte* out, const byte* in, word32 sz)
 
 int wc_CamelliaCbcDecrypt(Camellia* cam, byte* out, const byte* in, word32 sz)
 {
+    word32 blocks;
     if (cam == NULL || out == NULL || in == NULL) {
         return BAD_FUNC_ARG;
     }
-    word32 blocks = sz / CAMELLIA_BLOCK_SIZE;
+    blocks = sz / CAMELLIA_BLOCK_SIZE;
 
     while (blocks--) {
         XMEMCPY(cam->tmp, in, CAMELLIA_BLOCK_SIZE);

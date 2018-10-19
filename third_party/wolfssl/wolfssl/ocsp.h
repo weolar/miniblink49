@@ -1,6 +1,6 @@
 /* ocsp.h
  *
- * Copyright (C) 2006-2016 wolfSSL Inc.
+ * Copyright (C) 2006-2017 wolfSSL Inc.
  *
  * This file is part of wolfSSL.
  *
@@ -37,7 +37,7 @@
 
 typedef struct WOLFSSL_OCSP WOLFSSL_OCSP;
 
-#if defined(WOLFSSL_NGINX) || defined(WOLFSSL_HAPROXY)
+#if defined(OPENSSL_ALL) || defined(WOLFSSL_NGINX) || defined(WOLFSSL_HAPROXY)
 typedef struct OcspResponse WOLFSSL_OCSP_BASICRESP;
 
 typedef struct OcspRequest WOLFSSL_OCSP_CERTID;
@@ -49,12 +49,14 @@ WOLFSSL_LOCAL int  InitOCSP(WOLFSSL_OCSP*, WOLFSSL_CERT_MANAGER*);
 WOLFSSL_LOCAL void FreeOCSP(WOLFSSL_OCSP*, int dynamic);
 
 WOLFSSL_LOCAL int  CheckCertOCSP(WOLFSSL_OCSP*, DecodedCert*,
-                                            WOLFSSL_BUFFER_INFO* responseBuffer);
+                                           WOLFSSL_BUFFER_INFO* responseBuffer);
+WOLFSSL_LOCAL int  CheckCertOCSP_ex(WOLFSSL_OCSP*, DecodedCert*,
+                             WOLFSSL_BUFFER_INFO* responseBuffer, WOLFSSL* ssl);
 WOLFSSL_LOCAL int  CheckOcspRequest(WOLFSSL_OCSP* ocsp,
-                   OcspRequest* ocspRequest, WOLFSSL_BUFFER_INFO* responseBuffer);
+                 OcspRequest* ocspRequest, WOLFSSL_BUFFER_INFO* responseBuffer);
 
 
-#if defined(WOLFSSL_NGINX) || defined(WOLFSSL_HAPROXY)
+#if defined(OPENSSL_ALL) || defined(WOLFSSL_NGINX) || defined(WOLFSSL_HAPROXY)
 
 WOLFSSL_API int wolfSSL_OCSP_resp_find_status(WOLFSSL_OCSP_BASICRESP *bs,
     WOLFSSL_OCSP_CERTID* id, int* status, int* reason,
@@ -71,7 +73,7 @@ WOLFSSL_API WOLFSSL_OCSP_CERTID* wolfSSL_OCSP_cert_to_id(
 
 WOLFSSL_API void wolfSSL_OCSP_BASICRESP_free(WOLFSSL_OCSP_BASICRESP* basicResponse);
 WOLFSSL_API int wolfSSL_OCSP_basic_verify(WOLFSSL_OCSP_BASICRESP *bs,
-    STACK_OF(WOLFSSL_X509) *certs, WOLFSSL_X509_STORE *st, unsigned long flags);
+    WOLF_STACK_OF(WOLFSSL_X509) *certs, WOLFSSL_X509_STORE *st, unsigned long flags);
 
 WOLFSSL_API void wolfSSL_OCSP_RESPONSE_free(OcspResponse* response);
 WOLFSSL_API OcspResponse* wolfSSL_d2i_OCSP_RESPONSE_bio(WOLFSSL_BIO* bio,

@@ -1,6 +1,6 @@
 /* ocsp.c
  *
- * Copyright (C) 2006-2016 wolfSSL Inc.
+ * Copyright (C) 2006-2017 wolfSSL Inc.
  *
  * This file is part of wolfSSL.
  *
@@ -122,8 +122,7 @@ static int xstat2err(int st)
     }
 }
 
-
-int CheckCertOCSP(WOLFSSL_OCSP* ocsp, DecodedCert* cert, buffer* responseBuffer)
+int CheckCertOCSP_ex(WOLFSSL_OCSP* ocsp, DecodedCert* cert, buffer* responseBuffer, WOLFSSL* ssl)
 {
     int ret = OCSP_LOOKUP_FAIL;
 
@@ -147,6 +146,7 @@ int CheckCertOCSP(WOLFSSL_OCSP* ocsp, DecodedCert* cert, buffer* responseBuffer)
 
     if (InitOcspRequest(ocspRequest, cert, ocsp->cm->ocspSendNonce,
                                                          ocsp->cm->heap) == 0) {
+        ocspRequest->ssl = ssl;
         ret = CheckOcspRequest(ocsp, ocspRequest, responseBuffer);
 
         FreeOcspRequest(ocspRequest);
@@ -158,6 +158,10 @@ int CheckCertOCSP(WOLFSSL_OCSP* ocsp, DecodedCert* cert, buffer* responseBuffer)
 
     WOLFSSL_LEAVE("CheckCertOCSP", ret);
     return ret;
+}
+int CheckCertOCSP(WOLFSSL_OCSP* ocsp, DecodedCert* cert, buffer* responseBuffer)
+{
+    return CheckCertOCSP_ex(ocsp, cert, responseBuffer, NULL);
 }
 
 static int GetOcspEntry(WOLFSSL_OCSP* ocsp, OcspRequest* request,
@@ -220,9 +224,11 @@ static int GetOcspStatus(WOLFSSL_OCSP* ocsp, OcspRequest* request,
     }
     else if (*status) {
 #ifndef NO_ASN_TIME
-        if (ValidateDate((*status)->thisDate, (*status)->thisDateFormat, BEFORE)
+        if (XVALIDATE_DATE((*status)->thisDate,
+                                             (*status)->thisDateFormat, BEFORE)
         &&  ((*status)->nextDate[0] != 0)
-        &&  ValidateDate((*status)->nextDate, (*status)->nextDateFormat, AFTER))
+        &&  XVALIDATE_DATE((*status)->nextDate,
+                                             (*status)->nextDateFormat, AFTER))
 #endif
         {
             ret = xstat2err((*status)->status);
@@ -386,8 +392,13 @@ int CheckOcspRequest(WOLFSSL_OCSP* ocsp, OcspRequest* ocspRequest,
     const char* url            = NULL;
     int         urlSz          = 0;
     int         ret            = -1;
+    WOLFSSL*    ssl;
+    void*       ioCtx;
 
     WOLFSSL_ENTER("CheckOcspRequest");
+
+    if (ocsp == NULL || ocspRequest == NULL)
+        return BAD_FUNC_ARG;
 
     if (responseBuffer) {
         responseBuffer->buffer = NULL;
@@ -402,12 +413,16 @@ int CheckOcspRequest(WOLFSSL_OCSP* ocsp, OcspRequest* ocspRequest,
     if (ret != OCSP_INVALID_STATUS)
         return ret;
 
-#if defined(WOLFSSL_NGINX) || defined(WOLFSSL_HAPROXY)
-    if (ocsp->statusCb != NULL && ocspRequest->ssl != NULL) {
-        ret = ocsp->statusCb((WOLFSSL*)ocspRequest->ssl, ocsp->cm->ocspIOCtx);
+    /* get SSL and IOCtx */
+    ssl = (WOLFSSL*)ocspRequest->ssl;
+    ioCtx = (ssl && ssl->ocspIOCtx != NULL) ?
+                                        ssl->ocspIOCtx : ocsp->cm->ocspIOCtx;
+
+#if defined(OPENSSL_ALL) || defined(WOLFSSL_NGINX) || defined(WOLFSSL_HAPROXY)
+    if (ocsp->statusCb != NULL && ssl != NULL) {
+        ret = ocsp->statusCb(ssl, ioCtx);
         if (ret == 0) {
-            ret = wolfSSL_get_ocsp_response((WOLFSSL*)ocspRequest->ssl,
-                                            &response);
+            ret = wolfSSL_get_ocsp_response(ssl, &response);
             ret = CheckResponse(ocsp, response, ret, responseBuffer, status,
                                 entry, NULL);
             if (response != NULL)
@@ -442,11 +457,11 @@ int CheckOcspRequest(WOLFSSL_OCSP* ocsp, OcspRequest* ocspRequest,
 
     requestSz = EncodeOcspRequest(ocspRequest, request, requestSz);
     if (requestSz > 0 && ocsp->cm->ocspIOCb) {
-        responseSz = ocsp->cm->ocspIOCb(ocsp->cm->ocspIOCtx, url, urlSz,
+        responseSz = ocsp->cm->ocspIOCb(ioCtx, url, urlSz,
                                         request, requestSz, &response);
     }
     if (responseSz == WOLFSSL_CBIO_ERR_WANT_READ) {
-        ret = WANT_READ;
+        ret = OCSP_WANT_READ;
     }
 
     XFREE(request, ocsp->cm->heap, DYNAMIC_TYPE_OCSP);
@@ -457,13 +472,13 @@ int CheckOcspRequest(WOLFSSL_OCSP* ocsp, OcspRequest* ocspRequest,
     }
 
     if (response != NULL && ocsp->cm->ocspRespFreeCb)
-        ocsp->cm->ocspRespFreeCb(ocsp->cm->ocspIOCtx, response);
+        ocsp->cm->ocspRespFreeCb(ioCtx, response);
 
     WOLFSSL_LEAVE("CheckOcspRequest", ret);
     return ret;
 }
 
-#if defined(WOLFSSL_NGINX) || defined(WOLFSSL_HAPROXY)
+#if defined(OPENSSL_ALL) || defined(WOLFSSL_NGINX) || defined(WOLFSSL_HAPROXY)
 
 int wolfSSL_OCSP_resp_find_status(WOLFSSL_OCSP_BASICRESP *bs,
     WOLFSSL_OCSP_CERTID* id, int* status, int* reason,
@@ -471,11 +486,11 @@ int wolfSSL_OCSP_resp_find_status(WOLFSSL_OCSP_BASICRESP *bs,
     WOLFSSL_ASN1_TIME** nextupd)
 {
     if (bs == NULL || id == NULL)
-        return SSL_FAILURE;
+        return WOLFSSL_FAILURE;
 
     /* Only supporting one certificate status in asn.c. */
     if (CompareOcspReqResp(id, bs) != 0)
-        return SSL_FAILURE;
+        return WOLFSSL_FAILURE;
 
     if (status != NULL)
         *status = bs->status->status;
@@ -490,7 +505,7 @@ int wolfSSL_OCSP_resp_find_status(WOLFSSL_OCSP_BASICRESP *bs,
     if (revtime != NULL)
         *revtime = NULL;
 
-    return SSL_SUCCESS;
+    return WOLFSSL_SUCCESS;
 }
 
 const char *wolfSSL_OCSP_cert_status_str(long s)
@@ -515,7 +530,7 @@ int wolfSSL_OCSP_check_validity(WOLFSSL_ASN1_TIME* thisupd,
     (void)sec;
     (void)maxsec;
     /* Dates validated in DecodeSingleResponse. */
-    return SSL_SUCCESS;
+    return WOLFSSL_SUCCESS;
 }
 
 void wolfSSL_OCSP_CERTID_free(WOLFSSL_OCSP_CERTID* certId)
@@ -581,19 +596,24 @@ void wolfSSL_OCSP_BASICRESP_free(WOLFSSL_OCSP_BASICRESP* basicResponse)
 /* Signature verified in DecodeBasicOcspResponse.
  * But no store available to verify certificate. */
 int wolfSSL_OCSP_basic_verify(WOLFSSL_OCSP_BASICRESP *bs,
-    STACK_OF(WOLFSSL_X509) *certs, WOLFSSL_X509_STORE *st, unsigned long flags)
+    WOLF_STACK_OF(WOLFSSL_X509) *certs, WOLFSSL_X509_STORE *st, unsigned long flags)
 {
     DecodedCert cert;
-    int         ret = SSL_SUCCESS;
+    int         ret = WOLFSSL_SUCCESS;
 
     (void)certs;
 
     if (flags & OCSP_NOVERIFY)
-        return SSL_SUCCESS;
+        return WOLFSSL_SUCCESS;
+
+#ifdef OPENSSL_EXTRA
+    if (bs->verifyError != OCSP_VERIFY_ERROR_NONE)
+        return WOLFSSL_FAILURE;
+#endif
 
     InitDecodedCert(&cert, bs->cert, bs->certSz, NULL);
     if (ParseCertRelative(&cert, CERT_TYPE, VERIFY, st->cm) < 0)
-        ret = SSL_FAILURE;
+        ret = WOLFSSL_FAILURE;
     FreeDecodedCert(&cert);
 
     return ret;
@@ -620,26 +640,29 @@ OcspResponse* wolfSSL_d2i_OCSP_RESPONSE_bio(WOLFSSL_BIO* bio,
     if (bio == NULL)
         return NULL;
 
-    if (bio->type == BIO_MEMORY) {
+    if (bio->type == WOLFSSL_BIO_MEMORY) {
         len = wolfSSL_BIO_get_mem_data(bio, &data);
         if (len <= 0 || data == NULL) {
             return NULL;
         }
     }
-    else if (bio->type == BIO_FILE) {
+#ifndef NO_FILESYSTEM
+    else if (bio->type == WOLFSSL_BIO_FILE) {
         long i;
         long l;
 
         i = XFTELL(bio->file);
         if (i < 0)
             return NULL;
-        XFSEEK(bio->file, 0, SEEK_END);
+        if(XFSEEK(bio->file, 0, SEEK_END) != 0)
+            return NULL;
         l = XFTELL(bio->file);
         if (l < 0)
             return NULL;
-        XFSEEK(bio->file, i, SEEK_SET);
+        if (XFSEEK(bio->file, i, SEEK_SET) != 0)
+            return NULL;
 
-        /* check calulated length */
+        /* check calculated length */
         if (l - i <= 0)
             return NULL;
 
@@ -650,6 +673,7 @@ OcspResponse* wolfSSL_d2i_OCSP_RESPONSE_bio(WOLFSSL_BIO* bio,
 
         len = wolfSSL_BIO_read(bio, (char *)data, (int)l);
     }
+#endif
     else
         return NULL;
 

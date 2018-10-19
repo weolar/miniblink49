@@ -1,6 +1,6 @@
 /* fp_mont_small.i
  *
- * Copyright (C) 2006-2016 wolfSSL Inc.
+ * Copyright (C) 2006-2017 wolfSSL Inc.
  *
  * This file is part of wolfSSL.
  *
@@ -23,13 +23,26 @@
 
 #ifdef TFM_SMALL_MONT_SET
 /* computes x/R == x (mod N) via Montgomery Reduction */
-void fp_montgomery_reduce_small(fp_int *a, fp_int *m, fp_digit mp)
+int fp_montgomery_reduce_small(fp_int *a, fp_int *m, fp_digit mp)
 {
-   fp_digit c[FP_SIZE], *_c, *tmpm, mu, cy;
+#ifndef WOLFSSL_SMALL_STACK
+   fp_digit c[FP_SIZE];
+#else
+   fp_digit *c;
+#endif
+   fp_digit *_c, *tmpm, mu, cy;
    int      oldused, x, y, pa;
 
+#ifdef WOLFSSL_SMALL_STACK
+   /* only allocate space for what's needed for window plus res */
+   c = (fp_digit*)XMALLOC(sizeof(fp_digit)*FP_SIZE, NULL, DYNAMIC_TYPE_TMP_BUFFER);
+   if (c == NULL) {
+      return FP_MEM;
+   }
+#endif
+
    /* now zero the buff */
-   XMEMSET(c, 0, sizeof(c));
+   XMEMSET(c, 0, sizeof(fp_digit)*(FP_SIZE));
 
    pa = m->used;
 
@@ -3851,6 +3864,11 @@ void fp_montgomery_reduce_small(fp_int *a, fp_int *m, fp_digit mp)
   if (fp_cmp_mag (a, m) != FP_LT) {
     s_fp_sub (a, m, a);
   }
+
+#ifdef WOLFSSL_SMALL_STACK
+  XFREE(c, NULL, DYNAMIC_TYPE_TMP_BUFFER);
+#endif
+  return FP_OKAY;
 }
 
 #endif

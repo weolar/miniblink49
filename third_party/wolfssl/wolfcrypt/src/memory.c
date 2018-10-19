@@ -1,6 +1,6 @@
 /* memory.c
  *
- * Copyright (C) 2006-2016 wolfSSL Inc.
+ * Copyright (C) 2006-2017 wolfSSL Inc.
  *
  * This file is part of wolfSSL.
  *
@@ -34,44 +34,66 @@
     #define WOLFSSL_MALLOC_CHECK
 #endif
 
+
+/*
+Possible memory options:
+ * NO_WOLFSSL_MEMORY:               Disables wolf memory callback support. When not defined settings.h defines USE_WOLFSSL_MEMORY.
+ * WOLFSSL_STATIC_MEMORY:           Turns on the use of static memory buffers and functions.
+                                        This allows for using static memory instead of dynamic.
+ * WOLFSSL_STATIC_ALIGN:            Define defaults to 16 to indicate static memory alignment.
+ * HAVE_IO_POOL:                    Enables use of static thread safe memory pool for input/output buffers.
+ * XMALLOC_OVERRIDE:                Allows override of the XMALLOC, XFREE and XREALLOC macros.
+ * XMALLOC_USER:                    Allows custom XMALLOC, XFREE and XREALLOC functions to be defined.
+ * WOLFSSL_NO_MALLOC:               Disables the fall-back case to use STDIO malloc/free when no callbacks are set.
+ * WOLFSSL_TRACK_MEMORY:            Enables memory tracking for total stats and list of allocated memory.
+ * WOLFSSL_DEBUG_MEMORY:            Enables extra function and line number args for memory callbacks.
+ * WOLFSSL_DEBUG_MEMORY_PRINT:      Enables printing of each malloc/free.
+ * WOLFSSL_MALLOC_CHECK:            Reports malloc or alignment failure using WOLFSSL_STATIC_ALIGN
+ * WOLFSSL_FORCE_MALLOC_FAIL_TEST:  Used for internal testing to induce random malloc failures.
+ * WOLFSSL_HEAP_TEST:               Used for internal testing of heap hint
+ */
+
+
 #ifdef USE_WOLFSSL_MEMORY
 
 #include <wolfssl/wolfcrypt/memory.h>
 #include <wolfssl/wolfcrypt/error-crypt.h>
 #include <wolfssl/wolfcrypt/logging.h>
 
-#if defined(WOLFSSL_MALLOC_CHECK) || defined(WOLFSSL_TRACK_MEMORY_FULL)
+#if defined(WOLFSSL_DEBUG_MEMORY) && defined(WOLFSSL_DEBUG_MEMORY_PRINT)
+#include <stdio.h>
+#endif
+
+#ifdef WOLFSSL_FORCE_MALLOC_FAIL_TEST
+    static int gMemFailCountSeed;
+    static int gMemFailCount;
+    void wolfSSL_SetMemFailCount(int memFailCount)
+    {
+        if (gMemFailCountSeed == 0) {
+            gMemFailCountSeed = memFailCount;
+            gMemFailCount = memFailCount;
+        }
+    }
+#endif
+#if defined(WOLFSSL_MALLOC_CHECK) || defined(WOLFSSL_TRACK_MEMORY_FULL) || \
+                                                     defined(WOLFSSL_MEMORY_LOG)
     #include <stdio.h>
 #endif
 
 
 /* Set these to default values initially. */
-static wolfSSL_Malloc_cb  malloc_function = 0;
-static wolfSSL_Free_cb    free_function = 0;
-static wolfSSL_Realloc_cb realloc_function = 0;
+static wolfSSL_Malloc_cb  malloc_function = NULL;
+static wolfSSL_Free_cb    free_function = NULL;
+static wolfSSL_Realloc_cb realloc_function = NULL;
 
 int wolfSSL_SetAllocators(wolfSSL_Malloc_cb  mf,
                           wolfSSL_Free_cb    ff,
                           wolfSSL_Realloc_cb rf)
 {
-    int res = 0;
-
-    if (mf)
-        malloc_function = mf;
-    else
-        res = BAD_FUNC_ARG;
-
-    if (ff)
-        free_function = ff;
-    else
-        res = BAD_FUNC_ARG;
-
-    if (rf)
-        realloc_function = rf;
-    else
-        res = BAD_FUNC_ARG;
-
-    return res;
+    malloc_function = mf;
+    free_function = ff;
+    realloc_function = rf;
+    return 0;
 }
 
 int wolfSSL_GetAllocators(wolfSSL_Malloc_cb*  mf,
@@ -101,13 +123,44 @@ void* wolfSSL_Malloc(size_t size)
     #endif
     }
     else {
+    #ifndef WOLFSSL_NO_MALLOC
         res = malloc(size);
+    #else
+        WOLFSSL_MSG("No malloc available");
+    #endif
     }
 
-    #ifdef WOLFSSL_MALLOC_CHECK
-        if (res == NULL)
-            puts("wolfSSL_malloc failed");
-    #endif
+#ifdef WOLFSSL_DEBUG_MEMORY
+#if defined(WOLFSSL_DEBUG_MEMORY_PRINT) && !defined(WOLFSSL_TRACK_MEMORY)
+    printf("Alloc: %p -> %u at %s:%d\n", res, (word32)size, func, line);
+#else
+    (void)func;
+    (void)line;
+#endif
+#endif
+
+#ifdef WOLFSSL_MALLOC_CHECK
+    if (res == NULL)
+        WOLFSSL_MSG("wolfSSL_malloc failed");
+#endif
+
+#ifdef WOLFSSL_FORCE_MALLOC_FAIL_TEST
+    if (res && --gMemFailCount == 0) {
+        printf("\n---FORCED MEM FAIL TEST---\n");
+        if (free_function) {
+        #ifdef WOLFSSL_DEBUG_MEMORY
+            free_function(res, func, line);
+        #else
+            free_function(res);
+        #endif
+        }
+        else {
+            free(res); /* clear */
+        }
+        gMemFailCount = gMemFailCountSeed; /* reset */
+        return NULL;
+    }
+#endif
 
     return res;
 }
@@ -118,6 +171,15 @@ void wolfSSL_Free(void *ptr, const char* func, unsigned int line)
 void wolfSSL_Free(void *ptr)
 #endif
 {
+#ifdef WOLFSSL_DEBUG_MEMORY
+#if defined(WOLFSSL_DEBUG_MEMORY_PRINT) && !defined(WOLFSSL_TRACK_MEMORY)
+    printf("Free: %p at %s:%d\n", ptr, func, line);
+#else
+    (void)func;
+    (void)line;
+#endif
+#endif
+
     if (free_function) {
     #ifdef WOLFSSL_DEBUG_MEMORY
         free_function(ptr, func, line);
@@ -126,7 +188,11 @@ void wolfSSL_Free(void *ptr)
     #endif
     }
     else {
+    #ifndef WOLFSSL_NO_MALLOC
         free(ptr);
+    #else
+        WOLFSSL_MSG("No free available");
+    #endif
     }
 }
 
@@ -146,7 +212,11 @@ void* wolfSSL_Realloc(void *ptr, size_t size)
     #endif
     }
     else {
+    #ifndef WOLFSSL_NO_MALLOC
         res = realloc(ptr, size);
+    #else
+        WOLFSSL_MSG("No realloc available");
+    #endif
     }
 
     return res;
@@ -533,7 +603,11 @@ void* wolfSSL_Malloc(size_t size, void* heap, int type)
             }
         #else
         #ifndef WOLFSSL_NO_MALLOC
-            res = malloc(size);
+            #ifdef FREERTOS
+                res = pvPortMalloc(size);
+            #else
+                res = malloc(size);
+            #endif
         #else
             WOLFSSL_MSG("No heap hint found to use and no malloc");
             #ifdef WOLFSSL_DEBUG_MEMORY
@@ -667,7 +741,11 @@ void wolfSSL_Free(void *ptr, void* heap, int type)
             }
         #endif
         #ifndef WOLFSSL_NO_MALLOC
-            free(ptr);
+            #ifdef FREERTOS
+                vPortFree(ptr);
+            #else
+                free(ptr);
+            #endif
         #else
             WOLFSSL_MSG("Error trying to call free when turned off");
         #endif /* WOLFSSL_NO_MALLOC */
@@ -921,4 +999,101 @@ void XFREE(void *p, void* heap, int type)
 }
 
 #endif /* HAVE_IO_POOL */
+
+#ifdef WOLFSSL_MEMORY_LOG
+void *xmalloc(size_t n, void* heap, int type, const char* func,
+              const char* file, unsigned int line)
+{
+    void*   p;
+    word32* p32;
+
+    if (malloc_function)
+        p32 = malloc_function(n + sizeof(word32) * 4);
+    else
+        p32 = malloc(n + sizeof(word32) * 4);
+
+    p32[0] = n;
+    p = (void*)(p32 + 4);
+
+    fprintf(stderr, "Alloc: %p -> %u (%d) at %s:%s:%d\n", p, (word32)n, type,
+                                                              func, file, line);
+
+    (void)heap;
+
+    return p;
+}
+void *xrealloc(void *p, size_t n, void* heap, int type, const char* func,
+               const char* file, unsigned int line)
+{
+    void*   newp = NULL;
+    word32* p32;
+    word32* oldp32 = NULL;
+    word32  oldLen;
+
+    if (p != NULL) {
+        oldp32 = (word32*)p;
+        oldp32 -= 4;
+        oldLen = oldp32[0];
+    }
+
+    if (realloc_function)
+        p32 = realloc_function(oldp32, n + sizeof(word32) * 4);
+    else
+        p32 = realloc(oldp32, n + sizeof(word32) * 4);
+
+    if (p32 != NULL) {
+        p32[0] = n;
+        newp = (void*)(p32 + 4);
+
+        fprintf(stderr, "Alloc: %p -> %u (%d) at %s:%s:%d\n", newp, (word32)n,
+                                                        type, func, file, line);
+        if (p != NULL) {
+            fprintf(stderr, "Free: %p -> %u (%d) at %s:%s:%d\n", p, oldLen,
+                                                        type, func, file, line);
+        }
+    }
+
+    (void)heap;
+
+    return newp;
+}
+void xfree(void *p, void* heap, int type, const char* func, const char* file,
+           unsigned int line)
+{
+    word32* p32 = (word32*)p;
+
+    if (p != NULL) {
+        p32 -= 4;
+
+        fprintf(stderr, "Free: %p -> %u (%d) at %s:%s:%d\n", p, p32[0], type,
+                                                              func, file, line);
+
+        if (free_function)
+            free_function(p32);
+        else
+            free(p32);
+    }
+
+    (void)heap;
+}
+#endif /* WOLFSSL_MEMORY_LOG */
+
+#ifdef WOLFSSL_STACK_LOG
+/* Note: this code only works with GCC using -finstrument-functions. */
+void __attribute__((no_instrument_function))
+     __cyg_profile_func_enter(void *func,  void *caller)
+{
+    register void* sp asm("sp");
+    fprintf(stderr, "ENTER: %016lx %p\n", (size_t)func, sp);
+    (void)caller;
+}
+
+void __attribute__((no_instrument_function))
+     __cyg_profile_func_exit(void *func, void *caller)
+{
+    register void* sp asm("sp");
+    fprintf(stderr, "EXIT: %016lx %p\n", (size_t)func, sp);
+    (void)caller;
+}
+#endif
 

@@ -1,6 +1,6 @@
 /* mem_track.h
  *
- * Copyright (C) 2006-2016 wolfSSL Inc.
+ * Copyright (C) 2006-2017 wolfSSL Inc.
  *
  * This file is part of wolfSSL.
  *
@@ -62,30 +62,62 @@
 
     #include "wolfssl/wolfcrypt/logging.h"
 
+    #if defined(WOLFSSL_TRACK_MEMORY)
+        #define DO_MEM_STATS
+        #if defined(__linux__) || defined(__MACH__)
+            #define DO_MEM_LIST
+        #endif
+    #endif
+
+
     typedef struct memoryStats {
-        size_t totalAllocs;     /* number of allocations */
-        size_t totalDeallocs;   /* number of deallocations */
-        size_t totalBytes;      /* total number of bytes allocated */
-        size_t peakBytes;       /* concurrent max bytes */
-        size_t currentBytes;    /* total current bytes in use */
+        long totalAllocs;     /* number of allocations */
+        long totalDeallocs;   /* number of deallocations */
+        long totalBytes;      /* total number of bytes allocated */
+        long peakBytes;       /* concurrent max bytes */
+        long currentBytes;    /* total current bytes in use */
     } memoryStats;
 
     typedef struct memHint {
         size_t thisSize;      /* size of this memory */
+
+    #ifdef DO_MEM_LIST
+        struct memHint* next;
+        struct memHint* prev;
+        #ifdef WOLFSSL_DEBUG_MEMORY
+            const char* func;
+            unsigned int line;
+        #endif
+    #endif
         void*  thisMemory;    /* actual memory for user */
     } memHint;
 
     typedef struct memoryTrack {
         union {
             memHint hint;
-            byte    alignit[16];   /* make sure we have strong alignment */
+            byte    alignit[sizeof(memHint) + ((16-1) & ~(16-1))]; /* make sure we have strong alignment */
         } u;
     } memoryTrack;
 
-    #if defined(WOLFSSL_TRACK_MEMORY)
-        #define DO_MEM_STATS
-        static memoryStats ourMemStats;
+#ifdef DO_MEM_LIST
+    /* track allocations and report at end */
+    typedef struct memoryList {
+        memHint* head;
+        memHint* tail;
+        word32   count;
+    } memoryList;
+#endif
+
+#if defined(WOLFSSL_TRACK_MEMORY)
+    static memoryStats ourMemStats;
+
+    #ifdef DO_MEM_LIST
+        #include <pthread.h>
+        static memoryList ourMemList;
+        static pthread_mutex_t memLock = PTHREAD_MUTEX_INITIALIZER;
     #endif
+#endif
+
 
     /* if defined to not using inline then declare function prototypes */
     #ifdef NO_INLINE
@@ -106,12 +138,13 @@
     #endif
 
 #ifdef WOLFSSL_DEBUG_MEMORY
-    STATIC INLINE void* TrackMalloc(size_t sz, const char* func, unsigned int line)
+    STATIC WC_INLINE void* TrackMalloc(size_t sz, const char* func, unsigned int line)
 #else
-    STATIC INLINE void* TrackMalloc(size_t sz)
+    STATIC WC_INLINE void* TrackMalloc(size_t sz)
 #endif
     {
         memoryTrack* mt;
+        memHint* header;
 
         if (sz == 0)
             return NULL;
@@ -120,57 +153,126 @@
         if (mt == NULL)
             return NULL;
 
-        mt->u.hint.thisSize   = sz;
-        mt->u.hint.thisMemory = (byte*)mt + sizeof(memoryTrack);
+        header = &mt->u.hint;
+        header->thisSize   = sz;
+        header->thisMemory = (byte*)mt + sizeof(memoryTrack);
 
-#ifdef WOLFSSL_DEBUG_MEMORY
-        printf("Alloc: %p -> %u at %s:%d\n", mt->u.hint.thisMemory, (word32)sz, func, line);
-#endif
+    #ifdef WOLFSSL_DEBUG_MEMORY
+    #ifdef WOLFSSL_DEBUG_MEMORY_PRINT
+        printf("Alloc: %p -> %u at %s:%d\n", header->thisMemory, (word32)sz, func, line);
+    #else
+        (void)func;
+        (void)line;
+    #endif
+    #endif
 
-#ifdef DO_MEM_STATS
+    #ifdef DO_MEM_STATS
         ourMemStats.totalAllocs++;
         ourMemStats.totalBytes   += sz;
         ourMemStats.currentBytes += sz;
         if (ourMemStats.currentBytes > ourMemStats.peakBytes)
             ourMemStats.peakBytes = ourMemStats.currentBytes;
-#endif
+    #endif
+    #ifdef DO_MEM_LIST
+        if (pthread_mutex_lock(&memLock) == 0) {
+        #ifdef WOLFSSL_DEBUG_MEMORY
+            header->func = func;
+            header->line = line;
+        #endif
 
-        return mt->u.hint.thisMemory;
+            /* Setup event */
+            header->next = NULL;
+            if (ourMemList.tail == NULL)  {
+                ourMemList.head = header;
+            }
+            else {
+                ourMemList.tail->next = header;
+                header->prev = ourMemList.tail;
+            }
+            ourMemList.tail = header;      /* add to the end either way */
+            ourMemList.count++;
+
+            pthread_mutex_unlock(&memLock);
+        }
+    #endif
+
+        return header->thisMemory;
     }
 
 
 #ifdef WOLFSSL_DEBUG_MEMORY
-    STATIC INLINE void TrackFree(void* ptr, const char* func, unsigned int line)
+    STATIC WC_INLINE void TrackFree(void* ptr, const char* func, unsigned int line)
 #else
-    STATIC INLINE void TrackFree(void* ptr)
+    STATIC WC_INLINE void TrackFree(void* ptr)
 #endif
     {
         memoryTrack* mt;
+        memHint* header;
+        size_t sz;
 
         if (ptr == NULL) {
             return;
         }
 
-        mt = (memoryTrack*)ptr;
-        --mt;   /* same as minus sizeof(memoryTrack), removes header */
+        mt = (memoryTrack*)((byte*)ptr - sizeof(memoryTrack));
+        header = &mt->u.hint;
+        sz = header->thisSize;
 
-#ifdef DO_MEM_STATS
-        ourMemStats.currentBytes -= mt->u.hint.thisSize;
-        ourMemStats.totalDeallocs++;
-#endif
+    #ifdef DO_MEM_LIST
+        if (pthread_mutex_lock(&memLock) == 0) 
+        {
+    #endif
+
+    #ifdef DO_MEM_STATS
+            ourMemStats.currentBytes -= header->thisSize;
+            ourMemStats.totalDeallocs++;
+    #endif
+
+    #ifdef DO_MEM_LIST
+            if (header == ourMemList.head && header == ourMemList.tail) {
+                ourMemList.head = NULL;
+                ourMemList.tail = NULL;
+            }
+            else if (header == ourMemList.head) {
+                ourMemList.head = header->next;
+                ourMemList.head->prev = NULL;
+            }
+            else if (header == ourMemList.tail) {
+                ourMemList.tail = header->prev;
+                ourMemList.tail->next = NULL;
+            }
+            else {
+                memHint* next = header->next;
+                memHint* prev = header->prev;
+                if (next)
+                    next->prev = prev;
+                if (prev)
+                    prev->next = next;
+            }
+            ourMemList.count--;
+
+            pthread_mutex_unlock(&memLock);
+        }
+    #endif
 
 #ifdef WOLFSSL_DEBUG_MEMORY
-        printf("Free: %p -> %u at %s:%d\n", ptr, (word32)mt->u.hint.thisSize, func, line);
+#ifdef WOLFSSL_DEBUG_MEMORY_PRINT
+        printf("Free: %p -> %u at %s:%d\n", ptr, (word32)sz, func, line);
+#else
+        (void)func;
+        (void)line;
 #endif
+#endif
+        (void)sz;
 
         free(mt);
     }
 
 
 #ifdef WOLFSSL_DEBUG_MEMORY
-    STATIC INLINE void* TrackRealloc(void* ptr, size_t sz, const char* func, unsigned int line)
+    STATIC WC_INLINE void* TrackRealloc(void* ptr, size_t sz, const char* func, unsigned int line)
 #else
-    STATIC INLINE void* TrackRealloc(void* ptr, size_t sz)
+    STATIC WC_INLINE void* TrackRealloc(void* ptr, size_t sz)
 #endif
     {
     #ifdef WOLFSSL_DEBUG_MEMORY
@@ -181,11 +283,14 @@
 
         if (ptr) {
             /* if realloc is bigger, don't overread old ptr */
-            memoryTrack* mt = (memoryTrack*)ptr;
-            --mt;  /* same as minus sizeof(memoryTrack), removes header */
+            memoryTrack* mt;
+            memHint* header;
 
-            if (mt->u.hint.thisSize < sz)
-                sz = mt->u.hint.thisSize;
+            mt = (memoryTrack*)((byte*)ptr - sizeof(memoryTrack));
+            header = &mt->u.hint;
+
+            if (header->thisSize < sz)
+                sz = header->thisSize;
         }
 
         if (ret && ptr)
@@ -203,13 +308,28 @@
     }
 
 #ifdef WOLFSSL_TRACK_MEMORY
-    STATIC INLINE int InitMemoryTracker(void)
+    static wolfSSL_Malloc_cb mfDefault = NULL;
+    static wolfSSL_Free_cb ffDefault = NULL;
+    static wolfSSL_Realloc_cb rfDefault = NULL;
+
+    STATIC WC_INLINE int InitMemoryTracker(void)
     {
-        int ret = wolfSSL_SetAllocators(TrackMalloc, TrackFree, TrackRealloc);
+        int ret;
+
+        ret = wolfSSL_GetAllocators(&mfDefault, &ffDefault, &rfDefault);
+        if (ret < 0) {
+            printf("wolfSSL GetAllocators failed to get the defaults\n");
+        }
+        ret = wolfSSL_SetAllocators(TrackMalloc, TrackFree, TrackRealloc);
         if (ret < 0) {
             printf("wolfSSL SetAllocators failed for track memory\n");
             return ret;
         }
+
+    #ifdef DO_MEM_LIST
+        if (pthread_mutex_lock(&memLock) == 0)
+        {
+    #endif
 
     #ifdef DO_MEM_STATS
         ourMemStats.totalAllocs  = 0;
@@ -218,24 +338,59 @@
         ourMemStats.peakBytes    = 0;
         ourMemStats.currentBytes = 0;
     #endif
+    
+    #ifdef DO_MEM_LIST
+        XMEMSET(&ourMemList, 0, sizeof(ourMemList));
+
+        pthread_mutex_unlock(&memLock);
+        }
+    #endif
 
         return ret;
     }
 
-    STATIC INLINE void ShowMemoryTracker(void)
+    STATIC WC_INLINE void ShowMemoryTracker(void)
     {
-    #ifdef DO_MEM_STATS
-        printf("total   Allocs   = %9lu\n",
-                                       (unsigned long)ourMemStats.totalAllocs);
-        printf("total   Deallocs = %9lu\n",
-                                       (unsigned long)ourMemStats.totalDeallocs);
-        printf("total   Bytes    = %9lu\n",
-                                       (unsigned long)ourMemStats.totalBytes);
-        printf("peak    Bytes    = %9lu\n",
-                                       (unsigned long)ourMemStats.peakBytes);
-        printf("current Bytes    = %9lu\n",
-                                       (unsigned long)ourMemStats.currentBytes);
+    #ifdef DO_MEM_LIST
+        if (pthread_mutex_lock(&memLock) == 0)
+        {
     #endif
+
+    #ifdef DO_MEM_STATS
+        printf("total   Allocs   = %9ld\n", ourMemStats.totalAllocs);
+        printf("total   Deallocs = %9ld\n", ourMemStats.totalDeallocs);
+        printf("total   Bytes    = %9ld\n", ourMemStats.totalBytes);
+        printf("peak    Bytes    = %9ld\n", ourMemStats.peakBytes);
+        printf("current Bytes    = %9ld\n", ourMemStats.currentBytes);
+    #endif
+
+    #ifdef DO_MEM_LIST
+        if (ourMemList.count > 0) {
+            /* print list of allocations */
+            memHint* header;
+            for (header = ourMemList.head; header != NULL; header = header->next) {
+                printf("Leak: Ptr %p, Size %u"
+                #ifdef WOLFSSL_DEBUG_MEMORY
+                    ", Func %s, Line %d"
+                #endif
+                    "\n",
+                    (byte*)header + sizeof(memHint), (unsigned int)header->thisSize
+                #ifdef WOLFSSL_DEBUG_MEMORY
+                    , header->func, header->line
+                #endif
+                );
+            }
+        }
+
+        pthread_mutex_unlock(&memLock);
+        }
+    #endif
+    }
+
+    STATIC WC_INLINE int CleanupMemoryTracker(void)
+    {
+        /* restore default allocators */
+        return wolfSSL_SetAllocators(mfDefault, ffDefault, rfDefault);
     }
 #endif
 

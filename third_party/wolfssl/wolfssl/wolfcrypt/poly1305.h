@@ -1,6 +1,6 @@
 /* poly1305.h
  *
- * Copyright (C) 2006-2016 wolfSSL Inc.
+ * Copyright (C) 2006-2017 wolfSSL Inc.
  *
  * This file is part of wolfSSL.
  *
@@ -19,6 +19,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1335, USA
  */
 
+/*!
+    \file wolfssl/wolfcrypt/poly1305.h
+*/
 
 #ifndef WOLF_CRYPT_POLY1305_H
 #define WOLF_CRYPT_POLY1305_H
@@ -68,16 +71,14 @@ typedef struct Poly1305 {
     word64 r[3];
     word64 h[3];
     word64 pad[2];
-    word64 hh[14];
-    word32 r0[8];
+    word64 hh[20];
     word32 r1[8];
     word32 r2[8];
     word32 r3[8];
     word32 r4[8];
-    word32* rp[4];
-    word64 hibit[4];
+    word64 hm[16];
+    unsigned char buffer[8*POLY1305_BLOCK_SIZE];
     size_t leftover;
-    unsigned char buffer[4*POLY1305_BLOCK_SIZE];
     unsigned char finished;
     unsigned char started;
 #else

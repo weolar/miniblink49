@@ -1,6 +1,6 @@
 /* fp_mul_comba_small_set.i
  *
- * Copyright (C) 2006-2016 wolfSSL Inc.
+ * Copyright (C) 2006-2017 wolfSSL Inc.
  *
  * This file is part of wolfSSL.
  *
@@ -22,9 +22,21 @@
 
 
 #if defined(TFM_SMALL_SET)
-void fp_mul_comba_small(fp_int *A, fp_int *B, fp_int *C)
+int fp_mul_comba_small(fp_int *A, fp_int *B, fp_int *C)
 {
-   fp_digit c0, c1, c2, at[32];
+   fp_digit c0, c1, c2;
+#ifndef WOLFSSL_SMALL_STACK
+   fp_digit at[32];
+#else
+   fp_digit *at;
+#endif
+
+#ifdef WOLFSSL_SMALL_STACK
+   at = (fp_digit*)XMALLOC(sizeof(fp_digit) * 32, NULL, DYNAMIC_TYPE_TMP_BUFFER);
+   if (at == NULL)
+       return FP_MEM;
+#endif
+
    switch (MAX(A->used, B->used)) { 
 
    case 1:
@@ -1246,6 +1258,11 @@ void fp_mul_comba_small(fp_int *A, fp_int *B, fp_int *C)
    default:
       break;
    }
+
+#ifdef WOLFSSL_SMALL_STACK
+   XFREE(at, NULL, DYNAMIC_TYPE_TMP_BUFFER);
+#endif
+   return FP_OKAY;
 }
 
 #endif

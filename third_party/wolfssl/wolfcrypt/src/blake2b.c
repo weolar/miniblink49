@@ -12,7 +12,7 @@
 */
 /* blake2b.c
  *
- * Copyright (C) 2006-2016 wolfSSL Inc.
+ * Copyright (C) 2006-2017 wolfSSL Inc.
  *
  * This file is part of wolfSSL.
  *
@@ -70,14 +70,14 @@ static const byte blake2b_sigma[12][16] =
 };
 
 
-static INLINE int blake2b_set_lastnode( blake2b_state *S )
+static WC_INLINE int blake2b_set_lastnode( blake2b_state *S )
 {
   S->f[1] = ~0ULL;
   return 0;
 }
 
 /* Some helper functions, not necessarily useful */
-static INLINE int blake2b_set_lastblock( blake2b_state *S )
+static WC_INLINE int blake2b_set_lastblock( blake2b_state *S )
 {
   if( S->last_node ) blake2b_set_lastnode( S );
 
@@ -85,7 +85,7 @@ static INLINE int blake2b_set_lastblock( blake2b_state *S )
   return 0;
 }
 
-static INLINE int blake2b_increment_counter( blake2b_state *S, const word64
+static WC_INLINE int blake2b_increment_counter( blake2b_state *S, const word64
                                              inc )
 {
   S->t[0] += inc;
@@ -93,7 +93,7 @@ static INLINE int blake2b_increment_counter( blake2b_state *S, const word64
   return 0;
 }
 
-static INLINE int blake2b_init0( blake2b_state *S )
+static WC_INLINE int blake2b_init0( blake2b_state *S )
 {
   int i;
   XMEMSET( S, 0, sizeof( blake2b_state ) );
@@ -110,7 +110,7 @@ int blake2b_init_param( blake2b_state *S, const blake2b_param *P )
   byte *p ;
   blake2b_init0( S );
   p =  ( byte * )( P );
-  
+
   /* IV XOR ParamBlock */
   for( i = 0; i < 8; ++i )
     S->h[i] ^= load64( p + sizeof( S->h[i] ) * i );
@@ -422,6 +422,9 @@ int main( int argc, char **argv )
 /* Init Blake2b digest, track size in case final doesn't want to "remember" */
 int wc_InitBlake2b(Blake2b* b2b, word32 digestSz)
 {
+    if (b2b == NULL){
+        return -1;
+    }
     b2b->digestSz = digestSz;
 
     return blake2b_init(b2b->S, (byte)digestSz);

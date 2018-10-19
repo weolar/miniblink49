@@ -1,6 +1,6 @@
 /* integer.c
  *
- * Copyright (C) 2006-2016 wolfSSL Inc.
+ * Copyright (C) 2006-2017 wolfSSL Inc.
  *
  * This file is part of wolfSSL.
  *
@@ -44,6 +44,8 @@
 #ifndef NO_BIG_INT
 
 #ifndef USE_FAST_MATH
+
+#ifndef WOLFSSL_SP_MATH
 
 #include <wolfssl/wolfcrypt/integer.h>
 
@@ -3976,7 +3978,8 @@ int mp_set_int (mp_int * a, unsigned long b)
 }
 
 
-#if defined(WOLFSSL_KEY_GEN) || defined(HAVE_ECC)
+#if defined(WOLFSSL_KEY_GEN) || defined(HAVE_ECC) || !defined(NO_RSA) || \
+    !defined(NO_DSA) | !defined(NO_DH)
 
 /* c = a * a (mod b) */
 int mp_sqrmod (mp_int * a, mp_int * b, mp_int * c)
@@ -4002,7 +4005,8 @@ int mp_sqrmod (mp_int * a, mp_int * b, mp_int * c)
 
 #if defined(HAVE_ECC) || !defined(NO_PWDBASED) || defined(WOLFSSL_SNIFFER) || \
     defined(WOLFSSL_HAVE_WOLFSCEP) || defined(WOLFSSL_KEY_GEN) || \
-    defined(OPENSSL_EXTRA) || defined(WC_RSA_BLINDING)
+    defined(OPENSSL_EXTRA) || defined(WC_RSA_BLINDING) || \
+    (!defined(NO_RSA) && !defined(NO_RSA_BOUNDS_CHECK))
 
 /* single digit addition */
 int mp_add_d (mp_int* a, mp_digit b, mp_int* c)
@@ -4169,7 +4173,9 @@ int mp_sub_d (mp_int * a, mp_digit b, mp_int * c)
 #endif /* defined(HAVE_ECC) || !defined(NO_PWDBASED) */
 
 
-#if defined(WOLFSSL_KEY_GEN) || defined(HAVE_COMP_KEY) || defined(HAVE_ECC)
+#if defined(WOLFSSL_KEY_GEN) || defined(HAVE_COMP_KEY) || defined(HAVE_ECC) || \
+    defined(DEBUG_WOLFSSL) || !defined(NO_RSA) || !defined(NO_DSA) || \
+    !defined(NO_DH)
 
 static const int lnz[16] = {
    4, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0
@@ -4315,9 +4321,9 @@ int mp_mod_d (mp_int * a, mp_digit b, mp_digit * c)
   return mp_div_d(a, b, NULL, c);
 }
 
-#endif /* defined(WOLFSSL_KEY_GEN)||defined(HAVE_COMP_KEY)||defined(HAVE_ECC) */
+#endif /* WOLFSSL_KEY_GEN || HAVE_COMP_KEY || HAVE_ECC || DEBUG_WOLFSSL */
 
-#ifdef WOLFSSL_KEY_GEN
+#if defined(WOLFSSL_KEY_GEN) || !defined(NO_DH) || !defined(NO_DSA) || !defined(NO_RSA)
 
 const mp_digit ltm_prime_tab[PRIME_SIZE] = {
   0x0002, 0x0003, 0x0005, 0x0007, 0x000B, 0x000D, 0x0011, 0x0013,
@@ -4473,71 +4479,6 @@ static int mp_prime_is_divisible (mp_int * a, int *result)
   return MP_OKAY;
 }
 
-static const int USE_BBS = 1;
-
-int mp_rand_prime(mp_int* N, int len, WC_RNG* rng, void* heap)
-{
-    int   err, res, type;
-    byte* buf;
-
-    if (N == NULL || rng == NULL)
-        return MP_VAL;
-
-    /* get type */
-    if (len < 0) {
-        type = USE_BBS;
-        len = -len;
-    } else {
-        type = 0;
-    }
-
-    /* allow sizes between 2 and 512 bytes for a prime size */
-    if (len < 2 || len > 512) {
-        return MP_VAL;
-    }
-
-    /* allocate buffer to work with */
-    buf = (byte*)XMALLOC(len, heap, DYNAMIC_TYPE_RSA);
-    if (buf == NULL) {
-        return MP_MEM;
-    }
-    XMEMSET(buf, 0, len);
-
-    do {
-#ifdef SHOW_GEN
-        printf(".");
-        fflush(stdout);
-#endif
-        /* generate value */
-        err = wc_RNG_GenerateBlock(rng, buf, len);
-        if (err != 0) {
-            XFREE(buf, heap, DYNAMIC_TYPE_RSA);
-            return err;
-        }
-
-        /* munge bits */
-        buf[0]     |= 0x80 | 0x40;
-        buf[len-1] |= 0x01 | ((type & USE_BBS) ? 0x02 : 0x00);
-
-        /* load value */
-        if ((err = mp_read_unsigned_bin(N, buf, len)) != MP_OKAY) {
-            XFREE(buf, heap, DYNAMIC_TYPE_RSA);
-            return err;
-        }
-
-        /* test */
-        if ((err = mp_prime_is_prime(N, 8, &res)) != MP_OKAY) {
-            XFREE(buf, heap, DYNAMIC_TYPE_RSA);
-            return err;
-        }
-    } while (res == MP_NO);
-
-    XMEMSET(buf, 0, len);
-    XFREE(buf, heap, DYNAMIC_TYPE_RSA);
-
-    return MP_OKAY;
-}
-
 /*
  * Sets result to 1 if probably prime, 0 otherwise
  */
@@ -4596,6 +4537,170 @@ int mp_prime_is_prime (mp_int * a, int t, int *result)
   *result = MP_YES;
 LBL_B:mp_clear (&b);
   return err;
+}
+
+
+/*
+ * Sets result to 1 if probably prime, 0 otherwise
+ */
+int mp_prime_is_prime_ex (mp_int * a, int t, int *result, WC_RNG *rng)
+{
+  mp_int  b, c;
+  int     ix, err, res;
+  byte*   base = NULL;
+  word32  baseSz = 0;
+
+  /* default to no */
+  *result = MP_NO;
+
+  /* valid value of t? */
+  if (t <= 0 || t > PRIME_SIZE) {
+    return MP_VAL;
+  }
+
+  /* is the input equal to one of the primes in the table? */
+  for (ix = 0; ix < PRIME_SIZE; ix++) {
+      if (mp_cmp_d(a, ltm_prime_tab[ix]) == MP_EQ) {
+         *result = MP_YES;
+         return MP_OKAY;
+      }
+  }
+
+  /* first perform trial division */
+  if ((err = mp_prime_is_divisible (a, &res)) != MP_OKAY) {
+    return err;
+  }
+
+  /* return if it was trivially divisible */
+  if (res == MP_YES) {
+    return MP_OKAY;
+  }
+
+  /* now perform the miller-rabin rounds */
+  if ((err = mp_init (&b)) != MP_OKAY) {
+    return err;
+  }
+  if ((err = mp_init (&c)) != MP_OKAY) {
+      mp_clear(&b);
+    return err;
+  }
+
+  baseSz = mp_count_bits(a);
+  baseSz = (baseSz / 8) + ((baseSz % 8) ? 1 : 0);
+
+  base = (byte*)XMALLOC(baseSz, NULL, DYNAMIC_TYPE_TMP_BUFFER);
+  if (base == NULL) {
+      err = MP_MEM;
+      goto LBL_B;
+  }
+
+  if ((err = mp_sub_d(a, 2, &c)) != MP_OKAY) {
+      goto LBL_B;
+  }
+
+ /* now do a miller rabin with up to t random numbers, this should
+  * give a (1/4)^t chance of a false prime. */
+  for (ix = 0; ix < t; ix++) {
+    /* Set a test candidate. */
+    if ((err = wc_RNG_GenerateBlock(rng, base, baseSz)) != 0) {
+        goto LBL_B;
+    }
+
+    if ((err = mp_read_unsigned_bin(&b, base, baseSz)) != MP_OKAY) {
+        goto LBL_B;
+    }
+
+    if (mp_cmp_d(&b, 2) != MP_GT || mp_cmp(&b, &c) != MP_LT)
+        continue;
+
+    if ((err = mp_prime_miller_rabin (a, &b, &res)) != MP_OKAY) {
+      goto LBL_B;
+    }
+
+    if (res == MP_NO) {
+      goto LBL_B;
+    }
+  }
+
+  /* passed the test */
+  *result = MP_YES;
+LBL_B:mp_clear (&b);
+      mp_clear (&c);
+      XFREE(base, NULL, DYNAMIC_TYPE_TMP_BUFFER);
+  return err;
+}
+
+#endif /* WOLFSSL_KEY_GEN NO_DH NO_DSA NO_RSA */
+
+#ifdef WOLFSSL_KEY_GEN
+
+static const int USE_BBS = 1;
+
+int mp_rand_prime(mp_int* N, int len, WC_RNG* rng, void* heap)
+{
+    int   err, res, type;
+    byte* buf;
+
+    if (N == NULL || rng == NULL)
+        return MP_VAL;
+
+    /* get type */
+    if (len < 0) {
+        type = USE_BBS;
+        len = -len;
+    } else {
+        type = 0;
+    }
+
+    /* allow sizes between 2 and 512 bytes for a prime size */
+    if (len < 2 || len > 512) {
+        return MP_VAL;
+    }
+
+    /* allocate buffer to work with */
+    buf = (byte*)XMALLOC(len, heap, DYNAMIC_TYPE_RSA);
+    if (buf == NULL) {
+        return MP_MEM;
+    }
+    XMEMSET(buf, 0, len);
+
+    do {
+#ifdef SHOW_GEN
+        printf(".");
+        fflush(stdout);
+#endif
+        /* generate value */
+        err = wc_RNG_GenerateBlock(rng, buf, len);
+        if (err != 0) {
+            XFREE(buf, heap, DYNAMIC_TYPE_RSA);
+            return err;
+        }
+
+        /* munge bits */
+        buf[0]     |= 0x80 | 0x40;
+        buf[len-1] |= 0x01 | ((type & USE_BBS) ? 0x02 : 0x00);
+
+        /* load value */
+        if ((err = mp_read_unsigned_bin(N, buf, len)) != MP_OKAY) {
+            XFREE(buf, heap, DYNAMIC_TYPE_RSA);
+            return err;
+        }
+
+        /* test */
+        /* Running Miller-Rabin up to 3 times gives us a 2^{-80} chance
+         * of a 1024-bit candidate being a false positive, when it is our
+         * prime candidate. (Note 4.49 of Handbook of Applied Cryptography.)
+         * Using 8 because we've always used 8. */
+        if ((err = mp_prime_is_prime_ex(N, 8, &res, rng)) != MP_OKAY) {
+            XFREE(buf, heap, DYNAMIC_TYPE_RSA);
+            return err;
+        }
+    } while (res == MP_NO);
+
+    XMEMSET(buf, 0, len);
+    XFREE(buf, heap, DYNAMIC_TYPE_RSA);
+
+    return MP_OKAY;
 }
 
 
@@ -4728,14 +4833,16 @@ LBL_U:mp_clear (&v);
 #endif /* WOLFSSL_KEY_GEN */
 
 
-#if defined(HAVE_ECC) || defined(WOLFSSL_KEY_GEN) || defined(HAVE_COMP_KEY)
+#if !defined(NO_DSA) || defined(HAVE_ECC) || defined(WOLFSSL_KEY_GEN) || \
+    defined(HAVE_COMP_KEY) || defined(WOLFSSL_DEBUG_MATH) || \
+    defined(DEBUG_WOLFSSL)
 
 /* chars used in radix conversions */
 const char *mp_s_rmap = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ\
                          abcdefghijklmnopqrstuvwxyz+/";
 #endif
 
-#ifdef HAVE_ECC
+#if !defined(NO_DSA) || defined(HAVE_ECC)
 /* read a string [ASCII] in a given radix */
 int mp_read_radix (mp_int * a, const char *str, int radix)
 {
@@ -4746,7 +4853,7 @@ int mp_read_radix (mp_int * a, const char *str, int radix)
   mp_zero(a);
 
   /* make sure the radix is ok */
-  if (radix < 2 || radix > 64) {
+  if (radix < MP_RADIX_BIN || radix > MP_RADIX_MAX) {
     return MP_VAL;
   }
 
@@ -4805,10 +4912,9 @@ int mp_read_radix (mp_int * a, const char *str, int radix)
   }
   return MP_OKAY;
 }
-#endif /* HAVE_ECC */
+#endif /* !defined(NO_DSA) || defined(HAVE_ECC) */
 
-#if defined(WOLFSSL_KEY_GEN) || defined(HAVE_COMP_KEY) || \
-    defined(WOLFSSL_DEBUG_MATH)
+#ifdef WC_MP_TO_RADIX
 
 /* returns size of ASCII representation */
 int mp_radix_size (mp_int *a, int radix, int *size)
@@ -4820,13 +4926,13 @@ int mp_radix_size (mp_int *a, int radix, int *size)
     *size = 0;
 
     /* special case for binary */
-    if (radix == 2) {
+    if (radix == MP_RADIX_BIN) {
         *size = mp_count_bits (a) + (a->sign == MP_NEG ? 1 : 0) + 1;
         return MP_OKAY;
     }
 
     /* make sure the radix is in range */
-    if (radix < 2 || radix > 64) {
+    if (radix < MP_RADIX_BIN || radix > MP_RADIX_MAX) {
         return MP_VAL;
     }
 
@@ -4875,7 +4981,7 @@ int mp_toradix (mp_int *a, char *str, int radix)
     char   *_s = str;
 
     /* check range of the radix */
-    if (radix < 2 || radix > 64) {
+    if (radix < MP_RADIX_BIN || radix > MP_RADIX_MAX) {
         return MP_VAL;
     }
 
@@ -4933,7 +5039,7 @@ void mp_dump(const char* desc, mp_int* a, byte verbose)
   printf("%s: ptr=%p, used=%d, sign=%d, size=%d, mpd=%d\n",
     desc, a, a->used, a->sign, size, (int)sizeof(mp_digit));
 
-  mp_toradix(a, buffer, 16);
+  mp_tohex(a, buffer);
   printf("  %s\n  ", buffer);
 
   if (verbose) {
@@ -4948,7 +5054,9 @@ void mp_dump(const char* desc, mp_int* a, byte verbose)
 }
 #endif /* WOLFSSL_DEBUG_MATH */
 
-#endif /* defined(WOLFSSL_KEY_GEN) || defined(HAVE_COMP_KEY) || defined(WOLFSSL_DEBUG_MATH) */
+#endif /* WC_MP_TO_RADIX */
+
+#endif /* WOLFSSL_SP_MATH */
 
 #endif /* USE_FAST_MATH */
 

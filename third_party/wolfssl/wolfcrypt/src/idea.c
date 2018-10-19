@@ -1,6 +1,6 @@
 /* idea.c
  *
- * Copyright (C) 2006-2016 wolfSSL Inc.
+ * Copyright (C) 2006-2017 wolfSSL Inc.
  *
  * This file is part of wolfSSL.
  *
@@ -44,7 +44,7 @@
  * IDEA specify a special case when an entry value is 0 ( x or y)
  * then it must be replaced by 2^16
  */
-static INLINE word16 idea_mult(word16 x, word16 y)
+static WC_INLINE word16 idea_mult(word16 x, word16 y)
 {
     long mul, res;
 
@@ -66,7 +66,7 @@ static INLINE word16 idea_mult(word16 x, word16 y)
 
 /* compute 1/a modulo 2^16+1 using Extended euclidean algorithm
  * adapted from fp_invmod */
-static INLINE word16 idea_invmod(word16 x)
+static WC_INLINE word16 idea_invmod(word16 x)
 {
     int   u, v, b, d;
 

@@ -1,6 +1,6 @@
 /* ed25519.c
  *
- * Copyright (C) 2006-2016 wolfSSL Inc.
+ * Copyright (C) 2006-2017 wolfSSL Inc.
  *
  * This file is part of wolfSSL.
  *
@@ -90,6 +90,8 @@ int wc_ed25519_make_key(WC_RNG* rng, int keySz, ed25519_key* key)
     /* put public key after private key, on the same buffer */
     XMEMMOVE(key->k + ED25519_KEY_SIZE, key->p, ED25519_PUB_KEY_SIZE);
 
+    key->pubKeySet = 1;
+
     return ret;
 }
 
@@ -112,14 +114,16 @@ int wc_ed25519_sign_msg(const byte* in, word32 inlen, byte* out,
 #else
     ge_p3  R;
 #endif
-    byte   nonce[SHA512_DIGEST_SIZE];
-    byte   hram[SHA512_DIGEST_SIZE];
+    byte   nonce[WC_SHA512_DIGEST_SIZE];
+    byte   hram[WC_SHA512_DIGEST_SIZE];
     byte   az[ED25519_PRV_KEY_SIZE];
-    Sha512 sha;
+    wc_Sha512 sha;
     int    ret;
 
     /* sanity check on arguments */
     if (in == NULL || out == NULL || outLen == NULL || key == NULL)
+        return BAD_FUNC_ARG;
+    if (!key->pubKeySet)
         return BAD_FUNC_ARG;
 
     /* check and set up out length */
@@ -144,12 +148,11 @@ int wc_ed25519_sign_msg(const byte* in, word32 inlen, byte* out,
     if (ret != 0)
         return ret;
     ret = wc_Sha512Update(&sha, az + ED25519_KEY_SIZE, ED25519_KEY_SIZE);
-    if (ret != 0)
-        return ret;
-    ret = wc_Sha512Update(&sha, in, inlen);
-    if (ret != 0)
-        return ret;
-    ret = wc_Sha512Final(&sha, nonce);
+    if (ret == 0)
+        ret = wc_Sha512Update(&sha, in, inlen);
+    if (ret == 0)
+        ret = wc_Sha512Final(&sha, nonce);
+    wc_Sha512Free(&sha);
     if (ret != 0)
         return ret;
 
@@ -175,15 +178,13 @@ int wc_ed25519_sign_msg(const byte* in, word32 inlen, byte* out,
     if (ret != 0)
         return ret;
     ret = wc_Sha512Update(&sha, out, ED25519_SIG_SIZE/2);
-    if (ret != 0)
-        return ret;
-    ret = wc_Sha512Update(&sha, key->p, ED25519_PUB_KEY_SIZE);
-    if (ret != 0)
-        return ret;
-    ret = wc_Sha512Update(&sha, in, inlen);
-    if (ret != 0)
-        return ret;
-    ret = wc_Sha512Final(&sha, hram);
+    if (ret == 0)
+        ret = wc_Sha512Update(&sha, key->p, ED25519_PUB_KEY_SIZE);
+    if (ret == 0)
+        ret = wc_Sha512Update(&sha, in, inlen);
+    if (ret == 0)
+        ret = wc_Sha512Final(&sha, hram);
+    wc_Sha512Free(&sha);
     if (ret != 0)
         return ret;
 
@@ -214,13 +215,13 @@ int wc_ed25519_verify_msg(const byte* sig, word32 siglen, const byte* msg,
                           word32 msglen, int* res, ed25519_key* key)
 {
     byte   rcheck[ED25519_KEY_SIZE];
-    byte   h[SHA512_DIGEST_SIZE];
+    byte   h[WC_SHA512_DIGEST_SIZE];
 #ifndef FREESCALE_LTC_ECC
     ge_p3  A;
     ge_p2  R;
 #endif
     int    ret;
-    Sha512 sha;
+    wc_Sha512 sha;
 
     /* sanity check on arguments */
     if (sig == NULL || msg == NULL || res == NULL || key == NULL)
@@ -244,15 +245,13 @@ int wc_ed25519_verify_msg(const byte* sig, word32 siglen, const byte* msg,
     if (ret != 0)
         return ret;
     ret = wc_Sha512Update(&sha, sig,    ED25519_SIG_SIZE/2);
-    if (ret != 0)
-        return ret;
-    ret = wc_Sha512Update(&sha, key->p, ED25519_PUB_KEY_SIZE);
-    if (ret != 0)
-        return ret;
-    ret = wc_Sha512Update(&sha, msg,    msglen);
-    if (ret != 0)
-        return ret;
-    ret = wc_Sha512Final(&sha,  h);
+    if (ret == 0)
+        ret = wc_Sha512Update(&sha, key->p, ED25519_PUB_KEY_SIZE);
+    if (ret == 0)
+        ret = wc_Sha512Update(&sha, msg,    msglen);
+    if (ret == 0)
+        ret = wc_Sha512Final(&sha,  h);
+    wc_Sha512Free(&sha);
     if (ret != 0)
         return ret;
 
@@ -294,6 +293,10 @@ int wc_ed25519_init(ed25519_key* key)
         return BAD_FUNC_ARG;
 
     XMEMSET(key, 0, sizeof(ed25519_key));
+
+#ifndef FREESCALE_LTC_ECC
+    fe_init();
+#endif
 
     return 0;
 }
@@ -366,6 +369,7 @@ int wc_ed25519_import_public(const byte* in, word32 inLen, ed25519_key* key)
         pubKey.Y = key->pointY;
         LTC_PKHA_Ed25519_PointDecompress(key->p, ED25519_PUB_KEY_SIZE, &pubKey);
 #endif
+        key->pubKeySet = 1;
         return 0;
     }
 
@@ -385,6 +389,8 @@ int wc_ed25519_import_public(const byte* in, word32 inLen, ed25519_key* key)
         ret = ge_compress_key(key->p, in+1,
                               in+1+ED25519_PUB_KEY_SIZE, ED25519_PUB_KEY_SIZE);
 #endif /* FREESCALE_LTC_ECC */
+        if (ret == 0)
+            key->pubKeySet = 1;
         return ret;
     }
 
@@ -399,6 +405,7 @@ int wc_ed25519_import_public(const byte* in, word32 inLen, ed25519_key* key)
         pubKey.Y = key->pointY;
         LTC_PKHA_Ed25519_PointDecompress(key->p, ED25519_PUB_KEY_SIZE, &pubKey);
 #endif
+        key->pubKeySet = 1;
         return 0;
     }
 

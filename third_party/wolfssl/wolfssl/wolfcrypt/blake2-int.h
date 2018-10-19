@@ -12,7 +12,7 @@
 */
 /* blake2-int.h
  *
- * Copyright (C) 2006-2016 wolfSSL Inc.
+ * Copyright (C) 2006-2017 wolfSSL Inc.
  *
  * This file is part of wolfSSL.
  *
@@ -169,7 +169,7 @@
   int blake2sp( byte *out, const void *in, const void *key, const byte outlen, const word64 inlen, byte keylen );
   int blake2bp( byte *out, const void *in, const void *key, const byte outlen, const word64 inlen, byte keylen );
 
-  static INLINE int blake2( byte *out, const void *in, const void *key, const byte outlen, const word64 inlen, byte keylen )
+  static WC_INLINE int blake2( byte *out, const void *in, const void *key, const byte outlen, const word64 inlen, byte keylen )
   {
     return blake2b( out, in, key, outlen, inlen, keylen );
   }

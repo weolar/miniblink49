@@ -1,6 +1,6 @@
 /* wolfmath.h
  *
- * Copyright (C) 2006-2016 wolfSSL Inc.
+ * Copyright (C) 2006-2017 wolfSSL Inc.
  *
  * This file is part of wolfSSL.
  *
@@ -51,6 +51,14 @@
     int get_rand_digit(WC_RNG* rng, mp_digit* d);
     int mp_rand(mp_int* a, int digits, WC_RNG* rng);
 
+    enum {
+        /* format type */
+        WC_TYPE_HEX_STR = 1,
+        WC_TYPE_UNSIGNED_BIN = 2,
+    };
+
+    WOLFSSL_API int wc_export_int(mp_int* mp, byte* buf, word32* len, 
+        word32 keySz, int encType);
 
     #ifdef HAVE_WOLF_BIGINT
         void wc_bigint_init(WC_BIGINT* a);
@@ -61,6 +69,7 @@
         void wc_bigint_free(WC_BIGINT* a);
 
         int wc_mp_to_bigint(mp_int* src, WC_BIGINT* dst);
+        int wc_mp_to_bigint_sz(mp_int* src, WC_BIGINT* dst, word32 sz);
         int wc_bigint_to_mp(WC_BIGINT* src, mp_int* dst);
     #endif /* HAVE_WOLF_BIGINT */
 

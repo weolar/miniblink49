@@ -1,6 +1,6 @@
 /* fp_sqr_comba_3.i
  *
- * Copyright (C) 2006-2016 wolfSSL Inc.
+ * Copyright (C) 2006-2017 wolfSSL Inc.
  *
  * This file is part of wolfSSL.
  *
@@ -22,7 +22,7 @@
 
 
 #ifdef TFM_SQR3
-void fp_sqr_comba3(fp_int *A, fp_int *B)
+int fp_sqr_comba3(fp_int *A, fp_int *B)
 {
    fp_digit *a, b[6], c0, c1, c2;
 #ifdef TFM_ISO
@@ -65,6 +65,8 @@ void fp_sqr_comba3(fp_int *A, fp_int *B)
    B->sign = FP_ZPOS;
    XMEMCPY(B->dp, b, 6 * sizeof(fp_digit));
    fp_clamp(B);
+
+   return FP_OKAY;
 }
 #endif
 

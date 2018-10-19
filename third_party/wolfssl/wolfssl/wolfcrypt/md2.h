@@ -1,6 +1,6 @@
 /* md2.h
  *
- * Copyright (C) 2006-2016 wolfSSL Inc.
+ * Copyright (C) 2006-2017 wolfSSL Inc.
  *
  * This file is part of wolfSSL.
  *
@@ -19,6 +19,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1335, USA
  */
 
+/*!
+    \file wolfssl/wolfcrypt/md2.h
+*/
+
 
 #ifndef WOLF_CRYPT_MD2_H
 #define WOLF_CRYPT_MD2_H
@@ -33,7 +37,7 @@
 
 /* in bytes */
 enum {
-    MD2             =  6,    /* hash type unique */
+    MD2             =  WC_HASH_TYPE_MD2,
     MD2_BLOCK_SIZE  = 16,
     MD2_DIGEST_SIZE = 16,
     MD2_PAD_SIZE    = 16,

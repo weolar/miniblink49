@@ -1,6 +1,6 @@
 /* coding.h
  *
- * Copyright (C) 2006-2016 wolfSSL Inc.
+ * Copyright (C) 2006-2017 wolfSSL Inc.
  *
  * This file is part of wolfSSL.
  *
@@ -19,7 +19,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1335, USA
  */
 
-
+/*!
+    \file wolfssl/wolfcrypt/coding.h
+*/
 
 #ifndef WOLF_CRYPT_CODING_H
 #define WOLF_CRYPT_CODING_H
@@ -61,8 +63,16 @@ WOLFSSL_API int Base64_Decode(const byte* in, word32 inLen, byte* out,
                                   word32* outLen);
 #endif
 
-#if defined(OPENSSL_EXTRA) || defined(HAVE_WEBSERVER) || defined(HAVE_FIPS) \
-                           || defined(HAVE_ECC_CDH)
+#if defined(OPENSSL_EXTRA) || defined(OPENSSL_EXTRA_X509_SMALL) || \
+    defined(HAVE_WEBSERVER) || defined(HAVE_FIPS) || \
+    defined(HAVE_ECC_CDH) || defined(HAVE_SELFTEST) || \
+    defined(WOLFSSL_ENCRYPTED_KEYS)
+    #ifndef WOLFSSL_BASE16
+        #define WOLFSSL_BASE16
+    #endif
+#endif
+
+#ifdef WOLFSSL_BASE16
     WOLFSSL_API
     int Base16_Decode(const byte* in, word32 inLen, byte* out, word32* outLen);
     WOLFSSL_API
