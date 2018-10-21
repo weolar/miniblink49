@@ -553,9 +553,6 @@ void WebMediaPlayerImpl::paint(WebCanvas* canvas, const WebRect& rect, unsigned 
             delete m_memoryCanvas;
         m_size = size; // naturalSize();
         m_memoryCanvas = skia::CreatePlatformCanvas(m_size.width, m_size.height, true);
-
-        String output = String::format("WebMediaPlayerImpl::paint: %d %d\n", m_size.width, m_size.height);
-        OutputDebugStringA(output.utf8().data());
     }
 
     SkPaint clearPaint;

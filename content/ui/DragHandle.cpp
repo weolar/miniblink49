@@ -367,7 +367,7 @@ HRESULT __stdcall DragHandle::DragEnter(IDataObject* pDataObject, DWORD grfKeySt
     }
 
     m_lastDropEffect = *pdwEffect;
-    ASSERT(m_dragData.get() == pDataObject);
+    //ASSERT(m_dragData.get() == pDataObject); // 外部拖入会触发这个断言
 
     return S_OK;
 }

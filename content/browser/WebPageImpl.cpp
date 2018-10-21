@@ -73,6 +73,9 @@
 #include "wke/wkeGlobalVar.h"
 #endif
 #include "skia/ext/bitmap_platform_device_win.h"
+#if 0
+#include <fstream>
+#endif
 
 using namespace blink;
 
@@ -948,16 +951,6 @@ void drawDebugLine(SkCanvas* memoryCanvas, const IntRect& paintRect)
     static int g_debugCount = 0;
     ++g_debugCount;
 
-#if 0
-    HBRUSH hbrush;
-    HPEN hpen;
-    hbrush = ::CreateSolidBrush(rand()); // 创建蓝色画刷
-    ::SelectObject(hdc, hbrush);
-    //::Rectangle(hdc, m_paintRect.x(), m_paintRect.y(), m_paintRect.maxX(), m_paintRect.maxY());
-    ::Rectangle(hdc, 220, 40, 366, 266);
-    ::DeleteObject(hbrush);
-#endif
-
 #if 1 // debug
     if (blink::RuntimeEnabledFeatures::drawDirtyDebugLineEnabled()) {
         OwnPtr<GraphicsContext> context = GraphicsContext::deprecatedCreateWithCanvas(memoryCanvas, GraphicsContext::NothingDisabled);
@@ -1052,6 +1045,52 @@ void WebPageImpl::drawLayeredWindow(HWND hWnd, SkCanvas* canvas, HDC hdc, const 
     ::DeleteDC(hdcMemory);
 }
 
+#if 0
+bool HDCToFile(HDC Context)
+{
+    static int i = 0;
+    ++i;
+    String savePath;
+    savePath = String::format("C:\\Users\\weo\\Desktop\\mantan\\DumpFile_2_%d.png", i);
+
+    uint16_t BitsPerPixel = 24;
+    RECT Area = {0, 0, 300, 300};
+
+    uint32_t Width = Area.right - Area.left;
+    uint32_t Height = Area.bottom - Area.top;
+    BITMAPINFO Info;
+    BITMAPFILEHEADER Header;
+    memset(&Info, 0, sizeof(Info));
+    memset(&Header, 0, sizeof(Header));
+    Info.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+    Info.bmiHeader.biWidth = Width;
+    Info.bmiHeader.biHeight = Height;
+    Info.bmiHeader.biPlanes = 1;
+    Info.bmiHeader.biBitCount = BitsPerPixel;
+    Info.bmiHeader.biCompression = BI_RGB;
+    Info.bmiHeader.biSizeImage = Width * Height * (BitsPerPixel > 24 ? 4 : 3);
+    Header.bfType = 0x4D42;
+    Header.bfOffBits = sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER);
+    char* Pixels = NULL;
+    HDC MemDC = CreateCompatibleDC(Context);
+    HBITMAP Section = CreateDIBSection(Context, &Info, DIB_RGB_COLORS, (void**)&Pixels, 0, 0);
+    DeleteObject(SelectObject(MemDC, Section));
+    BitBlt(MemDC, 0, 0, Width, Height, Context, Area.left, Area.top, SRCCOPY);
+    DeleteDC(MemDC);
+    std::fstream hFile(savePath.utf8().data(), std::ios::out | std::ios::binary);
+    if (hFile.is_open()) {
+        hFile.write((char*)&Header, sizeof(Header));
+        hFile.write((char*)&Info.bmiHeader, sizeof(Info.bmiHeader));
+        hFile.write(Pixels, (((BitsPerPixel * Width + 31) & ~31) / 8) * Height);
+        hFile.close();
+        DeleteObject(Section);
+        return true;
+    }
+    DeleteObject(Section);
+    return false;
+}
+#endif
+
 // 本函数可能被调用在ui线程，也可以是合成线程。开启多线程绘制，则在合成线程
 void WebPageImpl::paintToMemoryCanvasInUiThread(SkCanvas* canvas, const IntRect& paintRect)
 {
@@ -1071,11 +1110,30 @@ void WebPageImpl::paintToMemoryCanvasInUiThread(SkCanvas* canvas, const IntRect&
 
     if (needDrawToScreen(hWnd)) { // 使用wke接口不由此上屏
         HDC hdc = ::GetDC(hWnd);
+#if 0
+        COLORREF c = ::GetPixel(hdc, 100, 100);
+        c = (c & 0x00ffffff);
+        if (/*c == 0x00ffffff &&*/ paintRect.height() > 600) {
+            HDCToFile(hMemoryDC);
+        }
+#endif
+
         if (m_layerTreeHost->getHasTransparentBackground()) {
             drawLayeredWindow(hWnd, canvas, hdc, paintRect, hMemoryDC);
         } else {
             skia::DrawToNativeContext(canvas, hdc, paintRect.x(), paintRect.y(), &intRectToWinRect(paintRect));
         }
+
+#if 0
+        HBRUSH hbrush;
+        HPEN hpen;
+        hbrush = ::CreateSolidBrush(rand()); // 创建蓝色画刷
+        ::SelectObject(hdc, hbrush);
+        //::Rectangle(hdc, m_paintRect.x(), m_paintRect.y(), m_paintRect.maxX(), m_paintRect.maxY());
+        ::Rectangle(hdc, 220, 40, 366, 266);
+        ::DeleteObject(hbrush);
+#endif
+
         ::ReleaseDC(hWnd, hdc);
     }
 
