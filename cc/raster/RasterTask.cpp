@@ -51,6 +51,10 @@ extern int debugPaint;
 extern int debugPaintTile;
 }
 
+namespace blink {
+bool saveDumpFile(const String& url, char* buffer, unsigned int size);
+}
+
 namespace cc {
 
 static RasterTaskWorkerThreadPool* s_sharedThreadPool = nullptr;
@@ -291,10 +295,14 @@ public:
         m_blendAction->setDirtyRectBitmap(bitmap);
         m_blendAction->setContentScale(m_contentScale);
 
-//         if (0) {
-//             Vector<unsigned char> output;
-//             blink::GDIPlusImageEncoder::encode(*bitmap, blink::GDIPlusImageEncoder::PNG, &output);
-//             blink::saveDumpFile("E:\\mycode\\miniblink49\\trunk\\out\\1.png", (char*)output.data(), output.size());
+//         if (m_dirtyRect.height() > 600) {
+//             SkColor c = bitmap->getColor(100, 100);
+//             c = (c & 0x00ffffff);
+//             if (c == 0x00ffffff) {
+//                 Vector<unsigned char> output;
+//                 blink::GDIPlusImageEncoder::encode(*bitmap, blink::GDIPlusImageEncoder::PNG, &output);
+//                 blink::saveDumpFile("", (char*)output.data(), output.size());
+//             }
 //         }
 #endif
     }

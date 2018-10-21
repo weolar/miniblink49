@@ -63,12 +63,12 @@ public:
     void updataTile(int newIndexNumX, int newIndexNumY, DrawToCanvasProperties* prop);
     void cleanupUnnecessaryTile(const WTF::Vector<TileActionInfo*>& tiles);
 
-    virtual void drawToCanvas(LayerTreeHost* host, blink::WebCanvas* canvas, const blink::IntRect& clip);
+    virtual bool drawToCanvas(LayerTreeHost* host, blink::WebCanvas* canvas, const blink::IntRect& clip);
 
     void blendToTiles(TileActionInfoVector* willRasteredTiles, const SkBitmap* bitmap, const SkRect& dirtyRect, float contentScale);
     void blendToTilesByTiles(TileActionInfoVector* willRasteredTiles);
     
-    void drawToCanvasChildren(LayerTreeHost* host, SkCanvas* canvas, const SkRect& clip, int deep);
+    bool drawToCanvasChildren(LayerTreeHost* host, SkCanvas* canvas, const SkRect& clip, int deep);
 
     size_t tilesSize() const;
 
@@ -95,7 +95,7 @@ class CompositingImageLayer : public CompositingLayer {
 public:
     CompositingImageLayer(int id);
     virtual ~CompositingImageLayer() override;
-    virtual void drawToCanvas(LayerTreeHost* host, blink::WebCanvas* canvas, const blink::IntRect& clip) override;
+    virtual bool drawToCanvas(LayerTreeHost* host, blink::WebCanvas* canvas, const blink::IntRect& clip) override;
     void setImage(SkBitmapRefWrap* bitmap);
     virtual CCType ccType() const override { return CompositingLayer::ImageCCLayer;    }
     

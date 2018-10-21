@@ -527,13 +527,13 @@ void printTrans(const SkMatrix44& transform, int deep)
     OutputDebugStringW(outString.charactersWithNullTermination().data());
 }
 
-void LayerTreeHost::drawToCanvas(SkCanvas* canvas, const SkRect& dirtyRect)
+bool LayerTreeHost::drawToCanvas(SkCanvas* canvas, const SkRect& dirtyRect)
 {
     if (!getRootCCLayer())
-        return;
+        return false;
 
     if (dirtyRect.isEmpty())
-        return;
+        return false;
 
     canvas->save();
     canvas->clipRect(dirtyRect);
@@ -545,9 +545,11 @@ void LayerTreeHost::drawToCanvas(SkCanvas* canvas, const SkRect& dirtyRect)
     clearColorPaint.setXfermodeMode(SkXfermode::kSrcOver_Mode); // SkXfermode::kSrcOver_Mode
     canvas->drawRect((SkRect)dirtyRect, clearColorPaint);
     
-    m_rootCCLayer->drawToCanvasChildren(this, canvas, dirtyRect, 0);
+    bool b = m_rootCCLayer->drawToCanvasChildren(this, canvas, dirtyRect, 0);
 
     canvas->restore();
+
+    return b;
 }
 
 struct DrawPropertiesFromAncestor {
@@ -1146,7 +1148,12 @@ void LayerTreeHost::paintToMemoryCanvasInCompositeThread(const SkRect& r)
     if (m_hasTransparentBackground)
         clearCanvas(m_memoryCanvas, paintRect, m_hasTransparentBackground);
 
-    drawToCanvas(m_memoryCanvas, paintRect); // 绘制脏矩形
+    bool needNotifUi = drawToCanvas(m_memoryCanvas, paintRect); // 绘制脏矩形
+
+    if (!needNotifUi) {
+        OutputDebugStringA("LayerTreeHost::paintToMemoryCanvasInCompositeThread exit\n");
+        return;
+    }
 
 #if ENABLE_WKE == 1
     if (blink::RuntimeEnabledFeatures::updataInOtherThreadEnabled()) {
