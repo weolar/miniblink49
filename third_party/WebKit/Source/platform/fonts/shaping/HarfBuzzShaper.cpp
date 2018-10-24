@@ -73,6 +73,8 @@ struct ShapeResult::RunInfo {
         m_glyphData.resize(m_numGlyphs);
     }
 
+    bool rtl() const { return HB_DIRECTION_IS_BACKWARD(m_direction); }
+    float xPositionForVisualOffset(unsigned offset) const;
     float xPositionForOffset(unsigned) const;
     int characterIndexForXPosition(float) const;
     void setGlyphAndPositions(unsigned index, uint16_t glyphId, float advance,
@@ -97,6 +99,14 @@ struct ShapeResult::RunInfo {
     unsigned m_numGlyphs;
     float m_width;
 };
+
+float ShapeResult::RunInfo::xPositionForVisualOffset(unsigned offset) const
+{
+    ASSERT(offset < m_numCharacters);
+    if (rtl())
+        offset = m_numCharacters - offset - 1;
+    return xPositionForOffset(offset);
+}
 
 float ShapeResult::RunInfo::xPositionForOffset(unsigned offset) const
 {
@@ -403,24 +413,32 @@ FloatRect ShapeResult::selectionRect(Vector<RefPtr<ShapeResult>>& results,
     int from = absoluteFrom;
     int to = absoluteTo;
 
-    unsigned wordOffset = 0;
+    unsigned totalNumCharacters = 0;
     for (unsigned j = 0; j < results.size(); j++) {
         RefPtr<ShapeResult> result = results[j];
+        if (direction == RTL) {
+            // Convert logical offsets to visual offsets, because results are in
+            // logical order while runs are in visual order.
+            if (!foundFromX && from >= 0 && static_cast<unsigned>(from) < result->numCharacters())
+                from = result->numCharacters() - from - 1;
+            if (!foundToX && to >= 0 && static_cast<unsigned>(to) < result->numCharacters())
+                to = result->numCharacters() - to - 1;
+            currentX -= result->width();
+        }
         for (unsigned i = 0; i < result->m_runs.size(); i++) {
             if (!result->m_runs[i])
                 continue;
-            if (direction == RTL)
-                currentX -= result->m_runs[i]->m_width;
+            ASSERT((direction == RTL) == result->m_runs[i]->rtl());
             int numCharacters = result->m_runs[i]->m_numCharacters;
             if (!foundFromX && from >= 0 && from < numCharacters) {
-                fromX = result->m_runs[i]->xPositionForOffset(from) + currentX;
+                fromX = result->m_runs[i]->xPositionForVisualOffset(from) + currentX;
                 foundFromX = true;
             } else {
                 from -= numCharacters;
             }
 
             if (!foundToX && to >= 0 && to < numCharacters) {
-                toX = result->m_runs[i]->xPositionForOffset(to) + currentX;
+                toX = result->m_runs[i]->xPositionForVisualOffset(to) + currentX;
                 foundToX = true;
             } else {
                 to -= numCharacters;
@@ -428,13 +446,22 @@ FloatRect ShapeResult::selectionRect(Vector<RefPtr<ShapeResult>>& results,
 
             if (foundFromX && foundToX)
                 break;
-            if (direction != RTL)
-                currentX += result->m_runs[i]->m_width;
+            currentX += result->m_runs[i]->m_width;
         }
-        wordOffset += result->numCharacters();
+        if (direction == RTL)
+            currentX -= result->width();
+        totalNumCharacters += result->numCharacters();
     }
 
     // The position in question might be just after the text.
+    if (!foundFromX && absoluteFrom == totalNumCharacters) {
+        fromX = direction == RTL ? 0 : totalWidth;
+        foundFromX = true;
+    }
+    if (!foundToX && absoluteTo == totalNumCharacters) {
+        toX = direction == RTL ? 0 : totalWidth;
+        foundToX = true;
+    }
     if (!foundFromX)
         fromX = 0;
     if (!foundToX)
