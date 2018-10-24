@@ -153,7 +153,7 @@ private:
         if (m_delayShowTimer.isActive())
             m_delayShowTimer.stop();
         m_delayShowCount = 0;
-        m_delayShowTimer.start(0.02, m_repeatInterval, FROM_HERE);
+        m_delayShowTimer.start(0.5, m_repeatInterval, FROM_HERE);
     }
 
     bool isNearPos(const POINT& a, const POINT& b)
