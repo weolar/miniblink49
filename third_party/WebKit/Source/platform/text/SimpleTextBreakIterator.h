@@ -6,173 +6,8 @@
 
 namespace blink {
 
-#if 0
-
-TextBreakIterator::TextBreakIterator(){}
-TextBreakIterator::~TextBreakIterator(){}
-
-class SimpleTextBreakIterator : public TextBreakIterator {
-public:
-    SimpleTextBreakIterator();
-    ~SimpleTextBreakIterator();
-
-    void setText(const LChar* string, int length);
-    void setText(const UChar* string, int length);
-    void scan();
-
-    virtual int32_t first(void) override;
-    virtual int32_t last(void) override;
-    virtual int32_t previous(void) override;
-    virtual int32_t next() override;
-    virtual bool isBoundary(int32_t offset) override;
-    virtual int32_t following(int32_t offset) override;
-    virtual int32_t preceding(int32_t offset) override;
-    virtual int32_t current(void) const override;
-
-private:
-    struct BreakRun {
-        BreakRun(int start, int end)
-        {
-            this->start = start;
-            this->end = end;
-        }
-        int start;
-        int end;
-    };
-    Vector<BreakRun> m_breakRuns;
-    const UChar* m_string;
-    int m_length;
-    int m_pos;
-};
-
-SimpleTextBreakIterator::SimpleTextBreakIterator()
-{
-    m_string = nullptr;
-    m_length = 0;
-}
-
-void SimpleTextBreakIterator::setText(const LChar* string, int length)
-{
-    m_string = nullptr;
-    m_length = 0;
-}
-
-void SimpleTextBreakIterator::setText(const UChar* string, int length)
-{
-    m_string = string;
-    m_length = length;
-    scan();
-    first();
-}
-
-bool isWordSpace(UChar c)
-{
-    const static UChar kWordSpace[] = L" ,.;\"{}~!@#$%^&*()_+|'<>/\\";
-    const int length = sizeof(kWordSpace) / sizeof(UChar);
-    for (int i = 0; i < length; ++i) {
-        if (kWordSpace[i] == c)
-            return true;
-    }
-
-    return false;
-}
-
-void SimpleTextBreakIterator::scan()
-{
-    return;
-
-    m_breakRuns.clear();
-
-    int posA = 0;
-    int posB = 0;
-    for (posA = 0; posA < m_length; ++posA) {
-        if (!isWordSpace(m_string[posA]))
-            continue;
-
-        posB = posA;
-
-        for (; posB < m_length; ++posB) {
-            if (!isWordSpace(m_string[posB]))
-                continue;
-            m_breakRuns.append(BreakRun(posA, posB));
-            posA = posB;
-            ++posB;
-            break;
-        }
-    }
-}
-
-int32_t SimpleTextBreakIterator::first()
-{
-    return (int32_t)-1;
-
-    if (0 == m_breakRuns.size())
-        return (int32_t)-1;
-
-    m_pos = 0;
-    return m_breakRuns[m_pos].start;
-}
-
-int32_t SimpleTextBreakIterator::last(void)
-{
-    return (int32_t)-1;
-
-    if (0 == m_breakRuns.size())
-        return (int32_t)-1;
-
-    m_pos = m_breakRuns.size() - 1;
-    return m_breakRuns[m_pos].start;
-}
-
-int32_t SimpleTextBreakIterator::previous(void)
-{
-    return (int32_t)-1;
-
-    if (0 == m_breakRuns.size())
-        return (int32_t)-1;
-
-    if (0 == m_pos)
-        return (int32_t)-1;
-
-    --m_pos;
-    return m_breakRuns[m_pos].start;
-}
-
-int32_t SimpleTextBreakIterator::next()
-{
-    return (int32_t)-1;
-
-    if (0 == m_breakRuns.size())
-        return (int32_t)-1;
-
-    if (m_breakRuns.size() - 1 == m_pos)
-        return (int32_t)-1;
-
-    ++m_pos;
-    return m_breakRuns[m_pos].start;
-}
-
-bool SimpleTextBreakIterator::isBoundary(int32_t offset)
-{
-    return true;
-}
-int32_t SimpleTextBreakIterator::following(int32_t offset)
-{
-    return (int32_t)-1;
-}
-
-int32_t SimpleTextBreakIterator::preceding(int32_t offset)
-{
-    return (int32_t)-1;
-}
-
-int32_t SimpleTextBreakIterator::current(void) const
-{
-    return (int32_t)-1;
-}
-#endif // if 0
-
 //////////////////////////////////////////////////////////////////////////
+
 void TextBreakIterator::reset(const UChar* str, int len)
 {
     m_string = str;
@@ -189,13 +24,15 @@ int32_t TextBreakIterator::last()
 int32_t TextBreakIterator::following(int32_t position)
 {
     m_currentPos = position;
-    return next();
+    int32_t ret = next();
+    return ret;
 }
 
 int32_t TextBreakIterator::preceding(int32_t position)
 {
     m_currentPos = position;
-    return previous();
+    int32_t ret = previous();
+    return ret;
 }
 
 bool TextBreakIterator::isBoundary(int32_t offset)
