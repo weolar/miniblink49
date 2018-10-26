@@ -313,7 +313,8 @@ WebString WebStorageAreaImpl::getItem(const WebString& key)
     if (keyValueIt == pageStorageArea->end())
         return WebString();
 
-    return WebString(keyValueIt->value);
+    String value(keyValueIt->value);
+    return value;
 }
 
 void WebStorageAreaImpl::setItemImpl(const WebString& key, const WebString& value, const WebURL& pageUrl, WebStorageArea::Result& result, bool isFromLoad)
