@@ -860,10 +860,16 @@ void BlobResourceLoader::notifyResponseOnSuccess()
     // BlobResourceLoader cannot be used with downloading, and doesn't even wait for continueDidReceiveResponse.
     // It's currently client's responsibility to know that didReceiveResponseAsync cannot be used to convert a
     // load into a download or blobs.
-//     if (usesAsyncCallbacks())
-//         m_client->didReceiveResponseAsync(this, response);
-//     else
-        m_client->didReceiveResponse(m_loader, response);
+
+    WebURLLoaderManager* manager = WebURLLoaderManager::sharedInstance();
+    if (!manager)
+        return;
+
+    String path = manager->createBlobTempFileInfoByUrlIfNeeded(m_request.url().string());
+    if (!path.isNull() && !path.isEmpty())
+        response.setDownloadFilePath(path);
+
+    m_client->didReceiveResponse(m_loader, response);
 }
 
 void BlobResourceLoader::notifyResponseOnError()
@@ -904,7 +910,13 @@ void BlobResourceLoader::notifyResponseOnError()
 
 void BlobResourceLoader::notifyReceiveData(const char* data, int bytesRead)
 {
-    if (m_client)
+    if (!m_client)
+        return;
+
+    WebURLLoaderManager* manager = WebURLLoaderManager::sharedInstance();
+    if (m_request.downloadToFile() && !m_request.useStreamOnResponse())
+        manager->appendDataToBlobCacheWhenDidDownloadData(m_client, m_loader, m_request.url().string(), data, bytesRead, 0);
+    else
         m_client->didReceiveData(m_loader, data, bytesRead, 0);
 }
 

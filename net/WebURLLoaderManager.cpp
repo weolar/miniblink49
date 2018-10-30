@@ -201,6 +201,21 @@ WebURLLoaderManager* WebURLLoaderManager::sharedInstance()
     return sharedInstance;
 }
 
+void WebURLLoaderManager::appendDataToBlobCacheWhenDidDownloadData(blink::WebURLLoaderClient* client, blink::WebURLLoader* loader, const String& url, const char* data, int dataLength, int encodedDataLength)
+{
+    WTF::HashMap<String, BlobTempFileInfo*>::iterator it = m_blobCache.find(url);
+    if (it == m_blobCache.end()) {
+        DebugBreak();
+        return;
+    }
+
+    BlobTempFileInfo* tempFile = it->value;
+    Vector<char>& tempFileData = tempFile->data;
+    tempFileData.append(data, dataLength);
+
+    client->didDownloadData(loader, dataLength, encodedDataLength);
+}
+
 void WebURLLoaderManager::didReceiveDataOrDownload(WebURLLoaderInternal* job, const char* data, int dataLength, int encodedDataLength)
 {
     blink::WebURLLoaderClient* client = job->client();
@@ -219,17 +234,7 @@ void WebURLLoaderManager::didReceiveDataOrDownload(WebURLLoaderInternal* job, co
         return;
     }
 
-    WTF::HashMap<String, BlobTempFileInfo*>::iterator it = m_blobCache.find(String(job->m_url));
-    if (it == m_blobCache.end()) {
-        DebugBreak();
-        return;
-    }
-
-    BlobTempFileInfo* tempFile = it->value;
-    Vector<char>& tempFileData = tempFile->data;
-    tempFileData.append(data, dataLength);
-
-    client->didDownloadData(loader, dataLength, encodedDataLength);
+    appendDataToBlobCacheWhenDidDownloadData(client, loader, String(job->m_url), data, dataLength, encodedDataLength);
 }
 
 BlobTempFileInfo* WebURLLoaderManager::getBlobTempFileInfoByTempFilePath(const String& path)
@@ -246,11 +251,11 @@ BlobTempFileInfo* WebURLLoaderManager::getBlobTempFileInfoByTempFilePath(const S
     return nullptr;
 }
 
-String WebURLLoaderManager::handleHeaderForBlobOnMainThread(WebURLLoaderInternal* job, size_t totalSize)
+String WebURLLoaderManager::createBlobTempFileInfoByUrlIfNeeded(const String& url)
 {
     String tempPath = String::format("file:///c:/miniblink_blob_download_%d", GetTickCount());
 
-    WTF::HashMap<String, BlobTempFileInfo*>::iterator it = m_blobCache.find(String(job->m_url));
+    WTF::HashMap<String, BlobTempFileInfo*>::iterator it = m_blobCache.find(url);
     if (it != m_blobCache.end())
         return it->value->tempUrl;
 
@@ -258,9 +263,14 @@ String WebURLLoaderManager::handleHeaderForBlobOnMainThread(WebURLLoaderInternal
     tempFileInfo->tempUrl = tempPath;
     tempFileInfo->refCount = 0;
 
-    m_blobCache.set(String(job->m_url), tempFileInfo);
+    m_blobCache.set(url, tempFileInfo);
 
     return tempPath;
+}
+
+String WebURLLoaderManager::handleHeaderForBlobOnMainThread(WebURLLoaderInternal* job, size_t totalSize)
+{
+    return createBlobTempFileInfoByUrlIfNeeded(String(job->m_url));
 }
 
 static void setBlobDataLengthByTempPath(WebURLLoaderInternal* job)

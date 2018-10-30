@@ -47,6 +47,8 @@ namespace blink {
 class WebURLRequest;
 class WebURLResponse;
 struct WebURLError;
+class WebURLLoaderClient;
+class WebURLLoader;
 }
 
 namespace net {
@@ -101,8 +103,11 @@ public:
 
     bool isShutdown() const { return m_isShutdown; }
 
+    void appendDataToBlobCacheWhenDidDownloadData(blink::WebURLLoaderClient* client, blink::WebURLLoader* loader, const String& url, const char* data, int dataLength, int encodedDataLength);
+    String createBlobTempFileInfoByUrlIfNeeded(const String& url);
     String handleHeaderForBlobOnMainThread(WebURLLoaderInternal* job, size_t totalSize);
     BlobTempFileInfo* getBlobTempFileInfoByTempFilePath(const String& path);
+    
     void didReceiveDataOrDownload(WebURLLoaderInternal* job, const char* data, int dataLength, int encodedDataLength);
     void handleDidFinishLoading(WebURLLoaderInternal* job, double finishTime, int64_t totalEncodedDataLength);
     void handleDidFail(WebURLLoaderInternal* job, const blink::WebURLError& error);

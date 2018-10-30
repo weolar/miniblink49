@@ -8,6 +8,7 @@ ActivatingObjCheck* ActivatingObjCheck::m_inst = nullptr;
 
 ActivatingObjCheck::ActivatingObjCheck()
 {
+    m_newestId = 1;
     m_activatingObjs = new std::set<intptr_t>();
     ::InitializeCriticalSection(&m_mutex);
 }
