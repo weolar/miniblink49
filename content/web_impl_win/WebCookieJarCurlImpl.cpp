@@ -259,7 +259,7 @@ public:
         m_type = kSetCookiesTask;
         m_count = count;
 
-        *m_count += 1;
+        //*m_count += 1;
     }
 
     virtual ~AsynSetCookies() override {}
@@ -271,7 +271,7 @@ public:
         if (manager)
             manager->removeLiveJobs(m_id);
 
-        *m_count -= 1;
+        //*m_count -= 1;
         delete this;
     }
 
@@ -332,9 +332,9 @@ static void setCookiesFromDOM(const KURL&, const KURL& url, const String& value)
     AsynSetCookies* job = new AsynSetCookies(strCookie, &count);
     int jobId = manager->addLiveJobs(job);
     manager->getIoThread()->postTask(FROM_HERE, WTF::bind(&AsynSetCookies::setCookie, jobId));
-    while (0 != count) {
-        ::Sleep(5);
-    }
+//     while (0 != count) {
+//         ::Sleep(5);
+//     }
 }
 
 const curl_slist* WebCookieJarImpl::getAllCookiesBegin()
