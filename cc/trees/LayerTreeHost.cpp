@@ -1150,10 +1150,8 @@ void LayerTreeHost::paintToMemoryCanvasInCompositeThread(const SkRect& r)
 
     bool needNotifUi = drawToCanvas(m_memoryCanvas, paintRect); // ªÊ÷∆‘‡æÿ–Œ
 
-    if (!needNotifUi) {
-        OutputDebugStringA("LayerTreeHost::paintToMemoryCanvasInCompositeThread exit\n");
+    if (!needNotifUi)
         return;
-    }
 
 #if ENABLE_WKE == 1
     if (blink::RuntimeEnabledFeatures::updataInOtherThreadEnabled()) {
