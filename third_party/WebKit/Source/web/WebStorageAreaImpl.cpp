@@ -104,7 +104,7 @@ void WebStorageAreaImpl::loadFromBufferImpl(const Vector<char>& buffer, const KU
     bool isKey = true;
     String key;
     String value;
-    for (size_t i = 0; i < buffer.size() - kSeparatorLength; ++i) {
+    for (size_t i = 0; i < buffer.size() - kSeparatorLength + 1; ++i) {
         if (0 != strncmp(kSeparator, &buffer[i], kSeparatorLength))
             continue;
 
