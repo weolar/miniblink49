@@ -227,6 +227,7 @@ void TextCodecICU::registerEncodingNames(EncodingNameRegistrar registrar)
 
 #else
     registrar("gb2312", "gb2312");
+    registrar("gb18030", "gb18030");
     registrar("gb_2312", "gb_2312");
     registrar("GBK", "GBK");
 #endif // MINIBLINK_NOT_IMPLEMENTED
@@ -252,6 +253,8 @@ void TextCodecICU::registerCodecs(TextCodecRegistrar registrar)
     }
 #else
     registrar("gb2312", create, 0);
+    registrar("gb18030", create, 0);
+    registrar("gb_2312", create, 0);
     registrar("GBK", create, 0);
 #endif // MINIBLINK_NOT_IMPLEMENTED
 }
@@ -517,7 +520,11 @@ String TextCodecICU::decode(const char* bytes, size_t length, FlushBehavior flus
 
 #else
     Vector<UChar> resultBuffer;
-    if (strcasecmp(m_encoding.name(), "gb2312") && strcasecmp(m_encoding.name(), "GBK"))
+    if (strcasecmp(m_encoding.name(), "gb2312") && 
+        strcasecmp(m_encoding.name(), "GBK") && 
+        strcasecmp(m_encoding.name(), "gb18030") &&
+        strcasecmp(m_encoding.name(), "gb_2312")
+        )
         return String();
 
     if (0 == length)
@@ -779,7 +786,10 @@ CString TextCodecICU::encode(const UChar* characters, size_t length, Unencodable
     return encodeCommon(characters, length, handling);
 #else
     std::vector<char> resultBuffer;
-    if (strcasecmp(m_encoding.name(), "gb2312") && strcasecmp(m_encoding.name(), "GBK"))
+    if (strcasecmp(m_encoding.name(), "gb2312") &&
+        strcasecmp(m_encoding.name(), "GBK") &&
+        strcasecmp(m_encoding.name(), "gb18030") &&
+        strcasecmp(m_encoding.name(), "gb_2312"))
         return CString();
 
     WCharToMByte(characters, length, &resultBuffer, GBK_CONV_CODE_PAGE);
@@ -794,7 +804,10 @@ CString TextCodecICU::encode(const LChar* characters, size_t length, Unencodable
 #ifdef MINIBLINK_NOT_IMPLEMENTED
     return encodeCommon(characters, length, handling);
 #else
-    if (strcasecmp(m_encoding.name(), "gb2312") && strcasecmp(m_encoding.name(), "GBK"))
+    if (strcasecmp(m_encoding.name(), "gb2312") &&
+        strcasecmp(m_encoding.name(), "GBK") &&
+        strcasecmp(m_encoding.name(), "gb18030") &&
+        strcasecmp(m_encoding.name(), "gb_2312"))
         return CString();
 
     bool sawError = false;
