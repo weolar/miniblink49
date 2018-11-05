@@ -70,11 +70,6 @@
     extern "C" {
 #endif
 
-enum {
-    RSA_MIN_SIZE = 512,
-    RSA_MAX_SIZE = 4096,
-};
-
 /* avoid redefinition of structs */
 #if !defined(HAVE_FIPS) || \
     (defined(HAVE_FIPS_VERSION) && (HAVE_FIPS_VERSION >= 2))
@@ -99,10 +94,12 @@ enum {
     RSA_BLOCK_TYPE_1 = 1,
     RSA_BLOCK_TYPE_2 = 2,
 
+    RSA_MIN_SIZE = 512,
+    RSA_MAX_SIZE = 4096,
+
     RSA_MIN_PAD_SZ   = 11,     /* separator + 0 + pad value + 8 pads */
 
     RSA_PSS_PAD_SZ = 8,
-    RSA_PSS_SALT_MAX_SZ = 62,
 
 #ifdef OPENSSL_EXTRA
     RSA_PKCS1_PADDING_SIZE = 11,
@@ -111,18 +108,11 @@ enum {
 #ifdef WC_RSA_PSS
     RSA_PSS_PAD_TERM = 0xBC,
 #endif
-
-#ifdef HAVE_PKCS11
-    RSA_MAX_ID_LEN      = 32,
-#endif
 };
 
 /* RSA */
 struct RsaKey {
-    mp_int n, e, d, p, q;
-#if defined(WOLFSSL_KEY_GEN) || defined(OPENSSL_EXTRA) || !defined(RSA_LOW_MEM)
-    mp_int dP, dQ, u;
-#endif
+    mp_int n, e, d, p, q, dP, dQ, u;
     void* heap;                               /* for user memory overrides */
     byte* data;                               /* temp buffer for async RSA */
     int   type;                               /* public or private */
@@ -145,10 +135,6 @@ struct RsaKey {
     byte*  mod;
     XSecure_Rsa xRsa;
 #endif
-#ifdef HAVE_PKCS11
-    byte id[RSA_MAX_ID_LEN];
-    int  idLen;
-#endif
     byte   dataIsAlloc;
 };
 
@@ -162,11 +148,6 @@ struct RsaKey {
 WOLFSSL_API int  wc_InitRsaKey(RsaKey* key, void* heap);
 WOLFSSL_API int  wc_InitRsaKey_ex(RsaKey* key, void* heap, int devId);
 WOLFSSL_API int  wc_FreeRsaKey(RsaKey* key);
-#ifdef HAVE_PKCS11
-WOLFSSL_API int wc_InitRsaKey_Id(RsaKey* key, unsigned char* id, int len,
-                                 void* heap, int devId);
-#endif
-WOLFSSL_API int  wc_CheckRsaKey(RsaKey* key);
 #ifdef WOLFSSL_XILINX_CRYPT
 WOLFSSL_LOCAL int wc_InitRsaHw(RsaKey* key);
 #endif /* WOLFSSL_XILINX_CRYPT */
@@ -211,16 +192,7 @@ WOLFSSL_API int  wc_RsaPSS_CheckPadding(const byte* in, word32 inLen, byte* sig,
 WOLFSSL_API int  wc_RsaPSS_CheckPadding_ex(const byte* in, word32 inLen,
                                            byte* sig, word32 sigSz,
                                            enum wc_HashType hashType,
-                                           int saltLen, int bits);
-WOLFSSL_API int  wc_RsaPSS_VerifyCheckInline(byte* in, word32 inLen, byte** out,
-                               const byte* digest, word32 digentLen,
-                               enum wc_HashType hash, int mgf,
-                               RsaKey* key);
-WOLFSSL_API int  wc_RsaPSS_VerifyCheck(byte* in, word32 inLen,
-                               byte* out, word32 outLen,
-                               const byte* digest, word32 digestLen,
-                               enum wc_HashType hash, int mgf,
-                               RsaKey* key);
+                                           int saltLen);
 
 WOLFSSL_API int  wc_RsaEncryptSize(RsaKey* key);
 
@@ -286,10 +258,6 @@ WOLFSSL_API int wc_RsaKeyToPublicDer(RsaKey*, byte* output, word32 inLen);
 
 #ifdef WOLFSSL_KEY_GEN
     WOLFSSL_API int wc_MakeRsaKey(RsaKey* key, int size, long e, WC_RNG* rng);
-    WOLFSSL_API int wc_CheckProbablePrime_ex(const byte* p, word32 pSz,
-                                          const byte* q, word32 qSz,
-                                          const byte* e, word32 eSz,
-                                          int nlen, int* isPrime, WC_RNG* rng);
     WOLFSSL_API int wc_CheckProbablePrime(const byte* p, word32 pSz,
                                           const byte* q, word32 qSz,
                                           const byte* e, word32 eSz,

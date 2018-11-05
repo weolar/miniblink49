@@ -84,7 +84,7 @@ int wc_caamSetResource(IODevice ioDev)
  *
  * returns 0 on success
  */
-int wc_caamInit(void)
+int wc_caamInit()
 {
     int    ret;
     word32 reg;
@@ -143,7 +143,7 @@ int wc_caamInit(void)
 }
 
 
-int wc_caamFree(void)
+int wc_caamFree()
 {
     return 0;
 }

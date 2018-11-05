@@ -22,7 +22,7 @@
 
 
 #ifdef TFM_SQR3
-int fp_sqr_comba3(fp_int *A, fp_int *B)
+void fp_sqr_comba3(fp_int *A, fp_int *B)
 {
    fp_digit *a, b[6], c0, c1, c2;
 #ifdef TFM_ISO
@@ -65,8 +65,6 @@ int fp_sqr_comba3(fp_int *A, fp_int *B)
    B->sign = FP_ZPOS;
    XMEMCPY(B->dp, b, 6 * sizeof(fp_digit));
    fp_clamp(B);
-
-   return FP_OKAY;
 }
 #endif
 

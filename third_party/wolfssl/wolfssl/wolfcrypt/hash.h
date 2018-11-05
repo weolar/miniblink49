@@ -134,7 +134,7 @@ WOLFSSL_API int wc_HashUpdate(wc_HashAlg* hash, enum wc_HashType type,
     const byte* data, word32 dataSz);
 WOLFSSL_API int wc_HashFinal(wc_HashAlg* hash, enum wc_HashType type,
     byte* out);
-WOLFSSL_API int wc_HashFree(wc_HashAlg* hash, enum wc_HashType type);
+
 
 #ifndef NO_MD5
 #include <wolfssl/wolfcrypt/md5.h>
@@ -146,24 +146,22 @@ WOLFSSL_API int wc_Md5Hash(const byte* data, word32 len, byte* hash);
 WOLFSSL_API int wc_ShaHash(const byte*, word32, byte*);
 #endif
 
-#ifdef WOLFSSL_SHA224
-#include <wolfssl/wolfcrypt/sha256.h>
-WOLFSSL_API int wc_Sha224Hash(const byte*, word32, byte*);
-#endif /* defined(WOLFSSL_SHA224) */
-
 #ifndef NO_SHA256
 #include <wolfssl/wolfcrypt/sha256.h>
 WOLFSSL_API int wc_Sha256Hash(const byte*, word32, byte*);
-#endif
 
-#ifdef WOLFSSL_SHA384
-#include <wolfssl/wolfcrypt/sha512.h>
-WOLFSSL_API int wc_Sha384Hash(const byte*, word32, byte*);
-#endif /* defined(WOLFSSL_SHA384) */
+    #if defined(WOLFSSL_SHA224)
+        WOLFSSL_API int wc_Sha224Hash(const byte*, word32, byte*);
+    #endif /* defined(WOLFSSL_SHA224) */
+#endif
 
 #ifdef WOLFSSL_SHA512
 #include <wolfssl/wolfcrypt/sha512.h>
 WOLFSSL_API int wc_Sha512Hash(const byte*, word32, byte*);
+
+    #if defined(WOLFSSL_SHA384)
+        WOLFSSL_API int wc_Sha384Hash(const byte*, word32, byte*);
+    #endif /* defined(WOLFSSL_SHA384) */
 #endif /* WOLFSSL_SHA512 */
 
 #ifdef __cplusplus

@@ -1308,7 +1308,6 @@ static int wc_PKCS12_create_key_bag(WC_PKCS12* pkcs12, WC_RNG* rng,
     tmpSz = SetSequence(totalSz, out);
     XMEMMOVE(out + tmpSz, out + MAX_SEQ_SZ, totalSz);
 
-    (void)heap;
     return totalSz + tmpSz;
 }
 

@@ -48,11 +48,6 @@ typedef struct WOLFSSL_AES_KEY {
     /* key-based fast multiplication table. */
     ALIGN16 void* M0[4096 / sizeof(void*)];
     #endif /* GCM_TABLE */
-    #if defined(WOLFSSL_DEVCRYPTO) && \
-        (defined(WOLFSSL_DEVCRYPTO_AES) || defined(WOLFSSL_DEVCRYPTO_CBC))
-    /* large enough for additional devcrypto information */
-    void* devKey[288 / sizeof(void*)];
-    #endif
 } WOLFSSL_AES_KEY;
 typedef WOLFSSL_AES_KEY AES_KEY;
 

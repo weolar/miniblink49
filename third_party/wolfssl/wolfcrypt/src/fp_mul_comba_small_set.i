@@ -22,21 +22,9 @@
 
 
 #if defined(TFM_SMALL_SET)
-int fp_mul_comba_small(fp_int *A, fp_int *B, fp_int *C)
+void fp_mul_comba_small(fp_int *A, fp_int *B, fp_int *C)
 {
-   fp_digit c0, c1, c2;
-#ifndef WOLFSSL_SMALL_STACK
-   fp_digit at[32];
-#else
-   fp_digit *at;
-#endif
-
-#ifdef WOLFSSL_SMALL_STACK
-   at = (fp_digit*)XMALLOC(sizeof(fp_digit) * 32, NULL, DYNAMIC_TYPE_TMP_BUFFER);
-   if (at == NULL)
-       return FP_MEM;
-#endif
-
+   fp_digit c0, c1, c2, at[32];
    switch (MAX(A->used, B->used)) { 
 
    case 1:
@@ -1258,11 +1246,6 @@ int fp_mul_comba_small(fp_int *A, fp_int *B, fp_int *C)
    default:
       break;
    }
-
-#ifdef WOLFSSL_SMALL_STACK
-   XFREE(at, NULL, DYNAMIC_TYPE_TMP_BUFFER);
-#endif
-   return FP_OKAY;
 }
 
 #endif

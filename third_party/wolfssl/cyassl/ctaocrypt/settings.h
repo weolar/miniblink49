@@ -150,20 +150,16 @@
     #define TFM_TIMING_RESISTANT
 #endif
 
-#if defined(CYASSL_MICROCHIP_PIC32MZ) || defined(WOLFSSL_MICROCHIP_PIC32MZ)
-    #ifndef NO_PIC32MZ_CRYPT
-        #define WOLFSSL_PIC32MZ_CRYPT
-    #endif
-    #ifndef NO_PIC32MZ_RNG
-        #define WOLFSSL_PIC32MZ_RNG
-    #endif
-    #ifndef NO_PIC32MZ_HASH
-        #define WOLFSSL_PIC32MZ_HASH
-    #endif
-
+#ifdef CYASSL_MICROCHIP_PIC32MZ
+    #define CYASSL_PIC32MZ_CE
+    #define CYASSL_PIC32MZ_CRYPT
+    #define HAVE_AES_ENGINE
+    #define CYASSL_PIC32MZ_RNG
+    /* #define CYASSL_PIC32MZ_HASH */
     #define CYASSL_AES_COUNTER
     #define HAVE_AESGCM
     #define NO_BIG_INT
+
 #endif
 
 #ifdef MICROCHIP_TCPIP_V5

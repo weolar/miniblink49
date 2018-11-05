@@ -103,7 +103,7 @@ static struct CAAM_DEVICE caam;
   ****************************************************************************/
 
 /* flush job ring and reset */
-static Error caamReset(void)
+static Error caamReset()
 {
     int t = 100000; /* time out counter for flushing job ring */
 

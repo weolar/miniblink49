@@ -66,25 +66,25 @@
      * i.e., _rotl and _rotr */
     #pragma intrinsic(_lrotl, _lrotr)
 
-    STATIC WC_INLINE word32 rotlFixed(word32 x, word32 y)
+    STATIC INLINE word32 rotlFixed(word32 x, word32 y)
     {
         return y ? _lrotl(x, y) : x;
     }
 
-    STATIC WC_INLINE word32 rotrFixed(word32 x, word32 y)
+    STATIC INLINE word32 rotrFixed(word32 x, word32 y)
     {
         return y ? _lrotr(x, y) : x;
     }
 
 #else /* generic */
 
-    STATIC WC_INLINE word32 rotlFixed(word32 x, word32 y)
+    STATIC INLINE word32 rotlFixed(word32 x, word32 y)
     {
         return (x << y) | (x >> (sizeof(y) * 8 - y));
     }
 
 
-    STATIC WC_INLINE word32 rotrFixed(word32 x, word32 y)
+    STATIC INLINE word32 rotrFixed(word32 x, word32 y)
     {
         return (x >> y) | (x << (sizeof(y) * 8 - y));
     }
@@ -92,7 +92,7 @@
 #endif
 
 
-STATIC WC_INLINE word32 ByteReverseWord32(word32 value)
+STATIC INLINE word32 ByteReverseWord32(word32 value)
 {
 #ifdef PPC_INTRINSICS
     /* PPC: load reverse indexed instruction */
@@ -116,7 +116,7 @@ STATIC WC_INLINE word32 ByteReverseWord32(word32 value)
 }
 
 
-STATIC WC_INLINE void ByteReverseWords(word32* out, const word32* in,
+STATIC INLINE void ByteReverseWords(word32* out, const word32* in,
                                     word32 byteCount)
 {
     word32 count = byteCount/(word32)sizeof(word32), i;
@@ -130,19 +130,19 @@ STATIC WC_INLINE void ByteReverseWords(word32* out, const word32* in,
 #ifdef WORD64_AVAILABLE
 
 
-STATIC WC_INLINE word64 rotlFixed64(word64 x, word64 y)
+STATIC INLINE word64 rotlFixed64(word64 x, word64 y)
 {
     return (x << y) | (x >> (sizeof(y) * 8 - y));
 }
 
 
-STATIC WC_INLINE word64 rotrFixed64(word64 x, word64 y)
+STATIC INLINE word64 rotrFixed64(word64 x, word64 y)
 {
     return (x >> y) | (x << (sizeof(y) * 8 - y));
 }
 
 
-STATIC WC_INLINE word64 ByteReverseWord64(word64 value)
+STATIC INLINE word64 ByteReverseWord64(word64 value)
 {
 #if defined(WOLF_ALLOW_BUILTIN) && defined(__GNUC_PREREQ) && __GNUC_PREREQ(4, 3)
     return (word64)__builtin_bswap64(value);
@@ -159,7 +159,7 @@ STATIC WC_INLINE word64 ByteReverseWord64(word64 value)
 }
 
 
-STATIC WC_INLINE void ByteReverseWords64(word64* out, const word64* in,
+STATIC INLINE void ByteReverseWords64(word64* out, const word64* in,
                                       word32 byteCount)
 {
     word32 count = byteCount/(word32)sizeof(word64), i;
@@ -172,7 +172,7 @@ STATIC WC_INLINE void ByteReverseWords64(word64* out, const word64* in,
 #endif /* WORD64_AVAILABLE */
 
 
-STATIC WC_INLINE void XorWords(wolfssl_word* r, const wolfssl_word* a, word32 n)
+STATIC INLINE void XorWords(wolfssl_word* r, const wolfssl_word* a, word32 n)
 {
     word32 i;
 
@@ -180,7 +180,7 @@ STATIC WC_INLINE void XorWords(wolfssl_word* r, const wolfssl_word* a, word32 n)
 }
 
 
-STATIC WC_INLINE void xorbuf(void* buf, const void* mask, word32 count)
+STATIC INLINE void xorbuf(void* buf, const void* mask, word32 count)
 {
     if (((wolfssl_word)buf | (wolfssl_word)mask | count) % WOLFSSL_WORD_SIZE == 0)
         XorWords( (wolfssl_word*)buf,
@@ -196,7 +196,7 @@ STATIC WC_INLINE void xorbuf(void* buf, const void* mask, word32 count)
 
 
 /* Make sure compiler doesn't skip */
-STATIC WC_INLINE void ForceZero(const void* mem, word32 len)
+STATIC INLINE void ForceZero(const void* mem, word32 len)
 {
     volatile byte* z = (volatile byte*)mem;
 
@@ -220,7 +220,7 @@ STATIC WC_INLINE void ForceZero(const void* mem, word32 len)
 
 
 /* check all length bytes for equality, return 0 on success */
-STATIC WC_INLINE int ConstantCompare(const byte* a, const byte* b, int length)
+STATIC INLINE int ConstantCompare(const byte* a, const byte* b, int length)
 {
     int i;
     int compareSum = 0;
@@ -238,7 +238,7 @@ STATIC WC_INLINE int ConstantCompare(const byte* a, const byte* b, int length)
     #if defined(HAVE_FIPS) && !defined(min) /* so ifdef check passes */
         #define min min
     #endif
-    STATIC WC_INLINE word32 min(word32 a, word32 b)
+    STATIC INLINE word32 min(word32 a, word32 b)
     {
         return a > b ? b : a;
     }
@@ -249,14 +249,14 @@ STATIC WC_INLINE int ConstantCompare(const byte* a, const byte* b, int length)
     #if defined(HAVE_FIPS) && !defined(max) /* so ifdef check passes */
         #define max max
     #endif
-    STATIC WC_INLINE word32 max(word32 a, word32 b)
+    STATIC INLINE word32 max(word32 a, word32 b)
     {
         return a > b ? a : b;
     }
 #endif /* !WOLFSSL_HAVE_MAX */
 
 /* converts a 32 bit integer to 24 bit */
-STATIC WC_INLINE void c32to24(word32 in, word24 out)
+STATIC INLINE void c32to24(word32 in, word24 out)
 {
     out[0] = (in >> 16) & 0xff;
     out[1] = (in >>  8) & 0xff;
@@ -264,14 +264,14 @@ STATIC WC_INLINE void c32to24(word32 in, word24 out)
 }
 
 /* convert 16 bit integer to opaque */
-STATIC WC_INLINE void c16toa(word16 wc_u16, byte* c)
+STATIC INLINE void c16toa(word16 wc_u16, byte* c)
 {
     c[0] = (wc_u16 >> 8) & 0xff;
     c[1] =  wc_u16 & 0xff;
 }
 
 /* convert 32 bit integer to opaque */
-STATIC WC_INLINE void c32toa(word32 wc_u32, byte* c)
+STATIC INLINE void c32toa(word32 wc_u32, byte* c)
 {
     c[0] = (wc_u32 >> 24) & 0xff;
     c[1] = (wc_u32 >> 16) & 0xff;
@@ -280,75 +280,75 @@ STATIC WC_INLINE void c32toa(word32 wc_u32, byte* c)
 }
 
 /* convert a 24 bit integer into a 32 bit one */
-STATIC WC_INLINE void c24to32(const word24 wc_u24, word32* wc_u32)
+STATIC INLINE void c24to32(const word24 wc_u24, word32* wc_u32)
 {
     *wc_u32 = (wc_u24[0] << 16) | (wc_u24[1] << 8) | wc_u24[2];
 }
 
 
 /* convert opaque to 24 bit integer */
-STATIC WC_INLINE void ato24(const byte* c, word32* wc_u24)
+STATIC INLINE void ato24(const byte* c, word32* wc_u24)
 {
     *wc_u24 = (c[0] << 16) | (c[1] << 8) | c[2];
 }
 
 /* convert opaque to 16 bit integer */
-STATIC WC_INLINE void ato16(const byte* c, word16* wc_u16)
+STATIC INLINE void ato16(const byte* c, word16* wc_u16)
 {
     *wc_u16 = (word16) ((c[0] << 8) | (c[1]));
 }
 
 /* convert opaque to 32 bit integer */
-STATIC WC_INLINE void ato32(const byte* c, word32* wc_u32)
+STATIC INLINE void ato32(const byte* c, word32* wc_u32)
 {
     *wc_u32 = ((word32)c[0] << 24) | (c[1] << 16) | (c[2] << 8) | c[3];
 }
 
 
-STATIC WC_INLINE word32 btoi(byte b)
+STATIC INLINE word32 btoi(byte b)
 {
     return (word32)(b - 0x30);
 }
 
 
 /* Constant time - mask set when a > b. */
-STATIC WC_INLINE byte ctMaskGT(int a, int b)
+STATIC INLINE byte ctMaskGT(int a, int b)
 {
     return (((word32)a - b - 1) >> 31) - 1;
 }
 
 /* Constant time - mask set when a >= b. */
-STATIC WC_INLINE byte ctMaskGTE(int a, int b)
+STATIC INLINE byte ctMaskGTE(int a, int b)
 {
     return (((word32)a - b    ) >> 31) - 1;
 }
 
 /* Constant time - mask set when a < b. */
-STATIC WC_INLINE byte ctMaskLT(int a, int b)
+STATIC INLINE byte ctMaskLT(int a, int b)
 {
     return (((word32)b - a - 1) >> 31) - 1;
 }
 
 /* Constant time - mask set when a <= b. */
-STATIC WC_INLINE byte ctMaskLTE(int a, int b)
+STATIC INLINE byte ctMaskLTE(int a, int b)
 {
     return (((word32)b - a    ) >> 31) - 1;
 }
 
 /* Constant time - mask set when a == b. */
-STATIC WC_INLINE byte ctMaskEq(int a, int b)
+STATIC INLINE byte ctMaskEq(int a, int b)
 {
     return 0 - (a == b);
 }
 
 /* Constant time - select b when mask is set and a otherwise. */
-STATIC WC_INLINE byte ctMaskSel(byte m, byte a, byte b)
+STATIC INLINE byte ctMaskSel(byte m, byte a, byte b)
 {
-    return (a & ((byte)~(word32)m)) | (b & m);
+    return (a & ~m) | (b & m);
 }
 
 /* Constant time - bit set when a <= b. */
-STATIC WC_INLINE byte ctSetLTE(int a, int b)
+STATIC INLINE byte ctSetLTE(int a, int b)
 {
     return ((word32)a - b - 1) >> 31;
 }

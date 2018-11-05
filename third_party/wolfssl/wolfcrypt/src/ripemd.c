@@ -271,7 +271,7 @@ static void Transform(RipeMd* ripemd)
 }
 
 
-static WC_INLINE void AddLength(RipeMd* ripemd, word32 len)
+static INLINE void AddLength(RipeMd* ripemd, word32 len)
 {
     word32 tmp = ripemd->loLen;
     if ( (ripemd->loLen += len) < tmp)

@@ -28,25 +28,11 @@
 
 #if !defined(NO_SHA)
 
-#if defined(HAVE_FIPS) && \
-	defined(HAVE_FIPS_VERSION) && (HAVE_FIPS_VERSION >= 2)
-
-    /* set NO_WRAPPERS before headers, use direct internal f()s not wrappers */
-    #define FIPS_NO_WRAPPERS
-
-    #ifdef USE_WINDOWS_API
-        #pragma code_seg(".fipsA$j")
-        #pragma const_seg(".fipsB$j")
-    #endif
-#endif
-
 #include <wolfssl/wolfcrypt/sha.h>
 #include <wolfssl/wolfcrypt/error-crypt.h>
 
 /* fips wrapper calls, user can call direct */
-#if defined(HAVE_FIPS) && \
-    (!defined(HAVE_FIPS_VERSION) || (HAVE_FIPS_VERSION < 2))
-
+#ifdef HAVE_FIPS
     int wc_InitSha(wc_Sha* sha)
     {
         if (sha == NULL) {
@@ -85,7 +71,7 @@
         /* Not supported in FIPS */
     }
 
-#else /* else build without fips, or for FIPS v2 */
+#else /* else build without fips */
 
 
 #if defined(WOLFSSL_TI_HASH)
@@ -267,7 +253,7 @@
 /* Software implementation */
 #ifdef USE_SHA_SOFTWARE_IMPL
 
-static WC_INLINE void AddLength(wc_Sha* sha, word32 len)
+static INLINE void AddLength(wc_Sha* sha, word32 len)
 {
     word32 tmp = sha->loLen;
     if ((sha->loLen += len) < tmp)
@@ -286,14 +272,6 @@ static WC_INLINE void AddLength(wc_Sha* sha, word32 len)
     #define f2(x,y,z) ((x)^(y)^(z))
     #define f3(x,y,z) (((x)&(y))|((z)&((x)|(y))))
     #define f4(x,y,z) ((x)^(y)^(z))
-
-    #ifdef WOLFSSL_NUCLEUS_1_2
-        /* nucleus.h also defines R1-R4 */
-        #undef R1
-        #undef R2
-        #undef R3
-        #undef R4
-    #endif
 
     /* (R0+R1), R2, R3, R4 are the different operations used in SHA1 */
     #define R0(v,w,x,y,z,i) (z)+= f1((w),(x),(y)) + blk0((i)) + 0x5A827999+ \
@@ -553,10 +531,6 @@ void wc_ShaFree(wc_Sha* sha)
 #if defined(WOLFSSL_ASYNC_CRYPT) && defined(WC_ASYNC_ENABLE_SHA)
     wolfAsync_DevCtxFree(&sha->asyncDev, WOLFSSL_ASYNC_MARKER_SHA);
 #endif /* WOLFSSL_ASYNC_CRYPT */
-
-#ifdef WOLFSSL_PIC32MZ_HASH
-    wc_ShaPic32Free(sha);
-#endif
 }
 
 #endif /* !WOLFSSL_TI_HASH */

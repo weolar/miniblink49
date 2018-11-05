@@ -29,7 +29,11 @@
 /* in case user set USE_FAST_MATH there */
 #include <wolfssl/wolfcrypt/settings.h>
 
-#include <wolfssl/wolfcrypt/integer.h>
+#ifdef USE_FAST_MATH
+    #include <wolfssl/wolfcrypt/tfm.h>
+#else
+    #include <wolfssl/wolfcrypt/integer.h>
+#endif
 
 #include <wolfssl/wolfcrypt/error-crypt.h>
 #include <wolfssl/wolfcrypt/logging.h>
@@ -87,7 +91,6 @@ mp_digit get_digit(mp_int* a, int n)
     return (n >= a->used || n < 0) ? 0 : a->dp[n];
 }
 
-#ifndef WC_NO_RNG
 int get_rand_digit(WC_RNG* rng, mp_digit* d)
 {
     return wc_RNG_GenerateBlock(rng, (byte*)d, sizeof(mp_digit));
@@ -96,91 +99,47 @@ int get_rand_digit(WC_RNG* rng, mp_digit* d)
 #ifdef WC_RSA_BLINDING
 int mp_rand(mp_int* a, int digits, WC_RNG* rng)
 {
-    int ret = 0;
-    DECLARE_VAR(d, mp_digit, 1, rng ? rng->heap : NULL);
+    int ret;
+    mp_digit d;
 
-    if (rng == NULL) {
-        ret = MISSING_RNG_E; goto exit;
-    }
+    if (rng == NULL)
+        return MISSING_RNG_E;
 
-    if (a == NULL
-    #ifdef WOLFSSL_ASYNC_CRYPT
-        || d == NULL
-    #endif
-    ) {
-        ret = BAD_FUNC_ARG; goto exit;
-    }
+    if (a == NULL)
+        return BAD_FUNC_ARG;
 
     mp_zero(a);
     if (digits <= 0) {
-        ret = MP_OKAY; goto exit;
+        return MP_OKAY;
     }
 
     /* first place a random non-zero digit */
     do {
-        ret = get_rand_digit(rng, d);
+        ret = get_rand_digit(rng, &d);
         if (ret != 0) {
-            goto exit;
+            return ret;
         }
-    } while (*d == 0);
+    } while (d == 0);
 
-    if ((ret = mp_add_d(a, *d, a)) != MP_OKAY) {
-        goto exit;
+    if ((ret = mp_add_d(a, d, a)) != MP_OKAY) {
+        return ret;
     }
 
     while (--digits > 0) {
         if ((ret = mp_lshd(a, 1)) != MP_OKAY) {
-            goto exit;
+            return ret;
         }
-        if ((ret = get_rand_digit(rng, d)) != 0) {
-            goto exit;
+        if ((ret = get_rand_digit(rng, &d)) != 0) {
+            return ret;
         }
-        if ((ret = mp_add_d(a, *d, a)) != MP_OKAY) {
-            goto exit;
+        if ((ret = mp_add_d(a, d, a)) != MP_OKAY) {
+            return ret;
         }
     }
-
-exit:
-    FREE_VAR(d, rng ? rng->heap : NULL);
 
     return ret;
 }
 #endif /* WC_RSA_BLINDING */
-#endif
-
-/* export an mp_int as unsigned char or hex string
- * encType is WC_TYPE_UNSIGNED_BIN or WC_TYPE_HEX_STR
- * return MP_OKAY on success */
-int wc_export_int(mp_int* mp, byte* buf, word32* len, word32 keySz,
-    int encType)
-{
-    int err;
-
-    if (mp == NULL)
-        return BAD_FUNC_ARG;
-
-    /* check buffer size */
-    if (*len < keySz) {
-        *len = keySz;
-        return BUFFER_E;
-    }
-
-    *len = keySz;
-    XMEMSET(buf, 0, *len);
-
-    if (encType == WC_TYPE_HEX_STR) {
-    #ifdef WC_MP_TO_RADIX
-        err = mp_tohex(mp, (char*)buf);
-    #else
-        err = NOT_COMPILED_IN;
-    #endif
-    }
-    else {
-        err = mp_to_unsigned_bin(mp, buf + (keySz - mp_unsigned_bin_size(mp)));
-    }
-
-    return err;
-}
 
 
 #ifdef HAVE_WOLF_BIGINT

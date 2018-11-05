@@ -82,7 +82,7 @@ static int InitSha256(wc_Sha256* sha256)
     return ret;
 }
 
-static WC_INLINE void AddLength(wc_Sha256* sha256, word32 len)
+static INLINE void AddLength(wc_Sha256* sha256, word32 len)
 {
     word32 tmp = sha256->loLen;
     if ((sha256->loLen += len) < tmp)
@@ -93,7 +93,7 @@ static WC_INLINE void AddLength(wc_Sha256* sha256, word32 len)
 #ifdef __aarch64__
 
 /* ARMv8 hardware accleration */
-static WC_INLINE int Sha256Update(wc_Sha256* sha256, const byte* data, word32 len)
+static INLINE int Sha256Update(wc_Sha256* sha256, const byte* data, word32 len)
 {
     word32 add;
     word32 numBlocks;
@@ -306,7 +306,7 @@ static WC_INLINE int Sha256Update(wc_Sha256* sha256, const byte* data, word32 le
 }
 
 
-static WC_INLINE int Sha256Final(wc_Sha256* sha256, byte* hash)
+static INLINE int Sha256Final(wc_Sha256* sha256, byte* hash)
 {
     byte* local;
 
@@ -655,7 +655,7 @@ static WC_INLINE int Sha256Final(wc_Sha256* sha256, byte* hash)
 #else /* not using 64 bit */
 
 /* ARMv8 hardware accleration Aarch32 */
-static WC_INLINE int Sha256Update(wc_Sha256* sha256, const byte* data, word32 len)
+static INLINE int Sha256Update(wc_Sha256* sha256, const byte* data, word32 len)
 {
     word32 add;
     word32 numBlocks;
@@ -882,7 +882,7 @@ static WC_INLINE int Sha256Update(wc_Sha256* sha256, const byte* data, word32 le
 }
 
 
-static WC_INLINE int Sha256Final(wc_Sha256* sha256, byte* hash)
+static INLINE int Sha256Final(wc_Sha256* sha256, byte* hash)
 {
     byte* local;
 

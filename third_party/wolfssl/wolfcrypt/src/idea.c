@@ -44,7 +44,7 @@
  * IDEA specify a special case when an entry value is 0 ( x or y)
  * then it must be replaced by 2^16
  */
-static WC_INLINE word16 idea_mult(word16 x, word16 y)
+static INLINE word16 idea_mult(word16 x, word16 y)
 {
     long mul, res;
 
@@ -66,7 +66,7 @@ static WC_INLINE word16 idea_mult(word16 x, word16 y)
 
 /* compute 1/a modulo 2^16+1 using Extended euclidean algorithm
  * adapted from fp_invmod */
-static WC_INLINE word16 idea_invmod(word16 x)
+static INLINE word16 idea_invmod(word16 x)
 {
     int   u, v, b, d;
 

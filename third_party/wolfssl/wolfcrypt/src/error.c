@@ -461,42 +461,6 @@ const char* wc_GetErrorString(int error)
     case DH_KAT_FIPS_E:
         return "wolfcrypt FIPS DH Known Answer Test Failure";
 
-    case AESCCM_KAT_FIPS_E:
-        return "AESCCM Known Answer Test check FIPS error";
-
-    case SHA3_KAT_FIPS_E:
-        return "SHA-3 Known Answer Test check FIPS error";
-
-    case ECDHE_KAT_FIPS_E:
-        return "wolfcrypt FIPS ECDHE Known Answer Test Failure";
-
-    case AES_GCM_OVERFLOW_E:
-        return "AES-GCM invocation counter overflow";
-
-    case AES_CCM_OVERFLOW_E:
-        return "AES-CCM invocation counter overflow";
-
-    case RSA_KEY_PAIR_E:
-        return "RSA Key Pair-Wise Consistency check fail";
-
-    case DH_CHECK_PRIV_E:
-        return "DH Check Private Key failure";
-
-    case WC_AFALG_SOCK_E:
-        return "AF_ALG socket error";
-
-    case WC_DEVCRYPTO_E:
-        return "Error with /dev/crypto";
-
-    case ZLIB_INIT_ERROR:
-        return "zlib init error";
-
-    case ZLIB_COMPRESS_ERROR:
-        return "zlib compress error";
-
-    case ZLIB_DECOMPRESS_ERROR:
-        return "zlib decompress error";
-
     default:
         return "unknown error number";
 

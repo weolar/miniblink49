@@ -51,14 +51,6 @@
     int get_rand_digit(WC_RNG* rng, mp_digit* d);
     int mp_rand(mp_int* a, int digits, WC_RNG* rng);
 
-    enum {
-        /* format type */
-        WC_TYPE_HEX_STR = 1,
-        WC_TYPE_UNSIGNED_BIN = 2,
-    };
-
-    WOLFSSL_API int wc_export_int(mp_int* mp, byte* buf, word32* len, 
-        word32 keySz, int encType);
 
     #ifdef HAVE_WOLF_BIGINT
         void wc_bigint_init(WC_BIGINT* a);

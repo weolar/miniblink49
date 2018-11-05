@@ -70,7 +70,7 @@ int wc_Arc4SetKey(Arc4* arc4, const byte* key, word32 length)
 }
 
 
-static WC_INLINE byte MakeByte(word32* x, word32* y, byte* s)
+static INLINE byte MakeByte(word32* x, word32* y, byte* s)
 {
     word32 a = s[*x], b;
     *y = (*y+a) & 0xff;

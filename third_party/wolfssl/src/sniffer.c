@@ -252,8 +252,7 @@ static const char* const msgTable[] =
 /* *nix version uses table above */
 static void GetError(int idx, char* str)
 {
-    XSTRNCPY(str, msgTable[idx - 1], MAX_ERROR_LEN-1);
-    str[MAX_ERROR_LEN-1] = '\0';
+    XSTRNCPY(str, msgTable[idx - 1], MAX_ERROR_LEN);
 }
 
 
@@ -1166,7 +1165,7 @@ static int LoadKeyFile(byte** keyBuf, word32* keyBufSz,
 
     file = XFOPEN(keyFile, "rb");
     if (file == XBADFILE) return -1;
-    if(XFSEEK(file, 0, XSEEK_END) != 0) return -1;
+    XFSEEK(file, 0, XSEEK_END);
     fileSz = XFTELL(file);
     XREWIND(file);
 

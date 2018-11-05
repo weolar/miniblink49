@@ -29,12 +29,14 @@
 
 #ifdef HAVE_FIPS
     /* for fips @wc_fips */
-    #include <wolfssl/wolfcrypt/fips.h>
+    #include <cyassl/ctaocrypt/sha3.h>
 #endif
 
 #ifdef __cplusplus
     extern "C" {
 #endif
+
+#ifndef HAVE_FIPS /* avoid redefinition of structs */
 
 #ifdef WOLFSSL_ASYNC_CRYPT
     #include <wolfssl/wolfcrypt/async.h>
@@ -100,7 +102,7 @@ typedef struct Sha3 {
 #endif /* WOLFSSL_ASYNC_CRYPT */
 } wc_Sha3;
 #endif
-
+#endif /* HAVE_FIPS */
 
 WOLFSSL_API int wc_InitSha3_224(wc_Sha3*, void*, int);
 WOLFSSL_API int wc_Sha3_224_Update(wc_Sha3*, const byte*, word32);

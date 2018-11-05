@@ -22,22 +22,11 @@
 
 
 #ifdef TFM_SQR4
-int fp_sqr_comba4(fp_int *A, fp_int *B)
+void fp_sqr_comba4(fp_int *A, fp_int *B)
 {
-   fp_digit *a, c0, c1, c2;
+   fp_digit *a, b[8], c0, c1, c2;
 #ifdef TFM_ISO
    fp_word tt;
-#endif
-#ifndef WOLFSSL_SMALL_STACK
-   fp_digit b[8];
-#else
-   fp_digit *b;
-#endif
-
-#ifdef WOLFSSL_SMALL_STACK
-   b = (fp_digit*)XMALLOC(sizeof(fp_digit) * 8, NULL, DYNAMIC_TYPE_TMP_BUFFER);
-   if (b == NULL)
-      return FP_MEM;
 #endif
 
    a = A->dp;
@@ -86,11 +75,6 @@ int fp_sqr_comba4(fp_int *A, fp_int *B)
    B->sign = FP_ZPOS;
    XMEMCPY(B->dp, b, 8 * sizeof(fp_digit));
    fp_clamp(B);
-
-#ifdef WOLFSSL_SMALL_STACK
-   XFREE(b, NULL, DYNAMIC_TYPE_TMP_BUFFER);
-#endif
-   return FP_OKAY;
 }
 #endif
 

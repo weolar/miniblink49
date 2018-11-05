@@ -95,7 +95,6 @@ WOLFSSL_API int wolfSSL_RSA_LoadDer_ex(WOLFSSL_RSA*, const unsigned char*, int s
 
 #define WOLFSSL_RSA_LOAD_PRIVATE 1
 #define WOLFSSL_RSA_LOAD_PUBLIC  2
-#define WOLFSSL_RSA_F4           0x10001L
 
 #define RSA_new  wolfSSL_RSA_new
 #define RSA_free wolfSSL_RSA_free
@@ -112,7 +111,6 @@ WOLFSSL_API int wolfSSL_RSA_LoadDer_ex(WOLFSSL_RSA*, const unsigned char*, int s
 #define RSA_verify          wolfSSL_RSA_verify
 #define RSA_public_decrypt wolfSSL_RSA_public_decrypt
 
-#define RSA_F4             WOLFSSL_RSA_F4
 
 #ifdef __cplusplus
     }  /* extern "C" */

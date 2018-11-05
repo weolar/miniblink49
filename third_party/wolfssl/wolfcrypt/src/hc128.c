@@ -272,7 +272,7 @@ static void Hc128_SetIV(HC128* ctx, const byte* inIv)
 }
 
 
-static WC_INLINE int DoKey(HC128* ctx, const byte* key, const byte* iv)
+static INLINE int DoKey(HC128* ctx, const byte* key, const byte* iv)
 {
   word32 i;
 
@@ -335,7 +335,7 @@ int wc_Hc128_SetKey(HC128* ctx, const byte* key, const byte* iv)
 
 
 /* The following defines the encryption of data stream */
-static WC_INLINE int DoProcess(HC128* ctx, byte* output, const byte* input,
+static INLINE int DoProcess(HC128* ctx, byte* output, const byte* input,
                             word32 msglen)
 {
   word32 i, keystream[16];

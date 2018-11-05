@@ -130,7 +130,7 @@ static void Transform(Md4* md4)
 }
 
 
-static WC_INLINE void AddLength(Md4* md4, word32 len)
+static INLINE void AddLength(Md4* md4, word32 len)
 {
     word32 tmp = md4->loLen;
     if ( (md4->loLen += len) < tmp)

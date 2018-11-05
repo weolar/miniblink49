@@ -80,9 +80,6 @@ WOLFSSL_API int wc_MakeDsaParameters(WC_RNG *rng, int modulus_size, DsaKey *dsa)
 /* raw export functions */
 WOLFSSL_API int wc_DsaImportParamsRaw(DsaKey* dsa, const char* p,
                                       const char* q, const char* g);
-WOLFSSL_API int wc_DsaImportParamsRawCheck(DsaKey* dsa, const char* p,
-                                      const char* q, const char* g,
-                                      int trusted, WC_RNG* rng);
 WOLFSSL_API int wc_DsaExportParamsRaw(DsaKey* dsa, byte* p, word32* pSz,
                                       byte* q, word32* qSz, byte* g,
                                       word32* gSz);

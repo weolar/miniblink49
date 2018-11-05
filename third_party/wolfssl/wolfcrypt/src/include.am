@@ -52,6 +52,7 @@ EXTRA_DIST += wolfcrypt/src/port/ti/ti-aes.c \
               wolfcrypt/src/port/arm/armv8-aes.c \
               wolfcrypt/src/port/arm/armv8-sha256.c \
               wolfcrypt/src/port/nxp/ksdk_port.c \
+              wolfcrypt/src/port/atmel/atmel.c \
               wolfcrypt/src/port/atmel/README.md \
               wolfcrypt/src/port/xilinx/xil-sha3.c \
               wolfcrypt/src/port/xilinx/xil-aesgcm.c \
@@ -60,27 +61,10 @@ EXTRA_DIST += wolfcrypt/src/port/ti/ti-aes.c \
               wolfcrypt/src/port/caam/caam_init.c \
               wolfcrypt/src/port/caam/caam_sha.c \
               wolfcrypt/src/port/caam/caam_doc.pdf \
-              wolfcrypt/src/port/st/stm32.c \
-              wolfcrypt/src/port/st/stsafe.c \
-              wolfcrypt/src/port/st/README.md \
-              wolfcrypt/src/port/af_alg/afalg_aes.c \
-              wolfcrypt/src/port/af_alg/afalg_hash.c \
-              wolfcrypt/src/port/devcrypto/devcrypto_hash.c \
-              wolfcrypt/src/port/devcrypto/wc_devcrypto.c \
-              wolfcrypt/src/port/devcrypto/README.md
+              wolfcrypt/src/port/st/stm32.c
 
 if BUILD_CRYPTODEV
 src_libwolfssl_la_SOURCES += wolfcrypt/src/cryptodev.c
-endif
-
-if BUILD_PKCS11
-src_libwolfssl_la_SOURCES += wolfcrypt/src/wc_pkcs11.c
-endif
-
-if BUILD_DEVCRYPTO
-src_libwolfssl_la_SOURCES += wolfcrypt/src/port/devcrypto/devcrypto_hash.c
-src_libwolfssl_la_SOURCES += wolfcrypt/src/port/devcrypto/devcrypto_aes.c
-src_libwolfssl_la_SOURCES += wolfcrypt/src/port/devcrypto/wc_devcrypto.c
 endif
 
 if BUILD_CAVIUM
@@ -94,8 +78,4 @@ src_libwolfssl_la_SOURCES += wolfcrypt/src/port/intel/quickassist.c
 src_libwolfssl_la_SOURCES += wolfcrypt/src/port/intel/quickassist_mem.c
 
 EXTRA_DIST += wolfcrypt/src/port/intel/README.md
-endif
-
-if BUILD_CRYPTOAUTHLIB
-src_libwolfssl_la_SOURCES += wolfcrypt/src/port/atmel/atmel.c
 endif

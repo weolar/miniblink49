@@ -205,22 +205,8 @@ enum {
     RSAPSS_PAT_FIPS_E   = -254,  /* RSA-PSS PAT failure */
     ECDSA_PAT_FIPS_E    = -255,  /* ECDSA PAT failure */
     DH_KAT_FIPS_E       = -256,  /* DH KAT failure */
-    AESCCM_KAT_FIPS_E   = -257,  /* AESCCM KAT failure */
-    SHA3_KAT_FIPS_E     = -258,  /* SHA-3 KAT failure */
-    ECDHE_KAT_FIPS_E    = -259,  /* ECDHE KAT failure */
-    AES_GCM_OVERFLOW_E  = -260,  /* AES-GCM invocation counter overflow. */
-    AES_CCM_OVERFLOW_E  = -261,  /* AES-CCM invocation counter overflow. */
-    RSA_KEY_PAIR_E      = -262,  /* RSA Key Pair-Wise Consistency check fail. */
-    DH_CHECK_PRIV_E     = -263,  /* DH Check Priv Key error */
 
-    WC_AFALG_SOCK_E     = -264,  /* AF_ALG socket error */
-    WC_DEVCRYPTO_E      = -265,  /* /dev/crypto error */
-
-    ZLIB_INIT_ERROR     = -266,   /* zlib init error  */
-    ZLIB_COMPRESS_ERROR = -267,   /* zlib compression error  */
-    ZLIB_DECOMPRESS_ERROR = -268,  /* zlib decompression error  */
-
-    WC_LAST_E           = -268,  /* Update this to indicate last error */
+    WC_LAST_E           = -256,  /* Update this to indicate last error */
     MIN_CODE_E          = -300   /* errors -101 - -299 */
 
     /* add new companion error id strings for any new error codes

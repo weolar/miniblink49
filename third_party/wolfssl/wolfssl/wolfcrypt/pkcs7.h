@@ -79,9 +79,9 @@ enum Pkcs7_Misc {
 
 
 typedef struct PKCS7Attrib {
-    const byte* oid;
+    byte* oid;
     word32 oidSz;
-    const byte* value;
+    byte* value;
     word32 valueSz;
 } PKCS7Attrib;
 
@@ -95,15 +95,12 @@ typedef struct PKCS7DecodedAttrib {
 } PKCS7DecodedAttrib;
 
 
-/* Public Structure Warning:
- * Existing members must not be changed to maintain backwards compatibility! 
- */
 typedef struct PKCS7 {
     WC_RNG* rng;
     PKCS7Attrib* signedAttribs;
-    byte*  content;               /* inner content, not owner             */
+    byte* content;                /* inner content, not owner             */
     byte*  singleCert;            /* recipient cert, DER, not owner       */
-    const byte* issuer;           /* issuer name of singleCert            */
+    byte*  issuer;                /* issuer name of singleCert            */
     byte*  privateKey;            /* private key, DER, not owner          */
     void*  heap;                  /* heap hint for dynamic memory         */
 #ifdef ASN_BER_TO_DER
@@ -139,17 +136,11 @@ typedef struct PKCS7 {
     int devId;                    /* device ID for HW based private key   */
     byte issuerHash[KEYID_SIZE];  /* hash of all alt Names                */
     byte issuerSn[MAX_SN_SZ];     /* singleCert's serial number           */
-    byte publicKey[MAX_RSA_INT_SZ + MAX_RSA_E_SZ]; /* MAX RSA key size (m + e)*/
+    byte publicKey[MAX_RSA_INT_SZ + MAX_RSA_E_SZ ];/*MAX RSA key size (m + e)*/
     word32 certSz[MAX_PKCS7_CERTS];
-    
-     /* flags - up to 16-bits */
-    word16 isDynamic:1;
-
-    /* !! NEW DATA MEMBERS MUST BE ADDED AT END !! */
 } PKCS7;
 
 
-WOLFSSL_API PKCS7* wc_PKCS7_New(void* heap, int devId);
 WOLFSSL_API int  wc_PKCS7_Init(PKCS7* pkcs7, void* heap, int devId);
 WOLFSSL_API int  wc_PKCS7_InitWithCert(PKCS7* pkcs7, byte* cert, word32 certSz);
 WOLFSSL_API void wc_PKCS7_Free(PKCS7* pkcs7);
@@ -160,14 +151,8 @@ WOLFSSL_API int  wc_PKCS7_EncodeData(PKCS7* pkcs7, byte* output,
                                        word32 outputSz);
 WOLFSSL_API int  wc_PKCS7_EncodeSignedData(PKCS7* pkcs7,
                                        byte* output, word32 outputSz);
-WOLFSSL_API int  wc_PKCS7_EncodeSignedData_ex(PKCS7* pkcs7, const byte* hashBuf, 
-    word32 hashSz, byte* outputHead, word32* outputHeadSz, byte* outputFoot, 
-    word32* outputFootSz);
 WOLFSSL_API int  wc_PKCS7_VerifySignedData(PKCS7* pkcs7,
                                        byte* pkiMsg, word32 pkiMsgSz);
-WOLFSSL_API int  wc_PKCS7_VerifySignedData_ex(PKCS7* pkcs7, const byte* hashBuf, 
-    word32 hashSz, byte* pkiMsgHead, word32 pkiMsgHeadSz, byte* pkiMsgFoot, 
-    word32 pkiMsgFootSz);
 WOLFSSL_API int  wc_PKCS7_EncodeEnvelopedData(PKCS7* pkcs7,
                                           byte* output, word32 outputSz);
 WOLFSSL_API int  wc_PKCS7_DecodeEnvelopedData(PKCS7* pkcs7, byte* pkiMsg,

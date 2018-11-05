@@ -118,61 +118,9 @@ int wc_CryptoDev_Rsa(const byte* in, word32 inLen, byte* out,
 
     return ret;
 }
-
-#ifdef WOLFSSL_KEY_GEN
-int wc_CryptoDev_MakeRsaKey(RsaKey* key, int size, long e, WC_RNG* rng)
-{
-    int ret = NOT_COMPILED_IN;
-    CryptoDev* dev;
-
-    /* locate registered callback */
-    dev = wc_CryptoDev_FindDevice(key->devId);
-    if (dev) {
-        if (dev->cb) {
-            wc_CryptoInfo cryptoInfo;
-            XMEMSET(&cryptoInfo, 0, sizeof(cryptoInfo));
-            cryptoInfo.algo_type = WC_ALGO_TYPE_PK;
-            cryptoInfo.pk.type = WC_PK_TYPE_RSA_KEYGEN;
-            cryptoInfo.pk.rsakg.key = key;
-            cryptoInfo.pk.rsakg.size = size;
-            cryptoInfo.pk.rsakg.e = e;
-            cryptoInfo.pk.rsakg.rng = rng;
-
-            ret = dev->cb(key->devId, &cryptoInfo, dev->ctx);
-        }
-    }
-
-    return ret;
-}
-#endif
 #endif /* !NO_RSA */
 
 #ifdef HAVE_ECC
-int wc_CryptoDev_MakeEccKey(WC_RNG* rng, int keySize, ecc_key* key, int curveId)
-{
-    int ret = NOT_COMPILED_IN;
-    CryptoDev* dev;
-
-    /* locate registered callback */
-    dev = wc_CryptoDev_FindDevice(key->devId);
-    if (dev) {
-        if (dev->cb) {
-            wc_CryptoInfo cryptoInfo;
-            XMEMSET(&cryptoInfo, 0, sizeof(cryptoInfo));
-            cryptoInfo.algo_type = WC_ALGO_TYPE_PK;
-            cryptoInfo.pk.type = WC_PK_TYPE_EC_KEYGEN;
-            cryptoInfo.pk.eckg.rng = rng;
-            cryptoInfo.pk.eckg.size = keySize;
-            cryptoInfo.pk.eckg.key = key;
-            cryptoInfo.pk.eckg.curveId = curveId;
-
-            ret = dev->cb(key->devId, &cryptoInfo, dev->ctx);
-        }
-    }
-
-    return ret;
-}
-
 int wc_CryptoDev_Ecdh(ecc_key* private_key, ecc_key* public_key,
     byte* out, word32* outlen)
 {
@@ -255,88 +203,5 @@ int wc_CryptoDev_EccVerify(const byte* sig, word32 siglen,
     return ret;
 }
 #endif /* HAVE_ECC */
-
-#if !defined(NO_AES) && defined(HAVE_AESGCM)
-int wc_CryptoDev_AesGcmEncrypt(Aes* aes, byte* out,
-                               const byte* in, word32 sz,
-                               const byte* iv, word32 ivSz,
-                               byte* authTag, word32 authTagSz,
-                               const byte* authIn, word32 authInSz)
-{
-    int ret = NOT_COMPILED_IN;
-    CryptoDev* dev;
-
-    /* locate registered callback */
-    dev = wc_CryptoDev_FindDevice(aes->devId);
-    if (dev) {
-        if (dev->cb) {
-            wc_CryptoInfo cryptoInfo;
-            XMEMSET(&cryptoInfo, 0, sizeof(cryptoInfo));
-            cryptoInfo.algo_type = WC_ALGO_TYPE_CIPHER;
-            cryptoInfo.cipher.type = WC_CIPHER_AES_GCM;
-            cryptoInfo.cipher.enc = 1;
-            cryptoInfo.cipher.aesgcm_enc.aes       = aes;
-            cryptoInfo.cipher.aesgcm_enc.out       = out;
-            cryptoInfo.cipher.aesgcm_enc.in        = in;
-            cryptoInfo.cipher.aesgcm_enc.sz        = sz;
-            cryptoInfo.cipher.aesgcm_enc.iv        = iv;
-            cryptoInfo.cipher.aesgcm_enc.ivSz      = ivSz;
-            cryptoInfo.cipher.aesgcm_enc.authTag   = authTag;
-            cryptoInfo.cipher.aesgcm_enc.authTagSz = authTagSz;
-            cryptoInfo.cipher.aesgcm_enc.authIn    = authIn;
-            cryptoInfo.cipher.aesgcm_enc.authInSz  = authInSz;
-
-            ret = dev->cb(aes->devId, &cryptoInfo, dev->ctx);
-        }
-    }
-
-    return ret;
-}
-
-int wc_CryptoDev_AesGcmDecrypt(Aes* aes, byte* out,
-                               const byte* in, word32 sz,
-                               const byte* iv, word32 ivSz,
-                               const byte* authTag, word32 authTagSz,
-                               const byte* authIn, word32 authInSz)
-{
-    int ret = NOT_COMPILED_IN;
-    CryptoDev* dev;
-
-    /* locate registered callback */
-    dev = wc_CryptoDev_FindDevice(aes->devId);
-    if (dev) {
-        if (dev->cb) {
-            wc_CryptoInfo cryptoInfo;
-            XMEMSET(&cryptoInfo, 0, sizeof(cryptoInfo));
-            cryptoInfo.algo_type = WC_ALGO_TYPE_CIPHER;
-            cryptoInfo.cipher.type = WC_CIPHER_AES_GCM;
-            cryptoInfo.cipher.enc = 0;
-            cryptoInfo.cipher.aesgcm_dec.aes       = aes;
-            cryptoInfo.cipher.aesgcm_dec.out       = out;
-            cryptoInfo.cipher.aesgcm_dec.in        = in;
-            cryptoInfo.cipher.aesgcm_dec.sz        = sz;
-            cryptoInfo.cipher.aesgcm_dec.iv        = iv;
-            cryptoInfo.cipher.aesgcm_dec.ivSz      = ivSz;
-            cryptoInfo.cipher.aesgcm_dec.authTag   = authTag;
-            cryptoInfo.cipher.aesgcm_dec.authTagSz = authTagSz;
-            cryptoInfo.cipher.aesgcm_dec.authIn    = authIn;
-            cryptoInfo.cipher.aesgcm_dec.authInSz  = authInSz;
-
-            ret = dev->cb(aes->devId, &cryptoInfo, dev->ctx);
-        }
-    }
-
-    return ret;
-}
-#endif /* !NO_AES && HAVE_AESGCM */
-
-/* call to support callback for entire buffer hash */
-int wc_CryptoDev_Sha256Hash(const byte* data, word32 len, byte* hash)
-{
-    (void)data;
-    (void)len;
-    (void)hash;
-    return NOT_COMPILED_IN;
-}
 
 #endif /* WOLF_CRYPTO_DEV */

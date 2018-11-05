@@ -303,7 +303,7 @@ static int CheckCertCRLList(WOLFSSL_CRL* crl, DecodedCert* cert, int *pFoundEntr
 
             if (doNextDate) {
             #ifndef NO_ASN_TIME
-                if (!XVALIDATE_DATE(crle->nextDate,crle->nextDateFormat, AFTER)) {
+                if (!ValidateDate(crle->nextDate,crle->nextDateFormat, AFTER)) {
                     WOLFSSL_MSG("CRL next date is no longer valid");
                     ret = ASN_AFTER_DATE_E;
                 }
@@ -771,7 +771,7 @@ static void* DoMonitor(void* arg)
 
 
 #ifndef max
-    static WC_INLINE int max(int a, int b)
+    static INLINE int max(int a, int b)
     {
         return a > b ? a : b;
     }
@@ -1045,7 +1045,8 @@ int LoadCRL(WOLFSSL_CRL* crl, const char* path, int type, int monitor)
         pathLen = (word32)XSTRLEN(path);
         pathBuf = (char*)XMALLOC(pathLen+1, crl->heap,DYNAMIC_TYPE_CRL_MONITOR);
         if (pathBuf) {
-            XSTRNCPY(pathBuf, path, pathLen+1);
+            XSTRNCPY(pathBuf, path, pathLen);
+            pathBuf[pathLen] = '\0'; /* Null Terminate */
 
             if (type == WOLFSSL_FILETYPE_PEM) {
                 /* free old path before setting a new one */

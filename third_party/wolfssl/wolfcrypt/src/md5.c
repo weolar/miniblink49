@@ -234,7 +234,7 @@
 
 #ifndef HAVE_MD5_CUST_API
 
-static WC_INLINE void AddLength(wc_Md5* md5, word32 len)
+static INLINE void AddLength(wc_Md5* md5, word32 len)
 {
     word32 tmp = md5->loLen;
     if ((md5->loLen += len) < tmp) {
@@ -399,10 +399,6 @@ void wc_Md5Free(wc_Md5* md5)
 #if defined(WOLFSSL_ASYNC_CRYPT) && defined(WC_ASYNC_ENABLE_MD5)
     wolfAsync_DevCtxFree(&md5->asyncDev, WOLFSSL_ASYNC_MARKER_MD5);
 #endif /* WOLFSSL_ASYNC_CRYPT */
-
-#ifdef WOLFSSL_PIC32MZ_HASH
-    wc_Md5Pic32Free(md5);
-#endif
 }
 
 int wc_Md5GetHash(wc_Md5* md5, byte* hash)

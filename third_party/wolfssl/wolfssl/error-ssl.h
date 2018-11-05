@@ -66,6 +66,9 @@ enum wolfSSL_ErrorCodes {
     CLIENT_ID_ERROR              = -331,   /* psk client identity error  */
     SERVER_HINT_ERROR            = -332,   /* psk server hint error  */
     PSK_KEY_ERROR                = -333,   /* psk key error  */
+    ZLIB_INIT_ERROR              = -334,   /* zlib init error  */
+    ZLIB_COMPRESS_ERROR          = -335,   /* zlib compression error  */
+    ZLIB_DECOMPRESS_ERROR        = -336,   /* zlib decompression error  */
 
     GETTIME_ERROR                = -337,   /* gettimeofday failed ??? */
     GETITIMER_ERROR              = -338,   /* getitimer failed ??? */

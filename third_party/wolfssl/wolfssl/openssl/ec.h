@@ -101,9 +101,6 @@ struct WOLFSSL_EC_KEY {
     char           exSet;        /* external set from internal ? */
 };
 
-#define WOLFSSL_EC_KEY_LOAD_PRIVATE 1
-#define WOLFSSL_EC_KEY_LOAD_PUBLIC  2
-
 WOLFSSL_API
 int wolfSSL_ECPoint_i2d(const WOLFSSL_EC_GROUP *curve,
                         const WOLFSSL_EC_POINT *p,
@@ -114,9 +111,6 @@ int wolfSSL_ECPoint_d2i(unsigned char *in, unsigned int len,
 WOLFSSL_API
 int wolfSSL_EC_KEY_LoadDer(WOLFSSL_EC_KEY* key,
                            const unsigned char* der, int derSz);
-WOLFSSL_API
-int wolfSSL_EC_KEY_LoadDer_ex(WOLFSSL_EC_KEY* key,
-                              const unsigned char* der, int derSz, int opt);
 WOLFSSL_API
 void wolfSSL_EC_KEY_free(WOLFSSL_EC_KEY *key);
 WOLFSSL_API

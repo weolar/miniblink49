@@ -925,7 +925,7 @@ int ge_compress_key(byte* out, const byte* xIn, const byte* yIn, word32 keySz)
 /*
 r = p + q
 */
-static WC_INLINE void ge_add(ge_p1p1 *r,const ge_p3 *p,const ge_cached *q)
+static INLINE void ge_add(ge_p1p1 *r,const ge_p3 *p,const ge_cached *q)
 {
 #ifndef CURVED25519_X64
     ge t0;
@@ -967,7 +967,7 @@ static unsigned char negative(signed char b)
 }
 
 
-static WC_INLINE void cmov(ge_precomp *t,const ge_precomp *u,unsigned char b,
+static INLINE void cmov(ge_precomp *t,const ge_precomp *u,unsigned char b,
                         unsigned char n)
 {
   b = equal(b,n);
@@ -6773,7 +6773,7 @@ int ge_frombytes_negate_vartime(ge_p3 *h,const unsigned char *s)
 r = p + q
 */
 
-static WC_INLINE void ge_madd(ge_p1p1 *r,const ge_p3 *p,const ge_precomp *q)
+static INLINE void ge_madd(ge_p1p1 *r,const ge_p3 *p,const ge_precomp *q)
 {
 #ifndef CURVED25519_X64
     ge t0;
@@ -6800,7 +6800,7 @@ static WC_INLINE void ge_madd(ge_p1p1 *r,const ge_p3 *p,const ge_precomp *q)
 r = p - q
 */
 
-static WC_INLINE void ge_msub(ge_p1p1 *r,const ge_p3 *p,const ge_precomp *q)
+static INLINE void ge_msub(ge_p1p1 *r,const ge_p3 *p,const ge_precomp *q)
 {
 #ifndef CURVED25519_X64
     ge t0;
@@ -6844,7 +6844,7 @@ static void ge_p1p1_to_p2(ge_p2 *r,const ge_p1p1 *p)
 r = p
 */
 
-static WC_INLINE void ge_p1p1_to_p3(ge_p3 *r,const ge_p1p1 *p)
+static INLINE void ge_p1p1_to_p3(ge_p3 *r,const ge_p1p1 *p)
 {
 #ifndef CURVED25519_X64
   fe_mul(r->X,p->X,p->T);
@@ -6873,7 +6873,7 @@ static void ge_p2_0(ge_p2 *h)
 r = 2 * p
 */
 
-static WC_INLINE void ge_p2_dbl(ge_p1p1 *r,const ge_p2 *p)
+static INLINE void ge_p2_dbl(ge_p1p1 *r,const ge_p2 *p)
 {
 #ifndef CURVED25519_X64
     ge t0;
@@ -6929,7 +6929,7 @@ static const ge d2 = {
 #endif
 
 
-static WC_INLINE void ge_p3_to_cached(ge_cached *r,const ge_p3 *p)
+static INLINE void ge_p3_to_cached(ge_cached *r,const ge_p3 *p)
 {
   fe_add(r->YplusX,p->Y,p->X);
   fe_sub(r->YminusX,p->Y,p->X);
@@ -6982,7 +6982,7 @@ static void ge_precomp_0(ge_precomp *h)
 r = p - q
 */
 
-static WC_INLINE void ge_sub(ge_p1p1 *r,const ge_p3 *p,const ge_cached *q)
+static INLINE void ge_sub(ge_p1p1 *r,const ge_p3 *p,const ge_cached *q)
 {
 #ifndef CURVED25519_X64
     ge t0;

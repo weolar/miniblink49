@@ -22,20 +22,9 @@
 
 
 #ifdef TFM_MUL8
-int fp_mul_comba8(fp_int *A, fp_int *B, fp_int *C)
+void fp_mul_comba8(fp_int *A, fp_int *B, fp_int *C)
 {
-   fp_digit c0, c1, c2;
-#ifndef WOLFSSL_SMALL_STACK
-   fp_digit at[16];
-#else
-   fp_digit *at;
-#endif
-
-#ifdef WOLFSSL_SMALL_STACK
-   at = (fp_digit*)XMALLOC(sizeof(fp_digit) * 16, NULL, DYNAMIC_TYPE_TMP_BUFFER);
-   if (at == NULL)
-       return FP_MEM;
-#endif
+   fp_digit c0, c1, c2, at[16];
 
    XMEMCPY(at, A->dp, 8 * sizeof(fp_digit));
    XMEMCPY(at+8, B->dp, 8 * sizeof(fp_digit));
@@ -106,10 +95,5 @@ int fp_mul_comba8(fp_int *A, fp_int *B, fp_int *C)
    C->sign = A->sign ^ B->sign;
    fp_clamp(C);
    COMBA_FINI;
-
-#ifdef WOLFSSL_SMALL_STACK
-   XFREE(at, NULL, DYNAMIC_TYPE_TMP_BUFFER);
-#endif
-   return FP_OKAY;
 }
 #endif

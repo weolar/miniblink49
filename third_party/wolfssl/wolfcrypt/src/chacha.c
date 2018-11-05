@@ -384,7 +384,7 @@ int wc_Chacha_SetKey(ChaCha* ctx, const byte* key, word32 keySz)
 /**
   * Converts word into bytes with rotations having been done.
   */
-static WC_INLINE void wc_Chacha_wordtobyte(word32 output[CHACHA_CHUNK_WORDS],
+static INLINE void wc_Chacha_wordtobyte(word32 output[CHACHA_CHUNK_WORDS],
     const word32 input[CHACHA_CHUNK_WORDS])
 {
     word32 x[CHACHA_CHUNK_WORDS];

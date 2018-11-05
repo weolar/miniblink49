@@ -148,11 +148,12 @@ int wc_ed25519_sign_msg(const byte* in, word32 inlen, byte* out,
     if (ret != 0)
         return ret;
     ret = wc_Sha512Update(&sha, az + ED25519_KEY_SIZE, ED25519_KEY_SIZE);
-    if (ret == 0)
-        ret = wc_Sha512Update(&sha, in, inlen);
-    if (ret == 0)
-        ret = wc_Sha512Final(&sha, nonce);
-    wc_Sha512Free(&sha);
+    if (ret != 0)
+        return ret;
+    ret = wc_Sha512Update(&sha, in, inlen);
+    if (ret != 0)
+        return ret;
+    ret = wc_Sha512Final(&sha, nonce);
     if (ret != 0)
         return ret;
 
@@ -178,13 +179,15 @@ int wc_ed25519_sign_msg(const byte* in, word32 inlen, byte* out,
     if (ret != 0)
         return ret;
     ret = wc_Sha512Update(&sha, out, ED25519_SIG_SIZE/2);
-    if (ret == 0)
-        ret = wc_Sha512Update(&sha, key->p, ED25519_PUB_KEY_SIZE);
-    if (ret == 0)
-        ret = wc_Sha512Update(&sha, in, inlen);
-    if (ret == 0)
-        ret = wc_Sha512Final(&sha, hram);
-    wc_Sha512Free(&sha);
+    if (ret != 0)
+        return ret;
+    ret = wc_Sha512Update(&sha, key->p, ED25519_PUB_KEY_SIZE);
+    if (ret != 0)
+        return ret;
+    ret = wc_Sha512Update(&sha, in, inlen);
+    if (ret != 0)
+        return ret;
+    ret = wc_Sha512Final(&sha, hram);
     if (ret != 0)
         return ret;
 
@@ -245,13 +248,15 @@ int wc_ed25519_verify_msg(const byte* sig, word32 siglen, const byte* msg,
     if (ret != 0)
         return ret;
     ret = wc_Sha512Update(&sha, sig,    ED25519_SIG_SIZE/2);
-    if (ret == 0)
-        ret = wc_Sha512Update(&sha, key->p, ED25519_PUB_KEY_SIZE);
-    if (ret == 0)
-        ret = wc_Sha512Update(&sha, msg,    msglen);
-    if (ret == 0)
-        ret = wc_Sha512Final(&sha,  h);
-    wc_Sha512Free(&sha);
+    if (ret != 0)
+        return ret;
+    ret = wc_Sha512Update(&sha, key->p, ED25519_PUB_KEY_SIZE);
+    if (ret != 0)
+        return ret;
+    ret = wc_Sha512Update(&sha, msg,    msglen);
+    if (ret != 0)
+        return ret;
+    ret = wc_Sha512Final(&sha,  h);
     if (ret != 0)
         return ret;
 

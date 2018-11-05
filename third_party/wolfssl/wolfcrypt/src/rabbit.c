@@ -145,7 +145,7 @@ static void wc_RabbitSetIV(Rabbit* ctx, const byte* inIv)
 
 
 /* Key setup */
-static WC_INLINE int DoKey(Rabbit* ctx, const byte* key, const byte* iv)
+static INLINE int DoKey(Rabbit* ctx, const byte* key, const byte* iv)
 {
     /* Temporary variables */
     word32 k0, k1, k2, k3, i;
@@ -247,7 +247,7 @@ int wc_RabbitSetKey(Rabbit* ctx, const byte* key, const byte* iv)
 
 
 /* Encrypt/decrypt a message of any size */
-static WC_INLINE int DoProcess(Rabbit* ctx, byte* output, const byte* input,
+static INLINE int DoProcess(Rabbit* ctx, byte* output, const byte* input,
                             word32 msglen)
 {
     /* Encrypt/decrypt all full blocks */

@@ -31,24 +31,10 @@
 
 #ifndef NO_DES3
 
-#if defined(HAVE_FIPS) && \
-	defined(HAVE_FIPS_VERSION) && (HAVE_FIPS_VERSION >= 2)
-
-    /* set NO_WRAPPERS before headers, use direct internal f()s not wrappers */
-    #define FIPS_NO_WRAPPERS
-
-    #ifdef USE_WINDOWS_API
-        #pragma code_seg(".fipsA$i")
-        #pragma const_seg(".fipsB$i")
-    #endif
-#endif
-
 #include <wolfssl/wolfcrypt/des3.h>
 
 /* fips wrapper calls, user can call direct */
-#if defined(HAVE_FIPS) && \
-    (!defined(HAVE_FIPS_VERSION) || (HAVE_FIPS_VERSION < 2))
-
+#ifdef HAVE_FIPS
     int wc_Des_SetKey(Des* des, const byte* key, const byte* iv, int dir)
     {
         return Des_SetKey(des, key, iv, dir);
@@ -121,7 +107,7 @@
             Des3Free(des3); */
     }
 
-#else /* else build without fips, or for FIPS v2 */
+#else /* build without fips */
 
 
 #if defined(WOLFSSL_TI_CRYPT)
@@ -1300,7 +1286,7 @@
         0x00001040,0x00040040,0x10000000,0x10041000}
     };
 
-    static WC_INLINE void IPERM(word32* left, word32* right)
+    static INLINE void IPERM(word32* left, word32* right)
     {
         word32 work;
 
@@ -1326,7 +1312,7 @@
         *right ^= work;
     }
 
-    static WC_INLINE void FPERM(word32* left, word32* right)
+    static INLINE void FPERM(word32* left, word32* right)
     {
         word32 work;
 

@@ -50,6 +50,8 @@
     #define WC_RNG_TYPE_DEFINED
 #endif
 
+struct WOLFSSL_CTX;
+
 
 /* Certificate file Type */
 enum CertType {
@@ -98,16 +100,13 @@ enum Ctc_Encoding {
     CTC_PRINTABLE  = 0x13  /* printable */
 };
 
-#ifndef WC_CTC_NAME_SIZE
-    #define WC_CTC_NAME_SIZE 64
-#endif
 #ifndef WC_CTC_MAX_ALT_SIZE
     #define WC_CTC_MAX_ALT_SIZE 16384
 #endif
 
 enum Ctc_Misc {
     CTC_COUNTRY_SIZE  =     2,
-    CTC_NAME_SIZE     = WC_CTC_NAME_SIZE,
+    CTC_NAME_SIZE     =    64,
     CTC_DATE_SIZE     =    32,
     CTC_MAX_ALT_SIZE  = WC_CTC_MAX_ALT_SIZE, /* may be huge, default: 16384 */
     CTC_SERIAL_SIZE   =    16,
@@ -154,11 +153,12 @@ typedef struct EncryptedInfo {
     char     name[NAME_SZ];    /* cipher name, such as "DES-CBC" */
     byte     iv[IV_SZ];        /* salt or encrypted IV */
 
-    word16   set:1;            /* if encryption set */
+    byte     set:1;            /* if encryption set */
 } EncryptedInfo;
 
 
-#if defined(WOLFSSL_CERT_GEN) || defined(WOLFSSL_CERT_EXT)
+#ifdef WOLFSSL_CERT_GEN
+
 #ifdef WOLFSSL_EKU_OID
     #ifndef CTC_MAX_EKU_NB
         #define CTC_MAX_EKU_NB 1
@@ -170,9 +170,7 @@ typedef struct EncryptedInfo {
     #undef CTC_MAX_EKU_OID_SZ
     #define CTC_MAX_EKU_OID_SZ 0
 #endif
-#endif /* WOLFSSL_CERT_GEN || WOLFSSL_CERT_EXT */
 
-#ifdef WOLFSSL_CERT_GEN
 
 #ifdef WOLFSSL_MULTI_ATTRIB
 #ifndef CTC_MAX_ATTRIB
@@ -204,16 +202,6 @@ typedef struct CertName {
     char unitEnc;
     char commonName[CTC_NAME_SIZE];
     char commonNameEnc;
-    char serialDev[CTC_NAME_SIZE];
-    char serialDevEnc;
-#ifdef WOLFSSL_CERT_EXT
-    char busCat[CTC_NAME_SIZE];
-    char busCatEnc;
-    char joiC[CTC_NAME_SIZE];
-    char joiCEnc;
-    char joiSt[CTC_NAME_SIZE];
-    char joiStEnc;
-#endif
     char email[CTC_NAME_SIZE];  /* !!!! email has to be last !!!! */
 #ifdef WOLFSSL_MULTI_ATTRIB
     NameAttrib name[CTC_MAX_ATTRIB];
@@ -257,8 +245,6 @@ typedef struct Cert {
 #endif
     char    certPolicies[CTC_MAX_CERTPOL_NB][CTC_MAX_CERTPOL_SZ];
     word16  certPoliciesNb;              /* Number of Cert Policy */
-    byte     issRaw[sizeof(CertName)];   /* raw issuer info */
-    byte     sbjRaw[sizeof(CertName)];   /* raw subject info */
 #endif
 #ifdef WOLFSSL_CERT_REQ
     char     challengePw[CTC_NAME_SIZE];
@@ -324,9 +310,6 @@ WOLFSSL_API int wc_SetSubjectKeyIdFromPublicKey_ex(Cert *cert, int keyType,
 WOLFSSL_API int wc_SetSubjectKeyIdFromPublicKey(Cert *cert, RsaKey *rsakey,
                                                 ecc_key *eckey);
 WOLFSSL_API int wc_SetSubjectKeyId(Cert *cert, const char* file);
-WOLFSSL_API int wc_GetSubjectRaw(byte **subjectRaw, Cert *cert);
-WOLFSSL_API int wc_SetSubjectRaw(Cert* cert, const byte* der, int derSz);
-WOLFSSL_API int wc_SetIssuerRaw(Cert* cert, const byte* der, int derSz);
 
 #ifdef HAVE_NTRU
 WOLFSSL_API int wc_SetSubjectKeyIdFromNtruPublicKey(Cert *cert, byte *ntruKey,
@@ -379,9 +362,6 @@ WOLFSSL_API int wc_GetDateAsCalendarTime(const byte* date, int length,
         const char** footer);
 
 #endif
-
-WOLFSSL_API  int wc_AllocDer(DerBuffer** pDer, word32 length, int type, void* heap);
-WOLFSSL_API void wc_FreeDer(DerBuffer** pDer);
 
 #ifdef WOLFSSL_PEM_TO_DER
     WOLFSSL_API int wc_PemToDer(const unsigned char* buff, long longSz, int type,
@@ -477,28 +457,6 @@ WOLFSSL_API int wc_GetTime(void* timePtr, word32 timeSize);
     WOLFSSL_API int wc_EncryptedInfoGet(EncryptedInfo* info,
         const char* cipherInfo);
 #endif
-
-
-#ifdef WOLFSSL_CERT_PIV
-
-typedef struct _wc_CertPIV {
-    const byte*  cert;
-    word32       certSz;
-    const byte*  certErrDet;
-    word32       certErrDetSz;
-    const byte*  nonce;         /* Identiv Only */
-    word32       nonceSz;       /* Identiv Only */
-    const byte*  signedNonce;   /* Identiv Only */
-    word32       signedNonceSz; /* Identiv Only */
-
-    /* flags */
-    word16       compression:2;
-    word16       isX509:1;
-    word16       isIdentiv:1;
-} wc_CertPIV;
-
-WOLFSSL_API int wc_ParseCertPIV(wc_CertPIV* cert, const byte* buf, word32 totalSz);
-#endif /* WOLFSSL_CERT_PIV */
 
 
 #ifdef __cplusplus

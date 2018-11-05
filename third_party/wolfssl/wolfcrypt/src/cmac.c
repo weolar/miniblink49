@@ -28,18 +28,6 @@
 
 #if defined(WOLFSSL_CMAC) && !defined(NO_AES) && defined(WOLFSSL_AES_DIRECT)
 
-#if defined(HAVE_FIPS) && \
-	defined(HAVE_FIPS_VERSION) && (HAVE_FIPS_VERSION >= 2)
-
-    /* set NO_WRAPPERS before headers, use direct internal f()s not wrappers */
-    #define FIPS_NO_WRAPPERS
-
-    #ifdef USE_WINDOWS_API
-        #pragma code_seg(".fipsA$n")
-        #pragma const_seg(".fipsB$n")
-    #endif
-#endif
-
 #ifdef NO_INLINE
     #include <wolfssl/wolfcrypt/misc.h>
 #else
@@ -129,10 +117,10 @@ int wc_CmacFinal(Cmac* cmac, byte* out, word32* outSz)
 {
     const byte* subKey;
 
-    if (cmac == NULL || out == NULL || outSz == NULL)
+    if (cmac == NULL || out == NULL)
         return BAD_FUNC_ARG;
 
-    if (*outSz < WC_CMAC_TAG_MIN_SZ || *outSz > WC_CMAC_TAG_MAX_SZ)
+    if (outSz != NULL && *outSz < AES_BLOCK_SIZE)
         return BUFFER_E;
 
     if (cmac->bufferSz == AES_BLOCK_SIZE) {
@@ -151,10 +139,10 @@ int wc_CmacFinal(Cmac* cmac, byte* out, word32* outSz)
     }
     xorbuf(cmac->buffer, cmac->digest, AES_BLOCK_SIZE);
     xorbuf(cmac->buffer, subKey, AES_BLOCK_SIZE);
-    wc_AesEncryptDirect(&cmac->aes, cmac->digest, cmac->buffer);
+    wc_AesEncryptDirect(&cmac->aes, out, cmac->buffer);
 
-    XMEMCPY(out, cmac->digest, *outSz);
-
+    if (outSz != NULL)
+        *outSz = AES_BLOCK_SIZE;
     ForceZero(cmac, sizeof(Cmac));
 
     return 0;

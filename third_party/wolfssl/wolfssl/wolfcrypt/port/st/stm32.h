@@ -1,6 +1,6 @@
 /* stm32.h
  *
- * Copyright (C) 2006-2018 wolfSSL Inc.
+ * Copyright (C) 2006-2017 wolfSSL Inc.
  *
  * This file is part of wolfSSL.
  *
@@ -22,15 +22,14 @@
 #ifndef _WOLFPORT_STM32_H_
 #define _WOLFPORT_STM32_H_
 
-/* Generic STM32 Hashing and Crypto Functions */
-/* Supports CubeMX HAL or Standard Peripheral Library */
-
-#include <wolfssl/wolfcrypt/types.h>
-
-
 #ifdef STM32_HASH
 
 #define WOLFSSL_NO_HASH_RAW
+
+/* Generic STM32 Hashing Function */
+/* Supports CubeMX HAL or Standard Peripheral Library */
+
+#include <wolfssl/wolfcrypt/types.h>
 
 #ifdef HASH_DIGEST
     /* The HASH_DIGEST register indicates SHA224/SHA256 support */
@@ -82,31 +81,5 @@ int  wc_Stm32_Hash_Final(STM32_HASH_Context* stmCtx, word32 algo,
     byte* hash, int digestSize);
 
 #endif /* STM32_HASH */
-
-
-#ifdef STM32_CRYPTO
-
-#ifndef NO_AES
-    #ifdef WOLFSSL_STM32L4
-        #define STM32_CRYPTO_AES_ONLY /* crypto engine only supports AES */
-        #define CRYP AES
-    #endif
-
-    /* CRYPT_AES_GCM starts the IV with 2 */
-    #define STM32_GCM_IV_START 2
-
-    #if defined(WOLFSSL_AES_DIRECT) || defined(HAVE_AESGCM) || defined(HAVE_AESCCM)
-        struct Aes;
-        #ifdef WOLFSSL_STM32_CUBEMX
-            int wc_Stm32_Aes_Init(struct Aes* aes, CRYP_HandleTypeDef* hcryp);
-        #else /* STD_PERI_LIB */
-            int wc_Stm32_Aes_Init(struct Aes* aes, CRYP_InitTypeDef* cryptInit,
-                CRYP_KeyInitTypeDef* keyInit);
-        #endif /* WOLFSSL_STM32_CUBEMX */
-    #endif /* WOLFSSL_AES_DIRECT || HAVE_AESGCM || HAVE_AESCCM */
-#endif /* !NO_AES */
-
-#endif /* STM32_CRYPTO */
-
 
 #endif /* _WOLFPORT_STM32_H_ */

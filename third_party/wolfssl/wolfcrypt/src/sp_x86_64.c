@@ -6911,7 +6911,7 @@ static int64_t sp_2048_cmp_16(sp_digit* a, sp_digit* b)
  * r  Remainder from the division.
  * returns MP_OKAY indicating success.
  */
-static WC_INLINE int sp_2048_div_16(sp_digit* a, sp_digit* d, sp_digit* m,
+static INLINE int sp_2048_div_16(sp_digit* a, sp_digit* d, sp_digit* m,
         sp_digit* r)
 {
     sp_digit t1[32], t2[17];
@@ -6955,7 +6955,7 @@ static WC_INLINE int sp_2048_div_16(sp_digit* a, sp_digit* d, sp_digit* m,
  * m  A single precision number that is the modulus to reduce with.
  * returns MP_OKAY indicating success.
  */
-static WC_INLINE int sp_2048_mod_16(sp_digit* r, sp_digit* a, sp_digit* m)
+static INLINE int sp_2048_mod_16(sp_digit* r, sp_digit* a, sp_digit* m)
 {
     return sp_2048_div_16(a, m, NULL, r);
 }
@@ -7422,7 +7422,6 @@ static int sp_2048_mod_exp_avx2_16(sp_digit* r, sp_digit* a, sp_digit* e,
 
 #endif /* !SP_RSA_PRIVATE_EXP_D && WOLFSSL_HAVE_SP_RSA */
 
-#ifdef WOLFSSL_HAVE_SP_DH
 /* r = 2^n mod m where n is the number of bits to reduce by.
  * Given m must be 2048 bits, just need to subtract.
  *
@@ -7437,7 +7436,6 @@ static void sp_2048_mont_norm_32(sp_digit* r, sp_digit* m)
     sp_2048_sub_in_place_32(r, m);
 }
 
-#endif /* WOLFSSL_HAVE_SP_DH */
 /* Conditionally subtract b from a using the mask m.
  * m is -1 to subtract and 0 when not copying.
  *
@@ -8891,7 +8889,7 @@ static int64_t sp_2048_cmp_32(sp_digit* a, sp_digit* b)
  * r  Remainder from the division.
  * returns MP_OKAY indicating success.
  */
-static WC_INLINE int sp_2048_div_32(sp_digit* a, sp_digit* d, sp_digit* m,
+static INLINE int sp_2048_div_32(sp_digit* a, sp_digit* d, sp_digit* m,
         sp_digit* r)
 {
     sp_digit t1[64], t2[33];
@@ -8935,7 +8933,7 @@ static WC_INLINE int sp_2048_div_32(sp_digit* a, sp_digit* d, sp_digit* m,
  * m  A single precision number that is the modulus to reduce with.
  * returns MP_OKAY indicating success.
  */
-static WC_INLINE int sp_2048_mod_32(sp_digit* r, sp_digit* a, sp_digit* m)
+static INLINE int sp_2048_mod_32(sp_digit* r, sp_digit* a, sp_digit* m)
 {
     return sp_2048_div_32(a, m, NULL, r);
 }
@@ -8949,7 +8947,7 @@ static WC_INLINE int sp_2048_mod_32(sp_digit* r, sp_digit* a, sp_digit* m)
  * r  Remainder from the division.
  * returns MP_OKAY indicating success.
  */
-static WC_INLINE int sp_2048_div_32_cond(sp_digit* a, sp_digit* d, sp_digit* m,
+static INLINE int sp_2048_div_32_cond(sp_digit* a, sp_digit* d, sp_digit* m,
         sp_digit* r)
 {
     sp_digit t1[64], t2[33];
@@ -8994,7 +8992,7 @@ static WC_INLINE int sp_2048_div_32_cond(sp_digit* a, sp_digit* d, sp_digit* m,
  * m  A single precision number that is the modulus to reduce with.
  * returns MP_OKAY indicating success.
  */
-static WC_INLINE int sp_2048_mod_32_cond(sp_digit* r, sp_digit* a, sp_digit* m)
+static INLINE int sp_2048_mod_32_cond(sp_digit* r, sp_digit* a, sp_digit* m)
 {
     return sp_2048_div_32_cond(a, m, NULL, r);
 }
@@ -9599,7 +9597,7 @@ int sp_RsaPublic_2048(const byte* in, word32 inLen, mp_int* em, mp_int* mm,
 #if defined(WOLFSSL_SP_SMALL) || defined(WOLFSSL_SMALL_STACK)
     if (err == MP_OKAY) {
         d = (sp_digit*)XMALLOC(sizeof(sp_digit) * 32 * 5, NULL,
-                                                              DYNAMIC_TYPE_RSA);
+                               DYNAMIC_TYPE_TMP_BUFFER);
         if (d == NULL)
             err = MEMORY_E;
     }
@@ -9712,7 +9710,7 @@ int sp_RsaPublic_2048(const byte* in, word32 inLen, mp_int* em, mp_int* mm,
 
 #if defined(WOLFSSL_SP_SMALL) || defined(WOLFSSL_SMALL_STACK)
     if (d != NULL)
-        XFREE(d, NULL, DYNAMIC_TYPE_RSA);
+        XFREE(d, NULL, DYNAMIC_TYPE_TMP_BUFFER);
 #endif
 
     return err;
@@ -9773,7 +9771,7 @@ int sp_RsaPrivate_2048(const byte* in, word32 inLen, mp_int* dm,
 #if defined(WOLFSSL_SP_SMALL) || defined(WOLFSSL_SMALL_STACK)
     if (err == MP_OKAY) {
         t = (sp_digit*)XMALLOC(sizeof(sp_digit) * 16 * 11, NULL,
-                                                              DYNAMIC_TYPE_RSA);
+                               DYNAMIC_TYPE_TMP_BUFFER);
         if (t == NULL)
             err = MEMORY_E;
     }
@@ -9853,7 +9851,7 @@ int sp_RsaPrivate_2048(const byte* in, word32 inLen, mp_int* dm,
 #if defined(WOLFSSL_SP_SMALL) || defined(WOLFSSL_SMALL_STACK)
     if (t != NULL) {
         XMEMSET(t, 0, sizeof(sp_digit) * 16 * 11);
-        XFREE(t, NULL, DYNAMIC_TYPE_RSA);
+        XFREE(t, NULL, DYNAMIC_TYPE_TMP_BUFFER);
     }
 #else
     XMEMSET(tmpad, 0, sizeof(tmpad));
@@ -23472,7 +23470,7 @@ static int64_t sp_3072_cmp_24(sp_digit* a, sp_digit* b)
  * r  Remainder from the division.
  * returns MP_OKAY indicating success.
  */
-static WC_INLINE int sp_3072_div_24(sp_digit* a, sp_digit* d, sp_digit* m,
+static INLINE int sp_3072_div_24(sp_digit* a, sp_digit* d, sp_digit* m,
         sp_digit* r)
 {
     sp_digit t1[48], t2[25];
@@ -23516,7 +23514,7 @@ static WC_INLINE int sp_3072_div_24(sp_digit* a, sp_digit* d, sp_digit* m,
  * m  A single precision number that is the modulus to reduce with.
  * returns MP_OKAY indicating success.
  */
-static WC_INLINE int sp_3072_mod_24(sp_digit* r, sp_digit* a, sp_digit* m)
+static INLINE int sp_3072_mod_24(sp_digit* r, sp_digit* a, sp_digit* m)
 {
     return sp_3072_div_24(a, m, NULL, r);
 }
@@ -24031,7 +24029,6 @@ static int sp_3072_mod_exp_avx2_24(sp_digit* r, sp_digit* a, sp_digit* e,
 
 #endif /* !SP_RSA_PRIVATE_EXP_D && WOLFSSL_HAVE_SP_RSA */
 
-#ifdef WOLFSSL_HAVE_SP_DH
 /* r = 2^n mod m where n is the number of bits to reduce by.
  * Given m must be 3072 bits, just need to subtract.
  *
@@ -24046,7 +24043,6 @@ static void sp_3072_mont_norm_48(sp_digit* r, sp_digit* m)
     sp_3072_sub_in_place_48(r, m);
 }
 
-#endif /* WOLFSSL_HAVE_SP_DH */
 /* Conditionally subtract b from a using the mask m.
  * m is -1 to subtract and 0 when not copying.
  *
@@ -26124,7 +26120,7 @@ static int64_t sp_3072_cmp_48(sp_digit* a, sp_digit* b)
  * r  Remainder from the division.
  * returns MP_OKAY indicating success.
  */
-static WC_INLINE int sp_3072_div_48(sp_digit* a, sp_digit* d, sp_digit* m,
+static INLINE int sp_3072_div_48(sp_digit* a, sp_digit* d, sp_digit* m,
         sp_digit* r)
 {
     sp_digit t1[96], t2[49];
@@ -26168,7 +26164,7 @@ static WC_INLINE int sp_3072_div_48(sp_digit* a, sp_digit* d, sp_digit* m,
  * m  A single precision number that is the modulus to reduce with.
  * returns MP_OKAY indicating success.
  */
-static WC_INLINE int sp_3072_mod_48(sp_digit* r, sp_digit* a, sp_digit* m)
+static INLINE int sp_3072_mod_48(sp_digit* r, sp_digit* a, sp_digit* m)
 {
     return sp_3072_div_48(a, m, NULL, r);
 }
@@ -26182,7 +26178,7 @@ static WC_INLINE int sp_3072_mod_48(sp_digit* r, sp_digit* a, sp_digit* m)
  * r  Remainder from the division.
  * returns MP_OKAY indicating success.
  */
-static WC_INLINE int sp_3072_div_48_cond(sp_digit* a, sp_digit* d, sp_digit* m,
+static INLINE int sp_3072_div_48_cond(sp_digit* a, sp_digit* d, sp_digit* m,
         sp_digit* r)
 {
     sp_digit t1[96], t2[49];
@@ -26227,7 +26223,7 @@ static WC_INLINE int sp_3072_div_48_cond(sp_digit* a, sp_digit* d, sp_digit* m,
  * m  A single precision number that is the modulus to reduce with.
  * returns MP_OKAY indicating success.
  */
-static WC_INLINE int sp_3072_mod_48_cond(sp_digit* r, sp_digit* a, sp_digit* m)
+static INLINE int sp_3072_mod_48_cond(sp_digit* r, sp_digit* a, sp_digit* m)
 {
     return sp_3072_div_48_cond(a, m, NULL, r);
 }
@@ -26928,7 +26924,7 @@ int sp_RsaPublic_3072(const byte* in, word32 inLen, mp_int* em, mp_int* mm,
 #if defined(WOLFSSL_SP_SMALL) || defined(WOLFSSL_SMALL_STACK)
     if (err == MP_OKAY) {
         d = (sp_digit*)XMALLOC(sizeof(sp_digit) * 48 * 5, NULL,
-                                                              DYNAMIC_TYPE_RSA);
+                               DYNAMIC_TYPE_TMP_BUFFER);
         if (d == NULL)
             err = MEMORY_E;
     }
@@ -27041,7 +27037,7 @@ int sp_RsaPublic_3072(const byte* in, word32 inLen, mp_int* em, mp_int* mm,
 
 #if defined(WOLFSSL_SP_SMALL) || defined(WOLFSSL_SMALL_STACK)
     if (d != NULL)
-        XFREE(d, NULL, DYNAMIC_TYPE_RSA);
+        XFREE(d, NULL, DYNAMIC_TYPE_TMP_BUFFER);
 #endif
 
     return err;
@@ -27102,7 +27098,7 @@ int sp_RsaPrivate_3072(const byte* in, word32 inLen, mp_int* dm,
 #if defined(WOLFSSL_SP_SMALL) || defined(WOLFSSL_SMALL_STACK)
     if (err == MP_OKAY) {
         t = (sp_digit*)XMALLOC(sizeof(sp_digit) * 24 * 11, NULL,
-                                                              DYNAMIC_TYPE_RSA);
+                               DYNAMIC_TYPE_TMP_BUFFER);
         if (t == NULL)
             err = MEMORY_E;
     }
@@ -27182,7 +27178,7 @@ int sp_RsaPrivate_3072(const byte* in, word32 inLen, mp_int* dm,
 #if defined(WOLFSSL_SP_SMALL) || defined(WOLFSSL_SMALL_STACK)
     if (t != NULL) {
         XMEMSET(t, 0, sizeof(sp_digit) * 24 * 11);
-        XFREE(t, NULL, DYNAMIC_TYPE_RSA);
+        XFREE(t, NULL, DYNAMIC_TYPE_TMP_BUFFER);
     }
 #else
     XMEMSET(tmpad, 0, sizeof(tmpad));
@@ -28685,7 +28681,8 @@ SP_NOINLINE static void sp_256_div2_4(sp_digit* r, sp_digit* a, sp_digit* m)
  */
 static void sp_256_proj_point_dbl_4(sp_point* r, sp_point* p, sp_digit* t)
 {
-    sp_point* rp[2];
+    sp_point *rp[2];
+    sp_point tp;
     sp_digit* t1 = t;
     sp_digit* t2 = t + 2*4;
     sp_digit* x;
@@ -28695,8 +28692,7 @@ static void sp_256_proj_point_dbl_4(sp_point* r, sp_point* p, sp_digit* t)
 
     /* When infinity don't double point passed in - constant time. */
     rp[0] = r;
-    rp[1] = (sp_point*)t;
-    XMEMSET(rp[1], 0, sizeof(sp_point));
+    rp[1] = &tp;
     x = rp[p->infinity]->x;
     y = rp[p->infinity]->y;
     z = rp[p->infinity]->z;
@@ -28760,7 +28756,8 @@ static void sp_256_proj_point_dbl_4(sp_point* r, sp_point* p, sp_digit* t)
 static void sp_256_proj_point_dbl_n_4(sp_point* r, sp_point* p, int n,
         sp_digit* t)
 {
-    sp_point* rp[2];
+    sp_point *rp[2];
+    sp_point tp;
     sp_digit* w = t;
     sp_digit* a = t + 2*4;
     sp_digit* b = t + 4*4;
@@ -28772,8 +28769,7 @@ static void sp_256_proj_point_dbl_n_4(sp_point* r, sp_point* p, int n,
     int i;
 
     rp[0] = r;
-    rp[1] = (sp_point*)t;
-    XMEMSET(rp[1], 0, sizeof(sp_point));
+    rp[1] = &tp;
     x = rp[p->infinity]->x;
     y = rp[p->infinity]->y;
     z = rp[p->infinity]->z;
@@ -28844,8 +28840,9 @@ static int sp_256_cmp_equal_4(const sp_digit* a, const sp_digit* b)
 static void sp_256_proj_point_add_4(sp_point* r, sp_point* p, sp_point* q,
         sp_digit* t)
 {
-    sp_point* ap[2];
-    sp_point* rp[2];
+    sp_point *ap[2];
+    sp_point *rp[2];
+    sp_point tp;
     sp_digit* t1 = t;
     sp_digit* t2 = t + 2*4;
     sp_digit* t3 = t + 4*4;
@@ -28872,8 +28869,8 @@ static void sp_256_proj_point_add_4(sp_point* r, sp_point* p, sp_point* q,
     }
     else {
         rp[0] = r;
-        rp[1] = (sp_point*)t;
-        XMEMSET(rp[1], 0, sizeof(sp_point));
+        rp[1] = &tp;
+        XMEMSET(&tp, 0, sizeof(tp));
         x = rp[p->infinity | q->infinity]->x;
         y = rp[p->infinity | q->infinity]->y;
         z = rp[p->infinity | q->infinity]->z;
@@ -29706,7 +29703,8 @@ static void sp_256_map_avx2_4(sp_point* r, sp_point* p, sp_digit* t)
  */
 static void sp_256_proj_point_dbl_avx2_4(sp_point* r, sp_point* p, sp_digit* t)
 {
-    sp_point* rp[2];
+    sp_point *rp[2];
+    sp_point tp;
     sp_digit* t1 = t;
     sp_digit* t2 = t + 2*4;
     sp_digit* x;
@@ -29716,8 +29714,7 @@ static void sp_256_proj_point_dbl_avx2_4(sp_point* r, sp_point* p, sp_digit* t)
 
     /* When infinity don't double point passed in - constant time. */
     rp[0] = r;
-    rp[1] = (sp_point*)t;
-    XMEMSET(rp[1], 0, sizeof(sp_point));
+    rp[1] = &tp;
     x = rp[p->infinity]->x;
     y = rp[p->infinity]->y;
     z = rp[p->infinity]->z;
@@ -29781,7 +29778,8 @@ static void sp_256_proj_point_dbl_avx2_4(sp_point* r, sp_point* p, sp_digit* t)
 static void sp_256_proj_point_dbl_n_avx2_4(sp_point* r, sp_point* p, int n,
         sp_digit* t)
 {
-    sp_point* rp[2];
+    sp_point *rp[2];
+    sp_point tp;
     sp_digit* w = t;
     sp_digit* a = t + 2*4;
     sp_digit* b = t + 4*4;
@@ -29793,8 +29791,7 @@ static void sp_256_proj_point_dbl_n_avx2_4(sp_point* r, sp_point* p, int n,
     int i;
 
     rp[0] = r;
-    rp[1] = (sp_point*)t;
-    XMEMSET(rp[1], 0, sizeof(sp_point));
+    rp[1] = &tp;
     x = rp[p->infinity]->x;
     y = rp[p->infinity]->y;
     z = rp[p->infinity]->z;
@@ -29853,8 +29850,9 @@ static void sp_256_proj_point_dbl_n_avx2_4(sp_point* r, sp_point* p, int n,
 static void sp_256_proj_point_add_avx2_4(sp_point* r, sp_point* p, sp_point* q,
         sp_digit* t)
 {
-    sp_point* ap[2];
-    sp_point* rp[2];
+    sp_point *ap[2];
+    sp_point *rp[2];
+    sp_point tp;
     sp_digit* t1 = t;
     sp_digit* t2 = t + 2*4;
     sp_digit* t3 = t + 4*4;
@@ -29881,8 +29879,8 @@ static void sp_256_proj_point_add_avx2_4(sp_point* r, sp_point* p, sp_point* q,
     }
     else {
         rp[0] = r;
-        rp[1] = (sp_point*)t;
-        XMEMSET(rp[1], 0, sizeof(sp_point));
+        rp[1] = &tp;
+        XMEMSET(&tp, 0, sizeof(tp));
         x = rp[p->infinity | q->infinity]->x;
         y = rp[p->infinity | q->infinity]->y;
         z = rp[p->infinity | q->infinity]->z;
@@ -30213,8 +30211,9 @@ typedef struct sp_table_entry {
 static void sp_256_proj_point_add_qz1_4(sp_point* r, sp_point* p,
         sp_point* q, sp_digit* t)
 {
-    sp_point* ap[2];
-    sp_point* rp[2];
+    sp_point *ap[2];
+    sp_point *rp[2];
+    sp_point tp;
     sp_digit* t1 = t;
     sp_digit* t2 = t + 2*4;
     sp_digit* t3 = t + 4*4;
@@ -30234,8 +30233,8 @@ static void sp_256_proj_point_add_qz1_4(sp_point* r, sp_point* p,
     }
     else {
         rp[0] = r;
-        rp[1] = (sp_point*)t;
-        XMEMSET(rp[1], 0, sizeof(sp_point));
+        rp[1] = &tp;
+        XMEMSET(&tp, 0, sizeof(tp));
         x = rp[p->infinity | q->infinity]->x;
         y = rp[p->infinity | q->infinity]->y;
         z = rp[p->infinity | q->infinity]->z;
@@ -30605,8 +30604,9 @@ static int sp_256_ecc_mulmod_4(sp_point* r, sp_point* g, sp_digit* k,
 static void sp_256_proj_point_add_qz1_avx2_4(sp_point* r, sp_point* p,
         sp_point* q, sp_digit* t)
 {
-    sp_point* ap[2];
-    sp_point* rp[2];
+    sp_point *ap[2];
+    sp_point *rp[2];
+    sp_point tp;
     sp_digit* t1 = t;
     sp_digit* t2 = t + 2*4;
     sp_digit* t3 = t + 4*4;
@@ -30626,8 +30626,8 @@ static void sp_256_proj_point_add_qz1_avx2_4(sp_point* r, sp_point* p,
     }
     else {
         rp[0] = r;
-        rp[1] = (sp_point*)t;
-        XMEMSET(rp[1], 0, sizeof(sp_point));
+        rp[1] = &tp;
+        XMEMSET(&tp, 0, sizeof(tp));
         x = rp[p->infinity | q->infinity]->x;
         y = rp[p->infinity | q->infinity]->y;
         z = rp[p->infinity | q->infinity]->z;
@@ -45114,7 +45114,7 @@ static void sp_256_mask_4(sp_digit* r, sp_digit* a, sp_digit m)
  * r  Remainder from the division.
  * returns MP_OKAY indicating success.
  */
-static WC_INLINE int sp_256_div_4(sp_digit* a, sp_digit* d, sp_digit* m,
+static INLINE int sp_256_div_4(sp_digit* a, sp_digit* d, sp_digit* m,
         sp_digit* r)
 {
     sp_digit t1[8], t2[5];
@@ -45158,7 +45158,7 @@ static WC_INLINE int sp_256_div_4(sp_digit* a, sp_digit* d, sp_digit* m,
  * m  A single precision number that is the modulus to reduce with.
  * returns MP_OKAY indicating success.
  */
-static WC_INLINE int sp_256_mod_4(sp_digit* r, sp_digit* a, sp_digit* m)
+static INLINE int sp_256_mod_4(sp_digit* r, sp_digit* a, sp_digit* m)
 {
     return sp_256_div_4(a, m, NULL, r);
 }
@@ -45799,7 +45799,7 @@ int sp_ecc_sign_256(const byte* hash, word32 hashLen, WC_RNG* rng, mp_int* priv,
                     mp_int* rm, mp_int* sm, void* heap)
 {
 #if defined(WOLFSSL_SP_SMALL) || defined(WOLFSSL_SMALL_STACK)
-    sp_digit* d = NULL;
+    sp_digit* d;
 #else
     sp_digit ed[2*4];
     sp_digit xd[2*4];

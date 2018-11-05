@@ -99,13 +99,11 @@ int sp_init_multi(sp_int* a, sp_int* b, sp_int* c, sp_int* d, sp_int* e,
  */
 void sp_clear(sp_int* a)
 {
-    if (a != NULL) {
-        int i;
+    int i;
 
-        for (i=0; i<a->used; i++)
-            a->dp[i] = 0;
-        a->used = 0;
-    }
+    for (i=0; i<a->used; i++)
+        a->dp[i] = 0;
+    a->used = 0;
 }
 
 /* Calculate the number of 8-bit values required to represent the big number.
@@ -543,7 +541,7 @@ int sp_mod(sp_int* a, sp_int* m, sp_int* r)
  */
 void sp_zero(sp_int* a)
 {
-    XMEMSET(a->dp, 0, a->size * sizeof(*a->dp));
+    XMEMSET(a->dp, 0, a->size);
     a->used = 0;
 }
 
@@ -630,63 +628,6 @@ int sp_add(sp_int* a, sp_int* b, sp_int* r)
     }
     r->dp[i] = c;
     r->used = (int)(i + c);
-
-    return MP_OKAY;
-}
-#endif
-
-#ifndef NO_RSA
-/* Set a number into the big number.
- *
- * a  SP integer.
- * b  Value to set.
- * returns MP_OKAY always.
- */
-int sp_set_int(sp_int* a, unsigned long b)
-{
-    a->used = 1;
-    a->dp[0] = b;
-
-    return MP_OKAY;
-}
-#endif
-
-#ifdef WC_MP_TO_RADIX
-/* Hex string characters. */
-static const char sp_hex_char[16] = {
-    '0', '1', '2', '3', '4', '5', '6', '7',
-    '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'
-};
-
-/* Put the hex string version, big-endian, of a in str.
- *
- * a    SP integer.
- * str  Hex string is stored here.
- * returns MP_OKAY always.
- */
-int sp_tohex(sp_int* a, char* str)
-{
-    int i, j;
-
-    /* quick out if its zero */
-    if (sp_iszero(a) == MP_YES) {
-        *str++ = '0';
-        *str = '\0';
-        return MP_OKAY;
-    }
-
-    i = a->used - 1;
-    for (j = SP_WORD_SIZE - 4; j >= 0; j -= 4) {
-        if (((a->dp[i] >> j) & 0xf) != 0)
-            break;
-    }
-    for (; j >= 0; j -= 4)
-        *(str++) = sp_hex_char[(a->dp[i] >> j) & 0xf];
-    for (--i; i >= 0; i--) {
-        for (j = SP_WORD_SIZE - 4; j >= 0; j -= 4)
-            *(str++) = sp_hex_char[(a->dp[i] >> j) & 0xf];
-    }
-    *str = '\0';
 
     return MP_OKAY;
 }

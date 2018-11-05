@@ -60,7 +60,7 @@ static int intelFlags;
 
 #endif
 
-void fe_init(void)
+void fe_init()
 {
 #ifdef HAVE_INTEL_AVX2
     if (cpuFlagsSet)
@@ -242,7 +242,7 @@ void fe_copy(fe r, const fe a)
  * b  A field element.
  * c  If 1 then swap and if 0 then don't swap.
  */
-static WC_INLINE void fe_cswap_int(fe a, fe b, int c)
+static INLINE void fe_cswap_int(fe a, fe b, int c)
 {
     __asm__ __volatile__ (
         "movslq	%[c], %%rax\n\t"
@@ -284,7 +284,7 @@ void fe_cswap(fe a, fe b, int c)
  * a  A field element.
  * b  A field element.
  */
-static WC_INLINE void fe_sub_int(fe r, const fe a, const fe b)
+static INLINE void fe_sub_int(fe r, const fe a, const fe b)
 {
     __asm__ __volatile__ (
         "movq	$0x7fffffffffffffff, %%rcx\n\t"
@@ -328,7 +328,7 @@ void fe_sub(fe r, const fe a, const fe b)
  * a  A field element.
  * b  A field element.
  */
-static WC_INLINE void fe_add_int(fe r, const fe a, const fe b)
+static INLINE void fe_add_int(fe r, const fe a, const fe b)
 {
     __asm__ __volatile__ (
         "movq	0(%[a]), %%rax\n\t"
@@ -378,7 +378,7 @@ void fe_mul(fe r, const fe a, const fe b)
 }
 
 #ifdef HAVE_INTEL_AVX2
-static WC_INLINE void fe_mul_avx2(fe r, const fe a, const fe b)
+static INLINE void fe_mul_avx2(fe r, const fe a, const fe b)
 {
     __asm__ __volatile__ (
         "#  A[0] * B[0]\n\t"
@@ -494,16 +494,6 @@ static WC_INLINE void fe_mul_avx2(fe r, const fe a, const fe b)
         "adcq	$0, %%r9\n\t"
         "adcq	$0, %%r10\n\t"
         "adcq	$0, %%r11\n\t"
-        "#  Reduce if top bit set\n\t"
-        "movq	%%r11, %%rdx\n\t"
-        "shrq	$63, %%rdx\n\t"
-        "imulq	$19, %%rdx, %%rax\n\t"
-        "andq	%%rcx, %%r11\n\t"
-        "addq	%%rax, %%r8\n\t"
-        "adcq	$0, %%r9\n\t"
-        "adcq	$0, %%r10\n\t"
-        "adcq	$0, %%r11\n\t"
-        "# Store\n\t"
         "movq	%%r8, 0(%[r])\n\t"
         "movq	%%r9, 8(%[r])\n\t"
         "movq	%%r10, 16(%[r])\n\t"
@@ -516,7 +506,7 @@ static WC_INLINE void fe_mul_avx2(fe r, const fe a, const fe b)
 }
 #endif /* HAVE_INTEL_AVX2 */
 
-static WC_INLINE void fe_mul_x64(fe r, const fe a, const fe b)
+static INLINE void fe_mul_x64(fe r, const fe a, const fe b)
 {
     __asm__ __volatile__ (
         "#  A[0] * B[0]\n\t"
@@ -657,16 +647,6 @@ static WC_INLINE void fe_mul_x64(fe r, const fe a, const fe b)
         "adcq	$0, %%r8\n\t"
         "adcq	$0, %%r9\n\t"
         "adcq	$0, %%r10\n\t"
-        "#  Reduce if top bit set\n\t"
-        "movq	%%r10, %%rdx\n\t"
-        "shrq	$63, %%rdx\n\t"
-        "imulq	$19, %%rdx, %%rax\n\t"
-        "andq	%%rbx, %%r10\n\t"
-        "addq	%%rax, %%rcx\n\t"
-        "adcq	$0, %%r8\n\t"
-        "adcq	$0, %%r9\n\t"
-        "adcq	$0, %%r10\n\t"
-        "# Store\n\t"
         "movq	%%rcx, 0(%[r])\n\t"
         "movq	%%r8, 8(%[r])\n\t"
         "movq	%%r9, 16(%[r])\n\t"
@@ -690,7 +670,7 @@ void fe_sq(fe r, const fe a)
 }
 
 #ifdef HAVE_INTEL_AVX2
-static WC_INLINE void fe_sq_avx2(fe r, const fe a)
+static INLINE void fe_sq_avx2(fe r, const fe a)
 {
     __asm__ __volatile__ (
         "# A[0] * A[1]\n\t"
@@ -782,16 +762,6 @@ static WC_INLINE void fe_sq_avx2(fe r, const fe a)
         "adcq	$0, %%r9\n\t"
         "adcq	$0, %%r10\n\t"
         "adcq	$0, %%r11\n\t"
-        "#  Reduce if top bit set\n\t"
-        "movq	%%r11, %%rdx\n\t"
-        "shrq	$63, %%rdx\n\t"
-        "imulq	$19, %%rdx, %%rax\n\t"
-        "andq	%%rcx, %%r11\n\t"
-        "addq	%%rax, %%r8\n\t"
-        "adcq	$0, %%r9\n\t"
-        "adcq	$0, %%r10\n\t"
-        "adcq	$0, %%r11\n\t"
-        "# Store\n\t"
         "movq	%%r8, 0(%[r])\n\t"
         "movq	%%r9, 8(%[r])\n\t"
         "movq	%%r10, 16(%[r])\n\t"
@@ -804,7 +774,7 @@ static WC_INLINE void fe_sq_avx2(fe r, const fe a)
 }
 #endif /* HAVE_INTEL_AVX2 */
 
-static WC_INLINE void fe_sq_x64(fe r, const fe a)
+static INLINE void fe_sq_x64(fe r, const fe a)
 {
     __asm__ __volatile__ (
         "#  A[0] * A[1]\n\t"
@@ -918,16 +888,6 @@ static WC_INLINE void fe_sq_x64(fe r, const fe a)
         "adcq	$0, %%r8\n\t"
         "adcq	$0, %%r9\n\t"
         "adcq	$0, %%r10\n\t"
-        "#  Reduce if top bit set\n\t"
-        "movq	%%r10, %%rdx\n\t"
-        "shrq	$63, %%rdx\n\t"
-        "imulq	$19, %%rdx, %%rax\n\t"
-        "andq	%%rbx, %%r10\n\t"
-        "addq	%%rax, %%rcx\n\t"
-        "adcq	$0, %%r8\n\t"
-        "adcq	$0, %%r9\n\t"
-        "adcq	$0, %%r10\n\t"
-        "# Store\n\t"
         "movq	%%rcx, 0(%[r])\n\t"
         "movq	%%r8, 8(%[r])\n\t"
         "movq	%%r9, 16(%[r])\n\t"
@@ -945,7 +905,7 @@ static WC_INLINE void fe_sq_x64(fe r, const fe a)
  * a  A field element.
  * b  A field element.
  */
-static WC_INLINE void fe_mul121666_int(fe r, fe a)
+static INLINE void fe_mul121666_int(fe r, fe a)
 {
     __asm__ __volatile__ (
         "movq	$0x7fffffffffffffff, %%rcx\n\t"
@@ -1289,7 +1249,7 @@ void fe_sq2(fe r, const fe a)
 }
 
 #ifdef HAVE_INTEL_AVX2
-static WC_INLINE void fe_sq2_avx2(fe r, const fe a)
+static INLINE void fe_sq2_avx2(fe r, const fe a)
 {
     __asm__ __volatile__ (
         "# A[0] * A[1]\n\t"
@@ -1392,16 +1352,6 @@ static WC_INLINE void fe_sq2_avx2(fe r, const fe a)
         "adcq	$0, %%r9\n\t"
         "adcq	$0, %%r10\n\t"
         "adcq	$0, %%r11\n\t"
-        "#  Reduce if top bit set\n\t"
-        "movq	%%r11, %%rdx\n\t"
-        "shrq	$63, %%rdx\n\t"
-        "imulq	$19, %%rdx, %%rax\n\t"
-        "andq	%%rbx, %%r11\n\t"
-        "addq	%%rax, %%r8\n\t"
-        "adcq	$0, %%r9\n\t"
-        "adcq	$0, %%r10\n\t"
-        "adcq	$0, %%r11\n\t"
-        "# Store\n\t"
         "movq	%%r8, 0(%[r])\n\t"
         "movq	%%r9, 8(%[r])\n\t"
         "movq	%%r10, 16(%[r])\n\t"
@@ -1414,7 +1364,7 @@ static WC_INLINE void fe_sq2_avx2(fe r, const fe a)
 }
 #endif /* HAVE_INTEL_AVX2 */
 
-static WC_INLINE void fe_sq2_x64(fe r, const fe a)
+static INLINE void fe_sq2_x64(fe r, const fe a)
 {
     __asm__ __volatile__ (
         "#  A[0] * A[1]\n\t"
@@ -1539,16 +1489,6 @@ static WC_INLINE void fe_sq2_x64(fe r, const fe a)
         "adcq	$0, %%r8\n\t"
         "adcq	$0, %%r9\n\t"
         "adcq	$0, %%r10\n\t"
-        "#  Reduce if top bit set\n\t"
-        "movq	%%r10, %%rdx\n\t"
-        "shrq	$63, %%rdx\n\t"
-        "imulq	$19, %%rdx, %%rax\n\t"
-        "andq	%%rbx, %%r10\n\t"
-        "addq	%%rax, %%rcx\n\t"
-        "adcq	$0, %%r8\n\t"
-        "adcq	$0, %%r9\n\t"
-        "adcq	$0, %%r10\n\t"
-        "# Store\n\t"
         "movq	%%rcx, 0(%[r])\n\t"
         "movq	%%r8, 8(%[r])\n\t"
         "movq	%%r9, 16(%[r])\n\t"

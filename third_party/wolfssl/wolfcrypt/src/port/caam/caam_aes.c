@@ -299,7 +299,7 @@ int wc_AesEcbDecrypt(Aes* aes, byte* out,
 /* AES-CTR */
 #ifdef WOLFSSL_AES_COUNTER
 /* Increment AES counter (from wolfcrypt/src/aes.c) */
-static WC_INLINE void IncrementAesCounter(byte* inOutCtr)
+static INLINE void IncrementAesCounter(byte* inOutCtr)
 {
     /* in network byte order so start at end and work back */
     int i;
