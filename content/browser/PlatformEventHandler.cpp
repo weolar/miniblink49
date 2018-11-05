@@ -328,6 +328,7 @@ LRESULT PlatformEventHandler::fireMouseEvent(HWND hWnd, UINT message, WPARAM wPa
         }
         switch (message) {
         case WM_LBUTTONDOWN:
+        case WM_LBUTTONDBLCLK:
             webMouseEvent.button = WebMouseEvent::ButtonLeft;
             webMouseEvent.modifiers |= WebMouseEvent::LeftButtonDown;
             break;
@@ -417,7 +418,10 @@ void PlatformEventHandler::setIsDraggableNodeMousedown()
 
 bool PlatformEventHandler::doDraggableRegionNcHitTest(HWND hWnd, const blink::IntPoint& pos, HRGN draggableRegion)
 {
-    if (blink::RuntimeEnabledFeatures::updataInOtherThreadEnabled() || !draggableRegion)
+    if (blink::RuntimeEnabledFeatures::updataInOtherThreadEnabled())
+        return true;
+
+    if (!draggableRegion)
         return false;
 
     return ::PtInRegion(draggableRegion, pos.x(), pos.y());
