@@ -37,6 +37,7 @@ private:
 
     WebPageImpl* m_page;
     int m_currentOffset;
+    int m_lastNavDirection;
     //blink::HeapVector<RawPtrWillBeMember<blink::HistoryItem>> m_items;
     Vector<HistoryEntry*> m_items;
 };

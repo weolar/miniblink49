@@ -418,10 +418,7 @@ void PlatformEventHandler::setIsDraggableNodeMousedown()
 
 bool PlatformEventHandler::doDraggableRegionNcHitTest(HWND hWnd, const blink::IntPoint& pos, HRGN draggableRegion)
 {
-    if (blink::RuntimeEnabledFeatures::updataInOtherThreadEnabled())
-        return true;
-
-    if (!draggableRegion)
+    if (blink::RuntimeEnabledFeatures::updataInOtherThreadEnabled() || !draggableRegion)
         return false;
 
     return ::PtInRegion(draggableRegion, pos.x(), pos.y());
