@@ -101,10 +101,14 @@ BOOL FixupHtmlUrl(Application* app)
 
 BOOL ProcessOptions(Application* app)
 {
-    int argc = 0;
-    LPWSTR* argv = CommandLineToArgvW(GetCommandLineW(), &argc);
-    ParseOptions(argc, argv, &app->options);
-    LocalFree(argv);
+    //int argc = 0;
+    //LPWSTR* argv = CommandLineToArgvW(GetCommandLineW(), &argc);
+    //ParseOptions(argc, argv, &app->options);
+    //LocalFree(argv);
+
+	app->options.showHelp = 0;
+	wcscpy(app->options.htmlFile, L"https://www.baidu.com");
+	app->options.transparent = 1;
 
     return TRUE;
 }
@@ -187,8 +191,8 @@ BOOL CreateWebWindow(Application* app)
     else
         app->window = wkeCreateWebWindow(WKE_WINDOW_TYPE_POPUP, NULL, 0, 0, 640, 480);
 
-    if (!app->window)
-        return FALSE;
+	if (!app->window)
+		return FALSE;
 
     wkeOnWindowClosing(app->window, HandleWindowClosing, app);
     wkeOnWindowDestroy(app->window, HandleWindowDestroy, app);

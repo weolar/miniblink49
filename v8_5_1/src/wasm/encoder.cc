@@ -390,7 +390,7 @@ void WasmFunctionEncoder::Serialize(byte* buffer, byte** header,
     EmitUint16(header, static_cast<uint16_t>(body_.size() + local_decl.Size()));
     (*header) += local_decl.Emit(*header);
     if (body_.size() > 0) {
-      std::memcpy(*header, &body_[0], body_.size());
+      memcpy(*header, &body_[0], body_.size());
       (*header) += body_.size();
     }
   }
@@ -422,7 +422,7 @@ void WasmDataSegmentEncoder::Serialize(byte* buffer, byte** header,
   EmitVarInt(header, dest_);
   EmitVarInt(header, static_cast<uint32_t>(data_.size()));
 
-  std::memcpy(*header, &data_[0], data_.size());
+  memcpy(*header, &data_[0], data_.size());
   (*header) += data_.size();
 }
 
