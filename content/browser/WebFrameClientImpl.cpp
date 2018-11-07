@@ -3,7 +3,6 @@
 #include "content/browser/WebPage.h"
 #include "content/browser/WebPageImpl.h"
 #include "content/ui/ContextMeun.h"
-#include "content/web_impl_win/WebCookieJarCurlImpl.h"
 #include "content/web_impl_win/WebMediaPlayerImpl.h"
 #include "content/web_impl_win/npapi/WebPluginImpl.h"
 #if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
@@ -36,6 +35,7 @@
 #include "third_party/WebKit/Source/core/page/Page.h"
 #include "third_party/WebKit/Source/wtf/text/WTFStringUtil.h"
 #include "net/RequestExtraData.h"
+#include "net/cookies/WebCookieJarCurlImpl.h"
 
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
 namespace wke {
@@ -207,9 +207,18 @@ WebExternalPopupMenu* WebFrameClientImpl::createExternalPopupMenu(const WebPopup
     return 0;
 }
 
-WebCookieJar* WebFrameClientImpl::cookieJar(WebLocalFrame*)
+WebCookieJar* WebFrameClientImpl::cookieJar(WebLocalFrame* frame)
 {
-    return WebCookieJarImpl::inst();
+    PassRefPtr<net::PageNetExtraData> extra = m_webPage->getPageNetExtraData();
+    if (extra && extra->getCookieJar())
+        return extra->getCookieJar();
+
+    net::WebURLLoaderManager* manager = net::WebURLLoaderManager::sharedInstance();
+    if (!manager)
+        return nullptr;
+
+    net::WebCookieJarImpl* result = manager->getShareCookieJar();
+    return result;
 }
 
 void WebFrameClientImpl::resetLoadState()

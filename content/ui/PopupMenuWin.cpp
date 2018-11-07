@@ -80,6 +80,7 @@ PopupMenuWin::PopupMenuWin(PopupMenuWinClient* client, HWND hWnd, IntPoint offse
     m_rect.setHeight(1);
     m_offset.setX(offset.x());
     m_offset.setY(offset.y());
+    m_lastFocusWnd = nullptr;
 }
 
 PopupMenuWin::~PopupMenuWin()
@@ -179,21 +180,35 @@ LRESULT CALLBACK PopupMenuWin::PopupMenuWndProc(HWND hWnd, UINT message, WPARAM 
 LRESULT PopupMenuWin::wndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     LRESULT lResult = 0;
+    BOOL bHandle = FALSE;
+    POINT ptCursor = { 0 };
+    PlatformEventHandler::MouseEvtInfo info = { false, false, nullptr };
+    HWND hFocusWnd = nullptr;
 
-//     String out = String::format("PopupMenuWin wndProc: %x %04x\n", hWnd, message);
-//     OutputDebugStringA(out.utf8().data());
+    //String out = String::format("PopupMenuWin wndProc: %x %04x\n", hWnd, message);
+    //OutputDebugStringA(out.utf8().data());
 
     switch (message) {
     case WM_NCDESTROY:
         OutputDebugStringA("PopupMenuWin::wndProc WM_NCDESTROY\n");
+        break;
+    case WM_CAPTURECHANGED: // 在多线程环境下，收不到WM_LBUTTONUP消息，只能这里来模拟
+        ::GetCursorPos(&ptCursor);
+        ::ScreenToClient(hWnd, &ptCursor);
+        lParam = MAKELONG(ptCursor.x, ptCursor.y);
+
+        m_platformEventHandler->fireMouseEvent(hWnd, WM_LBUTTONDOWN, 0, lParam, info, &bHandle);
+        m_platformEventHandler->fireMouseEvent(hWnd, WM_LBUTTONUP, 0, lParam, info, &bHandle);
+        hide();
+        if (bHandle)
+            return 0;
+
         break;
     case WM_MOUSEMOVE:
     case WM_LBUTTONDOWN:
     case WM_LBUTTONUP: {
         if (!m_initialize)
             break;
-        BOOL bHandle = FALSE;
-        PlatformEventHandler::MouseEvtInfo info = { false, false, nullptr };
         m_platformEventHandler->fireMouseEvent(hWnd, message, wParam, lParam, info, &bHandle);
         if (bHandle)
             return 0;
@@ -254,12 +269,12 @@ LRESULT PopupMenuWin::wndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPa
         break;
 
     case WM_TIMER:
-        beginMainFrame();
+        hFocusWnd = ::GetForegroundWindow();
+        m_lastFocusWnd = hFocusWnd;
         break;
     case WM_PMW_KILLFOCUS:
     case WM_KILLFOCUS:
-        m_isVisible = false;
-        m_webViewImpl->hidePopups();
+        hide();
         break;
     case WM_INIT_MENU:
         initialize();
@@ -335,9 +350,12 @@ void PopupMenuWin::show(WebNavigationPolicy)
     postCommit();
     
     updataSize();
+}
 
-//     if (m_hPopup)
-//         ::ShowWindow(m_hPopup, SW_SHOWNOACTIVATE);
+void PopupMenuWin::hide()
+{
+    m_isVisible = false;
+    m_webViewImpl->hidePopups();
 }
 
 void PopupMenuWin::paint(HDC hdc, RECT rcPaint)
@@ -438,14 +456,22 @@ void PopupMenuWin::asynStartCreateWnd(blink::Timer<PopupMenuWin>*)
 
         m_hPopup = CreateWindowEx(WS_EX_NOACTIVATE, kPopupWindowClassName, L"MbPopupMenu", WS_POPUP/* | WS_DISABLED*/,
             CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, /*m_hParentWnd*/nullptr, 0, 0, this);
+
+        //::SetTimer(m_hPopup, 0x123451, 100, nullptr);
         
-        g_hMouseHook = SetWindowsHookEx(WH_MOUSE, mouseHookProc, GetModuleHandle(NULL), GetCurrentThreadId());
+        DWORD dwProcessID;
+        DWORD dwThreadID;
+        dwThreadID = GetWindowThreadProcessId(m_hParentWnd, &dwProcessID);
+
+        g_hMouseHook = SetWindowsHookEx(WH_MOUSE, mouseHookProc, GetModuleHandle(NULL), /*GetCurrentThreadId()*/dwThreadID);
     }
     m_client->onPopupMenuCreate(m_hPopup);
     initWndStyle(m_hPopup);
 
     if (m_needsCommit)
         ::PostMessage(m_hPopup, WM_COMMIT, 0, 0);
+
+    m_lastFocusWnd = ::GetForegroundWindow();
 }
 
 WebWidget* PopupMenuWin::createWnd()
