@@ -21,12 +21,6 @@ const int maxRunningJobs = 5;
 const bool ignoreSSLErrors = true; //  ("WEBKIT_IGNORE_SSL_ERRORS");
 const int kAllowedProtocols = CURLPROTO_FILE | CURLPROTO_FTP | CURLPROTO_FTPS | CURLPROTO_HTTP | CURLPROTO_HTTPS;
 
-extern char* g_cookieJarPath;
-
-void setCookieJarFullPath(const WCHAR* path);
-void setCookieJarPath(const WCHAR* path);
-char* cookieJarPath();
-void freeJarPath();
 CString certificatePath();
 
 #if ENABLE(WEB_TIMING)

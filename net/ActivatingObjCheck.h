@@ -2,7 +2,7 @@
 #define ActivatingLoaderCheck_h
 
 #include <set>
-#include "third_party/WebKit/Source/wtf/HashSet.h"
+#include <windows.h>
 
 namespace net {
 
@@ -16,9 +16,9 @@ public:
     void shutdown();
     void destroy();
 
-    void add(intptr_t loader);
-    void remove(intptr_t loader);
-    bool isActivating(intptr_t loader);
+    void add(intptr_t obj);
+    void remove(intptr_t obj);
+    bool isActivating(intptr_t obj);
 
     void doGarbageCollected(bool forceGC);
 

@@ -54,7 +54,6 @@
 #include "third_party/WebKit/Source/platform/MIMETypeRegistry.h"
 #include "third_party/WebKit/Source/web/WebLocalFrameImpl.h"
 #include "content/web_impl_win/WebBlobRegistryImpl.h"
-#include "content/web_impl_win/WebCookieJarCurlImpl.h"
 #include "content/web_impl_win/BlinkPlatformImpl.h"
 #include "content/browser/WebFrameClientImpl.h"
 #include "content/browser/WebPage.h"
@@ -72,6 +71,7 @@
 #include "net/InitializeHandleInfo.h"
 #include "net/HeaderVisitor.h"
 #include "net/PageNetExtraData.h"
+#include "net/cookies/WebCookieJarCurlImpl.h"
 #include "wke/wkeNetHook.h"
 #include "third_party/WebKit/Source/wtf/Threading.h"
 #include "third_party/WebKit/Source/wtf/Vector.h"
@@ -103,14 +103,7 @@ WebURLLoaderManager::WebURLLoaderManager()
     m_thread = platform->ioThread();
 
     curl_global_init(CURL_GLOBAL_ALL);
-    //初始化curl批处理句柄
-    m_curlMultiHandle = curl_multi_init();
-    //初始化共享curl句柄,用于共享cookies和dns等缓存
-    m_curlShareHandle = curl_share_init();
-    curl_share_setopt(m_curlShareHandle, CURLSHOPT_SHARE, CURL_LOCK_DATA_COOKIE);
-    curl_share_setopt(m_curlShareHandle, CURLSHOPT_SHARE, CURL_LOCK_DATA_DNS);
-    curl_share_setopt(m_curlShareHandle, CURLSHOPT_LOCKFUNC, curl_lock_callback);
-    curl_share_setopt(m_curlShareHandle, CURLSHOPT_UNLOCKFUNC, curl_unlock_callback);
+    m_curlMultiHandle = curl_multi_init(); // 初始化curl批处理句柄
 
     initCookieSession();
 }
@@ -118,10 +111,7 @@ WebURLLoaderManager::WebURLLoaderManager()
 WebURLLoaderManager::~WebURLLoaderManager()
 {
     curl_multi_cleanup(m_curlMultiHandle);
-    curl_share_cleanup(m_curlShareHandle);
-//     if (m_cookieJarFileName)
-//         free(m_cookieJarFileName);
-    freeJarPath();
+    //curl_share_cleanup(m_curlShareHandle);
     curl_global_cleanup();
 }
 
@@ -162,19 +152,16 @@ void WebURLLoaderManager::initCookieSession()
     // Curl saves both persistent cookies, and session cookies to the cookie file.
     // The session cookies should be deleted before starting a new session.
 
+    //初始化共享curl句柄,用于共享cookies和dns等缓存
+    m_shareCookieJar = new WebCookieJarImpl("cookies.dat");
+
     CURL* curl = curl_easy_init();
-    if (!curl)
-        return;
+    curl_easy_setopt(curl, CURLOPT_SHARE, m_shareCookieJar->getCurlShareHandle());
 
-    curl_easy_setopt(curl, CURLOPT_SHARE, m_curlShareHandle);
-
-    WTF::Mutex* mutex = sharedResourceMutex(CURL_LOCK_DATA_COOKIE);
-    WTF::Locker<WTF::Mutex> locker(*mutex);
-    const char* cookieJarPathString = cookieJarPath();
-
-    if (cookieJarPathString) {
-        curl_easy_setopt(curl, CURLOPT_COOKIEFILE, cookieJarPathString);
-        curl_easy_setopt(curl, CURLOPT_COOKIEJAR, cookieJarPathString);
+    std::string cookieJarPathString = m_shareCookieJar->getCookieJarFullPath();
+    if (!cookieJarPathString.empty()) {
+        curl_easy_setopt(curl, CURLOPT_COOKIEFILE, cookieJarPathString.c_str());
+        curl_easy_setopt(curl, CURLOPT_COOKIEJAR, cookieJarPathString.c_str());
     }
 
     curl_easy_setopt(curl, CURLOPT_COOKIESESSION, 1);
@@ -183,10 +170,20 @@ void WebURLLoaderManager::initCookieSession()
 
 CURLSH* WebURLLoaderManager::getCurlShareHandle() const
 {
-    return m_curlShareHandle;
+    return m_shareCookieJar->getCurlShareHandle();
 }
 
-// const char* WebURLLoaderManager::getCookieJarFileName() const
+void WebURLLoaderManager::setCookieJarFullPath(const WCHAR* path)
+{
+    m_shareCookieJar->setCookieJarFullPath(path);
+}
+
+WebCookieJarImpl* WebURLLoaderManager::getShareCookieJar() const
+{
+    return m_shareCookieJar;
+}
+
+// const char* WebURLLoaderManager::getCookieJarFullPath() const
 // {
 //     return m_cookieJarFileName;
 // }
@@ -1047,8 +1044,8 @@ int WebURLLoaderManager::addAsynchronousJob(WebURLLoaderInternal* job)
     KURL kurl = job->firstRequest()->url();
     String url = WTF::ensureStringToUTF8String(kurl.string());
 #if 0
-    if (WTF::kNotFound != url.find("electron-ui/file:")) 
-        OutputDebugStringA("");
+//     if (WTF::kNotFound != url.find("electron-ui/file:")) 
+//         OutputDebugStringA("");
     
     String outString = String::format("addAsynchronousJob : %d, %s\n", m_liveJobs.size(), WTF::ensureStringToUTF8(url, true).data());
     OutputDebugStringW(outString.charactersWithNullTermination().data());
@@ -1422,7 +1419,7 @@ void WebURLLoaderManager::initializeHandleOnIoThread(int jobId, InitializeHandle
         curl_easy_setopt(job->m_handle, CURLOPT_SHARE, info->pageNetExtraData->getCurlShareHandle());
         job->m_pageNetExtraData = info->pageNetExtraData;
     } else
-        curl_easy_setopt(job->m_handle, CURLOPT_SHARE, m_curlShareHandle);
+        curl_easy_setopt(job->m_handle, CURLOPT_SHARE, m_shareCookieJar->getCurlShareHandle());
     curl_easy_setopt(job->m_handle, CURLOPT_DNS_CACHE_TIMEOUT, 60 * 5); // 5 minutes
     curl_easy_setopt(job->m_handle, CURLOPT_PROTOCOLS, kAllowedProtocols);
     curl_easy_setopt(job->m_handle, CURLOPT_REDIR_PROTOCOLS, kAllowedProtocols);
@@ -1447,20 +1444,21 @@ void WebURLLoaderManager::initializeHandleOnIoThread(int jobId, InitializeHandle
 
     curl_easy_setopt(job->m_handle, CURLOPT_URL, job->m_url);
 
-    std::string cookieJarFileName;
+    std::string cookieJarFullPath;
     if (job->m_pageNetExtraData) {
-        cookieJarFileName = job->m_pageNetExtraData->getCookieJarFileName();
+        cookieJarFullPath = job->m_pageNetExtraData->getCookieJarFullPath();
     } else {
-        WTF::Mutex* mutex = sharedResourceMutex(CURL_LOCK_DATA_COOKIE);
-        WTF::Locker<WTF::Mutex> locker(*mutex);
-        const char* cookieJarPathString = cookieJarPath();
-        if (cookieJarPathString && '\0' != cookieJarPathString[0])
-            cookieJarFileName = cookieJarPathString;
+//         WTF::Mutex* mutex = sharedResourceMutex(CURL_LOCK_DATA_COOKIE);
+//         WTF::Locker<WTF::Mutex> locker(*mutex);
+//         const char* cookieJarPathString = cookieJarPath();
+//         if (cookieJarPathString && '\0' != cookieJarPathString[0])
+//             cookieJarFileName = cookieJarPathString;
+        cookieJarFullPath = m_shareCookieJar->getCookieJarFullPath();
     }
-
-    if (!cookieJarFileName.empty()) {
-        curl_easy_setopt(job->m_handle, CURLOPT_COOKIEJAR, cookieJarFileName.c_str());
-        curl_easy_setopt(job->m_handle, CURLOPT_COOKIEFILE, cookieJarFileName.c_str());
+    
+    if (!cookieJarFullPath.empty()) {
+        curl_easy_setopt(job->m_handle, CURLOPT_COOKIEJAR, cookieJarFullPath.c_str());
+        curl_easy_setopt(job->m_handle, CURLOPT_COOKIEFILE, cookieJarFullPath.c_str());
     }
 
     if ("GET" == info->method) {

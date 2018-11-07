@@ -56,6 +56,7 @@ namespace net {
 class JobHead;
 class WebURLLoaderInternal;
 class WebURLLoaderManager;
+class WebCookieJarImpl;
 struct BlobTempFileInfo;
 struct InitializeHandleInfo;
 struct MainTaskArgs;
@@ -118,6 +119,9 @@ public:
 
     blink::WebThread* getIoThread() const { return m_thread; }
 
+    void setCookieJarFullPath(const WCHAR* path);
+    WebCookieJarImpl* getShareCookieJar() const;
+
 private:
     WebURLLoaderManager();
     ~WebURLLoaderManager();
@@ -144,8 +148,10 @@ private:
 
     Vector<WebURLLoaderInternal*> m_resourceHandleList;
     CURLM* m_curlMultiHandle;
-    CURLSH* m_curlShareHandle;
+    //CURLSH* m_curlShareHandle;
     //char* m_cookieJarFileName;
+    WebCookieJarImpl* m_shareCookieJar;
+
     char m_curlErrorBuffer[CURL_ERROR_SIZE];
     const CString m_certificatePath;
     int m_runningJobs;

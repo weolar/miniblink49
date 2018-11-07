@@ -9,18 +9,20 @@ typedef void CURLSH;
 
 namespace net {
     
+class WebCookieJarImpl;
+
 class PageNetExtraData : public WTF::ThreadSafeRefCounted<PageNetExtraData> {
 public:
     PageNetExtraData();
     ~PageNetExtraData();
 
-    void setCookieJarPath(const std::string& cookieJarFileName);
-    CURLSH* getCurlShareHandle() { return m_curlShareHandle; }
-    std::string getCookieJarFileName() { return m_cookieJarFileName; }
+    void setCookieJarFullPath(const std::string& cookieJarFileName);
+    CURLSH* getCurlShareHandle();
+    std::string getCookieJarFullPath();
+    net::WebCookieJarImpl* getCookieJar() const { return m_cookieJar; }
 
 private:
-    CURLSH* m_curlShareHandle;
-    std::string m_cookieJarFileName;
+    net::WebCookieJarImpl* m_cookieJar;
 };
 
 }
