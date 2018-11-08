@@ -1,3 +1,7 @@
+#undef HAVE_OPENSSL // weolar
+
+#if HAVE_OPENSSL
+
 #include "node.h"
 #include "node_buffer.h"
 #include "node_crypto.h"
@@ -5969,3 +5973,5 @@ void InitCrypto(Local<Object> target,
 }  // namespace node
 
 NODE_MODULE_CONTEXT_AWARE_BUILTIN(crypto, node::crypto::InitCrypto)
+
+#endif // NODE_UES_OPENSSL

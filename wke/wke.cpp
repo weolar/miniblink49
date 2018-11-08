@@ -9,18 +9,19 @@
 #include "wke/wkeGlobalVar.h"
 #include "content/browser/WebPage.h"
 #include "content/web_impl_win/BlinkPlatformImpl.h"
-#include "content/web_impl_win/WebCookieJarCurlImpl.h"
 #include "content/web_impl_win/WebThreadImpl.h"
 #include "content/web_impl_win/npapi/WebPluginImpl.h"
 #include "content/web_impl_win/npapi/PluginDatabase.h"
 #include "net/WebURLLoaderManager.h"
 #include "net/ActivatingObjCheck.h"
+#include "net/cookies/WebCookieJarCurlImpl.h"
 #include "third_party/WebKit/public/web/WebKit.h"
 #include "third_party/WebKit/public/web/WebFrame.h"
 #include "third_party/WebKit/public/web/WebDragOperation.h"
 #include "third_party/WebKit/public/web/WebDocument.h"
 #include "third_party/WebKit/public/web/WebCustomElement.h"
 #include "third_party/WebKit/public/web/WebUserGestureIndicator.h"
+#include "third_party/WebKit/public/web/WebPageSerializer.h"
 #include "third_party/WebKit/public/platform/WebDragData.h"
 #include "third_party/WebKit/Source/web/WebViewImpl.h"
 #include "third_party/WebKit/Source/web/WebSettingsImpl.h"
@@ -30,6 +31,7 @@
 #include "wtf/text/WTFString.h"
 #include "wtf/text/WTFStringUtil.h"
 #include <v8.h>
+#include <shlwapi.h>
 
 namespace net {
 void setCookieJarPath(const WCHAR* path);
@@ -683,26 +685,28 @@ void wkeSetCookie(wkeWebView webView, const utf8* url, const utf8* cookie)
     blink::KURL webUrl(blink::ParsedURLString, url);
     blink::KURL webFirstPartyForCookies;
     String webCookie(cookie);
-    content::WebCookieJarImpl::inst()->setCookie(webUrl, webFirstPartyForCookies, webCookie);
+    webView->getCookieJar()->setCookie(webUrl, webFirstPartyForCookies, webCookie);
 }
 
-void wkeVisitAllCookie(void* params, wkeCookieVisitor visitor)
+void wkeVisitAllCookie(wkeWebView webView, void* params, wkeCookieVisitor visitor)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
-    content::WebCookieJarImpl::visitAllCookie(params, (content::WebCookieJarImpl::CookieVisitor)visitor);
+    webView->getCookieJar()->visitAllCookie(params, (net::WebCookieJarImpl::CookieVisitor)visitor);
 }
 
-void wkePerformCookieCommand(wkeCookieCommand command)
+void wkePerformCookieCommand(wkeWebView webView, wkeCookieCommand command)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
     CURL* curl = curl_easy_init();
-
     if (!curl)
         return;
 
-    CURLSH* curlsh = net::WebURLLoaderManager::sharedInstance()->getCurlShareHandle();
-    curl_easy_setopt(curl, CURLOPT_SHARE, curlsh);
+    std::string cookiesData = webView->getCookieJarPath();
+    CURLSH* curlsh = webView->getCurlShareHandle();
 
+    curl_easy_setopt(curl, CURLOPT_SHARE, curlsh);
+    curl_easy_setopt(curl, CURLOPT_COOKIEJAR, cookiesData.c_str());
+    
     switch (command) {
     case wkeCookieCommandClearAllCookies:
         curl_easy_setopt(curl, CURLOPT_COOKIELIST, "ALL");
@@ -735,13 +739,29 @@ bool wkeIsCookieEnabled(wkeWebView webView)
 void wkeSetCookieJarPath(wkeWebView webView, const WCHAR* path)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
-    net::setCookieJarPath(path);
+    if (!path)
+        return;
+    std::wstring pathStr(path);
+    net::WebURLLoaderManager* manager = net::WebURLLoaderManager::sharedInstance();
+    if (!manager)
+        return;
+    if (pathStr[pathStr.size() - 1] != L'\\' && pathStr[pathStr.size() - 1] != L'/')
+        pathStr += L'\\';
+    if (!::PathIsDirectoryW(pathStr.c_str()))
+        return;
+    pathStr += L"cookies.dat";
+    manager->getShareCookieJar()->setCookieJarFullPath(pathStr.c_str());
 }
 
 void wkeSetCookieJarFullPath(wkeWebView webView, const WCHAR* path)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
-    net::setCookieJarFullPath(path);
+    if (!path)
+        return;
+    net::WebURLLoaderManager* manager = net::WebURLLoaderManager::sharedInstance();
+    if (!manager)
+        return;
+    manager->getShareCookieJar()->setCookieJarFullPath(path);
 }
 
 String* kLocalStorageFullPath = nullptr;
@@ -832,7 +852,7 @@ void wkeSetFocus(wkeWebView webView)
     if (!webView)
         return;
     webView->setFocus();
-    //OutputDebugStringA("wkeSetFocus\n");
+    OutputDebugStringA("wkeSetFocus\n");
 }
 
 void wkeKillFocus(wkeWebView webView)
@@ -840,8 +860,8 @@ void wkeKillFocus(wkeWebView webView)
     wke::checkThreadCallIsValid(__FUNCTION__);
     if (!webView)
         return;
-    //webView->killFocus();
-    //OutputDebugStringA("killFocus\n");
+    webView->killFocus();
+    OutputDebugStringA("killFocus\n");
 }
 
 wkeRect wkeGetCaretRect(wkeWebView webView)
@@ -1037,6 +1057,16 @@ void wkeOnConsole(wkeWebView webView, wkeConsoleCallback callback, void* param)
 void wkeUtilSetUiCallback(wkeUiThreadPostTaskCallback callback) 
 {
     wke::g_wkeUiThreadPostTaskCallback = callback;
+}
+
+const utf8* wkeUtilSerializeToMHTML(wkeWebView webView)
+{
+    wke::checkThreadCallIsValid(__FUNCTION__);
+
+    blink::WebViewImpl* webviewImpl = webView->getWebPage()->webViewImpl();
+    blink::WebCString result = blink::WebPageSerializer::serializeToMHTML(webviewImpl);
+    const utf8* resultStr = wke::createTempCharString(result.data(), result.length());
+    return resultStr;
 }
 
 void wkeSetUIThreadCallback(wkeWebView webView, wkeCallUiThread callback, void* param)
@@ -1316,10 +1346,38 @@ wkeWebView wkeCreateWebWindow(wkeWindowType type, HWND parent, int x, int y, int
     return webWindow;
 }
 
+wkeWebView wkeCreateWebView()
+{
+    wke::CWebView* webView = new wke::CWebView();
+    webView->webPage()->setNeedAutoDrawToHwnd(false);
+
+    //s_webViews.append(webView);
+    return webView;
+}
+
+void wkeDestroyWebView(wkeWebView webView)
+{
+    if (!webView)
+        return;
+
+    if (webView->getWkeHandler()->windowDestroyCallback)
+        webView->getWkeHandler()->windowDestroyCallback(webView, webView->getWkeHandler()->windowDestroyCallbackParam);
+
+    net::ActivatingObjCheck::inst()->remove(webView->getId());
+    std::set<wkeWebView>::iterator pos = wke::g_liveWebViews.find(webView);
+
+    if (pos != wke::g_liveWebViews.end()) {
+        delete webView;
+    }
+}
+
 void wkeDestroyWebWindow(wkeWebView webWindow)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
-    webWindow->destroy();
+    std::set<wkeWebView>::iterator pos = wke::g_liveWebViews.find(webWindow);
+    if (pos != wke::g_liveWebViews.end()) {
+        webWindow->destroy();
+    }
 }
 
 HWND wkeGetWindowHandle(wkeWebView webWindow)

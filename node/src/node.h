@@ -218,6 +218,10 @@ NODE_EXTERN void EmitBeforeExit(Environment* env);
 NODE_EXTERN int EmitExit(Environment* env);
 NODE_EXTERN void RunAtExit(Environment* env);
 
+NODE_EXTERN void AddLiveSet(intptr_t obj);
+NODE_EXTERN void RemoveLiveSet(intptr_t obj);
+NODE_EXTERN bool IsLiveObj(intptr_t obj);
+
 /* Converts a unixtime to V8 Date */
 #define NODE_UNIXTIME_V8(t) v8::Date::New(v8::Isolate::GetCurrent(),          \
     1000 * static_cast<double>(t))

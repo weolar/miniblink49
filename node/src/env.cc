@@ -1,6 +1,7 @@
 #include "env.h"
 #include "env-inl.h"
 #include "v8.h"
+#include "net/ActivatingObjCheck.h"
 
 #if defined(_MSC_VER)
 #define getpid GetCurrentProcessId
@@ -67,14 +68,19 @@ void Environment::PrintSyncTrace() const {
   fflush(stderr);
 }
 
+void AddLiveSet(intptr_t obj) {
+    net::ActivatingObjCheck::inst()->add((intptr_t)obj);
+}
+
+void RemoveLiveSet(intptr_t obj) {
+    net::ActivatingObjCheck::inst()->remove((intptr_t)obj);
+}
+
+bool IsLiveObj(intptr_t obj) {
+    return net::ActivatingObjCheck::inst()->isActivating((intptr_t)obj);
+}
+
 #ifndef MINIBLINK_NOT_IMPLEMENTED
-// Environment::MicrotaskSuppressionHandle Environment::BlinkMicrotaskSuppressionEnter(v8::Isolate* isolate) {
-//     return nodeBlinkMicrotaskSuppressionEnter(isolate);
-// }
-// 
-// void Environment::BlinkMicrotaskSuppressionLeave(MicrotaskSuppressionHandle handle) {
-//     nodeBlinkMicrotaskSuppressionLeave(handle);
-// }
 
 void BlinkMicrotaskSuppressionEnterFunc(Environment* self) {
     if (!self->blink_microtask_suppression_handle_)

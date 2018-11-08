@@ -15,8 +15,14 @@
 //////////////////////////////////////////////////////////////////////////
 
 namespace content {
- class WebPage;
+class WebPage;
 }
+
+namespace net {
+class WebCookieJarImpl;
+}
+
+typedef void CURLSH;
 
 namespace wke {
 
@@ -295,6 +301,10 @@ public:
     void showDevTools(const utf8* url, wkeOnShowDevtoolsCallback callback, void* param);
 
     content::WebPage* getWebPage() const { return m_webPage; }
+
+    CURLSH* getCurlShareHandle();
+    std::string getCookieJarPath();
+    net::WebCookieJarImpl* getCookieJar();
 
     std::set<jsValue>& getPersistentJsValue() { return m_persistentJsValue; }
 

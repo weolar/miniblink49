@@ -1,3 +1,7 @@
+#undef HAVE_OPENSSL // weolar
+
+#if HAVE_OPENSSL
+
 #include "tls_wrap.h"
 #include "async-wrap.h"
 #include "async-wrap-inl.h"
@@ -941,3 +945,5 @@ void TLSWrap::Initialize(Local<Object> target,
 }  // namespace node
 
 NODE_MODULE_CONTEXT_AWARE_BUILTIN(tls_wrap, node::TLSWrap::Initialize)
+
+#endif // #ifdef NODE_UES_OPENSSL

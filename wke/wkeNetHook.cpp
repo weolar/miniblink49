@@ -8,6 +8,7 @@
 #include "wke/wke.h"
 #include "wke/wkeString.h"
 #include "wke/wkeUtil.h"
+#include "wke/wkeGlobalVar.h"
 #include "third_party/WebKit/public/platform/WebURLRequest.h"
 #include "third_party/WebKit/public/platform/WebURLResponse.h"
 #include "third_party/WebKit/public/platform/Platform.h"
@@ -294,13 +295,19 @@ int wkeNetGetFavicon(wkeWebView webView, wkeOnNetGetFaviconCallback callback, vo
 struct wkeWebUrlRequest {
     blink::WebURLRequest m_resourceRequest;
 
-    wkeWebUrlRequest(const blink::WebURLRequest& resourceRequest)
+    wkeWebUrlRequest(wkeWebView webView, const blink::WebURLRequest& resourceRequest)
     {
+        m_webView = webView;
+        if (m_webView)
+            m_webviewId = wkeGetWebviewId(webView);
         m_resourceRequest = resourceRequest;
     }
 
     wkeWebUrlRequest(const utf8* url, const utf8* method, const utf8* mime)
     {
+        m_webView = nullptr;
+        m_webviewId = 0;
+
         m_resourceRequest.initialize();
 
         blink::KURL kurl(blink::ParsedURLString, url);
@@ -310,8 +317,45 @@ struct wkeWebUrlRequest {
 
     void addHTTPHeaderField(const utf8* name, const utf8* value)
     {
-        m_resourceRequest.addHTTPHeaderField(blink::WebString::fromUTF8(name), blink::WebString::fromUTF8(value));
+        std::string* nameStr = new std::string(name);
+        std::string* valueStr = new std::string(value);
+        if (nameStr->size() == 0 || valueStr->size() == 0) {
+            delete nameStr;
+            delete valueStr;
+            return;
+        }
+        if (WTF::isMainThread()) {
+            if (m_webView && 0 == m_webviewId && wke::g_liveWebViews.end() != wke::g_liveWebViews.find(m_webView))
+                m_webviewId = wkeGetWebviewId(m_webView);
+
+            if (wkeIsWebviewAlive(m_webviewId))
+                m_resourceRequest.addHTTPHeaderField(blink::WebString::fromUTF8(name), blink::WebString::fromUTF8(value));
+
+            delete nameStr;
+            delete valueStr;
+        } else {
+            wkeWebUrlRequest* self = this;
+            WTF::internal::callOnMainThreadClosure([self, nameStr, valueStr] {
+                self->addHTTPHeaderField(nameStr->c_str(), valueStr->c_str());
+                delete nameStr;
+                delete valueStr;
+            });
+        }
     }
+
+    wkeWebView getWebView() const
+    {
+        return m_webView;
+    }
+
+    void setWebView(wkeWebView webView)
+    {
+        m_webView = webView;
+    }
+
+private:
+    wkeWebView m_webView;
+    int m_webviewId;
 };
 
 struct wkeWebUrlResponse {
@@ -324,14 +368,16 @@ struct wkeWebUrlResponse {
 
 struct NetUrlRequest : public net::JobHead, public blink::WebURLLoaderClient {
 public:
-    NetUrlRequest(wkeWebView webView, wkeWebUrlRequestPtr request, void* param, wkeUrlRequestCallbacks callbacks)
+    NetUrlRequest(wkeWebView webView, wkeWebUrlRequestPtr request, void* param, const wkeUrlRequestCallbacks* callbacks)
     {
         m_ref = 0;
         m_id = 0;
         m_type = net::JobHead::kWkeCustomNetRequest;
         m_webView = webView;
-        if (m_webView)
+        m_webviewId = 0;
+        if (m_webView && WTF::isMainThread())
             m_webviewId = wkeGetWebviewId(webView);
+            
         m_resourceRequest = request->m_resourceRequest;
         
         m_callbackParam = nullptr;
@@ -345,47 +391,71 @@ public:
 
     ~NetUrlRequest()
     {
-        if (m_loader) {
-            m_loader->cancel();
-            delete m_loader;
-        }
-        net::WebURLLoaderManager::sharedInstance()->removeLiveJobs(m_id);
+        cancel();
+    }
+
+    void createLoader()
+    {
+        if (wke::g_liveWebViews.end() != wke::g_liveWebViews.find(m_webView))
+            m_webviewId = wkeGetWebviewId(m_webView);
+
+        m_loader = blink::Platform::current()->createURLLoader();
+        m_loader->loadAsynchronously(m_resourceRequest, this);
     }
 
     int start()
     {
-        m_loader = blink::Platform::current()->createURLLoader();
-        m_loader->loadAsynchronously(m_resourceRequest, this);
-
+        if (WTF::isMainThread()) {
+            createLoader();
+        } else {
+            NetUrlRequest* self = this;
+            WTF::internal::callOnMainThreadClosure([self] {
+                self->createLoader();
+            });
+        }
         m_id = net::WebURLLoaderManager::sharedInstance()->addLiveJobs(this);
         return m_id;
     }
 
+    void cancelLoader()
+    {
+        if (!m_loader)
+            return;
+
+        m_loader->cancel();
+        delete m_loader;
+        m_loader = nullptr;
+    }
+
     void cancel()
     {
-        if (m_loader) {
-            m_loader->cancel();
-            delete m_loader;
-            m_loader = nullptr;
+        if (WTF::isMainThread()) {
+            cancelLoader();
+        } else {
+            NetUrlRequest* self = this;
+            WTF::internal::callOnMainThreadClosure([self] {
+                self->cancelLoader();
+            });
         }
+
         net::WebURLLoaderManager::sharedInstance()->removeLiveJobs(m_id);
     }
 
-    void setCallback(void* param, wkeUrlRequestCallbacks callbacks)
+    void setCallback(void* param, const wkeUrlRequestCallbacks* callbacks)
     {
         m_callbackParam = param;
-        m_willRedirectCallback = callbacks.willRedirectCallback;
-        m_didReceiveResponseCallback = callbacks.didReceiveResponseCallback;
-        m_didReceiveDataCallback = callbacks.didReceiveDataCallback;
-        m_didFailCallback = callbacks.didFailCallback;
-        m_didFinishLoadingCallback = callbacks.didFinishLoadingCallback;
+        m_willRedirectCallback = callbacks->willRedirectCallback;
+        m_didReceiveResponseCallback = callbacks->didReceiveResponseCallback;
+        m_didReceiveDataCallback = callbacks->didReceiveDataCallback;
+        m_didFailCallback = callbacks->didFailCallback;
+        m_didFinishLoadingCallback = callbacks->didFinishLoadingCallback;
     }
 
     // WebURLLoaderClient
     virtual void willSendRequest(blink::WebURLLoader*, blink::WebURLRequest& newRequest, const blink::WebURLResponse& redirectResponse) override
     {
-        wkeWebUrlRequest oldWebRequest(m_resourceRequest);
-        wkeWebUrlRequest newWebRequest(newRequest);
+        wkeWebUrlRequest oldWebRequest(m_webView, m_resourceRequest);
+        wkeWebUrlRequest newWebRequest(m_webView, newRequest);
         wkeWebUrlResponse webRedirectResponse(redirectResponse);
         if (m_willRedirectCallback) {
             m_willRedirectCallback(m_webView, m_callbackParam, &oldWebRequest, &newWebRequest, &webRedirectResponse);
@@ -394,7 +464,7 @@ public:
 
     virtual void didReceiveResponse(blink::WebURLLoader*, const blink::WebURLResponse& response) override
     {
-        wkeWebUrlRequest webRequest(m_resourceRequest);
+        wkeWebUrlRequest webRequest(m_webView, m_resourceRequest);
         wkeWebUrlResponse webResponse(response);
         if (m_didReceiveResponseCallback)
             m_didReceiveResponseCallback(m_webView, m_callbackParam, &webRequest, &webResponse);
@@ -402,14 +472,14 @@ public:
 
     virtual void didReceiveData(blink::WebURLLoader*, const char* data, int dataLength, int encodedDataLength) override
     {
-        wkeWebUrlRequest webRequest(m_resourceRequest);
+        wkeWebUrlRequest webRequest(m_webView, m_resourceRequest);
         if (m_didReceiveDataCallback)
             m_didReceiveDataCallback(m_webView, m_callbackParam, &webRequest, data, dataLength);
     }
 
     virtual void didFail(blink::WebURLLoader* loader, const blink::WebURLError& error) override
     {
-        wkeWebUrlRequest webRequest(m_resourceRequest);
+        wkeWebUrlRequest webRequest(m_webView, m_resourceRequest);
         if (m_didFailCallback)
             m_didFailCallback(m_webView, m_callbackParam, &webRequest, error.localizedDescription.utf8().c_str());
 
@@ -418,7 +488,7 @@ public:
 
     virtual void didFinishLoading(blink::WebURLLoader* loader, double finishTime, int64_t totalEncodedDataLength) override
     {
-        wkeWebUrlRequest webRequest(m_resourceRequest);
+        wkeWebUrlRequest webRequest(m_webView, m_resourceRequest);
         if (m_didFinishLoadingCallback)
             m_didFinishLoadingCallback(m_webView, m_callbackParam, &webRequest, finishTime);
         delete this;
@@ -445,28 +515,41 @@ wkeWebUrlRequestPtr wkeNetCreateWebUrlRequest(const utf8* url, const utf8* metho
 
 void wkeNetAddHTTPHeaderFieldToUrlRequest(wkeWebUrlRequestPtr request, const utf8* name, const utf8* value)
 {
-    request->addHTTPHeaderField(name, value);
+    if (WTF::isMainThread())
+        return request->addHTTPHeaderField(name, value);
+
+    std::string* nameStr = new std::string(name);
+    std::string* valueStr = new std::string(value);
+    WTF::internal::callOnMainThreadClosure([request, nameStr, valueStr] {
+        request->addHTTPHeaderField(nameStr->c_str(), valueStr->c_str());
+        delete valueStr;
+        delete nameStr;
+    });
 }
 
 int wkeNetGetHttpStatusCode(wkeWebUrlResponsePtr response)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     return response->m_response.httpStatusCode();
 }
 
 long long wkeNetGetExpectedContentLength(wkeWebUrlResponsePtr response)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     return response->m_response.expectedContentLength();
 }
 
 const utf8* wkeNetGetResponseUrl(wkeWebUrlResponsePtr response)
 {
+    wke::checkThreadCallIsValid(__FUNCTION__);
     blink::KURL kurl = response->m_response.url();
     String url = kurl.getUTF8String();
     return wke::createTempCharString((const char*)url.characters8(), url.length());
 }
 
-int wkeNetStartUrlRequest(wkeWebView webView, wkeWebUrlRequestPtr request, void* param, wkeUrlRequestCallbacks callbacks)
+int wkeNetStartUrlRequest(wkeWebView webView, wkeWebUrlRequestPtr request, void* param, const wkeUrlRequestCallbacks* callbacks)
 {
+    request->setWebView(webView);
     NetUrlRequest* netRequest = new NetUrlRequest(webView, request, param, callbacks);
     return netRequest->start();
 }

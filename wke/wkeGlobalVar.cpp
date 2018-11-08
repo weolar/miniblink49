@@ -28,6 +28,8 @@ wkeOnIsMediaPlayerSupportsMIMEType g_onIsMediaPlayerSupportsMIMETypeCallback = n
 
 wkeTempCallbackInfo g_wkeTempCallbackInfo;
 
+std::set<wkeWebView> g_liveWebViews;
+
 }
 
 WKE_FILE_OPEN g_pfnOpen;
