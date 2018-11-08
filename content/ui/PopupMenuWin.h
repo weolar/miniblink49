@@ -60,6 +60,7 @@ public:
     virtual void setWindowRect(const blink::WebRect&) override;
     virtual blink::WebLayerTreeView* layerTreeView() override;
     virtual void show(blink::WebNavigationPolicy) override;
+    void hide();
 
     // LayerTreeHostClent --------------------------------------------------------
     virtual void onLayerTreeDirty() override { scheduleAnimation(); }
@@ -110,6 +111,8 @@ protected:
     HWND m_hParentWnd;
     blink::IntPoint m_offset;
     PlatformEventHandler* m_platformEventHandler;
+
+    HWND m_lastFocusWnd;
 };
 
 }

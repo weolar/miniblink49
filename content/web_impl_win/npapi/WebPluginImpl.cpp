@@ -28,7 +28,6 @@
 #include "config.h"
 #include "content/web_impl_win/npapi/WebPluginImpl.h"
 
-#include "content/web_impl_win/WebCookieJarCurlImpl.h"
 #include "content/web_impl_win/npapi/PluginDatabase.h"
 #include "content/web_impl_win/npapi/PluginPackage.h"
 #include "content/web_impl_win/npapi/PluginMainThreadScheduler.h"
@@ -57,6 +56,8 @@
 #include "third_party/npapi/bindings/npapi.h"
 #include "gen/blink/core/HTMLNames.h"
 #include "wtf/text/WTFStringUtil.h"
+#include "wke/wkeWebView.h"
+#include "net/cookies/WebCookieJarCurlImpl.h"
 
 using std::min;
 
@@ -1190,10 +1191,9 @@ NPError WebPluginImpl::getValueForURL(NPNURLVariable variable, const char* url, 
     case NPNURLVCookie: {
         KURL u(m_parentFrame->document()->baseURL(), url);
         if (u.isValid()) {
-            //Frame* frame = getFrame(parentFrame(), m_element);
             LocalFrame* frame = parentFrame();
             if (frame) {
-                const CString cookieStr(WebCookieJarImpl::inst()->cookies(u, WebURL()).utf8().c_str());
+                const CString cookieStr(m_wkeWebview->getCookieJar()->cookies(u, WebURL()).utf8().c_str());
                 if (!cookieStr.isNull()) {
                     const int size = cookieStr.length();
                     *value = static_cast<char*>(NPN_MemAlloc(size+1));
@@ -1254,9 +1254,8 @@ NPError WebPluginImpl::setValueForURL(NPNURLVariable variable, const char* url, 
         KURL u(m_parentFrame->document()->baseURL(), url);
         if (u.isValid()) {
             const String cookieStr = String::fromUTF8(value, len);
-            //Frame* frame = getFrame(parentFrame(), m_element);
             if (!cookieStr.isEmpty())
-                WebCookieJarImpl::inst()->setCookie(u, WebURL(), cookieStr);
+                m_wkeWebview->getCookieJar()->setCookie(u, WebURL(), cookieStr);
         } else
             result = NPERR_INVALID_URL;
         break;

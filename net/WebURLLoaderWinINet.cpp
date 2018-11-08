@@ -8,7 +8,6 @@
 #include "net/ActivatingObjCheck.h"
 #include "content/web_impl_win/WebURLLoaderImpl.h"
 #include "content/web_impl_win/CurrentTimeImpl.h"
-#include "content/web_impl_win/WebCookieJarImpl.h"
 #include "third_party/WebKit/public/platform/Platform.h"
 #include "third_party/WebKit/public/platform/WebThread.h"
 #include "third_party/WebKit/public/platform/WebURLRequest.h"
@@ -30,6 +29,7 @@
 #include "third_party/zlib/zlib.h"
 #include "net/DataURL.h"
 #include "net/BlinkSynchronousLoader.h"
+#include "net/cookies/WebCookieJarCurlImpl.h"
 
 #if USING_VC6RT == 1
 #define PURE                    = 0
@@ -153,7 +153,7 @@ WebURLLoaderWinINet::WebURLLoaderWinINet(content::WebURLLoaderImpl* loader)
 {
     ASSERT(isMainThread());
     ActivatingObjCheck::inst()->add((intptr_t)this);
-    
+
     String outString = String::format("WebURLLoaderWinINet::WebURLLoaderWinINet: %p\n", this);
     OutputDebugStringW(outString.charactersWithNullTermination().data());
 
@@ -274,7 +274,8 @@ void WebURLLoaderWinINet::internetStatusCallback(HINTERNET internetHandle, DWORD
         return;
 
     switch (internetStatus) {
-    case INTERNET_STATUS_REDIRECT: {
+    case INTERNET_STATUS_REDIRECT:
+    {
         String redirectUrl(static_cast<UChar*>(statusInformation), statusInformationLength);
         ASSERT(redirectUrl.containsOnlyASCII());
         if (redirectUrl.containsOnlyASCII()) {
@@ -282,7 +283,7 @@ void WebURLLoaderWinINet::internetStatusCallback(HINTERNET internetHandle, DWORD
             WTF::internal::callOnMainThread(callOnRedirect, handle);
         }
     }
-        break;
+    break;
 
     case INTERNET_STATUS_REQUEST_COMPLETE:
         WTF::internal::callOnMainThread(callOnRequestComplete, handle);
@@ -329,14 +330,14 @@ public:
         // Skip over referrer headers found in the header map because we already
         // pulled it out as a separate parameter.
         // 但挪到这里后，没有单独的参数写referr，干脆也加到headBuffer里
-//         if (equalIgnoringCase(nameString, "referer"))
-//             return;
+        //         if (equalIgnoringCase(nameString, "referer"))
+        //             return;
 
         if (equalIgnoringCase(nameString, "accept"))
             m_hasAcceptHeader = true;
 
-//         if (!m_buffer.isEmpty())
-//             appendCharToVector(m_buffer, "\r\n");
+        //         if (!m_buffer.isEmpty())
+        //             appendCharToVector(m_buffer, "\r\n");
 
         Vector<char> headBuffer;
         headBuffer.append(nameLatin1.data(), nameLatin1.length());
@@ -359,24 +360,17 @@ public:
             appendCharToVector(m_buffer, "Accept: */*\r\n");
             m_hasAcceptHeader = true;
         }
+        DebugBreak();
 
-// 		appendCharToVector(m_buffer, "\r\nDNT:1\r\n");
-// 
-// 		String X_XSRF_TOKEN = content::WebCookieJarImpl::inst()->X_XSRF_TOKEN();
-// 		if (!X_XSRF_TOKEN.isNull() && !X_XSRF_TOKEN.isEmpty()) {
-// 			//"X-XSRF-TOKEN:2|80ee8d91|5db34c1b6e61673b1889111ed9c1eeed|1468671743\r\n"
-// 			appendCharToVector(m_buffer, "XSRF-TOKEN:");
-// 			appendCharToVector(m_buffer, content::WebCookieJarImpl::inst()->X_XSRF_TOKEN().utf8().data());
-// 			appendCharToVector(m_buffer, "\r\n");
-// 		}
-		String cookie = content::WebCookieJarImpl::inst()->cookies(m_url, blink::KURL());
-		if (!cookie.isNull() && !cookie.isEmpty()) {
-			appendCharToVector(m_buffer, "Cookie: ");
-			appendCharToVector(m_buffer, cookie.utf8().data());
-			appendCharToVector(m_buffer, "\r\n");
-		}
- 		appendCharToVector(m_buffer, "\r\n");
-		
+        //         String cookie = content::WebCookieJarImpl::inst()->cookies(m_url, blink::KURL());
+        //         
+        //         if (!cookie.isNull() && !cookie.isEmpty()) {
+        //             appendCharToVector(m_buffer, "Cookie: ");
+        //             appendCharToVector(m_buffer, cookie.utf8().data());
+        //             appendCharToVector(m_buffer, "\r\n");
+        //         }
+        //         appendCharToVector(m_buffer, "\r\n");
+
         //////////////////////////////////////////////////////////////////////////
         if (0 && m_debugTest) {
             m_buffer.clear();
@@ -395,14 +389,14 @@ public:
             appendCharToVector(m_buffer, "\r\n");
             ::HttpAddRequestHeadersA(m_requestHandle, m_buffer.data(), m_buffer.size(), HTTP_ADDREQ_FLAG_ADD);
         }
-		
-	
+
+
         //////////////////////////////////////////////////////////////////////////
         return m_buffer;
     }
 
     HINTERNET m_requestHandle;
-	KURL m_url;
+    KURL m_url;
 
     bool m_debugTest;
 private:
@@ -410,34 +404,35 @@ private:
     bool m_hasAcceptHeader;
 };
 
-bool getCookiesFromHost(const KURL& url, Vector<char>* cookies) {
-	DWORD cookie_size = 0;
-	bool success = true;
-	std::string cookie_string;
+bool getCookiesFromHost(const KURL& url, Vector<char>* cookies)
+{
+    DWORD cookie_size = 0;
+    bool success = true;
+    std::string cookie_string;
 
 #ifndef COOKIEACTION_READ
 #define COOKIEACTION_READ 0x00000020
 #endif
-	int32 cookie_action = COOKIEACTION_READ;
+    int32 cookie_action = COOKIEACTION_READ;
 #undef COOKIEACTION_READ
-	// TODO string utf8 -> UTF16
-	BOOL result = InternetGetCookieA(url.string().utf8().data(), NULL, NULL, &cookie_size);
-	DWORD error = 0;
-	if (!result || 0 == cookie_size) {
-		success = false;
-		error = GetLastError();
-		return false;
-	}
+    // TODO string utf8 -> UTF16
+    BOOL result = InternetGetCookieA(url.string().utf8().data(), NULL, NULL, &cookie_size);
+    DWORD error = 0;
+    if (!result || 0 == cookie_size) {
+        success = false;
+        error = GetLastError();
+        return false;
+    }
 
-	cookies->resize(cookie_size + 1);
-	if (!InternetGetCookieA(url.string().utf8().data(), NULL, cookies->data(), &cookie_size)) {
-		success = false;
-		error = GetLastError();
-		return false;
-	}
+    cookies->resize(cookie_size + 1);
+    if (!InternetGetCookieA(url.string().utf8().data(), NULL, cookies->data(), &cookie_size)) {
+        success = false;
+        error = GetLastError();
+        return false;
+    }
 
-	cookies->at(cookie_size) = '\0';
-	return true;
+    cookies->at(cookie_size) = '\0';
+    return true;
 }
 
 bool testHttpDownload(KURL url, Vector<char>& buffer)
@@ -645,159 +640,159 @@ bool WebURLLoaderWinINet::start(const blink::WebURLRequest& request, blink::WebU
 
 bool WebURLLoaderWinINet::onRequestComplete()
 {
-    if (!m_internetHandle || (!m_requestHandle && !m_connectHandle))
-        return false;
-
-    if (m_bytesRemainingToWrite) {
-        DWORD bytesWritten;
-        const char* writeData = m_formData.data() + (m_formData.size() - m_bytesRemainingToWrite);
-        BOOL b = InternetWriteFile(m_requestHandle, writeData, m_bytesRemainingToWrite, &bytesWritten);
-        if (!b) {
-            DWORD dwError;
-            Vector<wchar_t> errorBuf;
-            DWORD dwBufferLength = 200;
-            errorBuf.resize(dwBufferLength);
-            b = ::InternetGetLastResponseInfoW(&dwError, errorBuf.data(), &dwBufferLength);
-            OutputDebugStringW(errorBuf.data());
-            OutputDebugStringA("\n");
-        }
-        m_bytesRemainingToWrite -= bytesWritten;
-//         if (m_bytesRemainingToWrite)
-//             return true;
-        m_formData.clear();
-    }
-
-    if (!m_sentEndRequest) {
-        HttpEndRequestW(m_requestHandle, 0, 0, reinterpret_cast<DWORD_PTR>(this));
-        m_sentEndRequest = true;
-        return true;
-    }
-
-    static const int bufferSize = 32768;
-    WTF::Vector<char> buffer;
-    buffer.resize(bufferSize + 2);
-    INTERNET_BUFFERSA buffers = { 0 };
-    buffers.dwStructSize = sizeof(INTERNET_BUFFERSA);
-    buffers.lpvBuffer = buffer.data();
-    buffers.dwBufferLength = bufferSize;
-
-    bool needGzip = false;
-    
-    BOOL ok = FALSE;
-    while ((ok = InternetReadFileExA(m_requestHandle, &buffers, m_loadSynchronously ? IRF_SYNC : IRF_NO_WAIT, reinterpret_cast<DWORD_PTR>(this))) && buffers.dwBufferLength) {
-        ASSERT(buffers.dwBufferLength <= bufferSize);
-
-        if (!m_hasReceivedResponse) {
-            m_hasReceivedResponse = true;
-
-            blink::WebURLResponse response(firstRequest()->url());
-
-            WTF::String httpStatusText = queryHTTPHeader(m_requestHandle, HTTP_QUERY_STATUS_TEXT);
-            if (!httpStatusText.isNull())
-                response.setHTTPStatusText(httpStatusText);
-
-            WTF::String httpStatusCode = queryHTTPHeader(m_requestHandle, HTTP_QUERY_STATUS_CODE);
-            if (!httpStatusCode.isNull())
-                response.setHTTPStatusCode(httpStatusCode.toInt());
-
-            WTF::String httpContentLength = queryHTTPHeader(m_requestHandle, HTTP_QUERY_CONTENT_LENGTH);
-            if (!httpContentLength.isNull())
-                response.setExpectedContentLength(httpContentLength.toInt());
-
-            WTF::String httpContentType = queryHTTPHeader(m_requestHandle, HTTP_QUERY_CONTENT_TYPE);
-            if (!httpContentType.isNull()) {
-                response.setMIMEType(blink::extractMIMETypeFromMediaType(WTF::AtomicString(httpContentType)));
-                response.setTextEncodingName(blink::extractCharsetFromMediaType(WTF::AtomicString(httpContentType)));
-
-                blink::WebUChar kContentType[] = L"Content-Type";
-                blink::WebString kContentTypeString(kContentType, sizeof(kContentType) / sizeof(blink::WebUChar) - 1);
-                response.setHTTPHeaderField(kContentTypeString, blink::WebString(httpContentType));
-            }
-
-            WTF::String rawHeadersCrlf = queryHTTPHeader(m_requestHandle, HTTP_QUERY_RAW_HEADERS_CRLF);
-            content::WebCookieJarImpl::inst()->setToRecordFromRawHeads(m_request->url(), rawHeadersCrlf);
-
-            needGzip = (WTF::kNotFound != rawHeadersCrlf.find("Content-Encoding: gzip"));
-
-            WTF::String cookies = queryHTTPHeader(m_requestHandle, HTTP_QUERY_COOKIE);
-            
-            if (m_client && m_loader) {
-                WTF::TemporaryChange<bool> cannotDestroy(m_canDestroy, false);
-                m_client->didReceiveResponse(m_loader, response);
-                if (!ActivatingObjCheck::inst()->isActivating((intptr_t)this)) // 有可能在didReceiveResponse把整个类析构掉
-                    return false;
-            }
-        }
-
-        m_totalEncodedDataLength += buffers.dwBufferLength;
-
-        // FIXME: https://bugs.webkit.org/show_bug.cgi?id=19793
-        // -1 means we do not provide any data about transfer size to inspector so it would use
-        // Content-Length headers or content size to show transfer size.
-        if (m_client && m_loader && !m_debugRedirectPath && !needGzip) {
-            WTF::TemporaryChange<bool> cannotDestroy(m_canDestroy, false);
-            m_client->didReceiveData(m_loader, buffer.data(), buffers.dwBufferLength, -1);
-        } else
-            m_gzipDecompressData.append(buffer.data(), buffers.dwBufferLength);
-
-        if (!ActivatingObjCheck::inst()->isActivating((intptr_t)this))
-            return false;
-
-        buffers.dwBufferLength = bufferSize;
-    }
-
-    if (!ok && GetLastError() == ERROR_IO_PENDING) {
-//         String urlTest = m_request->url().string();
-//         String out = String::format("WebURLLoaderWinINet::onRequestComplete not complete:");
-//         out.append(urlTest);
-//         out.append("\n");
-//         OutputDebugStringW(out.charactersWithNullTermination().data());
-        return true;
-    }
-
-	Vector<char> cookies;
-	if (getCookiesFromHost(m_request->url(), &cookies))
-		content::WebCookieJarImpl::inst()->setCookieFromWinINet(m_request->url(), cookies);
-
-    if (m_debugRedirectPath)
-        fileLoadImpl(*m_debugRedirectPath);
-
-    ::InternetCloseHandle(m_requestHandle);
-	::InternetCloseHandle(m_connectHandle);
-    m_requestHandle = 0;
-    m_connectHandle = 0;
-
-    if (m_client && m_loader) {
-        if (0 == m_totalEncodedDataLength || !m_hasReceivedResponse) {
-            blink::WebURLError error;
-            error.reason = GetLastError();
-            if (0 == error.reason)
-                error.reason = -1;
-            error.domain = blink::WebString(m_request->url().string());
-            error.localizedDescription = blink::WebString::fromUTF8("Url request fail, data length is null\n");
-            WTF::TemporaryChange<bool> cannotDestroy(m_canDestroy, false);
-            m_client->didFail(m_loader, error);
-            return false;
-        }
-
-//         String urlTest = m_request->url().string();
-//         String out = String::format("WebURLLoaderWinINet::onRequestComplete:");
-//         out.append(urlTest);
-//         out.append("\n");
-//         OutputDebugStringW(out.charactersWithNullTermination().data());
-
-        if (needGzip && m_gzipDecompressData.size() > 0) {
-            Vector<unsigned char> decompressData;
-            decompressData.resize(m_gzipDecompressData.size() * 10);
-            uLong ndata = decompressData.size();
-            if (0 == httpGzipDecompress(m_gzipDecompressData.data(), m_gzipDecompressData.size(), decompressData.data(), &ndata))
-                m_client->didReceiveData(m_loader, (const char *)decompressData.data(), ndata, -1);
-        }
-
-        WTF::TemporaryChange<bool> cannotDestroy(m_canDestroy, false);
-        m_client->didFinishLoading(m_loader, WTF::currentTime(), m_totalEncodedDataLength);
-    }
-    
+//     if (!m_internetHandle || (!m_requestHandle && !m_connectHandle))
+//         return false;
+// 
+//     if (m_bytesRemainingToWrite) {
+//         DWORD bytesWritten;
+//         const char* writeData = m_formData.data() + (m_formData.size() - m_bytesRemainingToWrite);
+//         BOOL b = InternetWriteFile(m_requestHandle, writeData, m_bytesRemainingToWrite, &bytesWritten);
+//         if (!b) {
+//             DWORD dwError;
+//             Vector<wchar_t> errorBuf;
+//             DWORD dwBufferLength = 200;
+//             errorBuf.resize(dwBufferLength);
+//             b = ::InternetGetLastResponseInfoW(&dwError, errorBuf.data(), &dwBufferLength);
+//             OutputDebugStringW(errorBuf.data());
+//             OutputDebugStringA("\n");
+//         }
+//         m_bytesRemainingToWrite -= bytesWritten;
+//         //         if (m_bytesRemainingToWrite)
+//         //             return true;
+//         m_formData.clear();
+//     }
+// 
+//     if (!m_sentEndRequest) {
+//         HttpEndRequestW(m_requestHandle, 0, 0, reinterpret_cast<DWORD_PTR>(this));
+//         m_sentEndRequest = true;
+//         return true;
+//     }
+// 
+//     static const int bufferSize = 32768;
+//     WTF::Vector<char> buffer;
+//     buffer.resize(bufferSize + 2);
+//     INTERNET_BUFFERSA buffers = { 0 };
+//     buffers.dwStructSize = sizeof(INTERNET_BUFFERSA);
+//     buffers.lpvBuffer = buffer.data();
+//     buffers.dwBufferLength = bufferSize;
+// 
+//     bool needGzip = false;
+// 
+//     BOOL ok = FALSE;
+//     while ((ok = InternetReadFileExA(m_requestHandle, &buffers, m_loadSynchronously ? IRF_SYNC : IRF_NO_WAIT, reinterpret_cast<DWORD_PTR>(this))) && buffers.dwBufferLength) {
+//         ASSERT(buffers.dwBufferLength <= bufferSize);
+// 
+//         if (!m_hasReceivedResponse) {
+//             m_hasReceivedResponse = true;
+// 
+//             blink::WebURLResponse response(firstRequest()->url());
+// 
+//             WTF::String httpStatusText = queryHTTPHeader(m_requestHandle, HTTP_QUERY_STATUS_TEXT);
+//             if (!httpStatusText.isNull())
+//                 response.setHTTPStatusText(httpStatusText);
+// 
+//             WTF::String httpStatusCode = queryHTTPHeader(m_requestHandle, HTTP_QUERY_STATUS_CODE);
+//             if (!httpStatusCode.isNull())
+//                 response.setHTTPStatusCode(httpStatusCode.toInt());
+// 
+//             WTF::String httpContentLength = queryHTTPHeader(m_requestHandle, HTTP_QUERY_CONTENT_LENGTH);
+//             if (!httpContentLength.isNull())
+//                 response.setExpectedContentLength(httpContentLength.toInt());
+// 
+//             WTF::String httpContentType = queryHTTPHeader(m_requestHandle, HTTP_QUERY_CONTENT_TYPE);
+//             if (!httpContentType.isNull()) {
+//                 response.setMIMEType(blink::extractMIMETypeFromMediaType(WTF::AtomicString(httpContentType)));
+//                 response.setTextEncodingName(blink::extractCharsetFromMediaType(WTF::AtomicString(httpContentType)));
+// 
+//                 blink::WebUChar kContentType[] = L"Content-Type";
+//                 blink::WebString kContentTypeString(kContentType, sizeof(kContentType) / sizeof(blink::WebUChar) - 1);
+//                 response.setHTTPHeaderField(kContentTypeString, blink::WebString(httpContentType));
+//             }
+// 
+//             WTF::String rawHeadersCrlf = queryHTTPHeader(m_requestHandle, HTTP_QUERY_RAW_HEADERS_CRLF);
+//             content::WebCookieJarImpl::inst()->setToRecordFromRawHeads(m_request->url(), rawHeadersCrlf);
+// 
+//             needGzip = (WTF::kNotFound != rawHeadersCrlf.find("Content-Encoding: gzip"));
+// 
+//             WTF::String cookies = queryHTTPHeader(m_requestHandle, HTTP_QUERY_COOKIE);
+// 
+//             if (m_client && m_loader) {
+//                 WTF::TemporaryChange<bool> cannotDestroy(m_canDestroy, false);
+//                 m_client->didReceiveResponse(m_loader, response);
+//                 if (!ActivatingObjCheck::inst()->isActivating((intptr_t)this)) // 有可能在didReceiveResponse把整个类析构掉
+//                     return false;
+//             }
+//         }
+// 
+//         m_totalEncodedDataLength += buffers.dwBufferLength;
+// 
+//         // FIXME: https://bugs.webkit.org/show_bug.cgi?id=19793
+//         // -1 means we do not provide any data about transfer size to inspector so it would use
+//         // Content-Length headers or content size to show transfer size.
+//         if (m_client && m_loader && !m_debugRedirectPath && !needGzip) {
+//             WTF::TemporaryChange<bool> cannotDestroy(m_canDestroy, false);
+//             m_client->didReceiveData(m_loader, buffer.data(), buffers.dwBufferLength, -1);
+//         } else
+//             m_gzipDecompressData.append(buffer.data(), buffers.dwBufferLength);
+// 
+//         if (!ActivatingObjCheck::inst()->isActivating((intptr_t)this))
+//             return false;
+// 
+//         buffers.dwBufferLength = bufferSize;
+//     }
+// 
+//     if (!ok && GetLastError() == ERROR_IO_PENDING) {
+//         //         String urlTest = m_request->url().string();
+//         //         String out = String::format("WebURLLoaderWinINet::onRequestComplete not complete:");
+//         //         out.append(urlTest);
+//         //         out.append("\n");
+//         //         OutputDebugStringW(out.charactersWithNullTermination().data());
+//         return true;
+//     }
+// 
+//     Vector<char> cookies;
+//     if (getCookiesFromHost(m_request->url(), &cookies))
+//         content::WebCookieJarImpl::inst()->setCookieFromWinINet(m_request->url(), cookies);
+// 
+//     if (m_debugRedirectPath)
+//         fileLoadImpl(*m_debugRedirectPath);
+// 
+//     ::InternetCloseHandle(m_requestHandle);
+//     ::InternetCloseHandle(m_connectHandle);
+//     m_requestHandle = 0;
+//     m_connectHandle = 0;
+// 
+//     if (m_client && m_loader) {
+//         if (0 == m_totalEncodedDataLength || !m_hasReceivedResponse) {
+//             blink::WebURLError error;
+//             error.reason = GetLastError();
+//             if (0 == error.reason)
+//                 error.reason = -1;
+//             error.domain = blink::WebString(m_request->url().string());
+//             error.localizedDescription = blink::WebString::fromUTF8("Url request fail, data length is null\n");
+//             WTF::TemporaryChange<bool> cannotDestroy(m_canDestroy, false);
+//             m_client->didFail(m_loader, error);
+//             return false;
+//         }
+// 
+//         //         String urlTest = m_request->url().string();
+//         //         String out = String::format("WebURLLoaderWinINet::onRequestComplete:");
+//         //         out.append(urlTest);
+//         //         out.append("\n");
+//         //         OutputDebugStringW(out.charactersWithNullTermination().data());
+// 
+//         if (needGzip && m_gzipDecompressData.size() > 0) {
+//             Vector<unsigned char> decompressData;
+//             decompressData.resize(m_gzipDecompressData.size() * 10);
+//             uLong ndata = decompressData.size();
+//             if (0 == httpGzipDecompress(m_gzipDecompressData.data(), m_gzipDecompressData.size(), decompressData.data(), &ndata))
+//                 m_client->didReceiveData(m_loader, (const char *)decompressData.data(), ndata, -1);
+//         }
+// 
+//         WTF::TemporaryChange<bool> cannotDestroy(m_canDestroy, false);
+//         m_client->didFinishLoading(m_loader, WTF::currentTime(), m_totalEncodedDataLength);
+//     }
+    DebugBreak();
     return false;
 }
 
@@ -845,7 +840,7 @@ void WebURLLoaderWinINet::fileLoadImpl(const blink::KURL& url)
         fileName.insert(moduleName.data(), moduleNameLen, insertPos);
         fileName.replace("/", "\\");
     }
-   
+
     HANDLE fileHandle = ::CreateFileW((LPCWSTR)fileName.charactersWithNullTermination().data(), GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 
     if (fileHandle == INVALID_HANDLE_VALUE) {
@@ -974,7 +969,7 @@ bool saveDumpFile(const String& url, char* buffer, unsigned int size)
         static int i = 0;
         ++i;
         String savePath;
-        savePath = String::format("E:\\mycode\\miniblink49\\trunk\\out\\dump\\DumpFile_%d.png", i);
+        savePath = String::format("C:\\Users\\weo\\Desktop\\mantan\\DumpFile_%d.png", i);
 
         String output;
         output = String::format("saveDumpFile:%d ", i);
