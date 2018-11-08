@@ -322,6 +322,12 @@ WKE_API bool wkeGoBack(wkeWebView webView);
 WKE_API bool wkeCanGoForward(wkeWebView webView);
 WKE_API bool wkeGoForward(wkeWebView webView);
 
+WKE_API bool wkeHasSelection(wkeWebView webView);
+WKE_API const wchar_t* wkeGetSelectedTextW(wkeWebView webView);
+WKE_API const utf8* wkeGetSelectedText(wkeWebView webView);
+WKE_API const wchar_t* wkeGetSelectedSourceW(wkeWebView webView);
+WKE_API const utf8* wkeGetSelectedSource(wkeWebView webView);
+
 WKE_API void wkeEditorSelectAll(wkeWebView webView);
 WKE_API void wkeEditorUnSelect(wkeWebView webView);
 WKE_API void wkeEditorCopy(wkeWebView webView);
@@ -339,11 +345,12 @@ WKE_API const utf8* wkeGetCookie(wkeWebView webView);
 //     wkeCookieList* next;
 // };
 // WKE_API const wkeCookieList* wkeGetAllCookie();
-// WKE_API void wkeFreeCookieList(const wkeCookieList* cookieList);
+// WKE_API void wkeFreeCookieList(const wkeCookieList* cookieList);
+
 typedef bool(*wkeCookieVisitor)(
     void* params,
-    const char* name, 
-    const char* value, 
+    const char* name,
+    const char* value,
     const char* domain,
     const char* path, // If |path| is non-empty only URLs at or below the path will get the cookie value.
     int secure, // If |secure| is true the cookie will only be sent for HTTPS requests.
@@ -624,16 +631,16 @@ WKE_API void wkeSetWindowTitleW(wkeWebView webWindow, const wchar_t* title);
 // #define WKE_CALL __cdecl
 // WKE_API void        WKE_CALL wkeLoad(wkeWebView* webView, const utf8* str);
 // WKE_API void        WKE_CALL wkeLoadW(wkeWebView* webView, const wchar_t* str);
-// 
+//
 // WKE_API void        WKE_CALL wkeSetRepaintInterval(wkeWebView* webView, int ms);
 // WKE_API int         WKE_CALL wkeGetRepaintInterval(wkeWebView* webView);
 // WKE_API bool        WKE_CALL wkeRepaintIfNeededAfterInterval(wkeWebView* webView);
 // WKE_API bool        WKE_CALL wkeRepaintAllNeeded();
 // WKE_API int         WKE_CALL wkeRunMessageLoop(const bool *quit);
-// 
+//
 // WKE_API void        WKE_CALL wkeSetHostWindow(wkeWebView* webWindow, void* hostWindow);
 // WKE_API void*       WKE_CALL wkeGetHostWindow(wkeWebView* webWindow);
-// 
+//
 // typedef enum {
 //     WKE_MESSAGE_SOURCE_HTML,
 //     WKE_MESSAGE_SOURCE_XML,
@@ -642,7 +649,7 @@ WKE_API void wkeSetWindowTitleW(wkeWebView webWindow, const wchar_t* title);
 //     WKE_MESSAGE_SOURCE_CONSOLE_API,
 //     WKE_MESSAGE_SOURCE_OTHER
 // } wkeMessageSource;
-// 
+//
 // typedef enum {
 //     WKE_MESSAGE_TYPE_LOG,
 //     WKE_MESSAGE_TYPE_DIR,
@@ -652,18 +659,18 @@ WKE_API void wkeSetWindowTitleW(wkeWebView webWindow, const wchar_t* title);
 //     WKE_MESSAGE_TYPE_START_GROUP_COLLAPSED,
 //     WKE_MESSAGE_TYPE_END_GROUP,
 //     WKE_MESSAGE_TYPE_ASSERT
-// 
+//
 // } wkeMessageType;
-// 
+//
 // typedef enum {
 //     WKE_MESSAGE_LEVEL_TIP,
 //     WKE_MESSAGE_LEVEL_LOG,
 //     WKE_MESSAGE_LEVEL_WARNING,
 //     WKE_MESSAGE_LEVEL_ERROR,
 //     WKE_MESSAGE_LEVEL_DEBUG
-// 
+//
 // } wkeMessageLevel;
-// 
+//
 // typedef struct {
 //     wkeMessageSource source;
 //     wkeMessageType type;
@@ -671,22 +678,22 @@ WKE_API void wkeSetWindowTitleW(wkeWebView webWindow, const wchar_t* title);
 //     wkeString* message;
 //     wkeString* url;
 //     unsigned int lineNumber;
-// 
+//
 // } wkeConsoleMessage;
-// 
+//
 // typedef void (WKE_CALL *wkeConsoleMessageCallback)(wkeWebView* webView, void* param, const wkeConsoleMessage* message);
 // WKE_API void WKE_CALL wkeOnConsoleMessage(wkeWebView* webView, wkeConsoleMessageCallback callback, void* callbackParam);
-// 
+//
 // typedef struct {
 //     wkeNavigationType navigationType;
 //     wkeString* url;
 //     wkeString* target;
-// 
+//
 //     int x;
 //     int y;
 //     int width;
 //     int height;
-// 
+//
 //     bool menuBarVisible;
 //     bool statusBarVisible;
 //     bool toolBarVisible;
@@ -694,20 +701,20 @@ WKE_API void wkeSetWindowTitleW(wkeWebView webWindow, const wchar_t* title);
 //     bool scrollbarsVisible;
 //     bool resizable;
 //     bool fullscreen;
-// 
+//
 // } wkeNewViewInfo;
-// 
+//
 // typedef struct {
 //     wkeString* url;
 //     wkeJSState* frameJSState;
 //     wkeJSState* mainFrameJSState;
-// 
+//
 // } wkeDocumentReadyInfo;
-// 
+//
 // WKE_API int         WKE_CALL wkeJSParamCount(wkeJSState* es);
 // WKE_API wkeJSType   WKE_CALL wkeJSParamType(wkeJSState* es, int index);
 // WKE_API wkeJSValue  WKE_CALL wkeJSParam(wkeJSState* es, int index);
-// 
+//
 // WKE_API void       WKE_CALL  wkeJSAddRef(wkeJSState* es, wkeJSValue v);
 // WKE_API void       WKE_CALL  wkeJSReleaseRef(wkeJSState* es, wkeJSValue v);
 // WKE_API void       WKE_CALL  wkeJSCollectGarbge();
@@ -876,6 +883,12 @@ public:
     virtual bool goBack() = 0;
     virtual bool canGoForward() const = 0;
     virtual bool goForward() = 0;
+
+	virtual bool hasSelection() const = 0;
+	virtual const wchar_t* selectedTextW() = 0;
+	virtual const utf8* selectedText() = 0;
+	virtual const wchar_t* selectedSourceW() = 0;
+	virtual const utf8* selectedSource() = 0;
 
     virtual void editorSelectAll() = 0;
     virtual void editorUnSelect() = 0;

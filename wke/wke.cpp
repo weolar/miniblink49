@@ -272,7 +272,7 @@ void wkeUpdate()
 //     static HWND hTimer = NULL;
 //     if (!hTimer)
 //         hTimer = FindWindow(L"TimerWindowClass", NULL);
-// 
+//
 //     if (hTimer) {
 //         MSG msg;
 //         while(PeekMessage(&msg, hTimer, 0, 0, PM_REMOVE))
@@ -1032,7 +1032,7 @@ void wkeOnConsole(wkeWebView webView, wkeConsoleCallback callback, void* param)
     webView->onConsole(callback, param);
 }
 
-void wkeUtilSetUiCallback(wkeUiThreadPostTaskCallback callback) 
+void wkeUtilSetUiCallback(wkeUiThreadPostTaskCallback callback)
 {
     wke::g_wkeUiThreadPostTaskCallback = callback;
 }
@@ -1752,6 +1752,36 @@ int wkeContentsHeight(wkeWebView webView)
     return wkeGetContentHeight(webView);
 }
 
+bool wkeHasSelection(wkeWebView webView)
+{
+	wke::checkThreadCallIsValid(__FUNCTION__);
+	return webView->hasSelection();
+}
+
+const utf8* wkeGetSelectedText(wkeWebView webView)
+{
+	wke::checkThreadCallIsValid(__FUNCTION__);
+	return webView->selectedText();
+}
+
+const wchar_t* wkeGetSelectedTextW(wkeWebView webView)
+{
+	wke::checkThreadCallIsValid(__FUNCTION__);
+	return webView->selectedTextW();
+}
+
+const utf8* wkeGetSelectedSource(wkeWebView webView)
+{
+	wke::checkThreadCallIsValid(__FUNCTION__);
+	return webView->selectedSource();
+}
+
+const wchar_t* wkeGetSelectedSourceW(wkeWebView webView)
+{
+	wke::checkThreadCallIsValid(__FUNCTION__);
+	return webView->selectedSourceW();
+}
+
 void wkeSelectAll(wkeWebView webView)
 {
     wkeEditorSelectAll(webView);
@@ -1896,7 +1926,7 @@ bool checkThreadCallIsValid(const char* funcName)
 
     if (WTF::isMainThread())
         return true;
-        
+
     output = L"禁止多线程调用此接口：";
     output.append(funcName);
     output.append(L"。当前线程id：");

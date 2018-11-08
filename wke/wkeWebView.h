@@ -74,7 +74,7 @@ struct CWebViewHandler {
 
     wkeCallUiThread callUiThreadCallback;
     void* callUiThreadCallbackParam;
-    
+
     wkeLoadUrlBeginCallback loadUrlBeginCallback;
     void* loadUrlBeginCallbackParam;
 
@@ -92,7 +92,7 @@ struct CWebViewHandler {
 
     wkeWindowClosingCallback windowClosingCallback;
     void* windowClosingCallbackParam;
-    
+
     wkeWindowDestroyCallback windowDestroyCallback;
     void* windowDestroyCallbackParam;
 
@@ -101,7 +101,7 @@ struct CWebViewHandler {
 
     wkeStartDraggingCallback startDraggingCallback;
     void* startDraggingCallbackParam;
-    
+
     bool isWke; // 是否是使用的wke接口
 };
 
@@ -124,7 +124,7 @@ public:
 
     void loadURL(const utf8* inUrl) override;
     void loadURL(const wchar_t* url) override;
-    
+
     void loadPostURL(const utf8* inUrl,const char * poastData,int nLen);
     void loadPostURL(const wchar_t * inUrl,const char * poastData,int nLen);
 
@@ -139,7 +139,7 @@ public:
 
 	  void setUserAgent(const utf8 * useragent);
     void setUserAgent(const wchar_t * useragent);
-    
+
     bool isLoading() const;
     bool isLoadingSucceeded() const;
     bool isLoadingFailed() const;
@@ -152,7 +152,7 @@ public:
 
     const utf8* title() override;
     const wchar_t* titleW() override;
-    
+
     virtual void resize(int w, int h) override;
     int width() const override;
     int height() const override;
@@ -162,7 +162,7 @@ public:
 
     virtual int contentsWidth() const override;
     virtual int contentsHeight() const override;
-    
+
     void setDirty(bool dirty) override;
     bool isDirty() const override;
     void addDirtyArea(int x, int y, int w, int h) override;
@@ -180,7 +180,13 @@ public:
     bool goBack() override;
     bool canGoForward() const override;
     bool goForward() override;
-    
+
+	bool hasSelection() const override;
+	const wchar_t* selectedTextW() override;
+	const utf8* selectedText() override;
+	const wchar_t* selectedSourceW() override;
+	const utf8* selectedSource() override;
+
     void editorSelectAll() override;
     void editorUnSelect() override;
     void editorCopy() override;
@@ -195,10 +201,10 @@ public:
 
     void setCookieEnabled(bool enable) override;
     bool isCookieEnabled() const override;
-    
+
     void setMediaVolume(float volume) override;
     float mediaVolume() const override;
-   
+
     virtual bool fireMouseEvent(unsigned int message, int x, int y, unsigned int flags) override;
     virtual bool fireContextMenuEvent(int x, int y, unsigned int flags) override;
     virtual bool fireMouseWheelEvent(int x, int y, int delta, unsigned int flags) override;
@@ -209,19 +215,19 @@ public:
 
     virtual void setFocus() override;
     virtual void killFocus() override;
-    
+
     virtual wkeRect getCaret() override;
     wkeRect caretRect();
 
     static int64_t wkeWebFrameHandleToFrameId(content::WebPage* page, wkeWebFrameHandle frameId);
     static wkeWebFrameHandle frameIdTowkeWebFrameHandle(content::WebPage* page, int64_t frameId);
 
-    jsValue runJS(const wchar_t* script) override;
-    jsValue runJS(const utf8* script) override;
+    jsValue runJS(const wchar_t* script, bool isInClosure = true) override;
+    jsValue runJS(const utf8* script, bool isInClosure = true) override;
     jsValue runJsInFrame(wkeWebFrameHandle frameId, const utf8* script, bool isInClosure);
     jsExecState globalExec() override;
     jsExecState globalExecByFrame(wkeWebFrameHandle frameId);
-    
+
     void sleep() override;
     void wake() override;
     bool isAwake() const override;
@@ -232,7 +238,7 @@ public:
     float zoomFactor() const override;
 
     void setEditable(bool editable) override;
-    
+
     void onURLChanged(wkeURLChangedCallback callback, void* callbackParam);
     void onURLChanged2(wkeURLChangedCallback2 callback, void* callbackParam);
     void onUrlChanged(const wkeString url);
@@ -255,7 +261,7 @@ public:
     virtual void onConsole(wkeConsoleCallback callback, void* callbackParam);
     virtual void onCallUiThread(wkeCallUiThread callback, void* callbackParam);
     void onNetResponse(wkeNetResponseCallback callback, void* callbackParam);
-    
+
     void onLoadUrlBegin(wkeLoadUrlBeginCallback callback, void* callbackParam);
     void onLoadUrlEnd(wkeLoadUrlEndCallback callback, void* callbackParam);
 
@@ -263,7 +269,7 @@ public:
     void onWillReleaseScriptContext(wkeWillReleaseScriptContextCallback callback, void* callbackParam);
 
     void onStartDragging(wkeStartDraggingCallback callback, void* callbackParam);
-    
+
     void onOtherLoad(wkeOnOtherLoadCallback callback, void* callbackParam);
 
     void onDraggableRegionsChanged(wkeDraggableRegionsChangedCallback callback, void* param);
@@ -327,7 +333,9 @@ protected:
     wke::CString m_url;  //记录url地址
     wke::CString m_title;
     wke::CString m_cookie;
-    wke::CString m_name;
+	wke::CString m_name;
+	wke::CString m_selectedText;
+	wke::CString m_selectedSource;
     bool m_transparent;
     bool m_isCokieEnabled;
 

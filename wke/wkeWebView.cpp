@@ -38,6 +38,8 @@ CWebView::CWebView()
     , m_cookie("", 0)
     , m_name("miniblink", 0)
     , m_url("", 0)
+	, m_selectedText("", 0)
+	, m_selectedSource("", 0)
     , m_isCokieEnabled(true)
     , m_isCreatedDevTools(false)
 {
@@ -195,7 +197,7 @@ static bool trimPath(const utf8* inUrl, bool isFile, std::vector<char>* out)
     if (length < 3)
         return false;
 
-    if (length > fileHeadLength) { 
+    if (length > fileHeadLength) {
         if (0 == strncmp(inUrl, fileHead, fileHeadLength)) { // file:///xxx.htm  file:///c:/xxx.htm
             fileBody = inUrl + fileHeadLength;
             fileBodyLength = length - fileHeadLength;
@@ -415,13 +417,13 @@ void CWebView::resize(int w, int h)
     m_webPage->fireResizeEvent(m_webPage->getHWND(), WM_SIZE, 0, MAKELONG(w, h));
 }
 
-int CWebView::width() const 
-{ 
+int CWebView::width() const
+{
     return m_webPage->viewportSize().width();
 }
 
-int CWebView::height() const 
-{ 
+int CWebView::height() const
+{
     return m_webPage->viewportSize().height();
 }
 
@@ -518,21 +520,21 @@ void CWebView::paint(void* bits, int bufWid, int bufHei, int xDst, int yDst, int
 {
 //     if (m_dirty)
 //         repaintIfNeeded();
-// 
+//
 //     if(xSrc + w > m_width) w = m_width - xSrc;
 //     if(ySrc + h > m_height) h = m_height -ySrc;
-//     
+//
 //     if(xDst + w > bufWid) w =bufWid - xDst;
 //     if(yDst + h > bufHei) h = bufHei - yDst;
-//     
+//
 //     int pitchDst = bufWid*4;
 //     int pitchSrc = m_width*4;
-//     
-//     unsigned char* src = (unsigned char*)m_pixels; 
-//     unsigned char* dst = (unsigned char*)bits; 
+//
+//     unsigned char* src = (unsigned char*)m_pixels;
+//     unsigned char* dst = (unsigned char*)bits;
 //     src += pitchSrc*ySrc + xSrc*4;
 //     dst += yDst*pitchDst + xDst*4;
-//     
+//
 //     if(bCopyAlpha) {
 //         for(int j = 0; j< h; j++) {
 //             memcpy(dst,src,w*4);
@@ -576,6 +578,35 @@ bool CWebView::goForward()
     //return page()->goForward();
     m_webPage->goForward();
     return true;
+}
+
+bool CWebView::hasSelection() const
+{
+	return m_webPage->mainFrame()->hasSelection();
+}
+
+const wchar_t* CWebView::selectedTextW()
+{
+	m_selectedText = (const WTF::String&) m_webPage->mainFrame()->selectionAsText();
+	return m_selectedText.stringW();
+}
+
+const utf8* CWebView::selectedText()
+{
+	m_selectedText = (const WTF::String&) m_webPage->mainFrame()->selectionAsText();
+	return m_selectedText.string();
+}
+
+const wchar_t* CWebView::selectedSourceW()
+{
+	m_selectedSource = (const WTF::String&) m_webPage->mainFrame()->selectionAsMarkup();
+	return m_selectedSource.stringW();
+}
+
+const utf8* CWebView::selectedSource()
+{
+	m_selectedSource = (const WTF::String&) m_webPage->mainFrame()->selectionAsMarkup();
+	return m_selectedSource.string();
 }
 
 void CWebView::editorSelectAll()
@@ -681,7 +712,7 @@ bool CWebView::fireMouseEvent(unsigned int message, int x, int y, unsigned int f
         x = MINSHORT;
         y = MINSHORT;
     }
-    
+
     BOOL handled = TRUE;
     WPARAM wParam = 0;
     LPARAM lParam = MAKELPARAM(x, y);
@@ -703,32 +734,32 @@ bool CWebView::fireMouseEvent(unsigned int message, int x, int y, unsigned int f
 bool CWebView::fireContextMenuEvent(int x, int y, unsigned int flags)
 {
 //     page()->contextMenuController()->clearContextMenu();
-// 
+//
 //     if (x == -1 && y == -1)
-//     {   
+//     {
 //         blink::Frame* focusedFrame = page()->focusController()->focusedOrMainFrame();
 //         return focusedFrame->eventHandler()->sendContextMenuEventForKey();
 //     }
-// 
+//
 //     blink::IntPoint pos(x, y);
 //     blink::IntPoint globalPos(x, y);
-// 
+//
 //     blink::MouseButton button = messageToButtonType(WM_RBUTTONUP, flags);
 //     blink::MouseEventType eventType = messageToEventType(WM_RBUTTONUP);
-// 
+//
 //     bool shift = flags & WKE_SHIFT;
 //     bool ctrl = flags & WKE_CONTROL;
 //     bool alt = GetKeyState(VK_MENU) & 0x8000;
 //     bool meta = alt;
 //     double timestamp = ::GetTickCount()*0.001;
-// 
+//
 //     int clickCount = 0;
 //     blink::PlatformMouseEvent mouseEvent(pos, globalPos, button, eventType, clickCount, shift, ctrl, alt, meta, timestamp);
-// 
+//
 //     blink::IntPoint documentPoint(mainFrame()->view()->windowToContents(pos));
 //     blink::HitTestResult result = mainFrame()->eventHandler()->hitTestResultAtPoint(documentPoint, false);
 //     blink::Frame* targetFrame = result.innerNonSharedNode() ? result.innerNonSharedNode()->document()->frame() : page()->focusController()->focusedOrMainFrame();
-// 
+//
 //     targetFrame->view()->setCursor(blink::pointerCursor());
 //     return targetFrame->eventHandler()->sendContextMenuEvent(mouseEvent);
     return true;
@@ -884,22 +915,22 @@ static jsValue runJsImpl(blink::WebFrame* mainFrame, String* codeString, bool is
     return v8ValueToJsValue(context, result);
 }
 
-jsValue CWebView::runJS(const wchar_t* script)
+jsValue CWebView::runJS(const wchar_t* script, bool isInClosure)
 {
     if (!script)
         return jsUndefined();
 
     String codeString(script);
-    return runJsImpl(m_webPage->mainFrame(), &codeString, true);
+    return runJsImpl(m_webPage->mainFrame(), &codeString, isInClosure);
 }
 
-jsValue CWebView::runJS(const utf8* script)
+jsValue CWebView::runJS(const utf8* script, bool isInClosure)
 {
     if (!script)
         return jsUndefined();
 
     String codeString = String::fromUTF8(script);
-    return runJsImpl(m_webPage->mainFrame(), &codeString, true);
+    return runJsImpl(m_webPage->mainFrame(), &codeString, isInClosure);
 }
 
 jsValue CWebView::runJsInFrame(wkeWebFrameHandle frameId, const utf8* script, bool isInClosure)
@@ -1085,7 +1116,7 @@ void CWebView::_initPage()
 //     pageClients.inspectorClient = new InspectorClient;
 //     pageClients.editorClient = new EditorClient;
 //     pageClients.dragClient = new DragClient;
-// 
+//
 //     m_page = adoptPtr(new blink::Page(pageClients));
 //     blink::Settings* settings = m_page->settings();
 //     settings->setMinimumFontSize(0);
@@ -1096,7 +1127,7 @@ void CWebView::_initPage()
 //     settings->setPluginsEnabled(true);
 //     settings->setLoadsImagesAutomatically(true);
 //     settings->setDefaultTextEncodingName(icuwin_getDefaultEncoding());
-//     
+//
 //     settings->setStandardFontFamily("Times New Roman");
 //     settings->setFixedFontFamily("Courier New");
 //     settings->setSerifFontFamily("Times New Roman");
@@ -1104,25 +1135,25 @@ void CWebView::_initPage()
 //     settings->setCursiveFontFamily("Comic Sans MS");
 //     settings->setFantasyFontFamily("Times New Roman");
 //     settings->setPictographFontFamily("Times New Roman");
-// 
+//
 //     settings->setAllowUniversalAccessFromFileURLs(true);
 //     settings->setAllowFileAccessFromFileURLs(true);
 //     settings->setJavaScriptCanAccessClipboard(true);
 //     settings->setShouldPrintBackgrounds(true);
 //     settings->setTextAreasAreResizable(true);
 //     settings->setLocalStorageEnabled(true);
-// 
+//
 //     UChar dir[256];
 //     GetCurrentDirectory(256, dir);
 //     wcscat(dir, L"\\localStorage");
 //     settings->setLocalStorageDatabasePath(dir);
 //     blink::DatabaseTracker::tracker().setDatabaseDirectoryPath(dir);
-// 
+//
 //     FrameLoaderClient* loader = new FrameLoaderClient(this, m_page.get());
 //     m_mainFrame = blink::Frame::create(m_page.get(), NULL, loader).get();
 //     loader->setFrame(m_mainFrame);
 //     m_mainFrame->init();
-// 
+//
 //     page()->focusController()->setActive(true);
 }
 
@@ -1279,7 +1310,7 @@ void CWebView::setDragFiles(const POINT* clintPos, const POINT* screenPos, wkeSt
         WTF::String file = files[i]->original();
         //GetFileSizeEx();
         file.insert("file:///", 0);
-    
+
         blink::WebDragData::Item it;
         it.storageType = blink::WebDragData::Item::StorageTypeFileSystemFile;
         it.fileSystemURL = blink::KURL(blink::ParsedURLString, file);
@@ -1331,7 +1362,7 @@ public:
 
     virtual void willProcessTask() override
     {
-        
+
     }
     virtual void didProcessTask() override
     {
