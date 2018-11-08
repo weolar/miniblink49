@@ -186,7 +186,13 @@ public:
     bool goBack() override;
     bool canGoForward() const override;
     bool goForward() override;
-    
+
+	bool hasSelection() const override;
+	const wchar_t* selectedTextW() override;
+	const utf8* selectedText() override;
+	const wchar_t* selectedSourceW() override;
+	const utf8* selectedSource() override;
+
     void editorSelectAll() override;
     void editorUnSelect() override;
     void editorCopy() override;
@@ -222,8 +228,8 @@ public:
     static int64_t wkeWebFrameHandleToFrameId(content::WebPage* page, wkeWebFrameHandle frameId);
     static wkeWebFrameHandle frameIdTowkeWebFrameHandle(content::WebPage* page, int64_t frameId);
 
-    jsValue runJS(const wchar_t* script) override;
-    jsValue runJS(const utf8* script) override;
+    jsValue runJS(const wchar_t* script, bool isInClosure = true) override;
+    jsValue runJS(const utf8* script, bool isInClosure = true) override;
     jsValue runJsInFrame(wkeWebFrameHandle frameId, const utf8* script, bool isInClosure);
     jsExecState globalExec() override;
     jsExecState globalExecByFrame(wkeWebFrameHandle frameId);
@@ -338,6 +344,8 @@ protected:
     wke::CString m_title;
     wke::CString m_cookie;
     wke::CString m_name;
+	wke::CString m_selectedText;
+	wke::CString m_selectedSource;
     bool m_transparent;
     bool m_isCokieEnabled;
 

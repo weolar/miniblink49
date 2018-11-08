@@ -611,6 +611,12 @@ public:
     virtual bool canGoForward() const = 0;
     virtual bool goForward() = 0;
 
+	virtual bool hasSelection() const = 0;
+	virtual const wchar_t* selectedTextW() = 0;
+	virtual const utf8* selectedText() = 0;
+	virtual const wchar_t* selectedSourceW() = 0;
+	virtual const utf8* selectedSource() = 0;
+
     virtual void editorSelectAll() = 0;
     virtual void editorUnSelect() = 0;
     virtual void editorCopy() = 0;
@@ -638,8 +644,8 @@ public:
 
     virtual wkeRect getCaret() = 0;
 
-    virtual jsValue runJS(const utf8* script) = 0;
-    virtual jsValue runJS(const wchar_t* script) = 0;
+    virtual jsValue runJS(const utf8* script, bool isInClosure = true) = 0;
+    virtual jsValue runJS(const wchar_t* script, bool isInClosure = true) = 0;
     virtual jsExecState globalExec() = 0;
 
     virtual void sleep() = 0; //moveOffscreen
@@ -912,6 +918,12 @@ public:
     ITERATOR1(bool, wkeGoBack, wkeWebView webView, "") \
     ITERATOR1(bool, wkeCanGoForward, wkeWebView webView, "") \
     ITERATOR1(bool, wkeGoForward, wkeWebView webView, "") \
+    \
+    ITERATOR1(bool, wkeHasSelection, wkeWebView webView, "") \
+    ITERATOR1(const wchar_t*, wkeGetSelectedTextW, wkeWebView webView, "") \
+    ITERATOR1(const utf8*, wkeGetSelectedText, wkeWebView webView, "") \
+    ITERATOR1(const wchar_t*, wkeGetSelectedSourceW, wkeWebView webView, "") \
+    ITERATOR1(const utf8*, wkeGetSelectedSource, wkeWebView webView, "") \
     \
     ITERATOR1(void, wkeEditorSelectAll, wkeWebView webView, "") \
     ITERATOR1(void, wkeEditorUnSelect, wkeWebView webView, "") \

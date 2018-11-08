@@ -619,6 +619,36 @@ bool wkeGoForward(wkeWebView webView)
     return webView->goForward();
 }
 
+bool wkeHasSelection(wkeWebView webView)
+{
+	wke::checkThreadCallIsValid(__FUNCTION__);
+	return webView->hasSelection();
+}
+
+const utf8* wkeGetSelectedText(wkeWebView webView)
+{
+	wke::checkThreadCallIsValid(__FUNCTION__);
+	return webView->selectedText();
+}
+
+const wchar_t* wkeGetSelectedTextW(wkeWebView webView)
+{
+	wke::checkThreadCallIsValid(__FUNCTION__);
+	return webView->selectedTextW();
+}
+
+const utf8* wkeGetSelectedSource(wkeWebView webView)
+{
+	wke::checkThreadCallIsValid(__FUNCTION__);
+	return webView->selectedSource();
+}
+
+const wchar_t* wkeGetSelectedSourceW(wkeWebView webView)
+{
+	wke::checkThreadCallIsValid(__FUNCTION__);
+	return webView->selectedSourceW();
+}
+
 void wkeEditorSelectAll(wkeWebView webView)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
