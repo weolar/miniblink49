@@ -61,6 +61,19 @@ void callOnMainThread(MainThreadFunction* function, void* context)
     (*callOnMainThreadFunction)(function, context);
 }
 
+void mainThreadClosureFunction(void* context)
+{
+    std::function<void(void)>* closure = (std::function<void(void)>*)context;
+    (*closure)();
+    delete closure;
+}
+
+void callOnMainThreadClosure(std::function<void(void)>&& closure)
+{
+    std::function<void(void)>* closureDummy = new std::function<void(void)>(std::move(closure));
+    callOnMainThread(mainThreadClosureFunction, closureDummy);
+}
+
 } // namespace internal
 
 bool isMainThread()
