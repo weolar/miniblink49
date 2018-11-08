@@ -114,11 +114,9 @@ void CWebView::loadPostURL(const utf8* inUrl, const char * poastData, int nLen )
     if (blink::protocolIsJavaScript(url)) {
         //m_mainFrame->script()->executeIfJavaScriptURL(url);
 		//Gergul
-		if (url.hasPath()) {
-			const char* pContent = &inUrl[sizeof("javascript:") - 1];//-1是因为sizeof会把'\0'都算进去了
-			blink::WebScriptSource source(blink::WebString::fromUTF8(pContent));
-			m_webPage->mainFrame()->executeScript(source);
-		}
+		const char* pContent = &inUrl[sizeof("javascript:") - 1];//-1是因为sizeof会把'\0'都算进去了
+		blink::WebScriptSource source(blink::WebString::fromUTF8(pContent));
+		m_webPage->mainFrame()->executeScript(source);
         return;
     }
 
@@ -233,11 +231,9 @@ void CWebView::_loadURL(const utf8* inUrl, bool isFile)
     if (blink::protocolIsJavaScript(url)) {
         //m_mainFrame->script()->executeIfJavaScriptURL(url);
 		//Gergul
-		if (url.hasPath()) {
-			const char* pContent = &inUrlBuf[sizeof("javascript:") - 1];//-1是因为sizeof会把'\0'都算进去了
-			blink::WebScriptSource source(blink::WebString::fromUTF8(pContent));
-			m_webPage->mainFrame()->executeScript(source);
-		}
+		const char* pContent = &inUrlBuf[sizeof("javascript:") - 1];//-1是因为sizeof会把'\0'都算进去了
+		blink::WebScriptSource source(blink::WebString::fromUTF8(pContent));
+		m_webPage->mainFrame()->executeScript(source);
         return;
     }
 
@@ -924,6 +920,22 @@ jsValue CWebView::runJsInFrame(wkeWebFrameHandle frameId, const utf8* script, bo
 
     String codeString = String::fromUTF8(script);
     return runJsImpl(webFrame, &codeString, isInClosure);
+}
+
+std::map<int64_t, jsValue> CWebView::runJsInAllFrames(const utf8* script, bool isInClosure)
+{
+	std::map<int64_t, jsValue> mpRet;
+
+	String codeString = String::fromUTF8(script);
+
+	Frame* frame = toCoreFrame(m_webPage->mainFrame());
+	while (frame) {
+		blink::WebFrame* webFrame = WebFrame::fromFrame(frame);
+		mpRet[frame->frameID()] = runJsImpl(webFrame, &codeString, isInClosure);
+		frame = frame->tree().traverseNext();
+	}
+	
+	return mpRet;
 }
 
 jsExecState CWebView::globalExec()

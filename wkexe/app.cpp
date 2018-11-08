@@ -112,7 +112,7 @@ BOOL ProcessOptions(Application* app)
     //LocalFree(argv);
 
 	app->options.showHelp = 0;
-	wcscpy(app->options.htmlFile, L"javascript:alert('ok')");
+	wcscpy(app->options.htmlFile, L"www.baidu.com");
 	app->options.transparent = 1;
 
     return TRUE;

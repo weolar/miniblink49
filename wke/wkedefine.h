@@ -954,6 +954,7 @@ public:
     \
     ITERATOR2(jsValue, wkeRunJS, wkeWebView webView, const utf8* script, "") \
     ITERATOR2(jsValue, wkeRunJSW, wkeWebView webView, const wchar_t* script, "") \
+	ITERATOR2(void, wkeRunJsInAllFrames, wkeWebView webView, const utf8* script, "在所有frame中执行js，在开发桌面应用使用iframe时很好用") \
     \
     ITERATOR1(jsExecState, wkeGlobalExec, wkeWebView webView, "") \
     ITERATOR2(jsExecState, wkeGetGlobalExecByFrame, wkeWebView webView, wkeWebFrameHandle frameId, "") \

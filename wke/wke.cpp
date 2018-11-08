@@ -862,6 +862,8 @@ jsValue wkeRunJSW(wkeWebView webView, const wchar_t* script)
     return webView->runJS(script);
 }
 
+
+
 jsExecState wkeGlobalExec(wkeWebView webView)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
@@ -1143,6 +1145,12 @@ jsValue wkeRunJsByFrame(wkeWebView webView, wkeWebFrameHandle frameId, const utf
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
     return webView->runJsInFrame(frameId, script, isInClosure);
+}
+
+void wkeRunJsInAllFrames(wkeWebView webView, const utf8* script)
+{
+	wke::checkThreadCallIsValid(__FUNCTION__);
+	webView->runJsInAllFrames(script, true);
 }
 
 void wkeInsertCSSByFrame(wkeWebView webView, wkeWebFrameHandle frameId, const utf8* cssText)
