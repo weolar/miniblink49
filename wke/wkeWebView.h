@@ -137,7 +137,7 @@ public:
 
     const utf8* url() const override;
 
-	  void setUserAgent(const utf8 * useragent);
+	void setUserAgent(const utf8 * useragent);
     void setUserAgent(const wchar_t * useragent);
     
     bool isLoading() const;

@@ -82,6 +82,10 @@ BOOL FixupHtmlUrl(Application* app)
     LPWSTR htmlOption = app->options.htmlFile;
     WCHAR htmlUrl[MAX_PATH + 1] = { 0 };
 
+#if 1
+	wcsncpy_s(app->url, MAX_PATH, htmlOption, MAX_PATH);
+	return TRUE;
+#else
     // 包含 :// 说明是完整的URL
     if (wcsstr(htmlOption, L"://"))
     {
@@ -97,6 +101,7 @@ BOOL FixupHtmlUrl(Application* app)
     }
     // 无法获得完整的URL，出错
     return FALSE;
+#endif
 }
 
 BOOL ProcessOptions(Application* app)
@@ -107,7 +112,7 @@ BOOL ProcessOptions(Application* app)
     //LocalFree(argv);
 
 	app->options.showHelp = 0;
-	wcscpy(app->options.htmlFile, L"https://www.baidu.com");
+	wcscpy(app->options.htmlFile, L"javascript:alert('ok')");
 	app->options.transparent = 1;
 
     return TRUE;

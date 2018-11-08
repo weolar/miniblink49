@@ -113,6 +113,12 @@ void CWebView::loadPostURL(const utf8* inUrl, const char * poastData, int nLen )
 
     if (blink::protocolIsJavaScript(url)) {
         //m_mainFrame->script()->executeIfJavaScriptURL(url);
+		//Gergul
+		if (url.hasPath()) {
+			const char* pContent = &inUrl[sizeof("javascript:") - 1];//-1是因为sizeof会把'\0'都算进去了
+			blink::WebScriptSource source(blink::WebString::fromUTF8(pContent));
+			m_webPage->mainFrame()->executeScript(source);
+		}
         return;
     }
 
@@ -226,6 +232,12 @@ void CWebView::_loadURL(const utf8* inUrl, bool isFile)
 
     if (blink::protocolIsJavaScript(url)) {
         //m_mainFrame->script()->executeIfJavaScriptURL(url);
+		//Gergul
+		if (url.hasPath()) {
+			const char* pContent = &inUrlBuf[sizeof("javascript:") - 1];//-1是因为sizeof会把'\0'都算进去了
+			blink::WebScriptSource source(blink::WebString::fromUTF8(pContent));
+			m_webPage->mainFrame()->executeScript(source);
+		}
         return;
     }
 
