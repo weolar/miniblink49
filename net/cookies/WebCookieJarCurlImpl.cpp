@@ -1,13 +1,14 @@
 
 #include <windows.h>
 
-#include "content/web_impl_win/WebCookieJarCurlImpl.h"
+#include "net/cookies/WebCookieJarCurlImpl.h"
 
 #define CURL_STATICLIB 
 #include "third_party/libcurl/include/curl/curl.h"
 
 #include "net/WebURLLoaderManager.h"
 #include "net/WebURLLoaderInternal.h"
+#include "net/WebURLLoaderManagerUtil.h"
 
 #include "third_party/WebKit/public/platform/WebURL.h"
 #include "third_party/WebKit/Source/wtf/text/WTFStringUtil.h"
@@ -16,11 +17,9 @@
 #include "third_party/WebKit/Source/wtf/text/StringBuilder.h"
 #include "third_party/WebKit/Source/wtf/text/StringHash.h"
 
-using namespace blink;
+namespace net {
 
-namespace content {
-
-WebCookieJarImpl* WebCookieJarImpl::m_inst = nullptr;
+//WebCookieJarImpl* WebCookieJarImpl::m_inst = nullptr;
 
 static void readCurlCookieToken(const char*& cookie, String& token)
 {
@@ -248,6 +247,8 @@ static String getNetscapeCookieFormat(const KURL& url, const String& value)
     return cookieStr.toString();
 }
 
+#if 0
+
 class AsynSetCookies : public net::JobHead {
 public:
     AsynSetCookies(const CString& cookie, int* count)
@@ -259,7 +260,7 @@ public:
         m_type = kSetCookiesTask;
         m_count = count;
 
-        //*m_count += 1;
+        *m_count += 1;
     }
 
     virtual ~AsynSetCookies() override {}
@@ -271,7 +272,7 @@ public:
         if (manager)
             manager->removeLiveJobs(m_id);
 
-        //*m_count -= 1;
+        *m_count -= 1;
         delete this;
     }
 
@@ -297,7 +298,7 @@ public:
             return;
         }
 
-        CURLSH* curlsh = net::WebURLLoaderManager::sharedInstance()->getCurlShareHandle();
+        CURLSH* curlsh = m_curlShareHandle;
         curl_easy_setopt(curl, CURLOPT_SHARE, curlsh);
         curl_easy_setopt(curl, CURLOPT_COOKIELIST, m_cookie.c_str());
         curl_easy_cleanup(curl);
@@ -310,11 +311,12 @@ private:
     std::string m_cookie;
 };
 
-static void setCookiesFromDOM(const KURL&, const KURL& url, const String& value)
-{
-    if (!net::WebURLLoaderManager::sharedInstance())
-        return;
+#else
 
+#endif
+
+void WebCookieJarImpl::setCookiesFromDOM(const blink::KURL&, const blink::KURL& url, const String& value)
+{
     // CURL accepts cookies in either Set-Cookie or Netscape file format.
     // However with Set-Cookie format, there is no way to specify that we
     // should not allow cookies to be read from subdomains, which is the
@@ -323,18 +325,27 @@ static void setCookiesFromDOM(const KURL&, const KURL& url, const String& value)
     cookie = WTF::ensureStringToUTF8String(cookie);
 
     CString strCookie(reinterpret_cast<const char*>(cookie.characters8()), cookie.length());
-
+#if 0
     net::WebURLLoaderManager* manager = net::WebURLLoaderManager::sharedInstance();
     if (!manager)
         return;
-    
+
     int count = 0;
     AsynSetCookies* job = new AsynSetCookies(strCookie, &count);
     int jobId = manager->addLiveJobs(job);
     manager->getIoThread()->postTask(FROM_HERE, WTF::bind(&AsynSetCookies::setCookie, jobId));
-//     while (0 != count) {
-//         ::Sleep(5);
-//     }
+    while (0 != count) {
+        ::Sleep(5);
+    }
+#else
+    CURL* curl = curl_easy_init();
+    CURLSH* curlsh = m_curlShareHandle;
+    curl_easy_setopt(curl, CURLOPT_SHARE, curlsh);
+    curl_easy_setopt(curl, CURLOPT_COOKIELIST, strCookie.data());
+    curl_easy_cleanup(curl);
+
+    m_dirty = true;
+#endif
 }
 
 const curl_slist* WebCookieJarImpl::getAllCookiesBegin()
@@ -343,7 +354,8 @@ const curl_slist* WebCookieJarImpl::getAllCookiesBegin()
     if (!curl)
         return nullptr;
 
-    CURLSH* curlsh = net::WebURLLoaderManager::sharedInstance()->getCurlShareHandle();
+    flushCurlCookie(curl);
+    CURLSH* curlsh = m_curlShareHandle;
 
     curl_easy_setopt(curl, CURLOPT_SHARE, curlsh);
 
@@ -367,7 +379,9 @@ void WebCookieJarImpl::visitAllCookie(void* params, CookieVisitor visit)
     if (!curl)
         return;
 
-    CURLSH* curlsh = net::WebURLLoaderManager::sharedInstance()->getCurlShareHandle();
+    flushCurlCookie(curl);
+
+    CURLSH* curlsh = m_curlShareHandle;
     curl_easy_setopt(curl, CURLOPT_SHARE, curlsh);
 
     curl_slist* list = nullptr;
@@ -467,19 +481,34 @@ void WebCookieJarImpl::deleteCookies(const KURL& url, const String& cookieName)
     visitAllCookie(&info, cookieVisitorForDelete);
 }
 
-String WebCookieJarImpl::cookiesForSession(const KURL&, const KURL& url, bool httponly)
+void WebCookieJarImpl::flushCurlCookie(CURL* curl)
 {
-    if (!net::WebURLLoaderManager::sharedInstance())
-        return "";
+    if (!m_dirty)
+        return;
+    m_dirty = false;
 
+    if (!curl)
+        curl = curl_easy_init();
+    std::string cookieJarFullPath = getCookieJarFullPath();
+    if (cookieJarFullPath.empty())
+        return;
+
+    curl_easy_setopt(curl, CURLOPT_SHARE, m_curlShareHandle);
+    curl_easy_setopt(curl, CURLOPT_COOKIEJAR, cookieJarFullPath.c_str());
+    curl_easy_setopt(curl, CURLOPT_COOKIELIST, "FLUSH");
+}
+
+String WebCookieJarImpl::getCookiesForSession(const KURL&, const KURL& url, bool httponly)
+{
     String cookies;
     CURL* curl = curl_easy_init();
-
     if (!curl)
         return cookies;
 
-    CURLSH* curlsh = net::WebURLLoaderManager::sharedInstance()->getCurlShareHandle();
+    flushCurlCookie(curl);
 
+    CURLSH* curlsh = m_curlShareHandle;
+    
     curl_easy_setopt(curl, CURLOPT_SHARE, curlsh);
 
     curl_slist* list = nullptr;
@@ -502,21 +531,71 @@ String WebCookieJarImpl::cookiesForSession(const KURL&, const KURL& url, bool ht
     }
 
     curl_easy_cleanup(curl);
-
+    
     return cookies;
 }
 
-WebCookieJarImpl::WebCookieJarImpl()
+WebCookieJarImpl::WebCookieJarImpl(std::string cookieJarFileName)
 {
+    m_curlShareHandle = curl_share_init();
+    curl_share_setopt(m_curlShareHandle, CURLSHOPT_SHARE, CURL_LOCK_DATA_COOKIE);
+    curl_share_setopt(m_curlShareHandle, CURLSHOPT_SHARE, CURL_LOCK_DATA_DNS);
+    curl_share_setopt(m_curlShareHandle, CURLSHOPT_LOCKFUNC, curl_lock_callback);
+    curl_share_setopt(m_curlShareHandle, CURLSHOPT_UNLOCKFUNC, curl_unlock_callback);
 
+    m_cookieJarFileName = cookieJarFileName;
+    m_dirty = false;
 }
 
 WebCookieJarImpl::~WebCookieJarImpl()
 {
-
+    if (m_curlShareHandle)
+        curl_share_cleanup(m_curlShareHandle);
 }
 
+void WebCookieJarImpl::setCookieJarFullPath(const WCHAR* path)
+{
+    WTF::Mutex* mutex = sharedResourceMutex(CURL_LOCK_DATA_COOKIE);
+    WTF::Locker<WTF::Mutex> locker(*mutex);
+
+    if (!path)
+        return;
+
+    std::vector<char> jarPathA;
+    WTF::WCharToMByte(path, wcslen(path), &jarPathA, CP_ACP);
+    if (0 == jarPathA.size())
+        return;
+
+    m_cookieJarFileName = std::string(&jarPathA[0], jarPathA.size());
+    m_dirty = true;
+}
+
+std::string WebCookieJarImpl::getCookieJarFullPath()
+{
+    WTF::Mutex* mutex = sharedResourceMutex(CURL_LOCK_DATA_COOKIE);
+    WTF::Locker<WTF::Mutex> locker(*mutex);
+
+    flushCurlCookie(nullptr);
+    return m_cookieJarFileName;
+}
+
+// char* getCookieJarPath()
+// {
+//     WTF::Mutex* mutex = sharedResourceMutex(CURL_LOCK_DATA_COOKIE);
+//     WTF::Locker<WTF::Mutex> locker(*mutex);
+// 
+//     if (g_cookieJarPath)
+//         return g_cookieJarPath;
+// 
+//     char* cookieJarPathStr = "cookies.dat";
+//     g_cookieJarPath = (char*)malloc(strlen(cookieJarPathStr) + 1);
+//     strcpy(g_cookieJarPath, cookieJarPathStr);
+// 
+//     return g_cookieJarPath;
+// }
+
 //----WebCookieJar----
+
 void WebCookieJarImpl::setCookie(const WebURL& webUrl, const WebURL& webFirstPartyForCookies, const WebString& webCookie)
 {
     setCookiesFromDOM(webFirstPartyForCookies, webUrl, webCookie);
@@ -524,12 +603,12 @@ void WebCookieJarImpl::setCookie(const WebURL& webUrl, const WebURL& webFirstPar
 
 WebString WebCookieJarImpl::cookies(const WebURL& webUrl, const WebURL& webFirstPartyForCookies)
 {
-    return cookiesForSession(webFirstPartyForCookies, webUrl, false);
+    return getCookiesForSession(webFirstPartyForCookies, webUrl, false);
 }
 
 WebString WebCookieJarImpl::cookieRequestHeaderFieldValue(const WebURL& webUrl, const WebURL& webFirstPartyForCookies)
 {
-    return cookiesForSession(webFirstPartyForCookies, webUrl, false);
+    return getCookiesForSession(webFirstPartyForCookies, webUrl, false);
 }
 
 void WebCookieJarImpl::setToRecordFromRawHeads(const KURL& url, const String& rawHeadsString)
@@ -544,11 +623,14 @@ void WebCookieJarImpl::setCookieFromWinINet(const KURL& url, const Vector<char>&
 
 //////////////////////////////////////////////////////////////////////////
 
-WebCookieJarImpl* WebCookieJarImpl::inst()
-{
-    if (!m_inst)
-        m_inst = new WebCookieJarImpl();
-    return m_inst;
-}
+// WebCookieJarImpl* WebCookieJarImpl::getShare()
+// {
+//     if (m_inst)
+//         return m_inst;
+// 
+//     CURLSH* curlsh = net::WebURLLoaderManager::sharedInstance()->getCurlShareHandle();
+//     m_inst = new WebCookieJarImpl(curlsh, net::cookieJarPath(), false);
+//     return m_inst;
+// }
 
 } // namespace content

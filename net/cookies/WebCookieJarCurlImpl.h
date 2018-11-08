@@ -1,5 +1,5 @@
-#ifndef WebCookieJarImph_h
-#define WebCookieJarImph_h
+#ifndef net_cookies_WebCookieJarImph_h
+#define net_cookies_WebCookieJarImph_h
 
 #include "third_party/WebKit/public/platform/WebCookieJar.h"
 #include "third_party/WebKit/Source/platform/weborigin/KURL.h"
@@ -10,14 +10,14 @@ class CookieMonster;
 }
 
 struct curl_slist;
+typedef void CURLSH;
+typedef void CURL;
 
-namespace content {
-
-class HttpCookie;
-
+namespace net {
+    
 class WebCookieJarImpl : public blink::WebCookieJar {
 public:
-    WebCookieJarImpl();
+    WebCookieJarImpl(std::string cookieJarFileName);
     ~WebCookieJarImpl();
     virtual void setCookie(const blink::WebURL&, const blink::WebURL& firstPartyForCookies, const blink::WebString& cookie) override;
     virtual blink::WebString cookies(const blink::WebURL&, const blink::WebURL& firstPartyForCookies) override;
@@ -27,20 +27,34 @@ public:
     void setCookieFromWinINet(const blink::KURL& url, const WTF::Vector<char>& cookiesLine);
     void setToRecordFromRawHeads(const blink::KURL& url, const WTF::String& rawHeadsString);
 
-    static void deleteCookies(const blink::KURL& url, const String& cookieName);
-    static String cookiesForSession(const blink::KURL&, const blink::KURL& url, bool httponly);
-    static const curl_slist* WebCookieJarImpl::getAllCookiesBegin();
-    static void WebCookieJarImpl::getAllCookiesEnd(const curl_slist* list);
+    void setCookieJarFullPath(const WCHAR* path);
+
+    void deleteCookies(const blink::KURL& url, const String& cookieName);
+    String getCookiesForSession(const blink::KURL&, const blink::KURL& url, bool httponly);
+    const curl_slist* WebCookieJarImpl::getAllCookiesBegin();
+    void WebCookieJarImpl::getAllCookiesEnd(const curl_slist* list);
 
     typedef bool(*CookieVisitor)(void* params, const char* name, const char* value, const char* domain, const char* path, int secure, int httpOnly, int* expires);
-    static void visitAllCookie(void* params, CookieVisitor visit);
+    void visitAllCookie(void* params, CookieVisitor visit);
 
-    static WebCookieJarImpl* inst();
+    //static WebCookieJarImpl* getShare();
+
+    CURLSH* getCurlShareHandle() const
+    {
+        return m_curlShareHandle;
+    }
+    std::string getCookieJarFullPath();
 
 private:
-    static WebCookieJarImpl* m_inst;
+    void flushCurlCookie(CURL* curl);
+    void setCookiesFromDOM(const blink::KURL&, const blink::KURL& url, const String& value);
+    CURLSH* m_curlShareHandle;
+    std::string m_cookieJarFileName;
+    bool m_dirty;
+
+    //static WebCookieJarImpl* m_inst;
 };
 
 } // content
 
-#endif // WebCookieJarImph_h
+#endif // net_cookies_WebCookieJarImph_h

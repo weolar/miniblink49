@@ -1442,7 +1442,11 @@ void WebPageImpl::fireKillFocusEvent(HWND hWnd, UINT message, WPARAM wParam, LPA
     HWND currentFocus = ::GetFocus();
     if (currentFocus == m_popupHandle)
         return;
-    m_webViewImpl->setFocus(false);
+
+    if (m_popup)
+        m_popup->hide();
+
+//     m_webViewImpl->setFocus(false);
 //     m_webViewImpl->setFocusedFrame(nullptr);
 //     m_webViewImpl->clearFocusedElement();
     m_popupHandle = nullptr;
@@ -2071,9 +2075,35 @@ void WebPageImpl::didStartProvisionalLoad()
     m_firstDrawCount = 0;
 }
 
+class RootWndAutoDisable {
+public:
+    RootWndAutoDisable(HWND hWnd)
+    {
+        HWND hTempWnd = hWnd;
+        m_hRootWnd = NULL;
+        while (hTempWnd) {
+            m_hRootWnd = hTempWnd;
+            hTempWnd = ::GetParent(hTempWnd);
+        }
+        if (m_hRootWnd)
+            ::EnableWindow(m_hRootWnd, FALSE);
+    }
+
+    ~RootWndAutoDisable()
+    {
+        if (m_hRootWnd)
+            ::EnableWindow(m_hRootWnd, TRUE);
+    }
+
+private:
+    HWND m_hRootWnd;
+};
+
 bool WebPageImpl::runFileChooser(const blink::WebFileChooserParams& params, blink::WebFileChooserCompletion* completion)
 {
-    return runFileChooserImpl(params, completion);
+    RootWndAutoDisable rootWndAutoDisable(m_hWnd);
+    bool b = runFileChooserImpl(params, completion);
+    return b;
 }
 
 void WebPageImpl::willEnterDebugLoop()
@@ -2098,7 +2128,7 @@ void WebPageImpl::setCookieJarPath(const char* path)
 {
     if (!m_pageNetExtraData)
         m_pageNetExtraData = new net::PageNetExtraData();
-    m_pageNetExtraData->setCookieJarPath(path);
+    m_pageNetExtraData->setCookieJarFullPath(path);
 }
 
 bool WebPageImpl::initSetting()
