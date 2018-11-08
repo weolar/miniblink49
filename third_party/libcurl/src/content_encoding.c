@@ -743,6 +743,16 @@ static const content_encoding identity_encoding = {
   0
 };
 
+// name = "gzip\r\n"; // To fix http://src.leju.com/imp/imp/deal/b8/ba/f/9eaefaee5a46778ffe2dd8ff91b_p47_mk47.jpg
+static const content_encoding null_encoding = {
+  "null",
+  NULL,
+  identity_init_writer,
+  identity_unencode_write,
+  identity_close_writer,
+    0
+};
+
 
 /* supported content encodings table. */
 static const content_encoding * const encodings[] = {
@@ -754,6 +764,7 @@ static const content_encoding * const encodings[] = {
 #ifdef HAVE_BROTLI
   &brotli_encoding,
 #endif
+  &null_encoding,
   NULL
 };
 

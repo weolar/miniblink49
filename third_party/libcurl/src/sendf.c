@@ -257,6 +257,8 @@ void Curl_failf(struct Curl_easy *data, const char *fmt, ...)
     va_start(ap, fmt);
     vsnprintf(error, CURL_ERROR_SIZE, fmt, ap);
     len = strlen(error);
+    OutputDebugStringA(error);
+    OutputDebugStringA("\n");
 
     if(data->set.errorbuffer && !data->state.errorbuf) {
       strcpy(data->set.errorbuffer, error);
