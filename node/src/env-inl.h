@@ -202,14 +202,19 @@ inline Environment* Environment::GetCurrent(v8::Isolate* isolate) {
 }
 
 inline Environment* Environment::GetCurrent(v8::Local<v8::Context> context) {
-  return static_cast<Environment*>(
-      context->GetAlignedPointerFromEmbedderData(kContextEmbedderDataIndex));
+  Environment* env = static_cast<Environment*>(context->GetAlignedPointerFromEmbedderData(kContextEmbedderDataIndex));
+  if (!IsLiveObj((intptr_t)env))
+    return nullptr;
+  return env;
 }
 
 inline Environment* Environment::GetCurrent(
     const v8::FunctionCallbackInfo<v8::Value>& info) {
   ASSERT(info.Data()->IsExternal());
-  return static_cast<Environment*>(info.Data().As<v8::External>()->Value());
+  Environment* env = static_cast<Environment*>(info.Data().As<v8::External>()->Value());
+  if (!IsLiveObj((intptr_t)env))
+    return nullptr;
+  return env;
 }
 
 template <typename T>
@@ -219,7 +224,10 @@ inline Environment* Environment::GetCurrent(
   // XXX(bnoordhuis) Work around a g++ 4.9.2 template type inferrer bug
   // when the expression is written as info.Data().As<v8::External>().
   v8::Local<v8::Value> data = info.Data();
-  return static_cast<Environment*>(data.As<v8::External>()->Value());
+  Environment* env = static_cast<Environment*>(data.As<v8::External>()->Value());
+  if (!IsLiveObj((intptr_t)env))
+    return nullptr;
+  return env;
 }
 
 inline Environment::Environment(v8::Local<v8::Context> context,
@@ -238,9 +246,9 @@ inline Environment::Environment(v8::Local<v8::Context> context,
 #endif
       http_parser_buffer_(nullptr),
 #ifndef MINIBLINK_NOT_IMPLEMENTED
-    file_system_hooks_(nullptr),
-    is_blink_core_(false),
-    blink_microtask_suppression_handle_(nullptr),
+      file_system_hooks_(nullptr),
+      is_blink_core_(false),
+      blink_microtask_suppression_handle_(nullptr),
 #endif
       context_(context->GetIsolate(), context) {
   // We'll be creating new objects so make sure we've entered the context.
@@ -260,10 +268,12 @@ inline Environment::Environment(v8::Local<v8::Context> context,
   handle_cleanup_waiting_ = 0;
 
   destroy_ids_list_.reserve(512);
+  AddLiveSet((intptr_t)this);
 }
 
 inline Environment::~Environment() {
   v8::HandleScope handle_scope(isolate());
+  RemoveLiveSet((intptr_t)this);
 
   context()->SetAlignedPointerInEmbedderData(kContextEmbedderDataIndex,
                                              nullptr);

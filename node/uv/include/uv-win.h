@@ -106,6 +106,7 @@ typedef struct pollfd {
  * Mingw32 doesn't have these :-(
  */
 #ifndef WSAID_ACCEPTEX
+
 # define WSAID_ACCEPTEX                                                       \
          {0xb5367df1, 0xcbac, 0x11cf,                                         \
          {0x95, 0xca, 0x00, 0x80, 0x5f, 0x48, 0xa1, 0x92}}
@@ -172,6 +173,16 @@ typedef struct pollfd {
 
   typedef PVOID RTL_SRWLOCK;
   typedef RTL_SRWLOCK SRWLOCK, *PSRWLOCK;
+#else
+typedef BOOL(PASCAL*LPFN_CONNECTEX)
+(SOCKET s,
+    const struct sockaddr* name,
+    int namelen,
+    PVOID lpSendBuffer,
+    DWORD dwSendDataLength,
+    LPDWORD lpdwBytesSent,
+    LPOVERLAPPED lpOverlapped);
+
 #endif
 
 #if USING_VC6RT == 1
