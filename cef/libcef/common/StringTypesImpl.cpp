@@ -1,7 +1,7 @@
 // Copyright (c) 2010 The Chromium Embedded Framework Authors. All rights
 // reserved. Use of this source code is governed by a BSD-style license that
 // can be found in the LICENSE file.
-#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
+//#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "include/internal/cef_string_types.h"
 #include <algorithm>
 #include "wtf/FastMalloc.h"
@@ -288,4 +288,4 @@ CEF_EXPORT void cef_string_userfree_utf16_free(cef_string_userfree_utf16_t str) 
     cef_string_utf16_clear(str);
     freeCefStringUserfreeUtf16(str);
 }
-#endif
+//#endif

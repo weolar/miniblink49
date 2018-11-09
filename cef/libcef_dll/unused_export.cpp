@@ -1,4 +1,4 @@
-#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
+//#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include <windows.h>
 #include "include/internal/cef_thread_internal.h"
 #include "include/internal/cef_export.h"
@@ -169,4 +169,4 @@ extern "C" CEF_EXPORT void cef_string_map_free() { DebugBreak(); }
 // CEF_EXPORT void cef_string_multimap_alloc() { DebugBreak(); }
 // CEF_EXPORT void cef_string_multimap_clear() { DebugBreak(); }
 // CEF_EXPORT void cef_string_multimap_free() { DebugBreak(); }
-#endif
+//#endif

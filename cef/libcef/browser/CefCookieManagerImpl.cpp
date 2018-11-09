@@ -11,7 +11,7 @@
 #include "libcef/browser/CefContext.h"
 #include "libcef/browser/ThreadUtil.h"
 
-#include "content/web_impl_win/WebCookieJarCurlImpl.h"
+#include "net/cookies/WebCookieJarCurlImpl.h"
 #include "third_party/WebKit/Source/platform/weborigin/KURL.h"
 #include "third_party/WebKit/public/platform/WebURL.h"
 #include "third_party/WebKit/public/platform/WebTraceLocation.h"
@@ -281,7 +281,7 @@ bool CefCookieManagerImpl::VisitAllCookies(CefRefPtr<CefCookieVisitor> visitor) 
 //       base::Bind(&CefCookieManagerImpl::VisitAllCookiesInternal, this,
 //                  visitor));
     CefCookieVisitorImpl visitorImpl(visitor.get(), nullptr, true);
-    content::WebCookieJarImpl::visitAllCookie(&visitorImpl, &CefCookieVisitorImpl::Visitor);
+    //content::WebCookieJarImpl::visitAllCookie(&visitorImpl, &CefCookieVisitorImpl::Visitor);
     visitorImpl.PushToVisitor();
 
     return true;
@@ -294,7 +294,7 @@ bool CefCookieManagerImpl::VisitUrlCookies(const CefString& url, bool includeHtt
 //                  includeHttpOnly, visitor));
 
     CefCookieVisitorImpl visitorImpl(visitor.get(), &url, includeHttpOnly);
-    content::WebCookieJarImpl::visitAllCookie(&visitorImpl, &CefCookieVisitorImpl::Visitor);
+    //content::WebCookieJarImpl::visitAllCookie(&visitorImpl, &CefCookieVisitorImpl::Visitor);
     visitorImpl.PushToVisitor();
 
     return true;
@@ -359,7 +359,7 @@ bool CefCookieManagerImpl::SetCookie(const CefString& url, const CefCookie& cook
     if (!kurl.isValid())
         return false;
 
-    content::WebCookieJarImpl::inst()->setCookie(blink::WebURL(), kurl, blink::WebString::fromUTF8(cookieString.c_str()));
+    //content::WebCookieJarImpl::inst()->setCookie(blink::WebURL(), kurl, blink::WebString::fromUTF8(cookieString.c_str()));
 
     if (callback.get()) {
         callback->AddRef();
@@ -390,7 +390,7 @@ bool CefCookieManagerImpl::DeleteCookies(const CefString& url, const CefString& 
     if (!kurl.isValid())
         return false;
 
-    content::WebCookieJarImpl::inst()->deleteCookies(kurl, blink::WebString::fromUTF8(cookieName.c_str()));
+    //content::WebCookieJarImpl::inst()->deleteCookies(kurl, blink::WebString::fromUTF8(cookieName.c_str()));
 
     if (callback.get()) {
         callback->AddRef();

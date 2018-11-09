@@ -112,7 +112,7 @@ BOOL ProcessOptions(Application* app)
     //LocalFree(argv);
 
 	app->options.showHelp = 0;
-	wcscpy(app->options.htmlFile, L"www.baidu.com");
+	wcscpy(app->options.htmlFile, L"http://bbs.linshimuye.com");
 	app->options.transparent = 1;
 
     return TRUE;
@@ -192,9 +192,9 @@ void HandleLoadUrlEnd(wkeWebView webView, void* param, const char *url, void *jo
 BOOL CreateWebWindow(Application* app)
 {
     if (app->options.transparent)
-        app->window = wkeCreateWebWindow(WKE_WINDOW_TYPE_TRANSPARENT, NULL, 0, 0, 640, 480);
+        app->window = wkeCreateWebWindow(WKE_WINDOW_TYPE_TRANSPARENT, NULL, 0, 0, 800, 600);
     else
-        app->window = wkeCreateWebWindow(WKE_WINDOW_TYPE_POPUP, NULL, 0, 0, 640, 480);
+        app->window = wkeCreateWebWindow(WKE_WINDOW_TYPE_POPUP, NULL, 0, 0, 800, 600);
 
 	if (!app->window)
 		return FALSE;
