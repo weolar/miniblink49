@@ -906,8 +906,10 @@ jsValue jsCall(jsExecState es, jsValue func, jsValue thisValue, jsValue* args, i
     }
 
     v8::Local<v8::Value> cbValue = getV8Value(func, context);
-    if (cbValue.IsEmpty() || !cbValue->IsFunction())
-        return jsUndefined();
+	if (cbValue.IsEmpty() || !cbValue->IsFunction()) {
+		delete[] argv;
+		return jsUndefined();
+	}
 
     v8::Function* cb = v8::Function::Cast(*cbValue);
 
