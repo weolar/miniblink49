@@ -3501,9 +3501,10 @@ WebDragOperation WebViewImpl::dragTargetDragEnter(
     WebDragOperationsMask operationsAllowed,
     int modifiers)
 {
-    ASSERT(!m_currentDragData);
+    //ASSERT(!m_currentDragData);
 
-    m_currentDragData = DataObject::create(webDragData);
+	if (!m_currentDragData)
+		m_currentDragData = DataObject::create(webDragData);
     m_operationsAllowed = operationsAllowed;
 
     return dragTargetDragEnterOrOver(clientPoint, screenPoint, DragEnter, modifiers);
