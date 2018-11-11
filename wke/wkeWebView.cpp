@@ -116,6 +116,8 @@ void CWebView::loadPostURL(const utf8* inUrl, const char * poastData, int nLen )
     if (!url.isValid())
         return;
 
+	//不需要这个也可以运行url中的js
+	/*
     if (blink::protocolIsJavaScript(url)) {
         //m_mainFrame->script()->executeIfJavaScriptURL(url);
 		//Gergul
@@ -123,7 +125,7 @@ void CWebView::loadPostURL(const utf8* inUrl, const char * poastData, int nLen )
 		blink::WebScriptSource source(blink::WebString::fromUTF8(pContent));
 		m_webPage->mainFrame()->executeScript(source);
         return;
-    }
+    }*/
 
     blink::WebURLRequest request(url);
     request.setCachePolicy(blink::WebURLRequest::UseProtocolCachePolicy);
@@ -233,6 +235,8 @@ void CWebView::_loadURL(const utf8* inUrl, bool isFile)
     if (!url.isValid())
         return;
 
+	//不需要这个也可以运行url中的js
+	/*
     if (blink::protocolIsJavaScript(url)) {
         //m_mainFrame->script()->executeIfJavaScriptURL(url);
 		//Gergul
@@ -240,7 +244,7 @@ void CWebView::_loadURL(const utf8* inUrl, bool isFile)
 		blink::WebScriptSource source(blink::WebString::fromUTF8(pContent));
 		m_webPage->mainFrame()->executeScript(source);
         return;
-    }
+    }*/
 
     m_url = &inUrlBuf[0];
     blink::WebURLRequest request(url);
