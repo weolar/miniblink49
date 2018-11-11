@@ -54,7 +54,7 @@
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <PlatformToolset>v140_xp</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
-    <WholeProgramOptimization>false</WholeProgramOptimization>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
@@ -146,9 +146,9 @@
     <IntDir>$(SolutionDir)..\out\tmp\$(ProjectName)\$(Configuration)\</IntDir>
     <LinkIncremental>true</LinkIncremental>
     <TargetExt>.dll</TargetExt>
-    <IncludePath>$(SolutionDir)..\vc6\include\crt;$(SolutionDir)..\vc6\include\wnet;$(SolutionDir)..\third_party\GDIPlus\Includes</IncludePath>
-    <ReferencePath />
-    <LibraryPath>$(SolutionDir)..\vc6\lib;$(SolutionDir)..\third_party\GDIPlus\lib</LibraryPath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSdk_71A_IncludePath);</IncludePath>
+    <ReferencePath>$(VC_ReferencesPath_x86);</ReferencePath>
+    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSdk_71A_LibraryPath_x86);</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <GenerateManifest>false</GenerateManifest>
@@ -181,10 +181,11 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
-      <AdditionalLibraryDirectories>$(SolutionDir)..\out\$(Configuration)\</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OutDir)</AdditionalLibraryDirectories>
       <AdditionalDependencies>InjectTool.lib;version.lib;harfbuzz.lib;ots.lib;Crypt32.lib;Wldap32.lib;Imm32.lib;libxml.lib;zlib.lib;libcurl.lib;v8_5_7.lib;v8_5_7_1.lib;skia.lib;winmm.lib;Ws2_32.lib;Usp10.lib;Shlwapi.lib;wininet.lib;GDIPlus.lib;DbgHelp.lib;libjpeg.lib;libpng.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>$(OutDir)node$(TargetExt)</OutputFile>
-      <ImportLibrary>$(OutDir)node.lib</ImportLibrary>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <ImportLibrary>
+      </ImportLibrary>
       <IgnoreSpecificDefaultLibraries>LIBCMT.lib</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
@@ -218,10 +219,11 @@
     <Link>
       <GenerateDebugInformation>DebugFastLink</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
-      <AdditionalLibraryDirectories>$(SolutionDir)..\third_party\GDIPlus\Lib;$(SolutionDir)..\out\$(Configuration)\</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OutDir)</AdditionalLibraryDirectories>
       <AdditionalDependencies>version.lib;ots.lib;harfbuzz.lib;Crypt32.lib;Wldap32.lib;Imm32.lib;libxml.lib;zlib.lib;libcurl.lib;v8_5_7.lib;v8_5_7_1.lib;skia.lib;winmm.lib;Ws2_32.lib;Usp10.lib;Shlwapi.lib;wininet.lib;GDIPlus.lib;libjpeg.lib;libpng.lib;openssl.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>$(OutDir)node$(TargetExt)</OutputFile>
-      <ImportLibrary>$(OutDir)node.lib</ImportLibrary>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <ImportLibrary>
+      </ImportLibrary>
       <IgnoreSpecificDefaultLibraries>LIBCMT.lib</IgnoreSpecificDefaultLibraries>
       <ShowProgress>NotSet</ShowProgress>
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
@@ -256,18 +258,21 @@
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
-      <AdditionalLibraryDirectories>$(SolutionDir)..\Debug\;$(SolutionDir)..\lib\;</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OutDir)</AdditionalLibraryDirectories>
       <AdditionalDependencies>InjectTool.lib;version.lib;ots_d.lib;Crypt32.lib;Wldap32.lib;Imm32.lib;libxml.lib;zlib_d.lib;libcurl_d.lib;v8_d.lib;skia_d.lib;winmm.lib;Ws2_32.lib;Usp10.lib;Shlwapi.lib;wininet.lib;GDIPlus.lib;libjpeg.lib;libpng.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>$(SolutionDir)..\Debug\miniblink.dll</OutputFile>
-      <ImportLibrary>$(OutDir)miniblink.lib</ImportLibrary>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <ImportLibrary>
+      </ImportLibrary>
       <IgnoreSpecificDefaultLibraries>LIBCMT.lib</IgnoreSpecificDefaultLibraries>
       <AdditionalOptions>/FORCE:UNRESOLVED %(AdditionalOptions)</AdditionalOptions>
-      <StackReserveSize>100000000</StackReserveSize>
+      <StackReserveSize>
+      </StackReserveSize>
       <HeapReserveSize>
       </HeapReserveSize>
       <HeapCommitSize>
       </HeapCommitSize>
-      <StackCommitSize>100000000</StackCommitSize>
+      <StackCommitSize>
+      </StackCommitSize>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -378,16 +383,17 @@
       <AdditionalOptions>/Zc:threadSafeInit- %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
-      <GenerateDebugInformation>Debug</GenerateDebugInformation>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <TargetMachine>MachineX86</TargetMachine>
-      <AdditionalLibraryDirectories>$(SolutionDir)..\third_party\GDIPlus\Lib;$(SolutionDir)..\out\$(Configuration)\</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OutDir)</AdditionalLibraryDirectories>
       <AdditionalDependencies>libcurl.lib;zlib.lib;ots.lib;libxml.lib;harfbuzz.lib;v8_5_7.lib;v8_5_7_1.lib;skia.lib;winmm.lib;Ws2_32.lib;Usp10.lib;Shlwapi.lib;wininet.lib;GDIPlus.lib;version.lib;Crypt32.lib;wldap32.lib;Imm32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;DbgHelp.lib;libjpeg.lib;libpng.lib;openssl.lib</AdditionalDependencies>
       <AdditionalOptions>/FORCE:UNRESOLVED %(AdditionalOptions)</AdditionalOptions>
-      <OutputFile>$(OutDir)node$(TargetExt)</OutputFile>
-      <ImportLibrary>$(OutDir)node.lib</ImportLibrary>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <ImportLibrary>
+      </ImportLibrary>
       <IgnoreSpecificDefaultLibraries>
       </IgnoreSpecificDefaultLibraries>
       <ShowProgress>NotSet</ShowProgress>
@@ -398,12 +404,12 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">
     <ClCompile>
-      <PreprocessorDefinitions>USING_VC6RT=1;_USING_V110_SDK71_;_WINDLL;_UNICODE;UNICODE;BUILDING_CEF_SHARED;NDEBUG;WIN32;_WINDOWS;INSIDE_BLINK=1;BLINK_IMPLEMENTATION=1;ENABLE_OILPAN=1;ENABLE_WKE=1</PreprocessorDefinitions>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <PreprocessorDefinitions>_USING_V110_SDK71_;_WINDLL;_UNICODE;UNICODE;BUILDING_CEF_SHARED;NDEBUG;WIN32;_WINDOWS;INSIDE_BLINK=1;BLINK_IMPLEMENTATION=1;ENABLE_OILPAN=1;ENABLE_WKE=1</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <AdditionalIncludeDirectories>../../;../../v8_4_8/;../../v8_4_8/include;../../base;../../third_party/;../../third_party/GDIPlus/Includes;../../third_party/npapi;../../third_party/WebKit;../../third_party/WebKit/Source;../../cef;../../third_party/icu/source/common;../../gen/blink;../../gen/blink/core;../../gen/blink/bindings/modules/v8;../../gen/blink/bindings/core/v8;../../gpu;../../third_party/khronos;../../third_party/libxml/src/include;../../third_party/libxml/win32/include;../../third_party/skia/include/core;../../third_party/skia/include/config;../../third_party/skia/include/codec;../../third_party/skia/include/device;../../third_party/skia/include/effects;../../third_party/skia/include/images;../../third_party/skia/include/pathops;../../third_party/skia/include/ports;../../third_party/skia/include/private;../../third_party/skia/include/utils</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../;../../v8_4_8/;../../v8_4_8/include;../../base;../../third_party/;../../third_party/GDIPlus/Includes;../../third_party/npapi;../../third_party/WebKit;../../third_party/WebKit/Source;../../cef;../../third_party/icu/source/common;../../gen/blink;../../gen/blink/core;../../gen/blink/bindings/modules/v8;../../gen/blink/bindings/core/v8;../../gpu;../../third_party/khronos;../../third_party/libxml/src/include;../../third_party/libxml/win32/include;../../third_party/skia/include/core;../../third_party/skia/include/config;../../third_party/skia/include/codec;../../third_party/skia/include/device;../../third_party/skia/include/effects;../../third_party/skia/include/images;../../third_party/skia/include/pathops;../../third_party/skia/include/ports;../../third_party/skia/include/private;../../third_party/skia/include/utils;../vc6/include</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile>config.h</PrecompiledHeaderFile>
       <DisableSpecificWarnings>4800;4291;4996;4244;4305;4577;4530;4595;4049</DisableSpecificWarnings>
       <ForcedIncludeFiles>config.h</ForcedIncludeFiles>
@@ -422,17 +428,19 @@
       <AdditionalOptions>/Zc:threadSafeInit- %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
-      <GenerateDebugInformation>DebugFastLink</GenerateDebugInformation>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <TargetMachine>MachineX86</TargetMachine>
-      <AdditionalLibraryDirectories>$(SolutionDir)..\third_party\GDIPlus\Lib;$(SolutionDir)..\out\Release_vc6\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>$(SolutionDir)..\out\$(Configuration)\libcurl.lib;zlib.lib;ots.lib;harfbuzz.lib;libxml.lib;v8_4_8.lib;skia.lib;winmm.lib;Ws2_32.lib;Usp10.lib;Shlwapi.lib;wininet.lib;GDIPlus.lib;version.lib;Crypt32.lib;wldap32.lib;Imm32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;openssl.lib;libjpeg.lib;libpng.lib;wolfssl.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(OutDir)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libcurl.lib;zlib.lib;ots.lib;libxml.lib;harfbuzz.lib;v8_5_7.lib;v8_5_7_1.lib;skia.lib;winmm.lib;Ws2_32.lib;Usp10.lib;Shlwapi.lib;wininet.lib;GDIPlus.lib;version.lib;Crypt32.lib;wldap32.lib;Imm32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;DbgHelp.lib;libjpeg.lib;libpng.lib;openssl.lib</AdditionalDependencies>
       <AdditionalOptions>/FORCE:UNRESOLVED %(AdditionalOptions)</AdditionalOptions>
-      <OutputFile>$(OutDir)node.dll</OutputFile>
-      <ImportLibrary>$(OutDir)miniblink.lib</ImportLibrary>
-      <IgnoreSpecificDefaultLibraries>LIBCMT.lib</IgnoreSpecificDefaultLibraries>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <ImportLibrary>
+      </ImportLibrary>
+      <IgnoreSpecificDefaultLibraries>
+      </IgnoreSpecificDefaultLibraries>
       <ShowProgress>NotSet</ShowProgress>
       <EntryPointSymbol>
       </EntryPointSymbol>
@@ -462,7 +470,7 @@
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <AdditionalLibraryDirectories>$(SolutionDir)..\out\$(Platform)$(Configuration)\</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OutDir)</AdditionalLibraryDirectories>
       <AdditionalDependencies>version.lib;Crypt32.lib;Advapi32.lib;wldap32.lib;libcurl.lib;zlib.lib;ots.lib;Imm32.lib;libxml.lib;v8_5_7.lib;v8_5_7_1.lib;skia.lib;winmm.lib;Ws2_32.lib;Usp10.lib;Shlwapi.lib;wininet.lib;GDIPlus.lib;DbgHelp.lib;libjpeg.lib;libpng.lib;harfbuzz.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>/FORCE:UNRESOLVED %(AdditionalOptions)</AdditionalOptions>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
@@ -472,12 +480,14 @@
       <EntryPointSymbol>
       </EntryPointSymbol>
       <GenerateDebugInformation>No</GenerateDebugInformation>
-      <StackReserveSize>100000000</StackReserveSize>
+      <StackReserveSize>
+      </StackReserveSize>
       <HeapReserveSize>
       </HeapReserveSize>
       <HeapCommitSize>
       </HeapCommitSize>
-      <StackCommitSize>100000000</StackCommitSize>
+      <StackCommitSize>
+      </StackCommitSize>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|x64'">
@@ -503,7 +513,7 @@
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <AdditionalLibraryDirectories>$(SolutionDir)..\out\$(Platform)$(Configuration)\;$(SolutionDir)..\out\$(Platform)Release\</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OutDir)</AdditionalLibraryDirectories>
       <AdditionalDependencies>version.lib;Crypt32.lib;Advapi32.lib;wldap32.lib;libcurl.lib;zlib.lib;ots.lib;Imm32.lib;libxml.lib;v8_4_8.lib;skia.lib;winmm.lib;Ws2_32.lib;Usp10.lib;Shlwapi.lib;wininet.lib;GDIPlus.lib;DbgHelp.lib;wolfssl.lib;harfbuzz.lib;libpng.lib;libjpeg.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>/FORCE:UNRESOLVED %(AdditionalOptions)</AdditionalOptions>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
@@ -513,12 +523,14 @@
       <EntryPointSymbol>
       </EntryPointSymbol>
       <GenerateDebugInformation>No</GenerateDebugInformation>
-      <StackReserveSize>100000000</StackReserveSize>
+      <StackReserveSize>
+      </StackReserveSize>
       <HeapReserveSize>
       </HeapReserveSize>
       <HeapCommitSize>
       </HeapCommitSize>
-      <StackCommitSize>100000000</StackCommitSize>
+      <StackCommitSize>
+      </StackCommitSize>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

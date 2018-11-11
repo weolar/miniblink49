@@ -309,7 +309,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;STATIC_GETOPT;WIN32_LEAN_AND_MEAN;ENABLE_CEF=1;USING_VC6RT=1;USING_CHROMIUM_BASE=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(SolutionDir)../electron/;$(SolutionDir)../;$(SolutionDir)../cef;$(SolutionDir)../wke;$(SolutionDir)../node/uv/include;$(SolutionDir)../node/cares/include;$(SolutionDir)../node/src;$(SolutionDir)../v8_5_7/include</AdditionalIncludeDirectories>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <ExceptionHandling>false</ExceptionHandling>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <DisableSpecificWarnings>4800;4291;4996;4244;4305;4577;4267;4530</DisableSpecificWarnings>
@@ -341,7 +341,7 @@
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(SolutionDir)../wke</AdditionalIncludeDirectories>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
