@@ -9,3 +9,5 @@ out/*
 bin/cookies.dat
 /wkexe/cookies.dat
 /wkexe/LocalStorage/*.localstorage
+/build/miniblink/bak
+/build/miniblink/bak2
