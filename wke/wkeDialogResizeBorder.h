@@ -11,6 +11,8 @@
 #define WM_SYNCBORDER WM_USER + 2000//同步拖拉区域消息
 
 #define GAP 6//拖拉区域大小
+#define MIN_WIDTH 30
+#define MIN_HEIGHT 30
 
 class CDialogResizeBorder
 {

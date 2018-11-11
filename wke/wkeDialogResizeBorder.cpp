@@ -146,7 +146,10 @@ void CDialogResizeBorder::syncBorder(bool bCheckShowed /*= true*/)
 		)
 	{
 		HWND hBorderWnd = m_hWnd;
-		::ShowWindow(hBorderWnd, SW_SHOW);
+		if (::IsWindowVisible(m_hWnd) == TRUE)
+			::ShowWindow(hBorderWnd, SW_SHOW);
+		else
+			::ShowWindow(hBorderWnd, SW_HIDE);
 
 		RECT rectWin = { 0 };
 		::GetWindowRect(m_hOwnerWnd, &rectWin);
@@ -234,6 +237,11 @@ void CDialogResizeBorder::resizeWindow()
 	}
 	LONG width = rectWin.right - rectWin.left;
 	LONG height = rectWin.bottom - rectWin.top;
+	if (width < MIN_WIDTH)
+		width = MIN_WIDTH;
+	if (height < MIN_HEIGHT)
+		height = MIN_HEIGHT;
+
 	::MoveWindow(m_hOwnerWnd, rectWin.left, rectWin.top, width, height, TRUE);
 }
 
