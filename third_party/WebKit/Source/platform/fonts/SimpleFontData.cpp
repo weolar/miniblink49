@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (C) 2005, 2008, 2010 Apple Inc. All rights reserved.
  * Copyright (C) 2006 Alexey Proskuryakov
  *
@@ -455,6 +455,7 @@ bool SimpleFontData::canRenderCombiningCharacterSequence(const UChar* characters
     if (!addResult.isNewEntry)
         return addResult.storedValue->value;
 
+	/*Gergul 修复“ส้้้้้้”这种字符串引起的崩溃问题
 #ifdef MINIBLINK_NOT_IMPLEMENTED
     UErrorCode error = U_ZERO_ERROR;
     Vector<UChar, 4> normalizedCharacters(length);
@@ -471,6 +472,7 @@ bool SimpleFontData::canRenderCombiningCharacterSequence(const UChar* characters
     }
 #endif // MINIBLINK_NOT_IMPLEMENTED
     notImplemented();
+	*/
 
     addResult.storedValue->value = true;
     return true;

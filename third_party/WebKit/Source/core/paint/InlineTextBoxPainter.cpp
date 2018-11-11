@@ -1,4 +1,4 @@
-// Copyright 2014 The Chromium Authors. All rights reserved.
+﻿// Copyright 2014 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -177,7 +177,11 @@ void InlineTextBoxPainter::paint(const PaintInfo& paintInfo, const LayoutPoint& 
 
     StringBuilder charactersWithHyphen;
     TextRun textRun = m_inlineTextBox.constructTextRun(styleToUse, font, string, maximumLength, m_inlineTextBox.hasHyphen() ? &charactersWithHyphen : 0);
-    if (m_inlineTextBox.hasHyphen())
+	//Gergul 修复“ส้้้้้้”这种字符串引起的崩溃问题
+	if (textRun.codePath() == TextRun::ForceComplex)
+		return;
+	
+	if (m_inlineTextBox.hasHyphen())
         length = textRun.length();
 
     int selectionStart = 0;
