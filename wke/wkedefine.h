@@ -715,6 +715,9 @@ public:
 #define WKE_DECLARE_ITERATOR6(returnVal, name, p1, p2, p3, p4, p5, p6, description) \
     WKE_EXTERN_C __declspec(dllexport) returnVal WKE_CALL_TYPE name(p1, p2, p3, p4, p5, p6);
 
+#define WKE_DECLARE_ITERATOR9(returnVal, name, p1, p2, p3, p4, p5, p6, p7, p8, p9, description) \
+    WKE_EXTERN_C __declspec(dllexport) returnVal WKE_CALL_TYPE name(p1, p2, p3, p4, p5, p6, p7, p8, p9);
+
 #define WKE_DECLARE_ITERATOR11(returnVal, name, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, description) \
     WKE_EXTERN_C __declspec(dllexport) returnVal WKE_CALL_TYPE name(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11);
 
@@ -751,7 +754,7 @@ public:
 
 // 以下是wke的导出函数。格式按照【返回类型】【函数名】【参数】来排列
 
-#define WKE_FOR_EACH_DEFINE_FUNCTION(ITERATOR0, ITERATOR1, ITERATOR2, ITERATOR3, ITERATOR4, ITERATOR5, ITERATOR6, ITERATOR11) \
+#define WKE_FOR_EACH_DEFINE_FUNCTION(ITERATOR0, ITERATOR1, ITERATOR2, ITERATOR3, ITERATOR4, ITERATOR5, ITERATOR6, ITERATOR11, ITERATOR9) \
     ITERATOR0(void, wkeShutdown, "") \
     \
     ITERATOR0(unsigned int, wkeVersion, "") \
@@ -1069,6 +1072,7 @@ public:
     ITERATOR5(void, wkeMoveWindow, wkeWebView webWindow, int x, int y, int width, int height, "") \
     ITERATOR1(void, wkeMoveToCenter, wkeWebView webWindow, "") \
     ITERATOR3(void, wkeResizeWindow, wkeWebView webWindow, int width, int height, "") \
+	ITERATOR9(void, wkeCreateResizeBorders, wkeWebView webWindow, bool bLeft, bool bTop, bool bRight, bool bBottom, bool bLeftTop, bool bLeftBottom, bool bRightTop, bool bRightBottom, "创建resize的拖拉边") \
     \
     ITERATOR6(wkeWebDragOperation, wkeDragTargetDragEnter, wkeWebView webView, const wkeWebDragData* webDragData, const POINT* clientPoint, const POINT* screenPoint, wkeWebDragOperationsMask operationsAllowed, int modifiers, "") \
     ITERATOR5(wkeWebDragOperation, wkeDragTargetDragOver, wkeWebView webView, const POINT* clientPoint, const POINT* screenPoint, wkeWebDragOperationsMask operationsAllowed, int modifiers, "") \
@@ -1188,7 +1192,7 @@ WKE_EXTERN_C __declspec(dllexport) void wkeInitialize();
 WKE_EXTERN_C __declspec(dllexport) void wkeInitializeEx(const wkeSettings* settings);
 
 WKE_FOR_EACH_DEFINE_FUNCTION(WKE_DECLARE_ITERATOR0, WKE_DECLARE_ITERATOR1, WKE_DECLARE_ITERATOR2, \
-    WKE_DECLARE_ITERATOR3, WKE_DECLARE_ITERATOR4, WKE_DECLARE_ITERATOR5, WKE_DECLARE_ITERATOR6, WKE_DECLARE_ITERATOR11)
+    WKE_DECLARE_ITERATOR3, WKE_DECLARE_ITERATOR4, WKE_DECLARE_ITERATOR5, WKE_DECLARE_ITERATOR6, WKE_DECLARE_ITERATOR11, WKE_DECLARE_ITERATOR9)
 
 #else
 

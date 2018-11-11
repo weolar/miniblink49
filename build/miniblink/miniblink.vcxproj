@@ -434,7 +434,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <TargetMachine>MachineX86</TargetMachine>
       <AdditionalLibraryDirectories>$(OutDir)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libcurl.lib;zlib.lib;ots.lib;libxml.lib;harfbuzz.lib;v8_5_7.lib;v8_5_7_1.lib;skia.lib;winmm.lib;Ws2_32.lib;Usp10.lib;Shlwapi.lib;wininet.lib;GDIPlus.lib;version.lib;Crypt32.lib;wldap32.lib;Imm32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;DbgHelp.lib;libjpeg.lib;libpng.lib;openssl.lib</AdditionalDependencies>
+      <AdditionalDependencies>libcurl.lib;zlib.lib;ots.lib;libxml.lib;harfbuzz.lib;v8_5_7.lib;v8_5_7_1.lib;skia.lib;winmm.lib;Ws2_32.lib;Usp10.lib;Shlwapi.lib;wininet.lib;GDIPlus.lib;version.lib;Crypt32.lib;wldap32.lib;Imm32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;DbgHelp.lib;libjpeg.lib;libpng.lib;openssl.lib;wolfssl.lib</AdditionalDependencies>
       <AdditionalOptions>/FORCE:UNRESOLVED %(AdditionalOptions)</AdditionalOptions>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
       <ImportLibrary>
@@ -5057,6 +5057,7 @@
     <ClCompile Include="..\..\third_party\WebKit\Source\wtf\text\WTFStringUtil.cpp" />
     <ClCompile Include="..\..\ui\gfx\win\dpi.cc" />
     <ClCompile Include="..\..\wke\wke.cpp" />
+    <ClCompile Include="..\..\wke\wkeDialogResizeBorder.cpp" />
     <ClCompile Include="..\..\wke\wkeGlobalVar.cpp" />
     <ClCompile Include="..\..\wke\wkeJsBind.cpp" />
     <ClCompile Include="..\..\wke\wkeNetHook.cpp" />
@@ -5988,9 +5989,11 @@
     <ClInclude Include="..\..\net\WebURLLoaderManagerUtil.h" />
     <ClInclude Include="..\..\node\nodeblink.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\..\node\src\node_url.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\..\third_party\WebKit\Source\bindings\core\v8\inspector\InspectorWrapper.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\bindings\core\v8\inspector\V8InjectedScriptHost.h" />
@@ -7037,198 +7040,263 @@
     <ClInclude Include="..\..\net\WebURLLoaderWinINet.h" />
     <ClInclude Include="..\..\node\src\async-wrap-inl.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\..\node\src\async-wrap.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\..\node\src\base-object-inl.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\..\node\src\base-object.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\..\node\src\base64.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\..\node\src\config.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\..\node\src\connection_wrap.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\..\node\src\connect_wrap.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\..\node\src\debug-agent.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\..\node\src\env-inl.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\..\node\src\env.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\..\node\src\handle_wrap.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\..\node\src\http_parser.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\..\node\src\inspector_agent.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\..\node\src\inspector_socket.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\..\node\src\js_stream.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\..\node\src\node.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\..\node\src\node_buffer.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\..\node\src\node_constants.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\..\node\src\node_counters.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\..\node\src\node_crypto.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\..\node\src\node_crypto_bio.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\..\node\src\node_crypto_clienthello-inl.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\..\node\src\node_crypto_clienthello.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\..\node\src\node_crypto_groups.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\..\node\src\node_dtrace.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\..\node\src\node_etw_provider.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\..\node\src\node_file.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\..\node\src\node_http_parser.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\..\node\src\node_i18n.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\..\node\src\node_internals.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\..\node\src\node_javascript.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\..\node\src\node_lttng.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\..\node\src\node_lttng_provider.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\..\node\src\node_lttng_tp.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\..\node\src\node_mutex.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\..\node\src\node_natives.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\..\node\src\node_object_wrap.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\..\node\src\node_perfctr_provider.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\..\node\src\node_revert.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\..\node\src\node_root_certs.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\..\node\src\node_stat_watcher.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\..\node\src\node_version.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\..\node\src\node_watchdog.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\..\node\src\node_win32_etw_provider-inl.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\..\node\src\node_win32_etw_provider.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\..\node\src\node_win32_perfctr_provider.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\..\node\src\node_wrap.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\..\node\src\pipe_wrap.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\..\node\src\req-wrap-inl.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\..\node\src\req-wrap.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\..\node\src\spawn_sync.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\..\node\src\stream_base-inl.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\..\node\src\stream_base.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\..\node\src\stream_wrap.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\..\node\src\string_bytes.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\..\node\src\string_search.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\..\node\src\tcp_wrap.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\..\node\src\tls_wrap.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\..\node\src\tree.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\..\node\src\tty_wrap.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\..\node\src\udp_wrap.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\..\node\src\util-inl.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\..\node\src\util.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\..\node\src\v8abbr.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\..\skia\config\SkUserConfig.h" />
     <ClInclude Include="..\..\skia\config\sk_ref_cnt_ext_debug.h" />
@@ -9003,6 +9071,7 @@
     <ClInclude Include="..\..\ui\gfx\win\dpi.h" />
     <ClInclude Include="..\..\wke\wke.h" />
     <ClInclude Include="..\..\wke\wkedefine.h" />
+    <ClInclude Include="..\..\wke\wkeDialogResizeBorder.h" />
     <ClInclude Include="..\..\wke\wkeGlobalVar.h" />
     <ClInclude Include="..\..\wke\wkeJsBind.h" />
     <ClInclude Include="..\..\wke\wkeMediaPlayer.h" />

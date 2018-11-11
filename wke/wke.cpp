@@ -1444,6 +1444,14 @@ void wkeResizeWindow(wkeWebView webWindow, int width, int height)
         return window->resize(width, height);
 }
 
+void wkeCreateResizeBorders(wkeWebView webWindow, bool bLeft, bool bTop, bool bRight, bool bBottom,
+	bool bLeftTop, bool bLeftBottom, bool bRightTop, bool bRightBottom)
+{
+	wke::checkThreadCallIsValid(__FUNCTION__);
+	if (wke::CWebWindow* window = static_cast<wke::CWebWindow*>(webWindow))
+		return window->createResizeBorders(bLeft, bTop, bRight, bBottom, bLeftTop, bLeftBottom, bRightTop, bRightBottom);
+}
+
 void wkeSetWindowTitle(wkeWebView webWindow, const utf8* title)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);

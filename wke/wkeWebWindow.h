@@ -4,6 +4,7 @@
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
 
 #include "wkeWebView.h"
+#include "wkeDialogResizeBorder.h"
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -32,6 +33,10 @@ public:
     void onDestroy(wkeWindowDestroyCallback callback, void* param);
     
     virtual void setTransparent(bool transparent) override;
+
+	void createResizeBorders(bool bLeft, bool bTop, bool bRight, bool bBottom, 
+		bool bLeftTop, bool bLeftBottom, bool bRightTop, bool bRightBottom);
+	void syncBorder(bool bCheckShowed = true);
 
 protected:
     virtual void onPaintUpdated(wkePaintUpdatedCallback callback, void* callbackParam) override;
@@ -78,6 +83,8 @@ protected:
         kWkeWebWindowDestroyed,
     };
     State m_state;
+
+	std::map<int, CDialogResizeBorder*> m_mpBorders;
 };
 
 };//namespace wke

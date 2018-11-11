@@ -200,7 +200,9 @@ LRESULT CWebWindow::_windowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM l
         ::DragAcceptFiles(hwnd, TRUE);
         SetTimer(hwnd, (UINT_PTR)this, 20, NULL);
         return 0;
-
+	//case WM_WINDOWPOSCHANGED:
+	//	syncBorder();
+	//	break;
     case WM_CLOSE:
         if (getWkeHandler()->windowClosingCallback) {
             if (!getWkeHandler()->windowClosingCallback(this, getWkeHandler()->windowClosingCallbackParam))
@@ -265,6 +267,8 @@ LRESULT CWebWindow::_windowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM l
 
         CWebView::resize(width, height);
         wkeRepaintIfNeeded(this);
+				
+		syncBorder();
 
         return 0;
     }
@@ -637,6 +641,18 @@ void CWebWindow::_onDocumentReady()
         m_originalDocumentReadyCallback(this, m_originalDocumentReadyCallbackParam);
 }
 
+void CWebWindow::syncBorder(bool bCheckShowed /*= true*/)
+{
+	for (std::map<int, CDialogResizeBorder*>::iterator it = m_mpBorders.begin();
+		it != m_mpBorders.end(); ++it)
+	{
+		int nHitTest = it->first;
+		CDialogResizeBorder* pBorder = it->second;
+
+		pBorder->SyncBorder(bCheckShowed);
+	}
+}
+
 void CWebWindow::onClosing(wkeWindowClosingCallback callback, void* param)
 {
     getWkeHandler()->windowClosingCallback = callback;
@@ -692,12 +708,11 @@ void CWebWindow::resize(int width, int height)
 void CWebWindow::moveToCenter()
 {
     int width = 0;
-    int height = 0; {
-        RECT rect = { 0 };
-        GetWindowRect(m_hWnd, &rect);
-        width = rect.right - rect.left;
-        height = rect.bottom - rect.top;
-    }
+    int height = 0;
+	RECT rect = { 0 };
+	GetWindowRect(m_hWnd, &rect);
+	width = rect.right - rect.left;
+	height = rect.bottom - rect.top;
 
     int parentWidth = 0;
     int parentHeight = 0;
@@ -737,6 +752,32 @@ void CWebWindow::setTransparent(bool transparent)
     ::UpdateWindow(m_hWnd);
 
     CWebView::setTransparent(transparent);
+}
+
+void CWebWindow::createResizeBorders(bool bLeft, bool bTop, bool bRight, bool bBottom,
+	bool bLeftTop,bool bLeftBottom, bool bRightTop, bool bRightBottom)
+{
+	//ÐÂ½¨Resize Border Dialog
+#define _CREATE_RESIZE_BORDER(b, t)	\
+	if (b && m_mpBorders.find(t) == m_mpBorders.end()) { \
+		(m_mpBorders[t] = new CDialogResizeBorder(NULL, m_hWnd, t))->DoModeless(); \
+	} \
+	else if (!b && m_mpBorders.find(t) != m_mpBorders.end()) { \
+		::DestroyWindow(m_mpBorders[t]->m_hWnd); \
+		delete m_mpBorders[t]; \
+		m_mpBorders.erase(t); \
+	}
+
+	_CREATE_RESIZE_BORDER(bLeft, HTLEFT);
+	_CREATE_RESIZE_BORDER(bTop, HTTOP);
+	_CREATE_RESIZE_BORDER(bRight, HTRIGHT);
+	_CREATE_RESIZE_BORDER(bBottom, HTBOTTOM);
+	_CREATE_RESIZE_BORDER(bLeftTop, HTTOPLEFT);
+	_CREATE_RESIZE_BORDER(bLeftBottom, HTBOTTOMLEFT);
+	_CREATE_RESIZE_BORDER(bRightTop, HTTOPRIGHT);
+	_CREATE_RESIZE_BORDER(bRightBottom, HTBOTTOMRIGHT);
+
+	syncBorder(false);
 }
 
 } // namespace wke
