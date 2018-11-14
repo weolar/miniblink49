@@ -469,11 +469,11 @@ bool SimpleFontData::canRenderCombiningCharacterSequence(const UChar* characters
         if (!glyphForCharacter(character))
             return false;
     }
-#endif // MINIBLINK_NOT_IMPLEMENTED
-    notImplemented();
-
     addResult.storedValue->value = true;
     return true;
+#else
+    return false;
+#endif // MINIBLINK_NOT_IMPLEMENTED
 }
 
 bool SimpleFontData::fillGlyphPage(GlyphPage* pageToFill, unsigned offset, unsigned length, UChar* buffer, unsigned bufferLength) const
