@@ -106,23 +106,36 @@ BOOL FixupHtmlUrl(Application* app)
 
 BOOL ProcessOptions(Application* app)
 {
-    //int argc = 0;
-    //LPWSTR* argv = CommandLineToArgvW(GetCommandLineW(), &argc);
-    //ParseOptions(argc, argv, &app->options);
-    //LocalFree(argv);
-
+#if 0
+	int argc = 0;
+	LPWSTR* argv = CommandLineToArgvW(GetCommandLineW(), &argc);
+	ParseOptions(argc, argv, &app->options);
+	LocalFree(argv);
+#else
 	app->options.showHelp = 0;
-	wcscpy(app->options.htmlFile, L"http://bbs.linshimuye.com");
+	wcscpy(app->options.htmlFile, L"www.baidu.com");
 	app->options.transparent = 1;
-
+#endif
     return TRUE;
 }
 
 // 回调：点击了关闭、返回 true 将销毁窗口，返回 false 什么都不做。
 bool HandleWindowClosing(wkeWebView webWindow, void* param)
 {
-    Application* app = (Application*)param;
-    return IDYES == MessageBoxW(NULL, L"确定要退出程序吗？", L"wkexe", MB_YESNO|MB_ICONQUESTION);
+	Application* app = (Application*)param;
+	bool bExit = (IDYES == MessageBoxW(NULL, L"确定要退出程序吗？", L"wkexe", MB_YESNO | MB_ICONQUESTION));
+
+	if (!bExit)
+	{
+		wkeLoadURL(webWindow, "www.baidu.com");
+
+		//wkeWebView newWin = wkeCreateWebWindow(WKE_WINDOW_TYPE_POPUP, NULL, 0, 0, 800, 600);
+		//wkeShowWindow(newWin, true);
+		//wkeLoadURL(newWin, "www.baidu.com");
+		//wkeCreateResizeBorders(newWin, true, true, true, true, true, true, true, true);
+	}
+
+	return bExit;
 }
 
 // 回调：窗口已销毁
@@ -210,6 +223,8 @@ BOOL CreateWebWindow(Application* app)
     wkeMoveToCenter(app->window);
     wkeLoadURLW(app->window, app->url);
 
+	wkeCreateResizeBorders(app->window, true, true, true, true, true, true, true, true);
+
     return TRUE;
 }
 
@@ -229,6 +244,27 @@ void RunMessageLoop(Application* app)
     }
 }
 
+jsValue WKE_CALL_TYPE js_foo(jsExecState es, void* param)
+{
+	int argCount = jsArgCount(es);
+	if (argCount < 1)
+		return jsUndefined();
+
+	jsType type = jsArgType(es, 0);
+	if (JSTYPE_STRING != type)
+		return jsUndefined();
+
+	jsValue arg0 = jsArg(es, 0);
+	const char* msg = jsToTempString(es, arg0);
+	MessageBoxA(NULL, msg, "foo", MB_OK);
+	return jsUndefined();
+}
+
+void InitJsBinding()
+{
+	wkeJsBindFunction("foo", js_foo, NULL, 1);
+}
+
 void RunApplication(Application* app)
 {
     memset(app, 0, sizeof(Application));
@@ -245,6 +281,8 @@ void RunApplication(Application* app)
 		//打开默认页面
 		wcsncpy_s(app->url, MAX_PATH, L"http://www.baidu.com", MAX_PATH);
     }
+
+	InitJsBinding();
 
     if (!CreateWebWindow(app))
     {
