@@ -1,5 +1,7 @@
+const hasCrypto = (process.versions.openssl != '0');
+
 const http = require('http');
-const https = require('https');
+const https = hasCrypto ? require('https') : null;
 
 const URL = require('url').URL;
 
@@ -7,9 +9,9 @@ function ClientRequest(options) {
 	this.req = null;
 	if ("string" == typeof options) {
 		const urlObj = new URL('https://example.org');
-		if ("https:" == urlObj.protocol)
+		if (hasCrypto && "https:" == urlObj.protocol)
 			this.req = https.request(options);
-	} else if ("https:" == options.protocol) {
+	} else if (hasCrypto && "https:" == options.protocol) {
 		this.req = https.request(options);
 	}
 	if (!this.req)

@@ -80,9 +80,9 @@ void log(const v8::FunctionCallbackInfo<v8::Value>& info) {
 
 } // namespace
 
-NodeBindings::NodeBindings(bool isBrowser, uv_loop_t* uvLoop)
+NodeBindings::NodeBindings(bool isBrowser)
     : m_isBrowser(isBrowser)
-    , m_uvLoop(uvLoop)
+    , m_uvLoop(nullptr)
     , m_env(nullptr)
     , m_callNextTickAsync(new uv_async_t()) {
 

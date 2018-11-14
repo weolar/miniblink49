@@ -6,6 +6,7 @@
 #include "common/ThreadCall.h"
 #include "common/WinUserMsg.h"
 #include <shellapi.h>
+#include <ole2.h>
 
 namespace atom {
     
@@ -342,6 +343,7 @@ public:
         case WM_NCDESTROY:
             ::KillTimer(hWnd, (UINT_PTR)self);
             ::RemovePropW(hWnd, kPrppW);
+            ::RevokeDragDrop(hWnd);
             ThreadCall::callBlinkThreadSync([wkeWebview, self] {
                 wkeDestroyWebView(wkeWebview);
             });

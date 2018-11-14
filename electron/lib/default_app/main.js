@@ -62,7 +62,7 @@ if (null == option.file) {
         option.file = fileName;
         break;
     }
-    console.log("default_app, option.file:" + option.file);
+    console.log("default_app.js, option.file:" + option.file);
 }
 
 // Quit when all windows are closed and no other one is listening to this.
@@ -138,6 +138,7 @@ function showErrorMessage(message) {
 }
 
 function loadApplicationByUrl(appUrl) {
+	console.log("default_app.js, loadApplicationByUrl: " + appUrl);
     require('./default_app').load(appUrl);
 }
 
@@ -164,6 +165,7 @@ if (option.file && !option.webdriver) {
     const file = option.file;
     const protocol = url.parse(file).protocol;
     const extension = path.extname(file);
+    
     if (protocol === 'http:' || protocol === 'https:' || protocol === 'file:') {
         loadApplicationByUrl(file);
     } else if (extension === '.html' || extension === '.htm') {

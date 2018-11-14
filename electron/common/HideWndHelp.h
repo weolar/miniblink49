@@ -69,6 +69,7 @@ private:
     HWND m_hHideWindow;
 
 };
+
 }
 
 #endif // common_HideWndHelp_h

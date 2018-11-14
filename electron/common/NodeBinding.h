@@ -20,8 +20,13 @@ namespace atom {
 
 class NodeBindings {
 public:
-    NodeBindings(bool isBrowser, uv_loop_t* uvLoop);
+    NodeBindings(bool isBrowser);
     ~NodeBindings();
+
+    void setUvLoop(uv_loop_t* uvLoop)
+    {
+        m_uvLoop = uvLoop;
+    }
 
     static void initNodeEnv();
 

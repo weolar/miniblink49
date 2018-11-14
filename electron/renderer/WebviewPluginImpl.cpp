@@ -25,7 +25,8 @@ void WebviewPluginImpl::staticDidCreateScriptContextCallback(wkeWebView webView,
 
     BlinkMicrotaskSuppressionHandle handle = nodeBlinkMicrotaskSuppressionEnter(contextV8->GetIsolate());
 
-    self->m_nodeBinding = new NodeBindings(false, ThreadCall::getBlinkLoop());
+    self->m_nodeBinding = new NodeBindings(false);
+    self->m_nodeBinding->setUvLoop(ThreadCall::getBlinkLoop());
     node::Environment* env = self->m_nodeBinding->createEnvironment(contextV8);
     self->m_nodeBinding->loadEnvironment();
 

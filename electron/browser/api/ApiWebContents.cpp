@@ -181,7 +181,6 @@ void WebContents::removeObserver(WebContentsObserver* observer) {
     m_observers.erase(it);
 }
 
-// new方法
 void WebContents::newFunction(const v8::FunctionCallbackInfo<v8::Value>& args) {
     v8::Isolate* isolate = args.GetIsolate();
     if (args.IsConstructCall()) {
@@ -224,7 +223,8 @@ void WebContents::onDidCreateScriptContext(wkeWebView webView, wkeWebFrameHandle
     const utf8* script = "window.Notification = function(){};";
     wkeRunJsByFrame(webView, frame, script, false);
     BlinkMicrotaskSuppressionHandle handle = nodeBlinkMicrotaskSuppressionEnter((*context)->GetIsolate());
-    m_nodeBinding = new NodeBindings(false, ThreadCall::getBlinkLoop());
+    m_nodeBinding = new NodeBindings(false);
+    m_nodeBinding->setUvLoop(ThreadCall::getBlinkLoop());
     node::Environment* env = m_nodeBinding->createEnvironment(*context);
     m_nodeBinding->loadEnvironment();
     nodeBlinkMicrotaskSuppressionLeave(handle);
@@ -237,8 +237,7 @@ void WebContents::staticOnWillReleaseScriptContextCallback(wkeWebView webView, v
 
 void WebContents::onWillReleaseScriptContextCallback(wkeWebView webView, wkeWebFrameHandle frame, v8::Local<v8::Context>* context, int worldId) {
     node::Environment* env = node::Environment::GetCurrent(*context);
-
-    if (env)
+    if (env && node::IsLiveObj((intptr_t)env))
         mate::emitEvent(env->isolate(), env->process_object(), "exit");
 
     delete m_nodeBinding;
