@@ -801,10 +801,11 @@ void WebFrameClientImpl::didCreateScriptContext(WebLocalFrame* frame, v8::Local<
     v8::V8::SetCaptureStackTraceForUncaughtExceptions(true, 50, v8::StackTrace::kDetailed);
 
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
-    if (frame->top() == frame)
-        wke::onCreateGlobalObjectInMainFrame(this, frame, context, extensionGroup, worldId);
-    else
-        wke::onCreateGlobalObjectInSubFrame(this, frame, context, extensionGroup, worldId);
+	//Gergul
+    //if (frame->top() == frame)
+        wke::onCreateGlobalObjectInFrame(this, frame, context, extensionGroup, worldId);
+    //else
+    //    wke::onCreateGlobalObjectInSubFrame(this, frame, context, extensionGroup, worldId);
 
     wke::AutoDisableFreeV8TempObejct autoDisableFreeV8TempObejct;
     if (m_webPage->wkeHandler().didCreateScriptContextCallback && m_webPage->getState() == pageInited)
@@ -832,10 +833,11 @@ void WebFrameClientImpl::didCreateScriptContext(WebLocalFrame* frame, v8::Local<
 void WebFrameClientImpl::willReleaseScriptContext(WebLocalFrame* frame, v8::Local<v8::Context> context, int worldId)
 {
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
-    if (frame->top() == frame) {
+	//Gergul
+    //if (frame->top() == frame) {
         wke::onReleaseGlobalObject(this, frame, context, worldId);
         m_webPage->disablePaint();
-    }
+    //}
 
     wke::AutoDisableFreeV8TempObejct autoDisableFreeV8TempObejct;
     if (m_webPage->wkeHandler().willReleaseScriptContextCallback && m_webPage->getState() == pageInited)

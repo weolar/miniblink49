@@ -1873,33 +1873,34 @@ jsExecState createTempExecStateByV8Context(v8::Local<v8::Context> context)
     return execState;
 }
 
-void onCreateGlobalObjectInSubFrame(content::WebFrameClientImpl* client, blink::WebLocalFrame* frame, 
-    v8::Local<v8::Context> context, int extensionGroup, int worldId)
+//void onCreateGlobalObjectInSubFrame(content::WebFrameClientImpl* client, blink::WebLocalFrame* frame, 
+//    v8::Local<v8::Context> context, int extensionGroup, int worldId)
+//{
+//    content::WebPage* webPage = client->webPage();
+//    CWebView* wkeWebView = webPage->wkeWebView();
+//    if (!wkeWebView)
+//        return;
+//
+//    v8::Isolate* isolate = context->GetIsolate();
+//    setWkeWebViewToV8Context(client, context);
+//}
+
+void onCreateGlobalObjectInFrame(content::WebFrameClientImpl* client, blink::WebLocalFrame* frame, v8::Local<v8::Context> context, int extensionGroup, int worldId)
 {
     content::WebPage* webPage = client->webPage();
     CWebView* wkeWebView = webPage->wkeWebView();
     if (!wkeWebView)
         return;
 
-    v8::Isolate* isolate = context->GetIsolate();
-    setWkeWebViewToV8Context(client, context);
-}
-
-void onCreateGlobalObjectInMainFrame(content::WebFrameClientImpl* client, blink::WebLocalFrame* frame, v8::Local<v8::Context> context, int extensionGroup, int worldId)
-{
-    content::WebPage* webPage = client->webPage();
-    CWebView* wkeWebView = webPage->wkeWebView();
-    if (!wkeWebView)
-        return;
-
-    if (!s_jsValueMap)
+	v8::Isolate* isolate = context->GetIsolate();
+	setWkeWebViewToV8Context(client, context);
+	
+	//注册自定义函数
+	if (!s_jsValueMap)
         s_jsValueMap = new JsValueMap();
     if (!s_execStates)
         s_execStates = new Vector<jsExecState>();
     
-    v8::Isolate* isolate = context->GetIsolate();
-    setWkeWebViewToV8Context(client, context);
-
     addFunction(context, "outputMsg", js_outputMsg, nullptr, 1);
     addAccessor(context, "webViewName", js_getWebViewName, nullptr, js_setWebViewName, nullptr);
     
