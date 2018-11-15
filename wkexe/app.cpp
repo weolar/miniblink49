@@ -129,10 +129,11 @@ bool HandleWindowClosing(wkeWebView webWindow, void* param)
 	{
 		wkeLoadURL(webWindow, "www.baidu.com");
 
-		//wkeWebView newWin = wkeCreateWebWindow(WKE_WINDOW_TYPE_POPUP, NULL, 0, 0, 800, 600);
-		//wkeShowWindow(newWin, true);
-		//wkeLoadURL(newWin, "www.baidu.com");
-		//wkeCreateResizeBorders(newWin, true, true, true, true, true, true, true, true);
+		wkeWebView newWin = wkeCreateWebWindow(WKE_WINDOW_TYPE_POPUP, NULL, 0, 0, 800, 600);
+		wkeShowWindow(newWin, true);
+		wkeLoadURL(newWin, "www.baidu.com");
+		wkeCreateResizeBorders(newWin, true, true, true, true, true, true, true, true);
+		wkeShowDevtools(newWin, L"www.baidu.com", NULL, NULL);
 	}
 
 	return bExit;

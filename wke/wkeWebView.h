@@ -222,12 +222,14 @@ public:
     static int64_t wkeWebFrameHandleToFrameId(content::WebPage* page, wkeWebFrameHandle frameId);
     static wkeWebFrameHandle frameIdTowkeWebFrameHandle(content::WebPage* page, int64_t frameId);
 
+	wkeWebFrameHandle getFrameHandleByUrl(const utf8* url);
+
     jsValue runJS(const wchar_t* script) override;
     jsValue runJS(const utf8* script) override;
     jsValue runJsInFrame(wkeWebFrameHandle frameId, const utf8* script, bool isInClosure);
 	//在所有frame中执行js
-	//  返回：<frameid, 返回值>
-	std::map<int64_t, jsValue> runJsInAllFrames(const utf8* script, bool isInClosure);
+	//  返回：<wkeWebFrameHandle, 返回值>
+	std::map<wkeWebFrameHandle, jsValue> runJsInAllFrames(const utf8* script, bool isInClosure);
     jsExecState globalExec() override;
     jsExecState globalExecByFrame(wkeWebFrameHandle frameId);
     

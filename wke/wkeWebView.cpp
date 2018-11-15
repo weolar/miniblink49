@@ -880,6 +880,22 @@ wkeWebFrameHandle CWebView::frameIdTowkeWebFrameHandle(content::WebPage* page, i
     return (wkeWebFrameHandle)(frameId - page->getFirstFrameId() + 1);
 }
 
+wkeWebFrameHandle CWebView::getFrameHandleByUrl(const utf8* url)
+{	
+	Frame* frame = toCoreFrame(m_webPage->mainFrame());
+	while (frame) {
+		blink::WebFrame* webFrame = WebFrame::fromFrame(frame);
+		if (NULL != webFrame) {			
+			if (webFrame->document().url() == blink::WebURL(blink::KURL(ParsedURLString, url))) {
+				return frameIdTowkeWebFrameHandle(m_webPage, frame->frameID());
+			}
+		}
+		frame = frame->tree().traverseNext();
+	}
+
+	return NULL;
+}
+
 static jsValue runJsImpl(blink::WebFrame* mainFrame, String* codeString, bool isInClosure)
 {
     blink::UserGestureIndicator gestureIndicator(blink::DefinitelyProcessingUserGesture);
@@ -935,16 +951,19 @@ jsValue CWebView::runJsInFrame(wkeWebFrameHandle frameId, const utf8* script, bo
     return runJsImpl(webFrame, &codeString, isInClosure);
 }
 
-std::map<int64_t, jsValue> CWebView::runJsInAllFrames(const utf8* script, bool isInClosure)
+std::map<wkeWebFrameHandle, jsValue> CWebView::runJsInAllFrames(const utf8* script, bool isInClosure)
 {
-	std::map<int64_t, jsValue> mpRet;
+	std::map<wkeWebFrameHandle, jsValue> mpRet;
 
 	String codeString = String::fromUTF8(script);
 
 	Frame* frame = toCoreFrame(m_webPage->mainFrame());
 	while (frame) {
 		blink::WebFrame* webFrame = WebFrame::fromFrame(frame);
-		mpRet[frame->frameID()] = runJsImpl(webFrame, &codeString, isInClosure);
+		if (NULL != webFrame) {
+			mpRet[frameIdTowkeWebFrameHandle(m_webPage, frame->frameID())] =
+				runJsImpl(webFrame, &codeString, isInClosure);
+		}
 		frame = frame->tree().traverseNext();
 	}
 	

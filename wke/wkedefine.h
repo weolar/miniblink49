@@ -1052,6 +1052,7 @@ public:
     ITERATOR1(wkePostBodyElement*, wkeNetCreatePostBodyElement, wkeWebView webView, "") \
     ITERATOR1(void, wkeNetFreePostBodyElement, wkePostBodyElement* element, "") \
     \
+	ITERATOR2(wkeWebFrameHandle, wkeGetFrameHandleByUrl, wkeWebView webView, const utf8* url, "根据URL获得对应的frame handle，url参数为全路径地址") \
     ITERATOR2(bool, wkeIsMainFrame, wkeWebView webView, wkeWebFrameHandle frameId, "") \
     ITERATOR2(bool, wkeIsWebRemoteFrame, wkeWebView webView, wkeWebFrameHandle frameId, "") \
     ITERATOR1(wkeWebFrameHandle, wkeWebFrameGetMainFrame, wkeWebView webView, "") \

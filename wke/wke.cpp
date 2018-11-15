@@ -375,6 +375,7 @@ void wkeShowDevtools(wkeWebView webView, const wchar_t* path, wkeOnShowDevtoolsC
     wke::checkThreadCallIsValid(__FUNCTION__);
     std::vector<char> pathUtf8;
     WTF::WCharToMByte(path, wcslen(path), &pathUtf8, CP_UTF8);
+	pathUtf8.push_back('\0');
     webView->showDevTools(&pathUtf8[0], callback, param);
 }
 
@@ -1133,6 +1134,12 @@ void wkeDeleteWillSendRequestInfo(wkeWebView webWindow, wkeWillSendRequestInfo* 
     wkeDeleteString(info->method);
     wkeDeleteString(info->referrer);
     delete info;
+}
+
+wkeWebFrameHandle wkeGetFrameHandleByUrl(wkeWebView webView, const utf8* url)
+{
+	wke::checkThreadCallIsValid(__FUNCTION__);
+	return webView->getFrameHandleByUrl(url);
 }
 
 bool wkeIsMainFrame(wkeWebView webView, wkeWebFrameHandle frameId)
