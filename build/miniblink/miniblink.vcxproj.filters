@@ -21636,9 +21636,6 @@
     <ClInclude Include="..\..\base\values.h">
       <Filter>base</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\cef\libcef\common\CefMssages.h">
-      <Filter>cef\libcef\common</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\gen\blink\core\fileapi\BlobPropertyBag.h">
       <Filter>gen\blink\core\fileapi</Filter>
     </ClInclude>
