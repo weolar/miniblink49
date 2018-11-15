@@ -1904,7 +1904,11 @@ void onCreateGlobalObjectInFrame(content::WebFrameClientImpl* client, blink::Web
     addFunction(context, "outputMsg", js_outputMsg, nullptr, 1);
     addAccessor(context, "webViewName", js_getWebViewName, nullptr, js_setWebViewName, nullptr);
     
-    blink::WebScriptSource injectSource("window.chrome = {app:null, runtime:null}");
+	const char* injectCode =
+		"window.chrome = {app:null, runtime:null};"
+		"window.Intl = {DateTimeFormat : function (locales, options) {return {format : function(event) {return event.toLocaleString(locales, options);}};}}";
+	
+	blink::WebScriptSource injectSource(blink::WebString::fromUTF8(injectCode));
     frame->executeScript(injectSource);
 
     v8::HandleScope handleScope(isolate);
