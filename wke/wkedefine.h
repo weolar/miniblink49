@@ -932,8 +932,8 @@ public:
     ITERATOR2(void, wkePerformCookieCommand, wkeWebView webView, wkeCookieCommand command, "") \
     ITERATOR2(void, wkeSetCookieEnabled, wkeWebView webView, bool enable, "") \
     ITERATOR1(bool, wkeIsCookieEnabled, wkeWebView webView, "") \
-    ITERATOR2(void, wkeSetCookieJarPath, wkeWebView webView, const WCHAR* path, "") \
-    ITERATOR2(void, wkeSetCookieJarFullPath, wkeWebView webView, const WCHAR* path, "") \
+    ITERATOR2(void, wkeSetCookieJarPath, wkeWebView webView, const char* path, "") \
+    ITERATOR2(void, wkeSetCookieJarFullPath, wkeWebView webView, const char* path, "") \
     ITERATOR2(void, wkeSetLocalStorageFullPath, wkeWebView webView, const WCHAR* path, "") \
     ITERATOR2(void, wkeAddPluginDirectory, wkeWebView webView, const WCHAR* path, "") \
     \
@@ -1052,7 +1052,7 @@ public:
     ITERATOR1(wkePostBodyElement*, wkeNetCreatePostBodyElement, wkeWebView webView, "") \
     ITERATOR1(void, wkeNetFreePostBodyElement, wkePostBodyElement* element, "") \
     \
-	ITERATOR2(wkeWebFrameHandle, wkeGetFrameHandleByUrl, wkeWebView webView, const utf8* url, "根据URL获得对应的frame handle，url参数为全路径地址") \
+	ITERATOR2(wkeWebFrameHandle, wkeGetFrameHandleByUrl, wkeWebView webView, const utf8* url, "根据URL获得对应的frame handle，url参数为全路径地址，不存在则返回NULL") \
     ITERATOR2(bool, wkeIsMainFrame, wkeWebView webView, wkeWebFrameHandle frameId, "") \
     ITERATOR2(bool, wkeIsWebRemoteFrame, wkeWebView webView, wkeWebFrameHandle frameId, "") \
     ITERATOR1(wkeWebFrameHandle, wkeWebFrameGetMainFrame, wkeWebView webView, "") \

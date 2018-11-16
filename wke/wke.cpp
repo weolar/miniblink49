@@ -737,24 +737,24 @@ bool wkeIsCookieEnabled(wkeWebView webView)
     return webView->isCookieEnabled();
 }
 
-void wkeSetCookieJarPath(wkeWebView webView, const WCHAR* path)
+void wkeSetCookieJarPath(wkeWebView webView, const char* path)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
     if (!path)
         return;
-    std::wstring pathStr(path);
-    net::WebURLLoaderManager* manager = net::WebURLLoaderManager::sharedInstance();
-    if (!manager)
-        return;
+	net::WebURLLoaderManager* manager = net::WebURLLoaderManager::sharedInstance();
+	if (!manager)
+		return;
+    std::string pathStr(path);
     if (pathStr[pathStr.size() - 1] != L'\\' && pathStr[pathStr.size() - 1] != L'/')
         pathStr += L'\\';
-    if (!::PathIsDirectoryW(pathStr.c_str()))
+    if (!::PathIsDirectoryA(pathStr.c_str()))
         return;
-    pathStr += L"cookies.dat";
+    pathStr += "cookies.dat";
     manager->getShareCookieJar()->setCookieJarFullPath(pathStr.c_str());
 }
 
-void wkeSetCookieJarFullPath(wkeWebView webView, const WCHAR* path)
+void wkeSetCookieJarFullPath(wkeWebView webView, const char* path)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
     if (!path)

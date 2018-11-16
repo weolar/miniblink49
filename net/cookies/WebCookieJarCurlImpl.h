@@ -27,7 +27,7 @@ public:
     void setCookieFromWinINet(const blink::KURL& url, const WTF::Vector<char>& cookiesLine);
     void setToRecordFromRawHeads(const blink::KURL& url, const WTF::String& rawHeadsString);
 
-    void setCookieJarFullPath(const WCHAR* path);
+	void setCookieJarFullPath(const char* path);
 
     void deleteCookies(const blink::KURL& url, const String& cookieName);
     String getCookiesForSession(const blink::KURL&, const blink::KURL& url, bool httponly);
