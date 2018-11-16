@@ -251,7 +251,7 @@ static String getNetscapeCookieFormat(const KURL& url, const String& value)
 
 class AsynSetCookies : public net::JobHead {
 public:
-    AsynSetCookies(const CString& cookie, int* count)
+    AsynSetCookies(const CString& cookie, int* count, CURLSH* curlShareHandle)
     {
         if (!cookie.isNull() && 0 != cookie.length())
             m_cookie = cookie.data();
@@ -259,6 +259,7 @@ public:
         m_id = 0;
         m_type = kSetCookiesTask;
         m_count = count;
+        m_curlShareHandle = curlShareHandle;
 
         *m_count += 1;
     }
@@ -309,9 +310,8 @@ public:
 private:
     int* m_count;
     std::string m_cookie;
+    CURLSH* m_curlShareHandle;
 };
-
-#else
 
 #endif
 
@@ -331,7 +331,7 @@ void WebCookieJarImpl::setCookiesFromDOM(const blink::KURL&, const blink::KURL& 
         return;
 
     int count = 0;
-    AsynSetCookies* job = new AsynSetCookies(strCookie, &count);
+    AsynSetCookies* job = new AsynSetCookies(strCookie, &count, m_curlShareHandle);
     int jobId = manager->addLiveJobs(job);
     manager->getIoThread()->postTask(FROM_HERE, WTF::bind(&AsynSetCookies::setCookie, jobId));
     while (0 != count) {
@@ -553,7 +553,7 @@ WebCookieJarImpl::~WebCookieJarImpl()
         curl_share_cleanup(m_curlShareHandle);
 }
 
-void WebCookieJarImpl::setCookieJarFullPath(const WCHAR* path)
+void WebCookieJarImpl::setCookieJarFullPath(const char* path)
 {
     WTF::Mutex* mutex = sharedResourceMutex(CURL_LOCK_DATA_COOKIE);
     WTF::Locker<WTF::Mutex> locker(*mutex);
@@ -561,12 +561,7 @@ void WebCookieJarImpl::setCookieJarFullPath(const WCHAR* path)
     if (!path)
         return;
 
-    std::vector<char> jarPathA;
-    WTF::WCharToMByte(path, wcslen(path), &jarPathA, CP_ACP);
-    if (0 == jarPathA.size())
-        return;
-
-    m_cookieJarFileName = std::string(&jarPathA[0], jarPathA.size());
+    m_cookieJarFileName = path;// std::string(&jarPathA[0], jarPathA.size());
     m_dirty = true;
 }
 

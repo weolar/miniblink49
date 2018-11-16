@@ -81,6 +81,7 @@ public:
     class IoTask;
     class MainTask;
     static WebURLLoaderManager* sharedInstance();
+    static void setCookieJarFullPath(const char* path);
     int addAsynchronousJob(WebURLLoaderInternal*);
     void cancel(int jobId);
     void cancelAll();
@@ -119,11 +120,11 @@ public:
 
     blink::WebThread* getIoThread() const { return m_thread; }
 
-    void setCookieJarFullPath(const WCHAR* path);
+    //void setCookieJarFullPath(const WCHAR* path);
     WebCookieJarImpl* getShareCookieJar() const;
 
 private:
-    WebURLLoaderManager();
+    WebURLLoaderManager(const char* path);
     ~WebURLLoaderManager();
 
     bool doCancel(JobHead* jobHeead, CancelledReason cancelledReason);
@@ -144,7 +145,9 @@ private:
 
     void dispatchSynchronousJobOnIoThread(WebURLLoaderInternal* job, InitializeHandleInfo* info, CURLcode* ret, int* isCallFinish);
 
-    void initCookieSession();
+    void initCookieSession(const char* cookiePath);
+
+    static WebURLLoaderManager* m_sharedInstance;
 
     Vector<WebURLLoaderInternal*> m_resourceHandleList;
     CURLM* m_curlMultiHandle;
@@ -164,6 +167,8 @@ private:
     WTF::Mutex m_liveJobsMutex;
     WTF::HashMap<int, JobHead*> m_liveJobs;
     int m_newestJobId;
+
+    WTF::Mutex m_shutdownMutex;
 
     //WTF::HashMap<int, MainTaskArgs*> m_writeCallbackCache;
     

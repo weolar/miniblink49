@@ -92,7 +92,7 @@ namespace net {
 
 MainTaskRunner* MainTaskRunner::m_inst = nullptr;
 
-WebURLLoaderManager::WebURLLoaderManager()
+WebURLLoaderManager::WebURLLoaderManager(const char* cookiePath)
     //: m_cookieJarFileName(cookieJarPath())
     : m_certificatePath(certificatePath())
     , m_runningJobs(0)
@@ -105,7 +105,7 @@ WebURLLoaderManager::WebURLLoaderManager()
     curl_global_init(CURL_GLOBAL_ALL);
     m_curlMultiHandle = curl_multi_init(); // 初始化curl批处理句柄
 
-    initCookieSession();
+    initCookieSession(cookiePath);
 }
 
 WebURLLoaderManager::~WebURLLoaderManager()
@@ -119,6 +119,8 @@ void WebURLLoaderManager::shutdown()
 {
     m_isShutdown = true;
 
+    WTF::Locker<WTF::Mutex> locker(m_shutdownMutex);
+    
     m_liveJobsMutex.lock();
     WTF::HashMap<int, JobHead*> liveJobs = m_liveJobs;
     m_liveJobs.clear();
@@ -129,6 +131,8 @@ void WebURLLoaderManager::shutdown()
     WTF::HashMap<int, JobHead*>::iterator it = liveJobs.begin();
     for (; it != liveJobs.end(); ++it) {
         JobHead* job = it->value;
+        if (!job)
+            continue;
 
         while (true) {
             m_liveJobsMutex.lock();
@@ -147,13 +151,13 @@ void WebURLLoaderManager::shutdown()
     m_thread = nullptr;
 }
 
-void WebURLLoaderManager::initCookieSession()
+void WebURLLoaderManager::initCookieSession(const char* cookiePath)
 {
     // Curl saves both persistent cookies, and session cookies to the cookie file.
     // The session cookies should be deleted before starting a new session.
 
     //初始化共享curl句柄,用于共享cookies和dns等缓存
-    m_shareCookieJar = new WebCookieJarImpl("cookies.dat");
+    m_shareCookieJar = new WebCookieJarImpl(cookiePath);
 
     CURL* curl = curl_easy_init();
     curl_easy_setopt(curl, CURLOPT_SHARE, m_shareCookieJar->getCurlShareHandle());
@@ -173,29 +177,34 @@ CURLSH* WebURLLoaderManager::getCurlShareHandle() const
     return m_shareCookieJar->getCurlShareHandle();
 }
 
-void WebURLLoaderManager::setCookieJarFullPath(const WCHAR* path)
-{
-    m_shareCookieJar->setCookieJarFullPath(path);
-}
+// void WebURLLoaderManager::setCookieJarFullPath(const WCHAR* path)
+// {
+//     m_shareCookieJar->setCookieJarFullPath(path);
+// }
 
 WebCookieJarImpl* WebURLLoaderManager::getShareCookieJar() const
 {
     return m_shareCookieJar;
 }
 
-// const char* WebURLLoaderManager::getCookieJarFullPath() const
-// {
-//     return m_cookieJarFileName;
-// }
+WebURLLoaderManager* WebURLLoaderManager::m_sharedInstance = nullptr;
 
 WebURLLoaderManager* WebURLLoaderManager::sharedInstance()
 {
-    static WebURLLoaderManager* sharedInstance = 0;
-    if (!sharedInstance)
-        sharedInstance = new WebURLLoaderManager();
-    if (sharedInstance->isShutdown())
+    if (!m_sharedInstance)
+        m_sharedInstance = new WebURLLoaderManager("cookies.dat");
+    if (m_sharedInstance->isShutdown())
         return nullptr;
-    return sharedInstance;
+    return m_sharedInstance;
+}
+
+void WebURLLoaderManager::setCookieJarFullPath(const char* path)
+{
+    if (!m_sharedInstance) {
+        m_sharedInstance = new WebURLLoaderManager(path);
+    } else {
+        m_sharedInstance->getShareCookieJar()->setCookieJarFullPath(path);
+    }
 }
 
 void WebURLLoaderManager::appendDataToBlobCacheWhenDidDownloadData(blink::WebURLLoaderClient* client, blink::WebURLLoader* loader, const String& url, const char* data, int dataLength, int encodedDataLength)
@@ -992,7 +1001,7 @@ public:
     virtual void run() override
     {
         JobHead* jobHead = m_manager->checkJob(m_jobId);
-        if (JobHead::kLoaderInternal != jobHead->getType())
+        if (!jobHead || JobHead::kLoaderInternal != jobHead->getType())
             return;
 
         WebURLLoaderInternal* job = (WebURLLoaderInternal*)jobHead;

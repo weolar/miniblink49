@@ -20,7 +20,11 @@ public:
 
     virtual void run() override
     {
+        WTF::Locker<WTF::Mutex> locker(m_manager->m_shutdownMutex);
         if (!m_manager->downloadOnIoThread())
+            return;
+
+        if (m_manager->m_isShutdown)
             return;
 
         IoTask* task = new IoTask(m_manager, m_thread, true);
