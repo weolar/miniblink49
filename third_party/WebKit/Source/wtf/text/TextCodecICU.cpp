@@ -594,8 +594,21 @@ bool TextCodecICU::hasValidChar()
 bool TextCodecICU::toUnicode(unsigned char c, UChar& uc)
 {
     m_incrementalDataChunk[m_incrementalDataChunkLength++] = c;
-    if (m_incrementalDataChunkLength + 2 >= kIncrementalDataChunkLength || hasValidChar()) {
-        int ret = MultiByteToWideChar(GBK_CONV_CODE_PAGE, 0, (LPSTR)m_incrementalDataChunk, m_incrementalDataChunkLength, &uc, 1);
+    if (m_incrementalDataChunkLength + 2 <= kIncrementalDataChunkLength && hasValidChar()) {
+        int ret = 0;
+        unsigned char c1 = m_incrementalDataChunk[0];
+        unsigned char c2 = m_incrementalDataChunk[1];
+        m_incrementalDataChunk[1];
+        if ((0x8e == c1 && 0x22 == c2) || (0x8f == c1 && 0x22 == c2) || (0xa0 == c1 && 0x22 == c2)) {
+            // to fix:
+            // https://item.jd.com/6683207.html
+            // https://newbuz.360buyimg.com/video/4.2/video.hls.min.js
+            uc = L'\"'; 
+            ret = 1;
+        } else {
+            ret = MultiByteToWideChar(GBK_CONV_CODE_PAGE, 0, (LPSTR)m_incrementalDataChunk, m_incrementalDataChunkLength, &uc, 1);
+        }
+
         m_incrementalDataChunkLength = 0;
 
         return ret == 1 ? true : false;
