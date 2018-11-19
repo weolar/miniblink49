@@ -561,24 +561,15 @@ String TextCodecICU::decode(const char* bytes, size_t length, FlushBehavior flus
     const uint8_t* source = reinterpret_cast<const uint8_t*>(bytes);
     const uint8_t* end = source + length;
     UChar* destination = buffer.characters();
+	UChar* destination1 = destination;
 
     UChar ch;
     while (source < end) {
-#if 0
         if (toUnicode(*source, ch)) {
             *destination = ch;
             destination++;
         }
         source++;
-#else
-		int nOffset = 0;
-		if (toUnicode(*source, ch, nOffset)) {
-			*destination = ch;
-			destination++;
-		}
-		source++;
-		source += nOffset;
-#endif
     }
     buffer.shrink(destination - buffer.characters());
     return String::adopt(buffer);
@@ -605,7 +596,21 @@ bool TextCodecICU::toUnicode(unsigned char c, UChar& uc)
 {
     m_incrementalDataChunk[m_incrementalDataChunkLength++] = c;
     if (m_incrementalDataChunkLength + 2 >= kIncrementalDataChunkLength || hasValidChar()) {
+
+#if 0 //Gergul，防止不可识别的字符冲掉ansi字符
         int ret = MultiByteToWideChar(GBK_CONV_CODE_PAGE, 0, (LPSTR)m_incrementalDataChunk, m_incrementalDataChunkLength, &uc, 1);
+#else
+		int nAnsiLen = m_incrementalDataChunkLength;
+		unsigned char c1 = m_incrementalDataChunk[0];
+		unsigned char c2 = m_incrementalDataChunk[1];
+		if (c1 > 127 && c2 <= 127) {
+			m_incrementalDataChunk[0] = c2;
+			m_incrementalDataChunk[1] = 'A';
+			nAnsiLen = 1;
+		}
+		int ret = MultiByteToWideChar(GBK_CONV_CODE_PAGE, 0, (LPSTR)m_incrementalDataChunk, nAnsiLen, &uc, 1);
+#endif
+
         m_incrementalDataChunkLength = 0;
 
         return ret == 1 ? true : false;
@@ -613,46 +618,6 @@ bool TextCodecICU::toUnicode(unsigned char c, UChar& uc)
 
     return false;
 }
-
-bool TextCodecICU::toUnicode(unsigned char c, UChar& uc, int& offset)
-{
-	m_incrementalDataChunk[m_incrementalDataChunkLength++] = c;
-	if (m_incrementalDataChunkLength + 2 >= kIncrementalDataChunkLength || hasValidChar()) {
-#if 1
-		unsigned char c1 = m_incrementalDataChunk[0];
-		unsigned char c2 = m_incrementalDataChunk[1];
-		if (c1 > 127 && c2 <= 127) {
-			m_incrementalDataChunk[0] = c2;
-			m_incrementalDataChunk[1] = 'A';
-			offset = -1;
-		}
-		else {
-			offset = 0;
-		}
-		int ret = MultiByteToWideChar(GBK_CONV_CODE_PAGE, 0, (LPSTR)m_incrementalDataChunk, m_incrementalDataChunkLength, &uc, 1);
-#else
-		int ret = 0;
-		unsigned char c1 = m_incrementalDataChunk[0];
-		unsigned char c2 = m_incrementalDataChunk[1];
-		if ((0x8e == c1 && 0x22 == c2) || (0x8f == c1 && 0x22 == c2) || (0xa0 == c1 && 0x22 == c2)) {
-			// to fix:
-			// https://item.jd.com/6683207.html
-			// https://newbuz.360buyimg.com/video/4.2/video.hls.min.js
-			uc = L'\"';
-			ret = 1;
-		}
-		else {
-			ret = MultiByteToWideChar(GBK_CONV_CODE_PAGE, 0, (LPSTR)m_incrementalDataChunk, m_incrementalDataChunkLength, &uc, 1);
-		}
-#endif
-		m_incrementalDataChunkLength = 0;
-
-		return ret == 1 ? true : false;
-	}
-
-	return false;
-}
-
 
 #if defined(USING_SYSTEM_ICU)
 // U+01F9 and U+1E3F have to be mapped to xA8xBF and xA8xBC per the encoding
