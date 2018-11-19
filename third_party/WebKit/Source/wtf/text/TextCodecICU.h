@@ -77,6 +77,7 @@ private:
 
     bool hasValidChar();
     bool toUnicode(unsigned char c, UChar& uc);
+	bool toUnicode(unsigned char c, UChar& uc, int& offset);
 
 //     int m_partialSequenceSize;
 //     uint8_t m_partialSequence[kIncrementalDataChunkLength;

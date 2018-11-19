@@ -113,7 +113,7 @@ BOOL ProcessOptions(Application* app)
 	LocalFree(argv);
 #else
 	app->options.showHelp = 0;
-	wcscpy(app->options.htmlFile, L"www.baidu.com");
+	wcscpy(app->options.htmlFile, L"https://item.jd.com/6683207.html");
 	app->options.transparent = 1;
 #endif
     return TRUE;
