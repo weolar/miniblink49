@@ -1203,29 +1203,28 @@ inline void wkeSetWkeDllPath(const wchar_t* dllPath)
     kWkeDllPath = dllPath;
 }
 
-inline void wkeInitializeEx(const wkeSettings* settings)
+inline int wkeInitializeEx(const wkeSettings* settings)
 {
     HMODULE hMod = LoadLibraryW(kWkeDllPath);
+	if(hMod){
+        FN_wkeInitializeEx wkeInitializeExFunc = (FN_wkeInitializeEx)GetProcAddress(hMod, "wkeInitializeEx");
+        wkeInitializeExFunc(settings);
 
-    FN_wkeInitializeEx wkeInitializeExFunc = (FN_wkeInitializeEx)GetProcAddress(hMod, "wkeInitializeEx");
-    wkeInitializeExFunc(settings);
-
-    WKE_FOR_EACH_DEFINE_FUNCTION(WKE_GET_PTR_ITERATOR0, WKE_GET_PTR_ITERATOR1, WKE_GET_PTR_ITERATOR2, WKE_GET_PTR_ITERATOR3, \
+        WKE_FOR_EACH_DEFINE_FUNCTION(WKE_GET_PTR_ITERATOR0, WKE_GET_PTR_ITERATOR1, WKE_GET_PTR_ITERATOR2, WKE_GET_PTR_ITERATOR3, \
         WKE_GET_PTR_ITERATOR4, WKE_GET_PTR_ITERATOR5, WKE_GET_PTR_ITERATOR6, WKE_GET_PTR_ITERATOR11);
-
-    return;
+		return 1;
+	}
+    return 0;
 }
 
-inline void wkeInit()
+inline int wkeInit()
 {
-    wkeInitializeEx(((const wkeSettings*)0));
-    return;
+    return wkeInitializeEx(((const wkeSettings*)0));
 }
 
-inline void wkeInitialize()
+inline int wkeInitialize()
 {
-    wkeInitializeEx(((const wkeSettings*)0));
-    return;
+    return wkeInitializeEx(((const wkeSettings*)0));
 }
 
 #endif
