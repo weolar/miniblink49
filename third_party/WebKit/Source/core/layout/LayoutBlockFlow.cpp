@@ -288,7 +288,6 @@ void LayoutBlockFlow::layoutBlock(bool relayoutChildren)
 
     LayoutAnalyzer::BlockScope analyzer(*this);
     SubtreeLayoutScope layoutScope(*this);
-    SubtreeLayoutScopeDummy* layoutScopeDummy = (SubtreeLayoutScopeDummy*)&layoutScope;
 
     LayoutUnit previousHeight = logicalHeight();
     LayoutUnit oldLeft = logicalLeft();
