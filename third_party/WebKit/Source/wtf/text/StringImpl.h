@@ -280,43 +280,13 @@ private:
     void destroyIfNotStatic();
 
 public:
-    bool hasHash() const
-    {
-        return rawHash() != 0;
-    }
-
-    unsigned existingHash() const
-    {
-        ASSERT(hasHash());
-        return rawHash();
-    }
-
-    unsigned hash() const
-    {
-        if (hasHash())
-            return existingHash();
-        return hashSlowCase();
-    }
-
-    ALWAYS_INLINE bool hasOneRef() const
-    {
-        return m_refCount == 1;
-    }
-
-    ALWAYS_INLINE void ref()
-    {
-        ++m_refCount;
-    }
-
-    ALWAYS_INLINE void deref()
-    {
-        if (hasOneRef()) {
-            destroyIfNotStatic();
-            return;
-        }
-
-        --m_refCount;
-    }
+    bool StringImpl::hasHash() const;
+    unsigned StringImpl::existingHash() const;
+    unsigned hash() const;
+    bool hasOneRef() const;
+    void ref();
+    void deref();
+    int getRef();
 
     static StringImpl* empty();
     static StringImpl* empty16Bit();
@@ -437,6 +407,9 @@ public:
     ALWAYS_INLINE static StringStats& stringStats() { return m_stringStats; }
 #endif
     static const UChar latin1CaseFoldTable[256];
+
+    void setIsUnuse(int val);
+    int getIsUnuse();
 
 private:
     template<typename CharType> static size_t allocationSize(unsigned length)

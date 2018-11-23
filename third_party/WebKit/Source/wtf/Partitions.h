@@ -31,66 +31,33 @@
 #ifndef Partitions_h
 #define Partitions_h
 
-#include "wtf/PartitionAlloc.h"
 #include "wtf/WTF.h"
 #include "wtf/WTFExport.h"
+#include "wtf/PartitionAlloc.h"
+#include <string.h>
 
 namespace WTF {
 
 class WTF_EXPORT Partitions {
 public:
-    static void initialize();
-    // TODO(bashi): Remove this function and make initialize() take
-    // HistogramEnumerationFunction when we can make sure that WTF::initialize()
-    // is called before using this class.
-    static void setHistogramEnumeration(HistogramEnumerationFunction);
+    typedef void (*ReportPartitionAllocSizeFunction)(size_t);
+
+    // Name of allocator used by tracing for marking sub-allocations while take
+    // memory snapshots.
+    static const char* const kAllocatedObjectPoolName;
+
+    static void initialize(ReportPartitionAllocSizeFunction);
     static void shutdown();
-    ALWAYS_INLINE static PartitionRootGeneric* bufferPartition()
-    {
-        // TODO(haraken): This check is needed because some call sites allocate
-        // Blink things before WTF::initialize(). We should fix those call sites
-        // and remove the check.
-        if (UNLIKELY(!s_initialized))
-            initialize();
-        return m_bufferAllocator.root();
-    }
 
-    ALWAYS_INLINE static PartitionRootGeneric* fastMallocPartition()
-    {
-        // TODO(haraken): This check is needed because some call sites allocate
-        // Blink things before WTF::initialize(). We should fix those call sites
-        // and remove the check.
-        if (UNLIKELY(!s_initialized))
-            initialize();
-        return m_fastMallocAllocator.root();
-    }
+    static PartitionRootGeneric* bufferPartition();
+    static PartitionRootGeneric* fastMallocPartition();
 
-    ALWAYS_INLINE static PartitionRoot* objectModelPartition()
-    {
-        ASSERT(s_initialized);
-        return m_objectModelAllocator.root();
-    }
-    ALWAYS_INLINE static PartitionRoot* layoutPartition()
-    {
-        ASSERT(s_initialized);
-        return m_layoutAllocator.root();
-    }
+    static PartitionRoot* nodePartition();
+    static PartitionRoot* layoutPartition();
 
-    static size_t currentDOMMemoryUsage()
-    {
-        ASSERT(s_initialized);
-        return m_objectModelAllocator.root()->totalSizeOfCommittedPages;
-    }
+    static size_t currentDOMMemoryUsage();
 
-    static size_t totalSizeOfCommittedPages()
-    {
-        size_t totalSize = 0;
-        totalSize += m_fastMallocAllocator.root()->totalSizeOfCommittedPages;
-        totalSize += m_bufferAllocator.root()->totalSizeOfCommittedPages;
-        totalSize += m_objectModelAllocator.root()->totalSizeOfCommittedPages;
-        totalSize += m_layoutAllocator.root()->totalSizeOfCommittedPages;
-        return totalSize;
-    }
+    static size_t totalSizeOfCommittedPages();
 
     static void decommitFreeableMemory();
 
@@ -98,14 +65,32 @@ public:
 
     static void dumpMemoryStats(PartitionStatsDumper*);
 
+    static void* bufferMalloc(size_t n, const char* typeName);
+    static void bufferFree(void* p);
+    static void* bufferRealloc(void* p, size_t n, const char* type_name);
+    static size_t bufferActualSize(size_t n);
+    static void handleOutOfMemory();
+
 private:
-    static int s_initializationLock;
+    static SpinLock s_initializationLock;
     static bool s_initialized;
+
+    // We have the following four partitions.
+    //   - LayoutObject partition: A partition to allocate LayoutObjects.
+    //     We prepare a dedicated partition for LayoutObjects because they
+    //     are likely to be a source of use-after-frees. Another reason
+    //     is for performance: As LayoutObjects are guaranteed to only be used
+    //     by the main thread, we can bypass acquiring a lock. Also we can
+    //     improve memory locality by putting LayoutObjects together.
+    //   - Buffer partition: A partition to allocate objects that have a strong
+    //     risk where the length and/or the contents are exploited from user
+    //     scripts. Vectors, HashTables, ArrayBufferContents and Strings are
+    //     allocated in the buffer partition.
+    //   - Fast malloc partition: A partition to allocate all other objects.
     static PartitionAllocatorGeneric m_fastMallocAllocator;
     static PartitionAllocatorGeneric m_bufferAllocator;
-    static SizeSpecificPartitionAllocator<3328> m_objectModelAllocator;
     static SizeSpecificPartitionAllocator<1024> m_layoutAllocator;
-    static HistogramEnumerationFunction m_histogramEnumeration;
+    static ReportPartitionAllocSizeFunction m_reportSizeFunction;
 };
 
 } // namespace WTF
