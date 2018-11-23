@@ -1357,6 +1357,9 @@ bool FrameLoader::shouldInterruptLoadForXFrameOptions(const String& content, con
 {
     UseCounter::count(m_frame->domWindow()->document(), UseCounter::XFrameOptions);
 
+    if (!RuntimeEnabledFeatures::cspCheckEnabled())
+        return false;
+
     Frame* topFrame = m_frame->tree().top();
     if (m_frame == topFrame)
         return false;

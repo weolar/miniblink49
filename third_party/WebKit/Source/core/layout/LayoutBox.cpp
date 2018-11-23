@@ -2420,6 +2420,11 @@ bool LayoutBox::skipContainingBlockForPercentHeightCalculation(const LayoutBox* 
     return document().inQuirksMode() && !containingBlock->isTableCell() && !containingBlock->isOutOfFlowPositioned() && containingBlock->style()->logicalHeight().isAuto();
 }
 
+static bool isFlexItem(const LayoutBox& box)
+{
+    return !box.isInline() && !box.isFloatingOrOutOfFlowPositioned() && box.parent() && box.parent()->isFlexibleBox();
+}
+
 LayoutUnit LayoutBox::computePercentageLogicalHeight(const Length& height) const
 {
     LayoutUnit availableHeight = -1;
@@ -2445,8 +2450,14 @@ LayoutUnit LayoutBox::computePercentageLogicalHeight(const Length& height) const
 
     bool includeBorderPadding = isTable();
 
+    LayoutUnit stretchedFlexHeight(-1);
+    if (isFlexItem(*cb))
+        stretchedFlexHeight = toLayoutFlexibleBox(cb->parent())->childLogicalHeightForPercentageResolution(*cb);
+
     if (isHorizontalWritingMode() != cb->isHorizontalWritingMode()) {
         availableHeight = containingBlockChild->containingBlockLogicalWidthForContent();
+    } else if (stretchedFlexHeight != LayoutUnit(-1)) {
+        availableHeight = stretchedFlexHeight;
     } else if (hasOverrideContainingBlockLogicalHeight()) {
         availableHeight = overrideContainingBlockContentLogicalHeight();
     } else if (cb->isTableCell()) {

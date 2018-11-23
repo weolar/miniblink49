@@ -182,9 +182,9 @@ FloatQuad LayoutGeometryMap::mapToContainer(const FloatRect& rect, const LayoutB
                 // weolar
                 IntRect a1 = enclosingIntRect(layoutObjectMappedResult);
                 IntRect a2 = enclosingIntRect(result.boundingBox());
-                DebugBreak();
+                //DebugBreak();
             }
-            ASSERT(enclosingIntRect(layoutObjectMappedResult) == enclosingIntRect(result.boundingBox()));
+            //ASSERT(enclosingIntRect(layoutObjectMappedResult) == enclosingIntRect(result.boundingBox()));
         }
     }
 #endif

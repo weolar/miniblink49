@@ -149,7 +149,7 @@ static SelectionPaintInvalidationMap* selectionPaintInvalidationMap = nullptr;
 void* LayoutObject::operator new(size_t sz)
 {
     ASSERT(isMainThread());
-    return partitionAlloc(WTF::Partitions::layoutPartition(), sz);
+    return partitionAlloc(WTF::Partitions::layoutPartition(), sz, "LayoutObject::operator new");
 }
 
 void LayoutObject::operator delete(void* ptr)
@@ -3322,15 +3322,6 @@ void LayoutObject::setIsSlowRepaintObject(bool isSlowRepaintObject)
 void LayoutObject::setSelfNeedsLayout(bool b)
 {
     m_bitfields.setSelfNeedsLayout(b);
-    // rt_rt_
-    Node* n = node();
-    if (n && n->isElementNode()) {
-        Element* e = (Element*)n;
-        String id = e->getIdAttribute();
-        if (WTF::kNotFound != id.find("rt_rt_")) {
-            OutputDebugStringA("");
-        }
-    }
 }
 
 void LayoutObject::setNeedsPositionedMovementLayout()
