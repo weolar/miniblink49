@@ -750,7 +750,14 @@ void wkeSetCookieJarPath(wkeWebView webView, const WCHAR* path)
     if (!::PathIsDirectoryW(pathStr.c_str()))
         return;
     pathStr += L"cookies.dat";
-    manager->getShareCookieJar()->setCookieJarFullPath(pathStr.c_str());
+
+    std::vector<char> pathStrA;
+    WTF::WCharToMByte(pathStr.c_str(), pathStr.size(), &pathStrA, CP_ACP);
+    if (0 == pathStrA.size())
+        return;
+    pathStrA.push_back('\0');
+
+    manager->getShareCookieJar()->setCookieJarFullPath(&pathStrA[0]);
 }
 
 void wkeSetCookieJarFullPath(wkeWebView webView, const WCHAR* path)
@@ -758,10 +765,13 @@ void wkeSetCookieJarFullPath(wkeWebView webView, const WCHAR* path)
     wke::checkThreadCallIsValid(__FUNCTION__);
     if (!path)
         return;
-    net::WebURLLoaderManager* manager = net::WebURLLoaderManager::sharedInstance();
-    if (!manager)
+
+    std::vector<char> jarPathA;
+    WTF::WCharToMByte(path, wcslen(path), &jarPathA, CP_ACP);
+    if (0 == jarPathA.size())
         return;
-    manager->getShareCookieJar()->setCookieJarFullPath(path);
+    jarPathA.push_back('\0');
+    net::WebURLLoaderManager::setCookieJarFullPath(&jarPathA[0]);
 }
 
 String* kLocalStorageFullPath = nullptr;
