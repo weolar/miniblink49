@@ -138,7 +138,7 @@ private:
 #if ENABLE(ASSERT)
     bool m_hasBeenDisposed;
 #endif
-#ifdef IMPLEMENTED_NEWEST_BLINK
+#ifndef MINIBLINK_NO_DEVTOOLS
     RefPtrWillBeMember<InstrumentingAgents> m_instrumentingAgents;
     OwnPtrWillBeMember<InjectedScriptManager> m_injectedScriptManager;
     OwnPtrWillBeMember<InspectorResourceContentLoader> m_resourceContentLoader;

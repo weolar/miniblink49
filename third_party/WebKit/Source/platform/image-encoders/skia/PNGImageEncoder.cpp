@@ -37,7 +37,7 @@
 #include "platform/geometry/IntSize.h"
 #include "platform/graphics/ImageBuffer.h"
 extern "C" {
-#include "png.h"
+#include "libpng/png.h"
 }
 
 namespace blink {

@@ -44,9 +44,11 @@ void WebURLLoaderImpl::loadAsynchronously(
     blink::WebURLLoaderClient* client)
 {
     bool canLoad = false;
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
     m_cefSchemeLoader = CefSchemeLoaderImpl::LoadAsynchronously(request, client, this, canLoad);
     if (canLoad)
         return;
+#endif
 
     m_loaderWinINet = new net::WebURLLoaderWinINet(this);
     m_loaderWinINet->loadAsynchronously(request, client);
@@ -54,9 +56,10 @@ void WebURLLoaderImpl::loadAsynchronously(
 
 void WebURLLoaderImpl::cancel()
 {
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
     if (m_cefSchemeLoader)
         m_cefSchemeLoader->Cancel();
-
+#endif
     ASSERT(m_loaderWinINet);
     m_loaderWinINet->cancel();
 }

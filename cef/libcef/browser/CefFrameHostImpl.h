@@ -11,6 +11,7 @@ struct Cef_Response_Params;
 
 namespace blink {
 class WebLocalFrame;
+class WebFrame;
 }
 
 // Implementation of CefFrame. CefFrameHostImpl objects are owned by the
@@ -20,12 +21,12 @@ class CefFrameHostImpl : public CefFrame {
 public:
 //     CefFrameHostImpl(CefBrowserHostImpl* browser, blink::WebLocalFrame* frame);
 //     CefFrameHostImpl(CefBrowserHostImpl* browser, blink::WebLocalFrame* frame, /*const CefString& url,*/ const CefString& name);
-	CefFrameHostImpl(CefBrowserHostImpl* browser,
-		int64 frameId,
-		bool isMainFrame,
-		const CefString& url,
-		const CefString& name,
-		int64 parentFrameId);
+    CefFrameHostImpl(CefBrowserHostImpl* browser,
+        int64 frameId,
+        bool isMainFrame,
+        const CefString& url,
+        const CefString& name,
+        int64 parentFrameId);
     ~CefFrameHostImpl() override {}
 
     // CefFrame methods
@@ -70,9 +71,10 @@ public:
     // Detach the frame from the browser.
     void Detach() {}
 
-	static int64 GetFrameIdByBlinkFrame(const blink::WebLocalFrame* frame);
-	static WTF::String GetFrameNameByBlinkFrame(const blink::WebLocalFrame* frame);
-	
+    static int64 GetFrameIdByBlinkFrame(const blink::WebLocalFrame* frame);
+    static int64 GetFrameIdByBlinkFrame(const blink::WebFrame* frame);
+    static WTF::String GetFrameNameByBlinkFrame(const blink::WebLocalFrame* frame);
+    
 protected:
     void Init(CefBrowserHostImpl* browser, blink::WebLocalFrame* frame, /*const CefString& url,*/ const CefString& name);
     void SendCommand(const WTF::String& commandName, Cef_Response_Params* response);

@@ -5,14 +5,14 @@
 #include "third_party/skia/include/core/SkCanvas.h"
 #include "cc/blink/WebLayerImpl.h"
 #include "cc/raster/SkBitmapRefWrap.h"
-#include "cc/raster/RasterTaskWorkerThreadPool.h"
+#include "cc/raster/RasterTask.h"
 
 namespace cc_blink {
 
 WebImageLayerImpl::WebImageLayerImpl()
     : m_bitmap(new cc::SkBitmapRefWrap())
 {
-	m_bitmap->ref();
+    m_bitmap->ref();
     m_layer = new WebLayerImpl(this);
     m_layer->setDrawsContent(true);
 }
@@ -40,18 +40,18 @@ blink::WebLayer* WebImageLayerImpl::layer()
 
 void WebImageLayerImpl::setImageBitmap(const SkBitmap& bitmap)
 {
-	if (!m_bitmap || (m_bitmap->get() && bitmap.pixelRef() && bitmap.pixelRef() == m_bitmap->get()->pixelRef()))
-		return;
+    if (!m_bitmap || (m_bitmap->get() && bitmap.pixelRef() && bitmap.pixelRef() == m_bitmap->get()->pixelRef()))
+        return;
 
-	m_bitmap->deref();
+    m_bitmap->deref();
 
-	SkBitmap* bitmapCopy = new SkBitmap(bitmap);
+    SkBitmap* bitmapCopy = new SkBitmap(bitmap);
 
-	m_bitmap = new cc::SkBitmapRefWrap();
-	m_bitmap->set(bitmapCopy);
-	m_bitmap->ref();
+    m_bitmap = new cc::SkBitmapRefWrap();
+    m_bitmap->set(bitmapCopy);
+    m_bitmap->ref();
 
-    m_layer->setNeedsFullTreeSync();
+    //m_layer->setNeedsFullTreeSync();
 }
 
 void WebImageLayerImpl::updataAndPaintContents(blink::WebCanvas* canvas, const blink::IntRect& clip)
@@ -61,9 +61,9 @@ void WebImageLayerImpl::updataAndPaintContents(blink::WebCanvas* canvas, const b
 
 void WebImageLayerImpl::recordDraw(cc::RasterTaskGroup* taskGroup)
 {
-	if (m_bitmap->get()) {
-		taskGroup->postImageLayerAction(m_layer->id(), m_bitmap);
-	}
+    if (m_bitmap->get()) {
+        taskGroup->postImageLayerAction(m_layer->id(), m_bitmap);
+    }
 }
 
 void WebImageLayerImpl::drawToCanvas(blink::WebCanvas* canvas, const blink::IntRect& clip)

@@ -2,6 +2,7 @@
 #ifndef _MEMORY_
 #define _MEMORY_
 #include <xmemory>
+#include <PlatformSTL.h>
 
 #ifdef  _MSC_VER
 #pragma pack(push,8)

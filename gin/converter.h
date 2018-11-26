@@ -10,8 +10,9 @@
 
 #include "base/logging.h"
 #include "base/strings/string_piece.h"
+#include "base/values.h"
 #include "gin/gin_export.h"
-#include "v8/include/v8.h"
+#include "v8.h"
 
 namespace gin {
 
@@ -116,6 +117,11 @@ struct GIN_EXPORT Converter<std::string> {
 };
 
 template<>
+struct GIN_EXPORT Converter<const char*> {
+    static v8::Local<v8::Value> ToV8(v8::Isolate* isolate, const char* val);
+};
+
+template<>
 struct GIN_EXPORT Converter<v8::Local<v8::Function> > {
   static bool FromV8(v8::Isolate* isolate,
                      v8::Local<v8::Value> val,
@@ -129,6 +135,11 @@ struct GIN_EXPORT Converter<v8::Local<v8::Object> > {
   static bool FromV8(v8::Isolate* isolate,
                      v8::Local<v8::Value> val,
                      v8::Local<v8::Object>* out);
+};
+
+template<>
+struct GIN_EXPORT Converter<v8::Local<v8::Primitive> > {
+    static v8::Local<v8::Value> ToV8(v8::Isolate* isolate, v8::Local<v8::Primitive> val);
 };
 
 template<>
@@ -156,6 +167,48 @@ struct GIN_EXPORT Converter<v8::Local<v8::Value> > {
   static bool FromV8(v8::Isolate* isolate,
                      v8::Local<v8::Value> val,
                      v8::Local<v8::Value>* out);
+};
+
+// template<>
+// struct GIN_EXPORT Converter<v8::Function> {
+//     static v8::Local<v8::Value> ToV8(v8::Isolate* isolate, const v8::Function* val);
+//     static bool FromV8(v8::Isolate* isolate, v8::Local<v8::Value> val, v8::Function** out);
+// };
+
+template<>
+struct GIN_EXPORT Converter<v8::Local<v8::String> > {
+    static v8::Local<v8::Value> ToV8(v8::Isolate* isolate,
+        v8::Local<v8::String> val);
+    static bool FromV8(v8::Isolate* isolate,
+        v8::Local<v8::Value> val,
+        v8::Local<v8::String>* out);
+};
+
+template<>
+struct GIN_EXPORT Converter<v8::Local<v8::Array> > {
+    static v8::Local<v8::Value> ToV8(v8::Isolate* isolate,
+        v8::Local<v8::Array> val);
+    static bool FromV8(v8::Isolate* isolate,
+        v8::Local<v8::Value> val,
+        v8::Local<v8::Array>* out);
+};
+
+template<>
+struct GIN_EXPORT Converter<base::ListValue> {
+    static v8::Local<v8::Value> ToV8(v8::Isolate* isolate,
+        const base::ListValue& val);
+    static bool FromV8(v8::Isolate* isolate,
+        v8::Local<v8::Value> val,
+        base::ListValue* out);
+};
+
+template<>
+struct GIN_EXPORT Converter<base::DictionaryValue> {
+    static v8::Local<v8::Value> ToV8(v8::Isolate* isolate,
+        const base::DictionaryValue& val);
+    static bool FromV8(v8::Isolate* isolate,
+        v8::Local<v8::Value> val,
+        base::DictionaryValue* out);
 };
 
 template<typename T>
@@ -212,6 +265,8 @@ template<typename T>
 v8::MaybeLocal<v8::Value> ConvertToV8(v8::Local<v8::Context> context, T input) {
   return Converter<T>::ToV8(context, input);
 }
+
+v8::Local<v8::Value> ConvertToV8(v8::Isolate* isolate, const base::ListValue& input);
 
 template<typename T, bool = ToV8ReturnsMaybe<T>::value> struct ToV8Traits;
 

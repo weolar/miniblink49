@@ -29,6 +29,11 @@ int toUpper(UChar* result, int resultLength, const UChar* src, int srcLength, bo
     return i;
 }
 
+bool isChineseUtf16Char(UChar c)
+{
+    return 0x4E00 <= c && c <= 0x9Fff;
+}
+
 } // namespace Unicode
 } // namespace WTF
 /*!

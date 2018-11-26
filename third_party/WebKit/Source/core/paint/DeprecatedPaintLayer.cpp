@@ -1080,7 +1080,7 @@ LayoutRect DeprecatedPaintLayer::paintingExtent(const DeprecatedPaintLayer* root
 
 void* DeprecatedPaintLayer::operator new(size_t sz)
 {
-    return partitionAlloc(WTF::Partitions::layoutPartition(), sz);
+    return partitionAlloc(WTF::Partitions::layoutPartition(), sz, "DeprecatedPaintLayer::operator new");
 }
 
 void DeprecatedPaintLayer::operator delete(void* ptr)
@@ -1396,7 +1396,13 @@ void DeprecatedPaintLayer::updateStackingNode()
 {
     ASSERT(!m_stackingNode);
     if (requiresStackingNode())
-        m_stackingNode = adoptPtr(new DeprecatedPaintLayerStackingNode(*layoutObject()));
+        m_stackingNode = adoptPtr(new DeprecatedPaintLayerStackingNode(this));
+}
+
+bool DeprecatedPaintLayer::isInTopLayer() const
+{
+    Node* node = layoutObject()->node();
+    return node && node->isElementNode() && toElement(node)->isInTopLayer();
 }
 
 void DeprecatedPaintLayer::updateScrollableArea()

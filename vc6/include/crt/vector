@@ -5,6 +5,8 @@
 #include <memory>
 #include <stdexcept>
 #include <xutility>
+#include <initializer_list>
+#include <type_traits>
 
 #ifdef  _MSC_VER
 #pragma pack(push,8)
@@ -73,6 +75,42 @@ public:
 				_First);
 			_End = _Last; }
 		return (*this); }
+    //////////////////////////////////////////////////////////////////////////
+    vector(initializer_list<_Ty> _Ilist, const _A& _Al = _A())
+        : allocator(_Al), _First(0), _Last(0), _End(0) { // construct from initializer_list       
+        for (const _Ty* it = _Ilist.begin(); it != _Ilist.end(); ++it) // initialize with [_First, _Last)
+            push_back(*it);
+    }
+
+    _Myt& operator=(initializer_list<value_type> _Ilist) { // assign initializer_list
+        assign(_Ilist.begin(), _Ilist.end());
+        return (*this);
+    }
+
+    vector(_Myt&& _Right)
+        : allocator(_STD move(_Right.allocator))
+        , _First(0), _Last(0), _End(0) {	// construct list by moving _Right
+        _Assign_rv(_STD forward<_Myt>(_Right));
+    }
+
+    vector(_Myt&& _Right, const _A& _Al)
+        : allocator(_Al)
+        , _First(0), _Last(0), _End(0) {	// construct list by moving _Right, allocator
+        _Assign_rv(_STD forward<_Myt>(_Right));
+    }
+
+    _Myt& operator=(_Myt&& _Right) { // assign by moving _Right
+        if (this != &_Right) { // different, assign it
+            clear();
+            _Assign_rv(_STD forward<_Myt>(_Right));
+        }
+        return (*this);
+    }
+
+    void _Assign_rv(_Myt&& _Right) { // swap with empty *this, same allocator
+        swap(_Right);
+    }
+    //////////////////////////////////////////////////////////////////////////
 	void reserve(size_type _N)
 		{if (capacity() < _N)
 			{iterator _S = allocator.allocate(_N, (void *)0);
@@ -121,6 +159,15 @@ public:
 		{if (size() <= _P)
 			_Xran();
 		return (*(begin() + _P)); }
+
+  _Tptr data() {	// return address of first element
+    return _First;
+  }
+
+  _Ctptr data() const {	// return address of first element
+    return _First;
+  }
+
 	const_reference operator[](size_type _P) const
 		{return (*(begin() + _P)); }
 	reference operator[](size_type _P)

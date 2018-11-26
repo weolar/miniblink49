@@ -74,7 +74,7 @@ class RefCountedBase {
 
   ~RefCountedBase() {
   #ifndef NDEBUG
-    DCHECK(in_dtor_) << "RefCounted object deleted without calling Release()";
+    DCHECK(in_dtor_);// << "RefCounted object deleted without calling Release()";
   #endif
   }
 

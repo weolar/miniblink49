@@ -57,8 +57,12 @@ String NavigatorID::appVersion()
     return agent.substring(agent.find('/') + 1);
 }
 
+char* g_navigatorPlatform = nullptr;
+
 String NavigatorID::platform()
 {
+    if (g_navigatorPlatform)
+        return g_navigatorPlatform;
 #if OS(MACOSX)
     // Match Safari and Mozilla on Mac x86.
     return "MacIntel";

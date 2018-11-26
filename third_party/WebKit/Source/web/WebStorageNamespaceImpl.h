@@ -37,7 +37,7 @@ class WebStorageNamespaceImpl : public blink::WebStorageNamespace {
 public:
     // The default constructor creates a local storage namespace, the second
     // constructor should be used for session storage namepaces.
-    WebStorageNamespaceImpl(int64 namespaceId, DOMStorageMap& cachedArea);
+    WebStorageNamespaceImpl(int64 namespaceId, DOMStorageMap* cachedArea, bool isLocal);
     virtual ~WebStorageNamespaceImpl();
 
     // See WebStorageNamespace.h for documentation on these functions.
@@ -46,8 +46,9 @@ public:
     virtual bool isSameNamespace(const WebStorageNamespace&) const override;
 
 private:
-    DOMStorageMap& m_cachedArea;
+    DOMStorageMap* m_cachedArea;
     int64 m_namespaceId;
+    bool m_isLocal;
 };
 
 }  // namespace content

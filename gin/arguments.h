@@ -20,6 +20,8 @@ class GIN_EXPORT Arguments {
   explicit Arguments(const v8::FunctionCallbackInfo<v8::Value>& info);
   ~Arguments();
 
+  const v8::FunctionCallbackInfo<v8::Value>* getInfo() const { return info_; }
+
   template<typename T>
   bool GetHolder(T* out) {
     return ConvertFromV8(isolate_, info_->Holder(), out);

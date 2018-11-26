@@ -1,21 +1,30 @@
-
+﻿
 #if USING_VC6RT == 1
 
 #include <string>
 #include <vector>
 #include <sstream>
-
-#include <algorithmvc6.h>
+#include <algorithm>
+#include <limits>
+#include <limits.h>
+#include <windows.h>
 
 extern "C" double fmod(double _Xx, double _Yx);
+
+#if !defined(_WIN64)
+void __cdecl operator delete(void * pv, const std::nothrow_t&)
+{
+    ::delete(pv);
+}
+#endif
 
 namespace std {
 
 int fpclassify(double x)
 {
-    union { double d; uint64_t u; }u = { x };
+    union { double d; unsigned __int64 u; }u = { x };
 
-    uint32_t exp = (uint32_t)((u.u & 0x7fffffffffffffffULL) >> 52);
+    unsigned __int32 exp = (unsigned __int32)((u.u & 0x7fffffffffffffffULL) >> 52);
 
     if (0 == exp) {
         if (u.u & 0x000fffffffffffffULL)
@@ -56,49 +65,49 @@ double asin(double x)
 
 bool isFloatIEEE754Negative(float f)
 {
-	float d = f;
-	if (sizeof(float) == sizeof(unsigned short int)) {
-		return (*(unsigned short int *)(&d) >> (sizeof(unsigned short int)*CHAR_BIT - 1) == 1);
-	}
-	else if (sizeof(float) == sizeof(unsigned int)) {
-		return (*(unsigned int *)(&d) >> (sizeof(unsigned int)*CHAR_BIT - 1) == 1);
-	}
-	else if (sizeof(float) == sizeof(unsigned long)) {
-		return (*(unsigned long *)(&d) >> (sizeof(unsigned long)*CHAR_BIT - 1) == 1);
-	}
-	else if (sizeof(float) == sizeof(unsigned char)) {
-		return (*(unsigned char *)(&d) >> (sizeof(unsigned char)*CHAR_BIT - 1) == 1);
-	}
-	else if (sizeof(float) == sizeof(unsigned long long)) {
-		return (*(unsigned long long *)(&d) >> (sizeof(unsigned long long)*CHAR_BIT - 1) == 1);
-	}
-	return false; // Should never get here if you've covered all the potential types!
+    float d = f;
+    if (sizeof(float) == sizeof(unsigned short int)) {
+        return (*(unsigned short int *)(&d) >> (sizeof(unsigned short int)*CHAR_BIT - 1) == 1);
+    }
+    else if (sizeof(float) == sizeof(unsigned int)) {
+        return (*(unsigned int *)(&d) >> (sizeof(unsigned int)*CHAR_BIT - 1) == 1);
+    }
+    else if (sizeof(float) == sizeof(unsigned long)) {
+        return (*(unsigned long *)(&d) >> (sizeof(unsigned long)*CHAR_BIT - 1) == 1);
+    }
+    else if (sizeof(float) == sizeof(unsigned char)) {
+        return (*(unsigned char *)(&d) >> (sizeof(unsigned char)*CHAR_BIT - 1) == 1);
+    }
+    else if (sizeof(float) == sizeof(unsigned long long)) {
+        return (*(unsigned long long *)(&d) >> (sizeof(unsigned long long)*CHAR_BIT - 1) == 1);
+    }
+    return false; // Should never get here if you've covered all the potential types!
 }
 
 bool signbit(float x)
 {
-	return isFloatIEEE754Negative(x);
+    return isFloatIEEE754Negative(x);
 }
 
 int _dsign(double x)
 {
-	enum { double_per_long = sizeof(double) / sizeof(long) };
-	enum { long_msb = sizeof(long) * CHAR_BIT - 1 };
-	union { double d; unsigned long i[double_per_long]; } u;
-	unsigned long l;
+    enum { double_per_long = sizeof(double) / sizeof(long) };
+    enum { long_msb = sizeof(long) * CHAR_BIT - 1 };
+    union { double d; unsigned long i[double_per_long]; } u;
+    unsigned long l;
 
-	u.d = x;
+    u.d = x;
 #ifdef WORDS_BIGENDIAN
-	l = u.i[0];
+    l = u.i[0];
 #else
-	l = u.i[double_per_long - 1];
+    l = u.i[double_per_long - 1];
 #endif
-	return (int)(l >> long_msb);
+    return (int)(l >> long_msb);
 }
 
 bool signbit(double x)
 {
-	return _dsign(x) != 0;
+    return _dsign(x) != 0;
 }
 
 double atan(double x)
@@ -113,10 +122,10 @@ double atan2(double x, double y)
 
 bool isless(double x, double y)
 {
-	if (!signbit(x) && signbit(y)) // + -
-		return false;
-	if (signbit(x) && !signbit(y)) // - +
-		return true;
+    if (!signbit(x) && signbit(y)) // + -
+        return false;
+    if (signbit(x) && !signbit(y)) // - +
+        return true;
     return x < y;
 }
 
@@ -127,42 +136,12 @@ double exp(double x)
 
 int isinf(double d)
 {
-	return fpclassify(d) == FP_INFINITE;
-//     int expon = 0;
-//     double val = frexp(d, &expon);
-//     if (expon == 1025) {
-//         if (val == 0.5) {
-//             return 1;
-//         } else if (val == -0.5) {
-//             return -1;
-//         } else {
-//             return 0;
-//         }
-//     } else {
-//         return 0;
-//     }
+    return fpclassify(d) == FP_INFINITE;
 }
 
 int isnan(double d)
 {
-	return fpclassify(d) == FP_NAN;
-
-//     int expon = 0;
-//     double val = frexp(d, &expon);
-//     if (expon == 1025) {
-//         if (val == 0.5) {
-//             return 0;
-//         }
-//         else if (val == -0.5) {
-//             return 0;
-//         }
-//         else {
-//             return 1;
-//         }
-//     }
-//     else {
-//         return 0;
-//     }
+    return fpclassify(d) == FP_NAN;
 }
 
 double log(double val)
@@ -183,7 +162,7 @@ double pow(int base, double exp)
 
 double __cdecl copysign(double x, double y)
 {
-    union { double f; uint64_t u; } ux, uy;
+    union { double f; unsigned __int64 u; } ux, uy;
 
     ux.f = x;
     uy.f = y;
@@ -194,7 +173,36 @@ double __cdecl copysign(double x, double y)
     return ux.f;
 }
 
-int64 abs(int64 val)
+__int64 abs(__int64 val)
+{
+    return (val > 0 ? val : -val);
+}
+
+unsigned __int64 abs(unsigned __int64 val)
+{
+    return val;
+}
+
+int abs(int val)
+{
+    return (val > 0 ? val : -val);
+}
+
+unsigned int abs(unsigned int val)
+{
+    return val;
+}
+
+double abs(double val) {
+    return (val > 0 ? val : -val);
+}
+
+float abs(float val) {
+    return (val > 0 ? val : -val);
+}
+
+
+double fabs(double val)
 {
     return (val > 0 ? val : -val);
 }
@@ -242,6 +250,31 @@ double tan(double val)
 double ldexp(double x, int exponent)
 {
     return ::ldexp(x, exponent);
+}
+
+bool isfinite(__int64 arg)
+{
+    return arg == arg && arg != std::numeric_limits<__int64>::infinity() && arg != -std::numeric_limits<__int64>::infinity();
+}
+
+bool isfinite(int arg)
+{
+    return arg == arg && arg != std::numeric_limits<int>::infinity() && arg != -std::numeric_limits<int>::infinity();
+}
+
+bool isfinite(unsigned int arg)
+{
+    return arg == arg && arg != std::numeric_limits<int>::infinity() && arg != -std::numeric_limits<int>::infinity();
+}
+
+bool isfinite(double arg)
+{
+    return arg == arg && arg != std::numeric_limits<double>::infinity() && arg != -std::numeric_limits<double>::infinity();
+}
+
+double nearbyint(double x)
+{
+  return ::nearbyint(x);
 }
 
 bool __cdecl operator != <char, char_traits<char>, allocator<char> >(basic_string<char, char_traits<char>, allocator<char> > const & a, char const * b)
@@ -332,6 +365,38 @@ bool __cdecl operator==<char, char_traits<char>, allocator<char> >(
 {
     return a.compare(b) == 0;
 }
+bool __cdecl operator==<char, char_traits<char>, allocator<char> >(
+	char const * a,
+	basic_string<char, char_traits<char>, allocator<char> > const & b) 
+{
+	return b.compare(a) == 0;
+}
+
+bool __cdecl operator!=<unsigned short, char_traits<unsigned short>, allocator<unsigned short> >(
+    basic_string<unsigned short, char_traits<unsigned short>, allocator<unsigned short> > const & a,
+    basic_string<unsigned short, char_traits<unsigned short>, allocator<unsigned short> > const & b)
+{
+    return a.compare(b) != 0;
+}
+
+basic_string<unsigned short, struct std::char_traits<unsigned short>, class std::allocator<unsigned short> > __cdecl 
+    operator+<unsigned short, char_traits<unsigned short>, allocator<unsigned short> >(
+        basic_string<unsigned short, char_traits<unsigned short>, allocator<unsigned short> > const & a,
+        basic_string<unsigned short, char_traits<unsigned short>, allocator<unsigned short> > const & b)
+{
+    wstring aCopy(a);
+    aCopy.append(b);
+    return aCopy;
+}
+
+basic_string<unsigned short, char_traits<unsigned short>, allocator<unsigned short> > __cdecl 
+    operator+<unsigned short, char_traits<unsigned short>, allocator<unsigned short> >(
+        basic_string<unsigned short, char_traits<unsigned short>, allocator<unsigned short> > const & a, unsigned short const * b)
+{
+    wstring aCopy(a);
+    aCopy.append(b);
+    return aCopy;
+}
 
 basic_string<char, char_traits<char>, class std::allocator<char> > __cdecl std::operator + <char, char_traits<char>, class std::allocator<char> >(
     basic_string<char, char_traits<char>, allocator<char> > const & a, char const * b)
@@ -341,44 +406,9 @@ basic_string<char, char_traits<char>, class std::allocator<char> > __cdecl std::
     return aCopy;
 }
 
-//////////////////////////////////////////////////////////////////////////
-
-basic_ostream<char, char_traits<char> >& __cdecl operator << <char, char_traits<char>>(
-    basic_ostream<char, char_traits<char> > & a, char const * b)
+void std::basic_string<char, std::char_traits<char>, std::allocator<char> >::clear(void)
 {
-    ostringstream aCopy;
-	size_t len = strlen(b);
-    aCopy.write(b, len);
-    a << aCopy;
-    return a;
-}
-
-basic_ostream<char, char_traits<char> > & __cdecl operator<< <char, char_traits<char>, allocator<char> >(
-    basic_ostream<char, char_traits<char> > & a, basic_string<char, char_traits<char>, allocator<char> > const & b)
-{
-    ostringstream aCopy;
-    aCopy.write(b.c_str(), b.size());
-    a << aCopy;
-    return a;
-}
-
-basic_ostream<char, char_traits<char> > & __cdecl operator<< <char, char_traits<char> >(basic_ostream<char, char_traits<char> > & a, char b)
-{
-    ostringstream aCopy;
-    char bCopy[3] = { b, 0, 0 };
-    aCopy.write(bCopy, 1);
-    a << aCopy;
-    return a;
-}
-
-basic_ostream<char, char_traits<char> > & __cdecl operator<< (basic_ostream<char, char_traits<char> > & a, __int64 b)
-{
-    ostringstream aCopy;
-    char buf[32];
-    sprintf(buf, "%I64d", b);
-    aCopy << buf;
-    a << aCopy;
-    return a;
+    _Eos(0);
 }
 
 } // std
@@ -390,16 +420,21 @@ double copysign(double x, double y)
     return std::copysign(x, y);
 }
 
+float copysignf(float number, float sign)
+{
+    return std::copysign((double)number, (double)sign);
+}
+
 double rint(double x)
 {
-    union { double d; uint64_t u; }u = { x };
-    uint64_t absux = u.u & 0x7fffffffffffffffULL;
+    union { double d; unsigned __int64 u; }u = { x };
+    unsigned __int64 absux = u.u & 0x7fffffffffffffffULL;
 
     //special case code for large int, Inf, NaN, 0
     if (absux - 1LL >= 0x4330000000000000ULL - 1LL)
         return x;
 
-    u.u = (u.u & 0x8000000000000000ULL) | 0x4330000000000000ULL;	//copysign( 0x1.0p23f, x )
+    u.u = (u.u & 0x8000000000000000ULL) | 0x4330000000000000ULL;    //copysign( 0x1.0p23f, x )
 
     x += u.d;
     x -= u.d;
@@ -446,7 +481,7 @@ long lrint(double x)
         if (result & 1L) {
             // If the trailing bit is set, we rounded the wrong way
             long step = (result >> 30) | 1L;// x < 0 ? -1 : 1
-            return result - step;			// x < 0 ? result + 1 : result - 1
+            return result - step;            // x < 0 ? result + 1 : result - 1
         }
         else {
             return result;
@@ -464,7 +499,7 @@ float nextafterf(float x, float y)
 
     if (y <= x) { // a subtraction here would risk Inf-Inf
         if (y == x)
-            return y;	//make sure sign of 0 is correct
+            return y;    //make sure sign of 0 is correct
         step = -1;
     }
 
@@ -486,23 +521,23 @@ float nextafterf(float x, float y)
 
 double nextafter(double x, double y)
 {
-    union { double d; uint64_t u; } ux = { x };
-    uint64_t	step = 1;
+    union { double d; unsigned __int64 u; } ux = { x };
+    unsigned __int64    step = 1;
 
     if (y != y || x != x)
         return x + y;
 
     if (y <= x) { // a subtraction here would risk Inf-Inf
         if (y == x)
-            return y;	//make sure sign of 0 is correct
+            return y;    //make sure sign of 0 is correct
         step = -1LL;
     }
 
     //correct for the sign
-    int64_t signMask = (int64_t)ux.u >> 63;
+    __int64 signMask = (__int64)ux.u >> 63;
     step = (step ^ signMask) - signMask;
 
-    uint64_t absux = ux.u & 0x7fffffffffffffffULL;
+    unsigned __int64 absux = ux.u & 0x7fffffffffffffffULL;
 
     if (absux == 0ULL) { // zero
         ux.d = y;
@@ -514,7 +549,7 @@ double nextafter(double x, double y)
     return ux.d;
 }
 
-typedef union { uint64_t u; double d; } du;
+typedef union { unsigned __int64 u; double d; } du;
 
 float hypotf(float x, float y)
 {
@@ -533,7 +568,7 @@ float hypotf(float x, float y)
         if (0x7ff0000000000000ULL == u[0].u || 0x7ff0000000000000ULL == u[1].u)
             return inf;
 
-        return x + y;		// NaN
+        return x + y;        // NaN
     }
 
     if (x == 0.0 || y == 0.0)
@@ -546,9 +581,9 @@ float hypotf(float x, float y)
     }
 
     //break values up into exponent and mantissa
-    int64_t largeExp = largeVal->u >> 52;
-    int64_t smallExp = smallVal->u >> 52;
-    int64_t diff = largeExp - smallExp;
+    __int64 largeExp = largeVal->u >> 52;
+    __int64 smallExp = smallVal->u >> 52;
+    __int64 diff = largeExp - smallExp;
     if (diff >= 55L)
         return largeVal->d + smallVal->d;
 
@@ -624,6 +659,11 @@ double trunc(double val)
     return result;
 }
 
+float truncf(float val)
+{
+    return trunc((double)val);
+}
+
 // extern "C" void _ultod3()
 // {
 //     DebugBreak();
@@ -645,50 +685,50 @@ double trunc(double val)
 
 extern "C" __declspec(naked) __int64 _ftol2_sse(double v)
 {
-	__asm {
-		push        ebp
-			mov         ebp, esp
-			sub         esp, 20h
-			and         esp, 0FFFFFFF0h
-			fld         st(0)
-			fst         dword ptr[esp + 18h]
-			fistp       qword ptr[esp + 10h]
-			fild        qword ptr[esp + 10h]
-			mov         edx, dword ptr[esp + 18h]
-			mov         eax, dword ptr[esp + 10h]
-			test        eax, eax
-			je          integer_QnaN_or_zero
-			arg_is_not_integer_QnaN :
-		fsubp       st(1), st
-			test        edx, edx
-			jns         positive
-			fstp        dword ptr[esp]
-			mov         ecx, dword ptr[esp]
-			xor ecx, 80000000h
-			add         ecx, 7FFFFFFFh
-			adc         eax, 0
-			mov         edx, dword ptr[esp + 14h]
-			adc         edx, 0
-			jmp         localexit
+    __asm {
+        push        ebp
+            mov         ebp, esp
+            sub         esp, 20h
+            and         esp, 0FFFFFFF0h
+            fld         st(0)
+            fst         dword ptr[esp + 18h]
+            fistp       qword ptr[esp + 10h]
+            fild        qword ptr[esp + 10h]
+            mov         edx, dword ptr[esp + 18h]
+            mov         eax, dword ptr[esp + 10h]
+            test        eax, eax
+            je          integer_QnaN_or_zero
+            arg_is_not_integer_QnaN :
+        fsubp       st(1), st
+            test        edx, edx
+            jns         positive
+            fstp        dword ptr[esp]
+            mov         ecx, dword ptr[esp]
+            xor ecx, 80000000h
+            add         ecx, 7FFFFFFFh
+            adc         eax, 0
+            mov         edx, dword ptr[esp + 14h]
+            adc         edx, 0
+            jmp         localexit
 
-			positive :
-		fstp        dword ptr[esp]
-			mov         ecx, dword ptr[esp]
-			add         ecx, 7FFFFFFFh
-			sbb         eax, 0
-			mov         edx, dword ptr[esp + 14h]
-			sbb         edx, 0
-			jmp         localexit
-			integer_QnaN_or_zero :
-		mov         edx, dword ptr[esp + 14h]
-			test        edx, 7FFFFFFFh
-			jne         arg_is_not_integer_QnaN
-			fstp        dword ptr[esp + 18h]
-			fstp        dword ptr[esp + 18h]
-			localexit :
-			leave
-			ret
-	}
+            positive :
+        fstp        dword ptr[esp]
+            mov         ecx, dword ptr[esp]
+            add         ecx, 7FFFFFFFh
+            sbb         eax, 0
+            mov         edx, dword ptr[esp + 14h]
+            sbb         edx, 0
+            jmp         localexit
+            integer_QnaN_or_zero :
+        mov         edx, dword ptr[esp + 14h]
+            test        edx, 7FFFFFFFh
+            jne         arg_is_not_integer_QnaN
+            fstp        dword ptr[esp + 18h]
+            fstp        dword ptr[esp + 18h]
+            localexit :
+            leave
+            ret
+    }
 }
 // 
 // extern "C" void _dtoui3()
@@ -782,9 +822,10 @@ extern "C" __declspec(naked) __int64 _ftol2_sse(double v)
 //     return 0;
 // }
 
-extern "C" void _alloca_probe_16()
+extern "C" void* _alloca_probe_16(size_t length)
 {
     DebugBreak();
+    return nullptr;
 }
 
 extern "C" void __report_rangecheckfailure()
@@ -804,27 +845,32 @@ extern "C" void __std_terminate()
 
 extern "C" int vsnprintf(char* const buffer, size_t const count, char const* const format, va_list args)
 {
-	return _vsnprintf(buffer, count, format, args);
+    return _vsnprintf(buffer, count, format, args);
 }
 
 extern "C" int snprintf(char* buffer, size_t count, const char* format, ...)
 {
-	int result;
-	va_list args;
-	va_start(args, format);
-	result = _vsnprintf(buffer, count, format, args);
-	va_end(args);
+    int result;
+    va_list args;
+    va_start(args, format);
+    result = _vsnprintf(buffer, count, format, args);
+    va_end(args);
 
-	// In the case where the string entirely filled the buffer, _vsnprintf will not
-	// null-terminate it, but snprintf must.
-	if (count > 0)
-		buffer[count - 1] = '\0';
+    // In the case where the string entirely filled the buffer, _vsnprintf will not
+    // null-terminate it, but snprintf must.
+    if (count > 0)
+        buffer[count - 1] = '\0';
 
-	return result;
+    return result;
 }
-
-FILE _iob[3] = { 0 };
 
 extern __declspec(dllimport) double _HUGE;
 
+float nearbyintf(float x) {
+    return 0;
+}
+
+double __cdecl scalbn(double _X, int _Y) {
+    return 0;
+}
 #endif // USING_VC6RT

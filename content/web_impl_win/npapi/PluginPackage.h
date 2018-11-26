@@ -67,6 +67,12 @@ public:
 #if ENABLE(NETSCAPE_PLUGIN_METADATA_CACHE)
     static PassRefPtr<PluginPackage> createPackageFromCache(const String& path, const time_t& lastModified, const String& name, const String& description, const String& mimeDescription);
 #endif
+    
+    static PassRefPtr<PluginPackage> createVirtualPackage(
+        NP_InitializeFuncPtr NP_Initialize,
+        NP_GetEntryPointsFuncPtr NP_GetEntryPoints,
+        NPP_ShutdownProcPtr NPP_Shutdown
+        );
 
     const String& name() const { return m_name; }
     const String& description() const { return m_description; }
@@ -90,7 +96,10 @@ public:
     bool isEnabled() const { return m_isEnabled; }
     void setEnabled(bool);
 
+    bool isVirtual() const { return m_isVirtual; }
+
     const NPPluginFuncs* pluginFuncs() const { return &m_pluginFuncs; }
+    const NPNetscapeFuncs* browserFuncs() const { return &m_browserFuncs; }
 
     int compareFileVersion(const PlatformModuleVersion&) const;
     int compare(const PluginPackage&) const;
@@ -102,8 +111,11 @@ public:
     void setMIMEDescription(const String& mimeDescription);
     String fullMIMEDescription() const { return m_fullMIMEDescription;}
 #endif
+
 private:
     PluginPackage(const String& path, const time_t& lastModified);
+
+    bool doLoad();
 
     bool fetchInfo();
     bool isPluginBlacklisted();
@@ -129,6 +141,10 @@ private:
 
     PlatformModule m_module;
     time_t m_lastModified;
+    
+    bool m_isVirtual;
+    NP_GetEntryPointsFuncPtr m_NP_GetEntryPoints;
+    NP_InitializeFuncPtr m_NP_Initialize;
 
     NPP_ShutdownProcPtr m_NPP_Shutdown;
     NPPluginFuncs m_pluginFuncs;

@@ -28,16 +28,17 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "config.h"
 #include "wtf/PageAllocator.h"
 
-#include "wtf/AddressSpaceRandomization.h"
 #include "wtf/Assertions.h"
+#include "wtf/Atomics.h"
+#include "wtf/AddressSpaceRandomization.h"
 
 #include <limits.h>
 
 #if OS(POSIX)
 
+#include <errno.h>
 #include <sys/mman.h>
 
 #ifndef MADV_FREE
@@ -48,9 +49,17 @@
 #define MAP_ANONYMOUS MAP_ANON
 #endif
 
+// On POSIX memmap uses a nearby address if the hint address is blocked.
+static const bool kHintIsAdvisory = true;
+static uint32_t s_allocPageErrorCode = 0;
+
 #elif OS(WIN)
 
 #include <windows.h>
+
+// VirtualAlloc will fail if allocation at the hint address is blocked.
+static const bool kHintIsAdvisory = false;
+static uint32_t s_allocPageErrorCode = ERROR_SUCCESS;
 
 #else
 #error Unknown OS
@@ -58,49 +67,64 @@
 
 namespace WTF {
 
-// This simple internal function wraps the OS-specific page allocation call so
-// that it behaves consistently: the address is a hint and if it cannot be used,
-// the allocation will be placed elsewhere.
-static void* systemAllocPages(void* addr, size_t len, PageAccessibilityConfiguration pageAccessibility)
+// This internal function wraps the OS-specific page allocation call. The
+// behavior of the hint address is determined by the kHintIsAdvisory constant.
+// If true, a non-zero hint is advisory and the returned address may differ from
+// the hint. If false, the hint is mandatory and a successful allocation will
+// not differ from the hint.
+static void* systemAllocPages(void* hint, size_t len, PageAccessibilityConfiguration pageAccessibility)
 {
     ASSERT(!(len & kPageAllocationGranularityOffsetMask));
-    ASSERT(!(reinterpret_cast<uintptr_t>(addr) & kPageAllocationGranularityOffsetMask));
+    ASSERT(!(reinterpret_cast<uintptr_t>(hint) & kPageAllocationGranularityOffsetMask));
     void* ret;
 #if OS(WIN)
-    int accessFlag = pageAccessibility == PageAccessible ? PAGE_READWRITE : PAGE_NOACCESS;
-    ret = VirtualAlloc(addr, len, MEM_RESERVE | MEM_COMMIT, accessFlag);
+    DWORD accessFlag = pageAccessibility == PageAccessible ? PAGE_READWRITE : PAGE_NOACCESS;
+    ret = VirtualAlloc(hint, len, MEM_RESERVE | MEM_COMMIT, accessFlag);
     if (!ret)
-        ret = VirtualAlloc(0, len, MEM_RESERVE | MEM_COMMIT, accessFlag);
+        releaseStore(&s_allocPageErrorCode, GetLastError());
 #else
     int accessFlag = pageAccessibility == PageAccessible ? (PROT_READ | PROT_WRITE) : PROT_NONE;
-    ret = mmap(addr, len, accessFlag, MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
-    if (ret == MAP_FAILED)
+    ret = mmap(hint, len, accessFlag, MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
+    if (ret == MAP_FAILED) {
+        releaseStore(&s_allocPageErrorCode, errno);
         ret = 0;
+    }
 #endif
     return ret;
 }
 
-static bool trimMapping(void* baseAddr, size_t baseLen, void* trimAddr, size_t trimLen)
+// Trims base to given length and alignment. Windows returns null on failure and frees base.
+static void* trimMapping(void *base, size_t baseLen, size_t trimLen, uintptr_t align, PageAccessibilityConfiguration pageAccessibility)
 {
-#if OS(WIN)
-    return false;
-#else
-    char* basePtr = static_cast<char*>(baseAddr);
-    char* trimPtr = static_cast<char*>(trimAddr);
-    ASSERT(trimPtr >= basePtr);
-    ASSERT(trimPtr + trimLen <= basePtr + baseLen);
-    size_t preLen = trimPtr - basePtr;
-    if (preLen) {
-        int ret = munmap(basePtr, preLen);
-        RELEASE_ASSERT(!ret);
+    size_t preSlack = reinterpret_cast<uintptr_t>(base) & (align - 1);
+    if (preSlack)
+        preSlack = align - preSlack;
+    size_t postSlack = baseLen - preSlack - trimLen;
+    ASSERT(baseLen >= trimLen || preSlack || postSlack);
+    ASSERT(preSlack < baseLen);
+    ASSERT(postSlack < baseLen);
+    void* ret = base;
+
+#if OS(POSIX) // On POSIX we can resize the allocation run.
+    (void) pageAccessibility;
+    if (preSlack) {
+        int res = munmap(base, preSlack);
+        RELEASE_ASSERT(!res);
+        ret = reinterpret_cast<char*>(base) + preSlack;
     }
-    size_t postLen = (basePtr + baseLen) - (trimPtr + trimLen);
-    if (postLen) {
-        int ret = munmap(trimPtr + trimLen, postLen);
-        RELEASE_ASSERT(!ret);
+    if (postSlack) {
+        int res = munmap(reinterpret_cast<char*>(ret) + trimLen, postSlack);
+        RELEASE_ASSERT(!res);
     }
-    return true;
+#else // On Windows we can't resize the allocation run.
+    if (preSlack || postSlack) {
+        ret = reinterpret_cast<char*>(base) + preSlack;
+        freePages(base, baseLen);
+        ret = systemAllocPages(ret, trimLen, pageAccessibility);
+    }
 #endif
+
+    return ret;
 }
 
 void* allocPages(void* addr, size_t len, size_t align, PageAccessibilityConfiguration pageAccessibility)
@@ -110,59 +134,55 @@ void* allocPages(void* addr, size_t len, size_t align, PageAccessibilityConfigur
     ASSERT(align >= kPageAllocationGranularity);
     ASSERT(!(align & kPageAllocationGranularityOffsetMask));
     ASSERT(!(reinterpret_cast<uintptr_t>(addr) & kPageAllocationGranularityOffsetMask));
-    size_t alignOffsetMask = align - 1;
-    size_t alignBaseMask = ~alignOffsetMask;
+    uintptr_t alignOffsetMask = align - 1;
+    uintptr_t alignBaseMask = ~alignOffsetMask;
     ASSERT(!(reinterpret_cast<uintptr_t>(addr) & alignOffsetMask));
+
     // If the client passed null as the address, choose a good one.
     if (!addr) {
         addr = getRandomPageBase();
         addr = reinterpret_cast<void*>(reinterpret_cast<uintptr_t>(addr) & alignBaseMask);
     }
 
-    // The common case, which is also the least work we can do, is that the
-    // address and length are suitable. Just try it.
-    void* ret = systemAllocPages(addr, len, pageAccessibility);
-    // If the alignment is to our liking, we're done.
-    if (!ret || !(reinterpret_cast<uintptr_t>(ret) & alignOffsetMask))
-        return ret;
+    // First try to force an exact-size, aligned allocation from our random base.
+    for (int count = 0; count < 3; ++count) {
+        void* ret = systemAllocPages(addr, len, pageAccessibility);
+        if (kHintIsAdvisory || ret) {
+            // If the alignment is to our liking, we're done.
+            if (!(reinterpret_cast<uintptr_t>(ret)& alignOffsetMask))
+                return ret;
+            freePages(ret, len);
+#if CPU(32BIT)
+            addr = reinterpret_cast<void*>((reinterpret_cast<uintptr_t>(ret)+align) & alignBaseMask);
+#endif
+        } else if (!addr) { // We know we're OOM when an unhinted allocation fails.
+            return nullptr;
 
-    // Annoying. Unmap and map a larger range to be sure to succeed on the
-    // second, slower attempt.
-    freePages(ret, len);
+        } else {
+#if CPU(32BIT)
+            addr = reinterpret_cast<char*>(addr) + align;
+#endif
+        }
 
-    size_t tryLen = len + (align - kPageAllocationGranularity);
-    RELEASE_ASSERT(tryLen > len);
-
-    // We loop to cater for the unlikely case where another thread maps on top
-    // of the aligned location we choose.
-    int count = 0;
-    while (count++ < 100) {
-        ret = systemAllocPages(addr, tryLen, pageAccessibility);
-        if (!ret)
-            return 0;
-        // We can now try and trim out a subset of the mapping.
-        addr = reinterpret_cast<void*>((reinterpret_cast<uintptr_t>(ret) + alignOffsetMask) & alignBaseMask);
-
-        // On POSIX systems, we can trim the oversized mapping to fit exactly.
-        // This will always work on POSIX systems.
-        if (trimMapping(ret, tryLen, addr, len))
-            return addr;
-
-        // On Windows, you can't trim an existing mapping so we unmap and remap
-        // a subset. We used to do for all platforms, but OSX 10.8 has a
-        // broken mmap() that ignores address hints for valid, unused addresses.
-        freePages(ret, tryLen);
-        ret = systemAllocPages(addr, len, pageAccessibility);
-        if (ret == addr || !ret)
-            return ret;
-
-        // Unlikely race / collision. Do the simple thing and just start again.
-        freePages(ret, len);
+#if !CPU(32BIT) // Keep trying random addresses on systems that have a large address space.
         addr = getRandomPageBase();
         addr = reinterpret_cast<void*>(reinterpret_cast<uintptr_t>(addr) & alignBaseMask);
+#endif
     }
-    IMMEDIATE_CRASH();
-    return 0;
+
+    // Map a larger allocation so we can force alignment, but continue randomizing only on 64-bit POSIX.
+    size_t tryLen = len + (align - kPageAllocationGranularity);
+    RELEASE_ASSERT(tryLen >= len);
+    void* ret;
+
+    do {
+        // Don't continue to burn cycles on mandatory hints (Windows).
+        addr = kHintIsAdvisory ? getRandomPageBase() : nullptr;
+        ret = systemAllocPages(addr, tryLen, pageAccessibility);
+    // The retries are for Windows, where a race can steal our mapping on resize.
+    } while (ret && !(ret = trimMapping(ret, tryLen, len, align, pageAccessibility)));
+
+    return ret;
 }
 
 void freePages(void* addr, size_t len)
@@ -231,11 +251,27 @@ void discardSystemPages(void* addr, size_t len)
     // decommitSystemPages() here to avoid code duplication.
     decommitSystemPages(addr, len);
 #else
-    (void) addr;
-    (void) len;
-    // TODO(cevans): implement this using MEM_RESET for Windows, once we've
-    // decided that the semantics are a match.
+    // On Windows discarded pages are not returned to the system immediately and
+    // not guaranteed to be zeroed when returned to the application.
+    using DiscardVirtualMemoryFunction = DWORD(WINAPI*)(PVOID virtualAddress, SIZE_T size);
+    static DiscardVirtualMemoryFunction discardVirtualMemory = reinterpret_cast<DiscardVirtualMemoryFunction>(-1);
+    if (discardVirtualMemory == reinterpret_cast<DiscardVirtualMemoryFunction>(-1))
+        discardVirtualMemory = reinterpret_cast<DiscardVirtualMemoryFunction>(GetProcAddress(GetModuleHandle(L"Kernel32.dll"), "DiscardVirtualMemory"));
+    // Use DiscardVirtualMemory when available because it releases faster than MEM_RESET.
+    DWORD ret = 1;
+    if (discardVirtualMemory)
+        ret = discardVirtualMemory(addr, len);
+    // DiscardVirtualMemory is buggy in Win10 SP0, so fall back to MEM_RESET on failure.
+    if (ret) {
+        void* ret = VirtualAlloc(addr, len, MEM_RESET, PAGE_READWRITE);
+        RELEASE_ASSERT(ret);
+    }
 #endif
+}
+
+uint32_t getAllocPageErrorCode()
+{
+    return acquireLoad(&s_allocPageErrorCode);
 }
 
 } // namespace WTF

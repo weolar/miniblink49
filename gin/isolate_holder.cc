@@ -26,22 +26,22 @@
 #endif // MINIBLINK_NOT_IMPLEMENTED
 
 // namespace v8 {
-// 	namespace base {
+//     namespace base {
 // 
-// 		class SysInfo final {
-// 		public:
-// 			// Returns the number of logical processors/core on the current machine.
-// 			static int NumberOfProcessors();
+//         class SysInfo final {
+//         public:
+//             // Returns the number of logical processors/core on the current machine.
+//             static int NumberOfProcessors();
 // 
-// 			// Returns the number of bytes of physical memory on the current machine.
-// 			static int64_t AmountOfPhysicalMemory();
+//             // Returns the number of bytes of physical memory on the current machine.
+//             static int64_t AmountOfPhysicalMemory();
 // 
-// 			// Returns the number of bytes of virtual memory of this process. A return
-// 			// value of zero means that there is no limit on the available virtual memory.
-// 			static int64_t AmountOfVirtualMemory();
-// 		};
+//             // Returns the number of bytes of virtual memory of this process. A return
+//             // value of zero means that there is no limit on the available virtual memory.
+//             static int64_t AmountOfVirtualMemory();
+//         };
 // 
-// 	}  // namespace base
+//     }  // namespace base
 // }  // namespace v8
 
 namespace gin {
@@ -62,7 +62,7 @@ IsolateHolder::IsolateHolder(AccessMode access_mode)
   params.entry_hook = DebugImpl::GetFunctionEntryHook();
   params.code_event_handler = DebugImpl::GetJitCodeEventHandler();
   params.constraints.ConfigureDefaults(v8::base::SysInfo::AmountOfPhysicalMemory(),
-	v8::base::SysInfo::AmountOfVirtualMemory());
+    v8::base::SysInfo::AmountOfVirtualMemory());
   params.array_buffer_allocator = allocator;
   isolate_ = v8::Isolate::New(params);
 #ifdef MINIBLINK_NOT_IMPLEMENTED
@@ -114,6 +114,22 @@ void IsolateHolder::Initialize(ScriptMode mode,
   CHECK(allocator);
   V8Initializer::Initialize(mode);
   g_array_buffer_allocator = allocator;
+}
+
+IsolateHolder::MemoryHead* IsolateHolder::GetPointerHead(void* pointer) {
+    return ((MemoryHead*)pointer) - 1;
+}
+
+size_t IsolateHolder::GetPointerMemSize(void* pointer) {
+    return GetPointerHead(pointer)->size;
+}
+
+void* IsolateHolder::GetHeadToMemBegin(IsolateHolder::MemoryHead* head) {
+    return head + 1;
+}
+
+v8::ArrayBuffer::Allocator* IsolateHolder::get_allocator() {
+    return g_array_buffer_allocator;
 }
 
 void IsolateHolder::AddRunMicrotasksObserver() {

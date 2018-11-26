@@ -4,6 +4,59 @@
 
 namespace WTF {
 
+static Vector<UChar> iso88959ToUtf16(const char* str, int length)
+{
+    if (0 == length)
+        return Vector<UChar>();
+
+    // https://codereview.stackexchange.com/questions/40780/function-to-convert-iso-8859-1-to-utf-8
+    Vector<char, 1024> bufferVector(length * 3);
+    char* buffer = bufferVector.data();
+    const LChar* characters = (const LChar*)str;
+    Unicode::ConversionResult result = Unicode::convertLatin1ToUTF8(&characters, characters + length, &buffer, buffer + bufferVector.size());
+    if (Unicode::conversionOK != result)
+        return Vector<UChar>();
+
+    String retVal = String::fromUTF8(bufferVector.data(), buffer - bufferVector.data());
+    ASSERT(!retVal.is8Bit());
+    return retVal.charactersWithNullTermination();
+}
+    
+Vector<UChar> ensureUTF16UChar(const String& string, bool isNullTermination)
+{
+    if (string.isNull() || string.isEmpty())
+        return Vector<UChar>();
+
+    Vector<UChar> out;
+    if (!string.is8Bit()) {
+        if (isNullTermination)
+            return string.charactersWithNullTermination();
+        out.append(string.characters16(), string.length());
+        return out;
+    }
+
+    //RELEASE_ASSERT(isLegalUTF8(string.characters8(), string.length()));
+    if (string.containsOnlyASCII()) {
+        out = string.charactersWithNullTermination();
+        if (!isNullTermination)
+            out.removeLast();
+        return out;
+    }
+
+    String retVal = String::fromUTF8(string.characters8(), string.length());
+    if (retVal.isNull() || retVal.isEmpty()) {
+        std::vector<UChar> wbuf;
+        out = iso88959ToUtf16((LPCSTR)string.characters8(), string.length());
+    } else {
+        ASSERT(!retVal.is8Bit());
+        out = retVal.charactersWithNullTermination();
+    }
+
+    if (!isNullTermination)
+        out.removeLast();
+    return out;
+}
+
 String ensureUTF16String(const String& string)
 {
     if (string.isNull() || string.isEmpty())
@@ -23,61 +76,44 @@ String ensureUTF16String(const String& string)
     const char* stringCurrent = reinterpret_cast<const char*>(stringStart);
     if (WTF::Unicode::convertUTF8ToUTF16(&stringCurrent, reinterpret_cast<const char *>(stringStart + length),
         &bufferCurrent, bufferCurrent + buffer.size()) != WTF::Unicode::conversionOK)
-        return String();
+        return "";
 
     unsigned utf16Length = bufferCurrent - bufferStart;
     ASSERT(utf16Length < length);
     return StringImpl::create(bufferStart, utf16Length);
 }
 
-Vector<UChar> ensureUTF16UChar(const String& string)
-{
-    String out = ensureUTF16String(string);
-    return out.charactersWithNullTermination();
-}
-
-// 如果string里是8bit的话，必须是utf8编码
-Vector<UChar> ensureStringToUChars(const String& string)
-{
-    if (string.isNull() || string.isEmpty())
-        return Vector<UChar>();
-
-    if (!string.is8Bit())
-        return string.charactersWithNullTermination();
-
-    //ASSERT(WTF::Unicode::isLegalUTF8(string.characters8(), string.length()));
-    if (string.containsOnlyASCII())
-        return string.charactersWithNullTermination();
-
-    String retVal = String::fromUTF8(string.characters8(), string.length());
-    if (retVal.isNull() || retVal.isEmpty())
-        return Vector<UChar>();
-
-    ASSERT(!retVal.is8Bit());
-    return retVal.charactersWithNullTermination();
-}
-
-Vector<char> ensureStringToUTF8(const String& string)
+Vector<char> ensureStringToUTF8(const String& string, bool isNullTermination)
 {
     Vector<char> out;
-    if (string.isNull() || string.isEmpty())
+    if (string.isNull() || string.isEmpty()) {
+        if (isNullTermination)
+            out.append('\0');
         return out;
+    }
+
     if (string.is8Bit()) {
         out.resize(string.length());
         memcpy(out.data(), string.characters8(), string.length());
-        out.append('\0');
     } else {
         CString utf8 = string.utf8();
-        out.resize(utf8.length());
-        memcpy(out.data(), utf8.data(), utf8.length());
+        size_t len = utf8.length();
+        if (0 == len)
+            return out;
+        
+        out.resize(len);
+        memcpy(out.data(), utf8.data(), len);
     }
+
+    if (isNullTermination && '\0' != out[out.size() - 1])
+        out.append('\0');
 
     return out;
 }
 
 String ensureStringToUTF8String(const String& string)
 {
-    Vector<char> out = ensureStringToUTF8(string);
+    Vector<char> out = ensureStringToUTF8(string, false);
     return String(out.data(), out.size());
 }
 
@@ -110,6 +146,36 @@ void stringTrim(String& stringInOut, bool leftTrim, bool rightTrim)
             stringInOut.remove(stringInOut.length() - 1);
         }
     }
+}
+
+void MByteToWChar(LPCSTR lpcszStr, DWORD cbMultiByte, std::vector<UChar>* out, UINT codePage)
+{
+    out->clear();
+
+    DWORD dwMinSize;
+    dwMinSize = MultiByteToWideChar(codePage, 0, lpcszStr, cbMultiByte, NULL, 0);
+    if (0 == dwMinSize)
+        return;
+
+    out->resize(dwMinSize);
+
+    // Convert headers from ASCII to Unicode.
+    MultiByteToWideChar(codePage, 0, lpcszStr, cbMultiByte, &out->at(0), dwMinSize);
+}
+
+void WCharToMByte(LPCWSTR lpWideCharStr, DWORD cchWideChar, std::vector<char>* out, UINT codePage)
+{
+    out->clear();
+
+    DWORD dwMinSize;
+    dwMinSize = WideCharToMultiByte(codePage, 0, lpWideCharStr, cchWideChar, NULL, 0, NULL, FALSE);
+    if (0 == dwMinSize)
+        return;
+
+    out->resize(dwMinSize);
+
+    // Convert headers from ASCII to Unicode.
+    WideCharToMultiByte(codePage, 0, lpWideCharStr, cchWideChar, &out->at(0), dwMinSize, NULL, FALSE);
 }
 
 bool splitStringToVector(const String& strData, const char strSplit, bool needTrim, WTF::Vector<String>& out)

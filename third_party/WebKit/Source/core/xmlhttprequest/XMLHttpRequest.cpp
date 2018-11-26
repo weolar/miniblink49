@@ -333,7 +333,7 @@ Blob* XMLHttpRequest::responseBlob()
 
     if (!m_responseBlob) {
         if (m_downloadingToFile) {
-            // ASSERT(!m_binaryResponseBuilder); // weolar
+            ASSERT(!m_binaryResponseBuilder); // weolar
 
             // When responseType is set to "blob", we redirect the downloaded
             // data to a file-handle directly in the browser process. We get
@@ -1156,10 +1156,10 @@ void XMLHttpRequest::setRequestHeader(const AtomicString& name, const AtomicStri
         return;
     }
 
-    if (!isValidHTTPHeaderValue(value)) {
-        exceptionState.throwDOMException(SyntaxError, "'" + value + "' is not a valid HTTP header field value.");
-        return;
-    }
+//     if (!isValidHTTPHeaderValue(value)) { // 这里好像是为了修复苹果网站的登录不了bug。具体我也忘了
+//         exceptionState.throwDOMException(SyntaxError, "'" + value + "' is not a valid HTTP header field value.");
+//         return;
+//     }
 
     // No script (privileged or not) can set unsafe headers.
     if (FetchUtils::isForbiddenHeaderName(name)) {

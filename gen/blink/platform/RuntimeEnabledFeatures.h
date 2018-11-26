@@ -433,6 +433,35 @@ public:
     static void setScrollRestorationEnabled(bool isEnabled) { isScrollRestorationEnabled = isEnabled; }
     static bool scrollRestorationEnabled() { return isScrollRestorationEnabled; }
 
+    static void setCspCheckEnabled(bool isEnabled) { isCspCheckEnabled = isEnabled; }
+    static bool cspCheckEnabled() { return isCspCheckEnabled; }
+
+    static void setMemoryCacheEnabled(bool isEnabled) { isMemoryCacheEnabled = isEnabled; }
+    static bool memoryCacheEnabled() { return isMemoryCacheEnabled; }
+
+    static void setNavigationToNewWindowEnabled(bool isEnabled) { isNavigationToNewWindowEnabled = isEnabled; }
+    static bool navigationToNewWindowEnabled() { return isNavigationToNewWindowEnabled; }
+    
+    static void setUpdataInOtherThreadEnabled(bool isEnabled) { isUpdataInOtherThreadEnabled = isEnabled; }
+    static bool updataInOtherThreadEnabled() { return isUpdataInOtherThreadEnabled; }
+    
+    static void setNpapiPluginsEnabled(bool isEnabled) { isNpapiPluginsEnabled = isEnabled; }
+    static bool npapiPluginsEnabled() { return isNpapiPluginsEnabled; }
+
+    static void setHeadlessEnabled(bool isEnabled) { isHeadlessEnabled = isEnabled; }
+    static bool headlessEnabled() { return isHeadlessEnabled; }
+
+    static void setFreshLocalFileEnabled(bool isEnabled) { isFreshLocalFileEnabled = isEnabled; }
+    static bool freshLocalFileEnabled() { return isFreshLocalFileEnabled; }
+
+    static void setAlwaysIsNotSolideColorEnabled(bool isEnabled) { isAlwaysIsNotSolideColor = isEnabled; }
+    static bool alwaysIsNotSolideColorEnabled() { return isAlwaysIsNotSolideColor; }
+
+    static void setDrawDirtyDebugLineEnabled(bool isEnabled) { isDrawDirtyDebugLineEnabled = isEnabled; }
+    static bool drawDirtyDebugLineEnabled() { return isDrawDirtyDebugLineEnabled; }
+
+    static void setDrawTileLineEnabled(bool isEnabled) { isDrawTileLineEnabled = isEnabled; }
+    static bool drawTileLineEnabled() { return isDrawTileLineEnabled; }
 
 private:
     RuntimeEnabledFeatures() { }
@@ -575,6 +604,16 @@ private:
     static bool isSVG1DOMEnabled;
     static bool isScrollCustomizationEnabled;
     static bool isScrollRestorationEnabled;
+    static bool isCspCheckEnabled;
+    static bool isMemoryCacheEnabled;
+    static bool isNavigationToNewWindowEnabled;
+    static bool isUpdataInOtherThreadEnabled;
+    static bool isNpapiPluginsEnabled;
+    static bool isHeadlessEnabled;
+    static bool isFreshLocalFileEnabled;
+    static bool isAlwaysIsNotSolideColor;
+    static bool isDrawDirtyDebugLineEnabled;
+    static bool isDrawTileLineEnabled;
 };
 
 } // namespace blink

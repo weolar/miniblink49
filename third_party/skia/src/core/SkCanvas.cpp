@@ -1756,6 +1756,11 @@ void SkCanvas::drawVertices(VertexMode vmode, int vertexCount, const SkPoint ver
                          indices, indexCount, paint);
 }
 
+void SkCanvas::drawBitmapMatrix(const SkBitmap&, const SkMatrix&, const SkPaint* paint) {
+    DebugBreak();
+}
+
+
 void SkCanvas::drawPath(const SkPath& path, const SkPaint& paint) {
     this->onDrawPath(path, paint);
 }

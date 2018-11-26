@@ -26,6 +26,7 @@
 #include "core/fetch/ResourcePtr.h"
 #include "platform/Logging.h"
 #include "platform/TraceEvent.h"
+#include "platform/RuntimeEnabledFeatures.h"
 #include "platform/weborigin/SecurityOrigin.h"
 #include "platform/weborigin/SecurityOriginHash.h"
 #include "public/platform/Platform.h"
@@ -35,6 +36,10 @@
 #include "wtf/MathExtras.h"
 #include "wtf/TemporaryChange.h"
 #include "wtf/text/CString.h"
+
+#if ENABLE_WKE
+extern bool g_wkeMemoryCacheEnable;
+#endif
 
 namespace blink {
 
@@ -170,9 +175,20 @@ MemoryCache::ResourceMap* MemoryCache::ensureResourceMap(const String& cacheIden
 
 void MemoryCache::add(Resource* resource)
 {
+#if ENABLE_WKE
+    if (!RuntimeEnabledFeatures::memoryCacheEnabled() && Resource::MainResource != resource->type())
+        return;
+#endif
+
     ASSERT(WTF::isMainThread());
     ASSERT(resource->url().isValid());
     ResourceMap* resources = ensureResourceMap(resource->cacheIdentifier());
+
+#ifndef MINIBLINK_NO_CHANGE
+    if (resources->contains(resource->url()))
+        return;
+#endif
+
     RELEASE_ASSERT(!resources->contains(resource->url()));
     resources->set(resource->url(), MemoryCacheEntry::create(resource));
     update(resource, 0, resource->size(), true);

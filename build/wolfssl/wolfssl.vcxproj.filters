@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\..\third_party\wolfssl\src\crl.c" />
+    <ClCompile Include="..\..\third_party\wolfssl\src\internal.c" />
+    <ClCompile Include="..\..\third_party\wolfssl\src\keys.c" />
+    <ClCompile Include="..\..\third_party\wolfssl\src\ocsp.c" />
+    <ClCompile Include="..\..\third_party\wolfssl\src\ssl.c" />
+    <ClCompile Include="..\..\third_party\wolfssl\src\tls.c" />
+    <ClCompile Include="..\..\third_party\wolfssl\wolfcrypt\src\aes.c" />
+    <ClCompile Include="..\..\third_party\wolfssl\wolfcrypt\src\arc4.c" />
+    <ClCompile Include="..\..\third_party\wolfssl\wolfcrypt\src\asn.c" />
+    <ClCompile Include="..\..\third_party\wolfssl\wolfcrypt\src\blake2b.c" />
+    <ClCompile Include="..\..\third_party\wolfssl\wolfcrypt\src\camellia.c" />
+    <ClCompile Include="..\..\third_party\wolfssl\wolfcrypt\src\chacha.c" />
+    <ClCompile Include="..\..\third_party\wolfssl\wolfcrypt\src\chacha20_poly1305.c" />
+    <ClCompile Include="..\..\third_party\wolfssl\wolfcrypt\src\coding.c" />
+    <ClCompile Include="..\..\third_party\wolfssl\wolfcrypt\src\des3.c" />
+    <ClCompile Include="..\..\third_party\wolfssl\wolfcrypt\src\dh.c" />
+    <ClCompile Include="..\..\third_party\wolfssl\wolfcrypt\src\dsa.c" />
+    <ClCompile Include="..\..\third_party\wolfssl\wolfcrypt\src\ecc.c" />
+    <ClCompile Include="..\..\third_party\wolfssl\wolfcrypt\src\error.c" />
+    <ClCompile Include="..\..\third_party\wolfssl\wolfcrypt\src\hash.c" />
+    <ClCompile Include="..\..\third_party\wolfssl\wolfcrypt\src\hc128.c" />
+    <ClCompile Include="..\..\third_party\wolfssl\wolfcrypt\src\hmac.c" />
+    <ClCompile Include="..\..\third_party\wolfssl\wolfcrypt\src\integer.c" />
+    <ClCompile Include="..\..\third_party\wolfssl\wolfcrypt\src\logging.c" />
+    <ClCompile Include="..\..\third_party\wolfssl\wolfcrypt\src\md4.c" />
+    <ClCompile Include="..\..\third_party\wolfssl\wolfcrypt\src\md5.c" />
+    <ClCompile Include="..\..\third_party\wolfssl\wolfcrypt\src\memory.c" />
+    <ClCompile Include="..\..\third_party\wolfssl\wolfcrypt\src\pkcs12.c" />
+    <ClCompile Include="..\..\third_party\wolfssl\wolfcrypt\src\pkcs7.c" />
+    <ClCompile Include="..\..\third_party\wolfssl\wolfcrypt\src\poly1305.c" />
+    <ClCompile Include="..\..\third_party\wolfssl\wolfcrypt\src\pwdbased.c" />
+    <ClCompile Include="..\..\third_party\wolfssl\wolfcrypt\src\rabbit.c" />
+    <ClCompile Include="..\..\third_party\wolfssl\wolfcrypt\src\random.c" />
+    <ClCompile Include="..\..\third_party\wolfssl\wolfcrypt\src\ripemd.c" />
+    <ClCompile Include="..\..\third_party\wolfssl\wolfcrypt\src\rsa.c" />
+    <ClCompile Include="..\..\third_party\wolfssl\wolfcrypt\src\sha.c" />
+    <ClCompile Include="..\..\third_party\wolfssl\wolfcrypt\src\sha256.c" />
+    <ClCompile Include="..\..\third_party\wolfssl\wolfcrypt\src\sha512.c" />
+    <ClCompile Include="..\..\third_party\wolfssl\wolfcrypt\src\signature.c" />
+    <ClCompile Include="..\..\third_party\wolfssl\wolfcrypt\src\wc_encrypt.c" />
+    <ClCompile Include="..\..\third_party\wolfssl\wolfcrypt\src\wc_port.c" />
+    <ClCompile Include="..\..\third_party\wolfssl\wolfcrypt\src\wolfevent.c" />
+    <ClCompile Include="..\..\third_party\wolfssl\wolfcrypt\src\wolfmath.c" />
+    <ClCompile Include="..\..\third_party\wolfssl\src\wolfio.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\third_party\wolfssl\user_settings.h" />
+  </ItemGroup>
+</Project>

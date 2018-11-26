@@ -44,6 +44,8 @@
 // For FILETIME in FromFileTime, until it moves to a new converter class.
 // See TODO(iyengar) below.
 #include <windows.h>
+#undef max
+#undef min
 #endif
 
 #include <limits>
@@ -549,7 +551,7 @@ inline TimeDelta TimeDelta::FromSecondsD(double secs) {
   // Preserve max to prevent overflow.
   if (secs == std::numeric_limits<double>::infinity())
     return Max();
-  return TimeDelta(secs * Time::kMicrosecondsPerSecond);
+  return TimeDelta((int64)(secs * Time::kMicrosecondsPerSecond));
 }
 
 // static
@@ -557,7 +559,7 @@ inline TimeDelta TimeDelta::FromMillisecondsD(double ms) {
   // Preserve max to prevent overflow.
   if (ms == std::numeric_limits<double>::infinity())
     return Max();
-  return TimeDelta(ms * Time::kMicrosecondsPerMillisecond);
+  return TimeDelta((int64)(ms * Time::kMicrosecondsPerMillisecond));
 }
 
 // static

@@ -122,7 +122,6 @@ CString TextEncoding::normalizeAndEncode(const String& string, UnencodableHandli
         length = normalizedLength;
     }
 #endif // MINIBLINK_NOT_IMPLEMENTED
-    notImplemented();
 
     return newTextCodec(*this)->encode(source, length, handling);
 }

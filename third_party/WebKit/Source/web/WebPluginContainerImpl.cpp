@@ -962,10 +962,7 @@ void WebPluginContainerImpl::calculateGeometry(IntRect& windowRect, IntRect& cli
 
     clipRect.move(-windowRect.x(), -windowRect.y());
     unobscuredRect.move(-windowRect.x(), -windowRect.y());
-#ifdef MINIBLINK_NOT_IMPLEMENTED
     getPluginOcclusions(m_element, this->parent(), frameRect(), cutOutRects);
-#endif // MINIBLINK_NOT_IMPLEMENTED
-    notImplemented();
     
     // Convert to the plugin position.
     for (size_t i = 0; i < cutOutRects.size(); i++)

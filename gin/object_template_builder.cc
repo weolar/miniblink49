@@ -4,6 +4,8 @@
 
 #include "gin/object_template_builder.h"
 
+#include <stdint.h>
+
 #include "gin/interceptor.h"
 #include "gin/per_isolate_data.h"
 #include "gin/public/wrapper_info.h"
@@ -122,8 +124,7 @@ void IndexedPropertySetter(uint32_t index,
     info.GetReturnValue().Set(value);
 }
 
-void IndexedPropertyEnumerator(
-    const v8::PropertyCallbackInfo<v8::Array>& info) {
+void IndexedPropertyEnumerator(const v8::PropertyCallbackInfo<v8::Array>& info) {
   v8::Isolate* isolate = info.GetIsolate();
   IndexedPropertyInterceptor* interceptor =
       IndexedInterceptorFromV8(isolate, info.Holder());
@@ -142,6 +143,14 @@ ObjectTemplateBuilder::ObjectTemplateBuilder(v8::Isolate* isolate)
     : isolate_(isolate), template_(v8::ObjectTemplate::New(isolate)) {
   template_->SetInternalFieldCount(kNumberOfInternalFields);
 }
+
+ObjectTemplateBuilder::ObjectTemplateBuilder(v8::Isolate* isolate, v8::Local<v8::ObjectTemplate> objectTemplate)
+  : isolate_(isolate), template_(objectTemplate) {
+  template_->SetInternalFieldCount(kNumberOfInternalFields);
+}
+
+ObjectTemplateBuilder::ObjectTemplateBuilder(
+    const ObjectTemplateBuilder& other) = default;
 
 ObjectTemplateBuilder::~ObjectTemplateBuilder() {
 }

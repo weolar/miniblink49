@@ -214,18 +214,16 @@ void V8MediaQueryList::derefObject(ScriptWrappable* scriptWrappable)
 #endif
 }
 
-void V8MediaQueryList::addListenerMethodEpilogueCustom(const v8::FunctionCallbackInfo<v8::Value>&, MediaQueryList*)
+void V8MediaQueryList::addListenerMethodEpilogueCustom(const v8::FunctionCallbackInfo<v8::Value>& info, MediaQueryList* impl)
 {
-#ifdef MINIBLINK_NOT_IMPLEMENTED
-#endif // MINIBLINK_NOT_IMPLEMENTED
-	notImplemented();
+    if (info.Length() >= 1 && info[0]->IsObject() && !impl->toNode())
+        addHiddenValueToArray(info.GetIsolate(), info.Holder(), info[0], V8EventTarget::eventListenerCacheIndex);
 }
 
-void V8MediaQueryList::removeListenerMethodEpilogueCustom(const v8::FunctionCallbackInfo<v8::Value>&, MediaQueryList*)
+void V8MediaQueryList::removeListenerMethodEpilogueCustom(const v8::FunctionCallbackInfo<v8::Value>& info, MediaQueryList* impl)
 {
-#ifdef MINIBLINK_NOT_IMPLEMENTED
-#endif // MINIBLINK_NOT_IMPLEMENTED
-	notImplemented();
+    if (info.Length() >= 1 && info[0]->IsObject() && !impl->toNode())
+        removeHiddenValueFromArray(info.GetIsolate(), info.Holder(), info[0], V8EventTarget::eventListenerCacheIndex);
 }
 
 } // namespace blink

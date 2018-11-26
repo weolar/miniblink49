@@ -256,4 +256,6 @@ Abstract:
 #endif /* _INC_WINDOWS */
 #endif /* _WINDOWS_ */
 
+#include <windowsvc6.h>
+
 

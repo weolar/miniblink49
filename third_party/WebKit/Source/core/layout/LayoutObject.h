@@ -220,37 +220,10 @@ public:
         bool m_preexistingForbidden;
     };
 
-    void assertLaidOut() const
-    {
-#ifndef NDEBUG
-        if (needsLayout())
-            showLayoutTreeForThis();
-#endif
-        ASSERT_WITH_SECURITY_IMPLICATION(!needsLayout());
-    }
-
-    void assertSubtreeIsLaidOut() const
-    {
-        for (const LayoutObject* layoutObject = this; layoutObject; layoutObject = layoutObject->nextInPreOrder())
-            layoutObject->assertLaidOut();
-    }
-
-    void assertClearedPaintInvalidationState() const
-    {
-#ifndef NDEBUG
-        if (paintInvalidationStateIsDirty()) {
-            showLayoutTreeForThis();
-            ASSERT_NOT_REACHED();
-        }
-#endif
-    }
-
-    void assertSubtreeClearedPaintInvalidationState() const
-    {
-        for (const LayoutObject* layoutObject = this; layoutObject; layoutObject = layoutObject->nextInPreOrder())
-            layoutObject->assertClearedPaintInvalidationState();
-    }
-
+    void assertLaidOut() const;
+    void assertSubtreeIsLaidOut() const;
+    void assertClearedPaintInvalidationState() const;
+    void assertSubtreeClearedPaintInvalidationState() const;
 #endif
 
     // Correct version of !layoutObjectHasNoBoxEffectObsolete().
@@ -544,7 +517,8 @@ public:
             || m_bitfields.needsSimplifiedNormalFlowLayout() || m_bitfields.needsPositionedMovementLayout();
     }
 
-    bool selfNeedsLayout() const { return m_bitfields.selfNeedsLayout(); }
+    //bool selfNeedsLayout() const { return m_bitfields.selfNeedsLayout(); }
+    bool selfNeedsLayout() const;
     bool needsPositionedMovementLayout() const { return m_bitfields.needsPositionedMovementLayout(); }
     bool needsPositionedMovementLayoutOnly() const
     {
@@ -554,7 +528,8 @@ public:
 
     bool posChildNeedsLayout() const { return m_bitfields.posChildNeedsLayout(); }
     bool needsSimplifiedNormalFlowLayout() const { return m_bitfields.needsSimplifiedNormalFlowLayout(); }
-    bool normalChildNeedsLayout() const { return m_bitfields.normalChildNeedsLayout(); }
+    //bool normalChildNeedsLayout() const { return m_bitfields.normalChildNeedsLayout(); }
+    bool normalChildNeedsLayout() const;
 
     bool preferredLogicalWidthsDirty() const { return m_bitfields.preferredLogicalWidthsDirty(); }
 
@@ -1235,6 +1210,8 @@ private:
     LayoutRect previousSelectionRectForPaintInvalidation() const;
     void setPreviousSelectionRectForPaintInvalidation(const LayoutRect&);
 
+    LayoutObject* containerForAbsolutePosition(const LayoutBoxModelObject* paintInvalidationContainer = nullptr, bool* paintInvalidationContainerSkipped = nullptr) const;
+
     const LayoutBoxModelObject* enclosingCompositedContainer() const;
 
     LayoutFlowThread* locateFlowThreadContainingBlock() const;
@@ -1419,17 +1396,28 @@ private:
 
     LayoutObjectBitfields m_bitfields;
 
-    void setSelfNeedsLayout(bool b) { m_bitfields.setSelfNeedsLayout(b); }
-    void setNeedsPositionedMovementLayout(bool b) { m_bitfields.setNeedsPositionedMovementLayout(b); }
-    void setNormalChildNeedsLayout(bool b) { m_bitfields.setNormalChildNeedsLayout(b); }
-    void setPosChildNeedsLayout(bool b) { m_bitfields.setPosChildNeedsLayout(b); }
-    void setNeedsSimplifiedNormalFlowLayout(bool b) { m_bitfields.setNeedsSimplifiedNormalFlowLayout(b); }
-    void setIsDragging(bool b) { m_bitfields.setIsDragging(b); }
-    void setEverHadLayout(bool b) { m_bitfields.setEverHadLayout(b); }
-    void setShouldInvalidateOverflowForPaint(bool b) { m_bitfields.setShouldInvalidateOverflowForPaint(b); }
-    void setSelfNeedsOverflowRecalcAfterStyleChange(bool b) { m_bitfields.setSelfNeedsOverflowRecalcAfterStyleChange(b); }
-    void setChildNeedsOverflowRecalcAfterStyleChange(bool b) { m_bitfields.setChildNeedsOverflowRecalcAfterStyleChange(b); }
+//     void setSelfNeedsLayout(bool b) { m_bitfields.setSelfNeedsLayout(b); }
+//     void setNeedsPositionedMovementLayout(bool b) { m_bitfields.setNeedsPositionedMovementLayout(b); }
+//     void setNormalChildNeedsLayout(bool b) { m_bitfields.setNormalChildNeedsLayout(b); }
+//     void setPosChildNeedsLayout(bool b) { m_bitfields.setPosChildNeedsLayout(b); }
+//     void setNeedsSimplifiedNormalFlowLayout(bool b) { m_bitfields.setNeedsSimplifiedNormalFlowLayout(b); }
+//     void setIsDragging(bool b) { m_bitfields.setIsDragging(b); }
+//     void setEverHadLayout(bool b) { m_bitfields.setEverHadLayout(b); }
+//     void setShouldInvalidateOverflowForPaint(bool b) { m_bitfields.setShouldInvalidateOverflowForPaint(b); }
+//     void setSelfNeedsOverflowRecalcAfterStyleChange(bool b) { m_bitfields.setSelfNeedsOverflowRecalcAfterStyleChange(b); }
+//     void setChildNeedsOverflowRecalcAfterStyleChange(bool b) { m_bitfields.setChildNeedsOverflowRecalcAfterStyleChange(b); }
 
+    void setSelfNeedsLayout(bool b);
+    void setNeedsPositionedMovementLayout(bool b);
+    void setNormalChildNeedsLayout(bool b);
+    void setPosChildNeedsLayout(bool b);
+    void setNeedsSimplifiedNormalFlowLayout(bool b);
+    void setIsDragging(bool b);
+    void setEverHadLayout(bool b);
+    void setShouldInvalidateOverflowForPaint(bool b);
+    void setSelfNeedsOverflowRecalcAfterStyleChange(bool b);
+    void setChildNeedsOverflowRecalcAfterStyleChange(bool b);
+        
 private:
     // Store state between styleWillChange and styleDidChange
     static bool s_affectsParentBlock;
@@ -1499,63 +1487,63 @@ inline bool LayoutObject::isBeforeOrAfterContent() const
 
 // setNeedsLayout() won't cause full paint invalidations as
 // setNeedsLayoutAndFullPaintInvalidation() does. Otherwise the two methods are identical.
-inline void LayoutObject::setNeedsLayout(LayoutInvalidationReasonForTracing reason, MarkingBehavior markParents, SubtreeLayoutScope* layouter)
-{
-    ASSERT(!isSetNeedsLayoutForbidden());
-    bool alreadyNeededLayout = m_bitfields.selfNeedsLayout();
-    setSelfNeedsLayout(true);
-    if (!alreadyNeededLayout) {
-        TRACE_EVENT_INSTANT1(
-            TRACE_DISABLED_BY_DEFAULT("devtools.timeline.invalidationTracking"),
-            "LayoutInvalidationTracking",
-            TRACE_EVENT_SCOPE_THREAD,
-            "data",
-            InspectorLayoutInvalidationTrackingEvent::data(this, reason));
-        if (markParents == MarkContainerChain && (!layouter || layouter->root() != this))
-            markContainerChainForLayout(true, layouter);
-    }
-}
+// inline void LayoutObject::setNeedsLayout(LayoutInvalidationReasonForTracing reason, MarkingBehavior markParents, SubtreeLayoutScope* layouter)
+// {
+//     ASSERT(!isSetNeedsLayoutForbidden());
+//     bool alreadyNeededLayout = m_bitfields.selfNeedsLayout();
+//     setSelfNeedsLayout(true);
+//     if (!alreadyNeededLayout) {
+//         TRACE_EVENT_INSTANT1(
+//             TRACE_DISABLED_BY_DEFAULT("devtools.timeline.invalidationTracking"),
+//             "LayoutInvalidationTracking",
+//             TRACE_EVENT_SCOPE_THREAD,
+//             "data",
+//             InspectorLayoutInvalidationTrackingEvent::data(this, reason));
+//         if (markParents == MarkContainerChain && (!layouter || layouter->root() != this))
+//             markContainerChainForLayout(true, layouter);
+//     }
+// }
+// 
+// inline void LayoutObject::setNeedsLayoutAndFullPaintInvalidation(LayoutInvalidationReasonForTracing reason, MarkingBehavior markParents, SubtreeLayoutScope* layouter)
+// {
+//     setNeedsLayout(reason, markParents, layouter);
+//     setShouldDoFullPaintInvalidation();
+// }
 
-inline void LayoutObject::setNeedsLayoutAndFullPaintInvalidation(LayoutInvalidationReasonForTracing reason, MarkingBehavior markParents, SubtreeLayoutScope* layouter)
-{
-    setNeedsLayout(reason, markParents, layouter);
-    setShouldDoFullPaintInvalidation();
-}
+// inline void LayoutObject::clearNeedsLayout()
+// {
+//     setNeededLayoutBecauseOfChildren(needsLayoutBecauseOfChildren());
+//     setLayoutDidGetCalledSinceLastFrame();
+//     setSelfNeedsLayout(false);
+//     setEverHadLayout(true);
+//     setPosChildNeedsLayout(false);
+//     setNeedsSimplifiedNormalFlowLayout(false);
+//     setNormalChildNeedsLayout(false);
+//     setNeedsPositionedMovementLayout(false);
+//     setAncestorLineBoxDirty(false);
+// #if ENABLE(ASSERT)
+//     checkBlockPositionedObjectsNeedLayout();
+// #endif
+// }
 
-inline void LayoutObject::clearNeedsLayout()
-{
-    setNeededLayoutBecauseOfChildren(needsLayoutBecauseOfChildren());
-    setLayoutDidGetCalledSinceLastFrame();
-    setSelfNeedsLayout(false);
-    setEverHadLayout(true);
-    setPosChildNeedsLayout(false);
-    setNeedsSimplifiedNormalFlowLayout(false);
-    setNormalChildNeedsLayout(false);
-    setNeedsPositionedMovementLayout(false);
-    setAncestorLineBoxDirty(false);
-#if ENABLE(ASSERT)
-    checkBlockPositionedObjectsNeedLayout();
-#endif
-}
+// inline void LayoutObject::setChildNeedsLayout(MarkingBehavior markParents, SubtreeLayoutScope* layouter)
+// {
+//     ASSERT(!isSetNeedsLayoutForbidden());
+//     bool alreadyNeededLayout = normalChildNeedsLayout();
+//     setNormalChildNeedsLayout(true);
+//     // FIXME: Replace MarkOnlyThis with the SubtreeLayoutScope code path and remove the MarkingBehavior argument entirely.
+//     if (!alreadyNeededLayout && markParents == MarkContainerChain && (!layouter || layouter->root() != this))
+//         markContainerChainForLayout(true, layouter);
+// }
 
-inline void LayoutObject::setChildNeedsLayout(MarkingBehavior markParents, SubtreeLayoutScope* layouter)
-{
-    ASSERT(!isSetNeedsLayoutForbidden());
-    bool alreadyNeededLayout = normalChildNeedsLayout();
-    setNormalChildNeedsLayout(true);
-    // FIXME: Replace MarkOnlyThis with the SubtreeLayoutScope code path and remove the MarkingBehavior argument entirely.
-    if (!alreadyNeededLayout && markParents == MarkContainerChain && (!layouter || layouter->root() != this))
-        markContainerChainForLayout(true, layouter);
-}
-
-inline void LayoutObject::setNeedsPositionedMovementLayout()
-{
-    bool alreadyNeededLayout = needsPositionedMovementLayout();
-    setNeedsPositionedMovementLayout(true);
-    ASSERT(!isSetNeedsLayoutForbidden());
-    if (!alreadyNeededLayout)
-        markContainerChainForLayout();
-}
+// void LayoutObject::setNeedsPositionedMovementLayout()
+// {
+//     bool alreadyNeededLayout = needsPositionedMovementLayout();
+//     setNeedsPositionedMovementLayout(true);
+//     ASSERT(!isSetNeedsLayoutForbidden());
+//     if (!alreadyNeededLayout)
+//         markContainerChainForLayout();
+// }
 
 inline bool LayoutObject::preservesNewline() const
 {

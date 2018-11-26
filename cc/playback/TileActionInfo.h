@@ -2,18 +2,24 @@
 #ifndef cc_playback_TileActionInfo_h
 #define cc_playback_TileActionInfo_h
 
+#include "third_party/skia/include/core/SkColor.h"
+#include "third_party/WebKit/Source/wtf/Vector.h"
+
+class SkBitmap;
+
 namespace cc {
     
 struct TileActionInfo {
-    TileActionInfo(int index, int xIndex, int yIndex)
-    {
-        this->index = index;
-        this->xIndex = xIndex;
-        this->yIndex = yIndex;
-    }
+    TileActionInfo(int index, int xIndex, int yIndex);
+    ~TileActionInfo();
+
     int index;
     int xIndex;
     int yIndex;
+
+    bool m_isSolidColorCoverWholeTile;
+    SkColor* m_solidColor;
+    SkBitmap* m_bitmap;
 };
 
 class TileActionInfoVector {
@@ -24,7 +30,7 @@ public:
     }
 
     size_t size() const { return m_infos.size(); }
-    const Vector<TileActionInfo*>& infos() const { return m_infos; }
+    const WTF::Vector<TileActionInfo*>& infos() const { return m_infos; }
 
     ~TileActionInfoVector()
     {
@@ -34,9 +40,8 @@ public:
         }
     }
 private:
-    Vector<TileActionInfo*> m_infos;
+    WTF::Vector<TileActionInfo*> m_infos;
 };
-
 
 }
 

@@ -13,9 +13,7 @@
 #include "third_party/skia/include/core/SkBBHFactory.h"
 #include "third_party/skia/include/core/SkPictureRecorder.h"
 #include "skia/ext/refptr.h"
-#include "cc/raster/RasterTaskWorkerThreadPool.h"
 #include "cc/raster/RasterResouce.h"
-//#include "cc/raster/RecordDrawHelp.h"
 #include "cc/trees/LayerTreeHost.h"
 #include "cc/trees/DrawProperties.h"
 #include "cc/tiles/TileGrid.h"
@@ -45,9 +43,9 @@ blink::WebLayer* WebContentLayerImpl::layer()
     return m_layer;
 }
 
-void WebContentLayerImpl::setDoubleSided(bool double_sided)
+void WebContentLayerImpl::setDoubleSided(bool doubleSided)
 {
-    //m_layer->setDoubleSided(double_sided);
+    m_layer->setDoubleSided(doubleSided);
 }
 
 void WebContentLayerImpl::setDrawCheckerboardForMissingTiles(bool enable)
@@ -70,8 +68,8 @@ void WebContentLayerImpl::paintContents(blink::WebCanvas* canvas, const blink::I
 
 void WebContentLayerImpl::recordDraw(cc::RasterTaskGroup* taskGroup)
 {
-// 	String outString = String::format("WebContentLayerImpl::recordDraw:%d \n", m_layer->id());
-// 	OutputDebugStringW(outString.charactersWithNullTermination().data());
+//     String outString = String::format("WebContentLayerImpl::recordDraw:%d \n", m_layer->id());
+//     OutputDebugStringW(outString.charactersWithNullTermination().data());
 
     if (!m_client || !m_layer)
         return;
@@ -98,7 +96,7 @@ void WebContentLayerImpl::drawToCanvas(blink::WebCanvas* canvas, const blink::In
     if (!m_layer)
         return;
 
-	DebugBreak();
+    DebugBreak();
 
 //     blink::IntSize bounds = m_layer->drawToCanvasProperties()->bounds;
 //     cc::LayerTreeHost* layerTreeHost = m_layer->layerTreeHost();

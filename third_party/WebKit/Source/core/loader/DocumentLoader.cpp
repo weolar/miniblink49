@@ -64,7 +64,7 @@
 #include "platform/UserGestureIndicator.h"
 #include "platform/mhtml/ArchiveResource.h"
 #include "platform/mhtml/ArchiveResourceCollection.h"
-//#include "platform/mhtml/MHTMLArchive.h"
+#include "platform/mhtml/MHTMLArchive.h"
 #include "platform/network/ContentSecurityPolicyResponseHeaders.h"
 #include "platform/plugins/PluginData.h"
 #include "platform/weborigin/SchemeRegistry.h"
@@ -648,7 +648,7 @@ bool DocumentLoader::maybeCreateArchive()
     // Give the archive machinery a crack at this document. If the MIME type is not an archive type, it will return 0.
     if (!isArchiveMIMEType(m_response.mimeType()))
         return false;
-#ifdef MINIBLINK_NOT_IMPLEMENTED
+#ifndef MINIBLINK_NOT_MHTML
     ASSERT(m_mainResource);
     m_archive = MHTMLArchive::create(m_response.url(), m_mainResource->resourceBuffer());
     // Invalid MHTML.
@@ -668,9 +668,8 @@ bool DocumentLoader::maybeCreateArchive()
     document()->enforceSandboxFlags(SandboxAll);
 
     commitData(mainResource->data()->data(), mainResource->data()->size());
-#endif // MINIBLINK_NOT_IMPLEMENTED
-    notImplemented();
-    return false;
+#endif // MINIBLINK_NOT_MHTML
+    return true;
 }
 
 void DocumentLoader::prepareSubframeArchiveLoadIfNeeded()
@@ -681,7 +680,7 @@ void DocumentLoader::prepareSubframeArchiveLoadIfNeeded()
     ArchiveResourceCollection* parentCollection = toLocalFrame(m_frame->tree().parent())->loader().documentLoader()->fetcher()->archiveResourceCollection();
     if (!parentCollection)
         return;
-#ifdef MINIBLINK_NOT_IMPLEMENTED
+#ifndef MINIBLINK_NOT_MHTML
     m_archive = parentCollection->popSubframeArchive(m_frame->tree().uniqueName(), m_request.url());
 
     if (!m_archive)
@@ -690,7 +689,7 @@ void DocumentLoader::prepareSubframeArchiveLoadIfNeeded()
 
     ArchiveResource* mainResource = m_archive->mainResource();
     m_substituteData = SubstituteData(mainResource->data(), mainResource->mimeType(), mainResource->textEncoding(), KURL());
-#endif // MINIBLINK_NOT_IMPLEMENTED
+#endif // MINIBLINK_NOT_MHTML
     notImplemented();
 }
 

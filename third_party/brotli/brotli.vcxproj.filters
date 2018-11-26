@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="dec">
+      <UniqueIdentifier>{5CF68805-77C4-1FB9-A420-45FAC842525E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dec">
+      <UniqueIdentifier>{5CF68805-77C4-1FB9-A420-45FAC842525E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dec">
+      <UniqueIdentifier>{5CF68805-77C4-1FB9-A420-45FAC842525E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dec">
+      <UniqueIdentifier>{5CF68805-77C4-1FB9-A420-45FAC842525E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dec">
+      <UniqueIdentifier>{5CF68805-77C4-1FB9-A420-45FAC842525E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dec">
+      <UniqueIdentifier>{5CF68805-77C4-1FB9-A420-45FAC842525E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dec">
+      <UniqueIdentifier>{5CF68805-77C4-1FB9-A420-45FAC842525E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dec">
+      <UniqueIdentifier>{5CF68805-77C4-1FB9-A420-45FAC842525E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dec">
+      <UniqueIdentifier>{5CF68805-77C4-1FB9-A420-45FAC842525E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dec">
+      <UniqueIdentifier>{5CF68805-77C4-1FB9-A420-45FAC842525E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dec">
+      <UniqueIdentifier>{5CF68805-77C4-1FB9-A420-45FAC842525E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dec">
+      <UniqueIdentifier>{5CF68805-77C4-1FB9-A420-45FAC842525E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dec">
+      <UniqueIdentifier>{5CF68805-77C4-1FB9-A420-45FAC842525E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dec">
+      <UniqueIdentifier>{5CF68805-77C4-1FB9-A420-45FAC842525E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dec">
+      <UniqueIdentifier>{5CF68805-77C4-1FB9-A420-45FAC842525E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dec">
+      <UniqueIdentifier>{5CF68805-77C4-1FB9-A420-45FAC842525E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dec">
+      <UniqueIdentifier>{5CF68805-77C4-1FB9-A420-45FAC842525E}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="dec\bit_reader.c">
+      <Filter>dec</Filter>
+    </ClCompile>
+    <ClInclude Include="dec\bit_reader.h">
+      <Filter>dec</Filter>
+    </ClInclude>
+    <ClInclude Include="dec\context.h">
+      <Filter>dec</Filter>
+    </ClInclude>
+    <ClCompile Include="dec\decode.c">
+      <Filter>dec</Filter>
+    </ClCompile>
+    <ClInclude Include="dec\decode.h">
+      <Filter>dec</Filter>
+    </ClInclude>
+    <ClCompile Include="dec\dictionary.c">
+      <Filter>dec</Filter>
+    </ClCompile>
+    <ClInclude Include="dec\dictionary.h">
+      <Filter>dec</Filter>
+    </ClInclude>
+    <ClCompile Include="dec\huffman.c">
+      <Filter>dec</Filter>
+    </ClCompile>
+    <ClInclude Include="dec\huffman.h">
+      <Filter>dec</Filter>
+    </ClInclude>
+    <ClInclude Include="dec\port.h">
+      <Filter>dec</Filter>
+    </ClInclude>
+    <ClInclude Include="dec\prefix.h">
+      <Filter>dec</Filter>
+    </ClInclude>
+    <ClCompile Include="dec\state.c">
+      <Filter>dec</Filter>
+    </ClCompile>
+    <ClInclude Include="dec\state.h">
+      <Filter>dec</Filter>
+    </ClInclude>
+    <ClCompile Include="dec\streams.c">
+      <Filter>dec</Filter>
+    </ClCompile>
+    <ClInclude Include="dec\streams.h">
+      <Filter>dec</Filter>
+    </ClInclude>
+    <ClInclude Include="dec\transform.h">
+      <Filter>dec</Filter>
+    </ClInclude>
+    <ClInclude Include="dec\types.h">
+      <Filter>dec</Filter>
+    </ClInclude>
+    <None Include="brotli.gyp"/>
+  </ItemGroup>
+</Project>

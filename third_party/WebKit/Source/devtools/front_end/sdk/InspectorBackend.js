@@ -62,7 +62,8 @@ InspectorBackendClass.prototype = {
          * @constructor
          * @param {!Object.<string, !Object>} agentsMap
          */
-        window.Protocol.Agents = function(agentsMap) {
+        window.Protocol.Agents = function (agentsMap) {
+            // call from WebInspector.Target -> WebInspector.Main._createConnection
             this._agentsMap = agentsMap;
         };
     },
@@ -970,8 +971,10 @@ InspectorBackendClass.AgentPrototype.prototype = {
 
         if (messageObject.result) {
             var paramNames = this._replyArgs[methodName] || [];
-            for (var i = 0; i < paramNames.length; ++i)
-                argumentsArray.push(messageObject.result[paramNames[i]]);
+            for (var i = 0; i < paramNames.length; ++i) {
+                var paramNamesValue = messageObject.result[paramNames[i]];
+                argumentsArray.push(paramNamesValue);                
+            }
         }
 
         callback.apply(null, argumentsArray);

@@ -713,13 +713,13 @@ ExecutionContext* toExecutionContext(v8::Local<v8::Context> context)
     v8::Local<v8::Object> windowWrapper = V8Window::findInstanceInPrototypeChain(global, context->GetIsolate());
     if (!windowWrapper.IsEmpty())
         return V8Window::toImpl(windowWrapper)->executionContext();
-#ifdef MINIBLINK_NOT_IMPLEMENTED
+
+#ifndef MINIBLINK_NOT_IMPLEMENTED_WEBWORKER
     v8::Local<v8::Object> workerWrapper = V8WorkerGlobalScope::findInstanceInPrototypeChain(global, context->GetIsolate());
     if (!workerWrapper.IsEmpty())
         return V8WorkerGlobalScope::toImpl(workerWrapper)->executionContext();
-#endif // MINIBLINK_NOT_IMPLEMENTED
+#endif
     // FIXME: Is this line of code reachable?
-    notImplemented();
     return 0;
 }
 
@@ -803,7 +803,7 @@ void crashIfV8IsDead()
     if (v8::V8::IsDead()) {
         // FIXME: We temporarily deal with V8 internal error situations
         // such as out-of-memory by crashing the renderer.
-        CRASH();
+        //CRASH(); // weolar
     }
 }
 

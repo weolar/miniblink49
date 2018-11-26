@@ -20,7 +20,7 @@ public:
     CString(const blink::WebString& str);
     CString(const utf8* str, size_t len);
     CString(const wchar_t* str, size_t len);
-   ~CString();
+    ~CString();
 
     CString& operator=(const WTF::String& str);
     CString& operator=(const CString& that);
@@ -41,6 +41,11 @@ protected:
     mutable utf8* m_utf8;
     mutable wchar_t* m_wide;
 };
+
+const char* createTempCharString(const char* str, size_t length);
+const wchar_t* createTempWCharString(const wchar_t* str, size_t length);
+jsKeys* createTempJsKeys(size_t length);
+void freeTempCharStrings();
 
 };
 

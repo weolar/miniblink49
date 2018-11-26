@@ -66,6 +66,11 @@ class GIN_EXPORT V8Initializer {
   static base::PlatformFile GetOpenSnapshotFileForChildProcesses(
       base::MemoryMappedFile::Region* region_out);
 #endif  // V8_USE_EXTERNAL_STARTUP_DATA
+  static void SetV8Platform(v8::Platform* platform) {
+    platform_ = platform;
+  }
+private:
+  static v8::Platform* platform_;
 };
 
 }  // namespace gin

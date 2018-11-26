@@ -222,13 +222,11 @@ bool WebPagePopupImpl::initialize(WebViewImpl* webView, PagePopupClient* popupCl
 
     if (!m_widgetClient || !initializePage())
         return false;
+    m_widgetClient->scheduleAnimation();
     m_widgetClient->show(WebNavigationPolicy());
     setFocus(true);
-
     return true;
 }
-
-void readScript(const WCHAR* path, Vector<char>& buffer);
 
 bool WebPagePopupImpl::initializePage()
 {
@@ -271,10 +269,10 @@ bool WebPagePopupImpl::initializePage()
 //     OutputDebugStringW(L"WebPagePopupImpl::initializePage ------ \n");
 
 //     data->clear();
-// 	Vector<char> buffer;
-// 	readScript(L"E:\\test\\select.htm", buffer);
-// 	data->append(buffer.data(), buffer.size());
-    //PagePopupClient::addString(testWebPagePopupImpl, data.get());
+//     Vector<char> buffer;
+//     readScript(L"E:\\test\\select.htm", buffer);
+//     data->append(buffer.data(), buffer.size());
+//     PagePopupClient::addString(testWebPagePopupImpl, data.get());
     //////////////////////////////////////////////////////////////////////////
 
     frame->loader().load(FrameLoadRequest(0, blankURL(), SubstituteData(data, "text/html", "UTF-8", KURL(), ForceSynchronousLoad)));

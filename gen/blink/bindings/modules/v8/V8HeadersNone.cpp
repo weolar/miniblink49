@@ -25,18 +25,18 @@
 
 namespace blink {
     
-Headers* V8Headers::toImplWithTypeCheck(v8::Isolate* isolate, v8::Local<v8::Value> value)
-{
-    notImplemented();
-    return nullptr;
-}
-
-void V8Headers::refObject(ScriptWrappable* scriptWrappable)
-{
-}
-
-void V8Headers::derefObject(ScriptWrappable* scriptWrappable)
-{
-}
+// Headers* V8Headers::toImplWithTypeCheck(v8::Isolate* isolate, v8::Local<v8::Value> value)
+// {
+//     notImplemented();
+//     return nullptr;
+// }
+// 
+// void V8Headers::refObject(ScriptWrappable* scriptWrappable)
+// {
+// }
+// 
+// void V8Headers::derefObject(ScriptWrappable* scriptWrappable)
+// {
+// }
 
 } // namespace blink

@@ -48,14 +48,14 @@ public:
 
     DOMArrayBufferView* getRandomValues(DOMArrayBufferView*, ExceptionState&);
 
-    SubtleCrypto* subtle();
+    //SubtleCrypto* subtle();
 
     DECLARE_TRACE();
 
 private:
     Crypto() { }
 
-    Member<SubtleCrypto> m_subtleCrypto;
+    //Member<SubtleCrypto> m_subtleCrypto;
 };
 
 } // namespace blink

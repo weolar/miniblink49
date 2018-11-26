@@ -1048,6 +1048,7 @@ void InspectorDOMAgent::performSearch(ErrorString*, const String& whitespaceTrim
         }
 
         // XPath evaluation
+#ifdef MINIBLINK_NOT_IMPLEMENTED
         for (Document* document : docs) {
             ASSERT(document);
             TrackExceptionState exceptionState;
@@ -1066,6 +1067,7 @@ void InspectorDOMAgent::performSearch(ErrorString*, const String& whitespaceTrim
                 resultCollector.add(node);
             }
         }
+#endif
 
         // Selector evaluation
         for (Document* document : docs) {

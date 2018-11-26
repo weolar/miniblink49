@@ -199,7 +199,7 @@ struct WebContextMenuData {
 
     WebContextMenuData()
         : mediaType(MediaTypeNone)
-        , hasImageContents(true)
+        , hasImageContents(false)
         , mediaFlags(MediaNone)
         , isSpellCheckingEnabled(false)
         , misspellingHash(0)

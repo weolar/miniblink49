@@ -67,6 +67,9 @@ public:
     SecurityContext::InsecureRequestsPolicy insecureRequestsPolicy() const;
     SecurityContext::InsecureNavigationsSet* insecureNavigationsToUpgrade() const;
 
+    bool shouldInheritSecurityOriginFromOwner() const { return m_shouldInheritSecurityOriginFromOwner; }
+    DocumentInit& withoutInheritingSecurityOrigin();
+
     Document* parent() const { return m_parent.get(); }
     Document* owner() const { return m_owner.get(); }
     KURL parentBaseURL() const;
@@ -101,6 +104,16 @@ private:
     // the network load. See also SecurityContext::isSecureTransitionTo.
     // FIXME: This is for DocumentWriter creation, not for one of Document.
     bool m_shouldReuseDefaultView;
+
+    // http://www.whatwg.org/specs/web-apps/current-work/#origin-0
+    //
+    // If a Document has the address "about:blank"
+    //     The origin of the Document is the origin it was assigned when its browsing context was created.
+    //
+    // Note: We generalize this to all "blank" URLs and invalid URLs because we
+    // treat all of these URLs as about:blank.
+    //
+    bool m_shouldInheritSecurityOriginFromOwner;
 };
 
 } // namespace blink

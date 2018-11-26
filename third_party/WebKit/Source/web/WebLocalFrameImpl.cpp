@@ -2077,7 +2077,7 @@ WebAutofillClient* WebLocalFrameImpl::autofillClient()
 
 void WebLocalFrameImpl::setDevToolsAgentClient(WebDevToolsAgentClient* devToolsClient)
 {
-#ifdef MINIBLINK_NOT_IMPLEMENTED
+#ifndef MINIBLINK_NO_DEVTOOLS
     if (devToolsClient) {
         m_devToolsAgent = WebDevToolsAgentImpl::create(this, devToolsClient);
     } else {
@@ -2085,8 +2085,7 @@ void WebLocalFrameImpl::setDevToolsAgentClient(WebDevToolsAgentClient* devToolsC
         m_devToolsAgent->dispose();
         m_devToolsAgent.clear();
     }
-#endif // MINIBLINK_NOT_IMPLEMENTED
-    notImplemented();
+#endif // MINIBLINK_NO_DEVTOOLSLINK_NOT_IMPLEMENTED
 }
 
 InspectorOverlay* WebLocalFrameImpl::inspectorOverlay()

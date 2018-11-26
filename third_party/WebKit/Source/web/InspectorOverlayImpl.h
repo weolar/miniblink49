@@ -81,9 +81,9 @@ public:
     void showAndHideViewSize(bool showGrid) override;
     void setListener(InspectorOverlay::Listener* listener) override 
     {
-#ifdef IMPLEMENTED_NEWEST_BLINK
+#ifndef MINIBLINK_NO_DEVTOOLS
         m_listener = listener; 
-#endif // IMPLEMENTED_NEWEST_BLINK
+#endif // MINIBLINK_NO_DEVTOOLS
     }
     void suspendUpdates() override;
     void resumeUpdates() override;
@@ -114,7 +114,7 @@ private:
     void evaluateInOverlay(const String& method, const String& argument);
     void evaluateInOverlay(const String& method, PassRefPtr<JSONValue> argument);
     void onTimer(Timer<InspectorOverlayImpl>*);
-#ifdef IMPLEMENTED_NEWEST_BLINK
+#ifndef MINIBLINK_NO_DEVTOOLS
     WebViewImpl* m_webViewImpl;
     String m_pausedInDebuggerMessage;
     bool m_inspectModeEnabled;
@@ -134,7 +134,7 @@ private:
     bool m_updating;
     RawPtrWillBeMember<InspectorOverlay::Listener> m_listener;
     OwnPtrWillBeMember<LayoutEditor> m_layoutEditor;
-#endif // IMPLEMENTED_NEWEST_BLINK
+#endif // MINIBLINK_NO_DEVTOOLS
 };
 
 } // namespace blink

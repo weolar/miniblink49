@@ -7,8 +7,8 @@
 #include "config.h"
 #include "V8CompositorWorkerGlobalScope.h"
 
-#include "../../../../../out/Debug/gen/blink/modules/CompositorWorkerGlobalScopeCoreConstructors.h"
-#include "../../../../../out/Debug/gen/blink/modules/CompositorWorkerGlobalScopeModulesConstructors.h"
+#include "gen/blink/modules/CompositorWorkerGlobalScopeCoreConstructors.h"
+#include "gen/blink/modules/CompositorWorkerGlobalScopeModulesConstructors.h"
 #include "bindings/core/v8/ExceptionState.h"
 #include "bindings/core/v8/ScriptValue.h"
 #include "bindings/core/v8/SerializedScriptValueFactory.h"

@@ -355,6 +355,7 @@ public:
 			_Grow(_N); }
 	bool empty() const
 		{return (_Len == 0); }
+  inline void clear() { _Eos(0); }
 	size_type copy(_E *_S, size_type _N, size_type _P0 = 0) const
 		{if (_Len < _P0)
 			_Xran();

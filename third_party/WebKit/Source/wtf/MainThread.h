@@ -33,6 +33,7 @@
 #include "wtf/Forward.h"
 #include "wtf/WTFExport.h"
 #include <stdint.h>
+#include <functional>
 
 namespace WTF {
 
@@ -46,6 +47,7 @@ WTF_EXPORT bool isMainThread();
 namespace internal {
 
 void callOnMainThread(MainThreadFunction*, void* context);
+void callOnMainThreadClosure(std::function<void(void)>&& closure);
 
 } // namespace internal
 

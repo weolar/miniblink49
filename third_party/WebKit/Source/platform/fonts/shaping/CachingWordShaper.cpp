@@ -23,37 +23,40 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#ifndef MINIBLINK_NO_HARFBUZZ
 #include "config.h"
 #include "platform/fonts/shaping/CachingWordShaper.h"
 
 #include "platform/fonts/SimpleFontData.h"
-//#include "platform/fonts/shaping/CachingWordShapeIterator.h"
-//#include "platform/fonts/shaping/HarfBuzzShaper.h"
-//#include "platform/fonts/shaping/ShapeCache.h"
+#ifndef MINIBLINK_NO_HARFBUZZ
+#include "platform/fonts/shaping/CachingWordShapeIterator.h"
+#include "platform/fonts/shaping/HarfBuzzShaper.h"
+#include "platform/fonts/shaping/ShapeCache.h"
+#endif
 #include "wtf/text/CharacterNames.h"
 
 namespace blink {
 
 CachingWordShaper::CachingWordShaper()
 {
-#ifdef MINIBLINK_NOT_IMPLEMENTED
+//#ifdef MINIBLINK_NOT_IMPLEMENTED
     m_shapeCache = new ShapeCache();
-#endif // MINIBLINK_NOT_IMPLEMENTED
+//#endif // MINIBLINK_NOT_IMPLEMENTED
 }
 
 CachingWordShaper::~CachingWordShaper()
 {
-#ifdef MINIBLINK_NOT_IMPLEMENTED
+//#ifdef MINIBLINK_NOT_IMPLEMENTED
     delete m_shapeCache;
-#endif // MINIBLINK_NOT_IMPLEMENTED
+//#endif // MINIBLINK_NOT_IMPLEMENTED
 }
 
 void CachingWordShaper::clear()
 {
-#ifdef MINIBLINK_NOT_IMPLEMENTED
+//#ifdef MINIBLINK_NOT_IMPLEMENTED
     if (m_shapeCache)
         m_shapeCache->clear();
-#endif // MINIBLINK_NOT_IMPLEMENTED
+//#endif // MINIBLINK_NOT_IMPLEMENTED
 }
 
 float CachingWordShaper::width(const Font* font, const TextRun& run,
@@ -61,7 +64,7 @@ float CachingWordShaper::width(const Font* font, const TextRun& run,
     FloatRect* glyphBounds)
 {
     float width = 0;
-#ifdef MINIBLINK_NOT_IMPLEMENTED
+//#ifdef MINIBLINK_NOT_IMPLEMENTED
     RefPtr<ShapeResult> wordResult;
     CachingWordShapeIterator iterator(m_shapeCache, run, font, fallbackFonts);
     while (iterator.next(&wordResult)) {
@@ -71,12 +74,12 @@ float CachingWordShaper::width(const Font* font, const TextRun& run,
                 glyphBounds->unite(wordResult->bounds());
         }
     }
-#endif // MINIBLINK_NOT_IMPLEMENTED
-    notImplemented();
+//#endif // MINIBLINK_NOT_IMPLEMENTED
+//     notImplemented();
     return width;
 }
 
-#ifdef MINIBLINK_NOT_IMPLEMENTED
+//#ifdef MINIBLINK_NOT_IMPLEMENTED
 static inline float shapeResultsForRun(ShapeCache* shapeCache, const Font* font,
     const TextRun& run, HashSet<const SimpleFontData*>* fallbackFonts,
     Vector<RefPtr<ShapeResult>>* results)
@@ -92,50 +95,52 @@ static inline float shapeResultsForRun(ShapeCache* shapeCache, const Font* font,
     }
     return totalWidth;
 }
-#endif // MINIBLINK_NOT_IMPLEMENTED
+//#endif // MINIBLINK_NOT_IMPLEMENTED
 
 float CachingWordShaper::fillGlyphBuffer(const Font* font, const TextRun& run,
     HashSet<const SimpleFontData*>* fallbackFonts,
     GlyphBuffer* glyphBuffer, unsigned from, unsigned to)
 {
-#ifdef MINIBLINK_NOT_IMPLEMENTED
+//#ifdef MINIBLINK_NOT_IMPLEMENTED
     Vector<RefPtr<ShapeResult>> results;
     shapeResultsForRun(m_shapeCache, font, run, fallbackFonts, &results);
 
     return ShapeResult::fillGlyphBuffer(results, glyphBuffer, run, from, to);
-#endif // MINIBLINK_NOT_IMPLEMENTED
-    notImplemented();
-    return 0;
+// #endif // MINIBLINK_NOT_IMPLEMENTED
+//     notImplemented();
+//     return 0;
 }
 
 float CachingWordShaper::fillGlyphBufferForTextEmphasis(const Font* font,
     const TextRun& run, const GlyphData* emphasisData, GlyphBuffer* glyphBuffer,
     unsigned from, unsigned to)
 {
-#ifdef MINIBLINK_NOT_IMPLEMENTED
+//#ifdef MINIBLINK_NOT_IMPLEMENTED
     Vector<RefPtr<ShapeResult>> results;
     shapeResultsForRun(m_shapeCache, font, run, nullptr, &results);
 
     return ShapeResult::fillGlyphBufferForTextEmphasis(results, glyphBuffer,
         run, emphasisData, from, to);
-#endif // MINIBLINK_NOT_IMPLEMENTED
-    notImplemented();
-    return 0;
+//#endif // MINIBLINK_NOT_IMPLEMENTED
+//     notImplemented();
+//     return 0;
 }
 
 FloatRect CachingWordShaper::selectionRect(const Font* font, const TextRun& run,
     const FloatPoint& point, int height, unsigned from, unsigned to)
 {
-#ifdef MINIBLINK_NOT_IMPLEMENTED
+//#ifdef MINIBLINK_NOT_IMPLEMENTED
     Vector<RefPtr<ShapeResult>> results;
     float totalWidth = shapeResultsForRun(m_shapeCache, font, run, nullptr,
         &results);
 
     return ShapeResult::selectionRect(results, run.direction(), totalWidth,
         point, height, from, to);
-#endif // MINIBLINK_NOT_IMPLEMENTED
-    notImplemented();
-    return FloatRect();
+//#endif // MINIBLINK_NOT_IMPLEMENTED
+//     notImplemented();
+//     return FloatRect();
 }
 
 }; // namespace blink
+
+#endif

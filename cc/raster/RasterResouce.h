@@ -39,40 +39,28 @@
 class SkBitmap;
 class SkPicture;
 
+namespace blink {
+class RecursiveMutex;
+}
+
 namespace cc {
 
 class RasterResouce {
 public:
-    RasterResouce(SkBitmapRefWrap* bitmapWrap, RecursiveMutex* mutex, SkPicture* picture, blink::FloatRect layerRect, RasterTaskClient* client)
-        : m_bitmapWrap(bitmapWrap)
-        , m_mutex(mutex)
-        , m_picture(picture)
-        , m_layerRect(layerRect)
-        , m_client(client)
-    {
-    }
+    RasterResouce(SkBitmapRefWrap* bitmapWrap, blink::RecursiveMutex* mutex, SkPicture* picture, blink::FloatRect layerRect, RasterTaskClient* client);
+    ~RasterResouce();
 
-    ~RasterResouce()
-    {
-        delete m_picture;
-        m_bitmapWrap->deref();
-        m_client->rasterTaskFinish();
-    }
-
-    bool willBeDelete()
-    {
-        return m_client->willBeDelete();
-    }
+    bool willBeDelete();
 
     SkBitmap* bitmap() { return m_bitmapWrap->get(); }
-    RecursiveMutex* mutex(){ return m_mutex; }
+    blink::RecursiveMutex* mutex(){ return m_mutex; }
     SkPicture* picture(){ return m_picture; }
     blink::FloatRect layerRect() { return m_layerRect; }
     blink::IntSize bitmapSize() { return blink::IntSize(m_bitmapWrap->get()->width(), m_bitmapWrap->get()->height()); }
 
 private:
     cc::SkBitmapRefWrap* m_bitmapWrap;
-    RecursiveMutex* m_mutex;
+    blink::RecursiveMutex* m_mutex;
     SkPicture* m_picture;
     blink::FloatRect m_layerRect;
     RasterTaskClient* m_client;

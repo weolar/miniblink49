@@ -375,6 +375,9 @@ bool WorkerThread::isCurrentThread()
 
 void WorkerThread::performIdleWork(double deadlineSeconds)
 {
+    if (m_shutdown) // weolar
+        return;
+    
     double gcDeadlineSeconds = deadlineSeconds;
 
     // The V8 GC does some GC steps (e.g. compaction) only when the idle notification is ~1s.

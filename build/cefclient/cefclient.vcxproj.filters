@@ -516,6 +516,12 @@
     <ClInclude Include="..\..\cef\libcef_dll\wrapper\cef_browser_info_map.h">
       <Filter>libcef_dll\wrapper</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\cef\tests\cefclient\browser\osr_window_gdi.h">
+      <Filter>browser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\cef\tests\cefclient\browser\common_handler.h">
+      <Filter>browser</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -982,6 +988,9 @@
     </ClCompile>
     <ClCompile Include="..\..\cef\libcef_dll\cpptoc\resolve_callback_cpptoc.cc">
       <Filter>libcef_dll\cpptoc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\cef\tests\cefclient\browser\osr_window_gdi.cpp">
+      <Filter>browser</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

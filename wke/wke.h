@@ -7,12 +7,16 @@
 *
 */
 
-#ifndef WKE_H
+#include "wkedefine.h"
+
+#if 0
 #define WKE_H
 
 //////////////////////////////////////////////////////////////////////////
 
+#ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
+#endif
 #include <windows.h>
 
 //////////////////////////////////////////////////////////////////////////
@@ -118,13 +122,19 @@ typedef struct {
 } wkeProxy;
 
 enum wkeSettingMask {
-    WKE_SETTING_PROXY = 1
+    WKE_SETTING_PROXY = 1,
+    WKE_SETTING_PAINTCALLBACK_IN_OTHER_THREAD = 1 << 2,
 };
 
 typedef struct {
     wkeProxy proxy;
     unsigned int mask;
 } wkeSettings;
+
+typedef struct {
+    int size;
+    unsigned int bgColor;
+} wkeViewSettings;
 
 /*
 *c interface
@@ -143,6 +153,9 @@ WKE_API void wkeInit();
 WKE_API void wkeShutdown();
 WKE_API unsigned int wkeVersion();
 WKE_API const utf8* wkeVersionString();
+WKE_API void wkeGC(wkeWebView webView, long delayMs);
+
+typedef void* wkeWebFrameHandle;
 
 typedef void* (*FILE_OPEN_) (const char* path);
 typedef void(*FILE_CLOSE_) (void* handle);
@@ -150,7 +163,14 @@ typedef size_t(*FILE_SIZE) (void* handle);
 typedef int(*FILE_READ) (void* handle, void* buffer, size_t size);
 typedef int(*FILE_SEEK) (void* handle, int offset, int origin);
 
-WKE_API void wkeSetFileSystem(FILE_OPEN_ pfn_open, FILE_CLOSE_ pfn_close, FILE_SIZE pfn_size, FILE_READ pfn_read, FILE_SEEK pfn_seek);
+typedef FILE_OPEN_ WKE_FILE_OPEN;
+typedef FILE_CLOSE_ WKE_FILE_CLOSE;
+typedef FILE_SIZE WKE_FILE_SIZE;
+typedef FILE_READ WKE_FILE_READ;
+typedef FILE_SEEK WKE_FILE_SEEK;
+typedef bool (*WKE_EXISTS_FILE)(const char * path);
+
+WKE_API void wkeSetFileSystem(WKE_FILE_OPEN pfnOpen, WKE_FILE_CLOSE pfnClose, WKE_FILE_SIZE pfnSize, WKE_FILE_READ pfnRead, WKE_FILE_SEEK pfnSeek);
 
 WKE_API const char* wkeWebViewName(wkeWebView webView);
 WKE_API void wkeSetWebViewName(wkeWebView webView, const char* name);
@@ -158,6 +178,8 @@ WKE_API void wkeSetWebViewName(wkeWebView webView, const char* name);
 WKE_API bool wkeIsLoaded(wkeWebView webView);
 WKE_API bool wkeIsLoadFailed(wkeWebView webView);
 WKE_API bool wkeIsLoadComplete(wkeWebView webView);
+
+WKE_API const utf8* wkeGetSource(wkeWebView webView);
 
 WKE_API const utf8* wkeTitle(wkeWebView webView);
 WKE_API const wchar_t* wkeTitleW(wkeWebView webView);
@@ -215,7 +237,10 @@ WKE_API const wchar_t* jsToStringW(jsExecState es, jsValue v);
 WKE_API void wkeInitialize();
 WKE_API void wkeInitializeEx(const wkeSettings* settings);
 WKE_API void wkeConfigure(const wkeSettings* settings);
-bool wkeIsInitialize();
+WKE_API bool wkeIsInitialize();
+
+WKE_API void wkeSetViewSettings(wkeWebView webView, const wkeViewSettings* settings);
+WKE_API void wkeSetDebugConfig(wkeWebView webView, const char* debugString, const char* param);
 
 WKE_API void wkeFinalize();
 WKE_API void wkeUpdate();
@@ -225,6 +250,19 @@ WKE_API const utf8* wkeGetVersionString();
 WKE_API wkeWebView wkeCreateWebView();
 WKE_API wkeWebView wkeGetWebView(const char* name);
 WKE_API void wkeDestroyWebView(wkeWebView webView);
+
+WKE_API void wkeSetMemoryCacheEnable(wkeWebView webView, bool b);
+WKE_API void wkeSetTouchEnabled(wkeWebView webView, bool b);
+WKE_API void wkeSetNavigationToNewWindowEnable(wkeWebView webView, bool b);
+WKE_API void wkeSetCspCheckEnable(wkeWebView webView, bool b);
+WKE_API void wkeSetNpapiPluginsEnabled(wkeWebView webView, bool b);
+WKE_API void wkeSetHeadlessEnabled(wkeWebView webView, bool b);
+WKE_API void wkeSetDragEnable(wkeWebView webView, bool b);
+
+WKE_API void wkeSetViewNetInterface(wkeWebView webView, const char* netInterface);
+
+WKE_API void wkeSetProxy(const wkeProxy* proxy);
+WKE_API void wkeSetViewProxy(wkeWebView webView, wkeProxy *proxy);
 
 WKE_API const char* wkeGetName(wkeWebView webView);
 WKE_API void wkeSetName(wkeWebView webView, const char* name);
@@ -241,7 +279,7 @@ WKE_API void wkeSetUserAgentW(wkeWebView webView, const wchar_t* userAgent);
 WKE_API void wkeLoadW(wkeWebView webView, const wchar_t* url);
 WKE_API void wkeLoadURL(wkeWebView webView, const utf8* url);
 WKE_API void wkeLoadURLW(wkeWebView webView, const wchar_t* url);
-WKE_API void wkePostURL(wkeWebView wkeView, const utf8* url, const char* postData, int  postLen);
+WKE_API void wkePostURL(wkeWebView wkeView, const utf8* url, const char* postData, int postLen);
 WKE_API void wkePostURLW(wkeWebView wkeView, const wchar_t* url, const char* postData, int postLen);
 
 WKE_API void wkeLoadHTML(wkeWebView webView, const utf8* html);
@@ -249,6 +287,8 @@ WKE_API void wkeLoadHTMLW(wkeWebView webView, const wchar_t* html);
 
 WKE_API void wkeLoadFile(wkeWebView webView, const utf8* filename);
 WKE_API void wkeLoadFileW(wkeWebView webView, const wchar_t* filename);
+
+WKE_API const utf8* wkeGetURL(wkeWebView webView);
 
 WKE_API bool wkeIsLoading(wkeWebView webView);
 WKE_API bool wkeIsLoadingSucceeded(wkeWebView webView);
@@ -283,15 +323,49 @@ WKE_API bool wkeCanGoForward(wkeWebView webView);
 WKE_API bool wkeGoForward(wkeWebView webView);
 
 WKE_API void wkeEditorSelectAll(wkeWebView webView);
+WKE_API void wkeEditorUnSelect(wkeWebView webView);
 WKE_API void wkeEditorCopy(wkeWebView webView);
 WKE_API void wkeEditorCut(wkeWebView webView);
 WKE_API void wkeEditorPaste(wkeWebView webView);
 WKE_API void wkeEditorDelete(wkeWebView webView);
+WKE_API void wkeEditorUndo(wkeWebView webView);
+WKE_API void wkeEditorRedo(wkeWebView webView);
 
 WKE_API const wchar_t* wkeGetCookieW(wkeWebView webView);
 WKE_API const utf8* wkeGetCookie(wkeWebView webView);
+
+// struct wkeCookieList {
+//     char *data;
+//     wkeCookieList* next;
+// };
+// WKE_API const wkeCookieList* wkeGetAllCookie();
+// WKE_API void wkeFreeCookieList(const wkeCookieList* cookieList);
+typedef bool(*wkeCookieVisitor)(
+    void* params,
+    const char* name, 
+    const char* value, 
+    const char* domain,
+    const char* path, // If |path| is non-empty only URLs at or below the path will get the cookie value.
+    int secure, // If |secure| is true the cookie will only be sent for HTTPS requests.
+    int httpOnly, // If |httponly| is true the cookie will only be sent for HTTP requests.
+    int* expires // The cookie expiration date is only valid if |has_expires| is true.
+    );
+
+WKE_API void wkeVisitAllCookie(void* params, wkeCookieVisitor visitor);
+
+enum wkeCookieCommand {
+    wkeCookieCommandClearAllCookies,
+    wkeCookieCommandClearSessionCookies,
+    wkeCookieCommandFlushCookiesToFile,
+    wkeCookieCommandReloadCookiesFromFile,
+};
+WKE_API void wkePerformCookieCommand(wkeCookieCommand command);
+
 WKE_API void wkeSetCookieEnabled(wkeWebView webView, bool enable);
 WKE_API bool wkeIsCookieEnabled(wkeWebView webView);
+WKE_API void wkeSetCookieJarPath(wkeWebView webView, const WCHAR* path);
+WKE_API void wkeSetCookieJarFullPath(wkeWebView webView, const WCHAR* path);
+WKE_API void wkeSetLocalStorageFullPath(wkeWebView webView, const WCHAR* path);
 
 WKE_API void wkeSetMediaVolume(wkeWebView webView, float volume);
 WKE_API float wkeGetMediaVolume(wkeWebView webView);
@@ -329,15 +403,82 @@ WKE_API const wchar_t* wkeGetStringW(const wkeString string);
 WKE_API void wkeSetString(wkeString string, const utf8* str, size_t len);
 WKE_API void wkeSetStringW(wkeString string, const wchar_t* str, size_t len);
 
+WKE_API wkeString wkeCreateStringW(const wchar_t* str, size_t len);
+WKE_API void wkeDeleteString(wkeString str);
+
+WKE_API wkeWebView wkeGetWebViewForCurrentContext();
+WKE_API void wkeSetUserKeyValue(wkeWebView webView, const char* key, void* value);
+WKE_API void* wkeGetUserKeyValue(wkeWebView webView, const char* key);
+
+enum WkeCursorInfoType {
+    WkeCursorInfoPointer,
+    WkeCursorInfoCross,
+    WkeCursorInfoHand,
+    WkeCursorInfoIBeam,
+    WkeCursorInfoWait,
+    WkeCursorInfoHelp,
+    WkeCursorInfoEastResize,
+    WkeCursorInfoNorthResize,
+    WkeCursorInfoNorthEastResize,
+    WkeCursorInfoNorthWestResize,
+    WkeCursorInfoSouthResize,
+    WkeCursorInfoSouthEastResize,
+    WkeCursorInfoSouthWestResize,
+    WkeCursorInfoWestResize,
+    WkeCursorInfoNorthSouthResize,
+    WkeCursorInfoEastWestResize,
+    WkeCursorInfoNorthEastSouthWestResize,
+    WkeCursorInfoNorthWestSouthEastResize,
+    WkeCursorInfoColumnResize,
+    WkeCursorInfoRowResize,
+    WkeCursorInfoMiddlePanning,
+    WkeCursorInfoEastPanning,
+    WkeCursorInfoNorthPanning,
+    WkeCursorInfoNorthEastPanning,
+    WkeCursorInfoNorthWestPanning,
+    WkeCursorInfoSouthPanning,
+    WkeCursorInfoSouthEastPanning,
+    WkeCursorInfoSouthWestPanning,
+    WkeCursorInfoWestPanning,
+    WkeCursorInfoMove,
+    WkeCursorInfoVerticalText,
+    WkeCursorInfoCell,
+    WkeCursorInfoContextMenu,
+    WkeCursorInfoAlias,
+    WkeCursorInfoProgress,
+    WkeCursorInfoNoDrop,
+    WkeCursorInfoCopy,
+    WkeCursorInfoNone,
+    WkeCursorInfoNotAllowed,
+    WkeCursorInfoZoomIn,
+    WkeCursorInfoZoomOut,
+    WkeCursorInfoGrab,
+    WkeCursorInfoGrabbing,
+    WkeCursorInfoCustom
+};
+
+WKE_API int wkeGetCursorInfoType(wkeWebView webView);
+WKE_API void wkeSetDragFiles(wkeWebView webView, const POINT* clintPos, const POINT* screenPos, wkeString files[], int filesCount);
+
+// blink内部窗口创建回调，例如下拉框
+WKE_API void wkeOnBlinkWindowCreate();
+
 //wke callback-----------------------------------------------------------------------------------
 typedef void(*wkeTitleChangedCallback)(wkeWebView webView, void* param, const wkeString title);
 WKE_API void wkeOnTitleChanged(wkeWebView webView, wkeTitleChangedCallback callback, void* callbackParam);
+WKE_API void wkeOnMouseOverUrlChanged(wkeWebView webView, wkeTitleChangedCallback callback, void* callbackParam);
 
 typedef void(*wkeURLChangedCallback)(wkeWebView webView, void* param, const wkeString url);
 WKE_API void wkeOnURLChanged(wkeWebView webView, wkeURLChangedCallback callback, void* callbackParam);
 
+typedef void(*wkeURLChangedCallback2)(wkeWebView webView, void* param, wkeWebFrameHandle frameId, const wkeString url);
+WKE_API void wkeOnURLChanged2(wkeWebView webView, wkeURLChangedCallback2 callback, void* callbackParam);
+
 typedef void(*wkePaintUpdatedCallback)(wkeWebView webView, void* param, const HDC hdc, int x, int y, int cx, int cy);
 WKE_API void wkeOnPaintUpdated(wkeWebView webView, wkePaintUpdatedCallback callback, void* callbackParam);
+
+typedef void(*wkePaintBitUpdatedCallback)(wkeWebView webView, void* param, const void* buffer, const wkeRect* r, int width, int height);
+WKE_API void wkeOnPaintBitUpdated(wkeWebView webView, wkePaintBitUpdatedCallback callback, void* callbackParam);
 
 typedef void(*wkeAlertBoxCallback)(wkeWebView webView, void* param, const wkeString msg);
 WKE_API void wkeOnAlertBox(wkeWebView webView, wkeAlertBoxCallback callback, void* callbackParam);
@@ -381,6 +522,9 @@ WKE_API void wkeOnCreateView(wkeWebView webView, wkeCreateViewCallback callback,
 typedef void(*wkeDocumentReadyCallback)(wkeWebView webView, void* param);
 WKE_API void wkeOnDocumentReady(wkeWebView webView, wkeDocumentReadyCallback callback, void* param);
 
+typedef void(*wkeDocumentReady2Callback)(wkeWebView webView, void* param, wkeWebFrameHandle frameId);
+WKE_API void wkeOnDocumentReady2(wkeWebView webView, wkeDocumentReady2Callback callback, void* param);
+
 typedef enum {
     WKE_LOADING_SUCCEEDED,
     WKE_LOADING_FAILED,
@@ -390,19 +534,65 @@ typedef enum {
 typedef void(*wkeLoadingFinishCallback)(wkeWebView webView, void* param, const wkeString url, wkeLoadingResult result, const wkeString failedReason);
 WKE_API void wkeOnLoadingFinish(wkeWebView webView, wkeLoadingFinishCallback callback, void* param);
 
-typedef bool(*wkeLoadUrlBeginCallback)(wkeWebView webView, void* param, const char *url, void *job);
-WKE_API void wkeOnLoadUrlBegin(wkeWebView webView, wkeLoadUrlBeginCallback callback, void* callbackParam);
+typedef bool(*wkeDownloadCallback)(wkeWebView webView, void* param, const char* url);
+WKE_API void wkeOnDownload(wkeWebView webView, wkeDownloadCallback callback, void* param);
 
-typedef void(*wkeLoadUrlEndCallback)(wkeWebView webView, void* param, const char *url, void *job, void* buf, int len);
-WKE_API void wkeOnLoadUrlEnd(wkeWebView webView, wkeLoadUrlEndCallback callback, void* callbackParam);
+typedef enum {
+    wkeLevelDebug = 4,
+    wkeLevelLog = 1,
+    wkeLevelInfo = 5,
+    wkeLevelWarning = 2,
+    wkeLevelError = 3,
+    wkeLevelRevokedError = 6,
+    wkeLevelLast = wkeLevelInfo
+} wkeConsoleLevel;
+typedef void(*wkeConsoleCallback)(wkeWebView webView, void* param, wkeConsoleLevel level, const wkeString message, const wkeString sourceName, unsigned sourceLine, const wkeString stackTrace);
+WKE_API void wkeOnConsole(wkeWebView webView, wkeConsoleCallback callback, void* param);
+
+typedef void(*wkeOnCallUiThread)(wkeWebView webView, void* paramOnInThread);
+typedef void(*wkeCallUiThread)(wkeWebView webView, wkeOnCallUiThread func, void* param);
+WKE_API void wkeSetUIThreadCallback(wkeWebView webView, wkeCallUiThread callback, void* param);
 
 //wkeNet--------------------------------------------------------------------------------------
-WKE_API void wkeNetSetMIMEType(void *job, char *type);
-WKE_API void wkeNetSetHTTPHeaderField(void *job, wchar_t *key, wchar_t *value);
-WKE_API void wkeNetSetURL(void *job, const char *url);
-WKE_API void wkeNetSetData(void *job, void *buf, int len);
-WKE_API void wkeNetHookRequest(void *job);	//调用此函数后,网络层收到数据会存储在一buf内,接收数据完成后响应OnLoadUrlEnd事件.#此调用严重影响性能,慎用
-                                            //wkewindow-----------------------------------------------------------------------------------
+typedef bool(*wkeLoadUrlBeginCallback)(wkeWebView webView, void* param, const char* url, void* job);
+WKE_API void wkeOnLoadUrlBegin(wkeWebView webView, wkeLoadUrlBeginCallback callback, void* callbackParam);
+
+typedef void(*wkeLoadUrlEndCallback)(wkeWebView webView, void* param, const char *url, void* job, void* buf, int len);
+WKE_API void wkeOnLoadUrlEnd(wkeWebView webView, wkeLoadUrlEndCallback callback, void* callbackParam);
+
+typedef void(*wkeDidCreateScriptContextCallback)(wkeWebView webView, void* param, wkeWebFrameHandle frameId, void* context, int extensionGroup, int worldId);
+WKE_API void wkeOnDidCreateScriptContext(wkeWebView webView, wkeDidCreateScriptContextCallback callback, void* callbackParam);
+
+typedef void(*wkeWillReleaseScriptContextCallback)(wkeWebView webView, void* param, wkeWebFrameHandle frameId, void* context, int worldId);
+WKE_API void wkeOnWillReleaseScriptContext(wkeWebView webView, wkeWillReleaseScriptContextCallback callback, void* callbackParam);
+
+WKE_API void wkeNetSetMIMEType(void* job, char *type);
+WKE_API void wkeNetSetHTTPHeaderField(void* job, wchar_t* key, wchar_t* value, bool response);
+WKE_API void wkeNetSetURL(void* job, const char *url);
+WKE_API void wkeNetSetData(void* job, void *buf, int len);
+// 调用此函数后,网络层收到数据会存储在一buf内,接收数据完成后响应OnLoadUrlEnd事件.#此调用严重影响性能,慎用
+// 此函数和wkeNetSetData的区别是，wkeNetHookRequest会在接受到真正网络数据后再调用回调，并允许回调修改网络数据。
+// 而wkeNetSetData是在网络数据还没发送的时候修改
+WKE_API void wkeNetHookRequest(void *job);
+
+typedef bool(*wkeNetResponseCallback)(wkeWebView webView, void* param, const char* url, void* job);
+WKE_API void wkeNetOnResponse(wkeWebView webView, wkeNetResponseCallback callback, void* param);
+
+WKE_API void wkeNetGetMIMEType(void* job, wkeString mime);
+
+WKE_API bool wkeIsMainFrame(wkeWebView webView, wkeWebFrameHandle frameId);
+WKE_API bool wkeIsWebRemoteFrame(wkeWebView webView, wkeWebFrameHandle frameId);
+WKE_API wkeWebFrameHandle wkeWebFrameGetMainFrame(wkeWebView webView);
+WKE_API jsValue wkeRunJsByFrame(wkeWebView webView, wkeWebFrameHandle frameId, const utf8* script, bool isInClosure);
+//WKE_API const utf8* wkeGetFrameUrl(wkeWebView webView, wkeWebFrameHandle frameId);
+
+typedef void* v8ContextPtr;
+WKE_API void wkeWebFrameGetMainWorldScriptContext(wkeWebView webView, wkeWebFrameHandle webFrameId, v8ContextPtr contextOut);
+
+typedef void* v8Isolate;
+WKE_API v8Isolate wkeGetBlinkMainThreadIsolate();
+
+//wkewindow-----------------------------------------------------------------------------------
 typedef enum {
     WKE_WINDOW_TYPE_POPUP,
     WKE_WINDOW_TYPE_TRANSPARENT,
@@ -430,9 +620,104 @@ WKE_API void wkeResizeWindow(wkeWebView webWindow, int width, int height);
 WKE_API void wkeSetWindowTitle(wkeWebView webWindow, const utf8* title);
 WKE_API void wkeSetWindowTitleW(wkeWebView webWindow, const wchar_t* title);
 
+// v3 api
+// #define WKE_CALL __cdecl
+// WKE_API void        WKE_CALL wkeLoad(wkeWebView* webView, const utf8* str);
+// WKE_API void        WKE_CALL wkeLoadW(wkeWebView* webView, const wchar_t* str);
+// 
+// WKE_API void        WKE_CALL wkeSetRepaintInterval(wkeWebView* webView, int ms);
+// WKE_API int         WKE_CALL wkeGetRepaintInterval(wkeWebView* webView);
+// WKE_API bool        WKE_CALL wkeRepaintIfNeededAfterInterval(wkeWebView* webView);
+// WKE_API bool        WKE_CALL wkeRepaintAllNeeded();
+// WKE_API int         WKE_CALL wkeRunMessageLoop(const bool *quit);
+// 
+// WKE_API void        WKE_CALL wkeSetHostWindow(wkeWebView* webWindow, void* hostWindow);
+// WKE_API void*       WKE_CALL wkeGetHostWindow(wkeWebView* webWindow);
+// 
+// typedef enum {
+//     WKE_MESSAGE_SOURCE_HTML,
+//     WKE_MESSAGE_SOURCE_XML,
+//     WKE_MESSAGE_SOURCE_JS,
+//     WKE_MESSAGE_SOURCE_NETWORK,
+//     WKE_MESSAGE_SOURCE_CONSOLE_API,
+//     WKE_MESSAGE_SOURCE_OTHER
+// } wkeMessageSource;
+// 
+// typedef enum {
+//     WKE_MESSAGE_TYPE_LOG,
+//     WKE_MESSAGE_TYPE_DIR,
+//     WKE_MESSAGE_TYPE_DIR_XML,
+//     WKE_MESSAGE_TYPE_TRACE,
+//     WKE_MESSAGE_TYPE_START_GROUP,
+//     WKE_MESSAGE_TYPE_START_GROUP_COLLAPSED,
+//     WKE_MESSAGE_TYPE_END_GROUP,
+//     WKE_MESSAGE_TYPE_ASSERT
+// 
+// } wkeMessageType;
+// 
+// typedef enum {
+//     WKE_MESSAGE_LEVEL_TIP,
+//     WKE_MESSAGE_LEVEL_LOG,
+//     WKE_MESSAGE_LEVEL_WARNING,
+//     WKE_MESSAGE_LEVEL_ERROR,
+//     WKE_MESSAGE_LEVEL_DEBUG
+// 
+// } wkeMessageLevel;
+// 
+// typedef struct {
+//     wkeMessageSource source;
+//     wkeMessageType type;
+//     wkeMessageLevel level;
+//     wkeString* message;
+//     wkeString* url;
+//     unsigned int lineNumber;
+// 
+// } wkeConsoleMessage;
+// 
+// typedef void (WKE_CALL *wkeConsoleMessageCallback)(wkeWebView* webView, void* param, const wkeConsoleMessage* message);
+// WKE_API void WKE_CALL wkeOnConsoleMessage(wkeWebView* webView, wkeConsoleMessageCallback callback, void* callbackParam);
+// 
+// typedef struct {
+//     wkeNavigationType navigationType;
+//     wkeString* url;
+//     wkeString* target;
+// 
+//     int x;
+//     int y;
+//     int width;
+//     int height;
+// 
+//     bool menuBarVisible;
+//     bool statusBarVisible;
+//     bool toolBarVisible;
+//     bool locationBarVisible;
+//     bool scrollbarsVisible;
+//     bool resizable;
+//     bool fullscreen;
+// 
+// } wkeNewViewInfo;
+// 
+// typedef struct {
+//     wkeString* url;
+//     wkeJSState* frameJSState;
+//     wkeJSState* mainFrameJSState;
+// 
+// } wkeDocumentReadyInfo;
+// 
+// WKE_API int         WKE_CALL wkeJSParamCount(wkeJSState* es);
+// WKE_API wkeJSType   WKE_CALL wkeJSParamType(wkeJSState* es, int index);
+// WKE_API wkeJSValue  WKE_CALL wkeJSParam(wkeJSState* es, int index);
+// 
+// WKE_API void       WKE_CALL  wkeJSAddRef(wkeJSState* es, wkeJSValue v);
+// WKE_API void       WKE_CALL  wkeJSReleaseRef(wkeJSState* es, wkeJSValue v);
+// WKE_API void       WKE_CALL  wkeJSCollectGarbge();
+//////////////////////////////////////////////////////////////////////////
+
 //JavaScript Bind-----------------------------------------------------------------------------------
 #define JS_CALL __fastcall
-typedef jsValue(JS_CALL *jsNativeFunction) (jsExecState es);
+typedef jsValue(JS_CALL* jsNativeFunction) (jsExecState es);
+
+typedef jsValue(* wkeJsNativeFunction) (jsExecState es, void* param);
 
 typedef enum {
     JSTYPE_NUMBER,
@@ -441,11 +726,16 @@ typedef enum {
     JSTYPE_OBJECT,
     JSTYPE_FUNCTION,
     JSTYPE_UNDEFINED,
+    JSTYPE_ARRAY,
 } jsType;
 
 WKE_API void jsBindFunction(const char* name, jsNativeFunction fn, unsigned int argCount);
 WKE_API void jsBindGetter(const char* name, jsNativeFunction fn); /*get property*/
 WKE_API void jsBindSetter(const char* name, jsNativeFunction fn); /*set property*/
+
+WKE_API void wkeJsBindFunction(const char* name, wkeJsNativeFunction fn, void* param, unsigned int argCount);
+WKE_API void wkeJsBindGetter(const char* name, wkeJsNativeFunction fn, void* param); /*get property*/
+WKE_API void wkeJsBindSetter(const char* name, wkeJsNativeFunction fn, void* param); /*set property*/
 
 WKE_API int jsArgCount(jsExecState es);
 WKE_API jsType jsArgType(jsExecState es, int argIdx);
@@ -504,13 +794,13 @@ WKE_API jsValue jsFunction(jsExecState es, jsData* obj);
 WKE_API jsData* jsGetData(jsExecState es, jsValue object);
 
 WKE_API jsValue jsGet(jsExecState es, jsValue object, const char* prop);
-WKE_API void   jsSet(jsExecState es, jsValue object, const char* prop, jsValue v);
+WKE_API void jsSet(jsExecState es, jsValue object, const char* prop, jsValue v);
 
 WKE_API jsValue jsGetAt(jsExecState es, jsValue object, int index);
-WKE_API void   jsSetAt(jsExecState es, jsValue object, int index, jsValue v);
+WKE_API void jsSetAt(jsExecState es, jsValue object, int index, jsValue v);
 
-WKE_API int     jsGetLength(jsExecState es, jsValue object);
-WKE_API void    jsSetLength(jsExecState es, jsValue object, int length);
+WKE_API int jsGetLength(jsExecState es, jsValue object);
+WKE_API void jsSetLength(jsExecState es, jsValue object, int length);
 
 //window object
 WKE_API jsValue jsGlobalObject(jsExecState es);
@@ -518,6 +808,7 @@ WKE_API wkeWebView jsGetWebView(jsExecState es);
 
 WKE_API jsValue jsEval(jsExecState es, const utf8* str);
 WKE_API jsValue jsEvalW(jsExecState es, const wchar_t* str);
+WKE_API jsValue jsEvalExW(jsExecState es, const wchar_t* str, bool isInClosure);
 
 WKE_API jsValue jsCall(jsExecState es, jsValue func, jsValue thisObject, jsValue* args, int argCount);
 WKE_API jsValue jsCallGlobal(jsExecState es, jsValue func, jsValue* args, int argCount);
@@ -531,6 +822,8 @@ WKE_API void jsGC();
 #ifdef __cplusplus
 }
 #endif
+
+#if defined(__cplusplus)
 
 namespace wke {
 
@@ -552,6 +845,8 @@ public:
 
     virtual void loadFile(const utf8* filename) = 0;
     virtual void loadFile(const wchar_t* filename) = 0;
+
+    virtual const utf8* url() const = 0;
 
     virtual bool isLoading() const = 0;        /*document load sucessed*/
     virtual bool isLoadingFailed() const = 0;    /*document load failed*/
@@ -583,10 +878,13 @@ public:
     virtual bool goForward() = 0;
 
     virtual void editorSelectAll() = 0;
+    virtual void editorUnSelect() = 0;
     virtual void editorCopy() = 0;
     virtual void editorCut() = 0;
     virtual void editorPaste() = 0;
     virtual void editorDelete() = 0;
+    virtual void editorUndo() = 0;
+    virtual void editorRedo() = 0;
 
     virtual void setCookieEnabled(bool enable) = 0;
     virtual bool isCookieEnabled() const = 0;
@@ -625,6 +923,7 @@ public:
 
 }
 
+#endif
 
 #endif
 

@@ -34,6 +34,7 @@ MSVC_POP_WARNING();
 
 #include "third_party/WebKit/Source/platform/weborigin/KURL.h"
 #include "third_party/WebKit/Source/bindings/core/v8/V8StringResource.h"
+#include "third_party/WebKit/Source/bindings/core/v8/V8HiddenValue.h"
 #include "content/browser/WebPage.h"
 
 namespace base {
@@ -114,15 +115,24 @@ public:
                 v8::String::NewFromUtf8(isolate_, kCefContextState);
 
             v8::Local<v8::Object> object = context->Global();
+			//zero
+#if V8_MINOR_VERSION == 7
+			v8::Local<v8::Value> value = blink::V8HiddenValue::getHiddenValue(isolate_, object, key);
+#else
             v8::Local<v8::Value> value = object->GetHiddenValue(key);
-            if (!value.IsEmpty()) {
+#endif 
+			if (!value.IsEmpty()) {
                 return static_cast<CefV8ContextState*>(
                     v8::External::Cast(*value)->Value());
             }
 
             scoped_refptr<CefV8ContextState> state = new CefV8ContextState();
+			//zero
+#if V8_MINOR_VERSION == 7
+			blink::V8HiddenValue::setHiddenValue(isolate_, object, key, v8::External::New(isolate_, state.get()));
+#else
             object->SetHiddenValue(key, v8::External::New(isolate_, state.get()));
-
+#endif
             // Reference will be released in ReleaseContext.
             state->AddRef();
 
@@ -149,18 +159,26 @@ public:
             v8::Local<v8::String> key =
                 v8::String::NewFromUtf8(isolate_, kCefContextState);
             v8::Local<v8::Object> object = context->Global();
+			//zero
+#if V8_MINOR_VERSION == 7
+			v8::Local<v8::Value> value = blink::V8HiddenValue::getHiddenValue(isolate_, object, key);
+#else
             v8::Local<v8::Value> value = object->GetHiddenValue(key);
+#endif
             if (value.IsEmpty())
                 return;
 
             scoped_refptr<CefV8ContextState> state =
                 static_cast<CefV8ContextState*>(v8::External::Cast(*value)->Value());
             state->Detach();
+			//zero
+#if V8_MINOR_VERSION == 7
+			blink::V8HiddenValue::deleteHiddenValue(isolate_, object, key);
+#else
             object->DeleteHiddenValue(key);
-
+#endif
             // Match the AddRef in GetContextState.
-            state->Release();
-        }
+		}
     }
 
     void AddGlobalTrackObject(CefTrackNode* object) {
@@ -337,20 +355,30 @@ public:
 
     // Attach this track object to the specified V8 object.
     void AttachTo(v8::Local<v8::Object> object) {
+		//zero
+#if V8_MINOR_VERSION == 7
+		blink::V8HiddenValue::setHiddenValue(isolate_, object, v8::String::NewFromUtf8(isolate_, kCefTrackObject),
+			v8::External::New(isolate_, this));
+#else
         object->SetHiddenValue(v8::String::NewFromUtf8(isolate_, kCefTrackObject),
             v8::External::New(isolate_, this));
+#endif
     }
 
     // Retrieve the track object for the specified V8 object.
     static V8TrackObject* Unwrap(v8::Isolate* isolate,
         v8::Local<v8::Object> object) {
         DCHECK(isolate);
+		//zero
+#if V8_MINOR_VERSION == 7
+		v8::Local<v8::Value> value = blink::V8HiddenValue::getHiddenValue(isolate, object, v8::String::NewFromUtf8(isolate, kCefTrackObject));
+#else
         v8::Local<v8::Value> value =
             object->GetHiddenValue(
             v8::String::NewFromUtf8(isolate, kCefTrackObject));
+#endif
         if (!value.IsEmpty())
             return static_cast<V8TrackObject*>(v8::External::Cast(*value)->Value());
-
         return NULL;
     }
 
@@ -1100,16 +1128,24 @@ void CefV8ValueImpl::Handle::SetWeakIfNecessary() {
 
         // The added reference will be released in Destructor.
         AddRef();
+//zero
+#if V8_MINOR_VERSION == 7
+
+#else
         handle_.SetWeak(this, Destructor);
+#endif
     }
 }
+//zero
+#if V8_MINOR_VERSION == 7
 
+#else
 // static
 void CefV8ValueImpl::Handle::Destructor(
     const v8::WeakCallbackData<v8::Value, Handle>& data) {
     data.GetParameter()->Release();
 }
-
+#endif
 
 // CefV8Value
 

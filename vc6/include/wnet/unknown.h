@@ -45,15 +45,15 @@ DECLARE_INTERFACE(IUnknown)
     (   THIS_
         IN      REFIID,
         OUT     PVOID *
-    )   PURE;
+    )   = 0;
 
     STDMETHOD_(ULONG,AddRef)
     (   THIS
-    )   PURE;
+    )   = 0;
 
     STDMETHOD_(ULONG,Release)
     (   THIS
-    )   PURE;
+    )   = 0;
 };
 #undef INTERFACE
 

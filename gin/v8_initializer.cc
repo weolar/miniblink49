@@ -5,6 +5,8 @@
 #include "gin/v8_initializer.h"
 #include "base/rand_util.h"
 
+#include "v8-platform.h"
+
 #if defined(V8_USE_EXTERNAL_STARTUP_DATA)
 #include "base/basictypes.h"
 #include "base/debug/alias.h"
@@ -346,13 +348,17 @@ base::PlatformFile V8Initializer::GetOpenSnapshotFileForChildProcesses(
 }
 #endif  // defined(V8_USE_EXTERNAL_STARTUP_DATA)
 
+v8::Platform* V8Initializer::platform_ = nullptr;
+
 // static
 void V8Initializer::Initialize(gin::IsolateHolder::ScriptMode mode) {
   static bool v8_is_initialized = false;
   if (v8_is_initialized)
     return;
 
-  v8::V8::InitializePlatform(V8Platform::Get());
+  if (!platform_)
+      platform_ = V8Platform::Get();
+  v8::V8::InitializePlatform(platform_);
 
   if (gin::IsolateHolder::kStrictMode == mode) {
     static const char use_strict[] = "--use_strict";

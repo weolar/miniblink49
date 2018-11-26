@@ -30,11 +30,13 @@ public:
 
     void onClosing(wkeWindowClosingCallback callback, void* param);
     void onDestroy(wkeWindowDestroyCallback callback, void* param);
+    
+    virtual void setTransparent(bool transparent) override;
 
 protected:
-    virtual void onPaintUpdated(wkePaintUpdatedCallback callback, void* callbackParam);
-    virtual void onLoadingFinish(wkeLoadingFinishCallback callback, void* callbackParam);
-    virtual void onDocumentReady(wkeDocumentReadyCallback callback, void* callbackParam);
+    virtual void onPaintUpdated(wkePaintUpdatedCallback callback, void* callbackParam) override;
+    virtual void onLoadingFinish(wkeLoadingFinishCallback callback, void* callbackParam) override;
+    virtual void onDocumentReady(wkeDocumentReadyCallback callback, void* callbackParam) override;
 
     bool _createWindow(HWND parent, unsigned styles, unsigned styleEx, int x, int y, int width, int height);
     void _destroyWindow();
@@ -63,11 +65,19 @@ protected:
     wkeLoadingFinishCallback m_originalLoadingFinishCallback;
     void* m_originalLoadingFinishCallbackParam;
 
-    wkeWindowClosingCallback m_windowClosingCallback;
-    void* m_windowClosingCallbackParam;
+//     wkeWindowClosingCallback m_windowClosingCallback;
+//     void* m_windowClosingCallbackParam;
+// 
+//     wkeWindowDestroyCallback m_windowDestroyCallback;
+//     void* m_windowDestroyCallbackParam;
 
-    wkeWindowDestroyCallback m_windowDestroyCallback;
-    void* m_windowDestroyCallbackParam;
+    enum State {
+        kWkeWebWindowUninit,
+        kWkeWebWindowInit,
+        kWkeWebWindowDestroing,
+        kWkeWebWindowDestroyed,
+    };
+    State m_state;
 };
 
 };//namespace wke

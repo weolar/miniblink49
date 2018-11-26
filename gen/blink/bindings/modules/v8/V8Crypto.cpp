@@ -43,16 +43,17 @@ namespace CryptoV8Internal {
 
 static void subtleAttributeGetter(const v8::FunctionCallbackInfo<v8::Value>& info)
 {
-    v8::Local<v8::Object> holder = info.Holder();
-    Crypto* impl = V8Crypto::toImpl(holder);
-    RawPtr<SubtleCrypto> cppValue(impl->subtle());
-    if (cppValue && DOMDataStore::setReturnValue(info.GetReturnValue(), cppValue.get()))
-        return;
-    v8::Local<v8::Value> v8Value(toV8(cppValue.get(), holder, info.GetIsolate()));
-    if (!v8Value.IsEmpty()) {
-        V8HiddenValue::setHiddenValue(info.GetIsolate(), holder, v8AtomicString(info.GetIsolate(), "subtle"), v8Value);
-        v8SetReturnValue(info, v8Value);
-    }
+//     v8::Local<v8::Object> holder = info.Holder();
+//     Crypto* impl = V8Crypto::toImpl(holder);
+//     RawPtr<SubtleCrypto> cppValue(impl->subtle());
+//     if (cppValue && DOMDataStore::setReturnValue(info.GetReturnValue(), cppValue.get()))
+//         return;
+//     v8::Local<v8::Value> v8Value(toV8(cppValue.get(), holder, info.GetIsolate()));
+//     if (!v8Value.IsEmpty()) {
+//         V8HiddenValue::setHiddenValue(info.GetIsolate(), holder, v8AtomicString(info.GetIsolate(), "subtle"), v8Value);
+//         v8SetReturnValue(info, v8Value);
+//     }
+    OutputDebugStringA("subtleAttributeGetter not implemented\n");
 }
 
 static void subtleAttributeGetterCallback(const v8::FunctionCallbackInfo<v8::Value>& info)

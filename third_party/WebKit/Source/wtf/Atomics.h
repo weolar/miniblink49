@@ -86,7 +86,7 @@ ALWAYS_INLINE unsigned long long atomicSubtract(unsigned long long volatile* add
 
 ALWAYS_INLINE int atomicIncrement(int volatile* addend) { return InterlockedIncrement(reinterpret_cast<long volatile*>(addend)); }
 ALWAYS_INLINE int atomicDecrement(int volatile* addend) { return InterlockedDecrement(reinterpret_cast<long volatile*>(addend)); }
-
+#if _WIN32_WINNT < 0x0A00 && !defined(_WIN64)
 __inline LONGLONG _Add64(volatile LONGLONG * destination, LONGLONG value)
 {
     __asm
@@ -98,10 +98,12 @@ __inline LONGLONG _Add64(volatile LONGLONG * destination, LONGLONG value)
         adc dword ptr[ebx + 4], edx;
     }
 }
-
+#endif
 ALWAYS_INLINE int64_t atomicIncrement(int64_t volatile* addend)
 {
-    //return InterlockedIncrement64(reinterpret_cast<long long volatile*>(addend));
+#if _WIN32_WINNT >= 0x0A00 || defined(_WIN64)
+    return InterlockedIncrement64(reinterpret_cast<long long volatile*>(addend));
+#else
     __asm
     {
         mov eax, 1;
@@ -109,11 +111,14 @@ ALWAYS_INLINE int64_t atomicIncrement(int64_t volatile* addend)
         lock xadd dword ptr[ebx], eax;
         adc dword ptr[ebx + 4], 0;
     }
+#endif
 }
 
 ALWAYS_INLINE int64_t atomicDecrement(int64_t volatile* addend)
 {
-    //return InterlockedDecrement64(reinterpret_cast<long long volatile*>(addend));
+#if _WIN32_WINNT >= 0x0A00 || defined(_WIN64)
+    return InterlockedDecrement64(reinterpret_cast<long long volatile*>(addend));
+#else
     __asm
     {
         mov eax, 0xFFFFFFFF;
@@ -121,6 +126,7 @@ ALWAYS_INLINE int64_t atomicDecrement(int64_t volatile* addend)
         lock xadd dword ptr[ebx], eax;
         adc dword ptr[ebx + 4], 0xFFFFFFFF;
     }
+#endif
 }
 
 ALWAYS_INLINE int atomicTestAndSetToOne(int volatile* ptr)

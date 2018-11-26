@@ -382,26 +382,26 @@ typedef struct _CMInvokeCommandInfoEx {
 DECLARE_INTERFACE_(IContextMenu, IUnknown)
 {
     // *** IUnknown methods ***
-    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) PURE;
-    STDMETHOD_(ULONG,AddRef) (THIS)  PURE;
-    STDMETHOD_(ULONG,Release) (THIS) PURE;
+    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) = 0;
+    STDMETHOD_(ULONG,AddRef) (THIS)  = 0;
+    STDMETHOD_(ULONG,Release) (THIS) = 0;
 
     STDMETHOD(QueryContextMenu)(THIS_
                                 HMENU hmenu,
                                 UINT indexMenu,
                                 UINT idCmdFirst,
                                 UINT idCmdLast,
-                                UINT uFlags) PURE;
+                                UINT uFlags) = 0;
 
     STDMETHOD(InvokeCommand)(THIS_
-                             LPCMINVOKECOMMANDINFO lpici) PURE;
+                             LPCMINVOKECOMMANDINFO lpici) = 0;
 
     STDMETHOD(GetCommandString)(THIS_
                                 UINT_PTR    idCmd,
                                 UINT        uType,
                                 UINT      * pwReserved,
                                 LPSTR       pszName,
-                                UINT        cchMax) PURE;
+                                UINT        cchMax) = 0;
 };
 
 typedef IContextMenu *  LPCONTEXTMENU;
@@ -425,9 +425,9 @@ typedef IContextMenu *  LPCONTEXTMENU;
 DECLARE_INTERFACE_(IContextMenu2, IContextMenu)
 {
     // *** IUnknown methods ***
-    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) PURE;
-    STDMETHOD_(ULONG,AddRef) (THIS)  PURE;
-    STDMETHOD_(ULONG,Release) (THIS) PURE;
+    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) = 0;
+    STDMETHOD_(ULONG,AddRef) (THIS)  = 0;
+    STDMETHOD_(ULONG,Release) (THIS) = 0;
 
     // *** IContextMenu methods ***
 
@@ -436,24 +436,24 @@ DECLARE_INTERFACE_(IContextMenu2, IContextMenu)
                                 UINT indexMenu,
                                 UINT idCmdFirst,
                                 UINT idCmdLast,
-                                UINT uFlags) PURE;
+                                UINT uFlags) = 0;
 
     STDMETHOD(InvokeCommand)(THIS_
-                             LPCMINVOKECOMMANDINFO lpici) PURE;
+                             LPCMINVOKECOMMANDINFO lpici) = 0;
 
     STDMETHOD(GetCommandString)(THIS_
                                 UINT_PTR    idCmd,
                                 UINT        uType,
                                 UINT      * pwReserved,
                                 LPSTR       pszName,
-                                UINT        cchMax) PURE;
+                                UINT        cchMax) = 0;
 
     // *** IContextMenu2 methods ***
 
     STDMETHOD(HandleMenuMsg)(THIS_
                              UINT uMsg,
                              WPARAM wParam,
-                             LPARAM lParam) PURE;
+                             LPARAM lParam) = 0;
 };
 
 typedef IContextMenu2 * LPCONTEXTMENU2;
@@ -474,9 +474,9 @@ typedef IContextMenu2 * LPCONTEXTMENU2;
 DECLARE_INTERFACE_(IContextMenu3, IContextMenu2)
 {
     // *** IUnknown methods ***
-    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) PURE;
-    STDMETHOD_(ULONG,AddRef) (THIS)  PURE;
-    STDMETHOD_(ULONG,Release) (THIS) PURE;
+    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) = 0;
+    STDMETHOD_(ULONG,AddRef) (THIS)  = 0;
+    STDMETHOD_(ULONG,Release) (THIS) = 0;
 
     // *** IContextMenu methods ***
 
@@ -485,24 +485,24 @@ DECLARE_INTERFACE_(IContextMenu3, IContextMenu2)
                                 UINT indexMenu,
                                 UINT idCmdFirst,
                                 UINT idCmdLast,
-                                UINT uFlags) PURE;
+                                UINT uFlags) = 0;
 
     STDMETHOD(InvokeCommand)(THIS_
-                             LPCMINVOKECOMMANDINFO lpici) PURE;
+                             LPCMINVOKECOMMANDINFO lpici) = 0;
 
     STDMETHOD(GetCommandString)(THIS_
                                 UINT_PTR    idCmd,
                                 UINT        uType,
                                 UINT      * pwReserved,
                                 LPSTR       pszName,
-                                UINT        cchMax) PURE;
+                                UINT        cchMax) = 0;
 
     // *** IContextMenu2 methods ***
 
     STDMETHOD(HandleMenuMsg)(THIS_
                              UINT uMsg,
                              WPARAM wParam,
-                             LPARAM lParam) PURE;
+                             LPARAM lParam) = 0;
 
     // *** IContextMenu3 methods ***
 
@@ -510,7 +510,7 @@ DECLARE_INTERFACE_(IContextMenu3, IContextMenu2)
                              UINT uMsg,
                              WPARAM wParam,
                              LPARAM lParam,
-                             LRESULT* plResult) PURE;
+                             LRESULT* plResult) = 0;
 };
 
 typedef IContextMenu3 * LPCONTEXTMENU3;
@@ -582,22 +582,22 @@ typedef struct
 DECLARE_INTERFACE_(IPersistFolder3, IPersistFolder2)
 {
     // *** IUnknown methods ***
-    STDMETHOD(QueryInterface)(THIS_ REFIID riid, void **ppv) PURE;
-    STDMETHOD_(ULONG,AddRef)(THIS)  PURE;
-    STDMETHOD_(ULONG,Release)(THIS) PURE;
+    STDMETHOD(QueryInterface)(THIS_ REFIID riid, void **ppv) = 0;
+    STDMETHOD_(ULONG,AddRef)(THIS)  = 0;
+    STDMETHOD_(ULONG,Release)(THIS) = 0;
 
     // *** IPersist methods ***
-    STDMETHOD(GetClassID)(THIS_ LPCLSID lpClassID) PURE;
+    STDMETHOD(GetClassID)(THIS_ LPCLSID lpClassID) = 0;
 
     // *** IPersistFolder methods ***
-    STDMETHOD(Initialize)(THIS_ LPCITEMIDLIST pidl) PURE;
+    STDMETHOD(Initialize)(THIS_ LPCITEMIDLIST pidl) = 0;
 
     // *** IPersistFolder2 methods ***
-    STDMETHOD(GetCurFolder)(THIS_ LPITEMIDLIST *ppidl) PURE;
+    STDMETHOD(GetCurFolder)(THIS_ LPITEMIDLIST *ppidl) = 0;
 
     // *** IPersistFolder3 methods ***
-    STDMETHOD(InitializeEx)(THIS_ IBindCtx *pbc, LPCITEMIDLIST pidlRoot, const PERSIST_FOLDER_TARGET_INFO *ppfti) PURE;
-    STDMETHOD(GetFolderTargetInfo)(THIS_ PERSIST_FOLDER_TARGET_INFO *ppfti) PURE;
+    STDMETHOD(InitializeEx)(THIS_ IBindCtx *pbc, LPCITEMIDLIST pidlRoot, const PERSIST_FOLDER_TARGET_INFO *ppfti) = 0;
+    STDMETHOD(GetFolderTargetInfo)(THIS_ PERSIST_FOLDER_TARGET_INFO *ppfti) = 0;
 };
 
 
@@ -732,9 +732,9 @@ DECLARE_INTERFACE_(IPersistFolder3, IPersistFolder2)
 DECLARE_INTERFACE_(IExtractIconA, IUnknown)     // exic
 {
     // *** IUnknown methods ***
-    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) PURE;
-    STDMETHOD_(ULONG,AddRef) (THIS)  PURE;
-    STDMETHOD_(ULONG,Release) (THIS) PURE;
+    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) = 0;
+    STDMETHOD_(ULONG,AddRef) (THIS)  = 0;
+    STDMETHOD_(ULONG,Release) (THIS) = 0;
 
     // *** IExtractIcon methods ***
     STDMETHOD(GetIconLocation)(THIS_
@@ -742,14 +742,14 @@ DECLARE_INTERFACE_(IExtractIconA, IUnknown)     // exic
                          LPSTR  szIconFile,
                          UINT   cchMax,
                          int   * piIndex,
-                         UINT  * pwFlags) PURE;
+                         UINT  * pwFlags) = 0;
 
     STDMETHOD(Extract)(THIS_
                            LPCSTR pszFile,
                            UINT   nIconIndex,
                            HICON   *phiconLarge,
                            HICON   *phiconSmall,
-                           UINT    nIconSize) PURE;
+                           UINT    nIconSize) = 0;
 };
 
 typedef IExtractIconA * LPEXTRACTICONA;
@@ -760,9 +760,9 @@ typedef IExtractIconA * LPEXTRACTICONA;
 DECLARE_INTERFACE_(IExtractIconW, IUnknown)     // exic
 {
     // *** IUnknown methods ***
-    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) PURE;
-    STDMETHOD_(ULONG,AddRef) (THIS)  PURE;
-    STDMETHOD_(ULONG,Release) (THIS) PURE;
+    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) = 0;
+    STDMETHOD_(ULONG,AddRef) (THIS)  = 0;
+    STDMETHOD_(ULONG,Release) (THIS) = 0;
 
     // *** IExtractIcon methods ***
     STDMETHOD(GetIconLocation)(THIS_
@@ -770,14 +770,14 @@ DECLARE_INTERFACE_(IExtractIconW, IUnknown)     // exic
                          LPWSTR szIconFile,
                          UINT   cchMax,
                          int   * piIndex,
-                         UINT  * pwFlags) PURE;
+                         UINT  * pwFlags) = 0;
 
     STDMETHOD(Extract)(THIS_
                            LPCWSTR pszFile,
                            UINT   nIconIndex,
                            HICON   *phiconLarge,
                            HICON   *phiconSmall,
-                           UINT    nIconSize) PURE;
+                           UINT    nIconSize) = 0;
 };
 
 typedef IExtractIconW * LPEXTRACTICONW;
@@ -835,13 +835,13 @@ typedef IExtractIconW * LPEXTRACTICONW;
 DECLARE_INTERFACE_(IShellIcon, IUnknown)      // shi
 {
     // *** IUnknown methods ***
-    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) PURE;
-    STDMETHOD_(ULONG,AddRef) (THIS)  PURE;
-    STDMETHOD_(ULONG,Release) (THIS) PURE;
+    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) = 0;
+    STDMETHOD_(ULONG,AddRef) (THIS)  = 0;
+    STDMETHOD_(ULONG,Release) (THIS) = 0;
 
     // *** IShellIcon methods ***
     STDMETHOD(GetIconOf)(THIS_ LPCITEMIDLIST pidl, UINT flags,
-                    LPINT lpIconIndex) PURE;
+                    LPINT lpIconIndex) = 0;
 };
 
 typedef IShellIcon *LPSHELLICON;
@@ -870,12 +870,12 @@ typedef IShellIcon *LPSHELLICON;
 //      S_FALSE, if the file is not a member
 //      E_FAIL,  if the operation failed due to bad WIN32_FIND_DATA
 //
-// IShellIconOverlayIdentifier::GetOverlayInfo(LPWSTR pwszIconFile, int * pIndex, DWORD * dwFlags) PURE;
+// IShellIconOverlayIdentifier::GetOverlayInfo(LPWSTR pwszIconFile, int * pIndex, DWORD * dwFlags) = 0;
 //      pszIconFile    the path of the icon file
 //      pIndex         Depend on the flags, this could contain the IconIndex
 //      dwFlags        defined below
 //
-// IShellIconOverlayIdentifier::GetPriority(int * pIPriority) PURE;
+// IShellIconOverlayIdentifier::GetPriority(int * pIPriority) = 0;
 //      pIPriority     the priority of this Overlay Identifier
 //
 //===========================================================================
@@ -886,14 +886,14 @@ typedef IShellIcon *LPSHELLICON;
 DECLARE_INTERFACE_(IShellIconOverlayIdentifier, IUnknown)
 {
     // *** IUnknown methods ***
-    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) PURE;
-    STDMETHOD_(ULONG,AddRef) (THIS)  PURE;
-    STDMETHOD_(ULONG,Release) (THIS) PURE;
+    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) = 0;
+    STDMETHOD_(ULONG,AddRef) (THIS)  = 0;
+    STDMETHOD_(ULONG,Release) (THIS) = 0;
 
     // *** IShellIconOverlayIdentifier methods ***
-    STDMETHOD (IsMemberOf)(THIS_ LPCWSTR pwszPath, DWORD dwAttrib) PURE;
-    STDMETHOD (GetOverlayInfo)(THIS_ LPWSTR pwszIconFile, int cchMax, int * pIndex, DWORD * pdwFlags) PURE;
-    STDMETHOD (GetPriority)(THIS_ int * pIPriority) PURE;
+    STDMETHOD (IsMemberOf)(THIS_ LPCWSTR pwszPath, DWORD dwAttrib) = 0;
+    STDMETHOD (GetOverlayInfo)(THIS_ LPWSTR pwszIconFile, int cchMax, int * pIndex, DWORD * pdwFlags) = 0;
+    STDMETHOD (GetPriority)(THIS_ int * pIPriority) = 0;
 };
 
 #define ISIOI_ICONFILE            0x00000001          // path is returned through pwszIconFile
@@ -936,16 +936,16 @@ DECLARE_INTERFACE_(IShellIconOverlayIdentifier, IUnknown)
 DECLARE_INTERFACE_(IShellIconOverlayManager, IUnknown)
 {
     // *** IUnknown methods ***
-    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) PURE;
-    STDMETHOD_(ULONG,AddRef) (THIS)  PURE;
-    STDMETHOD_(ULONG,Release) (THIS) PURE;
+    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) = 0;
+    STDMETHOD_(ULONG,AddRef) (THIS)  = 0;
+    STDMETHOD_(ULONG,Release) (THIS) = 0;
 
     // *** IShellIconOverlayManager methods ***
-    STDMETHOD(GetFileOverlayInfo)(THIS_ LPCWSTR pwszPath, DWORD dwAttrib, int * pIndex, DWORD dwflags) PURE;
-    STDMETHOD(GetReservedOverlayInfo)(THIS_ LPCWSTR pwszPath, DWORD dwAttrib, int * pIndex, DWORD dwflags, int iReservedID) PURE;
-    STDMETHOD(RefreshOverlayImages)(THIS_ DWORD dwFlags) PURE;
-    STDMETHOD(LoadNonloadedOverlayIdentifiers)(THIS) PURE;
-    STDMETHOD(OverlayIndexFromImageIndex)(THIS_ int iImage, int * piIndex, BOOL fAdd) PURE;
+    STDMETHOD(GetFileOverlayInfo)(THIS_ LPCWSTR pwszPath, DWORD dwAttrib, int * pIndex, DWORD dwflags) = 0;
+    STDMETHOD(GetReservedOverlayInfo)(THIS_ LPCWSTR pwszPath, DWORD dwAttrib, int * pIndex, DWORD dwflags, int iReservedID) = 0;
+    STDMETHOD(RefreshOverlayImages)(THIS_ DWORD dwFlags) = 0;
+    STDMETHOD(LoadNonloadedOverlayIdentifiers)(THIS) = 0;
+    STDMETHOD(OverlayIndexFromImageIndex)(THIS_ int iImage, int * piIndex, BOOL fAdd) = 0;
 };
 #define SIOM_OVERLAYINDEX         1
 #define SIOM_ICONINDEX            2
@@ -984,13 +984,13 @@ DECLARE_INTERFACE_(IShellIconOverlayManager, IUnknown)
 DECLARE_INTERFACE_(IShellIconOverlay, IUnknown)
 {
     // *** IUnknown methods ***
-    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) PURE;
-    STDMETHOD_(ULONG,AddRef) (THIS)  PURE;
-    STDMETHOD_(ULONG,Release) (THIS) PURE;
+    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) = 0;
+    STDMETHOD_(ULONG,AddRef) (THIS)  = 0;
+    STDMETHOD_(ULONG,Release) (THIS) = 0;
 
     // *** IShellIconOverlay methods ***
-    STDMETHOD(GetOverlayIndex)(THIS_ LPCITEMIDLIST pidl, int * pIndex) PURE;
-    STDMETHOD(GetOverlayIconIndex)(THIS_ LPCITEMIDLIST pidl, int * pIconIndex) PURE;
+    STDMETHOD(GetOverlayIndex)(THIS_ LPCITEMIDLIST pidl, int * pIndex) = 0;
+    STDMETHOD(GetOverlayIconIndex)(THIS_ LPCITEMIDLIST pidl, int * pIconIndex) = 0;
 };
 
 #define OI_ASYNC 0xFFFFEEEE
@@ -1135,16 +1135,16 @@ typedef struct
 DECLARE_INTERFACE_(IShellLinkDataList, IUnknown)
 {
     // *** IUnknown methods ***
-    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) PURE;
-    STDMETHOD_(ULONG, AddRef) (THIS)  PURE;
-    STDMETHOD_(ULONG, Release) (THIS) PURE;
+    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) = 0;
+    STDMETHOD_(ULONG, AddRef) (THIS)  = 0;
+    STDMETHOD_(ULONG, Release) (THIS) = 0;
 
     // *** IShellLinkDataList methods ***
-    STDMETHOD(AddDataBlock)(THIS_ void * pDataBlock) PURE;
-    STDMETHOD(CopyDataBlock)(THIS_ DWORD dwSig, void **ppDataBlock) PURE;
-    STDMETHOD(RemoveDataBlock)(THIS_ DWORD dwSig) PURE;
-    STDMETHOD(GetFlags)(THIS_ DWORD *pdwFlags) PURE;
-    STDMETHOD(SetFlags)(THIS_ DWORD dwFlags) PURE;
+    STDMETHOD(AddDataBlock)(THIS_ void * pDataBlock) = 0;
+    STDMETHOD(CopyDataBlock)(THIS_ DWORD dwSig, void **ppDataBlock) = 0;
+    STDMETHOD(RemoveDataBlock)(THIS_ DWORD dwSig) = 0;
+    STDMETHOD(GetFlags)(THIS_ DWORD *pdwFlags) = 0;
+    STDMETHOD(SetFlags)(THIS_ DWORD dwFlags) = 0;
 };
 
 #endif // (_WIN32_IE >= 0x0400)
@@ -1156,12 +1156,12 @@ DECLARE_INTERFACE_(IShellLinkDataList, IUnknown)
 DECLARE_INTERFACE_(IResolveShellLink, IUnknown)
 {
     // *** IUnknown methods ***
-    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) PURE;
-    STDMETHOD_(ULONG, AddRef) (THIS)  PURE;
-    STDMETHOD_(ULONG, Release) (THIS) PURE;
+    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) = 0;
+    STDMETHOD_(ULONG, AddRef) (THIS)  = 0;
+    STDMETHOD_(ULONG, Release) (THIS) = 0;
 
     // *** IResolveShellLink methods ***
-    STDMETHOD(ResolveShellLink)(THIS_ IUnknown* punk, HWND hwnd, DWORD fFlags) PURE;
+    STDMETHOD(ResolveShellLink)(THIS_ IUnknown* punk, HWND hwnd, DWORD fFlags) = 0;
 };
 #endif // (_WIN32_IE >= 0x0500)
 
@@ -1179,12 +1179,12 @@ DECLARE_INTERFACE_(IResolveShellLink, IUnknown)
 DECLARE_INTERFACE_(IShellExecuteHookA, IUnknown) // shexhk
 {
     // *** IUnknown methods ***
-    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) PURE;
-    STDMETHOD_(ULONG, AddRef) (THIS)  PURE;
-    STDMETHOD_(ULONG, Release) (THIS) PURE;
+    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) = 0;
+    STDMETHOD_(ULONG, AddRef) (THIS)  = 0;
+    STDMETHOD_(ULONG, Release) (THIS) = 0;
 
     // *** IShellExecuteHookA methods ***
-    STDMETHOD(Execute)(THIS_ LPSHELLEXECUTEINFOA pei) PURE;
+    STDMETHOD(Execute)(THIS_ LPSHELLEXECUTEINFOA pei) = 0;
 };
 
 #undef  INTERFACE
@@ -1193,12 +1193,12 @@ DECLARE_INTERFACE_(IShellExecuteHookA, IUnknown) // shexhk
 DECLARE_INTERFACE_(IShellExecuteHookW, IUnknown) // shexhk
 {
     // *** IUnknown methods ***
-    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) PURE;
-    STDMETHOD_(ULONG, AddRef) (THIS)  PURE;
-    STDMETHOD_(ULONG, Release) (THIS) PURE;
+    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) = 0;
+    STDMETHOD_(ULONG, AddRef) (THIS)  = 0;
+    STDMETHOD_(ULONG, Release) (THIS) = 0;
 
     // *** IShellExecuteHookW methods ***
-    STDMETHOD(Execute)(THIS_ LPSHELLEXECUTEINFOW pei) PURE;
+    STDMETHOD(Execute)(THIS_ LPSHELLEXECUTEINFOW pei) = 0;
 };
 
 #ifdef UNICODE
@@ -1222,12 +1222,12 @@ DECLARE_INTERFACE_(IShellExecuteHookW, IUnknown) // shexhk
 DECLARE_INTERFACE_(IURLSearchHook, IUnknown)
 {
     // *** IUnknown methods ***
-    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) PURE;
-    STDMETHOD_(ULONG, AddRef) (THIS)  PURE;
-    STDMETHOD_(ULONG, Release) (THIS) PURE;
+    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) = 0;
+    STDMETHOD_(ULONG, AddRef) (THIS)  = 0;
+    STDMETHOD_(ULONG, Release) (THIS) = 0;
 
     // *** IURLSearchHook methods ***
-    STDMETHOD(Translate)(THIS_ LPWSTR lpwszSearchURL, DWORD cchBufferSize) PURE;
+    STDMETHOD(Translate)(THIS_ LPWSTR lpwszSearchURL, DWORD cchBufferSize) = 0;
 };
 
 #undef  INTERFACE
@@ -1236,14 +1236,14 @@ DECLARE_INTERFACE_(IURLSearchHook, IUnknown)
 DECLARE_INTERFACE_(ISearchContext, IUnknown)
 {
     // *** IUnknown methods ***
-    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) PURE;
-    STDMETHOD_(ULONG, AddRef) (THIS)  PURE;
-    STDMETHOD_(ULONG, Release) (THIS) PURE;
+    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) = 0;
+    STDMETHOD_(ULONG, AddRef) (THIS)  = 0;
+    STDMETHOD_(ULONG, Release) (THIS) = 0;
 
     // *** ISearchContext methods ***
-    STDMETHOD(GetSearchUrl)(THIS_ BSTR * pbstrSearchUrl) PURE;
-    STDMETHOD(GetSearchText)(THIS_ BSTR * pbstrSearchText) PURE;
-    STDMETHOD(GetSearchStyle)(THIS_ DWORD * pdwSearchStyle) PURE;
+    STDMETHOD(GetSearchUrl)(THIS_ BSTR * pbstrSearchUrl) = 0;
+    STDMETHOD(GetSearchText)(THIS_ BSTR * pbstrSearchText) = 0;
+    STDMETHOD(GetSearchStyle)(THIS_ DWORD * pdwSearchStyle) = 0;
 };
 
 #undef  INTERFACE
@@ -1252,7 +1252,7 @@ DECLARE_INTERFACE_(ISearchContext, IUnknown)
 DECLARE_INTERFACE_(IURLSearchHook2, IURLSearchHook)
 {
     // *** IURLSearchHook2 methods ***
-    STDMETHOD(TranslateWithSearchContext)(THIS_ LPWSTR lpwszSearchURL, DWORD cchBufferSize, ISearchContext * pSearchContext) PURE;
+    STDMETHOD(TranslateWithSearchContext)(THIS_ LPWSTR lpwszSearchURL, DWORD cchBufferSize, ISearchContext * pSearchContext) = 0;
 };
 
 //===========================================================================
@@ -1267,17 +1267,17 @@ DECLARE_INTERFACE_(IURLSearchHook2, IURLSearchHook)
 DECLARE_INTERFACE_(INewShortcutHookA, IUnknown) // nshhk
 {
     // *** IUnknown methods ***
-    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) PURE;
-    STDMETHOD_(ULONG, AddRef) (THIS)  PURE;
-    STDMETHOD_(ULONG, Release) (THIS) PURE;
+    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) = 0;
+    STDMETHOD_(ULONG, AddRef) (THIS)  = 0;
+    STDMETHOD_(ULONG, Release) (THIS) = 0;
 
     // *** INewShortcutHook methods ***
-    STDMETHOD(SetReferent)(THIS_ LPCSTR pcszReferent, HWND hwnd) PURE;
-    STDMETHOD(GetReferent)(THIS_ LPSTR pszReferent, int cchReferent) PURE;
-    STDMETHOD(SetFolder)(THIS_ LPCSTR pcszFolder) PURE;
-    STDMETHOD(GetFolder)(THIS_ LPSTR pszFolder, int cchFolder) PURE;
-    STDMETHOD(GetName)(THIS_ LPSTR pszName, int cchName) PURE;
-    STDMETHOD(GetExtension)(THIS_ LPSTR pszExtension, int cchExtension) PURE;
+    STDMETHOD(SetReferent)(THIS_ LPCSTR pcszReferent, HWND hwnd) = 0;
+    STDMETHOD(GetReferent)(THIS_ LPSTR pszReferent, int cchReferent) = 0;
+    STDMETHOD(SetFolder)(THIS_ LPCSTR pcszFolder) = 0;
+    STDMETHOD(GetFolder)(THIS_ LPSTR pszFolder, int cchFolder) = 0;
+    STDMETHOD(GetName)(THIS_ LPSTR pszName, int cchName) = 0;
+    STDMETHOD(GetExtension)(THIS_ LPSTR pszExtension, int cchExtension) = 0;
 };
 
 #undef  INTERFACE
@@ -1286,17 +1286,17 @@ DECLARE_INTERFACE_(INewShortcutHookA, IUnknown) // nshhk
 DECLARE_INTERFACE_(INewShortcutHookW, IUnknown) // nshhk
 {
     // *** IUnknown methods ***
-    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) PURE;
-    STDMETHOD_(ULONG, AddRef) (THIS)  PURE;
-    STDMETHOD_(ULONG, Release) (THIS) PURE;
+    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) = 0;
+    STDMETHOD_(ULONG, AddRef) (THIS)  = 0;
+    STDMETHOD_(ULONG, Release) (THIS) = 0;
 
     // *** INewShortcutHook methods ***
-    STDMETHOD(SetReferent)(THIS_ LPCWSTR pcszReferent, HWND hwnd) PURE;
-    STDMETHOD(GetReferent)(THIS_ LPWSTR pszReferent, int cchReferent) PURE;
-    STDMETHOD(SetFolder)(THIS_ LPCWSTR pcszFolder) PURE;
-    STDMETHOD(GetFolder)(THIS_ LPWSTR pszFolder, int cchFolder) PURE;
-    STDMETHOD(GetName)(THIS_ LPWSTR pszName, int cchName) PURE;
-    STDMETHOD(GetExtension)(THIS_ LPWSTR pszExtension, int cchExtension) PURE;
+    STDMETHOD(SetReferent)(THIS_ LPCWSTR pcszReferent, HWND hwnd) = 0;
+    STDMETHOD(GetReferent)(THIS_ LPWSTR pszReferent, int cchReferent) = 0;
+    STDMETHOD(SetFolder)(THIS_ LPCWSTR pcszFolder) = 0;
+    STDMETHOD(GetFolder)(THIS_ LPWSTR pszFolder, int cchFolder) = 0;
+    STDMETHOD(GetName)(THIS_ LPWSTR pszName, int cchName) = 0;
+    STDMETHOD(GetExtension)(THIS_ LPWSTR pszExtension, int cchExtension) = 0;
 };
 
 #ifdef UNICODE
@@ -1393,13 +1393,13 @@ typedef UINT PRINTEROP_FLAGS;
 DECLARE_INTERFACE_(ICopyHookA, IUnknown)        // sl
 {
     // *** IUnknown methods ***
-    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) PURE;
-    STDMETHOD_(ULONG,AddRef) (THIS)  PURE;
-    STDMETHOD_(ULONG,Release) (THIS) PURE;
+    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) = 0;
+    STDMETHOD_(ULONG,AddRef) (THIS)  = 0;
+    STDMETHOD_(ULONG,Release) (THIS) = 0;
 
     // *** ICopyHook methods ***
     STDMETHOD_(UINT,CopyCallback) (THIS_ HWND hwnd, UINT wFunc, UINT wFlags, LPCSTR pszSrcFile, DWORD dwSrcAttribs,
-                                   LPCSTR pszDestFile, DWORD dwDestAttribs) PURE;
+                                   LPCSTR pszDestFile, DWORD dwDestAttribs) = 0;
 };
 
 typedef ICopyHookA *    LPCOPYHOOKA;
@@ -1410,13 +1410,13 @@ typedef ICopyHookA *    LPCOPYHOOKA;
 DECLARE_INTERFACE_(ICopyHookW, IUnknown)        // sl
 {
     // *** IUnknown methods ***
-    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) PURE;
-    STDMETHOD_(ULONG,AddRef) (THIS)  PURE;
-    STDMETHOD_(ULONG,Release) (THIS) PURE;
+    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) = 0;
+    STDMETHOD_(ULONG,AddRef) (THIS)  = 0;
+    STDMETHOD_(ULONG,Release) (THIS) = 0;
 
     // *** ICopyHook methods ***
     STDMETHOD_(UINT,CopyCallback) (THIS_ HWND hwnd, UINT wFunc, UINT wFlags, LPCWSTR pszSrcFile, DWORD dwSrcAttribs,
-                                   LPCWSTR pszDestFile, DWORD dwDestAttribs) PURE;
+                                   LPCWSTR pszDestFile, DWORD dwDestAttribs) = 0;
 };
 
 typedef ICopyHookW *    LPCOPYHOOKW;
@@ -1443,13 +1443,13 @@ typedef ICopyHookW *    LPCOPYHOOKW;
 DECLARE_INTERFACE_(IFileViewerSite, IUnknown)
 {
     // *** IUnknown methods ***
-    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) PURE;
-    STDMETHOD_(ULONG,AddRef) (THIS)  PURE;
-    STDMETHOD_(ULONG,Release) (THIS) PURE;
+    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) = 0;
+    STDMETHOD_(ULONG,AddRef) (THIS)  = 0;
+    STDMETHOD_(ULONG,Release) (THIS) = 0;
 
     // *** IFileViewerSite methods ***
-    STDMETHOD(SetPinnedWindow) (THIS_ HWND hwnd) PURE;
-    STDMETHOD(GetPinnedWindow) (THIS_ HWND *phwnd) PURE;
+    STDMETHOD(SetPinnedWindow) (THIS_ HWND hwnd) = 0;
+    STDMETHOD(GetPinnedWindow) (THIS_ HWND *phwnd) = 0;
 };
 
 typedef IFileViewerSite * LPFILEVIEWERSITE;
@@ -1503,14 +1503,14 @@ typedef struct
 DECLARE_INTERFACE(IFileViewerA)
 {
     // *** IUnknown methods ***
-    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) PURE;
-    STDMETHOD_(ULONG,AddRef) (THIS)  PURE;
-    STDMETHOD_(ULONG,Release) (THIS) PURE;
+    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) = 0;
+    STDMETHOD_(ULONG,AddRef) (THIS)  = 0;
+    STDMETHOD_(ULONG,Release) (THIS) = 0;
 
     // *** IFileViewer methods ***
-    STDMETHOD(ShowInitialize) (THIS_ LPFILEVIEWERSITE lpfsi) PURE;
-    STDMETHOD(Show) (THIS_ LPFVSHOWINFO pvsi) PURE;
-    STDMETHOD(PrintTo) (THIS_ LPSTR pszDriver, BOOL fSuppressUI) PURE;
+    STDMETHOD(ShowInitialize) (THIS_ LPFILEVIEWERSITE lpfsi) = 0;
+    STDMETHOD(Show) (THIS_ LPFVSHOWINFO pvsi) = 0;
+    STDMETHOD(PrintTo) (THIS_ LPSTR pszDriver, BOOL fSuppressUI) = 0;
 };
 
 typedef IFileViewerA * LPFILEVIEWERA;
@@ -1521,14 +1521,14 @@ typedef IFileViewerA * LPFILEVIEWERA;
 DECLARE_INTERFACE(IFileViewerW)
 {
     // *** IUnknown methods ***
-    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) PURE;
-    STDMETHOD_(ULONG,AddRef) (THIS)  PURE;
-    STDMETHOD_(ULONG,Release) (THIS) PURE;
+    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) = 0;
+    STDMETHOD_(ULONG,AddRef) (THIS)  = 0;
+    STDMETHOD_(ULONG,Release) (THIS) = 0;
 
     // *** IFileViewer methods ***
-    STDMETHOD(ShowInitialize) (THIS_ LPFILEVIEWERSITE lpfsi) PURE;
-    STDMETHOD(Show) (THIS_ LPFVSHOWINFO pvsi) PURE;
-    STDMETHOD(PrintTo) (THIS_ LPWSTR pszDriver, BOOL fSuppressUI) PURE;
+    STDMETHOD(ShowInitialize) (THIS_ LPFILEVIEWERSITE lpfsi) = 0;
+    STDMETHOD(Show) (THIS_ LPFVSHOWINFO pvsi) = 0;
+    STDMETHOD(PrintTo) (THIS_ LPWSTR pszDriver, BOOL fSuppressUI) = 0;
 };
 
 typedef IFileViewerW * LPFILEVIEWERW;
@@ -1662,16 +1662,16 @@ typedef IFileViewerW * LPFILEVIEWERW;
 DECLARE_INTERFACE_(ICommDlgBrowser, IUnknown)
 {
     // *** IUnknown methods ***
-    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) PURE;
-    STDMETHOD_(ULONG,AddRef) (THIS)  PURE;
-    STDMETHOD_(ULONG,Release) (THIS) PURE;
+    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) = 0;
+    STDMETHOD_(ULONG,AddRef) (THIS)  = 0;
+    STDMETHOD_(ULONG,Release) (THIS) = 0;
 
     // *** ICommDlgBrowser methods ***
-    STDMETHOD(OnDefaultCommand) (THIS_ struct IShellView * ppshv) PURE;
+    STDMETHOD(OnDefaultCommand) (THIS_ struct IShellView * ppshv) = 0;
     STDMETHOD(OnStateChange) (THIS_ struct IShellView * ppshv,
-                ULONG uChange) PURE;
+                ULONG uChange) = 0;
     STDMETHOD(IncludeObject) (THIS_ struct IShellView * ppshv,
-                LPCITEMIDLIST pidl) PURE;
+                LPCITEMIDLIST pidl) = 0;
 };
 
 typedef ICommDlgBrowser * LPCOMMDLGBROWSER;
@@ -1717,23 +1717,23 @@ typedef ICommDlgBrowser * LPCOMMDLGBROWSER;
 DECLARE_INTERFACE_(ICommDlgBrowser2, IUnknown)
 {
     // *** IUnknown methods ***
-    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) PURE;
-    STDMETHOD_(ULONG,AddRef) (THIS)  PURE;
-    STDMETHOD_(ULONG,Release) (THIS) PURE;
+    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) = 0;
+    STDMETHOD_(ULONG,AddRef) (THIS)  = 0;
+    STDMETHOD_(ULONG,Release) (THIS) = 0;
 
     // *** ICommDlgBrowser methods ***
-    STDMETHOD(OnDefaultCommand) (THIS_ struct IShellView * ppshv) PURE;
+    STDMETHOD(OnDefaultCommand) (THIS_ struct IShellView * ppshv) = 0;
     STDMETHOD(OnStateChange) (THIS_ struct IShellView * ppshv,
-                ULONG uChange) PURE;
+                ULONG uChange) = 0;
     STDMETHOD(IncludeObject) (THIS_ struct IShellView * ppshv,
-                LPCITEMIDLIST pidl) PURE;
+                LPCITEMIDLIST pidl) = 0;
 
     // *** ICommDlgBrowser2 methods ***
     STDMETHOD(Notify) (THIS_ struct IShellView * ppshv,
-                DWORD dwNotifyType) PURE;
+                DWORD dwNotifyType) = 0;
     STDMETHOD(GetDefaultMenuText) (THIS_ struct IShellView * ppshv,
-                WCHAR *pszText, INT cchMax) PURE;
-    STDMETHOD(GetViewFlags)(THIS_ DWORD *pdwFlags) PURE;
+                WCHAR *pszText, INT cchMax) = 0;
+    STDMETHOD(GetViewFlags)(THIS_ DWORD *pdwFlags) = 0;
 
 };
 
@@ -2192,13 +2192,13 @@ SHSTDAPI SHGetDesktopFolder(IShellFolder **ppshf);
 DECLARE_INTERFACE_(IFileSystemBindData, IUnknown)
 {
     // *** IUnknown methods ***
-    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) PURE;
-    STDMETHOD_(ULONG,AddRef) (THIS)  PURE;
-    STDMETHOD_(ULONG,Release) (THIS) PURE;
+    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) = 0;
+    STDMETHOD_(ULONG,AddRef) (THIS)  = 0;
+    STDMETHOD_(ULONG,Release) (THIS) = 0;
 
     // *** IFileSystemBindData methods ***
-    STDMETHOD(SetFindData)(THIS_ const WIN32_FIND_DATAW *pfd) PURE;
-    STDMETHOD(GetFindData)(THIS_ WIN32_FIND_DATAW *pfd) PURE;
+    STDMETHOD(SetFindData)(THIS_ const WIN32_FIND_DATAW *pfd) = 0;
+    STDMETHOD(GetFindData)(THIS_ WIN32_FIND_DATAW *pfd) = 0;
 };
 
 #undef  INTERFACE
@@ -2207,13 +2207,13 @@ DECLARE_INTERFACE_(IFileSystemBindData, IUnknown)
 DECLARE_INTERFACE_(IShellDetails, IUnknown)
 {
     // *** IUnknown methods ***
-    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) PURE;
-    STDMETHOD_(ULONG,AddRef) (THIS)  PURE;
-    STDMETHOD_(ULONG,Release) (THIS) PURE;
+    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) = 0;
+    STDMETHOD_(ULONG,AddRef) (THIS)  = 0;
+    STDMETHOD_(ULONG,Release) (THIS) = 0;
 
     // *** IShellDetails methods ***
-    STDMETHOD(GetDetailsOf)(THIS_ LPCITEMIDLIST pidl, UINT iColumn, SHELLDETAILS *pDetails) PURE;
-    STDMETHOD(ColumnClick)(THIS_ UINT iColumn) PURE;
+    STDMETHOD(GetDetailsOf)(THIS_ LPCITEMIDLIST pidl, UINT iColumn, SHELLDETAILS *pDetails) = 0;
+    STDMETHOD(ColumnClick)(THIS_ UINT iColumn) = 0;
 };
 
 
@@ -2243,13 +2243,13 @@ DECLARE_INTERFACE_(IShellDetails, IUnknown)
 DECLARE_INTERFACE_(IObjMgr, IUnknown)
 {
     // *** IUnknown methods ***
-    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) PURE;
-    STDMETHOD_(ULONG, AddRef) (THIS) PURE;
-    STDMETHOD_(ULONG, Release) (THIS) PURE;
+    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) = 0;
+    STDMETHOD_(ULONG, AddRef) (THIS) = 0;
+    STDMETHOD_(ULONG, Release) (THIS) = 0;
 
     // *** IObjMgr specific methods ***
-    STDMETHOD(Append) (THIS_ IUnknown *punk) PURE;
-    STDMETHOD(Remove) (THIS_ IUnknown *punk) PURE;
+    STDMETHOD(Append) (THIS_ IUnknown *punk) = 0;
+    STDMETHOD(Remove) (THIS_ IUnknown *punk) = 0;
 };
 
 
@@ -2284,13 +2284,13 @@ DECLARE_INTERFACE_(IObjMgr, IUnknown)
 DECLARE_INTERFACE_(ICurrentWorkingDirectory, IUnknown)
 {
     // *** IUnknown methods ***
-    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) PURE;
-    STDMETHOD_(ULONG, AddRef) (THIS) PURE;
-    STDMETHOD_(ULONG, Release) (THIS) PURE;
+    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) = 0;
+    STDMETHOD_(ULONG, AddRef) (THIS) = 0;
+    STDMETHOD_(ULONG, Release) (THIS) = 0;
 
     // *** ICurrentWorkingDirectory specific methods ***
-    STDMETHOD(GetDirectory) (THIS_ LPWSTR pwzPath, DWORD cchSize) PURE;
-    STDMETHOD(SetDirectory) (THIS_ LPCWSTR pwzPath) PURE;
+    STDMETHOD(GetDirectory) (THIS_ LPWSTR pwzPath, DWORD cchSize) = 0;
+    STDMETHOD(SetDirectory) (THIS_ LPCWSTR pwzPath) = 0;
 };
 
 
@@ -2321,12 +2321,12 @@ DECLARE_INTERFACE_(ICurrentWorkingDirectory, IUnknown)
 DECLARE_INTERFACE_(IACList, IUnknown)
 {
     // *** IUnknown methods ***
-    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) PURE;
-    STDMETHOD_(ULONG, AddRef) (THIS) PURE;
-    STDMETHOD_(ULONG, Release) (THIS) PURE;
+    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) = 0;
+    STDMETHOD_(ULONG, AddRef) (THIS) = 0;
+    STDMETHOD_(ULONG, Release) (THIS) = 0;
 
     // *** IACList specific methods ***
-    STDMETHOD(Expand) (THIS_ LPCOLESTR pszExpand) PURE;
+    STDMETHOD(Expand) (THIS_ LPCOLESTR pszExpand) = 0;
 };
 
 //-------------------------------------------------------------------------
@@ -2357,8 +2357,8 @@ typedef enum _tagAUTOCOMPLETELISTOPTIONS
 DECLARE_INTERFACE_(IACList2, IACList)
 {
     // *** IACList2 specific methods ***
-    STDMETHOD(SetOptions)(THIS_ DWORD dwFlag) PURE;
-    STDMETHOD(GetOptions)(THIS_ DWORD* pdwFlag) PURE;
+    STDMETHOD(SetOptions)(THIS_ DWORD dwFlag) = 0;
+    STDMETHOD(GetOptions)(THIS_ DWORD* pdwFlag) = 0;
 };
 
 
@@ -2427,21 +2427,21 @@ DECLARE_INTERFACE_(IACList2, IACList)
 DECLARE_INTERFACE_(IProgressDialog, IUnknown)
 {
     // *** IUnknown methods ***
-    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) PURE;
-    STDMETHOD_(ULONG,AddRef) (THIS)  PURE;
-    STDMETHOD_(ULONG,Release) (THIS) PURE;
+    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) = 0;
+    STDMETHOD_(ULONG,AddRef) (THIS)  = 0;
+    STDMETHOD_(ULONG,Release) (THIS) = 0;
 
     // *** IProgressDialog specific methods
-    STDMETHOD(StartProgressDialog)(THIS_ HWND hwndParent, IUnknown * punkEnableModless, DWORD dwFlags, LPCVOID pvResevered) PURE;
-    STDMETHOD(StopProgressDialog)(THIS) PURE;
-    STDMETHOD(SetTitle)(THIS_ LPCWSTR pwzTitle) PURE;
-    STDMETHOD(SetAnimation)(THIS_ HINSTANCE hInstAnimation, UINT idAnimation) PURE;
-    STDMETHOD_(BOOL,HasUserCancelled) (THIS) PURE;
-    STDMETHOD(SetProgress)(THIS_ DWORD dwCompleted, DWORD dwTotal) PURE;
-    STDMETHOD(SetProgress64)(THIS_ ULONGLONG ullCompleted, ULONGLONG ullTotal) PURE;
-    STDMETHOD(SetLine)(THIS_ DWORD dwLineNum, LPCWSTR pwzString, BOOL fCompactPath, LPCVOID pvResevered) PURE;
-    STDMETHOD(SetCancelMsg)(THIS_ LPCWSTR pwzCancelMsg, LPCVOID pvResevered) PURE;
-    STDMETHOD(Timer)(THIS_ DWORD dwTimerAction, LPCVOID pvResevered) PURE;
+    STDMETHOD(StartProgressDialog)(THIS_ HWND hwndParent, IUnknown * punkEnableModless, DWORD dwFlags, LPCVOID pvResevered) = 0;
+    STDMETHOD(StopProgressDialog)(THIS) = 0;
+    STDMETHOD(SetTitle)(THIS_ LPCWSTR pwzTitle) = 0;
+    STDMETHOD(SetAnimation)(THIS_ HINSTANCE hInstAnimation, UINT idAnimation) = 0;
+    STDMETHOD_(BOOL,HasUserCancelled) (THIS) = 0;
+    STDMETHOD(SetProgress)(THIS_ DWORD dwCompleted, DWORD dwTotal) = 0;
+    STDMETHOD(SetProgress64)(THIS_ ULONGLONG ullCompleted, ULONGLONG ullTotal) = 0;
+    STDMETHOD(SetLine)(THIS_ DWORD dwLineNum, LPCWSTR pwzString, BOOL fCompactPath, LPCVOID pvResevered) = 0;
+    STDMETHOD(SetCancelMsg)(THIS_ LPCWSTR pwzCancelMsg, LPCVOID pvResevered) = 0;
+    STDMETHOD(Timer)(THIS_ DWORD dwTimerAction, LPCVOID pvResevered) = 0;
 };
 
 
@@ -2475,12 +2475,12 @@ DECLARE_INTERFACE_(IProgressDialog, IUnknown)
 DECLARE_INTERFACE_(IInputObjectSite, IUnknown)
 {
     // *** IUnknown methods ***
-    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) PURE;
-    STDMETHOD_(ULONG,AddRef) (THIS)  PURE;
-    STDMETHOD_(ULONG,Release) (THIS) PURE;
+    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) = 0;
+    STDMETHOD_(ULONG,AddRef) (THIS)  = 0;
+    STDMETHOD_(ULONG,Release) (THIS) = 0;
 
     // *** IInputObjectSite specific methods ***
-    STDMETHOD(OnFocusChangeIS)(THIS_ IUnknown* punkObj, BOOL fSetFocus) PURE;
+    STDMETHOD(OnFocusChangeIS)(THIS_ IUnknown* punkObj, BOOL fSetFocus) = 0;
 };
 
 
@@ -2513,14 +2513,14 @@ DECLARE_INTERFACE_(IInputObjectSite, IUnknown)
 DECLARE_INTERFACE_(IInputObject, IUnknown)
 {
     // *** IUnknown methods ***
-    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) PURE;
-    STDMETHOD_(ULONG,AddRef) (THIS)  PURE;
-    STDMETHOD_(ULONG,Release) (THIS) PURE;
+    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) = 0;
+    STDMETHOD_(ULONG,AddRef) (THIS)  = 0;
+    STDMETHOD_(ULONG,Release) (THIS) = 0;
 
     // *** IInputObject specific methods ***
-    STDMETHOD(UIActivateIO)(THIS_ BOOL fActivate, LPMSG lpMsg) PURE;
-    STDMETHOD(HasFocusIO)(THIS) PURE;
-    STDMETHOD(TranslateAcceleratorIO)(THIS_ LPMSG lpMsg) PURE;
+    STDMETHOD(UIActivateIO)(THIS_ BOOL fActivate, LPMSG lpMsg) = 0;
+    STDMETHOD(HasFocusIO)(THIS) = 0;
+    STDMETHOD(TranslateAcceleratorIO)(THIS_ LPMSG lpMsg) = 0;
 };
 
 
@@ -2565,18 +2565,18 @@ DECLARE_INTERFACE_(IInputObject, IUnknown)
 DECLARE_INTERFACE_(IDockingWindowSite, IOleWindow)
 {
     // *** IUnknown methods ***
-    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) PURE;
-    STDMETHOD_(ULONG,AddRef) (THIS)  PURE;
-    STDMETHOD_(ULONG,Release) (THIS) PURE;
+    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) = 0;
+    STDMETHOD_(ULONG,AddRef) (THIS)  = 0;
+    STDMETHOD_(ULONG,Release) (THIS) = 0;
 
     // *** IOleWindow methods ***
-    STDMETHOD(GetWindow) (THIS_ HWND * lphwnd) PURE;
-    STDMETHOD(ContextSensitiveHelp) (THIS_ BOOL fEnterMode) PURE;
+    STDMETHOD(GetWindow) (THIS_ HWND * lphwnd) = 0;
+    STDMETHOD(ContextSensitiveHelp) (THIS_ BOOL fEnterMode) = 0;
 
     // *** IDockingWindowSite methods ***
-    STDMETHOD(GetBorderDW) (THIS_ IUnknown* punkObj, LPRECT prcBorder) PURE;
-    STDMETHOD(RequestBorderSpaceDW) (THIS_ IUnknown* punkObj, LPCBORDERWIDTHS pbw) PURE;
-    STDMETHOD(SetBorderSpaceDW) (THIS_ IUnknown* punkObj, LPCBORDERWIDTHS pbw) PURE;
+    STDMETHOD(GetBorderDW) (THIS_ IUnknown* punkObj, LPRECT prcBorder) = 0;
+    STDMETHOD(RequestBorderSpaceDW) (THIS_ IUnknown* punkObj, LPCBORDERWIDTHS pbw) = 0;
+    STDMETHOD(SetBorderSpaceDW) (THIS_ IUnknown* punkObj, LPCBORDERWIDTHS pbw) = 0;
 };
 
 
@@ -2610,18 +2610,18 @@ DECLARE_INTERFACE_(IDockingWindowSite, IOleWindow)
 DECLARE_INTERFACE_(IDockingWindowFrame, IOleWindow)
 {
     // *** IUnknown methods ***
-    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) PURE;
-    STDMETHOD_(ULONG,AddRef) (THIS)  PURE;
-    STDMETHOD_(ULONG,Release) (THIS) PURE;
+    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) = 0;
+    STDMETHOD_(ULONG,AddRef) (THIS)  = 0;
+    STDMETHOD_(ULONG,Release) (THIS) = 0;
 
     // *** IOleWindow methods ***
-    STDMETHOD(GetWindow) (THIS_ HWND * lphwnd) PURE;
-    STDMETHOD(ContextSensitiveHelp) (THIS_ BOOL fEnterMode) PURE;
+    STDMETHOD(GetWindow) (THIS_ HWND * lphwnd) = 0;
+    STDMETHOD(ContextSensitiveHelp) (THIS_ BOOL fEnterMode) = 0;
 
     // *** IDockingWindowFrame methods ***
-    STDMETHOD(AddToolbar) (THIS_ IUnknown* punkSrc, LPCWSTR pwszItem, DWORD dwAddFlags) PURE;
-    STDMETHOD(RemoveToolbar) (THIS_ IUnknown* punkSrc, DWORD dwRemoveFlags) PURE;
-    STDMETHOD(FindToolbar) (THIS_ LPCWSTR pwszItem, REFIID riid, void **ppv) PURE;
+    STDMETHOD(AddToolbar) (THIS_ IUnknown* punkSrc, LPCWSTR pwszItem, DWORD dwAddFlags) = 0;
+    STDMETHOD(RemoveToolbar) (THIS_ IUnknown* punkSrc, DWORD dwRemoveFlags) = 0;
+    STDMETHOD(FindToolbar) (THIS_ LPCWSTR pwszItem, REFIID riid, void **ppv) = 0;
 };
 
 
@@ -2667,16 +2667,16 @@ DECLARE_INTERFACE_(IDockingWindowFrame, IOleWindow)
 DECLARE_INTERFACE_( IRunnableTask, IUnknown )
 {
     // *** IUnknown methods ***
-    STDMETHOD (QueryInterface)(THIS_ REFIID riid, void **ppv) PURE;
-    STDMETHOD_(ULONG, AddRef)(THIS) PURE;
-    STDMETHOD_(ULONG, Release)(THIS) PURE;
+    STDMETHOD (QueryInterface)(THIS_ REFIID riid, void **ppv) = 0;
+    STDMETHOD_(ULONG, AddRef)(THIS) = 0;
+    STDMETHOD_(ULONG, Release)(THIS) = 0;
 
     // *** IRunnableTask methods ***
-    STDMETHOD (Run)(THIS) PURE;
-    STDMETHOD (Kill)(THIS_ BOOL fWait ) PURE;
-    STDMETHOD (Suspend)(THIS) PURE;
-    STDMETHOD (Resume)(THIS) PURE;
-    STDMETHOD_(ULONG, IsRunning)(THIS) PURE;
+    STDMETHOD (Run)(THIS) = 0;
+    STDMETHOD (Kill)(THIS_ BOOL fWait ) = 0;
+    STDMETHOD (Suspend)(THIS) = 0;
+    STDMETHOD (Resume)(THIS) = 0;
+    STDMETHOD_(ULONG, IsRunning)(THIS) = 0;
 };
 
 typedef IRunnableTask * LPRUNNABLETASK;
@@ -2769,23 +2769,23 @@ typedef IRunnableTask * LPRUNNABLETASK;
 DECLARE_INTERFACE_( IShellTaskScheduler, IUnknown )
 {
     // *** IUnknown methods ***
-    STDMETHOD (QueryInterface)(THIS_ REFIID riid, void **ppv) PURE;
-    STDMETHOD_(ULONG, AddRef)(THIS) PURE;
-    STDMETHOD_(ULONG, Release)(THIS) PURE;
+    STDMETHOD (QueryInterface)(THIS_ REFIID riid, void **ppv) = 0;
+    STDMETHOD_(ULONG, AddRef)(THIS) = 0;
+    STDMETHOD_(ULONG, Release)(THIS) = 0;
 
     // *** IShellTaskScheduler methods ***
     STDMETHOD (AddTask)(THIS_ IRunnableTask * pTask,
                REFTASKOWNERID rtoid,
                DWORD_PTR lParam,
-               DWORD dwPriority ) PURE;
+               DWORD dwPriority ) = 0;
 
     STDMETHOD (RemoveTasks)(THIS_ REFTASKOWNERID rtoid,
                DWORD_PTR lParam,
-               BOOL fWaitIfRunning ) PURE;
+               BOOL fWaitIfRunning ) = 0;
 
-    STDMETHOD_(UINT, CountTasks)(THIS_ REFTASKOWNERID rtoid) PURE;
+    STDMETHOD_(UINT, CountTasks)(THIS_ REFTASKOWNERID rtoid) = 0;
 
-    STDMETHOD (Status)(THIS_ DWORD dwReleaseStatus, DWORD dwThreadTimeout ) PURE;
+    STDMETHOD (Status)(THIS_ DWORD dwReleaseStatus, DWORD dwThreadTimeout ) = 0;
 };
 
 typedef IShellTaskScheduler * LPSHELLTASKSCHEDULER;
@@ -2801,35 +2801,35 @@ typedef IShellTaskScheduler * LPSHELLTASKSCHEDULER;
 DECLARE_INTERFACE_( IShellTaskScheduler2, IShellTaskScheduler )
 {
     // *** IUnknown methods ***
-    STDMETHOD (QueryInterface)(THIS_ REFIID riid, void **ppv) PURE;
-    STDMETHOD_(ULONG, AddRef)(THIS) PURE;
-    STDMETHOD_(ULONG, Release)(THIS) PURE;
+    STDMETHOD (QueryInterface)(THIS_ REFIID riid, void **ppv) = 0;
+    STDMETHOD_(ULONG, AddRef)(THIS) = 0;
+    STDMETHOD_(ULONG, Release)(THIS) = 0;
 
     // *** IShellTaskScheduler methods ***
     STDMETHOD (AddTask)(THIS_ IRunnableTask * pTask,
                REFTASKOWNERID rtoid,
                DWORD_PTR lParam,
-               DWORD dwPriority ) PURE;
+               DWORD dwPriority ) = 0;
 
     STDMETHOD (RemoveTasks)(THIS_ REFTASKOWNERID rtoid,
                DWORD_PTR lParam,
-               BOOL fWaitIfRunning ) PURE;
+               BOOL fWaitIfRunning ) = 0;
 
-    STDMETHOD_(UINT, CountTasks)(THIS_ REFTASKOWNERID rtoid) PURE;
+    STDMETHOD_(UINT, CountTasks)(THIS_ REFTASKOWNERID rtoid) = 0;
 
-    STDMETHOD (Status)(THIS_ DWORD dwReleaseStatus, DWORD dwThreadTimeout ) PURE;
+    STDMETHOD (Status)(THIS_ DWORD dwReleaseStatus, DWORD dwThreadTimeout ) = 0;
 
     // *** IShellTaskScheduler2 methods ***
     STDMETHOD (AddTask2)(THIS_ IRunnableTask * pTask,
                REFTASKOWNERID rtoid,
                DWORD_PTR lParam,
                DWORD dwPriority,
-               DWORD grfFlags ) PURE;
+               DWORD grfFlags ) = 0;
 
     STDMETHOD (MoveTask)(THIS_ REFTASKOWNERID rtoid,
                DWORD_PTR lParam,
                DWORD dwPriority,
-               DWORD grfFlags ) PURE;
+               DWORD grfFlags ) = 0;
 };
 
 #endif // (_WIN32_IE >= 0x0501)
@@ -2852,7 +2852,7 @@ DECLARE_INTERFACE_ ( IThumbnailCapture, IUnknown )
     // *** IThumbnailCapture methods ***
     STDMETHOD (CaptureThumbnail)    ( THIS_ const SIZE * pMaxSize,
                                       IUnknown * pHTMLDoc2,
-                                      HBITMAP * phbmThumbnail ) PURE;
+                                      HBITMAP * phbmThumbnail ) = 0;
 };
 typedef IThumbnailCapture * LPTHUMBNAILCAPTURE;
 
@@ -2876,14 +2876,14 @@ typedef struct _EnumImageStoreDATAtag
 
 DECLARE_INTERFACE_( IEnumShellImageStore, IUnknown )
 {
-    STDMETHOD ( QueryInterface ) ( THIS_ REFIID riid, void **ppv ) PURE;
-    STDMETHOD_( ULONG, AddRef ) ( THIS ) PURE;
-    STDMETHOD_( ULONG, Release ) ( THIS ) PURE;
+    STDMETHOD ( QueryInterface ) ( THIS_ REFIID riid, void **ppv ) = 0;
+    STDMETHOD_( ULONG, AddRef ) ( THIS ) = 0;
+    STDMETHOD_( ULONG, Release ) ( THIS ) = 0;
 
-    STDMETHOD ( Reset ) ( THIS ) PURE;
-    STDMETHOD ( Next ) ( THIS_ ULONG celt, PENUMSHELLIMAGESTOREDATA * prgElt, ULONG * pceltFetched ) PURE;
-    STDMETHOD ( Skip ) ( THIS_ ULONG celt ) PURE;
-    STDMETHOD ( Clone ) ( THIS_ IEnumShellImageStore ** ppEnum ) PURE;
+    STDMETHOD ( Reset ) ( THIS ) = 0;
+    STDMETHOD ( Next ) ( THIS_ ULONG celt, PENUMSHELLIMAGESTOREDATA * prgElt, ULONG * pceltFetched ) = 0;
+    STDMETHOD ( Skip ) ( THIS_ ULONG celt ) = 0;
+    STDMETHOD ( Clone ) ( THIS_ IEnumShellImageStore ** ppEnum ) = 0;
 };
 
 typedef IEnumShellImageStore * LPENUMSHELLIMAGESTORE;
@@ -2900,31 +2900,31 @@ typedef IEnumShellImageStore * LPENUMSHELLIMAGESTORE;
 // in a free threaded manner in conjunction with the Lock parameter to Open and close
 DECLARE_INTERFACE_( IShellImageStore, IUnknown )
 {
-    STDMETHOD ( QueryInterface )( THIS_ REFIID riid, void **ppv ) PURE;
-    STDMETHOD_( ULONG, AddRef ) ( THIS ) PURE;
-    STDMETHOD_( ULONG, Release ) ( THIS ) PURE;
+    STDMETHOD ( QueryInterface )( THIS_ REFIID riid, void **ppv ) = 0;
+    STDMETHOD_( ULONG, AddRef ) ( THIS ) = 0;
+    STDMETHOD_( ULONG, Release ) ( THIS ) = 0;
 
     // if the lock parameter is used, then all other calls into
     // open and/or create will block until the lock is released.
-    STDMETHOD ( Open ) ( THIS_ DWORD dwMode, DWORD * pdwLock ) PURE;
-    STDMETHOD ( Create ) ( THIS_ DWORD dwMode, DWORD * pdwLock ) PURE;
+    STDMETHOD ( Open ) ( THIS_ DWORD dwMode, DWORD * pdwLock ) = 0;
+    STDMETHOD ( Create ) ( THIS_ DWORD dwMode, DWORD * pdwLock ) = 0;
 
     // if the lock is passed to either of these two methods, it releases the lock
     // once the operation is complete.
-    STDMETHOD ( ReleaseLock ) ( THIS_ DWORD const * pdwLock ) PURE;
-    STDMETHOD ( Close ) ( THIS_ DWORD const * pdwLock ) PURE;
-    STDMETHOD ( Commit ) ( THIS_ DWORD const * pdwLock ) PURE;
-    STDMETHOD ( IsLocked ) ( THIS ) PURE;
+    STDMETHOD ( ReleaseLock ) ( THIS_ DWORD const * pdwLock ) = 0;
+    STDMETHOD ( Close ) ( THIS_ DWORD const * pdwLock ) = 0;
+    STDMETHOD ( Commit ) ( THIS_ DWORD const * pdwLock ) = 0;
+    STDMETHOD ( IsLocked ) ( THIS ) = 0;
 
-    STDMETHOD ( GetMode ) ( THIS_ DWORD * pdwMode ) PURE;
-    STDMETHOD ( GetCapabilities ) ( THIS_ DWORD * pdwCapMask ) PURE;
+    STDMETHOD ( GetMode ) ( THIS_ DWORD * pdwMode ) = 0;
+    STDMETHOD ( GetCapabilities ) ( THIS_ DWORD * pdwCapMask ) = 0;
 
-    STDMETHOD ( AddEntry ) ( THIS_ LPCWSTR pszName, const FILETIME * pftTimeStamp, DWORD dwMode, HBITMAP hImage ) PURE;
-    STDMETHOD ( GetEntry ) ( THIS_ LPCWSTR pszName, DWORD dwMode, HBITMAP * phImage ) PURE;
-    STDMETHOD ( DeleteEntry ) ( THIS_ LPCWSTR pszName ) PURE;
-    STDMETHOD ( IsEntryInStore ) ( THIS_ LPCWSTR pszName, FILETIME * pftTimeStamp ) PURE;
+    STDMETHOD ( AddEntry ) ( THIS_ LPCWSTR pszName, const FILETIME * pftTimeStamp, DWORD dwMode, HBITMAP hImage ) = 0;
+    STDMETHOD ( GetEntry ) ( THIS_ LPCWSTR pszName, DWORD dwMode, HBITMAP * phImage ) = 0;
+    STDMETHOD ( DeleteEntry ) ( THIS_ LPCWSTR pszName ) = 0;
+    STDMETHOD ( IsEntryInStore ) ( THIS_ LPCWSTR pszName, FILETIME * pftTimeStamp ) = 0;
 
-    STDMETHOD ( Enum ) ( THIS_ LPENUMSHELLIMAGESTORE * ppEnum ) PURE;
+    STDMETHOD ( Enum ) ( THIS_ LPENUMSHELLIMAGESTORE * ppEnum ) = 0;
 };
 
 typedef IShellImageStore * LPSHELLIMAGESTORE;
@@ -2980,14 +2980,14 @@ typedef struct {
 DECLARE_INTERFACE_(IShellFolderBand, IUnknown)
 {
     // *** IUnknown methods ***
-    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) PURE;
-    STDMETHOD_(ULONG,AddRef) (THIS)  PURE;
-    STDMETHOD_(ULONG,Release) (THIS) PURE;
+    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) = 0;
+    STDMETHOD_(ULONG,AddRef) (THIS)  = 0;
+    STDMETHOD_(ULONG,Release) (THIS) = 0;
 
     // *** IShellFolderBand Methods ***
-    STDMETHOD(InitializeSFB)(THIS_ IShellFolder *psf, LPCITEMIDLIST pidl) PURE;
-    STDMETHOD(SetBandInfoSFB)(THIS_ PBANDINFOSFB pbi) PURE;
-    STDMETHOD(GetBandInfoSFB)(THIS_ PBANDINFOSFB pbi) PURE;
+    STDMETHOD(InitializeSFB)(THIS_ IShellFolder *psf, LPCITEMIDLIST pidl) = 0;
+    STDMETHOD(SetBandInfoSFB)(THIS_ PBANDINFOSFB pbi) = 0;
+    STDMETHOD(GetBandInfoSFB)(THIS_ PBANDINFOSFB pbi) = 0;
 };
 
 // Command Target IDs
@@ -3004,19 +3004,19 @@ enum {
 DECLARE_INTERFACE_(IDeskBarClient, IOleWindow)
 {
     // *** IUnknown methods ***
-    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) PURE;
-    STDMETHOD_(ULONG,AddRef) (THIS)  PURE;
-    STDMETHOD_(ULONG,Release) (THIS) PURE;
+    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) = 0;
+    STDMETHOD_(ULONG,AddRef) (THIS)  = 0;
+    STDMETHOD_(ULONG,Release) (THIS) = 0;
 
     // *** IOleWindow methods ***
-    STDMETHOD(GetWindow) (THIS_ HWND * lphwnd) PURE;
-    STDMETHOD(ContextSensitiveHelp) (THIS_ BOOL fEnterMode) PURE;
+    STDMETHOD(GetWindow) (THIS_ HWND * lphwnd) = 0;
+    STDMETHOD(ContextSensitiveHelp) (THIS_ BOOL fEnterMode) = 0;
 
     // *** IDeskBarClient methods ***
-    STDMETHOD(SetDeskBarSite)   (THIS_ IUnknown* punkSite) PURE;
-    STDMETHOD(SetModeDBC)          (THIS_ DWORD dwMode) PURE;
-    STDMETHOD(UIActivateDBC)    (THIS_ DWORD dwState) PURE;
-    STDMETHOD(GetSize)    (THIS_ DWORD dwWhich, LPRECT prc) PURE;
+    STDMETHOD(SetDeskBarSite)   (THIS_ IUnknown* punkSite) = 0;
+    STDMETHOD(SetModeDBC)          (THIS_ DWORD dwMode) = 0;
+    STDMETHOD(UIActivateDBC)    (THIS_ DWORD dwState) = 0;
+    STDMETHOD(GetSize)    (THIS_ DWORD dwWhich, LPRECT prc) = 0;
 };
 
 #define DBC_GS_IDEAL          0  // get the ideal size
@@ -3252,30 +3252,30 @@ typedef enum tagDTI_ADTIWUI
 DECLARE_INTERFACE_( IActiveDesktop, IUnknown )
 {
     // IUnknown methods
-    STDMETHOD (QueryInterface)(THIS_ REFIID riid, void **ppv) PURE;
-    STDMETHOD_(ULONG, AddRef) ( THIS ) PURE;
-    STDMETHOD_(ULONG, Release) ( THIS ) PURE;
+    STDMETHOD (QueryInterface)(THIS_ REFIID riid, void **ppv) = 0;
+    STDMETHOD_(ULONG, AddRef) ( THIS ) = 0;
+    STDMETHOD_(ULONG, Release) ( THIS ) = 0;
 
     // IActiveDesktop methods
-    STDMETHOD (ApplyChanges)(THIS_ DWORD dwFlags) PURE;
-    STDMETHOD (GetWallpaper)(THIS_ LPWSTR pwszWallpaper, UINT cchWallpaper, DWORD dwReserved) PURE;
-    STDMETHOD (SetWallpaper)(THIS_ LPCWSTR pwszWallpaper, DWORD dwReserved) PURE;
-    STDMETHOD (GetWallpaperOptions)(THIS_ LPWALLPAPEROPT pwpo, DWORD dwReserved) PURE;
-    STDMETHOD (SetWallpaperOptions)(THIS_ LPCWALLPAPEROPT pwpo, DWORD dwReserved) PURE;
-    STDMETHOD (GetPattern)(THIS_ LPWSTR pwszPattern, UINT cchPattern, DWORD dwReserved) PURE;
-    STDMETHOD (SetPattern)(THIS_ LPCWSTR pwszPattern, DWORD dwReserved) PURE;
-    STDMETHOD (GetDesktopItemOptions)(THIS_ LPCOMPONENTSOPT pco, DWORD dwReserved) PURE;
-    STDMETHOD (SetDesktopItemOptions)(THIS_ LPCCOMPONENTSOPT pco, DWORD dwReserved) PURE;
-    STDMETHOD (AddDesktopItem)(THIS_ LPCCOMPONENT pcomp, DWORD dwReserved) PURE;
-    STDMETHOD (AddDesktopItemWithUI)(THIS_ HWND hwnd, LPCOMPONENT pcomp, DWORD dwReserved) PURE;
-    STDMETHOD (ModifyDesktopItem)(THIS_ LPCCOMPONENT pcomp, DWORD dwFlags) PURE;
-    STDMETHOD (RemoveDesktopItem)(THIS_ LPCCOMPONENT pcomp, DWORD dwReserved) PURE;
-    STDMETHOD (GetDesktopItemCount)(THIS_ LPINT lpiCount, DWORD dwReserved) PURE;
-    STDMETHOD (GetDesktopItem)(THIS_ int nComponent, LPCOMPONENT pcomp, DWORD dwReserved) PURE;
-    STDMETHOD (GetDesktopItemByID)(THIS_ ULONG_PTR dwID, LPCOMPONENT pcomp, DWORD dwReserved) PURE;
-    STDMETHOD (GenerateDesktopItemHtml)(THIS_ LPCWSTR pwszFileName, LPCOMPONENT pcomp, DWORD dwReserved) PURE;
-    STDMETHOD (AddUrl)(THIS_ HWND hwnd, LPCWSTR pszSource, LPCOMPONENT pcomp, DWORD dwFlags) PURE;
-    STDMETHOD (GetDesktopItemBySource)(THIS_ LPCWSTR pwszSource, LPCOMPONENT pcomp, DWORD dwReserved) PURE;
+    STDMETHOD (ApplyChanges)(THIS_ DWORD dwFlags) = 0;
+    STDMETHOD (GetWallpaper)(THIS_ LPWSTR pwszWallpaper, UINT cchWallpaper, DWORD dwReserved) = 0;
+    STDMETHOD (SetWallpaper)(THIS_ LPCWSTR pwszWallpaper, DWORD dwReserved) = 0;
+    STDMETHOD (GetWallpaperOptions)(THIS_ LPWALLPAPEROPT pwpo, DWORD dwReserved) = 0;
+    STDMETHOD (SetWallpaperOptions)(THIS_ LPCWALLPAPEROPT pwpo, DWORD dwReserved) = 0;
+    STDMETHOD (GetPattern)(THIS_ LPWSTR pwszPattern, UINT cchPattern, DWORD dwReserved) = 0;
+    STDMETHOD (SetPattern)(THIS_ LPCWSTR pwszPattern, DWORD dwReserved) = 0;
+    STDMETHOD (GetDesktopItemOptions)(THIS_ LPCOMPONENTSOPT pco, DWORD dwReserved) = 0;
+    STDMETHOD (SetDesktopItemOptions)(THIS_ LPCCOMPONENTSOPT pco, DWORD dwReserved) = 0;
+    STDMETHOD (AddDesktopItem)(THIS_ LPCCOMPONENT pcomp, DWORD dwReserved) = 0;
+    STDMETHOD (AddDesktopItemWithUI)(THIS_ HWND hwnd, LPCOMPONENT pcomp, DWORD dwReserved) = 0;
+    STDMETHOD (ModifyDesktopItem)(THIS_ LPCCOMPONENT pcomp, DWORD dwFlags) = 0;
+    STDMETHOD (RemoveDesktopItem)(THIS_ LPCCOMPONENT pcomp, DWORD dwReserved) = 0;
+    STDMETHOD (GetDesktopItemCount)(THIS_ LPINT lpiCount, DWORD dwReserved) = 0;
+    STDMETHOD (GetDesktopItem)(THIS_ int nComponent, LPCOMPONENT pcomp, DWORD dwReserved) = 0;
+    STDMETHOD (GetDesktopItemByID)(THIS_ ULONG_PTR dwID, LPCOMPONENT pcomp, DWORD dwReserved) = 0;
+    STDMETHOD (GenerateDesktopItemHtml)(THIS_ LPCWSTR pwszFileName, LPCOMPONENT pcomp, DWORD dwReserved) = 0;
+    STDMETHOD (AddUrl)(THIS_ HWND hwnd, LPCWSTR pszSource, LPCOMPONENT pcomp, DWORD dwFlags) = 0;
+    STDMETHOD (GetDesktopItemBySource)(THIS_ LPCWSTR pwszSource, LPCOMPONENT pcomp, DWORD dwReserved) = 0;
 };
 
 typedef IActiveDesktop * LPACTIVEDESKTOP;
@@ -3302,15 +3302,15 @@ typedef IActiveDesktop * LPACTIVEDESKTOP;
 DECLARE_INTERFACE_( IActiveDesktopP, IUnknown )
 {
     // IUnknown methods
-    STDMETHOD (QueryInterface)(THIS_ REFIID riid, void **ppv) PURE;
-    STDMETHOD_(ULONG, AddRef) ( THIS ) PURE;
-    STDMETHOD_(ULONG, Release) ( THIS ) PURE;
+    STDMETHOD (QueryInterface)(THIS_ REFIID riid, void **ppv) = 0;
+    STDMETHOD_(ULONG, AddRef) ( THIS ) = 0;
+    STDMETHOD_(ULONG, Release) ( THIS ) = 0;
 
     // IActiveDesktopP methods
-    STDMETHOD (SetSafeMode)(THIS_ DWORD dwFlags) PURE;
-    STDMETHOD (EnsureUpdateHTML)(THIS) PURE;
-    STDMETHOD (SetScheme)(THIS_ LPCWSTR pwszSchemeName, DWORD dwFlags) PURE;
-    STDMETHOD (GetScheme)(THIS_ LPWSTR pwszSchemeName, DWORD *lpdwcchBuffer, DWORD dwFlags) PURE;
+    STDMETHOD (SetSafeMode)(THIS_ DWORD dwFlags) = 0;
+    STDMETHOD (EnsureUpdateHTML)(THIS) = 0;
+    STDMETHOD (SetScheme)(THIS_ LPCWSTR pwszSchemeName, DWORD dwFlags) = 0;
+    STDMETHOD (GetScheme)(THIS_ LPWSTR pwszSchemeName, DWORD *lpdwcchBuffer, DWORD dwFlags) = 0;
     //
 };
 
@@ -3325,15 +3325,15 @@ typedef IActiveDesktopP * LPACTIVEDESKTOPP;
 DECLARE_INTERFACE_( IADesktopP2, IUnknown )
 {
     // IUnknown methods
-    STDMETHOD (QueryInterface)(THIS_ REFIID riid, void **ppv) PURE;
-    STDMETHOD_(ULONG, AddRef) ( THIS ) PURE;
-    STDMETHOD_(ULONG, Release) ( THIS ) PURE;
+    STDMETHOD (QueryInterface)(THIS_ REFIID riid, void **ppv) = 0;
+    STDMETHOD_(ULONG, AddRef) ( THIS ) = 0;
+    STDMETHOD_(ULONG, Release) ( THIS ) = 0;
 
     // IADesktopP2 methods
-    STDMETHOD (ReReadWallpaper)(THIS) PURE;
-    STDMETHOD (GetADObjectFlags)(THIS_ DWORD *lpdwFlags, DWORD dwMask) PURE;
-    STDMETHOD (UpdateAllDesktopSubscriptions)(THIS) PURE;
-    STDMETHOD (MakeDynamicChanges)(THIS_ IOleObject *pOleObj) PURE;
+    STDMETHOD (ReReadWallpaper)(THIS) = 0;
+    STDMETHOD (GetADObjectFlags)(THIS_ DWORD *lpdwFlags, DWORD dwMask) = 0;
+    STDMETHOD (UpdateAllDesktopSubscriptions)(THIS) = 0;
+    STDMETHOD (MakeDynamicChanges)(THIS_ IOleObject *pOleObj) = 0;
 };
 
 typedef IADesktopP2 * LPADESKTOPP2;
@@ -3391,14 +3391,14 @@ typedef const SHCOLUMNDATA* LPCSHCOLUMNDATA;
 DECLARE_INTERFACE_(IColumnProvider, IUnknown)
 {
     // IUnknown methods
-    STDMETHOD (QueryInterface)(THIS_ REFIID riid, void **ppv) PURE;
-    STDMETHOD_(ULONG, AddRef)(THIS) PURE;
-    STDMETHOD_(ULONG, Release)(THIS) PURE;
+    STDMETHOD (QueryInterface)(THIS_ REFIID riid, void **ppv) = 0;
+    STDMETHOD_(ULONG, AddRef)(THIS) = 0;
+    STDMETHOD_(ULONG, Release)(THIS) = 0;
 
     // IColumnProvider methods
-    STDMETHOD (Initialize)(THIS_ LPCSHCOLUMNINIT psci) PURE;
-    STDMETHOD (GetColumnInfo)(THIS_ DWORD dwIndex, SHCOLUMNINFO *psci) PURE;
-    STDMETHOD (GetItemData)(THIS_ LPCSHCOLUMNID pscid, LPCSHCOLUMNDATA pscd, VARIANT *pvarData) PURE;
+    STDMETHOD (Initialize)(THIS_ LPCSHCOLUMNINIT psci) = 0;
+    STDMETHOD (GetColumnInfo)(THIS_ DWORD dwIndex, SHCOLUMNINFO *psci) = 0;
+    STDMETHOD (GetItemData)(THIS_ LPCSHCOLUMNID pscid, LPCSHCOLUMNDATA pscd, VARIANT *pvarData) = 0;
 };
 
 
@@ -3487,18 +3487,18 @@ typedef struct
 DECLARE_INTERFACE_( IDropTargetHelper, IUnknown )
 {
     // IUnknown methods
-    STDMETHOD (QueryInterface)(THIS_ REFIID riid, void **ppv) PURE;
-    STDMETHOD_(ULONG, AddRef) ( THIS ) PURE;
-    STDMETHOD_(ULONG, Release) ( THIS ) PURE;
+    STDMETHOD (QueryInterface)(THIS_ REFIID riid, void **ppv) = 0;
+    STDMETHOD_(ULONG, AddRef) ( THIS ) = 0;
+    STDMETHOD_(ULONG, Release) ( THIS ) = 0;
 
     // IDropTargetHelper
     STDMETHOD (DragEnter)(THIS_ HWND hwndTarget, IDataObject* pDataObject,
-                          POINT* ppt, DWORD dwEffect) PURE;
-    STDMETHOD (DragLeave)(THIS) PURE;
-    STDMETHOD (DragOver)(THIS_ POINT* ppt, DWORD dwEffect) PURE;
+                          POINT* ppt, DWORD dwEffect) = 0;
+    STDMETHOD (DragLeave)(THIS) = 0;
+    STDMETHOD (DragOver)(THIS_ POINT* ppt, DWORD dwEffect) = 0;
     STDMETHOD (Drop)(THIS_ IDataObject* pDataObject, POINT* ppt,
-                     DWORD dwEffect) PURE;
-    STDMETHOD (Show)(THIS_ BOOL fShow) PURE;
+                     DWORD dwEffect) = 0;
+    STDMETHOD (Show)(THIS_ BOOL fShow) = 0;
 
 };
 
@@ -3508,15 +3508,15 @@ DECLARE_INTERFACE_( IDropTargetHelper, IUnknown )
 DECLARE_INTERFACE_( IDragSourceHelper, IUnknown )
 {
     // IUnknown methods
-    STDMETHOD (QueryInterface)(THIS_ REFIID riid, void **ppv) PURE;
-    STDMETHOD_(ULONG, AddRef) ( THIS ) PURE;
-    STDMETHOD_(ULONG, Release) ( THIS ) PURE;
+    STDMETHOD (QueryInterface)(THIS_ REFIID riid, void **ppv) = 0;
+    STDMETHOD_(ULONG, AddRef) ( THIS ) = 0;
+    STDMETHOD_(ULONG, Release) ( THIS ) = 0;
 
     // IDragSourceHelper
     STDMETHOD (InitializeFromBitmap)(THIS_ LPSHDRAGIMAGE pshdi,
-                                     IDataObject* pDataObject) PURE;
+                                     IDataObject* pDataObject) = 0;
     STDMETHOD (InitializeFromWindow)(THIS_ HWND hwnd, POINT* ppt,
-                                     IDataObject* pDataObject) PURE;
+                                     IDataObject* pDataObject) = 0;
 };
 #endif // (_WIN32_IE >= 0x0500)
 #endif // _WIN32_IE
@@ -3780,12 +3780,12 @@ SHSTDAPI_(void) SHChangeNotify(LONG wEventId, UINT uFlags, LPCVOID dwItem1, LPCV
 DECLARE_INTERFACE_(IShellChangeNotify, IUnknown)
 {
     // *** IUnknown methods ***
-    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) PURE;
-    STDMETHOD_(ULONG,AddRef) (THIS)  PURE;
-    STDMETHOD_(ULONG,Release) (THIS) PURE;
+    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) = 0;
+    STDMETHOD_(ULONG,AddRef) (THIS)  = 0;
+    STDMETHOD_(ULONG,Release) (THIS) = 0;
 
     // *** IShellChangeNotify methods ***
-    STDMETHOD(OnChange) (THIS_ LONG lEvent, LPCITEMIDLIST pidl1, LPCITEMIDLIST pidl2) PURE;
+    STDMETHOD(OnChange) (THIS_ LONG lEvent, LPCITEMIDLIST pidl1, LPCITEMIDLIST pidl2) = 0;
 } ;
 
 //
@@ -3805,13 +3805,13 @@ DECLARE_INTERFACE_(IShellChangeNotify, IUnknown)
 DECLARE_INTERFACE_(IQueryInfo, IUnknown)
 {
     // *** IUnknown methods ***
-    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) PURE;
-    STDMETHOD_(ULONG,AddRef) (THIS)  PURE;
-    STDMETHOD_(ULONG,Release) (THIS) PURE;
+    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) = 0;
+    STDMETHOD_(ULONG,AddRef) (THIS)  = 0;
+    STDMETHOD_(ULONG,Release) (THIS) = 0;
 
     // *** IQueryInfo methods ***
-    STDMETHOD(GetInfoTip)(THIS_ DWORD dwFlags, WCHAR **ppwszTip) PURE;
-    STDMETHOD(GetInfoFlags)(THIS_ DWORD *pdwFlags) PURE;
+    STDMETHOD(GetInfoTip)(THIS_ DWORD dwFlags, WCHAR **ppwszTip) = 0;
+    STDMETHOD(GetInfoFlags)(THIS_ DWORD *pdwFlags) = 0;
 } ;
 
 #define QITIPF_DEFAULT          0x00000000
@@ -4187,14 +4187,14 @@ SHSTDAPI SHILCreateFromPath(LPCWSTR szPath, LPITEMIDLIST *ppidl, DWORD *rgfInOut
 DECLARE_INTERFACE_(IDefViewFrame, IUnknown)
 {
     // *** IUnknown methods ***
-    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) PURE;
-    STDMETHOD_(ULONG,AddRef) (THIS)  PURE;
-    STDMETHOD_(ULONG,Release) (THIS) PURE;
+    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) = 0;
+    STDMETHOD_(ULONG,AddRef) (THIS)  = 0;
+    STDMETHOD_(ULONG,Release) (THIS) = 0;
 
     // *** IDefViewFrame methods ***
-    STDMETHOD(GetWindowLV) (THIS_ HWND * phwnd) PURE;
-    STDMETHOD(ReleaseWindowLV) (THIS) PURE;
-    STDMETHOD(GetShellFolder)(THIS_ IShellFolder **ppsf) PURE;
+    STDMETHOD(GetWindowLV) (THIS_ HWND * phwnd) = 0;
+    STDMETHOD(ReleaseWindowLV) (THIS) = 0;
+    STDMETHOD(GetShellFolder)(THIS_ IShellFolder **ppsf) = 0;
 };
 
 //===========================================================================
@@ -4420,12 +4420,12 @@ SHSTDAPI_(int)  Shell_GetCachedImageIndex(LPCWSTR pszIconPath, int iIconIndex, U
 DECLARE_INTERFACE_(IDocViewSite, IUnknown)
 {
     // *** IUnknown methods ***
-    STDMETHOD(QueryInterface)(THIS_ REFIID riid, void **ppv) PURE;
-    STDMETHOD_(ULONG,AddRef)(THIS) PURE;
-    STDMETHOD_(ULONG,Release)(THIS) PURE;
+    STDMETHOD(QueryInterface)(THIS_ REFIID riid, void **ppv) = 0;
+    STDMETHOD_(ULONG,AddRef)(THIS) = 0;
+    STDMETHOD_(ULONG,Release)(THIS) = 0;
 
     // *** IDocViewSite methods ***
-    STDMETHOD(OnSetTitle) (THIS_ VARIANTARG *pvTitle) PURE;
+    STDMETHOD(OnSetTitle) (THIS_ VARIANTARG *pvTitle) = 0;
 
 } ;
 #define VALIDATEUNC_NOUI        0x0002          // don't bring up UI
@@ -4482,12 +4482,12 @@ SHSTDAPI_(BOOL) IsUserAnAdmin(void);
 DECLARE_INTERFACE_(IInitializeObject, IUnknown)
 {
     // *** IUnknown methods ***
-    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) PURE;
-    STDMETHOD_(ULONG,AddRef) (THIS)  PURE;
-    STDMETHOD_(ULONG,Release) (THIS) PURE;
+    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) = 0;
+    STDMETHOD_(ULONG,AddRef) (THIS)  = 0;
+    STDMETHOD_(ULONG,Release) (THIS) = 0;
 
     // *** IInitializeObject methods
-    STDMETHOD(Initialize)(THIS) PURE;
+    STDMETHOD(Initialize)(THIS) = 0;
 };
 
 
@@ -4503,15 +4503,15 @@ enum
 DECLARE_INTERFACE_(IBanneredBar, IUnknown)
 {
     // *** IUnknown methods ***
-    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) PURE;
-    STDMETHOD_(ULONG,AddRef) (THIS)  PURE;
-    STDMETHOD_(ULONG,Release) (THIS) PURE;
+    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) = 0;
+    STDMETHOD_(ULONG,AddRef) (THIS)  = 0;
+    STDMETHOD_(ULONG,Release) (THIS) = 0;
 
     // *** IBanneredBar methods ***
-    STDMETHOD(SetIconSize)(THIS_ DWORD iIcon) PURE;
-    STDMETHOD(GetIconSize)(THIS_ DWORD* piIcon) PURE;
-    STDMETHOD(SetBitmap)(THIS_ HBITMAP hBitmap) PURE;
-    STDMETHOD(GetBitmap)(THIS_ HBITMAP* phBitmap) PURE;
+    STDMETHOD(SetIconSize)(THIS_ DWORD iIcon) = 0;
+    STDMETHOD(GetIconSize)(THIS_ DWORD* piIcon) = 0;
+    STDMETHOD(SetBitmap)(THIS_ HBITMAP hBitmap) = 0;
+    STDMETHOD(GetBitmap)(THIS_ HBITMAP* phBitmap) = 0;
 
 };
 
@@ -4526,12 +4526,12 @@ SHSTDAPI_(LRESULT) SHShellFolderView_Message(HWND hwndMain, UINT uMsg, LPARAM lP
 DECLARE_INTERFACE_(IShellFolderViewCB, IUnknown)
 {
     // *** IUnknown methods ***
-    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) PURE;
-    STDMETHOD_(ULONG,AddRef) (THIS)  PURE;
-    STDMETHOD_(ULONG,Release) (THIS) PURE;
+    STDMETHOD(QueryInterface) (THIS_ REFIID riid, void **ppv) = 0;
+    STDMETHOD_(ULONG,AddRef) (THIS)  = 0;
+    STDMETHOD_(ULONG,Release) (THIS) = 0;
 
     // *** IShellFolderViewCB methods ***
-    STDMETHOD(MessageSFVCB)(THIS_ UINT uMsg, WPARAM wParam, LPARAM lParam) PURE;
+    STDMETHOD(MessageSFVCB)(THIS_ UINT uMsg, WPARAM wParam, LPARAM lParam) = 0;
 };
 
 
@@ -5087,20 +5087,20 @@ SHSTDAPI SHPathPrepareForWriteW(HWND hwnd, IUnknown *punkEnableModless, LPCWSTR 
 DECLARE_INTERFACE_(INamedPropertyBag, IUnknown)
 {
     // *** IUnknown methods ***
-    STDMETHOD(QueryInterface)   (THIS_ REFIID riid, void **ppv) PURE;
-    STDMETHOD_(ULONG,AddRef)    (THIS) PURE;
-    STDMETHOD_(ULONG,Release)   (THIS) PURE;
+    STDMETHOD(QueryInterface)   (THIS_ REFIID riid, void **ppv) = 0;
+    STDMETHOD_(ULONG,AddRef)    (THIS) = 0;
+    STDMETHOD_(ULONG,Release)   (THIS) = 0;
     // *** INamedPropertyBag methods ***
     STDMETHOD(ReadPropertyNPB) (THIS_  /* [in] */ LPCOLESTR pszBagname,
                             /* [in] */ LPCOLESTR pszPropName,
-                            /* [out][in] */ PROPVARIANT *pVar) PURE;
+                            /* [out][in] */ PROPVARIANT *pVar) = 0;
 
     STDMETHOD(WritePropertyNPB)(THIS_ /* [in] */ LPCOLESTR pszBagname,
                            /* [in] */ LPCOLESTR pszPropName,
-                           /* [in] */ PROPVARIANT  *pVar) PURE;
+                           /* [in] */ PROPVARIANT  *pVar) = 0;
 
     STDMETHOD(RemovePropertyNPB)(THIS_ /* [in] */ LPCOLESTR pszBagname,
-                          /* [in] */ LPCOLESTR pszPropName) PURE;
+                          /* [in] */ LPCOLESTR pszPropName) = 0;
 };
 
 #ifdef __urlmon_h__

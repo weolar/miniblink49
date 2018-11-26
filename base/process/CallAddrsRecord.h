@@ -4,6 +4,11 @@
 #include <xmmintrin.h>
 #include <map>
 #include <set>
+#include <intrin.h>
+
+#ifdef _DEBUG
+#define ENABLE_MEM_COUNT 1
+#endif // _DEBUG
 
 class CallAddrsRecord {
 public:
@@ -22,11 +27,15 @@ public:
         //::EnterCriticalSection(&m_mutex);
         std::map<void*, void*>::iterator it = m_callAddrs.find(ptrAddr);
         if (it != m_callAddrs.end()) {
-            ASSERT(canRecover);
+            //ASSERT(canRecover);
+            if (!canRecover)
+                DebugBreak();
             it->second = funcAddr;
         }
         else {
-            ASSERT(!canRecover);
+            //ASSERT(!canRecover);
+            if (canRecover)
+                DebugBreak();
             m_callAddrs.insert(std::pair<void*, void*>(ptrAddr, funcAddr));
         }
         //::LeaveCriticalSection(&m_mutex);

@@ -51,18 +51,20 @@ class SK_API BitmapPlatformDevice : public SkBitmapDevice, public PlatformDevice
   // PlatformDevice overrides
   // Retrieves the bitmap DC, which is the memory DC for our bitmap data. The
   // bitmap DC is lazy created.
-  virtual PlatformSurface BeginPlatformPaint() OVERRIDE;
+  virtual PlatformSurface BeginPlatformPaint(void* hWnd) OVERRIDE;
   virtual void EndPlatformPaint() OVERRIDE;
 
-  virtual void DrawToNativeContext(HDC dc, int x, int y,
+  virtual bool DrawToNativeContext(HDC dc, int x, int y,
                                    const RECT* src_rect) OVERRIDE;
+  virtual bool DrawToNativeLayeredContext(HDC dc, const RECT* src_rect, const RECT* client_rect) OVERRIDE;
 
   // Loads the given transform and clipping region into the HDC. This is
   // overridden from SkBaseDevice.
   virtual void setMatrixClip(const SkMatrix& transform, const SkRegion& region,
                              const SkClipStack&) OVERRIDE;
 
-  HDC GetBitmapDCUgly(); // for wke
+  HDC GetBitmapDCUgly(void* hWnd); // for wke
+
  protected:
   // Flushes the Windows device context so that the pixel data can be accessed
   // directly by Skia. Overridden from SkBaseDevice, this is called when Skia
@@ -101,7 +103,7 @@ class SK_API BitmapPlatformDevice : public SkBitmapDevice, public PlatformDevice
   SkRegion clip_region_;
 
   // Create/destroy hdc_, which is the memory DC for our bitmap data.
-  HDC GetBitmapDC();
+  HDC GetBitmapDC(void* hWnd);
   void ReleaseBitmapDC();
   bool IsBitmapDCCreated() const;
 

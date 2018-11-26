@@ -37,7 +37,7 @@ namespace WTF {
 
 void* DefaultAllocator::allocateBacking(size_t size)
 {
-    return partitionAllocGeneric(Partitions::bufferPartition(), size);
+    return partitionAllocGeneric(Partitions::bufferPartition(), size, "DefaultAllocator::allocateBacking");
 }
 
 void DefaultAllocator::freeVectorBacking(void* address)

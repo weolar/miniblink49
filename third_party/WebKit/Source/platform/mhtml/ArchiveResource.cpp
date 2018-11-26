@@ -31,8 +31,16 @@
 
 namespace blink {
 
-inline ArchiveResource::ArchiveResource(PassRefPtr<SharedBuffer> data, const KURL& url, const AtomicString& mimeType, const AtomicString& textEncoding, const String& frameName, const ResourceResponse& response)
+inline ArchiveResource::ArchiveResource(
+    PassRefPtr<SharedBuffer> data,
+    const KURL& url,
+    const String& contentID,
+    const AtomicString& mimeType,
+    const AtomicString& textEncoding,
+    const String& frameName,
+    const ResourceResponse& response)
     : m_url(url)
+    , m_contentID(contentID)
     , m_response(response)
     , m_data(data)
     , m_mimeType(mimeType)
@@ -46,20 +54,25 @@ ArchiveResource::~ArchiveResource()
 {
 }
 
-PassRefPtrWillBeRawPtr<ArchiveResource> ArchiveResource::create(PassRefPtr<SharedBuffer> data, const KURL& url, const AtomicString& mimeType, const AtomicString& textEncoding, const String& frameName, const ResourceResponse& response)
+PassRefPtrWillBeRawPtr<ArchiveResource> ArchiveResource::create(
+    PassRefPtr<SharedBuffer> data,
+    const KURL& url,
+    const String& contentID,
+    const AtomicString& mimeType,
+    const AtomicString& textEncoding,
+    const String& frameName,
+    const ResourceResponse& response)
 {
     if (!data)
         return nullptr;
     if (response.isNull()) {
-        const ResourceResponse& resourceResponse = ResourceResponse(url, mimeType, data->size(), textEncoding, String());
-        return adoptRefWillBeNoop(new ArchiveResource(data, url, mimeType, textEncoding, frameName, resourceResponse));
+        const ResourceResponse& resourceResponse = ResourceResponse(
+            url, mimeType, data->size(), textEncoding, String());
+        return adoptRefWillBeNoop(new ArchiveResource(
+            data, url, contentID, mimeType, textEncoding, frameName, resourceResponse));
     }
-    return adoptRefWillBeNoop(new ArchiveResource(data, url, mimeType, textEncoding, frameName, response));
-}
-
-PassRefPtrWillBeRawPtr<ArchiveResource> ArchiveResource::create(PassRefPtr<SharedBuffer> data, const KURL& url, const ResourceResponse& response)
-{
-    return create(data, url, response.mimeType(), response.textEncodingName(), String(), response);
+    return adoptRefWillBeNoop(new ArchiveResource(
+        data, url, contentID, mimeType, textEncoding, frameName, response));
 }
 
 }

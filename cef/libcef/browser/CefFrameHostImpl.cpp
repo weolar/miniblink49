@@ -21,34 +21,44 @@
 #include "libcef/common/CefTaskImpl.h"
 #include "content/browser/WebPage.h"
 
-int64 CefFrameHostImpl::GetFrameIdByBlinkFrame(const blink::WebLocalFrame* frame) {
-	if (!frame)
-		return content::WebPage::kInvalidFrameId;
+int64 CefFrameHostImpl::GetFrameIdByBlinkFrame(const blink::WebFrame* frame) {
+    if (!frame)
+        return content::WebPage::kInvalidFrameId;
 
-	blink::Frame* blinkFrame = blink::toCoreFrame((blink::WebFrame*)frame);
-	if (!blinkFrame)
-		return content::WebPage::kInvalidFrameId;
-	return blinkFrame->frameID();
+    blink::Frame* blinkFrame = blink::toCoreFrame(frame);
+    if (!blinkFrame)
+        return content::WebPage::kInvalidFrameId;
+    return blinkFrame->frameID();
+}
+
+int64 CefFrameHostImpl::GetFrameIdByBlinkFrame(const blink::WebLocalFrame* frame) {
+    if (!frame)
+        return content::WebPage::kInvalidFrameId;
+
+    blink::Frame* blinkFrame = blink::toCoreFrame((blink::WebFrame*)frame);
+    if (!blinkFrame)
+        return content::WebPage::kInvalidFrameId;
+    return blinkFrame->frameID();
 }
 
 WTF::String CefFrameHostImpl::GetFrameNameByBlinkFrame(const blink::WebLocalFrame* frame) {
-	if (!frame || !frame->view())
-		return "";
+    if (!frame || !frame->view())
+        return "";
 
-	return frame->uniqueName();
+    return frame->uniqueName();
 }
 
 CefFrameHostImpl::CefFrameHostImpl(CefBrowserHostImpl* browser,
-	int64 frameId,
-	bool isMainFrame,
-	const CefString& url,
-	const CefString& name,
-	int64 parentFrameId) {
-	m_isMainFrame = isMainFrame;
-	m_url = url;
-	m_names = name;
-	m_browser = browser;
-	m_frameId = frameId;
+    int64 frameId,
+    bool isMainFrame,
+    const CefString& url,
+    const CefString& name,
+    int64 parentFrameId) {
+    m_isMainFrame = isMainFrame;
+    m_url = url;
+    m_names = name;
+    m_browser = browser;
+    m_frameId = frameId;
     m_isFocused = false;
 }
 
@@ -281,13 +291,13 @@ void CefFrameHostImpl::SendJavaScript(const std::string& jsCode, const std::stri
 }
 
 void CefFrameHostImpl::SendCommand(const WTF::String& commandName, Cef_Response_Params* response) {
-    if (!m_browser)
+    if (!m_browser || 0 == commandName.length())
         return;
 
     Cef_Request_Params* request = new Cef_Request_Params();
     request->name = "execute-command";
 
-    Vector<char> commandNameVector = WTF::ensureStringToUTF8(commandName);
+    Vector<char> commandNameVector = WTF::ensureStringToUTF8(commandName, true);
     std::string commandNameString = commandNameVector.data();
 
     request->arguments.AppendString(commandNameString);

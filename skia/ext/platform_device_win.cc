@@ -51,7 +51,7 @@ void InitializeDC(HDC context) {
   SkASSERT(res != 0);
 }
 
-PlatformSurface PlatformDevice::BeginPlatformPaint() {
+PlatformSurface PlatformDevice::BeginPlatformPaint(void* hWnd) {
   return 0;
 }
 
@@ -60,8 +60,9 @@ void PlatformDevice::EndPlatformPaint() {
   // Flushing will be done in onAccessBitmap.
 }
 
-void PlatformDevice::DrawToNativeContext(PlatformSurface surface, int x, int y,
+bool PlatformDevice::DrawToNativeContext(PlatformSurface surface, int x, int y,
                                          const PlatformRect* src_rect) {
+  return false;
 }
 
 // static

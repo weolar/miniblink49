@@ -2932,6 +2932,7 @@ SpellcheckAttributeState Element::spellcheckAttributeState() const
 
 bool Element::isSpellCheckingEnabled() const
 {
+#ifdef MINIBLINK_NOT_IMPLEMENTED
     for (const Element* element = this; element; element = element->parentOrShadowHostElement()) {
         switch (element->spellcheckAttributeState()) {
         case SpellcheckAttributeTrue:
@@ -2944,6 +2945,9 @@ bool Element::isSpellCheckingEnabled() const
     }
 
     return true;
+#else
+    return false; // weolar
+#endif
 }
 
 #if ENABLE(ASSERT)

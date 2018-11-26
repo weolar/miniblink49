@@ -28,9 +28,9 @@
 
 namespace base {
 
-	typedef wchar_t char16;
-	typedef std::wstring string16;
-	typedef std::char_traits<wchar_t> string16_char_traits;
+typedef wchar_t char16;
+typedef std::wstring string16;
+typedef std::char_traits<wchar_t> string16_char_traits;
 
 CommandLine* CommandLine::current_process_commandline_ = NULL;
 
@@ -45,7 +45,7 @@ const char kWhitespaceASCII[] = " ";
 
 std::wstring UTF8ToWide(const std::string& src) {
     std::wstring output;
-    WTF::Vector<UChar> out = WTF::ensureUTF16UChar(WTF::String(src.c_str(), src.size()));
+    WTF::Vector<UChar> out = WTF::ensureUTF16UChar(WTF::String(src.c_str(), src.size()), false);
     output.append((const wchar_t*)out.data(), out.size());
     return output;
 }
@@ -53,7 +53,7 @@ std::wstring UTF8ToWide(const std::string& src) {
 std::wstring ASCIIToWide(const std::string& ascii) {
     //DCHECK(base::IsStringASCII(ascii)) << ascii;
     WTF::String str(ascii.data(), ascii.size());
-    Vector<UChar> ustring = WTF::ensureStringToUChars(str);
+    Vector<UChar> ustring = WTF::ensureUTF16UChar(str, false);
     return std::wstring(ustring.data(), ustring.size());
 }
 // 
@@ -515,8 +515,8 @@ void CommandLine::PrependWrapper(const CommandLine::StringType& wrapper) {
   WTF::Vector<String> wrapper_argv_wtf;
   splitStringToVector(strData, ' ', false, wrapper_argv_wtf);
   for (size_t i = 0; i < wrapper_argv_wtf.size(); ++i) {
-      String arg = wrapper_argv_wtf[i];
-      wrapper_argv.push_back(ensureUTF16UChar(arg).data());
+    String arg = wrapper_argv_wtf[i];
+    wrapper_argv.push_back(WTF::ensureUTF16UChar(arg, true).data());
   }
 
   // Prepend the wrapper and update the switches/arguments |begin_args_|.

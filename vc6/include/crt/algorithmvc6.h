@@ -3,7 +3,7 @@
 
 #if USING_VC6RT == 1
 
-#include "math.h"
+#include <math.h>
 
 #undef min
 #undef max
@@ -62,6 +62,14 @@ double pow(double base, int exp);
 double pow(double base, double exp);
 
 __int64 abs(__int64 val);
+unsigned __int64 abs(unsigned __int64 val);
+int abs(int val);
+unsigned int abs(unsigned int val);
+double abs(double val);
+float abs(float val);
+
+__int64 abs(__int64 val);
+double fabs(double val);
 double floor(double x);
 float ceil(float x);
 double ceil(double x);
@@ -76,10 +84,10 @@ double fmod(double _Xx, double _Yx);
 bool signbit(float x);
 bool signbit(double x);
 
-template<typename T> bool isfinite(T arg)
-{
-    return arg == arg && arg != std::numeric_limits<T>::infinity() && arg != -std::numeric_limits<T>::infinity();
-}
+bool isfinite(__int64 arg);
+bool isfinite(int arg);
+bool isfinite(unsigned int arg);
+bool isfinite(double arg);
 
 int fpclassify(float x);
 int fpclassify(double x);
@@ -97,6 +105,12 @@ double exp(double x);
 int isinf(double d);
 int isnan(double d);
 
+template <class _Ty>
+inline bool isnormal(_Ty _X)
+{
+    return fpclassify(_X) == FP_NORMAL;
+}
+
 double sqrt(double val);
 double acos(double val);
 double sin(double val);
@@ -104,6 +118,7 @@ double cos(double val);
 double tan(double val);
 
 //void* memcpy(void* _Dst, void const* _Src, size_t _Size);
+double nearbyint(double x);
 
 } // namespace std
 
@@ -115,8 +130,10 @@ double nearbyint(double x);
 long lrint(double x);
 
 double copysign(double number, double sign);
+float copysignf(float number, float sign);
 
 double trunc(double val);
+float truncf(float val);
 
 long lroundf(float val);
 
@@ -128,6 +145,9 @@ double round(double val);
 
 float nextafterf(float x, float y);
 double nextafter(double x, double y);
+
+float nearbyintf(float x);
+long double nearbyintl(long double x);
 
 float hypotf(float x, float y);
 

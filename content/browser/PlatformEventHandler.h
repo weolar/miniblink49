@@ -16,15 +16,29 @@ public:
     PlatformEventHandler(blink::WebWidget* webWidget, blink::WebViewImpl* webViewImpl);
     static blink::WebKeyboardEvent buildKeyboardEvent(blink::WebInputEvent::Type type, UINT message, WPARAM wParam, LPARAM lParam);
 
-    LRESULT fireMouseEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, BOOL* bHandle);
+    struct MouseEvtInfo {
+        bool isNeedSetFocus;
+        bool isWillDestroy;
+        HRGN draggableRegion;
+    };
+    LRESULT fireMouseEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, const MouseEvtInfo& info, BOOL* bHandle);
+    LRESULT fireWheelEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
     void fireCaptureChangedEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
     void fireTouchEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+
+    void setIsDraggableNodeMousedown();
+
 private:
+    bool doDraggableRegionNcHitTest(HWND hWnd, const blink::IntPoint& pos, HRGN draggableRegion);
     bool m_isDraggableRegionNcHitTest;
     bool m_bMouseTrack;
     bool m_postMouseLeave;
     bool m_mouseInWindow;
     bool m_isAlert;
+    bool m_isDraggableNodeMousedown;
+    double m_lastTimeMouseDown;
+    blink::IntPoint m_lastPosMouseDown;
+    blink::IntPoint m_lastPosMouseMove;
     blink::IntRect m_lastPosForDrag;
     blink::WebViewImpl* m_webViewImpl;
     blink::WebWidget* m_webWidget;

@@ -2,6 +2,7 @@
 #ifndef _XUTILITY_
 #define _XUTILITY_
 #include <utility>
+#include <xtr1common>
 
 #ifdef  _MSC_VER
 #pragma pack(push,8)
@@ -82,18 +83,57 @@ template<class _II1, class _II2> inline
 	pair<_II1, _II2> mismatch(_II1 _F, _II1 _L, _II2 _X)
 	{for (; _F != _L && *_F == *_X; ++_F, ++_X)
 		;
-	return (pair<_II1, _II2>(_F, _X)); }
+	return (pair<_II1, _II2>(move(_F), move(_X))); }
 		// TEMPLATE FUNCTION mismatch WITH PRED
 template<class _II1, class _II2, class _Pr> inline
 	pair<_II1, _II2> mismatch(_II1 _F, _II1 _L, _II2 _X, _Pr _P)
 	{for (; _F != _L && _P(*_F, *_X); ++_F, ++_X)
 		;
-	return (pair<_II1, _II2>(_F, _X)); }
+	return (pair<_II1, _II2>(move(_F), move(_X))); }
 		// TEMPLATE FUNCTION swap
 template<class _Ty> inline
 	void swap(_Ty& _X, _Ty& _Y)
 	{_Ty _Tmp = _X;
 	_X = _Y, _Y = _Tmp; }
+
+// // TEMPLATE CLASS remove_reference
+// template<class _Ty>
+// struct remove_reference
+// {	// remove reference
+//     typedef _Ty type;
+// };
+// 
+// template<class _Ty>
+// struct remove_reference<_Ty&>
+// {	// remove reference
+//     typedef _Ty type;
+// };
+// 
+// template<class _Ty>
+// struct remove_reference<_Ty&&>
+// {	// remove rvalue reference
+//     typedef _Ty type;
+// };
+// 
+// template<class _Ty> inline
+// typename remove_reference<_Ty>::type&& move(_Ty&& _Arg)
+// {	// forward _Arg as movable
+//     return (static_cast<typename remove_reference<_Ty>::type&&>(_Arg));
+// }
+// 
+// // TEMPLATE FUNCTION forward
+// template<class _Ty> inline
+// _Ty&& forward(
+//     typename remove_reference<_Ty>::type& _Arg) {	// forward an lvalue as either an lvalue or an rvalue
+//     return (static_cast<_Ty&&>(_Arg));
+// }
+// 
+// template<class _Ty> inline
+// _Ty&& forward(
+//     typename remove_reference<_Ty>::type&& _Arg) {	// forward an rvalue as an rvalue
+//     static_assert(!is_lvalue_reference<_Ty>::value, "bad forward call");
+//     return (static_cast<_Ty&&>(_Arg));
+
 _STD_END
 #ifdef  _MSC_VER
 #pragma pack(pop)

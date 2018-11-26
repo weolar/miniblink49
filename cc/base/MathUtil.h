@@ -101,6 +101,11 @@ public:
     }
 
     static blink::FloatPoint3D MapPoint(const SkMatrix44& transform, const blink::FloatPoint3D& p, bool* clipped);
+
+    static blink::FloatRect ComputeEnclosingClippedRect(
+        const HomogeneousCoordinate& h1, const HomogeneousCoordinate& h2,
+        const HomogeneousCoordinate& h3, const HomogeneousCoordinate& h4);
+    static blink::FloatRect MapClippedRect(const SkMatrix44& transform, const blink::FloatRect& srcRect);
 };
 
 }

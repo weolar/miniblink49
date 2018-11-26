@@ -307,8 +307,12 @@ static int findFirstOf(const LChar* s, int sLen, int startPos, const char* toFin
 #ifndef NDEBUG
 static void checkEncodedString(const String& url)
 {
-    for (unsigned i = 0; i < url.length(); ++i)
-        ASSERT(!(url[i] & ~0x7F));
+    for (unsigned i = 0; i < url.length(); ++i) {
+        if ((url[i] & ~0x7F)) {
+            OutputDebugStringA("checkEncodedString fail\n");
+            break;
+        }
+    }
 
     ASSERT(!url.length() || isSchemeFirstChar(url[0]));
 }
@@ -351,10 +355,13 @@ bool needInserFileHead(const String& url)
     if (WTF::kNotFound != url.find("file:/"))
         return false;
 
-    if (WTF::kNotFound != url.find(":\\"))
-        return true;
+    if (WTF::kNotFound != url.find("data:"))
+        return false;
 
-    if (':' == url[1] && ('\\' == url[1] || '/' == url[1]))
+//     if (WTF::kNotFound != url.find(":\\"))
+//         return true;
+
+    if (':' == url[1] && ('\\' == url[2] || '/' == url[2]))
         return true;
 
     return false;
@@ -369,18 +376,19 @@ KURL::KURL(ParsedURLStringTag, const String& url)
         if (needInserFileHead(url)) {
             fixed = true;
             fixSchemeUrl = url;
-            fixSchemeUrl.insert("file:///", 0);            
+            fixSchemeUrl = WTF::ensureUTF16String(fixSchemeUrl); // see http://blog.csdn.net/weolar/article/details/78020701
+            fixSchemeUrl.insert(L"file:///", 0);            
             fixSchemeUrl.replace(L"\\", L"/");
-            parse(fixSchemeUrl.utf8().data());
+            parse(WTF::ensureStringToUTF8(fixSchemeUrl, true).data());
         } else
-            parse(url.utf8().data(), nullptr);
+            parse(WTF::ensureStringToUTF8(url, true).data(), nullptr);
 
         if (!m_isValid) {
             if (WTF::kNotFound == m_string.find("://")) {
                 fixed = true;
                 fixSchemeUrl = m_string;
                 fixSchemeUrl.insert("http://", 0);
-                parse(fixSchemeUrl.utf8().data(), 0);
+                parse(WTF::ensureStringToUTF8(fixSchemeUrl, true).data(), 0);
             }
         }
 
@@ -426,15 +434,19 @@ static bool shouldTrimFromURL(unsigned char c)
     return c <= ' ';
 }
 
-void KURL::init(const KURL& base, const String& relative, const TextEncoding& encoding)
+void KURL::init(const KURL& baseURL , const String& relative, const TextEncoding& encoding)
 {
     // Allow resolutions with a null or empty base URL, but not with any other invalid one.
     // FIXME: Is this a good rule?
-    if (!base.m_isValid && !base.isEmpty()) {
+    if (!baseURL.m_isValid && !baseURL.isEmpty()) {
         m_string = relative;
         invalidate();
         return;
     }
+
+    KURL base(baseURL);
+    if (baseURL.isNull())
+        base = KURL(ParsedURLString, "");
 
     // For compatibility with Win IE, treat backslashes as if they were slashes,
     // as long as we're not dealing with javascript: or data: URLs.
@@ -655,6 +667,26 @@ bool KURL::hasPath() const
     return m_pathEnd != m_portEnd;
 }
 
+const String& KURL::string() const
+{
+    if (m_string.isNull())
+        return emptyString();
+
+    if (m_string.containsOnlyASCII())
+        return m_string;
+
+    m_utf16String = WTF::ensureUTF16String(m_string);
+    return m_utf16String;
+}
+
+String KURL::getUTF8String() const
+{
+    if (m_string.isNull())
+        return emptyString();
+
+    return WTF::ensureStringToUTF8String(m_string);
+}
+
 String KURL::lastPathComponent() const
 {
     if (!hasPath())
@@ -665,6 +697,11 @@ String KURL::lastPathComponent() const
         --end;
 
     size_t start = m_string.reverseFind('/', end);
+    if (isLocalFile()) {
+        size_t start2 = m_string.reverseFind('\\', end);
+        if (start < start2)
+            start = start2;
+    }
     if (start < static_cast<unsigned>(m_portEnd))
         return String();
     ++start;
@@ -819,7 +856,9 @@ String KURL::query() const
 
 String KURL::path() const
 {
-    return decodeURLEscapeSequences(m_string.substring(m_portEnd, m_pathEnd - m_portEnd)); 
+    String path = decodeURLEscapeSequences(m_string.substring(m_portEnd, m_pathEnd - m_portEnd));
+    // 这个函数会给v8用，blink在处理传给v8的字符串的时候，只要是复杂字符，都是16位编码的
+    return WTF::ensureUTF16String(path);
 }
 
 bool KURL::setProtocol(const String& s)
@@ -1039,14 +1078,16 @@ String KURL::prettyURL() const
     return String::adopt(result);
 }
 
-// 这两函数返回的一定是UTF8，8字节的字符串，外面也不需要调用String::utf8()了
+// 这两函数返回的一定是UTF16，2字节的字符串，外面还是需要调用String::utf8()。
+// 以前是确定返回uf8，现在改成16是因为blink返回给js的字符串，如果是复杂字节必须是16。
 String decodeURLEscapeSequences(const String& str)
 {
     return decodeURLEscapeSequences(str, UTF8Encoding());
 }
 
-String decodeURLEscapeSequences(const String& str, const TextEncoding& encoding)
+String decodeURLEscapeSequences(const String& strURL, const TextEncoding& encoding)
 {
+    String str = WTF::ensureStringToUTF8String(strURL);
     Vector<LChar> result;
 
     CharBuffer buffer;
@@ -1096,7 +1137,7 @@ String decodeURLEscapeSequences(const String& str, const TextEncoding& encoding)
 
     String returnVal = String::adopt(result);
     ASSERT(returnVal.is8Bit());
-    return returnVal;
+    return WTF::ensureUTF16String(returnVal);
 }
 
 // Caution: This function does not bounds check.
@@ -1106,7 +1147,7 @@ static void appendEscapedChar(char*& buffer, unsigned char c)
     placeByteAsHex(c, buffer);
 }
 
-static void appendEscapingBadChars(char*& buffer, const char* strStart, size_t length)
+static void appendEscapingBadChars(char*& buffer, bool isFile, const char* strStart, size_t length)
 {
     char* p = buffer;
 
@@ -1114,7 +1155,7 @@ static void appendEscapingBadChars(char*& buffer, const char* strStart, size_t l
     const char* strEnd = strStart + length;
     while (str < strEnd) {
         unsigned char c = *str++;
-        if (isBadChar(c)) {
+        if (isBadChar(c) && !isFile) {
             if (c == '%' || c == '?')
                 *p++ = c;
             else if (c != 0x09 && c != 0x0a && c != 0x0d)
@@ -1141,10 +1182,12 @@ static void escapeAndAppendFragment(char*& buffer, const char* strStart, size_t 
 
         // Chrome and IE allow non-ascii characters in fragments, however doing
         // so would hit an ASSERT in checkEncodedString, so for now we don't.
+#if 0 // Be same to Chrome
         if (c < 0x20 || c >= 127) {
             appendEscapedChar(p, c);
             continue;
         }
+#endif
         *p++ = c;
     }
 
@@ -1220,10 +1263,12 @@ void KURL::parse(const String& string)
     if (!string.startsWith("file:///"))
         checkEncodedString(string);
 
-    CharBuffer buffer(string.length() + 1);
-    copyASCII(string.characters8(), string.length(), buffer.data());
-    buffer[string.length()] = '\0';
-    parse(buffer.data(), &string);
+    Vector<char> utf8 = WTF::ensureStringToUTF8(string, false);
+
+    CharBuffer buffer(utf8.size() + 1);
+    copyASCII((const LChar*)utf8.data(), utf8.size(), buffer.data());
+    buffer[utf8.size()] = '\0';
+    parse(buffer.data(), &String(utf8.data(), utf8.size()));
 }
 
 static inline bool equal(const char* a, size_t lenA, const char* b, size_t lenB)
@@ -1547,11 +1592,11 @@ void KURL::parse(const char* url, const String* originalString)
 
     // add path, escaping bad characters
     if (!hierarchical || !hasSlashDotOrDotDot(url))
-        appendEscapingBadChars(p, url + pathStart, pathEnd - pathStart);
+        appendEscapingBadChars(p, isFile, url + pathStart, pathEnd - pathStart);
     else {
         CharBuffer pathBuffer(pathEnd - pathStart + 1);
         size_t length = copyPathRemovingDots(pathBuffer.data(), url, pathStart, pathEnd);
-        appendEscapingBadChars(p, pathBuffer.data(), length);
+        appendEscapingBadChars(p, isFile, pathBuffer.data(), length);
     }
 
     m_pathEnd = p - buffer.data();
@@ -1566,7 +1611,7 @@ void KURL::parse(const char* url, const String* originalString)
     m_pathAfterLastSlash = i;
 
     // add query, escaping bad characters
-    appendEscapingBadChars(p, url + queryStart, queryEnd - queryStart);
+    appendEscapingBadChars(p, isFile, url + queryStart, queryEnd - queryStart);
     m_queryEnd = p - buffer.data();
 
     // add fragment, escaping bad characters
@@ -1593,9 +1638,11 @@ bool equalIgnoringFragmentIdentifier(const KURL& a, const KURL& b)
     if (a.m_queryEnd != b.m_queryEnd)
         return false;
     unsigned queryLength = a.m_queryEnd;
-    for (unsigned i = 0; i < queryLength; ++i)
-        if (a.string()[i] != b.string()[i])
+    for (unsigned i = 0; i < queryLength; ++i) {
+        if (a.getUTF8String()[i] != b.getUTF8String()[i]) {
             return false;
+        }
+    }
     return true;
 }
 
@@ -1613,12 +1660,12 @@ bool protocolHostAndPortAreEqual(const KURL& a, const KURL& b)
 
     // Check the scheme
     for (int i = 0; i < a.m_schemeEnd; ++i)
-        if (a.string()[i] != b.string()[i])
+        if (a.getUTF8String()[i] != b.getUTF8String()[i])
             return false;
 
     // And the host
     for (int i = 0; i < hostLengthA; ++i)
-        if (a.string()[hostStartA + i] != b.string()[hostStartB + i])
+        if (a.getUTF8String()[hostStartA + i] != b.getUTF8String()[hostStartB + i])
             return false;
 
     if (a.port() != b.port())

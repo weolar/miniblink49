@@ -231,6 +231,15 @@ bool PluginPackage::fetchInfo()
 
 bool PluginPackage::load()
 {
+    if (m_isVirtual) {
+        bool loadOk = doLoad();
+        if (loadOk) {
+            m_isLoaded = true;
+            m_loadCount++;
+        }
+        return loadOk;
+    }
+
     if (m_freeLibraryTimer.isActive()) {
         ASSERT(m_module);
         m_freeLibraryTimer.stop();
@@ -265,31 +274,14 @@ bool PluginPackage::load()
 
     m_isLoaded = true;
 
-    NP_GetEntryPointsFuncPtr NP_GetEntryPoints = 0;
-    NP_InitializeFuncPtr NP_Initialize = 0;
-    NPError npErr;
-
-    NP_Initialize = (NP_InitializeFuncPtr)::GetProcAddress(m_module, "NP_Initialize");
-    NP_GetEntryPoints = (NP_GetEntryPointsFuncPtr)GetProcAddress(m_module, "NP_GetEntryPoints");
+    m_NP_Initialize = (NP_InitializeFuncPtr)::GetProcAddress(m_module, "NP_Initialize");
+    m_NP_GetEntryPoints = (NP_GetEntryPointsFuncPtr)GetProcAddress(m_module, "NP_GetEntryPoints");
     m_NPP_Shutdown = (NPP_ShutdownProcPtr)::GetProcAddress(m_module, "NP_Shutdown");
 
-    if (!NP_Initialize || !NP_GetEntryPoints || !m_NPP_Shutdown)
+    if (!m_NP_Initialize || !m_NP_GetEntryPoints || !m_NPP_Shutdown)
         goto abort;
 
-    memset(&m_pluginFuncs, 0, sizeof(m_pluginFuncs));
-    m_pluginFuncs.size = sizeof(m_pluginFuncs);
-
-    npErr = NP_GetEntryPoints(&m_pluginFuncs);
-    //LOG_NPERROR(npErr);
-    if (npErr != NPERR_NO_ERROR)
-        goto abort;
-
-    initializeBrowserFuncs();
-
-    npErr = NP_Initialize(&m_browserFuncs);
-    //LOG_NPERROR(npErr);
-
-    if (npErr != NPERR_NO_ERROR)
+    if (!doLoad())
         goto abort;
 
     m_loadCount++;
@@ -298,6 +290,26 @@ bool PluginPackage::load()
 abort:
     unloadWithoutShutdown();
     return false;
+}
+
+bool PluginPackage::doLoad()
+{
+    memset(&m_pluginFuncs, 0, sizeof(m_pluginFuncs));
+    m_pluginFuncs.size = sizeof(m_pluginFuncs);
+
+    NPError npErr;
+
+    npErr = m_NP_GetEntryPoints(&m_pluginFuncs);
+    if (npErr != NPERR_NO_ERROR)
+        return false;
+
+    initializeBrowserFuncs();
+
+    npErr = m_NP_Initialize(&m_browserFuncs);
+    if (npErr != NPERR_NO_ERROR)
+        return false;
+
+    return true;
 }
 
 unsigned PluginPackage::hash() const

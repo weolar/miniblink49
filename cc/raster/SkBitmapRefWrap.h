@@ -10,25 +10,25 @@ class SkBitmapRefWrap {
 public:
     SkBitmapRefWrap()
     {
-		m_bitmap = nullptr;
+        m_bitmap = nullptr;
         m_ref = 0;
     }
 
     ~SkBitmapRefWrap()
     {
-		if (m_bitmap)
-			delete m_bitmap;
+        if (m_bitmap)
+            delete m_bitmap;
     }
 
     SkBitmapRefWrap* ref()
     {
-		sk_atomic_inc(&m_ref);
+        sk_atomic_inc(&m_ref);
         return this;
     }
 
     void deref()
     {
-		sk_atomic_dec(&m_ref);
+        sk_atomic_dec(&m_ref);
         if (m_ref <= 0)
             delete this;
     }
@@ -37,11 +37,11 @@ public:
 
     SkBitmap* get() { return m_bitmap; }
 
-	void set(SkBitmap* bitmap)
-	{
-		ASSERT(!m_bitmap);
-		m_bitmap = bitmap;
-	}
+    void set(SkBitmap* bitmap)
+    {
+        ASSERT(!m_bitmap);
+        m_bitmap = bitmap;
+    }
 
 private:
     SkBitmap* m_bitmap;

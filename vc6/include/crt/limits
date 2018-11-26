@@ -444,6 +444,8 @@ _STD_END
 
 #endif /* _LIMITS_ */
 
+#include <limitsvc6.h>
+
 /*
  * Copyright (c) 1995 by P.J. Plauger.  ALL RIGHTS RESERVED. 
  * Consult your license regarding permissions and restrictions.

@@ -72,6 +72,8 @@ bool BindingSecurity::shouldAllowAccessToFrame(v8::Isolate* isolate, Frame* targ
 {
     if (!target || !target->securityContext())
         return false;
+    if (!RuntimeEnabledFeatures::cspCheckEnabled())
+        return true;
     return canAccessFrame(isolate, target->securityContext()->securityOrigin(), target->domWindow(), reportingOption);
 }
 
@@ -79,6 +81,8 @@ bool BindingSecurity::shouldAllowAccessToFrame(v8::Isolate* isolate, Frame* targ
 {
     if (!target || !target->securityContext())
         return false;
+    if (!RuntimeEnabledFeatures::cspCheckEnabled())
+        return true;
     return canAccessFrame(isolate, target->securityContext()->securityOrigin(), target->domWindow(), exceptionState);
 }
 

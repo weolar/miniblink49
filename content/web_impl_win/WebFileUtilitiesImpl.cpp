@@ -18,7 +18,7 @@ static const ULONGLONG kSecondsFromFileTimeToTimet = 11644473600;
 
 static bool getFindData(String path, WIN32_FIND_DATAW& findData)
 {
-    Vector<UChar> upath = WTF::ensureUTF16UChar(path);
+    Vector<UChar> upath = WTF::ensureUTF16UChar(path, true);
     HANDLE handle = ::FindFirstFileW(upath.data(), &findData);
     if (handle == INVALID_HANDLE_VALUE)
         return false;
@@ -34,11 +34,11 @@ String pathByAppendingComponent(const String& path, const String& component)
         return String();
 
     //StringView(path).getCharactersWithUpconvert(buffer.data());
-    Vector<UChar> path16 = WTF::ensureUTF16UChar(path);
+    Vector<UChar> path16 = WTF::ensureUTF16UChar(path, true);
     for (size_t i = 0; i < path.length(); ++i) {
         buffer[i] = path16[i];
     }
-    buffer[path.length()] = '\0';
+    //buffer[path.length()] = '\0';
 
     if (!PathAppendW(buffer.data(), component.charactersWithNullTermination().data()))
         return String();
@@ -100,7 +100,7 @@ int writeToFile(HANDLE handle, const char* data, int length)
 
 String pathGetFileName(const String& path)
 {
-    return String(::PathFindFileNameW(WTF::ensureUTF16UChar(path).data()));
+    return String(::PathFindFileNameW(WTF::ensureUTF16UChar(path, true).data()));
 }
 
 bool fileExists(const String& path)
@@ -168,14 +168,18 @@ blink::WebString WebFileUtilitiesImpl::directoryName(const blink::WebString& pat
 
 blink::WebString WebFileUtilitiesImpl::baseName(const blink::WebString& path)
 {
-    Vector<UChar> result = WTF::ensureUTF16UChar(path);
+    if (path.isNull() || path.isEmpty())
+        return "";
+    Vector<UChar> result = WTF::ensureUTF16UChar(path, true);
+    if (result.isEmpty())
+        return "";
     ::PathStripPathW(result.data());
-    return blink::WebString(result.data(), result.size());
+    return String(result.data());
 }
 
 bool WebFileUtilitiesImpl::isDirectory(const blink::WebString& path)
 { 
-    return PathIsDirectoryW(WTF::ensureUTF16UChar(path).data());
+    return ::PathIsDirectoryW(WTF::ensureUTF16UChar(path, true).data());
 }
 
 blink::WebURL WebFileUtilitiesImpl::filePathToURL(const blink::WebString& path)

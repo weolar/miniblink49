@@ -24,7 +24,10 @@ class SkPicture;
 namespace cc {
 
 class Tile;
+
+class TilesAddr;
 class RasterTaskGroup;
+class LayerChangeActionCleanupUnnecessaryTile;
 
 // 理论上由DisplayListRecordingSource统一调用本类
 class TileGrid {
@@ -41,12 +44,12 @@ public:
 
     void mergeDirtyRectAndClipToCanBeShowedAreaIfNeeded(bool needClip);
 
-    
     void update(blink::WebContentLayerClient* client, RasterTaskGroup* taskGroup, const blink::IntSize& newLayerSize, const blink::IntRect& screenRect);
 
-    bool isInWillBeShowedArea(Tile* tile);
+    bool isInWillBeShowedArea(Tile* tile) const;
+    blink::IntRect getInWillBeShowedAreaPos() const;
 
-    Tile* getTileByXY(int xIndex, int yIndex);
+    //Tile* getTileByXY(int xIndex, int yIndex);
     void invalidate(const blink::IntRect& dirtyRect, bool directSaveToDirtyRects);
     //void appendPendingInvalidateRect(const blink::IntRect& r);
 
@@ -59,16 +62,21 @@ public:
     void lockTiles();
     void unlockTiles();
 
-    Vector<Tile*>* m_tiles; // for test!~!!!!!!!!!!!!!!
+    size_t getRegisterTilesSize() const { return m_registerTiles.size(); }
+
+    void forceCleanupUnnecessaryTile();
 
 private:
-	void updateTilePriorityAndCommitInvalidate(Vector<size_t>* hasBitmapTiles);
-	void applyDirtyRectsToRaster(blink::WebContentLayerClient* client, RasterTaskGroup* taskGroup);
+    void updateTilePriorityAndCommitInvalidate2(Vector<size_t>* hasBitmapTiles);
+    void doUpdateTilePriority(Tile* tile, Vector<size_t>* hasBitmapTiles, blink::IntRect* newCreatedWhenScrolling);
+    void applyDirtyRectsToRaster(blink::WebContentLayerClient* client, RasterTaskGroup* taskGroup);
     void markTileDirtyExceptNeedBeShowedArea(const blink::IntRect& dirtyRect);
     void savaUnnecessaryTile(RasterTaskGroup* taskGroup, Vector<Tile*>* hasBitmapTiles);
-	void cleanupUnnecessaryTile(Vector<size_t>* hasBitmapTiles);
-	void updateSize(const blink::IntRect& screenRect, const blink::IntSize& newLayerSize);
-    
+    void cleanupUnnecessaryTiles(Vector<size_t>* hasBitmapTiles);
+    void doCleanupUnnecessaryTile(size_t index, Tile* tile, LayerChangeActionCleanupUnnecessaryTile* cleanupAction);
+    void updateSize(const blink::IntRect& screenRect, const blink::IntSize& newLayerSize);
+    int getIndexByTile(const Tile* tile) const;
+
     Vector<Tile*> m_registerTiles; // 调试用，记录所有还没释放的tile，包括m_tiles已经没有记录的
     int m_numTileX;
     int m_numTileY;
@@ -78,12 +86,14 @@ private:
     blink::IntRect m_needBeShowedArea;
     blink::IntRect m_screenRect;
     bool m_willShutdown;
-    //blink::IntRect m_pendingInvalidateRect;
+    blink::IntRect m_lastInWillBeShowedAreaPosIndex;
 
     WTF::Mutex* m_registerTileMutex; // for debug
     int m_rasterTaskCount;
 
+    TilesAddr* m_tilesAddr;
     WTF::Mutex* m_tilesMutex; // from layerTreeHost()->tilesMutex()
+    bool m_isForceCleanup;
 };
 
 }

@@ -17,9 +17,17 @@
 // The DCHECK macro is equivalent to CHECK except that it only
 // generates code in debug builds.
 #ifdef DEBUG
-#define DCHECK(condition)      CHECK(condition)
+#  define DCHECK(condition)      CHECK(condition)
 #else
-#define DCHECK(condition)      ((void) 0)
+#  ifndef DCHECK
+#    define DCHECK(condition)      ((void) 0)
+#  endif
+#endif
+
+#if defined(NDEBUG) && !defined(DCHECK_ALWAYS_ON)
+#define DCHECK_IS_ON() 0
+#else
+#define DCHECK_IS_ON() 1
 #endif
 
 #endif BASE_LOGGING_H_

@@ -234,7 +234,6 @@ V8TemplateMapTraits::MapType* V8TemplateMapTraits::MapFromWeakCallbackInfo(const
     return &V8NPTemplateMap::sharedInstance(data.GetIsolate()).m_map;
 }
 
-
 static v8::Local<v8::Value> npObjectGetProperty(v8::Isolate* isolate, v8::Local<v8::Object> self, NPIdentifier identifier, v8::Local<v8::Value> key)
 {
     NPObject* npObject = v8ObjectToNPObject(self);
@@ -243,7 +242,6 @@ static v8::Local<v8::Value> npObjectGetProperty(v8::Isolate* isolate, v8::Local<
     // has already been deleted.
     if (!npObject || !_NPN_IsAlive(npObject))
         return V8ThrowException::throwReferenceError(isolate, "NPObject deleted");
-
 
     if (npObject->_class->hasProperty && npObject->_class->getProperty && npObject->_class->hasProperty(npObject, identifier)) {
         if (!_NPN_IsAlive(npObject))
@@ -259,7 +257,6 @@ static v8::Local<v8::Value> npObjectGetProperty(v8::Isolate* isolate, v8::Local<
             returnValue = convertNPVariantToV8Object(isolate, &result, npObject);
         _NPN_ReleaseVariantValue(&result);
         return returnValue;
-
     }
 
     if (!_NPN_IsAlive(npObject))

@@ -1,3 +1,4 @@
+
 // utility standard header
 #ifndef _UTILITY_
 #define _UTILITY_
@@ -11,324 +12,441 @@
 #endif
 #endif  /* _MSC_VER */
 _STD_BEGIN
-		// TEMPLATE STRUCT pair
+// TEMPLATE STRUCT pair
 template<class _T1, class _T2> struct pair {
-	typedef _T1 first_type;
-	typedef _T2 second_type;
-	pair()
-		: first(_T1()), second(_T2()) {}
-	pair(const _T1& _V1, const _T2& _V2)
-		: first(_V1), second(_V2) {}
-	template<class U, class V> pair(const pair<U, V> &p)
-		: first(p.first), second(p.second) {}
-	_T1 first;
-	_T2 second;
-	};
+    typedef _T1 first_type;
+    typedef _T2 second_type;
+    typedef pair<_T1, _T2> _Myt;
+    pair()
+        : first(_T1()), second(_T2()) {
+    }
+
+    template<class U, class V>
+    pair(U&& _V1, V&& _V2)
+        : first(_STD forward<U>(_V1))
+        , second(_STD forward<V>(_V2)) {
+    }
+
+    template<class U, class V>
+    pair(const U& _V1, const V& _V2)
+        : first((_V1))
+        , second((_V2)) {
+    }
+
+    pair(const pair& other)
+        : first(other.first)
+        , second(other.second) {
+    }
+   
+    pair(pair&& other)
+        : first(_STD forward<_T1>(other.first))
+        , second(_STD forward<_T2>(other.second)) {
+    }
+
+    template<class U, class V>
+    _Myt& operator = (const pair<U, V>& _Right) {	// assign from compatible pair
+        first = _Right.first;
+        second = _Right.second;
+        return (*this);
+    }
+
+    template<class U, class V>
+    _Myt& operator = (pair<U, V>&& _Right) {	// assign from moved compatible pair
+        first = _STD forward<U>(_Right.first);
+        second = _STD forward<V>(_Right.second);
+        return (*this);
+    }
+
+    _Myt& operator=(_Myt&& _Right) {	// assign from moved pair
+        first = _STD forward<_T1>(_Right.first);
+        second = _STD forward<_T2>(_Right.second);
+        return (*this);
+    }
+
+    _Myt& operator=(const _Myt& _Right) {	// assign from copied pair
+        first = _Right.first;
+        second = _Right.second;
+        return (*this);
+    }
+
+    template<class U, class V> pair(const pair<U, V> &p)
+        : first(p.first), second(p.second) {
+    }
+    _T1 first;
+    _T2 second;
+};
 template<class _T1, class _T2> inline
-	bool __cdecl operator==(const pair<_T1, _T2>& _X,
-		const pair<_T1, _T2>& _Y)
-	{return (_X.first == _Y.first && _X.second == _Y.second); }
+bool __cdecl operator==(const pair<_T1, _T2>& _X,
+    const pair<_T1, _T2>& _Y) {
+    return (_X.first == _Y.first && _X.second == _Y.second);
+}
 template<class _T1, class _T2> inline
-	bool __cdecl operator!=(const pair<_T1, _T2>& _X,
-		const pair<_T1, _T2>& _Y)
-	{return (!(_X == _Y)); }
+bool __cdecl operator!=(const pair<_T1, _T2>& _X,
+    const pair<_T1, _T2>& _Y) {
+    return (!(_X == _Y));
+}
 template<class _T1, class _T2> inline
-	bool __cdecl operator<(const pair<_T1, _T2>& _X,
-		const pair<_T1, _T2>& _Y)
-	{return (_X.first < _Y.first ||
-		!(_Y.first < _X.first) && _X.second < _Y.second); }
+bool __cdecl operator<(const pair<_T1, _T2>& _X,
+    const pair<_T1, _T2>& _Y) {
+    return (_X.first < _Y.first ||
+        !(_Y.first < _X.first) && _X.second < _Y.second);
+}
 template<class _T1, class _T2> inline
-	bool __cdecl operator>(const pair<_T1, _T2>& _X,
-		const pair<_T1, _T2>& _Y)
-	{return (_Y < _X); }
+bool __cdecl operator>(const pair<_T1, _T2>& _X,
+    const pair<_T1, _T2>& _Y) {
+    return (_Y < _X);
+}
 template<class _T1, class _T2> inline
-	bool __cdecl operator<=(const pair<_T1, _T2>& _X,
-		const pair<_T1, _T2>& _Y)
-	{return (!(_Y < _X)); }
+bool __cdecl operator<=(const pair<_T1, _T2>& _X,
+    const pair<_T1, _T2>& _Y) {
+    return (!(_Y < _X));
+}
 template<class _T1, class _T2> inline
-	bool __cdecl operator>=(const pair<_T1, _T2>& _X,
-		const pair<_T1, _T2>& _Y)
-	{return (!(_X < _Y)); }
+bool __cdecl operator>=(const pair<_T1, _T2>& _X,
+    const pair<_T1, _T2>& _Y) {
+    return (!(_X < _Y));
+}
+
 template<class _T1, class _T2> inline
-	pair<_T1, _T2> __cdecl make_pair(const _T1& _X, const _T2& _Y)
-	{return (pair<_T1, _T2>(_X, _Y)); }
-		// ITERATOR TAGS (from <iterator>)
+pair<_T1, _T2> __cdecl make_pair(_T1&& _Val1, _T2&& _Val2) {	// return pair composed from arguments
+    typedef pair<_T1, _T2> _Mypair;
+    return (_Mypair(_STD forward<_T1>(_Val1), _STD forward<_T2>(_Val2)));
+}
+
+
+// ITERATOR TAGS (from <iterator>)
 struct input_iterator_tag {};
 struct output_iterator_tag {};
 struct forward_iterator_tag
-	: public input_iterator_tag {};
+    : public input_iterator_tag {
+};
 struct bidirectional_iterator_tag
-	: public forward_iterator_tag {};
+    : public forward_iterator_tag {
+};
 struct random_access_iterator_tag
-	: public bidirectional_iterator_tag  {};
-		// TEMPLATE CLASS iterator (from <iterator>)
+    : public bidirectional_iterator_tag {
+};
+// TEMPLATE CLASS iterator (from <iterator>)
 template<class _C, class _Ty, class _D = ptrdiff_t>
-	struct iterator {
-	typedef _C iterator_category;
-	typedef _Ty value_type;
-	typedef _D distance_type;
-	};
+struct iterator {
+    typedef _C iterator_category;
+    typedef _Ty value_type;
+    typedef _D distance_type;
+};
 template<class _Ty, class _D>
-	struct _Bidit : public iterator<bidirectional_iterator_tag,
-		_Ty, _D> {};
+struct _Bidit : public iterator<bidirectional_iterator_tag,
+    _Ty, _D> {
+};
 template<class _Ty, class _D>
-	struct _Ranit : public iterator<random_access_iterator_tag,
-		_Ty, _D> {};
-		// TEMPLATE CLASS iterator_traits (from <iterator>)
+struct _Ranit : public iterator<random_access_iterator_tag,
+    _Ty, _D> {
+};
+// TEMPLATE CLASS iterator_traits (from <iterator>)
 template<class _It>
-	struct iterator_traits {
-	typedef typename _It::iterator_category iterator_category;
-	typedef typename _It::value_type value_type;
-	typedef typename _It::distance_type distance_type;
-	};
-		// TEMPLATE FUNCTION _Iter_cat (from <iterator>)
+struct iterator_traits {
+    typedef typename _It::iterator_category iterator_category;
+    typedef typename _It::value_type value_type;
+    typedef typename _It::distance_type distance_type;
+};
+// TEMPLATE FUNCTION _Iter_cat (from <iterator>)
 template<class _C, class _Ty, class _D> inline
-	_C __cdecl _Iter_cat(const iterator<_C, _Ty, _D>&)
-	{_C _IterCatTag;
-	 _C* _pIterCatTag;
-	_pIterCatTag = &_IterCatTag;	// Workaround for C4700 warning
-	return (_IterCatTag); }
+_C __cdecl _Iter_cat(const iterator<_C, _Ty, _D>&) {
+    _C _IterCatTag;
+    _C* _pIterCatTag;
+    _pIterCatTag = &_IterCatTag;	// Workaround for C4700 warning
+    return (_IterCatTag);
+}
 template<class _Ty> inline
-	random_access_iterator_tag __cdecl _Iter_cat(const _Ty *)
-	{random_access_iterator_tag _RandIterTag;
-	 random_access_iterator_tag* _pRandIterTag;
-	_pRandIterTag = &_RandIterTag;	// Workaround for C4700 warning
-	return (_RandIterTag); }
-		// TEMPLATE FUNCTION _Distance
+random_access_iterator_tag __cdecl _Iter_cat(const _Ty *) {
+    random_access_iterator_tag _RandIterTag;
+    random_access_iterator_tag* _pRandIterTag;
+    _pRandIterTag = &_RandIterTag;	// Workaround for C4700 warning
+    return (_RandIterTag);
+}
+// TEMPLATE FUNCTION _Distance
 template<class _II> inline
-	_CNTSIZ(_II) __cdecl distance(_II _F, _II _L)
-	{_CNTSIZ(_II) _N = 0;
-	_Distance(_F, _L, _N, _Iter_cat(_F));
-	return (_N); }
+_CNTSIZ(_II) __cdecl distance(_II _F, _II _L) {
+    _CNTSIZ(_II) _N = 0;
+    _Distance(_F, _L, _N, _Iter_cat(_F));
+    return (_N);
+}
 template<class _II, class _D> inline
-	void __cdecl _Distance(_II _F, _II _L, _D& _N)
-	{_Distance(_F, _L, _N, _Iter_cat(_F)); }
+void __cdecl _Distance(_II _F, _II _L, _D& _N) {
+    _Distance(_F, _L, _N, _Iter_cat(_F));
+}
 template<class _II, class _D> inline
-	void __cdecl _Distance(_II _F, _II _L, _D& _N, input_iterator_tag)
-	{for (; _F != _L; ++_F)
-		++_N; }
+void __cdecl _Distance(_II _F, _II _L, _D& _N, input_iterator_tag) {
+    for (; _F != _L; ++_F)
+        ++_N;
+}
 template<class _II, class _D> inline
-	void __cdecl _Distance(_II _F, _II _L, _D& _N, forward_iterator_tag)
-	{for (; _F != _L; ++_F)
-		++_N; }
+void __cdecl _Distance(_II _F, _II _L, _D& _N, forward_iterator_tag) {
+    for (; _F != _L; ++_F)
+        ++_N;
+}
 template<class _II, class _D> inline
-	void __cdecl _Distance(_II _F, _II _L, _D& _N,
-		bidirectional_iterator_tag)
-	{for (; _F != _L; ++_F)
-		++_N; }
+void __cdecl _Distance(_II _F, _II _L, _D& _N,
+    bidirectional_iterator_tag) {
+    for (; _F != _L; ++_F)
+        ++_N;
+}
 template<class _RI, class _D> inline
-	void __cdecl _Distance(_RI _F, _RI _L, _D& _N,
-		random_access_iterator_tag)
-	{_N += (_D) (_L - _F); }
-		// TEMPLATE CLASS reverse_iterator (from <iterator>)
+void __cdecl _Distance(_RI _F, _RI _L, _D& _N,
+    random_access_iterator_tag) {
+    _N += (_D)(_L - _F);
+}
+// TEMPLATE CLASS reverse_iterator (from <iterator>)
 template<class _RI,
-	class _Ty,
-	class _Rt = _Ty&,
-	class _Pt = _Ty *,
-	class _D = ptrdiff_t>
-	class reverse_iterator : public _Ranit<_Ty, _D> {
+class _Ty,
+class _Rt = _Ty&,
+class _Pt = _Ty *,
+class _D = ptrdiff_t>
+class reverse_iterator : public _Ranit<_Ty, _D> {
 public:
-	typedef reverse_iterator<_RI, _Ty, _Rt, _Pt, _D> _Myt;
-	typedef _RI iter_type;
-	typedef _Rt reference_type;
-	typedef _Pt pointer_type;
-	reverse_iterator()
-		{}
-	explicit reverse_iterator(_RI _X)
-		: current(_X) {}
-	_RI base() const
-		{return (current); }
-	_Rt operator*() const
-		{return (*(current - 1)); }
-	_Pt operator->() const
-		{return (&**this); }
-	_Myt& operator++()
-		{--current;
-		return (*this); }
-	_Myt operator++(int)
-		{_Myt _Tmp = *this;
-		--current;
-		return (_Tmp); }
-	_Myt& operator--()
-		{++current;
-		return (*this); }
-	_Myt operator--(int)
-		{_Myt _Tmp = *this;
-		++current;
-		return (_Tmp); }
-	_Myt& operator+=(_D _N)
-		{current -= _N;
-		return (*this); }
-	_Myt operator+(_D _N) const
-		{return (_Myt(current - _N)); }
-	_Myt& operator-=(_D _N)
-		{current += _N;
-		return (*this); }
-	_Myt operator-(_D _N) const
-		{return (_Myt(current + _N)); }
-	_Rt operator[](_D _N) const
-		{return (*(*this + _N)); }
+    typedef reverse_iterator<_RI, _Ty, _Rt, _Pt, _D> _Myt;
+    typedef _RI iter_type;
+    typedef _Rt reference_type;
+    typedef _Pt pointer_type;
+    reverse_iterator() {
+    }
+    explicit reverse_iterator(_RI _X)
+        : current(_X) {
+    }
+    _RI base() const {
+        return (current);
+    }
+    _Rt operator*() const {
+        return (*(current - 1));
+    }
+    _Pt operator->() const {
+        return (&**this);
+    }
+    _Myt& operator++() {
+        --current;
+        return (*this);
+    }
+    _Myt operator++(int) {
+        _Myt _Tmp = *this;
+        --current;
+        return (_Tmp);
+    }
+    _Myt& operator--() {
+        ++current;
+        return (*this);
+    }
+    _Myt operator--(int) {
+        _Myt _Tmp = *this;
+        ++current;
+        return (_Tmp);
+    }
+    _Myt& operator+=(_D _N) {
+        current -= _N;
+        return (*this);
+    }
+    _Myt operator+(_D _N) const {
+        return (_Myt(current - _N));
+    }
+    _Myt& operator-=(_D _N) {
+        current += _N;
+        return (*this);
+    }
+    _Myt operator-(_D _N) const {
+        return (_Myt(current + _N));
+    }
+    _Rt operator[](_D _N) const {
+        return (*(*this + _N));
+    }
 protected:
-	_RI current;
-	};
+    _RI current;
+};
 template<class _RI, class _Ty, class _Rt, class _Pt,
-	class _D> inline
-	bool __cdecl operator==(
-		const reverse_iterator<_RI, _Ty, _Rt, _Pt, _D>& _X,
-		const reverse_iterator<_RI, _Ty, _Rt, _Pt, _D>& _Y)
-	{return (_X.base() == _Y.base()); }
+class _D> inline
+    bool __cdecl operator==(
+        const reverse_iterator<_RI, _Ty, _Rt, _Pt, _D>& _X,
+        const reverse_iterator<_RI, _Ty, _Rt, _Pt, _D>& _Y) {
+    return (_X.base() == _Y.base());
+}
 template<class _RI, class _Ty, class _Rt, class _Pt,
-	class _D> inline
-	bool __cdecl operator!=(
-		const reverse_iterator<_RI, _Ty, _Rt, _Pt, _D>& _X,
-		const reverse_iterator<_RI, _Ty, _Rt, _Pt, _D>& _Y)
-	{return (!(_X == _Y)); }
+class _D> inline
+    bool __cdecl operator!=(
+        const reverse_iterator<_RI, _Ty, _Rt, _Pt, _D>& _X,
+        const reverse_iterator<_RI, _Ty, _Rt, _Pt, _D>& _Y) {
+    return (!(_X == _Y));
+}
 template<class _RI, class _Ty, class _Rt, class _Pt,
-	class _D> inline
-	bool __cdecl operator<(
-		const reverse_iterator<_RI, _Ty, _Rt, _Pt, _D>& _X,
-		const reverse_iterator<_RI, _Ty, _Rt, _Pt, _D>& _Y)
-	{return (_Y.base() < _X.base()); }
+class _D> inline
+    bool __cdecl operator<(
+        const reverse_iterator<_RI, _Ty, _Rt, _Pt, _D>& _X,
+        const reverse_iterator<_RI, _Ty, _Rt, _Pt, _D>& _Y) {
+    return (_Y.base() < _X.base());
+}
 template<class _RI, class _Ty, class _Rt, class _Pt,
-	class _D> inline
-	bool __cdecl operator>(
-		const reverse_iterator<_RI, _Ty, _Rt, _Pt, _D>& _X,
-		const reverse_iterator<_RI, _Ty, _Rt, _Pt, _D>& _Y)
-	{return (_Y < _X); }
+class _D> inline
+    bool __cdecl operator>(
+        const reverse_iterator<_RI, _Ty, _Rt, _Pt, _D>& _X,
+        const reverse_iterator<_RI, _Ty, _Rt, _Pt, _D>& _Y) {
+    return (_Y < _X);
+}
 template<class _RI, class _Ty, class _Rt, class _Pt,
-	class _D> inline
-	bool __cdecl operator<=(
-		const reverse_iterator<_RI, _Ty, _Rt, _Pt, _D>& _X,
-		const reverse_iterator<_RI, _Ty, _Rt, _Pt, _D>& _Y)
-	{return (!(_Y < _X)); }
+class _D> inline
+    bool __cdecl operator<=(
+        const reverse_iterator<_RI, _Ty, _Rt, _Pt, _D>& _X,
+        const reverse_iterator<_RI, _Ty, _Rt, _Pt, _D>& _Y) {
+    return (!(_Y < _X));
+}
 template<class _RI, class _Ty, class _Rt, class _Pt,
-	class _D> inline
-	bool __cdecl operator>=(
-		const reverse_iterator<_RI, _Ty, _Rt, _Pt, _D>& _X,
-		const reverse_iterator<_RI, _Ty, _Rt, _Pt, _D>& _Y)
-	{return (!(_X < _Y)); }
+class _D> inline
+    bool __cdecl operator>=(
+        const reverse_iterator<_RI, _Ty, _Rt, _Pt, _D>& _X,
+        const reverse_iterator<_RI, _Ty, _Rt, _Pt, _D>& _Y) {
+    return (!(_X < _Y));
+}
 template<class _RI, class _Ty, class _Rt, class _Pt,
-	class _D> inline
-	_D __cdecl operator-(
-		const reverse_iterator<_RI, _Ty, _Rt, _Pt, _D>& _X,
-		const reverse_iterator<_RI, _Ty, _Rt, _Pt, _D>& _Y)
-	{return (_Y.base() - _X.base()); }
+class _D> inline
+    _D __cdecl operator-(
+        const reverse_iterator<_RI, _Ty, _Rt, _Pt, _D>& _X,
+        const reverse_iterator<_RI, _Ty, _Rt, _Pt, _D>& _Y) {
+    return (_Y.base() - _X.base());
+}
 template<class _RI, class _Ty, class _Rt, class _Pt,
-	class _D> inline
-	reverse_iterator<_RI, _Ty, _Rt, _Pt, _D> __cdecl operator+(_D _N,
-		const reverse_iterator<_RI, _Ty, _Rt, _Pt, _D>& _Y)
-	{return (reverse_iterator<_RI, _Ty, _Rt, _Pt, _D>(
-		_Y.base() - _N)); }
-		// TEMPLATE CLASS istreambuf_iterator (from <iterator>)
+class _D> inline
+    reverse_iterator<_RI, _Ty, _Rt, _Pt, _D> __cdecl operator+(_D _N,
+        const reverse_iterator<_RI, _Ty, _Rt, _Pt, _D>& _Y) {
+    return (reverse_iterator<_RI, _Ty, _Rt, _Pt, _D>(
+        _Y.base() - _N));
+}
+// TEMPLATE CLASS istreambuf_iterator (from <iterator>)
 template<class _E, class _Tr /*= char_traits<_E> */ >
-	class istreambuf_iterator
-		: public iterator<input_iterator_tag, _E, typename _Tr::off_type> {
+class istreambuf_iterator
+    : public iterator<input_iterator_tag, _E, typename _Tr::off_type> {
 public:
-	typedef istreambuf_iterator<_E, _Tr> _Myt;
-	typedef _E char_type;
-	typedef _Tr traits_type;
-	typedef typename _Tr::int_type int_type;
-	typedef basic_streambuf<_E, _Tr> streambuf_type;
-	typedef basic_istream<_E, _Tr> istream_type;
-	istreambuf_iterator(streambuf_type *_Sb = 0) _THROW0()
-		: _Sbuf(_Sb), _Got(_Sb == 0) {}
-	istreambuf_iterator(istream_type& _I) _THROW0()
-		: _Sbuf(_I.rdbuf()), _Got(_I.rdbuf() == 0) {}
-	const _E& operator*() const
-		{if (!_Got)
-			((_Myt *)this)->_Peek();
-		return (_Val); }
-	const _E *operator->() const
-		{return (&**this); }
-	_Myt& operator++()
-		{_Inc();
-		return (*this); }
-	_Myt operator++(int)
-		{if (!_Got)
-			_Peek();
-		_Myt _Tmp = *this;
-		_Inc();
-		return (_Tmp); }
-	bool equal(const _Myt& _X) const
-		{if (!_Got)
-			((_Myt *)this)->_Peek();
-		if (!_X._Got)
-			((_Myt *)&_X)->_Peek();
-		return (_Sbuf == 0 && _X._Sbuf == 0
-			|| _Sbuf != 0 && _X._Sbuf != 0); }
+    typedef istreambuf_iterator<_E, _Tr> _Myt;
+    typedef _E char_type;
+    typedef _Tr traits_type;
+    typedef typename _Tr::int_type int_type;
+    typedef basic_streambuf<_E, _Tr> streambuf_type;
+    typedef basic_istream<_E, _Tr> istream_type;
+    istreambuf_iterator(streambuf_type *_Sb = 0) _THROW0()
+        : _Sbuf(_Sb), _Got(_Sb == 0) {
+    }
+    istreambuf_iterator(istream_type& _I) _THROW0()
+        : _Sbuf(_I.rdbuf()), _Got(_I.rdbuf() == 0) {
+    }
+    const _E& operator*() const {
+        if (!_Got)
+            ((_Myt *)this)->_Peek();
+        return (_Val);
+    }
+    const _E *operator->() const {
+        return (&**this);
+    }
+    _Myt& operator++() {
+        _Inc();
+        return (*this);
+    }
+    _Myt operator++(int) {
+        if (!_Got)
+            _Peek();
+        _Myt _Tmp = *this;
+        _Inc();
+        return (_Tmp);
+    }
+    bool equal(const _Myt& _X) const {
+        if (!_Got)
+            ((_Myt *)this)->_Peek();
+        if (!_X._Got)
+            ((_Myt *)&_X)->_Peek();
+        return (_Sbuf == 0 && _X._Sbuf == 0
+            || _Sbuf != 0 && _X._Sbuf != 0);
+    }
 private:
-	void _Inc()
-		{if (_Sbuf == 0
-			|| _Tr::eq_int_type(_Tr::eof(), _Sbuf->sbumpc()))
-			_Sbuf = 0, _Got = true;
-		else
-			_Got = false; }
-	_E _Peek()
-		{int_type _C;
-		if (_Sbuf == 0
-			|| _Tr::eq_int_type(_Tr::eof(), _C = _Sbuf->sgetc()))
-			_Sbuf = 0;
-		else
-			_Val = _Tr::to_char_type(_C);
-		_Got = true;
-		return (_Val); }
-	streambuf_type *_Sbuf;
-	bool _Got;
-	_E _Val;
-	};
+    void _Inc() {
+        if (_Sbuf == 0
+            || _Tr::eq_int_type(_Tr::eof(), _Sbuf->sbumpc()))
+            _Sbuf = 0, _Got = true;
+        else
+            _Got = false;
+    }
+    _E _Peek() {
+        int_type _C;
+        if (_Sbuf == 0
+            || _Tr::eq_int_type(_Tr::eof(), _C = _Sbuf->sgetc()))
+            _Sbuf = 0;
+        else
+            _Val = _Tr::to_char_type(_C);
+        _Got = true;
+        return (_Val);
+    }
+    streambuf_type *_Sbuf;
+    bool _Got;
+    _E _Val;
+};
 template<class _E, class _Tr> inline
-	bool __cdecl operator==(const istreambuf_iterator<_E, _Tr>& _X,
-		const istreambuf_iterator<_E, _Tr>& _Y)
-	{return (_X.equal(_Y)); }
+bool __cdecl operator==(const istreambuf_iterator<_E, _Tr>& _X,
+    const istreambuf_iterator<_E, _Tr>& _Y) {
+    return (_X.equal(_Y));
+}
 template<class _E, class _Tr> inline
-	bool __cdecl operator!=(const istreambuf_iterator<_E, _Tr>& _X,
-		const istreambuf_iterator<_E, _Tr>& _Y)
-	{return (!(_X == _Y)); }
-		// TEMPLATE CLASS ostreambuf_iterator (from <iterator>)
+bool __cdecl operator!=(const istreambuf_iterator<_E, _Tr>& _X,
+    const istreambuf_iterator<_E, _Tr>& _Y) {
+    return (!(_X == _Y));
+}
+// TEMPLATE CLASS ostreambuf_iterator (from <iterator>)
 template<class _E, class _Tr /*= char_traits<_E> */ >
-	class ostreambuf_iterator
-		: public iterator<output_iterator_tag, void, void> {
-	typedef ostreambuf_iterator<_E, _Tr> _Myt;
+class ostreambuf_iterator
+    : public iterator<output_iterator_tag, void, void> {
+    typedef ostreambuf_iterator<_E, _Tr> _Myt;
 public:
-	typedef _E char_type;
-	typedef _Tr traits_type;
-	typedef basic_streambuf<_E, _Tr> streambuf_type;
-	typedef basic_ostream<_E, _Tr> ostream_type;
-	ostreambuf_iterator(streambuf_type *_Sb) _THROW0()
-		: _Failed(false), _Sbuf(_Sb) {}
-	ostreambuf_iterator(ostream_type& _O) _THROW0()
-		: _Failed(false), _Sbuf(_O.rdbuf()) {}
-	_Myt& operator=(_E _X)
-		{if (_Sbuf == 0
-			|| _Tr::eq_int_type(_Tr::eof(), _Sbuf->sputc(_X)))
-			_Failed = true;
-		return (*this); }
-	_Myt& operator*()
-		{return (*this); }
-	_Myt& operator++()
-		{return (*this); }
-	_Myt& operator++(int)
-		{return (*this); }
-	bool failed() const _THROW0()
-		{return (_Failed); }
+    typedef _E char_type;
+    typedef _Tr traits_type;
+    typedef basic_streambuf<_E, _Tr> streambuf_type;
+    typedef basic_ostream<_E, _Tr> ostream_type;
+    ostreambuf_iterator(streambuf_type *_Sb) _THROW0()
+        : _Failed(false), _Sbuf(_Sb) {
+    }
+    ostreambuf_iterator(ostream_type& _O) _THROW0()
+        : _Failed(false), _Sbuf(_O.rdbuf()) {
+    }
+    _Myt& operator=(_E _X) {
+        if (_Sbuf == 0
+            || _Tr::eq_int_type(_Tr::eof(), _Sbuf->sputc(_X)))
+            _Failed = true;
+        return (*this);
+    }
+    _Myt& operator*() {
+        return (*this);
+    }
+    _Myt& operator++() {
+        return (*this);
+    }
+    _Myt& operator++(int) {
+        return (*this);
+    }
+    bool failed() const _THROW0() {
+        return (_Failed);
+    }
 private:
-	bool _Failed;
-	streambuf_type *_Sbuf;
-	};
-		// TEMPLATE OPERATORS
-	namespace rel_ops {
-template<class _Ty> inline
-	bool __cdecl operator!=(const _Ty& _X, const _Ty& _Y)
-	{return (!(_X == _Y)); }
-template<class _Ty> inline
-	bool __cdecl operator>(const _Ty& _X, const _Ty& _Y)
-	{return (_Y < _X); }
-template<class _Ty> inline
-	bool __cdecl operator<=(const _Ty& _X, const _Ty& _Y)
-	{return (!(_Y < _X)); }
-template<class _Ty> inline
-	bool __cdecl operator>=(const _Ty& _X, const _Ty& _Y)
-	{return (!(_X < _Y)); }
+    bool _Failed;
+    streambuf_type *_Sbuf;
+};
+// TEMPLATE OPERATORS
+namespace rel_ops {
+    template<class _Ty> inline
+        bool __cdecl operator!=(const _Ty& _X, const _Ty& _Y) {
+        return (!(_X == _Y));
+    }
+    template<class _Ty> inline
+        bool __cdecl operator>(const _Ty& _X, const _Ty& _Y) {
+        return (_Y < _X);
+    }
+    template<class _Ty> inline
+        bool __cdecl operator<=(const _Ty& _X, const _Ty& _Y) {
+        return (!(_Y < _X));
+    }
+    template<class _Ty> inline
+        bool __cdecl operator>=(const _Ty& _X, const _Ty& _Y) {
+        return (!(_X < _Y));
+    }
 	_STD_END
 _STD_END
 #ifdef  _MSC_VER

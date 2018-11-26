@@ -15,6 +15,7 @@ namespace blink {
 
 namespace net {
 class WebURLLoaderInternal;
+class BlobResourceLoader;
 }
 
 using namespace blink;
@@ -48,11 +49,13 @@ public:
 
     //void fireFailure(blink::Timer<WebURLLoaderImplCurl>*);
    
-    net::WebURLLoaderInternal* loaderInterna() { return m_webURLLoaderInternal; }
+    //net::WebURLLoaderInternal* loaderInterna() { return m_webURLLoaderInternal; }
 
 private:
     bool* m_hadDestroied;
-    net::WebURLLoaderInternal* m_webURLLoaderInternal;
+    int m_jobIds;
+
+    net::BlobResourceLoader* m_blobLoader;
 };
 
 }  // namespace content

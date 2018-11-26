@@ -30,9 +30,11 @@
 #include "config.h"
 #include "core/css/DOMWindowCSS.h"
 
+#include "core/css/CSSMarkup.h"
 #include "core/css/CSSPropertyMetadata.h"
 #include "core/css/StylePropertySet.h"
 #include "core/css/parser/CSSParser.h"
+#include "wtf/text/StringBuilder.h"
 #include "wtf/text/WTFString.h"
 
 namespace blink {
@@ -52,6 +54,13 @@ bool DOMWindowCSS::supports(const String& property, const String& value)
 bool DOMWindowCSS::supports(const String& conditionText)
 {
     return CSSParser::parseSupportsCondition(conditionText);
+}
+
+String DOMWindowCSS::escape(const String& ident)
+{
+    StringBuilder builder;
+    serializeIdentifier(ident, builder);
+    return builder.toString();
 }
 
 }

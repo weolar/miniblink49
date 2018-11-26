@@ -43,6 +43,7 @@ class DOMWindowCSS : public RefCountedWillBeGarbageCollected<DOMWindowCSS>, publ
 public:
     static bool supports(const String& property, const String& value);
     static bool supports(const String& conditionText);
+    static String escape(const String& ident);
 
     DEFINE_INLINE_TRACE() { }
 

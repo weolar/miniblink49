@@ -15,6 +15,7 @@ using namespace blink;
 namespace content {
 
 class WebPage;
+class ContextMenu;
 
 class WebFrameClientImpl : public WebFrameClient {
 public:
@@ -22,6 +23,7 @@ public:
     ~WebFrameClientImpl();
 
     virtual void didAddMessageToConsole(const WebConsoleMessage& message, const WebString& sourceName, unsigned sourceLine, const WebString& stackTrace) override;
+    virtual bool shouldReportDetailedMessageForSource(const WebString& source) override { return true; };
 
     virtual WebFrame* createChildFrame(WebLocalFrame* parent, WebTreeScopeType, const WebString& frameName, WebSandboxFlags sandboxFlags) override;
 
@@ -165,11 +167,11 @@ public:
 
     // Response headers have been received for the resource request given
     // by identifier.
-    virtual void didReceiveResponse(
-        WebLocalFrame*, unsigned identifier, const WebURLResponse&) override;
+    virtual void didReceiveResponse(WebLocalFrame* webFrame, unsigned identifier, const WebURLResponse&) override;
 
-    virtual void didChangeResourcePriority(
-        WebLocalFrame* webFrame, unsigned identifier, const WebURLRequest::Priority& priority, int) override;
+    virtual void didChangeResourcePriority(WebLocalFrame* webFrame, unsigned identifier, const WebURLRequest::Priority& priority, int) override;
+
+    virtual void didDispatchPingLoader(WebLocalFrame* webFrame, const WebURL& url) override;
 
     // Navigational queries ------------------------------------------------
     virtual WebNavigationPolicy decidePolicyForNavigation(const NavigationPolicyInfo& info) override;
@@ -182,7 +184,35 @@ public:
 
     // Dialogs -------------------------------------------------------------
 
+    virtual void runModalAlertDialog(const WebString& message) override;
+
+    // Displays a modal confirmation dialog with the given message as
+    // description and OK/Cancel choices. Returns true if the user selects
+    // 'OK' or false otherwise.
     virtual bool runModalConfirmDialog(const WebString& message) override;
+
+    // Displays a modal input dialog with the given message as description
+    // and OK/Cancel choices. The input field is pre-filled with
+    // defaultValue. Returns true if the user selects 'OK' or false
+    // otherwise. Upon returning true, actualValue contains the value of
+    // the input field.
+    virtual bool runModalPromptDialog(const WebString& message, const WebString& defaultValue, WebString* actualValue) override;
+
+    // Displays a modal confirmation dialog containing the given message as
+    // description and OK/Cancel choices, where 'OK' means that it is okay
+    // to proceed with closing the view. Returns true if the user selects
+    // 'OK' or false otherwise.
+    virtual bool runModalBeforeUnloadDialog(bool isReload, const WebString& message) override;
+
+    // UI ------------------------------------------------------------------
+
+    // Shows a context menu with commands relevant to a specific element on
+    // the given frame. Additional context data is supplied.
+    virtual void showContextMenu(const WebContextMenuData&) override;
+
+    // Called when the data attached to the currently displayed context menu is
+    // invalidated. The context menu may be closed if possible.
+    virtual void clearContextMenu() override;
 
     // Script notifications ------------------------------------------------
 
@@ -209,18 +239,19 @@ public:
     String title() const { return m_title; }
 #endif
 private:
+    void resetLoadState();
     void onLoadingStateChange(bool isLoading, bool toDifferentDocument);
 
     WebPage* m_webPage;
     bool m_loading;
-#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
-    // wke
+
     bool m_loadFailed;
     bool m_loaded;
     bool m_documentReady;
     String m_title;
-#endif
     WTF::Vector<WebFrame*> m_unusedFrames;
+
+    ContextMenu* m_menu;
 };
 
 } // namespace blink

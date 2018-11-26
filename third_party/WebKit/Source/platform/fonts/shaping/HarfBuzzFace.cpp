@@ -28,11 +28,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#ifndef MINIBLINK_NO_HARFBUZZ
 #include "config.h"
 #include "platform/fonts/shaping/HarfBuzzFace.h"
 
-#include "hb-ot.h"
-#include "hb.h"
+#include "third_party/harfbuzz-ng/src/hb-ot.h"
+#include "third_party/harfbuzz-ng/src/hb.h"
 #if OS(MACOSX)
 #include "hb-coretext.h"
 #endif
@@ -373,3 +374,5 @@ hb_font_t* HarfBuzzFace::createFont() const
 }
 
 } // namespace blink
+
+#endif

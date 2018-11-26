@@ -45,14 +45,14 @@ HRESULT WINAPI DeviceDialog( PDEVICEDIALOGDATA pDeviceDialogData );
 DECLARE_INTERFACE_(IWiaUIExtension, IUnknown)
 {
     // *** IUnknown methods ***
-    STDMETHOD(QueryInterface) (THIS_ REFIID riid, LPVOID FAR* ppvObj) PURE;
-    STDMETHOD_(ULONG,AddRef) (THIS) PURE;
-    STDMETHOD_(ULONG,Release) (THIS) PURE;
+    STDMETHOD(QueryInterface) (THIS_ REFIID riid, LPVOID FAR* ppvObj) = 0;
+    STDMETHOD_(ULONG,AddRef) (THIS) = 0;
+    STDMETHOD_(ULONG,Release) (THIS) = 0;
 
     // *** IWiaUIExtension methods ***
-    STDMETHOD(DeviceDialog)( THIS_ PDEVICEDIALOGDATA pDeviceDialogData ) PURE;
-    STDMETHOD(GetDeviceIcon)(THIS_ BSTR bstrDeviceId, HICON *phIcon, ULONG nSize ) PURE;
-    STDMETHOD(GetDeviceBitmapLogo)(THIS_ BSTR bstrDeviceId, HBITMAP *phBitmap, ULONG nMaxWidth, ULONG nMaxHeight ) PURE;
+    STDMETHOD(DeviceDialog)( THIS_ PDEVICEDIALOGDATA pDeviceDialogData ) = 0;
+    STDMETHOD(GetDeviceIcon)(THIS_ BSTR bstrDeviceId, HICON *phIcon, ULONG nSize ) = 0;
+    STDMETHOD(GetDeviceBitmapLogo)(THIS_ BSTR bstrDeviceId, HBITMAP *phBitmap, ULONG nMaxWidth, ULONG nMaxHeight ) = 0;
 };
 
 // {da319113-50ee-4c80-b460-57d005d44a2c}

@@ -324,6 +324,9 @@ const PassOwnPtr<Vector<CSPHeaderAndType>> ContentSecurityPolicy::headers() cons
 template<bool (CSPDirectiveList::*allowed)(ContentSecurityPolicy::ReportingStatus) const>
 bool isAllowedByAll(const CSPDirectiveListVector& policies, ContentSecurityPolicy::ReportingStatus reportingStatus)
 {
+    if (!RuntimeEnabledFeatures::cspCheckEnabled())
+        return true;
+
     for (const auto& policy : policies) {
         if (!(policy.get()->*allowed)(reportingStatus))
             return false;
@@ -334,6 +337,9 @@ bool isAllowedByAll(const CSPDirectiveListVector& policies, ContentSecurityPolic
 template <bool (CSPDirectiveList::*allowed)(ScriptState* scriptState, ContentSecurityPolicy::ReportingStatus, ContentSecurityPolicy::ExceptionStatus) const>
 bool isAllowedByAllWithStateAndExceptionStatus(const CSPDirectiveListVector& policies, ScriptState* scriptState, ContentSecurityPolicy::ReportingStatus reportingStatus, ContentSecurityPolicy::ExceptionStatus exceptionStatus)
 {
+    if (!RuntimeEnabledFeatures::cspCheckEnabled())
+        return true;
+
     for (const auto& policy : policies) {
         if (!(policy.get()->*allowed)(scriptState, reportingStatus, exceptionStatus))
             return false;
@@ -344,6 +350,9 @@ bool isAllowedByAllWithStateAndExceptionStatus(const CSPDirectiveListVector& pol
 template<bool (CSPDirectiveList::*allowed)(const String&, const WTF::OrdinalNumber&, ContentSecurityPolicy::ReportingStatus) const>
 bool isAllowedByAllWithContext(const CSPDirectiveListVector& policies, const String& contextURL, const WTF::OrdinalNumber& contextLine, ContentSecurityPolicy::ReportingStatus reportingStatus)
 {
+    if (!RuntimeEnabledFeatures::cspCheckEnabled())
+        return true;
+
     for (const auto& policy : policies) {
         if (!(policy.get()->*allowed)(contextURL, contextLine, reportingStatus))
             return false;
@@ -366,6 +375,9 @@ bool isAllowedByAllWithContextAndContent(const CSPDirectiveListVector& policies,
 template<bool (CSPDirectiveList::*allowed)(const String&) const>
 bool isAllowedByAllWithNonce(const CSPDirectiveListVector& policies, const String& nonce)
 {
+    if (!RuntimeEnabledFeatures::cspCheckEnabled())
+        return true;
+
     for (const auto& policy : policies) {
         if (!(policy.get()->*allowed)(nonce))
             return false;
@@ -376,6 +388,9 @@ bool isAllowedByAllWithNonce(const CSPDirectiveListVector& policies, const Strin
 template<bool (CSPDirectiveList::*allowed)(const CSPHashValue&) const>
 bool isAllowedByAllWithHash(const CSPDirectiveListVector& policies, const CSPHashValue& hashValue)
 {
+    if (!RuntimeEnabledFeatures::cspCheckEnabled())
+        return true;
+
     for (const auto& policy : policies) {
         if (!(policy.get()->*allowed)(hashValue))
             return false;
@@ -386,6 +401,9 @@ bool isAllowedByAllWithHash(const CSPDirectiveListVector& policies, const CSPHas
 template <bool (CSPDirectiveList::*allowFromURL)(const KURL&, ContentSecurityPolicy::RedirectStatus, ContentSecurityPolicy::ReportingStatus) const>
 bool isAllowedByAllWithURL(const CSPDirectiveListVector& policies, const KURL& url, ContentSecurityPolicy::RedirectStatus redirectStatus, ContentSecurityPolicy::ReportingStatus reportingStatus)
 {
+    if (!RuntimeEnabledFeatures::cspCheckEnabled())
+        return true;
+
     if (SchemeRegistry::schemeShouldBypassContentSecurityPolicy(url.protocol()))
         return true;
 
@@ -399,6 +417,9 @@ bool isAllowedByAllWithURL(const CSPDirectiveListVector& policies, const KURL& u
 template<bool (CSPDirectiveList::*allowed)(LocalFrame*, const KURL&, ContentSecurityPolicy::ReportingStatus) const>
 bool isAllowedByAllWithFrame(const CSPDirectiveListVector& policies, LocalFrame* frame, const KURL& url, ContentSecurityPolicy::ReportingStatus reportingStatus)
 {
+    if (!RuntimeEnabledFeatures::cspCheckEnabled())
+        return true;
+
     for (const auto& policy : policies) {
         if (!(policy.get()->*allowed)(frame, url, reportingStatus))
             return false;

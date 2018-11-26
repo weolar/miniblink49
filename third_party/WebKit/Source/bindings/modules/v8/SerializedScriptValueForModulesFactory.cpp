@@ -66,7 +66,7 @@ ScriptValueSerializer::Status SerializedScriptValueForModulesFactory::doSerializ
 
 v8::Local<v8::Value> SerializedScriptValueForModulesFactory::deserialize(String& data, BlobDataHandleMap& blobDataHandles, ArrayBufferContentsArray* arrayBufferContentsArray, v8::Isolate* isolate, MessagePortArray* messagePorts, const WebBlobInfoArray* blobInfo)
 {
-#ifdef MINIBLINK_NOT_IMPLEMENTED
+#ifndef MINIBLINK_NOT_IMPLEMENTED_WEBWORKER
     if (!data.impl())
         return v8::Null(isolate);
     static_assert(sizeof(SerializedScriptValueWriter::BufferValueType) == 2, "BufferValueType should be 2 bytes");

@@ -297,6 +297,7 @@ _CRTIMP _secerr_handler_func
 _CRTIMP void   __cdecl srand(unsigned int);
 _CRTIMP double __cdecl strtod(const char *, char **);
 _CRTIMP long   __cdecl strtol(const char *, char **, int);
+long long int  __cdecl strtoll(const char *nptr, char **endptr, int base);
 _CRTIMP unsigned long __cdecl strtoul(const char *, char **, int);
 _CRTIMP int    __cdecl system(const char *);
 _CRTIMP char * __cdecl _ultoa(unsigned long, char *, int);

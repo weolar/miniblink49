@@ -3,20 +3,43 @@
 
 #if USING_VC6RT == 1
 
-#include <windows.h>
+#ifndef _WIN32_WINNT
+#define _WIN32_WINNT (0x0501)
+#endif
+
 #include <commctrl.h>
 
 #undef min
 #undef max
 #undef PURE
 
+#ifndef _In_opt_
 #define _In_opt_ 
+#endif
+
+#ifndef _In_
 #define _In_
+#endif
+
+#ifndef _Inout_opt_
 #define _Inout_opt_
+#endif
+
+#ifndef _Inout_
 #define _Inout_
+#endif
+
+#ifndef _In_opt_z_
 #define _In_opt_z_
+#endif
+
+#ifndef _Out_
 #define _Out_
+#endif
+
+#ifndef _Out_opt_
 #define _Out_opt_
+#endif
 
 #define WS_EX_LAYERED 0x00080000
 #define SPI_GETWHEELSCROLLLINES 0x0068
@@ -35,7 +58,9 @@
 #define SPI_GETFONTSMOOTHINGTYPE 0x200A
 #define FE_FONTSMOOTHINGCLEARTYPE 0x0002
 
+#ifdef __cplusplus
 extern "C" {
+#endif
 
 WINBASEAPI
 BOOL
@@ -52,27 +77,27 @@ TryEnterCriticalSection(
     LPCRITICAL_SECTION lpCriticalSection
     );
 
+typedef struct tagTRACKMOUSEEVENT *LPTRACKMOUSEEVENT;
+
 WINUSERAPI BOOL WINAPI TrackMouseEvent(LPTRACKMOUSEEVENT lpEventTrack);
 
-HRESULT STDAPICALLTYPE CoInitializeEx(LPVOID pvReserved, DWORD dwCoInit);
+WINBASEAPI HRESULT STDAPICALLTYPE CoInitializeEx(LPVOID pvReserved, DWORD dwCoInit);
 
-BOOL WINAPI InternetSetCookieA(LPCSTR lpszUrl, LPCSTR lpszCookieName, LPCSTR lpszCookieData);
+WINBASEAPI BOOL WINAPI InternetSetCookieA(LPCSTR lpszUrl, LPCSTR lpszCookieName, LPCSTR lpszCookieData);
 
-VOID WINAPI GetNativeSystemInfo(LPSYSTEM_INFO lpSystemInfo);
+WINBASEAPI VOID WINAPI GetNativeSystemInfo(LPSYSTEM_INFO lpSystemInfo);
 
-BOOL WINAPI QueueUserWorkItem(LPTHREAD_START_ROUTINE Function, PVOID Context, ULONG Flags);
+WINBASEAPI BOOL WINAPI QueueUserWorkItem(LPTHREAD_START_ROUTINE Function, PVOID Context, ULONG Flags);
 
-COLORREF WINAPI SetDCBrushColor(HDC hdc, COLORREF color);
+WINBASEAPI COLORREF WINAPI SetDCBrushColor(HDC hdc, COLORREF color);
 
-COLORREF WINAPI SetDCPenColor(HDC hdc, COLORREF color);
+WINBASEAPI COLORREF WINAPI SetDCPenColor(HDC hdc, COLORREF color);
 
-BOOL WINAPI GdiAlphaBlend(HDC hdcDest, int xoriginDest, int yoriginDest, int wDest, int hDest, HDC hdcSrc, int xoriginSrc, int yoriginSrc, int wSrc, int hSrc, BLENDFUNCTION ftn);
+/*WINBASEAPI*/ BOOL WINAPI GdiAlphaBlend(HDC hdcDest, int xoriginDest, int yoriginDest, int wDest, int hDest, HDC hdcSrc, int xoriginSrc, int yoriginSrc, int wSrc, int hSrc, BLENDFUNCTION ftn);
 
-BOOL WINAPI UpdateLayeredWindow(_In_ HWND hWnd, _In_opt_ HDC hdcDst, _In_opt_ POINT* pptDst, _In_opt_ SIZE* psize, _In_opt_ HDC hdcSrc, _In_opt_ POINT* pptSrc, _In_ COLORREF crKey, _In_opt_ BLENDFUNCTION* pblend, _In_ DWORD dwFlags);
+WINBASEAPI BOOL WINAPI UpdateLayeredWindow(_In_ HWND hWnd, _In_opt_ HDC hdcDst, _In_opt_ POINT* pptDst, _In_opt_ SIZE* psize, _In_opt_ HDC hdcSrc, _In_opt_ POINT* pptSrc, _In_ COLORREF crKey, _In_opt_ BLENDFUNCTION* pblend, _In_ DWORD dwFlags);
 
-BOOL WINAPI IsDebuggerPresent(VOID);
-
-VOID WINAPI GetNativeSystemInfo(LPSYSTEM_INFO lpSystemInfo);
+WINBASEAPI BOOL WINAPI IsDebuggerPresent(VOID);
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -254,7 +279,9 @@ BOOL WINAPI HttpSendRequestW(
 
 BOOL WINAPI InternetWriteFile(_In_ HINTERNET hFile, LPCVOID lpBuffer, _In_ DWORD dwNumberOfBytesToWrite, _Out_ LPDWORD lpdwNumberOfBytesWritten);
 
+#ifdef __cplusplus
 } // extern "C"
+#endif // __cplusplus
 
 #endif
 

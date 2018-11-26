@@ -95,103 +95,167 @@ public:
     int pixelSnappedWidth() const { return m_frameRect.pixelSnappedWidth(); }
     int pixelSnappedHeight() const { return m_frameRect.pixelSnappedHeight(); }
 
-    void setX(LayoutUnit x)
-    {
-        if (x == m_frameRect.x())
-            return;
-        m_frameRect.setX(x);
-        frameRectChanged();
-    }
-    void setY(LayoutUnit y)
-    {
-        if (y == m_frameRect.y())
-            return;
-        m_frameRect.setY(y);
-        frameRectChanged();
-    }
-    void setWidth(LayoutUnit width)
-    {
-        if (width == m_frameRect.width())
-            return;
-        m_frameRect.setWidth(width);
-        frameRectChanged();
-    }
-    void setHeight(LayoutUnit height)
-    {
-        if (height == m_frameRect.height())
-            return;
-        m_frameRect.setHeight(height);
-        frameRectChanged();
-    }
+//     void setX(LayoutUnit x)
+//     {
+//         if (x == m_frameRect.x())
+//             return;
+//         m_frameRect.setX(x);
+//         frameRectChanged();
+//     }
+//     void setY(LayoutUnit y)
+//     {
+//         if (y == m_frameRect.y())
+//             return;
+//         m_frameRect.setY(y);
+//         frameRectChanged();
+//     }
+//     void setWidth(LayoutUnit width)
+//     {
+//         if (width == m_frameRect.width())
+//             return;
+//         m_frameRect.setWidth(width);
+//         frameRectChanged();
+//     }
+//     void setHeight(LayoutUnit height)
+//     {
+//         if (height == m_frameRect.height())
+//             return;
+//         m_frameRect.setHeight(height);
+//         frameRectChanged();
+//     }
+// 
+//     LayoutUnit logicalLeft() const { return style()->isHorizontalWritingMode() ? m_frameRect.x() : m_frameRect.y(); }
+//     LayoutUnit logicalRight() const { return logicalLeft() + logicalWidth(); }
+//     LayoutUnit logicalTop() const { return style()->isHorizontalWritingMode() ? m_frameRect.y() : m_frameRect.x(); }
+//     LayoutUnit logicalBottom() const { return logicalTop() + logicalHeight(); }
+//     LayoutUnit logicalWidth() const { return style()->isHorizontalWritingMode() ? m_frameRect.width() : m_frameRect.height(); }
+//     LayoutUnit logicalHeight() const { return style()->isHorizontalWritingMode() ? m_frameRect.height() : m_frameRect.width(); }
+// 
+//     LayoutUnit constrainLogicalWidthByMinMax(LayoutUnit, LayoutUnit, LayoutBlock*) const;
+//     LayoutUnit constrainLogicalHeightByMinMax(LayoutUnit logicalHeight, LayoutUnit intrinsicContentHeight) const;
+//     LayoutUnit constrainContentBoxLogicalHeightByMinMax(LayoutUnit logicalHeight, LayoutUnit intrinsicContentHeight) const;
+// 
+//     int pixelSnappedLogicalHeight() const { return style()->isHorizontalWritingMode() ? pixelSnappedHeight() : pixelSnappedWidth(); }
+//     int pixelSnappedLogicalWidth() const { return style()->isHorizontalWritingMode() ? pixelSnappedWidth() : pixelSnappedHeight(); }
+// 
+//     LayoutUnit minimumLogicalHeightForEmptyLine() const
+//     {
+//         return borderAndPaddingLogicalHeight() + scrollbarLogicalHeight()
+//             + lineHeight(true, isHorizontalWritingMode() ? HorizontalLine : VerticalLine, PositionOfInteriorLineBoxes);
+//     }
+// 
+//     void setLogicalLeft(LayoutUnit left)
+//     {
+//         if (style()->isHorizontalWritingMode())
+//             setX(left);
+//         else
+//             setY(left);
+//     }
+//     void setLogicalTop(LayoutUnit top)
+//     {
+//         if (style()->isHorizontalWritingMode())
+//             setY(top);
+//         else
+//             setX(top);
+//     }
+//     void setLogicalLocation(const LayoutPoint& location)
+//     {
+//         if (style()->isHorizontalWritingMode())
+//             setLocation(location);
+//         else
+//             setLocation(location.transposedPoint());
+//     }
+//     void setLogicalWidth(LayoutUnit size)
+//     {
+//         if (style()->isHorizontalWritingMode())
+//             setWidth(size);
+//         else
+//             setHeight(size);
+//     }
+//     void setLogicalHeight(LayoutUnit size)
+//     {
+//         if (style()->isHorizontalWritingMode())
+//             setHeight(size);
+//         else
+//             setWidth(size);
+//     }
+// 
+//     LayoutPoint location() const { return m_frameRect.location(); }
+//     LayoutSize locationOffset() const { return LayoutSize(m_frameRect.x(), m_frameRect.y()); }
+//     LayoutSize size() const { return m_frameRect.size(); }
+//     IntSize pixelSnappedSize() const { return m_frameRect.pixelSnappedSize(); }
+// 
+//     void setLocation(const LayoutPoint& location)
+//     {
+//         if (location == m_frameRect.location())
+//             return;
+//         m_frameRect.setLocation(location);
+//         frameRectChanged();
+//     }
+// 
+//     // FIXME: Currently scrollbars are using int geometry and positioned based on
+//     // pixelSnappedBorderBoxRect whose size may change when location changes because of
+//     // pixel snapping. This function is used to change location of the LayoutBox outside
+//     // of LayoutBox::layout(). Will remove when we use LayoutUnits for scrollbars.
+//     void setLocationAndUpdateOverflowControlsIfNeeded(const LayoutPoint&);
+// 
+//     void setSize(const LayoutSize& size)
+//     {
+//         if (size == m_frameRect.size())
+//             return;
+//         m_frameRect.setSize(size);
+//         frameRectChanged();
+//     }
+//     void move(LayoutUnit dx, LayoutUnit dy)
+//     {
+//         if (!dx && !dy)
+//             return;
+//         m_frameRect.move(dx, dy);
+//         frameRectChanged();
+//     }
+// 
+//     LayoutRect frameRect() const { return m_frameRect; }
+//     void setFrameRect(const LayoutRect& rect)
+//     {
+//         if (rect == m_frameRect)
+//             return;
+//         m_frameRect = rect;
+//         frameRectChanged();
+//     }
 
-    LayoutUnit logicalLeft() const { return style()->isHorizontalWritingMode() ? m_frameRect.x() : m_frameRect.y(); }
-    LayoutUnit logicalRight() const { return logicalLeft() + logicalWidth(); }
-    LayoutUnit logicalTop() const { return style()->isHorizontalWritingMode() ? m_frameRect.y() : m_frameRect.x(); }
-    LayoutUnit logicalBottom() const { return logicalTop() + logicalHeight(); }
-    LayoutUnit logicalWidth() const { return style()->isHorizontalWritingMode() ? m_frameRect.width() : m_frameRect.height(); }
-    LayoutUnit logicalHeight() const { return style()->isHorizontalWritingMode() ? m_frameRect.height() : m_frameRect.width(); }
+    void setX(LayoutUnit x);
+    void setY(LayoutUnit y);
+    void setWidth(LayoutUnit width);
+    void setHeight(LayoutUnit height);
+
+    LayoutUnit logicalLeft() const;
+    LayoutUnit logicalRight() const;
+    LayoutUnit logicalTop() const;
+    LayoutUnit logicalBottom() const;
+    LayoutUnit logicalWidth() const;
+    LayoutUnit logicalHeight() const;
 
     LayoutUnit constrainLogicalWidthByMinMax(LayoutUnit, LayoutUnit, LayoutBlock*) const;
     LayoutUnit constrainLogicalHeightByMinMax(LayoutUnit logicalHeight, LayoutUnit intrinsicContentHeight) const;
     LayoutUnit constrainContentBoxLogicalHeightByMinMax(LayoutUnit logicalHeight, LayoutUnit intrinsicContentHeight) const;
 
-    int pixelSnappedLogicalHeight() const { return style()->isHorizontalWritingMode() ? pixelSnappedHeight() : pixelSnappedWidth(); }
-    int pixelSnappedLogicalWidth() const { return style()->isHorizontalWritingMode() ? pixelSnappedWidth() : pixelSnappedHeight(); }
+    int pixelSnappedLogicalHeight() const;
+    int pixelSnappedLogicalWidth() const;
 
-    LayoutUnit minimumLogicalHeightForEmptyLine() const
-    {
-        return borderAndPaddingLogicalHeight() + scrollbarLogicalHeight()
-            + lineHeight(true, isHorizontalWritingMode() ? HorizontalLine : VerticalLine, PositionOfInteriorLineBoxes);
-    }
+    LayoutUnit minimumLogicalHeightForEmptyLine() const;
 
-    void setLogicalLeft(LayoutUnit left)
-    {
-        if (style()->isHorizontalWritingMode())
-            setX(left);
-        else
-            setY(left);
-    }
-    void setLogicalTop(LayoutUnit top)
-    {
-        if (style()->isHorizontalWritingMode())
-            setY(top);
-        else
-            setX(top);
-    }
-    void setLogicalLocation(const LayoutPoint& location)
-    {
-        if (style()->isHorizontalWritingMode())
-            setLocation(location);
-        else
-            setLocation(location.transposedPoint());
-    }
-    void setLogicalWidth(LayoutUnit size)
-    {
-        if (style()->isHorizontalWritingMode())
-            setWidth(size);
-        else
-            setHeight(size);
-    }
-    void setLogicalHeight(LayoutUnit size)
-    {
-        if (style()->isHorizontalWritingMode())
-            setHeight(size);
-        else
-            setWidth(size);
-    }
+    void setLogicalLeft(LayoutUnit left);
+    void setLogicalTop(LayoutUnit top);
+    void setLogicalLocation(const LayoutPoint& location);
+    void setLogicalWidth(LayoutUnit size);
+    void setLogicalHeight(LayoutUnit size);
 
-    LayoutPoint location() const { return m_frameRect.location(); }
-    LayoutSize locationOffset() const { return LayoutSize(m_frameRect.x(), m_frameRect.y()); }
-    LayoutSize size() const { return m_frameRect.size(); }
-    IntSize pixelSnappedSize() const { return m_frameRect.pixelSnappedSize(); }
+    LayoutPoint location() const;
+    LayoutSize locationOffset() const;
+    LayoutSize size() const;
+    IntSize pixelSnappedSize() const;
 
-    void setLocation(const LayoutPoint& location)
-    {
-        if (location == m_frameRect.location())
-            return;
-        m_frameRect.setLocation(location);
-        frameRectChanged();
-    }
+    void setLocation(const LayoutPoint& location);
 
     // FIXME: Currently scrollbars are using int geometry and positioned based on
     // pixelSnappedBorderBoxRect whose size may change when location changes because of
@@ -199,29 +263,11 @@ public:
     // of LayoutBox::layout(). Will remove when we use LayoutUnits for scrollbars.
     void setLocationAndUpdateOverflowControlsIfNeeded(const LayoutPoint&);
 
-    void setSize(const LayoutSize& size)
-    {
-        if (size == m_frameRect.size())
-            return;
-        m_frameRect.setSize(size);
-        frameRectChanged();
-    }
-    void move(LayoutUnit dx, LayoutUnit dy)
-    {
-        if (!dx && !dy)
-            return;
-        m_frameRect.move(dx, dy);
-        frameRectChanged();
-    }
+    void setSize(const LayoutSize& size);
+    void move(LayoutUnit dx, LayoutUnit dy);
 
-    LayoutRect frameRect() const { return m_frameRect; }
-    void setFrameRect(const LayoutRect& rect)
-    {
-        if (rect == m_frameRect)
-            return;
-        m_frameRect = rect;
-        frameRectChanged();
-    }
+    LayoutRect frameRect() const;
+    void setFrameRect(const LayoutRect& rect);
 
     LayoutRect borderBoxRect() const { return LayoutRect(LayoutPoint(), size()); }
     LayoutRect paddingBoxRect() const { return LayoutRect(borderLeft(), borderTop(), clientWidth(), clientHeight()); }

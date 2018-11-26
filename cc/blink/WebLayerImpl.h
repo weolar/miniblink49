@@ -43,6 +43,7 @@ namespace cc_blink {
 
 class WebToCCAnimationDelegateAdapter;
 class WebLayerImpl;
+class WebFilterOperationsImpl;
 
 typedef WTF::Vector<WebLayerImpl*> WebLayerImplList;
 
@@ -54,6 +55,8 @@ public:
 
     void setLayerTreeHost(cc::LayerTreeHost* host);
     cc::LayerTreeHost* layerTreeHost() const;
+
+    void gc();
 
     // WebLayerImplClient
     virtual void updataAndPaintContents(blink::WebCanvas* canvas, const blink::IntRect& clip) override;
@@ -68,7 +71,7 @@ public:
     void setContentsOpaqueIsFixed(bool fixed);
 
     blink::IntRect mapRectFromRootLayerCoordinateToCurrentLayer(const blink::IntRect& rect);
-    blink::IntRect mapRectFromCurrentLayerCoordinateToRootLayer(const blink::IntRect& rect);
+    SkRect mapRectFromCurrentLayerCoordinateToRootLayer(const SkRect& rect);
 
     // WebLayer implementation.
     int id() const override;
@@ -111,9 +114,11 @@ public:
     bool shouldFlattenTransform();
     void setRenderingContext(int context) override;
     void setUseParentBackfaceVisibility(bool visible) override;
+    void setDoubleSided(bool isDoubleSided);
     void setBackgroundColor(blink::WebColor color) override;
     blink::WebColor backgroundColor() const override;
     void setFilters(const blink::WebFilterOperations& filters) override;
+    const WebFilterOperationsImpl* getFilters() const;
     //void setBackgroundFilters(const blink::WebFilterOperations& filters) override;
     void setAnimationDelegate(
         blink::WebCompositorAnimationDelegate* delegate) override;
@@ -170,19 +175,18 @@ public:
     void setChildrenDirty();
     void clearChildrenDirty();
     void setAllParentDirty();
-    void setNeedsFullTreeSync();
+    void requestSelfAndAncestorBoundRepaint();
 
     const WebLayerImplClient* client() { return m_client; }
     //blink::IntRect updateRect() const { return m_updateRect; };
     cc::TileGrid* tileGrid() { return m_tileGrid; }
 
-    void onRasterFinish(int layerId, const blink::IntRect& rect);
     void requestRepaint(const blink::IntRect& rect);
     void requestBoundRepaint(bool directOrPending);
-    void appendPendingInvalidateRect(const blink::IntRect& rect);
+    void appendPendingInvalidateRect(const SkRect& rect);
 
     cc::DrawProperties* drawProperties();
-	//cc::DrawToCanvasProperties* drawToCanvasProperties(); // 在上屏时使用本属性，和DrawProperties比，不一定是最新的坐标属性，需要光栅化后来更新
+    //cc::DrawToCanvasProperties* drawToCanvasProperties(); // 在上屏时使用本属性，和DrawProperties比，不一定是最新的坐标属性，需要光栅化后来更新
     void updataDrawToCanvasProperties(cc::DrawToCanvasProperties* prop);
     const SkMatrix44& drawTransform() const;
 
@@ -198,10 +202,10 @@ public:
 
 protected:
     void setNeedsCommit(bool needUpdateAllBoundsArea);
-	void appendLayerChangeAction(cc::LayerChangeAction* action);
-	void appendLayerActionsToParent();
+    void appendLayerChangeAction(cc::LayerChangeAction* action);
+    void appendLayerActionsToParent();
 
-	WebLayerImplClient::Type m_layerType;
+    WebLayerImplClient::Type m_layerType;
     int m_id;
     blink::FloatPoint m_position;
     blink::IntSize m_bounds;
@@ -216,7 +220,7 @@ protected:
     blink::WebLayerClient* m_webLayerClient;
     WebLayerImplClient* m_client;
 
-    blink::IntRect m_updateRectInRootLayerCoordinate;
+    SkRect m_updateRectInRootLayerCoordinate;
     
     float m_opacity;
     blink::WebBlendMode m_blendMode;
@@ -229,6 +233,7 @@ protected:
     int context;
     int  m_3dSortingContextId;
     bool m_useParentBackfaceVisibility;
+    bool m_isDoubleSided;
     blink::WebColor m_backgroundColor;
     blink::WebDoublePoint m_scrollPositionDouble;
     blink::WebDoublePoint m_scrollCompensationAdjustment;
@@ -241,8 +246,8 @@ protected:
     blink::IntRect m_touchEventHandlerRegions;
     blink::WebScrollBlocksOn m_scrollBlocksOn;
     bool m_isContainerForFixedPositionLayers;
-    cc_blink::WebLayerImpl* m_scrollParent;
-    cc_blink::WebLayerImpl* m_clipParent;
+    //cc_blink::WebLayerImpl* m_scrollParent;
+    //cc_blink::WebLayerImpl* m_clipParent;
     cc_blink::WebLayerImpl* m_maskLayer;
     cc_blink::WebLayerImpl* m_replicaLayer;
     WTF::HashSet<WebLayerImpl*>* m_scrollChildren;
@@ -259,15 +264,17 @@ protected:
     WTF::Vector<blink::IntRect> m_nonFastScrollableRegion;
 
     cc::DrawProperties* m_drawProperties;
-	cc::DrawToCanvasProperties* m_drawToCanvasProperties;
+    cc::DrawToCanvasProperties* m_drawToCanvasProperties;
 
-	WTF::Vector<cc::LayerChangeAction*> m_savedActionsWhenHostIsNull;
+    WTF::Vector<cc::LayerChangeAction*> m_savedActionsWhenHostIsNull;
     bool m_hasMaskLayerChild;
     bool m_isMaskLayer;
     bool m_isReplicaLayer;
 
+    cc_blink::WebFilterOperationsImpl* m_filterOperations;
+
 private:
-	DISALLOW_COPY_AND_ASSIGN(WebLayerImpl);
+    DISALLOW_COPY_AND_ASSIGN(WebLayerImpl);
 };
 
 }  // namespace cc_blink

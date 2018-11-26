@@ -10,6 +10,7 @@
 #include "core/dom/ExceptionCode.h"
 #include "core/dom/SecurityContext.h"
 #include "core/events/MessageEvent.h"
+#include "core/frame/External.h"
 #include "core/frame/Frame.h"
 #include "core/frame/FrameClient.h"
 #include "core/frame/FrameConsole.h"
@@ -107,6 +108,13 @@ DOMWindow* DOMWindow::top() const
         return nullptr;
 
     return frame()->tree().top()->domWindow();
+}
+
+External* DOMWindow::external()
+{
+    if (!m_external)
+        m_external = new External();
+    return m_external;
 }
 
 DOMWindow* DOMWindow::anonymousIndexedGetter(uint32_t index) const
@@ -331,6 +339,7 @@ void DOMWindow::close(ExecutionContext* context)
 DEFINE_TRACE(DOMWindow)
 {
     visitor->trace(m_location);
+    visitor->trace(m_external);
     EventTargetWithInlineData::trace(visitor);
 }
 

@@ -24,6 +24,8 @@ public:
     explicit PartitionStatsDumperImpl(WebProcessMemoryDump* memoryDump)
         : m_memoryDump(memoryDump), m_uid(0) { }
 
+    void partitionDumpTotals(const char* partitionName, const PartitionMemoryStats*) override;
+
     // PartitionStatsDumper implementation.
     void partitionsDumpBucketStats(const char* partitionName, const PartitionBucketMemoryStats*) override;
 
@@ -31,6 +33,11 @@ private:
     WebProcessMemoryDump* m_memoryDump;
     size_t m_uid;
 };
+
+void PartitionStatsDumperImpl::partitionDumpTotals(const char* partitionName, const PartitionMemoryStats*)
+{
+    ;
+}
 
 void PartitionStatsDumperImpl::partitionsDumpBucketStats(const char* partitionName, const PartitionBucketMemoryStats* memoryStats)
 {

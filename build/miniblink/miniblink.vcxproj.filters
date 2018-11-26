@@ -250,18 +250,6 @@
     <Filter Include="third_party\Webkit\Source\core\xmlhttprequest">
       <UniqueIdentifier>{b86a2e53-5ada-4e0f-a709-205c0aed574a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="third_party\Webkit\Source\devtools">
-      <UniqueIdentifier>{34039253-b2d8-45f4-a98f-2dff2101dd29}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="third_party\Webkit\Source\devtools\front_end">
-      <UniqueIdentifier>{6c8d79c6-58ec-4fe4-97b3-838a29d7ec3f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="third_party\Webkit\Source\devtools\front_end\Images">
-      <UniqueIdentifier>{60ae61f8-163f-41e9-b107-178c520a633e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="third_party\Webkit\Source\devtools\front_end\Images\src">
-      <UniqueIdentifier>{e26322df-1867-4e76-8cb5-ff47e9f8f31b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="third_party\Webkit\Source\modules">
       <UniqueIdentifier>{ff6e81a8-5a35-4d1a-a896-6ac015cf0ae9}</UniqueIdentifier>
     </Filter>
@@ -442,12 +430,6 @@
     <Filter Include="gen\blink\platform">
       <UniqueIdentifier>{c217d0d6-b3ab-42f3-96d5-4db5c82cd04f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="base">
-      <UniqueIdentifier>{4340f40e-4405-439d-81f2-c9126a225f3f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="base\memory">
-      <UniqueIdentifier>{53c32c57-e58a-415f-b286-734b55306852}</UniqueIdentifier>
-    </Filter>
     <Filter Include="gen\blink\bindings">
       <UniqueIdentifier>{61a069b5-3d74-44b9-a505-dae4896ed11f}</UniqueIdentifier>
     </Filter>
@@ -462,9 +444,6 @@
     </Filter>
     <Filter Include="gen\blink\bindings\modules\v8">
       <UniqueIdentifier>{7aed396e-651f-4069-aa1e-88c19e821975}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="v8">
-      <UniqueIdentifier>{043c37b2-7934-4f97-b3ae-21813991acdc}</UniqueIdentifier>
     </Filter>
     <Filter Include="third_party\Webkit\Source\core\layout">
       <UniqueIdentifier>{5bf4d7d1-6381-4c2c-a6fe-f9208f679a0c}</UniqueIdentifier>
@@ -574,9 +553,6 @@
     <Filter Include="skia\ext">
       <UniqueIdentifier>{7692970c-51dc-46e7-8787-ecfe28b898bf}</UniqueIdentifier>
     </Filter>
-    <Filter Include="base\debug">
-      <UniqueIdentifier>{7307de3e-789b-453a-86a6-831df96e21b2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="third_party\Webkit\Source\platform\graphics\media">
       <UniqueIdentifier>{6383c3d0-3c4b-4772-a59c-ab2b59f10348}</UniqueIdentifier>
     </Filter>
@@ -600,9 +576,6 @@
     </Filter>
     <Filter Include="third_party\Webkit\Source\platform\heap\asm">
       <UniqueIdentifier>{067d5c05-0ea3-4b1e-a7d5-40ed535c7156}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="base\process">
-      <UniqueIdentifier>{86f1b8b7-ffff-4660-9e91-b44a9a4834ee}</UniqueIdentifier>
     </Filter>
     <Filter Include="ui">
       <UniqueIdentifier>{cb58e862-1718-4a4e-9387-d9f820210def}</UniqueIdentifier>
@@ -643,48 +616,6 @@
     <Filter Include="third_party\Webkit\Source\modules\storage">
       <UniqueIdentifier>{30a3ea81-4479-4e9c-89de-2aa24ca5074a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="cef">
-      <UniqueIdentifier>{73142b09-0224-4a7e-95fe-0a8033b08393}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="cef\include">
-      <UniqueIdentifier>{47a4516c-b9c2-4804-bc99-0b82ee8d951e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="cef\include\base">
-      <UniqueIdentifier>{ee517406-d120-45ad-aa45-1bd6841be149}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="cef\include\capi">
-      <UniqueIdentifier>{97b1a332-1f20-42b3-9477-e197da8ab9a2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="cef\include\internal">
-      <UniqueIdentifier>{8cac6ecc-0527-49c0-910b-f6b6133da506}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="cef\include\wrapper">
-      <UniqueIdentifier>{6a4cec0b-4ab8-474b-89ab-b150a6d6d67d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="cef\include\base\internal">
-      <UniqueIdentifier>{38bd4236-0638-4b4d-92ca-672238d0c58d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="cef\libcef_dll">
-      <UniqueIdentifier>{ff0f8cfa-385c-4c5b-8420-347a810a59c0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="cef\libcef">
-      <UniqueIdentifier>{54614d6f-13b2-4bef-8546-a195120c38be}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="cef\libcef\common">
-      <UniqueIdentifier>{0404acee-0e1d-46e5-bba3-4d1c62cbc8b6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="cef\libcef\browser">
-      <UniqueIdentifier>{de23e259-d1c0-4805-a3cf-ce18137a2dfd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="cef\libcef\browser\native">
-      <UniqueIdentifier>{f4bc710e-d830-4676-a0d8-56b1d8a7b46d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="cef\libcef_dll\base">
-      <UniqueIdentifier>{d3a623d9-9121-469d-b0fa-ee085559736f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="cef\libcef_dll\cpptoc">
-      <UniqueIdentifier>{abfa096f-2a1d-4a19-a1ef-4fd73cac37ee}</UniqueIdentifier>
-    </Filter>
     <Filter Include="gen\blink\bindings\modules\storage">
       <UniqueIdentifier>{72f304ee-90ee-4f98-b111-8995f4a96035}</UniqueIdentifier>
     </Filter>
@@ -712,14 +643,8 @@
     <Filter Include="cc\playback">
       <UniqueIdentifier>{cfc3fc5b-0967-4e76-8faa-9749f45f9bf8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="cef\libcef_dll\ctocpp">
-      <UniqueIdentifier>{6bda40bc-d176-470d-ac2d-e7509601aa80}</UniqueIdentifier>
-    </Filter>
     <Filter Include="wke">
       <UniqueIdentifier>{f0273d7d-b7d0-415a-8719-84b47d715888}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="cef\libcef\renderer">
-      <UniqueIdentifier>{0ab055c5-d093-4e58-9ccc-4386731abe93}</UniqueIdentifier>
     </Filter>
     <Filter Include="third_party\ots">
       <UniqueIdentifier>{87c7c286-e140-4d27-867f-f7df8252c4c3}</UniqueIdentifier>
@@ -730,17 +655,8 @@
     <Filter Include="net\cookies">
       <UniqueIdentifier>{ff555750-3752-46ba-877f-ff9cc64c4b20}</UniqueIdentifier>
     </Filter>
-    <Filter Include="base\time">
-      <UniqueIdentifier>{3f042bbb-445f-49b7-9374-292250317222}</UniqueIdentifier>
-    </Filter>
     <Filter Include="cc\layers">
       <UniqueIdentifier>{213bd9dc-f6b0-4fcf-9e5f-b444713df395}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="content\web_impl_win\ui">
-      <UniqueIdentifier>{b468b82a-41a2-4896-a4b4-8ec26f8a3ae0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="base\strings">
-      <UniqueIdentifier>{1e08a647-7d8b-4be0-98a6-23f9eeabd88d}</UniqueIdentifier>
     </Filter>
     <Filter Include="net\websocket">
       <UniqueIdentifier>{eac8e4db-7f21-4a45-9040-df20582d4727}</UniqueIdentifier>
@@ -750,6 +666,132 @@
     </Filter>
     <Filter Include="content\web_impl_win\npapi">
       <UniqueIdentifier>{26eb4eab-b806-4651-8467-46a5636674e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="node">
+      <UniqueIdentifier>{956d3a52-aa3b-4320-a89f-2662eb921979}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="node\src">
+      <UniqueIdentifier>{047022df-eda9-482c-98af-b1780a1527cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="node\uv">
+      <UniqueIdentifier>{d2db561c-ddf5-4385-8a3f-b74d43cd7f68}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="node\cares">
+      <UniqueIdentifier>{39d1114c-3d8a-4a8a-8034-cae2df0f1d87}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="node\cares\src">
+      <UniqueIdentifier>{a44c42ff-1bc9-4a07-bbe2-620573a4f25e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="node\uv\src">
+      <UniqueIdentifier>{33470477-f849-400f-a5ed-17fc5e7edd58}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="node\uv\src\win">
+      <UniqueIdentifier>{877efd80-bba9-437e-a0f3-b2089be66342}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{4340f40e-4405-439d-81f2-c9126a225f3f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base\memory">
+      <UniqueIdentifier>{53c32c57-e58a-415f-b286-734b55306852}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base\debug">
+      <UniqueIdentifier>{7307de3e-789b-453a-86a6-831df96e21b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base\process">
+      <UniqueIdentifier>{86f1b8b7-ffff-4660-9e91-b44a9a4834ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base\time">
+      <UniqueIdentifier>{3f042bbb-445f-49b7-9374-292250317222}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base\strings">
+      <UniqueIdentifier>{1e08a647-7d8b-4be0-98a6-23f9eeabd88d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\Webkit\Source\modules\compositorworker">
+      <UniqueIdentifier>{be01d586-0470-40f2-8644-e994e6c2bf22}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\Webkit\Source\modules\encoding">
+      <UniqueIdentifier>{f1ca691f-4090-4a96-a16f-9c7da58ecd56}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\Webkit\Source\devtools">
+      <UniqueIdentifier>{34039253-b2d8-45f4-a98f-2dff2101dd29}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\Webkit\Source\devtools\front_end">
+      <UniqueIdentifier>{6c8d79c6-58ec-4fe4-97b3-838a29d7ec3f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\Webkit\Source\devtools\front_end\Images">
+      <UniqueIdentifier>{60ae61f8-163f-41e9-b107-178c520a633e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\Webkit\Source\devtools\front_end\Images\src">
+      <UniqueIdentifier>{e26322df-1867-4e76-8cb5-ff47e9f8f31b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gen\blink\modules\encoding">
+      <UniqueIdentifier>{d38df5f6-c525-4ffb-9239-d84f6bb56d4c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\Webkit\Source\modules\fetch">
+      <UniqueIdentifier>{71e7f5a2-69e2-41d1-aa16-f8dbab0e49f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\Webkit\Source\bindings\core\v8\inspector">
+      <UniqueIdentifier>{4664322c-3cc0-48de-9ec1-7b4ac4a0f0c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="content\devtools">
+      <UniqueIdentifier>{69c50747-4c5e-4120-86ec-c201b975bfb4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base\json">
+      <UniqueIdentifier>{dd65231d-d14f-4a97-b2b3-3ee72313ad61}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="content\ui">
+      <UniqueIdentifier>{b468b82a-41a2-4896-a4b4-8ec26f8a3ae0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party\Webkit\Source\modules\crypto">
+      <UniqueIdentifier>{afea0f63-e862-4517-9aaf-749d564f726f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="cef">
+      <UniqueIdentifier>{73142b09-0224-4a7e-95fe-0a8033b08393}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="cef\include">
+      <UniqueIdentifier>{47a4516c-b9c2-4804-bc99-0b82ee8d951e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="cef\include\base">
+      <UniqueIdentifier>{ee517406-d120-45ad-aa45-1bd6841be149}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="cef\include\base\internal">
+      <UniqueIdentifier>{38bd4236-0638-4b4d-92ca-672238d0c58d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="cef\include\capi">
+      <UniqueIdentifier>{97b1a332-1f20-42b3-9477-e197da8ab9a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="cef\include\internal">
+      <UniqueIdentifier>{8cac6ecc-0527-49c0-910b-f6b6133da506}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="cef\include\wrapper">
+      <UniqueIdentifier>{6a4cec0b-4ab8-474b-89ab-b150a6d6d67d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="cef\libcef_dll">
+      <UniqueIdentifier>{ff0f8cfa-385c-4c5b-8420-347a810a59c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="cef\libcef_dll\base">
+      <UniqueIdentifier>{d3a623d9-9121-469d-b0fa-ee085559736f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="cef\libcef_dll\cpptoc">
+      <UniqueIdentifier>{abfa096f-2a1d-4a19-a1ef-4fd73cac37ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="cef\libcef_dll\ctocpp">
+      <UniqueIdentifier>{6bda40bc-d176-470d-ac2d-e7509601aa80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="cef\libcef">
+      <UniqueIdentifier>{54614d6f-13b2-4bef-8546-a195120c38be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="cef\libcef\common">
+      <UniqueIdentifier>{0404acee-0e1d-46e5-bba3-4d1c62cbc8b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="cef\libcef\browser">
+      <UniqueIdentifier>{de23e259-d1c0-4805-a3cf-ce18137a2dfd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="cef\libcef\browser\native">
+      <UniqueIdentifier>{f4bc710e-d830-4676-a0d8-56b1d8a7b46d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="cef\libcef\renderer">
+      <UniqueIdentifier>{0ab055c5-d093-4e58-9ccc-4386731abe93}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -6897,18 +6939,6 @@
     <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8AnimationPlayerEventInit.cpp">
       <Filter>gen\blink\bindings\core\v8</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\InspectorNone.cpp">
-      <Filter>third_party\Webkit\Source\core\inspector</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\ConsoleMessage.cpp">
-      <Filter>third_party\Webkit\Source\core\inspector</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\InspectorTraceEventsNone.cpp">
-      <Filter>third_party\Webkit\Source\core\inspector</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\ConsoleMessageStorage.cpp">
-      <Filter>third_party\Webkit\Source\core\inspector</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\third_party\WebKit\Source\platform\graphics\BitmapPatternBase.cpp">
       <Filter>third_party\Webkit\Source\platform\graphics</Filter>
     </ClCompile>
@@ -7173,12 +7203,6 @@
     <ClCompile Include="..\..\third_party\WebKit\Source\core\dom\ClientRectList.cpp">
       <Filter>third_party\Webkit\Source\core\dom</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\third_party\WebKit\Source\core\timing\MemoryInfo.cpp">
-      <Filter>third_party\Webkit\Source\core\timing</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\WebKit\Source\core\timing\ConsoleMemory.cpp">
-      <Filter>third_party\Webkit\Source\core\timing</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\third_party\WebKit\Source\core\css\StyleRuleKeyframe.cpp">
       <Filter>third_party\Webkit\Source\core\css</Filter>
     </ClCompile>
@@ -7232,9 +7256,6 @@
     </ClCompile>
     <ClCompile Include="..\..\third_party\WebKit\Source\core\css\CSSPathValue.cpp">
       <Filter>third_party\Webkit\Source\core\css</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\InstanceCounters.cpp">
-      <Filter>third_party\Webkit\Source\core\inspector</Filter>
     </ClCompile>
     <ClCompile Include="..\..\third_party\WebKit\Source\platform\EventDispatchForbiddenScope.cpp">
       <Filter>third_party\Webkit\Source\platform</Filter>
@@ -7493,15 +7514,6 @@
     </ClCompile>
     <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8CustomEvent.cpp">
       <Filter>gen\blink\bindings\core\v8</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\ScriptCallStack.cpp">
-      <Filter>third_party\Webkit\Source\core\inspector</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\ScriptCallFrame.cpp">
-      <Filter>third_party\Webkit\Source\core\inspector</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\ScriptAsyncCallStack.cpp">
-      <Filter>third_party\Webkit\Source\core\inspector</Filter>
     </ClCompile>
     <ClCompile Include="..\..\third_party\WebKit\Source\core\html\CrossOriginAttribute.cpp">
       <Filter>third_party\Webkit\Source\core\html</Filter>
@@ -7800,9 +7812,6 @@
     <ClCompile Include="..\..\third_party\WebKit\Source\web\PageWidgetDelegate.cpp">
       <Filter>third_party\Webkit\Source\web</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\third_party\WebKit\Source\web\WebDevToolsAgentImplNone.cpp">
-      <Filter>third_party\Webkit\Source\web</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\third_party\WebKit\Source\web\WebSerializedScriptValue.cpp">
       <Filter>third_party\Webkit\Source\web</Filter>
     </ClCompile>
@@ -7825,9 +7834,6 @@
       <Filter>third_party\Webkit\Source\web</Filter>
     </ClCompile>
     <ClCompile Include="..\..\third_party\WebKit\Source\web\CompositionUnderlineVectorBuilder.cpp">
-      <Filter>third_party\Webkit\Source\web</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\WebKit\Source\web\InspectorOverlayImplNone.cpp">
       <Filter>third_party\Webkit\Source\web</Filter>
     </ClCompile>
     <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8PluginPlaceholderElement.cpp">
@@ -7943,9 +7949,6 @@
     </ClCompile>
     <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8PartialNone.cpp">
       <Filter>gen\blink\bindings\modules\v8</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\ScriptArguments.cpp">
-      <Filter>third_party\Webkit\Source\core\inspector</Filter>
     </ClCompile>
     <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8NavigatorPartial.cpp">
       <Filter>gen\blink\bindings\modules\v8</Filter>
@@ -8255,9 +8258,6 @@
     </ClCompile>
     <ClCompile Include="..\..\third_party\WebKit\Source\core\xml\parser\XMLDocumentParserScope.cpp">
       <Filter>third_party\Webkit\Source\core\xml\parser</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\cc\raster\RasterTaskWorkerThreadPool.cpp">
-      <Filter>cc\raster</Filter>
     </ClCompile>
     <ClCompile Include="..\..\third_party\WebKit\Source\bindings\core\v8\custom\V8DocumentCustom.cpp">
       <Filter>third_party\Webkit\Source\bindings\core\v8\custom</Filter>
@@ -8595,9 +8595,6 @@
     <ClCompile Include="..\..\content\browser\PlatformEventHandler.cpp">
       <Filter>content\browser</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\content\browser\PopupMenuWin.cpp">
-      <Filter>content\browser</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\content\resources\pickerButtonCss.cpp">
       <Filter>content\resources</Filter>
     </ClCompile>
@@ -8850,12 +8847,6 @@
     <ClCompile Include="..\..\base\windowsvc6.cpp">
       <Filter>base</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\base\ostreamvc6.cpp">
-      <Filter>base</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\net\ActivatingLoaderCheck.cpp">
-      <Filter>net</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\content\web_impl_win\WebClipboardImpl.cpp">
       <Filter>content\web_impl_win</Filter>
     </ClCompile>
@@ -8990,6 +8981,1168 @@
     </ClCompile>
     <ClCompile Include="..\..\third_party\WebKit\Source\platform\image-decoders\GDIPlus\GDIPlusReader.cpp">
       <Filter>third_party\Webkit\Source\platform\image-decoders\GDIPlus</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\content\browser\NavigationController.cpp">
+      <Filter>content\browser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\nodeblink.cpp">
+      <Filter>node</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\fs-poll.c">
+      <Filter>node\uv\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\inet.c">
+      <Filter>node\uv\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\threadpool.c">
+      <Filter>node\uv\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\uv-common.c">
+      <Filter>node\uv\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\version.c">
+      <Filter>node\uv\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\uv.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\util1.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\udp_wrap.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\timer_wrap.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\tcp_wrap.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\string_search.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\string_bytes.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\stream_wrap.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\stream_base.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\spawn_sync.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\signal_wrap.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\process_wrap.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\pipe_wrap.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\node_zlib.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\node_win32_perfctr_provider.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\node_win32_etw_provider.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\node_watchdog.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\node_v8.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\node_util.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\node_stat_watcher.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\node_revert.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\node_os.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\node_javascript.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\node_http_parser.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\node_file.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\node_dtrace.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\node_crypto_clienthello.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\node_crypto_bio.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\node_crypto.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\node_counters.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\node_contextify.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\node_constants.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\node_config.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\node_buffer.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\js_stream.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\handle_wrap.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\fs_event_wrap.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\env.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\debug-agent.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\connection_wrap.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\connect_wrap.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\cares_wrap.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\backtrace_win32.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\async-wrap.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\http_parser.c">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\async.c">
+      <Filter>node\uv\src\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\core.c">
+      <Filter>node\uv\src\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\dl.c">
+      <Filter>node\uv\src\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\error.c">
+      <Filter>node\uv\src\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\fs.c">
+      <Filter>node\uv\src\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\fs-event.c">
+      <Filter>node\uv\src\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\getaddrinfo.c">
+      <Filter>node\uv\src\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\getnameinfo.c">
+      <Filter>node\uv\src\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\handle.c">
+      <Filter>node\uv\src\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\loop-watcher.c">
+      <Filter>node\uv\src\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\pipe.c">
+      <Filter>node\uv\src\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\poll.c">
+      <Filter>node\uv\src\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\process.c">
+      <Filter>node\uv\src\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\process-stdio.c">
+      <Filter>node\uv\src\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\req.c">
+      <Filter>node\uv\src\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\signal.c">
+      <Filter>node\uv\src\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\snprintf.c">
+      <Filter>node\uv\src\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\tcp.c">
+      <Filter>node\uv\src\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\udp.c">
+      <Filter>node\uv\src\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\util.c">
+      <Filter>node\uv\src\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\winapi.c">
+      <Filter>node\uv\src\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\winsock.c">
+      <Filter>node\uv\src\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares__close_sockets.c">
+      <Filter>node\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares__get_hostent.c">
+      <Filter>node\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares__read_line.c">
+      <Filter>node\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares__timeval.c">
+      <Filter>node\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_cancel.c">
+      <Filter>node\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_create_query.c">
+      <Filter>node\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_data.c">
+      <Filter>node\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_destroy.c">
+      <Filter>node\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_expand_name.c">
+      <Filter>node\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_expand_string.c">
+      <Filter>node\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_fds.c">
+      <Filter>node\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_free_hostent.c">
+      <Filter>node\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_free_string.c">
+      <Filter>node\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_getenv.c">
+      <Filter>node\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_gethostbyaddr.c">
+      <Filter>node\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_gethostbyname.c">
+      <Filter>node\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_getnameinfo.c">
+      <Filter>node\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_getopt.c">
+      <Filter>node\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_getsock.c">
+      <Filter>node\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_init.c">
+      <Filter>node\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_library_init.c">
+      <Filter>node\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_llist.c">
+      <Filter>node\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_mkquery.c">
+      <Filter>node\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_nowarn.c">
+      <Filter>node\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_options.c">
+      <Filter>node\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_parse_a_reply.c">
+      <Filter>node\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_parse_aaaa_reply.c">
+      <Filter>node\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_parse_mx_reply.c">
+      <Filter>node\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_parse_naptr_reply.c">
+      <Filter>node\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_parse_ns_reply.c">
+      <Filter>node\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_parse_ptr_reply.c">
+      <Filter>node\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_parse_soa_reply.c">
+      <Filter>node\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_parse_srv_reply.c">
+      <Filter>node\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_parse_txt_reply.c">
+      <Filter>node\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_platform.c">
+      <Filter>node\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_process.c">
+      <Filter>node\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_query.c">
+      <Filter>node\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_search.c">
+      <Filter>node\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_send.c">
+      <Filter>node\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_strcasecmp.c">
+      <Filter>node\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_strdup.c">
+      <Filter>node\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_strerror.c">
+      <Filter>node\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_timeout.c">
+      <Filter>node\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_version.c">
+      <Filter>node\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\ares_writev.c">
+      <Filter>node\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\bitncmp.c">
+      <Filter>node\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\inet_net_pton.c">
+      <Filter>node\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\inet_ntop.c">
+      <Filter>node\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\cares\src\windows_port.c">
+      <Filter>node\cares\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\thread1.c">
+      <Filter>node\uv\src\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\stream1.c">
+      <Filter>node\uv\src\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\node1.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\uv\src\win\timer1.c">
+      <Filter>node\uv\src\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\tty_wrap.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\base\ostreamvc6.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\exported\WebDragData.cpp">
+      <Filter>third_party\Webkit\Source\platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\image-decoders\jpeg\JPEGImageDecoder.cpp">
+      <Filter>third_party\Webkit\Source\platform\image-decoders\jpeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\image-decoders\png\PNGImageDecoder.cpp">
+      <Filter>third_party\Webkit\Source\platform\image-decoders\png</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\net\BlobResourceLoader.cpp">
+      <Filter>net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\net\FileSystem.cpp">
+      <Filter>net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\net\FileSystemWin.cpp">
+      <Filter>net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\net\FileStream.cpp">
+      <Filter>net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\net\PathWalker.cpp">
+      <Filter>net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\net\AsyncFileStream.cpp">
+      <Filter>net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\content\browser\CheckReEnter.cpp">
+      <Filter>content\browser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\net\WebURLLoaderWinINet.cpp">
+      <Filter>net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\content\web_impl_win\WebURLLoaderImpl.cpp">
+      <Filter>content\web_impl_win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\workers\DedicatedWorkerThread.cpp">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\workers\InProcessWorkerBase.cpp">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\workers\SharedWorker.cpp">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\workers\SharedWorkerGlobalScope.cpp">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\workers\SharedWorkerThread.cpp">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\workers\Worker.cpp">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\workers\WorkerConsole.cpp">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\workers\WorkerEventQueue.cpp">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\workers\WorkerGlobalScope.cpp">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\workers\WorkerGlobalScopeProxyProvider.cpp">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\workers\WorkerInspectorProxy.cpp">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\workers\WorkerLoaderProxy.cpp">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\workers\WorkerMessagingProxy.cpp">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\workers\WorkerNavigator.cpp">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\workers\WorkerObjectProxy.cpp">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\workers\WorkerScriptLoader.cpp">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\workers\WorkerThread.cpp">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\workers\WorkerThreadStartupData.cpp">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\workers\AbstractWorker.cpp">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\workers\DedicatedWorkerGlobalScope.cpp">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\workers\DedicatedWorkerMessagingProxy.cpp">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8SharedWorkerGlobalScopePartial.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8WorkerGlobalScopePartial.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8WorkerNavigatorPartial.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8CompositorWorker.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8CompositorWorkerGlobalScope.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\compositorworker\CompositorWorkerThread.cpp">
+      <Filter>third_party\Webkit\Source\modules\compositorworker</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\compositorworker\CompositorWorker.cpp">
+      <Filter>third_party\Webkit\Source\modules\compositorworker</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\compositorworker\CompositorWorkerGlobalScope.cpp">
+      <Filter>third_party\Webkit\Source\modules\compositorworker</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\compositorworker\CompositorWorkerManager.cpp">
+      <Filter>third_party\Webkit\Source\modules\compositorworker</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\compositorworker\CompositorWorkerMessagingProxy.cpp">
+      <Filter>third_party\Webkit\Source\modules\compositorworker</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8WorkerNavigator.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8Worker.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8WorkerLocation.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8WorkerGlobalScope.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\v8sharedworkerglobalscope.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8SharedWorker.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8WorkerConsole.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8WorkerPerformance.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8ReadableByteStreamReader.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8ReadableStream.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8ReadableStreamReader.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8ReadableByteStream.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\streams\ReadableStream.cpp">
+      <Filter>third_party\Webkit\Source\core\streams</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\streams\ReadableStreamReader.cpp">
+      <Filter>third_party\Webkit\Source\core\streams</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\streams\ReadableByteStream.cpp">
+      <Filter>third_party\Webkit\Source\core\streams</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\timing\ConsoleMemory.cpp">
+      <Filter>third_party\Webkit\Source\core\timing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\timing\DOMWindowPerformance.cpp">
+      <Filter>third_party\Webkit\Source\core\timing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\timing\MemoryInfo.cpp">
+      <Filter>third_party\Webkit\Source\core\timing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\timing\Performance.cpp">
+      <Filter>third_party\Webkit\Source\core\timing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\timing\PerformanceBase.cpp">
+      <Filter>third_party\Webkit\Source\core\timing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\timing\PerformanceCompositeTiming.cpp">
+      <Filter>third_party\Webkit\Source\core\timing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\timing\PerformanceEntry.cpp">
+      <Filter>third_party\Webkit\Source\core\timing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\timing\PerformanceNavigation.cpp">
+      <Filter>third_party\Webkit\Source\core\timing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\timing\PerformanceRenderTiming.cpp">
+      <Filter>third_party\Webkit\Source\core\timing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\timing\PerformanceResourceTiming.cpp">
+      <Filter>third_party\Webkit\Source\core\timing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\timing\PerformanceTiming.cpp">
+      <Filter>third_party\Webkit\Source\core\timing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\timing\PerformanceUserTiming.cpp">
+      <Filter>third_party\Webkit\Source\core\timing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\timing\SharedWorkerPerformance.cpp">
+      <Filter>third_party\Webkit\Source\core\timing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\timing\WorkerGlobalScopePerformance.cpp">
+      <Filter>third_party\Webkit\Source\core\timing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\timing\WorkerPerformance.cpp">
+      <Filter>third_party\Webkit\Source\core\timing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8PerformanceCompositeTiming.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8PerformanceTiming.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8Performance.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8PerformanceEntry.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8PerformanceMark.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8PerformanceMeasure.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8PerformanceNavigation.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8PerformanceRenderTiming.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8PerformanceResourceTiming.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8TextDecoder.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\encoding\Encoding.cpp">
+      <Filter>third_party\Webkit\Source\modules\encoding</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\encoding\TextDecoder.cpp">
+      <Filter>third_party\Webkit\Source\modules\encoding</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\encoding\TextEncoder.cpp">
+      <Filter>third_party\Webkit\Source\modules\encoding</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\bindings\core\v8\V8ObjectBuilder.cpp">
+      <Filter>third_party\Webkit\Source\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8DedicatedWorkerGlobalScope.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8TextDecodeOptions.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8TextDecoderOptions.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8TextEncoder.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\modules\encoding\TextDecoderOptions.cpp">
+      <Filter>gen\blink\modules\encoding</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\modules\encoding\TextDecodeOptions.cpp">
+      <Filter>gen\blink\modules\encoding</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\web\WorkerGlobalScopeProxyProviderImpl.cpp">
+      <Filter>third_party\Webkit\Source\web</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\web\WorkerContentSettingsClient.cpp">
+      <Filter>third_party\Webkit\Source\web</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8DedicatedWorkerGlobalScopePartial.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\content\web_impl_win\WaitableEventWin.cpp">
+      <Filter>content\web_impl_win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\fetch\Body.cpp">
+      <Filter>third_party\Webkit\Source\modules\fetch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\fetch\BodyStreamBuffer.cpp">
+      <Filter>third_party\Webkit\Source\modules\fetch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\fetch\CompositeDataConsumerHandle.cpp">
+      <Filter>third_party\Webkit\Source\modules\fetch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\fetch\DataConsumerHandleUtil.cpp">
+      <Filter>third_party\Webkit\Source\modules\fetch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\fetch\DataConsumerTee.cpp">
+      <Filter>third_party\Webkit\Source\modules\fetch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\fetch\FetchBlobDataConsumerHandle.cpp">
+      <Filter>third_party\Webkit\Source\modules\fetch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\fetch\FetchDataLoader.cpp">
+      <Filter>third_party\Webkit\Source\modules\fetch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\fetch\FetchHeaderList.cpp">
+      <Filter>third_party\Webkit\Source\modules\fetch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\fetch\FetchManager.cpp">
+      <Filter>third_party\Webkit\Source\modules\fetch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\fetch\FetchRequestData.cpp">
+      <Filter>third_party\Webkit\Source\modules\fetch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\fetch\FetchResponseData.cpp">
+      <Filter>third_party\Webkit\Source\modules\fetch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\fetch\GlobalFetch.cpp">
+      <Filter>third_party\Webkit\Source\modules\fetch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\fetch\Headers.cpp">
+      <Filter>third_party\Webkit\Source\modules\fetch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\fetch\Request.cpp">
+      <Filter>third_party\Webkit\Source\modules\fetch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\fetch\RequestInit.cpp">
+      <Filter>third_party\Webkit\Source\modules\fetch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\fetch\Response.cpp">
+      <Filter>third_party\Webkit\Source\modules\fetch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8Body.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\exported\WebDataConsumerHandle.cpp">
+      <Filter>third_party\Webkit\Source\platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\exported\WebServiceWorkerRequest.cpp">
+      <Filter>third_party\Webkit\Source\platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\exported\WebServiceWorkerResponse.cpp">
+      <Filter>third_party\Webkit\Source\platform\exported</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8Request.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8Response.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8Headers.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\net\SharedMemoryDataConsumerHandle.cpp">
+      <Filter>net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\net\FixedReceivedData.cpp">
+      <Filter>net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\cc\raster\RasterFilters.cpp">
+      <Filter>cc\raster</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\cc\raster\RasterTask.cpp">
+      <Filter>cc\raster</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\skia\ext\analysis_canvas.cc">
+      <Filter>skia\ext</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\cc\playback\TileActionInfo.cpp">
+      <Filter>cc\playback</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\cc\raster\RasterResouce.cpp">
+      <Filter>cc\raster</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\content\web_impl_win\WebMessagePortChannelImpl.cpp">
+      <Filter>content\web_impl_win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\content\browser\PlatformMessagePortChannel.cpp">
+      <Filter>content\browser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\image-decoders\ico\ICOImageDecoder.cpp">
+      <Filter>third_party\Webkit\Source\platform\image-decoders\ico</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\image-encoders\skia\PNGImageEncoder.cpp">
+      <Filter>third_party\Webkit\Source\platform\image-encoders\skia</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\image-encoders\skia\JPEGImageEncoder.cpp">
+      <Filter>third_party\Webkit\Source\platform\image-encoders\skia</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\xml\XMLSerializer.cpp">
+      <Filter>third_party\Webkit\Source\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8XMLSerializer.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\base\WindowsVersion.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\V8AsyncCallTracker.cpp">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\V8Debugger.cpp">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\WorkerConsoleAgent.cpp">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\WorkerDebuggerAgent.cpp">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\WorkerInspectorController.cpp">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\WorkerRuntimeAgent.cpp">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\WorkerThreadDebugger.cpp">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\AsyncCallChain.cpp">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\AsyncCallTracker.cpp">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\ConsoleMessage.cpp">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\ConsoleMessageStorage.cpp">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\ContentSearchUtils.cpp">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\DevToolsHost.cpp">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\DOMEditor.cpp">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\DOMPatchSupport.cpp">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\EventListenerInfo.cpp">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\IdentifiersFactory.cpp">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\InjectedScript.cpp">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\InjectedScriptHost.cpp">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\InjectedScriptManager.cpp">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\InjectedScriptNative.cpp">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\InspectorAnimationAgent.cpp">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\InspectorApplicationCacheAgent.cpp">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\InspectorBaseAgent.cpp">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\InspectorConsoleAgent.cpp">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\InspectorCSSAgent.cpp">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\InspectorDebuggerAgent.cpp">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\InspectorDOMAgent.cpp">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\InspectorDOMDebuggerAgent.cpp">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\InspectorHeapProfilerAgent.cpp">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\InspectorHighlight.cpp">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\InspectorHistory.cpp">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\InspectorInputAgent.cpp">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\InspectorInspectorAgent.cpp">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\InspectorInstrumentation.cpp">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\InspectorLayerTreeAgent.cpp">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\InspectorMemoryAgent.cpp">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\InspectorOverlayHost.cpp">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\InspectorPageAgent.cpp">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\InspectorProfilerAgent.cpp">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\InspectorResourceAgent.cpp">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\InspectorResourceContentLoader.cpp">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\InspectorRuntimeAgent.cpp">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\InspectorState.cpp">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\InspectorStyleSheet.cpp">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\InspectorTaskRunner.cpp">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\InspectorTimelineAgent.cpp">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\InspectorTraceEvents.cpp">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\InspectorTracingAgent.cpp">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\InspectorWorkerAgent.cpp">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\InstanceCounters.cpp">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\JavaScriptCallFrame.cpp">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\JSONParser.cpp">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\LayoutEditor.cpp">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\MainThreadDebugger.cpp">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\NetworkResourcesData.cpp">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\PageConsoleAgent.cpp">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\PageDebuggerAgent.cpp">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\PageRuntimeAgent.cpp">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\PromiseTracker.cpp">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\ScriptArguments.cpp">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\ScriptAsyncCallStack.cpp">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\ScriptCallFrame.cpp">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\ScriptCallStack.cpp">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\ScriptDebuggerBase.cpp">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\ScriptDebugListener.cpp">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\ScriptProfile.cpp">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\core\InspectorBackendDispatcher.cpp">
+      <Filter>gen\blink\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\core\InspectorFrontend.cpp">
+      <Filter>gen\blink\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\core\InspectorInstrumentationImpl.cpp">
+      <Filter>gen\blink\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\core\InspectorTypeBuilder.cpp">
+      <Filter>gen\blink\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\bindings\core\v8\inspector\V8InjectedScriptHost.cpp">
+      <Filter>third_party\Webkit\Source\bindings\core\v8\inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\bindings\core\v8\inspector\V8JavaScriptCallFrame.cpp">
+      <Filter>third_party\Webkit\Source\bindings\core\v8\inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\bindings\core\v8\inspector\InspectorWrapper.cpp">
+      <Filter>third_party\Webkit\Source\bindings\core\v8\inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\bindings\core\v8\custom\V8DevToolsHostCustom.cpp">
+      <Filter>third_party\Webkit\Source\bindings\core\v8\custom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8DevToolsHostPartial.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8DevToolsHost.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\bindings\core\v8\ScriptHeapSnapshot.cpp">
+      <Filter>third_party\Webkit\Source\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\bindings\core\v8\ScriptProfiler.cpp">
+      <Filter>third_party\Webkit\Source\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8InspectorOverlayHost.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\content\devtools\DevToolsClient.cpp">
+      <Filter>content\devtools</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\web\WebDevToolsFrontendImpl.cpp">
+      <Filter>third_party\Webkit\Source\web</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\web\WebDevToolsAgentImpl.cpp">
+      <Filter>third_party\Webkit\Source\web</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\web\InspectorRenderingAgent.cpp">
+      <Filter>third_party\Webkit\Source\web</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\base\json\json_writer.cc">
+      <Filter>base\json</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\base\json\json_reader.cc">
+      <Filter>base\json</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\base\json\json_parser.cc">
+      <Filter>base\json</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\base\json\json_util.cc">
+      <Filter>base\json</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\base\strings\string_piece.cc">
+      <Filter>base\strings</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\content\devtools\DevToolsAgent.cpp">
+      <Filter>content\devtools</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\content\devtools\DevToolsMgr.cpp">
+      <Filter>content\devtools</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\content\devtools\DevToolsProtocolDispatcher.cpp">
+      <Filter>content\devtools</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\content\resources\DebuggerScriptSourceJs.cpp">
+      <Filter>content\resources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\web\InspectorOverlayImpl.cpp">
+      <Filter>third_party\Webkit\Source\web</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\content\resources\InspectorOverlayPageHtml.cpp">
+      <Filter>content\resources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\content\resources\InjectedScriptSourceJs.cpp">
+      <Filter>content\resources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\content\ui\PopupMenuWin.cpp">
+      <Filter>content\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\content\ui\WCDataObject.cpp">
+      <Filter>content\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\content\ui\WebDropSource.cpp">
+      <Filter>content\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\content\ui\ClipboardUtil.cpp">
+      <Filter>content\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\content\ui\DragHandle.cpp">
+      <Filter>content\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\net\WebURLLoaderManagerUtil.cpp">
+      <Filter>net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8External.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\crypto\DOMWindowCrypto.cpp">
+      <Filter>third_party\Webkit\Source\modules\crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\crypto\ModulesCrypto.cpp">
+      <Filter>third_party\Webkit\Source\modules\crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8Crypto.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\bindings\core\v8\custom\V8MutationObserverCustom.cpp">
+      <Filter>third_party\Webkit\Source\bindings\core\v8\custom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\content\web_impl_win\WebCryptoImpl.cpp">
+      <Filter>content\web_impl_win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\bindings\core\v8\V8GCController_v8_5_7.cpp">
+      <Filter>third_party\Webkit\Source\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\cef\libcef\common\GeometryUtil.cpp">
+      <Filter>cef\libcef\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\mhtml\MHTMLParser.cpp">
+      <Filter>third_party\Webkit\Source\platform\mhtml</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\mhtml\ArchiveResource.cpp">
+      <Filter>third_party\Webkit\Source\platform\mhtml</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\mhtml\MHTMLArchive.cpp">
+      <Filter>third_party\Webkit\Source\platform\mhtml</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\node_url.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\web\WebCustomElement.cpp">
+      <Filter>third_party\Webkit\Source\web</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8DataTransferItemPartial.cpp">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\web\WebStorageEventDispatcherImpl.cpp">
+      <Filter>third_party\Webkit\Source\web</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\net\ActivatingObjCheck.cpp">
+      <Filter>net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\wke\wkeGlobalVar.cpp">
+      <Filter>wke</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\net\PageNetExtraData.cpp">
+      <Filter>net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\fonts\shaping\HarfBuzzFace.cpp">
+      <Filter>third_party\Webkit\Source\platform\fonts\shaping</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\platform\fonts\shaping\HarfBuzzShaper.cpp">
+      <Filter>third_party\Webkit\Source\platform\fonts\shaping</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\content\resources\MediaPlayerData.cpp" />
+    <ClCompile Include="..\..\node\src\tls_wrap.cc">
+      <Filter>node\src</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -18431,12 +19584,6 @@
     <ClInclude Include="..\..\third_party\WebKit\Source\core\html\HTMLImageFallbackHelper.h">
       <Filter>third_party\Webkit\Source\core\html</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\third_party\WebKit\Source\core\timing\MemoryInfo.h">
-      <Filter>third_party\Webkit\Source\core\timing</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\third_party\WebKit\Source\core\timing\ConsoleMemory.h">
-      <Filter>third_party\Webkit\Source\core\timing</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\third_party\WebKit\Source\core\css\StyleRuleKeyframe.h">
       <Filter>third_party\Webkit\Source\core\css</Filter>
     </ClInclude>
@@ -18487,9 +19634,6 @@
     </ClInclude>
     <ClInclude Include="..\..\third_party\WebKit\Source\core\css\parser\CSSParserTokenRange.h">
       <Filter>third_party\Webkit\Source\core\css\parser</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\InstanceCounters.h">
-      <Filter>third_party\Webkit\Source\core\inspector</Filter>
     </ClInclude>
     <ClInclude Include="..\..\third_party\WebKit\Source\core\dom\shadow\ComposedTreeTraversal.h">
       <Filter>third_party\Webkit\Source\core\dom\shadow</Filter>
@@ -19042,9 +20186,6 @@
     </ClInclude>
     <ClInclude Include="..\..\third_party\WebKit\Source\bindings\core\v8\ToV8.h">
       <Filter>third_party\Webkit\Source\bindings\core\v8</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\ScriptArguments.h">
-      <Filter>third_party\Webkit\Source\core\inspector</Filter>
     </ClInclude>
     <ClInclude Include="..\..\third_party\WebKit\Source\modules\navigatorcontentutils\NavigatorContentUtilsClient.h">
       <Filter>third_party\Webkit\Source\modules\navigatorcontentutils</Filter>
@@ -19724,9 +20865,6 @@
     <ClInclude Include="..\..\third_party\WebKit\Source\core\xml\parser\XMLDocumentParserScope.h">
       <Filter>third_party\Webkit\Source\core\xml\parser</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\cc\raster\RasterTaskWorkerThreadPool.h">
-      <Filter>cc\raster</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\cc\raster\RasterResouce.h">
       <Filter>cc\raster</Filter>
     </ClInclude>
@@ -19796,9 +20934,6 @@
     <ClInclude Include="..\..\wke\wkeJsBind.h">
       <Filter>wke</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\wke\wkeJsBindFreeTempObject.h">
-      <Filter>wke</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\third_party\WebKit\Source\web\WebMediaPlayerClientImpl.h">
       <Filter>third_party\Webkit\Source\web</Filter>
     </ClInclude>
@@ -19810,9 +20945,6 @@
     </ClInclude>
     <ClInclude Include="..\..\cef\libcef\renderer\CefV8Impl.h">
       <Filter>cef\libcef\renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\content\browser\PopupMenuWin.h">
-      <Filter>content\browser</Filter>
     </ClInclude>
     <ClInclude Include="..\..\third_party\WebKit\public\web\WebView.h">
       <Filter>third_party\Webkit\public\web</Filter>
@@ -20792,26 +21924,14 @@
     <ClInclude Include="..\..\cc\trees\ActionsFrameGroup.h">
       <Filter>cc\trees</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\ScriptCallStack.h">
-      <Filter>third_party\Webkit\Source\core\inspector</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\ScriptCallFrame.h">
-      <Filter>third_party\Webkit\Source\core\inspector</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\third_party\WebKit\Source\core\css\Counter.h">
       <Filter>third_party\Webkit\Source\core\css</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\net\ActivatingLoaderCheck.h">
-      <Filter>net</Filter>
     </ClInclude>
     <ClInclude Include="..\..\third_party\WebKit\Source\platform\exported\WebScrollbarImpl.h">
       <Filter>third_party\Webkit\Source\platform\exported</Filter>
     </ClInclude>
     <ClInclude Include="..\..\content\web_impl_win\WebClipboardImpl.h">
       <Filter>content\web_impl_win</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\content\web_impl_win\ui\ClipboardUtil.h">
-      <Filter>content\web_impl_win\ui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\base\strings\string_util.h">
       <Filter>base\strings</Filter>
@@ -20945,6 +22065,985 @@
     <ClInclude Include="..\..\third_party\WebKit\Source\platform\image-decoders\GDIPlus\GDIPlusReader.h">
       <Filter>third_party\Webkit\Source\platform\image-decoders\GDIPlus</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\content\browser\NavigationController.h">
+      <Filter>content\browser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\util.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\util-inl.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\node_natives.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\async-wrap.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\async-wrap-inl.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\base-object-inl.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\config.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\connect_wrap.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\handle_wrap.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\inspector_agent.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\inspector_socket.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\node_buffer.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\node_counters.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\node_crypto.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\node_crypto_clienthello.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\node_crypto_clienthello-inl.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\node_crypto_groups.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\node_dtrace.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\node_etw_provider.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\node_http_parser.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\node_i18n.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\node_internals.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\node_javascript.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\node_lttng.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\node_lttng_provider.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\node_lttng_tp.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\node_object_wrap.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\node_revert.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\node_stat_watcher.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\node_version.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\node_watchdog.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\node_win32_perfctr_provider.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\pipe_wrap.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\req-wrap.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\spawn_sync.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\stream_base.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\stream_base-inl.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\tcp_wrap.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\tree.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\tty_wrap.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\v8abbr.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\base64.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\base-object.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\connection_wrap.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\debug-agent.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\http_parser.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\js_stream.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\node.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\node_constants.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\node_crypto_bio.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\node_file.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\node_mutex.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\node_perfctr_provider.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\node_root_certs.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\node_win32_etw_provider.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\node_win32_etw_provider-inl.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\node_wrap.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\req-wrap-inl.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\stream_wrap.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\string_bytes.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\string_search.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\tls_wrap.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\udp_wrap.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\env.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\env-inl.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\net\BlobResourceLoader.h">
+      <Filter>net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\net\FileSystem.h">
+      <Filter>net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\net\FileStream.h">
+      <Filter>net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\net\PathWalker.h">
+      <Filter>net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\net\AsyncFileStream.h">
+      <Filter>net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\net\FileStreamClient.h">
+      <Filter>net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\net\StreamReader.h">
+      <Filter>net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\net\MemBlobStream.h">
+      <Filter>net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\content\browser\CheckReEnter.h">
+      <Filter>content\browser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\workers\DedicatedWorkerThread.h">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\workers\InProcessWorkerBase.h">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\workers\SharedWorker.h">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\workers\SharedWorkerGlobalScope.h">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\workers\SharedWorkerRepositoryClient.h">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\workers\SharedWorkerThread.h">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\workers\Worker.h">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\workers\WorkerClients.h">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\workers\WorkerConsole.h">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\workers\WorkerEventQueue.h">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\workers\WorkerGlobalScope.h">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\workers\WorkerGlobalScopeProxy.h">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\workers\WorkerGlobalScopeProxyProvider.h">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\workers\WorkerInspectorProxy.h">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\workers\WorkerLoaderProxy.h">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\workers\WorkerLocation.h">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\workers\WorkerMessagingProxy.h">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\workers\WorkerNavigator.h">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\workers\WorkerObjectProxy.h">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\workers\WorkerReportingProxy.h">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\workers\WorkerScriptLoader.h">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\workers\WorkerThread.h">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\workers\WorkerThreadStartupData.h">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\workers\DedicatedWorkerGlobalScope.h">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\workers\DedicatedWorkerMessagingProxy.h">
+      <Filter>third_party\Webkit\Source\core\workers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8ServiceWorkerRegistration.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8SharedWorkerGlobalScopePartial.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8WorkerGlobalScopePartial.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8WorkerNavigatorPartial.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8CompositorWorker.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8CompositorWorkerGlobalScope.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8CrossOriginServiceWorkerClient.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8DedicatedWorkerGlobalScopePartial.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8ServiceWorker.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8ServiceWorkerContainer.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8ServiceWorkerGlobalScope.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8ServiceWorkerMessageEvent.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8ServiceWorkerMessageEventInit.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\compositorworker\CompositorWorkerMessagingProxy.h">
+      <Filter>third_party\Webkit\Source\modules\compositorworker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\compositorworker\CompositorWorkerThread.h">
+      <Filter>third_party\Webkit\Source\modules\compositorworker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\compositorworker\CompositorWorker.h">
+      <Filter>third_party\Webkit\Source\modules\compositorworker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\compositorworker\CompositorWorkerGlobalScope.h">
+      <Filter>third_party\Webkit\Source\modules\compositorworker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\compositorworker\CompositorWorkerManager.h">
+      <Filter>third_party\Webkit\Source\modules\compositorworker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\streams\ReadableByteStreamReader.h">
+      <Filter>third_party\Webkit\Source\core\streams</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\streams\ReadableStream.h">
+      <Filter>third_party\Webkit\Source\core\streams</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\streams\ReadableStreamImpl.h">
+      <Filter>third_party\Webkit\Source\core\streams</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\streams\ReadableStreamReader.h">
+      <Filter>third_party\Webkit\Source\core\streams</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\streams\ReadableByteStream.h">
+      <Filter>third_party\Webkit\Source\core\streams</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\timing\WorkerPerformance.h">
+      <Filter>third_party\Webkit\Source\core\timing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\timing\ConsoleMemory.h">
+      <Filter>third_party\Webkit\Source\core\timing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\timing\DOMWindowPerformance.h">
+      <Filter>third_party\Webkit\Source\core\timing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\timing\MemoryInfo.h">
+      <Filter>third_party\Webkit\Source\core\timing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\timing\Performance.h">
+      <Filter>third_party\Webkit\Source\core\timing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\timing\PerformanceBase.h">
+      <Filter>third_party\Webkit\Source\core\timing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\timing\PerformanceCompositeTiming.h">
+      <Filter>third_party\Webkit\Source\core\timing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\timing\PerformanceEntry.h">
+      <Filter>third_party\Webkit\Source\core\timing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\timing\PerformanceMark.h">
+      <Filter>third_party\Webkit\Source\core\timing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\timing\PerformanceMeasure.h">
+      <Filter>third_party\Webkit\Source\core\timing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\timing\PerformanceNavigation.h">
+      <Filter>third_party\Webkit\Source\core\timing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\timing\PerformanceRenderTiming.h">
+      <Filter>third_party\Webkit\Source\core\timing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\timing\PerformanceResourceTiming.h">
+      <Filter>third_party\Webkit\Source\core\timing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\timing\PerformanceTiming.h">
+      <Filter>third_party\Webkit\Source\core\timing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\timing\PerformanceUserTiming.h">
+      <Filter>third_party\Webkit\Source\core\timing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\timing\SharedWorkerPerformance.h">
+      <Filter>third_party\Webkit\Source\core\timing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\timing\WorkerGlobalScopePerformance.h">
+      <Filter>third_party\Webkit\Source\core\timing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8TextDecoder.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\encoding\TextEncoder.h">
+      <Filter>third_party\Webkit\Source\modules\encoding</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\encoding\Encoding.h">
+      <Filter>third_party\Webkit\Source\modules\encoding</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\encoding\TextDecoder.h">
+      <Filter>third_party\Webkit\Source\modules\encoding</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\bindings\core\v8\V8ObjectBuilder.h">
+      <Filter>third_party\Webkit\Source\bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8TextDecodeOptions.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8TextDecoderOptions.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8TextEncoder.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\modules\encoding\TextDecoderOptions.h">
+      <Filter>gen\blink\modules\encoding</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\modules\encoding\TextDecodeOptions.h">
+      <Filter>gen\blink\modules\encoding</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\web\WorkerGlobalScopeProxyProviderImpl.h">
+      <Filter>third_party\Webkit\Source\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\web\WorkerContentSettingsClient.h">
+      <Filter>third_party\Webkit\Source\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\content\web_impl_win\WaitableEvent.h">
+      <Filter>content\web_impl_win</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\cc\tiles\TilesAddr.h">
+      <Filter>cc\tiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\cc\tiles\TileBase.h">
+      <Filter>cc\tiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\fetch\Response.h">
+      <Filter>third_party\Webkit\Source\modules\fetch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\fetch\ResponseInit.h">
+      <Filter>third_party\Webkit\Source\modules\fetch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\fetch\Body.h">
+      <Filter>third_party\Webkit\Source\modules\fetch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\fetch\BodyStreamBuffer.h">
+      <Filter>third_party\Webkit\Source\modules\fetch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\fetch\CompositeDataConsumerHandle.h">
+      <Filter>third_party\Webkit\Source\modules\fetch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\fetch\DataConsumerHandleUtil.h">
+      <Filter>third_party\Webkit\Source\modules\fetch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\fetch\DataConsumerTee.h">
+      <Filter>third_party\Webkit\Source\modules\fetch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\fetch\FetchBlobDataConsumerHandle.h">
+      <Filter>third_party\Webkit\Source\modules\fetch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\fetch\FetchDataConsumerHandle.h">
+      <Filter>third_party\Webkit\Source\modules\fetch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\fetch\FetchDataLoader.h">
+      <Filter>third_party\Webkit\Source\modules\fetch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\fetch\FetchHeaderList.h">
+      <Filter>third_party\Webkit\Source\modules\fetch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\fetch\FetchManager.h">
+      <Filter>third_party\Webkit\Source\modules\fetch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\fetch\FetchRequestData.h">
+      <Filter>third_party\Webkit\Source\modules\fetch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\fetch\FetchResponseData.h">
+      <Filter>third_party\Webkit\Source\modules\fetch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\fetch\GlobalFetch.h">
+      <Filter>third_party\Webkit\Source\modules\fetch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\fetch\Headers.h">
+      <Filter>third_party\Webkit\Source\modules\fetch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\fetch\Request.h">
+      <Filter>third_party\Webkit\Source\modules\fetch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\fetch\RequestInit.h">
+      <Filter>third_party\Webkit\Source\modules\fetch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8Body.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\net\SharedMemoryReceivedDataFactory.h">
+      <Filter>net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\net\SharedMemoryDataConsumerHandle.h">
+      <Filter>net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\net\RequestPeer.h">
+      <Filter>net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\net\FixedReceivedData.h">
+      <Filter>net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\cc\raster\RasterFilters.h">
+      <Filter>cc\raster</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\cc\raster\RasterTask.h">
+      <Filter>cc\raster</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\cc\tiles\TileWidthHeight.h">
+      <Filter>cc\tiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\content\web_impl_win\WebMessagePortChannelImpl.h">
+      <Filter>content\web_impl_win</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\content\browser\PlatformMessagePortChannel.h">
+      <Filter>content\browser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\net\WebURLLoaderManagerUtil.h">
+      <Filter>net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\net\WebURLLoaderManagerMainTask.h">
+      <Filter>net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wke\wkedefine.h">
+      <Filter>wke</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\net\WebURLLoaderManagerSetupInfo.h">
+      <Filter>net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\net\FlattenHTTPBodyElement.h">
+      <Filter>net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\xml\XMLSerializer.h">
+      <Filter>third_party\Webkit\Source\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\core\v8\V8XMLSerializer.h">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\base\WindowsVersion.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\V8AsyncCallTracker.h">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\V8Debugger.h">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\WorkerConsoleAgent.h">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\WorkerDebuggerAgent.h">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\WorkerInspectorController.h">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\WorkerRuntimeAgent.h">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\WorkerThreadDebugger.h">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\AsyncCallChain.h">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\AsyncCallTracker.h">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\AsyncOperationMap.h">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\ConsoleAPITypes.h">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\ConsoleMessage.h">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\ConsoleMessageStorage.h">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\ContentSearchUtils.h">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\DevToolsHost.h">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\DOMEditor.h">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\DOMPatchSupport.h">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\EventListenerInfo.h">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\IdentifiersFactory.h">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\InjectedScript.h">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\InjectedScriptHost.h">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\InjectedScriptHostClient.h">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\InjectedScriptManager.h">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\InjectedScriptNative.h">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\InspectorAnimationAgent.h">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\InspectorApplicationCacheAgent.h">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\InspectorBaseAgent.h">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\InspectorConsoleAgent.h">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\InspectorConsoleInstrumentation.h">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\InspectorCSSAgent.h">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\InspectorDebuggerAgent.h">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\InspectorDOMAgent.h">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\InspectorDOMDebuggerAgent.h">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\InspectorFrontendChannel.h">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\InspectorFrontendClient.h">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\InspectorHeapProfilerAgent.h">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\InspectorHighlight.h">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\InspectorHistory.h">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\InspectorInputAgent.h">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\InspectorInspectorAgent.h">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\InspectorInstrumentation.h">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\InspectorInstrumentationCustomInl.h">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\InspectorLayerTreeAgent.h">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\InspectorMemoryAgent.h">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\InspectorOverlay.h">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\InspectorOverlayHost.h">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\InspectorPageAgent.h">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\InspectorProfilerAgent.h">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\InspectorResourceAgent.h">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\InspectorResourceContentLoader.h">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\InspectorRuntimeAgent.h">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\InspectorState.h">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\InspectorStateClient.h">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\InspectorStyleSheet.h">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\InspectorTaskRunner.h">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\InspectorTimelineAgent.h">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\InspectorTraceEvents.h">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\InspectorTracingAgent.h">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\InspectorWorkerAgent.h">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\InstanceCounters.h">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\InstrumentingAgents.h">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\JavaScriptCallFrame.h">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\JSONParser.h">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\LayoutEditor.h">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\MainThreadDebugger.h">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\NetworkResourcesData.h">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\PageConsoleAgent.h">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\PageDebuggerAgent.h">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\PageRuntimeAgent.h">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\PromiseTracker.h">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\ScriptArguments.h">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\ScriptAsyncCallStack.h">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\ScriptBreakpoint.h">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\ScriptCallFrame.h">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\ScriptCallStack.h">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\ScriptDebuggerBase.h">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\ScriptDebugListener.h">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\ScriptProfile.h">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\bindings\core\v8\inspector\V8InjectedScriptHost.h">
+      <Filter>third_party\Webkit\Source\bindings\core\v8\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\bindings\core\v8\inspector\V8JavaScriptCallFrame.h">
+      <Filter>third_party\Webkit\Source\bindings\core\v8\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\bindings\core\v8\inspector\InspectorWrapper.h">
+      <Filter>third_party\Webkit\Source\bindings\core\v8\inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8DevToolsHostPartial.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\bindings\core\v8\ScriptHeapSnapshot.h">
+      <Filter>third_party\Webkit\Source\bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\bindings\core\v8\ScriptProfiler.h">
+      <Filter>third_party\Webkit\Source\bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8DOMFileSystemSync.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8DOMFileSystem.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\content\devtools\DevToolsClient.h">
+      <Filter>content\devtools</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\web\WebDevToolsFrontendImpl.h">
+      <Filter>third_party\Webkit\Source\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\web\WebDevToolsAgentImpl.h">
+      <Filter>third_party\Webkit\Source\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\web\InspectorRenderingAgent.h">
+      <Filter>third_party\Webkit\Source\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\base\json\json_writer.h">
+      <Filter>base\json</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\base\json\json_reader.h">
+      <Filter>base\json</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\base\json\json_parser.h">
+      <Filter>base\json</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\base\json\json_util.h">
+      <Filter>base\json</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\base\strings\string_piece.h">
+      <Filter>base\strings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\content\devtools\DevToolsAgent.h">
+      <Filter>content\devtools</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\content\devtools\DevToolsMgr.h">
+      <Filter>content\devtools</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\content\devtools\DevToolsProtocolDispatcher.h">
+      <Filter>content\devtools</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\web\InspectorOverlayImpl.h">
+      <Filter>third_party\Webkit\Source\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\content\ui\DragHandle.h">
+      <Filter>content\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\content\ui\PlatformCursor.h">
+      <Filter>content\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\content\ui\PopupMenuWin.h">
+      <Filter>content\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\content\ui\PopupMenuWinClient.h">
+      <Filter>content\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\content\ui\RunFileChooserImpl.h">
+      <Filter>content\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\content\ui\ToolTip.h">
+      <Filter>content\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\content\ui\WCDataObject.h">
+      <Filter>content\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\content\ui\WebDropSource.h">
+      <Filter>content\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\content\ui\ClipboardUtil.h">
+      <Filter>content\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\content\ui\ContextMeun.h">
+      <Filter>content\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\frame\External.h">
+      <Filter>third_party\Webkit\Source\core\frame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\core\v8\V8External.h">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\crypto\DOMWindowCrypto.h">
+      <Filter>third_party\Webkit\Source\modules\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\crypto\Crypto.h">
+      <Filter>third_party\Webkit\Source\modules\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8Crypto.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\content\ui\COMPtr.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\content\web_impl_win\WebCryptoImpl.h">
+      <Filter>content\web_impl_win</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\net\CancelledReason.h">
+      <Filter>net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\net\WebURLLoaderManagerAsynTask.h">
+      <Filter>net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wke\wkeNetHook.h">
+      <Filter>wke</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\net\InitializeHandleInfo.h">
+      <Filter>net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\net\ProxyType.h">
+      <Filter>net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\cef\libcef\common\GeometryUtil.h">
+      <Filter>cef\libcef\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\cef\include\cef_version.h">
+      <Filter>cef\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\net\HeaderVisitor.h">
+      <Filter>net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\net\LambdaTask.h">
+      <Filter>net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\node_url.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\nodeblink.h">
+      <Filter>node</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8DataTransferItemPartial.h">
+      <Filter>gen\blink\bindings\modules\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\net\ActivatingObjCheck.h">
+      <Filter>net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\content\browser\WebPageState.h">
+      <Filter>content\browser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wke\wkeUtil.h">
+      <Filter>wke</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wke\wkeGlobalVar.h">
+      <Filter>wke</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\net\PageNetExtraData.h">
+      <Filter>net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wke\wkeMediaPlayer.h">
+      <Filter>wke</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\content\resources\MediaPlayerData.h">
+      <Filter>content\resources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\third_party\WebKit\Source\devtools\front_end\Images\src\optimize_png.hashes">
@@ -21004,9 +23103,6 @@
     <None Include="..\..\third_party\WebKit\Source\core\animation\OWNERS">
       <Filter>third_party\Webkit\Source\core\animation</Filter>
     </None>
-    <None Include="..\..\third_party\WebKit\Source\platform\heap\asm\SaveRegisters_x86.asm">
-      <Filter>third_party\Webkit\Source\platform\heap\asm</Filter>
-    </None>
     <None Include="..\..\third_party\WebKit\Source\modules\storage\OWNERS">
       <Filter>third_party\Webkit\Source\modules\storage</Filter>
     </None>
@@ -21019,8 +23115,61 @@
     <None Include="..\..\third_party\WebKit\Source\modules\mediastream\DEPS">
       <Filter>third_party\Webkit\Source\modules\mediastream</Filter>
     </None>
+    <None Include="..\..\third_party\WebKit\Source\modules\compositorworker\DEPS">
+      <Filter>third_party\Webkit\Source\modules\compositorworker</Filter>
+    </None>
+    <None Include="..\..\third_party\WebKit\Source\modules\encoding\DEPS">
+      <Filter>third_party\Webkit\Source\modules\encoding</Filter>
+    </None>
+    <None Include="..\..\third_party\WebKit\Source\modules\encoding\OWNERS">
+      <Filter>third_party\Webkit\Source\modules\encoding</Filter>
+    </None>
+    <None Include="..\..\third_party\WebKit\Source\modules\fetch\DEPS">
+      <Filter>third_party\Webkit\Source\modules\fetch</Filter>
+    </None>
+    <None Include="..\..\third_party\WebKit\Source\modules\fetch\OWNERS">
+      <Filter>third_party\Webkit\Source\modules\fetch</Filter>
+    </None>
+    <None Include="..\..\third_party\WebKit\Source\core\inspector\BUILD.gn">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </None>
+    <None Include="..\..\third_party\WebKit\Source\core\inspector\CodeGeneratorInspector.py">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </None>
+    <None Include="..\..\third_party\WebKit\Source\core\inspector\CodeGeneratorInspectorStrings.py">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </None>
+    <None Include="..\..\third_party\WebKit\Source\core\inspector\CodeGeneratorInspectorStrings.pyc">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </None>
+    <None Include="..\..\third_party\WebKit\Source\core\inspector\CodeGeneratorInstrumentation.py">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </None>
+    <None Include="..\..\third_party\WebKit\Source\core\inspector\DebuggerScript.js">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </None>
+    <None Include="..\..\third_party\WebKit\Source\core\inspector\injected_script_externs.js">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </None>
+    <None Include="..\..\third_party\WebKit\Source\core\inspector\InjectedScriptSource.js">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </None>
+    <None Include="..\..\third_party\WebKit\Source\core\inspector\InspectorOverlayPage.html">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </None>
+    <None Include="..\..\third_party\WebKit\Source\core\inspector\OWNERS">
+      <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\..\third_party\WebKit\Source\platform\heap\asm\SaveRegisters_x86.asm">
+      <Filter>third_party\Webkit\Source\platform\heap\asm</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="miniblink.rc" />
   </ItemGroup>
 </Project>

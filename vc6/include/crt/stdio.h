@@ -191,7 +191,8 @@ typedef struct _iobuf FILE;
 /* Declare _iob[] array */
 
 #ifndef _STDIO_DEFINED
-_CRTIMP extern FILE _iob[];
+//_CRTIMP extern FILE _iob[];
+FILE * __cdecl __iob_func(void);
 #endif  /* _STDIO_DEFINED */
 
 
@@ -221,9 +222,12 @@ typedef struct fpos_t {
 #endif
 
 
-#define stdin  (&_iob[0])
-#define stdout (&_iob[1])
-#define stderr (&_iob[2])
+// #define stdin  (&_iob[0])
+// #define stdout (&_iob[1])
+// #define stderr (&_iob[2])
+#define stdin (&__iob_func()[0])
+#define stdout (&__iob_func()[1])
+#define stderr (&__iob_func()[2])
 
 
 #define _IOREAD         0x0001

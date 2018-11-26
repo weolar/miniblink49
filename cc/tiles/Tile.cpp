@@ -4,6 +4,7 @@
 #include "SkBitmap.h"
 #include "SkCanvas.h"
 #include "cc/tiles/TileGrid.h"
+#include "cc/tiles/TileWidthHeight.h"
 #include "cc/blink/WebLayerImpl.h" // TODO for backgroundColor
 
 #include "third_party/WebKit/Source/wtf/RefCountedLeakCounter.h"
@@ -14,24 +15,30 @@ namespace cc {
 DEFINE_DEBUG_ONLY_GLOBAL(WTF::RefCountedLeakCounter, tileCounter, ("ccTile"));
 #endif
 
-Tile::Tile(TileGrid* tileGrid, int xIndex, int yIndex)
+Tile::Tile()
+    : TileBase()
+{
+
+}
+
+TileBase* Tile::init(void* parent, int xIndex, int yIndex)
 {
     m_isNotInit = true;
-	m_refCnt = 1;
+    m_refCnt = 1;
     m_xIndex = xIndex;
     m_yIndex = yIndex;
     m_priority = TilePriorityNormal;
     m_postion = blink::IntRect(xIndex * kDefaultTileWidth, yIndex * kDefaultTileHeight, kDefaultTileWidth, kDefaultTileHeight);
-    //m_bitmap = nullptr;
     m_useingRate = 0;
-    m_tileGrid = tileGrid;
+    m_tileGrid = (TileGrid*)parent;
     m_tileGrid->registerTile(this);
     setAllBoundDirty();
-
 #ifndef NDEBUG
     tileCounter.increment();
 #endif
+    return this;
 }
+
 
 Tile::~Tile()
 {
@@ -39,7 +46,7 @@ Tile::~Tile()
         TileTraceLocation* location = m_refFrom[i];
         delete location;
     }
-	//m_refFrom.clear();
+    //m_refFrom.clear();
 
     //clearBitmap();
     m_tileGrid->unregisterTile(this);
@@ -52,23 +59,23 @@ Tile::~Tile()
 void Tile::ref(const blink::WebTraceLocation& location)
 {
     // m_refFrom要加锁
-	//m_refFrom.append(new TileTraceLocation(location.functionName(), location.fileName(), true));
-	ASSERT(m_refCnt > 0);
-	(void)sk_atomic_fetch_add(&m_refCnt, +1, sk_memory_order_relaxed);  // No barrier required.
+	  //m_refFrom.append(new TileTraceLocation(location.functionName(), location.fileName(), true));
+	  ASSERT(m_refCnt > 0);
+	  (void)sk_atomic_fetch_add(&m_refCnt, +1, sk_memory_order_relaxed);  // No barrier required.
 }
 
 void Tile::unref(const blink::WebTraceLocation& location)
 {
-	//m_refFrom.append(new TileTraceLocation(location.functionName(), location.fileName(), false));
-	ASSERT(m_refCnt > 0);
-	if (1 == sk_atomic_fetch_add(&m_refCnt, -1, sk_memory_order_acq_rel)) {
-		delete this;
-	}
+	  //m_refFrom.append(new TileTraceLocation(location.functionName(), location.fileName(), false));
+    ASSERT(m_refCnt > 0);
+    if (1 == sk_atomic_fetch_add(&m_refCnt, -1, sk_memory_order_acq_rel)) {
+        delete this;
+    }
 }
 
 int32_t Tile::getRefCnt() const
 {
-	return m_refCnt;
+	  return m_refCnt;
 }
 
 void Tile::clearBitmap()
@@ -77,12 +84,12 @@ void Tile::clearBitmap()
 //         delete m_bitmap;
 //     m_bitmap = nullptr;
 //     //m_bitmap->eraseColor(0xff000000); // debug test
-	m_bitmap = false;
+	  m_bitmap = false;
 }
 
 void Tile::allocBitmapIfNeeded()
 {
-	m_bitmap = true;
+	  m_bitmap = true;
 //     WTF::MutexLocker locker(m_mutex);
 //     m_isNotInit = false;
 //     //ASSERT(!(!m_bitmap && 1 != getRefCnt())); // 有可能在还没光栅化，就被滚动导致clearBitmap了
@@ -102,7 +109,7 @@ void Tile::allocBitmapIfNeeded()
 
 bool Tile::isSameTileGrid(const TileGrid* tileGrid) const
 {
-	return m_tileGrid == tileGrid;
+    return m_tileGrid == tileGrid;
 }
 
 void Tile::appendDirtyRect(const blink::IntRect& r) 

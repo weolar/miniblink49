@@ -137,6 +137,7 @@ WebSocketChannelImpl::WebSocketChannelImpl(ExecutionContext* context, WebSocketC
     , m_blobLoaderStatus(BlobLoaderNotStarted)
     , m_sourceURLAtConstruction(sourceURL)
     , m_lineNumberAtConstruction(lineNumber)
+    , m_beCallclosed(false)
    
 {
     m_identifier = createUniqueIdentifier();
@@ -146,7 +147,7 @@ WebSocketChannelImpl::WebSocketChannelImpl(ExecutionContext* context, WebSocketC
 WebSocketChannelImpl::~WebSocketChannelImpl()
 {
     ASSERT(!m_blobLoader);
-    ASSERT(0 == m_ref);
+    //ASSERT(0 == m_ref);
     WTF_LOG(Network, "WebSocketChannelImpl %p dtor", this);
 }
 
@@ -226,6 +227,7 @@ void WebSocketChannelImpl::close(int code, const String& reason)
     ASSERT(!m_suspended);
     if (!m_handle)
         return;
+    m_beCallclosed = true;
     RefPtr<WebSocketChannelImpl> protect(*this); // An attempt to send closing handshake may fail, which will get the channel closed and dereferenced.
     startClosingHandshake(code, reason);
     if (m_closing && !m_closingTimer.isActive())
@@ -348,7 +350,7 @@ void WebSocketChannelImpl::didCloseSocketStream(SocketStreamHandle* handle)
         WebSocketChannelClient* client = m_client;
         m_client = nullptr;
         m_handle = nullptr;
-        if (client)
+        if (client && !m_beCallclosed)
             client->didClose(m_receivedClosingHandshake ? WebSocketChannelClient::ClosingHandshakeComplete : WebSocketChannelClient::ClosingHandshakeIncomplete, m_closeEventCode, m_closeEventReason);
     }
     deref();
@@ -637,13 +639,13 @@ bool WebSocketChannelImpl::processFrame()
             // so we should pretend that we have finished to read this frame and
             // make sure that the member variables are in a consistent state before
             // the handler is invoked.
-            Vector<char> continuousFrameData;
-            continuousFrameData.appendVector(m_continuousFrameData);
+            OwnPtr<Vector<char>> continuousFrameData = adoptPtr(new Vector<char>());
+            continuousFrameData->appendVector(m_continuousFrameData);
             m_hasContinuousFrame = false;
             if (m_continuousFrameOpCode == WebSocketOneFrame::OpCodeText) {
                 String message;
-                if (continuousFrameData.size())
-                    message = String::fromUTF8(continuousFrameData.data(), continuousFrameData.size());
+                if (continuousFrameData->size())
+                    message = String::fromUTF8(continuousFrameData->data(), continuousFrameData->size());
                 else
                     message = emptyString();
                 if (message.isNull())
@@ -651,7 +653,7 @@ bool WebSocketChannelImpl::processFrame()
                 else
                     m_client->didReceiveTextMessage(message);
             } else if (m_continuousFrameOpCode == WebSocketOneFrame::OpCodeBinary)
-                m_client->didReceiveBinaryMessage(WTF::adoptPtr(&continuousFrameData));
+                m_client->didReceiveBinaryMessage(continuousFrameData.release());
         }
         break;
 
@@ -678,10 +680,10 @@ bool WebSocketChannelImpl::processFrame()
 
     case WebSocketOneFrame::OpCodeBinary:
         if (frame.final) {
-            Vector<char> binaryData(frame.payloadLength);
-            memcpy(binaryData.data(), frame.payload, frame.payloadLength);
+            OwnPtr<Vector<char>> binaryData = adoptPtr(new Vector<char>(frame.payloadLength));
+            memcpy(binaryData->data(), frame.payload, frame.payloadLength);
             skipBuffer(frameEnd - m_buffer.data());
-            m_client->didReceiveBinaryMessage(WTF::adoptPtr(&binaryData));
+            m_client->didReceiveBinaryMessage(binaryData.release());
         } else {
             m_hasContinuousFrame = true;
             m_continuousFrameOpCode = WebSocketOneFrame::OpCodeBinary;

@@ -1,0 +1,2531 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{6d980220-cd52-498c-93ca-13ef6962583e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include">
+      <UniqueIdentifier>{b69ee987-2dd2-4b97-b9bd-91c20d758848}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\base">
+      <UniqueIdentifier>{d44991a5-123c-44a7-ac95-3e118679a910}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\base\platform">
+      <UniqueIdentifier>{c4901942-5b05-4caa-8e6f-2487480e27c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\base\utils">
+      <UniqueIdentifier>{8ac601ed-07dc-45a6-afda-ac0c43184c52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\compiler">
+      <UniqueIdentifier>{65dbf700-e95d-416d-8dc5-7f2fe12ce788}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\compiler\ia32">
+      <UniqueIdentifier>{562935c9-a4ee-4d9c-8693-0ff1a12273db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\crankshaft">
+      <UniqueIdentifier>{7cb1746d-c2e6-459a-912d-902563a8f5df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\crankshaft\ia32">
+      <UniqueIdentifier>{0b92cf0c-780a-467a-8f39-4d962756a2cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\debug">
+      <UniqueIdentifier>{47941a34-8182-4d19-8b32-280e4cc0f3ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\debug\ia32">
+      <UniqueIdentifier>{f3f11377-67da-4ea9-b846-3ce8a30a3dbd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\extensions">
+      <UniqueIdentifier>{3cc4a88d-b993-4f69-8988-5e13b1386e1d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\heap">
+      <UniqueIdentifier>{eacf2902-ded5-4cf8-bfff-e6b9258cfc79}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\ia32">
+      <UniqueIdentifier>{141cc164-c391-42e9-86fd-4e7a1e9c54f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\ic">
+      <UniqueIdentifier>{fad826f9-1269-4c88-a679-ae1edae22ace}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\ic\ia32">
+      <UniqueIdentifier>{de36c413-06ce-4ddc-a264-cc5905b61d44}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\interpreter">
+      <UniqueIdentifier>{3bbf5a37-531b-4a4c-8162-60586d57fd19}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\profiler">
+      <UniqueIdentifier>{b2fea179-bce4-4378-a20d-e7a8cc21d5d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\regexp">
+      <UniqueIdentifier>{761b9f91-13d9-4920-99f9-b767cf233a0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\regexp\ia32">
+      <UniqueIdentifier>{ffb1d2a6-f87f-4e66-8092-d7bb8c5adf31}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\runtime">
+      <UniqueIdentifier>{e3b29bfe-0625-456c-9d71-4b6fbda086f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\snapshot">
+      <UniqueIdentifier>{937ac008-1e8a-4ed5-b16b-afe06632a879}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\third_party">
+      <UniqueIdentifier>{40dff814-c8f7-44fb-aca6-591a33fae9a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\third_party\fdlibm">
+      <UniqueIdentifier>{bbd917dc-bc16-4101-8886-f852e03bed0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\full-codegen">
+      <UniqueIdentifier>{72c9f78e-f8c2-4587-8000-e643509f34ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\full-codegen\ia32">
+      <UniqueIdentifier>{b00bda8a-7ec1-4bff-a383-9fcc209972eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\gen">
+      <UniqueIdentifier>{413218f9-609c-40bd-822e-c5e2fbf9fca1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\libplatform">
+      <UniqueIdentifier>{63e43a30-50d6-42f6-8ac1-aca837dd463f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\libplatform">
+      <UniqueIdentifier>{8b20f5ed-59f3-4b8a-b737-5550289e686c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\x64">
+      <UniqueIdentifier>{0b9f3cd2-bfbe-45e6-81ed-09f212ef0ff5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\compiler\x64">
+      <UniqueIdentifier>{fa17ff86-03fc-45c3-a72a-5171e72f8282}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\crankshaft\x64">
+      <UniqueIdentifier>{1465abf1-c8a6-40fc-9f08-59abfaba929c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\debug\x64">
+      <UniqueIdentifier>{e54419c8-864d-451f-987f-f9568531e1e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\full-codegen\x64">
+      <UniqueIdentifier>{bdc2188e-1b4d-4acc-8d05-a420efc5b433}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\ic\x64">
+      <UniqueIdentifier>{b42361a2-2011-47f4-8b3e-1f00183358f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\regexp\x64">
+      <UniqueIdentifier>{e3b894c0-799f-4b15-91af-16fb7b72a80f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\v8_4_8\include\v8.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\include\v8config.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\include\v8-debug.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\include\v8-platform.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\include\v8-profiler.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\include\v8-testing.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\include\v8-util.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\include\v8-version.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\include\libplatform\libplatform.h">
+      <Filter>include\libplatform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\base\adapters.h">
+      <Filter>src\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\base\atomicops.h">
+      <Filter>src\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\base\atomicops_internals_x86_msvc.h">
+      <Filter>src\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\base\bits.h">
+      <Filter>src\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\base\build_config.h">
+      <Filter>src\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\base\compiler-specific.h">
+      <Filter>src\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\base\cpu.h">
+      <Filter>src\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\base\division-by-constant.h">
+      <Filter>src\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\base\flags.h">
+      <Filter>src\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\base\functional.h">
+      <Filter>src\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\base\iterator.h">
+      <Filter>src\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\base\lazy-instance.h">
+      <Filter>src\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\base\logging.h">
+      <Filter>src\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\base\macros.h">
+      <Filter>src\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\base\once.h">
+      <Filter>src\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\base\qnx-math.h">
+      <Filter>src\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\base\safe_conversions.h">
+      <Filter>src\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\base\safe_conversions_impl.h">
+      <Filter>src\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\base\safe_math.h">
+      <Filter>src\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\base\safe_math_impl.h">
+      <Filter>src\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\base\smart-pointers.h">
+      <Filter>src\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\base\sys-info.h">
+      <Filter>src\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\base\win32-headers.h">
+      <Filter>src\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\base\platform\condition-variable.h">
+      <Filter>src\base\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\base\platform\elapsed-timer.h">
+      <Filter>src\base\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\base\platform\mutex.h">
+      <Filter>src\base\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\base\platform\platform.h">
+      <Filter>src\base\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\base\platform\semaphore.h">
+      <Filter>src\base\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\base\platform\time.h">
+      <Filter>src\base\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\base\utils\random-number-generator.h">
+      <Filter>src\base\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\access-builder.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\access-info.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\all-nodes.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\ast-graph-builder.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\ast-loop-assignment-analyzer.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\basic-block-instrumentor.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\binary-operator-reducer.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\branch-elimination.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\bytecode-graph-builder.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\change-lowering.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\coalesced-live-ranges.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\code-generator.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\code-generator-impl.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\common-node-cache.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\common-operator.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\common-operator-reducer.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\control-builders.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\control-equivalence.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\control-flow-optimizer.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\dead-code-elimination.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\diamond.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\frame.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\frame-elider.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\frame-states.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\gap-resolver.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\graph.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\graph-reducer.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\graph-replay.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\graph-trimmer.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\graph-visualizer.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\greedy-allocator.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\instruction.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\instruction-codes.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\instruction-selector.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\instruction-selector-impl.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\interpreter-assembler.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\js-builtin-reducer.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\js-context-relaxation.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\js-context-specialization.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\js-frame-specialization.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\js-generic-lowering.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\js-global-object-specialization.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\js-graph.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\js-inlining.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\js-inlining-heuristic.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\js-intrinsic-lowering.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\js-native-context-specialization.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\js-operator.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\js-typed-lowering.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\jump-threading.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\linkage.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\liveness-analyzer.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\live-range-separator.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\load-elimination.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\loop-analysis.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\loop-peeling.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\machine-operator.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\machine-operator-reducer.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\machine-type.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\move-optimizer.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\node.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\node-aux-data.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\node-cache.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\node-marker.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\node-matchers.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\node-properties.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\opcodes.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\operator.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\operator-properties.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\osr.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\pipeline.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\pipeline-statistics.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\raw-machine-assembler.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\register-allocator.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\register-allocator-verifier.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\representation-change.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\schedule.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\scheduler.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\select-lowering.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\simplified-lowering.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\simplified-operator.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\simplified-operator-reducer.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\source-position.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\state-values-utils.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\tail-call-optimization.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\typer.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\value-numbering-reducer.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\verifier.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\zone-pool.h">
+      <Filter>src\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\ia32\instruction-codes-ia32.h">
+      <Filter>src\compiler\ia32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\crankshaft\hydrogen.h">
+      <Filter>src\crankshaft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\crankshaft\hydrogen-alias-analysis.h">
+      <Filter>src\crankshaft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\crankshaft\hydrogen-bce.h">
+      <Filter>src\crankshaft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\crankshaft\hydrogen-bch.h">
+      <Filter>src\crankshaft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\crankshaft\hydrogen-canonicalize.h">
+      <Filter>src\crankshaft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\crankshaft\hydrogen-check-elimination.h">
+      <Filter>src\crankshaft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\crankshaft\hydrogen-dce.h">
+      <Filter>src\crankshaft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\crankshaft\hydrogen-dehoist.h">
+      <Filter>src\crankshaft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\crankshaft\hydrogen-environment-liveness.h">
+      <Filter>src\crankshaft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\crankshaft\hydrogen-escape-analysis.h">
+      <Filter>src\crankshaft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\crankshaft\hydrogen-flow-engine.h">
+      <Filter>src\crankshaft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\crankshaft\hydrogen-gvn.h">
+      <Filter>src\crankshaft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\crankshaft\hydrogen-infer-representation.h">
+      <Filter>src\crankshaft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\crankshaft\hydrogen-infer-types.h">
+      <Filter>src\crankshaft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\crankshaft\hydrogen-instructions.h">
+      <Filter>src\crankshaft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\crankshaft\hydrogen-load-elimination.h">
+      <Filter>src\crankshaft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\crankshaft\hydrogen-mark-deoptimize.h">
+      <Filter>src\crankshaft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\crankshaft\hydrogen-mark-unreachable.h">
+      <Filter>src\crankshaft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\crankshaft\hydrogen-osr.h">
+      <Filter>src\crankshaft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\crankshaft\hydrogen-range-analysis.h">
+      <Filter>src\crankshaft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\crankshaft\hydrogen-redundant-phi.h">
+      <Filter>src\crankshaft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\crankshaft\hydrogen-removable-simulates.h">
+      <Filter>src\crankshaft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\crankshaft\hydrogen-representation-changes.h">
+      <Filter>src\crankshaft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\crankshaft\hydrogen-sce.h">
+      <Filter>src\crankshaft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\crankshaft\hydrogen-store-elimination.h">
+      <Filter>src\crankshaft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\crankshaft\hydrogen-types.h">
+      <Filter>src\crankshaft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\crankshaft\hydrogen-uint32-analysis.h">
+      <Filter>src\crankshaft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\crankshaft\lithium.h">
+      <Filter>src\crankshaft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\crankshaft\lithium-allocator.h">
+      <Filter>src\crankshaft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\crankshaft\lithium-allocator-inl.h">
+      <Filter>src\crankshaft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\crankshaft\lithium-codegen.h">
+      <Filter>src\crankshaft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\crankshaft\lithium-inl.h">
+      <Filter>src\crankshaft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\crankshaft\typing.h">
+      <Filter>src\crankshaft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\crankshaft\unique.h">
+      <Filter>src\crankshaft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\crankshaft\ia32\lithium-codegen-ia32.h">
+      <Filter>src\crankshaft\ia32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\crankshaft\ia32\lithium-gap-resolver-ia32.h">
+      <Filter>src\crankshaft\ia32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\crankshaft\ia32\lithium-ia32.h">
+      <Filter>src\crankshaft\ia32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\debug\debug.h">
+      <Filter>src\debug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\debug\debug-evaluate.h">
+      <Filter>src\debug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\debug\debug-frames.h">
+      <Filter>src\debug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\debug\debug-scopes.h">
+      <Filter>src\debug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\debug\liveedit.h">
+      <Filter>src\debug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\extensions\externalize-string-extension.h">
+      <Filter>src\extensions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\extensions\free-buffer-extension.h">
+      <Filter>src\extensions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\extensions\gc-extension.h">
+      <Filter>src\extensions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\extensions\statistics-extension.h">
+      <Filter>src\extensions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\extensions\trigger-failure-extension.h">
+      <Filter>src\extensions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\heap\array-buffer-tracker.h">
+      <Filter>src\heap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\heap\gc-idle-time-handler.h">
+      <Filter>src\heap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\heap\gc-tracer.h">
+      <Filter>src\heap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\heap\heap.h">
+      <Filter>src\heap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\heap\heap-inl.h">
+      <Filter>src\heap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\heap\incremental-marking.h">
+      <Filter>src\heap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\heap\incremental-marking-inl.h">
+      <Filter>src\heap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\heap\incremental-marking-job.h">
+      <Filter>src\heap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\heap\mark-compact.h">
+      <Filter>src\heap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\heap\mark-compact-inl.h">
+      <Filter>src\heap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\heap\memory-reducer.h">
+      <Filter>src\heap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\heap\object-stats.h">
+      <Filter>src\heap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\heap\objects-visiting.h">
+      <Filter>src\heap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\heap\objects-visiting-inl.h">
+      <Filter>src\heap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\heap\scavenge-job.h">
+      <Filter>src\heap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\heap\scavenger.h">
+      <Filter>src\heap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\heap\scavenger-inl.h">
+      <Filter>src\heap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\heap\slots-buffer.h">
+      <Filter>src\heap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\heap\spaces.h">
+      <Filter>src\heap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\heap\spaces-inl.h">
+      <Filter>src\heap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\heap\store-buffer.h">
+      <Filter>src\heap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\heap\store-buffer-inl.h">
+      <Filter>src\heap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\ia32\assembler-ia32.h">
+      <Filter>src\ia32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\ia32\assembler-ia32-inl.h">
+      <Filter>src\ia32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\ia32\codegen-ia32.h">
+      <Filter>src\ia32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\ia32\code-stubs-ia32.h">
+      <Filter>src\ia32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\ia32\frames-ia32.h">
+      <Filter>src\ia32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\ia32\macro-assembler-ia32.h">
+      <Filter>src\ia32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\ia32\simulator-ia32.h">
+      <Filter>src\ia32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\ic\access-compiler.h">
+      <Filter>src\ic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\ic\call-optimization.h">
+      <Filter>src\ic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\ic\handler-compiler.h">
+      <Filter>src\ic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\ic\ic.h">
+      <Filter>src\ic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\ic\ic-compiler.h">
+      <Filter>src\ic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\ic\ic-inl.h">
+      <Filter>src\ic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\ic\ic-state.h">
+      <Filter>src\ic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\ic\stub-cache.h">
+      <Filter>src\ic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\interpreter\bytecode-array-builder.h">
+      <Filter>src\interpreter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\interpreter\bytecode-array-iterator.h">
+      <Filter>src\interpreter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\interpreter\bytecode-generator.h">
+      <Filter>src\interpreter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\interpreter\bytecodes.h">
+      <Filter>src\interpreter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\interpreter\bytecode-traits.h">
+      <Filter>src\interpreter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\interpreter\control-flow-builders.h">
+      <Filter>src\interpreter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\interpreter\interpreter.h">
+      <Filter>src\interpreter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\profiler\allocation-tracker.h">
+      <Filter>src\profiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\profiler\circular-queue.h">
+      <Filter>src\profiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\profiler\circular-queue-inl.h">
+      <Filter>src\profiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\profiler\cpu-profiler.h">
+      <Filter>src\profiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\profiler\cpu-profiler-inl.h">
+      <Filter>src\profiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\profiler\heap-profiler.h">
+      <Filter>src\profiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\profiler\heap-snapshot-generator.h">
+      <Filter>src\profiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\profiler\heap-snapshot-generator-inl.h">
+      <Filter>src\profiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\profiler\profile-generator.h">
+      <Filter>src\profiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\profiler\profile-generator-inl.h">
+      <Filter>src\profiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\profiler\sampler.h">
+      <Filter>src\profiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\profiler\strings-storage.h">
+      <Filter>src\profiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\profiler\unbound-queue.h">
+      <Filter>src\profiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\profiler\unbound-queue-inl.h">
+      <Filter>src\profiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\regexp\bytecodes-irregexp.h">
+      <Filter>src\regexp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\regexp\interpreter-irregexp.h">
+      <Filter>src\regexp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\regexp\jsregexp.h">
+      <Filter>src\regexp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\regexp\jsregexp-inl.h">
+      <Filter>src\regexp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\regexp\regexp-macro-assembler.h">
+      <Filter>src\regexp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\regexp\regexp-macro-assembler-irregexp.h">
+      <Filter>src\regexp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\regexp\regexp-macro-assembler-irregexp-inl.h">
+      <Filter>src\regexp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\regexp\regexp-macro-assembler-tracer.h">
+      <Filter>src\regexp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\regexp\regexp-stack.h">
+      <Filter>src\regexp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\regexp\ia32\regexp-macro-assembler-ia32.h">
+      <Filter>src\regexp\ia32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\runtime\runtime.h">
+      <Filter>src\runtime</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\runtime\runtime-utils.h">
+      <Filter>src\runtime</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\snapshot\natives.h">
+      <Filter>src\snapshot</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\snapshot\serialize.h">
+      <Filter>src\snapshot</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\snapshot\snapshot.h">
+      <Filter>src\snapshot</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\snapshot\snapshot-source-sink.h">
+      <Filter>src\snapshot</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\third_party\fdlibm\fdlibm.h">
+      <Filter>src\third_party\fdlibm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\accessors.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\address-map.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\allocation.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\allocation-site-scopes.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\api.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\api-natives.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\arguments.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\assembler.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\assert-scope.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\ast.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\ast-expression-visitor.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\ast-literal-reindexer.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\ast-numbering.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\ast-value-factory.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\atomic-utils.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\background-parsing-task.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\bailout-reason.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\basic-block-profiler.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\bignum.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\bignum-dtoa.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\bit-vector.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\bootstrapper.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\builtins.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\cached-powers.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\cancelable-task.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\char-predicates.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\char-predicates-inl.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\checks.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\code-factory.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\codegen.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\code-stubs.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compilation-cache.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compilation-dependencies.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compilation-statistics.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\context-measure.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\contexts.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\contexts-inl.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\conversions.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\conversions-inl.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\counters.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\date.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\dateparser.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\dateparser-inl.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\deoptimizer.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\disasm.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\disassembler.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\diy-fp.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\double.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\dtoa.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\effects.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\elements.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\elements-kind.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\execution.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\expression-classifier.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\factory.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\fast-dtoa.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\field-index.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\field-index-inl.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\fixed-dtoa.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\flag-definitions.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\flags.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\frames.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\frames-inl.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\func-name-inferrer.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\futex-emulation.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\gdb-jit.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\global-handles.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\globals.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\handles.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\handles-inl.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\hashmap.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\identity-map.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\interface-descriptors.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\isolate.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\isolate-inl.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\json-parser.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\json-stringifier.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\key-accumulator.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\layout-descriptor.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\layout-descriptor-inl.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\list.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\list-inl.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\log.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\log-inl.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\log-utils.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\lookup.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\macro-assembler.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\messages.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\modules.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\msan.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\objects.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\objects-inl.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\optimizing-compile-dispatcher.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\ostreams.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\parameter-initializer-rewriter.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\parser.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\pending-compilation-error-handler.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\preparse-data.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\preparse-data-format.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\preparser.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\prettyprinter.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\property.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\property-descriptor.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\property-details.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\prototype.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\register-configuration.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\rewriter.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\runtime-profiler.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\safepoint-table.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\scanner.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\scanner-character-streams.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\scopeinfo.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\scopes.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\signature.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\simulator.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\small-pointer-list.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\splay-tree.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\splay-tree-inl.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\startup-data-util.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\string-builder.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\string-search.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\string-stream.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\strtod.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\token.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\transitions.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\transitions-inl.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\type-cache.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\type-feedback-vector.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\type-feedback-vector-inl.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\type-info.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\types.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\types-inl.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\typing-asm.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\typing-reset.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\unicode.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\unicode-cache.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\unicode-cache-inl.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\unicode-decoder.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\unicode-inl.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\utils.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\v8.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\v8memory.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\v8threads.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\variables.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\vector.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\version.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\vm-state.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\vm-state-inl.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\zone.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\zone-allocator.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\zone-containers.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\full-codegen\full-codegen.h">
+      <Filter>src\full-codegen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\libplatform\worker-thread.h">
+      <Filter>src\libplatform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\libplatform\default-platform.h">
+      <Filter>src\libplatform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\libplatform\task-queue.h">
+      <Filter>src\libplatform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\x64\assembler-x64.h">
+      <Filter>src\x64</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\x64\assembler-x64-inl.h">
+      <Filter>src\x64</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\x64\codegen-x64.h">
+      <Filter>src\x64</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\x64\code-stubs-x64.h">
+      <Filter>src\x64</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\x64\frames-x64.h">
+      <Filter>src\x64</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\x64\macro-assembler-x64.h">
+      <Filter>src\x64</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\x64\simulator-x64.h">
+      <Filter>src\x64</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\compiler\x64\instruction-codes-x64.h">
+      <Filter>src\compiler\x64</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\crankshaft\x64\lithium-codegen-x64.h">
+      <Filter>src\crankshaft\x64</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\crankshaft\x64\lithium-gap-resolver-x64.h">
+      <Filter>src\crankshaft\x64</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\crankshaft\x64\lithium-x64.h">
+      <Filter>src\crankshaft\x64</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_4_8\src\regexp\x64\regexp-macro-assembler-x64.h">
+      <Filter>src\regexp\x64</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\v8_4_8\src\base\bits.cc">
+      <Filter>src\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\base\cpu.cc">
+      <Filter>src\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\base\division-by-constant.cc">
+      <Filter>src\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\base\functional.cc">
+      <Filter>src\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\base\logging.cc">
+      <Filter>src\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\base\once.cc">
+      <Filter>src\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\base\sys-info.cc">
+      <Filter>src\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\base\platform\condition-variable.cc">
+      <Filter>src\base\platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\base\platform\mutex.cc">
+      <Filter>src\base\platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\base\platform\platform-win32.cc">
+      <Filter>src\base\platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\base\platform\semaphore.cc">
+      <Filter>src\base\platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\base\platform\time.cc">
+      <Filter>src\base\platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\base\utils\random-number-generator.cc">
+      <Filter>src\base\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\access-builder.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\access-info.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\all-nodes.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\ast-graph-builder.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\ast-loop-assignment-analyzer.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\basic-block-instrumentor.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\binary-operator-reducer.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\branch-elimination.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\bytecode-graph-builder.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\change-lowering.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\c-linkage.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\coalesced-live-ranges.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\code-generator.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\common-node-cache.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\common-operator.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\common-operator-reducer.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\control-builders.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\control-equivalence.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\control-flow-optimizer.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\dead-code-elimination.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\frame.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\frame-elider.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\frame-states.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\gap-resolver.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\graph.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\graph-reducer.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\graph-replay.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\graph-trimmer.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\graph-visualizer.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\greedy-allocator.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\instruction.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\instruction-selector.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\interpreter-assembler.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\js-builtin-reducer.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\js-context-relaxation.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\js-context-specialization.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\js-frame-specialization.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\js-generic-lowering.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\js-global-object-specialization.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\js-graph.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\js-inlining.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\js-inlining-heuristic.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\js-intrinsic-lowering.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\js-native-context-specialization.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\js-operator.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\js-typed-lowering.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\jump-threading.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\linkage.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\liveness-analyzer.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\live-range-separator.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\load-elimination.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\loop-analysis.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\loop-peeling.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\machine-operator.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\machine-operator-reducer.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\machine-type.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\move-optimizer.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\node.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\node-cache.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\node-marker.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\node-matchers.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\node-properties.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\opcodes.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\operator.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\operator-properties.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\osr.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\pipeline.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\pipeline-statistics.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\raw-machine-assembler.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\register-allocator.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\register-allocator-verifier.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\schedule.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\scheduler.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\select-lowering.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\simplified-lowering.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\simplified-operator.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\simplified-operator-reducer.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\source-position.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\state-values-utils.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\tail-call-optimization.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\typer.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\value-numbering-reducer.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\verifier.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\zone-pool.cc">
+      <Filter>src\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\ia32\code-generator-ia32.cc">
+      <Filter>src\compiler\ia32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\ia32\instruction-selector-ia32.cc">
+      <Filter>src\compiler\ia32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\crankshaft\hydrogen.cc">
+      <Filter>src\crankshaft</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\crankshaft\hydrogen-bce.cc">
+      <Filter>src\crankshaft</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\crankshaft\hydrogen-bch.cc">
+      <Filter>src\crankshaft</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\crankshaft\hydrogen-canonicalize.cc">
+      <Filter>src\crankshaft</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\crankshaft\hydrogen-check-elimination.cc">
+      <Filter>src\crankshaft</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\crankshaft\hydrogen-dce.cc">
+      <Filter>src\crankshaft</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\crankshaft\hydrogen-dehoist.cc">
+      <Filter>src\crankshaft</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\crankshaft\hydrogen-environment-liveness.cc">
+      <Filter>src\crankshaft</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\crankshaft\hydrogen-escape-analysis.cc">
+      <Filter>src\crankshaft</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\crankshaft\hydrogen-gvn.cc">
+      <Filter>src\crankshaft</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\crankshaft\hydrogen-infer-representation.cc">
+      <Filter>src\crankshaft</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\crankshaft\hydrogen-infer-types.cc">
+      <Filter>src\crankshaft</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\crankshaft\hydrogen-instructions.cc">
+      <Filter>src\crankshaft</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\crankshaft\hydrogen-load-elimination.cc">
+      <Filter>src\crankshaft</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\crankshaft\hydrogen-mark-deoptimize.cc">
+      <Filter>src\crankshaft</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\crankshaft\hydrogen-mark-unreachable.cc">
+      <Filter>src\crankshaft</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\crankshaft\hydrogen-osr.cc">
+      <Filter>src\crankshaft</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\crankshaft\hydrogen-range-analysis.cc">
+      <Filter>src\crankshaft</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\crankshaft\hydrogen-redundant-phi.cc">
+      <Filter>src\crankshaft</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\crankshaft\hydrogen-removable-simulates.cc">
+      <Filter>src\crankshaft</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\crankshaft\hydrogen-representation-changes.cc">
+      <Filter>src\crankshaft</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\crankshaft\hydrogen-sce.cc">
+      <Filter>src\crankshaft</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\crankshaft\hydrogen-store-elimination.cc">
+      <Filter>src\crankshaft</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\crankshaft\hydrogen-types.cc">
+      <Filter>src\crankshaft</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\crankshaft\hydrogen-uint32-analysis.cc">
+      <Filter>src\crankshaft</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\crankshaft\lithium.cc">
+      <Filter>src\crankshaft</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\crankshaft\lithium-allocator.cc">
+      <Filter>src\crankshaft</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\crankshaft\lithium-codegen.cc">
+      <Filter>src\crankshaft</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\crankshaft\typing.cc">
+      <Filter>src\crankshaft</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\crankshaft\ia32\lithium-codegen-ia32.cc">
+      <Filter>src\crankshaft\ia32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\crankshaft\ia32\lithium-gap-resolver-ia32.cc">
+      <Filter>src\crankshaft\ia32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\crankshaft\ia32\lithium-ia32.cc">
+      <Filter>src\crankshaft\ia32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\debug\debug.cc">
+      <Filter>src\debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\debug\debug-evaluate.cc">
+      <Filter>src\debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\debug\debug-frames.cc">
+      <Filter>src\debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\debug\debug-scopes.cc">
+      <Filter>src\debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\debug\liveedit.cc">
+      <Filter>src\debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\debug\ia32\debug-ia32.cc">
+      <Filter>src\debug\ia32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\extensions\externalize-string-extension.cc">
+      <Filter>src\extensions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\extensions\free-buffer-extension.cc">
+      <Filter>src\extensions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\extensions\gc-extension.cc">
+      <Filter>src\extensions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\extensions\statistics-extension.cc">
+      <Filter>src\extensions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\extensions\trigger-failure-extension.cc">
+      <Filter>src\extensions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\heap\array-buffer-tracker.cc">
+      <Filter>src\heap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\heap\gc-idle-time-handler.cc">
+      <Filter>src\heap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\heap\gc-tracer.cc">
+      <Filter>src\heap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\heap\heap.cc">
+      <Filter>src\heap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\heap\incremental-marking.cc">
+      <Filter>src\heap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\heap\incremental-marking-job.cc">
+      <Filter>src\heap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\heap\mark-compact.cc">
+      <Filter>src\heap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\heap\memory-reducer.cc">
+      <Filter>src\heap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\heap\object-stats.cc">
+      <Filter>src\heap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\heap\objects-visiting.cc">
+      <Filter>src\heap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\heap\scavenge-job.cc">
+      <Filter>src\heap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\heap\scavenger.cc">
+      <Filter>src\heap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\heap\slots-buffer.cc">
+      <Filter>src\heap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\heap\spaces.cc">
+      <Filter>src\heap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\heap\store-buffer.cc">
+      <Filter>src\heap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\ia32\assembler-ia32.cc">
+      <Filter>src\ia32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\ia32\builtins-ia32.cc">
+      <Filter>src\ia32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\ia32\codegen-ia32.cc">
+      <Filter>src\ia32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\ia32\code-stubs-ia32.cc">
+      <Filter>src\ia32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\ia32\cpu-ia32.cc">
+      <Filter>src\ia32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\ia32\deoptimizer-ia32.cc">
+      <Filter>src\ia32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\ia32\disasm-ia32.cc">
+      <Filter>src\ia32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\ia32\frames-ia32.cc">
+      <Filter>src\ia32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\ia32\interface-descriptors-ia32.cc">
+      <Filter>src\ia32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\ia32\macro-assembler-ia32.cc">
+      <Filter>src\ia32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\ia32\simulator-ia32.cc">
+      <Filter>src\ia32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\ic\access-compiler.cc">
+      <Filter>src\ic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\ic\call-optimization.cc">
+      <Filter>src\ic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\ic\handler-compiler.cc">
+      <Filter>src\ic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\ic\ic.cc">
+      <Filter>src\ic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\ic\ic-compiler.cc">
+      <Filter>src\ic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\ic\ic-state.cc">
+      <Filter>src\ic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\ic\stub-cache.cc">
+      <Filter>src\ic</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\ic\ia32\access-compiler-ia32.cc">
+      <Filter>src\ic\ia32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\ic\ia32\handler-compiler-ia32.cc">
+      <Filter>src\ic\ia32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\ic\ia32\ic-compiler-ia32.cc">
+      <Filter>src\ic\ia32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\ic\ia32\ic-ia32.cc">
+      <Filter>src\ic\ia32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\ic\ia32\stub-cache-ia32.cc">
+      <Filter>src\ic\ia32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\interpreter\bytecode-array-builder.cc">
+      <Filter>src\interpreter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\interpreter\bytecode-array-iterator.cc">
+      <Filter>src\interpreter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\interpreter\bytecode-generator.cc">
+      <Filter>src\interpreter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\interpreter\bytecodes.cc">
+      <Filter>src\interpreter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\interpreter\control-flow-builders.cc">
+      <Filter>src\interpreter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\interpreter\interpreter.cc">
+      <Filter>src\interpreter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\profiler\allocation-tracker.cc">
+      <Filter>src\profiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\profiler\cpu-profiler.cc">
+      <Filter>src\profiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\profiler\heap-profiler.cc">
+      <Filter>src\profiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\profiler\heap-snapshot-generator.cc">
+      <Filter>src\profiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\profiler\profile-generator.cc">
+      <Filter>src\profiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\profiler\sampler.cc">
+      <Filter>src\profiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\profiler\strings-storage.cc">
+      <Filter>src\profiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\regexp\interpreter-irregexp.cc">
+      <Filter>src\regexp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\regexp\jsregexp.cc">
+      <Filter>src\regexp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\regexp\regexp-macro-assembler.cc">
+      <Filter>src\regexp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\regexp\regexp-macro-assembler-irregexp.cc">
+      <Filter>src\regexp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\regexp\regexp-macro-assembler-tracer.cc">
+      <Filter>src\regexp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\regexp\regexp-stack.cc">
+      <Filter>src\regexp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\regexp\ia32\regexp-macro-assembler-ia32.cc">
+      <Filter>src\regexp\ia32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\runtime\runtime.cc">
+      <Filter>src\runtime</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\runtime\runtime-array.cc">
+      <Filter>src\runtime</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\runtime\runtime-atomics.cc">
+      <Filter>src\runtime</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\runtime\runtime-classes.cc">
+      <Filter>src\runtime</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\runtime\runtime-collections.cc">
+      <Filter>src\runtime</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\runtime\runtime-compiler.cc">
+      <Filter>src\runtime</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\runtime\runtime-date.cc">
+      <Filter>src\runtime</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\runtime\runtime-debug.cc">
+      <Filter>src\runtime</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\runtime\runtime-forin.cc">
+      <Filter>src\runtime</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\runtime\runtime-function.cc">
+      <Filter>src\runtime</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\runtime\runtime-futex.cc">
+      <Filter>src\runtime</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\runtime\runtime-generator.cc">
+      <Filter>src\runtime</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\runtime\runtime-i18n.cc">
+      <Filter>src\runtime</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\runtime\runtime-internal.cc">
+      <Filter>src\runtime</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\runtime\runtime-interpreter.cc">
+      <Filter>src\runtime</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\runtime\runtime-json.cc">
+      <Filter>src\runtime</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\runtime\runtime-literals.cc">
+      <Filter>src\runtime</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\runtime\runtime-liveedit.cc">
+      <Filter>src\runtime</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\runtime\runtime-maths.cc">
+      <Filter>src\runtime</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\runtime\runtime-numbers.cc">
+      <Filter>src\runtime</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\runtime\runtime-object.cc">
+      <Filter>src\runtime</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\runtime\runtime-observe.cc">
+      <Filter>src\runtime</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\runtime\runtime-operators.cc">
+      <Filter>src\runtime</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\runtime\runtime-proxy.cc">
+      <Filter>src\runtime</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\runtime\runtime-regexp.cc">
+      <Filter>src\runtime</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\runtime\runtime-scopes.cc">
+      <Filter>src\runtime</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\runtime\runtime-simd.cc">
+      <Filter>src\runtime</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\runtime\runtime-strings.cc">
+      <Filter>src\runtime</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\runtime\runtime-symbol.cc">
+      <Filter>src\runtime</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\runtime\runtime-test.cc">
+      <Filter>src\runtime</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\runtime\runtime-typedarray.cc">
+      <Filter>src\runtime</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\runtime\runtime-uri.cc">
+      <Filter>src\runtime</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\snapshot\mksnapshot.cc">
+      <Filter>src\snapshot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\snapshot\serialize.cc">
+      <Filter>src\snapshot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\snapshot\snapshot-common.cc">
+      <Filter>src\snapshot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\snapshot\snapshot-empty.cc">
+      <Filter>src\snapshot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\snapshot\snapshot-source-sink.cc">
+      <Filter>src\snapshot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\third_party\fdlibm\fdlibm.cc">
+      <Filter>src\third_party\fdlibm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\accessors.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\address-map.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\allocation.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\allocation-site-scopes.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\api.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\api-natives.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\arguments.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\assembler.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\assert-scope.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\ast.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\ast-expression-visitor.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\ast-literal-reindexer.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\ast-numbering.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\ast-value-factory.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\background-parsing-task.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\bailout-reason.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\basic-block-profiler.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\bignum.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\bignum-dtoa.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\bit-vector.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\bootstrapper.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\builtins.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\cached-powers.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\cancelable-task.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\char-predicates.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\code-factory.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\codegen.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\code-stubs.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\code-stubs-hydrogen.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compilation-cache.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compilation-dependencies.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compilation-statistics.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\context-measure.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\contexts.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\conversions.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\counters.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\date.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\dateparser.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\deoptimizer.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\disassembler.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\diy-fp.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\dtoa.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\elements.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\elements-kind.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\execution.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\factory.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\fast-dtoa.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\fixed-dtoa.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\flags.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\frames.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\func-name-inferrer.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\futex-emulation.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\gdb-jit.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\global-handles.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\handles.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\identity-map.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\interface-descriptors.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\isolate.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\key-accumulator.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\layout-descriptor.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\log.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\log-utils.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\lookup.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\messages.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\modules.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\objects.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\objects-debug.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\objects-printer.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\optimizing-compile-dispatcher.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\ostreams.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\parameter-initializer-rewriter.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\parser.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\pattern-rewriter.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\pending-compilation-error-handler.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\preparse-data.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\preparser.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\prettyprinter.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\property.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\property-descriptor.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\register-configuration.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\rewriter.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\runtime-profiler.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\safepoint-table.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\scanner.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\scanner-character-streams.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\scopeinfo.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\scopes.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\startup-data-util.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\string-builder.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\string-stream.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\strtod.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\token.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\transitions.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\type-cache.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\type-feedback-vector.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\type-info.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\types.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\typing-asm.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\typing-reset.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\unicode.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\unicode-decoder.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\utils.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\v8.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\v8threads.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\variables.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\version.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\zone.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\full-codegen\full-codegen.cc">
+      <Filter>src\full-codegen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\full-codegen\ia32\full-codegen-ia32.cc">
+      <Filter>src\full-codegen\ia32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\v8_4_8\experimental-libraries.cc">
+      <Filter>src\gen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\v8_4_8\extras-libraries.cc">
+      <Filter>src\gen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\v8_4_8\libraries.cc">
+      <Filter>src\gen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\v8_4_8\code-stub-libraries.cc">
+      <Filter>src\gen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\v8_4_8\experimental-extras-libraries.cc">
+      <Filter>src\gen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\snapshot\natives-common.cc">
+      <Filter>src\snapshot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\libplatform\worker-thread.cc">
+      <Filter>src\libplatform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\libplatform\default-platform.cc">
+      <Filter>src\libplatform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\libplatform\task-queue.cc">
+      <Filter>src\libplatform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\x64\assembler-x64.cc">
+      <Filter>src\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\x64\builtins-x64.cc">
+      <Filter>src\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\x64\codegen-x64.cc">
+      <Filter>src\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\x64\code-stubs-x64.cc">
+      <Filter>src\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\x64\cpu-x64.cc">
+      <Filter>src\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\x64\deoptimizer-x64.cc">
+      <Filter>src\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\x64\disasm-x64.cc">
+      <Filter>src\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\x64\frames-x64.cc">
+      <Filter>src\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\x64\interface-descriptors-x64.cc">
+      <Filter>src\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\x64\macro-assembler-x64.cc">
+      <Filter>src\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\x64\simulator-x64.cc">
+      <Filter>src\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\x64\code-generator-x64.cc">
+      <Filter>src\compiler\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\compiler\x64\instruction-selector-x64.cc">
+      <Filter>src\compiler\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\crankshaft\x64\lithium-codegen-x64.cc">
+      <Filter>src\crankshaft\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\crankshaft\x64\lithium-gap-resolver-x64.cc">
+      <Filter>src\crankshaft\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\crankshaft\x64\lithium-x64.cc">
+      <Filter>src\crankshaft\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\debug\x64\debug-x64.cc">
+      <Filter>src\debug\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\full-codegen\x64\full-codegen-x64.cc">
+      <Filter>src\full-codegen\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\ic\x64\access-compiler-x64.cc">
+      <Filter>src\ic\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\ic\x64\handler-compiler-x64.cc">
+      <Filter>src\ic\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\ic\x64\ic-compiler-x64.cc">
+      <Filter>src\ic\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\ic\x64\ic-x64.cc">
+      <Filter>src\ic\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\ic\x64\stub-cache-x64.cc">
+      <Filter>src\ic\x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\v8_4_8\src\regexp\x64\regexp-macro-assembler-x64.cc">
+      <Filter>src\regexp\x64</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\v8_4_8\src\compiler\OWNERS">
+      <Filter>src\compiler</Filter>
+    </None>
+    <None Include="..\..\v8_4_8\src\compiler\STYLE">
+      <Filter>src\compiler</Filter>
+    </None>
+    <None Include="..\..\v8_4_8\src\crankshaft\OWNERS">
+      <Filter>src\crankshaft</Filter>
+    </None>
+    <None Include="..\..\v8_4_8\src\heap\OWNERS">
+      <Filter>src\heap</Filter>
+    </None>
+  </ItemGroup>
+</Project>

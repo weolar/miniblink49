@@ -54,6 +54,8 @@ class WebClipboardImpl : public blink::WebClipboard {
      void writeDataObject(const blink::WebDragData& data) override;
 
 private:
+    void clearClipboard();
+    void writeHTMLInternal(const blink::WebString& htmlText, const blink::WebURL& sourceUrl, const blink::WebString& plainText, bool writeSmartPaste);
     void writeBookmark(const String& titleData, const String& urlData);
     void writeBitmapFromHandle(HBITMAP source_hbitmap, const blink::IntSize& size);
     bool writeBitmap(const SkBitmap& bitmap);

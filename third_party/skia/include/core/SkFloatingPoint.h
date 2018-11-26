@@ -38,7 +38,7 @@ static inline float sk_float_copysign(float x, float y) {
 #    define SK_BUILD_WITH_CLANG_CL 0
 #endif
 #if (!SK_BUILD_WITH_CLANG_CL && __cplusplus >= 201103L) || (_MSC_VER >= 1800 && USING_VC6RT == 0) // weolar
-    return copysign(x, y);
+    return (float)copysign(x, y);
 
 // Posix has demanded 'float copysignf(float, float)' (from C99) since Issue 6.
 #elif defined(_POSIX_VERSION) && _POSIX_VERSION >= 200112L

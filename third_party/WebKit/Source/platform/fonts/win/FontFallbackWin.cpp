@@ -41,6 +41,13 @@
 // #include <unicode/locid.h>
 // #include <unicode/uchar.h>
 
+#if 0 //ndef MINIBLINK_NO_HARFBUZZ
+#include "third_party/icu/source/common/unicode/umachine.h"
+#include "third_party/icu/source/common/unicode/utrie2.h"
+#include "third_party/icu/source/common/unicode/utypes.h"
+#include "third_party/icu/source/common/unicode/mini_uchar.h"
+#endif
+
 namespace blink {
 
 namespace {
@@ -232,8 +239,10 @@ void initializeScriptFontMap(ScriptToFontMap& scriptFontMap, SkFontMgr* fontMana
         // For other locales, use the simplified Chinese font for Han.
         localeFamily = scriptFontMap[USCRIPT_SIMPLIFIED_HAN];
     }
+#else
+    //localeFamily = L"simsun";
 #endif // MINIBLINK_NOT_IMPLEMENTED
-    notImplemented();
+
     if (localeFamily)
         scriptFontMap[USCRIPT_HAN] = localeFamily;
 }
@@ -244,7 +253,7 @@ void initializeScriptFontMap(ScriptToFontMap& scriptFontMap, SkFontMgr* fontMana
 // FIXME: make this more efficient with a wider coverage
 UScriptCode getScriptBasedOnUnicodeBlock(int ucs4)
 {
-#ifdef MINIBLINK_NOT_IMPLEMENTED
+#if 0 //ndef MINIBLINK_NO_HARFBUZZ
     UBlockCode block = ublock_getCode(ucs4);
     switch (block) {
     case UBLOCK_CJK_SYMBOLS_AND_PUNCTUATION:
@@ -274,14 +283,15 @@ UScriptCode getScriptBasedOnUnicodeBlock(int ucs4)
     default:
         return USCRIPT_COMMON;
     }
-#endif // MINIBLINK_NOT_IMPLEMENTED
+#else
     notImplemented();
     return USCRIPT_COMMON;
+#endif // MINIBLINK_NO_HARFBUZZ
 }
 
 UScriptCode getScript(int ucs4)
 {
-#ifdef MINIBLINK_NOT_IMPLEMENTED
+#if 0 //ndef MINIBLINK_NO_HARFBUZZ
     UErrorCode err = U_ZERO_ERROR;
     UScriptCode script = uscript_getScript(ucs4, &err);
     // If script is invalid, common or inherited or there's an error,
@@ -289,7 +299,7 @@ UScriptCode getScript(int ucs4)
     if (script <= USCRIPT_INHERITED || U_FAILURE(err))
         script = getScriptBasedOnUnicodeBlock(ucs4);
     return script;
-#endif // MINIBLINK_NOT_IMPLEMENTED
+#endif // MINIBLINK_NO_HARFBUZZ
     notImplemented();
     return USCRIPT_COMMON;
 }
@@ -309,7 +319,7 @@ const UChar* getFontBasedOnUnicodeBlock(int ucs4, SkFontMgr* fontManager)
         }
         initialized = true;
     }
-#ifdef MINIBLINK_NOT_IMPLEMENTED
+#if 0 //ndef MINIBLINK_NO_HARFBUZZ
     UBlockCode block = ublock_getCode(ucs4);
     switch (block) {
     case UBLOCK_EMOTICONS:
@@ -326,7 +336,7 @@ const UChar* getFontBasedOnUnicodeBlock(int ucs4, SkFontMgr* fontManager)
     default:
         return 0;
     };
-#endif // MINIBLINK_NOT_IMPLEMENTED
+#endif // MINIBLINK_NO_HARFBUZZ
     return symbolFont;
 }
 

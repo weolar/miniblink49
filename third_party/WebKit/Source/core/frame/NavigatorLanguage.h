@@ -7,11 +7,13 @@
 
 #include "wtf/text/AtomicString.h"
 
+#include "core/frame/LocalFrame.h"
+
 namespace blink {
 
 class NavigatorLanguage {
 public:
-    NavigatorLanguage();
+    NavigatorLanguage(LocalFrame* frame);
 
     AtomicString language();
     virtual Vector<String> languages() = 0;
@@ -20,6 +22,7 @@ public:
 
 private:
     bool m_languagesChanged;
+    LocalFrame* m_frame_;
 };
 
 } // namespace blink

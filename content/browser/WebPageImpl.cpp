@@ -1,9 +1,8 @@
-﻿
-#include "content/browser/WebPageImpl.h"
+﻿#include "content/browser/WebPageImpl.h"
 
 #include "base/basictypes.h"
 #include "base/rand_util.h"
-
+#include "base/WindowsVersion.h"
 #include "third_party/WebKit/Source/wtf/text/qt4/UnicodeQt4.h"
 #include "third_party/WebKit/Source/core/frame/Frame.h"
 #include "third_party/WebKit/Source/core/frame/Settings.h"
@@ -30,6 +29,8 @@
 #include "third_party/WebKit/public/web/WebWindowFeatures.h"
 #include "third_party/WebKit/public/web/WebKit.h"
 #include "third_party/WebKit/public/web/WebFrameClient.h"
+#include "third_party/WebKit/public/web/WebDraggableRegion.h"
+#include "third_party/WebKit/public/web/WebDocument.h"
 #include "third_party/WebKit/Source/web/WebViewImpl.h"
 #include "third_party/WebKit/Source/web/FrameLoaderClientImpl.h"
 #include "third_party/WebKit/Source/web/WebLocalFrameImpl.h"
@@ -39,18 +40,23 @@
 #include "third_party/WebKit/Source/wtf/RefCountedLeakCounter.h"
 #include "third_party/WebKit/Source/wtf/text/WTFStringUtil.h"
 #include "third_party/WebKit/Source/bindings/core/v8/V8GCController.h"
-
-#include "skia/ext/bitmap_platform_device_win.h"
-
 #include "content/browser/WebPage.h"
 #include "content/browser/PlatformEventHandler.h"
-#include "content/browser/PopupMenuWin.h"
 #include "content/browser/WebFrameClientImpl.h"
+#include "content/browser/NavigationController.h"
+#include "content/browser/CheckReEnter.h"
+#include "content/ui/PopupMenuWin.h"
+#include "content/ui/PlatformCursor.h"
+#include "content/ui/RunFileChooserImpl.h"
+#include "content/ui/DragHandle.h"
+#include "content/ui/ToolTip.h"
 #include "content/web_impl_win/BlinkPlatformImpl.h"
 #include "content/web_impl_win/WebThreadImpl.h"
 #include "content/web_impl_win/npapi/PluginDatabase.h"
-
+#include "content/devtools/DevToolsClient.h"
+#include "content/devtools/DevToolsAgent.h"
 #include "cc/trees/LayerTreeHost.h"
+#include "cc/base/BdColor.h"
 
 #if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "cef/libcef/browser/CefBrowserHostImpl.h"
@@ -62,15 +68,24 @@
 #endif
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
 #include "wke/wkeWebView.h"
-#include "wke/wkeJsBindFreeTempObject.h"
+#include "wke/wkeUtil.h"
 #include "wke/wkeWebWindow.h"
+#include "wke/wkeGlobalVar.h"
 #endif
+#include "skia/ext/bitmap_platform_device_win.h"
+#if 0
+#include <fstream>
+#endif
+
 using namespace blink;
 
+extern DWORD g_paintToMemoryCanvasInUiThreadCount;
+extern DWORD g_mouseCount;
+extern bool g_isTouchEnabled;
+extern bool g_isMouseEnabled;
+
 namespace blink {
-
 bool saveDumpFile(const String& url, char* buffer, unsigned int size);
-
 }
 
 namespace content {
@@ -94,42 +109,69 @@ void WebPageImpl::unregisterDestroyNotif(DestroyNotif* destroyNotif)
         m_destroyNotifs.remove(pos);
 }
 
+int64_t WebPageImpl::m_firstFrameId = 0;
+
 WebPageImpl::WebPageImpl()
 {
     m_pagePtr = 0;
     m_bdColor = RGB(199, 237, 204) | 0xff000000;
-    m_memoryCanvas = nullptr;
-    m_needsCommit = true;
-    m_needsLayout = true;
-    m_isDrawDirty = true;
-    m_layerTreeHost = nullptr;
-    m_lastFrameTimeMonotonic = 0;
+    m_createDevToolsAgentTaskObserver = nullptr;
+    n_needAutoDrawToHwnd = true;
     m_webViewImpl = nullptr;
     m_debugCount = 0;
     m_enterCount = 0;
     m_hWnd = NULL;
     m_state = pageUninited;
     m_platformEventHandler = nullptr;
-    m_scheduleMessageCount = 0;
-    m_postpaintMessageCount = 0;
-    m_hasResize = false;
     m_postMouseLeave = false;
 #if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
     m_browser = nullptr;
 #endif
+    m_needsCommit = 0;
+    m_commitCount = 0;
+    m_needsLayout = 1;
+    m_layerDirty = 1;
+    m_executeMainFrameCount = 0;
+    m_lastFrameTimeMonotonic = 0;
+    m_popupHandle = nullptr;
     m_postCloseWidgetSoonMessage = false;
-    
-    m_layerTreeHost = new cc::LayerTreeHost(this);
-
+    m_navigationController = new NavigationController(this);
+    m_layerTreeHost = new cc::LayerTreeHost(this, this);
+    m_memoryCanvasForUi = nullptr;
+    m_disablePaint = false;
+    m_firstDrawCount = 0;
     m_webFrameClient = new content::WebFrameClientImpl();
+    m_platformCursor = nullptr;
+    m_devToolsClient = nullptr;
+    m_devToolsAgent = nullptr;
+    m_isEnterDebugLoop = false;
+    m_draggableRegion = ::CreateRectRgn(0, 0, 0, 0); // Create a HRGN representing the draggable window area.
+    m_pageNetExtraData = nullptr;
+
+    WebPageImpl* self = this;
+    m_dragHandle = new DragHandle(
+        [self] { self->onEnterDragSimulate(); },
+        [self] { self->onLeaveDragSimulate(); },
+        [self] { self->onDraggingSimulate(); });
+    m_isDragging = false;
+    m_isFirstEnterDrag = false;
+    m_autoRecordActionsCount = 0;
+    m_runningInMouseMessage = false;
+
+    m_screenInfo = nullptr;
+
+    m_toolTip = new ToolTip(true, 0.02);
+    m_validationMessageTip = new ToolTip(false, 1);
     
     WebLocalFrameImpl* webLocalFrameImpl = (WebLocalFrameImpl*)WebLocalFrame::create(WebTreeScopeType::Document, m_webFrameClient);
     m_webViewImpl = WebViewImpl::create(this);
     m_webViewImpl->setMainFrame(webLocalFrameImpl);
-    initSetting();
 
-    //m_frameLoaderClient = new FrameLoaderClientImpl(webLocalFrameImpl);
-    //m_frame->view()->setTransparent(m_useLayeredBuffer);
+    Frame* frame = toCoreFrame(m_webViewImpl->mainFrame());
+    if (0 == m_firstFrameId)
+        m_firstFrameId  = frame->frameID();
+
+    initSetting();
 
     m_platformEventHandler = new PlatformEventHandler(m_webViewImpl, m_webViewImpl);
 
@@ -144,9 +186,9 @@ WebPageImpl::WebPageImpl()
         if (!handler.get())
             return;
 
-        //     CefRefPtr<CefListValue> extraInfo = CefListValue::Create();
-        //     handler->OnRenderThreadCreated(extraInfo);
+        handler->OnRenderThreadCreated(nullptr);
         handler->OnWebKitInitialized();
+        handler->OnBrowserCreated(m_browser);
     }
 #endif
 }
@@ -156,82 +198,210 @@ WebPageImpl::~WebPageImpl()
     ASSERT(pageDestroyed == m_state);
     m_state = pageDestroyed;
 
-	delete m_layerTreeHost;
-	m_layerTreeHost = nullptr;
+    if (m_createDevToolsAgentTaskObserver) {
+        blink::Platform::current()->currentThread()->removeTaskObserver(m_createDevToolsAgentTaskObserver);
+        delete m_createDevToolsAgentTaskObserver;
+    }
+
+    if (m_screenInfo)
+        delete m_screenInfo;
+
+    delete m_toolTip;
+
+    if (m_memoryCanvasForUi)
+        delete m_memoryCanvasForUi;
+    m_memoryCanvasForUi = nullptr;
+    
+    m_navigationController = nullptr;
+
+    delete m_layerTreeHost;
+    m_layerTreeHost = nullptr;
 
     // 在Page::~Page()中销毁
     if (m_webFrameClient)
         delete m_webFrameClient;
     m_webFrameClient = nullptr;
 
-    if (m_memoryCanvas)
-        delete m_memoryCanvas;
-    m_memoryCanvas = nullptr;
-
     delete m_platformEventHandler;
     m_platformEventHandler = nullptr;
 
     m_pagePtr = 0;
+    m_popupHandle = nullptr;
+
+//     BlinkPlatformImpl* platform = (BlinkPlatformImpl*)blink::Platform::current();
+//     platform->setGcTimer(0);
+
+    String output = String::format("WebPageImpl::~WebPageImpl: %p\n", this);
+    OutputDebugStringA(output.utf8().data());
+}
+
+#if ENABLE_WKE == 1
+wke::CWebView* WebPageImpl::wkeWebView() const
+{
+    if (!m_pagePtr)
+        return nullptr;
+    return m_pagePtr->wkeWebView();
+}
+#endif
+
+class CreateDevToolsAgentTaskObserver : public blink::WebThread::TaskObserver {
+public:
+    CreateDevToolsAgentTaskObserver(WebPageImpl* parent)
+    {
+        m_parent = parent;
+    }
+    virtual ~CreateDevToolsAgentTaskObserver()
+    {
+    }
+
+    virtual void willProcessTask() override {}
+    virtual void didProcessTask() override
+    {
+        if (!m_parent->isDevToolsClient())
+            m_parent->createOrGetDevToolsAgent();
+        blink::Platform::current()->currentThread()->removeTaskObserver(this);
+        m_parent->didRunCreateDevToolsAgentTaskObserver();
+        delete this;
+    }
+
+private:
+    WebPageImpl* m_parent;
+};
+
+void WebPageImpl::didRunCreateDevToolsAgentTaskObserver()
+{
+    m_createDevToolsAgentTaskObserver = nullptr;
+}
+
+void WebPageImpl::init(WebPage* pagePtr, HWND hWnd)
+{
+    if (hWnd) {
+        setHWND(hWnd);
+
+        LONG windowStyle = GetWindowLongPtr(hWnd, GWL_EXSTYLE);
+        bool useLayeredBuffer = !!(windowStyle & WS_EX_LAYERED);
+        m_layerTreeHost->setHasTransparentBackground(useLayeredBuffer);
+    }
+    m_pagePtr = pagePtr;
+    m_webFrameClient->setWebPage(m_pagePtr);
+
+    m_webViewImpl->setFocus(true);
+
+    String output = String::format("WebPageImpl::init: %p\n", this);
+    OutputDebugStringA(output.utf8().data());
+
+    // DevToolsAgent必须先创建，不然无法记录执行环境，会导致console无法执行js
+    m_createDevToolsAgentTaskObserver = new CreateDevToolsAgentTaskObserver(this);
+    blink::Platform::current()->currentThread()->addTaskObserver(m_createDevToolsAgentTaskObserver);
+
+    m_state = pageInited;
 }
 
 bool WebPageImpl::checkForRepeatEnter()
 {
-    if (m_enterCount == 0)
+    if (m_isDragging && m_runningInMouseMessage)
+        return true;
+
+    if (m_enterCount == 0 && 0 == CheckReEnter::getEnterCount())
         return true;
     return false;
 }
 
-class CheckReEnter {
-public:
-    CheckReEnter(WebPageImpl* webPageImpl)
-    {
-        m_webPageImpl = webPageImpl;
-        ++m_webPageImpl->m_enterCount;
-    }
-
-    ~CheckReEnter()
-    {
-        --m_webPageImpl->m_enterCount;
-
-        if (WebPageImpl::pageDestroying == m_webPageImpl->m_state)
-            m_webPageImpl->doClose();
-    }
-
-private:
-    WebPageImpl* m_webPageImpl;
-};
-
-#define CHECK_FOR_REENTER(ret) \
-    if (!checkForRepeatEnter()) \
-        return ret; \
-    if (pageInited != m_state) \
-        return ret; \
-    CheckReEnter checker(this);
-
-#define CHECK_FOR_REENTER0() \
-    if (!checkForRepeatEnter()) \
-        return; \
-    if (pageInited != m_state) \
-        return; \
-    CheckReEnter checker(this);
-
 class AutoRecordActions {
 public:
-    AutoRecordActions(cc::LayerTreeHost* host)
+    AutoRecordActions(WebPageImpl* page, cc::LayerTreeHost* host, bool isComefromMainFrame)
+    {
+        m_isDragging = page->m_isDragging;
+        m_forceExit = false;
+
+        if (page->m_autoRecordActionsCount > 0) {
+            //RELEASE_ASSERT(page->m_isDragging && 1 == page->m_autoRecordActionsCount);
+            if (!(page->m_isDragging && 1 == page->m_autoRecordActionsCount)) {
+                m_forceExit = true;
+                return; // 在鼠标点击时候调用createwebview的时候调用wkeWake会触发这
+            }
+
+            init(page, host, false);
+            leave();
+        }
+        init(page, host, isComefromMainFrame);
+        enter();
+    }
+
+    void init(WebPageImpl* page, cc::LayerTreeHost* host, bool isComefromMainFrame)
     {
         m_host = host;
-        if (m_host)
-            m_host->beginRecordActions();
+        m_page = page;
+        m_isComefromMainFrame = isComefromMainFrame;
+    }
+
+    void enter()
+    {
+        m_page->m_autoRecordActionsCount++;
+
+        if (!m_host)
+            return;
+
+        m_lastFrameTimeMonotonic = WTF::monotonicallyIncreasingTime();
+
+        int layerDirty = m_page->m_layerDirty; 
+        int needsLayout = m_page->m_needsLayout; 
+        if (m_isComefromMainFrame) {
+            InterlockedExchange(reinterpret_cast<long volatile*>(&m_page->m_layerDirty), 0);
+            InterlockedExchange(reinterpret_cast<long volatile*>(&m_page->m_needsLayout), 0);
+        }
+        m_isLayout = (0 != layerDirty || 0 != needsLayout);
+        m_host->beginRecordActions(m_isComefromMainFrame);
     }
 
     ~AutoRecordActions()
     {
-        if (m_host)
-            m_host->endRecordActions();
+        if (m_forceExit)
+            return;
+        leave();
+        if (m_isDragging)
+            enter();
+    }
+
+    void leave()
+    {
+        m_page->m_autoRecordActionsCount--;
+        if (!m_host)
+            return;
+        
+        int layerDirty = m_page->m_layerDirty;
+        int needsLayout = m_page->m_needsLayout;
+        if (m_isComefromMainFrame) {
+            InterlockedExchange(reinterpret_cast<long volatile*>(&m_page->m_layerDirty), 0);
+            InterlockedExchange(reinterpret_cast<long volatile*>(&m_page->m_needsLayout), 0);
+        }
+        bool isLayout = 0 != layerDirty || 0 != needsLayout;
+
+        if ((isLayout || m_isLayout) && m_isComefromMainFrame) {
+            WebBeginFrameArgs frameArgs(m_lastFrameTimeMonotonic, 0, m_lastFrameTimeMonotonic - m_page->m_lastFrameTimeMonotonic);
+            m_page->m_webViewImpl->beginFrame(frameArgs);
+            m_page->m_webViewImpl->layout();
+        }
+
+        if (m_isComefromMainFrame)
+            m_host->recordDraw();
+        else if (isLayout || m_isLayout)
+            m_page->setNeedsCommitAndNotLayout();
+
+        m_host->endRecordActions();
+
+        m_page->m_lastFrameTimeMonotonic = m_lastFrameTimeMonotonic;
     }
 
 private:
+    WebPageImpl* m_page;
     cc::LayerTreeHost* m_host;
+    bool m_isLayout;
+    bool m_isComefromMainFrame;
+    bool m_isDragging;
+    double m_lastFrameTimeMonotonic;
+
+    bool m_forceExit;
 };
 
 #if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
@@ -257,7 +427,7 @@ static WebView* createWkeViewDefault(HWND parent, const WebString& name, const W
 {
     wke::CWebWindow* window = new wke::CWebWindow();
     WTF::String nameString = name;
-    Vector<UChar> nameBuf = WTF::ensureUTF16UChar(nameString);
+    Vector<UChar> nameBuf = WTF::ensureUTF16UChar(nameString, true);
 
     window->create(parent, WS_OVERLAPPEDWINDOW | WS_VISIBLE, 0, 100, 100, 570, 570);
 
@@ -284,8 +454,8 @@ WebView* WebPageImpl::createWkeView(WebLocalFrame* creator,
 
     wke::CWebViewHandler& handler = m_pagePtr->wkeHandler();
     if (!handler.createViewCallback)
-        return createWkeViewDefault(m_hWnd, name, url);
-
+        return createWkeViewDefault(/*m_hWnd*/nullptr, name, url);
+    
     wkeNavigationType type = WKE_NAVIGATION_TYPE_LINKCLICK;
     wke::CString wkeUrl(url.data(), url.length());
     wkeWindowFeatures windowFeatures;
@@ -301,8 +471,8 @@ WebView* WebPageImpl::createWkeView(WebLocalFrame* creator,
     windowFeatures.fullscreen = features.fullscreen;
 
     wke::CWebView* createdWebView = handler.createViewCallback(m_pagePtr->wkeWebView(), handler.createViewCallbackParam, type, &wkeUrl, &windowFeatures);
-    if (!createdWebView)
-        return createWkeViewDefault(m_hWnd, name, url);
+    if (!createdWebView || createdWebView == m_pagePtr->wkeWebView())
+        return nullptr;
 
     if (!createdWebView->webPage())
         return nullptr; 
@@ -324,102 +494,28 @@ WebView* WebPageImpl::createView(WebLocalFrame* creator,
 #if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
     return createCefView(creator, request, features, name, policy, suppressOpener);
 #else
-	return nullptr;
+    return nullptr;
 #endif
 }
 
-void WebPageImpl::init(WebPage* pagePtr, HWND hWnd)
+DevToolsAgent* WebPageImpl::createOrGetDevToolsAgent()
 {
-    m_hWnd = hWnd;
-
-    LONG windowStyle = GetWindowLongPtr(hWnd, GWL_EXSTYLE);
-    m_useLayeredBuffer = !!((windowStyle)& WS_EX_LAYERED);
-
-    m_pagePtr = pagePtr;
-    m_webFrameClient->setWebPage(m_pagePtr);
-
-    m_webViewImpl->setFocus(true);
-
-    m_state = pageInited;
+    if (m_devToolsAgent)
+        return m_devToolsAgent;
+    m_devToolsAgent = new DevToolsAgent(m_pagePtr, (blink::WebLocalFrame*)m_webViewImpl->mainFrame());
+    return m_devToolsAgent;    
 }
 
-void WebPageImpl::clearPaintWhenLayeredWindow(skia::PlatformCanvas* canvas, const IntRect& rect)
+DevToolsClient* WebPageImpl::createOrGetDevToolsClient()
 {
-    if (!m_useLayeredBuffer)
-        return;
-
-    // When using transparency mode clear the rectangle before painting.
-    SkPaint clearPaint;
-    clearPaint.setARGB(0, 0xf0, 0, 0);
-    clearPaint.setXfermodeMode(SkXfermode::kClear_Mode);
-
-    SkRect skrc;
-    skrc.set(rect.x(), rect.y(), rect.x() + rect.width(), rect.y() + rect.height());
-    canvas->drawRect(skrc, clearPaint);
-}
-
-void WebPageImpl::mergeDirtyList()
-{ 
-    while (doMergeDirtyList(true)) {}; 
-}
-
-bool WebPageImpl::doMergeDirtyList(bool forceMerge)
-{
-    int nDirty = (int)m_paintMessageQueue.size();
-    if (nDirty < 1) {
-        return false;
-    }
-
-    int bestDelta = forceMerge ? 0x7FFFFFFF : 0;
-    int mergeA = 0;
-    int mergeB = 0;
-    for (int i = 0; i < nDirty - 1; i++) {
-        for (int j = i + 1; j < nDirty; j++) {
-            int delta = intUnionArea(&m_paintMessageQueue[i], &m_paintMessageQueue[j]) -
-                intRectArea(&m_paintMessageQueue[i]) - intRectArea(&m_paintMessageQueue[j]);
-            if (bestDelta > delta) {
-                mergeA = i;
-                mergeB = j;
-                bestDelta = delta;
-            }
-        }
-    }
-
-    if (mergeA != mergeB) {
-        m_paintMessageQueue[mergeA].unite(m_paintMessageQueue[mergeB]);
-        for (int i = mergeB + 1; i < nDirty; i++)
-            m_paintMessageQueue[i - 1] = m_paintMessageQueue[i];
-
-        m_paintMessageQueue.removeLast();
-        return true;
-    }
-
-    return false;
-}
-
-void WebPageImpl::postPaintMessage(const IntRect* paintRect)
-{
-    if (!paintRect || paintRect->isEmpty() || !m_clientRect.intersects(*paintRect))
-        return;
-
-    IntRect dirtyRect = *paintRect;
-    dirtyRect.intersect(m_clientRect);
-
-// 	String outString = String::format("WebPageImpl::postPaintMessage: (%d %d)(%d %d)\n", dirtyRect.x(), dirtyRect.y(), dirtyRect.width(), dirtyRect.height());
-// 	OutputDebugStringW(outString.charactersWithNullTermination().data());
-
-    m_dirtyRects.append(dirtyRect);
-    setNeedsCommitAndNotLayout();
+    if (m_devToolsClient)
+        return m_devToolsClient;
+    m_devToolsClient = new DevToolsClient(m_pagePtr, (blink::WebLocalFrame*)m_webViewImpl->mainFrame());
+    return m_devToolsClient;
 }
 
 void WebPageImpl::testPaint()
 {
-    for (size_t index = 0; index < m_paintMessageQueue.size(); ++index) {
-        IntRect* paintRect = &m_paintMessageQueue[index];
-        WCHAR msg[100] = { 0 };
-        swprintf(msg, L"testPaint: %d %d %x\n", paintRect->y(), paintRect->height(), index);
-        OutputDebugStringW(msg);
-    }
 }
 
 void WebPageImpl::freeV8TempObejctOnOneFrameBefore()
@@ -429,229 +525,13 @@ void WebPageImpl::freeV8TempObejctOnOneFrameBefore()
 #endif
 }
 
-bool WebPageImpl::drawFrame()
-{
-    if (0 != m_scheduleMessageCount)
-        DebugBreak();
-
-    bool needClearCommit = m_layerTreeHost->preDrawFrame(); // 这里也会发起Commit
-
-    m_scheduleMessageCount++;
-
-    for (size_t i = 0; i < m_dirtyRects.size(); ++i) {
-        const blink::IntRect& r = m_dirtyRects[i];
-        paintToPlatformContext(r);
-    }
-
-	m_layerTreeHost->postDrawFrame();
-
-    m_dirtyRects.clear();
-    m_paintMessageQueue.clear();
-    m_scheduleMessageCount--;
-
-    return needClearCommit;
-}
-
-void WebPageImpl::firePaintEvent(HDC hdc, const RECT* paintRect)
-{
-    CHECK_FOR_REENTER0();
-    freeV8TempObejctOnOneFrameBefore();
-
-    if (!m_memoryCanvas || m_clientRect.isEmpty())
-        return;
-
-#if 0
-    HPEN hpen = CreatePen(PS_SOLID, 10, RGB(11, 22, 33));
-    HBRUSH hbrush = CreateSolidBrush(RGB(0xf3, 22, 33));
-
-    SelectObject(hdc, hpen);
-    SelectObject(hdc, hbrush);
-
-    Rectangle(hdc, paintRect->left, paintRect->top, paintRect->right, paintRect->bottom);
-
-    DeleteObject(hpen);
-    DeleteObject(hbrush);
-#endif
-
-    beginMainFrame();
-
-    skia::DrawToNativeContext(m_memoryCanvas, hdc, paintRect->left, paintRect->top, paintRect);
-}
-
-void WebPageImpl::paintToPlatformContext(const IntRect& paintRect)
-{
-    m_paintRect = paintRect;
-
-    bool needsFullTreeSync = true; // false; 先全部层都更新，这样滚动条才能被刷新到
-    if ((!m_memoryCanvas || m_hasResize) && !m_clientRect.isEmpty()) {
-        m_hasResize = false;
-        needsFullTreeSync = true;
-        m_paintRect = m_clientRect;
-
-        if (m_memoryCanvas)
-            delete m_memoryCanvas;
-        m_memoryCanvas = skia::CreatePlatformCanvas(m_clientRect.width(), m_clientRect.height(), !m_useLayeredBuffer);
-
-        SkPaint clearColorPaint;
-        clearColorPaint.setColor(0x0); // 0xfff0504a
-        clearColorPaint.setXfermodeMode(SkXfermode::kSrcOver_Mode); // SkXfermode::kSrcOver_Mode
-        m_memoryCanvas->drawRect((SkRect)m_clientRect, clearColorPaint);
-    }
-
-    m_paintRect.intersect(m_clientRect);
-    if (m_paintRect.isEmpty())
-        return;
-    
-    if (!m_memoryCanvas) {
-        ASSERT(false);
-        return;
-    }
-
-    m_isDrawDirty = true;
-    clearPaintWhenLayeredWindow(m_memoryCanvas, m_paintRect);
-
-    HDC hMemoryDC = skia::BeginPlatformPaint(m_memoryCanvas);
-
-    drawToCanvas(m_paintRect, m_memoryCanvas, needsFullTreeSync); // 绘制脏矩形
-
-    if (m_useLayeredBuffer) { // 再把内存dc画到hdc上
-        RECT rtWnd;
-        ::GetWindowRect(m_pagePtr->getHWND(), &rtWnd);
-        m_winodwRect = winRectToIntRect(rtWnd);
-        //skia::DrawToNativeLayeredContext(m_memoryCanvas.get(), hdc, m_winodwRect.x(), m_winodwRect.y(), &((RECT)m_clientRect));
-    } else {
-        drawDebugLine(m_memoryCanvas, m_paintRect);
-#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
-		if (m_browser) { // 使用wke接口不由此上屏
-			HDC hdc = GetDC(m_pagePtr->getHWND());
-			skia::DrawToNativeContext(m_memoryCanvas, hdc, m_paintRect.x(), m_paintRect.y(), &intRectToWinRect(m_paintRect));
-			ReleaseDC(m_pagePtr->getHWND(), hdc);
-		}
-#endif
-    }
-
-#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
-    if (m_pagePtr->wkeHandler().paintUpdatedCallback) {
-        m_pagePtr->wkeHandler().paintUpdatedCallback(
-            m_pagePtr->wkeWebView(), 
-            m_pagePtr->wkeHandler().paintUpdatedCallbackParam, 
-            hMemoryDC, m_paintRect.x(), m_paintRect.y(), m_paintRect.width(), m_paintRect.height());
-    }
-#endif
-
-    skia::EndPlatformPaint(m_memoryCanvas);
-}
-
-void WebPageImpl::drawDebugLine(skia::PlatformCanvas* memoryCanvas, const IntRect& paintRect)
-{
-    m_debugCount++;
-
-#if 0
-    HBRUSH hbrush;
-    HPEN hpen;
-    hbrush = ::CreateSolidBrush(rand()); // 创建蓝色画刷
-    ::SelectObject(hdc, hbrush);
-    //::Rectangle(hdc, m_paintRect.x(), m_paintRect.y(), m_paintRect.maxX(), m_paintRect.maxY());
-    ::Rectangle(hdc, 220, 40, 366, 266);
-    ::DeleteObject(hbrush);
-#endif
-
-#if 0 // debug
-    OwnPtr<GraphicsContext> context = GraphicsContext::deprecatedCreateWithCanvas(memoryCanvas, GraphicsContext::NothingDisabled);
-    context->setStrokeStyle(SolidStroke);
-    context->setStrokeColor(0xff000000 | (::GetTickCount() + base::RandInt(0, 0x1223345)));
-    context->drawLine(IntPoint(paintRect.x(), paintRect.y()), IntPoint(paintRect.maxX(), paintRect.maxY()));
-    context->drawLine(IntPoint(paintRect.maxX(), paintRect.y()), IntPoint(paintRect.x(), paintRect.maxY()));
-    context->strokeRect(paintRect, 2);
-#endif
-
-#if 0
-	String outString = String::format("drawDebugLine:%d %d %d %d, %d\n", m_paintRect.x(), m_paintRect.y(), m_paintRect.width(), m_paintRect.height(), m_debugCount);
-	OutputDebugStringW(outString.charactersWithNullTermination().data());
-#endif
-}
-
-void WebPageImpl::drawToCanvas(const IntRect& dirtyRect, skia::PlatformCanvas* canvas, bool needsFullTreeSync)
-{
-    if (dirtyRect.isEmpty() || !m_layerTreeHost)
-        return;
-
-    setPainting(true);
-
-    canvas->save();
-    canvas->clipRect(dirtyRect);
-
-    SkPaint paint;
-    paint.setAntiAlias(false);
-    paint.setColor(0xffffffff); // 0xfff0504a
-    paint.setXfermodeMode(SkXfermode::kSrcOver_Mode); // SkXfermode::kSrcOver_Mode
-    canvas->drawRect((SkRect)dirtyRect, paint);
-
-#if 0
-    m_layerTreeHost->updateLayers(canvas, dirtyRect, needsFullTreeSync);
-#else
-    m_layerTreeHost->drawToCanvas(canvas, dirtyRect);
-#endif
-
-    canvas->restore();
-    setPainting(false);
-}
-
-HDC WebPageImpl::viewDC()
-{
-    if (!m_memoryCanvas)
-        return nullptr;
-
-    skia::BitmapPlatformDevice* device = (skia::BitmapPlatformDevice*)skia::GetPlatformDevice(skia::GetTopDevice(*m_memoryCanvas));
-    if (device)
-        return device->GetBitmapDCUgly();
-    return nullptr;
-}
-
-void WebPageImpl::paintToBit(void* bits, int pitch)
-{
-    if (0 == pitch)
-        return;
-
-    CHECK_FOR_REENTER0();
-
-    beginMainFrame();
-
-    if (!m_memoryCanvas)
-        return;
-
-    int width = m_clientRect.width();
-    int height = m_clientRect.height();
-
-    DWORD cBytes = width * height * 4;
-    SkBaseDevice* device = (SkBaseDevice*)m_memoryCanvas->getTopDevice();
-    if (!device)
-        return;
-    const SkBitmap& bitmap = device->accessBitmap(false);
-    if (bitmap.info().width() != width || bitmap.info().height() != height)
-        return;
-    uint32_t* pixels = bitmap.getAddr32(0, 0);
-
-    if (pitch == 0 || pitch == width * 4) {
-        memcpy(bits, pixels, width * height * 4);
-    } else {
-        unsigned char* src = (unsigned char*)pixels;
-        unsigned char* dst = (unsigned char*)bits;
-        for (int i = 0; i < height; ++i) {
-            memcpy(dst, src, width * 4);
-            src += width * 4;
-            dst += pitch;
-        }
-    }
-
-    m_isDrawDirty = false;
-}
-
 void WebPageImpl::close()
 {
-	ASSERT(isMainThread());
+    ASSERT(isMainThread());
     if (pageInited != m_state)
         return;
+
+    m_state = pageDestroying;
 
     if (m_enterCount == 0) { // 把dragState().m_dragSrc之类的占用抵消
         WTF::TemporaryChange<int> temporaryChange(m_enterCount, 0);
@@ -663,8 +543,6 @@ void WebPageImpl::close()
         fireMouseEvent(m_hWnd, WM_RBUTTONUP, 0, lParam, nullptr);
     }
 
-    m_state = pageDestroying;
-    
     // 在KFrameLoaderClient::frameLoaderDestroyed()也会调用到此，所以在给脚本发消息的时候注意一下
     // WebCore::WebPage::windowCloseRequested+0x1a           
     // WebCore::KFrameLoaderClient::frameLoaderDestroyed+0xc  
@@ -691,42 +569,76 @@ void WebPageImpl::close()
 
 void WebPageImpl::doClose()
 {
-    for (size_t i = 0; i < m_destroyNotifs.size(); ++i)
-        m_destroyNotifs[i]->destroy();
-
-    m_layerTreeHost->applyActions(false);
+    m_layerTreeHost->requestApplyActionsToRunIntoCompositeThread(false);
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
-	if (!m_pagePtr->wkeHandler().isWke) {
+    if (!m_pagePtr->wkeHandler().isWke) {
 #endif
-		if (m_hWnd) {
-			::SetWindowLongPtr(m_hWnd, GWLP_USERDATA, 0);
-			::KillTimer(m_hWnd, (UINT_PTR)this);
-			::DestroyWindow(m_hWnd);
-		}
+        if (m_hWnd) {
+            ::SetWindowLongPtr(m_hWnd, GWLP_USERDATA, 0);
+            ::KillTimer(m_hWnd, (UINT_PTR)this);
+            ::DestroyWindow(m_hWnd);
+        }
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
-	}
+    }
 #endif
 
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
+    if (CefContentClient::Get()) {
+        CefRefPtr<CefApp> application = CefContentClient::Get()->rendererApplication();
+        if (application.get()) {
+            CefRefPtr<CefRenderProcessHandler> handler = application->GetRenderProcessHandler();
+            if (handler.get())
+                handler->OnBrowserDestroyed(m_browser);
+        }
+    }
+#endif
+
+
+    if (m_hWnd) {
+        if (::IsWindow(m_hWnd)) {
+            ::RevokeDragDrop(m_hWnd);
+            ASSERT(0 == m_dragHandle->getRefCount());
+        } else {
+            ASSERT(1 == m_dragHandle->getRefCount());
+        }
+    }
+
+    delete m_dragHandle;
+    m_dragHandle = nullptr;
 
     content::WebThreadImpl* threadImpl = nullptr;
     threadImpl = (content::WebThreadImpl*)(blink::Platform::current()->currentThread());
 
-    //blink::V8GCController::collectGarbage(v8::Isolate::GetCurrent());
-    m_webViewImpl->mainFrameImpl()->close();
+    if (m_devToolsClient)
+        delete m_devToolsClient;
+
+    if (m_devToolsAgent) {
+        m_devToolsAgent->onDetach();
+        delete m_devToolsAgent;
+    }
+
+    //m_webViewImpl->mainFrameImpl()->close();
     m_webViewImpl->close();
-    //v8::Isolate::GetCurrent()->CollectAllGarbage("WebPage close");
+
+    for (size_t i = 0; i < m_destroyNotifs.size(); ++i)
+        m_destroyNotifs[i]->destroy();
 
     m_state = pageDestroyed;
 }
 
 void WebPageImpl::closeWidgetSoon()
 {
-	ASSERT(isMainThread());
+    ASSERT(isMainThread());
 #if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
-	if (m_browser && !m_postCloseWidgetSoonMessage)
+    if (m_browser && !m_postCloseWidgetSoonMessage)
         blink::Platform::current()->currentThread()->postTask(FROM_HERE, WTF::bind(&CefBrowserHostImpl::CloseBrowser, m_browser, true));
 #endif
-	m_postCloseWidgetSoonMessage = true;
+    m_postCloseWidgetSoonMessage = true;
+}
+
+void WebPageImpl::gc()
+{
+    m_layerTreeHost->gc();
 }
 
 void WebPageImpl::showDebugNodeData()
@@ -744,120 +656,6 @@ class CommitTask : public blink::WebThread::Task, public WebPageImpl::DestroyNot
 public:
     CommitTask(WebPageImpl* client)
         : m_client(client)
-	{
-        m_client->registerDestroyNotif(this);
-#ifndef NDEBUG
-		commitTaskCounter.increment();
-#endif
-	}
-
-    virtual ~CommitTask() OVERRIDE
-    {
-        if (m_client)
-            m_client->unregisterDestroyNotif(this);
-#ifndef NDEBUG
-		commitTaskCounter.decrement();
-#endif
-	}
-
-    virtual void destroy()
-    {
-        m_client = nullptr;
-    }
-
-    virtual void run() OVERRIDE
-    {
-        if (m_client)
-            m_client->beginMainFrame();
-    }
-
-private:
-    WebPageImpl* m_client;
-};
-
-void WebPageImpl::setNeedsCommitAndNotLayout()
-{
-	if (m_needsCommit)
-		return;
-	m_needsCommit = true;
-#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
-	if (m_browser) {
-        m_browser->SetNeedHeartbeat();
-	} else {
-#endif
-        blink::Platform* platfrom = blink::Platform::current();
-        WebThreadImpl* threadImpl = (WebThreadImpl*)platfrom->mainThread();
-        threadImpl->postTask(FROM_HERE, new CommitTask(this));
-#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
-    }
-#endif
-}
-
-void WebPageImpl::setNeedsCommit()
-{
-    m_needsLayout = true;
-    setNeedsCommitAndNotLayout();
-}
-
-void WebPageImpl::clearNeedsCommit()
-{
-    m_needsCommit = false;
-#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
-    if (m_browser)
-        m_browser->ClearNeedHeartbeat();
-#endif
-}
-
-void WebPageImpl::beginMainFrame()
-{
-	bool needsCommit = m_needsCommit;
-	if (pageInited != m_state)
-		return;
-		
-	if (needsCommit) {
-		executeMainFrame();
-		drawFrame();
-	}
-}
-
-void WebPageImpl::executeMainFrame()
-{
-    freeV8TempObejctOnOneFrameBefore();
-
-    clearNeedsCommit();
-
-    double lastFrameTimeMonotonic = WTF::monotonicallyIncreasingTime();
-    
-    m_layerTreeHost->beginRecordActions();
-
-    if (m_needsLayout) {
-        WebBeginFrameArgs frameArgs(lastFrameTimeMonotonic, 0, lastFrameTimeMonotonic - m_lastFrameTimeMonotonic);
-        m_webViewImpl->beginFrame(frameArgs);
-        m_webViewImpl->layout();
-        m_needsLayout = false;
-    }
-
-    m_layerTreeHost->recordDraw();
-    m_layerTreeHost->endRecordActions();
-
-    m_lastFrameTimeMonotonic = lastFrameTimeMonotonic;
-
-#ifndef NDEBUG
-    if (0) {
-        showDebugNodeData();
-        m_layerTreeHost->showDebug();
-        blink::memoryCache()->evictResources();
-        V8GCController::collectGarbage(v8::Isolate::GetCurrent());
-        Heap::collectGarbage(ThreadState::HeapPointersOnStack, ThreadState::GCWithSweep, Heap::ForcedGC);
-        v8::Isolate::GetCurrent()->LowMemoryNotification();
-    }
-#endif    
-}
-
-class TestTask : public blink::WebThread::Task, public WebPageImpl::DestroyNotif {
-public:
-    TestTask(WebPageImpl* client)
-        : m_client(client)
     {
         m_client->registerDestroyNotif(this);
 #ifndef NDEBUG
@@ -865,33 +663,139 @@ public:
 #endif
     }
 
-    virtual ~TestTask() OVERRIDE
+    virtual ~CommitTask() override
     {
-        if (m_client)
+        if (m_client) {
             m_client->unregisterDestroyNotif(this);
+        }
 #ifndef NDEBUG
         commitTaskCounter.decrement();
 #endif
     }
 
-    virtual void destroy()
+    virtual void destroy() override
     {
         m_client = nullptr;
     }
 
-    virtual void run() OVERRIDE
+    virtual void run() override
     {
-        if (m_client)
-            m_client->loadURL(WebPage::kMainFrameId, L"https://map.baidu.com/", blink::Referrer(), nullptr);
+        if (!m_client)
+            return;
+        
+        atomicDecrement(&m_client->m_commitCount);
+        if (!doRun())
+            m_client->clearNeedsCommit();
     }
 
 private:
+    bool doRun()
+    {
+        m_client->beginMainFrame();
+        return true;
+    }
+
     WebPageImpl* m_client;
 };
 
+void WebPageImpl::setNeedsCommitAndNotLayout()
+{
+    if (0 != m_needsCommit)
+        return;
+    atomicIncrement(&m_needsCommit);
+
+#if 0 // (defined ENABLE_CEF) && (ENABLE_CEF == 1)
+    if (m_browser) {
+        m_browser->SetNeedHeartbeat();
+    } else {
+#endif
+        if (0 == m_commitCount) {
+            atomicIncrement(&m_commitCount);
+            blink::Platform* platfrom = blink::Platform::current();
+            WebThreadImpl* threadImpl = (WebThreadImpl*)platfrom->mainThread();
+            threadImpl->postTask(FROM_HERE, new CommitTask(this));
+        }
+#if 0 // (defined ENABLE_CEF) && (ENABLE_CEF == 1)
+    }
+#endif
+}
+
+void WebPageImpl::setNeedsCommit()
+{
+    InterlockedExchange(reinterpret_cast<long volatile*>(&m_needsLayout), 1);
+    setNeedsCommitAndNotLayout();
+}
+
+void WebPageImpl::clearNeedsCommit()
+{
+    atomicDecrement(&m_needsCommit);
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
+    if (m_browser)
+        m_browser->ClearNeedHeartbeat();
+#endif
+}
+
+void WebPageImpl::onLayerTreeDirty()
+{
+    InterlockedExchange(reinterpret_cast<long volatile*>(&m_layerDirty), 1);
+    setNeedsCommitAndNotLayout();
+}
+
+void WebPageImpl::didUpdateLayout()
+{
+    //onLayerTreeDirty();
+    setNeedsCommit();
+}
+
+void WebPageImpl::beginMainFrame()
+{
+    bool needsCommit = m_needsCommit;
+    if (pageInited != m_state)
+        return;
+
+    if (needsCommit) {
+        executeMainFrame();
+        m_layerTreeHost->requestDrawFrameToRunIntoCompositeThread();
+    }
+}
+
+void WebPageImpl::executeMainFrame()
+{
+    freeV8TempObejctOnOneFrameBefore();
+    clearNeedsCommit();
+
+    if (0 != m_executeMainFrameCount || m_isEnterDebugLoop)
+        return;
+    atomicIncrement(&m_executeMainFrameCount);
+
+    double lastFrameTimeMonotonic = WTF::monotonicallyIncreasingTime();
+
+    if (!m_layerTreeHost->canRecordActions()) {
+        setNeedsCommitAndNotLayout();
+        atomicDecrement(&m_executeMainFrameCount);
+        return;
+    }
+    
+    {
+        AutoRecordActions autoRecordActions(this, m_layerTreeHost, true);
+    }
+    
+#ifndef NDEBUG
+    if (0) {
+        showDebugNodeData();
+        m_layerTreeHost->showDebug();
+        blink::memoryCache()->evictResources();
+        // V8GCController::collectGarbage(v8::Isolate::GetCurrent());
+        Heap::collectGarbage(ThreadState::HeapPointersOnStack, ThreadState::GCWithSweep, Heap::ForcedGC);
+        v8::Isolate::GetCurrent()->LowMemoryNotification();
+    }
+#endif
+    atomicDecrement(&m_executeMainFrameCount);
+}
+
 bool WebPageImpl::fireTimerEvent()
 {
-    CHECK_FOR_REENTER(false);
+    CHECK_FOR_REENTER(this, false);
         
     beginMainFrame();
     return false;
@@ -899,7 +803,6 @@ bool WebPageImpl::fireTimerEvent()
 
 void WebPageImpl::fireResizeEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    CHECK_FOR_REENTER0();
     freeV8TempObejctOnOneFrameBefore();
     if (pageInited != m_state)
         return;
@@ -922,18 +825,24 @@ IntRect WebPageImpl::caretRect() const
         return IntRect();
 
     blink::IntRect caret;
-    if (RefPtrWillBeRawPtr<Range> range = targetFrame->selection().selection().toNormalizedRange()) {
-        blink::ExceptionCode ec = 0;
-       // RefPtr<blink::Range> tempRange = range->cloneRange(ec);
+    if (RefPtrWillBeRawPtr<Range> range = targetFrame->selection().selection().toNormalizedRange())
         caret = targetFrame->editor().firstRectForRange(range.get());
-    }
 
     caret = targetFrame->view()->contentsToViewport(caret);
+
+    if (!targetFrame->selection().hasEditableStyle() && !targetFrame->selection().isContentEditable())
+        caret.setHeight(0);
+
     return caret;
 }
 
 void WebPageImpl::setViewportSize(const IntSize& size)
 {
+    if (size.isEmpty())
+        return;
+
+    if (m_viewportSize == size)
+        return;
     m_viewportSize = size;
 
     ASSERT(pageInited == m_state);
@@ -943,24 +852,361 @@ void WebPageImpl::setViewportSize(const IntSize& size)
     if (size.isEmpty())
         return;
 
-    AutoRecordActions autoRecordActions(m_layerTreeHost);
-    
+    if (checkForRepeatEnter()) {
+        CheckReEnter checker(this);
+        AutoRecordActions autoRecordActions(this, m_layerTreeHost, false);
+    }
+
     if (m_layerTreeHost)
         m_layerTreeHost->setViewportSize(size);
 
     m_webViewImpl->resize(size);
-
-    m_clientRect = IntRect(0, 0, size.width(), size.height());
-    m_hasResize = true;
 }
 
-void WebPageImpl::repaintRequested(const IntRect& windowRect)
+void WebPageImpl::firePaintEvent(HDC hdc, const RECT* paintRect)
 {
+    CHECK_FOR_REENTER(this, (void)0);
     freeV8TempObejctOnOneFrameBefore();
-    if (pageInited != m_state || windowRect.isEmpty() || windowRect.maxY() < 0 || windowRect.maxX() < 0)
+
+    beginMainFrame();
+
+    if (m_layerTreeHost)
+        m_layerTreeHost->firePaintEvent(hdc, paintRect);
+}
+
+HDC WebPageImpl::viewDC()
+{
+    bool useLayeredBuffer = m_layerTreeHost->getHasTransparentBackground();
+    if (!m_memoryCanvasForUi && !m_viewportSize.isEmpty()) {
+        m_memoryCanvasForUi = skia::CreatePlatformCanvas(m_viewportSize.width(), m_viewportSize.height(), !useLayeredBuffer);
+        cc::LayerTreeHost::clearCanvas(m_memoryCanvasForUi, IntRect(0, 0, m_viewportSize.width(), m_viewportSize.height()), useLayeredBuffer);
+    }
+    if (!m_memoryCanvasForUi)
+        return nullptr;
+
+    skia::BitmapPlatformDevice* device = (skia::BitmapPlatformDevice*)skia::GetPlatformDevice(skia::GetTopDevice(*m_memoryCanvasForUi));
+    if (!device)
+        return nullptr;
+    HDC hDC = device->GetBitmapDCUgly(m_hWnd);
+    return hDC;
+}
+
+void WebPageImpl::copyToMemoryCanvasForUi()
+{
+    bool useLayeredBuffer = m_layerTreeHost->getHasTransparentBackground();
+    if (m_hWnd && !useLayeredBuffer) {
+        LONG windowStyle = GetWindowLongPtr(m_hWnd, GWL_EXSTYLE);
+        useLayeredBuffer = !!(windowStyle & WS_EX_LAYERED);
+        m_layerTreeHost->setHasTransparentBackground(useLayeredBuffer);
+    }
+
+    SkCanvas* memoryCanvas = m_layerTreeHost->getMemoryCanvasLocked();
+    if (!memoryCanvas) {
+        m_layerTreeHost->releaseMemoryCanvasLocked();
+        return;
+    }
+    
+    bool isCreatedThisTime = false;
+    int width = memoryCanvas->imageInfo().width();
+    int height = memoryCanvas->imageInfo().height();
+    if (0 != width && 0 != height) {
+        if ((!m_memoryCanvasForUi && 0 != width * height) || 
+            (m_memoryCanvasForUi && (width != m_memoryCanvasForUi->imageInfo().width() || height != m_memoryCanvasForUi->imageInfo().height()))) {
+            if (m_memoryCanvasForUi)
+                delete m_memoryCanvasForUi;
+            m_memoryCanvasForUi = skia::CreatePlatformCanvas(width, height, !useLayeredBuffer);
+            cc::LayerTreeHost::clearCanvas(m_memoryCanvasForUi, IntRect(0, 0, width, height), useLayeredBuffer);
+            isCreatedThisTime = true;
+        }
+    } else if (m_memoryCanvasForUi) {
+        delete m_memoryCanvasForUi;
+        m_memoryCanvasForUi = nullptr;
+    }
+
+    if (!m_memoryCanvasForUi) {
+        m_layerTreeHost->releaseMemoryCanvasLocked();
+        return;
+    }
+
+    if (useLayeredBuffer && !isCreatedThisTime)
+        cc::LayerTreeHost::clearCanvas(m_memoryCanvasForUi, IntRect(0, 0, width, height), useLayeredBuffer);
+
+    SkBaseDevice* device = skia::GetTopDevice(*memoryCanvas);
+    if (device) {
+        const SkBitmap& memoryCanvasBitmap = device->accessBitmap(false);
+        m_memoryCanvasForUi->drawBitmap(memoryCanvasBitmap, 0, 0, nullptr);
+    }
+    m_layerTreeHost->releaseMemoryCanvasLocked();
+}
+
+bool WebPageImpl::isDrawDirty()
+{
+    if (m_layerTreeHost)
+        return m_layerTreeHost->isDrawDirty();
+    return false;
+}
+
+void drawDebugLine(SkCanvas* memoryCanvas, const IntRect& paintRect)
+{
+    static int g_debugCount = 0;
+    ++g_debugCount;
+
+#if 1 // debug
+    if (blink::RuntimeEnabledFeatures::drawDirtyDebugLineEnabled()) {
+        OwnPtr<GraphicsContext> context = GraphicsContext::deprecatedCreateWithCanvas(memoryCanvas, GraphicsContext::NothingDisabled);
+        context->setStrokeStyle(SolidStroke);
+        context->setStrokeColor(0xff000000 | (::GetTickCount() + base::RandInt(0, 0x1223345)));
+        context->drawLine(IntPoint(paintRect.x(), paintRect.y()), IntPoint(paintRect.maxX(), paintRect.maxY()));
+        context->drawLine(IntPoint(paintRect.maxX(), paintRect.y()), IntPoint(paintRect.x(), paintRect.maxY()));
+        context->strokeRect(paintRect, 2);
+    }
+#endif
+
+#if 0
+    String outString = String::format("drawDebugLine:%d %d %d %d, %d\n", paintRect.x(), paintRect.y(), paintRect.width(), paintRect.height(), g_debugCount);
+    OutputDebugStringW(outString.charactersWithNullTermination().data());
+#endif
+}
+
+void WebPageImpl::disablePaint()
+{
+    m_disablePaint = true;
+}
+
+void WebPageImpl::enablePaint()
+{
+    m_disablePaint = false;
+}
+
+static bool canPaintToScreen(blink::WebViewImpl* webViewImpl)
+{
+    blink::Page* page = webViewImpl->page();
+    if (!page)
+        return true;
+
+    blink::LocalFrame* frame = page->deprecatedLocalMainFrame();
+    Document* document = frame->document();
+    if (!document)
+        return true;
+
+    if (!document->timing().firstLayout())
+        return false;
+
+    if (document->hasActiveParser())
+        return false;
+
+    return true;
+}
+
+bool WebPageImpl::needDrawToScreen(HWND hWnd) const
+{
+    if (!hWnd)
+        return false;
+
+    if (blink::RuntimeEnabledFeatures::updataInOtherThreadEnabled() && !m_devToolsClient)
+        return false;
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
+    if (m_browser && m_browser->IsWindowless())
+        return false;
+#endif
+    return n_needAutoDrawToHwnd;
+}
+
+void WebPageImpl::drawLayeredWindow(HWND hWnd, SkCanvas* canvas, HDC hdc, const IntRect& paintRect, HDC hMemoryDC) const
+{
+    RECT rtWnd;
+    ::GetWindowRect(hWnd, &rtWnd);
+    IntRect winodwRect = winRectToIntRect(rtWnd);
+    if (skia::DrawToNativeLayeredContext(canvas, hdc, &intRectToWinRect(paintRect), &rtWnd))
+        return;
+    
+    BITMAP bmp = { 0 };
+    HBITMAP hBmp = (HBITMAP)::GetCurrentObject(hMemoryDC, OBJ_BITMAP);
+    ::GetObject(hBmp, sizeof(BITMAP), (LPSTR)&bmp);
+
+    POINT pointSource = { 0, 0 };
+    SIZE sizeDest = { 0 };
+    sizeDest.cx = bmp.bmWidth;
+    sizeDest.cy = bmp.bmHeight;
+
+    HDC hdcMemory = ::CreateCompatibleDC(hdc);
+    HBITMAP hbmpMemory = ::CreateCompatibleBitmap(hdc, sizeDest.cx, sizeDest.cy);
+    HBITMAP hbmpOld = (HBITMAP)::SelectObject(hdcMemory, hbmpMemory);
+
+    BLENDFUNCTION blend = { 0 };
+    blend.BlendOp = AC_SRC_OVER;
+    blend.SourceConstantAlpha = 255;
+    blend.AlphaFormat = AC_SRC_ALPHA;
+    ::BitBlt(hdcMemory, 0, 0, sizeDest.cx, sizeDest.cy, hdc, 0, 0, SRCCOPY | CAPTUREBLT);
+    ::UpdateLayeredWindow(m_hWnd, hdc, nullptr, &sizeDest, hMemoryDC, &pointSource, RGB(0xFF, 0xFF, 0xFF), &blend, ULW_ALPHA);
+
+    ::SelectObject(hdcMemory, (HGDIOBJ)hbmpOld);
+    ::DeleteObject((HGDIOBJ)hbmpMemory);
+    ::DeleteDC(hdcMemory);
+}
+
+#if 0
+bool HDCToFile(HDC Context)
+{
+    static int i = 0;
+    ++i;
+    String savePath;
+    savePath = String::format("C:\\Users\\weo\\Desktop\\mantan\\DumpFile_2_%d.png", i);
+
+    uint16_t BitsPerPixel = 24;
+    RECT Area = {0, 0, 300, 300};
+
+    uint32_t Width = Area.right - Area.left;
+    uint32_t Height = Area.bottom - Area.top;
+    BITMAPINFO Info;
+    BITMAPFILEHEADER Header;
+    memset(&Info, 0, sizeof(Info));
+    memset(&Header, 0, sizeof(Header));
+    Info.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+    Info.bmiHeader.biWidth = Width;
+    Info.bmiHeader.biHeight = Height;
+    Info.bmiHeader.biPlanes = 1;
+    Info.bmiHeader.biBitCount = BitsPerPixel;
+    Info.bmiHeader.biCompression = BI_RGB;
+    Info.bmiHeader.biSizeImage = Width * Height * (BitsPerPixel > 24 ? 4 : 3);
+    Header.bfType = 0x4D42;
+    Header.bfOffBits = sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER);
+    char* Pixels = NULL;
+    HDC MemDC = CreateCompatibleDC(Context);
+    HBITMAP Section = CreateDIBSection(Context, &Info, DIB_RGB_COLORS, (void**)&Pixels, 0, 0);
+    DeleteObject(SelectObject(MemDC, Section));
+    BitBlt(MemDC, 0, 0, Width, Height, Context, Area.left, Area.top, SRCCOPY);
+    DeleteDC(MemDC);
+    std::fstream hFile(savePath.utf8().data(), std::ios::out | std::ios::binary);
+    if (hFile.is_open()) {
+        hFile.write((char*)&Header, sizeof(Header));
+        hFile.write((char*)&Info.bmiHeader, sizeof(Info.bmiHeader));
+        hFile.write(Pixels, (((BitsPerPixel * Width + 31) & ~31) / 8) * Height);
+        hFile.close();
+        DeleteObject(Section);
+        return true;
+    }
+    DeleteObject(Section);
+    return false;
+}
+#endif
+
+// 本函数可能被调用在ui线程，也可以是合成线程。开启多线程绘制，则在合成线程
+void WebPageImpl::paintToMemoryCanvasInUiThread(SkCanvas* canvas, const IntRect& paintRect)
+{
+    if (m_disablePaint)
         return;
 
-    postPaintMessage(&windowRect);
+    //if (0 == m_firstDrawCount && !canPaintToScreen(m_webViewImpl)) { }
+    ++m_firstDrawCount;
+
+    HWND hWnd = m_pagePtr->getHWND();
+    HDC hMemoryDC = nullptr;
+    hMemoryDC = skia::BeginPlatformPaint(hWnd, canvas);
+
+    drawDebugLine(canvas, paintRect);
+    
+    g_paintToMemoryCanvasInUiThreadCount++;
+
+    if (needDrawToScreen(hWnd)) { // 使用wke接口不由此上屏
+        HDC hdc = ::GetDC(hWnd);
+#if 0
+        COLORREF c = ::GetPixel(hdc, 100, 100);
+        c = (c & 0x00ffffff);
+        if (/*c == 0x00ffffff &&*/ paintRect.height() > 600) {
+            HDCToFile(hMemoryDC);
+        }
+#endif
+
+        if (m_layerTreeHost->getHasTransparentBackground()) {
+            drawLayeredWindow(hWnd, canvas, hdc, paintRect, hMemoryDC);
+        } else {
+            skia::DrawToNativeContext(canvas, hdc, paintRect.x(), paintRect.y(), &intRectToWinRect(paintRect));
+        }
+
+#if 0
+        HBRUSH hbrush;
+        HPEN hpen;
+        hbrush = ::CreateSolidBrush(rand()); // 创建蓝色画刷
+        ::SelectObject(hdc, hbrush);
+        //::Rectangle(hdc, m_paintRect.x(), m_paintRect.y(), m_paintRect.maxX(), m_paintRect.maxY());
+        ::Rectangle(hdc, 220, 40, 366, 266);
+        ::DeleteObject(hbrush);
+#endif
+
+        ::ReleaseDC(hWnd, hdc);
+    }
+
+    copyToMemoryCanvasForUi();
+
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
+    if (m_pagePtr->wkeHandler().paintUpdatedCallback) {
+        m_pagePtr->wkeHandler().paintUpdatedCallback(
+            m_pagePtr->wkeWebView(),
+            m_pagePtr->wkeHandler().paintUpdatedCallbackParam,
+            hMemoryDC, paintRect.x(), paintRect.y(), paintRect.width(), paintRect.height());
+    }
+#endif
+
+    skia::EndPlatformPaint(canvas);
+
+    cc::LayerTreeHost::BitInfo* bitInfo = nullptr;
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
+    if (m_pagePtr->wkeHandler().paintBitUpdatedCallback) {
+        bitInfo = m_layerTreeHost->getBitBegin();
+        if (bitInfo) {
+            wkeRect r = { paintRect.x(), paintRect.y(), paintRect.width(), paintRect.height() };
+            wke::CWebView* webview = m_pagePtr->wkeWebView();
+            void* paintBitUpdatedCallbackParam = m_pagePtr->wkeHandler().paintBitUpdatedCallbackParam;
+
+            m_pagePtr->wkeHandler().paintBitUpdatedCallback(webview, paintBitUpdatedCallbackParam,
+                bitInfo->pixels, &r, bitInfo->width, bitInfo->height);
+            m_layerTreeHost->getBitEnd(bitInfo);
+        }
+    }
+#endif
+
+#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
+    if (m_browser && m_layerTreeHost) {
+        bitInfo = m_layerTreeHost->getBitBegin();
+        if (bitInfo) {
+            CefRect r(paintRect.x(), paintRect.y(), paintRect.width(), paintRect.height());
+            m_browser->OnPaintUpdated(bitInfo->pixels, r, bitInfo->width, bitInfo->height);
+            m_layerTreeHost->getBitEnd(bitInfo);
+        }
+    }
+#endif
+}
+
+void WebPageImpl::paintToBit(void* bits, int pitch)
+{
+    CHECK_FOR_REENTER(this, (void)0);
+
+    beginMainFrame();
+
+    if (m_layerTreeHost)
+        m_layerTreeHost->paintToBit(bits, pitch);
+}
+
+void WebPageImpl::setDrawMinInterval(double drawMinInterval)
+{
+    if (m_layerTreeHost)
+        m_layerTreeHost->setDrawMinInterval(drawMinInterval);
+}
+
+void WebPageImpl::repaintRequested(const IntRect& windowRect, bool forceRepaintIfEmptyRect)
+{
+    freeV8TempObejctOnOneFrameBefore();
+    IntRect r = windowRect;
+    if (forceRepaintIfEmptyRect && r.isEmpty())
+        r = m_layerTreeHost->getClientRect();
+
+    if (pageInited != m_state || r.isEmpty() || r.maxY() < 0 || r.maxX() < 0)
+        return;
+
+    if (m_layerTreeHost)
+        m_layerTreeHost->postPaintMessage(r);
+    setNeedsCommitAndNotLayout();
 }
 
 // Called when a region of the WebWidget needs to be re-painted.
@@ -968,8 +1214,8 @@ void WebPageImpl::didInvalidateRect(const WebRect& r)
 {
     IntRect windowRect(r);
     if (-1 == windowRect.width() || -1 == windowRect.height())
-        windowRect = m_clientRect;
-    repaintRequested(windowRect);
+        windowRect = m_layerTreeHost->getClientRect();
+    repaintRequested(windowRect, false);
 }
 
 // Called when the Widget has changed size as a result of an auto-resize.
@@ -985,7 +1231,17 @@ void WebPageImpl::didUpdateLayoutSize(const WebSize& newSize)
 
 void WebPageImpl::scheduleAnimation()
 {
+    setNeedsCommit/*AndNotLayout*/();
+}
+
+void WebPageImpl::onLayerTreeSetNeedsCommit()
+{
     setNeedsCommit();
+}
+
+void WebPageImpl::onLayerTreeInvalidateRect(const blink::IntRect& r)
+{
+    didInvalidateRect(r);
 }
 
 void WebPageImpl::initializeLayerTreeView()
@@ -1000,25 +1256,52 @@ WebLayerTreeView* WebPageImpl::layerTreeView()
 
 void WebPageImpl::didChangeCursor(const WebCursorInfo& cursor)
 {
-    if (m_cursorType == cursor.type)
+    if (m_cursor.type == cursor.type)
         return;
-    m_cursorType = cursor.type;
+
+    m_cursor = cursor;
+
     if (m_hWnd)
-        ::PostMessage(m_hWnd, WM_SETCURSOR, 0, 0);
+        ::PostMessage(m_hWnd, WM_SETCURSOR, (WPARAM)m_hWnd, MAKELONG(HTCLIENT, 0)); // COleControl::OnSetCursor
+}
+
+int WebPageImpl::getCursorInfoType() const
+{
+    return (int)m_cursor.type;
 }
 
 void WebPageImpl::fireCursorEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, BOOL* handle)
 {
-    CHECK_FOR_REENTER0();
+    CHECK_FOR_REENTER(this, (void)0);
     freeV8TempObejctOnOneFrameBefore();
 
     if (handle)
         *handle = FALSE;
+
     HCURSOR hCur = NULL;
-    switch (m_cursorType) {
+    switch (m_cursor.type) {
     case WebCursorInfo::TypeIBeam:
         hCur = ::LoadCursor(NULL, IDC_IBEAM);
         break;
+        //////////////////////////////////////////////////////////////////////////
+    case WebCursorInfo::TypeProgress:
+        hCur = ::LoadCursor(NULL, IDC_APPSTARTING);
+        break;
+    case WebCursorInfo::TypeCross:
+        hCur = ::LoadCursor(NULL, IDC_CROSS);
+        break;
+    case WebCursorInfo::TypeMove:
+        hCur = ::LoadCursor(NULL, IDC_SIZEALL);
+        break;
+
+    case WebCursorInfo::TypeColumnResize:
+        hCur = ::LoadCursor(NULL, IDC_SIZEWE);
+        break;
+    case WebCursorInfo::TypeRowResize:
+        hCur = ::LoadCursor(NULL, IDC_SIZENS);
+        break;
+        //////////////////////////////////////////////////////////////////////////
+        
     case WebCursorInfo::TypeHand:
         hCur = ::LoadCursor(NULL, IDC_HAND);
         break;
@@ -1054,6 +1337,16 @@ void WebPageImpl::fireCursorEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM
     case WebCursorInfo::TypeNorthWestSouthEastResize:
         hCur = ::LoadCursor(NULL, IDC_SIZEALL);
         break;
+    case WebCursorInfo::TypeNoDrop:
+    case WebCursorInfo::TypeNotAllowed:
+        hCur = ::LoadCursor(NULL, IDC_NO);
+        break;
+    case WebCursorInfo::TypeCustom:
+        if (m_platformCursor)
+            ::DestroyIcon(m_platformCursor);
+        m_platformCursor = createSharedCursorImpl(m_cursor);
+        hCur = m_platformCursor;
+        break;
     }
 
     if (hCur) {
@@ -1063,92 +1356,48 @@ void WebPageImpl::fireCursorEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM
     }
 }
 
-static int verticalScrollLines()
-{
-    static ULONG scrollLines;
-    if (!scrollLines && !SystemParametersInfo(SPI_GETWHEELSCROLLLINES, 0, &scrollLines, 0))
-        scrollLines = 3;
-    return scrollLines;
-}
-
-static int horizontalScrollChars()
-{
-    static ULONG scrollChars;
-    if (!scrollChars && !SystemParametersInfo(SPI_GETWHEELSCROLLCHARS, 0, &scrollChars, 0))
-        scrollChars = 1;
-    return scrollChars;
-}
-
 LRESULT WebPageImpl::fireWheelEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    CHECK_FOR_REENTER(0);
+    CHECK_FOR_REENTER(this, 0);
     freeV8TempObejctOnOneFrameBefore();
-    AutoRecordActions autoRecordActions(m_layerTreeHost);
-
-    int x = LOWORD(lParam);
-    int y = HIWORD(lParam);
-    POINT point = {x, y};
-    ::ScreenToClient(hWnd, &point);
-    x = point.x;
-    y = point.y;
-
-    int wheelDelta = GET_WHEEL_DELTA_WPARAM(wParam);
-
-    static const float cScrollbarPixelsPerLine = 100.0f / 3.0f;
-    float delta = wheelDelta / static_cast<float>(WHEEL_DELTA);
-
-    float deltaX = 0.f;
-    float deltaY = 0.f;
-
-    bool shiftKey = wParam & MK_SHIFT;
-    bool ctrlKey = wParam & MK_CONTROL;
-
-    blink::PlatformWheelEventGranularity granularity = blink::ScrollByPageWheelEvent;
-
-    if (shiftKey) {
-        deltaX = delta * static_cast<float>(horizontalScrollChars()) * cScrollbarPixelsPerLine;
-        deltaY = 0;
-        granularity = blink::ScrollByPixelWheelEvent;
-    } else {
-        deltaX = 0;
-        deltaY = delta;
-        int verticalMultiplier = verticalScrollLines();
-        granularity = (verticalMultiplier == WHEEL_PAGESCROLL) ? blink::ScrollByPageWheelEvent : blink::ScrollByPixelWheelEvent;
-        if (granularity == blink::ScrollByPixelWheelEvent)
-            deltaY *= static_cast<float>(verticalMultiplier)* cScrollbarPixelsPerLine;
-    }
-
-    WebMouseWheelEvent webWheelEvent;
-    webWheelEvent.type = WebInputEvent::MouseWheel;
-    webWheelEvent.x = x;
-    webWheelEvent.y = y;
-    webWheelEvent.globalX = x;
-    webWheelEvent.globalY = y;
-    webWheelEvent.deltaX = deltaX;
-    webWheelEvent.deltaY = deltaY;
-    webWheelEvent.wheelTicksX = 0.f;
-    webWheelEvent.wheelTicksY = delta;
-    webWheelEvent.hasPreciseScrollingDeltas = true;
-    m_webViewImpl->handleInputEvent(webWheelEvent);
+    AutoRecordActions autoRecordActions(this, m_layerTreeHost, false);
+    
+    if (m_popup && m_popup->isVisible())
+        m_popup->fireWheelEvent(message, wParam, lParam);
+    else
+        m_platformEventHandler->fireWheelEvent(hWnd, message, wParam, lParam);
 
     return 0;
 }
 
 bool WebPageImpl::fireKeyUpEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    CHECK_FOR_REENTER(false);
+    CHECK_FOR_REENTER(this, false);
     freeV8TempObejctOnOneFrameBefore();
-    AutoRecordActions autoRecordActions(m_layerTreeHost);
-
+    AutoRecordActions autoRecordActions(this, m_layerTreeHost, false);
+    
     WebKeyboardEvent keyEvent = PlatformEventHandler::buildKeyboardEvent(WebInputEvent::KeyUp, message, wParam, lParam);
+    return m_webViewImpl->handleInputEvent(keyEvent);
+}
+
+bool WebPageImpl::fireKeyPressEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+    CHECK_FOR_REENTER(this, false);
+    freeV8TempObejctOnOneFrameBefore();
+    AutoRecordActions autoRecordActions(this, m_layerTreeHost, false);
+
+    WebKeyboardEvent keyEvent = PlatformEventHandler::buildKeyboardEvent(WebInputEvent::Char, message, wParam, lParam);
     return m_webViewImpl->handleInputEvent(keyEvent);
 }
 
 bool WebPageImpl::fireKeyDownEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    CHECK_FOR_REENTER(false);
+    CHECK_FOR_REENTER(this, false);
     freeV8TempObejctOnOneFrameBefore();
-    AutoRecordActions autoRecordActions(m_layerTreeHost);
+    AutoRecordActions autoRecordActions(this, m_layerTreeHost, false);
+
+    if (m_popup && m_popup->isVisible())
+        return m_popup->fireKeyUpEvent(message, wParam, lParam);
 
     unsigned int virtualKeyCode = wParam;
     WebKeyboardEvent keyEvent = PlatformEventHandler::buildKeyboardEvent(WebInputEvent::RawKeyDown, message, wParam, lParam);
@@ -1158,76 +1407,8 @@ bool WebPageImpl::fireKeyDownEvent(HWND hWnd, UINT message, WPARAM wParam, LPARA
     // FIXME: match IE list more closely, see <http://msdn2.microsoft.com/en-us/library/ms536938.aspx>.
     if (systemKey && virtualKeyCode != VK_RETURN)
         return false;
-
-    if (handled) {
-        MSG msg;
-        ::PeekMessage(&msg, NULL, WM_CHAR, WM_CHAR, PM_REMOVE);
-        return true;
-    }
-
-    // We need to handle back/forward using either Ctrl+Left/Right Arrow keys.
-    // FIXME: This logic should probably be in EventHandler::defaultArrowEventHandler().
-    // FIXME: Should check that other modifiers aren't pressed.
-//     if (virtualKeyCode == VK_RIGHT && keyEvent.modifiers & WebInputEvent::ControlKey)
-//         return page()->goForward();
-//     if (virtualKeyCode == VK_LEFT && keyEvent.modifiers & WebInputEvent::ControlKey)
-//         return page()->goBack();
-
-    // Need to scroll the page if the arrow keys, pgup/dn, or home/end are hit.
-//     WebCore::ScrollDirection direction;
-//     WebCore::ScrollGranularity granularity;
-//     switch (virtualKeyCode) {
-//     case VK_LEFT:
-//         granularity = WebCore::ScrollByLine;
-//         direction = WebCore::ScrollLeft;
-//         break;
-// 
-//     case VK_RIGHT:
-//         granularity = WebCore::ScrollByLine;
-//         direction = WebCore::ScrollRight;
-//         break;
-// 
-//     case VK_UP:
-//         granularity = WebCore::ScrollByLine;
-//         direction = WebCore::ScrollUp;
-//         break;
-// 
-//     case VK_DOWN:
-//         granularity = WebCore::ScrollByLine;
-//         direction = WebCore::ScrollDown;
-//         break;
-// 
-//     case VK_HOME:
-//         granularity = WebCore::ScrollByDocument;
-//         direction = WebCore::ScrollUp;
-//         break;
-// 
-//     case VK_END:
-//         granularity = WebCore::ScrollByDocument;
-//         direction = WebCore::ScrollDown;
-//         break;
-// 
-//     case VK_PRIOR:
-//         granularity = WebCore::ScrollByPage;
-//         direction = WebCore::ScrollUp;
-//         break;
-// 
-//     case VK_NEXT:
-//         granularity = WebCore::ScrollByPage;
-//         direction = WebCore::ScrollDown;
-//         break;
-// 
-//     default:
-//         return false;
-//     }
-// 
-//     if (frame->eventHandler()->scrollRecursively(direction, granularity)) {
-//         MSG msg;
-//         ::PeekMessage(&msg, NULL, WM_CHAR, WM_CHAR, PM_REMOVE);
-//         return true;
-//     }
-
-    return false;
+    
+    return handled;
 }
 
 bool WebPageImpl::handleCurrentKeyboardEvent()
@@ -1235,37 +1416,40 @@ bool WebPageImpl::handleCurrentKeyboardEvent()
     return false;
 }
 
-bool WebPageImpl::fireKeyPressEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
-{
-    CHECK_FOR_REENTER(false);
-    freeV8TempObejctOnOneFrameBefore();
-    AutoRecordActions autoRecordActions(m_layerTreeHost);
-
-    unsigned int charCode = wParam;
-    unsigned int flags = 0;
-    if (HIWORD(lParam) & KF_REPEAT)
-        flags |= KF_REPEAT;
-    if (HIWORD(lParam) & KF_EXTENDED)
-        flags |= KF_EXTENDED;
-    LPARAM keyData = MAKELPARAM(0, (WORD)flags);
-    bool systemKey = false;
-    WebKeyboardEvent keyEvent = PlatformEventHandler::buildKeyboardEvent(WebInputEvent::Char, message, wParam, lParam);
-    return m_webViewImpl->handleInputEvent(keyEvent);
-}
-
 void WebPageImpl::fireCaptureChangedEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    CHECK_FOR_REENTER0();
+    CHECK_FOR_REENTER(this, (void)0);
     freeV8TempObejctOnOneFrameBefore();
-    AutoRecordActions autoRecordActions(m_layerTreeHost);
+    AutoRecordActions autoRecordActions(this, m_layerTreeHost, false);
 
     m_platformEventHandler->fireCaptureChangedEvent(hWnd, message, wParam, lParam);
 }
 
+void WebPageImpl::fireSetFocusEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+    CHECK_FOR_REENTER(this, (void)0);
+    freeV8TempObejctOnOneFrameBefore();
+    // 见PlatformEventHandler::fireMouseEvent，里面也处理了设置焦点。因为这里有防重入机制
+    m_webViewImpl->setFocus(true);
+    m_webViewImpl->setIsActive(true);
+}
+
 void WebPageImpl::fireKillFocusEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    CHECK_FOR_REENTER0();
+    CHECK_FOR_REENTER(this, (void)0);
     freeV8TempObejctOnOneFrameBefore();
+
+    HWND currentFocus = ::GetFocus();
+    if (currentFocus == m_popupHandle)
+        return;
+
+    if (m_popup)
+        m_popup->hide();
+
+//     m_webViewImpl->setFocus(false);
+//     m_webViewImpl->setFocusedFrame(nullptr);
+//     m_webViewImpl->clearFocusedElement();
+    m_popupHandle = nullptr;
 }
 
 void WebPageImpl::fireTouchEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -1277,32 +1461,223 @@ void WebPageImpl::fireTouchEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM 
 
 LRESULT WebPageImpl::fireMouseEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, BOOL* bHandle)
 {
-    CHECK_FOR_REENTER(0);
+    TemporaryChange<bool> autoSet(m_runningInMouseMessage, true);
+    CHECK_FOR_REENTER(this, 0);
     freeV8TempObejctOnOneFrameBefore();
-    AutoRecordActions autoRecordActions(m_layerTreeHost);
+    AutoRecordActions autoRecordActions(this, m_layerTreeHost, false);
+    blink::UserGestureIndicator gestureIndicator(blink::DefinitelyProcessingUserGesture);
 
     bool handle = false;
-//     fireTouchEvent(hWnd, message, wParam, lParam);
-//     return; // TODO
 
-    m_platformEventHandler->fireMouseEvent(hWnd, message, wParam, lParam, bHandle);
+    if (blink::RuntimeEnabledFeatures::touchEnabled())
+        fireTouchEvent(hWnd, message, wParam, lParam);
+
+    PlatformEventHandler::MouseEvtInfo info = { true, pageDestroying == m_state, m_draggableRegion };
+    if (g_isMouseEnabled) {
+        if (m_isDragging) {
+            handleMouseWhenDraging(message);
+        } else
+            m_platformEventHandler->fireMouseEvent(hWnd, message, wParam, lParam, info, bHandle);
+    }
     return 0;
+}
+
+void WebPageImpl::handleMouseWhenDraging(UINT message)
+{
+    POINT screenPoint = { 0 };
+    ::GetCursorPos(&screenPoint);
+
+    POINT clientPoint = screenPoint;
+    ::ScreenToClient(m_hWnd, &clientPoint);
+
+    POINTL pt = { screenPoint.x, screenPoint.y };
+    DWORD pdwEffect;
+
+    if (WM_MOUSEMOVE == message) {
+        if (!m_isFirstEnterDrag) {
+            m_dragHandle->DragEnter(m_dragHandle->getDragData(), 0, pt, &pdwEffect);
+            m_isFirstEnterDrag = true;
+        } else
+            m_dragHandle->DragOver(0, pt, &pdwEffect);
+
+        blink::WebDragOperation op = DragHandle::dragCursorTodragOperation(pdwEffect);
+        blink::WebCursorInfo cursor;
+        cursor.type = blink::WebCursorInfo::TypeNoDrop;
+        if (blink::WebDragOperationNone != op)
+            cursor.type = blink::WebCursorInfo::TypeHand;
+        didChangeCursor(cursor);
+    } else if (WM_LBUTTONUP == message) {
+        m_isFirstEnterDrag = false;
+        m_dragHandle->Drop(m_dragHandle->getDragData(), 0, pt, &pdwEffect);
+        m_dragHandle->DragLeave();
+    }
+}
+
+void WebPageImpl::onEnterDragSimulate()
+{
+    m_isDragging = true;
+}
+
+void WebPageImpl::onLeaveDragSimulate()
+{
+    m_isFirstEnterDrag = false;
+    m_isDragging = false;
+}
+
+void WebPageImpl::onDraggingSimulate()
+{
+    beginMainFrame();
+
+    content::WebThreadImpl* threadImpl = (content::WebThreadImpl*)(blink::Platform::current()->currentThread());
+    threadImpl->fire();
+}
+
+static void initWkeWebDragDataItem(wkeWebDragData::Item* item)
+{
+    item->storageType = wkeWebDragData::Item::StorageTypeString;
+    item->stringType = nullptr; // wkeCreateStringW(L"", 0);
+    item->stringData = nullptr; // wkeCreateStringW(L"", 0);
+    item->filenameData = nullptr; // wkeCreateStringW(L"", 0);
+    item->displayNameData = nullptr; // wkeCreateStringW(L"", 0);
+    item->binaryData = nullptr;
+    item->title = nullptr; // wkeCreateStringW(L"", 0);
+    item->fileSystemURL = nullptr; // wkeCreateStringW(L"", 0);
+    item->fileSystemFileSize = 0;
+    item->baseURL = nullptr; // wkeCreateStringW(L"", 0);
+}
+
+static void freeUtf8String(wkeMemBuf* str)
+{
+    if (!str)
+        return;
+    wkeFreeMemBuf(str);
+}
+
+static void destroyWkeDragData(wkeWebDragData* data)
+{
+    wkeWebDragData::Item* items = data->m_itemList;
+    for (int i = 0; i < data->m_itemListLength; ++i) {
+        wkeWebDragData::Item* it = items + i;
+
+        if (wkeWebDragData::Item::StorageTypeFilename == it->storageType) {
+            freeUtf8String(it->filenameData);
+        } else if (wkeWebDragData::Item::StorageTypeFileSystemFile == it->storageType) {
+            freeUtf8String(it->fileSystemURL);
+        } else if (wkeWebDragData::Item::StorageTypeString == it->storageType) {
+            freeUtf8String(it->stringType);
+            freeUtf8String(it->stringData);
+        }
+    }
+    delete items;
+    delete data;
+}
+
+static wkeMemBuf* createUtf8String(const char* str, size_t len)
+{
+    if (!str)
+        return nullptr;
+//     char* result = new char[len + 1];
+//     strncpy(result, str, len);
+//     result[len - 1] = '\0';
+//     return result;
+
+    return wkeCreateMemBuf(nullptr, (void*)str, len);
+}
+
+static wkeWebDragData* webDropDataToWkeDragData(const blink::WebDragData& data)
+{
+    wkeWebDragData* result = new wkeWebDragData();
+
+    result->m_filesystemId = nullptr;
+    result->m_itemListLength = 0;
+    
+    size_t size = data.items().size();
+    result->m_itemList = new wkeWebDragData::Item[size];
+    result->m_itemListLength = size;
+    for (size_t i = 0; i < size; i++) {
+        blink::WebVector<blink::WebDragData::Item> items = data.items();
+        blink::WebDragData::Item& item = items[i];
+        initWkeWebDragDataItem(&result->m_itemList[i]);
+
+        if (blink::WebDragData::Item::StorageTypeFilename == item.storageType) {
+            result->m_itemList[i].storageType = wkeWebDragData::Item::StorageTypeFilename;
+
+            std::string fileName = item.filenameData.utf8();
+            result->m_itemList[i].filenameData = createUtf8String(fileName.c_str(), fileName.size());
+            
+        } else if (blink::WebDragData::Item::StorageTypeFileSystemFile == item.storageType) {
+            result->m_itemList[i].storageType = wkeWebDragData::Item::StorageTypeFileSystemFile;
+
+            blink::KURL fileSystemURL = item.fileSystemURL;
+            String fileSystemURLString = fileSystemURL.getUTF8String();
+            result->m_itemList[i].fileSystemURL = createUtf8String((const utf8*)fileSystemURLString.characters8(), fileSystemURLString.length());
+        } else if (blink::WebDragData::Item::StorageTypeString == item.storageType) {
+            result->m_itemList[i].storageType = wkeWebDragData::Item::StorageTypeString;
+
+            std::string stringType = item.stringType.utf8();
+            result->m_itemList[i].stringType = createUtf8String(stringType.c_str(), stringType.size());
+            std::string stringData = item.stringData.utf8();
+            result->m_itemList[i].stringData = createUtf8String(stringData.c_str(), stringData.size());
+        }
+    }
+
+    return result;
+}
+
+void WebPageImpl::startDragging(blink::WebLocalFrame* frame, const blink::WebDragData& data,
+    blink::WebDragOperationsMask mask, const blink::WebImage& image, const blink::WebPoint& dragImageOffset)
+{
+    BlinkPlatformImpl::AutoDisableGC autoDisableGC;
+
+    wkeStartDraggingCallback callback = m_pagePtr->wkeHandler().startDraggingCallback;
+    if (!callback) {
+        m_dragHandle->startDragging(frame, data, mask, image, dragImageOffset);
+        return;
+    }
+
+    void* param = m_pagePtr->wkeHandler().startDraggingCallbackParam;
+    wkePoint offset = { dragImageOffset.x, dragImageOffset.y };
+
+    wkeWebDragData* dragDate = webDropDataToWkeDragData(data);
+
+    onEnterDragSimulate();
+    CheckReEnter::decrementEnterCount();
+
+    callback(m_pagePtr->wkeWebView(), param,
+        wke::CWebView::frameIdTowkeWebFrameHandle(m_pagePtr, getFrameIdByBlinkFrame(frame)),
+        dragDate, (wkeWebDragOperationsMask)mask, nullptr, &offset);
+
+    CheckReEnter::incrementEnterCount();
+    onLeaveDragSimulate();
+
+    destroyWkeDragData(dragDate);
+}
+
+void WebPageImpl::loadHistoryItem(int64 frameId, const WebHistoryItem& item, WebHistoryLoadType type, WebURLRequest::CachePolicy policy)
+{
+    WebFrame* webFrame = getWebFrameFromFrameId(frameId);
+    if (!webFrame)
+        return;
+
+    //AutoRecordActions autoRecordActions(this, m_layerTreeHost, false);
+    webFrame->loadHistoryItem(item, type, policy);
+    m_webViewImpl->setFocus(true);
 }
 
 void WebPageImpl::loadURL(int64 frameId, const wchar_t* url, const blink::Referrer& referrer, const wchar_t* extraHeaders)
 {
     int length = wcslen(url);
     String urlW((const UChar*)url, length);
-	blink::KURL kurl(ParsedURLString, urlW.utf8().data());
+    blink::KURL kurl(ParsedURLString, urlW.utf8().data());
 
-	blink::WebURL webURL = kurl;
+    blink::WebURL webURL = kurl;
     blink::WebURLRequest request(webURL);
+    request.setHTTPReferrer(referrer.referrer, blink::WebReferrerPolicyOrigin);
     loadRequest(frameId, request);
 }
 
 void WebPageImpl::loadRequest(int64 frameId, const blink::WebURLRequest& request)
 {
-    CHECK_FOR_REENTER0();
     if (!m_webViewImpl || !m_webViewImpl->mainFrame())
         return;
 
@@ -1311,15 +1686,15 @@ void WebPageImpl::loadRequest(int64 frameId, const blink::WebURLRequest& request
     if (!webFrame)
         return;
 
-    AutoRecordActions autoRecordActions(m_layerTreeHost);
+    //AutoRecordActions autoRecordActions(this, m_layerTreeHost, false);
     
     requestWrap.setHTTPHeaderField(WebString::fromLatin1("Accept"), WebString::fromLatin1("text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"));
     webFrame->loadRequest(requestWrap);
+    m_webViewImpl->setFocus(true);
 }
 
 void WebPageImpl::loadHTMLString(int64 frameId, const WebData& html, const WebURL& baseURL, const WebURL& unreachableURL, bool replace)
 {
-    CHECK_FOR_REENTER0();
     if (!m_webViewImpl || !m_webViewImpl->mainFrame())
         return;
 
@@ -1327,8 +1702,151 @@ void WebPageImpl::loadHTMLString(int64 frameId, const WebData& html, const WebUR
     if (!webFrame)
         return;
 
-    AutoRecordActions autoRecordActions(m_layerTreeHost);
+    //AutoRecordActions autoRecordActions(this, m_layerTreeHost, false);
     webFrame->loadHTMLString(html, baseURL, unreachableURL, replace);
+    m_webViewImpl->setFocus(true);
+}
+
+void WebPageImpl::setTransparent(bool transparent)
+{
+    m_layerTreeHost->setHasTransparentBackground(transparent);
+    m_layerTreeHost->setBackgroundColor(cc::getRealColor(transparent, cc::s_kBgColor));
+    m_webViewImpl->setIsTransparent(transparent);
+    m_webViewImpl->setBaseBackgroundColor(cc::getRealColor(transparent, cc::s_kBgColor));
+}
+
+struct RegisterDragDropTask {
+    RegisterDragDropTask(int id, HWND hWnd, DragHandle* dragHandle)
+    {
+        m_id = id;
+        m_hWnd = hWnd;
+        m_dragHandle = dragHandle;
+    }
+
+    static void registerDragDropInUiThread(HWND hWnd, void* param)
+    {
+        ::OleInitialize(nullptr);
+
+        RegisterDragDropTask* self = (RegisterDragDropTask*)param;
+
+        do {
+            if (!wkeIsWebviewAlive(self->m_id))
+                break;
+            ::RegisterDragDrop(self->m_hWnd, self->m_dragHandle);
+        } while (false);
+
+        delete self;
+    }
+
+private:
+    int m_id;
+    HWND m_hWnd;
+    DragHandle* m_dragHandle;
+};
+
+struct PostTaskWrap {
+    PostTaskWrap(HWND hWnd, wkeUiThreadRunCallback callback, void* param)
+    {
+        m_hWnd = hWnd;
+        m_callback = callback;
+        m_param = param;
+    }
+
+    static void init()
+    {
+        if (wke::g_wkeUiThreadPostTaskCallback)
+            return;
+        wke::g_wkeUiThreadPostTaskCallback = PostTaskWrap::uiThreadPostTaskCallback;
+
+        m_uiPostTasks = new std::vector<PostTaskWrap*>();
+        ::InitializeCriticalSection(&m_uiPostTasksMutex);
+    }
+
+    WTF::String getProp() const { return m_prop; }
+
+    static void WINAPI timerProc(HWND hWnd, UINT message, UINT_PTR iTimerID, DWORD dwTime)
+    {
+        ::KillTimer(hWnd, kPostTaskTimerId);
+        
+        ::EnterCriticalSection(&m_uiPostTasksMutex);
+        std::vector<PostTaskWrap*>* tasksToRun = new std::vector<PostTaskWrap*>();
+        std::vector<PostTaskWrap*>* tasksToSave = new std::vector<PostTaskWrap*>();
+
+        for (size_t i = 0; i < m_uiPostTasks->size(); ++i) {
+            PostTaskWrap* task = m_uiPostTasks->at(i);
+            if (task->m_hWnd == hWnd)
+                tasksToRun->push_back(task);
+            else
+                tasksToSave->push_back(task);
+        }
+        delete m_uiPostTasks;
+        m_uiPostTasks = tasksToSave;
+        ::LeaveCriticalSection(&m_uiPostTasksMutex);
+
+        for (size_t i = 0; i < tasksToRun->size(); ++i) {
+            PostTaskWrap* task = tasksToRun->at(i);
+            task->m_callback(task->m_hWnd, task->m_param);
+            delete task;
+        }
+    }
+
+    static int uiThreadPostTaskCallback(HWND hWnd, wkeUiThreadRunCallback callback, void* param)
+    {
+        PostTaskWrap* task = new PostTaskWrap(hWnd, callback, param);
+
+        ::EnterCriticalSection(&m_uiPostTasksMutex);
+        m_uiPostTasks->push_back(task);
+        ::LeaveCriticalSection(&m_uiPostTasksMutex);
+
+        ::SetTimer(hWnd, kPostTaskTimerId, 10, &timerProc);
+        return 1;
+    }
+
+private:
+    HWND m_hWnd;
+    wkeUiThreadRunCallback m_callback;
+    void* m_param;
+    WTF::String m_prop;
+
+    static const int kPostTaskTimerId = 0x15324546;
+    static std::vector<PostTaskWrap*>* m_uiPostTasks;
+    static CRITICAL_SECTION m_uiPostTasksMutex;
+};
+std::vector<PostTaskWrap*>* PostTaskWrap::m_uiPostTasks = nullptr;
+CRITICAL_SECTION PostTaskWrap::m_uiPostTasksMutex;
+
+void WebPageImpl::setHWND(HWND hWnd)
+{
+    m_hWnd = hWnd;
+    if (!m_hWnd)
+        return;
+
+    DWORD processID;
+    DWORD threadID;
+    threadID = ::GetWindowThreadProcessId(hWnd, &processID);
+    if (threadID != ::GetCurrentThreadId())
+        PostTaskWrap::init();
+    
+    if (wke::g_wkeUiThreadPostTaskCallback) {
+        m_dragHandle->setViewWindow(m_hWnd, m_webViewImpl);
+        wke::g_wkeUiThreadPostTaskCallback(m_hWnd, RegisterDragDropTask::registerDragDropInUiThread, new RegisterDragDropTask(m_pagePtr->wkeWebView()->getId(), m_hWnd, m_dragHandle));
+    } else if (!blink::RuntimeEnabledFeatures::updataInOtherThreadEnabled()) {
+        m_dragHandle->setViewWindow(m_hWnd, m_webViewImpl);
+        ::RegisterDragDrop(m_hWnd, m_dragHandle);
+    }
+}
+
+WebPageImpl* WebPageImpl::getSelfForCurrentContext()
+{
+    blink::WebLocalFrame* frame = blink::WebLocalFrame::frameForCurrentContext();
+    if (!frame)
+        return nullptr;
+    blink::WebViewImpl* impl = (blink::WebViewImpl*)frame->view();
+    if (!impl)
+        return nullptr;
+
+    content::WebPageImpl* page = (content::WebPageImpl*)impl->client();
+    return page;
 }
 
 #if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
@@ -1343,7 +1861,33 @@ void WebPageImpl::setBrowser(CefBrowserHostImpl* browser)
 }
 #endif
 
-WebFrame* WebPageImpl::getWebFrameFromFrameId(int64 frameId)
+void WebPageImpl::didCommitProvisionalLoad(blink::WebLocalFrame* frame, const blink::WebHistoryItem& history, 
+    blink::WebHistoryCommitType type, bool isSameDocument)
+{
+    m_navigationController->insertOrReplaceEntry(history, type, isSameDocument);
+}
+
+void WebPageImpl::navigateBackForwardSoon(int offset)
+{
+    m_navigationController->navigateBackForwardSoon(offset);
+}
+
+int WebPageImpl::historyBackListCount()
+{
+    return m_navigationController->historyBackListCount();
+}
+
+int WebPageImpl::historyForwardListCount()
+{
+    return m_navigationController->historyForwardListCount();
+}
+
+void WebPageImpl::navigateToIndex(int index)
+{
+    m_navigationController->navigateToIndex(index);
+}
+
+WebFrame* WebPageImpl::getWebFrameFromFrameId(int64_t frameId)
 {
     blink::WebFrame* webFrame = nullptr;
     if (WebPage::kMainFrameId != frameId) {
@@ -1361,6 +1905,22 @@ WebFrame* WebPageImpl::getWebFrameFromFrameId(int64 frameId)
     return webFrame;
 }
 
+int64_t WebPageImpl::getFrameIdByBlinkFrame(const blink::WebFrame* frame)
+{
+    if (!frame)
+        return content::WebPage::kInvalidFrameId;
+
+    blink::Frame* blinkFrame = blink::toCoreFrame(frame);
+    if (!blinkFrame)
+        return content::WebPage::kInvalidFrameId;
+    return blinkFrame->frameID();
+}
+
+int64_t WebPageImpl::getFirstFrameId()
+{
+    return m_firstFrameId;
+}
+
 WebStorageNamespace* WebPageImpl::createSessionStorageNamespace()
 {
     return ((content::BlinkPlatformImpl*)Platform::current())->createSessionStorageNamespace();
@@ -1368,11 +1928,28 @@ WebStorageNamespace* WebPageImpl::createSessionStorageNamespace()
 
 WebString WebPageImpl::acceptLanguages()
 {
-    return WebString::fromUTF8("zh-CN,zh");
+    if (m_webViewImpl) {
+        blink::Page *page = m_webViewImpl->page();
+        if (page) {
+            blink::Settings &setings = page->settings();
+            return setings.language();
+        }
+    }
+    return WebString::fromUTF8("zh-CN,cn");
+}
+
+void WebPageImpl::setScreenInfo(const WebScreenInfo& info)
+{
+    if (m_screenInfo)
+        delete m_screenInfo;
+    m_screenInfo = new WebScreenInfo();
+    *m_screenInfo = info;
 }
 
 WebScreenInfo WebPageImpl::screenInfo()
 {
+    if (m_screenInfo)
+        return *m_screenInfo;
     POINT pt = { 0, 0 };
     HMONITOR hMonitor = ::MonitorFromPoint(pt, MONITOR_DEFAULTTOPRIMARY);
 
@@ -1380,16 +1957,178 @@ WebScreenInfo WebPageImpl::screenInfo()
     mi.cbSize = sizeof(MONITORINFO);
     ::GetMonitorInfo(hMonitor, &mi);
 
-    WebScreenInfo info;
-    info.rect = WebRect(winRectToIntRect(mi.rcMonitor));
-    info.availableRect = WebRect(winRectToIntRect(mi.rcWork));
+    m_screenInfo = new blink::WebScreenInfo();
+    m_screenInfo->rect = WebRect(winRectToIntRect(mi.rcMonitor));
+    m_screenInfo->availableRect = WebRect(winRectToIntRect(mi.rcWork));
 
-    return info;
+    return *m_screenInfo;
+}
+
+void WebPageImpl::setMouseOverURL(const blink::WebURL& url)
+{
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
+    wke::CString string(((KURL)url).string());
+    if (m_pagePtr->wkeHandler().mouseOverUrlChangedCallback) {
+        m_pagePtr->wkeHandler().mouseOverUrlChangedCallback(
+            m_pagePtr->wkeWebView(), m_pagePtr->wkeHandler().mouseOverUrlChangedCallbackParam, &string);
+    }
+#endif
+}
+
+void WebPageImpl::setToolTipText(const blink::WebString& toolTip, blink::WebTextDirection hint)
+{
+    m_toolTip->show(WTF::ensureUTF16UChar((String)toolTip, true).data(), nullptr);
+}
+
+void WebPageImpl::onMouseDown(const blink::WebNode& mouseDownNode)
+{
+    if (mouseDownNode.isDraggable())
+        m_platformEventHandler->setIsDraggableNodeMousedown();
+}
+
+void WebPageImpl::draggableRegionsChanged()
+{
+    WebFrame* frame = m_webViewImpl->mainFrame();
+    if (!frame)
+        return;
+    blink::WebDocument doc = frame->document();
+    blink::WebVector<blink::WebDraggableRegion> regions = doc.draggableRegions();
+    ::SetRectRgn(m_draggableRegion, 0, 0, 0, 0);
+
+    wkeDraggableRegion* wkeRegions = nullptr;
+    size_t size = regions.size();
+    if (0 != size)
+        wkeRegions = new wkeDraggableRegion[size];
+
+    for (size_t i = 0; i < size; ++i) {
+        blink::IntRect r = regions[i].bounds;
+
+        wkeRegions[i].bounds.left = r.x();
+        wkeRegions[i].bounds.top = r.y();
+        wkeRegions[i].bounds.right = r.maxX();
+        wkeRegions[i].bounds.bottom = r.maxY();
+        wkeRegions[i].draggable = regions[i].draggable;
+
+        HRGN region = ::CreateRectRgn(wkeRegions[i].bounds.left, wkeRegions[i].bounds.top, wkeRegions[i].bounds.right, wkeRegions[i].bounds.bottom);
+        ::CombineRgn(m_draggableRegion, m_draggableRegion, region,
+            wkeRegions[i].draggable ? RGN_OR : RGN_DIFF);
+        ::DeleteObject(region);
+    }
+
+#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
+    if (m_pagePtr->wkeHandler().draggableRegionsChangedCallback) {
+        m_pagePtr->wkeHandler().draggableRegionsChangedCallback(m_pagePtr->wkeWebView(),
+            m_pagePtr->wkeHandler().draggableRegionsChangedCallbackParam, wkeRegions, regions.size());
+    }
+#endif
+    if (wkeRegions)
+        delete[] wkeRegions;
 }
 
 WebWidget* WebPageImpl::createPopupMenu(WebPopupType type)
 {
-    return PopupMenuWin::create(m_hWnd, m_hWndoffset, m_webViewImpl, type);
+    if (!m_hWnd)
+        m_hWnd = ::GetActiveWindow();
+    
+    PopupMenuWin* popup = nullptr;
+    blink::WebWidget* result = PopupMenuWin::create(this, m_hWnd, m_hwndRenderOffset, m_webViewImpl, type, &popup);
+    m_popup = popup;
+    m_popupHandle = popup->popupHandle();
+    return result;
+}
+
+void WebPageImpl::onPopupMenuCreate(HWND hWnd)
+{
+    m_popupHandle = hWnd;
+}
+
+void WebPageImpl::onPopupMenuHide()
+{
+    //m_popup = nullptr;
+}
+
+void WebPageImpl::showValidationMessage(
+    const blink::WebRect& anchorInViewport,
+    const blink::WebString& mainText,
+    blink::WebTextDirection mainTextDir,
+    const blink::WebString& supplementalText,
+    blink::WebTextDirection supplementalTextDir
+    )
+{
+    POINT pos = { anchorInViewport.x, anchorInViewport.y };
+    ::ClientToScreen(m_hWnd, &pos);
+    m_validationMessageTip->show(WTF::ensureUTF16UChar((String)mainText, true).data(), &pos);
+}
+
+void WebPageImpl::hideValidationMessage()
+{
+
+}
+
+void WebPageImpl::moveValidationMessage(const blink::WebRect& anchorInViewport)
+{
+
+}
+
+void WebPageImpl::didStartProvisionalLoad()
+{
+    m_firstDrawCount = 0;
+}
+
+class RootWndAutoDisable {
+public:
+    RootWndAutoDisable(HWND hWnd)
+    {
+        HWND hTempWnd = hWnd;
+        m_hRootWnd = NULL;
+        while (hTempWnd) {
+            m_hRootWnd = hTempWnd;
+            hTempWnd = ::GetParent(hTempWnd);
+        }
+        if (m_hRootWnd)
+            ::EnableWindow(m_hRootWnd, FALSE);
+    }
+
+    ~RootWndAutoDisable()
+    {
+        if (m_hRootWnd)
+            ::EnableWindow(m_hRootWnd, TRUE);
+    }
+
+private:
+    HWND m_hRootWnd;
+};
+
+bool WebPageImpl::runFileChooser(const blink::WebFileChooserParams& params, blink::WebFileChooserCompletion* completion)
+{
+    RootWndAutoDisable rootWndAutoDisable(m_hWnd);
+    bool b = runFileChooserImpl(params, completion);
+    return b;
+}
+
+void WebPageImpl::willEnterDebugLoop()
+{
+    if (m_devToolsAgent)
+        m_isEnterDebugLoop = true;
+
+    if (m_devToolsClient)
+        m_webViewImpl->setIgnoreInputEvents(false);
+}
+
+void WebPageImpl::didExitDebugLoop()
+{
+    if (m_devToolsAgent)
+        m_isEnterDebugLoop = false;
+
+    if (m_devToolsClient)
+        m_webViewImpl->setIgnoreInputEvents(true);
+}
+
+void WebPageImpl::setCookieJarPath(const char* path)
+{
+    if (!m_pageNetExtraData)
+        m_pageNetExtraData = new net::PageNetExtraData();
+    m_pageNetExtraData->setCookieJarFullPath(path);
 }
 
 bool WebPageImpl::initSetting()
@@ -1398,7 +2137,7 @@ bool WebPageImpl::initSetting()
     if (!settings)
         return false;
     settings->setTextAreasAreResizable(true);
-
+    
     settings->setStandardFontFamily(WebString(L"微软雅黑", 4));
     settings->setUsesEncodingDetector(true);
     settings->setJavaScriptEnabled(true);
@@ -1406,7 +2145,7 @@ bool WebPageImpl::initSetting()
     settings->setAcceleratedCompositingEnabled(true);
     settings->setUseSolidColorScrollbars(false);
     settings->setPinchOverlayScrollbarThickness(8);
-    settings->setSpatialNavigationEnabled(true);
+    //settings->setSpatialNavigationEnabled(true);
     settings->setLocalStorageEnabled(true);
     settings->setMinimumFontSize(10);
     settings->setMinimumLogicalFontSize(10);
@@ -1414,10 +2153,10 @@ bool WebPageImpl::initSetting()
     settings->setDefaultFixedFontSize(16);
     settings->setLoadsImagesAutomatically(true);
     settings->setPluginsEnabled(true);
+    settings->setJavaScriptCanOpenWindowsAutomatically(true);
+    settings->setJavaScriptCanAccessClipboard(true);
 
     PluginDatabase::installedPlugins()->refresh();
-
-    // settings->setFontRenderingMode(AlternateRenderingMode);
 
     return true;
 }

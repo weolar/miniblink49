@@ -42,7 +42,7 @@ void WTFStringToCefString(const WTF::String& src, CefString& output) {
         return;
     }
 
-    Vector<UChar> buffer = ensureUTF16UChar(src);
+    Vector<UChar> buffer = ensureUTF16UChar(src, false);
     output.FromString(buffer.data(), buffer.size(), true);
 }
 

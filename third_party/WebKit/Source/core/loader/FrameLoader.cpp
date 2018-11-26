@@ -770,6 +770,9 @@ bool FrameLoader::prepareRequestForThisFrame(FrameLoadRequest& request)
 
 static bool shouldOpenInNewWindow(Frame* targetFrame, const FrameLoadRequest& request, NavigationPolicy policy)
 {
+    if (!RuntimeEnabledFeatures::navigationToNewWindowEnabled())
+        return false;
+
     if (!targetFrame && !request.frameName().isEmpty())
         return true;
     // FIXME: This case is a workaround for the fact that ctrl+clicking a form submission incorrectly
@@ -1353,6 +1356,9 @@ void FrameLoader::applyUserAgent(ResourceRequest& request)
 bool FrameLoader::shouldInterruptLoadForXFrameOptions(const String& content, const KURL& url, unsigned long requestIdentifier)
 {
     UseCounter::count(m_frame->domWindow()->document(), UseCounter::XFrameOptions);
+
+    if (!RuntimeEnabledFeatures::cspCheckEnabled())
+        return false;
 
     Frame* topFrame = m_frame->tree().top();
     if (m_frame == topFrame)

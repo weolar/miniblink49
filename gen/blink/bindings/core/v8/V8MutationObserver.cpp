@@ -181,18 +181,18 @@ void V8MutationObserver::derefObject(ScriptWrappable* scriptWrappable)
 #endif
 }
 
-void V8MutationObserver::visitDOMWrapper(v8::Isolate*, ScriptWrappable*, const v8::Persistent<v8::Object>&)
-{
-#ifdef MINIBLINK_NOT_IMPLEMENTED
-#endif // MINIBLINK_NOT_IMPLEMENTED
-	notImplemented();
-}
-
-void V8MutationObserver::constructorCustom(const v8::FunctionCallbackInfo<v8::Value>&)
-{
-#ifdef MINIBLINK_NOT_IMPLEMENTED
-#endif // MINIBLINK_NOT_IMPLEMENTED
-	notImplemented();
-}
+// void V8MutationObserver::visitDOMWrapper(v8::Isolate*, ScriptWrappable*, const v8::Persistent<v8::Object>&)
+// {
+// #ifdef MINIBLINK_NOT_IMPLEMENTED
+// #endif // MINIBLINK_NOT_IMPLEMENTED
+//     notImplemented();
+// }
+// 
+// void V8MutationObserver::constructorCustom(const v8::FunctionCallbackInfo<v8::Value>&)
+// {
+// #ifdef MINIBLINK_NOT_IMPLEMENTED
+// #endif // MINIBLINK_NOT_IMPLEMENTED
+//     notImplemented();
+// }
 
 } // namespace blink
