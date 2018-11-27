@@ -135,7 +135,7 @@ private:
     bool downloadOnIoThread();
     void removeFromCurlOnIoThread(int jobId);
 
-    void applyAuthenticationToRequest(WebURLLoaderInternal*, blink::WebURLRequest*);
+    void applyAuthenticationToRequest(WebURLLoaderInternal* job);
 
     int initializeHandleOnMainThread(WebURLLoaderInternal* job);
     void initializeHandleOnIoThread(int jobId, InitializeHandleInfo* info);

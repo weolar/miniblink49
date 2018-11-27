@@ -1257,6 +1257,7 @@ void WebURLLoaderManager::dispatchSynchronousJobOnIoThread(WebURLLoaderInternal*
 }
 
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
+
 static bool dispatchWkeLoadUrlBegin(WebURLLoaderInternal* job, InitializeHandleInfo* info)
 {
     RequestExtraData* requestExtraData = reinterpret_cast<RequestExtraData*>(job->firstRequest()->extraData());
@@ -1273,27 +1274,14 @@ static bool dispatchWkeLoadUrlBegin(WebURLLoaderInternal* job, InitializeHandleI
 
     return job->m_isWkeNetSetDataBeSetted || b;
 }
+
 #endif
 
-void WebURLLoaderManager::applyAuthenticationToRequest(WebURLLoaderInternal* handle, blink::WebURLRequest* request)
+void WebURLLoaderManager::applyAuthenticationToRequest(WebURLLoaderInternal* handle)
 {
     // m_user/m_pass are credentials given manually, for instance, by the arguments passed to XMLHttpRequest.open().
     WebURLLoaderInternal* job = handle;
-    // 
-    //     if (handle->shouldUseCredentialStorage()) {
-    //         if (job->m_user.isEmpty() && job->m_pass.isEmpty()) {
-    //             // <rdar://problem/7174050> - For URLs that match the paths of those previously challenged for HTTP Basic authentication, 
-    //             // try and reuse the credential preemptively, as allowed by RFC 2617.
-    //             job->m_initialCredential = CredentialStorage::defaultCredentialStorage().get(request.url());
-    //         } else {
-    //             // If there is already a protection space known for the KURL, update stored credentials
-    //             // before sending a request. This makes it possible to implement logout by sending an
-    //             // XMLHttpRequest with known incorrect credentials, and aborting it immediately (so that
-    //             // an authentication dialog doesn't pop up).
-    //             CredentialStorage::defaultCredentialStorage().set(Credential(job->m_user, job->m_pass, CredentialPersistenceNone), request.url());
-    //         }
-    //     }
-    // 
+
     String user = job->m_user;
     String password = job->m_pass;
 
@@ -1316,7 +1304,7 @@ InitializeHandleInfo* WebURLLoaderManager::preInitializeHandleOnMainThread(WebUR
 {
     InitializeHandleInfo* info = new InitializeHandleInfo();
     KURL url = job->firstRequest()->url();
-    
+
     // Remove any fragment part, otherwise curl will send it as part of the request.
     url.removeFragmentIdentifier();
     String urlString = url.string();
@@ -1333,8 +1321,12 @@ InitializeHandleInfo* WebURLLoaderManager::preInitializeHandleOnMainThread(WebUR
     }
 
     info->url = WTF::ensureStringToUTF8(urlString, true).data();
-
     info->method = job->firstRequest()->httpMethod().utf8();
+    
+#ifdef MINIBLINK_NO_MULTITHREAD_NET
+    ASSERT(!job->m_url); // url must remain valid through the request
+    job->m_url = fastStrDup(info->url.c_str()); // url is in ASCII so latin1() will only convert it to char* without character translation.
+#endif
 
     String contentType = job->firstRequest()->httpHeaderField("Content-Type");
     if (WTF::kNotFound != url.host().find("huobi.pro") && "POST" == info->method && job->firstRequest()->httpBody().isNull())
@@ -1437,31 +1429,21 @@ void WebURLLoaderManager::initializeHandleOnIoThread(int jobId, InitializeHandle
 
     if (!m_certificatePath.isNull())
         curl_easy_setopt(job->m_handle, CURLOPT_CAINFO, m_certificatePath.data());
+    
+    curl_easy_setopt(job->m_handle, CURLOPT_ENCODING, ""); // enable gzip and deflate through Accept-Encoding:
 
-    // enable gzip and deflate through Accept-Encoding:
-    curl_easy_setopt(job->m_handle, CURLOPT_ENCODING, "");
+#ifndef MINIBLINK_NO_MULTITHREAD_NET
+    ASSERT(!job->m_url); // url must remain valid through the request
+    job->m_url = fastStrDup(info->url.c_str()); // url is in ASCII so latin1() will only convert it to char* without character translation.
+#endif
 
-    // url must remain valid through the request
-    ASSERT(!job->m_url);
-
-    // url is in ASCII so latin1() will only convert it to char* without character translation.
-    job->m_url = fastStrDup(info->url.c_str());
-
-    KURL url = job->firstRequest()->url();
     String urlString = job->m_url;
-    //ASSERT(url.string() == urlString);
-
     curl_easy_setopt(job->m_handle, CURLOPT_URL, job->m_url);
 
     std::string cookieJarFullPath;
     if (job->m_pageNetExtraData) {
         cookieJarFullPath = job->m_pageNetExtraData->getCookieJarFullPath();
     } else {
-//         WTF::Mutex* mutex = sharedResourceMutex(CURL_LOCK_DATA_COOKIE);
-//         WTF::Locker<WTF::Mutex> locker(*mutex);
-//         const char* cookieJarPathString = cookieJarPath();
-//         if (cookieJarPathString && '\0' != cookieJarPathString[0])
-//             cookieJarFileName = cookieJarPathString;
         cookieJarFullPath = m_shareCookieJar->getCookieJarFullPath();
     }
     
@@ -1490,8 +1472,7 @@ void WebURLLoaderManager::initializeHandleOnIoThread(int jobId, InitializeHandle
     }
 
     // curl_easy_setopt(job->m_handle, CURLOPT_USERPWD, ":");
-
-    applyAuthenticationToRequest(job, job->firstRequest());
+    applyAuthenticationToRequest(job);
 
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
     if (info->proxy.size()) {

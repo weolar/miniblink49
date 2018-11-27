@@ -2,6 +2,7 @@
 #define content_browser_ContextMeun_h
 
 #include "content/browser/WebPage.h"
+#include "content/web_impl_win/WebThreadImpl.h"
 #include "third_party/WebKit/Source/web/WebViewImpl.h"
 #include "third_party/WebKit/Source/platform/Timer.h"
 #include "third_party/WebKit/public/web/WebContextMenuData.h"
@@ -127,6 +128,9 @@ public:
 
     void onCommand(UINT itemID)
     {
+        content::WebThreadImpl* threadImpl = (content::WebThreadImpl*)(blink::Platform::current()->currentThread());
+        threadImpl->fire();
+
         if (kCopySelectedTextId == itemID) {
             m_webPage->webViewImpl()->focusedFrame()->executeCommand("Copy");
         } else if (kCopyImageId == itemID) {

@@ -102,7 +102,22 @@ public:
     WebURLLoaderImplCurl* loader() { return m_loader; }
     void setLoader(WebURLLoaderImplCurl* loader) { m_loader = loader; }
 
-    blink::WebURLRequest* firstRequest() { return m_firstRequest; }
+    blink::WebURLRequest* firstRequest()
+    {
+#ifndef MINIBLINK_NO_MULTITHREAD_NET
+        RELEASE_ASSERT(WTF::isMainThread());
+#endif
+        return m_firstRequest; 
+    }
+
+    void resetFirstRequest(blink::WebURLRequest* newRequest)
+    {
+#ifndef MINIBLINK_NO_MULTITHREAD_NET
+        RELEASE_ASSERT(WTF::isMainThread() && m_firstRequest);
+#endif
+        delete m_firstRequest;
+        m_firstRequest = newRequest;
+    }
 
     bool isCancelled() const { return kNoCancelled != m_cancelledReason; }
 
@@ -110,8 +125,10 @@ public:
     WebURLLoaderClient* m_client;
     bool m_isSynchronous;
 
+private:
     blink::WebURLRequest* m_firstRequest;
 
+public:
     String m_lastHTTPMethod;
 
     // Suggested credentials for the current redirection step.

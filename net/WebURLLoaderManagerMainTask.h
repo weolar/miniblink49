@@ -565,8 +565,7 @@ static void doRedirect(WebURLLoaderInternal* job, const String& location, MainTa
     if (isRedirectByHttpCode)
         job->m_response.initialize();
 
-    delete job->m_firstRequest;
-    job->m_firstRequest = redirectedRequest;
+    job->resetFirstRequest(redirectedRequest);
 }
 
 static bool setHttpResponseDataToJobWhenDidReceiveResponseOnMainThread(WebURLLoaderInternal* job, MainTaskArgs* args)
