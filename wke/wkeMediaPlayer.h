@@ -236,6 +236,8 @@ public:
     virtual void connectedToRemoteDevice() {};
     virtual void disconnectedFromRemoteDevice() {};
 
+    virtual void didExitFullScreen() {};
+
 protected:
     ~WkeMediaPlayerClient() {}
 };
