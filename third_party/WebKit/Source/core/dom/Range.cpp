@@ -1635,10 +1635,10 @@ void Range::getBorderAndTextQuads(Vector<FloatQuad>& quads) const
                     layoutBoxModelObject->absoluteQuads(elementQuads);
                     m_ownerDocument->adjustFloatQuadsForScrollAndAbsoluteZoom(elementQuads, *layoutBoxModelObject);
 
-                    for (size_t i = 0; i < elementQuads.size(); ++i) {
-                        if (elementQuads[i].boundingBox().maxY() > 3300 || elementQuads[i].boundingBox().height() > 3300)
-                            OutputDebugStringA("Range::getBorderAndTextQuads!!\n");
-                    }
+//                     for (size_t i = 0; i < elementQuads.size(); ++i) {
+//                         if (elementQuads[i].boundingBox().maxY() > 3300 || elementQuads[i].boundingBox().height() > 3300)
+//                             OutputDebugStringA("Range::getBorderAndTextQuads!!\n");
+//                     }
                     quads.appendVector(elementQuads);
                 }
             }
@@ -1651,11 +1651,12 @@ void Range::getBorderAndTextQuads(Vector<FloatQuad>& quads) const
                 layoutText->absoluteQuadsForRange(textQuads, startOffset, endOffset);
                 m_ownerDocument->adjustFloatQuadsForScrollAndAbsoluteZoom(textQuads, *layoutText);
 
-                for (size_t i = 0; i < textQuads.size(); ++i) {
-                    FloatQuad xx = textQuads[i];
-                    if (xx.boundingBox().maxY() > 3300 || xx.boundingBox().height() > 3300)
-                        OutputDebugStringA("Range::getBorderAndTextQuads!!\n");
-                }
+//                 for (size_t i = 0; i < textQuads.size(); ++i) {
+//                     FloatQuad xx = textQuads[i];
+// 
+//                     String output = String::format("Range::getBorderAndTextQuads: %f %d\n", xx.boundingBox().x(), i);
+//                     OutputDebugStringA(output.utf8().data());
+//                 }
                 quads.appendVector(textQuads);
             }
         }
