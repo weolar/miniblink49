@@ -35,6 +35,7 @@
 #include "platform/RuntimeEnabledFeatures.h"
 #include "third_party/WebKit/public/platform/Platform.h"
 #include "third_party/WebKit/public/platform/WebTraceLocation.h"
+#include "third_party/WebKit/Source/platform/WebThreadSupportingGC.h"
 #include "third_party/WebKit/Source/wtf/ThreadingPrimitives.h"
 #include "third_party/WebKit/Source/wtf/RefCountedLeakCounter.h"
 #include "third_party/skia/include/core/SkBitmap.h"
@@ -71,15 +72,28 @@ RasterTaskWorkerThreadPool::~RasterTaskWorkerThreadPool()
 {
 }
 
+static void initializeRasterTaskThread(blink::WebThreadSupportingGC* webThreadSupportingGC)
+{
+    webThreadSupportingGC->initialize();
+}
+
 void RasterTaskWorkerThreadPool::init(int threadNum)
 {
     if (threadNum <= 0)
         threadNum = 1;
 
     for (int i = 0; i < threadNum; ++i) {
-        m_threads.append(blink::Platform::current()->createThread("RasterTaskWorkerThreadPool"));
+        blink::WebThreadSupportingGC* webThread = blink::WebThreadSupportingGC::create("RasterTaskWorkerThreadPool").leakPtr();
+        webThread->platformThread().postTask(FROM_HERE, WTF::bind(&initializeRasterTaskThread, webThread));
+        m_threads.append(webThread);
         m_threadBusyCount.append(0);
     }
+}
+
+static void shutdownRasterThread(blink::WebThreadSupportingGC* webThread, int* waitCount)
+{
+    webThread->shutdown();
+    atomicDecrement(waitCount);
 }
 
 void RasterTaskWorkerThreadPool::shutdown()
@@ -87,6 +101,16 @@ void RasterTaskWorkerThreadPool::shutdown()
     ASSERT(s_sharedThreadPool);
     m_willShutdown = true;
     while (m_pendingRasterTaskNum > 0) { Sleep(20); }
+
+    int waitCount = 0;
+    for (size_t i = 0; i < m_threads.size(); ++i) {
+        atomicIncrement(&waitCount);
+        m_threads[i]->platformThread().postTask(FROM_HERE, WTF::bind(&shutdownRasterThread, m_threads[i], &waitCount));
+    }
+
+    while (waitCount) {
+        Sleep(20);
+    }
 
     for (size_t i = 0; i < m_threads.size(); ++i) {
         delete m_threads[i];
@@ -231,6 +255,7 @@ public:
 
     virtual void run() override
     {
+
         DWORD nowTime = (DWORD)(WTF::currentTimeMS() * 100);
         raster();
         releaseRource();

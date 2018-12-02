@@ -38,6 +38,7 @@
 
 namespace blink {
 class WebThread;
+class WebThreadSupportingGC;
 class IntRect;
 }
 
@@ -168,7 +169,7 @@ private:
     RasterTaskWorkerThreadPool();
     ~RasterTaskWorkerThreadPool();
 
-    Vector<blink::WebThread*> m_threads;
+    Vector<blink::WebThreadSupportingGC*> m_threads;
     Vector<int> m_threadBusyCount;
     bool m_willShutdown;
     int m_pendingRasterTaskNum;

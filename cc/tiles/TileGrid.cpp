@@ -691,7 +691,7 @@ void TileGrid::applyDirtyRectsToRaster(blink::WebContentLayerClient* client, Ras
                     tile->increaseUseingRate();
 
                     // 发去光栅化;
-                    willRasteredTiles->append(getIndexByTile(tile), tile->xIndex(), tile->yIndex());
+                    willRasteredTiles->append(getIndexByTile(tile), tile->xIndex(), tile->yIndex());                    
                 }
             }
         }
