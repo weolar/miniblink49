@@ -31,6 +31,7 @@
 #include "third_party/WebKit/Source/web/WebStorageNamespaceImpl.h"
 #include "third_party/WebKit/public/platform/WebScrollbarBehavior.h"
 #include "third_party/WebKit/public/platform/WebPluginListBuilder.h"
+#include "third_party/WebKit/Source/platform/WebThreadSupportingGC.h"
 #include "third_party/WebKit/Source/platform/plugins/PluginData.h"
 #include "third_party/WebKit/Source/platform/PartitionAllocMemoryDumpProvider.h"
 #include "third_party/WebKit/Source/platform/heap/BlinkGCMemoryDumpProvider.h"
@@ -49,6 +50,7 @@
 #include "gin/array_buffer.h"
 #include "net/WebURLLoaderManager.h"
 #include "wke/wkeUtil.h"
+#include <crtdbg.h>
 
 DWORD g_paintToMemoryCanvasInUiThreadCount = 0;
 DWORD g_rasterTaskCount = 0;
@@ -81,7 +83,7 @@ void* __cdecl newFree(void* p)
     return myFree(p);
 }
 
-typedef void *  (__cdecl* MyRealloc)(void*, size_t);
+typedef void*  (__cdecl* MyRealloc)(void*, size_t);
 MyRealloc myRealloc = nullptr;
 
 void* __cdecl newRealloc(void* p, size_t s)
@@ -92,7 +94,38 @@ void* __cdecl newRealloc(void* p, size_t s)
     return myRealloc(p, s);
 }
 
+typedef void*  (__cdecl* MyMalloc)(size_t);
+MyMalloc myMalloc = nullptr;
+
+void* __cdecl newMalloc(size_t s)
+{
+    if (s == 256)
+        s = s;
+    return myMalloc(s);
+}
+
 #endif
+
+static void onAllocationHook(void* address, size_t, const char* typeName)
+{
+//     char* output = (char*)malloc(0x100);
+//     sprintf_s(output, 0x99, "onAllocationHook: %p\n", address);
+//     OutputDebugStringA(output);
+//     free(output);
+    //net::ActivatingObjCheck::inst()->add((intptr_t)address);
+}
+
+static void onFreeHook(void* address)
+{
+//     char* output = (char*)malloc(0x100);
+//     sprintf_s(output, 0x99, "onFreeHook: %p\n", address);
+//     OutputDebugStringA(output);
+//     free(output);
+// 
+//     if (!net::ActivatingObjCheck::inst()->isActivating((intptr_t)address))
+//         DebugBreak();
+//     net::ActivatingObjCheck::inst()->remove((intptr_t)address);
+}
 
 namespace blink {
 #ifdef _DEBUG
@@ -179,6 +212,9 @@ void BlinkPlatformImpl::initialize()
 
     platform->m_resTimer = new blink::Timer<BlinkPlatformImpl>(platform, &BlinkPlatformImpl::resourceGarbageCollectedTimer);
     platform->m_resTimer->start(120, 120, FROM_HERE);
+
+    WTF::PartitionAllocHooks::setAllocationHook(onAllocationHook);
+    WTF::PartitionAllocHooks::setFreeHook(onFreeHook);
     
 //     platform->m_perfTimer = new blink::Timer<BlinkPlatformImpl>(platform, &BlinkPlatformImpl::perfTimer);
 //     platform->m_perfTimer->start(2, 2, FROM_HERE);
@@ -215,8 +251,10 @@ BlinkPlatformImpl::BlinkPlatformImpl()
     setUserAgent(getUserAgent());
 
 #ifdef _DEBUG
-    myFree = (MyFree)ReplaceFuncAndCopy(free, newFree);
-    myRealloc = (MyRealloc)ReplaceFuncAndCopy(realloc, newRealloc);
+    //myFree = (MyFree)ReplaceFuncAndCopy(free, newFree);
+    //myRealloc = (MyRealloc)ReplaceFuncAndCopy(realloc, newRealloc);
+    //myMalloc = (MyMalloc)ReplaceFuncAndCopy(malloc, newMalloc);
+    //_CrtSetBreakAlloc(3584109);
 #endif
 }
 
@@ -279,14 +317,22 @@ void BlinkPlatformImpl::unregisterMemoryDumpProvider(blink::WebMemoryDumpProvide
     }
 }
 
+void shutdownIoThread(blink::WebThreadSupportingGC* webThread, int* waitCount)
+{
+    webThread->shutdown();
+    atomicDecrement(waitCount);
+}
+
 void BlinkPlatformImpl::preShutdown()
 {
     WebPluginImpl::shutdown();
     destroyWebInfo();
 
-    if (m_ioThread)
-        delete m_ioThread;
-    m_ioThread = nullptr;
+    int waitCount = 1;
+    blink::WebThreadSupportingGC* webThread = m_ioThread.leakPtr();
+    webThread->platformThread().postTask(FROM_HERE, WTF::bind(&shutdownIoThread, webThread, &waitCount));
+    while (waitCount) { }
+    delete webThread;
 
     WebThread* mainThread = m_mainThread;
     delete mainThread;
@@ -362,6 +408,8 @@ void BlinkPlatformImpl::shutdown()
     g_callAddrsRecord;
 #endif
     delete this;
+
+    //_CrtDumpMemoryLeaks();
 }
 
 void BlinkPlatformImpl::perfTimer(blink::Timer<BlinkPlatformImpl>*)
@@ -507,14 +555,24 @@ blink::WebThread* BlinkPlatformImpl::currentThread()
 
 blink::WebThread* BlinkPlatformImpl::tryGetIoThread() const
 {
-    return m_ioThread;
+    if (!m_ioThread)
+        return nullptr;
+    return &m_ioThread->platformThread();
+}
+
+static void initializeIoThread(blink::WebThreadSupportingGC* webThreadSupportingGC)
+{
+    webThreadSupportingGC->initialize();
 }
 
 blink::WebThread* BlinkPlatformImpl::ioThread()
 {
-    if (!m_ioThread)
-        m_ioThread = createThread("ioThread");
-    return m_ioThread;
+    if (!m_ioThread) {
+        m_ioThread = blink::WebThreadSupportingGC::create("ioThread");
+        m_ioThread->platformThread().postTask(FROM_HERE, WTF::bind(&initializeIoThread, m_ioThread.get()));
+    }
+
+    return &m_ioThread->platformThread();
 }
 
 void BlinkPlatformImpl::cryptographicallyRandomValues(unsigned char* buffer, size_t length)
@@ -565,7 +623,7 @@ double BlinkPlatformImpl::systemTraceTime()
 
 blink::WebString BlinkPlatformImpl::userAgent()
 {
-    return *m_userAgent;
+    return blink::WebString::fromUTF8(m_userAgent->c_str());
 }
 
 const char* BlinkPlatformImpl::getUserAgent()
@@ -574,14 +632,14 @@ const char* BlinkPlatformImpl::getUserAgent()
     BlinkPlatformImpl* self = (BlinkPlatformImpl*)blink::Platform::current();
     if (!self)
         return defaultUA;
-    return self->m_userAgent->utf8().data();
+    return self->m_userAgent->c_str();
 }
 
 void BlinkPlatformImpl::setUserAgent(const char* ua)
 {
     if (m_userAgent)
         delete m_userAgent;
-    m_userAgent = new String(ua);
+    m_userAgent = new std::string(ua);
 }
 
 void readJsFile(const wchar_t* path, std::vector<char>* buffer)
@@ -624,8 +682,17 @@ blink::WebData BlinkPlatformImpl::loadResource(const char* name)
         return blink::WebData((const char*)content::gTextAreaResizeCornerData, sizeof(content::gTextAreaResizeCornerData));
     else if (0 == strcmp("textAreaResizeCorner@2x", name))
         return blink::WebData((const char*)content::gTextAreaResizeCornerData, sizeof(content::gTextAreaResizeCornerData));
-    else if (0 == strcmp("mediaControls.css", name))
-        return blink::WebData((const char*)blink::mediaControlsUserAgentStyleSheet, sizeof(blink::mediaControlsUserAgentStyleSheet));
+    else if (0 == strcmp("mediaControls.css", name)) {
+        std::string buffer(blink::mediaControlsUserAgentStyleSheet, sizeof(blink::mediaControlsUserAgentStyleSheet));;
+        buffer += "video::-webkit-media-controls {display: none;}";
+        return blink::WebData(buffer.c_str(), buffer.size());
+        //return blink::WebData((const char*)blink::mediaControlsUserAgentStyleSheet, sizeof(blink::mediaControlsUserAgentStyleSheet));
+    } else if (0 == strcmp("fullscreen.css", name)) {
+//         std::vector<char> buffer;
+//         readJsFile(L"E:\\mycode\\miniblink49\\trunk\\third_party\\WebKit\\Source\\core\\css\\fullscreen.css", &buffer);
+//         return blink::WebData(&buffer[0], buffer.size());
+        return blink::WebData((const char*)content::fullscreenCss, sizeof(content::fullscreenCss));
+    }
     //////////////////////////////////////////////////////////////////////////
     else if (0 == strcmp("calendarPicker.css", name))
         return blink::WebData((const char*)content::calendarPickerCss, sizeof(content::calendarPickerCss));
@@ -656,9 +723,6 @@ blink::WebData BlinkPlatformImpl::loadResource(const char* name)
     else if (0 == strcmp("PluginPlaceholderElement.js", name))
         return blink::WebData((const char*)content::PluginPlaceholderElementJs, sizeof(content::PluginPlaceholderElementJs));
     else if (0 == strcmp("DebuggerScriptSource.js", name)) {
-//         std::vector<char> buffer;
-//         readJsFile(L"E:\\mycode\\miniblink49\\trunk\\third_party\\WebKit\\Source\\core\\inspector\\DebuggerScript.js", &buffer);
-//         return blink::WebData(&buffer[0], buffer.size());
         return blink::WebData((const char*)content::DebuggerScriptSourceJs, sizeof(content::DebuggerScriptSourceJs));
     } else if (0 == strcmp("InjectedScriptSource.js", name))
         return blink::WebData((const char*)content::InjectedScriptSourceJs, sizeof(content::InjectedScriptSourceJs));
