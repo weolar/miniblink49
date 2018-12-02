@@ -1423,6 +1423,12 @@ std::string CWebView::getCookieJarPath()
     return cookiesData;
 }
 
+void CWebView::setCookieJarPath(const utf8* path)
+{
+    if (m_webPage)
+        m_webPage->setCookieJarPath(path);
+}
+
 } // namespace wke
 
 #endif

@@ -566,7 +566,7 @@ WKE_API void wkeOnDidCreateScriptContext(wkeWebView webView, wkeDidCreateScriptC
 typedef void(*wkeWillReleaseScriptContextCallback)(wkeWebView webView, void* param, wkeWebFrameHandle frameId, void* context, int worldId);
 WKE_API void wkeOnWillReleaseScriptContext(wkeWebView webView, wkeWillReleaseScriptContextCallback callback, void* callbackParam);
 
-WKE_API void wkeNetSetMIMEType(void* job, char *type);
+WKE_API void wkeNetSetMIMEType(void* job, const char *type);
 WKE_API void wkeNetSetHTTPHeaderField(void* job, wchar_t* key, wchar_t* value, bool response);
 WKE_API void wkeNetSetURL(void* job, const char *url);
 WKE_API void wkeNetSetData(void* job, void *buf, int len);

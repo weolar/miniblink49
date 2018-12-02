@@ -59,9 +59,12 @@ typedef enum {
 #ifndef HAVE_WCHAR_T
 typedef unsigned short wchar_t;
 #endif
-#endif
 
-#include <stdbool.h>
+#define bool	_Bool
+#define false	0
+#define true	1
+
+#endif
 
 #if defined(__cplusplus)
 #define WKE_EXTERN_C extern "C" 
@@ -287,7 +290,7 @@ typedef struct {
 
         // Only valid when storageType == StorageTypeFileSystemFile.
         wkeMemBuf* fileSystemURL;
-        long long fileSystemFileSize;
+        __int64 fileSystemFileSize;
 
         // Only valid when stringType == "text/html".
         wkeMemBuf* baseURL;
@@ -355,8 +358,8 @@ typedef struct {
     wkeHttBodyElementType type;
     wkeMemBuf* data;
     wkeString filePath;
-    long long fileStart;
-    long long fileLength; // -1 means to the end of the file.
+    __int64 fileStart;
+    __int64 fileLength; // -1 means to the end of the file.
 } wkePostBodyElement;
 
 typedef struct {
@@ -1016,7 +1019,7 @@ public:
     \
     ITERATOR1(bool, wkeIsProcessingUserGesture, wkeWebView webView, "") \
     \
-    ITERATOR2(void, wkeNetSetMIMEType, wkeNetJob jobPtr, char *type, "") \
+    ITERATOR2(void, wkeNetSetMIMEType, wkeNetJob jobPtr, const char* type, "") \
     ITERATOR2(const char*, wkeNetGetMIMEType, wkeNetJob jobPtr, wkeString mime, "") \
     ITERATOR4(void, wkeNetSetHTTPHeaderField, wkeNetJob jobPtr, wchar_t* key, wchar_t* value, bool response, "") \
     ITERATOR2(const char*, wkeNetGetHTTPHeaderField, wkeNetJob jobPtr, const char* key, "") \

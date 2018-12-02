@@ -56,7 +56,7 @@ const char* wkeNetGetHTTPHeaderField(wkeNetJob jobPtr, const char* key)
     return wke::createTempCharString(valueBuffer.data(), valueBuffer.size());
 }
 
-void wkeNetSetMIMEType(wkeNetJob jobPtr, char* type)
+void wkeNetSetMIMEType(wkeNetJob jobPtr, const char* type)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
     net::WebURLLoaderInternal* job = (net::WebURLLoaderInternal*)jobPtr;
