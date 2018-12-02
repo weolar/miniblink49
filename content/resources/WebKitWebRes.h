@@ -21,6 +21,7 @@ extern char PluginPlaceholderElementJs[4296];
 extern char DebuggerScriptSourceJs[19016];
 extern char InspectorOverlayPageHtml[26549];
 extern char InjectedScriptSourceJs[70694];
+extern char fullscreenCss[1531];
 
 }
 
