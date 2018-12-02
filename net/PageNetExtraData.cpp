@@ -4,6 +4,7 @@
 #include "net/PageNetExtraData.h"
 #include "net/WebURLLoaderManagerUtil.h"
 #include "net/cookies/WebCookieJarCurlImpl.h"
+#include "net/cookies/CookieJarMgr.h"
 
 namespace net {
     
@@ -18,14 +19,18 @@ PageNetExtraData::~PageNetExtraData()
         delete m_cookieJar;
 }
 
-void PageNetExtraData::setCookieJarFullPath(const std::string& cookieJarFileName)
+void PageNetExtraData::setCookieJarFullPath(const std::string& path)
 {
+    WTF::Mutex* mutex = sharedResourceMutex(CURL_LOCK_DATA_COOKIE);
+    WTF::Locker<WTF::Mutex> locker(*mutex);
+
     if (m_cookieJar) {
         OutputDebugStringA("PageNetExtraData::setCookieJarPath has benn set");
         return;
     }
 
-    m_cookieJar = new WebCookieJarImpl(cookieJarFileName);
+    WebCookieJarImpl* cookieJar = CookieJarMgr::getInst()->createOrGet(path);
+    m_cookieJar = cookieJar;
 }
 
 CURLSH* PageNetExtraData::getCurlShareHandle()

@@ -258,7 +258,7 @@ private:
         Vector<char> buffer;
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &buffer);
         int res = curl_easy_perform(curl);
-        if (CURLE_OK != res) {
+        if (CURLE_OK != res || 0 == buffer.size()) {
             curl_easy_cleanup(curl);
             blink::Platform::current()->mainThread()->postTask(FROM_HERE, WTF::bind(onNetGetFaviconFinish, jobId, webviewId));
             return;

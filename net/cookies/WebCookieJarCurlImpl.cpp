@@ -535,7 +535,12 @@ String WebCookieJarImpl::getCookiesForSession(const KURL&, const KURL& url, bool
     return cookies;
 }
 
-WebCookieJarImpl::WebCookieJarImpl(std::string cookieJarFileName)
+WebCookieJarImpl* WebCookieJarImpl::create(const std::string& cookieJarFullPath)
+{
+    return new WebCookieJarImpl(cookieJarFullPath);
+}
+
+WebCookieJarImpl::WebCookieJarImpl(const std::string& cookieJarFullPath)
 {
     m_curlShareHandle = curl_share_init();
     curl_share_setopt(m_curlShareHandle, CURLSHOPT_SHARE, CURL_LOCK_DATA_COOKIE);
@@ -543,7 +548,7 @@ WebCookieJarImpl::WebCookieJarImpl(std::string cookieJarFileName)
     curl_share_setopt(m_curlShareHandle, CURLSHOPT_LOCKFUNC, curl_lock_callback);
     curl_share_setopt(m_curlShareHandle, CURLSHOPT_UNLOCKFUNC, curl_unlock_callback);
 
-    m_cookieJarFileName = cookieJarFileName;
+    m_cookieJarFileName = cookieJarFullPath;
     m_dirty = false;
 }
 
@@ -553,17 +558,17 @@ WebCookieJarImpl::~WebCookieJarImpl()
         curl_share_cleanup(m_curlShareHandle);
 }
 
-void WebCookieJarImpl::setCookieJarFullPath(const char* path)
-{
-    WTF::Mutex* mutex = sharedResourceMutex(CURL_LOCK_DATA_COOKIE);
-    WTF::Locker<WTF::Mutex> locker(*mutex);
-
-    if (!path)
-        return;
-
-    m_cookieJarFileName = path;// std::string(&jarPathA[0], jarPathA.size());
-    m_dirty = true;
-}
+// void WebCookieJarImpl::setCookieJarFullPath(const char* path)
+// {
+//     WTF::Mutex* mutex = sharedResourceMutex(CURL_LOCK_DATA_COOKIE);
+//     WTF::Locker<WTF::Mutex> locker(*mutex);
+// 
+//     if (!path)
+//         return;
+// 
+//     m_cookieJarFileName = path;// std::string(&jarPathA[0], jarPathA.size());
+//     m_dirty = true;
+// }
 
 std::string WebCookieJarImpl::getCookieJarFullPath()
 {
@@ -573,21 +578,6 @@ std::string WebCookieJarImpl::getCookieJarFullPath()
     flushCurlCookie(nullptr);
     return m_cookieJarFileName;
 }
-
-// char* getCookieJarPath()
-// {
-//     WTF::Mutex* mutex = sharedResourceMutex(CURL_LOCK_DATA_COOKIE);
-//     WTF::Locker<WTF::Mutex> locker(*mutex);
-// 
-//     if (g_cookieJarPath)
-//         return g_cookieJarPath;
-// 
-//     char* cookieJarPathStr = "cookies.dat";
-//     g_cookieJarPath = (char*)malloc(strlen(cookieJarPathStr) + 1);
-//     strcpy(g_cookieJarPath, cookieJarPathStr);
-// 
-//     return g_cookieJarPath;
-// }
 
 //----WebCookieJar----
 
@@ -615,17 +605,5 @@ void WebCookieJarImpl::setCookieFromWinINet(const KURL& url, const Vector<char>&
 {
     notImplemented();
 }
-
-//////////////////////////////////////////////////////////////////////////
-
-// WebCookieJarImpl* WebCookieJarImpl::getShare()
-// {
-//     if (m_inst)
-//         return m_inst;
-// 
-//     CURLSH* curlsh = net::WebURLLoaderManager::sharedInstance()->getCurlShareHandle();
-//     m_inst = new WebCookieJarImpl(curlsh, net::cookieJarPath(), false);
-//     return m_inst;
-// }
 
 } // namespace content

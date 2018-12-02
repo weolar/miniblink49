@@ -72,6 +72,7 @@
 #include "net/HeaderVisitor.h"
 #include "net/PageNetExtraData.h"
 #include "net/cookies/WebCookieJarCurlImpl.h"
+#include "net/cookies/CookieJarMgr.h"
 #include "wke/wkeNetHook.h"
 #include "third_party/WebKit/Source/wtf/Threading.h"
 #include "third_party/WebKit/Source/wtf/Vector.h"
@@ -92,8 +93,7 @@ namespace net {
 
 MainTaskRunner* MainTaskRunner::m_inst = nullptr;
 
-WebURLLoaderManager::WebURLLoaderManager(const char* cookiePath)
-    //: m_cookieJarFileName(cookieJarPath())
+WebURLLoaderManager::WebURLLoaderManager(const char* cookieJarFullPath)
     : m_certificatePath(certificatePath())
     , m_runningJobs(0)
     , m_isShutdown(false)
@@ -105,7 +105,7 @@ WebURLLoaderManager::WebURLLoaderManager(const char* cookiePath)
     curl_global_init(CURL_GLOBAL_ALL);
     m_curlMultiHandle = curl_multi_init(); // 初始化curl批处理句柄
 
-    initCookieSession(cookiePath);
+    initCookieSession(cookieJarFullPath);
 }
 
 WebURLLoaderManager::~WebURLLoaderManager()
@@ -151,13 +151,13 @@ void WebURLLoaderManager::shutdown()
     m_thread = nullptr;
 }
 
-void WebURLLoaderManager::initCookieSession(const char* cookiePath)
+void WebURLLoaderManager::initCookieSession(const char* cookieJarFullPath)
 {
     // Curl saves both persistent cookies, and session cookies to the cookie file.
     // The session cookies should be deleted before starting a new session.
 
     //初始化共享curl句柄,用于共享cookies和dns等缓存
-    m_shareCookieJar = new WebCookieJarImpl(cookiePath);
+    m_shareCookieJar = CookieJarMgr::getInst()->createOrGet(cookieJarFullPath);
 
     CURL* curl = curl_easy_init();
     curl_easy_setopt(curl, CURLOPT_SHARE, m_shareCookieJar->getCurlShareHandle());
@@ -177,11 +177,6 @@ CURLSH* WebURLLoaderManager::getCurlShareHandle() const
     return m_shareCookieJar->getCurlShareHandle();
 }
 
-// void WebURLLoaderManager::setCookieJarFullPath(const WCHAR* path)
-// {
-//     m_shareCookieJar->setCookieJarFullPath(path);
-// }
-
 WebCookieJarImpl* WebURLLoaderManager::getShareCookieJar() const
 {
     return m_shareCookieJar;
@@ -189,10 +184,27 @@ WebCookieJarImpl* WebURLLoaderManager::getShareCookieJar() const
 
 WebURLLoaderManager* WebURLLoaderManager::m_sharedInstance = nullptr;
 
+static std::string getDefaultCookiesFullpath()
+{
+    std::vector<wchar_t> path;
+    path.resize(MAX_PATH + 1);
+    memset(&path[0], 0, sizeof(wchar_t) * (MAX_PATH + 1));
+    ::GetModuleFileNameW(nullptr, &path[0], MAX_PATH);
+    ::PathRemoveFileSpecW(&path[0]);
+    ::PathAppendW(&path[0], L"cookies.dat");
+
+    std::vector<char> pathStrA;
+    WTF::WCharToMByte(&path[0], wcslen(&path[0]), &pathStrA, CP_ACP);
+
+    return std::string(&pathStrA[0], pathStrA.size());
+}
+
 WebURLLoaderManager* WebURLLoaderManager::sharedInstance()
 {
-    if (!m_sharedInstance)
-        m_sharedInstance = new WebURLLoaderManager("cookies.dat");
+    if (!m_sharedInstance) {
+        std::string defaultCookiesFullpath = getDefaultCookiesFullpath();
+        m_sharedInstance = new WebURLLoaderManager(defaultCookiesFullpath.c_str());
+    }
     if (m_sharedInstance->isShutdown())
         return nullptr;
     return m_sharedInstance;
@@ -203,7 +215,11 @@ void WebURLLoaderManager::setCookieJarFullPath(const char* path)
     if (!m_sharedInstance) {
         m_sharedInstance = new WebURLLoaderManager(path);
     } else {
-        m_sharedInstance->getShareCookieJar()->setCookieJarFullPath(path);
+        WTF::Mutex* mutex = sharedResourceMutex(CURL_LOCK_DATA_COOKIE);
+        WTF::Locker<WTF::Mutex> locker(*mutex);
+
+        WebCookieJarImpl* cookieJar = CookieJarMgr::getInst()->createOrGet(path);
+        m_sharedInstance->m_shareCookieJar = cookieJar;
     }
 }
 
@@ -1439,6 +1455,9 @@ void WebURLLoaderManager::initializeHandleOnIoThread(int jobId, InitializeHandle
 
     String urlString = job->m_url;
     curl_easy_setopt(job->m_handle, CURLOPT_URL, job->m_url);
+
+    WTF::Mutex* mutex = sharedResourceMutex(CURL_LOCK_DATA_COOKIE);
+    WTF::Locker<WTF::Mutex> locker(*mutex);
 
     std::string cookieJarFullPath;
     if (job->m_pageNetExtraData) {

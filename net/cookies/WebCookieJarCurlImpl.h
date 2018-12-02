@@ -17,8 +17,9 @@ namespace net {
     
 class WebCookieJarImpl : public blink::WebCookieJar {
 public:
-    WebCookieJarImpl(std::string cookieJarFileName);
+    static WebCookieJarImpl* create(const std::string& cookieJarFullPath);
     ~WebCookieJarImpl();
+
     virtual void setCookie(const blink::WebURL&, const blink::WebURL& firstPartyForCookies, const blink::WebString& cookie) override;
     virtual blink::WebString cookies(const blink::WebURL&, const blink::WebURL& firstPartyForCookies) override;
     virtual blink::WebString cookieRequestHeaderFieldValue(const blink::WebURL&, const blink::WebURL& firstPartyForCookies) override;
@@ -27,7 +28,7 @@ public:
     void setCookieFromWinINet(const blink::KURL& url, const WTF::Vector<char>& cookiesLine);
     void setToRecordFromRawHeads(const blink::KURL& url, const WTF::String& rawHeadsString);
 
-    void setCookieJarFullPath(const char* path);
+    //void setCookieJarFullPath(const char* path);
 
     void deleteCookies(const blink::KURL& url, const String& cookieName);
     String getCookiesForSession(const blink::KURL&, const blink::KURL& url, bool httponly);
@@ -37,8 +38,6 @@ public:
     typedef bool(*CookieVisitor)(void* params, const char* name, const char* value, const char* domain, const char* path, int secure, int httpOnly, int* expires);
     void visitAllCookie(void* params, CookieVisitor visit);
 
-    //static WebCookieJarImpl* getShare();
-
     CURLSH* getCurlShareHandle() const
     {
         return m_curlShareHandle;
@@ -46,6 +45,9 @@ public:
     std::string getCookieJarFullPath();
 
 private:
+    friend class WebCookieJarImpl;
+    WebCookieJarImpl(const std::string& cookieJarFullPath);
+
     void flushCurlCookie(CURL* curl);
     void setCookiesFromDOM(const blink::KURL&, const blink::KURL& url, const String& value);
     CURLSH* m_curlShareHandle;
