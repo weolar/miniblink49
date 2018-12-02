@@ -11,7 +11,7 @@
 #include "libcef/browser/CefContext.h"
 #include "libcef/browser/ThreadUtil.h"
 
-#include "content/web_impl_win/WebCookieJarCurlImpl.h"
+#include "net/cookies/WebCookieJarCurlImpl.h"
 #include "third_party/WebKit/Source/platform/weborigin/KURL.h"
 #include "third_party/WebKit/public/platform/WebURL.h"
 #include "third_party/WebKit/public/platform/WebTraceLocation.h"
@@ -276,26 +276,19 @@ private:
 };
 
 bool CefCookieManagerImpl::VisitAllCookies(CefRefPtr<CefCookieVisitor> visitor) {
-//   GetCookieMonster(
-//       BrowserThread::GetMessageLoopProxyForThread(BrowserThread::IO),
-//       base::Bind(&CefCookieManagerImpl::VisitAllCookiesInternal, this,
-//                  visitor));
-    CefCookieVisitorImpl visitorImpl(visitor.get(), nullptr, true);
-    content::WebCookieJarImpl::visitAllCookie(&visitorImpl, &CefCookieVisitorImpl::Visitor);
-    visitorImpl.PushToVisitor();
 
+//     CefCookieVisitorImpl visitorImpl(visitor.get(), nullptr, true);
+//     content::WebCookieJarImpl::visitAllCookie(&visitorImpl, &CefCookieVisitorImpl::Visitor);
+//     visitorImpl.PushToVisitor();
+    DebugBreak();
     return true;
 }
 
 bool CefCookieManagerImpl::VisitUrlCookies(const CefString& url, bool includeHttpOnly, CefRefPtr<CefCookieVisitor> visitor) {
-//   GetCookieMonster(
-//       BrowserThread::GetMessageLoopProxyForThread(BrowserThread::IO),
-//       base::Bind(&CefCookieManagerImpl::VisitUrlCookiesInternal, this, url,
-//                  includeHttpOnly, visitor));
-
-    CefCookieVisitorImpl visitorImpl(visitor.get(), &url, includeHttpOnly);
-    content::WebCookieJarImpl::visitAllCookie(&visitorImpl, &CefCookieVisitorImpl::Visitor);
-    visitorImpl.PushToVisitor();
+//     CefCookieVisitorImpl visitorImpl(visitor.get(), &url, includeHttpOnly);
+//     content::WebCookieJarImpl::visitAllCookie(&visitorImpl, &CefCookieVisitorImpl::Visitor);
+//     visitorImpl.PushToVisitor();
+    DebugBreak();
 
     return true;
 }
@@ -347,55 +340,58 @@ bool CefCookieManagerImpl::SetCookie(const CefString& url, const CefCookie& cook
     if (!CEF_CURRENTLY_ON_UIT())
         return false;
 
-    std::string urlString = url.ToString();
-    if (urlString.empty())
-        return false;
-
-    std::string cookieString = CefCookieToString(cookie);
-    if (cookieString.empty())
-        return false;
-
-    blink::KURL kurl(blink::ParsedURLString, url.ToString().c_str());
-    if (!kurl.isValid())
-        return false;
-
-    content::WebCookieJarImpl::inst()->setCookie(blink::WebURL(), kurl, blink::WebString::fromUTF8(cookieString.c_str()));
-
-    if (callback.get()) {
-        callback->AddRef();
-        blink::Platform::current()->currentThread()->postTask(FROM_HERE, WTF::bind(CefOnSetCookieCallback, callback.get()));
-    }
+//     std::string urlString = url.ToString();
+//     if (urlString.empty())
+//         return false;
+// 
+//     std::string cookieString = CefCookieToString(cookie);
+//     if (cookieString.empty())
+//         return false;
+// 
+//     blink::KURL kurl(blink::ParsedURLString, url.ToString().c_str());
+//     if (!kurl.isValid())
+//         return false;
+// 
+//     content::WebCookieJarImpl::getShare()->setCookie(blink::WebURL(), kurl, blink::WebString::fromUTF8(cookieString.c_str()));
+// 
+//     if (callback.get()) {
+//         callback->AddRef();
+//         blink::Platform::current()->currentThread()->postTask(FROM_HERE, WTF::bind(CefOnSetCookieCallback, callback.get()));
+//     }
+    DebugBreak();
 
     return true;
 }
 
 bool CefCookieManagerImpl::DeleteCookies(const CefString& url, const CefString& cookie_name, CefRefPtr<CefDeleteCookiesCallback> callback) {
     // Empty URLs are allowed but not invalid URLs.
-    blink::KURL gurl(blink::ParsedURLString, url.ToString().c_str());
-    if (!gurl.isEmpty() && !gurl.isValid())
-        return false;
+//     blink::KURL gurl(blink::ParsedURLString, url.ToString().c_str());
+//     if (!gurl.isEmpty() && !gurl.isValid())
+//         return false;
+// 
+//     if (!CEF_CURRENTLY_ON_UIT())
+//         return false;
+// 
+//     std::string urlString = url.ToString();
+//     if (urlString.empty())
+//         return false;
+// 
+//     std::string cookieName = cookie_name.ToString();
+//     if (cookieName.empty())
+//         return false;
+// 
+//     blink::KURL kurl(blink::ParsedURLString, url.ToString().c_str());
+//     if (!kurl.isValid())
+//         return false;
+// 
+//     content::WebCookieJarImpl::getShare()->deleteCookies(kurl, blink::WebString::fromUTF8(cookieName.c_str()));
+// 
+//     if (callback.get()) {
+//         callback->AddRef();
+//         blink::Platform::current()->currentThread()->postTask(FROM_HERE, WTF::bind(CefOnDelCookieCallback, callback.get()));
+//     }
+    DebugBreak();
 
-    if (!CEF_CURRENTLY_ON_UIT())
-        return false;
-
-    std::string urlString = url.ToString();
-    if (urlString.empty())
-        return false;
-
-    std::string cookieName = cookie_name.ToString();
-    if (cookieName.empty())
-        return false;
-
-    blink::KURL kurl(blink::ParsedURLString, url.ToString().c_str());
-    if (!kurl.isValid())
-        return false;
-
-    content::WebCookieJarImpl::inst()->deleteCookies(kurl, blink::WebString::fromUTF8(cookieName.c_str()));
-
-    if (callback.get()) {
-        callback->AddRef();
-        blink::Platform::current()->currentThread()->postTask(FROM_HERE, WTF::bind(CefOnDelCookieCallback, callback.get()));
-    }
     return true;
 }
 

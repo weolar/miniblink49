@@ -17,15 +17,15 @@ Lock::Lock() : lock_() {
 }
 
 Lock::~Lock() {
-  DCHECK(owning_thread_ref_.is_null());
+  //DCHECK(owning_thread_ref_.is_null());
 }
 
 void Lock::AssertAcquired() const {
-  DCHECK(owning_thread_ref_ == PlatformThread::CurrentRef());
+  //DCHECK(owning_thread_ref_ == PlatformThread::CurrentRef());
 }
 
 void Lock::CheckHeldAndUnmark() {
-  DCHECK(owning_thread_ref_ == PlatformThread::CurrentRef());
+  //DCHECK(owning_thread_ref_ == PlatformThread::CurrentRef());
   owning_thread_ref_ = PlatformThreadRef();
 }
 
@@ -35,7 +35,7 @@ void Lock::CheckUnheldAndMark() {
   // See "Why can the holder of a Lock not reacquire it?" at
   // http://www.chromium.org/developers/lock-and-condition-variable for more
   // information.
-  DCHECK(owning_thread_ref_.is_null());
+  //DCHECK(owning_thread_ref_.is_null());
   owning_thread_ref_ = PlatformThread::CurrentRef();
 }
 
