@@ -736,7 +736,7 @@ bool WebFrameClientImpl::runModalConfirmDialog(const WebString& message)
     bool needCall = true;
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
     wke::AutoDisableFreeV8TempObejct autoDisableFreeV8TempObejct;
-    if (m_webPage->wkeHandler().alertBoxCallback && m_webPage->getState() == pageInited) {
+    if (m_webPage->wkeHandler().confirmBoxCallback && m_webPage->getState() == pageInited) {
         needCall = false;
         wke::CString wkeMsg(message);
         return m_webPage->wkeHandler().confirmBoxCallback(m_webPage->wkeWebView(), m_webPage->wkeHandler().confirmBoxCallbackParam, &wkeMsg);
