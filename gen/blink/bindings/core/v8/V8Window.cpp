@@ -369,6 +369,7 @@
 #include "bindings/core/v8/V8TreeWalker.h"
 #include "bindings/core/v8/V8UIEvent.h"
 #include "bindings/core/v8/V8URL.h"
+#include "bindings/core/v8/V8URLSearchParams.h"
 #include "bindings/core/v8/V8VTTCue.h"
 #include "bindings/core/v8/V8VTTRegion.h"
 #include "bindings/core/v8/V8VTTRegionList.h"
@@ -7558,6 +7559,7 @@ static const V8DOMConfiguration::AttributeConfiguration V8WindowAttributes[] = {
     {"TreeWalker", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8TreeWalker::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
     {"UIEvent", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8UIEvent::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
     {"URL", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8URL::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
+    {"URLSearchParams", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8URLSearchParams::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
     {"VTTCue", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8VTTCue::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
     {"ValidityState", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8ValidityState::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
     {"WebKitCSSMatrix", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8WebKitCSSMatrix::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
