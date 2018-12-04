@@ -1,6 +1,6 @@
 /* md4.h
  *
- * Copyright (C) 2006-2016 wolfSSL Inc.
+ * Copyright (C) 2006-2017 wolfSSL Inc.
  *
  * This file is part of wolfSSL.
  *
@@ -19,6 +19,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1335, USA
  */
 
+/*!
+    \file wolfssl/wolfcrypt/md4.h
+*/
 
 #ifndef WOLF_CRYPT_MD4_H
 #define WOLF_CRYPT_MD4_H
@@ -33,6 +36,7 @@
 
 /* in bytes */
 enum {
+    MD4             =  WC_HASH_TYPE_MD4,
     MD4_BLOCK_SIZE  = 64,
     MD4_DIGEST_SIZE = 16,
     MD4_PAD_SIZE    = 56

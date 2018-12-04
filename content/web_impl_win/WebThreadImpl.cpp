@@ -1,25 +1,28 @@
 
 #include "config.h"
 
-#include "WebThreadImpl.h"
-
-#include <windows.h>
-#include <process.h>
-#include "base/compiler_specific.h"
-#include "base/thread.h"
+#include "content/web_impl_win/WebThreadImpl.h"
 #include "content/web_impl_win/BlinkPlatformImpl.h"
+#include "content/web_impl_win/WebTimerBase.h"
+#include "content/web_impl_win/WebSchedulerImpl.h"
+#include "content/web_impl_win/ActivatingTimerCheck.h"
+#include "content/browser/SharedTimerWin.h"
 #include "third_party/WebKit/public/platform/WebTraceLocation.h"
 #include "third_party/WebKit/Source/wtf/ThreadingPrimitives.h"
 
-#include "WebTimerBase.h"
-#include "WebSchedulerImpl.h"
-#include "ActivatingTimerCheck.h"
 #if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 #include "libcef/browser/CefContext.h"
 #endif
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
-#include "wke/wkeJsBindFreeTempObject.h"
+#include "wke/wkeUtil.h"
 #endif
+
+#include "base/compiler_specific.h"
+#include "base/thread.h"
+
+#include <windows.h>
+#include <process.h>
+#include <mmsystem.h>
 
 namespace content {
 
@@ -50,6 +53,7 @@ WebThreadImpl::WebThreadImpl(const char* name)
     , m_threadId(-1)
     , m_firingTimers(false)
     , m_webSchedulerImpl(new WebSchedulerImpl(this))
+    , m_isObserversDirty(false)
     , m_name(name)
     , m_suspendTimerQueue(false)
     , m_hadThreadInit(false)
@@ -60,14 +64,17 @@ WebThreadImpl::WebThreadImpl(const char* name)
 {
     m_name = name;
     ::InitializeCriticalSection(&m_taskPairsMutex);
-
-    if (0 == strcmp("MainThread", name)) {
+    ::InitializeCriticalSection(&m_observersMutex);
+    
+    m_isMainThread = (0 == strcmp("MainThread", name));
+    if (m_isMainThread) {
 #ifdef _DEBUG
         if (!gActivatingTimerCheck)
             gActivatingTimerCheck = new ActivatingTimerCheck();
 #endif
         m_hadThreadInit = true;
         m_threadId = WTF::currentThread();
+        updateSharedTimer();
         return;
     }
 
@@ -95,13 +102,16 @@ WebThreadImpl::~WebThreadImpl()
     delete m_webSchedulerImpl;
     
     ::DeleteCriticalSection(&m_taskPairsMutex);
-
+    ::DeleteCriticalSection(&m_observersMutex);
+    
     BlinkPlatformImpl* platform = (BlinkPlatformImpl*)blink::Platform::current();
     platform->onThreadExit(this);
 }
 
 void WebThreadImpl::shutdown()
 {
+    if (m_isMainThread)
+        stopSharedTimer();
     willExit();
     waitForExit();
 }
@@ -158,11 +168,11 @@ void WebThreadImpl::postTask(const blink::WebTraceLocation& location, blink::Web
 }
 
 void WebThreadImpl::postDelayedTaskImpl(
-    const blink::WebTraceLocation& location, blink::WebThread::Task* task, long long delayMs, double* createTimeOnOtherThread, int priority, unsigned* heapInsertionOrder)
+    const blink::WebTraceLocation& location, blink::WebThread::Task* task, 
+    long long delayMs, double* createTimeOnOtherThread, int priority, unsigned* heapInsertionOrder)
 {
     // delete by self
     WebTimerBase* timer = WebTimerBase::create(this, location, task, priority);
-//     timer->startOneShot((double)delayMs / 1000.0);
     timer->startFromOtherThread((double)delayMs / 1000.0, createTimeOnOtherThread, heapInsertionOrder);
 }
 
@@ -173,6 +183,8 @@ void WebThreadImpl::postDelayedTaskWithPriorityCrossThread(
     int priority)
 {
     if (m_willExit) {
+        if (m_hEvent)
+            ::SetEvent(m_hEvent);
         delete task;
         return;
     }
@@ -243,19 +255,9 @@ void WebThreadImpl::startTriggerTasks()
         m_taskPairsToPost.clear();
         ::LeaveCriticalSection(&m_taskPairsMutex);
 
-        //TaskPair::sortByPriority(&taskPairsToPostCopy);
-
         for (size_t i = 0; i < taskPairsToPostCopy.size(); ++i) {
             TaskPair* taskPair = taskPairsToPostCopy[i];
-//             if (0 == taskPair->delayMs) {
-//                 willProcessTasks();
-// 
-//                 taskPair->task->run();
-//                 delete taskPair->task;
-// 
-//                 didProcessTasks();
-//             } else
-                postDelayedTaskImpl(taskPair->location, taskPair->task, taskPair->delayMs, &taskPair->createTime, taskPair->priority, &taskPair->heapInsertionOrder);
+            postDelayedTaskImpl(taskPair->location, taskPair->task, taskPair->delayMs, &taskPair->createTime, taskPair->priority, &taskPair->heapInsertionOrder);
 
             delete taskPair;
         }
@@ -282,30 +284,97 @@ static std::vector<WebThreadImpl::TaskObserver*>::iterator findObserver(std::vec
     return observers.end();
 }
 
+class EmptyTask : public blink::WebThread::Task {
+public:
+    virtual ~EmptyTask() override {}
+    virtual void run() override {};
+};
+
 void WebThreadImpl::addTaskObserver(TaskObserver* observer)
 {
-    if (m_observers.end() == findObserver(m_observers, observer))
-        m_observers.push_back(observer);
+    ::EnterCriticalSection(&m_observersMutex);
+    if (m_observers.end() != findObserver(m_observers, observer)) {
+        if (m_hEvent)
+            ::SetEvent(m_hEvent);
+        ::LeaveCriticalSection(&m_observersMutex);
+        return;
+    }
+
+    m_observers.push_back(observer);
+    ::LeaveCriticalSection(&m_observersMutex);
+
+    double fireTime = currentTime();
+    if (!m_timerHeap.empty() && (m_timerHeap[0]->m_nextFireTime <= fireTime)) {
+        if (m_hEvent)
+            ::SetEvent(m_hEvent);
+    } else
+        postTask(FROM_HERE, new EmptyTask());
+
+    m_isObserversDirty = true;
 }
 
 void WebThreadImpl::removeTaskObserver(TaskObserver* observer)
 {
-    std::vector<WebThreadImpl::TaskObserver*>::iterator pos = findObserver(m_observers, observer);
-    if (m_observers.end() != pos)
-        m_observers.erase(pos);
+    ::EnterCriticalSection(&m_observersMutex);
+    for (size_t i = 0; i < m_observers.size(); ++i) {
+        if (observer == m_observers[i])
+            m_observers[i] = nullptr;
+    }
+    ::LeaveCriticalSection(&m_observersMutex);
+    m_isObserversDirty = true;
 }
 
 void WebThreadImpl::willProcessTasks()
 {
     // 有些回调，比如Microtask::enqueueMicrotask，会在退出的时候append进来，需要在最后执行，否则一些ImageLoad没法释放
-    for (size_t i = 0; i < m_observers.size(); ++i)
-        m_observers[i]->willProcessTask();
+    for (size_t i = 0; ; ++i) {
+        ::EnterCriticalSection(&m_observersMutex);
+        if (i >= m_observers.size()) {
+            ::LeaveCriticalSection(&m_observersMutex);
+            break;
+        }
+        TaskObserver* observer = m_observers[i];
+        ::LeaveCriticalSection(&m_observersMutex);
+        if (observer)
+            observer->willProcessTask();
+    }
+    clearEmptyObservers();
 }
 
 void WebThreadImpl::didProcessTasks()
 {
-    for (size_t i = 0; i < m_observers.size(); ++i)
-        m_observers[i]->didProcessTask();
+    for (size_t i = 0; ; ++i) {
+        ::EnterCriticalSection(&m_observersMutex);
+        if (i >= m_observers.size()) {
+            ::LeaveCriticalSection(&m_observersMutex);
+            break;
+        }
+        TaskObserver* observer = m_observers[i];
+        ::LeaveCriticalSection(&m_observersMutex);
+        if (observer)
+            observer->didProcessTask();
+    }
+    clearEmptyObservers();
+}
+
+void WebThreadImpl::clearEmptyObservers()
+{
+    if (!m_isObserversDirty)
+        return;
+    m_isObserversDirty = false;
+
+    ::EnterCriticalSection(&m_observersMutex);
+    std::vector<WebThreadImpl::TaskObserver*>::iterator it = m_observers.begin();
+    for (; it != m_observers.end();) {
+        if (nullptr == *it)
+            it = m_observers.erase(it);
+        else
+            ++it;
+
+        if (it == m_observers.end())
+            break;
+    }
+    ::LeaveCriticalSection(&m_observersMutex);
 }
 
 blink::WebScheduler* WebThreadImpl::scheduler() const
@@ -317,13 +386,16 @@ void WebThreadImpl::deleteUnusedTimers()
 {
     for (size_t i = 0; i < m_unusedTimersToDelete.size(); ++i) {
         WebTimerBase* timer = m_unusedTimersToDelete[i];
-        if (1 == timer->refCount()) { // weolar
+
+#if 0
+        if (1 == timer->refCount()) {
             for (size_t j = 0; j < m_timerHeap.size(); ++j) {
                 WebTimerBase* timerOther = m_timerHeap[j];
                 if (timerOther == timer)
                     DebugBreak();
             }
         }
+#endif
         timer->deref();
     }
     m_unusedTimersToDelete.clear();
@@ -390,7 +462,7 @@ void WebThreadImpl::fireOnExit()
 void WebThreadImpl::schedulerTasks()
 {
     // Do a re-entrancy check.
-    if (m_firingTimers || m_suspendTimerQueue) 
+    if (m_firingTimers /*|| m_suspendTimerQueue*/) 
         return;
     m_firingTimers = true;
 
@@ -410,8 +482,10 @@ void WebThreadImpl::schedulerTasks()
 #endif
 
     startTriggerTasks(); // 如果不加这句，且下面的循环在本线程不停添加定时器，则startTriggerTasks里的就没机会执行了。
-
+    
+    bool hasFire = false;
     while (!m_timerHeap.empty() && (m_timerHeap[0]->m_nextFireTime <= fireTime || m_willExit)) {
+        hasFire = true;
         WebTimerBase* timer = m_timerHeap[0];
         timer->m_nextFireTime = 0;
         timer->heapDeleteMin();
@@ -435,10 +509,20 @@ void WebThreadImpl::schedulerTasks()
         if (!m_firingTimers || timeToQuit < currentTime())
             break;
     }
-
+    if (!hasFire) {
+        willProcessTasks();
+        didProcessTasks();
+    }
+    
     m_firingTimers = false;
 
     updateSharedTimer();
+}
+
+void WebThreadImpl::updateSharedTimer()
+{
+    if (m_isMainThread)
+        setSharedTimerFireInterval(0.016);
 }
 
 std::vector<WebTimerBase*>& WebThreadImpl::timerHeap()

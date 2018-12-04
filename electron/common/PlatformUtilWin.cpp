@@ -5,27 +5,20 @@
 #include "common/PlatformUtil.h"
 
 #include <windows.h>
-#include <atlbase.h>
 #include <commdlg.h>
 #include <comdef.h>
-#include <dwmapi.h>
 #include <shellapi.h>
+#include <shlwapi.h>
 #include <shlobj.h>
 
-// #include "base/bind.h"
-// #include "base/bind_helpers.h"
 #include "base/files/file_path.h"
-//#include "base/files/file_util.h"
 #include "base/logging.h"
 #include "base/strings/string_util.h"
-//#include "base/strings/utf_string_conversions.h"
-//#include "base/win/registry.h"
 #include "base/win/scoped_co_mem.h"
 #include "base/win/scoped_com_initializer.h"
 #include "base/win/scoped_comptr.h"
 #include "base/win/windows_version.h"
 #include "base/win/shell.h"
-//#include "url/gurl.h"
 
 #include "v8.h"
 #include "gin/arguments.h"
@@ -47,6 +40,7 @@ bool ValidateShellCommandForScheme(const std::string& scheme) {
     DebugBreak();
     return true;
 }
+
 
 // Required COM implementation of IFileOperationProgressSink so we can
 // precheck files before deletion to make sure they can be move to the
@@ -110,27 +104,32 @@ HRESULT DeleteFileProgressSink::QueryInterface(REFIID riid, LPVOID* ppvObj) {
     if (!ppvObj)
         return E_INVALIDARG;
     *ppvObj = nullptr;
-    if (riid == IID_IUnknown || riid == IID_IFileOperationProgressSink) {
-        // Increment the reference count and return the pointer.
-        *ppvObj = reinterpret_cast<IUnknown*>(this);
-        AddRef();
-        return NOERROR;
-    }
+    DebugBreak();
+
+//     if (riid == IID_IUnknown || riid == IID_IFileOperationProgressSink) {
+//         // Increment the reference count and return the pointer.
+//         *ppvObj = reinterpret_cast<IUnknown*>(this);
+//         AddRef();
+//         return NOERROR;
+//     }
     return E_NOINTERFACE;
 }
 
 ULONG DeleteFileProgressSink::AddRef() {
-    InterlockedIncrement(&m_cRef);
+    //InterlockedIncrement(&m_cRef);
+    DebugBreak();
     return m_cRef;
 }
 
 ULONG DeleteFileProgressSink::Release() {
     // Decrement the object's internal counter.
-    ULONG ulRefCount = InterlockedDecrement(&m_cRef);
-    if (0 == m_cRef) {
-        delete this;
-    }
-    return ulRefCount;
+//     ULONG ulRefCount = InterlockedDecrement(&m_cRef);
+//     if (0 == m_cRef) {
+//         delete this;
+//     }
+//    return ulRefCount;
+    DebugBreak();
+    return 0;
 }
 
 HRESULT DeleteFileProgressSink::StartOperations() {
@@ -146,7 +145,7 @@ HRESULT DeleteFileProgressSink::PreRenameItem(DWORD, IShellItem*, LPCWSTR) {
 }
 
 HRESULT DeleteFileProgressSink::PostRenameItem(
-    DWORD, IShellItem*, __RPC__in_string LPCWSTR, HRESULT, IShellItem*) {
+    DWORD, IShellItem*, LPCWSTR, HRESULT, IShellItem*) {
     return E_NOTIMPL;
 }
 
@@ -216,9 +215,9 @@ void showItemInFolder(const base::FilePath& full_path) {
         return;
 
     typedef HRESULT(WINAPI *SHOpenFolderAndSelectItemsFuncPtr)(
-        PCIDLIST_ABSOLUTE pidl_Folder,
+        ITEMIDLIST* pidl_Folder,
         UINT cidl,
-        PCUITEMID_CHILD_ARRAY pidls,
+        const ITEMIDLIST** pidls,
         DWORD flags);
 
     static SHOpenFolderAndSelectItemsFuncPtr open_folder_and_select_itemsPtr = NULL;
@@ -359,8 +358,9 @@ bool moveItemToTrash(const base::FilePath& path) {
         return false;
 
     base::win::ScopedComPtr<IFileOperation> pfo;
-    if (FAILED(pfo.CreateInstance(CLSID_FileOperation)))
-        return false;
+//     if (FAILED(pfo.CreateInstance(CLSID_FileOperation)))
+//         return false;
+    DebugBreak();
 
     // Elevation prompt enabled for UAC protected files.  This overrides the
     // SILENT, NO_UI and NOERRORUI flags.
@@ -388,13 +388,26 @@ bool moveItemToTrash(const base::FilePath& path) {
 
     // Create an IShellItem from the supplied source path.
     base::win::ScopedComPtr<IShellItem> delete_item;
-    if (FAILED(SHCreateItemFromParsingName(path.value().c_str(),
-        NULL,
-        IID_PPV_ARGS(delete_item.Receive()))))
-        return false;
+//     if (FAILED(SHCreateItemFromParsingName(path.value().c_str(), NULL, IID_PPV_ARGS(delete_item.Receive()))))
+//         return false;
 
-    base::win::ScopedComPtr<IFileOperationProgressSink> delete_sink(
-        new DeleteFileProgressSink);
+    // https://stackoverflow.com/questions/20885556/replacement-for-shcreateitemfromparsingname-on-windows-xp
+    // http://blog.csdn.net/infoworld/article/details/54574953
+    IFileDialog *pfd = nullptr;
+    LPITEMIDLIST pidl = nullptr;
+    HRESULT hresult = ::SHParseDisplayName(path.value().c_str(), 0, &pidl, SFGAO_FOLDER, 0);
+    if (SUCCEEDED(hresult)) {
+        IShellFolder* psf = nullptr;
+        hresult = ::SHGetDesktopFolder(&psf);
+        if (SUCCEEDED(hresult)) {
+            hresult = psf->BindToObject(pidl, 0, IID_IShellFolder, (void**)delete_item.Receive());
+            if (SUCCEEDED(hresult)) {
+                pfd->SetFolder(delete_item.get());
+            }
+        }
+    }
+
+    base::win::ScopedComPtr<IFileOperationProgressSink> delete_sink(new DeleteFileProgressSink);
     if (!delete_sink)
         return false;
 

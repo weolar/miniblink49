@@ -1,6 +1,6 @@
 /* memory.c
  *
- * Copyright (C) 2006-2016 wolfSSL Inc.
+ * Copyright (C) 2006-2017 wolfSSL Inc.
  *
  * This file is part of wolfSSL.
  *
@@ -101,7 +101,11 @@ void* wolfSSL_Malloc(size_t size)
     #endif
     }
     else {
+    #ifndef WOLFSSL_NO_MALLOC
         res = malloc(size);
+    #else
+        WOLFSSL_MSG("No malloc available");
+    #endif
     }
 
     #ifdef WOLFSSL_MALLOC_CHECK
@@ -126,7 +130,11 @@ void wolfSSL_Free(void *ptr)
     #endif
     }
     else {
+    #ifndef WOLFSSL_NO_MALLOC
         free(ptr);
+    #else
+        WOLFSSL_MSG("No free available");
+    #endif
     }
 }
 
@@ -146,7 +154,11 @@ void* wolfSSL_Realloc(void *ptr, size_t size)
     #endif
     }
     else {
+    #ifndef WOLFSSL_NO_MALLOC
         res = realloc(ptr, size);
+    #else
+        WOLFSSL_MSG("No realloc available");
+    #endif
     }
 
     return res;
@@ -533,7 +545,11 @@ void* wolfSSL_Malloc(size_t size, void* heap, int type)
             }
         #else
         #ifndef WOLFSSL_NO_MALLOC
-            res = malloc(size);
+            #ifdef FREERTOS
+                res = pvPortMalloc(size);
+            #else
+                res = malloc(size);
+            #endif
         #else
             WOLFSSL_MSG("No heap hint found to use and no malloc");
             #ifdef WOLFSSL_DEBUG_MEMORY
@@ -667,7 +683,11 @@ void wolfSSL_Free(void *ptr, void* heap, int type)
             }
         #endif
         #ifndef WOLFSSL_NO_MALLOC
-            free(ptr);
+            #ifdef FREERTOS
+                vPortFree(ptr);
+            #else
+                free(ptr);
+            #endif
         #else
             WOLFSSL_MSG("Error trying to call free when turned off");
         #endif /* WOLFSSL_NO_MALLOC */

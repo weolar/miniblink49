@@ -13,7 +13,7 @@
 #include "base/win/shortcut.h"
 #include "base/files/file_path.h"
 #include "base/strings/string_util.h"
-#include "node/include/nodeblink.h"
+#include "node/nodeblink.h"
 #include "common/NodeRegisterHelp.h"
 
 namespace gin {

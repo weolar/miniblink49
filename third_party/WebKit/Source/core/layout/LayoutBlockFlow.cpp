@@ -289,6 +289,9 @@ void LayoutBlockFlow::layoutBlock(bool relayoutChildren)
     LayoutAnalyzer::BlockScope analyzer(*this);
     SubtreeLayoutScope layoutScope(*this);
 
+    LayoutUnit previousHeight = logicalHeight();
+    LayoutUnit oldLeft = logicalLeft();
+    
     // Multiple passes might be required for column based layout.
     // The number of passes could be as high as the number of columns.
     bool done = false;
@@ -299,6 +302,14 @@ void LayoutBlockFlow::layoutBlock(bool relayoutChildren)
     LayoutView* layoutView = view();
     if (layoutView->layoutState()->pageLogicalHeight())
         setPageLogicalOffset(layoutView->layoutState()->pageLogicalOffset(*this, logicalTop()));
+
+    if (logicalHeight() != previousHeight || isDocumentElement())
+        relayoutChildren = true;
+
+    PositionedLayoutBehavior behavior = DefaultLayout;
+    if (oldLeft != logicalLeft())
+        behavior = ForcedLayoutAfterContainingBlockMoved;
+    layoutPositionedObjects(relayoutChildren, behavior);
 
     updateLayerTransformAfterLayout();
 

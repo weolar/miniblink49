@@ -38,7 +38,9 @@ namespace blink {
 
 Navigator::Navigator(LocalFrame* frame)
     : DOMWindowProperty(frame)
+    , NavigatorLanguage(frame)
 {
+
 }
 
 Navigator::~Navigator()

@@ -1,6 +1,6 @@
 /* sha3.c
  *
- * Copyright (C) 2006-2016 wolfSSL Inc.
+ * Copyright (C) 2006-2017 wolfSSL Inc.
  *
  * This file is part of wolfSSL.
  *
@@ -34,7 +34,7 @@
 /* fips wrapper calls, user can call direct */
 #ifdef HAVE_FIPS
 
-    int wc_InitSha3_224(Sha3* sha, void* heap, int devId)
+    int wc_InitSha3_224(wc_Sha3* sha, void* heap, int devId)
     {
         (void)heap;
         (void)devId;
@@ -43,27 +43,27 @@
         }
         return InitSha3_224_fips(sha);
     }
-    int wc_Sha3_224_Update(Sha3* sha, const byte* data, word32 len)
+    int wc_Sha3_224_Update(wc_Sha3* sha, const byte* data, word32 len)
     {
         if (sha == NULL ||  (data == NULL && len > 0)) {
             return BAD_FUNC_ARG;
         }
         return Sha3_224_Update_fips(sha, data, len);
     }
-    int wc_Sha3_224_Final(Sha3* sha, byte* out)
+    int wc_Sha3_224_Final(wc_Sha3* sha, byte* out)
     {
         if (sha == NULL || out == NULL) {
             return BAD_FUNC_ARG;
         }
         return Sha3_224_Final_fips(sha, out);
     }
-    void wc_Sha3_224_Free(Sha3* sha)
+    void wc_Sha3_224_Free(wc_Sha3* sha)
     {
         (void)sha;
         /* Not supported in FIPS */
     }
 
-    int wc_InitSha3_256(Sha3* sha, void* heap, int devId)
+    int wc_InitSha3_256(wc_Sha3* sha, void* heap, int devId)
     {
         (void)heap;
         (void)devId;
@@ -72,27 +72,27 @@
         }
         return InitSha3_256_fips(sha);
     }
-    int wc_Sha3_256_Update(Sha3* sha, const byte* data, word32 len)
+    int wc_Sha3_256_Update(wc_Sha3* sha, const byte* data, word32 len)
     {
         if (sha == NULL ||  (data == NULL && len > 0)) {
             return BAD_FUNC_ARG;
         }
         return Sha3_256_Update_fips(sha, data, len);
     }
-    int wc_Sha3_256_Final(Sha3* sha, byte* out)
+    int wc_Sha3_256_Final(wc_Sha3* sha, byte* out)
     {
         if (sha == NULL || out == NULL) {
             return BAD_FUNC_ARG;
         }
         return Sha3_256_Final_fips(sha, out);
     }
-    void wc_Sha3_256_Free(Sha3* sha)
+    void wc_Sha3_256_Free(wc_Sha3* sha)
     {
         (void)sha;
         /* Not supported in FIPS */
     }
 
-    int wc_InitSha3_384(Sha3* sha, void* heap, int devId)
+    int wc_InitSha3_384(wc_Sha3* sha, void* heap, int devId)
     {
         (void)heap;
         (void)devId;
@@ -101,27 +101,27 @@
         }
         return InitSha3_384_fips(sha);
     }
-    int wc_Sha3_384_Update(Sha3* sha, const byte* data, word32 len)
+    int wc_Sha3_384_Update(wc_Sha3* sha, const byte* data, word32 len)
     {
         if (sha == NULL ||  (data == NULL && len > 0)) {
             return BAD_FUNC_ARG;
         }
         return Sha3_384_Update_fips(sha, data, len);
     }
-    int wc_Sha3_384_Final(Sha3* sha, byte* out)
+    int wc_Sha3_384_Final(wc_Sha3* sha, byte* out)
     {
         if (sha == NULL || out == NULL) {
             return BAD_FUNC_ARG;
         }
         return Sha3_384_Final_fips(sha, out);
     }
-    void wc_Sha3_384_Free(Sha3* sha)
+    void wc_Sha3_384_Free(wc_Sha3* sha)
     {
         (void)sha;
         /* Not supported in FIPS */
     }
 
-    int wc_InitSha3_512(Sha3* sha, void* heap, int devId)
+    int wc_InitSha3_512(wc_Sha3* sha, void* heap, int devId)
     {
         (void)heap;
         (void)devId;
@@ -130,21 +130,21 @@
         }
         return InitSha3_512_fips(sha);
     }
-    int wc_Sha3_512_Update(Sha3* sha, const byte* data, word32 len)
+    int wc_Sha3_512_Update(wc_Sha3* sha, const byte* data, word32 len)
     {
         if (sha == NULL ||  (data == NULL && len > 0)) {
             return BAD_FUNC_ARG;
         }
         return Sha3_512_Update_fips(sha, data, len);
     }
-    int wc_Sha3_512_Final(Sha3* sha, byte* out)
+    int wc_Sha3_512_Final(wc_Sha3* sha, byte* out)
     {
         if (sha == NULL || out == NULL) {
             return BAD_FUNC_ARG;
         }
         return Sha3_512_Final_fips(sha, out);
     }
-    void wc_Sha3_512_Free(Sha3* sha)
+    void wc_Sha3_512_Free(wc_Sha3* sha)
     {
         (void)sha;
         /* Not supported in FIPS */
@@ -327,7 +327,7 @@ do                                                                      \
     }                                                                   \
 }                                                                       \
 while (0)
-#endif
+#endif /* SHA3_BY_SPEC */
 
 /* The block operation performed on the state.
  *
@@ -375,8 +375,276 @@ static void BlockSha3(word64 *s)
     }
 }
 #else
-#include "sha3_long.i"
+/* Rotate a 64-bit value left.
+ *
+ * a  Number to rotate left.
+ * r  Number od bits to rotate left.
+ * returns the rotated number.
+ */
+#define ROTL64(a, n)    (((a)<<(n))|((a)>>(64-(n))))
+
+/* An array of values to XOR for block operation. */
+static const word64 hash_keccak_r[24] =
+{
+    0x0000000000000001UL, 0x0000000000008082UL,
+    0x800000000000808aUL, 0x8000000080008000UL,
+    0x000000000000808bUL, 0x0000000080000001UL,
+    0x8000000080008081UL, 0x8000000000008009UL,
+    0x000000000000008aUL, 0x0000000000000088UL,
+    0x0000000080008009UL, 0x000000008000000aUL,
+    0x000000008000808bUL, 0x800000000000008bUL,
+    0x8000000000008089UL, 0x8000000000008003UL,
+    0x8000000000008002UL, 0x8000000000000080UL,
+    0x000000000000800aUL, 0x800000008000000aUL,
+    0x8000000080008081UL, 0x8000000000008080UL,
+    0x0000000080000001UL, 0x8000000080008008UL
+};
+
+/* Indeces used in swap and rotate operation. */
+#define KI_0     6
+#define KI_1    12
+#define KI_2    18
+#define KI_3    24
+#define KI_4     3
+#define KI_5     9
+#define KI_6    10
+#define KI_7    16
+#define KI_8    22
+#define KI_9     1
+#define KI_10    7
+#define KI_11   13
+#define KI_12   19
+#define KI_13   20
+#define KI_14    4
+#define KI_15    5
+#define KI_16   11
+#define KI_17   17
+#define KI_18   23
+#define KI_19    2
+#define KI_20    8
+#define KI_21   14
+#define KI_22   15
+#define KI_23   21
+
+/* Number of bits to rotate in swap and rotate operation. */
+#define KR_0    44
+#define KR_1    43
+#define KR_2    21
+#define KR_3    14
+#define KR_4    28
+#define KR_5    20
+#define KR_6     3
+#define KR_7    45
+#define KR_8    61
+#define KR_9     1
+#define KR_10    6
+#define KR_11   25
+#define KR_12    8
+#define KR_13   18
+#define KR_14   27
+#define KR_15   36
+#define KR_16   10
+#define KR_17   15
+#define KR_18   56
+#define KR_19   62
+#define KR_20   55
+#define KR_21   39
+#define KR_22   41
+#define KR_23    2
+
+/* Mix the XOR of the column's values into each number by column.
+ *
+ * s  The state.
+ * b  Temporary array of XORed column values.
+ * x  The index of the column.
+ * t  Temporary variable.
+ */
+#define COL_MIX(s, b, x, t)                                     \
+do                                                              \
+{                                                               \
+    b[0] = s[0] ^ s[5] ^ s[10] ^ s[15] ^ s[20];                 \
+    b[1] = s[1] ^ s[6] ^ s[11] ^ s[16] ^ s[21];                 \
+    b[2] = s[2] ^ s[7] ^ s[12] ^ s[17] ^ s[22];                 \
+    b[3] = s[3] ^ s[8] ^ s[13] ^ s[18] ^ s[23];                 \
+    b[4] = s[4] ^ s[9] ^ s[14] ^ s[19] ^ s[24];                 \
+    t = b[(0 + 4) % 5] ^ ROTL64(b[(0 + 1) % 5], 1);             \
+    s[ 0] ^= t; s[ 5] ^= t; s[10] ^= t; s[15] ^= t; s[20] ^= t; \
+    t = b[(1 + 4) % 5] ^ ROTL64(b[(1 + 1) % 5], 1);             \
+    s[ 1] ^= t; s[ 6] ^= t; s[11] ^= t; s[16] ^= t; s[21] ^= t; \
+    t = b[(2 + 4) % 5] ^ ROTL64(b[(2 + 1) % 5], 1);             \
+    s[ 2] ^= t; s[ 7] ^= t; s[12] ^= t; s[17] ^= t; s[22] ^= t; \
+    t = b[(3 + 4) % 5] ^ ROTL64(b[(3 + 1) % 5], 1);             \
+    s[ 3] ^= t; s[ 8] ^= t; s[13] ^= t; s[18] ^= t; s[23] ^= t; \
+    t = b[(4 + 4) % 5] ^ ROTL64(b[(4 + 1) % 5], 1);             \
+    s[ 4] ^= t; s[ 9] ^= t; s[14] ^= t; s[19] ^= t; s[24] ^= t; \
+}                                                               \
+while (0)
+
+#define S(s1, i) ROTL64(s1[KI_##i], KR_##i)
+
+#ifdef SHA3_BY_SPEC
+/* Mix the row values.
+ * BMI1 has ANDN instruction ((~a) & b) - Haswell and above.
+ *
+ * s2  The new state.
+ * s1  The current state.
+ * b   Temporary array of XORed row values.
+ * t0  Temporary variable. (Unused)
+ * t1  Temporary variable. (Unused)
+ */
+#define ROW_MIX(s2, s1, b, t0, t1)            \
+do                                            \
+{                                             \
+    b[0] = s1[0];                             \
+    b[1] = S(s1, 0);                          \
+    b[2] = S(s1, 1);                          \
+    b[3] = S(s1, 2);                          \
+    b[4] = S(s1, 3);                          \
+    s2[0] = b[0] ^ (~b[1] & b[2]);            \
+    s2[1] = b[1] ^ (~b[2] & b[3]);            \
+    s2[2] = b[2] ^ (~b[3] & b[4]);            \
+    s2[3] = b[3] ^ (~b[4] & b[0]);            \
+    s2[4] = b[4] ^ (~b[0] & b[1]);            \
+    b[0] = S(s1, 4);                          \
+    b[1] = S(s1, 5);                          \
+    b[2] = S(s1, 6);                          \
+    b[3] = S(s1, 7);                          \
+    b[4] = S(s1, 8);                          \
+    s2[5] = b[0] ^ (~b[1] & b[2]);            \
+    s2[6] = b[1] ^ (~b[2] & b[3]);            \
+    s2[7] = b[2] ^ (~b[3] & b[4]);            \
+    s2[8] = b[3] ^ (~b[4] & b[0]);            \
+    s2[9] = b[4] ^ (~b[0] & b[1]);            \
+    b[0] = S(s1, 9);                          \
+    b[1] = S(s1, 10);                         \
+    b[2] = S(s1, 11);                         \
+    b[3] = S(s1, 12);                         \
+    b[4] = S(s1, 13);                         \
+    s2[10] = b[0] ^ (~b[1] & b[2]);           \
+    s2[11] = b[1] ^ (~b[2] & b[3]);           \
+    s2[12] = b[2] ^ (~b[3] & b[4]);           \
+    s2[13] = b[3] ^ (~b[4] & b[0]);           \
+    s2[14] = b[4] ^ (~b[0] & b[1]);           \
+    b[0] = S(s1, 14);                         \
+    b[1] = S(s1, 15);                         \
+    b[2] = S(s1, 16);                         \
+    b[3] = S(s1, 17);                         \
+    b[4] = S(s1, 18);                         \
+    s2[15] = b[0] ^ (~b[1] & b[2]);           \
+    s2[16] = b[1] ^ (~b[2] & b[3]);           \
+    s2[17] = b[2] ^ (~b[3] & b[4]);           \
+    s2[18] = b[3] ^ (~b[4] & b[0]);           \
+    s2[19] = b[4] ^ (~b[0] & b[1]);           \
+    b[0] = S(s1, 19);                         \
+    b[1] = S(s1, 20);                         \
+    b[2] = S(s1, 21);                         \
+    b[3] = S(s1, 22);                         \
+    b[4] = S(s1, 23);                         \
+    s2[20] = b[0] ^ (~b[1] & b[2]);           \
+    s2[21] = b[1] ^ (~b[2] & b[3]);           \
+    s2[22] = b[2] ^ (~b[3] & b[4]);           \
+    s2[23] = b[3] ^ (~b[4] & b[0]);           \
+    s2[24] = b[4] ^ (~b[0] & b[1]);           \
+}                                             \
+while (0)
+#else
+/* Mix the row values.
+ * a ^ (~b & c) == a ^ (c & (b ^ c)) == (a ^ b) ^ (b | c)
+ *
+ * s2  The new state.
+ * s1  The current state.
+ * b   Temporary array of XORed row values.
+ * t12 Temporary variable.
+ * t34 Temporary variable.
+ */
+#define ROW_MIX(s2, s1, b, t12, t34)          \
+do                                            \
+{                                             \
+    b[0] = s1[0];                             \
+    b[1] = S(s1, 0);                          \
+    b[2] = S(s1, 1);                          \
+    b[3] = S(s1, 2);                          \
+    b[4] = S(s1, 3);                          \
+    t12 = (b[1] ^ b[2]); t34 = (b[3] ^ b[4]); \
+    s2[0] = b[0] ^ (b[2] &  t12);             \
+    s2[1] =  t12 ^ (b[2] | b[3]);             \
+    s2[2] = b[2] ^ (b[4] &  t34);             \
+    s2[3] =  t34 ^ (b[4] | b[0]);             \
+    s2[4] = b[4] ^ (b[1] & (b[0] ^ b[1]));    \
+    b[0] = S(s1, 4);                          \
+    b[1] = S(s1, 5);                          \
+    b[2] = S(s1, 6);                          \
+    b[3] = S(s1, 7);                          \
+    b[4] = S(s1, 8);                          \
+    t12 = (b[1] ^ b[2]); t34 = (b[3] ^ b[4]); \
+    s2[5] = b[0] ^ (b[2] &  t12);             \
+    s2[6] =  t12 ^ (b[2] | b[3]);             \
+    s2[7] = b[2] ^ (b[4] &  t34);             \
+    s2[8] =  t34 ^ (b[4] | b[0]);             \
+    s2[9] = b[4] ^ (b[1] & (b[0] ^ b[1]));    \
+    b[0] = S(s1, 9);                          \
+    b[1] = S(s1, 10);                         \
+    b[2] = S(s1, 11);                         \
+    b[3] = S(s1, 12);                         \
+    b[4] = S(s1, 13);                         \
+    t12 = (b[1] ^ b[2]); t34 = (b[3] ^ b[4]); \
+    s2[10] = b[0] ^ (b[2] &  t12);            \
+    s2[11] =  t12 ^ (b[2] | b[3]);            \
+    s2[12] = b[2] ^ (b[4] &  t34);            \
+    s2[13] =  t34 ^ (b[4] | b[0]);            \
+    s2[14] = b[4] ^ (b[1] & (b[0] ^ b[1]));   \
+    b[0] = S(s1, 14);                         \
+    b[1] = S(s1, 15);                         \
+    b[2] = S(s1, 16);                         \
+    b[3] = S(s1, 17);                         \
+    b[4] = S(s1, 18);                         \
+    t12 = (b[1] ^ b[2]); t34 = (b[3] ^ b[4]); \
+    s2[15] = b[0] ^ (b[2] &  t12);            \
+    s2[16] =  t12 ^ (b[2] | b[3]);            \
+    s2[17] = b[2] ^ (b[4] &  t34);            \
+    s2[18] =  t34 ^ (b[4] | b[0]);            \
+    s2[19] = b[4] ^ (b[1] & (b[0] ^ b[1]));   \
+    b[0] = S(s1, 19);                         \
+    b[1] = S(s1, 20);                         \
+    b[2] = S(s1, 21);                         \
+    b[3] = S(s1, 22);                         \
+    b[4] = S(s1, 23);                         \
+    t12 = (b[1] ^ b[2]); t34 = (b[3] ^ b[4]); \
+    s2[20] = b[0] ^ (b[2] &  t12);            \
+    s2[21] =  t12 ^ (b[2] | b[3]);            \
+    s2[22] = b[2] ^ (b[4] &  t34);            \
+    s2[23] =  t34 ^ (b[4] | b[0]);            \
+    s2[24] = b[4] ^ (b[1] & (b[0] ^ b[1]));   \
+}                                             \
+while (0)
+#endif /* SHA3_BY_SPEC */
+
+/* The block operation performed on the state.
+ *
+ * s  The state.
+ */
+static void BlockSha3(word64 *s)
+{
+    word64 n[25];
+    word64 b[5];
+    word64 t0;
+#ifndef SHA3_BY_SPEC
+    word64 t1;
 #endif
+    byte i;
+
+    for (i = 0; i < 24; i += 2)
+    {
+        COL_MIX(s, b, x, t0);
+        ROW_MIX(n, s, b, t0, t1);
+        n[0] ^= hash_keccak_r[i];
+
+        COL_MIX(n, b, x, t0);
+        ROW_MIX(s, n, b, t0, t1);
+        s[0] ^= hash_keccak_r[i+1];
+    }
+}
+#endif /* WOLFSSL_SHA3_SMALL */
 
 /* Convert the array of bytes, in little-endian order, to a 64-bit integer.
  *
@@ -400,10 +668,10 @@ static word64 Load64BitBigEndian(const byte* a)
 
 /* Initialize the state for a SHA3-224 hash operation.
  *
- * sha3   Sha3 object holding state.
+ * sha3   wc_Sha3 object holding state.
  * returns 0 on success.
  */
-static int InitSha3(Sha3* sha3)
+static int InitSha3(wc_Sha3* sha3)
 {
     int i;
 
@@ -416,13 +684,13 @@ static int InitSha3(Sha3* sha3)
 
 /* Update the SHA-3 hash state with message data.
  *
- * sha3  Sha3 object holding state.
+ * sha3  wc_Sha3 object holding state.
  * data  Message data to be hashed.
  * len   Length of the message data.
  * p     Number of 64-bit numbers in a block of data to process.
  * returns 0 on success.
  */
-static int Sha3Update(Sha3* sha3, const byte* data, word32 len, byte p)
+static int Sha3Update(wc_Sha3* sha3, const byte* data, word32 len, byte p)
 {
     byte i;
     byte l;
@@ -431,25 +699,26 @@ static int Sha3Update(Sha3* sha3, const byte* data, word32 len, byte p)
     if (sha3->i > 0)
     {
         l = p * 8 - sha3->i;
-        if (l > len)
-            l = len;
+        if (l > len) {
+            l = (byte)len;
+        }
 
         t = &sha3->t[sha3->i];
         for (i = 0; i < l; i++)
             t[i] = data[i];
         data += i;
-        len -= i; 
+        len -= i;
         sha3->i += i;
 
         if (sha3->i == p * 8)
-        {   
+        {
             for (i = 0; i < p; i++)
                 sha3->s[i] ^= Load64BitBigEndian(sha3->t + 8 * i);
             BlockSha3(sha3->s);
             sha3->i = 0;
         }
     }
-    while (len >= p * 8)
+    while (len >= ((word32)(p * 8)))
     {
         for (i = 0; i < p; i++)
             sha3->s[i] ^= Load64BitBigEndian(data + 8 * i);
@@ -466,13 +735,13 @@ static int Sha3Update(Sha3* sha3, const byte* data, word32 len, byte p)
 
 /* Calculate the SHA-3 hash based on all the message data seen.
  *
- * sha3  Sha3 object holding state.
+ * sha3  wc_Sha3 object holding state.
  * hash  Buffer to hold the hash result.
  * p     Number of 64-bit numbers in a block of data to process.
  * len   Number of bytes in output.
  * returns 0 on success.
  */
-static int Sha3Final(Sha3* sha3, byte* hash, byte p, byte l)
+static int Sha3Final(wc_Sha3* sha3, byte* hash, byte p, byte l)
 {
     byte i;
     byte *s8 = (byte *)sha3->s;
@@ -496,12 +765,12 @@ static int Sha3Final(Sha3* sha3, byte* hash, byte p, byte l)
 
 /* Initialize the state for a SHA-3 hash operation.
  *
- * sha3   Sha3 object holding state.
+ * sha3   wc_Sha3 object holding state.
  * heap   Heap reference for dynamic memory allocation. (Used in async ops.)
  * devId  Device identifier for asynchronous operation.
  * returns 0 on success.
  */
-static int wc_InitSha3(Sha3* sha3, void* heap, int devId)
+static int wc_InitSha3(wc_Sha3* sha3, void* heap, int devId)
 {
     int ret = 0;
 
@@ -525,13 +794,13 @@ static int wc_InitSha3(Sha3* sha3, void* heap, int devId)
 
 /* Update the SHA-3 hash state with message data.
  *
- * sha3  Sha3 object holding state.
+ * sha3  wc_Sha3 object holding state.
  * data  Message data to be hashed.
  * len   Length of the message data.
  * p     Number of 64-bit numbers in a block of data to process.
  * returns 0 on success.
  */
-static int wc_Sha3Update(Sha3* sha3, const byte* data, word32 len, byte p)
+static int wc_Sha3Update(wc_Sha3* sha3, const byte* data, word32 len, byte p)
 {
     int ret = 0;
 
@@ -554,13 +823,13 @@ static int wc_Sha3Update(Sha3* sha3, const byte* data, word32 len, byte p)
 
 /* Calculate the SHA-3 hash based on all the message data seen.
  *
- * sha3  Sha3 object holding state.
+ * sha3  wc_Sha3 object holding state.
  * hash  Buffer to hold the hash result.
  * p     Number of 64-bit numbers in a block of data to process.
  * len   Number of bytes in output.
  * returns 0 on success.
  */
-static int wc_Sha3Final(Sha3* sha3, byte* hash, byte p, byte len)
+static int wc_Sha3Final(wc_Sha3* sha3, byte* hash, byte p, byte len)
 {
     int ret;
 
@@ -587,10 +856,10 @@ static int wc_Sha3Final(Sha3* sha3, byte* hash, byte p, byte len)
 /* Dispose of any dynamically allocated data from the SHA3-384 operation.
  * (Required for async ops.)
  *
- * sha3  Sha3 object holding state.
+ * sha3  wc_Sha3 object holding state.
  * returns 0 on success.
  */
-static void wc_Sha3Free(Sha3* sha3)
+static void wc_Sha3Free(wc_Sha3* sha3)
 {
     (void)sha3;
 
@@ -605,18 +874,18 @@ static void wc_Sha3Free(Sha3* sha3)
 
 /* Copy the state of the SHA3 operation.
  *
- * src  Sha3 object holding state top copy.
- * dst  Sha3 object to copy into.
+ * src  wc_Sha3 object holding state top copy.
+ * dst  wc_Sha3 object to copy into.
  * returns 0 on success.
  */
-static int wc_Sha3Copy(Sha3* src, Sha3* dst)
+static int wc_Sha3Copy(wc_Sha3* src, wc_Sha3* dst)
 {
     int ret = 0;
 
     if (src == NULL || dst == NULL)
         return BAD_FUNC_ARG;
 
-    XMEMCPY(dst, src, sizeof(Sha3));
+    XMEMCPY(dst, src, sizeof(wc_Sha3));
 
 #ifdef WOLFSSL_ASYNC_CRYPT
     ret = wolfAsync_DevCopy(&src->asyncDev, &dst->asyncDev);
@@ -629,16 +898,16 @@ static int wc_Sha3Copy(Sha3* src, Sha3* dst)
  * More message data can be added, after this operation, using the current
  * state.
  *
- * sha3  Sha3 object holding state.
+ * sha3  wc_Sha3 object holding state.
  * hash  Buffer to hold the hash result. Must be at least 28 bytes.
  * p     Number of 64-bit numbers in a block of data to process.
  * len   Number of bytes in output.
  * returns 0 on success.
  */
-static int wc_Sha3GetHash(Sha3* sha3, byte* hash, byte p, byte len)
+static int wc_Sha3GetHash(wc_Sha3* sha3, byte* hash, byte p, byte len)
 {
     int ret;
-    Sha3 tmpSha3;
+    wc_Sha3 tmpSha3;
 
     if (sha3 == NULL || hash == NULL)
         return BAD_FUNC_ARG;
@@ -653,47 +922,47 @@ static int wc_Sha3GetHash(Sha3* sha3, byte* hash, byte p, byte len)
 
 /* Initialize the state for a SHA3-224 hash operation.
  *
- * sha3   Sha3 object holding state.
+ * sha3   wc_Sha3 object holding state.
  * heap   Heap reference for dynamic memory allocation. (Used in async ops.)
  * devId  Device identifier for asynchronous operation.
  * returns 0 on success.
  */
-WOLFSSL_API int wc_InitSha3_224(Sha3* sha3, void* heap, int devId)
+WOLFSSL_API int wc_InitSha3_224(wc_Sha3* sha3, void* heap, int devId)
 {
     return wc_InitSha3(sha3, heap, devId);
 }
 
 /* Update the SHA3-224 hash state with message data.
  *
- * sha3  Sha3 object holding state.
+ * sha3  wc_Sha3 object holding state.
  * data  Message data to be hashed.
  * len   Length of the message data.
  * returns 0 on success.
  */
-WOLFSSL_API int wc_Sha3_224_Update(Sha3* sha3, const byte* data, word32 len)
+WOLFSSL_API int wc_Sha3_224_Update(wc_Sha3* sha3, const byte* data, word32 len)
 {
-    return wc_Sha3Update(sha3, data, len, SHA3_224_COUNT);
+    return wc_Sha3Update(sha3, data, len, WC_SHA3_224_COUNT);
 }
 
 /* Calculate the SHA3-224 hash based on all the message data seen.
  * The state is initialized ready for a new message to hash.
  *
- * sha3  Sha3 object holding state.
+ * sha3  wc_Sha3 object holding state.
  * hash  Buffer to hold the hash result. Must be at least 28 bytes.
  * returns 0 on success.
  */
-WOLFSSL_API int wc_Sha3_224_Final(Sha3* sha3, byte* hash)
+WOLFSSL_API int wc_Sha3_224_Final(wc_Sha3* sha3, byte* hash)
 {
-    return wc_Sha3Final(sha3, hash, SHA3_224_COUNT, SHA3_224_DIGEST_SIZE);
+    return wc_Sha3Final(sha3, hash, WC_SHA3_224_COUNT, WC_SHA3_224_DIGEST_SIZE);
 }
 
 /* Dispose of any dynamically allocated data from the SHA3-224 operation.
  * (Required for async ops.)
  *
- * sha3  Sha3 object holding state.
+ * sha3  wc_Sha3 object holding state.
  * returns 0 on success.
  */
-WOLFSSL_API void wc_Sha3_224_Free(Sha3* sha3)
+WOLFSSL_API void wc_Sha3_224_Free(wc_Sha3* sha3)
 {
     wc_Sha3Free(sha3);
 }
@@ -702,22 +971,22 @@ WOLFSSL_API void wc_Sha3_224_Free(Sha3* sha3)
  * More message data can be added, after this operation, using the current
  * state.
  *
- * sha3  Sha3 object holding state.
+ * sha3  wc_Sha3 object holding state.
  * hash  Buffer to hold the hash result. Must be at least 28 bytes.
  * returns 0 on success.
  */
-WOLFSSL_API int wc_Sha3_224_GetHash(Sha3* sha3, byte* hash)
+WOLFSSL_API int wc_Sha3_224_GetHash(wc_Sha3* sha3, byte* hash)
 {
-    return wc_Sha3GetHash(sha3, hash, SHA3_224_COUNT, SHA3_224_DIGEST_SIZE);
+    return wc_Sha3GetHash(sha3, hash, WC_SHA3_224_COUNT, WC_SHA3_224_DIGEST_SIZE);
 }
 
 /* Copy the state of the SHA3-224 operation.
  *
- * src  Sha3 object holding state top copy.
- * dst  Sha3 object to copy into.
+ * src  wc_Sha3 object holding state top copy.
+ * dst  wc_Sha3 object to copy into.
  * returns 0 on success.
  */
-WOLFSSL_API int wc_Sha3_224_Copy(Sha3* src, Sha3* dst)
+WOLFSSL_API int wc_Sha3_224_Copy(wc_Sha3* src, wc_Sha3* dst)
 {
     return wc_Sha3Copy(src, dst);
 }
@@ -725,47 +994,47 @@ WOLFSSL_API int wc_Sha3_224_Copy(Sha3* src, Sha3* dst)
 
 /* Initialize the state for a SHA3-256 hash operation.
  *
- * sha3   Sha3 object holding state.
+ * sha3   wc_Sha3 object holding state.
  * heap   Heap reference for dynamic memory allocation. (Used in async ops.)
  * devId  Device identifier for asynchronous operation.
  * returns 0 on success.
  */
-WOLFSSL_API int wc_InitSha3_256(Sha3* sha3, void* heap, int devId)
+WOLFSSL_API int wc_InitSha3_256(wc_Sha3* sha3, void* heap, int devId)
 {
     return wc_InitSha3(sha3, heap, devId);
 }
 
 /* Update the SHA3-256 hash state with message data.
  *
- * sha3  Sha3 object holding state.
+ * sha3  wc_Sha3 object holding state.
  * data  Message data to be hashed.
  * len   Length of the message data.
  * returns 0 on success.
  */
-WOLFSSL_API int wc_Sha3_256_Update(Sha3* sha3, const byte* data, word32 len)
+WOLFSSL_API int wc_Sha3_256_Update(wc_Sha3* sha3, const byte* data, word32 len)
 {
-    return wc_Sha3Update(sha3, data, len, SHA3_256_COUNT);
+    return wc_Sha3Update(sha3, data, len, WC_SHA3_256_COUNT);
 }
 
 /* Calculate the SHA3-256 hash based on all the message data seen.
  * The state is initialized ready for a new message to hash.
  *
- * sha3  Sha3 object holding state.
+ * sha3  wc_Sha3 object holding state.
  * hash  Buffer to hold the hash result. Must be at least 32 bytes.
  * returns 0 on success.
  */
-WOLFSSL_API int wc_Sha3_256_Final(Sha3* sha3, byte* hash)
+WOLFSSL_API int wc_Sha3_256_Final(wc_Sha3* sha3, byte* hash)
 {
-    return wc_Sha3Final(sha3, hash, SHA3_256_COUNT, SHA3_256_DIGEST_SIZE);
+    return wc_Sha3Final(sha3, hash, WC_SHA3_256_COUNT, WC_SHA3_256_DIGEST_SIZE);
 }
 
 /* Dispose of any dynamically allocated data from the SHA3-256 operation.
  * (Required for async ops.)
  *
- * sha3  Sha3 object holding state.
+ * sha3  wc_Sha3 object holding state.
  * returns 0 on success.
  */
-WOLFSSL_API void wc_Sha3_256_Free(Sha3* sha3)
+WOLFSSL_API void wc_Sha3_256_Free(wc_Sha3* sha3)
 {
     wc_Sha3Free(sha3);
 }
@@ -774,22 +1043,22 @@ WOLFSSL_API void wc_Sha3_256_Free(Sha3* sha3)
  * More message data can be added, after this operation, using the current
  * state.
  *
- * sha3  Sha3 object holding state.
+ * sha3  wc_Sha3 object holding state.
  * hash  Buffer to hold the hash result. Must be at least 32 bytes.
  * returns 0 on success.
  */
-WOLFSSL_API int wc_Sha3_256_GetHash(Sha3* sha3, byte* hash)
+WOLFSSL_API int wc_Sha3_256_GetHash(wc_Sha3* sha3, byte* hash)
 {
-    return wc_Sha3GetHash(sha3, hash, SHA3_256_COUNT, SHA3_256_DIGEST_SIZE);
+    return wc_Sha3GetHash(sha3, hash, WC_SHA3_256_COUNT, WC_SHA3_256_DIGEST_SIZE);
 }
 
 /* Copy the state of the SHA3-256 operation.
  *
- * src  Sha3 object holding state top copy.
- * dst  Sha3 object to copy into.
+ * src  wc_Sha3 object holding state top copy.
+ * dst  wc_Sha3 object to copy into.
  * returns 0 on success.
  */
-WOLFSSL_API int wc_Sha3_256_Copy(Sha3* src, Sha3* dst)
+WOLFSSL_API int wc_Sha3_256_Copy(wc_Sha3* src, wc_Sha3* dst)
 {
     return wc_Sha3Copy(src, dst);
 }
@@ -797,47 +1066,47 @@ WOLFSSL_API int wc_Sha3_256_Copy(Sha3* src, Sha3* dst)
 
 /* Initialize the state for a SHA3-384 hash operation.
  *
- * sha3   Sha3 object holding state.
+ * sha3   wc_Sha3 object holding state.
  * heap   Heap reference for dynamic memory allocation. (Used in async ops.)
  * devId  Device identifier for asynchronous operation.
  * returns 0 on success.
  */
-WOLFSSL_API int wc_InitSha3_384(Sha3* sha3, void* heap, int devId)
+WOLFSSL_API int wc_InitSha3_384(wc_Sha3* sha3, void* heap, int devId)
 {
     return wc_InitSha3(sha3, heap, devId);
 }
 
 /* Update the SHA3-384 hash state with message data.
  *
- * sha3  Sha3 object holding state.
+ * sha3  wc_Sha3 object holding state.
  * data  Message data to be hashed.
  * len   Length of the message data.
  * returns 0 on success.
  */
-WOLFSSL_API int wc_Sha3_384_Update(Sha3* sha3, const byte* data, word32 len)
+WOLFSSL_API int wc_Sha3_384_Update(wc_Sha3* sha3, const byte* data, word32 len)
 {
-    return wc_Sha3Update(sha3, data, len, SHA3_384_COUNT);
+    return wc_Sha3Update(sha3, data, len, WC_SHA3_384_COUNT);
 }
 
 /* Calculate the SHA3-384 hash based on all the message data seen.
  * The state is initialized ready for a new message to hash.
  *
- * sha3  Sha3 object holding state.
+ * sha3  wc_Sha3 object holding state.
  * hash  Buffer to hold the hash result. Must be at least 48 bytes.
  * returns 0 on success.
  */
-WOLFSSL_API int wc_Sha3_384_Final(Sha3* sha3, byte* hash)
+WOLFSSL_API int wc_Sha3_384_Final(wc_Sha3* sha3, byte* hash)
 {
-    return wc_Sha3Final(sha3, hash, SHA3_384_COUNT, SHA3_384_DIGEST_SIZE);
+    return wc_Sha3Final(sha3, hash, WC_SHA3_384_COUNT, WC_SHA3_384_DIGEST_SIZE);
 }
 
 /* Dispose of any dynamically allocated data from the SHA3-384 operation.
  * (Required for async ops.)
  *
- * sha3  Sha3 object holding state.
+ * sha3  wc_Sha3 object holding state.
  * returns 0 on success.
  */
-WOLFSSL_API void wc_Sha3_384_Free(Sha3* sha3)
+WOLFSSL_API void wc_Sha3_384_Free(wc_Sha3* sha3)
 {
     wc_Sha3Free(sha3);
 }
@@ -846,22 +1115,22 @@ WOLFSSL_API void wc_Sha3_384_Free(Sha3* sha3)
  * More message data can be added, after this operation, using the current
  * state.
  *
- * sha3  Sha3 object holding state.
+ * sha3  wc_Sha3 object holding state.
  * hash  Buffer to hold the hash result. Must be at least 48 bytes.
  * returns 0 on success.
  */
-WOLFSSL_API int wc_Sha3_384_GetHash(Sha3* sha3, byte* hash)
+WOLFSSL_API int wc_Sha3_384_GetHash(wc_Sha3* sha3, byte* hash)
 {
-    return wc_Sha3GetHash(sha3, hash, SHA3_384_COUNT, SHA3_384_DIGEST_SIZE);
+    return wc_Sha3GetHash(sha3, hash, WC_SHA3_384_COUNT, WC_SHA3_384_DIGEST_SIZE);
 }
 
 /* Copy the state of the SHA3-384 operation.
  *
- * src  Sha3 object holding state top copy.
- * dst  Sha3 object to copy into.
+ * src  wc_Sha3 object holding state top copy.
+ * dst  wc_Sha3 object to copy into.
  * returns 0 on success.
  */
-WOLFSSL_API int wc_Sha3_384_Copy(Sha3* src, Sha3* dst)
+WOLFSSL_API int wc_Sha3_384_Copy(wc_Sha3* src, wc_Sha3* dst)
 {
     return wc_Sha3Copy(src, dst);
 }
@@ -869,47 +1138,47 @@ WOLFSSL_API int wc_Sha3_384_Copy(Sha3* src, Sha3* dst)
 
 /* Initialize the state for a SHA3-512 hash operation.
  *
- * sha3   Sha3 object holding state.
+ * sha3   wc_Sha3 object holding state.
  * heap   Heap reference for dynamic memory allocation. (Used in async ops.)
  * devId  Device identifier for asynchronous operation.
  * returns 0 on success.
  */
-WOLFSSL_API int wc_InitSha3_512(Sha3* sha3, void* heap, int devId)
+WOLFSSL_API int wc_InitSha3_512(wc_Sha3* sha3, void* heap, int devId)
 {
     return wc_InitSha3(sha3, heap, devId);
 }
 
 /* Update the SHA3-512 hash state with message data.
  *
- * sha3  Sha3 object holding state.
+ * sha3  wc_Sha3 object holding state.
  * data  Message data to be hashed.
  * len   Length of the message data.
  * returns 0 on success.
  */
-WOLFSSL_API int wc_Sha3_512_Update(Sha3* sha3, const byte* data, word32 len)
+WOLFSSL_API int wc_Sha3_512_Update(wc_Sha3* sha3, const byte* data, word32 len)
 {
-    return wc_Sha3Update(sha3, data, len, SHA3_512_COUNT);
+    return wc_Sha3Update(sha3, data, len, WC_SHA3_512_COUNT);
 }
 
 /* Calculate the SHA3-512 hash based on all the message data seen.
  * The state is initialized ready for a new message to hash.
  *
- * sha3  Sha3 object holding state.
+ * sha3  wc_Sha3 object holding state.
  * hash  Buffer to hold the hash result. Must be at least 64 bytes.
  * returns 0 on success.
  */
-WOLFSSL_API int wc_Sha3_512_Final(Sha3* sha3, byte* hash)
+WOLFSSL_API int wc_Sha3_512_Final(wc_Sha3* sha3, byte* hash)
 {
-    return wc_Sha3Final(sha3, hash, SHA3_512_COUNT, SHA3_512_DIGEST_SIZE);
+    return wc_Sha3Final(sha3, hash, WC_SHA3_512_COUNT, WC_SHA3_512_DIGEST_SIZE);
 }
 
 /* Dispose of any dynamically allocated data from the SHA3-512 operation.
  * (Required for async ops.)
  *
- * sha3  Sha3 object holding state.
+ * sha3  wc_Sha3 object holding state.
  * returns 0 on success.
  */
-WOLFSSL_API void wc_Sha3_512_Free(Sha3* sha3)
+WOLFSSL_API void wc_Sha3_512_Free(wc_Sha3* sha3)
 {
     wc_Sha3Free(sha3);
 }
@@ -918,22 +1187,22 @@ WOLFSSL_API void wc_Sha3_512_Free(Sha3* sha3)
  * More message data can be added, after this operation, using the current
  * state.
  *
- * sha3  Sha3 object holding state.
+ * sha3  wc_Sha3 object holding state.
  * hash  Buffer to hold the hash result. Must be at least 64 bytes.
  * returns 0 on success.
  */
-WOLFSSL_API int wc_Sha3_512_GetHash(Sha3* sha3, byte* hash)
+WOLFSSL_API int wc_Sha3_512_GetHash(wc_Sha3* sha3, byte* hash)
 {
-    return wc_Sha3GetHash(sha3, hash, SHA3_512_COUNT, SHA3_512_DIGEST_SIZE);
+    return wc_Sha3GetHash(sha3, hash, WC_SHA3_512_COUNT, WC_SHA3_512_DIGEST_SIZE);
 }
 
 /* Copy the state of the SHA3-512 operation.
  *
- * src  Sha3 object holding state top copy.
- * dst  Sha3 object to copy into.
+ * src  wc_Sha3 object holding state top copy.
+ * dst  wc_Sha3 object to copy into.
  * returns 0 on success.
  */
-WOLFSSL_API int wc_Sha3_512_Copy(Sha3* src, Sha3* dst)
+WOLFSSL_API int wc_Sha3_512_Copy(wc_Sha3* src, wc_Sha3* dst)
 {
     return wc_Sha3Copy(src, dst);
 }

@@ -1,4 +1,29 @@
+/* pem.h
+ *
+ * Copyright (C) 2006-2017 wolfSSL Inc.
+ *
+ * This file is part of wolfSSL.
+ *
+ * wolfSSL is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * wolfSSL is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1335, USA
+ */
+
 /* pem.h for openssl */
+
+/*!
+    \file wolfssl/openssl/pem.h
+*/
 
 
 #ifndef WOLFSSL_PEM_H_
@@ -13,14 +38,17 @@
     extern "C" {
 #endif
 
-#define PEM_write_bio_PrivateKey wolfSSL_PEM_write_bio_PrivateKey
-
 /* RSA */
 WOLFSSL_API
 int wolfSSL_PEM_write_bio_RSAPrivateKey(WOLFSSL_BIO* bio, WOLFSSL_RSA* rsa,
                                         const EVP_CIPHER* cipher,
                                         unsigned char* passwd, int len,
                                         pem_password_cb* cb, void* arg);
+WOLFSSL_API
+WOLFSSL_RSA* wolfSSL_PEM_read_bio_RSAPrivateKey(WOLFSSL_BIO* bio,
+                                                  WOLFSSL_RSA**,
+                                                  pem_password_cb* cb,
+                                                  void* arg);
 WOLFSSL_API
 int wolfSSL_PEM_write_mem_RSAPrivateKey(RSA* rsa, const EVP_CIPHER* cipher,
                                         unsigned char* passwd, int len,
@@ -119,6 +147,7 @@ WOLFSSL_EVP_PKEY *wolfSSL_PEM_read_PrivateKey(FILE *fp, WOLFSSL_EVP_PKEY **x,
 #define PEM_write_bio_PrivateKey    wolfSSL_PEM_write_bio_PrivateKey
 /* RSA */
 #define PEM_write_bio_RSAPrivateKey wolfSSL_PEM_write_bio_RSAPrivateKey
+#define PEM_read_bio_RSAPrivateKey  wolfSSL_PEM_read_bio_RSAPrivateKey
 #define PEM_write_RSAPrivateKey     wolfSSL_PEM_write_RSAPrivateKey
 #define PEM_write_RSA_PUBKEY        wolfSSL_PEM_write_RSA_PUBKEY
 #define PEM_write_RSAPublicKey      wolfSSL_PEM_write_RSAPublicKey

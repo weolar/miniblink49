@@ -1,6 +1,6 @@
 /* random.c
  *
- * Copyright (C) 2006-2016 wolfSSL Inc.
+ * Copyright (C) 2006-2017 wolfSSL Inc.
  *
  * This file is part of wolfSSL.
  *
@@ -152,7 +152,7 @@ int wc_RNG_GenerateByte(WC_RNG* rng, byte* b)
 /* Start NIST DRBG code */
 #ifdef HAVE_HASHDRBG
 
-#define OUTPUT_BLOCK_LEN  (SHA256_DIGEST_SIZE)
+#define OUTPUT_BLOCK_LEN  (WC_SHA256_DIGEST_SIZE)
 #define MAX_REQUEST_LEN   (0x10000)
 #define RESEED_INTERVAL   WC_RESEED_INTERVAL
 #define SECURITY_STRENGTH (256)
@@ -162,10 +162,9 @@ int wc_RNG_GenerateByte(WC_RNG* rng, byte* b)
 
 /* Internal return codes */
 #define DRBG_SUCCESS      0
-#define DRBG_ERROR        1
-#define DRBG_FAILURE      2
-#define DRBG_NEED_RESEED  3
-#define DRBG_CONT_FAILURE 4
+#define DRBG_FAILURE      1
+#define DRBG_NEED_RESEED  2
+#define DRBG_CONT_FAILURE 3
 
 /* RNG health states */
 #define DRBG_NOT_INIT     0
@@ -173,7 +172,7 @@ int wc_RNG_GenerateByte(WC_RNG* rng, byte* b)
 #define DRBG_FAILED       2
 #define DRBG_CONT_FAILED  3
 
-#define RNG_HEALTH_TEST_CHECK_SIZE (SHA256_DIGEST_SIZE * 4)
+#define RNG_HEALTH_TEST_CHECK_SIZE (WC_SHA256_DIGEST_SIZE * 4)
 
 /* Verify max gen block len */
 #if RNG_MAX_BLOCK_LEN > MAX_REQUEST_LEN
@@ -215,8 +214,8 @@ static int Hash_df(DRBG* drbg, byte* out, word32 outSz, byte type,
     int i;
     int len;
     word32 bits = (outSz * 8); /* reverse byte order */
-    Sha256 sha;
-    DECLARE_VAR(digest, byte, SHA256_DIGEST_SIZE, drbg->heap);
+    wc_Sha256 sha;
+    DECLARE_VAR(digest, byte, WC_SHA256_DIGEST_SIZE, drbg->heap);
 
     (void)drbg;
 #ifdef WOLFSSL_ASYNC_CRYPT
@@ -271,7 +270,7 @@ static int Hash_df(DRBG* drbg, byte* out, word32 outSz, byte type,
         }
     }
 
-    ForceZero(digest, SHA256_DIGEST_SIZE);
+    ForceZero(digest, WC_SHA256_DIGEST_SIZE);
 
     FREE_VAR(digest, drbg->heap);
 
@@ -302,6 +301,16 @@ static int Hash_DRBG_Reseed(DRBG* drbg, const byte* entropy, word32 entropySz)
     return DRBG_SUCCESS;
 }
 
+/* Returns: DRBG_SUCCESS and DRBG_FAILURE or BAD_FUNC_ARG on fail */
+int wc_RNG_DRBG_Reseed(WC_RNG* rng, const byte* entropy, word32 entropySz)
+{
+    if (rng == NULL || entropy == NULL) {
+        return BAD_FUNC_ARG;
+    }
+
+    return Hash_DRBG_Reseed(rng->drbg, entropy, entropySz);
+}
+
 static INLINE void array_add_one(byte* data, word32 dataSz)
 {
     int i;
@@ -321,8 +330,8 @@ static int Hash_gen(DRBG* drbg, byte* out, word32 outSz, const byte* V)
     int i;
     int len;
     word32 checkBlock;
-    Sha256 sha;
-    DECLARE_VAR(digest, byte, SHA256_DIGEST_SIZE, drbg->heap);
+    wc_Sha256 sha;
+    DECLARE_VAR(digest, byte, WC_SHA256_DIGEST_SIZE, drbg->heap);
 
     /* Special case: outSz is 0 and out is NULL. wc_Generate a block to save for
      * the continuous test. */
@@ -409,14 +418,14 @@ static INLINE void array_add(byte* d, word32 dLen, const byte* s, word32 sLen)
 static int Hash_DRBG_Generate(DRBG* drbg, byte* out, word32 outSz)
 {
     int ret;
-    Sha256 sha;
+    wc_Sha256 sha;
     byte type;
     word32 reseedCtr;
 
     if (drbg->reseedCtr == RESEED_INTERVAL) {
         return DRBG_NEED_RESEED;
     } else {
-        DECLARE_VAR(digest, byte, SHA256_DIGEST_SIZE, drbg->heap);
+        DECLARE_VAR(digest, byte, WC_SHA256_DIGEST_SIZE, drbg->heap);
         type = drbgGenerateH;
         reseedCtr = drbg->reseedCtr;
 
@@ -437,7 +446,7 @@ static int Hash_DRBG_Generate(DRBG* drbg, byte* out, word32 outSz)
             wc_Sha256Free(&sha);
 
             if (ret == 0) {
-                array_add(drbg->V, sizeof(drbg->V), digest, SHA256_DIGEST_SIZE);
+                array_add(drbg->V, sizeof(drbg->V), digest, WC_SHA256_DIGEST_SIZE);
                 array_add(drbg->V, sizeof(drbg->V), drbg->C, sizeof(drbg->C));
             #ifdef LITTLE_ENDIAN_ORDER
                 reseedCtr = ByteReverseWord32(reseedCtr);
@@ -448,7 +457,7 @@ static int Hash_DRBG_Generate(DRBG* drbg, byte* out, word32 outSz)
             }
             drbg->reseedCtr++;
         }
-        ForceZero(digest, SHA256_DIGEST_SIZE);
+        ForceZero(digest, WC_SHA256_DIGEST_SIZE);
         FREE_VAR(digest, drbg->heap);
     }
 
@@ -1490,7 +1499,25 @@ int wc_GenerateSeed(OS_Seed* os, byte* output, word32 sz)
 
         return 0;
     }
+#elif defined(WOLFSSL_NUCLEUS)
+#include "nucleus.h"
+#include "kernel/plus_common.h"
 
+#warning "potential for not enough entropy, currently being used for testing"
+int wc_GenerateSeed(OS_Seed* os, byte* output, word32 sz)
+{
+    int i;
+    srand(NU_Get_Time_Stamp());
+
+    for (i = 0; i < sz; i++ ) {
+        output[i] = rand() % 256;
+        if ((i % 8) == 7) {
+            srand(NU_Get_Time_Stamp());
+        }
+    }
+
+    return 0;
+}
 #elif defined(WOLFSSL_VXWORKS)
 
     #include <randomNumGen.h>
@@ -1628,6 +1655,51 @@ int wc_GenerateSeed(OS_Seed* os, byte* output, word32 sz)
         return 0;
     }
 
+#elif (defined(WOLFSSL_IMX6_CAAM) || defined(WOLFSSL_IMX6_CAAM_RNG))
+
+    #include <wolfssl/wolfcrypt/port/caam/wolfcaam.h>
+    #include <wolfssl/wolfcrypt/port/caam/caam_driver.h>
+
+    int wc_GenerateSeed(OS_Seed* os, byte* output, word32 sz)
+    {
+        Buffer buf[1];
+        int ret  = 0;
+        int times = 1000, i;
+
+        (void)os;
+
+        if (output == NULL) {
+            return BUFFER_E;
+        }
+
+        buf[0].BufferType = DataBuffer | LastBuffer;
+        buf[0].TheAddress = (Address)output;
+        buf[0].Length     = sz;
+
+        /* Check Waiting to make sure entropy is ready */
+        for (i = 0; i < times; i++) {
+            ret = wc_caamAddAndWait(buf, NULL, CAAM_ENTROPY);
+            if (ret == Success) {
+                break;
+            }
+
+            /* driver could be waiting for entropy */
+            if (ret != RAN_BLOCK_E) {
+                return ret;
+            }
+            usleep(100);
+        }
+
+        if (i == times && ret != Success) {
+             return RNG_FAILURE_E;
+        }
+        else { /* Success case */
+            ret = 0;
+        }
+
+        return ret;
+    }
+
 #elif defined(CUSTOM_RAND_GENERATE_BLOCK)
     /* #define CUSTOM_RAND_GENERATE_BLOCK myRngFunc
      * extern int myRngFunc(byte* output, word32 sz);
@@ -1638,7 +1710,7 @@ int wc_GenerateSeed(OS_Seed* os, byte* output, word32 sz)
       defined(WOLFSSL_uITRON4)  || defined(WOLFSSL_uTKERNEL2) || \
       defined(WOLFSSL_LPC43xx)  || defined(WOLFSSL_STM32F2xx) || \
       defined(MBED)             || defined(WOLFSSL_EMBOS) || \
-      defined(WOLFSSL_GENSEED_FORTEST)
+      defined(WOLFSSL_GENSEED_FORTEST) || defined(WOLFSSL_CHIBIOS)
 
     /* these platforms do not have a default random seed and
        you'll need to implement your own wc_GenerateSeed or define via
@@ -1671,21 +1743,23 @@ int wc_GenerateSeed(OS_Seed* os, byte* output, word32 sz)
                  /* success, we're done */
                  return ret;
              }
-    #ifdef FORCE_FAILURE_RDSEED
+        #ifdef FORCE_FAILURE_RDSEED
              /* don't fallback to /dev/urandom */
              return ret;
-    #else
-             /* fallback to /dev/urandom attempt */
+        #else
+             /* reset error and fallback to using /dev/urandom */
              ret = 0;
-    #endif
+        #endif
         }
-
     #endif /* HAVE_INTEL_RDSEED */
 
-        os->fd = open("/dev/urandom",O_RDONLY);
-        if (os->fd == -1) {
+    #ifndef NO_DEV_URANDOM /* way to disable use of /dev/urandom */
+        os->fd = open("/dev/urandom", O_RDONLY);
+        if (os->fd == -1)
+    #endif
+        {
             /* may still have /dev/random */
-            os->fd = open("/dev/random",O_RDONLY);
+            os->fd = open("/dev/random", O_RDONLY);
             if (os->fd == -1)
                 return OPEN_RAN_E;
         }
@@ -1701,7 +1775,7 @@ int wc_GenerateSeed(OS_Seed* os, byte* output, word32 sz)
             output += len;
 
             if (sz) {
-    #ifdef BLOCKING
+    #if defined(BLOCKING) || defined(WC_RNG_BLOCKING)
                 sleep(0);             /* context switch */
     #else
                 ret = RAN_BLOCK_E;

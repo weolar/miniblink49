@@ -1,34 +1,96 @@
-# miniblink49
-=======================================================
-本次开源的代码未经许可，禁止用于商业用途
+# 简介 Abstract
+
+miniblink is a open source, one file, small browser widget base on chromium.
+
+By using C interface, you can create a browser just some line code.
+
+more information at https://weolar.github.io/miniblink/ or http://miniblink.net
+
+----
+
+miniblink是一个开源的、单文件、且目前已知的最小的基于chromium的，浏览器控件。
+
+通过其导出的纯C接口，几行代码即可创建一个浏览器控件。
+
+您可以通过官网https://weolar.github.io/miniblink/ 或http://miniblink.net 来获取更多的关于miniblink的信息。
+
+
+----
+
+# 特性 Features
+
+- 极致小巧的体积 (small size)
+- C++，C#，Delphi等语言调用 (support C++，C#，Delphi language to call)
+- 内嵌Nodejs，支持electron (with Nodejs, can run electron)
+- 随心所欲的定制功能、模拟环境 (simulate other browser environment)
+- 支持Windows xp、npapi (support windows xp and npapi)
+- 完善的HTML5支持，对各种前端库友好 (support HTML5, and friendly to front framework)
+- 关闭跨域开关后，可以使用各种跨域功能 (support cross domain)
+- 网络资源拦截，替换任意网站任意js为本地文件 (network intercept, you can replace any resource to local file)
+- headless模式，极大节省资源，适用于爬虫 (headless mode, be suitable for Web Crawler)
+
+----
+
+# 文档 Document
 
 关于miniblink的介绍见这篇文章：https://zhuanlan.zhihu.com/p/22611497?group_id=764036386641707008
 
-一、关于编译
-========================================================
-1、目前编译尽量使用VS2015以上的编译器,否则可能出现未知错误。尽量用vs2015.bat打开（重要！！）
+API文档见：https://weolar.github.io/miniblink/doc-main.html 
 
-2、Release版本默认采用VC6运行时库,此特性可以通过USING_VC6RT宏控制
+----
 
-3、miniblink默认同时导出CEF和WKE两种接口,导出接口可以通过ENABLE_CEF和ENABLE_WKE两个宏控制.#这里至少选择一种导出接口
+# 使用 Usage
+请前往https://github.com/weolar/miniblink49/releases 下载最新编译后的SDK，里面的demo_src是个完整的用例。
 
-二、关于说明
-========================================================
-1、miniblink主要是用来做PC端的浏览器嵌入组件，由于导出的是wke和cef的接口，所以你可以替换到你的项目中去体验和学习。基本相当于一个wke的升级版本，或者cef的精简版。
+或者前往 https://github.com/weolar/mb-demo 下载
 
-2、代码里很多地方为了能尽快跑起来，写的不是很优雅····所以大家尽情批判，我会逐步改进。
+最简单的创建一个窗口：
 
-3、代码里我觉得最复杂的是cc目录，那个是我自己写的，一个简单的软件渲染合成层。现在的blink，已经不是当年的webkit了，没有这个目录，连绘制都绘制不了。。
+**Usage**
 
-4、目前我在搞M53了，所以这次开源的是M49的。但也算比较新的内核了。
+```cpp
+// 无边框窗体 borderless window
+wkeWebView window = wkeCreateWebWindow(WKE_WINDOW_TYPE_TRANSPARENT, NULL, 0, 0, 640, 480);  
+wkeLoadURLW(window, L"miniblink.net");
+```
+![demo-1](https://weolar.github.io/miniblink/assets/images/demo-0.gif)
 
-5、下一步的发展方向是electron的接口，以及把M49的功能补充完整。目前缺少挺多功能的，比如前进后退还没做；UI线程和blink主线程还是同一根线程；还没写透明窗口；
+# 编译 Build
 
-6、虽然我花了大量精力维护，但bug可能在所难免。望广大网友积极反馈，我会大力修复
+不推荐自己编译。请前往https://github.com/weolar/miniblink49/releases 下载编译好的文件使用。
 
-三、关于讨论
-========================================================
-大家有问题可以加群178168957、或者邮箱weolar@qq.com，或者csdn：blog.csdn.net/weolar ,或者github里留言讨论。
-当然我不会所有问题都回答的，毕竟还要去工地搬砖养家糊口。
+因为每天有大量更新，我无法确保每次更新都能保证编译通过。如果有编译错误，请不要来提问，耐心等待我的下次提交。
 
-最后特别感谢zero，他帮我提交了很多代码。
+----
+
+# mini-electron
+
+mini-electron项目是一个基于miniblink的独立项目，旨在创建一个更小的electron运行环境。目前已经实现了这一目标。
+
+通过替换mini-electron，打包完后的文件仅仅6m左右。
+
+----
+
+# 联系方式
+
+大家有问题可以选择：
+
+- 加Q群94093808
+
+- 邮箱weolar@qq.com
+
+- github里留言issue讨论
+
+- 关注知乎专栏：https://zhuanlan.zhihu.com/chrome
+
+----
+
+# 致谢 Thanks
+
+特别感谢网友zero，他是miniblink的代码的重要贡献者。
+
+感谢网友core，感谢网友“大清知府”。
+
+感谢网友boxue（ https://www.zhihu.com/people/coltor/ ），他致力于对miniblink架构的研究及推广。
+
+

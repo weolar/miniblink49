@@ -27,6 +27,7 @@ class Tile;
 
 class TilesAddr;
 class RasterTaskGroup;
+class LayerChangeActionCleanupUnnecessaryTile;
 
 // 理论上由DisplayListRecordingSource统一调用本类
 class TileGrid {
@@ -61,17 +62,18 @@ public:
     void lockTiles();
     void unlockTiles();
 
-    //Vector<Tile*>* m_tiles; // for test!~!!!!!!!!!!!!!!
     size_t getRegisterTilesSize() const { return m_registerTiles.size(); }
 
+    void forceCleanupUnnecessaryTile();
+
 private:
-    void updateTilePriorityAndCommitInvalidate(Vector<size_t>* hasBitmapTiles);
     void updateTilePriorityAndCommitInvalidate2(Vector<size_t>* hasBitmapTiles);
     void doUpdateTilePriority(Tile* tile, Vector<size_t>* hasBitmapTiles, blink::IntRect* newCreatedWhenScrolling);
     void applyDirtyRectsToRaster(blink::WebContentLayerClient* client, RasterTaskGroup* taskGroup);
     void markTileDirtyExceptNeedBeShowedArea(const blink::IntRect& dirtyRect);
     void savaUnnecessaryTile(RasterTaskGroup* taskGroup, Vector<Tile*>* hasBitmapTiles);
-    void cleanupUnnecessaryTile(Vector<size_t>* hasBitmapTiles);
+    void cleanupUnnecessaryTiles(Vector<size_t>* hasBitmapTiles);
+    void doCleanupUnnecessaryTile(size_t index, Tile* tile, LayerChangeActionCleanupUnnecessaryTile* cleanupAction);
     void updateSize(const blink::IntRect& screenRect, const blink::IntSize& newLayerSize);
     int getIndexByTile(const Tile* tile) const;
 
@@ -91,6 +93,7 @@ private:
 
     TilesAddr* m_tilesAddr;
     WTF::Mutex* m_tilesMutex; // from layerTreeHost()->tilesMutex()
+    bool m_isForceCleanup;
 };
 
 }

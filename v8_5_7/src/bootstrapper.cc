@@ -3176,6 +3176,14 @@ void Bootstrapper::ExportFromRuntime(Isolate* isolate,
       script_map->AppendDescriptor(&d);
     }
 
+    Handle<AccessorInfo> script_line_ends =
+        Accessors::ScriptLineEndsInfo(isolate, attribs);
+    {
+      AccessorConstantDescriptor d(
+          Handle<Name>(Name::cast(script_line_ends->name())), script_line_ends, attribs);
+      script_map->AppendDescriptor(&d);
+    }
+
     Handle<AccessorInfo> script_source =
         Accessors::ScriptSourceInfo(isolate, attribs);
     {

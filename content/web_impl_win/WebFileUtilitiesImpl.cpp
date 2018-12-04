@@ -168,14 +168,18 @@ blink::WebString WebFileUtilitiesImpl::directoryName(const blink::WebString& pat
 
 blink::WebString WebFileUtilitiesImpl::baseName(const blink::WebString& path)
 {
+    if (path.isNull() || path.isEmpty())
+        return "";
     Vector<UChar> result = WTF::ensureUTF16UChar(path, true);
+    if (result.isEmpty())
+        return "";
     ::PathStripPathW(result.data());
-    return blink::WebString(result.data(), result.size());
+    return String(result.data());
 }
 
 bool WebFileUtilitiesImpl::isDirectory(const blink::WebString& path)
 { 
-    return PathIsDirectoryW(WTF::ensureUTF16UChar(path, true).data());
+    return ::PathIsDirectoryW(WTF::ensureUTF16UChar(path, true).data());
 }
 
 blink::WebURL WebFileUtilitiesImpl::filePathToURL(const blink::WebString& path)

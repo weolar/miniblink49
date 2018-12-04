@@ -44,6 +44,8 @@
       setupGlobalConsole();
     }
 
+    setupAsarSupport();
+
     const _process = NativeModule.require('internal/process');
 
     _process.setup_hrtime();
@@ -505,6 +507,10 @@
   NativeModule.prototype.cache = function() {
     NativeModule._cache[this.id] = this;
   };
+
+  function setupAsarSupport() {
+    process.binding('atom_common_asar').initAsarSupport(process, NativeModule.require);
+  }
 
   startup();
 });

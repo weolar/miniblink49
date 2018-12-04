@@ -1,6 +1,6 @@
 /* compress.c
  *
- * Copyright (C) 2006-2016 wolfSSL Inc.
+ * Copyright (C) 2006-2017 wolfSSL Inc.
  *
  * This file is part of wolfSSL.
  *
@@ -73,12 +73,12 @@ int wc_Compress(byte* out, word32 outSz, const byte* in, word32 inSz, word32 fla
  * outSz - size of destination buffer
  * in - pointer to source buffer to compress
  * inSz - size of source to compress
- * flags - flags to control how compress operates 
+ * flags - flags to control how compress operates
  *
  * return:
  *    negative - error code
  *    positive - bytes stored in out buffer
- * 
+ *
  * Note, the output buffer still needs to be larger than the input buffer.
  * The right chunk of data won't compress at all, and the lookup table will
  * add to the size of the output. The libz code says the compressed
@@ -127,12 +127,12 @@ int wc_DeCompress(byte* out, word32 outSz, const byte* in, word32 inSz)
  * outSz - size of destination buffer
  * in - pointer to source buffer to compress
  * inSz - size of source to compress
- * flags - flags to control how compress operates 
+ * flags - flags to control how compress operates
  *
  * return:
  *    negative - error code
  *    positive - bytes stored in out buffer
- */ 
+ */
 {
     z_stream stream;
     int result = 0;
@@ -157,7 +157,7 @@ int wc_DeCompress(byte* out, word32 outSz, const byte* in, word32 inSz)
         inflateEnd(&stream);
         return DECOMPRESS_E;
     }
-    
+
     result = (int)stream.total_out;
 
     if (inflateEnd(&stream) != Z_OK)

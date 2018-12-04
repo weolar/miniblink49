@@ -1,6 +1,6 @@
 /* ksdk_port.h
  *
- * Copyright (C) 2006-2016 wolfSSL Inc.
+ * Copyright (C) 2006-2017 wolfSSL Inc.
  *
  * This file is part of wolfSSL.
  *
@@ -51,9 +51,9 @@ int ksdk_port_init(void);
 
 	typedef enum _fsl_ltc_ecc_coordinate_system
 	{
-	    kLTC_Weierstrass = 0U, /*!< Point coordinates on an elliptic curve in Weierstrass form */
-	    kLTC_Curve25519 = 1U,  /*!< Point coordinates on an Curve25519 elliptic curve in Montgomery form */
-	    kLTC_Ed25519 = 2U,     /*!< Point coordinates on an Ed25519 elliptic curve in twisted Edwards form */
+	    kLTC_Weierstrass = 0U, /*< Point coordinates on an elliptic curve in Weierstrass form */
+	    kLTC_Curve25519 = 1U,  /*< Point coordinates on an Curve25519 elliptic curve in Montgomery form */
+	    kLTC_Ed25519 = 2U,     /*< Point coordinates on an Ed25519 elliptic curve in twisted Edwards form */
 	} fsl_ltc_ecc_coordinate_system_t;
 
 	int wc_ecc_point_add(ecc_point *mG, ecc_point *mQ, ecc_point *mR, mp_int *m);

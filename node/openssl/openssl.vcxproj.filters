@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="openssl">
@@ -5635,6 +5635,9 @@
     <Filter Include="openssl\crypto\whrlpool">
       <UniqueIdentifier>{613EEE13-7D17-5583-902A-AC863F144135}</UniqueIdentifier>
     </Filter>
+    <Filter Include="openssl\crypto\comp">
+      <UniqueIdentifier>{5fa9ddf2-f547-420e-92d0-75ca5f2f24d4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="openssl\ssl\bio_ssl.c">
@@ -7590,6 +7593,59 @@
     <ClCompile Include="openssl\crypto\whrlpool\wp_block.c">
       <Filter>openssl\crypto\whrlpool</Filter>
     </ClCompile>
-    <None Include="openssl.gyp"/>
+    <None Include="openssl.gyp" />
+    <ClCompile Include="openssl\crypto\comp\comp_lib.c">
+      <Filter>openssl\crypto\comp</Filter>
+    </ClCompile>
+    <ClCompile Include="openssl\crypto\comp\c_rle.c">
+      <Filter>openssl\crypto\comp</Filter>
+    </ClCompile>
+    <ClCompile Include="openssl\crypto\comp\c_zlib.c">
+      <Filter>openssl\crypto\comp</Filter>
+    </ClCompile>
+    <ClCompile Include="openssl\crypto\comp\comp_err.c">
+      <Filter>openssl\crypto\comp</Filter>
+    </ClCompile>
+    <ClCompile Include="openssl\crypto\des\des_enc.c">
+      <Filter>openssl\crypto\des</Filter>
+    </ClCompile>
+    <ClCompile Include="openssl\crypto\bn\bn_asm.c">
+      <Filter>openssl\crypto\bn</Filter>
+    </ClCompile>
+    <ClCompile Include="openssl\crypto\cast\c_enc.c">
+      <Filter>openssl\crypto\cast</Filter>
+    </ClCompile>
+    <ClCompile Include="openssl\crypto\bf\bf_enc.c">
+      <Filter>openssl\crypto\bf</Filter>
+    </ClCompile>
+    <ClCompile Include="openssl\crypto\aes\aes_core.c">
+      <Filter>openssl\crypto\aes</Filter>
+    </ClCompile>
+    <ClCompile Include="openssl\crypto\aes\aes_cbc.c">
+      <Filter>openssl\crypto\aes</Filter>
+    </ClCompile>
+    <ClCompile Include="openssl\crypto\camellia\camellia.c">
+      <Filter>openssl\crypto\camellia</Filter>
+    </ClCompile>
+    <ClCompile Include="openssl\crypto\rc4\rc4_enc.c">
+      <Filter>openssl\crypto\rc4</Filter>
+    </ClCompile>
+    <ClCompile Include="openssl\crypto\camellia\cmll_cbc.c">
+      <Filter>openssl\crypto\camellia</Filter>
+    </ClCompile>
+    <ClCompile Include="openssl\crypto\camellia\cmll_misc.c">
+      <Filter>openssl\crypto\camellia</Filter>
+    </ClCompile>
+    <ClCompile Include="openssl\crypto\rc4\rc4_skey.c">
+      <Filter>openssl\crypto\rc4</Filter>
+    </ClCompile>
+    <ClCompile Include="openssl\crypto\mem_clr.c">
+      <Filter>openssl\crypto</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="openssl\crypto\comp\comp.h">
+      <Filter>openssl\crypto\comp</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

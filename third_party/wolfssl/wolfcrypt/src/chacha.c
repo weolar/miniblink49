@@ -1,6 +1,6 @@
 /* chacha.c
  *
- * Copyright (C) 2006-2016 wolfSSL Inc.
+ * Copyright (C) 2006-2017 wolfSSL Inc.
  *
  * This file is part of wolfSSL.
  *
@@ -49,12 +49,6 @@
     #include <stdio.h>
 #endif
 
-#ifdef WOLFSSL_X86_64_BUILD
-#if defined(USE_INTEL_SPEEDUP) && !defined(NO_CHACHA_ASM)
-    #define USE_INTEL_CHACHA_SPEEDUP
-#endif
-#endif
-
 #ifdef USE_INTEL_CHACHA_SPEEDUP
     #include <emmintrin.h>
     #include <immintrin.h>
@@ -66,12 +60,24 @@
     #if defined(__clang__) && ((__clang_major__ < 3) || \
                                (__clang_major__ == 3 && __clang_minor__ <= 5))
         #define NO_AVX2_SUPPORT
+    #elif defined(__clang__) && defined(NO_AVX2_SUPPORT)
+        #undef NO_AVX2_SUPPORT
     #endif
 
-    #define HAVE_INTEL_AVX1
     #ifndef NO_AVX2_SUPPORT
         #define HAVE_INTEL_AVX2
     #endif
+
+    #if defined(_MSC_VER)
+        #define CHACHA20_NOINLINE __declspec(noinline)
+    #elif defined(__GNUC__)
+        #define CHACHA20_NOINLINE __attribute__((noinline))
+    #else
+        #define CHACHA20_NOINLINE
+    #endif
+
+    static int cpuidFlagsSet = 0;
+    static int cpuidFlags = 0;
 #endif
 
 #ifdef BIG_ENDIAN_ORDER
@@ -325,7 +331,7 @@ int wc_Chacha_SetKey(ChaCha* ctx, const byte* key, word32 keySz)
     if (ctx == NULL)
         return BAD_FUNC_ARG;
 
-    if (keySz != 16 && keySz != 32)
+    if (keySz != (CHACHA_MAX_KEY_SZ/2) && keySz != CHACHA_MAX_KEY_SZ)
         return BAD_FUNC_ARG;
 
 #ifdef XSTREAM_ALIGN
@@ -356,7 +362,7 @@ int wc_Chacha_SetKey(ChaCha* ctx, const byte* key, word32 keySz)
     ctx->X[5] = U8TO32_LITTLE(k +  4);
     ctx->X[6] = U8TO32_LITTLE(k +  8);
     ctx->X[7] = U8TO32_LITTLE(k + 12);
-    if (keySz == 32) {
+    if (keySz == CHACHA_MAX_KEY_SZ) {
         k += 16;
         constants = sigma;
     }
@@ -411,19 +417,378 @@ static INLINE void wc_Chacha_wordtobyte(word32 output[CHACHA_CHUNK_WORDS],
 
 #ifdef USE_INTEL_CHACHA_SPEEDUP
 
-#ifdef HAVE_INTEL_AVX1
-static void chacha_encrypt_avx(ChaCha* ctx, const byte* m, byte* c,
+#define QUARTERROUND_2_X64(r11, r12, r13, r14, r21, r22, r23, r24) \
+        "addl	"#r12", "#r11"\n\t"                                \
+        "addl	"#r22", "#r21"\n\t"                                \
+        "xorl	"#r11", "#r14"\n\t"                                \
+        "xorl	"#r21", "#r24"\n\t"                                \
+        "roll	$16, "#r14"\n\t"                                   \
+        "roll	$16, "#r24"\n\t"                                   \
+        "addl	"#r14", "#r13"\n\t"                                \
+        "addl	"#r24", "#r23"\n\t"                                \
+        "xorl	"#r13", "#r12"\n\t"                                \
+        "xorl	"#r23", "#r22"\n\t"                                \
+        "roll	$12, "#r12"\n\t"                                   \
+        "roll	$12, "#r22"\n\t"                                   \
+        "addl	"#r12", "#r11"\n\t"                                \
+        "addl	"#r22", "#r21"\n\t"                                \
+        "xorl	"#r11", "#r14"\n\t"                                \
+        "xorl	"#r21", "#r24"\n\t"                                \
+        "roll	$8, "#r14"\n\t"                                    \
+        "roll	$8, "#r24"\n\t"                                    \
+        "addl	"#r14", "#r13"\n\t"                                \
+        "addl	"#r24", "#r23"\n\t"                                \
+        "xorl	"#r13", "#r12"\n\t"                                \
+        "xorl	"#r23", "#r22"\n\t"                                \
+        "roll	$7, "#r12"\n\t"                                    \
+        "roll	$7, "#r22"\n\t"                                    \
+
+#define CHACHA_CRYPT_X64()                                                     \
+        "subq	$40, %%rsp\n\t"                                                \
+        "movq	32(%[input]), %%rax\n\t"                                       \
+        "movq	40(%[input]), %%rdx\n\t"                                       \
+        "movq	%%rax,  8(%%rsp)\n\t"                                          \
+        "movq	%%rdx, 16(%%rsp)\n\t"                                          \
+        "movl	 0(%[input]), %%eax\n\t"                                       \
+        "movl	 4(%[input]), %%ebx\n\t"                                       \
+        "movl	 8(%[input]), %%ecx\n\t"                                       \
+        "movl	12(%[input]), %%edx\n\t"                                       \
+        "movl	16(%[input]), %%r8d\n\t"                                       \
+        "movl	20(%[input]), %%r9d\n\t"                                       \
+        "movl	24(%[input]), %%r10d\n\t"                                      \
+        "movl	28(%[input]), %%r11d\n\t"                                      \
+        "movl	48(%[input]), %%r12d\n\t"                                      \
+        "movl	52(%[input]), %%r13d\n\t"                                      \
+        "movl	56(%[input]), %%r14d\n\t"                                      \
+        "movl	60(%[input]), %%r15d\n\t"                                      \
+        "movb	$10, (%%rsp)\n\t"                                              \
+        "movq	%%rsi, 32(%%rsp)\n\t"                                          \
+        "movq	%%rdi, 24(%%rsp)\n\t"                                          \
+        "movl	 8(%%rsp), %%esi\n\t"                                          \
+        "movl	12(%%rsp), %%edi\n\t"                                          \
+        "\n"                                                                   \
+        "1:\n\t"                                                               \
+        QUARTERROUND_2_X64(%%eax,  %%r8d, %%esi, %%r12d,                       \
+                           %%ebx,  %%r9d, %%edi, %%r13d)                       \
+        "movl	%%esi,  8(%%rsp)\n\t"                                          \
+        "movl	%%edi, 12(%%rsp)\n\t"                                          \
+        "movl	16(%%rsp), %%esi\n\t"                                          \
+        "movl	20(%%rsp), %%edi\n\t"                                          \
+        QUARTERROUND_2_X64(%%ecx, %%r10d, %%esi, %%r14d,                       \
+                           %%edx, %%r11d, %%edi, %%r15d)                       \
+        QUARTERROUND_2_X64(%%eax,  %%r9d, %%esi, %%r15d,                       \
+                           %%ebx, %%r10d, %%edi, %%r12d)                       \
+        "movl	%%esi, 16(%%rsp)\n\t"                                          \
+        "movl	%%edi, 20(%%rsp)\n\t"                                          \
+        "movl	 8(%%rsp), %%esi\n\t"                                          \
+        "movl	12(%%rsp), %%edi\n\t"                                          \
+        QUARTERROUND_2_X64(%%ecx, %%r11d, %%esi, %%r13d,                       \
+                           %%edx,  %%r8d, %%edi, %%r14d)                       \
+        "decb	(%%rsp)\n\t"                                                   \
+        "jnz	1b\n\t"                                                        \
+        "movl	%%esi,  8(%%rsp)\n\t"                                          \
+        "movl	%%edi, 12(%%rsp)\n\t"                                          \
+        "movq	32(%%rsp), %%rsi\n\t"                                          \
+        "movq	24(%%rsp), %%rdi\n\t"                                          \
+        "addl	 0(%[input]), %%eax\n\t"                                       \
+        "addl	 4(%[input]), %%ebx\n\t"                                       \
+        "addl	 8(%[input]), %%ecx\n\t"                                       \
+        "addl	12(%[input]), %%edx\n\t"                                       \
+        "addl	16(%[input]), %%r8d\n\t"                                       \
+        "addl	20(%[input]), %%r9d\n\t"                                       \
+        "addl	24(%[input]), %%r10d\n\t"                                      \
+        "addl	28(%[input]), %%r11d\n\t"                                      \
+        "addl	48(%[input]), %%r12d\n\t"                                      \
+        "addl	52(%[input]), %%r13d\n\t"                                      \
+        "addl	56(%[input]), %%r14d\n\t"                                      \
+        "addl	60(%[input]), %%r15d\n\t"                                      \
+
+#define CHACHA_PARTIAL_CHUNK_X64()                                             \
+    __asm__ __volatile__ (                                                     \
+        CHACHA_CRYPT_X64()                                                     \
+        "movl	%%eax ,  0(%[c])\n\t"                                          \
+        "movl	%%ebx ,  4(%[c])\n\t"                                          \
+        "movl	%%ecx ,  8(%[c])\n\t"                                          \
+        "movl	%%edx , 12(%[c])\n\t"                                          \
+        "movl	%%r8d , 16(%[c])\n\t"                                          \
+        "movl	%%r9d , 20(%[c])\n\t"                                          \
+        "movl	%%r10d, 24(%[c])\n\t"                                          \
+        "movl	%%r11d, 28(%[c])\n\t"                                          \
+        "movl	%%r12d, 48(%[c])\n\t"                                          \
+        "movl	%%r13d, 52(%[c])\n\t"                                          \
+        "movl	%%r14d, 56(%[c])\n\t"                                          \
+        "movl	%%r15d, 60(%[c])\n\t"                                          \
+        "movl	 8(%%rsp), %%eax\n\t"                                          \
+        "movl	12(%%rsp), %%ebx\n\t"                                          \
+        "movl	16(%%rsp), %%ecx\n\t"                                          \
+        "movl	20(%%rsp), %%edx\n\t"                                          \
+        "addl	32(%[input]), %%eax\n\t"                                       \
+        "addl	36(%[input]), %%ebx\n\t"                                       \
+        "addl	40(%[input]), %%ecx\n\t"                                       \
+        "addl	44(%[input]), %%edx\n\t"                                       \
+        "movl	%%eax , 32(%[c])\n\t"                                          \
+        "movl	%%ebx , 36(%[c])\n\t"                                          \
+        "movl	%%ecx , 40(%[c])\n\t"                                          \
+        "movl	%%edx , 44(%[c])\n\t"                                          \
+        "addl	$1, 48(%[input])\n\t"                                          \
+        "addq	$40, %%rsp\n\t"                                                \
+        "movq	%[output], %%rax\n\t"                                          \
+        "movq	%[m], %%rbx\n\t"                                               \
+        "movl	%[bytes], %%r8d\n\t"                                           \
+        "xorq	%%rdx, %%rdx\n\t"                                              \
+        "movl	%%r8d, %%r9d\n\t"                                              \
+        "andl	$7, %%r9d\n\t"                                                 \
+        "jz	4f\n\t"                                                        \
+        "\n"                                                                   \
+        "2:\n\t"                                                               \
+        "movzbl	(%[c],%%rdx,1), %%ecx\n\t"                                     \
+        "xorb	(%%rbx,%%rdx,1), %%cl\n\t"                                     \
+        "movb	%%cl, (%%rax,%%rdx,1)\n\t"                                     \
+        "incl	%%edx\n\t"                                                     \
+        "cmpl	%%r9d, %%edx\n\t"                                              \
+        "jne	2b\n\t"                                                        \
+        "je	3f\n\t"                                                        \
+        "\n"                                                                   \
+        "4:\n\t"                                                               \
+        "movq	(%[c],%%rdx,1), %%rcx\n\t"                                     \
+        "xorq	(%%rbx,%%rdx,1), %%rcx\n\t"                                    \
+        "movq	%%rcx, (%%rax,%%rdx,1)\n\t"                                    \
+        "addl	$8, %%edx\n\t"                                                 \
+        "\n"                                                                   \
+        "3:\n\t"                                                               \
+        "cmpl	%%r8d, %%edx\n\t"                                              \
+        "jne	4b\n\t"                                                        \
+        :                                                                      \
+        : [input] "r" (ctx->X), [c] "r" (x),                                   \
+          [output] "m" (c), [bytes] "m" (bytes), [m] "m" (m)                   \
+        : "eax", "ebx", "ecx", "edx", "r8", "r9", "r10", "r11", "r12", "r13",  \
+          "r14", "r15", "memory"                                               \
+    )
+
+
+#define CHACHA_CHUNK_X64()                                                     \
+    __asm__ __volatile__ (                                                     \
+        CHACHA_CRYPT_X64()                                                     \
+        "movq	%%rsi, 32(%%rsp)\n\t"                                          \
+        "addq	$40, %%rsp\n\t"                                                \
+        "movq	%[m], %%rsi\n\t"                                               \
+        "subq	$40, %%rsp\n\t"                                                \
+        "xorl	 0(%%rsi), %%eax\n\t"                                          \
+        "xorl	 4(%%rsi), %%ebx\n\t"                                          \
+        "xorl	 8(%%rsi), %%ecx\n\t"                                          \
+        "xorl	12(%%rsi), %%edx\n\t"                                          \
+        "xorl	16(%%rsi), %%r8d\n\t"                                          \
+        "xorl	20(%%rsi), %%r9d\n\t"                                          \
+        "xorl	24(%%rsi), %%r10d\n\t"                                         \
+        "xorl	28(%%rsi), %%r11d\n\t"                                         \
+        "xorl	48(%%rsi), %%r12d\n\t"                                         \
+        "xorl	52(%%rsi), %%r13d\n\t"                                         \
+        "xorl	56(%%rsi), %%r14d\n\t"                                         \
+        "xorl	60(%%rsi), %%r15d\n\t"                                         \
+        "movq	32(%%rsp), %%rsi\n\t"                                          \
+        "movl	%%eax ,  0(%[c])\n\t"                                          \
+        "movl	%%ebx ,  4(%[c])\n\t"                                          \
+        "movl	%%ecx ,  8(%[c])\n\t"                                          \
+        "movl	%%edx , 12(%[c])\n\t"                                          \
+        "movl	%%r8d , 16(%[c])\n\t"                                          \
+        "movl	%%r9d , 20(%[c])\n\t"                                          \
+        "movl	%%r10d, 24(%[c])\n\t"                                          \
+        "movl	%%r11d, 28(%[c])\n\t"                                          \
+        "movl	%%r12d, 48(%[c])\n\t"                                          \
+        "movl	%%r13d, 52(%[c])\n\t"                                          \
+        "movl	%%r14d, 56(%[c])\n\t"                                          \
+        "movl	%%r15d, 60(%[c])\n\t"                                          \
+        "addq	$40, %%rsp\n\t"                                                \
+        "movq	%[m], %%r8\n\t"                                                \
+        "subq	$40, %%rsp\n\t"                                                \
+        "movl	 8(%%rsp), %%eax\n\t"                                          \
+        "movl	12(%%rsp), %%ebx\n\t"                                          \
+        "movl	16(%%rsp), %%ecx\n\t"                                          \
+        "movl	20(%%rsp), %%edx\n\t"                                          \
+        "addl	32(%[input]), %%eax\n\t"                                       \
+        "addl	36(%[input]), %%ebx\n\t"                                       \
+        "addl	40(%[input]), %%ecx\n\t"                                       \
+        "addl	44(%[input]), %%edx\n\t"                                       \
+        "xorl	32(%%r8), %%eax\n\t"                                           \
+        "xorl	36(%%r8), %%ebx\n\t"                                           \
+        "xorl	40(%%r8), %%ecx\n\t"                                           \
+        "xorl	44(%%r8), %%edx\n\t"                                           \
+        "movl	%%eax , 32(%[c])\n\t"                                          \
+        "movl	%%ebx , 36(%[c])\n\t"                                          \
+        "movl	%%ecx , 40(%[c])\n\t"                                          \
+        "movl	%%edx , 44(%[c])\n\t"                                          \
+        "addl	$1, 48(%[input])\n\t"                                          \
+        "addq	$40, %%rsp\n\t"                                                \
+        :                                                                      \
+        : [input] "r" (ctx->X), [c] "r" (c), [m] "m" (m)                       \
+        : "eax", "ebx", "ecx", "edx", "r8", "r9", "r10", "r11", "r12", "r13",  \
+          "r14", "r15", "memory"                                               \
+    )
+
+
+static void chacha_encrypt_x64(ChaCha* ctx, const byte* m, byte* c,
                                word32 bytes)
+{
+    word32 x[CHACHA_CHUNK_WORDS];
+
+    if (bytes == 0)
+        return;
+
+    for (; bytes >= CHACHA_CHUNK_BYTES;) {
+        CHACHA_CHUNK_X64();
+        bytes -= CHACHA_CHUNK_BYTES;
+        c += CHACHA_CHUNK_BYTES;
+        m += CHACHA_CHUNK_BYTES;
+    }
+    if (bytes > 0) {
+        CHACHA_PARTIAL_CHUNK_X64();
+    }
+}
+
+#if defined(HAVE_INTEL_AVX1) || defined(HAVE_INTEL_AVX2)
+static const __m128i rotl8 =  { 0x0605040702010003UL,0x0e0d0c0f0a09080bUL };
+static const __m128i rotl16 = { 0x0504070601000302UL,0x0d0c0f0e09080b0aUL };
+#endif /* HAVE_INTEL_AVX1 || HAVE_INTEL_AVX2 */
+
+#ifdef HAVE_INTEL_AVX1
+#define QUARTERROUND_2_AVX()               \
+        "paddd	%%xmm1, %%xmm0\n\t"        \
+        "pxor	%%xmm0, %%xmm3\n\t"        \
+        "pshufb	%[rotl16], %%xmm3\n\t"     \
+        "paddd	%%xmm3, %%xmm2\n\t"        \
+        "pxor	%%xmm2, %%xmm1\n\t"        \
+        "movdqa	%%xmm1, %%xmm4\n\t"        \
+        "pslld	$12, %%xmm1\n\t"           \
+        "psrld	$20, %%xmm4\n\t"           \
+        "pxor	%%xmm4, %%xmm1\n\t"        \
+        "paddd	%%xmm1, %%xmm0\n\t"        \
+        "pxor	%%xmm0, %%xmm3\n\t"        \
+        "pshufb	%[rotl8], %%xmm3\n\t"      \
+        "paddd	%%xmm3, %%xmm2\n\t"        \
+        "pxor	%%xmm2, %%xmm1\n\t"        \
+        "movdqa	%%xmm1, %%xmm4\n\t"        \
+        "pslld	$7, %%xmm1\n\t"            \
+        "psrld	$25, %%xmm4\n\t"           \
+        "pxor	%%xmm4, %%xmm1\n\t"        \
+        "# Swap words for next round\n\t"  \
+        "pshufd	$0x39, %%xmm1, %%xmm1\n\t" \
+        "pshufd	$0x4e, %%xmm2, %%xmm2\n\t" \
+        "pshufd	$0x93, %%xmm3, %%xmm3\n\t" \
+        "paddd	%%xmm1, %%xmm0\n\t"        \
+        "pxor	%%xmm0, %%xmm3\n\t"        \
+        "pshufb	%[rotl16], %%xmm3\n\t"     \
+        "paddd	%%xmm3, %%xmm2\n\t"        \
+        "pxor	%%xmm2, %%xmm1\n\t"        \
+        "movdqa	%%xmm1, %%xmm4\n\t"        \
+        "pslld	$12, %%xmm1\n\t"           \
+        "psrld	$20, %%xmm4\n\t"           \
+        "pxor	%%xmm4, %%xmm1\n\t"        \
+        "paddd	%%xmm1, %%xmm0\n\t"        \
+        "pxor	%%xmm0, %%xmm3\n\t"        \
+        "pshufb	%[rotl8], %%xmm3\n\t"      \
+        "paddd	%%xmm3, %%xmm2\n\t"        \
+        "pxor	%%xmm2, %%xmm1\n\t"        \
+        "movdqa	%%xmm1, %%xmm4\n\t"        \
+        "pslld	$7, %%xmm1\n\t"            \
+        "psrld	$25, %%xmm4\n\t"           \
+        "pxor	%%xmm4, %%xmm1\n\t"        \
+        "# Swap words back\n\t"            \
+        "pshufd	$0x93, %%xmm1, %%xmm1\n\t" \
+        "pshufd	$0x4e, %%xmm2, %%xmm2\n\t" \
+        "pshufd	$0x39, %%xmm3, %%xmm3\n\t" \
+
+#define CHACHA_CRYPT_AVX()                                                     \
+        "movdqu	 0(%[input]), %%xmm0\n\t"                                      \
+        "movdqu	16(%[input]), %%xmm1\n\t"                                      \
+        "movdqu	32(%[input]), %%xmm2\n\t"                                      \
+        "movdqu	48(%[input]), %%xmm3\n\t"                                      \
+        "movb	$10, %%al\n\t"                                                 \
+        "\n"                                                                   \
+        "1:\n\t"                                                               \
+        QUARTERROUND_2_AVX()                                                   \
+        "decb	%%al\n\t"                                                      \
+        "jnz	1b\n\t"                                                        \
+        "movdqu	 0(%[input]), %%xmm4\n\t"                                      \
+        "movdqu	16(%[input]), %%xmm5\n\t"                                      \
+        "movdqu	32(%[input]), %%xmm6\n\t"                                      \
+        "movdqu	48(%[input]), %%xmm7\n\t"                                      \
+        "paddd	%%xmm4, %%xmm0\n\t"                                            \
+        "paddd	%%xmm5, %%xmm1\n\t"                                            \
+        "paddd	%%xmm6, %%xmm2\n\t"                                            \
+        "paddd	%%xmm7, %%xmm3\n\t"                                            \
+
+#define CHACHA_PARTIAL_CHUNK_AVX()                                             \
+    __asm__ __volatile__ (                                                     \
+        CHACHA_CRYPT_AVX()                                                     \
+        "movdqu	%%xmm0,  0(%[c])\n\t"                                          \
+        "movdqu	%%xmm1, 16(%[c])\n\t"                                          \
+        "movdqu	%%xmm2, 32(%[c])\n\t"                                          \
+        "movdqu	%%xmm3, 48(%[c])\n\t"                                          \
+        "addl	$1, 48(%[input])\n\t"                                          \
+        "movl	%[bytes], %%r8d\n\t"                                           \
+        "xorq	%%rdx, %%rdx\n\t"                                              \
+        "movl	%%r8d, %%r9d\n\t"                                              \
+        "andl	$7, %%r9d\n\t"                                                 \
+        "jz	4f\n\t"                                                        \
+        "\n"                                                                   \
+        "2:\n\t"                                                               \
+        "movzbl	(%[c],%%rdx,1), %%ecx\n\t"                                     \
+        "xorb	(%[m],%%rdx,1), %%cl\n\t"                                      \
+        "movb	%%cl, (%[output],%%rdx,1)\n\t"                                 \
+        "incl	%%edx\n\t"                                                     \
+        "cmpl	%%r9d, %%edx\n\t"                                              \
+        "jne	2b\n\t"                                                        \
+        "je	3f\n\t"                                                        \
+        "\n"                                                                   \
+        "4:\n\t"                                                               \
+        "movq	(%[c],%%rdx,1), %%rcx\n\t"                                     \
+        "xorq	(%[m],%%rdx,1), %%rcx\n\t"                                     \
+        "movq	%%rcx, (%[output],%%rdx,1)\n\t"                                \
+        "addl	$8, %%edx\n\t"                                                 \
+        "\n"                                                                   \
+        "3:\n\t"                                                               \
+        "cmpl	%%r8d, %%edx\n\t"                                              \
+        "jne	4b\n\t"                                                        \
+        :                                                                      \
+        : [input] "r" (ctx->X), [c] "r" (x),                                   \
+          [output] "r" (c), [bytes] "r" (bytes), [m] "r" (m),                  \
+          [rotl8] "xrm" (rotl8), [rotl16] "xrm" (rotl16)                       \
+        : "eax", "ecx", "edx", "r8", "r9", "memory",                           \
+          "xmm0", "xmm1", "xmm2", "xmm3", "xmm4", "xmm5", "xmm6", "xmm7"       \
+    )
+
+
+#define CHACHA_CHUNK_AVX()                                                     \
+    __asm__ __volatile__ (                                                     \
+        CHACHA_CRYPT_AVX()                                                     \
+        "movdqu	 0(%[m]), %%xmm4\n\t"                                          \
+        "movdqu	16(%[m]), %%xmm5\n\t"                                          \
+        "movdqu	32(%[m]), %%xmm6\n\t"                                          \
+        "movdqu	48(%[m]), %%xmm7\n\t"                                          \
+        "pxor	%%xmm4, %%xmm0\n\t"                                            \
+        "pxor	%%xmm5, %%xmm1\n\t"                                            \
+        "pxor	%%xmm6, %%xmm2\n\t"                                            \
+        "pxor	%%xmm7, %%xmm3\n\t"                                            \
+        "movdqu	%%xmm0,  0(%[c])\n\t"                                          \
+        "movdqu	%%xmm1, 16(%[c])\n\t"                                          \
+        "movdqu	%%xmm2, 32(%[c])\n\t"                                          \
+        "movdqu	%%xmm3, 48(%[c])\n\t"                                          \
+        "addl	$1, 48(%[input])\n\t"                                          \
+        :                                                                      \
+        : [input] "r" (ctx->X), [c] "r" (c), [m] "r" (m),                      \
+          [rotl8] "xrm" (rotl8), [rotl16] "xrm" (rotl16)                       \
+        : "rax", "memory",                                                     \
+          "xmm0", "xmm1", "xmm2", "xmm3", "xmm4", "xmm5", "xmm6", "xmm7"       \
+    )
+
+CHACHA20_NOINLINE static void chacha_encrypt_avx(ChaCha* ctx, const byte* m,
+                                                 byte* c, word32 bytes)
 {
     ALIGN128 word32 X[4*CHACHA_CHUNK_WORDS]; /* used to make sure aligned */
     ALIGN128 word32 x[2*CHACHA_CHUNK_WORDS]; /* used to make sure aligned */
-    byte*  output;
-    word32 i;
     word32 cnt = 0;
     static const __m128i add =    { 0x0000000100000000UL,0x0000000300000002UL };
     static const __m128i four =   { 0x0000000400000004UL,0x0000000400000004UL };
-    static const __m128i rotl8 =  { 0x0605040702010003UL,0x0e0d0c0f0a09080bUL };
-    static const __m128i rotl16 = { 0x0504070601000302UL,0x0d0c0f0e09080b0aUL };
 
     if (bytes == 0)
         return;
@@ -431,7 +796,7 @@ static void chacha_encrypt_avx(ChaCha* ctx, const byte* m, byte* c,
     __asm__ __volatile__ (
        "movl	%[bytes], %[cnt]\n\t"
        "shrl	$8, %[cnt]\n\t"
-       "jz	L_end128\n\t"
+       "jz      L_end128\n\t"
 
        "vpshufd	$0,   (%[key]), %%xmm0\n\t"
        "vpshufd	$0,  4(%[key]), %%xmm1\n\t"
@@ -644,7 +1009,7 @@ static void chacha_encrypt_avx(ChaCha* ctx, const byte* m, byte* c,
        "add	48(%[key]), %[cnt]\n\t"
        "movl	%[cnt], 48(%[key])\n\t"
        "\n"
-   "L_end128:"
+   "L_end128:\n\t"
        : [bytes] "+r" (bytes), [cnt] "+r" (cnt),
          [in] "+r" (m), [out] "+r" (c)
        : [X] "r" (X), [x] "r" (x), [key] "r" (ctx->X),
@@ -656,42 +1021,163 @@ static void chacha_encrypt_avx(ChaCha* ctx, const byte* m, byte* c,
          "xmm12", "xmm13", "xmm14", "xmm15", "memory"
     );
 
-    output = (byte*)x;
-    for (; bytes > 0;) {
-        wc_Chacha_wordtobyte(x, ctx->X);
-        ctx->X[CHACHA_IV_BYTES] = PLUSONE(ctx->X[CHACHA_IV_BYTES]);
-        if (bytes <= CHACHA_CHUNK_BYTES) {
-            for (i = 0; i < bytes; ++i) {
-                c[i] = m[i] ^ output[i];
-            }
-            return;
-        }
-        for (i = 0; i < CHACHA_CHUNK_BYTES; ++i) {
-            c[i] = m[i] ^ output[i];
-        }
+    for (; bytes >= CHACHA_CHUNK_BYTES;) {
+        CHACHA_CHUNK_AVX();
         bytes -= CHACHA_CHUNK_BYTES;
         c += CHACHA_CHUNK_BYTES;
         m += CHACHA_CHUNK_BYTES;
+    }
+    if (bytes > 0) {
+        CHACHA_PARTIAL_CHUNK_AVX();
     }
 }
 #endif /* HAVE_INTEL_AVX1 */
 
 #ifdef HAVE_INTEL_AVX2
+#define QUARTERROUND_2_AVX2()                          \
+        "vpaddd		%%xmm1, %%xmm0, %%xmm0\n\t"    \
+        "vpxor		%%xmm0, %%xmm3, %%xmm3\n\t"    \
+        "vpshufb	%[rotl16], %%xmm3, %%xmm3\n\t" \
+        "vpaddd		%%xmm3, %%xmm2, %%xmm2\n\t"    \
+        "vpxor		%%xmm2, %%xmm1, %%xmm1\n\t"    \
+        "vpsrld		$20, %%xmm1, %%xmm4\n\t"       \
+        "vpslld		$12, %%xmm1, %%xmm1\n\t"       \
+        "vpxor		%%xmm4, %%xmm1, %%xmm1\n\t"    \
+        "vpaddd		%%xmm1, %%xmm0, %%xmm0\n\t"    \
+        "vpxor		%%xmm0, %%xmm3, %%xmm3\n\t"    \
+        "vpshufb	%[rotl8], %%xmm3, %%xmm3\n\t"  \
+        "vpaddd		%%xmm3, %%xmm2, %%xmm2\n\t"    \
+        "vpxor		%%xmm2, %%xmm1, %%xmm1\n\t"    \
+        "vpsrld		$25, %%xmm1, %%xmm4\n\t"       \
+        "vpslld		$7, %%xmm1, %%xmm1\n\t"        \
+        "vpxor		%%xmm4, %%xmm1, %%xmm1\n\t"    \
+        "# Swap words for next round\n\t"              \
+        "vpshufd	$0x39, %%xmm1, %%xmm1\n\t"     \
+        "vpshufd	$0x4e, %%xmm2, %%xmm2\n\t"     \
+        "vpshufd	$0x93, %%xmm3, %%xmm3\n\t"     \
+        "vpaddd		%%xmm1, %%xmm0, %%xmm0\n\t"    \
+        "vpxor		%%xmm0, %%xmm3, %%xmm3\n\t"    \
+        "vpshufb	%[rotl16], %%xmm3, %%xmm3\n\t" \
+        "vpaddd		%%xmm3, %%xmm2, %%xmm2\n\t"    \
+        "vpxor		%%xmm2, %%xmm1, %%xmm1\n\t"    \
+        "vpsrld		$20, %%xmm1, %%xmm4\n\t"       \
+        "vpslld		$12, %%xmm1, %%xmm1\n\t"       \
+        "vpxor		%%xmm4, %%xmm1, %%xmm1\n\t"    \
+        "vpaddd		%%xmm1, %%xmm0, %%xmm0\n\t"    \
+        "vpxor		%%xmm0, %%xmm3, %%xmm3\n\t"    \
+        "vpshufb	%[rotl8], %%xmm3, %%xmm3\n\t"  \
+        "vpaddd		%%xmm3, %%xmm2, %%xmm2\n\t"    \
+        "vpxor		%%xmm2, %%xmm1, %%xmm1\n\t"    \
+        "vpsrld		$25, %%Xmm1, %%xmm4\n\t"       \
+        "vpslld		$7, %%xmm1, %%xmm1\n\t"        \
+        "vpxor		%%xmm4, %%xmm1, %%xmm1\n\t"    \
+        "# Swap words back\n\t"                        \
+        "vpshufd	$0x93, %%xmm1, %%xmm1\n\t"     \
+        "vpshufd	$0x4e, %%xmm2, %%xmm2\n\t"     \
+        "vpshufd	$0x39, %%xmm3, %%xmm3\n\t"     \
+
+#define CHACHA_CRYPT_AVX2()                                                    \
+        "vmovdqu	 0(%[input]), %%xmm8\n\t"                              \
+        "vmovdqu	16(%[input]), %%xmm9\n\t"                              \
+        "vmovdqu	32(%[input]), %%xmm10\n\t"                             \
+        "vmovdqu	48(%[input]), %%xmm11\n\t"                             \
+        "vmovdqu	%%xmm8, %%xmm0\n\t"                                    \
+        "vmovdqu	%%xmm9, %%xmm1\n\t"                                    \
+        "vmovdqu	%%xmm10, %%xmm2\n\t"                                   \
+        "vmovdqu	%%xmm11, %%xmm3\n\t"                                   \
+        "movb		$10, %%al\n\t"                                         \
+        "\n"                                                                   \
+        "1:\n\t"                                                               \
+        QUARTERROUND_2_AVX2()                                                  \
+        "decb		%%al\n\t"                                              \
+        "jnz		1b\n\t"                                                \
+        "vpaddd		%%xmm8, %%xmm0, %%xmm0\n\t"                            \
+        "vpaddd		%%xmm9, %%xmm1, %%xmm1\n\t"                            \
+        "vpaddd		%%xmm10, %%xmm2, %%xmm2\n\t"                           \
+        "vpaddd		%%xmm11, %%xmm3, %%xmm3\n\t"                           \
+
+#define CHACHA_PARTIAL_CHUNK_AVX2()                                            \
+    __asm__ __volatile__ (                                                     \
+        CHACHA_CRYPT_AVX2()                                                    \
+        "vmovdqu	%%xmm0,  0(%[c])\n\t"                                  \
+        "vmovdqu	%%xmm1, 16(%[c])\n\t"                                  \
+        "vmovdqu	%%xmm2, 32(%[c])\n\t"                                  \
+        "vmovdqu	%%xmm3, 48(%[c])\n\t"                                  \
+        "addl		$1, 48(%[input])\n\t"                                  \
+        "movl		%[bytes], %%r8d\n\t"                                   \
+        "xorq		%%rdx, %%rdx\n\t"                                      \
+        "movl		%%r8d, %%r9d\n\t"                                      \
+        "andl		$7, %%r9d\n\t"                                         \
+        "jz		4f\n\t"                                                \
+        "\n"                                                                   \
+        "2:\n\t"                                                               \
+        "movzbl		(%[c],%%rdx,1), %%ecx\n\t"                             \
+        "xorb		(%[m],%%rdx,1), %%cl\n\t"                              \
+        "movb		%%cl, (%[output],%%rdx,1)\n\t"                         \
+        "incl		%%edx\n\t"                                             \
+        "cmpl		%%r9d, %%edx\n\t"                                      \
+        "jne		2b\n\t"                                                \
+        "je		3f\n\t"                                                \
+        "\n"                                                                   \
+        "4:\n\t"                                                               \
+        "movq		(%[c],%%rdx,1), %%rcx\n\t"                             \
+        "xorq		(%[m],%%rdx,1), %%rcx\n\t"                             \
+        "movq		%%rcx, (%[output],%%rdx,1)\n\t"                        \
+        "addl		$8, %%edx\n\t"                                         \
+        "\n"                                                                   \
+        "3:\n\t"                                                               \
+        "cmpl		%%r8d, %%edx\n\t"                                      \
+        "jne		4b\n\t"                                                \
+        :                                                                      \
+        : [input] "r" (ctx->X), [c] "r" (x),                                   \
+          [output] "r" (c), [bytes] "r" (bytes), [m] "r" (m),                  \
+          [rotl8] "xrm" (rotl8), [rotl16] "xrm" (rotl16)                       \
+        : "eax", "ecx", "edx", "r8", "r9", "memory",                           \
+          "xmm0", "xmm1", "xmm2", "xmm3", "xmm4", "xmm5", "xmm6", "xmm7",      \
+          "xmm8", "xmm9", "xmm10", "xmm11"                                     \
+    )
+
+
+#define CHACHA_CHUNK_AVX2()                                                    \
+    __asm__ __volatile__ (                                                     \
+        CHACHA_CRYPT_AVX2()                                                    \
+        "vmovdqu	 0(%[m]), %%xmm4\n\t"                                  \
+        "vmovdqu	16(%[m]), %%xmm5\n\t"                                  \
+        "vmovdqu	32(%[m]), %%xmm6\n\t"                                  \
+        "vmovdqu	48(%[m]), %%xmm7\n\t"                                  \
+        "vpxor		%%xmm4, %%xmm0, %%xmm0\n\t"                            \
+        "vpxor		%%xmm5, %%xmm1, %%xmm1\n\t"                            \
+        "vpxor		%%xmm6, %%xmm2, %%xmm2\n\t"                            \
+        "vpxor		%%xmm7, %%xmm3, %%xmm3\n\t"                            \
+        "vmovdqu	%%xmm0,  0(%[c])\n\t"                                  \
+        "vmovdqu	%%xmm1, 16(%[c])\n\t"                                  \
+        "vmovdqu	%%xmm2, 32(%[c])\n\t"                                  \
+        "vmovdqu	%%xmm3, 48(%[c])\n\t"                                  \
+        "addl		$1, 48(%[input])\n\t"                                  \
+        :                                                                      \
+        : [input] "r" (ctx->X), [c] "r" (c), [m] "r" (m),                      \
+          [rotl8] "xrm" (rotl8), [rotl16] "xrm" (rotl16)                       \
+        : "rax", "memory",                                                     \
+          "xmm0", "xmm1", "xmm2", "xmm3", "xmm4", "xmm5", "xmm6", "xmm7",      \
+          "xmm8", "xmm9", "xmm10", "xmm11"                                     \
+    )
+
+
 static void chacha_encrypt_avx2(ChaCha* ctx, const byte* m, byte* c,
                                  word32 bytes)
 {
     ALIGN256 word32 X[8*CHACHA_CHUNK_WORDS]; /* used to make sure aligned */
     ALIGN256 word32 x[4*CHACHA_CHUNK_WORDS]; /* used to make sure aligned */
-    byte*  output;
-    word32 i;
     word32 cnt = 0;
     static const __m256i add    = { 0x0000000100000000UL,0x0000000300000002UL,
                                     0x0000000500000004UL,0x0000000700000006UL };
     static const __m256i eight  = { 0x0000000800000008UL,0x0000000800000008UL,
                                     0x0000000800000008UL,0x0000000800000008UL };
-    static const __m256i rotl8  = { 0x0605040702010003UL,0x0e0d0c0f0a09080bUL,
+    static const __m256i rotl8_256  =
+                                  { 0x0605040702010003UL,0x0e0d0c0f0a09080bUL,
                                     0x0605040702010003UL,0x0e0d0c0f0a09080bUL };
-    static const __m256i rotl16 = { 0x0504070601000302UL,0x0d0c0f0e09080b0aUL,
+    static const __m256i rotl16_256 =
+                                  { 0x0504070601000302UL,0x0d0c0f0e09080b0aUL,
                                     0x0504070601000302UL,0x0d0c0f0e09080b0aUL };
 
     if (bytes == 0)
@@ -700,7 +1186,7 @@ static void chacha_encrypt_avx2(ChaCha* ctx, const byte* m, byte* c,
     __asm__ __volatile__ (
        "movl	%[bytes], %[cnt]\n\t"
        "shrl	$9, %[cnt]\n\t"
-       "jz	L_end256\n\t"
+       "jz      L_end256\n\t"
 
        "vpbroadcastd	  (%[key]), %%ymm0\n\t"
        "vpbroadcastd	 4(%[key]), %%ymm1\n\t"
@@ -929,34 +1415,32 @@ static void chacha_encrypt_avx2(ChaCha* ctx, const byte* m, byte* c,
        "add	48(%[key]), %[cnt]\n\t"
        "movl	%[cnt], 48(%[key])\n\t"
        "\n"
-   "L_end256:"
+   "L_end256:\n\t"
        : [bytes] "+r" (bytes), [cnt] "+r" (cnt),
          [in] "+r" (m), [out] "+r" (c)
        : [X] "r" (X), [x] "r" (x), [key] "r" (ctx->X),
-         [add] "xrm" (add), [eight] "xrm" (eight),
-         [rotl8] "xrm" (rotl8), [rotl16] "xrm" (rotl16)
+         [add] "m" (add), [eight] "m" (eight),
+         [rotl8] "m" (rotl8_256), [rotl16] "m" (rotl16_256)
        : "ymm0", "ymm1", "ymm2", "ymm3",
          "ymm4", "ymm5", "ymm6", "ymm7",
          "ymm8", "ymm9", "ymm10", "ymm11",
          "ymm12", "ymm13", "ymm14", "ymm15", "memory"
     );
 
-    output = (byte*)x;
-    for (; bytes > 0;) {
-        wc_Chacha_wordtobyte(x, ctx->X);
-        ctx->X[CHACHA_IV_BYTES] = PLUSONE(ctx->X[CHACHA_IV_BYTES]);
-        if (bytes <= CHACHA_CHUNK_BYTES) {
-            for (i = 0; i < bytes; ++i) {
-                c[i] = m[i] ^ output[i];
-            }
-            return;
-        }
-        for (i = 0; i < CHACHA_CHUNK_BYTES; ++i) {
-            c[i] = m[i] ^ output[i];
-        }
+    /* AVX code optimised for multiples of 256 bytes. */
+    if (bytes == 256) {
+        chacha_encrypt_avx(ctx, m, c, bytes);
+        bytes -= 256;
+    }
+
+    for (; bytes >= CHACHA_CHUNK_BYTES;) {
+        CHACHA_CHUNK_AVX2();
         bytes -= CHACHA_CHUNK_BYTES;
         c += CHACHA_CHUNK_BYTES;
         m += CHACHA_CHUNK_BYTES;
+    }
+    if (bytes > 0) {
+        CHACHA_PARTIAL_CHUNK_AVX2();
     }
 }
 #endif /* HAVE_INTEL_AVX2 */
@@ -1002,14 +1486,23 @@ int wc_Chacha_Process(ChaCha* ctx, byte* output, const byte* input,
         return BAD_FUNC_ARG;
 
 #ifdef USE_INTEL_CHACHA_SPEEDUP
+    if (!cpuidFlagsSet) {
+        cpuidFlags = cpuid_get_flags();
+        cpuidFlagsSet = 1;
+    }
+
     #ifdef HAVE_INTEL_AVX2
-    if (IS_INTEL_AVX2(cpuid_get_flags())) {
+    if (IS_INTEL_AVX2(cpuidFlags)) {
         chacha_encrypt_avx2(ctx, input, output, msglen);
         return 0;
     }
     #endif
-    if (IS_INTEL_AVX1(cpuid_get_flags())) {
+    if (IS_INTEL_AVX1(cpuidFlags)) {
         chacha_encrypt_avx(ctx, input, output, msglen);
+        return 0;
+    }
+    else {
+        chacha_encrypt_x64(ctx, input, output, msglen);
         return 0;
     }
 #endif

@@ -72,6 +72,9 @@
 #endif
 
 namespace v8 {
+
+bool g_patchForCreateDataProperty = false; // 在属性访问器里调用CreateDataProperty会重入
+
 namespace internal {
 
 std::ostream& operator<<(std::ostream& os, InstanceType instance_type) {
@@ -5865,7 +5868,7 @@ Maybe<bool> JSObject::DefineOwnPropertyIgnoreAttributes(
 
         // Special handling for AccessorInfo, which behaves like a data
         // property.
-        if (accessors->IsAccessorInfo() && handling == DONT_FORCE_FIELD) {
+        if (accessors->IsAccessorInfo() && handling == DONT_FORCE_FIELD && !g_patchForCreateDataProperty) {
           PropertyAttributes current_attributes = it->property_attributes();
           // Ensure the context isn't changed after calling into accessors.
           AssertNoContextChange ncc(it->isolate());

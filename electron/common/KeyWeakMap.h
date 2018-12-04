@@ -20,6 +20,18 @@ class KeyWeakMap {
 public:
     // Records the key and self, used by SetWeak.
     struct KeyObject {
+        KeyObject(const K& otherKey, KeyWeakMap* weakMap)
+            : key(otherKey)
+            , self(weakMap) {
+        }
+        KeyObject(const KeyObject& other)
+            : key(other.key)
+            , self(other.self) {
+        }
+        KeyObject()
+            : key()
+            , self(nullptr) {
+        }
         K key;
         KeyWeakMap* self;
     };
@@ -32,7 +44,7 @@ public:
 
     // Sets the object to WeakMap with the given |key|.
     void set(v8::Isolate* isolate, const K& key, v8::Local<v8::Object> object) {
-        KeyObject key_object = { key, this };
+        KeyObject key_object(key, this);
         auto& p = m_map[key] = std::make_pair(key_object, v8::Global<v8::Object>(isolate, object));
         p.second.SetWeak(&(p.first), onObjectGC, v8::WeakCallbackType::kParameter);
     }
@@ -76,7 +88,7 @@ private:
         KeyWeakMap<K>::KeyObject* key_object = data.GetParameter();
         key_object->self->remove(key_object->key);
     }
-
+    
     // Map of stored objects.
     std::map<K, std::pair<KeyObject, v8::Global<v8::Object>>> m_map;
 

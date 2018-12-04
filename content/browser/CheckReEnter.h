@@ -12,18 +12,22 @@ public:
 
     ~CheckReEnter();
 
-    static int s_kEnterContent;
+    static void incrementEnterCount();
+    static void decrementEnterCount();
+    static int getEnterCount();
 
 private:
+    static int s_kEnterCount;
     WebPageImpl* m_webPageImpl;
 };
 
 #define CHECK_FOR_REENTER(self, ret) \
     if (!self->checkForRepeatEnter()) \
         return ret; \
-    if (WebPageImpl::pageInited != self->m_state) \
+    if (pageInited != self->m_state) \
         return ret; \
-    CheckReEnter checker(self);
+    CheckReEnter checker(self); \
+    BlinkPlatformImpl::AutoDisableGC autoDisableGC;
 
 } // content
 

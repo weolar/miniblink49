@@ -1,6 +1,6 @@
 /* asn.h
  *
- * Copyright (C) 2006-2016 wolfSSL Inc.
+ * Copyright (C) 2006-2017 wolfSSL Inc.
  *
  * This file is part of wolfSSL.
  *
@@ -38,10 +38,8 @@
 
 #include <wolfssl/wolfcrypt/asn.h>
 
-#ifndef WOLFSSL_PEMCERT_TODER_DEFINED
 #ifndef NO_FILESYSTEM
-    #define CyaSSL_PemCertToDer wolfSSL_PemCertToDer
-#endif
+    #define CyaSSL_PemCertToDer wc_PemCertToDer
 #endif
 
 #endif /* CTAO_CRYPT_ASN_H */

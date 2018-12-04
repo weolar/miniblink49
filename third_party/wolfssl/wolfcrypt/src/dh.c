@@ -1,6 +1,6 @@
 /* dh.c
  *
- * Copyright (C) 2006-2016 wolfSSL Inc.
+ * Copyright (C) 2006-2017 wolfSSL Inc.
  *
  * This file is part of wolfSSL.
  *
@@ -31,6 +31,10 @@
 #include <wolfssl/wolfcrypt/dh.h>
 #include <wolfssl/wolfcrypt/error-crypt.h>
 #include <wolfssl/wolfcrypt/logging.h>
+
+#ifdef WOLFSSL_HAVE_SP_DH
+#include <wolfssl/wolfcrypt/sp.h>
+#endif
 
 #ifdef NO_INLINE
     #include <wolfssl/wolfcrypt/misc.h>
@@ -500,7 +504,7 @@ int wc_InitDhKey_ex(DhKey* key, void* heap, int devId)
 
     key->heap = heap; /* for XMALLOC/XFREE in future */
 
-    if (mp_init_multi(&key->p, &key->g, NULL, NULL, NULL, NULL) != MP_OKAY)
+    if (mp_init_multi(&key->p, &key->g, &key->q, NULL, NULL, NULL) != MP_OKAY)
         return MEMORY_E;
 
 #if defined(WOLFSSL_ASYNC_CRYPT) && defined(WC_ASYNC_ENABLE_DH)
@@ -525,6 +529,7 @@ void wc_FreeDhKey(DhKey* key)
     if (key) {
         mp_clear(&key->p);
         mp_clear(&key->g);
+        mp_clear(&key->q);
 
     #if defined(WOLFSSL_ASYNC_CRYPT) && defined(WC_ASYNC_ENABLE_DH)
         wolfAsync_DevCtxFree(&key->asyncDev, WOLFSSL_ASYNC_MARKER_DH);
@@ -563,41 +568,184 @@ void wc_FreeDhKey(DhKey* key)
 #endif
 
 
-static int GeneratePrivateDh(DhKey* key, WC_RNG* rng, byte* priv, word32* privSz)
+#ifndef WOLFSSL_NO_DH186
+/* validate that (L,N) match allowed sizes from SP 800-56A, Section 5.5.1.1.
+ * modLen - represents L, the size of p in bits
+ * divLen - represents N, the size of q in bits
+ * return 0 on success, -1 on error */
+static int CheckDhLN(int modLen, int divLen)
 {
-    int ret = 0;
-    word32 sz = mp_unsigned_bin_size(&key->p);
+    int ret = -1;
 
-    /* Table of predetermined values from the operation
-       2 * DiscreteLogWorkFactor(sz * WOLFSSL_BIT_SIZE) / WOLFSSL_BIT_SIZE + 1
-       Sizes in table checked against RFC 3526
-     */
-    WOLFSSL_DH_ROUND(sz); /* if using fixed points only, then round up */
-    switch (sz) {
-        case 128:  sz = 21; break;
-        case 256:  sz = 29; break;
-        case 384:  sz = 34; break;
-        case 512:  sz = 39; break;
-        case 640:  sz = 42; break;
-        case 768:  sz = 46; break;
-        case 896:  sz = 49; break;
-        case 1024: sz = 52; break;
-        default:
-        #ifndef WOLFSSL_DH_CONST
-            /* if using floating points and size of p is not in table */
-            sz = min(sz, 2 * DiscreteLogWorkFactor(sz * WOLFSSL_BIT_SIZE) /
-                                       WOLFSSL_BIT_SIZE + 1);
+    switch (modLen) {
+        /* FA */
+        case 1024:
+            if (divLen == 160)
+                ret = 0;
             break;
-        #else
-            return BAD_FUNC_ARG;
-        #endif
+        /* FB, FC */
+        case 2048:
+            if (divLen == 224 || divLen == 256)
+                ret = 0;
+            break;
+        default:
+            break;
     }
 
-    ret = wc_RNG_GenerateBlock(rng, priv, sz);
+    return ret;
+}
 
-    if (ret == 0) {
-        priv[0] |= 0x0C;
-        *privSz = sz;
+
+/* Create DH private key
+ *
+ * Based on NIST FIPS 186-4,
+ * "B.1.1 Key Pair Generation Using Extra Random Bits"
+ *
+ * dh     - pointer to initialized DhKey structure, needs to have dh->q
+ * rng    - pointer to initialized WC_RNG structure
+ * priv   - output location for generated private key
+ * privSz - IN/OUT, size of priv buffer, size of generated private key
+ *
+ * return 0 on success, negative on error */
+static int GeneratePrivateDh186(DhKey* key, WC_RNG* rng, byte* priv,
+                                word32* privSz)
+{
+    byte* cBuf;
+    int qSz, pSz, cSz, err;
+    mp_int tmpQ, tmpX;
+
+    /* Parameters validated in calling functions. */
+
+    if (mp_iszero(&key->q) == MP_YES) {
+        WOLFSSL_MSG("DH q parameter needed for FIPS 186-4 key generation");
+        return BAD_FUNC_ARG;
+    }
+
+    qSz = mp_unsigned_bin_size(&key->q);
+    pSz = mp_unsigned_bin_size(&key->p);
+
+    /* verify (L,N) pair bit lengths */
+    if (CheckDhLN(pSz * WOLFSSL_BIT_SIZE, qSz * WOLFSSL_BIT_SIZE) != 0) {
+        WOLFSSL_MSG("DH param sizes do not match SP 800-56A requirements");
+        return BAD_FUNC_ARG;
+    }
+
+    /* generate extra 64 bits so that bias from mod function is negligible */
+    cSz = qSz + (64 / WOLFSSL_BIT_SIZE);
+    cBuf = (byte*)XMALLOC(cSz, key->heap, DYNAMIC_TYPE_TMP_BUFFER);
+    if (cBuf == NULL) {
+        return MEMORY_E;
+    }
+
+    if ((err = mp_init_multi(&tmpX, &tmpQ, NULL, NULL, NULL, NULL))
+                   != MP_OKAY) {
+        XFREE(cBuf, key->heap, DYNAMIC_TYPE_TMP_BUFFER);
+        return err;
+    }
+
+    do {
+        /* generate N+64 bits (c) from RBG into &tmpX, making sure positive.
+         * Hash_DRBG uses SHA-256 which matches maximum
+         * requested_security_strength of (L,N) */
+        err = wc_RNG_GenerateBlock(rng, cBuf, cSz);
+        if (err == MP_OKAY)
+            err = mp_read_unsigned_bin(&tmpX, cBuf, cSz);
+        if (err != MP_OKAY) {
+            mp_clear(&tmpX);
+            mp_clear(&tmpQ);
+            XFREE(cBuf, key->heap, DYNAMIC_TYPE_TMP_BUFFER);
+            return err;
+        }
+    } while (mp_cmp_d(&tmpX, 1) != MP_GT);
+
+    XFREE(cBuf, key->heap, DYNAMIC_TYPE_TMP_BUFFER);
+
+    /* tmpQ = q - 1 */
+    if (err == MP_OKAY)
+        err = mp_copy(&key->q, &tmpQ);
+
+    if (err == MP_OKAY)
+        err = mp_sub_d(&tmpQ, 1, &tmpQ);
+
+    /* x = c mod (q-1), &tmpX holds c */
+    if (err == MP_OKAY)
+        err = mp_mod(&tmpX, &tmpQ, &tmpX);
+
+    /* x = c mod (q-1) + 1 */
+    if (err == MP_OKAY)
+        err = mp_add_d(&tmpX, 1, &tmpX);
+
+    /* copy tmpX into priv */
+    if (err == MP_OKAY) {
+        pSz = mp_unsigned_bin_size(&tmpX);
+        if (pSz > (int)*privSz) {
+            WOLFSSL_MSG("DH private key output buffer too small");
+            err = BAD_FUNC_ARG;
+        } else {
+            *privSz = pSz;
+            err = mp_to_unsigned_bin(&tmpX, priv);
+        }
+    }
+
+    mp_clear(&tmpX);
+    mp_clear(&tmpQ);
+
+    return err;
+}
+#endif /* WOLFSSL_NO_DH186 */
+
+
+static int GeneratePrivateDh(DhKey* key, WC_RNG* rng, byte* priv,
+                             word32* privSz)
+{
+    int ret = 0;
+    word32 sz = 0;
+
+#ifndef WOLFSSL_NO_DH186
+    if (mp_iszero(&key->q) == MP_NO) {
+
+        /* q param available, use NIST FIPS 186-4, "B.1.1 Key Pair
+         * Generation Using Extra Random Bits" */
+        ret = GeneratePrivateDh186(key, rng, priv, privSz);
+
+    } else
+#endif
+    {
+
+        sz = mp_unsigned_bin_size(&key->p);
+
+        /* Table of predetermined values from the operation
+           2 * DiscreteLogWorkFactor(sz * WOLFSSL_BIT_SIZE) /
+           WOLFSSL_BIT_SIZE + 1
+           Sizes in table checked against RFC 3526
+         */
+        WOLFSSL_DH_ROUND(sz); /* if using fixed points only, then round up */
+        switch (sz) {
+            case 128:  sz = 21; break;
+            case 256:  sz = 29; break;
+            case 384:  sz = 34; break;
+            case 512:  sz = 39; break;
+            case 640:  sz = 42; break;
+            case 768:  sz = 46; break;
+            case 896:  sz = 49; break;
+            case 1024: sz = 52; break;
+            default:
+            #ifndef WOLFSSL_DH_CONST
+                /* if using floating points and size of p is not in table */
+                sz = min(sz, 2 * DiscreteLogWorkFactor(sz * WOLFSSL_BIT_SIZE) /
+                                           WOLFSSL_BIT_SIZE + 1);
+                break;
+            #else
+                return BAD_FUNC_ARG;
+            #endif
+        }
+
+        ret = wc_RNG_GenerateBlock(rng, priv, sz);
+
+        if (ret == 0) {
+            priv[0] |= 0x0C;
+            *privSz = sz;
+        }
     }
 
     return ret;
@@ -608,9 +756,23 @@ static int GeneratePublicDh(DhKey* key, byte* priv, word32 privSz,
     byte* pub, word32* pubSz)
 {
     int ret = 0;
+#ifndef WOLFSSL_SP_MATH
     mp_int x;
     mp_int y;
+#endif
 
+#ifdef WOLFSSL_HAVE_SP_DH
+#ifndef WOLFSSL_SP_NO_2048
+    if (mp_count_bits(&key->p) == 2048)
+        return sp_DhExp_2048(&key->g, priv, privSz, &key->p, pub, pubSz);
+#endif
+#ifndef WOLFSSL_SP_NO_3072
+    if (mp_count_bits(&key->p) == 3072)
+        return sp_DhExp_3072(&key->g, priv, privSz, &key->p, pub, pubSz);
+#endif
+#endif
+
+#ifndef WOLFSSL_SP_MATH
     if (mp_init_multi(&x, &y, 0, 0, 0, 0) != MP_OKAY)
         return MP_INIT_E;
 
@@ -628,6 +790,9 @@ static int GeneratePublicDh(DhKey* key, byte* priv, word32 privSz,
 
     mp_clear(&y);
     mp_clear(&x);
+#else
+    ret = WC_KEY_SIZE_E;
+#endif
 
     return ret;
 }
@@ -707,6 +872,115 @@ static int wc_DhGenerateKeyPair_Async(DhKey* key, WC_RNG* rng,
 #endif /* WOLFSSL_ASYNC_CRYPT && WC_ASYNC_ENABLE_DH */
 
 
+/* Check DH Public Key for invalid numbers, optionally allowing
+ * the public key to be checked against the large prime (q).
+ *
+ * key     DH key group parameters.
+ * pub     Public Key.
+ * pubSz   Public Key size.
+ * prime   Large prime (q), optionally NULL to skip check
+ * primeSz Size of large prime
+ *
+ *  returns 0 on success or error code
+ */
+int wc_DhCheckPubKey_ex(DhKey* key, const byte* pub, word32 pubSz,
+                        const byte* prime, word32 primeSz)
+{
+    int ret = 0;
+    mp_int y;
+    mp_int p;
+    mp_int q;
+
+    if (key == NULL || pub == NULL) {
+        return BAD_FUNC_ARG;
+    }
+
+    if (mp_init_multi(&y, &p, &q, NULL, NULL, NULL) != MP_OKAY) {
+        return MP_INIT_E;
+    }
+
+    if (mp_read_unsigned_bin(&y, pub, pubSz) != MP_OKAY) {
+        ret = MP_READ_E;
+    }
+
+    if (ret == 0 && prime != NULL) {
+        if (mp_read_unsigned_bin(&q, prime, primeSz) != MP_OKAY)
+            ret = MP_READ_E;
+
+    } else if (mp_iszero(&key->q) == MP_NO) {
+        /* use q available in DhKey */
+        if (mp_copy(&key->q, &q) != MP_OKAY)
+            ret = MP_INIT_E;
+    }
+
+    /* pub (y) should not be 0 or 1 */
+    if (ret == 0 && mp_cmp_d(&y, 2) == MP_LT) {
+        ret = MP_CMP_E;
+    }
+
+    /* pub (y) shouldn't be greater than or equal to p - 1 */
+    if (ret == 0 && mp_copy(&key->p, &p) != MP_OKAY) {
+        ret = MP_INIT_E;
+    }
+    if (ret == 0 && mp_sub_d(&p, 2, &p) != MP_OKAY) {
+        ret = MP_SUB_E;
+    }
+    if (ret == 0 && mp_cmp(&y, &p) == MP_GT) {
+        ret = MP_CMP_E;
+    }
+
+    if (ret == 0 && (prime != NULL || (mp_iszero(&key->q) == MP_NO) )) {
+
+        /* restore key->p into p */
+        if (mp_copy(&key->p, &p) != MP_OKAY)
+            ret = MP_INIT_E;
+    }
+
+    if (ret == 0 && prime != NULL) {
+#ifdef WOLFSSL_HAVE_SP_DH
+#ifndef WOLFSSL_SP_NO_2048
+        if (mp_count_bits(&key->p) == 2048) {
+            ret = sp_ModExp_2048(&y, &q, &p, &y);
+            if (ret != 0)
+                ret = MP_EXPTMOD_E;
+        }
+        else
+#endif
+#ifndef WOLFSSL_SP_NO_3072
+        if (mp_count_bits(&key->p) == 3072) {
+            ret = sp_ModExp_3072(&y, &q, &p, &y);
+            if (ret != 0)
+                ret = MP_EXPTMOD_E;
+        }
+        else
+#endif
+#endif
+
+#ifndef WOLFSSL_SP_MATH
+        {
+            /* calculate (y^q) mod(p), store back into y */
+            if (ret == 0 && mp_exptmod(&y, &q, &p, &y) != MP_OKAY)
+                ret = MP_EXPTMOD_E;
+        }
+#else
+        {
+            ret = WC_KEY_SIZE_E;
+        }
+#endif
+
+        /* verify above == 1 */
+        if (ret == 0 && mp_cmp_d(&y, 1) != MP_EQ)
+            ret = MP_CMP_E;
+    }
+
+    mp_clear(&y);
+    mp_clear(&p);
+    mp_clear(&q);
+
+    return ret;
+}
+
+
 /* Check DH Public Key for invalid numbers
  *
  * key   DH key group parameters.
@@ -717,43 +991,7 @@ static int wc_DhGenerateKeyPair_Async(DhKey* key, WC_RNG* rng,
  */
 int wc_DhCheckPubKey(DhKey* key, const byte* pub, word32 pubSz)
 {
-    int ret = 0;
-
-    mp_int x;
-    mp_int y;
-
-    if (key == NULL || pub == NULL) {
-        return BAD_FUNC_ARG;
-    }
-
-    if (mp_init_multi(&x, &y, NULL, NULL, NULL, NULL) != MP_OKAY) {
-        return MP_INIT_E;
-    }
-
-    if (mp_read_unsigned_bin(&x, pub, pubSz) != MP_OKAY) {
-        ret = MP_READ_E;
-    }
-
-    /* pub should not be 0 or 1 */
-    if (ret == 0 && mp_cmp_d(&x, 2) == MP_LT) {
-        ret = MP_CMP_E;
-    }
-
-    /* pub shouldn't be greater than or equal to p - 1 */
-    if (ret == 0 && mp_copy(&key->p, &y) != MP_OKAY) {
-        ret = MP_INIT_E;
-    }
-    if (ret == 0 && mp_sub_d(&y, 2, &y) != MP_OKAY) {
-        ret = MP_SUB_E;
-    }
-    if (ret == 0 && mp_cmp(&x, &y) == MP_GT) {
-        ret = MP_CMP_E;
-    }
-
-    mp_clear(&y);
-    mp_clear(&x);
-
-    return ret;
+    return wc_DhCheckPubKey_ex(key, pub, pubSz, NULL, 0);
 }
 
 
@@ -785,15 +1023,51 @@ static int wc_DhAgree_Sync(DhKey* key, byte* agree, word32* agreeSz,
     const byte* priv, word32 privSz, const byte* otherPub, word32 pubSz)
 {
     int ret = 0;
-    mp_int x;
     mp_int y;
+#ifndef WOLFSSL_SP_MATH
+    mp_int x;
     mp_int z;
+#endif
 
     if (wc_DhCheckPubKey(key, otherPub, pubSz) != 0) {
         WOLFSSL_MSG("wc_DhAgree wc_DhCheckPubKey failed");
         return DH_CHECK_PUB_E;
     }
 
+#ifdef WOLFSSL_HAVE_SP_DH
+#ifndef WOLFSSL_SP_NO_2048
+    if (mp_count_bits(&key->p) == 2048) {
+        if (mp_init(&y) != MP_OKAY)
+            return MP_INIT_E;
+
+        if (ret == 0 && mp_read_unsigned_bin(&y, otherPub, pubSz) != MP_OKAY)
+            ret = MP_READ_E;
+
+        if (ret == 0)
+            ret = sp_DhExp_2048(&y, priv, privSz, &key->p, agree, agreeSz);
+
+        mp_clear(&y);
+        return ret;
+    }
+#endif
+#ifndef WOLFSSL_SP_NO_3072
+    if (mp_count_bits(&key->p) == 3072) {
+        if (mp_init(&y) != MP_OKAY)
+            return MP_INIT_E;
+
+        if (ret == 0 && mp_read_unsigned_bin(&y, otherPub, pubSz) != MP_OKAY)
+            ret = MP_READ_E;
+
+        if (ret == 0)
+            ret = sp_DhExp_3072(&y, priv, privSz, &key->p, agree, agreeSz);
+
+        mp_clear(&y);
+        return ret;
+    }
+#endif
+#endif
+
+#ifndef WOLFSSL_SP_MATH
     if (mp_init_multi(&x, &y, &z, 0, 0, 0) != MP_OKAY)
         return MP_INIT_E;
 
@@ -806,6 +1080,10 @@ static int wc_DhAgree_Sync(DhKey* key, byte* agree, word32* agreeSz,
     if (ret == 0 && mp_exptmod(&y, &x, &key->p, &z) != MP_OKAY)
         ret = MP_EXPTMOD_E;
 
+    /* make sure z is not one (SP800-56A, 5.7.1.1) */
+    if (ret == 0 && (mp_cmp_d(&z, 1) == MP_EQ))
+        ret = MP_VAL;
+
     if (ret == 0 && mp_to_unsigned_bin(&z, agree) != MP_OKAY)
         ret = MP_TO_E;
 
@@ -815,6 +1093,7 @@ static int wc_DhAgree_Sync(DhKey* key, byte* agree, word32* agreeSz,
     mp_clear(&z);
     mp_clear(&y);
     mp_forcezero(&x);
+#endif
 
     return ret;
 }
@@ -877,41 +1156,82 @@ int wc_DhAgree(DhKey* key, byte* agree, word32* agreeSz, const byte* priv,
 }
 
 
+int wc_DhSetKey_ex(DhKey* key, const byte* p, word32 pSz, const byte* g,
+                   word32 gSz, const byte* q, word32 qSz)
+{
+    int ret = 0;
+    mp_int* keyP = NULL;
+    mp_int* keyG = NULL;
+    mp_int* keyQ = NULL;
+
+    if (key == NULL || p == NULL || g == NULL || pSz == 0 || gSz == 0) {
+        ret = BAD_FUNC_ARG;
+    }
+
+    if (ret == 0) {
+        /* may have leading 0 */
+        if (p[0] == 0) {
+            pSz--; p++;
+        }
+
+        if (g[0] == 0) {
+            gSz--; g++;
+        }
+
+        if (q != NULL) {
+            if (q[0] == 0) {
+                qSz--; q++;
+            }
+        }
+
+        if (mp_init(&key->p) != MP_OKAY)
+            ret = MP_INIT_E;
+    }
+
+    if (ret == 0) {
+        if (mp_read_unsigned_bin(&key->p, p, pSz) != MP_OKAY)
+            ret = ASN_DH_KEY_E;
+        else
+            keyP = &key->p;
+    }
+    if (ret == 0 && mp_init(&key->g) != MP_OKAY)
+        ret = MP_INIT_E;
+    if (ret == 0) {
+        if (mp_read_unsigned_bin(&key->g, g, gSz) != MP_OKAY)
+            ret = ASN_DH_KEY_E;
+        else
+            keyG = &key->g;
+    }
+
+    if (ret == 0 && q != NULL) {
+        if (mp_init(&key->q) != MP_OKAY)
+            ret = MP_INIT_E;
+    }
+    if (ret == 0 && q != NULL) {
+        if (mp_read_unsigned_bin(&key->q, q, qSz) != MP_OKAY)
+            ret = MP_INIT_E;
+        else
+            keyQ = &key->q;
+    }
+
+    if (ret != 0 && key != NULL) {
+        if (keyQ)
+            mp_clear(keyQ);
+        if (keyG)
+            mp_clear(keyG);
+        if (keyP)
+            mp_clear(keyP);
+    }
+
+    return ret;
+}
+
+
 /* not in asn anymore since no actual asn types used */
 int wc_DhSetKey(DhKey* key, const byte* p, word32 pSz, const byte* g,
                 word32 gSz)
 {
-    if (key == NULL || p == NULL || g == NULL || pSz == 0 || gSz == 0) {
-        return BAD_FUNC_ARG;
-    }
-
-    /* may have leading 0 */
-    if (p[0] == 0) {
-        pSz--; p++;
-    }
-
-    if (g[0] == 0) {
-        gSz--; g++;
-    }
-
-    if (mp_init(&key->p) != MP_OKAY)
-        return MP_INIT_E;
-    if (mp_read_unsigned_bin(&key->p, p, pSz) != 0) {
-        mp_clear(&key->p);
-        return ASN_DH_KEY_E;
-    }
-
-    if (mp_init(&key->g) != MP_OKAY) {
-        mp_clear(&key->p);
-        return MP_INIT_E;
-    }
-    if (mp_read_unsigned_bin(&key->g, g, gSz) != 0) {
-        mp_clear(&key->g);
-        mp_clear(&key->p);
-        return ASN_DH_KEY_E;
-    }
-
-    return 0;
+    return wc_DhSetKey_ex(key, p, pSz, g, gSz, NULL, 0);
 }
 
 #endif /* NO_DH */

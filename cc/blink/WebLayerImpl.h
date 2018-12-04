@@ -43,6 +43,7 @@ namespace cc_blink {
 
 class WebToCCAnimationDelegateAdapter;
 class WebLayerImpl;
+class WebFilterOperationsImpl;
 
 typedef WTF::Vector<WebLayerImpl*> WebLayerImplList;
 
@@ -54,6 +55,8 @@ public:
 
     void setLayerTreeHost(cc::LayerTreeHost* host);
     cc::LayerTreeHost* layerTreeHost() const;
+
+    void gc();
 
     // WebLayerImplClient
     virtual void updataAndPaintContents(blink::WebCanvas* canvas, const blink::IntRect& clip) override;
@@ -111,9 +114,11 @@ public:
     bool shouldFlattenTransform();
     void setRenderingContext(int context) override;
     void setUseParentBackfaceVisibility(bool visible) override;
+    void setDoubleSided(bool isDoubleSided);
     void setBackgroundColor(blink::WebColor color) override;
     blink::WebColor backgroundColor() const override;
     void setFilters(const blink::WebFilterOperations& filters) override;
+    const WebFilterOperationsImpl* getFilters() const;
     //void setBackgroundFilters(const blink::WebFilterOperations& filters) override;
     void setAnimationDelegate(
         blink::WebCompositorAnimationDelegate* delegate) override;
@@ -228,6 +233,7 @@ protected:
     int context;
     int  m_3dSortingContextId;
     bool m_useParentBackfaceVisibility;
+    bool m_isDoubleSided;
     blink::WebColor m_backgroundColor;
     blink::WebDoublePoint m_scrollPositionDouble;
     blink::WebDoublePoint m_scrollCompensationAdjustment;
@@ -240,8 +246,8 @@ protected:
     blink::IntRect m_touchEventHandlerRegions;
     blink::WebScrollBlocksOn m_scrollBlocksOn;
     bool m_isContainerForFixedPositionLayers;
-    cc_blink::WebLayerImpl* m_scrollParent;
-    cc_blink::WebLayerImpl* m_clipParent;
+    //cc_blink::WebLayerImpl* m_scrollParent;
+    //cc_blink::WebLayerImpl* m_clipParent;
     cc_blink::WebLayerImpl* m_maskLayer;
     cc_blink::WebLayerImpl* m_replicaLayer;
     WTF::HashSet<WebLayerImpl*>* m_scrollChildren;
@@ -264,6 +270,8 @@ protected:
     bool m_hasMaskLayerChild;
     bool m_isMaskLayer;
     bool m_isReplicaLayer;
+
+    cc_blink::WebFilterOperationsImpl* m_filterOperations;
 
 private:
     DISALLOW_COPY_AND_ASSIGN(WebLayerImpl);

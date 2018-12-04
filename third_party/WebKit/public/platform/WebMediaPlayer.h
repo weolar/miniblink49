@@ -49,6 +49,11 @@ class WebURL;
 struct WebRect;
 struct WebSize;
 class WebGraphicsContext3D;
+#ifndef MINIBLINK_NO_CHANGE
+class WebMouseEvent;
+class WebKeyboardEvent;
+struct WebPoint;
+#endif
 
 class WebMediaPlayer {
 public:
@@ -182,6 +187,14 @@ public:
     virtual void enabledAudioTracksChanged(const WebVector<TrackId>& enabledTrackIds) { }
     // |selectedTrackId| is null if no track is selected.
     virtual void selectedVideoTrackChanged(TrackId* selectedTrackId) { }
+
+#ifndef MINIBLINK_NO_CHANGE
+    virtual void setContentsToNativeWindowOffset(const WebPoint& p) = 0;
+    virtual bool handleMouseEvent(const WebMouseEvent& evt) = 0;
+    virtual bool handleKeyboardEvent(const WebKeyboardEvent& evt) = 0;
+    virtual void showMediaControls() = 0;
+    virtual void hideMediaControls() = 0;
+#endif
 };
 
 } // namespace blink

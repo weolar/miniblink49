@@ -82,7 +82,7 @@ int X509_STORE_set_default_paths(X509_STORE *ctx)
     return (1);
 }
 
-int X509_STORE_load_locations(X509_STORE *ctx, const char *file,
+int openssl_X509_STORE_load_locations(X509_STORE *ctx, const char *file,
                               const char *path)
 {
     X509_LOOKUP *lookup;

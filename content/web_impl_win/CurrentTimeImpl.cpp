@@ -95,9 +95,9 @@ static double highResUpTime()
 
 static double lowResUTCTime()
 {
-#if OS(WINCE)
+#if 1 // OS(WINCE)
     SYSTEMTIME systemTime;
-    GetSystemTime(&systemTime);
+    ::GetSystemTime(&systemTime);
     struct tm tmtime;
     tmtime.tm_year = systemTime.wYear - 1900;
     tmtime.tm_mon = systemTime.wMonth - 1;

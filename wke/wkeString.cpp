@@ -5,11 +5,18 @@
 #include <wtf/text/CString.h>
 #include <wtf/text/WTFStringUtil.h>
 #include "third_party/WebKit/public/platform/WebString.h"
-
-//cexer: 必须包含在后面，因为其中的 windows.h 会定义 max、min，导致 WebCore 内部的 max、min 出现错乱。
 #include "wkeString.h"
 
 //////////////////////////////////////////////////////////////////////////
+
+_jsKeys::~_jsKeys()
+{
+    for (size_t i = 0; i < length; ++i) {
+        char* key = *(char**)(keys + i);
+        delete[] key;
+    }
+    delete keys;
+}
 
 namespace wke {
 
@@ -135,9 +142,88 @@ void CString::_free()
     }
 }
 
+std::vector<std::vector<char>*>* s_sharedStringBuffers = nullptr;
+std::vector<std::vector<wchar_t>*>* s_sharedStringBuffersW = nullptr;
+std::vector<jsKeys*>* s_sharedJsKeys = nullptr;
 
+const char* createTempCharString(const char* str, size_t length)
+{
+    if (!str || 0 == length)
+        return "";
+    std::vector<char>* stringBuffer = new std::vector<char>(length + 1);
+    memcpy(&stringBuffer->at(0), str, length * sizeof(char));
+    stringBuffer->push_back('\0');
 
+    if (!s_sharedStringBuffers)
+        s_sharedStringBuffers = new std::vector<std::vector<char>*>();
+    s_sharedStringBuffers->push_back(stringBuffer);
+    return &stringBuffer->at(0);
+}
 
+const wchar_t* createTempWCharString(const wchar_t* str, size_t length)
+{
+    if (!str || 0 == length)
+        return L"";
+    std::vector<wchar_t>* stringBuffer = new std::vector<wchar_t>(length + 1);
+    memcpy(&stringBuffer->at(0), str, length * sizeof(wchar_t));
+    stringBuffer->push_back(L'\0');
+
+    if (!s_sharedStringBuffersW)
+        s_sharedStringBuffersW = new std::vector<std::vector<wchar_t>*>();
+    s_sharedStringBuffersW->push_back(stringBuffer);
+    return &stringBuffer->at(0);
+}
+
+jsKeys* createTempJsKeys(size_t length)
+{
+    if (!s_sharedJsKeys)
+        s_sharedJsKeys = new std::vector<jsKeys*>();
+
+    jsKeys* result = new jsKeys();
+    result->length = length;
+    result->keys = new const char*[length];
+    s_sharedJsKeys->push_back(result);
+    return result;
+}
+
+template<class T>
+static void freeShareds(std::vector<T*>* s_shared)
+{
+    if (!s_shared)
+        return;
+    
+    for (size_t i = 0; i < s_shared->size(); ++i) {
+        delete s_shared->at(i);
+    }
+    s_shared->clear();
+}
+
+void freeTempCharStrings()
+{
+    freeShareds(s_sharedJsKeys);
+    freeShareds(s_sharedStringBuffers);
+    freeShareds(s_sharedStringBuffersW);
+//     if (s_sharedJsKeys) {
+//         for (size_t i = 0; i < s_sharedJsKeys->size(); ++i) {
+//             delete s_sharedJsKeys->at(i);
+//         }
+//         s_sharedJsKeys->clear();
+//     }
+// 
+//     if (s_sharedStringBuffers) {
+//         for (size_t i = 0; i < s_sharedStringBuffers->size(); ++i) {
+//             delete s_sharedStringBuffers->at(i);
+//         }
+//         s_sharedStringBuffers->clear();
+//     }
+// 
+//     if (s_sharedStringBuffersW) {
+//         for (size_t i = 0; i < s_sharedStringBuffersW->size(); ++i) {
+//             delete s_sharedStringBuffersW->at(i);
+//         }
+//         s_sharedStringBuffersW->clear();
+//     }
+}
 
 };
 

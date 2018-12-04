@@ -60,7 +60,7 @@
 #include "platform/network/ResourceTimingInfo.h"
 #include "platform/weborigin/SchemeRegistry.h"
 #include "platform/weborigin/SecurityPolicy.h"
-
+    
 namespace blink {
 
 FrameFetchContext::FrameFetchContext(DocumentLoader* loader)
@@ -95,7 +95,7 @@ void FrameFetchContext::addAdditionalRequestHeaders(ResourceRequest& request, Fe
             outgoingOrigin = m_document->outgoingOrigin();
             request.setHTTPReferrer(SecurityPolicy::generateReferrer(m_document->referrerPolicy(), request.url(), m_document->outgoingReferrer()));
         } else {
-            RELEASE_ASSERT(SecurityPolicy::generateReferrer(request.referrerPolicy(), request.url(), request.httpReferrer()).referrer == request.httpReferrer());
+            RELEASE_ASSERT(!RuntimeEnabledFeatures::cspCheckEnabled() || SecurityPolicy::generateReferrer(request.referrerPolicy(), request.url(), request.httpReferrer()).referrer == request.httpReferrer());
             outgoingOrigin = SecurityOrigin::createFromString(request.httpReferrer())->toString();
         }
 
@@ -341,6 +341,8 @@ void FrameFetchContext::printAccessDeniedMessage(const KURL& url) const
 
 bool FrameFetchContext::canRequest(Resource::Type type, const ResourceRequest& resourceRequest, const KURL& url, const ResourceLoaderOptions& options, bool forPreload, FetchRequest::OriginRestriction originRestriction) const
 {
+    return true; // weolar
+
     SecurityOrigin* securityOrigin = options.securityOrigin.get();
     if (!securityOrigin && m_document)
         securityOrigin = m_document->securityOrigin();
@@ -590,8 +592,8 @@ void FrameFetchContext::upgradeInsecureRequest(FetchRequest& fetchRequest)
 
     // Tack an 'HTTPS' header to outgoing navigational requests, as described in
     // https://w3c.github.io/webappsec/specs/upgrade/#feature-detect
-    if (fetchRequest.resourceRequest().frameType() != WebURLRequest::FrameTypeNone)
-        fetchRequest.mutableResourceRequest().addHTTPHeaderField("Upgrade-Insecure-Requests", "1");
+//     if (fetchRequest.resourceRequest().frameType() != WebURLRequest::FrameTypeNone)
+//         fetchRequest.mutableResourceRequest().addHTTPHeaderField("Upgrade-Insecure-Requests", "1");
 
     if (m_document && m_document->insecureRequestsPolicy() == SecurityContext::InsecureRequestsUpgrade && url.protocolIs("http")) {
         ASSERT(m_document->insecureNavigationsToUpgrade());

@@ -93,16 +93,16 @@ public:
     virtual void WasHidden(bool hidden) override;
     virtual void NotifyScreenInfoChanged() override {}
     virtual void Invalidate(PaintElementType type) override {}
-    virtual void SendKeyEvent(const CefKeyEvent& event) override {}
+    virtual void SendKeyEvent(const CefKeyEvent& event) override;
     virtual void SendMouseClickEvent(const CefMouseEvent& event,
-        MouseButtonType type,
-        bool mouseUp, int clickCount) override {}
+            MouseButtonType type,
+            bool mouseUp, int clickCount) override;
     virtual void SendMouseMoveEvent(const CefMouseEvent& event,
-        bool mouseLeave) override {}
+            bool mouseLeave) override;
     virtual void SendMouseWheelEvent(const CefMouseEvent& event,
-        int deltaX, int deltaY) override {}
+            int deltaX, int deltaY) override;
     virtual void SendFocusEvent(bool setFocus) override;
-    virtual void SendCaptureLostEvent() override {}
+    virtual void SendCaptureLostEvent() override;
     virtual void NotifyMoveOrResizeStarted() override {}
     virtual int GetWindowlessFrameRate() override { return 10; }
     virtual void SetWindowlessFrameRate(int frame_rate) override {}
@@ -142,14 +142,16 @@ public:
     virtual void GetFrameNames(std::vector<CefString>& names) override;
     virtual bool SendProcessMessage(CefProcessId target_process, CefRefPtr<CefProcessMessage> message) override;
 
-	void OnLoadingStateChange(bool isLoading, bool toDifferentDocument);
+    void OnPaintUpdated(const uint32_t* buffer, const CefRect& paintRect, int width, int height);
+
+    void OnLoadingStateChange(bool isLoading, bool toDifferentDocument);
 
     void OnSetFocus(cef_focus_source_t source);
 
     void CancelContextMenu();
 
     // Returns true if windowless rendering is enabled.
-    bool IsWindowless() const { return false; }
+    bool IsWindowless() const { return m_isWindowless; }
 
     // Called when the OS window hosting the browser is destroyed.
     void WindowDestroyed();
@@ -194,16 +196,16 @@ public:
     static CefBrowserHostImpl* GetBrowserForMainFrame(blink::WebFrame* webFrame);
 
     void DidFinishLoad(blink::WebLocalFrame* frame);
-	void DidFailLoad(blink::WebLocalFrame* frame, const blink::WebURLError& error, blink::WebHistoryCommitType type);
+    void DidFailLoad(blink::WebLocalFrame* frame, const blink::WebURLError& error, blink::WebHistoryCommitType type);
     void DidCommitProvisionalLoadForFrame(blink::WebLocalFrame* frame, const blink::WebHistoryItem&);
-	void DidStartProvisionalLoad(blink::WebLocalFrame* localFrame, double triggeringEventTime);
-	void DidFailProvisionalLoad(blink::WebLocalFrame* frame, const blink::WebURLError& error, blink::WebHistoryCommitType);
+    void DidStartProvisionalLoad(blink::WebLocalFrame* localFrame, double triggeringEventTime);
+    void DidFailProvisionalLoad(blink::WebLocalFrame* frame, const blink::WebURLError& error, blink::WebHistoryCommitType);
 
     void OnLoadStart(CefRefPtr<CefFrame> fram);
-	void OnLoadError(CefRefPtr<CefFrame> frame, const blink::KURL& url, int errorCode, const WTF::String& errorDescription);
+    void OnLoadError(CefRefPtr<CefFrame> frame, const blink::KURL& url, int errorCode, const WTF::String& errorDescription);
     void OnAddressChange(CefRefPtr<CefFrame> frame, const CefString& url);
     void OnTitleChange(blink::WebLocalFrame* frame, const String& title);
-	void OnFrameIdentified(blink::WebLocalFrame* frame, blink::WebLocalFrame* parent);
+    void OnFrameIdentified(blink::WebLocalFrame* frame, blink::WebLocalFrame* parent);
 
     CefRefPtr<CefFrame> GetOrCreateFrame(const blink::WebLocalFrame* webFrame, int64 parentFrameId, const blink::KURL& frameUrl);
 
@@ -216,7 +218,9 @@ private:
         CefRefPtr<CefBrowserHostImpl> opener,
         CefRefPtr<CefRequestContext> requestContext);
 
-	static void CreateAndLoadOnWebkitThread(CreateBrowserHostWindowArgs* args);
+    static void CreateAndLoadOnWebkitThread(CreateBrowserHostWindowArgs* args);
+
+    static LONG __stdcall SubClassFunc(HWND hWnd, UINT Message, WPARAM wParam, LONG lParam);
 
     static void RegisterWindowClass();
     static LPCTSTR GetWndClass();
@@ -226,6 +230,14 @@ private:
     void CloseHostWindow();
 
     content::WebPage* m_webPage;
+
+    bool m_hasLMouseUp;
+    bool m_hasRMouseUp;
+    bool m_isWindowless;
+
+    WNDPROC m_lpfnOldWndProc;
+
+    CefScreenInfo m_screenInfo;
 
     CefBrowserSettings m_settings;
     CefRefPtr<CefClient> m_client;
@@ -242,14 +254,16 @@ private:
 
     bool m_windowDestroyed;
 
-	bool m_isLoading;
+    bool m_isLoading;
 
-	typedef std::map<int64, CefRefPtr<CefFrameHostImpl> > FrameMap;
-	FrameMap m_frames;
-	int64 m_mainFrameId;
-	int64 m_focusedFrameId;
+    typedef std::map<int64, CefRefPtr<CefFrameHostImpl> > FrameMap;
+    FrameMap m_frames;
+    int64 m_mainFrameId;
+    int64 m_focusedFrameId;
 
-	bool m_frameDestructionPending;
+    bool m_frameDestructionPending;
+
+    int64 m_identifier;
 	
     IMPLEMENT_REFCOUNTING(CefBrowserHostImpl);
     DISALLOW_COPY_AND_ASSIGN(CefBrowserHostImpl);

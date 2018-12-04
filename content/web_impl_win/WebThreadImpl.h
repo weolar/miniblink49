@@ -59,7 +59,7 @@ public:
     void resumeTimerQueue();
 
     std::vector<WebTimerBase*>& timerHeap();
-    void updateSharedTimer() {}
+    void updateSharedTimer();
     void appendUnusedTimerToDelete(WebTimerBase* timer) { m_unusedTimersToDelete.push_back(timer); }
 
     bool threadClosed() { return m_threadClosed; }
@@ -95,6 +95,7 @@ private:
 
     void willProcessTasks();
     void didProcessTasks();
+    void clearEmptyObservers();
 
     HANDLE m_hEvent;
     blink::PlatformThreadId m_threadId;
@@ -109,9 +110,11 @@ private:
     std::vector<WebTimerBase*> m_unusedTimersToDelete;
     std::vector<TaskPair*> m_taskPairsToPost;
     std::vector<TaskObserver*> m_observers;
+    bool m_isObserversDirty;
     const char* m_name;
 
-    CRITICAL_SECTION m_taskPairsMutex; // weolar
+    CRITICAL_SECTION m_taskPairsMutex;
+    CRITICAL_SECTION m_observersMutex;
     bool m_suspendTimerQueue;
 
     bool m_hadThreadInit;
@@ -119,6 +122,8 @@ private:
 
     double m_currentFrameCreateTime; // 当前帧全部使用这个创建时间
     static unsigned m_currentHeapInsertionOrder;
+
+    bool m_isMainThread;
 };
 
 } // namespace content

@@ -87,8 +87,7 @@ static bool isNonLatin1Separator(UChar32 character)
 #ifdef MINIBLINK_NOT_IMPLEMENTED
     return U_GET_GC_MASK(character) & (U_GC_S_MASK | U_GC_P_MASK | U_GC_Z_MASK | U_GC_CF_MASK);
 #endif // MINIBLINK_NOT_IMPLEMENTED
-    notImplemented();
-    return false;
+    return true; // 非latin字符全认为是分隔符
 }
 
 bool isSeparator(UChar32 character)

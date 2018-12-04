@@ -1013,6 +1013,7 @@ exports.error = internalUtil.deprecate(function(x) {
   }
 }, 'util.error is deprecated. Use console.error instead.');
 
+exports.promisify = internalUtil.promisify;
 
 exports._errnoException = function(err, syscall, original) {
   var errname = uv.errname(err);

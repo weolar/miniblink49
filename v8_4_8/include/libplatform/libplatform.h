@@ -5,8 +5,8 @@
 #ifndef V8_LIBPLATFORM_LIBPLATFORM_H_
 #define V8_LIBPLATFORM_LIBPLATFORM_H_
 
-#include "include/v8.h"
-#include "include/v8-platform.h"
+#include "v8.h"
+#include "v8-platform.h"
 
 namespace v8 {
 namespace platform {

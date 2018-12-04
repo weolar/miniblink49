@@ -28,7 +28,6 @@
 #include "config.h"
 #include "content/web_impl_win/npapi/WebPluginImpl.h"
 
-#include "content/web_impl_win/WebCookieJarCurlImpl.h"
 #include "content/web_impl_win/npapi/PluginDatabase.h"
 #include "content/web_impl_win/npapi/PluginPackage.h"
 #include "content/web_impl_win/npapi/PluginMainThreadScheduler.h"
@@ -57,6 +56,8 @@
 #include "third_party/npapi/bindings/npapi.h"
 #include "gen/blink/core/HTMLNames.h"
 #include "wtf/text/WTFStringUtil.h"
+#include "wke/wkeWebView.h"
+#include "net/cookies/WebCookieJarCurlImpl.h"
 
 using std::min;
 
@@ -83,7 +84,7 @@ static String scriptStringIfJavaScriptURL(const KURL& url)
         return String();
 
     // This returns an unescaped string
-    return decodeURLEscapeSequences(url.string().substring(11));
+    return WTF::ensureStringToUTF8String(decodeURLEscapeSequences(url.string().substring(11)));
 }
 
 static void buildResourceRequest(FrameLoadRequest* frameLoadRequest, blink::LocalFrame* parentFrame, const KURL& url, const char* target)
@@ -123,7 +124,7 @@ WebPluginImpl::WebPluginImpl(WebLocalFrame* parentFrame, const blink::WebPluginP
     , m_invalidateTimer(this, &WebPluginImpl::invalidateTimerFired)
     , m_popPopupsStateTimer(this, &WebPluginImpl::popPopupsStateTimerFired)
     , m_lifeSupportTimer(this, &WebPluginImpl::lifeSupportTimerFired)
-    , m_asynStartTimer(this, &WebPluginImpl::platformStartAsyn)
+    , m_asynStartTask(nullptr)
     , m_setPlatformPluginWidgetVisibilityTimer(this, &WebPluginImpl::asynSetPlatformPluginWidgetVisibilityTimerFired)
     , m_mode(params.loadManually ? NP_FULL : NP_EMBED)
     , m_paramNames(0)
@@ -144,7 +145,7 @@ WebPluginImpl::WebPluginImpl(WebLocalFrame* parentFrame, const blink::WebPluginP
     , m_isJavaScriptPaused(false)
     , m_haveCalledSetWindow(false)
     , m_memoryCanvas(nullptr)
-    , m_webviewClient(nullptr)
+    , m_wkeWebview(nullptr)
 {
 #ifndef NDEBUG
     webPluginImplCount.increment();
@@ -161,32 +162,35 @@ WebPluginImpl::WebPluginImpl(WebLocalFrame* parentFrame, const blink::WebPluginP
         m_plugin = PluginDatabase::installedPlugins()->findPlugin(m_url, m_mimeType);
 
     if (!m_plugin) {
+        String mime("application/virtual-plugin");
+        m_plugin = PluginDatabase::installedPlugins()->findPlugin(m_url, mime);
+    }
+
+    if (!m_plugin) {
         m_status = PluginStatusCanNotFindPlugin;
         return;
     }
 
-    m_instance = &m_instanceStruct;
+    m_instance = new NPP_t();
     m_instance->ndata = this;
     m_instance->pdata = 0;
 
     instanceMap().add(m_instance, this);
     memset(&m_npWindow, 0, sizeof(m_npWindow));
     setParameters(params.attributeNames, params.attributeValues);
-
-    //resize(size);
 }
 
 WebPluginImpl::~WebPluginImpl()
 {
     ASSERT(!m_lifeSupportTimer.isActive());
 
+    if (m_asynStartTask)
+        m_asynStartTask->onParentDestroy();
+
     // If we failed to find the plug-in, we'll return early in our constructor, and
     // m_instance will be 0.
     if (m_instance)
         instanceMap().remove(m_instance);
-
-    //     if (m_isWaitingToStart)
-    //         m_parentFrame->document()->removeMediaCanStartListener(this);
 
     stop();
 
@@ -195,10 +199,7 @@ WebPluginImpl::~WebPluginImpl()
 
     platformDestroy();
 
-    //m_parentFrame->script().cleanupScriptObjectsForPlugin(this);
-
-//     if (m_plugin && !(m_plugin->quirks().contains(PluginQuirkDontUnloadPlugin)))
-//         m_plugin->unload(); // 不卸载了，卸载容易出各种问题
+    m_pluginContainer->clearScriptObjects();
 
 #ifndef NDEBUG
     webPluginImplCount.decrement();
@@ -230,7 +231,6 @@ void WebPluginImpl::init()
         return;
     }
 
-    //WTF_LOG(Plugins, "WebPluginImpl::init(): Initializing plug-in '%s'", m_plugin->name().utf8().data());
     if (!m_plugin->load()) {
         m_plugin = nullptr;
         m_status = PluginStatusCanNotLoadPlugin;
@@ -250,15 +250,6 @@ bool WebPluginImpl::startOrAddToUnstartedList()
     if (!m_parentFrame->page())
         return false;
 
-    // We only delay starting the plug-in if we're going to kick off the load
-    // ourselves. Otherwise, the loader will try to deliver data before we've
-    // started the plug-in.
-//     if (!m_loadManually && !m_parentFrame->page()->canStartMedia()) {
-//         m_parentFrame->document()->addMediaCanStartListener(this);
-//         m_isWaitingToStart = true;
-//         return true;
-//     }
-
     return start();
 }
 
@@ -277,11 +268,9 @@ bool WebPluginImpl::start()
     NPError npErr;
     {
         WebPluginImpl::setCurrentPluginView(this);
-        //JSC::JSLock::DropAllLocks dropAllLocks(JSDOMWindowBase::commonVM());
         setCallingPlugin(true);
         npErr = m_plugin->pluginFuncs()->newp((NPMIMEType)m_mimeType.utf8().data(), m_instance, m_mode, m_paramCount, m_paramNames, m_paramValues, NULL);
         setCallingPlugin(false);
-        //LOG_NPERROR(npErr);
         WebPluginImpl::setCurrentPluginView(0);
     }
 
@@ -317,6 +306,53 @@ void WebPluginImpl::mediaCanStart()
 //     if (!start())
 //         parentFrame()->loader().client().dispatchDidFailToStartPlugin(this);
 }
+
+class DestroyNpTask : public blink::WebThread::TaskObserver {
+public:
+    DestroyNpTask(NPP_DestroyProcPtr destroyFunc, NPP instance)
+    {
+        m_destroyFunc = destroyFunc;
+        m_instance = instance;
+    }
+
+    virtual ~DestroyNpTask() override
+    {
+        delete m_instance;
+    }
+
+    virtual void willProcessTask() override
+    {
+    }
+
+    virtual void didProcessTask() override
+    {
+        String out = String::format("DestroyNpTask: %p, m_instance: %p, pdata: %p\n", this, m_instance, m_instance->pdata);
+        OutputDebugStringA(out.utf8().data());
+
+        NPSavedData* savedData = 0;
+        //WebPluginImpl::setCurrentPluginView(this);
+        //SetCallingPlugin(true);
+        NPError npErr = m_destroyFunc(m_instance, &savedData);
+        //setCallingPlugin(false);
+        //WebPluginImpl::setCurrentPluginView(0);
+
+        if (savedData) {
+            // TODO: Actually save this data instead of just discarding it
+            if (savedData->buf)
+                NPN_MemFree(savedData->buf);
+            NPN_MemFree(savedData);
+        }
+
+        m_instance->pdata = 0;
+
+        blink::Platform::current()->currentThread()->removeTaskObserver(this);
+        delete this;
+    }
+
+private:
+    NPP_DestroyProcPtr m_destroyFunc;
+    NPP m_instance;
+};
 
 void WebPluginImpl::stop()
 {
@@ -356,23 +392,8 @@ void WebPluginImpl::stop()
 
     PluginMainThreadScheduler::scheduler().unregisterPlugin(m_instance);
 
-#if 0 // 这里调用destroy会有问题，如果是在_NPN_Evaluate走到这里的话。例子：http://music.yule.sohu.com/20170926/n514522612.shtml
-    NPSavedData* savedData = 0;
-    WebPluginImpl::setCurrentPluginView(this);
-    setCallingPlugin(true);
-    NPError npErr = m_plugin->pluginFuncs()->destroy(m_instance, &savedData);
-    setCallingPlugin(false);
-    WebPluginImpl::setCurrentPluginView(0);
-
-    if (savedData) {
-        // TODO: Actually save this data instead of just discarding it
-        if (savedData->buf)
-            NPN_MemFree(savedData->buf);
-        NPN_MemFree(savedData);
-    }
-#endif
-
-    m_instance->pdata = 0;
+    // 这里调用destroy会有问题，如果是在_NPN_Evaluate走到这里的话。例子：http://music.yule.sohu.com/20170926/n514522612.shtml
+    blink::Platform::current()->currentThread()->addTaskObserver(new DestroyNpTask(m_plugin->pluginFuncs()->destroy, m_instance));
 }
 
 void WebPluginImpl::setCurrentPluginView(WebPluginImpl* pluginView)
@@ -605,16 +626,17 @@ void WebPluginImpl::status(const char* message)
 NPError WebPluginImpl::setValue(NPPVariable variable, void* value)
 {
     //LOG(Plugins, "WebPluginImpl::setValue(%s): ", prettyNameForNPPVariable(variable, value).data());
-
     switch (variable) {
     case NPPVpluginWindowBool:
         m_isWindowed = value;
+        //m_isWindowed = false; // weolar
+
         return NPERR_NO_ERROR;
     case NPPVpluginTransparentBool:
         m_isTransparent = value;
         return NPERR_NO_ERROR;
     default:
-        notImplemented();
+         //notImplemented();
         return NPERR_GENERIC_ERROR;
     }
 }
@@ -625,7 +647,6 @@ void WebPluginImpl::invalidateTimerFired(blink::Timer<WebPluginImpl>*)
         invalidateRect(m_invalidRects[i]);
     m_invalidRects.clear();
 }
-
 
 void WebPluginImpl::pushPopupsEnabledState(bool state)
 {
@@ -1003,7 +1024,6 @@ void WebPluginImpl::invalidateWindowlessPluginRect(const IntRect& rect)
 //     dirtyRect.move(renderer.borderLeft() + renderer.paddingLeft(), renderer.borderTop() + renderer.paddingTop());
 //     renderer.repaintRectangle(dirtyRect);
 
-    //m_webviewClient->didInvalidateRect(rect);
     m_pluginContainer->invalidateRect(rect);
 }
 
@@ -1081,6 +1101,11 @@ void WebPluginImpl::keepAlive(NPP instance)
     view->keepAlive();
 }
 
+bool WebPluginImpl::isAlive(NPP instance)
+{
+    return !!instanceMap().get(instance);
+}
+
 NPError WebPluginImpl::getValueStatic(NPNVariable variable, void* value)
 {
     //LOG(Plugins, "WebPluginImpl::getValueStatic(%s)", prettyNameForNPNVariable(variable).data());
@@ -1156,14 +1181,6 @@ NPError WebPluginImpl::getValue(NPNVariable variable, void* value)
     }
 }
 
-// static Frame* getFrame(Frame* parentFrame, Element* element)
-// {
-//     if (parentFrame)
-//         return parentFrame;
-//     
-//     return element->document().frame();
-// }
-
 NPError WebPluginImpl::getValueForURL(NPNURLVariable variable, const char* url, char** value, uint32_t* len)
 {
     //LOG(Plugins, "WebPluginImpl::getValueForURL(%s)", prettyNameForNPNURLVariable(variable).data());
@@ -1174,10 +1191,9 @@ NPError WebPluginImpl::getValueForURL(NPNURLVariable variable, const char* url, 
     case NPNURLVCookie: {
         KURL u(m_parentFrame->document()->baseURL(), url);
         if (u.isValid()) {
-            //Frame* frame = getFrame(parentFrame(), m_element);
             LocalFrame* frame = parentFrame();
             if (frame) {
-                const CString cookieStr(WebCookieJarImpl::inst()->cookies(u, WebURL()).utf8().c_str());
+                const CString cookieStr(m_wkeWebview->getCookieJar()->cookies(u, WebURL()).utf8().c_str());
                 if (!cookieStr.isNull()) {
                     const int size = cookieStr.length();
                     *value = static_cast<char*>(NPN_MemAlloc(size+1));
@@ -1238,9 +1254,8 @@ NPError WebPluginImpl::setValueForURL(NPNURLVariable variable, const char* url, 
         KURL u(m_parentFrame->document()->baseURL(), url);
         if (u.isValid()) {
             const String cookieStr = String::fromUTF8(value, len);
-            //Frame* frame = getFrame(parentFrame(), m_element);
             if (!cookieStr.isEmpty())
-                WebCookieJarImpl::inst()->setCookie(u, WebURL(), cookieStr);
+                m_wkeWebview->getCookieJar()->setCookie(u, WebURL(), cookieStr);
         } else
             result = NPERR_INVALID_URL;
         break;
@@ -1331,8 +1346,7 @@ v8::Local<v8::Object> WebPluginImpl::v8ScriptableObject(v8::Isolate*)
 }
 
 bool WebPluginImpl::getFormValue(WebString&)
-{ 
-    DebugBreak();
+{
     return false;
 }
 

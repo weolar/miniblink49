@@ -30,7 +30,7 @@ public:
 
     void onClosing(wkeWindowClosingCallback callback, void* param);
     void onDestroy(wkeWindowDestroyCallback callback, void* param);
-
+    
     virtual void setTransparent(bool transparent) override;
 
 protected:
@@ -70,6 +70,14 @@ protected:
 // 
 //     wkeWindowDestroyCallback m_windowDestroyCallback;
 //     void* m_windowDestroyCallbackParam;
+
+    enum State {
+        kWkeWebWindowUninit,
+        kWkeWebWindowInit,
+        kWkeWebWindowDestroing,
+        kWkeWebWindowDestroyed,
+    };
+    State m_state;
 };
 
 };//namespace wke

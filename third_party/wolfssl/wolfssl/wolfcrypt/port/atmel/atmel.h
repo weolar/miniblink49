@@ -1,6 +1,6 @@
 /* atecc508.h
  *
- * Copyright (C) 2006-2016 wolfSSL Inc.
+ * Copyright (C) 2006-2017 wolfSSL Inc.
  *
  * This file is part of wolfSSL. (formerly known as CyaSSL)
  *
@@ -46,10 +46,10 @@ struct WOLFSSL_X509_STORE_CTX;
 typedef struct t_atcert {
 	uint32_t signer_ca_size;
 	uint8_t signer_ca[512];
-	uint8_t signer_ca_pubkey[64];	
+	uint8_t signer_ca_pubkey[64];
 	uint32_t end_user_size;
 	uint8_t end_user[512];
-	uint8_t end_user_pubkey[64];	
+	uint8_t end_user_pubkey[64];
 } t_atcert;
 
 extern t_atcert atcert;

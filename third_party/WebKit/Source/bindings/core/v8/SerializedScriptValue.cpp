@@ -212,12 +212,14 @@ bool SerializedScriptValue::extractTransferables(v8::Isolate* isolate, v8::Local
     return true;
 }
 
+void blinkAdjustAmountOfExternalAllocatedMemory(int size);
+
 void SerializedScriptValue::registerMemoryAllocatedWithCurrentScriptContext()
 {
     if (m_externallyAllocatedMemory)
         return;
     m_externallyAllocatedMemory = static_cast<intptr_t>(m_data.length());
-    v8::Isolate::GetCurrent()->AdjustAmountOfExternalAllocatedMemory(m_externallyAllocatedMemory);
+    blinkAdjustAmountOfExternalAllocatedMemory(m_externallyAllocatedMemory);
 }
 
 SerializedScriptValue::~SerializedScriptValue()
@@ -226,8 +228,7 @@ SerializedScriptValue::~SerializedScriptValue()
     // used in a context other then Worker's onmessage environment and the presence of
     // current v8 context is not guaranteed. Avoid calling v8 then.
     if (m_externallyAllocatedMemory) {
-        ASSERT(v8::Isolate::GetCurrent());
-        v8::Isolate::GetCurrent()->AdjustAmountOfExternalAllocatedMemory(-m_externallyAllocatedMemory);
+        blinkAdjustAmountOfExternalAllocatedMemory(-m_externallyAllocatedMemory);
     }
 }
 

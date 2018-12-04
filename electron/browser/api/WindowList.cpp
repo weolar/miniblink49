@@ -20,11 +20,12 @@ WindowList* WindowList::getInstance() {
 
 // static
 void WindowList::addWindow(WindowInterface* window) {
-    if (window) {
-        // Push |window| on the appropriate list instance.
-        WindowVector& windows = getInstance()->m_windows;
-        windows.push_back(window);
-    }
+    if (!window)
+        return;
+    
+    // Push |window| on the appropriate list instance.
+    WindowVector& windows = getInstance()->m_windows;
+    windows.push_back(window);
 }
 
 // static

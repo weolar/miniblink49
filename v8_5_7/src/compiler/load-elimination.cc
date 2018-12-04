@@ -304,7 +304,7 @@ LoadElimination::AbstractField const* LoadElimination::AbstractField::Kill(
     if (MayAlias(object, pair.first)) {
       AbstractField* that = new (zone) AbstractField(zone);
       for (auto pair : this->info_for_node_) {
-        if (!MayAlias(object, pair.first)) that->info_for_node_.insert(pair);
+        if (!MayAlias(object, pair.first)) that->info_for_node_.insert(std::move(pair));
       }
       return that;
     }

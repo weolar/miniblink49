@@ -16,9 +16,10 @@ namespace {
 v8::Persistent<v8::ObjectTemplate> eventTemplate;
 
 void preventDefault(gin::Arguments* args) {
-//     gin::Dictionary self(args->isolate(), args->GetThis());
-//     self.Set("defaultPrevented", true);
-    DebugBreak();
+    v8::Local<v8::Object> obj;
+    args->GetHolder(&obj);
+    gin::Dictionary self(args->isolate(), obj);
+    self.Set("defaultPrevented", true);
 }
 
 void sendReply(const std::string& json) {

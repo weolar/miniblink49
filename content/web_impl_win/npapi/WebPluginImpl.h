@@ -55,6 +55,10 @@
 typedef HWND PlatformWidget;
 typedef PlatformWidget PlatformPluginWidget;
 
+namespace wke {
+class CWebView;
+}
+
 namespace blink {
 class WebPluginContainer;
 class GraphicsContext;
@@ -96,6 +100,7 @@ private:
 class WebPluginImpl : public RefCounted<WebPluginImpl>, public blink::WebPlugin, private PluginStreamClient {
 public:
     WebPluginImpl(blink::WebLocalFrame* parentFrame, const blink::WebPluginParams&);
+    virtual ~WebPluginImpl();
 
     virtual bool initialize(blink::WebPluginContainer*);
     virtual void destroy() override;
@@ -191,9 +196,6 @@ public:
     virtual bool isPlaceholder() { return true; }
     virtual bool shouldPersist() const { return false; }
 
-public:
-    virtual ~WebPluginImpl();
-
     PluginPackage* plugin() const { return m_plugin.get(); }
 
     NPP instance() const { return m_instance; }
@@ -264,8 +266,48 @@ public:
     bool start();
 
     static void keepAlive(NPP);
+    static bool isAlive(NPP);
 
     void keepAlive();
+
+    void setPlatformPluginWidget(PlatformPluginWidget widget)
+    {
+        if (widget != m_widget) {
+            m_widget = widget;
+        }
+    }
+
+    PlatformPluginWidget platformPluginWidget() const 
+    { 
+        return m_widget;
+    }
+
+//     PlatformWidget platformWidget() const { return m_widget; }
+//     void setPlatformWidget(PlatformWidget widget)
+//     {
+//         if (widget != m_widget) {
+//             m_widget = widget;
+//         }
+//     }
+
+    void setParentPlatformPluginWidget(PlatformWidget widget)
+    {
+        if (widget != m_parentWidget)
+            m_parentWidget = widget;
+    }
+
+    PlatformPluginWidget parentPlatformPluginWidget() const
+    {
+        return m_parentWidget;
+    }
+    
+    void setWkeWebView(wke::CWebView* wkeWebview) { m_wkeWebview = wkeWebview; }
+    wke::CWebView* getWkeWebView() { return m_wkeWebview; }
+
+    void setHwndRenderOffset(const blink::IntPoint& offset)
+    {
+        m_widgetOffset = offset;
+    }
 
 private:
     void setParameters(const blink::WebVector<blink::WebString>& paramNames, const blink::WebVector<blink::WebString>& paramValues);
@@ -307,10 +349,27 @@ private:
     void scheduleRequest(PassOwnPtr<PluginRequest>);
     void requestTimerFired(blink::Timer<WebPluginImpl>*);
     void invalidateTimerFired(blink::Timer<WebPluginImpl>*);
-    void platformStartAsyn(blink::Timer<WebPluginImpl>*);
+    void platformStartImpl(bool isSync);
     blink::Timer<WebPluginImpl> m_requestTimer;
     blink::Timer<WebPluginImpl> m_invalidateTimer;
-    blink::Timer<WebPluginImpl> m_asynStartTimer;
+
+    class PlatformStartAsynTask : public blink::WebThread::TaskObserver {
+    public:
+        PlatformStartAsynTask(WebPluginImpl* parentPtr)
+            : m_parentPtr(parentPtr) {}
+
+        virtual ~PlatformStartAsynTask() override {}
+        virtual void willProcessTask() override {}
+        virtual void didProcessTask() override;
+
+        void onParentDestroy() { m_parentPtr = nullptr; }
+
+    private:
+        WebPluginImpl* m_parentPtr;
+    };
+    PlatformStartAsynTask* m_asynStartTask;
+
+    friend class PlatformStartAsynTask;
 
     void asynSetPlatformPluginWidgetVisibilityTimerFired(blink::Timer<WebPluginImpl>*);
     blink::Timer<WebPluginImpl> m_setPlatformPluginWidgetVisibilityTimer;
@@ -339,7 +398,7 @@ private:
     WTF::CString m_userAgent;
 
     NPP m_instance;
-    NPP_t m_instanceStruct;
+    //NPP_t m_instanceStruct;
     NPWindow m_npWindow;
 
     Vector<bool, 4> m_popupStateStack;
@@ -360,32 +419,6 @@ private:
     HDC m_wmPrintHDC;
     bool m_haveUpdatedPluginWidget;
 
-public:
-    void setPlatformPluginWidget(PlatformPluginWidget widget) { setPlatformWidget(widget); }
-    PlatformPluginWidget platformPluginWidget() const { return platformWidget(); }
-
-    PlatformWidget platformWidget() const { return m_widget; }
-    void setPlatformWidget(PlatformWidget widget)
-    {
-        if (widget != m_widget) {
-            m_widget = widget;
-        }
-    }
-
-    void setParentPlatformWidget(PlatformWidget widget)
-    {
-        if (widget != m_parentWidget) {
-            m_parentWidget = widget;
-        }
-    }
-
-    void setWebViewClient(blink::WebViewClient* client) { m_webviewClient = client; }
-
-    void setHwndRenderOffset(const blink::IntPoint& offset)
-    {
-        m_widgetOffset = offset;
-    }
-
 private:
     blink::IntRect m_clipRect; // The clip rect to apply to a windowed plug-in
     blink::IntRect m_windowRect; // Our window rect.
@@ -404,7 +437,7 @@ private:
     static WebPluginImpl* s_currentPluginView;
 
     SkCanvas* m_memoryCanvas;
-    blink::WebViewClient* m_webviewClient;
+    wke::CWebView* m_wkeWebview;
 };
 
 } // namespace content

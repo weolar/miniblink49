@@ -49,15 +49,15 @@ DECLARE_INTERFACE(INonDelegatedUnknown) {
         THIS_
         IN REFIID InterfaceId,
         OUT PVOID* Interface
-        ) PURE;
+        ) = 0;
 
     STDMETHOD_(ULONG,NonDelegatedAddRef)(
         THIS
-        ) PURE;
+        ) = 0;
 
     STDMETHOD_(ULONG,NonDelegatedRelease)(
         THIS
-        ) PURE;
+        ) = 0;
 };
 
 #undef INTERFACE
@@ -67,15 +67,15 @@ DECLARE_INTERFACE(IIndirectedUnknown) {
         THIS_
         IN REFIID InterfaceId,
         OUT PVOID* Interface
-        ) PURE;
+        ) = 0;
 
     STDMETHOD_(ULONG,IndirectedAddRef)(
         THIS
-        ) PURE;
+        ) = 0;
 
     STDMETHOD_(ULONG,IndirectedRelease)(
         THIS
-        ) PURE;
+        ) = 0;
 };
 
 #if !defined(__cplusplus) || _MSC_VER < 1100
@@ -91,7 +91,7 @@ DECLARE_INTERFACE_(IKoInitializeParentDeviceObject, IUnknown) {
     STDMETHOD(SetParentDeviceObject)(
         THIS_
         IN PDEVICE_OBJECT ParentDeviceObject
-        ) PURE;
+        ) = 0;
 };
 
 #ifndef COMDDKMETHOD
@@ -154,9 +154,9 @@ public:
     STDMETHOD(QueryInterface)(THIS_                             \
         REFIID InterfaceId,                                     \
         PVOID* Interface                                        \
-        ) PURE;                                                 \
-    STDMETHOD_(ULONG,AddRef)(THIS) PURE;                        \
-    STDMETHOD_(ULONG,Release)(THIS) PURE;
+        ) = 0;                                                  \
+    STDMETHOD_(ULONG,AddRef)(THIS) = 0;                         \
+    STDMETHOD_(ULONG,Release)(THIS) = 0;
 
 #endif //!defined(DEFINE_ABSTRACT_UNKNOWN)
 

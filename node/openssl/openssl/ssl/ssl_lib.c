@@ -1992,7 +1992,7 @@ SSL_CTX *SSL_CTX_new(const SSL_METHOD *meth)
     ret->extra_certs = NULL;
     /* No compression for DTLS */
     if (!(meth->ssl3_enc->enc_flags & SSL_ENC_FLAG_DTLS))
-        ret->comp_methods = SSL_COMP_get_compression_methods();
+        ret->comp_methods = openssl_SSL_COMP_get_compression_methods();
 
     ret->max_send_fragment = SSL3_RT_MAX_PLAIN_LENGTH;
 
@@ -2390,7 +2390,7 @@ void ssl_set_cert_masks(CERT *c, const SSL_CIPHER *cipher)
         if (!(cpk->valid_flags & CERT_PKEY_SIGN))
             ecdsa_ok = 0;
         ecc_pkey = X509_get_pubkey(x);
-        ecc_pkey_size = (ecc_pkey != NULL) ? EVP_PKEY_bits(ecc_pkey) : 0;
+        ecc_pkey_size = (ecc_pkey != NULL) ? openssl_EVP_PKEY_bits(ecc_pkey) : 0;
         EVP_PKEY_free(ecc_pkey);
         if ((x->sig_alg) && (x->sig_alg->algorithm)) {
             signature_nid = OBJ_obj2nid(x->sig_alg->algorithm);
@@ -2470,7 +2470,7 @@ int ssl_check_srvr_ecc_cert_and_alg(X509 *x, SSL *s)
         pkey = X509_get_pubkey(x);
         if (pkey == NULL)
             return 0;
-        keysize = EVP_PKEY_bits(pkey);
+        keysize = openssl_EVP_PKEY_bits(pkey);
         EVP_PKEY_free(pkey);
         if (keysize > 163)
             return 0;
@@ -3228,7 +3228,7 @@ int SSL_CTX_set_default_verify_paths(SSL_CTX *ctx)
 int SSL_CTX_load_verify_locations(SSL_CTX *ctx, const char *CAfile,
                                   const char *CApath)
 {
-    return (X509_STORE_load_locations(ctx->cert_store, CAfile, CApath));
+    return (openssl_X509_STORE_load_locations(ctx->cert_store, CAfile, CApath));
 }
 #endif
 
@@ -3370,7 +3370,7 @@ RSA *cb(SSL *ssl, int is_export, int keylength)
  */
 
 #ifndef OPENSSL_NO_DH
-void SSL_CTX_set_tmp_dh_callback(SSL_CTX *ctx,
+void openssl_SSL_CTX_set_tmp_dh_callback(SSL_CTX *ctx,
                                  DH *(*dh) (SSL *ssl, int is_export,
                                             int keylength))
 {

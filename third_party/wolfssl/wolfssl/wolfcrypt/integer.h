@@ -1,6 +1,6 @@
 /* integer.h
  *
- * Copyright (C) 2006-2016 wolfSSL Inc.
+ * Copyright (C) 2006-2017 wolfSSL Inc.
  *
  * This file is part of wolfSSL.
  *
@@ -33,7 +33,9 @@
    may not be faster on all
 */
 #include <wolfssl/wolfcrypt/types.h>       /* will set MP_xxBIT if not default */
-#ifdef USE_FAST_MATH
+#ifdef WOLFSSL_SP_MATH
+    #include <wolfssl/wolfcrypt/sp_int.h>
+#elif defined(USE_FAST_MATH)
     #include <wolfssl/wolfcrypt/tfm.h>
 #else
 
@@ -248,14 +250,23 @@ typedef int ltm_prime_callback(unsigned char *dst, int len, void *dat);
 #define mp_mag_size(mp)           mp_unsigned_bin_size(mp)
 #define mp_tomag(mp, str)         mp_to_unsigned_bin((mp), (str))
 
-#define mp_tobinary(M, S)  mp_toradix((M), (S), 2)
-#define mp_tooctal(M, S)   mp_toradix((M), (S), 8)
-#define mp_todecimal(M, S) mp_toradix((M), (S), 10)
-#define mp_tohex(M, S)     mp_toradix((M), (S), 16)
+#define MP_RADIX_BIN  2
+#define MP_RADIX_OCT  8
+#define MP_RADIX_DEC  10
+#define MP_RADIX_HEX  16
+#define MP_RADIX_MAX  64
+
+#define mp_tobinary(M, S)  mp_toradix((M), (S), MP_RADIX_BIN)
+#define mp_tooctal(M, S)   mp_toradix((M), (S), MP_RADIX_OCT)
+#define mp_todecimal(M, S) mp_toradix((M), (S), MP_RADIX_DEC)
+#define mp_tohex(M, S)     mp_toradix((M), (S), MP_RADIX_HEX)
 
 #define s_mp_mul(a, b, c) s_mp_mul_digs(a, b, c, (a)->used + (b)->used + 1)
 
+#if defined(HAVE_ECC) || defined(WOLFSSL_KEY_GEN) || defined(HAVE_COMP_KEY) || \
+    defined(WOLFSSL_DEBUG_MATH) || defined(DEBUG_WOLFSSL)
 extern const char *mp_s_rmap;
+#endif
 
 /* 6 functions needed by Rsa */
 MP_API int  mp_init (mp_int * a);
@@ -355,7 +366,7 @@ MP_API int mp_radix_size (mp_int * a, int radix, int *size);
 #if defined(HAVE_ECC) || defined(WOLFSSL_KEY_GEN)
     MP_API int mp_sqrmod(mp_int* a, mp_int* b, mp_int* c);
 #endif
-#if defined(HAVE_ECC) || defined(WOLFSSL_KEY_GEN)
+#if !defined(NO_DSA) || defined(HAVE_ECC)
     MP_API int mp_read_radix(mp_int* a, const char* str, int radix);
 #endif
 

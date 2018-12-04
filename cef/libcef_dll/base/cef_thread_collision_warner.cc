@@ -14,8 +14,7 @@ void DCheckAsserter::warn() {
 }
 
 static subtle::Atomic32 CurrentThread() {
-  const cef_platform_thread_id_t current_thread_id =
-      cef_get_current_platform_thread_id();
+  const cef_platform_thread_id_t current_thread_id = (cef_platform_thread_id_t)::GetCurrentThreadId();
   // We need to get the thread id into an atomic data type. This might be a
   // truncating conversion, but any loss-of-information just increases the
   // chance of a fault negative, not a false positive.

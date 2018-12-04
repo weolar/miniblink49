@@ -65,7 +65,7 @@ SimpleFontData::SimpleFontData(const FontPlatformData& platformData, PassRefPtr<
 {
     platformInit();
     platformGlyphInit();
-#ifdef MINIBLINK_NOT_IMPLEMENTED
+#if 1 // def MINIBLINK_NOT_IMPLEMENTED
     if (platformData.isVerticalAnyUpright() && !isTextOrientationFallback) {
         m_verticalData = platformData.verticalData();
         m_hasVerticalGlyphs = m_verticalData.get() && m_verticalData->hasVerticalMetrics();
@@ -294,7 +294,7 @@ void SimpleFontData::platformGlyphInit()
     // See <http://bugs.webkit.org/show_bug.cgi?id=13178>
     if (m_zeroWidthSpaceGlyph == m_spaceGlyph) {
         m_zeroWidthSpaceGlyph = 0;
-        WTF_LOG_ERROR("Font maps SPACE and ZERO WIDTH SPACE to the same glyph. Glyph width will not be overridden.");
+        //WTF_LOG_ERROR("Font maps SPACE and ZERO WIDTH SPACE to the same glyph. Glyph width will not be overridden.");
     }
 
     m_missingGlyphData.fontData = this;
@@ -469,11 +469,11 @@ bool SimpleFontData::canRenderCombiningCharacterSequence(const UChar* characters
         if (!glyphForCharacter(character))
             return false;
     }
-#endif // MINIBLINK_NOT_IMPLEMENTED
-    notImplemented();
-
     addResult.storedValue->value = true;
     return true;
+#else
+    return false;
+#endif // MINIBLINK_NOT_IMPLEMENTED
 }
 
 bool SimpleFontData::fillGlyphPage(GlyphPage* pageToFill, unsigned offset, unsigned length, UChar* buffer, unsigned bufferLength) const

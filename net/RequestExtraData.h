@@ -9,7 +9,6 @@ namespace content {
 }
 #endif
 
-
 #if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 namespace blink {
 class WebLocalFrame;

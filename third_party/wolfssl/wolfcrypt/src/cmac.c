@@ -1,6 +1,6 @@
 /* cmac.c
  *
- * Copyright (C) 2006-2016 wolfSSL Inc.
+ * Copyright (C) 2006-2017 wolfSSL Inc.
  *
  * This file is part of wolfSSL.
  *
@@ -50,7 +50,7 @@ static void ShiftAndXorRb(byte* out, byte* in)
 
     for (i = 1, j = AES_BLOCK_SIZE - 1; i <= AES_BLOCK_SIZE; i++, j--) {
         last = (in[j] & 0x80) ? 1 : 0;
-        out[j] = (in[j] << 1) | mask;
+        out[j] = (byte)((in[j] << 1) | mask);
         mask = last;
         if (xorRb) {
             out[j] ^= Rb;
@@ -145,7 +145,7 @@ int wc_CmacFinal(Cmac* cmac, byte* out, word32* outSz)
         *outSz = AES_BLOCK_SIZE;
     ForceZero(cmac, sizeof(Cmac));
 
-    return 0; 
+    return 0;
 }
 
 

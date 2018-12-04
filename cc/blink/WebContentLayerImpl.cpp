@@ -13,9 +13,7 @@
 #include "third_party/skia/include/core/SkBBHFactory.h"
 #include "third_party/skia/include/core/SkPictureRecorder.h"
 #include "skia/ext/refptr.h"
-#include "cc/raster/RasterTaskWorkerThreadPool.h"
 #include "cc/raster/RasterResouce.h"
-//#include "cc/raster/RecordDrawHelp.h"
 #include "cc/trees/LayerTreeHost.h"
 #include "cc/trees/DrawProperties.h"
 #include "cc/tiles/TileGrid.h"
@@ -45,9 +43,9 @@ blink::WebLayer* WebContentLayerImpl::layer()
     return m_layer;
 }
 
-void WebContentLayerImpl::setDoubleSided(bool double_sided)
+void WebContentLayerImpl::setDoubleSided(bool doubleSided)
 {
-    //m_layer->setDoubleSided(double_sided);
+    m_layer->setDoubleSided(doubleSided);
 }
 
 void WebContentLayerImpl::setDrawCheckerboardForMissingTiles(bool enable)

@@ -34,7 +34,11 @@ void AtomCommandLine::init(int argc, const char* const* argv) {
 // static
 void AtomCommandLine::initW(int argc, const wchar_t* const* argv) {
     for (int i = 0; i < argc; ++i) {
-        wargv_.push_back(argv[i]);
+        std::wstring arg = argv[i];
+        if (arg.length() > 0 && arg[0] >= L'a' && arg[0] <= L'z')
+            arg[0] += L'A' - L'a';
+
+        wargv_.push_back(arg);
     }
 }
 
@@ -63,6 +67,11 @@ void AtomCommandLine::initAW() {
             fprintf(stderr, "Could not convert arguments to utf8.");
             return;
         }
+
+        char* argvStrA = argvA[i];
+        if (argvStrA[0] >= 'a' && argvStrA[0] <= 'z')
+            argvStrA[0] += 'A' - 'a';
+        argvStrA = argvStrA;
     }
 
     atom::AtomCommandLine::init(argc, argvA);

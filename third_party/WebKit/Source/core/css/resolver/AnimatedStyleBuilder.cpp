@@ -98,6 +98,26 @@ template<typename T> T animatableValueRoundClampTo(const AnimatableValue* value,
     return clampTo<T>(round(toAnimatableDouble(value)->toDouble()), min, max);
 }
 
+template <typename T>
+T roundedClampTo(double value)
+{
+    static_assert(std::is_integral<T>::value, "should use integral type T when rounding values");
+    return clampTo<T>(roundForImpreciseConversion<T>(value));
+}
+
+template <typename T>
+T animatableValueClampTo(const AnimatableValue* value)
+{
+    return roundedClampTo<T>(toAnimatableDouble(value)->toDouble());
+}
+
+template<typename T> T animatableLineWidthClamp(const AnimatableValue* value)
+{
+    double doubleValue = toAnimatableDouble(value)->toDouble();
+    // This matches StyleBuilderConverter::convertLineWidth().
+    return (doubleValue > 0 && doubleValue < 1) ? 1 : animatableValueClampTo<T>(value);
+}
+
 LengthBox animatableValueToLengthBox(const AnimatableValue* value, const StyleResolverState& state, ValueRange range = ValueRangeAll)
 {
     const AnimatableLengthBox* animatableLengthBox = toAnimatableLengthBox(value);
@@ -314,7 +334,7 @@ void AnimatedStyleBuilder::applyProperty(CSSPropertyID property, StyleResolverSt
         style->setBorderBottomRightRadius(animatableValueToLengthSize(value, state, ValueRangeNonNegative));
         return;
     case CSSPropertyBorderBottomWidth:
-        style->setBorderBottomWidth(animatableValueRoundClampTo<unsigned>(value));
+        style->setBorderBottomWidth(animatableLineWidthClamp<unsigned>(value));
         return;
     case CSSPropertyBorderImageOutset:
         style->setBorderImageOutset(animatableValueToBorderImageLengthBox(value, state));
@@ -334,14 +354,14 @@ void AnimatedStyleBuilder::applyProperty(CSSPropertyID property, StyleResolverSt
         style->setVisitedLinkBorderLeftColor(toAnimatableColor(value)->visitedLinkColor());
         return;
     case CSSPropertyBorderLeftWidth:
-        style->setBorderLeftWidth(animatableValueRoundClampTo<unsigned>(value));
+        style->setBorderLeftWidth(animatableLineWidthClamp<unsigned>(value));
         return;
     case CSSPropertyBorderRightColor:
         style->setBorderRightColor(toAnimatableColor(value)->color());
         style->setVisitedLinkBorderRightColor(toAnimatableColor(value)->visitedLinkColor());
         return;
     case CSSPropertyBorderRightWidth:
-        style->setBorderRightWidth(animatableValueRoundClampTo<unsigned>(value));
+        style->setBorderRightWidth(animatableLineWidthClamp<unsigned>(value));
         return;
     case CSSPropertyBorderTopColor:
         style->setBorderTopColor(toAnimatableColor(value)->color());
@@ -354,7 +374,7 @@ void AnimatedStyleBuilder::applyProperty(CSSPropertyID property, StyleResolverSt
         style->setBorderTopRightRadius(animatableValueToLengthSize(value, state, ValueRangeNonNegative));
         return;
     case CSSPropertyBorderTopWidth:
-        style->setBorderTopWidth(animatableValueRoundClampTo<unsigned>(value));
+        style->setBorderTopWidth(animatableLineWidthClamp<unsigned>(value));
         return;
     case CSSPropertyBottom:
         style->setBottom(animatableValueToLength(value, state));
@@ -469,7 +489,7 @@ void AnimatedStyleBuilder::applyProperty(CSSPropertyID property, StyleResolverSt
         style->setOutlineOffset(animatableValueRoundClampTo<int>(value));
         return;
     case CSSPropertyOutlineWidth:
-        style->setOutlineWidth(animatableValueRoundClampTo<unsigned short>(value));
+        style->setOutlineWidth(animatableLineWidthClamp<unsigned short>(value));
         return;
     case CSSPropertyPaddingBottom:
         style->setPaddingBottom(animatableValueToLength(value, state, ValueRangeNonNegative));
@@ -550,7 +570,7 @@ void AnimatedStyleBuilder::applyProperty(CSSPropertyID property, StyleResolverSt
         style->setColumnWidth(clampTo(toAnimatableDouble(value)->toDouble(), std::numeric_limits<float>::epsilon()));
         return;
     case CSSPropertyWebkitColumnRuleWidth:
-        style->setColumnRuleWidth(animatableValueRoundClampTo<unsigned short>(value));
+        style->setColumnRuleWidth(animatableLineWidthClamp<unsigned short>(value));
         return;
     case CSSPropertyWebkitFilter:
         style->setFilter(toAnimatableFilterOperations(value)->operations());

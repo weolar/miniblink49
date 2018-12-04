@@ -1,6 +1,6 @@
 /* types.h
  *
- * Copyright (C) 2006-2016 wolfSSL Inc.
+ * Copyright (C) 2006-2017 wolfSSL Inc.
  *
  * This file is part of wolfSSL.
  *
@@ -19,7 +19,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1335, USA
  */
 
-
+/*!
+    \file wolfssl/wolfcrypt/types.h
+*/
 
 #ifndef WOLF_CRYPT_TYPES_H
 #define WOLF_CRYPT_TYPES_H
@@ -46,28 +48,35 @@
 	    #endif
 	    typedef unsigned short word16;
 	    typedef unsigned int   word32;
+	    typedef byte           word24[3];
 	#endif
 
 
 	/* try to set SIZEOF_LONG or LONG_LONG if user didn't */
-	#if !defined(_MSC_VER) && !defined(__BCPLUSPLUS__)
+	#if !defined(_MSC_VER) && !defined(__BCPLUSPLUS__) && !defined(__EMSCRIPTEN__)
 	    #if !defined(SIZEOF_LONG_LONG) && !defined(SIZEOF_LONG)
-	        #if (defined(__alpha__) || defined(__ia64__) || defined(_ARCH_PPC64) \
-	                || defined(__mips64)  || defined(__x86_64__))
+	        #if (defined(__alpha__) || defined(__ia64__) || \
+	            defined(_ARCH_PPC64) || defined(__mips64) || \
+	            defined(__x86_64__) || \
+	            ((defined(sun) || defined(__sun)) && \
+	             (defined(LP64) || defined(_LP64))))
 	            /* long should be 64bit */
 	            #define SIZEOF_LONG 8
 	        #elif defined(__i386__) || defined(__CORTEX_M3__)
 	            /* long long should be 64bit */
 	            #define SIZEOF_LONG_LONG 8
 	        #endif
-	    #endif
+ 	    #endif
 	#endif
-
 
 	#if defined(_MSC_VER) || defined(__BCPLUSPLUS__)
 	    #define WORD64_AVAILABLE
 	    #define W64LIT(x) x##ui64
 	    typedef unsigned __int64 word64;
+	#elif defined(__EMSCRIPTEN__)
+	    #define WORD64_AVAILABLE
+	    #define W64LIT(x) x##ull
+	    typedef unsigned long long word64;
 	#elif defined(SIZEOF_LONG) && SIZEOF_LONG == 8
 	    #define WORD64_AVAILABLE
 	    #define W64LIT(x) x##LL
@@ -80,12 +89,9 @@
 	    #define WORD64_AVAILABLE
 	    #define W64LIT(x) x##LL
 	    typedef unsigned long long word64;
-	#else
-	    #define MP_16BIT  /* for mp_int, mp_word needs to be twice as big as
-	                         mp_digit, no 64 bit type so make mp_digit 16 bit */
 	#endif
 
-
+#if !defined(NO_64BIT) && defined(WORD64_AVAILABLE)
 	/* These platforms have 64-bit CPU registers.  */
 	#if (defined(__alpha__) || defined(__ia64__) || defined(_ARCH_PPC64) || \
 	     defined(__mips64)  || defined(__x86_64__) || defined(_M_X64)) || \
@@ -96,7 +102,7 @@
           (defined(LP64) || defined(_LP64))
         /* LP64 with GNU GCC compiler is reserved for when long int is 64 bits
          * and int uses 32 bits. When using Solaris Studio sparc and __sparc are
-         * avialable for 32 bit detection but __sparc64__ could be missed. This
+         * available for 32 bit detection but __sparc64__ could be missed. This
          * uses LP64 for checking 64 bit CPU arch. */
 	    typedef word64 wolfssl_word;
         #define WC_64BIT_CPU
@@ -106,7 +112,12 @@
 	        #define WOLFCRYPT_SLOW_WORD64
 	    #endif
 	#endif
-
+#else
+        #undef WORD64_AVAILABLE
+        typedef word32 wolfssl_word;
+        #define MP_16BIT  /* for mp_int, mp_word needs to be twice as big as
+                             mp_digit, no 64 bit type so make mp_digit 16 bit */
+#endif
 
 	enum {
 	    WOLFSSL_WORD_SIZE  = sizeof(wolfssl_word),
@@ -160,7 +171,7 @@
 	    #if defined(_MSC_VER)
 	        #define THREAD_LS_T __declspec(thread)
 	    /* Thread local storage only in FreeRTOS v8.2.1 and higher */
-	    #elif defined(FREERTOS)
+	    #elif defined(FREERTOS) || defined(FREERTOS_TCP)
 	        #define THREAD_LS_T
 	    #else
 	        #define THREAD_LS_T __thread
@@ -190,7 +201,7 @@
 	/* idea to add global alloc override by Moises Guimaraes  */
 	/* default to libc stuff */
 	/* XREALLOC is used once in normal math lib, not in fast math lib */
-	/* XFREE on some embeded systems doesn't like free(0) so test  */
+	/* XFREE on some embedded systems doesn't like free(0) so test  */
 	#if defined(HAVE_IO_POOL)
 		WOLFSSL_API void* XMALLOC(size_t n, void* heap, int type);
 		WOLFSSL_API void* XREALLOC(void *p, size_t n, void* heap, int type);
@@ -224,8 +235,7 @@
 	#elif !defined(MICRIUM_MALLOC) && !defined(EBSNET) \
 	        && !defined(WOLFSSL_SAFERTOS) && !defined(FREESCALE_MQX) \
 	        && !defined(FREESCALE_KSDK_MQX) && !defined(FREESCALE_FREE_RTOS) \
-            && !defined(WOLFSSL_LEANPSK) && !defined(FREERTOS) && !defined(FREERTOS_TCP)\
-            && !defined(WOLFSSL_uITRON4)
+            && !defined(WOLFSSL_LEANPSK) && !defined(WOLFSSL_uITRON4)
 	    /* default C runtime, can install different routines at runtime via cbs */
 	    #include <wolfssl/wolfcrypt/memory.h>
         #ifdef WOLFSSL_STATIC_MEMORY
@@ -238,7 +248,7 @@
 				#define XFREE(p, h, t)       {void* xp = (p); if((xp)) wolfSSL_Free((xp), (h), (t));}
 				#define XREALLOC(p, n, h, t) wolfSSL_Realloc((p), (n), (h), (t))
             #endif /* WOLFSSL_DEBUG_MEMORY */
-        #else
+        #elif !defined(FREERTOS) && !defined(FREERTOS_TCP)
             #ifdef WOLFSSL_DEBUG_MEMORY
 				#define XMALLOC(s, h, t)     ((void)h, (void)t, wolfSSL_Malloc((s), __func__, __LINE__))
 				#define XFREE(p, h, t)       {void* xp = (p); if((xp)) wolfSSL_Free((xp), __func__, __LINE__);}
@@ -286,8 +296,12 @@
         #define FREE_ARRAY(VAR_NAME, VAR_ITEMS, HEAP)  /* nothing to free, its stack */
     #endif
 
-    #ifndef WOLFSSL_LEANPSK
-	    char* mystrnstr(const char* s1, const char* s2, unsigned int n);
+    #if !defined(USE_WOLF_STRTOK) && \
+            (defined(__MINGW32__) || defined(WOLFSSL_TIRTOS) || defined(WOLF_C99))
+        #define USE_WOLF_STRTOK
+    #endif
+    #if !defined(USE_WOLF_STRSEP) && (defined(WOLF_C99))
+        #define USE_WOLF_STRSEP
     #endif
 
 	#ifndef STRING_USER
@@ -306,17 +320,34 @@
 	    #define XSTRNCMP(s1,s2,n) strncmp((s1),(s2),(n))
 	    #define XSTRNCAT(s1,s2,n) strncat((s1),(s2),(n))
 
-        #ifdef MICROCHIP_PIC32
+        #ifdef USE_WOLF_STRSEP
+            #define XSTRSEP(s1,d) wc_strsep((s1),(d))
+        #else
+            #define XSTRSEP(s1,d) strsep((s1),(d))
+        #endif
+
+        #if defined(MICROCHIP_PIC32) || defined(WOLFSSL_TIRTOS)
             /* XC32 does not support strncasecmp, so use case sensitive one */
             #define XSTRNCASECMP(s1,s2,n) strncmp((s1),(s2),(n))
-        #elif defined(USE_WINDOWS_API)
+        #elif defined(USE_WINDOWS_API) || defined(FREERTOS_TCP_WINSIM)
 	        #define XSTRNCASECMP(s1,s2,n) _strnicmp((s1),(s2),(n))
         #else
+            #if defined(HAVE_STRINGS_H) && defined(WOLF_C99) && \
+                !defined(WOLFSSL_SGX)
+                #include <strings.h>
+            #endif
 	        #define XSTRNCASECMP(s1,s2,n) strncasecmp((s1),(s2),(n))
 	    #endif
 
-        /* snprintf is used in asn.c for GetTimeString and PKCS7 test */
+        /* snprintf is used in asn.c for GetTimeString, PKCS7 test, and when
+           debugging is turned on */
         #ifndef USE_WINDOWS_API
+            #if defined(NO_FILESYSTEM) && defined(OPENSSL_EXTRA) && \
+               !defined(NO_STDIO_FILESYSTEM)
+                /* case where stdio is not included else where but is needed for
+                 * snprintf */
+                #include <stdio.h>
+            #endif
             #define XSNPRINTF snprintf
         #else
             #define XSNPRINTF _snprintf
@@ -324,23 +355,35 @@
 
         #if defined(WOLFSSL_CERT_EXT) || defined(HAVE_ALPN)
             /* use only Thread Safe version of strtok */
-            #if !defined(USE_WINDOWS_API) && !defined(INTIME_RTOS)
-                #define XSTRTOK strtok_r
-            #elif defined(__MINGW32__) || defined(WOLFSSL_TIRTOS) || \
-                    defined(USE_WOLF_STRTOK)
-                #ifndef USE_WOLF_STRTOK
-                    #define USE_WOLF_STRTOK
-                #endif
-                #define XSTRTOK wc_strtok
+            #if defined(USE_WOLF_STRTOK)
+                #define XSTRTOK(s1,d,ptr) wc_strtok((s1),(d),(ptr))
+            #elif defined(USE_WINDOWS_API) || defined(INTIME_RTOS)
+                #define XSTRTOK(s1,d,ptr) strtok_s((s1),(d),(ptr))
             #else
-                #define XSTRTOK strtok_s
+                #define XSTRTOK(s1,d,ptr) strtok_r((s1),(d),(ptr))
             #endif
         #endif
 	#endif
 
+    #ifdef USE_WOLF_STRTOK
+        WOLFSSL_API char* wc_strtok(char *str, const char *delim, char **nextp);
+    #endif
+    #ifdef USE_WOLF_STRSEP
+        WOLFSSL_API char* wc_strsep(char **stringp, const char *delim);
+    #endif
+
+    #if !defined(NO_FILESYSTEM) && defined(OPENSSL_EXTRA) && \
+        !defined(NO_STDIO_FILESYSTEM)
+        #ifndef XGETENV
+            #include <stdlib.h>
+            #define XGETENV getenv
+        #endif
+    #endif /* OPENSSL_EXTRA */
+
 	#ifndef CTYPE_USER
 	    #include <ctype.h>
-	    #if defined(HAVE_ECC) || defined(HAVE_OCSP) || defined(WOLFSSL_KEY_GEN)
+	    #if defined(HAVE_ECC) || defined(HAVE_OCSP) || \
+            defined(WOLFSSL_KEY_GEN) || !defined(NO_DSA)
 	        #define XTOUPPER(c)     toupper((c))
 	        #define XISALPHA(c)     isalpha((c))
 	    #endif
@@ -439,18 +482,83 @@
         DYNAMIC_TYPE_QSH          = 86,
         DYNAMIC_TYPE_SALT         = 87,
         DYNAMIC_TYPE_HASH_TMP     = 88,
+        DYNAMIC_TYPE_BLOB         = 89,
+        DYNAMIC_TYPE_NAME_ENTRY   = 90,
 	};
 
 	/* max error buffer string size */
-	enum {
-	    WOLFSSL_MAX_ERROR_SZ = 80
-	};
+    #ifndef WOLFSSL_MAX_ERROR_SZ
+	    #define WOLFSSL_MAX_ERROR_SZ 80
+    #endif
 
 	/* stack protection */
 	enum {
 	    MIN_STACK_BUFFER = 8
 	};
 
+
+    /* Algorithm Types */
+    enum wc_AlgoType {
+        WC_ALGO_TYPE_NONE = 0,
+        WC_ALGO_TYPE_HASH = 1,
+        WC_ALGO_TYPE_CIPHER = 2,
+        WC_ALGO_TYPE_PK = 3,
+
+        WC_ALGO_TYPE_MAX = WC_ALGO_TYPE_PK
+    };
+
+    /* hash types */
+    enum wc_HashType {
+        WC_HASH_TYPE_NONE = 0,
+        WC_HASH_TYPE_MD2 = 1,
+        WC_HASH_TYPE_MD4 = 2,
+        WC_HASH_TYPE_MD5 = 3,
+        WC_HASH_TYPE_SHA = 4, /* SHA-1 (not old SHA-0) */
+        WC_HASH_TYPE_SHA224 = 5,
+        WC_HASH_TYPE_SHA256 = 6,
+        WC_HASH_TYPE_SHA384 = 7,
+        WC_HASH_TYPE_SHA512 = 8,
+        WC_HASH_TYPE_MD5_SHA = 9,
+        WC_HASH_TYPE_SHA3_224 = 10,
+        WC_HASH_TYPE_SHA3_256 = 11,
+        WC_HASH_TYPE_SHA3_384 = 12,
+        WC_HASH_TYPE_SHA3_512 = 13,
+        WC_HASH_TYPE_BLAKE2B = 14,
+
+        WC_HASH_TYPE_MAX = WC_HASH_TYPE_BLAKE2B
+    };
+
+    /* cipher types */
+    enum wc_CipherType {
+        WC_CIPHER_NONE = 0,
+        WC_CIPHER_AES = 1,
+        WC_CIPHER_AES_CBC = 2,
+        WC_CIPHER_AES_GCM = 3,
+        WC_CIPHER_AES_CTR = 4,
+        WC_CIPHER_AES_XTS = 5,
+        WC_CIPHER_AES_CFB = 6,
+        WC_CIPHER_DES3 = 7,
+        WC_CIPHER_DES = 8,
+        WC_CIPHER_CHACHA = 9,
+        WC_CIPHER_HC128 = 10,
+        WC_CIPHER_IDEA = 11,
+
+        WC_CIPHER_MAX = WC_CIPHER_HC128
+    };
+
+    /* PK=public key (asymmetric) based algorithms */
+    enum wc_PkType {
+        WC_PK_TYPE_NONE = 0,
+        WC_PK_TYPE_RSA = 1,
+        WC_PK_TYPE_DH = 2,
+        WC_PK_TYPE_ECDH = 3,
+        WC_PK_TYPE_ECDSA_SIGN = 4,
+        WC_PK_TYPE_ECDSA_VERIFY = 5,
+        WC_PK_TYPE_ED25519 = 6,
+        WC_PK_TYPE_CURVE25519 = 7,
+
+        WC_PK_TYPE_MAX = WC_PK_TYPE_CURVE25519
+    };
 
 
 	/* settings detection for compile vs runtime math incompatibilities */
@@ -472,7 +580,7 @@
 	#elif defined(USE_FAST_MATH) && defined(SIZEOF_LONG_LONG) && (SIZEOF_LONG_LONG == 4)
 	    CTC_SETTINGS = 0x40
 	#else
-	    #error "bad math long / long long settings"
+	    //#error "bad math long / long long settings"
 	#endif
 	};
 
@@ -577,6 +685,29 @@
     #else
         #define EXIT_TEST(ret) return ret
     #endif
+
+
+    #if defined(__GNUC__)
+        #define WOLFSSL_PACK __attribute__ ((packed))
+    #else
+        #define WOLFSSL_PACK
+    #endif
+
+    #ifndef __GNUC_PREREQ
+        #if defined(__GNUC__) && defined(__GNUC_MINOR__)
+            #define __GNUC_PREREQ(maj, min) \
+                ((__GNUC__ << 16) + __GNUC_MINOR__ >= ((maj) << 16) + (min))
+        #else
+            #define __GNUC_PREREQ(maj, min) (0) /* not GNUC */
+        #endif
+    #endif
+
+    #if defined(__GNUC__)
+        #define WC_NORETURN __attribute__((noreturn))
+    #else
+        #define WC_NORETURN
+    #endif
+
 
 	#ifdef __cplusplus
 	    }   /* extern "C" */

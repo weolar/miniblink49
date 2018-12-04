@@ -200,21 +200,21 @@ extern template class _CRTIMP
 extern template class _CRTIMP
     basic_string<char, char_traits<char>, allocator<char> > __cdecl operator+(
         const basic_string<char, char_traits<char>, allocator<char> >&, const char);
-extern template _CRTIMP bool __cdecl operator==(
+extern template /*_CRTIMP*/ bool __cdecl operator==(
         const basic_string<char, char_traits<char>, allocator<char> >&,
         const basic_string<char, char_traits<char>, allocator<char> >&);
-extern template _CRTIMP bool __cdecl operator==(
+extern template /*_CRTIMP*/ bool __cdecl operator==(
         const char *, const basic_string<char, char_traits<char>, allocator<char> >&);
-extern template _CRTIMP bool __cdecl operator==(
+extern template /*_CRTIMP*/ bool __cdecl operator==(
         const basic_string<char, char_traits<char>, allocator<char> >&, const char *);
-extern template _CRTIMP bool __cdecl operator!=(
+extern template /*_CRTIMP*/ bool __cdecl operator!=(
         const basic_string<char, char_traits<char>, allocator<char> >&,
         const basic_string<char, char_traits<char>, allocator<char> >&);
 extern template _CRTIMP bool __cdecl operator!=(
         const char *, const basic_string<char, char_traits<char>, allocator<char> >&);
-extern template _CRTIMP bool __cdecl operator!=(
+extern template /*_CRTIMP*/ bool __cdecl operator!=(
         const basic_string<char, char_traits<char>, allocator<char> >&, const char *);
-extern template _CRTIMP bool __cdecl operator<(
+extern template /*_CRTIMP*/ bool __cdecl operator<(
         const basic_string<char, char_traits<char>, allocator<char> >&,
         const basic_string<char, char_traits<char>, allocator<char> >&);
 extern template _CRTIMP bool __cdecl operator<(
@@ -275,21 +275,21 @@ extern template class _CRTIMP
 extern template class _CRTIMP
     basic_string<wchar_t, char_traits<wchar_t>, allocator<wchar_t> > __cdecl operator+(
         const basic_string<wchar_t, char_traits<wchar_t>, allocator<wchar_t> >&, const wchar_t);
-extern template _CRTIMP bool __cdecl operator==(
+extern template /*_CRTIMP*/ bool __cdecl operator==(
         const basic_string<wchar_t, char_traits<wchar_t>, allocator<wchar_t> >&,
         const basic_string<wchar_t, char_traits<wchar_t>, allocator<wchar_t> >&);
 extern template _CRTIMP bool __cdecl operator==(
         const wchar_t *, const basic_string<wchar_t, char_traits<wchar_t>, allocator<wchar_t> >&);
-extern template _CRTIMP bool __cdecl operator==(
+extern template /*_CRTIMP*/ bool __cdecl operator==(
         const basic_string<wchar_t, char_traits<wchar_t>, allocator<wchar_t> >&, const wchar_t *);
-extern template _CRTIMP bool __cdecl operator!=(
+extern template /*_CRTIMP*/ bool __cdecl operator!=(
         const basic_string<wchar_t, char_traits<wchar_t>, allocator<wchar_t> >&,
         const basic_string<wchar_t, char_traits<wchar_t>, allocator<wchar_t> >&);
 extern template _CRTIMP bool __cdecl operator!=(
         const wchar_t *, const basic_string<wchar_t, char_traits<wchar_t>, allocator<wchar_t> >&);
-extern template _CRTIMP bool __cdecl operator!=(
+extern template /*_CRTIMP*/ bool __cdecl operator!=(
         const basic_string<wchar_t, char_traits<wchar_t>, allocator<wchar_t> >&, const wchar_t *);
-extern template _CRTIMP bool __cdecl operator<(
+extern template /*_CRTIMP*/ bool __cdecl operator<(
         const basic_string<wchar_t, char_traits<wchar_t>, allocator<wchar_t> >&,
         const basic_string<wchar_t, char_traits<wchar_t>, allocator<wchar_t> >&);
 extern template _CRTIMP bool __cdecl operator<(

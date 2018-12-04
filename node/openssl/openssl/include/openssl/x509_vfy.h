@@ -524,7 +524,7 @@ int X509_LOOKUP_by_alias(X509_LOOKUP *ctx, int type, char *str, int len,
 int X509_LOOKUP_shutdown(X509_LOOKUP *ctx);
 
 # ifndef OPENSSL_NO_STDIO
-int X509_STORE_load_locations(X509_STORE *ctx,
+int openssl_X509_STORE_load_locations(X509_STORE *ctx,
                               const char *file, const char *dir);
 int X509_STORE_set_default_paths(X509_STORE *ctx);
 # endif

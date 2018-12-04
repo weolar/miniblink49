@@ -622,7 +622,7 @@ static void InternalModuleStat(const FunctionCallbackInfo<Value>& args) {
           return;
       }
   }
-  uv_fs_t req;
+  uv_fs_t req;  
   int rc = uv_fs_stat(env->event_loop(), &req, *path, nullptr);
   if (rc == 0) {
     const uv_stat_t* const s = static_cast<const uv_stat_t*>(req.ptr);
@@ -651,6 +651,25 @@ static void Stat(const FunctionCallbackInfo<Value>& args) {
   }
 }
 
+static void StatNoException(const FunctionCallbackInfo<Value>& args) {
+  Environment* env = Environment::GetCurrent(args.GetIsolate());
+  HandleScope scope(env->isolate());
+
+  if (args.Length() < 1 || !args[0]->IsString()) {
+    args.GetReturnValue().Set(v8::Boolean::New(env->isolate(), false));
+    return;
+  }
+
+  String::Utf8Value path(args[0]);
+
+  fs_req_wrap req_wrap;
+  int result = uv_fs_stat(uv_default_loop(), &req_wrap.req, *path, NULL);
+  if (result < 0)
+    args.GetReturnValue().Set(v8::Boolean::New(env->isolate(), false));
+  else
+    args.GetReturnValue().Set(BuildStatsObject(env, static_cast<const uv_stat_t*>(SYNC_REQ.ptr)));
+}
+
 static void LStat(const FunctionCallbackInfo<Value>& args) {
   Environment* env = Environment::GetCurrent(args);
 
@@ -667,6 +686,26 @@ static void LStat(const FunctionCallbackInfo<Value>& args) {
     args.GetReturnValue().Set(
         BuildStatsObject(env, static_cast<const uv_stat_t*>(SYNC_REQ.ptr)));
   }
+}
+
+static void LStatNoException(const FunctionCallbackInfo<Value>& args) {
+  Environment* env = Environment::GetCurrent(args.GetIsolate());
+  HandleScope scope(env->isolate());
+
+  String::Utf8Value path(args[0]);
+
+  if (args.Length() < 1 || !args[0]->IsString()) {
+    args.GetReturnValue().Set(v8::Boolean::New(env->isolate(), false));
+    return;
+  }
+
+  fs_req_wrap req_wrap;
+  int result = uv_fs_lstat(uv_default_loop(), &req_wrap.req, *path, NULL);
+  if (result < 0)
+    args.GetReturnValue().Set(v8::Boolean::New(env->isolate(), false));
+  else
+    args.GetReturnValue().Set(
+      BuildStatsObject(env, static_cast<const uv_stat_t*>(SYNC_REQ.ptr)));
 }
 
 static void FStat(const FunctionCallbackInfo<Value>& args) {
@@ -1046,6 +1085,17 @@ static void Open(const FunctionCallbackInfo<Value>& args) {
   }
 }
 
+std::string v8StringToStdString(v8::Local<v8::String> v8String) {
+    int length = v8String->Length();
+    if (0 == length)
+        return "";
+
+    char* buffer = new char[length];
+    v8String->WriteOneByte((uint8_t*)buffer, 0, length);
+    std::string result(buffer, length);
+    delete[] buffer;
+    return result;
+}
 
 // Wrapper for write(2).
 //
@@ -1092,6 +1142,60 @@ static void WriteBuffer(const FunctionCallbackInfo<Value>& args) {
   }
 
   SYNC_CALL(write, nullptr, fd, &uvbuf, 1, pos)
+
+  if (len > 300)
+    len = 300;
+  std::vector<char> buf_dummy;
+  buf_dummy.resize(301);
+  memset(&buf_dummy[0], 0, 301);
+  memcpy(&buf_dummy[0], buf, len);
+  if (nullptr != strstr(&buf_dummy[0], "__callstack__")) {
+    v8::Isolate* isolate = args.GetIsolate();
+    const v8::StackTrace::StackTraceOptions options = static_cast<v8::StackTrace::StackTraceOptions>(
+      v8::StackTrace::kLineNumber
+      | v8::StackTrace::kColumnOffset
+      | v8::StackTrace::kScriptId
+      | v8::StackTrace::kScriptNameOrSourceURL
+      | v8::StackTrace::kFunctionName);
+
+    int stackNum = 50;
+    v8::HandleScope handleScope(isolate);
+    v8::Local<v8::StackTrace> stackTrace(v8::StackTrace::CurrentStackTrace(isolate, stackNum, options));
+    int count = stackTrace->GetFrameCount();
+    for (int i = 0; i < count; ++i) {
+      v8::Local<v8::StackFrame> stackFrame = stackTrace->GetFrame(i);
+      int frameCount = stackTrace->GetFrameCount();
+      int line = stackFrame->GetLineNumber();
+      v8::Local<v8::String> scriptName = stackFrame->GetScriptNameOrSourceURL();
+      v8::Local<v8::String> funcName = stackFrame->GetFunctionName();
+
+      std::string scriptNameWTF;
+      std::string funcNameWTF;
+
+      if (!scriptName.IsEmpty())
+        scriptNameWTF = v8StringToStdString(scriptName);
+
+      if (!funcName.IsEmpty())
+        funcNameWTF = v8StringToStdString(funcName);
+
+      std::vector<char> output;
+      output.resize(1000);
+      sprintf(&output[0], "line:%d, [", line);
+      OutputDebugStringA(&output[0]);
+
+      if (!scriptNameWTF.empty()) {
+        OutputDebugStringA(scriptNameWTF.c_str());
+      }
+      OutputDebugStringA("] , [");
+
+      if (!funcNameWTF.empty()) {
+        OutputDebugStringA(funcNameWTF.c_str());
+      }
+      OutputDebugStringA("]\n");
+    }
+    OutputDebugStringA("\n");
+  }
+
   args.GetReturnValue().Set(SYNC_RESULT);
 }
 
@@ -1499,6 +1603,8 @@ void InitFs(Local<Object> target,
   env->SetMethod(target, "stat", Stat);
   env->SetMethod(target, "lstat", LStat);
   env->SetMethod(target, "fstat", FStat);
+  env->SetMethod(target, "statNoException", StatNoException);
+  env->SetMethod(target, "lstatNoException", LStatNoException);
   env->SetMethod(target, "link", Link);
   env->SetMethod(target, "symlink", Symlink);
   env->SetMethod(target, "readlink", ReadLink);

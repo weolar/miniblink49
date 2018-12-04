@@ -33,9 +33,9 @@
 #include "third_party/WebKit/Source/web/WebPluginContainerImpl.h"
 #include "third_party/WebKit/Source/core/frame/FrameView.h"
 #include "third_party/WebKit/Source/platform/graphics/Image.h"
+#include "third_party/WebKit/Source/wtf/Functional.h"
 #include "third_party/WebKit/public/platform/Platform.h"
 #include "third_party/WebKit/public/web/WebInputEvent.h"
-#include "third_party/WebKit/Source/wtf/Functional.h"
 #include "skia/ext/bitmap_platform_device_win.h"
 #include "skia/ext/platform_canvas.h"
 
@@ -590,7 +590,8 @@ bool WebPluginImpl::handleMouseEvent(const blink::WebMouseEvent& evt)
     NPEvent npEvent;
 
     //blink::IntPoint p = contentsToNativeWindow(m_pluginContainer, blink::IntPoint(evt.x, evt.y));
-    blink::IntPoint p(evt.x, evt.y);
+    blink::IntPoint documentScrollOffsetRelativeToViewOrigin;// = contentsToNativeWindow(m_pluginContainer, blink::IntPoint());
+    blink::IntPoint p(evt.windowX - documentScrollOffsetRelativeToViewOrigin.x(), evt.windowY - documentScrollOffsetRelativeToViewOrigin.y());
 
     npEvent.lParam = MAKELPARAM(p.x(), p.y());
     npEvent.wParam = 0;
@@ -642,6 +643,10 @@ bool WebPluginImpl::handleMouseEvent(const blink::WebMouseEvent& evt)
             npEvent.event = WM_RBUTTONUP;
             break;
         }
+    } else if (evt.type == blink::WebInputEvent::Type::MouseWheel) {
+        const blink::WebMouseWheelEvent& wheelEvt = static_cast<const blink::WebMouseWheelEvent&>(evt);
+        npEvent.event = WM_MOUSEWHEEL;
+        npEvent.wParam = MAKEWPARAM(wheelEvt.deltaX, wheelEvt.deltaY);
     } else
         return isDefaultHandled;
 
@@ -688,7 +693,7 @@ bool WebPluginImpl::handleInputEvent(const blink::WebInputEvent& evt, blink::Web
     if (m_isWindowed)
         return false;
 
-    if (blink::WebInputEvent::isMouseEventType(evt.type))
+    if (blink::WebInputEvent::isMouseEventType(evt.type) || blink::WebInputEvent::MouseWheel == evt.type)
         return handleMouseEvent(static_cast<const blink::WebMouseEvent&>(evt));
 
     if (blink::WebInputEvent::isKeyboardEventType(evt.type))
@@ -713,9 +718,17 @@ void WebPluginImpl::paintIntoTransformedContext(HDC hdc)
     //IntRect r = contentsToNativeWindow(m_pluginContainer, container->frameRect());
     blink::IntPoint documentScrollOffsetRelativeToViewOrigin = contentsToNativeWindow(m_pluginContainer, blink::IntPoint());
     blink::IntRect r = container->frameRect();
+    blink::IntRect frameRect = container->frameRect();
 
-    windowpos.x = 0; // r.x();
-    windowpos.y = 0; // r.y();
+    // WM_WINDOWPOSCHANGED 存滚动的位置，setNPWindowRect设置原始位置
+    // WM_WINDOWPOSCHANGED是给鼠标键盘消息定位用的，表示flash在原生窗口中的位置
+    // setNPWindowRect表示绘制的目标在HDC的哪个坐标开始
+    r.setX(documentScrollOffsetRelativeToViewOrigin.x());
+    r.setY(documentScrollOffsetRelativeToViewOrigin.y());
+
+    windowpos.x = r.x();
+    windowpos.y = r.y();
+    
     windowpos.cx = r.width();
     windowpos.cy = r.height();
 
@@ -726,7 +739,7 @@ void WebPluginImpl::paintIntoTransformedContext(HDC hdc)
 
     dispatchNPEvent(npEvent);
 
-    setNPWindowRect(container->frameRect());
+    setNPWindowRect(frameRect);
 
     npEvent.event = WM_PAINT;
     npEvent.wParam = reinterpret_cast<uintptr_t>(hdc);
@@ -798,25 +811,40 @@ void WebPluginImpl::paint(blink::WebCanvas* canvas, const blink::WebRect& rect)
         return;
     }
 
-    HDC hMemoryDC = skia::BeginPlatformPaint(m_memoryCanvas);
+    if (!m_memoryCanvas || !canvas) // start()里有可能这两其中一个为nullptr，看打开哪个宏
+        return;
+
+    SkPaint clearPaint;
+    clearPaint.setARGB(0xff, 0xFF, 0xFF, 0xFF);
+    clearPaint.setXfermodeMode(SkXfermode::kClear_Mode);
+
+    SkRect skrc;
+    blink::IntRect r = container->frameRect();
+    skrc.set(0, 0, r.width(), r.height());
+    m_memoryCanvas->drawRect(skrc, clearPaint);
+
+    HDC hMemoryDC = skia::BeginPlatformPaint(m_parentWidget, m_memoryCanvas);
 
     // On Safari/Windows without transparency layers the GraphicsContext returns the HDC
     // of the window and the plugin expects that the passed in DC has window coordinates.
-    //if (!context.isInTransparencyLayer()) {
-//         XFORM transform;
-//         GetWorldTransform(hMemoryDC, &transform);
-//         transform.eDx = -m_windowRect.x();
-//         transform.eDy = -m_windowRect.y();
-//         SetWorldTransform(hMemoryDC, &transform);
-    //}
+    XFORM originalTransform;
+    XFORM transform;
+    ::GetWorldTransform(hMemoryDC, &originalTransform);
+    transform = originalTransform;
+    transform.eDx = -r.x();
+    transform.eDy = -r.y();
+    ::SetWorldTransform(hMemoryDC, &transform);
 
     paintIntoTransformedContext(hMemoryDC);
+
+    ::SetWorldTransform(hMemoryDC, &originalTransform);
     skia::EndPlatformPaint(m_memoryCanvas);
 
     SkBaseDevice* bitmapDevice = skia::GetTopDevice(*m_memoryCanvas);
     const SkBitmap& bitmap = bitmapDevice->accessBitmap(false);
     
-    canvas->drawBitmap(bitmap, m_windowRect.x(), m_windowRect.y());
+    if (canvas != m_memoryCanvas)
+        canvas->drawBitmap(bitmap, m_windowRect.x(), m_windowRect.y());
 }
 
 void WebPluginImpl::setNPWindowRect(const IntRect& rect)
@@ -825,16 +853,13 @@ void WebPluginImpl::setNPWindowRect(const IntRect& rect)
         return;
 
     WebPluginContainerImpl* container = (WebPluginContainerImpl*)m_pluginContainer;
-    if (!container->parent())
-        return;
-
-    FrameView* frameView = toFrameView(container->parent());
-    if (!frameView)
+    if (!container)
         return;
 
     IntPoint p = container->localToRootFramePoint(rect.location());
-    m_npWindow.x = 0; // rect.x(); // windowless模式是直接画在0，0点的独立canvas
-    m_npWindow.y = 0; // rect.y();
+    // windowless模式是直接画在rect.x，rect.y点的独立canvas
+    m_npWindow.x = rect.x();
+    m_npWindow.y = rect.y();
 
     m_npWindow.width = rect.width();
     m_npWindow.height = rect.height();
@@ -845,7 +870,6 @@ void WebPluginImpl::setNPWindowRect(const IntRect& rect)
     m_npWindow.clipRect.top = 0;
 
     if (m_plugin->pluginFuncs()->setwindow) {
-        //JSC::JSLock::DropAllLocks dropAllLocks(JSDOMWindowBase::commonVM());
         setCallingPlugin(true);
         m_plugin->pluginFuncs()->setwindow(m_instance, &m_npWindow);
         setCallingPlugin(false);
@@ -906,7 +930,7 @@ bool WebPluginImpl::platformGetValue(NPNVariable variable, void* value, NPError*
     switch (variable) {
         case NPNVnetscapeWindow: {
             HWND* w = reinterpret_cast<HWND*>(value);
-            *w = windowHandleForPageClient(platformPluginWidget());
+            *w = windowHandleForPageClient(platformPluginWidget() ? platformPluginWidget() : parentPlatformPluginWidget());
             *result = NPERR_NO_ERROR;
             return true;
         }
@@ -981,12 +1005,17 @@ void WebPluginImpl::forceRedraw()
 {
     if (m_isWindowed)
         ::UpdateWindow(platformPluginWidget());
-//      else
-//         ::UpdateWindow(windowHandleForPageClient(parent() ? parent()->hostWindow()->platformPageClient() : 0));
+#if 0
+     else
+        ::UpdateWindow(windowHandleForPageClient(parent() ? parent()->hostWindow()->platformPageClient() : 0));
+#endif
 }
 
-void WebPluginImpl::platformStartAsyn(blink::Timer<WebPluginImpl>*)
+void WebPluginImpl::platformStartImpl(bool isSync)
 {
+    if (m_asynStartTask)
+        m_asynStartTask = nullptr;
+
     WebPluginContainerImpl* container = (WebPluginContainerImpl*)m_pluginContainer;
     if (!container)
         return;
@@ -1003,7 +1032,7 @@ void WebPluginImpl::platformStartAsyn(blink::Timer<WebPluginImpl>*)
         HWND window = ::CreateWindowEx(0, kWebPluginViewClassName, 0, flags,
             0, 0, 0, 0, parentWindowHandle, 0, /*WebCore::instanceHandle()*/nullptr, 0);
 
-        setPlatformWidget(window);
+        setPlatformPluginWidget(window);
 
         // Calling SetWindowLongPtrA here makes the window proc ASCII, which is required by at least
         // the Shockwave Director plug-in.
@@ -1023,19 +1052,43 @@ void WebPluginImpl::platformStartAsyn(blink::Timer<WebPluginImpl>*)
     
     updatePluginWidget(m_windowRect, m_clipRect);
 
-    if (!m_plugin->quirks().contains(PluginQuirkDeferFirstSetWindowCall))
-        setNPWindowRect(container->frameRect());
+    if (!isSync && !m_plugin->quirks().contains(PluginQuirkDeferFirstSetWindowCall)) {
+        IntRect r = container->frameRect();
+        paint(m_memoryCanvas, r);
+    }
+}
+
+#define USING_ASYNC_START 1
+
+void WebPluginImpl::PlatformStartAsynTask::didProcessTask()
+{
+#if USING_ASYNC_START
+    if (m_parentPtr)
+        m_parentPtr->platformStartImpl(false);
+#else
+    if (m_parentPtr) {
+        IntRect r(0, 0, 1, 1);
+        m_parentPtr->paint(m_parentPtr->m_memoryCanvas, r);
+    }
+#endif
+    blink::Platform::current()->currentThread()->removeTaskObserver(this);
+    delete this;
 }
 
 bool WebPluginImpl::platformStart()
 {
     ASSERT(m_isStarted);
     ASSERT(m_status == PluginStatusLoadedSuccessfully);
-    WebPluginContainerImpl* container = (WebPluginContainerImpl*)m_pluginContainer;
-    if (!container)
-        return false;
 
-    m_asynStartTimer.startOneShot(0, FROM_HERE);
+#if USING_ASYNC_START == 0
+    // 淘宝npaliedit控件需要同步调用，否则会因为setwindow没被调用到而在namedPropertyGetterCustom里崩溃
+    platformStartImpl(true);
+#else
+    if (m_asynStartTask)
+        return false;
+    m_asynStartTask = new PlatformStartAsynTask(this);
+    blink::Platform::current()->currentThread()->addTaskObserver(m_asynStartTask);
+#endif
 
     return true;
 }
@@ -1068,10 +1121,10 @@ void WebPluginImpl::platformDestroy()
 
     blink::Platform::current()->currentThread()->postTask(FROM_HERE, WTF::bind(platformDestroyWindow, widget));
 
-    ++CheckReEnter::s_kEnterContent;
+    CheckReEnter::incrementEnterCount();
     ::ShowWindow(widget, SW_HIDE);
     setPlatformPluginWidget(0);
-    --CheckReEnter::s_kEnterContent;
+    CheckReEnter::decrementEnterCount();
 }
 
 PassRefPtr<Image> WebPluginImpl::snapshot()

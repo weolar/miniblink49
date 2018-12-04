@@ -7,6 +7,12 @@
     <Filter Include="include">
       <UniqueIdentifier>{f94efebc-4530-40dc-8339-739bad2e97c5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="brotli">
+      <UniqueIdentifier>{947533f8-c893-4704-9677-16cd32188d77}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="brotli\dec">
+      <UniqueIdentifier>{fbd48b5c-55f6-4b85-b3ef-1e16f64d798f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -111,6 +117,39 @@
     <ClInclude Include="..\..\third_party\ots\include\opentype-sanitiser.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\third_party\brotli\dec\dictionary.h">
+      <Filter>brotli\dec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\brotli\dec\huffman.h">
+      <Filter>brotli\dec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\brotli\dec\port.h">
+      <Filter>brotli\dec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\brotli\dec\prefix.h">
+      <Filter>brotli\dec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\brotli\dec\state.h">
+      <Filter>brotli\dec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\brotli\dec\streams.h">
+      <Filter>brotli\dec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\brotli\dec\transform.h">
+      <Filter>brotli\dec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\brotli\dec\types.h">
+      <Filter>brotli\dec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\brotli\dec\bit_reader.h">
+      <Filter>brotli\dec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\brotli\dec\context.h">
+      <Filter>brotli\dec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\brotli\dec\decode.h">
+      <Filter>brotli\dec</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\third_party\ots\src\vdmx.cc">
@@ -202,6 +241,27 @@
     </ClCompile>
     <ClCompile Include="..\..\third_party\ots\src\prep.cc">
       <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\ots\src\woff2.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\brotli\dec\dictionary.c">
+      <Filter>brotli\dec</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\brotli\dec\huffman.c">
+      <Filter>brotli\dec</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\brotli\dec\state.c">
+      <Filter>brotli\dec</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\brotli\dec\streams.c">
+      <Filter>brotli\dec</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\brotli\dec\bit_reader.c">
+      <Filter>brotli\dec</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\brotli\dec\decode.c">
+      <Filter>brotli\dec</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -21,6 +21,16 @@
 #include "libcef/common/CefTaskImpl.h"
 #include "content/browser/WebPage.h"
 
+int64 CefFrameHostImpl::GetFrameIdByBlinkFrame(const blink::WebFrame* frame) {
+    if (!frame)
+        return content::WebPage::kInvalidFrameId;
+
+    blink::Frame* blinkFrame = blink::toCoreFrame(frame);
+    if (!blinkFrame)
+        return content::WebPage::kInvalidFrameId;
+    return blinkFrame->frameID();
+}
+
 int64 CefFrameHostImpl::GetFrameIdByBlinkFrame(const blink::WebLocalFrame* frame) {
     if (!frame)
         return content::WebPage::kInvalidFrameId;

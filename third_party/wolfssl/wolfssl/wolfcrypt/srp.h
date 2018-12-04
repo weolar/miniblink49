@@ -1,6 +1,6 @@
 /* srp.h
  *
- * Copyright (C) 2006-2016 wolfSSL Inc.
+ * Copyright (C) 2006-2017 wolfSSL Inc.
  *
  * This file is part of wolfSSL.
  *
@@ -19,6 +19,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1335, USA
  */
 
+/*!
+    \file wolfssl/wolfcrypt/srp.h
+*/
 
 #ifdef WOLFCRYPT_HAVE_SRP
 
@@ -37,13 +40,13 @@
 
 /* Select the largest available hash for the buffer size. */
 #if defined(WOLFSSL_SHA512)
-    #define SRP_MAX_DIGEST_SIZE SHA512_DIGEST_SIZE
+    #define SRP_MAX_DIGEST_SIZE WC_SHA512_DIGEST_SIZE
 #elif defined(WOLFSSL_SHA384)
-    #define SRP_MAX_DIGEST_SIZE SHA384_DIGEST_SIZE
+    #define SRP_MAX_DIGEST_SIZE WC_SHA384_DIGEST_SIZE
 #elif !defined(NO_SHA256)
-    #define SRP_MAX_DIGEST_SIZE SHA256_DIGEST_SIZE
+    #define SRP_MAX_DIGEST_SIZE WC_SHA256_DIGEST_SIZE
 #elif !defined(NO_SHA)
-    #define SRP_MAX_DIGEST_SIZE SHA_DIGEST_SIZE
+    #define SRP_MAX_DIGEST_SIZE WC_SHA_DIGEST_SIZE
 #else
     #error "You have to have some kind of SHA hash if you want to use SRP."
 #endif
@@ -53,6 +56,9 @@
 
 /* Set the minimum number of bits acceptable for private keys (RFC 5054) */
 #define SRP_PRIVATE_KEY_MIN_BITS 256
+
+/* salt size for SRP password */
+#define SRP_SALT_SIZE  16
 
 /**
  * SRP side, client or server.
@@ -72,6 +78,7 @@ typedef enum {
         SRP_TYPE_SHA512 = 4,
 } SrpType;
 
+
 /**
  * SRP hash struct.
  */
@@ -79,16 +86,16 @@ typedef struct {
     byte type;
     union {
         #ifndef NO_SHA
-            Sha sha;
+            wc_Sha sha;
         #endif
         #ifndef NO_SHA256
-            Sha256 sha256;
+            wc_Sha256 sha256;
         #endif
         #ifdef WOLFSSL_SHA384
-            Sha384 sha384;
+            wc_Sha384 sha384;
         #endif
         #ifdef WOLFSSL_SHA512
-            Sha512 sha512;
+            wc_Sha512 sha512;
         #endif
     } data;
 } SrpHash;

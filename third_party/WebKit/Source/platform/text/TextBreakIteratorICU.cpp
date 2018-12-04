@@ -556,7 +556,7 @@ TextBreakIterator* breakType##BreakIterator(const UChar* string, int length)    
 TextBreakIterator* breakType##BreakIterator(const LChar* string, int length)                         \
 {                                                                                                    \
     String stringL(string, length);                                                                  \
-    Vector<UChar> stringU = WTF::ensureUTF16UChar(stringL, false);                                          \
+    Vector<UChar> stringU = WTF::ensureUTF16UChar(stringL, false);                                   \
     breakType##BreakIterator(stringU.data(), stringU.size());                                        \
     return nullptr;                                                                                  \
 }                                                                                                    \

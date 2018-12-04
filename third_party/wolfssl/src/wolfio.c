@@ -1,6 +1,6 @@
 /* wolfio.c
  *
- * Copyright (C) 2006-2016 wolfSSL Inc.
+ * Copyright (C) 2006-2017 wolfSSL Inc.
  *
  * This file is part of wolfSSL.
  *
@@ -46,7 +46,7 @@
 Possible IO enable options:
  * WOLFSSL_USER_IO:     Disables default Embed* callbacks and     default: off
                         allows user to define their own using
-                        wolfSSL_SetIORecv and wolfSSL_SetIOSend
+                        wolfSSL_CTX_SetIORecv and wolfSSL_CTX_SetIOSend
  * USE_WOLFSSL_IO:      Enables the wolfSSL IO functions          default: off
  * HAVE_HTTP_CLIENT:    Enables HTTP client API's                 default: off
                                      (unless HAVE_OCSP or HAVE_CRL_IO defined)
@@ -88,7 +88,7 @@ static INLINE int TranslateReturnCode(int old, int sd)
     return old;
 }
 
-static INLINE int LastError(void)
+static INLINE int wolfSSL_LastError(void)
 {
 #ifdef USE_WINDOWS_API
     return WSAGetLastError();
@@ -102,6 +102,88 @@ static INLINE int LastError(void)
 #endif /* USE_WOLFSSL_IO || HAVE_HTTP_CLIENT */
 
 
+#ifdef OPENSSL_EXTRA
+/* Use the WOLFSSL read BIO for receiving data. This is set by the function
+ * wolfSSL_set_bio and can also be set by wolfSSL_CTX_SetIORecv.
+ *
+ * ssl  WOLFSSL struct passed in that has this function set as the receive
+ *      callback.
+ * buf  buffer to fill with data read
+ * sz   size of buf buffer
+ * ctx  a user set context
+ *
+ * returns the amount of data read or want read. See WOLFSSL_CBIO_ERR_* values.
+ */
+int BioReceive(WOLFSSL* ssl, char* buf, int sz, void* ctx)
+{
+    int recvd = WOLFSSL_CBIO_ERR_GENERAL;
+
+    WOLFSSL_ENTER("BioReceive");
+
+    if (ssl->biord == NULL) {
+        WOLFSSL_MSG("WOLFSSL biord not set");
+        return WOLFSSL_CBIO_ERR_GENERAL;
+    }
+
+    switch (ssl->biord->type) {
+        case WOLFSSL_BIO_MEMORY:
+            if (wolfSSL_BIO_ctrl_pending(ssl->biord) == 0) {
+               return WOLFSSL_CBIO_ERR_WANT_READ;
+            }
+            recvd = wolfSSL_BIO_read(ssl->biord, buf, sz);
+            if (recvd <= 0) {
+                return WOLFSSL_CBIO_ERR_GENERAL;
+            }
+            break;
+
+       default:
+            WOLFSSL_MSG("This BIO type is unknown / unsupported");
+            return WOLFSSL_CBIO_ERR_GENERAL;
+    }
+
+    (void)ctx;
+    return recvd;
+}
+
+
+/* Use the WOLFSSL write BIO for sending data. This is set by the function
+ * wolfSSL_set_bio and can also be set by wolfSSL_CTX_SetIOSend.
+ *
+ * ssl  WOLFSSL struct passed in that has this function set as the send callback.
+ * buf  buffer with data to write out
+ * sz   size of buf buffer
+ * ctx  a user set context
+ *
+ * returns the amount of data sent or want send. See WOLFSSL_CBIO_ERR_* values.
+ */
+int BioSend(WOLFSSL* ssl, char *buf, int sz, void *ctx)
+{
+    int sent = WOLFSSL_CBIO_ERR_GENERAL;
+
+    if (ssl->biowr == NULL) {
+        WOLFSSL_MSG("WOLFSSL biowr not set\n");
+        return WOLFSSL_CBIO_ERR_GENERAL;
+    }
+
+    switch (ssl->biowr->type) {
+        case WOLFSSL_BIO_MEMORY:
+            sent = wolfSSL_BIO_write(ssl->biowr, buf, sz);
+            if (sent < 0) {
+                return WOLFSSL_CBIO_ERR_GENERAL;
+            }
+            break;
+
+        default:
+            WOLFSSL_MSG("This BIO type is unknown / unsupported");
+            return WOLFSSL_CBIO_ERR_GENERAL;
+    }
+    (void)ctx;
+
+    return sent;
+}
+#endif
+
+
 #ifdef USE_WOLFSSL_IO
 
 /* The receive embedded callback
@@ -112,41 +194,14 @@ int EmbedReceive(WOLFSSL *ssl, char *buf, int sz, void *ctx)
     int sd = *(int*)ctx;
     int recvd;
 
-#ifdef WOLFSSL_DTLS
-    {
-        int dtls_timeout = wolfSSL_dtls_get_current_timeout(ssl);
-        if (wolfSSL_dtls(ssl)
-                     && !wolfSSL_get_using_nonblock(ssl)
-                     && dtls_timeout != 0) {
-            #ifdef USE_WINDOWS_API
-                DWORD timeout = dtls_timeout * 1000;
-            #else
-                struct timeval timeout;
-                XMEMSET(&timeout, 0, sizeof(timeout));
-                timeout.tv_sec = dtls_timeout;
-            #endif
-            if (setsockopt(sd, SOL_SOCKET, SO_RCVTIMEO, (char*)&timeout,
-                           sizeof(timeout)) != 0) {
-                WOLFSSL_MSG("setsockopt rcvtimeo failed");
-            }
-        }
-    }
-#endif
-
     recvd = wolfIO_Recv(sd, buf, sz, ssl->rflags);
     if (recvd < 0) {
-        int err = LastError();
+        int err = wolfSSL_LastError();
         WOLFSSL_MSG("Embed Receive error");
 
         if (err == SOCKET_EWOULDBLOCK || err == SOCKET_EAGAIN) {
-            if (!wolfSSL_dtls(ssl) || wolfSSL_get_using_nonblock(ssl)) {
-                WOLFSSL_MSG("\tWould block");
-                return WOLFSSL_CBIO_ERR_WANT_READ;
-            }
-            else {
-                WOLFSSL_MSG("\tSocket timeout");
-                return WOLFSSL_CBIO_ERR_TIMEOUT;
-            }
+            WOLFSSL_MSG("\tWould block");
+            return WOLFSSL_CBIO_ERR_WANT_READ;
         }
         else if (err == SOCKET_ECONNRESET) {
             WOLFSSL_MSG("\tConnection reset");
@@ -155,10 +210,6 @@ int EmbedReceive(WOLFSSL *ssl, char *buf, int sz, void *ctx)
         else if (err == SOCKET_EINTR) {
             WOLFSSL_MSG("\tSocket interrupted");
             return WOLFSSL_CBIO_ERR_ISR;
-        }
-        else if (err == SOCKET_ECONNREFUSED) {
-            WOLFSSL_MSG("\tConnection refused");
-            return WOLFSSL_CBIO_ERR_WANT_READ;
         }
         else if (err == SOCKET_ECONNABORTED) {
             WOLFSSL_MSG("\tConnection aborted");
@@ -187,7 +238,7 @@ int EmbedSend(WOLFSSL* ssl, char *buf, int sz, void *ctx)
 
     sent = wolfIO_Send(sd, buf, sz, ssl->wflags);
     if (sent < 0) {
-        int err = LastError();
+        int err = wolfSSL_LastError();
         WOLFSSL_MSG("Embed Send error");
 
         if (err == SOCKET_EWOULDBLOCK || err == SOCKET_EAGAIN) {
@@ -262,11 +313,11 @@ int EmbedReceiveFrom(WOLFSSL *ssl, char *buf, int sz, void *ctx)
     recvd = TranslateReturnCode(recvd, sd);
 
     if (recvd < 0) {
-        err = LastError();
+        err = wolfSSL_LastError();
         WOLFSSL_MSG("Embed Receive From error");
 
         if (err == SOCKET_EWOULDBLOCK || err == SOCKET_EAGAIN) {
-            if (wolfSSL_get_using_nonblock(ssl)) {
+            if (wolfSSL_dtls_get_using_nonblock(ssl)) {
                 WOLFSSL_MSG("\tWould block");
                 return WOLFSSL_CBIO_ERR_WANT_READ;
             }
@@ -325,7 +376,7 @@ int EmbedSendTo(WOLFSSL* ssl, char *buf, int sz, void *ctx)
     sent = TranslateReturnCode(sent, sd);
 
     if (sent < 0) {
-        err = LastError();
+        err = wolfSSL_LastError();
         WOLFSSL_MSG("Embed Send To error");
 
         if (err == SOCKET_EWOULDBLOCK || err == SOCKET_EAGAIN) {
@@ -373,11 +424,11 @@ int EmbedReceiveFromMcast(WOLFSSL *ssl, char *buf, int sz, void *ctx)
     recvd = TranslateReturnCode(recvd, sd);
 
     if (recvd < 0) {
-        err = LastError();
+        err = wolfSSL_LastError();
         WOLFSSL_MSG("Embed Receive From error");
 
         if (err == SOCKET_EWOULDBLOCK || err == SOCKET_EAGAIN) {
-            if (wolfSSL_get_using_nonblock(ssl)) {
+            if (wolfSSL_dtls_get_using_nonblock(ssl)) {
                 WOLFSSL_MSG("\tWould block");
                 return WOLFSSL_CBIO_ERR_WANT_READ;
             }
@@ -417,7 +468,7 @@ int EmbedGenerateCookie(WOLFSSL* ssl, byte *buf, int sz, void *ctx)
     int sd = ssl->wfd;
     SOCKADDR_S peer;
     XSOCKLENT peerSz = sizeof(peer);
-    byte digest[SHA256_DIGEST_SIZE];
+    byte digest[WC_SHA256_DIGEST_SIZE];
     int  ret = 0;
 
     (void)ctx;
@@ -432,8 +483,8 @@ int EmbedGenerateCookie(WOLFSSL* ssl, byte *buf, int sz, void *ctx)
     if (ret != 0)
         return ret;
 
-    if (sz > SHA256_DIGEST_SIZE)
-        sz = SHA256_DIGEST_SIZE;
+    if (sz > WC_SHA256_DIGEST_SIZE)
+        sz = WC_SHA256_DIGEST_SIZE;
     XMEMCPY(buf, digest, sz);
 
     return sz;
@@ -460,7 +511,7 @@ int EmbedGenerateCookie(WOLFSSL* ssl, byte *buf, int sz, void *ctx)
         /* get peer information stored in ssl struct */
         peerSz = sizeof(SOCKADDR_S);
         if ((ret = wolfSSL_dtls_get_peer(ssl, (void*)&peer, &peerSz))
-                                                               != SSL_SUCCESS) {
+                                                               != WOLFSSL_SUCCESS) {
             return ret;
         }
 
@@ -494,7 +545,7 @@ int EmbedGenerateCookie(WOLFSSL* ssl, byte *buf, int sz, void *ctx)
         ip[*ipSz - 1] = '\0'; /* make sure has terminator */
         *ipSz = (word16)XSTRLEN(ip);
 
-        return SSL_SUCCESS;
+        return WOLFSSL_SUCCESS;
     }
 
     /* set the peer information in human readable form (ip, port, family)
@@ -524,7 +575,7 @@ int EmbedGenerateCookie(WOLFSSL* ssl, byte *buf, int sz, void *ctx)
 
                 /* peer sa is free'd in SSL_ResourceFree */
                 if ((ret = wolfSSL_dtls_set_peer(ssl, (SOCKADDR_IN*)&addr,
-                                          sizeof(SOCKADDR_IN)))!= SSL_SUCCESS) {
+                                          sizeof(SOCKADDR_IN)))!= WOLFSSL_SUCCESS) {
                     WOLFSSL_MSG("Import DTLS peer info error");
                     return ret;
                 }
@@ -541,7 +592,7 @@ int EmbedGenerateCookie(WOLFSSL* ssl, byte *buf, int sz, void *ctx)
 
                 /* peer sa is free'd in SSL_ResourceFree */
                 if ((ret = wolfSSL_dtls_set_peer(ssl, (SOCKADDR_IN6*)&addr,
-                                         sizeof(SOCKADDR_IN6)))!= SSL_SUCCESS) {
+                                         sizeof(SOCKADDR_IN6)))!= WOLFSSL_SUCCESS) {
                     WOLFSSL_MSG("Import DTLS peer info error");
                     return ret;
                 }
@@ -553,7 +604,7 @@ int EmbedGenerateCookie(WOLFSSL* ssl, byte *buf, int sz, void *ctx)
                 return BUFFER_E;
         }
 
-        return SSL_SUCCESS;
+        return WOLFSSL_SUCCESS;
     }
 #endif /* WOLFSSL_SESSION_EXPORT */
 #endif /* WOLFSSL_DTLS */
@@ -933,7 +984,7 @@ static int wolfIO_HttpProcessResponseBuf(int sfd, byte **recvBuf, int* recvBufSz
     return 0;
 }
 
-int wolfIO_HttpProcessResponse(int sfd, const char* appStr,
+int wolfIO_HttpProcessResponse(int sfd, const char** appStrList,
     byte** respBuf, byte* httpBuf, int httpBufSz, int dynType, void* heap)
 {
     int result = 0;
@@ -1016,9 +1067,21 @@ int wolfIO_HttpProcessResponse(int sfd, const char* appStr,
                 case phr_have_length:
                 case phr_have_type:
                     if (XSTRNCASECMP(start, "Content-Type:", 13) == 0) {
+                        int i;
+
                         start += 13;
                         while (*start == ' ' && *start != '\0') start++;
-                        if (XSTRNCASECMP(start, appStr, XSTRLEN(appStr)) != 0) {
+
+                        /* try and match against appStrList */
+                        i = 0;
+                        while (appStrList[i] != NULL) {
+                            if (XSTRNCASECMP(start, appStrList[i],
+                                                XSTRLEN(appStrList[i])) == 0) {
+                                break;
+                            }
+                            i++;
+                        }
+                        if (appStrList[i] == NULL) {
                             WOLFSSL_MSG("wolfIO_HttpProcessResponse appstr mismatch");
                             return -1;
                         }
@@ -1168,7 +1231,12 @@ int wolfIO_HttpBuildRequestOcsp(const char* domainName, const char* path,
 int wolfIO_HttpProcessResponseOcsp(int sfd, byte** respBuf,
                                        byte* httpBuf, int httpBufSz, void* heap)
 {
-    return wolfIO_HttpProcessResponse(sfd, "application/ocsp-response",
+    const char* appStrList[] = {
+        "application/ocsp-response",
+        NULL
+    };
+
+    return wolfIO_HttpProcessResponse(sfd, appStrList,
         respBuf, httpBuf, httpBufSz, DYNAMIC_TYPE_OCSP, heap);
 }
 
@@ -1238,7 +1306,7 @@ int EmbedOcspLookup(void* ctx, const char* url, int urlSz,
                                                  HTTP_SCRATCH_BUFFER_SIZE, ctx);
             }
 
-            close(sfd);
+            CloseSocket(sfd);
             XFREE(httpBuf, ctx, DYNAMIC_TYPE_OCSP);
         }
     }
@@ -1277,10 +1345,16 @@ int wolfIO_HttpProcessResponseCrl(WOLFSSL_CRL* crl, int sfd, byte* httpBuf,
     int result;
     byte *respBuf = NULL;
 
-    result = wolfIO_HttpProcessResponse(sfd, "application/pkix-crl",
+    const char* appStrList[] = {
+        "application/pkix-crl",
+        "application/x-pkcs7-crl",
+        NULL
+    };
+
+    result = wolfIO_HttpProcessResponse(sfd, appStrList,
         &respBuf, httpBuf, httpBufSz, DYNAMIC_TYPE_CRL, crl->heap);
     if (result >= 0) {
-        result = BufferLoadCRL(crl, respBuf, result, SSL_FILETYPE_ASN1, 0);
+        result = BufferLoadCRL(crl, respBuf, result, WOLFSSL_FILETYPE_ASN1, 0);
     }
     XFREE(respBuf, crl->heap, DYNAMIC_TYPE_CRL);
 
@@ -1333,7 +1407,7 @@ int EmbedCrlLookup(WOLFSSL_CRL* crl, const char* url, int urlSz)
                                                       HTTP_SCRATCH_BUFFER_SIZE);
             }
 
-            close(sfd);
+            CloseSocket(sfd);
             XFREE(httpBuf, crl->heap, DYNAMIC_TYPE_CRL);
         }
     }
@@ -1350,13 +1424,13 @@ int EmbedCrlLookup(WOLFSSL_CRL* crl, const char* url, int urlSz)
 
 
 
-WOLFSSL_API void wolfSSL_SetIORecv(WOLFSSL_CTX *ctx, CallbackIORecv CBIORecv)
+WOLFSSL_API void wolfSSL_CTX_SetIORecv(WOLFSSL_CTX *ctx, CallbackIORecv CBIORecv)
 {
     ctx->CBIORecv = CBIORecv;
 }
 
 
-WOLFSSL_API void wolfSSL_SetIOSend(WOLFSSL_CTX *ctx, CallbackIOSend CBIOSend)
+WOLFSSL_API void wolfSSL_CTX_SetIOSend(WOLFSSL_CTX *ctx, CallbackIOSend CBIOSend)
 {
     ctx->CBIOSend = CBIOSend;
 }
@@ -1610,7 +1684,7 @@ int MicriumReceive(WOLFSSL *ssl, char *buf, int sz, void *ctx)
     {
         int dtls_timeout = wolfSSL_dtls_get_current_timeout(ssl);
         if (wolfSSL_dtls(ssl)
-                     && !wolfSSL_get_using_nonblock(ssl)
+                     && !wolfSSL_dtls_get_using_nonblock(ssl)
                      && dtls_timeout != 0) {
             /* needs timeout in milliseconds */
             NetSock_CfgTimeoutRxQ_Set(sd, dtls_timeout * 1000, &err);
@@ -1627,7 +1701,7 @@ int MicriumReceive(WOLFSSL *ssl, char *buf, int sz, void *ctx)
 
         if (err == NET_ERR_RX || err == NET_SOCK_ERR_RX_Q_EMPTY ||
             err == NET_ERR_FAULT_LOCK_ACQUIRE) {
-            if (!wolfSSL_dtls(ssl) || wolfSSL_get_using_nonblock(ssl)) {
+            if (!wolfSSL_dtls(ssl) || wolfSSL_dtls_get_using_nonblock(ssl)) {
                 WOLFSSL_MSG("\tWould block");
                 return WOLFSSL_CBIO_ERR_WANT_READ;
             }
@@ -1667,7 +1741,7 @@ int MicriumReceiveFrom(WOLFSSL *ssl, char *buf, int sz, void *ctx)
     if (ssl->options.handShakeDone)
         dtls_timeout = 0;
 
-    if (!wolfSSL_get_using_nonblock(ssl)) {
+    if (!wolfSSL_dtls_get_using_nonblock(ssl)) {
         /* needs timeout in milliseconds */
         NetSock_CfgTimeoutRxQ_Set(sd, dtls_timeout * 1000, &err);
         if (err != NET_SOCK_ERR_NONE) {
@@ -1682,7 +1756,7 @@ int MicriumReceiveFrom(WOLFSSL *ssl, char *buf, int sz, void *ctx)
 
         if (err == NET_ERR_RX || err == NET_SOCK_ERR_RX_Q_EMPTY ||
             err == NET_ERR_FAULT_LOCK_ACQUIRE) {
-            if (wolfSSL_get_using_nonblock(ssl)) {
+            if (wolfSSL_dtls_get_using_nonblock(ssl)) {
                 WOLFSSL_MSG("\tWould block");
                 return WOLFSSL_CBIO_ERR_WANT_READ;
             }
@@ -1747,14 +1821,14 @@ int MicriumGenerateCookie(WOLFSSL* ssl, byte *buf, int sz, void *ctx)
 {
     NET_SOCK_ADDR peer;
     NET_SOCK_ADDR_LEN peerSz = sizeof(peer);
-    byte digest[SHA_DIGEST_SIZE];
+    byte digest[WC_SHA_DIGEST_SIZE];
     int  ret = 0;
 
     (void)ctx;
 
     XMEMSET(&peer, 0, sizeof(peer));
     if (wolfSSL_dtls_get_peer(ssl, (void*)&peer,
-                              (unsigned int*)&peerSz) != SSL_SUCCESS) {
+                              (unsigned int*)&peerSz) != WOLFSSL_SUCCESS) {
         WOLFSSL_MSG("getpeername failed in MicriumGenerateCookie");
         return GEN_COOKIE_E;
     }
@@ -1763,8 +1837,8 @@ int MicriumGenerateCookie(WOLFSSL* ssl, byte *buf, int sz, void *ctx)
     if (ret != 0)
         return ret;
 
-    if (sz > SHA_DIGEST_SIZE)
-        sz = SHA_DIGEST_SIZE;
+    if (sz > WC_SHA_DIGEST_SIZE)
+        sz = WC_SHA_DIGEST_SIZE;
     XMEMCPY(buf, digest, sz);
 
     return sz;

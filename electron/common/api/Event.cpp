@@ -33,6 +33,17 @@ bool Event::sendReply(const std::string& json) {
     return true;
 }
 
+std::string Event::returnValueGet() {
+    return m_returnValue;
+}
+
+void Event::returnValueSet(std::string json) {
+    m_returnValue = json;
+
+    if (m_callback)
+        (*m_callback)(json);
+}
+
 // static
 Event* Event::create(v8::Isolate* isolate, v8::Local<v8::Object> wrapper, std::function<void(std::string)>&& callback) {
     Event::init(isolate);
@@ -56,7 +67,29 @@ void Event::init(v8::Isolate* isolate) {
     gin::ObjectTemplateBuilder builder(isolate, prototype->InstanceTemplate());
     builder.SetMethod("preventDefault", &Event::preventDefault);
     builder.SetMethod("sendReply", &Event::sendReply);
+    //builder.SetMemberAccessor("returnValue2", &Event::returnValueGet, &Event::returnValueSet);
     (*constructor).Reset(isolate, prototype->GetFunction());
+}
+
+void accessorGetterCallback(v8::Local<v8::String> property, const v8::PropertyCallbackInfo<v8::Value>& info) {
+    v8::Isolate* isolate = info.GetIsolate();
+    v8::Local<v8::Value> v8_result_value;
+    if (!gin::TryConvertToV8(isolate, std::string("123456"), &v8_result_value))
+        return;
+
+    std::string propertyStr;
+    if (gin::ConvertFromV8(isolate, property, &propertyStr))
+        return;
+
+    info.GetReturnValue().Set(v8_result_value);
+}
+
+void accessorSetterCallback(v8::Local<v8::String> property, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& info) {
+    v8::Isolate* isolate = info.GetIsolate();
+    std::string arg;
+    if (gin::ConvertFromV8(isolate, value, &arg))
+        return;
+    arg = "hahah";
 }
 
 void Event::newFunction(const v8::FunctionCallbackInfo<v8::Value>& args) {
@@ -68,6 +101,9 @@ void Event::newFunction(const v8::FunctionCallbackInfo<v8::Value>& args) {
 
         Event* evt = new Event(isolate, args.This());
         args.GetReturnValue().Set(args.This());
+
+//         v8::Local<v8::Object> evtObj = evt->GetWrapper(isolate);
+//         evtObj->SetAccessor(v8::String::NewFromUtf8(isolate, "returnValue2"), accessorGetterCallback, accessorSetterCallback);
     }
 }
 

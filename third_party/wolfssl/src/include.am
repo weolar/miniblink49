@@ -33,7 +33,15 @@ src_libwolfssl_la_SOURCES += \
                ctaocrypt/src/sha256.c
 
 if BUILD_RSA
+if BUILD_FIPS_V2
+src_libwolfssl_la_SOURCES += wolfcrypt/src/rsa.c
+else
 src_libwolfssl_la_SOURCES += ctaocrypt/src/rsa.c
+endif
+endif
+
+if BUILD_ECC
+src_libwolfssl_la_SOURCES += wolfcrypt/src/ecc.c
 endif
 
 if BUILD_AES
@@ -53,10 +61,16 @@ src_libwolfssl_la_SOURCES += ctaocrypt/src/sha512.c
 endif
 
 src_libwolfssl_la_SOURCES += ctaocrypt/src/fips.c
+src_libwolfssl_la_SOURCES += wolfcrypt/src/fipsv2.c
 src_libwolfssl_la_SOURCES += ctaocrypt/src/fips_test.c
 
 # fips last file
 src_libwolfssl_la_SOURCES += ctaocrypt/src/wolfcrypt_last.c
+endif
+
+# CAVP self test
+if BUILD_SELFTEST
+src_libwolfssl_la_SOURCES += wolfcrypt/src/selftest.c
 endif
 
 src_libwolfssl_la_SOURCES += \
@@ -87,8 +101,29 @@ if BUILD_RSA
 if BUILD_FAST_RSA
 src_libwolfssl_la_SOURCES += wolfcrypt/user-crypto/src/rsa.c
 else
+if !BUILD_FIPS_V2
 src_libwolfssl_la_SOURCES += wolfcrypt/src/rsa.c
 endif
+endif
+endif
+endif
+
+if BUILD_SP
+if BUILD_SP_C
+src_libwolfssl_la_SOURCES += wolfcrypt/src/sp_c32.c
+src_libwolfssl_la_SOURCES += wolfcrypt/src/sp_c64.c
+endif
+if BUILD_SP_X86_64
+src_libwolfssl_la_SOURCES += wolfcrypt/src/sp_x86_64.c
+endif
+if BUILD_SP_ARM32
+src_libwolfssl_la_SOURCES += wolfcrypt/src/sp_arm32.c
+endif
+if BUILD_SP_ARM64
+src_libwolfssl_la_SOURCES += wolfcrypt/src/sp_arm64.c
+endif
+if BUILD_SP_INT
+src_libwolfssl_la_SOURCES += wolfcrypt/src/sp_int.c
 endif
 endif
 
@@ -169,7 +204,7 @@ src_libwolfssl_la_SOURCES += wolfcrypt/src/dsa.c
 endif
 
 if BUILD_AESNI
-src_libwolfssl_la_SOURCES += wolfcrypt/src/aes_asm.s
+src_libwolfssl_la_SOURCES += wolfcrypt/src/aes_asm.S
 endif
 
 if BUILD_CAMELLIA
@@ -215,8 +250,10 @@ if BUILD_SLOWMATH
 src_libwolfssl_la_SOURCES += wolfcrypt/src/integer.c
 endif
 
+if !BUILD_FIPS
 if BUILD_ECC
 src_libwolfssl_la_SOURCES += wolfcrypt/src/ecc.c
+endif
 endif
 
 if BUILD_CURVE25519
@@ -238,15 +275,9 @@ endif
 if BUILD_GEMATH
 if BUILD_ED25519_SMALL
 src_libwolfssl_la_SOURCES += wolfcrypt/src/ge_low_mem.c
-if !BUILD_CURVE25519_SMALL
-src_libwolfssl_la_SOURCES += wolfcrypt/src/fe_low_mem.c
-endif
 else
 src_libwolfssl_la_SOURCES += wolfcrypt/src/ge_operations.c
 if !BUILD_FEMATH
-src_libwolfssl_la_SOURCES += wolfcrypt/src/fe_operations.c
-endif
-if BUILD_CURVE25519_SMALL
 src_libwolfssl_la_SOURCES += wolfcrypt/src/fe_operations.c
 endif
 endif

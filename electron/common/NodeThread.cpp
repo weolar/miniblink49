@@ -1,15 +1,16 @@
 ﻿#include "NodeThread.h"
 
-#include "nodeblink.h"
+#include "node/nodeblink.h"
 #include "gin/v8_initializer.h"
 #include "libplatform/libplatform.h"
 #include "base/thread.h"
 #include "common/ThreadCall.h"
 #include "common/NodeBinding.h"
-#include "third_party/zlib/unzip.h"
+//#include "third_party/zlib/unzip.h"
 #include <string.h>
 #include <Windows.h>
 #include <process.h>
+#include <objbase.h>
 
 namespace atom {
 
@@ -95,15 +96,22 @@ static v8::Isolate* initNodeEnv(NodeArgc* nodeArgc) {
 }
 
 static void workerRun(NodeArgc* nodeArgc) {
-    int err = uv_loop_init(nodeArgc->childLoop);
-    if (err != 0)
-        goto loop_init_failed;
+    int err = 0;
+//     err = uv_loop_init(nodeArgc->childLoop);
+//     if (err != 0)
+//         goto loop_init_failed;
+
+    nodeArgc->childLoop = uv_default_loop();
+    nodeArgc->m_nodeBinding->setUvLoop(nodeArgc->childLoop);
+
+    ::OleInitialize(nullptr);
 
     // Interruption signal handler
     err = uv_async_init(nodeArgc->childLoop, &nodeArgc->async, childSignalCallback);
     if (err != 0)
         goto async_init_failed;
     //uv_unref(reinterpret_cast<uv_handle_t*>(&nodeArgc->async)); //zero 不屏蔽此句导致loop循环退出
+
     nodeArgc->initType = true;
     ::SetEvent(nodeArgc->initEvent);
 
@@ -139,7 +147,7 @@ NodeArgc* runNodeThread() {
     memset(nodeArgc, 0, sizeof(NodeArgc));
     nodeArgc->childLoop = (uv_loop_t *)malloc(sizeof(uv_loop_t));
 
-    nodeArgc->m_nodeBinding = new NodeBindings(true, nodeArgc->childLoop);
+    nodeArgc->m_nodeBinding = new NodeBindings(true/*, nodeArgc->childLoop*/);
 
     nodeArgc->initEvent = ::CreateEvent(NULL, FALSE, FALSE, NULL); // 创建一个对象,用来等待node环境基础环境创建成功
     int err = uv_thread_create(&nodeArgc->thread, reinterpret_cast<uv_thread_cb>(workerRun), nodeArgc);
@@ -167,7 +175,7 @@ node::Environment* nodeGetEnvironment(NodeArgc* nodeArgc) {
 
 } // atom
 
-#include "node/include/debug-agent.h"
+#include "node/src/debug-agent.h"
 
 namespace node {
 namespace debugger {

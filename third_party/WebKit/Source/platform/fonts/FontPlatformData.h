@@ -161,7 +161,7 @@ private:
     FontRenderStyle m_style;
 #endif
 
-#ifdef MINIBLINK_NOT_IMPLEMENTED
+#ifndef MINIBLINK_NO_HARFBUZZ
     mutable RefPtr<HarfBuzzFace> m_harfBuzzFace;
 #endif
 

@@ -1,6 +1,6 @@
 /* wc_port.h
  *
- * Copyright (C) 2006-2016 wolfSSL Inc.
+ * Copyright (C) 2006-2017 wolfSSL Inc.
  *
  * This file is part of wolfSSL.
  *
@@ -19,7 +19,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1335, USA
  */
 
-
+/*!
+    \file wolfssl/wolfcrypt/wc_port.h
+*/
 
 #ifndef WOLF_CRYPT_PORT_H
 #define WOLF_CRYPT_PORT_H
@@ -31,6 +33,14 @@
     extern "C" {
 #endif
 
+/* Detect if compiler supports C99. "NO_WOLF_C99" can be defined in
+ * user_settings.h to disable checking for C99 support. */
+#if !defined(WOLF_C99) && defined(__STDC_VERSION__) && \
+    !defined(WOLFSSL_ARDUINO) && !defined(NO_WOLF_C99)
+    #if __STDC_VERSION__ >= 199901L
+        #define WOLF_C99
+    #endif
+#endif
 
 #ifdef USE_WINDOWS_API
     #ifdef WOLFSSL_GAME_BUILD
@@ -69,6 +79,8 @@
     #include "kernel.h"
 #elif  defined(WOLFSSL_uTKERNEL2)
     #include "tk/tkernel.h"
+#elif defined(WOLFSSL_CMSIS_RTOS)
+    #include "cmsis_os.h"
 #elif defined(WOLFSSL_MDK_ARM)
     #if defined(WOLFSSL_MDK5)
         #include "cmsis_os.h"
@@ -184,7 +196,7 @@
     /* Define stubs, since HW mutex is disabled */
     #define wolfSSL_CryptHwMutexInit()      0 /* Success */
     #define wolfSSL_CryptHwMutexLock()      0 /* Success */
-    #define wolfSSL_CryptHwMutexUnLock()    0 /* Success */
+    #define wolfSSL_CryptHwMutexUnLock()    (void)0 /* Success */
 #endif /* WOLFSSL_CRYPT_HW_MUTEX */
 
 /* Mutex functions */
@@ -193,6 +205,13 @@ WOLFSSL_API wolfSSL_Mutex* wc_InitAndAllocMutex(void);
 WOLFSSL_API int wc_FreeMutex(wolfSSL_Mutex*);
 WOLFSSL_API int wc_LockMutex(wolfSSL_Mutex*);
 WOLFSSL_API int wc_UnLockMutex(wolfSSL_Mutex*);
+#if defined(OPENSSL_EXTRA) || defined(HAVE_WEBSERVER)
+/* dynamiclly set which mutex to use. unlock / lock is controlled by flag */
+typedef void (mutex_cb)(int flag, int type, const char* file, int line);
+
+WOLFSSL_API int wc_LockMutex_ex(int flag, int type, const char* file, int line);
+WOLFSSL_API int wc_SetMutexCb(mutex_cb* cb);
+#endif
 
 /* main crypto initialization function */
 WOLFSSL_API int wolfCrypt_Init(void);
@@ -274,7 +293,8 @@ WOLFSSL_API int wolfCrypt_Cleanup(void);
     #define XBADFILE   NULL
     #define XFGETS     fgets
 
-    #if !defined(USE_WINDOWS_API) && !defined(NO_WOLFSSL_DIR)
+    #if !defined(USE_WINDOWS_API) && !defined(NO_WOLFSSL_DIR)\
+        && !defined(WOLFSSL_NUCLEUS)
         #include <dirent.h>
         #include <unistd.h>
         #include <sys/stat.h>
@@ -288,7 +308,7 @@ WOLFSSL_API int wolfCrypt_Cleanup(void);
         #define MAX_PATH 256
     #endif
 
-#if !defined(NO_WOLFSSL_DIR)
+#if !defined(NO_WOLFSSL_DIR) && !defined(WOLFSSL_NUCLEUS)
     typedef struct ReadDirCtx {
     #ifdef USE_WINDOWS_API
         WIN32_FIND_DATAA FindFileData;
@@ -308,10 +328,6 @@ WOLFSSL_API int wolfCrypt_Cleanup(void);
 
 #endif /* !NO_FILESYSTEM */
 
-#ifdef USE_WOLF_STRTOK
-    WOLFSSL_LOCAL char* wc_strtok(char *str, const char *delim, char **nextp);
-#endif
-
 /* Windows API defines its own min() macro. */
 #if defined(USE_WINDOWS_API)
     #if defined(min) || defined(WOLFSSL_MYSQL_COMPATIBLE)
@@ -321,6 +337,171 @@ WOLFSSL_API int wolfCrypt_Cleanup(void);
         #define WOLFSSL_HAVE_MAX
     #endif /* max */
 #endif /* USE_WINDOWS_API */
+
+/* Time functions */
+#ifndef NO_ASN_TIME
+#if defined(USER_TIME)
+    /* Use our gmtime and time_t/struct tm types.
+       Only needs seconds since EPOCH using XTIME function.
+       time_t XTIME(time_t * timer) {}
+    */
+    #define WOLFSSL_GMTIME
+    #define USE_WOLF_TM
+    #define USE_WOLF_TIME_T
+
+#elif defined(TIME_OVERRIDES)
+    /* Override XTIME() and XGMTIME() functionality.
+       Requires user to provide these functions:
+        time_t XTIME(time_t * timer) {}
+        struct tm* XGMTIME(const time_t* timer, struct tm* tmp) {}
+    */
+    #ifndef HAVE_TIME_T_TYPE
+        #define USE_WOLF_TIME_T
+    #endif
+    #ifndef HAVE_TM_TYPE
+        #define USE_WOLF_TM
+    #endif
+    #define NEED_TMP_TIME
+
+#elif defined(HAVE_RTP_SYS)
+    #include "os.h"           /* dc_rtc_api needs    */
+    #include "dc_rtc_api.h"   /* to get current time */
+
+    /* uses parital <time.h> structures */
+    #define XTIME(tl)       (0)
+    #define XGMTIME(c, t)   rtpsys_gmtime((c))
+
+#elif defined(MICRIUM)
+    #include <clk.h>
+    #include <time.h>
+    #define XTIME(t1)       micrium_time((t1))
+    #define WOLFSSL_GMTIME
+
+#elif defined(MICROCHIP_TCPIP_V5) || defined(MICROCHIP_TCPIP)
+    #include <time.h>
+    #define XTIME(t1)       pic32_time((t1))
+    #define XGMTIME(c, t)   gmtime((c))
+
+#elif defined(FREESCALE_MQX) || defined(FREESCALE_KSDK_MQX)
+    #define XTIME(t1)       mqx_time((t1))
+    #define HAVE_GMTIME_R
+
+#elif defined(FREESCALE_KSDK_BM) || defined(FREESCALE_FREE_RTOS) || defined(FREESCALE_KSDK_FREERTOS)
+    #include <time.h>
+    #ifndef XTIME
+        /*extern time_t ksdk_time(time_t* timer);*/
+        #define XTIME(t1)   ksdk_time((t1))
+    #endif
+    #define XGMTIME(c, t)   gmtime((c))
+
+#elif defined(WOLFSSL_ATMEL)
+    #define XTIME(t1)       atmel_get_curr_time_and_date((t1))
+    #define WOLFSSL_GMTIME
+    #define USE_WOLF_TM
+    #define USE_WOLF_TIME_T
+
+#elif defined(IDIRECT_DEV_TIME)
+    /*Gets the timestamp from cloak software owned by VT iDirect
+    in place of time() from <time.h> */
+    #include <time.h>
+    #define XTIME(t1)       idirect_time((t1))
+    #define XGMTIME(c, t)   gmtime((c))
+
+#elif defined(_WIN32_WCE)
+    #include <windows.h>
+    #define XTIME(t1)       windows_time((t1))
+    #define WOLFSSL_GMTIME
+
+#else
+    /* default */
+    /* uses complete <time.h> facility */
+    #include <time.h>
+    #if defined(HAVE_SYS_TIME_H) || defined(WOLF_C99)
+        #include <sys/time.h>
+    #endif
+
+    /* PowerPC time_t is int */
+    #ifdef __PPC__
+        #define TIME_T_NOT_LONG
+    #endif
+#endif
+
+
+/* Map default time functions */
+#if !defined(XTIME) && !defined(TIME_OVERRIDES) && !defined(USER_TIME)
+    #define XTIME(tl)       time((tl))
+#endif
+#if !defined(XGMTIME) && !defined(TIME_OVERRIDES)
+    #if defined(WOLFSSL_GMTIME) || !defined(HAVE_GMTIME_R) || defined(WOLF_C99)
+        #define XGMTIME(c, t)   gmtime((c))
+    #else
+        #define XGMTIME(c, t)   gmtime_r((c), (t))
+        #define NEED_TMP_TIME
+    #endif
+#endif
+#if !defined(XVALIDATE_DATE) && !defined(HAVE_VALIDATE_DATE)
+    #define USE_WOLF_VALIDDATE
+    #define XVALIDATE_DATE(d, f, t) ValidateDate((d), (f), (t))
+#endif
+
+/* wolf struct tm and time_t */
+#if defined(USE_WOLF_TM)
+    struct tm {
+        int  tm_sec;     /* seconds after the minute [0-60] */
+        int  tm_min;     /* minutes after the hour [0-59] */
+        int  tm_hour;    /* hours since midnight [0-23] */
+        int  tm_mday;    /* day of the month [1-31] */
+        int  tm_mon;     /* months since January [0-11] */
+        int  tm_year;    /* years since 1900 */
+        int  tm_wday;    /* days since Sunday [0-6] */
+        int  tm_yday;    /* days since January 1 [0-365] */
+        int  tm_isdst;   /* Daylight Savings Time flag */
+        long tm_gmtoff;  /* offset from CUT in seconds */
+        char *tm_zone;   /* timezone abbreviation */
+    };
+#endif /* USE_WOLF_TM */
+#if defined(USE_WOLF_TIME_T)
+    typedef long time_t;
+#endif
+#if defined(USE_WOLF_SUSECONDS_T)
+    typedef long suseconds_t;
+#endif
+#if defined(USE_WOLF_TIMEVAL_T)
+    struct timeval
+    {
+        time_t tv_sec;
+        suseconds_t tv_usec;
+    };
+#endif
+
+    /* forward declarations */
+#if defined(USER_TIME)
+    struct tm* gmtime(const time_t* timer);
+    extern time_t XTIME(time_t * timer);
+
+    #ifdef STACK_TRAP
+        /* for stack trap tracking, don't call os gmtime on OS X/linux,
+           uses a lot of stack spce */
+        extern time_t time(time_t * timer);
+        #define XTIME(tl)  time((tl))
+    #endif /* STACK_TRAP */
+
+#elif defined(TIME_OVERRIDES)
+    extern time_t XTIME(time_t * timer);
+    extern struct tm* XGMTIME(const time_t* timer, struct tm* tmp);
+#elif defined(WOLFSSL_GMTIME)
+    struct tm* gmtime(const time_t* timer);
+#endif
+#endif /* NO_ASN_TIME */
+
+#ifndef WOLFSSL_LEANPSK
+    char* mystrnstr(const char* s1, const char* s2, unsigned int n);
+#endif
+
+#ifndef FILE_BUFFER_SIZE
+    #define FILE_BUFFER_SIZE 1024     /* default static file buffer size for input,
+                                    will use dynamic buffer if not big enough */
+#endif
 
 
 #ifdef __cplusplus

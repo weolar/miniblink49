@@ -1,6 +1,6 @@
 /* pkcs12.h
  *
- * Copyright (C) 2006-2016 wolfSSL Inc.
+ * Copyright (C) 2006-2017 wolfSSL Inc.
  *
  * This file is part of wolfSSL.
  *
@@ -39,7 +39,11 @@ typedef struct WC_DerCertList { /* dereferenced in ssl.c */
     struct WC_DerCertList* next;
 } WC_DerCertList;
 
-
+/* default values for creating PKCS12 */
+enum {
+    WC_PKCS12_ITT_DEFAULT = 2048,
+    WC_PKCS12_MAC_DEFAULT = 1,
+};
 
 WOLFSSL_API WC_PKCS12* wc_PKCS12_new(void);
 WOLFSSL_API void wc_PKCS12_free(WC_PKCS12* pkcs12);
@@ -47,10 +51,16 @@ WOLFSSL_API int wc_d2i_PKCS12(const byte* der, word32 derSz, WC_PKCS12* pkcs12);
 WOLFSSL_API int wc_PKCS12_parse(WC_PKCS12* pkcs12, const char* psw,
         byte** pkey, word32* pkeySz, byte** cert, word32* certSz,
         WC_DerCertList** ca);
+WOLFSSL_API WC_PKCS12* wc_PKCS12_create(char* pass, word32 passSz,
+        char* name, byte* key, word32 keySz, byte* cert, word32 certSz,
+        WC_DerCertList* ca, int nidKey, int nidCert, int iter, int macIter,
+        int keyType, void* heap);
+
 
 WOLFSSL_LOCAL int wc_PKCS12_SetHeap(WC_PKCS12* pkcs12, void* heap);
 WOLFSSL_LOCAL void* wc_PKCS12_GetHeap(WC_PKCS12* pkcs12);
 
+WOLFSSL_LOCAL void wc_FreeCertList(WC_DerCertList* list, void* heap);
 
 #ifdef __cplusplus
     } /* extern "C" */

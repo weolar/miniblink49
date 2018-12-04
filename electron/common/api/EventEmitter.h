@@ -28,7 +28,6 @@ class EventEmitter : public gin::Wrappable<T> {
 public:
     typedef std::vector<v8::Local<v8::Value>> ValueArray;
 
-
     // Make the convinient methods visible:
     // https://isocpp.org/wiki/faq/templates#nondependent-name-lookup-members
     v8::Local<v8::Object> getWrapper() { return Wrappable<T>::GetWrapper(isolate()); }

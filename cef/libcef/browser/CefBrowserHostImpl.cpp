@@ -26,6 +26,9 @@
 #include "libcef/common/CefContentClient.h"
 #include "libcef/common/StringUtil.h"
 #include "libcef/common/CefMessages.h"
+#include "libcef/common/GeometryUtil.h"
+
+static int64 CefBrowserHostImplIdentifierCount = 0;
 
 CefBrowserHostImpl::CefBrowserHostImpl(
     const CefBrowserSettings& settings,
@@ -33,8 +36,12 @@ CefBrowserHostImpl::CefBrowserHostImpl(
     scoped_refptr<CefBrowserInfo> browserInfo,
     CefRefPtr<CefBrowserHostImpl> opener,
     CefRefPtr<CefRequestContext> requestContext)
-    : m_settings(settings)
-    , m_webPage(nullptr)
+    : m_webPage(nullptr)
+    , m_hasLMouseUp(true)
+    , m_hasRMouseUp(true)
+    , m_isWindowless(false)
+    , m_lpfnOldWndProc(nullptr)
+    , m_settings(settings)
     , m_client(client)
     , m_browserInfo(browserInfo)
     , m_opener(kNullWindowHandle)
@@ -43,9 +50,9 @@ CefBrowserHostImpl::CefBrowserHostImpl(
     , m_windowDestroyed(false)
     , m_isLoading(false)
     , m_destructionState(DESTRUCTION_STATE_NONE)
-    , m_frameDestructionPending(false) {
+    , m_frameDestructionPending(false)
+    , m_identifier(CefBrowserHostImplIdentifierCount++) {
     DCHECK(requestContext.get());
-
     DCHECK(!browserInfo->Browser().get());
     browserInfo->SetBrowser(this);
     CefContext::Get()->RegisterBrowser(this);
@@ -135,9 +142,11 @@ CefRefPtr<CefBrowserHostImpl> CefBrowserHostImpl::Create(
 
 void CefBrowserHostImpl::CreateAndLoadOnWebkitThread(CreateBrowserHostWindowArgs* args) {
     scoped_refptr<CefBrowserInfo> info = CefBrowserInfoManager::GetInstance()->CreateBrowserInfo(args->isPopup, false);
-    *(args->result) = CefBrowserHostImpl::CreateInternal(*(args->windowInfo), *(args->settings), *(args->client), info, *(args->opener), *(args->requestContext));
-    if ((*(args->result)).get() && !args->url->empty()) {
-        (*(args->result))->LoadURL(content::WebPage::kMainFrameId, *(args->url), blink::Referrer(), CefString());
+    CefRefPtr<CefBrowserHostImpl> self = CefBrowserHostImpl::CreateInternal(*(args->windowInfo), *(args->settings), *(args->client), info, *(args->opener), *(args->requestContext));
+    *(args->result) = self;
+
+    if (self.get() && !args->url->empty()) {
+        self->LoadURL(content::WebPage::kMainFrameId, *(args->url), blink::Referrer(), CefString());
     }
     *(args->waitForFinish) = true;
 }
@@ -155,6 +164,7 @@ CefRefPtr<CefBrowserHostImpl> CefBrowserHostImpl::CreateInternal(
     content::WebPage* webPage = new content::WebPage(nullptr);
 
     CefRefPtr<CefBrowserHostImpl> browser = new CefBrowserHostImpl(settings, client, browserInfo, opener, requestContext);
+    browser->m_isWindowless = windowInfo.windowless_rendering_enabled;
     if (!browser->CreateHostWindow(windowInfo))
         return nullptr;
 
@@ -343,6 +353,16 @@ CefWindowHandle CefBrowserHostImpl::GetWindowHandle() {
     return m_webPage->getHWND();
 }
 
+void CefBrowserHostImpl::OnPaintUpdated(const uint32_t* buffer, const CefRect& r, int width, int height) {
+    if (!m_client || !m_client->GetRenderHandler().get())
+        return;
+    CefRefPtr<CefRenderHandler> render = m_client->GetRenderHandler();
+
+    CefRenderHandler::RectList dirtyRects;
+    dirtyRects.push_back(r);
+    render->OnPaint(this, PET_VIEW, dirtyRects, buffer, width, height);
+}
+
 void CefBrowserHostImpl::OnLoadingStateChange(bool isLoading, bool toDifferentDocument) {
     MutexLocker locker(m_stateLock);
     m_isLoading = isLoading;
@@ -372,38 +392,50 @@ void CefBrowserHostImpl::Reload() {
     frame->reload(true);
 }
 
-bool CefBrowserHostImpl::CanGoBack()
-{
+bool CefBrowserHostImpl::CanGoBack() {
     if (!m_webPage || !m_webPage->webViewImpl())
         return false;
     return m_webPage->canGoBack();
 }
 
-void CefBrowserHostImpl::GoBack()
-{
+void CefBrowserHostImpl::GoBack() {
     if (!m_webPage || !m_webPage->webViewImpl())
         return;
     m_webPage->goBack();
 }
 
-bool CefBrowserHostImpl::CanGoForward()
-{
+bool CefBrowserHostImpl::CanGoForward() {
     if (!m_webPage || !m_webPage->webViewImpl())
         return false;
     return m_webPage->canGoForward();
 }
 
-void CefBrowserHostImpl::GoForward()
-{
+void CefBrowserHostImpl::GoForward() {
     if (!m_webPage || !m_webPage->webViewImpl())
         return;
     m_webPage->goForward();
 }
 
 void CefBrowserHostImpl::ReloadIgnoreCache() {}
-void CefBrowserHostImpl::StopLoad() {}
-int CefBrowserHostImpl::GetIdentifier() { return 0; }
-bool CefBrowserHostImpl::IsSame(CefRefPtr<CefBrowser> that) { return false; }
+
+void CefBrowserHostImpl::StopLoad() {
+    if (m_webPage->mainFrame())
+        m_webPage->mainFrame()->stopLoading();
+}
+
+int CefBrowserHostImpl::GetIdentifier() {
+//     if (!m_webPage)
+//         return content::WebPage::kInvalidFrameId;
+//     
+//     blink::WebFrame* frame = m_webPage->mainFrame();
+//     return CefFrameHostImpl::GetFrameIdByBlinkFrame(frame);
+    return m_identifier;
+}
+
+bool CefBrowserHostImpl::IsSame(CefRefPtr<CefBrowser> that) {
+    return GetIdentifier() == that->GetIdentifier();
+}
+
 bool CefBrowserHostImpl::IsPopup() { return false; }
 bool CefBrowserHostImpl::HasDocument() { return false; }
 
@@ -530,23 +562,6 @@ bool CefBrowserHostImpl::SendProcessMessage(CefProcessId targetProcess, CefRefPt
     bool b = false;
     if (PID_BROWSER == targetProcess) {
         b = m_client->OnProcessMessageReceived(this, PID_RENDERER, message);
-        if (0) {
-            v8::Isolate* isolate = v8::Isolate::GetCurrent();
-            const v8::StackTrace::StackTraceOptions options = static_cast<v8::StackTrace::StackTraceOptions>(
-                v8::StackTrace::kLineNumber
-                | v8::StackTrace::kColumnOffset
-                | v8::StackTrace::kScriptId
-                | v8::StackTrace::kScriptNameOrSourceURL
-                | v8::StackTrace::kFunctionName);
-
-            int stackNum = 1;
-            v8::HandleScope handleScope(isolate);
-            v8::Local<v8::StackTrace> stackTrace(v8::StackTrace::CurrentStackTrace(isolate, stackNum, options));
-            v8::Local<v8::StackFrame> stackFrame = stackTrace->GetFrame(stackNum);
-            int frameCount = stackTrace->GetFrameCount();
-            int line = stackFrame->GetLineNumber();
-            line = 0;
-        }
     } else if (PID_RENDERER == targetProcess) {
         CefRefPtr<CefApp> application = CefContentClient::Get()->rendererApplication();
         if (application.get()) {
@@ -650,9 +665,11 @@ void CefBrowserHostImpl::CloseBrowser(bool forceClose) {
 }
 
 void CefBrowserHostImpl::CloseHostWindow() {
-    if (m_webPage && m_webPage->getHWND()) {
+    if (m_webPage && m_webPage->getHWND() && !IsWindowless()) {
         HWND frameWnd = ::GetAncestor(m_webPage->getHWND(), GA_ROOT);
         ::PostMessage(frameWnd, WM_CLOSE, 0, 0);
+    } else if (IsWindowless()) {
+        ::PostMessage(m_webPage->getHWND(), WM_CLOSE, 0, 0);
     }
 }
 
@@ -710,6 +727,16 @@ bool CefBrowserHostImpl::IsMouseCursorChangeDisabled() {
 }
 
 void CefBrowserHostImpl::WasResized() {
+    if (!m_client || !m_client->GetRenderHandler().get())
+        return;
+    CefRefPtr<CefRenderHandler> render = m_client->GetRenderHandler();
+    CefRect rect;
+
+    render->GetScreenInfo(this, m_screenInfo);
+    rect = m_screenInfo.rect;
+    float scale = m_screenInfo.device_scale_factor;
+    m_webPage->fireResizeEvent(nullptr, WM_SIZE, 0, 
+        MAKELPARAM(cef::LogicalToDevice(rect.width, scale), cef::LogicalToDevice(rect.height, scale)));
 }
 
 void CefBrowserHostImpl::WasHidden(bool hidden) {

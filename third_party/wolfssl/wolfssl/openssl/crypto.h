@@ -1,3 +1,24 @@
+/* crypto.h
+ *
+ * Copyright (C) 2006-2017 wolfSSL Inc.
+ *
+ * This file is part of wolfSSL.
+ *
+ * wolfSSL is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * wolfSSL is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1335, USA
+ */
+
 /* crypto.h for openSSL */
 
 #ifndef WOLFSSL_CRYPTO_H_
@@ -15,6 +36,7 @@
 WOLFSSL_API const char*   wolfSSLeay_version(int type);
 WOLFSSL_API unsigned long wolfSSLeay(void);
 
+
 #define CRYPTO_THREADID void
 
 #define SSLeay_version wolfSSLeay_version
@@ -23,8 +45,13 @@ WOLFSSL_API unsigned long wolfSSLeay(void);
 
 #define SSLEAY_VERSION 0x0090600fL
 #define SSLEAY_VERSION_NUMBER SSLEAY_VERSION
+#define CRYPTO_lock wc_LockMutex_ex
 
-#if defined(HAVE_STUNNEL) || defined(WOLFSSL_NGINX) || defined(WOLFSSL_HAPROXY)
+/* this function was used to set the default malloc, free, and realloc */
+#define CRYPTO_malloc_init() /* CRYPTO_malloc_init is not needed */
+
+#if defined(OPENSSL_ALL) || defined(HAVE_STUNNEL) || defined(WOLFSSL_NGINX) || \
+    defined(WOLFSSL_HAPROXY) || defined(OPENSSL_EXTRA)
 #define CRYPTO_set_mem_ex_functions      wolfSSL_CRYPTO_set_mem_ex_functions
 #define FIPS_mode                        wolfSSL_FIPS_mode
 #define FIPS_mode_set                    wolfSSL_FIPS_mode_set
@@ -34,17 +61,13 @@ typedef void (CRYPTO_free_func)(void*parent, void*ptr, CRYPTO_EX_DATA *ad, int i
 #define CRYPTO_THREADID_set_callback wolfSSL_THREADID_set_callback
 #define CRYPTO_THREADID_set_numeric wolfSSL_THREADID_set_numeric
 
-#define CRYPTO_lock wc_LockMutex
-#define CRYPTO_r_lock wc_LockMutex
-#define CRYPTO_unlock wc_UnLockMutex
+#define CRYPTO_r_lock wc_LockMutex_ex
+#define CRYPTO_unlock wc_LockMutex_ex
 
 #define CRYPTO_THREAD_lock wc_LockMutex
 #define CRYPTO_THREAD_r_lock wc_LockMutex
 #define CRYPTO_THREAD_unlock wc_UnLockMutex
 
-#define OPENSSL_malloc(a)  XMALLOC(a, NULL, DYNAMIC_TYPE_OPENSSL)
-
-#endif /* HAVE_STUNNEL || WOLFSSL_NGINX || WOLFSSL_HAPROXY */
+#endif /* OPENSSL_ALL || HAVE_STUNNEL || WOLFSSL_NGINX || WOLFSSL_HAPROXY */
 
 #endif /* header */
-

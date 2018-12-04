@@ -1,3 +1,24 @@
+/* ec.h
+ *
+ * Copyright (C) 2006-2017 wolfSSL Inc.
+ *
+ * This file is part of wolfSSL.
+ *
+ * wolfSSL is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * wolfSSL is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1335, USA
+ */
+
 /* ec.h for openssl */
 
 #ifndef WOLFSSL_EC_H_
@@ -130,10 +151,6 @@ int wolfSSL_EC_GROUP_get_order(const WOLFSSL_EC_GROUP *group,
                                WOLFSSL_BIGNUM *order, WOLFSSL_BN_CTX *ctx);
 WOLFSSL_API
 void wolfSSL_EC_GROUP_free(WOLFSSL_EC_GROUP *group);
-#if defined(DEBUG_WOLFSSL) && !defined(NO_FILESYSTEM)
-WOLFSSL_API
-void wolfssl_EC_POINT_dump(const char *msg, const WOLFSSL_EC_POINT *p);
-#endif
 WOLFSSL_API
 WOLFSSL_EC_POINT *wolfSSL_EC_POINT_new(const WOLFSSL_EC_GROUP *group);
 WOLFSSL_API
@@ -187,6 +204,8 @@ int wolfSSL_EC_POINT_is_at_infinity(const WOLFSSL_EC_GROUP *group,
 #define EC_POINT_cmp wolfSSL_EC_POINT_cmp
 #define EC_POINT_free wolfSSL_EC_POINT_free
 #define EC_POINT_is_at_infinity wolfSSL_EC_POINT_is_at_infinity
+
+#define EC_POINT_dump wolfSSL_EC_POINT_dump
 
 #ifdef __cplusplus
 }  /* extern "C" */

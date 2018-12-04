@@ -122,7 +122,7 @@ SK_API void DrawToNativeContext(SkCanvas* canvas,
                                 int y,
                                 const PlatformRect* src_rect);
 
-SK_API void DrawToNativeLayeredContext(SkCanvas* canvas, PlatformSurface context,
+SK_API bool DrawToNativeLayeredContext(SkCanvas* canvas, PlatformSurface context,
     const PlatformRect* src_rect, const PlatformRect* client_rect);
 
 // Sets the opacity of each pixel in the specified region to be opaque.
@@ -134,7 +134,7 @@ SK_API void MakeOpaque(SkCanvas* canvas, int x, int y, int width, int height);
 // Call EndPlatformPaint when you are done and want to use skia operations
 // after calling the platform-specific BeginPlatformPaint; this will
 // synchronize the bitmap to OS if necessary.
-SK_API PlatformSurface BeginPlatformPaint(SkCanvas* canvas);
+SK_API PlatformSurface BeginPlatformPaint(void* hWnd, SkCanvas* canvas);
 SK_API void EndPlatformPaint(SkCanvas* canvas);
 
 // Helper class for pairing calls to BeginPlatformPaint and EndPlatformPaint.
@@ -142,8 +142,8 @@ SK_API void EndPlatformPaint(SkCanvas* canvas);
 // EndPlatformPaint.
 class SK_API ScopedPlatformPaint {
  public:
-  explicit ScopedPlatformPaint(SkCanvas* canvas) : canvas_(canvas) {
-    platform_surface_ = BeginPlatformPaint(canvas);
+  explicit ScopedPlatformPaint(void* hWnd, SkCanvas* canvas) : canvas_(canvas) {
+    platform_surface_ = BeginPlatformPaint(hWnd, canvas);
   }
   ~ScopedPlatformPaint() { EndPlatformPaint(canvas_); }
 

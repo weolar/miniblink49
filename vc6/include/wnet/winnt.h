@@ -9625,6 +9625,30 @@ __inline struct _TEB * NtCurrentTeb( void ) { __asm mov eax, fs:[PcTeb] }
 #define ACTIVATION_CONTEXT_SECTION_CLR_SURROGATES               (9)
 #endif // winnt_only
 
+#define PRODUCT_CLUSTER_SERVER                      0x00000012
+#define PRODUCT_DATACENTER_SERVER                   0x00000008
+#define PRODUCT_SMALLBUSINESS_SERVER                0x00000009
+#define PRODUCT_ENTERPRISE_SERVER                   0x0000000A
+#define PRODUCT_STARTER                             0x0000000B
+#define PRODUCT_DATACENTER_SERVER_CORE              0x0000000C
+#define PRODUCT_STANDARD_SERVER_CORE                0x0000000D
+#define PRODUCT_ENTERPRISE_SERVER_CORE              0x0000000E
+#define PRODUCT_ENTERPRISE_SERVER_IA64              0x0000000F
+#define PRODUCT_BUSINESS_N                          0x00000010
+#define PRODUCT_WEB_SERVER                          0x00000011
+#define PRODUCT_CLUSTER_SERVER                      0x00000012
+#define PRODUCT_HOME_SERVER                         0x00000013
+#define PRODUCT_SMALLBUSINESS_SERVER_PREMIUM        0x00000019
+#define PRODUCT_STANDARD_SERVER                     0x00000007
+#define PRODUCT_PROFESSIONAL 0x00000030
+#define PRODUCT_ULTIMATE 0x00000001
+#define PRODUCT_ENTERPRISE 0x00000004
+#define PRODUCT_BUSINESS 0x00000006
+#define PRODUCT_HOME_BASIC 0x00000002
+#define PRODUCT_HOME_PREMIUM 0x00000003
+#define VER_SUITE_WH_SERVER 0x00008000
+
+
 #ifdef __cplusplus
 }
 #endif

@@ -28,9 +28,11 @@
 #include "base/base_export.h"
 #include "base/basictypes.h"
 #include "base/compiler_specific.h"
-//#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
+#if USING_CHROMIUM_BASE == 1
+#include "base/memory/scoped_ptr.h"
+#else
 #include "cef/include/base/cef_scoped_ptr.h"
-//#endif
+#endif
 
 namespace base {
 

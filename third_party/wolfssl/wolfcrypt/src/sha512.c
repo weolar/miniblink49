@@ -1,6 +1,6 @@
 /* sha512.c
  *
- * Copyright (C) 2006-2016 wolfSSL Inc.
+ * Copyright (C) 2006-2017 wolfSSL Inc.
  *
  * This file is part of wolfSSL.
  *
@@ -31,9 +31,14 @@
 #include <wolfssl/wolfcrypt/error-crypt.h>
 #include <wolfssl/wolfcrypt/cpuid.h>
 
+/* deprecated USE_SLOW_SHA2 (replaced with USE_SLOW_SHA512) */
+#if defined(USE_SLOW_SHA2) && !defined(USE_SLOW_SHA512)
+    #define USE_SLOW_SHA512
+#endif
+
 /* fips wrapper calls, user can call direct */
 #ifdef HAVE_FIPS
-    int wc_InitSha512(Sha512* sha)
+    int wc_InitSha512(wc_Sha512* sha)
     {
         if (sha == NULL) {
             return BAD_FUNC_ARG;
@@ -41,7 +46,7 @@
 
         return InitSha512_fips(sha);
     }
-    int wc_InitSha512_ex(Sha512* sha, void* heap, int devId)
+    int wc_InitSha512_ex(wc_Sha512* sha, void* heap, int devId)
     {
         (void)heap;
         (void)devId;
@@ -50,7 +55,7 @@
         }
         return InitSha512_fips(sha);
     }
-    int wc_Sha512Update(Sha512* sha, const byte* data, word32 len)
+    int wc_Sha512Update(wc_Sha512* sha, const byte* data, word32 len)
     {
         if (sha == NULL || (data == NULL && len > 0)) {
             return BAD_FUNC_ARG;
@@ -58,7 +63,7 @@
 
         return Sha512Update_fips(sha, data, len);
     }
-    int wc_Sha512Final(Sha512* sha, byte* out)
+    int wc_Sha512Final(wc_Sha512* sha, byte* out)
     {
         if (sha == NULL || out == NULL) {
             return BAD_FUNC_ARG;
@@ -66,21 +71,21 @@
 
         return Sha512Final_fips(sha, out);
     }
-    void wc_Sha512Free(Sha512* sha)
+    void wc_Sha512Free(wc_Sha512* sha)
     {
         (void)sha;
         /* Not supported in FIPS */
     }
 
     #if defined(WOLFSSL_SHA384) || defined(HAVE_AESGCM)
-        int wc_InitSha384(Sha384* sha)
+        int wc_InitSha384(wc_Sha384* sha)
         {
             if (sha == NULL) {
                 return BAD_FUNC_ARG;
             }
             return InitSha384_fips(sha);
         }
-        int wc_InitSha384_ex(Sha384* sha, void* heap, int devId)
+        int wc_InitSha384_ex(wc_Sha384* sha, void* heap, int devId)
         {
             (void)heap;
             (void)devId;
@@ -89,21 +94,21 @@
             }
             return InitSha384_fips(sha);
         }
-        int wc_Sha384Update(Sha384* sha, const byte* data, word32 len)
+        int wc_Sha384Update(wc_Sha384* sha, const byte* data, word32 len)
         {
             if (sha == NULL || (data == NULL && len > 0)) {
                 return BAD_FUNC_ARG;
             }
             return Sha384Update_fips(sha, data, len);
         }
-        int wc_Sha384Final(Sha384* sha, byte* out)
+        int wc_Sha384Final(wc_Sha384* sha, byte* out)
         {
             if (sha == NULL || out == NULL) {
                 return BAD_FUNC_ARG;
             }
             return Sha384Final_fips(sha, out);
         }
-        void wc_Sha384Free(Sha384* sha)
+        void wc_Sha384Free(wc_Sha384* sha)
         {
             (void)sha;
             /* Not supported in FIPS */
@@ -124,7 +129,22 @@
 
 #if defined(USE_INTEL_SPEEDUP)
     #define HAVE_INTEL_AVX1
-    #define HAVE_INTEL_AVX2
+
+    #if defined(__GNUC__) && ((__GNUC__ < 4) || \
+                              (__GNUC__ == 4 && __GNUC_MINOR__ <= 8))
+        #define NO_AVX2_SUPPORT
+    #endif
+    #if defined(__clang__) && ((__clang_major__ < 3) || \
+                               (__clang_major__ == 3 && __clang_minor__ <= 5))
+        #define NO_AVX2_SUPPORT
+    #elif defined(__clang__) && defined(NO_AVX2_SUPPORT)
+        #undef NO_AVX2_SUPPORT
+    #endif
+
+    #define HAVE_INTEL_AVX1
+    #ifndef NO_AVX2_SUPPORT
+        #define HAVE_INTEL_AVX2
+    #endif
 #endif
 
 #if defined(HAVE_INTEL_AVX1)
@@ -135,25 +155,6 @@
     #define HAVE_INTEL_RORX
     /* #define DEBUG_YMM  */
 #endif
-
-
-#if defined(HAVE_INTEL_RORX)
-    #define ROTR(func, bits, x) \
-    word64 func(word64 x) {  word64 ret ;\
-        __asm__ ("rorx $"#bits", %1, %0\n\t":"=r"(ret):"r"(x)) ;\
-        return ret ;\
-    }
-
-    static INLINE ROTR(rotrFixed64_28, 28, x);
-    static INLINE ROTR(rotrFixed64_34, 34, x);
-    static INLINE ROTR(rotrFixed64_39, 39, x);
-    static INLINE ROTR(rotrFixed64_14, 14, x);
-    static INLINE ROTR(rotrFixed64_18, 18, x);
-    static INLINE ROTR(rotrFixed64_41, 41, x);
-
-    #define S0_RORX(x) (rotrFixed64_28(x)^rotrFixed64_34(x)^rotrFixed64_39(x))
-    #define S1_RORX(x) (rotrFixed64_14(x)^rotrFixed64_18(x)^rotrFixed64_41(x))
-#endif /* HAVE_INTEL_RORX */
 
 #if defined(HAVE_BYTEREVERSE64) && \
         !defined(HAVE_INTEL_AVX1) && !defined(HAVE_INTEL_AVX2)
@@ -166,7 +167,11 @@
         }
 #endif
 
-static int InitSha512(Sha512* sha512)
+#if defined(WOLFSSL_IMX6_CAAM) && !defined(NO_IMX6_CAAM_HASH)
+    /* functions defined in wolfcrypt/src/port/caam/caam_sha.c */
+#else
+
+static int InitSha512(wc_Sha512* sha512)
 {
     if (sha512 == NULL)
         return BAD_FUNC_ARG;
@@ -199,7 +204,7 @@ static int InitSha512(Sha512* sha512)
         #define HAVE_INTEL_AVX2
     #endif
 
-    int InitSha512(Sha512* sha512) {
+    int InitSha512(wc_Sha512* sha512) {
          Save/Recover XMM, YMM
          ...
 
@@ -207,11 +212,11 @@ static int InitSha512(Sha512* sha512)
     }
 
     #if defined(HAVE_INTEL_AVX1)|| defined(HAVE_INTEL_AVX2)
-      Transform_AVX1(); # Function prototype
-      Transform_AVX2(); #
+      Transform_Sha512_AVX1(); # Function prototype
+      Transform_Sha512_AVX2(); #
     #endif
 
-      _Transform() {     # Native Transform Function body
+      _Transform_Sha512() {     # Native Transform Function body
 
       }
 
@@ -240,7 +245,7 @@ static int InitSha512(Sha512* sha512)
 
     #if defnied(HAVE_INTEL_AVX1)
 
-      int Transform_AVX1() {
+      int Transform_Sha512_AVX1() {
           Stitched Message Sched/Round
       }
 
@@ -248,7 +253,7 @@ static int InitSha512(Sha512* sha512)
 
     #if defnied(HAVE_INTEL_AVX2)
 
-      int Transform_AVX2() {
+      int Transform_Sha512_AVX2() {
           Stitched Message Sched/Round
       }
     #endif
@@ -261,30 +266,29 @@ static int InitSha512(Sha512* sha512)
      */
 
     #if defined(HAVE_INTEL_AVX1)
-        static int Transform_AVX1(Sha512 *sha512);
+        static int Transform_Sha512_AVX1(wc_Sha512 *sha512);
+        static int Transform_Sha512_AVX1_Len(wc_Sha512 *sha512, word32 len);
     #endif
     #if defined(HAVE_INTEL_AVX2)
-        static int Transform_AVX2(Sha512 *sha512);
-        #if defined(HAVE_INTEL_AVX1) && defined(HAVE_INTEL_AVX2) && defined(HAVE_INTEL_RORX)
-            static int Transform_AVX1_RORX(Sha512 *sha512);
+        static int Transform_Sha512_AVX2(wc_Sha512 *sha512);
+        static int Transform_Sha512_AVX2_Len(wc_Sha512 *sha512, word32 len);
+        #if defined(HAVE_INTEL_RORX)
+            static int Transform_Sha512_AVX1_RORX(wc_Sha512 *sha512);
+            static int Transform_Sha512_AVX1_RORX_Len(wc_Sha512 *sha512,
+                                                      word32 len);
+            static int Transform_Sha512_AVX2_RORX(wc_Sha512 *sha512);
+            static int Transform_Sha512_AVX2_RORX_Len(wc_Sha512 *sha512,
+                                                      word32 len);
         #endif
     #endif
-    static int _Transform(Sha512 *sha512);
-    static int (*Transform_p)(Sha512* sha512) = _Transform;
+    static int _Transform_Sha512(wc_Sha512 *sha512);
+    static int (*Transform_Sha512_p)(wc_Sha512* sha512) = _Transform_Sha512;
+    static int (*Transform_Sha512_Len_p)(wc_Sha512* sha512, word32 len) = NULL;
     static int transform_check = 0;
     static int intel_flags;
-    #define Transform(sha512) (*Transform_p)(sha512)
-
-    /* Dummy for saving MM_REGs on behalf of Transform */
-    /* #if defined(HAVE_INTEL_AVX2)
-     #define SAVE_XMM_YMM   __asm__ volatile("orq %%r8, %%r8":::\
-       "%ymm0","%ymm1","%ymm2","%ymm3","%ymm4","%ymm5","%ymm6","%ymm7","%ymm8","%ymm9","%ymm10","%ymm11",\
-       "%ymm12","%ymm13","%ymm14","%ymm15")
-    */
-    #if defined(HAVE_INTEL_AVX1)
-        #define SAVE_XMM_YMM   __asm__ volatile("orq %%r8, %%r8":::\
-            "xmm0","xmm1","xmm2","xmm3","xmm4","xmm5","xmm6","xmm7","xmm8","xmm9","xmm10","xmm11","xmm12","xmm13","xmm14","xmm15")
-    #endif
+    #define Transform_Sha512(sha512)     (*Transform_Sha512_p)(sha512)
+    #define Transform_Sha512_Len(sha512, len) \
+        (*Transform_Sha512_Len_p)(sha512, len)
 
     static void Sha512_SetTransform()
     {
@@ -294,27 +298,40 @@ static int InitSha512(Sha512* sha512)
         intel_flags = cpuid_get_flags();
 
     #if defined(HAVE_INTEL_AVX2)
-        if (IS_INTEL_AVX2(intel_flags) && IS_INTEL_BMI2(intel_flags)) {
-            if (1)
-                Transform_p = Transform_AVX1_RORX;
+        if (IS_INTEL_AVX2(intel_flags)) {
+        #ifdef HAVE_INTEL_RORX
+            if (IS_INTEL_BMI2(intel_flags)) {
+                Transform_Sha512_p = Transform_Sha512_AVX2_RORX;
+                Transform_Sha512_Len_p = Transform_Sha512_AVX2_RORX_Len;
+            }
             else
-                Transform_p = Transform_AVX2;
+        #endif
+            if (1) {
+                Transform_Sha512_p = Transform_Sha512_AVX2;
+                Transform_Sha512_Len_p = Transform_Sha512_AVX2_Len;
+            }
+        #ifdef HAVE_INTEL_RORX
+            else {
+                Transform_Sha512_p = Transform_Sha512_AVX1_RORX;
+                Transform_Sha512_Len_p = Transform_Sha512_AVX1_RORX_Len;
+            }
+        #endif
         }
         else
     #endif
     #if defined(HAVE_INTEL_AVX1)
-        if (1) {
-            Transform_p = ((IS_INTEL_AVX1(intel_flags)) ? Transform_AVX1 :
-                                                                    _Transform);
+        if (IS_INTEL_AVX1(intel_flags)) {
+            Transform_Sha512_p = Transform_Sha512_AVX1;
+            Transform_Sha512_Len_p = Transform_Sha512_AVX1_Len;
         }
         else
     #endif
-            Transform_p = _Transform;
+            Transform_Sha512_p = _Transform_Sha512;
 
         transform_check = 1;
     }
 
-    int wc_InitSha512_ex(Sha512* sha512, void* heap, int devId)
+    int wc_InitSha512_ex(wc_Sha512* sha512, void* heap, int devId)
     {
         int ret = InitSha512(sha512);
 
@@ -327,9 +344,9 @@ static int InitSha512(Sha512* sha512)
     }
 
 #else
-    #define Transform(sha512) _Transform(sha512)
+    #define Transform_Sha512(sha512) _Transform_Sha512(sha512)
 
-    int wc_InitSha512_ex(Sha512* sha512, void* heap, int devId)
+    int wc_InitSha512_ex(wc_Sha512* sha512, void* heap, int devId)
     {
         int ret = 0;
 
@@ -353,10 +370,6 @@ static int InitSha512(Sha512* sha512)
     }
 
 #endif /* Hardware Acceleration */
-
-#ifndef SAVE_XMM_YMM
-    #define SAVE_XMM_YMM
-#endif
 
 static const word64 K512[80] = {
     W64LIT(0x428a2f98d728ae22), W64LIT(0x7137449123ef65cd),
@@ -401,39 +414,42 @@ static const word64 K512[80] = {
     W64LIT(0x5fcb6fab3ad6faec), W64LIT(0x6c44198c4a475817)
 };
 
-
-
 #define blk0(i) (W[i] = sha512->buffer[i])
 
-#define blk2(i) (W[i&15]+=s1(W[(i-2)&15])+W[(i-7)&15]+s0(W[(i-15)&15]))
+#define blk2(i) (\
+               W[ i     & 15] += \
+            s1(W[(i-2)  & 15])+ \
+               W[(i-7)  & 15] + \
+            s0(W[(i-15) & 15])  \
+        )
 
-#define Ch(x,y,z) (z^(x&(y^z)))
-#define Maj(x,y,z) ((x&y)|(z&(x|y)))
+#define Ch(x,y,z)  (z ^ (x & (y ^ z)))
+#define Maj(x,y,z) ((x & y) | (z & (x | y)))
 
-#define a(i) T[(0-i)&7]
-#define b(i) T[(1-i)&7]
-#define c(i) T[(2-i)&7]
-#define d(i) T[(3-i)&7]
-#define e(i) T[(4-i)&7]
-#define f(i) T[(5-i)&7]
-#define g(i) T[(6-i)&7]
-#define h(i) T[(7-i)&7]
+#define a(i) T[(0-i) & 7]
+#define b(i) T[(1-i) & 7]
+#define c(i) T[(2-i) & 7]
+#define d(i) T[(3-i) & 7]
+#define e(i) T[(4-i) & 7]
+#define f(i) T[(5-i) & 7]
+#define g(i) T[(6-i) & 7]
+#define h(i) T[(7-i) & 7]
 
-#define S0(x) (rotrFixed64(x,28)^rotrFixed64(x,34)^rotrFixed64(x,39))
-#define S1(x) (rotrFixed64(x,14)^rotrFixed64(x,18)^rotrFixed64(x,41))
-#define s0(x) (rotrFixed64(x,1)^rotrFixed64(x,8)^(x>>7))
-#define s1(x) (rotrFixed64(x,19)^rotrFixed64(x,61)^(x>>6))
+#define S0(x) (rotrFixed64(x,28) ^ rotrFixed64(x,34) ^ rotrFixed64(x,39))
+#define S1(x) (rotrFixed64(x,14) ^ rotrFixed64(x,18) ^ rotrFixed64(x,41))
+#define s0(x) (rotrFixed64(x,1)  ^ rotrFixed64(x,8)  ^ (x>>7))
+#define s1(x) (rotrFixed64(x,19) ^ rotrFixed64(x,61) ^ (x>>6))
 
-#define R(i) h(i)+=S1(e(i))+Ch(e(i),f(i),g(i))+K[i+j]+(j?blk2(i):blk0(i));\
-    d(i)+=h(i);h(i)+=S0(a(i))+Maj(a(i),b(i),c(i))
+#define R(i) \
+    h(i) += S1(e(i)) + Ch(e(i),f(i),g(i)) + K[i+j] + (j ? blk2(i) : blk0(i)); \
+    d(i) += h(i); \
+    h(i) += S0(a(i)) + Maj(a(i),b(i),c(i))
 
-static int _Transform(Sha512* sha512)
+static int _Transform_Sha512(wc_Sha512* sha512)
 {
     const word64* K = K512;
-
     word32 j;
     word64 T[8];
-
 
 #ifdef WOLFSSL_SMALL_STACK
     word64* W;
@@ -447,7 +463,7 @@ static int _Transform(Sha512* sha512)
     /* Copy digest to working vars */
     XMEMCPY(T, sha512->digest, sizeof(T));
 
-#ifdef USE_SLOW_SHA2
+#ifdef USE_SLOW_SHA512
     /* over twice as small, but 50% slower */
     /* 80 operations, not unrolled */
     for (j = 0; j < 80; j += 16) {
@@ -464,10 +480,9 @@ static int _Transform(Sha512* sha512)
         R( 8); R( 9); R(10); R(11);
         R(12); R(13); R(14); R(15);
     }
-#endif /* USE_SLOW_SHA2 */
+#endif /* USE_SLOW_SHA512 */
 
     /* Add the working vars back into digest */
-
     sha512->digest[0] += a(0);
     sha512->digest[1] += b(0);
     sha512->digest[2] += c(0);
@@ -489,56 +504,113 @@ static int _Transform(Sha512* sha512)
 }
 
 
-static INLINE void AddLength(Sha512* sha512, word32 len)
+static INLINE void AddLength(wc_Sha512* sha512, word32 len)
 {
     word64 tmp = sha512->loLen;
     if ( (sha512->loLen += len) < tmp)
         sha512->hiLen++;                       /* carry low to high */
 }
 
-static INLINE int Sha512Update(Sha512* sha512, const byte* data, word32 len)
+static INLINE int Sha512Update(wc_Sha512* sha512, const byte* data, word32 len)
 {
     int ret = 0;
     /* do block size increments */
     byte* local = (byte*)sha512->buffer;
 
     /* check that internal buffLen is valid */
-    if (sha512->buffLen >= SHA512_BLOCK_SIZE)
+    if (sha512->buffLen >= WC_SHA512_BLOCK_SIZE)
         return BUFFER_E;
 
-    SAVE_XMM_YMM; /* for Intel AVX */
-
-    while (len) {
-        word32 add = min(len, SHA512_BLOCK_SIZE - sha512->buffLen);
+    if (sha512->buffLen > 0) {
+        word32 add = min(len, WC_SHA512_BLOCK_SIZE - sha512->buffLen);
         XMEMCPY(&local[sha512->buffLen], data, add);
 
         sha512->buffLen += add;
         data            += add;
         len             -= add;
 
-        if (sha512->buffLen == SHA512_BLOCK_SIZE) {
+        if (sha512->buffLen == WC_SHA512_BLOCK_SIZE) {
     #if defined(LITTLE_ENDIAN_ORDER)
         #if defined(HAVE_INTEL_AVX1) || defined(HAVE_INTEL_AVX2)
             if (!IS_INTEL_AVX1(intel_flags) && !IS_INTEL_AVX2(intel_flags))
         #endif
             {
                 ByteReverseWords64(sha512->buffer, sha512->buffer,
-                                                             SHA512_BLOCK_SIZE);
+                                                          WC_SHA512_BLOCK_SIZE);
             }
     #endif
-            ret = Transform(sha512);
+            ret = Transform_Sha512(sha512);
+            if (ret == 0) {
+                AddLength(sha512, WC_SHA512_BLOCK_SIZE);
+                sha512->buffLen = 0;
+            }
+            else
+                len = 0;
+        }
+    }
+
+#if defined(HAVE_INTEL_AVX1) || defined(HAVE_INTEL_AVX2)
+    if (Transform_Sha512_Len_p != NULL) {
+        word32 blocksLen = len & ~(WC_SHA512_BLOCK_SIZE-1);
+
+        if (blocksLen > 0) {
+            AddLength(sha512, blocksLen);
+            sha512->data = data;
+            /* Byte reversal performed in function if required. */
+            Transform_Sha512_Len(sha512, blocksLen);
+            data += blocksLen;
+            len  -= blocksLen;
+        }
+    }
+    else
+#endif
+#if !defined(LITTLE_ENDIAN_ORDER) || defined(FREESCALE_MMCAU_SHA) || \
+                            defined(HAVE_INTEL_AVX1) || defined(HAVE_INTEL_AVX2)
+    {
+        word32 blocksLen = len & ~(WC_SHA512_BLOCK_SIZE-1);
+
+        AddLength(sha512, blocksLen);
+        while (len >= WC_SHA512_BLOCK_SIZE) {
+            XMEMCPY(local, data, WC_SHA512_BLOCK_SIZE);
+
+            data += WC_SHA512_BLOCK_SIZE;
+            len  -= WC_SHA512_BLOCK_SIZE;
+
+            /* Byte reversal performed in function if required. */
+            ret = Transform_Sha512(sha512);
             if (ret != 0)
                 break;
-
-            AddLength(sha512, SHA512_BLOCK_SIZE);
-            sha512->buffLen = 0;
         }
+    }
+#else
+    {
+        word32 blocksLen = len & ~(WC_SHA512_BLOCK_SIZE-1);
+
+        AddLength(sha512, blocksLen);
+        while (len >= WC_SHA512_BLOCK_SIZE) {
+            XMEMCPY(local, data, WC_SHA512_BLOCK_SIZE);
+
+            data += WC_SHA512_BLOCK_SIZE;
+            len  -= WC_SHA512_BLOCK_SIZE;
+
+            ByteReverseWords64(sha512->buffer, sha512->buffer,
+                                                          WC_SHA512_BLOCK_SIZE);
+            ret = Transform_Sha512(sha512);
+            if (ret != 0)
+                break;
+        }
+    }
+#endif
+
+    if (len > 0) {
+        XMEMCPY(local, data, len);
+        sha512->buffLen = len;
     }
 
     return ret;
 }
 
-int wc_Sha512Update(Sha512* sha512, const byte* data, word32 len)
+int wc_Sha512Update(wc_Sha512* sha512, const byte* data, word32 len)
 {
     if (sha512 == NULL || (data == NULL && len > 0)) {
         return BAD_FUNC_ARG;
@@ -554,9 +626,9 @@ int wc_Sha512Update(Sha512* sha512, const byte* data, word32 len)
 
     return Sha512Update(sha512, data, len);
 }
+#endif /* WOLFSSL_IMX6_CAAM */
 
-
-static INLINE int Sha512Final(Sha512* sha512)
+static INLINE int Sha512Final(wc_Sha512* sha512)
 {
     byte* local = (byte*)sha512->buffer;
     int ret;
@@ -565,31 +637,30 @@ static INLINE int Sha512Final(Sha512* sha512)
         return BAD_FUNC_ARG;
     }
 
-    SAVE_XMM_YMM ; /* for Intel AVX */
     AddLength(sha512, sha512->buffLen);               /* before adding pads */
 
     local[sha512->buffLen++] = 0x80;  /* add 1 */
 
     /* pad with zeros */
-    if (sha512->buffLen > SHA512_PAD_SIZE) {
-        XMEMSET(&local[sha512->buffLen], 0, SHA512_BLOCK_SIZE - sha512->buffLen);
-        sha512->buffLen += SHA512_BLOCK_SIZE - sha512->buffLen;
+    if (sha512->buffLen > WC_SHA512_PAD_SIZE) {
+        XMEMSET(&local[sha512->buffLen], 0, WC_SHA512_BLOCK_SIZE - sha512->buffLen);
+        sha512->buffLen += WC_SHA512_BLOCK_SIZE - sha512->buffLen;
 #if defined(LITTLE_ENDIAN_ORDER)
     #if defined(HAVE_INTEL_AVX1) || defined(HAVE_INTEL_AVX2)
         if (!IS_INTEL_AVX1(intel_flags) && !IS_INTEL_AVX2(intel_flags))
     #endif
         {
             ByteReverseWords64(sha512->buffer,sha512->buffer,
-                                                             SHA512_BLOCK_SIZE);
+                                                             WC_SHA512_BLOCK_SIZE);
         }
 #endif /* LITTLE_ENDIAN_ORDER */
-        ret = Transform(sha512);
+        ret = Transform_Sha512(sha512);
         if (ret != 0)
             return ret;
 
         sha512->buffLen = 0;
     }
-    XMEMSET(&local[sha512->buffLen], 0, SHA512_PAD_SIZE - sha512->buffLen);
+    XMEMSET(&local[sha512->buffLen], 0, WC_SHA512_PAD_SIZE - sha512->buffLen);
 
     /* put lengths in bits */
     sha512->hiLen = (sha512->loLen >> (8 * sizeof(sha512->loLen) - 3)) +
@@ -601,30 +672,51 @@ static INLINE int Sha512Final(Sha512* sha512)
     #if defined(HAVE_INTEL_AVX1) || defined(HAVE_INTEL_AVX2)
         if (!IS_INTEL_AVX1(intel_flags) && !IS_INTEL_AVX2(intel_flags))
     #endif
-            ByteReverseWords64(sha512->buffer, sha512->buffer, SHA512_PAD_SIZE);
+            ByteReverseWords64(sha512->buffer, sha512->buffer, WC_SHA512_PAD_SIZE);
 #endif
     /* ! length ordering dependent on digest endian type ! */
 
-    sha512->buffer[SHA512_BLOCK_SIZE / sizeof(word64) - 2] = sha512->hiLen;
-    sha512->buffer[SHA512_BLOCK_SIZE / sizeof(word64) - 1] = sha512->loLen;
+    sha512->buffer[WC_SHA512_BLOCK_SIZE / sizeof(word64) - 2] = sha512->hiLen;
+    sha512->buffer[WC_SHA512_BLOCK_SIZE / sizeof(word64) - 1] = sha512->loLen;
 #if defined(HAVE_INTEL_AVX1) || defined(HAVE_INTEL_AVX2)
     if (IS_INTEL_AVX1(intel_flags) || IS_INTEL_AVX2(intel_flags))
-        ByteReverseWords64(&(sha512->buffer[SHA512_BLOCK_SIZE / sizeof(word64) - 2]),
-                           &(sha512->buffer[SHA512_BLOCK_SIZE / sizeof(word64) - 2]),
-                           SHA512_BLOCK_SIZE - SHA512_PAD_SIZE);
+        ByteReverseWords64(&(sha512->buffer[WC_SHA512_BLOCK_SIZE / sizeof(word64) - 2]),
+                           &(sha512->buffer[WC_SHA512_BLOCK_SIZE / sizeof(word64) - 2]),
+                           WC_SHA512_BLOCK_SIZE - WC_SHA512_PAD_SIZE);
 #endif
-    ret = Transform(sha512);
+    ret = Transform_Sha512(sha512);
     if (ret != 0)
         return ret;
 
     #ifdef LITTLE_ENDIAN_ORDER
-        ByteReverseWords64(sha512->digest, sha512->digest, SHA512_DIGEST_SIZE);
+        ByteReverseWords64(sha512->digest, sha512->digest, WC_SHA512_DIGEST_SIZE);
     #endif
 
     return 0;
 }
 
-int wc_Sha512Final(Sha512* sha512, byte* hash)
+int wc_Sha512FinalRaw(wc_Sha512* sha512, byte* hash)
+{
+#ifdef LITTLE_ENDIAN_ORDER
+    word64 digest[WC_SHA512_DIGEST_SIZE / sizeof(word64)];
+#endif
+
+    if (sha512 == NULL || hash == NULL) {
+        return BAD_FUNC_ARG;
+    }
+
+#ifdef LITTLE_ENDIAN_ORDER
+    ByteReverseWords64((word64*)digest, (word64*)sha512->digest,
+                                                         WC_SHA512_DIGEST_SIZE);
+    XMEMCPY(hash, digest, WC_SHA512_DIGEST_SIZE);
+#else
+    XMEMCPY(hash, sha512->digest, WC_SHA512_DIGEST_SIZE);
+#endif
+
+    return 0;
+}
+
+int wc_Sha512Final(wc_Sha512* sha512, byte* hash)
 {
     int ret;
 
@@ -636,7 +728,7 @@ int wc_Sha512Final(Sha512* sha512, byte* hash)
     if (sha512->asyncDev.marker == WOLFSSL_ASYNC_MARKER_SHA512) {
     #if defined(HAVE_INTEL_QA)
         return IntelQaSymSha512(&sha512->asyncDev, hash, NULL,
-                                            SHA512_DIGEST_SIZE);
+                                            WC_SHA512_DIGEST_SIZE);
     #endif
     }
 #endif /* WOLFSSL_ASYNC_CRYPT */
@@ -645,18 +737,18 @@ int wc_Sha512Final(Sha512* sha512, byte* hash)
     if (ret != 0)
         return ret;
 
-    XMEMCPY(hash, sha512->digest, SHA512_DIGEST_SIZE);
+    XMEMCPY(hash, sha512->digest, WC_SHA512_DIGEST_SIZE);
 
     return InitSha512(sha512);  /* reset state */
 }
 
 
-int wc_InitSha512(Sha512* sha512)
+int wc_InitSha512(wc_Sha512* sha512)
 {
     return wc_InitSha512_ex(sha512, NULL, INVALID_DEVID);
 }
 
-void wc_Sha512Free(Sha512* sha512)
+void wc_Sha512Free(wc_Sha512* sha512)
 {
     if (sha512 == NULL)
         return;
@@ -669,674 +761,1801 @@ void wc_Sha512Free(Sha512* sha512)
 
 #if defined(HAVE_INTEL_AVX1)
 
-#define Rx_1(i) h(i)+=S1(e(i))+Ch(e(i),f(i),g(i))+K[i+j] + W_X[i];
-#define Rx_2(i) d(i)+=h(i);
-#define Rx_3(i) h(i)+=S0(a(i))+Maj(a(i),b(i),c(i));
+static word64 mBYTE_FLIP_MASK[] =  { 0x0001020304050607, 0x08090a0b0c0d0e0f };
+
+#define W_0     xmm0
+#define W_2     xmm1
+#define W_4     xmm2
+#define W_6     xmm3
+#define W_8     xmm4
+#define W_10    xmm5
+#define W_12    xmm6
+#define W_14    xmm7
+
+#define W_M15   xmm12
+#define W_M7    xmm13
+#define MASK    xmm14
+
+#define XTMP1   xmm8
+#define XTMP2   xmm9
+#define XTMP3   xmm10
+#define XTMP4   xmm11
+
+#define XMM_REGS \
+    "xmm0", "xmm1", "xmm2", "xmm3", "xmm4", "xmm5", "xmm6", "xmm7",       \
+    "xmm8", "xmm9", "xmm10", "xmm11", "xmm12", "xmm13", "xmm14", "xmm15"
+
+#define _VPALIGNR(dest, src1, src2, bits)                               \
+    "vpalignr	$" #bits ", %%" #src2 ", %%" #src1 ", %%" #dest "\n\t"
+#define VPALIGNR(dest, src1, src2, bits) \
+       _VPALIGNR(dest, src1, src2, bits)
+
+#define _V_SHIFT_R(dest, src, bits)                             \
+    "vpsrlq	$" #bits ", %%" #src ", %%" #dest "\n\t"
+#define V_SHIFT_R(dest, src, bits) \
+       _V_SHIFT_R(dest, src, bits)
+
+#define _V_SHIFT_L(dest, src, bits)                             \
+    "vpsllq	$" #bits ", %%" #src ", %%" #dest "\n\t"
+#define V_SHIFT_L(dest, src, bits) \
+       _V_SHIFT_L(dest, src, bits)
+
+#define _V_ADD(dest, src1, src2)                                \
+    "vpaddq	%%" #src1 ", %%" #src2 ", %%" #dest "\n\t"
+#define V_ADD(dest, src1, src2) \
+       _V_ADD(dest, src1, src2)
+
+#define _V_XOR(dest, src1, src2)                                \
+    "vpxor	%%" #src1 ", %%" #src2 ", %%" #dest "\n\t"
+#define V_XOR(dest, src1, src2) \
+       _V_XOR(dest, src1, src2)
+
+#define _V_OR(dest, src1, src2)                                 \
+    "vpor	%%" #src1 ", %%" #src2 ", %%" #dest "\n\t"
+#define V_OR(dest, src1, src2) \
+       _V_OR(dest, src1, src2)
+
+#define RA  %%r8
+#define RB  %%r9
+#define RC  %%r10
+#define RD  %%r11
+#define RE  %%r12
+#define RF  %%r13
+#define RG  %%r14
+#define RH  %%r15
+
+#define STATE_REGS "r8", "r9", "r10", "r11", "r12", "r13", "r14", "r15"
+
+#define L1  "%%rax"
+#define L2  "%%rcx"
+#define L3  "%%rdx"
+#define L4  "%%rbx"
+#define WX  "%%rsp"
+
+#define WORK_REGS "rax", "rbx", "rcx", "rdx"
+
+#define RND_0_1(a,b,c,d,e,f,g,h,i)                   \
+    /* L1 = e >>> 23 */                              \
+    "rorq	 $23, " L1 "\n\t"                    \
+
+#define RND_0_2(a,b,c,d,e,f,g,h,i)                   \
+    /* L3 = a */                                     \
+    "movq	"#a", " L3 "\n\t"                    \
+    /* L2 = f */                                     \
+    "movq	"#f", " L2 "\n\t"                    \
+    /* h += W_X[i] */                                \
+    "addq	("#i")*8(" WX "), "#h"\n\t"          \
+    /* L2 = f ^ g */                                 \
+    "xorq	"#g", " L2 "\n\t"                    \
+
+#define RND_0_2_A(a,b,c,d,e,f,g,h,i)                 \
+    /* L3 = a */                                     \
+    "movq	"#a", " L3 "\n\t"                    \
+    /* L2 = f */                                     \
+    "movq	"#f", " L2 "\n\t"                    \
+
+#define RND_0_2_B(a,b,c,d,e,f,g,h,i)                 \
+    /* h += W_X[i] */                                \
+    "addq	("#i")*8(" WX "), "#h"\n\t"          \
+    /* L2 = f ^ g */                                 \
+    "xorq	"#g", " L2 "\n\t"                    \
+
+#define RND_0_3(a,b,c,d,e,f,g,h,i)                   \
+    /* L1 = (e >>> 23) ^ e */                        \
+    "xorq	"#e", " L1 "\n\t"                    \
+    /* L2 = (f ^ g) & e */                           \
+    "andq	"#e", " L2 "\n\t"                    \
+
+#define RND_0_4(a,b,c,d,e,f,g,h,i)                   \
+    /* L1 = ((e >>> 23) ^ e) >>> 4 */                \
+    "rorq	 $4, " L1 "\n\t"                     \
+    /* L2 = ((f ^ g) & e) ^ g */                     \
+    "xorq	"#g", " L2 "\n\t"                    \
+
+#define RND_0_5(a,b,c,d,e,f,g,h,i)                   \
+    /* L1 = (((e >>> 23) ^ e) >>> 4) ^ e */          \
+    "xorq	"#e", " L1 "\n\t"                    \
+    /* h += Ch(e,f,g) */                             \
+    "addq	" L2 ", "#h"\n\t"                    \
+
+#define RND_0_6(a,b,c,d,e,f,g,h,i)                   \
+    /* L1 = ((((e >>> 23) ^ e) >>> 4) ^ e) >>> 14 */ \
+    "rorq	$14, " L1 "\n\t"                     \
+    /* L3 = a ^ b */                                 \
+    "xorq	"#b", " L3 "\n\t"                    \
+
+#define RND_0_7(a,b,c,d,e,f,g,h,i)                   \
+    /* h += Sigma1(e) */                             \
+    "addq	" L1 ", "#h"\n\t"                    \
+    /* L2 = a */                                     \
+    "movq	"#a", " L2 "\n\t"                    \
+
+#define RND_0_8(a,b,c,d,e,f,g,h,i)                   \
+    /* L4 = (a ^ b) & (b ^ c) */                     \
+    "andq	" L3 ", " L4 "\n\t"                  \
+    /* L2 = a >>> 5 */                               \
+    "rorq	$5, " L2 "\n\t"                      \
+
+#define RND_0_9(a,b,c,d,e,f,g,h,i)                   \
+    /* L2 = (a >>> 5) ^ a */                         \
+    "xorq	"#a", " L2 "\n\t"                    \
+    /* L4 = ((a ^ b) & (b ^ c) ^ b */                \
+    "xorq	"#b", " L4 "\n\t"                    \
+
+#define RND_0_10(a,b,c,d,e,f,g,h,i)                  \
+    /* L2 = ((a >>> 5) ^ a) >>> 6 */                 \
+    "rorq	 $6, " L2 "\n\t"                     \
+    /* d += h */                                     \
+    "addq	"#h", "#d"\n\t"                      \
+
+#define RND_0_11(a,b,c,d,e,f,g,h,i)                  \
+    /* L2 = (((a >>> 5) ^ a) >>> 6) ^ a */           \
+    "xorq	"#a", " L2 "\n\t"                    \
+    /* h += Sigma0(a) */                             \
+    "addq	" L4 ", "#h"\n\t"                    \
+
+#define RND_0_12(a,b,c,d,e,f,g,h,i)                  \
+    /* L2 = ((((a >>> 5) ^ a) >>> 6) ^ a) >>> 28 */  \
+    "rorq	$28, " L2 "\n\t"                     \
+    /* d (= e next RND) */                           \
+    "movq	"#d", " L1 "\n\t"                    \
+    /* h += Maj(a,b,c) */                            \
+    "addq	" L2 ", "#h"\n\t"                    \
+
+#define RND_1_1(a,b,c,d,e,f,g,h,i)                   \
+    /* L1 = e >>> 23 */                              \
+    "rorq	 $23, " L1 "\n\t"                    \
+
+#define RND_1_2(a,b,c,d,e,f,g,h,i)                   \
+    /* L4 = a */                                     \
+    "movq	"#a", " L4 "\n\t"                    \
+    /* L2 = f */                                     \
+    "movq	"#f", " L2 "\n\t"                    \
+    /* h += W_X[i] */                                \
+    "addq	("#i")*8(" WX "), "#h"\n\t"          \
+    /* L2 = f ^ g */                                 \
+    "xorq	"#g", " L2 "\n\t"                    \
+
+#define RND_1_2_A(a,b,c,d,e,f,g,h,i)                 \
+    /* L4 = a */                                     \
+    "movq	"#a", " L4 "\n\t"                    \
+    /* L2 = f */                                     \
+    "movq	"#f", " L2 "\n\t"                    \
+
+#define RND_1_2_B(a,b,c,d,e,f,g,h,i)                 \
+    /* h += W_X[i] */                                \
+    "addq	("#i")*8(" WX "), "#h"\n\t"          \
+    /* L2 = f ^ g */                                 \
+    "xorq	"#g", " L2 "\n\t"                    \
+
+#define RND_1_3(a,b,c,d,e,f,g,h,i)                   \
+    /* L1 = (e >>> 23) ^ e */                        \
+    "xorq	"#e", " L1 "\n\t"                    \
+    /* L2 = (f ^ g) & e */                           \
+    "andq	"#e", " L2 "\n\t"                    \
+
+#define RND_1_4(a,b,c,d,e,f,g,h,i)                   \
+    /* ((e >>> 23) ^ e) >>> 4 */                     \
+    "rorq	 $4, " L1 "\n\t"                     \
+    /* ((f ^ g) & e) ^ g */                          \
+    "xorq	"#g", " L2 "\n\t"                    \
+
+#define RND_1_5(a,b,c,d,e,f,g,h,i)                   \
+    /* (((e >>> 23) ^ e) >>> 4) ^ e */               \
+    "xorq	"#e", " L1 "\n\t"                    \
+    /* h += Ch(e,f,g) */                             \
+    "addq	" L2 ", "#h"\n\t"                    \
+
+#define RND_1_6(a,b,c,d,e,f,g,h,i)                   \
+    /* L1 = ((((e >>> 23) ^ e) >>> 4) ^ e) >>> 14 */ \
+    "rorq	$14, " L1 "\n\t"                     \
+    /* L4 = a ^ b */                                 \
+    "xorq	"#b", " L4 "\n\t"                    \
+
+#define RND_1_7(a,b,c,d,e,f,g,h,i)                   \
+    /* h += Sigma1(e) */                             \
+    "addq	" L1 ", "#h"\n\t"                    \
+    /* L2 = a */                                     \
+    "movq	"#a", " L2 "\n\t"                    \
+ 
+#define RND_1_8(a,b,c,d,e,f,g,h,i)                   \
+    /* L3 = (a ^ b) & (b ^ c) */                     \
+    "andq	" L4 ", " L3 "\n\t"                  \
+    /* L2 = a >>> 5 */                               \
+    "rorq	$5, " L2 "\n\t"                      \
+
+#define RND_1_9(a,b,c,d,e,f,g,h,i)                   \
+    /* L2 = (a >>> 5) ^ a */                         \
+    "xorq	"#a", " L2 "\n\t"                    \
+    /* L3 = ((a ^ b) & (b ^ c) ^ b */                \
+    "xorq	"#b", " L3 "\n\t"                    \
+
+#define RND_1_10(a,b,c,d,e,f,g,h,i)                  \
+    /* L2 = ((a >>> 5) ^ a) >>> 6 */                 \
+    "rorq	 $6, " L2 "\n\t"                     \
+    /* d += h */                                     \
+    "addq	"#h", "#d"\n\t"                      \
+
+#define RND_1_11(a,b,c,d,e,f,g,h,i)                  \
+    /* L2 = (((a >>> 5) ^ a) >>> 6) ^ a */           \
+    "xorq	"#a", " L2 "\n\t"                    \
+    /* h += Sigma0(a) */                             \
+    "addq	" L3 ", "#h"\n\t"                    \
+
+#define RND_1_12(a,b,c,d,e,f,g,h,i)                  \
+    /* L2 = ((((a >>> 5) ^ a) >>> 6) ^ a) >>> 28 */  \
+    "rorq	$28, " L2 "\n\t"                     \
+    /* d (= e next RND) */                           \
+    "movq	"#d", " L1 "\n\t"                    \
+    /* h += Maj(a,b,c) */                            \
+    "addq	" L2 ", "#h"\n\t"                    \
+
+
+#define MsgSched2(W_0,W_2,W_4,W_6,W_8,W_10,W_12,W_14,a,b,c,d,e,f,g,h,i) \
+            RND_0_1(a,b,c,d,e,f,g,h,i)                                  \
+    VPALIGNR(W_M15, W_2, W_0, 8)                                        \
+    VPALIGNR(W_M7, W_10, W_8, 8)                                        \
+            RND_0_2(a,b,c,d,e,f,g,h,i)                                  \
+    V_SHIFT_R(XTMP1, W_M15, 1)                                          \
+    V_SHIFT_L(XTMP2, W_M15, 63)                                         \
+            RND_0_3(a,b,c,d,e,f,g,h,i)                                  \
+            RND_0_4(a,b,c,d,e,f,g,h,i)                                  \
+    V_SHIFT_R(XTMP3, W_M15, 8)                                          \
+    V_SHIFT_L(XTMP4, W_M15, 56)                                         \
+            RND_0_5(a,b,c,d,e,f,g,h,i)                                  \
+            RND_0_6(a,b,c,d,e,f,g,h,i)                                  \
+    V_OR(XTMP1, XTMP2, XTMP1)                                           \
+    V_OR(XTMP3, XTMP4, XTMP3)                                           \
+            RND_0_7(a,b,c,d,e,f,g,h,i)                                  \
+            RND_0_8(a,b,c,d,e,f,g,h,i)                                  \
+    V_SHIFT_R(XTMP4, W_M15, 7)                                          \
+    V_XOR(XTMP1, XTMP3, XTMP1)                                          \
+            RND_0_9(a,b,c,d,e,f,g,h,i)                                  \
+            RND_0_10(a,b,c,d,e,f,g,h,i)                                 \
+    V_XOR(XTMP1, XTMP4, XTMP1)                                          \
+    V_ADD(W_0, W_0, W_M7)                                               \
+            RND_0_11(a,b,c,d,e,f,g,h,i)                                 \
+            RND_0_12(a,b,c,d,e,f,g,h,i)                                 \
+            RND_1_1(h,a,b,c,d,e,f,g,i+1)                                \
+    V_ADD(W_0, W_0, XTMP1)                                              \
+            RND_1_2(h,a,b,c,d,e,f,g,i+1)                                \
+    V_SHIFT_R(XTMP1, W_14, 19)                                          \
+    V_SHIFT_L(XTMP2, W_14, 45)                                          \
+            RND_1_3(h,a,b,c,d,e,f,g,i+1)                                \
+            RND_1_4(h,a,b,c,d,e,f,g,i+1)                                \
+    V_SHIFT_R(XTMP3, W_14, 61)                                          \
+    V_SHIFT_L(XTMP4, W_14, 3)                                           \
+            RND_1_5(h,a,b,c,d,e,f,g,i+1)                                \
+            RND_1_6(h,a,b,c,d,e,f,g,i+1)                                \
+            RND_1_7(h,a,b,c,d,e,f,g,i+1)                                \
+    V_OR(XTMP1, XTMP2, XTMP1)                                           \
+    V_OR(XTMP3, XTMP4, XTMP3)                                           \
+            RND_1_8(h,a,b,c,d,e,f,g,i+1)                                \
+            RND_1_9(h,a,b,c,d,e,f,g,i+1)                                \
+    V_XOR(XTMP1, XTMP3, XTMP1)                                          \
+    V_SHIFT_R(XTMP4, W_14, 6)                                           \
+            RND_1_10(h,a,b,c,d,e,f,g,i+1)                               \
+            RND_1_11(h,a,b,c,d,e,f,g,i+1)                               \
+    V_XOR(XTMP1, XTMP4, XTMP1)                                          \
+            RND_1_12(h,a,b,c,d,e,f,g,i+1)                               \
+    V_ADD(W_0, W_0, XTMP1)                                              \
+
+#define RND_ALL_2(a, b, c, d, e, f, g, h, i) \
+    RND_0_1 (a, b, c, d, e, f, g, h, i )     \
+    RND_0_2 (a, b, c, d, e, f, g, h, i )     \
+    RND_0_3 (a, b, c, d, e, f, g, h, i )     \
+    RND_0_4 (a, b, c, d, e, f, g, h, i )     \
+    RND_0_5 (a, b, c, d, e, f, g, h, i )     \
+    RND_0_6 (a, b, c, d, e, f, g, h, i )     \
+    RND_0_7 (a, b, c, d, e, f, g, h, i )     \
+    RND_0_8 (a, b, c, d, e, f, g, h, i )     \
+    RND_0_9 (a, b, c, d, e, f, g, h, i )     \
+    RND_0_10(a, b, c, d, e, f, g, h, i )     \
+    RND_0_11(a, b, c, d, e, f, g, h, i )     \
+    RND_0_12(a, b, c, d, e, f, g, h, i )     \
+    RND_1_1 (h, a, b, c, d, e, f, g, i+1)    \
+    RND_1_2 (h, a, b, c, d, e, f, g, i+1)    \
+    RND_1_3 (h, a, b, c, d, e, f, g, i+1)    \
+    RND_1_4 (h, a, b, c, d, e, f, g, i+1)    \
+    RND_1_5 (h, a, b, c, d, e, f, g, i+1)    \
+    RND_1_6 (h, a, b, c, d, e, f, g, i+1)    \
+    RND_1_7 (h, a, b, c, d, e, f, g, i+1)    \
+    RND_1_8 (h, a, b, c, d, e, f, g, i+1)    \
+    RND_1_9 (h, a, b, c, d, e, f, g, i+1)    \
+    RND_1_10(h, a, b, c, d, e, f, g, i+1)    \
+    RND_1_11(h, a, b, c, d, e, f, g, i+1)    \
+    RND_1_12(h, a, b, c, d, e, f, g, i+1)
+
 
 #if defined(HAVE_INTEL_RORX)
 
-    #define Rx_RORX_1(i) h(i)+=S1_RORX(e(i))+Ch(e(i),f(i),g(i))+K[i+j] + W_X[i];
-    #define Rx_RORX_2(i) d(i)+=h(i);
-    #define Rx_RORX_3(i) h(i)+=S0_RORX(a(i))+Maj(a(i),b(i),c(i));
-#endif /* HAVE_INTEL_RORX */
+#define RND_RORX_0_1(a, b, c, d, e, f, g, h, i) \
+    /* L1 = e>>>14 */                           \
+    "rorxq	$14, "#e", " L1 "\n\t"          \
+    /* L2 = e>>>18 */                           \
+    "rorxq	$18, "#e", " L2 "\n\t"          \
+    /* Prev RND: h += Maj(a,b,c) */             \
+    "addq	" L3 ", "#a"\n\t"               \
+
+#define RND_RORX_0_2(a, b, c, d, e, f, g, h, i) \
+    /* h += w_k */                              \
+    "addq	("#i")*8(" WX "), "#h"\n\t"     \
+    /* L3 = f */                                \
+    "movq	"#f", " L3 "\n\t"               \
+    /* L2 = (e>>>14) ^ (e>>>18) */              \
+    "xorq	" L1 ", " L2 "\n\t"             \
+
+#define RND_RORX_0_3(a, b, c, d, e, f, g, h, i) \
+    /* L3 = f ^ g */                            \
+    "xorq	"#g", " L3 "\n\t"               \
+    /* L1 = e>>>41 */                           \
+    "rorxq	$41, "#e", " L1 "\n\t"          \
+    /* L1 = Sigma1(e) */                        \
+    "xorq	" L2 ", " L1 "\n\t"             \
+
+#define RND_RORX_0_4(a, b, c, d, e, f, g, h, i) \
+    /* L3 = (f ^ g) & e */                      \
+    "andq	"#e", " L3 "\n\t"               \
+    /* h += Sigma1(e) */                        \
+    "addq	" L1 ", "#h"\n\t"               \
+    /* L1 = a>>>28 */                           \
+    "rorxq	$28, "#a", " L1 "\n\t"          \
+
+#define RND_RORX_0_5(a, b, c, d, e, f, g, h, i) \
+    /* L2 = a>>>34 */                           \
+    "rorxq	$34, "#a", " L2 "\n\t"          \
+    /* L3 = Ch(e,f,g) */                        \
+    "xorq	"#g", " L3 "\n\t"               \
+    /* L2 = (a>>>28) ^ (a>>>34) */              \
+    "xorq	" L1 ", " L2 "\n\t"             \
+
+#define RND_RORX_0_6(a, b, c, d, e, f, g, h, i) \
+    /* L1 = a>>>39 */                           \
+    "rorxq	$39, "#a", " L1 "\n\t"          \
+    /* h += Ch(e,f,g) */                        \
+    "addq	" L3 ", "#h"\n\t"               \
+    /* L1 = Sigma0(a) */                        \
+    "xorq	" L2 ", " L1 "\n\t"             \
+
+#define RND_RORX_0_7(a, b, c, d, e, f, g, h, i) \
+    /* L3 = b */                                \
+    "movq	"#b", " L3 "\n\t"               \
+    /* d += h + w_k + Sigma1(e) + Ch(e,f,g) */  \
+    "addq	"#h", "#d"\n\t"                 \
+    /* L3 = a ^ b */                            \
+    "xorq	"#a", " L3 "\n\t"               \
+
+#define RND_RORX_0_8(a, b, c, d, e, f, g, h, i) \
+    /* L4 = (a ^ b) & (b ^ c) */                \
+    "andq	" L3 ", " L4 "\n\t"             \
+    /* h += Sigma0(a) */                        \
+    "addq	" L1 ", "#h"\n\t"               \
+    /* L4 = Maj(a,b,c) */                       \
+    "xorq	"#b", " L4 "\n\t"               \
+
+#define RND_RORX_1_1(a, b, c, d, e, f, g, h, i) \
+    /* L1 = e>>>14 */                           \
+    "rorxq	$14, "#e", " L1 "\n\t"          \
+    /* L2 = e>>>18 */                           \
+    "rorxq	$18, "#e", " L2 "\n\t"          \
+    /* Prev RND: h += Maj(a,b,c) */             \
+    "addq	" L4 ", "#a"\n\t"               \
+
+#define RND_RORX_1_2(a, b, c, d, e, f, g, h, i) \
+    /* h += w_k */                              \
+    "addq	("#i")*8(" WX "), "#h"\n\t"     \
+    /* L4 = f */                                \
+    "movq	"#f", " L4 "\n\t"               \
+    /* L2 = (e>>>14) ^ (e>>>18) */              \
+    "xorq	" L1 ", " L2 "\n\t"             \
+
+#define RND_RORX_1_3(a, b, c, d, e, f, g, h, i) \
+    /* L4 = f ^ g */                            \
+    "xorq	"#g", " L4 "\n\t"               \
+    /* L1 = e>>>41 */                           \
+    "rorxq	$41, "#e", " L1 "\n\t"          \
+    /* L1 = Sigma1(e) */                        \
+    "xorq	" L2 ", " L1 "\n\t"             \
+
+#define RND_RORX_1_4(a, b, c, d, e, f, g, h, i) \
+    /* L4 = (f ^ g) & e */                      \
+    "andq	"#e", " L4 "\n\t"               \
+    /* h += Sigma1(e) */                        \
+    "addq	" L1 ", "#h"\n\t"               \
+    /* L1 = a>>>28 */                           \
+    "rorxq	$28, "#a", " L1 "\n\t"          \
+
+#define RND_RORX_1_5(a, b, c, d, e, f, g, h, i) \
+    /* L2 = a>>>34 */                           \
+    "rorxq	$34, "#a", " L2 "\n\t"          \
+    /* L4 = Ch(e,f,g) */                        \
+    "xorq	"#g", " L4 "\n\t"               \
+    /* L2 = (a>>>28) ^ (a>>>34) */              \
+    "xorq	" L1 ", " L2 "\n\t"             \
+
+#define RND_RORX_1_6(a, b, c, d, e, f, g, h, i) \
+    /* L1 = a>>>39 */                           \
+    "rorxq	$39, "#a", " L1 "\n\t"          \
+    /* h += Ch(e,f,g) */                        \
+    "addq	" L4 ", "#h"\n\t"               \
+    /* L1 = Sigma0(a) */                        \
+    "xorq	" L2 ", " L1 "\n\t"             \
+
+#define RND_RORX_1_7(a, b, c, d, e, f, g, h, i) \
+    /* L4 = b */                                \
+    "movq	"#b", " L4 "\n\t"               \
+    /* d += h + w_k + Sigma1(e) + Ch(e,f,g) */  \
+    "addq	"#h", "#d"\n\t"                 \
+    /* L4 = a ^ b */                            \
+    "xorq	"#a", " L4 "\n\t"               \
+
+#define RND_RORX_1_8(a, b, c, d, e, f, g, h, i) \
+    /* L2 = (a ^ b) & (b ^ c) */                \
+    "andq	" L4 ", " L3 "\n\t"             \
+    /* h += Sigma0(a) */                        \
+    "addq	" L1 ", "#h"\n\t"               \
+    /* L3 = Maj(a,b,c) */                       \
+    "xorq	"#b", " L3 "\n\t"               \
+
+#define RND_RORX_ALL_2(a, b, c, d, e, f, g, h, i) \
+    RND_RORX_0_1(a, b, c, d, e, f, g, h, i+0)     \
+    RND_RORX_0_2(a, b, c, d, e, f, g, h, i+0)     \
+    RND_RORX_0_3(a, b, c, d, e, f, g, h, i+0)     \
+    RND_RORX_0_4(a, b, c, d, e, f, g, h, i+0)     \
+    RND_RORX_0_5(a, b, c, d, e, f, g, h, i+0)     \
+    RND_RORX_0_6(a, b, c, d, e, f, g, h, i+0)     \
+    RND_RORX_0_7(a, b, c, d, e, f, g, h, i+0)     \
+    RND_RORX_0_8(a, b, c, d, e, f, g, h, i+0)     \
+    RND_RORX_1_1(h, a, b, c, d, e, f, g, i+1)     \
+    RND_RORX_1_2(h, a, b, c, d, e, f, g, i+1)     \
+    RND_RORX_1_3(h, a, b, c, d, e, f, g, i+1)     \
+    RND_RORX_1_4(h, a, b, c, d, e, f, g, i+1)     \
+    RND_RORX_1_5(h, a, b, c, d, e, f, g, i+1)     \
+    RND_RORX_1_6(h, a, b, c, d, e, f, g, i+1)     \
+    RND_RORX_1_7(h, a, b, c, d, e, f, g, i+1)     \
+    RND_RORX_1_8(h, a, b, c, d, e, f, g, i+1)     \
+
+#define RND_RORX_ALL_4(a, b, c, d, e, f, g, h, i) \
+    RND_RORX_ALL_2(a, b, c, d, e, f, g, h, i+0)   \
+    RND_RORX_ALL_2(g, h, a, b, c, d, e, f, i+2)
+
+#define MsgSched_RORX(W_0,W_2,W_4,W_6,W_8,W_10,W_12,W_14,a,b,c,d,e,f,g,h,i) \
+            RND_RORX_0_1(a,b,c,d,e,f,g,h,i)                                 \
+    VPALIGNR(W_M15, W_2, W_0, 8)                                            \
+    VPALIGNR(W_M7, W_10, W_8, 8)                                            \
+            RND_RORX_0_2(a,b,c,d,e,f,g,h,i)                                 \
+    V_SHIFT_R(XTMP1, W_M15, 1)                                              \
+    V_SHIFT_L(XTMP2, W_M15, 63)                                             \
+            RND_RORX_0_3(a,b,c,d,e,f,g,h,i)                                 \
+    V_SHIFT_R(XTMP3, W_M15, 8)                                              \
+    V_SHIFT_L(XTMP4, W_M15, 56)                                             \
+            RND_RORX_0_4(a,b,c,d,e,f,g,h,i)                                 \
+    V_OR(XTMP1, XTMP2, XTMP1)                                               \
+    V_OR(XTMP3, XTMP4, XTMP3)                                               \
+            RND_RORX_0_5(a,b,c,d,e,f,g,h,i)                                 \
+    V_SHIFT_R(XTMP4, W_M15, 7)                                              \
+    V_XOR(XTMP1, XTMP3, XTMP1)                                              \
+            RND_RORX_0_6(a,b,c,d,e,f,g,h,i)                                 \
+    V_XOR(XTMP1, XTMP4, XTMP1)                                              \
+    V_ADD(W_0, W_0, W_M7)                                                   \
+            RND_RORX_0_7(a,b,c,d,e,f,g,h,i)                                 \
+            RND_RORX_0_8(a,b,c,d,e,f,g,h,i)                                 \
+    V_ADD(W_0, W_0, XTMP1)                                                  \
+            RND_RORX_1_1(h,a,b,c,d,e,f,g,i+1)                               \
+    V_SHIFT_R(XTMP1, W_14, 19)                                              \
+    V_SHIFT_L(XTMP2, W_14, 45)                                              \
+            RND_RORX_1_2(h,a,b,c,d,e,f,g,i+1)                               \
+    V_SHIFT_R(XTMP3, W_14, 61)                                              \
+    V_SHIFT_L(XTMP4, W_14, 3)                                               \
+            RND_RORX_1_3(h,a,b,c,d,e,f,g,i+1)                               \
+    V_OR(XTMP1, XTMP2, XTMP1)                                               \
+    V_OR(XTMP3, XTMP4, XTMP3)                                               \
+            RND_RORX_1_4(h,a,b,c,d,e,f,g,i+1)                               \
+            RND_RORX_1_5(h,a,b,c,d,e,f,g,i+1)                               \
+    V_XOR(XTMP1, XTMP3, XTMP1)                                              \
+    V_SHIFT_R(XTMP4, W_14, 6)                                               \
+            RND_RORX_1_6(h,a,b,c,d,e,f,g,i+1)                               \
+            RND_RORX_1_7(h,a,b,c,d,e,f,g,i+1)                               \
+    V_XOR(XTMP1, XTMP4, XTMP1)                                              \
+            RND_RORX_1_8(h,a,b,c,d,e,f,g,i+1)                               \
+    V_ADD(W_0, W_0, XTMP1)                                                  \
+
+#endif
+
+#define _INIT_MASK(mask) \
+    "vmovdqu %[mask], %%" #mask "\n\t"
+#define INIT_MASK(mask) \
+       _INIT_MASK(mask)
+
+#define _LOAD_W_2(i1, i2, xmm1, xmm2, mask, reg)           \
+    "vmovdqu	" #i1 "*16(%%" #reg "), %%" #xmm1 "\n\t"   \
+    "vmovdqu	" #i2 "*16(%%" #reg "), %%" #xmm2 "\n\t"   \
+    "vpshufb	%%" #mask ", %%" #xmm1 ", %%" #xmm1 "\n\t" \
+    "vpshufb	%%" #mask ", %%" #xmm2 ", %%" #xmm2 "\n\t"
+#define LOAD_W_2(i1, i2, xmm1, xmm2, mask, reg) \
+       _LOAD_W_2(i1, i2, xmm1, xmm2, mask, reg)
+
+#define LOAD_W(mask, reg)                           \
+    /* X0..3(xmm4..7), W[0..15] = buffer[0.15];  */ \
+    LOAD_W_2(0, 1, W_0 , W_2 , mask, reg)           \
+    LOAD_W_2(2, 3, W_4 , W_6 , mask, reg)           \
+    LOAD_W_2(4, 5, W_8 , W_10, mask, reg)           \
+    LOAD_W_2(6, 7, W_12, W_14, mask, reg)
+
+#define _SET_W_X_2(xmm0, xmm1, reg, i)                          \
+    "vpaddq	" #i "+ 0(%%" #reg "), %%" #xmm0 ", %%xmm8\n\t" \
+    "vpaddq	" #i "+16(%%" #reg "), %%" #xmm1 ", %%xmm9\n\t" \
+    "vmovdqu	%%xmm8, " #i "+ 0(" WX ")\n\t"                  \
+    "vmovdqu	%%xmm9, " #i "+16(" WX ")\n\t"                  \
+
+#define SET_W_X_2(xmm0, xmm1, reg, i) \
+       _SET_W_X_2(xmm0, xmm1, reg, i)
+
+#define SET_W_X(reg)                \
+    SET_W_X_2(W_0 , W_2 , reg,  0)  \
+    SET_W_X_2(W_4 , W_6 , reg, 32)  \
+    SET_W_X_2(W_8 , W_10, reg, 64)  \
+    SET_W_X_2(W_12, W_14, reg, 96)
+
+#define LOAD_DIGEST()                     \
+    "movq	  (%[sha512]), %%r8 \n\t" \
+    "movq	 8(%[sha512]), %%r9 \n\t" \
+    "movq	16(%[sha512]), %%r10\n\t" \
+    "movq	24(%[sha512]), %%r11\n\t" \
+    "movq	32(%[sha512]), %%r12\n\t" \
+    "movq	40(%[sha512]), %%r13\n\t" \
+    "movq	48(%[sha512]), %%r14\n\t" \
+    "movq	56(%[sha512]), %%r15\n\t"
+
+#define STORE_ADD_DIGEST()                \
+    "addq	 %%r8,   (%[sha512])\n\t" \
+    "addq	 %%r9,  8(%[sha512])\n\t" \
+    "addq	%%r10, 16(%[sha512])\n\t" \
+    "addq	%%r11, 24(%[sha512])\n\t" \
+    "addq	%%r12, 32(%[sha512])\n\t" \
+    "addq	%%r13, 40(%[sha512])\n\t" \
+    "addq	%%r14, 48(%[sha512])\n\t" \
+    "addq	%%r15, 56(%[sha512])\n\t"
+
+#define ADD_DIGEST()                      \
+    "addq	  (%[sha512]), %%r8 \n\t" \
+    "addq	 8(%[sha512]), %%r9 \n\t" \
+    "addq	16(%[sha512]), %%r10\n\t" \
+    "addq	24(%[sha512]), %%r11\n\t" \
+    "addq	32(%[sha512]), %%r12\n\t" \
+    "addq	40(%[sha512]), %%r13\n\t" \
+    "addq	48(%[sha512]), %%r14\n\t" \
+    "addq	56(%[sha512]), %%r15\n\t"
+
+#define STORE_DIGEST()                    \
+    "movq	 %%r8,   (%[sha512])\n\t" \
+    "movq	 %%r9,  8(%[sha512])\n\t" \
+    "movq	%%r10, 16(%[sha512])\n\t" \
+    "movq	%%r11, 24(%[sha512])\n\t" \
+    "movq	%%r12, 32(%[sha512])\n\t" \
+    "movq	%%r13, 40(%[sha512])\n\t" \
+    "movq	%%r14, 48(%[sha512])\n\t" \
+    "movq	%%r15, 56(%[sha512])\n\t"
 
 #endif /* HAVE_INTEL_AVX1 */
-
-#if defined(HAVE_INTEL_AVX2)
-#define Ry_1(i, w) h(i)+=S1(e(i))+Ch(e(i),f(i),g(i))+K[i+j] + w;
-#define Ry_2(i, w) d(i)+=h(i);
-#define Ry_3(i, w) h(i)+=S0(a(i))+Maj(a(i),b(i),c(i));
-#endif /* HAVE_INTEL_AVX2 */
-
-/* INLINE Assember for Intel AVX1 instructions */
-#if defined(HAVE_INTEL_AVX1)
-#if defined(DEBUG_XMM)
-    #define SAVE_REG(i)     __asm__ volatile("vmovdqu %%xmm"#i", %0 \n\t":"=m"(reg[i][0]):);
-    #define RECV_REG(i)     __asm__ volatile("vmovdqu %0, %%xmm"#i" \n\t"::"m"(reg[i][0]));
-
-    #define _DUMP_REG(REG, name)\
-        { word64 buf[16];word64 reg[16][2];int k;\
-          SAVE_REG(0); SAVE_REG(1); SAVE_REG(2);  SAVE_REG(3);  SAVE_REG(4);  \
-          SAVE_REG(5);   SAVE_REG(6); SAVE_REG(7);SAVE_REG(8); SAVE_REG(9); SAVE_REG(10);\
-           SAVE_REG(11); SAVE_REG(12); SAVE_REG(13); SAVE_REG(14); SAVE_REG(15); \
-          __asm__ volatile("vmovdqu %%"#REG", %0 \n\t":"=m"(buf[0]):);\
-          printf(" "#name":\t"); for(k=0; k<2; k++) printf("%016lx.", (word64)(buf[k])); printf("\n"); \
-          RECV_REG(0); RECV_REG(1); RECV_REG(2);  RECV_REG(3);  RECV_REG(4);\
-          RECV_REG(5);   RECV_REG(6); RECV_REG(7); RECV_REG(8); RECV_REG(9);\
-          RECV_REG(10); RECV_REG(11); RECV_REG(12); RECV_REG(13); RECV_REG(14); RECV_REG(15);\
-        }
-
-    #define DUMP_REG(REG) _DUMP_REG(REG, #REG)
-    #define PRINTF(fmt, ...)
-#else
-    #define DUMP_REG(REG)
-    #define PRINTF(fmt, ...)
-#endif /* DEBUG_XMM */
-
-#define _MOVE_to_REG(xymm, mem)       __asm__ volatile("vmovdqu %0, %%"#xymm" "\
-        :: "m"(mem));
-#define _MOVE_to_MEM(mem,i, xymm)     __asm__ volatile("vmovdqu %%"#xymm", %0" :\
-         "=m"(mem[i]),"=m"(mem[i+1]),"=m"(mem[i+2]),"=m"(mem[i+3]):);
-#define _MOVE(dest, src)              __asm__ volatile("vmovdqu %%"#src",  %%"\
-        #dest" "::);
-
-#define _S_TEMP(dest, src, bits, temp)  __asm__ volatile("vpsrlq  $"#bits", %%"\
-        #src", %%"#dest"\n\tvpsllq  $64-"#bits", %%"#src", %%"#temp"\n\tvpor %%"\
-        #temp",%%"#dest", %%"#dest" "::);
-#define _AVX1_R(dest, src, bits)      __asm__ volatile("vpsrlq  $"#bits", %%"\
-        #src", %%"#dest" "::);
-#define _XOR(dest, src1, src2)        __asm__ volatile("vpxor   %%"#src1", %%"\
-        #src2", %%"#dest" "::);
-#define _OR(dest, src1, src2)         __asm__ volatile("vpor    %%"#src1", %%"\
-        #src2", %%"#dest" "::);
-#define _ADD(dest, src1, src2)        __asm__ volatile("vpaddq   %%"#src1", %%"\
-        #src2", %%"#dest" "::);
-#define _ADD_MEM(dest, src1, mem)     __asm__ volatile("vpaddq   %0, %%"#src1", %%"\
-        #dest" "::"m"(mem));
-
-#define MOVE_to_REG(xymm, mem)      _MOVE_to_REG(xymm, mem)
-#define MOVE_to_MEM(mem, i, xymm)   _MOVE_to_MEM(mem, i, xymm)
-#define MOVE(dest, src)             _MOVE(dest, src)
-
-#define XOR(dest, src1, src2)      _XOR(dest, src1, src2)
-#define OR(dest, src1, src2)       _OR(dest, src1, src2)
-#define ADD(dest, src1, src2)      _ADD(dest, src1, src2)
-
-#define S_TMP(dest, src, bits, temp) _S_TEMP(dest, src, bits, temp);
-#define AVX1_S(dest, src, bits)      S_TMP(dest, src, bits, S_TEMP)
-#define AVX1_R(dest, src, bits)      _AVX1_R(dest, src, bits)
-
-#define Init_Mask(mask) \
-     __asm__ volatile("vmovdqu %0, %%xmm1\n\t"::"m"(mask):"%xmm1");
-
-#define _W_from_buff1(w, buff, xmm) \
-    /* X0..3(xmm4..7), W[0..15] = sha512->buffer[0.15];  */\
-     __asm__ volatile("vmovdqu %1, %%"#xmm"\n\t"\
-                      "vpshufb %%xmm1, %%"#xmm", %%"#xmm"\n\t"\
-                      "vmovdqu %%"#xmm", %0"\
-                      :"=m"(w): "m"(buff):"%xmm0");
-
-#define W_from_buff1(w, buff, xmm) _W_from_buff1(w, buff, xmm)
-
-#define W_from_buff(w, buff)\
-     Init_Mask(mBYTE_FLIP_MASK[0]);\
-     W_from_buff1(w[0], buff[0], W_0);\
-     W_from_buff1(w[2], buff[2], W_2);\
-     W_from_buff1(w[4], buff[4], W_4);\
-     W_from_buff1(w[6], buff[6], W_6);\
-     W_from_buff1(w[8], buff[8], W_8);\
-     W_from_buff1(w[10],buff[10],W_10);\
-     W_from_buff1(w[12],buff[12],W_12);\
-     W_from_buff1(w[14],buff[14],W_14);
-
-static word64 mBYTE_FLIP_MASK[] =  { 0x0001020304050607, 0x08090a0b0c0d0e0f };
-
-#define W_I_15  xmm14
-#define W_I_7   xmm11
-#define W_I_2   xmm13
-#define W_I     xmm12
-#define G_TEMP  xmm0
-#define S_TEMP  xmm1
-#define XMM_TEMP0  xmm2
-
-#define W_0     xmm12
-#define W_2     xmm3
-#define W_4     xmm4
-#define W_6     xmm5
-#define W_8     xmm6
-#define W_10    xmm7
-#define W_12    xmm8
-#define W_14    xmm9
-
-#define s0_1(dest, src)      AVX1_S(dest, src, 1);
-#define s0_2(dest, src)      AVX1_S(G_TEMP, src, 8); XOR(dest, G_TEMP, dest);
-#define s0_3(dest, src)      AVX1_R(G_TEMP, src, 7);  XOR(dest, G_TEMP, dest);
-
-#define s1_1(dest, src)      AVX1_S(dest, src, 19);
-#define s1_2(dest, src)      AVX1_S(G_TEMP, src, 61); XOR(dest, G_TEMP, dest);
-#define s1_3(dest, src)      AVX1_R(G_TEMP, src, 6); XOR(dest, G_TEMP, dest);
-
-#define s0_(dest, src)       s0_1(dest, src); s0_2(dest, src); s0_3(dest, src)
-#define s1_(dest, src)       s1_1(dest, src); s1_2(dest, src); s1_3(dest, src)
-
-#define Block_xx_1(i) \
-    MOVE_to_REG(W_I_15, W_X[(i-15)&15]);\
-    MOVE_to_REG(W_I_7,  W_X[(i- 7)&15]);\
-
-#define Block_xx_2(i) \
-    MOVE_to_REG(W_I_2,  W_X[(i- 2)&15]);\
-    MOVE_to_REG(W_I,    W_X[(i)]);\
-
-#define Block_xx_3(i) \
-    s0_ (XMM_TEMP0, W_I_15);\
-
-#define Block_xx_4(i) \
-    ADD(W_I, W_I, XMM_TEMP0);\
-    ADD(W_I, W_I, W_I_7);\
-
-#define Block_xx_5(i) \
-    s1_ (XMM_TEMP0, W_I_2);\
-
-#define Block_xx_6(i) \
-    ADD(W_I, W_I, XMM_TEMP0);\
-    MOVE_to_MEM(W_X,i, W_I);\
-    if (i==0)\
-        MOVE_to_MEM(W_X,16, W_I);\
-
-#define Block_xx_7(i) \
-    MOVE_to_REG(W_I_15, W_X[(i-15)&15]);\
-    MOVE_to_REG(W_I_7,  W_X[(i- 7)&15]);\
-
-#define Block_xx_8(i) \
-    MOVE_to_REG(W_I_2,  W_X[(i- 2)&15]);\
-    MOVE_to_REG(W_I,    W_X[(i)]);\
-
-#define Block_xx_9(i) \
-    s0_ (XMM_TEMP0, W_I_15);\
-
-#define Block_xx_10(i) \
-    ADD(W_I, W_I, XMM_TEMP0);\
-    ADD(W_I, W_I, W_I_7);\
-
-#define Block_xx_11(i) \
-    s1_ (XMM_TEMP0, W_I_2);\
-
-#define Block_xx_12(i) \
-    ADD(W_I, W_I, XMM_TEMP0);\
-    MOVE_to_MEM(W_X,i, W_I);\
-    if ((i)==0)\
-        MOVE_to_MEM(W_X,16, W_I);\
-
-static INLINE void Block_0_1(word64 *W_X) { Block_xx_1(0); }
-static INLINE void Block_0_2(word64 *W_X) { Block_xx_2(0); }
-static INLINE void Block_0_3(void) { Block_xx_3(0); }
-static INLINE void Block_0_4(void) { Block_xx_4(0); }
-static INLINE void Block_0_5(void) { Block_xx_5(0); }
-static INLINE void Block_0_6(word64 *W_X) { Block_xx_6(0); }
-static INLINE void Block_0_7(word64 *W_X) { Block_xx_7(2); }
-static INLINE void Block_0_8(word64 *W_X) { Block_xx_8(2); }
-static INLINE void Block_0_9(void) { Block_xx_9(2); }
-static INLINE void Block_0_10(void){ Block_xx_10(2); }
-static INLINE void Block_0_11(void){ Block_xx_11(2); }
-static INLINE void Block_0_12(word64 *W_X){ Block_xx_12(2); }
-
-static INLINE void Block_4_1(word64 *W_X) { Block_xx_1(4); }
-static INLINE void Block_4_2(word64 *W_X) { Block_xx_2(4); }
-static INLINE void Block_4_3(void) { Block_xx_3(4); }
-static INLINE void Block_4_4(void) { Block_xx_4(4); }
-static INLINE void Block_4_5(void) { Block_xx_5(4); }
-static INLINE void Block_4_6(word64 *W_X) { Block_xx_6(4); }
-static INLINE void Block_4_7(word64 *W_X) { Block_xx_7(6); }
-static INLINE void Block_4_8(word64 *W_X) { Block_xx_8(6); }
-static INLINE void Block_4_9(void) { Block_xx_9(6); }
-static INLINE void Block_4_10(void){ Block_xx_10(6); }
-static INLINE void Block_4_11(void){ Block_xx_11(6); }
-static INLINE void Block_4_12(word64 *W_X){ Block_xx_12(6); }
-
-static INLINE void Block_8_1(word64 *W_X) { Block_xx_1(8); }
-static INLINE void Block_8_2(word64 *W_X) { Block_xx_2(8); }
-static INLINE void Block_8_3(void) { Block_xx_3(8); }
-static INLINE void Block_8_4(void) { Block_xx_4(8); }
-static INLINE void Block_8_5(void) { Block_xx_5(8); }
-static INLINE void Block_8_6(word64 *W_X) { Block_xx_6(8); }
-static INLINE void Block_8_7(word64 *W_X) { Block_xx_7(10); }
-static INLINE void Block_8_8(word64 *W_X) { Block_xx_8(10); }
-static INLINE void Block_8_9(void) { Block_xx_9(10); }
-static INLINE void Block_8_10(void){ Block_xx_10(10); }
-static INLINE void Block_8_11(void){ Block_xx_11(10); }
-static INLINE void Block_8_12(word64 *W_X){ Block_xx_12(10); }
-
-static INLINE void Block_12_1(word64 *W_X) { Block_xx_1(12); }
-static INLINE void Block_12_2(word64 *W_X) { Block_xx_2(12); }
-static INLINE void Block_12_3(void) { Block_xx_3(12); }
-static INLINE void Block_12_4(void) { Block_xx_4(12); }
-static INLINE void Block_12_5(void) { Block_xx_5(12); }
-static INLINE void Block_12_6(word64 *W_X) { Block_xx_6(12); }
-static INLINE void Block_12_7(word64 *W_X) { Block_xx_7(14); }
-static INLINE void Block_12_8(word64 *W_X) { Block_xx_8(14); }
-static INLINE void Block_12_9(void) { Block_xx_9(14); }
-static INLINE void Block_12_10(void){ Block_xx_10(14); }
-static INLINE void Block_12_11(void){ Block_xx_11(14); }
-static INLINE void Block_12_12(word64 *W_X){ Block_xx_12(14); }
-
-#endif /* HAVE_INTEL_AVX1 */
-
-#if defined(HAVE_INTEL_AVX2)
-static const unsigned long mBYTE_FLIP_MASK_Y[] =
-   { 0x0001020304050607, 0x08090a0b0c0d0e0f, 0x0001020304050607, 0x08090a0b0c0d0e0f };
-
-#define W_from_buff_Y(buff)\
-    { /* X0..3(ymm9..12), W_X[0..15] = sha512->buffer[0.15];  */\
-     __asm__ volatile("vmovdqu %0, %%ymm8\n\t"::"m"(mBYTE_FLIP_MASK_Y[0]));\
-     __asm__ volatile("vmovdqu %0, %%ymm12\n\t"\
-                      "vmovdqu %1, %%ymm4\n\t"\
-                      "vpshufb %%ymm8, %%ymm12, %%ymm12\n\t"\
-                      "vpshufb %%ymm8, %%ymm4, %%ymm4\n\t"\
-                      :: "m"(buff[0]),  "m"(buff[4]));\
-     __asm__ volatile("vmovdqu %0, %%ymm5\n\t"\
-                      "vmovdqu %1, %%ymm6\n\t"\
-                      "vpshufb %%ymm8, %%ymm5, %%ymm5\n\t"\
-                      "vpshufb %%ymm8, %%ymm6, %%ymm6\n\t"\
-                      :: "m"(buff[8]),  "m"(buff[12]));\
-    }
-
-#if defined(DEBUG_YMM)
-    #define SAVE_REG_Y(i) __asm__ volatile("vmovdqu %%ymm"#i", %0 \n\t":"=m"(reg[i-4][0]):);
-    #define RECV_REG_Y(i) __asm__ volatile("vmovdqu %0, %%ymm"#i" \n\t"::"m"(reg[i-4][0]));
-
-    #define _DUMP_REG_Y(REG, name)\
-        { word64 buf[16];word64 reg[16][2];int k;\
-          SAVE_REG_Y(4);  SAVE_REG_Y(5);   SAVE_REG_Y(6); SAVE_REG_Y(7); \
-          SAVE_REG_Y(8); SAVE_REG_Y(9); SAVE_REG_Y(10); SAVE_REG_Y(11); SAVE_REG_Y(12);\
-          SAVE_REG_Y(13); SAVE_REG_Y(14); SAVE_REG_Y(15); \
-          __asm__ volatile("vmovdqu %%"#REG", %0 \n\t":"=m"(buf[0]):);\
-          printf(" "#name":\t"); for(k=0; k<4; k++) printf("%016lx.", (word64)buf[k]); printf("\n"); \
-          RECV_REG_Y(4);  RECV_REG_Y(5);   RECV_REG_Y(6); RECV_REG_Y(7); \
-          RECV_REG_Y(8); RECV_REG_Y(9); RECV_REG_Y(10); RECV_REG_Y(11); RECV_REG_Y(12); \
-          RECV_REG_Y(13); RECV_REG_Y(14); RECV_REG_Y(15);\
-        }
-
-    #define DUMP_REG_Y(REG) _DUMP_REG_Y(REG, #REG)
-    #define DUMP_REG2_Y(REG) _DUMP_REG_Y(REG, #REG)
-    #define PRINTF_Y(fmt, ...)
-#else
-    #define DUMP_REG_Y(REG)
-    #define DUMP_REG2_Y(REG)
-    #define PRINTF_Y(fmt, ...)
-#endif /* DEBUG_YMM */
-
-#define _MOVE_to_REGy(ymm, mem)         __asm__ volatile("vmovdqu %0, %%"#ymm" "\
-                                        :: "m"(mem));
-#define _MOVE_to_MEMy(mem,i, ymm)       __asm__ volatile("vmovdqu %%"#ymm", %0" \
-        : "=m"(mem[i]),"=m"(mem[i+1]),"=m"(mem[i+2]),"=m"(mem[i+3]):);
-#define _MOVE_128y(ymm0, ymm1, ymm2, map)  __asm__ volatile("vperm2i128  $"\
-        #map", %%"#ymm2", %%"#ymm1", %%"#ymm0" "::);
-#define _S_TEMPy(dest, src, bits, temp) \
-         __asm__ volatile("vpsrlq  $"#bits", %%"#src", %%"#dest"\n\tvpsllq  $64-"#bits\
-        ", %%"#src", %%"#temp"\n\tvpor %%"#temp",%%"#dest", %%"#dest" "::);
-#define _AVX2_R(dest, src, bits)        __asm__ volatile("vpsrlq  $"#bits", %%"\
-         #src", %%"#dest" "::);
-#define _XORy(dest, src1, src2)         __asm__ volatile("vpxor   %%"#src1", %%"\
-         #src2", %%"#dest" "::);
-#define _ADDy(dest, src1, src2)         __asm__ volatile("vpaddq   %%"#src1", %%"\
-         #src2", %%"#dest" "::);
-#define _BLENDy(map, dest, src1, src2)  __asm__ volatile("vpblendd    $"#map", %%"\
-         #src1",   %%"#src2", %%"#dest" "::);
-#define _BLENDQy(map, dest, src1, src2) __asm__ volatile("vblendpd   $"#map", %%"\
-         #src1",   %%"#src2", %%"#dest" "::);
-#define _PERMQy(map, dest, src)         __asm__ volatile("vpermq  $"#map", %%"\
-         #src", %%"#dest" "::);
-
-#define MOVE_to_REGy(ymm, mem)      _MOVE_to_REGy(ymm, mem)
-#define MOVE_to_MEMy(mem, i, ymm)   _MOVE_to_MEMy(mem, i, ymm)
-
-#define MOVE_128y(ymm0, ymm1, ymm2, map) _MOVE_128y(ymm0, ymm1, ymm2, map)
-#define XORy(dest, src1, src2)      _XORy(dest, src1, src2)
-#define ADDy(dest, src1, src2)      _ADDy(dest, src1, src2)
-#define BLENDy(map, dest, src1, src2) _BLENDy(map, dest, src1, src2)
-#define BLENDQy(map, dest, src1, src2) _BLENDQy(map, dest, src1, src2)
-#define PERMQy(map, dest, src)      _PERMQy(map, dest, src)
-
-
-#define S_TMPy(dest, src, bits, temp) _S_TEMPy(dest, src, bits, temp);
-#define AVX2_S(dest, src, bits)      S_TMPy(dest, src, bits, S_TEMPy)
-#define AVX2_R(dest, src, bits)      _AVX2_R(dest, src, bits)
-
-
-#define    FEEDBACK1_to_W_I_2(w_i_2, w_i)    MOVE_128y(YMM_TEMP0, w_i, w_i, 0x08);\
-                                       BLENDy(0xf0, w_i_2, YMM_TEMP0, w_i_2);
-
-#define    MOVE_W_to_W_I_15(w_i_15, w_0, w_4)  BLENDQy(0x1, w_i_15, w_4, w_0);\
-                                       PERMQy(0x39, w_i_15, w_i_15);
-#define    MOVE_W_to_W_I_7(w_i_7,  w_8, w_12)  BLENDQy(0x1, w_i_7, w_12, w_8);\
-                                       PERMQy(0x39, w_i_7, w_i_7);
-#define    MOVE_W_to_W_I_2(w_i_2,  w_12)       BLENDQy(0xc, w_i_2, w_12, w_i_2);\
-                                       PERMQy(0x0e, w_i_2, w_i_2);
-
-
-#define W_I_16y  ymm8
-#define W_I_15y  ymm9
-#define W_I_7y  ymm10
-#define W_I_2y  ymm11
-#define W_Iy    ymm12
-#define G_TEMPy     ymm13
-#define S_TEMPy     ymm14
-#define YMM_TEMP0  ymm15
-#define YMM_TEMP0x xmm15
-#define W_I_TEMPy   ymm7
-#define W_K_TEMPy   ymm15
-#define W_K_TEMPx  xmm15
-#define W_0y     ymm12
-#define W_4y     ymm4
-#define W_8y     ymm5
-#define W_12y    ymm6
-
-
-#define MOVE_15_to_16(w_i_16, w_i_15, w_i_7)\
-    __asm__ volatile("vperm2i128  $0x01, %%"#w_i_15", %%"#w_i_15", %%"#w_i_15" "::);\
-    __asm__ volatile("vpblendd    $0x08, %%"#w_i_15", %%"#w_i_7", %%"#w_i_16" "::);\
-    __asm__ volatile("vperm2i128 $0x01,  %%"#w_i_7",  %%"#w_i_7", %%"#w_i_15" "::);\
-    __asm__ volatile("vpblendd    $0x80, %%"#w_i_15", %%"#w_i_16", %%"#w_i_16" "::);\
-    __asm__ volatile("vpshufd    $0x93,  %%"#w_i_16", %%"#w_i_16" "::);\
-
-#define MOVE_7_to_15(w_i_15, w_i_7)\
-    __asm__ volatile("vmovdqu                 %%"#w_i_7",  %%"#w_i_15" "::);\
-
-#define MOVE_I_to_7(w_i_7, w_i)\
-    __asm__ volatile("vperm2i128 $0x01,       %%"#w_i",   %%"#w_i",   %%"#w_i_7" "::);\
-    __asm__ volatile("vpblendd    $0x01,       %%"#w_i_7",   %%"#w_i", %%"#w_i_7" "::);\
-    __asm__ volatile("vpshufd    $0x39, %%"#w_i_7", %%"#w_i_7" "::);\
-
-#define MOVE_I_to_2(w_i_2, w_i)\
-    __asm__ volatile("vperm2i128 $0x01,       %%"#w_i", %%"#w_i", %%"#w_i_2" "::);\
-    __asm__ volatile("vpshufd    $0x0e, %%"#w_i_2", %%"#w_i_2" "::);\
-
-#endif /* HAVE_INTEL_AVX2 */
 
 
 /***  Transform Body ***/
 #if defined(HAVE_INTEL_AVX1)
-static int Transform_AVX1(Sha512* sha512)
+static int Transform_Sha512_AVX1(wc_Sha512* sha512)
 {
-    const word64* K = K512;
-    word64 W_X[16+4] = {0};
-    word32 j;
-    word64 T[8];
+    __asm__ __volatile__ (
 
-    /* Copy digest to working vars */
-    XMEMCPY(T, sha512->digest, sizeof(T));
+        /* 16 Ws plus loop counter. */
+        "subq	$136, %%rsp\n\t"
+        "leaq	64(%[sha512]), %%rax\n\t"
 
-    W_from_buff(W_X, sha512->buffer);
-    for (j = 0; j < 80; j += 16) {
-        Rx_1( 0); Block_0_1(W_X); Rx_2( 0); Block_0_2(W_X); Rx_3( 0); Block_0_3();
-        Rx_1( 1); Block_0_4(); Rx_2( 1); Block_0_5(); Rx_3( 1); Block_0_6(W_X);
-        Rx_1( 2); Block_0_7(W_X); Rx_2( 2); Block_0_8(W_X); Rx_3( 2); Block_0_9();
-        Rx_1( 3); Block_0_10();Rx_2( 3); Block_0_11();Rx_3( 3); Block_0_12(W_X);
+    INIT_MASK(MASK)
+    LOAD_DIGEST()
 
-        Rx_1( 4); Block_4_1(W_X); Rx_2( 4); Block_4_2(W_X); Rx_3( 4); Block_4_3();
-        Rx_1( 5); Block_4_4(); Rx_2( 5); Block_4_5(); Rx_3( 5); Block_4_6(W_X);
-        Rx_1( 6); Block_4_7(W_X); Rx_2( 6); Block_4_8(W_X); Rx_3( 6); Block_4_9();
-        Rx_1( 7); Block_4_10();Rx_2( 7); Block_4_11();Rx_3( 7); Block_4_12(W_X);
+    LOAD_W(MASK, rax)
 
-        Rx_1( 8); Block_8_1(W_X); Rx_2( 8); Block_8_2(W_X); Rx_3( 8); Block_8_3();
-        Rx_1( 9); Block_8_4(); Rx_2( 9); Block_8_5(); Rx_3( 9); Block_8_6(W_X);
-        Rx_1(10); Block_8_7(W_X); Rx_2(10); Block_8_8(W_X); Rx_3(10); Block_8_9();
-        Rx_1(11); Block_8_10();Rx_2(11); Block_8_11();Rx_3(11); Block_8_12(W_X);
+        "movl	$4, 16*8(" WX ")\n\t"
+        "leaq	%[K512], %%rsi\n\t"
+        /* b */
+        "movq	%%r9, " L4 "\n\t"
+        /* e */
+        "movq	%%r12, " L1 "\n\t"
+        /* b ^ c */
+        "xorq	%%r10, " L4 "\n\t"
 
-        Rx_1(12); Block_12_1(W_X); Rx_2(12); Block_12_2(W_X); Rx_3(12); Block_12_3();
-        Rx_1(13); Block_12_4(); Rx_2(13); Block_12_5(); Rx_3(13); Block_12_6(W_X);
-        Rx_1(14); Block_12_7(W_X); Rx_2(14); Block_12_8(W_X); Rx_3(14); Block_12_9();
-        Rx_1(15); Block_12_10();Rx_2(15); Block_12_11();Rx_3(15); Block_12_12(W_X);
-    }
+        "# Start of 16 rounds\n"
+        "1:\n\t"
 
-    /* Add the working vars back into digest */
-    sha512->digest[0] += a(0);
-    sha512->digest[1] += b(0);
-    sha512->digest[2] += c(0);
-    sha512->digest[3] += d(0);
-    sha512->digest[4] += e(0);
-    sha512->digest[5] += f(0);
-    sha512->digest[6] += g(0);
-    sha512->digest[7] += h(0);
+    SET_W_X(rsi)
 
-    /* Wipe variables */
-#if !defined(HAVE_INTEL_AVX1) && !defined(HAVE_INTEL_AVX2)
-    XMEMSET(W_X, 0, sizeof(word64) * 16);
-#endif
-    XMEMSET(T, 0, sizeof(T));
+        "addq	$128, %%rsi\n\t"
+
+    MsgSched2(W_0,W_2,W_4,W_6,W_8,W_10,W_12,W_14,RA,RB,RC,RD,RE,RF,RG,RH, 0)
+    MsgSched2(W_2,W_4,W_6,W_8,W_10,W_12,W_14,W_0,RG,RH,RA,RB,RC,RD,RE,RF, 2)
+    MsgSched2(W_4,W_6,W_8,W_10,W_12,W_14,W_0,W_2,RE,RF,RG,RH,RA,RB,RC,RD, 4)
+    MsgSched2(W_6,W_8,W_10,W_12,W_14,W_0,W_2,W_4,RC,RD,RE,RF,RG,RH,RA,RB, 6)
+    MsgSched2(W_8,W_10,W_12,W_14,W_0,W_2,W_4,W_6,RA,RB,RC,RD,RE,RF,RG,RH, 8)
+    MsgSched2(W_10,W_12,W_14,W_0,W_2,W_4,W_6,W_8,RG,RH,RA,RB,RC,RD,RE,RF,10)
+    MsgSched2(W_12,W_14,W_0,W_2,W_4,W_6,W_8,W_10,RE,RF,RG,RH,RA,RB,RC,RD,12)
+    MsgSched2(W_14,W_0,W_2,W_4,W_6,W_8,W_10,W_12,RC,RD,RE,RF,RG,RH,RA,RB,14)
+
+        "subl	$1, 16*8(" WX ")\n\t"
+        "jne	1b\n\t"
+
+    SET_W_X(rsi)
+
+    RND_ALL_2(RA,RB,RC,RD,RE,RF,RG,RH, 0)
+    RND_ALL_2(RG,RH,RA,RB,RC,RD,RE,RF, 2)
+    RND_ALL_2(RE,RF,RG,RH,RA,RB,RC,RD, 4)
+    RND_ALL_2(RC,RD,RE,RF,RG,RH,RA,RB, 6)
+
+    RND_ALL_2(RA,RB,RC,RD,RE,RF,RG,RH, 8)
+    RND_ALL_2(RG,RH,RA,RB,RC,RD,RE,RF,10)
+    RND_ALL_2(RE,RF,RG,RH,RA,RB,RC,RD,12)
+    RND_ALL_2(RC,RD,RE,RF,RG,RH,RA,RB,14)
+
+    STORE_ADD_DIGEST()
+
+        "addq	$136, %%rsp\n\t"
+
+        :
+        : [mask]   "m" (mBYTE_FLIP_MASK),
+          [sha512] "r" (sha512),
+          [K512]   "m" (K512)
+        : WORK_REGS, STATE_REGS, XMM_REGS, "memory", "rsi"
+    );
+
+    return 0;
+}
+
+static int Transform_Sha512_AVX1_Len(wc_Sha512* sha512, word32 len)
+{
+    __asm__ __volatile__ (
+
+        "movq	224(%[sha512]), %%rsi\n\t"
+        "leaq	%[K512], %%rdx\n\t"
+
+    INIT_MASK(MASK)
+    LOAD_DIGEST()
+
+        "# Start of processing a block\n"
+        "2:\n\t"
+
+        /* 16 Ws plus loop counter and K512. len goes into -4(%rsp).
+         * Debug needs more stack space. */
+        "subq	$256, %%rsp\n\t"
+
+    LOAD_W(MASK, rsi)
+
+        "movl	$4, 16*8(" WX ")\n\t"
+        /* b */
+        "movq	%%r9, " L4 "\n\t"
+        /* e */
+        "movq	%%r12, " L1 "\n\t"
+        /* b ^ c */
+        "xorq	%%r10, " L4 "\n\t"
+
+    SET_W_X(rdx)
+
+        "# Start of 16 rounds\n"
+        "1:\n\t"
+
+        "addq	$128, %%rdx\n\t"
+        "movq	%%rdx, 17*8(%%rsp)\n\t"
+
+    MsgSched2(W_0,W_2,W_4,W_6,W_8,W_10,W_12,W_14,RA,RB,RC,RD,RE,RF,RG,RH, 0)
+    MsgSched2(W_2,W_4,W_6,W_8,W_10,W_12,W_14,W_0,RG,RH,RA,RB,RC,RD,RE,RF, 2)
+    MsgSched2(W_4,W_6,W_8,W_10,W_12,W_14,W_0,W_2,RE,RF,RG,RH,RA,RB,RC,RD, 4)
+    MsgSched2(W_6,W_8,W_10,W_12,W_14,W_0,W_2,W_4,RC,RD,RE,RF,RG,RH,RA,RB, 6)
+    MsgSched2(W_8,W_10,W_12,W_14,W_0,W_2,W_4,W_6,RA,RB,RC,RD,RE,RF,RG,RH, 8)
+    MsgSched2(W_10,W_12,W_14,W_0,W_2,W_4,W_6,W_8,RG,RH,RA,RB,RC,RD,RE,RF,10)
+    MsgSched2(W_12,W_14,W_0,W_2,W_4,W_6,W_8,W_10,RE,RF,RG,RH,RA,RB,RC,RD,12)
+    MsgSched2(W_14,W_0,W_2,W_4,W_6,W_8,W_10,W_12,RC,RD,RE,RF,RG,RH,RA,RB,14)
+
+        "movq	17*8(%%rsp), %%rdx\n\t"
+
+    SET_W_X(rdx)
+
+        "subl	$1, 16*8(" WX ")\n\t"
+        "jne	1b\n\t"
+
+    RND_ALL_2(RA,RB,RC,RD,RE,RF,RG,RH, 0)
+    RND_ALL_2(RG,RH,RA,RB,RC,RD,RE,RF, 2)
+    RND_ALL_2(RE,RF,RG,RH,RA,RB,RC,RD, 4)
+    RND_ALL_2(RC,RD,RE,RF,RG,RH,RA,RB, 6)
+
+    RND_ALL_2(RA,RB,RC,RD,RE,RF,RG,RH, 8)
+    RND_ALL_2(RG,RH,RA,RB,RC,RD,RE,RF,10)
+    RND_ALL_2(RE,RF,RG,RH,RA,RB,RC,RD,12)
+    RND_ALL_2(RC,RD,RE,RF,RG,RH,RA,RB,14)
+
+    ADD_DIGEST()
+
+        "addq	$256, %%rsp\n\t"
+        "leaq	%[K512], %%rdx\n\t"
+        "addq	$128, %%rsi\n\t"
+        "subl	$128, %[len]\n\t"
+
+    STORE_DIGEST()
+
+        "jnz	2b\n\t"
+
+        :
+        : [mask]   "m" (mBYTE_FLIP_MASK),
+          [len]    "m" (len),
+          [sha512] "r" (sha512),
+          [K512]   "m" (K512)
+        : WORK_REGS, STATE_REGS, XMM_REGS, "memory", "rsi"
+    );
 
     return 0;
 }
 #endif /* HAVE_INTEL_AVX1 */
 
-#if defined(HAVE_INTEL_AVX2) && defined(HAVE_INTEL_AVX1) && defined(HAVE_INTEL_RORX)
-static int Transform_AVX1_RORX(Sha512* sha512)
+#if defined(HAVE_INTEL_AVX2) && defined(HAVE_INTEL_RORX)
+static int Transform_Sha512_AVX1_RORX(wc_Sha512* sha512)
 {
-    const word64* K = K512;
-    word64 W_X[16+4] = {0};
-    word32 j;
-    word64 T[8];
+    __asm__ __volatile__ (
 
-    /* Copy digest to working vars */
-    XMEMCPY(T, sha512->digest, sizeof(T));
+        /* 16 Ws plus loop counter and K512. */
+        "subq	$144, %%rsp\n\t"
+        "leaq	64(%[sha512]), %%rax\n\t"
 
-    W_from_buff(W_X, sha512->buffer);
-    for (j = 0; j < 80; j += 16) {
-        Rx_RORX_1( 0); Block_0_1(W_X); Rx_RORX_2( 0); Block_0_2(W_X);
-                                    Rx_RORX_3( 0); Block_0_3();
-        Rx_RORX_1( 1); Block_0_4(); Rx_RORX_2( 1); Block_0_5();
-                                    Rx_RORX_3( 1); Block_0_6(W_X);
-        Rx_RORX_1( 2); Block_0_7(W_X); Rx_RORX_2( 2); Block_0_8(W_X);
-                                    Rx_RORX_3( 2); Block_0_9();
-        Rx_RORX_1( 3); Block_0_10();Rx_RORX_2( 3); Block_0_11();
-                                    Rx_RORX_3( 3); Block_0_12(W_X);
+    INIT_MASK(MASK)
+    LOAD_DIGEST()
 
-        Rx_RORX_1( 4); Block_4_1(W_X); Rx_RORX_2( 4); Block_4_2(W_X);
-                                    Rx_RORX_3( 4); Block_4_3();
-        Rx_RORX_1( 5); Block_4_4(); Rx_RORX_2( 5); Block_4_5();
-                                    Rx_RORX_3( 5); Block_4_6(W_X);
-        Rx_RORX_1( 6); Block_4_7(W_X); Rx_RORX_2( 6); Block_4_8(W_X);
-                                    Rx_RORX_3( 6); Block_4_9();
-        Rx_RORX_1( 7); Block_4_10();Rx_RORX_2( 7); Block_4_11();
-                                    Rx_RORX_3( 7); Block_4_12(W_X);
+    LOAD_W(MASK, rax)
 
-        Rx_RORX_1( 8); Block_8_1(W_X); Rx_RORX_2( 8); Block_8_2(W_X);
-                                    Rx_RORX_3( 8); Block_8_3();
-        Rx_RORX_1( 9); Block_8_4(); Rx_RORX_2( 9); Block_8_5();
-                                    Rx_RORX_3( 9); Block_8_6(W_X);
-        Rx_RORX_1(10); Block_8_7(W_X); Rx_RORX_2(10); Block_8_8(W_X);
-                                    Rx_RORX_3(10); Block_8_9();
-        Rx_RORX_1(11); Block_8_10();Rx_RORX_2(11); Block_8_11();
-                                    Rx_RORX_3(11); Block_8_12(W_X);
+        "movl	$4, 16*8(" WX ")\n\t"
+        "leaq	%[K512], %%rsi\n\t"
+        /* L4 = b */
+        "movq	%%r9, " L4 "\n\t"
+        /* L3 = 0 (add to prev h) */
+        "xorq	" L3 ", " L3 "\n\t"
+        /* L4 = b ^ c */
+        "xorq	%%r10, " L4 "\n\t"
 
-        Rx_RORX_1(12); Block_12_1(W_X); Rx_RORX_2(12); Block_12_2(W_X);
-                                     Rx_RORX_3(12); Block_12_3();
-        Rx_RORX_1(13); Block_12_4(); Rx_RORX_2(13); Block_12_5();
-                                     Rx_RORX_3(13); Block_12_6(W_X);
-        Rx_RORX_1(14); Block_12_7(W_X); Rx_RORX_2(14); Block_12_8(W_X);
-                                     Rx_RORX_3(14); Block_12_9();
-        Rx_RORX_1(15); Block_12_10();Rx_RORX_2(15); Block_12_11();
-                                     Rx_RORX_3(15); Block_12_12(W_X);
-    }
+    SET_W_X(rsi)
 
-    /* Add the working vars back into digest */
-    sha512->digest[0] += a(0);
-    sha512->digest[1] += b(0);
-    sha512->digest[2] += c(0);
-    sha512->digest[3] += d(0);
-    sha512->digest[4] += e(0);
-    sha512->digest[5] += f(0);
-    sha512->digest[6] += g(0);
-    sha512->digest[7] += h(0);
+        "# Start of 16 rounds\n"
+        "1:\n\t"
 
-    /* Wipe variables */
-#if !defined(HAVE_INTEL_AVX1)&&!defined(HAVE_INTEL_AVX2)
-    XMEMSET(W_X, 0, sizeof(word64) * 16);
-#endif
-    XMEMSET(T, 0, sizeof(T));
+        "addq	$128, %%rsi\n\t"
+
+    MsgSched_RORX(W_0,W_2,W_4,W_6,W_8,W_10,W_12,W_14,RA,RB,RC,RD,RE,RF,RG,RH, 0)
+    MsgSched_RORX(W_2,W_4,W_6,W_8,W_10,W_12,W_14,W_0,RG,RH,RA,RB,RC,RD,RE,RF, 2)
+    MsgSched_RORX(W_4,W_6,W_8,W_10,W_12,W_14,W_0,W_2,RE,RF,RG,RH,RA,RB,RC,RD, 4)
+    MsgSched_RORX(W_6,W_8,W_10,W_12,W_14,W_0,W_2,W_4,RC,RD,RE,RF,RG,RH,RA,RB, 6)
+    MsgSched_RORX(W_8,W_10,W_12,W_14,W_0,W_2,W_4,W_6,RA,RB,RC,RD,RE,RF,RG,RH, 8)
+    MsgSched_RORX(W_10,W_12,W_14,W_0,W_2,W_4,W_6,W_8,RG,RH,RA,RB,RC,RD,RE,RF,10)
+    MsgSched_RORX(W_12,W_14,W_0,W_2,W_4,W_6,W_8,W_10,RE,RF,RG,RH,RA,RB,RC,RD,12)
+    MsgSched_RORX(W_14,W_0,W_2,W_4,W_6,W_8,W_10,W_12,RC,RD,RE,RF,RG,RH,RA,RB,14)
+
+    SET_W_X(rsi)
+
+        "subl	$1, 16*8(" WX ")\n\t"
+        "jne	1b\n\t"
+
+    RND_RORX_ALL_2(RA,RB,RC,RD,RE,RF,RG,RH, 0)
+    RND_RORX_ALL_2(RG,RH,RA,RB,RC,RD,RE,RF, 2)
+    RND_RORX_ALL_2(RE,RF,RG,RH,RA,RB,RC,RD, 4)
+    RND_RORX_ALL_2(RC,RD,RE,RF,RG,RH,RA,RB, 6)
+
+    RND_RORX_ALL_2(RA,RB,RC,RD,RE,RF,RG,RH, 8)
+    RND_RORX_ALL_2(RG,RH,RA,RB,RC,RD,RE,RF,10)
+    RND_RORX_ALL_2(RE,RF,RG,RH,RA,RB,RC,RD,12)
+    RND_RORX_ALL_2(RC,RD,RE,RF,RG,RH,RA,RB,14)
+
+        /* Prev RND: h += Maj(a,b,c) */
+        "addq	" L3 ", %%r8\n\t"
+        "addq	$144, %%rsp\n\t"
+
+    STORE_ADD_DIGEST()
+
+        :
+        : [mask]   "m" (mBYTE_FLIP_MASK),
+          [sha512] "r" (sha512),
+          [K512]   "m" (K512)
+        : WORK_REGS, STATE_REGS, XMM_REGS, "memory", "rsi"
+    );
 
     return 0;
 }
-#endif /* HAVE_INTEL_AVX2 && HAVE_INTEL_AVX1 && HAVE_INTEL_RORX */
+
+static int Transform_Sha512_AVX1_RORX_Len(wc_Sha512* sha512, word32 len)
+{
+    __asm__ __volatile__ (
+
+        "movq	224(%[sha512]), %%rsi\n\t"
+        "leaq	%[K512], %%rcx\n\t"
+
+    INIT_MASK(MASK)
+    LOAD_DIGEST()
+
+        "# Start of processing a block\n"
+        "2:\n\t"
+
+        /* 16 Ws plus loop counter and K512. len goes into -4(%rsp).
+         * Debug needs more stack space. */
+        "subq	$256, %%rsp\n\t"
+
+    LOAD_W(MASK, rsi)
+
+        "movl	$4, 16*8(" WX ")\n\t"
+        /* L4 = b */
+        "movq	%%r9, " L4 "\n\t"
+        /* L3 = 0 (add to prev h) */
+        "xorq	" L3 ", " L3 "\n\t"
+        /* L4 = b ^ c */
+        "xorq	%%r10, " L4 "\n\t"
+
+    SET_W_X(rcx)
+
+        "# Start of 16 rounds\n"
+        "1:\n\t"
+
+        "addq	$128, %%rcx\n\t"
+        "movq	%%rcx, 17*8(%%rsp)\n\t"
+
+    MsgSched_RORX(W_0,W_2,W_4,W_6,W_8,W_10,W_12,W_14,RA,RB,RC,RD,RE,RF,RG,RH, 0)
+    MsgSched_RORX(W_2,W_4,W_6,W_8,W_10,W_12,W_14,W_0,RG,RH,RA,RB,RC,RD,RE,RF, 2)
+    MsgSched_RORX(W_4,W_6,W_8,W_10,W_12,W_14,W_0,W_2,RE,RF,RG,RH,RA,RB,RC,RD, 4)
+    MsgSched_RORX(W_6,W_8,W_10,W_12,W_14,W_0,W_2,W_4,RC,RD,RE,RF,RG,RH,RA,RB, 6)
+    MsgSched_RORX(W_8,W_10,W_12,W_14,W_0,W_2,W_4,W_6,RA,RB,RC,RD,RE,RF,RG,RH, 8)
+    MsgSched_RORX(W_10,W_12,W_14,W_0,W_2,W_4,W_6,W_8,RG,RH,RA,RB,RC,RD,RE,RF,10)
+    MsgSched_RORX(W_12,W_14,W_0,W_2,W_4,W_6,W_8,W_10,RE,RF,RG,RH,RA,RB,RC,RD,12)
+    MsgSched_RORX(W_14,W_0,W_2,W_4,W_6,W_8,W_10,W_12,RC,RD,RE,RF,RG,RH,RA,RB,14)
+
+        "movq	17*8(%%rsp), %%rcx\n\t"
+
+    SET_W_X(rcx)
+
+        "subl	$1, 16*8(" WX ")\n\t"
+        "jne	1b\n\t"
+
+    SET_W_X(rcx)
+
+    RND_RORX_ALL_2(RA,RB,RC,RD,RE,RF,RG,RH, 0)
+    RND_RORX_ALL_2(RG,RH,RA,RB,RC,RD,RE,RF, 2)
+    RND_RORX_ALL_2(RE,RF,RG,RH,RA,RB,RC,RD, 4)
+    RND_RORX_ALL_2(RC,RD,RE,RF,RG,RH,RA,RB, 6)
+
+    RND_RORX_ALL_2(RA,RB,RC,RD,RE,RF,RG,RH, 8)
+    RND_RORX_ALL_2(RG,RH,RA,RB,RC,RD,RE,RF,10)
+    RND_RORX_ALL_2(RE,RF,RG,RH,RA,RB,RC,RD,12)
+    RND_RORX_ALL_2(RC,RD,RE,RF,RG,RH,RA,RB,14)
+
+        /* Prev RND: h += Maj(a,b,c) */
+        "addq	" L3 ", %%r8\n\t"
+        "addq	$256, %%rsp\n\t"
+
+    ADD_DIGEST()
+
+        "leaq	%[K512], %%rcx\n\t"
+        "addq	$128, %%rsi\n\t"
+        "subl	$128, %[len]\n\t"
+
+    STORE_DIGEST()
+
+        "jnz	2b\n\t"
+
+        :
+        : [mask]   "m" (mBYTE_FLIP_MASK),
+          [len]    "m" (len),
+          [sha512] "r" (sha512),
+          [K512]   "m" (K512)
+        : WORK_REGS, STATE_REGS, XMM_REGS, "memory", "rsi"
+    );
+
+    return 0;
+}
+#endif /* HAVE_INTEL_AVX2 && HAVE_INTEL_RORX */
 
 #if defined(HAVE_INTEL_AVX2)
+static const unsigned long mBYTE_FLIP_MASK_Y[] =
+   { 0x0001020304050607, 0x08090a0b0c0d0e0f,
+     0x0001020304050607, 0x08090a0b0c0d0e0f };
 
-#define s0_1y(dest, src)      AVX2_S(dest, src, 1);
-#define s0_2y(dest, src)      AVX2_S(G_TEMPy, src, 8); XORy(dest, G_TEMPy, dest);
-#define s0_3y(dest, src)      AVX2_R(G_TEMPy, src, 7);  XORy(dest, G_TEMPy, dest);
+#define W_Y_0       ymm0
+#define W_Y_4       ymm1
+#define W_Y_8       ymm2
+#define W_Y_12      ymm3
 
-#define s1_1y(dest, src)      AVX2_S(dest, src, 19);
-#define s1_2y(dest, src)      AVX2_S(G_TEMPy, src, 61); XORy(dest, G_TEMPy, dest);
-#define s1_3y(dest, src)      AVX2_R(G_TEMPy, src, 6); XORy(dest, G_TEMPy, dest);
+#define X0       xmm0
+#define X1       xmm1
+#define X2       xmm2
+#define X3       xmm3
+#define X4       xmm4
+#define X5       xmm5
+#define X6       xmm6
+#define X7       xmm7
+#define X8       xmm8
+#define X9       xmm9
+#define Y0       ymm0
+#define Y1       ymm1
+#define Y2       ymm2
+#define Y3       ymm3
+#define Y4       ymm4
+#define Y5       ymm5
+#define Y6       ymm6
+#define Y7       ymm7
 
-#define s0_y(dest, src)       s0_1y(dest, src); s0_2y(dest, src); s0_3y(dest, src)
-#define s1_y(dest, src)       s1_1y(dest, src); s1_2y(dest, src); s1_3y(dest, src)
+#define W_Y_M15     ymm12
+#define W_Y_M7      ymm13
+#define W_Y_M2      ymm14
+#define MASK_Y      ymm15
+
+#define YTMP1       ymm8
+#define YTMP2       ymm9
+#define YTMP3       ymm10
+#define YTMP4       ymm11
+
+#define YMM_REGS \
+    "ymm0", "ymm1", "ymm2", "ymm3", "ymm4", "ymm5", "ymm6", "ymm7",       \
+    "xmm8", "ymm9", "ymm10", "ymm11", "ymm12", "ymm13", "ymm14", "ymm15"
+
+#define _VPERM2I128(dest, src1, src2, sel)                             \
+    "vperm2I128	$" #sel ", %%" #src2 ", %%" #src1 ", %%" #dest "\n\t"
+#define VPERM2I128(dest, src1, src2, sel) \
+       _VPERM2I128(dest, src1, src2, sel)
+
+#define _VPERMQ(dest, src, sel)                                        \
+    "vpermq	$" #sel ", %%" #src ", %%" #dest "\n\t"
+#define VPERMQ(dest, src, sel) \
+       _VPERMQ(dest, src, sel)
+
+#define _VPBLENDD(dest, src1, src2, sel)                               \
+    "vpblendd	$" #sel ", %%" #src2 ", %%" #src1 ", %%" #dest "\n\t"
+#define VPBLENDD(dest, src1, src2, sel) \
+       _VPBLENDD(dest, src1, src2, sel)
+
+#define _V_ADD_I(dest, src1, addr, i)                                  \
+    "vpaddq	 "#i"*8(%%" #addr "), %%" #src1 ", %%" #dest "\n\t"
+#define V_ADD_I(dest, src1, addr, i) \
+       _V_ADD_I(dest, src1, addr, i)
+
+#define _VMOVDQU_I(addr, i, src)                                       \
+    "vmovdqu	 %%" #src ", " #i "*8(%%" #addr ")\n\t"
+#define VMOVDQU_I(addr, i, src) \
+       _VMOVDQU_I(addr, i, src)
+
+#define MsgSched4_AVX2(W_Y_0,W_Y_4,W_Y_8,W_Y_12,a,b,c,d,e,f,g,h,i) \
+            RND_0_1(a,b,c,d,e,f,g,h,i)                             \
+    /* W[-13]..W[-15], W[-12] */                                   \
+    VPBLENDD(W_Y_M15, W_Y_0, W_Y_4, 0x03)                          \
+    /* W[-5]..W[-7], W[-4] */                                      \
+    VPBLENDD(W_Y_M7, W_Y_8, W_Y_12, 0x03)                          \
+            RND_0_2(a,b,c,d,e,f,g,h,i)                             \
+            RND_0_3(a,b,c,d,e,f,g,h,i)                             \
+    /* W_Y_M15 = W[-12]..W[-15] */                                 \
+    VPERMQ(W_Y_M15, W_Y_M15, 0x39)                                 \
+            RND_0_4(a,b,c,d,e,f,g,h,i)                             \
+    /* W_Y_M7 = W[-4]..W[-7] */                                    \
+    VPERMQ(W_Y_M7, W_Y_M7, 0x39)                                   \
+            RND_0_5(a,b,c,d,e,f,g,h,i)                             \
+            RND_0_6(a,b,c,d,e,f,g,h,i)                             \
+    /* W[-15] >>  1 */                                             \
+    V_SHIFT_R(YTMP1, W_Y_M15, 1)                                   \
+            RND_0_7(a,b,c,d,e,f,g,h,i)                             \
+    /* W[-15] << 63 */                                             \
+    V_SHIFT_L(YTMP2, W_Y_M15, 63)                                  \
+            RND_0_8(a,b,c,d,e,f,g,h,i)                             \
+    /* W[-15] >>  8 */                                             \
+    V_SHIFT_R(YTMP3, W_Y_M15, 8)                                   \
+            RND_0_9(a,b,c,d,e,f,g,h,i)                             \
+    /* W[-15] << 56 */                                             \
+    V_SHIFT_L(YTMP4, W_Y_M15, 56)                                  \
+            RND_0_10(a,b,c,d,e,f,g,h,i)                            \
+    /* W[-15] >>> 1 */                                             \
+    V_OR(YTMP1, YTMP2, YTMP1)                                      \
+            RND_0_11(a,b,c,d,e,f,g,h,i)                            \
+    /* W[-15] >>> 8 */                                             \
+    V_OR(YTMP3, YTMP4, YTMP3)                                      \
+            RND_0_12(a,b,c,d,e,f,g,h,i)                            \
+            RND_1_1(h,a,b,c,d,e,f,g,i+1)                           \
+    /* W[-15] >> 7 */                                              \
+    V_SHIFT_R(YTMP4, W_Y_M15, 7)                                   \
+            RND_1_2_A(h,a,b,c,d,e,f,g,i+1)                         \
+    /* (W[-15] >>> 1) ^ (W[-15] >>> 8) */                          \
+    V_XOR(YTMP1, YTMP3, YTMP1)                                     \
+            RND_1_2_B(h,a,b,c,d,e,f,g,i+1)                         \
+    /* (W[-15] >>> 1) ^ (W[-15] >>> 8) ^ (W[-15] >> 7) */          \
+    V_XOR(YTMP1, YTMP4, YTMP1)                                     \
+            RND_1_3(h,a,b,c,d,e,f,g,i+1)                           \
+    /* W[0] = W[-16] + W[-7] */                                    \
+    V_ADD(W_Y_0, W_Y_0, W_Y_M7)                                    \
+            RND_1_4(h,a,b,c,d,e,f,g,i+1)                           \
+    /* W[0] = W[-16] + W[-7] + s0(W[-15]) */                       \
+    V_ADD(W_Y_0, W_Y_0, YTMP1)                                     \
+            RND_1_5(h,a,b,c,d,e,f,g,i+1)                           \
+    /* 0, 0, W[-1], W[-2] */                                       \
+    VPERM2I128(W_Y_M2, W_Y_12, W_Y_12, 0x81)                       \
+            RND_1_6(h,a,b,c,d,e,f,g,i+1)                           \
+            RND_1_7(h,a,b,c,d,e,f,g,i+1)                           \
+            RND_1_8(h,a,b,c,d,e,f,g,i+1)                           \
+    /* W[-2] >> 19 */                                              \
+    V_SHIFT_R(YTMP1, W_Y_M2, 19)                                   \
+            RND_1_9(h,a,b,c,d,e,f,g,i+1)                           \
+    /* W[-2] << 45 */                                              \
+    V_SHIFT_L(YTMP2, W_Y_M2, 45)                                   \
+            RND_1_10(h,a,b,c,d,e,f,g,i+1)                          \
+    /* W[-2] >> 61 */                                              \
+    V_SHIFT_R(YTMP3, W_Y_M2, 61)                                   \
+            RND_1_11(h,a,b,c,d,e,f,g,i+1)                          \
+    /* W[-2] <<  3 */                                              \
+    V_SHIFT_L(YTMP4, W_Y_M2, 3)                                    \
+            RND_1_12(h,a,b,c,d,e,f,g,i+1)                          \
+            RND_0_1(g,h,a,b,c,d,e,f,i+2)                           \
+    /* W[-2] >>> 19 */                                             \
+    V_OR(YTMP1, YTMP2, YTMP1)                                      \
+            RND_0_2(g,h,a,b,c,d,e,f,i+2)                           \
+    /* W[-2] >>> 61 */                                             \
+    V_OR(YTMP3, YTMP4, YTMP3)                                      \
+            RND_0_3(g,h,a,b,c,d,e,f,i+2)                           \
+    /* (W[-2] >>> 19) ^ (W[-2] >>> 61) */                          \
+    V_XOR(YTMP1, YTMP3, YTMP1)                                     \
+            RND_0_4(g,h,a,b,c,d,e,f,i+2)                           \
+    /* W[-2] >>  6 */                                              \
+    V_SHIFT_R(YTMP4, W_Y_M2, 6)                                    \
+            RND_0_5(g,h,a,b,c,d,e,f,i+2)                           \
+    /* (W[-2] >>> 19) ^ (W[-2] >>> 61) ^ (W[-2] >> 6) */           \
+    V_XOR(YTMP1, YTMP4, YTMP1)                                     \
+            RND_0_6(g,h,a,b,c,d,e,f,i+2)                           \
+    /* W[0] = W[-16] + W[-7] + s0(W[-15]) + s1(W[-2]) */           \
+    V_ADD(W_Y_0, W_Y_0, YTMP1)                                     \
+            RND_0_7(g,h,a,b,c,d,e,f,i+2)                           \
+            RND_0_8(g,h,a,b,c,d,e,f,i+2)                           \
+    /* W[1], W[0], 0, 0 */                                         \
+    VPERM2I128(W_Y_M2, W_Y_0, W_Y_0, 0x08)                         \
+            RND_0_9(g,h,a,b,c,d,e,f,i+2)                           \
+            RND_0_10(g,h,a,b,c,d,e,f,i+2)                          \
+    /* W[-2] >> 19 */                                              \
+    V_SHIFT_R(YTMP1, W_Y_M2, 19)                                   \
+            RND_0_11(g,h,a,b,c,d,e,f,i+2)                          \
+    /* W[-2] << 45 */                                              \
+    V_SHIFT_L(YTMP2, W_Y_M2, 45)                                   \
+            RND_0_12(g,h,a,b,c,d,e,f,i+2)                          \
+            RND_1_1(f,g,h,a,b,c,d,e,i+3)                           \
+    /* W[-2] >> 61 */                                              \
+    V_SHIFT_R(YTMP3, W_Y_M2, 61)                                   \
+            RND_1_2(f,g,h,a,b,c,d,e,i+3)                           \
+    /* W[-2] <<  3 */                                              \
+    V_SHIFT_L(YTMP4, W_Y_M2, 3)                                    \
+            RND_1_3(f,g,h,a,b,c,d,e,i+3)                           \
+    /* W[-2] >>> 19 */                                             \
+    V_OR(YTMP1, YTMP2, YTMP1)                                      \
+            RND_1_4(f,g,h,a,b,c,d,e,i+3)                           \
+    /* W[-2] >>> 61 */                                             \
+    V_OR(YTMP3, YTMP4, YTMP3)                                      \
+            RND_1_5(f,g,h,a,b,c,d,e,i+3)                           \
+    /* (W[-2] >>> 19) ^ (W[-2] >>> 61) */                          \
+    V_XOR(YTMP1, YTMP3, YTMP1)                                     \
+            RND_1_6(f,g,h,a,b,c,d,e,i+3)                           \
+    /* W[-2] >>  6 */                                              \
+    V_SHIFT_R(YTMP4, W_Y_M2, 6)                                    \
+            RND_1_7(f,g,h,a,b,c,d,e,i+3)                           \
+    /* (W[-2] >>> 19) ^ (W[-2] >>> 61) ^ (W[-2] >> 6) */           \
+    V_XOR(YTMP1, YTMP4, YTMP1)                                     \
+            RND_1_8(f,g,h,a,b,c,d,e,i+3)                           \
+    /* W[0] = W[-16] + W[-7] + s0(W[-15]) + s1(W[-2]) */           \
+    V_ADD(W_Y_0, W_Y_0, YTMP1)                                     \
+            RND_1_9(f,g,h,a,b,c,d,e,i+3)                           \
+            RND_1_10(f,g,h,a,b,c,d,e,i+3)                          \
+            RND_1_11(f,g,h,a,b,c,d,e,i+3)                          \
+            RND_1_12(f,g,h,a,b,c,d,e,i+3)                          \
+
+#define MsgSched2_AVX2(W_0,W_2,W_4,W_6,W_8,W_10,W_12,W_14,a,b,c,d,e,f,g,h,i) \
+            RND_0_1(a,b,c,d,e,f,g,h,i)                                       \
+    VPALIGNR(W_Y_M15, W_2, W_0, 8)                                           \
+    VPALIGNR(W_Y_M7, W_10, W_8, 8)                                           \
+            RND_0_2(a,b,c,d,e,f,g,h,i)                                       \
+    V_SHIFT_R(YTMP1, W_Y_M15, 1)                                             \
+    V_SHIFT_L(YTMP2, W_Y_M15, 63)                                            \
+            RND_0_3(a,b,c,d,e,f,g,h,i)                                       \
+            RND_0_4(a,b,c,d,e,f,g,h,i)                                       \
+    V_SHIFT_R(YTMP3, W_Y_M15, 8)                                             \
+    V_SHIFT_L(YTMP4, W_Y_M15, 56)                                            \
+            RND_0_5(a,b,c,d,e,f,g,h,i)                                       \
+            RND_0_6(a,b,c,d,e,f,g,h,i)                                       \
+    V_OR(YTMP1, YTMP2, YTMP1)                                                \
+    V_OR(YTMP3, YTMP4, YTMP3)                                                \
+            RND_0_7(a,b,c,d,e,f,g,h,i)                                       \
+            RND_0_8(a,b,c,d,e,f,g,h,i)                                       \
+    V_SHIFT_R(YTMP4, W_Y_M15, 7)                                             \
+    V_XOR(YTMP1, YTMP3, YTMP1)                                               \
+            RND_0_9(a,b,c,d,e,f,g,h,i)                                       \
+            RND_0_10(a,b,c,d,e,f,g,h,i)                                      \
+    V_XOR(YTMP1, YTMP4, YTMP1)                                               \
+    V_ADD(W_0, W_0, W_Y_M7)                                                  \
+            RND_0_11(a,b,c,d,e,f,g,h,i)                                      \
+            RND_0_12(a,b,c,d,e,f,g,h,i)                                      \
+            RND_1_1(h,a,b,c,d,e,f,g,i+1)                                     \
+    V_ADD(W_0, W_0, YTMP1)                                                   \
+            RND_1_2(h,a,b,c,d,e,f,g,i+1)                                     \
+    V_SHIFT_R(YTMP1, W_14, 19)                                               \
+    V_SHIFT_L(YTMP2, W_14, 45)                                               \
+            RND_1_3(h,a,b,c,d,e,f,g,i+1)                                     \
+            RND_1_4(h,a,b,c,d,e,f,g,i+1)                                     \
+    V_SHIFT_R(YTMP3, W_14, 61)                                               \
+    V_SHIFT_L(YTMP4, W_14, 3)                                                \
+            RND_1_5(h,a,b,c,d,e,f,g,i+1)                                     \
+            RND_1_6(h,a,b,c,d,e,f,g,i+1)                                     \
+            RND_1_7(h,a,b,c,d,e,f,g,i+1)                                     \
+    V_OR(YTMP1, YTMP2, YTMP1)                                                \
+    V_OR(YTMP3, YTMP4, YTMP3)                                                \
+            RND_1_8(h,a,b,c,d,e,f,g,i+1)                                     \
+            RND_1_9(h,a,b,c,d,e,f,g,i+1)                                     \
+    V_XOR(YTMP1, YTMP3, YTMP1)                                               \
+    V_SHIFT_R(YTMP4, W_14, 6)                                                \
+            RND_1_10(h,a,b,c,d,e,f,g,i+1)                                    \
+            RND_1_11(h,a,b,c,d,e,f,g,i+1)                                    \
+    V_XOR(YTMP1, YTMP4, YTMP1)                                               \
+            RND_1_12(h,a,b,c,d,e,f,g,i+1)                                    \
+    V_ADD(W_0, W_0, YTMP1)                                                   \
+
+#define MsgSched4_AVX2_RORX_SET(W_Y_0,W_Y_4,W_Y_8,W_Y_12,a,b,c,d,e,f,g,h,i) \
+            RND_RORX_0_1(a,b,c,d,e,f,g,h,i)                                 \
+    /* W[-13]..W[-15], W[-12] */                                            \
+    VPBLENDD(W_Y_M15, W_Y_0, W_Y_4, 0x03)                                   \
+    /* W[-5]..W[-7], W[-4] */                                               \
+    VPBLENDD(W_Y_M7, W_Y_8, W_Y_12, 0x03)                                   \
+            RND_RORX_0_2(a,b,c,d,e,f,g,h,i)                                 \
+    /* W_Y_M15 = W[-12]..W[-15] */                                          \
+    VPERMQ(W_Y_M15, W_Y_M15, 0x39)                                          \
+            RND_RORX_0_3(a,b,c,d,e,f,g,h,i)                                 \
+    /* W_Y_M7 = W[-4]..W[-7] */                                             \
+    VPERMQ(W_Y_M7, W_Y_M7, 0x39)                                            \
+            RND_RORX_0_4(a,b,c,d,e,f,g,h,i)                                 \
+    /* W[-15] >>  1 */                                                      \
+    V_SHIFT_R(YTMP1, W_Y_M15, 1)                                            \
+    /* W[-15] << 63 */                                                      \
+    V_SHIFT_L(YTMP2, W_Y_M15, 63)                                           \
+            RND_RORX_0_5(a,b,c,d,e,f,g,h,i)                                 \
+    /* W[-15] >>  8 */                                                      \
+    V_SHIFT_R(YTMP3, W_Y_M15, 8)                                            \
+    /* W[-15] << 56 */                                                      \
+    V_SHIFT_L(YTMP4, W_Y_M15, 56)                                           \
+    /* W[-15] >>> 1 */                                                      \
+    V_OR(YTMP1, YTMP2, YTMP1)                                               \
+    /* W[-15] >>> 8 */                                                      \
+    V_OR(YTMP3, YTMP4, YTMP3)                                               \
+            RND_RORX_0_6(a,b,c,d,e,f,g,h,i)                                 \
+    /* W[-15] >> 7 */                                                       \
+    V_SHIFT_R(YTMP4, W_Y_M15, 7)                                            \
+            RND_RORX_0_7(a,b,c,d,e,f,g,h,i)                                 \
+    /* 0, 0, W[-1], W[-2] */                                                \
+    VPERM2I128(W_Y_M2, W_Y_12, W_Y_12, 0x81)                                \
+            RND_RORX_0_8(a,b,c,d,e,f,g,h,i)                                 \
+            RND_RORX_1_1(h,a,b,c,d,e,f,g,i+1)                               \
+    /* (W[-15] >>> 1) ^ (W[-15] >>> 8) */                                   \
+    V_XOR(YTMP1, YTMP3, YTMP1)                                              \
+            RND_RORX_1_2(h,a,b,c,d,e,f,g,i+1)                               \
+    /* (W[-15] >>> 1) ^ (W[-15] >>> 8) ^ (W[-15] >> 7) */                   \
+    V_XOR(YTMP1, YTMP4, YTMP1)                                              \
+            RND_RORX_1_3(h,a,b,c,d,e,f,g,i+1)                               \
+    /* W[0] = W[-16] + W[-7] */                                             \
+    V_ADD(W_Y_0, W_Y_0, W_Y_M7)                                             \
+    /* W[0] = W[-16] + W[-7] + s0(W[-15]) */                                \
+    V_ADD(W_Y_0, W_Y_0, YTMP1)                                              \
+            RND_RORX_1_4(h,a,b,c,d,e,f,g,i+1)                               \
+    /* W[-2] >> 19 */                                                       \
+    V_SHIFT_R(YTMP1, W_Y_M2, 19)                                            \
+    /* W[-2] << 45 */                                                       \
+    V_SHIFT_L(YTMP2, W_Y_M2, 45)                                            \
+            RND_RORX_1_5(h,a,b,c,d,e,f,g,i+1)                               \
+    /* W[-2] >> 61 */                                                       \
+    V_SHIFT_R(YTMP3, W_Y_M2, 61)                                            \
+    /* W[-2] <<  3 */                                                       \
+    V_SHIFT_L(YTMP4, W_Y_M2, 3)                                             \
+    /* W[-2] >>> 19 */                                                      \
+    V_OR(YTMP1, YTMP2, YTMP1)                                               \
+            RND_RORX_1_6(h,a,b,c,d,e,f,g,i+1)                               \
+    /* W[-2] >>> 61 */                                                      \
+    V_OR(YTMP3, YTMP4, YTMP3)                                               \
+            RND_RORX_1_7(h,a,b,c,d,e,f,g,i+1)                               \
+    /* (W[-2] >>> 19) ^ (W[-2] >>> 61) */                                   \
+    V_XOR(YTMP1, YTMP3, YTMP1)                                              \
+            RND_RORX_1_8(h,a,b,c,d,e,f,g,i+1)                               \
+    /* W[-2] >>  6 */                                                       \
+    V_SHIFT_R(YTMP4, W_Y_M2, 6)                                             \
+            RND_RORX_0_1(g,h,a,b,c,d,e,f,i+2)                               \
+    /* (W[-2] >>> 19) ^ (W[-2] >>> 61) ^ (W[-2] >> 6) */                    \
+    V_XOR(YTMP1, YTMP4, YTMP1)                                              \
+            RND_RORX_0_2(g,h,a,b,c,d,e,f,i+2)                               \
+    /* W[0] = W[-16] + W[-7] + s0(W[-15]) + s1(W[-2]) */                    \
+    V_ADD(W_Y_0, W_Y_0, YTMP1)                                              \
+            RND_RORX_0_3(g,h,a,b,c,d,e,f,i+2)                               \
+    /* W[1], W[0], 0, 0 */                                                  \
+    VPERM2I128(W_Y_M2, W_Y_0, W_Y_0, 0x08)                                  \
+            RND_RORX_0_4(g,h,a,b,c,d,e,f,i+2)                               \
+            RND_RORX_0_5(g,h,a,b,c,d,e,f,i+2)                               \
+    /* W[-2] >> 19 */                                                       \
+    V_SHIFT_R(YTMP1, W_Y_M2, 19)                                            \
+    /* W[-2] << 45 */                                                       \
+    V_SHIFT_L(YTMP2, W_Y_M2, 45)                                            \
+            RND_RORX_0_6(g,h,a,b,c,d,e,f,i+2)                               \
+    /* W[-2] >> 61 */                                                       \
+    V_SHIFT_R(YTMP3, W_Y_M2, 61)                                            \
+    /* W[-2] <<  3 */                                                       \
+    V_SHIFT_L(YTMP4, W_Y_M2, 3)                                             \
+    /* W[-2] >>> 19 */                                                      \
+    V_OR(YTMP1, YTMP2, YTMP1)                                               \
+            RND_RORX_0_7(g,h,a,b,c,d,e,f,i+2)                               \
+    /* W[-2] >>> 61 */                                                      \
+    V_OR(YTMP3, YTMP4, YTMP3)                                               \
+            RND_RORX_0_8(g,h,a,b,c,d,e,f,i+2)                               \
+    /* (W[-2] >>> 19) ^ (W[-2] >>> 61) */                                   \
+    V_XOR(YTMP1, YTMP3, YTMP1)                                              \
+            RND_RORX_1_1(f,g,h,a,b,c,d,e,i+3)                               \
+    /* W[-2] >>  6 */                                                       \
+    V_SHIFT_R(YTMP4, W_Y_M2, 6)                                             \
+            RND_RORX_1_2(f,g,h,a,b,c,d,e,i+3)                               \
+            RND_RORX_1_3(f,g,h,a,b,c,d,e,i+3)                               \
+    /* (W[-2] >>> 19) ^ (W[-2] >>> 61) ^ (W[-2] >> 6) */                    \
+    V_XOR(YTMP1, YTMP4, YTMP1)                                              \
+            RND_RORX_1_4(f,g,h,a,b,c,d,e,i+3)                               \
+            RND_RORX_1_5(f,g,h,a,b,c,d,e,i+3)                               \
+    /* W[0] = W[-16] + W[-7] + s0(W[-15]) + s1(W[-2]) */                    \
+    V_ADD(W_Y_0, W_Y_0, YTMP1)                                              \
+            RND_RORX_1_6(f,g,h,a,b,c,d,e,i+3)                               \
+    V_ADD_I(YTMP1, W_Y_0, rsi, i)                                           \
+            RND_RORX_1_7(f,g,h,a,b,c,d,e,i+3)                               \
+            RND_RORX_1_8(f,g,h,a,b,c,d,e,i+3)                               \
+    VMOVDQU_I(rsp, i, YTMP1)                                                \
+
+#define MsgSched2_AVX2_RORX(W_0,W_2,W_4,W_6,W_8,W_10,W_12,W_14,a,b,c,d,e,  \
+                            f,g,h,i)                                       \
+            RND_RORX_0_1(a,b,c,d,e,f,g,h,i)                                \
+    VPALIGNR(W_Y_M15, W_2, W_0, 8)                                         \
+    VPALIGNR(W_Y_M7, W_10, W_8, 8)                                         \
+            RND_RORX_0_2(a,b,c,d,e,f,g,h,i)                                \
+    V_SHIFT_R(YTMP1, W_Y_M15, 1)                                           \
+    V_SHIFT_L(YTMP2, W_Y_M15, 63)                                          \
+            RND_RORX_0_3(a,b,c,d,e,f,g,h,i)                                \
+    V_SHIFT_R(YTMP3, W_Y_M15, 8)                                           \
+    V_SHIFT_L(YTMP4, W_Y_M15, 56)                                          \
+            RND_RORX_0_4(a,b,c,d,e,f,g,h,i)                                \
+    V_OR(YTMP1, YTMP2, YTMP1)                                              \
+    V_OR(YTMP3, YTMP4, YTMP3)                                              \
+            RND_RORX_0_5(a,b,c,d,e,f,g,h,i)                                \
+    V_SHIFT_R(YTMP4, W_Y_M15, 7)                                           \
+    V_XOR(YTMP1, YTMP3, YTMP1)                                             \
+            RND_RORX_0_6(a,b,c,d,e,f,g,h,i)                                \
+    V_XOR(YTMP1, YTMP4, YTMP1)                                             \
+    V_ADD(W_0, W_0, W_Y_M7)                                                \
+            RND_RORX_0_7(a,b,c,d,e,f,g,h,i)                                \
+            RND_RORX_0_8(a,b,c,d,e,f,g,h,i)                                \
+    V_ADD(W_0, W_0, YTMP1)                                                 \
+            RND_RORX_1_1(h,a,b,c,d,e,f,g,i+1)                              \
+    V_SHIFT_R(YTMP1, W_14, 19)                                             \
+    V_SHIFT_L(YTMP2, W_14, 45)                                             \
+            RND_RORX_1_2(h,a,b,c,d,e,f,g,i+1)                              \
+    V_SHIFT_R(YTMP3, W_14, 61)                                             \
+    V_SHIFT_L(YTMP4, W_14, 3)                                              \
+            RND_RORX_1_3(h,a,b,c,d,e,f,g,i+1)                              \
+    V_OR(YTMP1, YTMP2, YTMP1)                                              \
+    V_OR(YTMP3, YTMP4, YTMP3)                                              \
+            RND_RORX_1_4(h,a,b,c,d,e,f,g,i+1)                              \
+            RND_RORX_1_5(h,a,b,c,d,e,f,g,i+1)                              \
+    V_XOR(YTMP1, YTMP3, YTMP1)                                             \
+    V_SHIFT_R(YTMP4, W_14, 6)                                              \
+            RND_RORX_1_6(h,a,b,c,d,e,f,g,i+1)                              \
+            RND_RORX_1_7(h,a,b,c,d,e,f,g,i+1)                              \
+    V_XOR(YTMP1, YTMP4, YTMP1)                                             \
+            RND_RORX_1_8(h,a,b,c,d,e,f,g,i+1)                              \
+    V_ADD(W_0, W_0, YTMP1)                                                 \
 
 
-#define Block_Y_xx_1(i, w_0, w_4, w_8, w_12)\
-    MOVE_W_to_W_I_15(W_I_15y, w_0, w_4);\
-    MOVE_W_to_W_I_7 (W_I_7y,  w_8, w_12);\
-    MOVE_W_to_W_I_2 (W_I_2y,  w_12);\
+#define _INIT_MASK_Y(mask)            \
+    "vmovdqu %[mask], %%"#mask"\n\t"
+#define INIT_MASK_Y(mask) \
+       _INIT_MASK_Y(mask)
 
-#define Block_Y_xx_2(i, w_0, w_4, w_8, w_12)\
-    s0_1y (YMM_TEMP0, W_I_15y);\
+/* Load into YMM registers and swap endian. */
+#define _LOAD_BLOCK_W_Y_2(mask, ymm0, ymm1, reg, i)           \
+    /* buffer[0..15] => ymm0..ymm3;  */                       \
+    "vmovdqu	" #i "+ 0(%%" #reg "), %%" #ymm0 "\n\t"       \
+    "vmovdqu	" #i "+32(%%" #reg "), %%" #ymm1 "\n\t"       \
+    "vpshufb	%%" #mask ", %%" #ymm0 ", %%" #ymm0 "\n\t"    \
+    "vpshufb	%%" #mask ", %%" #ymm1 ", %%" #ymm1 "\n\t"
 
-#define Block_Y_xx_3(i, w_0, w_4, w_8, w_12)\
-    s0_2y (YMM_TEMP0, W_I_15y);\
+#define LOAD_BLOCK_W_Y_2(mask, ymm1, ymm2, reg, i) \
+       _LOAD_BLOCK_W_Y_2(mask, ymm1, ymm2, reg, i)
 
-#define Block_Y_xx_4(i, w_0, w_4, w_8, w_12)\
-    s0_3y (YMM_TEMP0, W_I_15y);\
+#define LOAD_BLOCK_W_Y(mask, reg)                  \
+    LOAD_BLOCK_W_Y_2(mask, W_Y_0, W_Y_4 , reg,  0) \
+    LOAD_BLOCK_W_Y_2(mask, W_Y_8, W_Y_12, reg, 64)
 
-#define Block_Y_xx_5(i, w_0, w_4, w_8, w_12)\
-    ADDy(W_I_TEMPy, w_0, YMM_TEMP0);\
+#define _SET_W_Y_2(ymm0, ymm1, ymm2, ymm3, reg, i)                    \
+    "vpaddq	" #i "+ 0(%%" #reg "), %%" #ymm0 ", %%" #ymm2 "\n\t"  \
+    "vpaddq	" #i "+32(%%" #reg "), %%" #ymm1 ", %%" #ymm3 "\n\t"  \
+    "vmovdqu	%%" #ymm2 ", " #i "+ 0(" WX ")\n\t"                   \
+    "vmovdqu	%%" #ymm3 ", " #i "+32(" WX ")\n\t"
 
-#define Block_Y_xx_6(i, w_0, w_4, w_8, w_12)\
-    ADDy(W_I_TEMPy, W_I_TEMPy, W_I_7y);\
-    s1_1y (YMM_TEMP0, W_I_2y);\
+#define SET_W_Y_2(ymm0, ymm1, ymm2, ymm3, reg, i) \
+       _SET_W_Y_2(ymm0, ymm1, ymm2, ymm3, reg, i)
 
-#define Block_Y_xx_7(i, w_0, w_4, w_8, w_12)\
-    s1_2y (YMM_TEMP0, W_I_2y);\
+#define SET_BLOCK_W_Y(reg)                          \
+    SET_W_Y_2(W_Y_0, W_Y_4 , YTMP1, YTMP2, reg,  0) \
+    SET_W_Y_2(W_Y_8, W_Y_12, YTMP1, YTMP2, reg, 64)
 
-#define Block_Y_xx_8(i, w_0, w_4, w_8, w_12)\
-    s1_3y (YMM_TEMP0, W_I_2y);\
-    ADDy(w_0, W_I_TEMPy, YMM_TEMP0);\
+/* Load into YMM registers and swap endian. */
+#define _LOAD_BLOCK2_W_Y_2(mask, Y0, Y1, X0, X1, X8, X9, reg, i)   \
+    "vmovdqu	" #i "+  0(%%" #reg "), %%" #X0 "\n\t"                   \
+    "vmovdqu	" #i "+ 16(%%" #reg "), %%" #X1 "\n\t"                   \
+    "vmovdqu	" #i "+128(%%" #reg "), %%" #X8 "\n\t"                   \
+    "vmovdqu	" #i "+144(%%" #reg "), %%" #X9 "\n\t"                   \
+    "vinserti128	$1, %%" #X8 ", %%" #Y0 ", %%" #Y0 "\n\t"         \
+    "vinserti128	$1, %%" #X9 ", %%" #Y1 ", %%" #Y1 "\n\t"         \
+    "vpshufb	%%" #mask ", %%" #Y0 ", %%" #Y0 "\n\t"                   \
+    "vpshufb	%%" #mask ", %%" #Y1 ", %%" #Y1 "\n\t"
 
-#define Block_Y_xx_9(i, w_0, w_4, w_8, w_12)\
-    FEEDBACK1_to_W_I_2(W_I_2y, w_0);\
+#define LOAD_BLOCK2_W_Y_2(mask, Y0, Y1, X0, X1, X8, X9, reg, i) \
+       _LOAD_BLOCK2_W_Y_2(mask, Y0, Y1, X0, X1, X8, X9, reg, i)
 
-#define Block_Y_xx_10(i, w_0, w_4, w_8, w_12) \
-    s1_1y (YMM_TEMP0, W_I_2y);\
+#define LOAD_BLOCK2_W_Y(mask, reg)                           \
+    LOAD_BLOCK2_W_Y_2(mask, Y0, Y1, X0, X1, X8, X9, reg,  0) \
+    LOAD_BLOCK2_W_Y_2(mask, Y2, Y3, X2, X3, X8, X9, reg, 32) \
+    LOAD_BLOCK2_W_Y_2(mask, Y4, Y5, X4, X5, X8, X9, reg, 64) \
+    LOAD_BLOCK2_W_Y_2(mask, Y6, Y7, X6, X7, X8, X9, reg, 96) \
 
-#define Block_Y_xx_11(i, w_0, w_4, w_8, w_12) \
-    s1_2y (YMM_TEMP0, W_I_2y);\
+#define SET_BLOCK2_W_Y(reg)                   \
+    SET_W_Y_2(Y0, Y1, YTMP1, YTMP2, reg,   0) \
+    SET_W_Y_2(Y2, Y3, YTMP1, YTMP2, reg,  64) \
+    SET_W_Y_2(Y4, Y5, YTMP1, YTMP2, reg, 128) \
+    SET_W_Y_2(Y6, Y7, YTMP1, YTMP2, reg, 192)
 
-#define Block_Y_xx_12(i, w_0, w_4, w_8, w_12)\
-    s1_3y (YMM_TEMP0, W_I_2y);\
-    ADDy(w_0, W_I_TEMPy, YMM_TEMP0);\
-    MOVE_to_MEMy(w,0, w_4);\
+static const word64 K512_AVX2[160] = {
+    W64LIT(0x428a2f98d728ae22), W64LIT(0x7137449123ef65cd),
+    W64LIT(0x428a2f98d728ae22), W64LIT(0x7137449123ef65cd),
+    W64LIT(0xb5c0fbcfec4d3b2f), W64LIT(0xe9b5dba58189dbbc),
+    W64LIT(0xb5c0fbcfec4d3b2f), W64LIT(0xe9b5dba58189dbbc),
+    W64LIT(0x3956c25bf348b538), W64LIT(0x59f111f1b605d019),
+    W64LIT(0x3956c25bf348b538), W64LIT(0x59f111f1b605d019),
+    W64LIT(0x923f82a4af194f9b), W64LIT(0xab1c5ed5da6d8118),
+    W64LIT(0x923f82a4af194f9b), W64LIT(0xab1c5ed5da6d8118),
+    W64LIT(0xd807aa98a3030242), W64LIT(0x12835b0145706fbe),
+    W64LIT(0xd807aa98a3030242), W64LIT(0x12835b0145706fbe),
+    W64LIT(0x243185be4ee4b28c), W64LIT(0x550c7dc3d5ffb4e2),
+    W64LIT(0x243185be4ee4b28c), W64LIT(0x550c7dc3d5ffb4e2),
+    W64LIT(0x72be5d74f27b896f), W64LIT(0x80deb1fe3b1696b1),
+    W64LIT(0x72be5d74f27b896f), W64LIT(0x80deb1fe3b1696b1),
+    W64LIT(0x9bdc06a725c71235), W64LIT(0xc19bf174cf692694),
+    W64LIT(0x9bdc06a725c71235), W64LIT(0xc19bf174cf692694),
+    W64LIT(0xe49b69c19ef14ad2), W64LIT(0xefbe4786384f25e3),
+    W64LIT(0xe49b69c19ef14ad2), W64LIT(0xefbe4786384f25e3),
+    W64LIT(0x0fc19dc68b8cd5b5), W64LIT(0x240ca1cc77ac9c65),
+    W64LIT(0x0fc19dc68b8cd5b5), W64LIT(0x240ca1cc77ac9c65),
+    W64LIT(0x2de92c6f592b0275), W64LIT(0x4a7484aa6ea6e483),
+    W64LIT(0x2de92c6f592b0275), W64LIT(0x4a7484aa6ea6e483),
+    W64LIT(0x5cb0a9dcbd41fbd4), W64LIT(0x76f988da831153b5),
+    W64LIT(0x5cb0a9dcbd41fbd4), W64LIT(0x76f988da831153b5),
+    W64LIT(0x983e5152ee66dfab), W64LIT(0xa831c66d2db43210),
+    W64LIT(0x983e5152ee66dfab), W64LIT(0xa831c66d2db43210),
+    W64LIT(0xb00327c898fb213f), W64LIT(0xbf597fc7beef0ee4),
+    W64LIT(0xb00327c898fb213f), W64LIT(0xbf597fc7beef0ee4),
+    W64LIT(0xc6e00bf33da88fc2), W64LIT(0xd5a79147930aa725),
+    W64LIT(0xc6e00bf33da88fc2), W64LIT(0xd5a79147930aa725),
+    W64LIT(0x06ca6351e003826f), W64LIT(0x142929670a0e6e70),
+    W64LIT(0x06ca6351e003826f), W64LIT(0x142929670a0e6e70),
+    W64LIT(0x27b70a8546d22ffc), W64LIT(0x2e1b21385c26c926),
+    W64LIT(0x27b70a8546d22ffc), W64LIT(0x2e1b21385c26c926),
+    W64LIT(0x4d2c6dfc5ac42aed), W64LIT(0x53380d139d95b3df),
+    W64LIT(0x4d2c6dfc5ac42aed), W64LIT(0x53380d139d95b3df),
+    W64LIT(0x650a73548baf63de), W64LIT(0x766a0abb3c77b2a8),
+    W64LIT(0x650a73548baf63de), W64LIT(0x766a0abb3c77b2a8),
+    W64LIT(0x81c2c92e47edaee6), W64LIT(0x92722c851482353b),
+    W64LIT(0x81c2c92e47edaee6), W64LIT(0x92722c851482353b),
+    W64LIT(0xa2bfe8a14cf10364), W64LIT(0xa81a664bbc423001),
+    W64LIT(0xa2bfe8a14cf10364), W64LIT(0xa81a664bbc423001),
+    W64LIT(0xc24b8b70d0f89791), W64LIT(0xc76c51a30654be30),
+    W64LIT(0xc24b8b70d0f89791), W64LIT(0xc76c51a30654be30),
+    W64LIT(0xd192e819d6ef5218), W64LIT(0xd69906245565a910),
+    W64LIT(0xd192e819d6ef5218), W64LIT(0xd69906245565a910),
+    W64LIT(0xf40e35855771202a), W64LIT(0x106aa07032bbd1b8),
+    W64LIT(0xf40e35855771202a), W64LIT(0x106aa07032bbd1b8),
+    W64LIT(0x19a4c116b8d2d0c8), W64LIT(0x1e376c085141ab53),
+    W64LIT(0x19a4c116b8d2d0c8), W64LIT(0x1e376c085141ab53),
+    W64LIT(0x2748774cdf8eeb99), W64LIT(0x34b0bcb5e19b48a8),
+    W64LIT(0x2748774cdf8eeb99), W64LIT(0x34b0bcb5e19b48a8),
+    W64LIT(0x391c0cb3c5c95a63), W64LIT(0x4ed8aa4ae3418acb),
+    W64LIT(0x391c0cb3c5c95a63), W64LIT(0x4ed8aa4ae3418acb),
+    W64LIT(0x5b9cca4f7763e373), W64LIT(0x682e6ff3d6b2b8a3),
+    W64LIT(0x5b9cca4f7763e373), W64LIT(0x682e6ff3d6b2b8a3),
+    W64LIT(0x748f82ee5defb2fc), W64LIT(0x78a5636f43172f60),
+    W64LIT(0x748f82ee5defb2fc), W64LIT(0x78a5636f43172f60),
+    W64LIT(0x84c87814a1f0ab72), W64LIT(0x8cc702081a6439ec),
+    W64LIT(0x84c87814a1f0ab72), W64LIT(0x8cc702081a6439ec),
+    W64LIT(0x90befffa23631e28), W64LIT(0xa4506cebde82bde9),
+    W64LIT(0x90befffa23631e28), W64LIT(0xa4506cebde82bde9),
+    W64LIT(0xbef9a3f7b2c67915), W64LIT(0xc67178f2e372532b),
+    W64LIT(0xbef9a3f7b2c67915), W64LIT(0xc67178f2e372532b),
+    W64LIT(0xca273eceea26619c), W64LIT(0xd186b8c721c0c207),
+    W64LIT(0xca273eceea26619c), W64LIT(0xd186b8c721c0c207),
+    W64LIT(0xeada7dd6cde0eb1e), W64LIT(0xf57d4f7fee6ed178),
+    W64LIT(0xeada7dd6cde0eb1e), W64LIT(0xf57d4f7fee6ed178),
+    W64LIT(0x06f067aa72176fba), W64LIT(0x0a637dc5a2c898a6),
+    W64LIT(0x06f067aa72176fba), W64LIT(0x0a637dc5a2c898a6),
+    W64LIT(0x113f9804bef90dae), W64LIT(0x1b710b35131c471b),
+    W64LIT(0x113f9804bef90dae), W64LIT(0x1b710b35131c471b),
+    W64LIT(0x28db77f523047d84), W64LIT(0x32caab7b40c72493),
+    W64LIT(0x28db77f523047d84), W64LIT(0x32caab7b40c72493),
+    W64LIT(0x3c9ebe0a15c9bebc), W64LIT(0x431d67c49c100d4c),
+    W64LIT(0x3c9ebe0a15c9bebc), W64LIT(0x431d67c49c100d4c),
+    W64LIT(0x4cc5d4becb3e42b6), W64LIT(0x597f299cfc657e2a),
+    W64LIT(0x4cc5d4becb3e42b6), W64LIT(0x597f299cfc657e2a),
+    W64LIT(0x5fcb6fab3ad6faec), W64LIT(0x6c44198c4a475817),
+    W64LIT(0x5fcb6fab3ad6faec), W64LIT(0x6c44198c4a475817)
+};
+static const word64* K512_AVX2_END = &K512_AVX2[128];
 
-
-static INLINE void Block_Y_0_1(void) { Block_Y_xx_1(0, W_0y, W_4y, W_8y, W_12y); }
-static INLINE void Block_Y_0_2(void) { Block_Y_xx_2(0, W_0y, W_4y, W_8y, W_12y); }
-static INLINE void Block_Y_0_3(void) { Block_Y_xx_3(0, W_0y, W_4y, W_8y, W_12y); }
-static INLINE void Block_Y_0_4(void) { Block_Y_xx_4(0, W_0y, W_4y, W_8y, W_12y); }
-static INLINE void Block_Y_0_5(void) { Block_Y_xx_5(0, W_0y, W_4y, W_8y, W_12y); }
-static INLINE void Block_Y_0_6(void) { Block_Y_xx_6(0, W_0y, W_4y, W_8y, W_12y); }
-static INLINE void Block_Y_0_7(void) { Block_Y_xx_7(0, W_0y, W_4y, W_8y, W_12y); }
-static INLINE void Block_Y_0_8(void) { Block_Y_xx_8(0, W_0y, W_4y, W_8y, W_12y); }
-static INLINE void Block_Y_0_9(void) { Block_Y_xx_9(0, W_0y, W_4y, W_8y, W_12y); }
-static INLINE void Block_Y_0_10(void){ Block_Y_xx_10(0, W_0y, W_4y, W_8y, W_12y); }
-static INLINE void Block_Y_0_11(void){ Block_Y_xx_11(0, W_0y, W_4y, W_8y, W_12y); }
-static INLINE void Block_Y_0_12(word64 *w){ Block_Y_xx_12(0, W_0y, W_4y, W_8y, W_12y); }
-
-static INLINE void Block_Y_4_1(void) { Block_Y_xx_1(4, W_4y, W_8y, W_12y, W_0y); }
-static INLINE void Block_Y_4_2(void) { Block_Y_xx_2(4, W_4y, W_8y, W_12y, W_0y); }
-static INLINE void Block_Y_4_3(void) { Block_Y_xx_3(4, W_4y, W_8y, W_12y, W_0y); }
-static INLINE void Block_Y_4_4(void) { Block_Y_xx_4(4, W_4y, W_8y, W_12y, W_0y); }
-static INLINE void Block_Y_4_5(void) { Block_Y_xx_5(4, W_4y, W_8y, W_12y, W_0y); }
-static INLINE void Block_Y_4_6(void) { Block_Y_xx_6(4, W_4y, W_8y, W_12y, W_0y); }
-static INLINE void Block_Y_4_7(void) { Block_Y_xx_7(4, W_4y, W_8y, W_12y, W_0y); }
-static INLINE void Block_Y_4_8(void) { Block_Y_xx_8(4, W_4y, W_8y, W_12y, W_0y); }
-static INLINE void Block_Y_4_9(void) { Block_Y_xx_9(4, W_4y, W_8y, W_12y, W_0y); }
-static INLINE void Block_Y_4_10(void) { Block_Y_xx_10(4, W_4y, W_8y, W_12y, W_0y); }
-static INLINE void Block_Y_4_11(void) { Block_Y_xx_11(4, W_4y, W_8y, W_12y, W_0y); }
-static INLINE void Block_Y_4_12(word64 *w) { Block_Y_xx_12(4, W_4y, W_8y, W_12y, W_0y); }
-
-static INLINE void Block_Y_8_1(void) { Block_Y_xx_1(8, W_8y, W_12y, W_0y, W_4y); }
-static INLINE void Block_Y_8_2(void) { Block_Y_xx_2(8, W_8y, W_12y, W_0y, W_4y); }
-static INLINE void Block_Y_8_3(void) { Block_Y_xx_3(8, W_8y, W_12y, W_0y, W_4y); }
-static INLINE void Block_Y_8_4(void) { Block_Y_xx_4(8, W_8y, W_12y, W_0y, W_4y); }
-static INLINE void Block_Y_8_5(void) { Block_Y_xx_5(8, W_8y, W_12y, W_0y, W_4y); }
-static INLINE void Block_Y_8_6(void) { Block_Y_xx_6(8, W_8y, W_12y, W_0y, W_4y); }
-static INLINE void Block_Y_8_7(void) { Block_Y_xx_7(8, W_8y, W_12y, W_0y, W_4y); }
-static INLINE void Block_Y_8_8(void) { Block_Y_xx_8(8, W_8y, W_12y, W_0y, W_4y); }
-static INLINE void Block_Y_8_9(void) { Block_Y_xx_9(8, W_8y, W_12y, W_0y, W_4y); }
-static INLINE void Block_Y_8_10(void) { Block_Y_xx_10(8, W_8y, W_12y, W_0y, W_4y); }
-static INLINE void Block_Y_8_11(void) { Block_Y_xx_11(8, W_8y, W_12y, W_0y, W_4y); }
-static INLINE void Block_Y_8_12(word64 *w) { Block_Y_xx_12(8, W_8y, W_12y, W_0y, W_4y); }
-
-static INLINE void Block_Y_12_1(void) { Block_Y_xx_1(12, W_12y, W_0y, W_4y, W_8y); }
-static INLINE void Block_Y_12_2(void) { Block_Y_xx_2(12, W_12y, W_0y, W_4y, W_8y); }
-static INLINE void Block_Y_12_3(void) { Block_Y_xx_3(12, W_12y, W_0y, W_4y, W_8y); }
-static INLINE void Block_Y_12_4(void) { Block_Y_xx_4(12, W_12y, W_0y, W_4y, W_8y); }
-static INLINE void Block_Y_12_5(void) { Block_Y_xx_5(12, W_12y, W_0y, W_4y, W_8y); }
-static INLINE void Block_Y_12_6(void) { Block_Y_xx_6(12, W_12y, W_0y, W_4y, W_8y); }
-static INLINE void Block_Y_12_7(void) { Block_Y_xx_7(12, W_12y, W_0y, W_4y, W_8y); }
-static INLINE void Block_Y_12_8(void) { Block_Y_xx_8(12, W_12y, W_0y, W_4y, W_8y); }
-static INLINE void Block_Y_12_9(void) { Block_Y_xx_9(12, W_12y, W_0y, W_4y, W_8y); }
-static INLINE void Block_Y_12_10(void) { Block_Y_xx_10(12, W_12y, W_0y, W_4y, W_8y); }
-static INLINE void Block_Y_12_11(void) { Block_Y_xx_11(12, W_12y, W_0y, W_4y, W_8y); }
-static INLINE void Block_Y_12_12(word64 *w) { Block_Y_xx_12(12, W_12y, W_0y, W_4y, W_8y); }
-
-
-static int Transform_AVX2(Sha512* sha512)
+static int Transform_Sha512_AVX2(wc_Sha512* sha512)
 {
-    const word64* K = K512;
-    word64 w[4];
-    word32 j;
-    word64 T[8];
+    __asm__ __volatile__ (
 
-    /* Copy digest to working vars */
-    XMEMCPY(T, sha512->digest, sizeof(T));
+        /* 16 Ws plus loop counter and K512. */
+        "subq	$136, %%rsp\n\t"
+        "leaq	64(%[sha512]), %%rax\n\t"
 
-    W_from_buff_Y(sha512->buffer);
-    MOVE_to_MEMy(w,0, W_0y);
-    for (j = 0; j < 80; j += 16) {
-        Ry_1( 0, w[0]); Block_Y_0_1(); Ry_2( 0, w[0]); Block_Y_0_2();
-                                       Ry_3( 0, w[0]); Block_Y_0_3();
-        Ry_1( 1, w[1]); Block_Y_0_4(); Ry_2( 1, w[1]); Block_Y_0_5();
-                                       Ry_3( 1, w[1]); Block_Y_0_6();
-        Ry_1( 2, w[2]); Block_Y_0_7(); Ry_2( 2, w[2]); Block_Y_0_8();
-                                       Ry_3( 2, w[2]); Block_Y_0_9();
-        Ry_1( 3, w[3]); Block_Y_0_10();Ry_2( 3, w[3]); Block_Y_0_11();
-                                       Ry_3( 3, w[3]); Block_Y_0_12(w);
+    INIT_MASK(MASK_Y)
+    LOAD_DIGEST()
 
-        Ry_1( 4, w[0]); Block_Y_4_1(); Ry_2( 4, w[0]); Block_Y_4_2();
-                                       Ry_3( 4, w[0]); Block_Y_4_3();
-        Ry_1( 5, w[1]); Block_Y_4_4(); Ry_2( 5, w[1]); Block_Y_4_5();
-                                       Ry_3( 5, w[1]); Block_Y_4_6();
-        Ry_1( 6, w[2]); Block_Y_4_7(); Ry_2( 6, w[2]); Block_Y_4_8();
-                                       Ry_3( 6, w[2]); Block_Y_4_9();
-        Ry_1( 7, w[3]); Block_Y_4_10(); Ry_2( 7, w[3]);Block_Y_4_11();
-                                        Ry_3( 7, w[3]);Block_Y_4_12(w);
+    LOAD_BLOCK_W_Y(MASK_Y, rax)
 
-        Ry_1( 8, w[0]); Block_Y_8_1(); Ry_2( 8, w[0]); Block_Y_8_2();
-                                       Ry_3( 8, w[0]); Block_Y_8_3();
-        Ry_1( 9, w[1]); Block_Y_8_4(); Ry_2( 9, w[1]); Block_Y_8_5();
-                                       Ry_3( 9, w[1]); Block_Y_8_6();
-        Ry_1(10, w[2]); Block_Y_8_7(); Ry_2(10, w[2]); Block_Y_8_8();
-                                       Ry_3(10, w[2]); Block_Y_8_9();
-        Ry_1(11, w[3]); Block_Y_8_10();Ry_2(11, w[3]); Block_Y_8_11();
-                                       Ry_3(11, w[3]); Block_Y_8_12(w);
+        "movl	$4, 16*8(" WX ")\n\t"
+        "leaq	%[K512], %%rsi\n\t"
+        /* b */
+        "movq	%%r9, " L4 "\n\t"
+        /* e */
+        "movq	%%r12, " L1 "\n\t"
+        /* b ^ c */
+        "xorq	%%r10, " L4 "\n\t"
 
-        Ry_1(12, w[0]); Block_Y_12_1(); Ry_2(12, w[0]); Block_Y_12_2();
-                                        Ry_3(12, w[0]); Block_Y_12_3();
-        Ry_1(13, w[1]); Block_Y_12_4(); Ry_2(13, w[1]); Block_Y_12_5();
-                                        Ry_3(13, w[1]); Block_Y_12_6();
-        Ry_1(14, w[2]); Block_Y_12_7(); Ry_2(14, w[2]); Block_Y_12_8();
-                                        Ry_3(14, w[2]); Block_Y_12_9();
-        Ry_1(15, w[3]); Block_Y_12_10();Ry_2(15, w[3]); Block_Y_12_11();
-                                        Ry_3(15, w[3]);Block_Y_12_12(w);
-    }
+    SET_BLOCK_W_Y(rsi)
 
-    /* Add the working vars back into digest */
-    sha512->digest[0] += a(0);
-    sha512->digest[1] += b(0);
-    sha512->digest[2] += c(0);
-    sha512->digest[3] += d(0);
-    sha512->digest[4] += e(0);
-    sha512->digest[5] += f(0);
-    sha512->digest[6] += g(0);
-    sha512->digest[7] += h(0);
+        "# Start of 16 rounds\n"
+        "1:\n\t"
 
-    /* Wipe variables */
-#if !defined(HAVE_INTEL_AVX1) && !defined(HAVE_INTEL_AVX2)
-    XMEMSET(W, 0, sizeof(word64) * 16);
-#endif
-    XMEMSET(T, 0, sizeof(T));
+        "addq	$128, %%rsi\n\t"
+
+    MsgSched4_AVX2(W_Y_0,W_Y_4,W_Y_8,W_Y_12,RA,RB,RC,RD,RE,RF,RG,RH, 0)
+    MsgSched4_AVX2(W_Y_4,W_Y_8,W_Y_12,W_Y_0,RE,RF,RG,RH,RA,RB,RC,RD, 4)
+    MsgSched4_AVX2(W_Y_8,W_Y_12,W_Y_0,W_Y_4,RA,RB,RC,RD,RE,RF,RG,RH, 8)
+    MsgSched4_AVX2(W_Y_12,W_Y_0,W_Y_4,W_Y_8,RE,RF,RG,RH,RA,RB,RC,RD,12)
+
+    SET_BLOCK_W_Y(rsi)
+
+        "subl	$1, 16*8(" WX ")\n\t"
+        "jne	1b\n\t"
+
+    RND_ALL_2(RA,RB,RC,RD,RE,RF,RG,RH, 0)
+    RND_ALL_2(RG,RH,RA,RB,RC,RD,RE,RF, 2)
+    RND_ALL_2(RE,RF,RG,RH,RA,RB,RC,RD, 4)
+    RND_ALL_2(RC,RD,RE,RF,RG,RH,RA,RB, 6)
+
+    RND_ALL_2(RA,RB,RC,RD,RE,RF,RG,RH, 8)
+    RND_ALL_2(RG,RH,RA,RB,RC,RD,RE,RF,10)
+    RND_ALL_2(RE,RF,RG,RH,RA,RB,RC,RD,12)
+    RND_ALL_2(RC,RD,RE,RF,RG,RH,RA,RB,14)
+
+    STORE_ADD_DIGEST()
+
+        "addq	$136, %%rsp\n\t"
+
+        :
+        : [mask]   "m" (mBYTE_FLIP_MASK_Y),
+          [sha512] "r" (sha512),
+          [K512]   "m" (K512)
+        : WORK_REGS, STATE_REGS, YMM_REGS, "memory", "rsi"
+    );
 
     return 0;
 }
+
+static int Transform_Sha512_AVX2_Len(wc_Sha512* sha512, word32 len)
+{
+    if ((len & WC_SHA512_BLOCK_SIZE) != 0) {
+        XMEMCPY(sha512->buffer, sha512->data, WC_SHA512_BLOCK_SIZE);
+        Transform_Sha512_AVX2(sha512);
+        sha512->data += WC_SHA512_BLOCK_SIZE;
+        len -= WC_SHA512_BLOCK_SIZE;
+        if (len == 0)
+            return 0;
+    }
+
+    __asm__ __volatile__ (
+
+        "movq	224(%[sha512]), %%rcx\n\t"
+
+    INIT_MASK(MASK_Y)
+    LOAD_DIGEST()
+
+        "# Start of processing two blocks\n"
+        "2:\n\t"
+
+        "subq	$1344, %%rsp\n\t"
+        "leaq	%[K512], %%rsi\n\t"
+
+        /* L4 = b */
+        "movq	%%r9, " L4 "\n\t"
+        /* e */
+        "movq	%%r12, " L1 "\n\t"
+
+    LOAD_BLOCK2_W_Y(MASK_Y, rcx)
+
+        /* L4 = b ^ c */
+        "xorq	%%r10, " L4 "\n\t"
+        "\n"
+        "1:\n\t"
+    SET_BLOCK2_W_Y(rsi)
+    MsgSched2_AVX2(Y0,Y1,Y2,Y3,Y4,Y5,Y6,Y7,RA,RB,RC,RD,RE,RF,RG,RH, 0)
+    MsgSched2_AVX2(Y1,Y2,Y3,Y4,Y5,Y6,Y7,Y0,RG,RH,RA,RB,RC,RD,RE,RF, 4)
+    MsgSched2_AVX2(Y2,Y3,Y4,Y5,Y6,Y7,Y0,Y1,RE,RF,RG,RH,RA,RB,RC,RD, 8)
+    MsgSched2_AVX2(Y3,Y4,Y5,Y6,Y7,Y0,Y1,Y2,RC,RD,RE,RF,RG,RH,RA,RB,12)
+    MsgSched2_AVX2(Y4,Y5,Y6,Y7,Y0,Y1,Y2,Y3,RA,RB,RC,RD,RE,RF,RG,RH,16)
+    MsgSched2_AVX2(Y5,Y6,Y7,Y0,Y1,Y2,Y3,Y4,RG,RH,RA,RB,RC,RD,RE,RF,20)
+    MsgSched2_AVX2(Y6,Y7,Y0,Y1,Y2,Y3,Y4,Y5,RE,RF,RG,RH,RA,RB,RC,RD,24)
+    MsgSched2_AVX2(Y7,Y0,Y1,Y2,Y3,Y4,Y5,Y6,RC,RD,RE,RF,RG,RH,RA,RB,28)
+        "addq	$256, %%rsi\n\t"
+        "addq	$256, %%rsp\n\t"
+        "cmpq	%[K512_END], %%rsi\n\t"
+        "jne	1b\n\t"
+
+    SET_BLOCK2_W_Y(rsi)
+    RND_ALL_2(RA,RB,RC,RD,RE,RF,RG,RH, 0)
+    RND_ALL_2(RG,RH,RA,RB,RC,RD,RE,RF, 4)
+    RND_ALL_2(RE,RF,RG,RH,RA,RB,RC,RD, 8)
+    RND_ALL_2(RC,RD,RE,RF,RG,RH,RA,RB,12)
+
+    RND_ALL_2(RA,RB,RC,RD,RE,RF,RG,RH,16)
+    RND_ALL_2(RG,RH,RA,RB,RC,RD,RE,RF,20)
+    RND_ALL_2(RE,RF,RG,RH,RA,RB,RC,RD,24)
+    RND_ALL_2(RC,RD,RE,RF,RG,RH,RA,RB,28)
+        "subq	$1024, %%rsp\n\t"
+
+    ADD_DIGEST()
+    STORE_DIGEST()
+
+        /* L4 = b */
+        "movq	%%r9, " L4 "\n\t"
+        /* e */
+        "movq	%%r12, " L1 "\n\t"
+        /* L4 = b ^ c */
+        "xorq	%%r10, " L4 "\n\t"
+
+        "movq	$5, %%rsi\n\t"
+        "\n"
+        "3:\n\t"
+    RND_ALL_2(RA,RB,RC,RD,RE,RF,RG,RH, 2)
+    RND_ALL_2(RG,RH,RA,RB,RC,RD,RE,RF, 6)
+    RND_ALL_2(RE,RF,RG,RH,RA,RB,RC,RD,10)
+    RND_ALL_2(RC,RD,RE,RF,RG,RH,RA,RB,14)
+
+    RND_ALL_2(RA,RB,RC,RD,RE,RF,RG,RH,18)
+    RND_ALL_2(RG,RH,RA,RB,RC,RD,RE,RF,22)
+    RND_ALL_2(RE,RF,RG,RH,RA,RB,RC,RD,26)
+    RND_ALL_2(RC,RD,RE,RF,RG,RH,RA,RB,30)
+        "addq	$256, %%rsp\n\t"
+        "subq	$1, %%rsi\n\t"
+        "jnz	3b\n\t"
+
+    ADD_DIGEST()
+
+        "movq	224(%[sha512]), %%rcx\n\t"
+        "addq	$64, %%rsp\n\t"
+        "addq	$256, %%rcx\n\t"
+        "subl	$256, %[len]\n\t"
+        "movq	%%rcx, 224(%[sha512])\n\t"
+
+    STORE_DIGEST()
+
+        "jnz	2b\n\t"
+
+        :
+        : [mask]   "m" (mBYTE_FLIP_MASK_Y),
+          [len]    "m" (len),
+          [sha512] "r" (sha512),
+          [K512]   "m" (K512_AVX2),
+          [K512_END]   "m" (K512_AVX2_END)
+        : WORK_REGS, STATE_REGS, YMM_REGS, "memory", "rsi"
+    );
+
+    return 0;
+}
+
+#ifdef HAVE_INTEL_RORX
+static int Transform_Sha512_AVX2_RORX(wc_Sha512* sha512)
+{
+    __asm__ __volatile__ (
+
+        /* 16 Ws plus loop counter. */
+        "subq	$136, %%rsp\n\t"
+        "leaq	64(%[sha512]), " L2 "\n\t"
+
+    INIT_MASK(MASK_Y)
+    LOAD_DIGEST()
+
+    LOAD_BLOCK_W_Y(MASK_Y, rcx)
+
+        "movl	$4, 16*8(" WX ")\n\t"
+        "leaq	%[K512], %%rsi\n\t"
+        /* b */
+        "movq	%%r9, " L4 "\n\t"
+        /* L3 = 0 (add to prev h) */
+        "xorq	" L3 ", " L3 "\n\t"
+        /* b ^ c */
+        "xorq	%%r10, " L4 "\n\t"
+
+    SET_BLOCK_W_Y(rsi)
+
+        "# Start of 16 rounds\n"
+        "1:\n\t"
+
+        "addq	$128, %%rsi\n\t"
+
+    MsgSched4_AVX2_RORX_SET(W_Y_0,W_Y_4,W_Y_8,W_Y_12,RA,RB,RC,RD,RE,RF,RG,RH, 0)
+    MsgSched4_AVX2_RORX_SET(W_Y_4,W_Y_8,W_Y_12,W_Y_0,RE,RF,RG,RH,RA,RB,RC,RD, 4)
+    MsgSched4_AVX2_RORX_SET(W_Y_8,W_Y_12,W_Y_0,W_Y_4,RA,RB,RC,RD,RE,RF,RG,RH, 8)
+    MsgSched4_AVX2_RORX_SET(W_Y_12,W_Y_0,W_Y_4,W_Y_8,RE,RF,RG,RH,RA,RB,RC,RD,12)
+
+        "subl	$1, 16*8(%%rsp)\n\t"
+        "jnz	1b\n\t"
+
+    RND_RORX_ALL_4(RA,RB,RC,RD,RE,RF,RG,RH, 0)
+    RND_RORX_ALL_4(RE,RF,RG,RH,RA,RB,RC,RD, 4)
+    RND_RORX_ALL_4(RA,RB,RC,RD,RE,RF,RG,RH, 8)
+    RND_RORX_ALL_4(RE,RF,RG,RH,RA,RB,RC,RD,12)
+        /* Prev RND: h += Maj(a,b,c) */
+        "addq	" L3 ", %%r8\n\t"
+        "addq	$136, %%rsp\n\t"
+
+    STORE_ADD_DIGEST()
+
+        :
+        : [mask]   "m" (mBYTE_FLIP_MASK_Y),
+          [sha512] "r" (sha512),
+          [K512]   "m" (K512)
+        : WORK_REGS, STATE_REGS, YMM_REGS, "memory", "rsi"
+    );
+
+    return 0;
+}
+
+static int Transform_Sha512_AVX2_RORX_Len(wc_Sha512* sha512, word32 len)
+{
+    if ((len & WC_SHA512_BLOCK_SIZE) != 0) {
+        XMEMCPY(sha512->buffer, sha512->data, WC_SHA512_BLOCK_SIZE);
+        Transform_Sha512_AVX2_RORX(sha512);
+        sha512->data += WC_SHA512_BLOCK_SIZE;
+        len -= WC_SHA512_BLOCK_SIZE;
+        if (len == 0)
+            return 0;
+    }
+
+    __asm__ __volatile__ (
+
+        "movq	224(%[sha512]), %%rax\n\t"
+
+    INIT_MASK(MASK_Y)
+    LOAD_DIGEST()
+
+        "# Start of processing two blocks\n"
+        "2:\n\t"
+
+        "subq	$1344, %%rsp\n\t"
+        "leaq	%[K512], %%rsi\n\t"
+
+        /* L4 = b */
+        "movq	%%r9, " L4 "\n\t"
+        /* L3 = 0 (add to prev h) */
+        "xorq	" L3 ", " L3 "\n\t"
+
+    LOAD_BLOCK2_W_Y(MASK_Y, rax)
+
+        /* L4 = b ^ c */
+        "xorq	%%r10, " L4 "\n\t"
+        "\n"
+        "1:\n\t"
+    SET_BLOCK2_W_Y(rsi)
+    MsgSched2_AVX2_RORX(Y0,Y1,Y2,Y3,Y4,Y5,Y6,Y7,RA,RB,RC,RD,RE,RF,RG,RH, 0)
+    MsgSched2_AVX2_RORX(Y1,Y2,Y3,Y4,Y5,Y6,Y7,Y0,RG,RH,RA,RB,RC,RD,RE,RF, 4)
+    MsgSched2_AVX2_RORX(Y2,Y3,Y4,Y5,Y6,Y7,Y0,Y1,RE,RF,RG,RH,RA,RB,RC,RD, 8)
+    MsgSched2_AVX2_RORX(Y3,Y4,Y5,Y6,Y7,Y0,Y1,Y2,RC,RD,RE,RF,RG,RH,RA,RB,12)
+    MsgSched2_AVX2_RORX(Y4,Y5,Y6,Y7,Y0,Y1,Y2,Y3,RA,RB,RC,RD,RE,RF,RG,RH,16)
+    MsgSched2_AVX2_RORX(Y5,Y6,Y7,Y0,Y1,Y2,Y3,Y4,RG,RH,RA,RB,RC,RD,RE,RF,20)
+    MsgSched2_AVX2_RORX(Y6,Y7,Y0,Y1,Y2,Y3,Y4,Y5,RE,RF,RG,RH,RA,RB,RC,RD,24)
+    MsgSched2_AVX2_RORX(Y7,Y0,Y1,Y2,Y3,Y4,Y5,Y6,RC,RD,RE,RF,RG,RH,RA,RB,28)
+        "addq	$256, %%rsi\n\t"
+        "addq	$256, %%rsp\n\t"
+        "cmpq	%[K512_END], %%rsi\n\t"
+        "jne	1b\n\t"
+
+    SET_BLOCK2_W_Y(rsi)
+    RND_RORX_ALL_2(RA,RB,RC,RD,RE,RF,RG,RH, 0)
+    RND_RORX_ALL_2(RG,RH,RA,RB,RC,RD,RE,RF, 4)
+    RND_RORX_ALL_2(RE,RF,RG,RH,RA,RB,RC,RD, 8)
+    RND_RORX_ALL_2(RC,RD,RE,RF,RG,RH,RA,RB,12)
+
+    RND_RORX_ALL_2(RA,RB,RC,RD,RE,RF,RG,RH,16)
+    RND_RORX_ALL_2(RG,RH,RA,RB,RC,RD,RE,RF,20)
+    RND_RORX_ALL_2(RE,RF,RG,RH,RA,RB,RC,RD,24)
+    RND_RORX_ALL_2(RC,RD,RE,RF,RG,RH,RA,RB,28)
+        "addq	" L3 ", %%r8\n\t"
+        "subq	$1024, %%rsp\n\t"
+
+    ADD_DIGEST()
+    STORE_DIGEST()
+
+        /* L4 = b */
+        "movq	%%r9, " L4 "\n\t"
+        /* L3 = 0 (add to prev h) */
+        "xorq	" L3 ", " L3 "\n\t"
+        /* L4 = b ^ c */
+        "xorq	%%r10, " L4 "\n\t"
+
+        "movq	$5, %%rsi\n\t"
+        "\n"
+        "3:\n\t"
+    RND_RORX_ALL_2(RA,RB,RC,RD,RE,RF,RG,RH, 2)
+    RND_RORX_ALL_2(RG,RH,RA,RB,RC,RD,RE,RF, 6)
+    RND_RORX_ALL_2(RE,RF,RG,RH,RA,RB,RC,RD,10)
+    RND_RORX_ALL_2(RC,RD,RE,RF,RG,RH,RA,RB,14)
+
+    RND_RORX_ALL_2(RA,RB,RC,RD,RE,RF,RG,RH,18)
+    RND_RORX_ALL_2(RG,RH,RA,RB,RC,RD,RE,RF,22)
+    RND_RORX_ALL_2(RE,RF,RG,RH,RA,RB,RC,RD,26)
+    RND_RORX_ALL_2(RC,RD,RE,RF,RG,RH,RA,RB,30)
+        "addq	$256, %%rsp\n\t"
+        "subq	$1, %%rsi\n\t"
+        "jnz	3b\n\t"
+
+        "addq	" L3 ", %%r8\n\t"
+
+    ADD_DIGEST()
+
+        "movq	224(%[sha512]), %%rax\n\t"
+        "addq	$64, %%rsp\n\t"
+        "addq	$256, %%rax\n\t"
+        "subl	$256, %[len]\n\t"
+        "movq	%%rax, 224(%[sha512])\n\t"
+
+    STORE_DIGEST()
+
+        "jnz	2b\n\t"
+
+        :
+        : [mask]   "m" (mBYTE_FLIP_MASK_Y),
+          [len]    "m" (len),
+          [sha512] "r" (sha512),
+          [K512]   "m" (K512_AVX2),
+          [K512_END]   "m" (K512_AVX2_END)
+        : WORK_REGS, STATE_REGS, YMM_REGS, "memory", "rsi"
+    );
+
+    return 0;
+}
+#endif /* HAVE_INTEL_RORX */
 #endif /* HAVE_INTEL_AVX2 */
 
 
@@ -1345,7 +2564,12 @@ static int Transform_AVX2(Sha512* sha512)
 /* SHA384 */
 /* -------------------------------------------------------------------------- */
 #ifdef WOLFSSL_SHA384
-static int InitSha384(Sha384* sha384)
+
+#if defined(WOLFSSL_IMX6_CAAM) && !defined(NO_IMX6_CAAM_HASH)
+    /* functions defined in wolfcrypt/src/port/caam/caam_sha.c */
+#else
+
+static int InitSha384(wc_Sha384* sha384)
 {
     if (sha384 == NULL) {
         return BAD_FUNC_ARG;
@@ -1367,7 +2591,7 @@ static int InitSha384(Sha384* sha384)
     return 0;
 }
 
-int wc_Sha384Update(Sha384* sha384, const byte* data, word32 len)
+int wc_Sha384Update(wc_Sha384* sha384, const byte* data, word32 len)
 {
     if (sha384 == NULL || (data == NULL && len > 0)) {
         return BAD_FUNC_ARG;
@@ -1381,11 +2605,32 @@ int wc_Sha384Update(Sha384* sha384, const byte* data, word32 len)
     }
 #endif /* WOLFSSL_ASYNC_CRYPT */
 
-    return Sha512Update((Sha512*)sha384, data, len);
+    return Sha512Update((wc_Sha512*)sha384, data, len);
 }
 
 
-int wc_Sha384Final(Sha384* sha384, byte* hash)
+int wc_Sha384FinalRaw(wc_Sha384* sha384, byte* hash)
+{
+#ifdef LITTLE_ENDIAN_ORDER
+    word64 digest[WC_SHA384_DIGEST_SIZE / sizeof(word64)];
+#endif
+
+    if (sha384 == NULL || hash == NULL) {
+        return BAD_FUNC_ARG;
+    }
+
+#ifdef LITTLE_ENDIAN_ORDER
+    ByteReverseWords64((word64*)digest, (word64*)sha384->digest,
+                                                         WC_SHA384_DIGEST_SIZE);
+    XMEMCPY(hash, digest, WC_SHA384_DIGEST_SIZE);
+#else
+    XMEMCPY(hash, sha384->digest, WC_SHA384_DIGEST_SIZE);
+#endif
+
+    return 0;
+}
+
+int wc_Sha384Final(wc_Sha384* sha384, byte* hash)
 {
     int ret;
 
@@ -1397,16 +2642,16 @@ int wc_Sha384Final(Sha384* sha384, byte* hash)
     if (sha384->asyncDev.marker == WOLFSSL_ASYNC_MARKER_SHA384) {
     #if defined(HAVE_INTEL_QA)
         return IntelQaSymSha384(&sha384->asyncDev, hash, NULL,
-                                            SHA384_DIGEST_SIZE);
+                                            WC_SHA384_DIGEST_SIZE);
     #endif
     }
 #endif /* WOLFSSL_ASYNC_CRYPT */
 
-    ret = Sha512Final((Sha512*)sha384);
+    ret = Sha512Final((wc_Sha512*)sha384);
     if (ret != 0)
         return ret;
 
-    XMEMCPY(hash, sha384->digest, SHA384_DIGEST_SIZE);
+    XMEMCPY(hash, sha384->digest, WC_SHA384_DIGEST_SIZE);
 
     return InitSha384(sha384);  /* reset state */
 }
@@ -1414,7 +2659,7 @@ int wc_Sha384Final(Sha384* sha384, byte* hash)
 
 /* Hardware Acceleration */
 #if defined(HAVE_INTEL_AVX1) || defined(HAVE_INTEL_AVX2)
-    int wc_InitSha384_ex(Sha384* sha384, void* heap, int devId)
+    int wc_InitSha384_ex(wc_Sha384* sha384, void* heap, int devId)
     {
         int ret = InitSha384(sha384);
 
@@ -1426,7 +2671,7 @@ int wc_Sha384Final(Sha384* sha384, byte* hash)
         return ret;
     }
 #else
-int wc_InitSha384_ex(Sha384* sha384, void* heap, int devId)
+int wc_InitSha384_ex(wc_Sha384* sha384, void* heap, int devId)
 {
     int ret;
 
@@ -1449,13 +2694,14 @@ int wc_InitSha384_ex(Sha384* sha384, void* heap, int devId)
     return ret;
 }
 #endif
+#endif /* WOLFSSL_IMX6_CAAM */
 
-int wc_InitSha384(Sha384* sha384)
+int wc_InitSha384(wc_Sha384* sha384)
 {
     return wc_InitSha384_ex(sha384, NULL, INVALID_DEVID);
 }
 
-void wc_Sha384Free(Sha384* sha384)
+void wc_Sha384Free(wc_Sha384* sha384)
 {
     if (sha384 == NULL)
         return;
@@ -1470,10 +2716,10 @@ void wc_Sha384Free(Sha384* sha384)
 #endif /* HAVE_FIPS */
 
 
-int wc_Sha512GetHash(Sha512* sha512, byte* hash)
+int wc_Sha512GetHash(wc_Sha512* sha512, byte* hash)
 {
     int ret;
-    Sha512 tmpSha512;
+    wc_Sha512 tmpSha512;
 
     if (sha512 == NULL || hash == NULL)
         return BAD_FUNC_ARG;
@@ -1485,14 +2731,14 @@ int wc_Sha512GetHash(Sha512* sha512, byte* hash)
     return ret;
 }
 
-int wc_Sha512Copy(Sha512* src, Sha512* dst)
+int wc_Sha512Copy(wc_Sha512* src, wc_Sha512* dst)
 {
     int ret = 0;
 
     if (src == NULL || dst == NULL)
         return BAD_FUNC_ARG;
 
-    XMEMCPY(dst, src, sizeof(Sha512));
+    XMEMCPY(dst, src, sizeof(wc_Sha512));
 
 #ifdef WOLFSSL_ASYNC_CRYPT
     ret = wolfAsync_DevCopy(&src->asyncDev, &dst->asyncDev);
@@ -1502,10 +2748,10 @@ int wc_Sha512Copy(Sha512* src, Sha512* dst)
 }
 
 #ifdef WOLFSSL_SHA384
-int wc_Sha384GetHash(Sha384* sha384, byte* hash)
+int wc_Sha384GetHash(wc_Sha384* sha384, byte* hash)
 {
     int ret;
-    Sha384 tmpSha384;
+    wc_Sha384 tmpSha384;
 
     if (sha384 == NULL || hash == NULL)
         return BAD_FUNC_ARG;
@@ -1516,14 +2762,14 @@ int wc_Sha384GetHash(Sha384* sha384, byte* hash)
     }
     return ret;
 }
-int wc_Sha384Copy(Sha384* src, Sha384* dst)
+int wc_Sha384Copy(wc_Sha384* src, wc_Sha384* dst)
 {
     int ret = 0;
 
     if (src == NULL || dst == NULL)
         return BAD_FUNC_ARG;
 
-    XMEMCPY(dst, src, sizeof(Sha384));
+    XMEMCPY(dst, src, sizeof(wc_Sha384));
 
 #ifdef WOLFSSL_ASYNC_CRYPT
     ret = wolfAsync_DevCopy(&src->asyncDev, &dst->asyncDev);

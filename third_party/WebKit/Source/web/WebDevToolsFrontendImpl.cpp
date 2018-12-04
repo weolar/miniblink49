@@ -70,6 +70,19 @@ WebDevToolsFrontendImpl::WebDevToolsFrontendImpl(
 
 WebDevToolsFrontendImpl::~WebDevToolsFrontendImpl()
 {
+    if (m_devtoolsHost)
+        m_devtoolsHost->disconnectClient();
+
+    if (!m_devtoolsHost || !m_webFrame)
+        return;
+
+    v8::Isolate* isolate = v8::Isolate::GetCurrent();
+    ScriptState* scriptState = ScriptState::forMainWorld(m_webFrame->frame());
+    ScriptState::Scope scope(scriptState);
+
+    v8::Local<v8::Object> global = scriptState->context()->Global();
+    global->Delete(v8AtomicString(isolate, "DevToolsHost"));
+    m_devtoolsHost = nullptr;
 }
 
 void WebDevToolsFrontendImpl::didClearWindowObject(WebLocalFrameImpl* frame)

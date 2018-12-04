@@ -83,7 +83,7 @@ typedef _W64 unsigned int   size_t;
 #endif
 
 #ifndef _TIME_T_DEFINED
-#ifdef  _WIN64
+#if 1 // def  _WIN64
 typedef __int64   time_t;       /* time value */
 #else
 typedef _W64 long time_t;       /* time value */
@@ -149,7 +149,8 @@ typedef struct _iobuf FILE;
 /* Declare _iob[] array */
 
 #ifndef _STDIO_DEFINED
-_CRTIMP extern FILE _iob[];
+//_CRTIMP extern FILE _iob[];
+FILE * __cdecl __iob_func(void);
 #endif  /* _STDIO_DEFINED */
 
 #ifndef _FSIZE_T_DEFINED
@@ -562,9 +563,15 @@ _CRTIMP int __cdecl wscanf(const wchar_t *, ...);
 #define putwchar(_c)    fputwc((_c),stdout)
 #else   /* __cplusplus */
 inline wint_t __cdecl getwchar()
-        {return (fgetwc(&_iob[0])); }   /* stdin */
+{
+    return (fgetwc((&__iob_func()[0]))); // &_iob[0])
+}   /* stdin */
+
 inline wint_t __cdecl putwchar(wchar_t _C)
-        {return (fputwc(_C, &_iob[1])); }       /* stdout */
+{
+    return (fputwc(_C, (&__iob_func()[1]))); // &_iob[1])
+}       /* stdout */
+
 #endif  /* __cplusplus */
 
 #define getwc(_stm)     fgetwc(_stm)

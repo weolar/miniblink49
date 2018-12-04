@@ -2,7 +2,7 @@
 // Use of this source code is governed by the MIT license that can be
 // found in the LICENSE file.
 
-#include "node/include/nodeblink.h"
+#include "node/nodeblink.h"
 #include "common/NodeRegisterHelp.h"
 #include "common/api/EventEmitter.h"
 #include "gin/object_template_builder.h"
@@ -272,7 +272,7 @@ public:
         std::vector<ScreenWinDisplay> screen_win_displays;
         const size_t num_displays = display_infos.size();
         for (size_t i = 0; i < num_displays; ++i)
-            screen_win_displays.emplace_back(displays[i], display_infos[i]);
+            screen_win_displays.push_back(ScreenWinDisplay(displays[i], display_infos[i]));
 
         return screen_win_displays;
     }
@@ -334,7 +334,6 @@ public:
 
         prototype->SetClassName(v8::String::NewFromUtf8(isolate, "Screen"));
         gin::ObjectTemplateBuilder builder(isolate, prototype->InstanceTemplate());
-        builder.SetMethod("quit", &Screen::nullFunction);
         builder.SetMethod("getCursorScreenPoint", &Screen::getCursorScreenPointApi);
         builder.SetMethod("getPrimaryDisplay", &Screen::getPrimaryDisplayApi);
         builder.SetMethod("getAllDisplays", &Screen::getAllDisplaysApi);

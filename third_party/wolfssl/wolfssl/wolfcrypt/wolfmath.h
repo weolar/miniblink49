@@ -1,6 +1,6 @@
 /* wolfmath.h
  *
- * Copyright (C) 2006-2016 wolfSSL Inc.
+ * Copyright (C) 2006-2017 wolfSSL Inc.
  *
  * This file is part of wolfSSL.
  *
@@ -61,6 +61,7 @@
         void wc_bigint_free(WC_BIGINT* a);
 
         int wc_mp_to_bigint(mp_int* src, WC_BIGINT* dst);
+        int wc_mp_to_bigint_sz(mp_int* src, WC_BIGINT* dst, word32 sz);
         int wc_bigint_to_mp(WC_BIGINT* src, mp_int* dst);
     #endif /* HAVE_WOLF_BIGINT */
 

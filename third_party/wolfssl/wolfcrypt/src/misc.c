@@ -1,6 +1,6 @@
 /* misc.c
  *
- * Copyright (C) 2006-2016 wolfSSL Inc.
+ * Copyright (C) 2006-2017 wolfSSL Inc.
  *
  * This file is part of wolfSSL.
  *
@@ -46,7 +46,9 @@
 
 /* Check for if compiling misc.c when not needed. */
 #if !defined(WOLFSSL_MISC_INCLUDED) && !defined(NO_INLINE)
-    #warning misc.c does not need to be compiled when using inline (NO_INLINE not defined)
+    #ifndef WOLFSSL_IGNORE_FILE_WARN
+        #warning misc.c does not need to be compiled when using inline (NO_INLINE not defined)
+    #endif
 
 #else
 
@@ -99,6 +101,9 @@ STATIC INLINE word32 ByteReverseWord32(word32 value)
     return (word32)__REV(value);
 #elif defined(KEIL_INTRINSICS)
     return (word32)__rev(value);
+#elif defined(WOLF_ALLOW_BUILTIN) && \
+        defined(__GNUC_PREREQ) && __GNUC_PREREQ(4, 3)
+    return (word32)__builtin_bswap32(value);
 #elif defined(FAST_ROTATE)
     /* 5 instructions with rotate instruction, 9 without */
     return (rotrFixed(value, 8U) & 0xff00ff00) |
@@ -139,9 +144,11 @@ STATIC INLINE word64 rotrFixed64(word64 x, word64 y)
 
 STATIC INLINE word64 ByteReverseWord64(word64 value)
 {
-#if defined(WOLFCRYPT_SLOW_WORD64)
-	return (word64)(ByteReverseWord32((word32)value)) << 32 |
-                    ByteReverseWord32((word32)(value>>32));
+#if defined(WOLF_ALLOW_BUILTIN) && defined(__GNUC_PREREQ) && __GNUC_PREREQ(4, 3)
+    return (word64)__builtin_bswap64(value);
+#elif defined(WOLFCRYPT_SLOW_WORD64)
+	return (word64)((word64)ByteReverseWord32((word32) value)) << 32 |
+                    (word64)ByteReverseWord32((word32)(value   >> 32));
 #else
 	value = ((value & W64LIT(0xFF00FF00FF00FF00)) >> 8) |
             ((value & W64LIT(0x00FF00FF00FF00FF)) << 8);
@@ -192,13 +199,22 @@ STATIC INLINE void xorbuf(void* buf, const void* mask, word32 count)
 STATIC INLINE void ForceZero(const void* mem, word32 len)
 {
     volatile byte* z = (volatile byte*)mem;
-#ifdef WOLFSSL_X86_64_BUILD
-    volatile word64* w;
 
+#if defined(WOLFSSL_X86_64_BUILD) && defined(WORD64_AVAILABLE)
+    volatile word64* w;
+    #ifndef WOLFSSL_UNALIGNED_64BIT_ACCESS
+        word32 l = (sizeof(word64) - ((size_t)z & (sizeof(word64)-1))) &
+                                                             (sizeof(word64)-1);
+
+        if (len < l) l = len;
+        len -= l;
+        while (l--) *z++ = 0;
+    #endif
     for (w = (volatile word64*)z; len >= sizeof(*w); len -= sizeof(*w))
         *w++ = 0;
     z = (volatile byte*)w;
 #endif
+
     while (len--) *z++ = 0;
 }
 
@@ -238,6 +254,104 @@ STATIC INLINE int ConstantCompare(const byte* a, const byte* b, int length)
         return a > b ? a : b;
     }
 #endif /* !WOLFSSL_HAVE_MAX */
+
+/* converts a 32 bit integer to 24 bit */
+STATIC INLINE void c32to24(word32 in, word24 out)
+{
+    out[0] = (in >> 16) & 0xff;
+    out[1] = (in >>  8) & 0xff;
+    out[2] =  in & 0xff;
+}
+
+/* convert 16 bit integer to opaque */
+STATIC INLINE void c16toa(word16 wc_u16, byte* c)
+{
+    c[0] = (wc_u16 >> 8) & 0xff;
+    c[1] =  wc_u16 & 0xff;
+}
+
+/* convert 32 bit integer to opaque */
+STATIC INLINE void c32toa(word32 wc_u32, byte* c)
+{
+    c[0] = (wc_u32 >> 24) & 0xff;
+    c[1] = (wc_u32 >> 16) & 0xff;
+    c[2] = (wc_u32 >>  8) & 0xff;
+    c[3] =  wc_u32 & 0xff;
+}
+
+/* convert a 24 bit integer into a 32 bit one */
+STATIC INLINE void c24to32(const word24 wc_u24, word32* wc_u32)
+{
+    *wc_u32 = (wc_u24[0] << 16) | (wc_u24[1] << 8) | wc_u24[2];
+}
+
+
+/* convert opaque to 24 bit integer */
+STATIC INLINE void ato24(const byte* c, word32* wc_u24)
+{
+    *wc_u24 = (c[0] << 16) | (c[1] << 8) | c[2];
+}
+
+/* convert opaque to 16 bit integer */
+STATIC INLINE void ato16(const byte* c, word16* wc_u16)
+{
+    *wc_u16 = (word16) ((c[0] << 8) | (c[1]));
+}
+
+/* convert opaque to 32 bit integer */
+STATIC INLINE void ato32(const byte* c, word32* wc_u32)
+{
+    *wc_u32 = ((word32)c[0] << 24) | (c[1] << 16) | (c[2] << 8) | c[3];
+}
+
+
+STATIC INLINE word32 btoi(byte b)
+{
+    return (word32)(b - 0x30);
+}
+
+
+/* Constant time - mask set when a > b. */
+STATIC INLINE byte ctMaskGT(int a, int b)
+{
+    return (((word32)a - b - 1) >> 31) - 1;
+}
+
+/* Constant time - mask set when a >= b. */
+STATIC INLINE byte ctMaskGTE(int a, int b)
+{
+    return (((word32)a - b    ) >> 31) - 1;
+}
+
+/* Constant time - mask set when a < b. */
+STATIC INLINE byte ctMaskLT(int a, int b)
+{
+    return (((word32)b - a - 1) >> 31) - 1;
+}
+
+/* Constant time - mask set when a <= b. */
+STATIC INLINE byte ctMaskLTE(int a, int b)
+{
+    return (((word32)b - a    ) >> 31) - 1;
+}
+
+/* Constant time - mask set when a == b. */
+STATIC INLINE byte ctMaskEq(int a, int b)
+{
+    return 0 - (a == b);
+}
+
+/* Constant time - select b when mask is set and a otherwise. */
+STATIC INLINE byte ctMaskSel(byte m, byte a, byte b)
+{
+    return (a & ~m) | (b & m);
+}
+
+/* Constant time - bit set when a <= b. */
+STATIC INLINE byte ctSetLTE(int a, int b)
+{
+    return ((word32)a - b - 1) >> 31;
+}
 
 
 #undef STATIC

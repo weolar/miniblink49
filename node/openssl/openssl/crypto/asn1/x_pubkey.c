@@ -358,7 +358,7 @@ int X509_PUBKEY_set0_param(X509_PUBKEY *pub, ASN1_OBJECT *aobj,
     return 1;
 }
 
-int X509_PUBKEY_get0_param(ASN1_OBJECT **ppkalg,
+int openssl_X509_PUBKEY_get0_param(ASN1_OBJECT **ppkalg,
                            const unsigned char **pk, int *ppklen,
                            X509_ALGOR **pa, X509_PUBKEY *pub)
 {

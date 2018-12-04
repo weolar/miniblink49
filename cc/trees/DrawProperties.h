@@ -37,6 +37,8 @@ struct DrawToCanvasProperties : public DrawProperties {
         opaque = true;
         opacity = 0;
         backgroundColor = s_kBgColor;
+        useParentBackfaceVisibility = false;
+        isDoubleSided = false;
     }
 
     void copyDrawProperties(const DrawProperties& other, float otherOpacity)
@@ -63,6 +65,8 @@ struct DrawToCanvasProperties : public DrawProperties {
         maskLayerId = other.maskLayerId;
         replicaLayerId = other.replicaLayerId;
         backgroundColor = other.backgroundColor;
+        useParentBackfaceVisibility = other.useParentBackfaceVisibility;
+        isDoubleSided = other.isDoubleSided;
     }
 
     blink::IntSize bounds;
@@ -74,6 +78,8 @@ struct DrawToCanvasProperties : public DrawProperties {
     int maskLayerId;
     int replicaLayerId;
     SkColor backgroundColor;
+    bool useParentBackfaceVisibility;
+    bool isDoubleSided;
 };
 
 }  // namespace cc

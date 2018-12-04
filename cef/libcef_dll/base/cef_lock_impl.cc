@@ -67,23 +67,23 @@ LockImpl::LockImpl() {
 
 LockImpl::~LockImpl() {
   int rv = pthread_mutex_destroy(&native_handle_);
-  DCHECK_EQ(rv, 0) << ". " << strerror(rv);
+  //DCHECK_EQ(rv, 0) << ". " << strerror(rv);
 }
 
 bool LockImpl::Try() {
   int rv = pthread_mutex_trylock(&native_handle_);
-  DCHECK(rv == 0 || rv == EBUSY) << ". " << strerror(rv);
+  //DCHECK(rv == 0 || rv == EBUSY) << ". " << strerror(rv);
   return rv == 0;
 }
 
 void LockImpl::Lock() {
   int rv = pthread_mutex_lock(&native_handle_);
-  DCHECK_EQ(rv, 0) << ". " << strerror(rv);
+  //DCHECK_EQ(rv, 0) << ". " << strerror(rv);
 }
 
 void LockImpl::Unlock() {
   int rv = pthread_mutex_unlock(&native_handle_);
-  DCHECK_EQ(rv, 0) << ". " << strerror(rv);
+  //DCHECK_EQ(rv, 0) << ". " << strerror(rv);
 }
 
 }  // namespace cef_internal

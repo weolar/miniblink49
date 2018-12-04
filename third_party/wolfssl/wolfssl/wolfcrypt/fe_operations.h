@@ -1,6 +1,6 @@
 /* fe_operations.h
  *
- * Copyright (C) 2006-2016 wolfSSL Inc.
+ * Copyright (C) 2006-2017 wolfSSL Inc.
  *
  * This file is part of wolfSSL.
  *
@@ -33,7 +33,9 @@
 
 #include <wolfssl/wolfcrypt/types.h>
 
-#if defined(HAVE___UINT128_T) && !defined(NO_CURVED25519_128BIT)
+#if defined(USE_INTEL_SPEEDUP) && !defined(NO_CURVED25519_X64)
+    #define CURVED25519_X64
+#elif defined(HAVE___UINT128_T) && !defined(NO_CURVED25519_128BIT)
     #define CURVED25519_128BIT
 #endif
 
@@ -58,13 +60,17 @@ Bounds on each t[i] vary depending on context.
 
 
 #if !defined(FREESCALE_LTC_ECC)
+WOLFSSL_LOCAL void fe_init(void);
+
 WOLFSSL_LOCAL int  curve25519(byte * q, byte * n, byte * p);
 #endif
 
 /* default to be faster but take more memory */
 #if !defined(CURVE25519_SMALL) || !defined(ED25519_SMALL)
 
-#if defined(CURVED25519_128BIT)
+#ifdef CURVED25519_X64
+    typedef int64_t  fe[4];
+#elif defined(CURVED25519_128BIT)
     typedef int64_t  fe[5];
 #else
     typedef int32_t  fe[10];
@@ -98,6 +104,31 @@ WOLFSSL_LOCAL void fe_pow22523(fe,const fe);
 WOLFSSL_LOCAL uint64_t load_3(const unsigned char *in);
 WOLFSSL_LOCAL uint64_t load_4(const unsigned char *in);
 
+#ifdef CURVED25519_X64
+WOLFSSL_LOCAL void fe_ge_to_p2(fe rx, fe ry, fe rz, const fe px, const fe py,
+                               const fe pz, const fe pt);
+WOLFSSL_LOCAL void fe_ge_to_p3(fe rx, fe ry, fe rz, fe rt, const fe px,
+                               const fe py, const fe pz, const fe pt);
+WOLFSSL_LOCAL void fe_ge_dbl(fe rx, fe ry, fe rz, fe rt, const fe px,
+                             const fe py, const fe pz);
+WOLFSSL_LOCAL void fe_ge_madd(fe rx, fe ry, fe rz, fe rt, const fe px,
+                              const fe py, const fe pz, const fe pt,
+                              const fe qxy2d, const fe qyplusx,
+                              const fe qyminusx);
+WOLFSSL_LOCAL void fe_ge_msub(fe rx, fe ry, fe rz, fe rt, const fe px,
+                              const fe py, const fe pz, const fe pt,
+                              const fe qxy2d, const fe qyplusx,
+                              const fe qyminusx);
+WOLFSSL_LOCAL void fe_ge_add(fe rx, fe ry, fe rz, fe rt, const fe px,
+                             const fe py, const fe pz, const fe pt, const fe qz,
+                             const fe qt2d, const fe qyplusx,
+                             const fe qyminusx);
+WOLFSSL_LOCAL void fe_ge_sub(fe rx, fe ry, fe rz, fe rt, const fe px,
+                             const fe py, const fe pz, const fe pt, const fe qz,
+                             const fe qt2d, const fe qyplusx,
+                             const fe qyminusx);
+WOLFSSL_LOCAL void fe_cmov_table(fe* r, fe* base, signed char b);
+#endif /* CURVED25519_X64 */
 #endif /* !CURVE25519_SMALL || !ED25519_SMALL */
 
 /* Use less memory and only 32bit types or less, but is slower

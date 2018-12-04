@@ -1,6 +1,6 @@
 /* dsa.h
  *
- * Copyright (C) 2006-2016 wolfSSL Inc.
+ * Copyright (C) 2006-2017 wolfSSL Inc.
  *
  * This file is part of wolfSSL.
  *
@@ -19,6 +19,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1335, USA
  */
 
+/*!
+    \file wolfssl/wolfcrypt/dsa.h
+*/
 
 #ifndef WOLF_CRYPT_DSA_H
 #define WOLF_CRYPT_DSA_H
@@ -74,6 +77,14 @@ WOLFSSL_API int wc_MakeDsaKey(WC_RNG *rng, DsaKey *dsa);
 WOLFSSL_API int wc_MakeDsaParameters(WC_RNG *rng, int modulus_size, DsaKey *dsa);
 #endif
 
+/* raw export functions */
+WOLFSSL_API int wc_DsaImportParamsRaw(DsaKey* dsa, const char* p,
+                                      const char* q, const char* g);
+WOLFSSL_API int wc_DsaExportParamsRaw(DsaKey* dsa, byte* p, word32* pSz,
+                                      byte* q, word32* qSz, byte* g,
+                                      word32* gSz);
+WOLFSSL_API int wc_DsaExportKeyRaw(DsaKey* dsa, byte* x, word32* xSz, byte* y,
+                                   word32* ySz);
 #ifdef __cplusplus
     } /* extern "C" */
 #endif

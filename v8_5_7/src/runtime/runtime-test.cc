@@ -561,6 +561,15 @@ RUNTIME_FUNCTION(Runtime_NativeScriptsCount) {
 }
 
 
+// TODO(5510): remove this.
+RUNTIME_FUNCTION(Runtime_GetV8Version) {
+    HandleScope scope(isolate);
+    DCHECK_EQ(0, args.length());
+    const char* version_string = "v8.5.7"; // v8::V8::GetVersion();
+    return *isolate->factory()->NewStringFromAsciiChecked(version_string);
+}
+
+
 RUNTIME_FUNCTION(Runtime_DisassembleFunction) {
   HandleScope scope(isolate);
 #ifdef DEBUG

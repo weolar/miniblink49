@@ -311,14 +311,22 @@ enum __SAL_YesNo {_SAL_notpresent, _SAL_no, _SAL_maybe, _SAL_yes, _SAL_default};
 //          _In_ by itself can be used with non-pointer types (although it is redundant).
 
 // e.g. void SetPoint( _In_ const POINT* pPT );
+#ifndef _In_
 #define _In_                            _SAL2_Source_(_In_, (), _Pre1_impl_(__notnull_impl_notref) _Pre_valid_impl_ _Deref_pre1_impl_(__readaccess_impl_notref))
+#endif
+
+#ifndef _In_opt_
 #define _In_opt_                        _SAL2_Source_(_In_opt_, (), _Pre1_impl_(__maybenull_impl_notref) _Pre_valid_impl_ _Deref_pre_readonly_)
+#endif
 
 // nullterminated 'in' parameters.
 // e.g. void CopyStr( _In_z_ const char* szFrom, _Out_z_cap_(cchTo) char* szTo, size_t cchTo );
+#ifndef _In_z_
 #define _In_z_                          _SAL2_Source_(_In_z_, (),     _In_     _Pre1_impl_(__zterm_impl))
+#endif
+#ifndef _In_opt_z_
 #define _In_opt_z_                      _SAL2_Source_(_In_opt_z_, (), _In_opt_ _Pre1_impl_(__zterm_impl))
-
+#endif
 
 // 'input' buffers with given size
 

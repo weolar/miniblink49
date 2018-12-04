@@ -1,6 +1,6 @@
 /* error-ssl.h
  *
- * Copyright (C) 2006-2016 wolfSSL Inc.
+ * Copyright (C) 2006-2017 wolfSSL Inc.
  *
  * This file is part of wolfSSL.
  *
@@ -57,7 +57,7 @@ enum wolfSSL_ErrorCodes {
     DOMAIN_NAME_MISMATCH         = -322,   /* peer subject name mismatch */
     WANT_READ                    = -323,   /* want read, call again    */
     NOT_READY_ERROR              = -324,   /* handshake layer not ready */
-    PMS_VERSION_ERROR            = -325,   /* pre m secret version error */
+
     VERSION_ERROR                = -326,   /* record layer version error */
     WANT_WRITE                   = -327,   /* want write, call again   */
     BUFFER_ERROR                 = -328,   /* malformed buffer input   */
@@ -104,7 +104,7 @@ enum wolfSSL_ErrorCodes {
     COOKIE_ERROR                 = -369,   /* dtls cookie error */
     SEQUENCE_ERROR               = -370,   /* dtls sequence error */
     SUITES_ERROR                 = -371,   /* suites pointer error */
-    SSL_NO_PEM_HEADER            = -372,   /* no PEM header found */
+
     OUT_OF_ORDER_E               = -373,   /* out of order message */
     BAD_KEA_TYPE_E               = -374,   /* bad KEA type found */
     SANITY_CIPHER_E              = -375,   /* sanity check on cipher error */
@@ -142,7 +142,7 @@ enum wolfSSL_ErrorCodes {
     UNKNOWN_ALPN_PROTOCOL_NAME_E = -405,   /* Unrecognized protocol name Error*/
     BAD_CERTIFICATE_STATUS_ERROR = -406,   /* Bad certificate status message */
     OCSP_INVALID_STATUS          = -407,   /* Invalid OCSP Status */
-
+    OCSP_WANT_READ               = -408,   /* OCSP callback response WOLFSSL_CBIO_ERR_WANT_READ */
     RSA_KEY_SIZE_E               = -409,   /* RSA key too small */
     ECC_KEY_SIZE_E               = -410,   /* ECC key too small */
 
@@ -164,6 +164,7 @@ enum wolfSSL_ErrorCodes {
     MCAST_HIGHWATER_CB_E         = -426,   /* Multicast highwater cb err */
     ALERT_COUNT_E                = -427,   /* Alert Count exceeded err */
     EXT_MISSING                  = -428,   /* Required extension not found */
+    UNSUPPORTED_EXTENSION        = -429,   /* TLSX not requested by client */
     /* add strings to wolfSSL_ERR_reason_error_string in internal.c !!!!! */
 
     /* begin negotiation parameter errors */
@@ -180,7 +181,7 @@ enum wolfSSL_ErrorCodes {
 };
 
 
-#ifdef WOLFSSL_CALLBACKS
+#if defined(WOLFSSL_CALLBACKS) || defined(OPENSSL_EXTRA)
     enum {
         MIN_PARAM_ERR = UNSUPPORTED_SUITE,
         MAX_PARAM_ERR = MIN_PARAM_ERR - 10

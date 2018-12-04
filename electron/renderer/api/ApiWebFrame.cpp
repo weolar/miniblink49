@@ -2,13 +2,13 @@
 // Use of this source code is governed by the MIT license that can be
 // found in the LICENSE file.
 
-#include "node/include/nodeblink.h"
+#include "node/nodeblink.h"
 #include "common/NodeRegisterHelp.h"
 #include "common/api/EventEmitter.h"
+#include "common/ThreadCall.h"
 #include "gin/object_template_builder.h"
 #include "gin/dictionary.h"
-#include <windows.h>
-#include "base/strings/string_util.h"
+#include "wkedefine.h"
 
 namespace atom {
 
@@ -26,6 +26,7 @@ public:
 
         prototype->SetClassName(v8::String::NewFromUtf8(isolate, "WebFrame"));
         gin::ObjectTemplateBuilder builder(isolate, prototype->InstanceTemplate());
+        builder.SetMethod("registerEmbedderCustomElement", &WebFrame::registerEmbedderCustomElementApi);
         builder.SetMethod("setZoomFactor", &WebFrame::setZoomFactorApi);
         builder.SetMethod("getZoomFactor", &WebFrame::getZoomFactorApi);
         builder.SetMethod("getZoomLevel", &WebFrame::getZoomLevelApi);
@@ -39,9 +40,37 @@ public:
         builder.SetMethod("setSpellCheckProvider", &WebFrame::setSpellCheckProviderApi);
         builder.SetMethod("executeJavaScript", &WebFrame::executeJavaScriptApi);
         builder.SetMethod("setMaxListeners", &WebFrame::setMaxListenersApi);
+        builder.SetMethod("setVisualZoomLevelLimits", &WebFrame::setVisualZoomLevelLimitsApi);
+        builder.SetMethod("setLayoutZoomLevelLimits", &WebFrame::setLayoutZoomLevelLimitsApi);
         
         constructor.Reset(isolate, prototype->GetFunction());
         target->Set(v8::String::NewFromUtf8(isolate, "WebFrame"), prototype->GetFunction());
+    }
+
+    v8::Local<v8::Value> registerEmbedderCustomElementApi(const std::string& name, v8::Local<v8::Object> options) {
+        wkeWebView webview = wkeGetWebViewForCurrentContext();
+        wkeWebFrameHandle mainFrame = wkeWebFrameGetMainFrame(webview);
+
+        v8::Persistent<v8::Value> result;
+        wkeRegisterEmbedderCustomElement(webview, mainFrame, name.c_str(), &options, &result);
+        v8::Local<v8::Value> elementConstructor = result.Get(isolate());
+        result.Reset();
+        return elementConstructor;
+    }
+
+    void registerElementResizeCallbackApi(/*int element_instance_id, const GuestViewContainer::ResizeCallback& callback*/) {
+//         auto guest_view_container = GuestViewContainer::FromID(element_instance_id);
+//         if (guest_view_container)
+//             guest_view_container->RegisterElementResizeCallback(callback);
+    }
+
+
+    void setVisualZoomLevelLimitsApi(int Level1, int Level2) {
+
+    }
+
+    void setLayoutZoomLevelLimitsApi(int Level1, int Level2) {
+
     }
 
     void setZoomFactorApi(float factor) {
@@ -83,13 +112,60 @@ public:
         OutputDebugStringA("insertTextApi\n");
     }
 
-    // string code[, BOOL userGesture]
+    // callback, code, hasUserGesture
     void executeJavaScriptApi(const v8::FunctionCallbackInfo<v8::Value>& args) {
-        OutputDebugStringA("executeJavaScriptApi\n");
+        if (3 != args.Length())
+            return;
+
+        std::string codeString;
+        if (args[0]->IsString()) {
+            v8::String::Utf8Value code(args[0]);
+            codeString = *code;
+        }
+
+        bool hasUserGesture = false;
+        if (args[1]->IsBoolean()) {
+            v8::Local<v8::Boolean> hasUserGestureValue = args[1]->ToBoolean();
+            hasUserGesture = hasUserGestureValue->Value();
+        }
+
+        v8::Persistent<v8::Value> executeJavaScriptCallback;
+        if (args[2]->IsFunction())
+            executeJavaScriptCallback.Reset(args.GetIsolate(), args[2]);
+        else
+            executeJavaScriptCallback.Reset();
+
+        v8::HandleScope handleScope(isolate());
+        v8::Function* callback = nullptr;
+        v8::Local<v8::Value> f;
+        if (codeString.empty() && !executeJavaScriptCallback.IsEmpty()) {
+            f = executeJavaScriptCallback.Get(isolate());
+            callback = v8::Function::Cast(*(f));
+            callback->Call(v8::Undefined(isolate()), 0, nullptr);
+            return;
+        }
+
+        wkeWebView webview = wkeGetWebViewForCurrentContext();
+        wkeWebFrameHandle mainFrame = wkeWebFrameGetMainFrame(webview);
+        jsValue ret = wkeRunJsByFrame(webview, mainFrame, codeString.c_str(), false);
+        if (executeJavaScriptCallback.IsEmpty())
+            return;
+        
+        v8::Local<v8::Value> argv[1];
+        f = executeJavaScriptCallback.Get(isolate());
+        callback = v8::Function::Cast(*(f));
+        callback->Call(v8::Undefined(isolate()), 0, nullptr);
+
+        v8::Persistent<v8::Value>* v = (v8::Persistent<v8::Value>*)jsToV8Value(wkeGetGlobalExecByFrame(webview, mainFrame), ret);
+        v8::Local<v8::Value> value = v8::Undefined(isolate());
+        if (v)
+            value = v8::Local<v8::Value>::New(isolate(), *v);
+        argv[0] = value;
+        callback->Call(v8::Undefined(isolate()), 1, argv);
     }
 
     void setMaxListenersApi(int number) {
-        OutputDebugStringA("setMaxListenersApi\n");
+        //OutputDebugStringA("setMaxListenersApi\n");
     }
         
     static void newFunction(const v8::FunctionCallbackInfo<v8::Value>& args) {

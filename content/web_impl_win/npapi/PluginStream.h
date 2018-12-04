@@ -44,6 +44,7 @@
 #include <wtf/text/CString.h>
 #include <wtf/text/StringHash.h>
 #include <wtf/text/WTFString.h>
+#include <vector>
 
 namespace blink {
 class LocalFrame;
@@ -113,7 +114,7 @@ private:
     blink::Timer<PluginStream> m_delayDeliveryTimer;
     void delayDeliveryTimerFired(blink::Timer<PluginStream>*);
 
-    OwnPtr<Vector<char>> m_deliveryData;
+    OwnPtr<std::vector<char>> m_deliveryData;
 
     HANDLE m_tempFileHandle;
 

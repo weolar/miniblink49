@@ -1,0 +1,300 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{650cd08c-12e7-4f30-8948-a01d1b1b7c7d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-buffer-private.hh">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-cache-private.hh">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-common.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-deprecated.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-face.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-face-private.hh">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-font.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-font-private.hh">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-icu.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-mutex-private.hh">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-object-private.hh">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-open-file-private.hh">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-open-type-private.hh">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-ot.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-ot-cmap-table.hh">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-ot-font.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-ot-glyf-table.hh">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-ot-head-table.hh">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-ot-hhea-table.hh">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-ot-hmtx-table.hh">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-ot-layout.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-ot-layout-common-private.hh">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-ot-layout-gdef-table.hh">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-ot-layout-gpos-table.hh">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-ot-layout-gsubgpos-private.hh">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-ot-layout-gsub-table.hh">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-ot-layout-jstf-table.hh">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-ot-layout-private.hh">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-ot-map-private.hh">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-ot-maxp-table.hh">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-ot-shape.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-ot-shape-complex-arabic-fallback.hh">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-ot-shape-complex-arabic-private.hh">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-ot-shape-complex-arabic-table.hh">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-ot-shape-complex-arabic-win1256.hh">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-ot-shape-complex-indic-machine.hh">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-ot-shape-complex-indic-private.hh">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-ot-shape-complex-myanmar-machine.hh">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-ot-shape-complex-private.hh">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-ot-shape-complex-use-machine.hh">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-ot-shape-complex-use-private.hh">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-ot-shape-fallback-private.hh">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-ot-shape-normalize-private.hh">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-ot-shape-private.hh">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-ot-tag.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-private.hh">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-set.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-set-private.hh">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-shape.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-shape-plan.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-shape-plan-private.hh">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-shaper-impl-private.hh">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-shaper-list.hh">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-shaper-private.hh">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-unicode.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-unicode-private.hh">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-utf-private.hh">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-version.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-atomic-private.hh">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-blob.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-buffer.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-buffer-deserialize-json.hh">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\harfbuzz-ng\src\hb-buffer-deserialize-text.hh">
+      <Filter>src</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\third_party\harfbuzz-ng\src\hb-buffer-serialize.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\harfbuzz-ng\src\hb-common.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\harfbuzz-ng\src\hb-face.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\harfbuzz-ng\src\hb-fallback-shape.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\harfbuzz-ng\src\hb-font.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\harfbuzz-ng\src\hb-ot-font.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\harfbuzz-ng\src\hb-ot-layout.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\harfbuzz-ng\src\hb-ot-map.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\harfbuzz-ng\src\hb-ot-shape.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\harfbuzz-ng\src\hb-ot-shape-complex-arabic.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\harfbuzz-ng\src\hb-ot-shape-complex-default.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\harfbuzz-ng\src\hb-ot-shape-complex-hangul.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\harfbuzz-ng\src\hb-ot-shape-complex-hebrew.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\harfbuzz-ng\src\hb-ot-shape-complex-indic.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\harfbuzz-ng\src\hb-ot-shape-complex-indic-table.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\harfbuzz-ng\src\hb-ot-shape-complex-myanmar.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\harfbuzz-ng\src\hb-ot-shape-complex-thai.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\harfbuzz-ng\src\hb-ot-shape-complex-tibetan.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\harfbuzz-ng\src\hb-ot-shape-complex-use.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\harfbuzz-ng\src\hb-ot-shape-complex-use-table.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\harfbuzz-ng\src\hb-ot-shape-fallback.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\harfbuzz-ng\src\hb-ot-shape-normalize.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\harfbuzz-ng\src\hb-ot-tag.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\harfbuzz-ng\src\hb-set.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\harfbuzz-ng\src\hb-shape.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\harfbuzz-ng\src\hb-shape-plan.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\harfbuzz-ng\src\hb-shaper.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\harfbuzz-ng\src\hb-warning.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\harfbuzz-ng\src\hb-blob.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\harfbuzz-ng\src\hb-buffer.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\harfbuzz-ng\src\hb-unicode.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

@@ -181,7 +181,7 @@ void PluginStream::startStream()
     // Some plugins (Flash) expect that javascript URLs are passed back decoded as this is the
     // format used when requesting the URL.
     if (protocolIsJavaScript(responseUrlUtf8.data())) {
-        String decodeURL = decodeURLEscapeSequences(responseUrlUtf8.data());
+        String decodeURL = WTF::ensureStringToUTF8String(decodeURLEscapeSequences(responseUrlUtf8.data()));
         char* url = (char*)fastMalloc(decodeURL.length());
         strncpy(url, (char*)decodeURL.characters8(), decodeURL.length());
         m_stream.url = url;
@@ -192,7 +192,7 @@ void PluginStream::startStream()
 
     long long expectedContentLength = m_resourceResponse.expectedContentLength();
 
-    if (((KURL)(m_resourceResponse.url())).protocolIsInHTTPFamily()) {
+    if (responseURL.protocolIsInHTTPFamily()) {
         StringBuilder stringBuilder;
         String separator = /*ASCIILiteral*/(": ");
 
@@ -327,8 +327,6 @@ void PluginStream::destroyStream()
 
             if (m_loader)
                 m_loader->setDefersLoading(false);
-
-            //LOG_NPERROR(npErr);
         }
 
         m_stream.ndata = 0;
@@ -488,7 +486,7 @@ void PluginStream::didReceiveData(WebURLLoader* loader, const char* data, int da
 
     if (m_transferMode != NP_ASFILEONLY) {
         if (!m_deliveryData)
-            m_deliveryData = adoptPtr(new Vector<char>());
+            m_deliveryData = adoptPtr(new std::vector<char>());
 
         int oldSize = m_deliveryData->size();
         m_deliveryData->resize(oldSize + dataLength);

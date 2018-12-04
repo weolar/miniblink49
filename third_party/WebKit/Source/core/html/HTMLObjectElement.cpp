@@ -297,7 +297,15 @@ void HTMLObjectElement::updateWidgetInternal()
     if (!layoutObject())
         return;
 
-    if (!hasValidClassId() || !requestObject(url, serviceType, paramNames, paramValues)) {
+    bool canRequest = true;
+    if (classId().isEmpty() || !requestObject(url, classId(), paramNames, paramValues)) {
+        canRequest = false;
+    }
+
+    if (!canRequest)
+        canRequest = hasValidClassId() && requestObject(url, serviceType, paramNames, paramValues);
+
+    if (!canRequest) {
         if (!url.isEmpty())
             dispatchErrorEvent();
         if (hasFallbackContent())

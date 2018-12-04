@@ -2,6 +2,8 @@
 #ifndef content_WebPage_h
 #define content_WebPage_h
 
+#include "content/browser/WebPageState.h"
+
 #include "third_party/WebKit/Source/platform/geometry/IntSize.h"
 #include "third_party/WebKit/Source/platform/geometry/IntPoint.h"
 #include "third_party/WebKit/Source/platform/geometry/IntRect.h"
@@ -9,6 +11,7 @@
 #include "third_party/WebKit/public/web/WebViewClient.h"
 #include "third_party/WebKit/public/web/WebHistoryCommitType.h"
 #include "third_party/WebKit/Source/wtf/HashSet.h"
+#include "net/PageNetExtraData.h"
 
 #if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
 class CefBrowserHostImpl;
@@ -58,9 +61,22 @@ public:
     WebPage(void* foreignPtr);
     ~WebPage();
 
+    WebPageState getState() const;
+
     bool init(HWND hWnd);
 
     void close();
+
+    static void gcAll();
+    void gc();
+
+    void onDocumentReady();
+
+    void setNeedAutoDrawToHwnd(bool b);
+
+    static void connetDevTools(WebPage* frontEnd, WebPage* embedder);
+    bool isDevtoolsConneted() const;
+    void inspectElementAt(int x, int y);
 
     void loadURL(int64 frameId, const wchar_t* url, const blink::Referrer& referrer, const wchar_t* extraHeaders);
     void loadRequest(int64 frameId, const blink::WebURLRequest& request);
@@ -91,9 +107,11 @@ public:
 
     blink::IntRect caretRect();
 
-    void repaintRequested(const blink::IntRect& windowRect);
+    void repaintRequested(const blink::IntRect& windowRect, bool forceRepaintIfEmptyRect);
 
     void setIsDraggableRegionNcHitTest();
+
+    void setDrawMinInterval(double drawMinInterval);
 
     void setNeedsCommit();
     bool needsCommit() const;
@@ -109,7 +127,11 @@ public:
     void goBack();
     bool canGoForward();
     void goForward();
-    void didCommitProvisionalLoad(blink::WebLocalFrame* frame, const blink::WebHistoryItem& history, blink::WebHistoryCommitType type);
+    void goToOffset(int offset);
+    void goToIndex(int index);
+
+    void didCommitProvisionalLoad(blink::WebLocalFrame* frame,
+        const blink::WebHistoryItem& history, blink::WebHistoryCommitType type, bool isSameDocument);
 
     void setTransparent(bool transparent);
 
@@ -119,7 +141,13 @@ public:
     void disablePaint();
     void enablePaint();
 
+    void willEnterDebugLoop();
+    void didExitDebugLoop();
+
     void didStartProvisionalLoad();
+
+    void setScreenInfo(const blink::WebScreenInfo& info);
+    blink::WebScreenInfo screenInfo();
 
 #if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
     CefBrowserHostImpl* browser();
@@ -127,13 +155,19 @@ public:
 #endif
 
     blink::WebViewImpl* webViewImpl();
+    WebPageImpl* webPageImpl();
     blink::WebFrame* mainFrame();
 
     static WebPage* getSelfForCurrentContext();
 
+    PassRefPtr<net::PageNetExtraData> getPageNetExtraData();
+    void setCookieJarPath(const char* path);
+
     WebFrameClientImpl* webFrameClientImpl();
 
-    blink::WebFrame* getWebFrameFromFrameId(int64 frameId);
+    blink::WebFrame* getWebFrameFromFrameId(int64_t frameId);
+    int64_t getFrameIdByBlinkFrame(const blink::WebFrame* frame);
+    static int64_t getFirstFrameId();
 
     // kMainFrameId must be -1 to align with renderer expectations.
     static const int64 kMainFrameId = -1;

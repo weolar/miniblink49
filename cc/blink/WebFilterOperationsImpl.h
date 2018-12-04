@@ -14,30 +14,36 @@ namespace cc_blink {
 class WebFilterOperationsImpl : public blink::WebFilterOperations {
 public:
     WebFilterOperationsImpl();
-    virtual ~WebFilterOperationsImpl() OVERRIDE;
+    virtual ~WebFilterOperationsImpl() override;
 
-    virtual void appendGrayscaleFilter(float amount) OVERRIDE;
-    virtual void appendSepiaFilter(float amount) OVERRIDE;
-    virtual void appendSaturateFilter(float amount) OVERRIDE;
-    virtual void appendHueRotateFilter(float amount) OVERRIDE;
-    virtual void appendInvertFilter(float amount) OVERRIDE;
-    virtual void appendBrightnessFilter(float amount) OVERRIDE;
-    virtual void appendContrastFilter(float amount) OVERRIDE;
-    virtual void appendOpacityFilter(float amount) OVERRIDE;
-    virtual void appendBlurFilter(float amount) OVERRIDE;
-    virtual void appendDropShadowFilter(blink::WebPoint offset, float stdDeviation, blink::WebColor) OVERRIDE;
-    virtual void appendColorMatrixFilter(SkScalar matrix[20]) OVERRIDE;
-    virtual void appendZoomFilter(float amount, int inset) OVERRIDE;
-    virtual void appendSaturatingBrightnessFilter(float amount) OVERRIDE;
+    WebFilterOperationsImpl(const blink::WebFilterOperations&);
+    WebFilterOperationsImpl(const WebFilterOperationsImpl&);
+
+    virtual void appendGrayscaleFilter(float amount) override;
+    virtual void appendSepiaFilter(float amount) override;
+    virtual void appendSaturateFilter(float amount) override;
+    virtual void appendHueRotateFilter(float amount) override;
+    virtual void appendInvertFilter(float amount) override;
+    virtual void appendBrightnessFilter(float amount) override;
+    virtual void appendContrastFilter(float amount) override;
+    virtual void appendOpacityFilter(float amount) override;
+    virtual void appendBlurFilter(float amount) override;
+    virtual void appendDropShadowFilter(blink::WebPoint offset, float stdDeviation, blink::WebColor) override;
+    virtual void appendColorMatrixFilter(SkScalar matrix[20]) override;
+    virtual void appendZoomFilter(float amount, int inset) override;
+    virtual void appendSaturatingBrightnessFilter(float amount) override;
 
     // This grabs a ref on the passed-in filter.
-    virtual void appendReferenceFilter(SkImageFilter*)OVERRIDE;
+    virtual void appendReferenceFilter(SkImageFilter*)override;
 
-    virtual void clear() OVERRIDE;
-    virtual bool isEmpty() const OVERRIDE;
+    virtual void clear() override;
+    virtual bool isEmpty() const override;
+
+    const blink::FilterOperation& at(size_t i) const;
+    size_t getSize() const;
 
 protected:
-    WTF::Vector<blink::FilterOperation::OperationType> m_operationTypes;
+    WTF::Vector<blink::FilterOperation*> m_operations;
 };
 
 } // cc_blink

@@ -41,7 +41,7 @@ EXTRA_DIST += \
               wolfcrypt/src/fp_sqr_comba_9.i \
               wolfcrypt/src/fp_sqr_comba_small_set.i \
               wolfcrypt/src/fe_x25519_128.i \
-              wolfcrypt/src/sha3_long.i
+              wolfcrypt/src/fe_x25519_x64.i
 
 EXTRA_DIST += wolfcrypt/src/port/ti/ti-aes.c \
               wolfcrypt/src/port/ti/ti-des3.c \
@@ -55,7 +55,17 @@ EXTRA_DIST += wolfcrypt/src/port/ti/ti-aes.c \
               wolfcrypt/src/port/atmel/atmel.c \
               wolfcrypt/src/port/atmel/README.md \
               wolfcrypt/src/port/xilinx/xil-sha3.c \
-              wolfcrypt/src/port/xilinx/xil-aesgcm.c
+              wolfcrypt/src/port/xilinx/xil-aesgcm.c \
+              wolfcrypt/src/port/caam/caam_aes.c \
+              wolfcrypt/src/port/caam/caam_driver.c \
+              wolfcrypt/src/port/caam/caam_init.c \
+              wolfcrypt/src/port/caam/caam_sha.c \
+              wolfcrypt/src/port/caam/caam_doc.pdf \
+              wolfcrypt/src/port/st/stm32.c
+
+if BUILD_CRYPTODEV
+src_libwolfssl_la_SOURCES += wolfcrypt/src/cryptodev.c
+endif
 
 if BUILD_CAVIUM
 src_libwolfssl_la_SOURCES += wolfcrypt/src/port/cavium/cavium_nitrox.c

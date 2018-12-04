@@ -367,7 +367,9 @@ public:
         };
         virtual void enable(ErrorString*, PassRefPtrWillBeRawPtr<EnableCallback> callback) = 0;
         virtual void disable(ErrorString*) = 0;
-        virtual void getMatchedStylesForNode(ErrorString*, int in_nodeId, const bool* in_excludePseudo, const bool* in_excludeInherited, RefPtr<TypeBuilder::Array<TypeBuilder::CSS::RuleMatch> >& opt_out_matchedCSSRules, RefPtr<TypeBuilder::Array<TypeBuilder::CSS::PseudoIdMatches> >& opt_out_pseudoElements, RefPtr<TypeBuilder::Array<TypeBuilder::CSS::InheritedStyleEntry> >& opt_out_inherited) = 0;
+        virtual void getMatchedStylesForNode(ErrorString*, int in_nodeId, const bool* in_excludePseudo, const bool* in_excludeInherited, 
+            RefPtr<TypeBuilder::CSS::CSSStyle>& opt_out_inlineStyle, RefPtr<TypeBuilder::CSS::CSSStyle>& opt_out_attributesStyle,
+            RefPtr<TypeBuilder::Array<TypeBuilder::CSS::RuleMatch> >& opt_out_matchedCSSRules, RefPtr<TypeBuilder::Array<TypeBuilder::CSS::PseudoIdMatches> >& opt_out_pseudoElements, RefPtr<TypeBuilder::Array<TypeBuilder::CSS::InheritedStyleEntry> >& opt_out_inherited) = 0;
         virtual void getInlineStylesForNode(ErrorString*, int in_nodeId, RefPtr<TypeBuilder::CSS::CSSStyle>& opt_out_inlineStyle, RefPtr<TypeBuilder::CSS::CSSStyle>& opt_out_attributesStyle) = 0;
         virtual void getComputedStyleForNode(ErrorString*, int in_nodeId, RefPtr<TypeBuilder::Array<TypeBuilder::CSS::CSSComputedStyleProperty> >& out_computedStyle) = 0;
         virtual void getPlatformFontsForNode(ErrorString*, int in_nodeId, RefPtr<TypeBuilder::Array<TypeBuilder::CSS::PlatformFontUsage> >& out_fonts) = 0;

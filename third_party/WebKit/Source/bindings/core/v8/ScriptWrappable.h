@@ -173,29 +173,9 @@ protected:
     // already broken), we must not hit the RELEASE_ASSERT.
 
 private:
-    void disposeWrapper(const v8::WeakCallbackInfo<ScriptWrappable>& data)
-    {
-        auto scriptWrappable = reinterpret_cast<ScriptWrappable*>(data.GetInternalField(v8DOMWrapperObjectIndex));
-        RELEASE_ASSERT_WITH_SECURITY_IMPLICATION(scriptWrappable == this);
-        RELEASE_ASSERT(containsWrapper());
-        m_wrapper.Reset();
-    }
-
-    static void firstWeakCallback(const v8::WeakCallbackInfo<ScriptWrappable>& data)
-    {
-        data.GetParameter()->disposeWrapper(data);
-        data.SetSecondPassCallback(secondWeakCallback);
-    }
-
-    static void secondWeakCallback(const v8::WeakCallbackInfo<ScriptWrappable>& data)
-    {
-        // FIXME: I noticed that 50%~ of minor GC cycle times can be consumed
-        // inside data.GetParameter()->deref(), which causes Node destructions. We should
-        // make Node destructions incremental.
-        auto scriptWrappable = reinterpret_cast<ScriptWrappable*>(data.GetInternalField(v8DOMWrapperObjectIndex));
-        auto typeInfo = reinterpret_cast<WrapperTypeInfo*>(data.GetInternalField(v8DOMWrapperTypeIndex));
-        typeInfo->derefObject(scriptWrappable);
-    }
+    void disposeWrapper(const v8::WeakCallbackInfo<ScriptWrappable>& data);
+    static void firstWeakCallback(const v8::WeakCallbackInfo<ScriptWrappable>& data);
+    static void secondWeakCallback(const v8::WeakCallbackInfo<ScriptWrappable>& data);
 
     v8::Persistent<v8::Object> m_wrapper;
 };

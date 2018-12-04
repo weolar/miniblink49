@@ -18,6 +18,10 @@ extern char suggestionPickerJs[8952];
 extern char PrivateScriptRunnerJs[4109];
 extern char HTMLMarqueeElementJs[14511];
 extern char PluginPlaceholderElementJs[4296];
+extern char DebuggerScriptSourceJs[19016];
+extern char InspectorOverlayPageHtml[26549];
+extern char InjectedScriptSourceJs[70694];
+extern char fullscreenCss[1531];
 
 }
 

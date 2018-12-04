@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  * Copyright (C) 2004, 2006, 2007, 2008, 2011 Apple Inc. All rights reserved.
  * Copyright (C) 2006 Alexey Proskuryakov <ap@nypop.com>
  *
@@ -34,9 +34,8 @@
 #include "wtf/text/CString.h"
 #include "wtf/text/CharacterNames.h"
 #include "wtf/text/StringBuilder.h"
+#include "wtf/text/StringBuffer.h"
 #include "wtf/text/WTFStringUtil.h"
-// #include <unicode/ucnv.h>
-// #include <unicode/ucnv_cb.h>
 
 using std::min;
 
@@ -228,6 +227,7 @@ void TextCodecICU::registerEncodingNames(EncodingNameRegistrar registrar)
 
 #else
     registrar("gb2312", "gb2312");
+    registrar("gb18030", "gb18030");
     registrar("gb_2312", "gb_2312");
     registrar("GBK", "GBK");
 #endif // MINIBLINK_NOT_IMPLEMENTED
@@ -253,6 +253,8 @@ void TextCodecICU::registerCodecs(TextCodecRegistrar registrar)
     }
 #else
     registrar("gb2312", create, 0);
+    registrar("gb18030", create, 0);
+    registrar("gb_2312", create, 0);
     registrar("GBK", create, 0);
 #endif // MINIBLINK_NOT_IMPLEMENTED
 }
@@ -373,15 +375,15 @@ private:
 #endif // MINIBLINK_NOT_IMPLEMENTED
 
 
-// 1£©GB 18030 Óë GB 2312 - 1980 ºÍ GBK ¼æÈİ£¬¹²ÊÕÂ¼ºº×Ö70244¸ö¡£
-//   1£¬Óë UTF - 8 ÏàÍ¬£¬²ÉÓÃ¶à×Ö½Ú±àÂë£¬Ã¿¸ö×Ö¿ÉÒÔÓÉ 1 ¸ö¡¢2 ¸ö»ò 4 ¸ö×Ö½Ú×é³É¡£
-//   2£¬±àÂë¿Õ¼äÅÓ´ó£¬×î¶à¿É¶¨Òå 161 Íò¸ö×Ö·û¡£
-//   3£¬Ö§³ÖÖĞ¹ú¹úÄÚÉÙÊıÃñ×åµÄÎÄ×Ö£¬²»ĞèÒª¶¯ÓÃÔì×ÖÇø¡£
-//   4£¬ºº×ÖÊÕÂ¼·¶Î§°üº¬·±Ìåºº×ÖÒÔ¼°ÈÕº«ºº×Ö
-// 2£©GB 18030 ±àÂëÊÇÒ»¶şËÄ×Ö½Ú±ä³¤±àÂë¡£
-//   1£¬µ¥×Ö½Ú£¬ÆäÖµ´Ó 0 µ½ 0x7F£¬Óë ASCII ±àÂë¼æÈİ¡£
-//   2£¬Ë«×Ö½Ú£¬µÚÒ»¸ö×Ö½ÚµÄÖµ´Ó 0x81 µ½ 0xFE£¬µÚ¶ş¸ö×Ö½ÚµÄÖµ´Ó 0x40 µ½ 0xFE£¨²»°üÀ¨0x7F£©£¬Óë GBK ±ê×¼¼æÈİ¡£
-//   ËÄ×Ö½Ú£¬µÚÒ»¸ö×Ö½ÚµÄÖµ´Ó 0x81 µ½ 0xFE£¬µÚ¶ş¸ö×Ö½ÚµÄÖµ´Ó 0x30 µ½ 0x39£¬µÚÈı¸ö×Ö½Ú´Ó0x81 µ½ 0xFE£¬µÚËÄ¸ö×Ö½Ú´Ó 0x30 µ½ 0x39¡£
+// 1ï¼‰GB 18030 ä¸ GB 2312 - 1980 å’Œ GBK å…¼å®¹ï¼Œå…±æ”¶å½•æ±‰å­—70244ä¸ªã€‚
+//   1ï¼Œä¸ UTF - 8 ç›¸åŒï¼Œé‡‡ç”¨å¤šå­—èŠ‚ç¼–ç ï¼Œæ¯ä¸ªå­—å¯ä»¥ç”± 1 ä¸ªã€2 ä¸ªæˆ– 4 ä¸ªå­—èŠ‚ç»„æˆã€‚
+//   2ï¼Œç¼–ç ç©ºé—´åºå¤§ï¼Œæœ€å¤šå¯å®šä¹‰ 161 ä¸‡ä¸ªå­—ç¬¦ã€‚
+//   3ï¼Œæ”¯æŒä¸­å›½å›½å†…å°‘æ•°æ°‘æ—çš„æ–‡å­—ï¼Œä¸éœ€è¦åŠ¨ç”¨é€ å­—åŒºã€‚
+//   4ï¼Œæ±‰å­—æ”¶å½•èŒƒå›´åŒ…å«ç¹ä½“æ±‰å­—ä»¥åŠæ—¥éŸ©æ±‰å­—
+// 2ï¼‰GB 18030 ç¼–ç æ˜¯ä¸€äºŒå››å­—èŠ‚å˜é•¿ç¼–ç ã€‚
+//   1ï¼Œå•å­—èŠ‚ï¼Œå…¶å€¼ä» 0 åˆ° 0x7Fï¼Œä¸ ASCII ç¼–ç å…¼å®¹ã€‚
+//   2ï¼ŒåŒå­—èŠ‚ï¼Œç¬¬ä¸€ä¸ªå­—èŠ‚çš„å€¼ä» 0x81 åˆ° 0xFEï¼Œç¬¬äºŒä¸ªå­—èŠ‚çš„å€¼ä» 0x40 åˆ° 0xFEï¼ˆä¸åŒ…æ‹¬0x7Fï¼‰ï¼Œä¸ GBK æ ‡å‡†å…¼å®¹ã€‚
+//   å››å­—èŠ‚ï¼Œç¬¬ä¸€ä¸ªå­—èŠ‚çš„å€¼ä» 0x81 åˆ° 0xFEï¼Œç¬¬äºŒä¸ªå­—èŠ‚çš„å€¼ä» 0x30 åˆ° 0x39ï¼Œç¬¬ä¸‰ä¸ªå­—èŠ‚ä»0x81 åˆ° 0xFEï¼Œç¬¬å››ä¸ªå­—èŠ‚ä» 0x30 åˆ° 0x39ã€‚
 bool isValideGB(const unsigned char* str, int length)
 {
     if (1 == length) {
@@ -431,12 +433,12 @@ static Vector<UChar> decodeGbkWithLastData(char* data, int len, char* lastData, 
         }
     }
 
-    // ¿¼ÂÇ¼æÈİ4×Ö½Ú£¬ ÓÃ MB_ERR_INVALID_CHARS ±êÖ¾ÊÇÓÃÀ´±¨¸æ´íÎó
+    // è€ƒè™‘å…¼å®¹4å­—èŠ‚ï¼Œ ç”¨ MB_ERR_INVALID_CHARS æ ‡å¿—æ˜¯ç”¨æ¥æŠ¥å‘Šé”™è¯¯
     int size2 = MultiByteToWideChar(54936, MB_ERR_INVALID_CHARS, buffer, i, NULL, 0);
     if (size2 <= 0) {
         if (i < size) {
-            // Ê§°Ü£¬ Ä©Î²ÓĞ¿ÉÄÜÊÇ 4×Ö½Ú½Ø¶Ï
-            // Ò²ÓĞ¿ÉÄÜÖĞ¼äÓĞÂÒÂë£¬ ÕâÑù£¬ÎÒÃÇÔÙ»ØÍË2×Ö½Ú²»»á¸ü»µ°É£¿
+            // å¤±è´¥ï¼Œ æœ«å°¾æœ‰å¯èƒ½æ˜¯ 4å­—èŠ‚æˆªæ–­
+            // ä¹Ÿæœ‰å¯èƒ½ä¸­é—´æœ‰ä¹±ç ï¼Œ è¿™æ ·ï¼Œæˆ‘ä»¬å†å›é€€2å­—èŠ‚ä¸ä¼šæ›´åå§ï¼Ÿ
             if (i >= 2) {
                 unsigned char c = buffer[i - 2];
                 if (c >= 0x80 && c != 0xA0) {
@@ -456,6 +458,8 @@ static Vector<UChar> decodeGbkWithLastData(char* data, int len, char* lastData, 
         MultiByteToWideChar(54936, 0, buffer, i, &result[0], size2);
     return result;
 }
+
+#define GBK_CONV_CODE_PAGE (936)
 
 String TextCodecICU::decode(const char* bytes, size_t length, FlushBehavior flush, bool stopOnError, bool& sawError)
 {
@@ -516,12 +520,17 @@ String TextCodecICU::decode(const char* bytes, size_t length, FlushBehavior flus
 
 #else
     Vector<UChar> resultBuffer;
-    if (strcasecmp(m_encoding.name(), "gb2312") && strcasecmp(m_encoding.name(), "GBK"))
+    if (strcasecmp(m_encoding.name(), "gb2312") && 
+        strcasecmp(m_encoding.name(), "GBK") && 
+        strcasecmp(m_encoding.name(), "gb18030") &&
+        strcasecmp(m_encoding.name(), "gb_2312")
+        )
         return String();
 
     if (0 == length)
         return String();
 
+#if 0
     Vector<char> valideBytes;
 
     valideBytes.resize(length + m_incrementalDataChunkLength);
@@ -530,20 +539,82 @@ String TextCodecICU::decode(const char* bytes, size_t length, FlushBehavior flus
 
     m_incrementalDataChunkLength = 0;
     const unsigned char* lastInvalideChar = (const unsigned char*)bytes + length - 1;
+#endif
+
 #if 0
     if (length > 2 && !isValideGB(lastInvalideChar, 1) && !isValideGB(lastInvalideChar - 1, 2)) {
-        m_incrementalDataChunkLength = 1; // Ä¿Ç°²»Ö§³ÖGB-18030ËÄ×Ö½Ú±àÂë
+        m_incrementalDataChunkLength = 1; // ç›®å‰ä¸æ”¯æŒGB-18030å››å­—èŠ‚ç¼–ç 
         m_incrementalDataChunk[0] = *lastInvalideChar;
     }
 
-    WTF::MByteToWChar(valideBytes.data(), valideBytes.size() - m_incrementalDataChunkLength, &resultBuffer, CP_ACP);
+    WTF::MByteToWChar(valideBytes.data(), valideBytes.size() - m_incrementalDataChunkLength, &resultBuffer, GBK_CONV_CODE_PAGE);
     if (0 == resultBuffer.size())
         return String();
-#else
-    resultBuffer = decodeGbkWithLastData(valideBytes.data(), valideBytes.size(), m_incrementalDataChunk, &m_incrementalDataChunkLength);
 #endif
+
+#if 0
+    resultBuffer = decodeGbkWithLastData(valideBytes.data(), valideBytes.size(), m_incrementalDataChunk, &m_incrementalDataChunkLength);
     return String(&resultBuffer[0], resultBuffer.size());
+#endif
+
+    StringBuffer<UChar> buffer(m_incrementalDataChunkLength + length);
+    const uint8_t* source = reinterpret_cast<const uint8_t*>(bytes);
+    const uint8_t* end = source + length;
+    UChar* destination = buffer.characters();
+
+    UChar ch;
+    while (source < end) {
+        if (toUnicode(*source, ch)) {
+            *destination = ch;
+            destination++;
+        }
+        source++;
+    }
+    buffer.shrink(destination - buffer.characters());
+    return String::adopt(buffer);
+
+    
 #endif // MINIBLINK_NOT_IMPLEMENTED
+}
+
+bool TextCodecICU::hasValidChar()
+{
+    if (m_incrementalDataChunk == 0)
+        return false;
+
+    m_incrementalDataChunk[m_incrementalDataChunkLength] = 'A';
+    m_incrementalDataChunk[m_incrementalDataChunkLength + 1] = '\0';
+    char* ptr = CharNextExA(GBK_CONV_CODE_PAGE, (LPCSTR)m_incrementalDataChunk, 0);
+    if (ptr > ((char*)m_incrementalDataChunk + m_incrementalDataChunkLength))
+        return false;
+
+    return true;
+}
+
+bool TextCodecICU::toUnicode(unsigned char c, UChar& uc)
+{
+    m_incrementalDataChunk[m_incrementalDataChunkLength++] = c;
+    if (m_incrementalDataChunkLength + 2 <= kIncrementalDataChunkLength && hasValidChar()) {
+        int ret = 0;
+        unsigned char c1 = m_incrementalDataChunk[0];
+        unsigned char c2 = m_incrementalDataChunk[1];
+        m_incrementalDataChunk[1];
+        if ((0x8e == c1 && 0x22 == c2) || (0x8f == c1 && 0x22 == c2) || (0xa0 == c1 && 0x22 == c2)) {
+            // to fix:
+            // https://item.jd.com/6683207.html
+            // https://newbuz.360buyimg.com/video/4.2/video.hls.min.js
+            uc = L'\"'; 
+            ret = 1;
+        } else {
+            ret = MultiByteToWideChar(GBK_CONV_CODE_PAGE, 0, (LPSTR)m_incrementalDataChunk, m_incrementalDataChunkLength, &uc, 1);
+        }
+
+        m_incrementalDataChunkLength = 0;
+
+        return ret == 1 ? true : false;
+    }
+
+    return false;
 }
 
 #if defined(USING_SYSTEM_ICU)
@@ -728,10 +799,13 @@ CString TextCodecICU::encode(const UChar* characters, size_t length, Unencodable
     return encodeCommon(characters, length, handling);
 #else
     std::vector<char> resultBuffer;
-    if (strcasecmp(m_encoding.name(), "gb2312") && strcasecmp(m_encoding.name(), "GBK"))
+    if (strcasecmp(m_encoding.name(), "gb2312") &&
+        strcasecmp(m_encoding.name(), "GBK") &&
+        strcasecmp(m_encoding.name(), "gb18030") &&
+        strcasecmp(m_encoding.name(), "gb_2312"))
         return CString();
 
-    WCharToMByte(characters, length, &resultBuffer, CP_ACP);
+    WCharToMByte(characters, length, &resultBuffer, GBK_CONV_CODE_PAGE);
     if (0 == resultBuffer.size())
         return CString();
     return CString(&resultBuffer[0], resultBuffer.size());
@@ -743,7 +817,10 @@ CString TextCodecICU::encode(const LChar* characters, size_t length, Unencodable
 #ifdef MINIBLINK_NOT_IMPLEMENTED
     return encodeCommon(characters, length, handling);
 #else
-    if (strcasecmp(m_encoding.name(), "gb2312") && strcasecmp(m_encoding.name(), "GBK"))
+    if (strcasecmp(m_encoding.name(), "gb2312") &&
+        strcasecmp(m_encoding.name(), "GBK") &&
+        strcasecmp(m_encoding.name(), "gb18030") &&
+        strcasecmp(m_encoding.name(), "gb_2312"))
         return CString();
 
     bool sawError = false;

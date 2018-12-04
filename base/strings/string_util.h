@@ -78,8 +78,19 @@ public:
 };
 
 std::string ToLowerASCII(const std::string& str);
-
 std::string ToUpperASCII(const std::string& str);
+
+inline bool StartsWith(const std::string& str, const std::string& suffix) {
+    if (0 == str.length() || str.length() < suffix.length())
+        return false;
+    if (0 == suffix.length())
+        return true;
+
+    if (str.compare(0, suffix.length(), suffix) == 0)
+        return true;
+    
+    return false;
+}
 
 TrimPositions TrimWhitespace(const string16& input, TrimPositions positions, string16* output);
 

@@ -569,6 +569,56 @@ static void styleAttributeGetterCallbackForMainWorld(const v8::FunctionCallbackI
     TRACE_EVENT_SET_SAMPLING_STATE("v8", "V8Execution");
 }
 
+static void styleAttributeSetter(v8::Local<v8::Value> v8Value, const v8::FunctionCallbackInfo<v8::Value>& info)
+{
+    v8::Local<v8::Object> holder = info.Holder();
+    HTMLElement* proxyImpl = V8HTMLElement::toImpl(holder);
+    CSSStyleDeclaration* impl = WTF::getPtr(proxyImpl->style());
+    if (!impl)
+        return;
+
+    ExceptionState exceptionState(ExceptionState::SetterContext, "style", "HTMLElement", holder, info.GetIsolate());
+
+    // Prepare the value to be set.
+    V8StringResource<> cppValue = v8Value;
+    if (!cppValue.prepare())
+        return;
+
+    impl->setCSSText(cppValue, exceptionState);
+}
+
+static void styleAttributeSetterCallback(const v8::FunctionCallbackInfo<v8::Value>& info)
+{
+    v8::Local<v8::Value> v8Value = info[0];
+
+    HTMLElementV8Internal::styleAttributeSetter(v8Value, info);
+}
+
+static void styleAttributeSetterForMainWorld(v8::Local<v8::Value> v8Value, const v8::FunctionCallbackInfo<v8::Value>& info)
+{
+    v8::Local<v8::Object> holder = info.Holder();
+    HTMLElement* proxyImpl = V8HTMLElement::toImpl(holder);
+    CSSStyleDeclaration* impl = WTF::getPtr(proxyImpl->style());
+    if (!impl)
+        return;
+
+    ExceptionState exceptionState(ExceptionState::SetterContext, "style", "HTMLElement", holder, info.GetIsolate());
+
+    // Prepare the value to be set.
+    V8StringResource<> cppValue = v8Value;
+    if (!cppValue.prepare())
+        return;
+
+    impl->setCSSText(cppValue, exceptionState);
+}
+
+static void styleAttributeSetterCallbackForMainWorld(const v8::FunctionCallbackInfo<v8::Value>& info)
+{
+    v8::Local<v8::Value> v8Value = info[0];
+
+    HTMLElementV8Internal::styleAttributeSetterForMainWorld(v8Value, info);
+}
+
 static void innerTextAttributeGetter(const v8::FunctionCallbackInfo<v8::Value>& info)
 {
     v8::Local<v8::Object> holder = info.Holder();
@@ -2825,7 +2875,7 @@ static const V8DOMConfiguration::AccessorConfiguration V8HTMLElementAccessors[] 
     {"offsetLeft", HTMLElementV8Internal::offsetLeftAttributeGetterCallback, 0, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnPrototype, V8DOMConfiguration::CheckHolder},
     {"offsetWidth", HTMLElementV8Internal::offsetWidthAttributeGetterCallback, 0, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnPrototype, V8DOMConfiguration::CheckHolder},
     {"offsetHeight", HTMLElementV8Internal::offsetHeightAttributeGetterCallback, 0, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnPrototype, V8DOMConfiguration::CheckHolder},
-    {"style", HTMLElementV8Internal::styleAttributeGetterCallback, 0, HTMLElementV8Internal::styleAttributeGetterCallbackForMainWorld, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnPrototype, V8DOMConfiguration::CheckHolder},
+    {"style", HTMLElementV8Internal::styleAttributeGetterCallback, HTMLElementV8Internal::styleAttributeSetterCallbackForMainWorld, HTMLElementV8Internal::styleAttributeGetterCallbackForMainWorld, HTMLElementV8Internal::styleAttributeSetterCallbackForMainWorld, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnPrototype, V8DOMConfiguration::CheckHolder},
     {"innerText", HTMLElementV8Internal::innerTextAttributeGetterCallback, HTMLElementV8Internal::innerTextAttributeSetterCallback, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnPrototype, V8DOMConfiguration::CheckHolder},
     {"outerText", HTMLElementV8Internal::outerTextAttributeGetterCallback, HTMLElementV8Internal::outerTextAttributeSetterCallback, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnPrototype, V8DOMConfiguration::CheckHolder},
     {"webkitdropzone", HTMLElementV8Internal::webkitdropzoneAttributeGetterCallback, HTMLElementV8Internal::webkitdropzoneAttributeSetterCallback, 0, 0, 0, static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::None), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnPrototype, V8DOMConfiguration::CheckHolder},

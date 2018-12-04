@@ -29,7 +29,7 @@
 
 // Extra functions for MinGW. Most of these are the _s functions which are in
 // the Microsoft Visual Studio C++ CRT.
-#ifdef USING_VC6RT == 1 //__MINGW32__
+#if USING_VC6RT == 1 //__MINGW32__
 
 
 #ifndef __MINGW64_VERSION_MAJOR

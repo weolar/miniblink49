@@ -240,6 +240,9 @@ bool SecurityOrigin::isSecure(const KURL& url)
 
 bool SecurityOrigin::canAccess(const SecurityOrigin* other) const
 {
+    if (!RuntimeEnabledFeatures::cspCheckEnabled())
+        return true;
+
     if (m_universalAccess)
         return true;
 
@@ -276,6 +279,9 @@ bool SecurityOrigin::canAccess(const SecurityOrigin* other) const
 
 bool SecurityOrigin::canAccessCheckSuborigins(const SecurityOrigin* other) const
 {
+    if (!RuntimeEnabledFeatures::cspCheckEnabled())
+        return true;
+
     if (hasSuborigin() != other->hasSuborigin())
         return false;
 
@@ -294,6 +300,9 @@ bool SecurityOrigin::passesFileCheck(const SecurityOrigin* other) const
 
 bool SecurityOrigin::canRequest(const KURL& url) const
 {
+    if (!RuntimeEnabledFeatures::cspCheckEnabled())
+        return true;
+
     if (m_universalAccess)
         return true;
 
@@ -321,6 +330,9 @@ bool SecurityOrigin::canRequest(const KURL& url) const
 
 bool SecurityOrigin::canRequestNoSuborigin(const KURL& url) const
 {
+    if (!RuntimeEnabledFeatures::cspCheckEnabled())
+        return true;
+
     return !hasSuborigin() && canRequest(url);
 }
 
@@ -343,6 +355,9 @@ bool SecurityOrigin::taintsCanvas(const KURL& url) const
 
 bool SecurityOrigin::canDisplay(const KURL& url) const
 {
+    if (!RuntimeEnabledFeatures::cspCheckEnabled())
+        return true;
+
     if (m_universalAccess)
         return true;
 

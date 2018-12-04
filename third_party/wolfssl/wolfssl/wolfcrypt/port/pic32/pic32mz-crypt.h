@@ -1,6 +1,6 @@
 /* pic32mz-crypt.h
  *
- * Copyright (C) 2006-2016 wolfSSL Inc.
+ * Copyright (C) 2006-2017 wolfSSL Inc.
  *
  * This file is part of wolfSSL.
  *
@@ -26,6 +26,8 @@
 #ifdef __cplusplus
     extern "C" {
 #endif
+
+#include <wolfssl/wolfcrypt/settings.h>
 
 #ifdef WOLFSSL_MICROCHIP_PIC32MZ
 
@@ -194,6 +196,8 @@ int wc_Pic32DesCrypt(word32 *key, int keyLen, word32 *iv, int ivLen,
 #endif
 
 #ifdef WOLFSSL_PIC32MZ_HASH
+#define WOLFSSL_NO_HASH_RAW
+
 int wc_Pic32Hash(const byte* in, int inLen, word32* out, int outLen, int algo);
 int wc_Pic32HashCopy(hashUpdCache* src, hashUpdCache* dst);
 #endif

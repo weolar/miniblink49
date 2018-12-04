@@ -1,6 +1,6 @@
 /* aes.h
  *
- * Copyright (C) 2006-2016 wolfSSL Inc.
+ * Copyright (C) 2006-2017 wolfSSL Inc.
  *
  * This file is part of wolfSSL.
  *
@@ -18,6 +18,10 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1335, USA
  */
+
+/*!
+    \file wolfssl/wolfcrypt/aes.h
+*/
 
 
 #ifndef WOLF_CRYPT_AES_H
@@ -58,6 +62,16 @@
     extern "C" {
 #endif
 
+/* these are required for FIPS and non-FIPS */
+enum {    
+    AES_128_KEY_SIZE    = 16,  /* for 128 bit             */
+    AES_192_KEY_SIZE    = 24,  /* for 192 bit             */
+    AES_256_KEY_SIZE    = 32,  /* for 256 bit             */
+
+    AES_IV_SIZE         = 16,  /* always block size       */
+};
+
+
 #ifndef HAVE_FIPS /* to avoid redefinition of structures */
 
 #ifdef WOLFSSL_ASYNC_CRYPT
@@ -65,11 +79,13 @@
 #endif
 
 enum {
-    AES_ENC_TYPE   = 1,   /* cipher unique type */
+    AES_ENC_TYPE   = WC_CIPHER_AES,   /* cipher unique type */
     AES_ENCRYPTION = 0,
     AES_DECRYPTION = 1,
-    KEYWRAP_BLOCK_SIZE = 8,
-    AES_BLOCK_SIZE = 16
+
+    AES_BLOCK_SIZE      = 16,
+
+    KEYWRAP_BLOCK_SIZE  = 8,
 };
 
 
@@ -97,7 +113,7 @@ typedef struct Aes {
     word32 asyncIv[AES_BLOCK_SIZE/sizeof(word32)]; /* raw IV */
     WC_ASYNC_DEV asyncDev;
 #endif /* WOLFSSL_ASYNC_CRYPT */
-#ifdef WOLFSSL_AES_COUNTER
+#if defined(WOLFSSL_AES_COUNTER) || defined(WOLFSSL_AES_CFB)
     word32  left;            /* unused bytes left from last call */
 #endif
 #ifdef WOLFSSL_XILINX_CRYPT
@@ -144,6 +160,15 @@ WOLFSSL_API int  wc_AesCbcEncrypt(Aes* aes, byte* out,
                                   const byte* in, word32 sz);
 WOLFSSL_API int  wc_AesCbcDecrypt(Aes* aes, byte* out,
                                   const byte* in, word32 sz);
+
+#ifdef WOLFSSL_AES_CFB
+WOLFSSL_API int wc_AesCfbEncrypt(Aes* aes, byte* out,
+                                    const byte* in, word32 sz);
+#ifdef HAVE_AES_DECRYPT
+WOLFSSL_API int wc_AesCfbDecrypt(Aes* aes, byte* out,
+                                    const byte* in, word32 sz);
+#endif /* HAVE_AES_DECRYPT */
+#endif /* WOLFSSL_AES_CFB */
 
 #ifdef HAVE_AES_ECB
 WOLFSSL_API int wc_AesEcbEncrypt(Aes* aes, byte* out,
@@ -213,226 +238,22 @@ WOLFSSL_API int wc_AesEcbDecrypt(Aes* aes, byte* out,
 #endif /* HAVE_AES_KEYWRAP */
 
 #ifdef WOLFSSL_AES_XTS
-/*!
-    \ingroup AES
 
-    \brief This is to help with setting keys to correct encrypt or decrypt type.
-
-    \note Is up to user to call wc_AesXtsFree on aes key when done.
-
-    \return 0 Success
-
-    \param aes   AES keys for encrypt/decrypt process
-    \param key   buffer holding aes key | tweak key
-    \param len   length of key buffer in bytes. Should be twice that of key size.
-                 i.e. 32 for a 16 byte key.
-    \param dir   direction, either AES_ENCRYPTION or AES_DECRYPTION
-    \param heap  heap hint to use for memory. Can be NULL
-    \param devId id to use with async crypto. Can be 0
-
-    _Example_
-    \code
-    XtsAes aes;
-
-    if(wc_AesXtsSetKey(&aes, key, sizeof(key), AES_ENCRYPTION, NULL, 0) != 0)
-    {
-        // Handle error
-    }
-    wc_AesXtsFree(&aes);
-    \endcode
-
-    \sa wc_AesXtsEncrypt
-    \sa wc_AesXtsDecrypt
-    \sa wc_AesXtsFree
-*/
 WOLFSSL_API int wc_AesXtsSetKey(XtsAes* aes, const byte* key,
          word32 len, int dir, void* heap, int devId);
 
-
-/*!
-    \ingroup AES
-
-    \brief Same process as wc_AesXtsEncrypt but uses a word64 type as the tweak
-           value instead of a byte array. This just converts the word64 to a
-           byte array and calls wc_AesXtsEncrypt.
-
-    \return 0 Success
-
-    \param aes    AES keys to use for block encrypt/decrypt
-    \param out    output buffer to hold cipher text
-    \param in     input plain text buffer to encrypt
-    \param sz     size of both out and in buffers
-    \param sector value to use for tweak
-
-    _Example_
-    \code
-    XtsAes aes;
-    unsigned char plain[SIZE];
-    unsigned char cipher[SIZE];
-    word64 s = VALUE;
-
-    //set up keys with AES_ENCRYPTION as dir
-
-    if(wc_AesXtsEncryptSector(&aes, cipher, plain, SIZE, s) != 0)
-    {
-        // Handle error
-    }
-    wc_AesXtsFree(&aes);
-    \endcode
-
-    \sa wc_AesXtsEncrypt
-    \sa wc_AesXtsDecrypt
-    \sa wc_AesXtsSetKey
-    \sa wc_AesXtsFree
-*/
 WOLFSSL_API int wc_AesXtsEncryptSector(XtsAes* aes, byte* out,
          const byte* in, word32 sz, word64 sector);
 
-
-/*!
-    \ingroup AES
-
-    \brief Same process as wc_AesXtsDecrypt but uses a word64 type as the tweak
-           value instead of a byte array. This just converts the word64 to a
-           byte array.
-
-    \return 0 Success
-
-    \param aes    AES keys to use for block encrypt/decrypt
-    \param out    output buffer to hold plain text
-    \param in     input cipher text buffer to decrypt
-    \param sz     size of both out and in buffers
-    \param sector value to use for tweak
-
-    _Example_
-    \code
-    XtsAes aes;
-    unsigned char plain[SIZE];
-    unsigned char cipher[SIZE];
-    word64 s = VALUE;
-
-    //set up aes key with AES_DECRYPTION as dir and tweak with AES_ENCRYPTION
-
-    if(wc_AesXtsDecryptSector(&aes, plain, cipher, SIZE, s) != 0)
-    {
-        // Handle error
-    }
-    wc_AesXtsFree(&aes);
-    \endcode
-
-    \sa wc_AesXtsEncrypt
-    \sa wc_AesXtsDecrypt
-    \sa wc_AesXtsSetKey
-    \sa wc_AesXtsFree
-*/
 WOLFSSL_API int wc_AesXtsDecryptSector(XtsAes* aes, byte* out,
          const byte* in, word32 sz, word64 sector);
 
-
-/*!
-    \ingroup AES
-
-    \brief AES with XTS mode. (XTS) XEX encryption with Tweak and cipher text
-           Stealing.
-
-    \return 0 Success
-
-    \param aes   AES keys to use for block encrypt/decrypt
-    \param out   output buffer to hold cipher text
-    \param in    input plain text buffer to encrypt
-    \param sz    size of both out and in buffers
-    \param i     value to use for tweak
-    \param iSz   size of i buffer, should always be AES_BLOCK_SIZE but having
-                 this input adds a sanity check on how the user calls the
-                 function.
-
-    _Example_
-    \code
-    XtsAes aes;
-    unsigned char plain[SIZE];
-    unsigned char cipher[SIZE];
-    unsigned char i[AES_BLOCK_SIZE];
-
-    //set up key with AES_ENCRYPTION as dir
-
-    if(wc_AesXtsEncrypt(&aes, cipher, plain, SIZE, i, sizeof(i)) != 0)
-    {
-        // Handle error
-    }
-    wc_AesXtsFree(&aes);
-    \endcode
-
-    \sa wc_AesXtsDecrypt
-    \sa wc_AesXtsSetKey
-    \sa wc_AesXtsFree
-*/
 WOLFSSL_API int wc_AesXtsEncrypt(XtsAes* aes, byte* out,
          const byte* in, word32 sz, const byte* i, word32 iSz);
 
-
-/*!
-    \ingroup AES
-
-    \brief Same process as encryption but Aes key is AES_DECRYPTION type.
-
-    \return 0 Success
-
-    \param aes   AES keys to use for block encrypt/decrypt
-    \param out   output buffer to hold plain text
-    \param in    input cipher text buffer to decrypt
-    \param sz    size of both out and in buffers
-    \param i     value to use for tweak
-    \param iSz   size of i buffer, should always be AES_BLOCK_SIZE but having
-                 this input adds a sanity check on how the user calls the
-                 function.
-    _Example_
-    \code
-    XtsAes aes;
-    unsigned char plain[SIZE];
-    unsigned char cipher[SIZE];
-    unsigned char i[AES_BLOCK_SIZE];
-
-    //set up key with AES_DECRYPTION as dir and tweak with AES_ENCRYPTION
-
-    if(wc_AesXtsDecrypt(&aes, plain, cipher, SIZE, i, sizeof(i)) != 0)
-    {
-        // Handle error
-    }
-    wc_AesXtsFree(&aes);
-    \endcode
-
-    \sa wc_AesXtsEncrypt
-    \sa wc_AesXtsSetKey
-    \sa wc_AesXtsFree
-*/
 WOLFSSL_API int wc_AesXtsDecrypt(XtsAes* aes, byte* out,
         const byte* in, word32 sz, const byte* i, word32 iSz);
 
-
-/*!
-    \ingroup AES
-
-    \brief This is to free up any resources used by the XtsAes structure
-
-    \return 0 Success
-
-    \param aes AES keys to free
-
-    _Example_
-    \code
-    XtsAes aes;
-
-    if(wc_AesXtsSetKey(&aes, key, sizeof(key), AES_ENCRYPTION, NULL, 0) != 0)
-    {
-        // Handle error
-    }
-    wc_AesXtsFree(&aes);
-    \endcode
-
-    \sa wc_AesXtsEncrypt
-    \sa wc_AesXtsDecrypt
-    \sa wc_AesXtsSetKey
-*/
 WOLFSSL_API int wc_AesXtsFree(XtsAes* aes);
 #endif
 

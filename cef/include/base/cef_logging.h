@@ -171,7 +171,7 @@ namespace logging {
 
 // Gets the current log level.
 inline int GetMinLogLevel() {
-  return cef_get_min_log_level();
+    return 0;// cef_get_min_log_level();
 }
 
 // Gets the current vlog level for the given file (usually taken from
@@ -339,13 +339,17 @@ const LogSeverity LOG_0 = LOG_ERROR;
 // We make sure CHECK et al. always evaluates their arguments, as
 // doing CHECK(FunctionWithSideEffect()) is a common idiom.
 
+#ifndef CHECK
 #define CHECK(condition)                       \
   LAZY_STREAM(LOG_STREAM(FATAL), !(condition)) \
   << "Check failed: " #condition ". "
+#endif // CHECK
 
+#ifndef PCHECK
 #define PCHECK(condition) \
   LAZY_STREAM(PLOG_STREAM(FATAL), !(condition)) \
   << "Check failed: " #condition ". "
+#endif // PCHECK
 
 // Helper macro for binary operators.
 // Don't use this macro directly in your code, use CHECK_EQ et al below.
@@ -353,10 +357,13 @@ const LogSeverity LOG_0 = LOG_ERROR;
 // TODO(akalin): Rewrite this so that constructs like if (...)
 // CHECK_EQ(...) else { ... } work properly.
 #define CHECK_OP(name, op, val1, val2)                          \
-  if (std::string* _result =                                    \
-      cef::logging::Check##name##Impl((val1), (val2),                \
-                                 #val1 " " #op " " #val2))      \
-    cef::logging::LogMessage(__FILE__, __LINE__, _result).stream()
+    if (!(val1 op val2)) \
+        ::DebugBreak();
+
+//   if (std::string* _result =                                    \
+//       cef::logging::Check##name##Impl((val1), (val2),           \
+//                                  #val1 " " #op " " #val2))      \
+//     cef::logging::LogMessage(__FILE__, __LINE__, _result).stream()
 
 // Build the error message string.  This is separate from the "Impl"
 // function template because it is not performance critical and so can
@@ -413,12 +420,29 @@ DEFINE_CHECK_OP_IMPL(GE, >=)
 DEFINE_CHECK_OP_IMPL(GT, > )
 #undef DEFINE_CHECK_OP_IMPL
 
+#ifndef CHECK_EQ
 #define CHECK_EQ(val1, val2) CHECK_OP(EQ, ==, val1, val2)
+#endif
+
+#ifndef CHECK_NE
 #define CHECK_NE(val1, val2) CHECK_OP(NE, !=, val1, val2)
+#endif
+
+#ifndef CHECK_LE
 #define CHECK_LE(val1, val2) CHECK_OP(LE, <=, val1, val2)
+#endif
+
+#ifndef CHECK_LT
 #define CHECK_LT(val1, val2) CHECK_OP(LT, < , val1, val2)
+#endif
+
+#ifndef CHECK_GE
 #define CHECK_GE(val1, val2) CHECK_OP(GE, >=, val1, val2)
+#endif
+
+#ifndef CHECK_GT
 #define CHECK_GT(val1, val2) CHECK_OP(GT, > , val1, val2)
+#endif
 
 #if defined(NDEBUG)
 #define ENABLE_DLOG 0
@@ -505,13 +529,17 @@ const LogSeverity LOG_DCHECK = LOG_INFO;
 // variable warnings if the only use of a variable is in a DCHECK.
 // This behavior is different from DLOG_IF et al.
 
+#ifndef DCHECK
 #define DCHECK(condition)                                           \
   LAZY_STREAM(LOG_STREAM(DCHECK), DCHECK_IS_ON() && !(condition))   \
       << "Check failed: " #condition ". "
+#endif
 
+#ifndef DPCHECK
 #define DPCHECK(condition)                                          \
   LAZY_STREAM(PLOG_STREAM(DCHECK), DCHECK_IS_ON() && !(condition))  \
       << "Check failed: " #condition ". "
+#endif
 
 // Helper macro for binary operators.
 // Don't use this macro directly in your code, use DCHECK_EQ et al below.

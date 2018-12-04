@@ -101,7 +101,7 @@ inline PlatformThreadId CurrentId() {
 // Gets the current thread reference, which can be used to check if
 // we're on the right thread quickly.
 inline PlatformThreadRef CurrentRef() {
-  return PlatformThreadRef(cef_get_current_platform_thread_handle());
+  return PlatformThreadRef((cef_platform_thread_handle_t)::GetCurrentThread());
 }
 
 }  // namespace PlatformThread

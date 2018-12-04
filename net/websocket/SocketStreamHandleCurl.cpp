@@ -47,6 +47,7 @@ SocketStreamHandle::SocketStreamHandle(const KURL& url, SocketStreamHandleClient
     : SocketStreamHandleBase(url, client)
     , m_workerThread(0)
     , m_stopThread(0)
+    , m_readDataTaskCount(0)
 {
     WTF_LOG(Network, "SocketStreamHandle %p new client %p", this, m_client);
     ASSERT(isMainThread());
@@ -95,6 +96,7 @@ static void s_mainThreadReadData(void* param)
 
 void SocketStreamHandle::mainThreadReadData()
 {
+    atomicDecrement(&m_readDataTaskCount);
     didReceiveData();
     deref();
 }
@@ -103,7 +105,7 @@ bool SocketStreamHandle::readData(CURL* curlHandle)
 {
     ASSERT(!isMainThread());
 
-    const int bufferSize = 1024;
+    const int bufferSize = 1024 * 30;
     char* data = new char[bufferSize];
     size_t bytesRead = 0;
 
@@ -117,7 +119,10 @@ bool SocketStreamHandle::readData(CURL* curlHandle)
 
         ref();
 
-        WTF::internal::callOnMainThread(s_mainThreadReadData, this);
+        if (0 == m_readDataTaskCount) {
+            atomicIncrement(&m_readDataTaskCount);
+            WTF::internal::callOnMainThread(s_mainThreadReadData, this);
+        }
         return true;
     }
 
@@ -188,6 +193,8 @@ bool SocketStreamHandle::waitForAvailableData(CURL* curlHandle, long long select
     if (curl_easy_getinfo(curlHandle, CURLINFO_LASTSOCKET, &socket) != CURLE_OK)
         return false;
 
+    ::Sleep(50);
+
     fd_set fdread;
     FD_ZERO(&fdread);
     FD_SET(socket, &fdread);
@@ -228,10 +235,29 @@ void SocketStreamHandle::threadFunction()
     if (!curlHandle)
         return;
 
-    curl_easy_setopt(curlHandle, CURLOPT_URL, m_url.host().utf8().data());
-    curl_easy_setopt(curlHandle, CURLOPT_PORT, m_url.port());
+    String url = m_url.host();
+    unsigned short port = m_url.port();
+    bool isSSL = !m_url.protocolIs("ws");
+    if (0 == port)
+        port = isSSL ? 443 : 80;
+    
+    if (isSSL)
+        url = "https://" + url;
+
+    //curl_easy_setopt(curlHandle, CURLOPT_URL, m_url.host().utf8().data());
+    curl_easy_setopt(curlHandle, CURLOPT_URL, url.utf8().data());
+
+    curl_easy_setopt(curlHandle, CURLOPT_PORT, port);
     curl_easy_setopt(curlHandle, CURLOPT_CONNECT_ONLY);
     curl_easy_setopt(curlHandle, CURLOPT_TIMEOUT, 5000);
+
+    static const int kAllowedProtocols = CURLPROTO_FILE | CURLPROTO_FTP | CURLPROTO_FTPS | CURLPROTO_HTTP | CURLPROTO_HTTPS;
+    curl_easy_setopt(curlHandle, CURLOPT_SSL_VERIFYPEER, false); // ignoreSSLErrors
+    curl_easy_setopt(curlHandle, CURLOPT_SSL_VERIFYHOST, FALSE);
+    curl_easy_setopt(curlHandle, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
+    curl_easy_setopt(curlHandle, CURLOPT_DNS_CACHE_TIMEOUT, 60 * 5); // 5 minutes
+    curl_easy_setopt(curlHandle, CURLOPT_PROTOCOLS, kAllowedProtocols);
+    curl_easy_setopt(curlHandle, CURLOPT_REDIR_PROTOCOLS, kAllowedProtocols);
    
     // Connect to host
     if (curl_easy_perform(curlHandle) != CURLE_OK)

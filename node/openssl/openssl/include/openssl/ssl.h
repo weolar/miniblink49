@@ -2536,7 +2536,7 @@ void SSL_set_tmp_ecdh_callback(SSL *ssl,
 const COMP_METHOD *SSL_get_current_compression(SSL *s);
 const COMP_METHOD *SSL_get_current_expansion(SSL *s);
 const char *SSL_COMP_get_name(const COMP_METHOD *comp);
-STACK_OF(SSL_COMP) *SSL_COMP_get_compression_methods(void);
+STACK_OF(SSL_COMP) *openssl_SSL_COMP_get_compression_methods(void);
 STACK_OF(SSL_COMP) *SSL_COMP_set0_compression_methods(STACK_OF(SSL_COMP)
                                                       *meths);
 void SSL_COMP_free_compression_methods(void);
@@ -2545,7 +2545,7 @@ int SSL_COMP_add_compression_method(int id, COMP_METHOD *cm);
 const void *SSL_get_current_compression(SSL *s);
 const void *SSL_get_current_expansion(SSL *s);
 const char *SSL_COMP_get_name(const void *comp);
-void *SSL_COMP_get_compression_methods(void);
+void *openssl_SSL_COMP_get_compression_methods(void);
 int SSL_COMP_add_compression_method(int id, void *cm);
 # endif
 

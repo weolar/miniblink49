@@ -1,6 +1,6 @@
 /* sha3.h
  *
- * Copyright (C) 2006-2016 wolfSSL Inc.
+ * Copyright (C) 2006-2017 wolfSSL Inc.
  *
  * This file is part of wolfSSL.
  *
@@ -44,22 +44,43 @@
 
 /* in bytes */
 enum {
-    SHA3_224              = 10,   /* hash type unique */
-    SHA3_224_DIGEST_SIZE  = 28,
-    SHA3_224_COUNT        = 18,
+    WC_SHA3_224              = WC_HASH_TYPE_SHA3_224,
+    WC_SHA3_224_DIGEST_SIZE  = 28,
+    WC_SHA3_224_COUNT        = 18,
 
-    SHA3_256              = 11,   /* hash type unique */
-    SHA3_256_DIGEST_SIZE  = 32,
-    SHA3_256_COUNT        = 17,
+    WC_SHA3_256              = WC_HASH_TYPE_SHA3_256,
+    WC_SHA3_256_DIGEST_SIZE  = 32,
+    WC_SHA3_256_COUNT        = 17,
 
-    SHA3_384              = 12,   /* hash type unique */
-    SHA3_384_DIGEST_SIZE  = 48,
-    SHA3_384_COUNT        = 13,
+    WC_SHA3_384              = WC_HASH_TYPE_SHA3_384,
+    WC_SHA3_384_DIGEST_SIZE  = 48,
+    WC_SHA3_384_COUNT        = 13,
 
-    SHA3_512              = 13,   /* hash type unique */
-    SHA3_512_DIGEST_SIZE  = 64,
-    SHA3_512_COUNT        =  9
+    WC_SHA3_512              = WC_HASH_TYPE_SHA3_512,
+    WC_SHA3_512_DIGEST_SIZE  = 64,
+    WC_SHA3_512_COUNT        =  9,
+
+#ifndef HAVE_SELFTEST
+    /* These values are used for HMAC, not SHA-3 directly.
+     * They come from from FIPS PUB 202. */
+    WC_SHA3_224_BLOCK_SIZE = 144,
+    WC_SHA3_256_BLOCK_SIZE = 136,
+    WC_SHA3_384_BLOCK_SIZE = 104,
+    WC_SHA3_512_BLOCK_SIZE = 72,
+#endif
 };
+
+#ifndef NO_OLD_WC_NAMES
+    #define SHA3_224             WC_SHA3_224
+    #define SHA3_224_DIGEST_SIZE WC_SHA3_224_DIGEST_SIZE
+    #define SHA3_256             WC_SHA3_256
+    #define SHA3_256_DIGEST_SIZE WC_SHA3_256_DIGEST_SIZE
+    #define SHA3_384             WC_SHA3_384
+    #define SHA3_384_DIGEST_SIZE WC_SHA3_384_DIGEST_SIZE
+    #define SHA3_512             WC_SHA3_512
+    #define SHA3_512_DIGEST_SIZE WC_SHA3_512_DIGEST_SIZE
+    #define Sha3 wc_Sha3
+#endif
 
 
 #ifdef WOLFSSL_XILINX_CRYPT
@@ -79,37 +100,37 @@ typedef struct Sha3 {
 #ifdef WOLFSSL_ASYNC_CRYPT
     WC_ASYNC_DEV asyncDev;
 #endif /* WOLFSSL_ASYNC_CRYPT */
-} Sha3;
+} wc_Sha3;
 #endif
 #endif /* HAVE_FIPS */
 
-WOLFSSL_API int wc_InitSha3_224(Sha3*, void*, int);
-WOLFSSL_API int wc_Sha3_224_Update(Sha3*, const byte*, word32);
-WOLFSSL_API int wc_Sha3_224_Final(Sha3*, byte*);
-WOLFSSL_API void wc_Sha3_224_Free(Sha3*);
-WOLFSSL_API int wc_Sha3_224_GetHash(Sha3*, byte*);
-WOLFSSL_API int wc_Sha3_224_Copy(Sha3* src, Sha3* dst);
+WOLFSSL_API int wc_InitSha3_224(wc_Sha3*, void*, int);
+WOLFSSL_API int wc_Sha3_224_Update(wc_Sha3*, const byte*, word32);
+WOLFSSL_API int wc_Sha3_224_Final(wc_Sha3*, byte*);
+WOLFSSL_API void wc_Sha3_224_Free(wc_Sha3*);
+WOLFSSL_API int wc_Sha3_224_GetHash(wc_Sha3*, byte*);
+WOLFSSL_API int wc_Sha3_224_Copy(wc_Sha3* src, wc_Sha3* dst);
 
-WOLFSSL_API int wc_InitSha3_256(Sha3*, void*, int);
-WOLFSSL_API int wc_Sha3_256_Update(Sha3*, const byte*, word32);
-WOLFSSL_API int wc_Sha3_256_Final(Sha3*, byte*);
-WOLFSSL_API void wc_Sha3_256_Free(Sha3*);
-WOLFSSL_API int wc_Sha3_256_GetHash(Sha3*, byte*);
-WOLFSSL_API int wc_Sha3_256_Copy(Sha3* src, Sha3* dst);
+WOLFSSL_API int wc_InitSha3_256(wc_Sha3*, void*, int);
+WOLFSSL_API int wc_Sha3_256_Update(wc_Sha3*, const byte*, word32);
+WOLFSSL_API int wc_Sha3_256_Final(wc_Sha3*, byte*);
+WOLFSSL_API void wc_Sha3_256_Free(wc_Sha3*);
+WOLFSSL_API int wc_Sha3_256_GetHash(wc_Sha3*, byte*);
+WOLFSSL_API int wc_Sha3_256_Copy(wc_Sha3* src, wc_Sha3* dst);
 
-WOLFSSL_API int wc_InitSha3_384(Sha3*, void*, int);
-WOLFSSL_API int wc_Sha3_384_Update(Sha3*, const byte*, word32);
-WOLFSSL_API int wc_Sha3_384_Final(Sha3*, byte*);
-WOLFSSL_API void wc_Sha3_384_Free(Sha3*);
-WOLFSSL_API int wc_Sha3_384_GetHash(Sha3*, byte*);
-WOLFSSL_API int wc_Sha3_384_Copy(Sha3* src, Sha3* dst);
+WOLFSSL_API int wc_InitSha3_384(wc_Sha3*, void*, int);
+WOLFSSL_API int wc_Sha3_384_Update(wc_Sha3*, const byte*, word32);
+WOLFSSL_API int wc_Sha3_384_Final(wc_Sha3*, byte*);
+WOLFSSL_API void wc_Sha3_384_Free(wc_Sha3*);
+WOLFSSL_API int wc_Sha3_384_GetHash(wc_Sha3*, byte*);
+WOLFSSL_API int wc_Sha3_384_Copy(wc_Sha3* src, wc_Sha3* dst);
 
-WOLFSSL_API int wc_InitSha3_512(Sha3*, void*, int);
-WOLFSSL_API int wc_Sha3_512_Update(Sha3*, const byte*, word32);
-WOLFSSL_API int wc_Sha3_512_Final(Sha3*, byte*);
-WOLFSSL_API void wc_Sha3_512_Free(Sha3*);
-WOLFSSL_API int wc_Sha3_512_GetHash(Sha3*, byte*);
-WOLFSSL_API int wc_Sha3_512_Copy(Sha3* src, Sha3* dst);
+WOLFSSL_API int wc_InitSha3_512(wc_Sha3*, void*, int);
+WOLFSSL_API int wc_Sha3_512_Update(wc_Sha3*, const byte*, word32);
+WOLFSSL_API int wc_Sha3_512_Final(wc_Sha3*, byte*);
+WOLFSSL_API void wc_Sha3_512_Free(wc_Sha3*);
+WOLFSSL_API int wc_Sha3_512_GetHash(wc_Sha3*, byte*);
+WOLFSSL_API int wc_Sha3_512_Copy(wc_Sha3* src, wc_Sha3* dst);
 
 #ifdef __cplusplus
     } /* extern "C" */

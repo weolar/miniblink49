@@ -43,6 +43,18 @@ extern void initializeThreading();
 bool s_initialized;
 bool s_shutdown;
 
+static void maxObservedSizeFunction(size_t sizeInMB)
+{
+//     const size_t supportedMaxSizeInMB = 4 * 1024;
+//     if (sizeInMB >= supportedMaxSizeInMB)
+//         sizeInMB = supportedMaxSizeInMB - 1;
+// 
+//     // Send a UseCounter only when we see the highest memory usage
+//     // we've ever seen.
+//     DEFINE_STATIC_LOCAL(EnumerationHistogram, committedSizeHistogram, ("PartitionAlloc.CommittedSize", supportedMaxSizeInMB));
+//     committedSizeHistogram.count(sizeInMB);
+}
+
 void initialize(TimeFunction currentTimeFunction, TimeFunction monotonicallyIncreasingTimeFunction, TimeFunction systemTraceTimeFunction, HistogramEnumerationFunction histogramEnumerationFunction, AdjustAmountOfExternalAllocatedMemoryFunction adjustAmountOfExternalAllocatedMemoryFunction)
 {
     // WTF, and Blink in general, cannot handle being re-initialized, even if shutdown first.
@@ -53,8 +65,8 @@ void initialize(TimeFunction currentTimeFunction, TimeFunction monotonicallyIncr
     setCurrentTimeFunction(currentTimeFunction);
     setMonotonicallyIncreasingTimeFunction(monotonicallyIncreasingTimeFunction);
     setSystemTraceTimeFunction(systemTraceTimeFunction);
-    Partitions::initialize();
-    Partitions::setHistogramEnumeration(histogramEnumerationFunction);
+    Partitions::initialize(maxObservedSizeFunction);
+    //Partitions::setHistogramEnumeration(histogramEnumerationFunction);
     ArrayBufferContents::setAdjustAmoutOfExternalAllocatedMemoryFunction(adjustAmountOfExternalAllocatedMemoryFunction);
     initializeThreading();
 }

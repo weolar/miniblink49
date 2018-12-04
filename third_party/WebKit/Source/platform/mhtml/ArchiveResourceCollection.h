@@ -49,21 +49,19 @@ public:
 
     ~ArchiveResourceCollection();
 
-    void addResource(PassRefPtrWillBeRawPtr<ArchiveResource>);
     void addAllResources(MHTMLArchive*);
 
     ArchiveResource* archiveResourceForURL(const KURL&);
-#ifdef MINIBLINK_NOT_IMPLEMENTED
     PassRefPtrWillBeRawPtr<MHTMLArchive> popSubframeArchive(const String& frameName, const KURL&);
-#endif // MINIBLINK_NOT_IMPLEMENTED
 
     DECLARE_TRACE();
 
 private:
     ArchiveResourceCollection();
+    void addResource(ArchiveResource&);
 
     WillBeHeapHashMap<String, RefPtrWillBeMember<ArchiveResource>> m_subresources;
-    //WillBeHeapHashMap<String, RefPtrWillBeMember<MHTMLArchive>> m_subframes;
+    WillBeHeapHashMap<String, RefPtrWillBeMember<MHTMLArchive>> m_subframes;
 };
 
 }

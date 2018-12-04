@@ -18,10 +18,6 @@
 #include "wtf/text/StringUTF8Adaptor.h"
 #include "wtf/text/WTFString.h"
 
-namespace net {
-extern bool g_cspCheckEnable;
-}
-
 namespace blink {
 
 namespace {
@@ -225,7 +221,7 @@ bool CSPDirectiveList::checkInlineAndReportViolation(SourceListDirective* direct
 
 bool CSPDirectiveList::checkSourceAndReportViolation(SourceListDirective* directive, const KURL& url, const String& effectiveDirective, ContentSecurityPolicy::RedirectStatus redirectStatus) const
 {
-    if (!net::g_cspCheckEnable)
+    if (!RuntimeEnabledFeatures::cspCheckEnabled())
         return true;
 
     if (checkSource(directive, url, redirectStatus))
@@ -389,21 +385,29 @@ bool CSPDirectiveList::allowBaseURI(const KURL& url, ContentSecurityPolicy::Redi
 
 bool CSPDirectiveList::allowChildContextFromSource(const KURL& url, ContentSecurityPolicy::RedirectStatus redirectStatus, ContentSecurityPolicy::ReportingStatus reportingStatus) const
 {
+    if (!RuntimeEnabledFeatures::cspCheckEnabled())
+        return true;
     return reportingStatus == ContentSecurityPolicy::SendReport ? checkSourceAndReportViolation(operativeDirective(m_childSrc.get()), url, ContentSecurityPolicy::ChildSrc, redirectStatus) : checkSource(operativeDirective(m_childSrc.get()), url, redirectStatus);
 }
 
 bool CSPDirectiveList::allowAncestors(LocalFrame* frame, const KURL& url, ContentSecurityPolicy::ReportingStatus reportingStatus) const
 {
+    if (!RuntimeEnabledFeatures::cspCheckEnabled())
+        return true;
     return reportingStatus == ContentSecurityPolicy::SendReport ? checkAncestorsAndReportViolation(m_frameAncestors.get(), frame, url) : checkAncestors(m_frameAncestors.get(), frame);
 }
 
 bool CSPDirectiveList::allowScriptNonce(const String& nonce) const
 {
+    if (!RuntimeEnabledFeatures::cspCheckEnabled())
+        return true;
     return checkNonce(operativeDirective(m_scriptSrc.get()), nonce);
 }
 
 bool CSPDirectiveList::allowStyleNonce(const String& nonce) const
 {
+    if (!RuntimeEnabledFeatures::cspCheckEnabled())
+        return true;
     return checkNonce(operativeDirective(m_styleSrc.get()), nonce);
 }
 
@@ -414,6 +418,8 @@ bool CSPDirectiveList::allowScriptHash(const CSPHashValue& hashValue) const
 
 bool CSPDirectiveList::allowStyleHash(const CSPHashValue& hashValue) const
 {
+    if (!RuntimeEnabledFeatures::cspCheckEnabled())
+        return true;
     return checkHash(operativeDirective(m_styleSrc.get()), hashValue);
 }
 

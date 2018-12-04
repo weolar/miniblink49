@@ -1,6 +1,6 @@
 /* wolfmath.c
  *
- * Copyright (C) 2006-2016 wolfSSL Inc.
+ * Copyright (C) 2006-2017 wolfSSL Inc.
  *
  * This file is part of wolfSSL.
  *
@@ -235,20 +235,44 @@ void wc_bigint_free(WC_BIGINT* a)
     }
 }
 
-int wc_mp_to_bigint(mp_int* src, WC_BIGINT* dst)
+/* sz: make sure the buffer is at least that size and zero padded.
+ *     A `sz == 0` will use the size of `src`.
+ *     The calulcates sz is stored into dst->len in `wc_bigint_alloc`.
+ */
+int wc_mp_to_bigint_sz(mp_int* src, WC_BIGINT* dst, word32 sz)
 {
     int err;
-    word32 sz;
+    word32 x, y;
 
     if (src == NULL || dst == NULL)
         return BAD_FUNC_ARG;
 
-    sz = mp_unsigned_bin_size(src);
+    /* get size of source */
+    x = mp_unsigned_bin_size(src);
+    if (sz < x)
+        sz = x;
+
+    /* make sure destination is allocated and large enough */
     err = wc_bigint_alloc(dst, sz);
-    if (err == MP_OKAY)
-        err = mp_to_unsigned_bin(src, dst->buf);
+    if (err == MP_OKAY) {
+
+        /* leading zero pad */
+        y = sz - x;
+        XMEMSET(dst->buf, 0, y);
+
+        /* export src as unsigned bin to destination buf */
+        err = mp_to_unsigned_bin(src, dst->buf + y);
+    }
 
     return err;
+}
+
+int wc_mp_to_bigint(mp_int* src, WC_BIGINT* dst)
+{
+    if (src == NULL || dst == NULL)
+        return BAD_FUNC_ARG;
+
+    return wc_mp_to_bigint_sz(src, dst, 0);
 }
 
 int wc_bigint_to_mp(WC_BIGINT* src, mp_int* dst)

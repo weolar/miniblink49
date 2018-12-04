@@ -1,6 +1,6 @@
 /* fe_operations.c
  *
- * Copyright (C) 2006-2016 wolfSSL Inc.
+ * Copyright (C) 2006-2017 wolfSSL Inc.
  *
  * This file is part of wolfSSL.
  *
@@ -41,7 +41,9 @@
     #include <wolfcrypt/src/misc.c>
 #endif
 
-#ifdef CURVED25519_128BIT
+#ifdef CURVED25519_X64
+#include "fe_x25519_x64.i"
+#elif defined(CURVED25519_128BIT)
 #include "fe_x25519_128.i"
 #else
 
@@ -112,6 +114,16 @@ void fe_0(fe h)
   h[8] = 0;
   h[9] = 0;
 }
+
+
+#if ((defined(HAVE_CURVE25519) && !defined(CURVE25519_SMALL)) || \
+     (defined(HAVE_ED25519) && !defined(ED25519_SMALL))) && \
+    !defined(FREESCALE_LTC_ECC)
+/* to be Complementary to fe_low_mem.c */
+void fe_init()
+{
+}
+#endif
 
 #if defined(HAVE_CURVE25519) && !defined(CURVE25519_SMALL) && \
     !defined(FREESCALE_LTC_ECC)
@@ -482,38 +494,38 @@ void fe_tobytes(unsigned char *s,const fe h)
   Goal: Output h0+...+2^230 h9.
   */
 
-  s[0] = h0 >> 0;
-  s[1] = h0 >> 8;
-  s[2] = h0 >> 16;
-  s[3] = (h0 >> 24) | (h1 << 2);
-  s[4] = h1 >> 6;
-  s[5] = h1 >> 14;
-  s[6] = (h1 >> 22) | (h2 << 3);
-  s[7] = h2 >> 5;
-  s[8] = h2 >> 13;
-  s[9] = (h2 >> 21) | (h3 << 5);
-  s[10] = h3 >> 3;
-  s[11] = h3 >> 11;
-  s[12] = (h3 >> 19) | (h4 << 6);
-  s[13] = h4 >> 2;
-  s[14] = h4 >> 10;
-  s[15] = h4 >> 18;
-  s[16] = h5 >> 0;
-  s[17] = h5 >> 8;
-  s[18] = h5 >> 16;
-  s[19] = (h5 >> 24) | (h6 << 1);
-  s[20] = h6 >> 7;
-  s[21] = h6 >> 15;
-  s[22] = (h6 >> 23) | (h7 << 3);
-  s[23] = h7 >> 5;
-  s[24] = h7 >> 13;
-  s[25] = (h7 >> 21) | (h8 << 4);
-  s[26] = h8 >> 4;
-  s[27] = h8 >> 12;
-  s[28] = (h8 >> 20) | (h9 << 6);
-  s[29] = h9 >> 2;
-  s[30] = h9 >> 10;
-  s[31] = h9 >> 18;
+  s[0] = (byte)(h0 >> 0);
+  s[1] = (byte)(h0 >> 8);
+  s[2] = (byte)(h0 >> 16);
+  s[3] = (byte)((h0 >> 24) | (h1 << 2));
+  s[4] = (byte)(h1 >> 6);
+  s[5] = (byte)(h1 >> 14);
+  s[6] = (byte)((h1 >> 22) | (h2 << 3));
+  s[7] = (byte)(h2 >> 5);
+  s[8] = (byte)(h2 >> 13);
+  s[9] = (byte)((h2 >> 21) | (h3 << 5));
+  s[10] = (byte)(h3 >> 3);
+  s[11] = (byte)(h3 >> 11);
+  s[12] = (byte)((h3 >> 19) | (h4 << 6));
+  s[13] = (byte)(h4 >> 2);
+  s[14] = (byte)(h4 >> 10);
+  s[15] = (byte)(h4 >> 18);
+  s[16] = (byte)(h5 >> 0);
+  s[17] = (byte)(h5 >> 8);
+  s[18] = (byte)(h5 >> 16);
+  s[19] = (byte)((h5 >> 24) | (h6 << 1));
+  s[20] = (byte)(h6 >> 7);
+  s[21] = (byte)(h6 >> 15);
+  s[22] = (byte)((h6 >> 23) | (h7 << 3));
+  s[23] = (byte)(h7 >> 5);
+  s[24] = (byte)(h7 >> 13);
+  s[25] = (byte)((h7 >> 21) | (h8 << 4));
+  s[26] = (byte)(h8 >> 4);
+  s[27] = (byte)(h8 >> 12);
+  s[28] = (byte)((h8 >> 20) | (h9 << 6));
+  s[29] = (byte)(h9 >> 2);
+  s[30] = (byte)(h9 >> 10);
+  s[31] = (byte)(h9 >> 18);
 }
 
 

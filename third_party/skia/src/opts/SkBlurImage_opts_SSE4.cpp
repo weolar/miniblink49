@@ -14,7 +14,7 @@
  * SSE4 functions and enable the caller to determine SSE4 support.  However for
  * compilers that do not support SSE4x we provide a stub implementation.
  */
-#if SK_CPU_SSE_LEVEL >= SK_CPU_SSE_LEVEL_SSE41
+#if 1 // SK_CPU_SSE_LEVEL >= SK_CPU_SSE_LEVEL_SSE41
 
 #include <smmintrin.h>
 

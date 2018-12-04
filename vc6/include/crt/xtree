@@ -325,29 +325,28 @@ public:
     {
         return (key_compare);
     }
-    _Pairib insert(const value_type& _V)
-    {
+    
+    _Pairib insert(value_type&& _V) {
         _Nodeptr _X = _Root();
         _Nodeptr _Y = _Head;
         bool _Ans = true;
-        while (_X != _Nil)
-        {
+        while (_X != _Nil) {
             _Y = _X;
             _Ans = key_compare(_Kfn()(_V), _Key(_X));
             _X = _Ans ? _Left(_X) : _Right(_X);
         }
         if (_Multi)
-            return (_Pairib(_Insert(_X, _Y, _V), true));
+            return (_Pairib(_Insert(_X, _Y, forward<_Ty>(_V)), true));
         iterator _P = iterator(_Y);
         if (!_Ans)
             ;
         else if (_P == begin())
-            return (_Pairib(_Insert(_X, _Y, _V), true));
+            return (_Pairib(_Insert(_X, _Y, forward<_Ty>(_V)), true));
         else
             --_P;
         if (key_compare(_Key(_P._Mynode()), _Kfn()(_V)))
-            return (_Pairib(_Insert(_X, _Y, _V), true));
-        return (_Pairib(_P, false));
+            return (_Pairib(_Insert(_X, _Y, forward<_Ty>(_V)), true));
+        return (_Pairib(move(_P), false));
     }
     iterator insert(iterator _P, const value_type& _V)
     {
@@ -356,12 +355,12 @@ public:
         else if (_P == begin())
         {
             if (key_compare(_Kfn()(_V), _Key(_P._Mynode())))
-                return (_Insert(_Head, _P._Mynode(), _V));
+                return (_Insert(_Head, _P._Mynode(), value_type(_V)));
         }
         else if (_P == end())
         {
             if (key_compare(_Key(_Rmost()), _Kfn()(_V)))
-                return (_Insert(_Nil, _Rmost(), _V));
+                return (_Insert(_Nil, _Rmost(), value_type(_V)));
         }
         else
         {
@@ -370,12 +369,12 @@ public:
                 && key_compare(_Kfn()(_V), _Key(_P._Mynode())))
             {
                 if (_Right(_Pb._Mynode()) == _Nil)
-                    return (_Insert(_Nil, _Pb._Mynode(), _V));
+                    return (_Insert(_Nil, _Pb._Mynode(), value_type(_V)));
                 else
-                    return (_Insert(_Head, _P._Mynode(), _V));
+                    return (_Insert(_Head, _P._Mynode(), value_type(_V)));
             }
         }
-        return (insert(_V).first);
+        return (insert(value_type(_V)).first);
     }
     void insert(iterator _F, iterator _L)
     {
@@ -641,7 +640,7 @@ protected:
             if (_R == _X)
                 _R = _Y;
             _Right(_Y) = _Copy(_Right(_X), _Y);
-            _Consval(&_Value(_Y), _Value(_X));
+            _Consval(&_Value(_Y), forward<_Ty>( _Value(_X)));
             _Left(_P) = _Y;
             _P = _Y;
         }
@@ -680,14 +679,14 @@ protected:
         _Head = _Buynode(_Nil, _Red), _Size = 0;
         _Lmost() = _Head, _Rmost() = _Head;
     }
-    iterator _Insert(_Nodeptr _X, _Nodeptr _Y, const _Ty& _V)
+    iterator _Insert(_Nodeptr _X, _Nodeptr _Y, _Ty&& _V)
     {
         _Nodeptr _Z = _Buynode(_Y, _Red);
         _Left(_Z) = _Nil, _Right(_Z) = _Nil;
-        _Consval(&_Value(_Z), _V);
+        _Consval(&_Value(_Z), forward<_Ty>(_V));
         ++_Size;
         if (_Y == _Head || _X != _Nil
-            || key_compare(_Kfn()(_V), _Key(_Y)))
+            || key_compare(_Kfn()(move(_V)), _Key(_Y)))
         {
             _Left(_Y) = _Z;
             if (_Y == _Head)
@@ -854,9 +853,9 @@ protected:
         _Color(_S) = _Carg;
         return (_S);
     }
-    void _Consval(_Tptr _P, const _Ty& _V)
+    void _Consval(_Tptr _P, _Ty&& _V)
     {
-        _Construct(&*_P, _V);
+        _Construct(&*_P, forward<_Ty>(_V));
     }
     void _Destval(_Tptr _P)
     {

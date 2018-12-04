@@ -29,10 +29,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#ifndef MINIBLINK_NO_HARFBUZZ
 #include "config.h"
 #include "platform/fonts/shaping/HarfBuzzShaper.h"
 
-#include "hb.h"
+#include "third_party/harfbuzz-ng/src/hb.h"
 #include "platform/LayoutUnit.h"
 #include "platform/RuntimeEnabledFeatures.h"
 #include "platform/fonts/Character.h"
@@ -44,13 +45,14 @@
 #include "wtf/Compiler.h"
 #include "wtf/MathExtras.h"
 #include "wtf/text/Unicode.h"
+#include "wtf/ASCIICType.h"
 
 #include <list>
 #include <map>
 #include <string>
-#include <unicode/normlzr.h>
-#include <unicode/uchar.h>
-#include <unicode/uscript.h>
+// #include <unicode/normlzr.h>
+// #include <unicode/uchar.h>
+// #include <unicode/uscript.h>
 
 namespace blink {
 
@@ -71,6 +73,8 @@ struct ShapeResult::RunInfo {
         m_glyphData.resize(m_numGlyphs);
     }
 
+    bool rtl() const { return HB_DIRECTION_IS_BACKWARD(m_direction); }
+    float xPositionForVisualOffset(unsigned offset) const;
     float xPositionForOffset(unsigned) const;
     int characterIndexForXPosition(float) const;
     void setGlyphAndPositions(unsigned index, uint16_t glyphId, float advance,
@@ -95,6 +99,14 @@ struct ShapeResult::RunInfo {
     unsigned m_numGlyphs;
     float m_width;
 };
+
+float ShapeResult::RunInfo::xPositionForVisualOffset(unsigned offset) const
+{
+    ASSERT(offset < m_numCharacters);
+    if (rtl())
+        offset = m_numCharacters - offset - 1;
+    return xPositionForOffset(offset);
+}
 
 float ShapeResult::RunInfo::xPositionForOffset(unsigned offset) const
 {
@@ -277,8 +289,8 @@ float ShapeResult::fillGlyphBufferForTextEmphasisRun(GlyphBuffer* glyphBuffer,
     // then linearly split the sum of corresponding glyph advances by the number of
     // grapheme clusters in order to find positions for emphasis mark drawing.
     uint16_t clusterStart = direction == RTL
-        ? run->m_startIndex + run->m_numCharacters + runOffset
-        : run->glyphToCharacterIndex(0) + runOffset;
+        ? (uint16_t)(run->m_startIndex + run->m_numCharacters + runOffset)
+        : (uint16_t)(run->glyphToCharacterIndex(0) + runOffset);
 
     float advanceSoFar = initialAdvance;
     unsigned numGlyphs = run->m_numGlyphs;
@@ -307,7 +319,7 @@ float ShapeResult::fillGlyphBufferForTextEmphasisRun(GlyphBuffer* glyphBuffer,
             if (direction == RTL)
                 clusterEnd = currentCharacterIndex;
             else
-                clusterEnd = isRunEnd ? run->m_startIndex + run->m_numCharacters + runOffset : run->glyphToCharacterIndex(i + 1) + runOffset;
+                clusterEnd = (uint16_t)(isRunEnd ? run->m_startIndex + run->m_numCharacters + runOffset : run->glyphToCharacterIndex(i + 1) + runOffset);
 
             graphemesInCluster = countGraphemesInCluster(textRun.characters16(), textRun.charactersLength(), clusterStart, clusterEnd);
             if (!graphemesInCluster || !clusterAdvance)
@@ -401,24 +413,32 @@ FloatRect ShapeResult::selectionRect(Vector<RefPtr<ShapeResult>>& results,
     int from = absoluteFrom;
     int to = absoluteTo;
 
-    unsigned wordOffset = 0;
+    unsigned totalNumCharacters = 0;
     for (unsigned j = 0; j < results.size(); j++) {
         RefPtr<ShapeResult> result = results[j];
+        if (direction == RTL) {
+            // Convert logical offsets to visual offsets, because results are in
+            // logical order while runs are in visual order.
+            if (!foundFromX && from >= 0 && static_cast<unsigned>(from) < result->numCharacters())
+                from = result->numCharacters() - from - 1;
+            if (!foundToX && to >= 0 && static_cast<unsigned>(to) < result->numCharacters())
+                to = result->numCharacters() - to - 1;
+            currentX -= result->width();
+        }
         for (unsigned i = 0; i < result->m_runs.size(); i++) {
             if (!result->m_runs[i])
                 continue;
-            if (direction == RTL)
-                currentX -= result->m_runs[i]->m_width;
+            ASSERT((direction == RTL) == result->m_runs[i]->rtl());
             int numCharacters = result->m_runs[i]->m_numCharacters;
             if (!foundFromX && from >= 0 && from < numCharacters) {
-                fromX = result->m_runs[i]->xPositionForOffset(from) + currentX;
+                fromX = result->m_runs[i]->xPositionForVisualOffset(from) + currentX;
                 foundFromX = true;
             } else {
                 from -= numCharacters;
             }
 
             if (!foundToX && to >= 0 && to < numCharacters) {
-                toX = result->m_runs[i]->xPositionForOffset(to) + currentX;
+                toX = result->m_runs[i]->xPositionForVisualOffset(to) + currentX;
                 foundToX = true;
             } else {
                 to -= numCharacters;
@@ -426,13 +446,22 @@ FloatRect ShapeResult::selectionRect(Vector<RefPtr<ShapeResult>>& results,
 
             if (foundFromX && foundToX)
                 break;
-            if (direction != RTL)
-                currentX += result->m_runs[i]->m_width;
+            currentX += result->m_runs[i]->m_width;
         }
-        wordOffset += result->numCharacters();
+        if (direction == RTL)
+            currentX -= result->width();
+        totalNumCharacters += result->numCharacters();
     }
 
     // The position in question might be just after the text.
+    if (!foundFromX && absoluteFrom == totalNumCharacters) {
+        fromX = direction == RTL ? 0 : totalWidth;
+        foundFromX = true;
+    }
+    if (!foundToX && absoluteTo == totalNumCharacters) {
+        toX = direction == RTL ? 0 : totalWidth;
+        foundToX = true;
+    }
     if (!foundFromX)
         fromX = 0;
     if (!foundToX)
@@ -560,6 +589,17 @@ inline HarfBuzzShaper::HarfBuzzRun::HarfBuzzRun(const HarfBuzzRun& rhs)
 
 HarfBuzzShaper::HarfBuzzRun::~HarfBuzzRun()
 {
+}
+
+#define U16_APPEND(s, i, capacity, c, isError) { \
+    if((uint32_t)(c)<=0xffff) { \
+        (s)[(i)++]=(uint16_t)(c); \
+    } else if((uint32_t)(c)<=0x10ffff && (i)+1<(capacity)) { \
+        (s)[(i)++]=(uint16_t)(((c)>>10)+0xd7c0); \
+        (s)[(i)++]=(uint16_t)(((c)&0x3ff)|0xdc00); \
+    } else /* c>0x10ffff or not enough space */ { \
+        (isError)=TRUE; \
+    } \
 }
 
 static void normalizeCharacters(const TextRun& run, unsigned length, UChar* destination, unsigned* destinationLength)
@@ -766,6 +806,34 @@ struct CandidateRun {
     UScriptCode script;
 };
 
+static const int32_t countPropsVectors = 5520;
+static const int32_t propsVectorsColumns = 3;
+
+#define UPROPS_SCRIPT_MASK 0x000000ff
+#define UPROPS_SCRIPT_X_MASK 0x00c000ff
+#define UPROPS_SCRIPT_X_WITH_COMMON 0x400000
+#define UPROPS_SCRIPT_X_WITH_INHERITED 0x800000
+#define UPROPS_SCRIPT_X_WITH_OTHER 0xc00000
+#define U_FAILURE(x) ((x)>U_ZERO_ERROR)
+
+UScriptCode uscript_getScript(UChar32 c, UErrorCode *pErrorCode)
+{
+    if (pErrorCode == NULL || U_FAILURE(*pErrorCode))
+        return USCRIPT_INVALID_CODE;
+    
+    if ((uint32_t)c > 0x10ffff) {
+        *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
+        return USCRIPT_INVALID_CODE;
+    }
+
+    return USCRIPT_COMMON;
+}
+
+UBool uscript_hasScript(UChar32 c, UScriptCode sc)
+{
+    return false;
+}
+
 static inline bool collectCandidateRuns(const UChar* normalizedBuffer,
     size_t bufferLength, const Font* font, Vector<CandidateRun>* runs, bool isSpaceNormalize)
 {
@@ -873,6 +941,25 @@ static inline void resolveRunBasedOnScriptValue(Vector<CandidateRun>& runs,
     }
 }
 
+int32_t uscript_getScriptExtensions(UChar32 c, UScriptCode *scripts, int32_t capacity, UErrorCode *pErrorCode)
+{
+    uint32_t scriptX = 25;
+    if (pErrorCode == NULL || U_FAILURE(*pErrorCode))
+        return 0;
+    
+    if (capacity < 0 || (capacity>0 && scripts == NULL)) {
+        *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
+        return 0;
+    }
+
+    if (capacity == 0) {
+        *pErrorCode = U_BUFFER_OVERFLOW_ERROR;
+    } else {
+        scripts[0] = (UScriptCode)scriptX;
+    }
+    return 1;
+}
+
 static inline bool resolveCandidateRuns(Vector<CandidateRun>& runs)
 {
     UScriptCode scriptExtensions[USCRIPT_CODE_LIMIT];
@@ -886,16 +973,12 @@ static inline bool resolveCandidateRuns(Vector<CandidateRun>& runs)
         if (run.script == USCRIPT_INHERITED)
             run.script = i > 0 ? runs[i - 1].script : USCRIPT_COMMON;
 
-        int extensionsLength = uscript_getScriptExtensions(run.character,
-            scriptExtensions, sizeof(scriptExtensions) / sizeof(scriptExtensions[0]),
-            &errorCode);
+        int extensionsLength = uscript_getScriptExtensions(run.character, scriptExtensions, sizeof(scriptExtensions) / sizeof(scriptExtensions[0]), &errorCode);
         if (U_FAILURE(errorCode))
             return false;
 
-        resolveRunBasedOnScriptExtensions(runs, run, i, length,
-            scriptExtensions, extensionsLength, nextResolvedRun);
-        resolveRunBasedOnScriptValue(runs, run, i, length,
-            nextResolvedRun);
+        resolveRunBasedOnScriptExtensions(runs, run, i, length, scriptExtensions, extensionsLength, nextResolvedRun);
+        resolveRunBasedOnScriptValue(runs, run, i, length, nextResolvedRun);
         for (size_t j = i; j < nextResolvedRun; j++)
             runs[j].script = runs[nextResolvedRun].script;
 
@@ -918,6 +1001,7 @@ bool HarfBuzzShaper::createHarfBuzzRunsForSingleCharacter()
     if (U_FAILURE(errorCode))
         return false;
     addHarfBuzzRun(0, 1, fontData, script);
+
     return true;
 }
 
@@ -927,8 +1011,7 @@ bool HarfBuzzShaper::createHarfBuzzRuns()
         return createHarfBuzzRunsForSingleCharacter();
 
     Vector<CandidateRun> candidateRuns;
-    if (!collectCandidateRuns(m_normalizedBuffer.get(),
-        m_normalizedBufferLength, m_font, &candidateRuns, m_textRun.normalizeSpace()))
+    if (!collectCandidateRuns(m_normalizedBuffer.get(), m_normalizedBufferLength, m_font, &candidateRuns, m_textRun.normalizeSpace()))
         return false;
 
     if (!resolveCandidateRuns(candidateRuns))
@@ -949,6 +1032,13 @@ bool HarfBuzzShaper::createHarfBuzzRuns()
     return !m_harfBuzzRuns.isEmpty();
 }
 
+const char* uscript_getShortName(UScriptCode scriptCode)
+{
+    if (USCRIPT_LATIN == scriptCode)
+        return "Latn";
+    return "Zyyy";
+}
+
 // A port of hb_icu_script_to_script because harfbuzz on CrOS is built
 // without hb-icu. See http://crbug.com/356929
 static inline hb_script_t ICUScriptToHBScript(UScriptCode script)
@@ -957,6 +1047,7 @@ static inline hb_script_t ICUScriptToHBScript(UScriptCode script)
         return HB_SCRIPT_INVALID;
 
     return hb_script_from_string(uscript_getShortName(script), -1);
+    return HB_SCRIPT_INVALID;
 }
 
 static inline hb_direction_t TextDirectionToHBDirection(TextDirection dir, FontOrientation orientation, const SimpleFontData* fontData)
@@ -992,12 +1083,9 @@ static inline void addToHarfBuzzBufferInternal(hb_buffer_t* buffer,
     const FontDescription& fontDescription, const UChar* normalizedBuffer,
     unsigned startIndex, unsigned numCharacters)
 {
-    if (fontDescription.variant() == FontVariantSmallCaps
-        && u_islower(normalizedBuffer[startIndex])) {
-        String upperText = String(normalizedBuffer + startIndex, numCharacters)
-            .upper();
-        // TextRun is 16 bit, therefore upperText is 16 bit, even after we call
-        // makeUpper().
+    if (fontDescription.variant() == FontVariantSmallCaps &&  isASCIILower(normalizedBuffer[startIndex])) {
+        String upperText = String(normalizedBuffer + startIndex, numCharacters).upper();
+        // TextRun is 16 bit, therefore upperText is 16 bit, even after we call makeUpper().
         ASSERT(!upperText.is8Bit());
         hb_buffer_add_utf16(buffer, toUint16(upperText.characters16()),
             numCharacters, 0, numCharacters);
@@ -1187,3 +1275,5 @@ float HarfBuzzShaper::adjustSpacing(ShapeResult::RunInfo* run, size_t glyphIndex
 }
 
 } // namespace blink
+
+#endif

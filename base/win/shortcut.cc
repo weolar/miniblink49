@@ -4,18 +4,13 @@
 
 #include "base/win/shortcut.h"
 
-#include <shellapi.h>
-#include <shlobj.h>
-#include <propkey.h>
-
-//#include "base/files/file_util.h"
-//#include "base/threading/thread_restrictions.h"
 #include "base/win/scoped_comptr.h"
 #include "base/win/scoped_propvariant.h"
-//#include "base/win/win_util.h"
 #include "base/win/windows_version.h"
+
 #include <shlwapi.h>
-#include <propkey.h>
+#include <shellapi.h>
+#include <shlobj.h>
 
 namespace base {
 namespace win {
@@ -248,31 +243,31 @@ bool ResolveShortcutProperties(const FilePath& shortcut_path,
   }
 
   // Windows 7+ options, avoiding unnecessary work.
-  if ((options & ShortcutProperties::PROPERTIES_WIN7) &&
-      GetVersion() >= VERSION_WIN7) {
-    ScopedComPtr<IPropertyStore> property_store;
-    if (FAILED(property_store.QueryFrom(i_shell_link.get())))
-      return false;
-
-    if (options & ShortcutProperties::PROPERTIES_APP_ID) {
-      ScopedPropVariant pv_app_id;
-      if (property_store->GetValue(PKEY_AppUserModel_ID,
-                                   pv_app_id.Receive()) != S_OK) {
-        return false;
-      }
-      switch (pv_app_id.get().vt) {
-        case VT_EMPTY:
-          properties->set_app_id(L"");
-          break;
-        case VT_LPWSTR:
-          properties->set_app_id(pv_app_id.get().pwszVal);
-          break;
-        default:
-          //NOTREACHED() << "Unexpected variant type: " << pv_app_id.get().vt;
-          DebugBreak();
-          return false;
-      }
-    }
+  if ((options & ShortcutProperties::PROPERTIES_WIN7) && GetVersion() >= VERSION_WIN7) {
+//     ScopedComPtr<IPropertyStore> property_store;
+//     if (FAILED(property_store.QueryFrom(i_shell_link.get())))
+//       return false;
+// 
+//     if (options & ShortcutProperties::PROPERTIES_APP_ID) {
+//       ScopedPropVariant pv_app_id;
+//       if (property_store->GetValue(PKEY_AppUserModel_ID,
+//                                    pv_app_id.Receive()) != S_OK) {
+//         return false;
+//       }
+//       switch (pv_app_id.get().vt) {
+//         case VT_EMPTY:
+//           properties->set_app_id(L"");
+//           break;
+//         case VT_LPWSTR:
+//           properties->set_app_id(pv_app_id.get().pwszVal);
+//           break;
+//         default:
+//           //NOTREACHED() << "Unexpected variant type: " << pv_app_id.get().vt;
+//           DebugBreak();
+//           return false;
+//       }
+//     }
+      DebugBreak();
 
     if (options & ShortcutProperties::PROPERTIES_DUAL_MODE) {
 //       ScopedPropVariant pv_dual_mode;

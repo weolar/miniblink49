@@ -452,6 +452,8 @@ bool ScriptController::canExecuteScripts(ReasonForCallingCanExecuteScripts reaso
 {
     // For performance reasons, we check isInPrivateScriptIsolateWorld() only if
     // canExecuteScripts is going to return false.
+    if (!blink::RuntimeEnabledFeatures::cspCheckEnabled())
+        return true;
 
     if (frame()->document() && frame()->document()->isSandboxed(SandboxScripts)) {
         if (isInPrivateScriptIsolateWorld(isolate()))

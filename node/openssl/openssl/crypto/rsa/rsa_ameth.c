@@ -93,7 +93,7 @@ static int rsa_pub_decode(EVP_PKEY *pkey, X509_PUBKEY *pubkey)
     const unsigned char *p;
     int pklen;
     RSA *rsa = NULL;
-    if (!X509_PUBKEY_get0_param(NULL, &p, &pklen, NULL, pubkey))
+    if (!openssl_X509_PUBKEY_get0_param(NULL, &p, &pklen, NULL, pubkey))
         return 0;
     if (!(rsa = d2i_RSAPublicKey(NULL, &p, pklen))) {
         RSAerr(RSA_F_RSA_PUB_DECODE, ERR_R_RSA_LIB);
@@ -545,7 +545,7 @@ static ASN1_STRING *rsa_ctx_to_pss(EVP_PKEY_CTX *pkctx)
         saltlen = EVP_MD_size(sigmd);
     else if (saltlen == -2) {
         saltlen = EVP_PKEY_size(pk) - EVP_MD_size(sigmd) - 2;
-        if (((EVP_PKEY_bits(pk) - 1) & 0x7) == 0)
+        if (((openssl_EVP_PKEY_bits(pk) - 1) & 0x7) == 0)
             saltlen--;
     }
     pss = RSA_PSS_PARAMS_new();

@@ -1,6 +1,6 @@
 /* chacha20_poly1305.h
  *
- * Copyright (C) 2006-2016 wolfSSL Inc.
+ * Copyright (C) 2006-2017 wolfSSL Inc.
  *
  * This file is part of wolfSSL.
  *
@@ -24,6 +24,10 @@
  * and Poly1305 for IETF protocols" (draft-irtf-cfrg-chacha20-poly1305-10):
  * https://tools.ietf.org/html/draft-irtf-cfrg-chacha20-poly1305-10
  */
+
+/*!
+    \file wolfssl/wolfcrypt/chacha20_poly1305.h
+*/
 
 #ifndef WOLF_CRYPT_CHACHA20_POLY1305_H
 #define WOLF_CRYPT_CHACHA20_POLY1305_H

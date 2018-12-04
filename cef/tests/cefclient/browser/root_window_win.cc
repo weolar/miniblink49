@@ -480,6 +480,9 @@ LRESULT CALLBACK RootWindowWin::EditWndProc(HWND hWnd, UINT message,
         }
         return 0;
       }
+      if (wParam == 1 && 0x1e0001 == lParam) {
+          ::PostMessage(hWnd, EM_SETSEL, 0, -1);
+      }
       break;
     case WM_NCDESTROY:
       // Clear the reference to |self|.

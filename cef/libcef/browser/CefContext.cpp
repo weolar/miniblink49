@@ -199,11 +199,11 @@ void CefContext::FinalizeShutdownOnWebkitThread() {
 
     CefV8IsolateDestroyed();
 
-    ASSERT(0 == m_browserList.size());
-    ::DeleteCriticalSection(&m_browserListMutex);
-
     content::BlinkPlatformImpl* platform = (content::BlinkPlatformImpl*)blink::Platform::current();
     platform->shutdown();
+
+    ASSERT(0 == m_browserList.size());
+    ::DeleteCriticalSection(&m_browserListMutex);
 
     m_webkitShutdown = true;
 }
@@ -276,7 +276,7 @@ void CefContext::RunMessageLoop() {
 //                 OutputDebugStringA(out);
 //                 free(out);
 //                 g_qpcFrequency = qpcFrequency;
-                ::Sleep(10);
+                ::Sleep(2);
             } while (INVALID_HANDLE_VALUE != msg.hwnd && NULL != msg.hwnd);
             
             if (NULL == msg.hwnd && !g_context->IsNeedHeartbeat()) {
@@ -284,8 +284,8 @@ void CefContext::RunMessageLoop() {
                 break;
             }
 
-            if (!msg.hwnd)
-                ::Sleep(10);
+//             if (!msg.hwnd)
+//                 ::Sleep(2);
         }
     }
 }

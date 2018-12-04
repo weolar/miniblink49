@@ -8,6 +8,7 @@
 #include "libcef/browser/ThreadUtil.h"
 #include "libcef/browser/CefContext.h"
 #include "libcef/common/CefTaskImpl.h"
+#include "libcef/common/GeometryUtil.h"
 #include "content/browser/WebPage.h"
 #include "third_party/WebKit/Source/wtf/Functional.h"
 #include "third_party/WebKit/Source/web/WebViewImpl.h"
@@ -53,23 +54,52 @@ LPCTSTR CefBrowserHostImpl::GetWndClass() {
 
 bool CefBrowserHostImpl::CreateHostWindow(const CefWindowInfo& windowInfo) {
     ASSERT(!m_webPage);
-    if (IsWindowless())
-        return true;
-    RegisterWindowClass();
-
     m_webPage = new content::WebPage(nullptr);
+    HWND hWnd = nullptr;
+    if (!IsWindowless()) {
+        RegisterWindowClass();
+        hWnd = ::CreateWindowW(GetWndClass(), L"mini cef", windowInfo.style,
+            windowInfo.x, windowInfo.y, windowInfo.width, windowInfo.height,
+            windowInfo.parent_window, NULL, ::GetModuleHandle(NULL), this);
+        if (!hWnd)
+            return false;
 
-    HWND hWnd = ::CreateWindowW(GetWndClass(), L"mini cef", windowInfo.style,
-        windowInfo.x, windowInfo.y, windowInfo.width, windowInfo.height,
-        windowInfo.parent_window, NULL, ::GetModuleHandle(NULL), this);
-    if (!hWnd)
-        return false;
+        ::UpdateWindow(hWnd);
+        ::SetTimer(hWnd, (UINT_PTR)this, 50, nullptr);
+    } else {
+        hWnd = windowInfo.parent_window;
+        m_webPage->init(hWnd);
 
-    ::UpdateWindow(hWnd);
-    ::SetTimer(hWnd, (UINT_PTR)this, 50, nullptr);
+        int width = windowInfo.width;
+        int height = windowInfo.height;
+        if (0 == width * height && m_client || m_client->GetRenderHandler().get()) {
+            CefRefPtr<CefRenderHandler> render = m_client->GetRenderHandler();
+            CefRect r;
+            if (render->GetScreenInfo(this, m_screenInfo)) {
+                width = cef::LogicalToDevice(m_screenInfo.rect.width, m_screenInfo.device_scale_factor);
+                height = cef::LogicalToDevice(m_screenInfo.rect.height, m_screenInfo.device_scale_factor);
+            }
+        }
+        m_webPage->fireResizeEvent(nullptr, WM_SIZE, 0, MAKELPARAM(width, height));
 
+        ::SetPropW(hWnd, L"CefBrowserHostImpl", this);
+        m_lpfnOldWndProc = (WNDPROC)::SetWindowLong(hWnd, GWL_WNDPROC, (DWORD)SubClassFunc);
+    }
     m_webPage->setBrowser(this);
     return true;
+}
+
+// windowlessÄ£Ê½ÓÃ
+LONG CefBrowserHostImpl::SubClassFunc(HWND hWnd, UINT Message, WPARAM wParam, LONG lParam) {
+    CefBrowserHostImpl* self = (CefBrowserHostImpl*)::GetPropW(hWnd, L"CefBrowserHostImpl");
+
+    if (Message == WM_CLOSE) {
+        self->WindowDestroyed();
+        if (!::IsWindow(hWnd))
+            return 0;
+    }
+
+    return ::CallWindowProcW(self->m_lpfnOldWndProc, hWnd, Message, wParam, lParam);
 }
 
 bool CefBrowserHostImpl::FireHeartbeat() {
@@ -85,25 +115,25 @@ void CefBrowserHostImpl::ClearNeedHeartbeat() {
 }
 
 LRESULT CALLBACK CefBrowserHostImpl::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
-    CefBrowserHostImpl* browserHostImpl = nullptr;
+    CefBrowserHostImpl* self = nullptr;
     if (message == WM_NCCREATE) {
         LPCREATESTRUCT lpcs = reinterpret_cast<LPCREATESTRUCT>(lParam);
-        browserHostImpl = static_cast<CefBrowserHostImpl*>(lpcs->lpCreateParams);
-        ::SetWindowLongPtr(hWnd, GWLP_USERDATA, reinterpret_cast<LPARAM>(browserHostImpl));
+        self = static_cast<CefBrowserHostImpl*>(lpcs->lpCreateParams);
+        ::SetWindowLongPtr(hWnd, GWLP_USERDATA, reinterpret_cast<LPARAM>(self));
 
-        browserHostImpl->m_webPage->init(hWnd);
+        self->m_webPage->init(hWnd);
     } else {
-        browserHostImpl = reinterpret_cast<CefBrowserHostImpl*>(::GetWindowLongPtr(hWnd, GWLP_USERDATA));
+        self = reinterpret_cast<CefBrowserHostImpl*>(::GetWindowLongPtr(hWnd, GWLP_USERDATA));
         // if( message == WM_NCDESTROY && webPage != NULL )
         //    return 0;
     }
-    if (!browserHostImpl)
+    if (!self)
         return ::DefWindowProc(hWnd, message, wParam, lParam);
 
     BOOL bHandle = TRUE;
     LRESULT lResult = 0;
 
-    browserHostImpl->m_webPage->fireTimerEvent();
+    self->m_webPage->fireTimerEvent();
 
     switch (message) {
     case WM_ERASEBKGND:
@@ -111,15 +141,15 @@ LRESULT CALLBACK CefBrowserHostImpl::WndProc(HWND hWnd, UINT message, WPARAM wPa
         break;
     case WM_PAINT:
         bHandle = TRUE;
-        browserHostImpl->m_webPage->firePaintEvent(hWnd, message, wParam, lParam);
+        self->m_webPage->firePaintEvent(hWnd, message, wParam, lParam);
         break;
 
     case WM_TIMER:
-        browserHostImpl->m_webPage->fireTimerEvent();
+        self->m_webPage->fireTimerEvent();
         break;
     //case WM_SIZING:
     case WM_SIZE:
-        browserHostImpl->m_webPage->fireResizeEvent(hWnd, message, wParam, lParam);
+        self->m_webPage->fireResizeEvent(hWnd, message, wParam, lParam);
         break;
     case WM_LBUTTONDOWN:
     case WM_MBUTTONDOWN:
@@ -130,35 +160,35 @@ LRESULT CALLBACK CefBrowserHostImpl::WndProc(HWND hWnd, UINT message, WPARAM wPa
     case WM_RBUTTONUP:
     case WM_MOUSEMOVE:
     case WM_MOUSELEAVE:
-        browserHostImpl->m_webPage->fireMouseEvent(hWnd, message, wParam, lParam, nullptr);
+        self->m_webPage->fireMouseEvent(hWnd, message, wParam, lParam, nullptr);
         break;
     case WM_SETCURSOR:
-        lResult = browserHostImpl->m_webPage->fireCursorEvent(hWnd, message, wParam, lParam, &bHandle);
+        lResult = self->m_webPage->fireCursorEvent(hWnd, message, wParam, lParam, &bHandle);
         if (bHandle)
             return lResult;
         break;
     case WM_MOUSEWHEEL:
-        lResult = browserHostImpl->m_webPage->fireWheelEvent(hWnd, message, wParam, lParam);
+        lResult = self->m_webPage->fireWheelEvent(hWnd, message, wParam, lParam);
         break;
     case WM_KEYDOWN:
-        bHandle = browserHostImpl->m_webPage->fireKeyDownEvent(hWnd, message, wParam, lParam);
+        bHandle = self->m_webPage->fireKeyDownEvent(hWnd, message, wParam, lParam);
         break;
     case WM_KEYUP:
-        bHandle = browserHostImpl->m_webPage->fireKeyUpEvent(hWnd, message, wParam, lParam);
+        bHandle = self->m_webPage->fireKeyUpEvent(hWnd, message, wParam, lParam);
         break;
     case WM_CHAR:
-        bHandle = browserHostImpl->m_webPage->fireKeyPressEvent(hWnd, message, wParam, lParam);
+        bHandle = self->m_webPage->fireKeyPressEvent(hWnd, message, wParam, lParam);
         break;
     case WM_SETFOCUS:
-        browserHostImpl->SendFocusEvent(true);
+        self->SendFocusEvent(true);
         break;
     case WM_KILLFOCUS:
-        browserHostImpl->SendFocusEvent(false);
+        self->SendFocusEvent(false);
         break;
     case WM_IME_STARTCOMPOSITION:{
-        if (!browserHostImpl->m_webPage)
+        if (!self->m_webPage)
             return 0;
-        blink::IntRect caret = browserHostImpl->m_webPage->caretRect();
+        blink::IntRect caret = self->m_webPage->caretRect();
         COMPOSITIONFORM COMPOSITIONFORM;
         COMPOSITIONFORM.dwStyle = CFS_POINT | CFS_FORCE_POSITION;
         COMPOSITIONFORM.ptCurrentPos.x = caret.x();
@@ -170,14 +200,14 @@ LRESULT CALLBACK CefBrowserHostImpl::WndProc(HWND hWnd, UINT message, WPARAM wPa
         return 0;
     }
         break;
-    case WM_DESTROY:
+    case WM_NCDESTROY:
         // Clear the user data pointer.
         ::SetWindowLongPtr(hWnd, GWLP_USERDATA, NULL);
         // Force the browser to be destroyed. This will result in a call to
         // BrowserDestroyed() that will release the reference added in
         // CreateHostWindow().
         bHandle = TRUE;
-        browserHostImpl->WindowDestroyed();
+        self->WindowDestroyed();
         break;
     default:
         bHandle = FALSE;
@@ -190,6 +220,92 @@ LRESULT CALLBACK CefBrowserHostImpl::WndProc(HWND hWnd, UINT message, WPARAM wPa
 }
 
 void CefBrowserHostImpl::CancelContextMenu() {
+}
+
+void CefBrowserHostImpl::SendKeyEvent(const CefKeyEvent& evt) {
+    if (!m_webPage)
+        return;
+
+    if (KEYEVENT_KEYDOWN == evt.type)
+        m_webPage->fireKeyDownEvent(m_webPage->getHWND(), WM_KEYDOWN, evt.windows_key_code, evt.native_key_code);
+    else if (KEYEVENT_KEYUP == evt.type)
+        m_webPage->fireKeyUpEvent(m_webPage->getHWND(), WM_KEYUP, evt.windows_key_code, evt.native_key_code);
+    else if (KEYEVENT_CHAR == evt.type)
+        m_webPage->fireKeyPressEvent(m_webPage->getHWND(), WM_CHAR, evt.windows_key_code, evt.native_key_code);
+}
+
+void CefBrowserHostImpl::SendMouseClickEvent(const CefMouseEvent& evt, MouseButtonType type, bool mouseUp, int clickCount) {
+    UINT message;
+    if (!mouseUp) {
+        if (MBT_LEFT == type) {
+            m_hasLMouseUp = false;
+            message = WM_LBUTTONDOWN;
+        } else if (MBT_MIDDLE == type) {
+            message = WM_MBUTTONDOWN;
+        } else if (MBT_RIGHT == type) {
+            m_hasRMouseUp = false;
+            message = WM_RBUTTONDOWN;
+        }
+    } else {
+        if (MBT_LEFT == type) {
+            m_hasLMouseUp = true;
+            message = WM_LBUTTONUP;
+        } else if (MBT_MIDDLE == type) {
+            message = WM_MBUTTONUP;
+        } else if (MBT_RIGHT == type) {
+            m_hasRMouseUp = true;
+            message = WM_RBUTTONUP;
+        }
+    }
+
+    if (!m_webPage)
+        return;
+
+    BOOL bHandle = FALSE;
+
+    int x = cef::LogicalToDevice(evt.x, m_screenInfo.device_scale_factor);
+    int y = cef::LogicalToDevice(evt.y, m_screenInfo.device_scale_factor);
+    m_webPage->fireMouseEvent(m_webPage->getHWND(), message, 0, MAKELPARAM(x, y), &bHandle);
+}
+
+void CefBrowserHostImpl::SendMouseMoveEvent(const CefMouseEvent& evt, bool mouseLeave) {
+    if (!m_webPage)
+        return;
+
+    BOOL bHandle = FALSE;
+
+    WPARAM wParam = 0;
+    if (!m_hasLMouseUp)
+        wParam |= MK_LBUTTON;
+    if (!m_hasRMouseUp)
+        wParam |= MK_RBUTTON;
+
+    int x = cef::LogicalToDevice(evt.x, m_screenInfo.device_scale_factor);
+    int y = cef::LogicalToDevice(evt.y, m_screenInfo.device_scale_factor);
+
+    m_webPage->fireMouseEvent(m_webPage->getHWND(), WM_MOUSEMOVE, wParam, MAKELPARAM(x, y), &bHandle);
+}
+
+void CefBrowserHostImpl::SendMouseWheelEvent(const CefMouseEvent& evt, int deltaX, int deltaY) {
+    if (!m_webPage)
+        return;
+
+    WPARAM wParam = 0;
+    if (evt.modifiers & EVENTFLAG_CONTROL_DOWN)
+        wParam |= MK_CONTROL;
+
+    if (evt.modifiers & EVENTFLAG_SHIFT_DOWN)
+        wParam |= MK_SHIFT;
+
+    int x = cef::LogicalToDevice(evt.x, m_screenInfo.device_scale_factor);
+    int y = cef::LogicalToDevice(evt.y, m_screenInfo.device_scale_factor);
+
+    int deviceDeltaY = cef::LogicalToDevice(deltaY, m_screenInfo.device_scale_factor);
+     
+    m_webPage->fireWheelEvent(m_webPage->getHWND(), WM_MOUSEWHEEL, MAKEWPARAM(wParam, deviceDeltaY), MAKELPARAM(x, y));
+}
+
+void CefBrowserHostImpl::SendCaptureLostEvent() {
 }
 
 void CefBrowserHostImpl::SendFocusEvent(bool setFocus) {

@@ -26,6 +26,7 @@ namespace DevToolsHostPartialV8Internal {
 
 static void isolatedFileSystemMethod(const v8::FunctionCallbackInfo<v8::Value>& info)
 {
+#ifdef MINIBLINK_NOT_IMPLEMENTED
     if (UNLIKELY(info.Length() < 2)) {
         V8ThrowException::throwException(createMinimumArityTypeErrorForMethod(info.GetIsolate(), "isolatedFileSystem", "DevToolsHost", 2, info.Length()), info.GetIsolate());
         return;
@@ -42,6 +43,8 @@ static void isolatedFileSystemMethod(const v8::FunctionCallbackInfo<v8::Value>& 
             return;
     }
     v8SetReturnValue(info, DevToolsHostFileSystem::isolatedFileSystem(*impl, fileSystemId, registeredName));
+#endif
+    DebugBreak();
 }
 
 static void isolatedFileSystemMethodCallback(const v8::FunctionCallbackInfo<v8::Value>& info)
@@ -53,6 +56,7 @@ static void isolatedFileSystemMethodCallback(const v8::FunctionCallbackInfo<v8::
 
 static void upgradeDraggedFileSystemPermissionsMethod(const v8::FunctionCallbackInfo<v8::Value>& info)
 {
+#ifdef MINIBLINK_NOT_IMPLEMENTED
     if (UNLIKELY(info.Length() < 1)) {
         V8ThrowException::throwException(createMinimumArityTypeErrorForMethod(info.GetIsolate(), "upgradeDraggedFileSystemPermissions", "DevToolsHost", 1, info.Length()), info.GetIsolate());
         return;
@@ -63,6 +67,8 @@ static void upgradeDraggedFileSystemPermissionsMethod(const v8::FunctionCallback
         domFileSystem = V8DOMFileSystem::toImplWithTypeCheck(info.GetIsolate(), info[0]);
     }
     DevToolsHostFileSystem::upgradeDraggedFileSystemPermissions(*impl, domFileSystem);
+#endif
+    DebugBreak();
 }
 
 static void upgradeDraggedFileSystemPermissionsMethodCallback(const v8::FunctionCallbackInfo<v8::Value>& info)

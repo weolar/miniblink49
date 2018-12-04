@@ -76,14 +76,19 @@ template <typename T> using remove_reference = std::remove_reference<T>;
 #define UNLIKELY(expr) __builtin_expect(!!(expr), 0)
 #define PRETTY_FUNCTION_NAME __PRETTY_FUNCTION__
 #else
+#ifndef LIKELY
 #define LIKELY(expr) expr
+#endif
+#ifndef UNLIKELY
 #define UNLIKELY(expr) expr
+#endif
 #define PRETTY_FUNCTION_NAME ""
 #endif
 
 #define STRINGIFY_(x) #x
 #define STRINGIFY(x) STRINGIFY_(x)
 
+#ifndef CHECK
 #define CHECK(expr)                                                           \
   do {                                                                        \
     if (UNLIKELY(!(expr))) {                                                  \
@@ -92,6 +97,7 @@ template <typename T> using remove_reference = std::remove_reference<T>;
       node::Assert(&args);                                                    \
     }                                                                         \
   } while (0)
+#endif
 
 // FIXME(bnoordhuis) cctests don't link in node::Abort() and node::Assert().
 #ifdef GTEST_DONT_DEFINE_ASSERT_EQ

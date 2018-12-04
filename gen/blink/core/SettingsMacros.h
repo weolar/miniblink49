@@ -254,7 +254,9 @@
     void setWideViewportQuirkEnabled(bool wideViewportQuirkEnabled); \
     bool xssAuditorEnabled() const { return m_xssAuditorEnabled; } \
     void setXSSAuditorEnabled(bool xssAuditorEnabled); \
-    void setFromStrings(const String& name, const String& value);
+    void setFromStrings(const String& name, const String& value); \
+    void setLanguage(const String& language); \
+    const String& language()  const { return m_language; } \
 // End of SETTINGS_GETTERS_AND_SETTERS.
 
 #define SETTINGS_MEMBER_VARIABLES \
@@ -382,6 +384,7 @@
     bool m_webSecurityEnabled : 1; \
     bool m_wideViewportQuirkEnabled : 1; \
     bool m_xssAuditorEnabled : 1; \
+    String m_language;
 // End of SETTINGS_MEMBER_VARIABLES.
 
 #define SETTINGS_INITIALIZER_LIST \
@@ -500,6 +503,7 @@
     , m_webSecurityEnabled(true) \
     , m_wideViewportQuirkEnabled(false) \
     , m_xssAuditorEnabled(false) \
+    , m_language("zh-cn") \
 // End of SETTINGS_INITIALIZER_LIST.
 
 #define SETTINGS_SETTER_BODIES \
@@ -2019,7 +2023,13 @@ void Settings::setFromStrings(const String& name, const String& value) \
         ); \
         return; \
     } \
-}
+} \
+void Settings::setLanguage(const String& language) \
+{ \
+    if (m_language == language) \
+        return; \
+    m_language = language; \
+} \
 // End of SETTINGS_SETTER_BODIES.
 
 #endif // SettingsMacros_h

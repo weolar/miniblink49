@@ -1,6 +1,6 @@
 /* random.h
  *
- * Copyright (C) 2006-2016 wolfSSL Inc.
+ * Copyright (C) 2006-2017 wolfSSL Inc.
  *
  * This file is part of wolfSSL.
  *
@@ -18,6 +18,10 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1335, USA
  */
+
+/*!
+    \file wolfssl/wolfcrypt/random.h
+*/
 
 
 
@@ -50,7 +54,7 @@
 #endif
 
 
-#if defined(CUSTOM_RAND_GENERATE) && !defined(CUSTOM_RAND_TYPE)
+#if !defined(CUSTOM_RAND_TYPE)
     /* To maintain compatibility the default is byte */
     #define CUSTOM_RAND_TYPE    byte
 #endif
@@ -132,11 +136,6 @@ typedef struct OS_Seed {
     #define WC_RNG_TYPE_DEFINED
 #endif
 
-#ifdef HAVE_HASHDRBG
-    /* Private DRBG state */
-    struct DRBG;
-#endif
-
 /* RNG context */
 struct WC_RNG {
     OS_Seed seed;
@@ -180,6 +179,8 @@ WOLFSSL_API int  wc_FreeRng(WC_RNG*);
 
 
 #ifdef HAVE_HASHDRBG
+    WOLFSSL_LOCAL int wc_RNG_DRBG_Reseed(WC_RNG* rng, const byte* entropy,
+                                        word32 entropySz);
     WOLFSSL_API int wc_RNG_HealthTest(int reseed,
                                         const byte* entropyA, word32 entropyASz,
                                         const byte* entropyB, word32 entropyBSz,

@@ -1,6 +1,6 @@
 /* wolfevent.h
  *
- * Copyright (C) 2006-2016 wolfSSL Inc.
+ * Copyright (C) 2006-2017 wolfSSL Inc.
  *
  * This file is part of wolfSSL.
  *
@@ -28,9 +28,6 @@
 
 #ifndef SINGLE_THREADED
     #include <wolfssl/wolfcrypt/wc_port.h>
-#endif
-#ifdef HAVE_CAVIUM
-    #include <wolfssl/wolfcrypt/port/cavium/cavium_nitrox.h>
 #endif
 
 #ifndef WOLFSSL_WOLFSSL_TYPE_DEFINED
@@ -74,7 +71,10 @@ struct WOLF_EVENT {
 #endif
     } dev;
 #ifdef HAVE_CAVIUM
-    CavReqId            reqId;
+    word64              reqId;
+    #ifdef WOLFSSL_NITROX_DEBUG
+    word32              pendCount;
+    #endif
 #endif
 #ifndef WC_NO_ASYNC_THREADING
     pthread_t           threadId;

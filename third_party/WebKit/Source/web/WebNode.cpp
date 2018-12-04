@@ -200,6 +200,26 @@ bool WebNode::isTextNode() const
     return m_private->isTextNode();
 }
 
+bool WebNode::isDraggable() const
+{
+    LayoutObject* obj = m_private->layoutObject();
+    if (!obj)
+        return false;
+
+    Vector<AnnotatedRegionValue> regions;
+    obj->addAnnotatedRegions(regions);
+
+    for (size_t i = 0; i < regions.size(); ++i) {
+        AnnotatedRegionValue& region = regions[i];
+        if (!region.draggable)
+            continue;
+        if (region.bounds.isEmpty())
+            continue;
+        return true;
+    }
+    return false;
+}
+
 bool WebNode::isFocusable() const
 {
     if (!m_private->isElementNode())

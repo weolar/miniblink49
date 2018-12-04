@@ -106,9 +106,9 @@ static int dh_pub_decode(EVP_PKEY *pkey, X509_PUBKEY *pubkey)
 
     DH *dh = NULL;
 
-    if (!X509_PUBKEY_get0_param(NULL, &p, &pklen, &palg, pubkey))
+    if (!openssl_X509_PUBKEY_get0_param(NULL, &p, &pklen, &palg, pubkey))
         return 0;
-    X509_ALGOR_get0(NULL, &ptype, &pval, palg);
+    openssl_X509_ALGOR_get0(NULL, &ptype, &pval, palg);
 
     if (ptype != V_ASN1_SEQUENCE) {
         DHerr(DH_F_DH_PUB_DECODE, DH_R_PARAMETER_ENCODING_ERROR);
@@ -218,7 +218,7 @@ static int dh_priv_decode(EVP_PKEY *pkey, PKCS8_PRIV_KEY_INFO *p8)
     if (!PKCS8_pkey_get0(NULL, &p, &pklen, &palg, p8))
         return 0;
 
-    X509_ALGOR_get0(NULL, &ptype, &pval, palg);
+    openssl_X509_ALGOR_get0(NULL, &ptype, &pval, palg);
 
     if (ptype != V_ASN1_SEQUENCE)
         goto decerr;
@@ -663,7 +663,7 @@ static int dh_cms_set_peerkey(EVP_PKEY_CTX *pctx,
     const unsigned char *p;
     int plen;
 
-    X509_ALGOR_get0(&aoid, &atype, &aval, alg);
+    openssl_X509_ALGOR_get0(&aoid, &atype, &aval, alg);
     if (OBJ_obj2nid(aoid) != NID_dhpublicnumber)
         goto err;
     /* Only absent parameters allowed in RFC XXXX */
@@ -843,7 +843,7 @@ static int dh_cms_encrypt(CMS_RecipientInfo *ri)
     if (!CMS_RecipientInfo_kari_get0_orig_id(ri, &talg, &pubkey,
                                              NULL, NULL, NULL))
         goto err;
-    X509_ALGOR_get0(&aoid, NULL, NULL, talg);
+    openssl_X509_ALGOR_get0(&aoid, NULL, NULL, talg);
     /* Is everything uninitialised? */
     if (aoid == OBJ_nid2obj(NID_undef)) {
         ASN1_INTEGER *pubk;

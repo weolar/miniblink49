@@ -123,6 +123,7 @@ private:
     WTF::Mutex m_mutexReceive;
     Deque<OwnPtr<SocketData>> m_sendData;
     Deque<OwnPtr<SocketData>> m_receiveData;
+    int m_readDataTaskCount;
 };
 
 } // namespace net

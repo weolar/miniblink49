@@ -62,6 +62,13 @@ double pow(double base, int exp);
 double pow(double base, double exp);
 
 __int64 abs(__int64 val);
+unsigned __int64 abs(unsigned __int64 val);
+int abs(int val);
+unsigned int abs(unsigned int val);
+double abs(double val);
+float abs(float val);
+
+__int64 abs(__int64 val);
 double fabs(double val);
 double floor(double x);
 float ceil(float x);

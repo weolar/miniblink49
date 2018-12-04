@@ -866,8 +866,38 @@ DoubleSize DeprecatedPaintLayerScrollableArea::clampScrollOffset(const DoubleSiz
     int maxX = scrollWidth() - box().pixelSnappedClientWidth();
     int maxY = scrollHeight() - box().pixelSnappedClientHeight();
 
+    int scrollOffsetHeight = (int)(scrollOffset.height());
+
+//     char* output = (char*)malloc(0x300);
+//     sprintf_s(output, 0x299, "ScrollOffset: %p, %p"
+//         "scrollOffset:%d, scrollHeight:%d ClientHeight:%d, maxY:%d frameRectHeight:%d borderTop:%d borderBottom:%d, horizontalScrollbarHeight:%d\n", this, &box(),
+//         scrollOffsetHeight,
+//         scrollHeight().toInt(), box().pixelSnappedClientHeight(),
+//         maxY,
+//         box().frameRect().height().toInt(),
+//         box().borderTop(),
+//         box().borderBottom(),
+//         box().horizontalScrollbarHeight());
+//     if (scrollOffsetHeight != 0) {
+//         g_tesBox = &box();
+//         OutputDebugStringA(output);
+//     }
+//     free(output);
+    //////////////////////////////////////////////////////////////////////////
+    IntSize contentSize;
+    IntSize visibleSize;
+    if (box().hasOverflowClip()) {
+        contentSize = IntSize(pixelSnappedScrollWidth(), pixelSnappedScrollHeight());
+        visibleSize = enclosingIntRect(box().overflowClipRect(LayoutPoint())).size();
+    }
+    IntPoint result = -scrollOrigin() + (contentSize - visibleSize);
+    maxX = result.x();
+    maxY = result.y();
+    //////////////////////////////////////////////////////////////////////////
+
     double x = std::max(std::min(scrollOffset.width(), static_cast<double>(maxX)), 0.0);
     double y = std::max(std::min(scrollOffset.height(), static_cast<double>(maxY)), 0.0);
+
     return DoubleSize(x, y);
 }
 

@@ -1,6 +1,6 @@
 /* blake2.h
  *
- * Copyright (C) 2006-2016 wolfSSL Inc.
+ * Copyright (C) 2006-2017 wolfSSL Inc.
  *
  * This file is part of wolfSSL.
  *
@@ -19,8 +19,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1335, USA
  */
 
-
-
+/*!
+    \file wolfssl/wolfcrypt/blake2.h
+*/
 
 #ifndef WOLF_CRYPT_BLAKE2_H
 #define WOLF_CRYPT_BLAKE2_H
@@ -45,7 +46,7 @@
 
 /* in bytes, variable digest size up to 512 bits (64 bytes) */
 enum {
-    BLAKE2B_ID  = 7,   /* hash type unique */
+    BLAKE2B_ID  = WC_HASH_TYPE_BLAKE2B,
     BLAKE2B_256 = 32   /* 256 bit type, SSL default */
 };
 

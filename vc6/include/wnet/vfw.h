@@ -2052,38 +2052,38 @@ extern "C" {            /* Assume C declarations for C++ */
 DECLARE_INTERFACE_(IAVIStream, IUnknown)
 {
     // *** IUnknown methods ***
-    STDMETHOD(QueryInterface) (THIS_ REFIID riid, LPVOID FAR* ppvObj) PURE;
-    STDMETHOD_(ULONG,AddRef) (THIS)  PURE;
-    STDMETHOD_(ULONG,Release) (THIS) PURE;
+    STDMETHOD(QueryInterface) (THIS_ REFIID riid, LPVOID FAR* ppvObj) = 0;
+    STDMETHOD_(ULONG,AddRef) (THIS)  = 0;
+    STDMETHOD_(ULONG,Release) (THIS) = 0;
 
     // *** IAVIStream methods ***
-    STDMETHOD(Create)      (THIS_ LPARAM lParam1, LPARAM lParam2) PURE ;
-    STDMETHOD(Info)        (THIS_ AVISTREAMINFOW FAR * psi, LONG lSize) PURE ;
-    STDMETHOD_(LONG, FindSample)(THIS_ LONG lPos, LONG lFlags) PURE ;
+    STDMETHOD(Create)      (THIS_ LPARAM lParam1, LPARAM lParam2) = 0 ;
+    STDMETHOD(Info)        (THIS_ AVISTREAMINFOW FAR * psi, LONG lSize) = 0 ;
+    STDMETHOD_(LONG, FindSample)(THIS_ LONG lPos, LONG lFlags) = 0 ;
     STDMETHOD(ReadFormat)  (THIS_ LONG lPos,
-			    LPVOID lpFormat, LONG FAR *lpcbFormat) PURE ;
+			    LPVOID lpFormat, LONG FAR *lpcbFormat) = 0 ;
     STDMETHOD(SetFormat)   (THIS_ LONG lPos,
-			    LPVOID lpFormat, LONG cbFormat) PURE ;
+			    LPVOID lpFormat, LONG cbFormat) = 0 ;
     STDMETHOD(Read)        (THIS_ LONG lStart, LONG lSamples,
 			    LPVOID lpBuffer, LONG cbBuffer,
-			    LONG FAR * plBytes, LONG FAR * plSamples) PURE ;
+			    LONG FAR * plBytes, LONG FAR * plSamples) = 0 ;
     STDMETHOD(Write)       (THIS_ LONG lStart, LONG lSamples,
 			    LPVOID lpBuffer, LONG cbBuffer,
 			    DWORD dwFlags,
 			    LONG FAR *plSampWritten,
-			    LONG FAR *plBytesWritten) PURE ;
-    STDMETHOD(Delete)      (THIS_ LONG lStart, LONG lSamples) PURE;
-    STDMETHOD(ReadData)    (THIS_ DWORD fcc, LPVOID lp, LONG FAR *lpcb) PURE ;
-    STDMETHOD(WriteData)   (THIS_ DWORD fcc, LPVOID lp, LONG cb) PURE ;
+			    LONG FAR *plBytesWritten) = 0 ;
+    STDMETHOD(Delete)      (THIS_ LONG lStart, LONG lSamples) = 0;
+    STDMETHOD(ReadData)    (THIS_ DWORD fcc, LPVOID lp, LONG FAR *lpcb) = 0 ;
+    STDMETHOD(WriteData)   (THIS_ DWORD fcc, LPVOID lp, LONG cb) = 0 ;
 #ifdef _WIN32
     STDMETHOD(SetInfo) (THIS_ AVISTREAMINFOW FAR * lpInfo,
-			    LONG cbInfo) PURE;
+			    LONG cbInfo) = 0;
 #else
-    STDMETHOD(Reserved1)            (THIS) PURE;
-    STDMETHOD(Reserved2)            (THIS) PURE;
-    STDMETHOD(Reserved3)            (THIS) PURE;
-    STDMETHOD(Reserved4)            (THIS) PURE;
-    STDMETHOD(Reserved5)            (THIS) PURE;
+    STDMETHOD(Reserved1)            (THIS) = 0;
+    STDMETHOD(Reserved2)            (THIS) = 0;
+    STDMETHOD(Reserved3)            (THIS) = 0;
+    STDMETHOD(Reserved4)            (THIS) = 0;
+    STDMETHOD(Reserved5)            (THIS) = 0;
 #endif
 };
 
@@ -2096,17 +2096,17 @@ typedef       IAVIStream FAR* PAVISTREAM;
 DECLARE_INTERFACE_(IAVIStreaming, IUnknown)
 {
     // *** IUnknown methods ***
-    STDMETHOD(QueryInterface) (THIS_ REFIID riid, LPVOID FAR* ppvObj) PURE;
-    STDMETHOD_(ULONG,AddRef) (THIS)  PURE;
-    STDMETHOD_(ULONG,Release) (THIS) PURE;
+    STDMETHOD(QueryInterface) (THIS_ REFIID riid, LPVOID FAR* ppvObj) = 0;
+    STDMETHOD_(ULONG,AddRef) (THIS)  = 0;
+    STDMETHOD_(ULONG,Release) (THIS) = 0;
 
     // *** IAVIStreaming methods ***
     STDMETHOD(Begin) (THIS_
 		      LONG  lStart,		    // start of what we expect
 						    // to play
 		      LONG  lEnd,		    // expected end, or -1
-		      LONG  lRate) PURE;	    // Should this be a float?
-    STDMETHOD(End)   (THIS) PURE;
+		      LONG  lRate) = 0;	    // Should this be a float?
+    STDMETHOD(End)   (THIS) = 0;
 };
 
 typedef       IAVIStreaming FAR* PAVISTREAMING;
@@ -2118,25 +2118,25 @@ typedef       IAVIStreaming FAR* PAVISTREAMING;
 DECLARE_INTERFACE_(IAVIEditStream, IUnknown)
 {
     // *** IUnknown methods ***
-    STDMETHOD(QueryInterface) (THIS_ REFIID riid, LPVOID FAR* ppvObj) PURE;
-    STDMETHOD_(ULONG,AddRef) (THIS)  PURE;
-    STDMETHOD_(ULONG,Release) (THIS) PURE;
+    STDMETHOD(QueryInterface) (THIS_ REFIID riid, LPVOID FAR* ppvObj) = 0;
+    STDMETHOD_(ULONG,AddRef) (THIS)  = 0;
+    STDMETHOD_(ULONG,Release) (THIS) = 0;
 
     // *** IAVIEditStream methods ***
     STDMETHOD(Cut) (THIS_ LONG FAR *plStart,
 			  LONG FAR *plLength,
-			  PAVISTREAM FAR * ppResult) PURE;
+			  PAVISTREAM FAR * ppResult) = 0;
     STDMETHOD(Copy) (THIS_ LONG FAR *plStart,
 			   LONG FAR *plLength,
-			   PAVISTREAM FAR * ppResult) PURE;
+			   PAVISTREAM FAR * ppResult) = 0;
     STDMETHOD(Paste) (THIS_ LONG FAR *plPos,
 			    LONG FAR *plLength,
 			    PAVISTREAM pstream,
 			    LONG lStart,
-			    LONG lEnd) PURE;
-    STDMETHOD(Clone) (THIS_ PAVISTREAM FAR *ppResult) PURE;
+			    LONG lEnd) = 0;
+    STDMETHOD(Clone) (THIS_ PAVISTREAM FAR *ppResult) = 0;
     STDMETHOD(SetInfo) (THIS_ AVISTREAMINFOW FAR * lpInfo,
-			    LONG cbInfo) PURE;
+			    LONG cbInfo) = 0;
 };
 
 typedef       IAVIEditStream FAR* PAVIEDITSTREAM;
@@ -2149,7 +2149,7 @@ typedef       IAVIEditStream FAR* PAVIEDITSTREAM;
 
 DECLARE_INTERFACE_(IAVIPersistFile, IPersistFile)
 {
-    STDMETHOD(Reserved1)(THIS) PURE;
+    STDMETHOD(Reserved1)(THIS) = 0;
 };
 
 typedef IAVIPersistFile FAR* PAVIPERSISTFILE;
@@ -2161,33 +2161,33 @@ typedef IAVIPersistFile FAR* PAVIPERSISTFILE;
 DECLARE_INTERFACE_(IAVIFile, IUnknown)
 {
     // *** IUnknown methods ***
-    STDMETHOD(QueryInterface) (THIS_ REFIID riid, LPVOID FAR* ppvObj) PURE;
-    STDMETHOD_(ULONG,AddRef) (THIS)  PURE;
-    STDMETHOD_(ULONG,Release) (THIS) PURE;
+    STDMETHOD(QueryInterface) (THIS_ REFIID riid, LPVOID FAR* ppvObj) = 0;
+    STDMETHOD_(ULONG,AddRef) (THIS)  = 0;
+    STDMETHOD_(ULONG,Release) (THIS) = 0;
 
     // *** IAVIFile methods ***
     STDMETHOD(Info)                 (THIS_
                                      AVIFILEINFOW FAR * pfi,
-                                     LONG lSize) PURE;
+                                     LONG lSize) = 0;
     STDMETHOD(GetStream)            (THIS_
                                      PAVISTREAM FAR * ppStream,
 				     DWORD fccType,
-                                     LONG lParam) PURE;
+                                     LONG lParam) = 0;
     STDMETHOD(CreateStream)         (THIS_
                                      PAVISTREAM FAR * ppStream,
-                                     AVISTREAMINFOW FAR * psi) PURE;
+                                     AVISTREAMINFOW FAR * psi) = 0;
     STDMETHOD(WriteData)            (THIS_
                                      DWORD ckid,
                                      LPVOID lpData,
-                                     LONG cbData) PURE;
+                                     LONG cbData) = 0;
     STDMETHOD(ReadData)             (THIS_
                                      DWORD ckid,
                                      LPVOID lpData,
-                                     LONG FAR *lpcbData) PURE;
-    STDMETHOD(EndRecord)            (THIS) PURE;
+                                     LONG FAR *lpcbData) = 0;
+    STDMETHOD(EndRecord)            (THIS) = 0;
     STDMETHOD(DeleteStream)         (THIS_
 				     DWORD fccType,
-                                     LONG lParam) PURE;
+                                     LONG lParam) = 0;
 };
 
 #undef PAVIFILE
@@ -2202,23 +2202,23 @@ typedef       IAVIFile FAR* PAVIFILE;
 DECLARE_INTERFACE_(IGetFrame, IUnknown)
 {
     // *** IUnknown methods ***
-    STDMETHOD(QueryInterface) (THIS_ REFIID riid, LPVOID FAR* ppvObj) PURE;
-    STDMETHOD_(ULONG,AddRef) (THIS)  PURE;
-    STDMETHOD_(ULONG,Release) (THIS) PURE;
+    STDMETHOD(QueryInterface) (THIS_ REFIID riid, LPVOID FAR* ppvObj) = 0;
+    STDMETHOD_(ULONG,AddRef) (THIS)  = 0;
+    STDMETHOD_(ULONG,Release) (THIS) = 0;
 
     // *** IGetFrame methods ***
 
-    STDMETHOD_(LPVOID,GetFrame) (THIS_ LONG lPos) PURE;
-//  STDMETHOD_(LPVOID,GetFrameData) (THIS_ LONG lPos) PURE;
+    STDMETHOD_(LPVOID,GetFrame) (THIS_ LONG lPos) = 0;
+//  STDMETHOD_(LPVOID,GetFrameData) (THIS_ LONG lPos) = 0;
 
-    STDMETHOD(Begin) (THIS_ LONG lStart, LONG lEnd, LONG lRate) PURE;
-    STDMETHOD(End) (THIS) PURE;
+    STDMETHOD(Begin) (THIS_ LONG lStart, LONG lEnd, LONG lRate) = 0;
+    STDMETHOD(End) (THIS) = 0;
 
-    STDMETHOD(SetFormat) (THIS_ LPBITMAPINFOHEADER lpbi, LPVOID lpBits, int x, int y, int dx, int dy) PURE;
+    STDMETHOD(SetFormat) (THIS_ LPBITMAPINFOHEADER lpbi, LPVOID lpBits, int x, int y, int dx, int dy) = 0;
 
-//  STDMETHOD(DrawFrameStart) (THIS) PURE;
-//  STDMETHOD(DrawFrame) (THIS_ LONG lPos, HDC hdc, int x, int y, int dx, int dy) PURE;
-//  STDMETHOD(DrawFrameEnd) (THIS) PURE;
+//  STDMETHOD(DrawFrameStart) (THIS) = 0;
+//  STDMETHOD(DrawFrame) (THIS_ LONG lPos, HDC hdc, int x, int y, int dx, int dy) = 0;
+//  STDMETHOD(DrawFrameEnd) (THIS) = 0;
 };
 
 #undef PGETFRAME

@@ -74,7 +74,7 @@ void* fastMalloc(size_t n)
     RECORD_LOCK();
     n += sizeof(size_t);
 #endif
-    void* result = partitionAllocGeneric(Partitions::fastMallocPartition(), n);
+    void* result = partitionAllocGeneric(Partitions::fastMallocPartition(), n, "fastMalloc");
 #ifdef ENABLE_MEM_COUNT
     RECORD_MALLOC(result, false);
     InterlockedExchangeAdd(reinterpret_cast<long volatile*>(&g_blinkMemSize), static_cast<long>(n));
@@ -126,7 +126,7 @@ void* fastRealloc(void* p, size_t n)
     p = ptr;
     n += sizeof(size_t);
 #endif
-    result = partitionReallocGeneric(Partitions::fastMallocPartition(), p, n);
+    result = partitionReallocGeneric(Partitions::fastMallocPartition(), p, n, "fastRealloc");
 #ifdef ENABLE_MEM_COUNT
     RECORD_REALLOC(p, result);
     *(size_t*)result = n;

@@ -1,6 +1,6 @@
 /* evp.h
  *
- * Copyright (C) 2006-2016 wolfSSL Inc.
+ * Copyright (C) 2006-2017 wolfSSL Inc.
  *
  * This file is part of wolfSSL.
  *
@@ -21,7 +21,7 @@
 
 
 
-/*  evp.h defines mini evp openssl compatibility layer 
+/*  evp.h defines mini evp openssl compatibility layer
  *
  */
 

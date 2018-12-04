@@ -151,7 +151,7 @@ DebuggerScript.getScripts = function(contextDataSubstring)
 
 DebuggerScript._formatScript = function(script)
 {
-    var lineEnds = script.line_ends;
+    var lineEnds = script.line_ends;    
     var lineCount = lineEnds.length;
     var endLine = script.line_offset + lineCount - 1;
     var endColumn;

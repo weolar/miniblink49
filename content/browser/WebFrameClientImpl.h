@@ -15,6 +15,7 @@ using namespace blink;
 namespace content {
 
 class WebPage;
+class ContextMenu;
 
 class WebFrameClientImpl : public WebFrameClient {
 public:
@@ -22,6 +23,7 @@ public:
     ~WebFrameClientImpl();
 
     virtual void didAddMessageToConsole(const WebConsoleMessage& message, const WebString& sourceName, unsigned sourceLine, const WebString& stackTrace) override;
+    virtual bool shouldReportDetailedMessageForSource(const WebString& source) override { return true; };
 
     virtual WebFrame* createChildFrame(WebLocalFrame* parent, WebTreeScopeType, const WebString& frameName, WebSandboxFlags sandboxFlags) override;
 
@@ -202,6 +204,16 @@ public:
     // 'OK' or false otherwise.
     virtual bool runModalBeforeUnloadDialog(bool isReload, const WebString& message) override;
 
+    // UI ------------------------------------------------------------------
+
+    // Shows a context menu with commands relevant to a specific element on
+    // the given frame. Additional context data is supplied.
+    virtual void showContextMenu(const WebContextMenuData&) override;
+
+    // Called when the data attached to the currently displayed context menu is
+    // invalidated. The context menu may be closed if possible.
+    virtual void clearContextMenu() override;
+
     // Script notifications ------------------------------------------------
 
     // Notifies that a new script context has been created for this frame.
@@ -227,6 +239,7 @@ public:
     String title() const { return m_title; }
 #endif
 private:
+    void resetLoadState();
     void onLoadingStateChange(bool isLoading, bool toDifferentDocument);
 
     WebPage* m_webPage;
@@ -237,6 +250,8 @@ private:
     bool m_documentReady;
     String m_title;
     WTF::Vector<WebFrame*> m_unusedFrames;
+
+    ContextMenu* m_menu;
 };
 
 } // namespace blink

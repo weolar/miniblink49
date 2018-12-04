@@ -287,7 +287,7 @@ int i2d_SSL_SESSION(SSL_SESSION *in, unsigned char **pp)
     if (in->timeout != 0L)
         M_ASN1_I2D_len_EXP_opt(&(a.timeout), i2d_ASN1_INTEGER, 2, v2);
     if (in->peer != NULL)
-        M_ASN1_I2D_len_EXP_opt(in->peer, i2d_X509, 3, v3);
+        M_ASN1_I2D_len_EXP_opt(in->peer, openssl_i2d_X509, 3, v3);
     M_ASN1_I2D_len_EXP_opt(&a.session_id_context, i2d_ASN1_OCTET_STRING, 4,
                            v4);
     if (in->verify_result != X509_V_OK)
@@ -340,7 +340,7 @@ int i2d_SSL_SESSION(SSL_SESSION *in, unsigned char **pp)
     if (in->timeout != 0L)
         M_ASN1_I2D_put_EXP_opt(&(a.timeout), i2d_ASN1_INTEGER, 2, v2);
     if (in->peer != NULL)
-        M_ASN1_I2D_put_EXP_opt(in->peer, i2d_X509, 3, v3);
+        M_ASN1_I2D_put_EXP_opt(in->peer, openssl_i2d_X509, 3, v3);
     M_ASN1_I2D_put_EXP_opt(&a.session_id_context, i2d_ASN1_OCTET_STRING, 4,
                            v4);
     if (in->verify_result != X509_V_OK)

@@ -176,12 +176,12 @@ CanonicalCookie::~CanonicalCookie() {
 
 blink::KURL CanonicalCookie::GetCookieSourceFromURL(const blink::KURL& url) {
 	if (url.isLocalFile())
-		return blink::KURL(blink::ParsedURLString, (url.string()));
+		return url;
 
 	blink::KURL url_copy = url;
 	url_copy.removePort();
 
-	String replacements = url_copy.string();
+	String replacements = WTF::ensureStringToUTF8String(url_copy.string());
 	if (replacements.startsWith("https"))
 		replacements.replace("https", "http");
 

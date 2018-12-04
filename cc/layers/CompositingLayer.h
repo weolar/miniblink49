@@ -10,6 +10,7 @@ struct SkRect;
 
 namespace blink {
 class IntRect;
+class IntSize;
 }
 
 namespace cc {
@@ -52,25 +53,33 @@ public:
 
     bool masksToBounds() const;
     bool drawsContent() const;
+    const blink::IntSize& bounds() const;
     bool opaque() const;
     float opacity() const;
     SkColor backgroundColor() const;
+    bool isDoubleSided() const;
+    bool useParentBackfaceVisibility() const;
 
     void updataTile(int newIndexNumX, int newIndexNumY, DrawToCanvasProperties* prop);
     void cleanupUnnecessaryTile(const WTF::Vector<TileActionInfo*>& tiles);
 
-    virtual void drawToCanvas(LayerTreeHost* host, blink::WebCanvas* canvas, const blink::IntRect& clip);
+    virtual bool drawToCanvas(LayerTreeHost* host, blink::WebCanvas* canvas, const blink::IntRect& clip);
 
-    void blendToTiles(TileActionInfoVector* willRasteredTiles, const SkBitmap& bitmap, const SkRect& dirtyRect);
+    void blendToTiles(TileActionInfoVector* willRasteredTiles, const SkBitmap* bitmap, const SkRect& dirtyRect, float contentScale);
+    void blendToTilesByTiles(TileActionInfoVector* willRasteredTiles);
     
-    void drawToCanvasChildren(LayerTreeHost* host, SkCanvas* canvas, const blink::IntRect& clip, int deep);
+    bool drawToCanvasChildren(LayerTreeHost* host, SkCanvas* canvas, const SkRect& clip, int deep);
 
     size_t tilesSize() const;
 
+    SkColor getBackgroundColor() const;
+
 protected:
     friend class DoClipLayer;
-    void blendToTile(CompositingTile* tile, const SkBitmap& bitmap, const SkRect& dirtyRect);
+    void blendToTile(CompositingTile* tile, const SkBitmap* bitmap, const SkRect& dirtyRect, SkColor* solidColor, bool isSolidColorCoverWholeTile, float contentScale);
 
+    void drawDebugLine(SkCanvas& canvas, CompositingTile* tile);
+        
     int m_id;
     DrawToCanvasProperties* m_prop;
 
@@ -86,7 +95,7 @@ class CompositingImageLayer : public CompositingLayer {
 public:
     CompositingImageLayer(int id);
     virtual ~CompositingImageLayer() override;
-    virtual void drawToCanvas(LayerTreeHost* host, blink::WebCanvas* canvas, const blink::IntRect& clip) override;
+    virtual bool drawToCanvas(LayerTreeHost* host, blink::WebCanvas* canvas, const blink::IntRect& clip) override;
     void setImage(SkBitmapRefWrap* bitmap);
     virtual CCType ccType() const override { return CompositingLayer::ImageCCLayer;    }
     

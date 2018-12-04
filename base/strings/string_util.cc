@@ -92,11 +92,11 @@ std::string UTF16ToASCII(const string16& utf16) {
 
 std::string WideToUTF8(const string16& utf16) {
     std::string utf8;
-    size_t n = ::WideCharToMultiByte(CP_ACP, 0, utf16.c_str(), utf16.size(), NULL, 0, NULL, NULL);
+    size_t n = ::WideCharToMultiByte(CP_UTF8, 0, utf16.c_str(), utf16.size(), NULL, 0, NULL, NULL);
     if (0 == n)
         return "";
     std::vector<char> buf(n + 1);
-    ::WideCharToMultiByte(CP_ACP, 0, utf16.c_str(), -1, &buf[0], n, NULL, NULL);
+    ::WideCharToMultiByte(CP_UTF8, 0, utf16.c_str(), -1, &buf[0], n, NULL, NULL);
     utf8.resize(n);
     utf8.assign(&buf[0], n);
     return utf8;

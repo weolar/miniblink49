@@ -61,7 +61,8 @@ nobase_include_HEADERS+= \
                          wolfssl/wolfcrypt/pkcs12.h \
                          wolfssl/wolfcrypt/wolfmath.h \
                          wolfssl/wolfcrypt/sha3.h \
-                         wolfssl/wolfcrypt/cpuid.h
+                         wolfssl/wolfcrypt/cpuid.h \
+                         wolfssl/wolfcrypt/cryptodev.h
 
 noinst_HEADERS+= \
                          wolfssl/wolfcrypt/port/pic32/pic32mz-crypt.h \
@@ -70,7 +71,11 @@ noinst_HEADERS+= \
                          wolfssl/wolfcrypt/port/nrf51.h \
                          wolfssl/wolfcrypt/port/nxp/ksdk_port.h \
                          wolfssl/wolfcrypt/port/atmel/atmel.h \
-                         wolfssl/wolfcrypt/port/xilinx/xil-sha3.h
+                         wolfssl/wolfcrypt/port/xilinx/xil-sha3.h \
+                         wolfssl/wolfcrypt/port/caam/caam_driver.h \
+                         wolfssl/wolfcrypt/port/caam/wolfcaam.h \
+                         wolfssl/wolfcrypt/port/caam/wolfcaam_sha.h \
+                         wolfssl/wolfcrypt/port/st/stm32.h
 
 if BUILD_ASYNCCRYPT
 nobase_include_HEADERS+= wolfssl/wolfcrypt/async.h
@@ -83,5 +88,18 @@ endif
 if BUILD_INTEL_QA
 nobase_include_HEADERS+= wolfssl/wolfcrypt/port/intel/quickassist.h
 nobase_include_HEADERS+= wolfssl/wolfcrypt/port/intel/quickassist_mem.h
+endif
+
+if BUILD_SP
+nobase_include_HEADERS+= wolfssl/wolfcrypt/sp.h
+nobase_include_HEADERS+= wolfssl/wolfcrypt/sp_int.h
+endif
+
+if BUILD_SELFTEST
+nobase_include_HEADERS+= wolfssl/wolfcrypt/selftest.h
+endif
+
+if BUILD_FIPS_V2
+nobase_include_HEADERS+= wolfssl/wolfcrypt/fips.h
 endif
 

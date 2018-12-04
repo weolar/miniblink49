@@ -4857,24 +4857,25 @@ CSSValueKeywordsHash::findValueImpl (register const char *str, register unsigned
        -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1, 793
     };
 
-  if (len <= MAX_WORD_LENGTH && len >= MIN_WORD_LENGTH)
-    {
-      register int key = value_hash_function (str, len);
+    if (len <= MAX_WORD_LENGTH && len >= MIN_WORD_LENGTH) {
+        register int key = value_hash_function(str, len);
 
-      if (key <= MAX_HASH_VALUE && key >= 0)
-        {
-          register int index = lookup[key];
+        if (key <= MAX_HASH_VALUE && key >= 0) {
+            register int index = lookup[key];
 
-          if (index >= 0)
-            {
-              register const char *s = value_word_list[index].nameOffset + stringpool;
+            if (index >= 0) {
+                register const char *s = value_word_list[index].nameOffset + stringpool;
 
-              if (*str == *s && !strncmp (str + 1, s + 1, len - 1) && s[len] == '\0')
-                return &value_word_list[index];
+                if (*str == *s && !strncmp(str + 1, s + 1, len - 1) && s[len] == '\0')
+                    return &value_word_list[index];
             }
         }
     }
-  return 0;
+    if (0 == strncmp(str, "fit-content", len)) {
+        static Value fitContentStatic = { 0, CSSValueWebkitFitContent };
+        return &fitContentStatic;
+    }
+    return 0;
 }
 
 const Value* findValue(register const char* str, register unsigned int len)
@@ -4886,6 +4887,8 @@ const char* getValueName(unsigned short id)
 {
     if (id >= numCSSValueKeywords || id <= 0)
         return 0;
+    if (CSSValueFitContent == id)
+        return "fit-content";
     return valueListStringPool + valueListStringOffsets[id];
 }
 

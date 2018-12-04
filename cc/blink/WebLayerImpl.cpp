@@ -11,9 +11,10 @@
 #include "cc/trees/LayerTreeHost.h"
 #include "cc/tiles/TileGrid.h"
 #include "cc/trees/DrawProperties.h"
-#include "cc/raster/RasterTaskWorkerThreadPool.h"
+#include "cc/raster/RasterTask.h"
 #include "cc/playback/LayerChangeAction.h"
 #include "cc/base/MathUtil.h"
+#include "cc/blink/WebFilterOperationsImpl.h"
 #include "third_party/WebKit/public/platform/WebFloatPoint.h"
 #include "third_party/WebKit/public/platform/WebFloatRect.h"
 #include "third_party/WebKit/public/platform/WebGraphicsLayerDebugInfo.h"
@@ -26,6 +27,7 @@
 #include "third_party/WebKit/Source/platform/geometry/FloatRect.h"
 #include "third_party/WebKit/Source/platform/transforms/TransformationMatrix.h"
 #include "third_party/WebKit/Source/wtf/RefCountedLeakCounter.h"
+#include "platform/RuntimeEnabledFeatures.h"
 
 using blink::WebLayer;
 using blink::WebFloatPoint;
@@ -52,8 +54,6 @@ static void clearLayerActions(WTF::Vector<cc::LayerChangeAction*>* actions);
 DEFINE_DEBUG_ONLY_GLOBAL(WTF::RefCountedLeakCounter, webLayerImplCounter, ("ccWebLayerImpl"));
 #endif
 
-int debugMaskLayerId = -1;
-
 WebLayerImpl::WebLayerImpl(WebLayerImplClient* client)
     : m_client(client)
     , m_layerType(client->type())
@@ -67,6 +67,7 @@ WebLayerImpl::WebLayerImpl(WebLayerImplClient* client)
     , m_shouldFlattenTransform(true)
     , m_3dSortingContextId(0)
     , m_useParentBackfaceVisibility(false)
+    , m_isDoubleSided(false)
     , m_backgroundColor(0xff00ffff)
     , m_scrollClipLayerId(-1)
     , m_userScrollableHorizontal(true)
@@ -76,29 +77,32 @@ WebLayerImpl::WebLayerImpl(WebLayerImplClient* client)
     , m_shouldScrollOnMainThread(true)
     , m_scrollBlocksOn(blink::WebScrollBlocksOnNone)
     , m_isContainerForFixedPositionLayers(false)
-    , m_scrollParent(nullptr)
-    , m_clipParent(nullptr)
+//     , m_scrollParent(nullptr)
+//     , m_clipParent(nullptr)
     , m_contentsOpaqueIsFixed(false)
     , m_masksToBounds(false)
     , m_webLayerScrollClient(nullptr)
-//     , m_maskLayerId(-1)
-//     , m_replicaLayerId(-1)
+    //     , m_maskLayerId(-1)
+    //     , m_replicaLayerId(-1)
     , m_maskLayer(nullptr)
     , m_replicaLayer(nullptr)
     , m_layerTreeHost(nullptr)
     , m_stackingOrderChanged(true)
     , m_parent(nullptr)
-    , m_scrollChildren(nullptr)
-    , m_clipChildren(nullptr)
+    //, m_scrollChildren(nullptr)
+    //, m_clipChildren(nullptr)
     , m_tileGrid(nullptr)
     , m_drawProperties(new cc::DrawProperties())
     , m_drawToCanvasProperties(new cc::DrawToCanvasProperties())
     , m_isMaskLayer(false)
     , m_isReplicaLayer(false)
     , m_hasMaskLayerChild(false)
+    , m_filterOperations(nullptr)
 {
     m_id = atomicIncrement(&g_next_layer_id);
     m_webLayerClient = nullptr;
+
+    m_updateRectInRootLayerCoordinate.setEmpty();
 
     appendLayerChangeAction(new cc::LayerChangeActionCreate(-1, id(), m_layerType));
 
@@ -118,6 +122,10 @@ WebLayerImpl::~WebLayerImpl()
     if (m_tileGrid)
         delete m_tileGrid;
     m_tileGrid = nullptr;
+
+    if (m_filterOperations)
+        delete m_filterOperations;
+    m_filterOperations = nullptr;
 
     m_webLayerClient = nullptr;
 
@@ -146,8 +154,8 @@ WebLayerImpl::~WebLayerImpl()
     clearLayerActions(&m_savedActionsWhenHostIsNull);
 
     //TODO m_replicaLayer......
-    m_scrollParent = nullptr;
-    m_clipParent = nullptr;
+//     m_scrollParent = nullptr;
+//     m_clipParent = nullptr;
     m_maskLayer = nullptr;
     m_replicaLayer = nullptr;
 
@@ -162,30 +170,41 @@ WebLayerImpl::~WebLayerImpl()
 }
 
 void WebLayerImpl::removeFromScrollTree() {
-    if (m_scrollChildren) {
-        WTF::HashSet<WebLayerImpl*> copy = *m_scrollChildren;
-        for (WTF::HashSet<WebLayerImpl*>::iterator it = copy.begin(); it != copy.end(); ++it)
-            (*it)->setScrollParent(nullptr);
-    }
-
-    ASSERT(!m_scrollChildren);
-    setScrollParent(nullptr);
+//     setScrollParent(nullptr);
+// 
+//     if (m_scrollChildren) {
+//         WTF::HashSet<WebLayerImpl*> copy = *m_scrollChildren;
+//         for (WTF::HashSet<WebLayerImpl*>::iterator it = copy.begin(); it != copy.end(); ++it) {
+//             WebLayerImpl* scrollChild = (*it);
+//             scrollChild->setScrollParent(nullptr);
+//         }
+//         delete m_scrollChildren;
+//         m_scrollChildren = nullptr;
+//     }
+// 
+//     ASSERT(!m_scrollChildren);
 }
 
 void WebLayerImpl::removeFromClipTree() {
-    if (m_clipChildren) {
-        WTF::HashSet<WebLayerImpl*> copy = *m_clipChildren;
-        for (WTF::HashSet<WebLayerImpl*>::iterator it = copy.begin(); it != copy.end(); ++it)
-            (*it)->setClipParent(nullptr);
-    }
-
-    ASSERT(!m_clipChildren);
-    setClipParent(nullptr);
+//     if (m_clipChildren) {
+//         WTF::HashSet<WebLayerImpl*> copy = *m_clipChildren;
+//         for (WTF::HashSet<WebLayerImpl*>::iterator it = copy.begin(); it != copy.end(); ++it)
+//             (*it)->setClipParent(nullptr);
+//     }
+// 
+//     ASSERT(!m_clipChildren);
+//     setClipParent(nullptr);
 }
 
 cc::LayerTreeHost* WebLayerImpl::layerTreeHost() const
 {
     return m_layerTreeHost;
+}
+
+void WebLayerImpl::gc()
+{
+    if (m_tileGrid)
+        m_tileGrid->forceCleanupUnnecessaryTile();
 }
 
 static void applyLayerActions(cc::LayerTreeHost* host, WTF::Vector<cc::LayerChangeAction*>* actions)
@@ -231,11 +250,11 @@ void WebLayerImpl::setLayerTreeHost(cc::LayerTreeHost* host)
 
     m_layerTreeHost = host;
 
-    if (m_scrollParent)
-        m_scrollParent->setLayerTreeHost(host);
-
-    if (m_clipParent)
-        m_clipParent->setLayerTreeHost(host);
+//     if (m_scrollParent)
+//         m_scrollParent->setLayerTreeHost(host);
+// 
+//     if (m_clipParent)
+//         m_clipParent->setLayerTreeHost(host);
     
     for (size_t i = 0; i < m_children.size(); ++i)
         m_children[i]->setLayerTreeHost(host);
@@ -246,7 +265,7 @@ void WebLayerImpl::updataAndPaintContents(blink::WebCanvas* canvas, const blink:
     if (m_client)
         m_client->updataAndPaintContents(canvas, clip);
     m_dirty = false;
-    m_updateRectInRootLayerCoordinate = blink::IntRect();
+    m_updateRectInRootLayerCoordinate.setEmpty();
 }
 
 cc::DrawProperties* WebLayerImpl::drawProperties()
@@ -265,6 +284,8 @@ void WebLayerImpl::updataDrawToCanvasProperties(cc::DrawToCanvasProperties* prop
     prop->maskLayerId = maskLayerId();
     prop->replicaLayerId = replicaLayerId();
     prop->backgroundColor = m_backgroundColor;
+    prop->useParentBackfaceVisibility = m_useParentBackfaceVisibility;
+    prop->isDoubleSided = m_isDoubleSided;
 }
 
 const SkMatrix44& WebLayerImpl::drawTransform() const
@@ -326,7 +347,7 @@ void WebLayerImpl::recordDraw(cc::RasterTaskGroup* taskGroup)
 
     if (!m_updateRectInRootLayerCoordinate.isEmpty()) {
         taskGroup->appendPendingInvalidateRect(m_updateRectInRootLayerCoordinate);
-        m_updateRectInRootLayerCoordinate = blink::IntRect();
+        m_updateRectInRootLayerCoordinate.setEmpty();
     }
 
     if (m_dirty)  // 必须把子节点也加入dirty，因为父节点变了的话，子节点的combined_transform也会变
@@ -339,7 +360,7 @@ void WebLayerImpl::drawToCanvas(blink::WebCanvas* canvas, const blink::IntRect& 
     if (m_client)
         m_client->drawToCanvas(canvas, clip);
     m_dirty = false;
-    m_updateRectInRootLayerCoordinate = blink::IntRect();
+    m_updateRectInRootLayerCoordinate.setEmpty();
 }
 
 int WebLayerImpl::id() const 
@@ -658,8 +679,6 @@ void WebLayerImpl::setMaskLayer(WebLayer* maskLayer)
     m_maskLayer->setParent(this);
     setNeedsCommit(true);
 
-    debugMaskLayerId = m_id;
-
     // for debug
     WebLayerImpl* parentLayer = m_parent;
     while (parentLayer) {
@@ -860,11 +879,19 @@ void WebLayerImpl::setRenderingContext(int context)
     setNeedsCommit(true);
 }
 
-void WebLayerImpl::setUseParentBackfaceVisibility(bool use_parent_backface_visibility) 
+void WebLayerImpl::setUseParentBackfaceVisibility(bool useParentBackfaceVisibility)
 {
-    if (m_useParentBackfaceVisibility == use_parent_backface_visibility)
+    if (m_useParentBackfaceVisibility == useParentBackfaceVisibility)
         return;
-    m_useParentBackfaceVisibility = use_parent_backface_visibility;
+    m_useParentBackfaceVisibility = useParentBackfaceVisibility;
+    setNeedsCommit(true);
+}
+
+void WebLayerImpl::setDoubleSided(bool isDoubleSided)
+{
+    if (m_isDoubleSided == isDoubleSided)
+        return;
+    m_isDoubleSided = isDoubleSided;
     setNeedsCommit(true);
 }
 
@@ -885,7 +912,15 @@ void WebLayerImpl::setFilters(const WebFilterOperations& filters)
 {
     if (filters.isEmpty())
         return;
-    //setNeedsCommit(true);
+    if (m_filterOperations)
+        delete m_filterOperations;
+    m_filterOperations = new WebFilterOperationsImpl(filters);
+    setNeedsCommit(true);
+}
+
+const WebFilterOperationsImpl* WebLayerImpl::getFilters() const
+{
+    return m_filterOperations;
 }
 
 void WebLayerImpl::setAnimationDelegate(blink::WebCompositorAnimationDelegate* delegate)
@@ -1138,33 +1173,33 @@ void WebLayerImpl::setWebLayerClient(blink::WebLayerClient* client)
 
 void WebLayerImpl::setScrollParent(blink::WebLayer* parent)
 {
-    if (m_scrollParent == (cc_blink::WebLayerImpl*)parent)
-        return;
-    m_scrollParent = (cc_blink::WebLayerImpl*)parent;
-
-    if (m_scrollParent)
-        m_scrollParent->addScrollChild(this);
+//     if (m_scrollParent == (cc_blink::WebLayerImpl*)parent)
+//         return;
+//     m_scrollParent = (cc_blink::WebLayerImpl*)parent;
+// 
+//     if (m_scrollParent)
+//         m_scrollParent->addScrollChild(this);
 
     setNeedsCommit(true);
 }
 
 void WebLayerImpl::addScrollChild(WebLayerImpl* child) 
 {
-    if (!m_scrollChildren)
-        m_scrollChildren = new WTF::HashSet<WebLayerImpl*>();
-
-    m_scrollChildren->add(child);
+//     if (!m_scrollChildren)
+//         m_scrollChildren = new WTF::HashSet<WebLayerImpl*>();
+// 
+//     m_scrollChildren->add(child);
     setNeedsCommit(true);
 }
 
 void WebLayerImpl::setClipParent(blink::WebLayer* parent)
 {
-    if (m_clipParent == (cc_blink::WebLayerImpl*)parent)
-        return;
-    m_clipParent = (cc_blink::WebLayerImpl*)parent;
-
-    if (m_clipParent)
-        m_clipParent->addScrollChild(this);
+//     if (m_clipParent == (cc_blink::WebLayerImpl*)parent)
+//         return;
+//     m_clipParent = (cc_blink::WebLayerImpl*)parent;
+// 
+//     if (m_clipParent)
+//         m_clipParent->addScrollChild(this);
     
     setNeedsCommit(true);
 }
@@ -1283,7 +1318,14 @@ void WebLayerImpl::requestBoundRepaint(bool directOrPending)
 
 void WebLayerImpl::invalidateRect(const blink::WebRect& rect)
 {
+    if (blink::RuntimeEnabledFeatures::headlessEnabled())
+        return;
+
     blink::IntRect dirtyRect(rect);
+
+    if (1)
+        dirtyRect.inflate(1);
+
     if (m_tileGrid)
         m_tileGrid->invalidate(dirtyRect, false);
     setNeedsCommit(false);

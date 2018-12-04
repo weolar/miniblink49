@@ -1,6 +1,6 @@
 /* integer.c
  *
- * Copyright (C) 2006-2016 wolfSSL Inc.
+ * Copyright (C) 2006-2017 wolfSSL Inc.
  *
  * This file is part of wolfSSL.
  *
@@ -44,6 +44,8 @@
 #ifndef NO_BIG_INT
 
 #ifndef USE_FAST_MATH
+
+#ifndef WOLFSSL_SP_MATH
 
 #include <wolfssl/wolfcrypt/integer.h>
 
@@ -4169,7 +4171,8 @@ int mp_sub_d (mp_int * a, mp_digit b, mp_int * c)
 #endif /* defined(HAVE_ECC) || !defined(NO_PWDBASED) */
 
 
-#if defined(WOLFSSL_KEY_GEN) || defined(HAVE_COMP_KEY) || defined(HAVE_ECC)
+#if defined(WOLFSSL_KEY_GEN) || defined(HAVE_COMP_KEY) || defined(HAVE_ECC) || \
+    defined(DEBUG_WOLFSSL)
 
 static const int lnz[16] = {
    4, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0
@@ -4315,7 +4318,7 @@ int mp_mod_d (mp_int * a, mp_digit b, mp_digit * c)
   return mp_div_d(a, b, NULL, c);
 }
 
-#endif /* defined(WOLFSSL_KEY_GEN)||defined(HAVE_COMP_KEY)||defined(HAVE_ECC) */
+#endif /* WOLFSSL_KEY_GEN || HAVE_COMP_KEY || HAVE_ECC || DEBUG_WOLFSSL */
 
 #ifdef WOLFSSL_KEY_GEN
 
@@ -4728,14 +4731,16 @@ LBL_U:mp_clear (&v);
 #endif /* WOLFSSL_KEY_GEN */
 
 
-#if defined(HAVE_ECC) || defined(WOLFSSL_KEY_GEN) || defined(HAVE_COMP_KEY)
+#if !defined(NO_DSA) || defined(HAVE_ECC) || defined(WOLFSSL_KEY_GEN) || \
+    defined(HAVE_COMP_KEY) || defined(WOLFSSL_DEBUG_MATH) || \
+    defined(DEBUG_WOLFSSL)
 
 /* chars used in radix conversions */
 const char *mp_s_rmap = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ\
                          abcdefghijklmnopqrstuvwxyz+/";
 #endif
 
-#ifdef HAVE_ECC
+#if !defined(NO_DSA) || defined(HAVE_ECC)
 /* read a string [ASCII] in a given radix */
 int mp_read_radix (mp_int * a, const char *str, int radix)
 {
@@ -4746,7 +4751,7 @@ int mp_read_radix (mp_int * a, const char *str, int radix)
   mp_zero(a);
 
   /* make sure the radix is ok */
-  if (radix < 2 || radix > 64) {
+  if (radix < MP_RADIX_BIN || radix > MP_RADIX_MAX) {
     return MP_VAL;
   }
 
@@ -4805,10 +4810,11 @@ int mp_read_radix (mp_int * a, const char *str, int radix)
   }
   return MP_OKAY;
 }
-#endif /* HAVE_ECC */
+#endif /* !defined(NO_DSA) || defined(HAVE_ECC) */
 
 #if defined(WOLFSSL_KEY_GEN) || defined(HAVE_COMP_KEY) || \
-    defined(WOLFSSL_DEBUG_MATH)
+    defined(WOLFSSL_DEBUG_MATH) || defined(DEBUG_WOLFSSL) || \
+    defined(WOLFSSL_PUBLIC_MP)
 
 /* returns size of ASCII representation */
 int mp_radix_size (mp_int *a, int radix, int *size)
@@ -4820,13 +4826,13 @@ int mp_radix_size (mp_int *a, int radix, int *size)
     *size = 0;
 
     /* special case for binary */
-    if (radix == 2) {
+    if (radix == MP_RADIX_BIN) {
         *size = mp_count_bits (a) + (a->sign == MP_NEG ? 1 : 0) + 1;
         return MP_OKAY;
     }
 
     /* make sure the radix is in range */
-    if (radix < 2 || radix > 64) {
+    if (radix < MP_RADIX_BIN || radix > MP_RADIX_MAX) {
         return MP_VAL;
     }
 
@@ -4875,7 +4881,7 @@ int mp_toradix (mp_int *a, char *str, int radix)
     char   *_s = str;
 
     /* check range of the radix */
-    if (radix < 2 || radix > 64) {
+    if (radix < MP_RADIX_BIN || radix > MP_RADIX_MAX) {
         return MP_VAL;
     }
 
@@ -4933,7 +4939,7 @@ void mp_dump(const char* desc, mp_int* a, byte verbose)
   printf("%s: ptr=%p, used=%d, sign=%d, size=%d, mpd=%d\n",
     desc, a, a->used, a->sign, size, (int)sizeof(mp_digit));
 
-  mp_toradix(a, buffer, 16);
+  mp_tohex(a, buffer);
   printf("  %s\n  ", buffer);
 
   if (verbose) {
@@ -4949,6 +4955,8 @@ void mp_dump(const char* desc, mp_int* a, byte verbose)
 #endif /* WOLFSSL_DEBUG_MATH */
 
 #endif /* defined(WOLFSSL_KEY_GEN) || defined(HAVE_COMP_KEY) || defined(WOLFSSL_DEBUG_MATH) */
+
+#endif /* WOLFSSL_SP_MATH */
 
 #endif /* USE_FAST_MATH */
 

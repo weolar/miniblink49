@@ -130,6 +130,10 @@ Local<Value> Converter<base::StringPiece>::ToV8(Isolate* isolate,
       .ToLocalChecked();
 }
 
+Local<Value> Converter<const char*>::ToV8(Isolate* isolate, const char* val) {
+    return Converter<base::StringPiece>::ToV8(isolate, val);
+}
+
 Local<Value> Converter<std::string>::ToV8(Isolate* isolate,
                                           const std::string& val) {
   return Converter<base::StringPiece>::ToV8(isolate, val);
@@ -167,9 +171,12 @@ bool Converter<Local<Function>>::FromV8(Isolate* isolate,
   return true;
 }
 
-Local<Value> Converter<Local<Object>>::ToV8(Isolate* isolate,
-                                            Local<Object> val) {
+Local<Value> Converter<Local<Object>>::ToV8(Isolate* isolate, Local<Object> val) {
   return val.As<Value>();
+}
+
+Local<Value> Converter<Local<v8::Primitive>>::ToV8(Isolate* isolate, Local<v8::Primitive> val) {
+    return val.As<Value>();
 }
 
 bool Converter<Local<Object>>::FromV8(Isolate* isolate,
@@ -488,6 +495,8 @@ bool Converter<base::ListValue>::FromV8(Isolate* isolate, Local<Value> val, base
                 return false;
             }
             out->Append(arrayOut);
+        } else if (outValue->IsNull() || outValue->IsUndefined()) {
+            out->Append(base::Value::CreateNullValue());
         } else if (outValue->IsObject()) {
             base::DictionaryValue* dictionaryOut = new base::DictionaryValue();
             if (!Converter<base::DictionaryValue>::FromV8(isolate, outValue, dictionaryOut)) {
@@ -495,8 +504,6 @@ bool Converter<base::ListValue>::FromV8(Isolate* isolate, Local<Value> val, base
                 return false;
             }
             out->Append(dictionaryOut);
-        } else if (outValue->IsUndefined()) {
-            out->Append(base::Value::CreateNullValue());
         } else {
             DebugBreak();
             int type = v8ValueToType(outValue);

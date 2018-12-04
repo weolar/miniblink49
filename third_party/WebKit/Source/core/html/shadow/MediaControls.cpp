@@ -211,6 +211,12 @@ void MediaControls::show()
     m_panel->setIsDisplayed(true);
     if (m_overlayPlayButton)
         m_overlayPlayButton->updateDisplayType();
+
+#ifndef MINIBLINK_NO_CHANGE
+    WebMediaPlayer* player = m_mediaElement->webMediaPlayer();
+    if (player)
+        player->showMediaControls();
+#endif
 }
 
 void MediaControls::mediaElementFocused()
@@ -227,6 +233,12 @@ void MediaControls::hide()
     m_panel->setIsDisplayed(false);
     if (m_overlayPlayButton)
         m_overlayPlayButton->hide();
+
+#ifndef MINIBLINK_NO_CHANGE
+    WebMediaPlayer* player = m_mediaElement->webMediaPlayer();
+    if (player)
+        player->hideMediaControls();
+#endif
 }
 
 void MediaControls::makeOpaque()

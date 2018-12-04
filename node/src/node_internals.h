@@ -110,8 +110,10 @@ void RegisterSignalHandler(int signal,
                            bool reset_handler = false);
 #endif
 
+#ifndef arraysize
 template <typename T, size_t N>
 constexpr size_t arraysize(const T(&)[N]) { return N; }
+#endif
 
 #ifndef ROUND_UP
 # define ROUND_UP(a, b) ((a) % (b) ? ((a) + (b)) - ((a) % (b)) : (a))
@@ -158,6 +160,16 @@ inline bool IsLittleEndian() {
 inline bool IsBigEndian() {
   return GetEndianness() == kBigEndian;
 }
+
+// Like a `TryCatch` but exits the process if an exception was caught.
+class FatalTryCatch : public v8::TryCatch {
+public:
+  FatalTryCatch(Environment* env);
+  ~FatalTryCatch();
+
+private:
+  Environment* env_;
+};
 
 void ThrowError(v8::Isolate* isolate, const char* errmsg);
 void ThrowTypeError(v8::Isolate* isolate, const char* errmsg);

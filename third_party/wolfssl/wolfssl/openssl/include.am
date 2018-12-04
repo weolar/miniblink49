@@ -6,6 +6,7 @@ nobase_include_HEADERS+= \
                          wolfssl/openssl/aes.h\
                          wolfssl/openssl/bio.h \
                          wolfssl/openssl/bn.h \
+                         wolfssl/openssl/buffer.h \
                          wolfssl/openssl/conf.h \
                          wolfssl/openssl/crypto.h \
                          wolfssl/openssl/des.h \
@@ -24,6 +25,7 @@ nobase_include_HEADERS+= \
                          wolfssl/openssl/md4.h \
                          wolfssl/openssl/md5.h \
                          wolfssl/openssl/ripemd.h \
+                         wolfssl/openssl/objects.h \
                          wolfssl/openssl/ocsp.h \
                          wolfssl/openssl/opensslconf.h \
                          wolfssl/openssl/opensslv.h \
@@ -38,4 +40,5 @@ nobase_include_HEADERS+= \
                          wolfssl/openssl/stack.h \
                          wolfssl/openssl/ui.h \
                          wolfssl/openssl/x509.h \
-                         wolfssl/openssl/x509v3.h
+                         wolfssl/openssl/x509v3.h \
+                         wolfssl/openssl/rc4.h

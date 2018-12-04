@@ -52,7 +52,7 @@ extern "C" {
 
 
 #ifndef _TIME_T_DEFINED
-#ifdef  _WIN64
+#if 1 // def  _WIN64
 typedef __int64 time_t;         /* time value */
 #else
 typedef long    time_t;         /* time value */
@@ -102,13 +102,19 @@ struct __timeb64 {
 
 /* Function prototypes */
 
-_CRTIMP void __cdecl _ftime(struct _timeb *);
+//_CRTIMP void __cdecl _ftime(struct _timeb *);
+void __cdecl _ftime_64(struct _timeb *);
+
+inline void __cdecl _ftime(struct _timeb* t)
+{
+    _ftime_64(t);
+}
 
 #if     !__STDC__
 
 /* Non-ANSI name for compatibility */
 
-_CRTIMP void __cdecl ftime(struct timeb *);
+//_CRTIMP void __cdecl ftime(struct timeb *);
 
 #endif
 

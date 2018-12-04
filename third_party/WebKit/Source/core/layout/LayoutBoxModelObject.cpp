@@ -965,6 +965,22 @@ void LayoutBoxModelObject::moveChildTo(LayoutBoxModelObject* toBoxModelObject, L
     // positioned layoutObject maps don't become stale. It would be too slow to do the map lookup on each call.
     ASSERT(!fullRemoveInsert || !isLayoutBlock() || !toLayoutBlock(this)->hasPositionedObjects());
 
+    // https://chromium.googlesource.com/chromium/src/+/7afb0474da50c93fa2360fc70ccbb73a313a45f7%5E%21/#F4
+    // If a child is moving from a block-flow to an inline-flow parent then any
+    // floats currently intruding into the child can no longer do so. This can
+    // happen if a block becomes floating or out-of-flow and is moved to an
+    // anonymous block. Remove all floats from their float-lists immediately as
+    // markAllDescendantsWithFloatsForLayout won't attempt to remove floats from
+    // parents that have inline-flow if we try later.
+//     if (child->isLayoutBlockFlow() && toBoxModelObject->childrenInline() &&
+//         !childrenInline()) {
+//         toLayoutBlockFlow(child)->removeFloatingObjectsFromDescendants();
+//         ASSERT(!toLayoutBlockFlow(child)->containsFloats());
+//     }
+
+    if (fullRemoveInsert && isLayoutBlock() && child->isBox())
+        LayoutBlock::removePercentHeightDescendantIfNeeded(toLayoutBox(child));
+
     ASSERT(this == child->parent());
     ASSERT(!beforeChild || toBoxModelObject == beforeChild->parent());
     if (fullRemoveInsert && (toBoxModelObject->isLayoutBlock() || toBoxModelObject->isLayoutInline())) {
@@ -984,6 +1000,10 @@ void LayoutBoxModelObject::moveChildrenTo(LayoutBoxModelObject* toBoxModelObject
     if (fullRemoveInsert && isLayoutBlock()) {
         LayoutBlock* block = toLayoutBlock(this);
         block->removePositionedObjects(nullptr);
+
+        if (isBox())
+            LayoutBlock::removePercentHeightDescendantIfNeeded(toLayoutBox(this));
+        
         if (block->isLayoutBlockFlow())
             toLayoutBlockFlow(block)->removeFloatingObjects();
     }

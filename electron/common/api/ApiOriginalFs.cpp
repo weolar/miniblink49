@@ -5,8 +5,7 @@
 #include "common/NodeRegisterHelp.h"
 #include "gin/object_template_builder.h"
 #include "gin/converter.h"
-#include "include/v8-profiler.h"
-#include "node/include/nodeblink.h"
+#include "node/nodeblink.h"
 #include <string>
 
 namespace {

@@ -5,6 +5,7 @@
 #include "third_party/WebKit/public/platform/WebBlobRegistry.h"
 #include "third_party/WebKit/public/platform/WebBlobData.h"
 #include "third_party/WebKit/Source/wtf/HashMap.h"
+#include "third_party/WebKit/Source/wtf/ThreadingPrimitives.h"
 #include "third_party/WebKit/Source/wtf/text/StringHash.h"
 #include "third_party/WebKit/Source/wtf/text/WTFString.h"
 
@@ -20,6 +21,8 @@ namespace content {
 
 class WebBlobRegistryImpl : public blink::WebBlobRegistry {
 public:
+    WebBlobRegistryImpl();
+
     class BuilderImpl : public blink::WebBlobRegistry::Builder {
     public:
         BuilderImpl();
@@ -57,6 +60,7 @@ public:
 
 private:
     HashMap<String, net::BlobDataWrap*> m_datasSet;
+    mutable RecursiveMutex m_lock;
 };
 
 } // namespace content

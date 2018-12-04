@@ -742,17 +742,17 @@ typedef interface IStiDeviceW             *PSTIDEVICEW;
 DECLARE_INTERFACE_(IStillImageW, IUnknown)
 {
     /*** IUnknown methods ***/
-    STDMETHOD(QueryInterface) (THIS_ REFIID riid, LPVOID* ppvObj) PURE;
-    STDMETHOD_(ULONG, AddRef) (THIS) PURE;
-    STDMETHOD_(ULONG, Release) (THIS) PURE;
+    STDMETHOD(QueryInterface) (THIS_ REFIID riid, LPVOID* ppvObj) = 0;
+    STDMETHOD_(ULONG, AddRef) (THIS) = 0;
+    STDMETHOD_(ULONG, Release) (THIS) = 0;
 
     /*** IStillImage methods ***/
-    STDMETHOD(Initialize) (THIS_ HINSTANCE hinst,DWORD dwVersion) PURE;
+    STDMETHOD(Initialize) (THIS_ HINSTANCE hinst,DWORD dwVersion) = 0;
 
-    STDMETHOD(GetDeviceList)(THIS_ DWORD dwType,DWORD dwFlags,DWORD *pdwItemsReturned,LPVOID *ppBuffer) PURE;
-    STDMETHOD(GetDeviceInfo)(THIS_ LPWSTR  pwszDeviceName, LPVOID *ppBuffer) PURE;
+    STDMETHOD(GetDeviceList)(THIS_ DWORD dwType,DWORD dwFlags,DWORD *pdwItemsReturned,LPVOID *ppBuffer) = 0;
+    STDMETHOD(GetDeviceInfo)(THIS_ LPWSTR  pwszDeviceName, LPVOID *ppBuffer) = 0;
 
-    STDMETHOD(CreateDevice) (THIS_ LPWSTR  pwszDeviceName, DWORD   dwMode, PSTIDEVICE *pDevice,LPUNKNOWN punkOuter) PURE;
+    STDMETHOD(CreateDevice) (THIS_ LPWSTR  pwszDeviceName, DWORD   dwMode, PSTIDEVICE *pDevice,LPUNKNOWN punkOuter) = 0;
 
     //
     // Device instance values. Used to associate various data with device.
@@ -763,17 +763,17 @@ DECLARE_INTERFACE_(IStillImageW, IUnknown)
     //
     // For appllication started through push model launch, returns associated information
     //
-    STDMETHOD(GetSTILaunchInformation)(THIS_ LPWSTR  pwszDeviceName, DWORD *pdwEventCode,LPWSTR  pwszEventName) PURE;
-    STDMETHOD(RegisterLaunchApplication)(THIS_ LPWSTR  pwszAppName,LPWSTR  pwszCommandLine) PURE;
-    STDMETHOD(UnregisterLaunchApplication)(THIS_ LPWSTR  pwszAppName) PURE;
+    STDMETHOD(GetSTILaunchInformation)(THIS_ LPWSTR  pwszDeviceName, DWORD *pdwEventCode,LPWSTR  pwszEventName) = 0;
+    STDMETHOD(RegisterLaunchApplication)(THIS_ LPWSTR  pwszAppName,LPWSTR  pwszCommandLine) = 0;
+    STDMETHOD(UnregisterLaunchApplication)(THIS_ LPWSTR  pwszAppName) = 0;
 
     //
     // To control state of notification handling. For polled devices this means state of monitor
     // polling, for true notification devices means enabling/disabling notification flow
     // from monitor to registered applications
     //
-    STDMETHOD(EnableHwNotifications)(THIS_ LPCWSTR  pwszDeviceName,BOOL bNewState) PURE;
-    STDMETHOD(GetHwNotificationState)(THIS_ LPCWSTR  pwszDeviceName,BOOL *pbCurrentState) PURE;
+    STDMETHOD(EnableHwNotifications)(THIS_ LPCWSTR  pwszDeviceName,BOOL bNewState) = 0;
+    STDMETHOD(GetHwNotificationState)(THIS_ LPCWSTR  pwszDeviceName,BOOL *pbCurrentState) = 0;
 
     //
     // When device is installed but not accessible, application may request bus refresh
@@ -781,7 +781,7 @@ DECLARE_INTERFACE_(IStillImageW, IUnknown)
     // like SCSI, when device was powered on after PnP enumeration
     //
     //
-    STDMETHOD(RefreshDeviceBus)(THIS_ LPCWSTR  pwszDeviceName) PURE;
+    STDMETHOD(RefreshDeviceBus)(THIS_ LPCWSTR  pwszDeviceName) = 0;
 
     //
     // Launch application to emulate event on a device. Used by "control center" style components,
@@ -798,15 +798,15 @@ DECLARE_INTERFACE_(IStillImageW, IUnknown)
     //
     // Write message to STI error log
     //
-    STDMETHOD(WriteToErrorLog)(THIS_ DWORD dwMessageType,LPCWSTR pszMessage) PURE;
+    STDMETHOD(WriteToErrorLog)(THIS_ DWORD dwMessageType,LPCWSTR pszMessage) = 0;
 
     #ifdef NOT_IMPLEMENTED
 
         //
         // TO register application for receiving various STI notifications
         //
-        STIMETHOD(RegisterDeviceNotification(THIS_ LPWSTR  pwszAppName,LPSUBSCRIBE lpSubscribe) PURE;
-        STIMETHOD(UnregisterDeviceNotification(THIS_ ) PURE;
+        STIMETHOD(RegisterDeviceNotification(THIS_ LPWSTR  pwszAppName,LPSUBSCRIBE lpSubscribe) = 0;
+        STIMETHOD(UnregisterDeviceNotification(THIS_ ) = 0;
 
     #endif //NOT_IMPLEMENTED
 
@@ -819,17 +819,17 @@ typedef struct IStillImageW *LPSTILLIMAGEW;
 DECLARE_INTERFACE_(IStillImageA, IUnknown)
 {
     /*** IUnknown methods ***/
-    STDMETHOD(QueryInterface) (THIS_ REFIID riid, LPVOID* ppvObj) PURE;
-    STDMETHOD_(ULONG, AddRef) (THIS) PURE;
-    STDMETHOD_(ULONG, Release) (THIS) PURE;
+    STDMETHOD(QueryInterface) (THIS_ REFIID riid, LPVOID* ppvObj) = 0;
+    STDMETHOD_(ULONG, AddRef) (THIS) = 0;
+    STDMETHOD_(ULONG, Release) (THIS) = 0;
 
     /*** IStillImage methods ***/
-    STDMETHOD(Initialize) (THIS_ HINSTANCE hinst,DWORD dwVersion) PURE;
+    STDMETHOD(Initialize) (THIS_ HINSTANCE hinst,DWORD dwVersion) = 0;
 
-    STDMETHOD(GetDeviceList)(THIS_ DWORD dwType,DWORD dwFlags,DWORD *pdwItemsReturned,LPVOID *ppBuffer) PURE;
-    STDMETHOD(GetDeviceInfo)(THIS_ LPCSTR  pwszDeviceName, LPVOID *ppBuffer) PURE;
+    STDMETHOD(GetDeviceList)(THIS_ DWORD dwType,DWORD dwFlags,DWORD *pdwItemsReturned,LPVOID *ppBuffer) = 0;
+    STDMETHOD(GetDeviceInfo)(THIS_ LPCSTR  pwszDeviceName, LPVOID *ppBuffer) = 0;
 
-    STDMETHOD(CreateDevice) (THIS_ LPCSTR  pwszDeviceName, DWORD   dwMode, PSTIDEVICE *pDevice,LPUNKNOWN punkOuter) PURE;
+    STDMETHOD(CreateDevice) (THIS_ LPCSTR  pwszDeviceName, DWORD   dwMode, PSTIDEVICE *pDevice,LPUNKNOWN punkOuter) = 0;
 
     //
     // Device instance values. Used to associate various data with device.
@@ -840,17 +840,17 @@ DECLARE_INTERFACE_(IStillImageA, IUnknown)
     //
     // For appllication started through push model launch, returns associated information
     //
-    STDMETHOD(GetSTILaunchInformation)(THIS_ LPSTR  pwszDeviceName, DWORD *pdwEventCode,LPSTR  pwszEventName) PURE;
-    STDMETHOD(RegisterLaunchApplication)(THIS_ LPCSTR  pwszAppName,LPCSTR  pwszCommandLine) PURE;
-    STDMETHOD(UnregisterLaunchApplication)(THIS_ LPCSTR  pwszAppName) PURE;
+    STDMETHOD(GetSTILaunchInformation)(THIS_ LPSTR  pwszDeviceName, DWORD *pdwEventCode,LPSTR  pwszEventName) = 0;
+    STDMETHOD(RegisterLaunchApplication)(THIS_ LPCSTR  pwszAppName,LPCSTR  pwszCommandLine) = 0;
+    STDMETHOD(UnregisterLaunchApplication)(THIS_ LPCSTR  pwszAppName) = 0;
 
     //
     // To control state of notification handling. For polled devices this means state of monitor
     // polling, for true notification devices means enabling/disabling notification flow
     // from monitor to registered applications
     //
-    STDMETHOD(EnableHwNotifications)(THIS_ LPCSTR  pwszDeviceName,BOOL bNewState) PURE;
-    STDMETHOD(GetHwNotificationState)(THIS_ LPCSTR  pwszDeviceName,BOOL *pbCurrentState) PURE;
+    STDMETHOD(EnableHwNotifications)(THIS_ LPCSTR  pwszDeviceName,BOOL bNewState) = 0;
+    STDMETHOD(GetHwNotificationState)(THIS_ LPCSTR  pwszDeviceName,BOOL *pbCurrentState) = 0;
 
     //
     // When device is installed but not accessible, application may request bus refresh
@@ -858,7 +858,7 @@ DECLARE_INTERFACE_(IStillImageA, IUnknown)
     // like SCSI, when device was powered on after PnP enumeration
     //
     //
-    STDMETHOD(RefreshDeviceBus)(THIS_ LPCSTR  pwszDeviceName) PURE;
+    STDMETHOD(RefreshDeviceBus)(THIS_ LPCSTR  pwszDeviceName) = 0;
 
     //
     // Launch application to emulate event on a device. Used by "control center" style components,
@@ -876,15 +876,15 @@ DECLARE_INTERFACE_(IStillImageA, IUnknown)
     //
     // Write message to STI error log
     //
-    STDMETHOD(WriteToErrorLog)(THIS_ DWORD dwMessageType,LPCSTR pszMessage) PURE;
+    STDMETHOD(WriteToErrorLog)(THIS_ DWORD dwMessageType,LPCSTR pszMessage) = 0;
 
     #ifdef NOT_IMPLEMENTED
 
         //
         // TO register application for receiving various STI notifications
         //
-        STIMETHOD(RegisterDeviceNotification(THIS_ LPWSTR  pwszAppName,LPSUBSCRIBE lpSubscribe) PURE;
-        STIMETHOD(UnregisterDeviceNotification(THIS_ ) PURE;
+        STIMETHOD(RegisterDeviceNotification(THIS_ LPWSTR  pwszAppName,LPSUBSCRIBE lpSubscribe) = 0;
+        STIMETHOD(UnregisterDeviceNotification(THIS_ ) = 0;
 
     #endif //NOT_IMPLEMENTED
 
@@ -931,42 +931,42 @@ typedef struct IStillImage  *LPSTILLIMAGE;
 DECLARE_INTERFACE_(IStiDevice, IUnknown)
 {
     /*** IUnknown methods ***/
-    STDMETHOD(QueryInterface) (THIS_ REFIID riid, LPVOID* ppvObj) PURE;
-    STDMETHOD_(ULONG, AddRef) (THIS) PURE;
-    STDMETHOD_(ULONG, Release) (THIS) PURE;
+    STDMETHOD(QueryInterface) (THIS_ REFIID riid, LPVOID* ppvObj) = 0;
+    STDMETHOD_(ULONG, AddRef) (THIS) = 0;
+    STDMETHOD_(ULONG, Release) (THIS) = 0;
 
     /*** IStiDevice methods ***/
-    STDMETHOD(Initialize) (THIS_ HINSTANCE hinst,LPCWSTR pwszDeviceName,DWORD dwVersion,DWORD  dwMode) PURE;
+    STDMETHOD(Initialize) (THIS_ HINSTANCE hinst,LPCWSTR pwszDeviceName,DWORD dwVersion,DWORD  dwMode) = 0;
 
-    STDMETHOD(GetCapabilities) (THIS_ PSTI_DEV_CAPS pDevCaps) PURE;
+    STDMETHOD(GetCapabilities) (THIS_ PSTI_DEV_CAPS pDevCaps) = 0;
 
-    STDMETHOD(GetStatus) (THIS_ PSTI_DEVICE_STATUS pDevStatus) PURE;
+    STDMETHOD(GetStatus) (THIS_ PSTI_DEVICE_STATUS pDevStatus) = 0;
 
-    STDMETHOD(DeviceReset)(THIS ) PURE;
-    STDMETHOD(Diagnostic)(THIS_ LPSTI_DIAG pBuffer) PURE;
+    STDMETHOD(DeviceReset)(THIS ) = 0;
+    STDMETHOD(Diagnostic)(THIS_ LPSTI_DIAG pBuffer) = 0;
 
-    STDMETHOD(Escape)(THIS_ STI_RAW_CONTROL_CODE    EscapeFunction,LPVOID  lpInData,DWORD   cbInDataSize,LPVOID pOutData,DWORD dwOutDataSize,LPDWORD pdwActualData) PURE ;
+    STDMETHOD(Escape)(THIS_ STI_RAW_CONTROL_CODE    EscapeFunction,LPVOID  lpInData,DWORD   cbInDataSize,LPVOID pOutData,DWORD dwOutDataSize,LPDWORD pdwActualData) = 0 ;
 
-    STDMETHOD(GetLastError) (THIS_ LPDWORD pdwLastDeviceError) PURE;
+    STDMETHOD(GetLastError) (THIS_ LPDWORD pdwLastDeviceError) = 0;
 
-    STDMETHOD(LockDevice) (THIS_ DWORD dwTimeOut) PURE;
-    STDMETHOD(UnLockDevice) (THIS ) PURE;
+    STDMETHOD(LockDevice) (THIS_ DWORD dwTimeOut) = 0;
+    STDMETHOD(UnLockDevice) (THIS ) = 0;
 
-    STDMETHOD(RawReadData)(THIS_ LPVOID lpBuffer,LPDWORD lpdwNumberOfBytes,LPOVERLAPPED lpOverlapped) PURE;
-    STDMETHOD(RawWriteData)(THIS_ LPVOID lpBuffer,DWORD nNumberOfBytes,LPOVERLAPPED lpOverlapped) PURE;
+    STDMETHOD(RawReadData)(THIS_ LPVOID lpBuffer,LPDWORD lpdwNumberOfBytes,LPOVERLAPPED lpOverlapped) = 0;
+    STDMETHOD(RawWriteData)(THIS_ LPVOID lpBuffer,DWORD nNumberOfBytes,LPOVERLAPPED lpOverlapped) = 0;
 
-    STDMETHOD(RawReadCommand)(THIS_ LPVOID lpBuffer,LPDWORD lpdwNumberOfBytes,LPOVERLAPPED lpOverlapped) PURE;
-    STDMETHOD(RawWriteCommand)(THIS_ LPVOID lpBuffer,DWORD nNumberOfBytes,LPOVERLAPPED lpOverlapped) PURE;
+    STDMETHOD(RawReadCommand)(THIS_ LPVOID lpBuffer,LPDWORD lpdwNumberOfBytes,LPOVERLAPPED lpOverlapped) = 0;
+    STDMETHOD(RawWriteCommand)(THIS_ LPVOID lpBuffer,DWORD nNumberOfBytes,LPOVERLAPPED lpOverlapped) = 0;
 
     //
     // Subscription is used to enable "control center" style applications , where flow of
     // notifications should be redirected from monitor itself to another "launcher"
     //
-    STDMETHOD(Subscribe)(THIS_ LPSTISUBSCRIBE lpSubsribe) PURE;
-    STDMETHOD(GetLastNotificationData)(THIS_ LPSTINOTIFY   lpNotify) PURE;
-    STDMETHOD(UnSubscribe)(THIS ) PURE;
+    STDMETHOD(Subscribe)(THIS_ LPSTISUBSCRIBE lpSubsribe) = 0;
+    STDMETHOD(GetLastNotificationData)(THIS_ LPSTINOTIFY   lpNotify) = 0;
+    STDMETHOD(UnSubscribe)(THIS ) = 0;
 
-    STDMETHOD(GetLastErrorInfo) (THIS_ STI_ERROR_INFO *pLastErrorInfo) PURE;
+    STDMETHOD(GetLastErrorInfo) (THIS_ STI_ERROR_INFO *pLastErrorInfo) = 0;
 };
 
 #if !defined(__cplusplus) || defined(CINTERFACE)

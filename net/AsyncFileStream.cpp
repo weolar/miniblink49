@@ -34,6 +34,7 @@
 
 #include "net/FileStream.h"
 #include "net/FileStreamClient.h"
+#include "net/LambdaTask.h"
 #include "content/web_impl_win/BlinkPlatformImpl.h"
 #include "third_party/WebKit/public/platform/WebThread.h"
 #include "third_party/WebKit/public/platform/WebTraceLocation.h"
@@ -51,6 +52,11 @@ struct AsyncTaskInfo {
         this->blinkThread = blinkThread;
         this->fileThread = fileThread;
         destroyed = false;
+    }
+
+    ~AsyncTaskInfo()
+    {
+        delete stream;
     }
 
     FileStream* stream;
@@ -73,23 +79,6 @@ AsyncFileStream::AsyncFileStream(FileStreamClient* client)
     m_asyncTaskInfo = new AsyncTaskInfo(m_stream, m_blinkThread, m_fileThread, m_client);
 }
 
-static void lambdaCall(std::function<void()>&& func)
-{
-    func();
-}
-
-class LambdaTask : public  blink::WebThread::Task {
-public:
-    LambdaTask(std::function<void()>&& func) 
-        : m_func(func) { }
-    virtual ~LambdaTask() override { }
-
-    virtual void run() override { m_func(); }
-
-private:
-    std::function<void()> m_func;
-};
-
 static void callOnFileThread(AsyncTaskInfo* info, std::function<void()>&& func)
 {
     info->fileThread->postTask(FROM_HERE, new LambdaTask(std::move(func)));
@@ -103,6 +92,8 @@ static void callOnBlinkThread(AsyncTaskInfo* info, std::function<void()>&& func)
 AsyncFileStream::~AsyncFileStream()
 {
     ASSERT(isMainThread());
+
+    close();
 
     AsyncTaskInfo* asyncTaskInfo = m_asyncTaskInfo;
     // Set flag to prevent client callbacks and also prevent queued operations from starting.
@@ -226,8 +217,6 @@ void AsyncFileStream::close()
 
     AsyncTaskInfo* info = m_asyncTaskInfo;
     callOnFileThread(info, [info] {
-        if (info->destroyed)
-            return;
         info->stream->close();
     });
 }
