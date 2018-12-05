@@ -52,6 +52,9 @@
 #endif
 
 namespace v8 {
+
+DWORD tlsPatchForCreateDataProperty = 0;
+
 namespace internal {
 
 Handle<HeapType> Object::OptimalType(Isolate* isolate,
@@ -4854,8 +4857,11 @@ Maybe<bool> JSObject::DefineOwnPropertyIgnoreAttributes(
 
         // Special handling for ExecutableAccessorInfo, which behaves like a
         // data property.
-        if (accessors->IsExecutableAccessorInfo() &&
-            handling == DONT_FORCE_FIELD) {
+        bool b = false; ;// TlsAlloc(void);
+        if (0 != tlsPatchForCreateDataProperty)
+          b = (1 == (int)TlsGetValue(tlsPatchForCreateDataProperty));
+
+        if (accessors->IsExecutableAccessorInfo() && handling == DONT_FORCE_FIELD && !b) {
           PropertyDetails details = it->property_details();
           // Ensure the context isn't changed after calling into accessors.
           AssertNoContextChange ncc(it->isolate());
@@ -4965,6 +4971,9 @@ MaybeHandle<Object> JSObject::DefinePropertyOrElementIgnoreAttributes(
 
 Maybe<bool> JSObject::CreateDataProperty(LookupIterator* it,
                                          Handle<Object> value) {
+  if (0 == tlsPatchForCreateDataProperty)
+    tlsPatchForCreateDataProperty = TlsAlloc();
+  TlsSetValue(tlsPatchForCreateDataProperty, (LPVOID)1);
   DCHECK(it->GetReceiver()->IsJSObject());
   Maybe<PropertyAttributes> maybe = JSReceiver::GetPropertyAttributes(it);
   if (maybe.IsNothing()) return Nothing<bool>();
@@ -4981,6 +4990,7 @@ Maybe<bool> JSObject::CreateDataProperty(LookupIterator* it,
       DefineOwnPropertyIgnoreAttributes(it, value, NONE, DONT_FORCE_FIELD),
       Nothing<bool>());
 
+  TlsSetValue(tlsPatchForCreateDataProperty, (LPVOID)0);
   return Just(true);
 }
 
