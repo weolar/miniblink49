@@ -74,6 +74,7 @@
 namespace v8 {
 
 bool g_patchForCreateDataProperty = false; // 在属性访问器里调用CreateDataProperty会重入
+DWORD tlsPatchForCreateDataProperty = 0;
 
 namespace internal {
 
@@ -5868,7 +5869,11 @@ Maybe<bool> JSObject::DefineOwnPropertyIgnoreAttributes(
 
         // Special handling for AccessorInfo, which behaves like a data
         // property.
-        if (accessors->IsAccessorInfo() && handling == DONT_FORCE_FIELD && !g_patchForCreateDataProperty) {
+        bool b = false;  ;// TlsAlloc(void);
+        if (0 != tlsPatchForCreateDataProperty)
+          b = (1 == (int)TlsGetValue(tlsPatchForCreateDataProperty));
+
+        if (accessors->IsAccessorInfo() && handling == DONT_FORCE_FIELD && !b) {
           PropertyAttributes current_attributes = it->property_attributes();
           // Ensure the context isn't changed after calling into accessors.
           AssertNoContextChange ncc(it->isolate());
@@ -7023,6 +7028,9 @@ Maybe<bool> JSReceiver::CreateDataProperty(LookupIterator* it,
 Maybe<bool> JSObject::CreateDataProperty(LookupIterator* it,
                                          Handle<Object> value,
                                          ShouldThrow should_throw) {
+  if (0 == tlsPatchForCreateDataProperty)
+    tlsPatchForCreateDataProperty = TlsAlloc();
+  TlsSetValue(tlsPatchForCreateDataProperty, (LPVOID)1);
   DCHECK(it->GetReceiver()->IsJSObject());
   MAYBE_RETURN(JSReceiver::GetPropertyAttributes(it), Nothing<bool>());
   Handle<JSReceiver> receiver = Handle<JSReceiver>::cast(it->GetReceiver());
@@ -7048,6 +7056,7 @@ Maybe<bool> JSObject::CreateDataProperty(LookupIterator* it,
                             DefineOwnPropertyIgnoreAttributes(it, value, NONE),
                             Nothing<bool>());
 
+  TlsSetValue(tlsPatchForCreateDataProperty, (LPVOID)0);
   return Just(true);
 }
 
