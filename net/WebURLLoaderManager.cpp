@@ -605,8 +605,9 @@ bool WebURLLoaderManager::downloadOnIoThread()
 
                 MainTaskArgs* args = WebURLLoaderManagerMainTask::pushTask(jobId, WebURLLoaderManagerMainTask::TaskType::kDidFail, nullptr, 0, 0, 0);
                 args->resourceError->reason = msg->data.result;
-                args->resourceError->domain = WebString::fromLatin1(url);
-                args->resourceError->localizedDescription = WebString::fromLatin1(curl_easy_strerror(msg->data.result));
+                args->resourceError->domain = blink::WebString::fromLatin1(url);
+                args->resourceError->unreachableURL = blink::KURL(blink::ParsedURLString, url);
+                args->resourceError->localizedDescription = blink::WebString::fromLatin1(curl_easy_strerror(msg->data.result));
 
                 String outString = String::format("kDidFail on io Thread:%d, %s\n", msg->data.result, url);
                 OutputDebugStringW(outString.charactersWithNullTermination().data());
