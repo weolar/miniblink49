@@ -45,8 +45,13 @@ int NavigationController::historyForwardListCount()
 // - The other item corresponds to the same set of documents, including frames (for history entries created via regular navigation)
 static bool shouldDoSameDocumentNavigationTo(const HistoryEntry* curItem, const HistoryEntry* otherItem)
 {
+#if 0
+    // 这里先注释调用。重现地址：usertest.sztaizhou.com
+    // 一共三个item，如果第一个到第二个item是same，第三个不是，那么如果从
+    // 第三个后退到第二个，就会因为same导致页面加载失败
     if (otherItem->m_isSameDocument)
         return true;
+#endif
 
     if (curItem == otherItem)
         return false;

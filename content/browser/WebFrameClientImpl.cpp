@@ -321,7 +321,7 @@ void WebFrameClientImpl::didFailProvisionalLoad(WebLocalFrame* frame, const WebU
         String failedReasonStr = String::format("error reason: %d, ", error.reason);
         failedReasonStr.append(error.localizedDescription);
         wke::CString failedReason(failedReasonStr);
-        wke::CString url(error.unreachableURL.string());
+        wke::CString url(error.domain); // error is set in WebURLLoaderManager::downloadOnIoThread
 
         if (error.isCancellation)
             result = WKE_LOADING_CANCELED;
