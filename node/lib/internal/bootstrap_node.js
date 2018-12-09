@@ -149,6 +149,17 @@
 
         preloadModules();
         run(Module.runMain);
+      } else if (("_getProloadScript" in process)) { // weolar add
+        const Module = NativeModule.require('module');
+        const vm = NativeModule.require('vm');
+      	
+        const module = new Module('[proloadScript]');
+        var source = process._getProloadScript();
+        //source = Module.wrap(source);
+        preloadModules();
+        module._compile(source, "proloadScript.js");
+        
+        process._tickCallback();
       } else {
         preloadModules();
         // If -i or --interactive were passed, or stdin is a TTY.
@@ -509,6 +520,8 @@
   };
 
   function setupAsarSupport() {
+    if (("_isInElectronEnv" in process) && !process._isInElectronEnv()) // weolar add
+      return;
     process.binding('atom_common_asar').initAsarSupport(process, NativeModule.require);
   }
 
