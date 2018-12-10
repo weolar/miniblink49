@@ -149,7 +149,7 @@
 
         preloadModules();
         run(Module.runMain);
-      } else if (("_getProloadScript" in process)) { // weolar add
+      } else if (("_getPreloadScript" in process)) { // weolar add
         const Module = NativeModule.require('module');
         const vm = NativeModule.require('vm');
       	
