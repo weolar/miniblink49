@@ -28,6 +28,7 @@
 #include "async-wrap-inl.h"
 #include "env.h"
 #include "env-inl.h"
+#include "node_api.h"
 #include "handle_wrap.h"
 #include "req-wrap.h"
 #include "req-wrap-inl.h"
@@ -63,6 +64,11 @@ typedef int mode_t;
 #if USING_VC6RT == 1
 extern "C" int snprintf(char* buf, size_t len, const char* fmt, ...);
 #endif
+
+void napi_module_register_by_symbol(v8::Local<v8::Object> exports,
+    v8::Local<v8::Value> module,
+    v8::Local<v8::Context> context,
+    napi_addon_register_func init);
 
 namespace node {
 
@@ -2043,6 +2049,13 @@ namespace node {
     return lib->handle != nullptr;
   }
 
+  inline napi_addon_register_func GetNapiInitializerCallback(uv_lib_t* lib) {
+    const char* name = STRINGIFY(NAPI_MODULE_INITIALIZER_BASE) STRINGIFY(NAPI_MODULE_VERSION);
+    void* address;
+    uv_dlsym(lib, name, &address);
+    return reinterpret_cast<napi_addon_register_func>(address);
+  }
+
 	// DLOpen is process.dlopen(module, filename).
 	// Used to load 'module.node' dynamically shared objects.
 	//
@@ -2091,6 +2104,23 @@ namespace node {
       modpending = nullptr;
     }
 #endif
+
+    if (mp == nullptr) {
+      if (napi_addon_register_func napi_callback = GetNapiInitializerCallback(&lib)) {
+        v8::Local<v8::Object> module;
+        v8::Local<v8::Object> exports;
+        v8::Local<v8::Value> exports_v;
+        v8::Local<v8::Context> context = env->context();
+        if (!args[0]->ToObject(context).ToLocal(&module) ||
+          !module->Get(context, env->exports_string()).ToLocal(&exports_v) ||
+          !exports_v->ToObject(context).ToLocal(&exports)) {
+          return;  // Exception pending.
+        }
+
+        napi_module_register_by_symbol(exports, module, context, napi_callback);
+        return;
+      }
+    }
 
 		if (mp == nullptr) {
       PrintCallStack(args.GetIsolate());
@@ -3711,6 +3741,15 @@ namespace node {
 		at_exit_functions_ = p;
 	}
 
+  void AddEnvironmentCleanupHook(Isolate* isolate, void(*fun)(void* arg), void* arg) {
+    Environment* env = Environment::GetCurrent(isolate);
+    env->AddCleanupHook(fun, arg);
+  }
+
+  void RemoveEnvironmentCleanupHook(Isolate* isolate, void(*fun)(void* arg), void* arg) {
+    Environment* env = Environment::GetCurrent(isolate);
+    env->RemoveCleanupHook(fun, arg);
+  }
 
 	void EmitBeforeExit(Environment* env) {
 		HandleScope handle_scope(env->isolate());

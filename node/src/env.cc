@@ -14,6 +14,7 @@
 #ifndef MINIBLINK_NOT_IMPLEMENTED
 #include "node/nodeblink.h"
 #include <list>
+#include <algorithm>
 #endif
 
 namespace node {
@@ -66,6 +67,58 @@ void Environment::PrintSyncTrace() const {
     }
   }
   fflush(stderr);
+}
+
+void Environment::AddCleanupHook(void(*fn)(void*), void* arg) {
+    CleanupHookCallback* cb = new CleanupHookCallback(fn, arg, cleanup_hook_counter_++);
+    if (!cleanup_hooks_)
+        cleanup_hooks_ = new std::vector<CleanupHookCallback*>();
+    cleanup_hooks_->push_back(cb);
+}
+
+void Environment::RemoveCleanupHook(void(*fn)(void*), void* arg) {   
+    for (size_t i = 0; i < cleanup_hooks_->size(); ++i) {
+        CleanupHookCallback* hook = cleanup_hooks_->at(i);
+        if (hook->fn_ == fn && hook->arg_ == arg) {
+            cleanup_hooks_->erase(cleanup_hooks_->begin() + i);
+            delete hook;
+            return;
+        }
+    }
+}
+
+void RunCleanup(Environment* env) {
+    env->CleanupHandles();
+
+    while (!env->get_cleanup_hooks()->empty()) {
+        // Copy into a vector, since we can't sort an unordered_set in-place.
+        std::vector<Environment::CleanupHookCallback*> callbacks(env->get_cleanup_hooks()->begin(), env->get_cleanup_hooks()->end());
+        // We can't erase the copied elements from `cleanup_hooks_` yet, because we
+        // need to be able to check whether they were un-scheduled by another hook.
+        std::sort(callbacks.begin(), callbacks.end(), &Environment::CleanupHookCallback::CompareGT);
+
+        for (size_t i = 0; i < callbacks.size(); ++i) {
+            const Environment::CleanupHookCallback* cb = callbacks[i];
+
+            bool find = false;
+            for (size_t j = 0; j < env->get_cleanup_hooks()->size(); ++j) {
+                const Environment::CleanupHookCallback* cb2 = env->get_cleanup_hooks()->at(j);
+                if (cb2 != cb)
+                    continue;
+                find = true;
+                break;
+            }
+            if (!find) {
+                // This hook was removed from the `cleanup_hooks_` set during another
+                // hook that was run earlier. Nothing to do here.
+                continue;
+            }
+
+            cb->fn_(cb->arg_);
+            env->Environment::RemoveCleanupHook(cb->fn_, cb->arg_);
+        }
+        env->CleanupHandles();
+    }
 }
 
 void AddLiveSet(intptr_t obj) {
