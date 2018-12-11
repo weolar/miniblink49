@@ -14,10 +14,28 @@
 #define BUILDING_UV_SHARED 1
 #define CARES_BUILDING_LIBRARY 0
 
-#include "node/src/node.h"
-#include "node/src/env.h"
-#include "node/src/env-inl.h"
-#include "node/uv/include/uv.h"
+// #include "node/src/node.h"
+// #include "node/src/env.h"
+// #include "node/src/env-inl.h"
+// #include "node/uv/include/uv.h"
+
+#ifdef _WIN32
+# ifndef BUILDING_NODE_EXTENSION
+#   define NODE_EXTERN __declspec(dllexport)
+# else
+#   define NODE_EXTERN __declspec(dllimport)
+# endif
+#else
+# define NODE_EXTERN /* nothing */
+#endif
+
+namespace node {
+class Environment;
+}
+
+namespace v8 {
+class Isolate;
+}
 
 struct NodeNative {
     const char* name;
