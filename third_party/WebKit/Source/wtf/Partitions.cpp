@@ -31,7 +31,6 @@
 #include "wtf/Partitions.h"
 
 #include "base/debug/alias.h"
-#include "wtf/PartitionAllocator.h"
 #include "wtf/MainThread.h"
 
 namespace WTF {

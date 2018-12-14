@@ -2117,7 +2117,7 @@ namespace node {
           return;  // Exception pending.
         }
 
-        napi_module_register_by_symbol(exports, module, context, napi_callback);
+        //napi_module_register_by_symbol(exports, module, context, napi_callback);
         return;
       }
     }

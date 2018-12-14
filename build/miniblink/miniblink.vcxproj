@@ -520,6 +520,7 @@
     <ClCompile Include="..\..\content\devtools\DevToolsMgr.cpp" />
     <ClCompile Include="..\..\content\devtools\DevToolsProtocolDispatcher.cpp" />
     <ClCompile Include="..\..\content\resources\DebuggerScriptSourceJs.cpp" />
+    <ClCompile Include="..\..\content\resources\FullscreenCss.cpp" />
     <ClCompile Include="..\..\content\resources\InjectedScriptSourceJs.cpp" />
     <ClCompile Include="..\..\content\resources\InspectorOverlayPageHtml.cpp" />
     <ClCompile Include="..\..\content\resources\MediaPlayerData.cpp" />
@@ -530,9 +531,11 @@
     <ClCompile Include="..\..\content\ui\WebDropSource.cpp" />
     <ClCompile Include="..\..\content\web_impl_win\WebCryptoImpl.cpp" />
     <ClCompile Include="..\..\content\web_impl_win\WebMessagePortChannelImpl.cpp" />
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\USVStringOrURLSearchParams.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8DevToolsHost.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8External.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8InspectorOverlayHost.cpp" />
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8URLSearchParams.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8XMLSerializer.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8Crypto.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8DataTransferItemPartial.cpp" />
@@ -542,6 +545,8 @@
     <ClCompile Include="..\..\gen\blink\core\InspectorInstrumentationImpl.cpp" />
     <ClCompile Include="..\..\gen\blink\core\InspectorTypeBuilder.cpp" />
     <ClCompile Include="..\..\net\ActivatingObjCheck.cpp" />
+    <ClCompile Include="..\..\net\cookies\CookieJarMgr.cpp" />
+    <ClCompile Include="..\..\net\cookies\WebCookieJarCurlImpl.cpp" />
     <ClCompile Include="..\..\net\PageNetExtraData.cpp" />
     <ClCompile Include="..\..\net\WebURLLoaderManagerUtil.cpp" />
     <ClCompile Include="..\..\node\src\node_url.cc">
@@ -568,6 +573,7 @@
     <ClCompile Include="..\..\third_party\WebKit\Source\bindings\core\v8\ScriptHeapSnapshot.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\bindings\core\v8\ScriptProfiler.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\bindings\core\v8\V8GCController_v8_5_7.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\dom\URLSearchParams.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\AsyncCallChain.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\AsyncCallTracker.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\ConsoleMessage.cpp" />
@@ -857,7 +863,6 @@
     <ClCompile Include="..\..\content\web_impl_win\WaitableEventWin.cpp" />
     <ClCompile Include="..\..\content\web_impl_win\WebBlobRegistryImpl.cpp" />
     <ClCompile Include="..\..\content\web_impl_win\WebClipboardImpl.cpp" />
-    <ClCompile Include="..\..\content\web_impl_win\WebCookieJarCurlImpl.cpp" />
     <ClCompile Include="..\..\content\web_impl_win\WebFileUtilitiesImpl.cpp" />
     <ClCompile Include="..\..\content\web_impl_win\WebMediaPlayerImpl.cpp" />
     <ClCompile Include="..\..\content\web_impl_win\WebMimeRegistryImpl.cpp" />
@@ -4979,6 +4984,7 @@
     <ClCompile Include="..\..\third_party\WebKit\Source\web\WebDOMEvent.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\web\WebElement.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\web\WebElementCollection.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\web\WebEntities.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\web\WebFileChooserCompletionImpl.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\web\WebFormControlElement.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\web\WebFormElement.cpp" />
@@ -4995,6 +5001,8 @@
     <ClCompile Include="..\..\third_party\WebKit\Source\web\WebNode.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\web\WebNodeList.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\web\WebPagePopupImpl.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\web\WebPageSerializer.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\web\WebPageSerializerImpl.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\web\WebPluginContainerImpl.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\web\WebPluginLoadObserver.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\web\WebRange.cpp" />
@@ -5932,7 +5940,9 @@
     <ClInclude Include="..\..\content\ui\WebDropSource.h" />
     <ClInclude Include="..\..\content\web_impl_win\WebCryptoImpl.h" />
     <ClInclude Include="..\..\content\web_impl_win\WebMessagePortChannelImpl.h" />
+    <ClInclude Include="..\..\gen\blink\bindings\core\v8\USVStringOrURLSearchParams.h" />
     <ClInclude Include="..\..\gen\blink\bindings\core\v8\V8External.h" />
+    <ClInclude Include="..\..\gen\blink\bindings\core\v8\V8URLSearchParams.h" />
     <ClInclude Include="..\..\gen\blink\bindings\core\v8\V8XMLSerializer.h" />
     <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8Crypto.h" />
     <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8DataTransferItemPartial.h" />
@@ -5941,6 +5951,8 @@
     <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8DOMFileSystemSync.h" />
     <ClInclude Include="..\..\net\ActivatingObjCheck.h" />
     <ClInclude Include="..\..\net\CancelledReason.h" />
+    <ClInclude Include="..\..\net\cookies\CookieJarMgr.h" />
+    <ClInclude Include="..\..\net\cookies\WebCookieJarCurlImpl.h" />
     <ClInclude Include="..\..\net\FlattenHTTPBodyElement.h" />
     <ClInclude Include="..\..\net\HeaderVisitor.h" />
     <ClInclude Include="..\..\net\InitializeHandleInfo.h" />
@@ -5962,6 +5974,7 @@
     <ClInclude Include="..\..\third_party\WebKit\Source\bindings\core\v8\inspector\V8JavaScriptCallFrame.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\bindings\core\v8\ScriptHeapSnapshot.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\bindings\core\v8\ScriptProfiler.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\dom\URLSearchParams.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\core\frame\External.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\AsyncCallChain.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\AsyncCallTracker.h" />
@@ -6338,7 +6351,6 @@
     <ClInclude Include="..\..\content\web_impl_win\WaitableEvent.h" />
     <ClInclude Include="..\..\content\web_impl_win\WebBlobRegistryImpl.h" />
     <ClInclude Include="..\..\content\web_impl_win\WebClipboardImpl.h" />
-    <ClInclude Include="..\..\content\web_impl_win\WebCookieJarCurlImpl.h" />
     <ClInclude Include="..\..\content\web_impl_win\WebCookieJarINetImpl.h" />
     <ClInclude Include="..\..\content\web_impl_win\WebFileUtilitiesImpl.h" />
     <ClInclude Include="..\..\content\web_impl_win\WebMediaPlayerImpl.h" />
@@ -8938,6 +8950,7 @@
     <ClInclude Include="..\..\third_party\WebKit\Source\web\WebDataSourceImpl.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\web\WebDevToolsAgentImpl.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\web\WebDevToolsFrontendImpl.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\web\WebEntities.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\web\WebFileChooserCompletionImpl.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\web\WebFrameWidgetImpl.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\web\WebGraphicsContextImpl.h" />
@@ -8945,6 +8958,7 @@
     <ClInclude Include="..\..\third_party\WebKit\Source\web\WebLocalFrameImpl.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\web\WebMediaPlayerClientImpl.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\web\WebPagePopupImpl.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\web\WebPageSerializerImpl.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\web\WebPluginContainerImpl.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\web\WebPluginLoadObserver.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\web\WebRemoteFrameImpl.h" />

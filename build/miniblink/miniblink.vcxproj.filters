@@ -8859,9 +8859,6 @@
     <ClCompile Include="..\..\net\WebURLLoaderManager.cpp">
       <Filter>net</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\content\web_impl_win\WebCookieJarCurlImpl.cpp">
-      <Filter>content\web_impl_win</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\net\MultipartHandle.cpp">
       <Filter>net</Filter>
     </ClCompile>
@@ -10143,6 +10140,33 @@
     <ClCompile Include="..\..\content\resources\MediaPlayerData.cpp" />
     <ClCompile Include="..\..\node\src\tls_wrap.cc">
       <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\net\cookies\WebCookieJarCurlImpl.cpp">
+      <Filter>net\cookies</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\net\cookies\CookieJarMgr.cpp">
+      <Filter>net\cookies</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\content\resources\FullscreenCss.cpp">
+      <Filter>content\resources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8URLSearchParams.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\USVStringOrURLSearchParams.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\dom\URLSearchParams.cpp">
+      <Filter>third_party\Webkit\Source\core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\web\WebPageSerializer.cpp">
+      <Filter>third_party\Webkit\Source\web</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\web\WebPageSerializerImpl.cpp">
+      <Filter>third_party\Webkit\Source\web</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\web\WebEntities.cpp">
+      <Filter>third_party\Webkit\Source\web</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -21939,9 +21963,6 @@
     <ClInclude Include="..\..\base\strings\utf_offset_string_conversions.h">
       <Filter>base\strings</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\content\web_impl_win\WebCookieJarCurlImpl.h">
-      <Filter>content\web_impl_win</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\content\web_impl_win\WebCookieJarINetImpl.h">
       <Filter>content\web_impl_win</Filter>
     </ClInclude>
@@ -23043,6 +23064,27 @@
     </ClInclude>
     <ClInclude Include="..\..\content\resources\MediaPlayerData.h">
       <Filter>content\resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\net\cookies\WebCookieJarCurlImpl.h">
+      <Filter>net\cookies</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\net\cookies\CookieJarMgr.h">
+      <Filter>net\cookies</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\core\v8\V8URLSearchParams.h">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\core\v8\USVStringOrURLSearchParams.h">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\dom\URLSearchParams.h">
+      <Filter>third_party\Webkit\Source\core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\web\WebPageSerializerImpl.h">
+      <Filter>third_party\Webkit\Source\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\web\WebEntities.h">
+      <Filter>third_party\Webkit\Source\web</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
