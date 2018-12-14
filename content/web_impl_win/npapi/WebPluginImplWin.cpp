@@ -360,6 +360,8 @@ void WebPluginImpl::updatePluginWidget(const IntRect& windowRect, const IntRect&
             ::DeleteObject(rgn);
         }
 
+        setNPWindowRect(windowRect);
+
         setCallingPlugin(false);
 
         m_haveUpdatedPluginWidget = true;
