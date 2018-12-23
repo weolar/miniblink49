@@ -355,12 +355,12 @@ public:
         else if (_P == begin())
         {
             if (key_compare(_Kfn()(_V), _Key(_P._Mynode())))
-                return (_Insert(_Head, _P._Mynode(), value_type(_V)));
+                return (_Insert(_Head, _P._Mynode(), forward<_Ty>(value_type(_V))));
         }
         else if (_P == end())
         {
             if (key_compare(_Key(_Rmost()), _Kfn()(_V)))
-                return (_Insert(_Nil, _Rmost(), value_type(_V)));
+                return (_Insert(_Nil, _Rmost(), forward<_Ty>(value_type(_V))));
         }
         else
         {
@@ -369,12 +369,12 @@ public:
                 && key_compare(_Kfn()(_V), _Key(_P._Mynode())))
             {
                 if (_Right(_Pb._Mynode()) == _Nil)
-                    return (_Insert(_Nil, _Pb._Mynode(), value_type(_V)));
+                    return (_Insert(_Nil, _Pb._Mynode(), forward<_Ty>(value_type(_V))));
                 else
-                    return (_Insert(_Head, _P._Mynode(), value_type(_V)));
+                    return (_Insert(_Head, _P._Mynode(), forward<_Ty>(value_type(_V))));
             }
         }
-        return (insert(value_type(_V)).first);
+        return (insert(forward<_Ty>(value_type(_V))).first);
     }
     void insert(iterator _F, iterator _L)
     {
