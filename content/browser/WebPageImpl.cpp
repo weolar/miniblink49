@@ -595,11 +595,11 @@ void WebPageImpl::doClose()
 
 
     if (m_hWnd) {
-        if (::IsWindow(m_hWnd)) {
+        if (::IsWindow(m_hWnd)) { // 多线程渲染时，ui线程先销毁窗口，再走到此处
             ::RevokeDragDrop(m_hWnd);
             ASSERT(0 == m_dragHandle->getRefCount());
         } else {
-            ASSERT(1 == m_dragHandle->getRefCount());
+            ASSERT(0 == m_dragHandle->getRefCount());
         }
     }
 
@@ -2124,7 +2124,7 @@ void WebPageImpl::didExitDebugLoop()
         m_webViewImpl->setIgnoreInputEvents(true);
 }
 
-void WebPageImpl::setCookieJarPath(const char* path)
+void WebPageImpl::setCookieJarFullPath(const char* path)
 {
     if (!m_pageNetExtraData)
         m_pageNetExtraData = new net::PageNetExtraData();
@@ -2138,7 +2138,8 @@ bool WebPageImpl::initSetting()
         return false;
     settings->setTextAreasAreResizable(true);
     
-    settings->setStandardFontFamily(WebString(L"微软雅黑", 4));
+    //settings->setStandardFontFamily(WebString(L"微软雅黑", 4));
+    settings->setStandardFontFamily(blink::WebString(L"宋体", 2));
     settings->setUsesEncodingDetector(true);
     settings->setJavaScriptEnabled(true);
     settings->setAllowFileAccessFromFileURLs(true);
@@ -2155,6 +2156,7 @@ bool WebPageImpl::initSetting()
     settings->setPluginsEnabled(true);
     settings->setJavaScriptCanOpenWindowsAutomatically(true);
     settings->setJavaScriptCanAccessClipboard(true);
+    settings->setPrimaryPointerType(blink::WebSettings::PointerTypeFine);
 
     PluginDatabase::installedPlugins()->refresh();
 
