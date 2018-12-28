@@ -421,26 +421,28 @@ public:
         SkScalar trackHSV[3];
         SkColorToHSV(track_color_, trackHSV);
         SkColor buttonColor = SaturateAndBrighten(trackHSV, 0, 0.2f);
-        SkColor backgroundColor = buttonColor;
+        SkColor backgroundColor = 0xff000000 | (RGB(236, 236, 236));// buttonColor;
         if (state == blink::WebThemeEngine::StatePressed) {
             SkScalar buttonHSV[3];
             SkColorToHSV(buttonColor, buttonHSV);
             buttonColor = SaturateAndBrighten(buttonHSV, 0, -0.1f);
-        }
-        else if (state == blink::WebThemeEngine::StateHover) {
+            backgroundColor = 0xff000000 | (RGB(220, 220, 220));
+        } else if (state == blink::WebThemeEngine::StateHover) {
             SkScalar buttonHSV[3];
             SkColorToHSV(buttonColor, buttonHSV);
             buttonColor = SaturateAndBrighten(buttonHSV, 0, 0.05f);
+            backgroundColor = 0xff000000 | (RGB(220, 220, 220));
         }
 
         SkIRect skrect;
-        skrect.set(rect.x(), rect.y(), rect.x() + rect.width(), rect.y()
-            + rect.height());
+        skrect.set(rect.x(), rect.y(), rect.x() + rect.width(), rect.y() + rect.height());
         // Paint the background (the area visible behind the rounded corners).
+        //paint.setStyle(SkPaint::kFill_Style);
         paint.setColor(backgroundColor);
         canvas->drawIRect(skrect, paint);
 
         // Paint the button's outline and fill the middle
+#if 0
         SkPath outline;
         switch (direction) {
         case blink::WebThemeEngine::PartScrollbarUpArrow:
@@ -482,6 +484,7 @@ public:
         SkColorToHSV(thumb_inactive_color_, thumbHSV);
         paint.setColor(OutlineColor(trackHSV, thumbHSV));
         canvas->drawPath(outline, paint);
+#endif
 
         PaintArrow(canvas, rect, direction, GetArrowColor(state));
     }
@@ -562,10 +565,12 @@ public:
         paint.setColor(hovered ? SkColorSetRGB(0xA8, 0xA8, 0xA8) : SkColorSetRGB(0xC1, 0xC1, 0xC1));
         canvas->drawIRect(skrect, paint);
 
+#if 0
         paint.setStyle(SkPaint::kStroke_Style);
         paint.setStrokeWidth(1);
         paint.setColor(SkColorSetRGB(212, 208, 200));
         canvas->drawIRect(skrect, paint);
+#endif
     }
 
     void PaintScrollbarTrack(SkCanvas* canvas,
