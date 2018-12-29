@@ -73,7 +73,7 @@
 #include "core/html/LabelsNodeList.h"
 #include "core/inspector/ConsoleMessage.h"
 #include "core/svg/SVGDocumentExtensions.h"
-//#include "core/xml/DocumentXPathEvaluator.h"
+#include "core/xml/DocumentXPathEvaluator.h"
 #include "platform/RuntimeEnabledFeatures.h"
 #include "platform/ScriptForbiddenScope.h"
 #include "platform/TraceEvent.h"
@@ -5509,7 +5509,7 @@ static void querySelectorAllMethodCallback(const v8::FunctionCallbackInfo<v8::Va
 
 static void createExpressionMethod(const v8::FunctionCallbackInfo<v8::Value>& info)
 {
-#ifdef MINIBLINK_NOT_IMPLEMENTED
+#ifndef MINIBLINK_NO_XPATH
     ExceptionState exceptionState(ExceptionState::ExecutionContext, "createExpression", "Document", info.Holder(), info.GetIsolate());
     if (UNLIKELY(info.Length() < 1)) {
         setMinimumArityTypeError(exceptionState, 1, info.Length());
@@ -5540,8 +5540,9 @@ static void createExpressionMethod(const v8::FunctionCallbackInfo<v8::Value>& in
         return;
     }
     v8SetReturnValueFast(info, WTF::getPtr(result.release()), impl);
-#endif // MINIBLINK_NOT_IMPLEMENTED
+#else
     notImplemented();
+#endif // MINIBLINK_NO_XPATH
 }
 
 static void createExpressionMethodCallback(const v8::FunctionCallbackInfo<v8::Value>& info)
@@ -5554,7 +5555,7 @@ static void createExpressionMethodCallback(const v8::FunctionCallbackInfo<v8::Va
 
 static void createNSResolverMethod(const v8::FunctionCallbackInfo<v8::Value>& info)
 {
-#ifdef MINIBLINK_NOT_IMPLEMENTED
+#ifndef MINIBLINK_NO_XPATH
     if (UNLIKELY(info.Length() < 1)) {
         V8ThrowException::throwException(createMinimumArityTypeErrorForMethod(info.GetIsolate(), "createNSResolver", "Document", 1, info.Length()), info.GetIsolate());
         return;
@@ -5569,9 +5570,9 @@ static void createNSResolverMethod(const v8::FunctionCallbackInfo<v8::Value>& in
         }
     }
     v8SetReturnValueFast(info, WTF::getPtr(DocumentXPathEvaluator::createNSResolver(*impl, nodeResolver)), impl);
-#endif // MINIBLINK_NOT_IMPLEMENTED
-    //notImplemented();
+#else
     v8SetReturnValueNull(info);
+#endif // MINIBLINK_NO_XPATH
 }
 
 static void createNSResolverMethodCallback(const v8::FunctionCallbackInfo<v8::Value>& info)
@@ -5584,7 +5585,7 @@ static void createNSResolverMethodCallback(const v8::FunctionCallbackInfo<v8::Va
 
 static void evaluateMethod(const v8::FunctionCallbackInfo<v8::Value>& info)
 {
-#ifdef MINIBLINK_NOT_IMPLEMENTED
+#ifndef MINIBLINK_NO_XPATH
     ExceptionState exceptionState(ExceptionState::ExecutionContext, "evaluate", "Document", info.Holder(), info.GetIsolate());
     if (UNLIKELY(info.Length() < 2)) {
         setMinimumArityTypeError(exceptionState, 2, info.Length());
@@ -5636,9 +5637,9 @@ static void evaluateMethod(const v8::FunctionCallbackInfo<v8::Value>& info)
         return;
     }
     v8SetReturnValueFast(info, WTF::getPtr(result.release()), impl);
-#endif // MINIBLINK_NOT_IMPLEMENTED
-    //notImplemented();
+#else
     v8SetReturnValueNull(info);
+#endif // MINIBLINK_NO_XPATH
 }
 
 static void evaluateMethodCallback(const v8::FunctionCallbackInfo<v8::Value>& info)

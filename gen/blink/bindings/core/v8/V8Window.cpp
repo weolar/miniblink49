@@ -386,10 +386,12 @@
 #include "bindings/core/v8/V8XMLHttpRequestProgressEvent.h"
 #include "bindings/core/v8/V8XMLHttpRequestUpload.h"
 #include "bindings/core/v8/V8XMLSerializer.h"
-// #include "bindings/core/v8/V8XPathEvaluator.h"
-// #include "bindings/core/v8/V8XPathExpression.h"
-// #include "bindings/core/v8/V8XPathResult.h"
-// #include "bindings/core/v8/V8XSLTProcessor.h"
+#ifndef MINIBLINK_NO_XPATH
+#include "bindings/core/v8/V8XPathEvaluator.h"
+#include "bindings/core/v8/V8XPathExpression.h"
+#include "bindings/core/v8/V8XPathResult.h"
+#include "bindings/core/v8/V8XSLTProcessor.h"
+#endif
 #include "core/dom/ContextFeatures.h"
 #include "core/dom/Document.h"
 #include "core/dom/GlobalEventHandlers.h"
@@ -7574,9 +7576,11 @@ static const V8DOMConfiguration::AttributeConfiguration V8WindowAttributes[] = {
     {"XMLHttpRequestProgressEvent", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8XMLHttpRequestProgressEvent::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
     {"XMLHttpRequestUpload", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8XMLHttpRequestUpload::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
     {"XMLSerializer", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8XMLSerializer::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
-//  {"XPathEvaluator", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8XPathEvaluator::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
-//  {"XPathExpression", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8XPathExpression::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
-//  {"XPathResult", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8XPathResult::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
+#ifndef MINIBLINK_NO_XPATH
+    {"XPathEvaluator", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8XPathEvaluator::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
+    {"XPathExpression", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8XPathExpression::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
+    {"XPathResult", v8ConstructorAttributeGetter, DOMWindowV8Internal::DOMWindowConstructorAttributeSetterCallback, 0, 0, const_cast<WrapperTypeInfo*>(&V8XPathResult::wrapperTypeInfo), static_cast<v8::AccessControl>(v8::DEFAULT), static_cast<v8::PropertyAttribute>(v8::DontEnum), V8DOMConfiguration::ExposedToAllScripts, V8DOMConfiguration::OnInstance, V8DOMConfiguration::CheckHolder},
+#endif
 };
 #if defined(COMPONENT_BUILD) && defined(WIN32) && COMPILER(CLANG)
 #pragma clang diagnostic pop
