@@ -644,16 +644,17 @@ String toUSVString(v8::Isolate* isolate, v8::Local<v8::Value> value, ExceptionSt
 
 XPathNSResolver* toXPathNSResolver(ScriptState* scriptState, v8::Local<v8::Value> value)
 {
-#ifdef MINIBLINK_NOT_IMPLEMENTED
+#ifndef MINIBLINK_NO_XPATH
     XPathNSResolver* resolver = nullptr;
     if (V8XPathNSResolver::hasInstance(value, scriptState->isolate()))
         resolver = V8XPathNSResolver::toImpl(v8::Local<v8::Object>::Cast(value));
     else if (value->IsObject())
         resolver = V8CustomXPathNSResolver::create(scriptState, value.As<v8::Object>());
     return resolver;
-#endif // MINIBLINK_NOT_IMPLEMENTED
+#else
     notImplemented();
     return nullptr;
+#endif // MINIBLINK_NO_XPATH
 }
 
 DOMWindow* toDOMWindow(v8::Isolate* isolate, v8::Local<v8::Value> value)
