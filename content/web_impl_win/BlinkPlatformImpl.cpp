@@ -179,6 +179,7 @@ static void setRuntimeEnabledFeatures()
     blink::RuntimeEnabledFeatures::setCspCheckEnabled(true);
     blink::RuntimeEnabledFeatures::setNpapiPluginsEnabled(true);
     blink::RuntimeEnabledFeatures::setDOMConvenienceAPIEnabled(true);
+    blink::RuntimeEnabledFeatures::setTextBlobEnabled(true);    
 }
 
 void BlinkPlatformImpl::initialize()
