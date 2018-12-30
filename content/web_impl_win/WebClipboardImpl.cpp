@@ -375,13 +375,6 @@ blink::WebString WebClipboardImpl::readHTML(Buffer buffer, WebURL* sourceUrl,
         if (0 == sizeOfHtml)
             return blink::WebString();
 
-        HANDLE hFile = CreateFileW(L"D:\\1.txt", GENERIC_WRITE, FILE_SHARE_WRITE, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-        if (hFile && INVALID_HANDLE_VALUE != hFile) {
-            DWORD numberOfBytesWritten = 0;
-            ::WriteFile(hFile, cfHtml, sizeOfHtml, &numberOfBytesWritten, NULL);
-            ::CloseHandle(hFile);
-        }
-
         if (!WTF::isTextUTF8(cfHtml, sizeOfHtml))
             WTF::MByteToUtf8(cfHtml, sizeOfHtml, &utf8CfHtml, CP_ACP);
         else {
