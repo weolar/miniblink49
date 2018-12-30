@@ -1,0 +1,43 @@
+Name: libxslt
+URL: http://xmlsoft.org/XSLT
+Version: 1.1.28
+Security Critical: yes
+License: MIT
+License File: Copyright
+
+Description:
+
+libxslt from libxml.org.
+
+Modifications:
+
+- GetFileAttributes -> GetFileAttributesA in libxslt\security.c
+- Cherry-pick
+    https://git.gnome.org/browse/libxslt/commit/?id=7cb08dacadf7e1cf88ee2f45815251b61bffcde6
+  to fix http://crbug.com/530587.
+
+
+To import a new version:
+
+On Linux, get the latest tar via libxml.org.
+
+Extract and replace libxslt/ with libxslt-X.Y.Z/
+
+mkdir linux && cd linux
+../configure --without-debug --without-mem-debug --without-debugger --without-plugins --with-libxml-src=../../libxml/linux/ 
+Patch to not define HAVE_CLOCK_GETTIME.
+
+Do the same on Mac and copy the mac/config.h to Linux.
+
+On Windows:
+
+In win32\ run
+cscript //E:jscript configure.js compiler=msvc iconv=no xslt_debug=no mem_debug=no debugger=no modules=no
+and copy config.h to Linux in win32/
+
+Remove:
+  doc/
+  examples/
+  python/
+  tests/
+  vms/
