@@ -161,7 +161,7 @@ public:
     static WebPage* getSelfForCurrentContext();
 
     PassRefPtr<net::PageNetExtraData> getPageNetExtraData();
-    void setCookieJarPath(const char* path);
+    void setCookieJarFullPath(const char* path);
 
     WebFrameClientImpl* webFrameClientImpl();
 

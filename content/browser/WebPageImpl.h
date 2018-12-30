@@ -247,7 +247,7 @@ public:
     bool m_isDragging;
     bool m_isFirstEnterDrag;
 
-    void setCookieJarPath(const char* path);
+    void setCookieJarFullPath(const char* path);
     RefPtr<net::PageNetExtraData> m_pageNetExtraData;
 
     static int64_t m_firstFrameId;

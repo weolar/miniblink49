@@ -171,7 +171,7 @@ HGLOBAL ClipboardUtil::createGlobalData(const std::string& str)
     return data;
 }
 
-std::string ClipboardUtil::HtmlToCFHtml(const std::string& html, const std::string& base_url)
+std::string ClipboardUtil::HtmlToCFHtml(const std::string& html, const std::string& baseUrl)
 {
     if (html.empty())
         return std::string();
@@ -186,37 +186,33 @@ std::string ClipboardUtil::HtmlToCFHtml(const std::string& html, const std::stri
         "EndHTML:" NUMBER_FORMAT "\r\n"
         "StartFragment:" NUMBER_FORMAT "\r\n"
         "EndFragment:" NUMBER_FORMAT "\r\n";
-    static const char* source_url_prefix = "SourceURL:";
+    static const char* sourceUrlPrefix = "SourceURL:";
 
-    static const char* start_markup =
-        "<html>\r\n<body>\r\n<!--StartFragment-->";
-    static const char* end_markup =
-        "<!--EndFragment-->\r\n</body>\r\n</html>";
+    static const char* startMarkup = "<html>\r\n<body>\r\n<!--StartFragment-->";
+    static const char* endMarkup = "<!--EndFragment-->\r\n</body>\r\n</html>";
 
     // Calculate offsets
-    size_t start_html_offset = strlen(header) - strlen(NUMBER_FORMAT) * 4 +
-        MAX_DIGITS * 4;
-    if (!base_url.empty()) {
-        start_html_offset += strlen(source_url_prefix) +
-            base_url.length() + 2;  // Add 2 for \r\n.
+    size_t startHtmlOffset = strlen(header) - strlen(NUMBER_FORMAT) * 4 + MAX_DIGITS * 4;
+    if (!baseUrl.empty()) {
+        startHtmlOffset += strlen(sourceUrlPrefix) + baseUrl.length() + 2;  // Add 2 for \r\n.
     }
-    size_t start_fragment_offset = start_html_offset + strlen(start_markup);
-    size_t end_fragment_offset = start_fragment_offset + html.length();
-    size_t end_html_offset = end_fragment_offset + strlen(end_markup);
+    size_t startFragmentOffset = startHtmlOffset + strlen(startMarkup);
+    size_t endFragmentOffset = startFragmentOffset + html.length();
+    size_t endHtmlOffset = endFragmentOffset + strlen(endMarkup);
 
     std::vector<char> buffer;
     buffer.resize(2000);
-    sprintf(&buffer[0], header, start_html_offset, end_html_offset, start_fragment_offset, end_fragment_offset);
+    sprintf(&buffer[0], header, startHtmlOffset, endHtmlOffset, startFragmentOffset, endFragmentOffset);
     std::string result = &buffer[0];
 
-    if (!base_url.empty()) {
-        result.append(source_url_prefix);
-        result.append(base_url.c_str());
+    if (!baseUrl.empty()) {
+        result.append(sourceUrlPrefix);
+        result.append(baseUrl.c_str());
         result.append("\r\n");
     }
-    result.append(start_markup);
+    result.append(startMarkup);
     result.append(html.c_str());
-    result.append(end_markup);
+    result.append(endMarkup);
 
 #undef MAX_DIGITS
 #undef MAKE_NUMBER_FORMAT_1
@@ -226,22 +222,20 @@ std::string ClipboardUtil::HtmlToCFHtml(const std::string& html, const std::stri
     return result;
 }
 
-void ClipboardUtil::CFHtmlExtractMetadata(const std::string& cf_html,
-    std::string* base_url,
-    size_t* html_start,
-    size_t* fragment_start,
-    size_t* fragment_end)
+void ClipboardUtil::CFHtmlExtractMetadata(const std::string& cfHtml, std::string* baseUrl, size_t* htmlStart, size_t* fragmentStart, size_t* fragmentEnd)
 {
-    // Obtain base_url if present.
-    if (base_url) {
-        static std::string src_url_str("SourceURL:");
-        size_t line_start = cf_html.find(src_url_str);
-        if (line_start != std::string::npos) {
-            size_t src_end = cf_html.find("\n", line_start);
-            size_t src_start = line_start + src_url_str.length();
-            if (src_end != std::string::npos && src_start != std::string::npos) {
-                *base_url = cf_html.substr(src_start, src_end - src_start);
-                base::TrimWhitespace(*base_url, base::TRIM_ALL, base_url);
+    // Obtain baseUrl if present.
+    if (baseUrl) {
+        static std::string srcUrlStr("SourceURL:");
+        size_t lineStart = cfHtml.find(srcUrlStr);
+
+        if (lineStart != std::string::npos) {
+            size_t srcEnd = cfHtml.find("\n", lineStart);
+            size_t srcStart = lineStart + srcUrlStr.length();
+
+            if (srcEnd != std::string::npos && srcStart != std::string::npos) {
+                *baseUrl = cfHtml.substr(srcStart, srcEnd - srcStart);
+                base::TrimWhitespace(*baseUrl, base::TRIM_ALL, baseUrl);
             }
         }
     }
@@ -250,30 +244,29 @@ void ClipboardUtil::CFHtmlExtractMetadata(const std::string& cf_html,
     // If the comments cannot be found, like copying from OpenOffice Writer,
     // we simply fall back to using StartFragment/EndFragment bytecount values
     // to determine the fragment indexes.
-    std::string cf_html_lower = base::ToLowerASCII(cf_html);
-    size_t markup_start = cf_html_lower.find("<html", 0);
-    if (html_start) {
-        *html_start = markup_start;
-    }
-    size_t tag_start = cf_html.find("<!--StartFragment", markup_start);
-    if (tag_start == std::string::npos) {
-        static std::string start_fragment_str("StartFragment:");
-        size_t start_fragment_start = cf_html.find(start_fragment_str);
-        if (start_fragment_start != std::string::npos) {
-            *fragment_start = static_cast<size_t>(atoi(cf_html.c_str() +
-                start_fragment_start + start_fragment_str.length()));
-        }
+    std::string cfHtmlLower = base::ToLowerASCII(cfHtml);
+    size_t markupStart = cfHtmlLower.find("<html", 0);
+    if (htmlStart)
+        *htmlStart = markupStart;
+    
+    size_t tagStart = cfHtml.find("<!--StartFragment", markupStart);
+    if (tagStart == std::string::npos) {
+        static std::string startFragmentStr("StartFragment:");
+        size_t startFragmentStart = cfHtml.find(startFragmentStr);
 
-        static std::string end_fragment_str("EndFragment:");
-        size_t end_fragment_start = cf_html.find(end_fragment_str);
-        if (end_fragment_start != std::string::npos) {
-            *fragment_end = static_cast<size_t>(atoi(cf_html.c_str() +
-                end_fragment_start + end_fragment_str.length()));
-        }
+        if (startFragmentStart != std::string::npos)
+            *fragmentStart = static_cast<size_t>(atoi(cfHtml.c_str() + startFragmentStart + startFragmentStr.length()));
+
+        static std::string endFragmentStr("EndFragment:");
+        size_t endFragmentStart = cfHtml.find(endFragmentStr);
+
+        if (endFragmentStart != std::string::npos)
+            *fragmentEnd = static_cast<size_t>(atoi(cfHtml.c_str() + endFragmentStart + endFragmentStr.length()));
+        
     } else {
-        *fragment_start = cf_html.find('>', tag_start) + 1;
-        size_t tag_end = cf_html.rfind("<!--EndFragment", std::string::npos);
-        *fragment_end = cf_html.rfind('<', tag_end);
+        *fragmentStart = cfHtml.find('>', tagStart) + 1;
+        size_t tagEnd = cfHtml.rfind("<!--EndFragment", std::string::npos);
+        *fragmentEnd = cfHtml.rfind('<', tagEnd);
     }
 }
 
