@@ -392,7 +392,7 @@ blink::WebString WebClipboardImpl::readHTML(Buffer buffer, WebURL* sourceUrl,
     size_t htmlStart = std::string::npos;
     size_t startIndex = std::string::npos;
     size_t endIndex = std::string::npos;
-    ClipboardUtil::CFHtmlExtractMetadata(&utf8CfHtml[0], &srcUrl, &htmlStart, &startIndex, &endIndex);
+    ClipboardUtil::cfHtmlExtractMetadata(&utf8CfHtml[0], &srcUrl, &htmlStart, &startIndex, &endIndex);
 
     // This might happen if the contents of the clipboard changed and CF_HTML is
     // no longer available.
@@ -599,7 +599,7 @@ void WebClipboardImpl::writeHTMLInternal(const WebString& htmlText, const WebURL
     if (!urlString.isNull() && !urlString.isEmpty())
         url = WTFStringToStdString(urlString);
 
-    std::string htmlFragment = ClipboardUtil::HtmlToCFHtml(markup, url);
+    std::string htmlFragment = ClipboardUtil::htmlToCFHtml(markup, url);
     HGLOBAL glob = ClipboardUtil::createGlobalData(htmlFragment);
     // writeToClipboard(ClipboardUtil::getHtmlFormatType(), glob);
     writeText(plainText);

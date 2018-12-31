@@ -4,8 +4,10 @@
 #include "platform/geometry/IntRect.h"
 #include "ui/gfx/win/dpi.h"
 #include "WebThemeEngineImpl.h"
-//#include "NativeThemeWin.h"
-#include "CustomTheme.h"
+#if 0
+#include "NativeThemeWin.h"
+#endif
+#include "content/ui/CustomTheme.h"
 
 namespace content {
 

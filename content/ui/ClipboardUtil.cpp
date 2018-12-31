@@ -171,7 +171,7 @@ HGLOBAL ClipboardUtil::createGlobalData(const std::string& str)
     return data;
 }
 
-std::string ClipboardUtil::HtmlToCFHtml(const std::string& html, const std::string& baseUrl)
+std::string ClipboardUtil::htmlToCFHtml(const std::string& html, const std::string& baseUrl)
 {
     if (html.empty())
         return std::string();
@@ -222,7 +222,7 @@ std::string ClipboardUtil::HtmlToCFHtml(const std::string& html, const std::stri
     return result;
 }
 
-void ClipboardUtil::CFHtmlExtractMetadata(const std::string& cfHtml, std::string* baseUrl, size_t* htmlStart, size_t* fragmentStart, size_t* fragmentEnd)
+void ClipboardUtil::cfHtmlExtractMetadata(const std::string& cfHtml, std::string* baseUrl, size_t* htmlStart, size_t* fragmentStart, size_t* fragmentEnd)
 {
     // Obtain baseUrl if present.
     if (baseUrl) {

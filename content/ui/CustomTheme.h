@@ -1,5 +1,5 @@
-#ifndef CustomTheme_h
-#define CustomTheme_h
+#ifndef content_ui_CustomTheme_h
+#define content_ui_CustomTheme_h
 
 #if USING_VC6RT != 1
 #include <uxtheme.h>
@@ -14,160 +14,165 @@
 
 namespace color_utils {
 
-    // Represents an HSL color.
-    struct HSL {
-        double h;
-        double s;
-        double l;
-    };
+// Represents an HSL color.
+struct HSL {
+    double h;
+    double s;
+    double l;
+};
 
-    int calcHue(double temp1, double temp2, double hue) {
-        if (hue < 0.0)
-            ++hue;
-        else if (hue > 1.0)
-            --hue;
+int calcHue(double temp1, double temp2, double hue)
+{
+    if (hue < 0.0)
+        ++hue;
+    else if (hue > 1.0)
+        --hue;
 
-        double result = temp1;
-        if (hue * 6.0 < 1.0)
-            result = temp1 + (temp2 - temp1) * hue * 6.0;
-        else if (hue * 2.0 < 1.0)
-            result = temp2;
-        else if (hue * 3.0 < 2.0)
-            result = temp1 + (temp2 - temp1) * (2.0 / 3.0 - hue) * 6.0;
+    double result = temp1;
+    if (hue * 6.0 < 1.0)
+        result = temp1 + (temp2 - temp1) * hue * 6.0;
+    else if (hue * 2.0 < 1.0)
+        result = temp2;
+    else if (hue * 3.0 < 2.0)
+        result = temp1 + (temp2 - temp1) * (2.0 / 3.0 - hue) * 6.0;
 
-        // Scale the result from 0 - 255 and round off the value.
-        return static_cast<int>(result * 255 + .5);
+    // Scale the result from 0 - 255 and round off the value.
+    return static_cast<int>(result * 255 + .5);
+}
+
+void SkColorToHSL(SkColor c, HSL* hsl)
+{
+    double r = static_cast<double>(SkColorGetR(c)) / 255.0;
+    double g = static_cast<double>(SkColorGetG(c)) / 255.0;
+    double b = static_cast<double>(SkColorGetB(c)) / 255.0;
+    double vmax = std::max(std::max(r, g), b);
+    double vmin = std::min(std::min(r, g), b);
+    double delta = vmax - vmin;
+    hsl->l = (vmax + vmin) / 2;
+    if (SkColorGetR(c) == SkColorGetG(c) && SkColorGetR(c) == SkColorGetB(c)) {
+        hsl->h = hsl->s = 0;
+    } else {
+        double dr = (((vmax - r) / 6.0) + (delta / 2.0)) / delta;
+        double dg = (((vmax - g) / 6.0) + (delta / 2.0)) / delta;
+        double db = (((vmax - b) / 6.0) + (delta / 2.0)) / delta;
+        // We need to compare for the max value because comparing vmax to r, g, or b
+        // can sometimes result in values overflowing registers.
+        if (r >= g && r >= b)
+            hsl->h = db - dg;
+        else if (g >= r && g >= b)
+            hsl->h = (1.0 / 3.0) + dr - db;
+        else  // (b >= r && b >= g)
+            hsl->h = (2.0 / 3.0) + dg - dr;
+
+        if (hsl->h < 0.0)
+            ++hsl->h;
+        else if (hsl->h > 1.0)
+            --hsl->h;
+
+        hsl->s = delta / ((hsl->l < 0.5) ? (vmax + vmin) : (2 - vmax - vmin));
+    }
+}
+
+SkColor HSLToSkColor(const HSL& hsl, SkAlpha alpha)
+{
+    double hue = hsl.h;
+    double saturation = hsl.s;
+    double lightness = hsl.l;
+
+    // If there's no color, we don't care about hue and can do everything based on
+    // brightness.
+    if (!saturation) {
+        uint8 light;
+
+        if (lightness < 0)
+            light = 0;
+        else if (lightness >= 1.0)
+            light = 255;
+        else
+            light = SkDoubleToFixed(lightness) >> 8;
+
+        return SkColorSetARGB(alpha, light, light, light);
     }
 
-    void SkColorToHSL(SkColor c, HSL* hsl) {
-        double r = static_cast<double>(SkColorGetR(c)) / 255.0;
-        double g = static_cast<double>(SkColorGetG(c)) / 255.0;
-        double b = static_cast<double>(SkColorGetB(c)) / 255.0;
-        double vmax = std::max(std::max(r, g), b);
-        double vmin = std::min(std::min(r, g), b);
-        double delta = vmax - vmin;
-        hsl->l = (vmax + vmin) / 2;
-        if (SkColorGetR(c) == SkColorGetG(c) && SkColorGetR(c) == SkColorGetB(c)) {
-            hsl->h = hsl->s = 0;
-        }
-        else {
-            double dr = (((vmax - r) / 6.0) + (delta / 2.0)) / delta;
-            double dg = (((vmax - g) / 6.0) + (delta / 2.0)) / delta;
-            double db = (((vmax - b) / 6.0) + (delta / 2.0)) / delta;
-            // We need to compare for the max value because comparing vmax to r, g, or b
-            // can sometimes result in values overflowing registers.
-            if (r >= g && r >= b)
-                hsl->h = db - dg;
-            else if (g >= r && g >= b)
-                hsl->h = (1.0 / 3.0) + dr - db;
-            else  // (b >= r && b >= g)
-                hsl->h = (2.0 / 3.0) + dg - dr;
+    double temp2 = (lightness < 0.5) ?
+        (lightness * (1.0 + saturation)) :
+        (lightness + saturation - (lightness * saturation));
+    double temp1 = 2.0 * lightness - temp2;
+    return SkColorSetARGB(alpha,
+        calcHue(temp1, temp2, hue + 1.0 / 3.0),
+        calcHue(temp1, temp2, hue),
+        calcHue(temp1, temp2, hue - 1.0 / 3.0));
+}
 
-            if (hsl->h < 0.0)
-                ++hsl->h;
-            else if (hsl->h > 1.0)
-                --hsl->h;
-
-            hsl->s = delta / ((hsl->l < 0.5) ? (vmax + vmin) : (2 - vmax - vmin));
-        }
-    }
-
-    SkColor HSLToSkColor(const HSL& hsl, SkAlpha alpha) {
-        double hue = hsl.h;
-        double saturation = hsl.s;
-        double lightness = hsl.l;
-
-        // If there's no color, we don't care about hue and can do everything based on
-        // brightness.
-        if (!saturation) {
-            uint8 light;
-
-            if (lightness < 0)
-                light = 0;
-            else if (lightness >= 1.0)
-                light = 255;
-            else
-                light = SkDoubleToFixed(lightness) >> 8;
-
-            return SkColorSetARGB(alpha, light, light, light);
-        }
-
-        double temp2 = (lightness < 0.5) ?
-            (lightness * (1.0 + saturation)) :
-            (lightness + saturation - (lightness * saturation));
-        double temp1 = 2.0 * lightness - temp2;
-        return SkColorSetARGB(alpha,
-            calcHue(temp1, temp2, hue + 1.0 / 3.0),
-            calcHue(temp1, temp2, hue),
-            calcHue(temp1, temp2, hue - 1.0 / 3.0));
-    }
 }
 
 namespace {
 
-    // These are the default dimensions of radio buttons and checkboxes.
-    const int kCheckboxAndRadioWidth = 13;
-    const int kCheckboxAndRadioHeight = 13;
+// These are the default dimensions of radio buttons and checkboxes.
+const int kCheckboxAndRadioWidth = 13;
+const int kCheckboxAndRadioHeight = 13;
 
-    // These sizes match the sizes in Chromium Win.
-    const int kSliderThumbWidth = 11;
-    const int kSliderThumbHeight = 21;
+// These sizes match the sizes in Chromium Win.
+const int kSliderThumbWidth = 11;
+const int kSliderThumbHeight = 21;
 
-    const SkColor kSliderTrackBackgroundColor =
-        SkColorSetRGB(0xe3, 0xdd, 0xd8);
-    const SkColor kSliderThumbLightGrey = SkColorSetRGB(0xf4, 0xf2, 0xef);
-    const SkColor kSliderThumbDarkGrey = SkColorSetRGB(0xea, 0xe5, 0xe0);
-    const SkColor kSliderThumbBorderDarkGrey =
-        SkColorSetRGB(0x9d, 0x96, 0x8e);
+const SkColor kSliderTrackBackgroundColor =
+SkColorSetRGB(0xe3, 0xdd, 0xd8);
+const SkColor kSliderThumbLightGrey = SkColorSetRGB(0xf4, 0xf2, 0xef);
+const SkColor kSliderThumbDarkGrey = SkColorSetRGB(0xea, 0xe5, 0xe0);
+const SkColor kSliderThumbBorderDarkGrey =
+SkColorSetRGB(0x9d, 0x96, 0x8e);
 
-    const SkColor kTextBorderColor = SkColorSetRGB(0xa9, 0xa9, 0xa9);
+const SkColor kTextBorderColor = SkColorSetRGB(0xa9, 0xa9, 0xa9);
 
-    const SkColor kMenuPopupBackgroundColor = SkColorSetRGB(210, 225, 246);
+const SkColor kMenuPopupBackgroundColor = SkColorSetRGB(210, 225, 246);
 
-    const unsigned int kDefaultScrollbarWidth = 13; // 15
-    const unsigned int kDefaultScrollbarButtonLength = 12; // 14
+const unsigned int kDefaultScrollbarWidth = 13; // 15
+const unsigned int kDefaultScrollbarButtonLength = 12; // 14
 
-    const SkColor kCheckboxTinyColor = SK_ColorGRAY;
-    const SkColor kCheckboxShadowColor = SkColorSetARGB(0x15, 0, 0, 0);
-    const SkColor kCheckboxShadowHoveredColor = SkColorSetARGB(0x1F, 0, 0, 0);
-    const SkColor kCheckboxShadowDisabledColor = SkColorSetARGB(0, 0, 0, 0);
-    const SkColor kCheckboxGradientColors[] = {
-        SkColorSetRGB(0xed, 0xed, 0xed),
-        SkColorSetRGB(0xde, 0xde, 0xde) };
-    const SkColor kCheckboxGradientPressedColors[] = {
-        SkColorSetRGB(0xe7, 0xe7, 0xe7),
-        SkColorSetRGB(0xd7, 0xd7, 0xd7) };
-    const SkColor kCheckboxGradientHoveredColors[] = {
-        SkColorSetRGB(0xf0, 0xf0, 0xf0),
-        SkColorSetRGB(0xe0, 0xe0, 0xe0) };
-    const SkColor kCheckboxGradientDisabledColors[] = {
-        SkColorSetARGB(0x80, 0xed, 0xed, 0xed),
-        SkColorSetARGB(0x80, 0xde, 0xde, 0xde) };
-    const SkColor kCheckboxBorderColor = SkColorSetARGB(0x40, 0, 0, 0);
-    const SkColor kCheckboxBorderHoveredColor = SkColorSetARGB(0x4D, 0, 0, 0);
-    const SkColor kCheckboxBorderDisabledColor = SkColorSetARGB(0x20, 0, 0, 0);
-    const SkColor kCheckboxStrokeColor = SkColorSetARGB(0xB3, 0, 0, 0);
-    const SkColor kCheckboxStrokeDisabledColor = SkColorSetARGB(0x59, 0, 0, 0);
-    const SkColor kRadioDotColor = SkColorSetRGB(0x66, 0x66, 0x66);
-    const SkColor kRadioDotDisabledColor = SkColorSetARGB(0x80, 0x66, 0x66, 0x66);
+const SkColor kCheckboxTinyColor = SK_ColorGRAY;
+const SkColor kCheckboxShadowColor = SkColorSetARGB(0x15, 0, 0, 0);
+const SkColor kCheckboxShadowHoveredColor = SkColorSetARGB(0x1F, 0, 0, 0);
+const SkColor kCheckboxShadowDisabledColor = SkColorSetARGB(0, 0, 0, 0);
+const SkColor kCheckboxGradientColors[] = {
+    SkColorSetRGB(0xed, 0xed, 0xed),
+    SkColorSetRGB(0xde, 0xde, 0xde) };
+const SkColor kCheckboxGradientPressedColors[] = {
+    SkColorSetRGB(0xe7, 0xe7, 0xe7),
+    SkColorSetRGB(0xd7, 0xd7, 0xd7) };
+const SkColor kCheckboxGradientHoveredColors[] = {
+    SkColorSetRGB(0xf0, 0xf0, 0xf0),
+    SkColorSetRGB(0xe0, 0xe0, 0xe0) };
+const SkColor kCheckboxGradientDisabledColors[] = {
+    SkColorSetARGB(0x80, 0xed, 0xed, 0xed),
+    SkColorSetARGB(0x80, 0xde, 0xde, 0xde) };
+const SkColor kCheckboxBorderColor = SkColorSetARGB(0x40, 0, 0, 0);
+const SkColor kCheckboxBorderHoveredColor = SkColorSetARGB(0x4D, 0, 0, 0);
+const SkColor kCheckboxBorderDisabledColor = SkColorSetARGB(0x20, 0, 0, 0);
+const SkColor kCheckboxStrokeColor = SkColorSetARGB(0xB3, 0, 0, 0);
+const SkColor kCheckboxStrokeDisabledColor = SkColorSetARGB(0x59, 0, 0, 0);
+const SkColor kRadioDotColor = SkColorSetRGB(0x66, 0x66, 0x66);
+const SkColor kRadioDotDisabledColor = SkColorSetARGB(0x80, 0x66, 0x66, 0x66);
 
-    const unsigned int thumb_inactive_color_ = (0xeaeaea);
-    const unsigned int thumb_active_color_ = (0xf4f4f4);
-    const unsigned int track_color_ = (0xd3d3d3);
+const unsigned int thumb_inactive_color_ = (0xeaeaea);
+const unsigned int thumb_active_color_ = (0xf4f4f4);
+const unsigned int track_color_ = (0xd3d3d3);
 
 
-    // Get lightness adjusted color.
-    SkColor BrightenColor(const color_utils::HSL& hsl, SkAlpha alpha,
-        double lightness_amount) {
-        color_utils::HSL adjusted = hsl;
-        adjusted.l += lightness_amount;
-        if (adjusted.l > 1.0)
-            adjusted.l = 1.0;
-        if (adjusted.l < 0.0)
-            adjusted.l = 0.0;
+// Get lightness adjusted color.
+SkColor BrightenColor(const color_utils::HSL& hsl, SkAlpha alpha,
+    double lightness_amount)
+{
+    color_utils::HSL adjusted = hsl;
+    adjusted.l += lightness_amount;
+    if (adjusted.l > 1.0)
+        adjusted.l = 1.0;
+    if (adjusted.l < 0.0)
+        adjusted.l = 0.0;
 
-        return color_utils::HSLToSkColor(adjusted, alpha);
-    }
+    return color_utils::HSLToSkColor(adjusted, alpha);
+}
+
 }
 
 namespace content {
