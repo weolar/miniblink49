@@ -102,6 +102,8 @@ WebLayerImpl::WebLayerImpl(WebLayerImplClient* client)
     m_id = atomicIncrement(&g_next_layer_id);
     m_webLayerClient = nullptr;
 
+    m_updateRectInRootLayerCoordinate.setEmpty();
+
     appendLayerChangeAction(new cc::LayerChangeActionCreate(-1, id(), m_layerType));
 
     m_backgroundColor = 0x00ffffff | ((rand() % 3) * (rand() % 7) * GetTickCount());
@@ -263,7 +265,7 @@ void WebLayerImpl::updataAndPaintContents(blink::WebCanvas* canvas, const blink:
     if (m_client)
         m_client->updataAndPaintContents(canvas, clip);
     m_dirty = false;
-    m_updateRectInRootLayerCoordinate = blink::IntRect();
+    m_updateRectInRootLayerCoordinate.setEmpty();
 }
 
 cc::DrawProperties* WebLayerImpl::drawProperties()
@@ -345,7 +347,7 @@ void WebLayerImpl::recordDraw(cc::RasterTaskGroup* taskGroup)
 
     if (!m_updateRectInRootLayerCoordinate.isEmpty()) {
         taskGroup->appendPendingInvalidateRect(m_updateRectInRootLayerCoordinate);
-        m_updateRectInRootLayerCoordinate = blink::IntRect();
+        m_updateRectInRootLayerCoordinate.setEmpty();
     }
 
     if (m_dirty)  // 必须把子节点也加入dirty，因为父节点变了的话，子节点的combined_transform也会变
@@ -358,7 +360,7 @@ void WebLayerImpl::drawToCanvas(blink::WebCanvas* canvas, const blink::IntRect& 
     if (m_client)
         m_client->drawToCanvas(canvas, clip);
     m_dirty = false;
-    m_updateRectInRootLayerCoordinate = blink::IntRect();
+    m_updateRectInRootLayerCoordinate.setEmpty();
 }
 
 int WebLayerImpl::id() const 

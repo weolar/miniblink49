@@ -160,6 +160,16 @@ public:
 
     bool isDrawDirty();
     void paintToBit(void* bits, int pitch);
+
+    struct BitInfo {
+        uint32_t* pixels;
+        SkCanvas* tempCanvas;
+        int width;
+        int height;
+    };
+    BitInfo* getBitBegin();
+    void getBitEnd(const BitInfo* bitInfo);
+
     void requestDrawFrameToRunIntoCompositeThread();
     void requestApplyActionsToRunIntoCompositeThread(bool needCheck);
     //void setUseLayeredBuffer(bool b);
