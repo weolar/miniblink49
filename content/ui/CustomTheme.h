@@ -184,7 +184,8 @@ public:
 
     CustomTheme() 
         : scrollbar_width_(kDefaultScrollbarWidth)
-        , scrollbar_button_length_(kDefaultScrollbarButtonLength) {
+        , scrollbar_button_length_(kDefaultScrollbarButtonLength)
+    {
 
     }
 
@@ -243,7 +244,8 @@ public:
 //         return size;
 //     }
 
-    blink::IntSize GetPartSize(blink::WebThemeEngine::Part part) const {
+    blink::IntSize GetPartSize(blink::WebThemeEngine::Part part) const
+    {
         blink::IntSize size;
 //         size = CommonThemeGetPartSize(part, state, extra);
 //         if (!size.IsEmpty())
@@ -321,7 +323,8 @@ public:
         blink::WebThemeEngine::Part part,
         blink::WebThemeEngine::State state,
         const blink::IntRect& rect,
-        const blink::WebThemeEngine::ExtraParams& extra) const {
+        const blink::WebThemeEngine::ExtraParams& extra) const
+    {
         if (rect.isEmpty())
             return;
 
@@ -408,18 +411,21 @@ public:
         }
     }
 
-    void PaintMenuPopupBackground(SkCanvas* canvas, const blink::IntRect& rect) const {
+    void PaintMenuPopupBackground(SkCanvas* canvas, const blink::IntRect& rect) const
+    {
         canvas->drawColor(kMenuPopupBackgroundColor, SkXfermode::kSrc_Mode);
     }
 
     void PaintMenuItemBackground(SkCanvas* canvas, blink::WebThemeEngine::State state,
-        const blink::IntRect& rect, const blink::WebThemeEngine::MenuListExtraParams& menu_list) const {
+        const blink::IntRect& rect, const blink::WebThemeEngine::MenuListExtraParams& menu_list) const
+    {
         // By default don't draw anything over the normal background.
     }
 
     void PaintArrowButton(
         SkCanvas* canvas,
-        const blink::IntRect& rect, blink::WebThemeEngine::Part direction, blink::WebThemeEngine::State state) const {
+        const blink::IntRect& rect, blink::WebThemeEngine::Part direction, blink::WebThemeEngine::State state) const
+    {
         SkPaint paint;
 
         // Calculate button color.
@@ -497,15 +503,15 @@ public:
     void PaintArrow(SkCanvas* gc,
         const blink::IntRect& rect,
         blink::WebThemeEngine::Part direction,
-        SkColor color) const {
-        int width_middle, length_middle;
+        SkColor color) const
+    {
+        int widthMiddle, lengthMiddle;
         if (direction == blink::WebThemeEngine::PartScrollbarUpArrow || direction == blink::WebThemeEngine::PartScrollbarDownArrow) {
-            width_middle = rect.width() / 2 + 1;
-            length_middle = rect.height() / 2 + 1;
-        }
-        else {
-            length_middle = rect.width() / 2 + 1;
-            width_middle = rect.height() / 2 + 1;
+            widthMiddle = rect.width() / 2 + 1;
+            lengthMiddle = rect.height() / 2 + 1;
+        } else {
+            lengthMiddle = rect.width() / 2 + 1;
+            widthMiddle = rect.height() / 2 + 1;
         }
 
         SkPaint paint;
@@ -518,22 +524,22 @@ public:
         // looking arrows without anti-aliasing.
         switch (direction) {
         case blink::WebThemeEngine::PartScrollbarUpArrow:
-            path.moveTo(rect.x() + width_middle - 4, rect.y() + length_middle + 2);
+            path.moveTo(rect.x() + widthMiddle - 4, rect.y() + lengthMiddle + 2);
             path.rLineTo(7, 0);
             path.rLineTo(-4, -4);
             break;
         case blink::WebThemeEngine::PartScrollbarDownArrow:
-            path.moveTo(rect.x() + width_middle - 4, rect.y() + length_middle - 3);
+            path.moveTo(rect.x() + widthMiddle - 4, rect.y() + lengthMiddle - 3);
             path.rLineTo(7, 0);
             path.rLineTo(-4, 4);
             break;
         case blink::WebThemeEngine::PartScrollbarRightArrow:
-            path.moveTo(rect.x() + length_middle - 3, rect.y() + width_middle - 4);
+            path.moveTo(rect.x() + lengthMiddle - 3, rect.y() + widthMiddle - 4);
             path.rLineTo(0, 7);
             path.rLineTo(4, -4);
             break;
         case blink::WebThemeEngine::PartScrollbarLeftArrow:
-            path.moveTo(rect.x() + length_middle + 1, rect.y() + width_middle - 5);
+            path.moveTo(rect.x() + lengthMiddle + 1, rect.y() + widthMiddle - 5);
             path.rLineTo(0, 9);
             path.rLineTo(-4, -4);
             break;
@@ -548,7 +554,8 @@ public:
     void PaintScrollbarTrack2(SkCanvas* canvas,
         blink::WebThemeEngine::Part part, blink::WebThemeEngine::State state,
         const blink::WebThemeEngine::ScrollbarTrackExtraParams& extra_params,
-        const blink::IntRect& rect) const {
+        const blink::IntRect& rect) const
+    {
         SkPaint paint;
         SkIRect skrect;
 
@@ -558,7 +565,8 @@ public:
         canvas->drawIRect(skrect, paint);
     }
 
-    void PaintScrollbarThumb2(SkCanvas* canvas, blink::WebThemeEngine::Part part, blink::WebThemeEngine::State state, const blink::IntRect& rect) const {
+    void PaintScrollbarThumb2(SkCanvas* canvas, blink::WebThemeEngine::Part part, blink::WebThemeEngine::State state, const blink::IntRect& rect) const
+    {
         const bool hovered = state == blink::WebThemeEngine::StateHover;
         const bool vertical = part == blink::WebThemeEngine::PartScrollbarVerticalThumb;
 
@@ -581,7 +589,8 @@ public:
     void PaintScrollbarTrack(SkCanvas* canvas,
         blink::WebThemeEngine::Part part, blink::WebThemeEngine::State state,
         const blink::WebThemeEngine::ScrollbarTrackExtraParams& extra_params,
-        const blink::IntRect& rect) const {
+        const blink::IntRect& rect) const
+    {
         SkPaint paint;
         SkIRect skrect;
 
@@ -598,7 +607,8 @@ public:
         DrawBox(canvas, rect, paint);
     }
 
-    void PaintScrollbarThumb(SkCanvas* canvas, blink::WebThemeEngine::Part part, blink::WebThemeEngine::State state, const blink::IntRect& rect) const {
+    void PaintScrollbarThumb(SkCanvas* canvas, blink::WebThemeEngine::Part part, blink::WebThemeEngine::State state, const blink::IntRect& rect) const
+    {
         const bool hovered = state == blink::WebThemeEngine::StateHover;
         const int midx = rect.x() + rect.width() / 2;
         const int midy = rect.y() + rect.height() / 2;
@@ -621,12 +631,9 @@ public:
         paint.setColor(SaturateAndBrighten(thumb, 0, -0.02f));
 
         if (vertical) {
-            skrect.set(
-                midx + 1, rect.y(), rect.x() + rect.width(), rect.y() + rect.height());
-        }
-        else {
-            skrect.set(
-                rect.x(), midy + 1, rect.x() + rect.width(), rect.y() + rect.height());
+            skrect.set(midx + 1, rect.y(), rect.x() + rect.width(), rect.y() + rect.height());
+        } else {
+            skrect.set(rect.x(), midy + 1, rect.x() + rect.width(), rect.y() + rect.height());
         }
 
         canvas->drawIRect(skrect, paint);
@@ -677,7 +684,8 @@ public:
 
     void PaintScrollbarCorner(SkCanvas* canvas,
         blink::WebThemeEngine::State state,
-        const blink::IntRect& rect) const {
+        const blink::IntRect& rect) const
+    {
         SkPaint paint;
         paint.setColor(SK_ColorWHITE);
         paint.setStyle(SkPaint::kFill_Style);
@@ -688,7 +696,8 @@ public:
     void PaintCheckbox(SkCanvas* canvas,
         blink::WebThemeEngine::State state,
         const blink::IntRect& rect,
-        const blink::WebThemeEngine::ButtonExtraParams& button) const {
+        const blink::WebThemeEngine::ButtonExtraParams& button) const
+    {
         SkRect skrect = PaintCheckboxRadioCommon(canvas, state, rect, SkIntToScalar(2));
         if (!skrect.isEmpty()) {
             // Draw the checkmark / dash.
@@ -726,8 +735,8 @@ public:
         SkCanvas* canvas,
         blink::WebThemeEngine::State state,
         const blink::IntRect& rect,
-        const SkScalar borderRadius) const {
-
+        const SkScalar borderRadius) const
+    {
         SkRect skrect = /*gfx::RectToSkRect*/(rect);
 
         // Use the largest square that fits inside the provided rectangle.
@@ -770,10 +779,10 @@ public:
         }
 
         // Draw the gradient-filled rectangle
-        SkPoint gradient_bounds[3];
-        gradient_bounds[0].set(skrect.x(), skrect.y());
-        gradient_bounds[1].set(skrect.x(), skrect.y() + skrect.height() * 0.38);
-        gradient_bounds[2].set(skrect.x(), skrect.bottom());
+        SkPoint gradientBounds[3];
+        gradientBounds[0].set(skrect.x(), skrect.y());
+        gradientBounds[1].set(skrect.x(), skrect.y() + skrect.height() * 0.38);
+        gradientBounds[2].set(skrect.x(), skrect.bottom());
         const SkColor* startEndColors;
         if (state == blink::WebThemeEngine::StatePressed)
             startEndColors = kCheckboxGradientPressedColors;
@@ -786,7 +795,7 @@ public:
         SkColor colors[3] = { startEndColors[0], startEndColors[0], startEndColors[1] };
         skia::RefPtr<SkShader> shader = skia::AdoptRef(
             SkGradientShader::CreateLinear(
-            gradient_bounds, colors, NULL, 3, SkShader::kClamp_TileMode));
+            gradientBounds, colors, NULL, 3, SkShader::kClamp_TileMode));
         SkPaint paint;
         paint.setAntiAlias(true);
         paint.setShader(shader.get());
@@ -814,7 +823,8 @@ public:
     void PaintRadio(SkCanvas* canvas,
         blink::WebThemeEngine::State state,
         const blink::IntRect& rect,
-        const blink::WebThemeEngine::ButtonExtraParams& button) const {
+        const blink::WebThemeEngine::ButtonExtraParams& button) const
+    {
 
         // Most of a radio button is the same as a checkbox, except the the rounded
         // square is a circle (i.e. border radius >= 100%).
@@ -840,23 +850,24 @@ public:
     void PaintButton(SkCanvas* canvas,
         blink::WebThemeEngine::State state,
         const blink::IntRect& rect,
-        const blink::WebThemeEngine::ButtonExtraParams& button) const {
+        const blink::WebThemeEngine::ButtonExtraParams& button) const
+    {
         SkPaint paint;
         const int kRight = rect.maxX();
         const int kBottom = rect.maxY();
         SkRect skrect = SkRect::MakeLTRB(rect.x(), rect.y(), kRight, kBottom);
-        SkColor base_color = button.backgroundColor;
+        SkColor baseColor = button.backgroundColor;
 
-        color_utils::HSL base_hsl;
-        color_utils::SkColorToHSL(base_color, &base_hsl);
+        color_utils::HSL baseHsl;
+        color_utils::SkColorToHSL(baseColor, &baseHsl);
 
         // Our standard gradient is from 0xdd to 0xf8. This is the amount of
         // increased luminance between those values.
-        SkColor light_color(BrightenColor(base_hsl, SkColorGetA(base_color), 0.105));
+        SkColor light_color(BrightenColor(baseHsl, SkColorGetA(baseColor), 0.105));
 
         // If the button is too small, fallback to drawing a single, solid color
         if (rect.width() < 5 || rect.height() < 5) {
-            paint.setColor(base_color);
+            paint.setColor(baseColor);
             canvas->drawRect(skrect, paint);
             return;
         }
@@ -864,16 +875,14 @@ public:
         paint.setColor(SK_ColorBLACK);
         const int kLightEnd = state == blink::WebThemeEngine::StatePressed ? 1 : 0;
         const int kDarkEnd = !kLightEnd;
-        SkPoint gradient_bounds[2];
-        gradient_bounds[kLightEnd].iset(rect.x(), rect.y());
-        gradient_bounds[kDarkEnd].iset(rect.x(), kBottom - 1);
+        SkPoint gradientBounds[2];
+        gradientBounds[kLightEnd].iset(rect.x(), rect.y());
+        gradientBounds[kDarkEnd].iset(rect.x(), kBottom - 1);
         SkColor colors[2];
         colors[0] = light_color;
-        colors[1] = base_color;
+        colors[1] = baseColor;
 
-        skia::RefPtr<SkShader> shader = skia::AdoptRef(
-            SkGradientShader::CreateLinear(
-            gradient_bounds, colors, NULL, 2, SkShader::kClamp_TileMode));
+        skia::RefPtr<SkShader> shader = skia::AdoptRef(SkGradientShader::CreateLinear(gradientBounds, colors, NULL, 2, SkShader::kClamp_TileMode));
         paint.setStyle(SkPaint::kFill_Style);
         paint.setAntiAlias(true);
         paint.setShader(shader.get());
@@ -896,7 +905,8 @@ public:
     }
 
     void PaintTextField(SkCanvas* canvas, blink::WebThemeEngine::State state,
-        const blink::IntRect& rect, const blink::WebThemeEngine::TextFieldExtraParams& text) const {
+        const blink::IntRect& rect, const blink::WebThemeEngine::TextFieldExtraParams& text) const
+    {
         SkRect bounds;
         bounds.set(rect.x(), rect.y(), rect.maxX() - 1, rect.maxY() - 1);
 
@@ -914,7 +924,8 @@ public:
     }
 
     void PaintMenuList(SkCanvas* canvas, blink::WebThemeEngine::State state, const blink::IntRect& rect,
-        const blink::WebThemeEngine::MenuListExtraParams& menu_list) const {
+        const blink::WebThemeEngine::MenuListExtraParams& menu_list) const
+    {
         // If a border radius is specified, we let the WebCore paint the background
         // and the border of the control.
         if (!menu_list.hasBorderRadius) {
@@ -940,7 +951,8 @@ public:
     void PaintSliderTrack(SkCanvas* canvas,
         blink::WebThemeEngine::State state,
         const blink::IntRect& rect,
-        const blink::WebThemeEngine::SliderExtraParams& slider) const {
+        const blink::WebThemeEngine::SliderExtraParams& slider) const
+    {
         const int kMidX = rect.x() + rect.width() / 2;
         const int kMidY = rect.y() + rect.height() / 2;
 
@@ -953,8 +965,7 @@ public:
                 rect.y(),
                 std::min(rect.maxX(), kMidX + 2),
                 rect.maxY());
-        }
-        else {
+        } else {
             skrect.set(rect.x(),
                 std::max(rect.y(), kMidY - 2),
                 rect.maxX(),
@@ -966,7 +977,8 @@ public:
     void PaintSliderThumb(SkCanvas* canvas,
         blink::WebThemeEngine::State state,
         const blink::IntRect& rect,
-        const blink::WebThemeEngine::SliderExtraParams& slider) const {
+        const blink::WebThemeEngine::SliderExtraParams& slider) const
+    {
         const bool hovered = (state == blink::WebThemeEngine::StateHover) || slider.inDrag;
         const int kMidX = rect.x() + rect.width() / 2;
         const int kMidY = rect.y() + rect.height() / 2;
@@ -1004,7 +1016,8 @@ public:
     void PaintInnerSpinButton(SkCanvas* canvas,
         blink::WebThemeEngine::State state,
         const blink::IntRect& rect,
-        const blink::WebThemeEngine::InnerSpinButtonExtraParams& spin_button) const {
+        const blink::WebThemeEngine::InnerSpinButtonExtraParams& spin_button) const
+    {
         if (spin_button.readOnly)
             state = blink::WebThemeEngine::StateDisabled;
 
@@ -1026,7 +1039,8 @@ public:
     void PaintProgressBar(SkCanvas* canvas,
         blink::WebThemeEngine::State state,
         const blink::IntRect& rect,
-        const blink::WebThemeEngine::ProgressBarExtraParams& progress_bar) const {
+        const blink::WebThemeEngine::ProgressBarExtraParams& progress_bar) const
+    {
 //         ResourceBundle& rb = ResourceBundle::GetSharedInstance();
 //         gfx::ImageSkia* bar_image = rb.GetImageSkiaNamed(IDR_PROGRESS_BAR);
 //         gfx::ImageSkia* left_border_image = rb.GetImageSkiaNamed(IDR_PROGRESS_BORDER_LEFT);
@@ -1108,12 +1122,11 @@ public:
 //             dest_right_border_width, rect.height());
     }
 
-    bool IntersectsClipRectInt(SkCanvas* canvas,
-        int x, int y, int w, int h) const {
+    bool IntersectsClipRectInt(SkCanvas* canvas, int x, int y, int w, int h) const
+    {
         SkRect clip;
-        return canvas->getClipBounds(&clip) &&
-            clip.intersect(SkIntToScalar(x), SkIntToScalar(y), SkIntToScalar(x + w),
-            SkIntToScalar(y + h));
+        return canvas->getClipBounds(&clip) && 
+            clip.intersect(SkIntToScalar(x), SkIntToScalar(y), SkIntToScalar(x + w), SkIntToScalar(y + h));
     }
 
 //     void DrawImageInt(
@@ -1136,7 +1149,8 @@ public:
 
     SkColor SaturateAndBrighten(SkScalar* hsv,
         SkScalar saturate_amount,
-        SkScalar brighten_amount) const {
+        SkScalar brighten_amount) const
+    {
         SkScalar color[3];
         color[0] = hsv[0];
         color[1] = Clamp(hsv[1] + saturate_amount, 0.0, 1.0);
@@ -1144,7 +1158,8 @@ public:
         return SkHSVToColor(color);
     }
 
-    SkColor GetArrowColor(blink::WebThemeEngine::State state) const {
+    SkColor GetArrowColor(blink::WebThemeEngine::State state) const
+    {
         if (state != blink::WebThemeEngine::StateDisabled)
             return SK_ColorBLACK;
 
@@ -1159,7 +1174,8 @@ public:
         int x,
         int y1,
         int y2,
-        const SkPaint& paint) const {
+        const SkPaint& paint) const
+    {
         SkIRect skrect;
         skrect.set(x, y1, x + 1, y2 + 1);
         canvas->drawIRect(skrect, paint);
@@ -1169,7 +1185,8 @@ public:
         int x1,
         int x2,
         int y,
-        const SkPaint& paint) const {
+        const SkPaint& paint) const
+    {
         SkIRect skrect;
         skrect.set(x1, y, x2 + 1, y + 1);
         canvas->drawIRect(skrect, paint);
@@ -1177,7 +1194,8 @@ public:
 
     void DrawBox(SkCanvas* canvas,
         const blink::IntRect& rect,
-        const SkPaint& paint) const {
+        const SkPaint& paint) const
+    {
         const int right = rect.x() + rect.width() - 1;
         const int bottom = rect.y() + rect.height() - 1;
         DrawHorizLine(canvas, rect.x(), right, rect.y(), paint);
@@ -1188,11 +1206,13 @@ public:
 
     SkScalar Clamp(SkScalar value,
         SkScalar min,
-        SkScalar max) const {
+        SkScalar max) const
+    {
         return std::min(std::max(value, min), max);
     }
 
-    SkColor OutlineColor(SkScalar* hsv1, SkScalar* hsv2) const {
+    SkColor OutlineColor(SkScalar* hsv1, SkScalar* hsv2) const
+    {
         // GTK Theme engines have way too much control over the layout of
         // the scrollbar. We might be able to more closely approximate its
         // look-and-feel, if we sent whole images instead of just colors
