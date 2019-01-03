@@ -362,7 +362,7 @@ typedef struct {
     __int64 fileLength; // -1 means to the end of the file.
 } wkePostBodyElement;
 
-typedef struct {
+typedef struct _wkePostBodyElements {
     int size;
     wkePostBodyElement** element;
     size_t elementSize;
@@ -383,6 +383,23 @@ typedef enum _wkeRequestType {
     kWkeRequestTypePost,
     kWkeRequestTypePut,
 } wkeRequestType;
+
+typedef struct _wkePdfDatas {
+    int count;
+    void(WKE_CALL_TYPE* release)(struct _wkePdfDatas* self);
+    size_t* sizes;
+    const void** datas;
+} wkePdfDatas;
+
+typedef struct _wkePrintParams {
+    int dpi;
+    int width;
+    int height;
+    int marginTop;
+    int marginBottom;
+    int marginLeft;
+    int marginRight;
+} wkePrintParams;
 
 typedef void(WKE_CALL_TYPE*wkeTitleChangedCallback)(wkeWebView webView, void* param, const wkeString title);
 typedef void(WKE_CALL_TYPE*wkeURLChangedCallback)(wkeWebView webView, void* param, const wkeString url);
@@ -1034,8 +1051,7 @@ public:
     ITERATOR1(void, wkeNetContinueJob, wkeNetJob jobPtr, "")\
     ITERATOR1(const char*, wkeNetGetUrlByJob, wkeNetJob jobPtr, "")\
     ITERATOR1(void, wkeNetCancelRequest, wkeNetJob jobPtr, "")\
-    ITERATOR2(void, wkeNetChangeRequestUrl, wkeNetJob jobPtr, const char* url, "")\
-    ITERATOR1(void, wkeNetHoldJobToAsynCommit, wkeNetJob jobPtr, "")\
+    ITERATOR1(BOOL, wkeNetHoldJobToAsynCommit, wkeNetJob jobPtr, "")\
     \
     ITERATOR3(wkeWebUrlRequestPtr, wkeNetCreateWebUrlRequest, const utf8* url, const utf8* method, const utf8* mime, "")\
     ITERATOR3(void, wkeNetAddHTTPHeaderFieldToUrlRequest, wkeWebUrlRequestPtr request, const utf8* name, const utf8* value, "")\
@@ -1080,6 +1096,7 @@ public:
     \
     ITERATOR1(void, wkeUtilSetUiCallback, wkeUiThreadPostTaskCallback callback, "") \
     ITERATOR1(const utf8*, wkeUtilSerializeToMHTML, wkeWebView webView, "") \
+    ITERATOR2(const wkePdfDatas*, wkeUtilPrintToPdf, wkeWebView webView, const wkePrintParams* params,"") \
     \
     ITERATOR2(void, wkeSetWindowTitle, wkeWebView webWindow, const utf8* title, "") \
     ITERATOR2(void, wkeSetWindowTitleW, wkeWebView webWindow, const wchar_t* title, "") \
@@ -1209,14 +1226,14 @@ inline void wkeSetWkeDllPath(const wchar_t* dllPath)
 inline int wkeInitializeEx(const wkeSettings* settings)
 {
     HMODULE hMod = LoadLibraryW(kWkeDllPath);
-	if(hMod){
+    if (hMod) {
         FN_wkeInitializeEx wkeInitializeExFunc = (FN_wkeInitializeEx)GetProcAddress(hMod, "wkeInitializeEx");
         wkeInitializeExFunc(settings);
 
         WKE_FOR_EACH_DEFINE_FUNCTION(WKE_GET_PTR_ITERATOR0, WKE_GET_PTR_ITERATOR1, WKE_GET_PTR_ITERATOR2, WKE_GET_PTR_ITERATOR3, \
-        WKE_GET_PTR_ITERATOR4, WKE_GET_PTR_ITERATOR5, WKE_GET_PTR_ITERATOR6, WKE_GET_PTR_ITERATOR11);
-		return 1;
-	}
+            WKE_GET_PTR_ITERATOR4, WKE_GET_PTR_ITERATOR5, WKE_GET_PTR_ITERATOR6, WKE_GET_PTR_ITERATOR11);
+        return 1;
+    }
     return 0;
 }
 

@@ -97,6 +97,7 @@ void wkeNetSetData(wkeNetJob jobPtr, void* buf, int len)
     job->m_asynWkeNetSetData->resize(len);
     memcpy(job->m_asynWkeNetSetData->data(), buf, len);
     
+    job->m_isHoldJobToAsynCommit = false;
     job->m_isWkeNetSetDataBeSetted = true;
 }
 
@@ -147,21 +148,12 @@ void wkeNetContinueJob(wkeNetJob jobPtr)
 //     ASSERT(!job->m_url);
 // }
 
-void wkeNetChangeRequestUrl(wkeNetJob jobPtr, const char* url)
+BOOL wkeNetHoldJobToAsynCommit(wkeNetJob jobPtr)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
     net::WebURLLoaderInternal* job = (net::WebURLLoaderInternal*)jobPtr;
-    blink::KURL newUrl(blink::ParsedURLString, url);
-    job->m_response.setURL(newUrl);
-    job->firstRequest()->setURL(newUrl);
-    job->m_initializeHandleInfo->url = url;
-    ASSERT(!job->m_url);
-}
-
-void wkeNetHoldJobToAsynCommit(wkeNetJob jobPtr)
-{
-    wke::checkThreadCallIsValid(__FUNCTION__);
-    net::WebURLLoaderInternal* job = (net::WebURLLoaderInternal*)jobPtr;
+    if (job->m_isRedirection)
+        return FALSE;
 
     job->m_isWkeNetSetDataBeSetted = false;
     if (job->m_asynWkeNetSetData)
@@ -175,6 +167,8 @@ void wkeNetHoldJobToAsynCommit(wkeNetJob jobPtr)
     job->m_isHookRequest &= (~((unsigned int)1));
 
     job->m_isHoldJobToAsynCommit = true;
+
+    return TRUE;
 }
 
 wkeRequestType wkeNetGetRequestMethod(void *jobPtr)
