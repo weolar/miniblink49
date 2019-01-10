@@ -31,6 +31,7 @@
 #include "gen/blink/platform/RuntimeEnabledFeatures.h"
 #include "wtf/text/WTFString.h"
 #include "wtf/text/WTFStringUtil.h"
+#include "wtf/text/Base64.h"
 #include <v8.h>
 #include <shlwapi.h>
 
@@ -228,6 +229,10 @@ static std::vector<char> convertCookiesPathToUtf8(const WCHAR* path)
 void wkeSetDebugConfig(wkeWebView webview, const char* debugString, const char* param)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
+
+    if (wke::setDebugConfig(webview, debugString, param))
+        return;
+
     content::WebPage* webpage = nullptr;
     blink::WebViewImpl* webViewImpl = nullptr;
     blink::WebSettingsImpl* settings = nullptr;
@@ -281,8 +286,6 @@ void wkeSetDebugConfig(wkeWebView webview, const char* debugString, const char* 
             wke::g_rendererAntiAlias = atoi(param) == 1;
         } 
     }
-
-    wke::setDebugConfig(webview, debugString, param);
 }
 
 void wkeSetLanguage(wkeWebView webview, const char* language)
@@ -1128,6 +1131,12 @@ void wkeOnStartDragging(wkeWebView webView, wkeStartDraggingCallback callback, v
     webView->onStartDragging(callback, param);
 }
 
+void wkeOnPrint(wkeWebView webView, wkeOnPrintCallback callback, void* param)
+{
+    wke::checkThreadCallIsValid(__FUNCTION__);
+    webView->onPrint(callback, param);
+}
+
 void wkeOnWillMediaLoad(wkeWebView webView, wkeWillMediaLoadCallback callback, void* callbackParam)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
@@ -1694,6 +1703,16 @@ const utf8* wkeUtilDecodeURLEscape(const utf8* url)
     return resultStr;
 }
 
+const utf8* wkeUtilEncodeURLEscape(const utf8* url)
+{
+    String result = blink::encodeWithURLEscapeSequences(String::fromUTF8(url));
+    if (result.isNull() || result.isEmpty())
+        return url;
+    Vector<char> buffer = WTF::ensureStringToUTF8(result, false);
+    const char* resultStr = wke::createTempCharString((const char*)buffer.data(), buffer.size());
+    return resultStr;
+}
+
 int wkeGetWebviewId(wkeWebView webView)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
@@ -1960,6 +1979,45 @@ const utf8* wkeToString(const wkeString string)
 const wchar_t* wkeToStringW(const wkeString string)
 {
     return wkeGetStringW(string);
+}
+
+const utf8* wkeUtilBase64Encode(const utf8* str)
+{
+    if (!str)
+        return nullptr;
+
+    CString inStr(str);
+    String result = WTF::base64Encode(inStr, WTF::Base64InsertLFs);
+
+    if (result.isNull() || result.isEmpty() || !result.is8Bit())
+        return nullptr;
+    return wke::createTempCharString((const char *)(result.characters8()), result.length());
+}
+
+const utf8* wkeUtilBase64Decode(const utf8* str)
+{
+    CString inStr(str);
+    Vector<char> result;
+    bool ok = WTF::base64Decode(str, strlen(str), result);
+
+    if (!ok || 0 == result.size())
+        return nullptr;
+    return wke::createTempCharString(result.data(), result.size());
+}
+
+void wkeRunMessageLoop()
+{
+    MSG msg = { 0 };
+    while (true) {
+        if (::PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
+            if (WM_QUIT == msg.message)
+                break;
+            ::TranslateMessage(&msg);
+            ::DispatchMessageW(&msg);
+        }
+        wkeWake(nullptr);
+        ::Sleep(2);
+    }
 }
 
 // V1 API end

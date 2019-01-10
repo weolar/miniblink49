@@ -554,7 +554,7 @@ typedef void(*wkeCallUiThread)(wkeWebView webView, wkeOnCallUiThread func, void*
 WKE_API void wkeSetUIThreadCallback(wkeWebView webView, wkeCallUiThread callback, void* param);
 
 //wkeNet--------------------------------------------------------------------------------------
-typedef bool(*wkeLoadUrlBeginCallback)(wkeWebView webView, void* param, const char* url, void* job);
+typedef void(*wkeLoadUrlBeginCallback)(wkeWebView webView, void* param, const char* url, void* job);
 WKE_API void wkeOnLoadUrlBegin(wkeWebView webView, wkeLoadUrlBeginCallback callback, void* callbackParam);
 
 typedef void(*wkeLoadUrlEndCallback)(wkeWebView webView, void* param, const char *url, void* job, void* buf, int len);

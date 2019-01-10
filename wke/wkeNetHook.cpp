@@ -56,6 +56,16 @@ const char* wkeNetGetHTTPHeaderField(wkeNetJob jobPtr, const char* key)
     return wke::createTempCharString(valueBuffer.data(), valueBuffer.size());
 }
 
+const char* wkeNetGetHTTPHeaderFieldFromResponse(wkeNetJob jobPtr, const char* key)
+{
+    wke::checkThreadCallIsValid(__FUNCTION__);
+    net::WebURLLoaderInternal* job = (net::WebURLLoaderInternal*)jobPtr;
+    String value = job->m_response.httpHeaderField(String(key));
+    Vector<char> valueBuffer = WTF::ensureStringToUTF8(value, false);
+
+    return wke::createTempCharString(valueBuffer.data(), valueBuffer.size());
+}
+
 void wkeNetSetMIMEType(wkeNetJob jobPtr, const char* type)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
@@ -501,6 +511,30 @@ private:
     wkeOnUrlRequestDidFailCallback m_didFailCallback;
     wkeOnUrlRequestDidFinishLoadingCallback m_didFinishLoadingCallback;
 };
+
+blinkWebURLRequestPtr wkeNetCopyWebUrlRequest(wkeNetJob jobPtr, bool needExtraData)
+{
+    net::WebURLLoaderInternal* job = (net::WebURLLoaderInternal*)jobPtr;
+    blink::WebURLRequest* request = job->firstRequest();
+
+    blink::WebURLRequest* result = new blink::WebURLRequest();
+    result->assign(*request);
+
+    if (!needExtraData)
+        result->setExtraData(nullptr);
+
+    return result;
+}
+
+void wkeNetDeleteBlinkWebURLRequestPtr(blinkWebURLRequestPtr ptr)
+{
+    delete ptr;
+}
+
+wkeWebUrlRequestPtr wkeNetCreateWebUrlRequest2(const blinkWebURLRequestPtr request)
+{
+    return new wkeWebUrlRequest(nullptr, *request);
+}
 
 wkeWebUrlRequestPtr wkeNetCreateWebUrlRequest(const utf8* url, const utf8* method, const utf8* mime)
 {

@@ -107,6 +107,9 @@ struct CWebViewHandler {
 
     wkeStartDraggingCallback startDraggingCallback;
     void* startDraggingCallbackParam;
+
+    wkeOnPrintCallback printCallback;
+    void* printCallbackParam;
     
     bool isWke; // 是否是使用的wke接口
 };
@@ -270,6 +273,8 @@ public:
 
     void onStartDragging(wkeStartDraggingCallback callback, void* callbackParam);
     
+    void onPrint(wkeOnPrintCallback callback, void* param);
+
     void onOtherLoad(wkeOnOtherLoadCallback callback, void* callbackParam);
 
     void onDraggableRegionsChanged(wkeDraggableRegionsChangedCallback callback, void* param);
@@ -301,7 +306,7 @@ public:
 
     CURLSH* getCurlShareHandle();
     std::string getCookieJarPath();
-    void setCookieJarPath(const utf8* path);
+    void setCookieJarFullPath(const utf8* path);
     net::WebCookieJarImpl* getCookieJar();
 
     std::set<jsValue>& getPersistentJsValue() { return m_persistentJsValue; }
