@@ -264,6 +264,17 @@ static const char *get_top_domain(const char * const domain, size_t *outlen)
 /*
  * A case-insensitive hash for the cookie domains.
  */
+
+#pragma optimize( "", off)
+
+// fix vs2015 /o2 bug
+static inline size_t cookie_hash_util_no_crash(size_t h)
+{
+  return (h % (COOKIE_HASH_SIZE));
+}
+
+#pragma optimize( "", on)
+
 static size_t cookie_hash_domain(const char *domain, const size_t len)
 {
   const char *end = domain + len;
@@ -274,7 +285,7 @@ static size_t cookie_hash_domain(const char *domain, const size_t len)
     h ^= Curl_raw_toupper(*domain++);
   }
 
-  return (h % COOKIE_HASH_SIZE);
+  return cookie_hash_util_no_crash(h);
 }
 
 /*

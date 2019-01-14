@@ -37,6 +37,7 @@
 
 #ifdef USE_WIN32_LDAP           /* Use Windows LDAP implementation. */
 # include <winldap.h>
+# include <schnlsp.h>
 # ifndef LDAP_VENDOR_NAME
 #  error Your Platform SDK is NOT sufficient for LDAP support! \
          Update your Platform SDK, or disable LDAP support!

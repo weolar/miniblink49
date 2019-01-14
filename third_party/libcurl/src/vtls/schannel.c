@@ -1069,7 +1069,7 @@ schannel_connect_step2(struct connectdata *conn, int sockindex)
     }
   }
 
-#ifdef HAS_MANUAL_VERIFY_API
+#if 0 // def HAS_MANUAL_VERIFY_API // weolar
   if(conn->ssl_config.verifypeer && BACKEND->use_manual_cred_validation) {
     return verify_certificate(conn, sockindex);
   }
