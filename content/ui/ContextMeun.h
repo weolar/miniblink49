@@ -66,7 +66,9 @@ public:
     }
 
     enum MenuId {
-        kCopySelectedTextId,
+        kSelectedAllId,
+        kSelectedTextId,
+        kUndoId,
         kCopyImageId,
         kInspectElementAtId,
         kCutId,
@@ -96,8 +98,11 @@ public:
         
         m_data = blink::WebContextMenuData();
 
+        ::AppendMenu(m_popMenu, MF_STRING, kSelectedAllId, L"全选");
+        ::AppendMenu(m_popMenu, MF_STRING, kUndoId, L"撤销");
+        
         if ((!data.selectedText.isNull() && !data.selectedText.isEmpty()))
-            ::AppendMenu(m_popMenu, MF_STRING, kCopySelectedTextId, L"复制");
+            ::AppendMenu(m_popMenu, MF_STRING, kSelectedTextId, L"复制");
 
         if (data.hasImageContents) {
             ::AppendMenu(m_popMenu, MF_STRING, kCopyImageId, L"复制图片");
@@ -131,8 +136,12 @@ public:
         content::WebThreadImpl* threadImpl = (content::WebThreadImpl*)(blink::Platform::current()->currentThread());
         threadImpl->fire();
 
-        if (kCopySelectedTextId == itemID) {
+        if (kSelectedTextId == itemID) {
             m_webPage->webViewImpl()->focusedFrame()->executeCommand("Copy");
+        } else if (kSelectedAllId == itemID) {
+            m_webPage->webViewImpl()->focusedFrame()->executeCommand("SelectAll");
+        } else if (kUndoId == itemID) {
+            m_webPage->webViewImpl()->focusedFrame()->executeCommand("Undo");
         } else if (kCopyImageId == itemID) {
             m_webPage->webViewImpl()->copyImageAt(*m_imagePos);
             delete m_imagePos;
