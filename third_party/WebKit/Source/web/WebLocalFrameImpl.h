@@ -224,6 +224,8 @@ public:
     WebString contentAsMarkup() const override;
     WebString layoutTreeAsText(LayoutAsTextControls toShow = LayoutAsTextNormal) const override;
 
+    void drawInCanvas(const WebRect& rect, const WebString& customCSS, WebCanvas* canvas) const override;
+
     WebString markerTextForListItem(const WebElement&) const override;
     WebRect selectionBoundsRect() const override;
 

@@ -1425,7 +1425,7 @@ float WebLocalFrameImpl::getPrintPageShrink(int page)
 
 float WebLocalFrameImpl::printPage(int page, WebCanvas* canvas)
 {
-#if ENABLE(PRINTING)
+#if 1 // ENABLE(PRINTING)
 
     ASSERT(m_printContext && page >= 0 && frame() && frame()->document());
 
@@ -2267,22 +2267,127 @@ WebSandboxFlags WebLocalFrameImpl::effectiveSandboxFlags() const
     return static_cast<WebSandboxFlags>(frame()->loader().effectiveSandboxFlags());
 }
 
-int WebLocalFrameImpl::topContentInset() const {
-  if (frame() && frame()->view()) {
-    return frame()->view()->topContentInset();
-  }
-  return 0;
+int WebLocalFrameImpl::topContentInset() const
+{
+    if (frame() && frame()->view()) {
+        return frame()->view()->topContentInset();
+    }
+    return 0;
 }
 
-void WebLocalFrameImpl::setTopContentInset(int offset) {
-  m_topContentInset = offset;
-  if (frame() && frame()->view()) {
-    frame()->view()->setTopContentInset(m_topContentInset);
-    WebViewImpl* webView = viewImpl();
-    if (webView)
-      webView->layout();
-  }
-  return;
+void WebLocalFrameImpl::setTopContentInset(int offset)
+{
+    m_topContentInset = offset;
+    if (frame() && frame()->view()) {
+        frame()->view()->setTopContentInset(m_topContentInset);
+        WebViewImpl* webView = viewImpl();
+        if (webView)
+            webView->layout();
+    }
+    return;
+}
+
+static void collectAllFrames(Vector<const LocalFrame*>* list, const LocalFrame* frame)
+{
+    list->append(frame);
+
+    for (auto childFrame = frame->tree().firstChild(); childFrame; childFrame = childFrame->tree().nextSibling()) {
+        if (!childFrame->isLocalFrame())
+            continue;
+
+        collectAllFrames(list, toLocalFrame(childFrame));
+    }
+}
+
+class CanvasPainterContext {
+    void paintToGraphicsContext(GraphicsContext& context, FrameView* view, const FloatRect& floatRect)
+    {
+        // Enter a translation transform
+        AffineTransform transform;
+        transform.translate(static_cast<float>(-floatRect.x()), static_cast<float>(-floatRect.y()));
+        TransformRecorder transformRecorder(context, *this, transform);
+
+        // Enter a clipped region
+        ClipRecorder clipRecorder(context, *this, DisplayItem::ClipPrintedPage, LayoutRect(floatRect));
+
+        view->updateAllLifecyclePhases();
+
+        PaintBehavior oldPaintBehavior = view->paintBehavior();
+
+        view->setPaintBehavior(oldPaintBehavior | PaintBehaviorFlattenCompositingLayers);
+        view->paintContents(&context, IntRect(floatRect));
+        view->setPaintBehavior(oldPaintBehavior);
+    }
+
+public:
+    void paint(WebCanvas* canvas, FrameView* view, const FloatRect& floatRect)
+    {
+        SkPictureBuilder pictureBuilder(floatRect, &skia::getMetaData(*canvas));
+        paintToGraphicsContext(pictureBuilder.context(), view, floatRect);
+        pictureBuilder.endRecording()->playback(canvas);
+    }
+
+    DisplayItemClient displayItemClient() const
+    {
+        return toDisplayItemClient(this);
+    }
+
+    String debugName() const
+    {
+        return "CanvasPainterContext";
+    }
+};
+
+void WebLocalFrameImpl::drawInCanvas(const WebRect& rect, const WebString& customCSS, WebCanvas* canvas) const
+{
+    Vector<const LocalFrame*> frames;
+    collectAllFrames(&frames, frame());
+
+    // Set the new "style" attribute if specified
+    const blink::WebString classAttribute("class");
+    std::vector<WTF::String> originalStyleClasses;
+
+    if (!customCSS.isEmpty()) {
+        for (auto localFrame : frames) {
+            auto htmlBody = localFrame->document()->body();
+
+            // Some documents (ie. SVG documents) do not have body elements
+            if (!htmlBody)
+                continue;
+
+            auto webBody = WebElement(htmlBody);
+            if (webBody.hasAttribute(classAttribute)) {
+                WTF::String originalStyleClass = webBody.getAttribute(classAttribute);
+                originalStyleClasses.push_back(originalStyleClass);
+                webBody.setAttribute(classAttribute, WTF::String(originalStyleClass + " " + WTF::String(customCSS)));
+            } else {
+                originalStyleClasses.push_back(WTF::String());
+                webBody.setAttribute(classAttribute, customCSS);
+            }
+        }
+    }
+
+    CanvasPainterContext painterContext;
+    painterContext.paint(canvas, frameView(), FloatRect(rect));
+
+    // Restore the original "style" attribute
+    if (!originalStyleClasses.empty()) {
+        int index = -1;
+        for (auto localFrame : frames) {
+            auto htmlBody = localFrame->document()->body();
+            if (!htmlBody)
+                continue;
+
+            const auto& originalStyleClass = originalStyleClasses[++index];
+            auto webBody = WebElement(htmlBody);
+
+            if (!originalStyleClass.isEmpty()) {
+                webBody.setAttribute(classAttribute, originalStyleClass);
+            } else {
+                webBody.removeAttribute(classAttribute);
+            }
+        }
+    }
 }
 
 } // namespace blink
