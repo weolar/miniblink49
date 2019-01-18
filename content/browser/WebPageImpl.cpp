@@ -1926,6 +1926,15 @@ WebStorageNamespace* WebPageImpl::createSessionStorageNamespace()
     return ((content::BlinkPlatformImpl*)Platform::current())->createSessionStorageNamespace();
 }
 
+#ifndef MINIBLINK_NO_PAGE_LOCALSTORAGE
+WebStorageNamespace* WebPageImpl::createLocalStorageNamespace()
+{
+    if (!m_pageNetExtraData)
+        m_pageNetExtraData = new net::PageNetExtraData();
+    return m_pageNetExtraData->createWebStorageNamespace();
+}
+#endif
+
 WebString WebPageImpl::acceptLanguages()
 {
     if (m_webViewImpl) {
@@ -1984,6 +1993,14 @@ void WebPageImpl::onMouseDown(const blink::WebNode& mouseDownNode)
 {
     if (mouseDownNode.isDraggable())
         m_platformEventHandler->setIsDraggableNodeMousedown();
+}
+
+void WebPageImpl::printPage(blink::WebLocalFrame* frame)
+{
+    wkeWebFrameHandle handle = wke::CWebView::frameIdTowkeWebFrameHandle(m_pagePtr, getFrameIdByBlinkFrame(frame));
+
+    if (m_pagePtr->wkeHandler().printCallback)
+        m_pagePtr->wkeHandler().printCallback(m_pagePtr->wkeWebView(), m_pagePtr->wkeHandler().printCallbackParam, handle, nullptr);
 }
 
 void WebPageImpl::draggableRegionsChanged()
@@ -2129,6 +2146,13 @@ void WebPageImpl::setCookieJarFullPath(const char* path)
     if (!m_pageNetExtraData)
         m_pageNetExtraData = new net::PageNetExtraData();
     m_pageNetExtraData->setCookieJarFullPath(path);
+}
+
+void WebPageImpl::setLocalStorageFullPath(const char* path)
+{
+    if (!m_pageNetExtraData)
+        m_pageNetExtraData = new net::PageNetExtraData();
+    m_pageNetExtraData->setLocalStorageFullPath(path);
 }
 
 bool WebPageImpl::initSetting()

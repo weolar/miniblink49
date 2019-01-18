@@ -162,6 +162,7 @@ public:
 
     PassRefPtr<net::PageNetExtraData> getPageNetExtraData();
     void setCookieJarFullPath(const char* path);
+    void setLocalStorageFullPath(const char* path);
 
     WebFrameClientImpl* webFrameClientImpl();
 

@@ -97,9 +97,6 @@ public:
         m_popMenu = ::CreatePopupMenu();
         
         m_data = blink::WebContextMenuData();
-
-        ::AppendMenu(m_popMenu, MF_STRING, kSelectedAllId, L"全选");
-        ::AppendMenu(m_popMenu, MF_STRING, kUndoId, L"撤销");
         
         if ((!data.selectedText.isNull() && !data.selectedText.isEmpty()))
             ::AppendMenu(m_popMenu, MF_STRING, kSelectedTextId, L"复制");
@@ -115,6 +112,8 @@ public:
         if (data.isEditable) {
             ::AppendMenu(m_popMenu, MF_STRING, kCutId, L"剪切");
             ::AppendMenu(m_popMenu, MF_STRING, kPasteId, L"粘贴");
+            ::AppendMenu(m_popMenu, MF_STRING, kSelectedAllId, L"全选");
+            ::AppendMenu(m_popMenu, MF_STRING, kUndoId, L"撤销");
         }
 
         if (0 == ::GetMenuItemCount(m_popMenu)) {

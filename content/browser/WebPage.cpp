@@ -498,6 +498,12 @@ void WebPage::setCookieJarFullPath(const char* path)
         return m_pageImpl->setCookieJarFullPath(path);
 }
 
+void WebPage::setLocalStorageFullPath(const char* path)
+{
+    if (m_pageImpl)
+        return m_pageImpl->setLocalStorageFullPath(path);
+}
+
 WebPage* WebPage::getSelfForCurrentContext()
 {
     WebPageImpl* impl = WebPageImpl::getSelfForCurrentContext();

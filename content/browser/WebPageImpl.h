@@ -101,6 +101,9 @@ public:
     virtual void initializeLayerTreeView() override;
     virtual blink::WebWidget* createPopupMenu(blink::WebPopupType) override;
     virtual blink::WebStorageNamespace* createSessionStorageNamespace() override;
+#ifndef MINIBLINK_NO_PAGE_LOCALSTORAGE
+    virtual blink::WebStorageNamespace* createLocalStorageNamespace()  override;
+#endif
     virtual blink::WebString acceptLanguages() override;
     void setScreenInfo(const blink::WebScreenInfo& info);
     virtual blink::WebScreenInfo screenInfo() override;
@@ -108,6 +111,7 @@ public:
     virtual void setToolTipText(const blink::WebString&, blink::WebTextDirection hint) override;
     virtual void draggableRegionsChanged() override;
     virtual void onMouseDown(const blink::WebNode& mouseDownNode) override;
+    virtual void printPage(blink::WebLocalFrame* frame) override;
 
     // Editing --------------------------------------------------------
     virtual bool handleCurrentKeyboardEvent() override;
@@ -248,6 +252,7 @@ public:
     bool m_isFirstEnterDrag;
 
     void setCookieJarFullPath(const char* path);
+    void setLocalStorageFullPath(const char* path);
     RefPtr<net::PageNetExtraData> m_pageNetExtraData;
 
     static int64_t m_firstFrameId;

@@ -519,7 +519,10 @@ void WebFrameClientImpl::didChangeManifest(WebLocalFrame*) { }
 void WebFrameClientImpl::didChangeDefaultPresentation(WebLocalFrame*) { }
 void WebFrameClientImpl::didChangeThemeColor() { }
 
-void WebFrameClientImpl::dispatchLoad() { }
+void WebFrameClientImpl::dispatchLoad()
+{
+    OutputDebugStringA("WebFrameClientImpl::dispatchLoad\n");
+}
 
 WebNavigationPolicy WebFrameClientImpl::decidePolicyForNavigation(const NavigationPolicyInfo& info)
 {

@@ -21,14 +21,12 @@
 #include "content/resources/LocalizedString.h"
 #include "content/resources/WebKitWebRes.h"
 #include "content/resources/MediaPlayerData.h"
-
 #include "content/browser/WebPage.h"
 #include "content/browser/PlatformMessagePortChannel.h"
 #include "cc/blink/WebCompositorSupportImpl.h"
 #include "cc/raster/RasterTask.h"
 #include "third_party/WebKit/public/web/WebKit.h"
 #include "third_party/WebKit/Source/core/fetch/MemoryCache.h"
-#include "third_party/WebKit/Source/web/WebStorageNamespaceImpl.h"
 #include "third_party/WebKit/public/platform/WebScrollbarBehavior.h"
 #include "third_party/WebKit/public/platform/WebPluginListBuilder.h"
 #include "third_party/WebKit/Source/platform/WebThreadSupportingGC.h"
@@ -49,6 +47,7 @@
 #include "gin/public/isolate_holder.h"
 #include "gin/array_buffer.h"
 #include "net/WebURLLoaderManager.h"
+#include "net/WebStorageNamespaceImpl.h"
 #include "wke/wkeUtil.h"
 #include <crtdbg.h>
 
@@ -151,7 +150,7 @@ public:
     ~DOMStorageMapWrap()
     {
     }
-    blink::DOMStorageMap map;
+    net::DOMStorageMap map;
 };
 
 DWORD sCurrentThreadTlsKey = -1;
@@ -847,16 +846,21 @@ blink::WebURLError BlinkPlatformImpl::cancelledError(const blink::WebURL& url) c
 
 blink::WebStorageNamespace* BlinkPlatformImpl::createLocalStorageNamespace()
 {
+#ifndef MINIBLINK_NO_PAGE_LOCALSTORAGE
+    RELEASE_ASSERT(false);
+    return nullptr;
+#else
     if (!m_localStorageStorageMap)
         m_localStorageStorageMap = new DOMStorageMapWrap();
-    return new blink::WebStorageNamespaceImpl(blink::kLocalStorageNamespaceId, &m_localStorageStorageMap->map, true);
+    return new blink::WebStorageNamespaceImpl("", blink::kLocalStorageNamespaceId, &m_localStorageStorageMap->map, true);
+#endif
 }
 
 blink::WebStorageNamespace* BlinkPlatformImpl::createSessionStorageNamespace()
 {
     if (!m_sessionStorageStorageMap)
         m_sessionStorageStorageMap = new DOMStorageMapWrap();
-    return new blink::WebStorageNamespaceImpl(m_storageNamespaceIdCount++, &m_sessionStorageStorageMap->map, false);
+    return new net::WebStorageNamespaceImpl("", m_storageNamespaceIdCount++, &m_sessionStorageStorageMap->map, false);
 }
 
 bool BlinkPlatformImpl::portAllowed(const blink::WebURL&) const
