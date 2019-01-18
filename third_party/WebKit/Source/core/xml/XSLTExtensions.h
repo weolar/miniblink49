@@ -26,7 +26,7 @@
 #ifndef XSLTExtensions_h
 #define XSLTExtensions_h
 
-#include <libxslt/xsltInternals.h>
+#include "third_party/libxslt/libxslt/xsltInternals.h"
 
 namespace blink {
 

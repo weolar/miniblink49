@@ -31,7 +31,7 @@
 #include "wtf/text/StringHash.h"
 
 #include <libxml/parserInternals.h>
-#include <libxslt/documents.h>
+#include "third_party/libxslt/libxslt/documents.h"
 
 namespace blink {
 

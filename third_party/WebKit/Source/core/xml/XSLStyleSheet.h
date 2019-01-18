@@ -28,7 +28,7 @@
 #include "platform/RuntimeEnabledFeatures.h"
 #include "wtf/PassRefPtr.h"
 #include <libxml/tree.h>
-#include <libxslt/transform.h>
+#include "third_party/libxslt/libxslt/transform.h"
 
 namespace blink {
 

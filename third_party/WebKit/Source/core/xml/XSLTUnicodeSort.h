@@ -28,7 +28,7 @@
 #ifndef XSLTUnicodeSort_h
 #define XSLTUnicodeSort_h
 
-#include <libxslt/xsltInternals.h>
+#include "third_party/libxslt/libxslt/xsltInternals.h"
 
 namespace blink {
 

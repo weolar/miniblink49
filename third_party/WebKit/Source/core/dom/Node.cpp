@@ -82,6 +82,7 @@
 #include "core/layout/LayoutBox.h"
 #include "core/page/ContextMenuController.h"
 #include "core/page/Page.h"
+#include "core/page/ChromeClient.h"
 #include "core/svg/graphics/SVGImage.h"
 #include "platform/EventDispatchForbiddenScope.h"
 #include "platform/TraceEvent.h"
@@ -2078,6 +2079,18 @@ void Node::notifyMutationObserversNodeWillDetach()
 
 void Node::handleLocalEvents(Event& event)
 {
+#ifndef MINIBLINK_NO_DRAG_REGION
+    const AtomicString& eventType = event.type();
+    
+    if (EventTypeNames::mousedown == eventType && event.isMouseEvent() && event.eventPhase() == Event::CAPTURING_PHASE) {
+        MouseEvent* mouseEvent = toMouseEvent(&event);
+        if (mouseEvent->buttonDown() && LeftButton == mouseEvent->button()) {
+            if (LocalFrame* frame = document().frame())
+                frame->chromeClient().onMouseDown(this);
+        }
+    }
+#endif
+
     if (!hasEventTargetData())
         return;
 
@@ -2136,8 +2149,7 @@ bool Node::dispatchKeyEvent(const PlatformKeyboardEvent& event)
     return EventDispatcher::dispatchEvent(*this, KeyboardEventDispatchMediator::create(KeyboardEvent::create(event, document().domWindow())));
 }
 
-bool Node::dispatchMouseEvent(const PlatformMouseEvent& event, const AtomicString& eventType,
-    int detail, Node* relatedTarget)
+bool Node::dispatchMouseEvent(const PlatformMouseEvent& event, const AtomicString& eventType, int detail, Node* relatedTarget)
 {
     return EventDispatcher::dispatchEvent(*this, MouseEventDispatchMediator::create(MouseEvent::create(eventType, document().domWindow(), event, detail, relatedTarget)));
 }
