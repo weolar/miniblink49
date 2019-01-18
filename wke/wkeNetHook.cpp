@@ -158,6 +158,17 @@ void wkeNetContinueJob(wkeNetJob jobPtr)
 //     ASSERT(!job->m_url);
 // }
 
+void wkeNetChangeRequestUrl(wkeNetJob jobPtr, const char* url)
+{
+    wke::checkThreadCallIsValid(__FUNCTION__);
+    net::WebURLLoaderInternal* job = (net::WebURLLoaderInternal*)jobPtr;
+    blink::KURL newUrl(blink::ParsedURLString, url);
+    job->m_response.setURL(newUrl);
+    job->firstRequest()->setURL(newUrl);
+    job->m_initializeHandleInfo->url = url;
+    ASSERT(!job->m_url);
+}
+
 BOOL wkeNetHoldJobToAsynCommit(wkeNetJob jobPtr)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);

@@ -394,12 +394,11 @@ typedef enum _wkeRequestType {
 
 typedef struct _wkePdfDatas {
     int count;
-    void(WKE_CALL_TYPE* release)(struct _wkePdfDatas* self);
     size_t* sizes;
     const void** datas;
 } wkePdfDatas;
 
-typedef struct _wkePrintParams {
+typedef struct _wkePrintSettings {
     int structSize;
     int dpi;
     int width;
@@ -410,7 +409,13 @@ typedef struct _wkePrintParams {
     int marginRight;
     BOOL isPrintPageHeadAndFooter;
     BOOL isPrintBackgroud;
-} wkePrintParams;
+} wkePrintSettings;
+
+typedef struct _wkeScreenshotSettings {
+    int structSize;
+    int width;
+    int height;
+} wkeScreenshotSettings;
 
 typedef void(WKE_CALL_TYPE*wkeTitleChangedCallback)(wkeWebView webView, void* param, const wkeString title);
 typedef void(WKE_CALL_TYPE*wkeURLChangedCallback)(wkeWebView webView, void* param, const wkeString url);
@@ -453,7 +458,7 @@ typedef void(WKE_CALL_TYPE*wkeStartDraggingCallback)(
 typedef void(WKE_CALL_TYPE*wkeUiThreadRunCallback)(HWND hWnd, void* param);
 typedef int(WKE_CALL_TYPE*wkeUiThreadPostTaskCallback)(HWND hWnd, wkeUiThreadRunCallback callback, void* param);
 
-typedef enum {
+typedef enum _wkeOtherLoadType {
     WKE_DID_START_LOADING,
     WKE_DID_STOP_LOADING,
     WKE_DID_NAVIGATE,
@@ -464,14 +469,37 @@ typedef enum {
 } wkeOtherLoadType;
 typedef void(WKE_CALL_TYPE*wkeOnOtherLoadCallback)(wkeWebView webView, void* param, wkeOtherLoadType type, wkeTempCallbackInfo* info);
 
-typedef enum {
+typedef enum _wkeLoadingResult {
     WKE_LOADING_SUCCEEDED,
     WKE_LOADING_FAILED,
     WKE_LOADING_CANCELED
 } wkeLoadingResult;
 
+typedef enum _wkeDownloadOpt {
+    kWkeDownloadOptCancel,
+    kWkeDownloadOptCacheData,
+} wkeDownloadOpt;
+
+typedef void(WKE_CALL_TYPE*wkeNetJobDataRecvCallback)(void* ptr, wkeNetJob job, const char* data, int length);
+typedef void(WKE_CALL_TYPE*wkeNetJobDataFinishCallback)(void* ptr, wkeNetJob job, wkeLoadingResult result);
+
+typedef struct _wkeNetJobDataBind {
+    void* ptr;
+    wkeNetJobDataRecvCallback recvCallback;
+    wkeNetJobDataFinishCallback finishCallback;
+}wkeNetJobDataBind;
+
 typedef void(WKE_CALL_TYPE*wkeLoadingFinishCallback)(wkeWebView webView, void* param, const wkeString url, wkeLoadingResult result, const wkeString failedReason);
 typedef bool(WKE_CALL_TYPE*wkeDownloadCallback)(wkeWebView webView, void* param, const char* url);
+typedef wkeDownloadOpt(WKE_CALL_TYPE*wkeDownload2Callback)(
+    wkeWebView webView, 
+    void* param,
+    size_t expectedContentLength,
+    const char* url, 
+    const char* mime, 
+    const char* disposition, 
+    wkeNetJob job, 
+    wkeNetJobDataBind* dataBind);
 
 typedef enum {
     wkeLevelDebug = 4,
@@ -1032,6 +1060,7 @@ public:
     ITERATOR3(void, wkeOnDocumentReady2, wkeWebView webView, wkeDocumentReady2Callback callback, void* param, "") \
     ITERATOR3(void, wkeOnLoadingFinish, wkeWebView webView, wkeLoadingFinishCallback callback, void* param, "") \
     ITERATOR3(void, wkeOnDownload, wkeWebView webView, wkeDownloadCallback callback, void* param, "") \
+    ITERATOR3(void, wkeOnDownload2, wkeWebView webView, wkeDownload2Callback callback, void* param, "") \
     ITERATOR3(void, wkeOnConsole, wkeWebView webView, wkeConsoleCallback callback, void* param, "") \
     ITERATOR3(void, wkeSetUIThreadCallback, wkeWebView webView, wkeCallUiThread callback, void* param, "") \
     ITERATOR3(void, wkeOnLoadUrlBegin, wkeWebView webView, wkeLoadUrlBeginCallback callback, void* callbackParam, "") \
@@ -1066,6 +1095,7 @@ public:
     ITERATOR1(const char*, wkeNetGetUrlByJob, wkeNetJob jobPtr, "")\
     ITERATOR1(void, wkeNetCancelRequest, wkeNetJob jobPtr, "")\
     ITERATOR1(BOOL, wkeNetHoldJobToAsynCommit, wkeNetJob jobPtr, "")\
+    ITERATOR2(void, wkeNetChangeRequestUrl, wkeNetJob jobPtr, const char* url, "")\
     \
     ITERATOR3(wkeWebUrlRequestPtr, wkeNetCreateWebUrlRequest, const utf8* url, const utf8* method, const utf8* mime, "")\
     ITERATOR1(wkeWebUrlRequestPtr, wkeNetCreateWebUrlRequest2, const blinkWebURLRequestPtr request, "")\
@@ -1113,7 +1143,9 @@ public:
     \
     ITERATOR1(void, wkeUtilSetUiCallback, wkeUiThreadPostTaskCallback callback, "") \
     ITERATOR1(const utf8*, wkeUtilSerializeToMHTML, wkeWebView webView, "") \
-    ITERATOR2(const wkePdfDatas*, wkeUtilPrintToPdf, wkeWebView webView, const wkePrintParams* params,"") \
+    ITERATOR3(const wkePdfDatas*, wkeUtilPrintToPdf, wkeWebView webView, wkeWebFrameHandle frameId, const wkePrintSettings* settings,"") \
+    ITERATOR3(const wkeMemBuf*, wkePrintToBitmap, wkeWebView webView, wkeWebFrameHandle frameId, const wkeScreenshotSettings* settings,"") \
+    ITERATOR1(void, wkeUtilRelasePrintPdfDatas, const wkePdfDatas* datas,"") \
     \
     ITERATOR2(void, wkeSetWindowTitle, wkeWebView webWindow, const utf8* title, "") \
     ITERATOR2(void, wkeSetWindowTitleW, wkeWebView webWindow, const wchar_t* title, "") \

@@ -1065,10 +1065,10 @@ static HWND createHideWnd()
     ::RegisterClassEx(&wcex);
 
     s_hWnd = CreateWindowExW(
-        0,        // window ex-style
+        WS_EX_TOOLWINDOW,        // window ex-style
         kWindowClassName,    // window class name
         L"HideTopMostWnd", // window caption
-        WS_POPUP,         // window style
+        WS_POPUP & (~WS_CAPTION) & (~WS_SYSMENU) & (~WS_SIZEBOX), // window style
         1,              // initial x position
         1,              // initial y position
         1,          // initial x size
@@ -1206,6 +1206,12 @@ void CWebView::onDownload(wkeDownloadCallback callback, void* callbackParam)
 {
     m_webPage->wkeHandler().downloadCallback = callback;
     m_webPage->wkeHandler().downloadCallbackParam = callbackParam;
+}
+
+void CWebView::onDownload2(wkeDownload2Callback callback, void* callbackParam)
+{
+    m_webPage->wkeHandler().download2Callback = callback;
+    m_webPage->wkeHandler().download2CallbackParam = callbackParam;
 }
 
 void CWebView::onNetResponse(wkeNetResponseCallback callback, void* callbackParam)
@@ -1477,6 +1483,12 @@ void CWebView::setCookieJarFullPath(const utf8* path)
 {
     if (m_webPage)
         m_webPage->setCookieJarFullPath(path);
+}
+
+void CWebView::setLocalStorageFullPath(const utf8* path)
+{
+    if (m_webPage)
+        m_webPage->setLocalStorageFullPath(path);
 }
 
 } // namespace wke

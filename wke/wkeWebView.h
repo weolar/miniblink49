@@ -72,6 +72,9 @@ struct CWebViewHandler {
     wkeDownloadCallback downloadCallback;
     void* downloadCallbackParam;
 
+    wkeDownload2Callback download2Callback;
+    void* download2CallbackParam;
+
     wkeNetResponseCallback netResponseCallback;
     void* netResponseCallbackParam;
 
@@ -261,6 +264,8 @@ public:
     virtual void onDocumentReady(wkeDocumentReadyCallback callback, void* callbackParam);
     void onDocumentReady2(wkeDocumentReady2Callback callback, void* callbackParam);
     virtual void onDownload(wkeDownloadCallback callback, void* callbackParam);
+    void onDownload2(wkeDownload2Callback callback, void* callbackParam);
+    
     virtual void onConsole(wkeConsoleCallback callback, void* callbackParam);
     virtual void onCallUiThread(wkeCallUiThread callback, void* callbackParam);
     void onNetResponse(wkeNetResponseCallback callback, void* callbackParam);
@@ -308,6 +313,8 @@ public:
     std::string getCookieJarPath();
     void setCookieJarFullPath(const utf8* path);
     net::WebCookieJarImpl* getCookieJar();
+
+    void setLocalStorageFullPath(const utf8* path);
 
     std::set<jsValue>& getPersistentJsValue() { return m_persistentJsValue; }
 
