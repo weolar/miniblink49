@@ -3,26 +3,37 @@
 #define net_PageNetExtraData_h
 
 #include "third_party/WebKit/Source/wtf/ThreadSafeRefCounted.h"
+#include "net/StorageDef.h"
 #include <string>
 
 typedef void CURLSH;
 
+namespace blink {
+class WebStorageNamespace;
+}
+
 namespace net {
     
 class WebCookieJarImpl;
+class WebStorageNamespaceImpl;
 
 class PageNetExtraData : public WTF::ThreadSafeRefCounted<PageNetExtraData> {
 public:
     PageNetExtraData();
     ~PageNetExtraData();
 
-    void setCookieJarFullPath(const std::string& cookieJarFileName);
+    void setCookieJarFullPath(const std::string& fullPath);
     CURLSH* getCurlShareHandle();
     std::string getCookieJarFullPath();
-    net::WebCookieJarImpl* getCookieJar() const { return m_cookieJar; }
+    WebCookieJarImpl* getCookieJar() const { return m_cookieJar; }
+
+    void setLocalStorageFullPath(const std::string& fullPath);
+    blink::WebStorageNamespace* createWebStorageNamespace();
 
 private:
-    net::WebCookieJarImpl* m_cookieJar;
+    WebCookieJarImpl* m_cookieJar;
+    DOMStorageMap* m_localStorage;
+    String m_localStotageFullPath;
 };
 
 }

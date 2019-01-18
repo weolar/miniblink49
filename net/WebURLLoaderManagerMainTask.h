@@ -149,6 +149,8 @@ public:
         if (!job)
             return;
 
+        dispatchHook(job, m_type, m_args->ptr, m_args->size, m_args->nmemb);
+
         if (kRemoveFromCurl == m_type || kDidCancel == m_type) {
             autoLockJob.setNotDerefForDelete();
             release();
@@ -190,6 +192,35 @@ public:
             break;
         default:
             break;
+        }
+    }
+
+    static void dispatchHook(WebURLLoaderInternal* job, TaskType type, void* ptr, size_t size, size_t nmemb)
+    {
+        if (kWriteCallback == type) {
+            if (WebURLLoaderInternal::kCacheForDownloadNot != job->m_cacheForDownloadOpt) {
+                job->m_dataCacheForDownload.append((char*)ptr, size * nmemb);
+            }
+
+            if (job->m_dataBind) {
+                job->m_dataBind->recvCallback(job->m_dataBind->ptr, job, job->m_dataCacheForDownload.data(), job->m_dataCacheForDownload.size());
+                job->m_dataCacheForDownload.clear();
+            }
+        } else if (kDidCancel == type) {
+            if (job->m_dataBind) {
+                job->m_dataBind->finishCallback(job->m_dataBind->ptr, job, WKE_LOADING_CANCELED);
+                job->m_dataCacheForDownload.clear();
+            }
+        } else if (kDidFail == type) {
+            if (job->m_dataBind) {
+                job->m_dataBind->finishCallback(job->m_dataBind->ptr, job, WKE_LOADING_FAILED);
+                job->m_dataCacheForDownload.clear();
+            }
+        } else if (kDidFinishLoading == type) {
+            if (job->m_dataBind) {
+                job->m_dataBind->finishCallback(job->m_dataBind->ptr, job, WKE_LOADING_SUCCEEDED);
+                job->m_dataCacheForDownload.clear();
+            }
         }
     }
 
@@ -303,89 +334,7 @@ void MainTaskRunner::addTask(WebURLLoaderManagerMainTask* task)
     m_list.append(task);
 }
 
-
-static bool isDownloadResponse(WebURLLoaderInternal* job, const AtomicString& contentType)
-{
-    if (contentDispositionType(job->m_response.httpHeaderField("Content-Disposition")) == ContentDispositionAttachment)
-        return true;
-
-    const char* disableDownloadMimes[] = {
-        "text/css",
-        "text/javascript",
-        "text/plain",
-        "text/html",
-        "text/xml",
-        "text/xsl",
-        "image/png",
-        "image/gif",
-        "image/jpeg",
-        "image/bmp",
-        "image/webp",
-        "image/x-icon",
-        "image/svg+xml",
-        "audio/ogg",
-        "audio/midi",
-        "audio/x-midi",
-        "video/x-msvideo",
-        "video/mpeg",
-        "video/mp4",
-        "video/x-ms-wmv",
-        "font/woff2",
-        "font/opentype",
-        "application/xhtml+xml",
-        "application/font-woff",
-
-        "application/xhtml+xml",
-        "application/x-javascript",
-        "application/javascript",
-        nullptr
-    };
-    for (int i = 0; ; ++i) {
-        const char* type = disableDownloadMimes[i];
-        if (!type)
-            break;
-
-        String contentMime = contentType.lower();
-        
-        if (contentMime.startsWith(type))
-            return false;
-    }
-
-    return true;
-}
-
-#if ENABLE_WKE == 1
-static bool dispatchResponseToWke(WebURLLoaderInternal* job, const AtomicString& contentType)
-{
-    RequestExtraData* requestExtraData = reinterpret_cast<RequestExtraData*>(job->firstRequest()->extraData());
-    if (!requestExtraData)
-        return false;
-
-    WebPage* page = requestExtraData->page;
-    Vector<char> urlBuf = WTF::ensureStringToUTF8(job->firstRequest()->url().string(), true);
-
-    if (page->wkeHandler().netResponseCallback) {
-        if (page->wkeHandler().netResponseCallback(page->wkeWebView(), page->wkeHandler().downloadCallbackParam, urlBuf.data(), job)) {
-            blink::WebLocalFrame* frame = requestExtraData->frame;
-            frame->stopLoading();
-            return true;
-        }
-    }
-
-    if (isDownloadResponse(job, contentType)) {
-        if (page->wkeHandler().downloadCallback) {
-            if (page->wkeHandler().downloadCallback(page->wkeWebView(), page->wkeHandler().downloadCallbackParam, urlBuf.data())) {
-                blink::WebLocalFrame* frame = requestExtraData->frame;
-                frame->stopLoading();
-                return true;
-            }
-        }
-    }
-    return false;
-}
-#endif
-
-wkeResourceType WebURLRequestToResourceType(const blink::WebURLRequest& request)
+wkeResourceType webURLRequestToResourceType(const blink::WebURLRequest& request)
 {
     blink::WebURLRequest::RequestContext requestContext = request.requestContext();
     if (request.frameType() != blink::WebURLRequest::FrameTypeNone) {
@@ -495,6 +444,185 @@ wkeResourceType WebURLRequestToResourceType(const blink::WebURLRequest& request)
     }
 }
 
+static bool isResourceTypeFrame(WebURLLoaderInternal* job)
+{
+    blink::WebURLRequest* request = job->firstRequest();
+    if (!request)
+        return false;
+// 
+//     blink::WebURLRequest::RequestContext requestContext = request->requestContext();
+//     if (request->frameType() != blink::WebURLRequest::FrameTypeNone) {
+//         ASSERT(requestContext == blink::WebURLRequest::RequestContextForm ||
+//             requestContext == blink::WebURLRequest::RequestContextFrame ||
+//             requestContext == blink::WebURLRequest::RequestContextHyperlink ||
+//             requestContext == blink::WebURLRequest::RequestContextIframe ||
+//             requestContext == blink::WebURLRequest::RequestContextInternal ||
+//             requestContext == blink::WebURLRequest::RequestContextLocation);
+// 
+//         if (request->frameType() == blink::WebURLRequest::FrameTypeTopLevel || request->frameType() == blink::WebURLRequest::FrameTypeAuxiliary) {
+//             return true; //  RESOURCE_TYPE_MAIN_FRAME;
+//         }
+//         if (request->frameType() == WebURLRequest::FrameTypeNested)
+//             return true; //  RESOURCE_TYPE_SUB_FRAME
+//         
+//         ASSERT(false);
+//         return false;
+//     }
+// 
+//     return false;
+
+    wkeResourceType type = webURLRequestToResourceType(*request);
+    if (WKE_RESOURCE_TYPE_MAIN_FRAME == type || WKE_RESOURCE_TYPE_SUB_FRAME == type)
+        return true;
+
+    return false;
+}
+
+// content\public\common\resource_type.cc
+// content\browser\loader\mime_type_resource_handler.cc
+static bool isDownloadResponse(WebURLLoaderInternal* job, const AtomicString& contentType)
+{
+    if (!isResourceTypeFrame(job))
+        return false;
+
+    if (contentDispositionType(job->m_response.httpHeaderField("Content-Disposition")) == ContentDispositionAttachment)
+        return true;
+
+    if (contentType.isEmpty())
+        return false;
+
+    const char* disableDownloadMimes[] = {
+        "text/css",
+        "text/javascript",
+        "text/plain",
+        "text/html",
+        "text/xml",
+        "text/xsl",
+        "image/png",
+        "image/gif",
+        "image/jpeg",
+        "image/bmp",
+        "image/webp",
+        "image/x-icon",
+        "image/svg+xml",
+        "audio/ogg",
+        "audio/midi",
+        "audio/x-midi",
+        "video/x-msvideo",
+        "video/mpeg",
+        "video/mp4",
+        "video/x-ms-wmv",
+        "font/woff2",
+        "font/opentype",
+        "application/xhtml+xml",
+        "application/font-woff",
+        "application/json",
+        "application/xhtml+xml",
+        "application/x-javascript",
+        "application/javascript",
+        nullptr
+    };
+    for (int i = 0; ; ++i) {
+        const char* type = disableDownloadMimes[i];
+        if (!type)
+            break;
+
+        String contentMime = contentType.lower();
+        
+        if (contentMime.startsWith(type))
+            return false;
+    }
+
+    return true;
+}
+
+#if ENABLE_WKE == 1
+
+static bool dispatchDownloadToWke(WebPage* page, WebURLLoaderInternal* job, const utf8* url , const AtomicString& contentType)
+{
+    job->m_cacheForDownloadOpt = WebURLLoaderInternal::kCacheForDownloadYes;
+
+    Vector<char> mimeBuf = WTF::ensureStringToUTF8((String)contentType, true);
+    
+    String contentDisposition = job->m_response.httpHeaderField("Content-Disposition");
+    Vector<char> contentDispositionBuf = WTF::ensureStringToUTF8(contentDisposition, true);
+    
+    wkeNetJobDataBind dataBind = { 0 };
+    wkeDownload2Callback cb = page->wkeHandler().download2Callback;
+    if (!cb) {
+        job->m_cacheForDownloadOpt = WebURLLoaderInternal::kCacheForDownloadNot;
+        return false;
+    }
+
+    size_t expectedContentLength = job->m_response.expectedContentLength();
+    void* param = page->wkeHandler().download2CallbackParam;
+    wkeDownloadOpt opt = cb(page->wkeWebView(), param, expectedContentLength, url, mimeBuf.data(), contentDispositionBuf.data(), job, &dataBind);
+    if (kWkeDownloadOptCancel == opt) {
+        job->m_cacheForDownloadOpt = WebURLLoaderInternal::kCacheForDownloadNot;
+        return true;
+    } else if (kWkeDownloadOptCacheData == opt) {
+        job->m_dataBind = new wkeNetJobDataBind();
+        *(job->m_dataBind) = dataBind;
+
+        return false;
+    }
+
+    return true;
+}
+
+static bool dispatchResponseToWke(WebURLLoaderInternal* job, const AtomicString& contentType)
+{
+    RequestExtraData* requestExtraData = reinterpret_cast<RequestExtraData*>(job->firstRequest()->extraData());
+    if (!requestExtraData) { //没有的情况可能是客户端用导出接口发送的请求，也可能是即将关闭程序
+        job->m_cacheForDownloadOpt = WebURLLoaderInternal::kCacheForDownloadNot;
+        return false;
+    }
+
+    WebPage* page = requestExtraData->page;
+    Vector<char> urlBuf = WTF::ensureStringToUTF8(job->firstRequest()->url().string(), true);
+
+    wkeTempCallbackInfo* temInfo = wkeGetTempCallbackInfo(nullptr);
+    temInfo->size = sizeof(wkeTempCallbackInfo);
+    temInfo->job = job;
+    blink::WebLocalFrame* frame = requestExtraData->frame;
+    wkeWebFrameHandle frameHandle = wke::CWebView::frameIdTowkeWebFrameHandle(page, page->getFrameIdByBlinkFrame(frame));
+    temInfo->frame = frameHandle;
+
+    bool result = false;
+    do {
+        if (page->wkeHandler().netResponseCallback) {
+            if (page->wkeHandler().netResponseCallback(page->wkeWebView(), page->wkeHandler().downloadCallbackParam, urlBuf.data(), job)) {
+                result = true;
+                break;
+            }
+        }
+
+        if (isDownloadResponse(job, contentType)) {
+            if (dispatchDownloadToWke(page, job, urlBuf.data(), contentType)) {
+                result = true;
+                break;
+            }
+
+            if (page->wkeHandler().downloadCallback && page->wkeHandler().downloadCallback(page->wkeWebView(), page->wkeHandler().downloadCallbackParam, urlBuf.data())) {
+                result = true;
+                break;
+            }
+        } else {
+            job->m_cacheForDownloadOpt = WebURLLoaderInternal::kCacheForDownloadNot;
+            job->m_dataCacheForDownload.clear();
+        }
+    } while (false);
+
+    if (result)
+        frame->stopLoading();
+    
+    temInfo->size = 0;
+
+    return result;
+}
+
+#endif
+
 static void distpatchWkeWillSendRequest(WebURLLoaderInternal* job, const KURL* newURL, long httpCode)
 {
     net::RequestExtraData* requestExtraData = (net::RequestExtraData*)job->firstRequest()->extraData();
@@ -513,10 +641,11 @@ static void distpatchWkeWillSendRequest(WebURLLoaderInternal* job, const KURL* n
     Vector<UChar> referrer = WTF::ensureUTF16UChar(job->firstRequest()->httpHeaderField(blink::WebString::fromUTF8("Referer")), false);
     
     wkeTempCallbackInfo* info = wkeGetTempCallbackInfo(page->wkeWebView());
+    info->size = sizeof(wkeTempCallbackInfo);
     info->willSendRequestInfo = new wkeWillSendRequestInfo();
     info->willSendRequestInfo->url = wkeCreateStringW(url.data(), url.size());
     info->willSendRequestInfo->newUrl = newURL ? wkeCreateStringW(newUrl.data(), newUrl.size()) : nullptr;
-    info->willSendRequestInfo->resourceType = WebURLRequestToResourceType(*job->firstRequest());
+    info->willSendRequestInfo->resourceType = webURLRequestToResourceType(*job->firstRequest());
     info->willSendRequestInfo->httpResponseCode = httpCode;
     info->willSendRequestInfo->method = wkeCreateStringW(method.data(), method.size());
     info->willSendRequestInfo->referrer = wkeCreateStringW(referrer.data(), referrer.size());
@@ -528,6 +657,7 @@ static void distpatchWkeWillSendRequest(WebURLLoaderInternal* job, const KURL* n
 
     wkeDeleteWillSendRequestInfo(page->wkeWebView(), info->willSendRequestInfo);
     info->willSendRequestInfo = nullptr;
+    info->size = 0;
 }
 
 static void doRedirect(WebURLLoaderInternal* job, const String& location, MainTaskArgs* args, bool isRedirectByHttpCode)
@@ -547,11 +677,14 @@ static void doRedirect(WebURLLoaderInternal* job, const String& location, MainTa
 
     if (loadUrlBeginCallback) {
         CString newURLBuf(newURL.getUTF8String().utf8());
-        if (loadUrlBeginCallback(page->wkeWebView(), param, newURLBuf.data(), job)) {
-            WebURLLoaderManager::sharedInstance()->cancelWithHookRedirect(job);
+        
+        job->m_isRedirection = true;
+        loadUrlBeginCallback(page->wkeWebView(), param, newURLBuf.data(), job);
+        job->m_isRedirection = false;
 
-            if (job->m_isWkeNetSetDataBeSetted)
-                Platform::current()->currentThread()->scheduler()->postLoadingTask(FROM_HERE, new WkeAsynTask(WebURLLoaderManager::sharedInstance(), job->m_id));
+        if (job->m_isWkeNetSetDataBeSetted) {
+            WebURLLoaderManager::sharedInstance()->cancelWithHookRedirect(job);
+            Platform::current()->currentThread()->scheduler()->postLoadingTask(FROM_HERE, new WkeAsynTask(WebURLLoaderManager::sharedInstance(), job->m_id));
             return;
         }
     }
@@ -559,7 +692,7 @@ static void doRedirect(WebURLLoaderInternal* job, const String& location, MainTa
 
     blink::WebURLRequest* redirectedRequest = new blink::WebURLRequest(*job->firstRequest());
     redirectedRequest->setURL(newURL);
-    if (client && job->loader())
+    if (client && job->loader() && (WebURLLoaderInternal::kCacheForDownloadYes != job->m_cacheForDownloadOpt))
         client->willSendRequest(job->loader(), *redirectedRequest, job->m_response);
 
     if (isRedirectByHttpCode)
@@ -716,7 +849,6 @@ size_t WebURLLoaderManagerMainTask::handleHeaderCallbackOnMainThread(MainTaskArg
     ASSERT(!job->m_defersLoading);
 
     size_t totalSize = args->size * args->nmemb;
-    WebURLLoaderClient* client = job->client();
 
     String header(static_cast<const char*>(args->ptr), totalSize);
 
@@ -769,15 +901,25 @@ void WebURLLoaderManagerMainTask::handleHookRequestOnMainThread(WebURLLoaderInte
 {
     if (1 != job->m_isHookRequest)
         return;
+
+    KURL kurl = job->firstRequest()->url();
+    String url = WTF::ensureStringToUTF8String(kurl.string());
+
     RequestExtraData* requestExtraData = reinterpret_cast<RequestExtraData*>(job->firstRequest()->extraData());
+    if (!requestExtraData)
+        return;
     content::WebPage* page = requestExtraData->page;
-    if (!page->wkeHandler().loadUrlEndCallback)
+    if (!page)
         return;
 
     Vector<char> urlBuf = WTF::ensureStringToUTF8(job->firstRequest()->url().string(), true);
     void* loadUrlEndCallbackParam = page->wkeHandler().loadUrlEndCallbackParam;
     void* data = job->m_hookBufForEndHook ? job->m_hookBufForEndHook->data() : nullptr;
     size_t size = job->m_hookBufForEndHook ? job->m_hookBufForEndHook->size() : 0;
+
+    if (!page->wkeHandler().loadUrlEndCallback)
+        return;
+
     page->wkeHandler().loadUrlEndCallback(page->wkeWebView(), loadUrlEndCallbackParam, urlBuf.data(), job, data, size);
 }
 

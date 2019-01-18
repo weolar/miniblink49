@@ -48,6 +48,8 @@
 #define CURL_STATICLIB 
 #include "third_party/libcurl/include/curl/curl.h"
 
+//#define MINIBLINK_NO_MULTITHREAD_NET 1
+
 // The allocations and releases in WebURLLoaderInternal are
 // Cocoa-exception-free (either simple Foundation classes or
 // WebCoreResourceLoaderImp which avoids doing work in dealloc).
@@ -59,6 +61,8 @@ class WebURLLoaderClient;
 namespace content {
 class WebURLLoaderImplCurl;
 }
+
+typedef struct _wkeNetJobDataBind wkeNetJobDataBind;
 
 using namespace blink;
 using namespace content;
@@ -129,11 +133,15 @@ private:
     blink::WebURLRequest* m_firstRequest;
 
 public:
+    WebURLResponse m_response;
+    char* m_url; // 设置给curl的地址。和request可能不同，主要是fragment
     String m_lastHTTPMethod;
 
     // Suggested credentials for the current redirection step.
     String m_user;
     String m_pass;
+
+    bool m_isRedirection;
 
     //Credential m_initialCredential;
 
@@ -145,10 +153,10 @@ public:
     bool m_shouldContentSniff;
 
     CURL* m_handle;
-    char* m_url; // 设置给curl的地址。和request可能不同，主要是fragment
+    
     std::string m_effectiveUrl; // curl收到网络包后返回的最后有效地址，如果有重定向redirect，则可能和上面的变量不同
     struct curl_slist* m_customHeaders;
-    WebURLResponse m_response;
+    
     OwnPtr<MultipartHandle> m_multipartHandle;
 
     CancelledReason m_cancelledReason;
@@ -194,6 +202,18 @@ public:
     Vector<char>* m_hookBufForEndHook;
     Vector<char>* m_asynWkeNetSetData;
     bool m_isWkeNetSetDataBeSetted;
+
+    bool m_hasCallResponse; // 是否有head call被调用过。如果没有的话，且又有write call 提前调用了，就需要缓存数据给下载
+
+    enum CacheForDownloadOpt {
+        kCacheForDownloadUnknow,
+        kCacheForDownloadNot,
+        kCacheForDownloadYes,
+    };
+
+    CacheForDownloadOpt m_cacheForDownloadOpt;
+    wkeNetJobDataBind* m_dataBind;
+    Vector<char> m_dataCacheForDownload; // 下载时需要先缓存再给外部
 #endif
     RefPtr<PageNetExtraData> m_pageNetExtraData;
 };
