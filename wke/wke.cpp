@@ -124,8 +124,8 @@ void wkeConfigure(const wkeSettings* settings)
         return;
     if (settings->mask & WKE_SETTING_PROXY)
         wkeSetProxy(&settings->proxy);
-    if (settings->mask & WKE_SETTING_PAINTCALLBACK_IN_OTHER_THREAD)
-        blink::RuntimeEnabledFeatures::setUpdataInOtherThreadEnabled(true);
+//     if (settings->mask & WKE_SETTING_PAINTCALLBACK_IN_OTHER_THREAD)
+//         blink::RuntimeEnabledFeatures::setUpdataInOtherThreadEnabled(true);
 }
 
 void wkeInitializeEx(const wkeSettings* settings)
@@ -230,8 +230,10 @@ void wkeSetDebugConfig(wkeWebView webview, const char* debugString, const char* 
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
 
-    if (wke::setDebugConfig(webview, debugString, param))
+    if (nullptr != strstr(debugString, "paintcallbackInOtherThread")) {
+        blink::RuntimeEnabledFeatures::setUpdataInOtherThreadEnabled(true);
         return;
+    }
 
     content::WebPage* webpage = nullptr;
     blink::WebViewImpl* webViewImpl = nullptr;
@@ -790,7 +792,9 @@ void wkeSetCookieJarFullPath(wkeWebView webView, const WCHAR* path)
     net::WebURLLoaderManager::setCookieJarFullPath(&jarPathA[0]);
 }
 
-String* kLocalStorageFullPath = nullptr;
+namespace net {
+extern String* kDefaultLocalStorageFullPath;
+}
 
 void wkeSetLocalStorageFullPath(wkeWebView webView, const WCHAR* path)
 {
@@ -798,17 +802,18 @@ void wkeSetLocalStorageFullPath(wkeWebView webView, const WCHAR* path)
     if (!path)
         return;
 
-    if (kLocalStorageFullPath)
-        delete kLocalStorageFullPath;
-    kLocalStorageFullPath = new String(path);
-    if (kLocalStorageFullPath->isEmpty()) {
-        delete kLocalStorageFullPath;
-        kLocalStorageFullPath = nullptr;
+    if (net::kDefaultLocalStorageFullPath)
+        delete net::kDefaultLocalStorageFullPath;
+    net::kDefaultLocalStorageFullPath = new String(path);
+
+    if (net::kDefaultLocalStorageFullPath->isEmpty()) {
+        delete net::kDefaultLocalStorageFullPath;
+        net::kDefaultLocalStorageFullPath = nullptr;
         return;
     }
 
-    if (!kLocalStorageFullPath->endsWith(L'\\'))
-        kLocalStorageFullPath->append(L'\\');
+    if (!net::kDefaultLocalStorageFullPath->endsWith(L'\\'))
+        net::kDefaultLocalStorageFullPath->append(L'\\');
 }
 
 void wkeAddPluginDirectory(wkeWebView webView, const WCHAR* path)
@@ -1066,6 +1071,12 @@ void wkeOnDownload(wkeWebView webView, wkeDownloadCallback callback, void* param
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
     webView->onDownload(callback, param);
+}
+
+void wkeOnDownload2(wkeWebView webView, wkeDownload2Callback callback, void* param)
+{
+    wke::checkThreadCallIsValid(__FUNCTION__);
+    webView->onDownload2(callback, param);
 }
 
 void wkeNetOnResponse(wkeWebView webView, wkeNetResponseCallback callback, void* param)
