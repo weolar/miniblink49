@@ -3309,12 +3309,6 @@
     <ClCompile Include="..\..\third_party\WebKit\Source\wtf\MainThread.cpp">
       <Filter>third_party\Webkit\Source\wtf</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\third_party\WebKit\Source\wtf\PageAllocator.cpp">
-      <Filter>third_party\Webkit\Source\wtf</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\WebKit\Source\wtf\PartitionAlloc.cpp">
-      <Filter>third_party\Webkit\Source\wtf</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\third_party\WebKit\Source\wtf\PrintStream.cpp">
       <Filter>third_party\Webkit\Source\wtf</Filter>
     </ClCompile>
@@ -7860,9 +7854,6 @@
     <ClCompile Include="..\..\third_party\WebKit\Source\web\ContextFeaturesClientImpl.cpp">
       <Filter>third_party\Webkit\Source\web</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\third_party\WebKit\Source\web\FullscreenControllerNone.cpp">
-      <Filter>third_party\Webkit\Source\web</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\third_party\WebKit\Source\web\ResizeViewportAnchor.cpp">
       <Filter>third_party\Webkit\Source\web</Filter>
     </ClCompile>
@@ -8230,12 +8221,6 @@
       <Filter>third_party\Webkit\Source\web</Filter>
     </ClCompile>
     <ClCompile Include="..\..\third_party\WebKit\Source\web\StorageClientImpl.cpp">
-      <Filter>third_party\Webkit\Source\web</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\WebKit\Source\web\WebStorageAreaImpl.cpp">
-      <Filter>third_party\Webkit\Source\web</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\third_party\WebKit\Source\web\WebStorageNamespaceImpl.cpp">
       <Filter>third_party\Webkit\Source\web</Filter>
     </ClCompile>
     <ClCompile Include="..\..\net\DataURL.cpp">
@@ -8858,9 +8843,6 @@
     </ClCompile>
     <ClCompile Include="..\..\net\WebURLLoaderManager.cpp">
       <Filter>net</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\content\web_impl_win\WebCookieJarCurlImpl.cpp">
-      <Filter>content\web_impl_win</Filter>
     </ClCompile>
     <ClCompile Include="..\..\net\MultipartHandle.cpp">
       <Filter>net</Filter>
@@ -10140,9 +10122,152 @@
     <ClCompile Include="..\..\third_party\WebKit\Source\platform\fonts\shaping\HarfBuzzShaper.cpp">
       <Filter>third_party\Webkit\Source\platform\fonts\shaping</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\content\resources\MediaPlayerData.cpp" />
     <ClCompile Include="..\..\node\src\tls_wrap.cc">
       <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\web\WebPageSerializer.cpp">
+      <Filter>third_party\Webkit\Source\web</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\web\WebPageSerializerImpl.cpp">
+      <Filter>third_party\Webkit\Source\web</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\web\WebEntities.cpp">
+      <Filter>third_party\Webkit\Source\web</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\net\cookies\WebCookieJarCurlImpl.cpp">
+      <Filter>net\cookies</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\content\resources\MediaPlayerData.cpp">
+      <Filter>content\resources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\wtf\PartitionAllocator.cpp">
+      <Filter>third_party\Webkit\Source\wtf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\wtf\PartitionAlloc.cpp">
+      <Filter>third_party\Webkit\Source\wtf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\wtf\PageAllocator.cpp">
+      <Filter>third_party\Webkit\Source\wtf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\web\FullscreenControllerNone.cpp">
+      <Filter>third_party\Webkit\Source\web</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\net\cookies\CookieJarMgr.cpp">
+      <Filter>net\cookies</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\dom\URLSearchParams.cpp">
+      <Filter>third_party\Webkit\Source\core\dom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\USVStringOrURLSearchParams.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8URLSearchParams.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\content\resources\FullscreenCss.cpp">
+      <Filter>content\resources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\wke\wke2.cpp">
+      <Filter>wke</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\node\src\node_api.cc">
+      <Filter>node\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\xml\XPathVariableReference.cpp">
+      <Filter>third_party\Webkit\Source\core\xml</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\xml\XPathEvaluator.cpp">
+      <Filter>third_party\Webkit\Source\core\xml</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\xml\XPathExpression.cpp">
+      <Filter>third_party\Webkit\Source\core\xml</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\xml\XPathExpressionNode.cpp">
+      <Filter>third_party\Webkit\Source\core\xml</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\xml\XPathFunctions.cpp">
+      <Filter>third_party\Webkit\Source\core\xml</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\xml\XPathNodeSet.cpp">
+      <Filter>third_party\Webkit\Source\core\xml</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\xml\XPathParser.cpp">
+      <Filter>third_party\Webkit\Source\core\xml</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\xml\XPathPath.cpp">
+      <Filter>third_party\Webkit\Source\core\xml</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\xml\XPathPredicate.cpp">
+      <Filter>third_party\Webkit\Source\core\xml</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\xml\XPathResult.cpp">
+      <Filter>third_party\Webkit\Source\core\xml</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\xml\XPathStep.cpp">
+      <Filter>third_party\Webkit\Source\core\xml</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\xml\XPathUtil.cpp">
+      <Filter>third_party\Webkit\Source\core\xml</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\xml\XPathValue.cpp">
+      <Filter>third_party\Webkit\Source\core\xml</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\xml\NativeXPathNSResolver.cpp">
+      <Filter>third_party\Webkit\Source\core\xml</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\core\XPathGrammar.cpp">
+      <Filter>gen\blink\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8XPathEvaluator.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8XPathExpression.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8XPathNSResolver.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8XPathResult.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\miniblink\trunk\gen\blink\bindings\core\v8\V8XSLTProcessor.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\xml\XSLTProcessor.cpp">
+      <Filter>third_party\Webkit\Source\core\xml</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\xml\DocumentXPathEvaluator.cpp">
+      <Filter>third_party\Webkit\Source\core\xml</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\xml\DocumentXSLT.cpp">
+      <Filter>third_party\Webkit\Source\core\xml</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\xml\XSLTUnicodeSort.cpp">
+      <Filter>third_party\Webkit\Source\core\xml</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\xml\XSLStyleSheetLibxslt.cpp">
+      <Filter>third_party\Webkit\Source\core\xml</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\xml\XSLTProcessorLibxslt.cpp">
+      <Filter>third_party\Webkit\Source\core\xml</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\xml\XSLImportRule.cpp">
+      <Filter>third_party\Webkit\Source\core\xml</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\xml\XSLTExtensions.cpp">
+      <Filter>third_party\Webkit\Source\core\xml</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\bindings\core\v8\custom\V8CustomXPathNSResolver.cpp">
+      <Filter>third_party\Webkit\Source\bindings\core\v8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\net\WebStorageAreaImpl.cpp">
+      <Filter>net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\net\WebStorageNamespaceImpl.cpp">
+      <Filter>net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\net\StorageMgr.cpp">
+      <Filter>net</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -14008,12 +14133,6 @@
       <Filter>third_party\Webkit\Source\wtf</Filter>
     </ClInclude>
     <ClInclude Include="..\..\third_party\WebKit\Source\wtf\OwnPtrCommon.h">
-      <Filter>third_party\Webkit\Source\wtf</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\third_party\WebKit\Source\wtf\PageAllocator.h">
-      <Filter>third_party\Webkit\Source\wtf</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\third_party\WebKit\Source\wtf\PartitionAlloc.h">
       <Filter>third_party\Webkit\Source\wtf</Filter>
     </ClInclude>
     <ClInclude Include="..\..\third_party\WebKit\Source\wtf\PassOwnPtr.h">
@@ -20823,12 +20942,6 @@
     <ClInclude Include="..\..\third_party\WebKit\Source\web\StorageQuotaClientImpl.h">
       <Filter>third_party\Webkit\Source\web</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\third_party\WebKit\Source\web\WebStorageAreaImpl.h">
-      <Filter>third_party\Webkit\Source\web</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\third_party\WebKit\Source\web\WebStorageNamespaceImpl.h">
-      <Filter>third_party\Webkit\Source\web</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\net\WebURLLoaderManager.h">
       <Filter>net</Filter>
     </ClInclude>
@@ -20891,9 +21004,6 @@
     </ClInclude>
     <ClInclude Include="..\..\cc\tiles\TileGrid.h">
       <Filter>cc\tiles</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\content\web_impl_win\CustomTheme.h">
-      <Filter>content\web_impl_win</Filter>
     </ClInclude>
     <ClInclude Include="..\..\net\RequestExtraData.h">
       <Filter>net</Filter>
@@ -21938,12 +22048,6 @@
     </ClInclude>
     <ClInclude Include="..\..\base\strings\utf_offset_string_conversions.h">
       <Filter>base\strings</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\content\web_impl_win\WebCookieJarCurlImpl.h">
-      <Filter>content\web_impl_win</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\content\web_impl_win\WebCookieJarINetImpl.h">
-      <Filter>content\web_impl_win</Filter>
     </ClInclude>
     <ClInclude Include="..\..\base\process\CallAddrsRecord.h">
       <Filter>base\memory</Filter>
@@ -23044,6 +23148,141 @@
     <ClInclude Include="..\..\content\resources\MediaPlayerData.h">
       <Filter>content\resources</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\web\WebEntities.h">
+      <Filter>third_party\Webkit\Source\web</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\net\cookies\WebCookieJarCurlImpl.h">
+      <Filter>net\cookies</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\wtf\PartitionAllocator.h">
+      <Filter>third_party\Webkit\Source\wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\wtf\PartitionAlloc.h">
+      <Filter>third_party\Webkit\Source\wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\wtf\PageAllocator.h">
+      <Filter>third_party\Webkit\Source\wtf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\net\cookies\CookieJarMgr.h">
+      <Filter>net\cookies</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\dom\URLSearchParams.h">
+      <Filter>third_party\Webkit\Source\core\dom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\core\v8\USVStringOrURLSearchParams.h">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\core\v8\V8URLSearchParams.h">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wke\wke2.h">
+      <Filter>wke</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\node_api.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\node_api_types.h">
+      <Filter>node\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\xml\parser\MarkupTokenizerInlines.h">
+      <Filter>third_party\Webkit\Source\core\xml\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\xml\XPathValue.h">
+      <Filter>third_party\Webkit\Source\core\xml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\xml\XPathVariableReference.h">
+      <Filter>third_party\Webkit\Source\core\xml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\xml\XPathEvaluator.h">
+      <Filter>third_party\Webkit\Source\core\xml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\xml\XPathExpression.h">
+      <Filter>third_party\Webkit\Source\core\xml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\xml\XPathExpressionNode.h">
+      <Filter>third_party\Webkit\Source\core\xml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\xml\XPathFunctions.h">
+      <Filter>third_party\Webkit\Source\core\xml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\xml\XPathNodeSet.h">
+      <Filter>third_party\Webkit\Source\core\xml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\xml\XPathNSResolver.h">
+      <Filter>third_party\Webkit\Source\core\xml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\xml\XPathParser.h">
+      <Filter>third_party\Webkit\Source\core\xml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\xml\XPathPath.h">
+      <Filter>third_party\Webkit\Source\core\xml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\xml\XPathPredicate.h">
+      <Filter>third_party\Webkit\Source\core\xml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\xml\XPathResult.h">
+      <Filter>third_party\Webkit\Source\core\xml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\xml\XPathStep.h">
+      <Filter>third_party\Webkit\Source\core\xml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\xml\XPathUtil.h">
+      <Filter>third_party\Webkit\Source\core\xml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\xml\NativeXPathNSResolver.h">
+      <Filter>third_party\Webkit\Source\core\xml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\core\v8\V8XPathResult.h">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\core\v8\V8XPathEvaluator.h">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\core\v8\V8XPathExpression.h">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\core\v8\V8XPathNSResolver.h">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\miniblink\trunk\gen\blink\bindings\core\v8\V8XSLTProcessor.h">
+      <Filter>gen\blink\bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\xml\XSLTProcessor.h">
+      <Filter>third_party\Webkit\Source\core\xml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\xml\XSLStyleSheet.h">
+      <Filter>third_party\Webkit\Source\core\xml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\xml\DocumentXPathEvaluator.h">
+      <Filter>third_party\Webkit\Source\core\xml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\xml\DocumentXSLT.h">
+      <Filter>third_party\Webkit\Source\core\xml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\xml\XSLTUnicodeSort.h">
+      <Filter>third_party\Webkit\Source\core\xml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\bindings\core\v8\custom\V8CustomXPathNSResolver.h">
+      <Filter>third_party\Webkit\Source\bindings\core\v8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\content\ui\CustomTheme.h">
+      <Filter>content\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\net\WebStorageAreaImpl.h">
+      <Filter>net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\net\WebStorageNamespaceImpl.h">
+      <Filter>net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\net\StorageMgr.h">
+      <Filter>net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\net\StorageDef.h">
+      <Filter>net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\xml\XSLImportRule.h">
+      <Filter>third_party\Webkit\Source\core\xml</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\third_party\WebKit\Source\devtools\front_end\Images\src\optimize_png.hashes">
@@ -23159,6 +23398,9 @@
     </None>
     <None Include="..\..\third_party\WebKit\Source\core\inspector\OWNERS">
       <Filter>third_party\Webkit\Source\core\inspector</Filter>
+    </None>
+    <None Include="..\..\third_party\WebKit\Source\core\xml\XPathGrammar.y">
+      <Filter>third_party\Webkit\Source\core\xml</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

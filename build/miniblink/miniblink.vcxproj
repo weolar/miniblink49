@@ -163,7 +163,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>BUILDING_CEF_SHARED;DCHECK_ALWAYS_ON=1;WIN32;_DEBUG;_WINDOWS;INSIDE_BLINK=1;BLINK_IMPLEMENTATION=1;ENABLE_OILPAN=1;ENABLE_GC_PROFILING=1;ENABLE_WKE=1;ENABLE_CEF=1;CARES_STATICLIB=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>BUILDING_CEF_SHARED;DCHECK_ALWAYS_ON=1;WIN32;_DEBUG;_WINDOWS;INSIDE_BLINK=1;BLINK_IMPLEMENTATION=1;ENABLE_OILPAN=1;ENABLE_GC_PROFILING=1;ENABLE_WKE=1;CARES_STATICLIB=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -181,8 +181,8 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
-      <AdditionalLibraryDirectories>$(SolutionDir)..\out\$(Configuration)\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>InjectTool.lib;version.lib;harfbuzz.lib;ots.lib;Crypt32.lib;Wldap32.lib;Imm32.lib;libxml.lib;zlib.lib;libcurl.lib;v8_5_7.lib;v8_5_7_1.lib;skia.lib;winmm.lib;Ws2_32.lib;Usp10.lib;Shlwapi.lib;wininet.lib;GDIPlus.lib;DbgHelp.lib;libjpeg.lib;libpng.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\out\$(Configuration)\;</AdditionalLibraryDirectories>
+      <AdditionalDependencies>InjectTool.lib;version.lib;harfbuzz.lib;ots.lib;Crypt32.lib;Wldap32.lib;Imm32.lib;libxml.lib;zlib.lib;libcurl.lib;v8_5_7.lib;v8_5_7_1.lib;skia.lib;winmm.lib;Ws2_32.lib;Usp10.lib;Shlwapi.lib;wininet.lib;GDIPlus.lib;DbgHelp.lib;libjpeg.lib;libpng.lib;openssl.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)node$(TargetExt)</OutputFile>
       <ImportLibrary>$(OutDir)node.lib</ImportLibrary>
       <IgnoreSpecificDefaultLibraries>LIBCMT.lib</IgnoreSpecificDefaultLibraries>
@@ -191,7 +191,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">
     <ClCompile>
       <Optimization>MinSpace</Optimization>
-      <PreprocessorDefinitions>USING_VC6RT=1;_USING_V110_SDK71_;_WINDLL;_UNICODE;UNICODE;BUILDING_CEF_SHARED;NDEBUG;WIN32;_WINDOWS;INSIDE_BLINK=1;BLINK_IMPLEMENTATION=1;ENABLE_OILPAN=1;ENABLE_WKE=1;ENABLE_CEF=1;CARES_STATICLIB=1</PreprocessorDefinitions>
+      <PreprocessorDefinitions>USING_VC6RT=1;_USING_V110_SDK71_;_WINDLL;_UNICODE;UNICODE;BUILDING_CEF_SHARED;NDEBUG;WIN32;_WINDOWS;INSIDE_BLINK=1;BLINK_IMPLEMENTATION=1;ENABLE_OILPAN=1;ENABLE_WKE=1;CARES_STATICLIB=1</PreprocessorDefinitions>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -391,7 +391,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">
     <ClCompile>
-      <PreprocessorDefinitions>USING_VC6RT=1;_USING_V110_SDK71_;_WINDLL;_UNICODE;UNICODE;BUILDING_CEF_SHARED;NDEBUG;WIN32;_WINDOWS;INSIDE_BLINK=1;BLINK_IMPLEMENTATION=1;ENABLE_OILPAN=1;ENABLE_WKE=1;ENABLE_CEF=1</PreprocessorDefinitions>
+      <PreprocessorDefinitions>USING_VC6RT=1;_USING_V110_SDK71_;_WINDLL;_UNICODE;UNICODE;BUILDING_CEF_SHARED;NDEBUG;WIN32;_WINDOWS;INSIDE_BLINK=1;BLINK_IMPLEMENTATION=1;ENABLE_OILPAN=1;ENABLE_WKE=1</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
@@ -421,7 +421,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <TargetMachine>MachineX86</TargetMachine>
       <AdditionalLibraryDirectories>$(SolutionDir)..\third_party\GDIPlus\Lib;$(SolutionDir)..\out\Release_vc6\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>$(SolutionDir)..\out\$(Configuration)\libcurl.lib;zlib.lib;ots.lib;harfbuzz.lib;libxml.lib;v8_4_8.lib;skia.lib;winmm.lib;Ws2_32.lib;Usp10.lib;Shlwapi.lib;wininet.lib;GDIPlus.lib;version.lib;Crypt32.lib;wldap32.lib;Imm32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;openssl.lib;libjpeg.lib;libpng.lib;wolfssl.lib</AdditionalDependencies>
+      <AdditionalDependencies>libcurl.lib;zlib.lib;ots.lib;harfbuzz.lib;libxml.lib;v8_4_8.lib;skia.lib;winmm.lib;Ws2_32.lib;Usp10.lib;Shlwapi.lib;wininet.lib;GDIPlus.lib;version.lib;Crypt32.lib;wldap32.lib;Imm32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;openssl.lib;libjpeg.lib;libpng.lib;wolfssl.lib</AdditionalDependencies>
       <AdditionalOptions>/FORCE:UNRESOLVED %(AdditionalOptions)</AdditionalOptions>
       <OutputFile>$(OutDir)node.dll</OutputFile>
       <ImportLibrary>$(OutDir)miniblink.lib</ImportLibrary>
@@ -503,6 +503,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\..\miniblink\trunk\gen\blink\bindings\core\v8\V8XSLTProcessor.cpp" />
     <ClCompile Include="..\..\base\json\json_parser.cc" />
     <ClCompile Include="..\..\base\json\json_reader.cc" />
     <ClCompile Include="..\..\base\json\json_util.cc" />
@@ -520,6 +521,7 @@
     <ClCompile Include="..\..\content\devtools\DevToolsMgr.cpp" />
     <ClCompile Include="..\..\content\devtools\DevToolsProtocolDispatcher.cpp" />
     <ClCompile Include="..\..\content\resources\DebuggerScriptSourceJs.cpp" />
+    <ClCompile Include="..\..\content\resources\FullscreenCss.cpp" />
     <ClCompile Include="..\..\content\resources\InjectedScriptSourceJs.cpp" />
     <ClCompile Include="..\..\content\resources\InspectorOverlayPageHtml.cpp" />
     <ClCompile Include="..\..\content\resources\MediaPlayerData.cpp" />
@@ -530,10 +532,16 @@
     <ClCompile Include="..\..\content\ui\WebDropSource.cpp" />
     <ClCompile Include="..\..\content\web_impl_win\WebCryptoImpl.cpp" />
     <ClCompile Include="..\..\content\web_impl_win\WebMessagePortChannelImpl.cpp" />
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\USVStringOrURLSearchParams.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8DevToolsHost.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8External.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8InspectorOverlayHost.cpp" />
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8URLSearchParams.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8XMLSerializer.cpp" />
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8XPathEvaluator.cpp" />
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8XPathExpression.cpp" />
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8XPathNSResolver.cpp" />
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8XPathResult.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8Crypto.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8DataTransferItemPartial.cpp" />
     <ClCompile Include="..\..\gen\blink\bindings\modules\v8\V8DevToolsHostPartial.cpp" />
@@ -541,9 +549,20 @@
     <ClCompile Include="..\..\gen\blink\core\InspectorFrontend.cpp" />
     <ClCompile Include="..\..\gen\blink\core\InspectorInstrumentationImpl.cpp" />
     <ClCompile Include="..\..\gen\blink\core\InspectorTypeBuilder.cpp" />
+    <ClCompile Include="..\..\gen\blink\core\XPathGrammar.cpp" />
     <ClCompile Include="..\..\net\ActivatingObjCheck.cpp" />
+    <ClCompile Include="..\..\net\cookies\CookieJarMgr.cpp" />
+    <ClCompile Include="..\..\net\cookies\WebCookieJarCurlImpl.cpp" />
     <ClCompile Include="..\..\net\PageNetExtraData.cpp" />
+    <ClCompile Include="..\..\net\StorageMgr.cpp" />
+    <ClCompile Include="..\..\net\WebStorageAreaImpl.cpp" />
+    <ClCompile Include="..\..\net\WebStorageNamespaceImpl.cpp" />
     <ClCompile Include="..\..\net\WebURLLoaderManagerUtil.cpp" />
+    <ClCompile Include="..\..\node\src\node_api.cc">
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">../../third_party/zlib;../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../third_party/zlib;../../node/src;../../node/uv/include;../../node/cares/include;../../node/v8_inspector;../../node/openssl/openssl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\..\node\src\node_url.cc">
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;BUILDING_V8_SHARED=1;BUILDING_UV_SHARED=1;CARES_STATICLIB;NODE_ARCH="ia32";NODE_PLATFORM="win32";NODE_WANT_INTERNALS=1;HAVE_OPENSSL=1;HAVE_ETW=1;HAVE_PERFCTR=1;V8_INSPECTOR_USE_STL=1;NODE_USE_V8_PLATFORM=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
@@ -560,6 +579,7 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;BUILDING_V8_SHARED=1;BUILDING_UV_SHARED=1;CARES_STATICLIB;NODE_ARCH="ia32";NODE_PLATFORM="win32";NODE_WANT_INTERNALS=1;HAVE_OPENSSL=1;HAVE_ETW=1;HAVE_PERFCTR=1;V8_INSPECTOR_USE_STL=1;NODE_USE_V8_PLATFORM=0</PreprocessorDefinitions>
     </ClCompile>
     <ClCompile Include="..\..\skia\ext\analysis_canvas.cc" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\bindings\core\v8\custom\V8CustomXPathNSResolver.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\bindings\core\v8\custom\V8DevToolsHostCustom.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\bindings\core\v8\custom\V8MutationObserverCustom.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\bindings\core\v8\inspector\InspectorWrapper.cpp" />
@@ -568,6 +588,7 @@
     <ClCompile Include="..\..\third_party\WebKit\Source\bindings\core\v8\ScriptHeapSnapshot.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\bindings\core\v8\ScriptProfiler.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\bindings\core\v8\V8GCController_v8_5_7.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\dom\URLSearchParams.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\AsyncCallChain.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\AsyncCallTracker.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\ConsoleMessage.cpp" />
@@ -635,7 +656,29 @@
     <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\WorkerInspectorController.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\WorkerRuntimeAgent.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\WorkerThreadDebugger.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\xml\DocumentXPathEvaluator.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\xml\DocumentXSLT.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\xml\NativeXPathNSResolver.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\core\xml\XMLSerializer.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\xml\XPathEvaluator.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\xml\XPathExpression.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\xml\XPathExpressionNode.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\xml\XPathFunctions.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\xml\XPathNodeSet.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\xml\XPathParser.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\xml\XPathPath.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\xml\XPathPredicate.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\xml\XPathResult.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\xml\XPathStep.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\xml\XPathUtil.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\xml\XPathValue.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\xml\XPathVariableReference.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\xml\XSLImportRule.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\xml\XSLStyleSheetLibxslt.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\xml\XSLTExtensions.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\xml\XSLTProcessor.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\xml\XSLTProcessorLibxslt.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\xml\XSLTUnicodeSort.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\modules\compositorworker\CompositorWorker.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\modules\compositorworker\CompositorWorkerGlobalScope.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\modules\compositorworker\CompositorWorkerManager.cpp" />
@@ -857,7 +900,6 @@
     <ClCompile Include="..\..\content\web_impl_win\WaitableEventWin.cpp" />
     <ClCompile Include="..\..\content\web_impl_win\WebBlobRegistryImpl.cpp" />
     <ClCompile Include="..\..\content\web_impl_win\WebClipboardImpl.cpp" />
-    <ClCompile Include="..\..\content\web_impl_win\WebCookieJarCurlImpl.cpp" />
     <ClCompile Include="..\..\content\web_impl_win\WebFileUtilitiesImpl.cpp" />
     <ClCompile Include="..\..\content\web_impl_win\WebMediaPlayerImpl.cpp" />
     <ClCompile Include="..\..\content\web_impl_win\WebMimeRegistryImpl.cpp" />
@@ -4979,6 +5021,7 @@
     <ClCompile Include="..\..\third_party\WebKit\Source\web\WebDOMEvent.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\web\WebElement.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\web\WebElementCollection.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\web\WebEntities.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\web\WebFileChooserCompletionImpl.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\web\WebFormControlElement.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\web\WebFormElement.cpp" />
@@ -4995,6 +5038,8 @@
     <ClCompile Include="..\..\third_party\WebKit\Source\web\WebNode.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\web\WebNodeList.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\web\WebPagePopupImpl.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\web\WebPageSerializer.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\web\WebPageSerializerImpl.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\web\WebPluginContainerImpl.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\web\WebPluginLoadObserver.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\web\WebRange.cpp" />
@@ -5006,9 +5051,7 @@
     <ClCompile Include="..\..\third_party\WebKit\Source\web\WebSelection.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\web\WebSerializedScriptValue.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\web\WebSettingsImpl.cpp" />
-    <ClCompile Include="..\..\third_party\WebKit\Source\web\WebStorageAreaImpl.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\web\WebStorageEventDispatcherImpl.cpp" />
-    <ClCompile Include="..\..\third_party\WebKit\Source\web\WebStorageNamespaceImpl.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\web\WebTextCheckingCompletionImpl.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\web\WebTextCheckingResult.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\web\WebTextRun.cpp" />
@@ -5017,12 +5060,16 @@
     <ClCompile Include="..\..\third_party\WebKit\Source\web\WebViewImpl.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\web\WorkerContentSettingsClient.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\web\WorkerGlobalScopeProxyProviderImpl.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\wtf\PageAllocator.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\wtf\PartitionAlloc.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\wtf\PartitionAllocator.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\wtf\Partitions.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\wtf\text\qt4\UnicodeQt4.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\wtf\text\UTF8.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\wtf\text\WTFStringUtil.cpp" />
     <ClCompile Include="..\..\ui\gfx\win\dpi.cc" />
     <ClCompile Include="..\..\wke\wke.cpp" />
+    <ClCompile Include="..\..\wke\wke2.cpp" />
     <ClCompile Include="..\..\wke\wkeGlobalVar.cpp" />
     <ClCompile Include="..\..\wke\wkeJsBind.cpp" />
     <ClCompile Include="..\..\wke\wkeNetHook.cpp" />
@@ -5867,8 +5914,6 @@
     <ClCompile Include="..\..\third_party\WebKit\Source\wtf\HashTable.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\wtf\InstanceCounter.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\wtf\MainThread.cpp" />
-    <ClCompile Include="..\..\third_party\WebKit\Source\wtf\PageAllocator.cpp" />
-    <ClCompile Include="..\..\third_party\WebKit\Source\wtf\PartitionAlloc.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\wtf\PrintStream.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\wtf\RefCountedLeakCounter.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\wtf\SizeLimits.cpp" />
@@ -5901,6 +5946,7 @@
     <ClCompile Include="..\..\third_party\WebKit\Source\wtf\WTFThreadData.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\..\miniblink\trunk\gen\blink\bindings\core\v8\V8XSLTProcessor.h" />
     <ClInclude Include="..\..\base\json\json_parser.h" />
     <ClInclude Include="..\..\base\json\json_reader.h" />
     <ClInclude Include="..\..\base\json\json_util.h" />
@@ -5922,6 +5968,7 @@
     <ClInclude Include="..\..\content\ui\ClipboardUtil.h" />
     <ClInclude Include="..\..\content\ui\COMPtr.h" />
     <ClInclude Include="..\..\content\ui\ContextMeun.h" />
+    <ClInclude Include="..\..\content\ui\CustomTheme.h" />
     <ClInclude Include="..\..\content\ui\DragHandle.h" />
     <ClInclude Include="..\..\content\ui\PlatformCursor.h" />
     <ClInclude Include="..\..\content\ui\PopupMenuWin.h" />
@@ -5932,8 +5979,14 @@
     <ClInclude Include="..\..\content\ui\WebDropSource.h" />
     <ClInclude Include="..\..\content\web_impl_win\WebCryptoImpl.h" />
     <ClInclude Include="..\..\content\web_impl_win\WebMessagePortChannelImpl.h" />
+    <ClInclude Include="..\..\gen\blink\bindings\core\v8\USVStringOrURLSearchParams.h" />
     <ClInclude Include="..\..\gen\blink\bindings\core\v8\V8External.h" />
+    <ClInclude Include="..\..\gen\blink\bindings\core\v8\V8URLSearchParams.h" />
     <ClInclude Include="..\..\gen\blink\bindings\core\v8\V8XMLSerializer.h" />
+    <ClInclude Include="..\..\gen\blink\bindings\core\v8\V8XPathEvaluator.h" />
+    <ClInclude Include="..\..\gen\blink\bindings\core\v8\V8XPathExpression.h" />
+    <ClInclude Include="..\..\gen\blink\bindings\core\v8\V8XPathNSResolver.h" />
+    <ClInclude Include="..\..\gen\blink\bindings\core\v8\V8XPathResult.h" />
     <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8Crypto.h" />
     <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8DataTransferItemPartial.h" />
     <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8DevToolsHostPartial.h" />
@@ -5941,12 +5994,18 @@
     <ClInclude Include="..\..\gen\blink\bindings\modules\v8\V8DOMFileSystemSync.h" />
     <ClInclude Include="..\..\net\ActivatingObjCheck.h" />
     <ClInclude Include="..\..\net\CancelledReason.h" />
+    <ClInclude Include="..\..\net\cookies\CookieJarMgr.h" />
+    <ClInclude Include="..\..\net\cookies\WebCookieJarCurlImpl.h" />
     <ClInclude Include="..\..\net\FlattenHTTPBodyElement.h" />
     <ClInclude Include="..\..\net\HeaderVisitor.h" />
     <ClInclude Include="..\..\net\InitializeHandleInfo.h" />
     <ClInclude Include="..\..\net\LambdaTask.h" />
     <ClInclude Include="..\..\net\PageNetExtraData.h" />
     <ClInclude Include="..\..\net\ProxyType.h" />
+    <ClInclude Include="..\..\net\StorageDef.h" />
+    <ClInclude Include="..\..\net\StorageMgr.h" />
+    <ClInclude Include="..\..\net\WebStorageAreaImpl.h" />
+    <ClInclude Include="..\..\net\WebStorageNamespaceImpl.h" />
     <ClInclude Include="..\..\net\WebURLLoaderManagerAsynTask.h" />
     <ClInclude Include="..\..\net\WebURLLoaderManagerMainTask.h" />
     <ClInclude Include="..\..\net\WebURLLoaderManagerSetupInfo.h" />
@@ -5954,14 +6013,18 @@
     <ClInclude Include="..\..\node\nodeblink.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|x64'">true</ExcludedFromBuild>
     </ClInclude>
+    <ClInclude Include="..\..\node\src\node_api.h" />
+    <ClInclude Include="..\..\node\src\node_api_types.h" />
     <ClInclude Include="..\..\node\src\node_url.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|x64'">true</ExcludedFromBuild>
     </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\bindings\core\v8\custom\V8CustomXPathNSResolver.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\bindings\core\v8\inspector\InspectorWrapper.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\bindings\core\v8\inspector\V8InjectedScriptHost.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\bindings\core\v8\inspector\V8JavaScriptCallFrame.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\bindings\core\v8\ScriptHeapSnapshot.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\bindings\core\v8\ScriptProfiler.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\dom\URLSearchParams.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\core\frame\External.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\AsyncCallChain.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\AsyncCallTracker.h" />
@@ -6041,7 +6104,29 @@
     <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\WorkerInspectorController.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\WorkerRuntimeAgent.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\WorkerThreadDebugger.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\xml\DocumentXPathEvaluator.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\xml\DocumentXSLT.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\xml\NativeXPathNSResolver.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\xml\parser\MarkupTokenizerInlines.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\core\xml\XMLSerializer.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\xml\XPathEvaluator.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\xml\XPathExpression.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\xml\XPathExpressionNode.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\xml\XPathFunctions.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\xml\XPathNodeSet.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\xml\XPathNSResolver.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\xml\XPathParser.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\xml\XPathPath.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\xml\XPathPredicate.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\xml\XPathResult.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\xml\XPathStep.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\xml\XPathUtil.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\xml\XPathValue.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\xml\XPathVariableReference.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\xml\XSLImportRule.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\xml\XSLStyleSheet.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\xml\XSLTProcessor.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\xml\XSLTUnicodeSort.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\modules\compositorworker\CompositorWorker.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\modules\compositorworker\CompositorWorkerGlobalScope.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\modules\compositorworker\CompositorWorkerManager.h" />
@@ -6325,7 +6410,6 @@
     <ClInclude Include="..\..\content\resources\WebKitWebRes.h" />
     <ClInclude Include="..\..\content\web_impl_win\BlinkPlatformImpl.h" />
     <ClInclude Include="..\..\content\web_impl_win\CurrentTimeImpl.h" />
-    <ClInclude Include="..\..\content\web_impl_win\CustomTheme.h" />
     <ClInclude Include="..\..\content\web_impl_win\MissingImageData.h" />
     <ClInclude Include="..\..\content\web_impl_win\NativeThemeWin.h" />
     <ClInclude Include="..\..\content\web_impl_win\npapi\PluginDatabase.h" />
@@ -6338,8 +6422,6 @@
     <ClInclude Include="..\..\content\web_impl_win\WaitableEvent.h" />
     <ClInclude Include="..\..\content\web_impl_win\WebBlobRegistryImpl.h" />
     <ClInclude Include="..\..\content\web_impl_win\WebClipboardImpl.h" />
-    <ClInclude Include="..\..\content\web_impl_win\WebCookieJarCurlImpl.h" />
-    <ClInclude Include="..\..\content\web_impl_win\WebCookieJarINetImpl.h" />
     <ClInclude Include="..\..\content\web_impl_win\WebFileUtilitiesImpl.h" />
     <ClInclude Include="..\..\content\web_impl_win\WebMediaPlayerImpl.h" />
     <ClInclude Include="..\..\content\web_impl_win\WebMimeRegistryImpl.h" />
@@ -8938,6 +9020,7 @@
     <ClInclude Include="..\..\third_party\WebKit\Source\web\WebDataSourceImpl.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\web\WebDevToolsAgentImpl.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\web\WebDevToolsFrontendImpl.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\web\WebEntities.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\web\WebFileChooserCompletionImpl.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\web\WebFrameWidgetImpl.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\web\WebGraphicsContextImpl.h" />
@@ -8949,12 +9032,13 @@
     <ClInclude Include="..\..\third_party\WebKit\Source\web\WebPluginLoadObserver.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\web\WebRemoteFrameImpl.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\web\WebSettingsImpl.h" />
-    <ClInclude Include="..\..\third_party\WebKit\Source\web\WebStorageAreaImpl.h" />
-    <ClInclude Include="..\..\third_party\WebKit\Source\web\WebStorageNamespaceImpl.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\web\WebTextCheckingCompletionImpl.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\web\WebViewImpl.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\web\WorkerContentSettingsClient.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\web\WorkerGlobalScopeProxyProviderImpl.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\wtf\PageAllocator.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\wtf\PartitionAlloc.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\wtf\PartitionAllocator.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\wtf\Partitions.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\wtf\text\qt4\QChar.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\wtf\text\qt4\QString.h" />
@@ -8966,6 +9050,7 @@
     <ClInclude Include="..\..\third_party\WebKit\Source\wtf\text\WTFStringUtil.h" />
     <ClInclude Include="..\..\ui\gfx\win\dpi.h" />
     <ClInclude Include="..\..\wke\wke.h" />
+    <ClInclude Include="..\..\wke\wke2.h" />
     <ClInclude Include="..\..\wke\wkedefine.h" />
     <ClInclude Include="..\..\wke\wkeGlobalVar.h" />
     <ClInclude Include="..\..\wke\wkeJsBind.h" />
@@ -10263,8 +10348,6 @@
     <ClInclude Include="..\..\third_party\WebKit\Source\wtf\Optional.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\wtf\OwnPtr.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\wtf\OwnPtrCommon.h" />
-    <ClInclude Include="..\..\third_party\WebKit\Source\wtf\PageAllocator.h" />
-    <ClInclude Include="..\..\third_party\WebKit\Source\wtf\PartitionAlloc.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\wtf\PassOwnPtr.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\wtf\PassRefPtr.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\wtf\PassTraits.h" />
@@ -10347,6 +10430,7 @@
     <None Include="..\..\third_party\WebKit\Source\core\inspector\injected_script_externs.js" />
     <None Include="..\..\third_party\WebKit\Source\core\inspector\InspectorOverlayPage.html" />
     <None Include="..\..\third_party\WebKit\Source\core\inspector\OWNERS" />
+    <None Include="..\..\third_party\WebKit\Source\core\xml\XPathGrammar.y" />
     <None Include="..\..\third_party\WebKit\Source\modules\compositorworker\DEPS" />
     <None Include="..\..\gen\blink\core\EventInterfaces.in" />
     <None Include="..\..\third_party\WebKit\Source\core\animation\OWNERS" />

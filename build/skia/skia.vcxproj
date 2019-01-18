@@ -119,9 +119,9 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>SK_CPU_SSE_LEVEL=20;SK_GDI_ALWAYS_USE_TEXTMETRICS_FOR_FONT_METRICS;SK_USE_DISCARDABLE_SCALEDIMAGECACHE;WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>SK_CPU_SSE_LEVEL=20;SK_GDI_ALWAYS_USE_TEXTMETRICS_FOR_FONT_METRICS;SK_USE_DISCARDABLE_SCALEDIMAGECACHE;WIN32;_DEBUG;_LIB;SK_GAMMA_SRGB;SK_GAMMA_CONTRAST=0.5;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>../../third_party/skia/include/codec;../../third_party/skia/include/config;../../third_party/skia/include/core;../../third_party/skia/include/device;../../third_party/skia/include/effects;../../third_party/skia/include/images;../../third_party/skia/include/pathops;../../third_party/skia/include/pipe;../../third_party/skia/include/ports;../../third_party/skia/include/utils/win;../../third_party/skia/include/utils;../../third_party/skia/src/image;../../third_party/skia/src/core;../../third_party/skia/src/sfnt;../../third_party/skia/src/lazy;../../third_party/skia/src/utils;../../third_party/skia/src/opts;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../third_party/skia/include/codec;../../third_party/skia/include/config;../../third_party/skia/include/core;../../third_party/skia/include/device;../../third_party/skia/include/effects;../../third_party/skia/include/images;../../third_party/skia/include/pathops;../../third_party/skia/include/pipe;../../third_party/skia/include/ports;../../third_party/skia/include/utils/win;../../third_party/skia/include/utils;../../third_party/skia/src/image;../../third_party/skia/src/core;../../third_party/skia/src/sfnt;../../third_party/skia/src/lazy;../../third_party/skia/src/utils;../../third_party/skia/src/opts;../../third_party/skia/src/pdf;../../third_party/zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MinimalRebuild>false</MinimalRebuild>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
@@ -136,8 +136,8 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">
     <Lib />
     <ClCompile>
-      <PreprocessorDefinitions>SK_CPU_SSE_LEVEL=20;SK_GDI_ALWAYS_USE_TEXTMETRICS_FOR_FONT_METRICS;SK_USE_DISCARDABLE_SCALEDIMAGECACHE;USING_VC6RT=1;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>../../third_party/skia/include/codec;../../third_party/skia/include/config;../../third_party/skia/include/core;../../third_party/skia/include/device;../../third_party/skia/include/effects;../../third_party/skia/include/images;../../third_party/skia/include/pathops;../../third_party/skia/include/pipe;../../third_party/skia/include/ports;../../third_party/skia/include/utils/win;../../third_party/skia/include/utils;../../third_party/skia/src/image;../../third_party/skia/src/core;../../third_party/skia/src/sfnt;../../third_party/skia/src/lazy;../../third_party/skia/src/utils;../../third_party/skia/src/opts;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>SK_CPU_SSE_LEVEL=20;SK_GDI_ALWAYS_USE_TEXTMETRICS_FOR_FONT_METRICS;SK_USE_DISCARDABLE_SCALEDIMAGECACHE;USING_VC6RT=1;WIN32;NDEBUG;_LIB;SK_GAMMA_SRGB;SK_GAMMA_CONTRAST=0.5;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../../third_party/skia/include/codec;../../third_party/skia/include/config;../../third_party/skia/include/core;../../third_party/skia/include/device;../../third_party/skia/include/effects;../../third_party/skia/include/images;../../third_party/skia/include/pathops;../../third_party/skia/include/pipe;../../third_party/skia/include/ports;../../third_party/skia/include/utils/win;../../third_party/skia/include/utils;../../third_party/skia/src/image;../../third_party/skia/src/core;../../third_party/skia/src/sfnt;../../third_party/skia/src/lazy;../../third_party/skia/src/utils;../../third_party/skia/src/opts;../../third_party/skia/src/pdf;../../third_party/zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -219,7 +219,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>SK_CPU_SSE_LEVEL=20;SK_GDI_ALWAYS_USE_TEXTMETRICS_FOR_FONT_METRICS;SK_USE_DISCARDABLE_SCALEDIMAGECACHE;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>../../third_party/skia/include/codec;../../third_party/skia/include/config;../../third_party/skia/include/core;../../third_party/skia/include/device;../../third_party/skia/include/effects;../../third_party/skia/include/images;../../third_party/skia/include/pathops;../../third_party/skia/include/pipe;../../third_party/skia/include/ports;../../third_party/skia/include/utils/win;../../third_party/skia/include/utils;../../third_party/skia/src/image;../../third_party/skia/src/core;../../third_party/skia/src/sfnt;../../third_party/skia/src/lazy;../../third_party/skia/src/utils;../../third_party/skia/src/opts;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../third_party/skia/include/codec;../../third_party/skia/include/config;../../third_party/skia/include/core;../../third_party/skia/include/device;../../third_party/skia/include/effects;../../third_party/skia/include/images;../../third_party/skia/include/pathops;../../third_party/skia/include/pipe;../../third_party/skia/include/ports;../../third_party/skia/include/utils/win;../../third_party/skia/include/utils;../../third_party/skia/src/image;../../third_party/skia/src/core;../../third_party/skia/src/sfnt;../../third_party/skia/src/lazy;../../third_party/skia/src/utils;../../third_party/skia/src/opts;../../third_party/skia/src/pdf;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <ExceptionHandling>false</ExceptionHandling>
       <BufferSecurityCheck>false</BufferSecurityCheck>
@@ -682,6 +682,19 @@
     <ClInclude Include="..\..\third_party\skia\src\pathops\SkPathOpsTypes.h" />
     <ClInclude Include="..\..\third_party\skia\src\pathops\SkPathWriter.h" />
     <ClInclude Include="..\..\third_party\skia\src\pathops\SkReduceOrder.h" />
+    <ClInclude Include="..\..\third_party\skia\src\pdf\SkJpegInfo.h" />
+    <ClInclude Include="..\..\third_party\skia\src\pdf\SkPDFBitmap.h" />
+    <ClInclude Include="..\..\third_party\skia\src\pdf\SkPDFCanon.h" />
+    <ClInclude Include="..\..\third_party\skia\src\pdf\SkPDFDevice.h" />
+    <ClInclude Include="..\..\third_party\skia\src\pdf\SkPDFFont.h" />
+    <ClInclude Include="..\..\third_party\skia\src\pdf\SkPDFFontImpl.h" />
+    <ClInclude Include="..\..\third_party\skia\src\pdf\SkPDFFormXObject.h" />
+    <ClInclude Include="..\..\third_party\skia\src\pdf\SkPDFGraphicState.h" />
+    <ClInclude Include="..\..\third_party\skia\src\pdf\SkPDFResourceDict.h" />
+    <ClInclude Include="..\..\third_party\skia\src\pdf\SkPDFShader.h" />
+    <ClInclude Include="..\..\third_party\skia\src\pdf\SkPDFStream.h" />
+    <ClInclude Include="..\..\third_party\skia\src\pdf\SkPDFTypes.h" />
+    <ClInclude Include="..\..\third_party\skia\src\pdf\SkPDFUtils.h" />
     <ClInclude Include="..\..\third_party\skia\src\pipe\SkGPipePriv.h" />
     <ClInclude Include="..\..\third_party\skia\src\pipe\utils\SamplePipeControllers.h" />
     <ClInclude Include="..\..\third_party\skia\src\ports\SkFontConfigTypeface.h" />
@@ -772,6 +785,7 @@
     <ClCompile Include="..\..\third_party\skia\src\core\SkError.cpp" />
     <ClCompile Include="..\..\third_party\skia\src\core\SkFilterProc.cpp" />
     <ClCompile Include="..\..\third_party\skia\src\core\SkFilterShader.cpp" />
+    <ClCompile Include="..\..\third_party\skia\src\core\SkFlate.cpp" />
     <ClCompile Include="..\..\third_party\skia\src\core\SkFlattenable.cpp" />
     <ClCompile Include="..\..\third_party\skia\src\core\SkFlattenableSerialization.cpp" />
     <ClCompile Include="..\..\third_party\skia\src\core\SkFloatBits.cpp" />
@@ -876,6 +890,8 @@
     <ClCompile Include="..\..\third_party\skia\src\core\SkXfermode.cpp" />
     <ClCompile Include="..\..\third_party\skia\src\core\SkXfermodeInterpretation.cpp" />
     <ClCompile Include="..\..\third_party\skia\src\core\SkYUVPlanesCache.cpp" />
+    <ClCompile Include="..\..\third_party\skia\src\doc\SkDocument.cpp" />
+    <ClCompile Include="..\..\third_party\skia\src\doc\SkDocument_PDF.cpp" />
     <ClCompile Include="..\..\third_party\skia\src\effects\gradients\SkClampRange.cpp" />
     <ClCompile Include="..\..\third_party\skia\src\effects\gradients\SkGradientBitmapCache.cpp" />
     <ClCompile Include="..\..\third_party\skia\src\effects\gradients\SkGradientShader.cpp" />
@@ -998,6 +1014,18 @@
     <ClCompile Include="..\..\third_party\skia\src\pathops\SkPathOpsWinding.cpp" />
     <ClCompile Include="..\..\third_party\skia\src\pathops\SkPathWriter.cpp" />
     <ClCompile Include="..\..\third_party\skia\src\pathops\SkReduceOrder.cpp" />
+    <ClCompile Include="..\..\third_party\skia\src\pdf\SkJpegInfo.cpp" />
+    <ClCompile Include="..\..\third_party\skia\src\pdf\SkPDFBitmap.cpp" />
+    <ClCompile Include="..\..\third_party\skia\src\pdf\SkPDFCanon.cpp" />
+    <ClCompile Include="..\..\third_party\skia\src\pdf\SkPDFDevice.cpp" />
+    <ClCompile Include="..\..\third_party\skia\src\pdf\SkPDFFont.cpp" />
+    <ClCompile Include="..\..\third_party\skia\src\pdf\SkPDFFormXObject.cpp" />
+    <ClCompile Include="..\..\third_party\skia\src\pdf\SkPDFGraphicState.cpp" />
+    <ClCompile Include="..\..\third_party\skia\src\pdf\SkPDFResourceDict.cpp" />
+    <ClCompile Include="..\..\third_party\skia\src\pdf\SkPDFShader.cpp" />
+    <ClCompile Include="..\..\third_party\skia\src\pdf\SkPDFStream.cpp" />
+    <ClCompile Include="..\..\third_party\skia\src\pdf\SkPDFTypes.cpp" />
+    <ClCompile Include="..\..\third_party\skia\src\pdf\SkPDFUtils.cpp" />
     <ClCompile Include="..\..\third_party\skia\src\pipe\SkGPipeRead.cpp" />
     <ClCompile Include="..\..\third_party\skia\src\pipe\SkGPipeWrite.cpp" />
     <ClCompile Include="..\..\third_party\skia\src\pipe\utils\SamplePipeControllers.cpp" />

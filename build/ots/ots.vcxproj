@@ -119,10 +119,11 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;SFNTLY_NO_EXCEPTION;WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>../../third_party/zlib/;../../third_party/ots/include;../../third_party/ots/;../../third_party/brotli</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../third_party/sfntly/src/cpp/src;../../third_party/zlib/;../../third_party/ots/include;../../third_party/ots/;../../third_party/brotli</AdditionalIncludeDirectories>
       <MinimalRebuild>false</MinimalRebuild>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -135,8 +136,8 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">
     <Lib />
     <ClCompile>
-      <PreprocessorDefinitions>USING_VC6RT=1;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>../../third_party/zlib/;../../third_party/ots/include;../../third_party/ots/;../../third_party/brotli</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;SFNTLY_NO_EXCEPTION;USING_VC6RT=1;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../../third_party/sfntly/src/cpp/src;../../third_party/zlib/;../../third_party/ots/include;../../third_party/ots/;../../third_party/brotli</AdditionalIncludeDirectories>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -278,6 +279,70 @@
     <ClInclude Include="..\..\third_party\ots\src\vmtx.h" />
     <ClInclude Include="..\..\third_party\ots\src\vorg.h" />
     <ClInclude Include="..\..\third_party\ots\src\woff2.h" />
+    <ClInclude Include="..\..\third_party\sfntly\src\cpp\src\sample\chromium\font_subsetter.h" />
+    <ClInclude Include="..\..\third_party\sfntly\src\cpp\src\sample\chromium\subsetter_impl.h" />
+    <ClInclude Include="..\..\third_party\sfntly\src\cpp\src\sfntly\data\byte_array.h" />
+    <ClInclude Include="..\..\third_party\sfntly\src\cpp\src\sfntly\data\font_data.h" />
+    <ClInclude Include="..\..\third_party\sfntly\src\cpp\src\sfntly\data\font_input_stream.h" />
+    <ClInclude Include="..\..\third_party\sfntly\src\cpp\src\sfntly\data\font_output_stream.h" />
+    <ClInclude Include="..\..\third_party\sfntly\src\cpp\src\sfntly\data\growable_memory_byte_array.h" />
+    <ClInclude Include="..\..\third_party\sfntly\src\cpp\src\sfntly\data\memory_byte_array.h" />
+    <ClInclude Include="..\..\third_party\sfntly\src\cpp\src\sfntly\data\readable_font_data.h" />
+    <ClInclude Include="..\..\third_party\sfntly\src\cpp\src\sfntly\data\writable_font_data.h" />
+    <ClInclude Include="..\..\third_party\sfntly\src\cpp\src\sfntly\font.h" />
+    <ClInclude Include="..\..\third_party\sfntly\src\cpp\src\sfntly\font_factory.h" />
+    <ClInclude Include="..\..\third_party\sfntly\src\cpp\src\sfntly\math\fixed1616.h" />
+    <ClInclude Include="..\..\third_party\sfntly\src\cpp\src\sfntly\math\font_math.h" />
+    <ClInclude Include="..\..\third_party\sfntly\src\cpp\src\sfntly\port\atomic.h" />
+    <ClInclude Include="..\..\third_party\sfntly\src\cpp\src\sfntly\port\config.h" />
+    <ClInclude Include="..\..\third_party\sfntly\src\cpp\src\sfntly\port\endian.h" />
+    <ClInclude Include="..\..\third_party\sfntly\src\cpp\src\sfntly\port\exception_type.h" />
+    <ClInclude Include="..\..\third_party\sfntly\src\cpp\src\sfntly\port\file_input_stream.h" />
+    <ClInclude Include="..\..\third_party\sfntly\src\cpp\src\sfntly\port\input_stream.h" />
+    <ClInclude Include="..\..\third_party\sfntly\src\cpp\src\sfntly\port\java_iterator.h" />
+    <ClInclude Include="..\..\third_party\sfntly\src\cpp\src\sfntly\port\lock.h" />
+    <ClInclude Include="..\..\third_party\sfntly\src\cpp\src\sfntly\port\logging.h" />
+    <ClInclude Include="..\..\third_party\sfntly\src\cpp\src\sfntly\port\memory_input_stream.h" />
+    <ClInclude Include="..\..\third_party\sfntly\src\cpp\src\sfntly\port\memory_output_stream.h" />
+    <ClInclude Include="..\..\third_party\sfntly\src\cpp\src\sfntly\port\output_stream.h" />
+    <ClInclude Include="..\..\third_party\sfntly\src\cpp\src\sfntly\port\refcount.h" />
+    <ClInclude Include="..\..\third_party\sfntly\src\cpp\src\sfntly\port\type.h" />
+    <ClInclude Include="..\..\third_party\sfntly\src\cpp\src\sfntly\table\bitmap\big_glyph_metrics.h" />
+    <ClInclude Include="..\..\third_party\sfntly\src\cpp\src\sfntly\table\bitmap\bitmap_glyph.h" />
+    <ClInclude Include="..\..\third_party\sfntly\src\cpp\src\sfntly\table\bitmap\bitmap_glyph_info.h" />
+    <ClInclude Include="..\..\third_party\sfntly\src\cpp\src\sfntly\table\bitmap\bitmap_size_table.h" />
+    <ClInclude Include="..\..\third_party\sfntly\src\cpp\src\sfntly\table\bitmap\composite_bitmap_glyph.h" />
+    <ClInclude Include="..\..\third_party\sfntly\src\cpp\src\sfntly\table\bitmap\ebdt_table.h" />
+    <ClInclude Include="..\..\third_party\sfntly\src\cpp\src\sfntly\table\bitmap\eblc_table.h" />
+    <ClInclude Include="..\..\third_party\sfntly\src\cpp\src\sfntly\table\bitmap\ebsc_table.h" />
+    <ClInclude Include="..\..\third_party\sfntly\src\cpp\src\sfntly\table\bitmap\glyph_metrics.h" />
+    <ClInclude Include="..\..\third_party\sfntly\src\cpp\src\sfntly\table\bitmap\index_sub_table.h" />
+    <ClInclude Include="..\..\third_party\sfntly\src\cpp\src\sfntly\table\bitmap\index_sub_table_format1.h" />
+    <ClInclude Include="..\..\third_party\sfntly\src\cpp\src\sfntly\table\bitmap\index_sub_table_format2.h" />
+    <ClInclude Include="..\..\third_party\sfntly\src\cpp\src\sfntly\table\bitmap\index_sub_table_format3.h" />
+    <ClInclude Include="..\..\third_party\sfntly\src\cpp\src\sfntly\table\bitmap\index_sub_table_format4.h" />
+    <ClInclude Include="..\..\third_party\sfntly\src\cpp\src\sfntly\table\bitmap\index_sub_table_format5.h" />
+    <ClInclude Include="..\..\third_party\sfntly\src\cpp\src\sfntly\table\bitmap\simple_bitmap_glyph.h" />
+    <ClInclude Include="..\..\third_party\sfntly\src\cpp\src\sfntly\table\bitmap\small_glyph_metrics.h" />
+    <ClInclude Include="..\..\third_party\sfntly\src\cpp\src\sfntly\table\byte_array_table_builder.h" />
+    <ClInclude Include="..\..\third_party\sfntly\src\cpp\src\sfntly\table\core\cmap_table.h" />
+    <ClInclude Include="..\..\third_party\sfntly\src\cpp\src\sfntly\table\core\font_header_table.h" />
+    <ClInclude Include="..\..\third_party\sfntly\src\cpp\src\sfntly\table\core\horizontal_device_metrics_table.h" />
+    <ClInclude Include="..\..\third_party\sfntly\src\cpp\src\sfntly\table\core\horizontal_header_table.h" />
+    <ClInclude Include="..\..\third_party\sfntly\src\cpp\src\sfntly\table\core\horizontal_metrics_table.h" />
+    <ClInclude Include="..\..\third_party\sfntly\src\cpp\src\sfntly\table\core\maximum_profile_table.h" />
+    <ClInclude Include="..\..\third_party\sfntly\src\cpp\src\sfntly\table\core\name_table.h" />
+    <ClInclude Include="..\..\third_party\sfntly\src\cpp\src\sfntly\table\core\os2_table.h" />
+    <ClInclude Include="..\..\third_party\sfntly\src\cpp\src\sfntly\table\font_data_table.h" />
+    <ClInclude Include="..\..\third_party\sfntly\src\cpp\src\sfntly\table\generic_table_builder.h" />
+    <ClInclude Include="..\..\third_party\sfntly\src\cpp\src\sfntly\table\header.h" />
+    <ClInclude Include="..\..\third_party\sfntly\src\cpp\src\sfntly\table\subtable.h" />
+    <ClInclude Include="..\..\third_party\sfntly\src\cpp\src\sfntly\table\subtable_container_table.h" />
+    <ClInclude Include="..\..\third_party\sfntly\src\cpp\src\sfntly\table\table.h" />
+    <ClInclude Include="..\..\third_party\sfntly\src\cpp\src\sfntly\table\table_based_table_builder.h" />
+    <ClInclude Include="..\..\third_party\sfntly\src\cpp\src\sfntly\table\truetype\glyph_table.h" />
+    <ClInclude Include="..\..\third_party\sfntly\src\cpp\src\sfntly\table\truetype\loca_table.h" />
+    <ClInclude Include="..\..\third_party\sfntly\src\cpp\src\sfntly\tag.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\third_party\brotli\dec\bit_reader.c" />
@@ -497,6 +562,57 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\..\third_party\ots\src\woff2.cc" />
+    <ClCompile Include="..\..\third_party\sfntly\src\cpp\src\sample\chromium\font_subsetter.cc" />
+    <ClCompile Include="..\..\third_party\sfntly\src\cpp\src\sample\chromium\subsetter_impl.cc" />
+    <ClCompile Include="..\..\third_party\sfntly\src\cpp\src\sfntly\data\byte_array.cc" />
+    <ClCompile Include="..\..\third_party\sfntly\src\cpp\src\sfntly\data\font_data.cc" />
+    <ClCompile Include="..\..\third_party\sfntly\src\cpp\src\sfntly\data\font_input_stream.cc" />
+    <ClCompile Include="..\..\third_party\sfntly\src\cpp\src\sfntly\data\font_output_stream.cc" />
+    <ClCompile Include="..\..\third_party\sfntly\src\cpp\src\sfntly\data\growable_memory_byte_array.cc" />
+    <ClCompile Include="..\..\third_party\sfntly\src\cpp\src\sfntly\data\memory_byte_array.cc" />
+    <ClCompile Include="..\..\third_party\sfntly\src\cpp\src\sfntly\data\readable_font_data.cc" />
+    <ClCompile Include="..\..\third_party\sfntly\src\cpp\src\sfntly\data\writable_font_data.cc" />
+    <ClCompile Include="..\..\third_party\sfntly\src\cpp\src\sfntly\font.cc" />
+    <ClCompile Include="..\..\third_party\sfntly\src\cpp\src\sfntly\font_factory.cc" />
+    <ClCompile Include="..\..\third_party\sfntly\src\cpp\src\sfntly\port\file_input_stream.cc" />
+    <ClCompile Include="..\..\third_party\sfntly\src\cpp\src\sfntly\port\lock.cc" />
+    <ClCompile Include="..\..\third_party\sfntly\src\cpp\src\sfntly\port\memory_input_stream.cc" />
+    <ClCompile Include="..\..\third_party\sfntly\src\cpp\src\sfntly\port\memory_output_stream.cc" />
+    <ClCompile Include="..\..\third_party\sfntly\src\cpp\src\sfntly\table\bitmap\big_glyph_metrics.cc" />
+    <ClCompile Include="..\..\third_party\sfntly\src\cpp\src\sfntly\table\bitmap\bitmap_glyph.cc" />
+    <ClCompile Include="..\..\third_party\sfntly\src\cpp\src\sfntly\table\bitmap\bitmap_glyph_info.cc" />
+    <ClCompile Include="..\..\third_party\sfntly\src\cpp\src\sfntly\table\bitmap\bitmap_size_table.cc" />
+    <ClCompile Include="..\..\third_party\sfntly\src\cpp\src\sfntly\table\bitmap\composite_bitmap_glyph.cc" />
+    <ClCompile Include="..\..\third_party\sfntly\src\cpp\src\sfntly\table\bitmap\ebdt_table.cc" />
+    <ClCompile Include="..\..\third_party\sfntly\src\cpp\src\sfntly\table\bitmap\eblc_table.cc" />
+    <ClCompile Include="..\..\third_party\sfntly\src\cpp\src\sfntly\table\bitmap\ebsc_table.cc" />
+    <ClCompile Include="..\..\third_party\sfntly\src\cpp\src\sfntly\table\bitmap\glyph_metrics.cc" />
+    <ClCompile Include="..\..\third_party\sfntly\src\cpp\src\sfntly\table\bitmap\index_sub_table.cc" />
+    <ClCompile Include="..\..\third_party\sfntly\src\cpp\src\sfntly\table\bitmap\index_sub_table_format1.cc" />
+    <ClCompile Include="..\..\third_party\sfntly\src\cpp\src\sfntly\table\bitmap\index_sub_table_format2.cc" />
+    <ClCompile Include="..\..\third_party\sfntly\src\cpp\src\sfntly\table\bitmap\index_sub_table_format3.cc" />
+    <ClCompile Include="..\..\third_party\sfntly\src\cpp\src\sfntly\table\bitmap\index_sub_table_format4.cc" />
+    <ClCompile Include="..\..\third_party\sfntly\src\cpp\src\sfntly\table\bitmap\index_sub_table_format5.cc" />
+    <ClCompile Include="..\..\third_party\sfntly\src\cpp\src\sfntly\table\bitmap\simple_bitmap_glyph.cc" />
+    <ClCompile Include="..\..\third_party\sfntly\src\cpp\src\sfntly\table\bitmap\small_glyph_metrics.cc" />
+    <ClCompile Include="..\..\third_party\sfntly\src\cpp\src\sfntly\table\byte_array_table_builder.cc" />
+    <ClCompile Include="..\..\third_party\sfntly\src\cpp\src\sfntly\table\core\cmap_table.cc" />
+    <ClCompile Include="..\..\third_party\sfntly\src\cpp\src\sfntly\table\core\font_header_table.cc" />
+    <ClCompile Include="..\..\third_party\sfntly\src\cpp\src\sfntly\table\core\horizontal_device_metrics_table.cc" />
+    <ClCompile Include="..\..\third_party\sfntly\src\cpp\src\sfntly\table\core\horizontal_header_table.cc" />
+    <ClCompile Include="..\..\third_party\sfntly\src\cpp\src\sfntly\table\core\horizontal_metrics_table.cc" />
+    <ClCompile Include="..\..\third_party\sfntly\src\cpp\src\sfntly\table\core\maximum_profile_table.cc" />
+    <ClCompile Include="..\..\third_party\sfntly\src\cpp\src\sfntly\table\core\name_table.cc" />
+    <ClCompile Include="..\..\third_party\sfntly\src\cpp\src\sfntly\table\core\os2_table.cc" />
+    <ClCompile Include="..\..\third_party\sfntly\src\cpp\src\sfntly\table\font_data_table.cc" />
+    <ClCompile Include="..\..\third_party\sfntly\src\cpp\src\sfntly\table\generic_table_builder.cc" />
+    <ClCompile Include="..\..\third_party\sfntly\src\cpp\src\sfntly\table\header.cc" />
+    <ClCompile Include="..\..\third_party\sfntly\src\cpp\src\sfntly\table\subtable.cc" />
+    <ClCompile Include="..\..\third_party\sfntly\src\cpp\src\sfntly\table\table.cc" />
+    <ClCompile Include="..\..\third_party\sfntly\src\cpp\src\sfntly\table\table_based_table_builder.cc" />
+    <ClCompile Include="..\..\third_party\sfntly\src\cpp\src\sfntly\table\truetype\glyph_table.cc" />
+    <ClCompile Include="..\..\third_party\sfntly\src\cpp\src\sfntly\table\truetype\loca_table.cc" />
+    <ClCompile Include="..\..\third_party\sfntly\src\cpp\src\sfntly\tag.cc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

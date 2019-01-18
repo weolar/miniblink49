@@ -45,6 +45,7 @@
     <ClCompile Include="..\..\third_party\wolfssl\wolfcrypt\src\wolfevent.c" />
     <ClCompile Include="..\..\third_party\wolfssl\wolfcrypt\src\wolfmath.c" />
     <ClCompile Include="..\..\third_party\wolfssl\src\wolfio.c" />
+    <ClCompile Include="..\..\third_party\wolfssl\src\tls13.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\third_party\wolfssl\user_settings.h" />

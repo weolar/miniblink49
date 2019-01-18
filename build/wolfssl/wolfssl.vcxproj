@@ -215,6 +215,7 @@
     <ClCompile Include="..\..\third_party\wolfssl\src\ocsp.c" />
     <ClCompile Include="..\..\third_party\wolfssl\src\ssl.c" />
     <ClCompile Include="..\..\third_party\wolfssl\src\tls.c" />
+    <ClCompile Include="..\..\third_party\wolfssl\src\tls13.c" />
     <ClCompile Include="..\..\third_party\wolfssl\src\wolfio.c" />
     <ClCompile Include="..\..\third_party\wolfssl\wolfcrypt\src\aes.c" />
     <ClCompile Include="..\..\third_party\wolfssl\wolfcrypt\src\arc4.c" />

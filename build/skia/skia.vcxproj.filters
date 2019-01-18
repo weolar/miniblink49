@@ -109,6 +109,12 @@
     <Filter Include="src\sfnt">
       <UniqueIdentifier>{e426285d-7906-484a-afd9-9496e9a6c7e7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\pdf">
+      <UniqueIdentifier>{45ad2c9d-aeb0-4c8f-94f5-bf69447d511e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\doc">
+      <UniqueIdentifier>{914b7827-bb92-41a7-969d-158720c3c48a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -1533,6 +1539,45 @@
     <ClInclude Include="..\..\third_party\skia\src\sfnt\SkOTUtils.h">
       <Filter>src\sfnt</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\pdf\SkPDFResourceDict.h">
+      <Filter>src\pdf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\pdf\SkPDFShader.h">
+      <Filter>src\pdf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\pdf\SkPDFStream.h">
+      <Filter>src\pdf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\pdf\SkPDFTypes.h">
+      <Filter>src\pdf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\pdf\SkPDFUtils.h">
+      <Filter>src\pdf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\pdf\SkJpegInfo.h">
+      <Filter>src\pdf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\pdf\SkPDFBitmap.h">
+      <Filter>src\pdf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\pdf\SkPDFCanon.h">
+      <Filter>src\pdf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\pdf\SkPDFDevice.h">
+      <Filter>src\pdf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\pdf\SkPDFFont.h">
+      <Filter>src\pdf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\pdf\SkPDFFontImpl.h">
+      <Filter>src\pdf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\pdf\SkPDFFormXObject.h">
+      <Filter>src\pdf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\skia\src\pdf\SkPDFGraphicState.h">
+      <Filter>src\pdf</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\third_party\skia\src\core\SkAdvancedTypefaceMetrics.cpp">
@@ -2527,6 +2572,51 @@
     </ClCompile>
     <ClCompile Include="..\..\third_party\skia\src\sfnt\SkOTUtils.cpp">
       <Filter>src\sfnt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\pdf\SkPDFResourceDict.cpp">
+      <Filter>src\pdf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\pdf\SkPDFShader.cpp">
+      <Filter>src\pdf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\pdf\SkPDFStream.cpp">
+      <Filter>src\pdf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\pdf\SkPDFTypes.cpp">
+      <Filter>src\pdf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\pdf\SkPDFUtils.cpp">
+      <Filter>src\pdf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\pdf\SkJpegInfo.cpp">
+      <Filter>src\pdf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\pdf\SkPDFBitmap.cpp">
+      <Filter>src\pdf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\pdf\SkPDFCanon.cpp">
+      <Filter>src\pdf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\pdf\SkPDFDevice.cpp">
+      <Filter>src\pdf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\pdf\SkPDFFont.cpp">
+      <Filter>src\pdf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\pdf\SkPDFFormXObject.cpp">
+      <Filter>src\pdf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\pdf\SkPDFGraphicState.cpp">
+      <Filter>src\pdf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\doc\SkDocument_PDF.cpp">
+      <Filter>src\doc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\doc\SkDocument.cpp">
+      <Filter>src\doc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\skia\src\core\SkFlate.cpp">
+      <Filter>src\core</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
