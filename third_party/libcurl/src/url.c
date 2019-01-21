@@ -1944,6 +1944,19 @@ static CURLcode findprotocol(struct Curl_easy *data,
   const struct Curl_handler * const *pp;
   const struct Curl_handler *p;
 
+#if 1 // def USE_HSTS
+  /* HSTS means we override any http access with https if the domain
+  is listed in the HSTS database.
+  https://github.com/curl/curl/pull/2682/files
+  */
+  if (strcasecompare(protostr, "http")) {
+    if (0 != strstr(conn->host.name, "passport.liepin.com")) {
+      infof(data, "Domain found in HSTS database, upgrading to https\n");
+      protostr = "https";
+    }
+  }
+#endif
+
   /* Scan protocol handler table and match against 'protostr' to set a few
      variables based on the URL. Now that the handler may be changed later
      when the protocol specific setup function is called. */
