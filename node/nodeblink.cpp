@@ -142,7 +142,7 @@ namespace node {
 } // node
 
 extern "C" NODE_EXTERN void* nodeCreateDefaultPlatform() {
-    v8::Platform* v8platform = v8::platform::CreateDefaultPlatform(4);
+    v8::Platform* v8platform = v8::platform::CreateDefaultPlatform(1);
     gin::V8Initializer::SetV8Platform(v8platform);
     return v8platform;
 }
