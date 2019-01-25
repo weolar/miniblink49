@@ -22,12 +22,12 @@ public:
     PageNetExtraData();
     ~PageNetExtraData();
 
-    void setCookieJarFullPath(const std::string& fullPath);
+    void setCookieJarFullPath(const std::string& fullPathUtf8);
     CURLSH* getCurlShareHandle();
     std::string getCookieJarFullPath();
     WebCookieJarImpl* getCookieJar() const { return m_cookieJar; }
 
-    void setLocalStorageFullPath(const std::string& fullPath);
+    void setLocalStorageFullPath(const std::string& fullPathUtf8);
     blink::WebStorageNamespace* createWebStorageNamespace();
 
 private:

@@ -748,16 +748,33 @@ static bool setHttpResponseDataToJobWhenDidReceiveResponseOnMainThread(WebURLLoa
     // HTTP redirection 重定向
     if (isRedirectByHttpCode || isRedirectByUrl) {
         String location = job->m_response.httpHeaderField(WebString::fromUTF8("location"));
+        String nonAuthoritativeReason = job->m_response.httpHeaderField(WebString::fromUTF8("Non-Authoritative-Reason"));
+        
+        if (isRedirectByHttpCode)
+            OutputDebugStringA("isRedirectByHttpCode: ");
 
         if (isRedirectByUrl)
-            OutputDebugStringA("isRedirectByUrl! \n");
+            OutputDebugStringA("isRedirectByUrl: ");
+
+        // https://passport.liepin.com/account/v1/elogin#sfrom=click-pc_homepage-front_navigation-ecomphr_new
+        // 可能没location，或者开启了HSTS强制要求跳转到HTTPS。不过发现改这里没用，只需要在curl里把http改成https处理即可
+        // 见third_party\libcurl\src\url.c
+        if (location.isEmpty() || WTF::equalIgnoringCase(nonAuthoritativeReason, "HSTS"))
+            location = job->m_effectiveUrl.c_str();
 
         if (!location.isEmpty()) {
+            Vector<char> locationBuffer = WTF::ensureStringToUTF8(location, false);
+            locationBuffer.append('\n');
+            locationBuffer.append('\0');
+            OutputDebugStringA(locationBuffer.data());
+
             doRedirect(job, location, args, isRedirectByHttpCode);
             if (isRedirectByHttpCode)
                 return false;
             return true;
-        }
+        } else
+            OutputDebugStringA("location.isEmpty\n");
+
     } else if (isHttpAuthentication(args->httpCode)) {
 
     } else

@@ -23,7 +23,7 @@ PageNetExtraData::~PageNetExtraData()
         delete m_cookieJar;
 }
 
-void PageNetExtraData::setCookieJarFullPath(const std::string& fullPath)
+void PageNetExtraData::setCookieJarFullPath(const std::string& fullPathUtf8)
 {
     WTF::Mutex* mutex = sharedResourceMutex(CURL_LOCK_DATA_COOKIE);
     WTF::Locker<WTF::Mutex> locker(*mutex);
@@ -33,7 +33,7 @@ void PageNetExtraData::setCookieJarFullPath(const std::string& fullPath)
         return;
     }
 
-    WebCookieJarImpl* cookieJar = CookieJarMgr::getInst()->createOrGet(fullPath);
+    WebCookieJarImpl* cookieJar = CookieJarMgr::getInst()->createOrGet(fullPathUtf8);
     m_cookieJar = cookieJar;
 }
 
@@ -86,7 +86,7 @@ blink::WebStorageNamespace* PageNetExtraData::createWebStorageNamespace()
     return (blink::WebStorageNamespace*)storageArea;
 }
 
-void PageNetExtraData::setLocalStorageFullPath(const std::string& fullPath)
+void PageNetExtraData::setLocalStorageFullPath(const std::string& fullPathUtf8)
 {
     WTF::Mutex* mutex = sharedResourceMutex(CURL_LOCK_DATA_COOKIE);
     WTF::Locker<WTF::Mutex> locker(*mutex);
@@ -96,8 +96,12 @@ void PageNetExtraData::setLocalStorageFullPath(const std::string& fullPath)
         return;
     }
     
-    String path(fullPath.c_str(), fullPath.size());
+    std::vector<UChar> fullPathW;
+    WTF::MByteToWChar(fullPathUtf8.c_str(), fullPathUtf8.size(), &fullPathW, CP_UTF8);
+
+    String path(&fullPathW.at(0), fullPathW.size());
     m_localStotageFullPath = path;
+
     m_localStorage = StorageMgr::getInst()->createOrGet(path);
 }
 

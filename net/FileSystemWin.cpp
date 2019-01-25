@@ -376,7 +376,8 @@ PlatformFileHandle openFile(const String& path, FileOpenMode mode)
     }
 
     Vector<UChar> pathBuffer = WTF::ensureUTF16UChar(path, true);
-    return CreateFile(pathBuffer.data(), desiredAccess, FILE_SHARE_READ, 0, creationDisposition, FILE_ATTRIBUTE_NORMAL, 0);
+    PlatformFileHandle handle = CreateFile(pathBuffer.data(), desiredAccess, FILE_SHARE_READ, 0, creationDisposition, FILE_ATTRIBUTE_NORMAL, 0);
+    return handle;
 }
 
 void closeFile(PlatformFileHandle& handle)

@@ -7,6 +7,7 @@ StorageMgr* StorageMgr::m_inst = nullptr;
 
 DOMStorageMap* StorageMgr::createOrGet(const String& fullPath)
 {
+    RELEASE_ASSERT(!fullPath.is8Bit());
     WebStorageNamespaceImpl* storageArea = nullptr;
     HashMap<String, DOMStorageMap*>::iterator it = m_pathToStorageNamespace.find(fullPath);
     if (m_pathToStorageNamespace.end() != it)
