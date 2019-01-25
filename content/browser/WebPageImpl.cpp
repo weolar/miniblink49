@@ -946,7 +946,7 @@ bool WebPageImpl::isDrawDirty()
     return false;
 }
 
-void drawDebugLine(SkCanvas* memoryCanvas, const IntRect& paintRect)
+void drawDebugLine(void* ptr, SkCanvas* memoryCanvas, const IntRect& paintRect)
 {
     static int g_debugCount = 0;
     ++g_debugCount;
@@ -963,7 +963,7 @@ void drawDebugLine(SkCanvas* memoryCanvas, const IntRect& paintRect)
 #endif
 
 #if 0
-    String outString = String::format("drawDebugLine:%d %d %d %d, %d\n", paintRect.x(), paintRect.y(), paintRect.width(), paintRect.height(), g_debugCount);
+    String outString = String::format("drawDebugLine:%p, %d %d %d %d, %d\n", ptr, paintRect.x(), paintRect.y(), paintRect.width(), paintRect.height(), g_debugCount);
     OutputDebugStringW(outString.charactersWithNullTermination().data());
 #endif
 }
@@ -1104,7 +1104,7 @@ void WebPageImpl::paintToMemoryCanvasInUiThread(SkCanvas* canvas, const IntRect&
     HDC hMemoryDC = nullptr;
     hMemoryDC = skia::BeginPlatformPaint(hWnd, canvas);
 
-    drawDebugLine(canvas, paintRect);
+    drawDebugLine(this, canvas, paintRect);
     
     g_paintToMemoryCanvasInUiThreadCount++;
 
@@ -1827,12 +1827,14 @@ void WebPageImpl::setHWND(HWND hWnd)
     if (threadID != ::GetCurrentThreadId())
         PostTaskWrap::init();
     
-    if (wke::g_wkeUiThreadPostTaskCallback) {
-        m_dragHandle->setViewWindow(m_hWnd, m_webViewImpl);
-        wke::g_wkeUiThreadPostTaskCallback(m_hWnd, RegisterDragDropTask::registerDragDropInUiThread, new RegisterDragDropTask(m_pagePtr->wkeWebView()->getId(), m_hWnd, m_dragHandle));
-    } else if (!blink::RuntimeEnabledFeatures::updataInOtherThreadEnabled()) {
-        m_dragHandle->setViewWindow(m_hWnd, m_webViewImpl);
-        ::RegisterDragDrop(m_hWnd, m_dragHandle);
+    if (wke::g_isSetDragDropEnable) {
+        if (wke::g_wkeUiThreadPostTaskCallback) {
+            m_dragHandle->setViewWindow(m_hWnd, m_webViewImpl);
+            wke::g_wkeUiThreadPostTaskCallback(m_hWnd, RegisterDragDropTask::registerDragDropInUiThread, new RegisterDragDropTask(m_pagePtr->wkeWebView()->getId(), m_hWnd, m_dragHandle));
+        } else if (!blink::RuntimeEnabledFeatures::updataInOtherThreadEnabled()) {
+            m_dragHandle->setViewWindow(m_hWnd, m_webViewImpl);
+            ::RegisterDragDrop(m_hWnd, m_dragHandle);
+        }
     }
 }
 
