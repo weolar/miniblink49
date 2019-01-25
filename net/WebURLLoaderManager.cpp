@@ -1664,9 +1664,6 @@ WebURLLoaderInternal::WebURLLoaderInternal(WebURLLoaderImplCurl* loader, const W
 WebURLLoaderInternal::~WebURLLoaderInternal()
 {
     m_state = kDestroyed;
-    delete m_firstRequest;
-
-    fastFree(m_url);
 
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
     if (m_hookBufForEndHook)
@@ -1677,6 +1674,9 @@ WebURLLoaderInternal::~WebURLLoaderInternal()
         delete m_asynWkeNetSetData;
     }
 #endif
+
+    delete m_firstRequest;
+    fastFree(m_url);
 
     if (m_customHeaders)
         curl_slist_free_all(m_customHeaders);
