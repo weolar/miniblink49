@@ -7604,7 +7604,7 @@ static const V8DOMConfiguration::MethodConfiguration V8WindowMethods[] = {
     {"resizeTo", DOMWindowV8Internal::resizeToMethodCallback, 0, 2, V8DOMConfiguration::ExposedToAllScripts},
     {"resizeBy", DOMWindowV8Internal::resizeByMethodCallback, 0, 2, V8DOMConfiguration::ExposedToAllScripts},
     {"getSelection", DOMWindowV8Internal::getSelectionMethodCallback, 0, 0, V8DOMConfiguration::ExposedToAllScripts},
-    {"find", DOMWindowV8Internal::findMethodCallback, 0, 0, V8DOMConfiguration::ExposedToAllScripts},
+    //{"find", DOMWindowV8Internal::findMethodCallback, 0, 0, V8DOMConfiguration::ExposedToAllScripts},
     {"getMatchedCSSRules", DOMWindowV8Internal::getMatchedCSSRulesMethodCallback, 0, 0, V8DOMConfiguration::ExposedToAllScripts},
     {"webkitRequestAnimationFrame", DOMWindowV8Internal::webkitRequestAnimationFrameMethodCallback, 0, 1, V8DOMConfiguration::ExposedToAllScripts},
     {"webkitCancelAnimationFrame", DOMWindowV8Internal::webkitCancelAnimationFrameMethodCallback, 0, 1, V8DOMConfiguration::ExposedToAllScripts},
