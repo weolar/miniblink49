@@ -95,6 +95,9 @@ public:
 
     // Create a session storage namespace object associated with this WebView.
     virtual WebStorageNamespace* createSessionStorageNamespace() { return 0; }
+#ifndef MINIBLINK_NO_PAGE_LOCALSTORAGE
+    virtual WebStorageNamespace* createLocalStorageNamespace() { return 0; }
+#endif
 
 
     // Misc ----------------------------------------------------------------
