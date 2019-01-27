@@ -580,8 +580,10 @@ static void installV8HTMLIFrameElementTemplate(v8::Local<v8::FunctionTemplate> f
     v8::Local<v8::ObjectTemplate> prototypeTemplate = functionTemplate->PrototypeTemplate();
     ALLOW_UNUSED_LOCAL(prototypeTemplate);
 
+#if V8_MAJOR_VERSION >= 4 && V8_MINOR_VERSION > 5
     instanceTemplate->SetAccessCheckCallback(HTMLIFrameElementV8Internal::securityCheck,
         v8::External::New(isolate, const_cast<WrapperTypeInfo*>(&V8HTMLIFrameElement::wrapperTypeInfo)));
+#endif
 
     // Custom toString template
     functionTemplate->Set(v8AtomicString(isolate, "toString"), V8PerIsolateData::from(isolate)->toStringTemplate());
