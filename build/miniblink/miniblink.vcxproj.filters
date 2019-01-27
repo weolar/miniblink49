@@ -10230,9 +10230,6 @@
     <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8XPathResult.cpp">
       <Filter>gen\blink\bindings\core\v8</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\miniblink\trunk\gen\blink\bindings\core\v8\V8XSLTProcessor.cpp">
-      <Filter>gen\blink\bindings\core\v8</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\third_party\WebKit\Source\core\xml\XSLTProcessor.cpp">
       <Filter>third_party\Webkit\Source\core\xml</Filter>
     </ClCompile>
@@ -10268,6 +10265,9 @@
     </ClCompile>
     <ClCompile Include="..\..\net\StorageMgr.cpp">
       <Filter>net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8XSLTProcessor.cpp">
+      <Filter>gen\blink\bindings\core\v8</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -23244,9 +23244,6 @@
     <ClInclude Include="..\..\gen\blink\bindings\core\v8\V8XPathNSResolver.h">
       <Filter>gen\blink\bindings\core\v8</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\miniblink\trunk\gen\blink\bindings\core\v8\V8XSLTProcessor.h">
-      <Filter>gen\blink\bindings\core\v8</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\third_party\WebKit\Source\core\xml\XSLTProcessor.h">
       <Filter>third_party\Webkit\Source\core\xml</Filter>
     </ClInclude>
@@ -23282,6 +23279,9 @@
     </ClInclude>
     <ClInclude Include="..\..\third_party\WebKit\Source\core\xml\XSLImportRule.h">
       <Filter>third_party\Webkit\Source\core\xml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gen\blink\bindings\core\v8\V8XSLTProcessor.h">
+      <Filter>gen\blink\bindings\core\v8</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
