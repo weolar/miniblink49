@@ -567,7 +567,7 @@ bool LayerTreeHost::drawToCanvas(SkCanvas* canvas, const SkRect& dirtyRect)
     bool b = false;
     WTF::Locker<WTF::Mutex> locker(m_rootCCLayerMutex);
     if (getRootCCLayer())
-        b = m_rootCCLayer->drawToCanvasChildren(this, canvas, dirtyRect, 0);
+        b = m_rootCCLayer->drawToCanvasChildren(this, canvas, dirtyRect, 1, 0);
 
     canvas->restore();
 
