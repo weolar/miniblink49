@@ -922,6 +922,7 @@ void BlinkPlatformImpl::getPluginList(bool refresh, blink::WebPluginListBuilder*
         String name = package->name();
         String desc = package->description();
         String file = package->fileName();
+
         builder->addPlugin(name, desc, file);
 
         const MIMEToDescriptionsMap& mimeToDescriptions = package->mimeToDescriptions();
@@ -930,6 +931,20 @@ void BlinkPlatformImpl::getPluginList(bool refresh, blink::WebPluginListBuilder*
         for (MIMEToDescriptionsMap::const_iterator it = mimeToDescriptions.begin(); it != end; ++it) {
             String type = it->key;
             String desc = it->value;
+
+            // third_party\WebKit\Source\core\dom\DOMImplementation.cpp会询问
+            // third_party\WebKit\Source\platform\plugins\PluginData.cpp 里得到的插件mime是否有支持的，有的话就创建PluginDocument
+            if (desc.startsWith("application/virtual-plugin-")) {
+                if (!package->load())
+                    continue;
+
+                NPError npErr = package->pluginFuncs()->newp((NPMIMEType)"application/pdf", nullptr, 0, 0, nullptr, nullptr, nullptr);
+                if (NPERR_NO_ERROR != npErr)
+                    continue;
+                type = "application/pdf";
+                desc = "pdfviewer";
+            }
+
             builder->addMediaTypeToLastPlugin(type, desc);
 
             Vector<String> extensions = package->mimeToExtensions().get(type);

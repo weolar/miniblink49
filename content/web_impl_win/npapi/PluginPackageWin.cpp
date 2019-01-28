@@ -232,6 +232,9 @@ bool PluginPackage::fetchInfo()
 bool PluginPackage::load()
 {
     if (m_isVirtual) {
+        if (m_isLoaded)
+            return true;
+
         bool loadOk = doLoad();
         if (loadOk) {
             m_isLoaded = true;

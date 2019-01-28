@@ -282,14 +282,6 @@ public:
         return m_widget;
     }
 
-//     PlatformWidget platformWidget() const { return m_widget; }
-//     void setPlatformWidget(PlatformWidget widget)
-//     {
-//         if (widget != m_widget) {
-//             m_widget = widget;
-//         }
-//     }
-
     void setParentPlatformPluginWidget(PlatformWidget widget)
     {
         if (widget != m_parentWidget)
@@ -310,6 +302,8 @@ public:
     }
 
 private:
+    void findVirtualPluginByMime();
+
     void setParameters(const blink::WebVector<blink::WebString>& paramNames, const blink::WebVector<blink::WebString>& paramValues);
     bool startOrAddToUnstartedList();
     void init();

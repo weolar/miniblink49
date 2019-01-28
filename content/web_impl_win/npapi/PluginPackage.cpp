@@ -179,7 +179,8 @@ PassRefPtr<PluginPackage> PluginPackage::createVirtualPackage(
     NPP_ShutdownProcPtr NPP_Shutdown
     )
 {
-    String description = "application/virtual-plugin";
+    static int count = 0;
+    String description = String::format("application/virtual-plugin-%d", count++);
     String mimeDescription = description;
     time_t lastModified = 0;
     String name = "VirtualPlugin";

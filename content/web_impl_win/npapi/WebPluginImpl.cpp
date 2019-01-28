@@ -153,18 +153,16 @@ WebPluginImpl::WebPluginImpl(WebLocalFrame* parentFrame, const blink::WebPluginP
     if (!m_parentFrame)
         return;
 
+    findVirtualPluginByMime();
+
     // if we fail to find a plugin for this MIME type, findPlugin will search for
     // a plugin by the file extension and update the MIME type, so pass a mutable String
-    m_plugin = PluginDatabase::installedPlugins()->findPlugin(m_url, m_mimeType);
+    if (!m_plugin)
+        m_plugin = PluginDatabase::installedPlugins()->findPlugin(m_url, m_mimeType);
 
     // No plugin was found, try refreshing the database and searching again
     if (!m_plugin && PluginDatabase::installedPlugins()->refresh())
         m_plugin = PluginDatabase::installedPlugins()->findPlugin(m_url, m_mimeType);
-
-    if (!m_plugin) {
-        String mime("application/virtual-plugin");
-        m_plugin = PluginDatabase::installedPlugins()->findPlugin(m_url, mime);
-    }
 
     if (!m_plugin) {
         m_status = PluginStatusCanNotFindPlugin;
@@ -298,6 +296,27 @@ bool WebPluginImpl::start()
         return false;
 
     return true;
+}
+
+void WebPluginImpl::findVirtualPluginByMime()
+{
+    if (m_plugin)
+        return;
+
+    for (int i = 0; ; ++i) {
+        String mime = String::format("application/virtual-plugin-%d", i);
+        m_plugin = PluginDatabase::installedPlugins()->findPlugin(m_url, mime);
+
+        if (!m_plugin)
+            break;
+
+        if (!m_plugin->load())
+            continue;
+
+        NPError npErr = m_plugin->pluginFuncs()->newp((NPMIMEType)m_mimeType.utf8().data(), nullptr, 0, 0, nullptr, nullptr, nullptr);
+        if (NPERR_NO_ERROR == npErr)
+            break;
+    }   
 }
 
 void WebPluginImpl::mediaCanStart()

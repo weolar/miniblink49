@@ -78,6 +78,7 @@ blink::WebMimeRegistry::SupportsType WebMimeRegistryImpl::supportsMIMEType(const
             "application/x-javascript",
             "application/xhtml+xml",
             "application/json",
+            "application/pdf",
             "image/svg+xml",
             "image/jpeg",
             "image/png",
