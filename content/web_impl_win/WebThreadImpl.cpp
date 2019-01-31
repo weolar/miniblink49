@@ -51,7 +51,7 @@ ActivatingTimerCheck* gActivatingTimerCheck = nullptr;
 WebThreadImpl::WebThreadImpl(const char* name)
     : m_hEvent(NULL)
     , m_threadId(-1)
-    , m_firingTimers(false)
+    , m_firingTimers(0)
     , m_webSchedulerImpl(new WebSchedulerImpl(this))
     , m_isObserversDirty(false)
     , m_name(name)
@@ -429,6 +429,16 @@ void WebThreadImpl::resumeTimerQueue()
     m_suspendTimerQueue = false;
 }
 
+void WebThreadImpl::disableScheduler()
+{
+    ++m_firingTimers;
+}
+
+void WebThreadImpl::enableScheduler()
+{
+    --m_firingTimers;
+}
+
 void WebThreadImpl::fire()
 {
     startTriggerTasks();
@@ -462,9 +472,9 @@ void WebThreadImpl::fireOnExit()
 void WebThreadImpl::schedulerTasks()
 {
     // Do a re-entrancy check.
-    if (m_firingTimers /*|| m_suspendTimerQueue*/) 
+    if (m_firingTimers > 0 /*|| m_suspendTimerQueue*/) 
         return;
-    m_firingTimers = true;
+    ++m_firingTimers;
 
     ASSERT(m_threadId == WTF::currentThread());
     
@@ -514,7 +524,7 @@ void WebThreadImpl::schedulerTasks()
         didProcessTasks();
     }
     
-    m_firingTimers = false;
+    --m_firingTimers;
 
     updateSharedTimer();
 }

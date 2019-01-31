@@ -58,6 +58,9 @@ public:
     void suspendTimerQueue();
     void resumeTimerQueue();
 
+    void disableScheduler();
+    void enableScheduler();
+
     std::vector<WebTimerBase*>& timerHeap();
     void updateSharedTimer();
     void appendUnusedTimerToDelete(WebTimerBase* timer) { m_unusedTimersToDelete.push_back(timer); }
@@ -102,7 +105,7 @@ private:
     bool m_willExit;
     bool m_threadClosed;
 
-    bool m_firingTimers; // Reentrancy guard.
+    int m_firingTimers; // Reentrancy guard.
     WebSchedulerImpl* m_webSchedulerImpl;
 
     // 不能用wtf的函数，否则退出后wtf被关闭了，就不能访问了

@@ -353,7 +353,7 @@ void BlinkPlatformImpl::shutdown()
 
     cc::RasterTaskWorkerThreadPool* rasterPool = cc::RasterTaskWorkerThreadPool::shared();
     rasterPool->shutdown();
-
+ 
     SkGraphics::PurgeResourceCache();
     SkGraphics::PurgeFontCache();
     SkGraphics::Term();
@@ -440,7 +440,7 @@ BlinkPlatformImpl::AutoDisableGC::~AutoDisableGC()
 
 void BlinkPlatformImpl::resourceGarbageCollectedTimer(blink::Timer<BlinkPlatformImpl>*)
 {
-    blink::memoryCache()->evictResources();
+    doGarbageCollected();
 }
 
 void BlinkPlatformImpl::garbageCollectedTimer(blink::Timer<BlinkPlatformImpl>*)

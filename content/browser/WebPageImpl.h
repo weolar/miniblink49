@@ -102,7 +102,7 @@ public:
     virtual blink::WebWidget* createPopupMenu(blink::WebPopupType) override;
     virtual blink::WebStorageNamespace* createSessionStorageNamespace() override;
 #ifndef MINIBLINK_NO_PAGE_LOCALSTORAGE
-    virtual blink::WebStorageNamespace* createLocalStorageNamespace()  override;
+    virtual blink::WebStorageNamespace* createLocalStorageNamespace() override;
 #endif
     virtual blink::WebString acceptLanguages() override;
     void setScreenInfo(const blink::WebScreenInfo& info);

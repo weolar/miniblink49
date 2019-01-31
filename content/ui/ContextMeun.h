@@ -31,7 +31,7 @@ public:
             return;
 
         registerClass();
-        m_hWnd = CreateWindowExW(WS_EX_TOOLWINDOW, kContextMenuClassName, kContextMenuClassName, WS_POPUP | WS_MINIMIZEBOX, 
+        m_hWnd = CreateWindowExW(WS_EX_TOOLWINDOW, kContextMenuClassName, kContextMenuClassName, WS_POPUP, 
             CW_USEDEFAULT, CW_USEDEFAULT, 1, 1, HWND_DESKTOP, NULL, nullptr, this);
         ::SetPropW(m_hWnd, kContextMenuClassName, (HANDLE)this);
     }
@@ -124,7 +124,8 @@ public:
 
         m_data = data;
 
-        ::SetForegroundWindow(m_hWnd);
+        ::SetWindowPos(m_hWnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOREPOSITION | SWP_NOACTIVATE);
+        //::SetForegroundWindow(m_hWnd);
 
         UINT flags = TPM_RIGHTBUTTON | TPM_TOPALIGN | TPM_VERPOSANIMATION | TPM_HORIZONTAL | TPM_LEFTALIGN | TPM_HORPOSANIMATION;
         ::TrackPopupMenuEx(m_popMenu, flags, clientPt.x, clientPt.y, m_hWnd, 0);
