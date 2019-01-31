@@ -221,6 +221,7 @@ void WebURLLoaderManager::setCookieJarFullPath(const char* path)
         WebCookieJarImpl* cookieJar = CookieJarMgr::getInst()->createOrGet(path);
         m_sharedInstance->m_shareCookieJar = cookieJar;
     }
+    ASSERT(m_sharedInstance->m_shareCookieJar);
 }
 
 void WebURLLoaderManager::appendDataToBlobCacheWhenDidDownloadData(blink::WebURLLoaderClient* client, blink::WebURLLoader* loader, const String& url, const char* data, int dataLength, int encodedDataLength)
