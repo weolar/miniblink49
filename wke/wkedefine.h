@@ -401,7 +401,7 @@ typedef struct _wkePdfDatas {
 typedef struct _wkePrintSettings {
     int structSize;
     int dpi;
-    int width;
+    int width; // in px
     int height;
     int marginTop;
     int marginBottom;
@@ -893,7 +893,7 @@ public:
     ITERATOR2(void, wkeSetHeadlessEnabled, wkeWebView webView, bool b, "可以关闭渲染") \
     ITERATOR2(void, wkeSetDragEnable, wkeWebView webView, bool b, "可关闭拖拽文件加载网页") \
     ITERATOR2(void, wkeSetDragDropEnable, wkeWebView webView, bool b, "可关闭拖拽到其他进程") \
-    ITERATOR2(void, wkeSetLanguage, wkeWebView webView, const char* language, "可关闭拖拽到其他进程") \
+    ITERATOR2(void, wkeSetLanguage, wkeWebView webView, const char* language, "") \
     \
     ITERATOR2(void, wkeSetViewNetInterface, wkeWebView webView, const char* netInterface, "") \
     \
@@ -1078,8 +1078,8 @@ public:
     \
     ITERATOR1(bool, wkeIsProcessingUserGesture, wkeWebView webView, "") \
     \
-    ITERATOR2(void, wkeNetSetMIMEType, wkeNetJob jobPtr, const char* type, "") \
-    ITERATOR2(const char*, wkeNetGetMIMEType, wkeNetJob jobPtr, wkeString mime, "") \
+    ITERATOR2(void, wkeNetSetMIMEType, wkeNetJob jobPtr, const char* type, "设置response的mime") \
+    ITERATOR2(const char*, wkeNetGetMIMEType, wkeNetJob jobPtr, wkeString mime, "获取response的mime") \
     ITERATOR4(void, wkeNetSetHTTPHeaderField, wkeNetJob jobPtr, wchar_t* key, wchar_t* value, bool response, "") \
     ITERATOR2(const char*, wkeNetGetHTTPHeaderField, wkeNetJob jobPtr, const char* key, "") \
     ITERATOR2(const char*, wkeNetGetHTTPHeaderFieldFromResponse, wkeNetJob jobPtr, const char* key, "") \
@@ -1159,7 +1159,9 @@ public:
     \
     ITERATOR5(bool, wkeRegisterEmbedderCustomElement, wkeWebView webView, wkeWebFrameHandle frameId, const char* name, void* options, void* outResult, "") \
     \
-    ITERATOR3(void, wkeSetMediaPlayerFactory, wkeWebView webView, wkeMediaPlayerFactory factory, wkeOnIsMediaPlayerSupportsMIMEType callback,"") \
+    ITERATOR3(void, wkeSetMediaPlayerFactory, wkeWebView webView, wkeMediaPlayerFactory factory, wkeOnIsMediaPlayerSupportsMIMEType callback, "") \
+    \
+    ITERATOR3(const utf8* , wkeGetContentAsMarkup, wkeWebView webView, wkeWebFrameHandle frame, size_t* size, "") \
     \
     ITERATOR1(const utf8*, wkeUtilDecodeURLEscape, const utf8* url, "") \
     ITERATOR1(const utf8*, wkeUtilEncodeURLEscape, const utf8* url, "") \

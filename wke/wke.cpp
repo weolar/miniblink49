@@ -46,10 +46,16 @@ extern char* g_navigatorPlatform;
 
 //////////////////////////////////////////////////////////////////////////
 
+namespace wke {
+DWORD wkeThreadId = 0;
+}
+
 void wkeInitialize()
 {
     if (wke::wkeIsInit)
         return;
+
+    wke::wkeThreadId = ::GetCurrentThreadId();
 
     //double-precision float
     _controlfp(_PC_53, _MCW_PC);
@@ -1982,6 +1988,25 @@ const wkeClientHandler* wkeGetClientHandler(wkeWebView webView)
     return (const wkeClientHandler*)webView->getClientHandler();
 }
 
+const utf8* wkeGetContentAsMarkup(wkeWebView webView, wkeWebFrameHandle frameId, size_t* size)
+{
+    wke::checkThreadCallIsValid(__FUNCTION__);
+    content::WebPage* page = webView->webPage();
+    if (!page)
+        return nullptr;
+    blink::WebFrame* webFrame = page->getWebFrameFromFrameId(wke::CWebView::wkeWebFrameHandleToFrameId(page, frameId));
+    if (!webFrame)
+        return nullptr;
+    blink::WebString result = webFrame->contentAsMarkup();
+    if (result.isNull() || result.isEmpty())
+        return nullptr;
+
+    std::string resultUtf8 = result.utf8();
+    if (size)
+        *size = resultUtf8.size();
+    return wke::createTempCharString(resultUtf8.c_str(), resultUtf8.size());
+}
+
 const utf8* wkeToString(const wkeString string)
 {
     return wkeGetString(string);
@@ -2054,7 +2079,9 @@ bool checkThreadCallIsValid(const char* funcName)
     output.append(funcName);
     output.append(L"。当前线程id：");
     output.append(String::number(::GetCurrentThreadId()));
-
+    output.append(L"，主线程id：");
+    output.append(String::number(wkeThreadId));
+    
     ::MessageBoxW(nullptr, output.charactersWithNullTermination().data(), L"警告！", MB_OK);
     ::TerminateProcess((HANDLE)-1, 5);
     return false;

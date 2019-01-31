@@ -1439,16 +1439,18 @@ net::WebCookieJarImpl* CWebView::getCookieJar()
     if (!manager)
         return nullptr;
 
-    net::WebCookieJarImpl* result = manager->getShareCookieJar();
+    net::WebCookieJarImpl* netManagerCookie = manager->getShareCookieJar();
     if (!m_webPage)
-        return result;
+        return netManagerCookie;
 
     PassRefPtr<net::PageNetExtraData> extra = m_webPage->getPageNetExtraData();
     if (!extra)
-        return result;
+        return netManagerCookie;
 
-    result = extra->getCookieJar();
-    return result;
+    net::WebCookieJarImpl* pageCookie = extra->getCookieJar();
+    if (!pageCookie)
+        return netManagerCookie;
+    return pageCookie;
 }
 
 CURLSH* CWebView::getCurlShareHandle()

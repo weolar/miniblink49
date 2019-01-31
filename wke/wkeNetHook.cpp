@@ -73,6 +73,11 @@ void wkeNetSetMIMEType(wkeNetJob jobPtr, const char* type)
     job->m_response.setMIMEType(WebString::fromUTF8(type));
 }
 
+// void wkeNetSetMIMETypeToRequest(wkeNetJob jobPtr, const char* type)
+// {
+// 
+// }
+
 const char* wkeNetGetMIMEType(wkeNetJob jobPtr, wkeString mime)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
@@ -85,6 +90,16 @@ const char* wkeNetGetMIMEType(wkeNetJob jobPtr, wkeString mime)
 
     return wke::createTempCharString(contentTypeUtf8.data(), contentTypeUtf8.length());
 }
+
+// const char* wkeNetGetMIMETypeFromRequest(wkeNetJob jobPtr)
+// {
+//     wke::checkThreadCallIsValid(__FUNCTION__);
+//     net::WebURLLoaderInternal* job = (net::WebURLLoaderInternal*)jobPtr;
+//     AtomicString contentType = job->firstRequest()->httpHeaderField(WebString::fromUTF8("Content-Type"));
+//     WTF::CString contentTypeUtf8 = contentType.utf8();
+// 
+//     return wke::createTempCharString(contentTypeUtf8.data(), contentTypeUtf8.length());
+// }
 
 void wkeNetSetData(wkeNetJob jobPtr, void* buf, int len)
 {
@@ -173,7 +188,7 @@ BOOL wkeNetHoldJobToAsynCommit(wkeNetJob jobPtr)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
     net::WebURLLoaderInternal* job = (net::WebURLLoaderInternal*)jobPtr;
-    if (job->m_isRedirection)
+    if (job->m_isRedirection || job->m_isSynchronous)
         return FALSE;
 
     job->m_isWkeNetSetDataBeSetted = false;

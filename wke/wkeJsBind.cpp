@@ -16,6 +16,7 @@
 #include "third_party/WebKit/public/web/WebLocalFrame.h"
 #include "content/browser/WebFrameClientImpl.h"
 #include "content/browser/WebPage.h"
+#include "content/web_impl_win/WebThreadImpl.h"
 #include "wke/wke.h"
 #include "wke/wkeJsBind.h"
 #include "wke/wkeWebView.h"
@@ -2008,10 +2009,14 @@ void onReleaseGlobalObject(content::WebFrameClientImpl* client, blink::WebLocalF
 AutoDisableFreeV8TempObejct::AutoDisableFreeV8TempObejct()
 {
     ++m_disableCount;
+    content::WebThreadImpl* threadImpl = (content::WebThreadImpl*)blink::Platform::current()->currentThread();
+    threadImpl->disableScheduler();
 }
 
 AutoDisableFreeV8TempObejct::~AutoDisableFreeV8TempObejct()
 {
+    content::WebThreadImpl* threadImpl = (content::WebThreadImpl*)blink::Platform::current()->currentThread();
+    threadImpl->enableScheduler();
     --m_disableCount;
 }
 
