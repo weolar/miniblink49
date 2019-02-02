@@ -35,7 +35,7 @@ struct DrawToCanvasProperties : public DrawProperties {
         masksToBounds = true;
         drawsContent = true;
         opaque = true;
-        opacity = 0;
+        opacity = 1.0f; //和WebLayerImpl初始化值保持一样，否则根节点可能因为不会被updata而显示不出来。devtools里的高亮场景会出现这个问题
         backgroundColor = s_kBgColor;
         useParentBackfaceVisibility = false;
         isDoubleSided = false;
