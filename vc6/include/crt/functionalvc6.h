@@ -36,7 +36,7 @@ template<typename T, typename R, typename... Args>
 class functionWrap : public functionWrapBase<R(Args...)> {
 public:
     functionWrap(const T&& obj, void* parent)
-        : functionWrapBase(parent)
+        : functionWrapBase<R(Args...)>(parent)
         , m_obj(new T(obj)) {}
 
     functionWrap(const functionWrap& other) = delete;
@@ -61,9 +61,9 @@ public:
     }
 
 private:
-    functionWrap(const T* obj, void* parent) : functionWrapBase(parent) {
-        m_obj = obj;
-    }
+    functionWrap(const T* obj, void* parent) 
+        : functionWrapBase<R(Args...)>(parent)
+        , m_obj(obj) { }
 
     const T* m_obj;
 };
