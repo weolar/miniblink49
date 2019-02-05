@@ -512,7 +512,7 @@ bool CompositingLayer::drawToCanvasChildren(LayerTreeHost* host, SkCanvas* canva
     for (size_t i = 0; i < children().size(); ++i) {
         CompositingLayer* child = children()[i];
 
-        const SkMatrix44& currentTransform = child->drawToCanvasProperties()->currentTransform;
+        //const SkMatrix44& currentTransform = child->drawToCanvasProperties()->currentTransform;
         const SkMatrix44& transformToAncestor = child->drawToCanvasProperties()->screenSpaceTransform;
 
         SkMatrix matrixToAncestor;
