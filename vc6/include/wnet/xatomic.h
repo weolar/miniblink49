@@ -10,6 +10,8 @@
 #include <intrin.h>
 #include <xutility>
 
+#include <intrinvc6.h>
+
 #pragma pack(push,_CRT_PACKING)
 #pragma warning(push,3)
 #pragma push_macro("new")

@@ -2640,13 +2640,13 @@ _bittestandreset (
 
 BOOLEAN
 _interlockedbittestandset (
-    IN LONG *Base,
+    IN volatile LONG *Base,
     IN LONG Offset
     );
 
 BOOLEAN
 _interlockedbittestandreset (
-    IN LONG *Base,
+    IN volatile LONG *Base,
     IN LONG Offset
     );
 
