@@ -48,7 +48,7 @@ public:
 			tie()->flush();
 		return (good()); }
 	void osfx()
-		{if (flags() & ios_base:unitbuf)
+		{if (flags() & ios_base::unitbuf)
 			flush(); }
 	_Myt& operator<<(_Myt& (__cdecl *_F)(_Myt&))
 		{return ((*_F)(*this)); }
