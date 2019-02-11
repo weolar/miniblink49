@@ -76,7 +76,7 @@ public:
 		if (_Ok)
 			{const _Nput& _Fac = _USE(getloc(), _Nput);
 			fmtflags _Bfl = flags() & basefield;
-			long _Y = (_Bfl == oct || _Bfl == hex)
+			long _Y = (_Bfl == ios_base::oct || _Bfl == ios_base::hex)
 				? (long)(unsigned short)_X : (long)_X;
 			_TRY_IO_BEGIN
 			if (_Fac.put(_Iter(rdbuf()), *this,
@@ -103,7 +103,7 @@ public:
 		if (_Ok)
 			{const _Nput& _Fac = _USE(getloc(), _Nput);
 			fmtflags _Bfl = flags() & basefield;
-			long _Y = (_Bfl == oct || _Bfl == hex)
+			long _Y = (_Bfl == ios_base::oct || _Bfl == ios_base::hex)
 				? (long)(unsigned int)_X : (long)_X;
 			_TRY_IO_BEGIN
 			if (_Fac.put(_Iter(rdbuf()), *this,
@@ -382,6 +382,7 @@ template<class _E, class _Tr> inline
 	basic_ostream<_E, _Tr>& __cdecl operator<<(
 		basic_ostream<_E, _Tr>& _O, const signed short *_X)
 	{return (_O << (const wchar_t *)_X); }
+
 		// MANIPULATORS
 template<class _E, class _Tr> inline
 	basic_ostream<_E, _Tr>&
@@ -432,18 +433,32 @@ _CRTIMP inline basic_ostream<wchar_t, char_traits<wchar_t> >&
 #ifdef _DLL
 #pragma warning(disable:4231) /* the extern before template is a non-standard extension */
 
-extern template /*_CRTIMP*/ basic_ostream<char, char_traits<char> >& __cdecl operator<<(
-       basic_ostream<char, char_traits<char> >&, const char *);
-extern template /*_CRTIMP*/ basic_ostream<char, char_traits<char> >& __cdecl operator<<(
-       basic_ostream<char, char_traits<char> >&, char);
+// extern template /*_CRTIMP*/ basic_ostream<char, char_traits<char> >& __cdecl operator<<(
+//        basic_ostream<char, char_traits<char> >&, const char *);
+template<>
+basic_ostream<char, char_traits<char> >& __cdecl operator << <char, char_traits<char> >(
+    basic_ostream<char, char_traits<char> > & os, char const * b);
+
+// extern template /*_CRTIMP*/ basic_ostream<char, char_traits<char> >& __cdecl operator<<(
+//        basic_ostream<char, char_traits<char> >&, char);
+template<>
+basic_ostream<char, char_traits<char> > & __cdecl operator<< <char, char_traits<char> >(basic_ostream<char, char_traits<char> > & a, char b);
+
 extern template /*_CRTIMP*/ basic_ostream<char, char_traits<char> >& __cdecl operator<<(
        basic_ostream<char, char_traits<char> >&, const signed char *);
 extern template /*_CRTIMP*/ basic_ostream<char, char_traits<char> >& __cdecl operator<<(
        basic_ostream<char, char_traits<char> >&, const signed char);
-extern template /*_CRTIMP*/ basic_ostream<char, char_traits<char> >& __cdecl operator<<(
-       basic_ostream<char, char_traits<char> >&, const unsigned char *);
-extern template /*_CRTIMP*/ basic_ostream<char, char_traits<char> >& __cdecl operator<<(
-       basic_ostream<char, char_traits<char> >&, const unsigned char);
+
+// extern template /*_CRTIMP*/ basic_ostream<char, char_traits<char> >& __cdecl operator<<(
+//        basic_ostream<char, char_traits<char> >&, const unsigned char *);
+template<>
+basic_ostream<char, char_traits<char> > & __cdecl operator<< <char, char_traits<char> >(basic_ostream<char, char_traits<char> > & os, unsigned char const * str);
+
+// extern template /*_CRTIMP*/ basic_ostream<char, char_traits<char> >& __cdecl operator<<(
+//        basic_ostream<char, char_traits<char> >&, const unsigned char);
+template<>
+basic_ostream<char, char_traits<char> > & __cdecl operator<< <char, char_traits<char> >(basic_ostream<char, char_traits<char> > & os, unsigned char c);
+
 extern template /*_CRTIMP*/ basic_ostream<wchar_t, char_traits<wchar_t> >& __cdecl operator<<(
        basic_ostream<wchar_t, char_traits<wchar_t> >&, const wchar_t *);
 extern template /*_CRTIMP*/ basic_ostream<wchar_t, char_traits<wchar_t> >& __cdecl operator<<(
@@ -451,8 +466,14 @@ extern template /*_CRTIMP*/ basic_ostream<wchar_t, char_traits<wchar_t> >& __cde
 extern template /*_CRTIMP*/ basic_ostream<wchar_t, char_traits<wchar_t> >& __cdecl operator<<(
        basic_ostream<wchar_t, char_traits<wchar_t> >&, const signed short *);
 
-basic_ostream<char, char_traits<char> > & __cdecl operator<< (basic_ostream<char, char_traits<char> > & a, __int64 b);
-basic_ostream<char, char_traits<char> > & __cdecl operator << (basic_ostream<char, char_traits<char> >& a, unsigned __int64 b);
+// basic_ostream<char, char_traits<char> > & __cdecl operator << (basic_ostream<char, char_traits<char> >& a, __int64 b);
+// basic_ostream<char, char_traits<char> > & __cdecl operator << (basic_ostream<char, char_traits<char> >& a, unsigned __int64 b);
+
+template<class _E, class _Tr>
+basic_ostream<_E, _Tr> & __cdecl operator<< (basic_ostream<_E, _Tr> & _O, __int64 _C);
+
+template<class _E, class _Tr>
+basic_ostream<_E, _Tr> & __cdecl operator<< (basic_ostream<_E, _Tr> & _O, unsigned __int64 _C);
 
 #pragma warning(default:4231) /* restore previous warning */
 #endif		// _DLL

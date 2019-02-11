@@ -134,7 +134,7 @@ template<class _E>
                 {return (_C != eof() ? _C : !eof()); }
         };
                 // STRUCT char_traits<wchar_t>
-template<> struct _CRTIMP char_traits<wchar_t> {
+template<> struct /*_CRTIMP*/ char_traits<wchar_t> {
         typedef wchar_t _E;
         typedef _E char_type;   // for overloads
         typedef wint_t int_type;

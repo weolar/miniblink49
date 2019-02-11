@@ -44,6 +44,15 @@ typedef unsigned long long uint_fast64_t;
 typedef long long          intmax_t;
 typedef unsigned long long uintmax_t;
 
+#ifndef _UINTPTR_T_DEFINED
+#ifdef  _WIN64
+typedef unsigned __int64    uintptr_t;
+#else
+typedef unsigned int   uintptr_t;
+#endif
+#define _UINTPTR_T_DEFINED
+#endif
+
 typedef int intptr_t;
 typedef unsigned short uint16_t;
 

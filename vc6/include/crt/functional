@@ -81,6 +81,7 @@ template<class _Ty>
 	bool operator()(const _Ty& _X, const _Ty& _Y) const
 		{return (_X < _Y); }
 	};
+
 		// TEMPLATE STRUCT greater_equal
 template<class _Ty>
 	struct greater_equal : binary_function<_Ty, _Ty, bool> {
@@ -185,8 +186,7 @@ protected:
 		// TEMPLATE FUNCTION bind2nd
 template<class _Bfn, class _Ty> inline
 	binder2nd<_Bfn> bind2nd(const _Bfn& _X, const _Ty& _Y)
-		{return (binder2nd<_Bfn>(_X,
-			_Bfn::second_argument_type(_Y))); }
+		{return (binder2nd<_Bfn>(_X, typename _Bfn::second_argument_type(_Y))); }
 		// TEMPLATE CLASS pointer_to_unary_function
 template<class _A, class _R>
 	class pointer_to_unary_function

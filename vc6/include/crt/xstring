@@ -55,7 +55,7 @@ public:
 	typedef _Tr traits_type;
 	typedef _A allocator_type;
 	enum _Mref {_FROZEN = 255};
-	static const size_type npos;
+	static const size_type npos = (size_type)-1;
 	_Myt& operator=(const _Myt& _X)
 		{return (assign(_X)); }
 	_Myt& operator=(const _E *_S)
@@ -591,15 +591,15 @@ private:
 	_E *_Ptr;
 	size_type _Len, _Res;
 	};
-template<class _E, class _Tr, class _A>
-	const typename basic_string<_E, _Tr, _A>::size_type
-		basic_string<_E, _Tr, _A>::npos = (size_type)-1;
+// template<class _E, class _Tr, class _A>
+// 	const typename basic_string<_E, _Tr, _A>::size_type
+// 		basic_string<_E, _Tr, _A>::npos = (size_type)-1;
 
 #ifdef	_DLL
 #pragma warning(disable:4231) /* the extern before template is a non-standard extension */
 
 extern template class _CRTIMP basic_string<char, char_traits<char>, allocator<char> >;
-extern template class _CRTIMP basic_string<wchar_t, char_traits<wchar_t>, allocator<wchar_t> >;
+//extern template class _CRTIMP basic_string<wchar_t, char_traits<wchar_t>, allocator<wchar_t> >;
 
 #pragma warning(default:4231) /* restore previous warning */
 #endif		// _DLL

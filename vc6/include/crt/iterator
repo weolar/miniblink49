@@ -139,7 +139,7 @@ protected:
 	};
 template<class _C, class _XI> inline
 	insert_iterator<_C> inserter(_C& _X, _XI _I)
-	{return (insert_iterator<_C>(_X, _C::iterator(_I))); }
+	{return (typename insert_iterator<_C>(_X, typename _C::iterator(_I))); }
 		// TEMPLATE CLASS istream_iterator
 template<class _U, class _E = char,
 	class _Tr = char_traits<_E> >

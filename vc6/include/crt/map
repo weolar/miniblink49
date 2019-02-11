@@ -143,18 +143,17 @@ public:
     }
 
     iterator insert(iterator _P, const value_type& _X) {
-        return (_Tr.insert((_Imp::iterator&)_P, _X));
+        return (_Tr.insert(/*(_Imp::iterator&)*/_P, _X));
     }
     void insert(_It _F, _It _L) {
         for (; _F != _L; ++_F)
             _Tr.insert(*_F);
     }
     iterator erase(iterator _P) {
-        return (_Tr.erase((_Imp::iterator&)_P));
+        return (_Tr.erase(/*(_Imp::iterator&)*/_P));
     }
     iterator erase(iterator _F, iterator _L) {
-        return (_Tr.erase((_Imp::iterator&)_F,
-            (_Imp::iterator&)_L));
+        return (_Tr.erase(/*(_Imp::iterator&)*/_F, /*(_Imp::iterator&)*/_L));
     }
     size_type erase(const _K& _Kv) {
         return (_Tr.erase(_Kv));
@@ -357,18 +356,17 @@ public:
         return (_Tr.insert(_STD move(value_type(_X))).first);
     }
     iterator insert(iterator _P, const value_type& _X) {
-        return (_Tr.insert((_Imp::iterator&)_P, _X));
+        return (_Tr.insert(/*(_Imp::iterator&)*/_P, _X));
     }
     void insert(_It _F, _It _L) {
         for (; _F != _L; ++_F)
             _Tr.insert(*_F);
     }
     iterator erase(iterator _P) {
-        return (_Tr.erase((_Imp::iterator&)_P));
+        return (_Tr.erase(/*(_Imp::iterator&)*/_P));
     }
     iterator erase(iterator _F, iterator _L) {
-        return (_Tr.erase((_Imp::iterator&)_F,
-            (_Imp::iterator&)_L));
+        return (_Tr.erase(/*(_Imp::iterator&)*/_F, /*(_Imp::iterator&)*/_L));
     }
     size_type erase(const _K& _Kv = _K()) {
         return (_Tr.erase(_Kv));

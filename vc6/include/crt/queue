@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <deque>
 #include <vector>
+#include <functional>
 
 #ifdef  _MSC_VER
 #pragma pack(push,8)
@@ -74,9 +75,9 @@ public:
 protected:
 	_C c;
 	};
+
 		// TEMPLATE CLASS priority_queue
-template<class _Ty, class _C = vector<_Ty>,
-	class _Pr = less<_C::value_type> >
+template<class _Ty, class _C = vector<_Ty>, class _Pr = less<_C::value_type> >
 	class priority_queue {
 public:
 	typedef typename _C::allocator_type allocator_type;
