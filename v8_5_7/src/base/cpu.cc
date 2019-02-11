@@ -41,7 +41,7 @@
 #include "src/base/win32-headers.h"  // NOLINT
 #endif
 
-#if USING_VC6RT == 1
+#if USING_VC6RT == 1 && !defined __clang__
 void __cpuid(INT32 CPUInfo[4], INT32 InfoType)
 {
 	INT32 ECXValue = 0;

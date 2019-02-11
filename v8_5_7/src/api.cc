@@ -7317,7 +7317,8 @@ WasmCompiledModule::SerializedModule WasmCompiledModule::Serialize() {
   size_t size = static_cast<size_t>(script_data->length());
 #if USING_VC6RT == 1
   SerializedModule result;
-  result.first.swap(std::unique_ptr<const uint8_t[]>(script_data->data()));
+  std::unique_ptr<const uint8_t[]> script_data_ptr(script_data->data());
+  result.first.swap(script_data_ptr);
   result.second = size;
   return result;
 #else
