@@ -461,8 +461,8 @@ WebData WebClipboardImpl::readImage(Buffer buffer)
     }
     const void* bitmapBits = reinterpret_cast<const char*>(bitmap) + bitmap->bmiHeader.biSize + colorTableLength * sizeof(RGBQUAD);
 
-    int width = std::abs(bitmap->bmiHeader.biWidth);
-    int height = std::abs(bitmap->bmiHeader.biHeight);
+    int width = std::abs((int)bitmap->bmiHeader.biWidth);
+    int height = std::abs((int)bitmap->bmiHeader.biHeight);
 
     WTF::PassOwnPtr<SkCanvas> canvas = WTF::adoptPtr(skia::CreatePlatformCanvas(width, height, false));
     skia::BitmapPlatformDevice* device = (skia::BitmapPlatformDevice*)skia::GetPlatformDevice(skia::GetTopDevice(*canvas));

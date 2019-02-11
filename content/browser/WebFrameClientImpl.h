@@ -29,7 +29,7 @@ public:
 
     virtual void frameDetached(WebFrame* child, DetachType) override;
 
-    void loadURLExternally(WebLocalFrame*, const WebURLRequest&, WebNavigationPolicy, const WebString& downloadName) 
+    virtual void loadURLExternally(WebLocalFrame*, const WebURLRequest&, WebNavigationPolicy, const WebString& downloadName) override
     {
         OutputDebugStringA(__FUNCTION__);
     }

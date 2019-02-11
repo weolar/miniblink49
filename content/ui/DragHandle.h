@@ -24,6 +24,7 @@ public:
         std::function<void(void)>&& notifOnLeaveDrag,
         std::function<void(void)>&& notifOnDragging
         );
+    ~DragHandle() {}
 
     void setViewWindow(HWND viewWindow, blink::WebViewImpl* webViewImpl);
 

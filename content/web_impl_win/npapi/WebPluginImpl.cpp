@@ -1426,4 +1426,17 @@ void WebPluginImpl::didFailLoadingFrameRequest(const WebURL&, void* notifyData, 
     DebugBreak();
 }
 
+int WebPluginImpl::printBegin(const blink::WebPrintParams& printParams)
+{ 
+    return 0;
+}
+
+void WebPluginImpl::printPage(int pageNumber, blink::WebCanvas* canvas)
+{
+}
+
+void WebPluginImpl::printEnd()
+{
+}
+
 } // namespace content

@@ -1,6 +1,6 @@
 #include "content/devtools/DevToolsProtocolDispatcher.h"
 
-#include "content/devtools/DevtoolsClient.h"
+#include "content/devtools/DevToolsClient.h"
 #include "content/devtools/DevToolsMgr.h"
 #include "base/values.h"
 #include "base/json/json_writer.h"

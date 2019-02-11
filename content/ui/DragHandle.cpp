@@ -267,7 +267,7 @@ void DragHandle::startDragging(blink::WebLocalFrame* frame,
     const blink::WebImage& image,
     const blink::WebPoint& dragImageOffset)
 {
-    if (!m_webViewImpl)
+    if (!m_webViewImpl || !wke::g_isSetDragDropEnable)
         return;
 
     m_notifOnEnterDrag();

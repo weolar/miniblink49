@@ -1,4 +1,4 @@
-#include "base/macros.h"
+ï»¿#include "base/macros.h"
 
 namespace content {
 
@@ -10,37 +10,37 @@ blink::WebString queryLocalizedStringFromResources(blink::WebLocalizedString::Na
     blink::WebString out;
     switch (name) {
     case blink::WebLocalizedString::BlockedPluginText:
-        out = MAKE_UCHAR_TO_WEBSTRING(L"×èÈû²å¼ş");
+        out = MAKE_UCHAR_TO_WEBSTRING(L"é˜»å¡æ’ä»¶");
         break;
     case blink::WebLocalizedString::FileButtonChooseFileLabel:
-        out = MAKE_UCHAR_TO_WEBSTRING(L"Ñ¡ÔñÎÄ¼ş");
+        out = MAKE_UCHAR_TO_WEBSTRING(L"é€‰æ‹©æ–‡ä»¶");
         break;
     case blink::WebLocalizedString::FileButtonChooseMultipleFilesLabel:
-        out = MAKE_UCHAR_TO_WEBSTRING(L"Ñ¡Ôñ¶à¸öÎÄ¼ş");
+        out = MAKE_UCHAR_TO_WEBSTRING(L"é€‰æ‹©å¤šä¸ªæ–‡ä»¶");
         break;
     case blink::WebLocalizedString::FileButtonNoFileSelectedLabel:
-        out = MAKE_UCHAR_TO_WEBSTRING(L"Ã»ÓĞÎÄ¼ş±»Ñ¡ÖĞ");
+        out = MAKE_UCHAR_TO_WEBSTRING(L"æ²¡æœ‰æ–‡ä»¶è¢«é€‰ä¸­");
         break;
     case blink::WebLocalizedString::InputElementAltText:
         out = MAKE_UCHAR_TO_WEBSTRING(L"AltText");
         break;
     case blink::WebLocalizedString::MissingPluginText:
-        out = MAKE_UCHAR_TO_WEBSTRING(L"È±ÉÙ²å¼ş");
+        out = MAKE_UCHAR_TO_WEBSTRING(L"ç¼ºå°‘æ’ä»¶");
         break;
     case blink::WebLocalizedString::MultipleFileUploadText:
-        out = MAKE_UCHAR_TO_WEBSTRING(L"ÉÏ´«ÎÄ¼ş");
+        out = MAKE_UCHAR_TO_WEBSTRING(L"ä¸Šä¼ æ–‡ä»¶");
         break;
     case blink::WebLocalizedString::OtherColorLabel:
-        out = MAKE_UCHAR_TO_WEBSTRING(L"ÆäËûÑÕÉ«");
+        out = MAKE_UCHAR_TO_WEBSTRING(L"å…¶ä»–é¢œè‰²");
         break;
     case blink::WebLocalizedString::OtherDateLabel:
-        out = MAKE_UCHAR_TO_WEBSTRING(L"ÆäËûÈÕÆÚ");
+        out = MAKE_UCHAR_TO_WEBSTRING(L"å…¶ä»–æ—¥æœŸ");
         break;
     case blink::WebLocalizedString::OtherMonthLabel:
-        out = MAKE_UCHAR_TO_WEBSTRING(L"ÆäËûÔÂ·İ");
+        out = MAKE_UCHAR_TO_WEBSTRING(L"å…¶ä»–æœˆä»½");
         break;
     case blink::WebLocalizedString::ResetButtonDefaultLabel:
-        out = MAKE_UCHAR_TO_WEBSTRING(L"ÖØÖÃ");
+        out = MAKE_UCHAR_TO_WEBSTRING(L"é‡ç½®");
         break;
     case blink::WebLocalizedString::SearchableIndexIntroduction:
         out = MAKE_UCHAR_TO_WEBSTRING(L"SearchableIndexIntroduction");
@@ -49,16 +49,16 @@ blink::WebString queryLocalizedStringFromResources(blink::WebLocalizedString::Na
         out = MAKE_UCHAR_TO_WEBSTRING(L"SearchMenuClearRecentSearchesText");
         break;
     case blink::WebLocalizedString::SelectMenuListText:
-        out = MAKE_UCHAR_TO_WEBSTRING(L"Ñ¡Ôñ²Ëµ¥");
+        out = MAKE_UCHAR_TO_WEBSTRING(L"é€‰æ‹©èœå•");
         break;
     case blink::WebLocalizedString::SubmitButtonDefaultLabel:
-        out = MAKE_UCHAR_TO_WEBSTRING(L"Ìá½»");
+        out = MAKE_UCHAR_TO_WEBSTRING(L"æäº¤");
         break;
     case blink::WebLocalizedString::ThisMonthButtonLabel:
-        out = MAKE_UCHAR_TO_WEBSTRING(L"±¾ÔÂ");
+        out = MAKE_UCHAR_TO_WEBSTRING(L"æœ¬æœˆ");
         break;
     case blink::WebLocalizedString::ThisWeekButtonLabel:
-        out = MAKE_UCHAR_TO_WEBSTRING(L"±¾ÖÜ");
+        out = MAKE_UCHAR_TO_WEBSTRING(L"æœ¬å‘¨");
         break;
     }
 

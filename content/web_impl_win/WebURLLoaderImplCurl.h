@@ -9,8 +9,8 @@
 #include "third_party/WebKit/Source/platform/Timer.h"
 
 namespace blink {
-    WebURLRequest;
-    WebURLLoaderClient;
+class WebURLRequest;
+class WebURLLoaderClient;
 }
 
 namespace net {

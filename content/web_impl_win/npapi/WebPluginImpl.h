@@ -162,11 +162,9 @@ public:
     virtual bool isPrintScalingDisabled() { return false; }
     virtual bool getPrintPresetOptionsFromDocument(blink::WebPrintPresetOptions*) { return false; }
 
-    virtual int printBegin(const blink::WebPrintParams& printParams) { return 0; }
-
-    virtual void printPage(int pageNumber, blink::WebCanvas* canvas) { }
-
-    virtual void printEnd() { }
+    virtual int printBegin(const blink::WebPrintParams& printParams) override;
+    virtual void printPage(int pageNumber, blink::WebCanvas* canvas) override;
+    virtual void printEnd() override;
 
     virtual bool hasSelection() const { return false; }
     virtual blink::WebString selectionAsText() const { return blink::WebString(); }
@@ -186,10 +184,6 @@ public:
     virtual void selectFindResult(bool forward) { }
     virtual void stopFind() { }
 
-    enum RotationType {
-        RotationType90Clockwise,
-        RotationType90Counterclockwise
-    };
     virtual bool canRotateView() { return false; }
     virtual void rotateView(RotationType type) { }
 

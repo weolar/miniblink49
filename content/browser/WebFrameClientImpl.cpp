@@ -635,7 +635,7 @@ void WebFrameClientImpl::willSendRequest(WebLocalFrame* webFrame, unsigned ident
         return;
 
     net::RequestExtraData* requestExtraData = new net::RequestExtraData();
-    requestExtraData->frame = webFrame; // 两种模式都需要此对象
+
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
     requestExtraData->page = m_webPage;
 #endif
@@ -643,6 +643,8 @@ void WebFrameClientImpl::willSendRequest(WebLocalFrame* webFrame, unsigned ident
 #if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
     requestExtraData->browser = m_webPage->browser();
 #endif
+
+    requestExtraData->setFrame(webFrame); // 两种模式都需要此对象
 
     request.setExtraData(requestExtraData);
 

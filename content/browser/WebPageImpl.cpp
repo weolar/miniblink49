@@ -429,7 +429,7 @@ static WebView* createWkeViewDefault(HWND parent, const WebString& name, const W
     WTF::String nameString = name;
     Vector<UChar> nameBuf = WTF::ensureUTF16UChar(nameString, true);
 
-    window->create(parent, WS_OVERLAPPEDWINDOW | WS_VISIBLE, 0, 100, 100, 570, 570);
+    window->createWindow(parent, WS_OVERLAPPEDWINDOW | WS_VISIBLE, 0, 100, 100, 570, 570);
 
     WebPage* webPage = window->webPage();
     if (!webPage)
@@ -768,7 +768,7 @@ void WebPageImpl::executeMainFrame()
         return;
     atomicIncrement(&m_executeMainFrameCount);
 
-    double lastFrameTimeMonotonic = WTF::monotonicallyIncreasingTime();
+    //double lastFrameTimeMonotonic = WTF::monotonicallyIncreasingTime();
 
     if (!m_layerTreeHost->canRecordActions()) {
         setNeedsCommitAndNotLayout();
@@ -1016,8 +1016,9 @@ void WebPageImpl::drawLayeredWindow(HWND hWnd, SkCanvas* canvas, HDC hdc, const 
 {
     RECT rtWnd;
     ::GetWindowRect(hWnd, &rtWnd);
-    IntRect winodwRect = winRectToIntRect(rtWnd);
-    if (skia::DrawToNativeLayeredContext(canvas, hdc, &intRectToWinRect(paintRect), &rtWnd))
+
+    RECT rc = blink::intRectToWinRect(paintRect);
+    if (skia::DrawToNativeLayeredContext(canvas, hdc, &rc, &rtWnd))
         return;
     
     BITMAP bmp = { 0 };
@@ -1121,7 +1122,8 @@ void WebPageImpl::paintToMemoryCanvasInUiThread(SkCanvas* canvas, const IntRect&
         if (m_layerTreeHost->getHasTransparentBackground()) {
             drawLayeredWindow(hWnd, canvas, hdc, paintRect, hMemoryDC);
         } else {
-            skia::DrawToNativeContext(canvas, hdc, paintRect.x(), paintRect.y(), &intRectToWinRect(paintRect));
+            RECT rc = blink::intRectToWinRect(paintRect);
+            skia::DrawToNativeContext(canvas, hdc, paintRect.x(), paintRect.y(), &rc);
         }
 
 #if 0
@@ -1347,6 +1349,8 @@ void WebPageImpl::fireCursorEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM
         m_platformCursor = createSharedCursorImpl(m_cursor);
         hCur = m_platformCursor;
         break;
+    default:
+        break;
     }
 
     if (hCur) {
@@ -1466,8 +1470,6 @@ LRESULT WebPageImpl::fireMouseEvent(HWND hWnd, UINT message, WPARAM wParam, LPAR
     freeV8TempObejctOnOneFrameBefore();
     AutoRecordActions autoRecordActions(this, m_layerTreeHost, false);
     blink::UserGestureIndicator gestureIndicator(blink::DefinitelyProcessingUserGesture);
-
-    bool handle = false;
 
     if (blink::RuntimeEnabledFeatures::touchEnabled())
         fireTouchEvent(hWnd, message, wParam, lParam);

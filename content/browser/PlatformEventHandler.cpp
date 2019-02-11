@@ -71,13 +71,11 @@ static void buildModifiers(WebInputEvent* evt)
 
 WebKeyboardEvent PlatformEventHandler::buildKeyboardEvent(WebInputEvent::Type type, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    unsigned int virtualKeyCode = wParam;
     unsigned int flags = 0;
     if (HIWORD(lParam) & KF_REPEAT)
         flags |= KF_REPEAT;
     if (HIWORD(lParam) & KF_EXTENDED)
         flags |= KF_REPEAT;
-    bool systemKey = false;
 
     LPARAM keyData = MAKELPARAM(0, (WORD)flags);
     WebKeyboardEvent keyEvent;

@@ -34,6 +34,7 @@ public:
         m_hWnd = CreateWindowExW(WS_EX_TOOLWINDOW, kContextMenuClassName, kContextMenuClassName, WS_POPUP, 
             CW_USEDEFAULT, CW_USEDEFAULT, 1, 1, HWND_DESKTOP, NULL, nullptr, this);
         ::SetPropW(m_hWnd, kContextMenuClassName, (HANDLE)this);
+        ::SetForegroundWindow(m_hWnd);
     }
 
     ~ContextMenu()

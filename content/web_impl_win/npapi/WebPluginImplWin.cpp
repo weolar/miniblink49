@@ -618,6 +618,8 @@ bool WebPluginImpl::handleMouseEvent(const blink::WebMouseEvent& evt)
             case blink::WebMouseEvent::Button::ButtonRight:
                 npEvent.wParam |= MK_RBUTTON;
                 break;
+            case blink::WebMouseEvent::Button::ButtonNone:
+                break;
             }
         }
     } else if (evt.type == blink::WebInputEvent::Type::MouseDown) {

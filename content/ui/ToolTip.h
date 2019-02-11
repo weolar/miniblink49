@@ -158,7 +158,7 @@ private:
 
     bool isNearPos(const POINT& a, const POINT& b)
     {
-        return std::abs(a.x - b.x) + std::abs(a.y - b.y) < 15;
+        return std::abs((int)(a.x - b.x)) + std::abs((int)(a.y - b.y)) < 15;
     }
 
     void delayShowTimerFired(blink::Timer<ToolTip>*)
