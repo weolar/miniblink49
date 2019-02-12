@@ -256,12 +256,12 @@ public:
     virtual void run() override
     {
 
-        DWORD nowTime = (DWORD)(WTF::currentTimeMS() * 100);
+        //DWORD nowTime = (DWORD)(WTF::currentTimeMS() * 100);
         raster();
         releaseRource();
         g_rasterTaskCount++;
 
-        DWORD nowTime2 = (DWORD)(WTF::currentTimeMS() * 100);
+        //DWORD nowTime2 = (DWORD)(WTF::currentTimeMS() * 100);
         
 //         String output = String::format("RasterTask.run: %d\n", nowTime2 - nowTime);
 //         OutputDebugStringA(output.utf8().data());
