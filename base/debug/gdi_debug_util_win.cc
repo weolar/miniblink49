@@ -16,60 +16,60 @@
 
 namespace {
 
-void CollectChildGDIUsageAndDie(DWORD parent_pid) {
-  DebugBreak();
-#if 0
-  HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0) ;
-  if(snapshot == INVALID_HANDLE_VALUE)
-    CHECK(false);
-
-  int child_count = 0;
-  base::debug::Alias(&child_count);
-  int peak_gdi_count = 0;
-  base::debug::Alias(&peak_gdi_count);
-  int sum_gdi_count = 0;
-  base::debug::Alias(&sum_gdi_count);
-  int sum_user_count = 0;
-  base::debug::Alias(&sum_user_count);
-
-  PROCESSENTRY32 proc_entry = {0};
-  proc_entry.dwSize = sizeof(PROCESSENTRY32) ;
-  if(!Process32First(snapshot, &proc_entry))
-    CHECK(false);
-
-  do {
-    if (parent_pid != proc_entry.th32ParentProcessID)
-      continue;
-
-    // Got a child process. Compute GDI usage.
-//     base::win::ScopedHandle process(
-//         ::OpenProcess(PROCESS_QUERY_INFORMATION,
-//                       FALSE,
-//                       proc_entry.th32ParentProcessID));
-    HANDLE process = ::OpenProcess(PROCESS_QUERY_INFORMATION,
-        FALSE, proc_entry.th32ParentProcessID);
-    if (!process || (INVALID_HANDLE_VALUE) == process)
-        continue;
-//     if (!process)
+// void CollectChildGDIUsageAndDie(DWORD parent_pid) {
+//   DebugBreak();
+// #if 0
+//   HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0) ;
+//   if(snapshot == INVALID_HANDLE_VALUE)
+//     CHECK(false);
+// 
+//   int child_count = 0;
+//   base::debug::Alias(&child_count);
+//   int peak_gdi_count = 0;
+//   base::debug::Alias(&peak_gdi_count);
+//   int sum_gdi_count = 0;
+//   base::debug::Alias(&sum_gdi_count);
+//   int sum_user_count = 0;
+//   base::debug::Alias(&sum_user_count);
+// 
+//   PROCESSENTRY32 proc_entry = {0};
+//   proc_entry.dwSize = sizeof(PROCESSENTRY32) ;
+//   if(!Process32First(snapshot, &proc_entry))
+//     CHECK(false);
+// 
+//   do {
+//     if (parent_pid != proc_entry.th32ParentProcessID)
 //       continue;
-
-    int num_gdi_handles = ::GetGuiResources(process/*.Get()*/, GR_GDIOBJECTS);
-    int num_user_handles = ::GetGuiResources(process/*.Get()*/, GR_USEROBJECTS);
-    ::CloseHandle(process);
-
-    // Compute sum and peak counts.
-    ++child_count;
-    sum_user_count += num_user_handles;
-    sum_gdi_count += num_gdi_handles;
-    if (peak_gdi_count < num_gdi_handles)
-      peak_gdi_count = num_gdi_handles;
-
-  } while(Process32Next(snapshot, &proc_entry));
-
-  ::CloseHandle(snapshot) ;
-  CHECK(false);
-#endif
-}
+// 
+//     // Got a child process. Compute GDI usage.
+// //     base::win::ScopedHandle process(
+// //         ::OpenProcess(PROCESS_QUERY_INFORMATION,
+// //                       FALSE,
+// //                       proc_entry.th32ParentProcessID));
+//     HANDLE process = ::OpenProcess(PROCESS_QUERY_INFORMATION,
+//         FALSE, proc_entry.th32ParentProcessID);
+//     if (!process || (INVALID_HANDLE_VALUE) == process)
+//         continue;
+// //     if (!process)
+// //       continue;
+// 
+//     int num_gdi_handles = ::GetGuiResources(process/*.Get()*/, GR_GDIOBJECTS);
+//     int num_user_handles = ::GetGuiResources(process/*.Get()*/, GR_USEROBJECTS);
+//     ::CloseHandle(process);
+// 
+//     // Compute sum and peak counts.
+//     ++child_count;
+//     sum_user_count += num_user_handles;
+//     sum_gdi_count += num_gdi_handles;
+//     if (peak_gdi_count < num_gdi_handles)
+//       peak_gdi_count = num_gdi_handles;
+// 
+//   } while(Process32Next(snapshot, &proc_entry));
+// 
+//   ::CloseHandle(snapshot) ;
+//   CHECK(false);
+// #endif
+// }
 
 }  // namespace
 

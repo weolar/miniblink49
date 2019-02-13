@@ -30,4 +30,4 @@
 #define DCHECK_IS_ON() 1
 #endif
 
-#endif BASE_LOGGING_H_
+#endif // BASE_LOGGING_H_

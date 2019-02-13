@@ -3,7 +3,7 @@
 
 #include <windows.h>
 
-extern "C" void __cdecl free(void *);
+extern "C" _CRTIMP void __cdecl free(void *);
 
 void __cdecl operator delete(void* p, unsigned int)
 {
@@ -119,22 +119,22 @@ BOOL WINAPI GdiAlphaBlend(HDC hdcDest, int xoriginDest, int yoriginDest, int wDe
 }
 
 //////////////////////////////////////////////////////////////////////////
-extern "C" long WINAPI _InterlockedOr(long volatile * _Value, long _Mask);
-extern "C" char WINAPI _InterlockedOr8(char volatile * _Value, char _Mask);
-extern "C" short WINAPI _InterlockedOr16(short volatile * _Value, short _Mask);
-extern "C" short WINAPI _InterlockedExchange16(short volatile * _Target, short _Value);
-extern "C" short WINAPI _InterlockedXor16(short volatile * _Value, short _Mask);
-extern "C" short WINAPI _InterlockedCompareExchange16(short volatile * _Destination, short _Exchange, short _Comparand);
-extern "C" char WINAPI _InterlockedCompareExchange8(char volatile * _Destination, char _Exchange, char _Comparand);
-extern "C" char WINAPI _InterlockedXor8(char volatile * _Value, char _Mask);
-extern "C" short WINAPI _InterlockedExchangeAdd16(short volatile * _Addend, short _Value);
-extern "C" __int64 WINAPI _InterlockedCompareExchange64(__int64 volatile *Destination, __int64 ExChange, __int64 Comperand);
-extern "C" long WINAPI _InterlockedXor(long volatile * _Value, long _Mask);
-extern "C" short WINAPI _InterlockedAnd16(short volatile * _Value, short _Mask);
-extern "C" long WINAPI _InterlockedAnd(long volatile * _Value, long _Mask);
-extern "C" char WINAPI _InterlockedExchange8(char volatile * _Target, char _Value);
-extern "C" char WINAPI _InterlockedAnd8(char volatile * _Value, char _Mask);
-extern "C" char WINAPI _InterlockedExchangeAdd8(char volatile * _Addend, char _Value);
+extern "C" long /*WINAPI*/ _InterlockedOr(long volatile * _Value, long _Mask);
+extern "C" char /*WINAPI*/ _InterlockedOr8(char volatile * _Value, char _Mask);
+extern "C" short /*WINAPI*/ _InterlockedOr16(short volatile * _Value, short _Mask);
+extern "C" short /*WINAPI*/ _InterlockedExchange16(short volatile * _Target, short _Value);
+extern "C" short /*WINAPI*/ _InterlockedXor16(short volatile * _Value, short _Mask);
+extern "C" short /*WINAPI*/ _InterlockedCompareExchange16(short volatile * _Destination, short _Exchange, short _Comparand);
+extern "C" char /*WINAPI*/ _InterlockedCompareExchange8(char volatile * _Destination, char _Exchange, char _Comparand);
+extern "C" char /*WINAPI*/ _InterlockedXor8(char volatile * _Value, char _Mask);
+extern "C" short /*WINAPI*/ _InterlockedExchangeAdd16(short volatile * _Addend, short _Value);
+extern "C" __int64 /*WINAPI*/ _InterlockedCompareExchange64(__int64 volatile *Destination, __int64 ExChange, __int64 Comperand);
+extern "C" long /*WINAPI*/ _InterlockedXor(long volatile * _Value, long _Mask);
+extern "C" short /*WINAPI*/ _InterlockedAnd16(short volatile * _Value, short _Mask);
+extern "C" long /*WINAPI*/ _InterlockedAnd(long volatile * _Value, long _Mask);
+extern "C" char /*WINAPI*/ _InterlockedExchange8(char volatile * _Target, char _Value);
+extern "C" char /*WINAPI*/ _InterlockedAnd8(char volatile * _Value, char _Mask);
+extern "C" char /*WINAPI*/ _InterlockedExchangeAdd8(char volatile * _Addend, char _Value);
 
 // #pragma function("_InterlockedOr")
 // #pragma function("_InterlockedOr8")
@@ -237,9 +237,9 @@ char WINAPI InterlockedExchangeAdd8(char volatile * _Addend, char _Value)
 
 };
 
-void __stdcall _ReadWriteBarrier(void)
-{
-}
+// void /*WINAPI*/ _ReadWriteBarrier(void)
+// {
+// }
 
 //////////////////////////////////////////////////////////////////////////
 

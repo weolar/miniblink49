@@ -39,7 +39,7 @@ namespace {
 const CommandLine::CharType kSwitchTerminator[] = FILE_PATH_LITERAL("--");
 const CommandLine::CharType kSwitchValueSeparator[] = FILE_PATH_LITERAL("=");
 
-const wchar_t kWhitespaceWide[] = L" ";
+//const wchar_t kWhitespaceWide[] = L" ";
 const char16 kWhitespaceUTF16[] = L" ";
 const char kWhitespaceASCII[] = " ";
 
@@ -114,19 +114,19 @@ TrimPositions TrimWhitespace(const string16& input, TrimPositions positions, str
     return TrimStringT(input, base::string16(kWhitespaceUTF16), positions, output);
 }
 
-TrimPositions TrimWhitespaceASCII(const std::string& input,
-    TrimPositions positions,
-    std::string* output) {
-    return TrimStringT(input, std::string(kWhitespaceASCII), positions, output);
-}
+// TrimPositions TrimWhitespaceASCII(const std::string& input,
+//     TrimPositions positions,
+//     std::string* output) {
+//     return TrimStringT(input, std::string(kWhitespaceASCII), positions, output);
+// }
 
 // This function is only for backward-compatibility.
 // To be removed when all callers are updated.
-TrimPositions TrimWhitespace(const std::string& input,
-    TrimPositions positions,
-    std::string* output) {
-    return TrimWhitespaceASCII(input, positions, output);
-}
+// TrimPositions TrimWhitespace(const std::string& input,
+//     TrimPositions positions,
+//     std::string* output) {
+//     return TrimWhitespaceASCII(input, positions, output);
+// }
 
 
 // Since we use a lazy match, make sure that longer versions (like "--") are

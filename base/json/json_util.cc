@@ -681,7 +681,7 @@ bool StringToInt(const StringPiece& input, int* output)
 
 bool StringToDouble(const std::string& input, double* output)
 {
-    size_t parsedLength = 0;
+//     size_t parsedLength = 0;
 //     double result = WTF::parseDouble((const unsigned char*)input.c_str(), input.size(), parsedLength);
 //     if (0 == parsedLength)
 //         return false;
