@@ -1268,7 +1268,8 @@ void KURL::parse(const String& string)
     CharBuffer buffer(utf8.size() + 1);
     copyASCII((const LChar*)utf8.data(), utf8.size(), buffer.data());
     buffer[utf8.size()] = '\0';
-    parse(buffer.data(), &String(utf8.data(), utf8.size()));
+    String temp(utf8.data(), utf8.size());
+    parse(buffer.data(), &temp);
 }
 
 static inline bool equal(const char* a, size_t lenA, const char* b, size_t lenB)
