@@ -793,7 +793,9 @@ void WebFrameClientImpl::showContextMenu(const blink::WebContextMenuData& data)
 {
     if (!m_menu)
         m_menu = new ContextMenu(m_webPage);
-    m_menu->show(data);
+
+    if (m_webPage->getContextMenuEnabled())
+        m_menu->show(data);
 }
 
 void WebFrameClientImpl::clearContextMenu()

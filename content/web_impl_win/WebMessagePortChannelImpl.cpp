@@ -35,7 +35,7 @@ WebMessagePortChannelImpl::~WebMessagePortChannelImpl()
 
 void WebMessagePortChannelImpl::setClient(blink::WebMessagePortChannelClient* client)
 {
-    RELEASE_ASSERT (WTF::isMainThread()); // 暂时不支持多线程
+    //RELEASE_ASSERT (WTF::isMainThread()); // 强制支持多线程, demo:https://mozilla.github.io/pdf.js/
     // Must lock here since m_client is called on the main thread.
     m_channel->setRemotePort(client);
 

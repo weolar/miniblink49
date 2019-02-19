@@ -61,6 +61,7 @@ WebPage::WebPage(void* foreignPtr)
     m_wkeHandler = new wke::CWebViewHandler();
     memset(m_wkeHandler, 0, sizeof(wke::CWebViewHandler));
 #endif
+    m_isContextMenuEnable = true;
 }
 
 WebPage::~WebPage()
@@ -174,6 +175,16 @@ void WebPage::enablePaint()
 {
     if (m_pageImpl)
         m_pageImpl->enablePaint();
+}
+
+void WebPage::setContextMenuEnabled(bool b)
+{
+    m_isContextMenuEnable = b;
+}
+
+bool WebPage::getContextMenuEnabled() const
+{
+    return m_isContextMenuEnable;
 }
 
 void WebPage::willEnterDebugLoop()

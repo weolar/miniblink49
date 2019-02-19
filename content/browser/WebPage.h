@@ -141,6 +141,9 @@ public:
     void disablePaint();
     void enablePaint();
 
+    void setContextMenuEnabled(bool b);
+    bool getContextMenuEnabled() const;
+
     void willEnterDebugLoop();
     void didExitDebugLoop();
 
@@ -196,6 +199,8 @@ protected:
 #endif
     WebPageImpl* m_pageImpl;
     static WTF::HashSet<WebPage*>* m_webPageSet;
+
+    bool m_isContextMenuEnable;
 };
 
 } // namespace content
