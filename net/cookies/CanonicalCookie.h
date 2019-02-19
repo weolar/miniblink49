@@ -34,7 +34,7 @@ public:
 	// in which pre-validation of the ParsedCookie has not been done.
 	CanonicalCookie(const blink::KURL& url, const ParsedCookie& pc);
 
-	CanonicalCookie::CanonicalCookie(const blink::KURL& url, const std::string& name, const std::string& value,
+	CanonicalCookie(const blink::KURL& url, const std::string& name, const std::string& value,
 		const std::string& domain, const std::string& path,
 		const double& creation, const double& expiration,
 		const double& last_access, bool secure, bool httponly,

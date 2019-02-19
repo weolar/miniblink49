@@ -32,8 +32,8 @@ public:
 
     void deleteCookies(const blink::KURL& url, const String& cookieName);
     String getCookiesForSession(const blink::KURL&, const blink::KURL& url, bool httponly);
-    const curl_slist* WebCookieJarImpl::getAllCookiesBegin();
-    void WebCookieJarImpl::getAllCookiesEnd(const curl_slist* list);
+    const curl_slist* getAllCookiesBegin();
+    void getAllCookiesEnd(const curl_slist* list);
 
     typedef bool(*CookieVisitor)(void* params, const char* name, const char* value, const char* domain, const char* path, int secure, int httpOnly, int* expires);
     void visitAllCookie(void* params, CookieVisitor visit);

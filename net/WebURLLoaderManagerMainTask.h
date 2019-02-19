@@ -578,13 +578,17 @@ static bool dispatchResponseToWke(WebURLLoaderInternal* job, const AtomicString&
         return false;
     }
 
+    blink::WebLocalFrame* frame = requestExtraData->getFrame();
+    if (!frame)
+        return false;
+
     WebPage* page = requestExtraData->page;
     Vector<char> urlBuf = WTF::ensureStringToUTF8(job->firstRequest()->url().string(), true);
 
     wkeTempCallbackInfo* temInfo = wkeGetTempCallbackInfo(nullptr);
     temInfo->size = sizeof(wkeTempCallbackInfo);
     temInfo->job = job;
-    blink::WebLocalFrame* frame = requestExtraData->frame;
+
     wkeWebFrameHandle frameHandle = wke::CWebView::frameIdTowkeWebFrameHandle(page, page->getFrameIdByBlinkFrame(frame));
     temInfo->frame = frameHandle;
 
