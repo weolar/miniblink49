@@ -5,8 +5,10 @@
 #include "content/web_impl_win/WebThreadImpl.h"
 #include "third_party/WebKit/Source/web/WebViewImpl.h"
 #include "third_party/WebKit/Source/platform/Timer.h"
+#include "third_party/WebKit/Source/wtf/ThreadingPrimitives.h"
 #include "third_party/WebKit/public/web/WebContextMenuData.h"
 #include "third_party/WebKit/public/web/WebFrame.h"
+#include "wke/wkeGlobalVar.h"
 #include <windows.h>
 
 namespace content {
@@ -21,30 +23,51 @@ public:
         m_hWnd = nullptr;
         m_imagePos = nullptr;
         m_webPage = webPage;
+        m_isDestroyed = 0;
 
-        init();
+        ContextMenu* self = this;
+
+        m_uiCallback = wke::g_wkeUiThreadPostTaskCallback;
+        if (!m_uiCallback)
+            m_uiCallback = onUiThreadCallback;
+
+        asyncCallUiThread([self] {
+            self->initImpl();
+        });
     }
 
-    void init()
+    void initImpl()
     {
         if (m_hWnd)
             return;
 
         registerClass();
         m_hWnd = CreateWindowExW(WS_EX_TOOLWINDOW, kContextMenuClassName, kContextMenuClassName, WS_POPUP, 
-            CW_USEDEFAULT, CW_USEDEFAULT, 1, 1, HWND_DESKTOP, NULL, nullptr, this);
+            0, 0, 1, 1, HWND_DESKTOP, NULL, nullptr, this);
         ::SetPropW(m_hWnd, kContextMenuClassName, (HANDLE)this);
         ::SetForegroundWindow(m_hWnd);
+        ::ShowWindow(m_hWnd, SW_SHOW);
     }
 
     ~ContextMenu()
     {
-        ::SetPropW(m_hWnd, kContextMenuClassName, (HANDLE)nullptr);
-        ::DestroyWindow(m_hWnd);
-        if (m_popMenu)
-            ::DestroyMenu(m_popMenu);
+        m_mutex.lock();
+        InterlockedIncrement(&m_isDestroyed);
+
         if (m_imagePos)
             delete m_imagePos;
+
+        ContextMenu* self = this;
+        HWND hWnd = m_hWnd;
+        HMENU popMenu = m_popMenu;
+        asyncCallUiThread([hWnd, popMenu] {
+            ::SetPropW(hWnd, kContextMenuClassName, (HANDLE)nullptr);
+            ::DestroyWindow(hWnd);
+
+            if (popMenu)
+                ::DestroyMenu(popMenu);
+        });
+        m_mutex.unlock();
     }
 
     bool registerClass()
@@ -67,21 +90,86 @@ public:
     }
 
     enum MenuId {
-        kSelectedAllId,
-        kSelectedTextId,
-        kUndoId,
-        kCopyImageId,
-        kInspectElementAtId,
-        kCutId,
-        kPasteId
+        kSelectedAllId = 1 << 1,
+        kSelectedTextId = 1 << 2,
+        kUndoId = 1 << 3,
+        kCopyImageId = 1 << 4,
+        kInspectElementAtId = 1 << 5,
+        kCutId = 1 << 6,
+        kPasteId = 1 << 7
     };
-//     static const int kCopySelectedTextId = 1;
-//     static const int kCopySelectedTextId = 1;
-//     static const int kInspectElementAtId = 2;
-//     static const int kCutId = 3;
-//     static const int kPasteId = 4;
+
+    static int WKE_CALL_TYPE onUiThreadCallback(HWND hWnd, wkeUiThreadRunCallback callback, void* param)
+    {
+        callback(hWnd, param);
+        return 0;
+    }
+
+    void asyncCallUiThread(std::function<void()>&& func)
+    {
+        HWND hWnd = m_webPage->getHWND();
+        m_uiCallback(hWnd, UiTaskCall::asyncFunc, new UiTaskCall(&m_mutex, std::move(func)));
+    }
+
+    class UiTaskCall {
+    public:
+        UiTaskCall(WTF::Mutex* mutex, std::function<void()>&& func)
+            : m_func(func)
+            , m_mutex(mutex) {}
+
+        ~UiTaskCall() {}
+        
+    private:
+        WTF::Mutex* m_mutex;
+        std::function<void()> m_func;
+
+    public:
+        static void asyncFunc(HWND hWnd, void* param)
+        {
+            UiTaskCall* self = (UiTaskCall*)param;
+
+            self->m_mutex->lock();
+            (self->m_func)();
+            self->m_mutex->unlock();
+
+            delete self;
+        }
+    };
 
     void show(const blink::WebContextMenuData& data)
+    {
+        ContextMenu* self = this;
+        m_data = data;
+
+        UINT actionFlags = 0;
+        if ((!data.selectedText.isNull() && !data.selectedText.isEmpty()))
+            actionFlags |= kSelectedTextId;
+
+        if (data.hasImageContents) {
+            actionFlags |= kCopyImageId;
+            if (m_imagePos)
+                delete m_imagePos;
+            m_imagePos = new blink::IntPoint(data.mousePosition);
+        }
+
+        if (m_webPage->isDevtoolsConneted())
+            actionFlags |= kInspectElementAtId;
+
+        if (data.isEditable) {
+            actionFlags |= kCutId;
+            actionFlags |= kPasteId;
+            actionFlags |= kSelectedAllId;
+            actionFlags |= kUndoId;
+        }
+
+        asyncCallUiThread([self, actionFlags] {
+            if (0 < ContextMenu::m_isDestroyed)
+                return;
+            self->showImpl(actionFlags);
+        });
+    }
+
+    void showImpl(UINT actionFlags)
     {
         POINT screenPt = { 0 };
         ::GetCursorPos(&screenPt);
@@ -97,36 +185,40 @@ public:
             ::DestroyMenu(m_popMenu);
         m_popMenu = ::CreatePopupMenu();
         
-        m_data = blink::WebContextMenuData();
+        //m_data = blink::WebContextMenuData();
         
-        if ((!data.selectedText.isNull() && !data.selectedText.isEmpty()))
+        if (actionFlags & kSelectedTextId)
             ::AppendMenu(m_popMenu, MF_STRING, kSelectedTextId, L"复制");
 
-        if (data.hasImageContents) {
+        if (actionFlags & kCopyImageId)
             ::AppendMenu(m_popMenu, MF_STRING, kCopyImageId, L"复制图片");
-            m_imagePos = new blink::IntPoint(data.mousePosition);
-        }
 
-        if (m_webPage->isDevtoolsConneted())
+        if (actionFlags & kInspectElementAtId)
             ::AppendMenu(m_popMenu, MF_STRING, kInspectElementAtId, L"检查");
 
-        if (data.isEditable) {
+        if (actionFlags & kCutId)
             ::AppendMenu(m_popMenu, MF_STRING, kCutId, L"剪切");
-            ::AppendMenu(m_popMenu, MF_STRING, kPasteId, L"粘贴");
-            ::AppendMenu(m_popMenu, MF_STRING, kSelectedAllId, L"全选");
-            ::AppendMenu(m_popMenu, MF_STRING, kUndoId, L"撤销");
-        }
 
+        if (actionFlags & kPasteId)
+            ::AppendMenu(m_popMenu, MF_STRING, kPasteId, L"粘贴");
+
+        if (actionFlags & kSelectedAllId)
+            ::AppendMenu(m_popMenu, MF_STRING, kSelectedAllId, L"全选");
+
+        if (actionFlags & kUndoId)
+            ::AppendMenu(m_popMenu, MF_STRING, kUndoId, L"撤销");
+        
         if (0 == ::GetMenuItemCount(m_popMenu)) {
             ::DestroyMenu(m_popMenu);
             m_popMenu = nullptr;
             return;
         }
 
-        m_data = data;
+        //m_data = data;
 
-        ::SetWindowPos(m_hWnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOREPOSITION | SWP_NOACTIVATE);
+        //::ShowWindow(m_hWnd, SW_SHOWMINNOACTIVE);
         //::SetForegroundWindow(m_hWnd);
+        ::SetWindowPos(m_hWnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOREPOSITION | SWP_NOACTIVATE);
 
         UINT flags = TPM_RIGHTBUTTON | TPM_TOPALIGN | TPM_VERPOSANIMATION | TPM_HORIZONTAL | TPM_LEFTALIGN | TPM_HORPOSANIMATION;
         ::TrackPopupMenuEx(m_popMenu, flags, clientPt.x, clientPt.y, m_hWnd, 0);
@@ -134,6 +226,9 @@ public:
 
     void onCommand(UINT itemID)
     {
+        if (0 < ContextMenu::m_isDestroyed)
+            return;
+
         content::WebThreadImpl* threadImpl = (content::WebThreadImpl*)(blink::Platform::current()->currentThread());
         threadImpl->fire();
 
@@ -177,10 +272,16 @@ public:
             break;
         case WM_COMMAND: {
             UINT itemID = LOWORD(wParam);
-            self->onCommand(itemID);
+            if (WTF::isMainThread())
+                self->onCommand(itemID);
+            else
+                blink::Platform::current()->mainThread()->postTask(FROM_HERE, WTF::bind(&ContextMenu::onCommand, self, itemID));            
         }
             break;
         case WM_CLOSE:
+            break;
+        case WM_EXITMENULOOP:
+            //::ShowWindow(self->m_hWnd, SW_HIDE);
             break;
         }
 
@@ -201,7 +302,15 @@ public:
 
     int m_lastX;
     int m_lastY;
+
+    WTF::Mutex m_mutex;
+    wkeUiThreadPostTaskCallback m_uiCallback;
+
+public:
+    static volatile LONG m_isDestroyed;
 };
+
+volatile LONG ContextMenu::m_isDestroyed = 0;
 
 }
 
