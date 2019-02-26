@@ -87,12 +87,29 @@ void Environment::RemoveCleanupHook(void(*fn)(void*), void* arg) {
     }
 }
 
-void RunCleanup(Environment* env) {
-    env->CleanupHandles();
+void Environment::InitEnv() {
+    debugger_agent_ = new debugger::Agent(this);
+#if HAVE_INSPECTOR
+    inspector_agent_ = new debugger::Agent(this);
+#endif
 
-    while (!env->get_cleanup_hooks()->empty()) {
+    destroy_ids_list_ = new std::vector<int64_t>();
+    destroy_ids_list_->reserve(512);
+}
+
+void Environment::CleanEnv() {
+    CleanupHandles();
+
+    delete debugger_agent_;
+#if HAVE_INSPECTOR
+    delete inspector_agent_;
+#endif
+
+    delete destroy_ids_list_;
+
+    while (get_cleanup_hooks() && !get_cleanup_hooks()->empty()) {
         // Copy into a vector, since we can't sort an unordered_set in-place.
-        std::vector<Environment::CleanupHookCallback*> callbacks(env->get_cleanup_hooks()->begin(), env->get_cleanup_hooks()->end());
+        std::vector<Environment::CleanupHookCallback*> callbacks(get_cleanup_hooks()->begin(), get_cleanup_hooks()->end());
         // We can't erase the copied elements from `cleanup_hooks_` yet, because we
         // need to be able to check whether they were un-scheduled by another hook.
         std::sort(callbacks.begin(), callbacks.end(), &Environment::CleanupHookCallback::CompareGT);
@@ -101,8 +118,8 @@ void RunCleanup(Environment* env) {
             const Environment::CleanupHookCallback* cb = callbacks[i];
 
             bool find = false;
-            for (size_t j = 0; j < env->get_cleanup_hooks()->size(); ++j) {
-                const Environment::CleanupHookCallback* cb2 = env->get_cleanup_hooks()->at(j);
+            for (size_t j = 0; j < get_cleanup_hooks()->size(); ++j) {
+                const Environment::CleanupHookCallback* cb2 = get_cleanup_hooks()->at(j);
                 if (cb2 != cb)
                     continue;
                 find = true;
@@ -115,9 +132,9 @@ void RunCleanup(Environment* env) {
             }
 
             cb->fn_(cb->arg_);
-            env->Environment::RemoveCleanupHook(cb->fn_, cb->arg_);
+            RemoveCleanupHook(cb->fn_, cb->arg_);
         }
-        env->CleanupHandles();
+        CleanupHandles();
     }
 }
 

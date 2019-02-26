@@ -1,4 +1,4 @@
-// Hello, and welcome to hacking node.js!
+﻿// Hello, and welcome to hacking node.js!
 //
 // This file is invoked by node::LoadEnvironment in src/node.cc, and is
 // responsible for bootstrapping the node.js core. As special caution is given
@@ -153,11 +153,11 @@
         const Module = NativeModule.require('module');
         const vm = NativeModule.require('vm');
       	
-        const module = new Module('[proloadScript]');
-        var source = process._getProloadScript();
+        const module = new Module('[preloadScript]');
+        var source = process._getPreloadScript();
         //source = Module.wrap(source);
         preloadModules();
-        module._compile(source, "proloadScript.js");
+        module._compile(source, "preloadScript.js");
         
         process._tickCallback();
       } else {

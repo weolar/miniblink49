@@ -38,7 +38,11 @@ void* Calloc(size_t n, size_t size);
 #ifdef __GNUC__
 #define NO_RETURN __attribute__((noreturn))
 #else
-#define NO_RETURN __declspec(dllexport)
+
+#ifndef NO_RETURN
+#define NO_RETURN __declspec(noreturn)
+#endif
+
 #endif
 
 // The slightly odd function signature for Assert() is to ease
@@ -107,10 +111,12 @@ template <typename T> using remove_reference = std::remove_reference<T>;
 #define CHECK assert
 #endif
 
+#ifndef ASSERT
 #ifdef NDEBUG
 #define ASSERT(expr)
 #else
 #define ASSERT(expr) CHECK(expr)
+#endif
 #endif
 
 #define ASSERT_EQ(a, b) ASSERT((a) == (b))

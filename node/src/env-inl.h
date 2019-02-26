@@ -240,9 +240,9 @@ inline Environment::Environment(v8::Local<v8::Context> context,
       trace_sync_io_(false),
       makecallback_cntr_(0),
       async_wrap_uid_(0),
-      debugger_agent_(this),
+      debugger_agent_(nullptr),
 #if HAVE_INSPECTOR
-      inspector_agent_(this),
+      inspector_agent_(nullptr),
 #endif
       http_parser_buffer_(nullptr),
 #ifndef MINIBLINK_NOT_IMPLEMENTED
@@ -269,13 +269,13 @@ inline Environment::Environment(v8::Local<v8::Context> context,
   RB_INIT(&cares_task_list_);
   handle_cleanup_waiting_ = 0;
 
-  destroy_ids_list_.reserve(512);
+  InitEnv();
   AddLiveSet((intptr_t)this);
 }
 
 inline Environment::~Environment() {
   v8::HandleScope handle_scope(isolate());
-  RunCleanup(this);
+  CleanEnv();
   RemoveLiveSet((intptr_t)this);
 
   context()->SetAlignedPointerInEmbedderData(kContextEmbedderDataIndex,
@@ -435,7 +435,7 @@ inline int64_t Environment::get_async_wrap_uid() {
 }
 
 inline std::vector<int64_t>* Environment::destroy_ids_list() {
-  return &destroy_ids_list_;
+  return destroy_ids_list_;
 }
 
 inline uint32_t* Environment::heap_statistics_buffer() const {

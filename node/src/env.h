@@ -445,6 +445,9 @@ class Environment {
   struct CleanupHookCallback;
   std::vector<CleanupHookCallback*>* get_cleanup_hooks() { return cleanup_hooks_; }
 
+  void InitEnv();
+  void CleanEnv();
+
   static inline Environment* GetCurrent(v8::Isolate* isolate);
   static inline Environment* GetCurrent(v8::Local<v8::Context> context);
   static inline Environment* GetCurrent(
@@ -578,12 +581,12 @@ class Environment {
 #undef V
 
   inline debugger::Agent* debugger_agent() {
-    return &debugger_agent_;
+    return debugger_agent_;
   }
 
 #if HAVE_INSPECTOR
   inline inspector::Agent* inspector_agent() {
-    return &inspector_agent_;
+    return inspector_agent_;
   }
 #endif
 
@@ -634,10 +637,10 @@ class Environment {
   bool trace_sync_io_;
   size_t makecallback_cntr_;
   int64_t async_wrap_uid_;
-  std::vector<int64_t> destroy_ids_list_;
-  debugger::Agent debugger_agent_;
+  std::vector<int64_t>* destroy_ids_list_;
+  debugger::Agent* debugger_agent_;
 #if HAVE_INSPECTOR
-  inspector::Agent inspector_agent_;
+  inspector::Agent* inspector_agent_;
 #endif
 
   HandleWrapQueue handle_wrap_queue_;
