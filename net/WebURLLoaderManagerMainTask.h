@@ -79,10 +79,11 @@ public:
     static void destroy();
     static void add(WebURLLoaderManagerMainTask* task)
     {
-        if (!m_inst)
+        if (!m_inst) {
             m_inst = new MainTaskRunner();
+            blink::Platform::current()->mainThread()->addTaskObserver(m_inst);
+        }
         
-        blink::Platform::current()->mainThread()->addTaskObserver(m_inst);
         m_inst->addTask(task);
     }
 
