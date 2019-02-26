@@ -22,7 +22,7 @@ class CompositingLayer;
 
 class CompositingTile : public TileBase {
 public:
-    CompositingTile();
+    CompositingTile(SkColor backgroundColor);
     ~CompositingTile();
 
     virtual TileBase* init(void* parent, int xIndex, int yIndex) override;
@@ -63,6 +63,8 @@ private:
     SkBitmap* m_bitmap;
 
     SkColor* m_solidColor;
+
+    SkColor m_backgroundColor;
 };
 
 }

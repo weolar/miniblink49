@@ -19,8 +19,9 @@ namespace cc {
 DEFINE_DEBUG_ONLY_GLOBAL(WTF::RefCountedLeakCounter, compositingTileCounter, ("compositingTileCounter"));
 #endif
 
-CompositingTile::CompositingTile()
+CompositingTile::CompositingTile(SkColor backgroundColor)
     : TileBase()
+    , m_backgroundColor(backgroundColor)
 {
 
 }
@@ -34,7 +35,7 @@ TileBase* CompositingTile::init(void* parent, int xIndex, int yIndex)
     m_yIndex = yIndex;
     m_postion = blink::IntRect(xIndex * kDefaultTileWidth, yIndex * kDefaultTileHeight, kDefaultTileWidth, kDefaultTileHeight);
     m_bitmap = nullptr;
-    m_solidColor = new SkColor(0xffffffff);
+    m_solidColor = new SkColor(m_backgroundColor);
 #ifndef NDEBUG
     compositingTileCounter.increment();
 #endif
@@ -191,6 +192,9 @@ CompositingLayer* CompositingTile::layer() const
 
 void CompositingTile::setSolidColor(SkColor color)
 {
+    if (m_solidColor)
+        delete m_solidColor;
+
     m_solidColor = new SkColor();
     *m_solidColor = color;
 }

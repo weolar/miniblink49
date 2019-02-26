@@ -5,7 +5,7 @@
 
 namespace cc {
 #ifndef NDEBUG
-const SkColor s_kBgColor = 0xffff00ff;
+const SkColor s_kBgColor = 0xffffffff;
 #else
 const SkColor s_kBgColor = 0xffffffff;
 #endif

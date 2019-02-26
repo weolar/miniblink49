@@ -218,7 +218,8 @@ void CompositingLayer::cleanupUnnecessaryTile(const WTF::Vector<TileActionInfo*>
 {
     for (size_t i = 0; i < tiles.size(); ++i) {
         TileActionInfo* info = tiles[i];
-        CompositingTile* tile = (CompositingTile*)m_tilesAddr->getTileByXY(info->xIndex, info->yIndex, [] { return new CompositingTile(); });
+        SkColor color = m_prop->backgroundColor;
+        CompositingTile* tile = (CompositingTile*)m_tilesAddr->getTileByXY(info->xIndex, info->yIndex, [color] { return new CompositingTile(color); });
         ASSERT(tile == m_tilesAddr->getTileByIndex(info->index));        
         tile->clearBitmap();
         m_tilesAddr->remove(tile);
@@ -359,7 +360,8 @@ void CompositingLayer::blendToTiles(TileActionInfoVector* willRasteredTiles, con
     const Vector<TileActionInfo*>& infos = willRasteredTiles->infos();
     for (size_t i = 0; i < infos.size(); ++i) {
         TileActionInfo* info = infos[i];
-        CompositingTile* tile = (CompositingTile*)m_tilesAddr->getTileByXY(info->xIndex, info->yIndex, [] { return new CompositingTile(); });
+        SkColor color = m_prop->backgroundColor;
+        CompositingTile* tile = (CompositingTile*)m_tilesAddr->getTileByXY(info->xIndex, info->yIndex, [color] { return new CompositingTile(color); });
         ASSERT(tile == m_tilesAddr->getTileByIndex(info->index));
         blendToTile(tile, bitmap ? bitmap : info->m_bitmap, dirtyRect, info->m_solidColor, info->m_isSolidColorCoverWholeTile, contentScale);
     } 
