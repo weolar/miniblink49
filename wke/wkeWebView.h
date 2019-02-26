@@ -119,7 +119,7 @@ struct CWebViewHandler {
 
 class CWebView : public IWebView {
 public:
-    CWebView();
+    CWebView(COLORREF color);
     virtual ~CWebView();
 
     virtual bool create();
@@ -152,13 +152,13 @@ public:
 	  void setUserAgent(const utf8 * useragent);
     void setUserAgent(const wchar_t * useragent);
     
-    bool isLoading() const;
-    bool isLoadingSucceeded() const;
-    bool isLoadingFailed() const;
+    virtual bool isLoading() const override;
+    virtual bool isLoadingSucceeded() const override;
+    virtual bool isLoadingFailed() const override;
     bool isLoadingCompleted() const;
     virtual bool isDocumentReady() const override;
-    void stopLoading();
-    void reload();
+    virtual void stopLoading() override;
+    virtual void reload() override;
     void goToOffset(int offset);
     void goToIndex(int index);
 
@@ -325,7 +325,7 @@ protected:
 
     HWND m_hWnd;
     void _initHandler();
-    void _initPage();
+    void _initPage(COLORREF color);
     void _initMemoryDC();
 
     void _loadURL(const utf8* inUrl, bool isFile);

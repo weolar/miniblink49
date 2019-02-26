@@ -4,11 +4,13 @@
 #include "wke/wkeWebWindow.h"
 #include "wke/wkeGlobalVar.h"
 #include "content/browser/WebPage.h"
+#include "cc/base/BdColor.h"
 ////////////////////////////////////////////////////////////////////////////
 
 namespace wke {
 
-CWebWindow::CWebWindow()
+CWebWindow::CWebWindow(COLORREF c)
+    : CWebView(c)
 {
     m_state = kWkeWebWindowUninit;
 
@@ -29,13 +31,13 @@ CWebWindow::~CWebWindow()
     destroy();
 }
 
-bool CWebWindow::create(HWND parent, unsigned styles, unsigned styleEx, int x, int y, int width, int height)
+bool CWebWindow::createWindow(const wkeWindowCreateInfo* info)
 {
     CWebView::create();
-    return _createWindow(parent, styles, styleEx, x, y, width, height);
+    return _createWindow(info);
 }
 
-bool CWebWindow::create(HWND parent, wkeWindowType type, int x, int y, int width, int height)
+bool CWebWindow::createWindow(HWND parent, wkeWindowType type, int x, int y, int width, int height)
 {
     unsigned styles = 0;
     unsigned styleEx = 0;
@@ -59,7 +61,17 @@ bool CWebWindow::create(HWND parent, wkeWindowType type, int x, int y, int width
         wkeSetTransparent(this, false);
     }
 
-    return create(parent, styles, styleEx, x, y, width, height);
+    wkeWindowCreateInfo info;
+    info.size = sizeof(wkeWindowCreateInfo);
+    info.parent = parent;
+    info.style = styles;
+    info.styleEx = styleEx;
+    info.x = x;
+    info.y = y;
+    info.width = width;
+    info.height = height;
+    info.color = cc::s_kBgColor;
+    return createWindow(&info);
 }
 
 void CWebWindow::destroy()
@@ -85,7 +97,7 @@ void CWebWindow::onDocumentReady(wkeDocumentReadyCallback callback, void* callba
     m_originalDocumentReadyCallbackParam = callbackParam;
 }
 
-bool CWebWindow::_createWindow(HWND parent, unsigned styles, unsigned styleEx, int x, int y, int width, int height)
+bool CWebWindow::_createWindow(const wkeWindowCreateInfo* info)
 {
     if (IsWindow(m_hWnd))
         return true;
@@ -131,15 +143,15 @@ bool CWebWindow::_createWindow(HWND parent, unsigned styles, unsigned styleEx, i
     //    styles |=  WS_VISIBLE;
 
     m_hWnd = CreateWindowExW(
-        styleEx,        // window ex-style
+        info->styleEx,        // window ex-style
         szClassName,    // window class name
         L"wkeWebWindow", // window caption
-        styles,         // window style
-        x,              // initial x position
-        y,              // initial y position
-        width,          // initial x size
-        height,         // initial y size
-        parent,         // parent window handle
+        info->style,         // window style
+        info->x,              // initial x position
+        info->y,              // initial y position
+        info->width,          // initial x size
+        info->height,         // initial y size
+        info->parent,         // parent window handle
         NULL,           // window menu handle
         GetModuleHandleW(NULL),           // program instance handle
         this);         // creation parameters
@@ -147,7 +159,7 @@ bool CWebWindow::_createWindow(HWND parent, unsigned styles, unsigned styleEx, i
     if (!IsWindow(m_hWnd))
         return FALSE;
 
-    CWebView::resize(width, height);
+    CWebView::resize(info->width, info->height);
     return TRUE;
 }
 

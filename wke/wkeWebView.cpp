@@ -29,7 +29,7 @@
 
 namespace wke {
 
-CWebView::CWebView()
+CWebView::CWebView(COLORREF color)
     : m_hWnd(NULL)
     , m_transparent(false)
     , m_width(0)
@@ -46,7 +46,7 @@ CWebView::CWebView()
     m_id = net::ActivatingObjCheck::inst()->genId();
     net::ActivatingObjCheck::inst()->add(m_id);
 
-    _initPage();
+    _initPage(color);
     _initHandler();
     _initMemoryDC();
 
@@ -1126,11 +1126,11 @@ void CWebView::_initHandler()
     m_webPage->wkeHandler().promptBoxCallback = defaultRunPromptBox;
 }
 
-void CWebView::_initPage()
+void CWebView::_initPage(COLORREF color)
 {
     m_webPage = new content::WebPage(nullptr);
     m_webPage->initWkeWebView(this);
-    m_webPage->init(nullptr);
+    m_webPage->init(nullptr, color);
 
 //     blink::Page::PageClients pageClients;
 //     pageClients.chromeClient = new ChromeClient(this);

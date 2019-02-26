@@ -11,19 +11,19 @@ namespace wke {
 
 class CWebWindow : public CWebView {
 public:
-    CWebWindow();
-   ~CWebWindow();
+    CWebWindow(COLORREF c);
+    ~CWebWindow();
 
-    bool create(HWND parent, unsigned styles, unsigned styleEx, int x, int y, int width, int height);
-    bool create(HWND parent, wkeWindowType type, int x, int y, int width, int height);
+    bool createWindow(const wkeWindowCreateInfo* info);
+    bool createWindow(HWND parent, wkeWindowType type, int x, int y, int width, int height);
     
-    void destroy();
+    virtual void destroy() override;
 
     void show(bool b);
     void enable(bool b);
     void move(int x, int y, int width, int height);
     void moveToCenter();
-    void resize(int width, int height);
+    virtual void resize(int width, int height) override;
 
     void setTitle(const wchar_t* text);
     void setTitle(const utf8* text);
@@ -38,7 +38,7 @@ protected:
     virtual void onLoadingFinish(wkeLoadingFinishCallback callback, void* callbackParam) override;
     virtual void onDocumentReady(wkeDocumentReadyCallback callback, void* callbackParam) override;
 
-    bool _createWindow(HWND parent, unsigned styles, unsigned styleEx, int x, int y, int width, int height);
+    bool _createWindow(const wkeWindowCreateInfo* info);
     void _destroyWindow();
     void _initCallbacks();
 

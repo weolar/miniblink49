@@ -32,7 +32,9 @@
 #include "wtf/text/WTFString.h"
 #include "wtf/text/WTFStringUtil.h"
 #include "wtf/text/Base64.h"
+#include "cc/base/BdColor.h"
 #include <v8.h>
+#include "libplatform/libplatform.h"
 #include <shlwapi.h>
 
 namespace net {
@@ -172,6 +174,15 @@ void wkeSetTouchEnabled(wkeWebView webView, bool b)
     blink::RuntimeEnabledFeatures::setTouchEnabled(b);
 }
 
+void wkeSetContextMenuEnabled(wkeWebView webView, bool b)
+{
+    content::WebPage* webpage = nullptr;
+    if (webView)
+        webpage = webView->getWebPage();
+    if (webpage)
+        webpage->setContextMenuEnabled(b);
+}
+
 void wkeSetMouseEnabled(wkeWebView webView, bool b)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
@@ -240,6 +251,9 @@ void wkeSetDebugConfig(wkeWebView webview, const char* debugString, const char* 
         blink::RuntimeEnabledFeatures::setUpdataInOtherThreadEnabled(true);
         return;
     }
+
+    if (wke::setDebugConfig(webview, debugString, param))
+        return;
 
     content::WebPage* webpage = nullptr;
     blink::WebViewImpl* webViewImpl = nullptr;
@@ -1380,8 +1394,20 @@ void wkeSetDragFiles(wkeWebView webView, const POINT* clintPos, const POINT* scr
 wkeWebView wkeCreateWebWindow(wkeWindowType type, HWND parent, int x, int y, int width, int height)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
-    wke::CWebWindow* webWindow = new wke::CWebWindow();
-    if (!webWindow->create(parent, type, x, y, width, height)) {
+    wke::CWebWindow* webWindow = new wke::CWebWindow(cc::s_kBgColor);
+    if (!webWindow->createWindow(parent, type, x, y, width, height)) {
+        delete webWindow;
+        return NULL;
+    }
+
+    return webWindow;
+}
+
+wkeWebView wkeCreateWebCustomWindow(const wkeWindowCreateInfo* info)
+{
+    wke::checkThreadCallIsValid(__FUNCTION__);
+    wke::CWebWindow* webWindow = new wke::CWebWindow(info->color);
+    if (!webWindow->createWindow(info)) {
         delete webWindow;
         return NULL;
     }
@@ -1391,7 +1417,7 @@ wkeWebView wkeCreateWebWindow(wkeWindowType type, HWND parent, int x, int y, int
 
 wkeWebView wkeCreateWebView()
 {
-    wke::CWebView* webView = new wke::CWebView();
+    wke::CWebView* webView = new wke::CWebView(cc::s_kBgColor);
     webView->webPage()->setNeedAutoDrawToHwnd(false);
 
     //s_webViews.append(webView);
@@ -2039,6 +2065,26 @@ const utf8* wkeUtilBase64Decode(const utf8* str)
     if (!ok || 0 == result.size())
         return nullptr;
     return wke::createTempCharString(result.data(), result.size());
+}
+
+const wkeMemBuf* wkeUtilCreateV8Snapshot(const utf8* str)
+{
+    //i::CpuFeatures::Probe(true);
+    //v8::V8::InitializeICU();
+    v8::Platform* platform = v8::platform::CreateDefaultPlatform();
+    v8::V8::InitializePlatform(platform);
+    v8::V8::Initialize();
+
+    v8::StartupData blob = v8::V8::CreateSnapshotDataBlob(str);
+    wkeMemBuf* result = wkeCreateMemBuf(nullptr, (void *)(blob.data), blob.raw_size);
+
+    delete[] blob.data;
+
+    v8::V8::Dispose();
+    v8::V8::ShutdownPlatform();
+    delete platform;
+
+    return result;
 }
 
 void wkeRunMessageLoop()

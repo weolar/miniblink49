@@ -139,7 +139,7 @@ typedef struct _wkeSettings {
     unsigned int mask;
 } wkeSettings;
 
-typedef struct {
+typedef struct _wkeViewSettings {
     int size;
     unsigned int bgColor;
 } wkeViewSettings;
@@ -548,12 +548,24 @@ typedef void* v8ContextPtr;
 typedef void* v8Isolate;
 
 //wke window-----------------------------------------------------------------------------------
-typedef enum {
+typedef enum _wkeWindowType {
     WKE_WINDOW_TYPE_POPUP,
     WKE_WINDOW_TYPE_TRANSPARENT,
     WKE_WINDOW_TYPE_CONTROL
-
 } wkeWindowType;
+
+typedef struct _wkeWindowCreateInfo {
+    int size;
+    HWND parent;
+    DWORD style; 
+    DWORD styleEx; 
+    int x; 
+    int y; 
+    int width; 
+    int height;
+    COLORREF color;
+
+} wkeWindowCreateInfo;
 
 typedef bool(WKE_CALL_TYPE*wkeWindowClosingCallback)(wkeWebView webWindow, void* param);
 typedef void(WKE_CALL_TYPE*wkeWindowDestroyCallback)(wkeWebView webWindow, void* param);
@@ -887,6 +899,7 @@ public:
     ITERATOR2(void, wkeSetMemoryCacheEnable, wkeWebView webView, bool b, "") \
     ITERATOR2(void, wkeSetMouseEnabled, wkeWebView webView, bool b, "") \
     ITERATOR2(void, wkeSetTouchEnabled, wkeWebView webView, bool b, "") \
+    ITERATOR2(void, wkeSetContextMenuEnabled, wkeWebView webView, bool b, "") \
     ITERATOR2(void, wkeSetNavigationToNewWindowEnable, wkeWebView webView, bool b, "") \
     ITERATOR2(void, wkeSetCspCheckEnable, wkeWebView webView, bool b, "") \
     ITERATOR2(void, wkeSetNpapiPluginsEnabled, wkeWebView webView, bool b, "") \
@@ -984,7 +997,7 @@ public:
     \
     ITERATOR1(const wchar_t*, wkeGetCookieW, wkeWebView webView, "") \
     ITERATOR1(const utf8*, wkeGetCookie, wkeWebView webView, "") \
-    ITERATOR3(void, wkeSetCookie, wkeWebView webView, const utf8* url, const utf8* cookie, "cookie格式必须是:Set-cookie: PRODUCTINFO=webxpress; domain=.fidelity.com; path=/; secure") \
+    ITERATOR3(void, wkeSetCookie, wkeWebView webView, const utf8* url, const utf8* cookie, "cookie格式必须是类似:cna=4UvTFE12fEECAXFKf4SFW5eo; expires=Tue, 23-Jan-2029 13:17:21 GMT; path=/; domain=.youku.com") \
     ITERATOR3(void, wkeVisitAllCookie, wkeWebView webView, void* params, wkeCookieVisitor visitor, "") \
     ITERATOR2(void, wkePerformCookieCommand, wkeWebView webView, wkeCookieCommand command, "") \
     ITERATOR2(void, wkeSetCookieEnabled, wkeWebView webView, bool enable, "") \
@@ -1125,6 +1138,7 @@ public:
     ITERATOR0(v8Isolate, wkeGetBlinkMainThreadIsolate, "") \
     \
     ITERATOR6(wkeWebView, wkeCreateWebWindow, wkeWindowType type, HWND parent, int x, int y, int width, int height, "") \
+    ITERATOR1(wkeWebView, wkeCreateWebCustomWindow, const wkeWindowCreateInfo* info, "") \
     ITERATOR1(void, wkeDestroyWebWindow, wkeWebView webWindow, "") \
     ITERATOR1(HWND, wkeGetWindowHandle, wkeWebView webWindow, "") \
     \
@@ -1167,6 +1181,7 @@ public:
     ITERATOR1(const utf8*, wkeUtilEncodeURLEscape, const utf8* url, "") \
     ITERATOR1(const utf8*, wkeUtilBase64Encode, const utf8* str, "") \
     ITERATOR1(const utf8*, wkeUtilBase64Decode, const utf8* str, "") \
+    ITERATOR1(const wkeMemBuf*, wkeUtilCreateV8Snapshot, const utf8* str, "") \
     \
     ITERATOR0(void, wkeRunMessageLoop, "") \
     \
