@@ -111,10 +111,10 @@ void WebPageImpl::unregisterDestroyNotif(DestroyNotif* destroyNotif)
 
 int64_t WebPageImpl::m_firstFrameId = 0;
 
-WebPageImpl::WebPageImpl()
+WebPageImpl::WebPageImpl(COLORREF bdColor)
 {
     m_pagePtr = 0;
-    m_bdColor = RGB(199, 237, 204) | 0xff000000;
+    m_bdColor = bdColor; //  RGB(199, 237, 204) | 0xff000000;
     m_createDevToolsAgentTaskObserver = nullptr;
     n_needAutoDrawToHwnd = true;
     m_webViewImpl = nullptr;
@@ -166,6 +166,8 @@ WebPageImpl::WebPageImpl()
     WebLocalFrameImpl* webLocalFrameImpl = (WebLocalFrameImpl*)WebLocalFrame::create(WebTreeScopeType::Document, m_webFrameClient);
     m_webViewImpl = WebViewImpl::create(this);
     m_webViewImpl->setMainFrame(webLocalFrameImpl);
+
+    setBackgroundColor(m_bdColor);
 
     Frame* frame = toCoreFrame(m_webViewImpl->mainFrame());
     if (0 == m_firstFrameId)
@@ -425,11 +427,21 @@ WebView* WebPageImpl::createCefView(WebLocalFrame* creator,
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
 static WebView* createWkeViewDefault(HWND parent, const WebString& name, const WTF::CString& url)
 {
-    wke::CWebWindow* window = new wke::CWebWindow();
+    wke::CWebWindow* window = new wke::CWebWindow(cc::s_kBgColor);
     WTF::String nameString = name;
     Vector<UChar> nameBuf = WTF::ensureUTF16UChar(nameString, true);
 
-    window->createWindow(parent, WS_OVERLAPPEDWINDOW | WS_VISIBLE, 0, 100, 100, 570, 570);
+    wkeWindowCreateInfo info;
+    info.size = sizeof(wkeWindowCreateInfo);
+    info.style = WS_OVERLAPPEDWINDOW | WS_VISIBLE;
+    info.styleEx = 0;
+    info.x = 100;
+    info.y = 100;
+    info.width = 570;
+    info.height = 570;
+    info.color = cc::s_kBgColor;
+
+    window->createWindow(&info);
 
     WebPage* webPage = window->webPage();
     if (!webPage)
@@ -1129,7 +1141,7 @@ void WebPageImpl::paintToMemoryCanvasInUiThread(SkCanvas* canvas, const IntRect&
 #if 0
         HBRUSH hbrush;
         HPEN hpen;
-        hbrush = ::CreateSolidBrush(rand()); // 创建蓝色画刷
+        hbrush = ::CreateSolidBrush(rand());
         ::SelectObject(hdc, hbrush);
         //::Rectangle(hdc, m_paintRect.x(), m_paintRect.y(), m_paintRect.maxX(), m_paintRect.maxY());
         ::Rectangle(hdc, 220, 40, 366, 266);
@@ -1707,6 +1719,16 @@ void WebPageImpl::loadHTMLString(int64 frameId, const WebData& html, const WebUR
     //AutoRecordActions autoRecordActions(this, m_layerTreeHost, false);
     webFrame->loadHTMLString(html, baseURL, unreachableURL, replace);
     m_webViewImpl->setFocus(true);
+}
+
+void WebPageImpl::setBackgroundColor(COLORREF c)
+{
+    m_bdColor = c;
+
+    if (m_layerTreeHost)
+        m_layerTreeHost->setBackgroundColor(cc::getRealColor(false, c));
+    if (m_webViewImpl)
+        m_webViewImpl->setBaseBackgroundColor(cc::getRealColor(false, c));
 }
 
 void WebPageImpl::setTransparent(bool transparent)

@@ -6,6 +6,7 @@
 #define content_web_impl_win_WebMessagePortChannelImpl_h
 
 #include "third_party/WebKit/public/platform/WebMessagePortChannel.h"
+#include "third_party/WebKit/Source/wtf/ThreadingPrimitives.h"
 #include "content/browser/PlatformMessagePortChannel.h"
 
 namespace content {
@@ -34,6 +35,8 @@ private:
 
     blink::Member<PlatformMessagePortChannel> m_channel;
     blink::Persistent<WebMessagePortChannelImpl> m_keepAlive;
+
+    WTF::Mutex m_mutex;
 };
 
 }  // namespace content

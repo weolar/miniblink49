@@ -78,9 +78,9 @@ WebPage::~WebPage()
     m_webPageSet->remove(this);
 }
 
-bool WebPage::init(HWND hWnd)
+bool WebPage::init(HWND hWnd, COLORREF color)
 {
-    m_pageImpl = new WebPageImpl();
+    m_pageImpl = new WebPageImpl(color);
     m_pageImpl->init(this, hWnd);
     
     return true;
@@ -412,7 +412,7 @@ void WebPage::loadHTMLString(int64 frameId, const WebData& html, const WebURL& b
 
 void WebPage::setBackgroundColor(COLORREF c) {
     if (m_pageImpl)
-        m_pageImpl->m_bdColor = c;
+        m_pageImpl->setBackgroundColor(c);
 }
 
 #if (defined ENABLE_CEF) && (ENABLE_CEF == 1)

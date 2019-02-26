@@ -63,7 +63,7 @@ class WebPageImpl
     , public cc::LayerTreeHostClent
     , public PopupMenuWinClient {
 public:
-    WebPageImpl();
+    WebPageImpl(COLORREF bdColor);
     ~WebPageImpl();
 
     class DestroyNotif {
@@ -250,6 +250,8 @@ public:
     void onDraggingSimulate();
     bool m_isDragging;
     bool m_isFirstEnterDrag;
+
+    void setBackgroundColor(COLORREF c);
 
     void setCookieJarFullPath(const char* path);
     void setLocalStorageFullPath(const char* path);

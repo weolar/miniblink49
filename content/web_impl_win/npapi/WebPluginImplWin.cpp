@@ -1062,7 +1062,7 @@ void WebPluginImpl::platformStartImpl(bool isSync)
     }
 }
 
-#define USING_ASYNC_START 1
+#define USING_ASYNC_START 0
 
 void WebPluginImpl::PlatformStartAsynTask::didProcessTask()
 {

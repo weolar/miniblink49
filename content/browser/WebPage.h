@@ -63,7 +63,7 @@ public:
 
     WebPageState getState() const;
 
-    bool init(HWND hWnd);
+    bool init(HWND hWnd, COLORREF color);
 
     void close();
 

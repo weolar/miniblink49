@@ -37,6 +37,7 @@ void WebMessagePortChannelImpl::setClient(blink::WebMessagePortChannelClient* cl
 {
     //RELEASE_ASSERT (WTF::isMainThread()); // 强制支持多线程, demo:https://mozilla.github.io/pdf.js/
     // Must lock here since m_client is called on the main thread.
+    WTF::MutexLocker lock(m_mutex);
     m_channel->setRemotePort(client);
 
 //     String output = String::format("WebMessagePortChannelImpl::setClient: this:%p, MessagePort:%p\n", this, m_channel->m_remotePort);
@@ -46,6 +47,7 @@ void WebMessagePortChannelImpl::setClient(blink::WebMessagePortChannelClient* cl
 void WebMessagePortChannelImpl::destroy()
 {
     RELEASE_ASSERT(WTF::isMainThread());
+    WTF::MutexLocker lock(m_mutex);
 
     m_keepAlive = nullptr;
     PlatformMessagePortChannel* remote = m_channel->entangledChannel();
@@ -94,6 +96,7 @@ using namespace blink;
 
 DEFINE_TRACE(WebMessagePortChannelImpl)
 {
+    WTF::MutexLocker lock(m_mutex);
     visitor->trace(m_channel);
 }
 
