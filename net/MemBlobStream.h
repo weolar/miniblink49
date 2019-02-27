@@ -30,7 +30,8 @@ public:
         m_selfWrap = new SelfWrap(client);
     }
 
-    ~MemBlobStream() {
+    ~MemBlobStream()
+    {
         if (m_isAsync)
             return;
 
@@ -41,7 +42,15 @@ public:
         });
     }
 
-    long long getSize(const String& path, double expectedModificationTime) {
+    void cancel()
+    {
+        if (m_selfWrap)
+            m_selfWrap->isDestroied = true;
+    }
+
+
+    long long getSize(const String& path, double expectedModificationTime)
+    {
         if (m_info)
             return m_info->data.size();
         
@@ -60,7 +69,8 @@ public:
         return m_info->data.size();
     }
 
-    void init(long offset, long length) {
+    void init(long offset, long length)
+    {
         ++m_info->refCount;
         m_offset = offset;
         m_length = length;
@@ -74,7 +84,8 @@ public:
         }
     }
 
-    bool openForRead(const String& path, long long offset, long long length) {
+    bool openForRead(const String& path, long long offset, long long length)
+    {
         if (m_info) {
             if (m_info->tempUrl != path || m_offset != 0 || m_length != 0) {
                 DebugBreak();
@@ -102,7 +113,8 @@ public:
         return true;
     }
 
-    void close() {
+    void close()
+    {
         if (!m_info) {
             DebugBreak();
             return;
@@ -111,7 +123,8 @@ public:
         --m_info->refCount;
     }
 
-    int read(char* buffer, int length) {
+    int read(char* buffer, int length)
+    {
         if (!m_info)
             return 0;
 

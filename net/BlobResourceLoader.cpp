@@ -193,6 +193,12 @@ public:
         m_fileSyn = nullptr;
     }
 
+    void cancel()
+    {
+        if (m_isBlob && m_blob)
+            m_blob->cancel();
+    }
+
     bool initCheck(const String& path)
     {
         bool isBlob = path.startsWith("file:///c:/miniblink_blob_download_");
@@ -336,6 +342,8 @@ BlobResourceLoader::~BlobResourceLoader()
 
 void BlobResourceLoader::cancel()
 {
+    if (m_streamWrap)
+        m_streamWrap->cancel();
     m_streamWrap = nullptr;
     m_aborted = true;
 
