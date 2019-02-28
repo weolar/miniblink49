@@ -21,7 +21,6 @@ public:
     {
         m_popMenu = nullptr;
         m_hWnd = nullptr;
-        m_imagePos = nullptr;
         m_webPage = webPage;
         m_isDestroyed = 0;
 
@@ -53,9 +52,6 @@ public:
     {
         m_mutex.lock();
         InterlockedIncrement(&m_isDestroyed);
-
-        if (m_imagePos)
-            delete m_imagePos;
 
         ContextMenu* self = this;
         HWND hWnd = m_hWnd;
@@ -147,9 +143,7 @@ public:
 
         if (data.hasImageContents) {
             actionFlags |= kCopyImageId;
-            if (m_imagePos)
-                delete m_imagePos;
-            m_imagePos = new blink::IntPoint(data.mousePosition);
+            m_imagePos = blink::IntPoint(data.mousePosition);
         }
 
         if (m_webPage->isDevtoolsConneted())
@@ -176,10 +170,6 @@ public:
 
         POINT clientPt = screenPt;
         ::ScreenToClient(m_hWnd, &clientPt);
-
-        if (m_imagePos)
-            delete m_imagePos;
-        m_imagePos = nullptr;
 
         if (m_popMenu)
             ::DestroyMenu(m_popMenu);
@@ -239,9 +229,7 @@ public:
         } else if (kUndoId == itemID) {
             m_webPage->webViewImpl()->focusedFrame()->executeCommand("Undo");
         } else if (kCopyImageId == itemID) {
-            m_webPage->webViewImpl()->copyImageAt(*m_imagePos);
-            delete m_imagePos;
-            m_imagePos = nullptr;
+            m_webPage->webViewImpl()->copyImageAt(m_imagePos);
         } else if (kInspectElementAtId == itemID) {
             m_webPage->inspectElementAt(m_data.mousePosition.x, m_data.mousePosition.y);
         } else if (kCutId == itemID) {
@@ -298,7 +286,7 @@ public:
     blink::WebContextMenuData m_data;
     WebPage* m_webPage;
 
-    blink::IntPoint* m_imagePos;
+    blink::IntPoint m_imagePos;
 
     int m_lastX;
     int m_lastY;
