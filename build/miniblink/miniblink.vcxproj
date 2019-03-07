@@ -4814,6 +4814,7 @@
     <ClCompile Include="..\..\third_party\WebKit\Source\modules\websockets\InspectorWebSocketEvents.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\modules\websockets\WebSocketChannel.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\modules\websockets\WebSocketFrame.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\modules\websockets\WorkerWebSocketChannel.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\platform\animation\CubicBezierControlPoints.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\platform\DragImage.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\platform\EventDispatchForbiddenScope.cpp" />
@@ -6013,8 +6014,12 @@
     <ClInclude Include="..\..\node\nodeblink.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|x64'">true</ExcludedFromBuild>
     </ClInclude>
-    <ClInclude Include="..\..\node\src\node_api.h" />
-    <ClInclude Include="..\..\node\src\node_api_types.h" />
+    <ClInclude Include="..\..\node\src\node_api.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|x64'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\..\node\src\node_api_types.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|x64'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="..\..\node\src\node_url.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|x64'">true</ExcludedFromBuild>
     </ClInclude>
@@ -8862,6 +8867,7 @@
     <ClInclude Include="..\..\third_party\WebKit\Source\modules\websockets\WebSocketChannel.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\modules\websockets\WebSocketChannelClient.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\modules\websockets\WebSocketFrame.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\modules\websockets\WorkerWebSocketChannel.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\platform\exported\WebActiveGestureAnimation.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\platform\exported\WebScrollbarImpl.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\platform\exported\WebScrollbarThemeGeometryNative.h" />
