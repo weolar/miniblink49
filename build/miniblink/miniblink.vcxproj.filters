@@ -7590,9 +7590,6 @@
     <ClCompile Include="..\..\third_party\WebKit\Source\core\clipboard\DraggedIsolatedFileSystem.cpp">
       <Filter>third_party\Webkit\Source\core\clipboard</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\third_party\WebKit\Source\core\css\ComputedStyleCSSValueMapping.cpp">
-      <Filter>third_party\Webkit\Source\core</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\third_party\WebKit\Source\core\css\KeyframeStyleRuleCSSStyleDeclaration.cpp">
       <Filter>third_party\Webkit\Source\core\css</Filter>
     </ClCompile>
@@ -9747,9 +9744,6 @@
     <ClCompile Include="..\..\third_party\WebKit\Source\platform\image-encoders\skia\JPEGImageEncoder.cpp">
       <Filter>third_party\Webkit\Source\platform\image-encoders\skia</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\third_party\WebKit\Source\core\xml\XMLSerializer.cpp">
-      <Filter>third_party\Webkit\Source\core</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\gen\blink\bindings\core\v8\V8XMLSerializer.cpp">
       <Filter>gen\blink\bindings\core\v8</Filter>
     </ClCompile>
@@ -10271,6 +10265,33 @@
     </ClCompile>
     <ClCompile Include="..\..\third_party\WebKit\Source\modules\websockets\WorkerWebSocketChannel.cpp">
       <Filter>third_party\Webkit\Source\modules\websockets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\net\DefaultFullPath.cpp">
+      <Filter>net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\net\DiskCache.cpp">
+      <Filter>net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\css\CSSCustomPropertyDeclaration.cpp">
+      <Filter>third_party\Webkit\Source\core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\css\CSSVariableData.cpp">
+      <Filter>third_party\Webkit\Source\core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\css\CSSVariableReferenceValue.cpp">
+      <Filter>third_party\Webkit\Source\core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\css\parser\CSSVariableParser.cpp">
+      <Filter>third_party\Webkit\Source\core\css\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\css\resolver\CSSVariableResolver.cpp">
+      <Filter>third_party\Webkit\Source\core\css\resolver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\css\ComputedStyleCSSValueMapping.cpp">
+      <Filter>third_party\Webkit\Source\core\css</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\xml\XMLSerializer.cpp">
+      <Filter>third_party\Webkit\Source\core\xml</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -13905,9 +13926,6 @@
       <Filter>third_party\Webkit\Source\wtf</Filter>
     </ClInclude>
     <ClInclude Include="..\..\third_party\WebKit\Source\wtf\Alignment.h">
-      <Filter>third_party\Webkit\Source\wtf</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\third_party\WebKit\Source\wtf\Allocator.h">
       <Filter>third_party\Webkit\Source\wtf</Filter>
     </ClInclude>
     <ClInclude Include="..\..\third_party\WebKit\Source\wtf\ArrayBuffer.h">
@@ -20069,9 +20087,6 @@
     <ClInclude Include="..\..\third_party\WebKit\Source\core\clipboard\DraggedIsolatedFileSystem.h">
       <Filter>third_party\Webkit\Source\core\clipboard</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\third_party\WebKit\Source\core\css\ComputedStyleCSSValueMapping.h">
-      <Filter>third_party\Webkit\Source\core</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\third_party\WebKit\Source\core\css\KeyframeStyleRuleCSSStyleDeclaration.h">
       <Filter>third_party\Webkit\Source\core\css</Filter>
     </ClInclude>
@@ -22736,9 +22751,6 @@
     <ClInclude Include="..\..\net\FlattenHTTPBodyElement.h">
       <Filter>net</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\third_party\WebKit\Source\core\xml\XMLSerializer.h">
-      <Filter>third_party\Webkit\Source\core</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\gen\blink\bindings\core\v8\V8XMLSerializer.h">
       <Filter>gen\blink\bindings\core\v8</Filter>
     </ClInclude>
@@ -23288,6 +23300,36 @@
     </ClInclude>
     <ClInclude Include="..\..\third_party\WebKit\Source\modules\websockets\WorkerWebSocketChannel.h">
       <Filter>third_party\Webkit\Source\modules\websockets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\net\DefaultFullPath.h">
+      <Filter>net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\net\DiskCache.h">
+      <Filter>net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\style\StyleVariableData.h">
+      <Filter>third_party\Webkit\Source\core\style</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\css\CSSCustomPropertyDeclaration.h">
+      <Filter>third_party\Webkit\Source\core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\css\CSSVariableData.h">
+      <Filter>third_party\Webkit\Source\core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\css\CSSVariableReferenceValue.h">
+      <Filter>third_party\Webkit\Source\core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\css\parser\CSSVariableParser.h">
+      <Filter>third_party\Webkit\Source\core\css\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\css\resolver\CSSVariableResolver.h">
+      <Filter>third_party\Webkit\Source\core\css\resolver</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\css\ComputedStyleCSSValueMapping.h">
+      <Filter>third_party\Webkit\Source\core\css</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\xml\XMLSerializer.h">
+      <Filter>third_party\Webkit\Source\core\xml</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

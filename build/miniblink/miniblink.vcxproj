@@ -163,7 +163,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>BUILDING_CEF_SHARED;DCHECK_ALWAYS_ON=1;WIN32;_DEBUG;_WINDOWS;INSIDE_BLINK=1;BLINK_IMPLEMENTATION=1;ENABLE_OILPAN=1;ENABLE_GC_PROFILING=1;ENABLE_WKE=1;CARES_STATICLIB=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>BUILDING_CEF_SHARED;DCHECK_ALWAYS_ON=1;WIN32;_DEBUG;_WINDOWS;INSIDE_BLINK=1;BLINK_IMPLEMENTATION=1;ENABLE_OILPAN=1;ENABLE_GC_PROFILING=1;ENABLE_WKE=1;CARES_STATICLIB=1;CURL_STATICLIB=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -191,7 +191,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_vc6|Win32'">
     <ClCompile>
       <Optimization>MinSpace</Optimization>
-      <PreprocessorDefinitions>USING_VC6RT=1;_USING_V110_SDK71_;_WINDLL;_UNICODE;UNICODE;BUILDING_CEF_SHARED;NDEBUG;WIN32;_WINDOWS;INSIDE_BLINK=1;BLINK_IMPLEMENTATION=1;ENABLE_OILPAN=1;ENABLE_WKE=1;CARES_STATICLIB=1</PreprocessorDefinitions>
+      <PreprocessorDefinitions>USING_VC6RT=1;_USING_V110_SDK71_;_WINDLL;_UNICODE;UNICODE;BUILDING_CEF_SHARED;NDEBUG;WIN32;_WINDOWS;INSIDE_BLINK=1;BLINK_IMPLEMENTATION=1;ENABLE_OILPAN=1;ENABLE_WKE=1;CARES_STATICLIB=1;CURL_STATICLIB=1</PreprocessorDefinitions>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -391,7 +391,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_NoNode|Win32'">
     <ClCompile>
-      <PreprocessorDefinitions>USING_VC6RT=1;_USING_V110_SDK71_;_WINDLL;_UNICODE;UNICODE;BUILDING_CEF_SHARED;NDEBUG;WIN32;_WINDOWS;INSIDE_BLINK=1;BLINK_IMPLEMENTATION=1;ENABLE_OILPAN=1;ENABLE_WKE=1</PreprocessorDefinitions>
+      <PreprocessorDefinitions>USING_VC6RT=1;_USING_V110_SDK71_;_WINDLL;_UNICODE;UNICODE;BUILDING_CEF_SHARED;NDEBUG;WIN32;_WINDOWS;INSIDE_BLINK=1;BLINK_IMPLEMENTATION=1;ENABLE_OILPAN=1;ENABLE_WKE=1;CURL_STATICLIB=1</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
@@ -553,6 +553,8 @@
     <ClCompile Include="..\..\net\ActivatingObjCheck.cpp" />
     <ClCompile Include="..\..\net\cookies\CookieJarMgr.cpp" />
     <ClCompile Include="..\..\net\cookies\WebCookieJarCurlImpl.cpp" />
+    <ClCompile Include="..\..\net\DefaultFullPath.cpp" />
+    <ClCompile Include="..\..\net\DiskCache.cpp" />
     <ClCompile Include="..\..\net\PageNetExtraData.cpp" />
     <ClCompile Include="..\..\net\StorageMgr.cpp" />
     <ClCompile Include="..\..\net\WebStorageAreaImpl.cpp" />
@@ -588,6 +590,11 @@
     <ClCompile Include="..\..\third_party\WebKit\Source\bindings\core\v8\ScriptHeapSnapshot.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\bindings\core\v8\ScriptProfiler.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\bindings\core\v8\V8GCController_v8_5_7.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\css\CSSCustomPropertyDeclaration.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\css\CSSVariableData.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\css\CSSVariableReferenceValue.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\css\parser\CSSVariableParser.cpp" />
+    <ClCompile Include="..\..\third_party\WebKit\Source\core\css\resolver\CSSVariableResolver.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\core\dom\URLSearchParams.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\AsyncCallChain.cpp" />
     <ClCompile Include="..\..\third_party\WebKit\Source\core\inspector\AsyncCallTracker.cpp" />
@@ -5997,6 +6004,8 @@
     <ClInclude Include="..\..\net\CancelledReason.h" />
     <ClInclude Include="..\..\net\cookies\CookieJarMgr.h" />
     <ClInclude Include="..\..\net\cookies\WebCookieJarCurlImpl.h" />
+    <ClInclude Include="..\..\net\DefaultFullPath.h" />
+    <ClInclude Include="..\..\net\DiskCache.h" />
     <ClInclude Include="..\..\net\FlattenHTTPBodyElement.h" />
     <ClInclude Include="..\..\net\HeaderVisitor.h" />
     <ClInclude Include="..\..\net\InitializeHandleInfo.h" />
@@ -6029,6 +6038,11 @@
     <ClInclude Include="..\..\third_party\WebKit\Source\bindings\core\v8\inspector\V8JavaScriptCallFrame.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\bindings\core\v8\ScriptHeapSnapshot.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\bindings\core\v8\ScriptProfiler.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\css\CSSCustomPropertyDeclaration.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\css\CSSVariableData.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\css\CSSVariableReferenceValue.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\css\parser\CSSVariableParser.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\css\resolver\CSSVariableResolver.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\core\dom\URLSearchParams.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\core\frame\External.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\AsyncCallChain.h" />
@@ -6109,6 +6123,7 @@
     <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\WorkerInspectorController.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\WorkerRuntimeAgent.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\core\inspector\WorkerThreadDebugger.h" />
+    <ClInclude Include="..\..\third_party\WebKit\Source\core\style\StyleVariableData.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\core\xml\DocumentXPathEvaluator.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\core\xml\DocumentXSLT.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\core\xml\NativeXPathNSResolver.h" />
@@ -10277,7 +10292,6 @@
     <ClInclude Include="..\..\third_party\WebKit\Source\wtf\AddressSanitizer.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\wtf\AddressSpaceRandomization.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\wtf\Alignment.h" />
-    <ClInclude Include="..\..\third_party\WebKit\Source\wtf\Allocator.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\wtf\ArrayBuffer.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\wtf\ArrayBufferBuilder.h" />
     <ClInclude Include="..\..\third_party\WebKit\Source\wtf\ArrayBufferContents.h" />
