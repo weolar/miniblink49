@@ -796,7 +796,11 @@ bool ResourceFetcher::scheduleArchiveLoad(Resource* resource, const ResourceRequ
     if (!m_archiveResourceCollection)
         return false;
 
-    ArchiveResource* archiveResource = m_archiveResourceCollection->archiveResourceForURL(request.url());
+	KURL url = request.url();
+	if (url.protocolIsData()) // lookup M57, ResourceFetcher::resourceForStaticData
+		return false;
+
+    ArchiveResource* archiveResource = m_archiveResourceCollection->archiveResourceForURL(url);
     if (!archiveResource) {
         resource->error(Resource::LoadError);
         return false;
