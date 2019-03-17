@@ -249,7 +249,7 @@ void SocketStreamHandle::threadFunction()
 
     curl_easy_setopt(curlHandle, CURLOPT_PORT, port);
     curl_easy_setopt(curlHandle, CURLOPT_CONNECT_ONLY);
-    curl_easy_setopt(curlHandle, CURLOPT_TIMEOUT, 5000);
+    curl_easy_setopt(curlHandle, CURLOPT_TIMEOUT_MS, 500);
 
     static const int kAllowedProtocols = CURLPROTO_FILE | CURLPROTO_FTP | CURLPROTO_FTPS | CURLPROTO_HTTP | CURLPROTO_HTTPS;
     curl_easy_setopt(curlHandle, CURLOPT_SSL_VERIFYPEER, false); // ignoreSSLErrors
@@ -260,14 +260,21 @@ void SocketStreamHandle::threadFunction()
     curl_easy_setopt(curlHandle, CURLOPT_REDIR_PROTOCOLS, kAllowedProtocols);
    
     // Connect to host
-    if (curl_easy_perform(curlHandle) != CURLE_OK)
-        return;
+    const int retryCount = 5;
+    CURLcode curlCode = CURLE_FAILED_INIT;
+    for (int i = 0; i < retryCount; ++i) {
+        if (0 != m_stopThread)
+            break;
+        curlCode = curl_easy_perform(curlHandle);
+    }
+	if (CURLE_OK != curlCode)
+		return;
 
     ref();
 
     WTF::internal::callOnMainThread(s_mainThreadRun, this);
 
-    while (!m_stopThread) {
+    while (0 == m_stopThread) {
         // Send queued data
         sendData(curlHandle);
 
