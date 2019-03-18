@@ -280,8 +280,8 @@ private:
     void destroyIfNotStatic();
 
 public:
-    bool StringImpl::hasHash() const;
-    unsigned StringImpl::existingHash() const;
+    bool hasHash() const;
+    unsigned existingHash() const;
     unsigned hash() const;
     bool hasOneRef() const;
     void ref();

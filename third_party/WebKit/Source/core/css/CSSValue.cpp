@@ -53,6 +53,8 @@
 #include "core/css/CSSUnicodeRangeValue.h"
 #include "core/css/CSSUnsetValue.h"
 #include "core/css/CSSValueList.h"
+#include "core/css/CSSCustomPropertyDeclaration.h"
+#include "core/css/CSSVariableReferenceValue.h"
 
 namespace blink {
 
@@ -150,6 +152,10 @@ bool CSSValue::equals(const CSSValue& other) const
             return compareCSSValues<CSSSVGDocumentValue>(*this, other);
         case CSSContentDistributionClass:
             return compareCSSValues<CSSContentDistributionValue>(*this, other);
+		case CustomPropertyDeclarationClass:
+			return compareCSSValues<CSSCustomPropertyDeclaration>(*this, other);
+		case VariableReferenceClass:
+			return compareCSSValues<CSSVariableReferenceValue>(*this, other);
         default:
             ASSERT_NOT_REACHED();
             return false;
@@ -217,6 +223,11 @@ String CSSValue::cssText() const
         return toCSSSVGDocumentValue(this)->customCSSText();
     case CSSContentDistributionClass:
         return toCSSContentDistributionValue(this)->customCSSText();
+	case VariableReferenceClass:
+		return toCSSVariableReferenceValue(this)->customCSSText();
+	case CustomPropertyDeclarationClass:
+		// TODO(leviw): We don't allow custom properties in CSSOM yet
+		ASSERT_NOT_REACHED();
     }
     ASSERT_NOT_REACHED();
     return String();
@@ -309,6 +320,12 @@ void CSSValue::destroy()
     case CSSContentDistributionClass:
         delete toCSSContentDistributionValue(this);
         return;
+	case VariableReferenceClass:
+		delete toCSSVariableReferenceValue(this);
+		return;
+	case CustomPropertyDeclarationClass:
+		delete toCSSCustomPropertyDeclaration(this);
+		return;
     }
     ASSERT_NOT_REACHED();
 }
@@ -400,6 +417,12 @@ void CSSValue::finalizeGarbageCollectedObject()
     case CSSContentDistributionClass:
         toCSSContentDistributionValue(this)->~CSSContentDistributionValue();
         return;
+	case VariableReferenceClass:
+		toCSSVariableReferenceValue(this)->~CSSVariableReferenceValue();
+		return;
+	case CustomPropertyDeclarationClass:
+		toCSSCustomPropertyDeclaration(this)->~CSSCustomPropertyDeclaration();
+		return;
     }
     ASSERT_NOT_REACHED();
 }
@@ -491,6 +514,12 @@ DEFINE_TRACE(CSSValue)
     case CSSContentDistributionClass:
         toCSSContentDistributionValue(this)->traceAfterDispatch(visitor);
         return;
+	case VariableReferenceClass:
+		toCSSVariableReferenceValue(this)->traceAfterDispatch(visitor);
+		return;
+	case CustomPropertyDeclarationClass:
+		toCSSCustomPropertyDeclaration(this)->traceAfterDispatch(visitor);
+		return;
     }
     ASSERT_NOT_REACHED();
 }

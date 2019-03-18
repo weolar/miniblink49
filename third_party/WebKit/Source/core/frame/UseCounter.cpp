@@ -219,7 +219,7 @@ int UseCounter::mapCSSPropertyIdToCSSSampleIdForHistogram(int id)
     // CSSPropertyWebkitAspectRatio was 176
     case CSSPropertyAliasWebkitBackfaceVisibility: return 177;
     case CSSPropertyWebkitBackgroundClip: return 178;
-    case CSSPropertyWebkitBackgroundComposite: return 179;
+    //case CSSPropertyWebkitBackgroundComposite: return 179;
     case CSSPropertyWebkitBackgroundOrigin: return 180;
     case CSSPropertyAliasWebkitBackgroundSize: return 181;
     case CSSPropertyWebkitBorderAfter: return 182;
@@ -292,7 +292,7 @@ int UseCounter::mapCSSPropertyIdToCSSSampleIdForHistogram(int id)
     case CSSPropertyGridAutoFlow: return 250;
     case CSSPropertyWebkitHighlight: return 251;
     case CSSPropertyWebkitHyphenateCharacter: return 252;
-    case CSSPropertyWebkitLineBoxContain: return 257;
+    // case CSSPropertyWebkitLineBoxContain: return 257;
     // case CSSPropertyWebkitLineAlign: return 258;
     case CSSPropertyWebkitLineBreak: return 259;
     case CSSPropertyWebkitLineClamp: return 260;
@@ -389,7 +389,7 @@ int UseCounter::mapCSSPropertyIdToCSSSampleIdForHistogram(int id)
     case CSSPropertyClipPath: return 355;
     case CSSPropertyClipRule: return 356;
     case CSSPropertyMask: return 357;
-    case CSSPropertyEnableBackground: return 358;
+    //case CSSPropertyEnableBackground: return 358;
     case CSSPropertyFilter: return 359;
     case CSSPropertyFloodColor: return 360;
     case CSSPropertyFloodOpacity: return 361;
@@ -420,8 +420,8 @@ int UseCounter::mapCSSPropertyIdToCSSSampleIdForHistogram(int id)
     case CSSPropertyAlignmentBaseline: return 386;
     case CSSPropertyBaselineShift: return 387;
     case CSSPropertyDominantBaseline: return 388;
-    case CSSPropertyGlyphOrientationHorizontal: return 389;
-    case CSSPropertyGlyphOrientationVertical: return 390;
+//     case CSSPropertyGlyphOrientationHorizontal: return 389;
+//     case CSSPropertyGlyphOrientationVertical: return 390;
     // CSSPropertyKerning has been removed, was return 391;
     case CSSPropertyTextAnchor: return 392;
     case CSSPropertyVectorEffect: return 393;
@@ -489,7 +489,7 @@ int UseCounter::mapCSSPropertyIdToCSSSampleIdForHistogram(int id)
     case CSSPropertyGrid: return 453;
     case CSSPropertyAll: return 454;
     case CSSPropertyJustifyItems: return 455;
-    case CSSPropertyScrollBlocksOn: return 456;
+    //case CSSPropertyScrollBlocksOn: return 456;
     case CSSPropertyMotionPath: return 457;
     case CSSPropertyMotionOffset: return 458;
     case CSSPropertyMotionRotation: return 459;
@@ -540,6 +540,8 @@ int UseCounter::mapCSSPropertyIdToCSSSampleIdForHistogram(int id)
     case CSSPropertyTranslate: return 504;
     case CSSPropertyRotate: return 505;
     case CSSPropertyScale: return 506;
+	case CSSPropertyVariable: return 507;
+	//case CSSPropertyAliasWebkitUserSelect: return 508;
 
     // 1. Add new features above this line (don't change the assigned numbers of the existing
     // items).
@@ -556,7 +558,7 @@ int UseCounter::mapCSSPropertyIdToCSSSampleIdForHistogram(int id)
     return 0;
 }
 
-static int maximumCSSSampleId() { return 506; }
+static int maximumCSSSampleId() { return 507; }
 
 void UseCounter::muteForInspector()
 {

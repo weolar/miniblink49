@@ -584,6 +584,10 @@ public:
     TextDecorationStyle textDecorationStyle() const { return static_cast<TextDecorationStyle>(rareNonInheritedData->m_textDecorationStyle); }
     float wordSpacing() const;
     float letterSpacing() const;
+	StyleVariableData* variables() const;
+	
+	void setVariable(const AtomicString&, PassRefPtr<CSSVariableData>);
+	void removeVariable(const AtomicString&);
 
     float zoom() const { return visual->m_zoom; }
     float effectiveZoom() const { return rareInheritedData->m_effectiveZoom; }
@@ -1712,6 +1716,7 @@ public:
     static TouchAction initialTouchAction() { return TouchActionAuto; }
     static ShadowList* initialBoxShadow() { return 0; }
     static ShadowList* initialTextShadow() { return 0; }
+	static StyleVariableData* initialVariables() { return nullptr; }
     static ScrollBehavior initialScrollBehavior() { return ScrollBehaviorAuto; }
     static WebScrollBlocksOn initialScrollBlocksOn() { return WebScrollBlocksOnNone; }
     static ScrollSnapType initialScrollSnapType() { return ScrollSnapTypeNone; }

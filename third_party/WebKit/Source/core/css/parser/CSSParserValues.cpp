@@ -22,10 +22,12 @@
 #include "core/css/parser/CSSParserValues.h"
 
 #include "core/css/CSSFunctionValue.h"
+#include "core/css/CSSVariableData.h"
 #include "core/css/CSSSelectorList.h"
 #include "core/css/parser/CSSParserToken.h"
 #include "core/css/parser/CSSParserTokenRange.h"
 #include "core/css/parser/CSSPropertyParser.h"
+#include "core/css/parser/CSSVariableParser.h"
 #include "core/html/parser/HTMLParserIdioms.h"
 
 namespace blink {
@@ -33,8 +35,10 @@ namespace blink {
 using namespace WTF;
 
 CSSParserValueList::CSSParserValueList(CSSParserTokenRange range, bool& usesRemUnits)
-: m_current(0)
+	: m_current(0)
 {
+    CSSParserTokenRange originalRangeForVariables = range;
+
     usesRemUnits = false;
     Vector<CSSParserValueList*> stack;
     Vector<int> bracketCounts;
@@ -51,7 +55,8 @@ CSSParserValueList::CSSParserValueList(CSSParserTokenRange range, bool& usesRemU
             if (token.valueEqualsIgnoringCase("url")) {
                 const CSSParserToken& next = range.consumeIncludingWhitespace();
                 if (next.type() == BadStringToken || range.consume().type() != RightParenthesisToken) {
-                    destroyAndClear();
+                    //destroyAndClear();
+                    checkForVariableReferencesOrDestroyAndClear(originalRangeForVariables);
                     return;
                 }
                 ASSERT(next.type() == StringToken);
@@ -60,6 +65,9 @@ CSSParserValueList::CSSParserValueList(CSSParserTokenRange range, bool& usesRemU
                 value.unit = CSSPrimitiveValue::CSS_URI;
                 value.string = next.value();
                 break;
+            } else if (token.valueEqualsIgnoringCase("var")) {
+                checkForVariableReferencesOrDestroyAndClear(originalRangeForVariables);
+                return;
             }
 
             CSSParserFunction* function = new CSSParserFunction;
@@ -96,7 +104,8 @@ CSSParserValueList::CSSParserValueList(CSSParserTokenRange range, bool& usesRemU
                 stack.removeLast();
                 bracketCounts.removeLast();
                 if (bracketCounts.isEmpty()) {
-                    destroyAndClear();
+                    //destroyAndClear();
+                    checkForVariableReferencesOrDestroyAndClear(originalRangeForVariables);
                     return;
                 }
                 CSSParserValueList* currentList = stack.last();
@@ -214,10 +223,14 @@ CSSParserValueList::CSSParserValueList(CSSParserTokenRange range, bool& usesRemU
         case SuffixMatchToken:
         case SubstringMatchToken:
         case ColumnToken:
-        case BadStringToken:
-        case BadUrlToken:
+//         case BadStringToken:
+//         case BadUrlToken:
         case ColonToken:
         case SemicolonToken:
+            checkForVariableReferencesOrDestroyAndClear(originalRangeForVariables);
+            return;
+		case BadStringToken:
+		case BadUrlToken:
             destroyAndClear();
             return;
         }
@@ -245,7 +258,27 @@ static void destroy(Vector<CSSParserValue, 4>& values)
         else if (values[i].unit == CSSParserValue::ValueList
             || values[i].unit == CSSParserValue::DimensionList)
             delete values[i].valueList;
+        else if (values[i].id == CSSValueInternalVariableValue)
+            values[i].variableData->deref();
     }
+}
+
+void CSSParserValueList::checkForVariableReferencesOrDestroyAndClear(const CSSParserTokenRange& originalRange)
+{
+    // We have to clear any state that may have been previously loaded
+    destroyAndClear();
+    if (RuntimeEnabledFeatures::cssVariablesEnabled() && CSSVariableParser::containsValidVariableReferences(originalRange))
+        consumeVariableValue(originalRange);
+}
+
+void CSSParserValueList::consumeVariableValue(const CSSParserTokenRange& originalRange)
+{
+    ASSERT(m_values.isEmpty());
+    CSSParserValue variableValue;
+    variableValue.id = CSSValueInternalVariableValue;
+    variableValue.isInt = false;
+    variableValue.variableData = CSSVariableData::create(originalRange).leakRef();
+    addValue(variableValue);
 }
 
 void CSSParserValueList::destroyAndClear()

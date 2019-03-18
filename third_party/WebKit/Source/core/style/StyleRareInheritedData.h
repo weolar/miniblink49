@@ -28,6 +28,7 @@
 #include "core/CoreExport.h"
 #include "core/css/StyleColor.h"
 #include "core/style/DataRef.h"
+#include "core/style/StyleVariableData.h"
 #include "platform/Length.h"
 #include "platform/graphics/Color.h"
 #include "platform/text/TabSize.h"
@@ -151,6 +152,8 @@ public:
 
     RefPtr<AppliedTextDecorationList> appliedTextDecorations;
     TabSize m_tabSize;
+
+	RefPtr<StyleVariableData> variables;
 
 private:
     StyleRareInheritedData();

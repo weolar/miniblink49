@@ -1932,8 +1932,8 @@ PassRefPtrWillBeRawPtr<CSSValue> ComputedStyleCSSValueMapping::get(CSSPropertyID
         return cssValuePool().createValue(style.rubyPosition());
     case CSSPropertyScrollBehavior:
         return cssValuePool().createValue(style.scrollBehavior());
-    case CSSPropertyScrollBlocksOn:
-        return scrollBlocksOnFlagsToCSSValue(style.scrollBlocksOn());
+//     case CSSPropertyScrollBlocksOn:
+//         return scrollBlocksOnFlagsToCSSValue(style.scrollBlocksOn());
     case CSSPropertyTableLayout:
         return cssValuePool().createValue(style.tableLayout());
     case CSSPropertyTextAlign:
@@ -2342,8 +2342,8 @@ PassRefPtrWillBeRawPtr<CSSValue> ComputedStyleCSSValueMapping::get(CSSPropertyID
         return cssValuePool().createValue(style.textCombine());
     case CSSPropertyWebkitTextOrientation:
         return CSSPrimitiveValue::create(style.textOrientation());
-    case CSSPropertyWebkitLineBoxContain:
-        return createLineBoxContainValue(style.lineBoxContain());
+//     case CSSPropertyWebkitLineBoxContain:
+//         return createLineBoxContainValue(style.lineBoxContain());
     case CSSPropertyContent:
         return valueForContentData(style);
     case CSSPropertyCounterIncrement:
@@ -2609,15 +2609,15 @@ PassRefPtrWillBeRawPtr<CSSValue> ComputedStyleCSSValueMapping::get(CSSPropertyID
     }
     case CSSPropertyBufferedRendering:
         return CSSPrimitiveValue::create(svgStyle.bufferedRendering());
-    case CSSPropertyGlyphOrientationHorizontal:
-        return glyphOrientationToCSSPrimitiveValue(svgStyle.glyphOrientationHorizontal());
-    case CSSPropertyGlyphOrientationVertical: {
-        if (RefPtrWillBeRawPtr<CSSPrimitiveValue> value = glyphOrientationToCSSPrimitiveValue(svgStyle.glyphOrientationVertical()))
-            return value.release();
-        if (svgStyle.glyphOrientationVertical() == GO_AUTO)
-            return CSSPrimitiveValue::createIdentifier(CSSValueAuto);
-        return nullptr;
-    }
+//     case CSSPropertyGlyphOrientationHorizontal:
+//         return glyphOrientationToCSSPrimitiveValue(svgStyle.glyphOrientationHorizontal());
+//     case CSSPropertyGlyphOrientationVertical: {
+//         if (RefPtrWillBeRawPtr<CSSPrimitiveValue> value = glyphOrientationToCSSPrimitiveValue(svgStyle.glyphOrientationVertical()))
+//             return value.release();
+//         if (svgStyle.glyphOrientationVertical() == GO_AUTO)
+//             return CSSPrimitiveValue::createIdentifier(CSSValueAuto);
+//         return nullptr;
+//     }
     case CSSPropertyPaintOrder:
         return paintOrderToCSSValueList(svgStyle.paintOrder());
     case CSSPropertyVectorEffect:
@@ -2625,9 +2625,9 @@ PassRefPtrWillBeRawPtr<CSSValue> ComputedStyleCSSValueMapping::get(CSSPropertyID
     case CSSPropertyMaskType:
         return CSSPrimitiveValue::create(svgStyle.maskType());
     case CSSPropertyMarker:
-    case CSSPropertyEnableBackground:
-        // the above properties are not yet implemented in the engine
-        return nullptr;
+//     case CSSPropertyEnableBackground:
+//         // the above properties are not yet implemented in the engine
+//         return nullptr;
     case CSSPropertyCx:
         return zoomAdjustedPixelValueForLength(svgStyle.cx(), style);
     case CSSPropertyCy:
@@ -2702,6 +2702,11 @@ PassRefPtrWillBeRawPtr<CSSValue> ComputedStyleCSSValueMapping::get(CSSPropertyID
             list->append(cssValuePool().createValue(style.scale()->z(), CSSPrimitiveValue::CSS_NUMBER));
         return list.release();
     }
+	case CSSPropertyVariable:
+		// TODO(leviw): We should have a way to retrive variables here.
+		ASSERT_NOT_REACHED();
+		return nullptr;
+
     case CSSPropertyAll:
         return nullptr;
     default:

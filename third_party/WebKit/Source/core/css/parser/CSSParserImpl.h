@@ -98,6 +98,7 @@ private:
     void consumeDeclarationList(CSSParserTokenRange, StyleRule::Type);
     void consumeDeclaration(CSSParserTokenRange, StyleRule::Type);
     void consumeDeclarationValue(CSSParserTokenRange, CSSPropertyID, bool important, StyleRule::Type);
+	void consumeVariableDeclarationValue(CSSParserTokenRange, const AtomicString& variableName, bool important);
 
     static PassOwnPtr<Vector<double>> consumeKeyframeKeyList(CSSParserTokenRange);
 

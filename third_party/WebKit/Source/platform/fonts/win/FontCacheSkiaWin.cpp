@@ -166,8 +166,8 @@ PassRefPtr<SimpleFontData> FontCache::fallbackFontForCharacter(
     };
 
     const static wchar_t* const commonFonts[] = {
-        L"宋体",
         L"微软雅黑",
+        L"宋体",
         L"tahoma",
         L"arial unicode ms",
         L"lucida sans unicode",

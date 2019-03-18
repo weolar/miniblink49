@@ -146,7 +146,7 @@ static void messageHandlerInMainThread(v8::Local<v8::Message> message, v8::Local
     LocalDOMWindow* enteredWindow = enteredDOMWindow(isolate);
     if (!enteredWindow || !enteredWindow->isCurrentlyDisplayedInFrame())
         return;
-
+    
     int scriptId = 0;
     RefPtrWillBeRawPtr<ScriptCallStack> callStack = extractCallStack(isolate, message, &scriptId);
     String resourceName = extractResourceName(message, enteredWindow->document());
