@@ -22,7 +22,7 @@
 #include "skia/ext/platform_canvas.h"
 #include "skia/ext/bitmap_platform_device_win.h"
 #include "wtf/text/WTFStringUtil.h"
-
+#include "net/FileSystem.h"
 #include <windows.h>
 
 #if USING_VC6RT == 1
@@ -371,9 +371,17 @@ blink::WebString WebClipboardImpl::readHTML(Buffer buffer, WebURL* sourceUrl,
         const char* cfHtml = static_cast<const char*>(::GlobalLock(data));
         if (!cfHtml)
             return blink::WebString();
-        const int sizeOfHtml = strlen(cfHtml);
+
+        int sizeOfHtml = GlobalSize(data);
         if (0 == sizeOfHtml)
             return blink::WebString();
+
+        for (size_t i = 0; i < sizeOfHtml; ++i) {
+            if ('\0' == *((const char*)data + i)) {
+                sizeOfHtml = i;
+                break;
+            }
+        }
 
         if (!WTF::isTextUTF8(cfHtml, sizeOfHtml))
             WTF::MByteToUtf8(cfHtml, sizeOfHtml, &utf8CfHtml, CP_ACP);

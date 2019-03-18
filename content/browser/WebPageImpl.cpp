@@ -645,6 +645,15 @@ void WebPageImpl::closeWidgetSoon()
     if (m_browser && !m_postCloseWidgetSoonMessage)
         blink::Platform::current()->currentThread()->postTask(FROM_HERE, WTF::bind(&CefBrowserHostImpl::CloseBrowser, m_browser, true));
 #endif
+
+#if (ENABLE_WKE == 1)
+	wke::CWebViewHandler& handler = m_pagePtr->wkeHandler();
+    if (handler.windowClosingCallback) {
+        // 不管返回值了，也暂时不主动关闭窗口
+		handler.windowClosingCallback(m_pagePtr->wkeWebView(), handler.windowClosingCallbackParam);
+    }
+#endif
+
     m_postCloseWidgetSoonMessage = true;
 }
 
@@ -2207,6 +2216,7 @@ bool WebPageImpl::initSetting()
     settings->setJavaScriptCanOpenWindowsAutomatically(true);
     settings->setJavaScriptCanAccessClipboard(true);
     settings->setPrimaryPointerType(blink::WebSettings::PointerTypeFine);
+	settings->setAllowScriptsToCloseWindows(true);
 
     PluginDatabase::installedPlugins()->refresh();
 

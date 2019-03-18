@@ -1,6 +1,5 @@
 
 #include "config.h"
-#include "base/rand_util.h"
 #include "content/web_impl_win/BlinkPlatformImpl.h"
 #include "content/web_impl_win/WebThreadImpl.h"
 #include "content/web_impl_win/WebURLLoaderImpl.h"
@@ -49,6 +48,8 @@
 #include "net/WebURLLoaderManager.h"
 #include "net/WebStorageNamespaceImpl.h"
 #include "wke/wkeUtil.h"
+#include "base/rand_util.h"
+#include "base/values.h"
 #include <crtdbg.h>
 
 DWORD g_paintToMemoryCanvasInUiThreadCount = 0;
@@ -178,7 +179,9 @@ static void setRuntimeEnabledFeatures()
     blink::RuntimeEnabledFeatures::setCspCheckEnabled(true);
     blink::RuntimeEnabledFeatures::setNpapiPluginsEnabled(true);
     blink::RuntimeEnabledFeatures::setDOMConvenienceAPIEnabled(true);
-    blink::RuntimeEnabledFeatures::setTextBlobEnabled(true);    
+    blink::RuntimeEnabledFeatures::setTextBlobEnabled(true);
+	blink::RuntimeEnabledFeatures::setCssVariablesEnabled(true);
+	blink::RuntimeEnabledFeatures::setCSSMotionPathEnabled(true);
 }
 
 void BlinkPlatformImpl::initialize()
@@ -640,24 +643,6 @@ void BlinkPlatformImpl::setUserAgent(const char* ua)
     if (m_userAgent)
         delete m_userAgent;
     m_userAgent = new std::string(ua);
-}
-
-void readJsFile(const wchar_t* path, std::vector<char>* buffer)
-{
-    HANDLE hFile = CreateFileW(path, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-    if (INVALID_HANDLE_VALUE == hFile) {
-        DebugBreak();
-        return;
-    }
-
-    DWORD fileSizeHigh;
-    const DWORD bufferSize = ::GetFileSize(hFile, &fileSizeHigh);
-
-    DWORD numberOfBytesRead = 0;
-    buffer->resize(bufferSize);
-    BOOL b = ::ReadFile(hFile, &buffer->at(0), bufferSize, &numberOfBytesRead, nullptr);
-    ::CloseHandle(hFile);
-    b = b;
 }
 
 blink::WebData BlinkPlatformImpl::loadResource(const char* name)
