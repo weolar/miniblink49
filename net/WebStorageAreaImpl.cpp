@@ -53,7 +53,7 @@ static String buildOriginLocalFileNameString(const blink::KURL& pageUrl)
     return builder.toString();
 }
 
-static char* kLocalStorageDirectoryName = "LocalStorage";
+//static char* kLocalStorageDirectoryName = "LocalStorage";
 static char* kLocalStorageExtensionName = ".localstorage";
 
 static char* kSeparator = "--mb-sep--\n";
@@ -64,12 +64,11 @@ static size_t kEmptySepratorLength = 10;
 
 static String buildLocalStorageDirectoryPath(const String& localPath)
 {
-    String localStoragePath;
-//     if (kDefaultLocalStorageFullPath)
-//         localStoragePath = *kDefaultLocalStorageFullPath;
-    localStoragePath = localPath;
-    localStoragePath.append(kLocalStorageDirectoryName);
-    return localStoragePath;
+//     String localStoragePath;
+//     localStoragePath = localPath;
+//     localStoragePath.append(kLocalStorageDirectoryName);
+//     return localStoragePath;
+    return localPath;
 }
 
 static String buildLocalStorageFileNameString(const String& localPath, const blink::KURL& originUrl)

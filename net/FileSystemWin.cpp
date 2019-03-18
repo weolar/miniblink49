@@ -103,7 +103,6 @@ static void getFileCreationTimeFromFindData(const WIN32_FIND_DATAW& findData, ti
     time = fileTime.QuadPart / 10000000 - kSecondsFromFileTimeToTimet;
 }
 
-
 static void getFileModificationTimeFromFindData(const WIN32_FIND_DATAW& findData, time_t& time)
 {
     ULARGE_INTEGER fileTime;
@@ -172,14 +171,49 @@ bool getFileMetadata(const String& path, blink::FileMetadata& metadata)
 
 bool fileExists(const String& path)
 {
-    WIN32_FIND_DATAW findData;
-    return getFindData(path, findData);
+    Vector<UChar> buffer = WTF::ensureUTF16UChar(path, true);
+    return !!::PathFileExistsW(buffer.data());
 }
 
 bool deleteFile(const String& path)
 {
     Vector<UChar> buffer = WTF::ensureUTF16UChar(path, true);
     return !!DeleteFileW(buffer.data());
+}
+
+bool recursiveCreateDirectory(const String& dirString)
+{
+    String dir = WTF::ensureUTF16String(dirString);
+    if (dir.length() <= 3)
+        return false;
+
+    if (dir[dir.length() - 1] == '\\')
+        dir.remove(dir.length() - 1, 1);
+
+    Vector<UChar> buf = dir.charactersWithNullTermination();
+
+    WIN32_FIND_DATA wfd;
+    HANDLE hFind = ::FindFirstFile(buf.data(), &wfd);
+    if (hFind != INVALID_HANDLE_VALUE) {
+        ::FindClose(hFind);
+        if (wfd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
+            return true;
+    }
+
+    if (!::CreateDirectory(buf.data(), NULL)) {
+        String newDir = dir;
+        while (newDir[newDir.length() - 1] != '\\') {
+            newDir.remove(newDir.length() - 1, 1);
+        }
+        newDir.remove(newDir.length() - 1, 1);
+
+        recursiveCreateDirectory(newDir);
+
+        buf = dir.charactersWithNullTermination();
+        return !!::CreateDirectory(buf.data(), NULL);
+    }
+
+    return true;
 }
 
 bool createDirectory(const String& path)
@@ -432,6 +466,30 @@ int readFromFile(PlatformFileHandle handle, char* data, int length)
     if (!success)
         return -1;
     return static_cast<int>(bytesRead);
+}
+
+int readFromFile(PlatformFileHandle handle, std::vector<char>* buffer)
+{
+    buffer->resize(0);
+
+    if (!isHandleValid(handle))
+        return -1;
+
+    DWORD fileSizeHigh;
+    const DWORD bufferSize = ::GetFileSize(handle, &fileSizeHigh);
+    if (0 == bufferSize)
+        return -1;
+
+    DWORD numberOfBytesRead = 0;
+    buffer->resize(bufferSize);
+
+    BOOL b = ::ReadFile(handle, &buffer->at(0), bufferSize, &numberOfBytesRead, nullptr);
+    if (!b) {
+        buffer->resize(0);
+        return 0;
+    }
+    buffer->resize(numberOfBytesRead);
+    return static_cast<int>(numberOfBytesRead);
 }
 
 bool unloadModule(PlatformModule module)

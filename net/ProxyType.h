@@ -2,7 +2,7 @@
 #ifndef net_ProxyType_h
 #define net_ProxyType_h
 
-#include "curl/curl.h"
+#include "third_party/libcurl/include/curl/curl.h"
 
 namespace net  {
 

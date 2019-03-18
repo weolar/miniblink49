@@ -6,6 +6,7 @@
 #include "net/StorageDef.h"
 #include <string>
 
+typedef void CURL;
 typedef void CURLSH;
 
 namespace blink {

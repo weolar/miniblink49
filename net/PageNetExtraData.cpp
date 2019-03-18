@@ -1,12 +1,11 @@
 
-#define CURL_STATICLIB  
-
 #include "net/PageNetExtraData.h"
 #include "net/WebURLLoaderManagerUtil.h"
 #include "net/cookies/WebCookieJarCurlImpl.h"
 #include "net/cookies/CookieJarMgr.h"
 #include "net/StorageMgr.h"
 #include "net/WebStorageNamespaceImpl.h"
+#include "net/DefaultFullPath.h"
 #include <Shlwapi.h>
 
 namespace net {
@@ -51,27 +50,10 @@ std::string PageNetExtraData::getCookieJarFullPath()
     return "";
 }
 
-String* kDefaultLocalStorageFullPath = nullptr;
-
 blink::WebStorageNamespace* PageNetExtraData::createWebStorageNamespace()
-{       
-    if (!kDefaultLocalStorageFullPath) {
-        std::vector<wchar_t> path;
-        path.resize(MAX_PATH + 1);
-        memset(&path.at(0), 0, sizeof(wchar_t) * (MAX_PATH + 1));
-        ::GetModuleFileNameW(nullptr, &path.at(0), MAX_PATH);
-        ::PathRemoveFileSpecW(&path.at(0));
-
-        size_t size = wcslen(&path.at(0));
-
-        kDefaultLocalStorageFullPath = new String(&path.at(0), size);
-        UChar c = kDefaultLocalStorageFullPath->characters16()[size - 1];
-        if (L'\\' != c && L'/' != c)
-            kDefaultLocalStorageFullPath->append(L'\\');
-    }
-    
+{
     if (m_localStotageFullPath.isEmpty())
-        m_localStotageFullPath = *kDefaultLocalStorageFullPath;
+        m_localStotageFullPath = getDefaultLocalStorageFullPath();
 
     WebStorageNamespaceImpl* storageArea = nullptr;
     if (m_localStorage) {

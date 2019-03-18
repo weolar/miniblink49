@@ -28,7 +28,6 @@
 #ifndef net_WebURLLoaderManager_h
 #define net_WebURLLoaderManager_h
 
-#define CURL_STATICLIB  
 #define HTTP_ONLY 
 
 #include "net/CancelledReason.h"
@@ -60,6 +59,7 @@ class WebCookieJarImpl;
 struct BlobTempFileInfo;
 struct InitializeHandleInfo;
 struct MainTaskArgs;
+class DiskCache;
 
 class AutoLockJob {
 public:
@@ -101,9 +101,11 @@ public:
                       ProxyType type,
                       const String& username,
                       const String& password);
-    void shutdown();
 
+    void shutdown();
     bool isShutdown() const { return m_isShutdown; }
+
+    void saveDiskCache();
 
     void appendDataToBlobCacheWhenDidDownloadData(blink::WebURLLoaderClient* client, blink::WebURLLoader* loader, const String& url, const char* data, int dataLength, int encodedDataLength);
     String createBlobTempFileInfoByUrlIfNeeded(const String& url);
@@ -169,7 +171,7 @@ private:
 
     WTF::Mutex m_shutdownMutex;
 
-    //WTF::HashMap<int, MainTaskArgs*> m_writeCallbackCache;
+    DiskCache* m_diskCache;
     
     WTF::HashMap<String, BlobTempFileInfo*> m_blobCache; // real url -> <temp, data>
 };

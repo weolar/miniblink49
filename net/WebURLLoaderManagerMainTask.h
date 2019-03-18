@@ -204,22 +204,22 @@ public:
             }
 
             if (job->m_dataBind) {
-                job->m_dataBind->recvCallback(job->m_dataBind->ptr, job, job->m_dataCacheForDownload.data(), job->m_dataCacheForDownload.size());
+                job->m_dataBind->recvCallback(job->m_dataBind->param, job, job->m_dataCacheForDownload.data(), job->m_dataCacheForDownload.size());
                 job->m_dataCacheForDownload.clear();
             }
         } else if (kDidCancel == type) {
             if (job->m_dataBind) {
-                job->m_dataBind->finishCallback(job->m_dataBind->ptr, job, WKE_LOADING_CANCELED);
+                job->m_dataBind->finishCallback(job->m_dataBind->param, job, WKE_LOADING_CANCELED);
                 job->m_dataCacheForDownload.clear();
             }
         } else if (kDidFail == type) {
             if (job->m_dataBind) {
-                job->m_dataBind->finishCallback(job->m_dataBind->ptr, job, WKE_LOADING_FAILED);
+                job->m_dataBind->finishCallback(job->m_dataBind->param, job, WKE_LOADING_FAILED);
                 job->m_dataCacheForDownload.clear();
             }
         } else if (kDidFinishLoading == type) {
             if (job->m_dataBind) {
-                job->m_dataBind->finishCallback(job->m_dataBind->ptr, job, WKE_LOADING_SUCCEEDED);
+                job->m_dataBind->finishCallback(job->m_dataBind->param, job, WKE_LOADING_SUCCEEDED);
                 job->m_dataCacheForDownload.clear();
             }
         }
@@ -521,6 +521,7 @@ static bool isDownloadResponse(WebURLLoaderInternal* job, const AtomicString& co
         "application/xhtml+xml",
         "application/x-javascript",
         "application/javascript",
+		"application/pdf",
         nullptr
     };
     for (int i = 0; ; ++i) {
@@ -689,7 +690,7 @@ static void doRedirect(WebURLLoaderInternal* job, const String& location, MainTa
 
         if (job->m_isWkeNetSetDataBeSetted) {
             WebURLLoaderManager::sharedInstance()->cancelWithHookRedirect(job);
-            Platform::current()->currentThread()->scheduler()->postLoadingTask(FROM_HERE, new WkeAsynTask(WebURLLoaderManager::sharedInstance(), job->m_id));
+            Platform::current()->currentThread()->scheduler()->postLoadingTask(FROM_HERE, new HookAsynTask(WebURLLoaderManager::sharedInstance(), job->m_id, false));
             return;
         }
     }

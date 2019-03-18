@@ -71,6 +71,7 @@
 #include "net/InitializeHandleInfo.h"
 #include "net/HeaderVisitor.h"
 #include "net/PageNetExtraData.h"
+#include "net/DiskCache.h"
 #include "net/cookies/WebCookieJarCurlImpl.h"
 #include "net/cookies/CookieJarMgr.h"
 #include "wke/wkeNetHook.h"
@@ -98,6 +99,7 @@ WebURLLoaderManager::WebURLLoaderManager(const char* cookieJarFullPath)
     , m_runningJobs(0)
     , m_isShutdown(false)
     , m_newestJobId(1)
+    , m_diskCache(new DiskCache())
 {
     content::BlinkPlatformImpl* platform = (content::BlinkPlatformImpl*)Platform::current();
     m_thread = platform->ioThread();
@@ -106,18 +108,21 @@ WebURLLoaderManager::WebURLLoaderManager(const char* cookieJarFullPath)
     m_curlMultiHandle = curl_multi_init(); // 初始化curl批处理句柄
 
     initCookieSession(cookieJarFullPath);
+
+    m_diskCache->initFromJsonFile();
 }
 
 WebURLLoaderManager::~WebURLLoaderManager()
 {
     curl_multi_cleanup(m_curlMultiHandle);
-    //curl_share_cleanup(m_curlShareHandle);
     curl_global_cleanup();
 }
 
 void WebURLLoaderManager::shutdown()
 {
     m_isShutdown = true;
+
+    saveDiskCache();
 
     WTF::Locker<WTF::Mutex> locker(m_shutdownMutex);
     
@@ -149,6 +154,11 @@ void WebURLLoaderManager::shutdown()
 
     // delete m_thread;
     m_thread = nullptr;
+}
+
+void WebURLLoaderManager::saveDiskCache()
+{
+    m_diskCache->saveMemoryCache();
 }
 
 void WebURLLoaderManager::initCookieSession(const char* cookieJarFullPath)
@@ -722,7 +732,7 @@ static void flattenHTTPBodyBlobElement(const WebString& blobUUID, curl_off_t* si
             flattenElements->append(flattenElement);
             *size += item->data.size();
         } else if (blink::WebBlobData::Item::TypeFile == item->type) {
-            if (getFileSize(item->filePath, fileSizeResult)) {
+            if (getFileSize((String)item->filePath, fileSizeResult)) {
                 *size += fileSizeResult;
 
                 flattenElement = new FlattenHTTPBodyElement();
@@ -805,7 +815,7 @@ static SetupDataInfo* setupFormDataOnMainThread(WebURLLoaderInternal* job, CURLo
 
         FlattenHTTPBodyElement* flattenElement = nullptr;
         if (blink::WebHTTPBody::Element::TypeFile == element.type) {
-            if (getFileSize(element.filePath, fileSizeResult)) {
+            if (getFileSize((String)(element.filePath), fileSizeResult)) {
                 if (fileSizeResult > maxCurlOffT) {
                     // File size is too big for specifying it to cURL
                     chunkedTransfer = true;
@@ -1108,7 +1118,7 @@ int WebURLLoaderManager::addAsynchronousJob(WebURLLoaderInternal* job)
     if (0 == jobId)
         return 0;
 
-    if (job->m_isWkeNetSetDataBeSetted || job->m_isHoldJobToAsynCommit || job->m_isBlackList)
+    if (job->m_isWkeNetSetDataBeSetted || job->m_isHoldJobToAsynCommit || job->m_isBlackList || job->m_diskCacheItem)
         return jobId;
 
     continueJob(job);
@@ -1118,7 +1128,7 @@ int WebURLLoaderManager::addAsynchronousJob(WebURLLoaderInternal* job)
 void WebURLLoaderManager::continueJob(WebURLLoaderInternal* job)
 {
     if (job->m_isWkeNetSetDataBeSetted) {
-        Platform::current()->currentThread()->scheduler()->postLoadingTask(FROM_HERE, new WkeAsynTask(this, job->m_id));
+        Platform::current()->currentThread()->scheduler()->postLoadingTask(FROM_HERE, new HookAsynTask(this, job->m_id, false));
         return;
     }
     m_thread->postTask(FROM_HERE, WTF::bind(&WebURLLoaderManager::initializeHandleOnIoThread, this, job->m_id, job->m_initializeHandleInfo));
@@ -1549,7 +1559,7 @@ int WebURLLoaderManager::initializeHandleOnMainThread(WebURLLoaderInternal* job)
     dispatchWkeLoadUrlBegin(job, info);
 
     if (job->m_isWkeNetSetDataBeSetted) {
-        Platform::current()->currentThread()->scheduler()->postLoadingTask(FROM_HERE, new WkeAsynTask(this, jobId)); // postLoadingTask
+        Platform::current()->currentThread()->scheduler()->postLoadingTask(FROM_HERE, new HookAsynTask(this, jobId, false));
 
         RELEASE_ASSERT(!job->m_isHoldJobToAsynCommit);
 
@@ -1559,11 +1569,20 @@ int WebURLLoaderManager::initializeHandleOnMainThread(WebURLLoaderInternal* job)
 #endif
 
     KURL kurl = job->firstRequest()->url();
+
     bool needFastCheckLocalFilePath = !job->m_isWkeNetSetDataBeSetted && !job->m_isHoldJobToAsynCommit;
     if (needFastCheckLocalFilePath && kurl.isLocalFile() && isLocalFileNotExist(info->url.c_str(), job)) {
         Platform::current()->currentThread()->scheduler()->postLoadingTask(FROM_HERE, new BlackListCancelTask(this, jobId));
         delete info;
         return jobId;
+    }
+
+    DiskCacheItem* diskCacheItem = m_diskCache->getCacheUrlItem(kurl);
+    if (diskCacheItem) {
+        RELEASE_ASSERT(!job->m_diskCacheItem);
+        job->m_diskCacheItem = diskCacheItem;
+
+        Platform::current()->currentThread()->scheduler()->postLoadingTask(FROM_HERE, new HookAsynTask(this, jobId, true));
     }
 
     return jobId;
@@ -1632,6 +1651,7 @@ WebURLLoaderInternal::WebURLLoaderInternal(WebURLLoaderImplCurl* loader, const W
     , m_isWkeNetSetDataBeSetted(false)
 #endif
     , m_bodyStreamWriter(nullptr)
+    , m_diskCacheItem(nullptr)
 {
     m_ref = 0;
     m_id = 0;
@@ -1675,6 +1695,9 @@ WebURLLoaderInternal::~WebURLLoaderInternal()
         delete m_asynWkeNetSetData;
     }
 #endif
+
+    if (m_diskCacheItem)
+        delete m_diskCacheItem;
 
     delete m_firstRequest;
     fastFree(m_url);

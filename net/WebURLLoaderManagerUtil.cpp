@@ -1,7 +1,4 @@
 
-#define CURL_STATICLIB
-#define BUILDING_LIBCURL
-
 #include "net/WebURLLoaderManagerUtil.h"
 
 #include "net/WebURLLoaderInternal.h"
@@ -15,9 +12,7 @@
 #include <shlwapi.h>
 
 namespace net {
-
-//char* g_cookieJarPath = nullptr;
-
+	
 CString certificatePath()
 {
 #if 0 

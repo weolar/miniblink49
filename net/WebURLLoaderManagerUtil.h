@@ -5,7 +5,7 @@
 #include "third_party/WebKit/Source/wtf/RefCountedLeakCounter.h"
 #include "third_party/WebKit/Source/wtf/text/CString.h"
 #include "third_party/WebKit/Source/wtf/text/WTFStringUtil.h"
-#include "curl/curl.h"
+#include "third_party/libcurl/include/curl/curl.h"
 #include "wke/wkedefine.h"
 
 namespace WTF {

@@ -10,8 +10,8 @@ class CookieMonster;
 }
 
 struct curl_slist;
-typedef void CURLSH;
 typedef void CURL;
+typedef void CURLSH;
 
 namespace net {
     

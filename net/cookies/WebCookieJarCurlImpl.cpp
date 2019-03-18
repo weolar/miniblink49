@@ -2,20 +2,16 @@
 #include <windows.h>
 
 #include "net/cookies/WebCookieJarCurlImpl.h"
-
-#define CURL_STATICLIB 
-#include "third_party/libcurl/include/curl/curl.h"
-
 #include "net/WebURLLoaderManager.h"
 #include "net/WebURLLoaderInternal.h"
 #include "net/WebURLLoaderManagerUtil.h"
-
 #include "third_party/WebKit/public/platform/WebURL.h"
 #include "third_party/WebKit/Source/wtf/text/WTFStringUtil.h"
 #include "third_party/WebKit/Source/wtf/DateMath.h"
 #include "third_party/WebKit/Source/wtf/HashMap.h"
 #include "third_party/WebKit/Source/wtf/text/StringBuilder.h"
 #include "third_party/WebKit/Source/wtf/text/StringHash.h"
+#include "third_party/libcurl/include/curl/curl.h"
 
 namespace net {
 

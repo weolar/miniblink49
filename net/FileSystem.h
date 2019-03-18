@@ -140,6 +140,7 @@ bool fileExists(const String&);
 bool deleteFile(const String&);
 bool deleteEmptyDirectory(const String&);
 bool createDirectory(const String&);
+bool recursiveCreateDirectory(const String& dirString);
 bool moveFile(const String& oldPath, const String& newPath);
 bool getFileSize(const String&, long long& result);
 bool getFileSize(PlatformFileHandle, long long& result);
@@ -173,10 +174,14 @@ void closeFile(PlatformFileHandle&);
 // Returns the resulting offset from the beginning of the file if successful, -1 otherwise.
 long long seekFile(PlatformFileHandle, long long offset, FileSeekOrigin);
 bool truncateFile(PlatformFileHandle, long long offset);
+
 // Returns number of bytes actually read if successful, -1 otherwise.
 int writeToFile(PlatformFileHandle, const char* data, int length);
+
 // Returns number of bytes actually written if successful, -1 otherwise.
 int readFromFile(PlatformFileHandle, char* data, int length);
+int readFromFile(PlatformFileHandle, std::vector<char>* buffer);
+
 // #if USE(FILE_LOCK)
 // bool lockFile(PlatformFileHandle, FileLockMode);
 // bool unlockFile(PlatformFileHandle);

@@ -41,11 +41,8 @@
 #include "third_party/WebKit/Source/wtf/FastAllocBase.h"
 #include "third_party/WebKit/public/platform/WebURLLoaderClient.h"
 #include "third_party/WebKit/Source/wtf/OwnPtr.h"
-
 #include <windows.h>
 #include <memory>
-
-#define CURL_STATICLIB 
 #include "third_party/libcurl/include/curl/curl.h"
 
 //#define MINIBLINK_NO_MULTITHREAD_NET 1
@@ -73,6 +70,7 @@ class WebURLLoaderManagerMainTask;
 class WebURLLoaderManager;
 class FlattenHTTPBodyElementStream;
 struct InitializeHandleInfo;
+struct DiskCacheItem;
 
 class JobHead {
 public:
@@ -215,6 +213,9 @@ public:
     wkeNetJobDataBind* m_dataBind;
     Vector<char> m_dataCacheForDownload; // 下载时需要先缓存再给外部
 #endif
+
+    DiskCacheItem* m_diskCacheItem;
+
     RefPtr<PageNetExtraData> m_pageNetExtraData;
 };
 
