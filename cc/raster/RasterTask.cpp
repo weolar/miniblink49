@@ -341,7 +341,7 @@ public:
 
         // Uses kPremul_SkAlphaType since the result is not known to be opaque.
         SkImageInfo info = SkImageInfo::MakeN32(dirtyRect.width(), dirtyRect.height(), m_isOpaque ? kOpaque_SkAlphaType : kPremul_SkAlphaType); // TODO
-        SkSurfaceProps surfaceProps(0, kUnknown_SkPixelGeometry);
+        SkSurfaceProps surfaceProps(0, wke::g_smootTextEnable ? kRGB_H_SkPixelGeometry : kUnknown_SkPixelGeometry);
         size_t stride = info.minRowBytes();
         skia::RefPtr<SkSurface> surface = skia::AdoptRef(SkSurface::NewRasterDirect(info, bitmap->getPixels(), stride, &surfaceProps));
         skia::RefPtr<SkCanvas> canvas = skia::SharePtr(surface->getCanvas());
