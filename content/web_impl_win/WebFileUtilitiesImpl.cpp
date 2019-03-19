@@ -18,7 +18,12 @@ static const ULONGLONG kSecondsFromFileTimeToTimet = 11644473600;
 
 static bool getFindData(String path, WIN32_FIND_DATAW& findData)
 {
+    if (path.isNull() || path.isEmpty())
+        return false;
     Vector<UChar> upath = WTF::ensureUTF16UChar(path, true);
+    if (upath.isEmpty() || upath.size() <= 1)
+        return false;
+
     HANDLE handle = ::FindFirstFileW(upath.data(), &findData);
     if (handle == INVALID_HANDLE_VALUE)
         return false;
@@ -139,6 +144,9 @@ WebFileUtilitiesImpl::WebFileUtilitiesImpl()
 
 bool WebFileUtilitiesImpl::getFileInfo(const blink::WebString& path, blink::WebFileInfo& result)
 {
+    if (path.isNull() || path.isEmpty())
+        return false;
+
     WIN32_FIND_DATAW findData;
     if (!getFindData(path, findData))
         return false;
