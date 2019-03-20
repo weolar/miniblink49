@@ -4,7 +4,7 @@ miniblink is a open source, one file, small browser widget base on chromium.
 
 By using C interface, you can create a browser just some line code.
 
-more information at https://weolar.github.io/miniblink/ or http://miniblink.net
+more information at http://miniblink.net
 
 ----
 
@@ -12,7 +12,7 @@ miniblink是一个开源的、单文件、且目前已知的最小的基于chrom
 
 通过其导出的纯C接口，几行代码即可创建一个浏览器控件。
 
-您可以通过官网https://weolar.github.io/miniblink/ 或http://miniblink.net 来获取更多的关于miniblink的信息。
+您可以通过官网http://miniblink.net 来获取更多的关于miniblink的信息。
 
 
 ----
