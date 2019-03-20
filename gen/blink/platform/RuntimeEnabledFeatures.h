@@ -463,6 +463,9 @@ public:
     static void setDrawTileLineEnabled(bool isEnabled) { isDrawTileLineEnabled = isEnabled; }
     static bool drawTileLineEnabled() { return isDrawTileLineEnabled; }
 
+	static void setCssVariablesEnabled(bool isEnabled) { isCssVariablesEnabled = isEnabled; }
+	static bool cssVariablesEnabled() { return isCssVariablesEnabled; }
+
 private:
     RuntimeEnabledFeatures() { }
 
@@ -614,6 +617,7 @@ private:
     static bool isAlwaysIsNotSolideColor;
     static bool isDrawDirtyDebugLineEnabled;
     static bool isDrawTileLineEnabled;
+	static bool isCssVariablesEnabled;
 };
 
 } // namespace blink

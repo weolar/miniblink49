@@ -4874,7 +4874,10 @@ CSSValueKeywordsHash::findValueImpl (register const char *str, register unsigned
     if (0 == strncmp(str, "fit-content", len)) {
         static Value fitContentStatic = { 0, CSSValueWebkitFitContent };
         return &fitContentStatic;
-    }
+    } else if (0 == strncmp(str, "var", len)) {
+		static Value varStatic = { 0, CSSValueVar };
+		return &varStatic;
+	}
     return 0;
 }
 

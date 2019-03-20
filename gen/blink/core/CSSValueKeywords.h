@@ -808,9 +808,11 @@ enum CSSValueID {
     CSSValueDynamic = 793,
     CSSValueNonScalingStroke = 794,
     CSSValueFitContent = 795,
+	CSSValueInternalVariableValue = 796,
+	CSSValueVar = 797,
 };
 
-const int numCSSValueKeywords = 796;
+const int numCSSValueKeywords = 798;
 const size_t maxCSSValueKeywordLength = 42;
 
 const char* getValueName(unsigned short id);

@@ -826,5 +826,6 @@ bool RuntimeEnabledFeatures::isFreshLocalFileEnabled = false;
 bool RuntimeEnabledFeatures::isAlwaysIsNotSolideColor = false;
 bool RuntimeEnabledFeatures::isDrawDirtyDebugLineEnabled = false;
 bool RuntimeEnabledFeatures::isDrawTileLineEnabled = false;
+bool RuntimeEnabledFeatures::isCssVariablesEnabled = true;
 
 } // namespace blink
