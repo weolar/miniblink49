@@ -5,9 +5,8 @@
 #include <wtf/text/CString.h>
 #include <wtf/text/WTFStringUtil.h>
 #include "third_party/WebKit/public/platform/WebString.h"
-#include "wkeString.h"
-
-//////////////////////////////////////////////////////////////////////////
+#include "wke/wkeString.h"
+#include "wke/wkeUtil.h"
 
 _jsKeys::~_jsKeys()
 {
@@ -21,125 +20,109 @@ _jsKeys::~_jsKeys()
 namespace wke {
 
 CString::CString(const WTF::String& str)
-    : m_string(str)
-    , m_utf8(NULL)
-    , m_wide(NULL)
 {
-
+    setString(str);
 }
 
 CString::CString(const blink::WebString& str)
-    : m_string(str)
-    , m_utf8(NULL)
-    , m_wide(NULL)
 {
-
+    setString((String)str);
 }
 
 CString::CString(const utf8* str, size_t len /*= 0*/)
-    : m_utf8(NULL)
-    , m_wide(NULL)
 {
-    m_string = WTF::String::fromUTF8(str, len);
+    setString(str, len);
 }
 
 CString::CString(const wchar_t* str, size_t len /*= 0*/)
-    : m_utf8(NULL)
-    , m_wide(NULL)
 {
-    WTF::String(str, len).swap(m_string);
+    setString(str, len);
 }
 
 CString::~CString()
 {
-    _free();
+
+}
+
+void CString::setString(const WTF::String& str)
+{
+    checkThreadCallIsValid(__FUNCTION__);
+
+    if (str.isNull() || str.isEmpty())
+        return;
+
+    if (str.is8Bit()) {
+        m_str.resize(str.length());
+        memcpy(&m_str.at(0), str.characters8(), str.length());
+    } else {
+        WTF::WCharToMByte(str.characters16(), str.length(), &m_str, CP_UTF8);
+    }
+
+    m_str.push_back('\0');
 }
 
 CString& CString::operator = (const WTF::String& str)
 {
-    if (&m_string != &str) {
-        _dirty();
-        m_string = str;
-    }
+    setString(str);
     return *this;
 }
 
 CString& CString::operator=(const CString& str)
 {
-    return operator=(str.m_string);
+    m_str = str.m_str;
+    return *this;
 }
 
 const utf8* CString::string() const
 {
-    if (!m_utf8) {
-        Vector<char> wtfUtf8 = WTF::ensureStringToUTF8(m_string, false);
-        size_t wtfUtf8Len = wtfUtf8.size();
-        if (0 == wtfUtf8.size())
-            return "";
+    if (0 == m_str.size() || 1 == m_str.size())
+        return "";
 
-        m_utf8 = new utf8[wtfUtf8Len + 1];
-        if (wtfUtf8Len != 0)
-            memcpy(m_utf8, wtfUtf8.data(), wtfUtf8Len);
-
-        m_utf8[wtfUtf8Len] = 0;
-    }
-
-    return m_utf8;
+    return &m_str.at(0);
 }
 
 const wchar_t* CString::stringW() const
 {
-    if (!m_wide) {
-        Vector<UChar> stringBuf = WTF::ensureUTF16UChar(m_string, false);
-        if (0 == stringBuf.size())
-            return L"";
+    if (0 == m_str.size() || 1 == m_str.size())
+        return L"";
 
-        const wchar_t* wtfWide = stringBuf.data();
-        size_t wtfWideLen = stringBuf.size();
+    std::vector<UChar> result;
+    WTF::MByteToWChar(&m_str.at(0), m_str.size(), &result, CP_UTF8);
+    if (0 == result.size())
+        return L"";
 
-        m_wide = new wchar_t[wtfWideLen + 1];
-        memcpy(m_wide, wtfWide, (wtfWideLen)* sizeof(wchar_t));
-
-        m_wide[wtfWideLen] = 0;
-    }
-
-    return m_wide;
-}
-
-const WTF::String& CString::original() const
-{
-    return m_string;
+    return createTempWCharString((const wchar_t*)&result.at(0), result.size());
 }
 
 void CString::setString(const utf8* str, size_t len /*= 0*/)
 {
-    _dirty();
-    m_string = WTF::String::fromUTF8(str, len);
+    if (!str)
+        return;
+    if (0 == len)
+        len = strlen(str);
+    if (0 == len)
+        return;
+
+    m_str.resize(len);
+    memcpy(&m_str.at(0), str, len);
+    m_str.push_back('\0');
 }
 
 void CString::setString(const wchar_t* str, size_t len /*= 0*/)
 {
-    _dirty();
-    WTF::String(str, len).swap(m_string);
-}
-
-void CString::_dirty()
-{
-    _free();
+    if (!str)
+        return;
+    if (0 == len)
+        len = wcslen(str);
+    if (0 == len)
+        return;
+    WTF::WCharToMByte(str, len, &m_str, CP_UTF8);
+    m_str.push_back('\0');
 }
 
 void CString::_free()
 {
-    if (m_wide) {
-        delete [] m_wide;
-        m_wide = NULL;
-    }
 
-    if (m_utf8)
-    {
-        delete [] m_utf8;
-        m_utf8 = NULL;
-    }
 }
 
 std::vector<std::vector<char>*>* s_sharedStringBuffers = nullptr;

@@ -339,7 +339,8 @@ WKE_API const utf8* wkeGetCookie(wkeWebView webView);
 //     wkeCookieList* next;
 // };
 // WKE_API const wkeCookieList* wkeGetAllCookie();
-// WKE_API void wkeFreeCookieList(const wkeCookieList* cookieList);
+// WKE_API void wkeFreeCookieList(const wkeCookieList* cookieList);
+
 typedef bool(*wkeCookieVisitor)(
     void* params,
     const char* name, 

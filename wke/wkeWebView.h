@@ -22,6 +22,7 @@ namespace net {
 class WebCookieJarImpl;
 }
 
+typedef void CURL;
 typedef void CURLSH;
 
 namespace wke {

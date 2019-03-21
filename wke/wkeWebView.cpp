@@ -1341,8 +1341,7 @@ void CWebView::setDragFiles(const POINT* clintPos, const POINT* screenPos, wkeSt
     webDragData.initialize();
 
     for (int i = 0; i < filesCount; ++i) {
-        WTF::String file = files[i]->original();
-        //GetFileSizeEx();
+        WTF::String file = WTF::String::fromUTF8(files[i]->string());
         file.insert("file:///", 0);
     
         blink::WebDragData::Item it;

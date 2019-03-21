@@ -15,6 +15,7 @@
 #include "content/web_impl_win/npapi/PluginDatabase.h"
 #include "net/WebURLLoaderManager.h"
 #include "net/ActivatingObjCheck.h"
+#include "net/DefaultFullPath.h"
 #include "net/cookies/WebCookieJarCurlImpl.h"
 #include "third_party/WebKit/public/web/WebKit.h"
 #include "third_party/WebKit/public/web/WebFrame.h"
@@ -37,10 +38,15 @@
 #include "libplatform/libplatform.h"
 #include <shlwapi.h>
 
-namespace net {
-void setCookieJarPath(const WCHAR* path);
-void setCookieJarFullPath(const WCHAR* path);
-}
+// namespace net {
+// 
+// void setCookieJarPath(const WCHAR* path);
+// void setCookieJarFullPath(const WCHAR* path);
+// 
+// String getDefaultLocalStorageFullPath();
+// void setDefaultLocalStorageFullPath(const String& path);
+// 
+// }
 
 namespace blink {
 extern char* g_navigatorPlatform;
@@ -306,6 +312,8 @@ void wkeSetDebugConfig(wkeWebView webview, const char* debugString, const char* 
             wke::g_contentScale = atoi(param) / 100.0;
         } else if ("antiAlias" == item) {
             wke::g_rendererAntiAlias = atoi(param) == 1;
+        } else if ("diskCache" == item) {
+            wke::g_diskCacheEnable = atoi(param) == 1;
         } 
     }
 }
@@ -812,28 +820,14 @@ void wkeSetCookieJarFullPath(wkeWebView webView, const WCHAR* path)
     net::WebURLLoaderManager::setCookieJarFullPath(&jarPathA[0]);
 }
 
-namespace net {
-extern String* kDefaultLocalStorageFullPath;
-}
-
 void wkeSetLocalStorageFullPath(wkeWebView webView, const WCHAR* path)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
     if (!path)
         return;
 
-    if (net::kDefaultLocalStorageFullPath)
-        delete net::kDefaultLocalStorageFullPath;
-    net::kDefaultLocalStorageFullPath = new String(path);
-
-    if (net::kDefaultLocalStorageFullPath->isEmpty()) {
-        delete net::kDefaultLocalStorageFullPath;
-        net::kDefaultLocalStorageFullPath = nullptr;
-        return;
-    }
-
-    if (!net::kDefaultLocalStorageFullPath->endsWith(L'\\'))
-        net::kDefaultLocalStorageFullPath->append(L'\\');
+    String pathString(path);
+    net::setDefaultLocalStorageFullPath(pathString);
 }
 
 void wkeAddPluginDirectory(wkeWebView webView, const WCHAR* path)
@@ -1339,7 +1333,7 @@ void wkeSetStringW(wkeString string, const wchar_t* str, size_t len)
 
 wkeString wkeCreateString(const utf8* str, size_t len)
 {
-    wke::checkThreadCallIsValid(__FUNCTION__);
+    //wke::checkThreadCallIsValid(__FUNCTION__);
     wkeString wkeStr = new wke::CString(str, len);
     return wkeStr;
 }
@@ -1353,7 +1347,7 @@ wkeString wkeCreateStringW(const wchar_t* str, size_t len)
 
 void wkeDeleteString(wkeString str)
 {
-    wke::checkThreadCallIsValid(__FUNCTION__);
+    //wke::checkThreadCallIsValid(__FUNCTION__);
     delete str;
 }
 
@@ -1865,6 +1859,21 @@ bool wkeIsLoadComplete(wkeWebView webView)
 
 const utf8* wkeGetSource(wkeWebView webView)
 {
+	wke::checkThreadCallIsValid(__FUNCTION__);
+	content::WebPage* page = webView->webPage();
+	if (!page)
+		return nullptr;
+
+	blink::WebFrame* webFrame = page->mainFrame();
+	if (!webFrame)
+		return nullptr;
+	blink::WebString result = webFrame->contentAsMarkup();
+	if (result.isNull() || result.isEmpty())
+		return nullptr;
+
+	std::string resultUtf8 = result.utf8();
+	return wke::createTempCharString(resultUtf8.c_str(), resultUtf8.size());
+
     return nullptr;
 }
 
@@ -2085,6 +2094,11 @@ const wkeMemBuf* wkeUtilCreateV8Snapshot(const utf8* str)
     delete platform;
 
     return result;
+}
+
+void wkeSaveMemoryCache(wkeWebView webView)
+{
+    net::WebURLLoaderManager::sharedInstance()->saveDiskCache();
 }
 
 void wkeRunMessageLoop()

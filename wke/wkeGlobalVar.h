@@ -19,6 +19,8 @@ extern bool g_isDecodeUrlRequest;
 extern void* g_tipPaintCallback;
 extern float g_contentScale;
 extern bool g_rendererAntiAlias;
+extern bool g_diskCacheEnable;
+extern bool g_smootTextEnable;
 
 extern wkeUiThreadPostTaskCallback g_wkeUiThreadPostTaskCallback;
 

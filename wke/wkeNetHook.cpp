@@ -20,6 +20,7 @@
 #include "net/WebURLLoaderManagerSetupInfo.h"
 #include "net/WebURLLoaderManager.h"
 #include "net/HeaderVisitor.h"
+#include "net/DiskCache.h"
 
 void wkeNetSetHTTPHeaderField(wkeNetJob jobPtr, wchar_t* key, wchar_t* value, bool response)
 {
@@ -104,8 +105,10 @@ const char* wkeNetGetMIMEType(wkeNetJob jobPtr, wkeString mime)
 void wkeNetSetData(wkeNetJob jobPtr, void* buf, int len)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
-    if (0 == len)
-        return;
+    if (0 == len) {
+        len = 1;
+        buf = " ";
+    }
 
     net::WebURLLoaderInternal* job = (net::WebURLLoaderInternal*)jobPtr;
     WebURLLoaderClient* client = job->client();
@@ -116,6 +119,9 @@ void wkeNetSetData(wkeNetJob jobPtr, void* buf, int len)
         memcpy(job->m_hookBufForEndHook->data(), buf, len);
         return;
     }
+
+    if (job->m_diskCacheItem) // 如果外部设置了数据，则不走disk cache了
+        delete job->m_diskCacheItem;
 
     if (!job->m_asynWkeNetSetData)
         job->m_asynWkeNetSetData = new Vector<char>();
@@ -226,7 +232,7 @@ wkeRequestType wkeNetGetRequestMethod(void *jobPtr)
     return kWkeRequestTypeInvalidation;
 }
 
-wkePostBodyElements* wkeNetGetPostBody(void *jobPtr)
+wkePostBodyElements* wkeNetGetPostBody(void* jobPtr)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
     net::WebURLLoaderInternal* job = (net::WebURLLoaderInternal*)jobPtr;
@@ -627,7 +633,7 @@ wkePostBodyElements* flattenHTTPBodyElementToWke(const WTF::Vector<net::FlattenH
     wkePostBodyElements* result = wkeNetCreatePostBodyElements(nullptr, body.size());
     result->isDirty = false;
     for (size_t i = 0; i < result->elementSize; ++i) {
-        wkePostBodyElement*wkeElement = wkeNetCreatePostBodyElement(nullptr);
+        wkePostBodyElement* wkeElement = wkeNetCreatePostBodyElement(nullptr);
         result->element[i] = wkeElement;
         const net::FlattenHTTPBodyElement* element = body[i];
 
