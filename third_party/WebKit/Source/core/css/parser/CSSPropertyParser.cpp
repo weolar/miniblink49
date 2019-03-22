@@ -1552,6 +1552,9 @@ bool CSSPropertyParser::parseValue(CSSPropertyID unresolvedProperty, bool import
         parsedValue = parsePosition(m_valueList);
         break;
 
+    case CSSPropertyBackdropFilter:
+        break;
+
     default:
         return parseSVGValue(propId, important);
     }
