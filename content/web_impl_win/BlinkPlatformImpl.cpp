@@ -631,7 +631,7 @@ blink::WebString BlinkPlatformImpl::userAgent()
 
 const char* BlinkPlatformImpl::getUserAgent()
 {
-    const char* defaultUA = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.2171.99 Safari/537.36";
+    const char* defaultUA = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3489.1 Safari/537.36";
     BlinkPlatformImpl* self = (BlinkPlatformImpl*)blink::Platform::current();
     if (!self)
         return defaultUA;
