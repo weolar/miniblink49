@@ -1553,6 +1553,7 @@ bool CSSPropertyParser::parseValue(CSSPropertyID unresolvedProperty, bool import
         break;
 
     case CSSPropertyBackdropFilter:
+    case CSSPropertyFontFeatureSettings:
         break;
 
     default:
