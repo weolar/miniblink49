@@ -826,8 +826,17 @@ void wkeSetLocalStorageFullPath(wkeWebView webView, const WCHAR* path)
     if (!path)
         return;
 
-    String pathString(path);
-    net::setDefaultLocalStorageFullPath(pathString);
+	String pathString(path);
+	if (webView != NULL)
+	{
+		std::vector<char> filePathA;
+		WTF::WCharToMByte(path, wcslen(path), &filePathA, CP_ACP);
+		webView->setLocalStorageFullPath(&filePathA[0]);
+	}
+	else
+	{
+		net::setDefaultLocalStorageFullPath(pathString);
+	}
 }
 
 void wkeAddPluginDirectory(wkeWebView webView, const WCHAR* path)
