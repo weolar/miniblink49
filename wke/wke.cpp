@@ -826,7 +826,6 @@ void wkeSetLocalStorageFullPath(wkeWebView webView, const WCHAR* path)
     if (!path)
         return;
 
-	String pathString(path);
 	if (webView != NULL)
 	{
 		std::vector<char> filePathA;
@@ -835,6 +834,7 @@ void wkeSetLocalStorageFullPath(wkeWebView webView, const WCHAR* path)
 	}
 	else
 	{
+		String pathString(path);
 		net::setDefaultLocalStorageFullPath(pathString);
 	}
 }
