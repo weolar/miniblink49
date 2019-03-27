@@ -376,7 +376,7 @@ blink::WebString WebClipboardImpl::readHTML(Buffer buffer, WebURL* sourceUrl,
         if (0 == sizeOfHtml)
             return blink::WebString();
 
-        for (size_t i = 0; i < sizeOfHtml; ++i) {
+        for (int i = 0; i < sizeOfHtml; ++i) {
             if ('\0' == *((const char*)data + i)) {
                 sizeOfHtml = i;
                 break;
