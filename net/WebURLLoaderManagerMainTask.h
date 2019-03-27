@@ -597,7 +597,7 @@ static bool dispatchResponseToWke(WebURLLoaderInternal* job, const AtomicString&
     bool result = false;
     do {
         if (page->wkeHandler().netResponseCallback) {
-            if (page->wkeHandler().netResponseCallback(page->wkeWebView(), page->wkeHandler().downloadCallbackParam, urlBuf.data(), job)) {
+            if (page->wkeHandler().netResponseCallback(page->wkeWebView(), page->wkeHandler().netResponseCallbackParam, urlBuf.data(), job)) {
                 result = true;
                 break;
             }
