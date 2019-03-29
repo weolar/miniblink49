@@ -180,7 +180,7 @@ bool ScriptLoader::isScriptTypeSupported(LegacyTypeSupport supportLegacyTypes) c
     return false;
 }
 
-bool isBlocklistWebsiteToUseUtf8(const String& url);
+bool isBlacklistWebsiteToUseUtf8(const String& url);
 
 // http://dev.w3.org/html5/spec/Overview.html#prepare-a-script
 bool ScriptLoader::prepareScript(const TextPosition& scriptStartPosition, LegacyTypeSupport supportLegacyTypes)
@@ -239,8 +239,8 @@ bool ScriptLoader::prepareScript(const TextPosition& scriptStartPosition, Legacy
             defer = FetchRequest::LazyLoad;
 
         const String& sourceUrl = client->sourceAttributeValue();
-#if MINIBLINK_CHANGE
-        if (isBlocklistWebsiteToUseUtf8(sourceUrl))
+#ifndef MINIBLINK_NO_CHANGE
+        if (isBlacklistWebsiteToUseUtf8(sourceUrl))
             m_characterEncoding = "UTF-8";
 #endif
         if (!fetchScript(sourceUrl, defer))

@@ -69,10 +69,12 @@ static void preconnectHost(PreloadRequest* request)
 
 // some ali url is use GBK by mistake
 // TODO ScriptLoader::prepareScript
-bool isBlocklistWebsiteToUseUtf8(const String& url)
+bool isBlacklistWebsiteToUseUtf8(const String& url)
 {
     if (WTF::kNotFound != url.find("g.alicdn.com/kissy/k/1.4.4/seed.js") ||
-        WTF::kNotFound != url.find("g.alicdn.com/kg/??select/2.0.1/index.js?t="))
+        WTF::kNotFound != url.find("g.alicdn.com/kg/??select") ||
+        WTF::kNotFound != url.find("g.alicdn.com/kg/??slide")
+        )
         return true;
     return false;
 }
@@ -93,8 +95,8 @@ void HTMLResourcePreloader::preload(PassOwnPtr<PreloadRequest> preload)
         return;
     if (preload->resourceType() == Resource::Script || preload->resourceType() == Resource::CSSStyleSheet || preload->resourceType() == Resource::ImportResource) {
         String charset = preload->charset().isEmpty() ? m_document->charset().string() : preload->charset();
-#if MINIBLINK_CHANGE
-        if (preload->resourceType() == Resource::Script && isBlocklistWebsiteToUseUtf8(preload->resourceURL()))
+#ifndef MINIBLINK_NO_CHANGE
+        if (preload->resourceType() == Resource::Script && isBlacklistWebsiteToUseUtf8(preload->resourceURL()))
             charset = "UTF-8";
 #endif
         request.setCharset(charset);
