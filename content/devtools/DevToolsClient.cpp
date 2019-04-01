@@ -119,7 +119,7 @@ void DevToolsClient::sendMessageToBackend(const blink::WebString& message)
     String messageStr = message;
     String output = messageStr;
 
-    if (!m_devToolsProtocolDispatcher->dispatcher(messageStr.utf8().data()))
+    if (!m_devToolsProtocolDispatcher->dispatcher(messageStr.utf8().data()) && m_devToolsAgent != nullptr)
         blink::Platform::current()->currentThread()->postTask(FROM_HERE, new MessageToAgentTask(m_devToolsAgent, messageStr.utf8().data()));
 
 //     output = "sendMessageToBackend:";
