@@ -456,6 +456,10 @@ enum class WeakCallbackType { kParameter, kInternalFields, kFinalizer };
  */
 template <class T> class PersistentBase {
  public:
+     //zero
+     void MarkPartiallyDependent() {
+     }
+     //zero end
   /**
    * If non-empty, destroy the underlying storage cell
    * IsEmpty() will return true after this call.
@@ -1995,6 +1999,10 @@ class V8_EXPORT JSON {
    */
   static V8_WARN_UNUSED_RESULT MaybeLocal<Value> Parse(
       Local<Context> context, Local<String> json_string);
+  //zero
+  static V8_WARN_UNUSED_RESULT MaybeLocal<Value> Parse(
+      Isolate *isolate, Local<String> json_string);
+  //zero end
 
   /**
    * Tries to stringify the JSON-serializable object |json_object| and returns
@@ -4127,7 +4135,12 @@ class V8_EXPORT Function : public Object {
       Local<Value> data = Local<Value>(), int length = 0,
       ConstructorBehavior behavior = ConstructorBehavior::kAllow,
       SideEffectType side_effect_type = SideEffectType::kHasSideEffect);
-
+  //zero
+  static Local<Function> New(v8::Isolate* isolate,
+      FunctionCallback callback,
+      Local<Value> data = Local<Value>(),
+      int length = 0);
+  //zero end
   V8_WARN_UNUSED_RESULT MaybeLocal<Object> NewInstance(
       Local<Context> context, int argc, Local<Value> argv[]) const;
 
@@ -7354,7 +7367,28 @@ struct DeserializeInternalFieldsCallback {
   void* data;
 };
 typedef DeserializeInternalFieldsCallback DeserializeEmbedderFieldsCallback;
+//zero
+class UniqueId {
+public:
+    explicit UniqueId(intptr_t data)
+        : data_(data) {}
 
+    bool operator==(const UniqueId& other) const {
+        return data_ == other.data_;
+    }
+
+    bool operator!=(const UniqueId& other) const {
+        return data_ != other.data_;
+    }
+
+    bool operator<(const UniqueId& other) const {
+        return data_ < other.data_;
+    }
+
+private:
+    intptr_t data_;
+};
+//zero end
 /**
  * Isolate represents an isolated instance of the V8 engine.  V8 isolates have
  * completely separate states.  Objects from one isolate must not be used in
@@ -8587,6 +8621,22 @@ class V8_EXPORT Isolate {
   void operator delete(void*, size_t) = delete;
   void operator delete[](void*, size_t) = delete;
 
+  //zero
+  template<typename T> void SetObjectGroupId(const Persistent<T>& object,
+      UniqueId id) {};
+
+  template<typename T, typename S>
+  void SetReference(const Persistent<T>& parent,
+      const Persistent<S>& child) {
+      TYPE_CHECK(Object, T);
+      TYPE_CHECK(Value, S);
+
+  }
+
+  template<typename T> void SetReferenceFromGroup(UniqueId id,
+      const Persistent<T>& child);
+  //zero end
+
  private:
   template <class K, class V, class Traits>
   friend class PersistentValueMapBase;
@@ -8785,7 +8835,14 @@ class V8_EXPORT V8 {
    * handler or rely on the embedder's.
    */
   static bool EnableWebAssemblyTrapHandler(bool use_v8_signal_handler);
-
+  //zero
+  static void SetCaptureStackTraceForUncaughtExceptions(
+      bool capture, int frame_limit, StackTrace::StackTraceOptions options) {
+      Isolate* isolate = Isolate::GetCurrent();
+      isolate->SetCaptureStackTraceForUncaughtExceptions(capture, frame_limit,
+          options);
+  }
+  //zero end
  private:
   V8();
 

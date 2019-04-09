@@ -160,7 +160,12 @@ template <typename K, typename V, typename Traits>
 class PersistentValueMapBase {
  public:
   Isolate* GetIsolate() { return isolate_; }
+  //zero
+  void SetReference(const K& key,
+      const Persistent<Object>& parent) {
 
+  }
+  //zero end
   /**
    * Return size of the map.
    */

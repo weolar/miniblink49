@@ -3037,7 +3037,12 @@ MaybeLocal<Value> JSON::Parse(Local<Context> context,
   RETURN_ON_FAILED_EXECUTION(Value);
   RETURN_ESCAPED(result);
 }
-
+//zero
+MaybeLocal<Value> JSON::Parse(
+    Isolate *isolate, Local<String> json_string) {
+    return Parse(isolate->GetCurrentContext(), json_string);
+}
+//zero end
 MaybeLocal<String> JSON::Stringify(Local<Context> context,
                                    Local<Value> json_object,
                                    Local<String> gap) {
@@ -4911,6 +4916,15 @@ MaybeLocal<Function> Function::New(Local<Context> context,
   if (behavior == ConstructorBehavior::kThrow) templ->RemovePrototype();
   return templ->GetFunction(context);
 }
+
+//zero
+Local<Function> Function::New(Isolate* isolate,
+    FunctionCallback callback,
+    Local<Value> data = Local<Value>(),
+    int length = 0) {
+    return New(isolate->GetCurrentContext(), callback, data, length).FromMaybe(Local<Function>());
+};
+//zero end
 
 MaybeLocal<Object> Function::NewInstance(Local<Context> context, int argc,
                                          v8::Local<v8::Value> argv[]) const {
