@@ -25,8 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "config.h"
 #include "bindings/core/v8/NPV8Object.h"
+#include "config.h"
 
 #include "bindings/core/v8/ScriptController.h"
 #include "bindings/core/v8/ScriptSourceCode.h"
@@ -38,15 +38,22 @@
 #include "bindings/core/v8/WrapperTypeInfo.h"
 #include "bindings/core/v8/npruntime_impl.h"
 #include "bindings/core/v8/npruntime_priv.h"
+#include "content/browser/WebPageImpl.h"
+#include "core/dom/Document.h"
 #include "core/frame/LocalDOMWindow.h"
 #include "core/frame/LocalFrame.h"
+#include "core/page/ChromeClient.h"
+#include "net/cookies/WebCookieJarCurlImpl.h"
 #include "platform/ScriptForbiddenScope.h"
 #include "platform/UserGestureIndicator.h"
 #include "third_party/npapi/bindings/npfunctions.h"
+#include "web/WebViewImpl.h"
 #include "wtf/OwnPtr.h"
 #include "wtf/StringExtras.h"
 #include "wtf/text/WTFString.h"
 #include <stdio.h>
+
+extern "C" WINBASEAPI BOOL WINAPI InternetSetCookieA(LPCSTR lpszUrl, LPCSTR lpszCookieName, LPCSTR lpszCookieData);
 
 #if ENABLE_WKE
 extern NPNetscapeFuncs s_wkeBrowserFuncs;
@@ -58,9 +65,9 @@ namespace blink {
 
 namespace {
 
-void trace(Visitor*, ScriptWrappable*)
-{
-}
+    void trace(Visitor*, ScriptWrappable*)
+    {
+    }
 
 } // namespace
 
@@ -103,8 +110,7 @@ static ScriptState* mainWorldScriptState(v8::Isolate* isolate, NPObject* npObjec
     return scriptState;
 }
 
-static PassOwnPtr<v8::Local<v8::Value>[]> createValueListFromVariantArgs(v8::Isolate* isolate, const NPVariant* arguments, uint32_t argumentCount, NPObject* owner)
-{
+static PassOwnPtr<v8::Local<v8::Value>[]> createValueListFromVariantArgs(v8::Isolate* isolate, const NPVariant* arguments, uint32_t argumentCount, NPObject* owner) {
     OwnPtr<v8::Local<v8::Value>[]> argv = adoptArrayPtr(new v8::Local<v8::Value>[argumentCount]);
     for (uint32_t index = 0; index < argumentCount; index++) {
         const NPVariant* arg = &arguments[index];
@@ -350,6 +356,91 @@ bool _NPN_Evaluate(NPP npp, NPObject* npObject, NPString* npScript, NPVariant* r
     return _NPN_EvaluateHelper(npp, popupsAllowed, npObject, npScript, result);
 }
 
+void parseCookieKeyValue(const String& cookie, Vector<String>* keys, Vector<String>* values)
+{
+    String cookieStr(cookie);
+
+    size_t posA = 0;
+    size_t posB = 0;
+    String key;
+    String value;
+
+    if (cookieStr.length() < 3)
+        return;
+
+    if (cookieStr[cookieStr.length() - 1] != ';')
+        cookieStr.append("; ");
+
+    for (size_t i = 0; i < cookieStr.length(); ++i) {
+        if ('=' == cookieStr[i]) {
+            posB = i;
+            key = cookieStr.substring(posA, posB - posA);
+            ++i;
+            posA = i;
+        } else if (';' == cookieStr[i]) {
+            posB = i;
+            value = cookieStr.substring(posA, posB - posA);
+            ++i;
+            if (i >= cookieStr.length())
+                break;
+            if (' ' == cookieStr[i])
+                ++i;
+            posA = i;
+
+            keys->append(key);
+            values->append(value);
+        }
+    }
+}
+
+#ifndef MINIBLINK_NOT_IMPLEMENTED
+
+// fix "https://icorepnbs.pingan.com.cn/" swfupload bug, in which flash send http with cookie from IE
+static void fixSwfUpload(LocalFrame* frame)
+{
+    Document* doc = frame->document();
+    const KURL& url = doc->url();
+    if (!url.protocolIsInHTTPFamily())
+        return;
+
+    ChromeClient& chromeClient = frame->chromeClient();
+    WebViewImpl* view = (WebViewImpl*)chromeClient.webView();
+    if (!view)
+        return;
+    content::WebPageImpl* page = (content::WebPageImpl*)view->client();
+    if (!page)
+        return;
+    net::WebCookieJarImpl* cookieJar = page->getCookieJar();
+    if (!cookieJar)
+        return;
+    String cookie = cookieJar->getCookiesForSession(KURL(), doc->cookieURL(), true);
+    String host = url.protocol();
+
+    host.append("://");
+    host.append(url.host());
+
+    // ::InternetSetCookieA(sURL, NULL, "JSESSIONID=null;path=/;expires=Thu, 01-Jan-1970 00:00:01 GMT");
+    // ::InternetSetCookieA(sURL, "JSESSIONID", "1111111111;path=/;expires=Thu, 01-Jan-2022 00:00:01 GMT");
+
+    Vector<String> keys;
+    Vector<String> values;
+    parseCookieKeyValue(cookie.utf8().data(), &keys, &values);
+    for (size_t i = 0; i < keys.size(); ++i) {
+        String key = keys[i];
+        String value = values[i];
+
+        String temp = key;
+        temp.append("=null;path=/;expires=Thu, 01-Jan-1970 00:00:01 GMT");
+        ::InternetSetCookieA(host.utf8().data(), NULL, temp.utf8().data());
+
+        temp = value;
+        temp.append(";path=/;expires=Thu, 01-Jan-2022 00:00:01 GMT");
+        ::InternetSetCookieA(host.utf8().data(), key.utf8().data(), temp.utf8().data());
+    }
+}
+
+#endif
+
 bool _NPN_EvaluateHelper(NPP npp, bool popupsAllowed, NPObject* npObject, NPString* npScript, NPVariant* result)
 {
     if (result) {
@@ -390,6 +481,11 @@ bool _NPN_EvaluateHelper(NPP npp, bool popupsAllowed, NPObject* npObject, NPStri
     ASSERT(frame);
 
     String script = String::fromUTF8(npScript->UTF8Characters, npScript->UTF8Length);
+
+#ifndef MINIBLINK_NOT_IMPLEMENTED
+    if (WTF::kNotFound != script.find("SWFUpload") && WTF::kNotFound != script.find("uploadStart("))
+        fixSwfUpload(frame);
+#endif
 
     UserGestureIndicator gestureIndicator(popupsAllowed ? DefinitelyProcessingNewUserGesture : PossiblyProcessingUserGesture);
     v8::Local<v8::Value> v8result = frame->script().executeScriptAndReturnValue(scriptState->context(), ScriptSourceCode(script, KURL(ParsedURLString, filename)));
@@ -548,7 +644,7 @@ bool _NPN_HasMethod(NPP npp, NPObject* npObject, NPIdentifier methodName)
     return false;
 }
 
-void _NPN_SetException(NPObject* npObject, const NPUTF8 *message)
+void _NPN_SetException(NPObject* npObject, const NPUTF8* message)
 {
     if (!npObject || !npObjectToV8NPObject(npObject)) {
         v8::HandleScope handleScope(v8::Isolate::GetCurrent());
@@ -587,14 +683,13 @@ bool _NPN_Enumerate(NPP npp, NPObject* npObject, NPIdentifier** identifier, uint
 
         // FIXME: Figure out how to cache this helper function.  Run a helper function that collects the properties
         // on the object into an array.
-        const char enumeratorCode[] =
-            "(function (obj) {"
-            "  var props = [];"
-            "  for (var prop in obj) {"
-            "    props[props.length] = prop;"
-            "  }"
-            "  return props;"
-            "});";
+        const char enumeratorCode[] = "(function (obj) {"
+                                      "  var props = [];"
+                                      "  for (var prop in obj) {"
+                                      "    props[props.length] = prop;"
+                                      "  }"
+                                      "  return props;"
+                                      "});";
         v8::Local<v8::String> source = v8AtomicString(scriptState->isolate(), enumeratorCode);
         v8::Local<v8::Value> result;
         if (!V8ScriptRunner::compileAndRunInternalScript(source, scriptState->isolate()).ToLocal(&result))
@@ -620,7 +715,7 @@ bool _NPN_Enumerate(NPP npp, NPObject* npObject, NPIdentifier** identifier, uint
     }
 
     if (NP_CLASS_STRUCT_VERSION_HAS_ENUM(npObject->_class) && npObject->_class->enumerate)
-       return npObject->_class->enumerate(npObject, identifier, count);
+        return npObject->_class->enumerate(npObject, identifier, count);
 
     if (s_wkeBrowserFuncs.enumerate) {
         return s_wkeBrowserFuncs.enumerate(npp, npObject, identifier, count);
