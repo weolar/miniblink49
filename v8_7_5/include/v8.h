@@ -1112,6 +1112,16 @@ class V8_EXPORT Data {
   Data();
 };
 
+//zero
+class V8_EXPORT NativeWeakMap : public Data {
+public:
+    static Local<NativeWeakMap> New(Isolate* isolate);
+    void Set(Local<Value> key, Local<Value> value);
+    Local<Value> Get(Local<Value> key);
+    bool Has(Local<Value> key);
+    bool Delete(Local<Value> key);
+};
+//zero end
 /**
  * A container type that holds relevant metadata for module loading.
  *
@@ -9250,6 +9260,9 @@ class V8_EXPORT TryCatch {
   TryCatch(const TryCatch&) = delete;
   void operator=(const TryCatch&) = delete;
 
+  //zero
+  internal::Isolate* isolate() { return isolate_; };
+  //zero end
  private:
   // Declaring operator new and delete as deleted is not spec compliant.
   // Therefore declare them private instead to disable dynamic alloc
