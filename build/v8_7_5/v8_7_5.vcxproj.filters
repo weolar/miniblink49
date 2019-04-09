@@ -87,39 +87,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\v8_6_7\include\v8.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\v8_6_7\include\v8config.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\v8_6_7\include\v8-inspector.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\v8_6_7\include\v8-inspector-protocol.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\v8_6_7\include\v8-platform.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\v8_6_7\include\v8-profiler.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\v8_6_7\include\v8-testing.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\v8_6_7\include\v8-util.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\v8_6_7\include\v8-version.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\v8_6_7\include\v8-value-serializer-version.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\v8_6_7\include\v8-version-string.h">
-      <Filter>include</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\v8_7_5\src\asmjs\asm-js.h">
       <Filter>src\asmjs</Filter>
     </ClInclude>
@@ -1163,6 +1130,48 @@
     </ClInclude>
     <ClInclude Include="..\..\gen\v8_7_5\src\inspector\protocol\Schema.h">
       <Filter>src\gen\src\inspector\protocol</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_7_5\include\v8.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_7_5\include\v8config.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_7_5\include\v8-inspector.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_7_5\include\v8-inspector-protocol.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_7_5\include\v8-internal.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_7_5\include\v8-platform.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_7_5\include\v8-profiler.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_7_5\include\v8-testing.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_7_5\include\v8-util.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_7_5\include\v8-value-serializer-version.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_7_5\include\v8-version.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_7_5\include\v8-version-string.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_7_5\include\v8-wasm-trap-handler-posix.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\v8_7_5\include\v8-wasm-trap-handler-win.h">
+      <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
