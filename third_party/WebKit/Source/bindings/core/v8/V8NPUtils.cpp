@@ -171,7 +171,10 @@ void popExceptionHandler()
     delete doomed;
 }
 
-ExceptionCatcher::ExceptionCatcher()
+ExceptionCatcher::ExceptionCatcher(v8::Isolate* isolate)
+#if V8_MAJOR_VERSION > 5
+    : m_tryCatch(isolate)
+#endif
 {
     if (!topHandler)
         m_tryCatch.SetVerbose(true);

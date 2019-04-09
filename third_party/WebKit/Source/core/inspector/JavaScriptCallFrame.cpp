@@ -137,7 +137,11 @@ int JavaScriptCallFrame::scopeType(int scopeIndex) const
     v8::Local<v8::Object> callFrame = m_callFrame.newLocal(m_isolate);
     v8::Local<v8::Function> func = v8::Local<v8::Function>::Cast(callFrame->Get(v8AtomicString(m_isolate, "scopeType")));
     v8::Local<v8::Array> scopeType = v8::Local<v8::Array>::Cast(V8ScriptRunner::callInternalFunction(func, callFrame, 0, 0, m_isolate).ToLocalChecked());
+#if V8_MAJOR_VERSION > 5
+    return scopeType->Get(scopeIndex)->Int32Value(m_isolate->GetCurrentContext()).FromJust();
+#else
     return scopeType->Get(scopeIndex)->Int32Value();
+#endif
 }
 
 v8::Local<v8::Value> JavaScriptCallFrame::thisObject() const
@@ -157,7 +161,11 @@ bool JavaScriptCallFrame::isAtReturn() const
     v8::Local<v8::Value> result = m_callFrame.newLocal(m_isolate)->Get(v8AtomicString(m_isolate, "isAtReturn"));
     if (result.IsEmpty() || !result->IsBoolean())
         return false;
+#if V8_MAJOR_VERSION > 5
+    return result->BooleanValue(m_isolate);
+#else
     return result->BooleanValue();
+#endif
 }
 
 v8::Local<v8::Value> JavaScriptCallFrame::returnValue() const
@@ -218,7 +226,11 @@ v8::Local<v8::Object> JavaScriptCallFrame::createExceptionDetails(v8::Isolate* i
     exceptionDetails->Set(v8::String::NewFromUtf8(isolate, "text"), message->Get());
     exceptionDetails->Set(v8::String::NewFromUtf8(isolate, "url"), message->GetScriptOrigin().ResourceName());
     exceptionDetails->Set(v8::String::NewFromUtf8(isolate, "scriptId"), v8::Integer::New(isolate, message->GetScriptOrigin().ScriptID()->Value()));
+#if V8_MAJOR_VERSION > 5
+    exceptionDetails->Set(isolate->GetCurrentContext(), v8::String::NewFromUtf8(isolate, "line"), v8::Integer::New(isolate, message->GetLineNumber(isolate->GetCurrentContext()).FromJust()));
+#else
     exceptionDetails->Set(v8::String::NewFromUtf8(isolate, "line"), v8::Integer::New(isolate, message->GetLineNumber()));
+#endif
     exceptionDetails->Set(v8::String::NewFromUtf8(isolate, "column"), v8::Integer::New(isolate, message->GetStartColumn()));
     if (!message->GetStackTrace().IsEmpty())
         exceptionDetails->Set(v8::String::NewFromUtf8(isolate, "stackTrace"), message->GetStackTrace()->AsArray());

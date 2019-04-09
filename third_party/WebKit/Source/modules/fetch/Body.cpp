@@ -400,7 +400,11 @@ void Body::resolveJSON(const String& string)
     ScriptState::Scope scope(m_resolver->scriptState());
     v8::Isolate* isolate = m_resolver->scriptState()->isolate();
     v8::Local<v8::String> inputString = v8String(isolate, string);
+#if V8_MAJOR_VERSION > 5
+    v8::TryCatch trycatch(isolate);
+#else
     v8::TryCatch trycatch;
+#endif
     v8::Local<v8::Value> parsed;
     if (v8Call(v8::JSON::Parse(isolate, inputString), parsed, trycatch))
         m_resolver->resolve(parsed);

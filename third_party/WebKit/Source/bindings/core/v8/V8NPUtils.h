@@ -56,7 +56,7 @@ CORE_EXPORT void popExceptionHandler();
 // current ExceptionHandler.
 class ExceptionCatcher {
 public:
-    ExceptionCatcher();
+    ExceptionCatcher(v8::Isolate* isolate);
     ~ExceptionCatcher();
 private:
     v8::TryCatch m_tryCatch;

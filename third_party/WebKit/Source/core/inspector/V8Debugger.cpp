@@ -100,7 +100,7 @@ void V8Debugger::disable()
     m_debuggerContext.Reset();
     m_callFrameWrapperTemplate.Reset();
     v8::Debug::SetDebugEventListener(
-#if V8_MINOR_VERSION == 7
+#if V8_MAJOR_VERSION > 5
         m_isolate,
 #endif
         nullptr);
@@ -358,7 +358,11 @@ bool V8Debugger::setScriptSource(const String& sourceID, const String& newConten
     v8::Local<v8::Value> v8result;
     {
         EnableLiveEditScope enableLiveEditScope(m_isolate);
+#if V8_MAJOR_VERSION > 5
+        v8::TryCatch tryCatch(isolate);
+#else
         v8::TryCatch tryCatch;
+#endif
         tryCatch.SetVerbose(false);
         v8::MaybeLocal<v8::Value> maybeResult = callDebuggerMethod("liveEditScriptSource", 3, argv);
         if (tryCatch.HasCaught()) {

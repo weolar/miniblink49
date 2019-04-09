@@ -382,7 +382,11 @@ bool jsIsTrue(jsValue v)
         v8::Local<v8::Value> value = v8::Local<v8::Value>::New(wkeValue->isolate, wkeValue->value);
         if (!value->IsBoolean())
             return false;
+#if V8_MAJOR_VERSION > 5
+        v8::Local<v8::Boolean> boolValue = value->ToBoolean(wkeValue->isolate);
+#else
         v8::Local<v8::Boolean> boolValue = value->ToBoolean();
+#endif
         return boolValue->Value();
     }
 
@@ -408,7 +412,11 @@ int jsToInt(jsExecState es, jsValue v)
         v8::Isolate* isolate = wkeValue->isolate;
         v8::HandleScope handleScope(isolate);
         v8::Local<v8::Value> value = v8::Local<v8::Value>::New(wkeValue->isolate, wkeValue->value);
+#if V8_MAJOR_VERSION > 5
+        return value->ToInt32(isolate)->Value();
+#else
         return value->ToInt32()->Value();
+#endif
     } else if (WkeJsValue::wkeJsValueInt == wkeValue->type) {
         return wkeValue->intVal;
     } else if (WkeJsValue::wkeJsValueDouble == wkeValue->type) {
@@ -458,7 +466,11 @@ bool jsToBoolean(jsExecState es, jsValue v)
         v8::Isolate* isolate = wkeValue->isolate;
         v8::HandleScope handleScope(isolate);
         v8::Local<v8::Value> value = v8::Local<v8::Value>::New(wkeValue->isolate, wkeValue->value);
+#if V8_MAJOR_VERSION > 5
+        return value->ToBoolean(isolate)->Value();
+#else
         return value->ToBoolean()->Value();
+#endif
     } else if (WkeJsValue::wkeJsValueBool == wkeValue->type)
         return wkeValue->boolVal;
 
@@ -501,8 +513,11 @@ const utf8* jsToTempString(jsExecState es, jsValue v)
         v8::Local<v8::Value> value = v8::Local<v8::Value>::New(wkeValue->isolate, wkeValue->value);
 //         if (!value->IsString())
 //             return "";
-
+#if V8_MAJOR_VERSION > 5
+        v8::Local<v8::String> stringValue = value->ToString(isolate);
+#else
         v8::Local<v8::String> stringValue = value->ToString();
+#endif
         String stringWTF = blink::v8StringToWebCoreString<String>(stringValue, blink::DoNotExternalize);
 
         sharedStringBuffer = WTF::ensureStringToUTF8(stringWTF, false);
@@ -803,9 +818,15 @@ jsValue jsEvalExW(jsExecState es, const wchar_t* str, bool isInClosure)
     v8::MaybeLocal<v8::String> source = v8::String::NewFromUtf8(isolate, WTF::ensureStringToUTF8(codeString, true).data(), v8::NewStringType::kNormal);
     if (source.IsEmpty())
         return jsUndefined();
+#if V8_MAJOR_VERSION > 5
+    v8::Local<v8::Script> script = v8::Script::Compile(context, source.ToLocalChecked());
+    v8::TryCatch trycatch(isolate);
+    v8::Local<v8::Value> result = script->Run(context).FromMaybe(v8::Local<v8::Value>());
+#else
     v8::Local<v8::Script> script = v8::Script::Compile(source.ToLocalChecked());
     v8::TryCatch trycatch;
     v8::Local<v8::Value> result = script->Run();
+#endif
 
     //return wke::v8ValueToJsValue(context, result);
     return createJsValueByLocalValue(isolate, context, result);
@@ -850,7 +871,11 @@ static std::string* saveCallstack(v8::Local<v8::StackTrace> stackTrace)
     int count = stackTrace->GetFrameCount();
 
     for (int i = 0; i < count; ++i) {
+#if V8_MAJOR_VERSION > 5
+        v8::Local<v8::StackFrame> stackFrame = stackTrace->GetFrame(v8::Isolate::GetCurrent(), i);
+#else
         v8::Local<v8::StackFrame> stackFrame = stackTrace->GetFrame(i);
+#endif
         int frameCount = stackTrace->GetFrameCount();
         int line = stackFrame->GetLineNumber();
         v8::Local<v8::String> scriptName = stackFrame->GetScriptNameOrSourceURL();
@@ -860,12 +885,20 @@ static std::string* saveCallstack(v8::Local<v8::StackTrace> stackTrace)
         std::string funcNameWTF;
 
         if (!scriptName.IsEmpty()) {
+#if V8_MAJOR_VERSION > 5
+            v8::String::Utf8Value scriptNameUtf8(v8::Isolate::GetCurrent(), scriptName);
+#else
             v8::String::Utf8Value scriptNameUtf8(scriptName);
+#endif
             scriptNameWTF = *scriptNameUtf8;
         }
 
         if (!funcName.IsEmpty()) {
+#if V8_MAJOR_VERSION > 5
+            v8::String::Utf8Value funcNameUtf8(v8::Isolate::GetCurrent(), funcName);
+#else
             v8::String::Utf8Value funcNameUtf8(funcName);
+#endif
             funcNameWTF = *funcNameUtf8;
         }
         std::vector<char> output;
@@ -921,7 +954,11 @@ jsValue jsCall(jsExecState es, jsValue func, jsValue thisValue, jsValue* args, i
     if (thisValueV8.IsEmpty() || thisValueV8->IsUndefined())
         thisValueV8 = context->Global();
 
+#if V8_MAJOR_VERSION > 5
+    v8::TryCatch tryCatch(isolate);
+#else
     v8::TryCatch tryCatch;
+#endif
     tryCatch.SetVerbose(true);
 
     v8::MaybeLocal<v8::Value> ret = cb->Call(context, thisValueV8, argCount, argv);
@@ -992,9 +1029,13 @@ jsValue jsGet(jsExecState es, jsValue object, const char* prop)
     if (value.IsEmpty() || !value->IsObject())
         return jsUndefined();
 
+#if V8_MAJOR_VERSION > 5
+    v8::Local<v8::Object> obj = value->ToObject(isolate);
+    v8::TryCatch tryCatch(isolate);
+#else
     v8::Local<v8::Object> obj = value->ToObject();
-
     v8::TryCatch tryCatch;
+#endif
     tryCatch.SetVerbose(true);
 
     v8::MaybeLocal<v8::String> propV8 = v8::String::NewFromUtf8(isolate, prop, v8::NewStringType::kNormal, -1);
@@ -1026,10 +1067,14 @@ void jsSet(jsExecState es, jsValue object, const char* prop, jsValue value)
     v8::Local<v8::Value> valueLocal = getV8Value(value, context);
     if (valueLocal.IsEmpty())
         return;
-    
-    v8::Local<v8::Object> obj = objectLocal->ToObject();
 
+#if V8_MAJOR_VERSION > 5
+    v8::Local<v8::Object> obj = objectLocal->ToObject(isolate);
+    v8::TryCatch tryCatch(isolate);
+#else
+    v8::Local<v8::Object> obj = objectLocal->ToObject();
     v8::TryCatch tryCatch;
+#endif
     tryCatch.SetVerbose(true);
 
     v8::MaybeLocal<v8::String> propV8 = v8::String::NewFromUtf8(isolate, prop, v8::NewStringType::kNormal, -1);
@@ -1064,12 +1109,19 @@ void jsDeleteObjectProp(jsExecState es, jsValue object, const char* prop)
     v8::Local<v8::Value> objectLocal = getV8Value(object, context);
     if (objectLocal.IsEmpty() || !objectLocal->IsObject())
         return;
-
+#if V8_MAJOR_VERSION > 5
+    v8::Local<v8::Object> obj = objectLocal->ToObject(isolate);
+#else
     v8::Local<v8::Object> obj = objectLocal->ToObject();
+#endif
     v8::MaybeLocal<v8::String> propV8 = v8::String::NewFromUtf8(isolate, prop, v8::NewStringType::kNormal, -1);
     if (propV8.IsEmpty())
         return;
+#if V8_MAJOR_VERSION > 5
+    obj->Delete(context, propV8.ToLocalChecked());
+#else
     obj->Delete(propV8.ToLocalChecked());
+#endif
 }
 
 bool jsIsValidExecState(jsExecState es)
@@ -1114,7 +1166,11 @@ jsValue jsGetAt(jsExecState es, jsValue object, int index)
     if (retValue.IsEmpty())
         return jsUndefined();
 
+#if V8_MAJOR_VERSION > 5
+    v8::TryCatch tryCatch(isolate);
+#else
     v8::TryCatch tryCatch;
+#endif
     tryCatch.SetVerbose(true);
     if (tryCatch.HasCaught() || retValue.IsEmpty())
         return jsUndefined();
@@ -1161,17 +1217,28 @@ jsKeys* jsGetKeys(jsExecState es, jsValue object)
     v8::Context::Scope contextScope(context);
 
     v8::Local<v8::Value> value = getV8Value(object, context);
+#if V8_MAJOR_VERSION > 5
+    v8::Local<v8::Object> obj = value->ToObject(isolate);
+
+    v8::Local<v8::Array> arrKeys = obj->GetPropertyNames(context).FromMaybe(v8::Local<v8::Array>());
+#else
     v8::Local<v8::Object> obj = value->ToObject();
 
     v8::Local<v8::Array> arrKeys = obj->GetPropertyNames();
+#endif
     if (0 == arrKeys->Length())
         return nullptr;
     jsKeys* result = wke::createTempJsKeys(arrKeys->Length());
     
     for (uint32_t i = 0; i < result->length; ++i) {
         v8::Local<v8::Value> value = arrKeys->Get(v8::Integer::New(isolate, i));
+#if V8_MAJOR_VERSION > 5
+        v8::Local<v8::String> str = value->ToString(isolate);
+        v8::String::Utf8Value strUtf8(isolate, str);
+#else
         v8::Local<v8::String> str = value->ToString();
         v8::String::Utf8Value strUtf8(str);
+#endif
         if (0 == strUtf8.length())
             continue;
         char* keyPtr = new char[strUtf8.length() + 1];
@@ -1360,7 +1427,11 @@ static void addFunction(v8::Local<v8::Context> context, const char* name, wkeJsN
     tmpl->SetCallHandler(functionCallbackImpl, data);
 
     // Retrieve the function object and set the name.
+#if V8_MAJOR_VERSION > 5
+    v8::Local<v8::Function> func = tmpl->GetFunction(context).FromMaybe(v8::Local<v8::Function>());
+#else
     v8::Local<v8::Function> func = tmpl->GetFunction();
+#endif
     if (func.IsEmpty())
         return;
     
@@ -1517,7 +1588,11 @@ static void addAccessor(v8::Local<v8::Context> context, const char* name, wkeJsN
     v8::Context::Scope contextScope(context);
     v8::Local<v8::Object> globalObj = v8::Local<v8::Object>::Cast(context->Global()->GetPrototype());
 
+#if V8_MAJOR_VERSION > 5
+    v8::TryCatch tryCatch(isolate);
+#else
     v8::TryCatch tryCatch;
+#endif
     tryCatch.SetVerbose(true);
 
     v8::MaybeLocal<v8::String> nameMaybeLocal = v8::String::NewFromUtf8(isolate, name, v8::NewStringType::kNormal, -1);
@@ -1827,8 +1902,11 @@ jsData* jsGetData(jsExecState es, jsValue value)
     if (!external->IsExternal()) {
         if (!valueV8->IsObject())
             return nullptr;
-
+#if V8_MAJOR_VERSION > 5
+        v8::Local<v8::Object> obj = valueV8->ToObject(isolate);
+#else
         v8::Local<v8::Object> obj = valueV8->ToObject();
+#endif
         external = blink::V8HiddenValue::getHiddenValue(isolate, obj, v8::String::NewFromUtf8(isolate, "wkeJsData", v8::NewStringType::kNormal, -1).ToLocalChecked());
         if (external.IsEmpty() || !external->IsExternal())
             return nullptr;
@@ -1995,7 +2073,11 @@ void onReleaseGlobalObject(content::WebFrameClientImpl* client, blink::WebLocalF
 
             v8::Local<v8::Value> value = v8::Local<v8::Value>::New(wkeJsValue->isolate, wkeJsValue->value);
             if (value.IsEmpty() && value->IsObject()) {
+#if V8_MAJOR_VERSION > 5
+                v8::Local<v8::Object> obj = value->ToObject(isolate);
+#else
                 v8::Local<v8::Object> obj = value->ToObject();
+#endif
                 blink::V8HiddenValue::deleteHiddenValue(isolate, obj, v8::String::NewFromUtf8(isolate, "wkeJsData", v8::NewStringType::kNormal, -1).ToLocalChecked());
             }
 
@@ -2085,13 +2167,25 @@ jsValue v8ValueToJsValue(v8::Local<v8::Context> context, v8::Local<v8::Value> v8
         //return wke::createJsValueString(context, "Object");
         return createJsValueByLocalValue(context->GetIsolate(), context, v8Value);
     } else if (v8Value->IsInt32()) {
+#if V8_MAJOR_VERSION > 5
+        v8::Local<v8::Int32> v8Number = v8Value->ToInt32(context->GetIsolate());
+#else
         v8::Local<v8::Int32> v8Number = v8Value->ToInt32();
+#endif
         return jsInt(v8Number->Value());
     } else if (v8Value->IsUint32()) {
+#if V8_MAJOR_VERSION > 5
+        v8::Local<v8::Uint32> v8Number = v8Value->ToUint32(context).FromMaybe(v8::Local<v8::Uint32>());
+#else
         v8::Local<v8::Uint32> v8Number = v8Value->ToUint32();
+#endif
         return jsInt(v8Number->Value());
     } else if (v8Value->IsNumber()) {
+#if V8_MAJOR_VERSION > 5
+        v8::Local<v8::Number> v8Number = v8Value->ToNumber(context->GetIsolate());
+#else
         v8::Local<v8::Number> v8Number = v8Value->ToNumber();
+#endif
         return jsDouble(v8Number->Value());
     }
 
@@ -2123,24 +2217,41 @@ void recordJsExceptionInfo(const v8::TryCatch& tryCatch)
         g_jsExceptionInfo = nullptr;
         return;
     }
-
+#if V8_MAJOR_VERSION > 5
+    v8::Isolate* isolate = tryCatch.isolate();
+#endif
     if (!g_jsExceptionInfo)
         g_jsExceptionInfo = new jsExceptionInfo();
 
     v8::Local<v8::Message> message = tryCatch.Message();
-
+#if V8_MAJOR_VERSION > 5
+    v8::String::Utf8Value messageUtf8(isolate, message->Get());
+#else
     v8::String::Utf8Value messageUtf8(message->Get());
+#endif
     g_jsExceptionInfo->message = strDupWithLengthLimit(*messageUtf8, messageUtf8.length());
 
+#if V8_MAJOR_VERSION > 5
+    v8::String::Utf8Value sourceLineUtf8(isolate, message->GetSourceLine(isolate->GetCurrentContext()).FromMaybe(v8::Local<v8::Value>()));
+#else
     v8::String::Utf8Value sourceLineUtf8(message->GetSourceLine());
+#endif
     g_jsExceptionInfo->sourceLine = strDupWithLengthLimit(*sourceLineUtf8, sourceLineUtf8.length());
 
     if (!message->GetScriptResourceName().IsEmpty()) {
+#if V8_MAJOR_VERSION > 5
+        v8::String::Utf8Value scriptResourceNameUtf8(isolate, message->GetScriptResourceName()->ToString(isolate));
+#else
         v8::String::Utf8Value scriptResourceNameUtf8(message->GetScriptResourceName()->ToString());
+#endif
         g_jsExceptionInfo->scriptResourceName = strDupWithLengthLimit(*scriptResourceNameUtf8, scriptResourceNameUtf8.length());
     } else
         g_jsExceptionInfo->scriptResourceName = mallocEmpty();
+#if V8_MAJOR_VERSION > 5
+    g_jsExceptionInfo->lineNumber = message->GetLineNumber(isolate->GetCurrentContext()).FromJust();
+#else
     g_jsExceptionInfo->lineNumber = message->GetLineNumber();
+#endif
     g_jsExceptionInfo->startPosition = message->GetStartPosition();
     g_jsExceptionInfo->endPosition = message->GetEndPosition();
     g_jsExceptionInfo->startColumn = message->GetStartColumn();

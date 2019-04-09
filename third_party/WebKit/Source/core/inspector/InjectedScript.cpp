@@ -564,7 +564,11 @@ void InjectedScript::makeEvalCall(ErrorString* errorString, ScriptFunctionCall& 
 void InjectedScript::makeCallWithExceptionDetails(ScriptFunctionCall& function, RefPtr<JSONValue>* result, RefPtr<TypeBuilder::Debugger::ExceptionDetails>* exceptionDetails)
 {
     ScriptState::Scope scope(injectedScriptObject().scriptState());
+#if V8_MAJOR_VERSION > 5
+    v8::TryCatch tryCatch(injectedScriptObject().scriptState()->isolate());
+#else
     v8::TryCatch tryCatch;
+#endif
     ScriptValue resultValue = function.callWithoutExceptionHandling();
     if (tryCatch.HasCaught()) {
         v8::Local<v8::Message> message = tryCatch.Message();

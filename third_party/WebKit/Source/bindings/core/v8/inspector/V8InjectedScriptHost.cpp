@@ -115,14 +115,15 @@ void V8InjectedScriptHost::internalConstructorNameCallback(const v8::FunctionCal
 
     v8::Local<v8::Object> object = info[0].As<v8::Object>();
     v8::Local<v8::String> result = object->GetConstructorName();
-
+    v8::Isolate *isolae = info.GetIsolate();
     if (!result.IsEmpty() && toCoreStringWithUndefinedOrNullCheck(result) == "Object") {
         v8::Local<v8::String> constructorSymbol = v8AtomicString(info.GetIsolate(), "constructor");
-        if (object->HasRealNamedProperty(constructorSymbol) && !object->HasRealNamedCallbackProperty(constructorSymbol)) {
 #if V8_MAJOR_VERSION > 5
-            v8::TryCatch tryCatch(info.GetIsolate());
-            v8::Local<v8::Value> constructor = object->GetRealNamedProperty(info.GetIsolate()->GetCurrentContext(), constructorSymbol);
+        if (object->HasRealNamedProperty(isolae->GetCurrentContext(), constructorSymbol).FromJust() && !object->HasRealNamedCallbackProperty(isolae->GetCurrentContext(), constructorSymbol).FromJust()) {
+            v8::TryCatch tryCatch(isolae);
+            v8::Local<v8::Value> constructor = object->GetRealNamedProperty(isolae->GetCurrentContext(), constructorSymbol).FromMaybe(v8::Local<v8::Value>());
 #else
+        if (object->HasRealNamedProperty(constructorSymbol) && !object->HasRealNamedCallbackProperty(constructorSymbol)) {
             v8::TryCatch tryCatch;
             v8::Local<v8::Value> constructor = object->GetRealNamedProperty(constructorSymbol);
 #endif
