@@ -114,7 +114,11 @@ void V8AbstractEventListener::invokeEventHandler(ScriptState* scriptState, Event
     v8::Local<v8::Value> returnValue;
     {
         // Catch exceptions thrown in the event handler so they do not propagate to javascript code that caused the event to fire.
+#if V8_MAJOR_VERSION > 5
+        v8::TryCatch tryCatch(isolate());
+#else
         v8::TryCatch tryCatch;
+#endif
         tryCatch.SetVerbose(true);
 
         // Save the old 'event' property so we can restore it later.

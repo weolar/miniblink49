@@ -288,7 +288,11 @@ static void namedPropertyGetter(v8::Local<v8::Name> name, const v8::PropertyCall
     auto nameString = name.As<v8::String>();
     Storage* impl = V8Storage::toImpl(info.Holder());
     AtomicString propertyName = toCoreAtomicString(nameString);
+#if V8_MAJOR_VERSION > 5
+    v8::String::Utf8Value namedProperty(info.GetIsolate(), nameString);
+#else
     v8::String::Utf8Value namedProperty(nameString);
+#endif
     ExceptionState exceptionState(ExceptionState::GetterContext, *namedProperty, "Storage", info.Holder(), info.GetIsolate());
     String result = impl->anonymousNamedGetter(propertyName, exceptionState);
     if (exceptionState.throwIfNeeded())
@@ -308,7 +312,11 @@ static void namedPropertyGetterCallback(v8::Local<v8::Name> name, const v8::Prop
 static void namedPropertySetter(v8::Local<v8::Name> name, v8::Local<v8::Value> v8Value, const v8::PropertyCallbackInfo<v8::Value>& info)
 {
     auto nameString = name.As<v8::String>();
+#if V8_MAJOR_VERSION > 5
+    v8::String::Utf8Value namedProperty(info.GetIsolate(), nameString);
+#else
     v8::String::Utf8Value namedProperty(nameString);
+#endif
     ExceptionState exceptionState(ExceptionState::SetterContext, *namedProperty, "Storage", info.Holder(), info.GetIsolate());
     Storage* impl = V8Storage::toImpl(info.Holder());
     V8StringResource<> propertyName(nameString);
@@ -336,7 +344,11 @@ static void namedPropertyQuery(v8::Local<v8::Name> name, const v8::PropertyCallb
 {
     Storage* impl = V8Storage::toImpl(info.Holder());
     AtomicString propertyName = toCoreAtomicString(name.As<v8::String>());
+#if V8_MAJOR_VERSION > 5
+    v8::String::Utf8Value namedProperty(info.GetIsolate(), name);
+#else
     v8::String::Utf8Value namedProperty(name);
+#endif
     ExceptionState exceptionState(ExceptionState::GetterContext, *namedProperty, "Storage", info.Holder(), info.GetIsolate());
     bool result = impl->namedPropertyQuery(propertyName, exceptionState);
     if (exceptionState.throwIfNeeded())
@@ -357,7 +369,11 @@ static void namedPropertyDeleter(v8::Local<v8::Name> name, const v8::PropertyCal
 {
     Storage* impl = V8Storage::toImpl(info.Holder());
     AtomicString propertyName = toCoreAtomicString(name.As<v8::String>());
+#if V8_MAJOR_VERSION > 5
+    v8::String::Utf8Value namedProperty(info.GetIsolate(), name);
+#else
     v8::String::Utf8Value namedProperty(name);
+#endif
     ExceptionState exceptionState(ExceptionState::DeletionContext, *namedProperty, "Storage", info.Holder(), info.GetIsolate());
     DeleteResult result = impl->anonymousNamedDeleter(propertyName, exceptionState);
     if (exceptionState.throwIfNeeded())

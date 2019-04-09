@@ -157,7 +157,7 @@ void ScriptPromisePropertyBase::clearWrappers()
         v8::Local<v8::Object> wrapper = (*i)->newLocal(m_isolate);
         if (!wrapper.IsEmpty()) {
 			//zero
-#if V8_MINOR_VERSION == 7
+#if V8_MAJOR_VERSION > 5 || (V8_MAJOR_VERSION == 5 && V8_MINOR_VERSION == 7)
 			blink::V8HiddenValue::deleteHiddenValue(m_isolate, wrapper, resolverName());
 			blink::V8HiddenValue::deleteHiddenValue(m_isolate, wrapper, promiseName());
 #else

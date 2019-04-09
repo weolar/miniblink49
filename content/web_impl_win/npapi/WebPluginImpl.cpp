@@ -500,7 +500,11 @@ void WebPluginImpl::performRequest(PluginRequest* request)
 
         CString cstr;        
         if (result->IsString()) {
+#if V8_MAJOR_VERSION > 5
+            v8::Local<v8::String> v8String = result->ToString(toIsolate(m_parentFrame));
+#else
             v8::Local<v8::String> v8String = result->ToString();
+#endif
             resultString = v8StringToWebCoreString<String>(v8String, blink::Externalize);
             cstr = resultString.utf8();
         }

@@ -63,7 +63,7 @@ public:
     {
         v8::Local<v8::String> wrapperProperty = getHiddenProperty(isAttribute, isolate);
 		//zero
-#if V8_MINOR_VERSION == 7
+#if V8_MAJOR_VERSION > 5 || (V8_MAJOR_VERSION == 5 && V8_MINOR_VERSION == 7)
 		blink::V8HiddenValue::deleteHiddenValue(isolate, listenerObject, wrapperProperty);
 #else
         listenerObject->DeleteHiddenValue(wrapperProperty);
@@ -78,7 +78,7 @@ private:
         v8::HandleScope scope(scriptState->isolate());
         ASSERT(scriptState->isolate()->InContext());
 		//zero
-#if V8_MINOR_VERSION == 7
+#if V8_MAJOR_VERSION > 5 || (V8_MAJOR_VERSION == 5 && V8_MINOR_VERSION == 7)
 		v8::Local<v8::Value> listener = blink::V8HiddenValue::getHiddenValue(scriptState->isolate(), object, wrapperProperty);
 #else
         v8::Local<v8::Value> listener = object->GetHiddenValue(wrapperProperty);
@@ -112,7 +112,7 @@ PassRefPtr<V8EventListener> V8EventListenerList::findOrCreateWrapper(v8::Local<v
     RefPtr<V8EventListener> wrapperPtr = WrapperType::create(object, isAttribute, scriptState);
     if (wrapperPtr)
 		//zero
-#if V8_MINOR_VERSION == 7
+#if V8_MAJOR_VERSION > 5 || (V8_MAJOR_VERSION == 5 && V8_MINOR_VERSION == 7)
 		blink::V8HiddenValue::setHiddenValue(isolate, object, wrapperProperty, v8::External::New(isolate, wrapperPtr.get()));
 #else
         object->SetHiddenValue(wrapperProperty, v8::External::New(isolate, wrapperPtr.get()));

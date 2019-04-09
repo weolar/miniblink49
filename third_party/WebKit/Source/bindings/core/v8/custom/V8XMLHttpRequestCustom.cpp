@@ -86,7 +86,11 @@ void V8XMLHttpRequest::responseAttributeGetterCustom(const v8::FunctionCallbackI
 
             // Catch syntax error. Swallows an exception (when thrown) as the
             // spec says. https://xhr.spec.whatwg.org/#response-body
+#if V8_MAJOR_VERSION > 5
+            v8::TryCatch exceptionCatcher(isolate);
+#else
             v8::TryCatch exceptionCatcher;
+#endif
             v8::Local<v8::Value> json;
             if (v8Call(v8::JSON::Parse(isolate, jsonSource.v8Value()), json, exceptionCatcher))
                 v8SetReturnValue(info, json);

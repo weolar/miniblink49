@@ -28,8 +28,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "config.h"
 #include "bindings/core/v8/V8NPUtils.h"
+#include "config.h"
 
 #include "bindings/core/v8/NPV8Object.h"
 #include "bindings/core/v8/V8Binding.h"
@@ -64,10 +64,18 @@ void convertV8ObjectToNPVariant(v8::Isolate* isolate, v8::Local<v8::Value> objec
         VOID_TO_NPVARIANT(*result);
     } else if (object->IsString()) {
         v8::Local<v8::String> str = object.As<v8::String>();
+#if V8_MAJOR_VERSION > 5
+        int length = str->Utf8Length(isolate) + 1;
+#else
         int length = str->Utf8Length() + 1;
+#endif
         char* utf8Chars = reinterpret_cast<char*>(malloc(length));
+#if V8_MAJOR_VERSION > 5
+        str->WriteUtf8(isolate, utf8Chars, length, 0, v8::String::HINT_MANY_WRITES_EXPECTED);
+#else
         str->WriteUtf8(utf8Chars, length, 0, v8::String::HINT_MANY_WRITES_EXPECTED);
-        STRINGN_TO_NPVARIANT(utf8Chars, length-1, *result);
+#endif
+        STRINGN_TO_NPVARIANT(utf8Chars, length - 1, *result);
     } else if (object->IsObject()) {
         LocalDOMWindow* window = currentDOMWindow(isolate);
         NPObject* npobject = npCreateV8ScriptObject(isolate, 0, v8::Local<v8::Object>::Cast(object), window);
@@ -108,11 +116,14 @@ v8::Local<v8::Value> convertNPVariantToV8Object(v8::Isolate* isolate, const NPVa
 }
 
 // Helper function to create an NPN String Identifier from a v8 string.
-NPIdentifier getStringIdentifier(v8::Local<v8::String> str)
+NPIdentifier getStringIdentifier(v8::Isolate* isolate, v8::Local<v8::String> str)
 {
     const int kStackBufferSize = 100;
-
+#if V8_MAJOR_VERSION > 5
+    int bufferLength = str->Utf8Length(isolate) + 1;
+#else
     int bufferLength = str->Utf8Length() + 1;
+#endif
     if (bufferLength <= kStackBufferSize) {
         // Use local stack buffer to avoid heap allocations for small strings. Here we should only use the stack space for
         // stackBuffer when it's used, not when we use the heap.
@@ -120,11 +131,18 @@ NPIdentifier getStringIdentifier(v8::Local<v8::String> str)
         // WriteUtf8 is guaranteed to generate a null-terminated string because bufferLength is constructed to be one greater
         // than the string length.
         char stackBuffer[kStackBufferSize];
+#if V8_MAJOR_VERSION > 5
+        str->WriteUtf8(isolate, stackBuffer, bufferLength);
+#else
         str->WriteUtf8(stackBuffer, bufferLength);
+#endif
         return _NPN_GetStringIdentifier(stackBuffer);
     }
-
+#if V8_MAJOR_VERSION > 5
+    v8::String::Utf8Value utf8(isolate, str);
+#else
     v8::String::Utf8Value utf8(str);
+#endif
     return _NPN_GetStringIdentifier(*utf8);
 }
 

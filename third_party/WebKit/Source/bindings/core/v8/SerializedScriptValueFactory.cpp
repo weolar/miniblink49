@@ -21,7 +21,11 @@ PassRefPtr<SerializedScriptValue> SerializedScriptValueFactory::create(v8::Isola
     ScriptValueSerializer::Status status;
     String errorMessage;
     {
+#if V8_MAJOR_VERSION > 5
+        v8::TryCatch tryCatch(isolate);
+#else
         v8::TryCatch tryCatch;
+#endif
         status = doSerialize(value, writer, messagePorts, arrayBuffers, blobInfo, serializedValue.get(), tryCatch, errorMessage, isolate);
         if (status == ScriptValueSerializer::JSException) {
             // If there was a JS exception thrown, re-throw it.

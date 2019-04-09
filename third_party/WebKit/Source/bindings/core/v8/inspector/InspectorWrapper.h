@@ -86,7 +86,7 @@ public:
         typename blink::InspectorWrapperTypeTrait<T>::Type impl(object);
         v8::Isolate* isolate = context->GetIsolate();
         v8::Local<v8::External> objectReference = v8::External::New(isolate, new WeakCallbackData(isolate, impl, result));
-#if V8_MINOR_VERSION == 7
+#if V8_MAJOR_VERSION > 5 || (V8_MAJOR_VERSION == 5 && V8_MINOR_VERSION == 7)
         blink::V8HiddenValue::setHiddenValue(isolate, result, v8InternalizedString(isolate, hiddenPropertyName), objectReference);
 #else
         result->SetHiddenValue(v8InternalizedString(isolate, hiddenPropertyName), objectReference);

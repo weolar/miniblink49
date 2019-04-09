@@ -24,7 +24,7 @@ V8_HIDDEN_VALUES(V8_DEFINE_METHOD);
 
 v8::Local<v8::Value> V8HiddenValue::getHiddenValue(v8::Isolate* isolate, v8::Local<v8::Object> object, v8::Local<v8::String> key)
 {	//zero
-#if V8_MINOR_VERSION == 7
+#if V8_MAJOR_VERSION > 5 || (V8_MAJOR_VERSION == 5 && V8_MINOR_VERSION == 7)
     v8::Local<v8::Context> context = isolate->GetCurrentContext();
     v8::Local<v8::Private> privateKey =
         v8::Private::ForApi(isolate, key);
@@ -43,7 +43,7 @@ v8::Local<v8::Value> V8HiddenValue::getHiddenValue(v8::Isolate* isolate, v8::Loc
 bool V8HiddenValue::setHiddenValue(v8::Isolate* isolate, v8::Local<v8::Object> object, v8::Local<v8::String> key, v8::Local<v8::Value> value)
 {
 	//zero
-#if V8_MINOR_VERSION == 7
+#if V8_MAJOR_VERSION > 5 || (V8_MAJOR_VERSION == 5 && V8_MINOR_VERSION == 7)
     if (UNLIKELY(value.IsEmpty()))
         return false;
     return v8CallBoolean(object->SetPrivate(isolate->GetCurrentContext(), v8::Private::ForApi(isolate, key), value));
@@ -55,7 +55,7 @@ bool V8HiddenValue::setHiddenValue(v8::Isolate* isolate, v8::Local<v8::Object> o
 bool V8HiddenValue::deleteHiddenValue(v8::Isolate* isolate, v8::Local<v8::Object> object, v8::Local<v8::String> key)
 {
 	//zero
-#if V8_MINOR_VERSION == 7
+#if V8_MAJOR_VERSION > 5 || (V8_MAJOR_VERSION == 5 && V8_MINOR_VERSION == 7)
     return v8CallBoolean(object->SetPrivate(
         isolate->GetCurrentContext(), v8::Private::ForApi(isolate, key),
         v8::Undefined(isolate)));

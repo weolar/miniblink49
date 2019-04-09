@@ -30,8 +30,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "config.h"
 #include "bindings/core/v8/ScriptController.h"
+#include "config.h"
 
 #include "bindings/core/v8/BindingSecurity.h"
 #include "bindings/core/v8/NPV8Object.h"
@@ -83,7 +83,7 @@
 
 namespace blink {
 
-bool ScriptController::canAccessFromCurrentOrigin(LocalFrame *frame)
+bool ScriptController::canAccessFromCurrentOrigin(LocalFrame* frame)
 {
     if (!frame)
         return false;
@@ -168,11 +168,15 @@ v8::Local<v8::Value> ScriptController::executeScriptAndReturnValue(v8::Local<v8:
         if (frame()->settings())
             v8CacheOptions = frame()->settings()->v8CacheOptions();
 
-        // Isolate exceptions that occur when compiling and executing
-        // the code. These exceptions should not interfere with
-        // javascript code we might evaluate from C++ when returning
-        // from here.
+            // Isolate exceptions that occur when compiling and executing
+            // the code. These exceptions should not interfere with
+            // javascript code we might evaluate from C++ when returning
+            // from here.
+#if V8_MAJOR_VERSION > 5
+        v8::TryCatch tryCatch(isolate());
+#else
         v8::TryCatch tryCatch;
+#endif
         tryCatch.SetVerbose(true);
 
         v8::Local<v8::Script> script;
@@ -369,7 +373,7 @@ NPObject* ScriptController::windowScriptNPObject()
     if (canExecuteScripts(NotAboutToExecuteScript)) {
         // JavaScript is enabled, so there is a JavaScript window object.
         // Return an NPObject bound to the window object.
-		m_windowScriptNPObject = createScriptObject(frame(), isolate());
+        m_windowScriptNPObject = createScriptObject(frame(), isolate());
         _NPN_RegisterObject(m_windowScriptNPObject, 0);
     } else {
         // JavaScript is not enabled, so we cannot bind the NPObject to the

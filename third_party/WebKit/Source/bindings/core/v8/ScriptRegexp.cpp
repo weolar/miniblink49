@@ -26,8 +26,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "config.h"
 #include "bindings/core/v8/ScriptRegexp.h"
+#include "config.h"
 
 #include "bindings/core/v8/V8Binding.h"
 #include "bindings/core/v8/V8PerIsolateData.h"
@@ -42,8 +42,11 @@ ScriptRegexp::ScriptRegexp(const String& pattern, TextCaseSensitivity caseSensit
     v8::HandleScope handleScope(isolate);
     v8::Local<v8::Context> context = V8PerIsolateData::from(isolate)->ensureScriptRegexpContext();
     v8::Context::Scope contextScope(context);
+#if V8_MAJOR_VERSION > 5
+    v8::TryCatch tryCatch(isolate);
+#else
     v8::TryCatch tryCatch;
-
+#endif
     unsigned flags = v8::RegExp::kNone;
     if (caseSensitivity == TextCaseInsensitive)
         flags |= v8::RegExp::kIgnoreCase;
@@ -73,8 +76,11 @@ int ScriptRegexp::match(const String& string, int startFrom, int* matchLength) c
     v8::HandleScope handleScope(isolate);
     v8::Local<v8::Context> context = V8PerIsolateData::from(isolate)->ensureScriptRegexpContext();
     v8::Context::Scope contextScope(context);
+#if V8_MAJOR_VERSION > 5
+    v8::TryCatch tryCatch(isolate);
+#else
     v8::TryCatch tryCatch;
-
+#endif
     v8::Local<v8::RegExp> regex = m_regex.newLocal(isolate);
     v8::Local<v8::Value> exec;
     if (!regex->Get(context, v8AtomicString(isolate, "exec")).ToLocal(&exec))

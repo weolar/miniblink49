@@ -68,7 +68,11 @@ unsigned V8NodeFilterCondition::acceptNode(Node* node, ExceptionState& exception
     if (filter.IsEmpty())
         return NodeFilter::FILTER_ACCEPT;
 
+#if V8_MAJOR_VERSION > 5
+    v8::TryCatch exceptionCatcher(isolate);
+#else
     v8::TryCatch exceptionCatcher;
+#endif
 
     v8::Local<v8::Function> callback;
     v8::Local<v8::Value> receiver;

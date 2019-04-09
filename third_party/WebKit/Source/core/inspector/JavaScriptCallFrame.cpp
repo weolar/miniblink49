@@ -173,7 +173,11 @@ v8::Local<v8::Value> JavaScriptCallFrame::evaluateWithExceptionDetails(v8::Local
         expression,
         scopeExtension
     };
+#if V8_MAJOR_VERSION > 5
+    v8::TryCatch tryCatch(m_isolate);
+#else
     v8::TryCatch tryCatch;
+#endif
     v8::Local<v8::Object> wrappedResult = v8::Object::New(m_isolate);
     v8::Local<v8::Value> result;
     if (V8ScriptRunner::callInternalFunction(evalFunction, callFrame, WTF_ARRAY_LENGTH(argv), argv, m_isolate).ToLocal(&result)) {

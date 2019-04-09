@@ -184,7 +184,11 @@ ScriptValue WorkerScriptController::evaluate(const String& script, const String&
         m_disableEvalPending = String();
     }
 
+#if V8_MAJOR_VERSION > 5
+    v8::TryCatch block(isolate());
+#else
     v8::TryCatch block;
+#endif
 
     v8::Local<v8::Script> compiledScript;
     v8::MaybeLocal<v8::Value> maybeResult;

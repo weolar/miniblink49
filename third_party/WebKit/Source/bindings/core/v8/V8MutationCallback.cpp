@@ -78,7 +78,11 @@ void V8MutationCallback::call(const WillBeHeapVector<RefPtrWillBeMember<Mutation
         return;
     v8::Local<v8::Value> argv[] = { v8Mutations, observerHandle };
 
+#if V8_MAJOR_VERSION > 5
+    v8::TryCatch exceptionCatcher(isolate);
+#else
     v8::TryCatch exceptionCatcher;
+#endif
     exceptionCatcher.SetVerbose(true);
     ScriptController::callFunction(executionContext(), m_callback.newLocal(isolate), thisObject, WTF_ARRAY_LENGTH(argv), argv, isolate);
 }
