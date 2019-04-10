@@ -1554,6 +1554,7 @@ bool CSSPropertyParser::parseValue(CSSPropertyID unresolvedProperty, bool import
 
     case CSSPropertyBackdropFilter:
     case CSSPropertyFontFeatureSettings:
+    case CSSPropertyImageOrientation:
         break;
 
     default:
