@@ -1223,6 +1223,14 @@ void StyleResolver::applyProperties(StyleResolverState& state, const StyleProper
         if (!CSSPropertyPriorityData<priority>::propertyHasPriority(property))
             continue;
 
+        if (m_document->printing() && (
+            CSSPropertyTransitionDelay == current.id() ||
+            CSSPropertyTransitionDuration == current.id() ||
+            CSSPropertyTransitionProperty == current.id() ||
+            CSSPropertyTransitionTimingFunction == current.id() ||
+            CSSPropertyTransitionDuration == current.id()))
+            continue; // weolar
+
         StyleBuilder::applyProperty(current.id(), state, current.value());
     }
 }
