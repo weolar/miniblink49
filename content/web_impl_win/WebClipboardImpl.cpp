@@ -19,6 +19,8 @@
 #include "third_party/WebKit/Source/platform/clipboard/ClipboardMimeTypes.h"
 #include "third_party/skia/include/core/SkBitmap.h"
 #include "third_party/skia/include/core/SkCanvas.h"
+#include "third_party/skia/include/core/SkData.h"
+#include "third_party/skia/include/core/SkImageEncoder.h"
 #include "skia/ext/platform_canvas.h"
 #include "skia/ext/bitmap_platform_device_win.h"
 #include "wtf/text/WTFStringUtil.h"
@@ -429,27 +431,77 @@ blink::WebString WebClipboardImpl::readHTML(Buffer buffer, WebURL* sourceUrl,
     return resultStr;
 }
 
+static void skBitmapToBitmap(const SkBitmap& bitmap, Vector<unsigned char>* result)
+{
+    SkAutoLockPixels bitmapLock(bitmap);
+
+    if (bitmap.colorType() != kN32_SkColorType || !bitmap.getPixels())
+        return; // Only support 32 bit/pixel skia bitmaps.
+
+    if (bitmap.width() * bitmap.height() > 2024 * 2024)
+        return;
+    
+    BITMAPINFO bmi = { 0 };
+    bmi.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+    bmi.bmiHeader.biWidth = bitmap.width();
+    bmi.bmiHeader.biHeight = -bitmap.height();
+    bmi.bmiHeader.biPlanes = 1;
+    bmi.bmiHeader.biCompression = BI_RGB;
+    bmi.bmiHeader.biBitCount = 32;
+
+    WTF::PassOwnPtr<SkImageEncoder> encoder = WTF::adoptPtr(CreateARGBImageEncoder());
+    SkData* encodedData = encoder->encodeData(bitmap, 1);
+    if (!encodedData)
+        return;
+
+    SkAutoTUnref<SkData> skAutoUnrefData(encodedData);
+
+    const int bytesPerRow = bitmap.width() * 1 * 4;
+    long imageDataSize = bytesPerRow * bitmap.height() * 1;
+    if (imageDataSize > encodedData->size())
+        imageDataSize = encodedData->size();
+
+    BITMAPFILEHEADER fileHeader = {
+        0x4d42,
+        sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER) + imageDataSize,
+        0,
+        0,
+        sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER),
+    };
+
+    result->resize(sizeof(fileHeader) + sizeof(bmi.bmiHeader) + imageDataSize);
+
+    int pos = 0;
+    memcpy(result->data() + pos, &fileHeader, sizeof(BITMAPFILEHEADER));
+    pos += sizeof(BITMAPFILEHEADER);
+
+    memcpy(result->data() + pos, &bmi.bmiHeader, sizeof(BITMAPINFOHEADER));
+    pos += sizeof(BITMAPINFOHEADER);
+
+    memcpy(result->data() + pos, encodedData->data(), imageDataSize);
+}
+
 WebData WebClipboardImpl::readImage(Buffer buffer)
 {
     ClipboardType clipboardType;
     if (!convertBufferType(buffer, &clipboardType))
-        return WebData();
+        return blink::WebData();
         
     // Acquire the clipboard.
     ScopedClipboard clipboard;
     if (!clipboard.acquire(getClipboardWindow()))
-        return WebData();
+        return blink::WebData();
 
     // We use a DIB rather than a DDB here since ::GetObject() with the
     // HBITMAP returned from ::GetClipboardData(CF_BITMAP) always reports a color
     // depth of 32bpp.
     HANDLE hBitmap = ::GetClipboardData(CF_DIB);
     if (!hBitmap)
-        return WebData();
+        return blink::WebData();
 
     BITMAPINFO* bitmap = static_cast<BITMAPINFO*>(GlobalLock(hBitmap));
     if (!bitmap)
-        return WebData();
+        return blink::WebData();
     int colorTableLength = 0;
     switch (bitmap->bmiHeader.biBitCount) {
     case 1:
@@ -472,11 +524,12 @@ WebData WebClipboardImpl::readImage(Buffer buffer)
     int width = std::abs((int)bitmap->bmiHeader.biWidth);
     int height = std::abs((int)bitmap->bmiHeader.biHeight);
 
+#if 1
     WTF::PassOwnPtr<SkCanvas> canvas = WTF::adoptPtr(skia::CreatePlatformCanvas(width, height, false));
     skia::BitmapPlatformDevice* device = (skia::BitmapPlatformDevice*)skia::GetPlatformDevice(skia::GetTopDevice(*canvas));
     if (!device) {
         GlobalUnlock(hBitmap);
-        return WebData();
+        return blink::WebData();
     }
     HDC dc = device->GetBitmapDCUgly(getClipboardWindow());
     ::SetDIBitsToDevice(dc, 
@@ -488,8 +541,36 @@ WebData WebClipboardImpl::readImage(Buffer buffer)
         bitmapBits, bitmap, DIB_RGB_COLORS);
     const SkBitmap& skBitmap = device->accessBitmap(false);
 
-    Vector<unsigned char> result;
+    // Windows doesn't really handle alpha channels well in many situations. When
+    // the source image is < 32 bpp, we force the bitmap to be opaque. When the
+    // source image is 32 bpp, the alpha channel might still contain garbage data.
+    // Since Windows uses premultiplied alpha, we scan for instances where
+    // (R, G, B) > A. If there are any invalid premultiplied colors in the image,
+    // we assume the alpha channel contains garbage and force the bitmap to be
+    // opaque as well. Note that this  heuristic will fail on a transparent bitmap
+    // containing only black pixels...
+    {
+        SkAutoLockPixels lock(skBitmap);
+        bool hasInvalidAlphaChannel = bitmap->bmiHeader.biBitCount < 32 || bitmapHasInvalidPremultipliedColors(skBitmap);
+        if (hasInvalidAlphaChannel)
+            makeBitmapOpaque(skBitmap);
+    }
 
+    ::GlobalUnlock(hBitmap);
+    
+    Vector<unsigned char> output;
+#if 1
+    //blink::GDIPlusImageEncoder::encode(skBitmap, blink::GDIPlusImageEncoder::PNG, &output);
+    blink::PNGImageEncoder::encode(skBitmap, &output);
+#else
+    //skBitmapToBitmap(skBitmap, &output);
+    if (0 == output.size())
+        return blink::WebData();
+#endif
+    return blink::WebData((const char*)output.data(), output.size());
+
+#else
+    Vector<unsigned char> result;
     const int bytesPerRow = width * 1 * 4;
     const long imageDataSize = bytesPerRow * height * 1;
 
@@ -518,40 +599,9 @@ WebData WebClipboardImpl::readImage(Buffer buffer)
 //         ::WriteFile(hFile, result.data(), result.size(), &numberOfBytesWritten, NULL);
 //         ::CloseHandle(hFile);
 //     }
-
-    // Windows doesn't really handle alpha channels well in many situations. When
-    // the source image is < 32 bpp, we force the bitmap to be opaque. When the
-    // source image is 32 bpp, the alpha channel might still contain garbage data.
-    // Since Windows uses premultiplied alpha, we scan for instances where
-    // (R, G, B) > A. If there are any invalid premultiplied colors in the image,
-    // we assume the alpha channel contains garbage and force the bitmap to be
-    // opaque as well. Note that this  heuristic will fail on a transparent bitmap
-    // containing only black pixels...
-    {
-        SkAutoLockPixels lock(skBitmap);
-        bool hasInvalidAlphaChannel = bitmap->bmiHeader.biBitCount < 32 || bitmapHasInvalidPremultipliedColors(skBitmap);
-        if (hasInvalidAlphaChannel)
-            makeBitmapOpaque(skBitmap);
-    }
-
-    GlobalUnlock(hBitmap);
-
+    ::GlobalUnlock(hBitmap);
     return blink::WebData((const char*)result.data(), result.size());
-
-//     Vector<unsigned char> output;
-//     if (1)
-//         blink::GDIPlusImageEncoder::encode(skBitmap, blink::GDIPlusImageEncoder::PNG, &output);
-//     else
-//         blink::PNGImageEncoder::encode(skBitmap, &output);
-// 
-// //     HANDLE hFile = CreateFileW(L"D:\\1.png", GENERIC_WRITE, FILE_SHARE_WRITE, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-// //     if (hFile && INVALID_HANDLE_VALUE != hFile) {
-// //         DWORD numberOfBytesWritten = 0;
-// //         ::WriteFile(hFile, output.data(), output.size(), &numberOfBytesWritten, NULL);
-// //         ::CloseHandle(hFile);
-// //     }
-// 
-//     return WebData((const char*)output.data(), output.size());
+#endif
 }
 
 WebString WebClipboardImpl::readCustomData(Buffer buffer, const WebString& type)

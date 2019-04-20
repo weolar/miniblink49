@@ -23,27 +23,24 @@
 struct tagFORMATETC;
 typedef tagFORMATETC FORMATETC;
 
+namespace base {
+class DictionaryValue;
+}
+
 namespace content {
 
 class ClipboardUtil {
 public:
     static unsigned int getHtmlFormatType();
-
     static unsigned int getWebKitSmartPasteFormatType();
-
     static unsigned int getUrlWFormatType();
-
     static unsigned int getRtfFormatType();
-
     static const unsigned int getWebCustomDataFormatType();
-
     static FORMATETC* getPlainTextWFormatType();
-
     static FORMATETC* getPlainTextFormatType();
-
     static FORMATETC* urlWFormat();
-
     static FORMATETC* urlFormat();
+    static FORMATETC* getCustomTextsType();
 
     static bool getWebLocData(IDataObject* dataObject, std::string& url, std::string* title);
 
@@ -52,6 +49,7 @@ public:
     static std::string getURL(IDataObject* dataObject, std::string* title);
 
     static std::string getPlainText(IDataObject* dataObject);
+    static base::DictionaryValue* getCustomPlainTexts(IDataObject* dataObject);
 
     static HGLOBAL createGlobalData(const std::string& url, const std::string& title);
     static HGLOBAL createGlobalData(const std::string& str);

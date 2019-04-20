@@ -89,8 +89,10 @@ void WebFrameClientImpl::didAddMessageToConsole(const WebConsoleMessage& message
         outstr.append("\n");
     }
 
-    Vector<UChar> utf16 = WTF::ensureUTF16UChar(outstr, true);
-    OutputDebugStringW(utf16.data());
+    if (wke::g_consoleOutputEnable) {
+        Vector<UChar> utf16 = WTF::ensureUTF16UChar(outstr, true);
+        OutputDebugStringW(utf16.data());
+    }
 
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
     wke::AutoDisableFreeV8TempObejct autoDisableFreeV8TempObejct;
@@ -794,8 +796,14 @@ void WebFrameClientImpl::showContextMenu(const blink::WebContextMenuData& data)
     if (!m_menu)
         m_menu = new ContextMenu(m_webPage);
 
+    blink::WebDocument doc = data.node.document();
+    blink::WebLocalFrame* frmae = doc.frame();
+    int64_t frameId = 0;
+    if (frmae)
+        frameId = WebPageImpl::getFrameIdByBlinkFrame(frmae);
+
     if (m_webPage->getContextMenuEnabled())
-        m_menu->show(data);
+        m_menu->show(data, frameId);
 }
 
 void WebFrameClientImpl::clearContextMenu()

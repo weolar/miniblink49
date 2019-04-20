@@ -31,6 +31,16 @@ public:
 
     void setIsDraggableNodeMousedown();
 
+    void setHwndRenderOffset(const blink::IntPoint& offset)
+    {
+        m_offset = offset;
+    }
+
+    blink::IntPoint getHwndRenderOffset() const
+    {
+        return m_offset;
+    }
+
 private:
     bool isDraggableRegionNcHitTest(HWND hWnd, const blink::IntPoint& pos, HRGN draggableRegion);
     bool m_isDraggableRegionNcHitTest;
@@ -41,6 +51,7 @@ private:
     bool m_isDraggableNodeMousedown;
     bool m_isLeftMousedown;
     double m_lastTimeMouseDown;
+    blink::IntPoint m_offset;
     blink::IntPoint m_lastPosMouseDown;
     blink::IntPoint m_lastPosMouseMove;
     blink::IntRect m_lastPosForDrag;

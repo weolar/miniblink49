@@ -167,6 +167,7 @@ public:
     bool fireKeyPressEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
     int getCursorInfoType() const;
+    void setCursorInfoType(int type);
 
     HDC viewDC();
     void paintToBit(void* bits, int pitch);
@@ -253,8 +254,14 @@ public:
 
     void setBackgroundColor(COLORREF c);
 
+    void setHwndRenderOffset(const blink::IntPoint& offset);
+    blink::IntPoint getHwndRenderOffset() const;
+
     void setCookieJarFullPath(const char* path);
     void setLocalStorageFullPath(const char* path);
+
+    net::WebCookieJarImpl* getCookieJar();
+
     RefPtr<net::PageNetExtraData> m_pageNetExtraData;
 
     static int64_t m_firstFrameId;

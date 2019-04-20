@@ -7,6 +7,8 @@
 #include "content/ui/ClipboardUtil.h"
 
 #include "base/strings/string_util.h"
+#include "base/json/json_reader.h"
+#include "base/values.h"
 
 // #if USING_VC6RT == 1
 // #define PURE = 0
@@ -20,7 +22,6 @@ unsigned int ClipboardUtil::getHtmlFormatType()
     static unsigned int s_HtmlFormatType = ::RegisterClipboardFormat(L"HTML Format");
     return s_HtmlFormatType;
 }
-
 
 unsigned int ClipboardUtil::getWebKitSmartPasteFormatType()
 {
@@ -69,6 +70,13 @@ FORMATETC* ClipboardUtil::urlWFormat()
 FORMATETC* ClipboardUtil::urlFormat()
 {
     static unsigned int cf = RegisterClipboardFormat(L"UniformResourceLocator");
+    static FORMATETC urlFormat = { (CLIPFORMAT)cf, 0, DVASPECT_CONTENT, -1, TYMED_HGLOBAL };
+    return &urlFormat;
+}
+
+FORMATETC* ClipboardUtil::getCustomTextsType()
+{
+    static unsigned int cf = RegisterClipboardFormat(L"MiniBlinkCustomTextsType");
     static FORMATETC urlFormat = { (CLIPFORMAT)cf, 0, DVASPECT_CONTENT, -1, TYMED_HGLOBAL };
     return &urlFormat;
 }
@@ -140,6 +148,48 @@ std::string ClipboardUtil::getPlainText(IDataObject* dataObject)
         text = getURL(dataObject, nullptr);
     }
     return text;
+}
+
+base::DictionaryValue* ClipboardUtil::getCustomPlainTexts(IDataObject* dataObject)
+{
+    if (!dataObject)
+        return nullptr;
+
+    STGMEDIUM store;
+    std::string text;
+    if (!(SUCCEEDED(dataObject->GetData(getCustomTextsType(), &store))))
+        return nullptr;
+
+    wchar_t* data = static_cast<wchar_t*>(::GlobalLock(store.hGlobal));
+    size_t size = GlobalSize(store.hGlobal) / sizeof(wchar_t);
+    for (size_t i = 0; i < size; ++i) {
+        if (L'\0' != data[i])
+            continue;
+        size = i;
+        break;
+    }
+    if (0 == size)
+        return nullptr;
+    std::wstring utf16(data, size);
+    std::string json = base::WideToUTF8(utf16);
+    if (0 == json.size())
+        return nullptr;
+    
+    base::JSONReader jsonReader;
+    std::unique_ptr<base::Value> jsonVal = jsonReader.ReadToValue(json);
+
+    if (!jsonVal->IsType(base::Value::TYPE_DICTIONARY))
+        return nullptr;
+
+    base::DictionaryValue* dictVal = nullptr;
+    if (!jsonVal->GetAsDictionary(&dictVal))
+        return nullptr;
+
+    jsonVal.release();
+
+    GlobalUnlock(store.hGlobal);
+    ReleaseStgMedium(&store);
+    return dictVal;
 }
 
 HGLOBAL ClipboardUtil::createGlobalData(const std::string& url, const std::string& title)

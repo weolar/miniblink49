@@ -4,14 +4,15 @@
 #include "content/ui/WebDropSource.h"
 #include "content/ui/ClipboardUtil.h"
 #include "content/browser/CheckReEnter.h"
-#include "wke/wke.h"
+#include "wke/wkedefine.h"
 #include "wke/wkeGlobalVar.h"
 #include "third_party/WebKit/public/web/WebLocalFrame.h"
 #include "third_party/WebKit/Source/web/WebViewImpl.h"
 #include "third_party/WebKit/public/platform/WebImage.h"
 #include "third_party/WebKit/public/platform/WebPoint.h"
 #include "third_party/WebKit/public/platform/Platform.h"
-
+#include "base/values.h"
+#include "base/json/json_writer.h"
 
 namespace content {
 
@@ -93,6 +94,28 @@ blink::WebDragData DragHandle::dropDataToWebDragData(IDataObject* pDataObject)
         itemList.push_back(item);
     }
 
+    base::DictionaryValue* dictVal = ClipboardUtil::getCustomPlainTexts(pDataObject);
+    if (dictVal) {
+        base::DictionaryValue::Iterator it(*dictVal);
+        for (; !it.IsAtEnd(); it.Advance()) {
+            std::string type = it.key();
+            std::string text;
+
+            const base::Value& val = it.value();
+            if (!val.IsType(base::Value::TYPE_STRING))
+                continue;
+            if (!val.GetAsString(&text) || text.empty())
+                continue;
+
+            blink::WebDragData::Item item;
+            item.storageType = blink::WebDragData::Item::StorageTypeString;
+            item.stringType = blink::WebString::fromUTF8(type.c_str());
+            item.stringData = blink::WebString::fromUTF8(text.c_str());
+            itemList.push_back(item);
+        }
+        delete dictVal;
+    }
+        
     result.setItems(itemList);
     //result.setFilesystemId(drop_data.filesystem_id);
 
@@ -128,7 +151,7 @@ blink::WebDragOperation DragHandle::dragCursorTodragOperation(DWORD op)
 }
 
 blink::WebDragOperation DragHandle::startDraggingInUiThread(blink::WebLocalFrame* frame,
-    const blink::WebDragData* data,
+    const wkeWebDragData* data,
     const blink::WebDragOperationsMask mask,
     const blink::WebImage* image,
     const blink::WebPoint* dragImageOffset)
@@ -151,14 +174,34 @@ blink::WebDragOperation DragHandle::startDraggingInUiThread(blink::WebLocalFrame
     WCDataObject* dataObjectPtr = nullptr;
     WCDataObject::createInstance(&dataObjectPtr);
 
-    if (!data->isNull()) {
-        blink::WebVector<blink::WebDragData::Item> items = data->items();
-        for (size_t i = 0; i < items.size(); ++i) {
-            blink::WebDragData::Item it = items[i];
-            if (blink::WebDragData::Item::StorageTypeString == it.storageType) {
-                dataObjectPtr->writeString(it.stringType.utf8(), it.stringData.utf8());
-            }
+    wkeWebDragData::Item* items = data->m_itemList;
+
+    base::DictionaryValue* dictVal = nullptr;
+
+    for (int i = 0; i < data->m_itemListLength; ++i) {
+        const wkeWebDragData::Item& it = items[i];
+        if (wkeWebDragData::Item::StorageTypeString == it.storageType) {
+            std::string typeStr((const char*)(it.stringType->data ? it.stringType->data : ""), it.stringType->length != 0 ? it.stringType->length : 0);
+            std::string dataStr((const char*)(it.stringData->data ? it.stringData->data : ""), it.stringData->length != 0 ? it.stringData->length : 0);
+            
+            WCDataObject::ClipboardDataType typeEnum = WCDataObject::clipboardTypeFromMIMEType(typeStr);
+            if (WCDataObject::kClipboardDataTypeNone == typeEnum) {
+                if (!dictVal)
+                    dictVal = new base::DictionaryValue();
+
+                dictVal->SetString(typeStr, dataStr);
+            } else
+                dataObjectPtr->writeString(typeStr, dataStr);
         }
+    }
+
+    if (dictVal) {
+        std::string json;
+        base::JSONWriter::Write(*dictVal, &json);
+        if (json.size() > 0)
+            dataObjectPtr->writeCustomPlainText(json);
+
+        delete dictVal;
     }
 
     m_dragData = dataObjectPtr;
@@ -217,7 +260,7 @@ public:
         DragHandle* dragHandle,
         int* count,
         blink::WebLocalFrame* frame,
-        const blink::WebDragData& data,
+        const wkeWebDragData* data,
         const blink::WebDragOperationsMask mask,
         const blink::WebImage& image,
         const blink::WebPoint& dragImageOffset)
@@ -225,7 +268,7 @@ public:
         m_dragHandle = dragHandle;
         m_count = count;
         m_frame = frame;
-        m_data = &data;
+        m_data = data;
         m_mask = mask;
         m_image = &image;
         m_dragImageOffset = &dragImageOffset;
@@ -250,7 +293,7 @@ public:
 
 private:
     blink::WebLocalFrame* m_frame;
-    const blink::WebDragData* m_data;
+    const wkeWebDragData* m_data;
     blink::WebDragOperationsMask m_mask;
     const blink::WebImage* m_image;
     const blink::WebPoint* m_dragImageOffset;
@@ -262,7 +305,7 @@ private:
 };
 
 void DragHandle::startDragging(blink::WebLocalFrame* frame,
-    const blink::WebDragData& data,
+    const wkeWebDragData* dragDate,
     const blink::WebDragOperationsMask mask,
     const blink::WebImage& image,
     const blink::WebPoint& dragImageOffset)
@@ -273,7 +316,7 @@ void DragHandle::startDragging(blink::WebLocalFrame* frame,
     m_notifOnEnterDrag();
     CheckReEnter::decrementEnterCount();
 
-    StartDraggingTask* task = new StartDraggingTask(this, &m_taskCount, frame, data, mask, image, dragImageOffset);
+    StartDraggingTask* task = new StartDraggingTask(this, &m_taskCount, frame, dragDate, mask, image, dragImageOffset);
     if (wke::g_wkeUiThreadPostTaskCallback) {
         wke::g_wkeUiThreadPostTaskCallback(m_viewWindow, StartDraggingTask::runInUiThread, task);
 

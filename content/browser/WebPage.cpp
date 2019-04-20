@@ -302,6 +302,12 @@ int WebPage::getCursorInfoType() const
     return -1;
 }
 
+void WebPage::setCursorInfoType(int type)
+{
+    if (m_pageImpl)
+        m_pageImpl->setCursorInfoType(type);
+}
+
 IntSize WebPage::viewportSize() const
 { 
     if (m_pageImpl)
@@ -325,13 +331,13 @@ void WebPage::setHWND(HWND hwnd)
 void WebPage::setHwndRenderOffset(const blink::IntPoint& offset)
 {
     if (m_pageImpl)
-        m_pageImpl->m_hwndRenderOffset = offset;
+        m_pageImpl->setHwndRenderOffset(offset);
 }
 
 blink::IntPoint WebPage::getHwndRenderOffset() const
 {
     if (m_pageImpl)
-        return m_pageImpl->m_hwndRenderOffset;
+        return m_pageImpl->getHwndRenderOffset();
     return blink::IntPoint();
 }
 
@@ -494,6 +500,13 @@ blink::WebScreenInfo WebPage::screenInfo()
     if (m_pageImpl)
         return m_pageImpl->screenInfo();
     return blink::WebScreenInfo();
+}
+
+net::WebCookieJarImpl* WebPage::getCookieJar()
+{
+    if (m_pageImpl)
+        return m_pageImpl->getCookieJar();
+    return nullptr;    
 }
 
 PassRefPtr<net::PageNetExtraData> WebPage::getPageNetExtraData()

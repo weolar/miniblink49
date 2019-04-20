@@ -1293,6 +1293,11 @@ int WebPageImpl::getCursorInfoType() const
     return (int)m_cursor.type;
 }
 
+void WebPageImpl::setCursorInfoType(int type)
+{
+    m_cursor.type = (blink::WebCursorInfo::Type)type;
+}
+
 void WebPageImpl::fireCursorEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, BOOL* handle)
 {
     CHECK_FOR_REENTER(this, (void)0);
@@ -1599,11 +1604,6 @@ static wkeMemBuf* createUtf8String(const char* str, size_t len)
 {
     if (!str)
         return nullptr;
-//     char* result = new char[len + 1];
-//     strncpy(result, str, len);
-//     result[len - 1] = '\0';
-//     return result;
-
     return wkeCreateMemBuf(nullptr, (void*)str, len);
 }
 
@@ -1641,6 +1641,8 @@ static wkeWebDragData* webDropDataToWkeDragData(const blink::WebDragData& data)
             result->m_itemList[i].stringType = createUtf8String(stringType.c_str(), stringType.size());
             std::string stringData = item.stringData.utf8();
             result->m_itemList[i].stringData = createUtf8String(stringData.c_str(), stringData.size());
+        } else if (blink::WebDragData::Item::StorageTypeBinaryData == item.storageType) {
+            result->m_itemList[i].storageType = wkeWebDragData::Item::StorageTypeBinaryData;
         }
     }
 
@@ -1652,16 +1654,16 @@ void WebPageImpl::startDragging(blink::WebLocalFrame* frame, const blink::WebDra
 {
     BlinkPlatformImpl::AutoDisableGC autoDisableGC;
 
+    wkeWebDragData* dragDate = webDropDataToWkeDragData(data);
+
     wkeStartDraggingCallback callback = m_pagePtr->wkeHandler().startDraggingCallback;
     if (!callback) {
-        m_dragHandle->startDragging(frame, data, mask, image, dragImageOffset);
+        m_dragHandle->startDragging(frame, dragDate, mask, image, dragImageOffset);
         return;
     }
 
     void* param = m_pagePtr->wkeHandler().startDraggingCallbackParam;
     wkePoint offset = { dragImageOffset.x, dragImageOffset.y };
-
-    wkeWebDragData* dragDate = webDropDataToWkeDragData(data);
 
     onEnterDragSimulate();
     CheckReEnter::decrementEnterCount();
@@ -1740,6 +1742,16 @@ void WebPageImpl::setBackgroundColor(COLORREF c)
         m_webViewImpl->setBaseBackgroundColor(cc::getRealColor(false, c));
 }
 
+void WebPageImpl::setHwndRenderOffset(const blink::IntPoint& offset)
+{
+    m_platformEventHandler->setHwndRenderOffset(offset);
+}
+
+blink::IntPoint WebPageImpl::getHwndRenderOffset() const
+{
+    return m_platformEventHandler->getHwndRenderOffset();
+}
+
 void WebPageImpl::setTransparent(bool transparent)
 {
     m_layerTreeHost->setHasTransparentBackground(transparent);
@@ -1777,7 +1789,8 @@ private:
     DragHandle* m_dragHandle;
 };
 
-struct PostTaskWrap {
+class PostTaskWrap {
+public:
     PostTaskWrap(HWND hWnd, wkeUiThreadRunCallback callback, void* param)
     {
         m_hWnd = hWnd;
@@ -2151,10 +2164,21 @@ private:
     HWND m_hRootWnd;
 };
 
+class DelayPopupAterFileChooserTask : public blink::WebThread::Task {
+public:
+    DelayPopupAterFileChooserTask(HWND hWnd) { m_hWnd = hWnd; }
+    virtual ~DelayPopupAterFileChooserTask() { }
+    virtual void run() override { ::SetForegroundWindow(m_hWnd); }
+private:
+    HWND m_hWnd;
+};
+
 bool WebPageImpl::runFileChooser(const blink::WebFileChooserParams& params, blink::WebFileChooserCompletion* completion)
 {
     RootWndAutoDisable rootWndAutoDisable(m_hWnd);
     bool b = runFileChooserImpl(params, completion);
+    //wke::g_wkeUiThreadPostTaskCallback(m_hWnd, onDelayPopupAterFileChooser, nullptr);
+    blink::Platform::current()->currentThread()->postDelayedTask(FROM_HERE, new DelayPopupAterFileChooserTask(m_hWnd), 1000);
     return b;
 }
 
@@ -2188,6 +2212,22 @@ void WebPageImpl::setLocalStorageFullPath(const char* path)
     if (!m_pageNetExtraData)
         m_pageNetExtraData = new net::PageNetExtraData();
     m_pageNetExtraData->setLocalStorageFullPath(path);
+}
+
+net::WebCookieJarImpl* WebPageImpl::getCookieJar()
+{
+    net::WebURLLoaderManager* manager = net::WebURLLoaderManager::sharedInstance();
+    if (!manager)
+        return nullptr;
+
+    net::WebCookieJarImpl* netManagerCookie = manager->getShareCookieJar();
+    if (!m_pageNetExtraData)
+        return netManagerCookie;
+
+    net::WebCookieJarImpl* pageCookie = m_pageNetExtraData->getCookieJar();
+    if (!pageCookie)
+        return netManagerCookie;
+    return pageCookie;
 }
 
 bool WebPageImpl::initSetting()

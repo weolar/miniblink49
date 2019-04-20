@@ -9,6 +9,7 @@
 #include "third_party/WebKit/public/web/WebContextMenuData.h"
 #include "third_party/WebKit/public/web/WebFrame.h"
 #include "wke/wkeGlobalVar.h"
+#include "wke/wkeWebView.h"
 #include <windows.h>
 
 namespace content {
@@ -92,7 +93,11 @@ public:
         kCopyImageId = 1 << 4,
         kInspectElementAtId = 1 << 5,
         kCutId = 1 << 6,
-        kPasteId = 1 << 7
+        kPasteId = 1 << 7,
+        kPrintId = 1 << 8,
+        kGoForwardId = 1 << 9,
+        kGoBackId = 1 << 10,
+        kReloadId = 1 << 11,
     };
 
     static int WKE_CALL_TYPE onUiThreadCallback(HWND hWnd, wkeUiThreadRunCallback callback, void* param)
@@ -132,10 +137,11 @@ public:
         }
     };
 
-    void show(const blink::WebContextMenuData& data)
+    void show(const blink::WebContextMenuData& data, int64_t frameId)
     {
         ContextMenu* self = this;
         m_data = data;
+        m_frameId = frameId;
 
         UINT actionFlags = 0;
         if ((!data.selectedText.isNull() && !data.selectedText.isEmpty()))
@@ -155,6 +161,20 @@ public:
             actionFlags |= kSelectedAllId;
             actionFlags |= kUndoId;
         }
+
+        if (m_webPage->canGoForward())
+            actionFlags |= kGoForwardId;
+        if (m_webPage->canGoBack())
+            actionFlags |= kGoBackId;
+        actionFlags |= kReloadId;
+
+        bool needCreatePrintItem = false;
+        wkeOnContextMenuItemClickCallback clickCallback = m_webPage->wkeHandler().contextMenuItemClickCallback;
+        void* callbackParam = m_webPage->wkeHandler().contextMenuItemClickCallbackParam;
+        if (clickCallback)
+            needCreatePrintItem = clickCallback(m_webPage->wkeWebView(), callbackParam, kWkeContextMenuItemClickTypePrint, kWkeContextMenuItemClickStepShow, (wkeWebFrameHandle)m_frameId, nullptr);
+        if (needCreatePrintItem)
+            actionFlags |= kPrintId;
 
         asyncCallUiThread([self, actionFlags] {
             if (0 < ContextMenu::m_isDestroyed)
@@ -197,6 +217,18 @@ public:
 
         if (actionFlags & kUndoId)
             ::AppendMenu(m_popMenu, MF_STRING, kUndoId, L"撤销");
+
+        if (actionFlags & kGoForwardId)
+            ::AppendMenu(m_popMenu, MF_STRING, kGoForwardId, L"前进");
+
+        if (actionFlags & kGoBackId)
+            ::AppendMenu(m_popMenu, MF_STRING, kGoBackId, L"后退");
+
+        if (actionFlags & kReloadId)
+            ::AppendMenu(m_popMenu, MF_STRING, kReloadId, L"刷新");
+
+        if (actionFlags & kPrintId)
+            ::AppendMenu(m_popMenu, MF_STRING, kPrintId, L"打印");
         
         if (0 == ::GetMenuItemCount(m_popMenu)) {
             ::DestroyMenu(m_popMenu);
@@ -236,6 +268,17 @@ public:
             m_webPage->webViewImpl()->focusedFrame()->executeCommand("Cut");
         } else if (kPasteId == itemID) {
             m_webPage->webViewImpl()->focusedFrame()->executeCommand("Paste");
+        } else if (kGoForwardId == itemID) {
+            m_webPage->goForward();
+        } else if (kGoBackId == itemID) {
+            m_webPage->goBack();
+        } else if (kReloadId == itemID) {
+            m_webPage->mainFrame()->reload();
+        } else if (kPrintId == itemID) {
+            wkeOnContextMenuItemClickCallback clickCallback = m_webPage->wkeHandler().contextMenuItemClickCallback;
+            void* callbackParam = m_webPage->wkeHandler().contextMenuItemClickCallbackParam;
+            if (clickCallback)
+                clickCallback(m_webPage->wkeWebView(), callbackParam, kWkeContextMenuItemClickTypePrint, kWkeContextMenuItemClickStepClick, (wkeWebFrameHandle)m_frameId, nullptr);
         }
     }
 
@@ -293,6 +336,8 @@ public:
 
     WTF::Mutex m_mutex;
     wkeUiThreadPostTaskCallback m_uiCallback;
+
+    int64_t m_frameId;
 
 public:
     static volatile LONG m_isDestroyed;

@@ -15,6 +15,7 @@ namespace content {
 
 static const unsigned short HIGH_BIT_MASK_SHORT = 0x8000;
 
+// Source\WebCore\platform\win\KeyEventWin.cpp
 static bool isKeypadEvent(WPARAM code, LPARAM keyData, WebInputEvent::Type type)
 {
     if (type != WebInputEvent::RawKeyDown && type != WebInputEvent::KeyUp)
@@ -59,6 +60,49 @@ static bool isKeypadEvent(WPARAM code, LPARAM keyData, WebInputEvent::Type type)
 
 static inline String singleCharacterString(UChar c) { return String(&c, 1); }
 
+bool isShiftPressed()
+{
+    return (::GetKeyState(VK_SHIFT) & 0x8000) == 0x8000;
+}
+
+bool isCtrlPressed()
+{
+    return (::GetKeyState(VK_CONTROL) & 0x8000) == 0x8000;
+}
+
+bool isAltPressed()
+{
+    return (::GetKeyState(VK_MENU) & 0x8000) == 0x8000;
+}
+
+bool isAltGrPressed()
+{
+    return (::GetKeyState(VK_MENU) & 0x8000) == 0x8000 && (::GetKeyState(VK_CONTROL) & 0x8000) == 0x8000;
+}
+
+bool isWindowsKeyPressed()
+{
+    return (::GetKeyState(VK_LWIN) & 0x8000) == 0x8000 || (::GetKeyState(VK_RWIN) & 0x8000) == 0x8000;
+}
+
+bool isCapsLockOn()
+{
+    return (::GetKeyState(VK_CAPITAL) & 0x0001) == 0x0001;
+}
+
+bool isNumLockOn()
+{
+    return (::GetKeyState(VK_NUMLOCK) & 0x0001) == 0x0001;
+}
+
+bool isScrollLockOn()
+{
+    return (::GetKeyState(VK_SCROLL) & 0x0001) == 0x0001;
+}
+
+// src\ui\events\blink\blink_event_util.cc
+// src\ui\events\win\events_win.cc
+// src\ui\events\keycodes\dom\keycode_converter.cc
 static void buildModifiers(WebInputEvent* evt)
 {
     if (GetKeyState(VK_SHIFT) & HIGH_BIT_MASK_SHORT)
@@ -67,17 +111,21 @@ static void buildModifiers(WebInputEvent* evt)
         evt->modifiers |= WebInputEvent::ControlKey;
     if (GetKeyState(VK_MENU) & HIGH_BIT_MASK_SHORT)
         evt->modifiers |= WebInputEvent::AltKey;
+    if (isCapsLockOn())
+        evt->modifiers |= WebInputEvent::CapsLockOn;
+    if (isNumLockOn())
+        evt->modifiers |= WebInputEvent::NumLockOn;
 }
 
 WebKeyboardEvent PlatformEventHandler::buildKeyboardEvent(WebInputEvent::Type type, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    unsigned int flags = 0;
-    if (HIWORD(lParam) & KF_REPEAT)
-        flags |= KF_REPEAT;
-    if (HIWORD(lParam) & KF_EXTENDED)
-        flags |= KF_REPEAT;
+//     unsigned int flags = 0;
+//     if (HIWORD(lParam) & KF_REPEAT)
+//         flags |= KF_REPEAT;
+//     if (HIWORD(lParam) & KF_EXTENDED)
+//         flags |= KF_REPEAT;
 
-    LPARAM keyData = MAKELPARAM(0, (WORD)flags);
+    LPARAM keyData = lParam; // MAKELPARAM(0, (WORD)flags);
     WebKeyboardEvent keyEvent;
     keyEvent.windowsKeyCode = (type == WebInputEvent::RawKeyDown || type == WebInputEvent::KeyUp) ? wParam : 0;
     keyEvent.nativeKeyCode = wParam;
@@ -274,8 +322,8 @@ void PlatformEventHandler::buildMousePosInfo(HWND hWnd, UINT message, WPARAM wPa
         lParam = MAKELPARAM(ptCursor.x, ptCursor.y);
     } else {
         m_postMouseLeave = false;
-        pos->setX(((int)(short)LOWORD(lParam)));
-        pos->setY(((int)(short)HIWORD(lParam)));
+        pos->setX(/*m_offset.x() +*/ ((int)(short)LOWORD(lParam)));
+        pos->setY(/*m_offset.y() +*/ ((int)(short)HIWORD(lParam)));
 
         POINT widgetPoint = { pos->x(), pos->y() };
         ::ClientToScreen(hWnd, &widgetPoint);

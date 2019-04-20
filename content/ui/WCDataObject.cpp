@@ -366,10 +366,7 @@ void WCDataObject::clearData(CLIPFORMAT format)
     }
 }
 
-
-enum ClipboardDataType { ClipboardDataTypeNone, ClipboardDataTypeURL, ClipboardDataTypeText, ClipboardDataTypeTextHTML };
-
-static ClipboardDataType clipboardTypeFromMIMEType(const std::string& type)
+WCDataObject::ClipboardDataType WCDataObject::clipboardTypeFromMIMEType(const std::string& type)
 {
     std::string qType;
     base::TrimWhitespace(type, base::TRIM_ALL, &qType);
@@ -377,13 +374,13 @@ static ClipboardDataType clipboardTypeFromMIMEType(const std::string& type)
 
     // two special cases for IE compatibility
     if (qType == "text" || qType == "text/plain" || base::StartsWith(qType, "text/plain;"))
-        return ClipboardDataTypeText;
+        return kClipboardDataTypeText;
     if (qType == "url" || qType == "text/uri-list")
-        return ClipboardDataTypeURL;
+        return kClipboardDataTypeURL;
     if (qType == "text/html")
-        return ClipboardDataTypeTextHTML;
+        return kClipboardDataTypeTextHTML;
 
-    return ClipboardDataTypeNone;
+    return kClipboardDataTypeNone;
 }
 
 static bool writeURL(WCDataObject *data, const std::string& url, std::string title, bool withPlainText, bool withHTML)
@@ -431,12 +428,12 @@ void WCDataObject::writeString(const std::string& type, const std::string& data)
 {
     ClipboardDataType winType = clipboardTypeFromMIMEType(type);
 
-    if (winType == ClipboardDataTypeURL) {
+    if (winType == kClipboardDataTypeURL) {
         writeURL(this, data, std::string(), false, true);
         return;
     }
 
-    if (winType == ClipboardDataTypeText) {
+    if (winType == kClipboardDataTypeText) {
         STGMEDIUM medium = { 0 };
         medium.tymed = TYMED_HGLOBAL;
         medium.hGlobal = ClipboardUtil::createGlobalData(data);
@@ -446,6 +443,18 @@ void WCDataObject::writeString(const std::string& type, const std::string& data)
         if ((SetData(ClipboardUtil::getPlainTextWFormatType(), &medium, 1)) < 0)
             ::GlobalFree(medium.hGlobal);
     }
+}
+
+void WCDataObject::writeCustomPlainText(const std::string& customPlainText)
+{
+    STGMEDIUM medium = { 0 };
+    medium.tymed = TYMED_HGLOBAL;
+    medium.hGlobal = ClipboardUtil::createGlobalData(customPlainText);
+    if (!medium.hGlobal)
+        return;
+
+    if ((SetData(ClipboardUtil::getCustomTextsType(), &medium, 1)) < 0)
+        ::GlobalFree(medium.hGlobal);
 }
 
 }

@@ -48,6 +48,7 @@ public:
     void CopyMedium(STGMEDIUM* pMedDest, STGMEDIUM* pMedSrc, FORMATETC* pFmtSrc);
 
     void writeString(const std::string& type, const std::string& data);
+    void writeCustomPlainText(const std::string& customPlainText);
 
     //IUnknown
     virtual HRESULT __stdcall QueryInterface(REFIID riid, void** ppvObject);
@@ -69,6 +70,12 @@ public:
     
     static HRESULT createInstance(WCDataObject**);
     //static HRESULT createInstance(WCDataObject**, const DragDataMap&);
+
+    enum ClipboardDataType {
+        kClipboardDataTypeNone, kClipboardDataTypeURL, kClipboardDataTypeText, kClipboardDataTypeTextHTML
+    };
+
+    static ClipboardDataType clipboardTypeFromMIMEType(const std::string& type);
 
 private:
     WCDataObject();
