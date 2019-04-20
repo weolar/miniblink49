@@ -314,6 +314,8 @@ void wkeSetDebugConfig(wkeWebView webview, const char* debugString, const char* 
             wke::g_rendererAntiAlias = atoi(param) == 1;
         } else if ("diskCache" == item) {
             wke::g_diskCacheEnable = atoi(param) == 1;
+        } else if ("consoleOutput" == item) {
+            wke::g_consoleOutputEnable = atoi(param) == 1;
         } 
     }
 }
@@ -429,6 +431,7 @@ void wkeShowDevtools(wkeWebView webView, const wchar_t* path, wkeOnShowDevtoolsC
     wke::checkThreadCallIsValid(__FUNCTION__);
     std::vector<char> pathUtf8;
     WTF::WCharToMByte(path, wcslen(path), &pathUtf8, CP_UTF8);
+    pathUtf8.push_back('\0');
     webView->showDevTools(&pathUtf8[0], callback, param);
 }
 
@@ -1181,6 +1184,12 @@ void wkeOnOtherLoad(wkeWebView webWindow, wkeOnOtherLoadCallback callback, void*
     webWindow->onOtherLoad(callback, param);
 }
 
+void wkeOnContextMenuItemClick(wkeWebView webWindow, wkeOnContextMenuItemClickCallback callback, void* param)
+{
+    wke::checkThreadCallIsValid(__FUNCTION__);
+    webWindow->onContextMenuItemClick(callback, param);
+}
+
 void wkeDeleteWillSendRequestInfo(wkeWebView webWindow, wkeWillSendRequestInfo* info)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
@@ -1377,6 +1386,12 @@ int wkeGetCursorInfoType(wkeWebView webView)
 {
     wke::checkThreadCallIsValid(__FUNCTION__);
     return webView->getCursorInfoType();
+}
+
+void wkeSetCursorInfoType(wkeWebView webView, int type)
+{
+    wke::checkThreadCallIsValid(__FUNCTION__);
+    webView->setCursorInfoType(type);
 }
 
 void wkeSetDragFiles(wkeWebView webView, const POINT* clintPos, const POINT* screenPos, wkeString files[], int filesCount)
@@ -1951,6 +1966,7 @@ bool wkeContextMenuEvent(wkeWebView webView, int x, int y, unsigned int flags)
 {
     return wkeFireContextMenuEvent(webView, x, y, flags);
 }
+
 bool wkeMouseWheel(wkeWebView webView, int x, int y, int delta, unsigned int flags)
 {
     return wkeFireMouseWheelEvent(webView, x, y, delta, flags);

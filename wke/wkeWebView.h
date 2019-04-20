@@ -114,6 +114,9 @@ struct CWebViewHandler {
 
     wkeOnPrintCallback printCallback;
     void* printCallbackParam;
+
+    wkeOnContextMenuItemClickCallback contextMenuItemClickCallback;
+    void* contextMenuItemClickCallbackParam;
     
     bool isWke; // 是否是使用的wke接口
 };
@@ -276,13 +279,10 @@ public:
 
     void onDidCreateScriptContext(wkeDidCreateScriptContextCallback callback, void* callbackParam);
     void onWillReleaseScriptContext(wkeWillReleaseScriptContextCallback callback, void* callbackParam);
-
     void onStartDragging(wkeStartDraggingCallback callback, void* callbackParam);
-    
     void onPrint(wkeOnPrintCallback callback, void* param);
-
     void onOtherLoad(wkeOnOtherLoadCallback callback, void* callbackParam);
-
+    void onContextMenuItemClick(wkeOnContextMenuItemClickCallback callback, void* callbackParam);
     void onDraggableRegionsChanged(wkeDraggableRegionsChangedCallback callback, void* param);
 
     void setClientHandler(const wkeClientHandler* handler) override;
@@ -296,6 +296,7 @@ public:
     void* getUserKeyValue(const char* key);
 
     int getCursorInfoType();
+    void setCursorInfoType(int type);
 
     void setDragFiles(const POINT* clintPos, const POINT* screenPos, wkeString files[], int filesCount);
 

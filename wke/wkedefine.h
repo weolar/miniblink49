@@ -16,19 +16,19 @@
 //////////////////////////////////////////////////////////////////////////
 #define WKE_CALL_TYPE __cdecl
 
-typedef struct {
+typedef struct _wkeRect {
     int x;
     int y;
     int w;
     int h;
 } wkeRect;
 
-typedef struct {
+typedef struct _wkePoint {
     int x;
     int y;
 } wkePoint;
 
-typedef enum {
+typedef enum _wkeMouseFlags {
     WKE_LBUTTON = 0x01,
     WKE_RBUTTON = 0x02,
     WKE_SHIFT = 0x04,
@@ -36,12 +36,12 @@ typedef enum {
     WKE_MBUTTON = 0x10,
 } wkeMouseFlags;
 
-typedef enum {
+typedef enum _wkeKeyFlags {
     WKE_EXTENDED = 0x0100,
     WKE_REPEAT = 0x4000,
 } wkeKeyFlags;
 
-typedef enum {
+typedef enum _wkeMouseMsg {
     WKE_MSG_MOUSEMOVE = 0x0200,
     WKE_MSG_LBUTTONDOWN = 0x0201,
     WKE_MSG_LBUTTONUP = 0x0202,
@@ -112,7 +112,7 @@ typedef struct _tagWkeMediaPlayerClient* wkeMediaPlayerClient;
 typedef struct _tabblinkWebURLRequestPtr* blinkWebURLRequestPtr;
 #endif
 
-typedef enum {
+typedef enum _wkeProxyType {
     WKE_PROXY_NONE,
     WKE_PROXY_HTTP,
     WKE_PROXY_SOCKS4,
@@ -121,7 +121,7 @@ typedef enum {
     WKE_PROXY_SOCKS5HOSTNAME
 } wkeProxyType;
 
-typedef struct {
+typedef struct _wkeProxy {
     wkeProxyType type;
     char hostname[100];
     unsigned short port;
@@ -129,10 +129,10 @@ typedef struct {
     char password[50];
 } wkeProxy;
 
-enum wkeSettingMask {
+typedef enum _wkeSettingMask{
     WKE_SETTING_PROXY = 1,
     WKE_SETTING_PAINTCALLBACK_IN_OTHER_THREAD = 1 << 2,
-};
+} wkeSettingMask;
 
 typedef struct _wkeSettings {
     wkeProxy proxy;
@@ -263,7 +263,7 @@ typedef struct {
     size_t length;
 } wkeMemBuf;
 
-typedef struct {
+typedef struct _wkeWebDragData {
     struct Item {
         enum wkeStorageType {
             // String data with an associated MIME type. Depending on the MIME type, there may be
@@ -409,6 +409,7 @@ typedef struct _wkePrintSettings {
     int marginRight;
     BOOL isPrintPageHeadAndFooter;
     BOOL isPrintBackgroud;
+    BOOL isLandscape;
 } wkePrintSettings;
 
 typedef struct _wkeScreenshotSettings {
@@ -468,6 +469,24 @@ typedef enum _wkeOtherLoadType {
     WKE_DID_POST_REQUEST,
 } wkeOtherLoadType;
 typedef void(WKE_CALL_TYPE*wkeOnOtherLoadCallback)(wkeWebView webView, void* param, wkeOtherLoadType type, wkeTempCallbackInfo* info);
+
+typedef enum _wkeOnContextMenuItemClickType {
+    kWkeContextMenuItemClickTypePrint = 0x01,
+} wkeOnContextMenuItemClickType;
+
+typedef enum _wkeOnContextMenuItemClickStep {
+    kWkeContextMenuItemClickStepShow = 0x01,
+    kWkeContextMenuItemClickStepClick = 0x02,
+} wkeOnContextMenuItemClickStep;
+
+typedef bool(WKE_CALL_TYPE* wkeOnContextMenuItemClickCallback)(
+    wkeWebView webView, 
+    void* param, 
+    wkeOnContextMenuItemClickType type, 
+    wkeOnContextMenuItemClickStep step, 
+    wkeWebFrameHandle frameId,
+    void* info
+    );
 
 typedef enum _wkeLoadingResult {
     WKE_LOADING_SUCCEEDED,
@@ -1053,6 +1072,7 @@ public:
     ITERATOR2(void*, wkeGetUserKeyValue, wkeWebView webView, const char* key, "") \
     \
     ITERATOR1(int, wkeGetCursorInfoType, wkeWebView webView, "") \
+    ITERATOR2(void, wkeSetCursorInfoType, wkeWebView webView, int type, "") \
     ITERATOR5(void, wkeSetDragFiles, wkeWebView webView, const POINT* clintPos, const POINT* screenPos, wkeString files[], int filesCount, "") \
     \
     ITERATOR5(void, wkeSetDeviceParameter, wkeWebView webView, const char* device, const char* paramStr, int paramInt, float paramFloat, "") \
@@ -1088,6 +1108,7 @@ public:
     ITERATOR3(void, wkeOnPrint, wkeWebView webView, wkeOnPrintCallback callback, void* param, "") \
     \
     ITERATOR3(void, wkeOnOtherLoad, wkeWebView webView, wkeOnOtherLoadCallback callback, void* param, "") \
+    ITERATOR3(void, wkeOnContextMenuItemClick, wkeWebView webView, wkeOnContextMenuItemClickCallback callback, void* param, "") \
     \
     ITERATOR1(bool, wkeIsProcessingUserGesture, wkeWebView webView, "") \
     \

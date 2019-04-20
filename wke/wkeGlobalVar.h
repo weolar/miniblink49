@@ -21,6 +21,7 @@ extern float g_contentScale;
 extern bool g_rendererAntiAlias;
 extern bool g_diskCacheEnable;
 extern bool g_smootTextEnable;
+extern bool g_consoleOutputEnable;
 
 extern wkeUiThreadPostTaskCallback g_wkeUiThreadPostTaskCallback;
 

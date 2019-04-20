@@ -786,12 +786,12 @@ bool CWebView::fireKeyUpEvent(unsigned int virtualKeyCode, unsigned int flags, b
 bool CWebView::fireKeyDownEvent(unsigned int virtualKeyCode, unsigned int flags, bool systemKey)
 {
     WPARAM wParam = virtualKeyCode;
-    LPARAM lParam = 0;
+    LPARAM lParam = flags;
 
-    if (flags & WKE_REPEAT)
-        lParam |= ((KF_REPEAT) >> 16);
-    if (flags & WKE_EXTENDED)
-        lParam |= ((KF_EXTENDED) >> 16);
+//     if (flags & WKE_REPEAT)
+//         lParam |= ((KF_REPEAT) >> 16);
+//     if (flags & WKE_EXTENDED)
+//         lParam |= ((KF_EXTENDED) >> 16);
 
     m_webPage->fireKeyDownEvent(m_webPage->getHWND(), WM_KEYDOWN, wParam, lParam);
     return true;
@@ -800,12 +800,12 @@ bool CWebView::fireKeyDownEvent(unsigned int virtualKeyCode, unsigned int flags,
 bool CWebView::fireKeyPressEvent(unsigned int charCode, unsigned int flags, bool systemKey)
 {
     WPARAM wParam = charCode;
-    LPARAM lParam = 0;
+    LPARAM lParam = flags;
 
-    if (flags & WKE_REPEAT)
-        lParam |= ((KF_REPEAT) >> 16);
-    if (flags & WKE_EXTENDED)
-        lParam |= ((KF_EXTENDED) >> 16);
+//     if (flags & WKE_REPEAT)
+//         lParam |= ((KF_REPEAT) >> 16);
+//     if (flags & WKE_EXTENDED)
+//         lParam |= ((KF_EXTENDED) >> 16);
 
     m_webPage->fireKeyPressEvent(m_webPage->getHWND(), WM_CHAR, wParam, lParam);
     return true;
@@ -1274,6 +1274,12 @@ void CWebView::onOtherLoad(wkeOnOtherLoadCallback callback, void* callbackParam)
     m_webPage->wkeHandler().otherLoadCallbackParam = callbackParam;
 }
 
+void CWebView::onContextMenuItemClick(wkeOnContextMenuItemClickCallback callback, void* callbackParam)
+{
+    m_webPage->wkeHandler().contextMenuItemClickCallback = callback;
+    m_webPage->wkeHandler().contextMenuItemClickCallbackParam = callbackParam;
+}
+
 void CWebView::onDraggableRegionsChanged(wkeDraggableRegionsChangedCallback callback, void* callbackParam)
 {
     m_webPage->wkeHandler().draggableRegionsChangedCallback = callback;
@@ -1330,6 +1336,11 @@ void* CWebView::getUserKeyValue(const char* key)
 int CWebView::getCursorInfoType()
 {
     return m_webPage->getCursorInfoType();
+}
+
+void CWebView::setCursorInfoType(int type)
+{
+    m_webPage->setCursorInfoType(type);
 }
 
 void CWebView::setDragFiles(const POINT* clintPos, const POINT* screenPos, wkeString files[], int filesCount)
@@ -1434,22 +1445,10 @@ void CWebView::showDevTools(const utf8* url, wkeOnShowDevtoolsCallback callback,
 
 net::WebCookieJarImpl* CWebView::getCookieJar()
 {
-    net::WebURLLoaderManager* manager = net::WebURLLoaderManager::sharedInstance();
-    if (!manager)
+    if (!m_webPage)
         return nullptr;
 
-    net::WebCookieJarImpl* netManagerCookie = manager->getShareCookieJar();
-    if (!m_webPage)
-        return netManagerCookie;
-
-    PassRefPtr<net::PageNetExtraData> extra = m_webPage->getPageNetExtraData();
-    if (!extra)
-        return netManagerCookie;
-
-    net::WebCookieJarImpl* pageCookie = extra->getCookieJar();
-    if (!pageCookie)
-        return netManagerCookie;
-    return pageCookie;
+    return m_webPage->getCookieJar();
 }
 
 CURLSH* CWebView::getCurlShareHandle()

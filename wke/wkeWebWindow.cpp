@@ -412,11 +412,11 @@ LRESULT CWebWindow::_windowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM l
     case WM_KEYDOWN: {
         unsigned int virtualKeyCode = wParam;
         unsigned int flags = 0;
-        if (HIWORD(lParam) & KF_REPEAT)
-            flags |= WKE_REPEAT;
-        if (HIWORD(lParam) & KF_EXTENDED)
-            flags |= WKE_EXTENDED;
-
+//         if (HIWORD(lParam) & KF_REPEAT)
+//             flags |= WKE_REPEAT;
+//         if (HIWORD(lParam) & KF_EXTENDED)
+//             flags |= WKE_EXTENDED;
+        flags = lParam;
         if (wkeFireKeyDownEvent(this, virtualKeyCode, flags, false))
             return 0;
         break;
@@ -424,11 +424,11 @@ LRESULT CWebWindow::_windowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM l
     case WM_KEYUP: {
         unsigned int virtualKeyCode = wParam;
         unsigned int flags = 0;
-        if (HIWORD(lParam) & KF_REPEAT)
-            flags |= WKE_REPEAT;
-        if (HIWORD(lParam) & KF_EXTENDED)
-            flags |= WKE_EXTENDED;
-
+//         if (HIWORD(lParam) & KF_REPEAT)
+//             flags |= WKE_REPEAT;
+//         if (HIWORD(lParam) & KF_EXTENDED)
+//             flags |= WKE_EXTENDED;
+        flags = lParam;
         if (wkeFireKeyUpEvent(this, virtualKeyCode, flags, false))
             return 0;
         break;
@@ -553,10 +553,12 @@ LRESULT CWebWindow::_windowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM l
     case WM_IME_STARTCOMPOSITION: {
         wkeRect caret = wkeGetCaretRect(this);
 
+        blink::IntPoint offset = m_webPage->getHwndRenderOffset();
+
         COMPOSITIONFORM COMPOSITIONFORM;
         COMPOSITIONFORM.dwStyle = CFS_POINT | CFS_FORCE_POSITION;
-        COMPOSITIONFORM.ptCurrentPos.x = caret.x;
-        COMPOSITIONFORM.ptCurrentPos.y = caret.y;
+        COMPOSITIONFORM.ptCurrentPos.x = caret.x + offset.x();
+        COMPOSITIONFORM.ptCurrentPos.y = caret.y + offset.y();
 
         HIMC hIMC = ::ImmGetContext(hwnd);
         ::ImmSetCompositionWindow(hIMC, &COMPOSITIONFORM);
