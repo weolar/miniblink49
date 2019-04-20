@@ -47,15 +47,6 @@ private:
         accessorSetterArg.Clear();
     }
 };
-typedef JsExecStateInfo* jsExecState;
-static Vector<jsExecState>* s_execStates = nullptr;
-
-JsExecStateInfo* JsExecStateInfo::create()
-{
-    JsExecStateInfo* retVal = new JsExecStateInfo();
-    s_execStates->append(retVal);
-    return retVal;
-}
 
 // jsValue 的值分两种情况，一种是c++创建的，一种是v8创建再转换成jsValue的
 class WkeJsValue {
@@ -68,7 +59,7 @@ public:
         wkeJsValueV8Value,
         wkeJsValueNull,
         wkeJsValueUndefined,
-    } ;
+    };
 
     WkeJsValue()
     {
@@ -102,8 +93,29 @@ public:
     int refCount;
 };
 
+typedef JsExecStateInfo* jsExecState;
+static Vector<jsExecState>* s_execStates = nullptr;
+
 typedef WTF::HashMap<jsValue, WkeJsValue*> JsValueMap;
 static JsValueMap* s_jsValueMap = nullptr;
+
+static void ensureStaticVar()
+{
+    if (!s_jsValueMap)
+        s_jsValueMap = new JsValueMap();
+
+    if (!s_execStates)
+        s_execStates = new Vector<jsExecState>();
+}
+
+JsExecStateInfo* JsExecStateInfo::create()
+{
+    ensureStaticVar();
+
+    JsExecStateInfo* retVal = new JsExecStateInfo();
+    s_execStates->append(retVal);
+    return retVal;
+}
 
 static JsValueMap::iterator findJsValueMap(jsValue value)
 {
@@ -1067,7 +1079,7 @@ void jsSet(jsExecState es, jsValue object, const char* prop, jsValue value)
     v8::Local<v8::Value> valueLocal = getV8Value(value, context);
     if (valueLocal.IsEmpty())
         return;
-
+    
 #if V8_MAJOR_VERSION > 5
     v8::Local<v8::Object> obj = objectLocal->ToObject(isolate);
     v8::TryCatch tryCatch(isolate);
@@ -1971,10 +1983,7 @@ void onCreateGlobalObjectInMainFrame(content::WebFrameClientImpl* client, blink:
     if (!wkeWebView)
         return;
 
-    if (!s_jsValueMap)
-        s_jsValueMap = new JsValueMap();
-    if (!s_execStates)
-        s_execStates = new Vector<jsExecState>();
+    ensureStaticVar();
     
     v8::Isolate* isolate = context->GetIsolate();
     setWkeWebViewToV8Context(client, context);
