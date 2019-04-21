@@ -62,9 +62,7 @@ private:
     V8ValueStringBuilder(v8::Isolate* isolate)
         : m_arrayLimit(maxArrayItemsLimit)
         , m_isolate(isolate)
-#if V8_MAJOR_VERSION > 5
         , m_tryCatch(isolate)
-#endif
     {
     }
 

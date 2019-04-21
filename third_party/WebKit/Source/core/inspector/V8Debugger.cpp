@@ -78,16 +78,9 @@ void V8Debugger::enable()
 {
     ASSERT(!enabled());
     v8::HandleScope scope(m_isolate);
-    v8::Debug::SetDebugEventListener(
-#if V8_MINOR_VERSION == 7
-        m_isolate,
-#endif
+    v8::Debug::SetDebugEventListener(m_isolate,
         &V8Debugger::v8DebugEventCallback, v8::External::New(m_isolate, this));
-    m_debuggerContext.Reset(m_isolate, v8::Debug::GetDebugContext(
-#if V8_MINOR_VERSION == 7
-        m_isolate
-#endif
-        ));
+        m_debuggerContext.Reset(m_isolate, v8::Debug::GetDebugContext(m_isolate));
     m_callFrameWrapperTemplate.Reset(m_isolate, V8JavaScriptCallFrame::createWrapperTemplate(m_isolate));
     compileDebuggerScript();
 }
@@ -99,11 +92,7 @@ void V8Debugger::disable()
     m_debuggerScript.Reset();
     m_debuggerContext.Reset();
     m_callFrameWrapperTemplate.Reset();
-    v8::Debug::SetDebugEventListener(
-#if V8_MAJOR_VERSION > 5
-        m_isolate,
-#endif
-        nullptr);
+    v8::Debug::SetDebugEventListener(m_isolate, nullptr);
 }
 
 bool V8Debugger::enabled() const
@@ -150,15 +139,7 @@ String V8Debugger::setBreakpoint(const String& sourceID, const ScriptBreakpoint&
     info->Set(v8InternalizedString("condition"), v8String(m_isolate, scriptBreakpoint.condition));
 
     v8::Local<v8::Function> setBreakpointFunction = v8::Local<v8::Function>::Cast(debuggerScriptLocal()->Get(v8InternalizedString("setBreakpoint")));
-    v8::Local<v8::Value> breakpointId = v8::Debug::Call(
-#if V8_MINOR_VERSION == 7
-        debuggerContext(),
-#endif
-        setBreakpointFunction, info)
-#if V8_MINOR_VERSION == 7
-        .ToLocalChecked()
-#endif
-        ;
+    v8::Local<v8::Value> breakpointId = v8::Debug::Call(debuggerContext(), setBreakpointFunction, info).ToLocalChecked();
 
     if (breakpointId.IsEmpty() || !breakpointId->IsString())
         return "";
@@ -176,11 +157,7 @@ void V8Debugger::removeBreakpoint(const String& breakpointId)
     info->Set(v8InternalizedString("breakpointId"), v8String(m_isolate, breakpointId));
 
     v8::Local<v8::Function> removeBreakpointFunction = v8::Local<v8::Function>::Cast(debuggerScriptLocal()->Get(v8InternalizedString("removeBreakpoint")));
-    v8::Debug::Call(
-#if V8_MINOR_VERSION == 7
-        debuggerContext(),
-#endif
-        removeBreakpointFunction, info);
+    v8::Debug::Call(debuggerContext(), removeBreakpointFunction, info);
 }
 
 void V8Debugger::clearBreakpoints()
@@ -190,11 +167,7 @@ void V8Debugger::clearBreakpoints()
     v8::Context::Scope contextScope(context);
 
     v8::Local<v8::Function> clearBreakpoints = v8::Local<v8::Function>::Cast(debuggerScriptLocal()->Get(v8InternalizedString("clearBreakpoints")));
-    v8::Debug::Call(
-#if V8_MINOR_VERSION == 7
-        context,
-#endif
-        clearBreakpoints);
+    v8::Debug::Call(context, clearBreakpoints);
 }
 
 void V8Debugger::setBreakpointsActivated(bool activated)
@@ -209,11 +182,7 @@ void V8Debugger::setBreakpointsActivated(bool activated)
     v8::Local<v8::Object> info = v8::Object::New(m_isolate);
     info->Set(v8InternalizedString("enabled"), v8::Boolean::New(m_isolate, activated));
     v8::Local<v8::Function> setBreakpointsActivated = v8::Local<v8::Function>::Cast(debuggerScriptLocal()->Get(v8InternalizedString("setBreakpointsActivated")));
-    v8::Debug::Call(
-#if V8_MINOR_VERSION == 7
-        debuggerContext(),
-#endif
-        setBreakpointsActivated, info);
+    v8::Debug::Call(debuggerContext(), setBreakpointsActivated, info);
 
     m_breakpointsActivated = activated;
 }
@@ -281,11 +250,7 @@ void V8Debugger::breakProgram()
     }
 
     v8::Local<v8::Function> breakProgramFunction = v8::Local<v8::FunctionTemplate>::New(m_isolate, m_breakProgramCallbackTemplate)->GetFunction();
-    v8::Debug::Call(
-#if V8_MINOR_VERSION == 7
-        debuggerContext(),
-#endif
-        breakProgramFunction);
+    v8::Debug::Call(debuggerContext(), breakProgramFunction);
 }
 
 void V8Debugger::continueProgram()
@@ -358,11 +323,7 @@ bool V8Debugger::setScriptSource(const String& sourceID, const String& newConten
     v8::Local<v8::Value> v8result;
     {
         EnableLiveEditScope enableLiveEditScope(m_isolate);
-#if V8_MAJOR_VERSION > 5
-        v8::TryCatch tryCatch(isolate);
-#else
-        v8::TryCatch tryCatch;
-#endif
+        v8::TryCatch tryCatch(m_isolate);
         tryCatch.SetVerbose(false);
         v8::MaybeLocal<v8::Value> maybeResult = callDebuggerMethod("liveEditScriptSource", 3, argv);
         if (tryCatch.HasCaught()) {
@@ -443,15 +404,7 @@ PassRefPtr<JavaScriptCallFrame> V8Debugger::wrapCallFrames(int maximumLimit, Sco
     v8::Local<v8::Value> currentCallFrameV8;
     if (m_executionState.IsEmpty()) {
         v8::Local<v8::Function> currentCallFrameFunction = v8::Local<v8::Function>::Cast(debuggerScriptLocal()->Get(v8InternalizedString("currentCallFrame")));
-        currentCallFrameV8 = v8::Debug::Call(
-#if V8_MINOR_VERSION == 7
-            debuggerContext(),
-#endif
-            currentCallFrameFunction, v8::Integer::New(m_isolate, data))
-#if V8_MINOR_VERSION == 7
-            .ToLocalChecked()
-#endif
-            ;
+        currentCallFrameV8 = v8::Debug::Call(debuggerContext(), currentCallFrameFunction, v8::Integer::New(m_isolate, data)).ToLocalChecked();
     } else {
         v8::Local<v8::Value> argv[] = { m_executionState, v8::Integer::New(m_isolate, data) };
         currentCallFrameV8 = callDebuggerMethod("currentCallFrame", WTF_ARRAY_LENGTH(argv), argv).ToLocalChecked();
@@ -503,15 +456,7 @@ PassRefPtr<JavaScriptCallFrame> V8Debugger::callFrameNoScopes(int index)
     v8::Local<v8::Value> currentCallFrameV8;
     if (m_executionState.IsEmpty()) {
         v8::Local<v8::Function> currentCallFrameFunction = v8::Local<v8::Function>::Cast(debuggerScriptLocal()->Get(v8InternalizedString("currentCallFrameByIndex")));
-        currentCallFrameV8 = v8::Debug::Call(
-#if V8_MINOR_VERSION == 7
-            debuggerContext(),
-#endif
-            currentCallFrameFunction, v8::Integer::New(m_isolate, index))
-#if V8_MINOR_VERSION == 7
-            .ToLocalChecked()
-#endif
-            ;
+        currentCallFrameV8 = v8::Debug::Call(debuggerContext(), currentCallFrameFunction, v8::Integer::New(m_isolate, index)).ToLocalChecked();
     } else {
         v8::Local<v8::Value> argv[] = { m_executionState, v8::Integer::New(m_isolate, index) };
         currentCallFrameV8 = callDebuggerMethod("currentCallFrameByIndex", WTF_ARRAY_LENGTH(argv), argv).ToLocalChecked();

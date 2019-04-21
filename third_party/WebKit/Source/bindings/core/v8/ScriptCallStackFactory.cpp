@@ -73,11 +73,7 @@ static void toScriptCallFramesVector(v8::Local<v8::StackTrace> stackTrace, Vecto
     if (frameCount > static_cast<int>(maxStackSize))
         frameCount = maxStackSize;
     for (int i = 0; i < frameCount; i++) {
-#if V8_MAJOR_VERSION > 5
         v8::Local<v8::StackFrame> stackFrame = stackTrace->GetFrame(isolate, i);
-#else
-        v8::Local<v8::StackFrame> stackFrame = stackTrace->GetFrame(i);
-#endif
         scriptCallFrames.append(toScriptCallFrame(stackFrame));
     }
     if (!frameCount && !emptyStackIsAllowed) {

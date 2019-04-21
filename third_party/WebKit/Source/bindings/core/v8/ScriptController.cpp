@@ -168,15 +168,11 @@ v8::Local<v8::Value> ScriptController::executeScriptAndReturnValue(v8::Local<v8:
         if (frame()->settings())
             v8CacheOptions = frame()->settings()->v8CacheOptions();
 
-            // Isolate exceptions that occur when compiling and executing
-            // the code. These exceptions should not interfere with
-            // javascript code we might evaluate from C++ when returning
-            // from here.
-#if V8_MAJOR_VERSION > 5
+        // Isolate exceptions that occur when compiling and executing
+        // the code. These exceptions should not interfere with
+        // javascript code we might evaluate from C++ when returning
+        // from here.
         v8::TryCatch tryCatch(isolate());
-#else
-        v8::TryCatch tryCatch;
-#endif
         tryCatch.SetVerbose(true);
 
         v8::Local<v8::Script> script;

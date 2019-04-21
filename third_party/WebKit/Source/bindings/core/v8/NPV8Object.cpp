@@ -709,11 +709,8 @@ bool _NPN_Enumerate(NPP npp, NPObject* npObject, NPIdentifier** identifier, uint
             v8::Local<v8::Value> name;
             if (!props->Get(scriptState->context(), v8::Integer::New(scriptState->isolate(), i)).ToLocal(&name))
                 return false;
-#if V8_MAJOR_VERSION > 5
+
             (*identifier)[i] = getStringIdentifier(scriptState->isolate(), v8::Local<v8::String>::Cast(name));
-#else
-            (*identifier)[i] = getStringIdentifier(v8::Local<v8::String>::Cast(name));
-#endif
         }
         return true;
     }

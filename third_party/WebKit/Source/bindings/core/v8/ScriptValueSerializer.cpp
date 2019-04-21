@@ -1130,19 +1130,11 @@ bool SerializedScriptValueReader::readWithTag(SerializationTag tag, v8::Local<v8
         *value = v8Boolean(false, isolate());
         break;
     case TrueObjectTag:
-#if V8_MAJOR_VERSION > 5
         *value = v8::BooleanObject::New(isolate(), true);
-#else
-        *value = v8::BooleanObject::New(true);
-#endif
         creator.pushObjectReference(*value);
         break;
     case FalseObjectTag:
-#if V8_MAJOR_VERSION > 5
         *value = v8::BooleanObject::New(isolate(), false);
-#else
-        *value = v8::BooleanObject::New(false);
-#endif
         creator.pushObjectReference(*value);
         break;
     case StringTag:
@@ -1434,11 +1426,8 @@ bool SerializedScriptValueReader::readStringObject(v8::Local<v8::Value>* value)
     v8::Local<v8::Value> stringValue;
     if (!readString(&stringValue) || !stringValue->IsString())
         return false;
-#if V8_MAJOR_VERSION > 5
+
     *value = v8::StringObject::New(isolate(), stringValue.As<v8::String>());
-#else
-    *value = v8::StringObject::New(stringValue.As<v8::String>());
-#endif
     return true;
 }
 

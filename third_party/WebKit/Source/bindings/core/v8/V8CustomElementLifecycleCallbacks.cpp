@@ -169,11 +169,7 @@ void V8CustomElementLifecycleCallbacks::created(Element* element)
     if (callback.IsEmpty())
         return;
 
-#if V8_MAJOR_VERSION > 5
     v8::TryCatch exceptionCatcher(isolate);
-#else
-    v8::TryCatch exceptionCatcher;
-#endif
     exceptionCatcher.SetVerbose(true);
     ScriptController::callFunction(executionContext(), callback, receiver, 0, 0, isolate);
 }
@@ -215,11 +211,7 @@ void V8CustomElementLifecycleCallbacks::attributeChanged(Element* element, const
         newValue.isNull() ? v8::Local<v8::Value>(v8::Null(isolate)) : v8::Local<v8::Value>(v8String(isolate, newValue))
     };
 
-#if V8_MAJOR_VERSION > 5
     v8::TryCatch exceptionCatcher(isolate);
-#else
-    v8::TryCatch exceptionCatcher;
-#endif
     exceptionCatcher.SetVerbose(true);
     ScriptController::callFunction(executionContext(), callback, receiver, WTF_ARRAY_LENGTH(argv), argv, isolate);
 }
@@ -245,11 +237,7 @@ void V8CustomElementLifecycleCallbacks::call(const ScopedPersistent<v8::Function
     if (receiver.IsEmpty())
         return;
 
-#if V8_MAJOR_VERSION > 5
     v8::TryCatch exceptionCatcher(isolate);
-#else
-    v8::TryCatch exceptionCatcher;
-#endif
     exceptionCatcher.SetVerbose(true);
     ScriptController::callFunction(executionContext(), callback, receiver, 0, 0, isolate);
 }
