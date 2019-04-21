@@ -6,7 +6,7 @@
 #define V8_BASE_SYS_INFO_H_
 
 #include <stdint.h>
-#include "src/base/compiler-specific.h"
+//#include "src/base/compiler-specific.h"
 
 namespace v8 {
 namespace base {
