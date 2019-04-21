@@ -26,11 +26,7 @@ void V8RelatedEventInit::toImpl(v8::Isolate* isolate, v8::Local<v8::Value> v8Val
     if (exceptionState.hadException())
         return;
 
-#if V8_MAJOR_VERSION > 5
     v8::TryCatch block(isolate);
-#else
-    v8::TryCatch block;
-#endif
     v8::Local<v8::Object> v8Object;
     if (!v8Call(v8Value->ToObject(isolate->GetCurrentContext()), v8Object, block)) {
         exceptionState.rethrowV8Exception(block.Exception());

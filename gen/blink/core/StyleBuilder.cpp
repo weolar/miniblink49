@@ -2854,6 +2854,7 @@ void StyleBuilder::applyProperty(CSSPropertyID property, StyleResolverState& sta
     case CSSPropertySrc:
     //case CSSPropertyEnableBackground:
     case CSSPropertyWebkitFontSizeDelta:
+    case CSSPropertyFilter:
         return;
     default:
         ASSERT_NOT_REACHED();
