@@ -3820,6 +3820,9 @@ Maybe<bool> Value::BooleanValue(Local<Context> context) const {
   return Just(Utils::OpenHandle(this)->BooleanValue());
 }
 
+Maybe<bool> Value::BooleanValue(Isolate *isolate, Local<Context> context) const {
+    return Just(Utils::OpenHandle(this)->BooleanValue());
+}
 
 bool Value::BooleanValue() const {
   return Utils::OpenHandle(this)->BooleanValue();
