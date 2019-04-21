@@ -52,11 +52,7 @@ v8::Local<v8::Object> InspectorWrapperBase::createWrapper(v8::Local<v8::Function
 void* InspectorWrapperBase::unwrap(v8::Local<v8::Object> object, const char* name)
 {
     v8::Isolate* isolate = object->GetIsolate();
-#if V8_MAJOR_VERSION > 5 || (V8_MAJOR_VERSION == 5 && V8_MINOR_VERSION == 7)
     v8::Local<v8::Value> value = blink::V8HiddenValue::getHiddenValue(isolate, object, v8InternalizedString(isolate, name));
-#else
-    v8::Local<v8::Value> value = object->GetHiddenValue(v8InternalizedString(isolate, name));
-#endif
     if (value.IsEmpty())
         return nullptr;
     if (!value->IsExternal())
