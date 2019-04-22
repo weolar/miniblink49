@@ -158,7 +158,7 @@ bool JavaScriptCallFrame::isAtReturn() const
     v8::Local<v8::Value> result = m_callFrame.newLocal(m_isolate)->Get(v8AtomicString(m_isolate, "isAtReturn"));
     if (result.IsEmpty() || !result->IsBoolean())
         return false;
-    return result->BooleanValue(m_isolate, m_debuggerContext.newLocal(m_isolate)).FromJust();
+    return result->BooleanValue(m_isolate);
 }
 
 v8::Local<v8::Value> JavaScriptCallFrame::returnValue() const

@@ -2204,8 +2204,8 @@ class V8_EXPORT Value : public Data {
   V8_WARN_UNUSED_RESULT MaybeLocal<Uint32> ToArrayIndex(
       Local<Context> context) const;
 
+  bool BooleanValue(Isolate* isolate) const { return BooleanValue(); }
   V8_WARN_UNUSED_RESULT Maybe<bool> BooleanValue(Local<Context> context) const;
-  V8_WARN_UNUSED_RESULT Maybe<bool> BooleanValue(Isolate *isolate, Local<Context> context) const;
   V8_WARN_UNUSED_RESULT Maybe<double> NumberValue(Local<Context> context) const;
   V8_WARN_UNUSED_RESULT Maybe<int64_t> IntegerValue(
       Local<Context> context) const;
