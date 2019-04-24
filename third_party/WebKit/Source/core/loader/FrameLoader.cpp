@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011 Apple Inc. All rights reserved.
  * Copyright (C) 2008 Nokia Corporation and/or its subsidiary(-ies)
  * Copyright (C) 2008, 2009 Torch Mobile Inc. All rights reserved. (http://www.torchmobile.com/)
@@ -387,7 +387,8 @@ void FrameLoader::setHistoryItemStateForCommit(HistoryCommitType historyCommitTy
     }
 }
 
-static HistoryCommitType loadTypeToCommitType(FrameLoadType type)
+// 加入isRedirect标志以细分FrameLoadTypeRedirectWithLockedBackForwardList类型的处理
+static HistoryCommitType loadTypeToCommitType(FrameLoadType type,bool isRedirect)
 {
     switch (type) {
     case FrameLoadTypeStandard:
@@ -397,6 +398,11 @@ static HistoryCommitType loadTypeToCommitType(FrameLoadType type)
         return InitialCommitInChildFrame;
     case FrameLoadTypeBackForward:
         return BackForwardCommit;
+    case FrameLoadTypeRedirectWithLockedBackForwardList:
+        if (isRedirect)
+            return HistoryInertCommit;
+        else
+            return InitialCommitInChildFrame;
     default:
         break;
     }
@@ -408,7 +414,7 @@ void FrameLoader::receivedFirstData()
     if (m_stateMachine.creatingInitialEmptyDocument())
         return;
 
-    HistoryCommitType historyCommitType = loadTypeToCommitType(m_loadType);
+    HistoryCommitType historyCommitType = loadTypeToCommitType(m_loadType, documentLoader()->isClientRedirect());
     if (historyCommitType == StandardCommit && (m_documentLoader->urlForHistory().isEmpty() || (opener() && !m_currentItem && m_documentLoader->originalRequest().url().isEmpty())))
         historyCommitType = HistoryInertCommit;
     else if (historyCommitType == InitialCommitInChildFrame && MixedContentChecker::isMixedContent(m_frame->tree().top()->securityContext()->securityOrigin(), m_documentLoader->url()))
@@ -641,7 +647,7 @@ void FrameLoader::updateForSameDocumentNavigation(const KURL& newURL, SameDocume
     if (m_frame->document()->loadEventFinished())
         client()->didStartLoading(NavigationWithinSameDocument);
 
-    HistoryCommitType historyCommitType = loadTypeToCommitType(type);
+    HistoryCommitType historyCommitType = loadTypeToCommitType(type, documentLoader()->isClientRedirect());
     if (!m_currentItem)
         historyCommitType = HistoryInertCommit;
 
@@ -1193,7 +1199,7 @@ void FrameLoader::receivedMainResourceError(DocumentLoader* loader, const Resour
         m_frame->deprecatedLocalOwner()->renderFallbackContent();
     }
 
-    HistoryCommitType historyCommitType = loadTypeToCommitType(m_loadType);
+    HistoryCommitType historyCommitType = loadTypeToCommitType(m_loadType, documentLoader()->isClientRedirect());
     if (loader == m_provisionalDocumentLoader) {
         client()->dispatchDidFailProvisionalLoad(error, historyCommitType);
         if (loader != m_provisionalDocumentLoader)
