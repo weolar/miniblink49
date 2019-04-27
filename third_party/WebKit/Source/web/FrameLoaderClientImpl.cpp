@@ -554,6 +554,7 @@ NavigationPolicy FrameLoaderClientImpl::decidePolicyForNavigation(const Resource
     navigationInfo.isRedirect = ds->isRedirect();
 
     WebNavigationPolicy webPolicy = m_webFrame->client()->decidePolicyForNavigation(navigationInfo);
+    ((blink::ResourceRequest &)loader->request()).setURL(KURL(request.url()));
     return static_cast<NavigationPolicy>(webPolicy);
 }
 

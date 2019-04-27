@@ -616,6 +616,7 @@ WebNavigationPolicy WebFrameClientImpl::decidePolicyForNavigation(const Navigati
         bool ok = m_webPage->wkeHandler().navigationCallback(webView, m_webPage->wkeHandler().navigationCallbackParam, navigationType, &url);
         if (!ok)
             return WebNavigationPolicyIgnore;
+		info.urlRequest.setURL(WebURL(KURL(blink::ParsedURLString, url.string())));
     }
 #endif
     return info.defaultPolicy;
