@@ -91,6 +91,9 @@ struct CWebViewHandler {
     wkeLoadUrlEndCallback loadUrlEndCallback;
     void* loadUrlEndCallbackParam;
 
+	wkeLoadUrlFailCallback loadUrlFailCallback;
+	void* loadUrlFailCallbackParam;
+
 	void* wsCallback;
 	void* wsCallbackParam;
 
@@ -279,6 +282,7 @@ public:
     
     void onLoadUrlBegin(wkeLoadUrlBeginCallback callback, void* callbackParam);
     void onLoadUrlEnd(wkeLoadUrlEndCallback callback, void* callbackParam);
+	void onLoadUrlFail(wkeLoadUrlFailCallback callback, void* callbackParam);
 
     void onDidCreateScriptContext(wkeDidCreateScriptContextCallback callback, void* callbackParam);
     void onWillReleaseScriptContext(wkeWillReleaseScriptContextCallback callback, void* callbackParam);

@@ -364,6 +364,16 @@ void WebURLLoaderManager::handleDidFail(WebURLLoaderInternal* job, const blink::
     setBlobDataLengthByTempPath(job);
     if (WebURLLoaderInternal::kCacheForDownloadYes != job->m_cacheForDownloadOpt)
         job->client()->didFail(job->loader(), error);
+
+	RequestExtraData* requestExtraData = reinterpret_cast<RequestExtraData*>(job->firstRequest()->extraData());
+	WebPage* page = requestExtraData->page;
+	if (page) {
+		wkeLoadUrlFailCallback loadUrlFailCallback = page->wkeHandler().loadUrlFailCallback;
+		void* loadUrlFailCallbackParam = page->wkeHandler().loadUrlFailCallbackParam;
+		Vector<char> urlBuf = WTF::ensureStringToUTF8(job->firstRequest()->url().string(), true);
+		if (loadUrlFailCallback)
+			loadUrlFailCallback(page->wkeWebView(), loadUrlFailCallbackParam, urlBuf.data(), job);
+	}
 }
 
 static void cancelBodyStreaming(int jobId)

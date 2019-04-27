@@ -1256,6 +1256,12 @@ void CWebView::onLoadUrlEnd(wkeLoadUrlEndCallback callback, void* callbackParam)
     m_webPage->wkeHandler().loadUrlEndCallbackParam = callbackParam;
 }
 
+void CWebView::onLoadUrlFail(wkeLoadUrlFailCallback callback, void* callbackParam)
+{
+	m_webPage->wkeHandler().loadUrlFailCallback = callback;
+	m_webPage->wkeHandler().loadUrlFailCallbackParam = callbackParam;
+}
+
 void CWebView::onDidCreateScriptContext(wkeDidCreateScriptContextCallback callback, void* callbackParam)
 {
     m_webPage->wkeHandler().didCreateScriptContextCallback = callback;
