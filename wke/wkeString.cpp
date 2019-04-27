@@ -61,6 +61,11 @@ void CString::setString(const WTF::String& str)
     m_str.push_back('\0');
 }
 
+size_t CString::length()
+{
+	return m_str.size();
+}
+
 CString& CString::operator = (const WTF::String& str)
 {
     setString(str);

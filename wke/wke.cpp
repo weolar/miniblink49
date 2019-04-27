@@ -316,8 +316,38 @@ void wkeSetDebugConfig(wkeWebView webview, const char* debugString, const char* 
             wke::g_diskCacheEnable = atoi(param) == 1;
         } else if ("consoleOutput" == item) {
             wke::g_consoleOutputEnable = atoi(param) == 1;
-        } 
+        }
     }
+}
+
+void *wkeGetDebugConfig(wkeWebView webview, const char* debugString)
+{
+	wke::checkThreadCallIsValid(__FUNCTION__);
+
+	void* ret = NULL;
+	if (wke::getDebugConfig(webview, debugString, &ret))
+		return ret;
+
+	content::WebPage* webpage = nullptr;
+	blink::WebViewImpl* webViewImpl = nullptr;
+	blink::WebSettingsImpl* settings = nullptr;
+	if (webview)
+		webpage = webview->getWebPage();
+	if (webpage)
+		webViewImpl = webpage->webViewImpl();
+	if (webViewImpl)
+		settings = webViewImpl->settingsImpl();
+
+	String stringDebug(debugString);
+	Vector<String> result;
+	stringDebug.split(",", result);
+	for (size_t i = 0; i < result.size(); ++i) {
+		String item = result[i];
+		if ("alwaysIsNotSolideColor" == item) {
+			
+		}
+	}
+	return NULL;
 }
 
 void wkeSetLanguage(wkeWebView webview, const char* language)

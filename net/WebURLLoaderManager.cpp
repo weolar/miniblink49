@@ -74,7 +74,6 @@
 #include "net/DiskCache.h"
 #include "net/cookies/WebCookieJarCurlImpl.h"
 #include "net/cookies/CookieJarMgr.h"
-#include "wke/wkeNetHook.h"
 #include "third_party/WebKit/Source/wtf/Threading.h"
 #include "third_party/WebKit/Source/wtf/Vector.h"
 #include "third_party/WebKit/Source/wtf/text/CString.h"
@@ -83,6 +82,7 @@
 #include <stdio.h>
 
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
+#include "wke/wkeNetHook.h"
 #include "wke/wkeWebView.h"
 #include "wke/wkeGlobalVar.h"
 #endif

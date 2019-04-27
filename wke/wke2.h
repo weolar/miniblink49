@@ -7,7 +7,7 @@
 namespace wke {
 
 bool setDebugConfig(wkeWebView webview, const char* debugString, const char* param);
-
+bool getDebugConfig(wkeWebView webview, const char* debugString, void** ret);
 }
 
 #endif

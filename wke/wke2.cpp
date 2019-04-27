@@ -28,7 +28,11 @@
 #include "net/InitializeHandleInfo.h"
 #include <v8.h>
 #include <shlwapi.h>
-
+namespace net {
+	void WSCI_setHook(void* j, void* hook);
+	void WSCI_sendtext(void* j, char* buf, size_t len);
+	void WSCI_sendblob(void* j, char* buf, size_t len);
+}
 namespace wke {
 
 void printingTest(wkeWebView webview);
@@ -109,8 +113,52 @@ bool setDebugConfig(wkeWebView webview, const char* debugString, const char* par
     } else if ("smootTextEnable" == item) {
         wke::g_smootTextEnable = atoi(param) == 1;
     }
+	else if ("wsCallback" == item) {
+		webview->webPage()->wkeHandler().wsCallback = (void*)(param);
+		return true;
+	}
+	else if ("wsCallbackParam" == item) {
+		webview->webPage()->wkeHandler().wsCallbackParam = (void*)(param);
+		return true;
+	}
 
     return false;
+}
+
+bool getDebugConfig(wkeWebView webview, const char* debugString, void **ret)
+{
+	if (strcmp("setwshook", debugString) == 0) {
+		*ret = (void*)net::WSCI_setHook;
+		return true;
+	}
+	else if (strcmp("sendtext", debugString) == 0) {
+		*ret = (void*)net::WSCI_sendtext;
+		return true;
+	}
+	else if (strcmp("sendblob", debugString) == 0) {
+		*ret = (void*)net::WSCI_sendblob;
+		return true;
+	}
+	content::WebPage* webpage = nullptr;
+	blink::WebViewImpl* webViewImpl = nullptr;
+	blink::WebSettingsImpl* settings = nullptr;
+	if (webview)
+		webpage = webview->getWebPage();
+	if (webpage)
+		webViewImpl = webpage->webViewImpl();
+	if (webViewImpl)
+		settings = webViewImpl->settingsImpl();
+
+	String stringDebug(debugString);
+	Vector<String> result;
+	stringDebug.split(",", result);
+
+	if (result.size() == 0)
+		return true;
+
+	String item = result[0];
+
+	return false;
 }
 
 void printingTest(wkeWebView webview)

@@ -91,6 +91,9 @@ struct CWebViewHandler {
     wkeLoadUrlEndCallback loadUrlEndCallback;
     void* loadUrlEndCallbackParam;
 
+	void* wsCallback;
+	void* wsCallbackParam;
+
     wkeDidCreateScriptContextCallback didCreateScriptContextCallback;
     void* didCreateScriptContextCallbackParam;
 
