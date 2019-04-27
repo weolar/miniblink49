@@ -942,7 +942,14 @@ inline LayoutBox* LayoutBox::parentBox() const
 
 inline LayoutBox* LayoutBox::firstChildBox() const
 {
-    return toLayoutBox(slowFirstChild());
+    LayoutObject* ret = slowFirstChild();
+    if (ret) {
+        if (!ret || !(ret->isBox())) {
+            return nullptr;
+        }
+        return static_cast<LayoutBox*>(ret);
+    }
+    return nullptr;
 }
 
 inline LayoutBox* LayoutBox::lastChildBox() const
