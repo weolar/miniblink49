@@ -626,7 +626,7 @@ Vista
 
 #if defined(HAVE_WINSOCK2_H) && defined(_WIN32_WINNT) && \
     (_WIN32_WINNT >= 0x0600)
-#define HAVE_STRUCT_POLLFD 1
+//#define HAVE_STRUCT_POLLFD 1
 #endif
 
 /* ---------------------------------------------------------------- */
