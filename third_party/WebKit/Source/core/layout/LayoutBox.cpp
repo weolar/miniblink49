@@ -1163,12 +1163,10 @@ void LayoutBox::paint(const PaintInfo& paintInfo, const LayoutPoint& paintOffset
     BoxPainter(*this).paint(paintInfo, paintOffset);
 }
 
-
 void LayoutBox::paintBoxDecorationBackground(const PaintInfo& paintInfo, const LayoutPoint& paintOffset)
 {
     BoxPainter(*this).paintBoxDecorationBackground(paintInfo, paintOffset);
 }
-
 
 bool LayoutBox::getBackgroundPaintedExtent(LayoutRect& paintedExtent)
 {
