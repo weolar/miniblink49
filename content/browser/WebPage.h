@@ -13,9 +13,6 @@
 #include "third_party/WebKit/Source/wtf/HashSet.h"
 #include "net/PageNetExtraData.h"
 
-#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
-class CefBrowserHostImpl;
-#endif
 
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
 namespace wke {
@@ -152,11 +149,6 @@ public:
 
     void setScreenInfo(const blink::WebScreenInfo& info);
     blink::WebScreenInfo screenInfo();
-
-#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
-    CefBrowserHostImpl* browser();
-    void setBrowser(CefBrowserHostImpl* browserImpl);
-#endif
 
     blink::WebViewImpl* webViewImpl();
     WebPageImpl* webPageImpl();

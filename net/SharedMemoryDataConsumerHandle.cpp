@@ -9,7 +9,7 @@
 #include "third_party/WebKit/public/platform/Platform.h"
 #include "third_party/WebKit/public/platform/WebTraceLocation.h"
 #include "third_party/WebKit/Source/wtf/ThreadSafeRefCounted.h"
-#include "cef/include/base/cef_lock.h"
+#include "base/lock.h"
 #include <algorithm>
 #include <deque>
 

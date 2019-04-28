@@ -8,9 +8,6 @@
 #include <ostream>
 
 // #include "base/basictypes.h"
-#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
-#include "cef/include/base/cef_string16.h"
-#endif
 #include "base/file_path.h"
 #include "base/logging.h"
 // #include "base/strings/string_split.h"

@@ -10,9 +10,6 @@
 #include "third_party/WebKit/public/platform/WebTraceLocation.h"
 #include "third_party/WebKit/Source/wtf/ThreadingPrimitives.h"
 
-#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
-#include "libcef/browser/CefContext.h"
-#endif
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
 #include "wke/wkeUtil.h"
 #endif
@@ -199,10 +196,6 @@ void WebThreadImpl::postDelayedTaskWithPriorityCrossThread(
 
     if (m_hEvent)
         ::SetEvent(m_hEvent);
-#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
-    if (CefContext::Get())
-        CefContext::Get()->SetNeedHeartbeat();
-#endif
     ::LeaveCriticalSection(&m_taskPairsMutex);
 }
 

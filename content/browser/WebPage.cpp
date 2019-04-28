@@ -421,23 +421,6 @@ void WebPage::setBackgroundColor(COLORREF c) {
         m_pageImpl->setBackgroundColor(c);
 }
 
-#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
-CefBrowserHostImpl* WebPage::browser()
-{ 
-    ASSERT(m_pageImpl);
-    if (m_pageImpl)
-        return m_pageImpl->browser();
-    return nullptr;
-}
-
-void WebPage::setBrowser(CefBrowserHostImpl* browserImpl)
-{
-    ASSERT(m_pageImpl);
-    if (m_pageImpl)
-        m_pageImpl->setBrowser(browserImpl);
-}
-#endif
-
 bool WebPage::canGoBack()
 {
     if (!m_pageImpl)

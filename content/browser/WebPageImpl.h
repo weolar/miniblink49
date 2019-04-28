@@ -22,20 +22,10 @@ namespace cc {
 class LayerTreeHost;
 }
 
-#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
-namespace cef {
-class BrowserHostImpl;
-}
-#endif
-
 namespace blink {
 struct Referrer;
 class WebViewImpl;
 }
-
-#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
-class CefBrowserHostImpl;
-#endif
 
 namespace net {
 class PageNetExtraData;
@@ -211,10 +201,6 @@ public:
     static WebPageImpl* getSelfForCurrentContext();
 
     bool initSetting();
-#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
-    CefBrowserHostImpl* browser() const;
-    void setBrowser(CefBrowserHostImpl* browser);
-#endif
     blink::WebFrame* getWebFrameFromFrameId(int64_t frameId);
     static int64_t getFrameIdByBlinkFrame(const blink::WebFrame* frame);
     static int64_t getFirstFrameId();
@@ -287,9 +273,6 @@ public:
 
     // May be NULL if the browser has not yet been created or if the browser has
     // been destroyed.
-#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
-    CefBrowserHostImpl* m_browser;
-#endif
 
 #if ENABLE_WKE == 1
     wke::CWebView* wkeWebView() const;

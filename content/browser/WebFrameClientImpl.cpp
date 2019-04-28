@@ -5,22 +5,6 @@
 #include "content/ui/ContextMeun.h"
 #include "content/web_impl_win/WebMediaPlayerImpl.h"
 #include "content/web_impl_win/npapi/WebPluginImpl.h"
-#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
-#include "cef/include/capi/cef_base_capi.h"
-#include "cef/include/capi/cef_browser_capi.h"
-#include "cef/include/capi/cef_client_capi.h"
-#include "cef/include/internal/cef_ptr.h"
-#include "cef/include/internal/cef_export.h"
-#include "cef/include/cef_app.h"
-#include "cef/include/cef_client.h"
-#include "cef/libcef/common/CommonBase.h"
-#include "cef/libcef/common/CefRequestImpl.h"
-#include "cef/libcef/common/CefContentClient.h"
-#include "cef/libcef/common/StringUtil.h"
-#include "cef/libcef/browser/CefFrameHostImpl.h"
-#include "cef/libcef/browser/CefBrowserHostImpl.h"
-#include "cef/libcef/renderer/CefV8Impl.h"
-#endif
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
 #include "wke/wkeWebView.h"
 #include "wke/wkeJsBind.h"
@@ -121,11 +105,6 @@ WebFrame* WebFrameClientImpl::createChildFrame(WebLocalFrame* parent, WebTreeSco
 {
     WebLocalFrameImpl* webLocalFrameImpl = WebLocalFrameImpl::create(WebTreeScopeType::Document, this);
     parent->appendChild(webLocalFrameImpl);
-#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
-    CefBrowserHostImpl* browser = m_webPage->browser();
-    if (browser)
-        browser->OnFrameIdentified(webLocalFrameImpl, parent);
-#endif
     if (WTF::kNotFound == m_unusedFrames.find(webLocalFrameImpl))
         m_unusedFrames.append(webLocalFrameImpl);
 
@@ -239,24 +218,12 @@ void WebFrameClientImpl::onLoadingStateChange(bool isLoading, bool toDifferentDo
 
     if (!m_webPage)
         return;
-#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
-    CefBrowserHostImpl* browser = m_webPage->browser();
-    if (!browser || !browser->client().get())
-        return;
-
-    browser->OnLoadingStateChange(isLoading, toDifferentDocument);
-#endif
     WebViewImpl* webview = m_webPage->webViewImpl();
     if (!webview || !webview->client())
         return;
 
     bool canGoBack = webview->client()->historyBackListCount() > 0;
     bool canGoForward = webview->client()->historyForwardListCount() > 0;
-#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
-    CefRefPtr<CefLoadHandler> handler = browser->client()->GetLoadHandler();
-    if (handler.get())
-        handler->OnLoadingStateChange(browser, isLoading, canGoBack, canGoForward);
-#endif
 }
 
 void WebFrameClientImpl::didStartLoading(bool toDifferentDocument)
@@ -295,11 +262,6 @@ void WebFrameClientImpl::didStartProvisionalLoad(WebLocalFrame* localFrame, doub
 {
     resetLoadState();
 
-#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
-    CefBrowserHostImpl* browser = m_webPage->browser();
-    if (browser)
-        browser->DidStartProvisionalLoad(localFrame, triggeringEventTime);
-#endif
     if (localFrame && localFrame->parent())
         m_webPage->didStartProvisionalLoad();
 }
@@ -309,11 +271,6 @@ void WebFrameClientImpl::didReceiveServerRedirectForProvisionalLoad(WebLocalFram
 void WebFrameClientImpl::didFailProvisionalLoad(WebLocalFrame* frame, const WebURLError& error, WebHistoryCommitType type)
 {
     m_loadFailed = true;
-#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
-    CefBrowserHostImpl* browser = m_webPage->browser();
-    if (browser)
-        browser->DidFailProvisionalLoad(frame, error, type);
-#endif
 
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
     wke::AutoDisableFreeV8TempObejct autoDisableFreeV8TempObejct;
@@ -343,12 +300,6 @@ void WebFrameClientImpl::didCommitProvisionalLoad(WebLocalFrame* frame, const We
 {
     if (!frame->parent())
         m_webPage->didCommitProvisionalLoad(frame, history, type, false);
-
-#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
-    CefBrowserHostImpl* browser = m_webPage->browser();
-    if (browser)
-        browser->DidCommitProvisionalLoadForFrame(frame, history);
-#endif
 
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
     wke::AutoDisableFreeV8TempObejct autoDisableFreeV8TempObejct;
@@ -395,12 +346,6 @@ void WebFrameClientImpl::didReceiveTitle(WebLocalFrame* frame, const WebString& 
             handler.titleChangedCallback(m_webPage->wkeWebView(), handler.titleChangedCallbackParam, &string);
         }
 #endif
-
-#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
-        CefBrowserHostImpl* browser = m_webPage->browser();
-        if (browser)
-            browser->OnTitleChange(frame, m_title);
-#endif
     }
 }
 
@@ -430,12 +375,6 @@ void WebFrameClientImpl::didFailLoad(WebLocalFrame* frame, const WebURLError& er
 {
     m_loadFailed = true;
 
-#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
-    CefBrowserHostImpl* browser = m_webPage->browser();
-    if (browser)
-        browser->DidFailLoad(frame, error, type);
-#endif
-
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
     wke::AutoDisableFreeV8TempObejct autoDisableFreeV8TempObejct;
     wke::CWebViewHandler& handler = m_webPage->wkeHandler();
@@ -459,11 +398,6 @@ void WebFrameClientImpl::didFailLoad(WebLocalFrame* frame, const WebURLError& er
 void WebFrameClientImpl::didFinishLoad(WebLocalFrame* frame)
 {
     m_loaded = true;
-#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
-    CefBrowserHostImpl* browser = m_webPage->browser();
-    if (browser)
-        browser->DidFinishLoad(frame);
-#endif
 
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
     wke::AutoDisableFreeV8TempObejct autoDisableFreeV8TempObejct;
@@ -531,54 +465,6 @@ WebNavigationPolicy WebFrameClientImpl::decidePolicyForNavigation(const Navigati
     if (!m_webPage)
         return info.defaultPolicy;
 
-#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
-    if (m_webPage->browser() && info.frame) {
-        CefRefPtr<CefApp> application = CefContentClient::Get()->rendererApplication();
-        if (!application.get())
-            return info.defaultPolicy;
-
-        CefRefPtr<CefRenderProcessHandler> handler = application->GetRenderProcessHandler();
-        if (!handler.get())
-            return info.defaultPolicy;
-
-        CefStringUTF16 urlSpec;
-        cef::WebStringToCefString(info.urlRequest.url().spec().utf16(), urlSpec);
-
-        CefRefPtr<CefFrame> cefFrame = m_webPage->browser()->GetOrCreateFrame(info.frame, content::WebPage::kUnspecifiedFrameId, blink::KURL());
-
-        CefRefPtr<CefRequest> requestPtr(CefRequest::Create());
-        CefRequestImpl* requestImpl = static_cast<CefRequestImpl*>(requestPtr.get());
-        requestImpl->Set(info.urlRequest);
-        requestImpl->SetReadOnly(true);
-
-        cef_navigation_type_t navigation_type = NAVIGATION_OTHER;
-        switch (info.navigationType) {
-        case blink::WebNavigationTypeLinkClicked:
-            navigation_type = NAVIGATION_LINK_CLICKED;
-            break;
-        case blink::WebNavigationTypeFormSubmitted:
-            navigation_type = NAVIGATION_FORM_SUBMITTED;
-            break;
-        case blink::WebNavigationTypeBackForward:
-            navigation_type = NAVIGATION_BACK_FORWARD;
-            break;
-        case blink::WebNavigationTypeReload:
-            navigation_type = NAVIGATION_RELOAD;
-            break;
-        case blink::WebNavigationTypeFormResubmitted:
-            navigation_type = NAVIGATION_FORM_RESUBMITTED;
-            break;
-        case blink::WebNavigationTypeOther:
-            navigation_type = NAVIGATION_OTHER;
-            break;
-        }
-
-        if (!handler->OnBeforeNavigation((CefBrowser*)m_webPage->browser(), cefFrame.get(),
-            requestPtr.get(), navigation_type, info.isRedirect))
-            return info.defaultPolicy;
-    }
-#endif
-
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
     wke::AutoDisableFreeV8TempObejct autoDisableFreeV8TempObejct;
     if (m_webPage->wkeHandler().navigationCallback && m_webPage->getState() == pageInited) {
@@ -641,10 +527,6 @@ void WebFrameClientImpl::willSendRequest(WebLocalFrame* webFrame, unsigned ident
 
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
     requestExtraData->page = m_webPage;
-#endif
-
-#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
-    requestExtraData->browser = m_webPage->browser();
 #endif
 
     requestExtraData->setFrame(webFrame); // 两种模式都需要此对象
@@ -827,22 +709,6 @@ void WebFrameClientImpl::didCreateScriptContext(WebLocalFrame* frame, v8::Local<
         m_webPage->wkeHandler().didCreateScriptContextCallback(m_webPage->wkeWebView(), m_webPage->wkeHandler().didCreateScriptContextCallbackParam,
             frameIdToWkeFrame(m_webPage, frame), &context, extensionGroup, worldId);
 #endif
-#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
-    if (!CefContentClient::Get())
-        return;
-
-    CefRefPtr<CefApp> application = CefContentClient::Get()->rendererApplication();
-    if (!application.get())
-        return;
-
-    CefRefPtr<CefRenderProcessHandler> handler = application->GetRenderProcessHandler();
-    if (!handler.get())
-        return;
-
-    CefRefPtr<CefFrame> cefFrame = m_webPage->browser()->GetOrCreateFrame(frame, content::WebPage::kUnspecifiedFrameId, blink::KURL());
-    CefRefPtr<CefV8Context> cefV8Context = new CefV8ContextImpl(context->GetIsolate(), context);
-    handler->OnContextCreated((CefBrowser*)m_webPage->browser(), cefFrame.get(), cefV8Context);
-#endif
 }
 
 void WebFrameClientImpl::willReleaseScriptContext(WebLocalFrame* frame, v8::Local<v8::Context> context, int worldId)
@@ -857,23 +723,6 @@ void WebFrameClientImpl::willReleaseScriptContext(WebLocalFrame* frame, v8::Loca
     if (m_webPage->wkeHandler().willReleaseScriptContextCallback && m_webPage->getState() == pageInited)
         m_webPage->wkeHandler().willReleaseScriptContextCallback(m_webPage->wkeWebView(), m_webPage->wkeHandler().willReleaseScriptContextCallbackParam,
             frameIdToWkeFrame(m_webPage, frame), &context, worldId);
-#endif
-
-#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
-    if (!CefContentClient::Get())
-        return;
-
-    CefRefPtr<CefApp> application = CefContentClient::Get()->rendererApplication();
-    if (!application.get())
-        return;
-
-    CefRefPtr<CefRenderProcessHandler> handler = application->GetRenderProcessHandler();
-    if (!handler.get())
-        return;
-
-    CefRefPtr<CefFrame> cefFrame = m_webPage->browser()->GetOrCreateFrame(frame, content::WebPage::kUnspecifiedFrameId, blink::KURL());
-    CefRefPtr<CefV8Context> cefV8Context = new CefV8ContextImpl(context->GetIsolate(), context);
-    handler->OnContextReleased((CefBrowser*)m_webPage->browser(), cefFrame.get(), cefV8Context);
 #endif
 }
 

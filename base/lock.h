@@ -73,6 +73,16 @@ namespace base {
 	private:
 		RefType id_;
 	};
+	namespace PlatformThread {
+
+		// Gets the current thread reference, which can be used to check if
+		// we're on the right thread quickly.
+		inline PlatformThreadRef CurrentRef() {
+			return PlatformThreadRef((cef_platform_thread_handle_t)::GetCurrentThread());
+		}
+
+	}  // namespace PlatformThread
+
 	namespace cef_internal {
 
 		// This class implements the underlying platform-specific spin-lock mechanism
@@ -86,19 +96,32 @@ namespace base {
 			typedef pthread_mutex_t NativeHandle;
 #endif
 
-			LockImpl();
-			~LockImpl();
+			LockImpl() {
+				::InitializeCriticalSectionAndSpinCount(&native_handle_, 2000);
+			}
+			~LockImpl() {
+				::DeleteCriticalSection(&native_handle_);
+			}
 
 			// If the lock is not held, take it and return true.  If the lock is already
 			// held by something else, immediately return false.
-			bool Try();
+			bool Try() {
+				if (::TryEnterCriticalSection(&native_handle_) != FALSE) {
+					return true;
+				}
+				return false;
+			}
 
 			// Take the lock, blocking until it is available if necessary.
-			void Lock();
+			void Lock() {
+				::EnterCriticalSection(&native_handle_);
+			}
 
 			// Release the lock.  This must only be called by the lock's holder: after
 			// a successful call to Try, or a call to Lock.
-			void Unlock();
+			void Unlock() {
+				::LeaveCriticalSection(&native_handle_);
+			}
 
 			// Return the native underlying lock.
 			// TODO(awalker): refactor lock and condition variables so that this is
@@ -132,8 +155,12 @@ class Lock {
   // Null implementation if not debug.
   void AssertAcquired() const {}
 #else
-  Lock();
-  ~Lock();
+	 Lock() {
+
+  }
+	 ~Lock() {
+
+  }
 
   // NOTE: Although windows critical sections support recursive locks, we do not
   // allow this, and we will commonly fire a DCHECK() if a thread attempts to
@@ -155,7 +182,9 @@ class Lock {
     return rv;
   }
 
-  void AssertAcquired() const;
+  void AssertAcquired() const {
+	  //DCHECK(owning_thread_ref_ == PlatformThread::CurrentRef());
+  }
 #endif                          // NDEBUG
 
  private:
@@ -165,8 +194,19 @@ class Lock {
   // if the variable is set.  This is allowed by the underlying implementation
   // on windows but not on Posix, so we're doing unneeded checks on Posix.
   // It's worth it to share the code.
-  void CheckHeldAndUnmark();
-  void CheckUnheldAndMark();
+  void CheckHeldAndUnmark() {
+	  //DCHECK(owning_thread_ref_ == PlatformThread::CurrentRef());
+	  owning_thread_ref_ = PlatformThreadRef();
+  }
+  void CheckUnheldAndMark() {
+	  // Hitting this DCHECK means that your code is trying to re-enter a lock that
+	  // is already held. The Chromium Lock implementation is not reentrant.
+	  // See "Why can the holder of a Lock not reacquire it?" at
+	  // http://www.chromium.org/developers/lock-and-condition-variable for more
+	  // information.
+	  //DCHECK(owning_thread_ref_.is_null());
+	  owning_thread_ref_ = PlatformThread::CurrentRef();
+  }
 
   // All private data is implicitly protected by lock_.
   // Be VERY careful to only access members under that lock.

@@ -8,9 +8,6 @@
 #define BASE_STRINGS_STRING_UTIL_H_
 
 #include <string>
-#if (defined ENABLE_CEF) && (ENABLE_CEF == 1)
-#include "cef/include/base/cef_string16.h"
-#endif
 namespace base {
 
 	typedef wchar_t char16;
