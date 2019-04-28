@@ -6,7 +6,6 @@
 #endif
 #include "content/web_impl_win/WebURLLoaderImpl.h"
 #include "net/WebURLLoaderWinINet.h"
-#include "libcef/browser/CefSchemeLoaderImpl.h"
 
 namespace content {
 
