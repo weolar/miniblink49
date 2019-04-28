@@ -155,9 +155,9 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;SFNTLY_NO_EXCEPTION;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>../../third_party/zlib/;../../third_party/ots/include;../../third_party/ots/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../third_party/sfntly/src/cpp/src;../../third_party/zlib/;../../third_party/ots/include;../../third_party/ots/;../../third_party/brotli</AdditionalIncludeDirectories>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>

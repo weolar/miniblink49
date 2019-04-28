@@ -134,6 +134,7 @@
     <ClInclude Include="..\..\v8_4_8\src\compiler\greedy-allocator.h" />
     <ClInclude Include="..\..\v8_4_8\src\compiler\ia32\instruction-codes-ia32.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\..\v8_4_8\src\compiler\instruction-codes.h" />
     <ClInclude Include="..\..\v8_4_8\src\compiler\instruction-selector-impl.h" />
@@ -233,12 +234,15 @@
     <ClInclude Include="..\..\v8_4_8\src\crankshaft\hydrogen.h" />
     <ClInclude Include="..\..\v8_4_8\src\crankshaft\ia32\lithium-codegen-ia32.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\..\v8_4_8\src\crankshaft\ia32\lithium-gap-resolver-ia32.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\..\v8_4_8\src\crankshaft\ia32\lithium-ia32.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\..\v8_4_8\src\crankshaft\lithium-allocator-inl.h" />
     <ClInclude Include="..\..\v8_4_8\src\crankshaft\lithium-allocator.h" />
@@ -328,24 +332,31 @@
     <ClInclude Include="..\..\v8_4_8\src\heap\store-buffer.h" />
     <ClInclude Include="..\..\v8_4_8\src\ia32\assembler-ia32-inl.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\..\v8_4_8\src\ia32\assembler-ia32.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\..\v8_4_8\src\ia32\code-stubs-ia32.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\..\v8_4_8\src\ia32\codegen-ia32.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\..\v8_4_8\src\ia32\frames-ia32.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\..\v8_4_8\src\ia32\macro-assembler-ia32.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\..\v8_4_8\src\ia32\simulator-ia32.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\..\v8_4_8\src\ic\access-compiler.h" />
     <ClInclude Include="..\..\v8_4_8\src\ic\call-optimization.h" />
@@ -414,7 +425,9 @@
     <ClInclude Include="..\..\v8_4_8\src\property.h" />
     <ClInclude Include="..\..\v8_4_8\src\prototype.h" />
     <ClInclude Include="..\..\v8_4_8\src\regexp\bytecodes-irregexp.h" />
-    <ClInclude Include="..\..\v8_4_8\src\regexp\ia32\regexp-macro-assembler-ia32.h" />
+    <ClInclude Include="..\..\v8_4_8\src\regexp\ia32\regexp-macro-assembler-ia32.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="..\..\v8_4_8\src\regexp\interpreter-irregexp.h" />
     <ClInclude Include="..\..\v8_4_8\src\regexp\jsregexp-inl.h" />
     <ClInclude Include="..\..\v8_4_8\src\regexp\jsregexp.h" />
@@ -601,9 +614,11 @@
     <ClCompile Include="..\..\v8_4_8\src\compiler\greedy-allocator.cc" />
     <ClCompile Include="..\..\v8_4_8\src\compiler\ia32\code-generator-ia32.cc">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\v8_4_8\src\compiler\ia32\instruction-selector-ia32.cc">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\v8_4_8\src\compiler\instruction-selector.cc" />
     <ClCompile Include="..\..\v8_4_8\src\compiler\instruction.cc" />
@@ -700,12 +715,15 @@
     <ClCompile Include="..\..\v8_4_8\src\crankshaft\hydrogen.cc" />
     <ClCompile Include="..\..\v8_4_8\src\crankshaft\ia32\lithium-codegen-ia32.cc">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\v8_4_8\src\crankshaft\ia32\lithium-gap-resolver-ia32.cc">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\v8_4_8\src\crankshaft\ia32\lithium-ia32.cc">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\v8_4_8\src\crankshaft\lithium-allocator.cc" />
     <ClCompile Include="..\..\v8_4_8\src\crankshaft\lithium-codegen.cc" />
@@ -761,6 +779,7 @@
     <ClCompile Include="..\..\v8_4_8\src\full-codegen\full-codegen.cc" />
     <ClCompile Include="..\..\v8_4_8\src\full-codegen\ia32\full-codegen-ia32.cc">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\v8_4_8\src\full-codegen\x64\full-codegen-x64.cc">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
@@ -789,54 +808,70 @@
     <ClCompile Include="..\..\v8_4_8\src\heap\store-buffer.cc" />
     <ClCompile Include="..\..\v8_4_8\src\ia32\assembler-ia32.cc">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\v8_4_8\src\ia32\builtins-ia32.cc">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\v8_4_8\src\ia32\code-stubs-ia32.cc">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\v8_4_8\src\ia32\codegen-ia32.cc">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\v8_4_8\src\ia32\cpu-ia32.cc">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\v8_4_8\src\ia32\deoptimizer-ia32.cc">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\v8_4_8\src\ia32\disasm-ia32.cc">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\v8_4_8\src\ia32\frames-ia32.cc">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\v8_4_8\src\ia32\interface-descriptors-ia32.cc">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\v8_4_8\src\ia32\macro-assembler-ia32.cc">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\v8_4_8\src\ia32\simulator-ia32.cc">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\v8_4_8\src\ic\access-compiler.cc" />
     <ClCompile Include="..\..\v8_4_8\src\ic\call-optimization.cc" />
     <ClCompile Include="..\..\v8_4_8\src\ic\handler-compiler.cc" />
     <ClCompile Include="..\..\v8_4_8\src\ic\ia32\access-compiler-ia32.cc">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\v8_4_8\src\ic\ia32\handler-compiler-ia32.cc">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\v8_4_8\src\ic\ia32\ic-compiler-ia32.cc">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\v8_4_8\src\ic\ia32\ic-ia32.cc">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\v8_4_8\src\ic\ia32\stub-cache-ia32.cc">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\v8_4_8\src\ic\ic-compiler.cc" />
     <ClCompile Include="..\..\v8_4_8\src\ic\ic-state.cc" />
@@ -907,7 +942,9 @@
     <ClCompile Include="..\..\v8_4_8\src\profiler\strings-storage.cc" />
     <ClCompile Include="..\..\v8_4_8\src\property-descriptor.cc" />
     <ClCompile Include="..\..\v8_4_8\src\property.cc" />
-    <ClCompile Include="..\..\v8_4_8\src\regexp\ia32\regexp-macro-assembler-ia32.cc" />
+    <ClCompile Include="..\..\v8_4_8\src\regexp\ia32\regexp-macro-assembler-ia32.cc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\..\v8_4_8\src\regexp\interpreter-irregexp.cc" />
     <ClCompile Include="..\..\v8_4_8\src\regexp\jsregexp.cc" />
     <ClCompile Include="..\..\v8_4_8\src\regexp\regexp-macro-assembler-irregexp.cc" />
@@ -1176,7 +1213,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>V8_NO_FAST_TLS;WIN32;_DEBUG;_LIB;V8_TARGET_ARCH_X64=1;V8_DEPRECATION_WARNINGS;NVALGRIND;ENABLE_HANDLE_ZAPPING;V8_USE_EXTERNAL_STARTUP_DATA=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>../../v8_4_5</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../v8_4_8;../../v8_4_8/include</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>

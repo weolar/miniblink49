@@ -173,7 +173,7 @@
       <GenerateDebugInformation>DebugFastLink</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <AdditionalLibraryDirectories>$(SolutionDir)..\third_party\GDIPlus\Lib;$(SolutionDir)..\out\$(Configuration)\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>version.lib;ots.lib;harfbuzz.lib;Crypt32.lib;Wldap32.lib;Imm32.lib;libxml.lib;zlib.lib;libcurl.lib;v8_5_7.lib;v8_5_7_1.lib;skia.lib;winmm.lib;Ws2_32.lib;Usp10.lib;Shlwapi.lib;wininet.lib;GDIPlus.lib;libjpeg.lib;libpng.lib;wolfssl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>version.lib;ots.lib;harfbuzz.lib;Crypt32.lib;Wldap32.lib;Imm32.lib;libxml.lib;zlib.lib;libcurl.lib;v8_4_8.lib;skia.lib;winmm.lib;Ws2_32.lib;Usp10.lib;Shlwapi.lib;wininet.lib;GDIPlus.lib;libjpeg.lib;libpng.lib;wolfssl.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)node$(TargetExt)</OutputFile>
       <ImportLibrary>$(OutDir)node.lib</ImportLibrary>
       <IgnoreSpecificDefaultLibraries>LIBCMT.lib</IgnoreSpecificDefaultLibraries>
@@ -197,7 +197,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <AdditionalIncludeDirectories>../../;../../v8/;../../v8/include;../../third_party/;../../third_party/npapi;../../third_party/WebKit;../../third_party/WebKit/Source;../../cef;../../third_party/icu/source/common;../../gen/blink;../../gen/blink/core;../../gen/blink/bindings/modules/v8;../../gen/blink/bindings/core/v8;../../gpu;../../third_party/khronos;../../third_party/libxml/src/include;../../third_party/libxml/win32/include;../../third_party/skia/include/core;../../third_party/skia/include/config;../../third_party/skia/include/codec;../../third_party/skia/include/device;../../third_party/skia/include/effects;../../third_party/skia/include/images;../../third_party/skia/include/pathops;../../third_party/skia/include/ports;../../third_party/skia/include/private;../../third_party/skia/include/utils;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../;../../v8_4_8/;../../v8_4_8/include;../../third_party/;../../third_party/npapi;../../third_party/WebKit;../../third_party/WebKit/Source;../../cef;../../third_party/icu/source/common;../../gen/blink;../../gen/blink/core;../../gen/blink/bindings/modules/v8;../../gen/blink/bindings/core/v8;../../gpu;../../third_party/khronos;../../third_party/libxml/src/include;../../third_party/libxml/win32/include;../../third_party/skia/include/core;../../third_party/skia/include/config;../../third_party/skia/include/codec;../../third_party/skia/include/device;../../third_party/skia/include/effects;../../third_party/skia/include/images;../../third_party/skia/include/pathops;../../third_party/skia/include/ports;../../third_party/skia/include/private;../../third_party/skia/include/utils;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4800;4291;4996;4244;4305;4577;4267;</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PrecompiledHeaderFile>config.h</PrecompiledHeaderFile>
@@ -211,7 +211,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <AdditionalLibraryDirectories>$(SolutionDir)..\Debug\;$(SolutionDir)..\lib\;</AdditionalLibraryDirectories>
-      <AdditionalDependencies>InjectTool.lib;version.lib;ots_d.lib;Crypt32.lib;Wldap32.lib;Imm32.lib;libxml.lib;zlib_d.lib;libcurl_d.lib;v8_d.lib;skia_d.lib;winmm.lib;Ws2_32.lib;Usp10.lib;Shlwapi.lib;wininet.lib;GDIPlus.lib;libjpeg.lib;libpng.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>InjectTool.lib;version.lib;ots_d.lib;Crypt32.lib;Wldap32.lib;Imm32.lib;libxml.lib;zlib_d.lib;libcurl_d.lib;v8_d.lib;skia_d.lib;winmm.lib;Ws2_32.lib;Usp10.lib;Shlwapi.lib;wininet.lib;GDIPlus.lib;libjpeg.lib;libpng.lib;wolfssl.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(SolutionDir)..\Debug\miniblink.dll</OutputFile>
       <ImportLibrary>$(OutDir)miniblink.lib</ImportLibrary>
       <IgnoreSpecificDefaultLibraries>LIBCMT.lib</IgnoreSpecificDefaultLibraries>
@@ -290,7 +290,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <TargetMachine>MachineX86</TargetMachine>
       <AdditionalLibraryDirectories>$(SolutionDir)..\third_party\GDIPlus\Lib;$(SolutionDir)..\out\$(Configuration)\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libcurl.lib;zlib.lib;ots.lib;libxml.lib;harfbuzz.lib;v8_4_8.lib;skia.lib;winmm.lib;Ws2_32.lib;Usp10.lib;Shlwapi.lib;wininet.lib;GDIPlus.lib;version.lib;Crypt32.lib;wldap32.lib;Imm32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;DbgHelp.lib;libjpeg.lib;libpng.lib;openssl.lib</AdditionalDependencies>
+      <AdditionalDependencies>libcurl.lib;zlib.lib;ots.lib;libxml.lib;harfbuzz.lib;v8_4_8.lib;skia.lib;winmm.lib;Ws2_32.lib;Usp10.lib;Shlwapi.lib;wininet.lib;GDIPlus.lib;version.lib;Crypt32.lib;wldap32.lib;Imm32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;DbgHelp.lib;libjpeg.lib;libpng.lib;wolfssl.lib</AdditionalDependencies>
       <AdditionalOptions>/FORCE:UNRESOLVED %(AdditionalOptions)</AdditionalOptions>
       <OutputFile>$(OutDir)node$(TargetExt)</OutputFile>
       <ImportLibrary>$(OutDir)node.lib</ImportLibrary>
@@ -308,7 +308,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <AdditionalIncludeDirectories>../../;../../v8_5_7/;../../v8_5_7/include;../../third_party/;../../third_party/GDIPlus/Includes;../../third_party/npapi;../../third_party/WebKit;../../third_party/WebKit/Source;../../cef;../../third_party/icu/source/common;../../gen/blink;../../gen/blink/core;../../gen/blink/bindings/modules/v8;../../gen/blink/bindings/core/v8;../../gpu;../../third_party/khronos;../../third_party/libxml/src/include;../../third_party/libxml/win32/include;../../third_party/skia/include/core;../../third_party/skia/include/config;../../third_party/skia/include/codec;../../third_party/skia/include/device;../../third_party/skia/include/effects;../../third_party/skia/include/images;../../third_party/skia/include/pathops;../../third_party/skia/include/ports;../../third_party/skia/include/private;../../third_party/skia/include/utils;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../;../../v8_4_8/;../../v8_4_8/include;../../third_party/;../../third_party/GDIPlus/Includes;../../third_party/npapi;../../third_party/WebKit;../../third_party/WebKit/Source;../../cef;../../third_party/icu/source/common;../../gen/blink;../../gen/blink/core;../../gen/blink/bindings/modules/v8;../../gen/blink/bindings/core/v8;../../gpu;../../third_party/khronos;../../third_party/libxml/src/include;../../third_party/libxml/win32/include;../../third_party/skia/include/core;../../third_party/skia/include/config;../../third_party/skia/include/codec;../../third_party/skia/include/device;../../third_party/skia/include/effects;../../third_party/skia/include/images;../../third_party/skia/include/pathops;../../third_party/skia/include/ports;../../third_party/skia/include/private;../../third_party/skia/include/utils;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile>config.h</PrecompiledHeaderFile>
       <DisableSpecificWarnings>4800;4291;4996;4244;4305;4577;4530;4595;4049;4267;4302;4311</DisableSpecificWarnings>
       <ForcedIncludeFiles>config.h</ForcedIncludeFiles>
