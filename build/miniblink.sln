@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28010.2036
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.202
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "miniblink", "miniblink\miniblink.vcxproj", "{D4CF74E8-8AE3-4534-92BE-10503E556E87}"
 EndProject
@@ -24,8 +24,6 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "openssl", "..\node\openssl\openssl.vcxproj", "{5C6460DB-F7B1-5315-A0DE-79A9DFC525A1}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "v8_5_7", "v8_5_7\v8_5_7.vcxproj", "{F58AB436-5C2E-4C6C-966F-223C4BF4C63D}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "electron", "electron\electron.vcxproj", "{419D9B69-AC50-49EA-9188-40FB63BE1C90}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "v8_5_7_1", "v8_5_7\v8_5_7_1.vcxproj", "{6DAB5E30-5F37-4A4E-AAA2-8185790A047E}"
 EndProject
@@ -213,21 +211,6 @@ Global
 		{F58AB436-5C2E-4C6C-966F-223C4BF4C63D}.Release|Win32.Build.0 = Release|Win32
 		{F58AB436-5C2E-4C6C-966F-223C4BF4C63D}.Release|x64.ActiveCfg = Release|x64
 		{F58AB436-5C2E-4C6C-966F-223C4BF4C63D}.Release|x64.Build.0 = Release|x64
-		{419D9B69-AC50-49EA-9188-40FB63BE1C90}.Debug|Win32.ActiveCfg = Debug|Win32
-		{419D9B69-AC50-49EA-9188-40FB63BE1C90}.Debug|Win32.Build.0 = Debug|Win32
-		{419D9B69-AC50-49EA-9188-40FB63BE1C90}.Debug|x64.ActiveCfg = Debug|x64
-		{419D9B69-AC50-49EA-9188-40FB63BE1C90}.Debug|x64.Build.0 = Debug|x64
-		{419D9B69-AC50-49EA-9188-40FB63BE1C90}.Release_NoNode|Win32.ActiveCfg = Release_vc6|Win32
-		{419D9B69-AC50-49EA-9188-40FB63BE1C90}.Release_NoNode|Win32.Build.0 = Release_vc6|Win32
-		{419D9B69-AC50-49EA-9188-40FB63BE1C90}.Release_NoNode|x64.ActiveCfg = Release|x64
-		{419D9B69-AC50-49EA-9188-40FB63BE1C90}.Release_NoNode|x64.Build.0 = Release|x64
-		{419D9B69-AC50-49EA-9188-40FB63BE1C90}.Release_vc6|Win32.ActiveCfg = Release_vc6|Win32
-		{419D9B69-AC50-49EA-9188-40FB63BE1C90}.Release_vc6|Win32.Build.0 = Release_vc6|Win32
-		{419D9B69-AC50-49EA-9188-40FB63BE1C90}.Release_vc6|x64.ActiveCfg = Release_vc6|Win32
-		{419D9B69-AC50-49EA-9188-40FB63BE1C90}.Release|Win32.ActiveCfg = Release|Win32
-		{419D9B69-AC50-49EA-9188-40FB63BE1C90}.Release|Win32.Build.0 = Release|Win32
-		{419D9B69-AC50-49EA-9188-40FB63BE1C90}.Release|x64.ActiveCfg = Release|x64
-		{419D9B69-AC50-49EA-9188-40FB63BE1C90}.Release|x64.Build.0 = Release|x64
 		{6DAB5E30-5F37-4A4E-AAA2-8185790A047E}.Debug|Win32.ActiveCfg = Debug|Win32
 		{6DAB5E30-5F37-4A4E-AAA2-8185790A047E}.Debug|Win32.Build.0 = Debug|Win32
 		{6DAB5E30-5F37-4A4E-AAA2-8185790A047E}.Debug|x64.ActiveCfg = Debug|x64
