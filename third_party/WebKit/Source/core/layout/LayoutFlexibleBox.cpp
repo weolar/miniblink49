@@ -244,6 +244,9 @@ void LayoutFlexibleBox::computeChildPreferredLogicalWidths(LayoutObject& child, 
 
 void LayoutFlexibleBox::computeIntrinsicLogicalWidths(LayoutUnit& minLogicalWidth, LayoutUnit& maxLogicalWidth) const
 {
+    if (firstChild() && (firstChild()->isText()))
+        return;
+
     // FIXME: We're ignoring flex-basis here and we shouldn't. We can't start honoring it though until
     // the flex shorthand stops setting it to 0.
     // See https://bugs.webkit.org/show_bug.cgi?id=116117 and http://crbug.com/240765.
@@ -457,6 +460,9 @@ void LayoutFlexibleBox::styleDidChange(StyleDifference diff, const ComputedStyle
     LayoutBlock::styleDidChange(diff, oldStyle);
 
     if (oldStyle && oldStyle->alignItemsPosition() == ItemPositionStretch && diff.needsFullLayout()) {
+        if (firstChild() && (firstChild()->isText()))
+            return;
+
         // Flex items that were previously stretching need to be relayed out so we can compute new available cross axis space.
         // This is only necessary for stretching since other alignment values don't change the size of the box.
         for (LayoutBox* child = firstChildBox(); child; child = child->nextSiblingBox()) {
@@ -510,7 +516,12 @@ void LayoutFlexibleBox::layoutBlock(bool relayoutChildren)
         layoutPositionedObjects(relayoutChildren || isDocumentElement());
 
         // FIXME: css3/flexbox/repaint-rtl-column.html seems to issue paint invalidations for more overflow than it needs to.
-        computeOverflow(clientLogicalBottomAfterRepositioning());
+        if (!firstChild() || (firstChild() && !(firstChild()->isText())))
+            computeOverflow(clientLogicalBottomAfterRepositioning());
+        else {
+            LayoutObject* child = firstChild();
+            child->clearNeedsLayout();
+        }
     }
 
     updateLayerTransformAfterLayout();
@@ -548,6 +559,9 @@ void LayoutFlexibleBox::repositionLogicalHeightDependentFlexItems(Vector<LineCon
 LayoutUnit LayoutFlexibleBox::clientLogicalBottomAfterRepositioning()
 {
     LayoutUnit maxChildLogicalBottom;
+    if (firstChild() && (firstChild()->isText()))
+        return maxChildLogicalBottom;
+
     for (LayoutBox* child = firstChildBox(); child; child = child->nextSiblingBox()) {
         if (child->isOutOfFlowPositioned())
             continue;
@@ -1005,6 +1019,9 @@ LayoutUnit LayoutFlexibleBox::computeInnerFlexBaseSizeForChild(LayoutBox& child,
 
 void LayoutFlexibleBox::layoutFlexItems(bool relayoutChildren, SubtreeLayoutScope& layoutScope)
 {
+    if (firstChild() && (firstChild()->isText()))
+        return;
+
     Vector<LineContext> lineContexts;
     OrderedFlexItemList orderedChildren;
     LayoutUnit sumFlexBaseSize;
@@ -1014,7 +1031,7 @@ void LayoutFlexibleBox::layoutFlexItems(bool relayoutChildren, SubtreeLayoutScop
     LayoutUnit sumHypotheticalMainSize;
 
     PaintLayerScrollableArea::PreventRelayoutScope preventRelayoutScope(layoutScope);
-
+     
     m_orderIterator.first();
     LayoutUnit crossAxisOffset = flowAwareBorderBefore() + flowAwarePaddingBefore();
     while (computeNextFlexLine(orderedChildren, sumFlexBaseSize, totalFlexGrow, totalFlexShrink, totalWeightedFlexShrink, sumHypotheticalMainSize, relayoutChildren)) {
@@ -1198,6 +1215,9 @@ LayoutUnit LayoutFlexibleBox::computeChildMarginValue(Length margin)
 
 void LayoutFlexibleBox::prepareOrderIteratorAndMargins()
 {
+    if (firstChild() && (firstChild()->isText()))
+        return;
+
     OrderIteratorPopulator populator(m_orderIterator);
 
     for (LayoutBox* child = firstChildBox(); child; child = child->nextSiblingBox()) {
