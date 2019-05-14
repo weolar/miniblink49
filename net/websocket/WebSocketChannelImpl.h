@@ -73,14 +73,14 @@ public:
     }
     virtual ~WebSocketChannelImpl();
 
-    bool send(const char* data, int length, bool hook = false);
+    bool send(const char* data, int length, bool hook);
 
     // WebSocketChannel functions.
     virtual bool connect(const blink::KURL&, const String& protocol) override;
 //     virtual String subprotocol() override;
 //     virtual String extensions() override;
-    void send(const CString&, bool hook = false);
-	virtual void send(const CString&) override;
+    void send(const CString&, bool isHook);
+    virtual void send(const CString&) override;
     virtual void send(PassRefPtr<blink::BlobDataHandle>) override;
     virtual void send(const blink::DOMArrayBuffer&, unsigned byteOffset, unsigned byteLength) override;
     /*virtual*/ unsigned long bufferedAmount() const /*override*/;
@@ -131,12 +131,12 @@ public:
     void ref();
     void deref();
 #if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
-	//hook
-	bool(WKE_CALL_TYPE* m_onConnect)(wkeWebView webView, void* param, WebSocketChannelImpl* job);
-	bool(WKE_CALL_TYPE* m_onReceive)(wkeWebView webView, void* param, WebSocketChannelImpl* job, int OpCode, const char* buf, size_t len, wkeString new_data);
-	bool(WKE_CALL_TYPE* m_onSend)(wkeWebView webView, void* param, WebSocketChannelImpl* job, int OpCode, const char* buf, size_t len, wkeString new_data);
-	void(WKE_CALL_TYPE* m_onError)(wkeWebView webView, void* param, WebSocketChannelImpl* job);
-	void* m_Param;
+    //hook
+    bool(WKE_CALL_TYPE* m_onConnect)(wkeWebView webView, void* param, WebSocketChannelImpl* job);
+    bool(WKE_CALL_TYPE* m_onReceive)(wkeWebView webView, void* param, WebSocketChannelImpl* job, int OpCode, const char* buf, size_t len, wkeString new_data);
+    bool(WKE_CALL_TYPE* m_onSend)(wkeWebView webView, void* param, WebSocketChannelImpl* job, int OpCode, const char* buf, size_t len, wkeString new_data);
+    void(WKE_CALL_TYPE* m_onError)(wkeWebView webView, void* param, WebSocketChannelImpl* job);
+    void* m_hookUserParam;
 #endif
 protected:
 
@@ -172,10 +172,10 @@ private:
         CString stringData;
         Vector<char> vectorData;
         RefPtr<blink::BlobDataHandle> blobData;
-		bool hook;
+        bool isHook;
     };
-    void enqueueTextFrame(const CString&, bool hook = false);
-    void enqueueRawFrame(WebSocketOneFrame::OpCode, const char* data, size_t dataLength, bool hook = false);
+    void enqueueTextFrame(const CString&, bool isHook);
+    void enqueueRawFrame(WebSocketOneFrame::OpCode, const char* data, size_t dataLength, bool isHook);
     void enqueueBlobFrame(WebSocketOneFrame::OpCode, PassRefPtr<blink::BlobDataHandle>);
 
     void processOutgoingFrameQueue();
@@ -195,7 +195,7 @@ private:
 
     // If you are going to send a hybi-10 frame, you need to use the outgoing frame queue
     // instead of call sendFrame() directly.
-    bool sendFrame(WebSocketOneFrame::OpCode, const char* data, size_t dataLength, bool hook = false);
+    bool sendFrame(WebSocketOneFrame::OpCode, const char* data, size_t dataLength, bool isHook);
 
     enum BlobLoaderStatus {
         BlobLoaderNotStarted,

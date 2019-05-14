@@ -249,6 +249,20 @@ void WebURLLoaderManager::appendDataToBlobCacheWhenDidDownloadData(blink::WebURL
     client->didDownloadData(loader, dataLength, encodedDataLength);
 }
 
+// https://rbt.guorenpcic.com/api/grecar/print/transcriptPrintNew?policyNo=6191515000518004167&loginComCode=151515HH&userCode=W1500227 pdf没有mime，强行设置
+static void parseMimeIfNeeded(WebURLLoaderManager* manager, WebURLLoaderInternal* job, const char* data, int dataLengt)
+{
+    String mime = job->m_response.mimeType();
+    if (!job->m_needParseMime || (!mime.isNull() && !mime.isEmpty()))
+        return;
+    job->m_needParseMime = false;
+
+    if (dataLengt > 6 && 0 == memcmp(data, "%PDF-", 5)) {
+        job->m_response.setMIMEType(blink::WebString::fromUTF8("application/pdf"));
+        manager->handleDidReceiveResponse(job);
+    }
+}
+
 void WebURLLoaderManager::didReceiveDataOrDownload(WebURLLoaderInternal* job, const char* data, int dataLength, int encodedDataLength)
 {
     blink::WebURLLoaderClient* client = job->client();
@@ -263,8 +277,10 @@ void WebURLLoaderManager::didReceiveDataOrDownload(WebURLLoaderInternal* job, co
     }
 
     if (!job->firstRequest()->downloadToFile()) {
-        if (WebURLLoaderInternal::kCacheForDownloadYes != job->m_cacheForDownloadOpt)
+        if (WebURLLoaderInternal::kCacheForDownloadYes != job->m_cacheForDownloadOpt) {
+            parseMimeIfNeeded(this, job, data, dataLength);
             client->didReceiveData(loader, data, dataLength, encodedDataLength);
+        }
         return;
     }
 
@@ -1678,6 +1694,7 @@ WebURLLoaderInternal::WebURLLoaderInternal(WebURLLoaderImplCurl* loader, const W
     m_isDataUrl = false;
     m_isProxy = false;
     m_isProxyHeadRequest = false;
+    m_needParseMime = true;
     m_isHoldJobToAsynCommit = false;
     m_isRedirection = false;
     m_initializeHandleInfo = nullptr;
