@@ -103,7 +103,7 @@ DiskCacheItem* DiskCache::getCacheUrlItem(const blink::KURL& kurl)
             continue;
 
         if (kurl.getUTF8String() != url.c_str())
-            return nullptr;
+            continue;
 
         String path = net::getDefaultLocalStorageFullPath();
         path.append(String::format("diskcache\\%u.tmp", nameInt));
