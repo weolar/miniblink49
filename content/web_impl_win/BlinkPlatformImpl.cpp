@@ -180,9 +180,11 @@ static void setRuntimeEnabledFeatures()
     blink::RuntimeEnabledFeatures::setNpapiPluginsEnabled(true);
     blink::RuntimeEnabledFeatures::setDOMConvenienceAPIEnabled(true);
     blink::RuntimeEnabledFeatures::setTextBlobEnabled(true);
-	blink::RuntimeEnabledFeatures::setCssVariablesEnabled(true);
-	blink::RuntimeEnabledFeatures::setCSSMotionPathEnabled(true);
+    blink::RuntimeEnabledFeatures::setCssVariablesEnabled(true);
+    blink::RuntimeEnabledFeatures::setCSSMotionPathEnabled(true);
 }
+
+typedef BOOL (WINAPI* PFN_SetThreadStackGuarantee)(PULONG StackSizeInBytes);
 
 void BlinkPlatformImpl::initialize()
 {
@@ -190,6 +192,11 @@ void BlinkPlatformImpl::initialize()
     scrt_initialize_thread_safe_statics();
 #endif
     x86_check_features();
+    _control87(0x133f, 0xffff);
+
+    ULONG stackSizeInBytes = 894 * 1024;
+    PFN_SetThreadStackGuarantee pSetThreadStackGuarantee = (PFN_SetThreadStackGuarantee)::GetProcAddress(::GetModuleHandleW(L"Kernel32.dll"), "SetThreadStackGuarantee");
+    pSetThreadStackGuarantee(&stackSizeInBytes);
     
     ::CoInitializeEx(nullptr, 0); // COINIT_MULTITHREADED
     ::OleInitialize(nullptr);
@@ -221,8 +228,6 @@ void BlinkPlatformImpl::initialize()
     
 //     platform->m_perfTimer = new blink::Timer<BlinkPlatformImpl>(platform, &BlinkPlatformImpl::perfTimer);
 //     platform->m_perfTimer->start(2, 2, FROM_HERE);
-
-    //OutputDebugStringW(L"BlinkPlatformImpl::initBlink\n");
 }
 
 BlinkPlatformImpl::BlinkPlatformImpl() 
