@@ -5,6 +5,7 @@
 #include "wke/wkeGlobalVar.h"
 #include "content/browser/WebPage.h"
 #include "cc/base/BdColor.h"
+#include "base/strings/string_util.h"
 ////////////////////////////////////////////////////////////////////////////
 
 namespace wke {
@@ -409,25 +410,19 @@ LRESULT CWebWindow::_windowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM l
     //    }
     //    break;
 
+    case WM_SYSKEYDOWN: // no break
     case WM_KEYDOWN: {
         unsigned int virtualKeyCode = wParam;
         unsigned int flags = 0;
-//         if (HIWORD(lParam) & KF_REPEAT)
-//             flags |= WKE_REPEAT;
-//         if (HIWORD(lParam) & KF_EXTENDED)
-//             flags |= WKE_EXTENDED;
         flags = lParam;
         if (wkeFireKeyDownEvent(this, virtualKeyCode, flags, false))
             return 0;
         break;
     }
+    case WM_SYSKEYUP: // no break
     case WM_KEYUP: {
         unsigned int virtualKeyCode = wParam;
         unsigned int flags = 0;
-//         if (HIWORD(lParam) & KF_REPEAT)
-//             flags |= WKE_REPEAT;
-//         if (HIWORD(lParam) & KF_EXTENDED)
-//             flags |= WKE_EXTENDED;
         flags = lParam;
         if (wkeFireKeyUpEvent(this, virtualKeyCode, flags, false))
             return 0;
@@ -565,6 +560,8 @@ LRESULT CWebWindow::_windowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM l
         ::ImmReleaseContext(hwnd, hIMC);
     }
         return 0;
+    case WM_GETDLGCODE: // 使得MB控件作为对话框子窗口时可接收到键盘消息
+        return DLGC_WANTARROWS | DLGC_WANTALLKEYS | DLGC_WANTCHARS;
     }
 
     return ::DefWindowProcW(hwnd, message, wParam, lParam);
@@ -739,9 +736,8 @@ void CWebWindow::setTitle(const wchar_t* text)
 
 void CWebWindow::setTitle(const utf8* text)
 {
-    wchar_t wtext[1024 * 64 + 1] = { 0 };
-    MultiByteToWideChar(CP_UTF8, 0, text, strlen(text), wtext, 1024*64);
-    setTitle(wtext);
+    std::wstring textW = base::UTF8ToWide(text);
+    setTitle(textW.c_str());
 }
 
 void CWebWindow::setTransparent(bool transparent)
