@@ -2229,7 +2229,7 @@ void LayoutBox::updateLogicalHeight()
 
     LogicalExtentComputedValues computedValues;
     computeLogicalHeight(logicalHeight(), logicalTop(), computedValues);
-
+        
     setLogicalHeight(computedValues.m_extent);
     setLogicalTop(computedValues.m_position);
     setMarginBefore(computedValues.m_margins.m_before);
@@ -3198,12 +3198,25 @@ static void computeBlockStaticDistance(Length& logicalTop, Length& logicalBottom
         return;
 
     // FIXME: The static distance computation has not been patched for mixed writing modes.
-    LayoutUnit staticLogicalTop = child->layer()->staticBlockPosition() - containerBlock->borderBefore();
+    LayoutUnit staticLogicalTop = child->layer()->staticBlockPosition();
     for (LayoutObject* curr = child->parent(); curr && curr != containerBlock; curr = curr->container()) {
-        if (curr->isBox() && !curr->isTableRow())
-            staticLogicalTop += toLayoutBox(curr)->logicalTop();
+        if (!curr->isBox() || curr->isTableRow())
+            continue;
+        const LayoutBox& box = *toLayoutBox(curr);
+        staticLogicalTop += box.logicalTop();
+        if (box.isRelPositioned()) // isInFlowPositioned
+            staticLogicalTop += box.offsetForInFlowPosition().height();
+        if (!box.isLayoutFlowThread())
+            continue;
+        // We're walking out of a flowthread here. This flow thread is not in the
+        // containing block chain, so we need to convert the position from the
+        // coordinate space of this flowthread to the containing coordinate space.
+        // The inline position cannot affect the block position, so we don't bother
+        // calculating it.
+        LayoutUnit dummyInlinePosition;
+        toLayoutFlowThread(box).flowThreadToContainingCoordinateSpace(staticLogicalTop, dummyInlinePosition);
     }
-    logicalTop.setValue(Fixed, staticLogicalTop);
+    logicalTop.setValue(Fixed, staticLogicalTop - containerBlock->borderBefore());
 }
 
 void LayoutBox::computePositionedLogicalHeight(LogicalExtentComputedValues& computedValues) const
