@@ -104,6 +104,10 @@ public:
     // rectangles are completely physical in terms of writing mode.
     LayoutRect fragmentsBoundingBox(const LayoutRect& layerBoundingBox) const;
 
+    // Convert a logical position in the flow thread coordinate space to a logical
+    // position in the containing coordinate space.
+    void flowThreadToContainingCoordinateSpace(LayoutUnit& blockPosition, LayoutUnit& inlinePosition) const;
+
     LayoutPoint flowThreadPointToVisualPoint(const LayoutPoint& flowThreadPoint) const
     {
         return flowThreadPoint + columnOffset(flowThreadPoint);
