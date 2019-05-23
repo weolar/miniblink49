@@ -1,4 +1,4 @@
-#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
+ï»¿#if (defined ENABLE_WKE) && (ENABLE_WKE == 1)
 
 #define BUILDING_wke
 
@@ -40,6 +40,8 @@ CWebView::CWebView(COLORREF color)
     , m_cookie("", 0)
     , m_name("miniblink", 0)
     , m_url("", 0)
+	, m_selectedText("", 0)
+	, m_selectedSource("", 0)
     , m_isCokieEnabled(true)
     , m_isCreatedDevTools(false)
 {
@@ -221,7 +223,7 @@ void CWebView::_loadURL(const utf8* inUrl, bool isFile)
     if (!trimPath(inUrl, isFile, &inUrlBuf))
         return;
 
-    //cexer ±ØÐëµ÷ÓÃString::fromUTF8ÏÔÊ¾¹¹ÔìµÚ¶þ¸ö²ÎÊý£¬·ñÔòString::String»á°ÑinUrlµ±×÷latin1´¦Àí¡£
+    //cexer å¿…é¡»è°ƒç”¨String::fromUTF8æ˜¾ç¤ºæž„é€ ç¬¬äºŒä¸ªå‚æ•°ï¼Œå¦åˆ™String::Stringä¼šæŠŠinUrlå½“ä½œlatin1å¤„ç†ã€‚
     blink::KURL url(blink::ParsedURLString, &inUrlBuf[0]);
     if (!url.isValid())
         url.setProtocol("http:");
@@ -583,6 +585,35 @@ bool CWebView::goForward()
     return true;
 }
 
+bool CWebView::hasSelection() const
+{
+	return m_webPage->mainFrame()->hasSelection();
+}
+
+const wchar_t* CWebView::selectedTextW()
+{
+	m_selectedText = (const WTF::String&) m_webPage->mainFrame()->selectionAsText();
+	return m_selectedText.stringW();
+}
+
+const utf8* CWebView::selectedText()
+{
+	m_selectedText = (const WTF::String&) m_webPage->mainFrame()->selectionAsText();
+	return m_selectedText.string();
+}
+
+const wchar_t* CWebView::selectedSourceW()
+{
+	m_selectedSource = (const WTF::String&) m_webPage->mainFrame()->selectionAsMarkup();
+	return m_selectedSource.stringW();
+}
+
+const utf8* CWebView::selectedSource()
+{
+	m_selectedSource = (const WTF::String&) m_webPage->mainFrame()->selectionAsMarkup();
+	return m_selectedSource.string();
+}
+
 void CWebView::editorSelectAll()
 {
     m_webPage->mainFrame()->executeCommand("SelectAll");
@@ -893,22 +924,22 @@ static jsValue runJsImpl(blink::WebFrame* mainFrame, String* codeString, bool is
     return v8ValueToJsValue(context, result);
 }
 
-jsValue CWebView::runJS(const wchar_t* script)
+jsValue CWebView::runJS(const wchar_t* script, bool isInClosure)
 {
     if (!script)
         return jsUndefined();
 
     String codeString(script);
-    return runJsImpl(m_webPage->mainFrame(), &codeString, true);
+    return runJsImpl(m_webPage->mainFrame(), &codeString, isInClosure);
 }
 
-jsValue CWebView::runJS(const utf8* script)
+jsValue CWebView::runJS(const utf8* script, bool isInClosure)
 {
     if (!script)
         return jsUndefined();
 
     String codeString = String::fromUTF8(script);
-    return runJsImpl(m_webPage->mainFrame(), &codeString, true);
+    return runJsImpl(m_webPage->mainFrame(), &codeString, isInClosure);
 }
 
 jsValue CWebView::runJsInFrame(wkeWebFrameHandle frameId, const utf8* script, bool isInClosure)
