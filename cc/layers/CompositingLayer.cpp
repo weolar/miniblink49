@@ -46,8 +46,7 @@ DEFINE_DEBUG_ONLY_GLOBAL(WTF::RefCountedLeakCounter, compositingLayerCounter, ("
    
 CompositingLayer::CompositingLayer(int id)
 {
-    m_prop = new DrawToCanvasProperties();
-    //m_tiles = new Vector<CompositingTile*>();
+    m_prop = new DrawProps();
     m_tilesAddr = new TilesAddr(this);
     m_numTileX = 0;
     m_numTileY = 0;
@@ -189,7 +188,7 @@ void CompositingLayer::removeChildOrDependent(CompositingLayer* child)
     }
 }
 
-void CompositingLayer::updataDrawProp(DrawToCanvasProperties* prop)
+void CompositingLayer::updataDrawProp(DrawProps* prop)
 {
     m_prop->copy(*prop);
 }
@@ -204,7 +203,7 @@ SkColor CompositingLayer::getBackgroundColor() const
     return m_prop->backgroundColor;
 }
 
-void CompositingLayer::updataTile(int newIndexNumX, int newIndexNumY, DrawToCanvasProperties* prop)
+void CompositingLayer::updataTile(int newIndexNumX, int newIndexNumY, DrawProps* prop)
 {
     TilesAddr::realloByNewXY(&m_tilesAddr, newIndexNumX, newIndexNumY);
 
@@ -514,17 +513,12 @@ bool CompositingLayer::drawToCanvasChildren(LayerTreeHost* host, SkCanvas* canva
     for (size_t i = 0; i < children().size(); ++i) {
         CompositingLayer* child = children()[i];
 
-        //const SkMatrix44& currentTransform = child->drawToCanvasProperties()->currentTransform;
         const SkMatrix44& transformToAncestor = child->drawToCanvasProperties()->screenSpaceTransform;
 
         SkMatrix matrixToAncestor;
         transformToFlattenedSkMatrix(transformToAncestor, &matrixToAncestor);
 
-//         if (opacity() < 1 && opacity() > 0) {
-//             U8CPU opacityVal = (int)ceil(opacity() * 255);
-//             canvas->saveLayerAlpha(nullptr, opacityVal);
-//         } else
-            canvas->save();
+        canvas->save();
 
         SkPaint paint;
         paint.setAntiAlias(wke::g_rendererAntiAlias);

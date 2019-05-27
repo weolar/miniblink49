@@ -15,7 +15,7 @@ class IntSize;
 
 namespace cc {
 
-struct DrawToCanvasProperties;
+struct DrawProps;
 class CompositingTile;
 struct TileActionInfo;
 class TileActionInfoVector;
@@ -48,8 +48,8 @@ public:
 
     WTF::Vector<CompositingLayer*>& children() { return m_children; }
 
-    DrawToCanvasProperties* drawToCanvasProperties() { return m_prop; }
-    void updataDrawProp(DrawToCanvasProperties* m_prop);
+    DrawProps* drawToCanvasProperties() { return m_prop; }
+    void updataDrawProp(DrawProps* m_prop);
 
     bool masksToBounds() const;
     bool drawsContent() const;
@@ -60,7 +60,7 @@ public:
     bool isDoubleSided() const;
     bool useParentBackfaceVisibility() const;
 
-    void updataTile(int newIndexNumX, int newIndexNumY, DrawToCanvasProperties* prop);
+    void updataTile(int newIndexNumX, int newIndexNumY, DrawProps* prop);
     void cleanupUnnecessaryTile(const WTF::Vector<TileActionInfo*>& tiles);
 
     virtual bool drawToCanvas(LayerTreeHost* host, blink::WebCanvas* canvas, const blink::IntRect& clip, float parentOpacity);
@@ -81,7 +81,7 @@ protected:
     void drawDebugLine(SkCanvas& canvas, CompositingTile* tile);
         
     int m_id;
-    DrawToCanvasProperties* m_prop;
+    DrawProps* m_prop;
 
     TilesAddr* m_tilesAddr;
     int m_numTileX;

@@ -34,8 +34,7 @@ struct WebFloatRect;
 namespace cc {
 class LayerTreeHost;
 class TileGrid;
-struct DrawProperties;
-struct DrawToCanvasProperties;
+struct DrawProps;
 class LayerChangeAction;
 }
 
@@ -185,9 +184,9 @@ public:
     void requestBoundRepaint(bool directOrPending);
     void appendPendingInvalidateRect(const SkRect& rect);
 
-    cc::DrawProperties* drawProperties();
+    cc::DrawProps* drawProperties();
     //cc::DrawToCanvasProperties* drawToCanvasProperties(); // 在上屏时使用本属性，和DrawProperties比，不一定是最新的坐标属性，需要光栅化后来更新
-    void updataDrawToCanvasProperties(cc::DrawToCanvasProperties* prop);
+    void updataDrawToCanvasProperties(cc::DrawProps* prop);
     const SkMatrix44& drawTransform() const;
 
     int maskLayerId() const;
@@ -263,8 +262,8 @@ protected:
 
     WTF::Vector<blink::IntRect> m_nonFastScrollableRegion;
 
-    cc::DrawProperties* m_drawProperties;
-    cc::DrawToCanvasProperties* m_drawToCanvasProperties;
+    cc::DrawProps* m_drawProperties;
+    //cc::DrawToCanvasProperties* m_drawToCanvasProperties;
 
     WTF::Vector<cc::LayerChangeAction*> m_savedActionsWhenHostIsNull;
     bool m_hasMaskLayerChild;

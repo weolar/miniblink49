@@ -14,7 +14,7 @@ class WebLayerImpl;
 
 namespace cc {
 
-struct DrawToCanvasProperties;
+struct DrawProps;
 class TileActionInfoVector;
 struct TileActionInfo;
 class LayerTreeHost;
@@ -160,7 +160,7 @@ public:
 
 private:
     WTF::Vector<int> m_layerIds;
-    WTF::Vector<DrawToCanvasProperties*> m_props;
+    WTF::Vector<DrawProps*> m_props;
     WTF::Vector<SkRect> m_pendingInvalidateRects;
 };
 
@@ -204,7 +204,7 @@ private:
 
 class LayerChangeActionUpdataTile : public LayerChangeOneLayer {
 public:
-    LayerChangeActionUpdataTile(int actionId, int layerId, int newIndexNumX, int newIndexNumY, DrawToCanvasProperties* prop);
+    LayerChangeActionUpdataTile(int actionId, int layerId, int newIndexNumX, int newIndexNumY, DrawProps* prop);
     virtual void run(LayerTreeHost* host) override;
 
     int newIndexNumX() { return m_newIndexNumX; }
@@ -213,7 +213,7 @@ public:
 private:
     int m_newIndexNumX;
     int m_newIndexNumY;
-    DrawToCanvasProperties* m_prop;
+    DrawProps* m_prop;
 };
 
 class LayerChangeActionCleanupUnnecessaryTile : public LayerChangeOneLayer {

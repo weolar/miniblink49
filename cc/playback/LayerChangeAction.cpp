@@ -200,7 +200,7 @@ void LayerChangeActionDrawPropUpdata::run(LayerTreeHost* host)
             continue;
         }
 
-        DrawToCanvasProperties* prop = m_props[i];
+        DrawProps* prop = m_props[i];
         layer->updataDrawProp(prop);
         delete prop;
     }
@@ -218,7 +218,7 @@ void LayerChangeActionDrawPropUpdata::appendDirtyLayer(cc_blink::WebLayerImpl* l
 {
     m_layerIds.append(layer->id());
 
-    DrawToCanvasProperties* prop = new DrawToCanvasProperties();
+    DrawProps* prop = new DrawProps();
 //     prop->copyDrawProperties(*layer->drawProperties(), layer->opacity());
 //     prop->bounds = layer->bounds();
 //     prop->position = layer->position();
@@ -340,7 +340,7 @@ void LayerChangeActionBlend::run(LayerTreeHost* host)
 
 //////////////////////////////////////////////////////////////////////////
 
-LayerChangeActionUpdataTile::LayerChangeActionUpdataTile(int actionId, int layerId, int newIndexNumX, int newIndexNumY, DrawToCanvasProperties* prop)
+LayerChangeActionUpdataTile::LayerChangeActionUpdataTile(int actionId, int layerId, int newIndexNumX, int newIndexNumY, DrawProps* prop)
     : LayerChangeOneLayer(actionId, LayerChangeTileUpdata, layerId)
     , m_newIndexNumX(newIndexNumX)
     , m_newIndexNumY(newIndexNumY)

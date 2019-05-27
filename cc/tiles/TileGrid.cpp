@@ -256,7 +256,7 @@ void TileGrid::updateSize(const blink::IntRect& screenRect, const blink::IntSize
     m_numTileX = newIndexNumX;
     m_numTileY = newIndexNumY;
 
-    DrawToCanvasProperties* prop = new DrawToCanvasProperties();
+    DrawProps* prop = new DrawProps();
     m_layer->updataDrawToCanvasProperties(prop);
     cc::LayerTreeHost* host = m_layer->layerTreeHost();
     host->appendLayerChangeAction(new LayerChangeActionUpdataTile(host->genActionId(), m_layer->id(), newIndexNumX, newIndexNumY, prop));
