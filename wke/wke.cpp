@@ -231,6 +231,15 @@ void wkeSetDragDropEnable(wkeWebView webView, bool b)
     wke::g_isSetDragDropEnable = b;
 }
 
+void wkeSetContextMenuItemShow(wkeWebView webView, wkeMenuItemId item, bool isShow)
+{
+    wke::checkThreadCallIsValid(__FUNCTION__);
+    if (isShow)
+        wke::g_contextMenuItemMask |= item;
+    else
+        wke::g_contextMenuItemMask &= (~item);
+}
+
 static std::vector<char> convertCookiesPathToUtf8(const WCHAR* path)
 {
     std::wstring pathStr(path);
@@ -316,38 +325,41 @@ void wkeSetDebugConfig(wkeWebView webview, const char* debugString, const char* 
             wke::g_diskCacheEnable = atoi(param) == 1;
         } else if ("consoleOutput" == item) {
             wke::g_consoleOutputEnable = atoi(param) == 1;
+        } else if ("setStackLimit" == item) {
+            uintptr_t currentStackPosition = reinterpret_cast<uintptr_t>(&currentStackPosition);
+            v8::Isolate::GetCurrent()->SetStackLimit(currentStackPosition - (uintptr_t)atoi(param));
         }
     }
 }
 
-void *wkeGetDebugConfig(wkeWebView webview, const char* debugString)
+void* wkeGetDebugConfig(wkeWebView webview, const char* debugString)
 {
-	wke::checkThreadCallIsValid(__FUNCTION__);
+    wke::checkThreadCallIsValid(__FUNCTION__);
 
-	void* ret = NULL;
-	if (wke::getDebugConfig(webview, debugString, &ret))
-		return ret;
+    void* ret = NULL;
+    if (wke::getDebugConfig(webview, debugString, &ret))
+        return ret;
 
-	content::WebPage* webpage = nullptr;
-	blink::WebViewImpl* webViewImpl = nullptr;
-	blink::WebSettingsImpl* settings = nullptr;
-	if (webview)
-		webpage = webview->getWebPage();
-	if (webpage)
-		webViewImpl = webpage->webViewImpl();
-	if (webViewImpl)
-		settings = webViewImpl->settingsImpl();
+    content::WebPage* webpage = nullptr;
+    blink::WebViewImpl* webViewImpl = nullptr;
+    blink::WebSettingsImpl* settings = nullptr;
+    if (webview)
+        webpage = webview->getWebPage();
+    if (webpage)
+        webViewImpl = webpage->webViewImpl();
+    if (webViewImpl)
+        settings = webViewImpl->settingsImpl();
 
-	String stringDebug(debugString);
-	Vector<String> result;
-	stringDebug.split(",", result);
-	for (size_t i = 0; i < result.size(); ++i) {
-		String item = result[i];
-		if ("alwaysIsNotSolideColor" == item) {
-			
-		}
-	}
-	return NULL;
+    String stringDebug(debugString);
+    Vector<String> result;
+    stringDebug.split(",", result);
+    for (size_t i = 0; i < result.size(); ++i) {
+        String item = result[i];
+        if ("alwaysIsNotSolideColor" == item) {
+
+        }
+    }
+    return NULL;
 }
 
 void wkeSetLanguage(wkeWebView webview, const char* language)
@@ -1173,8 +1185,8 @@ void wkeOnLoadUrlEnd(wkeWebView webView, wkeLoadUrlEndCallback callback, void* c
 
 void wkeOnLoadUrlFail(wkeWebView webView, wkeLoadUrlFailCallback callback, void* callbackParam)
 {
-	wke::checkThreadCallIsValid(__FUNCTION__);
-	webView->onLoadUrlFail(callback, callbackParam);
+    wke::checkThreadCallIsValid(__FUNCTION__);
+    webView->onLoadUrlFail(callback, callbackParam);
 }
 
 void wkeOnDidCreateScriptContext(wkeWebView webView, wkeDidCreateScriptContextCallback callback, void* callbackParam)
@@ -1910,20 +1922,20 @@ bool wkeIsLoadComplete(wkeWebView webView)
 
 const utf8* wkeGetSource(wkeWebView webView)
 {
-	wke::checkThreadCallIsValid(__FUNCTION__);
-	content::WebPage* page = webView->webPage();
-	if (!page)
-		return nullptr;
+    wke::checkThreadCallIsValid(__FUNCTION__);
+    content::WebPage* page = webView->webPage();
+    if (!page)
+        return nullptr;
 
-	blink::WebFrame* webFrame = page->mainFrame();
-	if (!webFrame)
-		return nullptr;
-	blink::WebString result = webFrame->contentAsMarkup();
-	if (result.isNull() || result.isEmpty())
-		return nullptr;
+    blink::WebFrame* webFrame = page->mainFrame();
+    if (!webFrame)
+        return nullptr;
+    blink::WebString result = webFrame->contentAsMarkup();
+    if (result.isNull() || result.isEmpty())
+        return nullptr;
 
-	std::string resultUtf8 = result.utf8();
-	return wke::createTempCharString(resultUtf8.c_str(), resultUtf8.size());
+    std::string resultUtf8 = result.utf8();
+    return wke::createTempCharString(resultUtf8.c_str(), resultUtf8.size());
 
     return nullptr;
 }

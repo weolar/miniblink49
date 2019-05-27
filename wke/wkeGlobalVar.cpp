@@ -33,6 +33,8 @@ wkeTempCallbackInfo g_wkeTempCallbackInfo;
 
 std::set<wkeWebView> g_liveWebViews;
 
+DWORD g_contextMenuItemMask = kWkeMenuSelectedAllId | kWkeMenuSelectedTextId | kWkeMenuUndoId | kWkeMenuCopyImageId | kWkeMenuInspectElementAtId |
+    kWkeMenuCutId | kWkeMenuPasteId;
 }
 
 WKE_FILE_OPEN g_pfnOpen;
