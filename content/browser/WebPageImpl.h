@@ -170,10 +170,11 @@ public:
 
     void showDebugNodeData();
 
-    bool needsCommit() const { return m_needsCommit; }
+    //bool needsCommit() const { return m_needsCommit; }
+    bool needsCommit() const { return m_commitCount > 0; }
     void setNeedsCommit();
     void setNeedsCommitAndNotLayout();
-    void clearNeedsCommit();
+    //void clearNeedsCommit();
     bool isDrawDirty();
 
     // LayerTreeHostUiThreadClient --------------------------------------------------------
@@ -299,12 +300,11 @@ public:
     bool m_postCloseWidgetSoonMessage;
 
     WTF::Vector<DestroyNotif*> m_destroyNotifs;
-    //WTF::Vector<blink::IntRect> m_dragRegions;
     HRGN m_draggableRegion;
 
     HWND m_popupHandle;
     int m_debugCount;
-    int m_needsCommit;
+    //int m_needsCommit;
     int m_commitCount;
     int m_needsLayout;
     int m_layerDirty;

@@ -12,6 +12,7 @@
 #include "content/web_impl_win/WebMimeRegistryImpl.h"
 #include <vector>
 #include <shlwapi.h>
+#include <process.h>
 
 namespace content {
 
@@ -90,8 +91,127 @@ static void addForExtensions(const Vector<blink::WebString>& exts, const String&
     filter->push_back('\0');
 }
 
+static unsigned int __stdcall getOpenFileNameThread(void* param)
+{
+    std::function<void(void)>* callback = (std::function<void(void)>*)param;
+    (*callback)();
+
+    int count = 0;
+    MSG msg = { 0 };
+    while (true) {
+        if (::PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
+            ::TranslateMessage(&msg);
+            ::DispatchMessageW(&msg);
+        }
+        if (++count > 100)
+            break;
+        ::Sleep(5);
+    }
+
+    delete callback;
+    return 0;
+}
+
+HWND createHideWindow()
+{
+    WCHAR* s_fileChooserClassName = L"ChooserClass";
+    static bool hasRegister = false;
+    if (!hasRegister) {
+        WNDCLASS wc = { 0 };
+        wc.style = 0;
+        wc.lpfnWndProc = ::DefWindowProcW;
+        wc.cbClsExtra = 0;
+        wc.cbWndExtra = 0;
+        wc.hInstance = NULL;
+        wc.hIcon = LoadIcon(NULL, IDI_APPLICATION);
+        wc.hCursor = LoadCursor(NULL, IDC_ARROW);
+        wc.lpszClassName = s_fileChooserClassName;
+        ::RegisterClass(&wc);
+        hasRegister = true;
+    }
+    
+    HWND hWnd = ::CreateWindowW(s_fileChooserClassName, s_fileChooserClassName, WS_OVERLAPPEDWINDOW, 2, 2, 1, 1, NULL, NULL, NULL, NULL);
+
+    ::SetWindowPos(hWnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+    ::ShowWindow(hWnd, SW_HIDE);
+
+    return hWnd;
+}
+
+static bool runFileChooserTest(const blink::WebFileChooserParams& params, blink::WebFileChooserCompletion* completion)
+{
+    std::vector<wchar_t> fileNameBuf;
+    const int fileNameBufLen = 8192;
+    fileNameBuf.resize(fileNameBufLen);
+    memset(&fileNameBuf[0], 0, sizeof(wchar_t) * fileNameBufLen);
+
+    OPENFILENAMEW ofn = { 0 };
+    ofn.lStructSize = sizeof(OPENFILENAMEW);
+    ofn.hwndOwner = nullptr;
+    ofn.hInstance = nullptr;
+    ofn.lpstrFilter = L"*/*";
+    ofn.lpstrFile = &fileNameBuf[0];
+    ofn.nMaxFile = fileNameBufLen - 2;
+    ofn.lpstrTitle = L"hahahahahah";
+    ofn.Flags = OFN_EXPLORER | OFN_LONGNAMES | OFN_NOCHANGEDIR;
+    OPENFILENAMEW* ofnPtr = &ofn;
+
+    bool saveAs = params.saveAs;
+    bool multiSelect = params.multiSelect;
+    BOOL retVal = FALSE;
+    BOOL finish = FALSE;
+    std::function<void(void)>* callback = new std::function<void(void)>([ofnPtr, saveAs, multiSelect, &retVal, &finish] {
+        ofnPtr->hwndOwner = createHideWindow();
+        if (saveAs) {
+            ofnPtr->Flags = OFN_OVERWRITEPROMPT;
+            retVal = ::GetSaveFileNameW(ofnPtr);
+        } else if (multiSelect) {
+            ofnPtr->Flags |= OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST | OFN_ALLOWMULTISELECT;
+            retVal = ::GetOpenFileNameW(ofnPtr);
+        } else {
+            ofnPtr->Flags |= OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST;
+            retVal = ::GetOpenFileNameW(ofnPtr);
+        }
+        finish = TRUE;
+    });
+
+    unsigned int threadIdentifier = 0;
+    HANDLE threadHandle = reinterpret_cast<HANDLE>(_beginthreadex(0, 0, getOpenFileNameThread, callback, 0, &threadIdentifier));
+    while (!finish) {
+        ::Sleep(50);
+    }
+    ::CloseHandle(threadHandle);
+
+    //////////////////////////////////////////////////////////////////////////
+
+    blink::WebFileChooserCompletion::SelectedFileInfo info;
+    const std::wstring& filePath = L"C:\\Users\\weo\\Desktop\\1.gif";
+
+    info.path = String(filePath.c_str());
+    info.displayName = blink::Platform::current()->fileUtilities()->baseName(info.path);
+    const std::wstring& fileSystemURL = L"file:///" + filePath;
+    info.fileSystemURL = blink::KURL(blink::ParsedURLString, String(fileSystemURL.c_str()));
+
+    long long fileSizeResult = 0;
+    if (!getFileSize(filePath.c_str(), fileSizeResult))
+        fileSizeResult = 0;
+    info.modificationTime = 0;
+    info.length = fileSizeResult;
+    info.isDirectory = ::PathIsDirectoryW(filePath.c_str());
+
+    blink::WebVector<blink::WebFileChooserCompletion::SelectedFileInfo> wsFileNames((size_t)1);
+    wsFileNames[0] = info;
+
+    completion->didChooseFile(wsFileNames);
+    return true;
+}
+
 static bool runFileChooserImpl(const blink::WebFileChooserParams& params, blink::WebFileChooserCompletion* completion)
 {
+    //////////////////////////////////////////////////////////////////////////
+    //return runFileChooserTest(params, completion);
+    //////////////////////////////////////////////////////////////////////////
+
     // image/gif, image/jpeg, image/*
     // Image Files(*.txt)\0*.gif;*.jpeg;*.png\0All Files(*.*)\0*.*\0\0
     std::vector<char> filter;
@@ -146,18 +266,33 @@ static bool runFileChooserImpl(const blink::WebFileChooserParams& params, blink:
     ofn.nMaxFile = fileNameBufLen - 2;
     ofn.lpstrTitle = titleBuf.data();
     ofn.Flags = OFN_EXPLORER | OFN_LONGNAMES | OFN_NOCHANGEDIR;
+    OPENFILENAMEW* ofnPtr = &ofn;
 
+    bool saveAs = params.saveAs;
+    bool multiSelect = params.multiSelect;
     BOOL retVal = FALSE;
-    if (params.saveAs) {
-        ofn.Flags = OFN_OVERWRITEPROMPT;
-        retVal = ::GetSaveFileNameW(&ofn);
-    } else if (params.multiSelect) {
-        ofn.Flags |= OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST | OFN_ALLOWMULTISELECT;
-        retVal = ::GetOpenFileNameW(&ofn);
-    } else {
-        ofn.Flags |= OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST;
-        retVal = ::GetOpenFileNameW(&ofn);
+    BOOL finish = FALSE;
+    std::function<void(void)>* callback = new std::function<void(void)>([ofnPtr, saveAs, multiSelect, &retVal, &finish] {
+        ofnPtr->hwndOwner = createHideWindow();
+        if (saveAs) {
+            ofnPtr->Flags = OFN_OVERWRITEPROMPT;
+            retVal = ::GetSaveFileNameW(ofnPtr);
+        } else if (multiSelect) {
+            ofnPtr->Flags |= OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST | OFN_ALLOWMULTISELECT;
+            retVal = ::GetOpenFileNameW(ofnPtr);
+        } else {
+            ofnPtr->Flags |= OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST;
+            retVal = ::GetOpenFileNameW(ofnPtr);
+        }
+        finish = TRUE;
+    });
+
+    unsigned int threadIdentifier = 0;
+    HANDLE threadHandle = reinterpret_cast<HANDLE>(_beginthreadex(0, 0, getOpenFileNameThread, callback, 0, &threadIdentifier));
+    while (!finish) {
+        ::Sleep(50);
     }
+    ::CloseHandle(threadHandle);
 
     if (!retVal)
         return false;
@@ -185,7 +320,7 @@ static bool runFileChooserImpl(const blink::WebFileChooserParams& params, blink:
             selectedFilesRef.push_back(std::wstring(&fileNameBuf[0]));
         }
     }
-
+    
     if (0 == selectedFilesRef.size())
         return false;
 

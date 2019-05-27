@@ -183,6 +183,13 @@ public:
         });
     }
 
+    static bool canShowItem(UINT actionFlags, MenuId id)
+    {
+        if ((actionFlags & id) && (wke::g_contextMenuItemMask & id))
+            return true;
+        return false;
+    }
+
     void showImpl(UINT actionFlags)
     {
         POINT screenPt = { 0 };
@@ -197,37 +204,37 @@ public:
         
         //m_data = blink::WebContextMenuData();
         
-        if (actionFlags & kSelectedTextId)
+        if (canShowItem(actionFlags, kSelectedTextId))
             ::AppendMenu(m_popMenu, MF_STRING, kSelectedTextId, L"复制");
 
-        if (actionFlags & kCopyImageId)
+        if (canShowItem(actionFlags, kCopyImageId))
             ::AppendMenu(m_popMenu, MF_STRING, kCopyImageId, L"复制图片");
 
-        if (actionFlags & kInspectElementAtId)
+        if (canShowItem(actionFlags, kInspectElementAtId))
             ::AppendMenu(m_popMenu, MF_STRING, kInspectElementAtId, L"检查");
 
-        if (actionFlags & kCutId)
+        if (canShowItem(actionFlags, kCutId))
             ::AppendMenu(m_popMenu, MF_STRING, kCutId, L"剪切");
 
-        if (actionFlags & kPasteId)
+        if (canShowItem(actionFlags, kPasteId))
             ::AppendMenu(m_popMenu, MF_STRING, kPasteId, L"粘贴");
 
-        if (actionFlags & kSelectedAllId)
+        if (canShowItem(actionFlags, kSelectedAllId))
             ::AppendMenu(m_popMenu, MF_STRING, kSelectedAllId, L"全选");
 
-        if (actionFlags & kUndoId)
+        if (canShowItem(actionFlags, kUndoId))
             ::AppendMenu(m_popMenu, MF_STRING, kUndoId, L"撤销");
 
-        if (actionFlags & kGoForwardId)
+        if (canShowItem(actionFlags, kGoForwardId))
             ::AppendMenu(m_popMenu, MF_STRING, kGoForwardId, L"前进");
 
-        if (actionFlags & kGoBackId)
+        if (canShowItem(actionFlags, kGoBackId))
             ::AppendMenu(m_popMenu, MF_STRING, kGoBackId, L"后退");
 
-        if (actionFlags & kReloadId)
+        if (canShowItem(actionFlags, kReloadId))
             ::AppendMenu(m_popMenu, MF_STRING, kReloadId, L"刷新");
 
-        if (actionFlags & kPrintId)
+        if (canShowItem(actionFlags, kPrintId))
             ::AppendMenu(m_popMenu, MF_STRING, kPrintId, L"打印");
         
         if (0 == ::GetMenuItemCount(m_popMenu)) {

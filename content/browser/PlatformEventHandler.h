@@ -3,6 +3,7 @@
 
 #include "third_party/WebKit/public/web/WebInputEvent.h"
 #include "third_party/WebKit/Source/platform/geometry/IntRect.h"
+#include "third_party/WebKit/Source/platform/Timer.h"
 
 namespace blink {
 class WebViewImpl;
@@ -26,6 +27,8 @@ public:
     void fireCaptureChangedEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
     void fireTouchEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
+    void checkMouseLeave(blink::Timer<PlatformEventHandler>*);
+
     bool fireMouseUpEventIfNeeded(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, const MouseEvtInfo& info, BOOL* bHandle);
     void buildMousePosInfo(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, bool* handle, blink::IntPoint* pos, blink::IntPoint* globalPos);
 
@@ -44,7 +47,6 @@ public:
 private:
     bool isDraggableRegionNcHitTest(HWND hWnd, const blink::IntPoint& pos, HRGN draggableRegion);
     bool m_isDraggableRegionNcHitTest;
-    bool m_bMouseTrack;
     bool m_postMouseLeave;
     bool m_mouseInWindow;
     bool m_isAlert;
@@ -57,6 +59,9 @@ private:
     blink::IntRect m_lastPosForDrag;
     blink::WebViewImpl* m_webViewImpl;
     blink::WebWidget* m_webWidget;
+
+    HWND m_hWnd;
+    blink::Timer<PlatformEventHandler> m_checkMouseLeaveTimer;
 };
 
 } // content

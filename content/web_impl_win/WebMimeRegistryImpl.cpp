@@ -162,7 +162,6 @@ blink::WebMimeRegistry::SupportsType WebMimeRegistryImpl::supportsMediaMIMEType(
 {
     String typeString = type;
     if (wke::g_onIsMediaPlayerSupportsMIMETypeCallback) {
-
         std::string typeStr = type.utf8();
         bool isSupported = wke::g_onIsMediaPlayerSupportsMIMETypeCallback(typeStr.c_str());
         if (isSupported) // if (WTF::kNotFound != typeString.find("video/mp4"))

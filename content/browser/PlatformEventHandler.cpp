@@ -191,9 +191,9 @@ static void makeDraggableRegionNcHitTest(HWND hWnd, LPARAM lParam, bool* isDragg
 }
 
 PlatformEventHandler::PlatformEventHandler(WebWidget* webWidget, WebViewImpl* webViewImpl)
+    : m_checkMouseLeaveTimer(this, &PlatformEventHandler::checkMouseLeave)
 {
     m_isDraggableRegionNcHitTest = false;
-    m_bMouseTrack = false;
     m_postMouseLeave = false;
     m_mouseInWindow = false;
     m_isAlert = false;
@@ -347,8 +347,31 @@ bool PlatformEventHandler::fireMouseUpEventIfNeeded(HWND hWnd, UINT message, WPA
     return true;
 }
 
+void PlatformEventHandler::checkMouseLeave(blink::Timer<PlatformEventHandler>*)
+{
+    if (!m_hWnd || !::IsWindow(m_hWnd)) {
+        m_checkMouseLeaveTimer.stop();
+        return;
+    }
+
+    POINT pt = { 0 };
+    ::GetCursorPos(&pt);
+
+    RECT rc;
+    ::GetClientRect(m_hWnd, &rc);
+    ::ScreenToClient(m_hWnd, &pt);
+
+    if (!::PtInRect(&rc, pt) || !::IsWindowVisible(m_hWnd)) {
+        MouseEvtInfo info = { true, false, nullptr };
+        LPARAM lParam = MAKELONG(pt.x, pt.y);
+        fireMouseEvent(m_hWnd, WM_MOUSELEAVE, 0, lParam, info, nullptr);
+        m_checkMouseLeaveTimer.stop();
+    }
+}
+
 LRESULT PlatformEventHandler::fireMouseEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam, const MouseEvtInfo& info, BOOL* bHandle)
 {
+    m_hWnd = hWnd;
     bool handle = false;
 
     m_isDraggableRegionNcHitTest = false;
@@ -356,16 +379,6 @@ LRESULT PlatformEventHandler::fireMouseEvent(HWND hWnd, UINT message, WPARAM wPa
         return 0;
 
     bool isValideWindow = ::IsWindow(hWnd) && !info.isWillDestroy;
-
-    if (m_bMouseTrack && !m_postMouseLeave && hWnd) {
-        TRACKMOUSEEVENT csTME;
-        csTME.cbSize = sizeof(csTME);
-        csTME.dwFlags = TME_LEAVE | TME_HOVER;
-        csTME.hwndTrack = hWnd;  // 指定要追踪的窗口
-        csTME.dwHoverTime = 10;    // 鼠标在按钮上停留超过10ms，才认为状态为HOVER
-        ::TrackMouseEvent(&csTME); // 开启Windows的WM_MOUSELEAVE，WM_MOUSEHOVER事件支持
-        m_bMouseTrack = false;     // 若已经追踪，则停止追踪
-    }
 
     if (fireMouseUpEventIfNeeded(hWnd, message, wParam, lParam, info, bHandle))
         return 0;
@@ -378,8 +391,10 @@ LRESULT PlatformEventHandler::fireMouseEvent(HWND hWnd, UINT message, WPARAM wPa
 
     buildMousePosInfo(hWnd, message, wParam, lParam, &handle, &pos, &globalPos);
 
+    if (!m_checkMouseLeaveTimer.isActive())
+        m_checkMouseLeaveTimer.startRepeating(0.4, FROM_HERE);
     if (WM_MOUSELEAVE == message)
-        m_bMouseTrack = true;
+        m_checkMouseLeaveTimer.stop();
 
     double time = WTF::currentTime();
     WebMouseEvent webMouseEvent;
